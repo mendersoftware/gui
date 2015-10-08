@@ -1,6 +1,7 @@
 'use strict';
 
-var isBrowser = typeof window !== 'undefined';
+var isBrowser = require('../utils/is-browser');
+
 var Modernizr = isBrowser ? require('../utils/modernizr.custom') : undefined;
 
 //Keep track of already prefixed keys so we can skip Modernizr prefixing
