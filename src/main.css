@@ -1,0 +1,37 @@
+html,
+body {
+  height: 100%;
+}
+body {
+  font-family: Roboto;
+}
+/* Header */
+#header-nav {
+  margin-left: 220px;
+  margin-right: 8%;
+}
+#logo {
+  position: absolute;
+  left: 0;
+  width: 180px;
+  height: 48px;
+  background-image: url('/assets/img/headerlogo.png');
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+/* Layout */
+.leftFixed {
+  width: 260px;
+  float: left;
+}
+.leftFixed .innerBlock {
+  width: 100%;
+  margin-right: -260px;
+  padding-top: 20px;
+}
+.rightFluid {
+  margin-left: 260px;
+}
+.container {
+  padding: 40px 0;
+}
