@@ -12,6 +12,21 @@ var TableRow = mui.TableRow;
 var TableRowColumn = mui.TableRowColumn;
 
 var NodeList = React.createClass({
+  shouldComponentUpdate: function(nextProps, nextState) {
+    return nextProps.nodes !== this.props.nodes;
+  },
+  _onRowSelection: function(rows) {
+    if (rows === "all") {
+      rows = [];
+      for (var i=0; i<this.props.nodes.length;i++) {
+        rows.push(i);
+      }
+    }
+    AppActions.selectNodes(rows);
+  },
+  _selectAll: function(rows) {
+    console.log("select all", rows);
+  },
   render: function() {
     var nodes = this.props.nodes.map(function(node) {
       return (
@@ -25,13 +40,16 @@ var NodeList = React.createClass({
     })
     return (
       <Table
+        onRowSelection={this._onRowSelection}
         multiSelectable={true}>
-        <TableHeader key={"tableheader"}>
-          <TableRow key={1}>
-            <TableHeaderColumn key={"name"} tooltip="Name">Name</TableHeaderColumn>
-            <TableHeaderColumn key={"model"} tooltip="Model">Model</TableHeaderColumn>
-            <TableHeaderColumn key={"software"} tooltip="Installed software">Software</TableHeaderColumn>
-            <TableHeaderColumn key={"status"} tooltip="Status">Status</TableHeaderColumn>
+        <TableHeader
+        enableSelectAll={true}
+        onSelectAll={this._selectAll}>
+          <TableRow>
+            <TableHeaderColumn tooltip="Name">Name</TableHeaderColumn>
+            <TableHeaderColumn tooltip="Model">Model</TableHeaderColumn>
+            <TableHeaderColumn tooltip="Installed software">Software</TableHeaderColumn>
+            <TableHeaderColumn tooltip="Status">Status</TableHeaderColumn>
           </TableRow>
         </TableHeader>
         <TableBody

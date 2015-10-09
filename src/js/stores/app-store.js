@@ -7,6 +7,8 @@ var CHANGE_EVENT = "change";
 
 var _currentGroup = [];
 var _currentNodes = [];
+var _selectedNodes = [];
+var _showSnack = false;
 
 /* TEMP LOCAL GROUPS */
 var _groups = [
@@ -113,7 +115,7 @@ var _allnodes = [
 _selectGroup(_groups[0].id);
 
 function _selectGroup(id) {
-  console.log("selecting group", id);
+  _selectedNodes = [];
   if (id) {
     _currentGroup = _getGroupById(id).id;
     _getCurrentNodes(_currentGroup);
@@ -152,6 +154,35 @@ function _sortNodes() {
 }
 
 
+function _selectNodes(nodePositions) {
+  _selectedNodes = [];
+  for (var i=0; i<nodePositions.length; i++) {
+   _selectedNodes.push(_currentNodes[nodePositions[i]]);
+  }
+}
+
+function _addToGroup(id, nodes) {
+
+  var tmpGroup = _getGroupById(id);
+  
+  for (var i=0; i<nodes.length;i++) {
+    if (tmpGroup.nodes.indexOf(nodes[i].id)===-1) {
+      tmpGroup.nodes.push(nodes[i].id);
+    }
+  }
+
+  var idx = findWithAttr(_groups, id, tmpGroup.id);
+  _groups[idx] = tmpGroup;
+}
+
+function findWithAttr(array, attr, value) {
+  for(var i = 0; i < array.length; i += 1) {
+    if(array[i][attr] === value) {
+      return i;
+    }
+  }
+}
+
 function statusSort(a,b) {
   return (a.status > b.status) - (a.status < b.status);
 }
@@ -177,13 +208,24 @@ var AppStore = assign(EventEmitter.prototype, {
     return _currentNodes
   },
 
+  getSelectedNodes: function() {
+    return _selectedNodes
+  },
+
   dispatcherIndex: AppDispatcher.register(function(payload) {
     var action = payload.action;
     switch(action.actionType) {
       case AppConstants.SELECT_GROUP:
         _selectGroup(payload.action.groupId);
         break;
+      case AppConstants.SELECT_NODES:
+        _selectNodes(payload.action.nodes);
+        break;
+      case AppConstants.ADD_TO_GROUP:
+        _addToGroup(payload.action.groupId, payload.action.nodes);
+        break;
     }
+    
     AppStore.emitChange();
     return true;
   })

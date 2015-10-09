@@ -45306,6 +45306,21 @@ var AppActions = {
       groupId: groupId
     })
   },
+
+  selectNodes: function(nodeList) {
+    AppDispatcher.handleViewAction({
+      actionType: AppConstants.SELECT_NODES,
+      nodes: nodeList
+    })
+  },
+
+  addToGroup: function(groupId, nodeList) {
+    AppDispatcher.handleViewAction({
+      actionType: AppConstants.ADD_TO_GROUP,
+      groupId: groupId,
+      nodes: nodeList
+    })
+  },
   
 }
 
@@ -45472,6 +45487,21 @@ var TableRow = mui.TableRow;
 var TableRowColumn = mui.TableRowColumn;
 
 var NodeList = React.createClass({displayName: "NodeList",
+  shouldComponentUpdate: function(nextProps, nextState) {
+    return nextProps.nodes !== this.props.nodes;
+  },
+  _onRowSelection: function(rows) {
+    if (rows === "all") {
+      rows = [];
+      for (var i=0; i<this.props.nodes.length;i++) {
+        rows.push(i);
+      }
+    }
+    AppActions.selectNodes(rows);
+  },
+  _selectAll: function(rows) {
+    console.log("select all", rows);
+  },
   render: function() {
     var nodes = this.props.nodes.map(function(node) {
       return (
@@ -45485,13 +45515,16 @@ var NodeList = React.createClass({displayName: "NodeList",
     })
     return (
       React.createElement(Table, {
+        onRowSelection: this._onRowSelection, 
         multiSelectable: true}, 
-        React.createElement(TableHeader, {key: "tableheader"}, 
-          React.createElement(TableRow, {key: 1}, 
-            React.createElement(TableHeaderColumn, {key: "name", tooltip: "Name"}, "Name"), 
-            React.createElement(TableHeaderColumn, {key: "model", tooltip: "Model"}, "Model"), 
-            React.createElement(TableHeaderColumn, {key: "software", tooltip: "Installed software"}, "Software"), 
-            React.createElement(TableHeaderColumn, {key: "status", tooltip: "Status"}, "Status")
+        React.createElement(TableHeader, {
+        enableSelectAll: true, 
+        onSelectAll: this._selectAll}, 
+          React.createElement(TableRow, null, 
+            React.createElement(TableHeaderColumn, {tooltip: "Name"}, "Name"), 
+            React.createElement(TableHeaderColumn, {tooltip: "Model"}, "Model"), 
+            React.createElement(TableHeaderColumn, {tooltip: "Installed software"}, "Software"), 
+            React.createElement(TableHeaderColumn, {tooltip: "Status"}, "Status")
           )
         ), 
         React.createElement(TableBody, {
@@ -45517,7 +45550,8 @@ function getState() {
   return {
     groups: AppStore.getGroups(),
     selectedGroup: AppStore.getSelectedGroup(),
-    nodes: AppStore.getNodes()
+    nodes: AppStore.getNodes(),
+    selectedNodes: AppStore.getSelectedNodes(),
   }
 }
 
@@ -45538,9 +45572,8 @@ var Nodes = React.createClass({displayName: "Nodes",
           React.createElement(Groups, {groups: this.state.groups, selectedGroup: this.state.selectedGroup})
         ), 
         React.createElement("div", {className: "rightFluid"}, 
-          React.createElement("div", {className: "topSection"}, 
-            React.createElement(NodeList, {nodes: this.state.nodes})
-          )
+          React.createElement(NodeList, {nodes: this.state.nodes}), 
+          React.createElement(SelectedNodes, {selected: this.state.selectedNodes, selectedGroup: this.state.selectedGroup, groups: this.state.groups})
         )
       )
     );
@@ -45550,8 +45583,119 @@ var Nodes = React.createClass({displayName: "Nodes",
 module.exports = Nodes;
 
 },{"../../stores/app-store":378,"./groups":368,"./nodelist":369,"./selectednodes":371,"react":363}],371:[function(require,module,exports){
+var React = require('react');
+var AppStore = require('../../stores/app-store');
+var AppActions = require('../../actions/app-actions');
 
-},{}],372:[function(require,module,exports){
+var mui = require('material-ui');
+var FlatButton = mui.FlatButton;
+var Dialog = mui.Dialog;
+var SelectField = mui.SelectField;
+var Snackbar = mui.Snackbar;
+
+var addSelection = {};
+
+var SelectedNodes = React.createClass({displayName: "SelectedNodes",
+  _onDismiss: function() {
+    console.log("gone");
+  },
+  _handleSelectValueChange: function(e) {
+    var group = this.props.groups[e.target.value];
+    addSelection = {
+      group: group,
+      textFieldValue: e.target.value 
+    };
+  },
+  dialogDismiss: function(ref) {
+    this.refs[ref].dismiss();
+  },
+  dialogOpen: function(ref) {
+    this.refs[ref].show();
+  },
+  _addGroupHandler: function() {
+    AppActions.addToGroup(addSelection.textFieldValue, this.props.selected);
+    this.dialogDismiss('addGroup');
+    AppActions.selectGroup(addSelection.textFieldValue);
+  },
+
+  render: function() {
+    var hideInfo = {display: "none"};
+    var nodeInfo ='';
+    var hideRemove = this.props.selectedGroup === 1 ? {visibility: "hidden"} : {visibility: "visible"};
+    var disableAction = this.props.selected.length ? false : true;
+
+    if (this.props.selected.length === 1) {
+      hideInfo = {display: "block"};
+      nodeInfo = (
+        React.createElement("ul", null, 
+          React.createElement("li", null, "Name: ", this.props.selected[0].name), 
+          React.createElement("li", null, "Status: ", this.props.selected[0].status), 
+          React.createElement("li", null, "Model: ", this.props.selected[0].model), 
+          React.createElement("li", null, "Software: ", this.props.selected[0].software_version), 
+          React.createElement("li", null, "Architecture: ", this.props.selected[0].arch), 
+          React.createElement("li", null, "Groups: ", this.props.selected[0].groups.join(','))
+        )
+      )
+    }
+    var nodes = this.props.selected.map(function(node) {
+      return (
+        React.createElement("p", null, node.name)
+      )
+    })
+
+    var addActions = [
+      { text: 'Cancel', onClick: this.dialogDismiss.bind(null, 'addGroup')},
+      { text: 'Save group', onClick: this._addGroupHandler, ref: 'save' }
+    ];
+
+    var groupList = this.props.groups.map(function(group) {
+      if (group.id === 1) {
+        return {payload: '', text: ''}
+      } else {
+        return {payload: group.id, text: group.name}
+      }
+    });
+    groupList
+    return (
+      React.createElement("div", {className: "tableActions"}, 
+        React.createElement("div", null, 
+          React.createElement("span", {style: {marginRight:"30px"}}, nodes.length, " nodes selected"), 
+          React.createElement(FlatButton, {disabled: disableAction, label: "Add selected nodes to a group", secondary: true, onClick: this.dialogOpen.bind(null, 'addGroup')}), 
+          React.createElement(FlatButton, {disabled: disableAction, style: hideRemove, label: "Remove selected nodes from this group", secondary: true})
+        ), 
+        React.createElement("div", {className: "nodeInfo", style: hideInfo}, 
+          nodeInfo
+        ), 
+
+        React.createElement(Dialog, {
+          ref: "addGroup", 
+          title: "Add nodes to group", 
+          actions: addActions, 
+          actionFocus: "submit", 
+          autoDetectWindowHeight: true, autoScrollBodyContent: true}, 
+            React.createElement("div", {style: {height: '200px'}}, 
+              React.createElement(SelectField, {
+              ref: "groupSelect", 
+              onChange: this._handleSelectValueChange, 
+              floatingLabelText: "Select group", 
+              menuItems: groupList})
+          )
+        ), 
+
+        React.createElement(Snackbar, {
+          onDismiss: this._onDismiss, 
+          ref: "snackbar", 
+          autoHideDuration: 5000, 
+          action: "undo", 
+          message: "Nodes added to group"})
+      )
+    );
+  }
+});
+
+module.exports = SelectedNodes;
+
+},{"../../actions/app-actions":364,"../../stores/app-store":378,"material-ui":43,"react":363}],372:[function(require,module,exports){
 var React = require('react');
 
 var Software = React.createClass({displayName: "Software",
@@ -45607,7 +45751,8 @@ module.exports = (
 
 },{"../components/app":365,"../components/dashboard/dashboard":366,"../components/nodes/nodes":370,"../components/software/software":372,"../components/updates/updates":373,"react":363,"react-router":173}],375:[function(require,module,exports){
 module.exports = {
-  SELECT_GROUP: 'SELECT_GROUP'
+  SELECT_GROUP: 'SELECT_GROUP',
+  ADD_TO_GROUP: 'ADD_TO_GROUP'
 }
 
 },{}],376:[function(require,module,exports){
@@ -45653,6 +45798,8 @@ var CHANGE_EVENT = "change";
 
 var _currentGroup = [];
 var _currentNodes = [];
+var _selectedNodes = [];
+var _showSnack = false;
 
 /* TEMP LOCAL GROUPS */
 var _groups = [
@@ -45759,7 +45906,7 @@ var _allnodes = [
 _selectGroup(_groups[0].id);
 
 function _selectGroup(id) {
-  console.log("selecting group", id);
+  _selectedNodes = [];
   if (id) {
     _currentGroup = _getGroupById(id).id;
     _getCurrentNodes(_currentGroup);
@@ -45798,6 +45945,35 @@ function _sortNodes() {
 }
 
 
+function _selectNodes(nodePositions) {
+  _selectedNodes = [];
+  for (var i=0; i<nodePositions.length; i++) {
+   _selectedNodes.push(_currentNodes[nodePositions[i]]);
+  }
+}
+
+function _addToGroup(id, nodes) {
+
+  var tmpGroup = _getGroupById(id);
+  
+  for (var i=0; i<nodes.length;i++) {
+    if (tmpGroup.nodes.indexOf(nodes[i].id)===-1) {
+      tmpGroup.nodes.push(nodes[i].id);
+    }
+  }
+
+  var idx = findWithAttr(_groups, id, tmpGroup.id);
+  _groups[idx] = tmpGroup;
+}
+
+function findWithAttr(array, attr, value) {
+  for(var i = 0; i < array.length; i += 1) {
+    if(array[i][attr] === value) {
+      return i;
+    }
+  }
+}
+
 function statusSort(a,b) {
   return (a.status > b.status) - (a.status < b.status);
 }
@@ -45823,13 +45999,24 @@ var AppStore = assign(EventEmitter.prototype, {
     return _currentNodes
   },
 
+  getSelectedNodes: function() {
+    return _selectedNodes
+  },
+
   dispatcherIndex: AppDispatcher.register(function(payload) {
     var action = payload.action;
     switch(action.actionType) {
       case AppConstants.SELECT_GROUP:
         _selectGroup(payload.action.groupId);
         break;
+      case AppConstants.SELECT_NODES:
+        _selectNodes(payload.action.nodes);
+        break;
+      case AppConstants.ADD_TO_GROUP:
+        _addToGroup(payload.action.groupId, payload.action.nodes);
+        break;
     }
+    
     AppStore.emitChange();
     return true;
   })
