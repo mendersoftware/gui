@@ -45617,6 +45617,9 @@ var SelectedNodes = React.createClass({displayName: "SelectedNodes",
     this.dialogDismiss('addGroup');
     AppActions.selectGroup(addSelection.textFieldValue);
   },
+  _removeGroupHandler: function() {
+    AppActions.addToGroup(this.props.selectedGroup, this.props.selected);
+  },
 
   render: function() {
     var hideInfo = {display: "none"};
@@ -45661,7 +45664,7 @@ var SelectedNodes = React.createClass({displayName: "SelectedNodes",
         React.createElement("div", null, 
           React.createElement("span", {style: {marginRight:"30px"}}, nodes.length, " nodes selected"), 
           React.createElement(FlatButton, {disabled: disableAction, label: "Add selected nodes to a group", secondary: true, onClick: this.dialogOpen.bind(null, 'addGroup')}), 
-          React.createElement(FlatButton, {disabled: disableAction, style: hideRemove, label: "Remove selected nodes from this group", secondary: true})
+          React.createElement(FlatButton, {disabled: disableAction, style: hideRemove, label: "Remove selected nodes from this group", secondary: true, onClick: this._removeGroupHandler})
         ), 
         React.createElement("div", {className: "nodeInfo", style: hideInfo}, 
           nodeInfo
@@ -45687,7 +45690,15 @@ var SelectedNodes = React.createClass({displayName: "SelectedNodes",
           ref: "snackbar", 
           autoHideDuration: 5000, 
           action: "undo", 
-          message: "Nodes added to group"})
+          message: "Nodes added to group"}), 
+
+          React.createElement(Snackbar, {
+          onDismiss: this._onDismiss, 
+          ref: "snackbarRemove", 
+          autoHideDuration: 5000, 
+          action: "undo", 
+          message: "Nodes were removed from the group", 
+          onActionTouchTap: this._undoRemove})
       )
     );
   }
@@ -45752,7 +45763,8 @@ module.exports = (
 },{"../components/app":365,"../components/dashboard/dashboard":366,"../components/nodes/nodes":370,"../components/software/software":372,"../components/updates/updates":373,"react":363,"react-router":173}],375:[function(require,module,exports){
 module.exports = {
   SELECT_GROUP: 'SELECT_GROUP',
-  ADD_TO_GROUP: 'ADD_TO_GROUP'
+  ADD_TO_GROUP: 'ADD_TO_GROUP',
+  REMOVE_FROM_GROUP: 'REMOVE_FROM_GROUP'
 }
 
 },{}],376:[function(require,module,exports){
@@ -45960,11 +45972,17 @@ function _addToGroup(id, nodes) {
     if (tmpGroup.nodes.indexOf(nodes[i].id)===-1) {
       tmpGroup.nodes.push(nodes[i].id);
     }
+    else {
+      tmpGroup.nodes.splice(tmpGroup.nodes.indexOf(nodes[i].id),1);
+    }
   }
 
   var idx = findWithAttr(_groups, id, tmpGroup.id);
   _groups[idx] = tmpGroup;
+  _getCurrentNodes(id);
 }
+
+
 
 function findWithAttr(array, attr, value) {
   for(var i = 0; i < array.length; i += 1) {

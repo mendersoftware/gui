@@ -32,6 +32,9 @@ var SelectedNodes = React.createClass({
     this.dialogDismiss('addGroup');
     AppActions.selectGroup(addSelection.textFieldValue);
   },
+  _removeGroupHandler: function() {
+    AppActions.addToGroup(this.props.selectedGroup, this.props.selected);
+  },
 
   render: function() {
     var hideInfo = {display: "none"};
@@ -76,7 +79,7 @@ var SelectedNodes = React.createClass({
         <div>
           <span style={{marginRight:"30px"}}>{nodes.length} nodes selected</span>
           <FlatButton disabled={disableAction} label="Add selected nodes to a group" secondary={true} onClick={this.dialogOpen.bind(null, 'addGroup')} />
-          <FlatButton disabled={disableAction} style={hideRemove} label="Remove selected nodes from this group" secondary={true} />
+          <FlatButton disabled={disableAction} style={hideRemove} label="Remove selected nodes from this group" secondary={true} onClick={this._removeGroupHandler} />
         </div>
         <div className="nodeInfo" style={hideInfo}>
           {nodeInfo}
@@ -103,6 +106,14 @@ var SelectedNodes = React.createClass({
           autoHideDuration={5000}
           action="undo"
           message="Nodes added to group" />
+
+          <Snackbar 
+          onDismiss={this._onDismiss}
+          ref="snackbarRemove"
+          autoHideDuration={5000}
+          action="undo"
+          message="Nodes were removed from the group"
+          onActionTouchTap={this._undoRemove} />
       </div>
     );
   }

@@ -169,11 +169,17 @@ function _addToGroup(id, nodes) {
     if (tmpGroup.nodes.indexOf(nodes[i].id)===-1) {
       tmpGroup.nodes.push(nodes[i].id);
     }
+    else {
+      tmpGroup.nodes.splice(tmpGroup.nodes.indexOf(nodes[i].id),1);
+    }
   }
 
   var idx = findWithAttr(_groups, id, tmpGroup.id);
   _groups[idx] = tmpGroup;
+  _getCurrentNodes(id);
 }
+
+
 
 function findWithAttr(array, attr, value) {
   for(var i = 0; i < array.length; i += 1) {
