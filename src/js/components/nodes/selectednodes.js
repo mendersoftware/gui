@@ -4,18 +4,32 @@ var AppActions = require('../../actions/app-actions');
 
 var mui = require('material-ui');
 var FlatButton = mui.FlatButton;
+var RaisedButton = mui.RaisedButton;
 var Dialog = mui.Dialog;
 var SelectField = mui.SelectField;
+var TextField = mui.TextField;
 var Snackbar = mui.Snackbar;
 
 var addSelection = {};
 
 var SelectedNodes = React.createClass({
+  getInitialState: function() {
+    return {
+      showInput: false 
+    };
+  },
   _onDismiss: function() {
     console.log("gone");
   },
   _handleSelectValueChange: function(e) {
-    var group = this.props.groups[e.target.value];
+    this.setState({showInput: false});
+
+    var group = '';
+    for (var i=0;i<this.props.groups.length;i++) {
+      if (this.props.groups[i].id === e.target.value) {
+        group = this.props.groups[i];
+      }
+    }
     addSelection = {
       group: group,
       textFieldValue: e.target.value 
@@ -27,20 +41,52 @@ var SelectedNodes = React.createClass({
   dialogOpen: function(ref) {
     this.refs[ref].show();
   },
+  _showButton: function() {
+    this.setState({showInput: true});
+  },
   _addGroupHandler: function() {
-    AppActions.addToGroup(addSelection.textFieldValue, this.props.selected);
+    AppActions.addToGroup(addSelection.group, this.props.selected);
     this.dialogDismiss('addGroup');
     AppActions.selectGroup(addSelection.textFieldValue);
   },
   _removeGroupHandler: function() {
     AppActions.addToGroup(this.props.selectedGroup, this.props.selected);
   },
+  _newGroupHandler: function() {
+    var newGroup = this.refs['customGroup'].getValue();
+    newGroup = {
+      name: newGroup,
+      nodes: []
+    };
+    addSelection = {
+      group: newGroup,
+      textFieldValue: null 
+    };
+
+    // TODO update so gets added to props + select list 
+
+    this.setState({showInput: false});
+  },
+  _validateName: function(e) {
+    var newName = e.target.value;
+    var errorText = null;
+    for (var i=0;i<this.props.groups.length; i++) {
+      if (this.props.groups[i].name === newName) {
+        errorText = "A group with this name already exists";
+      }
+    }
+    this.setState({errorText1: errorText});
+  },
 
   render: function() {
     var hideInfo = {display: "none"};
     var nodeInfo ='';
-    var hideRemove = this.props.selectedGroup === 1 ? {visibility: "hidden"} : {visibility: "visible"};
+    var hideRemove = this.props.selectedGroup.id === 1 ? {visibility: "hidden"} : {visibility: "visible"};
     var disableAction = this.props.selected.length ? false : true;
+    var inputStyle = {
+      display: "inline-block",
+      marginRight: "30px"
+    }
 
     if (this.props.selected.length === 1) {
       hideInfo = {display: "block"};
@@ -63,7 +109,7 @@ var SelectedNodes = React.createClass({
 
     var addActions = [
       { text: 'Cancel', onClick: this.dialogDismiss.bind(null, 'addGroup')},
-      { text: 'Save group', onClick: this._addGroupHandler, ref: 'save' }
+      { text: 'Add to group', onClick: this._addGroupHandler, ref: 'save' }
     ];
 
     var groupList = this.props.groups.map(function(group) {
@@ -73,7 +119,7 @@ var SelectedNodes = React.createClass({
         return {payload: group.id, text: group.name}
       }
     });
-    groupList
+
     return (
       <div className="tableActions">
         <div>
@@ -91,13 +137,32 @@ var SelectedNodes = React.createClass({
           actions={addActions}
           actionFocus="submit"
           autoDetectWindowHeight={true} autoScrollBodyContent={true}>  
-            <div style={{height: '200px'}}>
+          <div style={{height: '200px'}}>
+            <div>
               <SelectField
               ref="groupSelect"
               onChange={this._handleSelectValueChange}
               floatingLabelText="Select group"
-              menuItems={groupList} />
-          < /div>
+              menuItems={groupList} 
+              style={inputStyle} />
+              
+              <RaisedButton 
+                label="New group" 
+                onClick={this._showButton}/>
+            </div>
+
+            <div className={this.state.showInput ? null : 'hidden'}>
+              <TextField
+                ref="customGroup"
+                hintText="Group name"
+                floatingLabelText="Group name"
+                style={inputStyle}
+                onChange={this._validateName}
+                errorText={this.state.errorText1} />
+            
+              <RaisedButton tooltip="save" onClick={this._newGroupHandler} >Save</RaisedButton>
+            </div>
+          </div>
         </Dialog>
 
         <Snackbar 

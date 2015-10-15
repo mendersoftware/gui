@@ -45314,11 +45314,18 @@ var AppActions = {
     })
   },
 
-  addToGroup: function(groupId, nodeList) {
+  addToGroup: function(group, nodeList) {
     AppDispatcher.handleViewAction({
       actionType: AppConstants.ADD_TO_GROUP,
-      groupId: groupId,
+      group: group,
       nodes: nodeList
+    })
+  },
+
+  uploadImage: function(image) {
+    AppDispatcher.handleViewAction({
+      actionType: AppConstants.UPLOAD_IMAGE,
+      image: image
     })
   },
   
@@ -45326,7 +45333,7 @@ var AppActions = {
 
 module.exports = AppActions;
 
-},{"../constants/app-constants":375,"../dispatchers/app-dispatcher":376}],365:[function(require,module,exports){
+},{"../constants/app-constants":378,"../dispatchers/app-dispatcher":379}],365:[function(require,module,exports){
 var React = require('react');
 var Router = require('react-router');
 var RouteHandler = Router.RouteHandler;
@@ -45454,7 +45461,7 @@ var Groups = React.createClass({displayName: "Groups",
     return (
       React.createElement(List, {subheader: "Groups"}, 
         this.props.groups.map(function(group) {
-          var isSelected = group.id===this.props.selectedGroup ? {backgroundColor: "#e7e7e7"} : {backgroundColor: "transparent"};
+          var isSelected = group.id===this.props.selectedGroup.id ? {backgroundColor: "#e7e7e7"} : {backgroundColor: "transparent"};
           var boundClick = this._changeGroup.bind(null, group.id);
           return (
             React.createElement(ListItem, {
@@ -45472,7 +45479,7 @@ var Groups = React.createClass({displayName: "Groups",
 
 module.exports = Groups;
 
-},{"../../actions/app-actions":364,"../../stores/app-store":378,"material-ui":43,"react":363}],369:[function(require,module,exports){
+},{"../../actions/app-actions":364,"../../stores/app-store":381,"material-ui":43,"react":363}],369:[function(require,module,exports){
 var React = require('react');
 var AppStore = require('../../stores/app-store');
 var AppActions = require('../../actions/app-actions');
@@ -45538,7 +45545,7 @@ var NodeList = React.createClass({displayName: "NodeList",
 
 module.exports = NodeList;
 
-},{"../../actions/app-actions":364,"../../stores/app-store":378,"material-ui":43,"react":363}],370:[function(require,module,exports){
+},{"../../actions/app-actions":364,"../../stores/app-store":381,"material-ui":43,"react":363}],370:[function(require,module,exports){
 var React = require('react');
 var AppStore = require('../../stores/app-store');
 
@@ -45551,7 +45558,7 @@ function getState() {
     groups: AppStore.getGroups(),
     selectedGroup: AppStore.getSelectedGroup(),
     nodes: AppStore.getNodes(),
-    selectedNodes: AppStore.getSelectedNodes(),
+    selectedNodes: AppStore.getSelectedNodes()
   }
 }
 
@@ -45572,6 +45579,7 @@ var Nodes = React.createClass({displayName: "Nodes",
           React.createElement(Groups, {groups: this.state.groups, selectedGroup: this.state.selectedGroup})
         ), 
         React.createElement("div", {className: "rightFluid"}, 
+          React.createElement("h4", null, this.state.selectedGroup.name), 
           React.createElement(NodeList, {nodes: this.state.nodes}), 
           React.createElement(SelectedNodes, {selected: this.state.selectedNodes, selectedGroup: this.state.selectedGroup, groups: this.state.groups})
         )
@@ -45582,25 +45590,39 @@ var Nodes = React.createClass({displayName: "Nodes",
 
 module.exports = Nodes;
 
-},{"../../stores/app-store":378,"./groups":368,"./nodelist":369,"./selectednodes":371,"react":363}],371:[function(require,module,exports){
+},{"../../stores/app-store":381,"./groups":368,"./nodelist":369,"./selectednodes":371,"react":363}],371:[function(require,module,exports){
 var React = require('react');
 var AppStore = require('../../stores/app-store');
 var AppActions = require('../../actions/app-actions');
 
 var mui = require('material-ui');
 var FlatButton = mui.FlatButton;
+var RaisedButton = mui.RaisedButton;
 var Dialog = mui.Dialog;
 var SelectField = mui.SelectField;
+var TextField = mui.TextField;
 var Snackbar = mui.Snackbar;
 
 var addSelection = {};
 
 var SelectedNodes = React.createClass({displayName: "SelectedNodes",
+  getInitialState: function() {
+    return {
+      showInput: false 
+    };
+  },
   _onDismiss: function() {
     console.log("gone");
   },
   _handleSelectValueChange: function(e) {
-    var group = this.props.groups[e.target.value];
+    this.setState({showInput: false});
+
+    var group = '';
+    for (var i=0;i<this.props.groups.length;i++) {
+      if (this.props.groups[i].id === e.target.value) {
+        group = this.props.groups[i];
+      }
+    }
     addSelection = {
       group: group,
       textFieldValue: e.target.value 
@@ -45612,20 +45634,52 @@ var SelectedNodes = React.createClass({displayName: "SelectedNodes",
   dialogOpen: function(ref) {
     this.refs[ref].show();
   },
+  _showButton: function() {
+    this.setState({showInput: true});
+  },
   _addGroupHandler: function() {
-    AppActions.addToGroup(addSelection.textFieldValue, this.props.selected);
+    AppActions.addToGroup(addSelection.group, this.props.selected);
     this.dialogDismiss('addGroup');
     AppActions.selectGroup(addSelection.textFieldValue);
   },
   _removeGroupHandler: function() {
     AppActions.addToGroup(this.props.selectedGroup, this.props.selected);
   },
+  _newGroupHandler: function() {
+    var newGroup = this.refs['customGroup'].getValue();
+    newGroup = {
+      name: newGroup,
+      nodes: []
+    };
+    addSelection = {
+      group: newGroup,
+      textFieldValue: null 
+    };
+
+    // TODO update so gets added to props + select list 
+
+    this.setState({showInput: false});
+  },
+  _validateName: function(e) {
+    var newName = e.target.value;
+    var errorText = null;
+    for (var i=0;i<this.props.groups.length; i++) {
+      if (this.props.groups[i].name === newName) {
+        errorText = "A group with this name already exists";
+      }
+    }
+    this.setState({errorText1: errorText});
+  },
 
   render: function() {
     var hideInfo = {display: "none"};
     var nodeInfo ='';
-    var hideRemove = this.props.selectedGroup === 1 ? {visibility: "hidden"} : {visibility: "visible"};
+    var hideRemove = this.props.selectedGroup.id === 1 ? {visibility: "hidden"} : {visibility: "visible"};
     var disableAction = this.props.selected.length ? false : true;
+    var inputStyle = {
+      display: "inline-block",
+      marginRight: "30px"
+    }
 
     if (this.props.selected.length === 1) {
       hideInfo = {display: "block"};
@@ -45648,7 +45702,7 @@ var SelectedNodes = React.createClass({displayName: "SelectedNodes",
 
     var addActions = [
       { text: 'Cancel', onClick: this.dialogDismiss.bind(null, 'addGroup')},
-      { text: 'Save group', onClick: this._addGroupHandler, ref: 'save' }
+      { text: 'Add to group', onClick: this._addGroupHandler, ref: 'save' }
     ];
 
     var groupList = this.props.groups.map(function(group) {
@@ -45658,7 +45712,7 @@ var SelectedNodes = React.createClass({displayName: "SelectedNodes",
         return {payload: group.id, text: group.name}
       }
     });
-    groupList
+
     return (
       React.createElement("div", {className: "tableActions"}, 
         React.createElement("div", null, 
@@ -45676,12 +45730,31 @@ var SelectedNodes = React.createClass({displayName: "SelectedNodes",
           actions: addActions, 
           actionFocus: "submit", 
           autoDetectWindowHeight: true, autoScrollBodyContent: true}, 
-            React.createElement("div", {style: {height: '200px'}}, 
+          React.createElement("div", {style: {height: '200px'}}, 
+            React.createElement("div", null, 
               React.createElement(SelectField, {
               ref: "groupSelect", 
               onChange: this._handleSelectValueChange, 
               floatingLabelText: "Select group", 
-              menuItems: groupList})
+              menuItems: groupList, 
+              style: inputStyle}), 
+              
+              React.createElement(RaisedButton, {
+                label: "New group", 
+                onClick: this._showButton})
+            ), 
+
+            React.createElement("div", {className: this.state.showInput ? null : 'hidden'}, 
+              React.createElement(TextField, {
+                ref: "customGroup", 
+                hintText: "Group name", 
+                floatingLabelText: "Group name", 
+                style: inputStyle, 
+                onChange: this._validateName, 
+                errorText: this.state.errorText1}), 
+            
+              React.createElement(RaisedButton, {tooltip: "save", onClick: this._newGroupHandler}, "Save")
+            )
           )
         ), 
 
@@ -45706,14 +45779,238 @@ var SelectedNodes = React.createClass({displayName: "SelectedNodes",
 
 module.exports = SelectedNodes;
 
-},{"../../actions/app-actions":364,"../../stores/app-store":378,"material-ui":43,"react":363}],372:[function(require,module,exports){
+},{"../../actions/app-actions":364,"../../stores/app-store":381,"material-ui":43,"react":363}],372:[function(require,module,exports){
 var React = require('react');
 
-var Software = React.createClass({displayName: "Software",
+// material ui
+var mui = require('material-ui');
+var Table = mui.Table;
+var TableHeader = mui.TableHeader;
+var TableHeaderColumn = mui.TableHeaderColumn;
+var TableBody = mui.TableBody;
+var TableRow = mui.TableRow;
+var TableRowColumn = mui.TableRowColumn;
+
+var Installed = React.createClass({displayName: "Installed",
   render: function() {
+   var items = this.props.software.map(function(pkg, index) {
+      return (
+        React.createElement(TableRow, {key: index}, 
+          React.createElement(TableRowColumn, null, pkg.name), 
+          React.createElement(TableRowColumn, null, pkg.model), 
+          React.createElement(TableRowColumn, null, pkg.nodes)
+        )
+      )
+    });
     return (
       React.createElement("div", null, 
-        "Software"
+        React.createElement(Table, {
+          selectable: false}, 
+          React.createElement(TableHeader, {
+            displaySelectAll: false, 
+            adjustForCheckbox: false}, 
+            React.createElement(TableRow, null, 
+              React.createElement(TableHeaderColumn, {tooltip: "Software"}, "Software"), 
+              React.createElement(TableHeaderColumn, {tooltip: "Model compatibility"}, "Model compatibility"), 
+              React.createElement(TableHeaderColumn, {tooltip: "Number of nodes"}, "Number of nodes")
+            )
+          ), 
+          React.createElement(TableBody, {
+            displayRowCheckbox: false}, 
+            items
+          )
+        )
+      )
+    );
+  }
+});
+
+module.exports = Installed;
+
+},{"material-ui":43,"react":363}],373:[function(require,module,exports){
+var React = require('react');
+var AppStore = require('../../stores/app-store');
+var AppActions = require('../../actions/app-actions');
+
+var UpdateButton = require('./updatebutton.js');
+
+var Router = require('react-router');
+var Link = Router.Link;
+
+// material ui
+var mui = require('material-ui');
+var Table = mui.Table;
+var TableHeader = mui.TableHeader;
+var TableHeaderColumn = mui.TableHeaderColumn;
+var TableBody = mui.TableBody;
+var TableRow = mui.TableRow;
+var TableRowColumn = mui.TableRowColumn;
+var RaisedButton = mui.RaisedButton;
+var Dialog = mui.Dialog;
+var SelectField = mui.SelectField;
+var TextField = mui.TextField;
+
+var newState = {model: "Acme Model 1"};
+
+var Repository = React.createClass({displayName: "Repository",
+  getInitialState: function() {
+    return {
+      groups: AppStore.getGroups(),
+    };
+  },
+  _handleFieldChange: function(field, e) {
+    newState[field] = e.target.value;
+    this.setState({newImage: newState});
+  },
+  dialogOpen: function (ref) {
+    this.refs[ref].show();
+  },
+  _onUploadSubmit: function() {
+    AppActions.uploadImage(this.state.newImage);
+    this.refs['upload'].dismiss();
+  },
+  render: function() {
+   var items = this.props.software.map(function(pkg, index) {
+      return (
+        React.createElement(TableRow, {key: index}, 
+          React.createElement(TableRowColumn, null, pkg.name), 
+          React.createElement(TableRowColumn, null, pkg.model), 
+          React.createElement(TableRowColumn, null, pkg.description), 
+          React.createElement(TableRowColumn, null, React.createElement(Link, {to: "/updates"}, "Schedule update"))
+        )
+      )
+    });
+    var uploadActions = [
+      { text: 'Cancel'},
+      { text: 'Upload image', onClick: this._onUploadSubmit, ref: 'upload', primary: 'true' }
+    ];
+
+    var groupItems = [];
+    for (var i=0; i<this.state.groups.length;i++) {
+      var tmp = { payload:this.state.groups[i].id, text: this.state.groups[i].name };
+      groupItems.push(tmp);
+    }
+    return (
+      React.createElement("div", null, 
+        React.createElement(Table, {
+          selectable: false}, 
+          React.createElement(TableHeader, {
+            displaySelectAll: false, 
+            adjustForCheckbox: false}, 
+            React.createElement(TableRow, null, 
+              React.createElement(TableHeaderColumn, {tooltip: "Software"}, "Software"), 
+              React.createElement(TableHeaderColumn, {tooltip: "Model compatibility"}, "Model compatibility"), 
+              React.createElement(TableHeaderColumn, {tooltip: "Description"}, "Description"), 
+              React.createElement(TableHeaderColumn, {tooltip: ""}, "Actions")
+            )
+          ), 
+          React.createElement(TableBody, {
+            displayRowCheckbox: false}, 
+            items
+          )
+        ), 
+        React.createElement("div", {className: "margin-top"}, 
+          React.createElement(RaisedButton, {onClick: this.dialogOpen.bind(null, 'upload'), label: "Upload a new image", primary: true})
+        ), 
+
+        React.createElement(Dialog, {
+          ref: "upload", 
+          title: "Upload a new image", 
+          autoDetectWindowHeight: true, 
+          autoScrollBodyContent: true, 
+          actions: uploadActions
+          }, 
+          React.createElement("div", {style: {height: '400px'}}, 
+            React.createElement("form", null, 
+
+              React.createElement(TextField, {
+                hintText: "Identifier", 
+                floatingLabelText: "Identifier", 
+                onChange: this._handleFieldChange.bind(null, 'name')}), 
+
+              React.createElement("p", null, React.createElement("input", {type: "file"})), 
+
+              React.createElement(TextField, {
+                value: "Acme Model 1", 
+                floatingLabelText: "Model compatibility", 
+                onChange: this._handleFieldChange.bind(null, 'model')}), 
+
+              React.createElement(TextField, {
+                hintText: "Description", 
+                floatingLabelText: "Description", 
+                multiLine: true, 
+                style: {display:"block"}, 
+                onChange: this._handleFieldChange.bind(null, 'description')})
+            )
+          )
+        )
+
+      )
+    );
+  }
+});
+
+module.exports = Repository;
+
+},{"../../actions/app-actions":364,"../../stores/app-store":381,"./updatebutton.js":375,"material-ui":43,"react":363,"react-router":173}],374:[function(require,module,exports){
+var React = require('react');
+var AppStore = require('../../stores/app-store');
+
+var Installed = require('./installed.js');
+var Repository = require('./repository.js');
+
+var mui = require('material-ui');
+var Tabs = mui.Tabs;
+var Tab = mui.Tab;
+
+var styles = {
+  tabs: {
+    backgroundColor: "#fff",
+    color: "#414141",
+  },
+  inkbar: {
+    backgroundColor: "#5d0f43",
+  }
+};
+
+function getState() {
+  return {
+    installed: AppStore.getSoftwareInstalled(),
+    repo: AppStore.getSoftwareRepo()
+  }
+}
+
+var Software = React.createClass({displayName: "Software",
+  getInitialState: function() {
+    return getState()
+  },
+  componentWillMount: function() {
+    AppStore.changeListener(this._onChange);
+  },
+  _onChange: function() {
+    this.setState(getState());
+    console.log("change", this.state.installed);
+  },
+  render: function() {
+  
+    return (
+      React.createElement("div", null, 
+         React.createElement(Tabs, {
+          tabItemContainerStyle: {width: "33%"}, 
+          inkBarStyle: styles.inkbar}, 
+          React.createElement(Tab, {key: 1, 
+          style: styles.tabs, 
+          label: "Installed"}, 
+            React.createElement(Installed, {software: this.state.installed})
+
+          ), 
+
+          React.createElement(Tab, {key: 2, 
+          style: styles.tabs, 
+          label: "Image repository"}, 
+            React.createElement(Repository, {software: this.state.repo})
+          )
+        )
       )
     );
   }
@@ -45721,7 +46018,24 @@ var Software = React.createClass({displayName: "Software",
 
 module.exports = Software;
 
-},{"react":363}],373:[function(require,module,exports){
+},{"../../stores/app-store":381,"./installed.js":372,"./repository.js":373,"material-ui":43,"react":363}],375:[function(require,module,exports){
+var React = require('react');
+
+// material ui
+var mui = require('material-ui');
+var RaisedButton = mui.RaisedButton;
+
+var UpdateButton = React.createClass({displayName: "UpdateButton",
+  render: function() {
+    return (
+      React.createElement(RaisedButton, {label: "Schedule update "})
+    );
+  }
+});
+
+module.exports = UpdateButton;
+
+},{"material-ui":43,"react":363}],376:[function(require,module,exports){
 var React = require('react');
 
 var Updates = React.createClass({displayName: "Updates",
@@ -45736,7 +46050,7 @@ var Updates = React.createClass({displayName: "Updates",
 
 module.exports = Updates;
 
-},{"react":363}],374:[function(require,module,exports){
+},{"react":363}],377:[function(require,module,exports){
 var React = require('react');
 
 var App = require('../components/app');
@@ -45753,21 +46067,22 @@ var Route = Router.Route;
 
 module.exports = (
   React.createElement(Route, {name: "app", path: "/", handler: App}, 
-    React.createElement(DefaultRoute, {handler: Dashboard}), 
+    React.createElement(DefaultRoute, {name: "dashboard", handler: Dashboard}), 
     React.createElement(Route, {name: "updates", path: "/updates", handler: Updates}), 
     React.createElement(Route, {name: "nodes", path: "/nodes", handler: Nodes}), 
     React.createElement(Route, {name: "software", path: "/software", handler: Software})
   )
 );  
 
-},{"../components/app":365,"../components/dashboard/dashboard":366,"../components/nodes/nodes":370,"../components/software/software":372,"../components/updates/updates":373,"react":363,"react-router":173}],375:[function(require,module,exports){
+},{"../components/app":365,"../components/dashboard/dashboard":366,"../components/nodes/nodes":370,"../components/software/software":374,"../components/updates/updates":376,"react":363,"react-router":173}],378:[function(require,module,exports){
 module.exports = {
   SELECT_GROUP: 'SELECT_GROUP',
   ADD_TO_GROUP: 'ADD_TO_GROUP',
-  REMOVE_FROM_GROUP: 'REMOVE_FROM_GROUP'
+  REMOVE_FROM_GROUP: 'REMOVE_FROM_GROUP',
+  UPLOAD_IMAGE: 'UPLOAD_IMAGE'
 }
 
-},{}],376:[function(require,module,exports){
+},{}],379:[function(require,module,exports){
 var Dispatcher = require('flux').Dispatcher;
 var assign = require('react/lib/Object.assign');
 
@@ -45782,7 +46097,7 @@ var AppDispatcher = assign(new Dispatcher(), {
 
 module.exports = AppDispatcher;
 
-},{"flux":4,"react/lib/Object.assign":219}],377:[function(require,module,exports){
+},{"flux":4,"react/lib/Object.assign":219}],380:[function(require,module,exports){
 var React = require('react');
 var Router = require('react-router');
 var routes = require('./config/routes');
@@ -45800,7 +46115,7 @@ Router.run(routes, function(Root) {
   React.render(React.createElement(Root, null), document.getElementById('main'));
 });
 
-},{"./config/routes":374,"react":363,"react-router":173,"react-tap-event-plugin":190}],378:[function(require,module,exports){
+},{"./config/routes":377,"react":363,"react-router":173,"react-tap-event-plugin":190}],381:[function(require,module,exports){
 var AppDispatcher = require('../dispatchers/app-dispatcher');
 var AppConstants = require('../constants/app-constants');
 var assign = require('react/lib/Object.assign');
@@ -45811,7 +46126,6 @@ var CHANGE_EVENT = "change";
 var _currentGroup = [];
 var _currentNodes = [];
 var _selectedNodes = [];
-var _showSnack = false;
 
 /* TEMP LOCAL GROUPS */
 var _groups = [
@@ -45919,9 +46233,10 @@ _selectGroup(_groups[0].id);
 
 function _selectGroup(id) {
   _selectedNodes = [];
+  //console.log(id, _groups);
   if (id) {
-    _currentGroup = _getGroupById(id).id;
-    _getCurrentNodes(_currentGroup);
+    _currentGroup = _getGroupById(id);
+    _getCurrentNodes(_currentGroup.id);
   }
 }
 
@@ -45932,6 +46247,17 @@ function _getGroupById(id) {
     }
   }
   return;
+}
+
+function _addNewGroup(group, nodes) {
+  var tmpGroup = group;
+  for (var i=0;i<nodes.length;i++) {
+    tmpGroup.nodes.push(nodes[i].id);
+  }
+  tmpGroup.id = _groups.length+1;
+  var idnew = _groups.length+1;
+  _groups.push(tmpGroup);
+  _selectGroup(_groups.length);
 }
 
 function _getNodeById(nodeId) {
@@ -45964,23 +46290,73 @@ function _selectNodes(nodePositions) {
   }
 }
 
-function _addToGroup(id, nodes) {
+function _addToGroup(group, nodes) {
+  var tmpGroup = group;
 
-  var tmpGroup = _getGroupById(id);
-  
-  for (var i=0; i<nodes.length;i++) {
-    if (tmpGroup.nodes.indexOf(nodes[i].id)===-1) {
-      tmpGroup.nodes.push(nodes[i].id);
+  if (tmpGroup.id) {
+    for (var i=0; i<nodes.length;i++) {
+      if (tmpGroup.nodes.indexOf(nodes[i].id)===-1) {
+        tmpGroup.nodes.push(nodes[i].id);
+      }
+      else {
+        tmpGroup.nodes.splice(tmpGroup.nodes.indexOf(nodes[i].id),1);
+      }
     }
-    else {
-      tmpGroup.nodes.splice(tmpGroup.nodes.indexOf(nodes[i].id),1);
+
+    var idx = findWithAttr(_groups, 'id', tmpGroup.id);
+    _groups[idx] = tmpGroup;
+    _getCurrentNodes(tmpGroup.id);
+
+    // TODO - delete if empty group?
+
+  } else if (nodes.length) {
+    // New group
+    _addNewGroup(group, nodes);
+    // TODO - go through nodes and add group
+  }
+}
+
+
+
+
+// SOFTWARE
+var _softwareInstalled = [];
+var _softwareRepo = [
+  {
+    id: 1,
+    name: "Version 1.1",
+    model: "Acme Model 1",
+    description: "Version 1.1 fixes bug #243 for Acme Model 1"
+  }
+];
+discoverSoftware();
+
+function discoverSoftware() {
+  _softwareInstalled = []
+  var unique = {};
+
+  for (var i=0; i<_allnodes.length; i++) {
+    if (typeof(unique[_allnodes[i].software_version]) == "undefined") {
+      unique[_allnodes[i].software_version] = 0;
     }
+    unique[_allnodes[i].software_version]++;
   }
 
-  var idx = findWithAttr(_groups, id, tmpGroup.id);
-  _groups[idx] = tmpGroup;
-  _getCurrentNodes(id);
+  for (val in unique) {
+    var idx = findWithAttr(_softwareRepo, 'name', val);
+    var software = _softwareRepo[idx];
+    software.nodes = unique[val];
+    _softwareInstalled.push(software);
+  }
 }
+
+function _uploadImage(image) {
+  image.id = _softwareRepo.length+1;
+  _softwareRepo.push(image);
+  console.log(_softwareRepo);
+}
+
+
 
 
 
@@ -46021,6 +46397,15 @@ var AppStore = assign(EventEmitter.prototype, {
     return _selectedNodes
   },
 
+
+  getSoftwareInstalled: function() {
+    return _softwareInstalled
+  },
+
+  getSoftwareRepo: function() {
+    return _softwareRepo
+  },
+
   dispatcherIndex: AppDispatcher.register(function(payload) {
     var action = payload.action;
     switch(action.actionType) {
@@ -46031,7 +46416,10 @@ var AppStore = assign(EventEmitter.prototype, {
         _selectNodes(payload.action.nodes);
         break;
       case AppConstants.ADD_TO_GROUP:
-        _addToGroup(payload.action.groupId, payload.action.nodes);
+        _addToGroup(payload.action.group, payload.action.nodes);
+        break;
+      case AppConstants.UPLOAD_IMAGE:
+        _uploadImage(payload.action.image);
         break;
     }
     
@@ -46043,4 +46431,4 @@ var AppStore = assign(EventEmitter.prototype, {
 
 module.exports = AppStore;
 
-},{"../constants/app-constants":375,"../dispatchers/app-dispatcher":376,"events":1,"react/lib/Object.assign":219}]},{},[377]);
+},{"../constants/app-constants":378,"../dispatchers/app-dispatcher":379,"events":1,"react/lib/Object.assign":219}]},{},[380]);

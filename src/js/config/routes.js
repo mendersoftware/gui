@@ -14,7 +14,7 @@ var Route = Router.Route;
 
 module.exports = (
   <Route name="app" path="/" handler={App}>
-    <DefaultRoute handler={Dashboard} />
+    <DefaultRoute name="dashboard" handler={Dashboard} />
     <Route name="updates" path="/updates" handler={Updates} />
     <Route name="nodes" path="/nodes" handler={Nodes} />
     <Route name="software" path="/software" handler={Software} />

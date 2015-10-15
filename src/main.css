@@ -5,6 +5,12 @@ body {
 body {
   font-family: Roboto;
 }
+.hidden {
+  display: none !important;
+}
+.margin-top {
+  margin-top: 30px;
+}
 /* Header */
 #header-nav {
   margin-left: 220px;

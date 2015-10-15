@@ -10,7 +10,7 @@ function getState() {
     groups: AppStore.getGroups(),
     selectedGroup: AppStore.getSelectedGroup(),
     nodes: AppStore.getNodes(),
-    selectedNodes: AppStore.getSelectedNodes(),
+    selectedNodes: AppStore.getSelectedNodes()
   }
 }
 
@@ -31,6 +31,7 @@ var Nodes = React.createClass({
           <Groups groups={this.state.groups} selectedGroup={this.state.selectedGroup} />
         </div>
         <div className="rightFluid">
+          <h4>{this.state.selectedGroup.name}</h4>
           <NodeList nodes={this.state.nodes} />
           <SelectedNodes selected={this.state.selectedNodes} selectedGroup={this.state.selectedGroup} groups={this.state.groups} />
         </div>

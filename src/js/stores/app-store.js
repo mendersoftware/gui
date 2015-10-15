@@ -8,7 +8,6 @@ var CHANGE_EVENT = "change";
 var _currentGroup = [];
 var _currentNodes = [];
 var _selectedNodes = [];
-var _showSnack = false;
 
 /* TEMP LOCAL GROUPS */
 var _groups = [
@@ -116,9 +115,10 @@ _selectGroup(_groups[0].id);
 
 function _selectGroup(id) {
   _selectedNodes = [];
+  //console.log(id, _groups);
   if (id) {
-    _currentGroup = _getGroupById(id).id;
-    _getCurrentNodes(_currentGroup);
+    _currentGroup = _getGroupById(id);
+    _getCurrentNodes(_currentGroup.id);
   }
 }
 
@@ -129,6 +129,17 @@ function _getGroupById(id) {
     }
   }
   return;
+}
+
+function _addNewGroup(group, nodes) {
+  var tmpGroup = group;
+  for (var i=0;i<nodes.length;i++) {
+    tmpGroup.nodes.push(nodes[i].id);
+  }
+  tmpGroup.id = _groups.length+1;
+  var idnew = _groups.length+1;
+  _groups.push(tmpGroup);
+  _selectGroup(_groups.length);
 }
 
 function _getNodeById(nodeId) {
@@ -161,23 +172,73 @@ function _selectNodes(nodePositions) {
   }
 }
 
-function _addToGroup(id, nodes) {
+function _addToGroup(group, nodes) {
+  var tmpGroup = group;
 
-  var tmpGroup = _getGroupById(id);
-  
-  for (var i=0; i<nodes.length;i++) {
-    if (tmpGroup.nodes.indexOf(nodes[i].id)===-1) {
-      tmpGroup.nodes.push(nodes[i].id);
+  if (tmpGroup.id) {
+    for (var i=0; i<nodes.length;i++) {
+      if (tmpGroup.nodes.indexOf(nodes[i].id)===-1) {
+        tmpGroup.nodes.push(nodes[i].id);
+      }
+      else {
+        tmpGroup.nodes.splice(tmpGroup.nodes.indexOf(nodes[i].id),1);
+      }
     }
-    else {
-      tmpGroup.nodes.splice(tmpGroup.nodes.indexOf(nodes[i].id),1);
+
+    var idx = findWithAttr(_groups, 'id', tmpGroup.id);
+    _groups[idx] = tmpGroup;
+    _getCurrentNodes(tmpGroup.id);
+
+    // TODO - delete if empty group?
+
+  } else if (nodes.length) {
+    // New group
+    _addNewGroup(group, nodes);
+    // TODO - go through nodes and add group
+  }
+}
+
+
+
+
+// SOFTWARE
+var _softwareInstalled = [];
+var _softwareRepo = [
+  {
+    id: 1,
+    name: "Version 1.1",
+    model: "Acme Model 1",
+    description: "Version 1.1 fixes bug #243 for Acme Model 1"
+  }
+];
+discoverSoftware();
+
+function discoverSoftware() {
+  _softwareInstalled = []
+  var unique = {};
+
+  for (var i=0; i<_allnodes.length; i++) {
+    if (typeof(unique[_allnodes[i].software_version]) == "undefined") {
+      unique[_allnodes[i].software_version] = 0;
     }
+    unique[_allnodes[i].software_version]++;
   }
 
-  var idx = findWithAttr(_groups, id, tmpGroup.id);
-  _groups[idx] = tmpGroup;
-  _getCurrentNodes(id);
+  for (val in unique) {
+    var idx = findWithAttr(_softwareRepo, 'name', val);
+    var software = _softwareRepo[idx];
+    software.nodes = unique[val];
+    _softwareInstalled.push(software);
+  }
 }
+
+function _uploadImage(image) {
+  image.id = _softwareRepo.length+1;
+  _softwareRepo.push(image);
+  console.log(_softwareRepo);
+}
+
+
 
 
 
@@ -218,6 +279,15 @@ var AppStore = assign(EventEmitter.prototype, {
     return _selectedNodes
   },
 
+
+  getSoftwareInstalled: function() {
+    return _softwareInstalled
+  },
+
+  getSoftwareRepo: function() {
+    return _softwareRepo
+  },
+
   dispatcherIndex: AppDispatcher.register(function(payload) {
     var action = payload.action;
     switch(action.actionType) {
@@ -228,7 +298,10 @@ var AppStore = assign(EventEmitter.prototype, {
         _selectNodes(payload.action.nodes);
         break;
       case AppConstants.ADD_TO_GROUP:
-        _addToGroup(payload.action.groupId, payload.action.nodes);
+        _addToGroup(payload.action.group, payload.action.nodes);
+        break;
+      case AppConstants.UPLOAD_IMAGE:
+        _uploadImage(payload.action.image);
         break;
     }
     

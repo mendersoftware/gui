@@ -18,11 +18,18 @@ var AppActions = {
     })
   },
 
-  addToGroup: function(groupId, nodeList) {
+  addToGroup: function(group, nodeList) {
     AppDispatcher.handleViewAction({
       actionType: AppConstants.ADD_TO_GROUP,
-      groupId: groupId,
+      group: group,
       nodes: nodeList
+    })
+  },
+
+  uploadImage: function(image) {
+    AppDispatcher.handleViewAction({
+      actionType: AppConstants.UPLOAD_IMAGE,
+      image: image
     })
   },
   
