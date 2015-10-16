@@ -115,7 +115,7 @@ _selectGroup(_groups[0].id);
 
 function _selectGroup(id) {
   _selectedDevices = [];
-  //console.log(id, _groups);
+
   if (id) {
     _currentGroup = _getGroupById(id);
     _getCurrentDevices(_currentGroup.id);
@@ -172,6 +172,24 @@ function _selectDevices(devicePositions) {
   }
 }
 
+function _getDevices(group, model) {
+  // get group id from name
+  var index = findWithAttr(_groups, 'name', group);
+  var groupId = _groups[index].id;
+
+  var deviceCount = 0;
+  for (var i=0; i<_alldevices.length; i++) {
+    if (_alldevices[i].model===model) {
+      for (var x=0; x<_alldevices[i].groups.length;x++) {
+        if (_alldevices[i].groups[x]===groupId) {
+          deviceCount++;
+        }
+      }
+    }
+  }
+  return deviceCount;
+}
+
 function _addToGroup(group, devices) {
   var tmpGroup = group;
 
@@ -206,10 +224,16 @@ var _softwareInstalled = [];
 var _softwareRepo = [
   {
     id: 1,
+    name: "Version 1.0",
+    model: "Acme Model 1",
+    description: "Version 1.0 stable for Acme Model 1"
+  },
+  {
+    id: 2,
     name: "Version 1.1",
     model: "Acme Model 1",
     description: "Version 1.1 fixes bug #243 for Acme Model 1"
-  }
+  },
 ];
 discoverSoftware();
 
@@ -235,7 +259,6 @@ function discoverSoftware() {
 function _uploadImage(image) {
   image.id = _softwareRepo.length+1;
   _softwareRepo.push(image);
-  console.log(_softwareRepo);
 }
 
 
@@ -244,6 +267,54 @@ function _uploadImage(image) {
 var _updates = [];
 var _schedule = [];
 var _events = [];
+
+var _updates = [
+  {
+    id: 1,
+    group: "Test",
+    model: "Acme Model 1",
+    software_version: "Version 1.1",
+    start_time: 1446383576000,
+    end_time: 1446387176000,
+    status: null,
+  },
+  {
+    id: 2,
+    group: "Development",
+    model: "Acme Model 1",
+    software_version: "Version 1.1",
+    start_time: 1446297176000,
+    end_time: 1446300776000,
+    status: null ,
+  },
+   {
+    id: 3,
+    group: "Production",
+    model: "Acme Model 1",
+    software_version: "Version 1.1",
+    start_time: 1444309976000,
+    end_time: 1444396376000,
+    status: "Complete",
+  },
+  {
+    id: 4,
+    group: "Test",
+    model: "Acme Model 1",
+    software_version: "Version 1.0",
+    start_time: 1443708776000,
+    end_time: 1443709971000,
+    status: "Complete",
+  },
+  {
+    id: 5,
+    group: "Test",
+    model: "Acme Model 1",
+    software_version: "Version 1.0",
+    start_time: 1443705176000,
+    end_time: 1443708776000,
+    status: "Failed",
+  },
+];
 
 
 function findWithAttr(array, attr, value) {
@@ -260,6 +331,7 @@ function statusSort(a,b) {
 
 var AppStore = assign(EventEmitter.prototype, {
   emitChange: function() {
+    console.log("change ");
     this.emit(CHANGE_EVENT)
   },
 
@@ -302,7 +374,11 @@ var AppStore = assign(EventEmitter.prototype, {
 
   getEventLog: function() {
     return _events
-  }, 
+  },
+
+  getDevicesFromParams: function(group, model) {
+    return _getDevices(group, model)
+  },
 
   dispatcherIndex: AppDispatcher.register(function(payload) {
     var action = payload.action;
@@ -318,7 +394,7 @@ var AppStore = assign(EventEmitter.prototype, {
         break;
       case AppConstants.UPLOAD_IMAGE:
         _uploadImage(payload.action.image);
-        break;
+        break;     
     }
     
     AppStore.emitChange();

@@ -23,7 +23,8 @@ function getState() {
   return {
     updates: AppStore.getRecentUpdates(),
     schedule: AppStore.getScheduledUpdates(),
-    events: AppStore.getEventLog()
+    events: AppStore.getEventLog(),
+    groups: AppStore.getGroups()
   }
 }
 
@@ -46,7 +47,7 @@ var Updates = React.createClass({
           <Tab key={1}
           style={styles.tabs}
           label={"Updates"}>
-            <Recent updates={this.state.updates} />
+            <Recent groups={this.state.groups} updates={this.state.updates} />
 
           </Tab>
 
