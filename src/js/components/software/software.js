@@ -34,7 +34,6 @@ var Software = React.createClass({
   },
   _onChange: function() {
     this.setState(getState());
-    console.log("change", this.state.installed);
   },
   render: function() {
   

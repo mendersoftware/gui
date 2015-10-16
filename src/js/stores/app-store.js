@@ -240,6 +240,10 @@ function _uploadImage(image) {
 
 
 
+// UPDATES
+var _updates = [];
+var _schedule = [];
+var _events = [];
 
 
 function findWithAttr(array, attr, value) {
@@ -287,6 +291,18 @@ var AppStore = assign(EventEmitter.prototype, {
   getSoftwareRepo: function() {
     return _softwareRepo
   },
+
+  getRecentUpdates: function() {
+    return _updates
+  }, 
+
+  getScheduledUpdates: function() {
+    return _schedule
+  }, 
+
+  getEventLog: function() {
+    return _events
+  }, 
 
   dispatcherIndex: AppDispatcher.register(function(payload) {
     var action = payload.action;

@@ -45333,7 +45333,7 @@ var AppActions = {
 
 module.exports = AppActions;
 
-},{"../constants/app-constants":378,"../dispatchers/app-dispatcher":379}],365:[function(require,module,exports){
+},{"../constants/app-constants":381,"../dispatchers/app-dispatcher":382}],365:[function(require,module,exports){
 var React = require('react');
 var Router = require('react-router');
 var RouteHandler = Router.RouteHandler;
@@ -45449,7 +45449,7 @@ var DeviceList = React.createClass({displayName: "DeviceList",
 
 module.exports = DeviceList;
 
-},{"../../actions/app-actions":364,"../../stores/app-store":381,"material-ui":43,"react":363}],368:[function(require,module,exports){
+},{"../../actions/app-actions":364,"../../stores/app-store":384,"material-ui":43,"react":363}],368:[function(require,module,exports){
 var React = require('react');
 var AppStore = require('../../stores/app-store');
 
@@ -45494,7 +45494,7 @@ var Devices = React.createClass({displayName: "Devices",
 
 module.exports = Devices;
 
-},{"../../stores/app-store":381,"./devicelist":367,"./groups":369,"./selecteddevices":370,"react":363}],369:[function(require,module,exports){
+},{"../../stores/app-store":384,"./devicelist":367,"./groups":369,"./selecteddevices":370,"react":363}],369:[function(require,module,exports){
 var React = require('react');
 var AppStore = require('../../stores/app-store');
 var AppActions = require('../../actions/app-actions');
@@ -45530,7 +45530,7 @@ var Groups = React.createClass({displayName: "Groups",
 
 module.exports = Groups;
 
-},{"../../actions/app-actions":364,"../../stores/app-store":381,"material-ui":43,"react":363}],370:[function(require,module,exports){
+},{"../../actions/app-actions":364,"../../stores/app-store":384,"material-ui":43,"react":363}],370:[function(require,module,exports){
 var React = require('react');
 var AppStore = require('../../stores/app-store');
 var AppActions = require('../../actions/app-actions');
@@ -45719,7 +45719,7 @@ var SelectedDevices = React.createClass({displayName: "SelectedDevices",
 
 module.exports = SelectedDevices;
 
-},{"../../actions/app-actions":364,"../../stores/app-store":381,"material-ui":43,"react":363}],371:[function(require,module,exports){
+},{"../../actions/app-actions":364,"../../stores/app-store":384,"material-ui":43,"react":363}],371:[function(require,module,exports){
 var React = require('react');
 var mui = require('material-ui');
 var Router = require('react-router');
@@ -45952,7 +45952,7 @@ var Repository = React.createClass({displayName: "Repository",
 
 module.exports = Repository;
 
-},{"../../actions/app-actions":364,"../../stores/app-store":381,"./updatebutton.js":375,"material-ui":43,"react":363,"react-router":173}],374:[function(require,module,exports){
+},{"../../actions/app-actions":364,"../../stores/app-store":384,"./updatebutton.js":375,"material-ui":43,"react":363,"react-router":173}],374:[function(require,module,exports){
 var React = require('react');
 var AppStore = require('../../stores/app-store');
 
@@ -45989,7 +45989,6 @@ var Software = React.createClass({displayName: "Software",
   },
   _onChange: function() {
     this.setState(getState());
-    console.log("change", this.state.installed);
   },
   render: function() {
   
@@ -46018,7 +46017,7 @@ var Software = React.createClass({displayName: "Software",
 
 module.exports = Software;
 
-},{"../../stores/app-store":381,"./installed.js":372,"./repository.js":373,"material-ui":43,"react":363}],375:[function(require,module,exports){
+},{"../../stores/app-store":384,"./installed.js":372,"./repository.js":373,"material-ui":43,"react":363}],375:[function(require,module,exports){
 var React = require('react');
 
 // material ui
@@ -46038,11 +46037,119 @@ module.exports = UpdateButton;
 },{"material-ui":43,"react":363}],376:[function(require,module,exports){
 var React = require('react');
 
+// material ui
+var mui = require('material-ui');
+
+
+var EventLog = React.createClass({displayName: "EventLog",
+  render: function() {
+    return (
+      React.createElement("div", null)
+    );
+  }
+});
+
+module.exports = EventLog;
+
+},{"material-ui":43,"react":363}],377:[function(require,module,exports){
+var React = require('react');
+
+// material ui
+var mui = require('material-ui');
+
+
+var Recent = React.createClass({displayName: "Recent",
+  render: function() {
+    return (
+      React.createElement("div", null)
+    );
+  }
+});
+
+module.exports = Recent;
+
+},{"material-ui":43,"react":363}],378:[function(require,module,exports){
+var React = require('react');
+
+// material ui
+var mui = require('material-ui');
+
+
+var Schedule = React.createClass({displayName: "Schedule",
+  render: function() {
+    return (
+      React.createElement("div", null)
+    );
+  }
+});
+
+module.exports = Schedule;
+
+},{"material-ui":43,"react":363}],379:[function(require,module,exports){
+var React = require('react');
+var AppStore = require('../../stores/app-store');
+
+var Recent = require('./recentupdates.js');
+var Schedule = require('./schedule.js');
+var EventLog = require('./eventlog.js');
+
+var mui = require('material-ui');
+var Tabs = mui.Tabs;
+var Tab = mui.Tab;
+
+var styles = {
+  tabs: {
+    backgroundColor: "#fff",
+    color: "#414141",
+  },
+  inkbar: {
+    backgroundColor: "#5d0f43",
+  }
+};
+
+function getState() {
+  return {
+    updates: AppStore.getRecentUpdates(),
+    schedule: AppStore.getScheduledUpdates(),
+    events: AppStore.getEventLog()
+  }
+}
+
 var Updates = React.createClass({displayName: "Updates",
+  getInitialState: function() {
+    return getState()
+  },
+  componentWillMount: function() {
+    AppStore.changeListener(this._onChange);
+  },
+  _onChange: function() {
+    this.setState(getState());
+  },
   render: function() {
     return (
       React.createElement("div", null, 
-        "Updates"
+         React.createElement(Tabs, {
+          tabItemContainerStyle: {width: "33%"}, 
+          inkBarStyle: styles.inkbar}, 
+          React.createElement(Tab, {key: 1, 
+          style: styles.tabs, 
+          label: "Updates"}, 
+            React.createElement(Recent, {updates: this.state.updates})
+
+          ), 
+
+          React.createElement(Tab, {key: 2, 
+          style: styles.tabs, 
+          label: "Schedule"}, 
+            React.createElement(Schedule, {updates: this.state.schedule})
+          ), 
+
+          React.createElement(Tab, {key: 3, 
+          style: styles.tabs, 
+          label: "Event log"}, 
+            React.createElement(EventLog, {events: this.state.events})
+          )
+        )
       )
     );
   }
@@ -46050,7 +46157,7 @@ var Updates = React.createClass({displayName: "Updates",
 
 module.exports = Updates;
 
-},{"react":363}],377:[function(require,module,exports){
+},{"../../stores/app-store":384,"./eventlog.js":376,"./recentupdates.js":377,"./schedule.js":378,"material-ui":43,"react":363}],380:[function(require,module,exports){
 var React = require('react');
 
 var App = require('../components/app');
@@ -46074,7 +46181,7 @@ module.exports = (
   )
 );  
 
-},{"../components/app":365,"../components/dashboard/dashboard":366,"../components/devices/devices":368,"../components/software/software":374,"../components/updates/updates":376,"react":363,"react-router":173}],378:[function(require,module,exports){
+},{"../components/app":365,"../components/dashboard/dashboard":366,"../components/devices/devices":368,"../components/software/software":374,"../components/updates/updates":379,"react":363,"react-router":173}],381:[function(require,module,exports){
 module.exports = {
   SELECT_GROUP: 'SELECT_GROUP',
   ADD_TO_GROUP: 'ADD_TO_GROUP',
@@ -46082,7 +46189,7 @@ module.exports = {
   UPLOAD_IMAGE: 'UPLOAD_IMAGE'
 }
 
-},{}],379:[function(require,module,exports){
+},{}],382:[function(require,module,exports){
 var Dispatcher = require('flux').Dispatcher;
 var assign = require('react/lib/Object.assign');
 
@@ -46097,7 +46204,7 @@ var AppDispatcher = assign(new Dispatcher(), {
 
 module.exports = AppDispatcher;
 
-},{"flux":4,"react/lib/Object.assign":219}],380:[function(require,module,exports){
+},{"flux":4,"react/lib/Object.assign":219}],383:[function(require,module,exports){
 var React = require('react');
 var Router = require('react-router');
 var routes = require('./config/routes');
@@ -46115,7 +46222,7 @@ Router.run(routes, function(Root) {
   React.render(React.createElement(Root, null), document.getElementById('main'));
 });
 
-},{"./config/routes":377,"react":363,"react-router":173,"react-tap-event-plugin":190}],381:[function(require,module,exports){
+},{"./config/routes":380,"react":363,"react-router":173,"react-tap-event-plugin":190}],384:[function(require,module,exports){
 var AppDispatcher = require('../dispatchers/app-dispatcher');
 var AppConstants = require('../constants/app-constants');
 var assign = require('react/lib/Object.assign');
@@ -46358,6 +46465,10 @@ function _uploadImage(image) {
 
 
 
+// UPDATES
+var _updates = [];
+var _schedule = [];
+var _events = [];
 
 
 function findWithAttr(array, attr, value) {
@@ -46406,6 +46517,18 @@ var AppStore = assign(EventEmitter.prototype, {
     return _softwareRepo
   },
 
+  getRecentUpdates: function() {
+    return _updates
+  }, 
+
+  getScheduledUpdates: function() {
+    return _schedule
+  }, 
+
+  getEventLog: function() {
+    return _events
+  }, 
+
   dispatcherIndex: AppDispatcher.register(function(payload) {
     var action = payload.action;
     switch(action.actionType) {
@@ -46431,4 +46554,4 @@ var AppStore = assign(EventEmitter.prototype, {
 
 module.exports = AppStore;
 
-},{"../constants/app-constants":378,"../dispatchers/app-dispatcher":379,"events":1,"react/lib/Object.assign":219}]},{},[380]);
+},{"../constants/app-constants":381,"../dispatchers/app-dispatcher":382,"events":1,"react/lib/Object.assign":219}]},{},[383]);
