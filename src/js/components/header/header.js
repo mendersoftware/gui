@@ -10,7 +10,7 @@ var Tab = mui.Tab;
 var menuItems = [
   {route:"/", text:"Dashboard"},
   {route:"/updates", text:"Updates"},
-  {route:"/nodes", text:"Nodes"},
+  {route:"/devices", text:"Devices"},
   {route:"/software", text:"Software"}
 ];
 

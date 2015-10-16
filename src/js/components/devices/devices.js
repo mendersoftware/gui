@@ -2,19 +2,19 @@ var React = require('react');
 var AppStore = require('../../stores/app-store');
 
 var Groups = require('./groups');
-var NodeList = require('./nodelist');
-var SelectedNodes = require('./selectednodes');
+var DeviceList = require('./devicelist');
+var SelectedDevices = require('./selecteddevices');
 
 function getState() {
   return {
     groups: AppStore.getGroups(),
     selectedGroup: AppStore.getSelectedGroup(),
-    nodes: AppStore.getNodes(),
-    selectedNodes: AppStore.getSelectedNodes()
+    devices: AppStore.getDevices(),
+    selectedDevices: AppStore.getSelectedDevices()
   }
 }
 
-var Nodes = React.createClass({
+var Devices = React.createClass({
   getInitialState: function() {
     return getState()
   },
@@ -32,12 +32,12 @@ var Nodes = React.createClass({
         </div>
         <div className="rightFluid">
           <h4>{this.state.selectedGroup.name}</h4>
-          <NodeList nodes={this.state.nodes} />
-          <SelectedNodes selected={this.state.selectedNodes} selectedGroup={this.state.selectedGroup} groups={this.state.groups} />
+          <DeviceList devices={this.state.devices} />
+          <SelectedDevices selected={this.state.selectedDevices} selectedGroup={this.state.selectedGroup} groups={this.state.groups} />
         </div>
       </div>
     );
   }
 });
 
-module.exports = Nodes;
+module.exports = Devices;

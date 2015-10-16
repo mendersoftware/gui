@@ -45307,18 +45307,18 @@ var AppActions = {
     })
   },
 
-  selectNodes: function(nodeList) {
+  selectDevices: function(deviceList) {
     AppDispatcher.handleViewAction({
-      actionType: AppConstants.SELECT_NODES,
-      nodes: nodeList
+      actionType: AppConstants.SELECT_DEVICES,
+      devices: deviceList
     })
   },
 
-  addToGroup: function(group, nodeList) {
+  addToGroup: function(group, deviceList) {
     AppDispatcher.handleViewAction({
       actionType: AppConstants.ADD_TO_GROUP,
       group: group,
-      nodes: nodeList
+      devices: deviceList
     })
   },
 
@@ -45368,7 +45368,7 @@ var App = React.createClass({displayName: "App",
 
 module.exports = App;
 
-},{"./header/header":367,"material-ui":43,"material-ui/lib/styles/raw-themes/light-raw-theme":81,"material-ui/lib/styles/theme-manager":84,"react":363,"react-router":173}],366:[function(require,module,exports){
+},{"./header/header":371,"material-ui":43,"material-ui/lib/styles/raw-themes/light-raw-theme":81,"material-ui/lib/styles/theme-manager":84,"react":363,"react-router":173}],366:[function(require,module,exports){
 var React = require('react');
 
 var Dashboard = React.createClass({displayName: "Dashboard",
@@ -45385,6 +45385,342 @@ module.exports = Dashboard;
 
 },{"react":363}],367:[function(require,module,exports){
 var React = require('react');
+var AppStore = require('../../stores/app-store');
+var AppActions = require('../../actions/app-actions');
+
+// material ui
+var mui = require('material-ui');
+var Table = mui.Table;
+var TableHeader = mui.TableHeader;
+var TableHeaderColumn = mui.TableHeaderColumn;
+var TableBody = mui.TableBody;
+var TableRow = mui.TableRow;
+var TableRowColumn = mui.TableRowColumn;
+
+var DeviceList = React.createClass({displayName: "DeviceList",
+  shouldComponentUpdate: function(nextProps, nextState) {
+    return nextProps.devices !== this.props.devices;
+  },
+  _onRowSelection: function(rows) {
+    if (rows === "all") {
+      rows = [];
+      for (var i=0; i<this.props.devices.length;i++) {
+        rows.push(i);
+      }
+    }
+    AppActions.selectDevices(rows);
+  },
+  _selectAll: function(rows) {
+    console.log("select all", rows);
+  },
+  render: function() {
+    var devices = this.props.devices.map(function(device) {
+      return (
+        React.createElement(TableRow, {key: device.id}, 
+          React.createElement(TableRowColumn, null, device.name), 
+          React.createElement(TableRowColumn, null, device.model), 
+          React.createElement(TableRowColumn, null, device.software_version), 
+          React.createElement(TableRowColumn, null, device.status)
+        )
+      )
+    })
+    return (
+      React.createElement(Table, {
+        onRowSelection: this._onRowSelection, 
+        multiSelectable: true}, 
+        React.createElement(TableHeader, {
+        enableSelectAll: true, 
+        onSelectAll: this._selectAll}, 
+          React.createElement(TableRow, null, 
+            React.createElement(TableHeaderColumn, {tooltip: "Name"}, "Name"), 
+            React.createElement(TableHeaderColumn, {tooltip: "Model"}, "Model"), 
+            React.createElement(TableHeaderColumn, {tooltip: "Installed software"}, "Software"), 
+            React.createElement(TableHeaderColumn, {tooltip: "Status"}, "Status")
+          )
+        ), 
+        React.createElement(TableBody, {
+          deselectOnClickaway: false}, 
+          devices
+        )
+      )
+    );
+  }
+});
+
+module.exports = DeviceList;
+
+},{"../../actions/app-actions":364,"../../stores/app-store":381,"material-ui":43,"react":363}],368:[function(require,module,exports){
+var React = require('react');
+var AppStore = require('../../stores/app-store');
+
+var Groups = require('./groups');
+var DeviceList = require('./devicelist');
+var SelectedDevices = require('./selecteddevices');
+
+function getState() {
+  return {
+    groups: AppStore.getGroups(),
+    selectedGroup: AppStore.getSelectedGroup(),
+    devices: AppStore.getDevices(),
+    selectedDevices: AppStore.getSelectedDevices()
+  }
+}
+
+var Devices = React.createClass({displayName: "Devices",
+  getInitialState: function() {
+    return getState()
+  },
+  componentWillMount: function() {
+    AppStore.changeListener(this._onChange);
+  },
+  _onChange: function() {
+    this.setState(getState());
+  },
+  render: function() {
+    return (
+      React.createElement("div", null, 
+       React.createElement("div", {className: "leftFixed"}, 
+          React.createElement(Groups, {groups: this.state.groups, selectedGroup: this.state.selectedGroup})
+        ), 
+        React.createElement("div", {className: "rightFluid"}, 
+          React.createElement("h4", null, this.state.selectedGroup.name), 
+          React.createElement(DeviceList, {devices: this.state.devices}), 
+          React.createElement(SelectedDevices, {selected: this.state.selectedDevices, selectedGroup: this.state.selectedGroup, groups: this.state.groups})
+        )
+      )
+    );
+  }
+});
+
+module.exports = Devices;
+
+},{"../../stores/app-store":381,"./devicelist":367,"./groups":369,"./selecteddevices":370,"react":363}],369:[function(require,module,exports){
+var React = require('react');
+var AppStore = require('../../stores/app-store');
+var AppActions = require('../../actions/app-actions');
+
+// material ui
+var mui = require('material-ui');
+var List = mui.List;
+var ListItem = mui.ListItem;
+
+var Groups = React.createClass({displayName: "Groups",
+  _changeGroup: function(id) {
+    AppActions.selectGroup(id);
+  },
+  render: function() {
+    return (
+      React.createElement(List, {subheader: "Groups"}, 
+        this.props.groups.map(function(group) {
+          var isSelected = group.id===this.props.selectedGroup.id ? {backgroundColor: "#e7e7e7"} : {backgroundColor: "transparent"};
+          var boundClick = this._changeGroup.bind(null, group.id);
+          return (
+            React.createElement(ListItem, {
+              key: group.id, 
+              primaryText: group.name, 
+              style: isSelected, 
+              onClick: boundClick})
+          )
+        }, this)
+      )
+    );
+  }
+});
+
+
+module.exports = Groups;
+
+},{"../../actions/app-actions":364,"../../stores/app-store":381,"material-ui":43,"react":363}],370:[function(require,module,exports){
+var React = require('react');
+var AppStore = require('../../stores/app-store');
+var AppActions = require('../../actions/app-actions');
+
+var mui = require('material-ui');
+var FlatButton = mui.FlatButton;
+var RaisedButton = mui.RaisedButton;
+var Dialog = mui.Dialog;
+var SelectField = mui.SelectField;
+var TextField = mui.TextField;
+var Snackbar = mui.Snackbar;
+
+var addSelection = {};
+
+var SelectedDevices = React.createClass({displayName: "SelectedDevices",
+  getInitialState: function() {
+    return {
+      showInput: false 
+    };
+  },
+  _onDismiss: function() {
+    console.log("gone");
+  },
+  _handleSelectValueChange: function(e) {
+    this.setState({showInput: false});
+
+    var group = '';
+    for (var i=0;i<this.props.groups.length;i++) {
+      if (this.props.groups[i].id === e.target.value) {
+        group = this.props.groups[i];
+      }
+    }
+    addSelection = {
+      group: group,
+      textFieldValue: e.target.value 
+    };
+  },
+  dialogDismiss: function(ref) {
+    this.refs[ref].dismiss();
+  },
+  dialogOpen: function(ref) {
+    this.refs[ref].show();
+  },
+  _showButton: function() {
+    this.setState({showInput: true});
+  },
+  _addGroupHandler: function() {
+    AppActions.addToGroup(addSelection.group, this.props.selected);
+    this.dialogDismiss('addGroup');
+    AppActions.selectGroup(addSelection.textFieldValue);
+  },
+  _removeGroupHandler: function() {
+    AppActions.addToGroup(this.props.selectedGroup, this.props.selected);
+  },
+  _newGroupHandler: function() {
+    var newGroup = this.refs['customGroup'].getValue();
+    newGroup = {
+      name: newGroup,
+      devices: []
+    };
+    addSelection = {
+      group: newGroup,
+      textFieldValue: null 
+    };
+
+    // TODO update so gets added to props + select list 
+
+    this.setState({showInput: false});
+  },
+  _validateName: function(e) {
+    var newName = e.target.value;
+    var errorText = null;
+    for (var i=0;i<this.props.groups.length; i++) {
+      if (this.props.groups[i].name === newName) {
+        errorText = "A group with this name already exists";
+      }
+    }
+    this.setState({errorText1: errorText});
+  },
+
+  render: function() {
+    var hideInfo = {display: "none"};
+    var deviceInfo ='';
+    var hideRemove = this.props.selectedGroup.id === 1 ? {visibility: "hidden"} : {visibility: "visible"};
+    var disableAction = this.props.selected.length ? false : true;
+    var inputStyle = {
+      display: "inline-block",
+      marginRight: "30px"
+    }
+
+    if (this.props.selected.length === 1) {
+      hideInfo = {display: "block"};
+      deviceInfo = (
+        React.createElement("ul", null, 
+          React.createElement("li", null, "Name: ", this.props.selected[0].name), 
+          React.createElement("li", null, "Status: ", this.props.selected[0].status), 
+          React.createElement("li", null, "Model: ", this.props.selected[0].model), 
+          React.createElement("li", null, "Software: ", this.props.selected[0].software_version), 
+          React.createElement("li", null, "Architecture: ", this.props.selected[0].arch), 
+          React.createElement("li", null, "Groups: ", this.props.selected[0].groups.join(','))
+        )
+      )
+    }
+    var devices = this.props.selected.map(function(device) {
+      return (
+        React.createElement("p", null, device.name)
+      )
+    })
+
+    var addActions = [
+      { text: 'Cancel', onClick: this.dialogDismiss.bind(null, 'addGroup')},
+      { text: 'Add to group', onClick: this._addGroupHandler, ref: 'save' }
+    ];
+
+    var groupList = this.props.groups.map(function(group) {
+      if (group.id === 1) {
+        return {payload: '', text: ''}
+      } else {
+        return {payload: group.id, text: group.name}
+      }
+    });
+
+    return (
+      React.createElement("div", {className: "tableActions"}, 
+        React.createElement("div", null, 
+          React.createElement("span", {style: {marginRight:"30px"}}, devices.length, " devices selected"), 
+          React.createElement(FlatButton, {disabled: disableAction, label: "Add selected devices to a group", secondary: true, onClick: this.dialogOpen.bind(null, 'addGroup')}), 
+          React.createElement(FlatButton, {disabled: disableAction, style: hideRemove, label: "Remove selected devices from this group", secondary: true, onClick: this._removeGroupHandler})
+        ), 
+        React.createElement("div", {className: "deviceInfo", style: hideInfo}, 
+          deviceInfo
+        ), 
+
+        React.createElement(Dialog, {
+          ref: "addGroup", 
+          title: "Add devices to group", 
+          actions: addActions, 
+          actionFocus: "submit", 
+          autoDetectWindowHeight: true, autoScrollBodyContent: true}, 
+          React.createElement("div", {style: {height: '200px'}}, 
+            React.createElement("div", null, 
+              React.createElement(SelectField, {
+              ref: "groupSelect", 
+              onChange: this._handleSelectValueChange, 
+              floatingLabelText: "Select group", 
+              menuItems: groupList, 
+              style: inputStyle}), 
+              
+              React.createElement(RaisedButton, {
+                label: "New group", 
+                onClick: this._showButton})
+            ), 
+
+            React.createElement("div", {className: this.state.showInput ? null : 'hidden'}, 
+              React.createElement(TextField, {
+                ref: "customGroup", 
+                hintText: "Group name", 
+                floatingLabelText: "Group name", 
+                style: inputStyle, 
+                onChange: this._validateName, 
+                errorText: this.state.errorText1}), 
+            
+              React.createElement(RaisedButton, {tooltip: "save", onClick: this._newGroupHandler}, "Save")
+            )
+          )
+        ), 
+
+        React.createElement(Snackbar, {
+          onDismiss: this._onDismiss, 
+          ref: "snackbar", 
+          autoHideDuration: 5000, 
+          action: "undo", 
+          message: "Devices added to group"}), 
+
+          React.createElement(Snackbar, {
+          onDismiss: this._onDismiss, 
+          ref: "snackbarRemove", 
+          autoHideDuration: 5000, 
+          action: "undo", 
+          message: "Devices were removed from the group", 
+          onActionTouchTap: this._undoRemove})
+      )
+    );
+  }
+});
+
+module.exports = SelectedDevices;
+
+},{"../../actions/app-actions":364,"../../stores/app-store":381,"material-ui":43,"react":363}],371:[function(require,module,exports){
+var React = require('react');
 var mui = require('material-ui');
 var Router = require('react-router');
 var RouteHandler = Router.RouteHandler;
@@ -45396,7 +45732,7 @@ var Tab = mui.Tab;
 var menuItems = [
   {route:"/", text:"Dashboard"},
   {route:"/updates", text:"Updates"},
-  {route:"/nodes", text:"Nodes"},
+  {route:"/devices", text:"Devices"},
   {route:"/software", text:"Software"}
 ];
 
@@ -45443,343 +45779,7 @@ Header.contextTypes = {
 
 module.exports = Header;
 
-},{"material-ui":43,"react":363,"react-router":173}],368:[function(require,module,exports){
-var React = require('react');
-var AppStore = require('../../stores/app-store');
-var AppActions = require('../../actions/app-actions');
-
-// material ui
-var mui = require('material-ui');
-var List = mui.List;
-var ListItem = mui.ListItem;
-
-var Groups = React.createClass({displayName: "Groups",
-  _changeGroup: function(id) {
-    AppActions.selectGroup(id);
-  },
-  render: function() {
-    return (
-      React.createElement(List, {subheader: "Groups"}, 
-        this.props.groups.map(function(group) {
-          var isSelected = group.id===this.props.selectedGroup.id ? {backgroundColor: "#e7e7e7"} : {backgroundColor: "transparent"};
-          var boundClick = this._changeGroup.bind(null, group.id);
-          return (
-            React.createElement(ListItem, {
-              key: group.id, 
-              primaryText: group.name, 
-              style: isSelected, 
-              onClick: boundClick})
-          )
-        }, this)
-      )
-    );
-  }
-});
-
-
-module.exports = Groups;
-
-},{"../../actions/app-actions":364,"../../stores/app-store":381,"material-ui":43,"react":363}],369:[function(require,module,exports){
-var React = require('react');
-var AppStore = require('../../stores/app-store');
-var AppActions = require('../../actions/app-actions');
-
-// material ui
-var mui = require('material-ui');
-var Table = mui.Table;
-var TableHeader = mui.TableHeader;
-var TableHeaderColumn = mui.TableHeaderColumn;
-var TableBody = mui.TableBody;
-var TableRow = mui.TableRow;
-var TableRowColumn = mui.TableRowColumn;
-
-var NodeList = React.createClass({displayName: "NodeList",
-  shouldComponentUpdate: function(nextProps, nextState) {
-    return nextProps.nodes !== this.props.nodes;
-  },
-  _onRowSelection: function(rows) {
-    if (rows === "all") {
-      rows = [];
-      for (var i=0; i<this.props.nodes.length;i++) {
-        rows.push(i);
-      }
-    }
-    AppActions.selectNodes(rows);
-  },
-  _selectAll: function(rows) {
-    console.log("select all", rows);
-  },
-  render: function() {
-    var nodes = this.props.nodes.map(function(node) {
-      return (
-        React.createElement(TableRow, {key: node.id}, 
-          React.createElement(TableRowColumn, null, node.name), 
-          React.createElement(TableRowColumn, null, node.model), 
-          React.createElement(TableRowColumn, null, node.software_version), 
-          React.createElement(TableRowColumn, null, node.status)
-        )
-      )
-    })
-    return (
-      React.createElement(Table, {
-        onRowSelection: this._onRowSelection, 
-        multiSelectable: true}, 
-        React.createElement(TableHeader, {
-        enableSelectAll: true, 
-        onSelectAll: this._selectAll}, 
-          React.createElement(TableRow, null, 
-            React.createElement(TableHeaderColumn, {tooltip: "Name"}, "Name"), 
-            React.createElement(TableHeaderColumn, {tooltip: "Model"}, "Model"), 
-            React.createElement(TableHeaderColumn, {tooltip: "Installed software"}, "Software"), 
-            React.createElement(TableHeaderColumn, {tooltip: "Status"}, "Status")
-          )
-        ), 
-        React.createElement(TableBody, {
-          deselectOnClickaway: false}, 
-          nodes
-        )
-      )
-    );
-  }
-});
-
-module.exports = NodeList;
-
-},{"../../actions/app-actions":364,"../../stores/app-store":381,"material-ui":43,"react":363}],370:[function(require,module,exports){
-var React = require('react');
-var AppStore = require('../../stores/app-store');
-
-var Groups = require('./groups');
-var NodeList = require('./nodelist');
-var SelectedNodes = require('./selectednodes');
-
-function getState() {
-  return {
-    groups: AppStore.getGroups(),
-    selectedGroup: AppStore.getSelectedGroup(),
-    nodes: AppStore.getNodes(),
-    selectedNodes: AppStore.getSelectedNodes()
-  }
-}
-
-var Nodes = React.createClass({displayName: "Nodes",
-  getInitialState: function() {
-    return getState()
-  },
-  componentWillMount: function() {
-    AppStore.changeListener(this._onChange);
-  },
-  _onChange: function() {
-    this.setState(getState());
-  },
-  render: function() {
-    return (
-      React.createElement("div", null, 
-       React.createElement("div", {className: "leftFixed"}, 
-          React.createElement(Groups, {groups: this.state.groups, selectedGroup: this.state.selectedGroup})
-        ), 
-        React.createElement("div", {className: "rightFluid"}, 
-          React.createElement("h4", null, this.state.selectedGroup.name), 
-          React.createElement(NodeList, {nodes: this.state.nodes}), 
-          React.createElement(SelectedNodes, {selected: this.state.selectedNodes, selectedGroup: this.state.selectedGroup, groups: this.state.groups})
-        )
-      )
-    );
-  }
-});
-
-module.exports = Nodes;
-
-},{"../../stores/app-store":381,"./groups":368,"./nodelist":369,"./selectednodes":371,"react":363}],371:[function(require,module,exports){
-var React = require('react');
-var AppStore = require('../../stores/app-store');
-var AppActions = require('../../actions/app-actions');
-
-var mui = require('material-ui');
-var FlatButton = mui.FlatButton;
-var RaisedButton = mui.RaisedButton;
-var Dialog = mui.Dialog;
-var SelectField = mui.SelectField;
-var TextField = mui.TextField;
-var Snackbar = mui.Snackbar;
-
-var addSelection = {};
-
-var SelectedNodes = React.createClass({displayName: "SelectedNodes",
-  getInitialState: function() {
-    return {
-      showInput: false 
-    };
-  },
-  _onDismiss: function() {
-    console.log("gone");
-  },
-  _handleSelectValueChange: function(e) {
-    this.setState({showInput: false});
-
-    var group = '';
-    for (var i=0;i<this.props.groups.length;i++) {
-      if (this.props.groups[i].id === e.target.value) {
-        group = this.props.groups[i];
-      }
-    }
-    addSelection = {
-      group: group,
-      textFieldValue: e.target.value 
-    };
-  },
-  dialogDismiss: function(ref) {
-    this.refs[ref].dismiss();
-  },
-  dialogOpen: function(ref) {
-    this.refs[ref].show();
-  },
-  _showButton: function() {
-    this.setState({showInput: true});
-  },
-  _addGroupHandler: function() {
-    AppActions.addToGroup(addSelection.group, this.props.selected);
-    this.dialogDismiss('addGroup');
-    AppActions.selectGroup(addSelection.textFieldValue);
-  },
-  _removeGroupHandler: function() {
-    AppActions.addToGroup(this.props.selectedGroup, this.props.selected);
-  },
-  _newGroupHandler: function() {
-    var newGroup = this.refs['customGroup'].getValue();
-    newGroup = {
-      name: newGroup,
-      nodes: []
-    };
-    addSelection = {
-      group: newGroup,
-      textFieldValue: null 
-    };
-
-    // TODO update so gets added to props + select list 
-
-    this.setState({showInput: false});
-  },
-  _validateName: function(e) {
-    var newName = e.target.value;
-    var errorText = null;
-    for (var i=0;i<this.props.groups.length; i++) {
-      if (this.props.groups[i].name === newName) {
-        errorText = "A group with this name already exists";
-      }
-    }
-    this.setState({errorText1: errorText});
-  },
-
-  render: function() {
-    var hideInfo = {display: "none"};
-    var nodeInfo ='';
-    var hideRemove = this.props.selectedGroup.id === 1 ? {visibility: "hidden"} : {visibility: "visible"};
-    var disableAction = this.props.selected.length ? false : true;
-    var inputStyle = {
-      display: "inline-block",
-      marginRight: "30px"
-    }
-
-    if (this.props.selected.length === 1) {
-      hideInfo = {display: "block"};
-      nodeInfo = (
-        React.createElement("ul", null, 
-          React.createElement("li", null, "Name: ", this.props.selected[0].name), 
-          React.createElement("li", null, "Status: ", this.props.selected[0].status), 
-          React.createElement("li", null, "Model: ", this.props.selected[0].model), 
-          React.createElement("li", null, "Software: ", this.props.selected[0].software_version), 
-          React.createElement("li", null, "Architecture: ", this.props.selected[0].arch), 
-          React.createElement("li", null, "Groups: ", this.props.selected[0].groups.join(','))
-        )
-      )
-    }
-    var nodes = this.props.selected.map(function(node) {
-      return (
-        React.createElement("p", null, node.name)
-      )
-    })
-
-    var addActions = [
-      { text: 'Cancel', onClick: this.dialogDismiss.bind(null, 'addGroup')},
-      { text: 'Add to group', onClick: this._addGroupHandler, ref: 'save' }
-    ];
-
-    var groupList = this.props.groups.map(function(group) {
-      if (group.id === 1) {
-        return {payload: '', text: ''}
-      } else {
-        return {payload: group.id, text: group.name}
-      }
-    });
-
-    return (
-      React.createElement("div", {className: "tableActions"}, 
-        React.createElement("div", null, 
-          React.createElement("span", {style: {marginRight:"30px"}}, nodes.length, " nodes selected"), 
-          React.createElement(FlatButton, {disabled: disableAction, label: "Add selected nodes to a group", secondary: true, onClick: this.dialogOpen.bind(null, 'addGroup')}), 
-          React.createElement(FlatButton, {disabled: disableAction, style: hideRemove, label: "Remove selected nodes from this group", secondary: true, onClick: this._removeGroupHandler})
-        ), 
-        React.createElement("div", {className: "nodeInfo", style: hideInfo}, 
-          nodeInfo
-        ), 
-
-        React.createElement(Dialog, {
-          ref: "addGroup", 
-          title: "Add nodes to group", 
-          actions: addActions, 
-          actionFocus: "submit", 
-          autoDetectWindowHeight: true, autoScrollBodyContent: true}, 
-          React.createElement("div", {style: {height: '200px'}}, 
-            React.createElement("div", null, 
-              React.createElement(SelectField, {
-              ref: "groupSelect", 
-              onChange: this._handleSelectValueChange, 
-              floatingLabelText: "Select group", 
-              menuItems: groupList, 
-              style: inputStyle}), 
-              
-              React.createElement(RaisedButton, {
-                label: "New group", 
-                onClick: this._showButton})
-            ), 
-
-            React.createElement("div", {className: this.state.showInput ? null : 'hidden'}, 
-              React.createElement(TextField, {
-                ref: "customGroup", 
-                hintText: "Group name", 
-                floatingLabelText: "Group name", 
-                style: inputStyle, 
-                onChange: this._validateName, 
-                errorText: this.state.errorText1}), 
-            
-              React.createElement(RaisedButton, {tooltip: "save", onClick: this._newGroupHandler}, "Save")
-            )
-          )
-        ), 
-
-        React.createElement(Snackbar, {
-          onDismiss: this._onDismiss, 
-          ref: "snackbar", 
-          autoHideDuration: 5000, 
-          action: "undo", 
-          message: "Nodes added to group"}), 
-
-          React.createElement(Snackbar, {
-          onDismiss: this._onDismiss, 
-          ref: "snackbarRemove", 
-          autoHideDuration: 5000, 
-          action: "undo", 
-          message: "Nodes were removed from the group", 
-          onActionTouchTap: this._undoRemove})
-      )
-    );
-  }
-});
-
-module.exports = SelectedNodes;
-
-},{"../../actions/app-actions":364,"../../stores/app-store":381,"material-ui":43,"react":363}],372:[function(require,module,exports){
+},{"material-ui":43,"react":363,"react-router":173}],372:[function(require,module,exports){
 var React = require('react');
 
 // material ui
@@ -45798,7 +45798,7 @@ var Installed = React.createClass({displayName: "Installed",
         React.createElement(TableRow, {key: index}, 
           React.createElement(TableRowColumn, null, pkg.name), 
           React.createElement(TableRowColumn, null, pkg.model), 
-          React.createElement(TableRowColumn, null, pkg.nodes)
+          React.createElement(TableRowColumn, null, pkg.devices)
         )
       )
     });
@@ -45812,7 +45812,7 @@ var Installed = React.createClass({displayName: "Installed",
             React.createElement(TableRow, null, 
               React.createElement(TableHeaderColumn, {tooltip: "Software"}, "Software"), 
               React.createElement(TableHeaderColumn, {tooltip: "Model compatibility"}, "Model compatibility"), 
-              React.createElement(TableHeaderColumn, {tooltip: "Number of nodes"}, "Number of nodes")
+              React.createElement(TableHeaderColumn, {tooltip: "Number of devices"}, "Number of devices")
             )
           ), 
           React.createElement(TableBody, {
@@ -46057,7 +46057,7 @@ var App = require('../components/app');
 
 var Dashboard = require('../components/dashboard/dashboard');
 var Updates = require('../components/updates/updates');
-var Nodes = require('../components/nodes/nodes');
+var Devices = require('../components/devices/devices');
 var Software = require('../components/software/software');
 
 
@@ -46069,12 +46069,12 @@ module.exports = (
   React.createElement(Route, {name: "app", path: "/", handler: App}, 
     React.createElement(DefaultRoute, {name: "dashboard", handler: Dashboard}), 
     React.createElement(Route, {name: "updates", path: "/updates", handler: Updates}), 
-    React.createElement(Route, {name: "nodes", path: "/nodes", handler: Nodes}), 
+    React.createElement(Route, {name: "devices", path: "/devices", handler: Devices}), 
     React.createElement(Route, {name: "software", path: "/software", handler: Software})
   )
 );  
 
-},{"../components/app":365,"../components/dashboard/dashboard":366,"../components/nodes/nodes":370,"../components/software/software":374,"../components/updates/updates":376,"react":363,"react-router":173}],378:[function(require,module,exports){
+},{"../components/app":365,"../components/dashboard/dashboard":366,"../components/devices/devices":368,"../components/software/software":374,"../components/updates/updates":376,"react":363,"react-router":173}],378:[function(require,module,exports){
 module.exports = {
   SELECT_GROUP: 'SELECT_GROUP',
   ADD_TO_GROUP: 'ADD_TO_GROUP',
@@ -46119,45 +46119,45 @@ Router.run(routes, function(Root) {
 var AppDispatcher = require('../dispatchers/app-dispatcher');
 var AppConstants = require('../constants/app-constants');
 var assign = require('react/lib/Object.assign');
-var EventEmitter = require('events').EventEmitter;  // from node
+var EventEmitter = require('events').EventEmitter;  // from device
 
 var CHANGE_EVENT = "change";
 
 var _currentGroup = [];
-var _currentNodes = [];
-var _selectedNodes = [];
+var _currentDevices = [];
+var _selectedDevices = [];
 
 /* TEMP LOCAL GROUPS */
 var _groups = [
   {
     id: 1,
     name: "All",
-    nodes: [1,2,3,4,5,6,7,8]
+    devices: [1,2,3,4,5,6,7,8]
   },
   {
     id: 2,
     name: "Development",
-    nodes: [1,2,3]
+    devices: [1,2,3]
   },
   {
     id: 3,
     name: "Test",
-    nodes: [4,5,6]
+    devices: [4,5,6]
   },
   {
     id: 4,
     name: "Production",
-    nodes: [7,8]
+    devices: [7,8]
   }
 ]
 
 
-/* Temp local nodes */
+/* Temp local devices */
 
-var _allnodes = [
+var _alldevices = [
   {
     'id': 1,
-    'name': 'Node001',
+    'name': 'Device001',
     'model':"Acme Model 1",
     'arch': 'armv7',
     'status': 'Up',
@@ -46166,7 +46166,7 @@ var _allnodes = [
   },
   {
     'id': 2,
-    'name': 'Node002',
+    'name': 'Device002',
     'model':"Acme Model 1",
     'arch': 'armv7',
     'status': 'Up',
@@ -46175,7 +46175,7 @@ var _allnodes = [
   },
   {
     'id': 3,
-    'name': 'Node003',
+    'name': 'Device003',
     'model':"Acme Model 1",
     'arch': 'armv7',
     'status': 'Up',
@@ -46184,7 +46184,7 @@ var _allnodes = [
   },
   {
     'id': 4,
-    'name': 'Node004',
+    'name': 'Device004',
     'model':"Acme Model 1",
     'arch': 'armv7',
     'status': 'Up',
@@ -46193,7 +46193,7 @@ var _allnodes = [
   },
   {
     'id': 5,
-    'name': 'Node005',
+    'name': 'Device005',
     'model':"Acme Model 1",
     'arch': 'armv7',
     'status': 'Down',
@@ -46202,7 +46202,7 @@ var _allnodes = [
   },
   {
     'id': 6,
-    'name': 'Node006',
+    'name': 'Device006',
     'model':"Acme Model 1",
     'arch': 'armv7',
     'status': 'Down',
@@ -46211,7 +46211,7 @@ var _allnodes = [
   },
   {
     'id': 7,
-    'name': 'Node007',
+    'name': 'Device007',
     'model':"Acme Model 1",
     'arch': 'armv7',
     'status': 'Up',
@@ -46220,7 +46220,7 @@ var _allnodes = [
   },
   {
     'id': 8,
-    'name': 'Node008',
+    'name': 'Device008',
     'model':"Acme Model 1",
     'arch': 'armv7',
     'status': 'Up',
@@ -46232,11 +46232,11 @@ var _allnodes = [
 _selectGroup(_groups[0].id);
 
 function _selectGroup(id) {
-  _selectedNodes = [];
+  _selectedDevices = [];
   //console.log(id, _groups);
   if (id) {
     _currentGroup = _getGroupById(id);
-    _getCurrentNodes(_currentGroup.id);
+    _getCurrentDevices(_currentGroup.id);
   }
 }
 
@@ -46249,10 +46249,10 @@ function _getGroupById(id) {
   return;
 }
 
-function _addNewGroup(group, nodes) {
+function _addNewGroup(group, devices) {
   var tmpGroup = group;
-  for (var i=0;i<nodes.length;i++) {
-    tmpGroup.nodes.push(nodes[i].id);
+  for (var i=0;i<devices.length;i++) {
+    tmpGroup.devices.push(devices[i].id);
   }
   tmpGroup.id = _groups.length+1;
   var idnew = _groups.length+1;
@@ -46260,59 +46260,59 @@ function _addNewGroup(group, nodes) {
   _selectGroup(_groups.length);
 }
 
-function _getNodeById(nodeId) {
-  for (var i=0; i<_allnodes.length;i++) {
-    if (_allnodes[i].id === nodeId) {
-      return _allnodes[i];
+function _getDeviceById(deviceId) {
+  for (var i=0; i<_alldevices.length;i++) {
+    if (_alldevices[i].id === deviceId) {
+      return _alldevices[i];
     }
   }
   return;
 }
 
-function _getCurrentNodes(groupId) {
-  _currentNodes = [];
-  var nodelist = _getGroupById(groupId).nodes;
-  for (var i=0; i<nodelist.length; i++) {
-    _currentNodes.push(_getNodeById(nodelist[i]));
+function _getCurrentDevices(groupId) {
+  _currentDevices = [];
+  var devicelist = _getGroupById(groupId).devices;
+  for (var i=0; i<devicelist.length; i++) {
+    _currentDevices.push(_getDeviceById(devicelist[i]));
   }
-  _sortNodes();
+  _sortDevices();
 }
 
-function _sortNodes() {
-  _currentNodes.sort(statusSort);
+function _sortDevices() {
+  _currentDevices.sort(statusSort);
 }
 
 
-function _selectNodes(nodePositions) {
-  _selectedNodes = [];
-  for (var i=0; i<nodePositions.length; i++) {
-   _selectedNodes.push(_currentNodes[nodePositions[i]]);
+function _selectDevices(devicePositions) {
+  _selectedDevices = [];
+  for (var i=0; i<devicePositions.length; i++) {
+   _selectedDevices.push(_currentDevices[devicePositions[i]]);
   }
 }
 
-function _addToGroup(group, nodes) {
+function _addToGroup(group, devices) {
   var tmpGroup = group;
 
   if (tmpGroup.id) {
-    for (var i=0; i<nodes.length;i++) {
-      if (tmpGroup.nodes.indexOf(nodes[i].id)===-1) {
-        tmpGroup.nodes.push(nodes[i].id);
+    for (var i=0; i<devices.length;i++) {
+      if (tmpGroup.devices.indexOf(devices[i].id)===-1) {
+        tmpGroup.devices.push(devices[i].id);
       }
       else {
-        tmpGroup.nodes.splice(tmpGroup.nodes.indexOf(nodes[i].id),1);
+        tmpGroup.devices.splice(tmpGroup.devices.indexOf(devices[i].id),1);
       }
     }
 
     var idx = findWithAttr(_groups, 'id', tmpGroup.id);
     _groups[idx] = tmpGroup;
-    _getCurrentNodes(tmpGroup.id);
+    _getCurrentDevices(tmpGroup.id);
 
     // TODO - delete if empty group?
 
-  } else if (nodes.length) {
+  } else if (devices.length) {
     // New group
-    _addNewGroup(group, nodes);
-    // TODO - go through nodes and add group
+    _addNewGroup(group, devices);
+    // TODO - go through devices and add group
   }
 }
 
@@ -46335,17 +46335,17 @@ function discoverSoftware() {
   _softwareInstalled = []
   var unique = {};
 
-  for (var i=0; i<_allnodes.length; i++) {
-    if (typeof(unique[_allnodes[i].software_version]) == "undefined") {
-      unique[_allnodes[i].software_version] = 0;
+  for (var i=0; i<_alldevices.length; i++) {
+    if (typeof(unique[_alldevices[i].software_version]) == "undefined") {
+      unique[_alldevices[i].software_version] = 0;
     }
-    unique[_allnodes[i].software_version]++;
+    unique[_alldevices[i].software_version]++;
   }
 
   for (val in unique) {
     var idx = findWithAttr(_softwareRepo, 'name', val);
     var software = _softwareRepo[idx];
-    software.nodes = unique[val];
+    software.devices = unique[val];
     _softwareInstalled.push(software);
   }
 }
@@ -46389,12 +46389,12 @@ var AppStore = assign(EventEmitter.prototype, {
     return _currentGroup
   },
 
-  getNodes: function() {
-    return _currentNodes
+  getDevices: function() {
+    return _currentDevices
   },
 
-  getSelectedNodes: function() {
-    return _selectedNodes
+  getSelectedDevices: function() {
+    return _selectedDevices
   },
 
 
@@ -46413,10 +46413,10 @@ var AppStore = assign(EventEmitter.prototype, {
         _selectGroup(payload.action.groupId);
         break;
       case AppConstants.SELECT_NODES:
-        _selectNodes(payload.action.nodes);
+        _selectDevices(payload.action.devices);
         break;
       case AppConstants.ADD_TO_GROUP:
-        _addToGroup(payload.action.group, payload.action.nodes);
+        _addToGroup(payload.action.group, payload.action.devices);
         break;
       case AppConstants.UPLOAD_IMAGE:
         _uploadImage(payload.action.image);

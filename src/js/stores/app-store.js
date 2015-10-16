@@ -1,45 +1,45 @@
 var AppDispatcher = require('../dispatchers/app-dispatcher');
 var AppConstants = require('../constants/app-constants');
 var assign = require('react/lib/Object.assign');
-var EventEmitter = require('events').EventEmitter;  // from node
+var EventEmitter = require('events').EventEmitter;  // from device
 
 var CHANGE_EVENT = "change";
 
 var _currentGroup = [];
-var _currentNodes = [];
-var _selectedNodes = [];
+var _currentDevices = [];
+var _selectedDevices = [];
 
 /* TEMP LOCAL GROUPS */
 var _groups = [
   {
     id: 1,
     name: "All",
-    nodes: [1,2,3,4,5,6,7,8]
+    devices: [1,2,3,4,5,6,7,8]
   },
   {
     id: 2,
     name: "Development",
-    nodes: [1,2,3]
+    devices: [1,2,3]
   },
   {
     id: 3,
     name: "Test",
-    nodes: [4,5,6]
+    devices: [4,5,6]
   },
   {
     id: 4,
     name: "Production",
-    nodes: [7,8]
+    devices: [7,8]
   }
 ]
 
 
-/* Temp local nodes */
+/* Temp local devices */
 
-var _allnodes = [
+var _alldevices = [
   {
     'id': 1,
-    'name': 'Node001',
+    'name': 'Device001',
     'model':"Acme Model 1",
     'arch': 'armv7',
     'status': 'Up',
@@ -48,7 +48,7 @@ var _allnodes = [
   },
   {
     'id': 2,
-    'name': 'Node002',
+    'name': 'Device002',
     'model':"Acme Model 1",
     'arch': 'armv7',
     'status': 'Up',
@@ -57,7 +57,7 @@ var _allnodes = [
   },
   {
     'id': 3,
-    'name': 'Node003',
+    'name': 'Device003',
     'model':"Acme Model 1",
     'arch': 'armv7',
     'status': 'Up',
@@ -66,7 +66,7 @@ var _allnodes = [
   },
   {
     'id': 4,
-    'name': 'Node004',
+    'name': 'Device004',
     'model':"Acme Model 1",
     'arch': 'armv7',
     'status': 'Up',
@@ -75,7 +75,7 @@ var _allnodes = [
   },
   {
     'id': 5,
-    'name': 'Node005',
+    'name': 'Device005',
     'model':"Acme Model 1",
     'arch': 'armv7',
     'status': 'Down',
@@ -84,7 +84,7 @@ var _allnodes = [
   },
   {
     'id': 6,
-    'name': 'Node006',
+    'name': 'Device006',
     'model':"Acme Model 1",
     'arch': 'armv7',
     'status': 'Down',
@@ -93,7 +93,7 @@ var _allnodes = [
   },
   {
     'id': 7,
-    'name': 'Node007',
+    'name': 'Device007',
     'model':"Acme Model 1",
     'arch': 'armv7',
     'status': 'Up',
@@ -102,7 +102,7 @@ var _allnodes = [
   },
   {
     'id': 8,
-    'name': 'Node008',
+    'name': 'Device008',
     'model':"Acme Model 1",
     'arch': 'armv7',
     'status': 'Up',
@@ -114,11 +114,11 @@ var _allnodes = [
 _selectGroup(_groups[0].id);
 
 function _selectGroup(id) {
-  _selectedNodes = [];
+  _selectedDevices = [];
   //console.log(id, _groups);
   if (id) {
     _currentGroup = _getGroupById(id);
-    _getCurrentNodes(_currentGroup.id);
+    _getCurrentDevices(_currentGroup.id);
   }
 }
 
@@ -131,10 +131,10 @@ function _getGroupById(id) {
   return;
 }
 
-function _addNewGroup(group, nodes) {
+function _addNewGroup(group, devices) {
   var tmpGroup = group;
-  for (var i=0;i<nodes.length;i++) {
-    tmpGroup.nodes.push(nodes[i].id);
+  for (var i=0;i<devices.length;i++) {
+    tmpGroup.devices.push(devices[i].id);
   }
   tmpGroup.id = _groups.length+1;
   var idnew = _groups.length+1;
@@ -142,59 +142,59 @@ function _addNewGroup(group, nodes) {
   _selectGroup(_groups.length);
 }
 
-function _getNodeById(nodeId) {
-  for (var i=0; i<_allnodes.length;i++) {
-    if (_allnodes[i].id === nodeId) {
-      return _allnodes[i];
+function _getDeviceById(deviceId) {
+  for (var i=0; i<_alldevices.length;i++) {
+    if (_alldevices[i].id === deviceId) {
+      return _alldevices[i];
     }
   }
   return;
 }
 
-function _getCurrentNodes(groupId) {
-  _currentNodes = [];
-  var nodelist = _getGroupById(groupId).nodes;
-  for (var i=0; i<nodelist.length; i++) {
-    _currentNodes.push(_getNodeById(nodelist[i]));
+function _getCurrentDevices(groupId) {
+  _currentDevices = [];
+  var devicelist = _getGroupById(groupId).devices;
+  for (var i=0; i<devicelist.length; i++) {
+    _currentDevices.push(_getDeviceById(devicelist[i]));
   }
-  _sortNodes();
+  _sortDevices();
 }
 
-function _sortNodes() {
-  _currentNodes.sort(statusSort);
+function _sortDevices() {
+  _currentDevices.sort(statusSort);
 }
 
 
-function _selectNodes(nodePositions) {
-  _selectedNodes = [];
-  for (var i=0; i<nodePositions.length; i++) {
-   _selectedNodes.push(_currentNodes[nodePositions[i]]);
+function _selectDevices(devicePositions) {
+  _selectedDevices = [];
+  for (var i=0; i<devicePositions.length; i++) {
+   _selectedDevices.push(_currentDevices[devicePositions[i]]);
   }
 }
 
-function _addToGroup(group, nodes) {
+function _addToGroup(group, devices) {
   var tmpGroup = group;
 
   if (tmpGroup.id) {
-    for (var i=0; i<nodes.length;i++) {
-      if (tmpGroup.nodes.indexOf(nodes[i].id)===-1) {
-        tmpGroup.nodes.push(nodes[i].id);
+    for (var i=0; i<devices.length;i++) {
+      if (tmpGroup.devices.indexOf(devices[i].id)===-1) {
+        tmpGroup.devices.push(devices[i].id);
       }
       else {
-        tmpGroup.nodes.splice(tmpGroup.nodes.indexOf(nodes[i].id),1);
+        tmpGroup.devices.splice(tmpGroup.devices.indexOf(devices[i].id),1);
       }
     }
 
     var idx = findWithAttr(_groups, 'id', tmpGroup.id);
     _groups[idx] = tmpGroup;
-    _getCurrentNodes(tmpGroup.id);
+    _getCurrentDevices(tmpGroup.id);
 
     // TODO - delete if empty group?
 
-  } else if (nodes.length) {
+  } else if (devices.length) {
     // New group
-    _addNewGroup(group, nodes);
-    // TODO - go through nodes and add group
+    _addNewGroup(group, devices);
+    // TODO - go through devices and add group
   }
 }
 
@@ -217,17 +217,17 @@ function discoverSoftware() {
   _softwareInstalled = []
   var unique = {};
 
-  for (var i=0; i<_allnodes.length; i++) {
-    if (typeof(unique[_allnodes[i].software_version]) == "undefined") {
-      unique[_allnodes[i].software_version] = 0;
+  for (var i=0; i<_alldevices.length; i++) {
+    if (typeof(unique[_alldevices[i].software_version]) == "undefined") {
+      unique[_alldevices[i].software_version] = 0;
     }
-    unique[_allnodes[i].software_version]++;
+    unique[_alldevices[i].software_version]++;
   }
 
   for (val in unique) {
     var idx = findWithAttr(_softwareRepo, 'name', val);
     var software = _softwareRepo[idx];
-    software.nodes = unique[val];
+    software.devices = unique[val];
     _softwareInstalled.push(software);
   }
 }
@@ -271,12 +271,12 @@ var AppStore = assign(EventEmitter.prototype, {
     return _currentGroup
   },
 
-  getNodes: function() {
-    return _currentNodes
+  getDevices: function() {
+    return _currentDevices
   },
 
-  getSelectedNodes: function() {
-    return _selectedNodes
+  getSelectedDevices: function() {
+    return _selectedDevices
   },
 
 
@@ -295,10 +295,10 @@ var AppStore = assign(EventEmitter.prototype, {
         _selectGroup(payload.action.groupId);
         break;
       case AppConstants.SELECT_NODES:
-        _selectNodes(payload.action.nodes);
+        _selectDevices(payload.action.devices);
         break;
       case AppConstants.ADD_TO_GROUP:
-        _addToGroup(payload.action.group, payload.action.nodes);
+        _addToGroup(payload.action.group, payload.action.devices);
         break;
       case AppConstants.UPLOAD_IMAGE:
         _uploadImage(payload.action.image);

@@ -11,18 +11,18 @@ var AppActions = {
     })
   },
 
-  selectNodes: function(nodeList) {
+  selectDevices: function(deviceList) {
     AppDispatcher.handleViewAction({
-      actionType: AppConstants.SELECT_NODES,
-      nodes: nodeList
+      actionType: AppConstants.SELECT_DEVICES,
+      devices: deviceList
     })
   },
 
-  addToGroup: function(group, nodeList) {
+  addToGroup: function(group, deviceList) {
     AppDispatcher.handleViewAction({
       actionType: AppConstants.ADD_TO_GROUP,
       group: group,
-      nodes: nodeList
+      devices: deviceList
     })
   },
 

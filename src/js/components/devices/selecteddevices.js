@@ -12,7 +12,7 @@ var Snackbar = mui.Snackbar;
 
 var addSelection = {};
 
-var SelectedNodes = React.createClass({
+var SelectedDevices = React.createClass({
   getInitialState: function() {
     return {
       showInput: false 
@@ -56,7 +56,7 @@ var SelectedNodes = React.createClass({
     var newGroup = this.refs['customGroup'].getValue();
     newGroup = {
       name: newGroup,
-      nodes: []
+      devices: []
     };
     addSelection = {
       group: newGroup,
@@ -80,7 +80,7 @@ var SelectedNodes = React.createClass({
 
   render: function() {
     var hideInfo = {display: "none"};
-    var nodeInfo ='';
+    var deviceInfo ='';
     var hideRemove = this.props.selectedGroup.id === 1 ? {visibility: "hidden"} : {visibility: "visible"};
     var disableAction = this.props.selected.length ? false : true;
     var inputStyle = {
@@ -90,7 +90,7 @@ var SelectedNodes = React.createClass({
 
     if (this.props.selected.length === 1) {
       hideInfo = {display: "block"};
-      nodeInfo = (
+      deviceInfo = (
         <ul>
           <li>Name: {this.props.selected[0].name}</li>
           <li>Status: {this.props.selected[0].status}</li>
@@ -101,9 +101,9 @@ var SelectedNodes = React.createClass({
         </ul>
       )
     }
-    var nodes = this.props.selected.map(function(node) {
+    var devices = this.props.selected.map(function(device) {
       return (
-        <p>{node.name}</p>
+        <p>{device.name}</p>
       )
     })
 
@@ -123,17 +123,17 @@ var SelectedNodes = React.createClass({
     return (
       <div className="tableActions">
         <div>
-          <span style={{marginRight:"30px"}}>{nodes.length} nodes selected</span>
-          <FlatButton disabled={disableAction} label="Add selected nodes to a group" secondary={true} onClick={this.dialogOpen.bind(null, 'addGroup')} />
-          <FlatButton disabled={disableAction} style={hideRemove} label="Remove selected nodes from this group" secondary={true} onClick={this._removeGroupHandler} />
+          <span style={{marginRight:"30px"}}>{devices.length} devices selected</span>
+          <FlatButton disabled={disableAction} label="Add selected devices to a group" secondary={true} onClick={this.dialogOpen.bind(null, 'addGroup')} />
+          <FlatButton disabled={disableAction} style={hideRemove} label="Remove selected devices from this group" secondary={true} onClick={this._removeGroupHandler} />
         </div>
-        <div className="nodeInfo" style={hideInfo}>
-          {nodeInfo}
+        <div className="deviceInfo" style={hideInfo}>
+          {deviceInfo}
         </div>
 
         <Dialog
           ref="addGroup"
-          title="Add nodes to group"
+          title="Add devices to group"
           actions={addActions}
           actionFocus="submit"
           autoDetectWindowHeight={true} autoScrollBodyContent={true}>  
@@ -170,18 +170,18 @@ var SelectedNodes = React.createClass({
           ref="snackbar"
           autoHideDuration={5000}
           action="undo"
-          message="Nodes added to group" />
+          message="Devices added to group" />
 
           <Snackbar 
           onDismiss={this._onDismiss}
           ref="snackbarRemove"
           autoHideDuration={5000}
           action="undo"
-          message="Nodes were removed from the group"
+          message="Devices were removed from the group"
           onActionTouchTap={this._undoRemove} />
       </div>
     );
   }
 });
 
-module.exports = SelectedNodes;
+module.exports = SelectedDevices;

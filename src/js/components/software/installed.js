@@ -16,7 +16,7 @@ var Installed = React.createClass({
         <TableRow key={index}>
           <TableRowColumn>{pkg.name}</TableRowColumn>
           <TableRowColumn>{pkg.model}</TableRowColumn>
-          <TableRowColumn>{pkg.nodes}</TableRowColumn>
+          <TableRowColumn>{pkg.devices}</TableRowColumn>
         </TableRow>
       )
     });
@@ -30,7 +30,7 @@ var Installed = React.createClass({
             <TableRow>
               <TableHeaderColumn tooltip="Software">Software</TableHeaderColumn>
               <TableHeaderColumn tooltip="Model compatibility">Model compatibility</TableHeaderColumn>
-              <TableHeaderColumn tooltip="Number of nodes">Number of nodes</TableHeaderColumn>
+              <TableHeaderColumn tooltip="Number of devices">Number of devices</TableHeaderColumn>
             </TableRow>
           </TableHeader>
           <TableBody

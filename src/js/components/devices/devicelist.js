@@ -11,30 +11,30 @@ var TableBody = mui.TableBody;
 var TableRow = mui.TableRow;
 var TableRowColumn = mui.TableRowColumn;
 
-var NodeList = React.createClass({
+var DeviceList = React.createClass({
   shouldComponentUpdate: function(nextProps, nextState) {
-    return nextProps.nodes !== this.props.nodes;
+    return nextProps.devices !== this.props.devices;
   },
   _onRowSelection: function(rows) {
     if (rows === "all") {
       rows = [];
-      for (var i=0; i<this.props.nodes.length;i++) {
+      for (var i=0; i<this.props.devices.length;i++) {
         rows.push(i);
       }
     }
-    AppActions.selectNodes(rows);
+    AppActions.selectDevices(rows);
   },
   _selectAll: function(rows) {
     console.log("select all", rows);
   },
   render: function() {
-    var nodes = this.props.nodes.map(function(node) {
+    var devices = this.props.devices.map(function(device) {
       return (
-        <TableRow key={node.id}>
-          <TableRowColumn>{node.name}</TableRowColumn>
-          <TableRowColumn>{node.model}</TableRowColumn>
-          <TableRowColumn>{node.software_version}</TableRowColumn>
-          <TableRowColumn>{node.status}</TableRowColumn>
+        <TableRow key={device.id}>
+          <TableRowColumn>{device.name}</TableRowColumn>
+          <TableRowColumn>{device.model}</TableRowColumn>
+          <TableRowColumn>{device.software_version}</TableRowColumn>
+          <TableRowColumn>{device.status}</TableRowColumn>
         </TableRow>
       )
     })
@@ -54,11 +54,11 @@ var NodeList = React.createClass({
         </TableHeader>
         <TableBody
           deselectOnClickaway={false}>
-          {nodes}
+          {devices}
         </TableBody>
       </Table>
     );
   }
 });
 
-module.exports = NodeList;
+module.exports = DeviceList;

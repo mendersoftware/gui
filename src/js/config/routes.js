@@ -4,7 +4,7 @@ var App = require('../components/app');
 
 var Dashboard = require('../components/dashboard/dashboard');
 var Updates = require('../components/updates/updates');
-var Nodes = require('../components/nodes/nodes');
+var Devices = require('../components/devices/devices');
 var Software = require('../components/software/software');
 
 
@@ -16,7 +16,7 @@ module.exports = (
   <Route name="app" path="/" handler={App}>
     <DefaultRoute name="dashboard" handler={Dashboard} />
     <Route name="updates" path="/updates" handler={Updates} />
-    <Route name="nodes" path="/nodes" handler={Nodes} />
+    <Route name="devices" path="/devices" handler={Devices} />
     <Route name="software" path="/software" handler={Software} />
   </Route>
 );  
