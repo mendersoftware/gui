@@ -1382,6 +1382,7 @@ var CardActions = React.createClass({
 
   propTypes: {
     expandable: React.PropTypes.bool,
+    actAsExpander: React.PropTypes.bool,
     showExpandableButton: React.PropTypes.bool
   },
 
@@ -1486,10 +1487,6 @@ var CardExpandable = React.createClass({
     this.setState({ muiTheme: newMuiTheme });
   },
 
-  _onExpanding: function _onExpanding() {
-    if (this.props.expanded === true) this.props.onExpanding(false);else this.props.onExpanding(true);
-  },
-
   render: function render() {
     var styles = this.getStyles();
 
@@ -1502,7 +1499,7 @@ var CardExpandable = React.createClass({
       IconButton,
       {
         style: mergedStyles,
-        onClick: this._onExpanding },
+        onTouchTap: this.props.onExpanding },
       expandable
     );
 
@@ -1535,6 +1532,7 @@ var CardHeader = React.createClass({
     subtitleStyle: React.PropTypes.object,
     textStyle: React.PropTypes.object,
     expandable: React.PropTypes.bool,
+    actAsExpander: React.PropTypes.bool,
     showExpandableButton: React.PropTypes.bool
   },
 
@@ -1632,7 +1630,8 @@ var CardMedia = React.createClass({
     overlayContainerStyle: React.PropTypes.object,
     overlayContentStyle: React.PropTypes.object,
     mediaStyle: React.PropTypes.object,
-    expandable: React.PropTypes.bool
+    expandable: React.PropTypes.bool,
+    actAsExpander: React.PropTypes.bool
   },
 
   getStyles: function getStyles() {
@@ -1740,7 +1739,8 @@ var CardText = React.createClass({
   propTypes: {
     color: React.PropTypes.string,
     style: React.PropTypes.object,
-    expandable: React.PropTypes.bool
+    expandable: React.PropTypes.bool,
+    actAsExpander: React.PropTypes.bool
   },
 
   getDefaultProps: function getDefaultProps() {
@@ -1794,6 +1794,7 @@ var CardTitle = React.createClass({
     subtitleColor: React.PropTypes.string,
     subtitleStyle: React.PropTypes.object,
     expandable: React.PropTypes.bool,
+    actAsExpander: React.PropTypes.bool,
     showExpandableButton: React.PropTypes.bool
   },
 
@@ -1877,9 +1878,10 @@ var Card = React.createClass({
     onExpandChange: React.PropTypes.func
   },
 
-  _onExpandable: function _onExpandable(value) {
-    this.setState({ expanded: value });
-    if (this.props.onExpandChange) this.props.onExpandChange(value);
+  _onExpandable: function _onExpandable() {
+    var newExpandedState = !(this.state.expanded === true);
+    this.setState({ expanded: newExpandedState });
+    if (this.props.onExpandChange) this.props.onExpandChange(newExpandedState);
   },
 
   render: function render() {
@@ -1891,6 +1893,10 @@ var Card = React.createClass({
         return null;
       }
       if (_this.state.expanded === false && currentChild.props.expandable === true) return;
+      if (currentChild.props.actAsExpander === true) {
+        currentChild.props.onTouchTap = _this._onExpandable;
+        currentChild.props.style = _this.mergeStyles({ cursor: 'pointer' }, currentChild.props.style);
+      }
       if (currentChild.props.showExpandableButton === true) {
         lastElement = React.cloneElement(currentChild, {}, currentChild.props.children, React.createElement(CardExpandable, { expanded: _this.state.expanded, onExpanding: _this._onExpandable }));
       } else {
@@ -2959,7 +2965,7 @@ var Calendar = React.createClass({
 
   _getToolbarInteractions: function _getToolbarInteractions() {
     return {
-      prevMonth: DateTime.monthDiff(this.state.selectedDate, this.props.minDate) > 0,
+      prevMonth: DateTime.monthDiff(this.state.displayDate, this.props.minDate) > 0,
       nextMonth: DateTime.monthDiff(this.state.displayDate, this.props.maxDate) < 0
     };
   },
