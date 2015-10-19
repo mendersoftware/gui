@@ -147,7 +147,7 @@ var SelectedDevices = React.createClass({
               style={inputStyle} />
               
               <RaisedButton 
-                label="New group" 
+                label="Create new" 
                 onClick={this._showButton}/>
             </div>
 
@@ -160,7 +160,7 @@ var SelectedDevices = React.createClass({
                 onChange={this._validateName}
                 errorText={this.state.errorText1} />
             
-              <RaisedButton tooltip="save" onClick={this._newGroupHandler} >Save</RaisedButton>
+              <RaisedButton label="Save" onClick={this._newGroupHandler} />
             </div>
           </div>
         </Dialog>

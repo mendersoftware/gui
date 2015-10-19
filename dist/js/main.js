@@ -49054,7 +49054,7 @@ var SelectedDevices = React.createClass({displayName: "SelectedDevices",
               style: inputStyle}), 
               
               React.createElement(RaisedButton, {
-                label: "New group", 
+                label: "Create new", 
                 onClick: this._showButton})
             ), 
 
@@ -49067,7 +49067,7 @@ var SelectedDevices = React.createClass({displayName: "SelectedDevices",
                 onChange: this._validateName, 
                 errorText: this.state.errorText1}), 
             
-              React.createElement(RaisedButton, {tooltip: "save", onClick: this._newGroupHandler}, "Save")
+              React.createElement(RaisedButton, {label: "Save", onClick: this._newGroupHandler})
             )
           )
         ), 
