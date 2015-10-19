@@ -21,10 +21,10 @@ var styles = {
 
 function getState() {
   return {
-    updates: AppStore.getRecentUpdates(),
-    schedule: AppStore.getScheduledUpdates(),
+    recent: AppStore.getRecentUpdates(new Date().getTime()),
+    progress: AppStore.getProgressUpdates(new Date().getTime()),
+    schedule: AppStore.getScheduledUpdates(new Date().getTime()),
     events: AppStore.getEventLog(),
-    groups: AppStore.getGroups()
   }
 }
 
@@ -47,14 +47,14 @@ var Updates = React.createClass({
           <Tab key={1}
           style={styles.tabs}
           label={"Updates"}>
-            <Recent groups={this.state.groups} updates={this.state.updates} />
+            <Recent recent={this.state.recent} progress={this.state.progress} />
 
           </Tab>
 
           <Tab key={2}
           style={styles.tabs}
           label={"Schedule"}>
-            <Schedule updates={this.state.schedule} />
+            <Schedule schedule={this.state.schedule} />
           </Tab>
 
           <Tab key={3}

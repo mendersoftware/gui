@@ -10,9 +10,9 @@ var Tab = mui.Tab;
 
 var menuItems = [
   {route:"/", text:"Dashboard"},
-  {route:"/updates", text:"Updates"},
   {route:"/devices", text:"Devices"},
-  {route:"/software", text:"Software"}
+  {route:"/software", text:"Software"},
+  {route:"/updates", text:"Updates"},
 ];
 
 var styles = {
@@ -42,9 +42,9 @@ var Header = React.createClass({
   _updateActive: function() {
 
     return this.context.router.isActive('dashboard') ? '0' :
-      this.context.router.isActive('updates') ? '1' :
-      this.context.router.isActive('devices') ? '2' : 
-      this.context.router.isActive('software') ? '3' : '0';
+      this.context.router.isActive('devices') ? '1' :
+      this.context.router.isActive('software') ? '2' : 
+      this.context.router.isActive('updates') ? '3' : '0';
   },
   _handleTabActive: function(tab) {
     this.context.router.transitionTo(tab.props.route);

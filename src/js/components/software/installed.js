@@ -22,22 +22,24 @@ var Installed = React.createClass({
     });
     return (
       <div>
-        <Table
-          selectable={false}>
-          <TableHeader
-            displaySelectAll={false}
-            adjustForCheckbox={false}>
-            <TableRow>
-              <TableHeaderColumn tooltip="Software">Software</TableHeaderColumn>
-              <TableHeaderColumn tooltip="Model compatibility">Model compatibility</TableHeaderColumn>
-              <TableHeaderColumn tooltip="Number of devices">Number of devices</TableHeaderColumn>
-            </TableRow>
-          </TableHeader>
-          <TableBody
-            displayRowCheckbox={false}>
-            {items}
-          </TableBody>
-        </Table>
+        <div style={{marginTop:"30px"}}> 
+          <Table
+            selectable={false}>
+            <TableHeader
+              displaySelectAll={false}
+              adjustForCheckbox={false}>
+              <TableRow>
+                <TableHeaderColumn tooltip="Software">Software</TableHeaderColumn>
+                <TableHeaderColumn tooltip="Model compatibility">Model compatibility</TableHeaderColumn>
+                <TableHeaderColumn tooltip="Number of devices"># Devices</TableHeaderColumn>
+              </TableRow>
+            </TableHeader>
+            <TableBody
+              displayRowCheckbox={false}>
+              {items}
+            </TableBody>
+          </Table>
+        </div>
       </div>
     );
   }

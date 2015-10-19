@@ -70,7 +70,7 @@ var _alldevices = [
     'model':"Acme Model 1",
     'arch': 'armv7',
     'status': 'Up',
-    'software_version': 'Version 1.1',
+    'software_version': 'Version 1.0',
     'groups': [1,3]
   },
   {
@@ -79,7 +79,7 @@ var _alldevices = [
     'model':"Acme Model 1",
     'arch': 'armv7',
     'status': 'Down',
-    'software_version': 'Version 1.1',
+    'software_version': 'Version 1.0',
     'groups': [1,3]
   },
   {
@@ -88,7 +88,7 @@ var _alldevices = [
     'model':"Acme Model 1",
     'arch': 'armv7',
     'status': 'Down',
-    'software_version': 'Version 1.1',
+    'software_version': 'Version 0.3',
     'groups': [1,3]
   },
   {
@@ -97,7 +97,7 @@ var _alldevices = [
     'model':"Acme Model 1",
     'arch': 'armv7',
     'status': 'Up',
-    'software_version': 'Version 1.1',
+    'software_version': 'Version 1.0',
     'groups': [1,4]
   },
   {
@@ -106,7 +106,7 @@ var _alldevices = [
     'model':"Acme Model 1",
     'arch': 'armv7',
     'status': 'Up',
-    'software_version': 'Version 1.1',
+    'software_version': 'Version 1.0',
     'groups': [1,4]
   },
 ];
@@ -224,15 +224,33 @@ var _softwareInstalled = [];
 var _softwareRepo = [
   {
     id: 1,
-    name: "Version 1.0",
+    name: "Version 0.2",
     model: "Acme Model 1",
-    description: "Version 1.0 stable for Acme Model 1"
+    description: "Version 0.2 Beta"
   },
   {
     id: 2,
+    name: "Version 0.3",
+    model: "Acme Model 1",
+    description: "Version 0.3 fixes bug #44 in Beta"
+  },
+  {
+    id: 3,
+    name: "Version 1.0",
+    model: "Acme Model 1",
+    description: "Version 1.0 stable release for Acme Model 1"
+  },
+  {
+    id: 4,
     name: "Version 1.1",
     model: "Acme Model 1",
     description: "Version 1.1 fixes bug #243 for Acme Model 1"
+  },
+  {
+    id: 5,
+    name: "Version 1.2",
+    model: "Acme Model 1",
+    description: "1.2 optimization"
   },
 ];
 discoverSoftware();
@@ -264,11 +282,12 @@ function _uploadImage(image) {
 
 
 // UPDATES
-var _updates = [];
+var _progress = [];
+var _recent = []
 var _schedule = [];
 var _events = [];
 
-var _updates = [
+var _allupdates = [
   {
     id: 1,
     group: "Test",
@@ -277,45 +296,165 @@ var _updates = [
     start_time: 1446383576000,
     end_time: 1446387176000,
     status: null,
+    devices: 3
   },
   {
     id: 2,
     group: "Development",
     model: "Acme Model 1",
-    software_version: "Version 1.1",
+    software_version: "Version 1.2",
     start_time: 1446297176000,
     end_time: 1446300776000,
     status: null ,
+    devices: 3
   },
-   {
+  {
     id: 3,
     group: "Production",
     model: "Acme Model 1",
-    software_version: "Version 1.1",
+    software_version: "Version 1.0",
     start_time: 1444309976000,
     end_time: 1444396376000,
     status: "Complete",
+    devices: [
+      {
+        id:7,
+        name:"Device007",
+        model:"Acme Model 1",
+        last_software_version:"Version 0.3",
+        software_version:"Version 1.0",
+        start_time:1444309976000,
+        end_time:1444396376000,
+        status:"Complete"
+      },
+      {
+        id:8,
+        name:"Device008",
+        model:"Acme Model 1",
+        last_software_version:"Version 0.3",
+        software_version:"Version 1.0",
+        start_time:1444309976000,
+        end_time:1444396376000,
+        status:"Complete"
+      },
+    ]
   },
   {
     id: 4,
     group: "Test",
     model: "Acme Model 1",
-    software_version: "Version 1.0",
-    start_time: 1443708776000,
-    end_time: 1443709971000,
+    software_version: "Version 0.3",
+    start_time: 1443705176000,
+    end_time: 1443708776000,
     status: "Complete",
+    devices: [
+     {
+        id:4,
+        name:"Device004",
+        model:"Acme Model 1",
+        last_software_version:"Version 0.2",
+        software_version:"Version 0.3",
+        start_time:1443705176000,
+        end_time:1443708776000,
+        status:"Complete"
+      },
+      {
+        id:5,
+        name:"Device005",
+        model:"Acme Model 1",
+        last_software_version:"Version 0.2",
+        software_version:"Version 0.3",
+        start_time:1443705176000,
+        end_time:1443708776000,
+        status:"Complete"
+      },
+      {
+        id:6,
+        name:"Device006",
+        model:"Acme Model 1",
+        last_software_version:"Version 0.3",
+        software_version:"Version 0.3",
+        start_time:1443705176000,
+        end_time: 1443708776000,
+        status:"Complete"
+      }
+    ]
   },
   {
     id: 5,
     group: "Test",
     model: "Acme Model 1",
     software_version: "Version 1.0",
-    start_time: 1443705176000,
-    end_time: 1443708776000,
+    start_time: 1443708776000,
+    end_time: 1443709971000,
     status: "Failed",
+    devices: [
+      {
+        id:4,
+        name:"Device004",
+        model:"Acme Model 1",
+        last_software_version:"Version 0.3",
+        software_version:"Version 1.0",
+        start_time:1443708776000,
+        end_time:1443709971000,
+        status:"Complete"
+      },
+      {
+        id:5,
+        name:"Device005",
+        model:"Acme Model 1",
+        last_software_version:"Version 0.3",
+        software_version:"Version 1.0",
+        start_time:1443708776000,
+        end_time:1443709971000,
+        status:"Complete"
+      },
+      {
+        id:6,
+        name:"Device006",
+        model:"Acme Model 1",
+        last_software_version:"Version 0.3",
+        software_version:"Version 0.3",
+        start_time:1443708776000,
+        end_time: 1443709971000,
+        status:"Failed"
+      }
+    ]
   },
 ];
+_allupdates.sort(startTimeSort);
 
+function _getRecentUpdates(time) {
+
+  var recent = [];
+  for (var i=0;i<_allupdates.length;i++) {
+    if (_allupdates[i].start_time<time && _allupdates[i].end_time<time) {
+      recent.push(_allupdates[i]);
+    }
+  }
+  return recent;
+}
+
+function _getProgressUpdates(time) {
+  var progress = [];
+  for (var i=0;i<_allupdates.length;i++) {
+    if (_allupdates[i].start_time<time && _allupdates[i].end_time>time) {
+      progress.push(_allupdates[i]);
+    }
+  }
+  return progress;
+}
+
+function _getScheduledUpdates(time) {
+  var schedule = [];
+  for (var i=0;i<_allupdates.length;i++) {
+    if (_allupdates[i].start_time>time) {
+      schedule.push(_allupdates[i]);
+    }
+  }
+  schedule.sort(startTimeSortAscend);
+  return schedule;
+}
 
 function findWithAttr(array, attr, value) {
   for(var i = 0; i < array.length; i += 1) {
@@ -329,9 +468,15 @@ function statusSort(a,b) {
   return (a.status > b.status) - (a.status < b.status);
 }
 
+function startTimeSort(a,b) {
+  return (b.start_time > a.start_time) - (b.start_time < a.start_time);
+}
+function startTimeSortAscend(a,b) {
+  return (a.start_time > b.start_time) - (a.start_time < b.start_time);
+}
+
 var AppStore = assign(EventEmitter.prototype, {
   emitChange: function() {
-    console.log("change ");
     this.emit(CHANGE_EVENT)
   },
 
@@ -364,12 +509,16 @@ var AppStore = assign(EventEmitter.prototype, {
     return _softwareRepo
   },
 
-  getRecentUpdates: function() {
-    return _updates
+  getRecentUpdates: function(date) {
+    return _getRecentUpdates(date)
   }, 
 
-  getScheduledUpdates: function() {
-    return _schedule
+  getProgressUpdates: function(date) {
+    return _getProgressUpdates(date)
+  }, 
+
+  getScheduledUpdates: function(date) {
+    return _getScheduledUpdates(date)
   }, 
 
   getEventLog: function() {

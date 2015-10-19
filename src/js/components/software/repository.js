@@ -19,6 +19,7 @@ var RaisedButton = mui.RaisedButton;
 var Dialog = mui.Dialog;
 var SelectField = mui.SelectField;
 var TextField = mui.TextField;
+var FlatButton = mui.FlatButton;
 
 var newState = {model: "Acme Model 1"};
 
@@ -31,6 +32,7 @@ var Repository = React.createClass({
   _handleFieldChange: function(field, e) {
     newState[field] = e.target.value;
     this.setState({newImage: newState});
+    console.log(this.state.newImage);
   },
   dialogOpen: function (ref) {
     this.refs[ref].show();
@@ -46,7 +48,7 @@ var Repository = React.createClass({
           <TableRowColumn>{pkg.name}</TableRowColumn>
           <TableRowColumn>{pkg.model}</TableRowColumn>
           <TableRowColumn>{pkg.description}</TableRowColumn>
-          <TableRowColumn><Link to="/updates">Schedule update</Link></TableRowColumn>
+          <TableRowColumn><FlatButton label="Schedule update" /></TableRowColumn>
         </TableRow>
       )
     });
@@ -62,23 +64,25 @@ var Repository = React.createClass({
     }
     return (
       <div>
-        <Table
-          selectable={false}>
-          <TableHeader
-            displaySelectAll={false}
-            adjustForCheckbox={false}>
-            <TableRow>
-              <TableHeaderColumn tooltip="Software">Software</TableHeaderColumn>
-              <TableHeaderColumn tooltip="Model compatibility">Model compatibility</TableHeaderColumn>
-              <TableHeaderColumn tooltip="Description">Description</TableHeaderColumn>
-              <TableHeaderColumn tooltip="">Actions</TableHeaderColumn>
-            </TableRow>
-          </TableHeader>
-          <TableBody
-            displayRowCheckbox={false}>
-            {items}
-          </TableBody>
-        </Table>
+        <div style={{marginTop:"30px"}}> 
+          <Table
+            selectable={false}>
+            <TableHeader
+              displaySelectAll={false}
+              adjustForCheckbox={false}>
+              <TableRow>
+                <TableHeaderColumn tooltip="Software">Software</TableHeaderColumn>
+                <TableHeaderColumn tooltip="Model compatibility">Model compatibility</TableHeaderColumn>
+                <TableHeaderColumn tooltip="Description">Description</TableHeaderColumn>
+                <TableHeaderColumn tooltip=""></TableHeaderColumn>
+              </TableRow>
+            </TableHeader>
+            <TableBody
+              displayRowCheckbox={false}>
+              {items}
+            </TableBody>
+          </Table>
+        </div>
         <div className="margin-top">
           <RaisedButton onClick={this.dialogOpen.bind(null, 'upload')} label="Upload a new image" primary={true} />
         </div>

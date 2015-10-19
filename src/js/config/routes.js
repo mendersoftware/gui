@@ -15,8 +15,8 @@ var Route = Router.Route;
 module.exports = (
   <Route name="app" path="/" handler={App}>
     <DefaultRoute name="dashboard" handler={Dashboard} />
-    <Route name="updates" path="/updates" handler={Updates} />
     <Route name="devices" path="/devices" handler={Devices} />
     <Route name="software" path="/software" handler={Software} />
+    <Route name="updates" path="/updates" handler={Updates} />
   </Route>
 );  

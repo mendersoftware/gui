@@ -2,9 +2,20 @@ html, body {
   height: 100%;
 }
 
+
+/* Type */
+
 body {
   font-family: Roboto;
+  font-size: 13px;
+  margin: 0;
 }
+
+.italic {
+  font-style: italic;
+}
+
+/* General */
 
 .box-sizing (@type: border-box) {
   -webkit-box-sizing: @type;
@@ -58,11 +69,16 @@ body {
 }
 
 .container {
-  padding: 40px 0;
+  padding: 40px 20px;
 }
 
 
 
 .tableActions {
   padding: 30px;
+}
+
+.largeDialog {
+  width: 84% !important;
+  max-width: 94% !important;
 }

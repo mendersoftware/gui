@@ -48701,7 +48701,7 @@ var AppActions = {
 
 module.exports = AppActions;
 
-},{"../constants/app-constants":384,"../dispatchers/app-dispatcher":385}],368:[function(require,module,exports){
+},{"../constants/app-constants":385,"../dispatchers/app-dispatcher":386}],368:[function(require,module,exports){
 var React = require('react');
 var Router = require('react-router');
 var RouteHandler = Router.RouteHandler;
@@ -48817,7 +48817,7 @@ var DeviceList = React.createClass({displayName: "DeviceList",
 
 module.exports = DeviceList;
 
-},{"../../actions/app-actions":367,"../../stores/app-store":387,"material-ui":43,"react":366}],371:[function(require,module,exports){
+},{"../../actions/app-actions":367,"../../stores/app-store":388,"material-ui":43,"react":366}],371:[function(require,module,exports){
 var React = require('react');
 var AppStore = require('../../stores/app-store');
 
@@ -48862,7 +48862,7 @@ var Devices = React.createClass({displayName: "Devices",
 
 module.exports = Devices;
 
-},{"../../stores/app-store":387,"./devicelist":370,"./groups":372,"./selecteddevices":373,"react":366}],372:[function(require,module,exports){
+},{"../../stores/app-store":388,"./devicelist":370,"./groups":372,"./selecteddevices":373,"react":366}],372:[function(require,module,exports){
 var React = require('react');
 var AppStore = require('../../stores/app-store');
 var AppActions = require('../../actions/app-actions');
@@ -48898,7 +48898,7 @@ var Groups = React.createClass({displayName: "Groups",
 
 module.exports = Groups;
 
-},{"../../actions/app-actions":367,"../../stores/app-store":387,"material-ui":43,"react":366}],373:[function(require,module,exports){
+},{"../../actions/app-actions":367,"../../stores/app-store":388,"material-ui":43,"react":366}],373:[function(require,module,exports){
 var React = require('react');
 var AppStore = require('../../stores/app-store');
 var AppActions = require('../../actions/app-actions');
@@ -49087,7 +49087,7 @@ var SelectedDevices = React.createClass({displayName: "SelectedDevices",
 
 module.exports = SelectedDevices;
 
-},{"../../actions/app-actions":367,"../../stores/app-store":387,"material-ui":43,"react":366}],374:[function(require,module,exports){
+},{"../../actions/app-actions":367,"../../stores/app-store":388,"material-ui":43,"react":366}],374:[function(require,module,exports){
 var React = require('react');
 var mui = require('material-ui');
 var Router = require('react-router');
@@ -49100,9 +49100,9 @@ var Tab = mui.Tab;
 
 var menuItems = [
   {route:"/", text:"Dashboard"},
-  {route:"/updates", text:"Updates"},
   {route:"/devices", text:"Devices"},
-  {route:"/software", text:"Software"}
+  {route:"/software", text:"Software"},
+  {route:"/updates", text:"Updates"},
 ];
 
 var styles = {
@@ -49132,9 +49132,9 @@ var Header = React.createClass({displayName: "Header",
   _updateActive: function() {
 
     return this.context.router.isActive('dashboard') ? '0' :
-      this.context.router.isActive('updates') ? '1' :
-      this.context.router.isActive('devices') ? '2' : 
-      this.context.router.isActive('software') ? '3' : '0';
+      this.context.router.isActive('devices') ? '1' :
+      this.context.router.isActive('software') ? '2' : 
+      this.context.router.isActive('updates') ? '3' : '0';
   },
   _handleTabActive: function(tab) {
     this.context.router.transitionTo(tab.props.route);
@@ -49195,20 +49195,22 @@ var Installed = React.createClass({displayName: "Installed",
     });
     return (
       React.createElement("div", null, 
-        React.createElement(Table, {
-          selectable: false}, 
-          React.createElement(TableHeader, {
-            displaySelectAll: false, 
-            adjustForCheckbox: false}, 
-            React.createElement(TableRow, null, 
-              React.createElement(TableHeaderColumn, {tooltip: "Software"}, "Software"), 
-              React.createElement(TableHeaderColumn, {tooltip: "Model compatibility"}, "Model compatibility"), 
-              React.createElement(TableHeaderColumn, {tooltip: "Number of devices"}, "Number of devices")
+        React.createElement("div", {style: {marginTop:"30px"}}, 
+          React.createElement(Table, {
+            selectable: false}, 
+            React.createElement(TableHeader, {
+              displaySelectAll: false, 
+              adjustForCheckbox: false}, 
+              React.createElement(TableRow, null, 
+                React.createElement(TableHeaderColumn, {tooltip: "Software"}, "Software"), 
+                React.createElement(TableHeaderColumn, {tooltip: "Model compatibility"}, "Model compatibility"), 
+                React.createElement(TableHeaderColumn, {tooltip: "Number of devices"}, "# Devices")
+              )
+            ), 
+            React.createElement(TableBody, {
+              displayRowCheckbox: false}, 
+              items
             )
-          ), 
-          React.createElement(TableBody, {
-            displayRowCheckbox: false}, 
-            items
           )
         )
       )
@@ -49240,6 +49242,7 @@ var RaisedButton = mui.RaisedButton;
 var Dialog = mui.Dialog;
 var SelectField = mui.SelectField;
 var TextField = mui.TextField;
+var FlatButton = mui.FlatButton;
 
 var newState = {model: "Acme Model 1"};
 
@@ -49252,6 +49255,7 @@ var Repository = React.createClass({displayName: "Repository",
   _handleFieldChange: function(field, e) {
     newState[field] = e.target.value;
     this.setState({newImage: newState});
+    console.log(this.state.newImage);
   },
   dialogOpen: function (ref) {
     this.refs[ref].show();
@@ -49267,7 +49271,7 @@ var Repository = React.createClass({displayName: "Repository",
           React.createElement(TableRowColumn, null, pkg.name), 
           React.createElement(TableRowColumn, null, pkg.model), 
           React.createElement(TableRowColumn, null, pkg.description), 
-          React.createElement(TableRowColumn, null, React.createElement(Link, {to: "/updates"}, "Schedule update"))
+          React.createElement(TableRowColumn, null, React.createElement(FlatButton, {label: "Schedule update"}))
         )
       )
     });
@@ -49283,21 +49287,23 @@ var Repository = React.createClass({displayName: "Repository",
     }
     return (
       React.createElement("div", null, 
-        React.createElement(Table, {
-          selectable: false}, 
-          React.createElement(TableHeader, {
-            displaySelectAll: false, 
-            adjustForCheckbox: false}, 
-            React.createElement(TableRow, null, 
-              React.createElement(TableHeaderColumn, {tooltip: "Software"}, "Software"), 
-              React.createElement(TableHeaderColumn, {tooltip: "Model compatibility"}, "Model compatibility"), 
-              React.createElement(TableHeaderColumn, {tooltip: "Description"}, "Description"), 
-              React.createElement(TableHeaderColumn, {tooltip: ""}, "Actions")
+        React.createElement("div", {style: {marginTop:"30px"}}, 
+          React.createElement(Table, {
+            selectable: false}, 
+            React.createElement(TableHeader, {
+              displaySelectAll: false, 
+              adjustForCheckbox: false}, 
+              React.createElement(TableRow, null, 
+                React.createElement(TableHeaderColumn, {tooltip: "Software"}, "Software"), 
+                React.createElement(TableHeaderColumn, {tooltip: "Model compatibility"}, "Model compatibility"), 
+                React.createElement(TableHeaderColumn, {tooltip: "Description"}, "Description"), 
+                React.createElement(TableHeaderColumn, {tooltip: ""})
+              )
+            ), 
+            React.createElement(TableBody, {
+              displayRowCheckbox: false}, 
+              items
             )
-          ), 
-          React.createElement(TableBody, {
-            displayRowCheckbox: false}, 
-            items
           )
         ), 
         React.createElement("div", {className: "margin-top"}, 
@@ -49343,7 +49349,7 @@ var Repository = React.createClass({displayName: "Repository",
 
 module.exports = Repository;
 
-},{"../../actions/app-actions":367,"../../stores/app-store":387,"./updatebutton.js":378,"material-ui":43,"react":366,"react-router":174}],377:[function(require,module,exports){
+},{"../../actions/app-actions":367,"../../stores/app-store":388,"./updatebutton.js":378,"material-ui":43,"react":366,"react-router":174}],377:[function(require,module,exports){
 var React = require('react');
 var AppStore = require('../../stores/app-store');
 
@@ -49408,7 +49414,7 @@ var Software = React.createClass({displayName: "Software",
 
 module.exports = Software;
 
-},{"../../stores/app-store":387,"./installed.js":375,"./repository.js":376,"material-ui":43,"react":366}],378:[function(require,module,exports){
+},{"../../stores/app-store":388,"./installed.js":375,"./repository.js":376,"material-ui":43,"react":366}],378:[function(require,module,exports){
 var React = require('react');
 
 // material ui
@@ -49451,7 +49457,7 @@ module.exports = EventLog;
 },{"material-ui":43,"react":366}],380:[function(require,module,exports){
 var React = require('react');
 var Time = require('react-time');
-var AppStore = require('../../stores/app-store');
+var Report = require('./report.js');
 
 // material ui
 var mui = require('material-ui');
@@ -49461,52 +49467,139 @@ var TableHeaderColumn = mui.TableHeaderColumn;
 var TableBody = mui.TableBody;
 var TableRow = mui.TableRow;
 var TableRowColumn = mui.TableRowColumn;
+var Dialog = mui.Dialog;
+var FlatButton = mui.FlatButton;
 
 
 var Recent = React.createClass({displayName: "Recent",
-  _getDevices: function(group, model) {
-    return AppStore.getDevicesFromParams(group, model);
+  getInitialState: function() {
+    return {
+      showReport:null 
+    };
   },
   shouldComponentUpdate: function(nextProps, nextState) {
-    return nextProps.groups !== this.props.groups;
+    return nextState.showReport !== this.state.showReport
+  },
+  _handleCellClick: function(rowNumber, columnId) {
+    var report = this.props.recent[rowNumber];
+    this.setState({showReport: report});
+    this.refs['statusDialog'].show();
   },
   render: function() {
-    var getDevices = this._getDevices;
-    var items = this.props.updates.map(function(update, index) {
-      return (
-        React.createElement(TableRow, {key: index}, 
-          React.createElement(TableRowColumn, null, update.group), 
-          React.createElement(TableRowColumn, null, update.model), 
-          React.createElement(TableRowColumn, null, update.software_version), 
-          React.createElement(TableRowColumn, null, getDevices(update.group, update.model)), 
-          React.createElement(TableRowColumn, null, React.createElement(Time, {value: update.start_time, format: "YYYY/MM/DD HH:mm"})), 
-          React.createElement(TableRowColumn, null, React.createElement(Time, {value: update.end_time, format: "YYYY/MM/DD HH:mm"})), 
-          React.createElement(TableRowColumn, null, update.status || "--")
-        )
-      )
-    });
-    return (
-      React.createElement("div", null, 
-        React.createElement(Table, {
-          selectable: false}, 
-          React.createElement(TableHeader, {
-            displaySelectAll: false, 
-            adjustForCheckbox: false}, 
-            React.createElement(TableRow, null, 
-              React.createElement(TableHeaderColumn, {tooltip: "Device group"}, "Group"), 
-              React.createElement(TableHeaderColumn, {tooltip: "Model compatibility"}, "Model compatibility"), 
-              React.createElement(TableHeaderColumn, {tooltip: "Target software version"}, "Software"), 
-              React.createElement(TableHeaderColumn, {tooltip: "Number of devices"}, "Number of devices"), 
-              React.createElement(TableHeaderColumn, {tooltip: "Start time"}, "Start time"), 
-              React.createElement(TableHeaderColumn, {tooltip: "End time"}, "End time"), 
-              React.createElement(TableHeaderColumn, {tooltip: "Status"}, "Status")
-            )
-          ), 
-          React.createElement(TableBody, {
-            displayRowCheckbox: false}, 
-            items
+    var now = new Date().getTime();
+
+    var progressCount = 0;
+    var progress = this.props.progress.map(function(update, index) {
+      if (update.start_time<now && update.end_time>now) {
+        progressCount++;
+        return (
+          React.createElement(TableRow, {hoverable: true, key: index}, 
+            React.createElement(TableRowColumn, null, update.group), 
+            React.createElement(TableRowColumn, null, update.model), 
+            React.createElement(TableRowColumn, null, update.software_version), 
+            React.createElement(TableRowColumn, null, update.devices.length), 
+            React.createElement(TableRowColumn, null, React.createElement(Time, {value: update.start_time, format: "YYYY/MM/DD HH:mm"})), 
+            React.createElement(TableRowColumn, null, React.createElement(Time, {value: update.end_time, format: "YYYY/MM/DD HH:mm"})), 
+            React.createElement(TableRowColumn, null, update.status || "--")
           )
         )
+      }
+    });
+
+    var recentCount = 0;
+    var recent = this.props.recent.map(function(update, index) {
+      if (update.start_time<now && update.end_time<now) {
+        recentCount++;
+        return (
+          React.createElement(TableRow, {key: index}, 
+            React.createElement(TableRowColumn, null, update.group), 
+            React.createElement(TableRowColumn, null, update.model), 
+            React.createElement(TableRowColumn, null, update.software_version), 
+            React.createElement(TableRowColumn, null, update.devices.length), 
+            React.createElement(TableRowColumn, null, React.createElement(Time, {value: update.start_time, format: "YYYY/MM/DD HH:mm"})), 
+            React.createElement(TableRowColumn, null, React.createElement(Time, {value: update.end_time, format: "YYYY/MM/DD HH:mm"})), 
+            React.createElement(TableRowColumn, null, React.createElement(FlatButton, {label: update.status || "--", primary: update.status === 'Failed', secondary: update.status === 'Complete'}))
+          )
+        )
+      }
+    });
+
+    var dialogActions = [
+      { text: 'Close' }
+    ];
+    return (
+      React.createElement("div", null, 
+        React.createElement("div", {style: {marginTop:"30px"}}, 
+          React.createElement("h3", null, "Updates in progress"), 
+          React.createElement(Table, {
+            className: progressCount ? null : 'hidden', 
+            selectable: false}, 
+            React.createElement(TableHeader, {
+              displaySelectAll: false, 
+              adjustForCheckbox: false}, 
+              React.createElement(TableRow, null, 
+                React.createElement(TableHeaderColumn, {tooltip: "Device group"}, "Group"), 
+                React.createElement(TableHeaderColumn, {tooltip: "Model compatibility"}, "Model compatibility"), 
+                React.createElement(TableHeaderColumn, {tooltip: "Target software version"}, "Software"), 
+                React.createElement(TableHeaderColumn, {tooltip: "Number of devices"}, "# Devices"), 
+                React.createElement(TableHeaderColumn, {tooltip: "Start time"}, "Start time"), 
+                React.createElement(TableHeaderColumn, {tooltip: "End time"}, "End time"), 
+                React.createElement(TableHeaderColumn, {tooltip: "Status"}, "Status")
+              )
+            ), 
+            React.createElement(TableBody, {
+              displayRowCheckbox: false}, 
+              progress
+            )
+          ), 
+          React.createElement("div", {className: progressCount ? 'hidden' : null}, 
+            React.createElement("p", {className: "italic"}, "No updates in progress")
+          )
+        ), 
+
+        React.createElement("div", {style: {marginTop:"60px"}}, 
+          React.createElement("h3", null, "Recent updates"), 
+          React.createElement(Table, {
+            onCellClick: this._handleCellClick, 
+            className: recentCount ? null : 'hidden', 
+            selectable: false}, 
+            React.createElement(TableHeader, {
+              displaySelectAll: false, 
+              adjustForCheckbox: false}, 
+              React.createElement(TableRow, null, 
+                React.createElement(TableHeaderColumn, {tooltip: "Device group"}, "Group"), 
+                React.createElement(TableHeaderColumn, {tooltip: "Model compatibility"}, "Model compatibility"), 
+                React.createElement(TableHeaderColumn, {tooltip: "Target software version"}, "Software"), 
+                React.createElement(TableHeaderColumn, {tooltip: "Number of devices"}, "# Devices"), 
+                React.createElement(TableHeaderColumn, {tooltip: "Start time"}, "Start time"), 
+                React.createElement(TableHeaderColumn, {tooltip: "End time"}, "End time"), 
+                React.createElement(TableHeaderColumn, {tooltip: "Status"}, "Status")
+              )
+            ), 
+            React.createElement(TableBody, {
+              showRowHover: true, 
+              displayRowCheckbox: false, 
+              style: {cursor:"pointer"}}, 
+              recent
+            )
+          ), 
+
+          React.createElement("div", {className: recentCount ? 'hidden' : null}, 
+            React.createElement("p", {className: "italic"}, "No recent updates")
+          )
+        ), 
+
+        React.createElement(Dialog, {title: "Update status report", 
+          actions: dialogActions, 
+          autoDetectWindowHeight: true, 
+          autoScrollBodyContent: true, 
+          ref: "statusDialog", 
+          contentClassName: "largeDialog"}, 
+            React.createElement("div", {style: {height: '1000px'}}, 
+              React.createElement(Report, {update: this.state.showReport})
+            )
+        )
+
       )
     );
   }
@@ -49514,8 +49607,9 @@ var Recent = React.createClass({displayName: "Recent",
 
 module.exports = Recent;
 
-},{"../../stores/app-store":387,"material-ui":43,"react":366,"react-time":193}],381:[function(require,module,exports){
+},{"./report.js":381,"material-ui":43,"react":366,"react-time":193}],381:[function(require,module,exports){
 var React = require('react');
+var Time = require('react-time');
 
 // material ui
 var mui = require('material-ui');
@@ -49525,19 +49619,147 @@ var TableHeaderColumn = mui.TableHeaderColumn;
 var TableBody = mui.TableBody;
 var TableRow = mui.TableRow;
 var TableRowColumn = mui.TableRowColumn;
+var FlatButton = mui.FlatButton;
+
+
+var Report = React.createClass({displayName: "Report",
+  
+  render: function() {
+    var deviceList = this.props.update.devices.map(function(device, index) {
+      return (
+        React.createElement(TableRow, {key: index}, 
+          React.createElement(TableRowColumn, null, device.name), 
+          React.createElement(TableRowColumn, null, device.model), 
+          React.createElement(TableRowColumn, null, device.last_software_version), 
+          React.createElement(TableRowColumn, null, device.software_version), 
+          React.createElement(TableRowColumn, null, React.createElement(Time, {value: device.start_time, format: "YYYY/MM/DD HH:mm"})), 
+          React.createElement(TableRowColumn, null, React.createElement(Time, {value: device.end_time, format: "YYYY/MM/DD HH:mm"})), 
+          React.createElement(TableRowColumn, null, device.status || "--"), 
+          React.createElement(TableRowColumn, null, React.createElement(FlatButton, {label: "Export log"}))
+        )
+      )
+    });
+    return (
+      React.createElement("div", null, 
+        React.createElement("div", null, 
+          React.createElement("ul", null, 
+            React.createElement("li", null, React.createElement("label", null, "Number of devices"), ": ", React.createElement("span", null, this.props.update.devices.length)), 
+            React.createElement("li", null, React.createElement("label", null, "Group"), ": ", React.createElement("span", null, this.props.update.group)), 
+            React.createElement("li", null, React.createElement("label", null, "Model"), ": ", React.createElement("span", null, this.props.update.model)), 
+            React.createElement("li", null, React.createElement("label", null, "Software"), ": ", React.createElement("span", null, this.props.update.software_version))
+          )
+        ), 
+        React.createElement("div", null, 
+          React.createElement("ul", null, 
+            React.createElement("li", null, React.createElement("label", null, "Status"), ": ", React.createElement("span", null, this.props.update.status)), 
+            React.createElement("li", null, React.createElement("label", null, "Start time"), ": ", React.createElement("span", null, React.createElement(Time, {value: this.props.update.start_time, format: "YYYY/MM/DD HH:mm"}))), 
+            React.createElement("li", null, React.createElement("label", null, "End time"), ": ", React.createElement("span", null, React.createElement(Time, {value: this.props.update.end_time, format: "YYYY/MM/DD HH:mm"})))
+          )
+        ), 
+
+        React.createElement(Table, {
+          selectable: false}, 
+          React.createElement(TableHeader, {
+            displaySelectAll: false, 
+            adjustForCheckbox: false}, 
+            React.createElement(TableRow, null, 
+              React.createElement(TableHeaderColumn, {tooltip: "Device name"}, "Device name"), 
+              React.createElement(TableHeaderColumn, {tooltip: "Device model"}, "Model"), 
+              React.createElement(TableHeaderColumn, {tooltip: "Previous software"}, "Updating from"), 
+              React.createElement(TableHeaderColumn, {tooltip: "Target software"}, "Updated to "), 
+              React.createElement(TableHeaderColumn, {tooltip: "Update start time"}, "Start time"), 
+              React.createElement(TableHeaderColumn, {tooltip: "Update end time"}, "End time"), 
+              React.createElement(TableHeaderColumn, {tooltip: "Status"}, "Status"), 
+              React.createElement(TableHeaderColumn, {tooltip: ""})
+            )
+          ), 
+          React.createElement(TableBody, {
+            displayRowCheckbox: false}, 
+            deviceList
+          )
+        )
+      )
+    );
+  }
+});
+
+module.exports = Report;
+
+},{"material-ui":43,"react":366,"react-time":193}],382:[function(require,module,exports){
+var React = require('react');
+var Time = require('react-time');
+
+// material ui
+var mui = require('material-ui');
+var Table = mui.Table;
+var TableHeader = mui.TableHeader;
+var TableHeaderColumn = mui.TableHeaderColumn;
+var TableBody = mui.TableBody;
+var TableRow = mui.TableRow;
+var TableRowColumn = mui.TableRowColumn;
+var FlatButton = mui.FlatButton;
 
 
 var Schedule = React.createClass({displayName: "Schedule",
   render: function() {
+    var now = new Date().getTime();
+
+    var scheduleCount = 0;
+    var schedule = this.props.schedule.map(function(update, index) {
+      if (update.start_time>now) {
+        scheduleCount++;
+        return (
+          React.createElement(TableRow, {key: index}, 
+            React.createElement(TableRowColumn, null, update.group), 
+            React.createElement(TableRowColumn, null, update.model), 
+            React.createElement(TableRowColumn, null, update.software_version), 
+            React.createElement(TableRowColumn, null, update.devices.length), 
+            React.createElement(TableRowColumn, null, React.createElement(Time, {value: update.start_time, format: "YYYY/MM/DD HH:mm"})), 
+            React.createElement(TableRowColumn, null, React.createElement(Time, {value: update.end_time, format: "YYYY/MM/DD HH:mm"})), 
+            React.createElement(TableRowColumn, null, React.createElement("span", null, "Begins "), React.createElement(Time, {value: update.start_time, format: "YYYY/MM/DD HH:mm", relative: true})), 
+            React.createElement(TableRowColumn, null, React.createElement(FlatButton, {label: "Edit"}), React.createElement(FlatButton, {label: "Remove"}))
+          )
+        )
+      }
+    });
     return (
-      React.createElement("div", null)
+      React.createElement("div", null, 
+        React.createElement("div", {style: {marginTop:"30px"}}, 
+          React.createElement("h3", null, "Scheduled updates"), 
+          React.createElement(Table, {
+            className: scheduleCount ? null : 'hidden', 
+            selectable: false}, 
+            React.createElement(TableHeader, {
+              displaySelectAll: false, 
+              adjustForCheckbox: false}, 
+              React.createElement(TableRow, null, 
+                React.createElement(TableHeaderColumn, {tooltip: "Device group"}, "Group"), 
+                React.createElement(TableHeaderColumn, {tooltip: "Model compatibility"}, "Model compatibility"), 
+                React.createElement(TableHeaderColumn, {tooltip: "Target software version"}, "Software"), 
+                React.createElement(TableHeaderColumn, {tooltip: "Number of devices"}, "# Devices"), 
+                React.createElement(TableHeaderColumn, {tooltip: "Start time"}, "Start time"), 
+                React.createElement(TableHeaderColumn, {tooltip: "End time"}, "End time"), 
+                React.createElement(TableHeaderColumn, {tooltip: "Details"}, "Details"), 
+                React.createElement(TableHeaderColumn, {tooltip: "Actions"})
+              )
+            ), 
+            React.createElement(TableBody, {
+              displayRowCheckbox: false}, 
+              schedule
+            )
+          ), 
+          React.createElement("div", {className: scheduleCount ? 'hidden' : null}, 
+            React.createElement("p", {className: "italic"}, "No updates scheduled")
+          )
+        )
+      )
     );
   }
 });
 
 module.exports = Schedule;
 
-},{"material-ui":43,"react":366}],382:[function(require,module,exports){
+},{"material-ui":43,"react":366,"react-time":193}],383:[function(require,module,exports){
 var React = require('react');
 var AppStore = require('../../stores/app-store');
 
@@ -49561,10 +49783,10 @@ var styles = {
 
 function getState() {
   return {
-    updates: AppStore.getRecentUpdates(),
-    schedule: AppStore.getScheduledUpdates(),
+    recent: AppStore.getRecentUpdates(new Date().getTime()),
+    progress: AppStore.getProgressUpdates(new Date().getTime()),
+    schedule: AppStore.getScheduledUpdates(new Date().getTime()),
     events: AppStore.getEventLog(),
-    groups: AppStore.getGroups()
   }
 }
 
@@ -49587,14 +49809,14 @@ var Updates = React.createClass({displayName: "Updates",
           React.createElement(Tab, {key: 1, 
           style: styles.tabs, 
           label: "Updates"}, 
-            React.createElement(Recent, {groups: this.state.groups, updates: this.state.updates})
+            React.createElement(Recent, {recent: this.state.recent, progress: this.state.progress})
 
           ), 
 
           React.createElement(Tab, {key: 2, 
           style: styles.tabs, 
           label: "Schedule"}, 
-            React.createElement(Schedule, {updates: this.state.schedule})
+            React.createElement(Schedule, {schedule: this.state.schedule})
           ), 
 
           React.createElement(Tab, {key: 3, 
@@ -49610,7 +49832,7 @@ var Updates = React.createClass({displayName: "Updates",
 
 module.exports = Updates;
 
-},{"../../stores/app-store":387,"./eventlog.js":379,"./recentupdates.js":380,"./schedule.js":381,"material-ui":43,"react":366}],383:[function(require,module,exports){
+},{"../../stores/app-store":388,"./eventlog.js":379,"./recentupdates.js":380,"./schedule.js":382,"material-ui":43,"react":366}],384:[function(require,module,exports){
 var React = require('react');
 
 var App = require('../components/app');
@@ -49628,13 +49850,13 @@ var Route = Router.Route;
 module.exports = (
   React.createElement(Route, {name: "app", path: "/", handler: App}, 
     React.createElement(DefaultRoute, {name: "dashboard", handler: Dashboard}), 
-    React.createElement(Route, {name: "updates", path: "/updates", handler: Updates}), 
     React.createElement(Route, {name: "devices", path: "/devices", handler: Devices}), 
-    React.createElement(Route, {name: "software", path: "/software", handler: Software})
+    React.createElement(Route, {name: "software", path: "/software", handler: Software}), 
+    React.createElement(Route, {name: "updates", path: "/updates", handler: Updates})
   )
 );  
 
-},{"../components/app":368,"../components/dashboard/dashboard":369,"../components/devices/devices":371,"../components/software/software":377,"../components/updates/updates":382,"react":366,"react-router":174}],384:[function(require,module,exports){
+},{"../components/app":368,"../components/dashboard/dashboard":369,"../components/devices/devices":371,"../components/software/software":377,"../components/updates/updates":383,"react":366,"react-router":174}],385:[function(require,module,exports){
 module.exports = {
   SELECT_GROUP: 'SELECT_GROUP',
   ADD_TO_GROUP: 'ADD_TO_GROUP',
@@ -49642,7 +49864,7 @@ module.exports = {
   UPLOAD_IMAGE: 'UPLOAD_IMAGE'
 }
 
-},{}],385:[function(require,module,exports){
+},{}],386:[function(require,module,exports){
 var Dispatcher = require('flux').Dispatcher;
 var assign = require('react/lib/Object.assign');
 
@@ -49657,7 +49879,7 @@ var AppDispatcher = assign(new Dispatcher(), {
 
 module.exports = AppDispatcher;
 
-},{"flux":4,"react/lib/Object.assign":222}],386:[function(require,module,exports){
+},{"flux":4,"react/lib/Object.assign":222}],387:[function(require,module,exports){
 var React = require('react');
 var Router = require('react-router');
 var routes = require('./config/routes');
@@ -49675,7 +49897,7 @@ Router.run(routes, function(Root) {
   React.render(React.createElement(Root, null), document.getElementById('main'));
 });
 
-},{"./config/routes":383,"react":366,"react-router":174,"react-tap-event-plugin":191}],387:[function(require,module,exports){
+},{"./config/routes":384,"react":366,"react-router":174,"react-tap-event-plugin":191}],388:[function(require,module,exports){
 var AppDispatcher = require('../dispatchers/app-dispatcher');
 var AppConstants = require('../constants/app-constants');
 var assign = require('react/lib/Object.assign');
@@ -49748,7 +49970,7 @@ var _alldevices = [
     'model':"Acme Model 1",
     'arch': 'armv7',
     'status': 'Up',
-    'software_version': 'Version 1.1',
+    'software_version': 'Version 1.0',
     'groups': [1,3]
   },
   {
@@ -49757,7 +49979,7 @@ var _alldevices = [
     'model':"Acme Model 1",
     'arch': 'armv7',
     'status': 'Down',
-    'software_version': 'Version 1.1',
+    'software_version': 'Version 1.0',
     'groups': [1,3]
   },
   {
@@ -49766,7 +49988,7 @@ var _alldevices = [
     'model':"Acme Model 1",
     'arch': 'armv7',
     'status': 'Down',
-    'software_version': 'Version 1.1',
+    'software_version': 'Version 0.3',
     'groups': [1,3]
   },
   {
@@ -49775,7 +49997,7 @@ var _alldevices = [
     'model':"Acme Model 1",
     'arch': 'armv7',
     'status': 'Up',
-    'software_version': 'Version 1.1',
+    'software_version': 'Version 1.0',
     'groups': [1,4]
   },
   {
@@ -49784,7 +50006,7 @@ var _alldevices = [
     'model':"Acme Model 1",
     'arch': 'armv7',
     'status': 'Up',
-    'software_version': 'Version 1.1',
+    'software_version': 'Version 1.0',
     'groups': [1,4]
   },
 ];
@@ -49902,15 +50124,33 @@ var _softwareInstalled = [];
 var _softwareRepo = [
   {
     id: 1,
-    name: "Version 1.0",
+    name: "Version 0.2",
     model: "Acme Model 1",
-    description: "Version 1.0 stable for Acme Model 1"
+    description: "Version 0.2 Beta"
   },
   {
     id: 2,
+    name: "Version 0.3",
+    model: "Acme Model 1",
+    description: "Version 0.3 fixes bug #44 in Beta"
+  },
+  {
+    id: 3,
+    name: "Version 1.0",
+    model: "Acme Model 1",
+    description: "Version 1.0 stable release for Acme Model 1"
+  },
+  {
+    id: 4,
     name: "Version 1.1",
     model: "Acme Model 1",
     description: "Version 1.1 fixes bug #243 for Acme Model 1"
+  },
+  {
+    id: 5,
+    name: "Version 1.2",
+    model: "Acme Model 1",
+    description: "1.2 optimization"
   },
 ];
 discoverSoftware();
@@ -49942,11 +50182,12 @@ function _uploadImage(image) {
 
 
 // UPDATES
-var _updates = [];
+var _progress = [];
+var _recent = []
 var _schedule = [];
 var _events = [];
 
-var _updates = [
+var _allupdates = [
   {
     id: 1,
     group: "Test",
@@ -49955,45 +50196,165 @@ var _updates = [
     start_time: 1446383576000,
     end_time: 1446387176000,
     status: null,
+    devices: 3
   },
   {
     id: 2,
     group: "Development",
     model: "Acme Model 1",
-    software_version: "Version 1.1",
+    software_version: "Version 1.2",
     start_time: 1446297176000,
     end_time: 1446300776000,
     status: null ,
+    devices: 3
   },
-   {
+  {
     id: 3,
     group: "Production",
     model: "Acme Model 1",
-    software_version: "Version 1.1",
+    software_version: "Version 1.0",
     start_time: 1444309976000,
     end_time: 1444396376000,
     status: "Complete",
+    devices: [
+      {
+        id:7,
+        name:"Device007",
+        model:"Acme Model 1",
+        last_software_version:"Version 0.3",
+        software_version:"Version 1.0",
+        start_time:1444309976000,
+        end_time:1444396376000,
+        status:"Complete"
+      },
+      {
+        id:8,
+        name:"Device008",
+        model:"Acme Model 1",
+        last_software_version:"Version 0.3",
+        software_version:"Version 1.0",
+        start_time:1444309976000,
+        end_time:1444396376000,
+        status:"Complete"
+      },
+    ]
   },
   {
     id: 4,
     group: "Test",
     model: "Acme Model 1",
-    software_version: "Version 1.0",
-    start_time: 1443708776000,
-    end_time: 1443709971000,
+    software_version: "Version 0.3",
+    start_time: 1443705176000,
+    end_time: 1443708776000,
     status: "Complete",
+    devices: [
+     {
+        id:4,
+        name:"Device004",
+        model:"Acme Model 1",
+        last_software_version:"Version 0.2",
+        software_version:"Version 0.3",
+        start_time:1443705176000,
+        end_time:1443708776000,
+        status:"Complete"
+      },
+      {
+        id:5,
+        name:"Device005",
+        model:"Acme Model 1",
+        last_software_version:"Version 0.2",
+        software_version:"Version 0.3",
+        start_time:1443705176000,
+        end_time:1443708776000,
+        status:"Complete"
+      },
+      {
+        id:6,
+        name:"Device006",
+        model:"Acme Model 1",
+        last_software_version:"Version 0.3",
+        software_version:"Version 0.3",
+        start_time:1443705176000,
+        end_time: 1443708776000,
+        status:"Complete"
+      }
+    ]
   },
   {
     id: 5,
     group: "Test",
     model: "Acme Model 1",
     software_version: "Version 1.0",
-    start_time: 1443705176000,
-    end_time: 1443708776000,
+    start_time: 1443708776000,
+    end_time: 1443709971000,
     status: "Failed",
+    devices: [
+      {
+        id:4,
+        name:"Device004",
+        model:"Acme Model 1",
+        last_software_version:"Version 0.3",
+        software_version:"Version 1.0",
+        start_time:1443708776000,
+        end_time:1443709971000,
+        status:"Complete"
+      },
+      {
+        id:5,
+        name:"Device005",
+        model:"Acme Model 1",
+        last_software_version:"Version 0.3",
+        software_version:"Version 1.0",
+        start_time:1443708776000,
+        end_time:1443709971000,
+        status:"Complete"
+      },
+      {
+        id:6,
+        name:"Device006",
+        model:"Acme Model 1",
+        last_software_version:"Version 0.3",
+        software_version:"Version 0.3",
+        start_time:1443708776000,
+        end_time: 1443709971000,
+        status:"Failed"
+      }
+    ]
   },
 ];
+_allupdates.sort(startTimeSort);
 
+function _getRecentUpdates(time) {
+
+  var recent = [];
+  for (var i=0;i<_allupdates.length;i++) {
+    if (_allupdates[i].start_time<time && _allupdates[i].end_time<time) {
+      recent.push(_allupdates[i]);
+    }
+  }
+  return recent;
+}
+
+function _getProgressUpdates(time) {
+  var progress = [];
+  for (var i=0;i<_allupdates.length;i++) {
+    if (_allupdates[i].start_time<time && _allupdates[i].end_time>time) {
+      progress.push(_allupdates[i]);
+    }
+  }
+  return progress;
+}
+
+function _getScheduledUpdates(time) {
+  var schedule = [];
+  for (var i=0;i<_allupdates.length;i++) {
+    if (_allupdates[i].start_time>time) {
+      schedule.push(_allupdates[i]);
+    }
+  }
+  schedule.sort(startTimeSortAscend);
+  return schedule;
+}
 
 function findWithAttr(array, attr, value) {
   for(var i = 0; i < array.length; i += 1) {
@@ -50007,9 +50368,15 @@ function statusSort(a,b) {
   return (a.status > b.status) - (a.status < b.status);
 }
 
+function startTimeSort(a,b) {
+  return (b.start_time > a.start_time) - (b.start_time < a.start_time);
+}
+function startTimeSortAscend(a,b) {
+  return (a.start_time > b.start_time) - (a.start_time < b.start_time);
+}
+
 var AppStore = assign(EventEmitter.prototype, {
   emitChange: function() {
-    console.log("change ");
     this.emit(CHANGE_EVENT)
   },
 
@@ -50042,12 +50409,16 @@ var AppStore = assign(EventEmitter.prototype, {
     return _softwareRepo
   },
 
-  getRecentUpdates: function() {
-    return _updates
+  getRecentUpdates: function(date) {
+    return _getRecentUpdates(date)
   }, 
 
-  getScheduledUpdates: function() {
-    return _schedule
+  getProgressUpdates: function(date) {
+    return _getProgressUpdates(date)
+  }, 
+
+  getScheduledUpdates: function(date) {
+    return _getScheduledUpdates(date)
   }, 
 
   getEventLog: function() {
@@ -50083,4 +50454,4 @@ var AppStore = assign(EventEmitter.prototype, {
 
 module.exports = AppStore;
 
-},{"../constants/app-constants":384,"../dispatchers/app-dispatcher":385,"events":1,"react/lib/Object.assign":222}]},{},[386]);
+},{"../constants/app-constants":385,"../dispatchers/app-dispatcher":386,"events":1,"react/lib/Object.assign":222}]},{},[387]);

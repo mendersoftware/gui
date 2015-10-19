@@ -2,9 +2,16 @@ html,
 body {
   height: 100%;
 }
+/* Type */
 body {
   font-family: Roboto;
+  font-size: 13px;
+  margin: 0;
 }
+.italic {
+  font-style: italic;
+}
+/* General */
 .hidden {
   display: none !important;
 }
@@ -39,8 +46,12 @@ body {
   margin-left: 260px;
 }
 .container {
-  padding: 40px 0;
+  padding: 40px 20px;
 }
 .tableActions {
   padding: 30px;
+}
+.largeDialog {
+  width: 84% !important;
+  max-width: 94% !important;
 }
