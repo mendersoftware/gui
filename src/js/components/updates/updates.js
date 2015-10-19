@@ -4,6 +4,7 @@ var AppStore = require('../../stores/app-store');
 var Recent = require('./recentupdates.js');
 var Schedule = require('./schedule.js');
 var EventLog = require('./eventlog.js');
+var ScheduleForm = require('./scheduleform.js');
 
 var mui = require('material-ui');
 var Tabs = mui.Tabs;
@@ -25,6 +26,8 @@ function getState() {
     progress: AppStore.getProgressUpdates(new Date().getTime()),
     schedule: AppStore.getScheduledUpdates(new Date().getTime()),
     events: AppStore.getEventLog(),
+    images: AppStore.getSoftwareRepo(),
+    groups: AppStore.getGroups()
   }
 }
 
@@ -39,6 +42,7 @@ var Updates = React.createClass({
     this.setState(getState());
   },
   render: function() {
+    console.log(this.state.progress);
     return (
       <div>
          <Tabs
@@ -48,13 +52,14 @@ var Updates = React.createClass({
           style={styles.tabs}
           label={"Updates"}>
             <Recent recent={this.state.recent} progress={this.state.progress} />
-
+            <ScheduleForm className="margin-top" groups={this.state.groups} images={this.state.images} />
           </Tab>
 
           <Tab key={2}
           style={styles.tabs}
           label={"Schedule"}>
             <Schedule schedule={this.state.schedule} />
+            <ScheduleForm className="margin-top" groups={this.state.groups} images={this.state.images} />
           </Tab>
 
           <Tab key={3}

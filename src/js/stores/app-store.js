@@ -177,17 +177,17 @@ function _getDevices(group, model) {
   var index = findWithAttr(_groups, 'name', group);
   var groupId = _groups[index].id;
 
-  var deviceCount = 0;
+  var devices = [];
   for (var i=0; i<_alldevices.length; i++) {
     if (_alldevices[i].model===model) {
       for (var x=0; x<_alldevices[i].groups.length;x++) {
         if (_alldevices[i].groups[x]===groupId) {
-          deviceCount++;
+          devices.push(_alldevices[i]);
         }
       }
     }
   }
-  return deviceCount;
+  return devices;
 }
 
 function _addToGroup(group, devices) {
@@ -296,7 +296,38 @@ var _allupdates = [
     start_time: 1446383576000,
     end_time: 1446387176000,
     status: null,
-    devices: 3
+    devices: [
+     {
+        id:4,
+        name:"Device004",
+        model:"Acme Model 1",
+        last_software_version:"Version 1.0",
+        software_version:"Version 1.0",
+        start_time:null,
+        end_time:null,
+        status:"Skipped"
+      },
+      {
+        id:5,
+        name:"Device005",
+        model:"Acme Model 1",
+        last_software_version:"Version 1.0",
+        software_version:"Version 1.o",
+        start_time:null,
+        end_time:null,
+        status: "Skipped"
+      },
+      {
+        id:6,
+        name:"Device006",
+        model:"Acme Model 1",
+        last_software_version:"Version 0.3",
+        software_version:"Version 1.0",
+        start_time:null,
+        end_time: null,
+        status: "Pending"
+      }
+    ]
   },
   {
     id: 2,
@@ -305,8 +336,39 @@ var _allupdates = [
     software_version: "Version 1.2",
     start_time: 1446297176000,
     end_time: 1446300776000,
-    status: null ,
-    devices: 3
+    status: null,
+    devices: [
+      {
+        id:1,
+        name:"Device001",
+        model:"Acme Model 1",
+        last_software_version:"Version 1.1",
+        software_version:"Version 1.2",
+        start_time:null,
+        end_time:null,
+        status:"Pending"
+      },
+      {
+        id:2,
+        name:"Device002",
+        model:"Acme Model 1",
+        last_software_version:"Version 1.1",
+        software_version:"Version 1.2",
+        start_time:1446297176000,
+        end_time:1443708776000,
+        status:"Pending"
+      },
+      {
+        id:3,
+        name:"Device003",
+        model:"Acme Model 1",
+        last_software_version:"Version 1.1",
+        software_version:"Version 1.2",
+        start_time:null,
+        end_time: null,
+        status:"Pending"
+      }
+    ]
   },
   {
     id: 3,
@@ -438,7 +500,7 @@ function _getRecentUpdates(time) {
 function _getProgressUpdates(time) {
   var progress = [];
   for (var i=0;i<_allupdates.length;i++) {
-    if (_allupdates[i].start_time<time && _allupdates[i].end_time>time) {
+    if (_allupdates[i].start_time<=time && _allupdates[i].end_time>time) {
       progress.push(_allupdates[i]);
     }
   }
@@ -455,6 +517,19 @@ function _getScheduledUpdates(time) {
   schedule.sort(startTimeSortAscend);
   return schedule;
 }
+
+function _saveSchedule(schedule) {
+  var tmp = {};
+  tmp.id = _allupdates.length+1;
+  tmp.group = schedule.group.name;
+  tmp.model = "Acme Model 1";
+  tmp.devices = _getDevices(tmp.group, tmp.model);
+  tmp.software_version = schedule.image.name;
+  tmp.start_time = schedule.start_time;
+  tmp.end_time = schedule.end_time;
+  _allupdates.push(tmp);
+}
+
 
 function findWithAttr(array, attr, value) {
   for(var i = 0; i < array.length; i += 1) {
@@ -535,7 +610,7 @@ var AppStore = assign(EventEmitter.prototype, {
       case AppConstants.SELECT_GROUP:
         _selectGroup(payload.action.groupId);
         break;
-      case AppConstants.SELECT_NODES:
+      case AppConstants.SELECT_DEVICES:
         _selectDevices(payload.action.devices);
         break;
       case AppConstants.ADD_TO_GROUP:
@@ -543,7 +618,10 @@ var AppStore = assign(EventEmitter.prototype, {
         break;
       case AppConstants.UPLOAD_IMAGE:
         _uploadImage(payload.action.image);
-        break;     
+        break;
+      case AppConstants.SAVE_SCHEDULE:
+        _saveSchedule(payload.action.schedule);
+        break;
     }
     
     AppStore.emitChange();

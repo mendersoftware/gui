@@ -33,6 +33,12 @@ var AppActions = {
     })
   },
   
+  saveSchedule: function(schedule) {
+    AppDispatcher.handleViewAction({
+      actionType: AppConstants.SAVE_SCHEDULE,
+      schedule: schedule
+    })
+  },
 }
 
 module.exports = AppActions;

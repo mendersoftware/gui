@@ -23,7 +23,6 @@ var Schedule = React.createClass({
         return (
           <TableRow key={index}>
             <TableRowColumn>{update.group}</TableRowColumn>
-            <TableRowColumn>{update.model}</TableRowColumn>
             <TableRowColumn>{update.software_version}</TableRowColumn>
             <TableRowColumn>{update.devices.length}</TableRowColumn>
             <TableRowColumn><Time value={update.start_time} format="YYYY/MM/DD HH:mm" /></TableRowColumn>
@@ -46,7 +45,6 @@ var Schedule = React.createClass({
               adjustForCheckbox={false}>
               <TableRow>
                 <TableHeaderColumn tooltip="Device group">Group</TableHeaderColumn>
-                <TableHeaderColumn tooltip="Model compatibility">Model compatibility</TableHeaderColumn>
                 <TableHeaderColumn tooltip="Target software version">Software</TableHeaderColumn>
                 <TableHeaderColumn tooltip="Number of devices"># Devices</TableHeaderColumn>
                 <TableHeaderColumn tooltip="Start time">Start time</TableHeaderColumn>

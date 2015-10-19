@@ -20,9 +20,7 @@ var Recent = React.createClass({
       showReport:null 
     };
   },
-  shouldComponentUpdate: function(nextProps, nextState) {
-    return nextState.showReport !== this.state.showReport
-  },
+
   _handleCellClick: function(rowNumber, columnId) {
     var report = this.props.recent[rowNumber];
     this.setState({showReport: report});
@@ -30,41 +28,35 @@ var Recent = React.createClass({
   },
   render: function() {
     var now = new Date().getTime();
-
-    var progressCount = 0;
     var progress = this.props.progress.map(function(update, index) {
-      if (update.start_time<now && update.end_time>now) {
-        progressCount++;
-        return (
-          <TableRow hoverable={true} key={index}>
-            <TableRowColumn>{update.group}</TableRowColumn>
-            <TableRowColumn>{update.model}</TableRowColumn>
-            <TableRowColumn>{update.software_version}</TableRowColumn>
-            <TableRowColumn>{update.devices.length}</TableRowColumn>
-            <TableRowColumn><Time value={update.start_time} format="YYYY/MM/DD HH:mm" /></TableRowColumn>
-            <TableRowColumn><Time value={update.end_time} format="YYYY/MM/DD HH:mm" /></TableRowColumn>
-            <TableRowColumn>{update.status || "--"}</TableRowColumn>
-          </TableRow>
-        )
-      }
+      return (
+        <TableRow key={index}>
+          <TableRowColumn>{update.group}</TableRowColumn>
+          <TableRowColumn>{update.software_version}</TableRowColumn>
+          <TableRowColumn>{update.devices.length}</TableRowColumn>
+          <TableRowColumn><Time value={update.start_time} format="YYYY/MM/DD HH:mm" /></TableRowColumn>
+          <TableRowColumn><Time value={update.end_time} format="YYYY/MM/DD HH:mm" /></TableRowColumn>
+          <TableRowColumn>{update.status || "--"}</TableRowColumn>
+        </TableRow>
+      )
     });
 
-    var recentCount = 0;
     var recent = this.props.recent.map(function(update, index) {
-      if (update.start_time<now && update.end_time<now) {
-        recentCount++;
-        return (
-          <TableRow key={index}>
-            <TableRowColumn>{update.group}</TableRowColumn>
-            <TableRowColumn>{update.model}</TableRowColumn>
-            <TableRowColumn>{update.software_version}</TableRowColumn>
-            <TableRowColumn>{update.devices.length}</TableRowColumn>
-            <TableRowColumn><Time value={update.start_time} format="YYYY/MM/DD HH:mm" /></TableRowColumn>
-            <TableRowColumn><Time value={update.end_time} format="YYYY/MM/DD HH:mm" /></TableRowColumn>
-            <TableRowColumn><FlatButton label={update.status || "--"} primary={update.status === 'Failed'} secondary={update.status === 'Complete'} /></TableRowColumn>
-          </TableRow>
-        )
+      var failCount=0;
+      for (var i=0;i<update.devices.length;i++) {
+        if (update.devices[i].status==='Failed') {failCount++}
       }
+      failCount = update.status === "Failed" ? " ("+failCount+")" : '';
+      return (
+        <TableRow key={index}>
+          <TableRowColumn>{update.group}</TableRowColumn>
+          <TableRowColumn>{update.software_version}</TableRowColumn>
+          <TableRowColumn>{update.devices.length}</TableRowColumn>
+          <TableRowColumn><Time value={update.start_time} format="YYYY/MM/DD HH:mm" /></TableRowColumn>
+          <TableRowColumn><Time value={update.end_time} format="YYYY/MM/DD HH:mm" /></TableRowColumn>
+          <TableRowColumn><FlatButton label={(update.status || "--") + failCount} primary={update.status === 'Failed'} secondary={update.status === 'Complete'} /></TableRowColumn>
+        </TableRow>
+      )
     });
 
     var dialogActions = [
@@ -75,14 +67,13 @@ var Recent = React.createClass({
         <div style={{marginTop:"30px"}}> 
           <h3>Updates in progress</h3>
           <Table
-            className={progressCount ? null : 'hidden'}
+            className={progress.length ? null : 'hidden'}
             selectable={false}>
             <TableHeader
               displaySelectAll={false}
               adjustForCheckbox={false}>
               <TableRow>
                 <TableHeaderColumn tooltip="Device group">Group</TableHeaderColumn>
-                <TableHeaderColumn tooltip="Model compatibility">Model compatibility</TableHeaderColumn>
                 <TableHeaderColumn tooltip="Target software version">Software</TableHeaderColumn>
                 <TableHeaderColumn tooltip="Number of devices"># Devices</TableHeaderColumn>
                 <TableHeaderColumn tooltip="Start time">Start time</TableHeaderColumn>
@@ -95,7 +86,7 @@ var Recent = React.createClass({
               {progress}
             </TableBody>
           </Table>
-          <div className={progressCount ? 'hidden' : null}>
+          <div className={progress.length ? 'hidden' : null}>
             <p className="italic">No updates in progress</p>
           </div>
         </div>
@@ -104,14 +95,13 @@ var Recent = React.createClass({
           <h3>Recent updates</h3>
           <Table
             onCellClick={this._handleCellClick}
-            className={recentCount ? null : 'hidden'}
+            className={recent.length ? null : 'hidden'}
             selectable={false}>
             <TableHeader
               displaySelectAll={false}
               adjustForCheckbox={false}>
               <TableRow>
                 <TableHeaderColumn tooltip="Device group">Group</TableHeaderColumn>
-                <TableHeaderColumn tooltip="Model compatibility">Model compatibility</TableHeaderColumn>
                 <TableHeaderColumn tooltip="Target software version">Software</TableHeaderColumn>
                 <TableHeaderColumn tooltip="Number of devices"># Devices</TableHeaderColumn>
                 <TableHeaderColumn tooltip="Start time">Start time</TableHeaderColumn>
@@ -127,7 +117,7 @@ var Recent = React.createClass({
             </TableBody>
           </Table>
 
-          <div className={recentCount ? 'hidden' : null}>
+          <div className={recent.length ? 'hidden' : null}>
             <p className="italic">No recent updates</p>
           </div>
         </div>
@@ -142,6 +132,7 @@ var Recent = React.createClass({
               <Report update={this.state.showReport} />
             </div>
         </Dialog>
+
 
       </div>
     );

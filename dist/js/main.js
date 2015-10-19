@@ -48697,11 +48697,17 @@ var AppActions = {
     })
   },
   
+  saveSchedule: function(schedule) {
+    AppDispatcher.handleViewAction({
+      actionType: AppConstants.SAVE_SCHEDULE,
+      schedule: schedule
+    })
+  },
 }
 
 module.exports = AppActions;
 
-},{"../constants/app-constants":385,"../dispatchers/app-dispatcher":386}],368:[function(require,module,exports){
+},{"../constants/app-constants":386,"../dispatchers/app-dispatcher":387}],368:[function(require,module,exports){
 var React = require('react');
 var Router = require('react-router');
 var RouteHandler = Router.RouteHandler;
@@ -48817,7 +48823,7 @@ var DeviceList = React.createClass({displayName: "DeviceList",
 
 module.exports = DeviceList;
 
-},{"../../actions/app-actions":367,"../../stores/app-store":388,"material-ui":43,"react":366}],371:[function(require,module,exports){
+},{"../../actions/app-actions":367,"../../stores/app-store":389,"material-ui":43,"react":366}],371:[function(require,module,exports){
 var React = require('react');
 var AppStore = require('../../stores/app-store');
 
@@ -48862,7 +48868,7 @@ var Devices = React.createClass({displayName: "Devices",
 
 module.exports = Devices;
 
-},{"../../stores/app-store":388,"./devicelist":370,"./groups":372,"./selecteddevices":373,"react":366}],372:[function(require,module,exports){
+},{"../../stores/app-store":389,"./devicelist":370,"./groups":372,"./selecteddevices":373,"react":366}],372:[function(require,module,exports){
 var React = require('react');
 var AppStore = require('../../stores/app-store');
 var AppActions = require('../../actions/app-actions');
@@ -48898,7 +48904,7 @@ var Groups = React.createClass({displayName: "Groups",
 
 module.exports = Groups;
 
-},{"../../actions/app-actions":367,"../../stores/app-store":388,"material-ui":43,"react":366}],373:[function(require,module,exports){
+},{"../../actions/app-actions":367,"../../stores/app-store":389,"material-ui":43,"react":366}],373:[function(require,module,exports){
 var React = require('react');
 var AppStore = require('../../stores/app-store');
 var AppActions = require('../../actions/app-actions');
@@ -49087,7 +49093,7 @@ var SelectedDevices = React.createClass({displayName: "SelectedDevices",
 
 module.exports = SelectedDevices;
 
-},{"../../actions/app-actions":367,"../../stores/app-store":388,"material-ui":43,"react":366}],374:[function(require,module,exports){
+},{"../../actions/app-actions":367,"../../stores/app-store":389,"material-ui":43,"react":366}],374:[function(require,module,exports){
 var React = require('react');
 var mui = require('material-ui');
 var Router = require('react-router');
@@ -49349,7 +49355,7 @@ var Repository = React.createClass({displayName: "Repository",
 
 module.exports = Repository;
 
-},{"../../actions/app-actions":367,"../../stores/app-store":388,"./updatebutton.js":378,"material-ui":43,"react":366,"react-router":174}],377:[function(require,module,exports){
+},{"../../actions/app-actions":367,"../../stores/app-store":389,"./updatebutton.js":378,"material-ui":43,"react":366,"react-router":174}],377:[function(require,module,exports){
 var React = require('react');
 var AppStore = require('../../stores/app-store');
 
@@ -49414,7 +49420,7 @@ var Software = React.createClass({displayName: "Software",
 
 module.exports = Software;
 
-},{"../../stores/app-store":388,"./installed.js":375,"./repository.js":376,"material-ui":43,"react":366}],378:[function(require,module,exports){
+},{"../../stores/app-store":389,"./installed.js":375,"./repository.js":376,"material-ui":43,"react":366}],378:[function(require,module,exports){
 var React = require('react');
 
 // material ui
@@ -49477,9 +49483,7 @@ var Recent = React.createClass({displayName: "Recent",
       showReport:null 
     };
   },
-  shouldComponentUpdate: function(nextProps, nextState) {
-    return nextState.showReport !== this.state.showReport
-  },
+
   _handleCellClick: function(rowNumber, columnId) {
     var report = this.props.recent[rowNumber];
     this.setState({showReport: report});
@@ -49487,41 +49491,35 @@ var Recent = React.createClass({displayName: "Recent",
   },
   render: function() {
     var now = new Date().getTime();
-
-    var progressCount = 0;
     var progress = this.props.progress.map(function(update, index) {
-      if (update.start_time<now && update.end_time>now) {
-        progressCount++;
-        return (
-          React.createElement(TableRow, {hoverable: true, key: index}, 
-            React.createElement(TableRowColumn, null, update.group), 
-            React.createElement(TableRowColumn, null, update.model), 
-            React.createElement(TableRowColumn, null, update.software_version), 
-            React.createElement(TableRowColumn, null, update.devices.length), 
-            React.createElement(TableRowColumn, null, React.createElement(Time, {value: update.start_time, format: "YYYY/MM/DD HH:mm"})), 
-            React.createElement(TableRowColumn, null, React.createElement(Time, {value: update.end_time, format: "YYYY/MM/DD HH:mm"})), 
-            React.createElement(TableRowColumn, null, update.status || "--")
-          )
+      return (
+        React.createElement(TableRow, {key: index}, 
+          React.createElement(TableRowColumn, null, update.group), 
+          React.createElement(TableRowColumn, null, update.software_version), 
+          React.createElement(TableRowColumn, null, update.devices.length), 
+          React.createElement(TableRowColumn, null, React.createElement(Time, {value: update.start_time, format: "YYYY/MM/DD HH:mm"})), 
+          React.createElement(TableRowColumn, null, React.createElement(Time, {value: update.end_time, format: "YYYY/MM/DD HH:mm"})), 
+          React.createElement(TableRowColumn, null, update.status || "--")
         )
-      }
+      )
     });
 
-    var recentCount = 0;
     var recent = this.props.recent.map(function(update, index) {
-      if (update.start_time<now && update.end_time<now) {
-        recentCount++;
-        return (
-          React.createElement(TableRow, {key: index}, 
-            React.createElement(TableRowColumn, null, update.group), 
-            React.createElement(TableRowColumn, null, update.model), 
-            React.createElement(TableRowColumn, null, update.software_version), 
-            React.createElement(TableRowColumn, null, update.devices.length), 
-            React.createElement(TableRowColumn, null, React.createElement(Time, {value: update.start_time, format: "YYYY/MM/DD HH:mm"})), 
-            React.createElement(TableRowColumn, null, React.createElement(Time, {value: update.end_time, format: "YYYY/MM/DD HH:mm"})), 
-            React.createElement(TableRowColumn, null, React.createElement(FlatButton, {label: update.status || "--", primary: update.status === 'Failed', secondary: update.status === 'Complete'}))
-          )
-        )
+      var failCount=0;
+      for (var i=0;i<update.devices.length;i++) {
+        if (update.devices[i].status==='Failed') {failCount++}
       }
+      failCount = update.status === "Failed" ? " ("+failCount+")" : '';
+      return (
+        React.createElement(TableRow, {key: index}, 
+          React.createElement(TableRowColumn, null, update.group), 
+          React.createElement(TableRowColumn, null, update.software_version), 
+          React.createElement(TableRowColumn, null, update.devices.length), 
+          React.createElement(TableRowColumn, null, React.createElement(Time, {value: update.start_time, format: "YYYY/MM/DD HH:mm"})), 
+          React.createElement(TableRowColumn, null, React.createElement(Time, {value: update.end_time, format: "YYYY/MM/DD HH:mm"})), 
+          React.createElement(TableRowColumn, null, React.createElement(FlatButton, {label: (update.status || "--") + failCount, primary: update.status === 'Failed', secondary: update.status === 'Complete'}))
+        )
+      )
     });
 
     var dialogActions = [
@@ -49532,14 +49530,13 @@ var Recent = React.createClass({displayName: "Recent",
         React.createElement("div", {style: {marginTop:"30px"}}, 
           React.createElement("h3", null, "Updates in progress"), 
           React.createElement(Table, {
-            className: progressCount ? null : 'hidden', 
+            className: progress.length ? null : 'hidden', 
             selectable: false}, 
             React.createElement(TableHeader, {
               displaySelectAll: false, 
               adjustForCheckbox: false}, 
               React.createElement(TableRow, null, 
                 React.createElement(TableHeaderColumn, {tooltip: "Device group"}, "Group"), 
-                React.createElement(TableHeaderColumn, {tooltip: "Model compatibility"}, "Model compatibility"), 
                 React.createElement(TableHeaderColumn, {tooltip: "Target software version"}, "Software"), 
                 React.createElement(TableHeaderColumn, {tooltip: "Number of devices"}, "# Devices"), 
                 React.createElement(TableHeaderColumn, {tooltip: "Start time"}, "Start time"), 
@@ -49552,7 +49549,7 @@ var Recent = React.createClass({displayName: "Recent",
               progress
             )
           ), 
-          React.createElement("div", {className: progressCount ? 'hidden' : null}, 
+          React.createElement("div", {className: progress.length ? 'hidden' : null}, 
             React.createElement("p", {className: "italic"}, "No updates in progress")
           )
         ), 
@@ -49561,14 +49558,13 @@ var Recent = React.createClass({displayName: "Recent",
           React.createElement("h3", null, "Recent updates"), 
           React.createElement(Table, {
             onCellClick: this._handleCellClick, 
-            className: recentCount ? null : 'hidden', 
+            className: recent.length ? null : 'hidden', 
             selectable: false}, 
             React.createElement(TableHeader, {
               displaySelectAll: false, 
               adjustForCheckbox: false}, 
               React.createElement(TableRow, null, 
                 React.createElement(TableHeaderColumn, {tooltip: "Device group"}, "Group"), 
-                React.createElement(TableHeaderColumn, {tooltip: "Model compatibility"}, "Model compatibility"), 
                 React.createElement(TableHeaderColumn, {tooltip: "Target software version"}, "Software"), 
                 React.createElement(TableHeaderColumn, {tooltip: "Number of devices"}, "# Devices"), 
                 React.createElement(TableHeaderColumn, {tooltip: "Start time"}, "Start time"), 
@@ -49584,7 +49580,7 @@ var Recent = React.createClass({displayName: "Recent",
             )
           ), 
 
-          React.createElement("div", {className: recentCount ? 'hidden' : null}, 
+          React.createElement("div", {className: recent.length ? 'hidden' : null}, 
             React.createElement("p", {className: "italic"}, "No recent updates")
           )
         ), 
@@ -49599,6 +49595,7 @@ var Recent = React.createClass({displayName: "Recent",
               React.createElement(Report, {update: this.state.showReport})
             )
         )
+
 
       )
     );
@@ -49711,7 +49708,6 @@ var Schedule = React.createClass({displayName: "Schedule",
         return (
           React.createElement(TableRow, {key: index}, 
             React.createElement(TableRowColumn, null, update.group), 
-            React.createElement(TableRowColumn, null, update.model), 
             React.createElement(TableRowColumn, null, update.software_version), 
             React.createElement(TableRowColumn, null, update.devices.length), 
             React.createElement(TableRowColumn, null, React.createElement(Time, {value: update.start_time, format: "YYYY/MM/DD HH:mm"})), 
@@ -49734,7 +49730,6 @@ var Schedule = React.createClass({displayName: "Schedule",
               adjustForCheckbox: false}, 
               React.createElement(TableRow, null, 
                 React.createElement(TableHeaderColumn, {tooltip: "Device group"}, "Group"), 
-                React.createElement(TableHeaderColumn, {tooltip: "Model compatibility"}, "Model compatibility"), 
                 React.createElement(TableHeaderColumn, {tooltip: "Target software version"}, "Software"), 
                 React.createElement(TableHeaderColumn, {tooltip: "Number of devices"}, "# Devices"), 
                 React.createElement(TableHeaderColumn, {tooltip: "Start time"}, "Start time"), 
@@ -49762,10 +49757,168 @@ module.exports = Schedule;
 },{"material-ui":43,"react":366,"react-time":193}],383:[function(require,module,exports){
 var React = require('react');
 var AppStore = require('../../stores/app-store');
+var AppActions = require('../../actions/app-actions');
+
+var mui = require('material-ui');
+
+var DatePicker = mui.DatePicker;
+var TimePicker = mui.TimePicker;
+var SelectField = mui.SelectField;
+var RadioButtonGroup = mui.RadioButtonGroup;
+var RadioButton = mui.RadioButton;
+var Dialog = mui.Dialog;
+var RaisedButton = mui.RaisedButton;
+
+function getDate() {
+  return new Date()
+}
+
+function addDate(date,days) {
+  var newDate = new Date(date);
+  newDate.setDate(newDate.getDate()+1);
+  return newDate;
+}
+
+var ScheduleForm = React.createClass({displayName: "ScheduleForm",
+  getInitialState: function() {
+    return {
+      minDate: getDate(),
+      minDate1: addDate(getDate(),1)
+    };
+  },
+  dialogDismiss: function(ref) {
+    this.refs[ref].dismiss();
+  },
+  dialogOpen: function(ref) {
+    this.refs[ref].show();
+  },
+  _handleGroupValueChange: function(e) {
+
+    var group = this.props.groups[e.target.value-1];
+        console.log("group", group, e.target.value);
+    this.setState({
+      group: group,
+    });
+  },
+  _handleImageValueChange: function(e) {
+    var image = this.props.images[e.target.value-1];
+            console.log("image", image, e.target.value);
+    this.setState({
+      image: image,
+    });
+  },
+  _onDialogSubmit: function() {
+    var newUpdate = {};
+    newUpdate.image = this.state.image;
+    newUpdate.group = this.state.group;
+    newUpdate.start_time = this.refs['time'].getTime().getTime();
+    newUpdate.end_time = this.refs['endtime'].getTime().getTime();
+    newUpdate.start_date = this.refs['date'].getDate();
+    newUpdate.end_date = this.refs['enddate'].getDate();
+
+    AppActions.saveSchedule(newUpdate);
+
+    this.dialogDismiss('schedule');
+
+  },
+
+  render: function() {
+    var imageItems = [];
+    for (var i=0; i<this.props.images.length;i++) {
+      var tmp = { payload:this.props.images[i].id, text: this.props.images[i].name };
+      imageItems.push(tmp);
+    }
+
+    var groupItems = [];
+    for (var i=0; i<this.props.groups.length;i++) {
+      var tmp = { payload:this.props.groups[i].id, text: this.props.groups[i].name };
+      groupItems.push(tmp);
+    }
+    var actions = [
+      { text: 'Cancel', onClick: this.dialogDismiss.bind(null, 'schedule')},
+      { text: 'Schedule update', onClick: this._onDialogSubmit, ref: 'save' }
+    ];
+    return (
+      React.createElement("div", null, 
+        React.createElement(RaisedButton, {primary: true, label: "Schedule an update", onClick: this.dialogOpen.bind(null, 'schedule')}), 
+        React.createElement(Dialog, {
+          ref: "schedule", 
+          title: "Schedule an update", 
+          actions: actions, 
+          actionFocus: "submit", 
+          autoDetectWindowHeight: true, autoScrollBodyContent: true
+
+          }, 
+          React.createElement("div", {style: {height: '400px'}}, 
+            React.createElement("form", null, 
+              React.createElement("div", {style: {display:"inline-block"}}, 
+                React.createElement(DatePicker, {
+                  floatingLabelText: "Start date", 
+                  autoOk: true, 
+                  ref: "date", 
+                  defaultDate: this.state.minDate, 
+                  minDate: this.state.minDate, 
+                  disabled: this.state.immediate, 
+                  mode: "landscape"}), 
+
+                React.createElement(TimePicker, {
+                  format: "24hr", 
+                  ref: "time", 
+                  defaultTime: this.state.minDate, 
+                  disabled: this.state.immediate, 
+                  floatingLabelText: "Start time"})
+              ), 
+              React.createElement("div", {style: {display:"inline-block", marginLeft:"30px"}}, 
+                React.createElement(DatePicker, {
+                  floatingLabelText: "End date", 
+                  autoOk: true, 
+                  ref: "enddate", 
+                  defaultDate: this.state.minDate1, 
+                  minDate: this.state.minDate1, 
+                  disabled: this.state.immediate, 
+                  mode: "landscape"}), 
+
+                React.createElement(TimePicker, {
+                  format: "24hr", 
+                  ref: "endtime", 
+                  defaultTime: this.state.minDate1, 
+                  disabled: this.state.immediate, 
+                  floatingLabelText: "End time"})
+              ), 
+              React.createElement(SelectField, {
+                ref: "image", 
+                value: this.state.image, 
+                onChange: this._handleImageValueChange, 
+                floatingLabelText: "Select software image", 
+                menuItems: imageItems}), 
+
+              React.createElement(SelectField, {
+                style: {display:"block"}, 
+                value: this.state.group, 
+                ref: "group", 
+                onChange: this._handleGroupValueChange, 
+                floatingLabelText: "Select group", 
+                menuItems: groupItems})
+
+            )
+          )
+        )
+      )
+    );
+  }
+});
+
+
+module.exports = ScheduleForm;
+
+},{"../../actions/app-actions":367,"../../stores/app-store":389,"material-ui":43,"react":366}],384:[function(require,module,exports){
+var React = require('react');
+var AppStore = require('../../stores/app-store');
 
 var Recent = require('./recentupdates.js');
 var Schedule = require('./schedule.js');
 var EventLog = require('./eventlog.js');
+var ScheduleForm = require('./scheduleform.js');
 
 var mui = require('material-ui');
 var Tabs = mui.Tabs;
@@ -49787,6 +49940,8 @@ function getState() {
     progress: AppStore.getProgressUpdates(new Date().getTime()),
     schedule: AppStore.getScheduledUpdates(new Date().getTime()),
     events: AppStore.getEventLog(),
+    images: AppStore.getSoftwareRepo(),
+    groups: AppStore.getGroups()
   }
 }
 
@@ -49801,6 +49956,7 @@ var Updates = React.createClass({displayName: "Updates",
     this.setState(getState());
   },
   render: function() {
+    console.log(this.state.progress);
     return (
       React.createElement("div", null, 
          React.createElement(Tabs, {
@@ -49809,14 +49965,15 @@ var Updates = React.createClass({displayName: "Updates",
           React.createElement(Tab, {key: 1, 
           style: styles.tabs, 
           label: "Updates"}, 
-            React.createElement(Recent, {recent: this.state.recent, progress: this.state.progress})
-
+            React.createElement(Recent, {recent: this.state.recent, progress: this.state.progress}), 
+            React.createElement(ScheduleForm, {className: "margin-top", groups: this.state.groups, images: this.state.images})
           ), 
 
           React.createElement(Tab, {key: 2, 
           style: styles.tabs, 
           label: "Schedule"}, 
-            React.createElement(Schedule, {schedule: this.state.schedule})
+            React.createElement(Schedule, {schedule: this.state.schedule}), 
+            React.createElement(ScheduleForm, {className: "margin-top", groups: this.state.groups, images: this.state.images})
           ), 
 
           React.createElement(Tab, {key: 3, 
@@ -49832,7 +49989,7 @@ var Updates = React.createClass({displayName: "Updates",
 
 module.exports = Updates;
 
-},{"../../stores/app-store":388,"./eventlog.js":379,"./recentupdates.js":380,"./schedule.js":382,"material-ui":43,"react":366}],384:[function(require,module,exports){
+},{"../../stores/app-store":389,"./eventlog.js":379,"./recentupdates.js":380,"./schedule.js":382,"./scheduleform.js":383,"material-ui":43,"react":366}],385:[function(require,module,exports){
 var React = require('react');
 
 var App = require('../components/app');
@@ -49856,15 +50013,16 @@ module.exports = (
   )
 );  
 
-},{"../components/app":368,"../components/dashboard/dashboard":369,"../components/devices/devices":371,"../components/software/software":377,"../components/updates/updates":383,"react":366,"react-router":174}],385:[function(require,module,exports){
+},{"../components/app":368,"../components/dashboard/dashboard":369,"../components/devices/devices":371,"../components/software/software":377,"../components/updates/updates":384,"react":366,"react-router":174}],386:[function(require,module,exports){
 module.exports = {
   SELECT_GROUP: 'SELECT_GROUP',
   ADD_TO_GROUP: 'ADD_TO_GROUP',
   REMOVE_FROM_GROUP: 'REMOVE_FROM_GROUP',
-  UPLOAD_IMAGE: 'UPLOAD_IMAGE'
+  UPLOAD_IMAGE: 'UPLOAD_IMAGE',
+  SAVE_SCHEDULE: 'SAVE_SCHEDULE'
 }
 
-},{}],386:[function(require,module,exports){
+},{}],387:[function(require,module,exports){
 var Dispatcher = require('flux').Dispatcher;
 var assign = require('react/lib/Object.assign');
 
@@ -49879,7 +50037,7 @@ var AppDispatcher = assign(new Dispatcher(), {
 
 module.exports = AppDispatcher;
 
-},{"flux":4,"react/lib/Object.assign":222}],387:[function(require,module,exports){
+},{"flux":4,"react/lib/Object.assign":222}],388:[function(require,module,exports){
 var React = require('react');
 var Router = require('react-router');
 var routes = require('./config/routes');
@@ -49897,7 +50055,7 @@ Router.run(routes, function(Root) {
   React.render(React.createElement(Root, null), document.getElementById('main'));
 });
 
-},{"./config/routes":384,"react":366,"react-router":174,"react-tap-event-plugin":191}],388:[function(require,module,exports){
+},{"./config/routes":385,"react":366,"react-router":174,"react-tap-event-plugin":191}],389:[function(require,module,exports){
 var AppDispatcher = require('../dispatchers/app-dispatcher');
 var AppConstants = require('../constants/app-constants');
 var assign = require('react/lib/Object.assign');
@@ -50077,17 +50235,17 @@ function _getDevices(group, model) {
   var index = findWithAttr(_groups, 'name', group);
   var groupId = _groups[index].id;
 
-  var deviceCount = 0;
+  var devices = [];
   for (var i=0; i<_alldevices.length; i++) {
     if (_alldevices[i].model===model) {
       for (var x=0; x<_alldevices[i].groups.length;x++) {
         if (_alldevices[i].groups[x]===groupId) {
-          deviceCount++;
+          devices.push(_alldevices[i]);
         }
       }
     }
   }
-  return deviceCount;
+  return devices;
 }
 
 function _addToGroup(group, devices) {
@@ -50196,7 +50354,38 @@ var _allupdates = [
     start_time: 1446383576000,
     end_time: 1446387176000,
     status: null,
-    devices: 3
+    devices: [
+     {
+        id:4,
+        name:"Device004",
+        model:"Acme Model 1",
+        last_software_version:"Version 1.0",
+        software_version:"Version 1.0",
+        start_time:null,
+        end_time:null,
+        status:"Skipped"
+      },
+      {
+        id:5,
+        name:"Device005",
+        model:"Acme Model 1",
+        last_software_version:"Version 1.0",
+        software_version:"Version 1.o",
+        start_time:null,
+        end_time:null,
+        status: "Skipped"
+      },
+      {
+        id:6,
+        name:"Device006",
+        model:"Acme Model 1",
+        last_software_version:"Version 0.3",
+        software_version:"Version 1.0",
+        start_time:null,
+        end_time: null,
+        status: "Pending"
+      }
+    ]
   },
   {
     id: 2,
@@ -50205,8 +50394,39 @@ var _allupdates = [
     software_version: "Version 1.2",
     start_time: 1446297176000,
     end_time: 1446300776000,
-    status: null ,
-    devices: 3
+    status: null,
+    devices: [
+      {
+        id:1,
+        name:"Device001",
+        model:"Acme Model 1",
+        last_software_version:"Version 1.1",
+        software_version:"Version 1.2",
+        start_time:null,
+        end_time:null,
+        status:"Pending"
+      },
+      {
+        id:2,
+        name:"Device002",
+        model:"Acme Model 1",
+        last_software_version:"Version 1.1",
+        software_version:"Version 1.2",
+        start_time:1446297176000,
+        end_time:1443708776000,
+        status:"Pending"
+      },
+      {
+        id:3,
+        name:"Device003",
+        model:"Acme Model 1",
+        last_software_version:"Version 1.1",
+        software_version:"Version 1.2",
+        start_time:null,
+        end_time: null,
+        status:"Pending"
+      }
+    ]
   },
   {
     id: 3,
@@ -50338,7 +50558,7 @@ function _getRecentUpdates(time) {
 function _getProgressUpdates(time) {
   var progress = [];
   for (var i=0;i<_allupdates.length;i++) {
-    if (_allupdates[i].start_time<time && _allupdates[i].end_time>time) {
+    if (_allupdates[i].start_time<=time && _allupdates[i].end_time>time) {
       progress.push(_allupdates[i]);
     }
   }
@@ -50355,6 +50575,19 @@ function _getScheduledUpdates(time) {
   schedule.sort(startTimeSortAscend);
   return schedule;
 }
+
+function _saveSchedule(schedule) {
+  var tmp = {};
+  tmp.id = _allupdates.length+1;
+  tmp.group = schedule.group.name;
+  tmp.model = "Acme Model 1";
+  tmp.devices = _getDevices(tmp.group, tmp.model);
+  tmp.software_version = schedule.image.name;
+  tmp.start_time = schedule.start_time;
+  tmp.end_time = schedule.end_time;
+  _allupdates.push(tmp);
+}
+
 
 function findWithAttr(array, attr, value) {
   for(var i = 0; i < array.length; i += 1) {
@@ -50435,7 +50668,7 @@ var AppStore = assign(EventEmitter.prototype, {
       case AppConstants.SELECT_GROUP:
         _selectGroup(payload.action.groupId);
         break;
-      case AppConstants.SELECT_NODES:
+      case AppConstants.SELECT_DEVICES:
         _selectDevices(payload.action.devices);
         break;
       case AppConstants.ADD_TO_GROUP:
@@ -50443,7 +50676,10 @@ var AppStore = assign(EventEmitter.prototype, {
         break;
       case AppConstants.UPLOAD_IMAGE:
         _uploadImage(payload.action.image);
-        break;     
+        break;
+      case AppConstants.SAVE_SCHEDULE:
+        _saveSchedule(payload.action.schedule);
+        break;
     }
     
     AppStore.emitChange();
@@ -50454,4 +50690,4 @@ var AppStore = assign(EventEmitter.prototype, {
 
 module.exports = AppStore;
 
-},{"../constants/app-constants":385,"../dispatchers/app-dispatcher":386,"events":1,"react/lib/Object.assign":222}]},{},[387]);
+},{"../constants/app-constants":386,"../dispatchers/app-dispatcher":387,"events":1,"react/lib/Object.assign":222}]},{},[388]);
