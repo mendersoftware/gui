@@ -2,6 +2,8 @@ var React = require('react');
 var AppStore = require('../../stores/app-store');
 var AppActions = require('../../actions/app-actions');
 
+var ScheduleForm = require('../updates/scheduleform');
+
 var UpdateButton = require('./updatebutton.js');
 
 var Router = require('react-router');
@@ -32,7 +34,6 @@ var Repository = React.createClass({
   _handleFieldChange: function(field, e) {
     newState[field] = e.target.value;
     this.setState({newImage: newState});
-    console.log(this.state.newImage);
   },
   dialogOpen: function (ref) {
     this.refs[ref].show();
@@ -42,13 +43,20 @@ var Repository = React.createClass({
     this.refs['upload'].dismiss();
   },
   render: function() {
-   var items = this.props.software.map(function(pkg, index) {
+    var software = this.props.software;
+    var groups = this.state.groups;
+    var items = this.props.software.map(function(pkg, index) {
+      // needed to prepopulate
+    var image = {
+      payload:pkg.id, 
+      text: pkg.name
+    };
       return (
         <TableRow key={index}>
           <TableRowColumn>{pkg.name}</TableRowColumn>
           <TableRowColumn>{pkg.model}</TableRowColumn>
           <TableRowColumn>{pkg.description}</TableRowColumn>
-          <TableRowColumn><FlatButton label="Schedule update" /></TableRowColumn>
+          <TableRowColumn><ScheduleForm images={software} image={pkg} imageVal={image} groups={groups} /></TableRowColumn>
         </TableRow>
       )
     });

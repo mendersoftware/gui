@@ -49231,6 +49231,8 @@ var React = require('react');
 var AppStore = require('../../stores/app-store');
 var AppActions = require('../../actions/app-actions');
 
+var ScheduleForm = require('../updates/scheduleform');
+
 var UpdateButton = require('./updatebutton.js');
 
 var Router = require('react-router');
@@ -49261,7 +49263,6 @@ var Repository = React.createClass({displayName: "Repository",
   _handleFieldChange: function(field, e) {
     newState[field] = e.target.value;
     this.setState({newImage: newState});
-    console.log(this.state.newImage);
   },
   dialogOpen: function (ref) {
     this.refs[ref].show();
@@ -49271,13 +49272,20 @@ var Repository = React.createClass({displayName: "Repository",
     this.refs['upload'].dismiss();
   },
   render: function() {
-   var items = this.props.software.map(function(pkg, index) {
+    var software = this.props.software;
+    var groups = this.state.groups;
+    var items = this.props.software.map(function(pkg, index) {
+      // needed to prepopulate
+    var image = {
+      payload:pkg.id, 
+      text: pkg.name
+    };
       return (
         React.createElement(TableRow, {key: index}, 
           React.createElement(TableRowColumn, null, pkg.name), 
           React.createElement(TableRowColumn, null, pkg.model), 
           React.createElement(TableRowColumn, null, pkg.description), 
-          React.createElement(TableRowColumn, null, React.createElement(FlatButton, {label: "Schedule update"}))
+          React.createElement(TableRowColumn, null, React.createElement(ScheduleForm, {images: software, image: pkg, imageVal: image, groups: groups}))
         )
       )
     });
@@ -49355,7 +49363,7 @@ var Repository = React.createClass({displayName: "Repository",
 
 module.exports = Repository;
 
-},{"../../actions/app-actions":367,"../../stores/app-store":389,"./updatebutton.js":378,"material-ui":43,"react":366,"react-router":174}],377:[function(require,module,exports){
+},{"../../actions/app-actions":367,"../../stores/app-store":389,"../updates/scheduleform":383,"./updatebutton.js":378,"material-ui":43,"react":366,"react-router":174}],377:[function(require,module,exports){
 var React = require('react');
 var AppStore = require('../../stores/app-store');
 
@@ -49764,6 +49772,7 @@ var mui = require('material-ui');
 var DatePicker = mui.DatePicker;
 var TimePicker = mui.TimePicker;
 var SelectField = mui.SelectField;
+var TextField = mui.TextField;
 var RadioButtonGroup = mui.RadioButtonGroup;
 var RadioButton = mui.RadioButton;
 var Dialog = mui.Dialog;
@@ -49781,9 +49790,20 @@ function addDate(date,days) {
 
 var ScheduleForm = React.createClass({displayName: "ScheduleForm",
   getInitialState: function() {
+      
+    var imageVal = {
+      payload: null,
+      text: ''
+    }
+    if (this.props.imageVal) {
+      imageVal = this.props.imageVal;
+    }
     return {
       minDate: getDate(),
-      minDate1: addDate(getDate(),1)
+      minDate1: addDate(getDate(),1),
+      imageVal: imageVal,
+      image: this.props.image,
+      groupVal: null
     };
   },
   dialogDismiss: function(ref) {
@@ -49795,16 +49815,19 @@ var ScheduleForm = React.createClass({displayName: "ScheduleForm",
   _handleGroupValueChange: function(e) {
 
     var group = this.props.groups[e.target.value-1];
-        console.log("group", group, e.target.value);
     this.setState({
       group: group,
+      groupVal: e.target.value,
     });
   },
   _handleImageValueChange: function(e) {
     var image = this.props.images[e.target.value-1];
-            console.log("image", image, e.target.value);
     this.setState({
       image: image,
+      imageVal: {
+        payload: e.target.value,
+        text: image.name
+      }
     });
   },
   _onDialogSubmit: function() {
@@ -49838,6 +49861,7 @@ var ScheduleForm = React.createClass({displayName: "ScheduleForm",
       { text: 'Cancel', onClick: this.dialogDismiss.bind(null, 'schedule')},
       { text: 'Schedule update', onClick: this._onDialogSubmit, ref: 'save' }
     ];
+    var model = this.state.image ? this.state.image.model : '';
     return (
       React.createElement("div", null, 
         React.createElement(RaisedButton, {primary: true, label: "Schedule an update", onClick: this.dialogOpen.bind(null, 'schedule')}), 
@@ -49885,21 +49909,25 @@ var ScheduleForm = React.createClass({displayName: "ScheduleForm",
                   disabled: this.state.immediate, 
                   floatingLabelText: "End time"})
               ), 
-              React.createElement(SelectField, {
-                ref: "image", 
-                value: this.state.image, 
-                onChange: this._handleImageValueChange, 
-                floatingLabelText: "Select software image", 
-                menuItems: imageItems}), 
 
-              React.createElement(SelectField, {
-                style: {display:"block"}, 
-                value: this.state.group, 
-                ref: "group", 
-                onChange: this._handleGroupValueChange, 
-                floatingLabelText: "Select group", 
-                menuItems: groupItems})
+              React.createElement("div", {style: {display:"block"}}, 
+                React.createElement(SelectField, {
+                  ref: "image", 
+                  value: this.state.imageVal.payload, 
+                  onChange: this._handleImageValueChange, 
+                  floatingLabelText: "Select software image", 
+                  menuItems: imageItems}), 
 
+                React.createElement("p", null, "Device type: ", model), 
+
+                React.createElement(SelectField, {
+                  style: {display:"block"}, 
+                  value: this.state.groupVal, 
+                  ref: "group", 
+                  onChange: this._handleGroupValueChange, 
+                  floatingLabelText: "Select group", 
+                  menuItems: groupItems})
+              )
             )
           )
         )

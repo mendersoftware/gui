@@ -7,6 +7,7 @@ var mui = require('material-ui');
 var DatePicker = mui.DatePicker;
 var TimePicker = mui.TimePicker;
 var SelectField = mui.SelectField;
+var TextField = mui.TextField;
 var RadioButtonGroup = mui.RadioButtonGroup;
 var RadioButton = mui.RadioButton;
 var Dialog = mui.Dialog;
@@ -24,9 +25,20 @@ function addDate(date,days) {
 
 var ScheduleForm = React.createClass({
   getInitialState: function() {
+      
+    var imageVal = {
+      payload: null,
+      text: ''
+    }
+    if (this.props.imageVal) {
+      imageVal = this.props.imageVal;
+    }
     return {
       minDate: getDate(),
-      minDate1: addDate(getDate(),1)
+      minDate1: addDate(getDate(),1),
+      imageVal: imageVal,
+      image: this.props.image,
+      groupVal: null
     };
   },
   dialogDismiss: function(ref) {
@@ -38,16 +50,19 @@ var ScheduleForm = React.createClass({
   _handleGroupValueChange: function(e) {
 
     var group = this.props.groups[e.target.value-1];
-        console.log("group", group, e.target.value);
     this.setState({
       group: group,
+      groupVal: e.target.value,
     });
   },
   _handleImageValueChange: function(e) {
     var image = this.props.images[e.target.value-1];
-            console.log("image", image, e.target.value);
     this.setState({
       image: image,
+      imageVal: {
+        payload: e.target.value,
+        text: image.name
+      }
     });
   },
   _onDialogSubmit: function() {
@@ -81,6 +96,7 @@ var ScheduleForm = React.createClass({
       { text: 'Cancel', onClick: this.dialogDismiss.bind(null, 'schedule')},
       { text: 'Schedule update', onClick: this._onDialogSubmit, ref: 'save' }
     ];
+    var model = this.state.image ? this.state.image.model : '';
     return (
       <div>
         <RaisedButton primary={true} label="Schedule an update" onClick={this.dialogOpen.bind(null, 'schedule')} />
@@ -128,21 +144,25 @@ var ScheduleForm = React.createClass({
                   disabled={this.state.immediate}
                   floatingLabelText="End time" />
               </div>
-              <SelectField
-                ref="image"
-                value={this.state.image}
-                onChange={this._handleImageValueChange}
-                floatingLabelText="Select software image"
-                menuItems={imageItems} />
 
-              <SelectField
-                style={{display:"block"}}
-                value={this.state.group}
-                ref="group"
-                onChange={this._handleGroupValueChange}
-                floatingLabelText="Select group"
-                menuItems={groupItems} />
+              <div style={{display:"block"}}>
+                <SelectField
+                  ref="image"
+                  value={this.state.imageVal.payload}
+                  onChange={this._handleImageValueChange}
+                  floatingLabelText="Select software image"
+                  menuItems={imageItems} />
 
+                <p>Device type: {model}</p>
+
+                <SelectField
+                  style={{display:"block"}}
+                  value={this.state.groupVal}
+                  ref="group"
+                  onChange={this._handleGroupValueChange}
+                  floatingLabelText="Select group"
+                  menuItems={groupItems} />
+              </div>
             </form>
           </div>
         </Dialog>
