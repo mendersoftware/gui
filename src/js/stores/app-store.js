@@ -216,6 +216,15 @@ function _addToGroup(group, devices) {
   }
 }
 
+function _getDeviceHealth() {
+  var health = {};
+  var down = collectWithAttr(_alldevices, 'status', 'Down');
+  console.log(down);
+  health.down = down.length;
+  health.up = _alldevices.length - health.down;
+  console.log(health);
+  return health;
+}
 
 
 
@@ -532,11 +541,21 @@ function _saveSchedule(schedule) {
 
 
 function findWithAttr(array, attr, value) {
-  for(var i = 0; i < array.length; i += 1) {
+  for(var i = 0; i<array.length; i++) {
     if(array[i][attr] === value) {
       return i;
     }
   }
+}
+
+function collectWithAttr(array, attr, value) {
+  var newArr = [];
+   for(var i = 0; i<array.length; i++) {
+    if(array[i][attr] === value) {
+      newArr.push(array[i]);
+    }
+  }
+  return newArr;
 }
 
 function statusSort(a,b) {
@@ -602,6 +621,10 @@ var AppStore = assign(EventEmitter.prototype, {
 
   getDevicesFromParams: function(group, model) {
     return _getDevices(group, model)
+  },
+
+  getHealth: function() {
+    return _getDeviceHealth()
   },
 
   dispatcherIndex: AppDispatcher.register(function(payload) {

@@ -48707,7 +48707,7 @@ var AppActions = {
 
 module.exports = AppActions;
 
-},{"../constants/app-constants":386,"../dispatchers/app-dispatcher":387}],368:[function(require,module,exports){
+},{"../constants/app-constants":389,"../dispatchers/app-dispatcher":390}],368:[function(require,module,exports){
 var React = require('react');
 var Router = require('react-router');
 var RouteHandler = Router.RouteHandler;
@@ -48742,14 +48742,31 @@ var App = React.createClass({displayName: "App",
 
 module.exports = App;
 
-},{"./header/header":374,"material-ui":43,"material-ui/lib/styles/raw-themes/light-raw-theme":81,"material-ui/lib/styles/theme-manager":84,"react":366,"react-router":174}],369:[function(require,module,exports){
+},{"./header/header":377,"material-ui":43,"material-ui/lib/styles/raw-themes/light-raw-theme":81,"material-ui/lib/styles/theme-manager":84,"react":366,"react-router":174}],369:[function(require,module,exports){
 var React = require('react');
+var AppStore = require('../../stores/app-store');
+var Health = require('./health');
+var Schedule = require('./schedule');
+var Progress = require('./progress');
+
+function getState() {
+  return {
+    progress: AppStore.getProgressUpdates(new Date().getTime()),
+    schedule: AppStore.getScheduledUpdates(new Date().getTime()),
+    health: AppStore.getHealth()
+  }
+}
 
 var Dashboard = React.createClass({displayName: "Dashboard",
+  getInitialState: function() {
+    return getState();
+  },
   render: function() {
     return (
       React.createElement("div", null, 
-        "dashboard"
+        React.createElement(Progress, {progress: this.state.progress}), 
+        React.createElement(Health, {health: this.state.health}), 
+        React.createElement(Schedule, {schedule: this.state.schedule})
       )
     );
   }
@@ -48757,7 +48774,139 @@ var Dashboard = React.createClass({displayName: "Dashboard",
 
 module.exports = Dashboard;
 
-},{"react":366}],370:[function(require,module,exports){
+},{"../../stores/app-store":392,"./health":370,"./progress":371,"./schedule":372,"react":366}],370:[function(require,module,exports){
+var React = require('react');
+
+// material ui
+var mui = require('material-ui');
+
+var Health = React.createClass({displayName: "Health",
+  render: function() {
+    return (
+      React.createElement("div", {className: "widget small"}, 
+        React.createElement("h3", null, "Device health"), 
+        React.createElement("p", null, "Down: ", this.props.health.down), 
+        React.createElement("hr", null), 
+        React.createElement("p", null, "Up: ", this.props.health.up)
+      )
+    );
+  }
+});
+
+module.exports = Health;
+
+},{"material-ui":43,"react":366}],371:[function(require,module,exports){
+var React = require('react');
+
+// material ui
+var mui = require('material-ui');
+var Table = mui.Table;
+var TableHeader = mui.TableHeader;
+var TableHeaderColumn = mui.TableHeaderColumn;
+var TableBody = mui.TableBody;
+var TableRow = mui.TableRow;
+var TableRowColumn = mui.TableRowColumn;
+
+
+var Progress = React.createClass({displayName: "Progress",
+  render: function() {
+    var progress = this.props.progress.map(function(update, index) {
+      return (
+        React.createElement(TableRow, {key: index}, 
+          React.createElement(TableRowColumn, null, update.group), 
+          React.createElement(TableRowColumn, null, update.software_version), 
+          React.createElement(TableRowColumn, null, update.devices.length), 
+          React.createElement(TableRowColumn, null, update.status || "--")
+        )
+      )
+    });
+    return (
+      React.createElement("div", {className: "widget"}, 
+        React.createElement("h3", null, "Updates in progress"), 
+        React.createElement(Table, {
+          selectable: false}, 
+          React.createElement(TableHeader, {
+            displaySelectAll: false, 
+            adjustForCheckbox: false}, 
+            React.createElement(TableRow, null, 
+              React.createElement(TableHeaderColumn, {tooltip: "Device group"}, "Group"), 
+              React.createElement(TableHeaderColumn, {tooltip: "Target software"}, "Software"), 
+              React.createElement(TableHeaderColumn, {tooltip: "Number of devices"}, "# Devices"), 
+              React.createElement(TableHeaderColumn, {tooltip: "Status"}, "Status")
+            )
+          ), 
+          React.createElement(TableBody, {
+            displayRowCheckbox: false}, 
+            progress
+          )
+        ), 
+        React.createElement("div", {className: progress.length ? 'hidden' : null}, 
+          React.createElement("p", {className: "italic"}, "No updates in progress")
+        )
+      )
+    );
+  }
+});
+
+module.exports = Progress;
+
+},{"material-ui":43,"react":366}],372:[function(require,module,exports){
+var React = require('react');
+var Time = require('react-time');
+
+// material ui
+var mui = require('material-ui');
+var Table = mui.Table;
+var TableHeader = mui.TableHeader;
+var TableHeaderColumn = mui.TableHeaderColumn;
+var TableBody = mui.TableBody;
+var TableRow = mui.TableRow;
+var TableRowColumn = mui.TableRowColumn;
+
+
+var Schedule = React.createClass({displayName: "Schedule",
+  render: function() {
+    var schedule = this.props.schedule.map(function(update, index) {
+      return (
+        React.createElement(TableRow, {key: index}, 
+          React.createElement(TableRowColumn, null, update.group), 
+          React.createElement(TableRowColumn, null, update.software_version), 
+          React.createElement(TableRowColumn, null, update.devices.length), 
+          React.createElement(TableRowColumn, null, "Begins ", React.createElement(Time, {value: update.start_time, format: "YYYY/MM/DD HH:mm", relative: true}))
+        )
+      )
+    });
+    return (
+      React.createElement("div", {className: "widget"}, 
+        React.createElement("h3", null, "Scheduled updates"), 
+        React.createElement(Table, {
+          selectable: false}, 
+          React.createElement(TableHeader, {
+            displaySelectAll: false, 
+            adjustForCheckbox: false}, 
+            React.createElement(TableRow, null, 
+              React.createElement(TableHeaderColumn, {tooltip: "Device group"}, "Group"), 
+              React.createElement(TableHeaderColumn, {tooltip: "Target software"}, "Software"), 
+              React.createElement(TableHeaderColumn, {tooltip: "Number of devices"}, "# Devices"), 
+              React.createElement(TableHeaderColumn, {tooltip: "Details"}, "Details")
+            )
+          ), 
+          React.createElement(TableBody, {
+            displayRowCheckbox: false}, 
+            schedule
+          )
+        ), 
+        React.createElement("div", {className: schedule.length ? 'hidden' : null}, 
+          React.createElement("p", {className: "italic"}, "No updates scheduled")
+        )
+      )
+    );
+  }
+});
+
+module.exports = Schedule;
+
+},{"material-ui":43,"react":366,"react-time":193}],373:[function(require,module,exports){
 var React = require('react');
 var AppStore = require('../../stores/app-store');
 var AppActions = require('../../actions/app-actions');
@@ -48823,7 +48972,7 @@ var DeviceList = React.createClass({displayName: "DeviceList",
 
 module.exports = DeviceList;
 
-},{"../../actions/app-actions":367,"../../stores/app-store":389,"material-ui":43,"react":366}],371:[function(require,module,exports){
+},{"../../actions/app-actions":367,"../../stores/app-store":392,"material-ui":43,"react":366}],374:[function(require,module,exports){
 var React = require('react');
 var AppStore = require('../../stores/app-store');
 
@@ -48868,7 +49017,7 @@ var Devices = React.createClass({displayName: "Devices",
 
 module.exports = Devices;
 
-},{"../../stores/app-store":389,"./devicelist":370,"./groups":372,"./selecteddevices":373,"react":366}],372:[function(require,module,exports){
+},{"../../stores/app-store":392,"./devicelist":373,"./groups":375,"./selecteddevices":376,"react":366}],375:[function(require,module,exports){
 var React = require('react');
 var AppStore = require('../../stores/app-store');
 var AppActions = require('../../actions/app-actions');
@@ -48904,7 +49053,7 @@ var Groups = React.createClass({displayName: "Groups",
 
 module.exports = Groups;
 
-},{"../../actions/app-actions":367,"../../stores/app-store":389,"material-ui":43,"react":366}],373:[function(require,module,exports){
+},{"../../actions/app-actions":367,"../../stores/app-store":392,"material-ui":43,"react":366}],376:[function(require,module,exports){
 var React = require('react');
 var AppStore = require('../../stores/app-store');
 var AppActions = require('../../actions/app-actions');
@@ -49113,7 +49262,7 @@ var SelectedDevices = React.createClass({displayName: "SelectedDevices",
 
 module.exports = SelectedDevices;
 
-},{"../../actions/app-actions":367,"../../stores/app-store":389,"material-ui":43,"react":366}],374:[function(require,module,exports){
+},{"../../actions/app-actions":367,"../../stores/app-store":392,"material-ui":43,"react":366}],377:[function(require,module,exports){
 var React = require('react');
 var mui = require('material-ui');
 var Router = require('react-router');
@@ -49196,7 +49345,7 @@ Header.contextTypes = {
 
 module.exports = Header;
 
-},{"material-ui":43,"react":366,"react-router":174}],375:[function(require,module,exports){
+},{"material-ui":43,"react":366,"react-router":174}],378:[function(require,module,exports){
 var React = require('react');
 
 // material ui
@@ -49246,7 +49395,7 @@ var Installed = React.createClass({displayName: "Installed",
 
 module.exports = Installed;
 
-},{"material-ui":43,"react":366}],376:[function(require,module,exports){
+},{"material-ui":43,"react":366}],379:[function(require,module,exports){
 var React = require('react');
 var AppStore = require('../../stores/app-store');
 var AppActions = require('../../actions/app-actions');
@@ -49383,7 +49532,7 @@ var Repository = React.createClass({displayName: "Repository",
 
 module.exports = Repository;
 
-},{"../../actions/app-actions":367,"../../stores/app-store":389,"../updates/scheduleform":383,"./updatebutton.js":378,"material-ui":43,"react":366,"react-router":174}],377:[function(require,module,exports){
+},{"../../actions/app-actions":367,"../../stores/app-store":392,"../updates/scheduleform":386,"./updatebutton.js":381,"material-ui":43,"react":366,"react-router":174}],380:[function(require,module,exports){
 var React = require('react');
 var AppStore = require('../../stores/app-store');
 
@@ -49448,7 +49597,7 @@ var Software = React.createClass({displayName: "Software",
 
 module.exports = Software;
 
-},{"../../stores/app-store":389,"./installed.js":375,"./repository.js":376,"material-ui":43,"react":366}],378:[function(require,module,exports){
+},{"../../stores/app-store":392,"./installed.js":378,"./repository.js":379,"material-ui":43,"react":366}],381:[function(require,module,exports){
 var React = require('react');
 
 // material ui
@@ -49465,7 +49614,7 @@ var UpdateButton = React.createClass({displayName: "UpdateButton",
 
 module.exports = UpdateButton;
 
-},{"material-ui":43,"react":366}],379:[function(require,module,exports){
+},{"material-ui":43,"react":366}],382:[function(require,module,exports){
 var React = require('react');
 
 // material ui
@@ -49488,7 +49637,7 @@ var EventLog = React.createClass({displayName: "EventLog",
 
 module.exports = EventLog;
 
-},{"material-ui":43,"react":366}],380:[function(require,module,exports){
+},{"material-ui":43,"react":366}],383:[function(require,module,exports){
 var React = require('react');
 var Time = require('react-time');
 var Report = require('./report.js');
@@ -49632,7 +49781,7 @@ var Recent = React.createClass({displayName: "Recent",
 
 module.exports = Recent;
 
-},{"./report.js":381,"material-ui":43,"react":366,"react-time":193}],381:[function(require,module,exports){
+},{"./report.js":384,"material-ui":43,"react":366,"react-time":193}],384:[function(require,module,exports){
 var React = require('react');
 var Time = require('react-time');
 
@@ -49710,7 +49859,7 @@ var Report = React.createClass({displayName: "Report",
 
 module.exports = Report;
 
-},{"material-ui":43,"react":366,"react-time":193}],382:[function(require,module,exports){
+},{"material-ui":43,"react":366,"react-time":193}],385:[function(require,module,exports){
 var React = require('react');
 var Time = require('react-time');
 
@@ -49782,7 +49931,7 @@ var Schedule = React.createClass({displayName: "Schedule",
 
 module.exports = Schedule;
 
-},{"material-ui":43,"react":366,"react-time":193}],383:[function(require,module,exports){
+},{"material-ui":43,"react":366,"react-time":193}],386:[function(require,module,exports){
 var React = require('react');
 var AppStore = require('../../stores/app-store');
 var AppActions = require('../../actions/app-actions');
@@ -49959,7 +50108,7 @@ var ScheduleForm = React.createClass({displayName: "ScheduleForm",
 
 module.exports = ScheduleForm;
 
-},{"../../actions/app-actions":367,"../../stores/app-store":389,"material-ui":43,"react":366}],384:[function(require,module,exports){
+},{"../../actions/app-actions":367,"../../stores/app-store":392,"material-ui":43,"react":366}],387:[function(require,module,exports){
 var React = require('react');
 var AppStore = require('../../stores/app-store');
 
@@ -50036,7 +50185,7 @@ var Updates = React.createClass({displayName: "Updates",
 
 module.exports = Updates;
 
-},{"../../stores/app-store":389,"./eventlog.js":379,"./recentupdates.js":380,"./schedule.js":382,"./scheduleform.js":383,"material-ui":43,"react":366}],385:[function(require,module,exports){
+},{"../../stores/app-store":392,"./eventlog.js":382,"./recentupdates.js":383,"./schedule.js":385,"./scheduleform.js":386,"material-ui":43,"react":366}],388:[function(require,module,exports){
 var React = require('react');
 
 var App = require('../components/app');
@@ -50060,7 +50209,7 @@ module.exports = (
   )
 );  
 
-},{"../components/app":368,"../components/dashboard/dashboard":369,"../components/devices/devices":371,"../components/software/software":377,"../components/updates/updates":384,"react":366,"react-router":174}],386:[function(require,module,exports){
+},{"../components/app":368,"../components/dashboard/dashboard":369,"../components/devices/devices":374,"../components/software/software":380,"../components/updates/updates":387,"react":366,"react-router":174}],389:[function(require,module,exports){
 module.exports = {
   SELECT_GROUP: 'SELECT_GROUP',
   ADD_TO_GROUP: 'ADD_TO_GROUP',
@@ -50069,7 +50218,7 @@ module.exports = {
   SAVE_SCHEDULE: 'SAVE_SCHEDULE'
 }
 
-},{}],387:[function(require,module,exports){
+},{}],390:[function(require,module,exports){
 var Dispatcher = require('flux').Dispatcher;
 var assign = require('react/lib/Object.assign');
 
@@ -50084,7 +50233,7 @@ var AppDispatcher = assign(new Dispatcher(), {
 
 module.exports = AppDispatcher;
 
-},{"flux":4,"react/lib/Object.assign":222}],388:[function(require,module,exports){
+},{"flux":4,"react/lib/Object.assign":222}],391:[function(require,module,exports){
 var React = require('react');
 var Router = require('react-router');
 var routes = require('./config/routes');
@@ -50102,7 +50251,7 @@ Router.run(routes, function(Root) {
   React.render(React.createElement(Root, null), document.getElementById('main'));
 });
 
-},{"./config/routes":385,"react":366,"react-router":174,"react-tap-event-plugin":191}],389:[function(require,module,exports){
+},{"./config/routes":388,"react":366,"react-router":174,"react-tap-event-plugin":191}],392:[function(require,module,exports){
 var AppDispatcher = require('../dispatchers/app-dispatcher');
 var AppConstants = require('../constants/app-constants');
 var assign = require('react/lib/Object.assign');
@@ -50321,6 +50470,15 @@ function _addToGroup(group, devices) {
   }
 }
 
+function _getDeviceHealth() {
+  var health = {};
+  var down = collectWithAttr(_alldevices, 'status', 'Down');
+  console.log(down);
+  health.down = down.length;
+  health.up = _alldevices.length - health.down;
+  console.log(health);
+  return health;
+}
 
 
 
@@ -50637,11 +50795,21 @@ function _saveSchedule(schedule) {
 
 
 function findWithAttr(array, attr, value) {
-  for(var i = 0; i < array.length; i += 1) {
+  for(var i = 0; i<array.length; i++) {
     if(array[i][attr] === value) {
       return i;
     }
   }
+}
+
+function collectWithAttr(array, attr, value) {
+  var newArr = [];
+   for(var i = 0; i<array.length; i++) {
+    if(array[i][attr] === value) {
+      newArr.push(array[i]);
+    }
+  }
+  return newArr;
 }
 
 function statusSort(a,b) {
@@ -50709,6 +50877,10 @@ var AppStore = assign(EventEmitter.prototype, {
     return _getDevices(group, model)
   },
 
+  getHealth: function() {
+    return _getDeviceHealth()
+  },
+
   dispatcherIndex: AppDispatcher.register(function(payload) {
     var action = payload.action;
     switch(action.actionType) {
@@ -50737,4 +50909,4 @@ var AppStore = assign(EventEmitter.prototype, {
 
 module.exports = AppStore;
 
-},{"../constants/app-constants":386,"../dispatchers/app-dispatcher":387,"events":1,"react/lib/Object.assign":222}]},{},[388]);
+},{"../constants/app-constants":389,"../dispatchers/app-dispatcher":390,"events":1,"react/lib/Object.assign":222}]},{},[391]);
