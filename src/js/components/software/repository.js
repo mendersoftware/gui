@@ -80,7 +80,7 @@ var Repository = React.createClass({
               adjustForCheckbox={false}>
               <TableRow>
                 <TableHeaderColumn tooltip="Software">Software</TableHeaderColumn>
-                <TableHeaderColumn tooltip="Model compatibility">Model compatibility</TableHeaderColumn>
+                <TableHeaderColumn tooltip="Device type compatibility">Device type compatibility</TableHeaderColumn>
                 <TableHeaderColumn tooltip="Description">Description</TableHeaderColumn>
                 <TableHeaderColumn tooltip=""></TableHeaderColumn>
               </TableRow>
@@ -114,7 +114,7 @@ var Repository = React.createClass({
 
               <TextField
                 value="Acme Model 1"
-                floatingLabelText="Model compatibility"
+                floatingLabelText="Device type compatibility"
                 onChange={this._handleFieldChange.bind(null, 'model')} />
 
               <TextField

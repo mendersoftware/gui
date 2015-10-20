@@ -48807,7 +48807,7 @@ var DeviceList = React.createClass({displayName: "DeviceList",
         onSelectAll: this._selectAll}, 
           React.createElement(TableRow, null, 
             React.createElement(TableHeaderColumn, {tooltip: "Name"}, "Name"), 
-            React.createElement(TableHeaderColumn, {tooltip: "Model"}, "Model"), 
+            React.createElement(TableHeaderColumn, {tooltip: "Device type"}, "Device type"), 
             React.createElement(TableHeaderColumn, {tooltip: "Installed software"}, "Software"), 
             React.createElement(TableHeaderColumn, {tooltip: "Status"}, "Status")
           )
@@ -49020,7 +49020,7 @@ var SelectedDevices = React.createClass({displayName: "SelectedDevices",
         React.createElement("ul", null, 
           React.createElement("li", null, "Name: ", this.props.selected[0].name), 
           React.createElement("li", null, "Status: ", this.props.selected[0].status), 
-          React.createElement("li", null, "Model: ", this.props.selected[0].model), 
+          React.createElement("li", null, "Device type: ", this.props.selected[0].model), 
           React.createElement("li", null, "Software: ", this.props.selected[0].software_version), 
           React.createElement("li", null, "Architecture: ", this.props.selected[0].arch), 
           React.createElement("li", null, "Groups: ", this.props.selected[0].groups.join(','))
@@ -49229,7 +49229,7 @@ var Installed = React.createClass({displayName: "Installed",
               adjustForCheckbox: false}, 
               React.createElement(TableRow, null, 
                 React.createElement(TableHeaderColumn, {tooltip: "Software"}, "Software"), 
-                React.createElement(TableHeaderColumn, {tooltip: "Model compatibility"}, "Model compatibility"), 
+                React.createElement(TableHeaderColumn, {tooltip: "Device type compatibility"}, "Device type compatibility"), 
                 React.createElement(TableHeaderColumn, {tooltip: "Number of devices"}, "# Devices")
               )
             ), 
@@ -49329,7 +49329,7 @@ var Repository = React.createClass({displayName: "Repository",
               adjustForCheckbox: false}, 
               React.createElement(TableRow, null, 
                 React.createElement(TableHeaderColumn, {tooltip: "Software"}, "Software"), 
-                React.createElement(TableHeaderColumn, {tooltip: "Model compatibility"}, "Model compatibility"), 
+                React.createElement(TableHeaderColumn, {tooltip: "Device type compatibility"}, "Device type compatibility"), 
                 React.createElement(TableHeaderColumn, {tooltip: "Description"}, "Description"), 
                 React.createElement(TableHeaderColumn, {tooltip: ""})
               )
@@ -49363,7 +49363,7 @@ var Repository = React.createClass({displayName: "Repository",
 
               React.createElement(TextField, {
                 value: "Acme Model 1", 
-                floatingLabelText: "Model compatibility", 
+                floatingLabelText: "Device type compatibility", 
                 onChange: this._handleFieldChange.bind(null, 'model')}), 
 
               React.createElement(TextField, {
@@ -49670,7 +49670,7 @@ var Report = React.createClass({displayName: "Report",
           React.createElement("ul", null, 
             React.createElement("li", null, React.createElement("label", null, "Number of devices"), ": ", React.createElement("span", null, this.props.update.devices.length)), 
             React.createElement("li", null, React.createElement("label", null, "Group"), ": ", React.createElement("span", null, this.props.update.group)), 
-            React.createElement("li", null, React.createElement("label", null, "Model"), ": ", React.createElement("span", null, this.props.update.model)), 
+            React.createElement("li", null, React.createElement("label", null, "Device type"), ": ", React.createElement("span", null, this.props.update.model)), 
             React.createElement("li", null, React.createElement("label", null, "Software"), ": ", React.createElement("span", null, this.props.update.software_version))
           )
         ), 
@@ -49689,7 +49689,7 @@ var Report = React.createClass({displayName: "Report",
             adjustForCheckbox: false}, 
             React.createElement(TableRow, null, 
               React.createElement(TableHeaderColumn, {tooltip: "Device name"}, "Device name"), 
-              React.createElement(TableHeaderColumn, {tooltip: "Device model"}, "Model"), 
+              React.createElement(TableHeaderColumn, {tooltip: "Device type"}, "Device type"), 
               React.createElement(TableHeaderColumn, {tooltip: "Previous software"}, "Updating from"), 
               React.createElement(TableHeaderColumn, {tooltip: "Target software"}, "Updated to "), 
               React.createElement(TableHeaderColumn, {tooltip: "Update start time"}, "Start time"), 

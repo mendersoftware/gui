@@ -35,7 +35,7 @@ var Report = React.createClass({
           <ul>
             <li><label>Number of devices</label>: <span>{this.props.update.devices.length}</span></li>
             <li><label>Group</label>: <span>{this.props.update.group}</span></li>
-            <li><label>Model</label>: <span>{this.props.update.model}</span></li>
+            <li><label>Device type</label>: <span>{this.props.update.model}</span></li>
             <li><label>Software</label>: <span>{this.props.update.software_version}</span></li>
           </ul>
         </div>
@@ -54,7 +54,7 @@ var Report = React.createClass({
             adjustForCheckbox={false}>
             <TableRow>
               <TableHeaderColumn tooltip="Device name">Device name</TableHeaderColumn>
-              <TableHeaderColumn tooltip="Device model">Model</TableHeaderColumn>
+              <TableHeaderColumn tooltip="Device type">Device type</TableHeaderColumn>
               <TableHeaderColumn tooltip="Previous software">Updating from</TableHeaderColumn>
               <TableHeaderColumn tooltip="Target software">Updated to </TableHeaderColumn>
               <TableHeaderColumn tooltip="Update start time">Start time</TableHeaderColumn>

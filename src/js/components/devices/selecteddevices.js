@@ -113,7 +113,7 @@ var SelectedDevices = React.createClass({
         <ul>
           <li>Name: {this.props.selected[0].name}</li>
           <li>Status: {this.props.selected[0].status}</li>
-          <li>Model: {this.props.selected[0].model}</li>
+          <li>Device type: {this.props.selected[0].model}</li>
           <li>Software: {this.props.selected[0].software_version}</li>
           <li>Architecture: {this.props.selected[0].arch}</li>
           <li>Groups: {this.props.selected[0].groups.join(',')}</li>

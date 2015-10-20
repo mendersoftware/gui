@@ -47,7 +47,7 @@ var DeviceList = React.createClass({
         onSelectAll={this._selectAll}>
           <TableRow>
             <TableHeaderColumn tooltip="Name">Name</TableHeaderColumn>
-            <TableHeaderColumn tooltip="Model">Model</TableHeaderColumn>
+            <TableHeaderColumn tooltip="Device type">Device type</TableHeaderColumn>
             <TableHeaderColumn tooltip="Installed software">Software</TableHeaderColumn>
             <TableHeaderColumn tooltip="Status">Status</TableHeaderColumn>
           </TableRow>

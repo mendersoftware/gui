@@ -30,7 +30,7 @@ var Installed = React.createClass({
               adjustForCheckbox={false}>
               <TableRow>
                 <TableHeaderColumn tooltip="Software">Software</TableHeaderColumn>
-                <TableHeaderColumn tooltip="Model compatibility">Model compatibility</TableHeaderColumn>
+                <TableHeaderColumn tooltip="Device type compatibility">Device type compatibility</TableHeaderColumn>
                 <TableHeaderColumn tooltip="Number of devices"># Devices</TableHeaderColumn>
               </TableRow>
             </TableHeader>
