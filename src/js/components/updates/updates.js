@@ -42,7 +42,6 @@ var Updates = React.createClass({
     this.setState(getState());
   },
   render: function() {
-    console.log(this.state.progress);
     return (
       <div>
          <Tabs

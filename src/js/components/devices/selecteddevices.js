@@ -15,7 +15,12 @@ var addSelection = {};
 var SelectedDevices = React.createClass({
   getInitialState: function() {
     return {
-      showInput: false 
+      showInput: false,
+      groups: this.props.groups,
+      selectedGroup: {
+        payload: '',
+        text: ''
+      }
     };
   },
   _onDismiss: function() {
@@ -30,6 +35,12 @@ var SelectedDevices = React.createClass({
         group = this.props.groups[i];
       }
     }
+    this.setState({
+      selectedGroup: {
+        payload:e.target.value,
+        text: group.name
+      }
+    });
     addSelection = {
       group: group,
       textFieldValue: e.target.value 
@@ -62,15 +73,23 @@ var SelectedDevices = React.createClass({
       group: newGroup,
       textFieldValue: null 
     };
-
-    // TODO update so gets added to props + select list 
-
-    this.setState({showInput: false});
+    var groups = this.state.groups;
+    newGroup.id = groups.length+1;
+    groups.push(newGroup);
+    
+    this.setState({
+      groups:groups,
+      showInput: false,
+      selectedGroup: {
+        payload: newGroup.id,
+        text: newGroup.name
+      }
+    });
   },
   _validateName: function(e) {
     var newName = e.target.value;
     var errorText = null;
-    for (var i=0;i<this.props.groups.length; i++) {
+    for (var i=0;i<this.state.groups.length; i++) {
       if (this.props.groups[i].name === newName) {
         errorText = "A group with this name already exists";
       }
@@ -112,7 +131,7 @@ var SelectedDevices = React.createClass({
       { text: 'Add to group', onClick: this._addGroupHandler, ref: 'save' }
     ];
 
-    var groupList = this.props.groups.map(function(group) {
+    var groupList = this.state.groups.map(function(group) {
       if (group.id === 1) {
         return {payload: '', text: ''}
       } else {
@@ -144,7 +163,8 @@ var SelectedDevices = React.createClass({
               onChange={this._handleSelectValueChange}
               floatingLabelText="Select group"
               menuItems={groupList} 
-              style={inputStyle} />
+              style={inputStyle}
+              value={this.state.selectedGroup.payload} />
               
               <RaisedButton 
                 label="Create new" 
