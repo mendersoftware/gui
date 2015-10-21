@@ -150,7 +150,7 @@ var ScheduleForm = React.createClass({
                   ref="image"
                   value={this.state.imageVal.payload}
                   onChange={this._handleImageValueChange}
-                  floatingLabelText="Select software image"
+                  floatingLabelText="Select target software"
                   menuItems={imageItems} />
 
                 <p>Device type: {model}</p>

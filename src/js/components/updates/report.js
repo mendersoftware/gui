@@ -36,7 +36,7 @@ var Report = React.createClass({
             <li><label>Number of devices</label>: <span>{this.props.update.devices.length}</span></li>
             <li><label>Group</label>: <span>{this.props.update.group}</span></li>
             <li><label>Device type</label>: <span>{this.props.update.model}</span></li>
-            <li><label>Software</label>: <span>{this.props.update.software_version}</span></li>
+            <li><label>Target software</label>: <span>{this.props.update.software_version}</span></li>
           </ul>
         </div>
         <div>

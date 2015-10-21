@@ -32,13 +32,15 @@ var Progress = React.createClass({
             adjustForCheckbox={false}>
             <TableRow>
               <TableHeaderColumn tooltip="Device group">Group</TableHeaderColumn>
-              <TableHeaderColumn tooltip="Target software">Software</TableHeaderColumn>
+              <TableHeaderColumn tooltip="Target software version">Target software</TableHeaderColumn>
               <TableHeaderColumn tooltip="Number of devices"># Devices</TableHeaderColumn>
               <TableHeaderColumn tooltip="Status">Status</TableHeaderColumn>
             </TableRow>
           </TableHeader>
           <TableBody
-            displayRowCheckbox={false}>
+            showRowHover={true}
+            displayRowCheckbox={false}
+            style={{cursor:"pointer"}}>
             {progress}
           </TableBody>
         </Table>

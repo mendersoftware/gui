@@ -48830,13 +48830,15 @@ var Progress = React.createClass({displayName: "Progress",
             adjustForCheckbox: false}, 
             React.createElement(TableRow, null, 
               React.createElement(TableHeaderColumn, {tooltip: "Device group"}, "Group"), 
-              React.createElement(TableHeaderColumn, {tooltip: "Target software"}, "Software"), 
+              React.createElement(TableHeaderColumn, {tooltip: "Target software version"}, "Target software"), 
               React.createElement(TableHeaderColumn, {tooltip: "Number of devices"}, "# Devices"), 
               React.createElement(TableHeaderColumn, {tooltip: "Status"}, "Status")
             )
           ), 
           React.createElement(TableBody, {
-            displayRowCheckbox: false}, 
+            showRowHover: true, 
+            displayRowCheckbox: false, 
+            style: {cursor:"pointer"}}, 
             progress
           )
         ), 
@@ -48886,13 +48888,15 @@ var Schedule = React.createClass({displayName: "Schedule",
             adjustForCheckbox: false}, 
             React.createElement(TableRow, null, 
               React.createElement(TableHeaderColumn, {tooltip: "Device group"}, "Group"), 
-              React.createElement(TableHeaderColumn, {tooltip: "Target software"}, "Software"), 
+              React.createElement(TableHeaderColumn, {tooltip: "Target software version"}, "Target software"), 
               React.createElement(TableHeaderColumn, {tooltip: "Number of devices"}, "# Devices"), 
               React.createElement(TableHeaderColumn, {tooltip: "Details"}, "Details")
             )
           ), 
           React.createElement(TableBody, {
-            displayRowCheckbox: false}, 
+            showRowHover: true, 
+            displayRowCheckbox: false, 
+            style: {cursor:"pointer"}}, 
             schedule
           )
         ), 
@@ -49722,7 +49726,9 @@ var Recent = React.createClass({displayName: "Recent",
               )
             ), 
             React.createElement(TableBody, {
-              displayRowCheckbox: false}, 
+              showRowHover: true, 
+              displayRowCheckbox: false, 
+              style: {cursor:"pointer"}}, 
               progress
             )
           ), 
@@ -49742,7 +49748,7 @@ var Recent = React.createClass({displayName: "Recent",
               adjustForCheckbox: false}, 
               React.createElement(TableRow, null, 
                 React.createElement(TableHeaderColumn, {tooltip: "Device group"}, "Group"), 
-                React.createElement(TableHeaderColumn, {tooltip: "Target software version"}, "Software"), 
+                React.createElement(TableHeaderColumn, {tooltip: "Target software version"}, "Target software"), 
                 React.createElement(TableHeaderColumn, {tooltip: "Number of devices"}, "# Devices"), 
                 React.createElement(TableHeaderColumn, {tooltip: "Start time"}, "Start time"), 
                 React.createElement(TableHeaderColumn, {tooltip: "End time"}, "End time"), 
@@ -49820,7 +49826,7 @@ var Report = React.createClass({displayName: "Report",
             React.createElement("li", null, React.createElement("label", null, "Number of devices"), ": ", React.createElement("span", null, this.props.update.devices.length)), 
             React.createElement("li", null, React.createElement("label", null, "Group"), ": ", React.createElement("span", null, this.props.update.group)), 
             React.createElement("li", null, React.createElement("label", null, "Device type"), ": ", React.createElement("span", null, this.props.update.model)), 
-            React.createElement("li", null, React.createElement("label", null, "Software"), ": ", React.createElement("span", null, this.props.update.software_version))
+            React.createElement("li", null, React.createElement("label", null, "Target software"), ": ", React.createElement("span", null, this.props.update.software_version))
           )
         ), 
         React.createElement("div", null, 
@@ -49907,7 +49913,7 @@ var Schedule = React.createClass({displayName: "Schedule",
               adjustForCheckbox: false}, 
               React.createElement(TableRow, null, 
                 React.createElement(TableHeaderColumn, {tooltip: "Device group"}, "Group"), 
-                React.createElement(TableHeaderColumn, {tooltip: "Target software version"}, "Software"), 
+                React.createElement(TableHeaderColumn, {tooltip: "Target software version"}, "Target software"), 
                 React.createElement(TableHeaderColumn, {tooltip: "Number of devices"}, "# Devices"), 
                 React.createElement(TableHeaderColumn, {tooltip: "Start time"}, "Start time"), 
                 React.createElement(TableHeaderColumn, {tooltip: "End time"}, "End time"), 
@@ -49916,7 +49922,9 @@ var Schedule = React.createClass({displayName: "Schedule",
               )
             ), 
             React.createElement(TableBody, {
-              displayRowCheckbox: false}, 
+              showRowHover: true, 
+              displayRowCheckbox: false, 
+              style: {cursor:"pointer"}}, 
               schedule
             )
           ), 
@@ -50084,7 +50092,7 @@ var ScheduleForm = React.createClass({displayName: "ScheduleForm",
                   ref: "image", 
                   value: this.state.imageVal.payload, 
                   onChange: this._handleImageValueChange, 
-                  floatingLabelText: "Select software image", 
+                  floatingLabelText: "Select target software", 
                   menuItems: imageItems}), 
 
                 React.createElement("p", null, "Device type: ", model), 
@@ -50473,10 +50481,8 @@ function _addToGroup(group, devices) {
 function _getDeviceHealth() {
   var health = {};
   var down = collectWithAttr(_alldevices, 'status', 'Down');
-  console.log(down);
   health.down = down.length;
   health.up = _alldevices.length - health.down;
-  console.log(health);
   return health;
 }
 

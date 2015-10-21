@@ -219,10 +219,8 @@ function _addToGroup(group, devices) {
 function _getDeviceHealth() {
   var health = {};
   var down = collectWithAttr(_alldevices, 'status', 'Down');
-  console.log(down);
   health.down = down.length;
   health.up = _alldevices.length - health.down;
-  console.log(health);
   return health;
 }
 

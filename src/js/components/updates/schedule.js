@@ -45,7 +45,7 @@ var Schedule = React.createClass({
               adjustForCheckbox={false}>
               <TableRow>
                 <TableHeaderColumn tooltip="Device group">Group</TableHeaderColumn>
-                <TableHeaderColumn tooltip="Target software version">Software</TableHeaderColumn>
+                <TableHeaderColumn tooltip="Target software version">Target software</TableHeaderColumn>
                 <TableHeaderColumn tooltip="Number of devices"># Devices</TableHeaderColumn>
                 <TableHeaderColumn tooltip="Start time">Start time</TableHeaderColumn>
                 <TableHeaderColumn tooltip="End time">End time</TableHeaderColumn>
@@ -54,7 +54,9 @@ var Schedule = React.createClass({
               </TableRow>
             </TableHeader>
             <TableBody
-              displayRowCheckbox={false}>
+              showRowHover={true}
+              displayRowCheckbox={false}
+              style={{cursor:"pointer"}}>
               {schedule}
             </TableBody>
           </Table>
