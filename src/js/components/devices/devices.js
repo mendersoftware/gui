@@ -10,7 +10,8 @@ function getState() {
     groups: AppStore.getGroups(),
     selectedGroup: AppStore.getSelectedGroup(),
     devices: AppStore.getDevices(),
-    selectedDevices: AppStore.getSelectedDevices()
+    selectedDevices: AppStore.getSelectedDevices(),
+    filters: AppStore.getFilters()
   }
 }
 
@@ -32,7 +33,7 @@ var Devices = React.createClass({
         </div>
         <div className="rightFluid">
           <h4>{this.state.selectedGroup.name}</h4>
-          <DeviceList devices={this.state.devices} />
+          <DeviceList filters={this.state.filters} devices={this.state.devices} />
           <SelectedDevices selected={this.state.selectedDevices} selectedGroup={this.state.selectedGroup} groups={this.state.groups} />
         </div>
       </div>

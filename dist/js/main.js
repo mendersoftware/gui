@@ -48989,7 +48989,8 @@ function getState() {
     groups: AppStore.getGroups(),
     selectedGroup: AppStore.getSelectedGroup(),
     devices: AppStore.getDevices(),
-    selectedDevices: AppStore.getSelectedDevices()
+    selectedDevices: AppStore.getSelectedDevices(),
+    filters: AppStore.getFilters()
   }
 }
 
@@ -49011,7 +49012,7 @@ var Devices = React.createClass({displayName: "Devices",
         ), 
         React.createElement("div", {className: "rightFluid"}, 
           React.createElement("h4", null, this.state.selectedGroup.name), 
-          React.createElement(DeviceList, {devices: this.state.devices}), 
+          React.createElement(DeviceList, {filters: this.state.filters, devices: this.state.devices}), 
           React.createElement(SelectedDevices, {selected: this.state.selectedDevices, selectedGroup: this.state.selectedGroup, groups: this.state.groups})
         )
       )
@@ -49965,6 +49966,14 @@ function addDate(date,days) {
   return newDate;
 }
 
+function getDevicesFromParams(group, model) {
+  var devices = [];
+  if (model && group) {
+    devices = AppStore.getDevicesFromParams(group, model);
+  }
+  return devices.length;
+}
+
 var ScheduleForm = React.createClass({displayName: "ScheduleForm",
   getInitialState: function() {
       
@@ -49990,21 +49999,24 @@ var ScheduleForm = React.createClass({displayName: "ScheduleForm",
     this.refs[ref].show();
   },
   _handleGroupValueChange: function(e) {
-
+    var image = this.state.image ? this.state.image.model : null;
     var group = this.props.groups[e.target.value-1];
     this.setState({
       group: group,
       groupVal: e.target.value,
+      devices: getDevicesFromParams(group.name, image)
     });
   },
   _handleImageValueChange: function(e) {
     var image = this.props.images[e.target.value-1];
+    var groupname = this.state.group ? this.state.group.name : null;
     this.setState({
       image: image,
       imageVal: {
         payload: e.target.value,
         text: image.name
-      }
+      },
+      devices: getDevicesFromParams(groupname, image.model)
     });
   },
   _onDialogSubmit: function() {
@@ -50103,7 +50115,9 @@ var ScheduleForm = React.createClass({displayName: "ScheduleForm",
                   ref: "group", 
                   onChange: this._handleGroupValueChange, 
                   floatingLabelText: "Select group", 
-                  menuItems: groupItems})
+                  menuItems: groupItems}), 
+
+                React.createElement("p", {className: this.state.devices ? null : 'hidden'}, this.state.devices, " devices will be updated ", React.createElement("a", {href: "#", className: "margin-left"}, "View devices"))
               )
             )
           )
@@ -50270,6 +50284,7 @@ var CHANGE_EVENT = "change";
 var _currentGroup = [];
 var _currentDevices = [];
 var _selectedDevices = [];
+var _filters = [];
 
 /* TEMP LOCAL GROUPS */
 var _groups = [
@@ -50436,6 +50451,7 @@ function _selectDevices(devicePositions) {
 
 function _getDevices(group, model) {
   // get group id from name
+  console.log(group, model);
   var index = findWithAttr(_groups, 'name', group);
   var groupId = _groups[index].id;
 
@@ -50839,47 +50855,86 @@ var AppStore = assign(EventEmitter.prototype, {
   },
 
   getGroups: function() {
+    /*
+    * Return list of groups
+    */
     return _groups
   },
 
   getSelectedGroup: function() {
+    /*
+    * Return group object for current group selection
+    */
     return _currentGroup
   },
 
   getDevices: function() {
+    /*
+    * Return list of devices by current selected group
+    */
     return _currentDevices
   },
 
+  getFilters: function() {
+    /*
+    * Return set of filters for list of devices
+    */
+    return _filters
+  },
+
   getSelectedDevices: function() {
+    /*
+    * Return list of selected devices
+    */
     return _selectedDevices
   },
 
-
   getSoftwareInstalled: function() {
+    /*
+    * Return list of software installed on devices
+    */
     return _softwareInstalled
   },
 
   getSoftwareRepo: function() {
+    /*
+    * Return list of saved software objects
+    */
     return _softwareRepo
   },
 
   getRecentUpdates: function(date) {
+    /*
+    * Return list of updates before date
+    */
     return _getRecentUpdates(date)
   }, 
 
   getProgressUpdates: function(date) {
+    /*
+    * Return list of updates in progress based on date
+    */
     return _getProgressUpdates(date)
   }, 
 
   getScheduledUpdates: function(date) {
+    /*
+    * Return list of updates scheduled after date
+    */
     return _getScheduledUpdates(date)
   }, 
 
   getEventLog: function() {
+    /*
+    * Return list of event objects from log
+    */
     return _events
   },
 
   getDevicesFromParams: function(group, model) {
+    /*
+    * Return list of devices given group and model
+    */
     return _getDevices(group, model)
   },
 

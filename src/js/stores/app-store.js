@@ -8,6 +8,7 @@ var CHANGE_EVENT = "change";
 var _currentGroup = [];
 var _currentDevices = [];
 var _selectedDevices = [];
+var _filters = [];
 
 /* TEMP LOCAL GROUPS */
 var _groups = [
@@ -174,6 +175,7 @@ function _selectDevices(devicePositions) {
 
 function _getDevices(group, model) {
   // get group id from name
+  console.log(group, model);
   var index = findWithAttr(_groups, 'name', group);
   var groupId = _groups[index].id;
 
@@ -602,7 +604,7 @@ var AppStore = assign(EventEmitter.prototype, {
     * Return set of filters for list of devices
     */
     return _filters
-  }
+  },
 
   getSelectedDevices: function() {
     /*
@@ -610,7 +612,6 @@ var AppStore = assign(EventEmitter.prototype, {
     */
     return _selectedDevices
   },
-
 
   getSoftwareInstalled: function() {
     /*

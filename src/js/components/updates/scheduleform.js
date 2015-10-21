@@ -23,6 +23,14 @@ function addDate(date,days) {
   return newDate;
 }
 
+function getDevicesFromParams(group, model) {
+  var devices = [];
+  if (model && group) {
+    devices = AppStore.getDevicesFromParams(group, model);
+  }
+  return devices.length;
+}
+
 var ScheduleForm = React.createClass({
   getInitialState: function() {
       
@@ -48,21 +56,24 @@ var ScheduleForm = React.createClass({
     this.refs[ref].show();
   },
   _handleGroupValueChange: function(e) {
-
+    var image = this.state.image ? this.state.image.model : null;
     var group = this.props.groups[e.target.value-1];
     this.setState({
       group: group,
       groupVal: e.target.value,
+      devices: getDevicesFromParams(group.name, image)
     });
   },
   _handleImageValueChange: function(e) {
     var image = this.props.images[e.target.value-1];
+    var groupname = this.state.group ? this.state.group.name : null;
     this.setState({
       image: image,
       imageVal: {
         payload: e.target.value,
         text: image.name
-      }
+      },
+      devices: getDevicesFromParams(groupname, image.model)
     });
   },
   _onDialogSubmit: function() {
@@ -162,6 +173,8 @@ var ScheduleForm = React.createClass({
                   onChange={this._handleGroupValueChange}
                   floatingLabelText="Select group"
                   menuItems={groupItems} />
+
+                <p className={this.state.devices ? null : 'hidden'}>{this.state.devices} devices will be updated <a href="#" className="margin-left">View devices</a></p>
               </div>
             </form>
           </div>
