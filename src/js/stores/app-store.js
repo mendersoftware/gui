@@ -577,47 +577,87 @@ var AppStore = assign(EventEmitter.prototype, {
   },
 
   getGroups: function() {
+    /*
+    * Return list of groups
+    */
     return _groups
   },
 
   getSelectedGroup: function() {
+    /*
+    * Return group object for current group selection
+    */
     return _currentGroup
   },
 
   getDevices: function() {
+    /*
+    * Return list of devices by current selected group
+    */
     return _currentDevices
   },
 
+  getFilters: function() {
+    /*
+    * Return set of filters for list of devices
+    */
+    return _filters
+  }
+
   getSelectedDevices: function() {
+    /*
+    * Return list of selected devices
+    */
     return _selectedDevices
   },
 
 
   getSoftwareInstalled: function() {
+    /*
+    * Return list of software installed on devices
+    */
     return _softwareInstalled
   },
 
   getSoftwareRepo: function() {
+    /*
+    * Return list of saved software objects
+    */
     return _softwareRepo
   },
 
   getRecentUpdates: function(date) {
+    /*
+    * Return list of updates before date
+    */
     return _getRecentUpdates(date)
   }, 
 
   getProgressUpdates: function(date) {
+    /*
+    * Return list of updates in progress based on date
+    */
     return _getProgressUpdates(date)
   }, 
 
   getScheduledUpdates: function(date) {
+    /*
+    * Return list of updates scheduled after date
+    */
     return _getScheduledUpdates(date)
   }, 
 
   getEventLog: function() {
+    /*
+    * Return list of event objects from log
+    */
     return _events
   },
 
   getDevicesFromParams: function(group, model) {
+    /*
+    * Return list of devices given group and model
+    */
     return _getDevices(group, model)
   },
 
