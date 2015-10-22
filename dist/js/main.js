@@ -49962,8 +49962,14 @@ function getDate() {
 
 function addDate(date,days) {
   var newDate = new Date(date);
-  newDate.setDate(newDate.getDate()+1);
+  newDate.setDate(newDate.getDate()+days);
   return newDate;
+}
+
+function combineDateTime(date, time) {
+  var diffMs = (date - time); // milliseconds 
+  var diffDays = Math.round(diffMs / 86400000); // days
+  return addDate(time, diffDays);
 }
 
 function getDevicesFromParams(group, model) {
@@ -50023,13 +50029,15 @@ var ScheduleForm = React.createClass({displayName: "ScheduleForm",
     var newUpdate = {};
     newUpdate.image = this.state.image;
     newUpdate.group = this.state.group;
-    newUpdate.start_time = this.refs['time'].getTime().getTime();
-    newUpdate.end_time = this.refs['endtime'].getTime().getTime();
-    newUpdate.start_date = this.refs['date'].getDate();
-    newUpdate.end_date = this.refs['enddate'].getDate();
+    var start_time = this.refs['time'].getTime().getTime();
+    var start_date = this.refs['date'].getDate().getTime();
+    newUpdate.start_time = combineDateTime(start_date, start_time);
+
+    var end_time = this.refs['endtime'].getTime().getTime();
+    var end_date = this.refs['enddate'].getDate().getTime();
+    newUpdate.end_time = combineDateTime(end_date, end_time);
 
     AppActions.saveSchedule(newUpdate);
-
     this.dialogDismiss('schedule');
 
   },
@@ -50064,39 +50072,50 @@ var ScheduleForm = React.createClass({displayName: "ScheduleForm",
           }, 
           React.createElement("div", {style: {height: '400px'}}, 
             React.createElement("form", null, 
-              React.createElement("div", {style: {display:"inline-block"}}, 
-                React.createElement(DatePicker, {
-                  floatingLabelText: "Start date", 
-                  autoOk: true, 
-                  ref: "date", 
-                  defaultDate: this.state.minDate, 
-                  minDate: this.state.minDate, 
-                  disabled: this.state.immediate, 
-                  mode: "landscape"}), 
-
-                React.createElement(TimePicker, {
-                  format: "24hr", 
-                  ref: "time", 
-                  defaultTime: this.state.minDate, 
-                  disabled: this.state.immediate, 
-                  floatingLabelText: "Start time"})
+              React.createElement("div", null, 
+                React.createElement("h5", {style: {margin:"0"}}, "Start update"), 
+                React.createElement("div", {style: {display:"inline-block"}}, 
+                  React.createElement(DatePicker, {
+                    floatingLabelText: "Start date", 
+                    autoOk: true, 
+                    ref: "date", 
+                    defaultDate: this.state.minDate, 
+                    minDate: this.state.minDate, 
+                    disabled: this.state.immediate, 
+                    mode: "landscape"})
+                ), 
+                React.createElement("div", {style: {display:"inline-block", marginLeft:"30px"}}, 
+                  React.createElement(TimePicker, {
+                    format: "24hr", 
+                    ref: "time", 
+                    defaultTime: this.state.minDate, 
+                    disabled: this.state.immediate, 
+                    floatingLabelText: "Start time"})
+                )
               ), 
-              React.createElement("div", {style: {display:"inline-block", marginLeft:"30px"}}, 
-                React.createElement(DatePicker, {
-                  floatingLabelText: "End date", 
-                  autoOk: true, 
-                  ref: "enddate", 
-                  defaultDate: this.state.minDate1, 
-                  minDate: this.state.minDate1, 
-                  disabled: this.state.immediate, 
-                  mode: "landscape"}), 
 
-                React.createElement(TimePicker, {
-                  format: "24hr", 
-                  ref: "endtime", 
-                  defaultTime: this.state.minDate1, 
-                  disabled: this.state.immediate, 
-                  floatingLabelText: "End time"})
+              React.createElement("div", {style: {marginTop:"20"}}, 
+                React.createElement("h5", {style: {margin:"0"}}, "End update"), 
+                React.createElement("div", {style: {display:"inline-block"}}, 
+              
+                  React.createElement(DatePicker, {
+                    floatingLabelText: "End date", 
+                    autoOk: true, 
+                    ref: "enddate", 
+                    defaultDate: this.state.minDate1, 
+                    minDate: this.state.minDate1, 
+                    disabled: this.state.immediate, 
+                    mode: "landscape"})
+                ), 
+                React.createElement("div", {style: {display:"inline-block", marginLeft:"30px"}}, 
+
+                  React.createElement(TimePicker, {
+                    format: "24hr", 
+                    ref: "endtime", 
+                    defaultTime: this.state.minDate1, 
+                    disabled: this.state.immediate, 
+                    floatingLabelText: "End time"})
+                )
               ), 
 
               React.createElement("div", {style: {display:"block"}}, 
@@ -50107,7 +50126,14 @@ var ScheduleForm = React.createClass({displayName: "ScheduleForm",
                   floatingLabelText: "Select target software", 
                   menuItems: imageItems}), 
 
-                React.createElement("p", null, "Device type: ", model), 
+                React.createElement(TextField, {
+                  className: "margin-left", 
+                  disabled: true, 
+                  hintText: "Device type", 
+                  floatingLabelText: "Device type", 
+                  value: model, 
+                  underlineDisabledStyle: {borderBottom:"none"}, 
+                  style: {bottom:"-8"}}), 
 
                 React.createElement(SelectField, {
                   style: {display:"block"}, 
@@ -50117,7 +50143,7 @@ var ScheduleForm = React.createClass({displayName: "ScheduleForm",
                   floatingLabelText: "Select group", 
                   menuItems: groupItems}), 
 
-                React.createElement("p", {className: this.state.devices ? null : 'hidden'}, this.state.devices, " devices will be updated ", React.createElement("a", {href: "#", className: "margin-left"}, "View devices"))
+                React.createElement("p", {className: this.state.devices ? null : 'hidden'}, this.state.devices, " devices will be updated ", React.createElement("a", {href: "#/devices", className: "margin-left"}, "View devices"))
               )
             )
           )
