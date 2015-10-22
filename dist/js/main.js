@@ -49074,7 +49074,6 @@ var Filters = React.createClass({displayName: "Filters",
         float: 'left',
         paddingLeft: '12px',
         lineHeight: '36px',
-        color: 'rgb(0, 188, 212)',
         marginRight: "-6"
       },
     }
@@ -49086,7 +49085,7 @@ var Filters = React.createClass({displayName: "Filters",
     var menuItems = [{text:'Disabled', disabled:true}];
     var filters = this.state.filters.map(function(item, index) {
       return (
-        React.createElement("div", {className: "filterPair", key: index}, 
+        React.createElement("div", {className: "filterPair", key: index, style: {width:"100%"}}, 
           React.createElement(SelectField, {
             style: {width:"100%"}, 
             value: item.key, 
@@ -49094,8 +49093,9 @@ var Filters = React.createClass({displayName: "Filters",
             hintText: "Filter by", 
             menuItems: attributes}), 
           React.createElement(TextField, {
-            style: {width:"100%"}, 
+            style: {width:"100%", marginTop:"-10"}, 
             value: item.value, 
+            hintText: "Value", 
             onChange: this._updateFilterValue.bind(null, index)})
         )
       )
@@ -49106,7 +49106,7 @@ var Filters = React.createClass({displayName: "Filters",
           React.createElement(FlatButton, {onClick: this._toggleNav, label: "Hide filters"})
         ), 
         filters, 
-        React.createElement(FlatButton, {onClick: this._addFilter, label: "Add filter", secondary: true}, 
+        React.createElement(FlatButton, {disabled: !this.state.filters[this.state.filters.length-1].value, onClick: this._addFilter, label: "Add filter", secondary: true}, 
           React.createElement(FontIcon, {style: styles.exampleFlatButtonIcon, className: "material-icons"}, "add_circle")
         )
       )
@@ -49119,7 +49119,7 @@ var Filters = React.createClass({displayName: "Filters",
           openRight: true, 
           menuItems: [], 
           header: filterNav, 
-          style: {padding: "10px 20px", top:"58"}}), 
+          style: {padding: "10px 20px", top:"58", overflowY:"auto"}}), 
 
         React.createElement("div", {style: {width:"100%", position:"relative"}}, 
           React.createElement(FlatButton, {style: {position:"absolute",right:"30", top:"-40"}, onClick: this._toggleNav, label: this.state.isDocked ? "Hide filters" : "Show filters"})

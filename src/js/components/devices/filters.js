@@ -46,7 +46,6 @@ var Filters = React.createClass({
         float: 'left',
         paddingLeft: '12px',
         lineHeight: '36px',
-        color: 'rgb(0, 188, 212)',
         marginRight: "-6"
       },
     }
@@ -58,7 +57,7 @@ var Filters = React.createClass({
     var menuItems = [{text:'Disabled', disabled:true}];
     var filters = this.state.filters.map(function(item, index) {
       return (
-        <div className="filterPair" key={index}>
+        <div className="filterPair" key={index} style={{width:"100%"}}>
           <SelectField
             style={{width:"100%"}}
             value={item.key}
@@ -66,8 +65,9 @@ var Filters = React.createClass({
             hintText="Filter by"
             menuItems={attributes} />
           <TextField
-            style={{width:"100%"}}
+            style={{width:"100%", marginTop:"-10"}}
             value={item.value}
+            hintText="Value"
             onChange={this._updateFilterValue.bind(null, index)} />
         </div>
       )
@@ -78,7 +78,7 @@ var Filters = React.createClass({
           <FlatButton onClick={this._toggleNav} label="Hide filters" />
         </div>
         {filters}
-        <FlatButton onClick={this._addFilter} label="Add filter" secondary={true}>
+        <FlatButton disabled={!this.state.filters[this.state.filters.length-1].value} onClick={this._addFilter} label="Add filter" secondary={true}>
           <FontIcon style={styles.exampleFlatButtonIcon} className="material-icons">add_circle</FontIcon>
         </FlatButton>
       </div>
@@ -91,7 +91,7 @@ var Filters = React.createClass({
           openRight={true}
           menuItems={[]}
           header={filterNav}
-          style={{padding: "10px 20px", top:"58"}} />
+          style={{padding: "10px 20px", top:"58", overflowY:"auto"}} />
 
         <div style={{width:"100%", position:"relative"}}>
           <FlatButton style={{position:"absolute",right:"30", top:"-40"}} onClick={this._toggleNav} label={this.state.isDocked ? "Hide filters" : "Show filters"} />

@@ -74,5 +74,11 @@ body {
   width: 20%;
 }
 .filterPair {
-  margin-top: 12px;
+  margin-bottom: 14px;
+}
+button .material-icons {
+  color: #00bcd4 !important;
+}
+button:disabled .material-icons {
+  color: rgba(0, 0, 0, 0.3) !important;
 }
