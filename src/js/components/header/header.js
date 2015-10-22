@@ -7,6 +7,7 @@ var ValueLink = Router.ValueLink;
 var Link = Router.Link;
 var Tabs = mui.Tabs;
 var Tab = mui.Tab;
+var Paper = mui.Paper;
 
 var menuItems = [
   {route:"/", text:"Dashboard"},
@@ -62,14 +63,14 @@ var Header = React.createClass({
       )
     });
     return (
-      <div id="header-nav">
+      <Paper id="header-nav" style={{zIndex:"11"}}>
         <div id="logo"></div>
         <Tabs
           value={this.state.tabIndex}
           inkBarStyle={styles.inkbar}>
           {menu}
         </Tabs>
-      </div>
+      </Paper>
     );
   }
 });

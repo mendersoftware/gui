@@ -21,14 +21,20 @@ body {
 .margin-left {
   margin-left: 30px;
 }
+.inline-block {
+  display: inline-block;
+}
 /* Header */
 #header-nav {
-  margin-left: 220px;
-  margin-right: 8%;
+  padding-left: 220px;
+  padding-right: 8%;
+  padding-top: 10px;
+  position: relative;
 }
 #logo {
   position: absolute;
-  left: 0;
+  left: 5px;
+  top: 5px;
   width: 180px;
   height: 48px;
   background-image: url('/assets/img/headerlogo.png');
@@ -66,4 +72,7 @@ body {
 }
 .widget.small {
   width: 20%;
+}
+.filterPair {
+  margin-top: 12px;
 }

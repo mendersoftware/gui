@@ -4,6 +4,7 @@ var AppStore = require('../../stores/app-store');
 var Groups = require('./groups');
 var DeviceList = require('./devicelist');
 var SelectedDevices = require('./selecteddevices');
+var Filters = require('./filters');
 
 function getState() {
   return {
@@ -11,7 +12,8 @@ function getState() {
     selectedGroup: AppStore.getSelectedGroup(),
     devices: AppStore.getDevices(),
     selectedDevices: AppStore.getSelectedDevices(),
-    filters: AppStore.getFilters()
+    filters: AppStore.getFilters(),
+    attributes: AppStore.getAttributes()
   }
 }
 
@@ -33,7 +35,8 @@ var Devices = React.createClass({
         </div>
         <div className="rightFluid">
           <h4>{this.state.selectedGroup.name}</h4>
-          <DeviceList filters={this.state.filters} devices={this.state.devices} />
+          <Filters attributes={this.state.attributes} filters={this.state.filters} />
+          <DeviceList devices={this.state.devices} />
           <SelectedDevices selected={this.state.selectedDevices} selectedGroup={this.state.selectedGroup} groups={this.state.groups} />
         </div>
       </div>

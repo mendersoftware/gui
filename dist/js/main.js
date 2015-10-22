@@ -48707,7 +48707,7 @@ var AppActions = {
 
 module.exports = AppActions;
 
-},{"../constants/app-constants":389,"../dispatchers/app-dispatcher":390}],368:[function(require,module,exports){
+},{"../constants/app-constants":390,"../dispatchers/app-dispatcher":391}],368:[function(require,module,exports){
 var React = require('react');
 var Router = require('react-router');
 var RouteHandler = Router.RouteHandler;
@@ -48742,7 +48742,7 @@ var App = React.createClass({displayName: "App",
 
 module.exports = App;
 
-},{"./header/header":377,"material-ui":43,"material-ui/lib/styles/raw-themes/light-raw-theme":81,"material-ui/lib/styles/theme-manager":84,"react":366,"react-router":174}],369:[function(require,module,exports){
+},{"./header/header":378,"material-ui":43,"material-ui/lib/styles/raw-themes/light-raw-theme":81,"material-ui/lib/styles/theme-manager":84,"react":366,"react-router":174}],369:[function(require,module,exports){
 var React = require('react');
 var AppStore = require('../../stores/app-store');
 var Health = require('./health');
@@ -48774,7 +48774,7 @@ var Dashboard = React.createClass({displayName: "Dashboard",
 
 module.exports = Dashboard;
 
-},{"../../stores/app-store":392,"./health":370,"./progress":371,"./schedule":372,"react":366}],370:[function(require,module,exports){
+},{"../../stores/app-store":393,"./health":370,"./progress":371,"./schedule":372,"react":366}],370:[function(require,module,exports){
 var React = require('react');
 
 // material ui
@@ -48961,7 +48961,7 @@ var DeviceList = React.createClass({displayName: "DeviceList",
           React.createElement(TableRow, null, 
             React.createElement(TableHeaderColumn, {tooltip: "Name"}, "Name"), 
             React.createElement(TableHeaderColumn, {tooltip: "Device type"}, "Device type"), 
-            React.createElement(TableHeaderColumn, {tooltip: "Installed software"}, "Software"), 
+            React.createElement(TableHeaderColumn, {tooltip: "Current software"}, "Current software"), 
             React.createElement(TableHeaderColumn, {tooltip: "Status"}, "Status")
           )
         ), 
@@ -48976,13 +48976,14 @@ var DeviceList = React.createClass({displayName: "DeviceList",
 
 module.exports = DeviceList;
 
-},{"../../actions/app-actions":367,"../../stores/app-store":392,"material-ui":43,"react":366}],374:[function(require,module,exports){
+},{"../../actions/app-actions":367,"../../stores/app-store":393,"material-ui":43,"react":366}],374:[function(require,module,exports){
 var React = require('react');
 var AppStore = require('../../stores/app-store');
 
 var Groups = require('./groups');
 var DeviceList = require('./devicelist');
 var SelectedDevices = require('./selecteddevices');
+var Filters = require('./filters');
 
 function getState() {
   return {
@@ -48990,7 +48991,8 @@ function getState() {
     selectedGroup: AppStore.getSelectedGroup(),
     devices: AppStore.getDevices(),
     selectedDevices: AppStore.getSelectedDevices(),
-    filters: AppStore.getFilters()
+    filters: AppStore.getFilters(),
+    attributes: AppStore.getAttributes()
   }
 }
 
@@ -49012,7 +49014,8 @@ var Devices = React.createClass({displayName: "Devices",
         ), 
         React.createElement("div", {className: "rightFluid"}, 
           React.createElement("h4", null, this.state.selectedGroup.name), 
-          React.createElement(DeviceList, {filters: this.state.filters, devices: this.state.devices}), 
+          React.createElement(Filters, {attributes: this.state.attributes, filters: this.state.filters}), 
+          React.createElement(DeviceList, {devices: this.state.devices}), 
           React.createElement(SelectedDevices, {selected: this.state.selectedDevices, selectedGroup: this.state.selectedGroup, groups: this.state.groups})
         )
       )
@@ -49022,7 +49025,113 @@ var Devices = React.createClass({displayName: "Devices",
 
 module.exports = Devices;
 
-},{"../../stores/app-store":392,"./devicelist":373,"./groups":375,"./selecteddevices":376,"react":366}],375:[function(require,module,exports){
+},{"../../stores/app-store":393,"./devicelist":373,"./filters":375,"./groups":376,"./selecteddevices":377,"react":366}],375:[function(require,module,exports){
+var React = require('react');
+
+// material ui
+var mui = require('material-ui');
+var SelectField = mui.SelectField;
+var TextField = mui.TextField;
+var FlatButton = mui.FlatButton;
+var LeftNav = mui.LeftNav;
+var FontIcon = mui.FontIcon;
+
+
+var Filters = React.createClass({displayName: "Filters",
+  getInitialState: function() {
+    return {
+      filters: this.props.filters,
+      isDocked: false
+    };
+  },
+  _updateFilterKey: function (index, e) {
+    var filterArray = this.state.filters;
+    filterArray[index].key = e.target.value;
+    this.setState({filters: filterArray});
+  },
+  _updateFilterValue: function (index, e) {
+    var filterArray = this.state.filters;
+    filterArray[index].value = e.target.value;
+    this.setState({filters: filterArray});
+  },
+  _addFilter: function() {
+    var filterArray = this.state.filters;
+    filterArray.push({key:'', value:''});
+    this.setState({filters: filterArray});
+  },
+  _toggleNav: function() {
+    this.refs.filterNav.toggle();
+    this.setState({
+      isDocked: !this.state.isDocked,
+    });
+  },
+  render: function() {
+    var styles = {
+      exampleFlatButtonIcon: {
+        height: '100%',
+        display: 'inline-block',
+        verticalAlign: 'middle',
+        float: 'left',
+        paddingLeft: '12px',
+        lineHeight: '36px',
+        color: 'rgb(0, 188, 212)',
+        marginRight: "-6"
+      },
+    }
+    var attributes = [];
+    for (key in this.props.attributes) {
+      var tmp = { payload:key, text: this.props.attributes[key] };
+      attributes.push(tmp);
+    }
+    var menuItems = [{text:'Disabled', disabled:true}];
+    var filters = this.state.filters.map(function(item, index) {
+      return (
+        React.createElement("div", {className: "filterPair", key: index}, 
+          React.createElement(SelectField, {
+            style: {width:"100%"}, 
+            value: item.key, 
+            onChange: this._updateFilterKey.bind(null, index), 
+            hintText: "Filter by", 
+            menuItems: attributes}), 
+          React.createElement(TextField, {
+            style: {width:"100%"}, 
+            value: item.value, 
+            onChange: this._updateFilterValue.bind(null, index)})
+        )
+      )
+    }, this);
+    var filterNav = (
+      React.createElement("div", {className: "filterWrapper"}, 
+        React.createElement("div", null, 
+          React.createElement(FlatButton, {onClick: this._toggleNav, label: "Hide filters"})
+        ), 
+        filters, 
+        React.createElement(FlatButton, {onClick: this._addFilter, label: "Add filter", secondary: true}, 
+          React.createElement(FontIcon, {style: styles.exampleFlatButtonIcon, className: "material-icons"}, "add_circle")
+        )
+      )
+    );
+    return (
+      React.createElement("div", null, 
+        React.createElement(LeftNav, {
+          ref: "filterNav", 
+          docked: this.state.isDocked, 
+          openRight: true, 
+          menuItems: [], 
+          header: filterNav, 
+          style: {padding: "10px 20px", top:"58"}}), 
+
+        React.createElement("div", {style: {width:"100%", position:"relative"}}, 
+          React.createElement(FlatButton, {style: {position:"absolute",right:"30", top:"-40"}, onClick: this._toggleNav, label: this.state.isDocked ? "Hide filters" : "Show filters"})
+        )
+      )
+    );
+  }
+});
+
+module.exports = Filters;
+
+},{"material-ui":43,"react":366}],376:[function(require,module,exports){
 var React = require('react');
 var AppStore = require('../../stores/app-store');
 var AppActions = require('../../actions/app-actions');
@@ -49058,7 +49167,7 @@ var Groups = React.createClass({displayName: "Groups",
 
 module.exports = Groups;
 
-},{"../../actions/app-actions":367,"../../stores/app-store":392,"material-ui":43,"react":366}],376:[function(require,module,exports){
+},{"../../actions/app-actions":367,"../../stores/app-store":393,"material-ui":43,"react":366}],377:[function(require,module,exports){
 var React = require('react');
 var AppStore = require('../../stores/app-store');
 var AppActions = require('../../actions/app-actions');
@@ -49267,7 +49376,7 @@ var SelectedDevices = React.createClass({displayName: "SelectedDevices",
 
 module.exports = SelectedDevices;
 
-},{"../../actions/app-actions":367,"../../stores/app-store":392,"material-ui":43,"react":366}],377:[function(require,module,exports){
+},{"../../actions/app-actions":367,"../../stores/app-store":393,"material-ui":43,"react":366}],378:[function(require,module,exports){
 var React = require('react');
 var mui = require('material-ui');
 var Router = require('react-router');
@@ -49277,6 +49386,7 @@ var ValueLink = Router.ValueLink;
 var Link = Router.Link;
 var Tabs = mui.Tabs;
 var Tab = mui.Tab;
+var Paper = mui.Paper;
 
 var menuItems = [
   {route:"/", text:"Dashboard"},
@@ -49332,7 +49442,7 @@ var Header = React.createClass({displayName: "Header",
       )
     });
     return (
-      React.createElement("div", {id: "header-nav"}, 
+      React.createElement(Paper, {id: "header-nav", style: {zIndex:"11"}}, 
         React.createElement("div", {id: "logo"}), 
         React.createElement(Tabs, {
           value: this.state.tabIndex, 
@@ -49350,7 +49460,7 @@ Header.contextTypes = {
 
 module.exports = Header;
 
-},{"material-ui":43,"react":366,"react-router":174}],378:[function(require,module,exports){
+},{"material-ui":43,"react":366,"react-router":174}],379:[function(require,module,exports){
 var React = require('react');
 
 // material ui
@@ -49400,7 +49510,7 @@ var Installed = React.createClass({displayName: "Installed",
 
 module.exports = Installed;
 
-},{"material-ui":43,"react":366}],379:[function(require,module,exports){
+},{"material-ui":43,"react":366}],380:[function(require,module,exports){
 var React = require('react');
 var AppStore = require('../../stores/app-store');
 var AppActions = require('../../actions/app-actions');
@@ -49537,7 +49647,7 @@ var Repository = React.createClass({displayName: "Repository",
 
 module.exports = Repository;
 
-},{"../../actions/app-actions":367,"../../stores/app-store":392,"../updates/scheduleform":386,"./updatebutton.js":381,"material-ui":43,"react":366,"react-router":174}],380:[function(require,module,exports){
+},{"../../actions/app-actions":367,"../../stores/app-store":393,"../updates/scheduleform":387,"./updatebutton.js":382,"material-ui":43,"react":366,"react-router":174}],381:[function(require,module,exports){
 var React = require('react');
 var AppStore = require('../../stores/app-store');
 
@@ -49602,7 +49712,7 @@ var Software = React.createClass({displayName: "Software",
 
 module.exports = Software;
 
-},{"../../stores/app-store":392,"./installed.js":378,"./repository.js":379,"material-ui":43,"react":366}],381:[function(require,module,exports){
+},{"../../stores/app-store":393,"./installed.js":379,"./repository.js":380,"material-ui":43,"react":366}],382:[function(require,module,exports){
 var React = require('react');
 
 // material ui
@@ -49619,7 +49729,7 @@ var UpdateButton = React.createClass({displayName: "UpdateButton",
 
 module.exports = UpdateButton;
 
-},{"material-ui":43,"react":366}],382:[function(require,module,exports){
+},{"material-ui":43,"react":366}],383:[function(require,module,exports){
 var React = require('react');
 
 // material ui
@@ -49642,7 +49752,7 @@ var EventLog = React.createClass({displayName: "EventLog",
 
 module.exports = EventLog;
 
-},{"material-ui":43,"react":366}],383:[function(require,module,exports){
+},{"material-ui":43,"react":366}],384:[function(require,module,exports){
 var React = require('react');
 var Time = require('react-time');
 var Report = require('./report.js');
@@ -49788,7 +49898,7 @@ var Recent = React.createClass({displayName: "Recent",
 
 module.exports = Recent;
 
-},{"./report.js":384,"material-ui":43,"react":366,"react-time":193}],384:[function(require,module,exports){
+},{"./report.js":385,"material-ui":43,"react":366,"react-time":193}],385:[function(require,module,exports){
 var React = require('react');
 var Time = require('react-time');
 
@@ -49866,7 +49976,7 @@ var Report = React.createClass({displayName: "Report",
 
 module.exports = Report;
 
-},{"material-ui":43,"react":366,"react-time":193}],385:[function(require,module,exports){
+},{"material-ui":43,"react":366,"react-time":193}],386:[function(require,module,exports){
 var React = require('react');
 var Time = require('react-time');
 
@@ -49940,7 +50050,7 @@ var Schedule = React.createClass({displayName: "Schedule",
 
 module.exports = Schedule;
 
-},{"material-ui":43,"react":366,"react-time":193}],386:[function(require,module,exports){
+},{"material-ui":43,"react":366,"react-time":193}],387:[function(require,module,exports){
 var React = require('react');
 var AppStore = require('../../stores/app-store');
 var AppActions = require('../../actions/app-actions');
@@ -50156,7 +50266,7 @@ var ScheduleForm = React.createClass({displayName: "ScheduleForm",
 
 module.exports = ScheduleForm;
 
-},{"../../actions/app-actions":367,"../../stores/app-store":392,"material-ui":43,"react":366}],387:[function(require,module,exports){
+},{"../../actions/app-actions":367,"../../stores/app-store":393,"material-ui":43,"react":366}],388:[function(require,module,exports){
 var React = require('react');
 var AppStore = require('../../stores/app-store');
 
@@ -50233,7 +50343,7 @@ var Updates = React.createClass({displayName: "Updates",
 
 module.exports = Updates;
 
-},{"../../stores/app-store":392,"./eventlog.js":382,"./recentupdates.js":383,"./schedule.js":385,"./scheduleform.js":386,"material-ui":43,"react":366}],388:[function(require,module,exports){
+},{"../../stores/app-store":393,"./eventlog.js":383,"./recentupdates.js":384,"./schedule.js":386,"./scheduleform.js":387,"material-ui":43,"react":366}],389:[function(require,module,exports){
 var React = require('react');
 
 var App = require('../components/app');
@@ -50257,7 +50367,7 @@ module.exports = (
   )
 );  
 
-},{"../components/app":368,"../components/dashboard/dashboard":369,"../components/devices/devices":374,"../components/software/software":380,"../components/updates/updates":387,"react":366,"react-router":174}],389:[function(require,module,exports){
+},{"../components/app":368,"../components/dashboard/dashboard":369,"../components/devices/devices":374,"../components/software/software":381,"../components/updates/updates":388,"react":366,"react-router":174}],390:[function(require,module,exports){
 module.exports = {
   SELECT_GROUP: 'SELECT_GROUP',
   ADD_TO_GROUP: 'ADD_TO_GROUP',
@@ -50266,7 +50376,7 @@ module.exports = {
   SAVE_SCHEDULE: 'SAVE_SCHEDULE'
 }
 
-},{}],390:[function(require,module,exports){
+},{}],391:[function(require,module,exports){
 var Dispatcher = require('flux').Dispatcher;
 var assign = require('react/lib/Object.assign');
 
@@ -50281,7 +50391,7 @@ var AppDispatcher = assign(new Dispatcher(), {
 
 module.exports = AppDispatcher;
 
-},{"flux":4,"react/lib/Object.assign":222}],391:[function(require,module,exports){
+},{"flux":4,"react/lib/Object.assign":222}],392:[function(require,module,exports){
 var React = require('react');
 var Router = require('react-router');
 var routes = require('./config/routes');
@@ -50299,7 +50409,7 @@ Router.run(routes, function(Root) {
   React.render(React.createElement(Root, null), document.getElementById('main'));
 });
 
-},{"./config/routes":388,"react":366,"react-router":174,"react-tap-event-plugin":191}],392:[function(require,module,exports){
+},{"./config/routes":389,"react":366,"react-router":174,"react-tap-event-plugin":191}],393:[function(require,module,exports){
 var AppDispatcher = require('../dispatchers/app-dispatcher');
 var AppConstants = require('../constants/app-constants');
 var assign = require('react/lib/Object.assign');
@@ -50310,7 +50420,14 @@ var CHANGE_EVENT = "change";
 var _currentGroup = [];
 var _currentDevices = [];
 var _selectedDevices = [];
-var _filters = [];
+var _filters = [{key:'', value:''}];
+var _attributes = {
+  name: "Name",
+  model: "Device type",
+  arch: "Architecture",
+  status: "Status",
+  software_version: "Current software"
+}
 
 /* TEMP LOCAL GROUPS */
 var _groups = [
@@ -50477,7 +50594,7 @@ function _selectDevices(devicePositions) {
 
 function _getDevices(group, model) {
   // get group id from name
-  console.log(group, model);
+
   var index = findWithAttr(_groups, 'name', group);
   var groupId = _groups[index].id;
 
@@ -50901,6 +51018,13 @@ var AppStore = assign(EventEmitter.prototype, {
     return _currentDevices
   },
 
+  getAttributes: function() {
+    /*
+    * Return set of filters for list of devices
+    */
+    return _attributes
+  },
+
   getFilters: function() {
     /*
     * Return set of filters for list of devices
@@ -50996,4 +51120,4 @@ var AppStore = assign(EventEmitter.prototype, {
 
 module.exports = AppStore;
 
-},{"../constants/app-constants":389,"../dispatchers/app-dispatcher":390,"events":1,"react/lib/Object.assign":222}]},{},[391]);
+},{"../constants/app-constants":390,"../dispatchers/app-dispatcher":391,"events":1,"react/lib/Object.assign":222}]},{},[392]);

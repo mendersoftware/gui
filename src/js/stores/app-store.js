@@ -8,7 +8,14 @@ var CHANGE_EVENT = "change";
 var _currentGroup = [];
 var _currentDevices = [];
 var _selectedDevices = [];
-var _filters = [];
+var _filters = [{key:'', value:''}];
+var _attributes = {
+  name: "Name",
+  model: "Device type",
+  arch: "Architecture",
+  status: "Status",
+  software_version: "Current software"
+}
 
 /* TEMP LOCAL GROUPS */
 var _groups = [
@@ -175,7 +182,7 @@ function _selectDevices(devicePositions) {
 
 function _getDevices(group, model) {
   // get group id from name
-  console.log(group, model);
+
   var index = findWithAttr(_groups, 'name', group);
   var groupId = _groups[index].id;
 
@@ -597,6 +604,13 @@ var AppStore = assign(EventEmitter.prototype, {
     * Return list of devices by current selected group
     */
     return _currentDevices
+  },
+
+  getAttributes: function() {
+    /*
+    * Return set of filters for list of devices
+    */
+    return _attributes
   },
 
   getFilters: function() {

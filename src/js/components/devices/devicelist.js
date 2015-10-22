@@ -48,7 +48,7 @@ var DeviceList = React.createClass({
           <TableRow>
             <TableHeaderColumn tooltip="Name">Name</TableHeaderColumn>
             <TableHeaderColumn tooltip="Device type">Device type</TableHeaderColumn>
-            <TableHeaderColumn tooltip="Installed software">Software</TableHeaderColumn>
+            <TableHeaderColumn tooltip="Current software">Current software</TableHeaderColumn>
             <TableHeaderColumn tooltip="Status">Status</TableHeaderColumn>
           </TableRow>
         </TableHeader>
