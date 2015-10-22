@@ -27,6 +27,9 @@ var Devices = React.createClass({
   _onChange: function() {
     this.setState(getState());
   },
+  _updateFilters: function(filters) {
+    this.setState({filters:filters});
+  },
   render: function() {
     return (
       <div>
@@ -35,7 +38,7 @@ var Devices = React.createClass({
         </div>
         <div className="rightFluid">
           <h4>{this.state.selectedGroup.name}</h4>
-          <Filters attributes={this.state.attributes} filters={this.state.filters} />
+          <Filters attributes={this.state.attributes} filters={this.state.filters} onFilterChange={this._updateFilters} />
           <DeviceList devices={this.state.devices} />
           <SelectedDevices selected={this.state.selectedDevices} selectedGroup={this.state.selectedGroup} groups={this.state.groups} />
         </div>

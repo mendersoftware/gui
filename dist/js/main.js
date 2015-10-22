@@ -49006,6 +49006,9 @@ var Devices = React.createClass({displayName: "Devices",
   _onChange: function() {
     this.setState(getState());
   },
+  _updateFilters: function(filters) {
+    this.setState({filters:filters});
+  },
   render: function() {
     return (
       React.createElement("div", null, 
@@ -49014,7 +49017,7 @@ var Devices = React.createClass({displayName: "Devices",
         ), 
         React.createElement("div", {className: "rightFluid"}, 
           React.createElement("h4", null, this.state.selectedGroup.name), 
-          React.createElement(Filters, {attributes: this.state.attributes, filters: this.state.filters}), 
+          React.createElement(Filters, {attributes: this.state.attributes, filters: this.state.filters, onFilterChange: this._updateFilters}), 
           React.createElement(DeviceList, {devices: this.state.devices}), 
           React.createElement(SelectedDevices, {selected: this.state.selectedDevices, selectedGroup: this.state.selectedGroup, groups: this.state.groups})
         )
@@ -49052,12 +49055,12 @@ var Filters = React.createClass({displayName: "Filters",
   _updateFilterValue: function (index, e) {
     var filterArray = this.state.filters;
     filterArray[index].value = e.target.value;
-    this.setState({filters: filterArray});
+    this.props.onFilterChange(filterArray);
   },
   _addFilter: function() {
     var filterArray = this.state.filters;
     filterArray.push({key:'', value:''});
-    this.setState({filters: filterArray});
+    this.props.onFilterChange(filterArray);
   },
   _toggleNav: function() {
     this.refs.filterNav.toggle();

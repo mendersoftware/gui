@@ -24,12 +24,12 @@ var Filters = React.createClass({
   _updateFilterValue: function (index, e) {
     var filterArray = this.state.filters;
     filterArray[index].value = e.target.value;
-    this.setState({filters: filterArray});
+    this.props.onFilterChange(filterArray);
   },
   _addFilter: function() {
     var filterArray = this.state.filters;
     filterArray.push({key:'', value:''});
-    this.setState({filters: filterArray});
+    this.props.onFilterChange(filterArray);
   },
   _toggleNav: function() {
     this.refs.filterNav.toggle();
