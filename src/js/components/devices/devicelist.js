@@ -39,24 +39,29 @@ var DeviceList = React.createClass({
       )
     })
     return (
-      <Table
-        onRowSelection={this._onRowSelection}
-        multiSelectable={true}>
-        <TableHeader
-        enableSelectAll={true}
-        onSelectAll={this._selectAll}>
-          <TableRow>
-            <TableHeaderColumn tooltip="Name">Name</TableHeaderColumn>
-            <TableHeaderColumn tooltip="Device type">Device type</TableHeaderColumn>
-            <TableHeaderColumn tooltip="Current software">Current software</TableHeaderColumn>
-            <TableHeaderColumn tooltip="Status">Status</TableHeaderColumn>
-          </TableRow>
-        </TableHeader>
-        <TableBody
-          deselectOnClickaway={false}>
-          {devices}
-        </TableBody>
-      </Table>
+      <div>
+        <Table
+          onRowSelection={this._onRowSelection}
+          multiSelectable={true}>
+          <TableHeader
+          enableSelectAll={true}
+          onSelectAll={this._selectAll}>
+            <TableRow>
+              <TableHeaderColumn tooltip="Name">Name</TableHeaderColumn>
+              <TableHeaderColumn tooltip="Device type">Device type</TableHeaderColumn>
+              <TableHeaderColumn tooltip="Current software">Current software</TableHeaderColumn>
+              <TableHeaderColumn tooltip="Status">Status</TableHeaderColumn>
+            </TableRow>
+          </TableHeader>
+          <TableBody
+            deselectOnClickaway={false}>
+            {devices}
+          </TableBody>
+        </Table>
+        <p className={devices.length ? 'hidden' : 'italic'}>
+          No devices found
+        </p>
+      </div>
     );
   }
 });

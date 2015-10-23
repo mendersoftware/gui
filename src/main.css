@@ -75,6 +75,18 @@ body {
 }
 .filterPair {
   margin-bottom: 14px;
+  width: 84%;
+  padding: 4px 10% 4px 11px;
+  position: relative;
+  background-color: #fafbfc;
+}
+.filterPair:first-child {
+  margin-top: 14px;
+}
+.remove-filter {
+  position: absolute;
+  right: -22px;
+  top: -22px;
 }
 button .material-icons {
   color: #00bcd4 !important;

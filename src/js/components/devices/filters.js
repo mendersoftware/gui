@@ -7,28 +7,39 @@ var TextField = mui.TextField;
 var FlatButton = mui.FlatButton;
 var LeftNav = mui.LeftNav;
 var FontIcon = mui.FontIcon;
+var IconButton = mui.IconButton;
 
 
 var Filters = React.createClass({
   getInitialState: function() {
     return {
-      filters: this.props.filters,
       isDocked: false
     };
   },
   _updateFilterKey: function (index, e) {
-    var filterArray = this.state.filters;
+    var filterArray = this.props.filters;
     filterArray[index].key = e.target.value;
+    filterArray[index].value = '';
     this.setState({filters: filterArray});
   },
   _updateFilterValue: function (index, e) {
-    var filterArray = this.state.filters;
+    var filterArray = this.props.filters;
     filterArray[index].value = e.target.value;
     this.props.onFilterChange(filterArray);
   },
   _addFilter: function() {
-    var filterArray = this.state.filters;
+    var filterArray = this.props.filters;
     filterArray.push({key:'', value:''});
+    this.props.onFilterChange(filterArray);
+  },
+  _removeFilter: function(index) {
+    var filterArray = this.props.filters;
+    if (filterArray.length>1) {
+      filterArray.splice(index,1);
+    }
+    else {
+      filterArray[0].value = '';
+    }
     this.props.onFilterChange(filterArray);
   },
   _toggleNav: function() {
@@ -55,9 +66,17 @@ var Filters = React.createClass({
       attributes.push(tmp);
     }
     var menuItems = [{text:'Disabled', disabled:true}];
-    var filters = this.state.filters.map(function(item, index) {
+    var filters = this.props.filters.map(function(item, index) {
       return (
-        <div className="filterPair" key={index} style={{width:"100%"}}>
+        <div className="filterPair" key={index}>
+          <IconButton
+            iconClassName="material-icons"
+            className="remove-filter"
+            style={{position:"absolute"}}
+            onClick={this._removeFilter.bind(null, index)}
+            disabled={!this.props.filters[0].key}>
+            remove_circle
+          </IconButton>
           <SelectField
             style={{width:"100%"}}
             value={item.key}
@@ -68,6 +87,7 @@ var Filters = React.createClass({
             style={{width:"100%", marginTop:"-10"}}
             value={item.value}
             hintText="Value"
+            disabled={!item.key}
             onChange={this._updateFilterValue.bind(null, index)} />
         </div>
       )
@@ -77,8 +97,10 @@ var Filters = React.createClass({
         <div>
           <FlatButton onClick={this._toggleNav} label="Hide filters" />
         </div>
+        <div>
         {filters}
-        <FlatButton disabled={!this.state.filters[this.state.filters.length-1].value} onClick={this._addFilter} label="Add filter" secondary={true}>
+        </div>
+        <FlatButton disabled={!this.props.filters[this.props.filters.length-1].value} onClick={this._addFilter} label="Add filter" secondary={true}>
           <FontIcon style={styles.exampleFlatButtonIcon} className="material-icons">add_circle</FontIcon>
         </FlatButton>
       </div>

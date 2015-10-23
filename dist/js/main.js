@@ -48703,6 +48703,13 @@ var AppActions = {
       schedule: schedule
     })
   },
+
+  updateFilters: function(filters) {
+    AppDispatcher.handleViewAction({
+      actionType: AppConstants.UPDATE_FILTERS,
+      filters: filters
+    })
+  },
 }
 
 module.exports = AppActions;
@@ -48952,22 +48959,27 @@ var DeviceList = React.createClass({displayName: "DeviceList",
       )
     })
     return (
-      React.createElement(Table, {
-        onRowSelection: this._onRowSelection, 
-        multiSelectable: true}, 
-        React.createElement(TableHeader, {
-        enableSelectAll: true, 
-        onSelectAll: this._selectAll}, 
-          React.createElement(TableRow, null, 
-            React.createElement(TableHeaderColumn, {tooltip: "Name"}, "Name"), 
-            React.createElement(TableHeaderColumn, {tooltip: "Device type"}, "Device type"), 
-            React.createElement(TableHeaderColumn, {tooltip: "Current software"}, "Current software"), 
-            React.createElement(TableHeaderColumn, {tooltip: "Status"}, "Status")
+      React.createElement("div", null, 
+        React.createElement(Table, {
+          onRowSelection: this._onRowSelection, 
+          multiSelectable: true}, 
+          React.createElement(TableHeader, {
+          enableSelectAll: true, 
+          onSelectAll: this._selectAll}, 
+            React.createElement(TableRow, null, 
+              React.createElement(TableHeaderColumn, {tooltip: "Name"}, "Name"), 
+              React.createElement(TableHeaderColumn, {tooltip: "Device type"}, "Device type"), 
+              React.createElement(TableHeaderColumn, {tooltip: "Current software"}, "Current software"), 
+              React.createElement(TableHeaderColumn, {tooltip: "Status"}, "Status")
+            )
+          ), 
+          React.createElement(TableBody, {
+            deselectOnClickaway: false}, 
+            devices
           )
         ), 
-        React.createElement(TableBody, {
-          deselectOnClickaway: false}, 
-          devices
+        React.createElement("p", {className: devices.length ? 'hidden' : 'italic'}, 
+          "No devices found"
         )
       )
     );
@@ -48979,6 +48991,7 @@ module.exports = DeviceList;
 },{"../../actions/app-actions":367,"../../stores/app-store":393,"material-ui":43,"react":366}],374:[function(require,module,exports){
 var React = require('react');
 var AppStore = require('../../stores/app-store');
+var AppActions = require('../../actions/app-actions');
 
 var Groups = require('./groups');
 var DeviceList = require('./devicelist');
@@ -49007,7 +49020,7 @@ var Devices = React.createClass({displayName: "Devices",
     this.setState(getState());
   },
   _updateFilters: function(filters) {
-    this.setState({filters:filters});
+    AppActions.updateFilters(filters);
   },
   render: function() {
     return (
@@ -49028,7 +49041,7 @@ var Devices = React.createClass({displayName: "Devices",
 
 module.exports = Devices;
 
-},{"../../stores/app-store":393,"./devicelist":373,"./filters":375,"./groups":376,"./selecteddevices":377,"react":366}],375:[function(require,module,exports){
+},{"../../actions/app-actions":367,"../../stores/app-store":393,"./devicelist":373,"./filters":375,"./groups":376,"./selecteddevices":377,"react":366}],375:[function(require,module,exports){
 var React = require('react');
 
 // material ui
@@ -49038,28 +49051,39 @@ var TextField = mui.TextField;
 var FlatButton = mui.FlatButton;
 var LeftNav = mui.LeftNav;
 var FontIcon = mui.FontIcon;
+var IconButton = mui.IconButton;
 
 
 var Filters = React.createClass({displayName: "Filters",
   getInitialState: function() {
     return {
-      filters: this.props.filters,
       isDocked: false
     };
   },
   _updateFilterKey: function (index, e) {
-    var filterArray = this.state.filters;
+    var filterArray = this.props.filters;
     filterArray[index].key = e.target.value;
+    filterArray[index].value = '';
     this.setState({filters: filterArray});
   },
   _updateFilterValue: function (index, e) {
-    var filterArray = this.state.filters;
+    var filterArray = this.props.filters;
     filterArray[index].value = e.target.value;
     this.props.onFilterChange(filterArray);
   },
   _addFilter: function() {
-    var filterArray = this.state.filters;
+    var filterArray = this.props.filters;
     filterArray.push({key:'', value:''});
+    this.props.onFilterChange(filterArray);
+  },
+  _removeFilter: function(index) {
+    var filterArray = this.props.filters;
+    if (filterArray.length>1) {
+      filterArray.splice(index,1);
+    }
+    else {
+      filterArray[0].value = '';
+    }
     this.props.onFilterChange(filterArray);
   },
   _toggleNav: function() {
@@ -49086,9 +49110,17 @@ var Filters = React.createClass({displayName: "Filters",
       attributes.push(tmp);
     }
     var menuItems = [{text:'Disabled', disabled:true}];
-    var filters = this.state.filters.map(function(item, index) {
+    var filters = this.props.filters.map(function(item, index) {
       return (
-        React.createElement("div", {className: "filterPair", key: index, style: {width:"100%"}}, 
+        React.createElement("div", {className: "filterPair", key: index}, 
+          React.createElement(IconButton, {
+            iconClassName: "material-icons", 
+            className: "remove-filter", 
+            style: {position:"absolute"}, 
+            onClick: this._removeFilter.bind(null, index), 
+            disabled: !this.props.filters[0].key}, 
+            "remove_circle"
+          ), 
           React.createElement(SelectField, {
             style: {width:"100%"}, 
             value: item.key, 
@@ -49099,6 +49131,7 @@ var Filters = React.createClass({displayName: "Filters",
             style: {width:"100%", marginTop:"-10"}, 
             value: item.value, 
             hintText: "Value", 
+            disabled: !item.key, 
             onChange: this._updateFilterValue.bind(null, index)})
         )
       )
@@ -49108,8 +49141,10 @@ var Filters = React.createClass({displayName: "Filters",
         React.createElement("div", null, 
           React.createElement(FlatButton, {onClick: this._toggleNav, label: "Hide filters"})
         ), 
-        filters, 
-        React.createElement(FlatButton, {disabled: !this.state.filters[this.state.filters.length-1].value, onClick: this._addFilter, label: "Add filter", secondary: true}, 
+        React.createElement("div", null, 
+        filters
+        ), 
+        React.createElement(FlatButton, {disabled: !this.props.filters[this.props.filters.length-1].value, onClick: this._addFilter, label: "Add filter", secondary: true}, 
           React.createElement(FontIcon, {style: styles.exampleFlatButtonIcon, className: "material-icons"}, "add_circle")
         )
       )
@@ -50376,7 +50411,8 @@ module.exports = {
   ADD_TO_GROUP: 'ADD_TO_GROUP',
   REMOVE_FROM_GROUP: 'REMOVE_FROM_GROUP',
   UPLOAD_IMAGE: 'UPLOAD_IMAGE',
-  SAVE_SCHEDULE: 'SAVE_SCHEDULE'
+  SAVE_SCHEDULE: 'SAVE_SCHEDULE',
+  UPDATE_FILTERS: 'UPDATE_FILTERS'
 }
 
 },{}],391:[function(require,module,exports){
@@ -50538,7 +50574,7 @@ _selectGroup(_groups[0].id);
 
 function _selectGroup(id) {
   _selectedDevices = [];
-
+  _filters = [{key:'', value:''}];
   if (id) {
     _currentGroup = _getGroupById(id);
     _getCurrentDevices(_currentGroup.id);
@@ -50578,13 +50614,36 @@ function _getCurrentDevices(groupId) {
   _currentDevices = [];
   var devicelist = _getGroupById(groupId).devices;
   for (var i=0; i<devicelist.length; i++) {
-    _currentDevices.push(_getDeviceById(devicelist[i]));
+    var device = _getDeviceById(devicelist[i]);
+    if (_matchFilters(device)) {
+       _currentDevices.push(device);
+    }
   }
   _sortDevices();
 }
 
 function _sortDevices() {
   _currentDevices.sort(statusSort);
+}
+
+function _updateFilters(filters) {
+  _filters = filters;
+  _getCurrentDevices(_currentGroup.id);
+}
+
+function _matchFilters(device) {
+  /*
+  * Match device attributes against _filters, return true or false
+  */
+  var match = true;
+  for (var i=0; i<_filters.length; i++) {
+    if (_filters[i].key && _filters[i].value) {
+      if (device[_filters[i].key].toLowerCase().indexOf(_filters[i].value.toLowerCase()) == -1) {
+        match = false;
+      }
+    }
+  }
+  return match;
 }
 
 
@@ -50629,6 +50688,9 @@ function _addToGroup(group, devices) {
 
     var idx = findWithAttr(_groups, 'id', tmpGroup.id);
     _groups[idx] = tmpGroup;
+
+    // reset filters
+    _filters = [{key:'', value:''}];
     _getCurrentDevices(tmpGroup.id);
 
     // TODO - delete if empty group?
@@ -51112,6 +51174,9 @@ var AppStore = assign(EventEmitter.prototype, {
         break;
       case AppConstants.SAVE_SCHEDULE:
         _saveSchedule(payload.action.schedule);
+        break;
+      case AppConstants.UPDATE_FILTERS:
+        _updateFilters(payload.action.filters);
         break;
     }
     

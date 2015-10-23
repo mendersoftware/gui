@@ -39,6 +39,13 @@ var AppActions = {
       schedule: schedule
     })
   },
+
+  updateFilters: function(filters) {
+    AppDispatcher.handleViewAction({
+      actionType: AppConstants.UPDATE_FILTERS,
+      filters: filters
+    })
+  },
 }
 
 module.exports = AppActions;

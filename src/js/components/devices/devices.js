@@ -1,5 +1,6 @@
 var React = require('react');
 var AppStore = require('../../stores/app-store');
+var AppActions = require('../../actions/app-actions');
 
 var Groups = require('./groups');
 var DeviceList = require('./devicelist');
@@ -28,7 +29,7 @@ var Devices = React.createClass({
     this.setState(getState());
   },
   _updateFilters: function(filters) {
-    this.setState({filters:filters});
+    AppActions.updateFilters(filters);
   },
   render: function() {
     return (

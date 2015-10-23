@@ -123,7 +123,7 @@ _selectGroup(_groups[0].id);
 
 function _selectGroup(id) {
   _selectedDevices = [];
-
+  _filters = [{key:'', value:''}];
   if (id) {
     _currentGroup = _getGroupById(id);
     _getCurrentDevices(_currentGroup.id);
@@ -163,13 +163,36 @@ function _getCurrentDevices(groupId) {
   _currentDevices = [];
   var devicelist = _getGroupById(groupId).devices;
   for (var i=0; i<devicelist.length; i++) {
-    _currentDevices.push(_getDeviceById(devicelist[i]));
+    var device = _getDeviceById(devicelist[i]);
+    if (_matchFilters(device)) {
+       _currentDevices.push(device);
+    }
   }
   _sortDevices();
 }
 
 function _sortDevices() {
   _currentDevices.sort(statusSort);
+}
+
+function _updateFilters(filters) {
+  _filters = filters;
+  _getCurrentDevices(_currentGroup.id);
+}
+
+function _matchFilters(device) {
+  /*
+  * Match device attributes against _filters, return true or false
+  */
+  var match = true;
+  for (var i=0; i<_filters.length; i++) {
+    if (_filters[i].key && _filters[i].value) {
+      if (device[_filters[i].key].toLowerCase().indexOf(_filters[i].value.toLowerCase()) == -1) {
+        match = false;
+      }
+    }
+  }
+  return match;
 }
 
 
@@ -214,6 +237,9 @@ function _addToGroup(group, devices) {
 
     var idx = findWithAttr(_groups, 'id', tmpGroup.id);
     _groups[idx] = tmpGroup;
+
+    // reset filters
+    _filters = [{key:'', value:''}];
     _getCurrentDevices(tmpGroup.id);
 
     // TODO - delete if empty group?
@@ -697,6 +723,9 @@ var AppStore = assign(EventEmitter.prototype, {
         break;
       case AppConstants.SAVE_SCHEDULE:
         _saveSchedule(payload.action.schedule);
+        break;
+      case AppConstants.UPDATE_FILTERS:
+        _updateFilters(payload.action.filters);
         break;
     }
     
