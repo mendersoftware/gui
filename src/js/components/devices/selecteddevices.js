@@ -1,6 +1,7 @@
 var React = require('react');
 var AppStore = require('../../stores/app-store');
 var AppActions = require('../../actions/app-actions');
+var ScheduleForm = require('../updates/scheduleform');
 
 var mui = require('material-ui');
 var FlatButton = mui.FlatButton;
@@ -86,6 +87,14 @@ var SelectedDevices = React.createClass({
       }
     });
   },
+  _selectHandler: function(device) {
+    var tmpGroup = {
+      name: device.name,
+      type: "private",
+      devices: []
+    }
+    AppActions.addToGroup(tmpGroup, this.props.selected);
+  },
   _validateName: function(e) {
     var newName = e.target.value;
     var errorText = null;
@@ -110,14 +119,17 @@ var SelectedDevices = React.createClass({
     if (this.props.selected.length === 1) {
       hideInfo = {display: "block"};
       deviceInfo = (
-        <ul>
-          <li>Name: {this.props.selected[0].name}</li>
-          <li>Status: {this.props.selected[0].status}</li>
-          <li>Device type: {this.props.selected[0].model}</li>
-          <li>Software: {this.props.selected[0].software_version}</li>
-          <li>Architecture: {this.props.selected[0].arch}</li>
-          <li>Groups: {this.props.selected[0].groups.join(',')}</li>
-        </ul>
+        <div>
+          <ul>
+            <li>Name: {this.props.selected[0].name}</li>
+            <li>Status: {this.props.selected[0].status}</li>
+            <li>Device type: {this.props.selected[0].model}</li>
+            <li>Software: {this.props.selected[0].software_version}</li>
+            <li>Architecture: {this.props.selected[0].arch}</li>
+            <li>Groups: {this.props.selected[0].groups.join(',')}</li>
+          </ul>
+          <ScheduleForm groups={this.props.groups} device={this.props.selected[0]} label="Schedule update for this device" className="float-right" primary={true} />
+        </div>
       )
     }
     var devices = this.props.selected.map(function(device) {

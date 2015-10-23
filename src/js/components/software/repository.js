@@ -56,7 +56,7 @@ var Repository = React.createClass({
           <TableRowColumn>{pkg.name}</TableRowColumn>
           <TableRowColumn>{pkg.model}</TableRowColumn>
           <TableRowColumn>{pkg.description}</TableRowColumn>
-          <TableRowColumn><ScheduleForm images={software} image={pkg} imageVal={image} groups={groups} /></TableRowColumn>
+          <TableRowColumn><ScheduleForm primary={false} secondary={true} images={software} image={pkg} imageVal={image} groups={groups} /></TableRowColumn>
         </TableRow>
       )
     });

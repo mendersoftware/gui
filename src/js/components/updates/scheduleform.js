@@ -39,7 +39,6 @@ function getDevicesFromParams(group, model) {
 
 var ScheduleForm = React.createClass({
   getInitialState: function() {
-      
     var imageVal = {
       payload: null,
       text: ''
@@ -47,12 +46,28 @@ var ScheduleForm = React.createClass({
     if (this.props.imageVal) {
       imageVal = this.props.imageVal;
     }
+
+    /* if single device */
+    var disabled = false;
+    var group = null;
+    if (this.props.device) {
+      disabled = true;
+      group = {
+        id: null,
+        name: this.props.device.name,
+        type: 'private',
+        devices: [this.props.device]
+      }
+    }
     return {
       minDate: getDate(),
       minDate1: addDate(getDate(),1),
       imageVal: imageVal,
       image: this.props.image,
-      groupVal: null
+      groupVal: null,
+      images: AppStore.getSoftwareRepo(),
+      disabled: disabled,
+      group: group
     };
   },
   dialogDismiss: function(ref) {
@@ -71,15 +86,16 @@ var ScheduleForm = React.createClass({
     });
   },
   _handleImageValueChange: function(e) {
-    var image = this.props.images[e.target.value-1];
+    var image = this.state.images[e.target.value-1];
     var groupname = this.state.group ? this.state.group.name : null;
+    var devices = this.props.device ? 1 : getDevicesFromParams(groupname, image.model);
     this.setState({
       image: image,
       imageVal: {
         payload: e.target.value,
         text: image.name
       },
-      devices: getDevicesFromParams(groupname, image.model)
+      devices: devices
     });
   },
   _onDialogSubmit: function() {
@@ -94,23 +110,28 @@ var ScheduleForm = React.createClass({
     var end_date = this.refs['enddate'].getDate().getTime();
     newUpdate.end_time = combineDateTime(end_date, end_time);
 
-    AppActions.saveSchedule(newUpdate);
+    AppActions.saveSchedule(newUpdate, this.state.disabled);
     this.dialogDismiss('schedule');
 
   },
 
   render: function() {
     var imageItems = [];
-    for (var i=0; i<this.props.images.length;i++) {
-      var tmp = { payload:this.props.images[i].id, text: this.props.images[i].name };
+    for (var i=0; i<this.state.images.length;i++) {
+      var tmp = { payload:this.state.images[i].id, text: this.state.images[i].name };
       imageItems.push(tmp);
     }
 
     var groupItems = [];
+    if (this.props.device) {
+      groupItems[0] = { payload:0, text: this.props.device.name }
+    }
+
     for (var i=0; i<this.props.groups.length;i++) {
       var tmp = { payload:this.props.groups[i].id, text: this.props.groups[i].name };
       groupItems.push(tmp);
     }
+
     var actions = [
       { text: 'Cancel', onClick: this.dialogDismiss.bind(null, 'schedule')},
       { text: 'Schedule update', onClick: this._onDialogSubmit, ref: 'save' }
@@ -118,7 +139,7 @@ var ScheduleForm = React.createClass({
     var model = this.state.image ? this.state.image.model : '';
     return (
       <div>
-        <RaisedButton primary={true} label="Schedule an update" onClick={this.dialogOpen.bind(null, 'schedule')} />
+        <RaisedButton primary={this.props.primary} secondary={this.props.secondary} label="Schedule an update" onClick={this.dialogOpen.bind(null, 'schedule')} />
         <Dialog
           ref="schedule"
           title="Schedule an update"
@@ -192,13 +213,25 @@ var ScheduleForm = React.createClass({
                   underlineDisabledStyle={{borderBottom:"none"}}
                   style={{bottom:"-8"}}/>
 
-                <SelectField
-                  style={{display:"block"}}
-                  value={this.state.groupVal}
-                  ref="group"
-                  onChange={this._handleGroupValueChange}
-                  floatingLabelText="Select group"
-                  menuItems={groupItems} />
+                <div className={this.state.disabled ? 'hidden' : "block"}>
+                  <SelectField
+                    style={{display:"block"}}
+                    value={this.state.groupVal}
+                    ref="group"
+                    onChange={this._handleGroupValueChange}
+                    floatingLabelText="Select group"
+                    menuItems={groupItems} />
+                </div>
+
+                <div className={this.state.disabled ? 'block' : "hidden"}>
+                  <TextField
+                    style={{display:"block"}}
+                    value={groupItems[0].text}
+                    ref="device"
+                    floatingLabelText="Device"
+                    disabled={this.state.disabled}
+                    underlineDisabledStyle={{borderBottom:"none"}} />
+                </div>
 
                 <p className={this.state.devices ? null : 'hidden'}>{this.state.devices} devices will be updated <a href="#/devices" className="margin-left">View devices</a></p>
               </div>

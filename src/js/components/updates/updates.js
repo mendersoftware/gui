@@ -51,14 +51,14 @@ var Updates = React.createClass({
           style={styles.tabs}
           label={"Updates"}>
             <Recent recent={this.state.recent} progress={this.state.progress} />
-            <ScheduleForm className="margin-top" groups={this.state.groups} images={this.state.images} />
+            <ScheduleForm primary={true} className="margin-top" groups={this.state.groups} images={this.state.images} />
           </Tab>
 
           <Tab key={2}
           style={styles.tabs}
           label={"Schedule"}>
             <Schedule schedule={this.state.schedule} />
-            <ScheduleForm className="margin-top" groups={this.state.groups} images={this.state.images} />
+            <ScheduleForm primary={true} className="margin-top" groups={this.state.groups} images={this.state.images} />
           </Tab>
 
           <Tab key={3}

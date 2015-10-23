@@ -33,10 +33,11 @@ var AppActions = {
     })
   },
   
-  saveSchedule: function(schedule) {
+  saveSchedule: function(schedule, single) {
     AppDispatcher.handleViewAction({
       actionType: AppConstants.SAVE_SCHEDULE,
-      schedule: schedule
+      schedule: schedule,
+      single: single
     })
   },
 

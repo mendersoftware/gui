@@ -15,15 +15,17 @@ var Groups = React.createClass({
     return (
       <List subheader="Groups">
         {this.props.groups.map(function(group) {
-          var isSelected = group.id===this.props.selectedGroup.id ? {backgroundColor: "#e7e7e7"} : {backgroundColor: "transparent"};
-          var boundClick = this._changeGroup.bind(null, group.id);
-          return (
-            <ListItem 
-              key={group.id} 
-              primaryText={group.name} 
-              style={isSelected}
-              onClick={boundClick} />
-          )
+          if (group.type==='public') {
+            var isSelected = group.id===this.props.selectedGroup.id ? {backgroundColor: "#e7e7e7"} : {backgroundColor: "transparent"};
+            var boundClick = this._changeGroup.bind(null, group.id);
+            return (
+              <ListItem 
+                key={group.id} 
+                primaryText={group.name} 
+                style={isSelected}
+                onClick={boundClick} />
+            )
+          }
         }, this)}
       </List>
     );

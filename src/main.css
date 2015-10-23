@@ -24,6 +24,12 @@ body {
 .inline-block {
   display: inline-block;
 }
+.block {
+  display: block;
+}
+.float-right {
+  float: right;
+}
 /* Header */
 #header-nav {
   padding-left: 220px;

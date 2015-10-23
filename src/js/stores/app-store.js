@@ -22,22 +22,27 @@ var _groups = [
   {
     id: 1,
     name: "All",
-    devices: [1,2,3,4,5,6,7,8]
+    devices: [1,2,3,4,5,6,7,8],
+    type: "public"
   },
   {
     id: 2,
     name: "Development",
-    devices: [1,2,3]
+    devices: [1,2,3],
+    type: "public"
   },
   {
     id: 3,
     name: "Test",
-    devices: [4,5,6]
+    devices: [4,5,6],
+    type: "public"
+
   },
   {
     id: 4,
     name: "Production",
-    devices: [7,8]
+    devices: [7,8],
+    type: "public"
   }
 ]
 
@@ -139,13 +144,13 @@ function _getGroupById(id) {
   return;
 }
 
-function _addNewGroup(group, devices) {
+function _addNewGroup(group, devices, type) {
   var tmpGroup = group;
   for (var i=0;i<devices.length;i++) {
     tmpGroup.devices.push(devices[i].id);
   }
   tmpGroup.id = _groups.length+1;
-  var idnew = _groups.length+1;
+  tmpGroup.type = type ? type : 'public';
   _groups.push(tmpGroup);
   _selectGroup(_groups.length);
 }
@@ -560,12 +565,13 @@ function _getScheduledUpdates(time) {
   return schedule;
 }
 
-function _saveSchedule(schedule) {
+function _saveSchedule(schedule, single) {
   var tmp = {};
   tmp.id = _allupdates.length+1;
   tmp.group = schedule.group.name;
   tmp.model = "Acme Model 1";
-  tmp.devices = _getDevices(tmp.group, tmp.model);
+  // whether single device or group
+  tmp.devices = !single ? _getDevices(tmp.group, tmp.model) : collectWithAttr(_alldevices, 'name', tmp.group);
   tmp.software_version = schedule.image.name;
   tmp.start_time = schedule.start_time;
   tmp.end_time = schedule.end_time;
@@ -722,7 +728,7 @@ var AppStore = assign(EventEmitter.prototype, {
         _uploadImage(payload.action.image);
         break;
       case AppConstants.SAVE_SCHEDULE:
-        _saveSchedule(payload.action.schedule);
+        _saveSchedule(payload.action.schedule, payload.action.single);
         break;
       case AppConstants.UPDATE_FILTERS:
         _updateFilters(payload.action.filters);

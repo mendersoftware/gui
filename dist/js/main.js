@@ -48697,10 +48697,11 @@ var AppActions = {
     })
   },
   
-  saveSchedule: function(schedule) {
+  saveSchedule: function(schedule, single) {
     AppDispatcher.handleViewAction({
       actionType: AppConstants.SAVE_SCHEDULE,
-      schedule: schedule
+      schedule: schedule,
+      single: single
     })
   },
 
@@ -49187,15 +49188,17 @@ var Groups = React.createClass({displayName: "Groups",
     return (
       React.createElement(List, {subheader: "Groups"}, 
         this.props.groups.map(function(group) {
-          var isSelected = group.id===this.props.selectedGroup.id ? {backgroundColor: "#e7e7e7"} : {backgroundColor: "transparent"};
-          var boundClick = this._changeGroup.bind(null, group.id);
-          return (
-            React.createElement(ListItem, {
-              key: group.id, 
-              primaryText: group.name, 
-              style: isSelected, 
-              onClick: boundClick})
-          )
+          if (group.type==='public') {
+            var isSelected = group.id===this.props.selectedGroup.id ? {backgroundColor: "#e7e7e7"} : {backgroundColor: "transparent"};
+            var boundClick = this._changeGroup.bind(null, group.id);
+            return (
+              React.createElement(ListItem, {
+                key: group.id, 
+                primaryText: group.name, 
+                style: isSelected, 
+                onClick: boundClick})
+            )
+          }
         }, this)
       )
     );
@@ -49209,6 +49212,7 @@ module.exports = Groups;
 var React = require('react');
 var AppStore = require('../../stores/app-store');
 var AppActions = require('../../actions/app-actions');
+var ScheduleForm = require('../updates/scheduleform');
 
 var mui = require('material-ui');
 var FlatButton = mui.FlatButton;
@@ -49294,6 +49298,14 @@ var SelectedDevices = React.createClass({displayName: "SelectedDevices",
       }
     });
   },
+  _selectHandler: function(device) {
+    var tmpGroup = {
+      name: device.name,
+      type: "private",
+      devices: []
+    }
+    AppActions.addToGroup(tmpGroup, this.props.selected);
+  },
   _validateName: function(e) {
     var newName = e.target.value;
     var errorText = null;
@@ -49318,13 +49330,16 @@ var SelectedDevices = React.createClass({displayName: "SelectedDevices",
     if (this.props.selected.length === 1) {
       hideInfo = {display: "block"};
       deviceInfo = (
-        React.createElement("ul", null, 
-          React.createElement("li", null, "Name: ", this.props.selected[0].name), 
-          React.createElement("li", null, "Status: ", this.props.selected[0].status), 
-          React.createElement("li", null, "Device type: ", this.props.selected[0].model), 
-          React.createElement("li", null, "Software: ", this.props.selected[0].software_version), 
-          React.createElement("li", null, "Architecture: ", this.props.selected[0].arch), 
-          React.createElement("li", null, "Groups: ", this.props.selected[0].groups.join(','))
+        React.createElement("div", null, 
+          React.createElement("ul", null, 
+            React.createElement("li", null, "Name: ", this.props.selected[0].name), 
+            React.createElement("li", null, "Status: ", this.props.selected[0].status), 
+            React.createElement("li", null, "Device type: ", this.props.selected[0].model), 
+            React.createElement("li", null, "Software: ", this.props.selected[0].software_version), 
+            React.createElement("li", null, "Architecture: ", this.props.selected[0].arch), 
+            React.createElement("li", null, "Groups: ", this.props.selected[0].groups.join(','))
+          ), 
+          React.createElement(ScheduleForm, {groups: this.props.groups, device: this.props.selected[0], label: "Schedule update for this device", className: "float-right", primary: true})
         )
       )
     }
@@ -49414,7 +49429,7 @@ var SelectedDevices = React.createClass({displayName: "SelectedDevices",
 
 module.exports = SelectedDevices;
 
-},{"../../actions/app-actions":367,"../../stores/app-store":393,"material-ui":43,"react":366}],378:[function(require,module,exports){
+},{"../../actions/app-actions":367,"../../stores/app-store":393,"../updates/scheduleform":387,"material-ui":43,"react":366}],378:[function(require,module,exports){
 var React = require('react');
 var mui = require('material-ui');
 var Router = require('react-router');
@@ -49607,7 +49622,7 @@ var Repository = React.createClass({displayName: "Repository",
           React.createElement(TableRowColumn, null, pkg.name), 
           React.createElement(TableRowColumn, null, pkg.model), 
           React.createElement(TableRowColumn, null, pkg.description), 
-          React.createElement(TableRowColumn, null, React.createElement(ScheduleForm, {images: software, image: pkg, imageVal: image, groups: groups}))
+          React.createElement(TableRowColumn, null, React.createElement(ScheduleForm, {primary: false, secondary: true, images: software, image: pkg, imageVal: image, groups: groups}))
         )
       )
     });
@@ -50130,7 +50145,6 @@ function getDevicesFromParams(group, model) {
 
 var ScheduleForm = React.createClass({displayName: "ScheduleForm",
   getInitialState: function() {
-      
     var imageVal = {
       payload: null,
       text: ''
@@ -50138,12 +50152,28 @@ var ScheduleForm = React.createClass({displayName: "ScheduleForm",
     if (this.props.imageVal) {
       imageVal = this.props.imageVal;
     }
+
+    /* if single device */
+    var disabled = false;
+    var group = null;
+    if (this.props.device) {
+      disabled = true;
+      group = {
+        id: null,
+        name: this.props.device.name,
+        type: 'private',
+        devices: [this.props.device]
+      }
+    }
     return {
       minDate: getDate(),
       minDate1: addDate(getDate(),1),
       imageVal: imageVal,
       image: this.props.image,
-      groupVal: null
+      groupVal: null,
+      images: AppStore.getSoftwareRepo(),
+      disabled: disabled,
+      group: group
     };
   },
   dialogDismiss: function(ref) {
@@ -50162,15 +50192,16 @@ var ScheduleForm = React.createClass({displayName: "ScheduleForm",
     });
   },
   _handleImageValueChange: function(e) {
-    var image = this.props.images[e.target.value-1];
+    var image = this.state.images[e.target.value-1];
     var groupname = this.state.group ? this.state.group.name : null;
+    var devices = this.props.device ? 1 : getDevicesFromParams(groupname, image.model);
     this.setState({
       image: image,
       imageVal: {
         payload: e.target.value,
         text: image.name
       },
-      devices: getDevicesFromParams(groupname, image.model)
+      devices: devices
     });
   },
   _onDialogSubmit: function() {
@@ -50185,23 +50216,28 @@ var ScheduleForm = React.createClass({displayName: "ScheduleForm",
     var end_date = this.refs['enddate'].getDate().getTime();
     newUpdate.end_time = combineDateTime(end_date, end_time);
 
-    AppActions.saveSchedule(newUpdate);
+    AppActions.saveSchedule(newUpdate, this.state.disabled);
     this.dialogDismiss('schedule');
 
   },
 
   render: function() {
     var imageItems = [];
-    for (var i=0; i<this.props.images.length;i++) {
-      var tmp = { payload:this.props.images[i].id, text: this.props.images[i].name };
+    for (var i=0; i<this.state.images.length;i++) {
+      var tmp = { payload:this.state.images[i].id, text: this.state.images[i].name };
       imageItems.push(tmp);
     }
 
     var groupItems = [];
+    if (this.props.device) {
+      groupItems[0] = { payload:0, text: this.props.device.name }
+    }
+
     for (var i=0; i<this.props.groups.length;i++) {
       var tmp = { payload:this.props.groups[i].id, text: this.props.groups[i].name };
       groupItems.push(tmp);
     }
+
     var actions = [
       { text: 'Cancel', onClick: this.dialogDismiss.bind(null, 'schedule')},
       { text: 'Schedule update', onClick: this._onDialogSubmit, ref: 'save' }
@@ -50209,7 +50245,7 @@ var ScheduleForm = React.createClass({displayName: "ScheduleForm",
     var model = this.state.image ? this.state.image.model : '';
     return (
       React.createElement("div", null, 
-        React.createElement(RaisedButton, {primary: true, label: "Schedule an update", onClick: this.dialogOpen.bind(null, 'schedule')}), 
+        React.createElement(RaisedButton, {primary: this.props.primary, secondary: this.props.secondary, label: "Schedule an update", onClick: this.dialogOpen.bind(null, 'schedule')}), 
         React.createElement(Dialog, {
           ref: "schedule", 
           title: "Schedule an update", 
@@ -50283,13 +50319,25 @@ var ScheduleForm = React.createClass({displayName: "ScheduleForm",
                   underlineDisabledStyle: {borderBottom:"none"}, 
                   style: {bottom:"-8"}}), 
 
-                React.createElement(SelectField, {
-                  style: {display:"block"}, 
-                  value: this.state.groupVal, 
-                  ref: "group", 
-                  onChange: this._handleGroupValueChange, 
-                  floatingLabelText: "Select group", 
-                  menuItems: groupItems}), 
+                React.createElement("div", {className: this.state.disabled ? 'hidden' : "block"}, 
+                  React.createElement(SelectField, {
+                    style: {display:"block"}, 
+                    value: this.state.groupVal, 
+                    ref: "group", 
+                    onChange: this._handleGroupValueChange, 
+                    floatingLabelText: "Select group", 
+                    menuItems: groupItems})
+                ), 
+
+                React.createElement("div", {className: this.state.disabled ? 'block' : "hidden"}, 
+                  React.createElement(TextField, {
+                    style: {display:"block"}, 
+                    value: groupItems[0].text, 
+                    ref: "device", 
+                    floatingLabelText: "Device", 
+                    disabled: this.state.disabled, 
+                    underlineDisabledStyle: {borderBottom:"none"}})
+                ), 
 
                 React.createElement("p", {className: this.state.devices ? null : 'hidden'}, this.state.devices, " devices will be updated ", React.createElement("a", {href: "#/devices", className: "margin-left"}, "View devices"))
               )
@@ -50358,14 +50406,14 @@ var Updates = React.createClass({displayName: "Updates",
           style: styles.tabs, 
           label: "Updates"}, 
             React.createElement(Recent, {recent: this.state.recent, progress: this.state.progress}), 
-            React.createElement(ScheduleForm, {className: "margin-top", groups: this.state.groups, images: this.state.images})
+            React.createElement(ScheduleForm, {primary: true, className: "margin-top", groups: this.state.groups, images: this.state.images})
           ), 
 
           React.createElement(Tab, {key: 2, 
           style: styles.tabs, 
           label: "Schedule"}, 
             React.createElement(Schedule, {schedule: this.state.schedule}), 
-            React.createElement(ScheduleForm, {className: "margin-top", groups: this.state.groups, images: this.state.images})
+            React.createElement(ScheduleForm, {primary: true, className: "margin-top", groups: this.state.groups, images: this.state.images})
           ), 
 
           React.createElement(Tab, {key: 3, 
@@ -50473,22 +50521,27 @@ var _groups = [
   {
     id: 1,
     name: "All",
-    devices: [1,2,3,4,5,6,7,8]
+    devices: [1,2,3,4,5,6,7,8],
+    type: "public"
   },
   {
     id: 2,
     name: "Development",
-    devices: [1,2,3]
+    devices: [1,2,3],
+    type: "public"
   },
   {
     id: 3,
     name: "Test",
-    devices: [4,5,6]
+    devices: [4,5,6],
+    type: "public"
+
   },
   {
     id: 4,
     name: "Production",
-    devices: [7,8]
+    devices: [7,8],
+    type: "public"
   }
 ]
 
@@ -50590,13 +50643,13 @@ function _getGroupById(id) {
   return;
 }
 
-function _addNewGroup(group, devices) {
+function _addNewGroup(group, devices, type) {
   var tmpGroup = group;
   for (var i=0;i<devices.length;i++) {
     tmpGroup.devices.push(devices[i].id);
   }
   tmpGroup.id = _groups.length+1;
-  var idnew = _groups.length+1;
+  tmpGroup.type = type ? type : 'public';
   _groups.push(tmpGroup);
   _selectGroup(_groups.length);
 }
@@ -51011,12 +51064,13 @@ function _getScheduledUpdates(time) {
   return schedule;
 }
 
-function _saveSchedule(schedule) {
+function _saveSchedule(schedule, single) {
   var tmp = {};
   tmp.id = _allupdates.length+1;
   tmp.group = schedule.group.name;
   tmp.model = "Acme Model 1";
-  tmp.devices = _getDevices(tmp.group, tmp.model);
+  // whether single device or group
+  tmp.devices = !single ? _getDevices(tmp.group, tmp.model) : collectWithAttr(_alldevices, 'name', tmp.group);
   tmp.software_version = schedule.image.name;
   tmp.start_time = schedule.start_time;
   tmp.end_time = schedule.end_time;
@@ -51173,7 +51227,7 @@ var AppStore = assign(EventEmitter.prototype, {
         _uploadImage(payload.action.image);
         break;
       case AppConstants.SAVE_SCHEDULE:
-        _saveSchedule(payload.action.schedule);
+        _saveSchedule(payload.action.schedule, payload.action.single);
         break;
       case AppConstants.UPDATE_FILTERS:
         _updateFilters(payload.action.filters);
