@@ -638,6 +638,13 @@ var AppStore = assign(EventEmitter.prototype, {
     return _currentDevices
   },
 
+  getSingleDevice: function(id) {
+    /*
+    * Return single device by id
+    */
+    return _alldevices[findWithAttr(_alldevices, 'id', id)]
+  },
+
   getAttributes: function() {
     /*
     * Return set of filters for list of devices

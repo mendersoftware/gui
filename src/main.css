@@ -11,6 +11,9 @@ body {
 .italic {
   font-style: italic;
 }
+.bold {
+  font-weight: bold;
+}
 /* General */
 .hidden {
   display: none !important;
@@ -67,8 +70,8 @@ body {
   padding: 30px;
 }
 .largeDialog {
-  width: 84% !important;
-  max-width: 94% !important;
+  width: 96% !important;
+  max-width: 96% !important;
 }
 .widget {
   width: 50%;

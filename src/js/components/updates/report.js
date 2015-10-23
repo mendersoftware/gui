@@ -1,5 +1,6 @@
 var React = require('react');
 var Time = require('react-time');
+var AppStore = require('../../stores/app-store');
 
 // material ui
 var mui = require('material-ui');
@@ -13,9 +14,14 @@ var FlatButton = mui.FlatButton;
 
 
 var Report = React.createClass({
+  _getDeviceDetails: function (id) {
+    // get device details not listed in schedule data
+    return AppStore.getSingleDevice(id)
+  },
   
   render: function() {
     var deviceList = this.props.update.devices.map(function(device, index) {
+      var deviceDetails = this._getDeviceDetails(device.id);
       return (
         <TableRow key={index}>
           <TableRowColumn>{device.name}</TableRowColumn>
@@ -25,13 +31,14 @@ var Report = React.createClass({
           <TableRowColumn><Time value={device.start_time} format="YYYY/MM/DD HH:mm" /></TableRowColumn>
           <TableRowColumn><Time value={device.end_time} format="YYYY/MM/DD HH:mm" /></TableRowColumn>
           <TableRowColumn>{device.status || "--"}</TableRowColumn>
+          <TableRowColumn>{deviceDetails.status || "--"}</TableRowColumn>
           <TableRowColumn><FlatButton label="Export log" /></TableRowColumn>
         </TableRow>
       )
-    });
+    }, this);
     return (
       <div>
-        <div>
+        <div className="inline-block">
           <ul>
             <li><label>Number of devices</label>: <span>{this.props.update.devices.length}</span></li>
             <li><label>Group</label>: <span>{this.props.update.group}</span></li>
@@ -39,11 +46,11 @@ var Report = React.createClass({
             <li><label>Target software</label>: <span>{this.props.update.software_version}</span></li>
           </ul>
         </div>
-        <div>
+        <div className="inline-block">
           <ul>
-            <li><label>Status</label>: <span>{this.props.update.status}</span></li>
             <li><label>Start time</label>: <span><Time value={this.props.update.start_time} format="YYYY/MM/DD HH:mm" /></span></li>
             <li><label>End time</label>: <span><Time value={this.props.update.end_time} format="YYYY/MM/DD HH:mm" /></span></li>
+            <li><label>Status</label>: <span className="bold">{this.props.update.status}</span></li>
           </ul>
         </div>
 
@@ -59,7 +66,8 @@ var Report = React.createClass({
               <TableHeaderColumn tooltip="Target software">Updated to </TableHeaderColumn>
               <TableHeaderColumn tooltip="Update start time">Start time</TableHeaderColumn>
               <TableHeaderColumn tooltip="Update end time">End time</TableHeaderColumn>
-              <TableHeaderColumn tooltip="Status">Status</TableHeaderColumn>
+              <TableHeaderColumn tooltip="Update status">Update status</TableHeaderColumn>
+              <TableHeaderColumn tooltip="Device status">Device status</TableHeaderColumn>
               <TableHeaderColumn tooltip=""></TableHeaderColumn>
             </TableRow>
           </TableHeader>

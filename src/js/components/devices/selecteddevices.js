@@ -105,6 +105,19 @@ var SelectedDevices = React.createClass({
     }
     this.setState({errorText1: errorText});
   },
+  _getGroupNames: function(list) {
+    /* TODO - move or tidy */
+    var nameList = [];
+    for (var i=0; i<list.length; i++) {
+      for(var x = 0; x<this.props.groups.length; x++) {
+        if(list[i] === this.props.groups[x].id) {
+          nameList.push(this.props.groups[x].name);
+        }
+      }
+    }
+
+    return nameList;
+  },
 
   render: function() {
     var hideInfo = {display: "none"};
@@ -126,7 +139,7 @@ var SelectedDevices = React.createClass({
             <li>Device type: {this.props.selected[0].model}</li>
             <li>Software: {this.props.selected[0].software_version}</li>
             <li>Architecture: {this.props.selected[0].arch}</li>
-            <li>Groups: {this.props.selected[0].groups.join(',')}</li>
+            <li>Groups: {this._getGroupNames(this.props.selected[0].groups).join(', ')}</li>
           </ul>
           <ScheduleForm groups={this.props.groups} device={this.props.selected[0]} label="Schedule update for this device" className="float-right" primary={true} />
         </div>

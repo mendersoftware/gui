@@ -49030,7 +49030,7 @@ var Devices = React.createClass({displayName: "Devices",
           React.createElement(Groups, {groups: this.state.groups, selectedGroup: this.state.selectedGroup})
         ), 
         React.createElement("div", {className: "rightFluid"}, 
-          React.createElement("h4", null, this.state.selectedGroup.name), 
+          React.createElement("h3", null, this.state.selectedGroup.name), 
           React.createElement(Filters, {attributes: this.state.attributes, filters: this.state.filters, onFilterChange: this._updateFilters}), 
           React.createElement(DeviceList, {devices: this.state.devices}), 
           React.createElement(SelectedDevices, {selected: this.state.selectedDevices, selectedGroup: this.state.selectedGroup, groups: this.state.groups})
@@ -49316,6 +49316,19 @@ var SelectedDevices = React.createClass({displayName: "SelectedDevices",
     }
     this.setState({errorText1: errorText});
   },
+  _getGroupNames: function(list) {
+    /* TODO - move or tidy */
+    var nameList = [];
+    for (var i=0; i<list.length; i++) {
+      for(var x = 0; x<this.props.groups.length; x++) {
+        if(list[i] === this.props.groups[x].id) {
+          nameList.push(this.props.groups[x].name);
+        }
+      }
+    }
+
+    return nameList;
+  },
 
   render: function() {
     var hideInfo = {display: "none"};
@@ -49337,7 +49350,7 @@ var SelectedDevices = React.createClass({displayName: "SelectedDevices",
             React.createElement("li", null, "Device type: ", this.props.selected[0].model), 
             React.createElement("li", null, "Software: ", this.props.selected[0].software_version), 
             React.createElement("li", null, "Architecture: ", this.props.selected[0].arch), 
-            React.createElement("li", null, "Groups: ", this.props.selected[0].groups.join(','))
+            React.createElement("li", null, "Groups: ", this._getGroupNames(this.props.selected[0].groups).join(', '))
           ), 
           React.createElement(ScheduleForm, {groups: this.props.groups, device: this.props.selected[0], label: "Schedule update for this device", className: "float-right", primary: true})
         )
@@ -49938,7 +49951,7 @@ var Recent = React.createClass({displayName: "Recent",
           autoScrollBodyContent: true, 
           ref: "statusDialog", 
           contentClassName: "largeDialog"}, 
-            React.createElement("div", {style: {height: '1000px'}}, 
+            React.createElement("div", null, 
               React.createElement(Report, {update: this.state.showReport})
             )
         )
@@ -49954,6 +49967,7 @@ module.exports = Recent;
 },{"./report.js":385,"material-ui":43,"react":366,"react-time":193}],385:[function(require,module,exports){
 var React = require('react');
 var Time = require('react-time');
+var AppStore = require('../../stores/app-store');
 
 // material ui
 var mui = require('material-ui');
@@ -49967,9 +49981,14 @@ var FlatButton = mui.FlatButton;
 
 
 var Report = React.createClass({displayName: "Report",
+  _getDeviceDetails: function (id) {
+    // get device details not listed in schedule data
+    return AppStore.getSingleDevice(id)
+  },
   
   render: function() {
     var deviceList = this.props.update.devices.map(function(device, index) {
+      var deviceDetails = this._getDeviceDetails(device.id);
       return (
         React.createElement(TableRow, {key: index}, 
           React.createElement(TableRowColumn, null, device.name), 
@@ -49979,13 +49998,14 @@ var Report = React.createClass({displayName: "Report",
           React.createElement(TableRowColumn, null, React.createElement(Time, {value: device.start_time, format: "YYYY/MM/DD HH:mm"})), 
           React.createElement(TableRowColumn, null, React.createElement(Time, {value: device.end_time, format: "YYYY/MM/DD HH:mm"})), 
           React.createElement(TableRowColumn, null, device.status || "--"), 
+          React.createElement(TableRowColumn, null, deviceDetails.status || "--"), 
           React.createElement(TableRowColumn, null, React.createElement(FlatButton, {label: "Export log"}))
         )
       )
-    });
+    }, this);
     return (
       React.createElement("div", null, 
-        React.createElement("div", null, 
+        React.createElement("div", {className: "inline-block"}, 
           React.createElement("ul", null, 
             React.createElement("li", null, React.createElement("label", null, "Number of devices"), ": ", React.createElement("span", null, this.props.update.devices.length)), 
             React.createElement("li", null, React.createElement("label", null, "Group"), ": ", React.createElement("span", null, this.props.update.group)), 
@@ -49993,11 +50013,11 @@ var Report = React.createClass({displayName: "Report",
             React.createElement("li", null, React.createElement("label", null, "Target software"), ": ", React.createElement("span", null, this.props.update.software_version))
           )
         ), 
-        React.createElement("div", null, 
+        React.createElement("div", {className: "inline-block"}, 
           React.createElement("ul", null, 
-            React.createElement("li", null, React.createElement("label", null, "Status"), ": ", React.createElement("span", null, this.props.update.status)), 
             React.createElement("li", null, React.createElement("label", null, "Start time"), ": ", React.createElement("span", null, React.createElement(Time, {value: this.props.update.start_time, format: "YYYY/MM/DD HH:mm"}))), 
-            React.createElement("li", null, React.createElement("label", null, "End time"), ": ", React.createElement("span", null, React.createElement(Time, {value: this.props.update.end_time, format: "YYYY/MM/DD HH:mm"})))
+            React.createElement("li", null, React.createElement("label", null, "End time"), ": ", React.createElement("span", null, React.createElement(Time, {value: this.props.update.end_time, format: "YYYY/MM/DD HH:mm"}))), 
+            React.createElement("li", null, React.createElement("label", null, "Status"), ": ", React.createElement("span", {className: "bold"}, this.props.update.status))
           )
         ), 
 
@@ -50013,7 +50033,8 @@ var Report = React.createClass({displayName: "Report",
               React.createElement(TableHeaderColumn, {tooltip: "Target software"}, "Updated to "), 
               React.createElement(TableHeaderColumn, {tooltip: "Update start time"}, "Start time"), 
               React.createElement(TableHeaderColumn, {tooltip: "Update end time"}, "End time"), 
-              React.createElement(TableHeaderColumn, {tooltip: "Status"}, "Status"), 
+              React.createElement(TableHeaderColumn, {tooltip: "Update status"}, "Update status"), 
+              React.createElement(TableHeaderColumn, {tooltip: "Device status"}, "Device status"), 
               React.createElement(TableHeaderColumn, {tooltip: ""})
             )
           ), 
@@ -50029,7 +50050,7 @@ var Report = React.createClass({displayName: "Report",
 
 module.exports = Report;
 
-},{"material-ui":43,"react":366,"react-time":193}],386:[function(require,module,exports){
+},{"../../stores/app-store":393,"material-ui":43,"react":366,"react-time":193}],386:[function(require,module,exports){
 var React = require('react');
 var Time = require('react-time');
 
@@ -51135,6 +51156,13 @@ var AppStore = assign(EventEmitter.prototype, {
     * Return list of devices by current selected group
     */
     return _currentDevices
+  },
+
+  getSingleDevice: function(id) {
+    /*
+    * Return single device by id
+    */
+    return _alldevices[findWithAttr(_alldevices, 'id', id)]
   },
 
   getAttributes: function() {

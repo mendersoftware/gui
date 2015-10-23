@@ -130,7 +130,7 @@ var Recent = React.createClass({
           autoScrollBodyContent={true}
           ref="statusDialog"
           contentClassName="largeDialog">
-            <div style={{height: '1000px'}}>
+            <div>
               <Report update={this.state.showReport} />
             </div>
         </Dialog>

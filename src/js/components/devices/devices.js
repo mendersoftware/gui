@@ -38,7 +38,7 @@ var Devices = React.createClass({
           <Groups groups={this.state.groups} selectedGroup={this.state.selectedGroup} />
         </div>
         <div className="rightFluid">
-          <h4>{this.state.selectedGroup.name}</h4>
+          <h3>{this.state.selectedGroup.name}</h3>
           <Filters attributes={this.state.attributes} filters={this.state.filters} onFilterChange={this._updateFilters} />
           <DeviceList devices={this.state.devices} />
           <SelectedDevices selected={this.state.selectedDevices} selectedGroup={this.state.selectedGroup} groups={this.state.groups} />
