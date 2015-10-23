@@ -97,6 +97,12 @@ body {
   right: -22px;
   top: -22px;
 }
+/* report view */
+.report-list {
+  display: inline-block;
+  margin-right: 30px;
+  width: 280px;
+}
 button .material-icons {
   color: #00bcd4 !important;
 }

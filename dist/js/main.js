@@ -49978,47 +49978,75 @@ var TableBody = mui.TableBody;
 var TableRow = mui.TableRow;
 var TableRowColumn = mui.TableRowColumn;
 var FlatButton = mui.FlatButton;
-
+var List = mui.List;
+var ListItem = mui.ListItem;
+var ListDivider = mui.ListDivider;
+var FontIcon = mui.FontIcon;
+var Checkbox = mui.Checkbox;
 
 var Report = React.createClass({displayName: "Report",
+  getInitialState: function() {
+    return {
+      failsOnly: true 
+    };
+  },
   _getDeviceDetails: function (id) {
     // get device details not listed in schedule data
     return AppStore.getSingleDevice(id)
   },
-  
+  _handleCheckbox: function(e, checked) {
+    this.setState({failsOnly:checked});
+  },
   render: function() {
     var deviceList = this.props.update.devices.map(function(device, index) {
       var deviceDetails = this._getDeviceDetails(device.id);
-      return (
-        React.createElement(TableRow, {key: index}, 
-          React.createElement(TableRowColumn, null, device.name), 
-          React.createElement(TableRowColumn, null, device.model), 
-          React.createElement(TableRowColumn, null, device.last_software_version), 
-          React.createElement(TableRowColumn, null, device.software_version), 
-          React.createElement(TableRowColumn, null, React.createElement(Time, {value: device.start_time, format: "YYYY/MM/DD HH:mm"})), 
-          React.createElement(TableRowColumn, null, React.createElement(Time, {value: device.end_time, format: "YYYY/MM/DD HH:mm"})), 
-          React.createElement(TableRowColumn, null, device.status || "--"), 
-          React.createElement(TableRowColumn, null, deviceDetails.status || "--"), 
-          React.createElement(TableRowColumn, null, React.createElement(FlatButton, {label: "Export log"}))
+      if ((device.status==="Failed")||(this.state.failsOnly===false)){
+        return (
+          React.createElement(TableRow, {key: index}, 
+            React.createElement(TableRowColumn, null, device.name), 
+            React.createElement(TableRowColumn, null, device.model), 
+            React.createElement(TableRowColumn, null, device.last_software_version), 
+            React.createElement(TableRowColumn, null, device.software_version), 
+            React.createElement(TableRowColumn, null, React.createElement(Time, {value: device.start_time, format: "YYYY/MM/DD HH:mm"})), 
+            React.createElement(TableRowColumn, null, React.createElement(Time, {value: device.end_time, format: "YYYY/MM/DD HH:mm"})), 
+            React.createElement(TableRowColumn, null, device.status || "--"), 
+            React.createElement(TableRowColumn, null, deviceDetails.status || "--"), 
+            React.createElement(TableRowColumn, null, React.createElement(FlatButton, {label: "Export log"}))
+          )
         )
-      )
+      }
     }, this);
     return (
       React.createElement("div", null, 
-        React.createElement("div", {className: "inline-block"}, 
-          React.createElement("ul", null, 
-            React.createElement("li", null, React.createElement("label", null, "Number of devices"), ": ", React.createElement("span", null, this.props.update.devices.length)), 
-            React.createElement("li", null, React.createElement("label", null, "Group"), ": ", React.createElement("span", null, this.props.update.group)), 
-            React.createElement("li", null, React.createElement("label", null, "Device type"), ": ", React.createElement("span", null, this.props.update.model)), 
-            React.createElement("li", null, React.createElement("label", null, "Target software"), ": ", React.createElement("span", null, this.props.update.software_version))
+        React.createElement("div", {className: "report-list"}, 
+          React.createElement(List, null, 
+            React.createElement(ListItem, {disabled: true, primaryText: "Group", secondaryText: this.props.update.group}), 
+            React.createElement(ListDivider, null), 
+            React.createElement(ListItem, {disabled: true, primaryText: "Device type", secondaryText: this.props.update.model}), 
+            React.createElement(ListDivider, null), 
+            React.createElement(ListItem, {disabled: true, primaryText: "Start time", secondaryText: React.createElement(Time, {value: this.props.update.start_time, format: "YYYY/MM/DD HH:mm"})})
           )
         ), 
-        React.createElement("div", {className: "inline-block"}, 
-          React.createElement("ul", null, 
-            React.createElement("li", null, React.createElement("label", null, "Start time"), ": ", React.createElement("span", null, React.createElement(Time, {value: this.props.update.start_time, format: "YYYY/MM/DD HH:mm"}))), 
-            React.createElement("li", null, React.createElement("label", null, "End time"), ": ", React.createElement("span", null, React.createElement(Time, {value: this.props.update.end_time, format: "YYYY/MM/DD HH:mm"}))), 
-            React.createElement("li", null, React.createElement("label", null, "Status"), ": ", React.createElement("span", {className: "bold"}, this.props.update.status))
+        React.createElement("div", {className: "report-list"}, 
+         React.createElement(List, null, 
+            React.createElement(ListItem, {disabled: true, primaryText: "Number of devices", secondaryText: this.props.update.devices.length}), 
+            React.createElement(ListDivider, null), 
+            React.createElement(ListItem, {disabled: true, primaryText: "Target software", secondaryText: this.props.update.software_version}), 
+            React.createElement(ListDivider, null), 
+            React.createElement(ListItem, {disabled: true, primaryText: "End time", secondaryText: React.createElement(Time, {value: this.props.update.end_time, format: "YYYY/MM/DD HH:mm"})})
           )
+        ), 
+        React.createElement("div", {className: "report-list"}, 
+         React.createElement(List, null, 
+            React.createElement(ListItem, {disabled: true, primaryText: "Status", secondaryText: this.props.update.status, leftIcon: React.createElement(FontIcon, {className: "material-icons"}, this.props.update.status==='Complete' ? 'check_circle' : 'error')})
+          )
+        ), 
+        React.createElement("div", {style: {display:"inline-block", width:"200px"}}, 
+          React.createElement(Checkbox, {
+            label: "Show only failures", 
+            defaultChecked: true, 
+            value: "showFails", 
+            onCheck: this._handleCheckbox})
         ), 
 
         React.createElement(Table, {

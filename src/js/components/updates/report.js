@@ -11,47 +11,75 @@ var TableBody = mui.TableBody;
 var TableRow = mui.TableRow;
 var TableRowColumn = mui.TableRowColumn;
 var FlatButton = mui.FlatButton;
-
+var List = mui.List;
+var ListItem = mui.ListItem;
+var ListDivider = mui.ListDivider;
+var FontIcon = mui.FontIcon;
+var Checkbox = mui.Checkbox;
 
 var Report = React.createClass({
+  getInitialState: function() {
+    return {
+      failsOnly: true 
+    };
+  },
   _getDeviceDetails: function (id) {
     // get device details not listed in schedule data
     return AppStore.getSingleDevice(id)
   },
-  
+  _handleCheckbox: function(e, checked) {
+    this.setState({failsOnly:checked});
+  },
   render: function() {
     var deviceList = this.props.update.devices.map(function(device, index) {
       var deviceDetails = this._getDeviceDetails(device.id);
-      return (
-        <TableRow key={index}>
-          <TableRowColumn>{device.name}</TableRowColumn>
-          <TableRowColumn>{device.model}</TableRowColumn>
-          <TableRowColumn>{device.last_software_version}</TableRowColumn>
-          <TableRowColumn>{device.software_version}</TableRowColumn>
-          <TableRowColumn><Time value={device.start_time} format="YYYY/MM/DD HH:mm" /></TableRowColumn>
-          <TableRowColumn><Time value={device.end_time} format="YYYY/MM/DD HH:mm" /></TableRowColumn>
-          <TableRowColumn>{device.status || "--"}</TableRowColumn>
-          <TableRowColumn>{deviceDetails.status || "--"}</TableRowColumn>
-          <TableRowColumn><FlatButton label="Export log" /></TableRowColumn>
-        </TableRow>
-      )
+      if ((device.status==="Failed")||(this.state.failsOnly===false)){
+        return (
+          <TableRow key={index}>
+            <TableRowColumn>{device.name}</TableRowColumn>
+            <TableRowColumn>{device.model}</TableRowColumn>
+            <TableRowColumn>{device.last_software_version}</TableRowColumn>
+            <TableRowColumn>{device.software_version}</TableRowColumn>
+            <TableRowColumn><Time value={device.start_time} format="YYYY/MM/DD HH:mm" /></TableRowColumn>
+            <TableRowColumn><Time value={device.end_time} format="YYYY/MM/DD HH:mm" /></TableRowColumn>
+            <TableRowColumn>{device.status || "--"}</TableRowColumn>
+            <TableRowColumn>{deviceDetails.status || "--"}</TableRowColumn>
+            <TableRowColumn><FlatButton label="Export log" /></TableRowColumn>
+          </TableRow>
+        )
+      }
     }, this);
     return (
       <div>
-        <div className="inline-block">
-          <ul>
-            <li><label>Number of devices</label>: <span>{this.props.update.devices.length}</span></li>
-            <li><label>Group</label>: <span>{this.props.update.group}</span></li>
-            <li><label>Device type</label>: <span>{this.props.update.model}</span></li>
-            <li><label>Target software</label>: <span>{this.props.update.software_version}</span></li>
-          </ul>
+        <div className="report-list">
+          <List>
+            <ListItem disabled={true} primaryText="Group" secondaryText={this.props.update.group} />
+            <ListDivider />
+            <ListItem disabled={true} primaryText="Device type" secondaryText={this.props.update.model} />
+            <ListDivider />
+            <ListItem disabled={true} primaryText="Start time" secondaryText={<Time value={this.props.update.start_time} format="YYYY/MM/DD HH:mm" />} />
+          </List>
         </div>
-        <div className="inline-block">
-          <ul>
-            <li><label>Start time</label>: <span><Time value={this.props.update.start_time} format="YYYY/MM/DD HH:mm" /></span></li>
-            <li><label>End time</label>: <span><Time value={this.props.update.end_time} format="YYYY/MM/DD HH:mm" /></span></li>
-            <li><label>Status</label>: <span className="bold">{this.props.update.status}</span></li>
-          </ul>
+        <div className="report-list">
+         <List>
+            <ListItem disabled={true} primaryText="Number of devices" secondaryText={this.props.update.devices.length} />
+            <ListDivider />
+            <ListItem disabled={true} primaryText="Target software" secondaryText={this.props.update.software_version} />
+            <ListDivider />
+            <ListItem disabled={true} primaryText="End time" secondaryText={<Time value={this.props.update.end_time} format="YYYY/MM/DD HH:mm" />} />
+          </List>
+        </div>
+        <div className="report-list">
+         <List>
+            <ListItem disabled={true} primaryText="Status" secondaryText={this.props.update.status} leftIcon={<FontIcon className="material-icons">{this.props.update.status==='Complete' ? 'check_circle' : 'error'}</FontIcon>} />
+          </List>
+        </div>
+        <div style={{display:"inline-block", width:"200px"}}>
+          <Checkbox
+            label="Show only failures"
+            defaultChecked={true}
+            value="showFails"
+            onCheck={this._handleCheckbox} />
         </div>
 
         <Table
