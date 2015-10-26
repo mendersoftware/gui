@@ -30,6 +30,11 @@ var Report = React.createClass({
   _handleCheckbox: function(e, checked) {
     this.setState({failsOnly:checked});
   },
+  _retryUpdate: function() {
+    console.log("click");
+    // replace contents of dialog, also change size, return contents and size on 'cancel'?
+    this.props.retryUpdate(this.props.update);
+  },
   render: function() {
     var deviceList = this.props.update.devices.map(function(device, index) {
       var deviceDetails = this._getDeviceDetails(device.id);
@@ -71,7 +76,12 @@ var Report = React.createClass({
         </div>
         <div className="report-list">
          <List>
-            <ListItem disabled={true} primaryText="Status" secondaryText={this.props.update.status} leftIcon={<FontIcon className="material-icons">{this.props.update.status==='Complete' ? 'check_circle' : 'error'}</FontIcon>} />
+            <ListItem 
+              disabled={this.props.update.status==='Complete'}
+              primaryText="Status"
+              secondaryText={<p>{this.props.update.status}{this.props.update.status==='Complete' ? '' : ' - Click to retry'}</p>}
+              leftIcon={<FontIcon className="material-icons">{this.props.update.status==='Complete' ? 'check_circle' : 'error'}</FontIcon>} 
+              onClick={this._retryUpdate} />
           </List>
         </div>
         <div style={{display:"inline-block", width:"200px"}}>

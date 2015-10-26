@@ -21,7 +21,8 @@ var styles = {
 function getState() {
   return {
     installed: AppStore.getSoftwareInstalled(),
-    repo: AppStore.getSoftwareRepo()
+    repo: AppStore.getSoftwareRepo(),
+    groups: AppStore.getGroups()
   }
 }
 
@@ -52,7 +53,7 @@ var Software = React.createClass({
           <Tab key={2}
           style={styles.tabs}
           label={"Image repository"}>
-            <Repository software={this.state.repo} />
+            <Repository software={this.state.repo} groups={this.state.groups} />
           </Tab>
         </Tabs>
       </div>

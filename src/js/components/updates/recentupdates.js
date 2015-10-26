@@ -1,6 +1,7 @@
 var React = require('react');
 var Time = require('react-time');
 var Report = require('./report.js');
+var ScheduleForm = require('./scheduleform');
 
 // material ui
 var mui = require('material-ui');
@@ -17,14 +18,14 @@ var FlatButton = mui.FlatButton;
 var Recent = React.createClass({
   getInitialState: function() {
     return {
-      showReport:null 
+      showReport: null,
+      retry: false
     };
   },
 
   _handleCellClick: function(rowNumber, columnId) {
     var report = this.props.recent[rowNumber];
-    this.setState({showReport: report});
-    this.refs['statusDialog'].show();
+    this.props.showReport(report);
   },
   render: function() {
     var now = new Date().getTime();
@@ -59,8 +60,12 @@ var Recent = React.createClass({
       )
     });
 
-    var dialogActions = [
+    var reportActions = [
       { text: 'Close' }
+    ];
+    var retryActions = [
+      { text: 'Cancel' },
+      { text: 'Schedule update', onClick: this._onUploadSubmit, primary: 'true' }
     ];
     return (
       <div>
@@ -123,18 +128,6 @@ var Recent = React.createClass({
             <p className="italic">No recent updates</p>
           </div>
         </div>
-
-        <Dialog title="Update status report"
-          actions={dialogActions}
-          autoDetectWindowHeight={true}
-          autoScrollBodyContent={true}
-          ref="statusDialog"
-          contentClassName="largeDialog">
-            <div>
-              <Report update={this.state.showReport} />
-            </div>
-        </Dialog>
-
 
       </div>
     );

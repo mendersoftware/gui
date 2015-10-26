@@ -624,6 +624,10 @@ var AppStore = assign(EventEmitter.prototype, {
     return _groups
   },
 
+  getSingleGroup: function(attr, val) {
+    return _groups[findWithAttr(_groups, attr, val)];
+  },
+
   getSelectedGroup: function() {
     /*
     * Return group object for current group selection
@@ -678,6 +682,13 @@ var AppStore = assign(EventEmitter.prototype, {
     * Return list of saved software objects
     */
     return _softwareRepo
+  },
+
+  getSoftwareImage: function(attr, val) {
+    /*
+    * Return single image by attr
+    */
+    return _softwareRepo[findWithAttr(_softwareRepo, attr, val)];
   },
 
   getRecentUpdates: function(date) {
