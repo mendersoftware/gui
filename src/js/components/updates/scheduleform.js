@@ -1,5 +1,7 @@
 var React = require('react');
 var AppStore = require('../../stores/app-store');
+var Router = require('react-router');
+var Link = Router.Link;
 
 var mui = require('material-ui');
 
@@ -10,6 +12,7 @@ var TextField = mui.TextField;
 var RadioButtonGroup = mui.RadioButtonGroup;
 var RadioButton = mui.RadioButton;
 var RaisedButton = mui.RaisedButton;
+
 
 function getDate() {
   return new Date()
@@ -147,6 +150,9 @@ var ScheduleForm = React.createClass({
     }
 
     var model = this.state.image ? this.state.image.model : '';
+    var filters = "model="+model;
+    if (this.props.device) {filters = "name="+this.props.device.name}
+    filters = encodeURIComponent(filters);
     return (
       <div style={{height: '400px'}}>
         <form>
@@ -237,7 +243,9 @@ var ScheduleForm = React.createClass({
                 underlineDisabledStyle={{borderBottom:"none"}} />
             </div>
 
-            <p className={this.state.devices ? null : 'hidden'}>{this.state.devices} devices will be updated <a href="#/devices" className="margin-left">View devices</a></p>
+            <p className={this.state.devices ? null : 'hidden'}>{this.state.devices} devices will be updated <Link to="devices" params={{groupId: this.state.groupVal.payload, filters:filters }} className="margin-left">View devices</Link></p>
+
+            <p className={this.state.group ? 'warning' : 'hidden'}>Any devices that are already on the target software version will be skipped.</p>
           </div>
         </form>
       </div>

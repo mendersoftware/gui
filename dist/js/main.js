@@ -49016,6 +49016,22 @@ var Devices = React.createClass({displayName: "Devices",
   },
   componentWillMount: function() {
     AppStore.changeListener(this._onChange);
+    var filters = [];
+    if (this.props.params) {
+      if (this.props.params.groupId) {
+        AppActions.selectGroup(Number(this.props.params.groupId));
+      }
+      if (this.props.params.filters) {
+        var str = decodeURIComponent(this.props.params.filters);
+        var obj = str.split("&");
+        for (var i=0;i<obj.length;i++) {
+          var f = obj[i].split("=");
+          filters.push({key:f[0], value:f[1]});
+        }
+        this._updateFilters(filters);
+      }
+    }
+    
   },
   _onChange: function() {
     this.setState(getState());
@@ -50220,6 +50236,8 @@ module.exports = ScheduleButton;
 },{"material-ui":43,"react":366}],388:[function(require,module,exports){
 var React = require('react');
 var AppStore = require('../../stores/app-store');
+var Router = require('react-router');
+var Link = Router.Link;
 
 var mui = require('material-ui');
 
@@ -50230,6 +50248,7 @@ var TextField = mui.TextField;
 var RadioButtonGroup = mui.RadioButtonGroup;
 var RadioButton = mui.RadioButton;
 var RaisedButton = mui.RaisedButton;
+
 
 function getDate() {
   return new Date()
@@ -50367,6 +50386,9 @@ var ScheduleForm = React.createClass({displayName: "ScheduleForm",
     }
 
     var model = this.state.image ? this.state.image.model : '';
+    var filters = "model="+model;
+    if (this.props.device) {filters = "name="+this.props.device.name}
+    filters = encodeURIComponent(filters);
     return (
       React.createElement("div", {style: {height: '400px'}}, 
         React.createElement("form", null, 
@@ -50457,7 +50479,9 @@ var ScheduleForm = React.createClass({displayName: "ScheduleForm",
                 underlineDisabledStyle: {borderBottom:"none"}})
             ), 
 
-            React.createElement("p", {className: this.state.devices ? null : 'hidden'}, this.state.devices, " devices will be updated ", React.createElement("a", {href: "#/devices", className: "margin-left"}, "View devices"))
+            React.createElement("p", {className: this.state.devices ? null : 'hidden'}, this.state.devices, " devices will be updated ", React.createElement(Link, {to: "devices", params: {groupId: this.state.groupVal.payload, filters:filters}, className: "margin-left"}, "View devices")), 
+
+            React.createElement("p", {className: this.state.group ? 'warning' : 'hidden'}, "Any devices that are already on the target software version will be skipped.")
           )
         )
       )
@@ -50468,7 +50492,7 @@ var ScheduleForm = React.createClass({displayName: "ScheduleForm",
 
 module.exports = ScheduleForm;
 
-},{"../../stores/app-store":394,"material-ui":43,"react":366}],389:[function(require,module,exports){
+},{"../../stores/app-store":394,"material-ui":43,"react":366,"react-router":174}],389:[function(require,module,exports){
 var React = require('react');
 var AppStore = require('../../stores/app-store');
 var AppActions = require('../../actions/app-actions');
@@ -50659,7 +50683,7 @@ var Route = Router.Route;
 module.exports = (
   React.createElement(Route, {name: "app", path: "/", handler: App}, 
     React.createElement(DefaultRoute, {name: "dashboard", handler: Dashboard}), 
-    React.createElement(Route, {name: "devices", path: "/devices", handler: Devices}), 
+    React.createElement(Route, {name: "devices", path: "/devices/?:groupId?/?:filters?", handler: Devices}), 
     React.createElement(Route, {name: "software", path: "/software", handler: Software}), 
     React.createElement(Route, {name: "updates", path: "/updates", handler: Updates})
   )

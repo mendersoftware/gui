@@ -24,6 +24,22 @@ var Devices = React.createClass({
   },
   componentWillMount: function() {
     AppStore.changeListener(this._onChange);
+    var filters = [];
+    if (this.props.params) {
+      if (this.props.params.groupId) {
+        AppActions.selectGroup(Number(this.props.params.groupId));
+      }
+      if (this.props.params.filters) {
+        var str = decodeURIComponent(this.props.params.filters);
+        var obj = str.split("&");
+        for (var i=0;i<obj.length;i++) {
+          var f = obj[i].split("=");
+          filters.push({key:f[0], value:f[1]});
+        }
+        this._updateFilters(filters);
+      }
+    }
+    
   },
   _onChange: function() {
     this.setState(getState());
