@@ -50017,7 +50017,7 @@ var Checkbox = mui.Checkbox;
 var Report = React.createClass({displayName: "Report",
   getInitialState: function() {
     return {
-      failsOnly: true 
+      failsOnly: this.props.update.status !== "Complete"
     };
   },
   _getDeviceDetails: function (id) {
@@ -50028,7 +50028,6 @@ var Report = React.createClass({displayName: "Report",
     this.setState({failsOnly:checked});
   },
   _retryUpdate: function() {
-    console.log("click");
     // replace contents of dialog, also change size, return contents and size on 'cancel'?
     this.props.retryUpdate(this.props.update);
   },
@@ -50081,11 +50080,11 @@ var Report = React.createClass({displayName: "Report",
               onClick: this._retryUpdate})
           )
         ), 
-        React.createElement("div", {style: {display:"inline-block", width:"200px"}}, 
+        React.createElement("div", {className: this.props.update.status==='Complete' ? "hidden" : null, style: {display:"inline-block", width:"200px"}}, 
           React.createElement(Checkbox, {
             label: "Show only failures", 
-            defaultChecked: true, 
-            value: "showFails", 
+            defaultChecked: this.props.update.status!=='Complete', 
+            value: this.state.failsOnly, 
             onCheck: this._handleCheckbox})
         ), 
 
@@ -50148,8 +50147,8 @@ var Schedule = React.createClass({displayName: "Schedule",
             React.createElement(TableRowColumn, null, update.devices.length), 
             React.createElement(TableRowColumn, null, React.createElement(Time, {value: update.start_time, format: "YYYY/MM/DD HH:mm"})), 
             React.createElement(TableRowColumn, null, React.createElement(Time, {value: update.end_time, format: "YYYY/MM/DD HH:mm"})), 
-            React.createElement(TableRowColumn, null, React.createElement("span", null, "Begins "), React.createElement(Time, {value: update.start_time, format: "YYYY/MM/DD HH:mm", relative: true})), 
-            React.createElement(TableRowColumn, null, React.createElement(FlatButton, {label: "Edit"}), React.createElement(FlatButton, {label: "Remove"}))
+            React.createElement(TableRowColumn, null, "Begins ", React.createElement(Time, {value: update.start_time, format: "YYYY/MM/DD HH:mm", relative: true})), 
+            React.createElement(TableRowColumn, null, React.createElement("div", null, React.createElement(FlatButton, {style: {padding:"0", marginRight:"4", minWidth:"55"}, label: "Edit"}), React.createElement(FlatButton, {style: {padding:"0", marginLeft:"4", minWidth:"55"}, label: "Remove"})))
           )
         )
       }
@@ -50530,7 +50529,6 @@ var Updates = React.createClass({displayName: "Updates",
         scheduleForm: true,
         contentClass: null
       });
-      console.log("set staate");
     }
     if (dialog === 'report') {
       this.setState({
@@ -50565,7 +50563,6 @@ var Updates = React.createClass({displayName: "Updates",
      this.dialogOpen("report");
   },
   _scheduleUpdate: function (update) {
-    console.log("retry schedule");
     var image = '';
     var group = '';
     if (update) {
@@ -50577,7 +50574,6 @@ var Updates = React.createClass({displayName: "Updates",
       }
     }
     this.setState({scheduleForm:true, imageVal:image, image:image, group:group, groupVal:group});
-    console.log("pre open");
     this.dialogOpen("schedule");
   },
   render: function() {

@@ -58,7 +58,6 @@ var Updates = React.createClass({
         scheduleForm: true,
         contentClass: null
       });
-      console.log("set staate");
     }
     if (dialog === 'report') {
       this.setState({
@@ -93,7 +92,6 @@ var Updates = React.createClass({
      this.dialogOpen("report");
   },
   _scheduleUpdate: function (update) {
-    console.log("retry schedule");
     var image = '';
     var group = '';
     if (update) {
@@ -105,7 +103,6 @@ var Updates = React.createClass({
       }
     }
     this.setState({scheduleForm:true, imageVal:image, image:image, group:group, groupVal:group});
-    console.log("pre open");
     this.dialogOpen("schedule");
   },
   render: function() {

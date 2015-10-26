@@ -20,7 +20,7 @@ var Checkbox = mui.Checkbox;
 var Report = React.createClass({
   getInitialState: function() {
     return {
-      failsOnly: true 
+      failsOnly: this.props.update.status !== "Complete"
     };
   },
   _getDeviceDetails: function (id) {
@@ -31,7 +31,6 @@ var Report = React.createClass({
     this.setState({failsOnly:checked});
   },
   _retryUpdate: function() {
-    console.log("click");
     // replace contents of dialog, also change size, return contents and size on 'cancel'?
     this.props.retryUpdate(this.props.update);
   },
@@ -84,11 +83,11 @@ var Report = React.createClass({
               onClick={this._retryUpdate} />
           </List>
         </div>
-        <div style={{display:"inline-block", width:"200px"}}>
+        <div className={this.props.update.status==='Complete' ? "hidden" : null} style={{display:"inline-block", width:"200px"}}>
           <Checkbox
             label="Show only failures"
-            defaultChecked={true}
-            value="showFails"
+            defaultChecked={this.props.update.status!=='Complete'}
+            value={this.state.failsOnly}
             onCheck={this._handleCheckbox} />
         </div>
 

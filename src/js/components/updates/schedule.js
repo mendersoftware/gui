@@ -27,8 +27,8 @@ var Schedule = React.createClass({
             <TableRowColumn>{update.devices.length}</TableRowColumn>
             <TableRowColumn><Time value={update.start_time} format="YYYY/MM/DD HH:mm" /></TableRowColumn>
             <TableRowColumn><Time value={update.end_time} format="YYYY/MM/DD HH:mm" /></TableRowColumn>
-            <TableRowColumn><span>Begins </span><Time value={update.start_time} format="YYYY/MM/DD HH:mm" relative /></TableRowColumn>
-            <TableRowColumn><FlatButton label="Edit" /><FlatButton label="Remove" /></TableRowColumn>
+            <TableRowColumn>Begins <Time value={update.start_time} format="YYYY/MM/DD HH:mm" relative /></TableRowColumn>
+            <TableRowColumn><div><FlatButton style={{padding:"0", marginRight:"4", minWidth:"55"}} label="Edit" /><FlatButton style={{padding:"0", marginLeft:"4", minWidth:"55"}} label="Remove" /></div></TableRowColumn>
           </TableRow>
         )
       }
