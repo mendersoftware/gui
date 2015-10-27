@@ -50545,7 +50545,7 @@ var ScheduleForm = React.createClass({displayName: "ScheduleForm",
 
             React.createElement("p", {className: this.state.devices ? null : 'hidden'}, this.state.devices, " devices will be updated ", React.createElement(Link, {to: "devices", params: {groupId: this.state.groupVal.payload, filters:filters}, className: this.state.disabled ? "hidden" : "margin-left"}, "View devices")), 
 
-            React.createElement("p", {className: this.state.group ? 'warning' : 'hidden'}, "Any devices that are already on the target software version will be skipped.")
+            React.createElement("p", {className: "warning"}, "Any devices that are already on the target software version will be skipped.")
           )
         )
       )
