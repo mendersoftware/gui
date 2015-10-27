@@ -17,6 +17,6 @@ module.exports = (
     <DefaultRoute name="dashboard" handler={Dashboard} />
     <Route name="devices" path="/devices/?:groupId?/?:filters?" handler={Devices} />
     <Route name="software" path="/software" handler={Software} />
-    <Route name="updates" path="/updates" handler={Updates} />
+    <Route name="updates" path="/updates/?:tab?" handler={Updates} />
   </Route>
 );  

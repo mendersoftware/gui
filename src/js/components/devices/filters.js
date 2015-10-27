@@ -111,7 +111,7 @@ var Filters = React.createClass({
       <div>
         <LeftNav 
           ref="filterNav"
-          docked={this.state.isDocked}
+          docked={false}
           openRight={true}
           menuItems={[]}
           header={filterNav}

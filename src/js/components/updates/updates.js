@@ -24,6 +24,12 @@ var styles = {
   }
 };
 
+var tabs = {
+  updates: '0',
+  schedule: '1',
+  events: '2'
+}
+
 function getState() {
   return {
     recent: AppStore.getRecentUpdates(new Date().getTime()),
@@ -34,7 +40,8 @@ function getState() {
     groups: AppStore.getGroups(),
     dialogTitle: "Schedule an update",
     scheduleForm: true,
-    contentClass: "largeDialog"
+    contentClass: "largeDialog",
+    tabIndex: "0"
   }
 }
 
@@ -44,6 +51,9 @@ var Updates = React.createClass({
   },
   componentWillMount: function() {
     AppStore.changeListener(this._onChange);
+      if (this.props.params) {
+        this.setState({tabIndex: tabs[this.props.params.tab]});
+      }
   },
   _onChange: function() {
     this.setState(getState());
@@ -128,10 +138,12 @@ var Updates = React.createClass({
       <div>
          <Tabs
           tabItemContainerStyle={{width: "33%"}}
-          inkBarStyle={styles.inkbar}>
+          inkBarStyle={styles.inkbar}
+          value={this.state.tabIndex}>
           <Tab key={1}
           style={styles.tabs}
-          label={"Updates"}>
+          label={"Updates"}
+          value="0">
             <Recent recent={this.state.recent} progress={this.state.progress} showReport={this._showReport} />
             <div style={{marginTop:"45"}}>
               <ScheduleButton primary={true} openDialog={this.dialogOpen} />
@@ -140,7 +152,8 @@ var Updates = React.createClass({
 
           <Tab key={2}
           style={styles.tabs}
-          label={"Schedule"}>
+          label={"Schedule"}
+          value="1">
             <Schedule schedule={this.state.schedule} />
             <div style={{marginTop:"45"}}>
               <ScheduleButton style={{marginTop:"45"}} primary={true}  openDialog={this.dialogOpen} />
@@ -149,7 +162,8 @@ var Updates = React.createClass({
 
           <Tab key={3}
           style={styles.tabs}
-          label={"Event log"}>
+          label={"Event log"}
+          value="2">
             <EventLog events={this.state.events} />
           </Tab>
         </Tabs>

@@ -48776,9 +48776,9 @@ var Dashboard = React.createClass({displayName: "Dashboard",
   render: function() {
     return (
       React.createElement("div", null, 
-        React.createElement(Progress, {progress: this.state.progress}), 
+        React.createElement(Progress, {clickHandle: this._handleWidgetClick, progress: this.state.progress, route: "/updates"}), 
         React.createElement(Health, {clickHandle: this._handleWidgetClick, health: this.state.health, route: "/devices/1/status%3DDown"}), 
-        React.createElement(Schedule, {schedule: this.state.schedule})
+        React.createElement(Schedule, {clickHandle: this._handleWidgetClick, schedule: this.state.schedule, route: "/updates/schedule"})
       )
     );
   }
@@ -48830,6 +48830,9 @@ var Paper = mui.Paper;
 
 
 var Progress = React.createClass({displayName: "Progress",
+  _clickHandle: function() {
+    this.props.clickHandle(this.props.route);
+  },
   render: function() {
     var progress = this.props.progress.map(function(update, index) {
       return (
@@ -48842,9 +48845,10 @@ var Progress = React.createClass({displayName: "Progress",
       )
     });
     return (
-      React.createElement(Paper, {zDepth: 1, className: "widget clickable"}, 
+      React.createElement(Paper, {zDepth: 1, className: "widget clickable", onClick: this._clickHandle}, 
         React.createElement("h3", null, "Updates in progress"), 
         React.createElement(Table, {
+          className: progress.length ? null : 'hidden', 
           selectable: false}, 
           React.createElement(TableHeader, {
             displaySelectAll: false, 
@@ -48889,6 +48893,9 @@ var Paper = mui.Paper;
 
 
 var Schedule = React.createClass({displayName: "Schedule",
+  _clickHandle: function() {
+    this.props.clickHandle(this.props.route);
+  },
   render: function() {
     var schedule = this.props.schedule.map(function(update, index) {
       return (
@@ -48901,7 +48908,7 @@ var Schedule = React.createClass({displayName: "Schedule",
       )
     });
     return (
-      React.createElement(Paper, {zDepth: 1, className: "widget clickable"}, 
+      React.createElement(Paper, {zDepth: 1, className: "widget clickable", onClick: this._clickHandle}, 
         React.createElement("h3", null, "Scheduled updates"), 
         React.createElement(Table, {
           selectable: false}, 
@@ -49045,7 +49052,6 @@ var Devices = React.createClass({displayName: "Devices",
         this._updateFilters(filters);
       }
     }
-    
   },
   _onChange: function() {
     this.setState(getState());
@@ -49186,7 +49192,7 @@ var Filters = React.createClass({displayName: "Filters",
       React.createElement("div", null, 
         React.createElement(LeftNav, {
           ref: "filterNav", 
-          docked: this.state.isDocked, 
+          docked: false, 
           openRight: true, 
           menuItems: [], 
           header: filterNav, 
@@ -50577,6 +50583,12 @@ var styles = {
   }
 };
 
+var tabs = {
+  updates: '0',
+  schedule: '1',
+  events: '2'
+}
+
 function getState() {
   return {
     recent: AppStore.getRecentUpdates(new Date().getTime()),
@@ -50587,7 +50599,8 @@ function getState() {
     groups: AppStore.getGroups(),
     dialogTitle: "Schedule an update",
     scheduleForm: true,
-    contentClass: "largeDialog"
+    contentClass: "largeDialog",
+    tabIndex: "0"
   }
 }
 
@@ -50597,6 +50610,9 @@ var Updates = React.createClass({displayName: "Updates",
   },
   componentWillMount: function() {
     AppStore.changeListener(this._onChange);
+      if (this.props.params) {
+        this.setState({tabIndex: tabs[this.props.params.tab]});
+      }
   },
   _onChange: function() {
     this.setState(getState());
@@ -50681,10 +50697,12 @@ var Updates = React.createClass({displayName: "Updates",
       React.createElement("div", null, 
          React.createElement(Tabs, {
           tabItemContainerStyle: {width: "33%"}, 
-          inkBarStyle: styles.inkbar}, 
+          inkBarStyle: styles.inkbar, 
+          value: this.state.tabIndex}, 
           React.createElement(Tab, {key: 1, 
           style: styles.tabs, 
-          label: "Updates"}, 
+          label: "Updates", 
+          value: "0"}, 
             React.createElement(Recent, {recent: this.state.recent, progress: this.state.progress, showReport: this._showReport}), 
             React.createElement("div", {style: {marginTop:"45"}}, 
               React.createElement(ScheduleButton, {primary: true, openDialog: this.dialogOpen})
@@ -50693,7 +50711,8 @@ var Updates = React.createClass({displayName: "Updates",
 
           React.createElement(Tab, {key: 2, 
           style: styles.tabs, 
-          label: "Schedule"}, 
+          label: "Schedule", 
+          value: "1"}, 
             React.createElement(Schedule, {schedule: this.state.schedule}), 
             React.createElement("div", {style: {marginTop:"45"}}, 
               React.createElement(ScheduleButton, {style: {marginTop:"45"}, primary: true, openDialog: this.dialogOpen})
@@ -50702,7 +50721,8 @@ var Updates = React.createClass({displayName: "Updates",
 
           React.createElement(Tab, {key: 3, 
           style: styles.tabs, 
-          label: "Event log"}, 
+          label: "Event log", 
+          value: "2"}, 
             React.createElement(EventLog, {events: this.state.events})
           )
         ), 
@@ -50743,7 +50763,7 @@ module.exports = (
     React.createElement(DefaultRoute, {name: "dashboard", handler: Dashboard}), 
     React.createElement(Route, {name: "devices", path: "/devices/?:groupId?/?:filters?", handler: Devices}), 
     React.createElement(Route, {name: "software", path: "/software", handler: Software}), 
-    React.createElement(Route, {name: "updates", path: "/updates", handler: Updates})
+    React.createElement(Route, {name: "updates", path: "/updates/?:tab?", handler: Updates})
   )
 );  
 

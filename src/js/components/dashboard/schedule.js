@@ -13,6 +13,9 @@ var Paper = mui.Paper;
 
 
 var Schedule = React.createClass({
+  _clickHandle: function() {
+    this.props.clickHandle(this.props.route);
+  },
   render: function() {
     var schedule = this.props.schedule.map(function(update, index) {
       return (
@@ -25,7 +28,7 @@ var Schedule = React.createClass({
       )
     });
     return (
-      <Paper zDepth={1} className="widget clickable">
+      <Paper zDepth={1} className="widget clickable"  onClick={this._clickHandle}>
         <h3>Scheduled updates</h3>
         <Table
           selectable={false}>

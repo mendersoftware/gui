@@ -39,7 +39,6 @@ var Devices = React.createClass({
         this._updateFilters(filters);
       }
     }
-    
   },
   _onChange: function() {
     this.setState(getState());

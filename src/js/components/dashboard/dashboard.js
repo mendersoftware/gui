@@ -23,9 +23,9 @@ var Dashboard = React.createClass({
   render: function() {
     return (
       <div>
-        <Progress progress={this.state.progress} />
+        <Progress clickHandle={this._handleWidgetClick} progress={this.state.progress} route="/updates" />
         <Health clickHandle={this._handleWidgetClick} health={this.state.health} route="/devices/1/status%3DDown" />
-        <Schedule schedule={this.state.schedule} />
+        <Schedule clickHandle={this._handleWidgetClick} schedule={this.state.schedule} route="/updates/schedule" />
       </div>
     );
   }

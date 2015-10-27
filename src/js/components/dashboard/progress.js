@@ -12,6 +12,9 @@ var Paper = mui.Paper;
 
 
 var Progress = React.createClass({
+  _clickHandle: function() {
+    this.props.clickHandle(this.props.route);
+  },
   render: function() {
     var progress = this.props.progress.map(function(update, index) {
       return (
@@ -24,9 +27,10 @@ var Progress = React.createClass({
       )
     });
     return (
-      <Paper zDepth={1} className="widget clickable">
+      <Paper zDepth={1} className="widget clickable" onClick={this._clickHandle}>
         <h3>Updates in progress</h3>
         <Table
+          className={progress.length ? null : 'hidden'}
           selectable={false}>
           <TableHeader
             displaySelectAll={false}
