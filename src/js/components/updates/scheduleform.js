@@ -69,6 +69,7 @@ var ScheduleForm = React.createClass({
         type: 'private',
         devices: [this.props.device]
       }
+      this._sendUpToParent(group, 'group');
     }
     return {
       minDate: getDate(),
@@ -243,7 +244,7 @@ var ScheduleForm = React.createClass({
                 underlineDisabledStyle={{borderBottom:"none"}} />
             </div>
 
-            <p className={this.state.devices ? null : 'hidden'}>{this.state.devices} devices will be updated <Link to="devices" params={{groupId: this.state.groupVal.payload, filters:filters }} className="margin-left">View devices</Link></p>
+            <p className={this.state.devices ? null : 'hidden'}>{this.state.devices} devices will be updated <Link to="devices" params={{groupId: this.state.groupVal.payload, filters:filters }} className={this.state.disabled ? "hidden" : "margin-left"}>View devices</Link></p>
 
             <p className={this.state.group ? 'warning' : 'hidden'}>Any devices that are already on the target software version will be skipped.</p>
           </div>

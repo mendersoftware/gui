@@ -16,7 +16,7 @@ var ScheduleButton = React.createClass({
   },
   render: function() {
     return (
-      <RaisedButton primary={this.props.primary} secondary={this.props.secondary} label="Schedule an update" onClick={this._handleClick} />
+      <RaisedButton primary={this.props.primary} secondary={this.props.secondary} label={ this.props.label || "Schedule an update"} onClick={this._handleClick} />
     );
   }
 });

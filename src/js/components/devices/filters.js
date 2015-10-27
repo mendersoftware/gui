@@ -116,7 +116,9 @@ var Filters = React.createClass({
           style={{padding: "10px 20px", top:"58", overflowY:"auto"}} />
 
         <div style={{width:"100%", position:"relative"}}>
-          <FlatButton style={{position:"absolute",right:"30", top:"-40"}} onClick={this._toggleNav} label={this.state.isDocked ? "Hide filters" : "Show filters"} />
+          <FlatButton style={{position:"absolute",right:"30", top:"-40"}} secondary={true} onClick={this._toggleNav} label="Filter devices">
+              <FontIcon style={styles.exampleFlatButtonIcon} className="material-icons">filter_list</FontIcon>
+          </FlatButton>
         </div>
       </div>
     );

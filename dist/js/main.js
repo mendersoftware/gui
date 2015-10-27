@@ -49177,7 +49177,9 @@ var Filters = React.createClass({displayName: "Filters",
           style: {padding: "10px 20px", top:"58", overflowY:"auto"}}), 
 
         React.createElement("div", {style: {width:"100%", position:"relative"}}, 
-          React.createElement(FlatButton, {style: {position:"absolute",right:"30", top:"-40"}, onClick: this._toggleNav, label: this.state.isDocked ? "Hide filters" : "Show filters"})
+          React.createElement(FlatButton, {style: {position:"absolute",right:"30", top:"-40"}, secondary: true, onClick: this._toggleNav, label: "Filter devices"}, 
+              React.createElement(FontIcon, {style: styles.exampleFlatButtonIcon, className: "material-icons"}, "filter_list")
+          )
         )
       )
     );
@@ -49229,6 +49231,7 @@ var React = require('react');
 var AppStore = require('../../stores/app-store');
 var AppActions = require('../../actions/app-actions');
 var ScheduleForm = require('../updates/scheduleform');
+var ScheduleButton = require('../updates/schedulebutton');
 
 var mui = require('material-ui');
 var FlatButton = mui.FlatButton;
@@ -49279,6 +49282,9 @@ var SelectedDevices = React.createClass({displayName: "SelectedDevices",
   },
   dialogOpen: function(ref) {
     this.refs[ref].show();
+  },
+  _openSchedule: function(ref) {
+    this.dialogOpen(ref);
   },
   _showButton: function() {
     this.setState({showInput: true});
@@ -49346,6 +49352,25 @@ var SelectedDevices = React.createClass({displayName: "SelectedDevices",
     return nameList;
   },
 
+  _updateParams: function(val, attr) {
+    // updating params from child schedule form
+    var tmp = {};
+    tmp[attr] = val;
+    this.setState(tmp);
+  },
+
+  _onScheduleSubmit: function() {
+    var newUpdate = {
+      group: this.state.group,
+      model: this.state.model,
+      start_time: this.state.start_time,
+      end_time: this.state.end_time,
+      image: this.state.image
+    }
+    AppActions.saveSchedule(newUpdate, this.props.selected.length === 1);
+    this.dialogDismiss('schedule');
+  },
+
   render: function() {
     var hideInfo = {display: "none"};
     var deviceInfo ='';
@@ -49368,7 +49393,7 @@ var SelectedDevices = React.createClass({displayName: "SelectedDevices",
             React.createElement("li", null, "Architecture: ", this.props.selected[0].arch), 
             React.createElement("li", null, "Groups: ", this._getGroupNames(this.props.selected[0].groups).join(', '))
           ), 
-          React.createElement(ScheduleForm, {groups: this.props.groups, device: this.props.selected[0], label: "Schedule update for this device", className: "float-right", primary: true})
+          React.createElement(ScheduleButton, {label: "Schedule update for this device", openDialog: this._openSchedule, className: "float-right", primary: false, secondary: true})
         )
       )
     }
@@ -49390,6 +49415,11 @@ var SelectedDevices = React.createClass({displayName: "SelectedDevices",
         return {payload: group.id, text: group.name}
       }
     });
+
+     var scheduleActions =  [
+      { text: 'Cancel'},
+      { text: 'Schedule update', onClick: this._onScheduleSubmit, ref: 'save' }
+    ];
 
     return (
       React.createElement("div", {className: "tableActions"}, 
@@ -49450,7 +49480,18 @@ var SelectedDevices = React.createClass({displayName: "SelectedDevices",
           autoHideDuration: 5000, 
           action: "undo", 
           message: "Devices were removed from the group", 
-          onActionTouchTap: this._undoRemove})
+          onActionTouchTap: this._undoRemove}), 
+
+        React.createElement(Dialog, {
+          ref: "schedule", 
+          title: "Schedule an update", 
+          actions: scheduleActions, 
+          autoDetectWindowHeight: true, autoScrollBodyContent: true
+          }, 
+          React.createElement(ScheduleForm, {device: this.props.selected[0], updateSchedule: this._updateParams, groups: this.props.groups})
+
+        )
+
       )
     );
   }
@@ -49458,7 +49499,7 @@ var SelectedDevices = React.createClass({displayName: "SelectedDevices",
 
 module.exports = SelectedDevices;
 
-},{"../../actions/app-actions":367,"../../stores/app-store":394,"../updates/scheduleform":388,"material-ui":43,"react":366}],378:[function(require,module,exports){
+},{"../../actions/app-actions":367,"../../stores/app-store":394,"../updates/schedulebutton":387,"../updates/scheduleform":388,"material-ui":43,"react":366}],378:[function(require,module,exports){
 var React = require('react');
 var mui = require('material-ui');
 var Router = require('react-router');
@@ -50226,7 +50267,7 @@ var ScheduleButton = React.createClass({displayName: "ScheduleButton",
   },
   render: function() {
     return (
-      React.createElement(RaisedButton, {primary: this.props.primary, secondary: this.props.secondary, label: "Schedule an update", onClick: this._handleClick})
+      React.createElement(RaisedButton, {primary: this.props.primary, secondary: this.props.secondary, label:  this.props.label || "Schedule an update", onClick: this._handleClick})
     );
   }
 });
@@ -50305,6 +50346,7 @@ var ScheduleForm = React.createClass({displayName: "ScheduleForm",
         type: 'private',
         devices: [this.props.device]
       }
+      this._sendUpToParent(group, 'group');
     }
     return {
       minDate: getDate(),
@@ -50479,7 +50521,7 @@ var ScheduleForm = React.createClass({displayName: "ScheduleForm",
                 underlineDisabledStyle: {borderBottom:"none"}})
             ), 
 
-            React.createElement("p", {className: this.state.devices ? null : 'hidden'}, this.state.devices, " devices will be updated ", React.createElement(Link, {to: "devices", params: {groupId: this.state.groupVal.payload, filters:filters}, className: "margin-left"}, "View devices")), 
+            React.createElement("p", {className: this.state.devices ? null : 'hidden'}, this.state.devices, " devices will be updated ", React.createElement(Link, {to: "devices", params: {groupId: this.state.groupVal.payload, filters:filters}, className: this.state.disabled ? "hidden" : "margin-left"}, "View devices")), 
 
             React.createElement("p", {className: this.state.group ? 'warning' : 'hidden'}, "Any devices that are already on the target software version will be skipped.")
           )

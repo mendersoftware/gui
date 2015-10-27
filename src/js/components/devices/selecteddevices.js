@@ -2,6 +2,7 @@ var React = require('react');
 var AppStore = require('../../stores/app-store');
 var AppActions = require('../../actions/app-actions');
 var ScheduleForm = require('../updates/scheduleform');
+var ScheduleButton = require('../updates/schedulebutton');
 
 var mui = require('material-ui');
 var FlatButton = mui.FlatButton;
@@ -52,6 +53,9 @@ var SelectedDevices = React.createClass({
   },
   dialogOpen: function(ref) {
     this.refs[ref].show();
+  },
+  _openSchedule: function(ref) {
+    this.dialogOpen(ref);
   },
   _showButton: function() {
     this.setState({showInput: true});
@@ -119,6 +123,25 @@ var SelectedDevices = React.createClass({
     return nameList;
   },
 
+  _updateParams: function(val, attr) {
+    // updating params from child schedule form
+    var tmp = {};
+    tmp[attr] = val;
+    this.setState(tmp);
+  },
+
+  _onScheduleSubmit: function() {
+    var newUpdate = {
+      group: this.state.group,
+      model: this.state.model,
+      start_time: this.state.start_time,
+      end_time: this.state.end_time,
+      image: this.state.image
+    }
+    AppActions.saveSchedule(newUpdate, this.props.selected.length === 1);
+    this.dialogDismiss('schedule');
+  },
+
   render: function() {
     var hideInfo = {display: "none"};
     var deviceInfo ='';
@@ -141,7 +164,7 @@ var SelectedDevices = React.createClass({
             <li>Architecture: {this.props.selected[0].arch}</li>
             <li>Groups: {this._getGroupNames(this.props.selected[0].groups).join(', ')}</li>
           </ul>
-          <ScheduleForm groups={this.props.groups} device={this.props.selected[0]} label="Schedule update for this device" className="float-right" primary={true} />
+          <ScheduleButton label="Schedule update for this device" openDialog={this._openSchedule} className="float-right" primary={false} secondary={true} />
         </div>
       )
     }
@@ -163,6 +186,11 @@ var SelectedDevices = React.createClass({
         return {payload: group.id, text: group.name}
       }
     });
+
+     var scheduleActions =  [
+      { text: 'Cancel'},
+      { text: 'Schedule update', onClick: this._onScheduleSubmit, ref: 'save' }
+    ];
 
     return (
       <div className="tableActions">
@@ -224,6 +252,17 @@ var SelectedDevices = React.createClass({
           action="undo"
           message="Devices were removed from the group"
           onActionTouchTap={this._undoRemove} />
+
+        <Dialog
+          ref="schedule"
+          title='Schedule an update'
+          actions={scheduleActions}
+          autoDetectWindowHeight={true} autoScrollBodyContent={true}
+          >
+          <ScheduleForm device={this.props.selected[0]} updateSchedule={this._updateParams} groups={this.props.groups} />
+
+        </Dialog>
+
       </div>
     );
   }
