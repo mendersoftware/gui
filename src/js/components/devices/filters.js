@@ -66,7 +66,9 @@ var Filters = React.createClass({
       attributes.push(tmp);
     }
     var menuItems = [{text:'Disabled', disabled:true}];
+    var filterCount = 0;
     var filters = this.props.filters.map(function(item, index) {
+      item.value ? filterCount++ : filterCount;
       return (
         <div className="filterPair" key={index}>
           <IconButton
@@ -116,7 +118,7 @@ var Filters = React.createClass({
           style={{padding: "10px 20px", top:"58", overflowY:"auto"}} />
 
         <div style={{width:"100%", position:"relative"}}>
-          <FlatButton style={{position:"absolute",right:"30", top:"-40"}} secondary={true} onClick={this._toggleNav} label="Filter devices">
+          <FlatButton style={{position:"absolute",right:"30", top:"-40"}} secondary={true} onClick={this._toggleNav} label={filterCount>0 ? "Filters ("+filterCount+")" : "Filters"}>
               <FontIcon style={styles.exampleFlatButtonIcon} className="material-icons">filter_list</FontIcon>
           </FlatButton>
         </div>

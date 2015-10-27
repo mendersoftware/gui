@@ -8,6 +8,7 @@ var TableHeaderColumn = mui.TableHeaderColumn;
 var TableBody = mui.TableBody;
 var TableRow = mui.TableRow;
 var TableRowColumn = mui.TableRowColumn;
+var Paper = mui.Paper;
 
 
 var Progress = React.createClass({
@@ -23,7 +24,7 @@ var Progress = React.createClass({
       )
     });
     return (
-      <div className="widget">
+      <Paper zDepth={1} className="widget clickable">
         <h3>Updates in progress</h3>
         <Table
           selectable={false}>
@@ -47,7 +48,7 @@ var Progress = React.createClass({
         <div className={progress.length ? 'hidden' : null}>
           <p className="italic">No updates in progress</p>
         </div>
-      </div>
+      </Paper>
     );
   }
 });

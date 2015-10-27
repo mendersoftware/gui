@@ -33,6 +33,15 @@ body {
 .float-right {
   float: right;
 }
+.clickable {
+  cursor: pointer;
+}
+.clickable:hover {
+  -webkit-transform: scale(1.02);
+  -moz-transform: scale(1.02);
+  -ms-transform: scale(1.02);
+  -o-transform: scale(1.02);
+}
 /* Header */
 #header-nav {
   padding-left: 220px;
@@ -75,9 +84,10 @@ body {
 }
 .widget {
   width: 50%;
-  min-height: 150px;
+  min-height: 200px;
   float: left;
-  margin: 30px 6% 30px 0;
+  padding: 22px 4% 22px;
+  margin: 0 15px 30px;
 }
 .widget.small {
   width: 20%;
@@ -109,3 +119,4 @@ button .material-icons {
 button:disabled .material-icons {
   color: rgba(0, 0, 0, 0.3) !important;
 }
+/* LESS MIXINS */

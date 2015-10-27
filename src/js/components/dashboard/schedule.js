@@ -9,6 +9,7 @@ var TableHeaderColumn = mui.TableHeaderColumn;
 var TableBody = mui.TableBody;
 var TableRow = mui.TableRow;
 var TableRowColumn = mui.TableRowColumn;
+var Paper = mui.Paper;
 
 
 var Schedule = React.createClass({
@@ -24,7 +25,7 @@ var Schedule = React.createClass({
       )
     });
     return (
-      <div className="widget">
+      <Paper zDepth={1} className="widget clickable">
         <h3>Scheduled updates</h3>
         <Table
           selectable={false}>
@@ -48,7 +49,7 @@ var Schedule = React.createClass({
         <div className={schedule.length ? 'hidden' : null}>
           <p className="italic">No updates scheduled</p>
         </div>
-      </div>
+      </Paper>
     );
   }
 });

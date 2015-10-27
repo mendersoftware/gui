@@ -50,6 +50,12 @@ body {
   float: right;
 }
 
+.clickable {
+  cursor: pointer;
+  &:hover {
+    .scale(1.02);
+  }
+}
 
 
 /* Header */
@@ -110,9 +116,10 @@ body {
 
 .widget {
   width: 50%;
-  min-height: 150px;
+  min-height: 200px;
   float: left;
-  margin: 30px 6% 30px 0;
+  padding: 22px 4% 22px;
+  margin: 0 15px 30px; 
 
   &.small {
     width: 20%;
@@ -154,4 +161,13 @@ button .material-icons {
 
 button:disabled .material-icons {
   color: rgba(0,0,0,0.3) !important;
+}
+
+
+/* LESS MIXINS */
+.scale (@factor) {
+  -webkit-transform: scale(@factor);
+  -moz-transform:    scale(@factor);
+  -ms-transform:     scale(@factor);
+  -o-transform:      scale(@factor);
 }

@@ -48756,6 +48756,7 @@ var AppStore = require('../../stores/app-store');
 var Health = require('./health');
 var Schedule = require('./schedule');
 var Progress = require('./progress');
+var Router = require('react-router');
 
 function getState() {
   return {
@@ -48769,29 +48770,40 @@ var Dashboard = React.createClass({displayName: "Dashboard",
   getInitialState: function() {
     return getState();
   },
+  _handleWidgetClick: function(route) {
+    this.context.router.transitionTo(route);
+  },
   render: function() {
     return (
       React.createElement("div", null, 
         React.createElement(Progress, {progress: this.state.progress}), 
-        React.createElement(Health, {health: this.state.health}), 
+        React.createElement(Health, {clickHandle: this._handleWidgetClick, health: this.state.health, route: "/devices/1/status%3DDown"}), 
         React.createElement(Schedule, {schedule: this.state.schedule})
       )
     );
   }
 });
 
+Dashboard.contextTypes = {
+  router: React.PropTypes.func
+};
+
 module.exports = Dashboard;
 
-},{"../../stores/app-store":394,"./health":370,"./progress":371,"./schedule":372,"react":366}],370:[function(require,module,exports){
+},{"../../stores/app-store":394,"./health":370,"./progress":371,"./schedule":372,"react":366,"react-router":174}],370:[function(require,module,exports){
 var React = require('react');
 
 // material ui
 var mui = require('material-ui');
+var Paper = mui.Paper;
 
 var Health = React.createClass({displayName: "Health",
+  _clickHandle: function() {
+    this.props.clickHandle(this.props.route);
+  },
   render: function() {
     return (
-      React.createElement("div", {className: "widget small"}, 
+      React.createElement(Paper, {zDepth: 1, className: "widget small clickable", onClick: this._clickHandle}, 
         React.createElement("h3", null, "Device health"), 
         React.createElement("p", null, "Down: ", this.props.health.down), 
         React.createElement("hr", null), 
@@ -48814,6 +48826,7 @@ var TableHeaderColumn = mui.TableHeaderColumn;
 var TableBody = mui.TableBody;
 var TableRow = mui.TableRow;
 var TableRowColumn = mui.TableRowColumn;
+var Paper = mui.Paper;
 
 
 var Progress = React.createClass({displayName: "Progress",
@@ -48829,7 +48842,7 @@ var Progress = React.createClass({displayName: "Progress",
       )
     });
     return (
-      React.createElement("div", {className: "widget"}, 
+      React.createElement(Paper, {zDepth: 1, className: "widget clickable"}, 
         React.createElement("h3", null, "Updates in progress"), 
         React.createElement(Table, {
           selectable: false}, 
@@ -48872,6 +48885,7 @@ var TableHeaderColumn = mui.TableHeaderColumn;
 var TableBody = mui.TableBody;
 var TableRow = mui.TableRow;
 var TableRowColumn = mui.TableRowColumn;
+var Paper = mui.Paper;
 
 
 var Schedule = React.createClass({displayName: "Schedule",
@@ -48887,7 +48901,7 @@ var Schedule = React.createClass({displayName: "Schedule",
       )
     });
     return (
-      React.createElement("div", {className: "widget"}, 
+      React.createElement(Paper, {zDepth: 1, className: "widget clickable"}, 
         React.createElement("h3", null, "Scheduled updates"), 
         React.createElement(Table, {
           selectable: false}, 
@@ -49127,7 +49141,9 @@ var Filters = React.createClass({displayName: "Filters",
       attributes.push(tmp);
     }
     var menuItems = [{text:'Disabled', disabled:true}];
+    var filterCount = 0;
     var filters = this.props.filters.map(function(item, index) {
+      item.value ? filterCount++ : filterCount;
       return (
         React.createElement("div", {className: "filterPair", key: index}, 
           React.createElement(IconButton, {
@@ -49177,7 +49193,7 @@ var Filters = React.createClass({displayName: "Filters",
           style: {padding: "10px 20px", top:"58", overflowY:"auto"}}), 
 
         React.createElement("div", {style: {width:"100%", position:"relative"}}, 
-          React.createElement(FlatButton, {style: {position:"absolute",right:"30", top:"-40"}, secondary: true, onClick: this._toggleNav, label: "Filter devices"}, 
+          React.createElement(FlatButton, {style: {position:"absolute",right:"30", top:"-40"}, secondary: true, onClick: this._toggleNav, label: filterCount>0 ? "Filters ("+filterCount+")" : "Filters"}, 
               React.createElement(FontIcon, {style: styles.exampleFlatButtonIcon, className: "material-icons"}, "filter_list")
           )
         )
