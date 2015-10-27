@@ -87,7 +87,7 @@ var Report = React.createClass({
           <Checkbox
             label="Show only failures"
             defaultChecked={this.props.update.status!=='Complete'}
-            value={this.state.failsOnly}
+            value={this.state.failsOnly.toString()}
             onCheck={this._handleCheckbox} />
         </div>
 

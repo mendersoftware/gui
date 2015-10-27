@@ -50163,7 +50163,7 @@ var Report = React.createClass({displayName: "Report",
           React.createElement(Checkbox, {
             label: "Show only failures", 
             defaultChecked: this.props.update.status!=='Complete', 
-            value: this.state.failsOnly, 
+            value: this.state.failsOnly.toString(), 
             onCheck: this._handleCheckbox})
         ), 
 
