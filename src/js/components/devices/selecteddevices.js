@@ -11,6 +11,10 @@ var Dialog = mui.Dialog;
 var SelectField = mui.SelectField;
 var TextField = mui.TextField;
 var Snackbar = mui.Snackbar;
+var List = mui.List;
+var ListItem = mui.ListItem;
+var ListDivider = mui.ListDivider;
+var FontIcon = mui.FontIcon;
 
 var addSelection = {};
 
@@ -145,26 +149,61 @@ var SelectedDevices = React.createClass({
   render: function() {
     var hideInfo = {display: "none"};
     var deviceInfo ='';
-    var hideRemove = this.props.selectedGroup.id === 1 ? {visibility: "hidden"} : {visibility: "visible"};
     var disableAction = this.props.selected.length ? false : true;
     var inputStyle = {
       display: "inline-block",
       marginRight: "30px"
+    }
+    var styles = {
+      buttonIcon: {
+        height: '100%',
+        display: 'inline-block',
+        verticalAlign: 'middle',
+        float: 'left',
+        paddingLeft: '12px',
+        lineHeight: '36px',
+        marginRight: "-6",
+        color: "rgb(0, 188, 212)"
+      },
+      raisedButtonIcon: {
+        height: '100%',
+        display: 'inline-block',
+        verticalAlign: 'middle',
+        float: 'left',
+        paddingLeft: '12px',
+        lineHeight: '36px',
+        marginRight: "-6",
+        color: "#fff"
+      },
     }
 
     if (this.props.selected.length === 1) {
       hideInfo = {display: "block"};
       deviceInfo = (
         <div>
-          <ul>
-            <li>Name: {this.props.selected[0].name}</li>
-            <li>Status: {this.props.selected[0].status}</li>
-            <li>Device type: {this.props.selected[0].model}</li>
-            <li>Software: {this.props.selected[0].software_version}</li>
-            <li>Architecture: {this.props.selected[0].arch}</li>
-            <li>Groups: {this._getGroupNames(this.props.selected[0].groups).join(', ')}</li>
-          </ul>
-          <ScheduleButton label="Schedule update for this device" openDialog={this._openSchedule} className="float-right" primary={false} secondary={true} />
+          <div className="report-list">
+            <List>
+              <ListItem disabled={true} primaryText="Name" secondaryText={this.props.selected[0].name} />
+              <ListDivider />
+              <ListItem disabled={true} primaryText="Status" secondaryText={this.props.selected[0].status} />
+              <ListDivider />
+              <ListItem disabled={true} primaryText="Device type" secondaryText={this.props.selected[0].model} />
+              <ListDivider />
+            </List>
+          </div>
+          <div className="report-list">
+            <List>
+              <ListItem disabled={true} primaryText="Software" secondaryText={this.props.selected[0].software_version} />
+              <ListDivider />
+              <ListItem disabled={true} primaryText="Architecture" secondaryText={this.props.selected[0].arch} />
+              <ListDivider />
+              <ListItem disabled={true} primaryText="Groups" secondaryText={this._getGroupNames(this.props.selected[0].groups).join(', ')} />
+              <ListDivider />
+            </List>
+          </div>
+          <div>
+            <ScheduleButton label="Schedule update for this device" openDialog={this._openSchedule} className="float-right" primary={false} secondary={true} />
+          </div>
         </div>
       )
     }
@@ -194,11 +233,15 @@ var SelectedDevices = React.createClass({
 
     return (
       <div className="tableActions">
-        <div>
-          <span style={{marginRight:"30px"}}>{devices.length} devices selected</span>
-          <FlatButton disabled={disableAction} label="Add selected devices to a group" secondary={true} onClick={this.dialogOpen.bind(null, 'addGroup')} />
-          <FlatButton disabled={disableAction} style={hideRemove} label="Remove selected devices from this group" secondary={true} onClick={this._removeGroupHandler} />
+        <div className='float-right'>
+          <RaisedButton disabled={disableAction} label="Add selected devices to a group" secondary={true} onClick={this.dialogOpen.bind(null, 'addGroup')}>
+            <FontIcon style={styles.raisedButtonIcon} className="material-icons">add_circle</FontIcon>
+          </RaisedButton>
+          <FlatButton disabled={disableAction} style={{marginLeft: "4"}} className={this.props.selectedGroup.id === 1 ? 'hidden' : null} label="Remove selected devices from this group" secondary={true} onClick={this._removeGroupHandler}>
+            <FontIcon style={styles.buttonIcon} className="material-icons">remove_circle_outline</FontIcon>
+          </FlatButton>
         </div>
+        <p>{devices.length} devices selected</p>
         <div className="deviceInfo" style={hideInfo}>
           {deviceInfo}
         </div>

@@ -49138,8 +49138,15 @@ var Filters = React.createClass({displayName: "Filters",
         float: 'left',
         paddingLeft: '12px',
         lineHeight: '36px',
-        marginRight: "-6"
+        marginRight: "-6",
+        color:"rgb(0, 188, 212)"
       },
+      removeButton: {
+        position: "absolute",
+        right: "-22",
+        top: "-22",
+        color: "rgb(0, 188, 212)"
+      }
     }
     var attributes = [];
     for (key in this.props.attributes) {
@@ -49154,10 +49161,10 @@ var Filters = React.createClass({displayName: "Filters",
         React.createElement("div", {className: "filterPair", key: index}, 
           React.createElement(IconButton, {
             iconClassName: "material-icons", 
-            className: "remove-filter", 
-            style: {position:"absolute"}, 
+            style: styles.removeButton, 
             onClick: this._removeFilter.bind(null, index), 
-            disabled: !this.props.filters[0].key}, 
+            disabled: !this.props.filters[0].key, 
+            className: "remove-icon"}, 
             "remove_circle"
           ), 
           React.createElement(SelectField, {
@@ -49219,6 +49226,7 @@ var AppActions = require('../../actions/app-actions');
 var mui = require('material-ui');
 var List = mui.List;
 var ListItem = mui.ListItem;
+var ListDivider = mui.ListDivider;
 
 var Groups = React.createClass({displayName: "Groups",
   _changeGroup: function(id) {
@@ -49262,6 +49270,10 @@ var Dialog = mui.Dialog;
 var SelectField = mui.SelectField;
 var TextField = mui.TextField;
 var Snackbar = mui.Snackbar;
+var List = mui.List;
+var ListItem = mui.ListItem;
+var ListDivider = mui.ListDivider;
+var FontIcon = mui.FontIcon;
 
 var addSelection = {};
 
@@ -49396,26 +49408,61 @@ var SelectedDevices = React.createClass({displayName: "SelectedDevices",
   render: function() {
     var hideInfo = {display: "none"};
     var deviceInfo ='';
-    var hideRemove = this.props.selectedGroup.id === 1 ? {visibility: "hidden"} : {visibility: "visible"};
     var disableAction = this.props.selected.length ? false : true;
     var inputStyle = {
       display: "inline-block",
       marginRight: "30px"
+    }
+    var styles = {
+      buttonIcon: {
+        height: '100%',
+        display: 'inline-block',
+        verticalAlign: 'middle',
+        float: 'left',
+        paddingLeft: '12px',
+        lineHeight: '36px',
+        marginRight: "-6",
+        color: "rgb(0, 188, 212)"
+      },
+      raisedButtonIcon: {
+        height: '100%',
+        display: 'inline-block',
+        verticalAlign: 'middle',
+        float: 'left',
+        paddingLeft: '12px',
+        lineHeight: '36px',
+        marginRight: "-6",
+        color: "#fff"
+      },
     }
 
     if (this.props.selected.length === 1) {
       hideInfo = {display: "block"};
       deviceInfo = (
         React.createElement("div", null, 
-          React.createElement("ul", null, 
-            React.createElement("li", null, "Name: ", this.props.selected[0].name), 
-            React.createElement("li", null, "Status: ", this.props.selected[0].status), 
-            React.createElement("li", null, "Device type: ", this.props.selected[0].model), 
-            React.createElement("li", null, "Software: ", this.props.selected[0].software_version), 
-            React.createElement("li", null, "Architecture: ", this.props.selected[0].arch), 
-            React.createElement("li", null, "Groups: ", this._getGroupNames(this.props.selected[0].groups).join(', '))
+          React.createElement("div", {className: "report-list"}, 
+            React.createElement(List, null, 
+              React.createElement(ListItem, {disabled: true, primaryText: "Name", secondaryText: this.props.selected[0].name}), 
+              React.createElement(ListDivider, null), 
+              React.createElement(ListItem, {disabled: true, primaryText: "Status", secondaryText: this.props.selected[0].status}), 
+              React.createElement(ListDivider, null), 
+              React.createElement(ListItem, {disabled: true, primaryText: "Device type", secondaryText: this.props.selected[0].model}), 
+              React.createElement(ListDivider, null)
+            )
           ), 
-          React.createElement(ScheduleButton, {label: "Schedule update for this device", openDialog: this._openSchedule, className: "float-right", primary: false, secondary: true})
+          React.createElement("div", {className: "report-list"}, 
+            React.createElement(List, null, 
+              React.createElement(ListItem, {disabled: true, primaryText: "Software", secondaryText: this.props.selected[0].software_version}), 
+              React.createElement(ListDivider, null), 
+              React.createElement(ListItem, {disabled: true, primaryText: "Architecture", secondaryText: this.props.selected[0].arch}), 
+              React.createElement(ListDivider, null), 
+              React.createElement(ListItem, {disabled: true, primaryText: "Groups", secondaryText: this._getGroupNames(this.props.selected[0].groups).join(', ')}), 
+              React.createElement(ListDivider, null)
+            )
+          ), 
+          React.createElement("div", null, 
+            React.createElement(ScheduleButton, {label: "Schedule update for this device", openDialog: this._openSchedule, className: "float-right", primary: false, secondary: true})
+          )
         )
       )
     }
@@ -49445,11 +49492,15 @@ var SelectedDevices = React.createClass({displayName: "SelectedDevices",
 
     return (
       React.createElement("div", {className: "tableActions"}, 
-        React.createElement("div", null, 
-          React.createElement("span", {style: {marginRight:"30px"}}, devices.length, " devices selected"), 
-          React.createElement(FlatButton, {disabled: disableAction, label: "Add selected devices to a group", secondary: true, onClick: this.dialogOpen.bind(null, 'addGroup')}), 
-          React.createElement(FlatButton, {disabled: disableAction, style: hideRemove, label: "Remove selected devices from this group", secondary: true, onClick: this._removeGroupHandler})
+        React.createElement("div", {className: "float-right"}, 
+          React.createElement(RaisedButton, {disabled: disableAction, label: "Add selected devices to a group", secondary: true, onClick: this.dialogOpen.bind(null, 'addGroup')}, 
+            React.createElement(FontIcon, {style: styles.raisedButtonIcon, className: "material-icons"}, "add_circle")
+          ), 
+          React.createElement(FlatButton, {disabled: disableAction, style: {marginLeft: "4"}, className: this.props.selectedGroup.id === 1 ? 'hidden' : null, label: "Remove selected devices from this group", secondary: true, onClick: this._removeGroupHandler}, 
+            React.createElement(FontIcon, {style: styles.buttonIcon, className: "material-icons"}, "remove_circle_outline")
+          )
         ), 
+        React.createElement("p", null, devices.length, " devices selected"), 
         React.createElement("div", {className: "deviceInfo", style: hideInfo}, 
           deviceInfo
         ), 

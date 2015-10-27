@@ -57,8 +57,15 @@ var Filters = React.createClass({
         float: 'left',
         paddingLeft: '12px',
         lineHeight: '36px',
-        marginRight: "-6"
+        marginRight: "-6",
+        color:"rgb(0, 188, 212)"
       },
+      removeButton: {
+        position: "absolute",
+        right: "-22",
+        top: "-22",
+        color: "rgb(0, 188, 212)"
+      }
     }
     var attributes = [];
     for (key in this.props.attributes) {
@@ -73,10 +80,10 @@ var Filters = React.createClass({
         <div className="filterPair" key={index}>
           <IconButton
             iconClassName="material-icons"
-            className="remove-filter"
-            style={{position:"absolute"}}
+            style={styles.removeButton}
             onClick={this._removeFilter.bind(null, index)}
-            disabled={!this.props.filters[0].key}>
+            disabled={!this.props.filters[0].key}
+            className="remove-icon">
             remove_circle
           </IconButton>
           <SelectField

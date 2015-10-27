@@ -105,7 +105,7 @@ body {
 
 
 .tableActions {
-  padding: 30px;
+  padding: 20px 30px;
 }
 
 .largeDialog {
@@ -139,12 +139,6 @@ body {
   }
 }
 
-.remove-filter {
-  position: absolute;
-  right: -22px;
-  top: -22px;
-}
-
 
 /* report view */
 
@@ -154,15 +148,17 @@ body {
   width: 280px;
 }
 
-
-button .material-icons {
-    color:rgb(0, 188, 212) !important;
-}
-
 button:disabled .material-icons {
   color: rgba(0,0,0,0.3) !important;
 }
 
+button.remove-icon:disabled .material-icons {
+  color: rgba(0,0,0,0.3) !important;
+}
+
+button.remove-icon .material-icons {
+  color: rgb(0, 188, 212) !important;
+}
 
 /* LESS MIXINS */
 .scale (@factor) {

@@ -6,6 +6,7 @@ var AppActions = require('../../actions/app-actions');
 var mui = require('material-ui');
 var List = mui.List;
 var ListItem = mui.ListItem;
+var ListDivider = mui.ListDivider;
 
 var Groups = React.createClass({
   _changeGroup: function(id) {

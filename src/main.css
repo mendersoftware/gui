@@ -76,7 +76,7 @@ body {
   padding: 40px 20px;
 }
 .tableActions {
-  padding: 30px;
+  padding: 20px 30px;
 }
 .largeDialog {
   width: 96% !important;
@@ -102,21 +102,19 @@ body {
 .filterPair:first-child {
   margin-top: 14px;
 }
-.remove-filter {
-  position: absolute;
-  right: -22px;
-  top: -22px;
-}
 /* report view */
 .report-list {
   display: inline-block;
   margin-right: 30px;
   width: 280px;
 }
-button .material-icons {
-  color: #00bcd4 !important;
-}
 button:disabled .material-icons {
   color: rgba(0, 0, 0, 0.3) !important;
+}
+button.remove-icon:disabled .material-icons {
+  color: rgba(0, 0, 0, 0.3) !important;
+}
+button.remove-icon .material-icons {
+  color: #00bcd4 !important;
 }
 /* LESS MIXINS */
