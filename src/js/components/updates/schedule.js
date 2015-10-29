@@ -13,6 +13,9 @@ var FlatButton = mui.FlatButton;
 
 
 var Schedule = React.createClass({
+  _handleEdit: function (update) {
+    this.props.edit(update);
+  },
   render: function() {
     var now = new Date().getTime();
 
@@ -28,11 +31,11 @@ var Schedule = React.createClass({
             <TableRowColumn><Time value={update.start_time} format="YYYY/MM/DD HH:mm" /></TableRowColumn>
             <TableRowColumn><Time value={update.end_time} format="YYYY/MM/DD HH:mm" /></TableRowColumn>
             <TableRowColumn>Begins <Time value={update.start_time} format="YYYY/MM/DD HH:mm" relative /></TableRowColumn>
-            <TableRowColumn><div><FlatButton style={{padding:"0", marginRight:"4", minWidth:"55"}} label="Edit" /><FlatButton style={{padding:"0", marginLeft:"4", minWidth:"55"}} label="Remove" /></div></TableRowColumn>
+            <TableRowColumn><div><FlatButton style={{padding:"0", marginRight:"4", minWidth:"55"}} label="Edit" onClick={this._handleEdit.bind(null, update)} /><FlatButton style={{padding:"0", marginLeft:"4", minWidth:"55"}} label="Remove" /></div></TableRowColumn>
           </TableRow>
         )
       }
-    });
+    }, this);
     return (
       <div>
         <div style={{marginTop:"30px"}}> 

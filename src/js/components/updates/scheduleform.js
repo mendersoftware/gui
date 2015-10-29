@@ -2,6 +2,7 @@ var React = require('react');
 var AppStore = require('../../stores/app-store');
 var Router = require('react-router');
 var Link = Router.Link;
+var DateTime = require('./datetime.js');
 
 var mui = require('material-ui');
 
@@ -25,8 +26,10 @@ function addDate(date,days) {
 }
 
 function combineDateTime(date, time) {
+
   var diffMs = (date - time); // milliseconds 
   var diffDays = Math.round(diffMs / 86400000); // days
+
   return addDate(time, diffDays);
 }
 
@@ -56,6 +59,7 @@ var ScheduleForm = React.createClass({
       groupVal.payload = this.props.groupVal.id;
       groupVal.text = this.props.groupVal.name;
     }
+    this._sendUpToParent(this.props.id, 'id');
 
     /* if single device */
     var disabled = false;
@@ -71,7 +75,18 @@ var ScheduleForm = React.createClass({
       }
       this._sendUpToParent(group, 'group');
     }
+
+    // date times
+    var start_date = this.props.start ? new Date(this.props.start) : getDate();
+    var start_time = start_date;
+    var end_date = this.props.end ? new Date(this.props.end) : addDate(getDate(),1);
+    var end_time = end_date;
+
     return {
+      start_time: start_time,
+      start_date: start_date,
+      end_time: end_time,
+      end_date: end_date,
       minDate: getDate(),
       minDate1: addDate(getDate(),1),
       imageVal: imageVal,
@@ -118,19 +133,29 @@ var ScheduleForm = React.createClass({
     // send params to parent with dialog holder
     this.props.updateSchedule(val, attr);
   },
-
   _updateTimes: function() {
     var newUpdate = {};
-    var start_time = this.refs['time'].getTime().getTime();
-    var start_date = this.refs['date'].getDate().getTime();
-    newUpdate.start_time = combineDateTime(start_date, start_time);
 
-    var end_time = this.refs['endtime'].getTime().getTime();
-    var end_date = this.refs['enddate'].getDate().getTime();
-    newUpdate.end_time = combineDateTime(end_date, end_time);
+    var start_time = this.state.start_time.getTime();
+    var start_date = this.state.start_date.getTime();
+   
+    newUpdate.start_time = combineDateTime(start_date, start_time).getTime();
+
+    var end_time = this.state.end_time.getTime();
+    var end_date = this.state.end_date.getTime();
+
+    newUpdate.end_time = combineDateTime(end_date, end_time).getTime();
 
     this._sendUpToParent(newUpdate.start_time, "start_time");
     this._sendUpToParent(newUpdate.end_time, "end_time");
+  },
+
+  _updatedDateTime: function(ref, date) {
+    var set = {};
+    set[ref] = date;
+    this.setState(set, function() {
+      this._updateTimes();
+    });
   },
 
   render: function() {
@@ -154,56 +179,52 @@ var ScheduleForm = React.createClass({
     var filters = "model="+model;
     if (this.props.device) {filters = "name="+this.props.device.name}
     filters = encodeURIComponent(filters);
+
+
+    var defaultStartDate =  this.state.start_time;
+    var defaultEndDate = this.state.end_time;
     return (
       <div style={{height: '400px'}}>
         <form>
           <div>
             <h5 style={{margin:"0"}}>Start update</h5>
             <div style={{display:"inline-block"}}>
-              <DatePicker
-                floatingLabelText="Start date"
-                autoOk={true}
-                ref="date"
-                defaultDate={this.state.minDate}
-                minDate={this.state.minDate}
-                disabled={this.state.immediate}
-                mode="landscape"
-                onChange={this._updateTimes} />
+               <DateTime 
+                my_ref="start_date"
+                date={true}
+                changed={this._updatedDateTime}
+                label="Start date"
+                defaultDate={defaultStartDate}
+                minDate={this.state.minDate} />
             </div>
             <div style={{display:"inline-block", marginLeft:"30px"}}>
-              <TimePicker
-                format="24hr"
-                ref="time"
-                defaultTime={this.state.minDate}
-                disabled={this.state.immediate}
-                floatingLabelText="Start time"
-                onChange={this._updateTimes} />
+               <DateTime 
+                my_ref="start_time"
+                time={true}
+                changed={this._updatedDateTime}
+                label="Start time"
+                defaultDate={defaultStartDate}/>
             </div>
           </div>
 
           <div style={{marginTop:"20"}}>
             <h5 style={{margin:"0"}}>End update</h5>
             <div style={{display:"inline-block"}}>
-          
-              <DatePicker
-                floatingLabelText="End date"
-                autoOk={true}
-                ref="enddate"
-                defaultDate={this.state.minDate1}
-                minDate={this.state.minDate1}
-                disabled={this.state.immediate}
-                mode="landscape"
-                onChange={this._updateTimes} />
+              <DateTime 
+                my_ref="end_date"
+                date={true}
+                changed={this._updatedDateTime}
+                label="End date"
+                defaultDate={defaultEndDate}
+                minDate={this.state.start_date} />
             </div>
             <div style={{display:"inline-block", marginLeft:"30px"}}>
-
-              <TimePicker
-                format="24hr"
-                ref="endtime"
-                defaultTime={this.state.minDate1}
-                disabled={this.state.immediate}
-                floatingLabelText="End time"
-                onChange={this._updateTimes} />
+               <DateTime 
+                my_ref="end_time"
+                time={true}
+                changed={this._updatedDateTime}
+                label="End time"
+                defaultDate={defaultEndDate}/>
             </div>
           </div>
 

@@ -48715,7 +48715,7 @@ var AppActions = {
 
 module.exports = AppActions;
 
-},{"../constants/app-constants":391,"../dispatchers/app-dispatcher":392}],368:[function(require,module,exports){
+},{"../constants/app-constants":392,"../dispatchers/app-dispatcher":393}],368:[function(require,module,exports){
 var React = require('react');
 var Router = require('react-router');
 var RouteHandler = Router.RouteHandler;
@@ -48790,7 +48790,7 @@ Dashboard.contextTypes = {
 
 module.exports = Dashboard;
 
-},{"../../stores/app-store":394,"./health":370,"./progress":371,"./schedule":372,"react":366,"react-router":174}],370:[function(require,module,exports){
+},{"../../stores/app-store":395,"./health":370,"./progress":371,"./schedule":372,"react":366,"react-router":174}],370:[function(require,module,exports){
 var React = require('react');
 
 // material ui
@@ -49010,7 +49010,7 @@ var DeviceList = React.createClass({displayName: "DeviceList",
 
 module.exports = DeviceList;
 
-},{"../../actions/app-actions":367,"../../stores/app-store":394,"material-ui":43,"react":366}],374:[function(require,module,exports){
+},{"../../actions/app-actions":367,"../../stores/app-store":395,"material-ui":43,"react":366}],374:[function(require,module,exports){
 var React = require('react');
 var AppStore = require('../../stores/app-store');
 var AppActions = require('../../actions/app-actions');
@@ -49078,7 +49078,7 @@ var Devices = React.createClass({displayName: "Devices",
 
 module.exports = Devices;
 
-},{"../../actions/app-actions":367,"../../stores/app-store":394,"./devicelist":373,"./filters":375,"./groups":376,"./selecteddevices":377,"react":366}],375:[function(require,module,exports){
+},{"../../actions/app-actions":367,"../../stores/app-store":395,"./devicelist":373,"./filters":375,"./groups":376,"./selecteddevices":377,"react":366}],375:[function(require,module,exports){
 var React = require('react');
 
 // material ui
@@ -49256,7 +49256,7 @@ var Groups = React.createClass({displayName: "Groups",
 
 module.exports = Groups;
 
-},{"../../actions/app-actions":367,"../../stores/app-store":394,"material-ui":43,"react":366}],377:[function(require,module,exports){
+},{"../../actions/app-actions":367,"../../stores/app-store":395,"material-ui":43,"react":366}],377:[function(require,module,exports){
 var React = require('react');
 var AppStore = require('../../stores/app-store');
 var AppActions = require('../../actions/app-actions');
@@ -49572,7 +49572,7 @@ var SelectedDevices = React.createClass({displayName: "SelectedDevices",
 
 module.exports = SelectedDevices;
 
-},{"../../actions/app-actions":367,"../../stores/app-store":394,"../updates/schedulebutton":387,"../updates/scheduleform":388,"material-ui":43,"react":366}],378:[function(require,module,exports){
+},{"../../actions/app-actions":367,"../../stores/app-store":395,"../updates/schedulebutton":388,"../updates/scheduleform":389,"material-ui":43,"react":366}],378:[function(require,module,exports){
 var React = require('react');
 var mui = require('material-ui');
 var Router = require('react-router');
@@ -49879,7 +49879,7 @@ var Repository = React.createClass({displayName: "Repository",
 
 module.exports = Repository;
 
-},{"../../actions/app-actions":367,"../../stores/app-store":394,"../updates/schedulebutton":387,"../updates/scheduleform":388,"./updatebutton.js":382,"material-ui":43,"react":366,"react-router":174}],381:[function(require,module,exports){
+},{"../../actions/app-actions":367,"../../stores/app-store":395,"../updates/schedulebutton":388,"../updates/scheduleform":389,"./updatebutton.js":382,"material-ui":43,"react":366,"react-router":174}],381:[function(require,module,exports){
 var React = require('react');
 var AppStore = require('../../stores/app-store');
 
@@ -49945,7 +49945,7 @@ var Software = React.createClass({displayName: "Software",
 
 module.exports = Software;
 
-},{"../../stores/app-store":394,"./installed.js":379,"./repository.js":380,"material-ui":43,"react":366}],382:[function(require,module,exports){
+},{"../../stores/app-store":395,"./installed.js":379,"./repository.js":380,"material-ui":43,"react":366}],382:[function(require,module,exports){
 var React = require('react');
 
 // material ui
@@ -49963,6 +49963,53 @@ var UpdateButton = React.createClass({displayName: "UpdateButton",
 module.exports = UpdateButton;
 
 },{"material-ui":43,"react":366}],383:[function(require,module,exports){
+var React = require('react');
+
+// material ui
+var mui = require('material-ui');
+var DatePicker = mui.DatePicker;
+var TimePicker = mui.TimePicker;
+
+var DateTime = React.createClass({displayName: "DateTime",
+  _update: function(e, date) {
+    this.props.changed(this.props.my_ref, date);
+  },
+  render: function() {
+    var element = (
+      React.createElement("div", null)
+    );
+    if (this.props.date) {
+      element = (
+        React.createElement(DatePicker, {
+          floatingLabelText: this.props.label, 
+          autoOk: true, 
+          ref: this.props.ref, 
+          defaultDate: this.props.defaultDate, 
+          minDate: this.props.minDate, 
+          mode: "landscape", 
+          onChange: this._update})
+      )
+    } else if (this.props.time) {
+      element = (
+        React.createElement(TimePicker, {
+        format: "24hr", 
+        ref: this.props.ref, 
+        defaultTime: this.props.defaultDate, 
+        floatingLabelText: this.props.label, 
+        onChange: this._update})
+      )
+    }
+    return (
+      React.createElement("div", null, 
+        element
+      )
+    );
+  }
+});
+
+module.exports = DateTime;
+
+},{"material-ui":43,"react":366}],384:[function(require,module,exports){
 var React = require('react');
 
 // material ui
@@ -49985,7 +50032,7 @@ var EventLog = React.createClass({displayName: "EventLog",
 
 module.exports = EventLog;
 
-},{"material-ui":43,"react":366}],384:[function(require,module,exports){
+},{"material-ui":43,"react":366}],385:[function(require,module,exports){
 var React = require('react');
 var Time = require('react-time');
 var Report = require('./report.js');
@@ -50124,7 +50171,7 @@ var Recent = React.createClass({displayName: "Recent",
 
 module.exports = Recent;
 
-},{"./report.js":385,"./scheduleform":388,"material-ui":43,"react":366,"react-time":193}],385:[function(require,module,exports){
+},{"./report.js":386,"./scheduleform":389,"material-ui":43,"react":366,"react-time":193}],386:[function(require,module,exports){
 var React = require('react');
 var Time = require('react-time');
 var AppStore = require('../../stores/app-store');
@@ -50247,7 +50294,7 @@ var Report = React.createClass({displayName: "Report",
 
 module.exports = Report;
 
-},{"../../stores/app-store":394,"material-ui":43,"react":366,"react-time":193}],386:[function(require,module,exports){
+},{"../../stores/app-store":395,"material-ui":43,"react":366,"react-time":193}],387:[function(require,module,exports){
 var React = require('react');
 var Time = require('react-time');
 
@@ -50263,6 +50310,9 @@ var FlatButton = mui.FlatButton;
 
 
 var Schedule = React.createClass({displayName: "Schedule",
+  _handleEdit: function (update) {
+    this.props.edit(update);
+  },
   render: function() {
     var now = new Date().getTime();
 
@@ -50278,11 +50328,11 @@ var Schedule = React.createClass({displayName: "Schedule",
             React.createElement(TableRowColumn, null, React.createElement(Time, {value: update.start_time, format: "YYYY/MM/DD HH:mm"})), 
             React.createElement(TableRowColumn, null, React.createElement(Time, {value: update.end_time, format: "YYYY/MM/DD HH:mm"})), 
             React.createElement(TableRowColumn, null, "Begins ", React.createElement(Time, {value: update.start_time, format: "YYYY/MM/DD HH:mm", relative: true})), 
-            React.createElement(TableRowColumn, null, React.createElement("div", null, React.createElement(FlatButton, {style: {padding:"0", marginRight:"4", minWidth:"55"}, label: "Edit"}), React.createElement(FlatButton, {style: {padding:"0", marginLeft:"4", minWidth:"55"}, label: "Remove"})))
+            React.createElement(TableRowColumn, null, React.createElement("div", null, React.createElement(FlatButton, {style: {padding:"0", marginRight:"4", minWidth:"55"}, label: "Edit", onClick: this._handleEdit.bind(null, update)}), React.createElement(FlatButton, {style: {padding:"0", marginLeft:"4", minWidth:"55"}, label: "Remove"})))
           )
         )
       }
-    });
+    }, this);
     return (
       React.createElement("div", null, 
         React.createElement("div", {style: {marginTop:"30px"}}, 
@@ -50321,7 +50371,7 @@ var Schedule = React.createClass({displayName: "Schedule",
 
 module.exports = Schedule;
 
-},{"material-ui":43,"react":366,"react-time":193}],387:[function(require,module,exports){
+},{"material-ui":43,"react":366,"react-time":193}],388:[function(require,module,exports){
 var React = require('react');
 
 // material ui
@@ -50347,11 +50397,12 @@ var ScheduleButton = React.createClass({displayName: "ScheduleButton",
 
 module.exports = ScheduleButton;
 
-},{"material-ui":43,"react":366}],388:[function(require,module,exports){
+},{"material-ui":43,"react":366}],389:[function(require,module,exports){
 var React = require('react');
 var AppStore = require('../../stores/app-store');
 var Router = require('react-router');
 var Link = Router.Link;
+var DateTime = require('./datetime.js');
 
 var mui = require('material-ui');
 
@@ -50375,8 +50426,10 @@ function addDate(date,days) {
 }
 
 function combineDateTime(date, time) {
+
   var diffMs = (date - time); // milliseconds 
   var diffDays = Math.round(diffMs / 86400000); // days
+
   return addDate(time, diffDays);
 }
 
@@ -50406,6 +50459,7 @@ var ScheduleForm = React.createClass({displayName: "ScheduleForm",
       groupVal.payload = this.props.groupVal.id;
       groupVal.text = this.props.groupVal.name;
     }
+    this._sendUpToParent(this.props.id, 'id');
 
     /* if single device */
     var disabled = false;
@@ -50421,7 +50475,18 @@ var ScheduleForm = React.createClass({displayName: "ScheduleForm",
       }
       this._sendUpToParent(group, 'group');
     }
+
+    // date times
+    var start_date = this.props.start ? new Date(this.props.start) : getDate();
+    var start_time = start_date;
+    var end_date = this.props.end ? new Date(this.props.end) : addDate(getDate(),1);
+    var end_time = end_date;
+
     return {
+      start_time: start_time,
+      start_date: start_date,
+      end_time: end_time,
+      end_date: end_date,
       minDate: getDate(),
       minDate1: addDate(getDate(),1),
       imageVal: imageVal,
@@ -50468,19 +50533,29 @@ var ScheduleForm = React.createClass({displayName: "ScheduleForm",
     // send params to parent with dialog holder
     this.props.updateSchedule(val, attr);
   },
-
   _updateTimes: function() {
     var newUpdate = {};
-    var start_time = this.refs['time'].getTime().getTime();
-    var start_date = this.refs['date'].getDate().getTime();
-    newUpdate.start_time = combineDateTime(start_date, start_time);
 
-    var end_time = this.refs['endtime'].getTime().getTime();
-    var end_date = this.refs['enddate'].getDate().getTime();
-    newUpdate.end_time = combineDateTime(end_date, end_time);
+    var start_time = this.state.start_time.getTime();
+    var start_date = this.state.start_date.getTime();
+   
+    newUpdate.start_time = combineDateTime(start_date, start_time).getTime();
+
+    var end_time = this.state.end_time.getTime();
+    var end_date = this.state.end_date.getTime();
+
+    newUpdate.end_time = combineDateTime(end_date, end_time).getTime();
 
     this._sendUpToParent(newUpdate.start_time, "start_time");
     this._sendUpToParent(newUpdate.end_time, "end_time");
+  },
+
+  _updatedDateTime: function(ref, date) {
+    var set = {};
+    set[ref] = date;
+    this.setState(set, function() {
+      this._updateTimes();
+    });
   },
 
   render: function() {
@@ -50504,56 +50579,52 @@ var ScheduleForm = React.createClass({displayName: "ScheduleForm",
     var filters = "model="+model;
     if (this.props.device) {filters = "name="+this.props.device.name}
     filters = encodeURIComponent(filters);
+
+
+    var defaultStartDate =  this.state.start_time;
+    var defaultEndDate = this.state.end_time;
     return (
       React.createElement("div", {style: {height: '400px'}}, 
         React.createElement("form", null, 
           React.createElement("div", null, 
             React.createElement("h5", {style: {margin:"0"}}, "Start update"), 
             React.createElement("div", {style: {display:"inline-block"}}, 
-              React.createElement(DatePicker, {
-                floatingLabelText: "Start date", 
-                autoOk: true, 
-                ref: "date", 
-                defaultDate: this.state.minDate, 
-                minDate: this.state.minDate, 
-                disabled: this.state.immediate, 
-                mode: "landscape", 
-                onChange: this._updateTimes})
+               React.createElement(DateTime, {
+                my_ref: "start_date", 
+                date: true, 
+                changed: this._updatedDateTime, 
+                label: "Start date", 
+                defaultDate: defaultStartDate, 
+                minDate: this.state.minDate})
             ), 
             React.createElement("div", {style: {display:"inline-block", marginLeft:"30px"}}, 
-              React.createElement(TimePicker, {
-                format: "24hr", 
-                ref: "time", 
-                defaultTime: this.state.minDate, 
-                disabled: this.state.immediate, 
-                floatingLabelText: "Start time", 
-                onChange: this._updateTimes})
+               React.createElement(DateTime, {
+                my_ref: "start_time", 
+                time: true, 
+                changed: this._updatedDateTime, 
+                label: "Start time", 
+                defaultDate: defaultStartDate})
             )
           ), 
 
           React.createElement("div", {style: {marginTop:"20"}}, 
             React.createElement("h5", {style: {margin:"0"}}, "End update"), 
             React.createElement("div", {style: {display:"inline-block"}}, 
-          
-              React.createElement(DatePicker, {
-                floatingLabelText: "End date", 
-                autoOk: true, 
-                ref: "enddate", 
-                defaultDate: this.state.minDate1, 
-                minDate: this.state.minDate1, 
-                disabled: this.state.immediate, 
-                mode: "landscape", 
-                onChange: this._updateTimes})
+              React.createElement(DateTime, {
+                my_ref: "end_date", 
+                date: true, 
+                changed: this._updatedDateTime, 
+                label: "End date", 
+                defaultDate: defaultEndDate, 
+                minDate: this.state.start_date})
             ), 
             React.createElement("div", {style: {display:"inline-block", marginLeft:"30px"}}, 
-
-              React.createElement(TimePicker, {
-                format: "24hr", 
-                ref: "endtime", 
-                defaultTime: this.state.minDate1, 
-                disabled: this.state.immediate, 
-                floatingLabelText: "End time", 
-                onChange: this._updateTimes})
+               React.createElement(DateTime, {
+                my_ref: "end_time", 
+                time: true, 
+                changed: this._updatedDateTime, 
+                label: "End time", 
+                defaultDate: defaultEndDate})
             )
           ), 
 
@@ -50607,7 +50678,7 @@ var ScheduleForm = React.createClass({displayName: "ScheduleForm",
 
 module.exports = ScheduleForm;
 
-},{"../../stores/app-store":394,"material-ui":43,"react":366,"react-router":174}],389:[function(require,module,exports){
+},{"../../stores/app-store":395,"./datetime.js":383,"material-ui":43,"react":366,"react-router":174}],390:[function(require,module,exports){
 var React = require('react');
 var AppStore = require('../../stores/app-store');
 var AppActions = require('../../actions/app-actions');
@@ -50623,6 +50694,7 @@ var mui = require('material-ui');
 var Tabs = mui.Tabs;
 var Tab = mui.Tab;
 var Dialog = mui.Dialog;
+var FlatButton = mui.FlatButton;
 
 var styles = {
   tabs: {
@@ -50650,8 +50722,8 @@ function getState() {
     groups: AppStore.getGroups(),
     dialogTitle: "Schedule an update",
     scheduleForm: true,
-    contentClass: "largeDialog",
-    tabIndex: "0"
+    contentClass: "largeDialog", 
+    invalid: true
   }
 }
 
@@ -50663,6 +50735,8 @@ var Updates = React.createClass({displayName: "Updates",
     AppStore.changeListener(this._onChange);
       if (this.props.params) {
         this.setState({tabIndex: tabs[this.props.params.tab]});
+      } else {
+        this.setState({tabIndex:"0"});
       }
   },
   _onChange: function() {
@@ -50670,6 +50744,7 @@ var Updates = React.createClass({displayName: "Updates",
   },
   dialogDismiss: function(ref) {
     this.refs[ref].dismiss();
+    this.replaceState(this.getInitialState());
   },
   dialogOpen: function(dialog) {
     if (dialog === 'schedule') {
@@ -50690,8 +50765,12 @@ var Updates = React.createClass({displayName: "Updates",
       this.refs['dialog'].show();
     }
   },
+  _changeTab: function(value, e, tab) {
+    this.setState({tabIndex: value});
+  },
   _onScheduleSubmit: function() {
     var newUpdate = {
+      id: this.state.id,
       group: this.state.group,
       model: this.state.model,
       start_time: this.state.start_time,
@@ -50714,21 +50793,40 @@ var Updates = React.createClass({displayName: "Updates",
   _scheduleUpdate: function (update) {
     var image = '';
     var group = '';
+    var start_time = null;
+    var end_time = null;
+    var id = null;
     if (update) {
+      if (update.id) {
+        id = update.id;
+      }
       if (update.software_version) {
         image = AppStore.getSoftwareImage('name', update.software_version);
       }
       if (update.group) {
         group = AppStore.getSingleGroup('name', update.group);
       }
+      if (update.start_time) {
+        start_time = update.start_time;
+      }
+      if (update.end_time) {
+        end_time = update.end_time;
+      }
     }
-    this.setState({scheduleForm:true, imageVal:image, image:image, group:group, groupVal:group});
+    this.setState({scheduleForm:true, imageVal:image, id:id, start_time:start_time, end_time:end_time, image:image, group:group, groupVal:group});
     this.dialogOpen("schedule");
   },
   render: function() {
     var scheduleActions =  [
-      { text: 'Cancel', onClick: this.dialogDismiss.bind(null, 'dialog')},
-      { text: 'Schedule update', onClick: this._onScheduleSubmit, ref: 'save' }
+      React.createElement(FlatButton, {
+        label: "Cancel", 
+        secondary: true, 
+        onClick: this.dialogDismiss.bind(null, 'dialog')}),
+      React.createElement(FlatButton, {
+        label: "Schedule update", 
+        secondary: true, 
+        onClick: this._onScheduleSubmit, 
+        ref: "save"})
     ];
     var reportActions = [
       { text: 'Close' }
@@ -50737,7 +50835,7 @@ var Updates = React.createClass({displayName: "Updates",
 
     if (this.state.scheduleForm) {
       dialogContent = (    
-        React.createElement(ScheduleForm, {updateSchedule: this._updateParams, images: this.state.software, image: this.state.image, imageVal: this.state.image, groups: this.state.groups, groupVal: this.state.group})
+        React.createElement(ScheduleForm, {updateSchedule: this._updateParams, id: this.state.id, images: this.state.software, image: this.state.image, imageVal: this.state.image, groups: this.state.groups, groupVal: this.state.group, start: this.state.start_time, end: this.state.end_time})
       )
     } else {
       dialogContent = (
@@ -50749,8 +50847,9 @@ var Updates = React.createClass({displayName: "Updates",
          React.createElement(Tabs, {
           tabItemContainerStyle: {width: "33%"}, 
           inkBarStyle: styles.inkbar, 
-          value: this.state.tabIndex}, 
-          React.createElement(Tab, {key: 1, 
+          value: this.state.tabIndex, 
+          onChange: this._changeTab}, 
+          React.createElement(Tab, {
           style: styles.tabs, 
           label: "Updates", 
           value: "0"}, 
@@ -50760,17 +50859,17 @@ var Updates = React.createClass({displayName: "Updates",
             )
           ), 
 
-          React.createElement(Tab, {key: 2, 
+          React.createElement(Tab, {
           style: styles.tabs, 
           label: "Schedule", 
           value: "1"}, 
-            React.createElement(Schedule, {schedule: this.state.schedule}), 
+            React.createElement(Schedule, {edit: this._scheduleUpdate, schedule: this.state.schedule}), 
             React.createElement("div", {style: {marginTop:"45"}}, 
               React.createElement(ScheduleButton, {style: {marginTop:"45"}, primary: true, openDialog: this.dialogOpen})
             )
           ), 
 
-          React.createElement(Tab, {key: 3, 
+          React.createElement(Tab, {
           style: styles.tabs, 
           label: "Event log", 
           value: "2"}, 
@@ -50794,7 +50893,7 @@ var Updates = React.createClass({displayName: "Updates",
 
 module.exports = Updates;
 
-},{"../../actions/app-actions":367,"../../stores/app-store":394,"./eventlog.js":383,"./recentupdates.js":384,"./report.js":385,"./schedule.js":386,"./schedulebutton.js":387,"./scheduleform.js":388,"material-ui":43,"react":366}],390:[function(require,module,exports){
+},{"../../actions/app-actions":367,"../../stores/app-store":395,"./eventlog.js":384,"./recentupdates.js":385,"./report.js":386,"./schedule.js":387,"./schedulebutton.js":388,"./scheduleform.js":389,"material-ui":43,"react":366}],391:[function(require,module,exports){
 var React = require('react');
 
 var App = require('../components/app');
@@ -50818,7 +50917,7 @@ module.exports = (
   )
 );  
 
-},{"../components/app":368,"../components/dashboard/dashboard":369,"../components/devices/devices":374,"../components/software/software":381,"../components/updates/updates":389,"react":366,"react-router":174}],391:[function(require,module,exports){
+},{"../components/app":368,"../components/dashboard/dashboard":369,"../components/devices/devices":374,"../components/software/software":381,"../components/updates/updates":390,"react":366,"react-router":174}],392:[function(require,module,exports){
 module.exports = {
   SELECT_GROUP: 'SELECT_GROUP',
   ADD_TO_GROUP: 'ADD_TO_GROUP',
@@ -50828,7 +50927,7 @@ module.exports = {
   UPDATE_FILTERS: 'UPDATE_FILTERS'
 }
 
-},{}],392:[function(require,module,exports){
+},{}],393:[function(require,module,exports){
 var Dispatcher = require('flux').Dispatcher;
 var assign = require('react/lib/Object.assign');
 
@@ -50843,7 +50942,7 @@ var AppDispatcher = assign(new Dispatcher(), {
 
 module.exports = AppDispatcher;
 
-},{"flux":4,"react/lib/Object.assign":222}],393:[function(require,module,exports){
+},{"flux":4,"react/lib/Object.assign":222}],394:[function(require,module,exports){
 var React = require('react');
 var Router = require('react-router');
 var routes = require('./config/routes');
@@ -50861,7 +50960,7 @@ Router.run(routes, function(Root) {
   React.render(React.createElement(Root, null), document.getElementById('main'));
 });
 
-},{"./config/routes":390,"react":366,"react-router":174,"react-tap-event-plugin":191}],394:[function(require,module,exports){
+},{"./config/routes":391,"react":366,"react-router":174,"react-tap-event-plugin":191}],395:[function(require,module,exports){
 var AppDispatcher = require('../dispatchers/app-dispatcher');
 var AppConstants = require('../constants/app-constants');
 var assign = require('react/lib/Object.assign');
@@ -51431,7 +51530,7 @@ function _getScheduledUpdates(time) {
 
 function _saveSchedule(schedule, single) {
   var tmp = {};
-  tmp.id = _allupdates.length+1;
+  tmp.id = schedule.id || _allupdates.length+1;
   tmp.group = schedule.group.name;
   tmp.model = "Acme Model 1";
   // whether single device or group
@@ -51439,7 +51538,8 @@ function _saveSchedule(schedule, single) {
   tmp.software_version = schedule.image.name;
   tmp.start_time = schedule.start_time;
   tmp.end_time = schedule.end_time;
-  _allupdates.push(tmp);
+  var index = findWithAttr(_allupdates, 'id', tmp.id);
+  index != undefined ? _allupdates[index] = tmp : _allupdates.push(tmp);
 }
 
 
@@ -51625,4 +51725,4 @@ var AppStore = assign(EventEmitter.prototype, {
 
 module.exports = AppStore;
 
-},{"../constants/app-constants":391,"../dispatchers/app-dispatcher":392,"events":1,"react/lib/Object.assign":222}]},{},[393]);
+},{"../constants/app-constants":392,"../dispatchers/app-dispatcher":393,"events":1,"react/lib/Object.assign":222}]},{},[394]);

@@ -567,7 +567,7 @@ function _getScheduledUpdates(time) {
 
 function _saveSchedule(schedule, single) {
   var tmp = {};
-  tmp.id = _allupdates.length+1;
+  tmp.id = schedule.id || _allupdates.length+1;
   tmp.group = schedule.group.name;
   tmp.model = "Acme Model 1";
   // whether single device or group
@@ -575,7 +575,8 @@ function _saveSchedule(schedule, single) {
   tmp.software_version = schedule.image.name;
   tmp.start_time = schedule.start_time;
   tmp.end_time = schedule.end_time;
-  _allupdates.push(tmp);
+  var index = findWithAttr(_allupdates, 'id', tmp.id);
+  index != undefined ? _allupdates[index] = tmp : _allupdates.push(tmp);
 }
 
 

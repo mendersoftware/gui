@@ -13,6 +13,7 @@ var mui = require('material-ui');
 var Tabs = mui.Tabs;
 var Tab = mui.Tab;
 var Dialog = mui.Dialog;
+var FlatButton = mui.FlatButton;
 
 var styles = {
   tabs: {
@@ -40,8 +41,8 @@ function getState() {
     groups: AppStore.getGroups(),
     dialogTitle: "Schedule an update",
     scheduleForm: true,
-    contentClass: "largeDialog",
-    tabIndex: "0"
+    contentClass: "largeDialog", 
+    invalid: true
   }
 }
 
@@ -53,6 +54,8 @@ var Updates = React.createClass({
     AppStore.changeListener(this._onChange);
       if (this.props.params) {
         this.setState({tabIndex: tabs[this.props.params.tab]});
+      } else {
+        this.setState({tabIndex:"0"});
       }
   },
   _onChange: function() {
@@ -60,6 +63,7 @@ var Updates = React.createClass({
   },
   dialogDismiss: function(ref) {
     this.refs[ref].dismiss();
+    this.replaceState(this.getInitialState());
   },
   dialogOpen: function(dialog) {
     if (dialog === 'schedule') {
@@ -80,8 +84,12 @@ var Updates = React.createClass({
       this.refs['dialog'].show();
     }
   },
+  _changeTab: function(value, e, tab) {
+    this.setState({tabIndex: value});
+  },
   _onScheduleSubmit: function() {
     var newUpdate = {
+      id: this.state.id,
       group: this.state.group,
       model: this.state.model,
       start_time: this.state.start_time,
@@ -104,21 +112,40 @@ var Updates = React.createClass({
   _scheduleUpdate: function (update) {
     var image = '';
     var group = '';
+    var start_time = null;
+    var end_time = null;
+    var id = null;
     if (update) {
+      if (update.id) {
+        id = update.id;
+      }
       if (update.software_version) {
         image = AppStore.getSoftwareImage('name', update.software_version);
       }
       if (update.group) {
         group = AppStore.getSingleGroup('name', update.group);
       }
+      if (update.start_time) {
+        start_time = update.start_time;
+      }
+      if (update.end_time) {
+        end_time = update.end_time;
+      }
     }
-    this.setState({scheduleForm:true, imageVal:image, image:image, group:group, groupVal:group});
+    this.setState({scheduleForm:true, imageVal:image, id:id, start_time:start_time, end_time:end_time, image:image, group:group, groupVal:group});
     this.dialogOpen("schedule");
   },
   render: function() {
     var scheduleActions =  [
-      { text: 'Cancel', onClick: this.dialogDismiss.bind(null, 'dialog')},
-      { text: 'Schedule update', onClick: this._onScheduleSubmit, ref: 'save' }
+      <FlatButton
+        label="Cancel"
+        secondary={true}
+        onClick={this.dialogDismiss.bind(null, 'dialog')} />,
+      <FlatButton
+        label="Schedule update"
+        secondary={true}
+        onClick={this._onScheduleSubmit}
+        ref="save" />
     ];
     var reportActions = [
       { text: 'Close' }
@@ -127,7 +154,7 @@ var Updates = React.createClass({
 
     if (this.state.scheduleForm) {
       dialogContent = (    
-        <ScheduleForm updateSchedule={this._updateParams} images={this.state.software} image={this.state.image} imageVal={this.state.image} groups={this.state.groups} groupVal={this.state.group} />
+        <ScheduleForm updateSchedule={this._updateParams} id={this.state.id} images={this.state.software} image={this.state.image} imageVal={this.state.image} groups={this.state.groups} groupVal={this.state.group} start={this.state.start_time} end={this.state.end_time} />
       )
     } else {
       dialogContent = (
@@ -139,8 +166,9 @@ var Updates = React.createClass({
          <Tabs
           tabItemContainerStyle={{width: "33%"}}
           inkBarStyle={styles.inkbar}
-          value={this.state.tabIndex}>
-          <Tab key={1}
+          value={this.state.tabIndex}
+          onChange={this._changeTab}>
+          <Tab
           style={styles.tabs}
           label={"Updates"}
           value="0">
@@ -150,17 +178,17 @@ var Updates = React.createClass({
             </div>
           </Tab>
 
-          <Tab key={2}
+          <Tab
           style={styles.tabs}
           label={"Schedule"}
           value="1">
-            <Schedule schedule={this.state.schedule} />
+            <Schedule edit={this._scheduleUpdate} schedule={this.state.schedule} />
             <div style={{marginTop:"45"}}>
               <ScheduleButton style={{marginTop:"45"}} primary={true}  openDialog={this.dialogOpen} />
             </div>
           </Tab>
 
-          <Tab key={3}
+          <Tab
           style={styles.tabs}
           label={"Event log"}
           value="2">
