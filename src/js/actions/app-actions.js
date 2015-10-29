@@ -41,6 +41,13 @@ var AppActions = {
     })
   },
 
+  removeUpdate: function(updateId) {
+    AppDispatcher.handleViewAction({
+      actionType: AppConstants.REMOVE_UPDATE,
+      id: updateId
+    })
+  },
+
   updateFilters: function(filters) {
     AppDispatcher.handleViewAction({
       actionType: AppConstants.UPDATE_FILTERS,

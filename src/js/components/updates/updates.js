@@ -135,6 +135,9 @@ var Updates = React.createClass({
     this.setState({scheduleForm:true, imageVal:image, id:id, start_time:start_time, end_time:end_time, image:image, group:group, groupVal:group});
     this.dialogOpen("schedule");
   },
+  _scheduleRemove: function(id) {
+    AppActions.removeUpdate(id);
+  },
   render: function() {
     var scheduleActions =  [
       <FlatButton
@@ -182,7 +185,7 @@ var Updates = React.createClass({
           style={styles.tabs}
           label={"Schedule"}
           value="1">
-            <Schedule edit={this._scheduleUpdate} schedule={this.state.schedule} />
+            <Schedule edit={this._scheduleUpdate} schedule={this.state.schedule} remove={this._scheduleRemove} />
             <div style={{marginTop:"45"}}>
               <ScheduleButton style={{marginTop:"45"}} primary={true}  openDialog={this.dialogOpen} />
             </div>

@@ -579,6 +579,11 @@ function _saveSchedule(schedule, single) {
   index != undefined ? _allupdates[index] = tmp : _allupdates.push(tmp);
 }
 
+function _removeUpdate(id) {
+  var idx = findWithAttr(_allupdates, 'id', id);
+  _allupdates.splice(idx,1);
+}
+
 
 function findWithAttr(array, attr, value) {
   for(var i = 0; i<array.length; i++) {
@@ -751,6 +756,9 @@ var AppStore = assign(EventEmitter.prototype, {
         break;
       case AppConstants.UPDATE_FILTERS:
         _updateFilters(payload.action.filters);
+        break;
+      case AppConstants.REMOVE_UPDATE:
+        _removeUpdate(payload.action.id);
         break;
     }
     

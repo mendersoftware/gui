@@ -48705,6 +48705,13 @@ var AppActions = {
     })
   },
 
+  removeUpdate: function(updateId) {
+    AppDispatcher.handleViewAction({
+      actionType: AppConstants.REMOVE_UPDATE,
+      id: updateId
+    })
+  },
+
   updateFilters: function(filters) {
     AppDispatcher.handleViewAction({
       actionType: AppConstants.UPDATE_FILTERS,
@@ -50313,6 +50320,9 @@ var Schedule = React.createClass({displayName: "Schedule",
   _handleEdit: function (update) {
     this.props.edit(update);
   },
+  _handleRemove: function (id) {
+    this.props.remove(id);
+  },
   render: function() {
     var now = new Date().getTime();
 
@@ -50328,7 +50338,7 @@ var Schedule = React.createClass({displayName: "Schedule",
             React.createElement(TableRowColumn, null, React.createElement(Time, {value: update.start_time, format: "YYYY/MM/DD HH:mm"})), 
             React.createElement(TableRowColumn, null, React.createElement(Time, {value: update.end_time, format: "YYYY/MM/DD HH:mm"})), 
             React.createElement(TableRowColumn, null, "Begins ", React.createElement(Time, {value: update.start_time, format: "YYYY/MM/DD HH:mm", relative: true})), 
-            React.createElement(TableRowColumn, null, React.createElement("div", null, React.createElement(FlatButton, {style: {padding:"0", marginRight:"4", minWidth:"55"}, label: "Edit", onClick: this._handleEdit.bind(null, update)}), React.createElement(FlatButton, {style: {padding:"0", marginLeft:"4", minWidth:"55"}, label: "Remove"})))
+            React.createElement(TableRowColumn, null, React.createElement("div", null, React.createElement(FlatButton, {style: {padding:"0", marginRight:"4", minWidth:"55"}, label: "Edit", onClick: this._handleEdit.bind(null, update)}), React.createElement(FlatButton, {style: {padding:"0", marginLeft:"4", minWidth:"55"}, label: "Remove", onClick: this._handleRemove.bind(null, update.id)})))
           )
         )
       }
@@ -50816,6 +50826,9 @@ var Updates = React.createClass({displayName: "Updates",
     this.setState({scheduleForm:true, imageVal:image, id:id, start_time:start_time, end_time:end_time, image:image, group:group, groupVal:group});
     this.dialogOpen("schedule");
   },
+  _scheduleRemove: function(id) {
+    AppActions.removeUpdate(id);
+  },
   render: function() {
     var scheduleActions =  [
       React.createElement(FlatButton, {
@@ -50863,7 +50876,7 @@ var Updates = React.createClass({displayName: "Updates",
           style: styles.tabs, 
           label: "Schedule", 
           value: "1"}, 
-            React.createElement(Schedule, {edit: this._scheduleUpdate, schedule: this.state.schedule}), 
+            React.createElement(Schedule, {edit: this._scheduleUpdate, schedule: this.state.schedule, remove: this._scheduleRemove}), 
             React.createElement("div", {style: {marginTop:"45"}}, 
               React.createElement(ScheduleButton, {style: {marginTop:"45"}, primary: true, openDialog: this.dialogOpen})
             )
@@ -50924,7 +50937,8 @@ module.exports = {
   REMOVE_FROM_GROUP: 'REMOVE_FROM_GROUP',
   UPLOAD_IMAGE: 'UPLOAD_IMAGE',
   SAVE_SCHEDULE: 'SAVE_SCHEDULE',
-  UPDATE_FILTERS: 'UPDATE_FILTERS'
+  UPDATE_FILTERS: 'UPDATE_FILTERS',
+  REMOVE_UPDATE: 'REMOVE_UPDATE'
 }
 
 },{}],393:[function(require,module,exports){
@@ -51542,6 +51556,11 @@ function _saveSchedule(schedule, single) {
   index != undefined ? _allupdates[index] = tmp : _allupdates.push(tmp);
 }
 
+function _removeUpdate(id) {
+  var idx = findWithAttr(_allupdates, 'id', id);
+  _allupdates.splice(idx,1);
+}
+
 
 function findWithAttr(array, attr, value) {
   for(var i = 0; i<array.length; i++) {
@@ -51714,6 +51733,9 @@ var AppStore = assign(EventEmitter.prototype, {
         break;
       case AppConstants.UPDATE_FILTERS:
         _updateFilters(payload.action.filters);
+        break;
+      case AppConstants.REMOVE_UPDATE:
+        _removeUpdate(payload.action.id);
         break;
     }
     
