@@ -13,7 +13,9 @@ var TableRowColumn = mui.TableRowColumn;
 var EventLog = React.createClass({
   render: function() {
     return (
-      <div />
+      <div>
+        <p className="italic">... Coming soon ...</p>
+      </div>
     );
   }
 });

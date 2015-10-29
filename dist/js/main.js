@@ -48988,7 +48988,7 @@ var DeviceList = React.createClass({displayName: "DeviceList",
       )
     })
     return (
-      React.createElement("div", null, 
+      React.createElement("div", {className: "maxTable"}, 
         React.createElement(Table, {
           onRowSelection: this._onRowSelection, 
           multiSelectable: true}, 
@@ -49283,12 +49283,16 @@ var ListDivider = mui.ListDivider;
 var FontIcon = mui.FontIcon;
 
 var addSelection = {};
+function getGroups() {
+  var copy = AppStore.getGroups().slice();
+  return copy
+}
 
 var SelectedDevices = React.createClass({displayName: "SelectedDevices",
   getInitialState: function() {
     return {
+      tmpGroups: getGroups(),
       showInput: false,
-      groups: this.props.groups,
       selectedGroup: {
         payload: '',
         text: ''
@@ -49342,18 +49346,19 @@ var SelectedDevices = React.createClass({displayName: "SelectedDevices",
     var newGroup = this.refs['customGroup'].getValue();
     newGroup = {
       name: newGroup,
-      devices: []
+      devices: [],
+      type: 'public'
     };
     addSelection = {
       group: newGroup,
       textFieldValue: null 
     };
-    var groups = this.state.groups;
-    newGroup.id = groups.length+1;
+ 
+    newGroup.id = this.props.groups.length+1;
+    var groups = this.state.tmpGroups;
     groups.push(newGroup);
-    
     this.setState({
-      groups:groups,
+      tmpGroups: groups,
       showInput: false,
       selectedGroup: {
         payload: newGroup.id,
@@ -49361,18 +49366,10 @@ var SelectedDevices = React.createClass({displayName: "SelectedDevices",
       }
     });
   },
-  _selectHandler: function(device) {
-    var tmpGroup = {
-      name: device.name,
-      type: "private",
-      devices: []
-    }
-    AppActions.addToGroup(tmpGroup, this.props.selected);
-  },
   _validateName: function(e) {
     var newName = e.target.value;
     var errorText = null;
-    for (var i=0;i<this.state.groups.length; i++) {
+    for (var i=0;i<this.props.groups.length; i++) {
       if (this.props.groups[i].name === newName) {
         errorText = "A group with this name already exists";
       }
@@ -49467,8 +49464,8 @@ var SelectedDevices = React.createClass({displayName: "SelectedDevices",
               React.createElement(ListDivider, null)
             )
           ), 
-          React.createElement("div", null, 
-            React.createElement(ScheduleButton, {label: "Schedule update for this device", openDialog: this._openSchedule, className: "float-right", primary: false, secondary: true})
+          React.createElement("div", {className: "float-right"}, 
+            React.createElement(ScheduleButton, {label: "Schedule update for this device", openDialog: this._openSchedule, primary: true, secondary: false})
           )
         )
       )
@@ -49484,7 +49481,7 @@ var SelectedDevices = React.createClass({displayName: "SelectedDevices",
       { text: 'Add to group', onClick: this._addGroupHandler, ref: 'save' }
     ];
 
-    var groupList = this.state.groups.map(function(group) {
+    var groupList = this.state.tmpGroups.map(function(group) {
       if (group.id === 1) {
         return {payload: '', text: ''}
       } else {
@@ -49509,6 +49506,7 @@ var SelectedDevices = React.createClass({displayName: "SelectedDevices",
         ), 
         React.createElement("p", null, devices.length, " devices selected"), 
         React.createElement("div", {className: "deviceInfo", style: hideInfo}, 
+          React.createElement("h3", null, "Device details"), 
           deviceInfo
         ), 
 
@@ -50032,7 +50030,9 @@ var TableRowColumn = mui.TableRowColumn;
 var EventLog = React.createClass({displayName: "EventLog",
   render: function() {
     return (
-      React.createElement("div", null)
+      React.createElement("div", null, 
+        React.createElement("p", {className: "italic"}, "... Coming soon ...")
+      )
     );
   }
 });
@@ -51206,8 +51206,8 @@ function _getDevices(group, model) {
 
 function _addToGroup(group, devices) {
   var tmpGroup = group;
-
-  if (tmpGroup.id) {
+  var idx = findWithAttr(_groups, 'id', tmpGroup.id);
+  if (idx) {
     for (var i=0; i<devices.length;i++) {
       if (tmpGroup.devices.indexOf(devices[i].id)===-1) {
         tmpGroup.devices.push(devices[i].id);
@@ -51228,7 +51228,7 @@ function _addToGroup(group, devices) {
 
   } else if (devices.length) {
     // New group
-    _addNewGroup(group, devices);
+    _addNewGroup(group, devices, 'public');
     // TODO - go through devices and add group
   }
 }

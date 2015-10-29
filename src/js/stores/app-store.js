@@ -229,8 +229,8 @@ function _getDevices(group, model) {
 
 function _addToGroup(group, devices) {
   var tmpGroup = group;
-
-  if (tmpGroup.id) {
+  var idx = findWithAttr(_groups, 'id', tmpGroup.id);
+  if (idx) {
     for (var i=0; i<devices.length;i++) {
       if (tmpGroup.devices.indexOf(devices[i].id)===-1) {
         tmpGroup.devices.push(devices[i].id);
@@ -251,7 +251,7 @@ function _addToGroup(group, devices) {
 
   } else if (devices.length) {
     // New group
-    _addNewGroup(group, devices);
+    _addNewGroup(group, devices, 'public');
     // TODO - go through devices and add group
   }
 }

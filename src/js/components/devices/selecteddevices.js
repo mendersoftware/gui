@@ -17,12 +17,16 @@ var ListDivider = mui.ListDivider;
 var FontIcon = mui.FontIcon;
 
 var addSelection = {};
+function getGroups() {
+  var copy = AppStore.getGroups().slice();
+  return copy
+}
 
 var SelectedDevices = React.createClass({
   getInitialState: function() {
     return {
+      tmpGroups: getGroups(),
       showInput: false,
-      groups: this.props.groups,
       selectedGroup: {
         payload: '',
         text: ''
@@ -76,18 +80,19 @@ var SelectedDevices = React.createClass({
     var newGroup = this.refs['customGroup'].getValue();
     newGroup = {
       name: newGroup,
-      devices: []
+      devices: [],
+      type: 'public'
     };
     addSelection = {
       group: newGroup,
       textFieldValue: null 
     };
-    var groups = this.state.groups;
-    newGroup.id = groups.length+1;
+ 
+    newGroup.id = this.props.groups.length+1;
+    var groups = this.state.tmpGroups;
     groups.push(newGroup);
-    
     this.setState({
-      groups:groups,
+      tmpGroups: groups,
       showInput: false,
       selectedGroup: {
         payload: newGroup.id,
@@ -95,18 +100,10 @@ var SelectedDevices = React.createClass({
       }
     });
   },
-  _selectHandler: function(device) {
-    var tmpGroup = {
-      name: device.name,
-      type: "private",
-      devices: []
-    }
-    AppActions.addToGroup(tmpGroup, this.props.selected);
-  },
   _validateName: function(e) {
     var newName = e.target.value;
     var errorText = null;
-    for (var i=0;i<this.state.groups.length; i++) {
+    for (var i=0;i<this.props.groups.length; i++) {
       if (this.props.groups[i].name === newName) {
         errorText = "A group with this name already exists";
       }
@@ -201,8 +198,8 @@ var SelectedDevices = React.createClass({
               <ListDivider />
             </List>
           </div>
-          <div>
-            <ScheduleButton label="Schedule update for this device" openDialog={this._openSchedule} className="float-right" primary={false} secondary={true} />
+          <div className="float-right">
+            <ScheduleButton label="Schedule update for this device" openDialog={this._openSchedule} primary={true} secondary={false} />
           </div>
         </div>
       )
@@ -218,7 +215,7 @@ var SelectedDevices = React.createClass({
       { text: 'Add to group', onClick: this._addGroupHandler, ref: 'save' }
     ];
 
-    var groupList = this.state.groups.map(function(group) {
+    var groupList = this.state.tmpGroups.map(function(group) {
       if (group.id === 1) {
         return {payload: '', text: ''}
       } else {
@@ -243,6 +240,7 @@ var SelectedDevices = React.createClass({
         </div>
         <p>{devices.length} devices selected</p>
         <div className="deviceInfo" style={hideInfo}>
+          <h3>Device details</h3>
           {deviceInfo}
         </div>
 

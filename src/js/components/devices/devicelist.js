@@ -39,7 +39,7 @@ var DeviceList = React.createClass({
       )
     })
     return (
-      <div>
+      <div className="maxTable">
         <Table
           onRowSelection={this._onRowSelection}
           multiSelectable={true}>
