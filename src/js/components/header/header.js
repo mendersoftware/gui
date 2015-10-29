@@ -64,7 +64,7 @@ var Header = React.createClass({
     });
     return (
       <Paper id="header-nav" style={{zIndex:"11"}}>
-        <div id="logo"></div>
+        <Link to="/" id="logo"></Link>
         <Tabs
           value={this.state.tabIndex}
           inkBarStyle={styles.inkbar}>

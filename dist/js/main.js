@@ -49646,7 +49646,7 @@ var Header = React.createClass({displayName: "Header",
     });
     return (
       React.createElement(Paper, {id: "header-nav", style: {zIndex:"11"}}, 
-        React.createElement("div", {id: "logo"}), 
+        React.createElement(Link, {to: "/", id: "logo"}), 
         React.createElement(Tabs, {
           value: this.state.tabIndex, 
           inkBarStyle: styles.inkbar}, 
