@@ -78,7 +78,7 @@ var Repository = React.createClass({
           <TableRowColumn>{pkg.name}</TableRowColumn>
           <TableRowColumn>{pkg.model}</TableRowColumn>
           <TableRowColumn>{pkg.description}</TableRowColumn>
-          <TableRowColumn><ScheduleButton primary={false} secondary={true} openDialog={this._openSchedule} image={pkg} /></TableRowColumn>
+          <TableRowColumn><ScheduleButton primary={false} secondary={false} openDialog={this._openSchedule} image={pkg} /></TableRowColumn>
         </TableRow>
       )
     }, this);
@@ -119,7 +119,7 @@ var Repository = React.createClass({
           </Table>
         </div>
         <div className="margin-top">
-          <RaisedButton onClick={this.dialogOpen.bind(null, 'upload')} label="Upload a new image" primary={true} />
+          <RaisedButton onClick={this.dialogOpen.bind(null, 'upload')} label="Upload a new image" secondary={true} />
         </div>
 
         <Dialog

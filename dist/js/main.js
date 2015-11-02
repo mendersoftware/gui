@@ -48943,7 +48943,6 @@ var App = React.createClass({displayName: "App",
   },
   getChildContext:function() { 
     var theme = ThemeManager.getMuiTheme(RawTheme);
-    theme.raisedButton.textColor = "black";
     return {
       muiTheme: theme,
     };
@@ -50023,7 +50022,7 @@ var Repository = React.createClass({displayName: "Repository",
           React.createElement(TableRowColumn, null, pkg.name), 
           React.createElement(TableRowColumn, null, pkg.model), 
           React.createElement(TableRowColumn, null, pkg.description), 
-          React.createElement(TableRowColumn, null, React.createElement(ScheduleButton, {primary: false, secondary: true, openDialog: this._openSchedule, image: pkg}))
+          React.createElement(TableRowColumn, null, React.createElement(ScheduleButton, {primary: false, secondary: false, openDialog: this._openSchedule, image: pkg}))
         )
       )
     }, this);
@@ -50064,7 +50063,7 @@ var Repository = React.createClass({displayName: "Repository",
           )
         ), 
         React.createElement("div", {className: "margin-top"}, 
-          React.createElement(RaisedButton, {onClick: this.dialogOpen.bind(null, 'upload'), label: "Upload a new image", primary: true})
+          React.createElement(RaisedButton, {onClick: this.dialogOpen.bind(null, 'upload'), label: "Upload a new image", secondary: true})
         ), 
 
         React.createElement(Dialog, {
@@ -51580,8 +51579,8 @@ var _allupdates = [
     group: "Test",
     model: "Acme Model 1",
     software_version: "Version 1.1",
-    start_time: 1446383576000,
-    end_time: 1446387176000,
+    start_time: 1447383576000,
+    end_time: 1447387176000,
     status: null,
     devices: [
      {
@@ -51621,8 +51620,8 @@ var _allupdates = [
     group: "Development",
     model: "Acme Model 1",
     software_version: "Version 1.2",
-    start_time: 1446297176000,
-    end_time: 1446300776000,
+    start_time: 1447297176000,
+    end_time: 1447300776000,
     status: null,
     devices: [
       {
@@ -51641,8 +51640,8 @@ var _allupdates = [
         model:"Acme Model 1",
         last_software_version:"Version 1.1",
         software_version:"Version 1.2",
-        start_time:1446297176000,
-        end_time:1443708776000,
+        start_time:1447297176000,
+        end_time:1444708776000,
         status:"Pending"
       },
       {
@@ -51662,8 +51661,8 @@ var _allupdates = [
     group: "Production",
     model: "Acme Model 1",
     software_version: "Version 1.0",
-    start_time: 1444309976000,
-    end_time: 1444396376000,
+    start_time: 1445309976000,
+    end_time: 1445396376000,
     status: "Complete",
     devices: [
       {
@@ -51672,8 +51671,8 @@ var _allupdates = [
         model:"Acme Model 1",
         last_software_version:"Version 0.3",
         software_version:"Version 1.0",
-        start_time:1444309976000,
-        end_time:1444396376000,
+        start_time:1445309976000,
+        end_time:1445396376000,
         status:"Complete"
       },
       {
@@ -51682,8 +51681,8 @@ var _allupdates = [
         model:"Acme Model 1",
         last_software_version:"Version 0.3",
         software_version:"Version 1.0",
-        start_time:1444309976000,
-        end_time:1444396376000,
+        start_time:1445309976000,
+        end_time:1445396376000,
         status:"Complete"
       },
     ]
@@ -51693,8 +51692,8 @@ var _allupdates = [
     group: "Test",
     model: "Acme Model 1",
     software_version: "Version 0.3",
-    start_time: 1443705176000,
-    end_time: 1443708776000,
+    start_time: 1444705176000,
+    end_time: 1444708776000,
     status: "Complete",
     devices: [
      {
@@ -51703,8 +51702,8 @@ var _allupdates = [
         model:"Acme Model 1",
         last_software_version:"Version 0.2",
         software_version:"Version 0.3",
-        start_time:1443705176000,
-        end_time:1443708776000,
+        start_time:1444705176000,
+        end_time:1444708776000,
         status:"Complete"
       },
       {
@@ -51713,8 +51712,8 @@ var _allupdates = [
         model:"Acme Model 1",
         last_software_version:"Version 0.2",
         software_version:"Version 0.3",
-        start_time:1443705176000,
-        end_time:1443708776000,
+        start_time:1444705176000,
+        end_time:1444708776000,
         status:"Complete"
       },
       {
@@ -51723,8 +51722,8 @@ var _allupdates = [
         model:"Acme Model 1",
         last_software_version:"Version 0.3",
         software_version:"Version 0.3",
-        start_time:1443705176000,
-        end_time: 1443708776000,
+        start_time:1444705176000,
+        end_time: 1444708776000,
         status:"Complete"
       }
     ]
@@ -51734,8 +51733,8 @@ var _allupdates = [
     group: "Test",
     model: "Acme Model 1",
     software_version: "Version 1.0",
-    start_time: 1443708776000,
-    end_time: 1443709971000,
+    start_time: 1444708776000,
+    end_time: 1444709971000,
     status: "Failed",
     devices: [
       {
@@ -51744,8 +51743,8 @@ var _allupdates = [
         model:"Acme Model 1",
         last_software_version:"Version 0.3",
         software_version:"Version 1.0",
-        start_time:1443708776000,
-        end_time:1443709971000,
+        start_time:1444708776000,
+        end_time:1444709971000,
         status:"Complete"
       },
       {
@@ -51754,8 +51753,8 @@ var _allupdates = [
         model:"Acme Model 1",
         last_software_version:"Version 0.3",
         software_version:"Version 1.0",
-        start_time:1443708776000,
-        end_time:1443709971000,
+        start_time:1444708776000,
+        end_time:1444709971000,
         status:"Complete"
       },
       {
@@ -51764,8 +51763,8 @@ var _allupdates = [
         model:"Acme Model 1",
         last_software_version:"Version 0.3",
         software_version:"Version 0.3",
-        start_time:1443708776000,
-        end_time: 1443709971000,
+        start_time:1444708776000,
+        end_time: 1444709971000,
         status:"Failed"
       }
     ]

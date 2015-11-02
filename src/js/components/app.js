@@ -13,7 +13,6 @@ var App = React.createClass({
   },
   getChildContext() { 
     var theme = ThemeManager.getMuiTheme(RawTheme);
-    theme.raisedButton.textColor = "black";
     return {
       muiTheme: theme,
     };
