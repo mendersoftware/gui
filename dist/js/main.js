@@ -49351,13 +49351,13 @@ var Filters = React.createClass({displayName: "Filters",
         paddingLeft: '12px',
         lineHeight: '36px',
         marginRight: "-6",
-        color:"rgb(0, 188, 212)"
+        color:"#99BDC3"
       },
       removeButton: {
         position: "absolute",
         right: "-22",
         top: "-22",
-        color: "rgb(0, 188, 212)"
+        color: "#99BDC3"
       }
     }
     var attributes = [];
