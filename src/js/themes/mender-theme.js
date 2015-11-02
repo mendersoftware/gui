@@ -14,7 +14,7 @@ module.exports = {
     accent1Color: "#5d0f43",
     accent2Color: Colors.grey100,
     accent3Color: "#7D3F69",
-    textColor: "#404041",
+    textColor: "rgba(0,0,0,0.8)",
     alternateTextColor: Colors.white,
     canvasColor: Colors.white,
     borderColor: "#e0e0e0",
