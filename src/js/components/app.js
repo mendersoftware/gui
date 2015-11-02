@@ -5,7 +5,7 @@ var Header = require('./header/header');
 
 var mui = require('material-ui');
 var ThemeManager = require('material-ui/lib/styles/theme-manager');
-var RawTheme = require('material-ui/lib/styles/raw-themes/light-raw-theme');
+var RawTheme = require('../themes/mender-theme.js');
 
 var App = React.createClass({
   childContextTypes: {

@@ -4,7 +4,7 @@ body {
 }
 /* Type */
 body {
-  font-family: Roboto;
+  font-family: Lato;
   font-size: 13px;
   margin: 0;
 }
@@ -44,10 +44,11 @@ body {
 }
 /* Header */
 #header-nav {
-  padding-left: 220px;
-  padding-right: 8%;
-  padding-top: 10px;
   position: relative;
+  border-top: 1px solid #e0e0e0;
+  padding-right: 30%;
+  background-color: #f7f7f7;
+  border-bottom: 1px solid #e0e0e0;
 }
 #logo {
   position: absolute;
@@ -55,7 +56,7 @@ body {
   top: 5px;
   width: 180px;
   height: 48px;
-  background-image: url('/assets/img/headerlogo.png');
+  background-image: url('../assets/img/headerlogo.png');
   background-repeat: no-repeat;
   background-size: contain;
 }
@@ -73,7 +74,7 @@ body {
   margin-left: 260px;
 }
 .container {
-  padding: 40px 20px;
+  padding: 30px;
 }
 .tableActions {
   padding: 20px 30px;

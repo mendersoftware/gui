@@ -19,9 +19,10 @@ var styles = {
   tabs: {
     backgroundColor: "#fff",
     color: "#414141",
+    borderBottom: "1px solid #e0e0e0"
   },
   inkbar: {
-    backgroundColor: "#5d0f43",
+    backgroundColor: "#679BA5",
   }
 };
 
@@ -166,38 +167,42 @@ var Updates = React.createClass({
     }
     return (
       <div>
-         <Tabs
-          tabItemContainerStyle={{width: "33%"}}
-          inkBarStyle={styles.inkbar}
-          value={this.state.tabIndex}
-          onChange={this._changeTab}>
-          <Tab
-          style={styles.tabs}
-          label={"Updates"}
-          value="0">
-            <Recent recent={this.state.recent} progress={this.state.progress} showReport={this._showReport} />
-            <div style={{marginTop:"45"}}>
-              <ScheduleButton primary={true} openDialog={this.dialogOpen} />
-            </div>
-          </Tab>
+        <div>
+          <Tabs
+            style={{position:"relative"}}
+            tabItemContainerStyle={{width:"33%"}}
+            inkBarStyle={styles.inkbar}
+            value={this.state.tabIndex}
+            onChange={this._changeTab}>
+            <Tab
+            style={styles.tabs}
+            label={"Latest"}
+            value="0"
+            className="tabClass">
+              <Recent recent={this.state.recent} progress={this.state.progress} showReport={this._showReport} />
+              <div style={{marginTop:"45"}}>
+                <ScheduleButton primary={true} openDialog={this.dialogOpen} />
+              </div>
+            </Tab>
 
-          <Tab
-          style={styles.tabs}
-          label={"Schedule"}
-          value="1">
-            <Schedule edit={this._scheduleUpdate} schedule={this.state.schedule} remove={this._scheduleRemove} />
-            <div style={{marginTop:"45"}}>
-              <ScheduleButton style={{marginTop:"45"}} primary={true}  openDialog={this.dialogOpen} />
-            </div>
-          </Tab>
+            <Tab
+            style={styles.tabs}
+            label={"Schedule"}
+            value="1">
+              <Schedule edit={this._scheduleUpdate} schedule={this.state.schedule} remove={this._scheduleRemove} />
+              <div style={{marginTop:"45"}}>
+                <ScheduleButton style={{marginTop:"45"}} primary={true}  openDialog={this.dialogOpen} />
+              </div>
+            </Tab>
 
-          <Tab
-          style={styles.tabs}
-          label={"Event log"}
-          value="2">
-            <EventLog events={this.state.events} />
-          </Tab>
-        </Tabs>
+            <Tab
+            style={styles.tabs}
+            label={"Event log"}
+            value="2">
+              <EventLog events={this.state.events} />
+            </Tab>
+          </Tabs>
+        </div>
       
         <Dialog
           ref="dialog"
