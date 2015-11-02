@@ -30,20 +30,23 @@ var UploadForm = React.createClass({
         <TextField
           hintText="Identifier"
           floatingLabelText="Identifier" 
-          onChange={this._handleFieldChange.bind(null, 'software')} />
+          onChange={this._handleFieldChange.bind(null, 'software')}
+          errorStyle={{color: "rgb(171, 16, 0)"}}/>
 
         <p><input type="file" /></p>
 
         <TextField
           value="Acme Model 1"
           floatingLabelText="Model compatibility"
-          onChange={this._handleFieldChange.bind(null, 'model')} />
+          onChange={this._handleFieldChange.bind(null, 'model')}
+          errorStyle={{color: "rgb(171, 16, 0)"}} />
 
         <TextField
           hintText="Description"
           floatingLabelText="Description" 
           multiLine={true}
           style={{display:"block"}}
+          errorStyle={{color: "rgb(171, 16, 0)"}}
           onChange={this._handleFieldChange.bind(null, 'description')} />
       </form>
     );

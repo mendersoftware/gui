@@ -199,7 +199,7 @@ var SelectedDevices = React.createClass({
             </List>
           </div>
           <div className="float-right">
-            <ScheduleButton label="Schedule update for this device" openDialog={this._openSchedule} primary={true} secondary={false} />
+            <ScheduleButton label="Schedule update for this device" openDialog={this._openSchedule} primary={false} secondary={false} />
           </div>
         </div>
       )
@@ -272,6 +272,7 @@ var SelectedDevices = React.createClass({
                 floatingLabelText="Group name"
                 style={inputStyle}
                 onChange={this._validateName}
+                errorStyle={{color: "rgb(171, 16, 0)"}}
                 errorText={this.state.errorText1} />
             
               <RaisedButton label="Save" onClick={this._newGroupHandler} />

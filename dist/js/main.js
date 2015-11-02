@@ -48942,9 +48942,11 @@ var App = React.createClass({displayName: "App",
     muiTheme: React.PropTypes.object
   },
   getChildContext:function() { 
+    var theme = ThemeManager.getMuiTheme(RawTheme);
+    theme.raisedButton.textColor = "black";
     return {
-      muiTheme: ThemeManager.getMuiTheme(RawTheme)
-    }
+      muiTheme: theme,
+    };
   },
   render: function() {
     return (
@@ -49351,13 +49353,13 @@ var Filters = React.createClass({displayName: "Filters",
         paddingLeft: '12px',
         lineHeight: '36px',
         marginRight: "-6",
-        color:"#99BDC3"
+        color:"#679BA5"
       },
       removeButton: {
         position: "absolute",
         right: "-22",
         top: "-22",
-        color: "#99BDC3"
+        color: "#679BA5"
       }
     }
     var attributes = [];
@@ -49390,6 +49392,7 @@ var Filters = React.createClass({displayName: "Filters",
             value: item.value, 
             hintText: "Value", 
             disabled: !item.key, 
+            errorStyle: {color: "rgb(171, 16, 0)"}, 
             onChange: this._updateFilterValue.bind(null, index)})
         )
       )
@@ -49670,7 +49673,7 @@ var SelectedDevices = React.createClass({displayName: "SelectedDevices",
             )
           ), 
           React.createElement("div", {className: "float-right"}, 
-            React.createElement(ScheduleButton, {label: "Schedule update for this device", openDialog: this._openSchedule, primary: true, secondary: false})
+            React.createElement(ScheduleButton, {label: "Schedule update for this device", openDialog: this._openSchedule, primary: false, secondary: false})
           )
         )
       )
@@ -49743,6 +49746,7 @@ var SelectedDevices = React.createClass({displayName: "SelectedDevices",
                 floatingLabelText: "Group name", 
                 style: inputStyle, 
                 onChange: this._validateName, 
+                errorStyle: {color: "rgb(171, 16, 0)"}, 
                 errorText: this.state.errorText1}), 
             
               React.createElement(RaisedButton, {label: "Save", onClick: this._newGroupHandler})
@@ -50076,21 +50080,24 @@ var Repository = React.createClass({displayName: "Repository",
               React.createElement(TextField, {
                 hintText: "Identifier", 
                 floatingLabelText: "Identifier", 
-                onChange: this._handleFieldChange.bind(null, 'name')}), 
+                onChange: this._handleFieldChange.bind(null, 'name'), 
+                errorStyle: {color: "rgb(171, 16, 0)"}}), 
 
               React.createElement("p", null, React.createElement("input", {type: "file"})), 
 
               React.createElement(TextField, {
                 value: "Acme Model 1", 
                 floatingLabelText: "Device type compatibility", 
-                onChange: this._handleFieldChange.bind(null, 'model')}), 
+                onChange: this._handleFieldChange.bind(null, 'model'), 
+                errorStyle: {color: "rgb(171, 16, 0)"}}), 
 
               React.createElement(TextField, {
                 hintText: "Description", 
                 floatingLabelText: "Description", 
                 multiLine: true, 
                 style: {display:"block"}, 
-                onChange: this._handleFieldChange.bind(null, 'description')})
+                onChange: this._handleFieldChange.bind(null, 'description'), 
+                errorStyle: {color: "rgb(171, 16, 0)"}})
             )
           )
         ), 
@@ -50253,12 +50260,34 @@ var TableBody = mui.TableBody;
 var TableRow = mui.TableRow;
 var TableRowColumn = mui.TableRowColumn;
 
+var FlatButton = mui.FlatButton;
+var RaisedButton = mui.RaisedButton;
 
 var EventLog = React.createClass({displayName: "EventLog",
   render: function() {
     return (
       React.createElement("div", null, 
-        React.createElement("p", {className: "italic"}, "... Coming soon ...")
+        React.createElement("p", {className: "italic"}, "... Coming soon ..."), 
+        React.createElement("div", null, 
+          React.createElement(FlatButton, {label: "Flat neutral"}), React.createElement("div", {style: {width:"20", display:"inline-block"}}), 
+          React.createElement(FlatButton, {label: "Flat secondary", secondary: true}), React.createElement("div", {style: {width:"20", display:"inline-block"}}), 
+          React.createElement(FlatButton, {label: "Flat primary", primary: true})
+        ), 
+        React.createElement("div", null, 
+          React.createElement(FlatButton, {label: "Flat neutral"}), React.createElement("div", {style: {width:"20", display:"inline-block"}}), 
+          React.createElement(FlatButton, {label: "Flat secondary", secondary: true}), React.createElement("div", {style: {width:"20", display:"inline-block"}}), 
+          React.createElement(FlatButton, {label: "Flat primary", primary: true})
+        ), 
+        React.createElement("div", {className: "margin-top"}, 
+          React.createElement(RaisedButton, {label: "Raised neutral"}), React.createElement("div", {style: {width:"20", display:"inline-block"}}), 
+          React.createElement(RaisedButton, {label: "Raised secondary", secondary: true}), React.createElement("div", {style: {width:"20", display:"inline-block"}}), 
+          React.createElement(RaisedButton, {label: "Raised primary", primary: true})
+        ), 
+        React.createElement("div", {className: "margin-top"}, 
+          React.createElement(RaisedButton, {label: "Raised neutral"}), React.createElement("div", {style: {width:"20", display:"inline-block"}}), 
+          React.createElement(RaisedButton, {label: "Raised secondary", secondary: true}), React.createElement("div", {style: {width:"20", display:"inline-block"}}), 
+          React.createElement(RaisedButton, {label: "Raised primary", primary: true})
+        )
       )
     );
   }
@@ -50880,7 +50909,8 @@ var ScheduleForm = React.createClass({displayName: "ScheduleForm",
               floatingLabelText: "Device type", 
               value: model, 
               underlineDisabledStyle: {borderBottom:"none"}, 
-              style: {bottom:"-8"}}), 
+              style: {bottom:"-8"}, 
+              errorStyle: {color: "rgb(171, 16, 0)"}}), 
 
             React.createElement("div", {className: this.state.disabled ? 'hidden' : "block"}, 
               React.createElement(SelectField, {
@@ -50899,7 +50929,8 @@ var ScheduleForm = React.createClass({displayName: "ScheduleForm",
                 ref: "device", 
                 floatingLabelText: "Device", 
                 disabled: this.state.disabled, 
-                underlineDisabledStyle: {borderBottom:"none"}})
+                underlineDisabledStyle: {borderBottom:"none"}, 
+                errorStyle: {color: "rgb(171, 16, 0)"}})
             ), 
 
             React.createElement("p", {className: this.state.devices ? null : 'hidden'}, this.state.devices, " devices will be updated ", React.createElement(Link, {to: "devices", params: {groupId: this.state.groupVal.payload, filters:filters}, className: this.state.disabled ? "hidden" : "margin-left"}, "View devices")), 
@@ -51985,35 +52016,17 @@ module.exports = AppStore;
 var Colors = require('material-ui/lib/styles/colors');
 var ColorManipulator = require('material-ui/lib/utils/color-manipulator');
 var Spacing = require('material-ui/lib/styles/spacing');
-/*
-module.exports = {
-  spacing: Spacing,
-  fontFamily: 'Roboto, sans-serif',
-  palette: {
-    primary1Color: "#347A87",
-    primary2Color: "#015969",
-    primary3Color: "#8c8c8d",
-    accent1Color: "#7D3F69",
-    accent2Color: Colors.grey100,
-    accent3Color: "#99BDC3",
-    textColor: "#404041",
-    alternateTextColor: "#E1E1E1",
-    canvasColor: Colors.white,
-    borderColor: "#EEEEEE",
-    disabledColor: ColorManipulator.fade(Colors.darkBlack, 0.3)
-  }
-}; */
 
 module.exports = {
   spacing: Spacing,
   fontFamily: 'Lato, sans-serif',
   palette: {
-    primary1Color: "#679BA5",
+    primary1Color: "#347A87",
     primary2Color: "#015969",
     primary3Color: "#8c8c8d",
-    accent1Color: "#5D0F43",
+    accent1Color: "#5d0f43",
     accent2Color: Colors.grey100,
-    accent3Color: "#99BDC3",
+    accent3Color: "#7D3F69",
     textColor: "#404041",
     alternateTextColor: Colors.white,
     canvasColor: Colors.white,

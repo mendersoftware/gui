@@ -58,13 +58,13 @@ var Filters = React.createClass({
         paddingLeft: '12px',
         lineHeight: '36px',
         marginRight: "-6",
-        color:"#99BDC3"
+        color:"#679BA5"
       },
       removeButton: {
         position: "absolute",
         right: "-22",
         top: "-22",
-        color: "#99BDC3"
+        color: "#679BA5"
       }
     }
     var attributes = [];
@@ -97,6 +97,7 @@ var Filters = React.createClass({
             value={item.value}
             hintText="Value"
             disabled={!item.key}
+            errorStyle={{color: "rgb(171, 16, 0)"}}
             onChange={this._updateFilterValue.bind(null, index)} />
         </div>
       )

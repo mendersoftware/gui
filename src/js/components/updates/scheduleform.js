@@ -243,7 +243,8 @@ var ScheduleForm = React.createClass({
               floatingLabelText="Device type"
               value={model} 
               underlineDisabledStyle={{borderBottom:"none"}}
-              style={{bottom:"-8"}}/>
+              style={{bottom:"-8"}}
+              errorStyle={{color: "rgb(171, 16, 0)"}} />
 
             <div className={this.state.disabled ? 'hidden' : "block"}>
               <SelectField
@@ -262,7 +263,8 @@ var ScheduleForm = React.createClass({
                 ref="device"
                 floatingLabelText="Device"
                 disabled={this.state.disabled}
-                underlineDisabledStyle={{borderBottom:"none"}} />
+                underlineDisabledStyle={{borderBottom:"none"}}
+                errorStyle={{color: "rgb(171, 16, 0)"}} />
             </div>
 
             <p className={this.state.devices ? null : 'hidden'}>{this.state.devices} devices will be updated <Link to="devices" params={{groupId: this.state.groupVal.payload, filters:filters }} className={this.state.disabled ? "hidden" : "margin-left"}>View devices</Link></p>
