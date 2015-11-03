@@ -49944,7 +49944,7 @@ var Installed = React.createClass({displayName: "Installed",
     });
     return (
       React.createElement("div", null, 
-        React.createElement("div", {style: {marginTop:"30px"}}, 
+        React.createElement("div", null, 
           React.createElement(Table, {
             selectable: false}, 
             React.createElement(TableHeader, {
@@ -50085,7 +50085,7 @@ var Repository = React.createClass({displayName: "Repository",
     }
     return (
       React.createElement("div", null, 
-        React.createElement("div", {style: {marginTop:"30px"}}, 
+        React.createElement("div", null, 
           React.createElement(Table, {
             selectable: false}, 
             React.createElement(TableHeader, {

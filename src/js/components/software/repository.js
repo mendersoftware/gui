@@ -113,7 +113,7 @@ var Repository = React.createClass({
     }
     return (
       <div>
-        <div style={{marginTop:"30px"}}> 
+        <div> 
           <Table
             selectable={false}>
             <TableHeader
