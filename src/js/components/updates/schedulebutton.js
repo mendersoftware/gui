@@ -3,7 +3,7 @@ var React = require('react');
 // material ui
 var mui = require('material-ui');
 var RaisedButton = mui.RaisedButton;
-
+var FlatButton = mui.FlatButton;
 
 
 var ScheduleButton = React.createClass({
@@ -15,8 +15,18 @@ var ScheduleButton = React.createClass({
     this.props.openDialog("schedule", image);
   },
   render: function() {
+    var button = '';
+    if (this.props.buttonType === 'flat') {
+      button = (
+        <FlatButton primary={this.props.primary} secondary={this.props.secondary} label={ this.props.label || "Schedule an update"} onClick={this._handleClick} />
+      )
+    } else {
+      button = (
+        <RaisedButton primary={this.props.primary} secondary={this.props.secondary} label={ this.props.label || "Schedule an update"} onClick={this._handleClick} />
+      )
+    }
     return (
-      <RaisedButton primary={this.props.primary} secondary={this.props.secondary} label={ this.props.label || "Schedule an update"} onClick={this._handleClick} />
+      <div>{button}</div>
     );
   }
 });

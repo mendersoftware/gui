@@ -49279,7 +49279,7 @@ var Devices = React.createClass({displayName: "Devices",
           React.createElement(Groups, {groups: this.state.groups, selectedGroup: this.state.selectedGroup})
         ), 
         React.createElement("div", {className: "rightFluid padding-right"}, 
-          React.createElement("h3", null, this.state.selectedGroup.name), 
+          React.createElement("h3", {style: {marginLeft:"26"}}, this.state.selectedGroup.name), 
           React.createElement(Filters, {attributes: this.state.attributes, filters: this.state.filters, onFilterChange: this._updateFilters}), 
           React.createElement(DeviceList, {devices: this.state.devices}), 
           React.createElement(SelectedDevices, {selected: this.state.selectedDevices, selectedGroup: this.state.selectedGroup, groups: this.state.groups})
@@ -49677,11 +49677,13 @@ var SelectedDevices = React.createClass({displayName: "SelectedDevices",
           ), 
           React.createElement("div", {className: "report-list"}, 
             React.createElement(List, null, 
-              React.createElement(ListItem, {primaryText: "Schedule update", secondaryText: "Click to update this device", onClick: this._clickListItem})
+              React.createElement(ListItem, {
+                primaryText: "Schedule update", 
+                secondaryText: "Click to update this device", 
+                onClick: this._clickListItem, 
+                leftIcon: React.createElement(FontIcon, {className: "material-icons"}, "schedule")}), 
+              React.createElement(ListDivider, null)
             )
-          ), 
-          React.createElement("div", {className: "float-right"}, 
-            React.createElement(ScheduleButton, {ref: "schedule-button", label: "Schedule update for this device", openDialog: this._openSchedule, primary: false, secondary: false})
           )
         )
       )
@@ -49693,8 +49695,16 @@ var SelectedDevices = React.createClass({displayName: "SelectedDevices",
     })
 
     var addActions = [
-      { text: 'Cancel', onClick: this.dialogDismiss.bind(null, 'addGroup')},
-      { text: 'Add to group', onClick: this._addGroupHandler, ref: 'save' }
+      React.createElement("div", {style: {marginRight:"10", display:"inline-block"}}, 
+        React.createElement(FlatButton, {
+          label: "Cancel", 
+          onClick: this.dialogDismiss.bind(null, 'addGroup')})
+      ),
+      React.createElement(RaisedButton, {
+        label: "Add to group", 
+        primary: true, 
+        onClick: this._addGroupHandler, 
+        ref: "save"})
     ];
 
     var groupList = this.state.tmpGroups.map(function(group) {
@@ -49705,9 +49715,17 @@ var SelectedDevices = React.createClass({displayName: "SelectedDevices",
       }
     });
 
-     var scheduleActions =  [
-      { text: 'Cancel'},
-      { text: 'Schedule update', onClick: this._onScheduleSubmit, ref: 'save' }
+    var scheduleActions =  [
+      React.createElement("div", {style: {marginRight:"10", display:"inline-block"}}, 
+        React.createElement(FlatButton, {
+          label: "Cancel", 
+          onClick: this.dialogDismiss.bind(null, 'schedule')})
+      ),
+      React.createElement(RaisedButton, {
+        label: "Schedule update", 
+        primary: true, 
+        onClick: this._onScheduleSubmit, 
+        ref: "save"})
     ];
 
     return (
@@ -49781,7 +49799,8 @@ var SelectedDevices = React.createClass({displayName: "SelectedDevices",
           ref: "schedule", 
           title: "Schedule an update", 
           actions: scheduleActions, 
-          autoDetectWindowHeight: true, autoScrollBodyContent: true
+          autoDetectWindowHeight: true, autoScrollBodyContent: true, 
+          bodyStyle: {paddingTop:"0"}
           }, 
           React.createElement(ScheduleForm, {device: this.props.selected[0], updateSchedule: this._updateParams, groups: this.props.groups})
 
@@ -50031,18 +50050,32 @@ var Repository = React.createClass({displayName: "Repository",
           React.createElement(TableRowColumn, null, pkg.name), 
           React.createElement(TableRowColumn, null, pkg.model), 
           React.createElement(TableRowColumn, null, pkg.description), 
-          React.createElement(TableRowColumn, null, React.createElement(ScheduleButton, {primary: false, secondary: false, openDialog: this._openSchedule, image: pkg}))
+          React.createElement(TableRowColumn, null, React.createElement(ScheduleButton, {buttonType: "flat", primary: false, secondary: true, openDialog: this._openSchedule, image: pkg}))
         )
       )
     }, this);
     var uploadActions = [
-      { text: 'Cancel'},
-      { text: 'Upload image', onClick: this._onUploadSubmit, ref: 'upload', primary: 'true' }
+      React.createElement("div", {style: {marginRight:"10", display:"inline-block"}}, 
+        React.createElement(FlatButton, {
+          label: "Cancel", 
+          onClick: this.dialogDismiss.bind(null, 'upload')})
+      ),
+      React.createElement(RaisedButton, {
+        label: "Upload image", 
+        primary: true, 
+        onClick: this._onUploadSubmit})
     ];
 
     var scheduleActions = [
-      { text: 'Cancel', onClick: this.dialogDismiss.bind(null, 'schedule')},
-      { text: 'Schedule update', onClick: this._onScheduleSubmit, ref: 'save' }
+      React.createElement("div", {style: {marginRight:"10", display:"inline-block"}}, 
+        React.createElement(FlatButton, {
+          label: "Cancel", 
+          onClick: this.dialogDismiss.bind(null, 'schedule')})
+      ),
+      React.createElement(RaisedButton, {
+        label: "Schedule update", 
+        primary: true, 
+        onClick: this._onScheduleSubmit})
     ];
 
     var groupItems = [];
@@ -50114,7 +50147,8 @@ var Repository = React.createClass({displayName: "Repository",
           ref: "schedule", 
           title: "Schedule an update", 
           actions: scheduleActions, 
-          autoDetectWindowHeight: true, autoScrollBodyContent: true
+          autoDetectWindowHeight: true, autoScrollBodyContent: true, 
+          bodyStyle: {paddingTop:"0"}
           }, 
           React.createElement(ScheduleForm, {updateSchedule: this._updateParams, images: software, image: this.state.image, imageVal: this.state.image, groups: this.props.groups})
         )
@@ -50529,7 +50563,7 @@ var Report = React.createClass({displayName: "Report",
               disabled: this.props.update.status==='Complete', 
               primaryText: "Status", 
               secondaryText: React.createElement("p", null, this.props.update.status, this.props.update.status==='Complete' ? '' : ' - Click to retry'), 
-              leftIcon: React.createElement(FontIcon, {className: "material-icons"}, this.props.update.status==='Complete' ? 'check_circle' : 'error'), 
+              leftIcon: React.createElement(FontIcon, {className: "material-icons error-icon"}, this.props.update.status==='Complete' ? 'check_circle' : 'error'), 
               onClick: this._retryUpdate})
           )
         ), 
@@ -50607,7 +50641,7 @@ var Schedule = React.createClass({displayName: "Schedule",
             React.createElement(TableRowColumn, null, React.createElement(Time, {value: update.start_time, format: "YYYY/MM/DD HH:mm"})), 
             React.createElement(TableRowColumn, null, React.createElement(Time, {value: update.end_time, format: "YYYY/MM/DD HH:mm"})), 
             React.createElement(TableRowColumn, null, "Begins ", React.createElement(Time, {value: update.start_time, format: "YYYY/MM/DD HH:mm", relative: true})), 
-            React.createElement(TableRowColumn, null, React.createElement("div", null, React.createElement(FlatButton, {style: {padding:"0", marginRight:"4", minWidth:"55"}, label: "Edit", onClick: this._handleEdit.bind(null, update)}), React.createElement(FlatButton, {style: {padding:"0", marginLeft:"4", minWidth:"55"}, label: "Remove", onClick: this._handleRemove.bind(null, update.id)})))
+            React.createElement(TableRowColumn, null, React.createElement("div", null, React.createElement(FlatButton, {secondary: true, style: {padding:"0", marginRight:"4", minWidth:"55"}, label: "Edit", onClick: this._handleEdit.bind(null, update)}), React.createElement(FlatButton, {style: {padding:"0", marginLeft:"4", minWidth:"55"}, label: "Remove", onClick: this._handleRemove.bind(null, update.id)})))
           )
         )
       }
@@ -50656,7 +50690,7 @@ var React = require('react');
 // material ui
 var mui = require('material-ui');
 var RaisedButton = mui.RaisedButton;
-
+var FlatButton = mui.FlatButton;
 
 
 var ScheduleButton = React.createClass({displayName: "ScheduleButton",
@@ -50668,8 +50702,18 @@ var ScheduleButton = React.createClass({displayName: "ScheduleButton",
     this.props.openDialog("schedule", image);
   },
   render: function() {
+    var button = '';
+    if (this.props.buttonType === 'flat') {
+      button = (
+        React.createElement(FlatButton, {primary: this.props.primary, secondary: this.props.secondary, label:  this.props.label || "Schedule an update", onClick: this._handleClick})
+      )
+    } else {
+      button = (
+        React.createElement(RaisedButton, {primary: this.props.primary, secondary: this.props.secondary, label:  this.props.label || "Schedule an update", onClick: this._handleClick})
+      )
+    }
     return (
-      React.createElement(RaisedButton, {primary: this.props.primary, secondary: this.props.secondary, label:  this.props.label || "Schedule an update", onClick: this._handleClick})
+      React.createElement("div", null, button)
     );
   }
 });
@@ -50979,6 +51023,7 @@ var Tabs = mui.Tabs;
 var Tab = mui.Tab;
 var Dialog = mui.Dialog;
 var FlatButton = mui.FlatButton;
+var RaisedButton = mui.RaisedButton;
 
 var styles = {
   tabs: {
@@ -51106,13 +51151,14 @@ var Updates = React.createClass({displayName: "Updates",
   },
   render: function() {
     var scheduleActions =  [
-      React.createElement(FlatButton, {
-        label: "Cancel", 
-        secondary: true, 
-        onClick: this.dialogDismiss.bind(null, 'dialog')}),
-      React.createElement(FlatButton, {
+      React.createElement("div", {style: {marginRight:"10", display:"inline-block"}}, 
+        React.createElement(FlatButton, {
+          label: "Cancel", 
+          onClick: this.dialogDismiss.bind(null, 'dialog')})
+      ),
+      React.createElement(RaisedButton, {
         label: "Schedule update", 
-        secondary: true, 
+        primary: true, 
         onClick: this._onScheduleSubmit, 
         ref: "save"})
     ];
@@ -51147,7 +51193,7 @@ var Updates = React.createClass({displayName: "Updates",
               React.createElement("div", {className: "tabContainer"}, 
                 React.createElement(Recent, {recent: this.state.recent, progress: this.state.progress, showReport: this._showReport}), 
                 React.createElement("div", {style: {marginTop:"45"}}, 
-                  React.createElement(ScheduleButton, {primary: true, openDialog: this.dialogOpen})
+                  React.createElement(ScheduleButton, {secondary: true, openDialog: this.dialogOpen})
                 )
               )
             ), 
@@ -51159,7 +51205,7 @@ var Updates = React.createClass({displayName: "Updates",
               React.createElement("div", {className: "tabContainer"}, 
                 React.createElement(Schedule, {edit: this._scheduleUpdate, schedule: this.state.schedule, remove: this._scheduleRemove}), 
                 React.createElement("div", {style: {marginTop:"45"}}, 
-                  React.createElement(ScheduleButton, {style: {marginTop:"45"}, primary: true, openDialog: this.dialogOpen})
+                  React.createElement(ScheduleButton, {style: {marginTop:"45"}, secondary: true, openDialog: this.dialogOpen})
                 )
               )
             ), 

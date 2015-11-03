@@ -78,18 +78,32 @@ var Repository = React.createClass({
           <TableRowColumn>{pkg.name}</TableRowColumn>
           <TableRowColumn>{pkg.model}</TableRowColumn>
           <TableRowColumn>{pkg.description}</TableRowColumn>
-          <TableRowColumn><ScheduleButton primary={false} secondary={false} openDialog={this._openSchedule} image={pkg} /></TableRowColumn>
+          <TableRowColumn><ScheduleButton buttonType="flat" primary={false} secondary={true} openDialog={this._openSchedule} image={pkg} /></TableRowColumn>
         </TableRow>
       )
     }, this);
     var uploadActions = [
-      { text: 'Cancel'},
-      { text: 'Upload image', onClick: this._onUploadSubmit, ref: 'upload', primary: 'true' }
+      <div style={{marginRight:"10", display:"inline-block"}}>
+        <FlatButton
+          label="Cancel"
+          onClick={this.dialogDismiss.bind(null, 'upload')} />
+      </div>,
+      <RaisedButton
+        label="Upload image"
+        primary={true}
+        onClick={this._onUploadSubmit} />
     ];
 
     var scheduleActions = [
-      { text: 'Cancel', onClick: this.dialogDismiss.bind(null, 'schedule')},
-      { text: 'Schedule update', onClick: this._onScheduleSubmit, ref: 'save' }
+      <div style={{marginRight:"10", display:"inline-block"}}>
+        <FlatButton
+          label="Cancel"
+          onClick={this.dialogDismiss.bind(null, 'schedule')} />
+      </div>,
+      <RaisedButton
+        label="Schedule update"
+        primary={true}
+        onClick={this._onScheduleSubmit} />
     ];
 
     var groupItems = [];
@@ -162,6 +176,7 @@ var Repository = React.createClass({
           title='Schedule an update'
           actions={scheduleActions}
           autoDetectWindowHeight={true} autoScrollBodyContent={true}
+          bodyStyle={{paddingTop:"0"}}
           >
           <ScheduleForm updateSchedule={this._updateParams} images={software} image={this.state.image} imageVal={this.state.image} groups={this.props.groups} />
         </Dialog>

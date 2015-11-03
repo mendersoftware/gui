@@ -14,6 +14,7 @@ var Tabs = mui.Tabs;
 var Tab = mui.Tab;
 var Dialog = mui.Dialog;
 var FlatButton = mui.FlatButton;
+var RaisedButton = mui.RaisedButton;
 
 var styles = {
   tabs: {
@@ -141,13 +142,14 @@ var Updates = React.createClass({
   },
   render: function() {
     var scheduleActions =  [
-      <FlatButton
-        label="Cancel"
-        secondary={true}
-        onClick={this.dialogDismiss.bind(null, 'dialog')} />,
-      <FlatButton
+      <div style={{marginRight:"10", display:"inline-block"}}>
+        <FlatButton
+          label="Cancel"
+          onClick={this.dialogDismiss.bind(null, 'dialog')} />
+      </div>,
+      <RaisedButton
         label="Schedule update"
-        secondary={true}
+        primary={true}
         onClick={this._onScheduleSubmit}
         ref="save" />
     ];
@@ -182,7 +184,7 @@ var Updates = React.createClass({
               <div className="tabContainer">
                 <Recent recent={this.state.recent} progress={this.state.progress} showReport={this._showReport} />
                 <div style={{marginTop:"45"}}>
-                  <ScheduleButton primary={true} openDialog={this.dialogOpen} />
+                  <ScheduleButton secondary={true} openDialog={this.dialogOpen} />
                 </div>
               </div>
             </Tab>
@@ -194,7 +196,7 @@ var Updates = React.createClass({
               <div className="tabContainer">
                 <Schedule edit={this._scheduleUpdate} schedule={this.state.schedule} remove={this._scheduleRemove} />
                 <div style={{marginTop:"45"}}>
-                  <ScheduleButton style={{marginTop:"45"}} primary={true}  openDialog={this.dialogOpen} />
+                  <ScheduleButton style={{marginTop:"45"}} secondary={true}  openDialog={this.dialogOpen} />
                 </div>
               </div>
             </Tab>

@@ -24,6 +24,9 @@ body {
 .margin-left {
   margin-left: 30px;
 }
+.margin-right {
+  margin-right: 30px;
+}
 .margin-bottom {
   margin-bottom: 30px;
 }
@@ -80,7 +83,7 @@ body {
   margin-left: 260px;
 }
 .tableActions {
-  padding: 20px 30px 20px 0;
+  padding: 20px 0 20px 28px;
 }
 .largeDialog {
   width: 96% !important;
@@ -145,5 +148,8 @@ button.remove-icon:disabled .material-icons {
 }
 button.remove-icon .material-icons {
   color: #679BA5 !important;
+}
+.material-icons.error-icon {
+  color: #ab1000 !important;
 }
 /* LESS MIXINS */

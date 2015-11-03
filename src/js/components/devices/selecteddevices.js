@@ -204,11 +204,13 @@ var SelectedDevices = React.createClass({
           </div>
           <div className="report-list">
             <List>
-              <ListItem primaryText="Schedule update" secondaryText="Click to update this device" onClick={this._clickListItem}/>
+              <ListItem
+                primaryText="Schedule update"
+                secondaryText="Click to update this device"
+                onClick={this._clickListItem}
+                leftIcon={<FontIcon className="material-icons">schedule</FontIcon>} />
+              <ListDivider />
             </List>
-          </div>
-          <div className="float-right">
-            <ScheduleButton ref="schedule-button" label="Schedule update for this device" openDialog={this._openSchedule} primary={false} secondary={false}  />
           </div>
         </div>
       )
@@ -220,8 +222,16 @@ var SelectedDevices = React.createClass({
     })
 
     var addActions = [
-      { text: 'Cancel', onClick: this.dialogDismiss.bind(null, 'addGroup')},
-      { text: 'Add to group', onClick: this._addGroupHandler, ref: 'save' }
+      <div style={{marginRight:"10", display:"inline-block"}}>
+        <FlatButton
+          label="Cancel"
+          onClick={this.dialogDismiss.bind(null, 'addGroup')} />
+      </div>,
+      <RaisedButton
+        label="Add to group"
+        primary={true}
+        onClick={this._addGroupHandler}
+        ref="save" />
     ];
 
     var groupList = this.state.tmpGroups.map(function(group) {
@@ -232,9 +242,17 @@ var SelectedDevices = React.createClass({
       }
     });
 
-     var scheduleActions =  [
-      { text: 'Cancel'},
-      { text: 'Schedule update', onClick: this._onScheduleSubmit, ref: 'save' }
+    var scheduleActions =  [
+      <div style={{marginRight:"10", display:"inline-block"}}>
+        <FlatButton
+          label="Cancel"
+          onClick={this.dialogDismiss.bind(null, 'schedule')} />
+      </div>,
+      <RaisedButton
+        label="Schedule update"
+        primary={true}
+        onClick={this._onScheduleSubmit}
+        ref="save" />
     ];
 
     return (
@@ -309,6 +327,7 @@ var SelectedDevices = React.createClass({
           title='Schedule an update'
           actions={scheduleActions}
           autoDetectWindowHeight={true} autoScrollBodyContent={true}
+          bodyStyle={{paddingTop:"0"}}
           >
           <ScheduleForm device={this.props.selected[0]} updateSchedule={this._updateParams} groups={this.props.groups} />
 
