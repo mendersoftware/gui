@@ -131,6 +131,10 @@ var SelectedDevices = React.createClass({
     this.setState(tmp);
   },
 
+  _clickListItem: function() {
+   this._openSchedule('schedule');
+  },
+
   _onScheduleSubmit: function() {
     var newUpdate = {
       group: this.state.group,
@@ -198,8 +202,13 @@ var SelectedDevices = React.createClass({
               <ListDivider />
             </List>
           </div>
+          <div className="report-list">
+            <List>
+              <ListItem primaryText="Schedule update" secondaryText="Click to update this device" onClick={this._clickListItem}/>
+            </List>
+          </div>
           <div className="float-right">
-            <ScheduleButton label="Schedule update for this device" openDialog={this._openSchedule} primary={false} secondary={false} />
+            <ScheduleButton ref="schedule-button" label="Schedule update for this device" openDialog={this._openSchedule} primary={false} secondary={false}  />
           </div>
         </div>
       )

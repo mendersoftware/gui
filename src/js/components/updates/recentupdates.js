@@ -69,7 +69,7 @@ var Recent = React.createClass({
     ];
     return (
       <div>
-        <div style={{marginTop:"30px"}}> 
+        <div style={{marginBottom:"60"}}> 
           <h3>Updates in progress</h3>
           <Table
             className={progress.length ? null : 'hidden'}
@@ -98,7 +98,9 @@ var Recent = React.createClass({
           </div>
         </div>
 
-        <div style={{marginTop:"60px"}}>
+        <hr className="table-divider" />
+
+        <div style={{marginTop:"60"}}>
           <h3>Recent updates</h3>
           <Table
             onCellClick={this._handleCellClick}

@@ -13,6 +13,7 @@ var TextField = mui.TextField;
 var RadioButtonGroup = mui.RadioButtonGroup;
 var RadioButton = mui.RadioButton;
 var RaisedButton = mui.RaisedButton;
+var FontIcon = mui.FontIcon;
 
 
 function getDate() {
@@ -184,12 +185,57 @@ var ScheduleForm = React.createClass({
     var defaultStartDate =  this.state.start_time;
     var defaultEndDate = this.state.end_time;
     return (
-      <div style={{height: '400px'}}>
+      <div style={{height: '440px'}}>
         <form>
-          <div>
+          <div style={{display:"block"}}>
+            <SelectField
+              ref="image"
+              value={this.state.imageVal.payload}
+              onChange={this._handleImageValueChange}
+              floatingLabelText="Select target software"
+              menuItems={imageItems} />
+
+            <TextField
+              className="margin-left"
+              disabled={true}
+              hintText="Device type"
+              floatingLabelText="Device type"
+              value={model} 
+              underlineDisabledStyle={{borderBottom:"none"}}
+              style={{bottom:"-8"}}
+              errorStyle={{color: "rgb(171, 16, 0)"}} />
+          </div>
+
+          <div style={{display:"block"}}>
+            <div className={this.state.disabled ? 'hidden' : 'inline-block'}>
+              <SelectField
+                value={this.state.groupVal.payload}
+                ref="group"
+                onChange={this._handleGroupValueChange}
+                floatingLabelText="Select group"
+                menuItems={groupItems} />
+            </div>
+
+            <div className={this.state.disabled ? 'inline-block' : 'hidden'}>
+              <TextField
+                value={groupItems[0].text}
+                ref="device"
+                floatingLabelText="Device"
+                disabled={this.state.disabled}
+                underlineDisabledStyle={{borderBottom:"none"}}
+                errorStyle={{color: "rgb(171, 16, 0)"}} />
+              </div>
+
+            <span className={this.state.devices ? 'margin-left' : 'hidden'}>{this.state.devices} devices will be updated <Link to="devices" params={{groupId: this.state.groupVal.payload, filters:filters }} className={this.state.disabled ? "hidden" : "margin-left"}>View devices</Link></span>
+            
+          </div>
+            
+          <p className='info'><FontIcon className="material-icons" style={{marginRight:"4", fontSize:"18", top: "4"}}>info_outline</FontIcon>Any devices that are already on the target software version will be skipped.</p>
+
+          <div className="inputGroup">
             <h5 style={{margin:"0"}}>Start update</h5>
             <div style={{display:"inline-block"}}>
-               <DateTime 
+              <DateTime 
                 my_ref="start_date"
                 date={true}
                 changed={this._updatedDateTime}
@@ -198,7 +244,7 @@ var ScheduleForm = React.createClass({
                 minDate={this.state.minDate} />
             </div>
             <div style={{display:"inline-block", marginLeft:"30px"}}>
-               <DateTime 
+              <DateTime 
                 my_ref="start_time"
                 time={true}
                 changed={this._updatedDateTime}
@@ -207,7 +253,7 @@ var ScheduleForm = React.createClass({
             </div>
           </div>
 
-          <div style={{marginTop:"20"}}>
+          <div style={{marginTop:"20"}} className="inputGroup">
             <h5 style={{margin:"0"}}>End update</h5>
             <div style={{display:"inline-block"}}>
               <DateTime 
@@ -228,49 +274,6 @@ var ScheduleForm = React.createClass({
             </div>
           </div>
 
-          <div style={{display:"block"}}>
-            <SelectField
-              ref="image"
-              value={this.state.imageVal.payload}
-              onChange={this._handleImageValueChange}
-              floatingLabelText="Select target software"
-              menuItems={imageItems} />
-
-            <TextField
-              className="margin-left"
-              disabled={true}
-              hintText="Device type"
-              floatingLabelText="Device type"
-              value={model} 
-              underlineDisabledStyle={{borderBottom:"none"}}
-              style={{bottom:"-8"}}
-              errorStyle={{color: "rgb(171, 16, 0)"}} />
-
-            <div className={this.state.disabled ? 'hidden' : "block"}>
-              <SelectField
-                style={{display:"block"}}
-                value={this.state.groupVal.payload}
-                ref="group"
-                onChange={this._handleGroupValueChange}
-                floatingLabelText="Select group"
-                menuItems={groupItems} />
-            </div>
-
-            <div className={this.state.disabled ? 'block' : "hidden"}>
-              <TextField
-                style={{display:"block"}}
-                value={groupItems[0].text}
-                ref="device"
-                floatingLabelText="Device"
-                disabled={this.state.disabled}
-                underlineDisabledStyle={{borderBottom:"none"}}
-                errorStyle={{color: "rgb(171, 16, 0)"}} />
-            </div>
-
-            <p className={this.state.devices ? null : 'hidden'}>{this.state.devices} devices will be updated <Link to="devices" params={{groupId: this.state.groupVal.payload, filters:filters }} className={this.state.disabled ? "hidden" : "margin-left"}>View devices</Link></p>
-
-            <p className='warning'>Any devices that are already on the target software version will be skipped.</p>
-          </div>
         </form>
       </div>
     );

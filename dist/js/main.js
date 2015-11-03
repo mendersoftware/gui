@@ -48988,7 +48988,7 @@ var Dashboard = React.createClass({displayName: "Dashboard",
   },
   render: function() {
     return (
-      React.createElement("div", null, 
+      React.createElement("div", {className: "contentContainer"}, 
         React.createElement(Progress, {clickHandle: this._handleWidgetClick, progress: this.state.progress, route: "/updates"}), 
         React.createElement(Health, {clickHandle: this._handleWidgetClick, health: this.state.health, route: "/devices/1/status%3DDown"}), 
         React.createElement(Schedule, {clickHandle: this._handleWidgetClick, schedule: this.state.schedule, route: "/updates/schedule"})
@@ -49274,11 +49274,11 @@ var Devices = React.createClass({displayName: "Devices",
   },
   render: function() {
     return (
-      React.createElement("div", null, 
+      React.createElement("div", {className: "margin-top"}, 
        React.createElement("div", {className: "leftFixed"}, 
           React.createElement(Groups, {groups: this.state.groups, selectedGroup: this.state.selectedGroup})
         ), 
-        React.createElement("div", {className: "rightFluid"}, 
+        React.createElement("div", {className: "rightFluid padding-right"}, 
           React.createElement("h3", null, this.state.selectedGroup.name), 
           React.createElement(Filters, {attributes: this.state.attributes, filters: this.state.filters, onFilterChange: this._updateFilters}), 
           React.createElement(DeviceList, {devices: this.state.devices}), 
@@ -49604,6 +49604,10 @@ var SelectedDevices = React.createClass({displayName: "SelectedDevices",
     this.setState(tmp);
   },
 
+  _clickListItem: function() {
+   this._openSchedule('schedule');
+  },
+
   _onScheduleSubmit: function() {
     var newUpdate = {
       group: this.state.group,
@@ -49671,8 +49675,13 @@ var SelectedDevices = React.createClass({displayName: "SelectedDevices",
               React.createElement(ListDivider, null)
             )
           ), 
+          React.createElement("div", {className: "report-list"}, 
+            React.createElement(List, null, 
+              React.createElement(ListItem, {primaryText: "Schedule update", secondaryText: "Click to update this device", onClick: this._clickListItem})
+            )
+          ), 
           React.createElement("div", {className: "float-right"}, 
-            React.createElement(ScheduleButton, {label: "Schedule update for this device", openDialog: this._openSchedule, primary: false, secondary: false})
+            React.createElement(ScheduleButton, {ref: "schedule-button", label: "Schedule update for this device", openDialog: this._openSchedule, primary: false, secondary: false})
           )
         )
       )
@@ -50166,14 +50175,17 @@ var Software = React.createClass({displayName: "Software",
           React.createElement(Tab, {key: 1, 
           style: styles.tabs, 
           label: "Installed"}, 
-            React.createElement(Installed, {software: this.state.installed})
-
+            React.createElement("div", {className: "tabContainer"}, 
+              React.createElement(Installed, {software: this.state.installed})
+            )
           ), 
 
           React.createElement(Tab, {key: 2, 
           style: styles.tabs, 
           label: "Image repository"}, 
-            React.createElement(Repository, {software: this.state.repo, groups: this.state.groups})
+            React.createElement("div", {className: "tabContainer"}, 
+              React.createElement(Repository, {software: this.state.repo, groups: this.state.groups})
+            )
           )
         )
       )
@@ -50366,7 +50378,7 @@ var Recent = React.createClass({displayName: "Recent",
     ];
     return (
       React.createElement("div", null, 
-        React.createElement("div", {style: {marginTop:"30px"}}, 
+        React.createElement("div", {style: {marginBottom:"60"}}, 
           React.createElement("h3", null, "Updates in progress"), 
           React.createElement(Table, {
             className: progress.length ? null : 'hidden', 
@@ -50395,7 +50407,9 @@ var Recent = React.createClass({displayName: "Recent",
           )
         ), 
 
-        React.createElement("div", {style: {marginTop:"60px"}}, 
+        React.createElement("hr", {className: "table-divider"}), 
+
+        React.createElement("div", {style: {marginTop:"60"}}, 
           React.createElement("h3", null, "Recent updates"), 
           React.createElement(Table, {
             onCellClick: this._handleCellClick, 
@@ -50678,6 +50692,7 @@ var TextField = mui.TextField;
 var RadioButtonGroup = mui.RadioButtonGroup;
 var RadioButton = mui.RadioButton;
 var RaisedButton = mui.RaisedButton;
+var FontIcon = mui.FontIcon;
 
 
 function getDate() {
@@ -50849,12 +50864,57 @@ var ScheduleForm = React.createClass({displayName: "ScheduleForm",
     var defaultStartDate =  this.state.start_time;
     var defaultEndDate = this.state.end_time;
     return (
-      React.createElement("div", {style: {height: '400px'}}, 
+      React.createElement("div", {style: {height: '440px'}}, 
         React.createElement("form", null, 
-          React.createElement("div", null, 
+          React.createElement("div", {style: {display:"block"}}, 
+            React.createElement(SelectField, {
+              ref: "image", 
+              value: this.state.imageVal.payload, 
+              onChange: this._handleImageValueChange, 
+              floatingLabelText: "Select target software", 
+              menuItems: imageItems}), 
+
+            React.createElement(TextField, {
+              className: "margin-left", 
+              disabled: true, 
+              hintText: "Device type", 
+              floatingLabelText: "Device type", 
+              value: model, 
+              underlineDisabledStyle: {borderBottom:"none"}, 
+              style: {bottom:"-8"}, 
+              errorStyle: {color: "rgb(171, 16, 0)"}})
+          ), 
+
+          React.createElement("div", {style: {display:"block"}}, 
+            React.createElement("div", {className: this.state.disabled ? 'hidden' : 'inline-block'}, 
+              React.createElement(SelectField, {
+                value: this.state.groupVal.payload, 
+                ref: "group", 
+                onChange: this._handleGroupValueChange, 
+                floatingLabelText: "Select group", 
+                menuItems: groupItems})
+            ), 
+
+            React.createElement("div", {className: this.state.disabled ? 'inline-block' : 'hidden'}, 
+              React.createElement(TextField, {
+                value: groupItems[0].text, 
+                ref: "device", 
+                floatingLabelText: "Device", 
+                disabled: this.state.disabled, 
+                underlineDisabledStyle: {borderBottom:"none"}, 
+                errorStyle: {color: "rgb(171, 16, 0)"}})
+              ), 
+
+            React.createElement("span", {className: this.state.devices ? 'margin-left' : 'hidden'}, this.state.devices, " devices will be updated ", React.createElement(Link, {to: "devices", params: {groupId: this.state.groupVal.payload, filters:filters}, className: this.state.disabled ? "hidden" : "margin-left"}, "View devices"))
+            
+          ), 
+            
+          React.createElement("p", {className: "info"}, React.createElement(FontIcon, {className: "material-icons", style: {marginRight:"4", fontSize:"18", top: "4"}}, "info_outline"), "Any devices that are already on the target software version will be skipped."), 
+
+          React.createElement("div", {className: "inputGroup"}, 
             React.createElement("h5", {style: {margin:"0"}}, "Start update"), 
             React.createElement("div", {style: {display:"inline-block"}}, 
-               React.createElement(DateTime, {
+              React.createElement(DateTime, {
                 my_ref: "start_date", 
                 date: true, 
                 changed: this._updatedDateTime, 
@@ -50863,7 +50923,7 @@ var ScheduleForm = React.createClass({displayName: "ScheduleForm",
                 minDate: this.state.minDate})
             ), 
             React.createElement("div", {style: {display:"inline-block", marginLeft:"30px"}}, 
-               React.createElement(DateTime, {
+              React.createElement(DateTime, {
                 my_ref: "start_time", 
                 time: true, 
                 changed: this._updatedDateTime, 
@@ -50872,7 +50932,7 @@ var ScheduleForm = React.createClass({displayName: "ScheduleForm",
             )
           ), 
 
-          React.createElement("div", {style: {marginTop:"20"}}, 
+          React.createElement("div", {style: {marginTop:"20"}, className: "inputGroup"}, 
             React.createElement("h5", {style: {margin:"0"}}, "End update"), 
             React.createElement("div", {style: {display:"inline-block"}}, 
               React.createElement(DateTime, {
@@ -50891,51 +50951,8 @@ var ScheduleForm = React.createClass({displayName: "ScheduleForm",
                 label: "End time", 
                 defaultDate: defaultEndDate})
             )
-          ), 
-
-          React.createElement("div", {style: {display:"block"}}, 
-            React.createElement(SelectField, {
-              ref: "image", 
-              value: this.state.imageVal.payload, 
-              onChange: this._handleImageValueChange, 
-              floatingLabelText: "Select target software", 
-              menuItems: imageItems}), 
-
-            React.createElement(TextField, {
-              className: "margin-left", 
-              disabled: true, 
-              hintText: "Device type", 
-              floatingLabelText: "Device type", 
-              value: model, 
-              underlineDisabledStyle: {borderBottom:"none"}, 
-              style: {bottom:"-8"}, 
-              errorStyle: {color: "rgb(171, 16, 0)"}}), 
-
-            React.createElement("div", {className: this.state.disabled ? 'hidden' : "block"}, 
-              React.createElement(SelectField, {
-                style: {display:"block"}, 
-                value: this.state.groupVal.payload, 
-                ref: "group", 
-                onChange: this._handleGroupValueChange, 
-                floatingLabelText: "Select group", 
-                menuItems: groupItems})
-            ), 
-
-            React.createElement("div", {className: this.state.disabled ? 'block' : "hidden"}, 
-              React.createElement(TextField, {
-                style: {display:"block"}, 
-                value: groupItems[0].text, 
-                ref: "device", 
-                floatingLabelText: "Device", 
-                disabled: this.state.disabled, 
-                underlineDisabledStyle: {borderBottom:"none"}, 
-                errorStyle: {color: "rgb(171, 16, 0)"}})
-            ), 
-
-            React.createElement("p", {className: this.state.devices ? null : 'hidden'}, this.state.devices, " devices will be updated ", React.createElement(Link, {to: "devices", params: {groupId: this.state.groupVal.payload, filters:filters}, className: this.state.disabled ? "hidden" : "margin-left"}, "View devices")), 
-
-            React.createElement("p", {className: "warning"}, "Any devices that are already on the target software version will be skipped.")
           )
+
         )
       )
     );
@@ -50967,7 +50984,7 @@ var styles = {
   tabs: {
     backgroundColor: "#fff",
     color: "#414141",
-    borderBottom: "1px solid #e0e0e0"
+    borderBottom: "1px solid #e0e0e0",
   },
   inkbar: {
     backgroundColor: "#679BA5",
@@ -51127,9 +51144,11 @@ var Updates = React.createClass({displayName: "Updates",
             label: "Latest", 
             value: "0", 
             className: "tabClass"}, 
-              React.createElement(Recent, {recent: this.state.recent, progress: this.state.progress, showReport: this._showReport}), 
-              React.createElement("div", {style: {marginTop:"45"}}, 
-                React.createElement(ScheduleButton, {primary: true, openDialog: this.dialogOpen})
+              React.createElement("div", {className: "tabContainer"}, 
+                React.createElement(Recent, {recent: this.state.recent, progress: this.state.progress, showReport: this._showReport}), 
+                React.createElement("div", {style: {marginTop:"45"}}, 
+                  React.createElement(ScheduleButton, {primary: true, openDialog: this.dialogOpen})
+                )
               )
             ), 
 
@@ -51137,9 +51156,11 @@ var Updates = React.createClass({displayName: "Updates",
             style: styles.tabs, 
             label: "Schedule", 
             value: "1"}, 
-              React.createElement(Schedule, {edit: this._scheduleUpdate, schedule: this.state.schedule, remove: this._scheduleRemove}), 
-              React.createElement("div", {style: {marginTop:"45"}}, 
-                React.createElement(ScheduleButton, {style: {marginTop:"45"}, primary: true, openDialog: this.dialogOpen})
+              React.createElement("div", {className: "tabContainer"}, 
+                React.createElement(Schedule, {edit: this._scheduleUpdate, schedule: this.state.schedule, remove: this._scheduleRemove}), 
+                React.createElement("div", {style: {marginTop:"45"}}, 
+                  React.createElement(ScheduleButton, {style: {marginTop:"45"}, primary: true, openDialog: this.dialogOpen})
+                )
               )
             ), 
 
@@ -51147,7 +51168,9 @@ var Updates = React.createClass({displayName: "Updates",
             style: styles.tabs, 
             label: "Event log", 
             value: "2"}, 
-              React.createElement(EventLog, {events: this.state.events})
+              React.createElement("div", {className: "tabContainer"}, 
+                React.createElement(EventLog, {events: this.state.events})
+              )
             )
           )
         ), 
@@ -51157,7 +51180,8 @@ var Updates = React.createClass({displayName: "Updates",
           title: this.state.dialogTitle, 
           actions: this.state.scheduleForm ? scheduleActions : reportActions, 
           autoDetectWindowHeight: true, autoScrollBodyContent: true, 
-          contentClassName: this.state.contentClass
+          contentClassName: this.state.contentClass, 
+          bodyStyle: {paddingTop:"0"}
           }, 
           dialogContent
         )

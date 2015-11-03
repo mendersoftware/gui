@@ -48,11 +48,11 @@ var Devices = React.createClass({
   },
   render: function() {
     return (
-      <div>
+      <div className="margin-top">
        <div className="leftFixed">
           <Groups groups={this.state.groups} selectedGroup={this.state.selectedGroup} />
         </div>
-        <div className="rightFluid">
+        <div className="rightFluid padding-right">
           <h3>{this.state.selectedGroup.name}</h3>
           <Filters attributes={this.state.attributes} filters={this.state.filters} onFilterChange={this._updateFilters} />
           <DeviceList devices={this.state.devices} />

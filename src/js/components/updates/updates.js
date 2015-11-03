@@ -19,7 +19,7 @@ var styles = {
   tabs: {
     backgroundColor: "#fff",
     color: "#414141",
-    borderBottom: "1px solid #e0e0e0"
+    borderBottom: "1px solid #e0e0e0",
   },
   inkbar: {
     backgroundColor: "#679BA5",
@@ -179,9 +179,11 @@ var Updates = React.createClass({
             label={"Latest"}
             value="0"
             className="tabClass">
-              <Recent recent={this.state.recent} progress={this.state.progress} showReport={this._showReport} />
-              <div style={{marginTop:"45"}}>
-                <ScheduleButton primary={true} openDialog={this.dialogOpen} />
+              <div className="tabContainer">
+                <Recent recent={this.state.recent} progress={this.state.progress} showReport={this._showReport} />
+                <div style={{marginTop:"45"}}>
+                  <ScheduleButton primary={true} openDialog={this.dialogOpen} />
+                </div>
               </div>
             </Tab>
 
@@ -189,9 +191,11 @@ var Updates = React.createClass({
             style={styles.tabs}
             label={"Schedule"}
             value="1">
-              <Schedule edit={this._scheduleUpdate} schedule={this.state.schedule} remove={this._scheduleRemove} />
-              <div style={{marginTop:"45"}}>
-                <ScheduleButton style={{marginTop:"45"}} primary={true}  openDialog={this.dialogOpen} />
+              <div className="tabContainer">
+                <Schedule edit={this._scheduleUpdate} schedule={this.state.schedule} remove={this._scheduleRemove} />
+                <div style={{marginTop:"45"}}>
+                  <ScheduleButton style={{marginTop:"45"}} primary={true}  openDialog={this.dialogOpen} />
+                </div>
               </div>
             </Tab>
 
@@ -199,7 +203,9 @@ var Updates = React.createClass({
             style={styles.tabs}
             label={"Event log"}
             value="2">
-              <EventLog events={this.state.events} />
+              <div className="tabContainer">
+                <EventLog events={this.state.events} />
+              </div>
             </Tab>
           </Tabs>
         </div>
@@ -210,6 +216,7 @@ var Updates = React.createClass({
           actions={this.state.scheduleForm ? scheduleActions : reportActions}
           autoDetectWindowHeight={true} autoScrollBodyContent={true}
           contentClassName={this.state.contentClass}
+          bodyStyle={{paddingTop:"0"}}
           >
           {dialogContent}
         </Dialog>

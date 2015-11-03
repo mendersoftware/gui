@@ -46,14 +46,17 @@ var Software = React.createClass({
           <Tab key={1}
           style={styles.tabs}
           label={"Installed"}>
-            <Installed software={this.state.installed} />
-
+            <div className="tabContainer">
+              <Installed software={this.state.installed} />
+            </div>
           </Tab>
 
           <Tab key={2}
           style={styles.tabs}
           label={"Image repository"}>
-            <Repository software={this.state.repo} groups={this.state.groups} />
+            <div className="tabContainer">
+              <Repository software={this.state.repo} groups={this.state.groups} />
+            </div>
           </Tab>
         </Tabs>
       </div>
