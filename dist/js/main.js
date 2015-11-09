@@ -48990,7 +48990,7 @@ var Dashboard = React.createClass({displayName: "Dashboard",
     return (
       React.createElement("div", {className: "contentContainer"}, 
 
-      React.createElement("img", {src: "../assets/img/dashmock1.png"})
+      React.createElement("img", {src: "assets/img/dashmock1.png"})
 
 
       )

@@ -24,7 +24,7 @@ var Dashboard = React.createClass({
     return (
       <div className="contentContainer">
 
-      <img src="../assets/img/dashmock1.png" />
+      <img src="assets/img/dashmock1.png" />
 
 
       </div>
