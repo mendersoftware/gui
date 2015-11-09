@@ -19,10 +19,13 @@ var Groups = React.createClass({
           if (group.type==='public') {
             var isSelected = group.id===this.props.selectedGroup.id ? {backgroundColor: "#e7e7e7"} : {backgroundColor: "transparent"};
             var boundClick = this._changeGroup.bind(null, group.id);
+            var groupLabel = (
+                <span>{group.name}<span className='float-right length'>{group.devices.length}</span></span>
+            );
             return (
               <ListItem 
                 key={group.id} 
-                primaryText={group.name} 
+                primaryText={groupLabel}
                 style={isSelected}
                 onClick={boundClick} />
             )

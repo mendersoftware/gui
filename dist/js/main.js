@@ -49453,10 +49453,13 @@ var Groups = React.createClass({displayName: "Groups",
           if (group.type==='public') {
             var isSelected = group.id===this.props.selectedGroup.id ? {backgroundColor: "#e7e7e7"} : {backgroundColor: "transparent"};
             var boundClick = this._changeGroup.bind(null, group.id);
+            var groupLabel = (
+                React.createElement("span", null, group.name, React.createElement("span", {className: "float-right length"}, group.devices.length))
+            );
             return (
               React.createElement(ListItem, {
                 key: group.id, 
-                primaryText: group.name, 
+                primaryText: groupLabel, 
                 style: isSelected, 
                 onClick: boundClick})
             )
