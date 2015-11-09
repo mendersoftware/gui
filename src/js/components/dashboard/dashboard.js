@@ -23,9 +23,10 @@ var Dashboard = React.createClass({
   render: function() {
     return (
       <div className="contentContainer">
-        <Progress clickHandle={this._handleWidgetClick} progress={this.state.progress} route="/updates" />
-        <Health clickHandle={this._handleWidgetClick} health={this.state.health} route="/devices/1/status%3DDown" />
-        <Schedule clickHandle={this._handleWidgetClick} schedule={this.state.schedule} route="/updates/schedule" />
+
+      <img src="../assets/img/dashmock1.png" />
+
+
       </div>
     );
   }

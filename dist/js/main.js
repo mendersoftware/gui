@@ -48989,9 +48989,10 @@ var Dashboard = React.createClass({displayName: "Dashboard",
   render: function() {
     return (
       React.createElement("div", {className: "contentContainer"}, 
-        React.createElement(Progress, {clickHandle: this._handleWidgetClick, progress: this.state.progress, route: "/updates"}), 
-        React.createElement(Health, {clickHandle: this._handleWidgetClick, health: this.state.health, route: "/devices/1/status%3DDown"}), 
-        React.createElement(Schedule, {clickHandle: this._handleWidgetClick, schedule: this.state.schedule, route: "/updates/schedule"})
+
+      React.createElement("img", {src: "../assets/img/dashmock1.png"})
+
+
       )
     );
   }
