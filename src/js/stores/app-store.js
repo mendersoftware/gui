@@ -249,7 +249,7 @@ function _addToGroup(group, devices) {
 
     // TODO - delete if empty group?
 
-  } else if (devices.length) {
+  } else {
     // New group
     _addNewGroup(group, devices, 'public');
     // TODO - go through devices and add group

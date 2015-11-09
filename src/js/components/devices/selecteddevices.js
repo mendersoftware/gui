@@ -25,7 +25,6 @@ function getGroups() {
 var SelectedDevices = React.createClass({
   getInitialState: function() {
     return {
-      tmpGroups: getGroups(),
       showInput: false,
       selectedGroup: {
         payload: '',
@@ -89,10 +88,9 @@ var SelectedDevices = React.createClass({
     };
  
     newGroup.id = this.props.groups.length+1;
-    var groups = this.state.tmpGroups;
+    var groups = this.props.groups;
     groups.push(newGroup);
     this.setState({
-      tmpGroups: groups,
       showInput: false,
       selectedGroup: {
         payload: newGroup.id,
@@ -234,7 +232,7 @@ var SelectedDevices = React.createClass({
         ref="save" />
     ];
 
-    var groupList = this.state.tmpGroups.map(function(group) {
+    var groupList = this.props.groups.map(function(group) {
       if (group.id === 1) {
         return {payload: '', text: ''}
       } else {

@@ -22,7 +22,7 @@ var Dashboard = React.createClass({
   },
   render: function() {
     return (
-      <div className="contentContainer">
+      <div className="">
 
       <img src="assets/img/dashmock1.png" />
 

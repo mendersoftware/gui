@@ -48988,7 +48988,7 @@ var Dashboard = React.createClass({displayName: "Dashboard",
   },
   render: function() {
     return (
-      React.createElement("div", {className: "contentContainer"}, 
+      React.createElement("div", {className: ""}, 
 
       React.createElement("img", {src: "assets/img/dashmock1.png"})
 
@@ -49280,7 +49280,7 @@ var Devices = React.createClass({displayName: "Devices",
           React.createElement(Groups, {groups: this.state.groups, selectedGroup: this.state.selectedGroup})
         ), 
         React.createElement("div", {className: "rightFluid padding-right"}, 
-          React.createElement("h3", {style: {marginLeft:"26"}}, this.state.selectedGroup.name), 
+          React.createElement("h2", {style: {marginLeft:"26"}}, this.state.selectedGroup.name), 
           React.createElement(Filters, {attributes: this.state.attributes, filters: this.state.filters, onFilterChange: this._updateFilters}), 
           React.createElement(DeviceList, {devices: this.state.devices}), 
           React.createElement(SelectedDevices, {selected: this.state.selectedDevices, selectedGroup: this.state.selectedGroup, groups: this.state.groups})
@@ -49442,30 +49442,104 @@ var mui = require('material-ui');
 var List = mui.List;
 var ListItem = mui.ListItem;
 var ListDivider = mui.ListDivider;
+var FontIcon = mui.FontIcon;
+var Dialog = mui.Dialog;
+var TextField = mui.TextField;
+var FlatButton = mui.FlatButton;
+var RaisedButton = mui.RaisedButton;
 
 var Groups = React.createClass({displayName: "Groups",
+  getInitialState: function() {
+    return {
+      errorText1:'' 
+    };
+  },
   _changeGroup: function(id) {
     AppActions.selectGroup(id);
   },
+  _createGroupHandler: function() {
+    var newGroup = this.refs['customGroup'].getValue();
+    newGroup = {
+      name: newGroup,
+      devices: [],
+      type: 'public'
+    };
+ 
+    AppActions.addToGroup(newGroup, []);
+    this.dialogDismiss("createGroup");
+  },
+  dialogDismiss: function(ref) {
+    this.refs[ref].dismiss();
+  },
+  dialogOpen: function(ref) {
+    this.refs[ref].show();
+  },
+  _validateName: function(e) {
+    var newName = e.target.value;
+    var errorText = null;
+    for (var i=0;i<this.props.groups.length; i++) {
+      if (this.props.groups[i].name === newName) {
+        errorText = "A group with this name already exists";
+      }
+    }
+    this.setState({errorText1: errorText});
+  },
   render: function() {
+    var createBtn = (
+      React.createElement(FontIcon, {className: "material-icons"}, "create")
+    );
+    var createActions = [
+      React.createElement("div", {style: {marginRight:"10", display:"inline-block"}}, 
+        React.createElement(FlatButton, {
+          label: "Cancel", 
+          onClick: this.dialogDismiss.bind(null, 'createGroup')})
+      ),
+      React.createElement(RaisedButton, {
+        label: "Create group", 
+        primary: true, 
+        onClick: this._createGroupHandler})
+    ];
     return (
-      React.createElement(List, {subheader: "Groups"}, 
-        this.props.groups.map(function(group) {
-          if (group.type==='public') {
-            var isSelected = group.id===this.props.selectedGroup.id ? {backgroundColor: "#e7e7e7"} : {backgroundColor: "transparent"};
-            var boundClick = this._changeGroup.bind(null, group.id);
-            var groupLabel = (
-                React.createElement("span", null, group.name, React.createElement("span", {className: "float-right length"}, group.devices.length))
-            );
-            return (
-              React.createElement(ListItem, {
-                key: group.id, 
-                primaryText: groupLabel, 
-                style: isSelected, 
-                onClick: boundClick})
-            )
-          }
-        }, this)
+      React.createElement("div", null, 
+        React.createElement(List, {subheader: "Groups"}, 
+          this.props.groups.map(function(group) {
+            if (group.type==='public') {
+              var isSelected = group.id===this.props.selectedGroup.id ? {backgroundColor: "#e7e7e7"} : {backgroundColor: "transparent"};
+              var boundClick = this._changeGroup.bind(null, group.id);
+              var groupLabel = (
+                  React.createElement("span", null, group.name, React.createElement("span", {className: "float-right length"}, group.devices.length))
+              );
+              return (
+                React.createElement(ListItem, {
+                  key: group.id, 
+                  primaryText: groupLabel, 
+                  style: isSelected, 
+                  onClick: boundClick})
+              )
+            }
+          }, this), 
+           React.createElement(ListItem, {
+            leftIcon: createBtn, 
+            primaryText: "Create a group", 
+            onClick: this.dialogOpen.bind(null, 'createGroup')})
+        ), 
+
+        React.createElement(Dialog, {
+          ref: "createGroup", 
+          title: "Create a new group", 
+          actions: createActions, 
+          actionFocus: "submit", 
+          autoDetectWindowHeight: true, autoScrollBodyContent: true}, 
+
+            React.createElement(TextField, {
+              ref: "customGroup", 
+              hintText: "Group name", 
+              floatingLabelText: "Group name", 
+              onChange: this._validateName, 
+              errorStyle: {color: "rgb(171, 16, 0)"}, 
+              errorText: this.state.errorText1})
+        )
+
       )
     );
   }
@@ -49502,7 +49576,6 @@ function getGroups() {
 var SelectedDevices = React.createClass({displayName: "SelectedDevices",
   getInitialState: function() {
     return {
-      tmpGroups: getGroups(),
       showInput: false,
       selectedGroup: {
         payload: '',
@@ -49566,10 +49639,9 @@ var SelectedDevices = React.createClass({displayName: "SelectedDevices",
     };
  
     newGroup.id = this.props.groups.length+1;
-    var groups = this.state.tmpGroups;
+    var groups = this.props.groups;
     groups.push(newGroup);
     this.setState({
-      tmpGroups: groups,
       showInput: false,
       selectedGroup: {
         payload: newGroup.id,
@@ -49711,7 +49783,7 @@ var SelectedDevices = React.createClass({displayName: "SelectedDevices",
         ref: "save"})
     ];
 
-    var groupList = this.state.tmpGroups.map(function(group) {
+    var groupList = this.props.groups.map(function(group) {
       if (group.id === 1) {
         return {payload: '', text: ''}
       } else {
@@ -51562,7 +51634,7 @@ function _addToGroup(group, devices) {
 
     // TODO - delete if empty group?
 
-  } else if (devices.length) {
+  } else {
     // New group
     _addNewGroup(group, devices, 'public');
     // TODO - go through devices and add group
