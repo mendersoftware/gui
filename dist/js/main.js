@@ -49167,9 +49167,25 @@ var TableBody = mui.TableBody;
 var TableRow = mui.TableRow;
 var TableRowColumn = mui.TableRowColumn;
 
+var TextField = mui.TextField;
+var FlatButton = mui.FlatButton;
+var FontIcon = mui.FontIcon;
+
 var DeviceList = React.createClass({displayName: "DeviceList",
+  getInitialState: function() {
+    return {
+      errorText1: null,
+    };
+  },
   shouldComponentUpdate: function(nextProps, nextState) {
-    return nextProps.devices !== this.props.devices;
+    if (nextProps.selectedGroup.name !== this.props.selectedGroup.name) {
+      this.refs['input'].setValue(nextProps.selectedGroup.name); 
+      return true;
+    } if (nextProps.devices !== this.props.devices) {
+      return true;
+    } else {
+      return false;
+    }
   },
   _onRowSelection: function(rows) {
     if (rows === "all") {
@@ -49183,7 +49199,50 @@ var DeviceList = React.createClass({displayName: "DeviceList",
   _selectAll: function(rows) {
     console.log("select all", rows);
   },
+  _handleGroupNameChange: function(event) {
+    if (!this.state.errorText1) {
+      var group = this.props.selectedGroup;
+      group.name = event.target.value;
+      AppActions.addToGroup(group, []);
+    }
+  },
+  _validateName: function(name) {
+    var errorText = null;
+    if (name) {
+      for (var i=0;i<this.props.groups.length; i++) {
+        if (this.props.groups[i].name === name) {
+          errorText = "A group with this name already exists";
+        }
+      }
+    } else {
+      errorText = "Name cannot be left blank.";
+    }
+    this.setState({errorText1: errorText});
+  },
+  _onChange: function(event) {
+    this._validateName(event.target.value);
+  },
   render: function() {
+    var styles = {
+      exampleFlatButtonIcon: {
+        height: '100%',
+        display: 'inline-block',
+        verticalAlign: 'middle',
+        float: 'left',
+        paddingLeft: '12px',
+        lineHeight: '36px',
+        marginRight: "-6",
+        color:"#679BA5",
+        fontSize:'16'
+      },
+      exampleFlatButton: {
+        fontSize:'12',
+        marginLeft:"10",
+        opacity:"0.5",
+        float:"right",
+        marginRight:"160"
+      }
+    }
     var devices = this.props.devices.map(function(device) {
       return (
         React.createElement(TableRow, {key: device.id}, 
@@ -49194,28 +49253,50 @@ var DeviceList = React.createClass({displayName: "DeviceList",
         )
       )
     })
+    var selectedName = this.props.selectedGroup.name;
     return (
-      React.createElement("div", {className: "maxTable"}, 
-        React.createElement(Table, {
-          onRowSelection: this._onRowSelection, 
-          multiSelectable: true}, 
-          React.createElement(TableHeader, {
-          enableSelectAll: true, 
-          onSelectAll: this._selectAll}, 
-            React.createElement(TableRow, null, 
-              React.createElement(TableHeaderColumn, {tooltip: "Name"}, "Name"), 
-              React.createElement(TableHeaderColumn, {tooltip: "Device type"}, "Device type"), 
-              React.createElement(TableHeaderColumn, {tooltip: "Current software"}, "Current software"), 
-              React.createElement(TableHeaderColumn, {tooltip: "Status"}, "Status")
-            )
-          ), 
-          React.createElement(TableBody, {
-            deselectOnClickaway: false}, 
-            devices
+      React.createElement("div", null, 
+        React.createElement("div", {style: {marginLeft:"26"}}, 
+          React.createElement("h2", {className: "hoverEdit", tooltip: "Rename"}, 
+            React.createElement(TextField, {
+              ref: "input", 
+              defaultValue: selectedName, 
+              underlineStyle: {borderBottom:"none"}, 
+              underlineFocusStyle: {borderColor:"#e0e0e0"}, 
+              onEnterKeyDown: this._handleGroupNameChange, 
+              onBlur: this._handleGroupNameChange, 
+              errorStyle: {color: "rgb(171, 16, 0)"}, 
+              errorText: this.state.errorText1, 
+              className: "hoverText", 
+              onChange: this._onChange}), 
+              React.createElement(FlatButton, {style: styles.exampleFlatButton, className: "opacityButton", secondary: true, label: "Remove group", labelPosition: "after"}, 
+                React.createElement(FontIcon, {style: styles.exampleFlatButtonIcon, className: "material-icons"}, "delete")
+              )
           )
         ), 
-        React.createElement("p", {className: devices.length ? 'hidden' : 'italic'}, 
-          "No devices found"
+        React.createElement("div", {className: "maxTable"}, 
+          React.createElement(Table, {
+            onRowSelection: this._onRowSelection, 
+            multiSelectable: true, 
+            className: devices.length ? null : 'hidden'}, 
+            React.createElement(TableHeader, {
+            enableSelectAll: true, 
+            onSelectAll: this._selectAll}, 
+              React.createElement(TableRow, null, 
+                React.createElement(TableHeaderColumn, {tooltip: "Name"}, "Name"), 
+                React.createElement(TableHeaderColumn, {tooltip: "Device type"}, "Device type"), 
+                React.createElement(TableHeaderColumn, {tooltip: "Current software"}, "Current software"), 
+                React.createElement(TableHeaderColumn, {tooltip: "Status"}, "Status")
+              )
+            ), 
+            React.createElement(TableBody, {
+              deselectOnClickaway: false}, 
+              devices
+            )
+          ), 
+          React.createElement("p", {className: devices.length ? 'hidden' : 'italic margin-left'}, 
+            "No devices found. Add devices to this group by making a selection within 'All devices' and choosing 'Add selected devices to a group'."
+          )
         )
       )
     );
@@ -49280,10 +49361,9 @@ var Devices = React.createClass({displayName: "Devices",
           React.createElement(Groups, {groups: this.state.groups, selectedGroup: this.state.selectedGroup})
         ), 
         React.createElement("div", {className: "rightFluid padding-right"}, 
-          React.createElement("h2", {style: {marginLeft:"26"}}, this.state.selectedGroup.name), 
           React.createElement(Filters, {attributes: this.state.attributes, filters: this.state.filters, onFilterChange: this._updateFilters}), 
-          React.createElement(DeviceList, {devices: this.state.devices}), 
-          React.createElement(SelectedDevices, {selected: this.state.selectedDevices, selectedGroup: this.state.selectedGroup, groups: this.state.groups})
+          React.createElement(DeviceList, {groups: this.state.groups, devices: this.state.devices, selectedGroup: this.state.selectedGroup}), 
+          React.createElement(SelectedDevices, {devices: this.state.devices, selected: this.state.selectedDevices, selectedGroup: this.state.selectedGroup, groups: this.state.groups})
         )
       )
     );
@@ -49421,7 +49501,7 @@ var Filters = React.createClass({displayName: "Filters",
           style: {padding: "10px 20px", top:"58", overflowY:"auto"}}), 
 
         React.createElement("div", {style: {width:"100%", position:"relative"}}, 
-          React.createElement(FlatButton, {style: {position:"absolute",right:"30", top:"-40"}, secondary: true, onClick: this._toggleNav, label: filterCount>0 ? "Filters ("+filterCount+")" : "Filters"}, 
+          React.createElement(FlatButton, {style: {position:"absolute",right:"30"}, secondary: true, onClick: this._toggleNav, label: filterCount>0 ? "Filters ("+filterCount+")" : "Filters"}, 
               React.createElement(FontIcon, {style: styles.exampleFlatButtonIcon, className: "material-icons"}, "filter_list")
           )
         )
@@ -49805,7 +49885,7 @@ var SelectedDevices = React.createClass({displayName: "SelectedDevices",
     ];
 
     return (
-      React.createElement("div", {className: "tableActions"}, 
+      React.createElement("div", {className: "tableActions", className: this.props.devices.length ? null : "hidden"}, 
         React.createElement("div", {className: "float-right"}, 
           React.createElement(RaisedButton, {disabled: disableAction, label: "Add selected devices to a group", secondary: true, onClick: this.dialogOpen.bind(null, 'addGroup')}, 
             React.createElement(FontIcon, {style: styles.raisedButtonIcon, className: "material-icons"}, "add_circle")
@@ -51406,7 +51486,7 @@ var _attributes = {
 var _groups = [
   {
     id: 1,
-    name: "All",
+    name: "All devices",
     devices: [1,2,3,4,5,6,7,8],
     type: "public"
   },
@@ -51615,7 +51695,7 @@ function _getDevices(group, model) {
 function _addToGroup(group, devices) {
   var tmpGroup = group;
   var idx = findWithAttr(_groups, 'id', tmpGroup.id);
-  if (idx) {
+  if (idx != undefined) {
     for (var i=0; i<devices.length;i++) {
       if (tmpGroup.devices.indexOf(devices[i].id)===-1) {
         tmpGroup.devices.push(devices[i].id);
@@ -51624,8 +51704,6 @@ function _addToGroup(group, devices) {
         tmpGroup.devices.splice(tmpGroup.devices.indexOf(devices[i].id),1);
       }
     }
-
-    var idx = findWithAttr(_groups, 'id', tmpGroup.id);
     _groups[idx] = tmpGroup;
 
     // reset filters

@@ -21,7 +21,7 @@ var _attributes = {
 var _groups = [
   {
     id: 1,
-    name: "All",
+    name: "All devices",
     devices: [1,2,3,4,5,6,7,8],
     type: "public"
   },
@@ -230,7 +230,7 @@ function _getDevices(group, model) {
 function _addToGroup(group, devices) {
   var tmpGroup = group;
   var idx = findWithAttr(_groups, 'id', tmpGroup.id);
-  if (idx) {
+  if (idx != undefined) {
     for (var i=0; i<devices.length;i++) {
       if (tmpGroup.devices.indexOf(devices[i].id)===-1) {
         tmpGroup.devices.push(devices[i].id);
@@ -239,8 +239,6 @@ function _addToGroup(group, devices) {
         tmpGroup.devices.splice(tmpGroup.devices.indexOf(devices[i].id),1);
       }
     }
-
-    var idx = findWithAttr(_groups, 'id', tmpGroup.id);
     _groups[idx] = tmpGroup;
 
     // reset filters

@@ -254,7 +254,7 @@ var SelectedDevices = React.createClass({
     ];
 
     return (
-      <div className="tableActions">
+      <div className="tableActions" className={this.props.devices.length ? null : "hidden"}>
         <div className='float-right'>
           <RaisedButton disabled={disableAction} label="Add selected devices to a group" secondary={true} onClick={this.dialogOpen.bind(null, 'addGroup')}>
             <FontIcon style={styles.raisedButtonIcon} className="material-icons">add_circle</FontIcon>
