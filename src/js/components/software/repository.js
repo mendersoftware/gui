@@ -75,22 +75,17 @@ var Repository = React.createClass({
     var image = this.props.software[rows[0]];
     this.setState({image:image});
   },
-  _getDevicesInstalled: function (id) {
-    // body...
-    return 0;
-  },
   render: function() {
     var software = this.props.software;
     var groups = this.props.groups;
     var items = this.props.software.map(function(pkg, index) {
-      var devices = this._getDevicesInstalled(pkg.id);
       return (
         <TableRow key={index}>
           <TableRowColumn>{pkg.name}</TableRowColumn>
           <TableRowColumn>{pkg.model}</TableRowColumn>
           <TableRowColumn>{pkg.tags.join(', ')}</TableRowColumn>
           <TableRowColumn><Time value={pkg.build_date} format="YYYY/MM/DD HH:mm" /></TableRowColumn>
-          <TableRowColumn>{devices}</TableRowColumn>
+          <TableRowColumn>{pkg.devices}</TableRowColumn>
         </TableRow>
       )
     }, this);

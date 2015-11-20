@@ -5,7 +5,6 @@ var Repository = require('./repository.js');
 
 function getState() {
   return {
-    installed: AppStore.getSoftwareInstalled(),
     repo: AppStore.getSoftwareRepo(),
     groups: AppStore.getGroups()
   }
@@ -25,7 +24,7 @@ var Software = React.createClass({
   
     return (
       <div className="contentContainer">
-        <Repository installed={this.state.installed} software={this.state.repo} groups={this.state.groups} />
+        <Repository software={this.state.repo} groups={this.state.groups} />
       </div>
     );
   }
