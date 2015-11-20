@@ -49290,7 +49290,9 @@ var DeviceList = React.createClass({displayName: "DeviceList",
               )
             ), 
             React.createElement(TableBody, {
-              deselectOnClickaway: false}, 
+              deselectOnClickaway: false, 
+              showRowHover: true, 
+              className: "clickable"}, 
               devices
             )
           ), 
@@ -49885,7 +49887,7 @@ var SelectedDevices = React.createClass({displayName: "SelectedDevices",
     ];
 
     return (
-      React.createElement("div", {className: "tableActions", className: this.props.devices.length ? null : "hidden"}, 
+      React.createElement("div", {className: this.props.devices.length ? null : "hidden"}, 
         React.createElement("div", {className: "float-right"}, 
           React.createElement(RaisedButton, {disabled: disableAction, label: "Add selected devices to a group", secondary: true, onClick: this.dialogOpen.bind(null, 'addGroup')}, 
             React.createElement(FontIcon, {style: styles.raisedButtonIcon, className: "material-icons"}, "add_circle")
@@ -49895,7 +49897,7 @@ var SelectedDevices = React.createClass({displayName: "SelectedDevices",
           )
         ), 
         React.createElement("p", null, devices.length, " devices selected"), 
-        React.createElement("div", {className: "deviceInfo", style: hideInfo}, 
+        React.createElement("div", {id: "deviceInfo", style: hideInfo}, 
           React.createElement("h3", null, "Device details"), 
           deviceInfo
         ), 
@@ -50077,62 +50079,14 @@ module.exports = Header;
 
 },{"material-ui":43,"material-ui/lib/menus/menu-item":56,"material-ui/lib/toolbar/toolbar-group":124,"material-ui/lib/toolbar/toolbar-title":126,"react":368,"react-router":176}],381:[function(require,module,exports){
 var React = require('react');
-
-// material ui
-var mui = require('material-ui');
-var Table = mui.Table;
-var TableHeader = mui.TableHeader;
-var TableHeaderColumn = mui.TableHeaderColumn;
-var TableBody = mui.TableBody;
-var TableRow = mui.TableRow;
-var TableRowColumn = mui.TableRowColumn;
-
-var Installed = React.createClass({displayName: "Installed",
-  render: function() {
-   var items = this.props.software.map(function(pkg, index) {
-      return (
-        React.createElement(TableRow, {key: index}, 
-          React.createElement(TableRowColumn, null, pkg.name), 
-          React.createElement(TableRowColumn, null, pkg.model), 
-          React.createElement(TableRowColumn, null, pkg.devices)
-        )
-      )
-    });
-    return (
-      React.createElement("div", null, 
-        React.createElement("div", null, 
-          React.createElement(Table, {
-            selectable: false}, 
-            React.createElement(TableHeader, {
-              displaySelectAll: false, 
-              adjustForCheckbox: false}, 
-              React.createElement(TableRow, null, 
-                React.createElement(TableHeaderColumn, {tooltip: "Software"}, "Software"), 
-                React.createElement(TableHeaderColumn, {tooltip: "Device type compatibility"}, "Device type compatibility"), 
-                React.createElement(TableHeaderColumn, {tooltip: "Number of devices"}, "# Devices")
-              )
-            ), 
-            React.createElement(TableBody, {
-              displayRowCheckbox: false}, 
-              items
-            )
-          )
-        )
-      )
-    );
-  }
-});
-
-module.exports = Installed;
-
-},{"material-ui":43,"react":368}],382:[function(require,module,exports){
-var React = require('react');
+var Time = require('react-time');
 var AppStore = require('../../stores/app-store');
 var AppActions = require('../../actions/app-actions');
 var ScheduleButton = require('../updates/schedulebutton');
 var ScheduleForm = require('../updates/scheduleform');
 
 var UpdateButton = require('./updatebutton.js');
+var SelectedImage = require('./selectedimage.js');
 
 var Router = require('react-router');
 var Link = Router.Link;
@@ -50156,7 +50110,7 @@ var newState = {model: "Acme Model 1"};
 var Repository = React.createClass({displayName: "Repository",
   getInitialState: function() {
     return {
-      image:null 
+      image:null
     };
   },
 
@@ -50197,16 +50151,26 @@ var Repository = React.createClass({displayName: "Repository",
     tmp[attr] = val;
     this.setState(tmp);
   },
+  _onRowSelection: function(rows) {
+    var image = this.props.software[rows[0]];
+    this.setState({image:image});
+  },
+  _getDevicesInstalled: function (id) {
+    // body...
+    return 0;
+  },
   render: function() {
     var software = this.props.software;
     var groups = this.props.groups;
     var items = this.props.software.map(function(pkg, index) {
+      var devices = this._getDevicesInstalled(pkg.id);
       return (
         React.createElement(TableRow, {key: index}, 
           React.createElement(TableRowColumn, null, pkg.name), 
           React.createElement(TableRowColumn, null, pkg.model), 
-          React.createElement(TableRowColumn, null, pkg.description), 
-          React.createElement(TableRowColumn, null, React.createElement(ScheduleButton, {buttonType: "flat", primary: false, secondary: true, openDialog: this._openSchedule, image: pkg}))
+          React.createElement(TableRowColumn, null, pkg.tags.join(', ')), 
+          React.createElement(TableRowColumn, null, React.createElement(Time, {value: pkg.build_date, format: "YYYY/MM/DD HH:mm"})), 
+          React.createElement(TableRowColumn, null, devices)
         )
       )
     }, this);
@@ -50241,29 +50205,39 @@ var Repository = React.createClass({displayName: "Repository",
     }
     return (
       React.createElement("div", null, 
-        React.createElement("div", null, 
+        React.createElement("h3", null, "Available images"), 
+        React.createElement("div", {className: "maxTable"}, 
           React.createElement(Table, {
-            selectable: false}, 
+            onRowSelection: this._onRowSelection}, 
             React.createElement(TableHeader, {
               displaySelectAll: false, 
               adjustForCheckbox: false}, 
               React.createElement(TableRow, null, 
                 React.createElement(TableHeaderColumn, {tooltip: "Software"}, "Software"), 
                 React.createElement(TableHeaderColumn, {tooltip: "Device type compatibility"}, "Device type compatibility"), 
-                React.createElement(TableHeaderColumn, {tooltip: "Description"}, "Description"), 
-                React.createElement(TableHeaderColumn, {tooltip: ""})
+                React.createElement(TableHeaderColumn, {tooltip: "Tages"}, "Tags"), 
+                React.createElement(TableHeaderColumn, {tooltip: "Build time"}, "Build time"), 
+                React.createElement(TableHeaderColumn, {tooltip: "Installed on devices"}, "Installed on devices")
               )
             ), 
             React.createElement(TableBody, {
-              displayRowCheckbox: false}, 
+              displayRowCheckbox: false, 
+              showRowHover: true, 
+              className: "clickable"}, 
               items
             )
           )
         ), 
-        React.createElement("div", {className: "margin-top"}, 
-          React.createElement(RaisedButton, {onClick: this.dialogOpen.bind(null, 'upload'), label: "Upload a new image", secondary: true})
-        ), 
 
+        React.createElement("div", null, 
+          React.createElement("div", {className: "float-right"}, 
+            React.createElement(RaisedButton, {onClick: this.dialogOpen.bind(null, 'upload'), label: "Upload new image", secondary: true})
+          ), 
+
+          React.createElement("div", {style: {height:"16"}}), 
+ 
+          React.createElement(SelectedImage, {selected: this.state.image})
+        ), 
         React.createElement(Dialog, {
           ref: "upload", 
           title: "Upload a new image", 
@@ -50316,26 +50290,83 @@ var Repository = React.createClass({displayName: "Repository",
 
 module.exports = Repository;
 
-},{"../../actions/app-actions":369,"../../stores/app-store":397,"../updates/schedulebutton":390,"../updates/scheduleform":391,"./updatebutton.js":384,"material-ui":43,"react":368,"react-router":176}],383:[function(require,module,exports){
+},{"../../actions/app-actions":369,"../../stores/app-store":397,"../updates/schedulebutton":390,"../updates/scheduleform":391,"./selectedimage.js":382,"./updatebutton.js":384,"material-ui":43,"react":368,"react-router":176,"react-time":195}],382:[function(require,module,exports){
+var React = require('react');
+var Time = require('react-time');
+
+// material ui
+var mui = require('material-ui');
+
+var List = mui.List;
+var ListItem = mui.ListItem;
+var ListDivider = mui.ListDivider;
+var FontIcon = mui.FontIcon;
+
+
+var SelectedImage = React.createClass({displayName: "SelectedImage",
+  render: function() {
+    var info = {name: "-", tags: ['-'], model: "-", build_date: "-", upload_date: "-", size: "-", checksum: "-"};
+    if (this.props.selected) {
+      for (var key in this.props.selected) {
+        info[key] = this.props.selected[key];
+        if (key.indexOf("date")!==-1) {
+          info[key] = (
+            React.createElement(Time, {style: {position:"relative", top:"4"}, value: this.props.selected[key], format: "YYYY/MM/DD HH:mm"})
+          )
+        }
+      }
+    }
+    return (
+      React.createElement("div", {id: "imageInfo", className: this.props.selected ? null : "muted"}, 
+        React.createElement("h3", null, "Image details"), 
+        React.createElement("div", {className: "report-list"}, 
+          React.createElement(List, null, 
+            React.createElement(ListItem, {disabled: true, primaryText: "Software", secondaryText: info.name}), 
+            React.createElement(ListDivider, null), 
+            React.createElement(ListItem, {disabled: true, primaryText: "Tags", secondaryText: info.tags.join(', ')}), 
+            React.createElement(ListDivider, null), 
+            React.createElement(ListItem, {disabled: true, primaryText: "Device type", secondaryText: info.model}), 
+            React.createElement(ListDivider, null)
+          )
+        ), 
+        React.createElement("div", {className: "report-list"}, 
+          React.createElement(List, null, 
+            React.createElement(ListItem, {disabled: true, primaryText: "Date built", secondaryText: info.build_date}), 
+            React.createElement(ListDivider, null), 
+            React.createElement(ListItem, {disabled: true, primaryText: "Date uploaded", secondaryText: info.upload_date}), 
+            React.createElement(ListDivider, null), 
+            React.createElement(ListItem, {disabled: true, primaryText: "Size", secondaryText: info.size}), 
+            React.createElement(ListDivider, null)
+          )
+        ), 
+        React.createElement("div", {className: "report-list", style: {width:"320"}}, 
+          React.createElement(List, null, 
+            React.createElement(ListItem, {disabled: true, primaryText: "Checksum", secondaryTextLines: 2, style: {wordWrap:"break-word"}, secondaryText: info.checksum}), 
+            React.createElement(ListDivider, null), 
+            React.createElement(ListItem, {
+              primaryText: "Schedule update", 
+              secondaryText: "Click to update using this image", 
+              onClick: this._clickImageItem, 
+              leftIcon: React.createElement(FontIcon, {className: "material-icons"}, "schedule")}), 
+            React.createElement(ListDivider, null)
+          )
+        ), 
+        React.createElement("div", {style: {padding:"16", width:"560"}}, 
+          React.createElement("span", {style: {fontSize:"16", color:"rgba(0,0,0,0.8)"}}, "Description"), 
+          React.createElement("p", null, info.description)
+        )
+      )
+    );
+  }
+});
+
+module.exports = SelectedImage;
+
+},{"material-ui":43,"react":368,"react-time":195}],383:[function(require,module,exports){
 var React = require('react');
 var AppStore = require('../../stores/app-store');
 
-var Installed = require('./installed.js');
 var Repository = require('./repository.js');
-
-var mui = require('material-ui');
-var Tabs = mui.Tabs;
-var Tab = mui.Tab;
-
-var styles = {
-  tabs: {
-    backgroundColor: "#fff",
-    color: "#414141",
-  },
-  inkbar: {
-    backgroundColor: "#5d0f43",
-  }
-};
 
 function getState() {
   return {
@@ -50358,26 +50389,8 @@ var Software = React.createClass({displayName: "Software",
   render: function() {
   
     return (
-      React.createElement("div", null, 
-         React.createElement(Tabs, {
-          tabItemContainerStyle: {width: "33%"}, 
-          inkBarStyle: styles.inkbar}, 
-          React.createElement(Tab, {key: 1, 
-          style: styles.tabs, 
-          label: "Installed"}, 
-            React.createElement("div", {className: "tabContainer"}, 
-              React.createElement(Installed, {software: this.state.installed})
-            )
-          ), 
-
-          React.createElement(Tab, {key: 2, 
-          style: styles.tabs, 
-          label: "Image repository"}, 
-            React.createElement("div", {className: "tabContainer"}, 
-              React.createElement(Repository, {software: this.state.repo, groups: this.state.groups})
-            )
-          )
-        )
+      React.createElement("div", {className: "contentContainer"}, 
+        React.createElement(Repository, {installed: this.state.installed, software: this.state.repo, groups: this.state.groups})
       )
     );
   }
@@ -50385,7 +50398,7 @@ var Software = React.createClass({displayName: "Software",
 
 module.exports = Software;
 
-},{"../../stores/app-store":397,"./installed.js":381,"./repository.js":382,"material-ui":43,"react":368}],384:[function(require,module,exports){
+},{"../../stores/app-store":397,"./repository.js":381,"react":368}],384:[function(require,module,exports){
 var React = require('react');
 
 // material ui
@@ -50588,7 +50601,7 @@ var Recent = React.createClass({displayName: "Recent",
             React.createElement(TableBody, {
               showRowHover: true, 
               displayRowCheckbox: false, 
-              style: {cursor:"pointer"}}, 
+              className: "clickable"}, 
               progress
             )
           ), 
@@ -50804,34 +50817,31 @@ var Schedule = React.createClass({displayName: "Schedule",
     }, this);
     return (
       React.createElement("div", null, 
-        React.createElement("div", {style: {marginTop:"30px"}}, 
-          React.createElement("h3", null, "Scheduled updates"), 
-          React.createElement(Table, {
-            className: scheduleCount ? null : 'hidden', 
-            selectable: false}, 
-            React.createElement(TableHeader, {
-              displaySelectAll: false, 
-              adjustForCheckbox: false}, 
-              React.createElement(TableRow, null, 
-                React.createElement(TableHeaderColumn, {tooltip: "Device group"}, "Group"), 
-                React.createElement(TableHeaderColumn, {tooltip: "Target software version"}, "Target software"), 
-                React.createElement(TableHeaderColumn, {tooltip: "Number of devices"}, "# Devices"), 
-                React.createElement(TableHeaderColumn, {tooltip: "Start time"}, "Start time"), 
-                React.createElement(TableHeaderColumn, {tooltip: "End time"}, "End time"), 
-                React.createElement(TableHeaderColumn, {tooltip: "Details"}, "Details"), 
-                React.createElement(TableHeaderColumn, {tooltip: "Actions"})
-              )
-            ), 
-            React.createElement(TableBody, {
-              showRowHover: true, 
-              displayRowCheckbox: false, 
-              style: {cursor:"pointer"}}, 
-              schedule
+        React.createElement("h3", null, "Scheduled updates"), 
+        React.createElement(Table, {
+          className: scheduleCount ? null : 'hidden', 
+          selectable: false}, 
+          React.createElement(TableHeader, {
+            displaySelectAll: false, 
+            adjustForCheckbox: false}, 
+            React.createElement(TableRow, null, 
+              React.createElement(TableHeaderColumn, {tooltip: "Device group"}, "Group"), 
+              React.createElement(TableHeaderColumn, {tooltip: "Target software version"}, "Target software"), 
+              React.createElement(TableHeaderColumn, {tooltip: "Number of devices"}, "# Devices"), 
+              React.createElement(TableHeaderColumn, {tooltip: "Start time"}, "Start time"), 
+              React.createElement(TableHeaderColumn, {tooltip: "End time"}, "End time"), 
+              React.createElement(TableHeaderColumn, {tooltip: "Details"}, "Details"), 
+              React.createElement(TableHeaderColumn, {tooltip: "Actions"})
             )
           ), 
-          React.createElement("div", {className: scheduleCount ? 'hidden' : null}, 
-            React.createElement("p", {className: "italic"}, "No updates scheduled")
+          React.createElement(TableBody, {
+            showRowHover: true, 
+            displayRowCheckbox: false}, 
+            schedule
           )
+        ), 
+        React.createElement("div", {className: scheduleCount ? 'hidden' : null}, 
+          React.createElement("p", {className: "italic"}, "No updates scheduled")
         )
       )
     );
@@ -51736,31 +51746,56 @@ var _softwareRepo = [
     id: 1,
     name: "Version 0.2",
     model: "Acme Model 1",
-    description: "Version 0.2 Beta"
+    description: "Version 0.2 Beta",
+    build_date: 1442309576000,
+    upload_date: 1443309976000,
+    checksum: "ed0fd7cc588a60a582f94829c4c39686b8cf84f80e2c8914d7dbea947756d726",
+    tags: ["Acme", "beta"],
+    size: "18.4 MB"
   },
   {
     id: 2,
     name: "Version 0.3",
     model: "Acme Model 1",
-    description: "Version 0.3 fixes bug #44 in Beta"
+    description: "Version 0.3 fixes bug #44 in Beta",
+    build_date: 1442311876000,
+    upload_date: 1444309976000,
+    checksum: "ad77f16744df3c874530fd0caad688a80b228244b5d2caeedab791f90a2db619",
+    tags: ["Acme", "beta", "bugfix"],
+    size: "18.4 MB"
   },
   {
     id: 3,
     name: "Version 1.0",
     model: "Acme Model 1",
-    description: "Version 1.0 stable release for Acme Model 1"
+    description: "Version 1.0 stable release for Acme Model 1",
+    build_date: 1444309991000,
+    upload_date: 1445309334000,
+    checksum: "d3f8001422abade2702130ac74349e0f77d139c6eb89842844c30712bb66e9b9",
+    tags: ["Acme", "stable"],
+    size: "18.4 MB"
   },
   {
     id: 4,
     name: "Version 1.1",
     model: "Acme Model 1",
-    description: "Version 1.1 fixes bug #243 for Acme Model 1"
+    description: "Version 1.1 fixes bug #243 for Acme Model 1",
+    build_date: 1444909991000,
+    upload_date: 1445409334000,
+    checksum: "8020f6d69da4a0a9d2d7d4cd70307c4bacfa07bc5eb5ce1dc4b37de2b2ea5247",
+    tags: ["Acme", "bugfix"],
+    size: "18.4 MB"
   },
   {
     id: 5,
     name: "Version 1.2",
     model: "Acme Model 1",
-    description: "1.2 optimization"
+    description: "1.2 optimization",
+    build_date: 1444939971000,
+    upload_date: 1445429374000,
+    checksum: "b411936863d0e245292bb81a60189c7ffd95dbd3723c718e2a1694f944bd91a3",
+    tags: ["Acme"],
+    size: "18.4 MB"
   },
 ];
 discoverSoftware();
@@ -51803,8 +51838,8 @@ var _allupdates = [
     group: "Test",
     model: "Acme Model 1",
     software_version: "Version 1.1",
-    start_time: 1447383576000,
-    end_time: 1447387176000,
+    start_time: 1448493576000,
+    end_time: 1448497176000,
     status: null,
     devices: [
      {
@@ -51844,8 +51879,8 @@ var _allupdates = [
     group: "Development",
     model: "Acme Model 1",
     software_version: "Version 1.2",
-    start_time: 1447297176000,
-    end_time: 1447300776000,
+    start_time: 1448407176000,
+    end_time: 1448410776000,
     status: null,
     devices: [
       {

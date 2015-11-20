@@ -62,9 +62,10 @@ body {
 
 .clickable {
   cursor: pointer;
-  &:hover {
-    .scale(1.01);
-  }
+}
+
+.muted {
+  opacity: 0.4;
 }
 
 
@@ -117,6 +118,9 @@ body {
   margin-left: 290px;
 }
 
+.contentContainer {
+  padding: 30px;
+}
 
 .tableActions {
   padding: 20px 0 20px 28px;
@@ -153,7 +157,7 @@ body {
   }
 }
 
-.deviceInfo {
+#deviceInfo, #imageInfo {
   margin-top: 35px;
   border-top: 1px solid #e0e0e0;
 

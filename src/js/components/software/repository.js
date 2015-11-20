@@ -1,10 +1,12 @@
 var React = require('react');
+var Time = require('react-time');
 var AppStore = require('../../stores/app-store');
 var AppActions = require('../../actions/app-actions');
 var ScheduleButton = require('../updates/schedulebutton');
 var ScheduleForm = require('../updates/scheduleform');
 
 var UpdateButton = require('./updatebutton.js');
+var SelectedImage = require('./selectedimage.js');
 
 var Router = require('react-router');
 var Link = Router.Link;
@@ -28,7 +30,7 @@ var newState = {model: "Acme Model 1"};
 var Repository = React.createClass({
   getInitialState: function() {
     return {
-      image:null 
+      image:null
     };
   },
 
@@ -69,16 +71,26 @@ var Repository = React.createClass({
     tmp[attr] = val;
     this.setState(tmp);
   },
+  _onRowSelection: function(rows) {
+    var image = this.props.software[rows[0]];
+    this.setState({image:image});
+  },
+  _getDevicesInstalled: function (id) {
+    // body...
+    return 0;
+  },
   render: function() {
     var software = this.props.software;
     var groups = this.props.groups;
     var items = this.props.software.map(function(pkg, index) {
+      var devices = this._getDevicesInstalled(pkg.id);
       return (
         <TableRow key={index}>
           <TableRowColumn>{pkg.name}</TableRowColumn>
           <TableRowColumn>{pkg.model}</TableRowColumn>
-          <TableRowColumn>{pkg.description}</TableRowColumn>
-          <TableRowColumn><ScheduleButton buttonType="flat" primary={false} secondary={true} openDialog={this._openSchedule} image={pkg} /></TableRowColumn>
+          <TableRowColumn>{pkg.tags.join(', ')}</TableRowColumn>
+          <TableRowColumn><Time value={pkg.build_date} format="YYYY/MM/DD HH:mm" /></TableRowColumn>
+          <TableRowColumn>{devices}</TableRowColumn>
         </TableRow>
       )
     }, this);
@@ -113,29 +125,39 @@ var Repository = React.createClass({
     }
     return (
       <div>
-        <div> 
+        <h3>Available images</h3>
+        <div className="maxTable"> 
           <Table
-            selectable={false}>
+            onRowSelection={this._onRowSelection}>
             <TableHeader
               displaySelectAll={false}
               adjustForCheckbox={false}>
               <TableRow>
                 <TableHeaderColumn tooltip="Software">Software</TableHeaderColumn>
                 <TableHeaderColumn tooltip="Device type compatibility">Device type compatibility</TableHeaderColumn>
-                <TableHeaderColumn tooltip="Description">Description</TableHeaderColumn>
-                <TableHeaderColumn tooltip=""></TableHeaderColumn>
+                <TableHeaderColumn tooltip="Tages">Tags</TableHeaderColumn>
+                <TableHeaderColumn tooltip="Build time">Build time</TableHeaderColumn>
+                <TableHeaderColumn tooltip="Installed on devices">Installed on devices</TableHeaderColumn>
               </TableRow>
             </TableHeader>
             <TableBody
-              displayRowCheckbox={false}>
+              displayRowCheckbox={false}
+              showRowHover={true}
+              className="clickable">
               {items}
             </TableBody>
           </Table>
         </div>
-        <div className="margin-top">
-          <RaisedButton onClick={this.dialogOpen.bind(null, 'upload')} label="Upload a new image" secondary={true} />
-        </div>
 
+        <div>
+          <div className="float-right">
+            <RaisedButton onClick={this.dialogOpen.bind(null, 'upload')} label="Upload new image" secondary={true} />
+          </div>
+
+          <div style={{height:"16"}} />
+ 
+          <SelectedImage selected={this.state.image} />
+        </div>
         <Dialog
           ref="upload"
           title="Upload a new image"

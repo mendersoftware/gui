@@ -271,31 +271,56 @@ var _softwareRepo = [
     id: 1,
     name: "Version 0.2",
     model: "Acme Model 1",
-    description: "Version 0.2 Beta"
+    description: "Version 0.2 Beta",
+    build_date: 1442309576000,
+    upload_date: 1443309976000,
+    checksum: "ed0fd7cc588a60a582f94829c4c39686b8cf84f80e2c8914d7dbea947756d726",
+    tags: ["Acme", "beta"],
+    size: "18.4 MB"
   },
   {
     id: 2,
     name: "Version 0.3",
     model: "Acme Model 1",
-    description: "Version 0.3 fixes bug #44 in Beta"
+    description: "Version 0.3 fixes bug #44 in Beta",
+    build_date: 1442311876000,
+    upload_date: 1444309976000,
+    checksum: "ad77f16744df3c874530fd0caad688a80b228244b5d2caeedab791f90a2db619",
+    tags: ["Acme", "beta", "bugfix"],
+    size: "18.4 MB"
   },
   {
     id: 3,
     name: "Version 1.0",
     model: "Acme Model 1",
-    description: "Version 1.0 stable release for Acme Model 1"
+    description: "Version 1.0 stable release for Acme Model 1",
+    build_date: 1444309991000,
+    upload_date: 1445309334000,
+    checksum: "d3f8001422abade2702130ac74349e0f77d139c6eb89842844c30712bb66e9b9",
+    tags: ["Acme", "stable"],
+    size: "18.4 MB"
   },
   {
     id: 4,
     name: "Version 1.1",
     model: "Acme Model 1",
-    description: "Version 1.1 fixes bug #243 for Acme Model 1"
+    description: "Version 1.1 fixes bug #243 for Acme Model 1",
+    build_date: 1444909991000,
+    upload_date: 1445409334000,
+    checksum: "8020f6d69da4a0a9d2d7d4cd70307c4bacfa07bc5eb5ce1dc4b37de2b2ea5247",
+    tags: ["Acme", "bugfix"],
+    size: "18.4 MB"
   },
   {
     id: 5,
     name: "Version 1.2",
     model: "Acme Model 1",
-    description: "1.2 optimization"
+    description: "1.2 optimization",
+    build_date: 1444939971000,
+    upload_date: 1445429374000,
+    checksum: "b411936863d0e245292bb81a60189c7ffd95dbd3723c718e2a1694f944bd91a3",
+    tags: ["Acme"],
+    size: "18.4 MB"
   },
 ];
 discoverSoftware();
@@ -338,8 +363,8 @@ var _allupdates = [
     group: "Test",
     model: "Acme Model 1",
     software_version: "Version 1.1",
-    start_time: 1447383576000,
-    end_time: 1447387176000,
+    start_time: 1448493576000,
+    end_time: 1448497176000,
     status: null,
     devices: [
      {
@@ -379,8 +404,8 @@ var _allupdates = [
     group: "Development",
     model: "Acme Model 1",
     software_version: "Version 1.2",
-    start_time: 1447297176000,
-    end_time: 1447300776000,
+    start_time: 1448407176000,
+    end_time: 1448410776000,
     status: null,
     devices: [
       {

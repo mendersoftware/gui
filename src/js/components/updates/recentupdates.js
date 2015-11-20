@@ -89,7 +89,7 @@ var Recent = React.createClass({
             <TableBody
               showRowHover={true}
               displayRowCheckbox={false}
-              style={{cursor:"pointer"}}>
+              className="clickable">
               {progress}
             </TableBody>
           </Table>

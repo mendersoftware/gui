@@ -41,34 +41,31 @@ var Schedule = React.createClass({
     }, this);
     return (
       <div>
-        <div style={{marginTop:"30px"}}> 
-          <h3>Scheduled updates</h3>
-          <Table
-            className={scheduleCount ? null : 'hidden'}
-            selectable={false}>
-            <TableHeader
-              displaySelectAll={false}
-              adjustForCheckbox={false}>
-              <TableRow>
-                <TableHeaderColumn tooltip="Device group">Group</TableHeaderColumn>
-                <TableHeaderColumn tooltip="Target software version">Target software</TableHeaderColumn>
-                <TableHeaderColumn tooltip="Number of devices"># Devices</TableHeaderColumn>
-                <TableHeaderColumn tooltip="Start time">Start time</TableHeaderColumn>
-                <TableHeaderColumn tooltip="End time">End time</TableHeaderColumn>
-                <TableHeaderColumn tooltip="Details">Details</TableHeaderColumn>
-                <TableHeaderColumn tooltip="Actions"></TableHeaderColumn>
-              </TableRow>
-            </TableHeader>
-            <TableBody
-              showRowHover={true}
-              displayRowCheckbox={false}
-              style={{cursor:"pointer"}}>
-              {schedule}
-            </TableBody>
-          </Table>
-          <div className={scheduleCount ? 'hidden' : null}>
-            <p className="italic">No updates scheduled</p>
-          </div>
+        <h3>Scheduled updates</h3>
+        <Table
+          className={scheduleCount ? null : 'hidden'}
+          selectable={false}>
+          <TableHeader
+            displaySelectAll={false}
+            adjustForCheckbox={false}>
+            <TableRow>
+              <TableHeaderColumn tooltip="Device group">Group</TableHeaderColumn>
+              <TableHeaderColumn tooltip="Target software version">Target software</TableHeaderColumn>
+              <TableHeaderColumn tooltip="Number of devices"># Devices</TableHeaderColumn>
+              <TableHeaderColumn tooltip="Start time">Start time</TableHeaderColumn>
+              <TableHeaderColumn tooltip="End time">End time</TableHeaderColumn>
+              <TableHeaderColumn tooltip="Details">Details</TableHeaderColumn>
+              <TableHeaderColumn tooltip="Actions"></TableHeaderColumn>
+            </TableRow>
+          </TableHeader>
+          <TableBody
+            showRowHover={true}
+            displayRowCheckbox={false}>
+            {schedule}
+          </TableBody>
+        </Table>
+        <div className={scheduleCount ? 'hidden' : null}>
+          <p className="italic">No updates scheduled</p>
         </div>
       </div>
     );

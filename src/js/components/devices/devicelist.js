@@ -134,7 +134,9 @@ var DeviceList = React.createClass({
               </TableRow>
             </TableHeader>
             <TableBody
-              deselectOnClickaway={false}>
+              deselectOnClickaway={false}
+              showRowHover={true}
+              className="clickable">
               {devices}
             </TableBody>
           </Table>
