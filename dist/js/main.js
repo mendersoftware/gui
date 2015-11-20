@@ -50246,7 +50246,7 @@ var Repository = React.createClass({displayName: "Repository",
 
           React.createElement("div", {style: {height:"16", marginTop:"10"}}), 
  
-          React.createElement(SelectedImage, {selected: this.state.image})
+          React.createElement(SelectedImage, {selected: this.state.image, openSchedule: this._openSchedule})
         ), 
         React.createElement(Dialog, {
           ref: "upload", 
@@ -50320,6 +50320,9 @@ var SelectedImage = React.createClass({displayName: "SelectedImage",
     filters = encodeURIComponent(filters);
     this.context.router.transitionTo("/devices/:groupId/:filters", {groupId:1, filters: filters}, null);
   },
+  _clickImageSchedule: function() {
+    this.props.openSchedule("schedule", this.props.selected);
+  },
   render: function() {
     var info = {name: "-", tags: ['-'], model: "-", build_date: "-", upload_date: "-", size: "-", checksum: "-", devices: "-"};
     if (this.props.selected) {
@@ -50341,7 +50344,7 @@ var SelectedImage = React.createClass({displayName: "SelectedImage",
             React.createElement(ListDivider, null), 
             React.createElement(ListItem, {disabled: true, primaryText: "Tags", secondaryText: info.tags.join(', ')}), 
             React.createElement(ListDivider, null), 
-            React.createElement(ListItem, {disabled: false, primaryText: "Device type", secondaryText: info.model, onClick: this._handleLinkClick.bind(null, info.model)}), 
+            React.createElement(ListItem, {disabled: this.props.selected ? false : true, primaryText: "Device type", secondaryText: info.model, onClick: this._handleLinkClick.bind(null, info.model)}), 
             React.createElement(ListDivider, null)
           )
         ), 
@@ -50371,9 +50374,10 @@ var SelectedImage = React.createClass({displayName: "SelectedImage",
           React.createElement("div", {className: "report-list", style: {width:"320"}}, 
             React.createElement(List, null, 
               React.createElement(ListItem, {
+                disabled: this.props.selected ? false : true, 
                 primaryText: "Schedule update", 
-                secondaryText: "Click to update using this image", 
-                onClick: this._clickImageItem, 
+                secondaryText: "Create an update with this image", 
+                onClick: this._clickImageSchedule, 
                 leftIcon: React.createElement(FontIcon, {className: "material-icons"}, "schedule")}), 
               React.createElement(ListDivider, null)
             )

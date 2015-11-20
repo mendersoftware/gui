@@ -167,7 +167,7 @@ var Repository = React.createClass({
 
           <div style={{height:"16", marginTop:"10"}} />
  
-          <SelectedImage selected={this.state.image} />
+          <SelectedImage selected={this.state.image} openSchedule={this._openSchedule} />
         </div>
         <Dialog
           ref="upload"

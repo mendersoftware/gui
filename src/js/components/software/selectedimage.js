@@ -17,6 +17,9 @@ var SelectedImage = React.createClass({
     filters = encodeURIComponent(filters);
     this.context.router.transitionTo("/devices/:groupId/:filters", {groupId:1, filters: filters}, null);
   },
+  _clickImageSchedule: function() {
+    this.props.openSchedule("schedule", this.props.selected);
+  },
   render: function() {
     var info = {name: "-", tags: ['-'], model: "-", build_date: "-", upload_date: "-", size: "-", checksum: "-", devices: "-"};
     if (this.props.selected) {
@@ -38,7 +41,7 @@ var SelectedImage = React.createClass({
             <ListDivider />
             <ListItem disabled={true} primaryText="Tags" secondaryText={info.tags.join(', ')} />
             <ListDivider />
-            <ListItem disabled={false} primaryText="Device type" secondaryText={info.model} onClick={this._handleLinkClick.bind(null, info.model)} />
+            <ListItem disabled={this.props.selected ? false : true} primaryText="Device type" secondaryText={info.model} onClick={this._handleLinkClick.bind(null, info.model)} />
             <ListDivider />
           </List>
         </div>
@@ -68,9 +71,10 @@ var SelectedImage = React.createClass({
           <div className="report-list" style={{width:"320"}}>
             <List>
               <ListItem
+                disabled={this.props.selected ? false : true}
                 primaryText="Schedule update"
-                secondaryText="Click to update using this image"
-                onClick={this._clickImageItem}
+                secondaryText="Create an update with this image"
+                onClick={this._clickImageSchedule}
                 leftIcon={<FontIcon className="material-icons">schedule</FontIcon>} />
               <ListDivider />
             </List>
