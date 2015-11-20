@@ -75,6 +75,9 @@ var Repository = React.createClass({
     var image = this.props.software[rows[0]];
     this.setState({image:image});
   },
+  _sortColumn: function(col) {
+    console.log("sort", col);
+  },
   render: function() {
     var software = this.props.software;
     var groups = this.props.groups;
@@ -131,6 +134,12 @@ var Repository = React.createClass({
         color:"#ffffff",
         fontSize:'16'
       },
+      sortIcon: {
+        verticalAlign: 'middle',
+        marginLeft: "10",
+        color: "#8c8c8d",
+        cursor: "pointer",
+      }
     }
     return (
       <div>
@@ -140,13 +149,13 @@ var Repository = React.createClass({
             onRowSelection={this._onRowSelection}>
             <TableHeader
               displaySelectAll={false}
-              adjustForCheckbox={false}>
+              adjustForCheckbox={false} >
               <TableRow>
-                <TableHeaderColumn tooltip="Software">Software</TableHeaderColumn>
-                <TableHeaderColumn tooltip="Device type compatibility">Device type compatibility</TableHeaderColumn>
-                <TableHeaderColumn tooltip="Tages">Tags</TableHeaderColumn>
-                <TableHeaderColumn tooltip="Build time">Build time</TableHeaderColumn>
-                <TableHeaderColumn tooltip="Installed on devices">Installed on devices</TableHeaderColumn>
+                <TableHeaderColumn className="columnHeader" tooltip="Software">Software <FontIcon style={styles.sortIcon} onClick={this._sortColumn.bind(null, "name")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
+                <TableHeaderColumn className="columnHeader" tooltip="Device type compatibility">Device type compatibility <FontIcon style={styles.sortIcon} onClick={this._sortColumn.bind(null, "model")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
+                <TableHeaderColumn className="columnHeader" tooltip="Tages">Tags</TableHeaderColumn>
+                <TableHeaderColumn className="columnHeader" tooltip="Build date">Build date <FontIcon style={styles.sortIcon} onClick={this._sortColumn.bind(null, "build_date")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
+                <TableHeaderColumn className="columnHeader" tooltip="Installed on devices">Installed on devices <FontIcon style={styles.sortIcon} onClick={this._sortColumn.bind(null, "devices")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
               </TableRow>
             </TableHeader>
             <TableBody

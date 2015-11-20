@@ -50154,6 +50154,9 @@ var Repository = React.createClass({displayName: "Repository",
     var image = this.props.software[rows[0]];
     this.setState({image:image});
   },
+  _sortColumn: function(col) {
+    console.log("sort", col);
+  },
   render: function() {
     var software = this.props.software;
     var groups = this.props.groups;
@@ -50210,6 +50213,12 @@ var Repository = React.createClass({displayName: "Repository",
         color:"#ffffff",
         fontSize:'16'
       },
+      sortIcon: {
+        verticalAlign: 'middle',
+        marginLeft: "10",
+        color: "#8c8c8d",
+        cursor: "pointer",
+      }
     }
     return (
       React.createElement("div", null, 
@@ -50221,11 +50230,11 @@ var Repository = React.createClass({displayName: "Repository",
               displaySelectAll: false, 
               adjustForCheckbox: false}, 
               React.createElement(TableRow, null, 
-                React.createElement(TableHeaderColumn, {tooltip: "Software"}, "Software"), 
-                React.createElement(TableHeaderColumn, {tooltip: "Device type compatibility"}, "Device type compatibility"), 
-                React.createElement(TableHeaderColumn, {tooltip: "Tages"}, "Tags"), 
-                React.createElement(TableHeaderColumn, {tooltip: "Build time"}, "Build time"), 
-                React.createElement(TableHeaderColumn, {tooltip: "Installed on devices"}, "Installed on devices")
+                React.createElement(TableHeaderColumn, {className: "columnHeader", tooltip: "Software"}, "Software ", React.createElement(FontIcon, {style: styles.sortIcon, onClick: this._sortColumn.bind(null, "name"), className: "sortIcon material-icons"}, "sort")), 
+                React.createElement(TableHeaderColumn, {className: "columnHeader", tooltip: "Device type compatibility"}, "Device type compatibility ", React.createElement(FontIcon, {style: styles.sortIcon, onClick: this._sortColumn.bind(null, "model"), className: "sortIcon material-icons"}, "sort")), 
+                React.createElement(TableHeaderColumn, {className: "columnHeader", tooltip: "Tages"}, "Tags"), 
+                React.createElement(TableHeaderColumn, {className: "columnHeader", tooltip: "Build date"}, "Build date ", React.createElement(FontIcon, {style: styles.sortIcon, onClick: this._sortColumn.bind(null, "build_date"), className: "sortIcon material-icons"}, "sort")), 
+                React.createElement(TableHeaderColumn, {className: "columnHeader", tooltip: "Installed on devices"}, "Installed on devices ", React.createElement(FontIcon, {style: styles.sortIcon, onClick: this._sortColumn.bind(null, "devices"), className: "sortIcon material-icons"}, "sort"))
               )
             ), 
             React.createElement(TableBody, {
