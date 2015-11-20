@@ -21,6 +21,9 @@ body {
 .margin-top {
   margin-top: 30px;
 }
+.margin-top-small {
+  margin-top: 15px;
+}
 .margin-left {
   margin-left: 30px;
 }
@@ -84,9 +87,7 @@ body {
 }
 .rightFluid {
   margin-left: 290px;
-}
-.contentContainer {
-  padding: 30px;
+  padding-bottom: 30px;
 }
 .tableActions {
   padding: 20px 0 20px 28px;
@@ -130,7 +131,7 @@ span.length {
   color: #8c8c8d;
 }
 .maxTable {
-  max-height: 55vh;
+  max-height: 50vh;
   overflow: auto;
 }
 /* report view */
@@ -141,7 +142,7 @@ span.length {
 }
 .tabContainer,
 .contentContainer {
-  padding: 30px;
+  padding: 15px 30px 30px;
 }
 /* Forms */
 .inputGroup {

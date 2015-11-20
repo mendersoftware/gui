@@ -2,7 +2,6 @@ var React = require('react');
 var AppStore = require('../../stores/app-store');
 var AppActions = require('../../actions/app-actions');
 var ScheduleForm = require('../updates/scheduleform');
-var ScheduleButton = require('../updates/schedulebutton');
 
 var mui = require('material-ui');
 var FlatButton = mui.FlatButton;

@@ -2,7 +2,6 @@ var React = require('react');
 var Time = require('react-time');
 var AppStore = require('../../stores/app-store');
 var AppActions = require('../../actions/app-actions');
-var ScheduleButton = require('../updates/schedulebutton');
 var ScheduleForm = require('../updates/scheduleform');
 
 var UpdateButton = require('./updatebutton.js');
@@ -24,6 +23,7 @@ var Dialog = mui.Dialog;
 var SelectField = mui.SelectField;
 var TextField = mui.TextField;
 var FlatButton = mui.FlatButton;
+var FontIcon = mui.FontIcon;
 
 var newState = {model: "Acme Model 1"};
 
@@ -123,6 +123,20 @@ var Repository = React.createClass({
       var tmp = { payload:this.props.groups[i].id, text: this.props.groups[i].name };
       groupItems.push(tmp);
     }
+
+    var styles = {
+      flatButtonIcon: {
+        height: '100%',
+        display: 'inline-block',
+        verticalAlign: 'middle',
+        float: 'left',
+        paddingLeft: '12px',
+        lineHeight: '36px',
+        marginRight: "-6",
+        color:"#ffffff",
+        fontSize:'16'
+      },
+    }
     return (
       <div>
         <h3>Available images</h3>
@@ -151,10 +165,12 @@ var Repository = React.createClass({
 
         <div>
           <div className="float-right">
-            <RaisedButton onClick={this.dialogOpen.bind(null, 'upload')} label="Upload new image" secondary={true} />
+            <RaisedButton onClick={this.dialogOpen.bind(null, 'upload')} label="Upload new image" labelPosition="after" secondary={true}>
+              <FontIcon style={styles.flatButtonIcon} className="material-icons">file_upload</FontIcon>
+            </RaisedButton>
           </div>
 
-          <div style={{height:"16"}} />
+          <div style={{height:"16", marginTop:"10"}} />
  
           <SelectedImage selected={this.state.image} />
         </div>

@@ -49358,7 +49358,7 @@ var Devices = React.createClass({displayName: "Devices",
   },
   render: function() {
     return (
-      React.createElement("div", {className: "margin-top"}, 
+      React.createElement("div", {className: "margin-top-small"}, 
        React.createElement("div", {className: "leftFixed"}, 
           React.createElement(Groups, {groups: this.state.groups, selectedGroup: this.state.selectedGroup})
         ), 
@@ -49635,7 +49635,6 @@ var React = require('react');
 var AppStore = require('../../stores/app-store');
 var AppActions = require('../../actions/app-actions');
 var ScheduleForm = require('../updates/scheduleform');
-var ScheduleButton = require('../updates/schedulebutton');
 
 var mui = require('material-ui');
 var FlatButton = mui.FlatButton;
@@ -49971,7 +49970,7 @@ var SelectedDevices = React.createClass({displayName: "SelectedDevices",
 
 module.exports = SelectedDevices;
 
-},{"../../actions/app-actions":369,"../../stores/app-store":397,"../updates/schedulebutton":390,"../updates/scheduleform":391,"material-ui":43,"react":368}],380:[function(require,module,exports){
+},{"../../actions/app-actions":369,"../../stores/app-store":397,"../updates/scheduleform":391,"material-ui":43,"react":368}],380:[function(require,module,exports){
 var React = require('react');
 var mui = require('material-ui');
 var Router = require('react-router');
@@ -50082,7 +50081,6 @@ var React = require('react');
 var Time = require('react-time');
 var AppStore = require('../../stores/app-store');
 var AppActions = require('../../actions/app-actions');
-var ScheduleButton = require('../updates/schedulebutton');
 var ScheduleForm = require('../updates/scheduleform');
 
 var UpdateButton = require('./updatebutton.js');
@@ -50104,6 +50102,7 @@ var Dialog = mui.Dialog;
 var SelectField = mui.SelectField;
 var TextField = mui.TextField;
 var FlatButton = mui.FlatButton;
+var FontIcon = mui.FontIcon;
 
 var newState = {model: "Acme Model 1"};
 
@@ -50203,6 +50202,20 @@ var Repository = React.createClass({displayName: "Repository",
       var tmp = { payload:this.props.groups[i].id, text: this.props.groups[i].name };
       groupItems.push(tmp);
     }
+
+    var styles = {
+      flatButtonIcon: {
+        height: '100%',
+        display: 'inline-block',
+        verticalAlign: 'middle',
+        float: 'left',
+        paddingLeft: '12px',
+        lineHeight: '36px',
+        marginRight: "-6",
+        color:"#ffffff",
+        fontSize:'16'
+      },
+    }
     return (
       React.createElement("div", null, 
         React.createElement("h3", null, "Available images"), 
@@ -50231,10 +50244,12 @@ var Repository = React.createClass({displayName: "Repository",
 
         React.createElement("div", null, 
           React.createElement("div", {className: "float-right"}, 
-            React.createElement(RaisedButton, {onClick: this.dialogOpen.bind(null, 'upload'), label: "Upload new image", secondary: true})
+            React.createElement(RaisedButton, {onClick: this.dialogOpen.bind(null, 'upload'), label: "Upload new image", labelPosition: "after", secondary: true}, 
+              React.createElement(FontIcon, {style: styles.flatButtonIcon, className: "material-icons"}, "file_upload")
+            )
           ), 
 
-          React.createElement("div", {style: {height:"16"}}), 
+          React.createElement("div", {style: {height:"16", marginTop:"10"}}), 
  
           React.createElement(SelectedImage, {selected: this.state.image})
         ), 
@@ -50290,7 +50305,7 @@ var Repository = React.createClass({displayName: "Repository",
 
 module.exports = Repository;
 
-},{"../../actions/app-actions":369,"../../stores/app-store":397,"../updates/schedulebutton":390,"../updates/scheduleform":391,"./selectedimage.js":382,"./updatebutton.js":384,"material-ui":43,"react":368,"react-router":176,"react-time":195}],382:[function(require,module,exports){
+},{"../../actions/app-actions":369,"../../stores/app-store":397,"../updates/scheduleform":391,"./selectedimage.js":382,"./updatebutton.js":384,"material-ui":43,"react":368,"react-router":176,"react-time":195}],382:[function(require,module,exports){
 var React = require('react');
 var Time = require('react-time');
 
@@ -51358,7 +51373,7 @@ var Updates = React.createClass({displayName: "Updates",
             className: "tabClass"}, 
               React.createElement("div", {className: "tabContainer"}, 
                 React.createElement(Recent, {recent: this.state.recent, progress: this.state.progress, showReport: this._showReport}), 
-                React.createElement("div", {style: {marginTop:"45"}}, 
+                React.createElement("div", {style: {marginTop:"45"}, className: "float-right"}, 
                   React.createElement(ScheduleButton, {secondary: true, openDialog: this.dialogOpen})
                 )
               )
@@ -51370,7 +51385,7 @@ var Updates = React.createClass({displayName: "Updates",
             value: "1"}, 
               React.createElement("div", {className: "tabContainer"}, 
                 React.createElement(Schedule, {edit: this._scheduleUpdate, schedule: this.state.schedule, remove: this._scheduleRemove}), 
-                React.createElement("div", {style: {marginTop:"45"}}, 
+                React.createElement("div", {style: {marginTop:"45"}, className: "float-right"}, 
                   React.createElement(ScheduleButton, {style: {marginTop:"45"}, secondary: true, openDialog: this.dialogOpen})
                 )
               )

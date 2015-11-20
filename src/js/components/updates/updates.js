@@ -183,7 +183,7 @@ var Updates = React.createClass({
             className="tabClass">
               <div className="tabContainer">
                 <Recent recent={this.state.recent} progress={this.state.progress} showReport={this._showReport} />
-                <div style={{marginTop:"45"}}>
+                <div style={{marginTop:"45"}} className="float-right">
                   <ScheduleButton secondary={true} openDialog={this.dialogOpen} />
                 </div>
               </div>
@@ -195,7 +195,7 @@ var Updates = React.createClass({
             value="1">
               <div className="tabContainer">
                 <Schedule edit={this._scheduleUpdate} schedule={this.state.schedule} remove={this._scheduleRemove} />
-                <div style={{marginTop:"45"}}>
+                <div style={{marginTop:"45"}} className="float-right">
                   <ScheduleButton style={{marginTop:"45"}} secondary={true}  openDialog={this.dialogOpen} />
                 </div>
               </div>

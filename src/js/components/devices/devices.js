@@ -48,7 +48,7 @@ var Devices = React.createClass({
   },
   render: function() {
     return (
-      <div className="margin-top">
+      <div className="margin-top-small">
        <div className="leftFixed">
           <Groups groups={this.state.groups} selectedGroup={this.state.selectedGroup} />
         </div>
