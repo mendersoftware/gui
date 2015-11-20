@@ -50308,6 +50308,7 @@ module.exports = Repository;
 },{"../../actions/app-actions":369,"../../stores/app-store":397,"../updates/scheduleform":391,"./selectedimage.js":382,"./updatebutton.js":384,"material-ui":43,"react":368,"react-router":176,"react-time":195}],382:[function(require,module,exports){
 var React = require('react');
 var Time = require('react-time');
+var Router = require('react-router');
 
 // material ui
 var mui = require('material-ui');
@@ -50319,6 +50320,11 @@ var FontIcon = mui.FontIcon;
 
 
 var SelectedImage = React.createClass({displayName: "SelectedImage",
+  _handleLinkClick: function(model) {
+    var filters = "model="+model;
+    filters = encodeURIComponent(filters);
+    this.context.router.transitionTo("/devices/:groupId/:filters", {groupId:1, filters: filters}, null);
+  },
   render: function() {
     var info = {name: "-", tags: ['-'], model: "-", build_date: "-", upload_date: "-", size: "-", checksum: "-"};
     if (this.props.selected) {
@@ -50340,7 +50346,7 @@ var SelectedImage = React.createClass({displayName: "SelectedImage",
             React.createElement(ListDivider, null), 
             React.createElement(ListItem, {disabled: true, primaryText: "Tags", secondaryText: info.tags.join(', ')}), 
             React.createElement(ListDivider, null), 
-            React.createElement(ListItem, {disabled: true, primaryText: "Device type", secondaryText: info.model}), 
+            React.createElement(ListItem, {disabled: false, primaryText: "Device type", secondaryText: info.model, onClick: this._handleLinkClick.bind(null, info.model)}), 
             React.createElement(ListDivider, null)
           )
         ), 
@@ -50375,9 +50381,13 @@ var SelectedImage = React.createClass({displayName: "SelectedImage",
   }
 });
 
+SelectedImage.contextTypes = {
+  router: React.PropTypes.func.isRequired
+};
+
 module.exports = SelectedImage;
 
-},{"material-ui":43,"react":368,"react-time":195}],383:[function(require,module,exports){
+},{"material-ui":43,"react":368,"react-router":176,"react-time":195}],383:[function(require,module,exports){
 var React = require('react');
 var AppStore = require('../../stores/app-store');
 

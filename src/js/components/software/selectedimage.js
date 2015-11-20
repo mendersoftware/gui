@@ -1,5 +1,6 @@
 var React = require('react');
 var Time = require('react-time');
+var Router = require('react-router');
 
 // material ui
 var mui = require('material-ui');
@@ -11,6 +12,11 @@ var FontIcon = mui.FontIcon;
 
 
 var SelectedImage = React.createClass({
+  _handleLinkClick: function(model) {
+    var filters = "model="+model;
+    filters = encodeURIComponent(filters);
+    this.context.router.transitionTo("/devices/:groupId/:filters", {groupId:1, filters: filters}, null);
+  },
   render: function() {
     var info = {name: "-", tags: ['-'], model: "-", build_date: "-", upload_date: "-", size: "-", checksum: "-"};
     if (this.props.selected) {
@@ -32,7 +38,7 @@ var SelectedImage = React.createClass({
             <ListDivider />
             <ListItem disabled={true} primaryText="Tags" secondaryText={info.tags.join(', ')} />
             <ListDivider />
-            <ListItem disabled={true} primaryText="Device type" secondaryText={info.model} />
+            <ListItem disabled={false} primaryText="Device type" secondaryText={info.model} onClick={this._handleLinkClick.bind(null, info.model)} />
             <ListDivider />
           </List>
         </div>
@@ -66,6 +72,10 @@ var SelectedImage = React.createClass({
     );
   }
 });
+
+SelectedImage.contextTypes = {
+  router: React.PropTypes.func.isRequired
+};
 
 module.exports = SelectedImage;
 
