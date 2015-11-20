@@ -18,7 +18,7 @@ var SelectedImage = React.createClass({
     this.context.router.transitionTo("/devices/:groupId/:filters", {groupId:1, filters: filters}, null);
   },
   render: function() {
-    var info = {name: "-", tags: ['-'], model: "-", build_date: "-", upload_date: "-", size: "-", checksum: "-"};
+    var info = {name: "-", tags: ['-'], model: "-", build_date: "-", upload_date: "-", size: "-", checksum: "-", devices: "-"};
     if (this.props.selected) {
       for (var key in this.props.selected) {
         info[key] = this.props.selected[key];
@@ -52,21 +52,29 @@ var SelectedImage = React.createClass({
             <ListDivider />
           </List>
         </div>
-        <div className="report-list" style={{width:"320"}}>
+        <div className="report-list" style={{width: "320"}}>
           <List>
             <ListItem disabled={true} primaryText="Checksum" secondaryTextLines={2} style={{wordWrap:"break-word"}} secondaryText={info.checksum} />
             <ListDivider />
-            <ListItem
-              primaryText="Schedule update"
-              secondaryText="Click to update using this image"
-              onClick={this._clickImageItem}
-              leftIcon={<FontIcon className="material-icons">schedule</FontIcon>} />
+            <ListItem disabled={true} primaryText="Installed on devices" secondaryText={info.devices ? info.devices : "-"} />
             <ListDivider />
           </List>
         </div>
-        <div style={{padding:"16", width:"560"}}>
-          <span style={{fontSize:"16", color:"rgba(0,0,0,0.8)"}}>Description</span>
-          <p>{info.description}</p>
+        <div className="margin-top">
+          <div className="report-list" style={{padding:"16", width:"560", verticalAlign:"top"}}>
+            <span style={{fontSize:"16", color:"rgba(0,0,0,0.8)"}}>Description</span>
+            <p style={{color:"rgba(0,0,0,0.54)"}}>{info.description}</p>
+          </div>
+          <div className="report-list" style={{width:"320"}}>
+            <List>
+              <ListItem
+                primaryText="Schedule update"
+                secondaryText="Click to update using this image"
+                onClick={this._clickImageItem}
+                leftIcon={<FontIcon className="material-icons">schedule</FontIcon>} />
+              <ListDivider />
+            </List>
+          </div>
         </div>
       </div>
     );

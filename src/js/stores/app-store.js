@@ -275,7 +275,7 @@ var _softwareRepo = [
     upload_date: 1443309976000,
     checksum: "ed0fd7cc588a60a582f94829c4c39686b8cf84f80e2c8914d7dbea947756d726",
     tags: ["Acme", "beta"],
-    size: "18.4 MB",
+    size: "15.2 MB",
     devices: 0
   },
   {
@@ -287,7 +287,7 @@ var _softwareRepo = [
     upload_date: 1444309976000,
     checksum: "ad77f16744df3c874530fd0caad688a80b228244b5d2caeedab791f90a2db619",
     tags: ["Acme", "beta", "bugfix"],
-    size: "18.4 MB",
+    size: "15.4 MB",
     devices: 0
   },
   {
@@ -299,7 +299,7 @@ var _softwareRepo = [
     upload_date: 1445309334000,
     checksum: "d3f8001422abade2702130ac74349e0f77d139c6eb89842844c30712bb66e9b9",
     tags: ["Acme", "stable"],
-    size: "18.4 MB",
+    size: "18.8 MB",
     devices: 0
   },
   {
@@ -311,7 +311,7 @@ var _softwareRepo = [
     upload_date: 1445409334000,
     checksum: "8020f6d69da4a0a9d2d7d4cd70307c4bacfa07bc5eb5ce1dc4b37de2b2ea5247",
     tags: ["Acme", "bugfix"],
-    size: "18.4 MB",
+    size: "18.9 MB",
     devices: 0
   },
   {
@@ -324,6 +324,18 @@ var _softwareRepo = [
     checksum: "b411936863d0e245292bb81a60189c7ffd95dbd3723c718e2a1694f944bd91a3",
     tags: ["Acme"],
     size: "18.4 MB",
+    devices: 0
+  },
+  {
+    id: 6,
+    name: "Version 1.0 Wifi",
+    model: "Wifi Model 1",
+    description: "Stable firmware for wireless models",
+    build_date: 1444949934000,
+    upload_date: 1445329472000,
+    checksum: "b411936863d0e245292bb81a60189c7ffd95dbd3723c718e2a1694f944bd91a3",
+    tags: ["Wifi", "stable"],
+    size: "10.3 MB",
     devices: 0
   },
 ];
