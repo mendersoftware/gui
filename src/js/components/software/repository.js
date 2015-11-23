@@ -4,6 +4,8 @@ var AppStore = require('../../stores/app-store');
 var AppActions = require('../../actions/app-actions');
 var ScheduleForm = require('../updates/scheduleform');
 
+var SearchInput = require('react-search-input');
+
 var UpdateButton = require('./updatebutton.js');
 var SelectedImage = require('./selectedimage.js');
 
@@ -32,7 +34,8 @@ var Repository = React.createClass({
     return {
       image:null,
       sortCol: "name",
-      sortDown: true
+      sortDown: true,
+      searchTerm: null
     };
   },
 
@@ -92,10 +95,17 @@ var Repository = React.createClass({
     // sort table
     AppActions.sortTable("_softwareRepo", col, direction);
   },
+  searchUpdated: function(term) {
+    this.setState({searchTerm: term}); // needed to force re-render
+  },
   render: function() {
     var software = this.props.software;
+    if (this.refs.search) {
+      var filters = ['name', 'model', 'tags'];
+      software = software.filter(this.refs.search.filter(filters));
+    }
     var groups = this.props.groups;
-    var items = this.props.software.map(function(pkg, index) {
+    var items = software.map(function(pkg, index) {
       return (
         <TableRow key={index}>
           <TableRowColumn>{pkg.name}</TableRowColumn>
@@ -158,6 +168,7 @@ var Repository = React.createClass({
     return (
       <div>
         <h3>Available images</h3>
+        <SearchInput ref='search' onChange={this.searchUpdated} />
         <div className="maxTable"> 
           <Table
             onRowSelection={this._onRowSelection}>
@@ -167,7 +178,7 @@ var Repository = React.createClass({
               <TableRow>
                 <TableHeaderColumn className="columnHeader" tooltip="Software">Software <FontIcon ref="name" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "name")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
                 <TableHeaderColumn className="columnHeader" tooltip="Device type compatibility">Device type compatibility <FontIcon ref="model" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "model")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
-                <TableHeaderColumn className="columnHeader" tooltip="Tages">Tags</TableHeaderColumn>
+                <TableHeaderColumn className="columnHeader" tooltip="Tags">Tags</TableHeaderColumn>
                 <TableHeaderColumn className="columnHeader" tooltip="Build date">Build date <FontIcon style={styles.sortIcon} ref="build_date" onClick={this._sortColumn.bind(null, "build_date")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
                 <TableHeaderColumn className="columnHeader" tooltip="Installed on devices">Installed on devices <FontIcon style={styles.sortIcon} ref="devices" onClick={this._sortColumn.bind(null, "devices")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
               </TableRow>
