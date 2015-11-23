@@ -134,6 +134,36 @@ span.length {
   max-height: 50vh;
   overflow: auto;
 }
+.columnHeader .sortIcon {
+  visibility: hidden;
+  -webkit-transition: visibility 0.1s linear !important;
+  -moz-transition: visibility 0.1s linear !important;
+  -ms-transition: visibility 0.1s linear !important;
+  -o-transition: visibility 0.1s linear !important;
+}
+.columnHeader:hover .sortIcon {
+  visibility: visible;
+  -webkit-opacity: 0.4;
+  -moz-opacity: 0.4;
+  opacity: 0.4;
+}
+.columnHeader:hover .sortIcon.selected,
+.columnHeader .sortIcon.selected {
+  -webkit-opacity: 1;
+  -moz-opacity: 1;
+  opacity: 1;
+  visibility: visible;
+  -webkit-transition: all 0.15s linear !important;
+  -moz-transition: all 0.15s linear !important;
+  -ms-transition: all 0.15s linear !important;
+  -o-transition: all 0.15s linear !important;
+}
+.columnHeader .sortIcon.selected.false {
+  -webkit-transform: rotateX(180deg) !important;
+  -moz-transform: rotateX(180deg) !important;
+  -ms-transform: rotateX(180deg) !important;
+  -o-transform: rotateX(180deg) !important;
+}
 /* report view */
 .report-list {
   display: inline-block;

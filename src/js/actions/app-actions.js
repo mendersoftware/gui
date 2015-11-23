@@ -54,6 +54,15 @@ var AppActions = {
       filters: filters
     })
   },
+
+  sortTable: function(table, column, direction) {
+    AppDispatcher.handleViewAction({
+      actionType: AppConstants.SORT_TABLE,
+      table: table,
+      column: column,
+      direction: direction 
+    })
+  },
 }
 
 module.exports = AppActions;

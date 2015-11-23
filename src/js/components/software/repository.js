@@ -30,7 +30,9 @@ var newState = {model: "Acme Model 1"};
 var Repository = React.createClass({
   getInitialState: function() {
     return {
-      image:null
+      image:null,
+      sortCol: "name",
+      sortDown: true
     };
   },
 
@@ -76,7 +78,19 @@ var Repository = React.createClass({
     this.setState({image:image});
   },
   _sortColumn: function(col) {
-    console.log("sort", col);
+    var direction;
+    if (this.state.sortCol !== col) {
+      this.refs[this.state.sortCol].getDOMNode().className = "sortIcon material-icons";
+      this.refs[col].getDOMNode().className = "sortIcon material-icons selected";
+      this.setState({sortCol:col, sortDown: true});
+      direction = true;
+    } else {
+      direction = !(this.state.sortDown);
+      this.refs[this.state.sortCol].getDOMNode().className = "sortIcon material-icons selected " +direction;
+      this.setState({sortDown: direction});
+    }
+    // sort table
+    AppActions.sortTable("_softwareRepo", col, direction);
   },
   render: function() {
     var software = this.props.software;
@@ -151,11 +165,11 @@ var Repository = React.createClass({
               displaySelectAll={false}
               adjustForCheckbox={false} >
               <TableRow>
-                <TableHeaderColumn className="columnHeader" tooltip="Software">Software <FontIcon style={styles.sortIcon} onClick={this._sortColumn.bind(null, "name")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
-                <TableHeaderColumn className="columnHeader" tooltip="Device type compatibility">Device type compatibility <FontIcon style={styles.sortIcon} onClick={this._sortColumn.bind(null, "model")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
+                <TableHeaderColumn className="columnHeader" tooltip="Software">Software <FontIcon ref="name" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "name")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
+                <TableHeaderColumn className="columnHeader" tooltip="Device type compatibility">Device type compatibility <FontIcon ref="model" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "model")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
                 <TableHeaderColumn className="columnHeader" tooltip="Tages">Tags</TableHeaderColumn>
-                <TableHeaderColumn className="columnHeader" tooltip="Build date">Build date <FontIcon style={styles.sortIcon} onClick={this._sortColumn.bind(null, "build_date")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
-                <TableHeaderColumn className="columnHeader" tooltip="Installed on devices">Installed on devices <FontIcon style={styles.sortIcon} onClick={this._sortColumn.bind(null, "devices")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
+                <TableHeaderColumn className="columnHeader" tooltip="Build date">Build date <FontIcon style={styles.sortIcon} ref="build_date" onClick={this._sortColumn.bind(null, "build_date")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
+                <TableHeaderColumn className="columnHeader" tooltip="Installed on devices">Installed on devices <FontIcon style={styles.sortIcon} ref="devices" onClick={this._sortColumn.bind(null, "devices")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
               </TableRow>
             </TableHeader>
             <TableBody

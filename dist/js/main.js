@@ -48923,6 +48923,15 @@ var AppActions = {
       filters: filters
     })
   },
+
+  sortTable: function(table, column, direction) {
+    AppDispatcher.handleViewAction({
+      actionType: AppConstants.SORT_TABLE,
+      table: table,
+      column: column,
+      direction: direction 
+    })
+  },
 }
 
 module.exports = AppActions;
@@ -50109,7 +50118,9 @@ var newState = {model: "Acme Model 1"};
 var Repository = React.createClass({displayName: "Repository",
   getInitialState: function() {
     return {
-      image:null
+      image:null,
+      sortCol: "name",
+      sortDown: true
     };
   },
 
@@ -50155,7 +50166,19 @@ var Repository = React.createClass({displayName: "Repository",
     this.setState({image:image});
   },
   _sortColumn: function(col) {
-    console.log("sort", col);
+    var direction;
+    if (this.state.sortCol !== col) {
+      this.refs[this.state.sortCol].getDOMNode().className = "sortIcon material-icons";
+      this.refs[col].getDOMNode().className = "sortIcon material-icons selected";
+      this.setState({sortCol:col, sortDown: true});
+      direction = true;
+    } else {
+      direction = !(this.state.sortDown);
+      this.refs[this.state.sortCol].getDOMNode().className = "sortIcon material-icons selected " +direction;
+      this.setState({sortDown: direction});
+    }
+    // sort table
+    AppActions.sortTable("_softwareRepo", col, direction);
   },
   render: function() {
     var software = this.props.software;
@@ -50230,11 +50253,11 @@ var Repository = React.createClass({displayName: "Repository",
               displaySelectAll: false, 
               adjustForCheckbox: false}, 
               React.createElement(TableRow, null, 
-                React.createElement(TableHeaderColumn, {className: "columnHeader", tooltip: "Software"}, "Software ", React.createElement(FontIcon, {style: styles.sortIcon, onClick: this._sortColumn.bind(null, "name"), className: "sortIcon material-icons"}, "sort")), 
-                React.createElement(TableHeaderColumn, {className: "columnHeader", tooltip: "Device type compatibility"}, "Device type compatibility ", React.createElement(FontIcon, {style: styles.sortIcon, onClick: this._sortColumn.bind(null, "model"), className: "sortIcon material-icons"}, "sort")), 
+                React.createElement(TableHeaderColumn, {className: "columnHeader", tooltip: "Software"}, "Software ", React.createElement(FontIcon, {ref: "name", style: styles.sortIcon, onClick: this._sortColumn.bind(null, "name"), className: "sortIcon material-icons"}, "sort")), 
+                React.createElement(TableHeaderColumn, {className: "columnHeader", tooltip: "Device type compatibility"}, "Device type compatibility ", React.createElement(FontIcon, {ref: "model", style: styles.sortIcon, onClick: this._sortColumn.bind(null, "model"), className: "sortIcon material-icons"}, "sort")), 
                 React.createElement(TableHeaderColumn, {className: "columnHeader", tooltip: "Tages"}, "Tags"), 
-                React.createElement(TableHeaderColumn, {className: "columnHeader", tooltip: "Build date"}, "Build date ", React.createElement(FontIcon, {style: styles.sortIcon, onClick: this._sortColumn.bind(null, "build_date"), className: "sortIcon material-icons"}, "sort")), 
-                React.createElement(TableHeaderColumn, {className: "columnHeader", tooltip: "Installed on devices"}, "Installed on devices ", React.createElement(FontIcon, {style: styles.sortIcon, onClick: this._sortColumn.bind(null, "devices"), className: "sortIcon material-icons"}, "sort"))
+                React.createElement(TableHeaderColumn, {className: "columnHeader", tooltip: "Build date"}, "Build date ", React.createElement(FontIcon, {style: styles.sortIcon, ref: "build_date", onClick: this._sortColumn.bind(null, "build_date"), className: "sortIcon material-icons"}, "sort")), 
+                React.createElement(TableHeaderColumn, {className: "columnHeader", tooltip: "Installed on devices"}, "Installed on devices ", React.createElement(FontIcon, {style: styles.sortIcon, ref: "devices", onClick: this._sortColumn.bind(null, "devices"), className: "sortIcon material-icons"}, "sort"))
               )
             ), 
             React.createElement(TableBody, {
@@ -51476,7 +51499,8 @@ module.exports = {
   UPLOAD_IMAGE: 'UPLOAD_IMAGE',
   SAVE_SCHEDULE: 'SAVE_SCHEDULE',
   UPDATE_FILTERS: 'UPDATE_FILTERS',
-  REMOVE_UPDATE: 'REMOVE_UPDATE'
+  REMOVE_UPDATE: 'REMOVE_UPDATE',
+  SORT_TABLE: 'SORT_TABLE'
 }
 
 },{}],395:[function(require,module,exports){
@@ -51849,7 +51873,7 @@ var _softwareRepo = [
     build_date: 1444949934000,
     upload_date: 1445329472000,
     checksum: "b411936863d0e245292bb81a60189c7ffd95dbd3723c718e2a1694f944bd91a3",
-    tags: ["Wifi", "stable"],
+    tags: ["stable", "wifi"],
     size: "10.3 MB",
     devices: 0
   },
@@ -52136,6 +52160,15 @@ function _removeUpdate(id) {
 }
 
 
+function _sortTable(array, column, direction) {
+  switch(array) {
+    case "_softwareRepo":
+      _softwareRepo.sort(customSort(direction, column));
+      break;
+  }
+}
+
+
 function findWithAttr(array, attr, value) {
   for(var i = 0; i<array.length; i++) {
     if(array[i][attr] === value) {
@@ -52152,6 +52185,16 @@ function collectWithAttr(array, attr, value) {
     }
   }
   return newArr;
+}
+
+function customSort(direction, field) {
+  return function(a, b) {
+    if (a[field] > b[field])
+       return direction ? -1 : 1;
+    if (a[field] < b[field])
+      return direction ? 1 : -1;
+    return 0;
+  };
 }
 
 function statusSort(a,b) {
@@ -52304,6 +52347,8 @@ var AppStore = assign(EventEmitter.prototype, {
       case AppConstants.REMOVE_UPDATE:
         _removeUpdate(payload.action.id);
         break;
+      case AppConstants.SORT_TABLE:
+        _sortTable(payload.action.table, payload.action.column, payload.action.direction)
     }
     
     AppStore.emitChange();

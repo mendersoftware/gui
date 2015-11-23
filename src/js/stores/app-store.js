@@ -334,7 +334,7 @@ var _softwareRepo = [
     build_date: 1444949934000,
     upload_date: 1445329472000,
     checksum: "b411936863d0e245292bb81a60189c7ffd95dbd3723c718e2a1694f944bd91a3",
-    tags: ["Wifi", "stable"],
+    tags: ["stable", "wifi"],
     size: "10.3 MB",
     devices: 0
   },
@@ -621,6 +621,15 @@ function _removeUpdate(id) {
 }
 
 
+function _sortTable(array, column, direction) {
+  switch(array) {
+    case "_softwareRepo":
+      _softwareRepo.sort(customSort(direction, column));
+      break;
+  }
+}
+
+
 function findWithAttr(array, attr, value) {
   for(var i = 0; i<array.length; i++) {
     if(array[i][attr] === value) {
@@ -637,6 +646,16 @@ function collectWithAttr(array, attr, value) {
     }
   }
   return newArr;
+}
+
+function customSort(direction, field) {
+  return function(a, b) {
+    if (a[field] > b[field])
+       return direction ? -1 : 1;
+    if (a[field] < b[field])
+      return direction ? 1 : -1;
+    return 0;
+  };
 }
 
 function statusSort(a,b) {
@@ -789,6 +808,8 @@ var AppStore = assign(EventEmitter.prototype, {
       case AppConstants.REMOVE_UPDATE:
         _removeUpdate(payload.action.id);
         break;
+      case AppConstants.SORT_TABLE:
+        _sortTable(payload.action.table, payload.action.column, payload.action.direction)
     }
     
     AppStore.emitChange();
