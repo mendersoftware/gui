@@ -168,10 +168,11 @@ var Repository = React.createClass({
     return (
       <div>
         <h3>Available images</h3>
-        <SearchInput ref='search' onChange={this.searchUpdated} />
+        <SearchInput className="tableSearch" ref='search' onChange={this.searchUpdated} />
         <div className="maxTable"> 
           <Table
-            onRowSelection={this._onRowSelection}>
+            onRowSelection={this._onRowSelection}
+            className={items.length ? null : "hidden"}>
             <TableHeader
               displaySelectAll={false}
               adjustForCheckbox={false} >
@@ -190,6 +191,10 @@ var Repository = React.createClass({
               {items}
             </TableBody>
           </Table>
+
+          <p className={items.length ? 'hidden' : 'italic margin-left'}>
+            No images found.
+          </p>
         </div>
 
         <div>

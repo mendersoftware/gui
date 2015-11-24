@@ -50439,10 +50439,11 @@ var Repository = React.createClass({displayName: "Repository",
     return (
       React.createElement("div", null, 
         React.createElement("h3", null, "Available images"), 
-        React.createElement(SearchInput, {ref: "search", onChange: this.searchUpdated}), 
+        React.createElement(SearchInput, {className: "tableSearch", ref: "search", onChange: this.searchUpdated}), 
         React.createElement("div", {className: "maxTable"}, 
           React.createElement(Table, {
-            onRowSelection: this._onRowSelection}, 
+            onRowSelection: this._onRowSelection, 
+            className: items.length ? null : "hidden"}, 
             React.createElement(TableHeader, {
               displaySelectAll: false, 
               adjustForCheckbox: false}, 
@@ -50460,6 +50461,10 @@ var Repository = React.createClass({displayName: "Repository",
               className: "clickable"}, 
               items
             )
+          ), 
+
+          React.createElement("p", {className: items.length ? 'hidden' : 'italic margin-left'}, 
+            "No images found."
           )
         ), 
 

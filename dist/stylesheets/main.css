@@ -164,6 +164,11 @@ span.length {
   -ms-transform: rotateX(180deg) !important;
   -o-transform: rotateX(180deg) !important;
 }
+.tableSearch {
+  position: absolute;
+  right: 30px;
+  top: 30px;
+}
 /* report view */
 .report-list {
   display: inline-block;
@@ -173,6 +178,7 @@ span.length {
 .tabContainer,
 .contentContainer {
   padding: 15px 30px 30px;
+  position: relative;
 }
 /* Forms */
 .inputGroup {
