@@ -321,6 +321,18 @@ span.day {
 .updates-container:first-child {
   margin-left: 0;
 }
+.fail {
+  color: #6A150C;
+}
+.fail > div {
+  background-color: #F6F1F1;
+}
+.fail div {
+  color: #6A150C !important;
+}
+.fail .material-icons {
+  color: #6A150C !important;
+}
 span.progress-version {
   color: rgba(0, 0, 0, 0.8);
   font-size: 16px;

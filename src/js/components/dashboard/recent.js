@@ -29,7 +29,7 @@ var Recent = React.createClass({
           </FontIcon>
         );
         return (
-          <div key={index}>
+          <div key={index} className={status==="warning" ? "fail" : null}>
             <ListItem
               disabled={false}
               primaryText={update.software_version}

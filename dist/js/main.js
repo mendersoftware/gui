@@ -49384,7 +49384,7 @@ var Recent = React.createClass({displayName: "Recent",
           )
         );
         return (
-          React.createElement("div", {key: index}, 
+          React.createElement("div", {key: index, className: status==="warning" ? "fail" : null}, 
             React.createElement(ListItem, {
               disabled: false, 
               primaryText: update.software_version, 
