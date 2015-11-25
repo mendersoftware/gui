@@ -365,6 +365,47 @@ hr.table-divider {
   min-height: 50vh;
 }
 
+.activityWrapper {
+  margin-bottom: 30px;
+  position: relative;
+
+  .activityEntry {
+    padding: 1px 12px 0.5em;
+    background-color: @alertgreen;
+    color: #E0E0E0;
+    position: relative;
+
+    p.summary {
+      color: @lightestgrey;
+    }
+
+    &:after {
+      content:"";
+      width:0;
+      height:0;
+      position: absolute;
+      z-index:-1;
+      bottom:-10px;
+      left:10px;
+      border-bottom:10px solid transparent;
+      border-left:10px solid @alertgreen;
+    }
+
+     &.negative {
+      background-color: @alertpurple;
+      &:after {
+         border-left:10px solid @alertpurple;
+      }
+    }
+  }
+
+  .activityTime {
+    color: #bdbdbd;
+    position: relative;
+    top: 12px;
+  }
+}
+
 .updates {
   position: relative;
   overflow: auto;

@@ -49159,6 +49159,7 @@ module.exports = App;
 var React = require('react');
 var Router = require('react-router');
 var Link = Router.Link;
+var Time = require('react-time');
 
 // material ui
 var mui = require('material-ui');
@@ -49168,13 +49169,25 @@ var Activity = React.createClass({displayName: "Activity",
     this.props.clickHandle();
   },
   render: function() {
+    var activity = this.props.activity.map(function(log, index) {
+      return (
+        React.createElement("div", {key: index, className: "activityWrapper"}, 
+          React.createElement("div", {className: log.negative ? "activityEntry negative" : "activityEntry"}, 
+            React.createElement("p", {className: "summary"}, log.summary), 
+            React.createElement("p", null, log.details)
+          ), 
+          React.createElement(Time, {style: {fontSize:"12"}, className: "activityTime", value: log.timestamp, format: "YY/MM/DD HH:mm"})
+        )
+      )
+    }); 
     return (
       React.createElement("div", {className: "activity-log"}, 
-        React.createElement("div", {className: "dashboard-header"}, 
+        React.createElement("div", null, 
           React.createElement("h2", null, "User activity")
         ), 
         React.createElement("div", null, 
-          React.createElement("div", {className: "margin-bottom"}
+          React.createElement("div", {className: "margin-bottom"}, 
+            activity
           ), 
           React.createElement("div", null, 
             React.createElement(Link, {to: "/updates/events", className: "float-right"}, "View all")
@@ -49191,7 +49204,7 @@ Activity.contextTypes = {
 
 module.exports = Activity;
 
-},{"material-ui":43,"react":369,"react-router":176}],373:[function(require,module,exports){
+},{"material-ui":43,"react":369,"react-router":176,"react-time":196}],373:[function(require,module,exports){
 var React = require('react');
 var AppStore = require('../../stores/app-store');
 var Health = require('./health');
@@ -49204,7 +49217,8 @@ function getState() {
     progress: AppStore.getProgressUpdates(new Date().getTime()),
     schedule: AppStore.getScheduledUpdates(new Date().getTime()),
     health: AppStore.getHealth(),
-    recent: AppStore.getRecentUpdates(new Date().getTime())
+    recent: AppStore.getRecentUpdates(new Date().getTime()),
+    activity: AppStore.getActivity()
   }
 }
 
@@ -49223,7 +49237,7 @@ var Dashboard = React.createClass({displayName: "Dashboard",
             React.createElement(Health, {health: this.state.health}), 
             React.createElement(Updates, {progress: this.state.progress, schedule: this.state.schedule, recent: this.state.recent})
           ), 
-          React.createElement(Activity, null)
+          React.createElement(Activity, {activity: this.state.activity})
         )
       )
     );
@@ -52532,6 +52546,28 @@ var _allupdates = [
 ];
 _allupdates.sort(startTimeSort);
 
+
+_activityLog = [
+  {
+    summary: "User Admin scheduled an update to group Wifi",
+    details: "1 devices in group Wifi will be updated to Wifi Version 1 at 2015/11/26 04:06",
+    timestamp: 1445708776000,
+    negative: false
+  },
+  {
+    summary: "User Admin uploaded image Version 1.2",
+    details: "Software image Version 1.2 was uploaded at 2015/10/15 22:12",
+    timestamp: 1444708776000,
+    negative: false
+  },
+  {
+    summary: "User Admin cancelled an update to group Test",
+    details: "Cancelled update to 3 devices in group Test to software Version 1.1 at 2015/11/23 09:30",
+    timestamp: 1443708776000,
+    negative: true
+  },
+];
+
 function _getRecentUpdates(time) {
 
   var recent = [];
@@ -52745,6 +52781,13 @@ var AppStore = assign(EventEmitter.prototype, {
 
   getHealth: function() {
     return _getDeviceHealth()
+  },
+
+  getActivity: function() {
+    /*
+    * Return activity log
+    */
+    return _activityLog
   },
 
   dispatcherIndex: AppDispatcher.register(function(payload) {

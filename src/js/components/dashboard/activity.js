@@ -1,6 +1,7 @@
 var React = require('react');
 var Router = require('react-router');
 var Link = Router.Link;
+var Time = require('react-time');
 
 // material ui
 var mui = require('material-ui');
@@ -10,13 +11,25 @@ var Activity = React.createClass({
     this.props.clickHandle();
   },
   render: function() {
+    var activity = this.props.activity.map(function(log, index) {
+      return (
+        <div key={index} className="activityWrapper">
+          <div className={log.negative ? "activityEntry negative" : "activityEntry"}>
+            <p className="summary">{log.summary}</p>
+            <p>{log.details}</p>
+          </div>
+          <Time style={{fontSize:"12"}} className="activityTime" value={log.timestamp} format="YY/MM/DD HH:mm" />
+        </div>
+      )
+    }); 
     return (
       <div className="activity-log">
-        <div className="dashboard-header">
+        <div>
           <h2>User activity</h2>
         </div>
         <div>
           <div className="margin-bottom">
+            {activity}
           </div>
           <div>
             <Link to="/updates/events" className="float-right">View all</Link>

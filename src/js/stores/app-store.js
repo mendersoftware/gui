@@ -600,6 +600,28 @@ var _allupdates = [
 ];
 _allupdates.sort(startTimeSort);
 
+
+_activityLog = [
+  {
+    summary: "User Admin scheduled an update to group Wifi",
+    details: "1 devices in group Wifi will be updated to Wifi Version 1 at 2015/11/26 04:06",
+    timestamp: 1445708776000,
+    negative: false
+  },
+  {
+    summary: "User Admin uploaded image Version 1.2",
+    details: "Software image Version 1.2 was uploaded at 2015/10/15 22:12",
+    timestamp: 1444708776000,
+    negative: false
+  },
+  {
+    summary: "User Admin cancelled an update to group Test",
+    details: "Cancelled update to 3 devices in group Test to software Version 1.1 at 2015/11/23 09:30",
+    timestamp: 1443708776000,
+    negative: true
+  },
+];
+
 function _getRecentUpdates(time) {
 
   var recent = [];
@@ -813,6 +835,13 @@ var AppStore = assign(EventEmitter.prototype, {
 
   getHealth: function() {
     return _getDeviceHealth()
+  },
+
+  getActivity: function() {
+    /*
+    * Return activity log
+    */
+    return _activityLog
   },
 
   dispatcherIndex: AppDispatcher.register(function(payload) {

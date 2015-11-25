@@ -10,7 +10,8 @@ function getState() {
     progress: AppStore.getProgressUpdates(new Date().getTime()),
     schedule: AppStore.getScheduledUpdates(new Date().getTime()),
     health: AppStore.getHealth(),
-    recent: AppStore.getRecentUpdates(new Date().getTime())
+    recent: AppStore.getRecentUpdates(new Date().getTime()),
+    activity: AppStore.getActivity()
   }
 }
 
@@ -29,7 +30,7 @@ var Dashboard = React.createClass({
             <Health health={this.state.health} />
             <Updates progress={this.state.progress} schedule={this.state.schedule} recent={this.state.recent} />
           </div>
-          <Activity />
+          <Activity activity={this.state.activity} />
         </div>
       </div>
     );

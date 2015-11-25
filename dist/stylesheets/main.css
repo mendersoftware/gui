@@ -287,6 +287,41 @@ hr.table-divider {
   float: right;
   min-height: 50vh;
 }
+.activityWrapper {
+  margin-bottom: 30px;
+  position: relative;
+}
+.activityWrapper .activityEntry {
+  padding: 1px 12px 0.5em;
+  background-color: #679BA5;
+  color: #E0E0E0;
+  position: relative;
+}
+.activityWrapper .activityEntry p.summary {
+  color: #F7F7F7;
+}
+.activityWrapper .activityEntry:after {
+  content: "";
+  width: 0;
+  height: 0;
+  position: absolute;
+  z-index: -1;
+  bottom: -10px;
+  left: 10px;
+  border-bottom: 10px solid transparent;
+  border-left: 10px solid #679BA5;
+}
+.activityWrapper .activityEntry.negative {
+  background-color: #7D3F69;
+}
+.activityWrapper .activityEntry.negative:after {
+  border-left: 10px solid #7D3F69;
+}
+.activityWrapper .activityTime {
+  color: #bdbdbd;
+  position: relative;
+  top: 12px;
+}
 .updates {
   position: relative;
   overflow: auto;
