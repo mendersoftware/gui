@@ -10,13 +10,7 @@ var ListItem = mui.ListItem;
 var ListDivider = mui.ListDivider;
 var FontIcon = mui.FontIcon;
 
-
-var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
-  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
-];
-
-
-var Schedule = React.createClass({
+var Recent = React.createClass({
   _clickHandle: function() {
     this.props.clickHandle(this.props.route);
   },
@@ -24,21 +18,25 @@ var Schedule = React.createClass({
     console.log(e);
   },
   render: function() {
-    var schedule = this.props.updates.map(function(update, index) {
+    var recent = this.props.updates.map(function(update, index) {
       if (index<5) {
         var group = update.group + " (" + update.devices.length + ")";
-        var month = new Date(update.start_time);
-        month = monthNames[month.getMonth()];
         var last = (this.props.updates.length === index+1) || index===4;
+        var status = update.status === "Failed" ? "warning" : "check";
+        var icon = (
+          <FontIcon className="material-icons">
+            {status}
+          </FontIcon>
+        );
         return (
           <div key={index}>
             <ListItem
-              disabled={true}
+              disabled={false}
               primaryText={update.software_version}
               secondaryText={group}
               onClick={this._clickUpdate}
-              leftIcon={<div style={{width:"auto", height:"auto"}}><span className="day"><Time value={update.start_time} format="DD" /></span><span className="month">{month}</span></div>}
-              rightIcon={<Time style={{top:"18", right:"22"}} value={update.start_time} format="HH:mm" />} />
+              leftIcon={icon}
+              rightIcon={<Time style={{float:"right", position:"initial", width:"auto", marginRight:"-56", whiteSpace:"nowrap", fontSize:"14"}} value={update.end_time} format="YYYY/MM/DD HH:mm" />} />
             <ListDivider inset={true} className={last ? "hidden" : null} />
           </div>
         )
@@ -47,17 +45,17 @@ var Schedule = React.createClass({
     return (
       <div className="updates-container">
         <div className="dashboard-header subsection">
-          <h3>Upcoming<span className="dashboard-number">{schedule.length}</span></h3>
+          <h3>Recent<span className="dashboard-number">{recent.length}</span></h3>
         </div>
         <div>
           <List>
-            {schedule}
+            {recent}
           </List>
-          <div className={schedule.length ? 'hidden' : null}>
-            <p className="italic">No updates scheduled</p>
+          <div className={recent.length ? 'hidden' : null}>
+            <p className="italic">No recent updates</p>
           </div>
           <div>
-            <Link to="/updates/schedule" className="float-right">View schedule</Link>
+            <Link to="/updates" className="float-right">All updates</Link>
           </div>
         </div>
       </div>
@@ -65,8 +63,8 @@ var Schedule = React.createClass({
   }
 });
 
-Schedule.contextTypes = {
+Recent.contextTypes = {
   router: React.PropTypes.func
 };
 
-module.exports = Schedule;
+module.exports = Recent;

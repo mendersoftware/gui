@@ -22,7 +22,7 @@ var _groups = [
   {
     id: 1,
     name: "All devices",
-    devices: [1,2,3,4,5,6,7,8],
+    devices: [1,2,3,4,5,6,7,8,9],
     type: "public"
   },
   {
@@ -121,6 +121,15 @@ var _alldevices = [
     'status': 'Up',
     'software_version': 'Version 1.0',
     'groups': [1,4]
+  },
+  {
+    'id': 9,
+    'name': 'Wifi001',
+    'model':"Wifi Model 1",
+    'arch': 'arm64',
+    'status': 'Up',
+    'software_version': 'Version 1.0 Wifi',
+    'groups': [1]
   },
 ];
 
@@ -259,6 +268,7 @@ function _getDeviceHealth() {
   var down = collectWithAttr(_alldevices, 'status', 'Down');
   health.down = down.length;
   health.up = _alldevices.length - health.down;
+  health.new = 0;
   return health;
 }
 
@@ -417,8 +427,8 @@ var _allupdates = [
     group: "Development",
     model: "Acme Model 1",
     software_version: "Version 1.2",
-    start_time: 1448407176000,
-    end_time: 1448410776000,
+    start_time: 1448507176000,
+    end_time: 1448510776000,
     status: null,
     devices: [
       {
@@ -566,6 +576,27 @@ var _allupdates = [
       }
     ]
   },
+  {
+    id: 6,
+    group: "Wifi",
+    model: "Wifi Model 1",
+    software_version: "Wifi Version 1.0",
+    start_time: 1447708776000,
+    end_time: 1450709971000,
+    status: null,
+    devices: [
+      {
+        id:9,
+        name:"Wifi001",
+        model:"Wifi Model 1",
+        last_software_version:"Wifi Version Beta",
+        software_version:"Wifi Version 1.0",
+        start_time:1450708776000,
+        end_time:1451709971000,
+        status:"Pending"
+      },
+    ]
+  }
 ];
 _allupdates.sort(startTimeSort);
 

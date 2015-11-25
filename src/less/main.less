@@ -2,6 +2,42 @@ html, body {
   height: 100%;
 }
 
+/* General */
+
+// colors
+@red: #6A150C;
+@green: #007647;
+@alertgreen: #679BA5;
+@alertpurple: #7D3F69;
+@linkgreen: #347A87;
+@linkhover: #679BA5;
+@lightestgrey: #F7F7F7;
+@lightgrey: #DBEDEB;
+
+.green {
+  background-color: @green;
+  color: #FFFEFF;
+}
+
+.red {
+  background-color: @red;
+  color: #FFFEFF;
+}
+
+.lightestgrey {
+  background-color: @lightestgrey;
+}
+.lightgrey {
+  background-color: @lightgrey;
+}
+
+.box-sizing (@type: border-box) {
+  -webkit-box-sizing: @type;
+  -moz-box-sizing:    @type;
+  box-sizing:         @type;
+}
+
+
 
 /* Type */
 
@@ -9,6 +45,7 @@ body {
   font-family: Lato;
   font-size: 13px;
   margin: 0;
+  color: #404041;
 }
 
 .italic {
@@ -19,12 +56,23 @@ body {
   font-weight: bold;
 }
 
-/* General */
+a {
+  font-weight: bold;
+  text-decoration: none;
+  color: @linkgreen;
 
-.box-sizing (@type: border-box) {
-  -webkit-box-sizing: @type;
-  -moz-box-sizing:    @type;
-  box-sizing:         @type;
+  &:hover {
+    color: @linkhover;
+  }
+}
+
+.nowrap {
+  white-space: nowrap;
+}
+
+
+.clear {
+  clear: both;
 }
 
 .hidden {
@@ -61,6 +109,10 @@ body {
 
 .float-right {
   float: right;
+}
+
+.float-left {
+  float: left;
 }
 
 .clickable {
@@ -199,11 +251,11 @@ span.length {
 
 .tableSearch {
   position: absolute;
-  right:30px;
+  right: 30px;
   top: 30px;
 
   input[type="text"] {
-    
+
   }
 }
 
@@ -219,6 +271,7 @@ span.length {
 .tabContainer, .contentContainer {
   padding: 15px 30px 30px;
   position: relative;
+  overflow: auto;
 }
 
 
@@ -255,6 +308,139 @@ hr.table-divider {
     height: 6px;
     background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.03), rgba(0, 0, 0, 0));
 }
+
+/* Dashboard */
+
+.leftDashboard {
+  width: 71%;
+  float: left;
+  border-right: 1px solid #d4e9e7;
+  padding-right: 2%;
+}
+
+.health {
+  height: 22vh;
+  position: relative;
+
+  .health-panel {
+    width:20%;
+    margin: 15px 1% 15px 0;
+    display: inline-block;
+    box-sizing: border-box;
+    padding: 3%;
+    height: 80%;
+    min-height: 100px;
+
+    &:last-child {
+      margin-right: 0;
+    }
+
+    span {
+      font-size: 20px;
+      vertical-align: text-top;
+      font-size: 1.5vw;
+    }
+
+    .number {
+      font-size: 4vw;
+      font-weight: bold;
+      margin-right: 16px;
+      position: relative;
+      top: -9px;
+    }
+
+  }
+}
+
+.activity-log {
+  width: 25%;
+  float: right;
+  min-height: 50vh;
+}
+
+.updates {
+  position: relative;
+  overflow: auto;
+  margin-top: 30px;
+}
+
+span.month, span.day {
+  display: block;
+  text-align: center;
+}
+
+
+.dashboard-container {
+  position: absolute;
+  top: 40px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.dashboard-header {
+  border-bottom: 1px solid #d4e9e7;
+
+  &.subsection {
+    border: none;
+  }
+
+  h2,h3 {
+    margin: 8px 0; 
+  }
+
+  .dashboard-number {
+    margin-left: 10px;
+    color: #CDDEDC;
+  }
+}
+
+.updates-container {
+  float: left;
+  margin: 15px 0 15px 6%;
+  width:47%;
+  padding-bottom: 15px;
+  border-bottom: 1px solid @lightestgrey;
+
+  &:first-child {
+    margin-left: 0;
+  }
+}
+
+
+span.progress-version {
+  color: rgba(0,0,0,0.8);
+  font-size: 16px;
+  display: block;
+}
+
+span.progress-group {
+  color: rgba(0, 0, 0, 0.54);
+  font-size: 14px;
+  margin-top: 4px;
+}
+
+.progressBar, .progressTime {
+  padding-left: 66px;
+}
+
+.progressBar {
+  height: 20px;
+  width: 94%;
+  position: relative;
+  top: 4px;
+  box-sizing: border-box;
+
+  div {
+    height: 100%;
+  }
+}
+
+.progressTime {
+  position: relative;
+  top: 12px;
+}
+
 
 /* LESS MIXINS */
 .scale (@factor) {

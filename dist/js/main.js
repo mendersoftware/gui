@@ -49119,7 +49119,7 @@ var AppActions = {
 
 module.exports = AppActions;
 
-},{"../constants/app-constants":395,"../dispatchers/app-dispatcher":396}],371:[function(require,module,exports){
+},{"../constants/app-constants":398,"../dispatchers/app-dispatcher":399}],371:[function(require,module,exports){
 var React = require('react');
 var Router = require('react-router');
 var RouteHandler = Router.RouteHandler;
@@ -49155,19 +49155,56 @@ var App = React.createClass({displayName: "App",
 
 module.exports = App;
 
-},{"../themes/mender-theme.js":399,"./header/header":381,"material-ui":43,"material-ui/lib/styles/theme-manager":85,"react":369,"react-router":176}],372:[function(require,module,exports){
+},{"../themes/mender-theme.js":402,"./header/header":384,"material-ui":43,"material-ui/lib/styles/theme-manager":85,"react":369,"react-router":176}],372:[function(require,module,exports){
+var React = require('react');
+var Router = require('react-router');
+var Link = Router.Link;
+
+// material ui
+var mui = require('material-ui');
+
+var Activity = React.createClass({displayName: "Activity",
+  _clickHandle: function() {
+    this.props.clickHandle();
+  },
+  render: function() {
+    return (
+      React.createElement("div", {className: "activity-log"}, 
+        React.createElement("div", {className: "dashboard-header"}, 
+          React.createElement("h2", null, "User activity")
+        ), 
+        React.createElement("div", null, 
+          React.createElement("div", {className: "margin-bottom"}
+          ), 
+          React.createElement("div", null, 
+            React.createElement(Link, {to: "/updates/events", className: "float-right"}, "View all")
+          )
+        )
+      )
+    );
+  }
+});
+
+Activity.contextTypes = {
+  router: React.PropTypes.func
+};
+
+module.exports = Activity;
+
+},{"material-ui":43,"react":369,"react-router":176}],373:[function(require,module,exports){
 var React = require('react');
 var AppStore = require('../../stores/app-store');
 var Health = require('./health');
-var Schedule = require('./schedule');
-var Progress = require('./progress');
+var Activity = require('./activity');
+var Updates = require('./updates');
 var Router = require('react-router');
 
 function getState() {
   return {
     progress: AppStore.getProgressUpdates(new Date().getTime()),
     schedule: AppStore.getScheduledUpdates(new Date().getTime()),
-    health: AppStore.getHealth()
+    health: AppStore.getHealth(),
+    recent: AppStore.getRecentUpdates(new Date().getTime())
   }
 }
 
@@ -49180,11 +49217,14 @@ var Dashboard = React.createClass({displayName: "Dashboard",
   },
   render: function() {
     return (
-      React.createElement("div", {className: ""}, 
-
-      React.createElement("img", {src: "assets/img/dashmock1.png"})
-
-
+      React.createElement("div", {className: "contentContainer"}, 
+        React.createElement("div", null, 
+          React.createElement("div", {className: "leftDashboard"}, 
+            React.createElement(Health, {health: this.state.health}), 
+            React.createElement(Updates, {progress: this.state.progress, schedule: this.state.schedule, recent: this.state.recent})
+          ), 
+          React.createElement(Activity, null)
+        )
       )
     );
   }
@@ -49196,43 +49236,65 @@ Dashboard.contextTypes = {
 
 module.exports = Dashboard;
 
-},{"../../stores/app-store":398,"./health":373,"./progress":374,"./schedule":375,"react":369,"react-router":176}],373:[function(require,module,exports){
+},{"../../stores/app-store":401,"./activity":372,"./health":374,"./updates":378,"react":369,"react-router":176}],374:[function(require,module,exports){
 var React = require('react');
+var Router = require('react-router');
+var Link = Router.Link;
 
 // material ui
 var mui = require('material-ui');
-var Paper = mui.Paper;
 
 var Health = React.createClass({displayName: "Health",
   _clickHandle: function() {
-    this.props.clickHandle(this.props.route);
+    this.props.clickHandle();
   },
   render: function() {
     return (
-      React.createElement(Paper, {zDepth: 1, className: "widget small clickable", onClick: this._clickHandle}, 
-        React.createElement("h3", null, "Device health"), 
-        React.createElement("p", null, "Down: ", this.props.health.down), 
-        React.createElement("hr", null), 
-        React.createElement("p", null, "Up: ", this.props.health.up)
+      React.createElement("div", {className: "health"}, 
+        React.createElement("div", {className: "dashboard-header"}, 
+          React.createElement("h2", null, "Devices ", React.createElement("span", {className: "dashboard-number"}, "8"))
+        ), 
+        React.createElement("div", {className: "dashboard-container"}, 
+          React.createElement("div", {className: "health-panel red"}, 
+            React.createElement("span", {className: "number"}, this.props.health.down), 
+            React.createElement("span", null, "down")
+          ), 
+          React.createElement("div", {className: "health-panel green"}, 
+            React.createElement("span", {className: "number"}, this.props.health.up), 
+            React.createElement("span", null, "up")
+          ), 
+          React.createElement("div", {className: "health-panel lightestgrey"}, 
+            React.createElement("span", {className: "number"}, this.props.health.new), 
+            React.createElement("span", null, "new")
+          ), 
+          React.createElement("div", {className: "clear"}, 
+            React.createElement(Link, {to: "/devices", className: "float-right"}, "Manage devices")
+          )
+        )
       )
     );
   }
 });
 
+
+Health.contextTypes = {
+  router: React.PropTypes.func
+};
+
 module.exports = Health;
 
-},{"material-ui":43,"react":369}],374:[function(require,module,exports){
+},{"material-ui":43,"react":369,"react-router":176}],375:[function(require,module,exports){
 var React = require('react');
+var Router = require('react-router');
+var Link = Router.Link;
+var Time = require('react-time');
 
 // material ui
 var mui = require('material-ui');
-var Table = mui.Table;
-var TableHeader = mui.TableHeader;
-var TableHeaderColumn = mui.TableHeaderColumn;
-var TableBody = mui.TableBody;
-var TableRow = mui.TableRow;
-var TableRowColumn = mui.TableRowColumn;
-var Paper = mui.Paper;
+var List = mui.List;
+var ListItem = mui.ListItem;
+var ListDivider = mui.ListDivider;
+var FontIcon = mui.FontIcon;
 
 
 var Progress = React.createClass({displayName: "Progress",
@@ -49240,112 +49302,242 @@ var Progress = React.createClass({displayName: "Progress",
     this.props.clickHandle(this.props.route);
   },
   render: function() {
-    var progress = this.props.progress.map(function(update, index) {
+    var progress = this.props.updates.map(function(update, index) {
+      var group = update.group + " (" + update.devices.length + ")";
+      var last = (this.props.updates.length === index+1) || index===4;
+      var progressBar = (
+          React.createElement("div", {className: "progressBar"}, 
+            React.createElement("div", {className: "lightgrey"}, 
+              React.createElement("div", {className: "green float-left", style: {width:"80%"}}), 
+              React.createElement("div", {className: "red float-left", style: {width:"10%"}})
+            )
+          )
+      );
       return (
-        React.createElement(TableRow, {key: index}, 
-          React.createElement(TableRowColumn, null, update.group), 
-          React.createElement(TableRowColumn, null, update.software_version), 
-          React.createElement(TableRowColumn, null, update.devices.length), 
-          React.createElement(TableRowColumn, null, update.status || "--")
+        React.createElement("div", {key: index}, 
+          React.createElement(ListItem, {
+            disabled: false, 
+            style: {paddingBottom:"12"}, 
+            primaryText: progressBar, 
+            secondaryText: React.createElement(Time, {style: {fontSize:"12"}, className: "progressTime", value: update.start_time, format: "YY/MM/DD HH:mm"}), 
+            onClick: this._clickUpdate, 
+            leftIcon: React.createElement("div", {style: {width:"110", height:"auto"}}, React.createElement("span", {className: "progress-version"}, update.software_version), React.createElement("span", {className: "progress-group"}, group)), 
+            rightIcon: React.createElement("span", {style: {top:"18", right:"22"}}, "80%")}), 
+          React.createElement(ListDivider, {className: last ? "hidden" : null})
         )
       )
-    });
+    }, this);
     return (
-      React.createElement(Paper, {zDepth: 1, className: "widget clickable", onClick: this._clickHandle}, 
-        React.createElement("h3", null, "Updates in progress"), 
-        React.createElement(Table, {
-          className: progress.length ? null : 'hidden', 
-          selectable: false}, 
-          React.createElement(TableHeader, {
-            displaySelectAll: false, 
-            adjustForCheckbox: false}, 
-            React.createElement(TableRow, null, 
-              React.createElement(TableHeaderColumn, {tooltip: "Device group"}, "Group"), 
-              React.createElement(TableHeaderColumn, {tooltip: "Target software version"}, "Target software"), 
-              React.createElement(TableHeaderColumn, {tooltip: "Number of devices"}, "# Devices"), 
-              React.createElement(TableHeaderColumn, {tooltip: "Status"}, "Status")
-            )
-          ), 
-          React.createElement(TableBody, {
-            showRowHover: true, 
-            displayRowCheckbox: false, 
-            style: {cursor:"pointer"}}, 
-            progress
-          )
+      React.createElement("div", {className: "updates-container"}, 
+        React.createElement("div", {className: "dashboard-header subsection"}, 
+          React.createElement("h3", null, "In progress", React.createElement("span", {className: "dashboard-number"}, progress.length))
         ), 
-        React.createElement("div", {className: progress.length ? 'hidden' : null}, 
-          React.createElement("p", {className: "italic"}, "No updates in progress")
+        React.createElement("div", null, 
+          React.createElement(List, null, 
+            progress
+          ), 
+          React.createElement("div", {className: progress.length ? 'hidden' : null}, 
+            React.createElement("p", {className: "italic"}, "No updates in progress")
+          ), 
+          React.createElement(Link, {to: "/updates", className: "float-right"}, "All updates")
         )
       )
     );
   }
 });
 
+Progress.contextTypes = {
+  router: React.PropTypes.func
+};
+
 module.exports = Progress;
 
-},{"material-ui":43,"react":369}],375:[function(require,module,exports){
+},{"material-ui":43,"react":369,"react-router":176,"react-time":196}],376:[function(require,module,exports){
 var React = require('react');
 var Time = require('react-time');
+var Router = require('react-router');
+var Link = Router.Link;
 
 // material ui
 var mui = require('material-ui');
-var Table = mui.Table;
-var TableHeader = mui.TableHeader;
-var TableHeaderColumn = mui.TableHeaderColumn;
-var TableBody = mui.TableBody;
-var TableRow = mui.TableRow;
-var TableRowColumn = mui.TableRowColumn;
-var Paper = mui.Paper;
+var List = mui.List;
+var ListItem = mui.ListItem;
+var ListDivider = mui.ListDivider;
+var FontIcon = mui.FontIcon;
+
+var Recent = React.createClass({displayName: "Recent",
+  _clickHandle: function() {
+    this.props.clickHandle(this.props.route);
+  },
+  _clickUpdate: function(e) {
+    console.log(e);
+  },
+  render: function() {
+    var recent = this.props.updates.map(function(update, index) {
+      if (index<5) {
+        var group = update.group + " (" + update.devices.length + ")";
+        var last = (this.props.updates.length === index+1) || index===4;
+        var status = update.status === "Failed" ? "warning" : "check";
+        var icon = (
+          React.createElement(FontIcon, {className: "material-icons"}, 
+            status
+          )
+        );
+        return (
+          React.createElement("div", {key: index}, 
+            React.createElement(ListItem, {
+              disabled: false, 
+              primaryText: update.software_version, 
+              secondaryText: group, 
+              onClick: this._clickUpdate, 
+              leftIcon: icon, 
+              rightIcon: React.createElement(Time, {style: {float:"right", position:"initial", width:"auto", marginRight:"-56", whiteSpace:"nowrap", fontSize:"14"}, value: update.end_time, format: "YYYY/MM/DD HH:mm"})}), 
+            React.createElement(ListDivider, {inset: true, className: last ? "hidden" : null})
+          )
+        )
+      }
+    }, this);
+    return (
+      React.createElement("div", {className: "updates-container"}, 
+        React.createElement("div", {className: "dashboard-header subsection"}, 
+          React.createElement("h3", null, "Recent", React.createElement("span", {className: "dashboard-number"}, recent.length))
+        ), 
+        React.createElement("div", null, 
+          React.createElement(List, null, 
+            recent
+          ), 
+          React.createElement("div", {className: recent.length ? 'hidden' : null}, 
+            React.createElement("p", {className: "italic"}, "No recent updates")
+          ), 
+          React.createElement("div", null, 
+            React.createElement(Link, {to: "/updates", className: "float-right"}, "All updates")
+          )
+        )
+      )
+    );
+  }
+});
+
+Recent.contextTypes = {
+  router: React.PropTypes.func
+};
+
+module.exports = Recent;
+
+},{"material-ui":43,"react":369,"react-router":176,"react-time":196}],377:[function(require,module,exports){
+var React = require('react');
+var Time = require('react-time');
+var Router = require('react-router');
+var Link = Router.Link;
+
+// material ui
+var mui = require('material-ui');
+var List = mui.List;
+var ListItem = mui.ListItem;
+var ListDivider = mui.ListDivider;
+var FontIcon = mui.FontIcon;
+
+
+var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+];
 
 
 var Schedule = React.createClass({displayName: "Schedule",
   _clickHandle: function() {
     this.props.clickHandle(this.props.route);
   },
+  _clickUpdate: function(e) {
+    console.log(e);
+  },
   render: function() {
-    var schedule = this.props.schedule.map(function(update, index) {
-      return (
-        React.createElement(TableRow, {key: index}, 
-          React.createElement(TableRowColumn, null, update.group), 
-          React.createElement(TableRowColumn, null, update.software_version), 
-          React.createElement(TableRowColumn, null, update.devices.length), 
-          React.createElement(TableRowColumn, null, "Begins ", React.createElement(Time, {value: update.start_time, format: "YYYY/MM/DD HH:mm", relative: true}))
-        )
-      )
-    });
-    return (
-      React.createElement(Paper, {zDepth: 1, className: "widget clickable", onClick: this._clickHandle}, 
-        React.createElement("h3", null, "Scheduled updates"), 
-        React.createElement(Table, {
-          selectable: false}, 
-          React.createElement(TableHeader, {
-            displaySelectAll: false, 
-            adjustForCheckbox: false}, 
-            React.createElement(TableRow, null, 
-              React.createElement(TableHeaderColumn, {tooltip: "Device group"}, "Group"), 
-              React.createElement(TableHeaderColumn, {tooltip: "Target software version"}, "Target software"), 
-              React.createElement(TableHeaderColumn, {tooltip: "Number of devices"}, "# Devices"), 
-              React.createElement(TableHeaderColumn, {tooltip: "Details"}, "Details")
-            )
-          ), 
-          React.createElement(TableBody, {
-            showRowHover: true, 
-            displayRowCheckbox: false, 
-            style: {cursor:"pointer"}}, 
-            schedule
+    var schedule = this.props.updates.map(function(update, index) {
+      if (index<5) {
+        var group = update.group + " (" + update.devices.length + ")";
+        var month = new Date(update.start_time);
+        month = monthNames[month.getMonth()];
+        var last = (this.props.updates.length === index+1) || index===4;
+        return (
+          React.createElement("div", {key: index}, 
+            React.createElement(ListItem, {
+              disabled: true, 
+              primaryText: update.software_version, 
+              secondaryText: group, 
+              onClick: this._clickUpdate, 
+              leftIcon: React.createElement("div", {style: {width:"auto", height:"auto"}}, React.createElement("span", {className: "day"}, React.createElement(Time, {value: update.start_time, format: "DD"})), React.createElement("span", {className: "month"}, month)), 
+              rightIcon: React.createElement(Time, {style: {top:"18", right:"22"}, value: update.start_time, format: "HH:mm"})}), 
+            React.createElement(ListDivider, {inset: true, className: last ? "hidden" : null})
           )
+        )
+      }
+    }, this);
+    return (
+      React.createElement("div", {className: "updates-container"}, 
+        React.createElement("div", {className: "dashboard-header subsection"}, 
+          React.createElement("h3", null, "Upcoming", React.createElement("span", {className: "dashboard-number"}, schedule.length))
         ), 
-        React.createElement("div", {className: schedule.length ? 'hidden' : null}, 
-          React.createElement("p", {className: "italic"}, "No updates scheduled")
+        React.createElement("div", null, 
+          React.createElement(List, null, 
+            schedule
+          ), 
+          React.createElement("div", {className: schedule.length ? 'hidden' : null}, 
+            React.createElement("p", {className: "italic"}, "No updates scheduled")
+          ), 
+          React.createElement("div", null, 
+            React.createElement(Link, {to: "/updates/schedule", className: "float-right"}, "View schedule")
+          )
         )
       )
     );
   }
 });
 
+Schedule.contextTypes = {
+  router: React.PropTypes.func
+};
+
 module.exports = Schedule;
 
-},{"material-ui":43,"react":369,"react-time":196}],376:[function(require,module,exports){
+},{"material-ui":43,"react":369,"react-router":176,"react-time":196}],378:[function(require,module,exports){
+var React = require('react');
+var Schedule = require('./schedule');
+var Progress = require('./progress');
+var Recent = require('./recent');
+
+// material ui
+var mui = require('material-ui');
+var RaisedButton = mui.RaisedButton;
+
+var Updates = React.createClass({displayName: "Updates",
+  _clickHandle: function() {
+    this.props.clickHandle();
+  },
+  render: function() {
+    return (
+      React.createElement("div", {className: "updates"}, 
+        React.createElement("div", {className: "dashboard-header"}, 
+          React.createElement("h2", null, "Updates")
+        ), 
+        React.createElement("div", null, 
+          React.createElement("div", null, 
+            React.createElement(Progress, {updates: this.props.progress}), 
+            React.createElement(Schedule, {updates: this.props.schedule})
+          ), 
+          React.createElement("div", {className: "clear"}, 
+            React.createElement(Recent, {updates: this.props.recent}), 
+            React.createElement("div", {style: {position:"absolute", bottom:"30", right:"0"}}, 
+              React.createElement(RaisedButton, {label: "Schedule update", secondary: true})
+            )
+          )
+        )
+      )
+    );
+  }
+});
+
+module.exports = Updates;
+
+},{"./progress":375,"./recent":376,"./schedule":377,"material-ui":43,"react":369}],379:[function(require,module,exports){
 var React = require('react');
 var AppStore = require('../../stores/app-store');
 var AppActions = require('../../actions/app-actions');
@@ -49499,7 +49691,7 @@ var DeviceList = React.createClass({displayName: "DeviceList",
 
 module.exports = DeviceList;
 
-},{"../../actions/app-actions":370,"../../stores/app-store":398,"material-ui":43,"react":369}],377:[function(require,module,exports){
+},{"../../actions/app-actions":370,"../../stores/app-store":401,"material-ui":43,"react":369}],380:[function(require,module,exports){
 var React = require('react');
 var AppStore = require('../../stores/app-store');
 var AppActions = require('../../actions/app-actions');
@@ -49566,7 +49758,7 @@ var Devices = React.createClass({displayName: "Devices",
 
 module.exports = Devices;
 
-},{"../../actions/app-actions":370,"../../stores/app-store":398,"./devicelist":376,"./filters":378,"./groups":379,"./selecteddevices":380,"react":369}],378:[function(require,module,exports){
+},{"../../actions/app-actions":370,"../../stores/app-store":401,"./devicelist":379,"./filters":381,"./groups":382,"./selecteddevices":383,"react":369}],381:[function(require,module,exports){
 var React = require('react');
 
 // material ui
@@ -49706,7 +49898,7 @@ var Filters = React.createClass({displayName: "Filters",
 
 module.exports = Filters;
 
-},{"material-ui":43,"react":369}],379:[function(require,module,exports){
+},{"material-ui":43,"react":369}],382:[function(require,module,exports){
 var React = require('react');
 var AppStore = require('../../stores/app-store');
 var AppActions = require('../../actions/app-actions');
@@ -49822,7 +50014,7 @@ var Groups = React.createClass({displayName: "Groups",
 
 module.exports = Groups;
 
-},{"../../actions/app-actions":370,"../../stores/app-store":398,"material-ui":43,"react":369}],380:[function(require,module,exports){
+},{"../../actions/app-actions":370,"../../stores/app-store":401,"material-ui":43,"react":369}],383:[function(require,module,exports){
 var React = require('react');
 var AppStore = require('../../stores/app-store');
 var AppActions = require('../../actions/app-actions');
@@ -50162,7 +50354,7 @@ var SelectedDevices = React.createClass({displayName: "SelectedDevices",
 
 module.exports = SelectedDevices;
 
-},{"../../actions/app-actions":370,"../../stores/app-store":398,"../updates/scheduleform":392,"material-ui":43,"react":369}],381:[function(require,module,exports){
+},{"../../actions/app-actions":370,"../../stores/app-store":401,"../updates/scheduleform":395,"material-ui":43,"react":369}],384:[function(require,module,exports){
 var React = require('react');
 var mui = require('material-ui');
 var Router = require('react-router');
@@ -50268,7 +50460,7 @@ Header.contextTypes = {
 
 module.exports = Header;
 
-},{"material-ui":43,"material-ui/lib/menus/menu-item":56,"material-ui/lib/toolbar/toolbar-group":124,"material-ui/lib/toolbar/toolbar-title":126,"react":369,"react-router":176}],382:[function(require,module,exports){
+},{"material-ui":43,"material-ui/lib/menus/menu-item":56,"material-ui/lib/toolbar/toolbar-group":124,"material-ui/lib/toolbar/toolbar-title":126,"react":369,"react-router":176}],385:[function(require,module,exports){
 var React = require('react');
 var Time = require('react-time');
 var AppStore = require('../../stores/app-store');
@@ -50531,7 +50723,7 @@ var Repository = React.createClass({displayName: "Repository",
 
 module.exports = Repository;
 
-},{"../../actions/app-actions":370,"../../stores/app-store":398,"../updates/scheduleform":392,"./selectedimage.js":383,"./updatebutton.js":385,"material-ui":43,"react":369,"react-router":176,"react-search-input":191,"react-time":196}],383:[function(require,module,exports){
+},{"../../actions/app-actions":370,"../../stores/app-store":401,"../updates/scheduleform":395,"./selectedimage.js":386,"./updatebutton.js":388,"material-ui":43,"react":369,"react-router":176,"react-search-input":191,"react-time":196}],386:[function(require,module,exports){
 var React = require('react');
 var Time = require('react-time');
 var Router = require('react-router');
@@ -50625,7 +50817,7 @@ SelectedImage.contextTypes = {
 
 module.exports = SelectedImage;
 
-},{"material-ui":43,"react":369,"react-router":176,"react-time":196}],384:[function(require,module,exports){
+},{"material-ui":43,"react":369,"react-router":176,"react-time":196}],387:[function(require,module,exports){
 var React = require('react');
 var AppStore = require('../../stores/app-store');
 
@@ -50660,7 +50852,7 @@ var Software = React.createClass({displayName: "Software",
 
 module.exports = Software;
 
-},{"../../stores/app-store":398,"./repository.js":382,"react":369}],385:[function(require,module,exports){
+},{"../../stores/app-store":401,"./repository.js":385,"react":369}],388:[function(require,module,exports){
 var React = require('react');
 
 // material ui
@@ -50677,7 +50869,7 @@ var UpdateButton = React.createClass({displayName: "UpdateButton",
 
 module.exports = UpdateButton;
 
-},{"material-ui":43,"react":369}],386:[function(require,module,exports){
+},{"material-ui":43,"react":369}],389:[function(require,module,exports){
 var React = require('react');
 
 // material ui
@@ -50724,7 +50916,7 @@ var DateTime = React.createClass({displayName: "DateTime",
 
 module.exports = DateTime;
 
-},{"material-ui":43,"react":369}],387:[function(require,module,exports){
+},{"material-ui":43,"react":369}],390:[function(require,module,exports){
 var React = require('react');
 
 // material ui
@@ -50771,7 +50963,7 @@ var EventLog = React.createClass({displayName: "EventLog",
 
 module.exports = EventLog;
 
-},{"material-ui":43,"react":369}],388:[function(require,module,exports){
+},{"material-ui":43,"react":369}],391:[function(require,module,exports){
 var React = require('react');
 var Time = require('react-time');
 var Report = require('./report.js');
@@ -50912,7 +51104,7 @@ var Recent = React.createClass({displayName: "Recent",
 
 module.exports = Recent;
 
-},{"./report.js":389,"./scheduleform":392,"material-ui":43,"react":369,"react-time":196}],389:[function(require,module,exports){
+},{"./report.js":392,"./scheduleform":395,"material-ui":43,"react":369,"react-time":196}],392:[function(require,module,exports){
 var React = require('react');
 var Time = require('react-time');
 var AppStore = require('../../stores/app-store');
@@ -51035,7 +51227,7 @@ var Report = React.createClass({displayName: "Report",
 
 module.exports = Report;
 
-},{"../../stores/app-store":398,"material-ui":43,"react":369,"react-time":196}],390:[function(require,module,exports){
+},{"../../stores/app-store":401,"material-ui":43,"react":369,"react-time":196}],393:[function(require,module,exports){
 var React = require('react');
 var Time = require('react-time');
 
@@ -51112,7 +51304,7 @@ var Schedule = React.createClass({displayName: "Schedule",
 
 module.exports = Schedule;
 
-},{"material-ui":43,"react":369,"react-time":196}],391:[function(require,module,exports){
+},{"material-ui":43,"react":369,"react-time":196}],394:[function(require,module,exports){
 var React = require('react');
 
 // material ui
@@ -51148,7 +51340,7 @@ var ScheduleButton = React.createClass({displayName: "ScheduleButton",
 
 module.exports = ScheduleButton;
 
-},{"material-ui":43,"react":369}],392:[function(require,module,exports){
+},{"material-ui":43,"react":369}],395:[function(require,module,exports){
 var React = require('react');
 var AppStore = require('../../stores/app-store');
 var Router = require('react-router');
@@ -51434,7 +51626,7 @@ var ScheduleForm = React.createClass({displayName: "ScheduleForm",
 
 module.exports = ScheduleForm;
 
-},{"../../stores/app-store":398,"./datetime.js":386,"material-ui":43,"react":369,"react-router":176}],393:[function(require,module,exports){
+},{"../../stores/app-store":401,"./datetime.js":389,"material-ui":43,"react":369,"react-router":176}],396:[function(require,module,exports){
 var React = require('react');
 var AppStore = require('../../stores/app-store');
 var AppActions = require('../../actions/app-actions');
@@ -51666,7 +51858,7 @@ var Updates = React.createClass({displayName: "Updates",
 
 module.exports = Updates;
 
-},{"../../actions/app-actions":370,"../../stores/app-store":398,"./eventlog.js":387,"./recentupdates.js":388,"./report.js":389,"./schedule.js":390,"./schedulebutton.js":391,"./scheduleform.js":392,"material-ui":43,"react":369}],394:[function(require,module,exports){
+},{"../../actions/app-actions":370,"../../stores/app-store":401,"./eventlog.js":390,"./recentupdates.js":391,"./report.js":392,"./schedule.js":393,"./schedulebutton.js":394,"./scheduleform.js":395,"material-ui":43,"react":369}],397:[function(require,module,exports){
 var React = require('react');
 
 var App = require('../components/app');
@@ -51690,7 +51882,7 @@ module.exports = (
   )
 );  
 
-},{"../components/app":371,"../components/dashboard/dashboard":372,"../components/devices/devices":377,"../components/software/software":384,"../components/updates/updates":393,"react":369,"react-router":176}],395:[function(require,module,exports){
+},{"../components/app":371,"../components/dashboard/dashboard":373,"../components/devices/devices":380,"../components/software/software":387,"../components/updates/updates":396,"react":369,"react-router":176}],398:[function(require,module,exports){
 module.exports = {
   SELECT_GROUP: 'SELECT_GROUP',
   ADD_TO_GROUP: 'ADD_TO_GROUP',
@@ -51702,7 +51894,7 @@ module.exports = {
   SORT_TABLE: 'SORT_TABLE'
 }
 
-},{}],396:[function(require,module,exports){
+},{}],399:[function(require,module,exports){
 var Dispatcher = require('flux').Dispatcher;
 var assign = require('react/lib/Object.assign');
 
@@ -51717,7 +51909,7 @@ var AppDispatcher = assign(new Dispatcher(), {
 
 module.exports = AppDispatcher;
 
-},{"flux":4,"react/lib/Object.assign":225}],397:[function(require,module,exports){
+},{"flux":4,"react/lib/Object.assign":225}],400:[function(require,module,exports){
 var React = require('react');
 var Router = require('react-router');
 var routes = require('./config/routes');
@@ -51735,7 +51927,7 @@ Router.run(routes, function(Root) {
   React.render(React.createElement(Root, null), document.getElementById('main'));
 });
 
-},{"./config/routes":394,"react":369,"react-router":176,"react-tap-event-plugin":194}],398:[function(require,module,exports){
+},{"./config/routes":397,"react":369,"react-router":176,"react-tap-event-plugin":194}],401:[function(require,module,exports){
 var AppDispatcher = require('../dispatchers/app-dispatcher');
 var AppConstants = require('../constants/app-constants');
 var assign = require('react/lib/Object.assign');
@@ -51760,7 +51952,7 @@ var _groups = [
   {
     id: 1,
     name: "All devices",
-    devices: [1,2,3,4,5,6,7,8],
+    devices: [1,2,3,4,5,6,7,8,9],
     type: "public"
   },
   {
@@ -51859,6 +52051,15 @@ var _alldevices = [
     'status': 'Up',
     'software_version': 'Version 1.0',
     'groups': [1,4]
+  },
+  {
+    'id': 9,
+    'name': 'Wifi001',
+    'model':"Wifi Model 1",
+    'arch': 'arm64',
+    'status': 'Up',
+    'software_version': 'Version 1.0 Wifi',
+    'groups': [1]
   },
 ];
 
@@ -51997,6 +52198,7 @@ function _getDeviceHealth() {
   var down = collectWithAttr(_alldevices, 'status', 'Down');
   health.down = down.length;
   health.up = _alldevices.length - health.down;
+  health.new = 0;
   return health;
 }
 
@@ -52155,8 +52357,8 @@ var _allupdates = [
     group: "Development",
     model: "Acme Model 1",
     software_version: "Version 1.2",
-    start_time: 1448407176000,
-    end_time: 1448410776000,
+    start_time: 1448507176000,
+    end_time: 1448510776000,
     status: null,
     devices: [
       {
@@ -52304,6 +52506,27 @@ var _allupdates = [
       }
     ]
   },
+  {
+    id: 6,
+    group: "Wifi",
+    model: "Wifi Model 1",
+    software_version: "Wifi Version 1.0",
+    start_time: 1447708776000,
+    end_time: 1450709971000,
+    status: null,
+    devices: [
+      {
+        id:9,
+        name:"Wifi001",
+        model:"Wifi Model 1",
+        last_software_version:"Wifi Version Beta",
+        software_version:"Wifi Version 1.0",
+        start_time:1450708776000,
+        end_time:1451709971000,
+        status:"Pending"
+      },
+    ]
+  }
 ];
 _allupdates.sort(startTimeSort);
 
@@ -52558,7 +52781,7 @@ var AppStore = assign(EventEmitter.prototype, {
 
 module.exports = AppStore;
 
-},{"../constants/app-constants":395,"../dispatchers/app-dispatcher":396,"events":1,"react/lib/Object.assign":225}],399:[function(require,module,exports){
+},{"../constants/app-constants":398,"../dispatchers/app-dispatcher":399,"events":1,"react/lib/Object.assign":225}],402:[function(require,module,exports){
 'use strict';
 
 var Colors = require('material-ui/lib/styles/colors');
@@ -52583,4 +52806,4 @@ module.exports = {
   }
 };
 
-},{"material-ui/lib/styles/colors":79,"material-ui/lib/styles/spacing":83,"material-ui/lib/utils/color-manipulator":134}]},{},[397]);
+},{"material-ui/lib/styles/colors":79,"material-ui/lib/styles/spacing":83,"material-ui/lib/utils/color-manipulator":134}]},{},[400]);

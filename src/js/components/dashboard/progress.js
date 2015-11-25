@@ -1,14 +1,14 @@
 var React = require('react');
+var Router = require('react-router');
+var Link = Router.Link;
+var Time = require('react-time');
 
 // material ui
 var mui = require('material-ui');
-var Table = mui.Table;
-var TableHeader = mui.TableHeader;
-var TableHeaderColumn = mui.TableHeaderColumn;
-var TableBody = mui.TableBody;
-var TableRow = mui.TableRow;
-var TableRowColumn = mui.TableRowColumn;
-var Paper = mui.Paper;
+var List = mui.List;
+var ListItem = mui.ListItem;
+var ListDivider = mui.ListDivider;
+var FontIcon = mui.FontIcon;
 
 
 var Progress = React.createClass({
@@ -16,45 +16,52 @@ var Progress = React.createClass({
     this.props.clickHandle(this.props.route);
   },
   render: function() {
-    var progress = this.props.progress.map(function(update, index) {
+    var progress = this.props.updates.map(function(update, index) {
+      var group = update.group + " (" + update.devices.length + ")";
+      var last = (this.props.updates.length === index+1) || index===4;
+      var progressBar = (
+          <div className="progressBar">
+            <div className="lightgrey">
+              <div className="green float-left" style={{width:"80%"}}></div>
+              <div className="red float-left" style={{width:"10%"}}></div>
+            </div>
+          </div>
+      );
       return (
-        <TableRow key={index}>
-          <TableRowColumn>{update.group}</TableRowColumn>
-          <TableRowColumn>{update.software_version}</TableRowColumn>
-          <TableRowColumn>{update.devices.length}</TableRowColumn>
-          <TableRowColumn>{update.status || "--"}</TableRowColumn>
-        </TableRow>
-      )
-    });
-    return (
-      <Paper zDepth={1} className="widget clickable" onClick={this._clickHandle}>
-        <h3>Updates in progress</h3>
-        <Table
-          className={progress.length ? null : 'hidden'}
-          selectable={false}>
-          <TableHeader
-            displaySelectAll={false}
-            adjustForCheckbox={false}>
-            <TableRow>
-              <TableHeaderColumn tooltip="Device group">Group</TableHeaderColumn>
-              <TableHeaderColumn tooltip="Target software version">Target software</TableHeaderColumn>
-              <TableHeaderColumn tooltip="Number of devices"># Devices</TableHeaderColumn>
-              <TableHeaderColumn tooltip="Status">Status</TableHeaderColumn>
-            </TableRow>
-          </TableHeader>
-          <TableBody
-            showRowHover={true}
-            displayRowCheckbox={false}
-            style={{cursor:"pointer"}}>
-            {progress}
-          </TableBody>
-        </Table>
-        <div className={progress.length ? 'hidden' : null}>
-          <p className="italic">No updates in progress</p>
+        <div key={index}>
+          <ListItem
+            disabled={false}
+            style={{paddingBottom:"12"}}
+            primaryText={progressBar}
+            secondaryText={<Time style={{fontSize:"12"}} className="progressTime" value={update.start_time} format="YY/MM/DD HH:mm" />}
+            onClick={this._clickUpdate}
+            leftIcon={<div style={{width:"110", height:"auto"}}><span className="progress-version">{update.software_version}</span><span className="progress-group">{group}</span></div>}
+            rightIcon={<span style={{top:"18", right:"22"}}>80%</span>} />
+          <ListDivider className={last ? "hidden" : null} />
         </div>
-      </Paper>
+      )
+    }, this);
+    return (
+      <div className="updates-container">
+        <div className="dashboard-header subsection">
+          <h3>In progress<span className="dashboard-number">{progress.length}</span></h3>
+        </div>
+        <div>
+          <List>
+            {progress}
+          </List>
+          <div className={progress.length ? 'hidden' : null}>
+            <p className="italic">No updates in progress</p>
+          </div>
+          <Link to="/updates" className="float-right">All updates</Link>
+        </div>
+      </div>
     );
   }
 });
+
+Progress.contextTypes = {
+  router: React.PropTypes.func
+};
 
 module.exports = Progress;
