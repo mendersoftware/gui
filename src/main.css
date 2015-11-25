@@ -108,6 +108,13 @@ a:hover {
   background-size: contain;
 }
 /* Layout */
+.flexbox {
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: -webkit-box;
+  display: flex;
+  overflow: hidden;
+}
 .leftFixed {
   width: 260px;
   float: left;
@@ -312,7 +319,10 @@ span.day {
   color: #CDDEDC;
 }
 .updates-container {
-  float: left;
+  -webkit-box-flex: 1;
+  -webkit-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
   margin: 15px 0 15px 6%;
   width: 47%;
   padding-bottom: 15px;

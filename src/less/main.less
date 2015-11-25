@@ -158,6 +158,13 @@ a {
 
 /* Layout */
 
+.flexbox {
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  overflow: hidden;
+}
+
 .leftFixed {
   width: 260px;
   float: left;
@@ -396,7 +403,7 @@ span.month, span.day {
 }
 
 .updates-container {
-  float: left;
+  flex:1;
   margin: 15px 0 15px 6%;
   width:47%;
   padding-bottom: 15px;

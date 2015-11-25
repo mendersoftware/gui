@@ -49519,14 +49519,16 @@ var Updates = React.createClass({displayName: "Updates",
           React.createElement("h2", null, "Updates")
         ), 
         React.createElement("div", null, 
-          React.createElement("div", null, 
+          React.createElement("div", {className: "flexbox"}, 
             React.createElement(Progress, {updates: this.props.progress}), 
-            React.createElement(Schedule, {updates: this.props.schedule})
+            React.createElement(Recent, {updates: this.props.recent})
           ), 
-          React.createElement("div", {className: "clear"}, 
-            React.createElement(Recent, {updates: this.props.recent}), 
-            React.createElement("div", {style: {position:"absolute", bottom:"30", right:"0"}}, 
-              React.createElement(RaisedButton, {label: "Schedule update", secondary: true})
+          React.createElement("div", {className: "flexbox"}, 
+            React.createElement(Schedule, {updates: this.props.schedule}), 
+            React.createElement("div", {className: "updates-container"}, 
+              React.createElement("div", {style: {position:"absolute", bottom:"30", right:"0"}}, 
+                React.createElement(RaisedButton, {label: "Schedule update", secondary: true})
+              )
             )
           )
         )

@@ -18,14 +18,16 @@ var Updates = React.createClass({
           <h2>Updates</h2>
         </div>
         <div>
-          <div>
+          <div className="flexbox">
             <Progress updates={this.props.progress} />
-            <Schedule updates={this.props.schedule} />
-          </div>
-          <div className="clear">
             <Recent updates={this.props.recent} />
-            <div style={{position:"absolute", bottom:"30", right:"0"}}>
-              <RaisedButton label="Schedule update" secondary={true} />
+          </div>
+          <div className="flexbox">
+            <Schedule updates={this.props.schedule} />
+            <div className="updates-container">
+              <div style={{position:"absolute", bottom:"30", right:"0"}}>
+                <RaisedButton label="Schedule update" secondary={true} />
+              </div>
             </div>
           </div>
         </div>
