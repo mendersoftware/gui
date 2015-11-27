@@ -30,7 +30,7 @@ var Progress = React.createClass({
       return (
         <div key={index}>
           <ListItem
-            disabled={false}
+            disabled={true}
             style={{paddingBottom:"12"}}
             primaryText={progressBar}
             secondaryText={<Time style={{fontSize:"12"}} className="progressTime" value={update.start_time} format="YY/MM/DD HH:mm" />}

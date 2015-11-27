@@ -11,11 +11,12 @@ var ListDivider = mui.ListDivider;
 var FontIcon = mui.FontIcon;
 
 var Recent = React.createClass({
-  _clickHandle: function() {
-    this.props.clickHandle(this.props.route);
-  },
-  _clickUpdate: function(e) {
-    console.log(e);
+  _clickHandle: function(id) {
+    var params = {};
+    params.id = id;
+    params.route="updates";
+    params.open=true;
+    this.props.clickHandle(params);
   },
   render: function() {
     var recent = this.props.updates.map(function(update, index) {
@@ -34,7 +35,7 @@ var Recent = React.createClass({
               disabled={false}
               primaryText={update.software_version}
               secondaryText={group}
-              onClick={this._clickUpdate}
+              onClick={this._clickHandle.bind(null, update.id)}
               leftIcon={icon}
               rightIcon={<Time style={{float:"right", position:"initial", width:"auto", marginRight:"-56", whiteSpace:"nowrap", fontSize:"14"}} value={update.end_time} format="YYYY/MM/DD HH:mm" />} />
             <ListDivider inset={true} className={last ? "hidden" : null} />

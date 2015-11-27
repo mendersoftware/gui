@@ -49231,7 +49231,7 @@ var Dashboard = React.createClass({displayName: "Dashboard",
 
     switch(params.route){
       case "updates":
-        var URIParams = "open="+params.open;
+        var URIParams = "open="+params.open + "&id="+params.id;
         URIParams = encodeURIComponent(URIParams);
         this.context.router.transitionTo("/updates/:tab/:params/", {tab:0, params:URIParams}, null);
         break;
@@ -49339,7 +49339,7 @@ var Progress = React.createClass({displayName: "Progress",
       return (
         React.createElement("div", {key: index}, 
           React.createElement(ListItem, {
-            disabled: false, 
+            disabled: true, 
             style: {paddingBottom:"12"}, 
             primaryText: progressBar, 
             secondaryText: React.createElement(Time, {style: {fontSize:"12"}, className: "progressTime", value: update.start_time, format: "YY/MM/DD HH:mm"}), 
@@ -49389,11 +49389,12 @@ var ListDivider = mui.ListDivider;
 var FontIcon = mui.FontIcon;
 
 var Recent = React.createClass({displayName: "Recent",
-  _clickHandle: function() {
-    this.props.clickHandle(this.props.route);
-  },
-  _clickUpdate: function(e) {
-    console.log(e);
+  _clickHandle: function(id) {
+    var params = {};
+    params.id = id;
+    params.route="updates";
+    params.open=true;
+    this.props.clickHandle(params);
   },
   render: function() {
     var recent = this.props.updates.map(function(update, index) {
@@ -49412,7 +49413,7 @@ var Recent = React.createClass({displayName: "Recent",
               disabled: false, 
               primaryText: update.software_version, 
               secondaryText: group, 
-              onClick: this._clickUpdate, 
+              onClick: this._clickHandle.bind(null, update.id), 
               leftIcon: icon, 
               rightIcon: React.createElement(Time, {style: {float:"right", position:"initial", width:"auto", marginRight:"-56", whiteSpace:"nowrap", fontSize:"14"}, value: update.end_time, format: "YYYY/MM/DD HH:mm"})}), 
             React.createElement(ListDivider, {inset: true, className: last ? "hidden" : null})
@@ -49545,8 +49546,8 @@ var Updates = React.createClass({displayName: "Updates",
         ), 
         React.createElement("div", null, 
           React.createElement("div", {className: "flexbox"}, 
-            React.createElement(Progress, {updates: this.props.progress}), 
-            React.createElement(Recent, {updates: this.props.recent})
+            React.createElement(Progress, {clickHandle: this._clickHandle, updates: this.props.progress}), 
+            React.createElement(Recent, {clickHandle: this._clickHandle, updates: this.props.recent})
           ), 
           React.createElement("div", {className: "flexbox"}, 
             React.createElement(Schedule, {updates: this.props.schedule}), 
@@ -51724,9 +51725,16 @@ var Updates = React.createClass({displayName: "Updates",
           }
           if (params.open) {
             var that = this;
-            setTimeout(function() {
-              that.dialogOpen('schedule');
-            }, 500);
+            if (params.id) {
+              setTimeout(function() {
+                var report = that._getReportById(params.id);
+                that._showReport(report);
+              }, 500);
+            } else {
+              setTimeout(function() {
+                that.dialogOpen("schedule");
+              }, 500);
+            }
           }
           
         }
@@ -51781,6 +51789,9 @@ var Updates = React.createClass({displayName: "Updates",
     var tmp = {};
     tmp[attr] = val;
     this.setState(tmp);
+  },
+  _getReportById: function (id) {
+    return AppStore.getSingleUpdate("id", Number(id));
   },
   _showReport: function (report) {
      this.setState({scheduleForm: false, showReport:report});
@@ -52795,7 +52806,12 @@ var AppStore = assign(EventEmitter.prototype, {
     * Return list of updates before date
     */
     return _getRecentUpdates(date)
-  }, 
+  },
+
+  getSingleUpdate: function(attr, val) {
+    var index = findWithAttr(_allupdates, attr, val);
+    return _allupdates[index];
+  },
 
   getProgressUpdates: function(date) {
     /*

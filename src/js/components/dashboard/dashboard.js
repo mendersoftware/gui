@@ -24,7 +24,7 @@ var Dashboard = React.createClass({
 
     switch(params.route){
       case "updates":
-        var URIParams = "open="+params.open;
+        var URIParams = "open="+params.open + "&id="+params.id;
         URIParams = encodeURIComponent(URIParams);
         this.context.router.transitionTo("/updates/:tab/:params/", {tab:0, params:URIParams}, null);
         break;

@@ -68,9 +68,16 @@ var Updates = React.createClass({
           }
           if (params.open) {
             var that = this;
-            setTimeout(function() {
-              that.dialogOpen('schedule');
-            }, 500);
+            if (params.id) {
+              setTimeout(function() {
+                var report = that._getReportById(params.id);
+                that._showReport(report);
+              }, 500);
+            } else {
+              setTimeout(function() {
+                that.dialogOpen("schedule");
+              }, 500);
+            }
           }
           
         }
@@ -125,6 +132,9 @@ var Updates = React.createClass({
     var tmp = {};
     tmp[attr] = val;
     this.setState(tmp);
+  },
+  _getReportById: function (id) {
+    return AppStore.getSingleUpdate("id", Number(id));
   },
   _showReport: function (report) {
      this.setState({scheduleForm: false, showReport:report});

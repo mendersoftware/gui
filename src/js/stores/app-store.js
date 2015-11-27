@@ -828,7 +828,12 @@ var AppStore = assign(EventEmitter.prototype, {
     * Return list of updates before date
     */
     return _getRecentUpdates(date)
-  }, 
+  },
+
+  getSingleUpdate: function(attr, val) {
+    var index = findWithAttr(_allupdates, attr, val);
+    return _allupdates[index];
+  },
 
   getProgressUpdates: function(date) {
     /*
