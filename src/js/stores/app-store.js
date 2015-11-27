@@ -22,7 +22,7 @@ var _groups = [
   {
     id: 1,
     name: "All devices",
-    devices: [1,2,3,4,5,6,7,8,9],
+    devices: [1,2,3,4,5,6,7,8,9,10,11],
     type: "public"
   },
   {
@@ -42,6 +42,12 @@ var _groups = [
     id: 4,
     name: "Production",
     devices: [7,8],
+    type: "public"
+  },
+  {
+    id: 5,
+    name: "Wifi",
+    devices: [9],
     type: "public"
   }
 ]
@@ -125,6 +131,24 @@ var _alldevices = [
   {
     'id': 9,
     'name': 'Wifi001',
+    'model':"Wifi Model 1",
+    'arch': 'arm64',
+    'status': 'Up',
+    'software_version': 'Version 1.0 Wifi',
+    'groups': [1,5]
+  },
+  {
+    'id': 10,
+    'name': 'Wifi002',
+    'model':"Wifi Model 1",
+    'arch': 'arm64',
+    'status': 'Up',
+    'software_version': 'Version 1.0 Wifi',
+    'groups': [1]
+  },
+   {
+    'id': 11,
+    'name': 'Wifi003',
     'model':"Wifi Model 1",
     'arch': 'arm64',
     'status': 'Up',
@@ -266,9 +290,10 @@ function _addToGroup(group, devices) {
 function _getDeviceHealth() {
   var health = {};
   var down = collectWithAttr(_alldevices, 'status', 'Down');
+  var nogroup = collectWithAttr(_alldevices, 'groups', [1]);
   health.down = down.length;
   health.up = _alldevices.length - health.down;
-  health.new = 0;
+  health.nogroup = nogroup.length;
   return health;
 }
 
@@ -386,8 +411,8 @@ var _allupdates = [
     group: "Test",
     model: "Acme Model 1",
     software_version: "Version 1.1",
-    start_time: 1448493576000,
-    end_time: 1448497176000,
+    start_time: 1458493576000,
+    end_time: 1458497176000,
     status: null,
     devices: [
      {
@@ -427,8 +452,8 @@ var _allupdates = [
     group: "Development",
     model: "Acme Model 1",
     software_version: "Version 1.2",
-    start_time: 1448507176000,
-    end_time: 1448510776000,
+    start_time: 1458507176000,
+    end_time: 1458510776000,
     status: null,
     devices: [
       {
@@ -694,7 +719,7 @@ function findWithAttr(array, attr, value) {
 function collectWithAttr(array, attr, value) {
   var newArr = [];
    for(var i = 0; i<array.length; i++) {
-    if(array[i][attr] === value) {
+    if(array[i][attr].toString() === value.toString()) {
       newArr.push(array[i]);
     }
   }

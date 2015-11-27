@@ -49226,8 +49226,16 @@ var Dashboard = React.createClass({displayName: "Dashboard",
   getInitialState: function() {
     return getState();
   },
-  _handleWidgetClick: function(route) {
-    this.context.router.transitionTo(route);
+  _handleClick: function(params) {
+    var id = params.id ? params.id : null;
+
+    switch(params.route){
+      case "updates":
+        var URIParams = "open="+params.open;
+        URIParams = encodeURIComponent(URIParams);
+        this.context.router.transitionTo("/updates/:tab/:params/", {tab:0, params:URIParams}, null);
+        break;
+    }
   },
   render: function() {
     return (
@@ -49235,7 +49243,7 @@ var Dashboard = React.createClass({displayName: "Dashboard",
         React.createElement("div", null, 
           React.createElement("div", {className: "leftDashboard"}, 
             React.createElement(Health, {health: this.state.health}), 
-            React.createElement(Updates, {progress: this.state.progress, schedule: this.state.schedule, recent: this.state.recent})
+            React.createElement(Updates, {clickHandle: this._handleClick, progress: this.state.progress, schedule: this.state.schedule, recent: this.state.recent})
           ), 
           React.createElement(Activity, {activity: this.state.activity})
         )
@@ -49278,7 +49286,8 @@ var Health = React.createClass({displayName: "Health",
             React.createElement("span", null, "up")
           ), 
           React.createElement("div", {className: "health-panel lightestgrey"}, 
-            React.createElement("span", {className: "number"}, this.props.health.new), 
+            React.createElement("span", {className: this.props.health.nogroup ? "number" : "hidden", style: {marginRight:"0"}}, "+"), 
+            React.createElement("span", {className: "number"}, this.props.health.nogroup), 
             React.createElement("span", null, "new")
           ), 
           React.createElement("div", {className: "clear"}, 
@@ -49521,10 +49530,12 @@ var Recent = require('./recent');
 // material ui
 var mui = require('material-ui');
 var RaisedButton = mui.RaisedButton;
+var FlatButton = mui.FlatButton;
+var Dialog = mui.Dialog;
 
 var Updates = React.createClass({displayName: "Updates",
-  _clickHandle: function() {
-    this.props.clickHandle();
+  _clickHandle: function(params) {
+    this.props.clickHandle(params);
   },
   render: function() {
     return (
@@ -49541,7 +49552,7 @@ var Updates = React.createClass({displayName: "Updates",
             React.createElement(Schedule, {updates: this.props.schedule}), 
             React.createElement("div", {className: "updates-container"}, 
               React.createElement("div", {style: {position:"absolute", bottom:"30", right:"0"}}, 
-                React.createElement(RaisedButton, {label: "Schedule update", secondary: true})
+                React.createElement(RaisedButton, {onClick: this._clickHandle.bind(null, {route:"updates",open:true}), label: "Schedule update", secondary: true})
               )
             )
           )
@@ -51697,10 +51708,29 @@ var Updates = React.createClass({displayName: "Updates",
   getInitialState: function() {
     return getState()
   },
-  componentWillMount: function() {
+  componentDidMount: function() {
     AppStore.changeListener(this._onChange);
       if (this.props.params) {
         this.setState({tabIndex: tabs[this.props.params.tab]});
+
+        if (this.props.params.params) {
+          var str = decodeURIComponent(this.props.params.params);
+          var obj = str.split("&");
+        
+          var params = [];
+          for (var i=0;i<obj.length;i++) {
+            var f = obj[i].split("=");
+            params[f[0]] = f[1];
+          }
+          if (params.open) {
+            var that = this;
+            setTimeout(function() {
+              that.dialogOpen('schedule');
+            }, 500);
+          }
+          
+        }
+
       } else {
         this.setState({tabIndex:"0"});
       }
@@ -51844,15 +51874,6 @@ var Updates = React.createClass({displayName: "Updates",
                   React.createElement(ScheduleButton, {style: {marginTop:"45"}, secondary: true, openDialog: this.dialogOpen})
                 )
               )
-            ), 
-
-            React.createElement(Tab, {
-            style: styles.tabs, 
-            label: "Event log", 
-            value: "2"}, 
-              React.createElement("div", {className: "tabContainer"}, 
-                React.createElement(EventLog, {events: this.state.events})
-              )
             )
           )
         ), 
@@ -51894,7 +51915,7 @@ module.exports = (
     React.createElement(DefaultRoute, {name: "dashboard", handler: Dashboard}), 
     React.createElement(Route, {name: "devices", path: "/devices/?:groupId?/?:filters?", handler: Devices}), 
     React.createElement(Route, {name: "software", path: "/software", handler: Software}), 
-    React.createElement(Route, {name: "updates", path: "/updates/?:tab?", handler: Updates})
+    React.createElement(Route, {name: "updates", path: "/updates/?:tab?/?:params?/?:Id?", handler: Updates})
   )
 );  
 
@@ -51968,7 +51989,7 @@ var _groups = [
   {
     id: 1,
     name: "All devices",
-    devices: [1,2,3,4,5,6,7,8,9],
+    devices: [1,2,3,4,5,6,7,8,9,10,11],
     type: "public"
   },
   {
@@ -51988,6 +52009,12 @@ var _groups = [
     id: 4,
     name: "Production",
     devices: [7,8],
+    type: "public"
+  },
+  {
+    id: 5,
+    name: "Wifi",
+    devices: [9],
     type: "public"
   }
 ]
@@ -52071,6 +52098,24 @@ var _alldevices = [
   {
     'id': 9,
     'name': 'Wifi001',
+    'model':"Wifi Model 1",
+    'arch': 'arm64',
+    'status': 'Up',
+    'software_version': 'Version 1.0 Wifi',
+    'groups': [1,5]
+  },
+  {
+    'id': 10,
+    'name': 'Wifi002',
+    'model':"Wifi Model 1",
+    'arch': 'arm64',
+    'status': 'Up',
+    'software_version': 'Version 1.0 Wifi',
+    'groups': [1]
+  },
+   {
+    'id': 11,
+    'name': 'Wifi003',
     'model':"Wifi Model 1",
     'arch': 'arm64',
     'status': 'Up',
@@ -52212,9 +52257,10 @@ function _addToGroup(group, devices) {
 function _getDeviceHealth() {
   var health = {};
   var down = collectWithAttr(_alldevices, 'status', 'Down');
+  var nogroup = collectWithAttr(_alldevices, 'groups', [1]);
   health.down = down.length;
   health.up = _alldevices.length - health.down;
-  health.new = 0;
+  health.nogroup = nogroup.length;
   return health;
 }
 
@@ -52332,8 +52378,8 @@ var _allupdates = [
     group: "Test",
     model: "Acme Model 1",
     software_version: "Version 1.1",
-    start_time: 1448493576000,
-    end_time: 1448497176000,
+    start_time: 1458493576000,
+    end_time: 1458497176000,
     status: null,
     devices: [
      {
@@ -52373,8 +52419,8 @@ var _allupdates = [
     group: "Development",
     model: "Acme Model 1",
     software_version: "Version 1.2",
-    start_time: 1448507176000,
-    end_time: 1448510776000,
+    start_time: 1458507176000,
+    end_time: 1458510776000,
     status: null,
     devices: [
       {
@@ -52640,7 +52686,7 @@ function findWithAttr(array, attr, value) {
 function collectWithAttr(array, attr, value) {
   var newArr = [];
    for(var i = 0; i<array.length; i++) {
-    if(array[i][attr] === value) {
+    if(array[i][attr].toString() === value.toString()) {
       newArr.push(array[i]);
     }
   }

@@ -19,8 +19,16 @@ var Dashboard = React.createClass({
   getInitialState: function() {
     return getState();
   },
-  _handleWidgetClick: function(route) {
-    this.context.router.transitionTo(route);
+  _handleClick: function(params) {
+    var id = params.id ? params.id : null;
+
+    switch(params.route){
+      case "updates":
+        var URIParams = "open="+params.open;
+        URIParams = encodeURIComponent(URIParams);
+        this.context.router.transitionTo("/updates/:tab/:params/", {tab:0, params:URIParams}, null);
+        break;
+    }
   },
   render: function() {
     return (
@@ -28,7 +36,7 @@ var Dashboard = React.createClass({
         <div>
           <div className="leftDashboard">
             <Health health={this.state.health} />
-            <Updates progress={this.state.progress} schedule={this.state.schedule} recent={this.state.recent} />
+            <Updates clickHandle={this._handleClick} progress={this.state.progress} schedule={this.state.schedule} recent={this.state.recent} />
           </div>
           <Activity activity={this.state.activity} />
         </div>

@@ -6,10 +6,12 @@ var Recent = require('./recent');
 // material ui
 var mui = require('material-ui');
 var RaisedButton = mui.RaisedButton;
+var FlatButton = mui.FlatButton;
+var Dialog = mui.Dialog;
 
 var Updates = React.createClass({
-  _clickHandle: function() {
-    this.props.clickHandle();
+  _clickHandle: function(params) {
+    this.props.clickHandle(params);
   },
   render: function() {
     return (
@@ -26,7 +28,7 @@ var Updates = React.createClass({
             <Schedule updates={this.props.schedule} />
             <div className="updates-container">
               <div style={{position:"absolute", bottom:"30", right:"0"}}>
-                <RaisedButton label="Schedule update" secondary={true} />
+                <RaisedButton onClick={this._clickHandle.bind(null, {route:"updates",open:true})} label="Schedule update" secondary={true} />
               </div>
             </div>
           </div>

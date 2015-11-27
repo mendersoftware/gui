@@ -52,10 +52,29 @@ var Updates = React.createClass({
   getInitialState: function() {
     return getState()
   },
-  componentWillMount: function() {
+  componentDidMount: function() {
     AppStore.changeListener(this._onChange);
       if (this.props.params) {
         this.setState({tabIndex: tabs[this.props.params.tab]});
+
+        if (this.props.params.params) {
+          var str = decodeURIComponent(this.props.params.params);
+          var obj = str.split("&");
+        
+          var params = [];
+          for (var i=0;i<obj.length;i++) {
+            var f = obj[i].split("=");
+            params[f[0]] = f[1];
+          }
+          if (params.open) {
+            var that = this;
+            setTimeout(function() {
+              that.dialogOpen('schedule');
+            }, 500);
+          }
+          
+        }
+
       } else {
         this.setState({tabIndex:"0"});
       }
@@ -198,15 +217,6 @@ var Updates = React.createClass({
                 <div style={{marginTop:"45"}} className="float-right">
                   <ScheduleButton style={{marginTop:"45"}} secondary={true}  openDialog={this.dialogOpen} />
                 </div>
-              </div>
-            </Tab>
-
-            <Tab
-            style={styles.tabs}
-            label={"Event log"}
-            value="2">
-              <div className="tabContainer">
-                <EventLog events={this.state.events} />
               </div>
             </Tab>
           </Tabs>

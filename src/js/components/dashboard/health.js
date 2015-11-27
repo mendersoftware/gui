@@ -25,7 +25,8 @@ var Health = React.createClass({
             <span>up</span>
           </div>
           <div className="health-panel lightestgrey">
-            <span className="number">{this.props.health.new}</span>
+            <span className={this.props.health.nogroup ? "number" : "hidden"} style={{marginRight:"0"}}>+</span>
+            <span className="number">{this.props.health.nogroup}</span>
             <span>new</span>
           </div>
           <div className="clear">
