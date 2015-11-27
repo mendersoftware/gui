@@ -337,12 +337,6 @@ hr.table-divider {
     padding: 3%;
     height: 80%;
     min-height: 100px;
-    cursor: pointer;
-
-    &:hover {
-      .scale(1.01);
-      .opacity(0.9);
-    }
 
     &:last-child {
       margin-right: 0;
@@ -409,6 +403,16 @@ hr.table-divider {
     color: #bdbdbd;
     position: relative;
     top: 12px;
+  }
+}
+
+
+.activityEntry, .health-panel {
+  cursor: pointer;
+
+  &:hover {
+    .scale(1.01);
+    .opacity(0.9);
   }
 }
 
