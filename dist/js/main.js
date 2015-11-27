@@ -49227,11 +49227,10 @@ var Dashboard = React.createClass({displayName: "Dashboard",
     return getState();
   },
   _handleClick: function(params) {
-    var id = params.id ? params.id : null;
-
     switch(params.route){
       case "updates":
-        var URIParams = "open="+params.open + "&id="+params.id;
+        var URIParams = "open="+params.open;
+        URIParams = params.id ? URIParams + "&id="+params.id : URIParams;
         URIParams = encodeURIComponent(URIParams);
         this.context.router.transitionTo("/updates/:tab/:params/", {tab:0, params:URIParams}, null);
         break;
