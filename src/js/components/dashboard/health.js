@@ -6,8 +6,8 @@ var Link = Router.Link;
 var mui = require('material-ui');
 
 var Health = React.createClass({
-  _clickHandle: function() {
-    this.props.clickHandle();
+  _clickHandle: function(status) {
+    this.props.clickHandle({route:"devices", status:status});
   },
   render: function() {
     return (
@@ -16,11 +16,11 @@ var Health = React.createClass({
           <h2>Devices <span className="dashboard-number">8</span></h2>
         </div>
         <div className="dashboard-container">
-          <div className="health-panel red">
+          <div className="health-panel red" onClick={this._clickHandle.bind(null, "down")}>
             <span className="number">{this.props.health.down}</span>
             <span>down</span>
           </div>
-          <div className="health-panel green">
+          <div className="health-panel green" onClick={this._clickHandle.bind(null, "up")}>
             <span className="number">{this.props.health.up}</span>
             <span>up</span>
           </div>

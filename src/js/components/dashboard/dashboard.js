@@ -28,6 +28,11 @@ var Dashboard = React.createClass({
         URIParams = encodeURIComponent(URIParams);
         this.context.router.transitionTo("/updates/:tab/:params/", {tab:0, params:URIParams}, null);
         break;
+      case "devices":
+        var filters = "status="+params.status;
+        filters = encodeURIComponent(filters);
+        this.context.router.transitionTo("/devices/:groupId/:filters", {groupId:1, filters: filters}, null);
+        break;
     }
   },
   render: function() {
@@ -35,7 +40,7 @@ var Dashboard = React.createClass({
       <div className="contentContainer">
         <div>
           <div className="leftDashboard">
-            <Health health={this.state.health} />
+            <Health clickHandle={this._handleClick} health={this.state.health} />
             <Updates clickHandle={this._handleClick} progress={this.state.progress} schedule={this.state.schedule} recent={this.state.recent} />
           </div>
           <Activity activity={this.state.activity} />

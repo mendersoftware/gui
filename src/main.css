@@ -266,6 +266,16 @@ hr.table-divider {
   padding: 3%;
   height: 80%;
   min-height: 100px;
+  cursor: pointer;
+}
+.health .health-panel:hover {
+  -webkit-transform: scale(1.01);
+  -moz-transform: scale(1.01);
+  -ms-transform: scale(1.01);
+  -o-transform: scale(1.01);
+  -webkit-opacity: 0.9;
+  -moz-opacity: 0.9;
+  opacity: 0.9;
 }
 .health .health-panel:last-child {
   margin-right: 0;

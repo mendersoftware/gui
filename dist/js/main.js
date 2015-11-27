@@ -49235,6 +49235,11 @@ var Dashboard = React.createClass({displayName: "Dashboard",
         URIParams = encodeURIComponent(URIParams);
         this.context.router.transitionTo("/updates/:tab/:params/", {tab:0, params:URIParams}, null);
         break;
+      case "devices":
+        var filters = "status="+params.status;
+        filters = encodeURIComponent(filters);
+        this.context.router.transitionTo("/devices/:groupId/:filters", {groupId:1, filters: filters}, null);
+        break;
     }
   },
   render: function() {
@@ -49242,7 +49247,7 @@ var Dashboard = React.createClass({displayName: "Dashboard",
       React.createElement("div", {className: "contentContainer"}, 
         React.createElement("div", null, 
           React.createElement("div", {className: "leftDashboard"}, 
-            React.createElement(Health, {health: this.state.health}), 
+            React.createElement(Health, {clickHandle: this._handleClick, health: this.state.health}), 
             React.createElement(Updates, {clickHandle: this._handleClick, progress: this.state.progress, schedule: this.state.schedule, recent: this.state.recent})
           ), 
           React.createElement(Activity, {activity: this.state.activity})
@@ -49267,8 +49272,8 @@ var Link = Router.Link;
 var mui = require('material-ui');
 
 var Health = React.createClass({displayName: "Health",
-  _clickHandle: function() {
-    this.props.clickHandle();
+  _clickHandle: function(status) {
+    this.props.clickHandle({route:"devices", status:status});
   },
   render: function() {
     return (
@@ -49277,11 +49282,11 @@ var Health = React.createClass({displayName: "Health",
           React.createElement("h2", null, "Devices ", React.createElement("span", {className: "dashboard-number"}, "8"))
         ), 
         React.createElement("div", {className: "dashboard-container"}, 
-          React.createElement("div", {className: "health-panel red"}, 
+          React.createElement("div", {className: "health-panel red", onClick: this._clickHandle.bind(null, "down")}, 
             React.createElement("span", {className: "number"}, this.props.health.down), 
             React.createElement("span", null, "down")
           ), 
-          React.createElement("div", {className: "health-panel green"}, 
+          React.createElement("div", {className: "health-panel green", onClick: this._clickHandle.bind(null, "up")}, 
             React.createElement("span", {className: "number"}, this.props.health.up), 
             React.createElement("span", null, "up")
           ), 
