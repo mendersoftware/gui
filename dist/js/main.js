@@ -49315,6 +49315,7 @@ var React = require('react');
 var Router = require('react-router');
 var Link = Router.Link;
 var Time = require('react-time');
+var AppStore = require('../../stores/app-store');
 
 // material ui
 var mui = require('material-ui');
@@ -49325,18 +49326,26 @@ var FontIcon = mui.FontIcon;
 
 
 var Progress = React.createClass({displayName: "Progress",
-  _clickHandle: function() {
+  _getProgress: function (id) {
+    return AppStore.getProgressStatus(id);
+  },
+  _clickHandle: function () {
     this.props.clickHandle(this.props.route);
   },
   render: function() {
     var progress = this.props.updates.map(function(update, index) {
       var group = update.group + " (" + update.devices.length + ")";
       var last = (this.props.updates.length === index+1) || index===4;
+      var progress = this._getProgress(update.id);
+      var complete = ((progress.complete / update.devices.length)*100).toFixed(0);
+      var failed = ((progress.failed / update.devices.length)*100).toFixed(0);
+      var total = Number(complete) + Number(failed);
+
       var progressBar = (
           React.createElement("div", {className: "progressBar"}, 
             React.createElement("div", {className: "lightgrey"}, 
-              React.createElement("div", {className: "green float-left", style: {width:"80%"}}), 
-              React.createElement("div", {className: "red float-left", style: {width:"10%"}})
+              React.createElement("div", {className: "green float-left", style: {width:complete+"%"}}), 
+              React.createElement("div", {className: "red float-left", style: {width:failed+"%"}})
             )
           )
       );
@@ -49344,12 +49353,12 @@ var Progress = React.createClass({displayName: "Progress",
         React.createElement("div", {key: index}, 
           React.createElement(ListItem, {
             disabled: true, 
-            style: {paddingBottom:"12"}, 
+            style: {paddingBottom:"12", height:"50"}, 
             primaryText: progressBar, 
             secondaryText: React.createElement(Time, {style: {fontSize:"12"}, className: "progressTime", value: update.start_time, format: "YY/MM/DD HH:mm"}), 
             onClick: this._clickUpdate, 
             leftIcon: React.createElement("div", {style: {width:"110", height:"auto"}}, React.createElement("span", {className: "progress-version"}, update.software_version), React.createElement("span", {className: "progress-group"}, group)), 
-            rightIcon: React.createElement("span", {style: {top:"18", right:"22"}}, "80%")}), 
+            rightIcon: React.createElement("span", {style: {top:"18", right:"22"}}, total, "%")}), 
           React.createElement(ListDivider, {className: last ? "hidden" : null})
         )
       )
@@ -49379,7 +49388,7 @@ Progress.contextTypes = {
 
 module.exports = Progress;
 
-},{"material-ui":43,"react":369,"react-router":176,"react-time":196}],376:[function(require,module,exports){
+},{"../../stores/app-store":401,"material-ui":43,"react":369,"react-router":176,"react-time":196}],376:[function(require,module,exports){
 var React = require('react');
 var Time = require('react-time');
 var Router = require('react-router');
@@ -52603,7 +52612,38 @@ var _allupdates = [
         status:"Pending"
       },
     ]
-  }
+  },
+  {
+    id: 7,
+    group: "Production",
+    model: "Acme Model 1",
+    software_version: "Version 1.1",
+    start_time: 1447309976000,
+    end_time: 1455396376000,
+    status: "Pending",
+    devices: [
+      {
+        id:7,
+        name:"Device007",
+        model:"Acme Model 1",
+        last_software_version:"Version 1.0",
+        software_version:"Version 1.1",
+        start_time:1447309976000,
+        end_time:1449309976000,
+        status:"Complete"
+      },
+      {
+        id:8,
+        name:"Device008",
+        model:"Acme Model 1",
+        last_software_version:"Version 1.0",
+        software_version:"Version 1.1",
+        start_time:1447309976000,
+        end_time:1455396376000,
+        status:"Pending"
+      },
+    ]
+  },
 ];
 _allupdates.sort(startTimeSort);
 
@@ -52646,6 +52686,15 @@ function _getProgressUpdates(time) {
     if (_allupdates[i].start_time<=time && _allupdates[i].end_time>time) {
       progress.push(_allupdates[i]);
     }
+  }
+  return progress;
+}
+
+function _getProgressStatus(id) {
+  var update = _allupdates[findWithAttr(_allupdates, "id", id)];
+  var progress = {complete:0, failed: 0, pending: 0};
+  for (var key in update.devices) {
+    progress[update.devices[key].status.toLowerCase()]++;
   }
   return progress;
 }
@@ -52822,7 +52871,14 @@ var AppStore = assign(EventEmitter.prototype, {
     * Return list of updates in progress based on date
     */
     return _getProgressUpdates(date)
-  }, 
+  },
+
+  getProgressStatus: function(id) {
+    /*
+    * Return progress stats for a single update
+    */
+    return _getProgressStatus(id);
+  },
 
   getScheduledUpdates: function(date) {
     /*

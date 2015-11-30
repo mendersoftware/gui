@@ -621,7 +621,38 @@ var _allupdates = [
         status:"Pending"
       },
     ]
-  }
+  },
+  {
+    id: 7,
+    group: "Production",
+    model: "Acme Model 1",
+    software_version: "Version 1.1",
+    start_time: 1447309976000,
+    end_time: 1455396376000,
+    status: "Pending",
+    devices: [
+      {
+        id:7,
+        name:"Device007",
+        model:"Acme Model 1",
+        last_software_version:"Version 1.0",
+        software_version:"Version 1.1",
+        start_time:1447309976000,
+        end_time:1449309976000,
+        status:"Complete"
+      },
+      {
+        id:8,
+        name:"Device008",
+        model:"Acme Model 1",
+        last_software_version:"Version 1.0",
+        software_version:"Version 1.1",
+        start_time:1447309976000,
+        end_time:1455396376000,
+        status:"Pending"
+      },
+    ]
+  },
 ];
 _allupdates.sort(startTimeSort);
 
@@ -664,6 +695,15 @@ function _getProgressUpdates(time) {
     if (_allupdates[i].start_time<=time && _allupdates[i].end_time>time) {
       progress.push(_allupdates[i]);
     }
+  }
+  return progress;
+}
+
+function _getProgressStatus(id) {
+  var update = _allupdates[findWithAttr(_allupdates, "id", id)];
+  var progress = {complete:0, failed: 0, pending: 0};
+  for (var key in update.devices) {
+    progress[update.devices[key].status.toLowerCase()]++;
   }
   return progress;
 }
@@ -840,7 +880,14 @@ var AppStore = assign(EventEmitter.prototype, {
     * Return list of updates in progress based on date
     */
     return _getProgressUpdates(date)
-  }, 
+  },
+
+  getProgressStatus: function(id) {
+    /*
+    * Return progress stats for a single update
+    */
+    return _getProgressStatus(id);
+  },
 
   getScheduledUpdates: function(date) {
     /*
