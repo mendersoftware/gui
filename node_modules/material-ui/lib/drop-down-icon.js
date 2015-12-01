@@ -39,7 +39,8 @@ var DropDownIcon = React.createClass({
     closeOnMenuItemTouchTap: React.PropTypes.bool,
     iconStyle: React.PropTypes.object,
     iconClassName: React.PropTypes.string,
-    iconLigature: React.PropTypes.string
+    iconLigature: React.PropTypes.string,
+    style: React.PropTypes.object
   },
 
   getInitialState: function getInitialState() {
@@ -115,7 +116,7 @@ var DropDownIcon = React.createClass({
 
     return React.createElement(
       'div',
-      _extends({}, other, { style: this.mergeAndPrefix(styles.root, this.props.style) }),
+      _extends({}, other, { style: this.prepareStyles(styles.root, this.props.style) }),
       React.createElement(
         'div',
         { onTouchTap: this._onControlClick },
@@ -130,7 +131,7 @@ var DropDownIcon = React.createClass({
       ),
       React.createElement(Menu, {
         ref: 'menuItems',
-        style: this.mergeAndPrefix(styles.menu),
+        style: styles.menu,
         menuItems: menuItems,
         menuItemStyle: styles.menuItem,
         hideable: true,

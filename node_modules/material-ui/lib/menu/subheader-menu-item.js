@@ -19,7 +19,8 @@ var SubheaderMenuItem = React.createClass({
     index: React.PropTypes.number.isRequired,
     text: React.PropTypes.string.isRequired,
     firstChild: React.PropTypes.bool,
-    className: React.PropTypes.string
+    className: React.PropTypes.string,
+    style: React.PropTypes.object
   },
 
   //for passing default theme context to children
@@ -88,7 +89,7 @@ var SubheaderMenuItem = React.createClass({
       {
         key: this.props.index,
         className: this.props.className,
-        style: this.mergeAndPrefix(this.getStyles().root, this.props.firstChild && this.getStyles().rootWhenFirstChild, this.props.style) },
+        style: this.prepareStyles(this.getStyles().root, this.props.firstChild && this.getStyles().rootWhenFirstChild, this.props.style) },
       this.props.text
     );
   }

@@ -110,7 +110,7 @@ var TableRowColumn = React.createClass({
       _extends({
         key: this.props.key,
         className: classes,
-        style: this.mergeAndPrefix(styles.root, style)
+        style: this.prepareStyles(styles.root, style)
       }, handlers, other),
       this.props.children
     );

@@ -4,22 +4,53 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
 
-var React = require('react/addons');
-var PureRenderMixin = React.addons.PureRenderMixin;
-var ReactTransitionGroup = React.addons.TransitionGroup;
+var React = require('react');
+var PureRenderMixin = require('react-addons-pure-render-mixin');
+var ReactTransitionGroup = require('react-addons-transition-group');
 var StylePropable = require('../mixins/style-propable');
 var ScaleInChild = require('./scale-in-child');
+var DefaultRawTheme = require('../styles/raw-themes/light-raw-theme');
+var ThemeManager = require('../styles/theme-manager');
 
 var ScaleIn = React.createClass({
   displayName: 'ScaleIn',
 
   mixins: [PureRenderMixin, StylePropable],
 
+  contextTypes: {
+    muiTheme: React.PropTypes.object
+  },
+
+  //for passing default theme context to children
+  childContextTypes: {
+    muiTheme: React.PropTypes.object
+  },
+
+  getChildContext: function getChildContext() {
+    return {
+      muiTheme: this.state.muiTheme
+    };
+  },
+
+  getInitialState: function getInitialState() {
+    return {
+      muiTheme: this.context.muiTheme ? this.context.muiTheme : ThemeManager.getMuiTheme(DefaultRawTheme)
+    };
+  },
+
+  //to update theme inside state whenever a new theme is passed down
+  //from the parent / owner using context
+  componentWillReceiveProps: function componentWillReceiveProps(nextProps, nextContext) {
+    var newMuiTheme = nextContext.muiTheme ? nextContext.muiTheme : this.state.muiTheme;
+    this.setState({ muiTheme: newMuiTheme });
+  },
+
   propTypes: {
     childStyle: React.PropTypes.object,
     enterDelay: React.PropTypes.number,
     maxScale: React.PropTypes.number,
-    minScale: React.PropTypes.number
+    minScale: React.PropTypes.number,
+    style: React.PropTypes.object
   },
 
   getDefaultProps: function getDefaultProps() {
@@ -39,7 +70,7 @@ var ScaleIn = React.createClass({
 
     var other = _objectWithoutProperties(_props, ['children', 'childStyle', 'enterDelay', 'maxScale', 'minScale', 'style']);
 
-    var mergedRootStyles = this.mergeAndPrefix({
+    var mergedRootStyles = this.prepareStyles({
       position: 'relative',
       overflow: 'hidden',
       height: '100%'

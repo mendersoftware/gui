@@ -3,6 +3,7 @@
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 var React = require('react');
+var ReactDOM = require('react-dom');
 var StylePropable = require('../mixins/style-propable');
 var Colors = require('../styles/colors');
 var DateTime = require('../utils/date-time');
@@ -80,8 +81,8 @@ var CalendarYear = React.createClass({
   _scrollToSelectedYear: function _scrollToSelectedYear() {
     if (this.refs.selectedYearButton === undefined) return;
 
-    var container = this.getDOMNode();
-    var yearButtonNode = this.refs.selectedYearButton.getDOMNode();
+    var container = ReactDOM.findDOMNode(this);
+    var yearButtonNode = ReactDOM.findDOMNode(this.refs.selectedYearButton);
 
     var containerHeight = container.clientHeight;
     var yearButtonNodeHeight = yearButtonNode.clientHeight || 32;

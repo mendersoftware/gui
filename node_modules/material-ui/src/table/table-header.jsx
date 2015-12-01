@@ -82,7 +82,7 @@ const TableHeader = React.createClass({
     let baseHeaderRow = this._createBaseHeaderRow();
 
     return (
-      <thead className={classes} style={this.mergeAndPrefix(this.getStyles().root, style)}>
+      <thead className={classes} style={this.prepareStyles(this.getStyles().root, style)}>
         {superHeaderRows}
         {baseHeaderRow}
       </thead>
@@ -152,7 +152,7 @@ const TableHeader = React.createClass({
   },
 
   _getSelectAllCheckboxColumn(props) {
-  if (!this.props.displaySelectAll) return this._getCheckboxPlaceholder(props);
+    if (!this.props.displaySelectAll) return this._getCheckboxPlaceholder(props);
 
     const checkbox =
       <Checkbox
@@ -163,8 +163,9 @@ const TableHeader = React.createClass({
         checked={this.props.selectAllSelected}
         onCheck={this._onSelectAll} />;
 
+    const key = 'hpcb' + props.rowNumber;
     return (
-      <TableHeaderColumn style={{width: 24}}>
+      <TableHeaderColumn key={key} style={{width: 24}}>
         {checkbox}
       </TableHeaderColumn>
     );

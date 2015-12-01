@@ -5,6 +5,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
 
 var React = require('react');
+var ReactDOM = require('react-dom');
 var StylePropable = require('./mixins/style-propable');
 var Transitions = require('./styles/transitions');
 var Colors = require('./styles/colors');
@@ -26,7 +27,8 @@ var Tooltip = React.createClass({
     show: React.PropTypes.bool,
     touch: React.PropTypes.bool,
     verticalPosition: React.PropTypes.oneOf(['top', 'bottom']),
-    horizontalPosition: React.PropTypes.oneOf(['left', 'right', 'center'])
+    horizontalPosition: React.PropTypes.oneOf(['left', 'right', 'center']),
+    style: React.PropTypes.object
   },
 
   //for passing default theme context to children
@@ -132,21 +134,21 @@ var Tooltip = React.createClass({
     return React.createElement(
       'div',
       _extends({}, other, {
-        style: this.mergeAndPrefix(styles.root, this.props.show && styles.rootWhenShown, this.props.touch && styles.rootWhenTouched, this.props.style) }),
+        style: this.prepareStyles(styles.root, this.props.show && styles.rootWhenShown, this.props.touch && styles.rootWhenTouched, this.props.style) }),
       React.createElement('div', {
         ref: 'ripple',
-        style: this.mergeAndPrefix(styles.ripple, this.props.show && styles.rippleWhenShown) }),
+        style: this.prepareStyles(styles.ripple, this.props.show && styles.rippleWhenShown) }),
       React.createElement(
         'span',
-        { style: this.mergeAndPrefix(styles.label) },
+        { style: this.prepareStyles(styles.label) },
         this.props.label
       )
     );
   },
 
   _setRippleSize: function _setRippleSize() {
-    var ripple = React.findDOMNode(this.refs.ripple);
-    var tooltip = window.getComputedStyle(React.findDOMNode(this));
+    var ripple = ReactDOM.findDOMNode(this.refs.ripple);
+    var tooltip = window.getComputedStyle(ReactDOM.findDOMNode(this));
     var tooltipWidth = parseInt(tooltip.getPropertyValue("width"), 10) / (this.props.horizontalPosition === 'center' ? 2 : 1);
     var tooltipHeight = parseInt(tooltip.getPropertyValue("height"), 10);
 
@@ -161,7 +163,7 @@ var Tooltip = React.createClass({
   },
 
   _setTooltipPosition: function _setTooltipPosition() {
-    var tooltip = React.findDOMNode(this);
+    var tooltip = ReactDOM.findDOMNode(this);
     this.setState({ offsetWidth: tooltip.offsetWidth });
   }
 

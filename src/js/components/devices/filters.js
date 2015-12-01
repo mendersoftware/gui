@@ -1,4 +1,4 @@
-var React = require('react');
+import React from 'react';
 
 // material ui
 var mui = require('material-ui');
@@ -68,7 +68,7 @@ var Filters = React.createClass({
       }
     }
     var attributes = [];
-    for (key in this.props.attributes) {
+    for (var key in this.props.attributes) {
       var tmp = { payload:key, text: this.props.attributes[key] };
       attributes.push(tmp);
     }

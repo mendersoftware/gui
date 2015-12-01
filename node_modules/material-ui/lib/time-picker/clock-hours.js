@@ -1,9 +1,12 @@
 'use strict';
 
 var React = require('react');
+var ReactDOM = require('react-dom');
 var StylePropable = require('../mixins/style-propable');
 var ClockNumber = require("./clock-number");
 var ClockPointer = require("./clock-pointer");
+var DefaultRawTheme = require('../styles/raw-themes/light-raw-theme');
+var ThemeManager = require('../styles/theme-manager');
 
 function rad2deg(rad) {
   return rad * 57.29577951308232;
@@ -25,6 +28,34 @@ var ClockHours = React.createClass({
   displayName: 'ClockHours',
 
   mixins: [StylePropable],
+
+  contextTypes: {
+    muiTheme: React.PropTypes.object
+  },
+
+  //for passing default theme context to children
+  childContextTypes: {
+    muiTheme: React.PropTypes.object
+  },
+
+  getChildContext: function getChildContext() {
+    return {
+      muiTheme: this.state.muiTheme
+    };
+  },
+
+  getInitialState: function getInitialState() {
+    return {
+      muiTheme: this.context.muiTheme ? this.context.muiTheme : ThemeManager.getMuiTheme(DefaultRawTheme)
+    };
+  },
+
+  //to update theme inside state whenever a new theme is passed down
+  //from the parent / owner using context
+  componentWillReceiveProps: function componentWillReceiveProps(nextProps, nextContext) {
+    var newMuiTheme = nextContext.muiTheme ? nextContext.muiTheme : this.state.muiTheme;
+    this.setState({ muiTheme: newMuiTheme });
+  },
 
   propTypes: {
     initialHours: React.PropTypes.number,
@@ -52,7 +83,7 @@ var ClockHours = React.createClass({
   },
 
   componentDidMount: function componentDidMount() {
-    var clockElement = React.findDOMNode(this.refs.mask);
+    var clockElement = ReactDOM.findDOMNode(this.refs.mask);
 
     this.center = {
       x: clockElement.offsetWidth / 2,
@@ -184,10 +215,10 @@ var ClockHours = React.createClass({
 
     return React.createElement(
       'div',
-      { ref: 'clock', style: this.mergeAndPrefix(styles.root) },
+      { ref: 'clock', style: this.prepareStyles(styles.root) },
       React.createElement(ClockPointer, { hasSelected: true, value: hours, type: 'hour' }),
       numbers,
-      React.createElement('div', { ref: 'mask', style: this.mergeAndPrefix(styles.hitMask), onTouchMove: this.handleTouchMove,
+      React.createElement('div', { ref: 'mask', style: this.prepareStyles(styles.hitMask), onTouchMove: this.handleTouchMove,
         onTouchEnd: this.handleTouchEnd, onMouseUp: this.handleUp, onMouseMove: this.handleMove })
     );
   }

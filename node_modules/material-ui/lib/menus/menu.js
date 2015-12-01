@@ -4,8 +4,9 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
 
-var React = require('react/addons');
-var update = React.addons.update;
+var React = require('react');
+var ReactDOM = require('react-dom');
+var update = require('react-addons-update');
 var Controllable = require('../mixins/controllable');
 var StylePropable = require('../mixins/style-propable');
 var AutoPrefix = require('../styles/auto-prefix');
@@ -38,6 +39,7 @@ var Menu = React.createClass({
     onItemTouchTap: React.PropTypes.func,
     onKeyDown: React.PropTypes.func,
     openDirection: PropTypes.corners,
+    style: React.PropTypes.object,
     selectedMenuItemStyle: React.PropTypes.object,
     width: PropTypes.stringOrNumber,
     zDepth: PropTypes.zDepth
@@ -95,12 +97,11 @@ var Menu = React.createClass({
   componentWillLeave: function componentWillLeave(callback) {
     var _this = this;
 
-    var rootStyle = React.findDOMNode(this).style;
-
-    AutoPrefix.set(rootStyle, 'transition', Transitions.easeOut('250ms', ['opacity', 'transform']));
-    AutoPrefix.set(rootStyle, 'transform', 'translate3d(0,-8px,0)');
+    var rootStyle = ReactDOM.findDOMNode(this).style;
+    rootStyle.transition = Transitions.easeOut('250ms', ['opacity', 'transform']);
+    rootStyle.transform = 'translate3d(0,-8px,0)';
     rootStyle.opacity = 0;
-
+    rootStyle = AutoPrefix.all(rootStyle);
     setTimeout(function () {
       if (_this.isMounted()) callback();
     }, 250);
@@ -184,7 +185,7 @@ var Menu = React.createClass({
       }
     };
 
-    var mergedRootStyles = this.mergeAndPrefix(styles.root, style);
+    var mergedRootStyles = this.prepareStyles(styles.root, style);
     var mergedListStyles = this.mergeStyles(styles.list, listStyle);
 
     //Cascade children opacity
@@ -209,7 +210,7 @@ var Menu = React.createClass({
           transitionDelay = cumulativeDelay;
         }
 
-        childrenContainerStyles = _this2.mergeAndPrefix(styles.menuItemContainer, {
+        childrenContainerStyles = _this2.prepareStyles(styles.menuItemContainer, {
           transitionDelay: transitionDelay + 'ms'
         });
       }
@@ -254,9 +255,9 @@ var Menu = React.createClass({
   },
 
   _animateOpen: function _animateOpen() {
-    var rootStyle = React.findDOMNode(this).style;
-    var scrollContainerStyle = React.findDOMNode(this.refs.scrollContainer).style;
-    var menuContainers = React.findDOMNode(this.refs.list).childNodes;
+    var rootStyle = ReactDOM.findDOMNode(this).style;
+    var scrollContainerStyle = ReactDOM.findDOMNode(this.refs.scrollContainer).style;
+    var menuContainers = ReactDOM.findDOMNode(this.refs.list).childNodes;
 
     AutoPrefix.set(rootStyle, 'transform', 'scaleX(1)');
     AutoPrefix.set(scrollContainerStyle, 'transform', 'scaleY(1)');
@@ -439,20 +440,20 @@ var Menu = React.createClass({
     var menuItemHeight = desktop ? 32 : 48;
 
     if (focusedMenuItem) {
-      var selectedOffSet = React.findDOMNode(focusedMenuItem).offsetTop;
+      var selectedOffSet = ReactDOM.findDOMNode(focusedMenuItem).offsetTop;
 
       //Make the focused item be the 2nd item in the list the
       //user sees
       var scrollTop = selectedOffSet - menuItemHeight;
       if (scrollTop < menuItemHeight) scrollTop = 0;
 
-      React.findDOMNode(this.refs.scrollContainer).scrollTop = scrollTop;
+      ReactDOM.findDOMNode(this.refs.scrollContainer).scrollTop = scrollTop;
     }
   },
 
   _setWidth: function _setWidth() {
-    var el = React.findDOMNode(this);
-    var listEl = React.findDOMNode(this.refs.list);
+    var el = ReactDOM.findDOMNode(this);
+    var listEl = ReactDOM.findDOMNode(this.refs.list);
     var elWidth = el.offsetWidth;
     var keyWidth = this.state.keyWidth;
     var minWidth = keyWidth * 1.5;

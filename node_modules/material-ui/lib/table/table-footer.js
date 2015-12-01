@@ -50,7 +50,8 @@ var TableFooter = React.createClass({
 
   getDefaultProps: function getDefaultProps() {
     return {
-      adjustForCheckbox: true
+      adjustForCheckbox: true,
+      style: {}
     };
   },
 
@@ -75,8 +76,9 @@ var TableFooter = React.createClass({
   render: function render() {
     var _props = this.props;
     var className = _props.className;
+    var style = _props.style;
 
-    var other = _objectWithoutProperties(_props, ['className']);
+    var other = _objectWithoutProperties(_props, ['className', 'style']);
 
     var classes = 'mui-table-footer';
     if (className) classes += ' ' + className;
@@ -85,7 +87,7 @@ var TableFooter = React.createClass({
 
     return React.createElement(
       'tfoot',
-      _extends({ className: classes }, other),
+      _extends({ className: classes, style: this.prepareStyles(style) }, other),
       footerRows
     );
   },

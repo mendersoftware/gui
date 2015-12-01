@@ -4,8 +4,8 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
 
-var React = require('react/addons');
-var PureRenderMixin = React.addons.PureRenderMixin;
+var React = require('react');
+var PureRenderMixin = require('react-addons-pure-render-mixin');
 var StylePropable = require('../mixins/style-propable');
 var Colors = require('../styles/colors');
 var CheckIcon = require('../svg-icons/navigation/check');
@@ -32,6 +32,7 @@ var MenuItem = React.createClass({
     leftIcon: React.PropTypes.element,
     rightIcon: React.PropTypes.element,
     secondaryText: React.PropTypes.node,
+    style: React.PropTypes.object,
     value: React.PropTypes.string
   },
 
@@ -153,7 +154,7 @@ var MenuItem = React.createClass({
 
       secondaryTextElement = secondaryTextIsAnElement ? React.cloneElement(secondaryText, { style: mergedSecondaryTextStyles }) : React.createElement(
         'div',
-        { style: styles.secondaryText },
+        { style: this.prepareStyles(styles.secondaryText) },
         secondaryText
       );
     }

@@ -4,7 +4,8 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
 
-var React = require('react/addons');
+var React = require('react');
+var ReactDOM = require('react-dom');
 var TabTemplate = require('./tabTemplate');
 var InkBar = require('../ink-bar');
 var StylePropable = require('../mixins/style-propable');
@@ -25,7 +26,9 @@ var Tabs = React.createClass({
     contentContainerStyle: React.PropTypes.object,
     initialSelectedIndex: React.PropTypes.number,
     inkBarStyle: React.PropTypes.object,
-    tabItemContainerStyle: React.PropTypes.object
+    tabItemContainerStyle: React.PropTypes.object,
+    tabTemplate: React.PropTypes.func,
+    style: React.PropTypes.object
   },
 
   //for passing default theme context to children
@@ -41,7 +44,8 @@ var Tabs = React.createClass({
 
   getDefaultProps: function getDefaultProps() {
     return {
-      initialSelectedIndex: 0
+      initialSelectedIndex: 0,
+      tabTemplate: TabTemplate
     };
   },
 
@@ -56,7 +60,7 @@ var Tabs = React.createClass({
   },
 
   getEvenWidth: function getEvenWidth() {
-    return parseInt(window.getComputedStyle(React.findDOMNode(this)).getPropertyValue('width'), 10);
+    return parseInt(window.getComputedStyle(ReactDOM.findDOMNode(this)).getPropertyValue('width'), 10);
   },
 
   getTabCount: function getTabCount() {
@@ -85,8 +89,9 @@ var Tabs = React.createClass({
     var style = _props.style;
     var tabWidth = _props.tabWidth;
     var tabItemContainerStyle = _props.tabItemContainerStyle;
+    var tabTemplate = _props.tabTemplate;
 
-    var other = _objectWithoutProperties(_props, ['children', 'contentContainerStyle', 'initialSelectedIndex', 'inkBarStyle', 'style', 'tabWidth', 'tabItemContainerStyle']);
+    var other = _objectWithoutProperties(_props, ['children', 'contentContainerStyle', 'initialSelectedIndex', 'inkBarStyle', 'style', 'tabWidth', 'tabItemContainerStyle', 'tabTemplate']);
 
     var themeVariables = this.state.muiTheme.tabs;
     var styles = {
@@ -115,7 +120,7 @@ var Tabs = React.createClass({
           console.error('Tabs value prop has been passed, but Tab ' + index + ' does not have a value prop. Needs value if Tabs is going' + ' to be a controlled component.');
         }
 
-        tabContent.push(tab.props.children ? React.createElement(TabTemplate, {
+        tabContent.push(tab.props.children ? React.createElement(tabTemplate, {
           key: index,
           selected: _this._getSelected(tab, index)
         }, tab.props.children) : undefined);
@@ -143,10 +148,10 @@ var Tabs = React.createClass({
     return React.createElement(
       'div',
       _extends({}, other, {
-        style: this.mergeAndPrefix(style) }),
+        style: this.prepareStyles(style) }),
       React.createElement(
         'div',
-        { style: this.mergeAndPrefix(styles.tabItemContainer, tabItemContainerStyle) },
+        { style: this.prepareStyles(styles.tabItemContainer, tabItemContainerStyle) },
         tabs
       ),
       React.createElement(
@@ -156,7 +161,7 @@ var Tabs = React.createClass({
       ),
       React.createElement(
         'div',
-        { style: this.mergeAndPrefix(contentContainerStyle) },
+        { style: this.prepareStyles(contentContainerStyle) },
         tabContent
       )
     );

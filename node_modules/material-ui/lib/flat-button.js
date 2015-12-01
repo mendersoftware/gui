@@ -4,7 +4,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
 
-var React = require('react/addons');
+var React = require('react');
 var ContextPure = require('./mixins/context-pure');
 var Transitions = require('./styles/transitions');
 var Children = require('./utils/children');
@@ -75,13 +75,14 @@ var FlatButton = React.createClass({
     onTouchStart: React.PropTypes.func,
     primary: React.PropTypes.bool,
     rippleColor: React.PropTypes.string,
-    secondary: React.PropTypes.bool
+    secondary: React.PropTypes.bool,
+    style: React.PropTypes.object
   },
 
   getDefaultProps: function getDefaultProps() {
     return {
       labelStyle: {},
-      labelPosition: 'before',
+      labelPosition: 'before', // Should be after but we keep it like for now (prevent breaking changes)
       onKeyboardFocus: function onKeyboardFocus() {},
       onMouseEnter: function onMouseEnter() {},
       onMouseLeave: function onMouseLeave() {},
@@ -167,6 +168,7 @@ var FlatButton = React.createClass({
     }, style);
 
     var labelElement = label ? React.createElement(FlatButtonLabel, { label: label, style: labelStyle }) : undefined;
+
     // Place label before or after children.
     var childrenFragment = labelPosition === 'before' ? { labelElement: labelElement, children: children } : { children: children, labelElement: labelElement };
     var enhancedButtonChildren = Children.create(childrenFragment);

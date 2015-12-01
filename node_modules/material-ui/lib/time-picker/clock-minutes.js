@@ -1,6 +1,7 @@
 'use strict';
 
 var React = require('react');
+var ReactDOM = require('react-dom');
 var StylePropable = require('../mixins/style-propable');
 var ClockNumber = require("./clock-number");
 var ClockPointer = require("./clock-pointer");
@@ -80,7 +81,7 @@ var ClockMinutes = React.createClass({
   },
 
   componentDidMount: function componentDidMount() {
-    var clockElement = React.findDOMNode(this.refs.mask);
+    var clockElement = ReactDOM.findDOMNode(this.refs.mask);
 
     this.center = {
       x: clockElement.offsetWidth / 2,
@@ -183,10 +184,10 @@ var ClockMinutes = React.createClass({
 
     return React.createElement(
       'div',
-      { ref: 'clock', style: this.mergeAndPrefix(styles.root) },
+      { ref: 'clock', style: this.prepareStyles(styles.root) },
       React.createElement(ClockPointer, { value: minutes.selected, type: 'minute' }),
       minutes.numbers,
-      React.createElement('div', { ref: 'mask', style: this.mergeAndPrefix(styles.hitMask), hasSelected: minutes.hasSelected,
+      React.createElement('div', { ref: 'mask', style: this.prepareStyles(styles.hitMask), hasSelected: minutes.hasSelected,
         onTouchMove: this.handleTouch, onTouchEnd: this.handleTouch,
         onMouseUp: this.handleUp, onMouseMove: this.handleMove })
     );

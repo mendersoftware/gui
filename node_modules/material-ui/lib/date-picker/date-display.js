@@ -6,9 +6,7 @@ function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in ob
 
 var React = require('react');
 var StylePropable = require('../mixins/style-propable');
-var DateTime = require('../utils/date-time');
 var Transitions = require('../styles/transitions');
-var AutoPrefix = require('../styles/auto-prefix');
 var SlideInTransitionGroup = require('../transition-groups/slide-in');
 var DefaultRawTheme = require('../styles/raw-themes/light-raw-theme');
 var ThemeManager = require('../styles/theme-manager');
@@ -23,9 +21,12 @@ var DateDisplay = React.createClass({
   },
 
   propTypes: {
+    DateTimeFormat: React.PropTypes.func.isRequired,
+    locale: React.PropTypes.string.isRequired,
     disableYearSelection: React.PropTypes.bool,
     monthDaySelected: React.PropTypes.bool,
     selectedDate: React.PropTypes.object.isRequired,
+    style: React.PropTypes.object,
     weekCount: React.PropTypes.number
   },
 
@@ -92,12 +93,6 @@ var DateDisplay = React.createClass({
         padding: 20
       },
 
-      month: {
-        display: isLandscape ? 'block' : undefined,
-        marginLeft: isLandscape ? undefined : 8,
-        marginTop: isLandscape ? 5 : undefined
-      },
-
       monthDay: {
         root: {
           display: 'inline-block',
@@ -138,20 +133,25 @@ var DateDisplay = React.createClass({
 
   render: function render() {
     var _props = this.props;
+    var DateTimeFormat = _props.DateTimeFormat;
+    var locale = _props.locale;
     var selectedDate = _props.selectedDate;
     var style = _props.style;
 
-    var other = _objectWithoutProperties(_props, ['selectedDate', 'style']);
+    var other = _objectWithoutProperties(_props, ['DateTimeFormat', 'locale', 'selectedDate', 'style']);
 
-    var dayOfWeek = DateTime.getDayOfWeek(this.props.selectedDate);
-    var month = DateTime.getShortMonth(this.props.selectedDate);
-    var day = this.props.selectedDate.getDate();
     var year = this.props.selectedDate.getFullYear();
     var styles = this.getStyles();
 
+    var dateTimeFormatted = new DateTimeFormat(locale, {
+      month: 'short',
+      weekday: 'short',
+      day: '2-digit'
+    }).format(this.props.selectedDate);
+
     return React.createElement(
       'div',
-      _extends({}, other, { style: this.mergeAndPrefix(styles.root, this.props.style) }),
+      _extends({}, other, { style: this.prepareStyles(styles.root, this.props.style) }),
       React.createElement(
         SlideInTransitionGroup,
         {
@@ -171,22 +171,10 @@ var DateDisplay = React.createClass({
         React.createElement(
           'div',
           {
-            key: dayOfWeek + month + day,
+            key: dateTimeFormatted,
             style: styles.monthDay.title,
             onTouchTap: this._handleMonthDayClick },
-          React.createElement(
-            'span',
-            null,
-            dayOfWeek,
-            ','
-          ),
-          React.createElement(
-            'span',
-            { style: styles.month },
-            month,
-            ' ',
-            day
-          )
+          dateTimeFormatted
         )
       )
     );

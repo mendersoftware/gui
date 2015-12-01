@@ -1,6 +1,7 @@
-const React = require('react/addons');
-const PureRenderMixin = React.addons.PureRenderMixin;
-const ReactTransitionGroup = React.addons.TransitionGroup;
+const React = require('react');
+const ReactDOM = require('react-dom');
+const PureRenderMixin = require('react-addons-pure-render-mixin');
+const ReactTransitionGroup = require('react-addons-transition-group');
 const StylePropable = require('../mixins/style-propable');
 const Dom = require('../utils/dom');
 const ImmutabilityHelper = require('../utils/immutability-helper');
@@ -15,9 +16,16 @@ const TouchRipple = React.createClass({
     centerRipple: React.PropTypes.bool,
     color: React.PropTypes.string,
     opacity: React.PropTypes.number,
+    style: React.PropTypes.object,
   },
 
   getInitialState() {
+    //Touch start produces a mouse down event for compat reasons. To avoid
+    //showing ripples twice we skip showing a ripple for the first mouse down
+    //after a touch start. Note we don't store ignoreNextMouseDown in this.state
+    //to avoid re-rendering when we change it
+    this._ignoreNextMouseDown = false;
+
     return {
       //This prop allows us to only render the ReactTransitionGroup
       //on the first click of the component, making the inital
@@ -72,15 +80,12 @@ const TouchRipple = React.createClass({
   },
 
   start(e, isRippleTouchGenerated) {
-    let ripples = this.state.ripples;
-
-    //Do nothing if we're starting a click-event-generated ripple
-    //while having touch-generated ripples
-    if (!isRippleTouchGenerated) {
-      for (let i = 0; i < ripples.length; i++) {
-        if (ripples[i].props.touchGenerated) return;
-      }
+    if (this._ignoreNextMouseDown && !isRippleTouchGenerated) {
+      this._ignoreNextMouseDown = false;
+      return;
     }
+
+    let ripples = this.state.ripples;
 
     //Add a ripple to the ripples array
     ripples = ImmutabilityHelper.push(ripples, (
@@ -92,6 +97,7 @@ const TouchRipple = React.createClass({
         touchGenerated={isRippleTouchGenerated} />
     ));
 
+    this._ignoreNextMouseDown = isRippleTouchGenerated;
     this.setState({
       hasRipples: true,
       nextKey: this.state.nextKey + 1,
@@ -129,7 +135,7 @@ const TouchRipple = React.createClass({
 
   _getRippleStyle(e) {
     let style = {};
-    const el = React.findDOMNode(this);
+    const el = ReactDOM.findDOMNode(this);
     const elHeight = el.offsetHeight;
     const elWidth = el.offsetWidth;
     const offset = Dom.offset(el);

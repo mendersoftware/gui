@@ -1,22 +1,21 @@
-var React = require('react');
+import React from 'react';
 
-var App = require('../components/app');
+import App from '../components/app';
 
-var Dashboard = require('../components/dashboard/dashboard');
-var Updates = require('../components/updates/updates');
-var Devices = require('../components/devices/devices');
-var Software = require('../components/software/software');
+import Dashboard from '../components/dashboard/dashboard';
+import Updates from '../components/updates/updates';
+import Devices from '../components/devices/devices';
+import Software from '../components/software/software';
 
 
-var Router = require('react-router');
-var DefaultRoute = Router.DefaultRoute;
-var Route = Router.Route;
+import { Router, Route, IndexRoute } from 'react-router';
+
 
 module.exports = (
-  <Route name="app" path="/" handler={App}>
-    <DefaultRoute name="dashboard" handler={Dashboard} />
-    <Route name="devices" path="/devices/?:groupId?/?:filters?" handler={Devices} />
-    <Route name="software" path="/software" handler={Software} />
-    <Route name="updates" path="/updates/?:tab?/?:params?/?:Id?" handler={Updates} />
+  <Route path="/" component={App}>
+    <IndexRoute component={Dashboard} />
+    <Route path="/devices(/:groupId)(/:filters)" component={Devices} />
+    <Route path="/software" component={Software} />
+    <Route path="/updates(/:tab)(/:params)(/:Id)" component={Updates} />
   </Route>
 );  

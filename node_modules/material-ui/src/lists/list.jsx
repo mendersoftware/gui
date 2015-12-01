@@ -1,5 +1,5 @@
-const React = require('react/addons');
-const PureRenderMixin = React.addons.PureRenderMixin;
+const React = require('react');
+const PureRenderMixin = require('react-addons-pure-render-mixin');
 const PropTypes = require('../utils/prop-types');
 const StylePropable = require('../mixins/style-propable');
 const Typography = require('../styles/typography');
@@ -17,7 +17,8 @@ const List = React.createClass({
 
   propTypes: {
     insetSubheader: React.PropTypes.bool,
-    subheader: React.PropTypes.string,
+    style: React.PropTypes.object,
+    subheader: React.PropTypes.node,
     subheaderStyle: React.PropTypes.object,
     zDepth: PropTypes.zDepth,
   },
@@ -81,7 +82,7 @@ const List = React.createClass({
 
     let subheaderElement;
     if (subheader) {
-      const mergedSubheaderStyles = this.mergeAndPrefix(styles.subheader, subheaderStyle);
+      const mergedSubheaderStyles = this.prepareStyles(styles.subheader, subheaderStyle);
       subheaderElement = <div style={mergedSubheaderStyles}>{subheader}</div>;
     }
 

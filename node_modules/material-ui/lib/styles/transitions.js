@@ -30,6 +30,6 @@ module.exports = {
     delay = delay || '0ms';
     easeFunction = easeFunction || "linear";
 
-    return AutoPrefix.singleHyphened(property) + ' ' + duration + ' ' + easeFunction + ' ' + delay;
+    return property + ' ' + duration + ' ' + easeFunction + ' ' + delay;
   }
 };

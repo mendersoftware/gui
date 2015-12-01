@@ -1,4 +1,4 @@
-const React = require('react/addons');
+const React = require('react');
 const StylePropable = require('../mixins/style-propable');
 const ListDivider = require('../lists/list-divider');
 const DefaultRawTheme = require('../styles/raw-themes/light-raw-theme');
@@ -10,6 +10,10 @@ const MenuDivider = React.createClass({
 
   contextTypes: {
     muiTheme: React.PropTypes.object,
+  },
+
+  propTypes: {
+    style: React.PropTypes.object,
   },
 
   //for passing default theme context to children
@@ -42,7 +46,7 @@ const MenuDivider = React.createClass({
       ...other,
     } = this.props;
 
-    let mergedStyles = this.mergeAndPrefix({
+    let mergedStyles = this.mergeStyles({
       marginTop: 7,
       marginBottom: 8,
     }, style);

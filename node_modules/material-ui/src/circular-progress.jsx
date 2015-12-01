@@ -1,4 +1,5 @@
 const React = require('react');
+const ReactDOM = require('react-dom');
 const StylePropable = require('./mixins/style-propable');
 const AutoPrefix = require('./styles/auto-prefix');
 const Transitions = require("./styles/transitions");
@@ -16,6 +17,7 @@ const CircularProgress = React.createClass({
       max:  React.PropTypes.number,
       size: React.PropTypes.number,
       color: React.PropTypes.string,
+      style: React.PropTypes.object,
       innerStyle: React.PropTypes.object,
   },
 
@@ -59,8 +61,8 @@ const CircularProgress = React.createClass({
   },
 
   componentDidMount() {
-    let wrapper = React.findDOMNode(this.refs.wrapper);
-    let path = React.findDOMNode(this.refs.path);
+    let wrapper = ReactDOM.findDOMNode(this.refs.wrapper);
+    let path = ReactDOM.findDOMNode(this.refs.path);
 
     this._scalePath(path);
     this._rotateWrapper(wrapper);
@@ -98,26 +100,24 @@ const CircularProgress = React.createClass({
     if (!this.isMounted()) return;
     if (this.props.mode !== "indeterminate") return;
 
-    AutoPrefix.set(wrapper.style, "transform", null);
-    AutoPrefix.set(wrapper.style, "transform", "rotate(0deg)");
-    wrapper.style.transitionDuration = "0ms";
+    AutoPrefix.set(wrapper.style, 'transform', 'rotate(0deg)');
+    AutoPrefix.set(wrapper.style, 'transitionDuration', '0ms');
 
     setTimeout(() => {
-      AutoPrefix.set(wrapper.style, "transform", "rotate(1800deg)");
-      wrapper.style.transitionDuration = "10s";
-      //wrapper.style.webkitTransitionTimingFunction = "linear";
-      AutoPrefix.set(wrapper.style, "transitionTimingFunction", "linear");
+      AutoPrefix.set(wrapper.style, 'transform', 'rotate(1800deg)');
+      AutoPrefix.set(wrapper.style, 'transitionDuration', '10s');
+      AutoPrefix.set(wrapper.style, 'transitionTimingFunction', 'linear');
     }, 50);
   },
 
   getDefaultProps() {
-      return {
-          mode: "indeterminate",
-          value: 0,
-          min: 0,
-          max: 100,
-          size: 1,
-      };
+    return {
+      mode: "indeterminate",
+      value: 0,
+      min: 0,
+      max: 100,
+      size: 1,
+    };
   },
 
   getTheme() {
@@ -185,10 +185,10 @@ const CircularProgress = React.createClass({
     let styles = this.getStyles(size || 1);
 
     return (
-      <div {...other} style={this.mergeAndPrefix(styles.root, style)} >
-        <div ref="wrapper" style={this.mergeAndPrefix(styles.wrapper, innerStyle)} >
-          <svg style={this.mergeAndPrefix(styles.svg)} >
-            <circle ref="path" style={this.mergeAndPrefix(styles.path)} cx="25" cy="25"
+      <div {...other} style={this.prepareStyles(styles.root, style)} >
+        <div ref="wrapper" style={this.prepareStyles(styles.wrapper, innerStyle)} >
+          <svg style={this.prepareStyles(styles.svg)} >
+            <circle ref="path" style={this.prepareStyles(styles.path)} cx="25" cy="25"
               r="20" fill="none" strokeWidth="2.5" strokeMiterlimit="10" />
           </svg>
         </div>

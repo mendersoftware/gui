@@ -1,7 +1,7 @@
 'use strict';
 
-var React = require('react/addons');
-var update = React.addons.update;
+var React = require('react');
+var update = require('react-addons-update');
 
 function mergeSingle(objA, objB) {
   if (!objA) return objB;

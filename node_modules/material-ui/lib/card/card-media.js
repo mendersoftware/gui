@@ -5,11 +5,41 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 var React = require('react');
 var Styles = require('../styles');
 var StylePropable = require('../mixins/style-propable');
+var ThemeManager = require('../styles/theme-manager');
+var DefaultRawTheme = require('../styles/raw-themes/light-raw-theme');
 
 var CardMedia = React.createClass({
   displayName: 'CardMedia',
 
   mixins: [StylePropable],
+
+  contextTypes: {
+    muiTheme: React.PropTypes.object
+  },
+
+  //for passing default theme context to children
+  childContextTypes: {
+    muiTheme: React.PropTypes.object
+  },
+
+  getChildContext: function getChildContext() {
+    return {
+      muiTheme: this.state.muiTheme
+    };
+  },
+
+  getInitialState: function getInitialState() {
+    return {
+      muiTheme: this.context.muiTheme ? this.context.muiTheme : ThemeManager.getMuiTheme(DefaultRawTheme)
+    };
+  },
+
+  //to update theme inside state whenever a new theme is passed down
+  //from the parent / owner using context
+  componentWillReceiveProps: function componentWillReceiveProps(nextProps, nextContext) {
+    var newMuiTheme = nextContext.muiTheme ? nextContext.muiTheme : this.state.muiTheme;
+    this.setState({ muiTheme: newMuiTheme });
+  },
 
   propTypes: {
     overlay: React.PropTypes.node,
@@ -50,7 +80,8 @@ var CardMedia = React.createClass({
       mediaChild: {
         verticalAlign: 'top',
         maxWidth: '100%',
-        minWidth: '100%'
+        minWidth: '100%',
+        width: '100%'
       }
     };
   },
@@ -59,14 +90,14 @@ var CardMedia = React.createClass({
     var _this = this;
 
     var styles = this.getStyles();
-    var rootStyle = this.mergeAndPrefix(styles.root, this.props.style);
-    var mediaStyle = this.mergeAndPrefix(styles.media, this.props.mediaStyle);
-    var overlayContainerStyle = this.mergeAndPrefix(styles.overlayContainer, this.props.overlayContainerStyle);
-    var overlayContentStyle = this.mergeAndPrefix(styles.overlayContent, this.props.overlayContentStyle);
-    var overlayStyle = this.mergeAndPrefix(styles.overlay, this.props.overlayStyle);
+    var rootStyle = this.prepareStyles(styles.root, this.props.style);
+    var mediaStyle = this.prepareStyles(styles.media, this.props.mediaStyle);
+    var overlayContainerStyle = this.prepareStyles(styles.overlayContainer, this.props.overlayContainerStyle);
+    var overlayContentStyle = this.prepareStyles(styles.overlayContent, this.props.overlayContentStyle);
+    var overlayStyle = this.prepareStyles(styles.overlay, this.props.overlayStyle);
 
     var children = React.Children.map(this.props.children, function (child) {
-      return React.cloneElement(child, { style: _this.mergeAndPrefix(styles.mediaChild, child.props.style) });
+      return React.cloneElement(child, { style: _this.prepareStyles(styles.mediaChild, child.props.style) });
     });
 
     var overlayChildren = React.Children.map(this.props.overlay, function (child) {

@@ -1,7 +1,8 @@
 'use strict';
 
-var React = require('react/addons');
-var PureRenderMixin = React.addons.PureRenderMixin;
+var React = require('react');
+var ReactDOM = require('react-dom');
+var PureRenderMixin = require('react-addons-pure-render-mixin');
 var StylePropable = require('../mixins/style-propable');
 var AutoPrefix = require('../styles/auto-prefix');
 var Colors = require('../styles/colors');
@@ -19,7 +20,8 @@ var FocusRipple = React.createClass({
     color: React.PropTypes.string,
     innerStyle: React.PropTypes.object,
     opacity: React.PropTypes.number,
-    show: React.PropTypes.bool
+    show: React.PropTypes.bool,
+    style: React.PropTypes.object
   },
 
   getDefaultProps: function getDefaultProps() {
@@ -89,23 +91,23 @@ var FocusRipple = React.createClass({
   _pulsate: function _pulsate() {
     if (!this.isMounted()) return;
 
-    var innerCircle = React.findDOMNode(this.refs.innerCircle);
+    var innerCircle = ReactDOM.findDOMNode(this.refs.innerCircle);
     if (!innerCircle) return;
 
     var startScale = 'scale(1)';
     var endScale = 'scale(0.85)';
-    var currentScale = innerCircle.style[AutoPrefix.single('transform')];
+    var currentScale = innerCircle.style.transform;
     var nextScale = undefined;
 
     currentScale = currentScale || startScale;
     nextScale = currentScale === startScale ? endScale : startScale;
 
-    innerCircle.style[AutoPrefix.single('transform')] = nextScale;
+    AutoPrefix.set(innerCircle.style, 'transform', nextScale);
     this._timeout = setTimeout(this._pulsate, pulsateDuration);
   },
 
   _setRippleSize: function _setRippleSize() {
-    var el = React.findDOMNode(this.refs.innerCircle);
+    var el = ReactDOM.findDOMNode(this.refs.innerCircle);
     var height = el.offsetHeight;
     var width = el.offsetWidth;
     var size = Math.max(height, width);

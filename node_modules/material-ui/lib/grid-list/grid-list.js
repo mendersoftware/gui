@@ -14,10 +14,15 @@ var GridList = React.createClass({
 
   mixins: [StylePropable],
 
+  contextTypes: {
+    muiTheme: React.PropTypes.object
+  },
+
   propTypes: {
     cols: React.PropTypes.number,
     padding: React.PropTypes.number,
-    cellHeight: React.PropTypes.number
+    cellHeight: React.PropTypes.number,
+    style: React.PropTypes.object
   },
 
   //for passing default theme context to children
@@ -35,7 +40,7 @@ var GridList = React.createClass({
     return {
       cols: 2,
       padding: 4,
-      cellHeight: '180px'
+      cellHeight: 180
     };
   },
 
@@ -55,7 +60,7 @@ var GridList = React.createClass({
   getStyles: function getStyles() {
     return {
       root: {
-        display: 'flex',
+        display: '-webkit-box; display: -moz-box; display: -ms-flexbox; display: -webkit-flex; display: flex',
         flexWrap: 'wrap',
         margin: '-' + this.props.padding / 2 + 'px'
       },
@@ -80,26 +85,26 @@ var GridList = React.createClass({
 
     var styles = this.getStyles();
 
-    var mergedRootStyles = this.mergeAndPrefix(styles.root, style);
+    var mergedRootStyles = this.mergeStyles(styles.root, style);
 
     var wrappedChildren = React.Children.map(children, function (currentChild) {
       var childCols = currentChild.props.cols || 1;
       var childRows = currentChild.props.rows || 1;
-      var itemStyle = _this.mergeAndPrefix(styles.item, {
+      var itemStyle = _this.mergeStyles(styles.item, {
         width: 100 / cols * childCols + '%',
         height: cellHeight * childRows + padding
       });
 
       return React.createElement(
         'div',
-        { style: itemStyle },
+        { style: _this.prepareStyles(itemStyle) },
         currentChild
       );
     });
 
     return React.createElement(
       'div',
-      _extends({ style: mergedRootStyles }, other),
+      _extends({ style: this.prepareStyles(mergedRootStyles) }, other),
       wrappedChildren
     );
   }

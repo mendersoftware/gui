@@ -28,6 +28,7 @@ const FontIcon = React.createClass({
     hoverColor: React.PropTypes.string,
     onMouseLeave: React.PropTypes.func,
     onMouseEnter: React.PropTypes.func,
+    style: React.PropTypes.object,
   },
 
   getInitialState() {
@@ -60,7 +61,7 @@ const FontIcon = React.createClass({
       this.state.muiTheme.rawTheme.palette.textColor;
     let onColor = hoverColor ? hoverColor : offColor;
 
-    let mergedStyles = this.mergeAndPrefix({
+    let mergedStyles = this.prepareStyles({
       position: 'relative',
       fontSize: spacing.iconSize,
       display: 'inline-block',

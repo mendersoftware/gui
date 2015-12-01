@@ -4,8 +4,8 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
 
-var React = require('react/addons');
-var PureRenderMixin = React.addons.PureRenderMixin;
+var React = require('react');
+var PureRenderMixin = require('react-addons-pure-render-mixin');
 var StylePropable = require('./mixins/style-propable');
 var PropTypes = require('./utils/prop-types');
 var Transitions = require('./styles/transitions');
@@ -49,7 +49,8 @@ var Paper = React.createClass({
     circle: React.PropTypes.bool,
     rounded: React.PropTypes.bool,
     transitionEnabled: React.PropTypes.bool,
-    zDepth: PropTypes.zDepth
+    zDepth: PropTypes.zDepth,
+    style: React.PropTypes.object
   },
 
   getDefaultProps: function getDefaultProps() {
@@ -84,7 +85,7 @@ var Paper = React.createClass({
 
     return React.createElement(
       'div',
-      _extends({}, other, { style: this.mergeAndPrefix(styles, style) }),
+      _extends({}, other, { style: this.prepareStyles(styles, style) }),
       children
     );
   },

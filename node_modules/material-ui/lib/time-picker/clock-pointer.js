@@ -119,8 +119,8 @@ var ClockPointer = React.createClass({
 
     return React.createElement(
       'div',
-      { style: this.mergeAndPrefix(styles.root) },
-      React.createElement('div', { style: styles.mark })
+      { style: this.prepareStyles(styles.root) },
+      React.createElement('div', { style: this.prepareStyles(styles.mark) })
     );
   }
 });

@@ -4,8 +4,8 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
 
-var React = require('react/addons');
-var PureRenderMixin = React.addons.PureRenderMixin;
+var React = require('react');
+var PureRenderMixin = require('react-addons-pure-render-mixin');
 var PropTypes = require('../utils/prop-types');
 var StylePropable = require('../mixins/style-propable');
 var Typography = require('../styles/typography');
@@ -24,7 +24,8 @@ var List = React.createClass({
 
   propTypes: {
     insetSubheader: React.PropTypes.bool,
-    subheader: React.PropTypes.string,
+    style: React.PropTypes.object,
+    subheader: React.PropTypes.node,
     subheaderStyle: React.PropTypes.object,
     zDepth: PropTypes.zDepth
   },
@@ -88,7 +89,7 @@ var List = React.createClass({
 
     var subheaderElement = undefined;
     if (subheader) {
-      var mergedSubheaderStyles = this.mergeAndPrefix(styles.subheader, subheaderStyle);
+      var mergedSubheaderStyles = this.prepareStyles(styles.subheader, subheaderStyle);
       subheaderElement = React.createElement(
         'div',
         { style: mergedSubheaderStyles },

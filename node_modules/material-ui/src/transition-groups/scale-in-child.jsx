@@ -1,18 +1,50 @@
-const React = require('react/addons');
-const PureRenderMixin = React.addons.PureRenderMixin;
+const React = require('react');
+const ReactDOM = require('react-dom');
+const PureRenderMixin = require('react-addons-pure-render-mixin');
 const StylePropable = require('../mixins/style-propable');
 const AutoPrefix = require('../styles/auto-prefix');
 const Transitions = require('../styles/transitions');
+const DefaultRawTheme = require('../styles/raw-themes/light-raw-theme');
+const ThemeManager = require('../styles/theme-manager');
 
 
 const ScaleInChild = React.createClass({
 
   mixins: [PureRenderMixin, StylePropable],
 
+  contextTypes: {
+    muiTheme: React.PropTypes.object,
+  },
+
+  //for passing default theme context to children
+  childContextTypes: {
+    muiTheme: React.PropTypes.object,
+  },
+
+  getChildContext () {
+    return {
+      muiTheme: this.state.muiTheme,
+    };
+  },
+
+  getInitialState () {
+    return {
+      muiTheme: this.context.muiTheme ? this.context.muiTheme : ThemeManager.getMuiTheme(DefaultRawTheme),
+    };
+  },
+
+  //to update theme inside state whenever a new theme is passed down
+  //from the parent / owner using context
+  componentWillReceiveProps (nextProps, nextContext) {
+    let newMuiTheme = nextContext.muiTheme ? nextContext.muiTheme : this.state.muiTheme;
+    this.setState({muiTheme: newMuiTheme});
+  },
+
   propTypes: {
     enterDelay: React.PropTypes.number,
     maxScale: React.PropTypes.number,
     minScale: React.PropTypes.number,
+    style: React.PropTypes.object,
   },
 
   getDefaultProps: function() {
@@ -40,7 +72,7 @@ const ScaleInChild = React.createClass({
   },
 
   componentWillLeave(callback) {
-    let style = React.findDOMNode(this).style;
+    let style = ReactDOM.findDOMNode(this).style;
 
     style.opacity = '0';
     AutoPrefix.set(style, 'transform', 'scale(' + this.props.minScale + ')');
@@ -58,7 +90,7 @@ const ScaleInChild = React.createClass({
       ...other,
     } = this.props;
 
-    const mergedRootStyles = this.mergeAndPrefix({
+    const mergedRootStyles = this.prepareStyles({
       position: 'absolute',
       height: '100%',
       width: '100%',
@@ -75,14 +107,14 @@ const ScaleInChild = React.createClass({
   },
 
   _animate() {
-    let style = React.findDOMNode(this).style;
+    let style = ReactDOM.findDOMNode(this).style;
 
     style.opacity = '1';
     AutoPrefix.set(style, 'transform', 'scale(' + this.props.maxScale + ')');
   },
 
   _initializeAnimation(callback) {
-    let style = React.findDOMNode(this).style;
+    let style = ReactDOM.findDOMNode(this).style;
 
     style.opacity = '0';
     AutoPrefix.set(style, 'transform', 'scale(0)');

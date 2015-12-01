@@ -130,16 +130,16 @@ var TimeDisplay = React.createClass({
 
     return React.createElement(
       'div',
-      _extends({}, other, { style: this.mergeAndPrefix(styles.root) }),
+      _extends({}, other, { style: this.prepareStyles(styles.root) }),
       React.createElement(
         'div',
-        { style: this.mergeAndPrefix(styles.box) },
+        { style: this.prepareStyles(styles.box) },
         React.createElement(
           'div',
-          { style: this.mergeAndPrefix(styles.time) },
+          { style: this.prepareStyles(styles.time) },
           React.createElement(
             'span',
-            { style: this.mergeAndPrefix(styles.hour), onTouchTap: this.props.onSelectHour },
+            { style: this.prepareStyles(styles.hour), onTouchTap: this.props.onSelectHour },
             hour
           ),
           React.createElement(
@@ -149,7 +149,7 @@ var TimeDisplay = React.createClass({
           ),
           React.createElement(
             'span',
-            { style: this.mergeAndPrefix(styles.minute), onTouchTap: this.props.onSelectMin },
+            { style: this.prepareStyles(styles.minute), onTouchTap: this.props.onSelectMin },
             min
           )
         ),

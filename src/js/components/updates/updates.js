@@ -1,4 +1,4 @@
-var React = require('react');
+import React from 'react';
 var AppStore = require('../../stores/app-store');
 var AppActions = require('../../actions/app-actions');
 
@@ -72,11 +72,11 @@ var Updates = React.createClass({
               setTimeout(function() {
                 var report = that._getReportById(params.id);
                 that._showReport(report);
-              }, 500);
+              }, 400);
             } else {
               setTimeout(function() {
                 that.dialogOpen("schedule");
-              }, 500);
+              }, 400);
             }
           }
           

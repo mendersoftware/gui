@@ -4,7 +4,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
 
-var React = require('react/addons');
+var React = require('react');
 var StylePropable = require('../mixins/style-propable');
 var DefaultRawTheme = require('../styles/raw-themes/light-raw-theme');
 var ThemeManager = require('../styles/theme-manager');
@@ -19,7 +19,8 @@ var ListDivider = React.createClass({
   },
 
   propTypes: {
-    inset: React.PropTypes.bool
+    inset: React.PropTypes.bool,
+    style: React.PropTypes.object
   },
 
   //for passing default theme context to children
@@ -53,7 +54,7 @@ var ListDivider = React.createClass({
 
     var other = _objectWithoutProperties(_props, ['inset', 'style']);
 
-    var mergedStyles = this.mergeAndPrefix({
+    var mergedStyles = this.mergeStyles({
       margin: 0,
       marginTop: -1,
       marginLeft: inset ? 72 : 0,
@@ -62,7 +63,7 @@ var ListDivider = React.createClass({
       backgroundColor: this.state.muiTheme.rawTheme.palette.borderColor
     }, style);
 
-    return React.createElement('hr', _extends({}, other, { style: mergedStyles }));
+    return React.createElement('hr', _extends({}, other, { style: this.prepareStyles(mergedStyles) }));
   }
 });
 

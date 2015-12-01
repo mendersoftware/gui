@@ -1,6 +1,5 @@
-var React = require('react');
-var Router = require('react-router');
-var Link = Router.Link;
+import React from 'react';
+import { Router, Route, Link } from 'react-router';
 var Time = require('react-time');
 var AppStore = require('../../stores/app-store');
 

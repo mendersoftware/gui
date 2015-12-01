@@ -1,7 +1,7 @@
 'use strict';
 
-var React = require('react/addons');
-var createFragment = React.addons.createFragment;
+var React = require('react');
+var createFragment = require('react-addons-create-fragment');
 
 module.exports = {
 

@@ -1,11 +1,9 @@
-var React = require('react');
-var Router = require('react-router');
-var RouteHandler = Router.RouteHandler;
-var Header = require('./header/header');
+import React from 'react';
+import Header from './header/header';
 
-var mui = require('material-ui');
-var ThemeManager = require('material-ui/lib/styles/theme-manager');
-var RawTheme = require('../themes/mender-theme.js');
+import mui from 'material-ui';
+import ThemeManager from 'material-ui/lib/styles/theme-manager';
+import RawTheme from '../themes/mender-theme.js';
 
 var App = React.createClass({
   childContextTypes: {
@@ -21,10 +19,10 @@ var App = React.createClass({
     return (
       <div className="wrapper">
         <div className="header">
-          <Header />
+          <Header history={this.props.history} />
         </div>
         <div className="container">
-          <RouteHandler />
+          {this.props.children}
         </div>
       </div>
     )

@@ -5,6 +5,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
 
 var React = require('react');
+var ReactDOM = require('react-dom');
 var StylePropable = require('./mixins/style-propable');
 var AutoPrefix = require('./styles/auto-prefix');
 var Transitions = require("./styles/transitions");
@@ -23,6 +24,7 @@ var CircularProgress = React.createClass({
     max: React.PropTypes.number,
     size: React.PropTypes.number,
     color: React.PropTypes.string,
+    style: React.PropTypes.object,
     innerStyle: React.PropTypes.object
   },
 
@@ -66,8 +68,8 @@ var CircularProgress = React.createClass({
   },
 
   componentDidMount: function componentDidMount() {
-    var wrapper = React.findDOMNode(this.refs.wrapper);
-    var path = React.findDOMNode(this.refs.path);
+    var wrapper = ReactDOM.findDOMNode(this.refs.wrapper);
+    var path = ReactDOM.findDOMNode(this.refs.path);
 
     this._scalePath(path);
     this._rotateWrapper(wrapper);
@@ -103,15 +105,13 @@ var CircularProgress = React.createClass({
     if (!this.isMounted()) return;
     if (this.props.mode !== "indeterminate") return;
 
-    AutoPrefix.set(wrapper.style, "transform", null);
-    AutoPrefix.set(wrapper.style, "transform", "rotate(0deg)");
-    wrapper.style.transitionDuration = "0ms";
+    AutoPrefix.set(wrapper.style, 'transform', 'rotate(0deg)');
+    AutoPrefix.set(wrapper.style, 'transitionDuration', '0ms');
 
     setTimeout(function () {
-      AutoPrefix.set(wrapper.style, "transform", "rotate(1800deg)");
-      wrapper.style.transitionDuration = "10s";
-      //wrapper.style.webkitTransitionTimingFunction = "linear";
-      AutoPrefix.set(wrapper.style, "transitionTimingFunction", "linear");
+      AutoPrefix.set(wrapper.style, 'transform', 'rotate(1800deg)');
+      AutoPrefix.set(wrapper.style, 'transitionDuration', '10s');
+      AutoPrefix.set(wrapper.style, 'transitionTimingFunction', 'linear');
     }, 50);
   },
 
@@ -190,14 +190,14 @@ var CircularProgress = React.createClass({
 
     return React.createElement(
       'div',
-      _extends({}, other, { style: this.mergeAndPrefix(styles.root, style) }),
+      _extends({}, other, { style: this.prepareStyles(styles.root, style) }),
       React.createElement(
         'div',
-        { ref: 'wrapper', style: this.mergeAndPrefix(styles.wrapper, innerStyle) },
+        { ref: 'wrapper', style: this.prepareStyles(styles.wrapper, innerStyle) },
         React.createElement(
           'svg',
-          { style: this.mergeAndPrefix(styles.svg) },
-          React.createElement('circle', { ref: 'path', style: this.mergeAndPrefix(styles.path), cx: '25', cy: '25',
+          { style: this.prepareStyles(styles.svg) },
+          React.createElement('circle', { ref: 'path', style: this.prepareStyles(styles.path), cx: '25', cy: '25',
             r: '20', fill: 'none', strokeWidth: '2.5', strokeMiterlimit: '10' })
         )
       )

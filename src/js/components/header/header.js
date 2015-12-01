@@ -1,10 +1,7 @@
-var React = require('react');
+import React from 'react';
 var mui = require('material-ui');
-var Router = require('react-router');
-var RouteHandler = Router.RouteHandler;
-var ValueLink = Router.ValueLink;
+import { Router, Route, Link } from 'react-router';
 
-var Link = Router.Link;
 var Tabs = mui.Tabs;
 var Tab = mui.Tab;
 var IconMenu = mui.IconMenu;
@@ -48,14 +45,13 @@ var Header = React.createClass({
     this.setState({tabIndex: this._updateActive()});
   },
   _updateActive: function() {
-
-    return this.context.router.isActive('dashboard') ? '0' :
-      this.context.router.isActive('devices') ? '1' :
-      this.context.router.isActive('software') ? '2' : 
-      this.context.router.isActive('updates') ? '3' : '0';
+    return this.props.history.isActive('/', null, true) ? '0' :
+      this.props.history.isActive('/devices') ? '1' :
+      this.props.history.isActive('/software') ? '2' : 
+      this.props.history.isActive('/updates') ? '3' : '0';
   },
   _handleTabActive: function(tab) {
-    this.context.router.transitionTo(tab.props.route);
+    this.props.history.pushState(null, tab.props.route);
   },
   render: function() {
     var tabHandler = this._handleTabActive;
@@ -98,7 +94,8 @@ var Header = React.createClass({
 });
 
 Header.contextTypes = {
-  router: React.PropTypes.func
+  location: React.PropTypes.object,
+  history: React.PropTypes.object
 };
 
 module.exports = Header;

@@ -40,7 +40,8 @@ var CardExpandable = React.createClass({
 
   propTypes: {
     onExpanding: React.PropTypes.func.isRequired,
-    expanded: React.PropTypes.bool
+    expanded: React.PropTypes.bool,
+    style: React.PropTypes.object
   },
 
   //for passing default theme context to children
@@ -84,7 +85,7 @@ var CardExpandable = React.createClass({
     var expandable = undefined;
     if (this.props.expanded === true) expandable = React.createElement(OpenIcon, null);else expandable = React.createElement(CloseIcon, null);
 
-    var mergedStyles = this.mergeAndPrefix(styles.root, this.props.style);
+    var mergedStyles = this.mergeStyles(styles.root, this.props.style);
 
     var expandableBtn = React.createElement(
       IconButton,

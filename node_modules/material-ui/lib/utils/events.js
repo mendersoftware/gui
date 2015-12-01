@@ -3,7 +3,7 @@
 module.exports = {
 
   once: function once(el, type, callback) {
-    var typeArray = type.split(' ');
+    var typeArray = type ? type.split(' ') : [];
     var recursiveFunction = function recursiveFunction(e) {
       e.target.removeEventListener(e.type, recursiveFunction);
       return callback(e);

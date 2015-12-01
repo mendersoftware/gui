@@ -1,4 +1,4 @@
-var React = require('react');
+import React from 'react';
 var Time = require('react-time');
 var AppStore = require('../../stores/app-store');
 

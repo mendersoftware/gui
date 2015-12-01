@@ -4,8 +4,9 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
 
-var React = require('react/addons');
-var ReactTransitionGroup = React.addons.TransitionGroup;
+var React = require('react');
+var ReactDOM = require('react-dom');
+var ReactTransitionGroup = require('react-addons-transition-group');
 var ClickAwayable = require('../mixins/click-awayable');
 var StylePropable = require('../mixins/style-propable');
 var Events = require('../utils/events');
@@ -36,6 +37,7 @@ var IconMenu = React.createClass({
     onMouseUp: React.PropTypes.func,
     onTouchTap: React.PropTypes.func,
     menuStyle: React.PropTypes.object,
+    style: React.PropTypes.object,
     touchTapCloseDelay: React.PropTypes.number
   },
 
@@ -128,7 +130,7 @@ var IconMenu = React.createClass({
       }
     };
 
-    var mergedRootStyles = this.mergeAndPrefix(styles.root, style);
+    var mergedRootStyles = this.prepareStyles(styles.root, style);
     var mergedMenuStyles = this.mergeStyles(styles.menu, menuStyle);
 
     var iconButton = React.cloneElement(iconButtonElement, {
@@ -184,7 +186,7 @@ var IconMenu = React.createClass({
         //Set focus on the icon button when the menu close
         if (isKeyboard) {
           var iconButton = _this2.refs[_this2.state.iconButtonRef];
-          React.findDOMNode(iconButton).focus();
+          ReactDOM.findDOMNode(iconButton).focus();
           iconButton.setKeyboardFocus();
         }
       });

@@ -123,10 +123,10 @@ var YearButton = React.createClass({
         onMouseEnter: this._handleMouseEnter,
         onMouseLeave: this._handleMouseLeave,
         onTouchTap: this._handleTouchTap }),
-      React.createElement('div', { style: styles.buttonState }),
+      React.createElement('div', { style: this.prepareStyles(styles.buttonState) }),
       React.createElement(
         'span',
-        { style: styles.label },
+        { style: this.prepareStyles(styles.label) },
         year
       )
     );

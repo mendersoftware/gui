@@ -1,5 +1,5 @@
-const React = require('react/addons');
-const PureRenderMixin = React.addons.PureRenderMixin;
+const React = require('react');
+const PureRenderMixin = require('react-addons-pure-render-mixin');
 const StylePropable = require('../mixins/style-propable');
 const Colors = require('../styles/colors');
 const CheckIcon = require('../svg-icons/navigation/check');
@@ -29,6 +29,7 @@ const MenuItem = React.createClass({
     leftIcon: React.PropTypes.element,
     rightIcon: React.PropTypes.element,
     secondaryText: React.PropTypes.node,
+    style: React.PropTypes.object,
     value: React.PropTypes.string,
   },
 
@@ -152,7 +153,7 @@ const MenuItem = React.createClass({
 
       secondaryTextElement = secondaryTextIsAnElement ?
         React.cloneElement(secondaryText, {style: mergedSecondaryTextStyles}) :
-        <div style={styles.secondaryText}>{secondaryText}</div>;
+        <div style={this.prepareStyles(styles.secondaryText)}>{secondaryText}</div>;
     }
 
     return (

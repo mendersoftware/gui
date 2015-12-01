@@ -4,20 +4,51 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
 
-var React = require('react/addons');
-var ReactTransitionGroup = React.addons.TransitionGroup;
+var React = require('react');
+var ReactTransitionGroup = require('react-addons-transition-group');
 var StylePropable = require('../mixins/style-propable');
 var SlideInChild = require('./slide-in-child');
+var DefaultRawTheme = require('../styles/raw-themes/light-raw-theme');
+var ThemeManager = require('../styles/theme-manager');
 
 var SlideIn = React.createClass({
   displayName: 'SlideIn',
 
   mixins: [StylePropable],
 
+  contextTypes: {
+    muiTheme: React.PropTypes.object
+  },
+
+  //for passing default theme context to children
+  childContextTypes: {
+    muiTheme: React.PropTypes.object
+  },
+
+  getChildContext: function getChildContext() {
+    return {
+      muiTheme: this.state.muiTheme
+    };
+  },
+
+  getInitialState: function getInitialState() {
+    return {
+      muiTheme: this.context.muiTheme ? this.context.muiTheme : ThemeManager.getMuiTheme(DefaultRawTheme)
+    };
+  },
+
+  //to update theme inside state whenever a new theme is passed down
+  //from the parent / owner using context
+  componentWillReceiveProps: function componentWillReceiveProps(nextProps, nextContext) {
+    var newMuiTheme = nextContext.muiTheme ? nextContext.muiTheme : this.state.muiTheme;
+    this.setState({ muiTheme: newMuiTheme });
+  },
+
   propTypes: {
     enterDelay: React.PropTypes.number,
     childStyle: React.PropTypes.object,
-    direction: React.PropTypes.oneOf(['left', 'right', 'up', 'down'])
+    direction: React.PropTypes.oneOf(['left', 'right', 'up', 'down']),
+    style: React.PropTypes.object
   },
 
   getDefaultProps: function getDefaultProps() {
@@ -39,7 +70,7 @@ var SlideIn = React.createClass({
 
     var other = _objectWithoutProperties(_props, ['enterDelay', 'children', 'childStyle', 'direction', 'style']);
 
-    var mergedRootStyles = this.mergeAndPrefix({
+    var mergedRootStyles = this.prepareStyles({
       position: 'relative',
       overflow: 'hidden',
       height: '100%'

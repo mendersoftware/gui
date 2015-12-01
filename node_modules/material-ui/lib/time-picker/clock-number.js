@@ -117,7 +117,7 @@ var ClockNumber = React.createClass({
 
     return React.createElement(
       'span',
-      { style: this.mergeAndPrefix(styles.root) },
+      { style: this.prepareStyles(styles.root) },
       this.props.value
     );
   }

@@ -1,7 +1,8 @@
 'use strict';
 
-var React = require('react/addons');
+var React = require('react');
 var ContextPure = require('../mixins/context-pure');
+var StylePropable = require('../mixins/style-propable');
 var Styles = require('../utils/styles');
 var DefaultRawTheme = require('../styles/raw-themes/light-raw-theme');
 var ThemeManager = require('../styles/theme-manager');
@@ -9,7 +10,7 @@ var ThemeManager = require('../styles/theme-manager');
 var FlatButtonLabel = React.createClass({
   displayName: 'FlatButtonLabel',
 
-  mixins: [ContextPure],
+  mixins: [ContextPure, StylePropable],
 
   contextTypes: {
     muiTheme: React.PropTypes.object
@@ -59,14 +60,14 @@ var FlatButtonLabel = React.createClass({
 
     var contextKeys = this.constructor.getRelevantContextKeys(this.state.muiTheme);
 
-    var mergedRootStyles = Styles.mergeAndPrefix({
+    var mergedRootStyles = this.mergeStyles({
       position: 'relative',
       padding: '0 ' + contextKeys.spacingDesktopGutterLess + 'px'
     }, style);
 
     return React.createElement(
       'span',
-      { style: mergedRootStyles },
+      { style: this.prepareStyles(mergedRootStyles) },
       label
     );
   }

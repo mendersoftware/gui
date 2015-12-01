@@ -1,7 +1,6 @@
-var React = require('react');
+import React from 'react';
 var Time = require('react-time');
-var Router = require('react-router');
-var Link = Router.Link;
+import { Router, Route, Link } from 'react-router';
 
 // material ui
 var mui = require('material-ui');

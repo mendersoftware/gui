@@ -4,8 +4,9 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
 
-var React = require('react/addons');
-var PureRenderMixin = React.addons.PureRenderMixin;
+var React = require('react');
+var ReactDOM = require('react-dom');
+var PureRenderMixin = require('react-addons-pure-render-mixin');
 var StylePropable = require('../mixins/style-propable');
 var AutoPrefix = require('../styles/auto-prefix');
 var Transitions = require('../styles/transitions');
@@ -18,7 +19,8 @@ var CircleRipple = React.createClass({
 
   propTypes: {
     color: React.PropTypes.string,
-    opacity: React.PropTypes.number
+    opacity: React.PropTypes.number,
+    style: React.PropTypes.object
   },
 
   getDefaultProps: function getDefaultProps() {
@@ -47,7 +49,7 @@ var CircleRipple = React.createClass({
   componentWillLeave: function componentWillLeave(callback) {
     var _this = this;
 
-    var style = React.findDOMNode(this).style;
+    var style = ReactDOM.findDOMNode(this).style;
     style.opacity = 0;
     setTimeout(function () {
       if (_this.isMounted()) callback();
@@ -76,7 +78,7 @@ var CircleRipple = React.createClass({
   },
 
   _animate: function _animate() {
-    var style = React.findDOMNode(this).style;
+    var style = ReactDOM.findDOMNode(this).style;
     var transitionValue = Transitions.easeOut('2s', 'opacity') + ',' + Transitions.easeOut('1s', 'transform');
     AutoPrefix.set(style, 'transition', transitionValue);
     AutoPrefix.set(style, 'transform', 'scale(1)');
@@ -85,7 +87,7 @@ var CircleRipple = React.createClass({
   _initializeAnimation: function _initializeAnimation(callback) {
     var _this2 = this;
 
-    var style = React.findDOMNode(this).style;
+    var style = ReactDOM.findDOMNode(this).style;
     style.opacity = this.props.opacity;
     AutoPrefix.set(style, 'transform', 'scale(0)');
     setTimeout(function () {

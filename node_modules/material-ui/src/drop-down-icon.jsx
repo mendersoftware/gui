@@ -34,6 +34,7 @@ const DropDownIcon = React.createClass({
     iconStyle: React.PropTypes.object,
     iconClassName: React.PropTypes.string,
     iconLigature: React.PropTypes.string,
+    style: React.PropTypes.object,
   },
 
   getInitialState() {
@@ -108,7 +109,7 @@ const DropDownIcon = React.createClass({
     let styles = this.getStyles();
 
     return (
-      <div {...other} style={this.mergeAndPrefix(styles.root, this.props.style)}>
+      <div {...other} style={this.prepareStyles(styles.root, this.props.style)}>
           <div onTouchTap={this._onControlClick}>
               <FontIcon
                 className={iconClassName}
@@ -117,7 +118,7 @@ const DropDownIcon = React.createClass({
           </div>
           <Menu
             ref="menuItems"
-            style={this.mergeAndPrefix(styles.menu)}
+            style={styles.menu}
             menuItems={menuItems}
             menuItemStyle={styles.menuItem}
             hideable={true}

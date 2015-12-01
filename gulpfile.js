@@ -2,6 +2,7 @@ var gulp = require('gulp');
 var rename = require('gulp-rename');
 var browserify = require('browserify');
 var reactify = require("reactify");
+var babelify = require("babelify");
 var source = require("vinyl-source-stream"); // gulp needs a stream not a string, from browserify
 var less = require('gulp-less');
 var prefix = require('gulp-autoprefixer');
@@ -25,7 +26,7 @@ gulp.task('minify', ['styles'], function() {
 
 gulp.task('browserify', function() {
   browserify('./src/js/main.js')
-    .transform('reactify', {stripTypes: true, es6: true})
+    .transform('babelify', {presets: ["es2015", "react"]})
     .bundle()
     .pipe(source('main.js'))
     .pipe(gulp.dest('dist/js'));

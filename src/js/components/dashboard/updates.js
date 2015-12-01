@@ -1,4 +1,4 @@
-var React = require('react');
+import React from 'react';
 var Schedule = require('./schedule');
 var Progress = require('./progress');
 var Recent = require('./recent');

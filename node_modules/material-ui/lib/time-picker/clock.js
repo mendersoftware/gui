@@ -13,10 +13,16 @@ var Clock = React.createClass({
   mixins: [StylePropable],
 
   propTypes: {
+    onChangeMinutes: React.PropTypes.func,
+    onChangeHours: React.PropTypes.func,
     initialTime: React.PropTypes.object,
     mode: React.PropTypes.oneOf(['hour', 'minute']),
     format: React.PropTypes.oneOf(['ampm', '24hr']),
     isActive: React.PropTypes.bool
+  },
+
+  contextTypes: {
+    muiTheme: React.PropTypes.object
   },
 
   getDefaultProps: function getDefaultProps() {
@@ -79,11 +85,11 @@ var Clock = React.createClass({
     if (this.props.format === 'ampm') {
       buttons = [React.createElement(
         ClockButton,
-        { position: 'left', onTouchTap: this._setAffix.bind(this, "am"), selected: isAM },
+        { key: 'AM', position: 'left', onTouchTap: this._setAffix.bind(this, "am"), selected: isAM },
         "AM"
       ), React.createElement(
         ClockButton,
-        { position: 'right', onTouchTap: this._setAffix.bind(this, "pm"), selected: !isAM },
+        { key: 'PM', position: 'right', onTouchTap: this._setAffix.bind(this, "pm"), selected: !isAM },
         "PM"
       )];
     }
@@ -120,7 +126,7 @@ var Clock = React.createClass({
 
     return React.createElement(
       'div',
-      { style: styles.root },
+      { style: this.prepareStyles(styles.root) },
       React.createElement(TimeDisplay, {
         selectedTime: this.state.selectedTime,
         mode: this.state.mode,
@@ -130,7 +136,7 @@ var Clock = React.createClass({
         onSelectMin: this._setMode.bind(this, 'minute') }),
       React.createElement(
         'div',
-        { style: styles.container },
+        { style: this.prepareStyles(styles.container) },
         clock
       ),
       buttons
@@ -159,11 +165,16 @@ var Clock = React.createClass({
       selectedTime: time
     });
 
+    var onChangeHours = this.props.onChangeHours;
+
     if (finished) {
       setTimeout(function () {
         _this2.setState({
           mode: 'minute'
         });
+        if (typeof onChangeHours === 'function') {
+          onChangeHours(time);
+        }
       }, 100);
     }
   },
@@ -174,6 +185,14 @@ var Clock = React.createClass({
     this.setState({
       selectedTime: time
     });
+
+    var onChangeMinutes = this.props.onChangeMinutes;
+
+    if (typeof onChangeMinutes === 'function') {
+      setTimeout(function () {
+        onChangeMinutes(time);
+      }, 0);
+    }
   },
 
   getSelectedTime: function getSelectedTime() {

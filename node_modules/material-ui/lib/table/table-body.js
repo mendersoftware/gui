@@ -11,11 +11,28 @@ var Checkbox = require('../checkbox');
 var TableRowColumn = require('./table-row-column');
 var ClickAwayable = require('../mixins/click-awayable');
 var StylePropable = require('../mixins/style-propable');
+var DefaultRawTheme = require('../styles/raw-themes/light-raw-theme');
+var ThemeManager = require('../styles/theme-manager');
 
 var TableBody = React.createClass({
   displayName: 'TableBody',
 
   mixins: [ClickAwayable, StylePropable],
+
+  contextTypes: {
+    muiTheme: React.PropTypes.object
+  },
+
+  //for passing default theme context to children
+  childContextTypes: {
+    muiTheme: React.PropTypes.object
+  },
+
+  getChildContext: function getChildContext() {
+    return {
+      muiTheme: this.state.muiTheme
+    };
+  },
 
   propTypes: {
     allRowsSelected: React.PropTypes.bool,
@@ -42,17 +59,24 @@ var TableBody = React.createClass({
       displayRowCheckbox: true,
       multiSelectable: false,
       preScanRows: true,
-      selectable: true
+      selectable: true,
+      style: {}
     };
   },
 
   getInitialState: function getInitialState() {
     return {
+      muiTheme: this.context.muiTheme ? this.context.muiTheme : ThemeManager.getMuiTheme(DefaultRawTheme),
       selectedRows: this._calculatePreselectedRows(this.props)
     };
   },
 
-  componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
+  //to update theme inside state whenever a new theme is passed down
+  //from the parent / owner using context
+  componentWillReceiveProps: function componentWillReceiveProps(nextProps, nextContext) {
+    var newMuiTheme = nextContext.muiTheme ? nextContext.muiTheme : this.state.muiTheme;
+    this.setState({ muiTheme: newMuiTheme });
+
     var newState = {};
 
     if (this.props.allRowsSelected && !nextProps.allRowsSelected) {
@@ -69,6 +93,7 @@ var TableBody = React.createClass({
   componentClickAway: function componentClickAway() {
     if (this.props.deselectOnClickaway && this.state.selectedRows.length) {
       this.setState({ selectedRows: [] });
+      if (this.props.onRowSelection) this.props.onRowSelection([]);
     }
   },
 
@@ -86,7 +111,7 @@ var TableBody = React.createClass({
 
     return React.createElement(
       'tbody',
-      { className: classes, style: style },
+      { className: classes, style: this.prepareStyles(style) },
       rows
     );
   },

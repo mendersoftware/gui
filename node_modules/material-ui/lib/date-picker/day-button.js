@@ -130,13 +130,13 @@ var DayButton = React.createClass({
         onMouseLeave: this._handleMouseLeave,
         onTouchTap: this._handleTouchTap,
         onKeyboardFocus: this._handleKeyboardFocus }),
-      React.createElement('div', { style: styles.buttonState }),
+      React.createElement('div', { style: this.prepareStyles(styles.buttonState) }),
       React.createElement(
         'span',
-        { style: styles.label },
+        { style: this.prepareStyles(styles.label) },
         this.props.date.getDate()
       )
-    ) : React.createElement('span', { style: styles.root });
+    ) : React.createElement('span', { style: this.prepareStyles(styles.root) });
   },
 
   _handleMouseEnter: function _handleMouseEnter() {

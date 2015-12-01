@@ -4,8 +4,9 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
 
-var React = require('react/addons');
-var PureRenderMixin = React.addons.PureRenderMixin;
+var React = require('react');
+var ReactDOM = require('react-dom');
+var PureRenderMixin = require('react-addons-pure-render-mixin');
 var ColorManipulator = require('../utils/color-manipulator');
 var StylePropable = require('../mixins/style-propable');
 var Colors = require('../styles/colors');
@@ -52,6 +53,7 @@ var ListItem = React.createClass({
     rightIconButton: React.PropTypes.element,
     rightToggle: React.PropTypes.element,
     primaryText: React.PropTypes.node,
+    style: React.PropTypes.object,
     secondaryText: React.PropTypes.node,
     secondaryTextLines: React.PropTypes.oneOf([1, 2])
   },
@@ -330,10 +332,10 @@ var ListItem = React.createClass({
           onTouchStart: this._handleTouchStart,
           onTouchTap: onTouchTap,
           ref: 'enhancedButton',
-          style: this.mergeAndPrefix(styles.root, style) }),
+          style: this.mergeStyles(styles.root, style) }),
         React.createElement(
           'div',
-          { style: this.mergeAndPrefix(styles.innerDiv, innerDivStyle) },
+          { style: this.prepareStyles(styles.innerDiv, innerDivStyle) },
           contentChildren
         )
       ),
@@ -343,7 +345,7 @@ var ListItem = React.createClass({
 
   applyFocusState: function applyFocusState(focusState) {
     var button = this.refs.enhancedButton;
-    var buttonEl = React.findDOMNode(button);
+    var buttonEl = ReactDOM.findDOMNode(button);
 
     if (button) {
       switch (focusState) {
@@ -366,7 +368,7 @@ var ListItem = React.createClass({
     var innerDivStyle = _props2.innerDivStyle;
     var style = _props2.style;
 
-    var mergedDivStyles = this.mergeAndPrefix(styles.root, styles.innerDiv, innerDivStyle, style);
+    var mergedDivStyles = this.prepareStyles(styles.root, styles.innerDiv, innerDivStyle, style);
 
     return React.createElement('div', { style: mergedDivStyles }, contentChildren);
   },
@@ -376,21 +378,21 @@ var ListItem = React.createClass({
     var innerDivStyle = _props3.innerDivStyle;
     var style = _props3.style;
 
-    var mergedLabelStyles = this.mergeAndPrefix(styles.root, styles.innerDiv, innerDivStyle, styles.label, style);
+    var mergedLabelStyles = this.prepareStyles(styles.root, styles.innerDiv, innerDivStyle, styles.label, style);
 
     return React.createElement('label', { style: mergedLabelStyles }, contentChildren);
   },
 
   _createTextElement: function _createTextElement(styles, data, key) {
     var isAnElement = React.isValidElement(data);
-    var mergedStyles = isAnElement ? this.mergeStyles(styles, data.props.style) : null;
+    var mergedStyles = isAnElement ? this.prepareStyles(styles, data.props.style) : null;
 
     return isAnElement ? React.cloneElement(data, {
       key: key,
       style: mergedStyles
     }) : React.createElement(
       'div',
-      { key: key, style: styles },
+      { key: key, style: this.prepareStyles(styles) },
       data
     );
   },

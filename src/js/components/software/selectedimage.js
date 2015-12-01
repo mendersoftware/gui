@@ -1,9 +1,9 @@
-var React = require('react');
-var Time = require('react-time');
-var Router = require('react-router');
+import React from 'react';
+import Time from 'react-time';
+import Router from 'react-router';
 
 // material ui
-var mui = require('material-ui');
+import mui from 'material-ui';
 
 var List = mui.List;
 var ListItem = mui.ListItem;
@@ -15,7 +15,7 @@ var SelectedImage = React.createClass({
   _handleLinkClick: function(model) {
     var filters = "model="+model;
     filters = encodeURIComponent(filters);
-    this.context.router.transitionTo("/devices/:groupId/:filters", {groupId:1, filters: filters}, null);
+    this.props.history.pushState(null, "/devices/:groupId/:filters", {groupId:1, filters: filters}, null);
   },
   _clickImageSchedule: function() {
     this.props.openSchedule("schedule", this.props.selected);
@@ -86,7 +86,8 @@ var SelectedImage = React.createClass({
 });
 
 SelectedImage.contextTypes = {
-  router: React.PropTypes.func.isRequired
+  location: React.PropTypes.object,
+  history: React.PropTypes.object
 };
 
 module.exports = SelectedImage;

@@ -29,7 +29,8 @@ var InkBar = React.createClass({
   propTypes: {
     color: React.PropTypes.string,
     left: React.PropTypes.string.isRequired,
-    width: React.PropTypes.string.isRequired
+    width: React.PropTypes.string.isRequired,
+    style: React.PropTypes.object
   },
 
   getInitialState: function getInitialState() {
@@ -57,7 +58,7 @@ var InkBar = React.createClass({
     var other = _objectWithoutProperties(_props, ['color', 'left', 'width', 'style']);
 
     var colorStyle = color ? { backgroundColor: color } : undefined;
-    var styles = this.mergeAndPrefix({
+    var styles = this.prepareStyles({
       left: left,
       width: width,
       bottom: 0,

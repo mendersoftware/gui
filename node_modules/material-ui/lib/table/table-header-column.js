@@ -104,7 +104,7 @@ var TableHeaderColumn = React.createClass({
       tooltip = React.createElement(Tooltip, {
         label: this.props.tooltip,
         show: this.state.hovered,
-        style: this.mergeAndPrefix(styles.tooltip, tooltipStyle) });
+        style: this.mergeStyles(styles.tooltip, tooltipStyle) });
     }
 
     return React.createElement(
@@ -112,7 +112,7 @@ var TableHeaderColumn = React.createClass({
       _extends({
         key: this.props.key,
         className: classes,
-        style: this.mergeAndPrefix(styles.root, style)
+        style: this.prepareStyles(styles.root, style)
       }, handlers, other),
       tooltip,
       this.props.children

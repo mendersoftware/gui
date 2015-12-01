@@ -3,7 +3,7 @@
 var Colors = require('./colors');
 var ColorManipulator = require('../utils/color-manipulator');
 var Extend = require('../utils/extend');
-var update = require('react/lib/update');
+var update = require('react-addons-update');
 
 module.exports = {
 
@@ -18,10 +18,21 @@ module.exports = {
       avatar: {
         borderColor: 'rgba(0, 0, 0, 0.08)'
       },
+      badge: {
+        color: rawTheme.palette.alternateTextColor,
+        textColor: rawTheme.palette.textColor,
+        primaryColor: rawTheme.palette.accent1Color,
+        primaryTextColor: rawTheme.palette.alternateTextColor,
+        secondaryColor: rawTheme.palette.primary1Color,
+        secondaryTextColor: rawTheme.palette.alternateTextColor
+      },
       button: {
         height: 36,
         minWidth: 88,
         iconButtonSize: rawTheme.spacing.iconSize * 2
+      },
+      cardText: {
+        textColor: rawTheme.palette.textColor
       },
       checkbox: {
         boxColor: rawTheme.palette.textColor,
@@ -117,7 +128,7 @@ module.exports = {
         handleSize: 12,
         handleSizeDisabled: 8,
         handleSizeActive: 18,
-        handleColorZero: rawTheme.palette.borderColor,
+        handleColorZero: rawTheme.palette.primary3Color,
         handleFillColor: rawTheme.palette.alternateTextColor,
         selectionColor: rawTheme.palette.primary1Color,
         rippleColor: rawTheme.palette.primary1Color
@@ -134,13 +145,13 @@ module.exports = {
         borderColor: rawTheme.palette.borderColor
       },
       tableHeaderColumn: {
-        textColor: rawTheme.palette.primary3Color,
+        textColor: rawTheme.palette.accent3Color,
         height: 56,
         spacing: 24
       },
       tableFooter: {
         borderColor: rawTheme.palette.borderColor,
-        textColor: rawTheme.palette.primary3Color
+        textColor: rawTheme.palette.accent3Color
       },
       tableRow: {
         hoverColor: rawTheme.palette.accent2Color,
@@ -157,7 +168,7 @@ module.exports = {
         color: rawTheme.palette.alternateTextColor,
         textColor: rawTheme.palette.accent3Color,
         accentColor: rawTheme.palette.primary1Color,
-        clockColor: rawTheme.palette.primary3Color,
+        clockColor: rawTheme.palette.textColor,
         selectColor: rawTheme.palette.primary2Color,
         selectTextColor: rawTheme.palette.alternateTextColor
       },
@@ -181,7 +192,9 @@ module.exports = {
         menuHoverColor: 'rgba(0, 0, 0, .10)'
       },
       tabs: {
-        backgroundColor: rawTheme.palette.primary1Color
+        backgroundColor: rawTheme.palette.primary1Color,
+        textColor: ColorManipulator.fade(rawTheme.palette.alternateTextColor, 0.6),
+        selectedTextColor: rawTheme.palette.alternateTextColor
       },
       textField: {
         textColor: rawTheme.palette.textColor,
@@ -192,7 +205,8 @@ module.exports = {
         focusColor: rawTheme.palette.primary1Color,
         backgroundColor: 'transparent',
         borderColor: rawTheme.palette.borderColor
-      }
+      },
+      isRtl: false
     };
 
     //add properties to objects inside 'returnObj' that depend on existing properties

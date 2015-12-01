@@ -1,4 +1,5 @@
-const React = require('react/addons');
+const React = require('react');
+const ReactDOM = require('react-dom');
 const TabTemplate = require('./tabTemplate');
 const InkBar = require('../ink-bar');
 const StylePropable = require('../mixins/style-propable');
@@ -19,6 +20,8 @@ const Tabs = React.createClass({
     initialSelectedIndex: React.PropTypes.number,
     inkBarStyle: React.PropTypes.object,
     tabItemContainerStyle: React.PropTypes.object,
+    tabTemplate: React.PropTypes.func,
+    style: React.PropTypes.object,
   },
 
   //for passing default theme context to children
@@ -35,6 +38,7 @@ const Tabs = React.createClass({
   getDefaultProps() {
     return {
       initialSelectedIndex : 0,
+      tabTemplate: TabTemplate,
     };
   },
 
@@ -55,7 +59,7 @@ const Tabs = React.createClass({
   getEvenWidth(){
     return (
       parseInt(window
-        .getComputedStyle(React.findDOMNode(this))
+        .getComputedStyle(ReactDOM.findDOMNode(this))
         .getPropertyValue('width'), 10)
     );
   },
@@ -84,6 +88,7 @@ const Tabs = React.createClass({
       style,
       tabWidth,
       tabItemContainerStyle,
+      tabTemplate,
       ...other,
     } = this.props;
 
@@ -117,7 +122,7 @@ const Tabs = React.createClass({
         }
 
         tabContent.push(tab.props.children ?
-          React.createElement(TabTemplate, {
+          React.createElement(tabTemplate, {
             key: index,
             selected: this._getSelected(tab, index),
           }, tab.props.children) : undefined);
@@ -150,14 +155,14 @@ const Tabs = React.createClass({
     return (
       <div
         {...other}
-        style={this.mergeAndPrefix(style)}>
-        <div style={this.mergeAndPrefix(styles.tabItemContainer, tabItemContainerStyle)}>
+        style={this.prepareStyles(style)}>
+        <div style={this.prepareStyles(styles.tabItemContainer, tabItemContainerStyle)}>
           {tabs}
         </div>
         <div style={{width: inkBarContainerWidth}}>
          {inkBar}
         </div>
-        <div style={this.mergeAndPrefix(contentContainerStyle)}>
+        <div style={this.prepareStyles(contentContainerStyle)}>
           {tabContent}
         </div>
       </div>

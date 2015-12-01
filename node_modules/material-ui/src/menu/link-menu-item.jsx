@@ -19,6 +19,7 @@ const LinkMenuItem = React.createClass({
     active: React.PropTypes.bool,
     disabled: React.PropTypes.bool,
     className: React.PropTypes.string,
+    style: React.PropTypes.object,
   },
 
   getDefaultProps() {
@@ -92,7 +93,7 @@ const LinkMenuItem = React.createClass({
     let styles = this.getStyles();
 
     let linkStyles =
-      this.mergeAndPrefix(
+      this.prepareStyles(
         styles.root,
         this.props.selected && styles.rootWhenSelected,
         this.props.selected && styles.rootWhenSelected,

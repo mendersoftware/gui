@@ -5,17 +5,48 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 var React = require('react');
 var Styles = require('../styles');
 var StylePropable = require('../mixins/style-propable');
+var ThemeManager = require('../styles/theme-manager');
+var DefaultRawTheme = require('../styles/raw-themes/light-raw-theme');
 
 var CardTitle = React.createClass({
   displayName: 'CardTitle',
 
   mixins: [StylePropable],
 
+  contextTypes: {
+    muiTheme: React.PropTypes.object
+  },
+
+  //for passing default theme context to children
+  childContextTypes: {
+    muiTheme: React.PropTypes.object
+  },
+
+  getChildContext: function getChildContext() {
+    return {
+      muiTheme: this.state.muiTheme
+    };
+  },
+
+  getInitialState: function getInitialState() {
+    return {
+      muiTheme: this.context.muiTheme ? this.context.muiTheme : ThemeManager.getMuiTheme(DefaultRawTheme)
+    };
+  },
+
+  //to update theme inside state whenever a new theme is passed down
+  //from the parent / owner using context
+  componentWillReceiveProps: function componentWillReceiveProps(nextProps, nextContext) {
+    var newMuiTheme = nextContext.muiTheme ? nextContext.muiTheme : this.state.muiTheme;
+    this.setState({ muiTheme: newMuiTheme });
+  },
+
   propTypes: {
-    title: React.PropTypes.string,
+    title: React.PropTypes.node,
     titleColor: React.PropTypes.string,
     titleStyle: React.PropTypes.object,
-    subtitle: React.PropTypes.string,
+    style: React.PropTypes.object,
+    subtitle: React.PropTypes.node,
     subtitleColor: React.PropTypes.string,
     subtitleStyle: React.PropTypes.object,
     expandable: React.PropTypes.bool,
@@ -52,9 +83,9 @@ var CardTitle = React.createClass({
 
   render: function render() {
     var styles = this.getStyles();
-    var rootStyle = this.mergeAndPrefix(styles.root, this.props.style);
-    var titleStyle = this.mergeAndPrefix(styles.title, this.props.titleStyle);
-    var subtitleStyle = this.mergeAndPrefix(styles.subtitle, this.props.subtitleStyle);
+    var rootStyle = this.prepareStyles(styles.root, this.props.style);
+    var titleStyle = this.prepareStyles(styles.title, this.props.titleStyle);
+    var subtitleStyle = this.prepareStyles(styles.subtitle, this.props.subtitleStyle);
 
     return React.createElement(
       'div',

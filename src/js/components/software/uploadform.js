@@ -1,4 +1,4 @@
-var React = require('react');
+import React from 'react';
 var AppStore = require('../../stores/app-store');
 
 var mui = require('material-ui');

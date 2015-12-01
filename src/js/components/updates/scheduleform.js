@@ -1,18 +1,14 @@
-var React = require('react');
-var AppStore = require('../../stores/app-store');
-var Router = require('react-router');
-var Link = Router.Link;
-var DateTime = require('./datetime.js');
+import React from 'react';
+import AppStore from '../../stores/app-store';
+import { Router, Link } from 'react-router';
+import DateTime from './datetime.js';
 
-var mui = require('material-ui');
+import mui from 'material-ui';
 
 var DatePicker = mui.DatePicker;
 var TimePicker = mui.TimePicker;
 var SelectField = mui.SelectField;
 var TextField = mui.TextField;
-var RadioButtonGroup = mui.RadioButtonGroup;
-var RadioButton = mui.RadioButton;
-var RaisedButton = mui.RaisedButton;
 var FontIcon = mui.FontIcon;
 
 

@@ -4,7 +4,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
 
-var React = require('react/addons');
+var React = require('react');
 var StylePropable = require('./mixins/style-propable');
 var Colors = require('./styles/colors');
 var DefaultRawTheme = require('./styles/raw-themes/light-raw-theme');
@@ -92,7 +92,7 @@ var Avatar = React.createClass({
         });
       }
 
-      return React.createElement('img', _extends({}, other, { src: src, style: this.mergeAndPrefix(styles.root, style) }));
+      return React.createElement('img', _extends({}, other, { src: src, style: this.prepareStyles(styles.root, style) }));
     } else {
       styles.root = this.mergeStyles(styles.root, {
         backgroundColor: backgroundColor,
@@ -113,7 +113,7 @@ var Avatar = React.createClass({
 
       return React.createElement(
         'div',
-        _extends({}, other, { style: this.mergeAndPrefix(styles.root, style) }),
+        _extends({}, other, { style: this.prepareStyles(styles.root, style) }),
         iconElement,
         this.props.children
       );

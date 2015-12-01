@@ -386,7 +386,7 @@ function discoverSoftware() {
     unique[_alldevices[i].software_version]++;
   }
 
-  for (val in unique) {
+  for (var val in unique) {
     var idx = findWithAttr(_softwareRepo, 'name', val);
     _softwareRepo[idx].devices = unique[val];
   }
@@ -657,7 +657,7 @@ var _allupdates = [
 _allupdates.sort(startTimeSort);
 
 
-_activityLog = [
+var _activityLog = [
   {
     summary: "User Admin scheduled an update to group Wifi",
     details: "1 devices in group Wifi will be updated to Wifi Version 1 at 2015/11/26 04:06",

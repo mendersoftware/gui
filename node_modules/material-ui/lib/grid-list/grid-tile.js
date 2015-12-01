@@ -7,19 +7,22 @@ function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in ob
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 var React = require('react');
+var ReactDOM = require('react-dom');
 var StylePropable = require('../mixins/style-propable');
 var DefaultRawTheme = require('../styles/raw-themes/light-raw-theme');
 var ThemeManager = require('../styles/theme-manager');
-
-var AutoPrefix = require('../styles/auto-prefix');
 
 var GridTile = React.createClass({
   displayName: 'GridTile',
 
   mixins: [StylePropable],
 
+  contextTypes: {
+    muiTheme: React.PropTypes.object
+  },
+
   propTypes: {
-    title: React.PropTypes.string,
+    title: React.PropTypes.node,
     subtitle: React.PropTypes.node,
     titlePosition: React.PropTypes.oneOf(['top', 'bottom']),
     titleBackground: React.PropTypes.string,
@@ -27,6 +30,7 @@ var GridTile = React.createClass({
     actionPosition: React.PropTypes.oneOf(['left', 'right']),
     cols: React.PropTypes.number,
     rows: React.PropTypes.number,
+    style: React.PropTypes.object,
     rootClass: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.object])
   },
 
@@ -84,7 +88,7 @@ var GridTile = React.createClass({
         position: 'absolute',
         left: 0,
         right: 0
-      }, _defineProperty(_titleBar, this.props.titlePosition, 0), _defineProperty(_titleBar, 'height', this.props.subtitle ? 68 : 48), _defineProperty(_titleBar, 'background', this.props.titleBackground), _defineProperty(_titleBar, 'display', 'flex'), _defineProperty(_titleBar, 'alignItems', 'center'), _titleBar),
+      }, _defineProperty(_titleBar, this.props.titlePosition, 0), _defineProperty(_titleBar, 'height', this.props.subtitle ? 68 : 48), _defineProperty(_titleBar, 'background', this.props.titleBackground), _defineProperty(_titleBar, 'display', '-webkit-box; display: -moz-box; display: -ms-flexbox; display: -webkit-flex; display: flex'), _defineProperty(_titleBar, 'alignItems', 'center'), _titleBar),
       titleWrap: {
         flexGrow: 1,
         marginLeft: actionPos === 'right' ? gutterLess : 0,
@@ -114,9 +118,6 @@ var GridTile = React.createClass({
         left: '50%'
       }
     };
-    styles.titleBar = AutoPrefix.all(styles.titleBar);
-    styles.titleWrap = AutoPrefix.all(styles.titleWrap);
-    styles.actionIcon = AutoPrefix.all(styles.actionIcon);
     return styles;
   },
 
@@ -129,7 +130,7 @@ var GridTile = React.createClass({
   },
 
   _ensureImageCover: function _ensureImageCover() {
-    var imgEl = React.findDOMNode(this.refs.img);
+    var imgEl = ReactDOM.findDOMNode(this.refs.img);
 
     if (imgEl) {
       (function () {
@@ -171,31 +172,31 @@ var GridTile = React.createClass({
 
     var styles = this.getStyles();
 
-    var mergedRootStyles = this.mergeAndPrefix(styles.root, style);
+    var mergedRootStyles = this.prepareStyles(styles.root, style);
 
     var titleBar = null;
 
     if (title) {
       titleBar = React.createElement(
         'div',
-        { style: styles.titleBar },
+        { style: this.prepareStyles(styles.titleBar) },
         React.createElement(
           'div',
-          { style: styles.titleWrap },
+          { style: this.prepareStyles(styles.titleWrap) },
           React.createElement(
             'div',
-            { style: styles.title },
+            { style: this.prepareStyles(styles.title) },
             title
           ),
           subtitle ? React.createElement(
             'div',
-            { style: styles.subtitle },
+            { style: this.prepareStyles(styles.subtitle) },
             subtitle
           ) : null
         ),
         actionIcon ? React.createElement(
           'div',
-          { style: styles.actionIcon },
+          { style: this.prepareStyles(styles.actionIcon) },
           actionIcon
         ) : null
       );
@@ -210,7 +211,7 @@ var GridTile = React.createClass({
         if (child.type === 'img') {
           return React.cloneElement(child, {
             ref: 'img',
-            style: _this.mergeStyles(styles.childImg, child.props.style)
+            style: _this.prepareStyles(styles.childImg, child.props.style)
           });
         } else {
           return child;

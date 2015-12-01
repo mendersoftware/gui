@@ -24,7 +24,8 @@ var Tab = React.createClass({
     onActive: React.PropTypes.func,
     selected: React.PropTypes.bool,
     width: React.PropTypes.string,
-    value: React.PropTypes.string
+    value: React.PropTypes.string,
+    style: React.PropTypes.object
   },
 
   //for passing default theme context to children
@@ -70,13 +71,13 @@ var Tab = React.createClass({
 
     var other = _objectWithoutProperties(_props, ['label', 'onActive', 'onTouchTap', 'selected', 'style', 'value', 'width']);
 
-    var styles = this.mergeAndPrefix({
+    var styles = this.prepareStyles({
       display: 'table-cell',
       cursor: 'pointer',
       textAlign: 'center',
       verticalAlign: 'middle',
       height: 48,
-      color: selected ? 'rgba(255,255,255,1)' : 'rgba(255,255,255,0.6)',
+      color: selected ? this.state.muiTheme.tabs.selectedTextColor : this.state.muiTheme.tabs.textColor,
       outline: 'none',
       fontSize: 14,
       fontWeight: 500,

@@ -9,10 +9,14 @@ var StylePropable = require('../mixins/style-propable');
 var WindowListenable = require('../mixins/window-listenable');
 var TimePickerDialog = require('./time-picker-dialog');
 var TextField = require('../text-field');
+var ThemeManager = require('../styles/theme-manager');
+var DefaultRawTheme = require('../styles/raw-themes/light-raw-theme');
 
 var emptyTime = new Date();
 emptyTime.setHours(0);
 emptyTime.setMinutes(0);
+emptyTime.setSeconds(0);
+emptyTime.setMilliseconds(0);
 
 var TimePicker = React.createClass({
   displayName: 'TimePicker',
@@ -20,6 +24,7 @@ var TimePicker = React.createClass({
   mixins: [StylePropable, WindowListenable],
 
   propTypes: {
+    autoOk: React.PropTypes.bool,
     defaultTime: React.PropTypes.object,
     format: React.PropTypes.oneOf(['ampm', '24hr']),
     pedantic: React.PropTypes.bool,
@@ -27,7 +32,13 @@ var TimePicker = React.createClass({
     onTouchTap: React.PropTypes.func,
     onChange: React.PropTypes.func,
     onShow: React.PropTypes.func,
-    onDismiss: React.PropTypes.func
+    onDismiss: React.PropTypes.func,
+    style: React.PropTypes.object,
+    textFieldStyle: React.PropTypes.object
+  },
+
+  contextTypes: {
+    muiTheme: React.PropTypes.object
   },
 
   windowListeners: {
@@ -38,14 +49,17 @@ var TimePicker = React.createClass({
     return {
       defaultTime: null,
       format: 'ampm',
-      pedantic: false
+      pedantic: false,
+      autoOk: false,
+      style: {}
     };
   },
 
   getInitialState: function getInitialState() {
     return {
       time: this.props.defaultTime || emptyTime,
-      dialogTime: new Date()
+      dialogTime: new Date(),
+      muiTheme: this.context.muiTheme ? this.context.muiTheme : ThemeManager.getMuiTheme(DefaultRawTheme)
     };
   },
 
@@ -81,13 +95,16 @@ var TimePicker = React.createClass({
 
   render: function render() {
     var _props = this.props;
+    var autoOk = _props.autoOk;
     var format = _props.format;
     var onFocus = _props.onFocus;
     var onTouchTap = _props.onTouchTap;
     var onShow = _props.onShow;
     var onDismiss = _props.onDismiss;
+    var style = _props.style;
+    var textFieldStyle = _props.textFieldStyle;
 
-    var other = _objectWithoutProperties(_props, ['format', 'onFocus', 'onTouchTap', 'onShow', 'onDismiss']);
+    var other = _objectWithoutProperties(_props, ['autoOk', 'format', 'onFocus', 'onTouchTap', 'onShow', 'onDismiss', 'style', 'textFieldStyle']);
 
     var defaultInputValue = undefined;
 
@@ -97,8 +114,9 @@ var TimePicker = React.createClass({
 
     return React.createElement(
       'div',
-      null,
+      { style: this.prepareStyles(style) },
       React.createElement(TextField, _extends({}, other, {
+        style: textFieldStyle,
         ref: 'input',
         defaultValue: defaultInputValue,
         onFocus: this._handleInputFocus,
@@ -109,7 +127,8 @@ var TimePicker = React.createClass({
         onAccept: this._handleDialogAccept,
         onShow: onShow,
         onDismiss: onDismiss,
-        format: format })
+        format: format,
+        autoOk: autoOk })
     );
   },
 
@@ -118,10 +137,34 @@ var TimePicker = React.createClass({
   },
 
   setTime: function setTime(t) {
+    if (t) {
+      this.setState({
+        time: t
+      });
+
+      this.refs.input.setValue(this.formatTime(t));
+    } else {
+      this.setState({
+        time: emptyTime
+      });
+
+      this.refs.input.setValue(null);
+    }
+  },
+
+  /**
+   * Alias for `openDialog()` for an api consistent with TextField.
+   */
+  focus: function focus() {
+    this.openDialog();
+  },
+
+  openDialog: function openDialog() {
     this.setState({
-      time: t
+      dialogTime: this.getTime()
     });
-    this.refs.input.setValue(this.formatTime(t));
+
+    this.refs.dialogWindow.show();
   },
 
   _handleDialogAccept: function _handleDialogAccept(t) {
@@ -137,11 +180,8 @@ var TimePicker = React.createClass({
   _handleInputTouchTap: function _handleInputTouchTap(e) {
     e.preventDefault();
 
-    this.setState({
-      dialogTime: this.getTime()
-    });
+    this.openDialog();
 
-    this.refs.dialogWindow.show();
     if (this.props.onTouchTap) this.props.onTouchTap(e);
   }
 });

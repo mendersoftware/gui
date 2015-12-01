@@ -24,7 +24,8 @@ var SvgIcon = React.createClass({
     hoverColor: React.PropTypes.string,
     onMouseEnter: React.PropTypes.func,
     onMouseLeave: React.PropTypes.func,
-    viewBox: React.PropTypes.string
+    viewBox: React.PropTypes.string,
+    style: React.PropTypes.object
   },
 
   //for passing default theme context to children
@@ -75,7 +76,7 @@ var SvgIcon = React.createClass({
     var offColor = color ? color : style && style.fill ? style.fill : this.state.muiTheme.rawTheme.palette.textColor;
     var onColor = hoverColor ? hoverColor : offColor;
 
-    var mergedStyles = this.mergeAndPrefix({
+    var mergedStyles = this.prepareStyles({
       display: 'inline-block',
       height: 24,
       width: 24,

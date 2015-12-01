@@ -1,19 +1,22 @@
-var React = require('react');
-var Time = require('react-time');
-var AppStore = require('../../stores/app-store');
-var AppActions = require('../../actions/app-actions');
-var ScheduleForm = require('../updates/scheduleform');
+import React from 'react';
+import Time from 'react-time';
+import AppStore from '../../stores/app-store';
+import AppActions from '../../actions/app-actions';
+import ScheduleForm from '../updates/scheduleform';
 
-var SearchInput = require('react-search-input');
 
-var UpdateButton = require('./updatebutton.js');
-var SelectedImage = require('./selectedimage.js');
+import SearchInput from 'react-search-input';
 
-var Router = require('react-router');
-var Link = Router.Link;
+import UpdateButton from './updatebutton.js';
+import SelectedImage from './selectedimage.js';
+
+import { Router, Link } from 'react-router';
+
+var ReactTags = require('react-tag-input').WithContext;
+
 
 // material ui
-var mui = require('material-ui');
+import mui from 'material-ui';
 var Table = mui.Table;
 var TableHeader = mui.TableHeader;
 var TableHeaderColumn = mui.TableHeaderColumn;
@@ -32,6 +35,7 @@ var newState = {model: "Acme Model 1"};
 var Repository = React.createClass({
   getInitialState: function() {
     return {
+      tags:[{id:1, text:"Acme"}],
       image:null,
       sortCol: "name",
       sortDown: true,
@@ -98,6 +102,22 @@ var Repository = React.createClass({
   searchUpdated: function(term) {
     this.setState({searchTerm: term}); // needed to force re-render
   },
+  handleDelete: function(i) {
+    var tags = this.state.tags;
+    tags.splice(i, 1);
+    this.setState({tags: tags});
+  },
+  handleAddition: function(tag) {
+    var tags = this.state.tags;
+    tags.push({
+        id: tags.length + 1,
+        text: tag
+    });
+    this.setState({tags: tags});
+  },
+  handleDrag: function(tag, currPos, newPos) {
+
+  },
   render: function() {
     var software = this.props.software;
     if (this.refs.search) {
@@ -119,10 +139,12 @@ var Repository = React.createClass({
     var uploadActions = [
       <div style={{marginRight:"10", display:"inline-block"}}>
         <FlatButton
+          key="cancel"
           label="Cancel"
           onClick={this.dialogDismiss.bind(null, 'upload')} />
       </div>,
       <RaisedButton
+        key="submit"
         label="Upload image"
         primary={true}
         onClick={this._onUploadSubmit} />
@@ -131,10 +153,12 @@ var Repository = React.createClass({
     var scheduleActions = [
       <div style={{marginRight:"10", display:"inline-block"}}>
         <FlatButton
+          key="cancel-schedule"
           label="Cancel"
           onClick={this.dialogDismiss.bind(null, 'schedule')} />
       </div>,
       <RaisedButton
+        key="schedule-submit"
         label="Schedule update"
         primary={true}
         onClick={this._onScheduleSubmit} />
@@ -165,6 +189,8 @@ var Repository = React.createClass({
         cursor: "pointer",
       }
     }
+
+    var tags = this.state.tags;
     return (
       <div>
         <h3>Available images</h3>
@@ -199,7 +225,7 @@ var Repository = React.createClass({
 
         <div>
           <div className="float-right">
-            <RaisedButton onClick={this.dialogOpen.bind(null, 'upload')} label="Upload new image" labelPosition="after" secondary={true}>
+            <RaisedButton key="file_upload" onClick={this.dialogOpen.bind(null, 'upload')} label="Upload new image" labelPosition="after" secondary={true}>
               <FontIcon style={styles.flatButtonIcon} className="material-icons">file_upload</FontIcon>
             </RaisedButton>
           </div>
@@ -239,6 +265,13 @@ var Repository = React.createClass({
                 style={{display:"block"}}
                 onChange={this._handleFieldChange.bind(null, 'description')}
                 errorStyle={{color: "rgb(171, 16, 0)"}} />
+
+              <div className="tagContainer">
+                 <ReactTags tags={tags} 
+                    handleDelete={this.handleDelete}
+                    handleAddition={this.handleAddition}
+                    handleDrag={this.handleDrag} />
+              </div>
             </form>
           </div>
         </Dialog>

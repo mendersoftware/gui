@@ -1,9 +1,11 @@
-var React = require('react');
+import React from 'react';
 var AppStore = require('../../stores/app-store');
 var Health = require('./health');
 var Activity = require('./activity');
 var Updates = require('./updates');
-var Router = require('react-router');
+import { Router, Route, Link } from 'react-router';
+
+
 
 function getState() {
   return {
@@ -25,12 +27,14 @@ var Dashboard = React.createClass({
         var URIParams = "open="+params.open;
         URIParams = params.id ? URIParams + "&id="+params.id : URIParams;
         URIParams = encodeURIComponent(URIParams);
-        this.context.router.transitionTo("/updates/:tab/:params/", {tab:0, params:URIParams}, null);
+        //this.context.router.transitionTo("/updates/:tab/:params/", {tab:0, params:URIParams}, null);
+        this.context.history.pushState(null, '/updates/0/'+URIParams, null);
         break;
       case "devices":
         var filters = "status="+params.status;
         filters = encodeURIComponent(filters);
-        this.context.router.transitionTo("/devices/:groupId/:filters", {groupId:1, filters: filters}, null);
+        //this.context.router.transitionTo("/devices/:groupId/:filters", {groupId:1, filters: filters}, null);
+        this.context.history.pushState(null, '/devices/1/'+filters, null);
         break;
     }
   },
@@ -50,7 +54,7 @@ var Dashboard = React.createClass({
 });
 
 Dashboard.contextTypes = {
-  router: React.PropTypes.func
+  history: React.PropTypes.object
 };
-
+ 
 module.exports = Dashboard;

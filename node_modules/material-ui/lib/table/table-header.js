@@ -89,7 +89,7 @@ var TableHeader = React.createClass({
 
     return React.createElement(
       'thead',
-      { className: classes, style: this.mergeAndPrefix(this.getStyles().root, style) },
+      { className: classes, style: this.prepareStyles(this.getStyles().root, style) },
       superHeaderRows,
       baseHeaderRow
     );
@@ -164,9 +164,10 @@ var TableHeader = React.createClass({
       checked: this.props.selectAllSelected,
       onCheck: this._onSelectAll });
 
+    var key = 'hpcb' + props.rowNumber;
     return React.createElement(
       TableHeaderColumn,
-      { style: { width: 24 } },
+      { key: key, style: { width: 24 } },
       checkbox
     );
   },

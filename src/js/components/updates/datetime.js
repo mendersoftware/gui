@@ -1,4 +1,4 @@
-var React = require('react');
+import React from 'react';
 
 // material ui
 var mui = require('material-ui');

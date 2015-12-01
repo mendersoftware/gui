@@ -5,11 +5,41 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 var React = require('react');
 var Styles = require('../styles');
 var StylePropable = require('../mixins/style-propable');
+var ThemeManager = require('../styles/theme-manager');
+var DefaultRawTheme = require('../styles/raw-themes/light-raw-theme');
 
 var CardText = React.createClass({
   displayName: 'CardText',
 
   mixins: [StylePropable],
+
+  contextTypes: {
+    muiTheme: React.PropTypes.object
+  },
+
+  //for passing default theme context to children
+  childContextTypes: {
+    muiTheme: React.PropTypes.object
+  },
+
+  getChildContext: function getChildContext() {
+    return {
+      muiTheme: this.state.muiTheme
+    };
+  },
+
+  getInitialState: function getInitialState() {
+    return {
+      muiTheme: this.context.muiTheme ? this.context.muiTheme : ThemeManager.getMuiTheme(DefaultRawTheme)
+    };
+  },
+
+  //to update theme inside state whenever a new theme is passed down
+  //from the parent / owner using context
+  componentWillReceiveProps: function componentWillReceiveProps(nextProps, nextContext) {
+    var newMuiTheme = nextContext.muiTheme ? nextContext.muiTheme : this.state.muiTheme;
+    this.setState({ muiTheme: newMuiTheme });
+  },
 
   propTypes: {
     color: React.PropTypes.string,
@@ -18,25 +48,20 @@ var CardText = React.createClass({
     actAsExpander: React.PropTypes.bool
   },
 
-  getDefaultProps: function getDefaultProps() {
-    return {
-      color: Styles.Colors.ck
-    };
-  },
-
   getStyles: function getStyles() {
+    var themeVariables = this.state.muiTheme.cardText;
     return {
       root: {
         padding: 16,
         fontSize: '14px',
-        color: this.props.color
+        color: this.props.color ? this.props.color : themeVariables.textColor
       }
     };
   },
 
   render: function render() {
     var styles = this.getStyles();
-    var rootStyle = this.mergeAndPrefix(styles.root, this.props.style);
+    var rootStyle = this.prepareStyles(styles.root, this.props.style);
 
     return React.createElement(
       'div',

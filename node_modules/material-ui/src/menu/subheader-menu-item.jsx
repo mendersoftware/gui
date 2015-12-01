@@ -17,6 +17,7 @@ const SubheaderMenuItem = React.createClass({
       text: React.PropTypes.string.isRequired,
       firstChild: React.PropTypes.bool,
       className: React.PropTypes.string,
+      style: React.PropTypes.object,
   },
 
   //for passing default theme context to children
@@ -84,7 +85,7 @@ const SubheaderMenuItem = React.createClass({
         <div
           key={this.props.index}
           className={this.props.className}
-          style={this.mergeAndPrefix(
+          style={this.prepareStyles(
             this.getStyles().root,
             this.props.firstChild && this.getStyles().rootWhenFirstChild,
             this.props.style

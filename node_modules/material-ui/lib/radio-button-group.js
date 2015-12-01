@@ -6,16 +6,38 @@ function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in ob
 
 var React = require('react');
 var RadioButton = require('./radio-button');
+var StylePropable = require('./mixins/style-propable');
+var DefaultRawTheme = require('./styles/raw-themes/light-raw-theme');
+var ThemeManager = require('./styles/theme-manager');
 
 var RadioButtonGroup = React.createClass({
   displayName: 'RadioButtonGroup',
+
+  mixins: [StylePropable],
+
+  contextTypes: {
+    muiTheme: React.PropTypes.object
+  },
+
+  //for passing default theme context to children
+  childContextTypes: {
+    muiTheme: React.PropTypes.object
+  },
+
+  getChildContext: function getChildContext() {
+    return {
+      muiTheme: this.state.muiTheme
+    };
+  },
 
   propTypes: {
     name: React.PropTypes.string.isRequired,
     valueSelected: React.PropTypes.string,
     defaultSelected: React.PropTypes.string,
     labelPosition: React.PropTypes.oneOf(['left', 'right']),
-    onChange: React.PropTypes.func
+    onChange: React.PropTypes.func,
+    style: React.PropTypes.object,
+    className: React.PropTypes.string
   },
 
   _hasCheckAttribute: function _hasCheckAttribute(radioButton) {
@@ -25,7 +47,14 @@ var RadioButtonGroup = React.createClass({
   getInitialState: function getInitialState() {
     return {
       numberCheckedRadioButtons: 0,
-      selected: this.props.valueSelected || this.props.defaultSelected || ''
+      selected: this.props.valueSelected || this.props.defaultSelected || '',
+      muiTheme: this.context.muiTheme ? this.context.muiTheme : ThemeManager.getMuiTheme(DefaultRawTheme)
+    };
+  },
+
+  getDefaultProps: function getDefaultProps() {
+    return {
+      style: {}
     };
   },
 
@@ -41,10 +70,15 @@ var RadioButtonGroup = React.createClass({
     this.setState({ numberCheckedRadioButtons: cnt });
   },
 
-  componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps: function componentWillReceiveProps(nextProps, nextContext) {
+    var newMuiTheme = nextContext.muiTheme ? nextContext.muiTheme : this.state.muiTheme;
+    var newState = { muiTheme: newMuiTheme };
+
     if (nextProps.hasOwnProperty('valueSelected')) {
-      this.setState({ selected: nextProps.valueSelected });
+      newState.selected = nextProps.valueSelected;
     }
+
+    this.setState(newState);
   },
 
   render: function render() {
@@ -73,7 +107,7 @@ var RadioButtonGroup = React.createClass({
     return React.createElement(
       'div',
       {
-        style: this.props.style,
+        style: this.prepareStyles(this.props.style),
         className: this.props.className || '' },
       options
     );

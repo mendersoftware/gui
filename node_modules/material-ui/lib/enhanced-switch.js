@@ -5,6 +5,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
 
 var React = require('react');
+var ReactDOM = require('react-dom');
 var KeyCode = require('./utils/key-code');
 var StylePropable = require('./mixins/style-propable');
 var Transitions = require('./styles/transitions');
@@ -51,14 +52,15 @@ var EnhancedSwitch = React.createClass({
     labelStyle: React.PropTypes.object,
     name: React.PropTypes.string,
     value: React.PropTypes.string,
-    label: React.PropTypes.string,
+    label: React.PropTypes.node,
     onSwitch: React.PropTypes.func,
     required: React.PropTypes.bool,
     disabled: React.PropTypes.bool,
     defaultSwitched: React.PropTypes.bool,
     labelPosition: React.PropTypes.oneOf(['left', 'right']),
     disableFocusRipple: React.PropTypes.bool,
-    disableTouchRipple: React.PropTypes.bool
+    disableTouchRipple: React.PropTypes.bool,
+    style: React.PropTypes.object
   },
 
   windowListeners: {
@@ -75,11 +77,11 @@ var EnhancedSwitch = React.createClass({
   },
 
   getEvenWidth: function getEvenWidth() {
-    return parseInt(window.getComputedStyle(React.findDOMNode(this.refs.root)).getPropertyValue('width'), 10);
+    return parseInt(window.getComputedStyle(ReactDOM.findDOMNode(this.refs.root)).getPropertyValue('width'), 10);
   },
 
   componentDidMount: function componentDidMount() {
-    var inputNode = React.findDOMNode(this.refs.checkbox);
+    var inputNode = ReactDOM.findDOMNode(this.refs.checkbox);
     if (!this.props.switched || inputNode.checked !== this.props.switched) {
       this.props.onParentShouldUpdate(inputNode.checked);
     }
@@ -202,8 +204,8 @@ var EnhancedSwitch = React.createClass({
     var other = _objectWithoutProperties(_props, ['type', 'name', 'value', 'label', 'onSwitch', 'defaultSwitched', 'onBlur', 'onFocus', 'onMouseUp', 'onMouseDown', 'onMouseLeave', 'onTouchStart', 'onTouchEnd', 'disableTouchRipple', 'disableFocusRipple', 'className']);
 
     var styles = this.getStyles();
-    var wrapStyles = this.mergeAndPrefix(styles.wrap, this.props.iconStyle);
-    var rippleStyle = this.mergeAndPrefix(styles.ripple, this.props.rippleStyle);
+    var wrapStyles = this.prepareStyles(styles.wrap, this.props.iconStyle);
+    var rippleStyle = this.prepareStyles(styles.ripple, this.props.rippleStyle);
     var rippleColor = this.props.hasOwnProperty('rippleColor') ? this.props.rippleColor : this.getTheme().primary1Color;
 
     if (this.props.thumbStyle) {
@@ -213,7 +215,7 @@ var EnhancedSwitch = React.createClass({
 
     var inputId = this.props.id || UniqueId.generate();
 
-    var labelStyle = this.mergeAndPrefix(styles.label, this.props.labelStyle);
+    var labelStyle = this.prepareStyles(styles.label, this.props.labelStyle);
     var labelElement = this.props.label ? React.createElement(
       'label',
       { style: labelStyle, htmlFor: inputId },
@@ -223,7 +225,7 @@ var EnhancedSwitch = React.createClass({
     var inputProps = {
       ref: "checkbox",
       type: this.props.inputType,
-      style: this.mergeAndPrefix(styles.input),
+      style: this.prepareStyles(styles.input),
       name: this.props.name,
       value: this.props.value,
       defaultChecked: this.props.defaultSwitched,
@@ -272,7 +274,7 @@ var EnhancedSwitch = React.createClass({
     ) : React.createElement(
       'div',
       { style: wrapStyles },
-      React.createElement('div', { style: this.props.trackStyle }),
+      React.createElement('div', { style: this.prepareStyles(this.props.trackStyle) }),
       React.createElement(
         Paper,
         { style: this.props.thumbStyle, zDepth: 1, circle: true },
@@ -287,33 +289,33 @@ var EnhancedSwitch = React.createClass({
     // Position is left if not defined or invalid.
     var elementsInOrder = labelPositionExist && this.props.labelPosition.toUpperCase() === "RIGHT" ? React.createElement(
       ClearFix,
-      { style: this.mergeAndPrefix(styles.controls) },
+      { style: styles.controls },
       switchElement,
       labelElement
     ) : React.createElement(
       ClearFix,
-      { style: this.mergeAndPrefix(styles.controls) },
+      { style: styles.controls },
       labelElement,
       switchElement
     );
 
     return React.createElement(
       'div',
-      { ref: 'root', className: className, style: this.mergeAndPrefix(styles.root, this.props.style) },
+      { ref: 'root', className: className, style: this.prepareStyles(styles.root, this.props.style) },
       inputElement,
       elementsInOrder
     );
   },
 
   isSwitched: function isSwitched() {
-    return React.findDOMNode(this.refs.checkbox).checked;
+    return ReactDOM.findDOMNode(this.refs.checkbox).checked;
   },
 
   // no callback here because there is no event
   setSwitched: function setSwitched(newSwitchedValue) {
     if (!this.props.hasOwnProperty('checked') || this.props.checked === false) {
       this.props.onParentShouldUpdate(newSwitchedValue);
-      React.findDOMNode(this.refs.checkbox).checked = newSwitchedValue;
+      ReactDOM.findDOMNode(this.refs.checkbox).checked = newSwitchedValue;
     } else if (process.env.NODE_ENV !== 'production') {
       var message = 'Cannot call set method while checked is defined as a property.';
       console.error(message);
@@ -321,7 +323,7 @@ var EnhancedSwitch = React.createClass({
   },
 
   getValue: function getValue() {
-    return React.findDOMNode(this.refs.checkbox).value;
+    return ReactDOM.findDOMNode(this.refs.checkbox).value;
   },
 
   isKeyboardFocused: function isKeyboardFocused() {
@@ -334,7 +336,7 @@ var EnhancedSwitch = React.createClass({
       isKeyboardFocused: false
     });
 
-    var isInputChecked = React.findDOMNode(this.refs.checkbox).checked;
+    var isInputChecked = ReactDOM.findDOMNode(this.refs.checkbox).checked;
 
     if (!this.props.hasOwnProperty('checked')) {
       this.props.onParentShouldUpdate(isInputChecked);

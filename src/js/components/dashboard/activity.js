@@ -1,10 +1,10 @@
-var React = require('react');
-var Router = require('react-router');
-var Link = Router.Link;
-var Time = require('react-time');
+import React from 'react';
+import { Router, Route, Link } from 'react-router';
+
+import Time from 'react-time';
 
 // material ui
-var mui = require('material-ui');
+import mui from 'material-ui';
 
 var Activity = React.createClass({
   _clickHandle: function() {

@@ -1,6 +1,7 @@
 'use strict';
 
 var React = require('react');
+var ReactDOM = require('react-dom');
 var Events = require('../utils/events');
 var Dom = require('../utils/dom');
 
@@ -17,11 +18,11 @@ module.exports = {
   },
 
   _checkClickAway: function _checkClickAway(event) {
-    var el = React.findDOMNode(this);
+    var el = ReactDOM.findDOMNode(this);
 
     // Check if the target is inside the current component
     if (event.target !== el && !Dom.isDescendant(el, event.target) && document.documentElement.contains(event.target)) {
-      if (this.componentClickAway) this.componentClickAway();
+      if (this.componentClickAway) this.componentClickAway(event);
     }
   },
 

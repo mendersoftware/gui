@@ -4,8 +4,8 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
 
-var React = require('react/addons');
-var PureRenderMixin = React.addons.PureRenderMixin;
+var React = require('react');
+var PureRenderMixin = require('react-addons-pure-render-mixin');
 var StylePropable = require('./mixins/style-propable');
 var Colors = require('./styles/colors');
 var Children = require('./utils/children');
@@ -79,7 +79,8 @@ var EnhancedButton = React.createClass({
     onKeyDown: React.PropTypes.func,
     onKeyUp: React.PropTypes.func,
     onTouchTap: React.PropTypes.func,
-    tabIndex: React.PropTypes.number
+    tabIndex: React.PropTypes.number,
+    style: React.PropTypes.object
   },
 
   getDefaultProps: function getDefaultProps() {
@@ -145,7 +146,7 @@ var EnhancedButton = React.createClass({
 
     var other = _objectWithoutProperties(_props, ['centerRipple', 'children', 'containerElement', 'disabled', 'disableFocusRipple', 'disableKeyboardFocus', 'disableTouchRipple', 'focusRippleColor', 'focusRippleOpacity', 'linkButton', 'touchRippleColor', 'touchRippleOpacity', 'onBlur', 'onFocus', 'onKeyUp', 'onKeyDown', 'onTouchTap', 'style', 'tabIndex', 'type']);
 
-    var mergedStyles = this.mergeAndPrefix({
+    var mergedStyles = this.prepareStyles({
       border: 10,
       background: 'none',
       boxSizing: 'border-box',

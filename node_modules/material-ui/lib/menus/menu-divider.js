@@ -4,7 +4,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
 
-var React = require('react/addons');
+var React = require('react');
 var StylePropable = require('../mixins/style-propable');
 var ListDivider = require('../lists/list-divider');
 var DefaultRawTheme = require('../styles/raw-themes/light-raw-theme');
@@ -17,6 +17,10 @@ var MenuDivider = React.createClass({
 
   contextTypes: {
     muiTheme: React.PropTypes.object
+  },
+
+  propTypes: {
+    style: React.PropTypes.object
   },
 
   //for passing default theme context to children
@@ -49,7 +53,7 @@ var MenuDivider = React.createClass({
 
     var other = _objectWithoutProperties(_props, ['style']);
 
-    var mergedStyles = this.mergeAndPrefix({
+    var mergedStyles = this.mergeStyles({
       marginTop: 7,
       marginBottom: 8
     }, style);

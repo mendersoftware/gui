@@ -13,6 +13,7 @@ const ToolbarTitle = React.createClass({
 
   propTypes: {
     text: React.PropTypes.string,
+    style: React.PropTypes.object,
   },
 
   //for passing default theme context to children
@@ -50,7 +51,7 @@ const ToolbarTitle = React.createClass({
       ...other,
     } = this.props;
 
-    let styles = this.mergeAndPrefix({
+    let styles = this.prepareStyles({
       paddingRight: this.state.muiTheme.rawTheme.spacing.desktopGutterLess,
       lineHeight: this.getTheme().height + 'px',
       fontSize: this.getTheme().titleFontSize + 'px',
