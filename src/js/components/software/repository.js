@@ -39,7 +39,9 @@ var Repository = React.createClass({
       image:null,
       sortCol: "name",
       sortDown: true,
-      searchTerm: null
+      searchTerm: null,
+      upload: false,
+      schedule: false
     };
   },
 
@@ -54,10 +56,14 @@ var Repository = React.createClass({
     this.dialogOpen(ref);
   },
   dialogOpen: function (ref) {
-    this.refs[ref].show();
+    var obj = {};
+    obj[ref] = true;
+    this.setState(obj);
   },
   dialogDismiss: function(ref) {
-    this.refs[ref].dismiss();
+    var obj = {};
+    obj[ref] = false;
+    this.setState(obj);
   },
   _onScheduleSubmit: function() {
     var newUpdate = {
@@ -249,6 +255,7 @@ var Repository = React.createClass({
         </div>
         <Dialog
           ref="upload"
+          open={this.state.upload}
           title="Upload a new image"
           autoDetectWindowHeight={true}
           autoScrollBodyContent={true}
@@ -292,6 +299,7 @@ var Repository = React.createClass({
 
         <Dialog
           ref="schedule"
+          open={this.state.schedule}
           title='Schedule an update'
           actions={scheduleActions}
           autoDetectWindowHeight={true} autoScrollBodyContent={true}

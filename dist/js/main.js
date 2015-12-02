@@ -59958,7 +59958,9 @@ var Repository = _react2.default.createClass({
       image: null,
       sortCol: "name",
       sortDown: true,
-      searchTerm: null
+      searchTerm: null,
+      upload: false,
+      schedule: false
     };
   },
 
@@ -59973,10 +59975,14 @@ var Repository = _react2.default.createClass({
     this.dialogOpen(ref);
   },
   dialogOpen: function dialogOpen(ref) {
-    this.refs[ref].show();
+    var obj = {};
+    obj[ref] = true;
+    this.setState(obj);
   },
   dialogDismiss: function dialogDismiss(ref) {
-    this.refs[ref].dismiss();
+    var obj = {};
+    obj[ref] = false;
+    this.setState(obj);
   },
   _onScheduleSubmit: function _onScheduleSubmit() {
     var newUpdate = {
@@ -60248,6 +60254,7 @@ var Repository = _react2.default.createClass({
         Dialog,
         {
           ref: 'upload',
+          open: this.state.upload,
           title: 'Upload a new image',
           autoDetectWindowHeight: true,
           autoScrollBodyContent: true,
@@ -60301,6 +60308,7 @@ var Repository = _react2.default.createClass({
         Dialog,
         {
           ref: 'schedule',
+          open: this.state.schedule,
           title: 'Schedule an update',
           actions: scheduleActions,
           autoDetectWindowHeight: true, autoScrollBodyContent: true,
