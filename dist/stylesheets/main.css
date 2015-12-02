@@ -19,7 +19,7 @@ body {
 }
 /* Type */
 body {
-  font-family: Lato;
+  font-family: Lato, sans-serif;
   font-size: 13px;
   margin: 0;
   color: #404041;
@@ -256,20 +256,45 @@ hr.table-divider {
   padding: 5px;
   background-color: #DBEDEB;
   color: #679BA5;
+  display: inline-block;
+  margin-top: 5px;
 }
 .ReactTags__remove {
   cursor: pointer;
   padding: 10px 0 10px 10px;
 }
-.ReactTags__tagInput {
-  margin-top: 15px;
-}
 .ReactTags__tagInput input,
 .ReactTags__tagInput input:focus {
   outline: none;
-  border: 1px solid #e0e0e0;
-  padding: 4px 8px;
-  border-radius: 3px;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  border-bottom: solid 1px #e0e0e0;
+  padding: 7px 0;
+  font-size: 16px;
+  font-family: Lato, sans-serif;
+  color: rgba(0, 0, 0, 0.8);
+}
+.ReactTags__tagInput input::-webkit-input-placeholder,
+.ReactTags__tagInput input:focus::-webkit-input-placeholder {
+  color: rgba(0, 0, 0, 0.3);
+}
+.ReactTags__tagInput input:-moz-placeholder,
+.ReactTags__tagInput input:focus:-moz-placeholder {
+  color: rgba(0, 0, 0, 0.3);
+}
+.ReactTags__tagInput input::-moz-placeholder,
+.ReactTags__tagInput input:focus::-moz-placeholder {
+  color: rgba(0, 0, 0, 0.3);
+}
+.ReactTags__tagInput input:-ms-input-placeholder,
+.ReactTags__tagInput input:focus:-ms-input-placeholder {
+  color: rgba(0, 0, 0, 0.3);
+}
+.inputHeader {
+  color: rgba(0, 0, 0, 0.5);
+  font-size: 12px;
+  display: block;
 }
 /* Dashboard */
 .leftDashboard {

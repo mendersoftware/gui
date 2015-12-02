@@ -42,7 +42,7 @@ html, body {
 /* Type */
 
 body {
-  font-family: Lato;
+  font-family: Lato, sans-serif;
   font-size: 13px;
   margin: 0;
   color: #404041;
@@ -327,6 +327,8 @@ hr.table-divider {
   padding: 5px;
   background-color: @lightgrey;
   color: @linkhover;
+  display: inline-block;
+  margin-top: 5px;
 }
 
 .ReactTags__remove {
@@ -334,18 +336,32 @@ hr.table-divider {
   padding: 10px 0 10px 10px;
 }
 
+
 .ReactTags__tagInput {
-  margin-top: 15px;
 
   input, input:focus {
     outline: none;
-    border: 1px solid #e0e0e0;
-    padding: 4px 8px;
-    border-radius: 3px;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-bottom: solid 1px #e0e0e0;
+    padding: 7px 0;
+    font-size: 16px;
+    font-family: Lato, sans-serif;
+    color: rgba(0,0,0,0.8);
+
+    .placeholder({
+      color: rgba(0,0,0,0.3);
+    });
+
   }
 }
 
-
+.inputHeader {
+  color:rgba(0,0,0,0.5);
+  font-size: 12px;
+  display: block;
+}
 
 /* Dashboard */
 
@@ -573,4 +589,20 @@ span.progress-group {
   -moz-transform:    rotateX(@deg);
   -ms-transform:     rotateX(@deg);
   -o-transform:      rotateX(@deg);
+}
+
+.placeholder(@rules) {
+
+    &::-webkit-input-placeholder {
+        @rules();
+    }
+    &:-moz-placeholder {
+        @rules();
+    }
+    &::-moz-placeholder {
+        @rules();
+    }
+    &:-ms-input-placeholder {
+        @rules();
+    }
 }

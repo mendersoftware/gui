@@ -59947,14 +59947,14 @@ var TextField = _materialUi2.default.TextField;
 var FlatButton = _materialUi2.default.FlatButton;
 var FontIcon = _materialUi2.default.FontIcon;
 
-var newState = { model: "Acme Model 1" };
+var newState = { model: "Acme Model 1", tags: [] };
+var tags = [];
 
 var Repository = _react2.default.createClass({
   displayName: 'Repository',
 
   getInitialState: function getInitialState() {
     return {
-      tags: [{ id: 1, text: "Acme" }],
       image: null,
       sortCol: "name",
       sortDown: true,
@@ -59990,6 +59990,13 @@ var Repository = _react2.default.createClass({
     this.dialogDismiss('schedule');
   },
   _onUploadSubmit: function _onUploadSubmit() {
+    //update build date, upload date, checksum, size
+    var newImage = this.state.newImage;
+    newImage.build_date = new Date().getTime();
+    newImage.upload_date = new Date().getTime();
+    newImage.checksum = "b411936863d0e245292bb81a60189c7ffd95dbd3723c718e2a1694f944bd91a3";
+    newImage.size = "12.6 MB";
+
     _appActions2.default.uploadImage(this.state.newImage);
     this.refs['upload'].dismiss();
   },
@@ -60027,16 +60034,22 @@ var Repository = _react2.default.createClass({
     this.setState({ tags: tags });
   },
   handleAddition: function handleAddition(tag) {
-    var tags = this.state.tags;
     tags.push({
       id: tags.length + 1,
       text: tag
     });
-    this.setState({ tags: tags });
+
+    newState.tags = [];
+    for (var i in tags) {
+      newState.tags.push(tags[i].text);
+    }
+
+    this.setState({ newImage: newState });
   },
   handleDrag: function handleDrag(tag, currPos, newPos) {},
   render: function render() {
     var software = this.props.software;
+
     if (this.refs.search) {
       var filters = ['name', 'model', 'tags'];
       software = software.filter(this.refs.search.filter(filters));
@@ -60059,7 +60072,7 @@ var Repository = _react2.default.createClass({
         _react2.default.createElement(
           TableRowColumn,
           null,
-          pkg.tags.join(', ')
+          pkg.tags.join(", ")
         ),
         _react2.default.createElement(
           TableRowColumn,
@@ -60125,7 +60138,6 @@ var Repository = _react2.default.createClass({
       }
     };
 
-    var tags = this.state.tags;
     return _react2.default.createElement(
       'div',
       null,
@@ -60272,6 +60284,11 @@ var Repository = _react2.default.createClass({
             _react2.default.createElement(
               'div',
               { className: 'tagContainer' },
+              _react2.default.createElement(
+                'span',
+                { className: 'inputHeader' },
+                'Tags'
+              ),
               _react2.default.createElement(ReactTags, { tags: tags,
                 handleDelete: this.handleDelete,
                 handleAddition: this.handleAddition,

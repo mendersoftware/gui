@@ -30,12 +30,12 @@ var TextField = mui.TextField;
 var FlatButton = mui.FlatButton;
 var FontIcon = mui.FontIcon;
 
-var newState = {model: "Acme Model 1"};
+var newState = {model: "Acme Model 1", tags: []};
+var tags = [];
 
 var Repository = React.createClass({
   getInitialState: function() {
     return {
-      tags:[{id:1, text:"Acme"}],
       image:null,
       sortCol: "name",
       sortDown: true,
@@ -71,6 +71,13 @@ var Repository = React.createClass({
     this.dialogDismiss('schedule');
   },
   _onUploadSubmit: function() {
+    //update build date, upload date, checksum, size
+    var newImage = this.state.newImage;
+    newImage.build_date = new Date().getTime();
+    newImage.upload_date = new Date().getTime();
+    newImage.checksum = "b411936863d0e245292bb81a60189c7ffd95dbd3723c718e2a1694f944bd91a3";
+    newImage.size = "12.6 MB";
+
     AppActions.uploadImage(this.state.newImage);
     this.refs['upload'].dismiss();
   },
@@ -108,18 +115,25 @@ var Repository = React.createClass({
     this.setState({tags: tags});
   },
   handleAddition: function(tag) {
-    var tags = this.state.tags;
     tags.push({
         id: tags.length + 1,
         text: tag
     });
-    this.setState({tags: tags});
+
+    newState.tags = [];
+    for (var i in tags) {
+      newState.tags.push(tags[i].text);
+    }
+
+    this.setState({newImage: newState});
   },
   handleDrag: function(tag, currPos, newPos) {
 
   },
   render: function() {
     var software = this.props.software;
+
+
     if (this.refs.search) {
       var filters = ['name', 'model', 'tags'];
       software = software.filter(this.refs.search.filter(filters));
@@ -130,7 +144,7 @@ var Repository = React.createClass({
         <TableRow key={index}>
           <TableRowColumn>{pkg.name}</TableRowColumn>
           <TableRowColumn>{pkg.model}</TableRowColumn>
-          <TableRowColumn>{pkg.tags.join(', ')}</TableRowColumn>
+          <TableRowColumn>{pkg.tags.join(", ")}</TableRowColumn>
           <TableRowColumn><Time value={pkg.build_date} format="YYYY/MM/DD HH:mm" /></TableRowColumn>
           <TableRowColumn>{pkg.devices}</TableRowColumn>
         </TableRow>
@@ -190,7 +204,6 @@ var Repository = React.createClass({
       }
     }
 
-    var tags = this.state.tags;
     return (
       <div>
         <h3>Available images</h3>
@@ -267,6 +280,7 @@ var Repository = React.createClass({
                 errorStyle={{color: "rgb(171, 16, 0)"}} />
 
               <div className="tagContainer">
+                <span className="inputHeader">Tags</span>
                  <ReactTags tags={tags} 
                     handleDelete={this.handleDelete}
                     handleAddition={this.handleAddition}
