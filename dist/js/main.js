@@ -59955,23 +59955,23 @@ var Repository = _react2.default.createClass({
 
   getInitialState: function getInitialState() {
     return {
-      image: null,
+      image: {
+        name: null,
+        description: null
+      },
       sortCol: "name",
       sortDown: true,
       searchTerm: null,
       upload: false,
-      schedule: false
+      schedule: false,
+      popupLabel: "Upload a new image"
     };
   },
 
   _handleFieldChange: function _handleFieldChange(field, e) {
     newState[field] = e.target.value;
-    this.setState({ newImage: newState });
   },
   _openSchedule: function _openSchedule(ref, image) {
-    if (image) {
-      this.setState({ image: image, imageVal: image });
-    }
     this.dialogOpen(ref);
   },
   dialogOpen: function dialogOpen(ref) {
@@ -59997,13 +59997,13 @@ var Repository = _react2.default.createClass({
   },
   _onUploadSubmit: function _onUploadSubmit() {
     //update build date, upload date, checksum, size
-    var newImage = this.state.newImage;
-    newImage.build_date = new Date().getTime();
-    newImage.upload_date = new Date().getTime();
-    newImage.checksum = "b411936863d0e245292bb81a60189c7ffd95dbd3723c718e2a1694f944bd91a3";
-    newImage.size = "12.6 MB";
 
-    _appActions2.default.uploadImage(this.state.newImage);
+    newState.build_date = new Date().getTime();
+    newState.upload_date = new Date().getTime();
+    newState.checksum = "b411936863d0e245292bb81a60189c7ffd95dbd3723c718e2a1694f944bd91a3";
+    newState.size = "12.6 MB";
+
+    _appActions2.default.uploadImage(newState);
     this.refs['upload'].dismiss();
   },
   _updateParams: function _updateParams(val, attr) {
@@ -60035,9 +60035,11 @@ var Repository = _react2.default.createClass({
     this.setState({ searchTerm: term }); // needed to force re-render
   },
   handleDelete: function handleDelete(i) {
-    var tags = this.state.tags;
     tags.splice(i, 1);
-    this.setState({ tags: tags });
+    newState.tags = [];
+    for (var i in tags) {
+      newState.tags.push(tags[i].text);
+    }
   },
   handleAddition: function handleAddition(tag) {
     tags.push({
@@ -60049,13 +60051,25 @@ var Repository = _react2.default.createClass({
     for (var i in tags) {
       newState.tags.push(tags[i].text);
     }
-
-    this.setState({ newImage: newState });
   },
   handleDrag: function handleDrag(tag, currPos, newPos) {},
+  _openUpload: function _openUpload(ref, image) {
+    if (image) {
+      this.setState({ popupLabel: "Edit image details" });
+      newState = image;
+    } else {
+      newState = { model: "Acme Model 1", tags: [] };
+      this.setState({ image: newState, popupLabel: "Upload a new image" });
+    }
+    tags = [];
+    for (var i in newState.tags) {
+      tags.push({ id: i, text: newState.tags[i] });
+    }
+    this.dialogOpen('upload');
+  },
   render: function render() {
     var software = this.props.software;
-
+    var image = this.state.image;
     if (this.refs.search) {
       var filters = ['name', 'model', 'tags'];
       software = software.filter(this.refs.search.filter(filters));
@@ -60101,7 +60115,7 @@ var Repository = _react2.default.createClass({
         onClick: this.dialogDismiss.bind(null, 'upload') })
     ), _react2.default.createElement(RaisedButton, {
       key: 'submit',
-      label: 'Upload image',
+      label: 'Save image',
       primary: true,
       onClick: this._onUploadSubmit })];
 
@@ -60125,7 +60139,7 @@ var Repository = _react2.default.createClass({
     }
 
     var styles = {
-      flatButtonIcon: {
+      buttonIcon: {
         height: '100%',
         display: 'inline-block',
         verticalAlign: 'middle',
@@ -60134,6 +60148,17 @@ var Repository = _react2.default.createClass({
         lineHeight: '36px',
         marginRight: "-6",
         color: "#ffffff",
+        fontSize: '16'
+      },
+      flatButtonIcon: {
+        height: '100%',
+        display: 'inline-block',
+        verticalAlign: 'middle',
+        float: 'left',
+        paddingLeft: '12px',
+        lineHeight: '36px',
+        marginRight: "-6",
+        color: "rgba(0,0,0,0.8)",
         fontSize: '16'
       },
       sortIcon: {
@@ -60239,23 +60264,23 @@ var Repository = _react2.default.createClass({
           { className: 'float-right' },
           _react2.default.createElement(
             RaisedButton,
-            { key: 'file_upload', onClick: this.dialogOpen.bind(null, 'upload'), label: 'Upload new image', labelPosition: 'after', secondary: true },
+            { key: 'file_upload', onClick: this._openUpload.bind(null, "upload", null), label: 'Upload image file', labelPosition: 'after', secondary: true },
             _react2.default.createElement(
               FontIcon,
-              { style: styles.flatButtonIcon, className: 'material-icons' },
+              { style: styles.buttonIcon, className: 'material-icons' },
               'file_upload'
             )
           )
         ),
         _react2.default.createElement('div', { style: { height: "16", marginTop: "10" } }),
-        _react2.default.createElement(_selectedimage2.default, { selected: this.state.image, openSchedule: this._openSchedule })
+        _react2.default.createElement(_selectedimage2.default, { editImage: this._openUpload, buttonStyle: styles.flatButtonIcon, image: this.state.image, openSchedule: this._openSchedule })
       ),
       _react2.default.createElement(
         Dialog,
         {
           ref: 'upload',
           open: this.state.upload,
-          title: 'Upload a new image',
+          title: this.state.popupLabel,
           autoDetectWindowHeight: true,
           autoScrollBodyContent: true,
           actions: uploadActions
@@ -60267,17 +60292,21 @@ var Repository = _react2.default.createClass({
             'form',
             null,
             _react2.default.createElement(TextField, {
+              defaultValue: image.name,
+              disabled: image.id,
               hintText: 'Identifier',
               floatingLabelText: 'Identifier',
               onChange: this._handleFieldChange.bind(null, 'name'),
               errorStyle: { color: "rgb(171, 16, 0)" } }),
             _react2.default.createElement(
               'p',
-              null,
+              { className: image ? "hidden" : null },
               _react2.default.createElement('input', { type: 'file' })
             ),
             _react2.default.createElement(TextField, {
               value: 'Acme Model 1',
+              disabled: true,
+              style: { display: "block" },
               floatingLabelText: 'Device type compatibility',
               onChange: this._handleFieldChange.bind(null, 'model'),
               errorStyle: { color: "rgb(171, 16, 0)" } }),
@@ -60287,7 +60316,8 @@ var Repository = _react2.default.createClass({
               multiLine: true,
               style: { display: "block" },
               onChange: this._handleFieldChange.bind(null, 'description'),
-              errorStyle: { color: "rgb(171, 16, 0)" } }),
+              errorStyle: { color: "rgb(171, 16, 0)" },
+              defaultValue: image.description }),
             _react2.default.createElement(
               'div',
               { className: 'tagContainer' },
@@ -60350,6 +60380,7 @@ var List = _materialUi2.default.List;
 var ListItem = _materialUi2.default.ListItem;
 var ListDivider = _materialUi2.default.ListDivider;
 var FontIcon = _materialUi2.default.FontIcon;
+var FlatButton = _materialUi2.default.FlatButton;
 
 var SelectedImage = _react2.default.createClass({
   displayName: 'SelectedImage',
@@ -60360,21 +60391,23 @@ var SelectedImage = _react2.default.createClass({
     this.props.history.pushState(null, "/devices/:groupId/:filters", { groupId: 1, filters: filters }, null);
   },
   _clickImageSchedule: function _clickImageSchedule() {
-    this.props.openSchedule("schedule", this.props.selected);
+    this.props.openSchedule("schedule", this.props.image);
   },
   render: function render() {
     var info = { name: "-", tags: ['-'], model: "-", build_date: "-", upload_date: "-", size: "-", checksum: "-", devices: "-" };
-    if (this.props.selected) {
-      for (var key in this.props.selected) {
-        info[key] = this.props.selected[key];
+    if (this.props.image) {
+      for (var key in this.props.image) {
+        if (this.props.image[key] != null) {
+          info[key] = this.props.image[key];
+        };
         if (key.indexOf("date") !== -1) {
-          info[key] = _react2.default.createElement(_reactTime2.default, { style: { position: "relative", top: "4" }, value: this.props.selected[key], format: 'YYYY/MM/DD HH:mm' });
+          info[key] = _react2.default.createElement(_reactTime2.default, { style: { position: "relative", top: "4" }, value: this.props.image[key], format: 'YYYY/MM/DD HH:mm' });
         }
       }
     }
     return _react2.default.createElement(
       'div',
-      { id: 'imageInfo', className: this.props.selected ? null : "muted" },
+      { id: 'imageInfo', className: this.props.image.name == null ? "muted" : null },
       _react2.default.createElement(
         'h3',
         null,
@@ -60390,7 +60423,7 @@ var SelectedImage = _react2.default.createClass({
           _react2.default.createElement(ListDivider, null),
           _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Tags', secondaryText: info.tags.join(', ') }),
           _react2.default.createElement(ListDivider, null),
-          _react2.default.createElement(ListItem, { disabled: this.props.selected ? false : true, primaryText: 'Device type', secondaryText: info.model, onClick: this._handleLinkClick.bind(null, info.model) }),
+          _react2.default.createElement(ListItem, { disabled: this.props.image.model ? false : true, primaryText: 'Device type', secondaryText: info.model, onClick: this._handleLinkClick.bind(null, info.model) }),
           _react2.default.createElement(ListDivider, null)
         )
       ),
@@ -60422,6 +60455,19 @@ var SelectedImage = _react2.default.createClass({
       ),
       _react2.default.createElement(
         'div',
+        { className: 'float-right' },
+        _react2.default.createElement(
+          FlatButton,
+          { disabled: !this.props.image.name, label: 'Edit image details', onClick: this.props.editImage.bind(null, "schedule", this.props.image) },
+          _react2.default.createElement(
+            FontIcon,
+            { style: this.props.buttonStyle, className: 'material-icons' },
+            'edit'
+          )
+        )
+      ),
+      _react2.default.createElement(
+        'div',
         { className: 'margin-top' },
         _react2.default.createElement(
           'div',
@@ -60444,7 +60490,7 @@ var SelectedImage = _react2.default.createClass({
             List,
             null,
             _react2.default.createElement(ListItem, {
-              disabled: this.props.selected ? false : true,
+              disabled: this.props.image.name ? false : true,
               primaryText: 'Schedule update',
               secondaryText: 'Create an update with this image',
               onClick: this._clickImageSchedule,

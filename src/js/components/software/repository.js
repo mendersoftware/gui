@@ -36,23 +36,23 @@ var tags = [];
 var Repository = React.createClass({
   getInitialState: function() {
     return {
-      image:null,
+      image: {
+        name: null,
+        description: null
+      },
       sortCol: "name",
       sortDown: true,
       searchTerm: null,
       upload: false,
-      schedule: false
+      schedule: false,
+      popupLabel: "Upload a new image"
     };
   },
 
   _handleFieldChange: function(field, e) {
     newState[field] = e.target.value;
-    this.setState({newImage: newState});
   },
   _openSchedule: function(ref, image) {
-    if (image) {
-      this.setState({image: image, imageVal:image});
-    }
     this.dialogOpen(ref);
   },
   dialogOpen: function (ref) {
@@ -78,13 +78,13 @@ var Repository = React.createClass({
   },
   _onUploadSubmit: function() {
     //update build date, upload date, checksum, size
-    var newImage = this.state.newImage;
-    newImage.build_date = new Date().getTime();
-    newImage.upload_date = new Date().getTime();
-    newImage.checksum = "b411936863d0e245292bb81a60189c7ffd95dbd3723c718e2a1694f944bd91a3";
-    newImage.size = "12.6 MB";
+   
+    newState.build_date = new Date().getTime();
+    newState.upload_date = new Date().getTime();
+    newState.checksum = "b411936863d0e245292bb81a60189c7ffd95dbd3723c718e2a1694f944bd91a3";
+    newState.size = "12.6 MB";
 
-    AppActions.uploadImage(this.state.newImage);
+    AppActions.uploadImage(newState);
     this.refs['upload'].dismiss();
   },
   _updateParams: function(val, attr) {
@@ -116,9 +116,11 @@ var Repository = React.createClass({
     this.setState({searchTerm: term}); // needed to force re-render
   },
   handleDelete: function(i) {
-    var tags = this.state.tags;
     tags.splice(i, 1);
-    this.setState({tags: tags});
+    newState.tags = [];
+    for (var i in tags) {
+      newState.tags.push(tags[i].text);
+    }
   },
   handleAddition: function(tag) {
     tags.push({
@@ -130,16 +132,27 @@ var Repository = React.createClass({
     for (var i in tags) {
       newState.tags.push(tags[i].text);
     }
-
-    this.setState({newImage: newState});
   },
   handleDrag: function(tag, currPos, newPos) {
 
   },
+  _openUpload: function(ref, image) {
+    if (image) {
+      this.setState({popupLabel: "Edit image details"});
+      newState = image;
+    } else {
+      newState = {model: "Acme Model 1", tags: []};
+      this.setState({image: newState, popupLabel: "Upload a new image"});
+    }
+    tags = [];
+    for (var i in newState.tags) {
+      tags.push({id:i, text:newState.tags[i]});
+    }
+    this.dialogOpen('upload');
+  },
   render: function() {
     var software = this.props.software;
-
-
+    var image = this.state.image;
     if (this.refs.search) {
       var filters = ['name', 'model', 'tags'];
       software = software.filter(this.refs.search.filter(filters));
@@ -165,7 +178,7 @@ var Repository = React.createClass({
       </div>,
       <RaisedButton
         key="submit"
-        label="Upload image"
+        label="Save image"
         primary={true}
         onClick={this._onUploadSubmit} />
     ];
@@ -191,7 +204,7 @@ var Repository = React.createClass({
     }
 
     var styles = {
-      flatButtonIcon: {
+      buttonIcon: {
         height: '100%',
         display: 'inline-block',
         verticalAlign: 'middle',
@@ -200,6 +213,17 @@ var Repository = React.createClass({
         lineHeight: '36px',
         marginRight: "-6",
         color:"#ffffff",
+        fontSize:'16'
+      },
+      flatButtonIcon: {
+        height: '100%',
+        display: 'inline-block',
+        verticalAlign: 'middle',
+        float: 'left',
+        paddingLeft: '12px',
+        lineHeight: '36px',
+        marginRight: "-6",
+        color:"rgba(0,0,0,0.8)",
         fontSize:'16'
       },
       sortIcon: {
@@ -244,19 +268,19 @@ var Repository = React.createClass({
 
         <div>
           <div className="float-right">
-            <RaisedButton key="file_upload" onClick={this.dialogOpen.bind(null, 'upload')} label="Upload new image" labelPosition="after" secondary={true}>
-              <FontIcon style={styles.flatButtonIcon} className="material-icons">file_upload</FontIcon>
+            <RaisedButton key="file_upload" onClick={this._openUpload.bind(null,"upload", null)} label="Upload image file" labelPosition="after" secondary={true}>
+              <FontIcon style={styles.buttonIcon} className="material-icons">file_upload</FontIcon>
             </RaisedButton>
           </div>
 
           <div style={{height:"16", marginTop:"10"}} />
  
-          <SelectedImage selected={this.state.image} openSchedule={this._openSchedule} />
+          <SelectedImage editImage={this._openUpload} buttonStyle={styles.flatButtonIcon} image={this.state.image} openSchedule={this._openSchedule} />
         </div>
         <Dialog
           ref="upload"
           open={this.state.upload}
-          title="Upload a new image"
+          title={this.state.popupLabel}
           autoDetectWindowHeight={true}
           autoScrollBodyContent={true}
           actions={uploadActions}
@@ -265,15 +289,19 @@ var Repository = React.createClass({
             <form>
 
               <TextField
+                defaultValue={image.name}
+                disabled={image.id}
                 hintText="Identifier"
                 floatingLabelText="Identifier" 
                 onChange={this._handleFieldChange.bind(null, 'name')}
                 errorStyle={{color: "rgb(171, 16, 0)"}} />
 
-              <p><input type="file" /></p>
+              <p className={image ? "hidden" : null}><input type="file" /></p>
 
               <TextField
                 value="Acme Model 1"
+                disabled={true}
+                style={{display:"block"}}
                 floatingLabelText="Device type compatibility"
                 onChange={this._handleFieldChange.bind(null, 'model')} 
                 errorStyle={{color: "rgb(171, 16, 0)"}} />
@@ -284,7 +312,8 @@ var Repository = React.createClass({
                 multiLine={true}
                 style={{display:"block"}}
                 onChange={this._handleFieldChange.bind(null, 'description')}
-                errorStyle={{color: "rgb(171, 16, 0)"}} />
+                errorStyle={{color: "rgb(171, 16, 0)"}}
+                defaultValue={image.description} />
 
               <div className="tagContainer">
                 <span className="inputHeader">Tags</span>

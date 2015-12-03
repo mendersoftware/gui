@@ -9,6 +9,7 @@ var List = mui.List;
 var ListItem = mui.ListItem;
 var ListDivider = mui.ListDivider;
 var FontIcon = mui.FontIcon;
+var FlatButton = mui.FlatButton;
 
 
 var SelectedImage = React.createClass({
@@ -18,22 +19,22 @@ var SelectedImage = React.createClass({
     this.props.history.pushState(null, "/devices/:groupId/:filters", {groupId:1, filters: filters}, null);
   },
   _clickImageSchedule: function() {
-    this.props.openSchedule("schedule", this.props.selected);
+    this.props.openSchedule("schedule", this.props.image);
   },
   render: function() {
     var info = {name: "-", tags: ['-'], model: "-", build_date: "-", upload_date: "-", size: "-", checksum: "-", devices: "-"};
-    if (this.props.selected) {
-      for (var key in this.props.selected) {
-        info[key] = this.props.selected[key];
+    if (this.props.image) {
+      for (var key in this.props.image) {
+        if (this.props.image[key] != null) { info[key] = this.props.image[key] };
         if (key.indexOf("date")!==-1) {
           info[key] = (
-            <Time style={{position:"relative", top:"4"}} value={this.props.selected[key]} format="YYYY/MM/DD HH:mm" />
+            <Time style={{position:"relative", top:"4"}} value={this.props.image[key]} format="YYYY/MM/DD HH:mm" />
           )
         }
       }
     }
     return (
-      <div id="imageInfo" className={this.props.selected ? null : "muted"}>
+      <div id="imageInfo" className={this.props.image.name == null ? "muted" : null}>
         <h3>Image details</h3>
         <div className="report-list">
           <List>
@@ -41,7 +42,7 @@ var SelectedImage = React.createClass({
             <ListDivider />
             <ListItem disabled={true} primaryText="Tags" secondaryText={info.tags.join(', ')} />
             <ListDivider />
-            <ListItem disabled={this.props.selected ? false : true} primaryText="Device type" secondaryText={info.model} onClick={this._handleLinkClick.bind(null, info.model)} />
+            <ListItem disabled={this.props.image.model ? false : true} primaryText="Device type" secondaryText={info.model} onClick={this._handleLinkClick.bind(null, info.model)} />
             <ListDivider />
           </List>
         </div>
@@ -63,6 +64,11 @@ var SelectedImage = React.createClass({
             <ListDivider />
           </List>
         </div>
+        <div className="float-right">
+          <FlatButton disabled={!this.props.image.name} label="Edit image details" onClick={this.props.editImage.bind(null, "schedule", this.props.image)}>
+            <FontIcon style={this.props.buttonStyle} className="material-icons">edit</FontIcon>
+          </FlatButton>
+        </div>
         <div className="margin-top">
           <div className="report-list" style={{padding:"16", width:"560", verticalAlign:"top"}}>
             <span style={{fontSize:"16", color:"rgba(0,0,0,0.8)"}}>Description</span>
@@ -71,7 +77,7 @@ var SelectedImage = React.createClass({
           <div className="report-list" style={{width:"320"}}>
             <List>
               <ListItem
-                disabled={this.props.selected ? false : true}
+                disabled={this.props.image.name ? false : true}
                 primaryText="Schedule update"
                 secondaryText="Create an update with this image"
                 onClick={this._clickImageSchedule}
