@@ -208,6 +208,34 @@ span.length {
   right: 30px;
   top: 30px;
 }
+.tableSearch input,
+.tableSearch input:focus {
+  outline: none;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  border-bottom: solid 1px #e0e0e0;
+  padding: 7px 0;
+  font-size: 16px;
+  font-family: Lato, sans-serif;
+  color: rgba(0, 0, 0, 0.8);
+}
+.tableSearch input::-webkit-input-placeholder,
+.tableSearch input:focus::-webkit-input-placeholder {
+  color: rgba(0, 0, 0, 0.3);
+}
+.tableSearch input:-moz-placeholder,
+.tableSearch input:focus:-moz-placeholder {
+  color: rgba(0, 0, 0, 0.3);
+}
+.tableSearch input::-moz-placeholder,
+.tableSearch input:focus::-moz-placeholder {
+  color: rgba(0, 0, 0, 0.3);
+}
+.tableSearch input:-ms-input-placeholder,
+.tableSearch input:focus:-ms-input-placeholder {
+  color: rgba(0, 0, 0, 0.3);
+}
 /* report view */
 .report-list {
   display: inline-block;
