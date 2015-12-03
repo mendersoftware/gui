@@ -59930,6 +59930,8 @@ var _materialUi2 = _interopRequireDefault(_materialUi);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+var update = require('react-addons-update');
+
 var ReactTags = require('react-tag-input').WithContext;
 
 // material ui
@@ -59949,6 +59951,7 @@ var FontIcon = _materialUi2.default.FontIcon;
 
 var newState = { model: "Acme Model 1", tags: [] };
 var tags = [];
+var software = [];
 
 var Repository = _react2.default.createClass({
   displayName: 'Repository',
@@ -60012,7 +60015,7 @@ var Repository = _react2.default.createClass({
     this.setState(tmp);
   },
   _onRowSelection: function _onRowSelection(rows) {
-    var image = this.props.software[rows[0]];
+    var image = software[rows[0]];
     this.setState({ image: image });
   },
   _sortColumn: function _sortColumn(col) {
@@ -60031,7 +60034,7 @@ var Repository = _react2.default.createClass({
     _appActions2.default.sortTable("_softwareRepo", col, direction);
   },
   searchUpdated: function searchUpdated(term) {
-    this.setState({ searchTerm: term }); // needed to force re-render
+    this.setState({ searchTerm: term, image: {} }); // needed to force re-render
   },
   handleDelete: function handleDelete(i) {
     tags.splice(i, 1);
@@ -60067,10 +60070,21 @@ var Repository = _react2.default.createClass({
     this.dialogOpen('upload');
   },
   render: function render() {
-    var software = this.props.software;
+
+    // copy array so as not to alter props
+    for (var i in this.props.software) {
+      var replace = this.props.software[i].tags.join(', ');
+      software[i] = update(this.props.software[i], {
+        'tags': {
+          $set: replace
+        }
+      });
+    }
+
     var image = this.state.image;
+
     if (this.refs.search) {
-      var filters = ['name', 'model', 'tags'];
+      var filters = ['name', 'model', 'tags', 'description'];
       software = software.filter(this.refs.search.filter(filters));
     }
     var groups = this.props.groups;
@@ -60091,7 +60105,7 @@ var Repository = _react2.default.createClass({
         _react2.default.createElement(
           TableRowColumn,
           null,
-          pkg.tags.join(", ")
+          pkg.tags
         ),
         _react2.default.createElement(
           TableRowColumn,
@@ -60351,7 +60365,7 @@ var Repository = _react2.default.createClass({
 
 module.exports = Repository;
 
-},{"../../actions/app-actions":519,"../../stores/app-store":550,"../updates/scheduleform":544,"./selectedimage.js":535,"./updatebutton.js":537,"material-ui":170,"react":515,"react-router":340,"react-search-input":345,"react-tag-input":348,"react-time":353}],535:[function(require,module,exports){
+},{"../../actions/app-actions":519,"../../stores/app-store":550,"../updates/scheduleform":544,"./selectedimage.js":535,"./updatebutton.js":537,"material-ui":170,"react":515,"react-addons-update":288,"react-router":340,"react-search-input":345,"react-tag-input":348,"react-time":353}],535:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -60420,7 +60434,7 @@ var SelectedImage = _react2.default.createClass({
           null,
           _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Software', secondaryText: info.name }),
           _react2.default.createElement(ListDivider, null),
-          _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Tags', secondaryText: info.tags.join(', ') }),
+          _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Tags', secondaryText: info.tags }),
           _react2.default.createElement(ListDivider, null),
           _react2.default.createElement(ListItem, { disabled: this.props.image.model ? false : true, primaryText: 'Device type', secondaryText: info.model, onClick: this._handleLinkClick.bind(null, info.model) }),
           _react2.default.createElement(ListDivider, null)

@@ -3,6 +3,7 @@ import Time from 'react-time';
 import AppStore from '../../stores/app-store';
 import AppActions from '../../actions/app-actions';
 import ScheduleForm from '../updates/scheduleform';
+var update = require('react-addons-update');
 
 
 import SearchInput from 'react-search-input';
@@ -32,6 +33,7 @@ var FontIcon = mui.FontIcon;
 
 var newState = {model: "Acme Model 1", tags: []};
 var tags = [];
+var software = [];
 
 var Repository = React.createClass({
   getInitialState: function() {
@@ -93,7 +95,7 @@ var Repository = React.createClass({
     this.setState(tmp);
   },
   _onRowSelection: function(rows) {
-    var image = this.props.software[rows[0]];
+    var image = software[rows[0]];
     this.setState({image:image});
   },
   _sortColumn: function(col) {
@@ -112,7 +114,7 @@ var Repository = React.createClass({
     AppActions.sortTable("_softwareRepo", col, direction);
   },
   searchUpdated: function(term) {
-    this.setState({searchTerm: term}); // needed to force re-render
+    this.setState({searchTerm: term, image: {}}); // needed to force re-render
   },
   handleDelete: function(i) {
     tags.splice(i, 1);
@@ -150,10 +152,21 @@ var Repository = React.createClass({
     this.dialogOpen('upload');
   },
   render: function() {
-    var software = this.props.software;
+
+    // copy array so as not to alter props
+    for (var i in this.props.software) {
+      var replace = this.props.software[i].tags.join(', ');
+      software[i] = update(this.props.software[i], {
+        'tags': {
+          $set: replace
+        }
+      });
+    }
+    
     var image = this.state.image;
+    
     if (this.refs.search) {
-      var filters = ['name', 'model', 'tags'];
+      var filters = ['name', 'model', 'tags', 'description'];
       software = software.filter(this.refs.search.filter(filters));
     }
     var groups = this.props.groups;
@@ -162,7 +175,7 @@ var Repository = React.createClass({
         <TableRow key={index}>
           <TableRowColumn>{pkg.name}</TableRowColumn>
           <TableRowColumn>{pkg.model}</TableRowColumn>
-          <TableRowColumn>{pkg.tags.join(", ")}</TableRowColumn>
+          <TableRowColumn>{pkg.tags}</TableRowColumn>
           <TableRowColumn><Time value={pkg.build_date} format="YYYY/MM/DD HH:mm" /></TableRowColumn>
           <TableRowColumn>{pkg.devices}</TableRowColumn>
         </TableRow>
