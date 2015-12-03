@@ -60002,9 +60002,8 @@ var Repository = _react2.default.createClass({
     newState.upload_date = new Date().getTime();
     newState.checksum = "b411936863d0e245292bb81a60189c7ffd95dbd3723c718e2a1694f944bd91a3";
     newState.size = "12.6 MB";
-
     _appActions2.default.uploadImage(newState);
-    this.refs['upload'].dismiss();
+    this.dialogDismiss('upload');
   },
   _updateParams: function _updateParams(val, attr) {
     // updating params from child schedule form
@@ -60293,14 +60292,14 @@ var Repository = _react2.default.createClass({
             null,
             _react2.default.createElement(TextField, {
               defaultValue: image.name,
-              disabled: image.id,
+              disabled: image.name ? true : false,
               hintText: 'Identifier',
               floatingLabelText: 'Identifier',
               onChange: this._handleFieldChange.bind(null, 'name'),
               errorStyle: { color: "rgb(171, 16, 0)" } }),
             _react2.default.createElement(
               'p',
-              { className: image ? "hidden" : null },
+              { className: image.name ? "hidden" : null },
               _react2.default.createElement('input', { type: 'file' })
             ),
             _react2.default.createElement(TextField, {
@@ -62497,8 +62496,12 @@ function discoverSoftware() {
 }
 
 function _uploadImage(image) {
-  image.id = _softwareRepo.length + 1;
-  _softwareRepo.push(image);
+  if (image.id) {
+    _softwareRepo[findWithAttr(_softwareRepo, "id", image.id)] = image;
+  } else {
+    image.id = _softwareRepo.length + 1;
+    _softwareRepo.push(image);
+  }
 }
 
 // UPDATES

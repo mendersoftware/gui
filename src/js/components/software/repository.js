@@ -83,9 +83,8 @@ var Repository = React.createClass({
     newState.upload_date = new Date().getTime();
     newState.checksum = "b411936863d0e245292bb81a60189c7ffd95dbd3723c718e2a1694f944bd91a3";
     newState.size = "12.6 MB";
-
     AppActions.uploadImage(newState);
-    this.refs['upload'].dismiss();
+    this.dialogDismiss('upload');
   },
   _updateParams: function(val, attr) {
     // updating params from child schedule form
@@ -290,13 +289,13 @@ var Repository = React.createClass({
 
               <TextField
                 defaultValue={image.name}
-                disabled={image.id}
+                disabled={image.name ? true : false}
                 hintText="Identifier"
                 floatingLabelText="Identifier" 
                 onChange={this._handleFieldChange.bind(null, 'name')}
                 errorStyle={{color: "rgb(171, 16, 0)"}} />
 
-              <p className={image ? "hidden" : null}><input type="file" /></p>
+              <p className={image.name ? "hidden" : null}><input type="file" /></p>
 
               <TextField
                 value="Acme Model 1"

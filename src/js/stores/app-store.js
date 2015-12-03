@@ -393,10 +393,13 @@ function discoverSoftware() {
 }
 
 function _uploadImage(image) {
-  image.id = _softwareRepo.length+1;
-  _softwareRepo.push(image);
+  if (image.id) {
+    _softwareRepo[findWithAttr(_softwareRepo, "id", image.id)] = image;
+  } else {
+    image.id = _softwareRepo.length+1;
+    _softwareRepo.push(image);
+  }
 }
-
 
 
 // UPDATES
