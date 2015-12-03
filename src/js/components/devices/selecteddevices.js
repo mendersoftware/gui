@@ -195,12 +195,14 @@ var SelectedDevices = React.createClass({
               <ListDivider />
               <ListItem disabled={true} primaryText="Architecture" secondaryText={this.props.selected[0].arch} />
               <ListDivider />
-              <ListItem disabled={true} primaryText="Groups" secondaryText={this._getGroupNames(this.props.selected[0].groups).join(', ')} />
+              <ListItem disabled={true} primaryText="Groups" secondaryText={this.props.selected[0].tags.join(', ')} />
               <ListDivider />
             </List>
           </div>
           <div className="report-list">
             <List>
+              <ListItem disabled={true} primaryText="Tags" secondaryText={this._getGroupNames(this.props.selected[0].groups).join(', ')} />
+              <ListDivider />
               <ListItem
                 primaryText="Schedule update"
                 secondaryText="Click to update this device"

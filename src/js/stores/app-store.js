@@ -14,7 +14,8 @@ var _attributes = {
   model: "Device type",
   arch: "Architecture",
   status: "Status",
-  software_version: "Current software"
+  software_version: "Current software",
+  tags: "Tags"
 }
 
 /* TEMP LOCAL GROUPS */
