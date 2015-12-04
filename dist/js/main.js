@@ -60085,7 +60085,6 @@ var Repository = _react2.default.createClass({
       this.setState({ image: newState, popupLabel: "Upload a new image" });
     }
     tags = [];
-    console.log(newState.tags);
     for (var i in newState.tags) {
       tags.push({ id: i, text: newState.tags[i] });
     }
