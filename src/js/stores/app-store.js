@@ -64,7 +64,8 @@ var _alldevices = [
     'arch': 'armv7',
     'status': 'Up',
     'software_version': 'Version 1.1',
-    'groups': [1,2]
+    'groups': [1,2],
+    'tags': []
   },
   {
     'id': 2,
@@ -73,7 +74,8 @@ var _alldevices = [
     'arch': 'armv7',
     'status': 'Up',
     'software_version': 'Version 1.1',
-    'groups': [1,2]
+    'groups': [1,2],
+    'tags': []
   },
   {
     'id': 3,
@@ -82,7 +84,8 @@ var _alldevices = [
     'arch': 'armv7',
     'status': 'Up',
     'software_version': 'Version 1.1',
-    'groups': [1,2]
+    'groups': [1,2],
+    'tags': []
   },
   {
     'id': 4,
@@ -91,7 +94,8 @@ var _alldevices = [
     'arch': 'armv7',
     'status': 'Up',
     'software_version': 'Version 1.0',
-    'groups': [1,3]
+    'groups': [1,3],
+    'tags': []
   },
   {
     'id': 5,
@@ -100,7 +104,8 @@ var _alldevices = [
     'arch': 'armv7',
     'status': 'Down',
     'software_version': 'Version 1.0',
-    'groups': [1,3]
+    'groups': [1,3],
+    'tags': []
   },
   {
     'id': 6,
@@ -109,7 +114,8 @@ var _alldevices = [
     'arch': 'armv7',
     'status': 'Down',
     'software_version': 'Version 0.3',
-    'groups': [1,3]
+    'groups': [1,3],
+    'tags': []
   },
   {
     'id': 7,
@@ -118,7 +124,8 @@ var _alldevices = [
     'arch': 'armv7',
     'status': 'Up',
     'software_version': 'Version 1.0',
-    'groups': [1,4]
+    'groups': [1,4],
+    'tags': []
   },
   {
     'id': 8,
@@ -127,7 +134,8 @@ var _alldevices = [
     'arch': 'armv7',
     'status': 'Up',
     'software_version': 'Version 1.0',
-    'groups': [1,4]
+    'groups': [1,4],
+    'tags': []
   },
   {
     'id': 9,
@@ -136,7 +144,8 @@ var _alldevices = [
     'arch': 'arm64',
     'status': 'Up',
     'software_version': 'Version 1.0 Wifi',
-    'groups': [1,5]
+    'groups': [1,5],
+    'tags': []
   },
   {
     'id': 10,
@@ -145,7 +154,8 @@ var _alldevices = [
     'arch': 'arm64',
     'status': 'Up',
     'software_version': 'Version 1.0 Wifi',
-    'groups': [1]
+    'groups': [1],
+    'tags': []
   },
    {
     'id': 11,
@@ -154,7 +164,8 @@ var _alldevices = [
     'arch': 'arm64',
     'status': 'Up',
     'software_version': 'Version 1.0 Wifi',
-    'groups': [1]
+    'groups': [1],
+    'tags': []
   },
 ];
 
@@ -226,8 +237,17 @@ function _matchFilters(device) {
   var match = true;
   for (var i=0; i<_filters.length; i++) {
     if (_filters[i].key && _filters[i].value) {
-      if (device[_filters[i].key].toLowerCase().indexOf(_filters[i].value.toLowerCase()) == -1) {
-        match = false;
+      console.log(device[_filters[i].key], device);
+      if (device[_filters[i].key] instanceof Array) {
+        // array
+         if (device[_filters[i].key].join(', ').toLowerCase().indexOf(_filters[i].value.toLowerCase()) == -1) {
+          match = false;
+        }
+      } else {
+        // string
+        if (device[_filters[i].key].toLowerCase().indexOf(_filters[i].value.toLowerCase()) == -1) {
+          match = false;
+        }
       }
     }
   }

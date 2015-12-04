@@ -286,6 +286,7 @@ hr.table-divider {
   color: #679BA5;
   display: inline-block;
   margin-top: 5px;
+  font-size: 13px;
 }
 .ReactTags__remove {
   cursor: pointer;

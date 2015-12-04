@@ -40,7 +40,7 @@ var SelectedImage = React.createClass({
           <List>
             <ListItem disabled={true} primaryText="Software" secondaryText={info.name} />
             <ListDivider />
-            <ListItem disabled={true} primaryText="Tags" secondaryText={info.tags} />
+            <ListItem disabled={true} primaryText="Tags" secondaryText={info.tags.join(", ")} />
             <ListDivider />
             <ListItem disabled={this.props.image.model ? false : true} primaryText="Device type" secondaryText={info.model} onClick={this._handleLinkClick.bind(null, info.model)} />
             <ListDivider />

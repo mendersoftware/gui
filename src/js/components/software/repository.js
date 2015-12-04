@@ -95,7 +95,8 @@ var Repository = React.createClass({
     this.setState(tmp);
   },
   _onRowSelection: function(rows) {
-    var image = software[rows[0]];
+    var imageId = software[rows[0]].id;
+    var image = AppStore.getSoftwareImage("id", imageId);
     this.setState({image:image});
   },
   _sortColumn: function(col) {
@@ -146,6 +147,7 @@ var Repository = React.createClass({
       this.setState({image: newState, popupLabel: "Upload a new image"});
     }
     tags = [];
+    console.log(newState.tags);
     for (var i in newState.tags) {
       tags.push({id:i, text:newState.tags[i]});
     }

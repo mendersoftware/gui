@@ -15,6 +15,9 @@ var ListItem = mui.ListItem;
 var ListDivider = mui.ListDivider;
 var FontIcon = mui.FontIcon;
 
+var ReactTags = require('react-tag-input').WithContext;
+var tags = [{id:0, text: "tmp"}];
+
 var addSelection = {};
 function getGroups() {
   var copy = AppStore.getGroups().slice();
@@ -144,6 +147,19 @@ var SelectedDevices = React.createClass({
     this.dialogDismiss('schedule');
   },
 
+  handleDelete: function(i) {
+    tags.splice(i, 1);
+  },
+  handleAddition: function(tag) {
+    tags.push({
+        id: tags.length + 1,
+        text: tag
+    });
+  },
+  handleDrag: function(tag, currPos, newPos) {
+
+  },
+
   render: function() {
     var hideInfo = {display: "none"};
     var deviceInfo ='';
@@ -176,6 +192,12 @@ var SelectedDevices = React.createClass({
     }
 
     if (this.props.selected.length === 1) {
+      var tagInput = (
+        <ReactTags tags={tags} 
+          handleDelete={this.handleDelete}  
+          handleAddition={this.handleAddition}
+          handleDrag={this.handleDrag} />
+      );
       hideInfo = {display: "block"};
       deviceInfo = (
         <div>
@@ -195,13 +217,13 @@ var SelectedDevices = React.createClass({
               <ListDivider />
               <ListItem disabled={true} primaryText="Architecture" secondaryText={this.props.selected[0].arch} />
               <ListDivider />
-              <ListItem disabled={true} primaryText="Groups" secondaryText={this.props.selected[0].tags.join(', ')} />
+              <ListItem disabled={true} primaryText="Groups" secondaryText={this._getGroupNames(this.props.selected[0].groups).join(', ')} />
               <ListDivider />
             </List>
           </div>
           <div className="report-list">
             <List>
-              <ListItem disabled={true} primaryText="Tags" secondaryText={this._getGroupNames(this.props.selected[0].groups).join(', ')} />
+              <ListItem disabled={true} primaryText="Tags" secondaryText={this.props.selected[0].tags.join(', ')} />
               <ListDivider />
               <ListItem
                 primaryText="Schedule update"
