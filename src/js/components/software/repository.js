@@ -330,7 +330,8 @@ var Repository = React.createClass({
 
               <div className="tagContainer">
                 <span className="inputHeader">Tags</span>
-                 <ReactTags tags={tags} 
+                 <ReactTags tags={tags}
+                    autofocus={false}
                     handleDelete={this.handleDelete}
                     handleAddition={this.handleAddition}
                     handleDrag={this.handleDrag} />

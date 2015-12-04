@@ -51,7 +51,7 @@ var Groups = React.createClass({
   },
   render: function() {
     var createBtn = (
-      <FontIcon className="material-icons">create</FontIcon>
+      <FontIcon className="material-icons">add</FontIcon>
     );
     var createActions = [
       <div style={{marginRight:"10", display:"inline-block"}}>

@@ -145,7 +145,7 @@ var _alldevices = [
     'status': 'Up',
     'software_version': 'Version 1.0 Wifi',
     'groups': [1,5],
-    'tags': []
+    'tags': ['wifi']
   },
   {
     'id': 10,
@@ -155,7 +155,7 @@ var _alldevices = [
     'status': 'Up',
     'software_version': 'Version 1.0 Wifi',
     'groups': [1],
-    'tags': []
+    'tags': ['wifi']
   },
    {
     'id': 11,
@@ -165,7 +165,7 @@ var _alldevices = [
     'status': 'Up',
     'software_version': 'Version 1.0 Wifi',
     'groups': [1],
-    'tags': []
+    'tags': ['wifi']
   },
 ];
 
@@ -223,6 +223,12 @@ function _getCurrentDevices(groupId) {
 
 function _sortDevices() {
   _currentDevices.sort(statusSort);
+}
+
+function _updateDeviceTags(id, tags) {
+  console.log(id, tags);
+  var index = findWithAttr(_alldevices, "id", id);
+  _alldevices[index].tags = tags;
 }
 
 function _updateFilters(filters) {
@@ -964,6 +970,9 @@ var AppStore = assign(EventEmitter.prototype, {
         break;
       case AppConstants.UPDATE_FILTERS:
         _updateFilters(payload.action.filters);
+        break;
+      case AppConstants.UPDATE_DEVICE_TAGS:
+        _updateDeviceTags(payload.action.id, payload.action.tags);
         break;
       case AppConstants.REMOVE_UPDATE:
         _removeUpdate(payload.action.id);

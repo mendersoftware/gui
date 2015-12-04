@@ -58013,6 +58013,14 @@ var AppActions = {
     });
   },
 
+  updateDeviceTags: function updateDeviceTags(id, tags) {
+    AppDispatcher.handleViewAction({
+      actionType: AppConstants.UPDATE_DEVICE_TAGS,
+      id: id,
+      tags: tags
+    });
+  },
+
   sortTable: function sortTable(table, column, direction) {
     AppDispatcher.handleViewAction({
       actionType: AppConstants.SORT_TABLE,
@@ -59308,7 +59316,7 @@ var Groups = _react2.default.createClass({
     var createBtn = _react2.default.createElement(
       FontIcon,
       { className: 'material-icons' },
-      'create'
+      'add'
     );
     var createActions = [_react2.default.createElement(
       'div',
@@ -59398,11 +59406,13 @@ var List = mui.List;
 var ListItem = mui.ListItem;
 var ListDivider = mui.ListDivider;
 var FontIcon = mui.FontIcon;
+var IconButton = mui.IconButton;
 
 var ReactTags = require('react-tag-input').WithContext;
-var tags = [{ id: 0, text: "tmp" }];
+var tagslist = [];
 
 var addSelection = {};
+
 function getGroups() {
   var copy = AppStore.getGroups().slice();
   return copy;
@@ -59417,7 +59427,8 @@ var SelectedDevices = _react2.default.createClass({
       selectedGroup: {
         payload: '',
         text: ''
-      }
+      },
+      tagEdit: false
     };
   },
   _onDismiss: function _onDismiss() {
@@ -59534,15 +59545,28 @@ var SelectedDevices = _react2.default.createClass({
   },
 
   handleDelete: function handleDelete(i) {
-    tags.splice(i, 1);
+    tagslist.splice(i, 1);
   },
   handleAddition: function handleAddition(tag) {
-    tags.push({
-      id: tags.length + 1,
+    tagslist.push({
+      id: tagslist.length + 1,
       text: tag
     });
   },
   handleDrag: function handleDrag(tag, currPos, newPos) {},
+  _clickedEdit: function _clickedEdit() {
+    if (this.state.tagEdit) {
+      var noIds = [];
+      for (var i in tagslist) {
+        noIds.push(tagslist[i].text);
+      }
+      console.log(noIds);
+
+      // save new tag data to device
+      AppActions.updateDeviceTags(this.props.selected[0].id, noIds);
+    }
+    this.setState({ tagEdit: !this.state.tagEdit });
+  },
 
   render: function render() {
     var hideInfo = { display: "none" };
@@ -59572,14 +59596,33 @@ var SelectedDevices = _react2.default.createClass({
         lineHeight: '36px',
         marginRight: "-6",
         color: "#fff"
+      },
+      editButton: {
+        color: "rgba(0, 0, 0, 0.54)",
+        fontSize: "20"
       }
     };
 
+    var editButton = _react2.default.createElement(
+      IconButton,
+      { iconStyle: styles.editButton, style: { top: "auto", bottom: "0" }, onClick: this._clickedEdit, iconClassName: 'material-icons' },
+      this.state.tagEdit ? "check" : "edit"
+    );
+
     if (this.props.selected.length === 1) {
-      var tagInput = _react2.default.createElement(ReactTags, { tags: tags,
+      tagslist = [];
+      for (var i in this.props.selected[0].tags) {
+        tagslist.push({ id: i, text: this.props.selected[0].tags[i] });
+      }
+
+      var tagInput = _react2.default.createElement(ReactTags, { tags: tagslist,
         handleDelete: this.handleDelete,
         handleAddition: this.handleAddition,
-        handleDrag: this.handleDrag });
+        handleDrag: this.handleDrag,
+        delimeters: [9, 13, 188] });
+
+      var tags = this.state.tagEdit ? tagInput : this.props.selected[0].tags.join(', ') || '-';
+
       hideInfo = { display: "block" };
       deviceInfo = _react2.default.createElement(
         'div',
@@ -59618,7 +59661,7 @@ var SelectedDevices = _react2.default.createClass({
           _react2.default.createElement(
             List,
             null,
-            _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Tags', secondaryText: this.props.selected[0].tags.join(', ') }),
+            _react2.default.createElement(ListItem, { rightIconButton: editButton, disabled: true, primaryText: 'Tags', secondaryText: tags }),
             _react2.default.createElement(ListDivider, null),
             _react2.default.createElement(ListItem, {
               primaryText: 'Schedule update',
@@ -60361,6 +60404,7 @@ var Repository = _react2.default.createClass({
                 'Tags'
               ),
               _react2.default.createElement(ReactTags, { tags: tags,
+                autofocus: false,
                 handleDelete: this.handleDelete,
                 handleAddition: this.handleAddition,
                 handleDrag: this.handleDrag })
@@ -62106,7 +62150,8 @@ module.exports = {
   SAVE_SCHEDULE: 'SAVE_SCHEDULE',
   UPDATE_FILTERS: 'UPDATE_FILTERS',
   REMOVE_UPDATE: 'REMOVE_UPDATE',
-  SORT_TABLE: 'SORT_TABLE'
+  SORT_TABLE: 'SORT_TABLE',
+  UPDATE_DEVICE_TAGS: 'UPDATE_DEVICE_TAGS'
 };
 
 },{}],548:[function(require,module,exports){
@@ -62298,7 +62343,7 @@ var _alldevices = [{
   'status': 'Up',
   'software_version': 'Version 1.0 Wifi',
   'groups': [1, 5],
-  'tags': []
+  'tags': ['wifi']
 }, {
   'id': 10,
   'name': 'Wifi002',
@@ -62307,7 +62352,7 @@ var _alldevices = [{
   'status': 'Up',
   'software_version': 'Version 1.0 Wifi',
   'groups': [1],
-  'tags': []
+  'tags': ['wifi']
 }, {
   'id': 11,
   'name': 'Wifi003',
@@ -62316,7 +62361,7 @@ var _alldevices = [{
   'status': 'Up',
   'software_version': 'Version 1.0 Wifi',
   'groups': [1],
-  'tags': []
+  'tags': ['wifi']
 }];
 
 _selectGroup(_groups[0].id);
@@ -62373,6 +62418,12 @@ function _getCurrentDevices(groupId) {
 
 function _sortDevices() {
   _currentDevices.sort(statusSort);
+}
+
+function _updateDeviceTags(id, tags) {
+  console.log(id, tags);
+  var index = findWithAttr(_alldevices, "id", id);
+  _alldevices[index].tags = tags;
 }
 
 function _updateFilters(filters) {
@@ -63060,6 +63111,9 @@ var AppStore = assign(EventEmitter.prototype, {
         break;
       case AppConstants.UPDATE_FILTERS:
         _updateFilters(payload.action.filters);
+        break;
+      case AppConstants.UPDATE_DEVICE_TAGS:
+        _updateDeviceTags(payload.action.id, payload.action.tags);
         break;
       case AppConstants.REMOVE_UPDATE:
         _removeUpdate(payload.action.id);

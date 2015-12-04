@@ -55,6 +55,14 @@ var AppActions = {
     })
   },
 
+  updateDeviceTags: function(id, tags) {
+    AppDispatcher.handleViewAction({
+      actionType: AppConstants.UPDATE_DEVICE_TAGS,
+      id: id,
+      tags: tags
+    })
+  },
+
   sortTable: function(table, column, direction) {
     AppDispatcher.handleViewAction({
       actionType: AppConstants.SORT_TABLE,

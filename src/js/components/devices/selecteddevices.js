@@ -14,11 +14,13 @@ var List = mui.List;
 var ListItem = mui.ListItem;
 var ListDivider = mui.ListDivider;
 var FontIcon = mui.FontIcon;
+var IconButton = mui.IconButton;
 
 var ReactTags = require('react-tag-input').WithContext;
-var tags = [{id:0, text: "tmp"}];
+var tagslist = [];
 
 var addSelection = {};
+
 function getGroups() {
   var copy = AppStore.getGroups().slice();
   return copy
@@ -31,7 +33,8 @@ var SelectedDevices = React.createClass({
       selectedGroup: {
         payload: '',
         text: ''
-      }
+      },
+      tagEdit: false,
     };
   },
   _onDismiss: function() {
@@ -148,16 +151,29 @@ var SelectedDevices = React.createClass({
   },
 
   handleDelete: function(i) {
-    tags.splice(i, 1);
+    tagslist.splice(i, 1);
   },
   handleAddition: function(tag) {
-    tags.push({
-        id: tags.length + 1,
+    tagslist.push({
+        id: tagslist.length + 1,
         text: tag
     });
   },
   handleDrag: function(tag, currPos, newPos) {
 
+  },
+  _clickedEdit: function() {
+    if (this.state.tagEdit) {
+      var noIds = [];
+      for (var i in tagslist) {
+        noIds.push(tagslist[i].text);
+      }
+      console.log(noIds);
+
+      // save new tag data to device
+      AppActions.updateDeviceTags(this.props.selected[0].id, noIds);
+    }
+    this.setState({tagEdit: !this.state.tagEdit});
   },
 
   render: function() {
@@ -189,15 +205,35 @@ var SelectedDevices = React.createClass({
         marginRight: "-6",
         color: "#fff"
       },
+      editButton: {
+        color: "rgba(0, 0, 0, 0.54)",
+        fontSize: "20" 
+      }
     }
 
+    var editButton = (
+      <IconButton iconStyle={styles.editButton} style={{top:"auto", bottom: "0"}} onClick={this._clickedEdit} iconClassName="material-icons">
+        {this.state.tagEdit ? "check" : "edit"}
+      </IconButton>
+    );
+
+
     if (this.props.selected.length === 1) {
+      tagslist = [];
+      for (var i in this.props.selected[0].tags) {
+        tagslist.push({id:i, text:this.props.selected[0].tags[i]});
+      }
+
       var tagInput = (
-        <ReactTags tags={tags} 
+        <ReactTags tags={tagslist} 
           handleDelete={this.handleDelete}  
           handleAddition={this.handleAddition}
-          handleDrag={this.handleDrag} />
+          handleDrag={this.handleDrag}
+          delimeters={[9, 13, 188]} />
       );
+     
+      var tags = this.state.tagEdit ? tagInput : this.props.selected[0].tags.join(', ') || '-';
+     
       hideInfo = {display: "block"};
       deviceInfo = (
         <div>
@@ -223,7 +259,7 @@ var SelectedDevices = React.createClass({
           </div>
           <div className="report-list">
             <List>
-              <ListItem disabled={true} primaryText="Tags" secondaryText={this.props.selected[0].tags.join(', ')} />
+              <ListItem rightIconButton={editButton} disabled={true} primaryText="Tags" secondaryText={tags} />
               <ListDivider />
               <ListItem
                 primaryText="Schedule update"
