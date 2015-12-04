@@ -62388,7 +62388,6 @@ function _matchFilters(device) {
   var match = true;
   for (var i = 0; i < _filters.length; i++) {
     if (_filters[i].key && _filters[i].value) {
-      console.log(device[_filters[i].key], device);
       if (device[_filters[i].key] instanceof Array) {
         // array
         if (device[_filters[i].key].join(', ').toLowerCase().indexOf(_filters[i].value.toLowerCase()) == -1) {
