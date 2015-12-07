@@ -57807,13 +57807,13 @@ var Dashboard = _react2.default.createClass({
         URIParams = params.id ? URIParams + "&id=" + params.id : URIParams;
         URIParams = encodeURIComponent(URIParams);
         //this.context.router.transitionTo("/updates/:tab/:params/", {tab:0, params:URIParams}, null);
-        this.context.history.pushState(null, '/updates/0/' + URIParams, null);
+        this.context.history.push('/updates/0/' + URIParams);
         break;
       case "devices":
         var filters = "status=" + params.status;
         filters = encodeURIComponent(filters);
         //this.context.router.transitionTo("/devices/:groupId/:filters", {groupId:1, filters: filters}, null);
-        this.context.history.pushState(null, '/devices/1/' + filters, null);
+        this.context.history.push('/devices/1/' + filters);
         break;
     }
   },
@@ -59471,7 +59471,7 @@ var Header = _react2.default.createClass({
     return this.props.history.isActive('/', null, true) ? '0' : this.props.history.isActive('/devices') ? '1' : this.props.history.isActive('/software') ? '2' : this.props.history.isActive('/updates') ? '3' : '0';
   },
   _handleTabActive: function _handleTabActive(tab) {
-    this.props.history.pushState(null, tab.props.route);
+    this.props.history.push(tab.props.route);
   },
   render: function render() {
     var tabHandler = this._handleTabActive;
@@ -60054,7 +60054,7 @@ var SelectedImage = _react2.default.createClass({
   _handleLinkClick: function _handleLinkClick(model) {
     var filters = "model=" + model;
     filters = encodeURIComponent(filters);
-    this.props.history.pushState(null, "/devices/:groupId/:filters", { groupId: 1, filters: filters }, null);
+    this.props.history.push(null, "/devices/:groupId/:filters", { groupId: 1, filters: filters }, null);
   },
   _clickImageSchedule: function _clickImageSchedule() {
     this.props.openSchedule("schedule", this.props.image);

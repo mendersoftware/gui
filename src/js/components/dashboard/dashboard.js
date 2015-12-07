@@ -28,13 +28,13 @@ var Dashboard = React.createClass({
         URIParams = params.id ? URIParams + "&id="+params.id : URIParams;
         URIParams = encodeURIComponent(URIParams);
         //this.context.router.transitionTo("/updates/:tab/:params/", {tab:0, params:URIParams}, null);
-        this.context.history.pushState(null, '/updates/0/'+URIParams, null);
+        this.context.history.push('/updates/0/'+URIParams);
         break;
       case "devices":
         var filters = "status="+params.status;
         filters = encodeURIComponent(filters);
         //this.context.router.transitionTo("/devices/:groupId/:filters", {groupId:1, filters: filters}, null);
-        this.context.history.pushState(null, '/devices/1/'+filters, null);
+        this.context.history.push('/devices/1/'+filters);
         break;
     }
   },

@@ -16,7 +16,7 @@ var SelectedImage = React.createClass({
   _handleLinkClick: function(model) {
     var filters = "model="+model;
     filters = encodeURIComponent(filters);
-    this.props.history.pushState(null, "/devices/:groupId/:filters", {groupId:1, filters: filters}, null);
+    this.props.history.push(null, "/devices/:groupId/:filters", {groupId:1, filters: filters}, null);
   },
   _clickImageSchedule: function() {
     this.props.openSchedule("schedule", this.props.image);

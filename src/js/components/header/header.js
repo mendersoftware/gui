@@ -51,7 +51,7 @@ var Header = React.createClass({
       this.props.history.isActive('/updates') ? '3' : '0';
   },
   _handleTabActive: function(tab) {
-    this.props.history.pushState(null, tab.props.route);
+    this.props.history.push(tab.props.route);
   },
   render: function() {
     var tabHandler = this._handleTabActive;

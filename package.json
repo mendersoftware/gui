@@ -15,7 +15,7 @@
     "gulp-less": "^3.0.3",
     "gulp-minify-css": "^1.2.1",
     "gulp-rename": "^1.2.2",
-    "history": "^1.13.1",
+    "history": "^1.14.0",
     "jstransformify": "^1.0.0",
     "material-ui": "^0.13.4",
     "moment": "^2.10.6",
