@@ -63,4 +63,4 @@ gulp.task('minify-css', function() {
 
 ## LICENSE
 
-[MIT](./LICENSE) © [Jonathan Pollack](https://github.com/murphydanger)
+[MIT](./LICENSE) © [Murphy Danger](https://github.com/murphydanger)
