@@ -59659,6 +59659,9 @@ var Repository = _react2.default.createClass({
     _appActions2.default.uploadImage(newState);
     this.dialogDismiss('upload');
   },
+  _uploadImage: function _uploadImage(image) {
+    _appActions2.default.uploadImage(image);
+  },
   _updateParams: function _updateParams(val, attr) {
     // updating params from child schedule form
     var tmp = {};
@@ -59938,7 +59941,7 @@ var Repository = _react2.default.createClass({
           )
         ),
         _react2.default.createElement('div', { style: { height: "16", marginTop: "10" } }),
-        _react2.default.createElement(_selectedimage2.default, { editImage: this._openUpload, buttonStyle: styles.flatButtonIcon, image: this.state.image, openSchedule: this._openSchedule })
+        _react2.default.createElement(_selectedimage2.default, { uploadImage: this._uploadImage, editImage: this._openUpload, buttonStyle: styles.flatButtonIcon, image: this.state.image, openSchedule: this._openSchedule })
       ),
       _react2.default.createElement(
         Dialog,
@@ -60047,17 +60050,61 @@ var ListItem = _materialUi2.default.ListItem;
 var ListDivider = _materialUi2.default.ListDivider;
 var FontIcon = _materialUi2.default.FontIcon;
 var FlatButton = _materialUi2.default.FlatButton;
+var IconButton = _materialUi2.default.IconButton;
+
+var ReactTags = require('react-tag-input').WithContext;
+var tagslist = [];
 
 var SelectedImage = _react2.default.createClass({
   displayName: 'SelectedImage',
 
+  getInitialState: function getInitialState() {
+    return {
+      tagEdit: false,
+      descEdit: false
+    };
+  },
   _handleLinkClick: function _handleLinkClick(model) {
     var filters = "model=" + model;
     filters = encodeURIComponent(filters);
-    this.props.history.push(null, "/devices/:groupId/:filters", { groupId: 1, filters: filters }, null);
+    this.props.history.push("/devices/:groupId/:filters", { groupId: 1, filters: filters }, null);
   },
   _clickImageSchedule: function _clickImageSchedule() {
     this.props.openSchedule("schedule", this.props.image);
+  },
+  handleDelete: function handleDelete(i) {
+    tagslist.splice(i, 1);
+  },
+  handleAddition: function handleAddition(tag) {
+    tagslist.push({
+      id: tagslist.length + 1,
+      text: tag
+    });
+  },
+  handleDrag: function handleDrag(tag, currPos, newPos) {},
+  _tagsEdit: function _tagsEdit(image) {
+    if (this.state.tagEdit) {
+      var noIds = [];
+      for (var i in tagslist) {
+        noIds.push(tagslist[i].text);
+      }
+
+      // save new tag data to image
+      image.tags = noIds;
+      this.props.uploadImage(image);
+
+      // hacky
+      var newimage = this.props.image;
+      newimage.tags = image.tags;
+    }
+    this.setState({ tagEdit: !this.state.tagEdit });
+  },
+  _initTagslist: function _initTagslist(list) {
+    for (var i in list) {
+      if (list[i] !== '-') {
+        tagslist.push({ id: i, text: list[i] });
+      }
+    }
   },
   render: function render() {
     var info = { name: "-", tags: ['-'], model: "-", build_date: "-", upload_date: "-", size: "-", checksum: "-", devices: "-" };
@@ -60071,6 +60118,34 @@ var SelectedImage = _react2.default.createClass({
         }
       }
     }
+    tagslist = [];
+    this._initTagslist(info.tags);
+
+    var styles = {
+      editButton: {
+        color: "rgba(0, 0, 0, 0.54)",
+        fontSize: "20"
+      }
+    };
+    var editButton = _react2.default.createElement(
+      IconButton,
+      { iconStyle: styles.editButton, style: { top: "auto", bottom: "0" }, onClick: this._tagsEdit.bind(null, info), iconClassName: 'material-icons' },
+      this.state.tagEdit ? "check" : "edit"
+    );
+    var editButtonDesc = _react2.default.createElement(
+      IconButton,
+      { iconStyle: styles.editButton, style: { position: "absolute", right: "0", bottom: "0" }, iconClassName: 'material-icons' },
+      this.state.descEdit ? "check" : "edit"
+    );
+
+    var tagInput = _react2.default.createElement(ReactTags, { tags: tagslist,
+      handleDelete: this.handleDelete,
+      handleAddition: this.handleAddition,
+      handleDrag: this.handleDrag,
+      delimeters: [9, 13, 188] });
+
+    var tags = this.state.tagEdit ? tagInput : info.tags.join(', ');
+
     return _react2.default.createElement(
       'div',
       { id: 'imageInfo', className: this.props.image.name == null ? "muted" : null },
@@ -60087,9 +60162,9 @@ var SelectedImage = _react2.default.createClass({
           null,
           _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Software', secondaryText: info.name }),
           _react2.default.createElement(ListDivider, null),
-          _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Tags', secondaryText: info.tags.join(", ") }),
-          _react2.default.createElement(ListDivider, null),
           _react2.default.createElement(ListItem, { disabled: this.props.image.model ? false : true, primaryText: 'Device type', secondaryText: info.model, onClick: this._handleLinkClick.bind(null, info.model) }),
+          _react2.default.createElement(ListDivider, null),
+          _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Size', secondaryText: info.size }),
           _react2.default.createElement(ListDivider, null)
         )
       ),
@@ -60103,7 +60178,7 @@ var SelectedImage = _react2.default.createClass({
           _react2.default.createElement(ListDivider, null),
           _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Date uploaded', secondaryText: info.upload_date }),
           _react2.default.createElement(ListDivider, null),
-          _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Size', secondaryText: info.size }),
+          _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Installed on devices', secondaryText: info.devices ? info.devices : "-" }),
           _react2.default.createElement(ListDivider, null)
         )
       ),
@@ -60113,31 +60188,19 @@ var SelectedImage = _react2.default.createClass({
         _react2.default.createElement(
           List,
           null,
-          _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Checksum', secondaryTextLines: 2, style: { wordWrap: "break-word" }, secondaryText: info.checksum }),
+          _react2.default.createElement(ListItem, { rightIconButton: editButton, disabled: true, primaryText: 'Tags', secondaryText: tags }),
           _react2.default.createElement(ListDivider, null),
-          _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Installed on devices', secondaryText: info.devices ? info.devices : "-" }),
+          _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Checksum', secondaryTextLines: 2, style: { wordWrap: "break-word" }, secondaryText: info.checksum }),
           _react2.default.createElement(ListDivider, null)
         )
       ),
-      _react2.default.createElement(
-        'div',
-        { className: 'float-right' },
-        _react2.default.createElement(
-          FlatButton,
-          { disabled: !this.props.image.name, label: 'Edit image details', onClick: this.props.editImage.bind(null, "schedule", this.props.image) },
-          _react2.default.createElement(
-            FontIcon,
-            { style: this.props.buttonStyle, className: 'material-icons' },
-            'edit'
-          )
-        )
-      ),
+      _react2.default.createElement('div', { className: 'float-right' }),
       _react2.default.createElement(
         'div',
         { className: 'margin-top' },
         _react2.default.createElement(
           'div',
-          { className: 'report-list', style: { padding: "16", width: "560", verticalAlign: "top" } },
+          { className: 'report-list', style: { padding: "16", width: "560", verticalAlign: "top", position: "relative" } },
           _react2.default.createElement(
             'span',
             { style: { fontSize: "16", color: "rgba(0,0,0,0.8)" } },
@@ -60145,9 +60208,10 @@ var SelectedImage = _react2.default.createClass({
           ),
           _react2.default.createElement(
             'p',
-            { style: { color: "rgba(0,0,0,0.54)" } },
+            { style: { color: "rgba(0,0,0,0.54)", marginRight: "30" } },
             info.description
-          )
+          ),
+          editButtonDesc
         ),
         _react2.default.createElement(
           'div',
@@ -60180,7 +60244,7 @@ SelectedImage.contextTypes = {
 
 module.exports = SelectedImage;
 
-},{"material-ui":169,"react":512,"react-router":337,"react-time":350}],534:[function(require,module,exports){
+},{"material-ui":169,"react":512,"react-router":337,"react-tag-input":345,"react-time":350}],534:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -61303,7 +61367,7 @@ var ScheduleForm = _react2.default.createClass({
             floatingLabelText: 'Device type',
             value: model,
             underlineDisabledStyle: { borderBottom: "none" },
-            style: { bottom: "-8" },
+            style: { verticalAlign: "top" },
             errorStyle: { color: "rgb(171, 16, 0)" } })
         ),
         _react2.default.createElement(
@@ -61331,8 +61395,8 @@ var ScheduleForm = _react2.default.createClass({
               errorStyle: { color: "rgb(171, 16, 0)" } })
           ),
           _react2.default.createElement(
-            'span',
-            { className: this.state.devices ? 'margin-left' : 'hidden' },
+            'div',
+            { className: this.state.devices ? null : 'hidden' },
             this.state.devices,
             ' devices will be updated ',
             _react2.default.createElement(

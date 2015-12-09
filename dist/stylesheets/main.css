@@ -47,6 +47,9 @@ a:hover {
 .hidden {
   display: none !important;
 }
+.relative {
+  position: relative;
+}
 .margin-top {
   margin-top: 30px;
 }
@@ -114,6 +117,10 @@ a:hover {
   display: -webkit-box;
   display: flex;
   overflow: hidden;
+}
+.align-top {
+  display: inline-block;
+  vertical-align: top;
 }
 .leftFixed {
   width: 260px;

@@ -198,7 +198,7 @@ var ScheduleForm = React.createClass({
               floatingLabelText="Device type"
               value={model} 
               underlineDisabledStyle={{borderBottom:"none"}}
-              style={{bottom:"-8"}}
+              style={{verticalAlign:"top"}}
               errorStyle={{color: "rgb(171, 16, 0)"}} />
           </div>
 
@@ -219,10 +219,10 @@ var ScheduleForm = React.createClass({
                 floatingLabelText="Device"
                 disabled={this.state.disabled}
                 underlineDisabledStyle={{borderBottom:"none"}}
-                errorStyle={{color: "rgb(171, 16, 0)"}} />
-              </div>
+                errorStyle={{color: "rgb(171, 16, 0)"}} />  
+            </div>
 
-            <span className={this.state.devices ? 'margin-left' : 'hidden'}>{this.state.devices} devices will be updated <Link to="devices" params={{groupId: this.state.groupVal.payload, filters:filters }} className={this.state.disabled ? "hidden" : "margin-left"}>View devices</Link></span>
+            <div className={this.state.devices ? null : 'hidden'}>{this.state.devices} devices will be updated <Link to="devices" params={{groupId: this.state.groupVal.payload, filters:filters }} className={this.state.disabled ? "hidden" : "margin-left"}>View devices</Link></div>
             
           </div>
             

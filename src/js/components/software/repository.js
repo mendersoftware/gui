@@ -88,6 +88,9 @@ var Repository = React.createClass({
     AppActions.uploadImage(newState);
     this.dialogDismiss('upload');
   },
+  _uploadImage: function(image) {
+    AppActions.uploadImage(image);
+  },
   _updateParams: function(val, attr) {
     // updating params from child schedule form
     var tmp = {};
@@ -288,7 +291,7 @@ var Repository = React.createClass({
 
           <div style={{height:"16", marginTop:"10"}} />
  
-          <SelectedImage editImage={this._openUpload} buttonStyle={styles.flatButtonIcon} image={this.state.image} openSchedule={this._openSchedule} />
+          <SelectedImage uploadImage={this._uploadImage} editImage={this._openUpload} buttonStyle={styles.flatButtonIcon} image={this.state.image} openSchedule={this._openSchedule} />
         </div>
         <Dialog
           ref="upload"
