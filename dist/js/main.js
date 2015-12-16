@@ -62023,7 +62023,6 @@ var Repository = _react2.default.createClass({
   },
 
   componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
-    console.log(nextProps.software);
     software = nextProps.software;
   },
 
@@ -62132,24 +62131,27 @@ var Repository = _react2.default.createClass({
   },
   render: function render() {
     // copy array so as not to alter props
-    for (var i in this.state.software) {
-      var replace = this.state.software[i].tags.join(', ');
-      software[i] = update(this.state.software[i], {
+    var tmpSoftware = [];
+    for (var i in software) {
+      var replace = '';
+      if (software[i].tags) {
+        replace = software[i].tags.join(', ');
+      }
+      tmpSoftware[i] = update(software[i], {
         'tags': {
           $set: replace
         }
       });
     }
-    console.log(software);
 
     var image = this.state.image;
 
     if (this.refs.search) {
       var filters = ['name', 'model', 'tags', 'description'];
-      software = software.filter(this.refs.search.filter(filters));
+      tmpSoftware = software.filter(this.refs.search.filter(filters));
     }
     var groups = this.props.groups;
-    var items = software.map(function (pkg, index) {
+    var items = tmpSoftware.map(function (pkg, index) {
       return _react2.default.createElement(
         TableRow,
         { key: index },
