@@ -47,8 +47,14 @@ var Repository = React.createClass({
       searchTerm: null,
       upload: false,
       schedule: false,
-      popupLabel: "Upload a new image"
+      popupLabel: "Upload a new image",
+      software: []
     };
+  },
+
+  componentWillReceiveProps: function(nextProps) {
+    console.log(nextProps.software);
+    software = nextProps.software;
   },
 
   _handleFieldChange: function(field, e) {
@@ -83,6 +89,7 @@ var Repository = React.createClass({
    
     newState.build_date = new Date().getTime();
     newState.upload_date = new Date().getTime();
+    newState.md5 = "ui2ehu2h3823";
     newState.checksum = "b411936863d0e245292bb81a60189c7ffd95dbd3723c718e2a1694f944bd91a3";
     newState.size = "12.6 MB";
     AppActions.uploadImage(newState);
@@ -156,16 +163,16 @@ var Repository = React.createClass({
     this.dialogOpen('upload');
   },
   render: function() {
-
     // copy array so as not to alter props
-    for (var i in this.props.software) {
-      var replace = this.props.software[i].tags.join(', ');
-      software[i] = update(this.props.software[i], {
+    for (var i in this.state.software) {
+      var replace = this.state.software[i].tags.join(', ');
+      software[i] = update(this.state.software[i], {
         'tags': {
           $set: replace
         }
       });
     }
+    console.log(software);
     
     var image = this.state.image;
     
@@ -179,14 +186,14 @@ var Repository = React.createClass({
         <TableRow key={index}>
           <TableRowColumn>{pkg.name}</TableRowColumn>
           <TableRowColumn>{pkg.model}</TableRowColumn>
-          <TableRowColumn>{pkg.tags}</TableRowColumn>
-          <TableRowColumn><Time value={pkg.build_date} format="YYYY/MM/DD HH:mm" /></TableRowColumn>
-          <TableRowColumn>{pkg.devices}</TableRowColumn>
+          <TableRowColumn>{pkg.tags || '-'}</TableRowColumn>
+          <TableRowColumn><Time value={pkg.modified} format="YYYY/MM/DD HH:mm" /></TableRowColumn>
+          <TableRowColumn>{pkg.devices || 0}</TableRowColumn>
         </TableRow>
       )
     }, this);
     var uploadActions = [
-      <div style={{marginRight:"10", display:"inline-block"}}>
+      <div key="cancelcontain" style={{marginRight:"10", display:"inline-block"}}>
         <FlatButton
           key="cancel"
           label="Cancel"
@@ -200,7 +207,7 @@ var Repository = React.createClass({
     ];
 
     var scheduleActions = [
-      <div style={{marginRight:"10", display:"inline-block"}}>
+      <div key="cancelcontain2" style={{marginRight:"10", display:"inline-block"}}>
         <FlatButton
           key="cancel-schedule"
           label="Cancel"
@@ -252,9 +259,10 @@ var Repository = React.createClass({
 
     return (
       <div>
+      
         <h3>Available images</h3>
         <SearchInput className="tableSearch" ref='search' onChange={this.searchUpdated} />
-        <div className="maxTable"> 
+        <div className="maxTable">
           <Table
             onRowSelection={this._onRowSelection}
             className={items.length ? null : "hidden"}>
@@ -265,7 +273,7 @@ var Repository = React.createClass({
                 <TableHeaderColumn className="columnHeader" tooltip="Software">Software <FontIcon ref="name" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "name")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
                 <TableHeaderColumn className="columnHeader" tooltip="Device type compatibility">Device type compatibility <FontIcon ref="model" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "model")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
                 <TableHeaderColumn className="columnHeader" tooltip="Tags">Tags</TableHeaderColumn>
-                <TableHeaderColumn className="columnHeader" tooltip="Build date">Build date <FontIcon style={styles.sortIcon} ref="build_date" onClick={this._sortColumn.bind(null, "build_date")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
+                <TableHeaderColumn className="columnHeader" tooltip="Upload date">Upload date <FontIcon style={styles.sortIcon} ref="modified" onClick={this._sortColumn.bind(null, "modified")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
                 <TableHeaderColumn className="columnHeader" tooltip="Installed on devices">Installed on devices <FontIcon style={styles.sortIcon} ref="devices" onClick={this._sortColumn.bind(null, "devices")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
               </TableRow>
             </TableHeader>
@@ -294,6 +302,7 @@ var Repository = React.createClass({
           <SelectedImage uploadImage={this._uploadImage} editImage={this._openUpload} buttonStyle={styles.flatButtonIcon} image={this.state.image} openSchedule={this._openSchedule} />
         </div>
         <Dialog
+          key="upload1"
           ref="upload"
           open={this.state.upload}
           title={this.state.popupLabel}
@@ -344,6 +353,7 @@ var Repository = React.createClass({
         </Dialog>
 
         <Dialog
+          key="schedule1"
           ref="schedule"
           open={this.state.schedule}
           title='Schedule an update'
@@ -353,7 +363,6 @@ var Repository = React.createClass({
           >
           <ScheduleForm updateSchedule={this._updateParams} images={software} image={this.state.image} imageVal={this.state.image} groups={this.props.groups} />
         </Dialog>
-
       </div>
     );
   }

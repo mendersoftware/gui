@@ -68,11 +68,11 @@ var SelectedImage = React.createClass({
     }
   },
   render: function() {
-    var info = {name: "-", tags: ['-'], model: "-", build_date: "-", upload_date: "-", size: "-", checksum: "-", devices: "-"};
+    var info = {name: "-", tags: ['-'], model: "-", build_date: "-", modified: "-", size: "-", checksum: "-", devices: "-"};
     if (this.props.image) {
       for (var key in this.props.image) {
         if (this.props.image[key] != null) { info[key] = this.props.image[key] };
-        if (key.indexOf("date")!==-1) {
+        if (key.indexOf("modified")!==-1) {
           info[key] = (
             <Time style={{position:"relative", top:"4"}} value={this.props.image[key]} format="YYYY/MM/DD HH:mm" />
           )
@@ -126,7 +126,7 @@ var SelectedImage = React.createClass({
           <List>
             <ListItem disabled={true} primaryText="Date built" secondaryText={info.build_date} />
             <ListDivider />
-            <ListItem disabled={true} primaryText="Date uploaded" secondaryText={info.upload_date} />
+            <ListItem disabled={true} primaryText="Date uploaded" secondaryText={info.modified} />
             <ListDivider />
             <ListItem disabled={true} primaryText="Installed on devices" secondaryText={info.devices ? info.devices : "-"} />
             <ListDivider />

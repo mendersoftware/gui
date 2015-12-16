@@ -86,6 +86,9 @@ var Updates = React.createClass({
         this.setState({tabIndex:"0"});
       }
   },
+  componentWillUnmount: function () {
+    AppStore.removeChangeListener(this._onChange);
+  },
   _onChange: function() {
     this.setState(getState());
   },

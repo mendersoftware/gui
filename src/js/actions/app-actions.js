@@ -1,6 +1,6 @@
 var AppConstants = require('../constants/app-constants');
 var AppDispatcher = require('../dispatchers/app-dispatcher');
-
+var Api = require('../api/api');
 
 var AppActions = {
  
@@ -26,12 +26,31 @@ var AppActions = {
     })
   },
 
+  getImages: function() {
+    Api
+      .get('http://ec2-52-90-219-172.compute-1.amazonaws.com:42619/api/0.0.1/images')
+      .then(function(images) {
+        AppDispatcher.handleViewAction({
+          actionType: AppConstants.RECEIVE_IMAGES,
+          images: images
+        });
+      });
+  },
+
   uploadImage: function(image) {
+    Api
+      .post('http://ec2-52-90-219-172.compute-1.amazonaws.com:42619/api/0.0.1/images', image)
+      .then(function(data) {
+        console.log(data);
+      });
+  },
+
+  /*uploadImage: function(image) {
     AppDispatcher.handleViewAction({
       actionType: AppConstants.UPLOAD_IMAGE,
       image: image
     })
-  },
+  },*/
   
   saveSchedule: function(schedule, single) {
     AppDispatcher.handleViewAction({

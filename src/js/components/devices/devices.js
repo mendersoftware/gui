@@ -40,6 +40,9 @@ var Devices = React.createClass({
       }
     }
   },
+  componentWillUnmount: function () {
+    AppStore.removeChangeListener(this._onChange);
+  },
   _onChange: function() {
     this.setState(getState());
   },

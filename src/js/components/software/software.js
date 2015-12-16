@@ -1,6 +1,6 @@
 import React from 'react';
 var AppStore = require('../../stores/app-store');
-
+var AppActions = require('../../actions/app-actions');
 var Repository = require('./repository.js');
 
 function getState() {
@@ -12,19 +12,37 @@ function getState() {
 
 var Software = React.createClass({
   getInitialState: function() {
-    return getState()
+    return {
+      repo: [],
+      groups: [],
+      software: []
+    }
   },
   componentWillMount: function() {
     AppStore.changeListener(this._onChange);
   },
+  componentDidMount: function() {
+    console.log("did mount");
+    AppActions.getImages();
+  },
+  componentWillUnmount: function () {
+    console.log("unmount");
+    AppStore.removeChangeListener(this._onChange);
+  },
   _onChange: function() {
-    this.setState(getState());
+    console.log("change");
+    this.setState({groups: AppStore.getGroups()}, function() {
+      console.log("got groups");
+    });
+    this.setState({software: AppStore.getSoftwareRepo()}, function() {
+      console.log("got software");
+    });
   },
   render: function() {
-  
+  console.log(this.state.software);
     return (
       <div className="contentContainer">
-        <Repository software={this.state.repo} groups={this.state.groups} />
+        <Repository software={this.state.software} groups={this.state.groups} />
       </div>
     );
   }
