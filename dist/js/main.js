@@ -59929,7 +59929,7 @@ var AppActions = {
 
   uploadImage: function uploadImage(image) {
     Api.post('http://ec2-52-90-219-172.compute-1.amazonaws.com:42619/api/0.0.1/images', image).then(function (data) {
-      console.log(data);
+      console.log("upload", data);
     });
   },
 
@@ -59993,8 +59993,10 @@ var Api = {
     return new Promise(function (resolve, reject) {
       request.get(url).end(function (err, res) {
         if (err || !res.ok) {
+          console.log("error", res);
           reject();
         } else {
+          console.log("api", res);
           resolve(res.body);
         }
       });
@@ -61960,6 +61962,10 @@ var _scheduleform = require('../updates/scheduleform');
 
 var _scheduleform2 = _interopRequireDefault(_scheduleform);
 
+var _reactDom = require('react-dom');
+
+var _reactDom2 = _interopRequireDefault(_reactDom);
+
 var _reactSearchInput = require('react-search-input');
 
 var _reactSearchInput2 = _interopRequireDefault(_reactSearchInput);
@@ -62080,14 +62086,15 @@ var Repository = _react2.default.createClass({
   },
   _sortColumn: function _sortColumn(col) {
     var direction;
+    console.log("sort!");
     if (this.state.sortCol !== col) {
-      this.refs[this.state.sortCol].getDOMNode().className = "sortIcon material-icons";
-      this.refs[col].getDOMNode().className = "sortIcon material-icons selected";
+      _reactDom2.default.findDOMNode(this.refs[this.state.sortCol]).className = "sortIcon material-icons";
+      _reactDom2.default.findDOMNode(this.refs[col]).className = "sortIcon material-icons selected";
       this.setState({ sortCol: col, sortDown: true });
       direction = true;
     } else {
       direction = !this.state.sortDown;
-      this.refs[this.state.sortCol].getDOMNode().className = "sortIcon material-icons selected " + direction;
+      _reactDom2.default.findDOMNode(this.refs[this.state.sortCol]).className = "sortIcon material-icons selected " + direction;
       this.setState({ sortDown: direction });
     }
     // sort table
@@ -62431,7 +62438,7 @@ var Repository = _react2.default.createClass({
 
 module.exports = Repository;
 
-},{"../../actions/app-actions":521,"../../stores/app-store":553,"../updates/scheduleform":547,"./selectedimage.js":538,"./updatebutton.js":540,"material-ui":171,"react":514,"react-addons-update":287,"react-router":339,"react-search-input":344,"react-tag-input":347,"react-time":352}],538:[function(require,module,exports){
+},{"../../actions/app-actions":521,"../../stores/app-store":553,"../updates/scheduleform":547,"./selectedimage.js":538,"./updatebutton.js":540,"material-ui":171,"react":514,"react-addons-update":287,"react-dom":319,"react-router":339,"react-search-input":344,"react-tag-input":347,"react-time":352}],538:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -64302,7 +64309,8 @@ var assign = require('react/lib/Object.assign');
 var EventEmitter = require('events').EventEmitter; // from device
 
 var CHANGE_EVENT = "change";
-
+console.log("load store");
+var _softwareRepo = [];
 var _currentGroup = [];
 var _currentDevices = [];
 var _selectedDevices = [];
@@ -64599,9 +64607,6 @@ function _getDeviceHealth() {
   health.total = _alldevices.length;
   return health;
 }
-
-// SOFTWARE
-var _softwareRepo = [];
 
 function discoverDevices(array) {
   var unique = {};
@@ -65158,6 +65163,7 @@ var AppStore = assign(EventEmitter.prototype, {
 
       /* API */
       case AppConstants.RECEIVE_IMAGES:
+        console.log("dispatcher receive");
         setImages(payload.action.images);
     }
 

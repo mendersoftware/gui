@@ -41,7 +41,7 @@ var AppActions = {
     Api
       .post('http://ec2-52-90-219-172.compute-1.amazonaws.com:42619/api/0.0.1/images', image)
       .then(function(data) {
-        console.log(data);
+        console.log("upload", data);
       });
   },
 

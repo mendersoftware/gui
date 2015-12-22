@@ -3,6 +3,7 @@ import Time from 'react-time';
 import AppStore from '../../stores/app-store';
 import AppActions from '../../actions/app-actions';
 import ScheduleForm from '../updates/scheduleform';
+import ReactDOM from 'react-dom';
 var update = require('react-addons-update');
 
 
@@ -110,14 +111,15 @@ var Repository = React.createClass({
   },
   _sortColumn: function(col) {
     var direction;
+    console.log("sort!");
     if (this.state.sortCol !== col) {
-      this.refs[this.state.sortCol].getDOMNode().className = "sortIcon material-icons";
-      this.refs[col].getDOMNode().className = "sortIcon material-icons selected";
+      ReactDOM.findDOMNode(this.refs[this.state.sortCol]).className = "sortIcon material-icons";
+      ReactDOM.findDOMNode(this.refs[col]).className = "sortIcon material-icons selected";
       this.setState({sortCol:col, sortDown: true});
       direction = true;
     } else {
       direction = !(this.state.sortDown);
-      this.refs[this.state.sortCol].getDOMNode().className = "sortIcon material-icons selected " +direction;
+      ReactDOM.findDOMNode(this.refs[this.state.sortCol]).className = "sortIcon material-icons selected " +direction;
       this.setState({sortDown: direction});
     }
     // sort table

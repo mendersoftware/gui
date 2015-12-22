@@ -4,7 +4,8 @@ var assign = require('react/lib/Object.assign');
 var EventEmitter = require('events').EventEmitter;  // from device
 
 var CHANGE_EVENT = "change";
-
+console.log("load store");
+var _softwareRepo = [];
 var _currentGroup = [];
 var _currentDevices = [];
 var _selectedDevices = [];
@@ -324,10 +325,6 @@ function _getDeviceHealth() {
   return health;
 }
 
-
-
-// SOFTWARE
-var _softwareRepo = [];
 
 function discoverDevices(array) {
   var unique = {};
@@ -929,6 +926,7 @@ var AppStore = assign(EventEmitter.prototype, {
 
       /* API */
       case AppConstants.RECEIVE_IMAGES:
+        console.log("dispatcher receive");
         setImages(payload.action.images);
     }
     

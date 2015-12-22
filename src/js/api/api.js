@@ -8,8 +8,10 @@ var Api = {
         .get(url)
         .end(function (err, res) {
           if (err || !res.ok) {
+            console.log("error", res);
             reject();
           } else {
+            console.log("api", res);
             resolve(res.body);
           }
         });
