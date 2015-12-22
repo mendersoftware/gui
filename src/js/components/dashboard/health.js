@@ -12,7 +12,7 @@ var Health = React.createClass({
     return (
       <div className="health">
         <div className="dashboard-header">
-          <h2>Devices <span className="dashboard-number">8</span></h2>
+          <h2>Devices <span className="dashboard-number">{this.props.health.total}</span></h2>
         </div>
         <div className="dashboard-container">
           <div className="health-panel red" onClick={this._clickHandle.bind(null, "down")}>

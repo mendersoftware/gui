@@ -320,6 +320,7 @@ function _getDeviceHealth() {
   health.down = down.length;
   health.up = _alldevices.length - health.down;
   health.nogroup = nogroup.length;
+  health.total = _alldevices.length;
   return health;
 }
 

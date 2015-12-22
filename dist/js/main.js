@@ -57876,7 +57876,7 @@ var Health = _react2.default.createClass({
           _react2.default.createElement(
             'span',
             { className: 'dashboard-number' },
-            '8'
+            this.props.health.total
           )
         )
       ),
@@ -62164,6 +62164,7 @@ function _getDeviceHealth() {
   health.down = down.length;
   health.up = _alldevices.length - health.down;
   health.nogroup = nogroup.length;
+  health.total = _alldevices.length;
   return health;
 }
 
