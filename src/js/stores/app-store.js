@@ -333,8 +333,8 @@ var _softwareRepo = [
     name: "Version 0.2",
     model: "Acme Model 1",
     description: "Version 0.2 Beta",
-    build_date: 1442309576000,
-    upload_date: 1443309976000,
+    build_date: 1442310576000,
+    upload_date: 14433010976000,
     checksum: "ed0fd7cc588a60a582f94829c4c39686b8cf84f80e2c8914d7dbea947756d726",
     tags: ["Acme", "beta"],
     size: "15.2 MB",
@@ -636,9 +636,9 @@ var _allupdates = [
     group: "Wifi",
     model: "Wifi Model 1",
     software_version: "Wifi Version 1.0",
-    start_time: 1447708776000,
-    end_time: 1450709971000,
-    status: null,
+    start_time: 1450769971000,
+    end_time: 1450999971000,
+    status: "Pending",
     devices: [
       {
         id:9,
