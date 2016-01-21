@@ -636,8 +636,8 @@ var _allupdates = [
     group: "Wifi",
     model: "Wifi Model 1",
     software_version: "Wifi Version 1.0",
-    start_time: 1450769971000,
-    end_time: 1450999971000,
+    start_time: 1453169971000,
+    end_time: 1459199971000,
     status: "Pending",
     devices: [
       {
@@ -646,8 +646,8 @@ var _allupdates = [
         model:"Wifi Model 1",
         last_software_version:"Wifi Version Beta",
         software_version:"Wifi Version 1.0",
-        start_time:1450708776000,
-        end_time:1451709971000,
+        start_time:1453169971000,
+        end_time:1459199971000,
         status:"Pending"
       },
     ]
