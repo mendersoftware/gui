@@ -1,17 +1,19 @@
 var request = require('superagent');
 var Promise = require('es6-promise').Promise;
 
+var username = "admin";
+var password = "admin";
+
 var Api = {
   get: function(url) {
     return new Promise(function (resolve, reject) {
       request
         .get(url)
+        .auth('admin', 'admin')
         .end(function (err, res) {
           if (err || !res.ok) {
-            console.log("error", res);
             reject();
           } else {
-            console.log("api", res);
             resolve(res.body);
           }
         });
@@ -19,17 +21,35 @@ var Api = {
   },
   post: function(url, data) {
     return new Promise(function (resolve, reject) {
-      console.log(url);
       request
         .post(url)
+        .auth('admin', 'admin')
         .set('Content-Type', 'application/json')
         .send(data)
         .end(function (err, res) {
-          console.log(err, res);
           if (err || !res.ok) {
             reject();
           } else {
             resolve(JSON.parse(res.text));
+          }
+        });
+    });
+  },
+  put: function(url, image) {
+    return new Promise(function (resolve, reject) {
+      request
+        .put(url)
+        .set("Content-Type", "application/octet-stream")
+        .send(image)
+        .end(function (err, res) {
+          if (err || !res.ok) {
+            reject();
+          } else {
+            var responsetext = "";
+            if (res.text) {
+              responsetext = JSON.parse(res.text);
+            }
+            resolve(responsetext);
           }
         });
     });

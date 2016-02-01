@@ -1,6 +1,8 @@
 var AppConstants = require('../constants/app-constants');
 var AppDispatcher = require('../dispatchers/app-dispatcher');
 var Api = require('../api/api');
+var apiUrl = "http://54.229.121.179:8080/api/0.0.1/";
+
 
 var AppActions = {
  
@@ -28,7 +30,7 @@ var AppActions = {
 
   getImages: function() {
     Api
-      .get('http://ec2-52-90-219-172.compute-1.amazonaws.com:42619/api/0.0.1/images')
+      .get(apiUrl+'images')
       .then(function(images) {
         AppDispatcher.handleViewAction({
           actionType: AppConstants.RECEIVE_IMAGES,
@@ -37,20 +39,32 @@ var AppActions = {
       });
   },
 
-  uploadImage: function(image) {
+  uploadImage: function(meta, callback) {
     Api
-      .post('http://ec2-52-90-219-172.compute-1.amazonaws.com:42619/api/0.0.1/images', image)
+      .post(apiUrl+'images', meta)
       .then(function(data) {
-        console.log("upload", data);
+        // inserted image meta data, got ID in return 
+        callback(data.id);
       });
   },
 
-  /*uploadImage: function(image) {
-    AppDispatcher.handleViewAction({
-      actionType: AppConstants.UPLOAD_IMAGE,
-      image: image
-    })
-  },*/
+  getUploadUri: function(id, callback) {
+    Api
+      .get(apiUrl + 'images/' + id + "/upload?expire=60")
+      .then(function(data) {
+        var uri = data.uri;
+        callback(uri);
+      });
+  },
+  
+  doFileUpload: function(uri, image) {
+    // got upload uri, finish uploading file
+    console.log(uri, "do file upload");
+    Api
+      .put(uri, image)
+      .then(function(data) {
+      });
+  },
   
   saveSchedule: function(schedule, single) {
     AppDispatcher.handleViewAction({

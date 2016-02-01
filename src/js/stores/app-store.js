@@ -4,7 +4,7 @@ var assign = require('react/lib/Object.assign');
 var EventEmitter = require('events').EventEmitter;  // from device
 
 var CHANGE_EVENT = "change";
-console.log("load store");
+
 var _softwareRepo = [];
 var _currentGroup = [];
 var _currentDevices = [];
@@ -750,8 +750,10 @@ function startTimeSortAscend(a,b) {
 * API STARTS HERE
 */
 function setImages(images) {
-  console.log("setimages", images);
-  _softwareRepo = images;
+  if (images) {
+     _softwareRepo = images;
+  }
+  _softwareRepo.sort(customSort(1, "modified"));
 }
 
 
@@ -923,11 +925,12 @@ var AppStore = assign(EventEmitter.prototype, {
         break;
       case AppConstants.SORT_TABLE:
         _sortTable(payload.action.table, payload.action.column, payload.action.direction);
+        break;
 
       /* API */
       case AppConstants.RECEIVE_IMAGES:
-        console.log("dispatcher receive");
         setImages(payload.action.images);
+        break;
     }
     
     AppStore.emitChange();

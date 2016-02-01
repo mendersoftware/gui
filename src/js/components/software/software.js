@@ -22,24 +22,18 @@ var Software = React.createClass({
     AppStore.changeListener(this._onChange);
   },
   componentDidMount: function() {
-    console.log("did mount");
     AppActions.getImages();
   },
   componentWillUnmount: function () {
-    console.log("unmount");
     AppStore.removeChangeListener(this._onChange);
   },
   _onChange: function() {
-    console.log("change");
     this.setState({groups: AppStore.getGroups()}, function() {
-      console.log("got groups");
     });
     this.setState({software: AppStore.getSoftwareRepo()}, function() {
-      console.log("got software");
     });
   },
   render: function() {
-  console.log(this.state.software);
     return (
       <div className="contentContainer">
         <Repository software={this.state.software} groups={this.state.groups} />

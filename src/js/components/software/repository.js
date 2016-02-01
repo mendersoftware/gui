@@ -5,6 +5,7 @@ import AppActions from '../../actions/app-actions';
 import ScheduleForm from '../updates/scheduleform';
 import ReactDOM from 'react-dom';
 var update = require('react-addons-update');
+var FileInput = require('react-file-input');
 
 
 import SearchInput from 'react-search-input';
@@ -49,7 +50,8 @@ var Repository = React.createClass({
       upload: false,
       schedule: false,
       popupLabel: "Upload a new image",
-      software: []
+      software: [],
+      tmpFile: null,
     };
   },
 
@@ -86,17 +88,20 @@ var Repository = React.createClass({
   },
   _onUploadSubmit: function() {
     //update build date, upload date, checksum, size
-   
-    newState.build_date = new Date().getTime();
-    newState.upload_date = new Date().getTime();
-    newState.md5 = "ui2ehu2h3823";
-    newState.checksum = "b411936863d0e245292bb81a60189c7ffd95dbd3723c718e2a1694f944bd91a3";
-    newState.size = "12.6 MB";
-    AppActions.uploadImage(newState);
+    newState.modified = this.state.tmpFile.modified;
+    newState.size = this.state.tmpFile.size;
+    var tmpFile = this.state.tmpFile;
+    //newState.md5 = "ui2ehu2h3823";
+    //newState.checksum = "b411936863d0e245292bb81a60189c7ffd95dbd3723c718e2a1694f944bd91a3";
+    AppActions.uploadImage(newState, function(id) {
+      AppActions.getUploadUri(id, function(uri) {
+        AppActions.doFileUpload(uri, tmpFile, function() {
+          console.log("done upload");
+          // now reload images
+        });
+      });
+    });
     this.dialogDismiss('upload');
-  },
-  _uploadImage: function(image) {
-    AppActions.uploadImage(image);
   },
   _updateParams: function(val, attr) {
     // updating params from child schedule form
@@ -162,6 +167,16 @@ var Repository = React.createClass({
       tags.push({id:i, text:newState.tags[i]});
     }
     this.dialogOpen('upload');
+  },
+  changedFile: function(event) {
+    console.log('Selected file:', event.target.files[0]);
+    if (event.target.files.length) {
+      this.setState({tmpFile: event.target.files[0]});
+      if (!this.state.image.name) {
+        newState.name = event.target.files[0].name;
+        this.refs.nameField.setValue(event.target.files[0].name);
+      }
+    }
   },
   render: function() {
     // copy array so as not to alter props
@@ -303,7 +318,7 @@ var Repository = React.createClass({
 
           <div style={{height:"16", marginTop:"10"}} />
  
-          <SelectedImage uploadImage={this._uploadImage} editImage={this._openUpload} buttonStyle={styles.flatButtonIcon} image={this.state.image} openSchedule={this._openSchedule} />
+          <SelectedImage editImage={this._openUpload} buttonStyle={styles.flatButtonIcon} image={this.state.image} openSchedule={this._openSchedule} />
         </div>
         <Dialog
           key="upload1"
@@ -321,11 +336,17 @@ var Repository = React.createClass({
                 defaultValue={image.name}
                 disabled={image.name ? true : false}
                 hintText="Identifier"
+                ref="nameField"
                 floatingLabelText="Identifier" 
                 onChange={this._handleFieldChange.bind(null, 'name')}
                 errorStyle={{color: "rgb(171, 16, 0)"}} />
 
-              <p className={image.name ? "hidden" : null}><input type="file" /></p>
+              <FileInput name="myImage"
+                   accept=".png,.gif"
+                   placeholder="My Image"
+                   className="fileInput"
+                   style={{zIndex: "2"}}
+                   onChange={this.changedFile} />
 
               <TextField
                 value="Acme Model 1"

@@ -52,7 +52,7 @@ var SelectedImage = React.createClass({
 
       // save new tag data to image
       image.tags = noIds;
-      this.props.uploadImage(image);
+      //this.props.uploadImage(image);
       
       // hacky
       var newimage = this.props.image;
