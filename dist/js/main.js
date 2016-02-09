@@ -64121,7 +64121,8 @@ function getState() {
     dialogTitle: "Schedule an update",
     scheduleForm: true,
     contentClass: "largeDialog",
-    invalid: true
+    invalid: true,
+    dialog: false
   };
 }
 
@@ -64170,7 +64171,6 @@ var Updates = _react2.default.createClass({
     this.setState(getState());
   },
   dialogDismiss: function dialogDismiss(ref) {
-    this.refs[ref].dismiss();
     this.replaceState(this.getInitialState());
   },
   dialogOpen: function dialogOpen(dialog) {
@@ -64188,9 +64188,8 @@ var Updates = _react2.default.createClass({
         contentClass: "largeDialog"
       });
     }
-    if (!this.refs['dialog'].isOpen()) {
-      this.refs['dialog'].show();
-    }
+
+    this.setState({ dialog: !this.state.dialog });
   },
   _changeTab: function _changeTab(value, e, tab) {
     this.setState({ tabIndex: value });
@@ -64328,7 +64327,8 @@ var Updates = _react2.default.createClass({
           actions: this.state.scheduleForm ? scheduleActions : reportActions,
           autoDetectWindowHeight: true, autoScrollBodyContent: true,
           contentClassName: this.state.contentClass,
-          bodyStyle: { paddingTop: "0" }
+          bodyStyle: { paddingTop: "0" },
+          open: this.state.dialog
         },
         dialogContent
       )
