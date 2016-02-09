@@ -9,7 +9,6 @@ var Api = {
     return new Promise(function (resolve, reject) {
       request
         .get(url)
-        .auth('admin', 'admin')
         .end(function (err, res) {
           if (err || !res.ok) {
             reject();
@@ -23,7 +22,6 @@ var Api = {
     return new Promise(function (resolve, reject) {
       request
         .post(url)
-        .auth('admin', 'admin')
         .set('Content-Type', 'application/json')
         .send(data)
         .end(function (err, res) {
@@ -35,12 +33,31 @@ var Api = {
         });
     });
   },
-  put: function(url, image) {
+  putImage: function(url, image) {
     return new Promise(function (resolve, reject) {
       request
         .put(url)
         .set("Content-Type", "application/octet-stream")
         .send(image)
+        .end(function (err, res) {
+          if (err || !res.ok) {
+            reject();
+          } else {
+            var responsetext = "";
+            if (res.text) {
+              responsetext = JSON.parse(res.text);
+            }
+            resolve(responsetext);
+          }
+        });
+    });
+  },
+  putJSON: function(url, data) {
+    return new Promise(function (resolve, reject) {
+      request
+        .put(url)
+        .set('Content-Type', 'application/json')
+        .send(data)
         .end(function (err, res) {
           if (err || !res.ok) {
             reject();

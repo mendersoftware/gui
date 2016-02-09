@@ -87,8 +87,8 @@ var Repository = React.createClass({
     this.dialogDismiss('schedule');
   },
   _onUploadSubmit: function() {
-    //update build date, upload date, checksum, size
-    newState.modified = this.state.tmpFile.modified;
+    //update build date, last modified, checksum, size
+    newState.modified = this.state.tmpFile.lastModified;
     newState.size = this.state.tmpFile.size;
     var tmpFile = this.state.tmpFile;
     //newState.md5 = "ui2ehu2h3823";
@@ -96,12 +96,17 @@ var Repository = React.createClass({
     AppActions.uploadImage(newState, function(id) {
       AppActions.getUploadUri(id, function(uri) {
         AppActions.doFileUpload(uri, tmpFile, function() {
-          console.log("done upload");
-          // now reload images
+          AppActions.getImages();
         });
       });
     });
     this.dialogDismiss('upload');
+  },
+  _editImageData: function (image) {
+    AppActions.editImage(image, function() {
+      AppActions.getImages();
+    });
+    this.setState({image:image});
   },
   _updateParams: function(val, attr) {
     // updating params from child schedule form
@@ -116,7 +121,6 @@ var Repository = React.createClass({
   },
   _sortColumn: function(col) {
     var direction;
-    console.log("sort!");
     if (this.state.sortCol !== col) {
       ReactDOM.findDOMNode(this.refs[this.state.sortCol]).className = "sortIcon material-icons";
       ReactDOM.findDOMNode(this.refs[col]).className = "sortIcon material-icons selected";
@@ -169,7 +173,6 @@ var Repository = React.createClass({
     this.dialogOpen('upload');
   },
   changedFile: function(event) {
-    console.log('Selected file:', event.target.files[0]);
     if (event.target.files.length) {
       this.setState({tmpFile: event.target.files[0]});
       if (!this.state.image.name) {
@@ -292,7 +295,7 @@ var Repository = React.createClass({
                 <TableHeaderColumn className="columnHeader" tooltip="Software">Software <FontIcon ref="name" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "name")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
                 <TableHeaderColumn className="columnHeader" tooltip="Device type compatibility">Device type compatibility <FontIcon ref="model" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "model")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
                 <TableHeaderColumn className="columnHeader" tooltip="Tags">Tags</TableHeaderColumn>
-                <TableHeaderColumn className="columnHeader" tooltip="Upload date">Upload date <FontIcon style={styles.sortIcon} ref="modified" onClick={this._sortColumn.bind(null, "modified")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
+                <TableHeaderColumn className="columnHeader" tooltip="Last modified">Last modified <FontIcon style={styles.sortIcon} ref="modified" onClick={this._sortColumn.bind(null, "modified")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
                 <TableHeaderColumn className="columnHeader" tooltip="Installed on devices">Installed on devices <FontIcon style={styles.sortIcon} ref="devices" onClick={this._sortColumn.bind(null, "devices")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
               </TableRow>
             </TableHeader>
@@ -318,7 +321,7 @@ var Repository = React.createClass({
 
           <div style={{height:"16", marginTop:"10"}} />
  
-          <SelectedImage editImage={this._openUpload} buttonStyle={styles.flatButtonIcon} image={this.state.image} openSchedule={this._openSchedule} />
+          <SelectedImage editImage={this._editImageData} buttonStyle={styles.flatButtonIcon} image={this.state.image} openSchedule={this._openSchedule} />
         </div>
         <Dialog
           key="upload1"

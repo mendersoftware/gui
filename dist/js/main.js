@@ -60009,10 +60009,18 @@ var AppActions = {
     });
   },
 
-  doFileUpload: function doFileUpload(uri, image) {
+  doFileUpload: function doFileUpload(uri, image, callback) {
     // got upload uri, finish uploading file
-    console.log(uri, "do file upload");
-    Api.put(uri, image).then(function (data) {});
+    Api.putImage(uri, image).then(function (data) {
+      callback();
+    });
+  },
+
+  editImage: function editImage(image, callback) {
+    var data = { description: image.description, name: image.name, model: image.model, image: image.tags };
+    Api.putJSON(apiUrl + "images/" + image.id, data).then(function (res) {
+      callback();
+    });
   },
 
   saveSchedule: function saveSchedule(schedule, single) {
@@ -60069,7 +60077,7 @@ var password = "admin";
 var Api = {
   get: function get(url) {
     return new Promise(function (resolve, reject) {
-      request.get(url).auth('admin', 'admin').end(function (err, res) {
+      request.get(url).end(function (err, res) {
         if (err || !res.ok) {
           reject();
         } else {
@@ -60080,7 +60088,7 @@ var Api = {
   },
   post: function post(url, data) {
     return new Promise(function (resolve, reject) {
-      request.post(url).auth('admin', 'admin').set('Content-Type', 'application/json').send(data).end(function (err, res) {
+      request.post(url).set('Content-Type', 'application/json').send(data).end(function (err, res) {
         if (err || !res.ok) {
           reject();
         } else {
@@ -60089,9 +60097,24 @@ var Api = {
       });
     });
   },
-  put: function put(url, image) {
+  putImage: function putImage(url, image) {
     return new Promise(function (resolve, reject) {
       request.put(url).set("Content-Type", "application/octet-stream").send(image).end(function (err, res) {
+        if (err || !res.ok) {
+          reject();
+        } else {
+          var responsetext = "";
+          if (res.text) {
+            responsetext = JSON.parse(res.text);
+          }
+          resolve(responsetext);
+        }
+      });
+    });
+  },
+  putJSON: function putJSON(url, data) {
+    return new Promise(function (resolve, reject) {
+      request.put(url).set('Content-Type', 'application/json').send(data).end(function (err, res) {
         if (err || !res.ok) {
           reject();
         } else {
@@ -62151,8 +62174,8 @@ var Repository = _react2.default.createClass({
     this.dialogDismiss('schedule');
   },
   _onUploadSubmit: function _onUploadSubmit() {
-    //update build date, upload date, checksum, size
-    newState.modified = this.state.tmpFile.modified;
+    //update build date, last modified, checksum, size
+    newState.modified = this.state.tmpFile.lastModified;
     newState.size = this.state.tmpFile.size;
     var tmpFile = this.state.tmpFile;
     //newState.md5 = "ui2ehu2h3823";
@@ -62160,12 +62183,17 @@ var Repository = _react2.default.createClass({
     _appActions2.default.uploadImage(newState, function (id) {
       _appActions2.default.getUploadUri(id, function (uri) {
         _appActions2.default.doFileUpload(uri, tmpFile, function () {
-          console.log("done upload");
-          // now reload images
+          _appActions2.default.getImages();
         });
       });
     });
     this.dialogDismiss('upload');
+  },
+  _editImageData: function _editImageData(image) {
+    _appActions2.default.editImage(image, function () {
+      _appActions2.default.getImages();
+    });
+    this.setState({ image: image });
   },
   _updateParams: function _updateParams(val, attr) {
     // updating params from child schedule form
@@ -62180,7 +62208,6 @@ var Repository = _react2.default.createClass({
   },
   _sortColumn: function _sortColumn(col) {
     var direction;
-    console.log("sort!");
     if (this.state.sortCol !== col) {
       _reactDom2.default.findDOMNode(this.refs[this.state.sortCol]).className = "sortIcon material-icons";
       _reactDom2.default.findDOMNode(this.refs[col]).className = "sortIcon material-icons selected";
@@ -62231,7 +62258,6 @@ var Repository = _react2.default.createClass({
     this.dialogOpen('upload');
   },
   changedFile: function changedFile(event) {
-    console.log('Selected file:', event.target.files[0]);
     if (event.target.files.length) {
       this.setState({ tmpFile: event.target.files[0] });
       if (!this.state.image.name) {
@@ -62408,8 +62434,8 @@ var Repository = _react2.default.createClass({
               ),
               _react2.default.createElement(
                 TableHeaderColumn,
-                { className: 'columnHeader', tooltip: 'Upload date' },
-                'Upload date ',
+                { className: 'columnHeader', tooltip: 'Last modified' },
+                'Last modified ',
                 _react2.default.createElement(
                   FontIcon,
                   { style: styles.sortIcon, ref: 'modified', onClick: this._sortColumn.bind(null, "modified"), className: 'sortIcon material-icons' },
@@ -62460,7 +62486,7 @@ var Repository = _react2.default.createClass({
           )
         ),
         _react2.default.createElement('div', { style: { height: "16", marginTop: "10" } }),
-        _react2.default.createElement(_selectedimage2.default, { editImage: this._openUpload, buttonStyle: styles.flatButtonIcon, image: this.state.image, openSchedule: this._openSchedule })
+        _react2.default.createElement(_selectedimage2.default, { editImage: this._editImageData, buttonStyle: styles.flatButtonIcon, image: this.state.image, openSchedule: this._openSchedule })
       ),
       _react2.default.createElement(
         Dialog,
@@ -62574,6 +62600,7 @@ var ListDivider = _materialUi2.default.ListDivider;
 var FontIcon = _materialUi2.default.FontIcon;
 var FlatButton = _materialUi2.default.FlatButton;
 var IconButton = _materialUi2.default.IconButton;
+var TextField = _materialUi2.default.TextField;
 
 var ReactTags = require('react-tag-input').WithContext;
 var tagslist = [];
@@ -62619,6 +62646,9 @@ var SelectedImage = _react2.default.createClass({
       // hacky
       var newimage = this.props.image;
       newimage.tags = image.tags;
+
+      // update image upstream
+      this.props.editImage(image);
     }
     this.setState({ tagEdit: !this.state.tagEdit });
   },
@@ -62629,8 +62659,21 @@ var SelectedImage = _react2.default.createClass({
       }
     }
   },
+  _descEdit: function _descEdit(image) {
+    if (this.state.descEdit) {
+      image.description = this.state.descValue;
+      // save change
+      this.props.editImage(image);
+    }
+    this.setState({ descEdit: !this.state.descEdit });
+  },
+  handleDescChange: function handleDescChange(event) {
+    this.setState({
+      descValue: event.target.value
+    });
+  },
   render: function render() {
-    var info = { name: "-", tags: ['-'], model: "-", build_date: "-", modified: "-", size: "-", checksum: "-", devices: "-" };
+    var info = { name: "-", tags: ['-'], model: "-", build_date: "-", modified: "-", size: "-", checksum: "-", devices: "-", description: "-" };
     if (this.props.image) {
       for (var key in this.props.image) {
         if (this.props.image[key] != null) {
@@ -62652,12 +62695,12 @@ var SelectedImage = _react2.default.createClass({
     };
     var editButton = _react2.default.createElement(
       IconButton,
-      { iconStyle: styles.editButton, style: { top: "auto", bottom: "0" }, onClick: this._tagsEdit.bind(null, info), iconClassName: 'material-icons' },
+      { iconStyle: styles.editButton, style: { top: "auto", bottom: "0" }, onClick: this._tagsEdit.bind(null, this.props.image), iconClassName: 'material-icons' },
       this.state.tagEdit ? "check" : "edit"
     );
     var editButtonDesc = _react2.default.createElement(
       IconButton,
-      { iconStyle: styles.editButton, style: { position: "absolute", right: "0", bottom: "0" }, iconClassName: 'material-icons' },
+      { iconStyle: styles.editButton, style: { position: "absolute", right: "0", bottom: "8" }, onClick: this._descEdit.bind(null, this.props.image), iconClassName: 'material-icons' },
       this.state.descEdit ? "check" : "edit"
     );
 
@@ -62667,7 +62710,10 @@ var SelectedImage = _react2.default.createClass({
       handleDrag: this.handleDrag,
       delimeters: [9, 13, 188] });
 
+    var descInput = _react2.default.createElement(TextField, { ref: 'description', defaultValue: info.description, onChange: this.handleDescChange });
+
     var tags = this.state.tagEdit ? tagInput : info.tags.join(', ');
+    var desc = this.state.descEdit ? descInput : info.description;
 
     return _react2.default.createElement(
       'div',
@@ -62723,18 +62769,23 @@ var SelectedImage = _react2.default.createClass({
         { className: 'margin-top' },
         _react2.default.createElement(
           'div',
-          { className: 'report-list', style: { padding: "16", width: "560", verticalAlign: "top", position: "relative" } },
+          { className: 'report-list', style: { padding: "8px 0px", width: "590", verticalAlign: "top", position: "relative" } },
           _react2.default.createElement(
-            'span',
-            { style: { fontSize: "16", color: "rgba(0,0,0,0.8)" } },
-            'Description'
+            'div',
+            { style: { padding: "20px 16px 15px", fontSize: "16", lineHeight: "16px" } },
+            _react2.default.createElement(
+              'span',
+              { style: { color: "rgba(0,0,0,0.8)" } },
+              'Description'
+            ),
+            _react2.default.createElement(
+              'div',
+              { style: { color: "rgba(0,0,0,0.54)", marginRight: "30", marginTop: "4" } },
+              desc
+            ),
+            editButtonDesc
           ),
-          _react2.default.createElement(
-            'p',
-            { style: { color: "rgba(0,0,0,0.54)", marginRight: "30" } },
-            info.description
-          ),
-          editButtonDesc
+          _react2.default.createElement('hr', { style: { margin: "0", backgroundColor: "#e0e0e0", height: "1", border: "none" } })
         ),
         _react2.default.createElement(
           'div',

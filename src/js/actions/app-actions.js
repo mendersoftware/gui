@@ -57,12 +57,21 @@ var AppActions = {
       });
   },
   
-  doFileUpload: function(uri, image) {
+  doFileUpload: function(uri, image, callback) {
     // got upload uri, finish uploading file
-    console.log(uri, "do file upload");
     Api
-      .put(uri, image)
+      .putImage(uri, image)
       .then(function(data) {
+        callback();
+      });
+  },
+
+  editImage: function(image, callback) {
+    var data = {description: image.description, name: image.name, model: image.model, image: image.tags};
+    Api
+      .putJSON(apiUrl + "images/" + image.id, data)
+      .then(function(res) {
+        callback();
       });
   },
   
