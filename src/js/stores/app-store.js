@@ -5,6 +5,7 @@ var EventEmitter = require('events').EventEmitter;  // from device
 
 var CHANGE_EVENT = "change";
 
+var _softwareRepo = [];
 var _currentGroup = [];
 var _currentDevices = [];
 var _selectedDevices = [];
@@ -325,85 +326,7 @@ function _getDeviceHealth() {
 }
 
 
-
-// SOFTWARE
-var _softwareRepo = [
-  {
-    id: 1,
-    name: "Version 0.2",
-    model: "Acme Model 1",
-    description: "Version 0.2 Beta",
-    build_date: 1442310576000,
-    upload_date: 14433010976000,
-    checksum: "ed0fd7cc588a60a582f94829c4c39686b8cf84f80e2c8914d7dbea947756d726",
-    tags: ["Acme", "beta"],
-    size: "15.2 MB",
-    devices: 0
-  },
-  {
-    id: 2,
-    name: "Version 0.3",
-    model: "Acme Model 1",
-    description: "Version 0.3 fixes bug #44 in Beta",
-    build_date: 1442311876000,
-    upload_date: 1444309976000,
-    checksum: "ad77f16744df3c874530fd0caad688a80b228244b5d2caeedab791f90a2db619",
-    tags: ["Acme", "beta", "bugfix"],
-    size: "15.4 MB",
-    devices: 0
-  },
-  {
-    id: 3,
-    name: "Version 1.0",
-    model: "Acme Model 1",
-    description: "Version 1.0 stable release for Acme Model 1",
-    build_date: 1444309991000,
-    upload_date: 1445309334000,
-    checksum: "d3f8001422abade2702130ac74349e0f77d139c6eb89842844c30712bb66e9b9",
-    tags: ["Acme", "stable"],
-    size: "18.8 MB",
-    devices: 0
-  },
-  {
-    id: 4,
-    name: "Version 1.1",
-    model: "Acme Model 1",
-    description: "Version 1.1 fixes bug #243 for Acme Model 1",
-    build_date: 1444909991000,
-    upload_date: 1445409334000,
-    checksum: "8020f6d69da4a0a9d2d7d4cd70307c4bacfa07bc5eb5ce1dc4b37de2b2ea5247",
-    tags: ["Acme", "bugfix"],
-    size: "18.9 MB",
-    devices: 0
-  },
-  {
-    id: 5,
-    name: "Version 1.2",
-    model: "Acme Model 1",
-    description: "1.2 optimization",
-    build_date: 1444939971000,
-    upload_date: 1445429374000,
-    checksum: "b411936863d0e245292bb81a60189c7ffd95dbd3723c718e2a1694f944bd91a3",
-    tags: ["Acme"],
-    size: "18.4 MB",
-    devices: 0
-  },
-  {
-    id: 6,
-    name: "Version 1.0 Wifi",
-    model: "Wifi Model 1",
-    description: "Stable firmware for wireless models",
-    build_date: 1444949934000,
-    upload_date: 1445329472000,
-    checksum: "b411936863d0e245292bb81a60189c7ffd95dbd3723c718e2a1694f944bd91a3",
-    tags: ["stable", "wifi"],
-    size: "10.3 MB",
-    devices: 0
-  },
-];
-discoverSoftware();
-
-function discoverSoftware() {
+function discoverDevices(array) {
   var unique = {};
 
   for (var i=0; i<_alldevices.length; i++) {
@@ -413,10 +336,14 @@ function discoverSoftware() {
     unique[_alldevices[i].software_version]++;
   }
 
-  for (var val in unique) {
-    var idx = findWithAttr(_softwareRepo, 'name', val);
-    _softwareRepo[idx].devices = unique[val];
+  if (array.length) {
+    for (var val in unique) {
+      var idx = findWithAttr(array, 'name', val);
+      if (idx) { array[idx].devices = unique[val] }
+    }
   }
+  return array;
+ 
 }
 
 function _uploadImage(image) {
@@ -817,6 +744,20 @@ function startTimeSortAscend(a,b) {
   return (a.start_time > b.start_time) - (a.start_time < b.start_time);
 }
 
+
+
+/*
+* API STARTS HERE
+*/
+function setImages(images) {
+  if (images) {
+     _softwareRepo = images;
+  }
+  _softwareRepo.sort(customSort(1, "modified"));
+}
+
+
+
 var AppStore = assign(EventEmitter.prototype, {
   emitChange: function() {
     this.emit(CHANGE_EVENT)
@@ -824,6 +765,10 @@ var AppStore = assign(EventEmitter.prototype, {
 
   changeListener: function(callback) {
     this.on(CHANGE_EVENT, callback)
+  },
+
+  removeChangeListener: function(callback) {
+    this.removeListener(CHANGE_EVENT, callback);
   },
 
   getGroups: function() {
@@ -883,7 +828,7 @@ var AppStore = assign(EventEmitter.prototype, {
     /*
     * Return list of saved software objects
     */
-    return _softwareRepo
+    return discoverDevices(_softwareRepo);
   },
 
   getSoftwareImage: function(attr, val) {
@@ -979,7 +924,13 @@ var AppStore = assign(EventEmitter.prototype, {
         _removeUpdate(payload.action.id);
         break;
       case AppConstants.SORT_TABLE:
-        _sortTable(payload.action.table, payload.action.column, payload.action.direction)
+        _sortTable(payload.action.table, payload.action.column, payload.action.direction);
+        break;
+
+      /* API */
+      case AppConstants.RECEIVE_IMAGES:
+        setImages(payload.action.images);
+        break;
     }
     
     AppStore.emitChange();

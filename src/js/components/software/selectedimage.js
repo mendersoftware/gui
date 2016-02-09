@@ -11,6 +11,7 @@ var ListDivider = mui.ListDivider;
 var FontIcon = mui.FontIcon;
 var FlatButton = mui.FlatButton;
 var IconButton = mui.IconButton;
+var TextField = mui.TextField;
 
 var ReactTags = require('react-tag-input').WithContext;
 var tagslist = [];
@@ -52,11 +53,14 @@ var SelectedImage = React.createClass({
 
       // save new tag data to image
       image.tags = noIds;
-      this.props.uploadImage(image);
+      //this.props.uploadImage(image);
       
       // hacky
       var newimage = this.props.image;
       newimage.tags = image.tags;
+
+      // update image upstream
+      this.props.editImage(image);
     }
     this.setState({tagEdit: !this.state.tagEdit});
   },
@@ -67,12 +71,25 @@ var SelectedImage = React.createClass({
       }
     }
   },
+  _descEdit: function(image) {
+    if (this.state.descEdit) {
+      image.description = this.state.descValue;
+      // save change
+      this.props.editImage(image);
+    }
+    this.setState({descEdit: !this.state.descEdit});
+  },
+  handleDescChange: function(event) {
+    this.setState({
+      descValue: event.target.value
+    });
+  },
   render: function() {
-    var info = {name: "-", tags: ['-'], model: "-", build_date: "-", upload_date: "-", size: "-", checksum: "-", devices: "-"};
+    var info = {name: "-", tags: ['-'], model: "-", build_date: "-", modified: "-", size: "-", checksum: "-", devices: "-", description: "-"};
     if (this.props.image) {
       for (var key in this.props.image) {
         if (this.props.image[key] != null) { info[key] = this.props.image[key] };
-        if (key.indexOf("date")!==-1) {
+        if (key.indexOf("modified")!==-1) {
           info[key] = (
             <Time style={{position:"relative", top:"4"}} value={this.props.image[key]} format="YYYY/MM/DD HH:mm" />
           )
@@ -89,12 +106,12 @@ var SelectedImage = React.createClass({
       }
     }
     var editButton = (
-      <IconButton iconStyle={styles.editButton} style={{top:"auto", bottom: "0"}} onClick={this._tagsEdit.bind(null, info)} iconClassName="material-icons">
+      <IconButton iconStyle={styles.editButton} style={{top:"auto", bottom: "0"}} onClick={this._tagsEdit.bind(null, this.props.image)} iconClassName="material-icons">
         {this.state.tagEdit ? "check" : "edit"}
       </IconButton>
     );
     var editButtonDesc = (
-      <IconButton iconStyle={styles.editButton} style={{position:"absolute", right:"0", bottom: "0"}} iconClassName="material-icons">
+      <IconButton iconStyle={styles.editButton} style={{position:"absolute", right:"0", bottom: "8"}} onClick={this._descEdit.bind(null, this.props.image)} iconClassName="material-icons">
         {this.state.descEdit ? "check" : "edit"}
       </IconButton>
     );
@@ -107,7 +124,12 @@ var SelectedImage = React.createClass({
         delimeters={[9, 13, 188]} />
     );
 
+    var descInput = (
+      <TextField ref="description" defaultValue={info.description} onChange={this.handleDescChange} />
+    );
+
     var tags = this.state.tagEdit ? tagInput : info.tags.join(', ');
+    var desc = this.state.descEdit ? descInput : info.description;
 
     return (
       <div id="imageInfo" className={this.props.image.name == null ? "muted" : null}>
@@ -126,7 +148,7 @@ var SelectedImage = React.createClass({
           <List>
             <ListItem disabled={true} primaryText="Date built" secondaryText={info.build_date} />
             <ListDivider />
-            <ListItem disabled={true} primaryText="Date uploaded" secondaryText={info.upload_date} />
+            <ListItem disabled={true} primaryText="Date uploaded" secondaryText={info.modified} />
             <ListDivider />
             <ListItem disabled={true} primaryText="Installed on devices" secondaryText={info.devices ? info.devices : "-"} />
             <ListDivider />
@@ -144,10 +166,13 @@ var SelectedImage = React.createClass({
           
         </div>
         <div className="margin-top">
-          <div className="report-list" style={{padding:"16", width:"560", verticalAlign:"top", position:"relative"}}>
-            <span style={{fontSize:"16", color:"rgba(0,0,0,0.8)"}}>Description</span>
-            <p style={{color:"rgba(0,0,0,0.54)", marginRight:"30"}}>{info.description}</p>
-            {editButtonDesc}
+          <div className="report-list" style={{padding:"8px 0px", width:"590", verticalAlign:"top", position:"relative"}}>
+            <div style={{padding:"20px 16px 15px", fontSize:"16", lineHeight:"16px"}}>
+              <span style={{color:"rgba(0,0,0,0.8)"}}>Description</span>
+              <div style={{color:"rgba(0,0,0,0.54)", marginRight:"30", marginTop:"4"}}>{desc}</div>
+              {editButtonDesc}
+            </div>
+            <hr style={{margin:"0", backgroundColor:"#e0e0e0", height:"1", border:"none"}} />
           </div>
           <div className="report-list" style={{width:"320"}}>
             <List>

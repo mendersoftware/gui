@@ -1,5 +1,7 @@
 var AppConstants = require('../constants/app-constants');
 var AppDispatcher = require('../dispatchers/app-dispatcher');
+var Api = require('../api/api');
+var apiUrl = "http://54.229.121.179:8080/api/0.0.1/";
 
 
 var AppActions = {
@@ -26,11 +28,51 @@ var AppActions = {
     })
   },
 
-  uploadImage: function(image) {
-    AppDispatcher.handleViewAction({
-      actionType: AppConstants.UPLOAD_IMAGE,
-      image: image
-    })
+  getImages: function() {
+    Api
+      .get(apiUrl+'images')
+      .then(function(images) {
+        AppDispatcher.handleViewAction({
+          actionType: AppConstants.RECEIVE_IMAGES,
+          images: images
+        });
+      });
+  },
+
+  uploadImage: function(meta, callback) {
+    Api
+      .post(apiUrl+'images', meta)
+      .then(function(data) {
+        // inserted image meta data, got ID in return 
+        callback(data.id);
+      });
+  },
+
+  getUploadUri: function(id, callback) {
+    Api
+      .get(apiUrl + 'images/' + id + "/upload?expire=60")
+      .then(function(data) {
+        var uri = data.uri;
+        callback(uri);
+      });
+  },
+  
+  doFileUpload: function(uri, image, callback) {
+    // got upload uri, finish uploading file
+    Api
+      .putImage(uri, image)
+      .then(function(data) {
+        callback();
+      });
+  },
+
+  editImage: function(image, callback) {
+    var data = {description: image.description, name: image.name, model: image.model, image: image.tags};
+    Api
+      .putJSON(apiUrl + "images/" + image.id, data)
+      .then(function(res) {
+        callback();
+      });
   },
   
   saveSchedule: function(schedule, single) {

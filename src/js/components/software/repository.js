@@ -3,7 +3,9 @@ import Time from 'react-time';
 import AppStore from '../../stores/app-store';
 import AppActions from '../../actions/app-actions';
 import ScheduleForm from '../updates/scheduleform';
+import ReactDOM from 'react-dom';
 var update = require('react-addons-update');
+var FileInput = require('react-file-input');
 
 
 import SearchInput from 'react-search-input';
@@ -47,8 +49,14 @@ var Repository = React.createClass({
       searchTerm: null,
       upload: false,
       schedule: false,
-      popupLabel: "Upload a new image"
+      popupLabel: "Upload a new image",
+      software: [],
+      tmpFile: null,
     };
+  },
+
+  componentWillReceiveProps: function(nextProps) {
+    software = nextProps.software;
   },
 
   _handleFieldChange: function(field, e) {
@@ -79,17 +87,26 @@ var Repository = React.createClass({
     this.dialogDismiss('schedule');
   },
   _onUploadSubmit: function() {
-    //update build date, upload date, checksum, size
-   
-    newState.build_date = new Date().getTime();
-    newState.upload_date = new Date().getTime();
-    newState.checksum = "b411936863d0e245292bb81a60189c7ffd95dbd3723c718e2a1694f944bd91a3";
-    newState.size = "12.6 MB";
-    AppActions.uploadImage(newState);
+    //update build date, last modified, checksum, size
+    newState.modified = this.state.tmpFile.lastModified;
+    newState.size = this.state.tmpFile.size;
+    var tmpFile = this.state.tmpFile;
+    //newState.md5 = "ui2ehu2h3823";
+    //newState.checksum = "b411936863d0e245292bb81a60189c7ffd95dbd3723c718e2a1694f944bd91a3";
+    AppActions.uploadImage(newState, function(id) {
+      AppActions.getUploadUri(id, function(uri) {
+        AppActions.doFileUpload(uri, tmpFile, function() {
+          AppActions.getImages();
+        });
+      });
+    });
     this.dialogDismiss('upload');
   },
-  _uploadImage: function(image) {
-    AppActions.uploadImage(image);
+  _editImageData: function (image) {
+    AppActions.editImage(image, function() {
+      AppActions.getImages();
+    });
+    this.setState({image:image});
   },
   _updateParams: function(val, attr) {
     // updating params from child schedule form
@@ -105,13 +122,13 @@ var Repository = React.createClass({
   _sortColumn: function(col) {
     var direction;
     if (this.state.sortCol !== col) {
-      this.refs[this.state.sortCol].getDOMNode().className = "sortIcon material-icons";
-      this.refs[col].getDOMNode().className = "sortIcon material-icons selected";
+      ReactDOM.findDOMNode(this.refs[this.state.sortCol]).className = "sortIcon material-icons";
+      ReactDOM.findDOMNode(this.refs[col]).className = "sortIcon material-icons selected";
       this.setState({sortCol:col, sortDown: true});
       direction = true;
     } else {
       direction = !(this.state.sortDown);
-      this.refs[this.state.sortCol].getDOMNode().className = "sortIcon material-icons selected " +direction;
+      ReactDOM.findDOMNode(this.refs[this.state.sortCol]).className = "sortIcon material-icons selected " +direction;
       this.setState({sortDown: direction});
     }
     // sort table
@@ -155,12 +172,24 @@ var Repository = React.createClass({
     }
     this.dialogOpen('upload');
   },
+  changedFile: function(event) {
+    if (event.target.files.length) {
+      this.setState({tmpFile: event.target.files[0]});
+      if (!this.state.image.name) {
+        newState.name = event.target.files[0].name;
+        this.refs.nameField.setValue(event.target.files[0].name);
+      }
+    }
+  },
   render: function() {
-
     // copy array so as not to alter props
-    for (var i in this.props.software) {
-      var replace = this.props.software[i].tags.join(', ');
-      software[i] = update(this.props.software[i], {
+    var tmpSoftware = [];
+    for (var i in software) {
+      var replace = '';
+      if (software[i].tags) {
+        replace = software[i].tags.join(', ');
+      }
+      tmpSoftware[i] = update(software[i], {
         'tags': {
           $set: replace
         }
@@ -171,22 +200,22 @@ var Repository = React.createClass({
     
     if (this.refs.search) {
       var filters = ['name', 'model', 'tags', 'description'];
-      software = software.filter(this.refs.search.filter(filters));
+      tmpSoftware = software.filter(this.refs.search.filter(filters));
     }
     var groups = this.props.groups;
-    var items = software.map(function(pkg, index) {
+    var items = tmpSoftware.map(function(pkg, index) {
       return (
         <TableRow key={index}>
           <TableRowColumn>{pkg.name}</TableRowColumn>
           <TableRowColumn>{pkg.model}</TableRowColumn>
-          <TableRowColumn>{pkg.tags}</TableRowColumn>
-          <TableRowColumn><Time value={pkg.build_date} format="YYYY/MM/DD HH:mm" /></TableRowColumn>
-          <TableRowColumn>{pkg.devices}</TableRowColumn>
+          <TableRowColumn>{pkg.tags || '-'}</TableRowColumn>
+          <TableRowColumn><Time value={pkg.modified} format="YYYY/MM/DD HH:mm" /></TableRowColumn>
+          <TableRowColumn>{pkg.devices || 0}</TableRowColumn>
         </TableRow>
       )
     }, this);
     var uploadActions = [
-      <div style={{marginRight:"10", display:"inline-block"}}>
+      <div key="cancelcontain" style={{marginRight:"10", display:"inline-block"}}>
         <FlatButton
           key="cancel"
           label="Cancel"
@@ -200,7 +229,7 @@ var Repository = React.createClass({
     ];
 
     var scheduleActions = [
-      <div style={{marginRight:"10", display:"inline-block"}}>
+      <div key="cancelcontain2" style={{marginRight:"10", display:"inline-block"}}>
         <FlatButton
           key="cancel-schedule"
           label="Cancel"
@@ -252,9 +281,10 @@ var Repository = React.createClass({
 
     return (
       <div>
+      
         <h3>Available images</h3>
         <SearchInput className="tableSearch" ref='search' onChange={this.searchUpdated} />
-        <div className="maxTable"> 
+        <div className="maxTable">
           <Table
             onRowSelection={this._onRowSelection}
             className={items.length ? null : "hidden"}>
@@ -265,7 +295,7 @@ var Repository = React.createClass({
                 <TableHeaderColumn className="columnHeader" tooltip="Software">Software <FontIcon ref="name" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "name")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
                 <TableHeaderColumn className="columnHeader" tooltip="Device type compatibility">Device type compatibility <FontIcon ref="model" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "model")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
                 <TableHeaderColumn className="columnHeader" tooltip="Tags">Tags</TableHeaderColumn>
-                <TableHeaderColumn className="columnHeader" tooltip="Build date">Build date <FontIcon style={styles.sortIcon} ref="build_date" onClick={this._sortColumn.bind(null, "build_date")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
+                <TableHeaderColumn className="columnHeader" tooltip="Last modified">Last modified <FontIcon style={styles.sortIcon} ref="modified" onClick={this._sortColumn.bind(null, "modified")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
                 <TableHeaderColumn className="columnHeader" tooltip="Installed on devices">Installed on devices <FontIcon style={styles.sortIcon} ref="devices" onClick={this._sortColumn.bind(null, "devices")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
               </TableRow>
             </TableHeader>
@@ -291,9 +321,10 @@ var Repository = React.createClass({
 
           <div style={{height:"16", marginTop:"10"}} />
  
-          <SelectedImage uploadImage={this._uploadImage} editImage={this._openUpload} buttonStyle={styles.flatButtonIcon} image={this.state.image} openSchedule={this._openSchedule} />
+          <SelectedImage editImage={this._editImageData} buttonStyle={styles.flatButtonIcon} image={this.state.image} openSchedule={this._openSchedule} />
         </div>
         <Dialog
+          key="upload1"
           ref="upload"
           open={this.state.upload}
           title={this.state.popupLabel}
@@ -308,11 +339,17 @@ var Repository = React.createClass({
                 defaultValue={image.name}
                 disabled={image.name ? true : false}
                 hintText="Identifier"
+                ref="nameField"
                 floatingLabelText="Identifier" 
                 onChange={this._handleFieldChange.bind(null, 'name')}
                 errorStyle={{color: "rgb(171, 16, 0)"}} />
 
-              <p className={image.name ? "hidden" : null}><input type="file" /></p>
+              <FileInput name="myImage"
+                   accept=".png,.gif"
+                   placeholder="My Image"
+                   className="fileInput"
+                   style={{zIndex: "2"}}
+                   onChange={this.changedFile} />
 
               <TextField
                 value="Acme Model 1"
@@ -344,6 +381,7 @@ var Repository = React.createClass({
         </Dialog>
 
         <Dialog
+          key="schedule1"
           ref="schedule"
           open={this.state.schedule}
           title='Schedule an update'
@@ -353,7 +391,6 @@ var Repository = React.createClass({
           >
           <ScheduleForm updateSchedule={this._updateParams} images={software} image={this.state.image} imageVal={this.state.image} groups={this.props.groups} />
         </Dialog>
-
       </div>
     );
   }

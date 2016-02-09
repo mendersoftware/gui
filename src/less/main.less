@@ -340,7 +340,7 @@ hr.table-divider {
 
 
 .tagContainer {
-  margin-top: 30px;
+  margin-top: 20px;
 }
 
 .ReactTags__tag {
@@ -360,23 +360,32 @@ hr.table-divider {
 }
 
 
-.ReactTags__tagInput {
+.ReactTags__tagInput input, .ReactTags__tagInput input:focus, input.fileInput {
+  outline: none;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  border-bottom: solid 1px #e0e0e0;
+  padding: 7px 0;
+  font-size: 16px;
+  font-family: Lato, sans-serif;
+  color: rgba(0,0,0,0.8);
 
-  input, input:focus {
-    outline: none;
-    border-top: none;
-    border-left: none;
-    border-right: none;
-    border-bottom: solid 1px #e0e0e0;
-    padding: 7px 0;
-    font-size: 16px;
-    font-family: Lato, sans-serif;
-    color: rgba(0,0,0,0.8);
+  .placeholder({
+    color: rgba(0,0,0,0.3);
+  });
+}
 
-    .placeholder({
-      color: rgba(0,0,0,0.3);
-    });
-
+input[type="file"].fileInput,
+input[type="text"].fileInput {
+  width: 256px !important;
+  margin: 32px 0 10px 0;
+  cursor: pointer;
+  &:first-child {
+    z-index: 2 !important;
+  }
+  &:last-child {
+    z-index: 1 !important;
   }
 }
 

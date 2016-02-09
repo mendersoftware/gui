@@ -283,7 +283,7 @@ hr.table-divider {
   background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.03), rgba(0, 0, 0, 0));
 }
 .tagContainer {
-  margin-top: 30px;
+  margin-top: 20px;
 }
 .ReactTags__tag {
   margin-right: 10px;
@@ -300,7 +300,8 @@ hr.table-divider {
   padding: 10px 0 10px 10px;
 }
 .ReactTags__tagInput input,
-.ReactTags__tagInput input:focus {
+.ReactTags__tagInput input:focus,
+input.fileInput {
   outline: none;
   border-top: none;
   border-left: none;
@@ -312,20 +313,38 @@ hr.table-divider {
   color: rgba(0, 0, 0, 0.8);
 }
 .ReactTags__tagInput input::-webkit-input-placeholder,
-.ReactTags__tagInput input:focus::-webkit-input-placeholder {
+.ReactTags__tagInput input:focus::-webkit-input-placeholder,
+input.fileInput::-webkit-input-placeholder {
   color: rgba(0, 0, 0, 0.3);
 }
 .ReactTags__tagInput input:-moz-placeholder,
-.ReactTags__tagInput input:focus:-moz-placeholder {
+.ReactTags__tagInput input:focus:-moz-placeholder,
+input.fileInput:-moz-placeholder {
   color: rgba(0, 0, 0, 0.3);
 }
 .ReactTags__tagInput input::-moz-placeholder,
-.ReactTags__tagInput input:focus::-moz-placeholder {
+.ReactTags__tagInput input:focus::-moz-placeholder,
+input.fileInput::-moz-placeholder {
   color: rgba(0, 0, 0, 0.3);
 }
 .ReactTags__tagInput input:-ms-input-placeholder,
-.ReactTags__tagInput input:focus:-ms-input-placeholder {
+.ReactTags__tagInput input:focus:-ms-input-placeholder,
+input.fileInput:-ms-input-placeholder {
   color: rgba(0, 0, 0, 0.3);
+}
+input[type="file"].fileInput,
+input[type="text"].fileInput {
+  width: 256px !important;
+  margin: 32px 0 10px 0;
+  cursor: pointer;
+}
+input[type="file"].fileInput:first-child,
+input[type="text"].fileInput:first-child {
+  z-index: 2 !important;
+}
+input[type="file"].fileInput:last-child,
+input[type="text"].fileInput:last-child {
+  z-index: 1 !important;
 }
 .inputHeader {
   color: rgba(0, 0, 0, 0.5);
