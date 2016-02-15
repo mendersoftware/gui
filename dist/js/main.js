@@ -63854,7 +63854,11 @@ var ScheduleForm = _react2.default.createClass({
     this._sendUpToParent(group, 'group');
   },
   _handleImageValueChange: function _handleImageValueChange(e) {
-    var image = this.state.images[e.target.value - 1];
+    var elementPos = this.state.images.map(function (x) {
+      return x.id;
+    }).indexOf(e.target.value);
+    var image = this.state.images[elementPos];
+
     var groupname = this.state.group ? this.state.group.name : null;
     var devices = this.props.device ? 1 : getDevicesFromParams(groupname, image.model);
     this.setState({
@@ -64097,6 +64101,7 @@ var Updates = _react2.default.createClass({
     } else {
       this.setState({ tabIndex: "0" });
     }
+    AppActions.getImages();
   },
   componentWillUnmount: function componentWillUnmount() {
     AppStore.removeChangeListener(this._onChange);

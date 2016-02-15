@@ -86,6 +86,7 @@ var Updates = React.createClass({
       } else {
         this.setState({tabIndex:"0"});
       }
+      AppActions.getImages();
   },
   componentWillUnmount: function () {
     AppStore.removeChangeListener(this._onChange);
