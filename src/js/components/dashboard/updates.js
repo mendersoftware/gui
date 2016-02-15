@@ -25,11 +25,8 @@ var Updates = React.createClass({
             <Recent clickHandle={this._clickHandle} updates={this.props.recent} />
           </div>
           <div className="flexbox">
-            <Schedule updates={this.props.schedule} />
-            <div className="updates-container">
-              <div style={{position:"absolute", bottom:"30", right:"0"}}>
-                <RaisedButton onClick={this._clickHandle.bind(null, {route:"updates",open:true})} label="Schedule update" secondary={true} />
-              </div>
+            <div>
+              <RaisedButton onClick={this._clickHandle.bind(null, {route:"updates",open:true})} label="Deploy update" secondary={true} />
             </div>
           </div>
         </div>

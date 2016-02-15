@@ -7,7 +7,7 @@ var RaisedButton = mui.RaisedButton;
 var UpdateButton = React.createClass({
   render: function() {
     return (
-      <RaisedButton label="Schedule update "/>
+      <RaisedButton label="Deploy update "/>
     );
   }
 });
