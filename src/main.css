@@ -1,6 +1,8 @@
-html,
-body {
+html {
   height: 100%;
+}
+body {
+  min-height: 100%;
 }
 /* General */
 .green {
@@ -30,12 +32,15 @@ body {
 .bold {
   font-weight: bold;
 }
-a {
+a,
+span.link {
   font-weight: bold;
   text-decoration: none;
   color: #347A87;
+  cursor: pointer;
 }
-a:hover {
+a:hover,
+span.link:hover {
   color: #679BA5;
 }
 .nowrap {

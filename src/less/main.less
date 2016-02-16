@@ -1,5 +1,8 @@
-html, body {
+html {
   height: 100%;
+}
+body {
+  min-height: 100%;
 }
 
 /* General */
@@ -56,10 +59,11 @@ body {
   font-weight: bold;
 }
 
-a {
+a, span.link {
   font-weight: bold;
   text-decoration: none;
   color: @linkgreen;
+  cursor: pointer; 
 
   &:hover {
     color: @linkhover;

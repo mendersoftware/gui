@@ -26,7 +26,7 @@ var Updates = React.createClass({
           </div>
           <div className="flexbox">
             <div>
-              <RaisedButton onClick={this._clickHandle.bind(null, {route:"updates",open:true})} label="Deploy update" secondary={true} />
+              <RaisedButton onClick={this._clickHandle.bind(null, {route:"updates",open:true})} label="Deploy an update" secondary={true} />
             </div>
           </div>
         </div>

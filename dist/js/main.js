@@ -3947,6 +3947,10 @@ var _createDOMHistory = require('./createDOMHistory');
 
 var _createDOMHistory2 = _interopRequireDefault(_createDOMHistory);
 
+var _parsePath = require('./parsePath');
+
+var _parsePath2 = _interopRequireDefault(_parsePath);
+
 function isAbsolutePath(path) {
   return typeof path === 'string' && path.charAt(0) === '/';
 }
@@ -4005,7 +4009,9 @@ function createHashHistory() {
       key = state = null;
     }
 
-    return history.createLocation(path, state, undefined, key);
+    var location = _parsePath2['default'](path);
+
+    return history.createLocation(_extends({}, location, { state: state }), undefined, key);
   }
 
   function startHashChangeListener(_ref) {
@@ -4092,6 +4098,18 @@ function createHashHistory() {
     };
   }
 
+  function push(location) {
+    process.env.NODE_ENV !== 'production' ? _warning2['default'](queryKey || location.state == null, 'You cannot use state without a queryKey it will be dropped') : undefined;
+
+    history.push(location);
+  }
+
+  function replace(location) {
+    process.env.NODE_ENV !== 'production' ? _warning2['default'](queryKey || location.state == null, 'You cannot use state without a queryKey it will be dropped') : undefined;
+
+    history.replace(location);
+  }
+
   var goIsSupportedWithoutReload = _DOMUtils.supportsGoWithoutReloadUsingHash();
 
   function go(n) {
@@ -4118,14 +4136,14 @@ function createHashHistory() {
     if (--listenerCount === 0) stopHashChangeListener();
   }
 
-  // deprecated - warning is in createHistory
+  // deprecated
   function pushState(state, path) {
     process.env.NODE_ENV !== 'production' ? _warning2['default'](queryKey || state == null, 'You cannot use state without a queryKey it will be dropped') : undefined;
 
     history.pushState(state, path);
   }
 
-  // deprecated - warning is in createHistory
+  // deprecated
   function replaceState(state, path) {
     process.env.NODE_ENV !== 'production' ? _warning2['default'](queryKey || state == null, 'You cannot use state without a queryKey it will be dropped') : undefined;
 
@@ -4135,19 +4153,23 @@ function createHashHistory() {
   return _extends({}, history, {
     listenBefore: listenBefore,
     listen: listen,
-    pushState: pushState,
-    replaceState: replaceState,
+    push: push,
+    replace: replace,
     go: go,
     createHref: createHref,
-    registerTransitionHook: registerTransitionHook,
-    unregisterTransitionHook: unregisterTransitionHook
+
+    registerTransitionHook: registerTransitionHook, // deprecated - warning is in createHistory
+    unregisterTransitionHook: unregisterTransitionHook, // deprecated - warning is in createHistory
+    pushState: pushState, // deprecated - warning is in createHistory
+    replaceState: replaceState // deprecated - warning is in createHistory
   });
 }
 
 exports['default'] = createHashHistory;
 module.exports = exports['default'];
 }).call(this,require('_process'))
-},{"./Actions":33,"./DOMStateStorage":35,"./DOMUtils":36,"./ExecutionEnvironment":37,"./createDOMHistory":38,"_process":282,"invariant":60,"warning":521}],40:[function(require,module,exports){
+},{"./Actions":33,"./DOMStateStorage":35,"./DOMUtils":36,"./ExecutionEnvironment":37,"./createDOMHistory":38,"./parsePath":45,"_process":282,"invariant":60,"warning":521}],40:[function(require,module,exports){
+//import warning from 'warning'
 'use strict';
 
 exports.__esModule = true;
@@ -4168,13 +4190,13 @@ var _createLocation2 = require('./createLocation');
 
 var _createLocation3 = _interopRequireDefault(_createLocation2);
 
-var _parsePath = require('./parsePath');
-
-var _parsePath2 = _interopRequireDefault(_parsePath);
-
 var _runTransitionHook = require('./runTransitionHook');
 
 var _runTransitionHook2 = _interopRequireDefault(_runTransitionHook);
+
+var _parsePath = require('./parsePath');
+
+var _parsePath2 = _interopRequireDefault(_parsePath);
 
 var _deprecate = require('./deprecate');
 
@@ -4313,11 +4335,11 @@ function createHistory() {
   }
 
   function push(location) {
-    transitionTo(createLocation(location, null, _Actions.PUSH, createKey()));
+    transitionTo(createLocation(location, _Actions.PUSH, createKey()));
   }
 
   function replace(location) {
-    transitionTo(createLocation(location, null, _Actions.REPLACE, createKey()));
+    transitionTo(createLocation(location, _Actions.REPLACE, createKey()));
   }
 
   function goBack() {
@@ -4332,12 +4354,12 @@ function createHistory() {
     return createRandomKey(keyLength);
   }
 
-  function createPath(path) {
-    if (path == null || typeof path === 'string') return path;
+  function createPath(location) {
+    if (location == null || typeof location === 'string') return location;
 
-    var pathname = path.pathname;
-    var search = path.search;
-    var hash = path.hash;
+    var pathname = location.pathname;
+    var search = location.search;
+    var hash = location.hash;
 
     var result = pathname;
 
@@ -4348,14 +4370,29 @@ function createHistory() {
     return result;
   }
 
-  function createHref(path) {
-    return createPath(path);
+  function createHref(location) {
+    return createPath(location);
   }
 
-  function createLocation(path, state, action) {
-    var key = arguments.length <= 3 || arguments[3] === undefined ? createKey() : arguments[3];
+  function createLocation(location, action) {
+    var key = arguments.length <= 2 || arguments[2] === undefined ? createKey() : arguments[2];
 
-    return _createLocation3['default'](path, state, action, key);
+    if (typeof action === 'object') {
+      //warning(
+      //  false,
+      //  'The state (2nd) argument to history.createLocation is deprecated; use a ' +
+      //  'location descriptor instead'
+      //)
+
+      if (typeof location === 'string') location = _parsePath2['default'](location);
+
+      location = _extends({}, location, { state: action });
+
+      action = key;
+      key = arguments[3] || createKey();
+    }
+
+    return _createLocation3['default'](location, action, key);
   }
 
   // deprecated
@@ -4424,9 +4461,12 @@ function createHistory() {
 exports['default'] = createHistory;
 module.exports = exports['default'];
 },{"./Actions":33,"./AsyncUtils":34,"./createLocation":41,"./deprecate":43,"./parsePath":45,"./runTransitionHook":46,"deep-equal":3}],41:[function(require,module,exports){
+//import warning from 'warning'
 'use strict';
 
 exports.__esModule = true;
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
@@ -4438,18 +4478,30 @@ var _parsePath2 = _interopRequireDefault(_parsePath);
 
 function createLocation() {
   var location = arguments.length <= 0 || arguments[0] === undefined ? '/' : arguments[0];
-  var state = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
-  var action = arguments.length <= 2 || arguments[2] === undefined ? _Actions.POP : arguments[2];
-  var key = arguments.length <= 3 || arguments[3] === undefined ? null : arguments[3];
+  var action = arguments.length <= 1 || arguments[1] === undefined ? _Actions.POP : arguments[1];
+  var key = arguments.length <= 2 || arguments[2] === undefined ? null : arguments[2];
+
+  var _fourthArg = arguments.length <= 3 || arguments[3] === undefined ? null : arguments[3];
 
   if (typeof location === 'string') location = _parsePath2['default'](location);
+
+  if (typeof action === 'object') {
+    //warning(
+    //  false,
+    //  'The state (2nd) argument to createLocation is deprecated; use a ' +
+    //  'location descriptor instead'
+    //)
+
+    location = _extends({}, location, { state: action });
+
+    action = key || _Actions.POP;
+    key = _fourthArg;
+  }
 
   var pathname = location.pathname || '/';
   var search = location.search || '';
   var hash = location.hash || '';
-
-  // TODO: Deprecate passing state directly into createLocation.
-  state = location.state || state;
+  var state = location.state || null;
 
   return {
     pathname: pathname,
@@ -4473,6 +4525,10 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
+var _warning = require('warning');
+
+var _warning2 = _interopRequireDefault(_warning);
+
 var _invariant = require('invariant');
 
 var _invariant2 = _interopRequireDefault(_invariant);
@@ -4482,6 +4538,10 @@ var _Actions = require('./Actions');
 var _createHistory = require('./createHistory');
 
 var _createHistory2 = _interopRequireDefault(_createHistory);
+
+var _parsePath = require('./parsePath');
+
+var _parsePath2 = _interopRequireDefault(_parsePath);
 
 function createStateStorage(entries) {
   return entries.filter(function (entry) {
@@ -4562,7 +4622,9 @@ function createMemoryHistory() {
       entry.key = key;
     }
 
-    return history.createLocation(path, state, undefined, key);
+    var location = _parsePath2['default'](path);
+
+    return history.createLocation(_extends({}, location, { state: state }), undefined, key);
   }
 
   function canGo(n) {
@@ -4572,7 +4634,10 @@ function createMemoryHistory() {
 
   function go(n) {
     if (n) {
-      !canGo(n) ? process.env.NODE_ENV !== 'production' ? _invariant2['default'](false, 'Cannot go(%s) there is not enough history', n) : _invariant2['default'](false) : undefined;
+      if (!canGo(n)) {
+        process.env.NODE_ENV !== 'production' ? _warning2['default'](false, 'Cannot go(%s) there is not enough history', n) : undefined;
+        return;
+      }
 
       current += n;
 
@@ -4608,29 +4673,23 @@ function createMemoryHistory() {
 exports['default'] = createMemoryHistory;
 module.exports = exports['default'];
 }).call(this,require('_process'))
-},{"./Actions":33,"./createHistory":40,"_process":282,"invariant":60}],43:[function(require,module,exports){
-(function (process){
-'use strict';
+},{"./Actions":33,"./createHistory":40,"./parsePath":45,"_process":282,"invariant":60,"warning":521}],43:[function(require,module,exports){
+//import warning from 'warning'
+
+"use strict";
 
 exports.__esModule = true;
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-var _warning = require('warning');
-
-var _warning2 = _interopRequireDefault(_warning);
-
-function deprecate(fn, message) {
-  return function () {
-    process.env.NODE_ENV !== 'production' ? _warning2['default'](false, '[history] ' + message) : undefined;
-    return fn.apply(this, arguments);
-  };
+function deprecate(fn) {
+  return fn;
+  //return function () {
+  //  warning(false, '[history] ' + message)
+  //  return fn.apply(this, arguments)
+  //}
 }
 
-exports['default'] = deprecate;
-module.exports = exports['default'];
-}).call(this,require('_process'))
-},{"_process":282,"warning":521}],44:[function(require,module,exports){
+exports["default"] = deprecate;
+module.exports = exports["default"];
+},{}],44:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -4816,12 +4875,12 @@ function useBasename(createHistory) {
       history.replace(prependBasename(location));
     }
 
-    function createPath(path) {
-      return history.createPath(prependBasename(path));
+    function createPath(location) {
+      return history.createPath(prependBasename(location));
     }
 
-    function createHref(path) {
-      return history.createHref(prependBasename(path));
+    function createHref(location) {
+      return history.createHref(prependBasename(location));
     }
 
     function createLocation() {
@@ -4982,12 +5041,20 @@ function useQueries(createHistory) {
       history.replace(appendQuery(location, location.query));
     }
 
-    function createPath(path, query) {
-      return history.createPath(appendQuery(path, query));
+    function createPath(location, query) {
+      //warning(
+      //  !query,
+      //  'the query argument to createPath is deprecated; use a location descriptor instead'
+      //)
+      return history.createPath(appendQuery(location, query || location.query));
     }
 
-    function createHref(path, query) {
-      return history.createHref(appendQuery(path, query));
+    function createHref(location, query) {
+      //warning(
+      //  !query,
+      //  'the query argument to createHref is deprecated; use a location descriptor instead'
+      //)
+      return history.createHref(appendQuery(location, query || location.query));
     }
 
     function createLocation() {
@@ -58703,7 +58770,7 @@ module.exports = exports['default'];
 'use strict';
 module.exports = function (str) {
 	return encodeURIComponent(str).replace(/[!'()*]/g, function (c) {
-		return '%' + c.charCodeAt(0).toString(16);
+		return '%' + c.charCodeAt(0).toString(16).toUpperCase();
 	});
 };
 
@@ -60395,6 +60462,25 @@ var Health = _react2.default.createClass({
         { className: 'dashboard-container' },
         _react2.default.createElement(
           'div',
+          { className: '' },
+          _react2.default.createElement(
+            'span',
+            { className: this.props.health.nogroup ? "number" : "hidden", style: { marginRight: "0" } },
+            '+'
+          ),
+          _react2.default.createElement(
+            'span',
+            { className: 'number' },
+            this.props.health.nogroup
+          ),
+          _react2.default.createElement(
+            'span',
+            null,
+            'Pending'
+          )
+        ),
+        _react2.default.createElement(
+          'div',
           { className: 'health-panel red', onClick: this._clickHandle.bind(null, "down") },
           _react2.default.createElement(
             'span',
@@ -60419,25 +60505,6 @@ var Health = _react2.default.createClass({
             'span',
             null,
             'up'
-          )
-        ),
-        _react2.default.createElement(
-          'div',
-          { className: 'health-panel lightestgrey' },
-          _react2.default.createElement(
-            'span',
-            { className: this.props.health.nogroup ? "number" : "hidden", style: { marginRight: "0" } },
-            '+'
-          ),
-          _react2.default.createElement(
-            'span',
-            { className: 'number' },
-            this.props.health.nogroup
-          ),
-          _react2.default.createElement(
-            'span',
-            null,
-            'new'
           )
         ),
         _react2.default.createElement(
@@ -60872,7 +60939,7 @@ var Updates = _react2.default.createClass({
           _react2.default.createElement(
             'div',
             null,
-            _react2.default.createElement(RaisedButton, { onClick: this._clickHandle.bind(null, { route: "updates", open: true }), label: 'Deploy update', secondary: true })
+            _react2.default.createElement(RaisedButton, { onClick: this._clickHandle.bind(null, { route: "updates", open: true }), label: 'Deploy an update', secondary: true })
           )
         )
       )
@@ -63753,6 +63820,7 @@ var TimePicker = _materialUi2.default.TimePicker;
 var SelectField = _materialUi2.default.SelectField;
 var TextField = _materialUi2.default.TextField;
 var FontIcon = _materialUi2.default.FontIcon;
+var LeftNav = _materialUi2.default.LeftNav;
 
 function getDate() {
   return new Date();
@@ -63777,7 +63845,7 @@ function getDevicesFromParams(group, model) {
   if (model && group) {
     devices = _appStore2.default.getDevicesFromParams(group, model);
   }
-  return devices.length;
+  return devices;
 }
 
 var ScheduleForm = _react2.default.createClass({
@@ -63835,7 +63903,8 @@ var ScheduleForm = _react2.default.createClass({
       groupVal: groupVal,
       images: _appStore2.default.getSoftwareRepo(),
       disabled: disabled,
-      group: group
+      group: group,
+      showDevices: false
     };
   },
   componentDidMount: function componentDidMount() {
@@ -63862,7 +63931,8 @@ var ScheduleForm = _react2.default.createClass({
     var image = this.state.images[elementPos];
 
     var groupname = this.state.group ? this.state.group.name : null;
-    var devices = this.props.device ? 1 : getDevicesFromParams(groupname, image.model);
+    var devices = this.props.device ? this.props.device : getDevicesFromParams(groupname, image.model);
+    console.log(devices);
     this.setState({
       image: image,
       imageVal: {
@@ -63903,6 +63973,11 @@ var ScheduleForm = _react2.default.createClass({
     });
   },
 
+  _showDevices: function _showDevices() {
+    this.refs.devicesNav.toggle();
+    this.setState({ showDevices: !this.state.showDevices });
+  },
+
   render: function render() {
     var imageItems = [];
     for (var i = 0; i < this.state.images.length; i++) {
@@ -63929,9 +64004,48 @@ var ScheduleForm = _react2.default.createClass({
 
     var defaultStartDate = this.state.start_time;
     var defaultEndDate = this.state.end_time;
+    var deviceList = _react2.default.createElement(
+      'p',
+      null,
+      'No devices'
+    );
+    if (this.state.devices) {
+      deviceList = this.state.devices.map(function (item, index) {
+        var singleFilter = "name=" + item.name;
+        singleFilter = encodeURIComponent(singleFilter);
+        return _react2.default.createElement(
+          'p',
+          null,
+          _react2.default.createElement(
+            _reactRouter.Link,
+            { to: '/devices/' + this.state.groupVal.payload + '/' + singleFilter },
+            item.name
+          )
+        );
+      }, this);
+    }
+    deviceList = _react2.default.createElement(
+      'div',
+      null,
+      deviceList,
+      _react2.default.createElement(
+        _reactRouter.Link,
+        { to: '/devices/' + this.state.groupVal.payload + '/' + filters },
+        'View group in Devices'
+      )
+    );
+
     return _react2.default.createElement(
       'div',
       { style: { height: '440px' } },
+      _react2.default.createElement(LeftNav, {
+        ref: 'devicesNav',
+        docked: false,
+        openRight: true,
+        menuItems: [],
+        open: this.state.showDevices,
+        header: deviceList,
+        style: { overflowY: "auto" } }),
       _react2.default.createElement(
         'form',
         null,
@@ -63981,11 +64095,11 @@ var ScheduleForm = _react2.default.createClass({
           _react2.default.createElement(
             'div',
             { className: this.state.devices ? null : 'hidden' },
-            this.state.devices,
+            this.state.devices ? this.state.devices.length : "0",
             ' devices will be updated ',
             _react2.default.createElement(
-              _reactRouter.Link,
-              { to: 'devices', params: { groupId: this.state.groupVal.payload, filters: filters }, className: this.state.disabled ? "hidden" : "margin-left" },
+              'span',
+              { onClick: this._showDevices, params: { groupId: this.state.groupVal.payload, filters: filters }, className: this.state.disabled ? "hidden" : "margin-left link" },
               'View devices'
             )
           )
@@ -64231,7 +64345,10 @@ var Updates = _react2.default.createClass({
           autoDetectWindowHeight: true, autoScrollBodyContent: true,
           contentClassName: this.state.contentClass,
           bodyStyle: { paddingTop: "0" },
-          open: this.state.dialog
+          open: this.state.dialog,
+          contentStyle: { overflow: "hidden", boxShadow: "0 14px 45px rgba(0, 0, 0, 0.25), 0 10px 18px rgba(0, 0, 0, 0.22)" },
+          actionsContainerStyle: { marginBottom: "0" },
+          actionsContainerClassName: 'noMargin'
         },
         dialogContent
       )
@@ -64276,9 +64393,29 @@ module.exports = _react2.default.createElement(
   _reactRouter.Route,
   { path: '/', component: _app2.default },
   _react2.default.createElement(_reactRouter.IndexRoute, { component: _dashboard2.default }),
-  _react2.default.createElement(_reactRouter.Route, { path: '/devices(/:groupId)(/:filters)', component: _devices2.default }),
+  _react2.default.createElement(
+    _reactRouter.Route,
+    { path: '/devices', component: _devices2.default },
+    _react2.default.createElement(
+      _reactRouter.Route,
+      { path: '(:groupId)' },
+      _react2.default.createElement(_reactRouter.Route, { path: '(:filters)' })
+    )
+  ),
   _react2.default.createElement(_reactRouter.Route, { path: '/software', component: _software2.default }),
-  _react2.default.createElement(_reactRouter.Route, { path: '/updates(/:tab)(/:params)(/:Id)', component: _updates2.default })
+  _react2.default.createElement(
+    _reactRouter.Route,
+    { path: '/updates', component: _updates2.default },
+    _react2.default.createElement(
+      _reactRouter.Route,
+      { path: '(:tab)' },
+      _react2.default.createElement(
+        _reactRouter.Route,
+        { path: '(:params)' },
+        _react2.default.createElement(_reactRouter.Route, { path: '(:Id)' })
+      )
+    )
+  )
 );
 
 },{"../components/app":524,"../components/dashboard/dashboard":526,"../components/devices/devices":533,"../components/software/software":540,"../components/updates/updates":549,"react":515,"react-router":340}],551:[function(require,module,exports){
