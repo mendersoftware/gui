@@ -178,8 +178,8 @@ var SelectedImage = React.createClass({
             <List>
               <ListItem
                 disabled={this.props.image.name ? false : true}
-                primaryText="Schedule update"
-                secondaryText="Create an update with this image"
+                primaryText="Deploy update"
+                secondaryText="Update devices with this image"
                 onClick={this._clickImageSchedule}
                 leftIcon={<FontIcon className="material-icons">schedule</FontIcon>} />
               <ListDivider />

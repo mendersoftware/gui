@@ -237,7 +237,7 @@ var Repository = React.createClass({
       </div>,
       <RaisedButton
         key="schedule-submit"
-        label="Schedule update"
+        label="Deploy update"
         primary={true}
         onClick={this._onScheduleSubmit} />
     ];
@@ -384,7 +384,7 @@ var Repository = React.createClass({
           key="schedule1"
           ref="schedule"
           open={this.state.schedule}
-          title='Schedule an update'
+          title='Deploy an update'
           actions={scheduleActions}
           autoDetectWindowHeight={true} autoScrollBodyContent={true}
           bodyStyle={{paddingTop:"0"}}

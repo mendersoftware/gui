@@ -18,11 +18,11 @@ var ScheduleButton = React.createClass({
     var button = '';
     if (this.props.buttonType === 'flat') {
       button = (
-        <FlatButton primary={this.props.primary} secondary={this.props.secondary} label={ this.props.label || "Schedule an update"} onClick={this._handleClick} />
+        <FlatButton primary={this.props.primary} secondary={this.props.secondary} label={ this.props.label || "Deploy an update"} onClick={this._handleClick} />
       )
     } else {
       button = (
-        <RaisedButton primary={this.props.primary} secondary={this.props.secondary} label={ this.props.label || "Schedule an update"} onClick={this._handleClick} />
+        <RaisedButton primary={this.props.primary} secondary={this.props.secondary} label={ this.props.label || "Deploy an update"} onClick={this._handleClick} />
       )
     }
     return (

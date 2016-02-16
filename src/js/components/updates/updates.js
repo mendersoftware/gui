@@ -41,7 +41,7 @@ function getState() {
     events: AppStore.getEventLog(),
     images: AppStore.getSoftwareRepo(),
     groups: AppStore.getGroups(),
-    dialogTitle: "Schedule an update",
+    dialogTitle: "Deploy an update",
     scheduleForm: true,
     contentClass: "largeDialog", 
     invalid: true,
@@ -86,6 +86,7 @@ var Updates = React.createClass({
       } else {
         this.setState({tabIndex:"0"});
       }
+      AppActions.getImages();
   },
   componentWillUnmount: function () {
     AppStore.removeChangeListener(this._onChange);
@@ -99,7 +100,7 @@ var Updates = React.createClass({
   dialogOpen: function(dialog) {
     if (dialog === 'schedule') {
       this.setState({
-        dialogTitle: "Schedule an update",
+        dialogTitle: "Deploy an update",
         scheduleForm: true,
         contentClass: null
       });
@@ -180,7 +181,7 @@ var Updates = React.createClass({
           onClick={this.dialogDismiss.bind(null, 'dialog')} />
       </div>,
       <RaisedButton
-        label="Schedule update"
+        label="Deploy update"
         primary={true}
         onClick={this._onScheduleSubmit}
         ref="save" />
@@ -200,39 +201,12 @@ var Updates = React.createClass({
       )
     }
     return (
-      <div>
+      <div className="contentContainer">
         <div>
-          <Tabs
-            style={{position:"relative"}}
-            tabItemContainerStyle={{width:"33%"}}
-            inkBarStyle={styles.inkbar}
-            value={this.state.tabIndex}
-            onChange={this._changeTab}>
-            <Tab
-            style={styles.tabs}
-            label={"Latest"}
-            value="0"
-            className="tabClass">
-              <div className="tabContainer">
-                <Recent recent={this.state.recent} progress={this.state.progress} showReport={this._showReport} />
-                <div style={{marginTop:"45"}} className="float-right">
-                  <ScheduleButton secondary={true} openDialog={this.dialogOpen} />
-                </div>
-              </div>
-            </Tab>
-
-            <Tab
-            style={styles.tabs}
-            label={"Schedule"}
-            value="1">
-              <div className="tabContainer">
-                <Schedule edit={this._scheduleUpdate} schedule={this.state.schedule} remove={this._scheduleRemove} />
-                <div style={{marginTop:"45"}} className="float-right">
-                  <ScheduleButton style={{marginTop:"45"}} secondary={true}  openDialog={this.dialogOpen} />
-                </div>
-              </div>
-            </Tab>
-          </Tabs>
+          <Recent recent={this.state.recent} progress={this.state.progress} showReport={this._showReport} />
+          <div style={{marginTop:"45"}} className="float-right">
+            <ScheduleButton secondary={true} openDialog={this.dialogOpen} />
+          </div>
         </div>
       
         <Dialog

@@ -60869,15 +60869,10 @@ var Updates = _react2.default.createClass({
         _react2.default.createElement(
           'div',
           { className: 'flexbox' },
-          _react2.default.createElement(Schedule, { updates: this.props.schedule }),
           _react2.default.createElement(
             'div',
-            { className: 'updates-container' },
-            _react2.default.createElement(
-              'div',
-              { style: { position: "absolute", bottom: "30", right: "0" } },
-              _react2.default.createElement(RaisedButton, { onClick: this._clickHandle.bind(null, { route: "updates", open: true }), label: 'Schedule update', secondary: true })
-            )
+            null,
+            _react2.default.createElement(RaisedButton, { onClick: this._clickHandle.bind(null, { route: "updates", open: true }), label: 'Deploy update', secondary: true })
           )
         )
       )
@@ -61128,7 +61123,8 @@ function getState() {
     devices: AppStore.getDevices(),
     selectedDevices: AppStore.getSelectedDevices(),
     filters: AppStore.getFilters(),
-    attributes: AppStore.getAttributes()
+    attributes: AppStore.getAttributes(),
+    images: AppStore.getSoftwareRepo()
   };
 }
 
@@ -61139,6 +61135,7 @@ var Devices = _react2.default.createClass({
     return getState();
   },
   componentWillMount: function componentWillMount() {
+    AppActions.getImages();
     AppStore.changeListener(this._onChange);
     var filters = [];
     if (this.props.params) {
@@ -61168,7 +61165,7 @@ var Devices = _react2.default.createClass({
   render: function render() {
     return _react2.default.createElement(
       'div',
-      { className: 'margin-top-small' },
+      { className: 'margin-top' },
       _react2.default.createElement(
         'div',
         { className: 'leftFixed' },
@@ -61179,7 +61176,7 @@ var Devices = _react2.default.createClass({
         { className: 'rightFluid padding-right' },
         _react2.default.createElement(Filters, { attributes: this.state.attributes, filters: this.state.filters, onFilterChange: this._updateFilters }),
         _react2.default.createElement(DeviceList, { groups: this.state.groups, devices: this.state.devices, selectedGroup: this.state.selectedGroup }),
-        _react2.default.createElement(SelectedDevices, { devices: this.state.devices, selected: this.state.selectedDevices, selectedGroup: this.state.selectedGroup, groups: this.state.groups })
+        _react2.default.createElement(SelectedDevices, { images: this.state.images, devices: this.state.devices, selected: this.state.selectedDevices, selectedGroup: this.state.selectedGroup, groups: this.state.groups })
       )
     );
   }
@@ -61765,7 +61762,7 @@ var SelectedDevices = _react2.default.createClass({
             _react2.default.createElement(ListItem, { rightIconButton: editButton, disabled: true, primaryText: 'Tags', secondaryText: tags }),
             _react2.default.createElement(ListDivider, null),
             _react2.default.createElement(ListItem, {
-              primaryText: 'Schedule update',
+              primaryText: 'Deploy update',
               secondaryText: 'Click to update this device',
               onClick: this._clickListItem,
               leftIcon: _react2.default.createElement(
@@ -61813,7 +61810,7 @@ var SelectedDevices = _react2.default.createClass({
         label: 'Cancel',
         onClick: this.dialogDismiss.bind(null, 'schedule') })
     ), _react2.default.createElement(RaisedButton, {
-      label: 'Schedule update',
+      label: 'Deploy update',
       primary: true,
       onClick: this._onScheduleSubmit,
       ref: 'save' })];
@@ -61916,12 +61913,12 @@ var SelectedDevices = _react2.default.createClass({
         Dialog,
         {
           ref: 'schedule',
-          title: 'Schedule an update',
+          title: 'Deploy an update',
           actions: scheduleActions,
           autoDetectWindowHeight: true, autoScrollBodyContent: true,
           bodyStyle: { paddingTop: "0" }
         },
-        _react2.default.createElement(ScheduleForm, { device: this.props.selected[0], updateSchedule: this._updateParams, groups: this.props.groups })
+        _react2.default.createElement(ScheduleForm, { images: this.props.images, device: this.props.selected[0], updateSchedule: this._updateParams, groups: this.props.groups })
       )
     );
   }
@@ -62341,7 +62338,7 @@ var Repository = _react2.default.createClass({
         onClick: this.dialogDismiss.bind(null, 'schedule') })
     ), _react2.default.createElement(RaisedButton, {
       key: 'schedule-submit',
-      label: 'Schedule update',
+      label: 'Deploy update',
       primary: true,
       onClick: this._onScheduleSubmit })];
 
@@ -62557,7 +62554,7 @@ var Repository = _react2.default.createClass({
           key: 'schedule1',
           ref: 'schedule',
           open: this.state.schedule,
-          title: 'Schedule an update',
+          title: 'Deploy an update',
           actions: scheduleActions,
           autoDetectWindowHeight: true, autoScrollBodyContent: true,
           bodyStyle: { paddingTop: "0" }
@@ -62795,8 +62792,8 @@ var SelectedImage = _react2.default.createClass({
             null,
             _react2.default.createElement(ListItem, {
               disabled: this.props.image.name ? false : true,
-              primaryText: 'Schedule update',
-              secondaryText: 'Create an update with this image',
+              primaryText: 'Deploy update',
+              secondaryText: 'Update devices with this image',
               onClick: this._clickImageSchedule,
               leftIcon: _react2.default.createElement(
                 FontIcon,
@@ -62889,7 +62886,7 @@ var UpdateButton = _react2.default.createClass({
   displayName: 'UpdateButton',
 
   render: function render() {
-    return _react2.default.createElement(RaisedButton, { label: 'Schedule update ' });
+    return _react2.default.createElement(RaisedButton, { label: 'Deploy update ' });
   }
 });
 
@@ -63141,7 +63138,7 @@ var Recent = _react2.default.createClass({
     });
 
     var reportActions = [{ text: 'Close' }];
-    var retryActions = [{ text: 'Cancel' }, { text: 'Schedule update', onClick: this._onUploadSubmit, primary: 'true' }];
+    var retryActions = [{ text: 'Cancel' }, { text: 'Deploy update', onClick: this._onUploadSubmit, primary: 'true' }];
     return _react2.default.createElement(
       'div',
       null,
@@ -63217,7 +63214,6 @@ var Recent = _react2.default.createClass({
           )
         )
       ),
-      _react2.default.createElement('hr', { className: 'table-divider' }),
       _react2.default.createElement(
         'div',
         { style: { marginTop: "60" } },
@@ -63715,9 +63711,9 @@ var ScheduleButton = _react2.default.createClass({
   render: function render() {
     var button = '';
     if (this.props.buttonType === 'flat') {
-      button = _react2.default.createElement(FlatButton, { primary: this.props.primary, secondary: this.props.secondary, label: this.props.label || "Schedule an update", onClick: this._handleClick });
+      button = _react2.default.createElement(FlatButton, { primary: this.props.primary, secondary: this.props.secondary, label: this.props.label || "Deploy an update", onClick: this._handleClick });
     } else {
-      button = _react2.default.createElement(RaisedButton, { primary: this.props.primary, secondary: this.props.secondary, label: this.props.label || "Schedule an update", onClick: this._handleClick });
+      button = _react2.default.createElement(RaisedButton, { primary: this.props.primary, secondary: this.props.secondary, label: this.props.label || "Deploy an update", onClick: this._handleClick });
     }
     return _react2.default.createElement(
       'div',
@@ -63860,7 +63856,11 @@ var ScheduleForm = _react2.default.createClass({
     this._sendUpToParent(group, 'group');
   },
   _handleImageValueChange: function _handleImageValueChange(e) {
-    var image = this.state.images[e.target.value - 1];
+    var elementPos = this.state.images.map(function (x) {
+      return x.id;
+    }).indexOf(e.target.value);
+    var image = this.state.images[elementPos];
+
     var groupname = this.state.group ? this.state.group.name : null;
     var devices = this.props.device ? 1 : getDevicesFromParams(groupname, image.model);
     this.setState({
@@ -63999,66 +63999,6 @@ var ScheduleForm = _react2.default.createClass({
             'info_outline'
           ),
           'Any devices that are already on the target software version will be skipped.'
-        ),
-        _react2.default.createElement(
-          'div',
-          { className: 'inputGroup' },
-          _react2.default.createElement(
-            'h5',
-            { style: { margin: "0" } },
-            'Start update'
-          ),
-          _react2.default.createElement(
-            'div',
-            { style: { display: "inline-block" } },
-            _react2.default.createElement(_datetime2.default, {
-              my_ref: 'start_date',
-              date: true,
-              changed: this._updatedDateTime,
-              label: 'Start date',
-              defaultDate: defaultStartDate,
-              minDate: this.state.minDate })
-          ),
-          _react2.default.createElement(
-            'div',
-            { style: { display: "inline-block", marginLeft: "30px" } },
-            _react2.default.createElement(_datetime2.default, {
-              my_ref: 'start_time',
-              time: true,
-              changed: this._updatedDateTime,
-              label: 'Start time',
-              defaultDate: defaultStartDate })
-          )
-        ),
-        _react2.default.createElement(
-          'div',
-          { style: { marginTop: "20" }, className: 'inputGroup' },
-          _react2.default.createElement(
-            'h5',
-            { style: { margin: "0" } },
-            'End update'
-          ),
-          _react2.default.createElement(
-            'div',
-            { style: { display: "inline-block" } },
-            _react2.default.createElement(_datetime2.default, {
-              my_ref: 'end_date',
-              date: true,
-              changed: this._updatedDateTime,
-              label: 'End date',
-              defaultDate: defaultEndDate,
-              minDate: this.state.start_date })
-          ),
-          _react2.default.createElement(
-            'div',
-            { style: { display: "inline-block", marginLeft: "30px" } },
-            _react2.default.createElement(_datetime2.default, {
-              my_ref: 'end_time',
-              time: true,
-              changed: this._updatedDateTime,
-              label: 'End time',
-              defaultDate: defaultEndDate })
-          )
         )
       )
     );
@@ -64118,7 +64058,7 @@ function getState() {
     events: AppStore.getEventLog(),
     images: AppStore.getSoftwareRepo(),
     groups: AppStore.getGroups(),
-    dialogTitle: "Schedule an update",
+    dialogTitle: "Deploy an update",
     scheduleForm: true,
     contentClass: "largeDialog",
     invalid: true,
@@ -64163,6 +64103,7 @@ var Updates = _react2.default.createClass({
     } else {
       this.setState({ tabIndex: "0" });
     }
+    AppActions.getImages();
   },
   componentWillUnmount: function componentWillUnmount() {
     AppStore.removeChangeListener(this._onChange);
@@ -64176,7 +64117,7 @@ var Updates = _react2.default.createClass({
   dialogOpen: function dialogOpen(dialog) {
     if (dialog === 'schedule') {
       this.setState({
-        dialogTitle: "Schedule an update",
+        dialogTitle: "Deploy an update",
         scheduleForm: true,
         contentClass: null
       });
@@ -64256,7 +64197,7 @@ var Updates = _react2.default.createClass({
         label: 'Cancel',
         onClick: this.dialogDismiss.bind(null, 'dialog') })
     ), _react2.default.createElement(RaisedButton, {
-      label: 'Schedule update',
+      label: 'Deploy update',
       primary: true,
       onClick: this._onScheduleSubmit,
       ref: 'save' })];
@@ -64270,53 +64211,15 @@ var Updates = _react2.default.createClass({
     }
     return _react2.default.createElement(
       'div',
-      null,
+      { className: 'contentContainer' },
       _react2.default.createElement(
         'div',
         null,
+        _react2.default.createElement(Recent, { recent: this.state.recent, progress: this.state.progress, showReport: this._showReport }),
         _react2.default.createElement(
-          Tabs,
-          {
-            style: { position: "relative" },
-            tabItemContainerStyle: { width: "33%" },
-            inkBarStyle: styles.inkbar,
-            value: this.state.tabIndex,
-            onChange: this._changeTab },
-          _react2.default.createElement(
-            Tab,
-            {
-              style: styles.tabs,
-              label: "Latest",
-              value: '0',
-              className: 'tabClass' },
-            _react2.default.createElement(
-              'div',
-              { className: 'tabContainer' },
-              _react2.default.createElement(Recent, { recent: this.state.recent, progress: this.state.progress, showReport: this._showReport }),
-              _react2.default.createElement(
-                'div',
-                { style: { marginTop: "45" }, className: 'float-right' },
-                _react2.default.createElement(ScheduleButton, { secondary: true, openDialog: this.dialogOpen })
-              )
-            )
-          ),
-          _react2.default.createElement(
-            Tab,
-            {
-              style: styles.tabs,
-              label: "Schedule",
-              value: '1' },
-            _react2.default.createElement(
-              'div',
-              { className: 'tabContainer' },
-              _react2.default.createElement(Schedule, { edit: this._scheduleUpdate, schedule: this.state.schedule, remove: this._scheduleRemove }),
-              _react2.default.createElement(
-                'div',
-                { style: { marginTop: "45" }, className: 'float-right' },
-                _react2.default.createElement(ScheduleButton, { style: { marginTop: "45" }, secondary: true, openDialog: this.dialogOpen })
-              )
-            )
-          )
+          'div',
+          { style: { marginTop: "45" }, className: 'float-right' },
+          _react2.default.createElement(ScheduleButton, { secondary: true, openDialog: this.dialogOpen })
         )
       ),
       _react2.default.createElement(

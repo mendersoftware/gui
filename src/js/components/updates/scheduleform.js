@@ -112,7 +112,9 @@ var ScheduleForm = React.createClass({
     this._sendUpToParent(group, 'group');
   },
   _handleImageValueChange: function(e) {
-    var image = this.state.images[e.target.value-1];
+    var elementPos = this.state.images.map(function(x) {return x.id;}).indexOf(e.target.value);
+    var image = this.state.images[elementPos];
+
     var groupname = this.state.group ? this.state.group.name : null;
     var devices = this.props.device ? 1 : getDevicesFromParams(groupname, image.model);
     this.setState({
@@ -227,48 +229,6 @@ var ScheduleForm = React.createClass({
           </div>
             
           <p className='info'><FontIcon className="material-icons" style={{marginRight:"4", fontSize:"18", top: "4"}}>info_outline</FontIcon>Any devices that are already on the target software version will be skipped.</p>
-
-          <div className="inputGroup">
-            <h5 style={{margin:"0"}}>Start update</h5>
-            <div style={{display:"inline-block"}}>
-              <DateTime 
-                my_ref="start_date"
-                date={true}
-                changed={this._updatedDateTime}
-                label="Start date"
-                defaultDate={defaultStartDate}
-                minDate={this.state.minDate} />
-            </div>
-            <div style={{display:"inline-block", marginLeft:"30px"}}>
-              <DateTime 
-                my_ref="start_time"
-                time={true}
-                changed={this._updatedDateTime}
-                label="Start time"
-                defaultDate={defaultStartDate}/>
-            </div>
-          </div>
-
-          <div style={{marginTop:"20"}} className="inputGroup">
-            <h5 style={{margin:"0"}}>End update</h5>
-            <div style={{display:"inline-block"}}>
-              <DateTime 
-                my_ref="end_date"
-                date={true}
-                changed={this._updatedDateTime}
-                label="End date"
-                defaultDate={defaultEndDate}
-                minDate={this.state.start_date} />
-            </div>
-            <div style={{display:"inline-block", marginLeft:"30px"}}>
-               <DateTime 
-                my_ref="end_time"
-                time={true}
-                changed={this._updatedDateTime}
-                label="End time"
-                defaultDate={defaultEndDate}/>
-            </div>
-          </div>
 
         </form>
       </div>

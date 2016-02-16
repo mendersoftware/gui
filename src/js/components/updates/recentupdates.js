@@ -65,7 +65,7 @@ var Recent = React.createClass({
     ];
     var retryActions = [
       { text: 'Cancel' },
-      { text: 'Schedule update', onClick: this._onUploadSubmit, primary: 'true' }
+      { text: 'Deploy update', onClick: this._onUploadSubmit, primary: 'true' }
     ];
     return (
       <div>
@@ -97,8 +97,6 @@ var Recent = React.createClass({
             <p className="italic">No updates in progress</p>
           </div>
         </div>
-
-        <hr className="table-divider" />
 
         <div style={{marginTop:"60"}}>
           <h3>Recent updates</h3>
