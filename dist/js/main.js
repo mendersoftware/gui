@@ -61123,7 +61123,8 @@ function getState() {
     devices: AppStore.getDevices(),
     selectedDevices: AppStore.getSelectedDevices(),
     filters: AppStore.getFilters(),
-    attributes: AppStore.getAttributes()
+    attributes: AppStore.getAttributes(),
+    images: AppStore.getSoftwareRepo()
   };
 }
 
@@ -61134,6 +61135,7 @@ var Devices = _react2.default.createClass({
     return getState();
   },
   componentWillMount: function componentWillMount() {
+    AppActions.getImages();
     AppStore.changeListener(this._onChange);
     var filters = [];
     if (this.props.params) {
@@ -61174,7 +61176,7 @@ var Devices = _react2.default.createClass({
         { className: 'rightFluid padding-right' },
         _react2.default.createElement(Filters, { attributes: this.state.attributes, filters: this.state.filters, onFilterChange: this._updateFilters }),
         _react2.default.createElement(DeviceList, { groups: this.state.groups, devices: this.state.devices, selectedGroup: this.state.selectedGroup }),
-        _react2.default.createElement(SelectedDevices, { devices: this.state.devices, selected: this.state.selectedDevices, selectedGroup: this.state.selectedGroup, groups: this.state.groups })
+        _react2.default.createElement(SelectedDevices, { images: this.state.images, devices: this.state.devices, selected: this.state.selectedDevices, selectedGroup: this.state.selectedGroup, groups: this.state.groups })
       )
     );
   }
@@ -61916,7 +61918,7 @@ var SelectedDevices = _react2.default.createClass({
           autoDetectWindowHeight: true, autoScrollBodyContent: true,
           bodyStyle: { paddingTop: "0" }
         },
-        _react2.default.createElement(ScheduleForm, { device: this.props.selected[0], updateSchedule: this._updateParams, groups: this.props.groups })
+        _react2.default.createElement(ScheduleForm, { images: this.props.images, device: this.props.selected[0], updateSchedule: this._updateParams, groups: this.props.groups })
       )
     );
   }

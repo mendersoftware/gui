@@ -14,7 +14,8 @@ function getState() {
     devices: AppStore.getDevices(),
     selectedDevices: AppStore.getSelectedDevices(),
     filters: AppStore.getFilters(),
-    attributes: AppStore.getAttributes()
+    attributes: AppStore.getAttributes(),
+    images: AppStore.getSoftwareRepo()
   }
 }
 
@@ -23,6 +24,7 @@ var Devices = React.createClass({
     return getState()
   },
   componentWillMount: function() {
+    AppActions.getImages();
     AppStore.changeListener(this._onChange);
     var filters = [];
     if (this.props.params) {
@@ -58,7 +60,7 @@ var Devices = React.createClass({
         <div className="rightFluid padding-right">
           <Filters attributes={this.state.attributes} filters={this.state.filters} onFilterChange={this._updateFilters} />
           <DeviceList groups={this.state.groups} devices={this.state.devices} selectedGroup={this.state.selectedGroup} />
-          <SelectedDevices devices={this.state.devices} selected={this.state.selectedDevices} selectedGroup={this.state.selectedGroup} groups={this.state.groups} />
+          <SelectedDevices images={this.state.images} devices={this.state.devices} selected={this.state.selectedDevices} selectedGroup={this.state.selectedGroup} groups={this.state.groups} />
         </div>
       </div>
     );

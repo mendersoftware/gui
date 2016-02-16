@@ -386,7 +386,7 @@ var SelectedDevices = React.createClass({
           autoDetectWindowHeight={true} autoScrollBodyContent={true}
           bodyStyle={{paddingTop:"0"}}
           >
-          <ScheduleForm device={this.props.selected[0]} updateSchedule={this._updateParams} groups={this.props.groups} />
+          <ScheduleForm images={this.props.images} device={this.props.selected[0]} updateSchedule={this._updateParams} groups={this.props.groups} />
 
         </Dialog>
 
