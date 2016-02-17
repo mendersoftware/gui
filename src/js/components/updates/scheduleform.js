@@ -11,6 +11,7 @@ var SelectField = mui.SelectField;
 var TextField = mui.TextField;
 var FontIcon = mui.FontIcon;
 var LeftNav = mui.LeftNav;
+var FlatButton = mui.FlatButton;
 
 
 
@@ -119,7 +120,7 @@ var ScheduleForm = React.createClass({
     var image = this.state.images[elementPos];
 
     var groupname = this.state.group ? this.state.group.name : null;
-    var devices = this.props.device ? this.props.device : getDevicesFromParams(groupname, image.model);
+    var devices = this.props.device ? [this.props.device] : getDevicesFromParams(groupname, image.model);
     console.log(devices);
     this.setState({
       image: image,
@@ -206,9 +207,10 @@ var ScheduleForm = React.createClass({
       }, this);
     }
     deviceList = (
-      <div>
+      <div className="deviceSlider">
+        <FlatButton label="Hide devices" onClick={this._showDevices} />
         {deviceList}
-        <Link to={`/devices/${this.state.groupVal.payload}/${filters}`}>View group in Devices</Link>
+        <p><Link to={`/devices/${this.state.groupVal.payload}/${filters}`}>Go to group ></Link></p>
       </div>
     );
 

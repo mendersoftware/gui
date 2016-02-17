@@ -529,4 +529,11 @@ span.progress-group {
   position: relative;
   top: 12px;
 }
+.deviceSlider {
+  padding: 15px;
+  margin-bottom: -30px;
+}
+.deviceSlider p {
+  padding: 0 15px;
+}
 /* LESS MIXINS */

@@ -61983,7 +61983,8 @@ var SelectedDevices = _react2.default.createClass({
           title: 'Deploy an update',
           actions: scheduleActions,
           autoDetectWindowHeight: true, autoScrollBodyContent: true,
-          bodyStyle: { paddingTop: "0" }
+          bodyStyle: { paddingTop: "0" },
+          contentStyle: { overflow: "hidden", boxShadow: "0 14px 45px rgba(0, 0, 0, 0.25), 0 10px 18px rgba(0, 0, 0, 0.22)" }
         },
         _react2.default.createElement(ScheduleForm, { images: this.props.images, device: this.props.selected[0], updateSchedule: this._updateParams, groups: this.props.groups })
       )
@@ -62624,7 +62625,8 @@ var Repository = _react2.default.createClass({
           title: 'Deploy an update',
           actions: scheduleActions,
           autoDetectWindowHeight: true, autoScrollBodyContent: true,
-          bodyStyle: { paddingTop: "0" }
+          bodyStyle: { paddingTop: "0" },
+          contentStyle: { overflow: "hidden", boxShadow: "0 14px 45px rgba(0, 0, 0, 0.25), 0 10px 18px rgba(0, 0, 0, 0.22)" }
         },
         _react2.default.createElement(_scheduleform2.default, { updateSchedule: this._updateParams, images: software, image: this.state.image, imageVal: this.state.image, groups: this.props.groups })
       )
@@ -63821,6 +63823,7 @@ var SelectField = _materialUi2.default.SelectField;
 var TextField = _materialUi2.default.TextField;
 var FontIcon = _materialUi2.default.FontIcon;
 var LeftNav = _materialUi2.default.LeftNav;
+var FlatButton = _materialUi2.default.FlatButton;
 
 function getDate() {
   return new Date();
@@ -63931,7 +63934,7 @@ var ScheduleForm = _react2.default.createClass({
     var image = this.state.images[elementPos];
 
     var groupname = this.state.group ? this.state.group.name : null;
-    var devices = this.props.device ? this.props.device : getDevicesFromParams(groupname, image.model);
+    var devices = this.props.device ? [this.props.device] : getDevicesFromParams(groupname, image.model);
     console.log(devices);
     this.setState({
       image: image,
@@ -64026,12 +64029,17 @@ var ScheduleForm = _react2.default.createClass({
     }
     deviceList = _react2.default.createElement(
       'div',
-      null,
+      { className: 'deviceSlider' },
+      _react2.default.createElement(FlatButton, { label: 'Hide devices', onClick: this._showDevices }),
       deviceList,
       _react2.default.createElement(
-        _reactRouter.Link,
-        { to: '/devices/' + this.state.groupVal.payload + '/' + filters },
-        'View group in Devices'
+        'p',
+        null,
+        _react2.default.createElement(
+          _reactRouter.Link,
+          { to: '/devices/' + this.state.groupVal.payload + '/' + filters },
+          'Go to group >'
+        )
       )
     );
 

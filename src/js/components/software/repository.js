@@ -388,6 +388,7 @@ var Repository = React.createClass({
           actions={scheduleActions}
           autoDetectWindowHeight={true} autoScrollBodyContent={true}
           bodyStyle={{paddingTop:"0"}}
+          contentStyle={{overflow:"hidden", boxShadow:"0 14px 45px rgba(0, 0, 0, 0.25), 0 10px 18px rgba(0, 0, 0, 0.22)"}}
           >
           <ScheduleForm updateSchedule={this._updateParams} images={software} image={this.state.image} imageVal={this.state.image} groups={this.props.groups} />
         </Dialog>

@@ -385,6 +385,7 @@ var SelectedDevices = React.createClass({
           actions={scheduleActions}
           autoDetectWindowHeight={true} autoScrollBodyContent={true}
           bodyStyle={{paddingTop:"0"}}
+          contentStyle={{overflow:"hidden", boxShadow:"0 14px 45px rgba(0, 0, 0, 0.25), 0 10px 18px rgba(0, 0, 0, 0.22)"}}
           >
           <ScheduleForm images={this.props.images} device={this.props.selected[0]} updateSchedule={this._updateParams} groups={this.props.groups} />
 
