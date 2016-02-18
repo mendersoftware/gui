@@ -16,7 +16,8 @@ var RaisedButton = mui.RaisedButton;
 var Groups = React.createClass({
   getInitialState: function() {
     return {
-      errorText1:'' 
+      errorText1:'',
+      openDialog: false
     };
   },
   _changeGroup: function(id) {
@@ -31,13 +32,10 @@ var Groups = React.createClass({
     };
  
     AppActions.addToGroup(newGroup, []);
-    this.dialogDismiss("createGroup");
+    this.setState({openDialog: false});
   },
-  dialogDismiss: function(ref) {
-    this.refs[ref].dismiss();
-  },
-  dialogOpen: function(ref) {
-    this.refs[ref].show();
+  dialogToggle: function() {
+    this.setState({openDialog: !this.state.openDialog });
   },
   _validateName: function(e) {
     var newName = e.target.value;
@@ -57,7 +55,7 @@ var Groups = React.createClass({
       <div style={{marginRight:"10", display:"inline-block"}}>
         <FlatButton
           label="Cancel"
-          onClick={this.dialogDismiss.bind(null, 'createGroup')} />
+          onClick={this.dialogToggle} />
       </div>,
       <RaisedButton
         label="Create group"
@@ -86,13 +84,14 @@ var Groups = React.createClass({
            <ListItem 
             leftIcon={createBtn}
             primaryText="Create a group"
-            onClick={this.dialogOpen.bind(null, 'createGroup')} />
+            onClick={this.dialogToggle} />
         </List>
 
         <Dialog
           ref="createGroup"
           title="Create a new group"
           actions={createActions}
+          open={this.state.openDialog}
           autoDetectWindowHeight={true} autoScrollBodyContent={true}>  
 
             <TextField

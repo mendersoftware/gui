@@ -72757,7 +72757,8 @@ var Groups = _react2.default.createClass({
 
   getInitialState: function getInitialState() {
     return {
-      errorText1: ''
+      errorText1: '',
+      openDialog: false
     };
   },
   _changeGroup: function _changeGroup(id) {
@@ -72772,13 +72773,10 @@ var Groups = _react2.default.createClass({
     };
 
     AppActions.addToGroup(newGroup, []);
-    this.dialogDismiss("createGroup");
+    this.setState({ openDialog: false });
   },
-  dialogDismiss: function dialogDismiss(ref) {
-    this.refs[ref].dismiss();
-  },
-  dialogOpen: function dialogOpen(ref) {
-    this.refs[ref].show();
+  dialogToggle: function dialogToggle() {
+    this.setState({ openDialog: !this.state.openDialog });
   },
   _validateName: function _validateName(e) {
     var newName = e.target.value;
@@ -72801,7 +72799,7 @@ var Groups = _react2.default.createClass({
       { style: { marginRight: "10", display: "inline-block" } },
       _react2.default.createElement(FlatButton, {
         label: 'Cancel',
-        onClick: this.dialogDismiss.bind(null, 'createGroup') })
+        onClick: this.dialogToggle })
     ), _react2.default.createElement(RaisedButton, {
       label: 'Create group',
       primary: true,
@@ -72836,7 +72834,7 @@ var Groups = _react2.default.createClass({
         _react2.default.createElement(ListItem, {
           leftIcon: createBtn,
           primaryText: 'Create a group',
-          onClick: this.dialogOpen.bind(null, 'createGroup') })
+          onClick: this.dialogToggle })
       ),
       _react2.default.createElement(
         Dialog,
@@ -72844,6 +72842,7 @@ var Groups = _react2.default.createClass({
           ref: 'createGroup',
           title: 'Create a new group',
           actions: createActions,
+          open: this.state.openDialog,
           autoDetectWindowHeight: true, autoScrollBodyContent: true },
         _react2.default.createElement(TextField, {
           ref: 'customGroup',
