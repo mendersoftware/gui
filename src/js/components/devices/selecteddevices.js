@@ -390,7 +390,7 @@ var SelectedDevices = React.createClass({
           <ScheduleForm images={this.props.images} device={this.props.selected[0]} updateSchedule={this._updateParams} groups={this.props.groups} />
 
         </Dialog>
-
+        
       </div>
     );
   }

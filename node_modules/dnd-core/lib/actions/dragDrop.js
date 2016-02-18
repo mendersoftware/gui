@@ -17,13 +17,13 @@ var _invariant = require('invariant');
 
 var _invariant2 = _interopRequireDefault(_invariant);
 
-var _lodashLangIsArray = require('lodash/lang/isArray');
+var _lodashIsArray = require('lodash/isArray');
 
-var _lodashLangIsArray2 = _interopRequireDefault(_lodashLangIsArray);
+var _lodashIsArray2 = _interopRequireDefault(_lodashIsArray);
 
-var _lodashLangIsObject = require('lodash/lang/isObject');
+var _lodashIsObject = require('lodash/isObject');
 
-var _lodashLangIsObject2 = _interopRequireDefault(_lodashLangIsObject);
+var _lodashIsObject2 = _interopRequireDefault(_lodashIsObject);
 
 var BEGIN_DRAG = 'dnd-core/BEGIN_DRAG';
 exports.BEGIN_DRAG = BEGIN_DRAG;
@@ -46,7 +46,7 @@ function beginDrag(sourceIds) {
   var clientOffset = _ref$clientOffset === undefined ? null : _ref$clientOffset;
   var getSourceClientOffset = _ref.getSourceClientOffset;
 
-  _invariant2['default'](_lodashLangIsArray2['default'](sourceIds), 'Expected sourceIds to be an array.');
+  _invariant2['default'](_lodashIsArray2['default'](sourceIds), 'Expected sourceIds to be an array.');
 
   var monitor = this.getMonitor();
   var registry = this.getRegistry();
@@ -75,7 +75,7 @@ function beginDrag(sourceIds) {
 
   var source = registry.getSource(sourceId);
   var item = source.beginDrag(monitor, sourceId);
-  _invariant2['default'](_lodashLangIsObject2['default'](item), 'Item must be an object.');
+  _invariant2['default'](_lodashIsObject2['default'](item), 'Item must be an object.');
 
   registry.pinSource(sourceId);
 
@@ -108,7 +108,7 @@ function hover(targetIds) {
   var _ref2$clientOffset = _ref2.clientOffset;
   var clientOffset = _ref2$clientOffset === undefined ? null : _ref2$clientOffset;
 
-  _invariant2['default'](_lodashLangIsArray2['default'](targetIds), 'Expected targetIds to be an array.');
+  _invariant2['default'](_lodashIsArray2['default'](targetIds), 'Expected targetIds to be an array.');
   targetIds = targetIds.slice(0);
 
   var monitor = this.getMonitor();
@@ -152,7 +152,7 @@ function drop() {
     var target = registry.getTarget(targetId);
 
     var dropResult = target.drop(monitor, targetId);
-    _invariant2['default'](typeof dropResult === 'undefined' || _lodashLangIsObject2['default'](dropResult), 'Drop result must either be an object or undefined.');
+    _invariant2['default'](typeof dropResult === 'undefined' || _lodashIsObject2['default'](dropResult), 'Drop result must either be an object or undefined.');
     if (typeof dropResult === 'undefined') {
       dropResult = index === 0 ? {} : monitor.getDropResult();
     }

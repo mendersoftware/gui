@@ -20,6 +20,10 @@ var _dirtyHandlerIds = require('./dirtyHandlerIds');
 
 var _dirtyHandlerIds2 = _interopRequireDefault(_dirtyHandlerIds);
 
+var _stateId = require('./stateId');
+
+var _stateId2 = _interopRequireDefault(_stateId);
+
 exports['default'] = function (state, action) {
   if (state === undefined) state = {};
 
@@ -27,7 +31,8 @@ exports['default'] = function (state, action) {
     dirtyHandlerIds: _dirtyHandlerIds2['default'](state.dirtyHandlerIds, action, state.dragOperation),
     dragOffset: _dragOffset2['default'](state.dragOffset, action),
     refCount: _refCount2['default'](state.refCount, action),
-    dragOperation: _dragOperation2['default'](state.dragOperation, action)
+    dragOperation: _dragOperation2['default'](state.dragOperation, action),
+    stateId: _stateId2['default'](state.stateId)
   };
 };
 

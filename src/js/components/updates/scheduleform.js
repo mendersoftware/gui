@@ -163,7 +163,6 @@ var ScheduleForm = React.createClass({
   },
 
   _showDevices: function() {
-    this.refs.devicesNav.toggle();
     this.setState({showDevices: !this.state.showDevices});
   },
 
@@ -210,7 +209,7 @@ var ScheduleForm = React.createClass({
       <div className="deviceSlider">
         <FlatButton label="Hide devices" onClick={this._showDevices} />
         {deviceList}
-        <p><Link to={`/devices/${this.state.groupVal.payload}/${filters}`}>Go to group ></Link></p>
+        <p className={this.state.group ? this.state.group : "hidden"}><Link to={`/devices/${this.state.groupVal.payload}/${filters}`}>Go to group ></Link></p>
       </div>
     );
 
@@ -220,10 +219,12 @@ var ScheduleForm = React.createClass({
           ref="devicesNav"
           docked={false}
           openRight={true}
-          menuItems={[]}
-          open={this.state.showDevices} 
-          header={deviceList}
-          style={{overflowY:"auto"}} />
+          open={this.state.showDevices}
+          overlayStyle={{backgroundColor:"rgba(0, 0, 0, 0.3)"}}
+          onRequestChange={this._showDevices}
+        >
+          {deviceList}
+        </LeftNav>
           
         <form>
           <div style={{display:"block"}}>
@@ -252,7 +253,8 @@ var ScheduleForm = React.createClass({
                 ref="group"
                 onChange={this._handleGroupValueChange}
                 floatingLabelText="Select group"
-                menuItems={groupItems} />
+                menuItems={groupItems}
+                style={{marginBottom:10}} />
             </div>
 
             <div className={this.state.disabled ? 'inline-block' : 'hidden'}>

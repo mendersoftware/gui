@@ -1,6 +1,6 @@
-const React = require('react');
-const PureRenderMixin = require('react-addons-pure-render-mixin');
-const SvgIcon = require('../../svg-icon');
+import React from 'react';
+import PureRenderMixin from 'react-addons-pure-render-mixin';
+import SvgIcon from '../../svg-icon';
 
 const AvFiberManualRecord = React.createClass({
 
@@ -9,11 +9,11 @@ const AvFiberManualRecord = React.createClass({
   render() {
     return (
       <SvgIcon {...this.props}>
-        <circle fill="#010101" cx="12" cy="12" r="8"/>
+        <circle cx="12" cy="12" r="8"/>
       </SvgIcon>
     );
   }
 
 });
 
-module.exports = AvFiberManualRecord;
+export default AvFiberManualRecord;
