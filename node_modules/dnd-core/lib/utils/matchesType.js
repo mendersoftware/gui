@@ -5,12 +5,12 @@ exports['default'] = matchesType;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _lodashLangIsArray = require('lodash/lang/isArray');
+var _lodashIsArray = require('lodash/isArray');
 
-var _lodashLangIsArray2 = _interopRequireDefault(_lodashLangIsArray);
+var _lodashIsArray2 = _interopRequireDefault(_lodashIsArray);
 
 function matchesType(targetType, draggedItemType) {
-  if (_lodashLangIsArray2['default'](targetType)) {
+  if (_lodashIsArray2['default'](targetType)) {
     return targetType.some(function (t) {
       return t === draggedItemType;
     });

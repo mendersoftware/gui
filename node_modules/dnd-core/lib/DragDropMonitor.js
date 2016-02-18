@@ -14,9 +14,9 @@ var _utilsMatchesType = require('./utils/matchesType');
 
 var _utilsMatchesType2 = _interopRequireDefault(_utilsMatchesType);
 
-var _lodashLangIsArray = require('lodash/lang/isArray');
+var _lodashIsArray = require('lodash/isArray');
 
-var _lodashLangIsArray2 = _interopRequireDefault(_lodashLangIsArray);
+var _lodashIsArray2 = _interopRequireDefault(_lodashIsArray);
 
 var _HandlerRegistry = require('./HandlerRegistry');
 
@@ -42,11 +42,20 @@ var DragDropMonitor = (function () {
     var handlerIds = _ref.handlerIds;
 
     _invariant2['default'](typeof listener === 'function', 'listener must be a function.');
-    _invariant2['default'](typeof handlerIds === 'undefined' || _lodashLangIsArray2['default'](handlerIds), 'handlerIds, when specified, must be an array of strings.');
+    _invariant2['default'](typeof handlerIds === 'undefined' || _lodashIsArray2['default'](handlerIds), 'handlerIds, when specified, must be an array of strings.');
 
+    var prevStateId = this.store.getState().stateId;
     var handleChange = function handleChange() {
-      if (_reducersDirtyHandlerIds.areDirty(_this.store.getState().dirtyHandlerIds, handlerIds)) {
-        listener();
+      var state = _this.store.getState();
+      var currentStateId = state.stateId;
+      try {
+        var canSkipListener = currentStateId === prevStateId || currentStateId === prevStateId + 1 && !_reducersDirtyHandlerIds.areDirty(state.dirtyHandlerIds, handlerIds);
+
+        if (!canSkipListener) {
+          listener();
+        }
+      } finally {
+        prevStateId = currentStateId;
       }
     };
 

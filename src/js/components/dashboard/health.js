@@ -15,6 +15,12 @@ var Health = React.createClass({
           <h2>Devices <span className="dashboard-number">{this.props.health.total}</span></h2>
         </div>
         <div className="dashboard-container">
+          <div className="">
+            <span className={this.props.health.nogroup ? "number" : "hidden"} style={{marginRight:"0"}}>+</span>
+            <span className="number">{this.props.health.nogroup}</span>
+            <span>Pending</span>
+          </div>
+
           <div className="health-panel red" onClick={this._clickHandle.bind(null, "down")}>
             <span className="number">{this.props.health.down}</span>
             <span>down</span>
@@ -22,11 +28,6 @@ var Health = React.createClass({
           <div className="health-panel green" onClick={this._clickHandle.bind(null, "up")}>
             <span className="number">{this.props.health.up}</span>
             <span>up</span>
-          </div>
-          <div className="health-panel lightestgrey">
-            <span className={this.props.health.nogroup ? "number" : "hidden"} style={{marginRight:"0"}}>+</span>
-            <span className="number">{this.props.health.nogroup}</span>
-            <span>new</span>
           </div>
           <div className="clear">
             <Link to="/devices" className="float-right">Manage devices</Link>

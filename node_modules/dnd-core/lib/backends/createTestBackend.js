@@ -7,9 +7,9 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'd
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-var _lodashUtilityNoop = require('lodash/utility/noop');
+var _lodashNoop = require('lodash/noop');
 
-var _lodashUtilityNoop2 = _interopRequireDefault(_lodashUtilityNoop);
+var _lodashNoop2 = _interopRequireDefault(_lodashNoop);
 
 var TestBackend = (function () {
   function TestBackend(manager) {
@@ -27,15 +27,15 @@ var TestBackend = (function () {
   };
 
   TestBackend.prototype.connectDragSource = function connectDragSource() {
-    return _lodashUtilityNoop2['default'];
+    return _lodashNoop2['default'];
   };
 
   TestBackend.prototype.connectDragPreview = function connectDragPreview() {
-    return _lodashUtilityNoop2['default'];
+    return _lodashNoop2['default'];
   };
 
   TestBackend.prototype.connectDropTarget = function connectDropTarget() {
-    return _lodashUtilityNoop2['default'];
+    return _lodashNoop2['default'];
   };
 
   TestBackend.prototype.simulateBeginDrag = function simulateBeginDrag(sourceIds, options) {

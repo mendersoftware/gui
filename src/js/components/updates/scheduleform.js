@@ -10,6 +10,9 @@ var TimePicker = mui.TimePicker;
 var SelectField = mui.SelectField;
 var TextField = mui.TextField;
 var FontIcon = mui.FontIcon;
+var LeftNav = mui.LeftNav;
+var FlatButton = mui.FlatButton;
+
 
 
 function getDate() {
@@ -35,7 +38,7 @@ function getDevicesFromParams(group, model) {
   if (model && group) {
     devices = AppStore.getDevicesFromParams(group, model);
   }
-  return devices.length;
+  return devices;
 }
 
 var ScheduleForm = React.createClass({
@@ -91,7 +94,8 @@ var ScheduleForm = React.createClass({
       groupVal: groupVal,
       images: AppStore.getSoftwareRepo(),
       disabled: disabled,
-      group: group
+      group: group,
+      showDevices: false
     };
   },
   componentDidMount: function() {
@@ -116,7 +120,8 @@ var ScheduleForm = React.createClass({
     var image = this.state.images[elementPos];
 
     var groupname = this.state.group ? this.state.group.name : null;
-    var devices = this.props.device ? 1 : getDevicesFromParams(groupname, image.model);
+    var devices = this.props.device ? [this.props.device] : getDevicesFromParams(groupname, image.model);
+    console.log(devices);
     this.setState({
       image: image,
       imageVal: {
@@ -157,6 +162,10 @@ var ScheduleForm = React.createClass({
     });
   },
 
+  _showDevices: function() {
+    this.setState({showDevices: !this.state.showDevices});
+  },
+
   render: function() {
     var imageItems = [];
     for (var i=0; i<this.state.images.length;i++) {
@@ -182,8 +191,41 @@ var ScheduleForm = React.createClass({
 
     var defaultStartDate =  this.state.start_time;
     var defaultEndDate = this.state.end_time;
+    var deviceList = (
+        <p>No devices</p>
+    );
+    if (this.state.devices) {
+      deviceList = this.state.devices.map(function(item, index) {
+        var singleFilter = "name="+item.name;
+        singleFilter = encodeURIComponent(singleFilter);
+        return (
+            <p>
+              <Link to={`/devices/${this.state.groupVal.payload}/${singleFilter}`}>{item.name}</Link>
+            </p>
+        )
+      }, this);
+    }
+    deviceList = (
+      <div className="deviceSlider">
+        <FlatButton label="Hide devices" onClick={this._showDevices} />
+        {deviceList}
+        <p className={this.state.group ? this.state.group : "hidden"}><Link to={`/devices/${this.state.groupVal.payload}/${filters}`}>Go to group ></Link></p>
+      </div>
+    );
+
     return (
       <div style={{height: '440px'}}>
+        <LeftNav 
+          ref="devicesNav"
+          docked={false}
+          openRight={true}
+          open={this.state.showDevices}
+          overlayStyle={{backgroundColor:"rgba(0, 0, 0, 0.3)"}}
+          onRequestChange={this._showDevices}
+        >
+          {deviceList}
+        </LeftNav>
+          
         <form>
           <div style={{display:"block"}}>
             <SelectField
@@ -211,7 +253,8 @@ var ScheduleForm = React.createClass({
                 ref="group"
                 onChange={this._handleGroupValueChange}
                 floatingLabelText="Select group"
-                menuItems={groupItems} />
+                menuItems={groupItems}
+                style={{marginBottom:10}} />
             </div>
 
             <div className={this.state.disabled ? 'inline-block' : 'hidden'}>
@@ -224,7 +267,7 @@ var ScheduleForm = React.createClass({
                 errorStyle={{color: "rgb(171, 16, 0)"}} />  
             </div>
 
-            <div className={this.state.devices ? null : 'hidden'}>{this.state.devices} devices will be updated <Link to="devices" params={{groupId: this.state.groupVal.payload, filters:filters }} className={this.state.disabled ? "hidden" : "margin-left"}>View devices</Link></div>
+            <div className={this.state.devices ? null : 'hidden'}>{this.state.devices ? this.state.devices.length : "0"} devices will be updated <span onClick={this._showDevices} params={{groupId: this.state.groupVal.payload, filters:filters }} className={this.state.disabled ? "hidden" : "margin-left link"}>View devices</span></div>
             
           </div>
             

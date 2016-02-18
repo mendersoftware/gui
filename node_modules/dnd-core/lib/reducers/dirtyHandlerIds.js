@@ -6,13 +6,13 @@ exports.areDirty = areDirty;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _lodashArrayXor = require('lodash/array/xor');
+var _lodashXor = require('lodash/xor');
 
-var _lodashArrayXor2 = _interopRequireDefault(_lodashArrayXor);
+var _lodashXor2 = _interopRequireDefault(_lodashXor);
 
-var _lodashArrayIntersection = require('lodash/array/intersection');
+var _lodashIntersection = require('lodash/intersection');
 
-var _lodashArrayIntersection2 = _interopRequireDefault(_lodashArrayIntersection);
+var _lodashIntersection2 = _interopRequireDefault(_lodashIntersection);
 
 var _actionsDragDrop = require('../actions/dragDrop');
 
@@ -43,7 +43,7 @@ function dirtyHandlerIds(state, action, dragOperation) {
   var targetIds = action.targetIds;
   var prevTargetIds = dragOperation.targetIds;
 
-  var dirtyHandlerIds = _lodashArrayXor2['default'](targetIds, prevTargetIds);
+  var dirtyHandlerIds = _lodashXor2['default'](targetIds, prevTargetIds);
 
   var didChange = false;
   if (dirtyHandlerIds.length === 0) {
@@ -85,5 +85,5 @@ function areDirty(state, handlerIds) {
     return true;
   }
 
-  return _lodashArrayIntersection2['default'](handlerIds, state).length > 0;
+  return _lodashIntersection2['default'](handlerIds, state).length > 0;
 }

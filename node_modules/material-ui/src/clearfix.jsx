@@ -1,71 +1,38 @@
-const React = require('react');
-const BeforeAfterWrapper = require('./before-after-wrapper');
-const StylePropable = require('./mixins/style-propable');
-const DefaultRawTheme = require('./styles/raw-themes/light-raw-theme');
-const ThemeManager = require('./styles/theme-manager');
+import React from 'react';
+import BeforeAfterWrapper from './before-after-wrapper';
 
-
-const ClearFix = React.createClass({
-  mixins: [StylePropable],
-
-  contextTypes: {
-    muiTheme: React.PropTypes.object,
+const styles = {
+  before: {
+    content: "' '",
+    display: 'table',
   },
-
-  propTypes: {
-    style: React.PropTypes.object,
+  after: {
+    content: "' '",
+    clear: 'both',
+    display: 'table',
   },
-  
-  //for passing default theme context to children
-  childContextTypes: {
-    muiTheme: React.PropTypes.object,
-  },
+};
 
-  getChildContext () {
-    return {
-      muiTheme: this.state.muiTheme,
-    };
-  },
+const ClearFix = ({style, children, ...other}) => (
+  <BeforeAfterWrapper
+    {...other}
+    beforeStyle={styles.before}
+    afterStyle={styles.after}
+    style={style}
+  >
+    {children}
+  </BeforeAfterWrapper>
+);
 
-  getInitialState () {
-    return {
-      muiTheme: this.context.muiTheme ? this.context.muiTheme : ThemeManager.getMuiTheme(DefaultRawTheme),
-    };
-  },
+ClearFix.displayName = 'ClearFix';
 
-  //to update theme inside state whenever a new theme is passed down
-  //from the parent / owner using context
-  componentWillReceiveProps (nextProps, nextContext) {
-    let newMuiTheme = nextContext.muiTheme ? nextContext.muiTheme : this.state.muiTheme;
-    this.setState({muiTheme: newMuiTheme});
-  },
+ClearFix.propTypes = {
+  children: React.PropTypes.node,
 
-  render() {
-    let {
-      style,
-      ...other,
-    } = this.props;
+  /**
+   * Override the inline-styles of the root element.
+   */
+  style: React.PropTypes.object,
+};
 
-    let before = function() {
-      return {
-        content: "' '",
-        display: 'table',
-      };
-    };
-
-    let after = before();
-    after.clear = 'both';
-
-    return (
-      <BeforeAfterWrapper
-        {...other}
-        beforeStyle={before()}
-        afterStyle={after}
-        style={style}>
-          {this.props.children}
-      </BeforeAfterWrapper>
-    );
-  },
-});
-
-module.exports = ClearFix;
+export default ClearFix;

@@ -12,9 +12,9 @@ var _actionsDragDrop = require('../actions/dragDrop');
 
 var _actionsRegistry = require('../actions/registry');
 
-var _lodashArrayWithout = require('lodash/array/without');
+var _lodashWithout = require('lodash/without');
 
-var _lodashArrayWithout2 = _interopRequireDefault(_lodashArrayWithout);
+var _lodashWithout2 = _interopRequireDefault(_lodashWithout);
 
 var initialState = {
   itemType: null,
@@ -56,7 +56,7 @@ function dragOperation(state, action) {
         return state;
       }
       return _extends({}, state, {
-        targetIds: _lodashArrayWithout2['default'](state.targetIds, action.targetId)
+        targetIds: _lodashWithout2['default'](state.targetIds, action.targetId)
       });
     case _actionsDragDrop.DROP:
       return _extends({}, state, {

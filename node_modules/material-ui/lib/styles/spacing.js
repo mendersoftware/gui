@@ -1,6 +1,9 @@
 "use strict";
 
-module.exports = {
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = {
   iconSize: 24,
 
   desktopGutter: 24,
@@ -14,3 +17,4 @@ module.exports = {
   desktopSubheaderHeight: 48,
   desktopToolbarHeight: 56
 };
+module.exports = exports['default'];

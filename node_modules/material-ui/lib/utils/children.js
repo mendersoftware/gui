@@ -1,10 +1,20 @@
 'use strict';
 
-var React = require('react');
-var createFragment = require('react-addons-create-fragment');
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 
-module.exports = {
+var _react = require('react');
 
+var _react2 = _interopRequireDefault(_react);
+
+var _reactAddonsCreateFragment = require('react-addons-create-fragment');
+
+var _reactAddonsCreateFragment2 = _interopRequireDefault(_reactAddonsCreateFragment);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = {
   create: function create(fragments) {
     var newFragments = {};
     var validChildrenCount = 0;
@@ -23,19 +33,18 @@ module.exports = {
 
     if (validChildrenCount === 0) return undefined;
     if (validChildrenCount === 1) return newFragments[firstKey];
-    return createFragment(newFragments);
+    return (0, _reactAddonsCreateFragment2.default)(newFragments);
   },
-
   extend: function extend(children, extendedProps, extendedChildren) {
 
-    return React.isValidElement(children) ? React.Children.map(children, function (child) {
+    return _react2.default.isValidElement(children) ? _react2.default.Children.map(children, function (child) {
 
       var newProps = typeof extendedProps === 'function' ? extendedProps(child) : extendedProps;
 
       var newChildren = typeof extendedChildren === 'function' ? extendedChildren(child) : extendedChildren ? extendedChildren : child.props.children;
 
-      return React.cloneElement(child, newProps, newChildren);
+      return _react2.default.cloneElement(child, newProps, newChildren);
     }) : children;
   }
-
 };
+module.exports = exports['default'];
