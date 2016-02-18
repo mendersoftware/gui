@@ -45,13 +45,13 @@ var Header = React.createClass({
     this.setState({tabIndex: this._updateActive()});
   },
   _updateActive: function() {
-    return this.props.history.isActive('/', null, true) ? '0' :
-      this.props.history.isActive('/devices') ? '1' :
-      this.props.history.isActive('/software') ? '2' : 
-      this.props.history.isActive('/updates') ? '3' : '0';
+    return this.context.router.isActive({ pathname: '/' }, true) ? '0' :
+      this.context.router.isActive('/devices') ? '1' :
+      this.context.router.isActive('/software') ? '2' : 
+      this.context.router.isActive('/updates') ? '3' : '0';
   },
   _handleTabActive: function(tab) {
-    this.props.history.push(tab.props.route);
+    this.context.router.push(tab.props.route);
   },
   render: function() {
     var tabHandler = this._handleTabActive;
@@ -94,8 +94,7 @@ var Header = React.createClass({
 });
 
 Header.contextTypes = {
-  location: React.PropTypes.object,
-  history: React.PropTypes.object
+  router: React.PropTypes.object,
 };
 
 module.exports = Header;

@@ -6,7 +6,7 @@ import { Router, Route, Link } from 'react-router';
 var mui = require('material-ui');
 var List = mui.List;
 var ListItem = mui.ListItem;
-var ListDivider = mui.ListDivider;
+var Divider = mui.Divider;
 var FontIcon = mui.FontIcon;
 
 var Recent = React.createClass({
@@ -37,7 +37,7 @@ var Recent = React.createClass({
               onClick={this._clickHandle.bind(null, update.id)}
               leftIcon={icon}
               rightIcon={<Time style={{float:"right", position:"initial", width:"auto", marginRight:"-56", whiteSpace:"nowrap", fontSize:"14"}} value={update.end_time} format="YYYY/MM/DD HH:mm" />} />
-            <ListDivider inset={true} className={last ? "hidden" : null} />
+            <Divider inset={true} className={last ? "hidden" : null} />
           </div>
         )
       }
@@ -64,7 +64,7 @@ var Recent = React.createClass({
 });
 
 Recent.contextTypes = {
-  router: React.PropTypes.func
+  router: React.PropTypes.object
 };
 
 module.exports = Recent;

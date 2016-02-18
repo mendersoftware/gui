@@ -7,12 +7,14 @@ import RawTheme from '../themes/mender-theme.js';
 
 var App = React.createClass({
   childContextTypes: {
+    location: React.PropTypes.object,
     muiTheme: React.PropTypes.object
   },
   getChildContext() { 
     var theme = ThemeManager.getMuiTheme(RawTheme);
     return {
       muiTheme: theme,
+      location: this.props.location
     };
   },
   render: function() {

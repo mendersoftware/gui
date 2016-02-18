@@ -41,7 +41,7 @@ var Activity = React.createClass({
 });
 
 Activity.contextTypes = {
-  router: React.PropTypes.func
+  router: React.PropTypes.object
 };
 
 module.exports = Activity;

@@ -40,7 +40,7 @@ var Health = React.createClass({
 
 
 Health.contextTypes = {
-  router: React.PropTypes.func
+  router: React.PropTypes.object
 };
 
 module.exports = Health;

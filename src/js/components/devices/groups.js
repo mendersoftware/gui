@@ -93,7 +93,6 @@ var Groups = React.createClass({
           ref="createGroup"
           title="Create a new group"
           actions={createActions}
-          actionFocus="submit"
           autoDetectWindowHeight={true} autoScrollBodyContent={true}>  
 
             <TextField

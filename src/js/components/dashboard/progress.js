@@ -7,7 +7,7 @@ var AppStore = require('../../stores/app-store');
 var mui = require('material-ui');
 var List = mui.List;
 var ListItem = mui.ListItem;
-var ListDivider = mui.ListDivider;
+var Divider = mui.Divider;
 var FontIcon = mui.FontIcon;
 
 
@@ -45,7 +45,7 @@ var Progress = React.createClass({
             onClick={this._clickUpdate}
             leftIcon={<div style={{width:"110", height:"auto"}}><span className="progress-version">{update.software_version}</span><span className="progress-group">{group}</span></div>}
             rightIcon={<span style={{top:"18", right:"22"}}>{total}%</span>} />
-          <ListDivider className={last ? "hidden" : null} />
+          <Divider className={last ? "hidden" : null} />
         </div>
       )
     }, this);
@@ -69,7 +69,7 @@ var Progress = React.createClass({
 });
 
 Progress.contextTypes = {
-  router: React.PropTypes.func
+  router: React.PropTypes.object
 };
 
 module.exports = Progress;
