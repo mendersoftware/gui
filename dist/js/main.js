@@ -74408,7 +74408,6 @@ var TableHeaderColumn = mui.TableHeaderColumn;
 var TableBody = mui.TableBody;
 var TableRow = mui.TableRow;
 var TableRowColumn = mui.TableRowColumn;
-var Dialog = mui.Dialog;
 var FlatButton = mui.FlatButton;
 
 var Recent = _react2.default.createClass({
@@ -74687,7 +74686,7 @@ var TableRowColumn = mui.TableRowColumn;
 var FlatButton = mui.FlatButton;
 var List = mui.List;
 var ListItem = mui.ListItem;
-var ListDivider = mui.ListDivider;
+var Divider = mui.Divider;
 var FontIcon = mui.FontIcon;
 var Checkbox = mui.Checkbox;
 
@@ -74775,9 +74774,9 @@ var Report = _react2.default.createClass({
           List,
           null,
           _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Group', secondaryText: this.props.update.group }),
-          _react2.default.createElement(ListDivider, null),
+          _react2.default.createElement(Divider, null),
           _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Device type', secondaryText: this.props.update.model }),
-          _react2.default.createElement(ListDivider, null),
+          _react2.default.createElement(Divider, null),
           _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Start time', secondaryText: _react2.default.createElement(Time, { value: this.props.update.start_time, format: 'YYYY/MM/DD HH:mm' }) })
         )
       ),
@@ -74788,9 +74787,9 @@ var Report = _react2.default.createClass({
           List,
           null,
           _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Number of devices', secondaryText: this.props.update.devices.length }),
-          _react2.default.createElement(ListDivider, null),
+          _react2.default.createElement(Divider, null),
           _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Target software', secondaryText: this.props.update.software_version }),
-          _react2.default.createElement(ListDivider, null),
+          _react2.default.createElement(Divider, null),
           _react2.default.createElement(ListItem, { disabled: true, primaryText: 'End time', secondaryText: _react2.default.createElement(Time, { value: this.props.update.end_time, format: 'YYYY/MM/DD HH:mm' }) })
         )
       ),
@@ -75547,11 +75546,12 @@ var Updates = _react2.default.createClass({
     this.replaceState(this.getInitialState());
   },
   dialogOpen: function dialogOpen(dialog) {
+    this.setState({ dialog: true });
     if (dialog === 'schedule') {
       this.setState({
         dialogTitle: "Deploy an update",
         scheduleForm: true,
-        contentClass: null
+        contentClass: "dialog"
       });
     }
     if (dialog === 'report') {
@@ -75561,8 +75561,6 @@ var Updates = _react2.default.createClass({
         contentClass: "largeDialog"
       });
     }
-
-    this.setState({ dialog: !this.state.dialog });
   },
   _changeTab: function _changeTab(value, e, tab) {
     this.setState({ tabIndex: value });
@@ -75593,6 +75591,8 @@ var Updates = _react2.default.createClass({
     this.dialogOpen("report");
   },
   _scheduleUpdate: function _scheduleUpdate(update) {
+    this.setState({ dialog: false });
+
     var image = '';
     var group = '';
     var start_time = null;
@@ -75633,7 +75633,9 @@ var Updates = _react2.default.createClass({
       primary: true,
       onClick: this._onScheduleSubmit,
       ref: 'save' })];
-    var reportActions = [{ text: 'Close' }];
+    var reportActions = [_react2.default.createElement(FlatButton, {
+      label: 'Close',
+      onClick: this.dialogDismiss.bind(null, 'dialog') })];
     var dialogContent = '';
 
     if (this.state.scheduleForm) {

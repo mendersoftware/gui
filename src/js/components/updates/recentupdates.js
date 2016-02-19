@@ -11,7 +11,6 @@ var TableHeaderColumn = mui.TableHeaderColumn;
 var TableBody = mui.TableBody;
 var TableRow = mui.TableRow;
 var TableRowColumn = mui.TableRowColumn;
-var Dialog = mui.Dialog;
 var FlatButton = mui.FlatButton;
 
 

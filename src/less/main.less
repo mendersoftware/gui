@@ -199,11 +199,15 @@ a, span.link {
   padding: 20px 0 20px 28px;
 }
 
-.largeDialog {
-  width: 96% !important;
-  max-width: 96% !important;
+.dialog {
+  .transition(width 1s linear) !important;
 }
 
+.largeDialog {
+  width: inherit !important;
+  max-width: 96% !important;
+  .transition(width 1s linear) !important;
+}
 
 .widget {
   width: 50%;

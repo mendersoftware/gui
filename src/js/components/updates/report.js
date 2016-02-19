@@ -13,7 +13,7 @@ var TableRowColumn = mui.TableRowColumn;
 var FlatButton = mui.FlatButton;
 var List = mui.List;
 var ListItem = mui.ListItem;
-var ListDivider = mui.ListDivider;
+var Divider = mui.Divider;
 var FontIcon = mui.FontIcon;
 var Checkbox = mui.Checkbox;
 
@@ -58,18 +58,18 @@ var Report = React.createClass({
         <div className="report-list">
           <List>
             <ListItem disabled={true} primaryText="Group" secondaryText={this.props.update.group} />
-            <ListDivider />
+            <Divider />
             <ListItem disabled={true} primaryText="Device type" secondaryText={this.props.update.model} />
-            <ListDivider />
+            <Divider />
             <ListItem disabled={true} primaryText="Start time" secondaryText={<Time value={this.props.update.start_time} format="YYYY/MM/DD HH:mm" />} />
           </List>
         </div>
         <div className="report-list">
          <List>
             <ListItem disabled={true} primaryText="Number of devices" secondaryText={this.props.update.devices.length} />
-            <ListDivider />
+            <Divider />
             <ListItem disabled={true} primaryText="Target software" secondaryText={this.props.update.software_version} />
-            <ListDivider />
+            <Divider />
             <ListItem disabled={true} primaryText="End time" secondaryText={<Time value={this.props.update.end_time} format="YYYY/MM/DD HH:mm" />} />
           </List>
         </div>

@@ -98,11 +98,12 @@ var Updates = React.createClass({
     this.replaceState(this.getInitialState());
   },
   dialogOpen: function(dialog) {
+    this.setState({dialog: true});
     if (dialog === 'schedule') {
       this.setState({
         dialogTitle: "Deploy an update",
         scheduleForm: true,
-        contentClass: null
+        contentClass: "dialog"
       });
     }
     if (dialog === 'report') {
@@ -112,9 +113,6 @@ var Updates = React.createClass({
         contentClass: "largeDialog"
       })
     }
-    
-    this.setState({dialog: !this.state.dialog});
-    
   },
   _changeTab: function(value, e, tab) {
     this.setState({tabIndex: value});
@@ -145,6 +143,8 @@ var Updates = React.createClass({
      this.dialogOpen("report");
   },
   _scheduleUpdate: function (update) {
+    this.setState({dialog:false});
+ 
     var image = '';
     var group = '';
     var start_time = null;
@@ -187,7 +187,9 @@ var Updates = React.createClass({
         ref="save" />
     ];
     var reportActions = [
-      { text: 'Close' }
+      <FlatButton
+          label="Close"
+          onClick={this.dialogDismiss.bind(null, 'dialog')} />
     ];
     var dialogContent = '';
 

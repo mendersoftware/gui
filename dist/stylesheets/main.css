@@ -143,9 +143,19 @@ span.link:hover {
 .tableActions {
   padding: 20px 0 20px 28px;
 }
+.dialog {
+  -webkit-transition: width 1s linear !important;
+  -moz-transition: width 1s linear !important;
+  -ms-transition: width 1s linear !important;
+  -o-transition: width 1s linear !important;
+}
 .largeDialog {
-  width: 96% !important;
+  width: inherit !important;
   max-width: 96% !important;
+  -webkit-transition: width 1s linear !important;
+  -moz-transition: width 1s linear !important;
+  -ms-transition: width 1s linear !important;
+  -o-transition: width 1s linear !important;
 }
 .widget {
   width: 50%;
