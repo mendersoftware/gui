@@ -72,7 +72,6 @@ var Filters = React.createClass({
       var tmp = <MenuItem value={key} key={i} primaryText={this.props.attributes[key]} />
       attributes.push(tmp);
     }
-    var menuItems = [{text:'Disabled', disabled:true}];
     var filterCount = 0;
     var filters = this.props.filters.map(function(item, index) {
       item.value ? filterCount++ : filterCount;

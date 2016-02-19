@@ -72645,7 +72645,6 @@ var Filters = _react2.default.createClass({
       var tmp = _react2.default.createElement(MenuItem, { value: key, key: i, primaryText: this.props.attributes[key] });
       attributes.push(tmp);
     }
-    var menuItems = [{ text: 'Disabled', disabled: true }];
     var filterCount = 0;
     var filters = this.props.filters.map(function (item, index) {
       item.value ? filterCount++ : filterCount;
@@ -72888,7 +72887,7 @@ var SelectField = mui.SelectField;
 var TextField = mui.TextField;
 var List = mui.List;
 var ListItem = mui.ListItem;
-var ListDivider = mui.ListDivider;
+var Divider = mui.Divider;
 var FontIcon = mui.FontIcon;
 var IconButton = mui.IconButton;
 
@@ -73039,7 +73038,6 @@ var SelectedDevices = _react2.default.createClass({
       for (var i in tagslist) {
         noIds.push(tagslist[i].text);
       }
-      console.log(noIds);
 
       // save new tag data to device
       AppActions.updateDeviceTags(this.props.selected[0].id, noIds);
@@ -73113,11 +73111,11 @@ var SelectedDevices = _react2.default.createClass({
             List,
             null,
             _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Name', secondaryText: this.props.selected[0].name }),
-            _react2.default.createElement(ListDivider, null),
+            _react2.default.createElement(Divider, null),
             _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Status', secondaryText: this.props.selected[0].status }),
-            _react2.default.createElement(ListDivider, null),
+            _react2.default.createElement(Divider, null),
             _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Device type', secondaryText: this.props.selected[0].model }),
-            _react2.default.createElement(ListDivider, null)
+            _react2.default.createElement(Divider, null)
           )
         ),
         _react2.default.createElement(
@@ -73127,11 +73125,11 @@ var SelectedDevices = _react2.default.createClass({
             List,
             null,
             _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Software', secondaryText: this.props.selected[0].software_version }),
-            _react2.default.createElement(ListDivider, null),
+            _react2.default.createElement(Divider, null),
             _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Architecture', secondaryText: this.props.selected[0].arch }),
-            _react2.default.createElement(ListDivider, null),
+            _react2.default.createElement(Divider, null),
             _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Groups', secondaryText: this._getGroupNames(this.props.selected[0].groups).join(', ') }),
-            _react2.default.createElement(ListDivider, null)
+            _react2.default.createElement(Divider, null)
           )
         ),
         _react2.default.createElement(
@@ -73141,7 +73139,7 @@ var SelectedDevices = _react2.default.createClass({
             List,
             null,
             _react2.default.createElement(ListItem, { rightIconButton: editButton, disabled: true, primaryText: 'Tags', secondaryText: tags }),
-            _react2.default.createElement(ListDivider, null),
+            _react2.default.createElement(Divider, null),
             _react2.default.createElement(ListItem, {
               primaryText: 'Deploy update',
               secondaryText: 'Click to update this device',
@@ -73151,7 +73149,7 @@ var SelectedDevices = _react2.default.createClass({
                 { className: 'material-icons' },
                 'schedule'
               ) }),
-            _react2.default.createElement(ListDivider, null)
+            _react2.default.createElement(Divider, null)
           )
         )
       );
@@ -73284,7 +73282,8 @@ var SelectedDevices = _react2.default.createClass({
           open: this.state.schedule,
           title: 'Deploy an update',
           actions: scheduleActions,
-          autoDetectWindowHeight: true, autoScrollBodyContent: true,
+          autoDetectWindowHeight: true,
+          autoScrollBodyContent: true,
           bodyStyle: { paddingTop: "0" },
           contentStyle: { overflow: "hidden", boxShadow: "0 14px 45px rgba(0, 0, 0, 0.25), 0 10px 18px rgba(0, 0, 0, 0.22)" }
         },
@@ -75127,6 +75126,7 @@ var TextField = _materialUi2.default.TextField;
 var FontIcon = _materialUi2.default.FontIcon;
 var LeftNav = _materialUi2.default.LeftNav;
 var FlatButton = _materialUi2.default.FlatButton;
+var MenuItem = _materialUi2.default.MenuItem;
 
 function getDate() {
   return new Date();
@@ -75174,7 +75174,6 @@ var ScheduleForm = _react2.default.createClass({
       groupVal.payload = this.props.groupVal.id;
       groupVal.text = this.props.groupVal.name;
     }
-    this._sendUpToParent(this.props.id, 'id');
 
     /* if single device */
     var disabled = false;
@@ -75188,7 +75187,6 @@ var ScheduleForm = _react2.default.createClass({
         type: 'private',
         devices: [this.props.device]
       };
-      this._sendUpToParent(group, 'group');
     }
 
     // date times
@@ -75228,25 +75226,22 @@ var ScheduleForm = _react2.default.createClass({
       },
       devices: getDevicesFromParams(group.name, image)
     });
+    this._sendUpToParent(this.state.image, 'image');
     this._sendUpToParent(group, 'group');
   },
-  _handleImageValueChange: function _handleImageValueChange(e) {
-    var elementPos = this.state.images.map(function (x) {
-      return x.id;
-    }).indexOf(e.target.value);
-    var image = this.state.images[elementPos];
-
+  _handleImageValueChange: function _handleImageValueChange(e, index, value) {
+    var image = this.state.images[index];
     var groupname = this.state.group ? this.state.group.name : null;
     var devices = this.props.device ? [this.props.device] : getDevicesFromParams(groupname, image.model);
-    console.log(devices);
     this.setState({
       image: image,
       imageVal: {
-        payload: e.target.value,
+        payload: image.id,
         text: image.name
       },
       devices: devices
     });
+    this._sendUpToParent(this.state.group, 'group');
     this._sendUpToParent(image, 'image');
   },
 
@@ -75286,17 +75281,17 @@ var ScheduleForm = _react2.default.createClass({
   render: function render() {
     var imageItems = [];
     for (var i = 0; i < this.state.images.length; i++) {
-      var tmp = { payload: this.state.images[i].id, text: this.state.images[i].name };
+      var tmp = _react2.default.createElement(MenuItem, { value: this.state.images[i].id, key: i, primaryText: this.state.images[i].name });
       imageItems.push(tmp);
     }
 
     var groupItems = [];
     if (this.props.device) {
-      groupItems[0] = { payload: 0, text: this.props.device.name };
+      groupItems[0] = _react2.default.createElement(MenuItem, { value: '0', key: 'device', primaryText: this.props.device.name });
     }
 
     for (var i = 0; i < this.props.groups.length; i++) {
-      var tmp = { payload: this.props.groups[i].id, text: this.props.groups[i].name };
+      var tmp = _react2.default.createElement(MenuItem, { value: this.props.groups[i].id, key: i, primaryText: this.props.groups[i].name });
       groupItems.push(tmp);
     }
 
@@ -75320,7 +75315,7 @@ var ScheduleForm = _react2.default.createClass({
         singleFilter = encodeURIComponent(singleFilter);
         return _react2.default.createElement(
           'p',
-          null,
+          { key: index },
           _react2.default.createElement(
             _reactRouter.Link,
             { to: '/devices/' + this.state.groupVal.payload + '/' + singleFilter },
@@ -75366,12 +75361,16 @@ var ScheduleForm = _react2.default.createClass({
         _react2.default.createElement(
           'div',
           { style: { display: "block" } },
-          _react2.default.createElement(SelectField, {
-            ref: 'image',
-            value: this.state.imageVal.payload,
-            onChange: this._handleImageValueChange,
-            floatingLabelText: 'Select target software',
-            menuItems: imageItems }),
+          _react2.default.createElement(
+            SelectField,
+            {
+              ref: 'image',
+              value: this.state.imageVal.payload,
+              onChange: this._handleImageValueChange,
+              floatingLabelText: 'Select target software'
+            },
+            imageItems
+          ),
           _react2.default.createElement(TextField, {
             className: 'margin-left',
             disabled: true,
@@ -75388,13 +75387,17 @@ var ScheduleForm = _react2.default.createClass({
           _react2.default.createElement(
             'div',
             { className: this.state.disabled ? 'hidden' : 'inline-block' },
-            _react2.default.createElement(SelectField, {
-              value: this.state.groupVal.payload,
-              ref: 'group',
-              onChange: this._handleGroupValueChange,
-              floatingLabelText: 'Select group',
-              menuItems: groupItems,
-              style: { marginBottom: 10 } })
+            _react2.default.createElement(
+              SelectField,
+              {
+                value: this.state.groupVal.payload,
+                ref: 'group',
+                onChange: this._handleGroupValueChange,
+                floatingLabelText: 'Select group',
+                style: { marginBottom: 10 }
+              },
+              groupItems
+            )
           ),
           _react2.default.createElement(
             'div',

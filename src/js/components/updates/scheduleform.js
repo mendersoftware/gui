@@ -12,6 +12,7 @@ var TextField = mui.TextField;
 var FontIcon = mui.FontIcon;
 var LeftNav = mui.LeftNav;
 var FlatButton = mui.FlatButton;
+var MenuItem = mui.MenuItem;
 
 
 
@@ -59,7 +60,6 @@ var ScheduleForm = React.createClass({
       groupVal.payload = this.props.groupVal.id;
       groupVal.text = this.props.groupVal.name;
     }
-    this._sendUpToParent(this.props.id, 'id');
 
     /* if single device */
     var disabled = false;
@@ -73,7 +73,6 @@ var ScheduleForm = React.createClass({
         type: 'private',
         devices: [this.props.device]
       }
-      this._sendUpToParent(group, 'group');
     }
 
     // date times
@@ -113,23 +112,22 @@ var ScheduleForm = React.createClass({
       },
       devices: getDevicesFromParams(group.name, image)
     });
+    this._sendUpToParent(this.state.image, 'image');
     this._sendUpToParent(group, 'group');
   },
-  _handleImageValueChange: function(e) {
-    var elementPos = this.state.images.map(function(x) {return x.id;}).indexOf(e.target.value);
-    var image = this.state.images[elementPos];
-
+  _handleImageValueChange: function(e, index, value) {
+    var image = this.state.images[index];
     var groupname = this.state.group ? this.state.group.name : null;
     var devices = this.props.device ? [this.props.device] : getDevicesFromParams(groupname, image.model);
-    console.log(devices);
     this.setState({
       image: image,
       imageVal: {
-        payload: e.target.value,
+        payload: image.id,
         text: image.name
       },
       devices: devices
     });
+    this._sendUpToParent(this.state.group, 'group');
     this._sendUpToParent(image, 'image');
   },
 
@@ -169,17 +167,17 @@ var ScheduleForm = React.createClass({
   render: function() {
     var imageItems = [];
     for (var i=0; i<this.state.images.length;i++) {
-      var tmp = { payload:this.state.images[i].id, text: this.state.images[i].name };
+      var tmp = <MenuItem value={this.state.images[i].id} key={i} primaryText={this.state.images[i].name} />
       imageItems.push(tmp);
     }
 
     var groupItems = [];
     if (this.props.device) {
-      groupItems[0] = { payload:0, text: this.props.device.name }
+      groupItems[0] = <MenuItem value="0" key="device" primaryText={this.props.device.name} />
     }
 
     for (var i=0; i<this.props.groups.length;i++) {
-      var tmp = { payload:this.props.groups[i].id, text: this.props.groups[i].name };
+      var tmp = <MenuItem value={this.props.groups[i].id} key={i} primaryText={this.props.groups[i].name} />;
       groupItems.push(tmp);
     }
 
@@ -199,7 +197,7 @@ var ScheduleForm = React.createClass({
         var singleFilter = "name="+item.name;
         singleFilter = encodeURIComponent(singleFilter);
         return (
-            <p>
+            <p key={index}>
               <Link to={`/devices/${this.state.groupVal.payload}/${singleFilter}`}>{item.name}</Link>
             </p>
         )
@@ -233,7 +231,9 @@ var ScheduleForm = React.createClass({
               value={this.state.imageVal.payload}
               onChange={this._handleImageValueChange}
               floatingLabelText="Select target software"
-              menuItems={imageItems} />
+            >
+              {imageItems}
+            </SelectField>
 
             <TextField
               className="margin-left"
@@ -253,8 +253,10 @@ var ScheduleForm = React.createClass({
                 ref="group"
                 onChange={this._handleGroupValueChange}
                 floatingLabelText="Select group"
-                menuItems={groupItems}
-                style={{marginBottom:10}} />
+                style={{marginBottom:10}} 
+              >
+                {groupItems}
+              </SelectField>
             </div>
 
             <div className={this.state.disabled ? 'inline-block' : 'hidden'}>

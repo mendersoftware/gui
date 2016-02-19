@@ -12,7 +12,7 @@ var SelectField = mui.SelectField;
 var TextField = mui.TextField;
 var List = mui.List;
 var ListItem = mui.ListItem;
-var ListDivider = mui.ListDivider;
+var Divider = mui.Divider;
 var FontIcon = mui.FontIcon;
 var IconButton = mui.IconButton;
 
@@ -163,7 +163,6 @@ var SelectedDevices = React.createClass({
       for (var i in tagslist) {
         noIds.push(tagslist[i].text);
       }
-      console.log(noIds);
 
       // save new tag data to device
       AppActions.updateDeviceTags(this.props.selected[0].id, noIds);
@@ -235,33 +234,33 @@ var SelectedDevices = React.createClass({
           <div className="report-list">
             <List>
               <ListItem disabled={true} primaryText="Name" secondaryText={this.props.selected[0].name} />
-              <ListDivider />
+              <Divider />
               <ListItem disabled={true} primaryText="Status" secondaryText={this.props.selected[0].status} />
-              <ListDivider />
+              <Divider />
               <ListItem disabled={true} primaryText="Device type" secondaryText={this.props.selected[0].model} />
-              <ListDivider />
+              <Divider />
             </List>
           </div>
           <div className="report-list">
             <List>
               <ListItem disabled={true} primaryText="Software" secondaryText={this.props.selected[0].software_version} />
-              <ListDivider />
+              <Divider />
               <ListItem disabled={true} primaryText="Architecture" secondaryText={this.props.selected[0].arch} />
-              <ListDivider />
+              <Divider />
               <ListItem disabled={true} primaryText="Groups" secondaryText={this._getGroupNames(this.props.selected[0].groups).join(', ')} />
-              <ListDivider />
+              <Divider />
             </List>
           </div>
           <div className="report-list">
             <List>
               <ListItem rightIconButton={editButton} disabled={true} primaryText="Tags" secondaryText={tags} />
-              <ListDivider />
+              <Divider />
               <ListItem
                 primaryText="Deploy update"
                 secondaryText="Click to update this device"
                 onClick={this._clickListItem}
                 leftIcon={<FontIcon className="material-icons">schedule</FontIcon>} />
-              <ListDivider />
+              <Divider />
             </List>
           </div>
         </div>
@@ -362,7 +361,8 @@ var SelectedDevices = React.createClass({
           open={this.state.schedule}
           title='Deploy an update'
           actions={scheduleActions}
-          autoDetectWindowHeight={true} autoScrollBodyContent={true}
+          autoDetectWindowHeight={true}
+          autoScrollBodyContent={true}
           bodyStyle={{paddingTop:"0"}}
           contentStyle={{overflow:"hidden", boxShadow:"0 14px 45px rgba(0, 0, 0, 0.25), 0 10px 18px rgba(0, 0, 0, 0.22)"}}
           >
