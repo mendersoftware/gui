@@ -101,13 +101,13 @@ var ScheduleForm = React.createClass({
     this._updateTimes();
   },
 
-  _handleGroupValueChange: function(e) {
+  _handleGroupValueChange: function(e, index, value) {
     var image = this.state.image ? this.state.image.model : null;
-    var group = this.props.groups[e.target.value-1];
+    var group = this.props.groups[index];
     this.setState({
       group: group,
       groupVal: {
-        payload: e.target.value,
+        payload: group.id,
         text: group.name,
       },
       devices: getDevicesFromParams(group.name, image)

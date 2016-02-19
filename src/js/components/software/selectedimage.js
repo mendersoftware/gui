@@ -7,7 +7,7 @@ import mui from 'material-ui';
 
 var List = mui.List;
 var ListItem = mui.ListItem;
-var ListDivider = mui.ListDivider;
+var Divider = mui.Divider;
 var FontIcon = mui.FontIcon;
 var FlatButton = mui.FlatButton;
 var IconButton = mui.IconButton;
@@ -137,29 +137,29 @@ var SelectedImage = React.createClass({
         <div className="report-list">
           <List>
             <ListItem disabled={true} primaryText="Software" secondaryText={info.name} />
-            <ListDivider />
+            <Divider />
             <ListItem disabled={this.props.image.model ? false : true} primaryText="Device type" secondaryText={info.model} onClick={this._handleLinkClick.bind(null, info.model)} />
-            <ListDivider />
+            <Divider />
             <ListItem disabled={true} primaryText="Size" secondaryText={info.size} />
-            <ListDivider />
+            <Divider />
           </List>
         </div>
         <div className="report-list">
           <List>
             <ListItem disabled={true} primaryText="Date built" secondaryText={info.build_date} />
-            <ListDivider />
+            <Divider />
             <ListItem disabled={true} primaryText="Date uploaded" secondaryText={info.modified} />
-            <ListDivider />
+            <Divider />
             <ListItem disabled={true} primaryText="Installed on devices" secondaryText={info.devices ? info.devices : "-"} />
-            <ListDivider />
+            <Divider />
           </List>
         </div>
         <div className="report-list" style={{width: "320"}}>
           <List>
             <ListItem rightIconButton={editButton} disabled={true} primaryText="Tags" secondaryText={tags} />
-            <ListDivider />
+            <Divider />
             <ListItem disabled={true} primaryText="Checksum" secondaryTextLines={2} style={{wordWrap:"break-word"}} secondaryText={info.checksum} />
-            <ListDivider />
+            <Divider />
           </List>
         </div>
         <div className="float-right">
@@ -182,7 +182,7 @@ var SelectedImage = React.createClass({
                 secondaryText="Update devices with this image"
                 onClick={this._clickImageSchedule}
                 leftIcon={<FontIcon className="material-icons">schedule</FontIcon>} />
-              <ListDivider />
+              <Divider />
             </List>
           </div>
         </div>

@@ -73964,7 +73964,7 @@ var List = _materialUi2.default.List;
 // material ui
 
 var ListItem = _materialUi2.default.ListItem;
-var ListDivider = _materialUi2.default.ListDivider;
+var Divider = _materialUi2.default.Divider;
 var FontIcon = _materialUi2.default.FontIcon;
 var FlatButton = _materialUi2.default.FlatButton;
 var IconButton = _materialUi2.default.IconButton;
@@ -74098,11 +74098,11 @@ var SelectedImage = _react2.default.createClass({
           List,
           null,
           _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Software', secondaryText: info.name }),
-          _react2.default.createElement(ListDivider, null),
+          _react2.default.createElement(Divider, null),
           _react2.default.createElement(ListItem, { disabled: this.props.image.model ? false : true, primaryText: 'Device type', secondaryText: info.model, onClick: this._handleLinkClick.bind(null, info.model) }),
-          _react2.default.createElement(ListDivider, null),
+          _react2.default.createElement(Divider, null),
           _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Size', secondaryText: info.size }),
-          _react2.default.createElement(ListDivider, null)
+          _react2.default.createElement(Divider, null)
         )
       ),
       _react2.default.createElement(
@@ -74112,11 +74112,11 @@ var SelectedImage = _react2.default.createClass({
           List,
           null,
           _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Date built', secondaryText: info.build_date }),
-          _react2.default.createElement(ListDivider, null),
+          _react2.default.createElement(Divider, null),
           _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Date uploaded', secondaryText: info.modified }),
-          _react2.default.createElement(ListDivider, null),
+          _react2.default.createElement(Divider, null),
           _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Installed on devices', secondaryText: info.devices ? info.devices : "-" }),
-          _react2.default.createElement(ListDivider, null)
+          _react2.default.createElement(Divider, null)
         )
       ),
       _react2.default.createElement(
@@ -74126,9 +74126,9 @@ var SelectedImage = _react2.default.createClass({
           List,
           null,
           _react2.default.createElement(ListItem, { rightIconButton: editButton, disabled: true, primaryText: 'Tags', secondaryText: tags }),
-          _react2.default.createElement(ListDivider, null),
+          _react2.default.createElement(Divider, null),
           _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Checksum', secondaryTextLines: 2, style: { wordWrap: "break-word" }, secondaryText: info.checksum }),
-          _react2.default.createElement(ListDivider, null)
+          _react2.default.createElement(Divider, null)
         )
       ),
       _react2.default.createElement('div', { className: 'float-right' }),
@@ -74171,7 +74171,7 @@ var SelectedImage = _react2.default.createClass({
                 { className: 'material-icons' },
                 'schedule'
               ) }),
-            _react2.default.createElement(ListDivider, null)
+            _react2.default.createElement(Divider, null)
           )
         )
       )
@@ -75215,13 +75215,13 @@ var ScheduleForm = _react2.default.createClass({
     this._updateTimes();
   },
 
-  _handleGroupValueChange: function _handleGroupValueChange(e) {
+  _handleGroupValueChange: function _handleGroupValueChange(e, index, value) {
     var image = this.state.image ? this.state.image.model : null;
-    var group = this.props.groups[e.target.value - 1];
+    var group = this.props.groups[index];
     this.setState({
       group: group,
       groupVal: {
-        payload: e.target.value,
+        payload: group.id,
         text: group.name
       },
       devices: getDevicesFromParams(group.name, image)
