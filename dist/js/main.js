@@ -72297,7 +72297,7 @@ var DeviceList = _react2.default.createClass({
   },
   shouldComponentUpdate: function shouldComponentUpdate(nextProps, nextState) {
     if (nextProps.selectedGroup.name !== this.props.selectedGroup.name) {
-      this.refs['input'].setValue(nextProps.selectedGroup.name);
+      //this.refs['input'].setValue(nextProps.selectedGroup.name);
       return true;
     }if (nextProps.devices !== this.props.devices) {
       return true;
@@ -72576,6 +72576,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 // material ui
 var mui = require('material-ui');
 var SelectField = mui.SelectField;
+var MenuItem = mui.MenuItem;
 var TextField = mui.TextField;
 var FlatButton = mui.FlatButton;
 var LeftNav = mui.LeftNav;
@@ -72587,18 +72588,17 @@ var Filters = _react2.default.createClass({
 
   getInitialState: function getInitialState() {
     return {
-      isDocked: false
+      showFilters: false
     };
   },
-  _updateFilterKey: function _updateFilterKey(index, e) {
+  _updateFilterKey: function _updateFilterKey(i, event, index, value) {
     var filterArray = this.props.filters;
-    filterArray[index].key = e.target.value;
-    filterArray[index].value = '';
+    filterArray[i] = { key: value, value: '' };
     this.setState({ filters: filterArray });
   },
-  _updateFilterValue: function _updateFilterValue(index, e) {
+  _updateFilterValue: function _updateFilterValue(index, event) {
     var filterArray = this.props.filters;
-    filterArray[index].value = e.target.value;
+    filterArray[index].value = event.target.value;
     this.props.onFilterChange(filterArray);
   },
   _addFilter: function _addFilter() {
@@ -72616,9 +72616,8 @@ var Filters = _react2.default.createClass({
     this.props.onFilterChange(filterArray);
   },
   _toggleNav: function _toggleNav() {
-    this.refs.filterNav.toggle();
     this.setState({
-      isDocked: !this.state.isDocked
+      showFilters: !this.state.showFilters
     });
   },
   render: function render() {
@@ -72642,7 +72641,8 @@ var Filters = _react2.default.createClass({
     };
     var attributes = [];
     for (var key in this.props.attributes) {
-      var tmp = { payload: key, text: this.props.attributes[key] };
+      var i = Object.keys(this.props.attributes).indexOf(key);
+      var tmp = _react2.default.createElement(MenuItem, { value: key, key: i, primaryText: this.props.attributes[key] });
       attributes.push(tmp);
     }
     var menuItems = [{ text: 'Disabled', disabled: true }];
@@ -72662,12 +72662,16 @@ var Filters = _react2.default.createClass({
             className: 'remove-icon' },
           'remove_circle'
         ),
-        _react2.default.createElement(SelectField, {
-          style: { width: "100%" },
-          value: item.key,
-          onChange: this._updateFilterKey.bind(null, index),
-          hintText: 'Filter by',
-          menuItems: attributes }),
+        _react2.default.createElement(
+          SelectField,
+          {
+            style: { width: "100%" },
+            value: item.key,
+            onChange: this._updateFilterKey.bind(null, index),
+            hintText: 'Filter by'
+          },
+          attributes
+        ),
         _react2.default.createElement(TextField, {
           style: { width: "100%", marginTop: "-10" },
           value: item.value,
@@ -72703,13 +72707,17 @@ var Filters = _react2.default.createClass({
     return _react2.default.createElement(
       'div',
       null,
-      _react2.default.createElement(LeftNav, {
-        ref: 'filterNav',
-        docked: false,
-        openRight: true,
-        menuItems: [],
-        header: filterNav,
-        style: { padding: "10px 20px", top: "58", overflowY: "auto" } }),
+      _react2.default.createElement(
+        LeftNav,
+        {
+          ref: 'filterNav',
+          open: this.state.showFilters,
+          docked: false,
+          openRight: true,
+          style: { padding: "10px 20px", top: "58", overflowY: "auto" }
+        },
+        filterNav
+      ),
       _react2.default.createElement(
         'div',
         { style: { width: "100%", position: "relative" } },
@@ -72875,9 +72883,9 @@ var mui = require('material-ui');
 var FlatButton = mui.FlatButton;
 var RaisedButton = mui.RaisedButton;
 var Dialog = mui.Dialog;
+var MenuItem = mui.MenuItem;
 var SelectField = mui.SelectField;
 var TextField = mui.TextField;
-var Snackbar = mui.Snackbar;
 var List = mui.List;
 var ListItem = mui.ListItem;
 var ListDivider = mui.ListDivider;
@@ -72904,11 +72912,10 @@ var SelectedDevices = _react2.default.createClass({
         payload: '',
         text: ''
       },
-      tagEdit: false
+      tagEdit: false,
+      schedule: false,
+      addGroup: false
     };
-  },
-  _onDismiss: function _onDismiss() {
-    console.log("gone");
   },
   _handleSelectValueChange: function _handleSelectValueChange(e) {
     this.setState({ showInput: false });
@@ -72930,21 +72937,17 @@ var SelectedDevices = _react2.default.createClass({
       textFieldValue: e.target.value
     };
   },
-  dialogDismiss: function dialogDismiss(ref) {
-    this.refs[ref].dismiss();
-  },
-  dialogOpen: function dialogOpen(ref) {
-    this.refs[ref].show();
-  },
-  _openSchedule: function _openSchedule(ref) {
-    this.dialogOpen(ref);
+  dialogToggle: function dialogToggle(ref) {
+    var state = {};
+    state[ref] = !this.state[ref];
+    this.setState(state);
   },
   _showButton: function _showButton() {
     this.setState({ showInput: true });
   },
   _addGroupHandler: function _addGroupHandler() {
     AppActions.addToGroup(addSelection.group, this.props.selected);
-    this.dialogDismiss('addGroup');
+    this.dialogToggle('addGroup');
     AppActions.selectGroup(addSelection.textFieldValue);
   },
   _removeGroupHandler: function _removeGroupHandler() {
@@ -73005,7 +73008,7 @@ var SelectedDevices = _react2.default.createClass({
   },
 
   _clickListItem: function _clickListItem() {
-    this._openSchedule('schedule');
+    this.dialogToggle('schedule');
   },
 
   _onScheduleSubmit: function _onScheduleSubmit() {
@@ -73017,7 +73020,7 @@ var SelectedDevices = _react2.default.createClass({
       image: this.state.image
     };
     AppActions.saveSchedule(newUpdate, this.props.selected.length === 1);
-    this.dialogDismiss('schedule');
+    this.dialogToggle('schedule');
   },
 
   handleDelete: function handleDelete(i) {
@@ -73166,18 +73169,16 @@ var SelectedDevices = _react2.default.createClass({
       { style: { marginRight: "10", display: "inline-block" } },
       _react2.default.createElement(FlatButton, {
         label: 'Cancel',
-        onClick: this.dialogDismiss.bind(null, 'addGroup') })
+        onClick: this.dialogToggle.bind(null, 'addGroup') })
     ), _react2.default.createElement(RaisedButton, {
       label: 'Add to group',
       primary: true,
       onClick: this._addGroupHandler,
       ref: 'save' })];
 
-    var groupList = this.props.groups.map(function (group) {
-      if (group.id === 1) {
-        return { payload: '', text: '' };
-      } else {
-        return { payload: group.id, text: group.name };
+    var groupList = this.props.groups.map(function (group, index) {
+      if (group.id !== 1) {
+        return _react2.default.createElement(MenuItem, { value: group.id, key: index, primaryText: group.name });
       }
     });
 
@@ -73186,7 +73187,7 @@ var SelectedDevices = _react2.default.createClass({
       { style: { marginRight: "10", display: "inline-block" } },
       _react2.default.createElement(FlatButton, {
         label: 'Cancel',
-        onClick: this.dialogDismiss.bind(null, 'schedule') })
+        onClick: this.dialogToggle.bind(null, 'schedule') })
     ), _react2.default.createElement(RaisedButton, {
       label: 'Deploy update',
       primary: true,
@@ -73201,7 +73202,7 @@ var SelectedDevices = _react2.default.createClass({
         { className: 'float-right' },
         _react2.default.createElement(
           RaisedButton,
-          { disabled: disableAction, label: 'Add selected devices to a group', secondary: true, onClick: this.dialogOpen.bind(null, 'addGroup') },
+          { disabled: disableAction, label: 'Add selected devices to a group', secondary: true, onClick: this.dialogToggle.bind(null, 'addGroup') },
           _react2.default.createElement(
             FontIcon,
             { style: styles.raisedButtonIcon, className: 'material-icons' },
@@ -73237,7 +73238,7 @@ var SelectedDevices = _react2.default.createClass({
       _react2.default.createElement(
         Dialog,
         {
-          ref: 'addGroup',
+          open: this.state.addGroup,
           title: 'Add devices to group',
           actions: addActions,
           autoDetectWindowHeight: true, autoScrollBodyContent: true },
@@ -73247,13 +73248,17 @@ var SelectedDevices = _react2.default.createClass({
           _react2.default.createElement(
             'div',
             null,
-            _react2.default.createElement(SelectField, {
-              ref: 'groupSelect',
-              onChange: this._handleSelectValueChange,
-              floatingLabelText: 'Select group',
-              menuItems: groupList,
-              style: inputStyle,
-              value: this.state.selectedGroup.payload }),
+            _react2.default.createElement(
+              SelectField,
+              {
+                ref: 'groupSelect',
+                onChange: this._handleSelectValueChange,
+                floatingLabelText: 'Select group',
+                style: inputStyle,
+                value: this.state.selectedGroup.payload
+              },
+              groupList
+            ),
             _react2.default.createElement(RaisedButton, {
               label: 'Create new',
               onClick: this._showButton })
@@ -73273,23 +73278,10 @@ var SelectedDevices = _react2.default.createClass({
           )
         )
       ),
-      _react2.default.createElement(Snackbar, {
-        onDismiss: this._onDismiss,
-        ref: 'snackbar',
-        autoHideDuration: 5000,
-        action: 'undo',
-        message: 'Devices added to group' }),
-      _react2.default.createElement(Snackbar, {
-        onDismiss: this._onDismiss,
-        ref: 'snackbarRemove',
-        autoHideDuration: 5000,
-        action: 'undo',
-        message: 'Devices were removed from the group',
-        onActionTouchTap: this._undoRemove }),
       _react2.default.createElement(
         Dialog,
         {
-          ref: 'schedule',
+          open: this.state.schedule,
           title: 'Deploy an update',
           actions: scheduleActions,
           autoDetectWindowHeight: true, autoScrollBodyContent: true,

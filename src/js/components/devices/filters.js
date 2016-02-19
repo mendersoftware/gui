@@ -3,6 +3,7 @@ import React from 'react';
 // material ui
 var mui = require('material-ui');
 var SelectField = mui.SelectField;
+var MenuItem = mui.MenuItem;
 var TextField = mui.TextField;
 var FlatButton = mui.FlatButton;
 var LeftNav = mui.LeftNav;
@@ -13,18 +14,17 @@ var IconButton = mui.IconButton;
 var Filters = React.createClass({
   getInitialState: function() {
     return {
-      isDocked: false
+      showFilters: false
     };
   },
-  _updateFilterKey: function (index, e) {
+  _updateFilterKey: function (i, event, index, value) {
     var filterArray = this.props.filters;
-    filterArray[index].key = e.target.value;
-    filterArray[index].value = '';
+    filterArray[i] = {key:value, value:''};
     this.setState({filters: filterArray});
   },
-  _updateFilterValue: function (index, e) {
+  _updateFilterValue: function (index, event) {
     var filterArray = this.props.filters;
-    filterArray[index].value = e.target.value;
+    filterArray[index].value = event.target.value;
     this.props.onFilterChange(filterArray);
   },
   _addFilter: function() {
@@ -43,9 +43,8 @@ var Filters = React.createClass({
     this.props.onFilterChange(filterArray);
   },
   _toggleNav: function() {
-    this.refs.filterNav.toggle();
     this.setState({
-      isDocked: !this.state.isDocked,
+      showFilters: !this.state.showFilters
     });
   },
   render: function() {
@@ -69,7 +68,8 @@ var Filters = React.createClass({
     }
     var attributes = [];
     for (var key in this.props.attributes) {
-      var tmp = { payload:key, text: this.props.attributes[key] };
+      var i = Object.keys(this.props.attributes).indexOf(key);
+      var tmp = <MenuItem value={key} key={i} primaryText={this.props.attributes[key]} />
       attributes.push(tmp);
     }
     var menuItems = [{text:'Disabled', disabled:true}];
@@ -91,7 +91,9 @@ var Filters = React.createClass({
             value={item.key}
             onChange={this._updateFilterKey.bind(null, index)}
             hintText="Filter by"
-            menuItems={attributes} />
+          >
+            {attributes} 
+          </SelectField>
           <TextField
             style={{width:"100%", marginTop:"-10"}}
             value={item.value}
@@ -119,11 +121,13 @@ var Filters = React.createClass({
       <div>
         <LeftNav 
           ref="filterNav"
+          open={this.state.showFilters}
           docked={false}
           openRight={true}
-          menuItems={[]}
-          header={filterNav}
-          style={{padding: "10px 20px", top:"58", overflowY:"auto"}} />
+          style={{padding: "10px 20px", top:"58", overflowY:"auto"}}
+        >
+          {filterNav}
+        </LeftNav>
 
         <div style={{width:"100%", position:"relative"}}>
           <FlatButton style={{position:"absolute",right:"30"}} secondary={true} onClick={this._toggleNav} label={filterCount>0 ? "Filters ("+filterCount+")" : "Filters"}>

@@ -23,7 +23,7 @@ var DeviceList = React.createClass({
   },
   shouldComponentUpdate: function(nextProps, nextState) {
     if (nextProps.selectedGroup.name !== this.props.selectedGroup.name) {
-      this.refs['input'].setValue(nextProps.selectedGroup.name); 
+      //this.refs['input'].setValue(nextProps.selectedGroup.name); 
       return true;
     } if (nextProps.devices !== this.props.devices) {
       return true;

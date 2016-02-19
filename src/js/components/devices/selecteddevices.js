@@ -7,9 +7,9 @@ var mui = require('material-ui');
 var FlatButton = mui.FlatButton;
 var RaisedButton = mui.RaisedButton;
 var Dialog = mui.Dialog;
+var MenuItem = mui.MenuItem;
 var SelectField = mui.SelectField;
 var TextField = mui.TextField;
-var Snackbar = mui.Snackbar;
 var List = mui.List;
 var ListItem = mui.ListItem;
 var ListDivider = mui.ListDivider;
@@ -35,10 +35,9 @@ var SelectedDevices = React.createClass({
         text: ''
       },
       tagEdit: false,
+      schedule: false,
+      addGroup: false
     };
-  },
-  _onDismiss: function() {
-    console.log("gone");
   },
   _handleSelectValueChange: function(e) {
     this.setState({showInput: false});
@@ -60,21 +59,17 @@ var SelectedDevices = React.createClass({
       textFieldValue: e.target.value 
     };
   },
-  dialogDismiss: function(ref) {
-    this.refs[ref].dismiss();
-  },
-  dialogOpen: function(ref) {
-    this.refs[ref].show();
-  },
-  _openSchedule: function(ref) {
-    this.dialogOpen(ref);
+  dialogToggle: function (ref) {
+    var state = {};
+    state[ref] = !this.state[ref];
+    this.setState(state);
   },
   _showButton: function() {
     this.setState({showInput: true});
   },
   _addGroupHandler: function() {
     AppActions.addToGroup(addSelection.group, this.props.selected);
-    this.dialogDismiss('addGroup');
+    this.dialogToggle('addGroup');
     AppActions.selectGroup(addSelection.textFieldValue);
   },
   _removeGroupHandler: function() {
@@ -135,7 +130,7 @@ var SelectedDevices = React.createClass({
   },
 
   _clickListItem: function() {
-   this._openSchedule('schedule');
+   this.dialogToggle('schedule');
   },
 
   _onScheduleSubmit: function() {
@@ -147,7 +142,7 @@ var SelectedDevices = React.createClass({
       image: this.state.image
     }
     AppActions.saveSchedule(newUpdate, this.props.selected.length === 1);
-    this.dialogDismiss('schedule');
+    this.dialogToggle('schedule');
   },
 
   handleDelete: function(i) {
@@ -282,7 +277,7 @@ var SelectedDevices = React.createClass({
       <div style={{marginRight:"10", display:"inline-block"}}>
         <FlatButton
           label="Cancel"
-          onClick={this.dialogDismiss.bind(null, 'addGroup')} />
+          onClick={this.dialogToggle.bind(null, 'addGroup')} />
       </div>,
       <RaisedButton
         label="Add to group"
@@ -291,11 +286,9 @@ var SelectedDevices = React.createClass({
         ref="save" />
     ];
 
-    var groupList = this.props.groups.map(function(group) {
-      if (group.id === 1) {
-        return {payload: '', text: ''}
-      } else {
-        return {payload: group.id, text: group.name}
+    var groupList = this.props.groups.map(function(group, index) {
+      if (group.id !== 1) {
+        return <MenuItem value={group.id} key={index} primaryText={group.name} />
       }
     });
 
@@ -303,7 +296,7 @@ var SelectedDevices = React.createClass({
       <div style={{marginRight:"10", display:"inline-block"}}>
         <FlatButton
           label="Cancel"
-          onClick={this.dialogDismiss.bind(null, 'schedule')} />
+          onClick={this.dialogToggle.bind(null, 'schedule')} />
       </div>,
       <RaisedButton
         label="Deploy update"
@@ -315,7 +308,7 @@ var SelectedDevices = React.createClass({
     return (
       <div className={this.props.devices.length ? null : "hidden"}>
         <div className='float-right'>
-          <RaisedButton disabled={disableAction} label="Add selected devices to a group" secondary={true} onClick={this.dialogOpen.bind(null, 'addGroup')}>
+          <RaisedButton disabled={disableAction} label="Add selected devices to a group" secondary={true} onClick={this.dialogToggle.bind(null, 'addGroup')}>
             <FontIcon style={styles.raisedButtonIcon} className="material-icons">add_circle</FontIcon>
           </RaisedButton>
           <FlatButton disabled={disableAction} style={{marginLeft: "4"}} className={this.props.selectedGroup.id === 1 ? 'hidden' : null} label="Remove selected devices from this group" secondary={true} onClick={this._removeGroupHandler}>
@@ -329,7 +322,7 @@ var SelectedDevices = React.createClass({
         </div>
 
         <Dialog
-          ref="addGroup"
+          open={this.state.addGroup}
           title="Add devices to group"
           actions={addActions}
           autoDetectWindowHeight={true} autoScrollBodyContent={true}>  
@@ -339,9 +332,11 @@ var SelectedDevices = React.createClass({
               ref="groupSelect"
               onChange={this._handleSelectValueChange}
               floatingLabelText="Select group"
-              menuItems={groupList} 
               style={inputStyle}
-              value={this.state.selectedGroup.payload} />
+              value={this.state.selectedGroup.payload}
+              >
+                {groupList}
+              </SelectField>
               
               <RaisedButton 
                 label="Create new" 
@@ -363,23 +358,8 @@ var SelectedDevices = React.createClass({
           </div>
         </Dialog>
 
-        <Snackbar 
-          onDismiss={this._onDismiss}
-          ref="snackbar"
-          autoHideDuration={5000}
-          action="undo"
-          message="Devices added to group" />
-
-          <Snackbar 
-          onDismiss={this._onDismiss}
-          ref="snackbarRemove"
-          autoHideDuration={5000}
-          action="undo"
-          message="Devices were removed from the group"
-          onActionTouchTap={this._undoRemove} />
-
         <Dialog
-          ref="schedule"
+          open={this.state.schedule}
           title='Deploy an update'
           actions={scheduleActions}
           autoDetectWindowHeight={true} autoScrollBodyContent={true}
