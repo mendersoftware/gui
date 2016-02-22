@@ -230,8 +230,8 @@ span.length {
   right: 45px;
   top: 30px;
 }
-.tableSearch input,
-.tableSearch input:focus {
+.search input,
+.search input:focus {
   outline: none;
   border-top: none;
   border-left: none;
@@ -242,21 +242,27 @@ span.length {
   font-family: Lato, sans-serif;
   color: rgba(0, 0, 0, 0.8);
 }
-.tableSearch input::-webkit-input-placeholder,
-.tableSearch input:focus::-webkit-input-placeholder {
+.search input::-webkit-input-placeholder,
+.search input:focus::-webkit-input-placeholder {
   color: rgba(0, 0, 0, 0.3);
 }
-.tableSearch input:-moz-placeholder,
-.tableSearch input:focus:-moz-placeholder {
+.search input:-moz-placeholder,
+.search input:focus:-moz-placeholder {
   color: rgba(0, 0, 0, 0.3);
 }
-.tableSearch input::-moz-placeholder,
-.tableSearch input:focus::-moz-placeholder {
+.search input::-moz-placeholder,
+.search input:focus::-moz-placeholder {
   color: rgba(0, 0, 0, 0.3);
 }
-.tableSearch input:-ms-input-placeholder,
-.tableSearch input:focus:-ms-input-placeholder {
+.search input:-ms-input-placeholder,
+.search input:focus:-ms-input-placeholder {
   color: rgba(0, 0, 0, 0.3);
+}
+.closeSlider {
+  box-shadow: rgba(0, 0, 0, 0.156863) -2px 0px 4px -9px, rgba(0, 0, 0, 0.227451) -5px 0px 5px -2px !important;
+}
+.closeSlider:hover {
+  background-color: #EBEBEB !important;
 }
 /* report view */
 .report-list {
@@ -540,7 +546,9 @@ span.progress-group {
   top: 12px;
 }
 .deviceSlider {
-  padding: 15px;
+  padding: 15px 15px 5% 30px;
+  height: 95%;
+  overflow-y: auto;
   margin-bottom: -30px;
 }
 .deviceSlider p {

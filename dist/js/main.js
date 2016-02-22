@@ -73756,7 +73756,7 @@ var Repository = _react2.default.createClass({
         null,
         'Available images'
       ),
-      _react2.default.createElement(_reactSearchInput2.default, { className: 'tableSearch', ref: 'search', onChange: this.searchUpdated }),
+      _react2.default.createElement(_reactSearchInput2.default, { className: 'search tableSearch', ref: 'search', onChange: this.searchUpdated }),
       _react2.default.createElement(
         'div',
         { className: 'maxTable' },
@@ -73832,7 +73832,7 @@ var Repository = _react2.default.createClass({
         _react2.default.createElement(
           'p',
           { className: items.length ? 'hidden' : 'italic margin-left' },
-          'No images found.'
+          'No images found'
         )
       ),
       _react2.default.createElement(
@@ -75112,6 +75112,10 @@ var _datetime = require('./datetime.js');
 
 var _datetime2 = _interopRequireDefault(_datetime);
 
+var _reactSearchInput = require('react-search-input');
+
+var _reactSearchInput2 = _interopRequireDefault(_reactSearchInput);
+
 var _materialUi = require('material-ui');
 
 var _materialUi2 = _interopRequireDefault(_materialUi);
@@ -75124,8 +75128,9 @@ var SelectField = _materialUi2.default.SelectField;
 var TextField = _materialUi2.default.TextField;
 var FontIcon = _materialUi2.default.FontIcon;
 var LeftNav = _materialUi2.default.LeftNav;
-var FlatButton = _materialUi2.default.FlatButton;
+var IconButton = _materialUi2.default.IconButton;
 var MenuItem = _materialUi2.default.MenuItem;
+var Divider = _materialUi2.default.Divider;
 
 function getDate() {
   return new Date();
@@ -75277,6 +75282,10 @@ var ScheduleForm = _react2.default.createClass({
     this.setState({ showDevices: !this.state.showDevices });
   },
 
+  searchUpdated: function searchUpdated(term) {
+    this.setState({ searchTerm: term }); // needed to force re-render
+  },
+
   render: function render() {
     var imageItems = [];
     for (var i = 0; i < this.state.images.length; i++) {
@@ -75303,13 +75312,20 @@ var ScheduleForm = _react2.default.createClass({
 
     var defaultStartDate = this.state.start_time;
     var defaultEndDate = this.state.end_time;
+    var tmpDevices = [];
+
+    if (this.refs.search && this.state.devices) {
+      var filters = ['name'];
+      tmpDevices = this.state.devices.filter(this.refs.search.filter(filters));
+    }
+
     var deviceList = _react2.default.createElement(
       'p',
       null,
       'No devices'
     );
     if (this.state.devices) {
-      deviceList = this.state.devices.map(function (item, index) {
+      deviceList = tmpDevices.map(function (item, index) {
         var singleFilter = "name=" + item.name;
         singleFilter = encodeURIComponent(singleFilter);
         return _react2.default.createElement(
@@ -75326,8 +75342,23 @@ var ScheduleForm = _react2.default.createClass({
     deviceList = _react2.default.createElement(
       'div',
       { className: 'deviceSlider' },
-      _react2.default.createElement(FlatButton, { label: 'Hide devices', onClick: this._showDevices }),
+      _react2.default.createElement(
+        IconButton,
+        { className: 'closeSlider', iconStyle: { fontSize: "16px" }, onClick: this._showDevices, style: { borderRadius: "30px", width: "40px", height: "40", position: "absolute", left: "-18px", backgroundColor: "rgba(255,255,255,1)" } },
+        _react2.default.createElement(
+          FontIcon,
+          { className: 'material-icons' },
+          'close'
+        )
+      ),
+      _react2.default.createElement(_reactSearchInput2.default, { className: 'search', ref: 'search', onChange: this.searchUpdated, placeholder: 'Search devices', style: { margin: "10" } }),
       deviceList,
+      _react2.default.createElement(
+        'p',
+        { className: tmpDevices.length ? "hidden" : "italic" },
+        'No devices match this search term'
+      ),
+      _react2.default.createElement(Divider, null),
       _react2.default.createElement(
         'p',
         { className: this.state.group ? this.state.group : "hidden" },
@@ -75348,6 +75379,7 @@ var ScheduleForm = _react2.default.createClass({
           ref: 'devicesNav',
           docked: false,
           openRight: true,
+          style: this.state.showDevices ? { overflow: "visible" } : { overflow: "hidden" },
           open: this.state.showDevices,
           overlayStyle: { backgroundColor: "rgba(0, 0, 0, 0.3)" },
           onRequestChange: this._showDevices
@@ -75438,7 +75470,7 @@ var ScheduleForm = _react2.default.createClass({
 
 module.exports = ScheduleForm;
 
-},{"../../stores/app-store":663,"./datetime.js":651,"material-ui":250,"react":626,"react-router":432}],658:[function(require,module,exports){
+},{"../../stores/app-store":663,"./datetime.js":651,"material-ui":250,"react":626,"react-router":432,"react-search-input":455}],658:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');

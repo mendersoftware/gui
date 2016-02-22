@@ -2,7 +2,7 @@ import React from 'react';
 import AppStore from '../../stores/app-store';
 import { Router, Link } from 'react-router';
 import DateTime from './datetime.js';
-
+import SearchInput from 'react-search-input';
 import mui from 'material-ui';
 
 var DatePicker = mui.DatePicker;
@@ -11,8 +11,9 @@ var SelectField = mui.SelectField;
 var TextField = mui.TextField;
 var FontIcon = mui.FontIcon;
 var LeftNav = mui.LeftNav;
-var FlatButton = mui.FlatButton;
+var IconButton = mui.IconButton;
 var MenuItem = mui.MenuItem;
+var Divider = mui.Divider;
 
 
 
@@ -94,7 +95,7 @@ var ScheduleForm = React.createClass({
       images: AppStore.getSoftwareRepo(),
       disabled: disabled,
       group: group,
-      showDevices: false
+      showDevices: false,
     };
   },
   componentDidMount: function() {
@@ -164,6 +165,10 @@ var ScheduleForm = React.createClass({
     this.setState({showDevices: !this.state.showDevices});
   },
 
+  searchUpdated: function(term) {
+    this.setState({searchTerm: term}); // needed to force re-render
+  },
+
   render: function() {
     var imageItems = [];
     for (var i=0; i<this.state.images.length;i++) {
@@ -189,11 +194,18 @@ var ScheduleForm = React.createClass({
 
     var defaultStartDate =  this.state.start_time;
     var defaultEndDate = this.state.end_time;
+    var tmpDevices = [];
+
+    if (this.refs.search && this.state.devices) {
+      var filters = ['name'];
+      tmpDevices = this.state.devices.filter(this.refs.search.filter(filters));
+    }
+
     var deviceList = (
         <p>No devices</p>
     );
     if (this.state.devices) {
-      deviceList = this.state.devices.map(function(item, index) {
+      deviceList = tmpDevices.map(function(item, index) {
         var singleFilter = "name="+item.name;
         singleFilter = encodeURIComponent(singleFilter);
         return (
@@ -205,8 +217,13 @@ var ScheduleForm = React.createClass({
     }
     deviceList = (
       <div className="deviceSlider">
-        <FlatButton label="Hide devices" onClick={this._showDevices} />
+        <IconButton className="closeSlider" iconStyle={{fontSize:"16px"}} onClick={this._showDevices} style={{borderRadius:"30px", width:"40px", height:"40", position:"absolute", left:"-18px", backgroundColor:"rgba(255,255,255,1)"}}>
+          <FontIcon className="material-icons">close</FontIcon>
+        </IconButton>
+        <SearchInput className="search" ref='search' onChange={this.searchUpdated} placeholder="Search devices" style={{margin:"10"}} />
         {deviceList}
+        <p className={tmpDevices.length ? "hidden" : "italic" }>No devices match this search term</p>
+        <Divider />
         <p className={this.state.group ? this.state.group : "hidden"}><Link to={`/devices/${this.state.groupVal.payload}/${filters}`}>Go to group ></Link></p>
       </div>
     );
@@ -217,6 +234,7 @@ var ScheduleForm = React.createClass({
           ref="devicesNav"
           docked={false}
           openRight={true}
+          style={this.state.showDevices ? {overflow:"visible"} : {overflow:"hidden"}}
           open={this.state.showDevices}
           overlayStyle={{backgroundColor:"rgba(0, 0, 0, 0.3)"}}
           onRequestChange={this._showDevices}

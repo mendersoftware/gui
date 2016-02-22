@@ -283,7 +283,7 @@ var Repository = React.createClass({
       <div>
       
         <h3>Available images</h3>
-        <SearchInput className="tableSearch" ref='search' onChange={this.searchUpdated} />
+        <SearchInput className="search tableSearch" ref='search' onChange={this.searchUpdated} />
         <div className="maxTable">
           <Table
             onRowSelection={this._onRowSelection}
@@ -308,7 +308,7 @@ var Repository = React.createClass({
           </Table>
 
           <p className={items.length ? 'hidden' : 'italic margin-left'}>
-            No images found.
+            No images found
           </p>
         </div>
 
