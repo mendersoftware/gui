@@ -64,6 +64,9 @@ span.link:hover {
 .margin-left {
   margin-left: 30px;
 }
+.margin-left-small {
+  margin-left: 15px;
+}
 .margin-right {
   margin-right: 30px;
 }
@@ -72,6 +75,9 @@ span.link:hover {
 }
 .padding-right {
   padding-right: 45px;
+}
+.padding-top {
+  padding-top: 30px;
 }
 .inline-block {
   display: inline-block;
@@ -144,18 +150,63 @@ span.link:hover {
   padding: 20px 0 20px 28px;
 }
 .dialog {
-  -webkit-transition: width 1s linear !important;
-  -moz-transition: width 1s linear !important;
-  -ms-transition: width 1s linear !important;
-  -o-transition: width 1s linear !important;
+  -webkit-transition: width 1s ease-in-out !important;
+  -moz-transition: width 1s ease-in-out !important;
+  -ms-transition: width 1s ease-in-out !important;
+  -o-transition: width 1s ease-in-out !important;
 }
 .largeDialog {
   width: inherit !important;
   max-width: 96% !important;
-  -webkit-transition: width 1s linear !important;
-  -moz-transition: width 1s linear !important;
-  -ms-transition: width 1s linear !important;
-  -o-transition: width 1s linear !important;
+  -webkit-transition: width 1s ease-in-out !important;
+  -moz-transition: width 1s ease-in-out !important;
+  -ms-transition: width 1s ease-in-out !important;
+  -o-transition: width 1s ease-in-out !important;
+}
+.dialogTableContainer {
+  padding-top: 30px;
+  -webkit-transition: opacity 0.7s ease-in !important;
+  -moz-transition: opacity 0.7s ease-in !important;
+  -ms-transition: opacity 0.7s ease-in !important;
+  -o-transition: opacity 0.7s ease-in !important;
+  overflow: hidden;
+  position: relative;
+  opacity: 1;
+  min-height: 53vh;
+}
+.dialogTableContainer.zero {
+  min-height: 100px;
+  height: 100px;
+  opacity: 0;
+  padding: 0;
+}
+.absoluteTextfieldButton {
+  position: absolute;
+  top: 70px;
+  left: 24px;
+  -webkit-transition: all 0.42s ease-in-out !important;
+  -moz-transition: all 0.42s ease-in-out !important;
+  -ms-transition: all 0.42s ease-in-out !important;
+  -o-transition: all 0.42s ease-in-out !important;
+  z-index: 1400;
+  display: inline-block;
+}
+.absoluteTextfieldButton.top-right {
+  left: 478px;
+}
+.fixedSearch {
+  position: fixed;
+  left: 24px;
+  right: 24px;
+  top: 68px;
+  padding: 24px 0;
+  background-color: white;
+  z-index: 30000;
+}
+.top-right {
+  position: absolute !important;
+  top: 0;
+  right: 0;
 }
 .widget {
   width: 50%;
@@ -197,10 +248,10 @@ span.length {
 }
 .columnHeader .sortIcon {
   visibility: hidden;
-  -webkit-transition: visibility 0.1s linear !important;
-  -moz-transition: visibility 0.1s linear !important;
-  -ms-transition: visibility 0.1s linear !important;
-  -o-transition: visibility 0.1s linear !important;
+  -webkit-transition: visibility 0.1s ease-in !important;
+  -moz-transition: visibility 0.1s ease-in !important;
+  -ms-transition: visibility 0.1s ease-in !important;
+  -o-transition: visibility 0.1s ease-in !important;
 }
 .columnHeader:hover .sortIcon {
   visibility: visible;
@@ -214,10 +265,10 @@ span.length {
   -moz-opacity: 1;
   opacity: 1;
   visibility: visible;
-  -webkit-transition: all 0.15s linear !important;
-  -moz-transition: all 0.15s linear !important;
-  -ms-transition: all 0.15s linear !important;
-  -o-transition: all 0.15s linear !important;
+  -webkit-transition: all 0.15s ease-in-out !important;
+  -moz-transition: all 0.15s ease-in-out !important;
+  -ms-transition: all 0.15s ease-in-out !important;
+  -o-transition: all 0.15s ease-in-out !important;
 }
 .columnHeader .sortIcon.selected.false {
   -webkit-transform: rotateX(180deg) !important;
@@ -293,6 +344,11 @@ button.remove-icon:disabled .material-icons {
 }
 button.remove-icon .material-icons {
   color: #679BA5 !important;
+}
+.inline-action {
+  position: relative;
+  top: -6px;
+  margin-left: 10px;
 }
 .material-icons.error-icon {
   color: #ab1000 !important;
@@ -553,5 +609,11 @@ span.progress-group {
 }
 .deviceSlider p {
   padding: 0 15px;
+}
+.heightTransition {
+  -webkit-transition: all 0.5s ease-in-out;
+  -moz-transition: all 0.5s ease-in-out;
+  -ms-transition: all 0.5s ease-in-out;
+  -o-transition: all 0.5s ease-in-out;
 }
 /* LESS MIXINS */

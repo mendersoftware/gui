@@ -346,7 +346,7 @@ var Repository = React.createClass({
 
               <FileInput name="myImage"
                    accept=".png,.gif"
-                   placeholder="My Image"
+                   placeholder="Upload image"
                    className="fileInput"
                    style={{zIndex: "2"}}
                    onChange={this.changedFile} />

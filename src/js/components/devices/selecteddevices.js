@@ -288,9 +288,10 @@ var SelectedDevices = React.createClass({
     var groupList = this.props.groups.map(function(group, index) {
       if (group.id !== 1) {
         return <MenuItem value={group.id} key={index} primaryText={group.name} />
+      } else {
+        return <MenuItem value='' key={index} primaryText='' />
       }
     });
-
     var scheduleActions =  [
       <div style={{marginRight:"10", display:"inline-block"}}>
         <FlatButton
@@ -322,7 +323,7 @@ var SelectedDevices = React.createClass({
 
         <Dialog
           open={this.state.addGroup}
-          title="Add devices to group"
+          title="Add selected devices to group"
           actions={addActions}
           autoDetectWindowHeight={true} autoScrollBodyContent={true}>  
           <div style={{height: '200px'}}>
@@ -334,7 +335,7 @@ var SelectedDevices = React.createClass({
               style={inputStyle}
               value={this.state.selectedGroup.payload}
               >
-                {groupList}
+               {groupList}
               </SelectField>
               
               <RaisedButton 
@@ -352,7 +353,7 @@ var SelectedDevices = React.createClass({
                 errorStyle={{color: "rgb(171, 16, 0)"}}
                 errorText={this.state.errorText1} />
             
-              <RaisedButton label="Save" onClick={this._newGroupHandler} />
+              <RaisedButton secondary={true} label="Save" onClick={this._newGroupHandler} />
             </div>
           </div>
         </Dialog>

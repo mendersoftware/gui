@@ -72469,7 +72469,7 @@ var DeviceList = _react2.default.createClass({
         ),
         _react2.default.createElement(
           'p',
-          { className: devices.length ? 'hidden' : 'italic margin-left' },
+          { className: devices.length ? 'hidden' : 'italic muted margin-left' },
           'No devices found. Add devices to this group by making a selection within \'All devices\' and choosing \'Add selected devices to a group\'.'
         )
       )
@@ -72501,6 +72501,7 @@ function getState() {
     groups: AppStore.getGroups(),
     selectedGroup: AppStore.getSelectedGroup(),
     devices: AppStore.getDevices(),
+    allDevices: AppStore.getAllDevices(),
     selectedDevices: AppStore.getSelectedDevices(),
     filters: AppStore.getFilters(),
     attributes: AppStore.getAttributes(),
@@ -72549,7 +72550,7 @@ var Devices = _react2.default.createClass({
       _react2.default.createElement(
         'div',
         { className: 'leftFixed' },
-        _react2.default.createElement(Groups, { groups: this.state.groups, selectedGroup: this.state.selectedGroup })
+        _react2.default.createElement(Groups, { groups: this.state.groups, selectedGroup: this.state.selectedGroup, allDevices: this.state.allDevices })
       ),
       _react2.default.createElement(
         'div',
@@ -72743,21 +72744,34 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
+var _reactSearchInput = require('react-search-input');
+
+var _reactSearchInput2 = _interopRequireDefault(_reactSearchInput);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var AppStore = require('../../stores/app-store');
 var AppActions = require('../../actions/app-actions');
 
+
 // material ui
 var mui = require('material-ui');
 var List = mui.List;
 var ListItem = mui.ListItem;
-var ListDivider = mui.ListDivider;
 var FontIcon = mui.FontIcon;
 var Dialog = mui.Dialog;
 var TextField = mui.TextField;
 var FlatButton = mui.FlatButton;
 var RaisedButton = mui.RaisedButton;
+var Table = mui.Table;
+var TableHeaderColumn = mui.TableHeaderColumn;
+var TableHeader = mui.TableHeader;
+var TableRowColumn = mui.TableRowColumn;
+var TableRow = mui.TableRow;
+var TableBody = mui.TableBody;
+
+var tmpDevices = [];
+var selectedDevices = [];
 
 var Groups = _react2.default.createClass({
   displayName: 'Groups',
@@ -72765,36 +72779,92 @@ var Groups = _react2.default.createClass({
   getInitialState: function getInitialState() {
     return {
       errorText1: '',
-      openDialog: false
+      openDialog: false,
+      showDeviceList: false,
+      newGroup: '',
+      invalid: true,
+      selectedDevices: []
     };
+  },
+  shouldComponentUpdate: function shouldComponentUpdate(nextProps, nextState) {
+    if (nextState.selectedDevices !== this.state.selectedDevices) {
+      return false;
+    } else {
+      return true;
+    }
   },
   _changeGroup: function _changeGroup(id) {
     AppActions.selectGroup(id);
   },
   _createGroupHandler: function _createGroupHandler() {
-    var newGroup = this.refs['customGroup'].getValue();
-    newGroup = {
-      name: newGroup,
+    var selected = [];
+    if (this.state.selectedDevices.length) {
+      for (var i = 0; i < this.state.selectedDevices.length; i++) {
+        selected.push(tmpDevices[this.state.selectedDevices[i]]);
+      }
+    }
+    var newGroup = {
+      name: this.state.newGroup,
       devices: [],
       type: 'public'
     };
 
-    AppActions.addToGroup(newGroup, []);
-    this.setState({ openDialog: false });
+    AppActions.addToGroup(newGroup, selected);
+    this.setState({ openDialog: false, showDeviceList: false });
   },
   dialogToggle: function dialogToggle() {
-    this.setState({ openDialog: !this.state.openDialog });
+    this.setState({ openDialog: !this.state.openDialog, showDeviceList: false, newGroup: '' });
   },
-  _validateName: function _validateName(e) {
+  validateName: function validateName(e) {
     var newName = e.target.value;
+    this.setState({ newGroup: newName });
+    var invalid = newName ? false : true;
     var errorText = null;
     for (var i = 0; i < this.props.groups.length; i++) {
-      if (this.props.groups[i].name === newName) {
+      if (this.props.groups[i].name.toLowerCase() === newName.toLowerCase()) {
+        invalid = true;
         errorText = "A group with this name already exists";
       }
     }
-    this.setState({ errorText1: errorText });
+    this.setState({ errorText1: errorText, invalid: invalid });
   },
+
+  _getGroupNames: function _getGroupNames(list) {
+    /* TODO - move or tidy as it is dupliacte */
+    var nameList = [];
+    for (var i = 0; i < list.length; i++) {
+      for (var x = 0; x < this.props.groups.length; x++) {
+        if (list[i] === this.props.groups[x].id) {
+          nameList.push(this.props.groups[x].name);
+        }
+      }
+    }
+
+    return nameList;
+  },
+
+  searchUpdated: function searchUpdated(term) {
+    this.setState({ searchTerm: term }); // needed to force re-render
+  },
+
+  showDeviceList: function showDeviceList() {
+    this.setState({ showDeviceList: true });
+  },
+
+  _onRowSelection: function _onRowSelection(array) {
+    var selected = [];
+    if (array === "all") {
+      for (var i = 0; i < tmpDevices.length; i++) {
+        selected.push(i);
+      }
+    } else if (array === "none") {
+      selected = [];
+    } else {
+      selected = array;
+    }
+    this.setState({ selectedDevices: selected });
+  },
+
   render: function render() {
     var createBtn = _react2.default.createElement(
       FontIcon,
@@ -72810,7 +72880,36 @@ var Groups = _react2.default.createClass({
     ), _react2.default.createElement(RaisedButton, {
       label: 'Create group',
       primary: true,
-      onClick: this._createGroupHandler })];
+      onClick: this._createGroupHandler,
+      disabled: this.state.invalid })];
+
+    if (this.refs.search && this.props.allDevices) {
+      var filters = ['name'];
+      tmpDevices = this.props.allDevices.filter(this.refs.search.filter(filters));
+    }
+
+    var deviceList = tmpDevices.map(function (device, index) {
+      return _react2.default.createElement(
+        TableRow,
+        { key: index },
+        _react2.default.createElement(
+          TableRowColumn,
+          null,
+          device.name
+        ),
+        _react2.default.createElement(
+          TableRowColumn,
+          null,
+          device.model
+        ),
+        _react2.default.createElement(
+          TableRowColumn,
+          null,
+          this._getGroupNames(device.groups).join(', ')
+        )
+      );
+    }, this);
+
     return _react2.default.createElement(
       'div',
       null,
@@ -72850,14 +72949,85 @@ var Groups = _react2.default.createClass({
           title: 'Create a new group',
           actions: createActions,
           open: this.state.openDialog,
-          autoDetectWindowHeight: true, autoScrollBodyContent: true },
-        _react2.default.createElement(TextField, {
-          ref: 'customGroup',
-          hintText: 'Group name',
-          floatingLabelText: 'Group name',
-          onChange: this._validateName,
-          errorStyle: { color: "rgb(171, 16, 0)" },
-          errorText: this.state.errorText1 })
+          autoDetectWindowHeight: true, autoScrollBodyContent: true, modal: true,
+          bodyClassName: 'heightTransition',
+          bodyStyle: { maxHeight: "50vh" },
+          titleStyle: { paddingBottom: "15" }
+        },
+        _react2.default.createElement(
+          'div',
+          { className: this.state.showDeviceList ? "absoluteTextfieldButton top-right margin-right" : "absoluteTextfieldButton" },
+          _react2.default.createElement(TextField, {
+            ref: 'customGroup',
+            className: 'float-left',
+            hintText: 'Name your group',
+            floatingLabelText: 'Name your group',
+            value: this.state.newGroup,
+            onChange: this.validateName,
+            errorStyle: { color: "rgb(171, 16, 0)" },
+            errorText: this.state.errorText1 }),
+          _react2.default.createElement(
+            'div',
+            { className: this.state.showDeviceList ? "hidden" : "float-left margin-left-small" },
+            _react2.default.createElement(RaisedButton, { disabled: this.state.invalid, style: { marginTop: "26" }, label: 'Next', secondary: true, onClick: this.showDeviceList })
+          )
+        ),
+        _react2.default.createElement(
+          'div',
+          { className: this.state.showDeviceList === true ? "dialogTableContainer" : "dialogTableContainer zero" },
+          _react2.default.createElement(
+            'div',
+            { className: 'fixedSearch' },
+            _react2.default.createElement(
+              'span',
+              null,
+              'Select devices to include in the new group:'
+            ),
+            _react2.default.createElement(_reactSearchInput2.default, { className: 'search top-right', ref: 'search', onChange: this.searchUpdated, placeholder: 'Search devices', style: { margin: "10" } })
+          ),
+          _react2.default.createElement(
+            Table,
+            {
+              multiSelectable: true,
+              className: deviceList.length ? null : "hidden",
+              onRowSelection: this._onRowSelection },
+            _react2.default.createElement(
+              TableHeader,
+              null,
+              _react2.default.createElement(
+                TableRow,
+                null,
+                _react2.default.createElement(
+                  TableHeaderColumn,
+                  null,
+                  'Name'
+                ),
+                _react2.default.createElement(
+                  TableHeaderColumn,
+                  null,
+                  'Device type'
+                ),
+                _react2.default.createElement(
+                  TableHeaderColumn,
+                  null,
+                  'Group'
+                )
+              )
+            ),
+            _react2.default.createElement(
+              TableBody,
+              {
+                deselectOnClickaway: false,
+                showRowHover: true },
+              deviceList
+            )
+          ),
+          _react2.default.createElement(
+            'p',
+            { className: deviceList.length ? "hidden" : "italic muted" },
+            'No devices match the search term'
+          )
+        )
       )
     );
   }
@@ -72865,7 +73035,7 @@ var Groups = _react2.default.createClass({
 
 module.exports = Groups;
 
-},{"../../actions/app-actions":631,"../../stores/app-store":663,"material-ui":250,"react":626}],645:[function(require,module,exports){
+},{"../../actions/app-actions":631,"../../stores/app-store":663,"material-ui":250,"react":626,"react-search-input":455}],645:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -73177,9 +73347,10 @@ var SelectedDevices = _react2.default.createClass({
     var groupList = this.props.groups.map(function (group, index) {
       if (group.id !== 1) {
         return _react2.default.createElement(MenuItem, { value: group.id, key: index, primaryText: group.name });
+      } else {
+        return _react2.default.createElement(MenuItem, { value: '', key: index, primaryText: '' });
       }
     });
-
     var scheduleActions = [_react2.default.createElement(
       'div',
       { style: { marginRight: "10", display: "inline-block" } },
@@ -73237,7 +73408,7 @@ var SelectedDevices = _react2.default.createClass({
         Dialog,
         {
           open: this.state.addGroup,
-          title: 'Add devices to group',
+          title: 'Add selected devices to group',
           actions: addActions,
           autoDetectWindowHeight: true, autoScrollBodyContent: true },
         _react2.default.createElement(
@@ -73272,7 +73443,7 @@ var SelectedDevices = _react2.default.createClass({
               onChange: this._validateName,
               errorStyle: { color: "rgb(171, 16, 0)" },
               errorText: this.state.errorText1 }),
-            _react2.default.createElement(RaisedButton, { label: 'Save', onClick: this._newGroupHandler })
+            _react2.default.createElement(RaisedButton, { secondary: true, label: 'Save', onClick: this._newGroupHandler })
           )
         )
       ),
@@ -73881,7 +74052,7 @@ var Repository = _react2.default.createClass({
               errorStyle: { color: "rgb(171, 16, 0)" } }),
             _react2.default.createElement(FileInput, { name: 'myImage',
               accept: '.png,.gif',
-              placeholder: 'My Image',
+              placeholder: 'Upload image',
               className: 'fileInput',
               style: { zIndex: "2" },
               onChange: this.changedFile }),
@@ -76372,8 +76543,8 @@ var _allupdates = [{
   group: "Production",
   model: "Acme Model 1",
   software_version: "Version 1.1",
-  start_time: 1447309976000,
-  end_time: 1455396376000,
+  start_time: 1456169971000,
+  end_time: 1459899971000,
   status: "Pending",
   devices: [{
     id: 7,
@@ -76381,8 +76552,8 @@ var _allupdates = [{
     model: "Acme Model 1",
     last_software_version: "Version 1.0",
     software_version: "Version 1.1",
-    start_time: 1447309976000,
-    end_time: 1449309976000,
+    start_time: 1456169971000,
+    end_time: 1459899971000,
     status: "Complete"
   }, {
     id: 8,
@@ -76390,8 +76561,8 @@ var _allupdates = [{
     model: "Acme Model 1",
     last_software_version: "Version 1.0",
     software_version: "Version 1.1",
-    start_time: 1447309976000,
-    end_time: 1455396376000,
+    start_time: 1456169971000,
+    end_time: 1459899971000,
     status: "Pending"
   }]
 }];
@@ -76558,6 +76729,13 @@ var AppStore = assign(EventEmitter.prototype, {
     * Return group object for current group selection
     */
     return _currentGroup;
+  },
+
+  getAllDevices: function getAllDevices() {
+    /*
+    * Return list of devices by current selected group
+    */
+    return _alldevices;
   },
 
   getDevices: function getDevices() {

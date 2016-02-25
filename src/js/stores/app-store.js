@@ -584,8 +584,8 @@ var _allupdates = [
     group: "Production",
     model: "Acme Model 1",
     software_version: "Version 1.1",
-    start_time: 1447309976000,
-    end_time: 1455396376000,
+    start_time: 1456169971000,
+    end_time: 1459899971000,
     status: "Pending",
     devices: [
       {
@@ -594,8 +594,8 @@ var _allupdates = [
         model:"Acme Model 1",
         last_software_version:"Version 1.0",
         software_version:"Version 1.1",
-        start_time:1447309976000,
-        end_time:1449309976000,
+        start_time:1456169971000,
+        end_time:1459899971000,
         status:"Complete"
       },
       {
@@ -604,8 +604,8 @@ var _allupdates = [
         model:"Acme Model 1",
         last_software_version:"Version 1.0",
         software_version:"Version 1.1",
-        start_time:1447309976000,
-        end_time:1455396376000,
+        start_time:1456169971000,
+        end_time:1459899971000,
         status:"Pending"
       },
     ]
@@ -787,6 +787,14 @@ var AppStore = assign(EventEmitter.prototype, {
     * Return group object for current group selection
     */
     return _currentGroup
+  },
+
+
+  getAllDevices: function() {
+    /*
+    * Return list of devices by current selected group
+    */
+    return _alldevices
   },
 
   getDevices: function() {
