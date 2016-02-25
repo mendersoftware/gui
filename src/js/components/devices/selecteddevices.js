@@ -39,24 +39,19 @@ var SelectedDevices = React.createClass({
       addGroup: false
     };
   },
-  _handleSelectValueChange: function(e) {
+  _handleSelectValueChange: function(event, index, value) {
     this.setState({showInput: false});
+    var group = this.props.groups[index];
 
-    var group = '';
-    for (var i=0;i<this.props.groups.length;i++) {
-      if (this.props.groups[i].id === e.target.value) {
-        group = this.props.groups[i];
-      }
-    }
     this.setState({
       selectedGroup: {
-        payload:e.target.value,
+        payload:value,
         text: group.name
       }
     });
     addSelection = {
       group: group,
-      textFieldValue: e.target.value 
+      textFieldValue: group.name
     };
   },
   dialogToggle: function (ref) {
@@ -65,12 +60,19 @@ var SelectedDevices = React.createClass({
     this.setState(state);
   },
   _showButton: function() {
-    this.setState({showInput: true});
+    this.setState({
+      selectedGroup: {
+        payload:null,
+        text: null
+      },
+      showInput: true
+    });
+    this.refs.customGroup.focus();
   },
   _addGroupHandler: function() {
     AppActions.addToGroup(addSelection.group, this.props.selected);
     this.dialogToggle('addGroup');
-    AppActions.selectGroup(addSelection.textFieldValue);
+    AppActions.selectGroup(addSelection.group.id);
   },
   _removeGroupHandler: function() {
     AppActions.addToGroup(this.props.selectedGroup, this.props.selected);
@@ -97,16 +99,19 @@ var SelectedDevices = React.createClass({
         text: newGroup.name
       }
     });
+
   },
   _validateName: function(e) {
     var newName = e.target.value;
     var errorText = null;
+    var invalid = false;
     for (var i=0;i<this.props.groups.length; i++) {
       if (this.props.groups[i].name === newName) {
         errorText = "A group with this name already exists";
+        invalid = true;
       }
     }
-    this.setState({errorText1: errorText});
+    this.setState({errorText1: errorText, invalid: invalid});
   },
   _getGroupNames: function(list) {
     /* TODO - move or tidy */
@@ -174,10 +179,7 @@ var SelectedDevices = React.createClass({
     var hideInfo = {display: "none"};
     var deviceInfo ='';
     var disableAction = this.props.selected.length ? false : true;
-    var inputStyle = {
-      display: "inline-block",
-      marginRight: "30px"
-    }
+   
     var styles = {
       buttonIcon: {
         height: '100%',
@@ -282,7 +284,8 @@ var SelectedDevices = React.createClass({
         label="Add to group"
         primary={true}
         onClick={this._addGroupHandler}
-        ref="save" />
+        ref="save" 
+        disabled={this.state.invalid} />
     ];
 
     var groupList = this.props.groups.map(function(group, index) {
@@ -328,19 +331,23 @@ var SelectedDevices = React.createClass({
           autoDetectWindowHeight={true} autoScrollBodyContent={true}>  
           <div style={{height: '200px'}}>
             <div>
-              <SelectField
-              ref="groupSelect"
-              onChange={this._handleSelectValueChange}
-              floatingLabelText="Select group"
-              style={inputStyle}
-              value={this.state.selectedGroup.payload}
-              >
-               {groupList}
-              </SelectField>
+              <div className="float-left">
+                <SelectField
+                ref="groupSelect"
+                onChange={this._handleSelectValueChange}
+                floatingLabelText="Select group"
+                value={this.state.selectedGroup.payload}
+                >
+                 {groupList}
+                </SelectField>
+              </div>
               
-              <RaisedButton 
-                label="Create new" 
-                onClick={this._showButton}/>
+              <div className="float-left margin-left-small">
+                <RaisedButton 
+                  label="Create new"
+                  style={{marginTop:"26"}}
+                  onClick={this._showButton}/>
+              </div>
             </div>
 
             <div className={this.state.showInput ? null : 'hidden'}>
@@ -348,12 +355,18 @@ var SelectedDevices = React.createClass({
                 ref="customGroup"
                 hintText="Group name"
                 floatingLabelText="Group name"
-                style={inputStyle}
+                className="float-left clear"
                 onChange={this._validateName}
                 errorStyle={{color: "rgb(171, 16, 0)"}}
                 errorText={this.state.errorText1} />
-            
-              <RaisedButton secondary={true} label="Save" onClick={this._newGroupHandler} />
+              <div className="float-left margin-left-small">
+                <RaisedButton
+                  style={{marginTop:"26"}}
+                  secondary={true}
+                  label="Save"
+                  onClick={this._newGroupHandler}
+                  disabled={this.state.invalid} />
+              </div>
             </div>
           </div>
         </Dialog>
