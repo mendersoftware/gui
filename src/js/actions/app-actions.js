@@ -1,7 +1,9 @@
 var AppConstants = require('../constants/app-constants');
 var AppDispatcher = require('../dispatchers/app-dispatcher');
 var Api = require('../api/api');
+var UpdatesApi = require('../api/updates-api');
 var apiUrl = "http://54.229.121.179:8080/api/0.0.1/";
+var updatesApiUrl = "http://private-f72329-deploymenttest.apiary-mock.com/api/0.0.1/";
 
 
 var AppActions = {
@@ -27,6 +29,9 @@ var AppActions = {
       devices: deviceList
     })
   },
+
+
+  /* API */
 
   getImages: function() {
     Api
@@ -74,6 +79,9 @@ var AppActions = {
         callback();
       });
   },
+
+
+
   
   saveSchedule: function(schedule, single) {
     AppDispatcher.handleViewAction({
@@ -82,6 +90,26 @@ var AppActions = {
       single: single
     })
   },
+
+
+
+
+  /* API */
+  getUpdates: function() {
+    UpdatesApi
+      .get(updatesApiUrl+'deployments/')
+      .then(function(updates) {
+        AppDispatcher.handleViewAction({
+          actionType: AppConstants.RECEIVE_UPDATES,
+          updates: updates
+        });
+      });
+  },
+
+
+
+
+
 
   removeUpdate: function(updateId) {
     AppDispatcher.handleViewAction({

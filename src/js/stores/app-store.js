@@ -362,256 +362,9 @@ var _recent = []
 var _schedule = [];
 var _events = [];
 
-var _allupdates = [
-  {
-    id: 1,
-    group: "Test",
-    model: "Acme Model 1",
-    software_version: "Version 1.1",
-    start_time: 1458493576000,
-    end_time: 1458497176000,
-    status: null,
-    devices: [
-     {
-        id:4,
-        name:"Device004",
-        model:"Acme Model 1",
-        last_software_version:"Version 1.0",
-        software_version:"Version 1.0",
-        start_time:null,
-        end_time:null,
-        status:"Skipped"
-      },
-      {
-        id:5,
-        name:"Device005",
-        model:"Acme Model 1",
-        last_software_version:"Version 1.0",
-        software_version:"Version 1.o",
-        start_time:null,
-        end_time:null,
-        status: "Skipped"
-      },
-      {
-        id:6,
-        name:"Device006",
-        model:"Acme Model 1",
-        last_software_version:"Version 0.3",
-        software_version:"Version 1.0",
-        start_time:null,
-        end_time: null,
-        status: "Pending"
-      }
-    ]
-  },
-  {
-    id: 2,
-    group: "Development",
-    model: "Acme Model 1",
-    software_version: "Version 1.2",
-    start_time: 1458507176000,
-    end_time: 1458510776000,
-    status: null,
-    devices: [
-      {
-        id:1,
-        name:"Device001",
-        model:"Acme Model 1",
-        last_software_version:"Version 1.1",
-        software_version:"Version 1.2",
-        start_time:null,
-        end_time:null,
-        status:"Pending"
-      },
-      {
-        id:2,
-        name:"Device002",
-        model:"Acme Model 1",
-        last_software_version:"Version 1.1",
-        software_version:"Version 1.2",
-        start_time:1447297176000,
-        end_time:1444708776000,
-        status:"Pending"
-      },
-      {
-        id:3,
-        name:"Device003",
-        model:"Acme Model 1",
-        last_software_version:"Version 1.1",
-        software_version:"Version 1.2",
-        start_time:null,
-        end_time: null,
-        status:"Pending"
-      }
-    ]
-  },
-  {
-    id: 3,
-    group: "Production",
-    model: "Acme Model 1",
-    software_version: "Version 1.0",
-    start_time: 1445309976000,
-    end_time: 1445396376000,
-    status: "Complete",
-    devices: [
-      {
-        id:7,
-        name:"Device007",
-        model:"Acme Model 1",
-        last_software_version:"Version 0.3",
-        software_version:"Version 1.0",
-        start_time:1445309976000,
-        end_time:1445396376000,
-        status:"Complete"
-      },
-      {
-        id:8,
-        name:"Device008",
-        model:"Acme Model 1",
-        last_software_version:"Version 0.3",
-        software_version:"Version 1.0",
-        start_time:1445309976000,
-        end_time:1445396376000,
-        status:"Complete"
-      },
-    ]
-  },
-  {
-    id: 4,
-    group: "Test",
-    model: "Acme Model 1",
-    software_version: "Version 0.3",
-    start_time: 1444705176000,
-    end_time: 1444708776000,
-    status: "Complete",
-    devices: [
-     {
-        id:4,
-        name:"Device004",
-        model:"Acme Model 1",
-        last_software_version:"Version 0.2",
-        software_version:"Version 0.3",
-        start_time:1444705176000,
-        end_time:1444708776000,
-        status:"Complete"
-      },
-      {
-        id:5,
-        name:"Device005",
-        model:"Acme Model 1",
-        last_software_version:"Version 0.2",
-        software_version:"Version 0.3",
-        start_time:1444705176000,
-        end_time:1444708776000,
-        status:"Complete"
-      },
-      {
-        id:6,
-        name:"Device006",
-        model:"Acme Model 1",
-        last_software_version:"Version 0.3",
-        software_version:"Version 0.3",
-        start_time:1444705176000,
-        end_time: 1444708776000,
-        status:"Complete"
-      }
-    ]
-  },
-  {
-    id: 5,
-    group: "Test",
-    model: "Acme Model 1",
-    software_version: "Version 1.0",
-    start_time: 1444708776000,
-    end_time: 1444709971000,
-    status: "Failed",
-    devices: [
-      {
-        id:4,
-        name:"Device004",
-        model:"Acme Model 1",
-        last_software_version:"Version 0.3",
-        software_version:"Version 1.0",
-        start_time:1444708776000,
-        end_time:1444709971000,
-        status:"Complete"
-      },
-      {
-        id:5,
-        name:"Device005",
-        model:"Acme Model 1",
-        last_software_version:"Version 0.3",
-        software_version:"Version 1.0",
-        start_time:1444708776000,
-        end_time:1444709971000,
-        status:"Complete"
-      },
-      {
-        id:6,
-        name:"Device006",
-        model:"Acme Model 1",
-        last_software_version:"Version 0.3",
-        software_version:"Version 0.3",
-        start_time:1444708776000,
-        end_time: 1444709971000,
-        status:"Failed"
-      }
-    ]
-  },
-  {
-    id: 6,
-    group: "Wifi",
-    model: "Wifi Model 1",
-    software_version: "Wifi Version 1.0",
-    start_time: 1453169971000,
-    end_time: 1459199971000,
-    status: "Pending",
-    devices: [
-      {
-        id:9,
-        name:"Wifi001",
-        model:"Wifi Model 1",
-        last_software_version:"Wifi Version Beta",
-        software_version:"Wifi Version 1.0",
-        start_time:1453169971000,
-        end_time:1459199971000,
-        status:"Pending"
-      },
-    ]
-  },
-  {
-    id: 7,
-    group: "Production",
-    model: "Acme Model 1",
-    software_version: "Version 1.1",
-    start_time: 1456169971000,
-    end_time: 1459899971000,
-    status: "Pending",
-    devices: [
-      {
-        id:7,
-        name:"Device007",
-        model:"Acme Model 1",
-        last_software_version:"Version 1.0",
-        software_version:"Version 1.1",
-        start_time:1456169971000,
-        end_time:1459899971000,
-        status:"Complete"
-      },
-      {
-        id:8,
-        name:"Device008",
-        model:"Acme Model 1",
-        last_software_version:"Version 1.0",
-        software_version:"Version 1.1",
-        start_time:1456169971000,
-        end_time:1459899971000,
-        status:"Pending"
-      },
-    ]
-  },
-];
-_allupdates.sort(startTimeSort);
+var _allupdates = [];
+
+//_allupdates.sort(startTimeSort);
 
 
 var _activityLog = [
@@ -636,10 +389,11 @@ var _activityLog = [
 ];
 
 function _getRecentUpdates(time) {
-
   var recent = [];
   for (var i=0;i<_allupdates.length;i++) {
-    if (_allupdates[i].start_time<time && _allupdates[i].end_time<time) {
+    var created = new Date(_allupdates[i].created);
+    var finished = new Date(_allupdates[i].finished);
+    if (created<time && finished<time) {
       recent.push(_allupdates[i]);
     }
   }
@@ -649,8 +403,10 @@ function _getRecentUpdates(time) {
 function _getProgressUpdates(time) {
   var progress = [];
   for (var i=0;i<_allupdates.length;i++) {
-    if (_allupdates[i].start_time<=time && _allupdates[i].end_time>time) {
-      progress.push(_allupdates[i]);
+    var created = new Date(_allupdates[i].created);
+    var finished = new Date(_allupdates[i].finished);
+    if (created<=time && finished>time) {
+      recent.push(_allupdates[i]);
     }
   }
   return progress;
@@ -755,6 +511,18 @@ function setImages(images) {
   }
   _softwareRepo.sort(customSort(1, "modified"));
 }
+
+
+
+function setUpdates(updates) {
+  if (updates) {
+     _allupdates = updates;
+  }
+  _allupdates.sort(startTimeSort);
+}
+
+
+
 
 
 
@@ -938,6 +706,11 @@ var AppStore = assign(EventEmitter.prototype, {
       /* API */
       case AppConstants.RECEIVE_IMAGES:
         setImages(payload.action.images);
+        break;
+
+      /* API */
+      case AppConstants.RECEIVE_UPDATES:
+        setUpdates(payload.action.updates);
         break;
     }
     

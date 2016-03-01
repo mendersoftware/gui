@@ -71334,7 +71334,9 @@ module.exports = warning;
 var AppConstants = require('../constants/app-constants');
 var AppDispatcher = require('../dispatchers/app-dispatcher');
 var Api = require('../api/api');
+var UpdatesApi = require('../api/updates-api');
 var apiUrl = "http://54.229.121.179:8080/api/0.0.1/";
+var updatesApiUrl = "http://private-f72329-deploymenttest.apiary-mock.com/api/0.0.1/";
 
 var AppActions = {
 
@@ -71359,6 +71361,8 @@ var AppActions = {
       devices: deviceList
     });
   },
+
+  /* API */
 
   getImages: function getImages() {
     Api.get(apiUrl + 'images').then(function (images) {
@@ -71405,6 +71409,16 @@ var AppActions = {
     });
   },
 
+  /* API */
+  getUpdates: function getUpdates() {
+    UpdatesApi.get(updatesApiUrl + 'deployments/').then(function (updates) {
+      AppDispatcher.handleViewAction({
+        actionType: AppConstants.RECEIVE_UPDATES,
+        updates: updates
+      });
+    });
+  },
+
   removeUpdate: function removeUpdate(updateId) {
     AppDispatcher.handleViewAction({
       actionType: AppConstants.REMOVE_UPDATE,
@@ -71439,7 +71453,7 @@ var AppActions = {
 
 module.exports = AppActions;
 
-},{"../api/api":632,"../constants/app-constants":660,"../dispatchers/app-dispatcher":661}],632:[function(require,module,exports){
+},{"../api/api":632,"../api/updates-api":633,"../constants/app-constants":661,"../dispatchers/app-dispatcher":662}],632:[function(require,module,exports){
 'use strict';
 
 var request = require('superagent');
@@ -71508,6 +71522,69 @@ module.exports = Api;
 },{"es6-promise":91,"superagent":629}],633:[function(require,module,exports){
 'use strict';
 
+var request = require('superagent');
+var Promise = require('es6-promise').Promise;
+
+var Api = {
+  get: function get(url) {
+    return new Promise(function (resolve, reject) {
+      request.get(url).end(function (err, res) {
+        if (err || !res.ok) {
+          reject();
+        } else {
+          resolve(res.body);
+        }
+      });
+    });
+  },
+  post: function post(url, data) {
+    return new Promise(function (resolve, reject) {
+      request.post(url).set('Content-Type', 'application/json').send(data).end(function (err, res) {
+        if (err || !res.ok) {
+          reject();
+        } else {
+          resolve(JSON.parse(res.text));
+        }
+      });
+    });
+  },
+  putImage: function putImage(url, image) {
+    return new Promise(function (resolve, reject) {
+      request.put(url).set("Content-Type", "application/octet-stream").send(image).end(function (err, res) {
+        if (err || !res.ok) {
+          reject();
+        } else {
+          var responsetext = "";
+          if (res.text) {
+            responsetext = JSON.parse(res.text);
+          }
+          resolve(responsetext);
+        }
+      });
+    });
+  },
+  putJSON: function putJSON(url, data) {
+    return new Promise(function (resolve, reject) {
+      request.put(url).set('Content-Type', 'application/json').send(data).end(function (err, res) {
+        if (err || !res.ok) {
+          reject();
+        } else {
+          var responsetext = "";
+          if (res.text) {
+            responsetext = JSON.parse(res.text);
+          }
+          resolve(responsetext);
+        }
+      });
+    });
+  }
+};
+
+module.exports = Api;
+
+},{"es6-promise":91,"superagent":629}],634:[function(require,module,exports){
+'use strict';
+
 var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
@@ -71565,7 +71642,7 @@ var App = _react2.default.createClass({
 
 module.exports = App;
 
-},{"../themes/mender-theme.js":664,"./header/header":646,"material-ui":250,"material-ui/lib/styles/theme-manager":299,"react":626}],634:[function(require,module,exports){
+},{"../themes/mender-theme.js":665,"./header/header":647,"material-ui":250,"material-ui/lib/styles/theme-manager":299,"react":626}],635:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -71655,7 +71732,7 @@ Activity.contextTypes = {
 
 module.exports = Activity;
 
-},{"material-ui":250,"react":626,"react-router":432,"react-time":464}],635:[function(require,module,exports){
+},{"material-ui":250,"react":626,"react-router":432,"react-time":464}],636:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -71730,7 +71807,7 @@ Dashboard.contextTypes = {
 
 module.exports = Dashboard;
 
-},{"../../stores/app-store":663,"./activity":634,"./health":636,"./updates":640,"react":626,"react-router":432}],636:[function(require,module,exports){
+},{"../../stores/app-store":664,"./activity":635,"./health":637,"./updates":641,"react":626,"react-router":432}],637:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -71838,7 +71915,7 @@ Health.contextTypes = {
 
 module.exports = Health;
 
-},{"material-ui":250,"react":626,"react-router":432}],637:[function(require,module,exports){
+},{"material-ui":250,"react":626,"react-router":432}],638:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -71969,7 +72046,7 @@ Progress.contextTypes = {
 
 module.exports = Progress;
 
-},{"../../stores/app-store":663,"material-ui":250,"react":626,"react-router":432,"react-time":464}],638:[function(require,module,exports){
+},{"../../stores/app-store":664,"material-ui":250,"react":626,"react-router":432,"react-time":464}],639:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -72079,7 +72156,7 @@ Recent.contextTypes = {
 
 module.exports = Recent;
 
-},{"material-ui":250,"react":626,"react-router":432,"react-time":464}],639:[function(require,module,exports){
+},{"material-ui":250,"react":626,"react-router":432,"react-time":464}],640:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -72199,7 +72276,7 @@ Schedule.contextTypes = {
 
 module.exports = Schedule;
 
-},{"material-ui":250,"react":626,"react-router":432,"react-time":464}],640:[function(require,module,exports){
+},{"material-ui":250,"react":626,"react-router":432,"react-time":464}],641:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -72262,7 +72339,7 @@ var Updates = _react2.default.createClass({
 
 module.exports = Updates;
 
-},{"./progress":637,"./recent":638,"./schedule":639,"material-ui":250,"react":626}],641:[function(require,module,exports){
+},{"./progress":638,"./recent":639,"./schedule":640,"material-ui":250,"react":626}],642:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -72479,7 +72556,7 @@ var DeviceList = _react2.default.createClass({
 
 module.exports = DeviceList;
 
-},{"../../actions/app-actions":631,"../../stores/app-store":663,"material-ui":250,"react":626}],642:[function(require,module,exports){
+},{"../../actions/app-actions":631,"../../stores/app-store":664,"material-ui":250,"react":626}],643:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -72565,7 +72642,7 @@ var Devices = _react2.default.createClass({
 
 module.exports = Devices;
 
-},{"../../actions/app-actions":631,"../../stores/app-store":663,"./devicelist":641,"./filters":643,"./groups":644,"./selecteddevices":645,"react":626}],643:[function(require,module,exports){
+},{"../../actions/app-actions":631,"../../stores/app-store":664,"./devicelist":642,"./filters":644,"./groups":645,"./selecteddevices":646,"react":626}],644:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -72737,7 +72814,7 @@ var Filters = _react2.default.createClass({
 
 module.exports = Filters;
 
-},{"material-ui":250,"react":626}],644:[function(require,module,exports){
+},{"material-ui":250,"react":626}],645:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -73035,7 +73112,7 @@ var Groups = _react2.default.createClass({
 
 module.exports = Groups;
 
-},{"../../actions/app-actions":631,"../../stores/app-store":663,"material-ui":250,"react":626,"react-search-input":455}],645:[function(require,module,exports){
+},{"../../actions/app-actions":631,"../../stores/app-store":664,"material-ui":250,"react":626,"react-search-input":455}],646:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -73485,7 +73562,7 @@ var SelectedDevices = _react2.default.createClass({
 
 module.exports = SelectedDevices;
 
-},{"../../actions/app-actions":631,"../../stores/app-store":663,"../updates/scheduleform":657,"material-ui":250,"react":626,"react-tag-input":458}],646:[function(require,module,exports){
+},{"../../actions/app-actions":631,"../../stores/app-store":664,"../updates/scheduleform":658,"material-ui":250,"react":626,"react-tag-input":458}],647:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -73607,7 +73684,7 @@ Header.contextTypes = {
 
 module.exports = Header;
 
-},{"material-ui":250,"material-ui/lib/menus/menu-item":263,"material-ui/lib/toolbar/toolbar-group":342,"material-ui/lib/toolbar/toolbar-title":344,"react":626,"react-router":432}],647:[function(require,module,exports){
+},{"material-ui":250,"material-ui/lib/menus/menu-item":263,"material-ui/lib/toolbar/toolbar-group":342,"material-ui/lib/toolbar/toolbar-title":344,"react":626,"react-router":432}],648:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -74128,7 +74205,7 @@ var Repository = _react2.default.createClass({
 
 module.exports = Repository;
 
-},{"../../actions/app-actions":631,"../../stores/app-store":663,"../updates/scheduleform":657,"./selectedimage.js":648,"./updatebutton.js":650,"material-ui":250,"react":626,"react-addons-update":371,"react-dom":403,"react-file-input":404,"react-router":432,"react-search-input":455,"react-tag-input":458,"react-time":464}],648:[function(require,module,exports){
+},{"../../actions/app-actions":631,"../../stores/app-store":664,"../updates/scheduleform":658,"./selectedimage.js":649,"./updatebutton.js":651,"material-ui":250,"react":626,"react-addons-update":371,"react-dom":403,"react-file-input":404,"react-router":432,"react-search-input":455,"react-tag-input":458,"react-time":464}],649:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -74376,7 +74453,7 @@ SelectedImage.contextTypes = {
 
 module.exports = SelectedImage;
 
-},{"material-ui":250,"react":626,"react-router":432,"react-tag-input":458,"react-time":464}],649:[function(require,module,exports){
+},{"material-ui":250,"react":626,"react-router":432,"react-tag-input":458,"react-time":464}],650:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -74430,7 +74507,7 @@ var Software = _react2.default.createClass({
 
 module.exports = Software;
 
-},{"../../actions/app-actions":631,"../../stores/app-store":663,"./repository.js":647,"react":626}],650:[function(require,module,exports){
+},{"../../actions/app-actions":631,"../../stores/app-store":664,"./repository.js":648,"react":626}],651:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -74453,7 +74530,7 @@ var UpdateButton = _react2.default.createClass({
 
 module.exports = UpdateButton;
 
-},{"material-ui":250,"react":626}],651:[function(require,module,exports){
+},{"material-ui":250,"react":626}],652:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -74502,7 +74579,7 @@ var DateTime = _react2.default.createClass({
 
 module.exports = DateTime;
 
-},{"material-ui":250,"react":626}],652:[function(require,module,exports){
+},{"material-ui":250,"react":626}],653:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -74577,7 +74654,7 @@ var EventLog = _react2.default.createClass({
 
 module.exports = EventLog;
 
-},{"material-ui":250,"react":626}],653:[function(require,module,exports){
+},{"material-ui":250,"react":626}],654:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -74600,6 +74677,9 @@ var TableRow = mui.TableRow;
 var TableRowColumn = mui.TableRowColumn;
 var FlatButton = mui.FlatButton;
 
+var progress = [];
+var recent = [];
+
 var Recent = _react2.default.createClass({
   displayName: 'Recent',
 
@@ -74609,41 +74689,48 @@ var Recent = _react2.default.createClass({
       retry: false
     };
   },
+  componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
+    progress = nextProps.progress;
+    recent = nextProps.recent;
+  },
 
   _handleCellClick: function _handleCellClick(rowNumber, columnId) {
-    var report = this.props.recent[rowNumber];
+    var report = recent[rowNumber];
     this.props.showReport(report);
   },
+  _formatTime: function _formatTime(date) {
+    return date.replace(' ', 'T').replace(/ /g, '').replace('UTC', '');
+  },
   render: function render() {
-    var now = new Date().getTime();
-    var progress = this.props.progress.map(function (update, index) {
+
+    var progressMap = progress.map(function (update, index) {
       return _react2.default.createElement(
         TableRow,
         { key: index },
         _react2.default.createElement(
           TableRowColumn,
           null,
-          update.group
+          update.name
         ),
         _react2.default.createElement(
           TableRowColumn,
           null,
-          update.software_version
+          update.version
         ),
         _react2.default.createElement(
           TableRowColumn,
           null,
-          update.devices.length
+          '-'
         ),
         _react2.default.createElement(
           TableRowColumn,
           null,
-          _react2.default.createElement(Time, { value: update.start_time, format: 'YYYY/MM/DD HH:mm' })
+          _react2.default.createElement(Time, { value: this._formatTime(update.created), format: 'YYYY/MM/DD HH:mm' })
         ),
         _react2.default.createElement(
           TableRowColumn,
           null,
-          _react2.default.createElement(Time, { value: update.end_time, format: 'YYYY/MM/DD HH:mm' })
+          _react2.default.createElement(Time, { value: this._formatTime(update.finished), format: 'YYYY/MM/DD HH:mm' })
         ),
         _react2.default.createElement(
           TableRowColumn,
@@ -74651,51 +74738,44 @@ var Recent = _react2.default.createClass({
           update.status || "--"
         )
       );
-    });
+    }, this);
 
-    var recent = this.props.recent.map(function (update, index) {
-      var failCount = 0;
-      for (var i = 0; i < update.devices.length; i++) {
-        if (update.devices[i].status === 'Failed') {
-          failCount++;
-        }
-      }
-      failCount = update.status === "Failed" ? " (" + failCount + ")" : '';
+    var recentMap = recent.map(function (update, index) {
       return _react2.default.createElement(
         TableRow,
         { key: index },
         _react2.default.createElement(
           TableRowColumn,
           null,
-          update.group
+          update.name
         ),
         _react2.default.createElement(
           TableRowColumn,
           null,
-          update.software_version
+          update.version
         ),
         _react2.default.createElement(
           TableRowColumn,
           null,
-          update.devices.length
+          '-'
         ),
         _react2.default.createElement(
           TableRowColumn,
           null,
-          _react2.default.createElement(Time, { value: update.start_time, format: 'YYYY/MM/DD HH:mm' })
+          _react2.default.createElement(Time, { value: this._formatTime(update.created), format: 'YYYY/MM/DD HH:mm' })
         ),
         _react2.default.createElement(
           TableRowColumn,
           null,
-          _react2.default.createElement(Time, { value: update.end_time, format: 'YYYY/MM/DD HH:mm' })
+          _react2.default.createElement(Time, { value: this._formatTime(update.finished), format: 'YYYY/MM/DD HH:mm' })
         ),
         _react2.default.createElement(
           TableRowColumn,
           null,
-          _react2.default.createElement(FlatButton, { label: (update.status || "--") + failCount, primary: update.status === 'Failed', secondary: update.status === 'Complete' })
+          _react2.default.createElement(FlatButton, { label: update.status, primary: update.status === 'failed', secondary: update.status === 'complete' })
         )
       );
-    });
+    }, this);
 
     var reportActions = [{ text: 'Close' }];
     var retryActions = [{ text: 'Cancel' }, { text: 'Deploy update', onClick: this._onUploadSubmit, primary: 'true' }];
@@ -74713,7 +74793,7 @@ var Recent = _react2.default.createClass({
         _react2.default.createElement(
           Table,
           {
-            className: progress.length ? null : 'hidden',
+            className: progressMap.length ? null : 'hidden',
             selectable: false },
           _react2.default.createElement(
             TableHeader,
@@ -74761,12 +74841,12 @@ var Recent = _react2.default.createClass({
               showRowHover: true,
               displayRowCheckbox: false,
               className: 'clickable' },
-            progress
+            progressMap
           )
         ),
         _react2.default.createElement(
           'div',
-          { className: progress.length ? 'hidden' : null },
+          { className: progressMap.length ? 'hidden' : null },
           _react2.default.createElement(
             'p',
             { className: 'italic' },
@@ -74786,7 +74866,7 @@ var Recent = _react2.default.createClass({
           Table,
           {
             onCellClick: this._handleCellClick,
-            className: recent.length ? null : 'hidden',
+            className: recentMap.length ? null : 'hidden',
             selectable: false },
           _react2.default.createElement(
             TableHeader,
@@ -74834,12 +74914,12 @@ var Recent = _react2.default.createClass({
               showRowHover: true,
               displayRowCheckbox: false,
               style: { cursor: "pointer" } },
-            recent
+            recentMap
           )
         ),
         _react2.default.createElement(
           'div',
-          { className: recent.length ? 'hidden' : null },
+          { className: recentMap.length ? 'hidden' : null },
           _react2.default.createElement(
             'p',
             { className: 'italic' },
@@ -74853,7 +74933,7 @@ var Recent = _react2.default.createClass({
 
 module.exports = Recent;
 
-},{"./report.js":654,"./scheduleform":657,"material-ui":250,"react":626,"react-time":464}],654:[function(require,module,exports){
+},{"./report.js":655,"./scheduleform":658,"material-ui":250,"react":626,"react-time":464}],655:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -75083,7 +75163,7 @@ var Report = _react2.default.createClass({
 
 module.exports = Report;
 
-},{"../../stores/app-store":663,"material-ui":250,"react":626,"react-time":464}],655:[function(require,module,exports){
+},{"../../stores/app-store":664,"material-ui":250,"react":626,"react-time":464}],656:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -75244,7 +75324,7 @@ var Schedule = _react2.default.createClass({
 
 module.exports = Schedule;
 
-},{"material-ui":250,"react":626,"react-time":464}],656:[function(require,module,exports){
+},{"material-ui":250,"react":626,"react-time":464}],657:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -75285,7 +75365,7 @@ var ScheduleButton = _react2.default.createClass({
 
 module.exports = ScheduleButton;
 
-},{"material-ui":250,"react":626}],657:[function(require,module,exports){
+},{"material-ui":250,"react":626}],658:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -75660,7 +75740,7 @@ var ScheduleForm = _react2.default.createClass({
 
 module.exports = ScheduleForm;
 
-},{"../../stores/app-store":663,"./datetime.js":651,"material-ui":250,"react":626,"react-router":432,"react-search-input":455}],658:[function(require,module,exports){
+},{"../../stores/app-store":664,"./datetime.js":652,"material-ui":250,"react":626,"react-router":432,"react-search-input":455}],659:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -75705,9 +75785,9 @@ var tabs = {
 
 function getState() {
   return {
-    recent: AppStore.getRecentUpdates(new Date().getTime()),
-    progress: AppStore.getProgressUpdates(new Date().getTime()),
-    schedule: AppStore.getScheduledUpdates(new Date().getTime()),
+    recent: AppStore.getRecentUpdates(new Date()),
+    progress: AppStore.getProgressUpdates(new Date()),
+    schedule: AppStore.getScheduledUpdates(new Date()),
     events: AppStore.getEventLog(),
     images: AppStore.getSoftwareRepo(),
     groups: AppStore.getGroups(),
@@ -75727,6 +75807,7 @@ var Updates = _react2.default.createClass({
   },
   componentDidMount: function componentDidMount() {
     AppStore.changeListener(this._onChange);
+    AppActions.getUpdates();
     if (this.props.params) {
       this.setState({ tabIndex: tabs[this.props.params.tab] });
 
@@ -75899,7 +75980,7 @@ var Updates = _react2.default.createClass({
 
 module.exports = Updates;
 
-},{"../../actions/app-actions":631,"../../stores/app-store":663,"./eventlog.js":652,"./recentupdates.js":653,"./report.js":654,"./schedule.js":655,"./schedulebutton.js":656,"./scheduleform.js":657,"material-ui":250,"react":626}],659:[function(require,module,exports){
+},{"../../actions/app-actions":631,"../../stores/app-store":664,"./eventlog.js":653,"./recentupdates.js":654,"./report.js":655,"./schedule.js":656,"./schedulebutton.js":657,"./scheduleform.js":658,"material-ui":250,"react":626}],660:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -75959,7 +76040,7 @@ module.exports = _react2.default.createElement(
   )
 );
 
-},{"../components/app":633,"../components/dashboard/dashboard":635,"../components/devices/devices":642,"../components/software/software":649,"../components/updates/updates":658,"react":626,"react-router":432}],660:[function(require,module,exports){
+},{"../components/app":634,"../components/dashboard/dashboard":636,"../components/devices/devices":643,"../components/software/software":650,"../components/updates/updates":659,"react":626,"react-router":432}],661:[function(require,module,exports){
 'use strict';
 
 module.exports = {
@@ -75972,10 +76053,11 @@ module.exports = {
   SORT_TABLE: 'SORT_TABLE',
   UPDATE_DEVICE_TAGS: 'UPDATE_DEVICE_TAGS',
   RECEIVE_IMAGES: 'RECEIVE_IMAGES',
-  UPLOAD_IMAGE: 'UPLOAD_IMAGE'
+  UPLOAD_IMAGE: 'UPLOAD_IMAGE',
+  RECEIVE_UPDATES: 'RECEIVE_UPDATES'
 };
 
-},{}],661:[function(require,module,exports){
+},{}],662:[function(require,module,exports){
 'use strict';
 
 var Dispatcher = require('flux').Dispatcher;
@@ -75993,7 +76075,7 @@ var AppDispatcher = assign(new Dispatcher(), {
 
 module.exports = AppDispatcher;
 
-},{"flux":94,"react/lib/Object.assign":486}],662:[function(require,module,exports){
+},{"flux":94,"react/lib/Object.assign":486}],663:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -76024,7 +76106,7 @@ var routes = require('./config/routes');
   routes
 ), document.getElementById('main'));
 
-},{"./config/routes":659,"react":626,"react-dom":403,"react-router":432,"react-tap-event-plugin":462}],663:[function(require,module,exports){
+},{"./config/routes":660,"react":626,"react-dom":403,"react-router":432,"react-tap-event-plugin":462}],664:[function(require,module,exports){
 'use strict';
 
 var AppDispatcher = require('../dispatchers/app-dispatcher');
@@ -76368,224 +76450,9 @@ var _recent = [];
 var _schedule = [];
 var _events = [];
 
-var _allupdates = [{
-  id: 1,
-  group: "Test",
-  model: "Acme Model 1",
-  software_version: "Version 1.1",
-  start_time: 1458493576000,
-  end_time: 1458497176000,
-  status: null,
-  devices: [{
-    id: 4,
-    name: "Device004",
-    model: "Acme Model 1",
-    last_software_version: "Version 1.0",
-    software_version: "Version 1.0",
-    start_time: null,
-    end_time: null,
-    status: "Skipped"
-  }, {
-    id: 5,
-    name: "Device005",
-    model: "Acme Model 1",
-    last_software_version: "Version 1.0",
-    software_version: "Version 1.o",
-    start_time: null,
-    end_time: null,
-    status: "Skipped"
-  }, {
-    id: 6,
-    name: "Device006",
-    model: "Acme Model 1",
-    last_software_version: "Version 0.3",
-    software_version: "Version 1.0",
-    start_time: null,
-    end_time: null,
-    status: "Pending"
-  }]
-}, {
-  id: 2,
-  group: "Development",
-  model: "Acme Model 1",
-  software_version: "Version 1.2",
-  start_time: 1458507176000,
-  end_time: 1458510776000,
-  status: null,
-  devices: [{
-    id: 1,
-    name: "Device001",
-    model: "Acme Model 1",
-    last_software_version: "Version 1.1",
-    software_version: "Version 1.2",
-    start_time: null,
-    end_time: null,
-    status: "Pending"
-  }, {
-    id: 2,
-    name: "Device002",
-    model: "Acme Model 1",
-    last_software_version: "Version 1.1",
-    software_version: "Version 1.2",
-    start_time: 1447297176000,
-    end_time: 1444708776000,
-    status: "Pending"
-  }, {
-    id: 3,
-    name: "Device003",
-    model: "Acme Model 1",
-    last_software_version: "Version 1.1",
-    software_version: "Version 1.2",
-    start_time: null,
-    end_time: null,
-    status: "Pending"
-  }]
-}, {
-  id: 3,
-  group: "Production",
-  model: "Acme Model 1",
-  software_version: "Version 1.0",
-  start_time: 1445309976000,
-  end_time: 1445396376000,
-  status: "Complete",
-  devices: [{
-    id: 7,
-    name: "Device007",
-    model: "Acme Model 1",
-    last_software_version: "Version 0.3",
-    software_version: "Version 1.0",
-    start_time: 1445309976000,
-    end_time: 1445396376000,
-    status: "Complete"
-  }, {
-    id: 8,
-    name: "Device008",
-    model: "Acme Model 1",
-    last_software_version: "Version 0.3",
-    software_version: "Version 1.0",
-    start_time: 1445309976000,
-    end_time: 1445396376000,
-    status: "Complete"
-  }]
-}, {
-  id: 4,
-  group: "Test",
-  model: "Acme Model 1",
-  software_version: "Version 0.3",
-  start_time: 1444705176000,
-  end_time: 1444708776000,
-  status: "Complete",
-  devices: [{
-    id: 4,
-    name: "Device004",
-    model: "Acme Model 1",
-    last_software_version: "Version 0.2",
-    software_version: "Version 0.3",
-    start_time: 1444705176000,
-    end_time: 1444708776000,
-    status: "Complete"
-  }, {
-    id: 5,
-    name: "Device005",
-    model: "Acme Model 1",
-    last_software_version: "Version 0.2",
-    software_version: "Version 0.3",
-    start_time: 1444705176000,
-    end_time: 1444708776000,
-    status: "Complete"
-  }, {
-    id: 6,
-    name: "Device006",
-    model: "Acme Model 1",
-    last_software_version: "Version 0.3",
-    software_version: "Version 0.3",
-    start_time: 1444705176000,
-    end_time: 1444708776000,
-    status: "Complete"
-  }]
-}, {
-  id: 5,
-  group: "Test",
-  model: "Acme Model 1",
-  software_version: "Version 1.0",
-  start_time: 1444708776000,
-  end_time: 1444709971000,
-  status: "Failed",
-  devices: [{
-    id: 4,
-    name: "Device004",
-    model: "Acme Model 1",
-    last_software_version: "Version 0.3",
-    software_version: "Version 1.0",
-    start_time: 1444708776000,
-    end_time: 1444709971000,
-    status: "Complete"
-  }, {
-    id: 5,
-    name: "Device005",
-    model: "Acme Model 1",
-    last_software_version: "Version 0.3",
-    software_version: "Version 1.0",
-    start_time: 1444708776000,
-    end_time: 1444709971000,
-    status: "Complete"
-  }, {
-    id: 6,
-    name: "Device006",
-    model: "Acme Model 1",
-    last_software_version: "Version 0.3",
-    software_version: "Version 0.3",
-    start_time: 1444708776000,
-    end_time: 1444709971000,
-    status: "Failed"
-  }]
-}, {
-  id: 6,
-  group: "Wifi",
-  model: "Wifi Model 1",
-  software_version: "Wifi Version 1.0",
-  start_time: 1453169971000,
-  end_time: 1459199971000,
-  status: "Pending",
-  devices: [{
-    id: 9,
-    name: "Wifi001",
-    model: "Wifi Model 1",
-    last_software_version: "Wifi Version Beta",
-    software_version: "Wifi Version 1.0",
-    start_time: 1453169971000,
-    end_time: 1459199971000,
-    status: "Pending"
-  }]
-}, {
-  id: 7,
-  group: "Production",
-  model: "Acme Model 1",
-  software_version: "Version 1.1",
-  start_time: 1456169971000,
-  end_time: 1459899971000,
-  status: "Pending",
-  devices: [{
-    id: 7,
-    name: "Device007",
-    model: "Acme Model 1",
-    last_software_version: "Version 1.0",
-    software_version: "Version 1.1",
-    start_time: 1456169971000,
-    end_time: 1459899971000,
-    status: "Complete"
-  }, {
-    id: 8,
-    name: "Device008",
-    model: "Acme Model 1",
-    last_software_version: "Version 1.0",
-    software_version: "Version 1.1",
-    start_time: 1456169971000,
-    end_time: 1459899971000,
-    status: "Pending"
-  }]
-}];
-_allupdates.sort(startTimeSort);
+var _allupdates = [];
+
+//_allupdates.sort(startTimeSort);
 
 var _activityLog = [{
   summary: "User Admin scheduled an update to group Wifi",
@@ -76605,10 +76472,11 @@ var _activityLog = [{
 }];
 
 function _getRecentUpdates(time) {
-
   var recent = [];
   for (var i = 0; i < _allupdates.length; i++) {
-    if (_allupdates[i].start_time < time && _allupdates[i].end_time < time) {
+    var created = new Date(_allupdates[i].created);
+    var finished = new Date(_allupdates[i].finished);
+    if (created < time && finished < time) {
       recent.push(_allupdates[i]);
     }
   }
@@ -76618,8 +76486,10 @@ function _getRecentUpdates(time) {
 function _getProgressUpdates(time) {
   var progress = [];
   for (var i = 0; i < _allupdates.length; i++) {
-    if (_allupdates[i].start_time <= time && _allupdates[i].end_time > time) {
-      progress.push(_allupdates[i]);
+    var created = new Date(_allupdates[i].created);
+    var finished = new Date(_allupdates[i].finished);
+    if (created <= time && finished > time) {
+      recent.push(_allupdates[i]);
     }
   }
   return progress;
@@ -76717,6 +76587,13 @@ function setImages(images) {
     _softwareRepo = images;
   }
   _softwareRepo.sort(customSort(1, "modified"));
+}
+
+function setUpdates(updates) {
+  if (updates) {
+    _allupdates = updates;
+  }
+  _allupdates.sort(startTimeSort);
 }
 
 var AppStore = assign(EventEmitter.prototype, {
@@ -76899,6 +76776,11 @@ var AppStore = assign(EventEmitter.prototype, {
       case AppConstants.RECEIVE_IMAGES:
         setImages(payload.action.images);
         break;
+
+      /* API */
+      case AppConstants.RECEIVE_UPDATES:
+        setUpdates(payload.action.updates);
+        break;
     }
 
     AppStore.emitChange();
@@ -76909,7 +76791,7 @@ var AppStore = assign(EventEmitter.prototype, {
 
 module.exports = AppStore;
 
-},{"../constants/app-constants":660,"../dispatchers/app-dispatcher":661,"events":92,"react/lib/Object.assign":486}],664:[function(require,module,exports){
+},{"../constants/app-constants":661,"../dispatchers/app-dispatcher":662,"events":92,"react/lib/Object.assign":486}],665:[function(require,module,exports){
 'use strict';
 
 var Colors = require('material-ui/lib/styles/colors');
@@ -76934,4 +76816,4 @@ module.exports = {
   }
 };
 
-},{"material-ui/lib/styles/colors":292,"material-ui/lib/styles/spacing":297,"material-ui/lib/utils/color-manipulator":352}]},{},[662]);
+},{"material-ui/lib/styles/colors":292,"material-ui/lib/styles/spacing":297,"material-ui/lib/utils/color-manipulator":352}]},{},[663]);

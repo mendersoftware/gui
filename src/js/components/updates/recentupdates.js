@@ -13,6 +13,8 @@ var TableRow = mui.TableRow;
 var TableRowColumn = mui.TableRowColumn;
 var FlatButton = mui.FlatButton;
 
+var progress = [];
+var recent = [];
 
 var Recent = React.createClass({
   getInitialState: function() {
@@ -21,43 +23,45 @@ var Recent = React.createClass({
       retry: false
     };
   },
+  componentWillReceiveProps: function(nextProps) {
+    progress = nextProps.progress;
+    recent = nextProps.recent;
+  },
 
   _handleCellClick: function(rowNumber, columnId) {
-    var report = this.props.recent[rowNumber];
+    var report = recent[rowNumber];
     this.props.showReport(report);
   },
+  _formatTime: function(date) {
+    return date.replace(' ','T').replace(/ /g, '').replace('UTC','');
+  },
   render: function() {
-    var now = new Date().getTime();
-    var progress = this.props.progress.map(function(update, index) {
+
+    var progressMap = progress.map(function(update, index) {
       return (
         <TableRow key={index}>
-          <TableRowColumn>{update.group}</TableRowColumn>
-          <TableRowColumn>{update.software_version}</TableRowColumn>
-          <TableRowColumn>{update.devices.length}</TableRowColumn>
-          <TableRowColumn><Time value={update.start_time} format="YYYY/MM/DD HH:mm" /></TableRowColumn>
-          <TableRowColumn><Time value={update.end_time} format="YYYY/MM/DD HH:mm" /></TableRowColumn>
+          <TableRowColumn>{update.name}</TableRowColumn>
+          <TableRowColumn>{update.version}</TableRowColumn>
+          <TableRowColumn>-</TableRowColumn>
+          <TableRowColumn><Time value={this._formatTime(update.created)} format="YYYY/MM/DD HH:mm" /></TableRowColumn>
+          <TableRowColumn><Time value={this._formatTime(update.finished)} format="YYYY/MM/DD HH:mm" /></TableRowColumn>
           <TableRowColumn>{update.status || "--"}</TableRowColumn>
         </TableRow>
       )
-    });
-
-    var recent = this.props.recent.map(function(update, index) {
-      var failCount=0;
-      for (var i=0;i<update.devices.length;i++) {
-        if (update.devices[i].status==='Failed') {failCount++}
-      }
-      failCount = update.status === "Failed" ? " ("+failCount+")" : '';
+    }, this);
+ 
+    var recentMap = recent.map(function(update, index) {
       return (
         <TableRow key={index}>
-          <TableRowColumn>{update.group}</TableRowColumn>
-          <TableRowColumn>{update.software_version}</TableRowColumn>
-          <TableRowColumn>{update.devices.length}</TableRowColumn>
-          <TableRowColumn><Time value={update.start_time} format="YYYY/MM/DD HH:mm" /></TableRowColumn>
-          <TableRowColumn><Time value={update.end_time} format="YYYY/MM/DD HH:mm" /></TableRowColumn>
-          <TableRowColumn><FlatButton label={(update.status || "--") + failCount} primary={update.status === 'Failed'} secondary={update.status === 'Complete'} /></TableRowColumn>
+          <TableRowColumn>{update.name}</TableRowColumn>
+          <TableRowColumn>{update.version}</TableRowColumn>
+          <TableRowColumn>-</TableRowColumn>
+          <TableRowColumn><Time value={this._formatTime(update.created)} format="YYYY/MM/DD HH:mm" /></TableRowColumn>
+          <TableRowColumn><Time value={this._formatTime(update.finished)} format="YYYY/MM/DD HH:mm" /></TableRowColumn>
+          <TableRowColumn><FlatButton label={update.status} primary={update.status === 'failed'} secondary={update.status === 'complete'} /></TableRowColumn>
         </TableRow>
       )
-    });
+    }, this);
 
     var reportActions = [
       { text: 'Close' }
@@ -71,7 +75,7 @@ var Recent = React.createClass({
         <div style={{marginBottom:"60"}}> 
           <h3>Updates in progress</h3>
           <Table
-            className={progress.length ? null : 'hidden'}
+            className={progressMap.length ? null : 'hidden'}
             selectable={false}>
             <TableHeader
               displaySelectAll={false}
@@ -89,10 +93,10 @@ var Recent = React.createClass({
               showRowHover={true}
               displayRowCheckbox={false}
               className="clickable">
-              {progress}
+              {progressMap}
             </TableBody>
           </Table>
-          <div className={progress.length ? 'hidden' : null}>
+          <div className={progressMap.length ? 'hidden' : null}>
             <p className="italic">No updates in progress</p>
           </div>
         </div>
@@ -101,7 +105,7 @@ var Recent = React.createClass({
           <h3>Recent updates</h3>
           <Table
             onCellClick={this._handleCellClick}
-            className={recent.length ? null : 'hidden'}
+            className={recentMap.length ? null : 'hidden'}
             selectable={false}>
             <TableHeader
               displaySelectAll={false}
@@ -119,11 +123,11 @@ var Recent = React.createClass({
               showRowHover={true}
               displayRowCheckbox={false}
               style={{cursor:"pointer"}}>
-              {recent}
+              {recentMap}
             </TableBody>
           </Table>
 
-          <div className={recent.length ? 'hidden' : null}>
+          <div className={recentMap.length ? 'hidden' : null}>
             <p className="italic">No recent updates</p>
           </div>
         </div>

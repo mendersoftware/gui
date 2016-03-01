@@ -35,9 +35,9 @@ var tabs = {
 
 function getState() {
   return {
-    recent: AppStore.getRecentUpdates(new Date().getTime()),
-    progress: AppStore.getProgressUpdates(new Date().getTime()),
-    schedule: AppStore.getScheduledUpdates(new Date().getTime()),
+    recent: AppStore.getRecentUpdates(new Date()),
+    progress: AppStore.getProgressUpdates(new Date()),
+    schedule: AppStore.getScheduledUpdates(new Date()),
     events: AppStore.getEventLog(),
     images: AppStore.getSoftwareRepo(),
     groups: AppStore.getGroups(),
@@ -55,6 +55,7 @@ var Updates = React.createClass({
   },
   componentDidMount: function() {
     AppStore.changeListener(this._onChange);
+    AppActions.getUpdates();
       if (this.props.params) {
         this.setState({tabIndex: tabs[this.props.params.tab]});
 
