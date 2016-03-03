@@ -75136,7 +75136,7 @@ var Report = _react2.default.createClass({
               { className: this.props.update.status === "inprogress" ? "hidden" : "material-icons error-icon" },
               this.props.update.status !== 'Failed' ? 'check_circle' : 'error'
             ),
-            onClick: this._retryUpdate })
+            onTouchTap: this._retryUpdate })
         )
       ),
       _react2.default.createElement(

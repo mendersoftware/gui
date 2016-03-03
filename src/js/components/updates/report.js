@@ -93,7 +93,7 @@ var Report = React.createClass({
               primaryText="Status"
               secondaryText={<p>{status}{this.props.update.status!=='Failed' ? '' : ' - Click to retry'}</p>}
               leftIcon={<FontIcon className={this.props.update.status==="inprogress" ? "hidden" : "material-icons error-icon"}>{this.props.update.status !=='Failed' ? 'check_circle' : 'error'}</FontIcon>} 
-              onClick={this._retryUpdate} />
+              onTouchTap={this._retryUpdate} />
           </List>
         </div>
         <div className={this.props.update.status==='Complete' ? "hidden" : null} style={{display:"inline-block", width:"200px"}}>
