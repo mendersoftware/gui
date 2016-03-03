@@ -75021,7 +75021,10 @@ var Report = _react2.default.createClass({
 
   getInitialState: function getInitialState() {
     return {
-      failsOnly: this.props.update.status === "Failed"
+      failsOnly: this.props.update.status === "Failed",
+      stats: {
+        failure: null
+      }
     };
   },
   componentDidMount: function componentDidMount() {
@@ -75048,6 +75051,9 @@ var Report = _react2.default.createClass({
     // replace contents of dialog, also change size, return contents and size on 'cancel'?
     this.props.retryUpdate(this.props.update);
   },
+  _formatTime: function _formatTime(date) {
+    return date.replace(' ', 'T').replace(/ /g, '').replace('UTC', '');
+  },
   render: function render() {
     var deviceList = [];
     if (this.state.devices) {
@@ -75070,7 +75076,7 @@ var Report = _react2.default.createClass({
             _react2.default.createElement(
               TableRowColumn,
               null,
-              _react2.default.createElement(Time, { value: device.finished, format: 'YYYY/MM/DD HH:mm' })
+              _react2.default.createElement(Time, { value: this._formatTime(device.finished), format: 'YYYY/MM/DD HH:mm' })
             ),
             _react2.default.createElement(
               TableRowColumn,
@@ -75100,7 +75106,7 @@ var Report = _react2.default.createClass({
           _react2.default.createElement(Divider, null),
           _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Device type', secondaryText: this.props.update.model || "--" }),
           _react2.default.createElement(Divider, null),
-          _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Start time', secondaryText: _react2.default.createElement(Time, { value: this.props.update.created, format: 'YYYY/MM/DD HH:mm' }) })
+          _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Start time', secondaryText: _react2.default.createElement(Time, { value: this._formatTime(this.props.update.created), format: 'YYYY/MM/DD HH:mm' }) })
         )
       ),
       _react2.default.createElement(
@@ -75113,7 +75119,7 @@ var Report = _react2.default.createClass({
           _react2.default.createElement(Divider, null),
           _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Target software', secondaryText: this.props.update.version }),
           _react2.default.createElement(Divider, null),
-          _react2.default.createElement(ListItem, { disabled: true, primaryText: 'End time', secondaryText: _react2.default.createElement(Time, { value: this.props.update.finished, format: 'YYYY/MM/DD HH:mm' }) })
+          _react2.default.createElement(ListItem, { disabled: true, primaryText: 'End time', secondaryText: _react2.default.createElement(Time, { value: this._formatTime(this.props.update.finished), format: 'YYYY/MM/DD HH:mm' }) })
         )
       ),
       _react2.default.createElement(
@@ -75146,7 +75152,8 @@ var Report = _react2.default.createClass({
           label: 'Show only failures',
           defaultChecked: this.props.update.status === 'Failed',
           checked: this.state.failsOnly,
-          onCheck: this._handleCheckbox })
+          onCheck: this._handleCheckbox,
+          className: this.state.stats.failure ? null : "hidden" })
       ),
       _react2.default.createElement(
         'div',

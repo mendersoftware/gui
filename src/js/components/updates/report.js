@@ -21,6 +21,9 @@ var Report = React.createClass({
   getInitialState: function() {
     return {
       failsOnly: this.props.update.status === "Failed",
+      stats: {
+        failure: null
+      }
     };
   },
    componentDidMount: function() {
@@ -47,6 +50,9 @@ var Report = React.createClass({
     // replace contents of dialog, also change size, return contents and size on 'cancel'?
     this.props.retryUpdate(this.props.update);
   },
+  _formatTime: function(date) {
+    return date.replace(' ','T').replace(/ /g, '').replace('UTC','');
+  },
   render: function() {
     var deviceList = [];
     if (this.state.devices) {
@@ -57,7 +63,7 @@ var Report = React.createClass({
             <TableRow key={index}>
               <TableRowColumn>{device.id}</TableRowColumn>
               <TableRowColumn>{this.props.update.version}</TableRowColumn>
-              <TableRowColumn><Time value={device.finished} format="YYYY/MM/DD HH:mm" /></TableRowColumn>
+              <TableRowColumn><Time value={this._formatTime(device.finished)} format="YYYY/MM/DD HH:mm" /></TableRowColumn>
               <TableRowColumn>{device.status || "--"}</TableRowColumn>
               <TableRowColumn><FlatButton label="Export log" /></TableRowColumn>
             </TableRow>
@@ -74,7 +80,7 @@ var Report = React.createClass({
             <Divider />
             <ListItem disabled={true} primaryText="Device type" secondaryText={this.props.update.model || "--"} />
             <Divider />
-            <ListItem disabled={true} primaryText="Start time" secondaryText={<Time value={this.props.update.created} format="YYYY/MM/DD HH:mm" />} />
+            <ListItem disabled={true} primaryText="Start time" secondaryText={<Time value={this._formatTime(this.props.update.created)} format="YYYY/MM/DD HH:mm" />} />
           </List>
         </div>
         <div className="report-list">
@@ -83,7 +89,7 @@ var Report = React.createClass({
             <Divider />
             <ListItem disabled={true} primaryText="Target software" secondaryText={this.props.update.version} />
             <Divider />
-            <ListItem disabled={true} primaryText="End time" secondaryText={<Time value={this.props.update.finished} format="YYYY/MM/DD HH:mm" />} />
+            <ListItem disabled={true} primaryText="End time" secondaryText={<Time value={this._formatTime(this.props.update.finished)} format="YYYY/MM/DD HH:mm" />} />
           </List>
         </div>
         <div className="report-list">
@@ -101,7 +107,8 @@ var Report = React.createClass({
             label="Show only failures"
             defaultChecked={this.props.update.status==='Failed'}
             checked={this.state.failsOnly}
-            onCheck={this._handleCheckbox} />
+            onCheck={this._handleCheckbox}
+            className={this.state.stats.failure ? null : "hidden"} />
         </div>
 
         <div style={{minHeight:"20vh"}}>
