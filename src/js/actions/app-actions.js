@@ -82,17 +82,6 @@ var AppActions = {
 
 
 
-  
-  saveSchedule: function(schedule, single) {
-    AppDispatcher.handleViewAction({
-      actionType: AppConstants.SAVE_SCHEDULE,
-      schedule: schedule,
-      single: single
-    })
-  },
-
-
-
 
   /* API */
   getUpdates: function() {
@@ -105,6 +94,44 @@ var AppActions = {
         });
       });
   },
+  createUpdate: function(update) {
+    UpdatesApi
+    .post(updatesApiUrl+'deployments/', update)
+      .then(function(data) {
+        // inserted update data,
+        callback(data);
+      });
+  },
+  getSingleUpdate: function(id, callback) {
+    UpdatesApi
+      .get(updatesApiUrl+'deployments/'+id)
+      .then(function(data) {
+        callback(data);
+      });
+  },
+  getSingleUpdateStats: function(id, callback) {
+    UpdatesApi
+      .get(updatesApiUrl+'deployments/'+id +'/statistics')
+      .then(function(data) {
+        callback(data);
+      });
+  },
+  getSingleUpdateDevices: function(id, callback) {
+    UpdatesApi
+      .get(updatesApiUrl+'deployments/'+id +'/devices')
+      .then(function(data) {
+        callback(data);
+      });
+  },
+     
+  saveSchedule: function(schedule, single) {
+    AppDispatcher.handleViewAction({
+      actionType: AppConstants.SAVE_SCHEDULE,
+      schedule: schedule,
+      single: single
+    })
+  },
+
 
 
 

@@ -26,7 +26,11 @@ var Api = {
           if (err || !res.ok) {
             reject();
           } else {
-            resolve(JSON.parse(res.text));
+            var responsetext = "";
+            if (res.text) {
+              responsetext = JSON.parse(res.text);
+            }
+            resolve(responsetext);
           }
         });
     });

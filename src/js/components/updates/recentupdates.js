@@ -3,6 +3,8 @@ var Time = require('react-time');
 var Report = require('./report.js');
 var ScheduleForm = require('./scheduleform');
 
+var ProgressBar = require('./progressbar');
+
 // material ui
 var mui = require('material-ui');
 var Table = mui.Table;
@@ -36,7 +38,7 @@ var Recent = React.createClass({
     return date.replace(' ','T').replace(/ /g, '').replace('UTC','');
   },
   render: function() {
-
+    // get statistics for each in progress
     var progressMap = progress.map(function(update, index) {
       return (
         <TableRow key={index}>
@@ -45,12 +47,14 @@ var Recent = React.createClass({
           <TableRowColumn>-</TableRowColumn>
           <TableRowColumn><Time value={this._formatTime(update.created)} format="YYYY/MM/DD HH:mm" /></TableRowColumn>
           <TableRowColumn><Time value={this._formatTime(update.finished)} format="YYYY/MM/DD HH:mm" /></TableRowColumn>
-          <TableRowColumn>{update.status || "--"}</TableRowColumn>
+          <TableRowColumn><ProgressBar stats={update.id} /></TableRowColumn>
         </TableRow>
       )
     }, this);
  
     var recentMap = recent.map(function(update, index) {
+      // if failure, get statistics
+      var status = (update.status === "inprogress") ? "In progress" : update.status;
       return (
         <TableRow key={index}>
           <TableRowColumn>{update.name}</TableRowColumn>
@@ -58,7 +62,7 @@ var Recent = React.createClass({
           <TableRowColumn>-</TableRowColumn>
           <TableRowColumn><Time value={this._formatTime(update.created)} format="YYYY/MM/DD HH:mm" /></TableRowColumn>
           <TableRowColumn><Time value={this._formatTime(update.finished)} format="YYYY/MM/DD HH:mm" /></TableRowColumn>
-          <TableRowColumn><FlatButton label={update.status} primary={update.status === 'failed'} secondary={update.status === 'complete'} /></TableRowColumn>
+          <TableRowColumn><FlatButton label={status} primary={update.status === 'failed'} secondary={update.status === 'complete'} /></TableRowColumn>
         </TableRow>
       )
     }, this);

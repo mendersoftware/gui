@@ -227,7 +227,6 @@ function _sortDevices() {
 }
 
 function _updateDeviceTags(id, tags) {
-  console.log(id, tags);
   var index = findWithAttr(_alldevices, "id", id);
   _alldevices[index].tags = tags;
 }
@@ -363,6 +362,7 @@ var _schedule = [];
 var _events = [];
 
 var _allupdates = [];
+var _selectedUpdate = {};
 
 //_allupdates.sort(startTimeSort);
 
@@ -405,8 +405,11 @@ function _getProgressUpdates(time) {
   for (var i=0;i<_allupdates.length;i++) {
     var created = new Date(_allupdates[i].created);
     var finished = new Date(_allupdates[i].finished);
-    if (created<=time && finished>time) {
-      recent.push(_allupdates[i]);
+    /*
+    * CHANGE FOR MOCKING API
+    */ 
+    if (created<=time && finished<time) {
+      progress.push(_allupdates[i]);
     }
   }
   return progress;
@@ -521,7 +524,11 @@ function setUpdates(updates) {
   _allupdates.sort(startTimeSort);
 }
 
-
+function setSelectedUpdate(update) {
+  if (update) {
+    _selectedUpdate = update;
+  }
+}
 
 
 
@@ -626,6 +633,13 @@ var AppStore = assign(EventEmitter.prototype, {
     return _allupdates[index];
   },
 
+  getSelectedUpdate: function() {
+    /*
+    * Return current selected update
+    */
+    return _selectedUpdate
+  },
+
   getProgressUpdates: function(date) {
     /*
     * Return list of updates in progress based on date
@@ -711,6 +725,9 @@ var AppStore = assign(EventEmitter.prototype, {
       /* API */
       case AppConstants.RECEIVE_UPDATES:
         setUpdates(payload.action.updates);
+        break;
+       case AppConstants.SINGLE_UPDATE:
+        setSelectedUpdate(payload.action.update);
         break;
     }
     

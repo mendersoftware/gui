@@ -71401,14 +71401,6 @@ var AppActions = {
     });
   },
 
-  saveSchedule: function saveSchedule(schedule, single) {
-    AppDispatcher.handleViewAction({
-      actionType: AppConstants.SAVE_SCHEDULE,
-      schedule: schedule,
-      single: single
-    });
-  },
-
   /* API */
   getUpdates: function getUpdates() {
     UpdatesApi.get(updatesApiUrl + 'deployments/').then(function (updates) {
@@ -71416,6 +71408,35 @@ var AppActions = {
         actionType: AppConstants.RECEIVE_UPDATES,
         updates: updates
       });
+    });
+  },
+  createUpdate: function createUpdate(update) {
+    UpdatesApi.post(updatesApiUrl + 'deployments/', update).then(function (data) {
+      // inserted update data,
+      callback(data);
+    });
+  },
+  getSingleUpdate: function getSingleUpdate(id, callback) {
+    UpdatesApi.get(updatesApiUrl + 'deployments/' + id).then(function (data) {
+      callback(data);
+    });
+  },
+  getSingleUpdateStats: function getSingleUpdateStats(id, callback) {
+    UpdatesApi.get(updatesApiUrl + 'deployments/' + id + '/statistics').then(function (data) {
+      callback(data);
+    });
+  },
+  getSingleUpdateDevices: function getSingleUpdateDevices(id, callback) {
+    UpdatesApi.get(updatesApiUrl + 'deployments/' + id + '/devices').then(function (data) {
+      callback(data);
+    });
+  },
+
+  saveSchedule: function saveSchedule(schedule, single) {
+    AppDispatcher.handleViewAction({
+      actionType: AppConstants.SAVE_SCHEDULE,
+      schedule: schedule,
+      single: single
     });
   },
 
@@ -71453,7 +71474,7 @@ var AppActions = {
 
 module.exports = AppActions;
 
-},{"../api/api":632,"../api/updates-api":633,"../constants/app-constants":661,"../dispatchers/app-dispatcher":662}],632:[function(require,module,exports){
+},{"../api/api":632,"../api/updates-api":633,"../constants/app-constants":662,"../dispatchers/app-dispatcher":663}],632:[function(require,module,exports){
 'use strict';
 
 var request = require('superagent');
@@ -71543,7 +71564,11 @@ var Api = {
         if (err || !res.ok) {
           reject();
         } else {
-          resolve(JSON.parse(res.text));
+          var responsetext = "";
+          if (res.text) {
+            responsetext = JSON.parse(res.text);
+          }
+          resolve(responsetext);
         }
       });
     });
@@ -71642,7 +71667,7 @@ var App = _react2.default.createClass({
 
 module.exports = App;
 
-},{"../themes/mender-theme.js":665,"./header/header":647,"material-ui":250,"material-ui/lib/styles/theme-manager":299,"react":626}],635:[function(require,module,exports){
+},{"../themes/mender-theme.js":666,"./header/header":647,"material-ui":250,"material-ui/lib/styles/theme-manager":299,"react":626}],635:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -71807,7 +71832,7 @@ Dashboard.contextTypes = {
 
 module.exports = Dashboard;
 
-},{"../../stores/app-store":664,"./activity":635,"./health":637,"./updates":641,"react":626,"react-router":432}],637:[function(require,module,exports){
+},{"../../stores/app-store":665,"./activity":635,"./health":637,"./updates":641,"react":626,"react-router":432}],637:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -72046,7 +72071,7 @@ Progress.contextTypes = {
 
 module.exports = Progress;
 
-},{"../../stores/app-store":664,"material-ui":250,"react":626,"react-router":432,"react-time":464}],639:[function(require,module,exports){
+},{"../../stores/app-store":665,"material-ui":250,"react":626,"react-router":432,"react-time":464}],639:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -72556,7 +72581,7 @@ var DeviceList = _react2.default.createClass({
 
 module.exports = DeviceList;
 
-},{"../../actions/app-actions":631,"../../stores/app-store":664,"material-ui":250,"react":626}],643:[function(require,module,exports){
+},{"../../actions/app-actions":631,"../../stores/app-store":665,"material-ui":250,"react":626}],643:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -72642,7 +72667,7 @@ var Devices = _react2.default.createClass({
 
 module.exports = Devices;
 
-},{"../../actions/app-actions":631,"../../stores/app-store":664,"./devicelist":642,"./filters":644,"./groups":645,"./selecteddevices":646,"react":626}],644:[function(require,module,exports){
+},{"../../actions/app-actions":631,"../../stores/app-store":665,"./devicelist":642,"./filters":644,"./groups":645,"./selecteddevices":646,"react":626}],644:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -73112,7 +73137,7 @@ var Groups = _react2.default.createClass({
 
 module.exports = Groups;
 
-},{"../../actions/app-actions":631,"../../stores/app-store":664,"material-ui":250,"react":626,"react-search-input":455}],646:[function(require,module,exports){
+},{"../../actions/app-actions":631,"../../stores/app-store":665,"material-ui":250,"react":626,"react-search-input":455}],646:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -73562,7 +73587,7 @@ var SelectedDevices = _react2.default.createClass({
 
 module.exports = SelectedDevices;
 
-},{"../../actions/app-actions":631,"../../stores/app-store":664,"../updates/scheduleform":658,"material-ui":250,"react":626,"react-tag-input":458}],647:[function(require,module,exports){
+},{"../../actions/app-actions":631,"../../stores/app-store":665,"../updates/scheduleform":659,"material-ui":250,"react":626,"react-tag-input":458}],647:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -74205,7 +74230,7 @@ var Repository = _react2.default.createClass({
 
 module.exports = Repository;
 
-},{"../../actions/app-actions":631,"../../stores/app-store":664,"../updates/scheduleform":658,"./selectedimage.js":649,"./updatebutton.js":651,"material-ui":250,"react":626,"react-addons-update":371,"react-dom":403,"react-file-input":404,"react-router":432,"react-search-input":455,"react-tag-input":458,"react-time":464}],649:[function(require,module,exports){
+},{"../../actions/app-actions":631,"../../stores/app-store":665,"../updates/scheduleform":659,"./selectedimage.js":649,"./updatebutton.js":651,"material-ui":250,"react":626,"react-addons-update":371,"react-dom":403,"react-file-input":404,"react-router":432,"react-search-input":455,"react-tag-input":458,"react-time":464}],649:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -74507,7 +74532,7 @@ var Software = _react2.default.createClass({
 
 module.exports = Software;
 
-},{"../../actions/app-actions":631,"../../stores/app-store":664,"./repository.js":648,"react":626}],651:[function(require,module,exports){
+},{"../../actions/app-actions":631,"../../stores/app-store":665,"./repository.js":648,"react":626}],651:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -74663,9 +74688,38 @@ var _react2 = _interopRequireDefault(_react);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+// material ui
+var mui = require('material-ui');
+
+var ProgressBar = _react2.default.createClass({
+  displayName: 'ProgressBar',
+
+  _handleClick: function _handleClick() {},
+  render: function render() {
+    return _react2.default.createElement(
+      'div',
+      null,
+      'test'
+    );
+  }
+});
+
+module.exports = ProgressBar;
+
+},{"material-ui":250,"react":626}],655:[function(require,module,exports){
+'use strict';
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 var Time = require('react-time');
 var Report = require('./report.js');
 var ScheduleForm = require('./scheduleform');
+
+var ProgressBar = require('./progressbar');
 
 // material ui
 var mui = require('material-ui');
@@ -74702,7 +74756,7 @@ var Recent = _react2.default.createClass({
     return date.replace(' ', 'T').replace(/ /g, '').replace('UTC', '');
   },
   render: function render() {
-
+    // get statistics for each in progress
     var progressMap = progress.map(function (update, index) {
       return _react2.default.createElement(
         TableRow,
@@ -74735,12 +74789,14 @@ var Recent = _react2.default.createClass({
         _react2.default.createElement(
           TableRowColumn,
           null,
-          update.status || "--"
+          _react2.default.createElement(ProgressBar, { stats: update.id })
         )
       );
     }, this);
 
     var recentMap = recent.map(function (update, index) {
+      // if failure, get statistics
+      var status = update.status === "inprogress" ? "In progress" : update.status;
       return _react2.default.createElement(
         TableRow,
         { key: index },
@@ -74772,7 +74828,7 @@ var Recent = _react2.default.createClass({
         _react2.default.createElement(
           TableRowColumn,
           null,
-          _react2.default.createElement(FlatButton, { label: update.status, primary: update.status === 'failed', secondary: update.status === 'complete' })
+          _react2.default.createElement(FlatButton, { label: status, primary: update.status === 'failed', secondary: update.status === 'complete' })
         )
       );
     }, this);
@@ -74933,7 +74989,7 @@ var Recent = _react2.default.createClass({
 
 module.exports = Recent;
 
-},{"./report.js":655,"./scheduleform":658,"material-ui":250,"react":626,"react-time":464}],655:[function(require,module,exports){
+},{"./progressbar":654,"./report.js":656,"./scheduleform":659,"material-ui":250,"react":626,"react-time":464}],656:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -74943,7 +74999,7 @@ var _react2 = _interopRequireDefault(_react);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var Time = require('react-time');
-var AppStore = require('../../stores/app-store');
+var AppActions = require('../../actions/app-actions');
 
 // material ui
 var mui = require('material-ui');
@@ -74965,12 +75021,25 @@ var Report = _react2.default.createClass({
 
   getInitialState: function getInitialState() {
     return {
-      failsOnly: this.props.update.status !== "Complete"
+      failsOnly: this.props.update.status === "Failed"
     };
+  },
+  componentDidMount: function componentDidMount() {
+    AppActions.getSingleUpdateStats(this.props.update.id, function (stats) {
+      this._updateState("stats", stats);
+    }.bind(this));
+    AppActions.getSingleUpdateDevices(this.props.update.id, function (devices) {
+      this._updateState("devices", devices);
+    }.bind(this));
+  },
+  _updateState: function _updateState(key, val) {
+    var state = {};
+    state[key] = val;
+    this.setState(state);
   },
   _getDeviceDetails: function _getDeviceDetails(id) {
     // get device details not listed in schedule data
-    return AppStore.getSingleDevice(id);
+    //return AppActions.getSingleDeviceReport(id)
   },
   _handleCheckbox: function _handleCheckbox(e, checked) {
     this.setState({ failsOnly: checked });
@@ -74980,60 +75049,44 @@ var Report = _react2.default.createClass({
     this.props.retryUpdate(this.props.update);
   },
   render: function render() {
-    var deviceList = this.props.update.devices.map(function (device, index) {
-      var deviceDetails = this._getDeviceDetails(device.id);
-      if (device.status === "Failed" || this.state.failsOnly === false) {
-        return _react2.default.createElement(
-          TableRow,
-          { key: index },
-          _react2.default.createElement(
-            TableRowColumn,
-            null,
-            device.name
-          ),
-          _react2.default.createElement(
-            TableRowColumn,
-            null,
-            device.model
-          ),
-          _react2.default.createElement(
-            TableRowColumn,
-            null,
-            device.last_software_version
-          ),
-          _react2.default.createElement(
-            TableRowColumn,
-            null,
-            device.software_version
-          ),
-          _react2.default.createElement(
-            TableRowColumn,
-            null,
-            _react2.default.createElement(Time, { value: device.start_time, format: 'YYYY/MM/DD HH:mm' })
-          ),
-          _react2.default.createElement(
-            TableRowColumn,
-            null,
-            _react2.default.createElement(Time, { value: device.end_time, format: 'YYYY/MM/DD HH:mm' })
-          ),
-          _react2.default.createElement(
-            TableRowColumn,
-            null,
-            device.status || "--"
-          ),
-          _react2.default.createElement(
-            TableRowColumn,
-            null,
-            deviceDetails.status || "--"
-          ),
-          _react2.default.createElement(
-            TableRowColumn,
-            null,
-            _react2.default.createElement(FlatButton, { label: 'Export log' })
-          )
-        );
-      }
-    }, this);
+    var deviceList = [];
+    if (this.state.devices) {
+      deviceList = this.state.devices.map(function (device, index) {
+        //var deviceDetails = this._getDeviceDetails(device.id);
+        if (device.status === "Failed" || this.state.failsOnly === false) {
+          return _react2.default.createElement(
+            TableRow,
+            { key: index },
+            _react2.default.createElement(
+              TableRowColumn,
+              null,
+              device.id
+            ),
+            _react2.default.createElement(
+              TableRowColumn,
+              null,
+              this.props.update.version
+            ),
+            _react2.default.createElement(
+              TableRowColumn,
+              null,
+              _react2.default.createElement(Time, { value: device.finished, format: 'YYYY/MM/DD HH:mm' })
+            ),
+            _react2.default.createElement(
+              TableRowColumn,
+              null,
+              device.status || "--"
+            ),
+            _react2.default.createElement(
+              TableRowColumn,
+              null,
+              _react2.default.createElement(FlatButton, { label: 'Export log' })
+            )
+          );
+        }
+      }, this);
+    }
+    var status = this.props.update.status === "inprogress" ? "In progress" : this.props.update.status;
     return _react2.default.createElement(
       'div',
       null,
@@ -75043,11 +75096,11 @@ var Report = _react2.default.createClass({
         _react2.default.createElement(
           List,
           null,
-          _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Group', secondaryText: this.props.update.group }),
+          _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Group', secondaryText: this.props.update.name }),
           _react2.default.createElement(Divider, null),
-          _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Device type', secondaryText: this.props.update.model }),
+          _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Device type', secondaryText: this.props.update.model || "--" }),
           _react2.default.createElement(Divider, null),
-          _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Start time', secondaryText: _react2.default.createElement(Time, { value: this.props.update.start_time, format: 'YYYY/MM/DD HH:mm' }) })
+          _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Start time', secondaryText: _react2.default.createElement(Time, { value: this.props.update.created, format: 'YYYY/MM/DD HH:mm' }) })
         )
       ),
       _react2.default.createElement(
@@ -75056,11 +75109,11 @@ var Report = _react2.default.createClass({
         _react2.default.createElement(
           List,
           null,
-          _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Number of devices', secondaryText: this.props.update.devices.length }),
+          _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Number of devices', secondaryText: deviceList.length }),
           _react2.default.createElement(Divider, null),
-          _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Target software', secondaryText: this.props.update.software_version }),
+          _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Target software', secondaryText: this.props.update.version }),
           _react2.default.createElement(Divider, null),
-          _react2.default.createElement(ListItem, { disabled: true, primaryText: 'End time', secondaryText: _react2.default.createElement(Time, { value: this.props.update.end_time, format: 'YYYY/MM/DD HH:mm' }) })
+          _react2.default.createElement(ListItem, { disabled: true, primaryText: 'End time', secondaryText: _react2.default.createElement(Time, { value: this.props.update.finished, format: 'YYYY/MM/DD HH:mm' }) })
         )
       ),
       _react2.default.createElement(
@@ -75070,18 +75123,18 @@ var Report = _react2.default.createClass({
           List,
           null,
           _react2.default.createElement(ListItem, {
-            disabled: this.props.update.status === 'Complete',
+            disabled: this.props.update.status !== 'Failed',
             primaryText: 'Status',
             secondaryText: _react2.default.createElement(
               'p',
               null,
-              this.props.update.status,
-              this.props.update.status === 'Complete' ? '' : ' - Click to retry'
+              status,
+              this.props.update.status !== 'Failed' ? '' : ' - Click to retry'
             ),
             leftIcon: _react2.default.createElement(
               FontIcon,
-              { className: 'material-icons error-icon' },
-              this.props.update.status === 'Complete' ? 'check_circle' : 'error'
+              { className: this.props.update.status === "inprogress" ? "hidden" : "material-icons error-icon" },
+              this.props.update.status !== 'Failed' ? 'check_circle' : 'error'
             ),
             onClick: this._retryUpdate })
         )
@@ -75091,70 +75144,55 @@ var Report = _react2.default.createClass({
         { className: this.props.update.status === 'Complete' ? "hidden" : null, style: { display: "inline-block", width: "200px" } },
         _react2.default.createElement(Checkbox, {
           label: 'Show only failures',
-          defaultChecked: this.props.update.status !== 'Complete',
-          value: this.state.failsOnly.toString(),
+          defaultChecked: this.props.update.status === 'Failed',
+          checked: this.state.failsOnly,
           onCheck: this._handleCheckbox })
       ),
       _react2.default.createElement(
-        Table,
-        {
-          selectable: false },
+        'div',
+        { style: { minHeight: "20vh" } },
         _react2.default.createElement(
-          TableHeader,
+          Table,
           {
-            displaySelectAll: false,
-            adjustForCheckbox: false },
+            className: deviceList.length ? null : "hidden",
+            selectable: false },
           _react2.default.createElement(
-            TableRow,
-            null,
+            TableHeader,
+            {
+              displaySelectAll: false,
+              adjustForCheckbox: false },
             _react2.default.createElement(
-              TableHeaderColumn,
-              { tooltip: 'Device name' },
-              'Device name'
-            ),
-            _react2.default.createElement(
-              TableHeaderColumn,
-              { tooltip: 'Device type' },
-              'Device type'
-            ),
-            _react2.default.createElement(
-              TableHeaderColumn,
-              { tooltip: 'Previous software' },
-              'Updating from'
-            ),
-            _react2.default.createElement(
-              TableHeaderColumn,
-              { tooltip: 'Target software' },
-              'Updated to '
-            ),
-            _react2.default.createElement(
-              TableHeaderColumn,
-              { tooltip: 'Update start time' },
-              'Start time'
-            ),
-            _react2.default.createElement(
-              TableHeaderColumn,
-              { tooltip: 'Update end time' },
-              'End time'
-            ),
-            _react2.default.createElement(
-              TableHeaderColumn,
-              { tooltip: 'Update status' },
-              'Update status'
-            ),
-            _react2.default.createElement(
-              TableHeaderColumn,
-              { tooltip: 'Device status' },
-              'Device status'
-            ),
-            _react2.default.createElement(TableHeaderColumn, { tooltip: '' })
+              TableRow,
+              null,
+              _react2.default.createElement(
+                TableHeaderColumn,
+                { tooltip: 'Device name' },
+                'Device name'
+              ),
+              _react2.default.createElement(
+                TableHeaderColumn,
+                { tooltip: 'Target software' },
+                'Updated to'
+              ),
+              _react2.default.createElement(
+                TableHeaderColumn,
+                { tooltip: 'Update end time' },
+                'End time'
+              ),
+              _react2.default.createElement(
+                TableHeaderColumn,
+                { tooltip: 'Update status' },
+                'Update status'
+              ),
+              _react2.default.createElement(TableHeaderColumn, { tooltip: '' })
+            )
+          ),
+          _react2.default.createElement(
+            TableBody,
+            {
+              displayRowCheckbox: false },
+            deviceList
           )
-        ),
-        _react2.default.createElement(
-          TableBody,
-          {
-            displayRowCheckbox: false },
-          deviceList
         )
       )
     );
@@ -75163,7 +75201,7 @@ var Report = _react2.default.createClass({
 
 module.exports = Report;
 
-},{"../../stores/app-store":664,"material-ui":250,"react":626,"react-time":464}],656:[function(require,module,exports){
+},{"../../actions/app-actions":631,"material-ui":250,"react":626,"react-time":464}],657:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -75324,7 +75362,7 @@ var Schedule = _react2.default.createClass({
 
 module.exports = Schedule;
 
-},{"material-ui":250,"react":626,"react-time":464}],657:[function(require,module,exports){
+},{"material-ui":250,"react":626,"react-time":464}],658:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -75365,7 +75403,7 @@ var ScheduleButton = _react2.default.createClass({
 
 module.exports = ScheduleButton;
 
-},{"material-ui":250,"react":626}],658:[function(require,module,exports){
+},{"material-ui":250,"react":626}],659:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -75740,7 +75778,7 @@ var ScheduleForm = _react2.default.createClass({
 
 module.exports = ScheduleForm;
 
-},{"../../stores/app-store":664,"./datetime.js":652,"material-ui":250,"react":626,"react-router":432,"react-search-input":455}],659:[function(require,module,exports){
+},{"../../stores/app-store":665,"./datetime.js":652,"material-ui":250,"react":626,"react-router":432,"react-search-input":455}],660:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -75870,14 +75908,15 @@ var Updates = _react2.default.createClass({
   },
   _onScheduleSubmit: function _onScheduleSubmit() {
     var newUpdate = {
-      id: this.state.id,
-      group: this.state.group,
-      model: this.state.model,
-      start_time: this.state.start_time,
-      end_time: this.state.end_time,
-      image: this.state.image
+      //id: this.state.id,
+      name: this.state.group.name,
+      model: this.state.image.model,
+      //start_time: this.state.start_time,
+      //end_time: this.state.end_time,
+      version: this.state.image.name,
+      devices: AppStore.getDevicesFromParams(this.state.group.name, this.state.model)
     };
-    AppActions.saveSchedule(newUpdate, this.state.disabled);
+    AppActions.createUpdate(newUpdate, this.state.disabled);
     this.dialogDismiss('dialog');
   },
   _updateParams: function _updateParams(val, attr) {
@@ -75889,8 +75928,8 @@ var Updates = _react2.default.createClass({
   _getReportById: function _getReportById(id) {
     return AppStore.getSingleUpdate("id", Number(id));
   },
-  _showReport: function _showReport(report) {
-    this.setState({ scheduleForm: false, showReport: report });
+  _showReport: function _showReport(update) {
+    this.setState({ scheduleForm: false, selectedUpdate: update });
     this.dialogOpen("report");
   },
   _scheduleUpdate: function _scheduleUpdate(update) {
@@ -75944,7 +75983,7 @@ var Updates = _react2.default.createClass({
     if (this.state.scheduleForm) {
       dialogContent = _react2.default.createElement(ScheduleForm, { updateSchedule: this._updateParams, id: this.state.id, images: this.state.software, image: this.state.image, imageVal: this.state.image, groups: this.state.groups, groupVal: this.state.group, start: this.state.start_time, end: this.state.end_time });
     } else {
-      dialogContent = _react2.default.createElement(Report, { retryUpdate: this._scheduleUpdate, update: this.state.showReport });
+      dialogContent = _react2.default.createElement(Report, { update: this.state.selectedUpdate, retryUpdate: this._scheduleUpdate });
     }
     return _react2.default.createElement(
       'div',
@@ -75980,7 +76019,7 @@ var Updates = _react2.default.createClass({
 
 module.exports = Updates;
 
-},{"../../actions/app-actions":631,"../../stores/app-store":664,"./eventlog.js":653,"./recentupdates.js":654,"./report.js":655,"./schedule.js":656,"./schedulebutton.js":657,"./scheduleform.js":658,"material-ui":250,"react":626}],660:[function(require,module,exports){
+},{"../../actions/app-actions":631,"../../stores/app-store":665,"./eventlog.js":653,"./recentupdates.js":655,"./report.js":656,"./schedule.js":657,"./schedulebutton.js":658,"./scheduleform.js":659,"material-ui":250,"react":626}],661:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -76040,7 +76079,7 @@ module.exports = _react2.default.createElement(
   )
 );
 
-},{"../components/app":634,"../components/dashboard/dashboard":636,"../components/devices/devices":643,"../components/software/software":650,"../components/updates/updates":659,"react":626,"react-router":432}],661:[function(require,module,exports){
+},{"../components/app":634,"../components/dashboard/dashboard":636,"../components/devices/devices":643,"../components/software/software":650,"../components/updates/updates":660,"react":626,"react-router":432}],662:[function(require,module,exports){
 'use strict';
 
 module.exports = {
@@ -76054,10 +76093,11 @@ module.exports = {
   UPDATE_DEVICE_TAGS: 'UPDATE_DEVICE_TAGS',
   RECEIVE_IMAGES: 'RECEIVE_IMAGES',
   UPLOAD_IMAGE: 'UPLOAD_IMAGE',
-  RECEIVE_UPDATES: 'RECEIVE_UPDATES'
+  RECEIVE_UPDATES: 'RECEIVE_UPDATES',
+  SINGLE_UPDATE: 'SINGLE_UPDATE'
 };
 
-},{}],662:[function(require,module,exports){
+},{}],663:[function(require,module,exports){
 'use strict';
 
 var Dispatcher = require('flux').Dispatcher;
@@ -76075,7 +76115,7 @@ var AppDispatcher = assign(new Dispatcher(), {
 
 module.exports = AppDispatcher;
 
-},{"flux":94,"react/lib/Object.assign":486}],663:[function(require,module,exports){
+},{"flux":94,"react/lib/Object.assign":486}],664:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -76106,7 +76146,7 @@ var routes = require('./config/routes');
   routes
 ), document.getElementById('main'));
 
-},{"./config/routes":660,"react":626,"react-dom":403,"react-router":432,"react-tap-event-plugin":462}],664:[function(require,module,exports){
+},{"./config/routes":661,"react":626,"react-dom":403,"react-router":432,"react-tap-event-plugin":462}],665:[function(require,module,exports){
 'use strict';
 
 var AppDispatcher = require('../dispatchers/app-dispatcher');
@@ -76319,7 +76359,6 @@ function _sortDevices() {
 }
 
 function _updateDeviceTags(id, tags) {
-  console.log(id, tags);
   var index = findWithAttr(_alldevices, "id", id);
   _alldevices[index].tags = tags;
 }
@@ -76451,6 +76490,7 @@ var _schedule = [];
 var _events = [];
 
 var _allupdates = [];
+var _selectedUpdate = {};
 
 //_allupdates.sort(startTimeSort);
 
@@ -76488,8 +76528,11 @@ function _getProgressUpdates(time) {
   for (var i = 0; i < _allupdates.length; i++) {
     var created = new Date(_allupdates[i].created);
     var finished = new Date(_allupdates[i].finished);
-    if (created <= time && finished > time) {
-      recent.push(_allupdates[i]);
+    /*
+    * CHANGE FOR MOCKING API
+    */
+    if (created <= time && finished < time) {
+      progress.push(_allupdates[i]);
     }
   }
   return progress;
@@ -76596,6 +76639,12 @@ function setUpdates(updates) {
   _allupdates.sort(startTimeSort);
 }
 
+function setSelectedUpdate(update) {
+  if (update) {
+    _selectedUpdate = update;
+  }
+}
+
 var AppStore = assign(EventEmitter.prototype, {
   emitChange: function emitChange() {
     this.emit(CHANGE_EVENT);
@@ -76695,6 +76744,13 @@ var AppStore = assign(EventEmitter.prototype, {
     return _allupdates[index];
   },
 
+  getSelectedUpdate: function getSelectedUpdate() {
+    /*
+    * Return current selected update
+    */
+    return _selectedUpdate;
+  },
+
   getProgressUpdates: function getProgressUpdates(date) {
     /*
     * Return list of updates in progress based on date
@@ -76781,6 +76837,9 @@ var AppStore = assign(EventEmitter.prototype, {
       case AppConstants.RECEIVE_UPDATES:
         setUpdates(payload.action.updates);
         break;
+      case AppConstants.SINGLE_UPDATE:
+        setSelectedUpdate(payload.action.update);
+        break;
     }
 
     AppStore.emitChange();
@@ -76791,7 +76850,7 @@ var AppStore = assign(EventEmitter.prototype, {
 
 module.exports = AppStore;
 
-},{"../constants/app-constants":661,"../dispatchers/app-dispatcher":662,"events":92,"react/lib/Object.assign":486}],665:[function(require,module,exports){
+},{"../constants/app-constants":662,"../dispatchers/app-dispatcher":663,"events":92,"react/lib/Object.assign":486}],666:[function(require,module,exports){
 'use strict';
 
 var Colors = require('material-ui/lib/styles/colors');
@@ -76816,4 +76875,4 @@ module.exports = {
   }
 };
 
-},{"material-ui/lib/styles/colors":292,"material-ui/lib/styles/spacing":297,"material-ui/lib/utils/color-manipulator":352}]},{},[663]);
+},{"material-ui/lib/styles/colors":292,"material-ui/lib/styles/spacing":297,"material-ui/lib/utils/color-manipulator":352}]},{},[664]);

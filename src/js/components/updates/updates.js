@@ -120,14 +120,15 @@ var Updates = React.createClass({
   },
   _onScheduleSubmit: function() {
     var newUpdate = {
-      id: this.state.id,
-      group: this.state.group,
-      model: this.state.model,
-      start_time: this.state.start_time,
-      end_time: this.state.end_time,
-      image: this.state.image
+      //id: this.state.id,
+      name: this.state.group.name,
+      model: this.state.image.model,
+      //start_time: this.state.start_time,
+      //end_time: this.state.end_time,
+      version: this.state.image.name,
+      devices: AppStore.getDevicesFromParams(this.state.group.name, this.state.model)
     }
-    AppActions.saveSchedule(newUpdate, this.state.disabled);
+    AppActions.createUpdate(newUpdate, this.state.disabled);
     this.dialogDismiss('dialog');
   },
   _updateParams: function(val, attr) {
@@ -139,9 +140,9 @@ var Updates = React.createClass({
   _getReportById: function (id) {
     return AppStore.getSingleUpdate("id", Number(id));
   },
-  _showReport: function (report) {
-     this.setState({scheduleForm: false, showReport:report});
-     this.dialogOpen("report");
+  _showReport: function (update) {
+    this.setState({scheduleForm: false, selectedUpdate: update});
+    this.dialogOpen("report");
   },
   _scheduleUpdate: function (update) {
     this.setState({dialog:false});
@@ -200,7 +201,7 @@ var Updates = React.createClass({
       )
     } else {
       dialogContent = (
-        <Report retryUpdate={this._scheduleUpdate} update={this.state.showReport} />
+        <Report update={this.state.selectedUpdate} retryUpdate={this._scheduleUpdate} />
       )
     }
     return (
