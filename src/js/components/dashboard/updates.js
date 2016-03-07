@@ -14,6 +14,13 @@ var Updates = React.createClass({
     this.props.clickHandle(params);
   },
   render: function() {
+    var progress = this.props.progress.map(function(update, index) {
+      return (
+        <div key={index}>
+          <p>{update.name}</p>
+        </div>
+      );
+    });
     return (
       <div className="updates">
         <div className="dashboard-header">
@@ -22,7 +29,6 @@ var Updates = React.createClass({
         <div>
           <div className="flexbox">
             <Progress clickHandle={this._clickHandle} updates={this.props.progress} />
-            <Recent clickHandle={this._clickHandle} updates={this.props.recent} />
           </div>
           <div className="flexbox">
             <div>

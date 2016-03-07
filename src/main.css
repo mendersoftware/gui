@@ -19,6 +19,9 @@ body {
 .lightgrey {
   background-color: #DBEDEB;
 }
+.grey {
+  background-color: #c7c7c7;
+}
 /* Type */
 body {
   font-family: Lato, sans-serif;
@@ -594,8 +597,27 @@ span.progress-group {
   top: 4px;
   box-sizing: border-box;
 }
+.progressBar.tableBar {
+  padding-left: 0;
+}
 .progressBar div {
   height: 100%;
+}
+.progressBar .green,
+.progressBar .red,
+.progressBar .grey {
+  -webkit-transition: width 0.5s ease-out;
+  -moz-transition: width 0.5s ease-out;
+  -ms-transition: width 0.5s ease-out;
+  -o-transition: width 0.5s ease-out;
+  width: 0;
+}
+.progressBar .percentage {
+  position: absolute;
+  right: -8%;
+  width: 6%;
+  top: 0;
+  text-align: right;
 }
 .progressTime {
   position: relative;

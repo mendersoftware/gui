@@ -29,7 +29,6 @@ var Recent = React.createClass({
     progress = nextProps.progress;
     recent = nextProps.recent;
   },
-
   _handleCellClick: function(rowNumber, columnId) {
     var report = recent[rowNumber];
     this.props.showReport(report);
@@ -47,7 +46,7 @@ var Recent = React.createClass({
           <TableRowColumn>-</TableRowColumn>
           <TableRowColumn><Time value={this._formatTime(update.created)} format="YYYY/MM/DD HH:mm" /></TableRowColumn>
           <TableRowColumn><Time value={this._formatTime(update.finished)} format="YYYY/MM/DD HH:mm" /></TableRowColumn>
-          <TableRowColumn><ProgressBar stats={update.id} /></TableRowColumn>
+          <TableRowColumn><ProgressBar noPadding={true} update={update} /></TableRowColumn>
         </TableRow>
       )
     }, this);

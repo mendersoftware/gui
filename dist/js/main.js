@@ -71474,7 +71474,7 @@ var AppActions = {
 
 module.exports = AppActions;
 
-},{"../api/api":632,"../api/updates-api":633,"../constants/app-constants":662,"../dispatchers/app-dispatcher":663}],632:[function(require,module,exports){
+},{"../api/api":632,"../api/updates-api":633,"../constants/app-constants":663,"../dispatchers/app-dispatcher":664}],632:[function(require,module,exports){
 'use strict';
 
 var request = require('superagent');
@@ -71667,7 +71667,7 @@ var App = _react2.default.createClass({
 
 module.exports = App;
 
-},{"../themes/mender-theme.js":666,"./header/header":647,"material-ui":250,"material-ui/lib/styles/theme-manager":299,"react":626}],635:[function(require,module,exports){
+},{"../themes/mender-theme.js":667,"./header/header":647,"material-ui":250,"material-ui/lib/styles/theme-manager":299,"react":626}],635:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -71769,6 +71769,7 @@ var _reactRouter = require('react-router');
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var AppStore = require('../../stores/app-store');
+var AppActions = require('../../actions/app-actions');
 var Health = require('./health');
 var Activity = require('./activity');
 var Updates = require('./updates');
@@ -71776,10 +71777,9 @@ var Updates = require('./updates');
 
 function getState() {
   return {
-    progress: AppStore.getProgressUpdates(new Date().getTime()),
-    schedule: AppStore.getScheduledUpdates(new Date().getTime()),
+    progress: AppStore.getProgressUpdates(new Date()),
     health: AppStore.getHealth(),
-    recent: AppStore.getRecentUpdates(new Date().getTime()),
+    recent: AppStore.getRecentUpdates(new Date()),
     activity: AppStore.getActivity()
   };
 }
@@ -71789,6 +71789,18 @@ var Dashboard = _react2.default.createClass({
 
   getInitialState: function getInitialState() {
     return getState();
+  },
+  componentWillMount: function componentWillMount() {
+    AppStore.changeListener(this._onChange);
+  },
+  componentWillUnmount: function componentWillUnmount() {
+    AppStore.removeChangeListener(this._onChange);
+  },
+  componentDidMount: function componentDidMount() {
+    AppActions.getUpdates();
+  },
+  _onChange: function _onChange() {
+    this.setState(getState());
   },
   _handleClick: function _handleClick(params) {
     switch (params.route) {
@@ -71818,7 +71830,7 @@ var Dashboard = _react2.default.createClass({
           'div',
           { className: 'leftDashboard' },
           _react2.default.createElement(Health, { clickHandle: this._handleClick, health: this.state.health }),
-          _react2.default.createElement(Updates, { clickHandle: this._handleClick, progress: this.state.progress, schedule: this.state.schedule, recent: this.state.recent })
+          _react2.default.createElement(Updates, { clickHandle: this._handleClick, progress: this.state.progress, recent: this.state.recent })
         ),
         _react2.default.createElement(Activity, { activity: this.state.activity })
       )
@@ -71832,7 +71844,7 @@ Dashboard.contextTypes = {
 
 module.exports = Dashboard;
 
-},{"../../stores/app-store":665,"./activity":635,"./health":637,"./updates":641,"react":626,"react-router":432}],637:[function(require,module,exports){
+},{"../../actions/app-actions":631,"../../stores/app-store":666,"./activity":635,"./health":637,"./updates":641,"react":626,"react-router":432}],637:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -71951,8 +71963,8 @@ var _reactRouter = require('react-router');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+var ProgressBar = require('../updates/progressBar.js');
 var Time = require('react-time');
-var AppStore = require('../../stores/app-store');
 
 // material ui
 var mui = require('material-ui');
@@ -71964,31 +71976,17 @@ var FontIcon = mui.FontIcon;
 var Progress = _react2.default.createClass({
   displayName: 'Progress',
 
-  _getProgress: function _getProgress(id) {
-    return AppStore.getProgressStatus(id);
-  },
   _clickHandle: function _clickHandle() {
     this.props.clickHandle(this.props.route);
   },
+  _formatTime: function _formatTime(date) {
+    return date.replace(' ', 'T').replace(/ /g, '').replace('UTC', '');
+  },
   render: function render() {
     var progress = this.props.updates.map(function (update, index) {
-      var group = update.group + " (" + update.devices.length + ")";
-      var last = this.props.updates.length === index + 1 || index === 4;
-      var progress = this._getProgress(update.id);
-      var complete = (progress.complete / update.devices.length * 100).toFixed(0);
-      var failed = (progress.failed / update.devices.length * 100).toFixed(0);
-      var total = Number(complete) + Number(failed);
+      var progressBar = _react2.default.createElement(ProgressBar, { update: update });
 
-      var progressBar = _react2.default.createElement(
-        'div',
-        { className: 'progressBar' },
-        _react2.default.createElement(
-          'div',
-          { className: 'lightgrey' },
-          _react2.default.createElement('div', { className: 'green float-left', style: { width: complete + "%" } }),
-          _react2.default.createElement('div', { className: 'red float-left', style: { width: failed + "%" } })
-        )
-      );
+      var last = this.props.updates.length === index + 1 || index === 4;
       return _react2.default.createElement(
         'div',
         { key: index },
@@ -71996,31 +71994,27 @@ var Progress = _react2.default.createClass({
           disabled: true,
           style: { paddingBottom: "12", height: "50" },
           primaryText: progressBar,
-          secondaryText: _react2.default.createElement(Time, { style: { fontSize: "12" }, className: 'progressTime', value: update.start_time, format: 'YY/MM/DD HH:mm' }),
-          onClick: this._clickUpdate,
+          secondaryText: _react2.default.createElement(Time, { style: { fontSize: "12" }, className: 'progressTime', value: this._formatTime(update.created), format: 'YY/MM/DD HH:mm' }),
+          onClick: this._clickHandle,
           leftIcon: _react2.default.createElement(
             'div',
             { style: { width: "110", height: "auto" } },
             _react2.default.createElement(
               'span',
               { className: 'progress-version' },
-              update.software_version
+              update.version
             ),
             _react2.default.createElement(
               'span',
               { className: 'progress-group' },
-              group
+              update.name
             )
-          ),
-          rightIcon: _react2.default.createElement(
-            'span',
-            { style: { top: "18", right: "22" } },
-            total,
-            '%'
-          ) }),
+          )
+        }),
         _react2.default.createElement(Divider, { className: last ? "hidden" : null })
       );
     }, this);
+
     return _react2.default.createElement(
       'div',
       { className: 'updates-container' },
@@ -72071,7 +72065,7 @@ Progress.contextTypes = {
 
 module.exports = Progress;
 
-},{"../../stores/app-store":665,"material-ui":250,"react":626,"react-router":432,"react-time":464}],639:[function(require,module,exports){
+},{"../updates/progressBar.js":654,"material-ui":250,"react":626,"react-router":432,"react-time":464}],639:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -72327,6 +72321,17 @@ var Updates = _react2.default.createClass({
     this.props.clickHandle(params);
   },
   render: function render() {
+    var progress = this.props.progress.map(function (update, index) {
+      return _react2.default.createElement(
+        'div',
+        { key: index },
+        _react2.default.createElement(
+          'p',
+          null,
+          update.name
+        )
+      );
+    });
     return _react2.default.createElement(
       'div',
       { className: 'updates' },
@@ -72345,8 +72350,7 @@ var Updates = _react2.default.createClass({
         _react2.default.createElement(
           'div',
           { className: 'flexbox' },
-          _react2.default.createElement(Progress, { clickHandle: this._clickHandle, updates: this.props.progress }),
-          _react2.default.createElement(Recent, { clickHandle: this._clickHandle, updates: this.props.recent })
+          _react2.default.createElement(Progress, { clickHandle: this._clickHandle, updates: this.props.progress })
         ),
         _react2.default.createElement(
           'div',
@@ -72581,7 +72585,7 @@ var DeviceList = _react2.default.createClass({
 
 module.exports = DeviceList;
 
-},{"../../actions/app-actions":631,"../../stores/app-store":665,"material-ui":250,"react":626}],643:[function(require,module,exports){
+},{"../../actions/app-actions":631,"../../stores/app-store":666,"material-ui":250,"react":626}],643:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -72667,7 +72671,7 @@ var Devices = _react2.default.createClass({
 
 module.exports = Devices;
 
-},{"../../actions/app-actions":631,"../../stores/app-store":665,"./devicelist":642,"./filters":644,"./groups":645,"./selecteddevices":646,"react":626}],644:[function(require,module,exports){
+},{"../../actions/app-actions":631,"../../stores/app-store":666,"./devicelist":642,"./filters":644,"./groups":645,"./selecteddevices":646,"react":626}],644:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -73137,7 +73141,7 @@ var Groups = _react2.default.createClass({
 
 module.exports = Groups;
 
-},{"../../actions/app-actions":631,"../../stores/app-store":665,"material-ui":250,"react":626,"react-search-input":455}],646:[function(require,module,exports){
+},{"../../actions/app-actions":631,"../../stores/app-store":666,"material-ui":250,"react":626,"react-search-input":455}],646:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -73587,7 +73591,7 @@ var SelectedDevices = _react2.default.createClass({
 
 module.exports = SelectedDevices;
 
-},{"../../actions/app-actions":631,"../../stores/app-store":665,"../updates/scheduleform":659,"material-ui":250,"react":626,"react-tag-input":458}],647:[function(require,module,exports){
+},{"../../actions/app-actions":631,"../../stores/app-store":666,"../updates/scheduleform":660,"material-ui":250,"react":626,"react-tag-input":458}],647:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -74230,7 +74234,7 @@ var Repository = _react2.default.createClass({
 
 module.exports = Repository;
 
-},{"../../actions/app-actions":631,"../../stores/app-store":665,"../updates/scheduleform":659,"./selectedimage.js":649,"./updatebutton.js":651,"material-ui":250,"react":626,"react-addons-update":371,"react-dom":403,"react-file-input":404,"react-router":432,"react-search-input":455,"react-tag-input":458,"react-time":464}],649:[function(require,module,exports){
+},{"../../actions/app-actions":631,"../../stores/app-store":666,"../updates/scheduleform":660,"./selectedimage.js":649,"./updatebutton.js":651,"material-ui":250,"react":626,"react-addons-update":371,"react-dom":403,"react-file-input":404,"react-router":432,"react-search-input":455,"react-tag-input":458,"react-time":464}],649:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -74532,7 +74536,7 @@ var Software = _react2.default.createClass({
 
 module.exports = Software;
 
-},{"../../actions/app-actions":631,"../../stores/app-store":665,"./repository.js":648,"react":626}],651:[function(require,module,exports){
+},{"../../actions/app-actions":631,"../../stores/app-store":666,"./repository.js":648,"react":626}],651:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -74688,25 +74692,160 @@ var _react2 = _interopRequireDefault(_react);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+var AppActions = require('../../actions/app-actions');
+
 // material ui
 var mui = require('material-ui');
 
 var ProgressBar = _react2.default.createClass({
   displayName: 'ProgressBar',
 
+  getInitialState: function getInitialState() {
+    return {
+      devices: [],
+      stats: {
+        "successful": 0,
+        "pending": 0,
+        "inprogress": 0,
+        "failure": 0,
+        "noimage": 0
+      }
+    };
+  },
+  componentDidMount: function componentDidMount() {
+    AppActions.getSingleUpdateStats(this.props.update.id, function (stats) {
+      this.setState({ stats: stats });
+    }.bind(this));
+    AppActions.getSingleUpdateDevices(this.props.update.id, function (devices) {
+      this.setState({ devices: devices });
+    }.bind(this));
+  },
   _handleClick: function _handleClick() {},
+  _sendUpPercentage: function _sendUpPercentage(per) {
+    this.props.gotPercent(per);
+  },
   render: function render() {
+    // used for MOCK API because devices.length does not equal stats length
+    var totalDevices = this.state.stats.successful + this.state.stats.failure + this.state.stats.inprogress + this.state.stats.pending;
+
+    var success = (this.state.stats.successful / totalDevices * 100).toFixed(0);
+    var failures = (this.state.stats.failure / totalDevices * 100).toFixed(0);
+    var progress = (this.state.stats.inprogress / totalDevices * 100).toFixed(0);
+    var percentDone = Number(success) + Number(failures);
+
+    var progressBar = _react2.default.createElement(
+      'div',
+      { className: this.props.noPadding ? "tableBar progressBar" : "progressBar" },
+      _react2.default.createElement(
+        'div',
+        { className: 'lightgrey' },
+        _react2.default.createElement('div', { className: 'green float-left', style: { width: success + "%" } }),
+        _react2.default.createElement('div', { className: 'red float-left', style: { width: failures + "%" } }),
+        _react2.default.createElement('div', { className: 'grey float-left', style: { width: progress + "%" } })
+      ),
+      _react2.default.createElement(
+        'div',
+        { className: 'percentage' },
+        _react2.default.createElement(
+          'span',
+          null,
+          percentDone || 0,
+          '%'
+        )
+      )
+    );
     return _react2.default.createElement(
       'div',
       null,
-      'test'
+      progressBar
     );
   }
 });
 
 module.exports = ProgressBar;
 
-},{"material-ui":250,"react":626}],655:[function(require,module,exports){
+},{"../../actions/app-actions":631,"material-ui":250,"react":626}],655:[function(require,module,exports){
+'use strict';
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var AppActions = require('../../actions/app-actions');
+
+// material ui
+var mui = require('material-ui');
+
+var ProgressBar = _react2.default.createClass({
+  displayName: 'ProgressBar',
+
+  getInitialState: function getInitialState() {
+    return {
+      devices: [],
+      stats: {
+        "successful": 0,
+        "pending": 0,
+        "inprogress": 0,
+        "failure": 0,
+        "noimage": 0
+      }
+    };
+  },
+  componentDidMount: function componentDidMount() {
+    AppActions.getSingleUpdateStats(this.props.update.id, function (stats) {
+      this.setState({ stats: stats });
+    }.bind(this));
+    AppActions.getSingleUpdateDevices(this.props.update.id, function (devices) {
+      this.setState({ devices: devices });
+    }.bind(this));
+  },
+  _handleClick: function _handleClick() {},
+  _sendUpPercentage: function _sendUpPercentage(per) {
+    this.props.gotPercent(per);
+  },
+  render: function render() {
+    // used for MOCK API because devices.length does not equal stats length
+    var totalDevices = this.state.stats.successful + this.state.stats.failure + this.state.stats.inprogress + this.state.stats.pending;
+
+    var success = (this.state.stats.successful / totalDevices * 100).toFixed(0);
+    var failures = (this.state.stats.failure / totalDevices * 100).toFixed(0);
+    var progress = (this.state.stats.inprogress / totalDevices * 100).toFixed(0);
+    var percentDone = Number(success) + Number(failures);
+
+    var progressBar = _react2.default.createElement(
+      'div',
+      { className: this.props.noPadding ? "tableBar progressBar" : "progressBar" },
+      _react2.default.createElement(
+        'div',
+        { className: 'lightgrey' },
+        _react2.default.createElement('div', { className: 'green float-left', style: { width: success + "%" } }),
+        _react2.default.createElement('div', { className: 'red float-left', style: { width: failures + "%" } }),
+        _react2.default.createElement('div', { className: 'grey float-left', style: { width: progress + "%" } })
+      ),
+      _react2.default.createElement(
+        'div',
+        { className: 'percentage' },
+        _react2.default.createElement(
+          'span',
+          null,
+          percentDone || 0,
+          '%'
+        )
+      )
+    );
+    return _react2.default.createElement(
+      'div',
+      null,
+      progressBar
+    );
+  }
+});
+
+module.exports = ProgressBar;
+
+},{"../../actions/app-actions":631,"material-ui":250,"react":626}],656:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -74747,7 +74886,6 @@ var Recent = _react2.default.createClass({
     progress = nextProps.progress;
     recent = nextProps.recent;
   },
-
   _handleCellClick: function _handleCellClick(rowNumber, columnId) {
     var report = recent[rowNumber];
     this.props.showReport(report);
@@ -74789,7 +74927,7 @@ var Recent = _react2.default.createClass({
         _react2.default.createElement(
           TableRowColumn,
           null,
-          _react2.default.createElement(ProgressBar, { stats: update.id })
+          _react2.default.createElement(ProgressBar, { noPadding: true, update: update })
         )
       );
     }, this);
@@ -74989,7 +75127,7 @@ var Recent = _react2.default.createClass({
 
 module.exports = Recent;
 
-},{"./progressbar":654,"./report.js":656,"./scheduleform":659,"material-ui":250,"react":626,"react-time":464}],656:[function(require,module,exports){
+},{"./progressbar":655,"./report.js":657,"./scheduleform":660,"material-ui":250,"react":626,"react-time":464}],657:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -75208,7 +75346,7 @@ var Report = _react2.default.createClass({
 
 module.exports = Report;
 
-},{"../../actions/app-actions":631,"material-ui":250,"react":626,"react-time":464}],657:[function(require,module,exports){
+},{"../../actions/app-actions":631,"material-ui":250,"react":626,"react-time":464}],658:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -75369,7 +75507,7 @@ var Schedule = _react2.default.createClass({
 
 module.exports = Schedule;
 
-},{"material-ui":250,"react":626,"react-time":464}],658:[function(require,module,exports){
+},{"material-ui":250,"react":626,"react-time":464}],659:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -75410,7 +75548,7 @@ var ScheduleButton = _react2.default.createClass({
 
 module.exports = ScheduleButton;
 
-},{"material-ui":250,"react":626}],659:[function(require,module,exports){
+},{"material-ui":250,"react":626}],660:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -75785,7 +75923,7 @@ var ScheduleForm = _react2.default.createClass({
 
 module.exports = ScheduleForm;
 
-},{"../../stores/app-store":665,"./datetime.js":652,"material-ui":250,"react":626,"react-router":432,"react-search-input":455}],660:[function(require,module,exports){
+},{"../../stores/app-store":666,"./datetime.js":652,"material-ui":250,"react":626,"react-router":432,"react-search-input":455}],661:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -76026,7 +76164,7 @@ var Updates = _react2.default.createClass({
 
 module.exports = Updates;
 
-},{"../../actions/app-actions":631,"../../stores/app-store":665,"./eventlog.js":653,"./recentupdates.js":655,"./report.js":656,"./schedule.js":657,"./schedulebutton.js":658,"./scheduleform.js":659,"material-ui":250,"react":626}],661:[function(require,module,exports){
+},{"../../actions/app-actions":631,"../../stores/app-store":666,"./eventlog.js":653,"./recentupdates.js":656,"./report.js":657,"./schedule.js":658,"./schedulebutton.js":659,"./scheduleform.js":660,"material-ui":250,"react":626}],662:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -76086,7 +76224,7 @@ module.exports = _react2.default.createElement(
   )
 );
 
-},{"../components/app":634,"../components/dashboard/dashboard":636,"../components/devices/devices":643,"../components/software/software":650,"../components/updates/updates":660,"react":626,"react-router":432}],662:[function(require,module,exports){
+},{"../components/app":634,"../components/dashboard/dashboard":636,"../components/devices/devices":643,"../components/software/software":650,"../components/updates/updates":661,"react":626,"react-router":432}],663:[function(require,module,exports){
 'use strict';
 
 module.exports = {
@@ -76104,7 +76242,7 @@ module.exports = {
   SINGLE_UPDATE: 'SINGLE_UPDATE'
 };
 
-},{}],663:[function(require,module,exports){
+},{}],664:[function(require,module,exports){
 'use strict';
 
 var Dispatcher = require('flux').Dispatcher;
@@ -76122,7 +76260,7 @@ var AppDispatcher = assign(new Dispatcher(), {
 
 module.exports = AppDispatcher;
 
-},{"flux":94,"react/lib/Object.assign":486}],664:[function(require,module,exports){
+},{"flux":94,"react/lib/Object.assign":486}],665:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -76153,7 +76291,7 @@ var routes = require('./config/routes');
   routes
 ), document.getElementById('main'));
 
-},{"./config/routes":661,"react":626,"react-dom":403,"react-router":432,"react-tap-event-plugin":462}],665:[function(require,module,exports){
+},{"./config/routes":662,"react":626,"react-dom":403,"react-router":432,"react-tap-event-plugin":462}],666:[function(require,module,exports){
 'use strict';
 
 var AppDispatcher = require('../dispatchers/app-dispatcher');
@@ -76857,7 +76995,7 @@ var AppStore = assign(EventEmitter.prototype, {
 
 module.exports = AppStore;
 
-},{"../constants/app-constants":662,"../dispatchers/app-dispatcher":663,"events":92,"react/lib/Object.assign":486}],666:[function(require,module,exports){
+},{"../constants/app-constants":663,"../dispatchers/app-dispatcher":664,"events":92,"react/lib/Object.assign":486}],667:[function(require,module,exports){
 'use strict';
 
 var Colors = require('material-ui/lib/styles/colors');
@@ -76882,4 +77020,5 @@ module.exports = {
   }
 };
 
-},{"material-ui/lib/styles/colors":292,"material-ui/lib/styles/spacing":297,"material-ui/lib/utils/color-manipulator":352}]},{},[664]);
+},{"material-ui/lib/styles/colors":292,"material-ui/lib/styles/spacing":297,"material-ui/lib/utils/color-manipulator":352}]},{},[665]);
+les/colors":292,"material-ui/lib/styles/spacing":297,"material-ui/lib/utils/color-manipulator":352}]},{},[665]);

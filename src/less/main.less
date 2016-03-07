@@ -16,6 +16,7 @@ body {
 @linkhover: #679BA5;
 @lightestgrey: #F7F7F7;
 @lightgrey: #DBEDEB;
+@grey: #c7c7c7;
 
 .green {
   background-color: @green;
@@ -32,6 +33,9 @@ body {
 }
 .lightgrey {
   background-color: @lightgrey;
+}
+.grey {
+  background-color: @grey;
 }
 
 .box-sizing (@type: border-box) {
@@ -653,6 +657,7 @@ span.progress-group {
   padding-left: 66px;
 }
 
+
 .progressBar {
   height: 20px;
   width: 94%;
@@ -660,8 +665,25 @@ span.progress-group {
   top: 4px;
   box-sizing: border-box;
 
+  &.tableBar {
+    padding-left: 0;
+  }
+
   div {
     height: 100%;
+  }
+
+  .green, .red, .grey {
+    .transition(width 0.5s ease-out);
+    width: 0;
+  }
+
+  .percentage {
+    position: absolute;
+    right: -8%;
+    width: 6%;
+    top: 0;
+    text-align: right;
   }
 }
 
