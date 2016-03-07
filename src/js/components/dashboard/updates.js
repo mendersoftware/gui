@@ -29,6 +29,7 @@ var Updates = React.createClass({
         <div>
           <div className="flexbox">
             <Progress clickHandle={this._clickHandle} updates={this.props.progress} />
+            <Recent clickHandle={this._clickHandle} updates={this.props.recent} />
           </div>
           <div className="flexbox">
             <div>

@@ -20,7 +20,7 @@ var Recent = React.createClass({
   render: function() {
     var recent = this.props.updates.map(function(update, index) {
       if (index<5) {
-        var group = update.group + " (" + update.devices.length + ")";
+        var group = update.name;
         var last = (this.props.updates.length === index+1) || index===4;
         var status = update.status === "Failed" ? "warning" : "check";
         var icon = (
@@ -32,11 +32,11 @@ var Recent = React.createClass({
           <div key={index} className={status==="warning" ? "fail" : null}>
             <ListItem
               disabled={false}
-              primaryText={update.software_version}
+              primaryText={update.version}
               secondaryText={group}
               onClick={this._clickHandle.bind(null, update.id)}
               leftIcon={icon}
-              rightIcon={<Time style={{float:"right", position:"initial", width:"auto", marginRight:"-56", whiteSpace:"nowrap", fontSize:"14"}} value={update.end_time} format="YYYY/MM/DD HH:mm" />} />
+              rightIcon={<Time style={{float:"right", position:"initial", width:"auto", marginRight:"-56", whiteSpace:"nowrap", fontSize:"14"}} value={update.finished} format="YYYY/MM/DD HH:mm" />} />
             <Divider inset={true} className={last ? "hidden" : null} />
           </div>
         )

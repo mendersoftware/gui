@@ -660,13 +660,15 @@ span.progress-group {
 
 .progressBar {
   height: 20px;
-  width: 94%;
+  width: 90%;
   position: relative;
   top: 4px;
   box-sizing: border-box;
 
   &.tableBar {
     padding-left: 0;
+    width: 86%;
+    top: 0;
   }
 
   div {
@@ -680,10 +682,15 @@ span.progress-group {
 
   .percentage {
     position: absolute;
-    right: -8%;
-    width: 6%;
-    top: 0;
+    right: -50px;
+    top: 2px;
+    width: 40px;
     text-align: right;
+  }
+
+  &.tableBar .percentage {
+    right: -40px;
+    width: 34px;
   }
 }
 

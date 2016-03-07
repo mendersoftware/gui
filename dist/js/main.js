@@ -72099,7 +72099,7 @@ var Recent = _react2.default.createClass({
   render: function render() {
     var recent = this.props.updates.map(function (update, index) {
       if (index < 5) {
-        var group = update.group + " (" + update.devices.length + ")";
+        var group = update.name;
         var last = this.props.updates.length === index + 1 || index === 4;
         var status = update.status === "Failed" ? "warning" : "check";
         var icon = _react2.default.createElement(
@@ -72112,11 +72112,11 @@ var Recent = _react2.default.createClass({
           { key: index, className: status === "warning" ? "fail" : null },
           _react2.default.createElement(ListItem, {
             disabled: false,
-            primaryText: update.software_version,
+            primaryText: update.version,
             secondaryText: group,
             onClick: this._clickHandle.bind(null, update.id),
             leftIcon: icon,
-            rightIcon: _react2.default.createElement(Time, { style: { float: "right", position: "initial", width: "auto", marginRight: "-56", whiteSpace: "nowrap", fontSize: "14" }, value: update.end_time, format: 'YYYY/MM/DD HH:mm' }) }),
+            rightIcon: _react2.default.createElement(Time, { style: { float: "right", position: "initial", width: "auto", marginRight: "-56", whiteSpace: "nowrap", fontSize: "14" }, value: update.finished, format: 'YYYY/MM/DD HH:mm' }) }),
           _react2.default.createElement(Divider, { inset: true, className: last ? "hidden" : null })
         );
       }
@@ -72350,7 +72350,8 @@ var Updates = _react2.default.createClass({
         _react2.default.createElement(
           'div',
           { className: 'flexbox' },
-          _react2.default.createElement(Progress, { clickHandle: this._clickHandle, updates: this.props.progress })
+          _react2.default.createElement(Progress, { clickHandle: this._clickHandle, updates: this.props.progress }),
+          _react2.default.createElement(Recent, { clickHandle: this._clickHandle, updates: this.props.recent })
         ),
         _react2.default.createElement(
           'div',
@@ -76006,10 +76007,7 @@ var Updates = _react2.default.createClass({
         if (params.open) {
           var that = this;
           if (params.id) {
-            setTimeout(function () {
-              var report = that._getReportById(params.id);
-              that._showReport(report);
-            }, 400);
+            that._getReportById(params.id);
           } else {
             setTimeout(function () {
               that.dialogOpen("schedule");
@@ -76071,7 +76069,12 @@ var Updates = _react2.default.createClass({
     this.setState(tmp);
   },
   _getReportById: function _getReportById(id) {
-    return AppStore.getSingleUpdate("id", Number(id));
+    AppActions.getSingleUpdate(id, function (data) {
+      var that = this;
+      setTimeout(function () {
+        that._showReport(data);
+      }, 400);
+    }.bind(this));
   },
   _showReport: function _showReport(update) {
     this.setState({ scheduleForm: false, selectedUpdate: update });
@@ -77021,4 +77024,3 @@ module.exports = {
 };
 
 },{"material-ui/lib/styles/colors":292,"material-ui/lib/styles/spacing":297,"material-ui/lib/utils/color-manipulator":352}]},{},[665]);
-les/colors":292,"material-ui/lib/styles/spacing":297,"material-ui/lib/utils/color-manipulator":352}]},{},[665]);

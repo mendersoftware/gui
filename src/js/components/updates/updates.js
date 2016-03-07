@@ -71,10 +71,7 @@ var Updates = React.createClass({
           if (params.open) {
             var that = this;
             if (params.id) {
-              setTimeout(function() {
-                var report = that._getReportById(params.id);
-                that._showReport(report);
-              }, 400);
+              that._getReportById(params.id);
             } else {
               setTimeout(function() {
                 that.dialogOpen("schedule");
@@ -138,7 +135,12 @@ var Updates = React.createClass({
     this.setState(tmp);
   },
   _getReportById: function (id) {
-    return AppStore.getSingleUpdate("id", Number(id));
+     AppActions.getSingleUpdate(id, function(data) {
+        var that = this;
+        setTimeout(function() {
+          that._showReport(data);
+        }, 400);
+    }.bind(this));
   },
   _showReport: function (update) {
     this.setState({scheduleForm: false, selectedUpdate: update});
