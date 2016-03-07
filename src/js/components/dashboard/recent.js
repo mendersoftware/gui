@@ -1,5 +1,5 @@
 import React from 'react';
-var GroupDevices = require('./groupdevices');
+var GroupDevices = require('../updates/groupdevices');
 
 var Time = require('react-time');
 var AppActions = require('../../actions/app-actions');
@@ -33,7 +33,11 @@ var Recent = React.createClass({
     var recent = this.props.updates.map(function(update, index) {
       if (index<5) {
 
-        var group = <GroupDevices update={update} />;
+        var group = (
+            <span className="progress-group">
+              <span>{update.name} </span>(<GroupDevices update={update.id} />)
+            </span>
+        );
         var last = (this.props.updates.length === index+1) || index===4;
         var status = update.status === "Failed" ? "warning" : "check";
         var icon = (

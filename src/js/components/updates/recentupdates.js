@@ -2,6 +2,7 @@ import React from 'react';
 var Time = require('react-time');
 var Report = require('./report.js');
 var ScheduleForm = require('./scheduleform');
+var GroupDevices = require('./groupdevices');
 
 var ProgressBar = require('./progressbar');
 
@@ -39,11 +40,12 @@ var Recent = React.createClass({
   render: function() {
     // get statistics for each in progress
     var progressMap = progress.map(function(update, index) {
+
       return (
         <TableRow key={index}>
           <TableRowColumn>{update.name}</TableRowColumn>
           <TableRowColumn>{update.version}</TableRowColumn>
-          <TableRowColumn>-</TableRowColumn>
+          <TableRowColumn><GroupDevices update={update.id} /></TableRowColumn>
           <TableRowColumn><Time value={this._formatTime(update.created)} format="YYYY/MM/DD HH:mm" /></TableRowColumn>
           <TableRowColumn><Time value={this._formatTime(update.finished)} format="YYYY/MM/DD HH:mm" /></TableRowColumn>
           <TableRowColumn><ProgressBar noPadding={true} update={update} /></TableRowColumn>
@@ -58,7 +60,7 @@ var Recent = React.createClass({
         <TableRow key={index}>
           <TableRowColumn>{update.name}</TableRowColumn>
           <TableRowColumn>{update.version}</TableRowColumn>
-          <TableRowColumn>-</TableRowColumn>
+          <TableRowColumn><GroupDevices update={update.id} /></TableRowColumn>
           <TableRowColumn><Time value={this._formatTime(update.created)} format="YYYY/MM/DD HH:mm" /></TableRowColumn>
           <TableRowColumn><Time value={this._formatTime(update.finished)} format="YYYY/MM/DD HH:mm" /></TableRowColumn>
           <TableRowColumn><FlatButton label={status} primary={update.status === 'failed'} secondary={update.status === 'complete'} /></TableRowColumn>

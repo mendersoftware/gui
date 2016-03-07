@@ -4,23 +4,21 @@ var AppActions = require('../../actions/app-actions');
 var GroupDevices = React.createClass({
   getInitialState: function() {
     return {
-      devices: null 
+      devices: "-"
     };
   },
-  componentDidMount: function() {
+  componentWillMount: function() {
     this.getDevices();
   },
   getDevices: function() {
-    AppActions.getSingleUpdateDevices(this.props.update.id, function(devices) {
+    AppActions.getSingleUpdateDevices(this.props.update, function(devices) {
       // retrieve number of devices from child
-      this.setState({devices:"("+ devices.length +")"});
+      this.setState({devices: devices.length});
     }.bind(this));
   },
   render: function() {
     return (
-      <div>
-        <span className="progress-group">{this.props.update.name} {this.state.devices}</span>
-      </div>
+      <span>{this.state.devices}</span>
     );
   }
 });
