@@ -24,6 +24,7 @@ var ProgressBar = React.createClass({
     }.bind(this));
     AppActions.getSingleUpdateDevices(this.props.update.id, function(devices) {
       this.setState({devices: devices});
+      this.props.getDevices(devices.length, this.props.index);
     }.bind(this));
   },
   _handleClick: function() {

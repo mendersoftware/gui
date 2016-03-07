@@ -1,5 +1,9 @@
 import React from 'react';
+var GroupDevices = require('./groupdevices');
+
 var Time = require('react-time');
+var AppActions = require('../../actions/app-actions');
+
 import { Router, Route, Link } from 'react-router';
 
 // material ui
@@ -10,6 +14,11 @@ var Divider = mui.Divider;
 var FontIcon = mui.FontIcon;
 
 var Recent = React.createClass({
+  getInitialState: function() {
+    return {
+      devices: {} 
+    };
+  },
   _clickHandle: function(id) {
     var params = {};
     params.id = id;
@@ -17,10 +26,14 @@ var Recent = React.createClass({
     params.open=true;
     this.props.clickHandle(params);
   },
+  _formatTime: function(date) {
+    return date.replace(' ','T').replace(/ /g, '').replace('UTC','');
+  },
   render: function() {
     var recent = this.props.updates.map(function(update, index) {
       if (index<5) {
-        var group = update.name;
+
+        var group = <GroupDevices update={update} />;
         var last = (this.props.updates.length === index+1) || index===4;
         var status = update.status === "Failed" ? "warning" : "check";
         var icon = (
@@ -36,7 +49,7 @@ var Recent = React.createClass({
               secondaryText={group}
               onClick={this._clickHandle.bind(null, update.id)}
               leftIcon={icon}
-              rightIcon={<Time style={{float:"right", position:"initial", width:"auto", marginRight:"-56", whiteSpace:"nowrap", fontSize:"14"}} value={update.finished} format="YYYY/MM/DD HH:mm" />} />
+              rightIcon={<Time style={{float:"right", position:"initial", width:"auto", marginRight:"-56", whiteSpace:"nowrap", fontSize:"14"}} value={this._formatTime(update.finished)} format="YYYY/MM/DD HH:mm" />} />
             <Divider inset={true} className={last ? "hidden" : null} />
           </div>
         )
