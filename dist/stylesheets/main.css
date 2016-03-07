@@ -592,15 +592,13 @@ span.progress-group {
 }
 .progressBar {
   height: 20px;
-  width: 90%;
+  width: 94%;
   position: relative;
   top: 4px;
   box-sizing: border-box;
 }
 .progressBar.tableBar {
   padding-left: 0;
-  width: 86%;
-  top: 0;
 }
 .progressBar div {
   height: 100%;
@@ -616,14 +614,10 @@ span.progress-group {
 }
 .progressBar .percentage {
   position: absolute;
-  right: -50px;
-  top: 2px;
-  width: 40px;
+  right: -8%;
+  width: 6%;
+  top: 0;
   text-align: right;
-}
-.progressBar.tableBar .percentage {
-  right: -40px;
-  width: 34px;
 }
 .progressTime {
   position: relative;
