@@ -80,6 +80,7 @@ var Recent = React.createClass({
         <div style={{marginBottom:"60"}}> 
           <h3>Updates in progress</h3>
           <Table
+            onCellClick={this._handleCellClick}
             className={progressMap.length ? null : 'hidden'}
             selectable={false}>
             <TableHeader

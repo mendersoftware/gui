@@ -75068,6 +75068,7 @@ var Recent = _react2.default.createClass({
         _react2.default.createElement(
           Table,
           {
+            onCellClick: this._handleCellClick,
             className: progressMap.length ? null : 'hidden',
             selectable: false },
           _react2.default.createElement(
@@ -75290,6 +75291,11 @@ var Report = _react2.default.createClass({
             _react2.default.createElement(
               TableRowColumn,
               null,
+              device.model
+            ),
+            _react2.default.createElement(
+              TableRowColumn,
+              null,
               this.props.update.version
             ),
             _react2.default.createElement(
@@ -75394,6 +75400,11 @@ var Report = _react2.default.createClass({
                 TableHeaderColumn,
                 { tooltip: 'Device name' },
                 'Device name'
+              ),
+              _react2.default.createElement(
+                TableHeaderColumn,
+                { tooltip: 'Device type' },
+                'Device type'
               ),
               _react2.default.createElement(
                 TableHeaderColumn,

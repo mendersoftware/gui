@@ -62,6 +62,7 @@ var Report = React.createClass({
           return (
             <TableRow key={index}>
               <TableRowColumn>{device.id}</TableRowColumn>
+              <TableRowColumn>{device.model}</TableRowColumn>
               <TableRowColumn>{this.props.update.version}</TableRowColumn>
               <TableRowColumn><Time value={this._formatTime(device.finished)} format="YYYY/MM/DD HH:mm" /></TableRowColumn>
               <TableRowColumn>{device.status || "--"}</TableRowColumn>
@@ -121,6 +122,7 @@ var Report = React.createClass({
               adjustForCheckbox={false}>
               <TableRow>
                 <TableHeaderColumn tooltip="Device name">Device name</TableHeaderColumn>
+                <TableHeaderColumn tooltip="Device type">Device type</TableHeaderColumn>
                 <TableHeaderColumn tooltip="Target software">Updated to</TableHeaderColumn>
                 <TableHeaderColumn tooltip="Update end time">End time</TableHeaderColumn>
                 <TableHeaderColumn tooltip="Update status">Update status</TableHeaderColumn>
