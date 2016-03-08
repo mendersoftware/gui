@@ -123,6 +123,13 @@ var AppActions = {
         callback(data);
       });
   },
+  getDeviceLog: function(deploymentId, deviceId, callback) {
+    UpdatesApi
+      .getText(updatesApiUrl+'deployments/'+deploymentId +'/devices/'+deviceId +"/log")
+      .then(function(data) {
+        callback(data);
+      });
+  },
      
   saveSchedule: function(schedule, single) {
     AppDispatcher.handleViewAction({

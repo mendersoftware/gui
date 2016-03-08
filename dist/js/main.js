@@ -71431,6 +71431,11 @@ var AppActions = {
       callback(data);
     });
   },
+  getDeviceLog: function getDeviceLog(deploymentId, deviceId, callback) {
+    UpdatesApi.getText(updatesApiUrl + 'deployments/' + deploymentId + '/devices/' + deviceId + "/log").then(function (data) {
+      callback(data);
+    });
+  },
 
   saveSchedule: function saveSchedule(schedule, single) {
     AppDispatcher.handleViewAction({
@@ -71558,6 +71563,17 @@ var Api = {
       });
     });
   },
+  getText: function getText(url) {
+    return new Promise(function (resolve, reject) {
+      request.get(url).set('Content-Type', 'application/text').end(function (err, res) {
+        if (err || !res.ok) {
+          reject();
+        } else {
+          resolve(res.text);
+        }
+      });
+    });
+  },
   post: function post(url, data) {
     return new Promise(function (resolve, reject) {
       request.post(url).set('Content-Type', 'application/json').send(data).end(function (err, res) {
@@ -71572,37 +71588,8 @@ var Api = {
         }
       });
     });
-  },
-  putImage: function putImage(url, image) {
-    return new Promise(function (resolve, reject) {
-      request.put(url).set("Content-Type", "application/octet-stream").send(image).end(function (err, res) {
-        if (err || !res.ok) {
-          reject();
-        } else {
-          var responsetext = "";
-          if (res.text) {
-            responsetext = JSON.parse(res.text);
-          }
-          resolve(responsetext);
-        }
-      });
-    });
-  },
-  putJSON: function putJSON(url, data) {
-    return new Promise(function (resolve, reject) {
-      request.put(url).set('Content-Type', 'application/json').send(data).end(function (err, res) {
-        if (err || !res.ok) {
-          reject();
-        } else {
-          var responsetext = "";
-          if (res.text) {
-            responsetext = JSON.parse(res.text);
-          }
-          resolve(responsetext);
-        }
-      });
-    });
   }
+
 };
 
 module.exports = Api;
@@ -75274,6 +75261,15 @@ var Report = _react2.default.createClass({
   _formatTime: function _formatTime(date) {
     return date.replace(' ', 'T').replace(/ /g, '').replace('UTC', '');
   },
+  exportLog: function exportLog(id) {
+
+    console.log(id, this.props.update.id, "exportio");
+    AppActions.getDeviceLog(this.props.update.id, id, function (data) {
+      var content = data;
+      var uriContent = "data:application/octet-stream," + encodeURIComponent(content);
+      var newWindow = window.open(uriContent, 'deviceLog');
+    });
+  },
   render: function render() {
     var deviceList = [];
     if (this.state.devices) {
@@ -75311,7 +75307,7 @@ var Report = _react2.default.createClass({
             _react2.default.createElement(
               TableRowColumn,
               null,
-              _react2.default.createElement(FlatButton, { label: 'Export log' })
+              _react2.default.createElement(FlatButton, { onClick: this.exportLog.bind(null, device.id), label: 'Export log' })
             )
           );
         }

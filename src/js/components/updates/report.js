@@ -43,17 +43,26 @@ var Report = React.createClass({
     // get device details not listed in schedule data
     //return AppActions.getSingleDeviceReport(id)
   },
-  _handleCheckbox: function(e, checked) {
+  _handleCheckbox: function (e, checked) {
     this.setState({failsOnly:checked});
   },
-  _retryUpdate: function() {
+  _retryUpdate: function () {
     // replace contents of dialog, also change size, return contents and size on 'cancel'?
     this.props.retryUpdate(this.props.update);
   },
-  _formatTime: function(date) {
+  _formatTime: function (date) {
     return date.replace(' ','T').replace(/ /g, '').replace('UTC','');
   },
-  render: function() {
+  exportLog: function (id) {
+
+    console.log(id, this.props.update.id, "exportio");
+    AppActions.getDeviceLog(this.props.update.id, id, function(data) {
+      var content = data;
+      var uriContent = "data:application/octet-stream," + encodeURIComponent(content);
+      var newWindow = window.open(uriContent, 'deviceLog');
+    });
+  },
+  render: function () {
     var deviceList = [];
     if (this.state.devices) {
       deviceList = this.state.devices.map(function(device, index) {
@@ -66,7 +75,7 @@ var Report = React.createClass({
               <TableRowColumn>{this.props.update.version}</TableRowColumn>
               <TableRowColumn><Time value={this._formatTime(device.finished)} format="YYYY/MM/DD HH:mm" /></TableRowColumn>
               <TableRowColumn>{device.status || "--"}</TableRowColumn>
-              <TableRowColumn><FlatButton label="Export log" /></TableRowColumn>
+              <TableRowColumn><FlatButton onClick={this.exportLog.bind(null, device.id)} label="Export log" /></TableRowColumn>
             </TableRow>
           )
         }

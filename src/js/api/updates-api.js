@@ -16,6 +16,20 @@ var Api = {
         });
     });
   },
+  getText: function(url) {
+    return new Promise(function (resolve, reject) {
+      request
+        .get(url)
+        .set('Content-Type', 'application/text')
+        .end(function (err, res) {
+          if (err || !res.ok) {
+            reject();
+          } else {
+            resolve(res.text);
+          }
+        });
+    });
+  },
   post: function(url, data) {
     return new Promise(function (resolve, reject) {
       request
@@ -35,44 +49,7 @@ var Api = {
         });
     });
   },
-  putImage: function(url, image) {
-    return new Promise(function (resolve, reject) {
-      request
-        .put(url)
-        .set("Content-Type", "application/octet-stream")
-        .send(image)
-        .end(function (err, res) {
-          if (err || !res.ok) {
-            reject();
-          } else {
-            var responsetext = "";
-            if (res.text) {
-              responsetext = JSON.parse(res.text);
-            }
-            resolve(responsetext);
-          }
-        });
-    });
-  },
-  putJSON: function(url, data) {
-    return new Promise(function (resolve, reject) {
-      request
-        .put(url)
-        .set('Content-Type', 'application/json')
-        .send(data)
-        .end(function (err, res) {
-          if (err || !res.ok) {
-            reject();
-          } else {
-            var responsetext = "";
-            if (res.text) {
-              responsetext = JSON.parse(res.text);
-            }
-            resolve(responsetext);
-          }
-        });
-    });
-  }
+
 }
 
 module.exports = Api;
