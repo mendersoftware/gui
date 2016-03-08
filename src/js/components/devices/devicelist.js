@@ -37,6 +37,8 @@ var DeviceList = React.createClass({
       for (var i=0; i<this.props.devices.length;i++) {
         rows.push(i);
       }
+    } else if (rows === "none") {
+      rows = [];
     }
     AppActions.selectDevices(rows);
   },
@@ -124,8 +126,7 @@ var DeviceList = React.createClass({
             multiSelectable={true}
             className={devices.length ? null : 'hidden'} >
             <TableHeader
-            enableSelectAll={true}
-            onSelectAll={this._selectAll}>
+            enableSelectAll={true}>
               <TableRow>
                 <TableHeaderColumn tooltip="Name">Name</TableHeaderColumn>
                 <TableHeaderColumn tooltip="Device type">Device type</TableHeaderColumn>

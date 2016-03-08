@@ -72442,6 +72442,8 @@ var DeviceList = _react2.default.createClass({
       for (var i = 0; i < this.props.devices.length; i++) {
         rows.push(i);
       }
+    } else if (rows === "none") {
+      rows = [];
     }
     AppActions.selectDevices(rows);
   },
@@ -72562,8 +72564,7 @@ var DeviceList = _react2.default.createClass({
           _react2.default.createElement(
             TableHeader,
             {
-              enableSelectAll: true,
-              onSelectAll: this._selectAll },
+              enableSelectAll: true },
             _react2.default.createElement(
               TableRow,
               null,
@@ -76137,6 +76138,11 @@ var Updates = _react2.default.createClass({
     this.setState({ tabIndex: value });
   },
   _onScheduleSubmit: function _onScheduleSubmit() {
+    var devices = AppStore.getDevicesFromParams(this.state.group.name, this.state.image.model);
+    var ids = [];
+    for (var i = 0; i < devices.length; i++) {
+      ids.push(devices[i].id);
+    }
     var newUpdate = {
       //id: this.state.id,
       name: this.state.group.name,
@@ -76144,8 +76150,9 @@ var Updates = _react2.default.createClass({
       //start_time: this.state.start_time,
       //end_time: this.state.end_time,
       version: this.state.image.name,
-      devices: AppStore.getDevicesFromParams(this.state.group.name, this.state.model)
+      devices: ids
     };
+    console.log(newUpdate.devices);
     AppActions.createUpdate(newUpdate, this.state.disabled);
     this.dialogDismiss('dialog');
   },

@@ -116,6 +116,11 @@ var Updates = React.createClass({
     this.setState({tabIndex: value});
   },
   _onScheduleSubmit: function() {
+    var devices = AppStore.getDevicesFromParams(this.state.group.name, this.state.image.model);
+    var ids = [];
+    for (var i=0; i<devices.length; i++) {
+      ids.push(devices[i].id);
+    }
     var newUpdate = {
       //id: this.state.id,
       name: this.state.group.name,
@@ -123,8 +128,9 @@ var Updates = React.createClass({
       //start_time: this.state.start_time,
       //end_time: this.state.end_time,
       version: this.state.image.name,
-      devices: AppStore.getDevicesFromParams(this.state.group.name, this.state.model)
+      devices: ids
     }
+    console.log(newUpdate.devices);
     AppActions.createUpdate(newUpdate, this.state.disabled);
     this.dialogDismiss('dialog');
   },
