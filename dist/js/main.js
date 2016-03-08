@@ -72954,7 +72954,7 @@ var Groups = _react2.default.createClass({
     };
 
     AppActions.addToGroup(newGroup, selected);
-    this.setState({ openDialog: false, showDeviceList: false });
+    this.setState({ openDialog: false, showDeviceList: false, invalid: true });
   },
   dialogToggle: function dialogToggle() {
     this.setState({ openDialog: !this.state.openDialog, showDeviceList: false, newGroup: '' });
