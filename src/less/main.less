@@ -424,8 +424,8 @@ hr.table-divider {
 tr.expand {
   height: 380px !important;
   background-color: rgb(224,224,224);
+  .transition(height 0.2s ease-out);
 
-  .transition(height 0.4s ease-out);
   td {
     vertical-align: top;
     padding-top: 20px;
@@ -441,7 +441,7 @@ tr.expand {
     }
 
     div.expanded>div {
-        animation: fadein 1s 1;
+        animation: fadein 0.7s 1;
     }
   }
 }
