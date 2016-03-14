@@ -44,7 +44,8 @@ var SelectedImage = React.createClass({
   handleDrag: function(tag, currPos, newPos) {
 
   },
-  _tagsEdit: function(image) {
+  _tagsEdit: function(image, event) {
+    event.stopPropagation();
     if (this.state.tagEdit) {
       var noIds = [];
       for (var i in tagslist) {
@@ -71,7 +72,8 @@ var SelectedImage = React.createClass({
       }
     }
   },
-  _descEdit: function(image) {
+  _descEdit: function(image, event) {
+    event.stopPropagation();
     if (this.state.descEdit) {
       image.description = this.state.descValue;
       // save change
@@ -132,33 +134,28 @@ var SelectedImage = React.createClass({
     var desc = this.state.descEdit ? descInput : info.description;
 
     return (
-      <div id="imageInfo" className={this.props.image.name == null ? "muted" : null}>
-        <h3>Image details</h3>
+      <div className={this.props.image.name == null ? "muted" : null}>
         <div className="report-list">
-          <List>
-            <ListItem disabled={true} primaryText="Software" secondaryText={info.name} />
+          <List style={{backgroundColor: "rgba(255,255,255,0)"}}>
+            <ListItem disabled={true} primaryText="Date built" secondaryText={info.build_date} />
             <Divider />
-            <ListItem disabled={this.props.image.model ? false : true} primaryText="Device type" secondaryText={info.model} onClick={this._handleLinkClick.bind(null, info.model)} />
+            <ListItem disabled={true} primaryText="Date uploaded" secondaryText={info.modified} />
+            <Divider />
+          </List>
+        </div>
+        <div className="report-list">
+          <List style={{backgroundColor: "rgba(255,255,255,0)"}}>
+            <ListItem disabled={true} primaryText="Checksum" secondaryTextLines={2} style={{wordWrap:"break-word"}} secondaryText={info.checksum} />
             <Divider />
             <ListItem disabled={true} primaryText="Size" secondaryText={info.size} />
             <Divider />
           </List>
         </div>
-        <div className="report-list">
-          <List>
-            <ListItem disabled={true} primaryText="Date built" secondaryText={info.build_date} />
-            <Divider />
-            <ListItem disabled={true} primaryText="Date uploaded" secondaryText={info.modified} />
-            <Divider />
-            <ListItem disabled={true} primaryText="Installed on devices" secondaryText={info.devices ? info.devices : "-"} />
-            <Divider />
-          </List>
-        </div>
         <div className="report-list" style={{width: "320"}}>
-          <List>
+          <List style={{backgroundColor: "rgba(255,255,255,0)"}}>
             <ListItem rightIconButton={editButton} disabled={true} primaryText="Tags" secondaryText={tags} />
             <Divider />
-            <ListItem disabled={true} primaryText="Checksum" secondaryTextLines={2} style={{wordWrap:"break-word"}} secondaryText={info.checksum} />
+         
             <Divider />
           </List>
         </div>
@@ -167,7 +164,7 @@ var SelectedImage = React.createClass({
         </div>
         <div className="margin-top">
           <div className="report-list" style={{padding:"8px 0px", width:"590", verticalAlign:"top", position:"relative"}}>
-            <div style={{padding:"20px 16px 15px", fontSize:"16", lineHeight:"16px"}}>
+            <div style={{padding:"20px 16px 15px", fontSize:"15", lineHeight:"15px"}}>
               <span style={{color:"rgba(0,0,0,0.8)"}}>Description</span>
               <div style={{color:"rgba(0,0,0,0.54)", marginRight:"30", marginTop:"4"}}>{desc}</div>
               {editButtonDesc}
@@ -175,7 +172,7 @@ var SelectedImage = React.createClass({
             <hr style={{margin:"0", backgroundColor:"#e0e0e0", height:"1", border:"none"}} />
           </div>
           <div className="report-list" style={{width:"320"}}>
-            <List>
+            <List style={{backgroundColor: "rgba(255,255,255,0)"}}>
               <ListItem
                 disabled={this.props.image.name ? false : true}
                 primaryText="Deploy update"

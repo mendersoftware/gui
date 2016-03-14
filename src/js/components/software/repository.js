@@ -115,8 +115,12 @@ var Repository = React.createClass({
     this.setState(tmp);
   },
   _onRowSelection: function(rows) {
+
     var imageId = software[rows[0]].id;
     var image = AppStore.getSoftwareImage("id", imageId);
+    if (image === this.state.image) {
+      image = {name:null, description: null};
+    }
     this.setState({image:image});
   },
   _sortColumn: function(col) {
@@ -181,7 +185,43 @@ var Repository = React.createClass({
       }
     }
   },
+  _onClick: function(event) {
+    event.stopPropagation();
+  },
   render: function() {
+
+    var styles = {
+      buttonIcon: {
+        height: '100%',
+        display: 'inline-block',
+        verticalAlign: 'middle',
+        float: 'left',
+        paddingLeft: '12px',
+        lineHeight: '36px',
+        marginRight: "-6",
+        color:"#ffffff",
+        fontSize:'16'
+      },
+      flatButtonIcon: {
+        height: '100%',
+        display: 'inline-block',
+        verticalAlign: 'middle',
+        float: 'left',
+        paddingLeft: '12px',
+        lineHeight: '36px',
+        marginRight: "-6",
+        color:"rgba(0,0,0,0.8)",
+        fontSize:'16'
+      },
+      sortIcon: {
+        verticalAlign: 'middle',
+        marginLeft: "10",
+        color: "#8c8c8d",
+        cursor: "pointer",
+      }
+    }
+
+
     // copy array so as not to alter props
     var tmpSoftware = [];
     for (var i in software) {
@@ -204,13 +244,22 @@ var Repository = React.createClass({
     }
     var groups = this.props.groups;
     var items = tmpSoftware.map(function(pkg, index) {
+      var selected = '';
+      if (this.state.image.name === pkg.name ) {
+        selected = <SelectedImage editImage={this._editImageData} buttonStyle={styles.flatButtonIcon} image={this.state.image} openSchedule={this._openSchedule} />
+      }
       return (
-        <TableRow key={index}>
+        <TableRow hoverable={this.state.image.name !== pkg.name} className={this.state.image.name === pkg.name ? "expand" : null} key={index} >
           <TableRowColumn>{pkg.name}</TableRowColumn>
           <TableRowColumn>{pkg.model}</TableRowColumn>
           <TableRowColumn>{pkg.tags || '-'}</TableRowColumn>
           <TableRowColumn><Time value={pkg.modified} format="YYYY/MM/DD HH:mm" /></TableRowColumn>
           <TableRowColumn>{pkg.devices || 0}</TableRowColumn>
+          <TableRowColumn style={{width:"0", overflow:"visible"}}>
+            <div onClick={this._onClick} className={this.state.image.name === pkg.name ? "expanded" : null}>
+              {selected}
+            </div>
+          </TableRowColumn>
         </TableRow>
       )
     }, this);
@@ -248,43 +297,12 @@ var Repository = React.createClass({
       groupItems.push(tmp);
     }
 
-    var styles = {
-      buttonIcon: {
-        height: '100%',
-        display: 'inline-block',
-        verticalAlign: 'middle',
-        float: 'left',
-        paddingLeft: '12px',
-        lineHeight: '36px',
-        marginRight: "-6",
-        color:"#ffffff",
-        fontSize:'16'
-      },
-      flatButtonIcon: {
-        height: '100%',
-        display: 'inline-block',
-        verticalAlign: 'middle',
-        float: 'left',
-        paddingLeft: '12px',
-        lineHeight: '36px',
-        marginRight: "-6",
-        color:"rgba(0,0,0,0.8)",
-        fontSize:'16'
-      },
-      sortIcon: {
-        verticalAlign: 'middle',
-        marginLeft: "10",
-        color: "#8c8c8d",
-        cursor: "pointer",
-      }
-    }
-
     return (
       <div>
       
         <h3>Available images</h3>
         <SearchInput className="search tableSearch" ref='search' onChange={this.searchUpdated} />
-        <div className="maxTable">
+        <div>
           <Table
             onRowSelection={this._onRowSelection}
             className={items.length ? null : "hidden"}>
@@ -318,10 +336,7 @@ var Repository = React.createClass({
               <FontIcon style={styles.buttonIcon} className="material-icons">file_upload</FontIcon>
             </RaisedButton>
           </div>
-
-          <div style={{height:"16", marginTop:"10"}} />
  
-          <SelectedImage editImage={this._editImageData} buttonStyle={styles.flatButtonIcon} image={this.state.image} openSchedule={this._openSchedule} />
         </div>
         <Dialog
           key="upload1"

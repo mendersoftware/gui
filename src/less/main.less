@@ -419,6 +419,34 @@ hr.table-divider {
 }
 
 
+// table expanding
+
+tr.expand {
+  height: 380px !important;
+  background-color: rgb(224,224,224);
+
+  .transition(height 0.4s ease-out);
+  td {
+    vertical-align: top;
+    padding-top: 20px;
+  
+    div.expanded {
+      position: absolute;
+      left: 45px;
+      margin-top: 34px;
+      padding: 0 30px; 
+      right: 45px;
+      height: 326px;
+      background-color: #ffffff;
+    }
+
+    div.expanded>div {
+        animation: fadein 1s 1;
+    }
+  }
+}
+
+
 .tagContainer {
   margin-top: 20px;
 }
@@ -713,6 +741,15 @@ span.progress-group {
 .heightTransition {
   .transition(all 0.5s ease-in-out);
 }
+
+@keyframes fadein {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+} 
 
 
 /* LESS MIXINS */

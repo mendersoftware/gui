@@ -73890,8 +73890,12 @@ var Repository = _react2.default.createClass({
     this.setState(tmp);
   },
   _onRowSelection: function _onRowSelection(rows) {
+
     var imageId = software[rows[0]].id;
     var image = _appStore2.default.getSoftwareImage("id", imageId);
+    if (image === this.state.image) {
+      image = { name: null, description: null };
+    }
     this.setState({ image: image });
   },
   _sortColumn: function _sortColumn(col) {
@@ -73954,7 +73958,42 @@ var Repository = _react2.default.createClass({
       }
     }
   },
+  _onClick: function _onClick(event) {
+    event.stopPropagation();
+  },
   render: function render() {
+
+    var styles = {
+      buttonIcon: {
+        height: '100%',
+        display: 'inline-block',
+        verticalAlign: 'middle',
+        float: 'left',
+        paddingLeft: '12px',
+        lineHeight: '36px',
+        marginRight: "-6",
+        color: "#ffffff",
+        fontSize: '16'
+      },
+      flatButtonIcon: {
+        height: '100%',
+        display: 'inline-block',
+        verticalAlign: 'middle',
+        float: 'left',
+        paddingLeft: '12px',
+        lineHeight: '36px',
+        marginRight: "-6",
+        color: "rgba(0,0,0,0.8)",
+        fontSize: '16'
+      },
+      sortIcon: {
+        verticalAlign: 'middle',
+        marginLeft: "10",
+        color: "#8c8c8d",
+        cursor: "pointer"
+      }
+    };
+
     // copy array so as not to alter props
     var tmpSoftware = [];
     for (var i in software) {
@@ -73977,9 +74016,13 @@ var Repository = _react2.default.createClass({
     }
     var groups = this.props.groups;
     var items = tmpSoftware.map(function (pkg, index) {
+      var selected = '';
+      if (this.state.image.name === pkg.name) {
+        selected = _react2.default.createElement(_selectedimage2.default, { editImage: this._editImageData, buttonStyle: styles.flatButtonIcon, image: this.state.image, openSchedule: this._openSchedule });
+      }
       return _react2.default.createElement(
         TableRow,
-        { key: index },
+        { hoverable: this.state.image.name !== pkg.name, className: this.state.image.name === pkg.name ? "expand" : null, key: index },
         _react2.default.createElement(
           TableRowColumn,
           null,
@@ -74004,6 +74047,15 @@ var Repository = _react2.default.createClass({
           TableRowColumn,
           null,
           pkg.devices || 0
+        ),
+        _react2.default.createElement(
+          TableRowColumn,
+          { style: { width: "0", overflow: "visible" } },
+          _react2.default.createElement(
+            'div',
+            { onClick: this._onClick, className: this.state.image.name === pkg.name ? "expanded" : null },
+            selected
+          )
         )
       );
     }, this);
@@ -74039,37 +74091,6 @@ var Repository = _react2.default.createClass({
       groupItems.push(tmp);
     }
 
-    var styles = {
-      buttonIcon: {
-        height: '100%',
-        display: 'inline-block',
-        verticalAlign: 'middle',
-        float: 'left',
-        paddingLeft: '12px',
-        lineHeight: '36px',
-        marginRight: "-6",
-        color: "#ffffff",
-        fontSize: '16'
-      },
-      flatButtonIcon: {
-        height: '100%',
-        display: 'inline-block',
-        verticalAlign: 'middle',
-        float: 'left',
-        paddingLeft: '12px',
-        lineHeight: '36px',
-        marginRight: "-6",
-        color: "rgba(0,0,0,0.8)",
-        fontSize: '16'
-      },
-      sortIcon: {
-        verticalAlign: 'middle',
-        marginLeft: "10",
-        color: "#8c8c8d",
-        cursor: "pointer"
-      }
-    };
-
     return _react2.default.createElement(
       'div',
       null,
@@ -74081,7 +74102,7 @@ var Repository = _react2.default.createClass({
       _react2.default.createElement(_reactSearchInput2.default, { className: 'search tableSearch', ref: 'search', onChange: this.searchUpdated }),
       _react2.default.createElement(
         'div',
-        { className: 'maxTable' },
+        null,
         _react2.default.createElement(
           Table,
           {
@@ -74172,9 +74193,7 @@ var Repository = _react2.default.createClass({
               'file_upload'
             )
           )
-        ),
-        _react2.default.createElement('div', { style: { height: "16", marginTop: "10" } }),
-        _react2.default.createElement(_selectedimage2.default, { editImage: this._editImageData, buttonStyle: styles.flatButtonIcon, image: this.state.image, openSchedule: this._openSchedule })
+        )
       ),
       _react2.default.createElement(
         Dialog,
@@ -74322,7 +74341,8 @@ var SelectedImage = _react2.default.createClass({
     });
   },
   handleDrag: function handleDrag(tag, currPos, newPos) {},
-  _tagsEdit: function _tagsEdit(image) {
+  _tagsEdit: function _tagsEdit(image, event) {
+    event.stopPropagation();
     if (this.state.tagEdit) {
       var noIds = [];
       for (var i in tagslist) {
@@ -74349,7 +74369,8 @@ var SelectedImage = _react2.default.createClass({
       }
     }
   },
-  _descEdit: function _descEdit(image) {
+  _descEdit: function _descEdit(image, event) {
+    event.stopPropagation();
     if (this.state.descEdit) {
       image.description = this.state.descValue;
       // save change
@@ -74407,23 +74428,16 @@ var SelectedImage = _react2.default.createClass({
 
     return _react2.default.createElement(
       'div',
-      { id: 'imageInfo', className: this.props.image.name == null ? "muted" : null },
-      _react2.default.createElement(
-        'h3',
-        null,
-        'Image details'
-      ),
+      { className: this.props.image.name == null ? "muted" : null },
       _react2.default.createElement(
         'div',
         { className: 'report-list' },
         _react2.default.createElement(
           List,
-          null,
-          _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Software', secondaryText: info.name }),
+          { style: { backgroundColor: "rgba(255,255,255,0)" } },
+          _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Date built', secondaryText: info.build_date }),
           _react2.default.createElement(Divider, null),
-          _react2.default.createElement(ListItem, { disabled: this.props.image.model ? false : true, primaryText: 'Device type', secondaryText: info.model, onClick: this._handleLinkClick.bind(null, info.model) }),
-          _react2.default.createElement(Divider, null),
-          _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Size', secondaryText: info.size }),
+          _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Date uploaded', secondaryText: info.modified }),
           _react2.default.createElement(Divider, null)
         )
       ),
@@ -74432,12 +74446,10 @@ var SelectedImage = _react2.default.createClass({
         { className: 'report-list' },
         _react2.default.createElement(
           List,
-          null,
-          _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Date built', secondaryText: info.build_date }),
+          { style: { backgroundColor: "rgba(255,255,255,0)" } },
+          _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Checksum', secondaryTextLines: 2, style: { wordWrap: "break-word" }, secondaryText: info.checksum }),
           _react2.default.createElement(Divider, null),
-          _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Date uploaded', secondaryText: info.modified }),
-          _react2.default.createElement(Divider, null),
-          _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Installed on devices', secondaryText: info.devices ? info.devices : "-" }),
+          _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Size', secondaryText: info.size }),
           _react2.default.createElement(Divider, null)
         )
       ),
@@ -74446,10 +74458,9 @@ var SelectedImage = _react2.default.createClass({
         { className: 'report-list', style: { width: "320" } },
         _react2.default.createElement(
           List,
-          null,
+          { style: { backgroundColor: "rgba(255,255,255,0)" } },
           _react2.default.createElement(ListItem, { rightIconButton: editButton, disabled: true, primaryText: 'Tags', secondaryText: tags }),
           _react2.default.createElement(Divider, null),
-          _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Checksum', secondaryTextLines: 2, style: { wordWrap: "break-word" }, secondaryText: info.checksum }),
           _react2.default.createElement(Divider, null)
         )
       ),
@@ -74462,7 +74473,7 @@ var SelectedImage = _react2.default.createClass({
           { className: 'report-list', style: { padding: "8px 0px", width: "590", verticalAlign: "top", position: "relative" } },
           _react2.default.createElement(
             'div',
-            { style: { padding: "20px 16px 15px", fontSize: "16", lineHeight: "16px" } },
+            { style: { padding: "20px 16px 15px", fontSize: "15", lineHeight: "15px" } },
             _react2.default.createElement(
               'span',
               { style: { color: "rgba(0,0,0,0.8)" } },
@@ -74482,7 +74493,7 @@ var SelectedImage = _react2.default.createClass({
           { className: 'report-list', style: { width: "320" } },
           _react2.default.createElement(
             List,
-            null,
+            { style: { backgroundColor: "rgba(255,255,255,0)" } },
             _react2.default.createElement(ListItem, {
               disabled: this.props.image.name ? false : true,
               primaryText: 'Deploy update',
