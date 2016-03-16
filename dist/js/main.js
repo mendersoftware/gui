@@ -72414,33 +72414,32 @@ var TableHeaderColumn = mui.TableHeaderColumn;
 var TableBody = mui.TableBody;
 var TableRow = mui.TableRow;
 var TableRowColumn = mui.TableRowColumn;
+var RaisedButton = mui.RaisedButton;
+var Dialog = mui.Dialog;
+var MenuItem = mui.MenuItem;
 
+var SelectField = mui.SelectField;
 var TextField = mui.TextField;
 var FlatButton = mui.FlatButton;
 var FontIcon = mui.FontIcon;
 var IconButton = mui.IconButton;
+
+var addSelection = {};
 
 var DeviceList = _react2.default.createClass({
   displayName: 'DeviceList',
 
   getInitialState: function getInitialState() {
     return {
-      errorText1: null
-
+      errorText1: null,
+      selectedGroup: {
+        payload: '',
+        text: ''
+      },
+      addGroup: false
     };
   },
-  shouldComponentUpdate: function shouldComponentUpdate(nextProps, nextState) {
-    if (nextProps.selectedGroup.name !== this.props.selectedGroup.name) {
-      //this.refs['input'].setValue(nextProps.selectedGroup.name);
-      return true;
-    }if (nextProps.devices !== this.props.devices) {
-      return true;
-    }if (nextState.expanded !== this.state.expanded) {
-      return true;
-    } else {
-      return false;
-    }
-  },
+
   _onRowSelection: function _onRowSelection(rows) {
     if (rows === "all") {
       rows = [];
@@ -72496,6 +72495,69 @@ var DeviceList = _react2.default.createClass({
     }
     return value;
   },
+  _addGroupHandler: function _addGroupHandler() {
+    AppActions.addToGroup(addSelection.group, this.props.selectedDevices);
+    this.dialogToggle('addGroup');
+    AppActions.selectGroup(addSelection.group.id);
+  },
+  _removeGroupHandler: function _removeGroupHandler() {
+    AppActions.addToGroup(this.props.selectedGroup, this.props.selectedDevices);
+  },
+  _newGroupHandler: function _newGroupHandler() {
+    var newGroup = this.refs['customGroup'].getValue();
+    newGroup = {
+      name: newGroup,
+      devices: [],
+      type: 'public'
+    };
+    addSelection = {
+      group: newGroup,
+      textFieldValue: null
+    };
+
+    newGroup.id = this.props.groups.length + 1;
+    var groups = this.props.groups;
+    groups.push(newGroup);
+    this.setState({
+      showInput: false,
+      selectedGroup: {
+        payload: newGroup.id,
+        text: newGroup.name
+      }
+    });
+  },
+  _validateName: function _validateName(e) {
+    var newName = e.target.value;
+    var errorText = null;
+    var invalid = false;
+    for (var i = 0; i < this.props.groups.length; i++) {
+      if (this.props.groups[i].name === newName) {
+        errorText = "A group with this name already exists";
+        invalid = true;
+      }
+    }
+    this.setState({ errorText1: errorText, invalid: invalid });
+  },
+  dialogToggle: function dialogToggle(ref) {
+    var state = {};
+    state[ref] = !this.state[ref];
+    this.setState(state);
+  },
+  _handleSelectValueChange: function _handleSelectValueChange(event, index, value) {
+    this.setState({ showInput: false });
+    var group = this.props.groups[index];
+
+    this.setState({
+      selectedGroup: {
+        payload: value,
+        text: group.name
+      }
+    });
+    addSelection = {
+      group: group,
+      textFieldValue: group.name
+    };
+  },
   render: function render() {
     var styles = {
       exampleFlatButtonIcon: {
@@ -72515,8 +72577,37 @@ var DeviceList = _react2.default.createClass({
         opacity: "0.5",
         float: "right",
         marginRight: "160"
+      },
+      buttonIcon: {
+        height: '100%',
+        display: 'inline-block',
+        verticalAlign: 'middle',
+        float: 'left',
+        paddingLeft: '12px',
+        lineHeight: '36px',
+        marginRight: "-6",
+        color: "rgb(0, 188, 212)"
+      },
+      raisedButtonIcon: {
+        height: '100%',
+        display: 'inline-block',
+        verticalAlign: 'middle',
+        float: 'left',
+        paddingLeft: '12px',
+        lineHeight: '36px',
+        marginRight: "-6",
+        color: "#fff"
       }
     };
+
+    var groupList = this.props.groups.map(function (group, index) {
+      if (group.id !== 1) {
+        return _react2.default.createElement(MenuItem, { value: group.id, key: index, primaryText: group.name });
+      } else {
+        return _react2.default.createElement(MenuItem, { value: '', key: index, primaryText: '' });
+      }
+    });
+
     var devices = this.props.devices.map(function (device, index) {
       var expanded = '';
       if (this.state.expanded === index) {
@@ -72570,6 +72661,21 @@ var DeviceList = _react2.default.createClass({
       );
     }, this);
     var selectedName = this.props.selectedGroup.name;
+    var disableAction = this.props.selectedDevices.length ? false : true;
+
+    var addActions = [_react2.default.createElement(
+      'div',
+      { style: { marginRight: "10", display: "inline-block" } },
+      _react2.default.createElement(FlatButton, {
+        label: 'Cancel',
+        onClick: this.dialogToggle.bind(null, 'addGroup') })
+    ), _react2.default.createElement(RaisedButton, {
+      label: 'Add to group',
+      primary: true,
+      onClick: this._addGroupHandler,
+      ref: 'save',
+      disabled: this.state.invalid })];
+
     return _react2.default.createElement(
       'div',
       null,
@@ -72603,7 +72709,7 @@ var DeviceList = _react2.default.createClass({
       ),
       _react2.default.createElement(
         'div',
-        null,
+        { className: 'margin-bottom' },
         _react2.default.createElement(
           Table,
           {
@@ -72657,6 +72763,100 @@ var DeviceList = _react2.default.createClass({
           'p',
           { className: devices.length ? 'hidden' : 'italic muted margin-left' },
           'No devices found. Add devices to this group by making a selection within \'All devices\' and choosing \'Add selected devices to a group\'.'
+        )
+      ),
+      _react2.default.createElement(
+        'div',
+        { className: this.props.selectedDevices.length ? "fixedButtons" : "hidden" },
+        _react2.default.createElement(
+          'span',
+          { className: 'margin-right' },
+          this.props.selectedDevices.length,
+          ' device',
+          _react2.default.createElement(
+            'span',
+            { className: this.props.selectedDevices.length > 1 ? null : "hidden" },
+            's'
+          ),
+          ' selected'
+        ),
+        _react2.default.createElement(
+          RaisedButton,
+          { disabled: disableAction, label: 'Add selected devices to a group', secondary: true, onClick: this.dialogToggle.bind(null, 'addGroup') },
+          _react2.default.createElement(
+            FontIcon,
+            { style: styles.raisedButtonIcon, className: 'material-icons' },
+            'add_circle'
+          )
+        ),
+        _react2.default.createElement(
+          FlatButton,
+          { disabled: disableAction, style: { marginLeft: "4" }, className: this.props.selectedGroup.id === 1 ? 'hidden' : null, label: 'Remove selected devices from this group', secondary: true, onClick: this._removeGroupHandler },
+          _react2.default.createElement(
+            FontIcon,
+            { style: styles.buttonIcon, className: 'material-icons' },
+            'remove_circle_outline'
+          )
+        )
+      ),
+      _react2.default.createElement(
+        Dialog,
+        {
+          open: this.state.addGroup,
+          title: 'Add selected devices to group',
+          actions: addActions,
+          autoDetectWindowHeight: true, autoScrollBodyContent: true },
+        _react2.default.createElement(
+          'div',
+          { style: { height: '200px' } },
+          _react2.default.createElement(
+            'div',
+            null,
+            _react2.default.createElement(
+              'div',
+              { className: 'float-left' },
+              _react2.default.createElement(
+                SelectField,
+                {
+                  ref: 'groupSelect',
+                  onChange: this._handleSelectValueChange,
+                  floatingLabelText: 'Select group',
+                  value: this.state.selectedGroup.payload
+                },
+                groupList
+              )
+            ),
+            _react2.default.createElement(
+              'div',
+              { className: 'float-left margin-left-small' },
+              _react2.default.createElement(RaisedButton, {
+                label: 'Create new',
+                style: { marginTop: "26" },
+                onClick: this._showButton })
+            )
+          ),
+          _react2.default.createElement(
+            'div',
+            { className: this.state.showInput ? null : 'hidden' },
+            _react2.default.createElement(TextField, {
+              ref: 'customGroup',
+              hintText: 'Group name',
+              floatingLabelText: 'Group name',
+              className: 'float-left clear',
+              onChange: this._validateName,
+              errorStyle: { color: "rgb(171, 16, 0)" },
+              errorText: this.state.errorText1 }),
+            _react2.default.createElement(
+              'div',
+              { className: 'float-left margin-left-small' },
+              _react2.default.createElement(RaisedButton, {
+                style: { marginTop: "26" },
+                secondary: true,
+                label: 'Save',
+                onClick: this._newGroupHandler,
+                disabled: this.state.invalid })
+            )
+          )
         )
       )
     );
@@ -73237,9 +73437,6 @@ var mui = require('material-ui');
 var FlatButton = mui.FlatButton;
 var RaisedButton = mui.RaisedButton;
 var Dialog = mui.Dialog;
-var MenuItem = mui.MenuItem;
-var SelectField = mui.SelectField;
-var TextField = mui.TextField;
 var List = mui.List;
 var ListItem = mui.ListItem;
 var Divider = mui.Divider;
@@ -73248,8 +73445,6 @@ var IconButton = mui.IconButton;
 
 var ReactTags = require('react-tag-input').WithContext;
 var tagslist = [];
-
-var addSelection = {};
 
 function getGroups() {
   var copy = AppStore.getGroups().slice();
@@ -73267,23 +73462,7 @@ var SelectedDevices = _react2.default.createClass({
         text: ''
       },
       tagEdit: false,
-      schedule: false,
-      addGroup: false
-    };
-  },
-  _handleSelectValueChange: function _handleSelectValueChange(event, index, value) {
-    this.setState({ showInput: false });
-    var group = this.props.groups[index];
-
-    this.setState({
-      selectedGroup: {
-        payload: value,
-        text: group.name
-      }
-    });
-    addSelection = {
-      group: group,
-      textFieldValue: group.name
+      schedule: false
     };
   },
   dialogToggle: function dialogToggle(ref) {
@@ -73301,49 +73480,7 @@ var SelectedDevices = _react2.default.createClass({
     });
     this.refs.customGroup.focus();
   },
-  _addGroupHandler: function _addGroupHandler() {
-    AppActions.addToGroup(addSelection.group, this.props.selected);
-    this.dialogToggle('addGroup');
-    AppActions.selectGroup(addSelection.group.id);
-  },
-  _removeGroupHandler: function _removeGroupHandler() {
-    AppActions.addToGroup(this.props.selectedGroup, this.props.selected);
-  },
-  _newGroupHandler: function _newGroupHandler() {
-    var newGroup = this.refs['customGroup'].getValue();
-    newGroup = {
-      name: newGroup,
-      devices: [],
-      type: 'public'
-    };
-    addSelection = {
-      group: newGroup,
-      textFieldValue: null
-    };
 
-    newGroup.id = this.props.groups.length + 1;
-    var groups = this.props.groups;
-    groups.push(newGroup);
-    this.setState({
-      showInput: false,
-      selectedGroup: {
-        payload: newGroup.id,
-        text: newGroup.name
-      }
-    });
-  },
-  _validateName: function _validateName(e) {
-    var newName = e.target.value;
-    var errorText = null;
-    var invalid = false;
-    for (var i = 0; i < this.props.groups.length; i++) {
-      if (this.props.groups[i].name === newName) {
-        errorText = "A group with this name already exists";
-        invalid = true;
-      }
-    }
-    this.setState({ errorText1: errorText, invalid: invalid });
-  },
   _getGroupNames: function _getGroupNames(list) {
     /* TODO - move or tidy */
     var nameList = [];
@@ -73407,29 +73544,8 @@ var SelectedDevices = _react2.default.createClass({
   render: function render() {
     var hideInfo = { display: "none" };
     var deviceInfo = '';
-    var disableAction = this.props.selected.length ? false : true;
 
     var styles = {
-      buttonIcon: {
-        height: '100%',
-        display: 'inline-block',
-        verticalAlign: 'middle',
-        float: 'left',
-        paddingLeft: '12px',
-        lineHeight: '36px',
-        marginRight: "-6",
-        color: "rgb(0, 188, 212)"
-      },
-      raisedButtonIcon: {
-        height: '100%',
-        display: 'inline-block',
-        verticalAlign: 'middle',
-        float: 'left',
-        paddingLeft: '12px',
-        lineHeight: '36px',
-        marginRight: "-6",
-        color: "#fff"
-      },
       editButton: {
         color: "rgba(0, 0, 0, 0.54)",
         fontSize: "20"
@@ -73518,26 +73634,6 @@ var SelectedDevices = _react2.default.createClass({
       );
     });
 
-    var addActions = [_react2.default.createElement(
-      'div',
-      { style: { marginRight: "10", display: "inline-block" } },
-      _react2.default.createElement(FlatButton, {
-        label: 'Cancel',
-        onClick: this.dialogToggle.bind(null, 'addGroup') })
-    ), _react2.default.createElement(RaisedButton, {
-      label: 'Add to group',
-      primary: true,
-      onClick: this._addGroupHandler,
-      ref: 'save',
-      disabled: this.state.invalid })];
-
-    var groupList = this.props.groups.map(function (group, index) {
-      if (group.id !== 1) {
-        return _react2.default.createElement(MenuItem, { value: group.id, key: index, primaryText: group.name });
-      } else {
-        return _react2.default.createElement(MenuItem, { value: '', key: index, primaryText: '' });
-      }
-    });
     var scheduleActions = [_react2.default.createElement(
       'div',
       { style: { marginRight: "10", display: "inline-block" } },
@@ -73552,104 +73648,16 @@ var SelectedDevices = _react2.default.createClass({
 
     return _react2.default.createElement(
       'div',
-      { className: this.props.devices.length ? null : "hidden" },
+      null,
       _react2.default.createElement(
         'div',
-        null,
-        _react2.default.createElement(
-          RaisedButton,
-          { disabled: disableAction, label: 'Add selected devices to a group', secondary: true, onClick: this.dialogToggle.bind(null, 'addGroup') },
-          _react2.default.createElement(
-            FontIcon,
-            { style: styles.raisedButtonIcon, className: 'material-icons' },
-            'add_circle'
-          )
-        ),
-        _react2.default.createElement(
-          FlatButton,
-          { disabled: disableAction, style: { marginLeft: "4" }, className: this.props.selectedGroup.id === 1 ? 'hidden' : null, label: 'Remove selected devices from this group', secondary: true, onClick: this._removeGroupHandler },
-          _react2.default.createElement(
-            FontIcon,
-            { style: styles.buttonIcon, className: 'material-icons' },
-            'remove_circle_outline'
-          )
-        )
-      ),
-      _react2.default.createElement(
-        'p',
-        null,
-        devices.length,
-        ' devices selected'
-      ),
-      _react2.default.createElement(
-        'div',
-        { id: 'deviceInfo', style: hideInfo },
+        { style: hideInfo },
         _react2.default.createElement(
           'h3',
           null,
           'Device details'
         ),
         deviceInfo
-      ),
-      _react2.default.createElement(
-        Dialog,
-        {
-          open: this.state.addGroup,
-          title: 'Add selected devices to group',
-          actions: addActions,
-          autoDetectWindowHeight: true, autoScrollBodyContent: true },
-        _react2.default.createElement(
-          'div',
-          { style: { height: '200px' } },
-          _react2.default.createElement(
-            'div',
-            null,
-            _react2.default.createElement(
-              'div',
-              { className: 'float-left' },
-              _react2.default.createElement(
-                SelectField,
-                {
-                  ref: 'groupSelect',
-                  onChange: this._handleSelectValueChange,
-                  floatingLabelText: 'Select group',
-                  value: this.state.selectedGroup.payload
-                },
-                groupList
-              )
-            ),
-            _react2.default.createElement(
-              'div',
-              { className: 'float-left margin-left-small' },
-              _react2.default.createElement(RaisedButton, {
-                label: 'Create new',
-                style: { marginTop: "26" },
-                onClick: this._showButton })
-            )
-          ),
-          _react2.default.createElement(
-            'div',
-            { className: this.state.showInput ? null : 'hidden' },
-            _react2.default.createElement(TextField, {
-              ref: 'customGroup',
-              hintText: 'Group name',
-              floatingLabelText: 'Group name',
-              className: 'float-left clear',
-              onChange: this._validateName,
-              errorStyle: { color: "rgb(171, 16, 0)" },
-              errorText: this.state.errorText1 }),
-            _react2.default.createElement(
-              'div',
-              { className: 'float-left margin-left-small' },
-              _react2.default.createElement(RaisedButton, {
-                style: { marginTop: "26" },
-                secondary: true,
-                label: 'Save',
-                onClick: this._newGroupHandler,
-                disabled: this.state.invalid })
-            )
-          )
-        )
       ),
       _react2.default.createElement(
         Dialog,

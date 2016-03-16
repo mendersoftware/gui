@@ -7,9 +7,6 @@ var mui = require('material-ui');
 var FlatButton = mui.FlatButton;
 var RaisedButton = mui.RaisedButton;
 var Dialog = mui.Dialog;
-var MenuItem = mui.MenuItem;
-var SelectField = mui.SelectField;
-var TextField = mui.TextField;
 var List = mui.List;
 var ListItem = mui.ListItem;
 var Divider = mui.Divider;
@@ -18,8 +15,6 @@ var IconButton = mui.IconButton;
 
 var ReactTags = require('react-tag-input').WithContext;
 var tagslist = [];
-
-var addSelection = {};
 
 function getGroups() {
   var copy = AppStore.getGroups().slice();
@@ -36,22 +31,6 @@ var SelectedDevices = React.createClass({
       },
       tagEdit: false,
       schedule: false,
-      addGroup: false
-    };
-  },
-  _handleSelectValueChange: function(event, index, value) {
-    this.setState({showInput: false});
-    var group = this.props.groups[index];
-
-    this.setState({
-      selectedGroup: {
-        payload:value,
-        text: group.name
-      }
-    });
-    addSelection = {
-      group: group,
-      textFieldValue: group.name
     };
   },
   dialogToggle: function (ref) {
@@ -69,50 +48,7 @@ var SelectedDevices = React.createClass({
     });
     this.refs.customGroup.focus();
   },
-  _addGroupHandler: function() {
-    AppActions.addToGroup(addSelection.group, this.props.selected);
-    this.dialogToggle('addGroup');
-    AppActions.selectGroup(addSelection.group.id);
-  },
-  _removeGroupHandler: function() {
-    AppActions.addToGroup(this.props.selectedGroup, this.props.selected);
-  },
-  _newGroupHandler: function() {
-    var newGroup = this.refs['customGroup'].getValue();
-    newGroup = {
-      name: newGroup,
-      devices: [],
-      type: 'public'
-    };
-    addSelection = {
-      group: newGroup,
-      textFieldValue: null 
-    };
- 
-    newGroup.id = this.props.groups.length+1;
-    var groups = this.props.groups;
-    groups.push(newGroup);
-    this.setState({
-      showInput: false,
-      selectedGroup: {
-        payload: newGroup.id,
-        text: newGroup.name
-      }
-    });
 
-  },
-  _validateName: function(e) {
-    var newName = e.target.value;
-    var errorText = null;
-    var invalid = false;
-    for (var i=0;i<this.props.groups.length; i++) {
-      if (this.props.groups[i].name === newName) {
-        errorText = "A group with this name already exists";
-        invalid = true;
-      }
-    }
-    this.setState({errorText1: errorText, invalid: invalid});
-  },
   _getGroupNames: function(list) {
     /* TODO - move or tidy */
     var nameList = [];
@@ -178,29 +114,8 @@ var SelectedDevices = React.createClass({
   render: function() {
     var hideInfo = {display: "none"};
     var deviceInfo ='';
-    var disableAction = this.props.selected.length ? false : true;
    
     var styles = {
-      buttonIcon: {
-        height: '100%',
-        display: 'inline-block',
-        verticalAlign: 'middle',
-        float: 'left',
-        paddingLeft: '12px',
-        lineHeight: '36px',
-        marginRight: "-6",
-        color: "rgb(0, 188, 212)"
-      },
-      raisedButtonIcon: {
-        height: '100%',
-        display: 'inline-block',
-        verticalAlign: 'middle',
-        float: 'left',
-        paddingLeft: '12px',
-        lineHeight: '36px',
-        marginRight: "-6",
-        color: "#fff"
-      },
       editButton: {
         color: "rgba(0, 0, 0, 0.54)",
         fontSize: "20" 
@@ -274,27 +189,7 @@ var SelectedDevices = React.createClass({
       )
     })
 
-    var addActions = [
-      <div style={{marginRight:"10", display:"inline-block"}}>
-        <FlatButton
-          label="Cancel"
-          onClick={this.dialogToggle.bind(null, 'addGroup')} />
-      </div>,
-      <RaisedButton
-        label="Add to group"
-        primary={true}
-        onClick={this._addGroupHandler}
-        ref="save" 
-        disabled={this.state.invalid} />
-    ];
 
-    var groupList = this.props.groups.map(function(group, index) {
-      if (group.id !== 1) {
-        return <MenuItem value={group.id} key={index} primaryText={group.name} />
-      } else {
-        return <MenuItem value='' key={index} primaryText='' />
-      }
-    });
     var scheduleActions =  [
       <div style={{marginRight:"10", display:"inline-block"}}>
         <FlatButton
@@ -309,67 +204,11 @@ var SelectedDevices = React.createClass({
     ];
 
     return (
-      <div className={this.props.devices.length ? null : "hidden"}>
-        <div>
-          <RaisedButton disabled={disableAction} label="Add selected devices to a group" secondary={true} onClick={this.dialogToggle.bind(null, 'addGroup')}>
-            <FontIcon style={styles.raisedButtonIcon} className="material-icons">add_circle</FontIcon>
-          </RaisedButton>
-          <FlatButton disabled={disableAction} style={{marginLeft: "4"}} className={this.props.selectedGroup.id === 1 ? 'hidden' : null} label="Remove selected devices from this group" secondary={true} onClick={this._removeGroupHandler}>
-            <FontIcon style={styles.buttonIcon} className="material-icons">remove_circle_outline</FontIcon>
-          </FlatButton>
-        </div>
-        <p>{devices.length} devices selected</p>
-        <div id="deviceInfo" style={hideInfo}>
+      <div>
+        <div style={hideInfo}>
           <h3>Device details</h3>
           {deviceInfo}
         </div>
-
-        <Dialog
-          open={this.state.addGroup}
-          title="Add selected devices to group"
-          actions={addActions}
-          autoDetectWindowHeight={true} autoScrollBodyContent={true}>  
-          <div style={{height: '200px'}}>
-            <div>
-              <div className="float-left">
-                <SelectField
-                ref="groupSelect"
-                onChange={this._handleSelectValueChange}
-                floatingLabelText="Select group"
-                value={this.state.selectedGroup.payload}
-                >
-                 {groupList}
-                </SelectField>
-              </div>
-              
-              <div className="float-left margin-left-small">
-                <RaisedButton 
-                  label="Create new"
-                  style={{marginTop:"26"}}
-                  onClick={this._showButton}/>
-              </div>
-            </div>
-
-            <div className={this.state.showInput ? null : 'hidden'}>
-              <TextField
-                ref="customGroup"
-                hintText="Group name"
-                floatingLabelText="Group name"
-                className="float-left clear"
-                onChange={this._validateName}
-                errorStyle={{color: "rgb(171, 16, 0)"}}
-                errorText={this.state.errorText1} />
-              <div className="float-left margin-left-small">
-                <RaisedButton
-                  style={{marginTop:"26"}}
-                  secondary={true}
-                  label="Save"
-                  onClick={this._newGroupHandler}
-                  disabled={this.state.invalid} />
-              </div>
-            </div>
-          </div>
-        </Dialog>
 
         <Dialog
           open={this.state.schedule}
