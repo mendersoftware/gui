@@ -204,6 +204,7 @@ a, span.link {
 .rightFluid {
   margin-left: 290px;
   padding-bottom: 30px;
+  position: relative;
 }
 
 .tableActions {
@@ -428,21 +429,32 @@ tr.expand {
 
   td {
     vertical-align: top;
-    padding-top: 20px;
+    padding-top: 18px;
   
     div.expanded {
       position: absolute;
-      left: 45px;
-      margin-top: 34px;
+      left: 0;
+      margin-top: 46px;
       padding: 0 30px; 
-      right: 45px;
-      height: 326px;
+      right: 0;
+      padding-right: 45px;
+      height: 331px;
       background-color: #ffffff;
     }
 
     div.expanded>div {
         animation: fadein 0.7s 1;
     }
+  }
+
+  td:first-child>div div {
+    margin-top: -1px;
+  }
+  td:last-child {
+    padding-top: 3px;
+  }
+  td.expandButton {
+    padding-top: 2px;
   }
 }
 

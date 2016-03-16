@@ -4,7 +4,7 @@ var AppActions = require('../../actions/app-actions');
 
 var Groups = require('./groups');
 var DeviceList = require('./devicelist');
-var SelectedDevices = require('./selecteddevices');
+
 var Filters = require('./filters');
 
 function getState() {
@@ -60,8 +60,7 @@ var Devices = React.createClass({
         </div>
         <div className="rightFluid padding-right">
           <Filters attributes={this.state.attributes} filters={this.state.filters} onFilterChange={this._updateFilters} />
-          <DeviceList groups={this.state.groups} devices={this.state.devices} selectedGroup={this.state.selectedGroup} />
-          <SelectedDevices images={this.state.images} devices={this.state.devices} selected={this.state.selectedDevices} selectedGroup={this.state.selectedGroup} groups={this.state.groups} />
+          <DeviceList images={this.state.images} selectedDevices={this.state.selectedDevices} groups={this.state.groups} devices={this.state.devices} selectedGroup={this.state.selectedGroup} />
         </div>
       </div>
     );

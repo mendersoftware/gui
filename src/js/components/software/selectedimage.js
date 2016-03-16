@@ -155,8 +155,6 @@ var SelectedImage = React.createClass({
           <List style={{backgroundColor: "rgba(255,255,255,0)"}}>
             <ListItem rightIconButton={editButton} disabled={true} primaryText="Tags" secondaryText={tags} />
             <Divider />
-         
-            <Divider />
           </List>
         </div>
         <div className="float-right">

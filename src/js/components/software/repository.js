@@ -32,6 +32,7 @@ var SelectField = mui.SelectField;
 var TextField = mui.TextField;
 var FlatButton = mui.FlatButton;
 var FontIcon = mui.FontIcon;
+var IconButton = mui.IconButton;
 
 var newState = {model: "Acme Model 1", tags: []};
 var tags = [];
@@ -255,6 +256,9 @@ var Repository = React.createClass({
           <TableRowColumn>{pkg.tags || '-'}</TableRowColumn>
           <TableRowColumn><Time value={pkg.modified} format="YYYY/MM/DD HH:mm" /></TableRowColumn>
           <TableRowColumn>{pkg.devices || 0}</TableRowColumn>
+          <TableRowColumn className="expandButton">
+            <IconButton><FontIcon className="material-icons">{ selected ? "arrow_drop_up" : "arrow_drop_down"}</FontIcon></IconButton>
+          </TableRowColumn>
           <TableRowColumn style={{width:"0", overflow:"visible"}}>
             <div onClick={this._onClick} className={this.state.image.name === pkg.name ? "expanded" : null}>
               {selected}
@@ -302,7 +306,7 @@ var Repository = React.createClass({
       
         <h3>Available images</h3>
         <SearchInput className="search tableSearch" ref='search' onChange={this.searchUpdated} />
-        <div>
+        <div style={{position: "relative"}}>
           <Table
             onRowSelection={this._onRowSelection}
             className={items.length ? null : "hidden"}>
@@ -315,6 +319,7 @@ var Repository = React.createClass({
                 <TableHeaderColumn className="columnHeader" tooltip="Tags">Tags</TableHeaderColumn>
                 <TableHeaderColumn className="columnHeader" tooltip="Last modified">Last modified <FontIcon style={styles.sortIcon} ref="modified" onClick={this._sortColumn.bind(null, "modified")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
                 <TableHeaderColumn className="columnHeader" tooltip="Installed on devices">Installed on devices <FontIcon style={styles.sortIcon} ref="devices" onClick={this._sortColumn.bind(null, "devices")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
+                <TableHeaderColumn className="columnHeader" tooltip="Show details">Show details</TableHeaderColumn>
               </TableRow>
             </TableHeader>
             <TableBody

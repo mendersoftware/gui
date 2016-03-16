@@ -72404,6 +72404,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var AppStore = require('../../stores/app-store');
 var AppActions = require('../../actions/app-actions');
+var SelectedDevices = require('./selecteddevices');
 
 // material ui
 var mui = require('material-ui');
@@ -72417,6 +72418,7 @@ var TableRowColumn = mui.TableRowColumn;
 var TextField = mui.TextField;
 var FlatButton = mui.FlatButton;
 var FontIcon = mui.FontIcon;
+var IconButton = mui.IconButton;
 
 var DeviceList = _react2.default.createClass({
   displayName: 'DeviceList',
@@ -72424,6 +72426,7 @@ var DeviceList = _react2.default.createClass({
   getInitialState: function getInitialState() {
     return {
       errorText1: null
+
     };
   },
   shouldComponentUpdate: function shouldComponentUpdate(nextProps, nextState) {
@@ -72431,6 +72434,8 @@ var DeviceList = _react2.default.createClass({
       //this.refs['input'].setValue(nextProps.selectedGroup.name);
       return true;
     }if (nextProps.devices !== this.props.devices) {
+      return true;
+    }if (nextState.expanded !== this.state.expanded) {
       return true;
     } else {
       return false;
@@ -72473,6 +72478,14 @@ var DeviceList = _react2.default.createClass({
   _onChange: function _onChange(event) {
     this._validateName(event.target.value);
   },
+  _expandRow: function _expandRow(index, event) {
+    event.stopPropagation();
+    var newIndex = index;
+    if (index == this.state.expanded) {
+      newIndex = null;
+    }
+    this.setState({ expanded: newIndex });
+  },
   render: function render() {
     var styles = {
       exampleFlatButtonIcon: {
@@ -72494,10 +72507,14 @@ var DeviceList = _react2.default.createClass({
         marginRight: "160"
       }
     };
-    var devices = this.props.devices.map(function (device) {
+    var devices = this.props.devices.map(function (device, index) {
+      var selected = '';
+      if (this.state.expanded === index) {
+        selected = _react2.default.createElement(SelectedDevices, { images: this.props.images, devices: this.props.devices, selected: this.props.selectedDevices, selectedGroup: this.props.selectedGroup, groups: this.props.groups });
+      }
       return _react2.default.createElement(
         TableRow,
-        { key: device.id },
+        { hoverable: !selected, className: selected ? "expand" : null, key: index },
         _react2.default.createElement(
           TableRowColumn,
           null,
@@ -72517,9 +72534,31 @@ var DeviceList = _react2.default.createClass({
           TableRowColumn,
           null,
           device.status
+        ),
+        _react2.default.createElement(
+          TableRowColumn,
+          { className: 'expandButton' },
+          _react2.default.createElement(
+            IconButton,
+            { onClick: this._expandRow.bind(this, index) },
+            _react2.default.createElement(
+              FontIcon,
+              { className: 'material-icons' },
+              selected ? "arrow_drop_up" : "arrow_drop_down"
+            )
+          )
+        ),
+        _react2.default.createElement(
+          TableRowColumn,
+          { style: { width: "0", overflow: "visible" } },
+          _react2.default.createElement(
+            'div',
+            { className: selected ? "expanded" : null },
+            selected
+          )
         )
       );
-    });
+    }, this);
     var selectedName = this.props.selectedGroup.name;
     return _react2.default.createElement(
       'div',
@@ -72554,7 +72593,7 @@ var DeviceList = _react2.default.createClass({
       ),
       _react2.default.createElement(
         'div',
-        { className: 'maxTable' },
+        null,
         _react2.default.createElement(
           Table,
           {
@@ -72587,6 +72626,11 @@ var DeviceList = _react2.default.createClass({
                 TableHeaderColumn,
                 { tooltip: 'Status' },
                 'Status'
+              ),
+              _react2.default.createElement(
+                TableHeaderColumn,
+                { tooltip: 'Show details' },
+                'Show details'
               )
             )
           ),
@@ -72611,7 +72655,7 @@ var DeviceList = _react2.default.createClass({
 
 module.exports = DeviceList;
 
-},{"../../actions/app-actions":631,"../../stores/app-store":667,"material-ui":250,"react":626}],643:[function(require,module,exports){
+},{"../../actions/app-actions":631,"../../stores/app-store":667,"./selecteddevices":646,"material-ui":250,"react":626}],643:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -72625,7 +72669,7 @@ var AppActions = require('../../actions/app-actions');
 
 var Groups = require('./groups');
 var DeviceList = require('./devicelist');
-var SelectedDevices = require('./selecteddevices');
+
 var Filters = require('./filters');
 
 function getState() {
@@ -72688,8 +72732,7 @@ var Devices = _react2.default.createClass({
         'div',
         { className: 'rightFluid padding-right' },
         _react2.default.createElement(Filters, { attributes: this.state.attributes, filters: this.state.filters, onFilterChange: this._updateFilters }),
-        _react2.default.createElement(DeviceList, { groups: this.state.groups, devices: this.state.devices, selectedGroup: this.state.selectedGroup }),
-        _react2.default.createElement(SelectedDevices, { images: this.state.images, devices: this.state.devices, selected: this.state.selectedDevices, selectedGroup: this.state.selectedGroup, groups: this.state.groups })
+        _react2.default.createElement(DeviceList, { images: this.state.images, selectedDevices: this.state.selectedDevices, groups: this.state.groups, devices: this.state.devices, selectedGroup: this.state.selectedGroup })
       )
     );
   }
@@ -72697,7 +72740,7 @@ var Devices = _react2.default.createClass({
 
 module.exports = Devices;
 
-},{"../../actions/app-actions":631,"../../stores/app-store":667,"./devicelist":642,"./filters":644,"./groups":645,"./selecteddevices":646,"react":626}],644:[function(require,module,exports){
+},{"../../actions/app-actions":631,"../../stores/app-store":667,"./devicelist":642,"./filters":644,"./groups":645,"react":626}],644:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -73502,7 +73545,7 @@ var SelectedDevices = _react2.default.createClass({
       { className: this.props.devices.length ? null : "hidden" },
       _react2.default.createElement(
         'div',
-        { className: 'float-right' },
+        null,
         _react2.default.createElement(
           RaisedButton,
           { disabled: disableAction, label: 'Add selected devices to a group', secondary: true, onClick: this.dialogToggle.bind(null, 'addGroup') },
@@ -73805,6 +73848,7 @@ var SelectField = _materialUi2.default.SelectField;
 var TextField = _materialUi2.default.TextField;
 var FlatButton = _materialUi2.default.FlatButton;
 var FontIcon = _materialUi2.default.FontIcon;
+var IconButton = _materialUi2.default.IconButton;
 
 var newState = { model: "Acme Model 1", tags: [] };
 var tags = [];
@@ -74050,6 +74094,19 @@ var Repository = _react2.default.createClass({
         ),
         _react2.default.createElement(
           TableRowColumn,
+          { className: 'expandButton' },
+          _react2.default.createElement(
+            IconButton,
+            null,
+            _react2.default.createElement(
+              FontIcon,
+              { className: 'material-icons' },
+              selected ? "arrow_drop_up" : "arrow_drop_down"
+            )
+          )
+        ),
+        _react2.default.createElement(
+          TableRowColumn,
           { style: { width: "0", overflow: "visible" } },
           _react2.default.createElement(
             'div',
@@ -74102,7 +74159,7 @@ var Repository = _react2.default.createClass({
       _react2.default.createElement(_reactSearchInput2.default, { className: 'search tableSearch', ref: 'search', onChange: this.searchUpdated }),
       _react2.default.createElement(
         'div',
-        null,
+        { style: { position: "relative" } },
         _react2.default.createElement(
           Table,
           {
@@ -74160,6 +74217,11 @@ var Repository = _react2.default.createClass({
                   { style: styles.sortIcon, ref: 'devices', onClick: this._sortColumn.bind(null, "devices"), className: 'sortIcon material-icons' },
                   'sort'
                 )
+              ),
+              _react2.default.createElement(
+                TableHeaderColumn,
+                { className: 'columnHeader', tooltip: 'Show details' },
+                'Show details'
               )
             )
           ),
@@ -74460,7 +74522,6 @@ var SelectedImage = _react2.default.createClass({
           List,
           { style: { backgroundColor: "rgba(255,255,255,0)" } },
           _react2.default.createElement(ListItem, { rightIconButton: editButton, disabled: true, primaryText: 'Tags', secondaryText: tags }),
-          _react2.default.createElement(Divider, null),
           _react2.default.createElement(Divider, null)
         )
       ),
@@ -77129,3 +77190,4 @@ module.exports = {
 };
 
 },{"material-ui/lib/styles/colors":292,"material-ui/lib/styles/spacing":297,"material-ui/lib/utils/color-manipulator":352}]},{},[666]);
+

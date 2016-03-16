@@ -148,6 +148,7 @@ span.link:hover {
 .rightFluid {
   margin-left: 290px;
   padding-bottom: 30px;
+  position: relative;
 }
 .tableActions {
   padding: 20px 0 20px 28px;
@@ -372,20 +373,30 @@ tr.expand {
 }
 tr.expand td {
   vertical-align: top;
-  padding-top: 20px;
+  padding-top: 18px;
 }
 tr.expand td div.expanded {
   position: absolute;
-  left: 45px;
-  margin-top: 34px;
+  left: 0;
+  margin-top: 46px;
   padding: 0 30px;
-  right: 45px;
-  height: 326px;
+  right: 0;
+  padding-right: 45px;
+  height: 331px;
   background-color: #ffffff;
 }
 tr.expand td div.expanded > div {
   -webkit-animation: fadein 0.7s 1;
           animation: fadein 0.7s 1;
+}
+tr.expand td:first-child > div div {
+  margin-top: -1px;
+}
+tr.expand td:last-child {
+  padding-top: 3px;
+}
+tr.expand td.expandButton {
+  padding-top: 2px;
 }
 .tagContainer {
   margin-top: 20px;

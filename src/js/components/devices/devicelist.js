@@ -1,6 +1,7 @@
 import React from 'react';
 var AppStore = require('../../stores/app-store');
 var AppActions = require('../../actions/app-actions');
+var SelectedDevices = require('./selecteddevices');
 
 // material ui
 var mui = require('material-ui');
@@ -14,11 +15,13 @@ var TableRowColumn = mui.TableRowColumn;
 var TextField = mui.TextField;
 var FlatButton = mui.FlatButton;
 var FontIcon = mui.FontIcon;
+var IconButton = mui.IconButton;
 
 var DeviceList = React.createClass({
   getInitialState: function() {
     return {
       errorText1: null,
+
     };
   },
   shouldComponentUpdate: function(nextProps, nextState) {
@@ -26,6 +29,8 @@ var DeviceList = React.createClass({
       //this.refs['input'].setValue(nextProps.selectedGroup.name); 
       return true;
     } if (nextProps.devices !== this.props.devices) {
+      return true;
+    } if (nextState.expanded !== this.state.expanded) {
       return true;
     } else {
       return false;
@@ -68,6 +73,14 @@ var DeviceList = React.createClass({
   _onChange: function(event) {
     this._validateName(event.target.value);
   },
+  _expandRow: function(index, event) {
+    event.stopPropagation();
+    var newIndex = index;
+    if (index == this.state.expanded) {
+      newIndex = null;
+    }
+    this.setState({expanded: newIndex});
+  },
   render: function() {
     var styles = {
       exampleFlatButtonIcon: {
@@ -89,16 +102,28 @@ var DeviceList = React.createClass({
         marginRight:"160"
       }
     }
-    var devices = this.props.devices.map(function(device) {
+    var devices = this.props.devices.map(function(device, index) {
+      var selected = '';
+      if ( this.state.expanded === index ) {
+        selected = <SelectedDevices images={this.props.images} devices={this.props.devices} selected={this.props.selectedDevices} selectedGroup={this.props.selectedGroup} groups={this.props.groups} />
+      }
       return (
-        <TableRow key={device.id}>
+        <TableRow hoverable={!selected} className={selected ? "expand" : null}  key={index}>
           <TableRowColumn>{device.name}</TableRowColumn>
           <TableRowColumn>{device.model}</TableRowColumn>
           <TableRowColumn>{device.software_version}</TableRowColumn>
           <TableRowColumn>{device.status}</TableRowColumn>
+          <TableRowColumn className="expandButton">
+            <IconButton onClick={this._expandRow.bind(this, index)}><FontIcon className="material-icons">{ selected ? "arrow_drop_up" : "arrow_drop_down"}</FontIcon></IconButton>
+          </TableRowColumn>
+          <TableRowColumn style={{width:"0", overflow:"visible"}}>
+            <div className={selected ? "expanded" : null}>
+              {selected}
+            </div>
+          </TableRowColumn>
         </TableRow>
       )
-    })
+    }, this);
     var selectedName = this.props.selectedGroup.name;
     return (
       <div>
@@ -120,7 +145,7 @@ var DeviceList = React.createClass({
               </FlatButton>
           </h2>
         </div>
-        <div className="maxTable">
+        <div>
           <Table
             onRowSelection={this._onRowSelection}
             multiSelectable={true}
@@ -132,6 +157,7 @@ var DeviceList = React.createClass({
                 <TableHeaderColumn tooltip="Device type">Device type</TableHeaderColumn>
                 <TableHeaderColumn tooltip="Current software">Current software</TableHeaderColumn>
                 <TableHeaderColumn tooltip="Status">Status</TableHeaderColumn>
+                <TableHeaderColumn tooltip="Show details">Show details</TableHeaderColumn>
               </TableRow>
             </TableHeader>
             <TableBody
