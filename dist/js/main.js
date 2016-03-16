@@ -72486,6 +72486,16 @@ var DeviceList = _react2.default.createClass({
     }
     this.setState({ expanded: newIndex });
   },
+  _ifSelected: function _ifSelected(name) {
+    var value = false;
+    for (var i = 0; i < this.props.selectedDevices.length; i++) {
+      if (name === this.props.selectedDevices[i].name) {
+        value = true;
+        break;
+      }
+    }
+    return value;
+  },
   render: function render() {
     var styles = {
       exampleFlatButtonIcon: {
@@ -72508,13 +72518,13 @@ var DeviceList = _react2.default.createClass({
       }
     };
     var devices = this.props.devices.map(function (device, index) {
-      var selected = '';
+      var expanded = '';
       if (this.state.expanded === index) {
-        selected = _react2.default.createElement(SelectedDevices, { images: this.props.images, devices: this.props.devices, selected: this.props.selectedDevices, selectedGroup: this.props.selectedGroup, groups: this.props.groups });
+        expanded = _react2.default.createElement(SelectedDevices, { images: this.props.images, devices: this.props.devices, selected: [device], selectedGroup: this.props.selectedGroup, groups: this.props.groups });
       }
       return _react2.default.createElement(
         TableRow,
-        { hoverable: !selected, className: selected ? "expand" : null, key: index },
+        { selected: this._ifSelected(device.name), hoverable: !expanded, className: expanded ? "expand" : null, key: index },
         _react2.default.createElement(
           TableRowColumn,
           null,
@@ -72537,14 +72547,14 @@ var DeviceList = _react2.default.createClass({
         ),
         _react2.default.createElement(
           TableRowColumn,
-          { className: 'expandButton' },
+          { style: { maxWidth: "40" }, className: 'expandButton' },
           _react2.default.createElement(
             IconButton,
             { onClick: this._expandRow.bind(this, index) },
             _react2.default.createElement(
               FontIcon,
               { className: 'material-icons' },
-              selected ? "arrow_drop_up" : "arrow_drop_down"
+              expanded ? "arrow_drop_up" : "arrow_drop_down"
             )
           )
         ),
@@ -72553,8 +72563,8 @@ var DeviceList = _react2.default.createClass({
           { style: { width: "0", overflow: "visible" } },
           _react2.default.createElement(
             'div',
-            { className: selected ? "expanded" : null },
-            selected
+            { className: expanded ? "expanded" : null },
+            expanded
           )
         )
       );
@@ -77190,4 +77200,3 @@ module.exports = {
 };
 
 },{"material-ui/lib/styles/colors":292,"material-ui/lib/styles/spacing":297,"material-ui/lib/utils/color-manipulator":352}]},{},[666]);
-
