@@ -72558,6 +72558,17 @@ var DeviceList = _react2.default.createClass({
       textFieldValue: group.name
     };
   },
+
+  _showButton: function _showButton() {
+    this.setState({
+      selectedGroup: {
+        payload: null,
+        text: null
+      },
+      showInput: true
+    });
+    this.refs.customGroup.focus();
+  },
   render: function render() {
     var styles = {
       exampleFlatButtonIcon: {
@@ -73469,16 +73480,6 @@ var SelectedDevices = _react2.default.createClass({
     var state = {};
     state[ref] = !this.state[ref];
     this.setState(state);
-  },
-  _showButton: function _showButton() {
-    this.setState({
-      selectedGroup: {
-        payload: null,
-        text: null
-      },
-      showInput: true
-    });
-    this.refs.customGroup.focus();
   },
 
   _getGroupNames: function _getGroupNames(list) {

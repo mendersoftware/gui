@@ -38,16 +38,6 @@ var SelectedDevices = React.createClass({
     state[ref] = !this.state[ref];
     this.setState(state);
   },
-  _showButton: function() {
-    this.setState({
-      selectedGroup: {
-        payload:null,
-        text: null
-      },
-      showInput: true
-    });
-    this.refs.customGroup.focus();
-  },
 
   _getGroupNames: function(list) {
     /* TODO - move or tidy */

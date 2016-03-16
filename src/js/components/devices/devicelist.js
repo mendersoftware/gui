@@ -154,6 +154,17 @@ var DeviceList = React.createClass({
       textFieldValue: group.name
     };
   },
+
+  _showButton: function() {
+    this.setState({
+      selectedGroup: {
+        payload:null,
+        text: null
+      },
+      showInput: true
+    });
+    this.refs.customGroup.focus();
+  },
   render: function() {
     var styles = {
       exampleFlatButtonIcon: {
