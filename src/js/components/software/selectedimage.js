@@ -78,16 +78,11 @@ var SelectedImage = React.createClass({
   _descEdit: function(image, event) {
     event.stopPropagation();
     if (this.state.descEdit) {
-      image.description = this.state.descValue || event.target.value;
+      image.description = this.refs.description.getValue();
       // save change
       this.props.editImage(image);
     }
     this.setState({descEdit: !this.state.descEdit});
-  },
-  handleDescChange: function(event) {
-    this.setState({
-      descValue: event.target.value
-    });
   },
   render: function() {
     var info = {name: "-", tags: ['-'], model: "-", build_date: "-", modified: "-", size: "-", checksum: "-", devices: "-", description: "-"};
@@ -134,10 +129,9 @@ var SelectedImage = React.createClass({
     var descInput = (
       <TextField 
         className={this.state.descEdit ? null : "hidden"} 
-        style={{width:"100%"}} inputStyle={{ marginTop:"0"}} 
+        style={{width:"100%"}} inputStyle={{ marginTop:"0"}}
         multiLine={true} rowsMax={2} ref="description" 
         defaultValue={info.description} 
-        onChange={this.handleDescChange} 
         onEnterKeyDown={this._descEdit.bind(null, this.props.image)} />
     );
 
