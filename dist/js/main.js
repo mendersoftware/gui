@@ -72649,10 +72649,10 @@ var DeviceList = _react2.default.createClass({
         ),
         _react2.default.createElement(
           TableRowColumn,
-          { style: { maxWidth: "40" }, className: 'expandButton' },
+          { style: { width: "66", paddingRight: "0", paddingLeft: "12" }, className: 'expandButton' },
           _react2.default.createElement(
             IconButton,
-            { onClick: this._expandRow.bind(this, index) },
+            { className: 'float-right', onClick: this._expandRow.bind(this, index) },
             _react2.default.createElement(
               FontIcon,
               { className: 'material-icons' },
@@ -72756,7 +72756,7 @@ var DeviceList = _react2.default.createClass({
               ),
               _react2.default.createElement(
                 TableHeaderColumn,
-                { tooltip: 'Show details' },
+                { style: { width: "66", paddingRight: "12", paddingLeft: "12" }, tooltip: 'Show details' },
                 'Show details'
               )
             )
@@ -74107,7 +74107,7 @@ var Repository = _react2.default.createClass({
         ),
         _react2.default.createElement(
           TableRowColumn,
-          { className: 'expandButton' },
+          { style: { width: "66", paddingRight: "0", paddingLeft: "12" }, className: 'expandButton' },
           _react2.default.createElement(
             IconButton,
             null,
@@ -74233,7 +74233,7 @@ var Repository = _react2.default.createClass({
               ),
               _react2.default.createElement(
                 TableHeaderColumn,
-                { className: 'columnHeader', tooltip: 'Show details' },
+                { style: { width: "66", paddingRight: "12", paddingLeft: "12" }, className: 'columnHeader', tooltip: 'Show details' },
                 'Show details'
               )
             )

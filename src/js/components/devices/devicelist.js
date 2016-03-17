@@ -227,8 +227,8 @@ var DeviceList = React.createClass({
           <TableRowColumn>{device.model}</TableRowColumn>
           <TableRowColumn>{device.software_version}</TableRowColumn>
           <TableRowColumn>{device.status}</TableRowColumn>
-          <TableRowColumn style={{maxWidth:"40"}} className="expandButton">
-            <IconButton onClick={this._expandRow.bind(this, index)}><FontIcon className="material-icons">{ expanded ? "arrow_drop_up" : "arrow_drop_down"}</FontIcon></IconButton>
+          <TableRowColumn style={{width:"66", paddingRight:"0", paddingLeft:"12"}} className="expandButton">
+            <IconButton className="float-right" onClick={this._expandRow.bind(this, index)}><FontIcon className="material-icons">{ expanded ? "arrow_drop_up" : "arrow_drop_down"}</FontIcon></IconButton>
           </TableRowColumn>
           <TableRowColumn style={{width:"0", overflow:"visible"}}>
             <div className={expanded ? "expanded" : null}>
@@ -287,7 +287,7 @@ var DeviceList = React.createClass({
                 <TableHeaderColumn tooltip="Device type">Device type</TableHeaderColumn>
                 <TableHeaderColumn tooltip="Current software">Current software</TableHeaderColumn>
                 <TableHeaderColumn tooltip="Status">Status</TableHeaderColumn>
-                <TableHeaderColumn tooltip="Show details">Show details</TableHeaderColumn>
+                <TableHeaderColumn style={{width:"66", paddingRight:"12", paddingLeft:"12"}} tooltip="Show details">Show details</TableHeaderColumn>
               </TableRow>
             </TableHeader>
             <TableBody
