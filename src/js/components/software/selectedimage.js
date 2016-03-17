@@ -24,6 +24,9 @@ var SelectedImage = React.createClass({
       descEdit: false
     };
   },
+  componentDidUpdate: function(prevProps, prevState) {
+    if (this.state.descEdit) { this.refs.description.focus() };
+  },
   _handleLinkClick: function(model) {
     var filters = "model="+model;
     filters = encodeURIComponent(filters);
@@ -75,7 +78,7 @@ var SelectedImage = React.createClass({
   _descEdit: function(image, event) {
     event.stopPropagation();
     if (this.state.descEdit) {
-      image.description = this.state.descValue;
+      image.description = this.state.descValue || event.target.value;
       // save change
       this.props.editImage(image);
     }
@@ -90,7 +93,9 @@ var SelectedImage = React.createClass({
     var info = {name: "-", tags: ['-'], model: "-", build_date: "-", modified: "-", size: "-", checksum: "-", devices: "-", description: "-"};
     if (this.props.image) {
       for (var key in this.props.image) {
-        if (this.props.image[key] != null) { info[key] = this.props.image[key] };
+        if (this.props.image[key]) {
+          info[key] = this.props.image[key];
+        };
         if (key.indexOf("modified")!==-1) {
           info[key] = (
             <Time style={{position:"relative", top:"4"}} value={this.props.image[key]} format="YYYY/MM/DD HH:mm" />
@@ -127,44 +132,53 @@ var SelectedImage = React.createClass({
     );
 
     var descInput = (
-      <TextField ref="description" defaultValue={info.description} onChange={this.handleDescChange} />
+      <TextField 
+        className={this.state.descEdit ? null : "hidden"} 
+        style={{width:"100%"}} inputStyle={{ marginTop:"0"}} 
+        multiLine={true} rowsMax={2} ref="description" 
+        defaultValue={info.description} 
+        onChange={this.handleDescChange} 
+        onEnterKeyDown={this._descEdit.bind(null, this.props.image)} />
     );
 
     var tags = this.state.tagEdit ? tagInput : info.tags.join(', ');
-    var desc = this.state.descEdit ? descInput : info.description;
-
+  
     return (
       <div className={this.props.image.name == null ? "muted" : null}>
-        <div className="report-list">
-          <List style={{backgroundColor: "rgba(255,255,255,0)"}}>
-            <ListItem disabled={true} primaryText="Date built" secondaryText={info.build_date} />
-            <Divider />
-            <ListItem disabled={true} primaryText="Date uploaded" secondaryText={info.modified} />
-            <Divider />
-          </List>
+        <h3 className="margin-bottom-none">Image details</h3>
+        <div>
+          <div className="report-list">
+            <List style={{backgroundColor: "rgba(255,255,255,0)"}}>
+              <ListItem disabled={true} primaryText="Date built" secondaryText={info.build_date} />
+              <Divider />
+              <ListItem disabled={true} primaryText="Date uploaded" secondaryText={info.modified} />
+              <Divider />
+            </List>
+          </div>
+          <div className="report-list">
+            <List style={{backgroundColor: "rgba(255,255,255,0)"}}>
+              <ListItem disabled={true} primaryText="Checksum" style={{wordWrap:"break-word"}} secondaryText={info.checksum} />
+              <Divider />
+              <ListItem disabled={true} primaryText="Size" secondaryText={info.size} />
+              <Divider />
+            </List>
+          </div>
+          <div className="report-list" style={{width: "320"}}>
+            <List style={{backgroundColor: "rgba(255,255,255,0)"}}>
+              <ListItem rightIconButton={editButton} disabled={true} primaryText="Tags" secondaryText={tags} />
+              <Divider />
+            </List>
+          </div>
         </div>
-        <div className="report-list">
-          <List style={{backgroundColor: "rgba(255,255,255,0)"}}>
-            <ListItem disabled={true} primaryText="Checksum" secondaryTextLines={2} style={{wordWrap:"break-word"}} secondaryText={info.checksum} />
-            <Divider />
-            <ListItem disabled={true} primaryText="Size" secondaryText={info.size} />
-            <Divider />
-          </List>
-        </div>
-        <div className="report-list" style={{width: "320"}}>
-          <List style={{backgroundColor: "rgba(255,255,255,0)"}}>
-            <ListItem rightIconButton={editButton} disabled={true} primaryText="Tags" secondaryText={tags} />
-            <Divider />
-          </List>
-        </div>
-        <div className="float-right">
-          
-        </div>
-        <div className="margin-top">
-          <div className="report-list" style={{padding:"8px 0px", width:"590", verticalAlign:"top", position:"relative"}}>
+
+        <div className="relative" style={{top:"-18"}}>
+          <div className="report-list" style={{padding:"8px 0px", width:"590", position:"relative"}}>
             <div style={{padding:"20px 16px 15px", fontSize:"15", lineHeight:"15px"}}>
               <span style={{color:"rgba(0,0,0,0.8)"}}>Description</span>
-              <div style={{color:"rgba(0,0,0,0.54)", marginRight:"30", marginTop:"4"}}>{desc}</div>
+              <div style={{color:"rgba(0,0,0,0.54)", marginRight:"30", marginTop:"7", whiteSpace: "normal"}}>
+                <span className={this.state.descEdit ? "hidden" : null}>{info.description}</span>
+                {descInput}
+              </div>
               {editButtonDesc}
             </div>
             <hr style={{margin:"0", backgroundColor:"#e0e0e0", height:"1", border:"none"}} />
@@ -180,6 +194,8 @@ var SelectedImage = React.createClass({
               <Divider />
             </List>
           </div>
+       
+          <div className="report-list" style={{height:"130", width:"0"}}></div>
         </div>
       </div>
     );

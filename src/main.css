@@ -55,6 +55,9 @@ span.link:hover {
 .hidden {
   display: none !important;
 }
+.transparent {
+  opacity: 0;
+}
 .relative {
   position: relative;
 }
@@ -75,6 +78,9 @@ span.link:hover {
 }
 .margin-bottom {
   margin-bottom: 30px;
+}
+.margin-bottom-none {
+  margin-bottom: 0;
 }
 .padding-right {
   padding-right: 45px;
@@ -317,6 +323,7 @@ span.length {
   display: inline-block;
   margin-right: 30px;
   width: 280px;
+  vertical-align: bottom;
 }
 .tabContainer,
 .contentContainer {

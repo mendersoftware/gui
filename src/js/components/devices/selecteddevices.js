@@ -88,7 +88,8 @@ var SelectedDevices = React.createClass({
   handleDrag: function(tag, currPos, newPos) {
 
   },
-  _clickedEdit: function() {
+  _clickedEdit: function(event) {
+    event.stopPropagation();
     if (this.state.tagEdit) {
       var noIds = [];
       for (var i in tagslist) {
@@ -102,8 +103,6 @@ var SelectedDevices = React.createClass({
   },
 
   render: function() {
-    var hideInfo = {display: "none"};
-    var deviceInfo ='';
    
     var styles = {
       editButton: {
@@ -135,8 +134,7 @@ var SelectedDevices = React.createClass({
      
       var tags = this.state.tagEdit ? tagInput : this.props.selected[0].tags.join(', ') || '-';
      
-      hideInfo = {display: "block"};
-      deviceInfo = (
+      var deviceInfo = (
         <div>
           <div className="report-list">
             <List>
@@ -195,11 +193,10 @@ var SelectedDevices = React.createClass({
 
     return (
       <div>
-        <div style={hideInfo}>
-          <h3>Device details</h3>
-          {deviceInfo}
-        </div>
-
+     
+        <h3 className="margin-bottom-none">Device details</h3>
+        {deviceInfo}
+   
         <Dialog
           open={this.state.schedule}
           title='Deploy an update'

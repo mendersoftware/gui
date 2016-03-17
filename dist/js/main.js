@@ -73529,7 +73529,8 @@ var SelectedDevices = _react2.default.createClass({
     });
   },
   handleDrag: function handleDrag(tag, currPos, newPos) {},
-  _clickedEdit: function _clickedEdit() {
+  _clickedEdit: function _clickedEdit(event) {
+    event.stopPropagation();
     if (this.state.tagEdit) {
       var noIds = [];
       for (var i in tagslist) {
@@ -73543,8 +73544,6 @@ var SelectedDevices = _react2.default.createClass({
   },
 
   render: function render() {
-    var hideInfo = { display: "none" };
-    var deviceInfo = '';
 
     var styles = {
       editButton: {
@@ -73573,8 +73572,7 @@ var SelectedDevices = _react2.default.createClass({
 
       var tags = this.state.tagEdit ? tagInput : this.props.selected[0].tags.join(', ') || '-';
 
-      hideInfo = { display: "block" };
-      deviceInfo = _react2.default.createElement(
+      var deviceInfo = _react2.default.createElement(
         'div',
         null,
         _react2.default.createElement(
@@ -73651,15 +73649,11 @@ var SelectedDevices = _react2.default.createClass({
       'div',
       null,
       _react2.default.createElement(
-        'div',
-        { style: hideInfo },
-        _react2.default.createElement(
-          'h3',
-          null,
-          'Device details'
-        ),
-        deviceInfo
+        'h3',
+        { className: 'margin-bottom-none' },
+        'Device details'
       ),
+      deviceInfo,
       _react2.default.createElement(
         Dialog,
         {
@@ -74404,6 +74398,11 @@ var SelectedImage = _react2.default.createClass({
       descEdit: false
     };
   },
+  componentDidUpdate: function componentDidUpdate(prevProps, prevState) {
+    if (this.state.descEdit) {
+      this.refs.description.focus();
+    };
+  },
   _handleLinkClick: function _handleLinkClick(model) {
     var filters = "model=" + model;
     filters = encodeURIComponent(filters);
@@ -74453,7 +74452,7 @@ var SelectedImage = _react2.default.createClass({
   _descEdit: function _descEdit(image, event) {
     event.stopPropagation();
     if (this.state.descEdit) {
-      image.description = this.state.descValue;
+      image.description = this.state.descValue || event.target.value;
       // save change
       this.props.editImage(image);
     }
@@ -74468,7 +74467,7 @@ var SelectedImage = _react2.default.createClass({
     var info = { name: "-", tags: ['-'], model: "-", build_date: "-", modified: "-", size: "-", checksum: "-", devices: "-", description: "-" };
     if (this.props.image) {
       for (var key in this.props.image) {
-        if (this.props.image[key] != null) {
+        if (this.props.image[key]) {
           info[key] = this.props.image[key];
         };
         if (key.indexOf("modified") !== -1) {
@@ -74502,55 +74501,68 @@ var SelectedImage = _react2.default.createClass({
       handleDrag: this.handleDrag,
       delimeters: [9, 13, 188] });
 
-    var descInput = _react2.default.createElement(TextField, { ref: 'description', defaultValue: info.description, onChange: this.handleDescChange });
+    var descInput = _react2.default.createElement(TextField, {
+      className: this.state.descEdit ? null : "hidden",
+      style: { width: "100%" }, inputStyle: { marginTop: "0" },
+      multiLine: true, rowsMax: 2, ref: 'description',
+      defaultValue: info.description,
+      onChange: this.handleDescChange,
+      onEnterKeyDown: this._descEdit.bind(null, this.props.image) });
 
     var tags = this.state.tagEdit ? tagInput : info.tags.join(', ');
-    var desc = this.state.descEdit ? descInput : info.description;
 
     return _react2.default.createElement(
       'div',
       { className: this.props.image.name == null ? "muted" : null },
       _react2.default.createElement(
-        'div',
-        { className: 'report-list' },
-        _react2.default.createElement(
-          List,
-          { style: { backgroundColor: "rgba(255,255,255,0)" } },
-          _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Date built', secondaryText: info.build_date }),
-          _react2.default.createElement(Divider, null),
-          _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Date uploaded', secondaryText: info.modified }),
-          _react2.default.createElement(Divider, null)
-        )
+        'h3',
+        { className: 'margin-bottom-none' },
+        'Image details'
       ),
       _react2.default.createElement(
         'div',
-        { className: 'report-list' },
-        _react2.default.createElement(
-          List,
-          { style: { backgroundColor: "rgba(255,255,255,0)" } },
-          _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Checksum', secondaryTextLines: 2, style: { wordWrap: "break-word" }, secondaryText: info.checksum }),
-          _react2.default.createElement(Divider, null),
-          _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Size', secondaryText: info.size }),
-          _react2.default.createElement(Divider, null)
-        )
-      ),
-      _react2.default.createElement(
-        'div',
-        { className: 'report-list', style: { width: "320" } },
-        _react2.default.createElement(
-          List,
-          { style: { backgroundColor: "rgba(255,255,255,0)" } },
-          _react2.default.createElement(ListItem, { rightIconButton: editButton, disabled: true, primaryText: 'Tags', secondaryText: tags }),
-          _react2.default.createElement(Divider, null)
-        )
-      ),
-      _react2.default.createElement('div', { className: 'float-right' }),
-      _react2.default.createElement(
-        'div',
-        { className: 'margin-top' },
+        null,
         _react2.default.createElement(
           'div',
-          { className: 'report-list', style: { padding: "8px 0px", width: "590", verticalAlign: "top", position: "relative" } },
+          { className: 'report-list' },
+          _react2.default.createElement(
+            List,
+            { style: { backgroundColor: "rgba(255,255,255,0)" } },
+            _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Date built', secondaryText: info.build_date }),
+            _react2.default.createElement(Divider, null),
+            _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Date uploaded', secondaryText: info.modified }),
+            _react2.default.createElement(Divider, null)
+          )
+        ),
+        _react2.default.createElement(
+          'div',
+          { className: 'report-list' },
+          _react2.default.createElement(
+            List,
+            { style: { backgroundColor: "rgba(255,255,255,0)" } },
+            _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Checksum', style: { wordWrap: "break-word" }, secondaryText: info.checksum }),
+            _react2.default.createElement(Divider, null),
+            _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Size', secondaryText: info.size }),
+            _react2.default.createElement(Divider, null)
+          )
+        ),
+        _react2.default.createElement(
+          'div',
+          { className: 'report-list', style: { width: "320" } },
+          _react2.default.createElement(
+            List,
+            { style: { backgroundColor: "rgba(255,255,255,0)" } },
+            _react2.default.createElement(ListItem, { rightIconButton: editButton, disabled: true, primaryText: 'Tags', secondaryText: tags }),
+            _react2.default.createElement(Divider, null)
+          )
+        )
+      ),
+      _react2.default.createElement(
+        'div',
+        { className: 'relative', style: { top: "-18" } },
+        _react2.default.createElement(
+          'div',
+          { className: 'report-list', style: { padding: "8px 0px", width: "590", position: "relative" } },
           _react2.default.createElement(
             'div',
             { style: { padding: "20px 16px 15px", fontSize: "15", lineHeight: "15px" } },
@@ -74561,8 +74573,13 @@ var SelectedImage = _react2.default.createClass({
             ),
             _react2.default.createElement(
               'div',
-              { style: { color: "rgba(0,0,0,0.54)", marginRight: "30", marginTop: "4" } },
-              desc
+              { style: { color: "rgba(0,0,0,0.54)", marginRight: "30", marginTop: "7", whiteSpace: "normal" } },
+              _react2.default.createElement(
+                'span',
+                { className: this.state.descEdit ? "hidden" : null },
+                info.description
+              ),
+              descInput
             ),
             editButtonDesc
           ),
@@ -74586,7 +74603,8 @@ var SelectedImage = _react2.default.createClass({
               ) }),
             _react2.default.createElement(Divider, null)
           )
-        )
+        ),
+        _react2.default.createElement('div', { className: 'report-list', style: { height: "130", width: "0" } })
       )
     );
   }
