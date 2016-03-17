@@ -386,8 +386,8 @@ tr.expand td div.expanded {
   background-color: #ffffff;
 }
 tr.expand td div.expanded > div {
-  -webkit-animation: fadein 0.7s 1;
-          animation: fadein 0.7s 1;
+  -webkit-animation: fadein 0.5s 1;
+          animation: fadein 0.5s 1;
 }
 tr.expand td:first-child > div div {
   margin-top: -1px;
