@@ -364,7 +364,7 @@ hr.table-divider {
   background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.03), rgba(0, 0, 0, 0));
 }
 tr.expand {
-  height: 380px !important;
+  height: 374px !important;
   background-color: #e0e0e0;
   -webkit-transition: height 0.2s ease-out;
   -moz-transition: height 0.2s ease-out;
@@ -382,7 +382,7 @@ tr.expand td div.expanded {
   padding: 0 30px;
   right: 0;
   padding-right: 45px;
-  height: 331px;
+  height: 325px;
   background-color: #ffffff;
 }
 tr.expand td div.expanded > div {
@@ -397,6 +397,12 @@ tr.expand td:last-child {
 }
 tr.expand td.expandButton {
   padding-top: 2px;
+}
+tr.expand.devices {
+  height: 340px !important;
+}
+tr.expand.devices td div.expanded {
+  height: 290px;
 }
 .fixedButtons {
   position: fixed;

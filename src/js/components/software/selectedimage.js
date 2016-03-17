@@ -171,7 +171,7 @@ var SelectedImage = React.createClass({
           </div>
         </div>
 
-        <div className="relative" style={{top:"-18"}}>
+        <div className="relative" style={{top:"-24"}}>
           <div className="report-list" style={{padding:"8px 0px", width:"590", position:"relative"}}>
             <div style={{padding:"20px 16px 15px", fontSize:"15", lineHeight:"15px"}}>
               <span style={{color:"rgba(0,0,0,0.8)"}}>Description</span>

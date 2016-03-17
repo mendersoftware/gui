@@ -222,7 +222,7 @@ var DeviceList = React.createClass({
         expanded = <SelectedDevices images={this.props.images} devices={this.props.devices} selected={[device]} selectedGroup={this.props.selectedGroup} groups={this.props.groups} />
       }
       return (
-        <TableRow selected={this._ifSelected(device.name)} hoverable={!expanded} className={expanded ? "expand" : null}  key={index}>
+        <TableRow selected={this._ifSelected(device.name)} hoverable={!expanded} className={expanded ? "expand devices" : null}  key={index}>
           <TableRowColumn>{device.name}</TableRowColumn>
           <TableRowColumn>{device.model}</TableRowColumn>
           <TableRowColumn>{device.software_version}</TableRowColumn>

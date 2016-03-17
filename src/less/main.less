@@ -425,7 +425,7 @@ hr.table-divider {
 // table expanding
 
 tr.expand {
-  height: 380px !important;
+  height: 374px !important;
   background-color: rgb(224,224,224);
   .transition(height 0.2s ease-out);
 
@@ -440,13 +440,15 @@ tr.expand {
       padding: 0 30px; 
       right: 0;
       padding-right: 45px;
-      height: 331px;
+      height: 325px;
       background-color: #ffffff;
     }
 
     div.expanded>div {
         animation: fadein 0.7s 1;
     }
+
+   
   }
 
   td:first-child>div div {
@@ -459,6 +461,15 @@ tr.expand {
     padding-top: 2px;
   }
 }
+
+tr.expand.devices {
+  height: 340px !important;
+
+  td div.expanded {
+    height: 290px;
+  }
+}
+
 
 .fixedButtons {
   position: fixed;

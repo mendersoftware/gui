@@ -72626,7 +72626,7 @@ var DeviceList = _react2.default.createClass({
       }
       return _react2.default.createElement(
         TableRow,
-        { selected: this._ifSelected(device.name), hoverable: !expanded, className: expanded ? "expand" : null, key: index },
+        { selected: this._ifSelected(device.name), hoverable: !expanded, className: expanded ? "expand devices" : null, key: index },
         _react2.default.createElement(
           TableRowColumn,
           null,
@@ -74559,7 +74559,7 @@ var SelectedImage = _react2.default.createClass({
       ),
       _react2.default.createElement(
         'div',
-        { className: 'relative', style: { top: "-18" } },
+        { className: 'relative', style: { top: "-24" } },
         _react2.default.createElement(
           'div',
           { className: 'report-list', style: { padding: "8px 0px", width: "590", position: "relative" } },
