@@ -74556,7 +74556,7 @@ var SelectedImage = _react2.default.createClass({
         { className: 'relative', style: { top: "-24" } },
         _react2.default.createElement(
           'div',
-          { className: 'report-list', style: { padding: "8px 0px", width: "590", position: "relative" } },
+          { className: 'report-list', style: { padding: "8px 0px", width: "63%", position: "relative" } },
           _react2.default.createElement(
             'div',
             { style: { padding: "20px 16px 15px", fontSize: "15", lineHeight: "15px" } },
