@@ -165,6 +165,9 @@ var DeviceList = React.createClass({
     });
     this.refs.customGroup.focus();
   },
+  _onClick: function(event) {
+    event.stopPropagation();
+  },
   render: function() {
     var styles = {
       exampleFlatButtonIcon: {
@@ -231,7 +234,7 @@ var DeviceList = React.createClass({
             <IconButton className="float-right" onClick={this._expandRow.bind(this, index)}><FontIcon className="material-icons">{ expanded ? "arrow_drop_up" : "arrow_drop_down"}</FontIcon></IconButton>
           </TableRowColumn>
           <TableRowColumn style={{width:"0", overflow:"visible"}}>
-            <div className={expanded ? "expanded" : null}>
+            <div onClick={this._onClick} className={expanded ? "expanded" : null}>
               {expanded}
             </div>
           </TableRowColumn>

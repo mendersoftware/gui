@@ -394,7 +394,7 @@ tr.expand {
 }
 tr.expand td {
   vertical-align: top;
-  padding-top: 18px;
+  padding-top: 16px;
 }
 tr.expand td div.expanded {
   position: absolute;

@@ -72569,6 +72569,9 @@ var DeviceList = _react2.default.createClass({
     });
     this.refs.customGroup.focus();
   },
+  _onClick: function _onClick(event) {
+    event.stopPropagation();
+  },
   render: function render() {
     var styles = {
       exampleFlatButtonIcon: {
@@ -72665,7 +72668,7 @@ var DeviceList = _react2.default.createClass({
           { style: { width: "0", overflow: "visible" } },
           _react2.default.createElement(
             'div',
-            { className: expanded ? "expanded" : null },
+            { onClick: this._onClick, className: expanded ? "expanded" : null },
             expanded
           )
         )
