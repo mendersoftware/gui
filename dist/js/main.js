@@ -72587,7 +72587,7 @@ var DeviceList = _react2.default.createClass({
         marginLeft: "10",
         opacity: "0.5",
         float: "right",
-        marginRight: "160"
+        marginRight: "130"
       },
       buttonIcon: {
         height: '100%',
@@ -73119,7 +73119,7 @@ var Filters = _react2.default.createClass({
         { style: { width: "100%", position: "relative" } },
         _react2.default.createElement(
           FlatButton,
-          { style: { position: "absolute", right: "30" }, secondary: true, onClick: this._toggleNav, label: filterCount > 0 ? "Filters (" + filterCount + ")" : "Filters" },
+          { style: { position: "absolute", right: "0" }, secondary: true, onClick: this._toggleNav, label: filterCount > 0 ? "Filters (" + filterCount + ")" : "Filters" },
           _react2.default.createElement(
             FontIcon,
             { style: styles.exampleFlatButtonIcon, className: 'material-icons' },
@@ -74165,11 +74165,28 @@ var Repository = _react2.default.createClass({
       'div',
       null,
       _react2.default.createElement(
-        'h3',
-        null,
-        'Available images'
+        'div',
+        { className: 'top-right-button' },
+        _react2.default.createElement(
+          RaisedButton,
+          { key: 'file_upload', onClick: this._openUpload.bind(null, "upload", null), label: 'Upload image file', labelPosition: 'after', secondary: true },
+          _react2.default.createElement(
+            FontIcon,
+            { style: styles.buttonIcon, className: 'material-icons' },
+            'file_upload'
+          )
+        )
       ),
-      _react2.default.createElement(_reactSearchInput2.default, { className: 'search tableSearch', ref: 'search', onChange: this.searchUpdated }),
+      _react2.default.createElement(
+        'div',
+        null,
+        _react2.default.createElement(
+          'h3',
+          { className: 'inline-block' },
+          'Available images'
+        ),
+        _react2.default.createElement(_reactSearchInput2.default, { placeholder: 'Search images', className: 'search tableSearch', ref: 'search', onChange: this.searchUpdated })
+      ),
       _react2.default.createElement(
         'div',
         { style: { position: "relative" } },
@@ -74251,23 +74268,6 @@ var Repository = _react2.default.createClass({
           'p',
           { className: items.length ? 'hidden' : 'italic margin-left' },
           'No images found'
-        )
-      ),
-      _react2.default.createElement(
-        'div',
-        null,
-        _react2.default.createElement(
-          'div',
-          { className: 'float-right' },
-          _react2.default.createElement(
-            RaisedButton,
-            { key: 'file_upload', onClick: this._openUpload.bind(null, "upload", null), label: 'Upload image file', labelPosition: 'after', secondary: true },
-            _react2.default.createElement(
-              FontIcon,
-              { style: styles.buttonIcon, className: 'material-icons' },
-              'file_upload'
-            )
-          )
         )
       ),
       _react2.default.createElement(

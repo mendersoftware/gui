@@ -303,9 +303,18 @@ var Repository = React.createClass({
 
     return (
       <div>
+
+        <div className="top-right-button">
+          <RaisedButton key="file_upload" onClick={this._openUpload.bind(null,"upload", null)} label="Upload image file" labelPosition="after" secondary={true}>
+            <FontIcon style={styles.buttonIcon} className="material-icons">file_upload</FontIcon>
+          </RaisedButton>
+        </div>
       
-        <h3>Available images</h3>
-        <SearchInput className="search tableSearch" ref='search' onChange={this.searchUpdated} />
+        <div>
+          <h3 className="inline-block">Available images</h3>
+          <SearchInput placeholder="Search images" className="search tableSearch" ref='search' onChange={this.searchUpdated} />
+        </div>
+        
         <div style={{position: "relative"}}>
           <Table
             onRowSelection={this._onRowSelection}
@@ -335,14 +344,6 @@ var Repository = React.createClass({
           </p>
         </div>
 
-        <div>
-          <div className="float-right">
-            <RaisedButton key="file_upload" onClick={this._openUpload.bind(null,"upload", null)} label="Upload image file" labelPosition="after" secondary={true}>
-              <FontIcon style={styles.buttonIcon} className="material-icons">file_upload</FontIcon>
-            </RaisedButton>
-          </div>
- 
-        </div>
         <Dialog
           key="upload1"
           ref="upload"

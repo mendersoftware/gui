@@ -141,6 +141,9 @@ span.link:hover {
   display: flex;
   overflow: hidden;
 }
+.overflow-hidden {
+  overflow: hidden;
+}
 .align-top {
   display: inline-block;
   vertical-align: top;
@@ -280,9 +283,10 @@ span.length {
   -o-transform: rotateX(180deg) !important;
 }
 .tableSearch {
-  position: absolute;
-  right: 45px;
-  top: 30px;
+  display: inline-block;
+  margin-left: 45px;
+  position: relative;
+  top: -4px;
 }
 .search input,
 .search input:focus {
@@ -292,24 +296,42 @@ span.length {
   border-right: none;
   border-bottom: solid 1px #e0e0e0;
   padding: 7px 0;
-  font-size: 16px;
+  padding-left: 24px;
+  font-size: 13px;
   font-family: Lato, sans-serif;
   color: rgba(0, 0, 0, 0.8);
 }
 .search input::-webkit-input-placeholder,
 .search input:focus::-webkit-input-placeholder {
   color: rgba(0, 0, 0, 0.3);
+  content: "Search";
 }
 .search input:-moz-placeholder,
 .search input:focus:-moz-placeholder {
   color: rgba(0, 0, 0, 0.3);
+  content: "Search";
 }
 .search input::-moz-placeholder,
 .search input:focus::-moz-placeholder {
   color: rgba(0, 0, 0, 0.3);
+  content: "Search";
 }
 .search input:-ms-input-placeholder,
 .search input:focus:-ms-input-placeholder {
+  color: rgba(0, 0, 0, 0.3);
+  content: "Search";
+}
+.search::before {
+  content: "\26b2";
+  display: block;
+  position: absolute;
+  width: 15px;
+  z-index: 3;
+  height: 15px;
+  -webkit-transform: rotate(-45deg);
+          transform: rotate(-45deg);
+  font-size: 20px;
+  line-height: 32px;
   color: rgba(0, 0, 0, 0.3);
 }
 .closeSlider {
@@ -414,6 +436,11 @@ tr.expand.devices td div.expanded {
           animation: fadein 0.3s 1;
   border-bottom-left-radius: 2px;
   border-top-left-radius: 2px;
+}
+.top-right-button {
+  position: absolute;
+  top: 30px;
+  right: 45px;
 }
 .tagContainer {
   margin-top: 20px;

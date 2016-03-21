@@ -183,7 +183,7 @@ var DeviceList = React.createClass({
         marginLeft:"10",
         opacity:"0.5",
         float:"right",
-        marginRight:"160"
+        marginRight:"130"
       },
       buttonIcon: {
         height: '100%',

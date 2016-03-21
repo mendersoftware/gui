@@ -195,6 +195,10 @@ a, span.link {
   overflow: hidden;
 }
 
+.overflow-hidden {
+  overflow: hidden;
+}
+
 .align-top {
   display: inline-block;
   vertical-align: top;
@@ -332,9 +336,10 @@ span.length {
 }
 
 .tableSearch {
-  position: absolute;
-  right: 45px;
-  top: 30px;
+  display: inline-block;
+  margin-left: 45px;
+  position: relative;
+  top: -4px;
 }
 
 .search {
@@ -346,14 +351,29 @@ span.length {
     border-right: none;
     border-bottom: solid 1px #e0e0e0;
     padding: 7px 0;
-    font-size: 16px;
+    padding-left: 24px;
+    font-size: 13px;
     font-family: Lato, sans-serif;
     color: rgba(0,0,0,0.8);
 
     .placeholder({
       color: rgba(0,0,0,0.3);
+      content: "Search";
     });
   }
+}
+
+.search::before {
+  content: "\26b2";
+  display: block;
+  position: absolute;
+  width: 15px;
+  z-index: 3;
+  height: 15px;
+  transform: rotate(-45deg);
+  font-size: 20px;
+  line-height: 32px;
+  color: rgba(0,0,0,0.3);
 }
 
 
@@ -480,6 +500,12 @@ tr.expand.devices {
   animation: fadein 0.3s 1;
   border-bottom-left-radius: 2px;
   border-top-left-radius: 2px;
+}
+
+.top-right-button {
+  position: absolute;
+  top: 30px;
+  right: 45px;
 }
 
 
