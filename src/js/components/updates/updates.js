@@ -215,10 +215,10 @@ var Updates = React.createClass({
     return (
       <div className="contentContainer">
         <div>
-          <Recent recent={this.state.recent} progress={this.state.progress} showReport={this._showReport} />
-          <div style={{marginTop:"45"}} className="float-right">
+          <div className="top-right-button">
             <ScheduleButton secondary={true} openDialog={this.dialogOpen} />
           </div>
+          <Recent recent={this.state.recent} progress={this.state.progress} showReport={this._showReport} />
         </div>
       
         <Dialog

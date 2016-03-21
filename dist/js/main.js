@@ -76336,12 +76336,12 @@ var Updates = _react2.default.createClass({
       _react2.default.createElement(
         'div',
         null,
-        _react2.default.createElement(Recent, { recent: this.state.recent, progress: this.state.progress, showReport: this._showReport }),
         _react2.default.createElement(
           'div',
-          { style: { marginTop: "45" }, className: 'float-right' },
+          { className: 'top-right-button' },
           _react2.default.createElement(ScheduleButton, { secondary: true, openDialog: this.dialogOpen })
-        )
+        ),
+        _react2.default.createElement(Recent, { recent: this.state.recent, progress: this.state.progress, showReport: this._showReport })
       ),
       _react2.default.createElement(
         Dialog,
