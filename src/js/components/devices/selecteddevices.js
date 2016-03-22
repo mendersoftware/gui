@@ -1,4 +1,5 @@
 import React from 'react';
+import { Router, Link } from 'react-router';
 var AppStore = require('../../stores/app-store');
 var AppActions = require('../../actions/app-actions');
 var ScheduleForm = require('../updates/scheduleform');
@@ -133,7 +134,13 @@ var SelectedDevices = React.createClass({
       );
      
       var tags = this.state.tagEdit ? tagInput : this.props.selected[0].tags.join(', ') || '-';
-     
+      var encodedSoftware = encodeURIComponent(this.props.selected[0].software_version); 
+      var softwareLink = (
+        <div>
+          <Link style={{fontWeight:"500"}} to={`/software/${encodedSoftware}`}>{this.props.selected[0].software_version}</Link>
+        </div>
+      )
+
       var deviceInfo = (
         <div>
           <div className="report-list">
@@ -148,7 +155,7 @@ var SelectedDevices = React.createClass({
           </div>
           <div className="report-list">
             <List>
-              <ListItem disabled={true} primaryText="Software" secondaryText={this.props.selected[0].software_version} />
+              <ListItem disabled={true} primaryText="Software" secondaryText={softwareLink} />
               <Divider />
               <ListItem disabled={true} primaryText="Architecture" secondaryText={this.props.selected[0].arch} />
               <Divider />

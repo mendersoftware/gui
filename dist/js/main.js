@@ -73441,6 +73441,8 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
+var _reactRouter = require('react-router');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var AppStore = require('../../stores/app-store');
@@ -73574,6 +73576,16 @@ var SelectedDevices = _react2.default.createClass({
         delimeters: [9, 13, 188] });
 
       var tags = this.state.tagEdit ? tagInput : this.props.selected[0].tags.join(', ') || '-';
+      var encodedSoftware = encodeURIComponent(this.props.selected[0].software_version);
+      var softwareLink = _react2.default.createElement(
+        'div',
+        null,
+        _react2.default.createElement(
+          _reactRouter.Link,
+          { style: { fontWeight: "500" }, to: '/software/' + encodedSoftware },
+          this.props.selected[0].software_version
+        )
+      );
 
       var deviceInfo = _react2.default.createElement(
         'div',
@@ -73598,7 +73610,7 @@ var SelectedDevices = _react2.default.createClass({
           _react2.default.createElement(
             List,
             null,
-            _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Software', secondaryText: this.props.selected[0].software_version }),
+            _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Software', secondaryText: softwareLink }),
             _react2.default.createElement(Divider, null),
             _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Architecture', secondaryText: this.props.selected[0].arch }),
             _react2.default.createElement(Divider, null),
@@ -73676,7 +73688,7 @@ var SelectedDevices = _react2.default.createClass({
 
 module.exports = SelectedDevices;
 
-},{"../../actions/app-actions":631,"../../stores/app-store":667,"../updates/scheduleform":661,"material-ui":250,"react":626,"react-tag-input":458}],647:[function(require,module,exports){
+},{"../../actions/app-actions":631,"../../stores/app-store":667,"../updates/scheduleform":661,"material-ui":250,"react":626,"react-router":432,"react-tag-input":458}],647:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -73892,6 +73904,9 @@ var Repository = _react2.default.createClass({
 
   componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
     software = nextProps.software;
+    if (nextProps.selected) {
+      this.setState({ image: nextProps.selected });
+    }
   },
 
   _handleFieldChange: function _handleFieldChange(field, e) {
@@ -74656,7 +74671,8 @@ var Software = _react2.default.createClass({
     return {
       repo: [],
       groups: [],
-      software: []
+      software: [],
+      selected: null
     };
   },
   componentWillMount: function componentWillMount() {
@@ -74671,12 +74687,20 @@ var Software = _react2.default.createClass({
   _onChange: function _onChange() {
     this.setState({ groups: AppStore.getGroups() }, function () {});
     this.setState({ software: AppStore.getSoftwareRepo() }, function () {});
+
+    if (this.props.params) {
+      if (this.props.params.softwareVersion) {
+        // selected software
+        var image = AppStore.getSoftwareImage("name", this.props.params.softwareVersion);
+        this.setState({ selected: image });
+      }
+    }
   },
   render: function render() {
     return _react2.default.createElement(
       'div',
       { className: 'contentContainer' },
-      _react2.default.createElement(Repository, { software: this.state.software, groups: this.state.groups })
+      _react2.default.createElement(Repository, { selected: this.state.selected, software: this.state.software, groups: this.state.groups })
     );
   }
 });
@@ -76426,7 +76450,11 @@ module.exports = _react2.default.createElement(
       _react2.default.createElement(_reactRouter.Route, { path: '(:filters)' })
     )
   ),
-  _react2.default.createElement(_reactRouter.Route, { path: '/software', component: _software2.default }),
+  _react2.default.createElement(
+    _reactRouter.Route,
+    { path: '/software', component: _software2.default },
+    _react2.default.createElement(_reactRouter.Route, { path: '(:softwareVersion)' })
+  ),
   _react2.default.createElement(
     _reactRouter.Route,
     { path: '/updates', component: _updates2.default },

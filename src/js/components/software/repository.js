@@ -58,6 +58,9 @@ var Repository = React.createClass({
 
   componentWillReceiveProps: function(nextProps) {
     software = nextProps.software;
+    if (nextProps.selected) {
+      this.setState({image: nextProps.selected});
+    }
   },
 
   _handleFieldChange: function(field, e) {
