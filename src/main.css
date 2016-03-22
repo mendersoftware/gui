@@ -525,7 +525,7 @@ input[type="text"].fileInput:last-child {
   padding-right: 2%;
 }
 .health {
-  height: 22vh;
+  height: 26vh;
   position: relative;
 }
 .health .health-panel {
@@ -621,7 +621,6 @@ span.day {
   top: 40px;
   left: 0;
   right: 0;
-  bottom: 0;
 }
 .dashboard-header {
   border-bottom: 1px solid #d4e9e7;
