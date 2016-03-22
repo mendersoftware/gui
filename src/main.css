@@ -341,7 +341,8 @@ span.length {
   background-color: #EBEBEB !important;
 }
 /* report view */
-.report-list {
+.report-list,
+.list-item {
   display: inline-block;
   margin-right: 3%;
   width: 30%;
@@ -414,6 +415,7 @@ tr.expand td div.expanded {
 tr.expand td div.expanded > div {
   -webkit-animation: fadein 0.5s 1;
           animation: fadein 0.5s 1;
+  background-color: #ffffff;
 }
 tr.expand td:first-child > div div {
   margin-top: -1px;

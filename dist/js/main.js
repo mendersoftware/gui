@@ -74134,7 +74134,7 @@ var Repository = _react2.default.createClass({
           { style: { width: "66", paddingRight: "0", paddingLeft: "12" }, className: 'expandButton' },
           _react2.default.createElement(
             IconButton,
-            null,
+            { className: 'float-right' },
             _react2.default.createElement(
               FontIcon,
               { className: 'material-icons' },
@@ -74556,7 +74556,7 @@ var SelectedImage = _react2.default.createClass({
         null,
         _react2.default.createElement(
           'div',
-          { className: 'report-list' },
+          { className: 'image-list list-item' },
           _react2.default.createElement(
             List,
             { style: { backgroundColor: "rgba(255,255,255,0)" } },
@@ -74568,7 +74568,7 @@ var SelectedImage = _react2.default.createClass({
         ),
         _react2.default.createElement(
           'div',
-          { className: 'report-list' },
+          { className: 'image-list list-item' },
           _react2.default.createElement(
             List,
             { style: { backgroundColor: "rgba(255,255,255,0)" } },
@@ -74580,7 +74580,7 @@ var SelectedImage = _react2.default.createClass({
         ),
         _react2.default.createElement(
           'div',
-          { className: 'report-list' },
+          { className: 'image-list list-item' },
           _react2.default.createElement(
             List,
             { style: { backgroundColor: "rgba(255,255,255,0)" } },

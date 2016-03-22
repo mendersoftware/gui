@@ -260,7 +260,7 @@ var Repository = React.createClass({
           <TableRowColumn><Time value={pkg.modified} format="YYYY/MM/DD HH:mm" /></TableRowColumn>
           <TableRowColumn>{pkg.devices || 0}</TableRowColumn>
           <TableRowColumn style={{width:"66", paddingRight:"0", paddingLeft:"12"}} className="expandButton">
-            <IconButton><FontIcon className="material-icons">{ selected ? "arrow_drop_up" : "arrow_drop_down"}</FontIcon></IconButton>
+            <IconButton className="float-right"><FontIcon className="material-icons">{ selected ? "arrow_drop_up" : "arrow_drop_down"}</FontIcon></IconButton>
           </TableRowColumn>
           <TableRowColumn style={{width:"0", overflow:"visible"}}>
             <div onClick={this._onClick} className={this.state.image.name === pkg.name ? "expanded" : null}>

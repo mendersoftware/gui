@@ -149,7 +149,7 @@ var SelectedImage = React.createClass({
       <div className={this.props.image.name == null ? "muted" : null}>
         <h3 className="margin-bottom-none">Image details</h3>
         <div>
-          <div className="report-list">
+          <div className="image-list list-item">
             <List style={{backgroundColor: "rgba(255,255,255,0)"}}>
               <ListItem disabled={true} primaryText="Date built" secondaryText={info.build_date} />
               <Divider />
@@ -157,7 +157,7 @@ var SelectedImage = React.createClass({
               <Divider />
             </List>
           </div>
-          <div className="report-list">
+          <div className="image-list list-item">
             <List style={{backgroundColor: "rgba(255,255,255,0)"}}>
               <ListItem disabled={true} primaryText="Checksum" style={{wordWrap:"break-word"}} secondaryText={info.checksum} />
               <Divider />
@@ -165,7 +165,7 @@ var SelectedImage = React.createClass({
               <Divider />
             </List>
           </div>
-          <div className="report-list">
+          <div className="image-list list-item">
             <List style={{backgroundColor: "rgba(255,255,255,0)"}}>
               <ListItem disabled={true} primaryText="Installed on devices" secondaryText={devicesLink} />
               <Divider />
