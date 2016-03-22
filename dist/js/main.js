@@ -72440,6 +72440,12 @@ var DeviceList = _react2.default.createClass({
     };
   },
 
+  componentWillUpdate: function componentWillUpdate(nextProps, nextState) {
+    if (nextProps.selectedGroup !== this.props.selectedGroup) {
+      this.setState({ expanded: null });
+    }
+  },
+
   _onRowSelection: function _onRowSelection(rows) {
     if (rows === "all") {
       rows = [];

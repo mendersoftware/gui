@@ -34,6 +34,12 @@ var DeviceList = React.createClass({
       addGroup: false
     };
   },
+
+  componentWillUpdate: function(nextProps, nextState) {
+    if (nextProps.selectedGroup !== this.props.selectedGroup) {
+      this.setState({expanded: null});
+    }
+  },
   
   _onRowSelection: function(rows) {
     if (rows === "all") {
