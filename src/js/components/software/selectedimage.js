@@ -1,6 +1,6 @@
 import React from 'react';
 import Time from 'react-time';
-import Router from 'react-router';
+import { Router, Link } from 'react-router';
 
 // material ui
 import mui from 'material-ui';
@@ -136,7 +136,15 @@ var SelectedImage = React.createClass({
     );
 
     var tags = this.state.tagEdit ? tagInput : info.tags.join(', ');
-  
+    var devicesFilter = "software_version="+info.name;
+    devicesFilter = encodeURIComponent(devicesFilter);    
+    var devicesLink = (
+      <div>
+        <span>{info.devices}</span>
+        <Link className={info.devices == '-' ? 'hidden' : "listItem-link" } to={`/devices/0/${devicesFilter}`}>View devices</Link>
+      </div>
+    );
+
     return (
       <div className={this.props.image.name == null ? "muted" : null}>
         <h3 className="margin-bottom-none">Image details</h3>
@@ -157,8 +165,10 @@ var SelectedImage = React.createClass({
               <Divider />
             </List>
           </div>
-          <div className="report-list" style={{width: "320"}}>
+          <div className="report-list">
             <List style={{backgroundColor: "rgba(255,255,255,0)"}}>
+              <ListItem disabled={true} primaryText="Installed on devices" secondaryText={devicesLink} />
+              <Divider />
               <ListItem rightIconButton={editButton} disabled={true} primaryText="Tags" secondaryText={tags} />
               <Divider />
             </List>
@@ -197,8 +207,7 @@ var SelectedImage = React.createClass({
 });
 
 SelectedImage.contextTypes = {
-  location: React.PropTypes.object,
-  history: React.PropTypes.object
+  router: React.PropTypes.object,
 };
 
 module.exports = SelectedImage;

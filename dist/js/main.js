@@ -74370,8 +74370,6 @@ var _reactTime2 = _interopRequireDefault(_reactTime);
 
 var _reactRouter = require('react-router');
 
-var _reactRouter2 = _interopRequireDefault(_reactRouter);
-
 var _materialUi = require('material-ui');
 
 var _materialUi2 = _interopRequireDefault(_materialUi);
@@ -74507,6 +74505,22 @@ var SelectedImage = _react2.default.createClass({
       onEnterKeyDown: this._descEdit.bind(null, this.props.image) });
 
     var tags = this.state.tagEdit ? tagInput : info.tags.join(', ');
+    var devicesFilter = "software_version=" + info.name;
+    devicesFilter = encodeURIComponent(devicesFilter);
+    var devicesLink = _react2.default.createElement(
+      'div',
+      null,
+      _react2.default.createElement(
+        'span',
+        null,
+        info.devices
+      ),
+      _react2.default.createElement(
+        _reactRouter.Link,
+        { className: info.devices == '-' ? 'hidden' : "listItem-link", to: '/devices/0/' + devicesFilter },
+        'View devices'
+      )
+    );
 
     return _react2.default.createElement(
       'div',
@@ -74545,10 +74559,12 @@ var SelectedImage = _react2.default.createClass({
         ),
         _react2.default.createElement(
           'div',
-          { className: 'report-list', style: { width: "320" } },
+          { className: 'report-list' },
           _react2.default.createElement(
             List,
             { style: { backgroundColor: "rgba(255,255,255,0)" } },
+            _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Installed on devices', secondaryText: devicesLink }),
+            _react2.default.createElement(Divider, null),
             _react2.default.createElement(ListItem, { rightIconButton: editButton, disabled: true, primaryText: 'Tags', secondaryText: tags }),
             _react2.default.createElement(Divider, null)
           )
@@ -74608,8 +74624,7 @@ var SelectedImage = _react2.default.createClass({
 });
 
 SelectedImage.contextTypes = {
-  location: _react2.default.PropTypes.object,
-  history: _react2.default.PropTypes.object
+  router: _react2.default.PropTypes.object
 };
 
 module.exports = SelectedImage;
