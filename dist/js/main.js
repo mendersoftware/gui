@@ -75355,6 +75355,8 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
+var _reactRouter = require('react-router');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var Time = require('react-time');
@@ -75424,8 +75426,29 @@ var Report = _react2.default.createClass({
   },
   render: function render() {
     var deviceList = [];
+    var encodedSoftware = encodeURIComponent(this.props.update.version);
+    var softwareLink = _react2.default.createElement(
+      'div',
+      null,
+      _react2.default.createElement(
+        _reactRouter.Link,
+        { style: { fontWeight: "500" }, to: '/software/' + encodedSoftware },
+        this.props.update.version
+      )
+    );
+
     if (this.state.devices) {
       deviceList = this.state.devices.map(function (device, index) {
+        var encodedDevice = encodeURIComponent("name=" + device.id);
+        var deviceLink = _react2.default.createElement(
+          'div',
+          null,
+          _react2.default.createElement(
+            _reactRouter.Link,
+            { style: { fontWeight: "500" }, to: '/devices/0/' + encodedDevice },
+            device.id
+          )
+        );
         //var deviceDetails = this._getDeviceDetails(device.id);
         if (device.status === "Failed" || this.state.failsOnly === false) {
           return _react2.default.createElement(
@@ -75434,7 +75457,7 @@ var Report = _react2.default.createClass({
             _react2.default.createElement(
               TableRowColumn,
               null,
-              device.id
+              deviceLink
             ),
             _react2.default.createElement(
               TableRowColumn,
@@ -75444,7 +75467,7 @@ var Report = _react2.default.createClass({
             _react2.default.createElement(
               TableRowColumn,
               null,
-              this.props.update.version
+              softwareLink
             ),
             _react2.default.createElement(
               TableRowColumn,
@@ -75490,7 +75513,7 @@ var Report = _react2.default.createClass({
           null,
           _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Number of devices', secondaryText: deviceList.length }),
           _react2.default.createElement(Divider, null),
-          _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Target software', secondaryText: this.props.update.version }),
+          _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Target software', secondaryText: softwareLink }),
           _react2.default.createElement(Divider, null),
           _react2.default.createElement(ListItem, { disabled: true, primaryText: 'End time', secondaryText: _react2.default.createElement(Time, { value: this._formatTime(this.props.update.finished), format: 'YYYY/MM/DD HH:mm' }) })
         )
@@ -75586,7 +75609,7 @@ var Report = _react2.default.createClass({
 
 module.exports = Report;
 
-},{"../../actions/app-actions":631,"material-ui":250,"react":626,"react-time":464}],659:[function(require,module,exports){
+},{"../../actions/app-actions":631,"material-ui":250,"react":626,"react-router":432,"react-time":464}],659:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');

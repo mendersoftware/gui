@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router';
 var Time = require('react-time');
 var AppActions = require('../../actions/app-actions');
 
@@ -64,15 +65,28 @@ var Report = React.createClass({
   },
   render: function () {
     var deviceList = [];
+    var encodedSoftware = encodeURIComponent(this.props.update.version); 
+    var softwareLink = (
+      <div>
+        <Link style={{fontWeight:"500"}} to={`/software/${encodedSoftware}`}>{this.props.update.version}</Link>
+      </div>
+    )
+
     if (this.state.devices) {
       deviceList = this.state.devices.map(function(device, index) {
+        var encodedDevice = encodeURIComponent("name="+device.id); 
+        var deviceLink = (
+        <div>
+          <Link style={{fontWeight:"500"}} to={`/devices/0/${encodedDevice}`}>{device.id}</Link>
+        </div>
+        );
         //var deviceDetails = this._getDeviceDetails(device.id);
         if ((device.status==="Failed")||(this.state.failsOnly===false)){
           return (
             <TableRow key={index}>
-              <TableRowColumn>{device.id}</TableRowColumn>
+              <TableRowColumn>{deviceLink}</TableRowColumn>
               <TableRowColumn>{device.model}</TableRowColumn>
-              <TableRowColumn>{this.props.update.version}</TableRowColumn>
+              <TableRowColumn>{softwareLink}</TableRowColumn>
               <TableRowColumn><Time value={this._formatTime(device.finished)} format="YYYY/MM/DD HH:mm" /></TableRowColumn>
               <TableRowColumn>{device.status || "--"}</TableRowColumn>
               <TableRowColumn><FlatButton onClick={this.exportLog.bind(null, device.id)} label="Export log" /></TableRowColumn>
@@ -97,7 +111,7 @@ var Report = React.createClass({
          <List>
             <ListItem disabled={true} primaryText="Number of devices" secondaryText={deviceList.length} />
             <Divider />
-            <ListItem disabled={true} primaryText="Target software" secondaryText={this.props.update.version} />
+            <ListItem disabled={true} primaryText="Target software" secondaryText={softwareLink} />
             <Divider />
             <ListItem disabled={true} primaryText="End time" secondaryText={<Time value={this._formatTime(this.props.update.finished)} format="YYYY/MM/DD HH:mm" />} />
           </List>
