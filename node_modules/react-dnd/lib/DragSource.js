@@ -10,9 +10,9 @@ var _invariant = require('invariant');
 
 var _invariant2 = _interopRequireDefault(_invariant);
 
-var _lodashLangIsPlainObject = require('lodash/lang/isPlainObject');
+var _lodashIsPlainObject = require('lodash/isPlainObject');
 
-var _lodashLangIsPlainObject2 = _interopRequireDefault(_lodashLangIsPlainObject);
+var _lodashIsPlainObject2 = _interopRequireDefault(_lodashIsPlainObject);
 
 var _utilsCheckDecoratorArguments = require('./utils/checkDecoratorArguments');
 
@@ -53,10 +53,10 @@ function DragSource(type, spec, collect) {
       return type;
     };
   }
-  _invariant2['default'](_lodashLangIsPlainObject2['default'](spec), 'Expected "spec" provided as the second argument to DragSource to be ' + 'a plain object. Instead, received %s. ' + 'Read more: http://gaearon.github.io/react-dnd/docs-drag-source.html', spec);
+  _invariant2['default'](_lodashIsPlainObject2['default'](spec), 'Expected "spec" provided as the second argument to DragSource to be ' + 'a plain object. Instead, received %s. ' + 'Read more: http://gaearon.github.io/react-dnd/docs-drag-source.html', spec);
   var createSource = _createSourceFactory2['default'](spec);
   _invariant2['default'](typeof collect === 'function', 'Expected "collect" provided as the third argument to DragSource to be ' + 'a function that returns a plain object of props to inject. ' + 'Instead, received %s. ' + 'Read more: http://gaearon.github.io/react-dnd/docs-drag-source.html', collect);
-  _invariant2['default'](_lodashLangIsPlainObject2['default'](options), 'Expected "options" provided as the fourth argument to DragSource to be ' + 'a plain object when specified. ' + 'Instead, received %s. ' + 'Read more: http://gaearon.github.io/react-dnd/docs-drag-source.html', collect);
+  _invariant2['default'](_lodashIsPlainObject2['default'](options), 'Expected "options" provided as the fourth argument to DragSource to be ' + 'a plain object when specified. ' + 'Instead, received %s. ' + 'Read more: http://gaearon.github.io/react-dnd/docs-drag-source.html', collect);
 
   return function decorateSource(DecoratedComponent) {
     return _decorateHandler2['default']({

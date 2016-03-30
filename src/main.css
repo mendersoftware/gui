@@ -234,6 +234,10 @@ span.link:hover {
 .widget.small {
   width: 20%;
 }
+.filterWrapper {
+  padding: 10px 20px;
+  overflow-y: auto;
+}
 .filterPair {
   margin-bottom: 14px;
   width: 84%;

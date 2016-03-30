@@ -1,16 +1,16 @@
 import React from 'react';
 var mui = require('material-ui');
-import { Router, Route, Link } from 'react-router';
+import { Link } from 'react-router';
 
 var Tabs = mui.Tabs;
 var Tab = mui.Tab;
-var IconMenu = mui.IconMenu;
-var IconButton = mui.IconButton;
-var MenuItem = require('material-ui/lib/menus/menu-item');
-var FontIcon = mui.FontIcon;
-var Toolbar = mui.Toolbar;
-var ToolbarGroup = require('material-ui/lib/toolbar/toolbar-group');
-var ToolbarTitle = require('material-ui/lib/toolbar/toolbar-title');
+import IconMenu from 'material-ui/lib/menus/icon-menu';
+import IconButton from 'material-ui/lib/icon-button';
+import MenuItem from 'material-ui/lib/menus/menu-item';
+import FontIcon from 'material-ui/lib/font-icon';
+import Toolbar from 'material-ui/lib/toolbar/toolbar';
+import ToolbarGroup from 'material-ui/lib/toolbar/toolbar-group';
+import ToolbarTitle from 'material-ui/lib/toolbar/toolbar-title';
 
 
 var menuItems = [

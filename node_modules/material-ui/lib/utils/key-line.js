@@ -16,4 +16,3 @@ exports.default = {
     return Math.ceil(dim / this.Desktop.INCREMENT) * this.Desktop.INCREMENT;
   }
 };
-module.exports = exports['default'];

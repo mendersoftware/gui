@@ -15,4 +15,3 @@ exports.default = {
   snackbar: 2900,
   tooltip: 3000
 };
-module.exports = exports['default'];

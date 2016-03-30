@@ -117,7 +117,7 @@ var Filters = React.createClass({
       </div>
     );
     return (
-      <div>
+      <div style={{height: "4"}}>
         <LeftNav 
           ref="filterNav"
           open={this.state.showFilters}

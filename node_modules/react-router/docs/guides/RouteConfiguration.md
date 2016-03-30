@@ -134,7 +134,7 @@ URL                     | Components
 `/inbox`                | `App -> Inbox`
 `/messages/:id`         | `App -> Inbox -> Message`
 
-**Note**: Absolute paths may not be used in route config that is [dynamically loaded](/docs/guides/advanced/DynamicRouting.md).
+**Note**: Absolute paths may not be used in route config that is [dynamically loaded](/docs/guides/DynamicRouting.md).
 
 ### Preserving URLs
 
@@ -165,7 +165,7 @@ Now when someone clicks on that link to `/inbox/messages/5` they'll automaticall
 
 ### Enter and Leave Hooks
 
-[Route](/docs/Glossary.md#route)s may also define [`onEnter`](/docs/Glossary.md#enterhook) and [`onLeave`](/docs/Glossary.md#leavehook) hooks that are invoked once a transition has been [confirmed](/docs/guides/advanced/ConfirmingNavigation.md). These hooks are useful for various things like [requiring auth](https://github.com/rackt/react-router/tree/master/examples/auth-flow) when a route is entered and saving stuff to persistent storage before a route unmounts.
+[Route](/docs/Glossary.md#route)s may also define [`onEnter`](/docs/Glossary.md#enterhook) and [`onLeave`](/docs/Glossary.md#leavehook) hooks that are invoked once a transition has been [confirmed](/docs/guides/ConfirmingNavigation.md). These hooks are useful for various things like [requiring auth](https://github.com/reactjs/react-router/tree/master/examples/auth-flow) when a route is entered and saving stuff to persistent storage before a route unmounts.
 
 During a transition, [`onLeave` hooks](/docs/Glossary.md#leavehook) run first on all routes we are leaving, starting with the leaf route on up to the first common ancestor route. Next, [`onEnter` hooks](/docs/Glossary.md#enterhook) run starting with the first parent route we're entering down to the leaf route.
 
@@ -175,14 +175,16 @@ Continuing with our example above, if a user clicked on a link to `/about` from 
   - `onLeave` on the `/inbox` route
   - `onEnter` on the `/about` route
 
-### Alternate Configuration
+### Configuration with Plain Routes
 
 Since [routes](/docs/Glossary.md#route) are usually nested, it's useful to use a concise nested syntax like [JSX](https://facebook.github.io/jsx/) to describe their relationship to one another. However, you may also use an array of plain [route](/docs/Glossary.md#route) objects if you prefer to avoid using JSX.
+
+The `<Redirect>` configuration helper is not available when using plain routes, so you have to set up the redirect using the `onEnter` hook. 
 
 The route config we've discussed up to this point could also be specified like this:
 
 ```js
-const routeConfig = [
+const routes = [
   { path: '/',
     component: App,
     indexRoute: { component: Dashboard },
@@ -203,5 +205,5 @@ const routeConfig = [
   }
 ]
 
-render(<Router routes={routeConfig} />, document.body)
+render(<Router routes={routes} />, document.body)
 ```

@@ -56,17 +56,25 @@ var DeviceList = React.createClass({
     console.log("select all", rows);
   },
   _handleGroupNameChange: function(event) {
-    if (!this.state.errorText1) {
-      var group = this.props.selectedGroup;
-      group.name = event.target.value;
-      AppActions.addToGroup(group, []);
+    if (event.keyCode === 13 ) {
+      if (!this.state.errorText1) {
+        var group = this.props.selectedGroup;
+        console.log("val", event.target.value);
+        group.name = event.target.value;
+        AppActions.addToGroup(group, []);
+      }
+    } else {
+      this._validateName(event.target.value);
     }
   },
   _validateName: function(name) {
     var errorText = null;
+    console.log(name);
     if (name) {
       for (var i=0;i<this.props.groups.length; i++) {
         if (this.props.groups[i].name === name) {
+          console.log("got a name");
+
           errorText = "A group with this name already exists";
         }
       }
@@ -128,8 +136,8 @@ var DeviceList = React.createClass({
     });
 
   },
-  _validateName: function(e) {
-    var newName = e.target.value;
+  _validateName: function(name) {
+    var newName = name;
     var errorText = null;
     var invalid = false;
     for (var i=0;i<this.props.groups.length; i++) {
@@ -231,11 +239,11 @@ var DeviceList = React.createClass({
         expanded = <SelectedDevices images={this.props.images} devices={this.props.devices} selected={[device]} selectedGroup={this.props.selectedGroup} groups={this.props.groups} />
       }
       return (
-        <TableRow selected={this._ifSelected(device.name)} hoverable={!expanded} className={expanded ? "expand devices" : null}  key={index}>
+        <TableRow onRowClick={this._expandRow.bind(this, index)} selected={this._ifSelected(device.name)} hoverable={!expanded} className={expanded ? "expand devices" : null}  key={index}>
           <TableRowColumn>{device.name}</TableRowColumn>
           <TableRowColumn>{device.model}</TableRowColumn>
-          <TableRowColumn>{device.software_version}</TableRowColumn>
-          <TableRowColumn>{device.status}</TableRowColumn>
+          <TableRowColumn onClick={this._expandRow.bind(this, index)}>{device.software_version}</TableRowColumn>
+          <TableRowColumn onClick={this._expandRow.bind(this, index)}>{device.status}</TableRowColumn>
           <TableRowColumn style={{width:"66", paddingRight:"0", paddingLeft:"12"}} className="expandButton">
             <IconButton className="float-right" onClick={this._expandRow.bind(this, index)}><FontIcon className="material-icons">{ expanded ? "arrow_drop_up" : "arrow_drop_down"}</FontIcon></IconButton>
           </TableRowColumn>
@@ -269,16 +277,15 @@ var DeviceList = React.createClass({
         <div style={{marginLeft:"26"}}>
           <h2 className="hoverEdit" tooltip="Rename">
             <TextField 
-              ref="input"
-              defaultValue={selectedName}
+              id="groupNameInput"
+              value={selectedName}
               underlineStyle={{borderBottom:"none"}}
               underlineFocusStyle={{borderColor:"#e0e0e0"}}
-              onEnterKeyDown={this._handleGroupNameChange}
+              onKeyDown={this._handleGroupNameChange}
               onBlur={this._handleGroupNameChange}
               errorStyle={{color: "rgb(171, 16, 0)"}}
               errorText={this.state.errorText1}
-              className="hoverText"
-              onChange={this._onChange} />
+              className="hoverText" />
               <FlatButton style={styles.exampleFlatButton} className="opacityButton" secondary={true} label="Remove group" labelPosition="after">
                 <FontIcon style={styles.exampleFlatButtonIcon} className="material-icons">delete</FontIcon>
               </FlatButton>

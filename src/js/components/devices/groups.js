@@ -18,6 +18,7 @@ var TableHeader = mui.TableHeader;
 var TableRowColumn = mui.TableRowColumn;
 var TableRow = mui.TableRow;
 var TableBody = mui.TableBody;
+import Subheader from 'material-ui/lib/Subheader';
 
 
 var tmpDevices = [];
@@ -153,7 +154,8 @@ var Groups = React.createClass({
 
     return (
       <div>
-        <List subheader="Groups">
+        <List>
+          <Subheader>Groups</Subheader>
           {this.props.groups.map(function(group) {
             if (group.type==='public') {
               var isSelected = group.id===this.props.selectedGroup.id ? {backgroundColor: "#e7e7e7"} : {backgroundColor: "transparent"};

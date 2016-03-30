@@ -28,9 +28,9 @@ var _utilsShallowEqualScalar = require('./utils/shallowEqualScalar');
 
 var _utilsShallowEqualScalar2 = _interopRequireDefault(_utilsShallowEqualScalar);
 
-var _lodashLangIsPlainObject = require('lodash/lang/isPlainObject');
+var _lodashIsPlainObject = require('lodash/isPlainObject');
 
-var _lodashLangIsPlainObject2 = _interopRequireDefault(_lodashLangIsPlainObject);
+var _lodashIsPlainObject2 = _interopRequireDefault(_lodashIsPlainObject);
 
 var _invariant = require('invariant');
 
@@ -45,7 +45,7 @@ function DragLayer(collect) {
 
   _utilsCheckDecoratorArguments2['default'].apply(undefined, ['DragLayer', 'collect[, options]'].concat(_slice.call(arguments)));
   _invariant2['default'](typeof collect === 'function', 'Expected "collect" provided as the first argument to DragLayer ' + 'to be a function that collects props to inject into the component. ', 'Instead, received %s. ' + 'Read more: http://gaearon.github.io/react-dnd/docs-drag-layer.html', collect);
-  _invariant2['default'](_lodashLangIsPlainObject2['default'](options), 'Expected "options" provided as the second argument to DragLayer to be ' + 'a plain object when specified. ' + 'Instead, received %s. ' + 'Read more: http://gaearon.github.io/react-dnd/docs-drag-layer.html', options);
+  _invariant2['default'](_lodashIsPlainObject2['default'](options), 'Expected "options" provided as the second argument to DragLayer to be ' + 'a plain object when specified. ' + 'Instead, received %s. ' + 'Read more: http://gaearon.github.io/react-dnd/docs-drag-layer.html', options);
 
   return function decorateLayer(DecoratedComponent) {
     var _options$arePropsEqual = options.arePropsEqual;
@@ -93,15 +93,27 @@ function DragLayer(collect) {
       }
 
       DragLayerContainer.prototype.componentDidMount = function componentDidMount() {
+        this.isCurrentlyMounted = true;
+
         var monitor = this.manager.getMonitor();
-        this.unsubscribe = monitor.subscribeToOffsetChange(this.handleChange);
+        this.unsubscribeFromOffsetChange = monitor.subscribeToOffsetChange(this.handleChange);
+        this.unsubscribeFromStateChange = monitor.subscribeToStateChange(this.handleChange);
+
+        this.handleChange();
       };
 
       DragLayerContainer.prototype.componentWillUnmount = function componentWillUnmount() {
-        this.unsubscribe();
+        this.isCurrentlyMounted = false;
+
+        this.unsubscribeFromOffsetChange();
+        this.unsubscribeFromStateChange();
       };
 
       DragLayerContainer.prototype.handleChange = function handleChange() {
+        if (!this.isCurrentlyMounted) {
+          return;
+        }
+
         var nextState = this.getCurrentState();
         if (!_utilsShallowEqual2['default'](nextState, this.state)) {
           this.setState(nextState);

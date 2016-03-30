@@ -4,17 +4,17 @@ exports.__esModule = true;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _lodashFunctionMemoize = require('lodash/function/memoize');
+var _lodashMemoize = require('lodash/memoize');
 
-var _lodashFunctionMemoize2 = _interopRequireDefault(_lodashFunctionMemoize);
+var _lodashMemoize2 = _interopRequireDefault(_lodashMemoize);
 
-var isFirefox = _lodashFunctionMemoize2['default'](function () {
+var isFirefox = _lodashMemoize2['default'](function () {
   return (/firefox/i.test(navigator.userAgent)
   );
 });
 
 exports.isFirefox = isFirefox;
-var isSafari = _lodashFunctionMemoize2['default'](function () {
+var isSafari = _lodashMemoize2['default'](function () {
   return Boolean(window.safari);
 });
 exports.isSafari = isSafari;
