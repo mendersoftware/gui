@@ -24,34 +24,28 @@ var _groups = [
   {
     id: 1,
     name: "All devices",
-    devices: [1,2,3,4,5,6,7,8,9,10,11],
+    devices: [1,2,3,4,5,6,7],
     type: "public"
   },
   {
     id: 2,
     name: "Development",
-    devices: [1,2,3],
+    devices: [3],
     type: "public"
   },
   {
     id: 3,
     name: "Test",
-    devices: [4,5,6],
+    devices: [1,2],
     type: "public"
 
   },
   {
     id: 4,
     name: "Production",
-    devices: [7,8],
+    devices: [4,5,6],
     type: "public"
   },
-  {
-    id: 5,
-    name: "Wifi",
-    devices: [9],
-    type: "public"
-  }
 ]
 
 
@@ -60,113 +54,73 @@ var _groups = [
 var _alldevices = [
   {
     'id': 1,
-    'name': 'Device001',
-    'model':"Acme Model 1",
-    'arch': 'armv7',
+    'name': '00a0c91e6-7dec-11d0-a765-f81d4faebf1',
+    'model':"Raspberry Pi 3",
+    'arch': 'ARMv8 Cortex-A53',
     'status': 'Up',
-    'software_version': 'Version 1.1',
-    'groups': [1,2],
+    'software_version': 'Application 0.0.1',
+    'groups': [1,3],
     'tags': []
   },
   {
     'id': 2,
-    'name': 'Device002',
-    'model':"Acme Model 1",
-    'arch': 'armv7',
+    'name': '00a0c91e6-7dec-11d0-a765-f81d4faebf2',
+    'model':"Raspberry Pi 3",
+    'arch': 'ARMv8 Cortex-A53',
     'status': 'Up',
-    'software_version': 'Version 1.1',
-    'groups': [1,2],
+    'software_version': 'Application 0.0.1',
+    'groups': [1,3],
     'tags': []
   },
   {
     'id': 3,
-    'name': 'Device003',
-    'model':"Acme Model 1",
-    'arch': 'armv7',
+    'name': '00a0c91e6-7dec-11d0-a765-f81d4faebf3',
+    'model':"Raspberry Pi 3",
+    'arch': 'ARMv8 Cortex-A53',
     'status': 'Up',
-    'software_version': 'Version 1.1',
+    'software_version': 'Application 0.0.1',
     'groups': [1,2],
     'tags': []
   },
   {
     'id': 4,
-    'name': 'Device004',
-    'model':"Acme Model 1",
-    'arch': 'armv7',
+    'name': '00a0c91e6-7dec-11d0-a765-f81d4faebf4',
+    'model':"Raspberry Pi 3",
+    'arch': 'ARMv8 Cortex-A53',
     'status': 'Up',
-    'software_version': 'Version 1.0',
-    'groups': [1,3],
+    'software_version': 'Application 0.0.2',
+    'groups': [1,4],
     'tags': []
   },
   {
     'id': 5,
-    'name': 'Device005',
-    'model':"Acme Model 1",
-    'arch': 'armv7',
-    'status': 'Down',
-    'software_version': 'Version 1.0',
-    'groups': [1,3],
+    'name': '00a0c91e6-7dec-11d0-a765-f81d4faebf5',
+    'model':"Raspberry Pi 3",
+    'arch': 'ARMv8 Cortex-A53',
+    'status': 'Up',
+    'software_version': 'Application 0.0.2',
+    'groups': [1,4],
     'tags': []
   },
   {
     'id': 6,
-    'name': 'Device006',
-    'model':"Acme Model 1",
-    'arch': 'armv7',
-    'status': 'Down',
-    'software_version': 'Version 0.3',
-    'groups': [1,3],
+    'name': '00a0c91e6-7dec-11d0-a765-f81d4faebf6',
+    'model':"Raspberry Pi 3",
+    'arch': 'ARMv8 Cortex-A53',
+    'status': 'Up',
+    'software_version': 'Application 0.0.2',
+    'groups': [1,4],
     'tags': []
   },
   {
     'id': 7,
-    'name': 'Device007',
-    'model':"Acme Model 1",
-    'arch': 'armv7',
-    'status': 'Up',
-    'software_version': 'Version 1.0',
-    'groups': [1,4],
-    'tags': []
-  },
-  {
-    'id': 8,
-    'name': 'Device008',
-    'model':"Acme Model 1",
-    'arch': 'armv7',
-    'status': 'Up',
-    'software_version': 'Version 1.0',
-    'groups': [1,4],
-    'tags': []
-  },
-  {
-    'id': 9,
-    'name': 'Wifi001',
-    'model':"Wifi Model 1",
-    'arch': 'arm64',
-    'status': 'Up',
-    'software_version': 'Version 1.0 Wifi',
-    'groups': [1,5],
-    'tags': ['wifi']
-  },
-  {
-    'id': 10,
-    'name': 'Wifi002',
-    'model':"Wifi Model 1",
-    'arch': 'arm64',
-    'status': 'Up',
-    'software_version': 'Version 1.0 Wifi',
+    'name': '0dde3346-4dec-11d0-a765-f81d4faebf7',
+    'model':"Raspberry Pi 2 Model B",
+    'arch': 'ARMv7 Cortex-A7',
+    'status': 'Down',
+    'software_version': 'Application 0.0.1',
     'groups': [1],
-    'tags': ['wifi']
-  },
-   {
-    'id': 11,
-    'name': 'Wifi003',
-    'model':"Wifi Model 1",
-    'arch': 'arm64',
-    'status': 'Up',
-    'software_version': 'Version 1.0 Wifi',
-    'groups': [1],
-    'tags': ['wifi']
+    'tags': []
   },
 ];
 
@@ -338,11 +292,10 @@ function discoverDevices(array) {
   if (array.length) {
     for (var val in unique) {
       var idx = findWithAttr(array, 'name', val);
-      if (idx) { array[idx].devices = unique[val] }
+      if (idx!==undefined) { array[idx]['devices'] = unique[val] }
     }
   }
   return array;
- 
 }
 
 function _uploadImage(image) {
@@ -408,7 +361,7 @@ function _getProgressUpdates(time) {
     /*
     * CHANGE FOR MOCKING API
     */ 
-    if (created<=time && finished<time) {
+    if (created<=time && finished>time) {
       progress.push(_allupdates[i]);
     }
   }

@@ -2,8 +2,8 @@ var AppConstants = require('../constants/app-constants');
 var AppDispatcher = require('../dispatchers/app-dispatcher');
 var Api = require('../api/api');
 var UpdatesApi = require('../api/updates-api');
-var apiUrl = "http://54.229.121.179:8080/api/0.0.1/";
-var updatesApiUrl = "http://private-f72329-deploymenttest.apiary-mock.com/api/0.0.1/";
+var apiUrl = "http://private-9f43d-michaelatmender.apiary-mock.com/api/0.0.1/";
+var updatesApiUrl = "http://private-9f43d-michaelatmender.apiary-mock.com/api/0.0.1/";
 
 
 var AppActions = {
@@ -86,7 +86,7 @@ var AppActions = {
   /* API */
   getUpdates: function() {
     UpdatesApi
-      .get(updatesApiUrl+'deployments/')
+      .get(updatesApiUrl+'deployments')
       .then(function(updates) {
         AppDispatcher.handleViewAction({
           actionType: AppConstants.RECEIVE_UPDATES,
@@ -96,7 +96,7 @@ var AppActions = {
   },
   createUpdate: function(update) {
     UpdatesApi
-    .post(updatesApiUrl+'deployments/', update)
+    .post(updatesApiUrl+'deployments', update)
       .then(function(data) {
         // inserted update data,
         callback(data);

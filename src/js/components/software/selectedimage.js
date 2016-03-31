@@ -77,12 +77,14 @@ var SelectedImage = React.createClass({
   },
   _descEdit: function(image, event) {
     event.stopPropagation();
-    if (this.state.descEdit) {
-      image.description = this.refs.description.getValue();
-      // save change
-      this.props.editImage(image);
+    if (event.keyCode === 13) {
+      if (this.state.descEdit) {
+        image.description = this.refs.description.getValue();
+        // save change
+        this.props.editImage(image);
+      }
+      this.setState({descEdit: !this.state.descEdit});
     }
-    this.setState({descEdit: !this.state.descEdit});
   },
   render: function() {
     var info = {name: "-", tags: ['-'], model: "-", build_date: "-", modified: "-", size: "-", checksum: "-", devices: "-", description: "-"};
@@ -93,7 +95,7 @@ var SelectedImage = React.createClass({
         };
         if (key.indexOf("modified")!==-1) {
           info[key] = (
-            <Time style={{position:"relative", top:"4"}} value={this.props.image[key]} format="YYYY/MM/DD HH:mm" />
+            <Time style={{position:"relative", top:"4"}} value={this.props.formatTime(this.props.image[key])} format="YYYY/MM/DD HH:mm" />
           )
         }
       }
@@ -132,7 +134,7 @@ var SelectedImage = React.createClass({
         style={{width:"100%"}} inputStyle={{ marginTop:"0"}}
         multiLine={true} rowsMax={2} ref="description" 
         defaultValue={info.description} 
-        onEnterKeyDown={this._descEdit.bind(null, this.props.image)} />
+        onKeyDown={this._descEdit.bind(null, this.props.image)} />
     );
 
     var tags = this.state.tagEdit ? tagInput : info.tags.join(', ');

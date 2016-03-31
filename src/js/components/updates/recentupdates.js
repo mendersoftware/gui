@@ -46,8 +46,8 @@ var Recent = React.createClass({
           <TableRowColumn>{update.name}</TableRowColumn>
           <TableRowColumn>{update.version}</TableRowColumn>
           <TableRowColumn><GroupDevices update={update.id} /></TableRowColumn>
-          <TableRowColumn><Time value={this._formatTime(update.created)} format="YYYY/MM/DD HH:mm" /></TableRowColumn>
-          <TableRowColumn><Time value={this._formatTime(update.finished)} format="YYYY/MM/DD HH:mm" /></TableRowColumn>
+          <TableRowColumn><Time value={this._formatTime(update.created)} format="YYYY-MM-DD HH:mm" /></TableRowColumn>
+          <TableRowColumn>--</TableRowColumn>
           <TableRowColumn><ProgressBar noPadding={true} update={update} /></TableRowColumn>
         </TableRow>
       )
@@ -61,8 +61,8 @@ var Recent = React.createClass({
           <TableRowColumn>{update.name}</TableRowColumn>
           <TableRowColumn>{update.version}</TableRowColumn>
           <TableRowColumn><GroupDevices update={update.id} /></TableRowColumn>
-          <TableRowColumn><Time value={this._formatTime(update.created)} format="YYYY/MM/DD HH:mm" /></TableRowColumn>
-          <TableRowColumn><Time value={this._formatTime(update.finished)} format="YYYY/MM/DD HH:mm" /></TableRowColumn>
+          <TableRowColumn><Time value={this._formatTime(update.created)} format="YYYY-MM-DD HH:mm" /></TableRowColumn>
+          <TableRowColumn><Time value={this._formatTime(update.finished)} format="YYYY-MM-DD HH:mm" /></TableRowColumn>
           <TableRowColumn><FlatButton label={status} primary={update.status === 'failed'} secondary={update.status === 'complete'} /></TableRowColumn>
         </TableRow>
       )

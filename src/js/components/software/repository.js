@@ -192,6 +192,9 @@ var Repository = React.createClass({
   _onClick: function(event) {
     event.stopPropagation();
   },
+  _formatTime: function(date) {
+    return date.replace(' ','T').replace(/ /g, '').replace('UTC','');
+  },
   render: function() {
 
     var styles = {
@@ -250,14 +253,14 @@ var Repository = React.createClass({
     var items = tmpSoftware.map(function(pkg, index) {
       var selected = '';
       if (this.state.image.name === pkg.name ) {
-        selected = <SelectedImage editImage={this._editImageData} buttonStyle={styles.flatButtonIcon} image={this.state.image} openSchedule={this._openSchedule} />
+        selected = <SelectedImage formatTime={this._formatTime} editImage={this._editImageData} buttonStyle={styles.flatButtonIcon} image={this.state.image} openSchedule={this._openSchedule} />
       }
       return (
         <TableRow hoverable={this.state.image.name !== pkg.name} className={this.state.image.name === pkg.name ? "expand" : null} key={index} >
           <TableRowColumn>{pkg.name}</TableRowColumn>
           <TableRowColumn>{pkg.model}</TableRowColumn>
           <TableRowColumn>{pkg.tags || '-'}</TableRowColumn>
-          <TableRowColumn><Time value={pkg.modified} format="YYYY/MM/DD HH:mm" /></TableRowColumn>
+          <TableRowColumn><Time value={this._formatTime(pkg.modified)} format="YYYY-MM-DD HH:mm" /></TableRowColumn>
           <TableRowColumn>{pkg.devices || 0}</TableRowColumn>
           <TableRowColumn style={{width:"66", paddingRight:"0", paddingLeft:"12"}} className="expandButton">
             <IconButton className="float-right"><FontIcon className="material-icons">{ selected ? "arrow_drop_up" : "arrow_drop_down"}</FontIcon></IconButton>

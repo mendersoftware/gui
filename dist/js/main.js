@@ -76162,8 +76162,8 @@ var AppConstants = require('../constants/app-constants');
 var AppDispatcher = require('../dispatchers/app-dispatcher');
 var Api = require('../api/api');
 var UpdatesApi = require('../api/updates-api');
-var apiUrl = "http://54.229.121.179:8080/api/0.0.1/";
-var updatesApiUrl = "http://private-f72329-deploymenttest.apiary-mock.com/api/0.0.1/";
+var apiUrl = "http://private-9f43d-michaelatmender.apiary-mock.com/api/0.0.1/";
+var updatesApiUrl = "http://private-9f43d-michaelatmender.apiary-mock.com/api/0.0.1/";
 
 var AppActions = {
 
@@ -76230,7 +76230,7 @@ var AppActions = {
 
   /* API */
   getUpdates: function getUpdates() {
-    UpdatesApi.get(updatesApiUrl + 'deployments/').then(function (updates) {
+    UpdatesApi.get(updatesApiUrl + 'deployments').then(function (updates) {
       AppDispatcher.handleViewAction({
         actionType: AppConstants.RECEIVE_UPDATES,
         updates: updates
@@ -76238,7 +76238,7 @@ var AppActions = {
     });
   },
   createUpdate: function createUpdate(update) {
-    UpdatesApi.post(updatesApiUrl + 'deployments/', update).then(function (data) {
+    UpdatesApi.post(updatesApiUrl + 'deployments', update).then(function (data) {
       // inserted update data,
       callback(data);
     });
@@ -76701,7 +76701,7 @@ var Health = _react2.default.createClass({
         { className: 'dashboard-container' },
         _react2.default.createElement(
           'div',
-          { className: '' },
+          { className: 'hidden' },
           _react2.default.createElement(
             'span',
             { className: this.props.health.nogroup ? "number" : "hidden", style: { marginRight: "0" } },
@@ -77942,15 +77942,14 @@ var Filters = _react2.default.createClass({
     );
     return _react2.default.createElement(
       'div',
-      { style: { height: "4" } },
+      null,
       _react2.default.createElement(
         LeftNav,
         {
           ref: 'filterNav',
           open: this.state.showFilters,
           docked: false,
-          openRight: true,
-          style: { padding: "10px 20px", top: "58", overflowY: "auto" }
+          openRight: true
         },
         filterNav
       ),
@@ -78905,6 +78904,9 @@ var Repository = _react2.default.createClass({
   _onClick: function _onClick(event) {
     event.stopPropagation();
   },
+  _formatTime: function _formatTime(date) {
+    return date.replace(' ', 'T').replace(/ /g, '').replace('UTC', '');
+  },
   render: function render() {
 
     var styles = {
@@ -78962,7 +78964,7 @@ var Repository = _react2.default.createClass({
     var items = tmpSoftware.map(function (pkg, index) {
       var selected = '';
       if (this.state.image.name === pkg.name) {
-        selected = _react2.default.createElement(_selectedimage2.default, { editImage: this._editImageData, buttonStyle: styles.flatButtonIcon, image: this.state.image, openSchedule: this._openSchedule });
+        selected = _react2.default.createElement(_selectedimage2.default, { formatTime: this._formatTime, editImage: this._editImageData, buttonStyle: styles.flatButtonIcon, image: this.state.image, openSchedule: this._openSchedule });
       }
       return _react2.default.createElement(
         TableRow,
@@ -78985,7 +78987,7 @@ var Repository = _react2.default.createClass({
         _react2.default.createElement(
           TableRowColumn,
           null,
-          _react2.default.createElement(_reactTime2.default, { value: pkg.modified, format: 'YYYY/MM/DD HH:mm' })
+          _react2.default.createElement(_reactTime2.default, { value: this._formatTime(pkg.modified), format: 'YYYY-MM-DD HH:mm' })
         ),
         _react2.default.createElement(
           TableRowColumn,
@@ -79336,12 +79338,14 @@ var SelectedImage = _react2.default.createClass({
   },
   _descEdit: function _descEdit(image, event) {
     event.stopPropagation();
-    if (this.state.descEdit) {
-      image.description = this.refs.description.getValue();
-      // save change
-      this.props.editImage(image);
+    if (event.keyCode === 13) {
+      if (this.state.descEdit) {
+        image.description = this.refs.description.getValue();
+        // save change
+        this.props.editImage(image);
+      }
+      this.setState({ descEdit: !this.state.descEdit });
     }
-    this.setState({ descEdit: !this.state.descEdit });
   },
   render: function render() {
     var info = { name: "-", tags: ['-'], model: "-", build_date: "-", modified: "-", size: "-", checksum: "-", devices: "-", description: "-" };
@@ -79351,7 +79355,7 @@ var SelectedImage = _react2.default.createClass({
           info[key] = this.props.image[key];
         };
         if (key.indexOf("modified") !== -1) {
-          info[key] = _react2.default.createElement(_reactTime2.default, { style: { position: "relative", top: "4" }, value: this.props.image[key], format: 'YYYY/MM/DD HH:mm' });
+          info[key] = _react2.default.createElement(_reactTime2.default, { style: { position: "relative", top: "4" }, value: this.props.formatTime(this.props.image[key]), format: 'YYYY/MM/DD HH:mm' });
         }
       }
     }
@@ -79386,7 +79390,7 @@ var SelectedImage = _react2.default.createClass({
       style: { width: "100%" }, inputStyle: { marginTop: "0" },
       multiLine: true, rowsMax: 2, ref: 'description',
       defaultValue: info.description,
-      onEnterKeyDown: this._descEdit.bind(null, this.props.image) });
+      onKeyDown: this._descEdit.bind(null, this.props.image) });
 
     var tags = this.state.tagEdit ? tagInput : info.tags.join(', ');
     var devicesFilter = "software_version=" + info.name;
@@ -80000,12 +80004,12 @@ var Recent = _react2.default.createClass({
         _react2.default.createElement(
           TableRowColumn,
           null,
-          _react2.default.createElement(Time, { value: this._formatTime(update.created), format: 'YYYY/MM/DD HH:mm' })
+          _react2.default.createElement(Time, { value: this._formatTime(update.created), format: 'YYYY-MM-DD HH:mm' })
         ),
         _react2.default.createElement(
           TableRowColumn,
           null,
-          _react2.default.createElement(Time, { value: this._formatTime(update.finished), format: 'YYYY/MM/DD HH:mm' })
+          '--'
         ),
         _react2.default.createElement(
           TableRowColumn,
@@ -80039,12 +80043,12 @@ var Recent = _react2.default.createClass({
         _react2.default.createElement(
           TableRowColumn,
           null,
-          _react2.default.createElement(Time, { value: this._formatTime(update.created), format: 'YYYY/MM/DD HH:mm' })
+          _react2.default.createElement(Time, { value: this._formatTime(update.created), format: 'YYYY-MM-DD HH:mm' })
         ),
         _react2.default.createElement(
           TableRowColumn,
           null,
-          _react2.default.createElement(Time, { value: this._formatTime(update.finished), format: 'YYYY/MM/DD HH:mm' })
+          _react2.default.createElement(Time, { value: this._formatTime(update.finished), format: 'YYYY-MM-DD HH:mm' })
         ),
         _react2.default.createElement(
           TableRowColumn,
@@ -81457,28 +81461,23 @@ var _attributes = {
 var _groups = [{
   id: 1,
   name: "All devices",
-  devices: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+  devices: [1, 2, 3, 4, 5, 6, 7],
   type: "public"
 }, {
   id: 2,
   name: "Development",
-  devices: [1, 2, 3],
+  devices: [3],
   type: "public"
 }, {
   id: 3,
   name: "Test",
-  devices: [4, 5, 6],
+  devices: [1, 2],
   type: "public"
 
 }, {
   id: 4,
   name: "Production",
-  devices: [7, 8],
-  type: "public"
-}, {
-  id: 5,
-  name: "Wifi",
-  devices: [9],
+  devices: [4, 5, 6],
   type: "public"
 }];
 
@@ -81486,103 +81485,67 @@ var _groups = [{
 
 var _alldevices = [{
   'id': 1,
-  'name': 'Device001',
-  'model': "Acme Model 1",
-  'arch': 'armv7',
+  'name': '00a0c91e6-7dec-11d0-a765-f81d4faebf1',
+  'model': "Raspberry Pi 3",
+  'arch': 'ARMv8 Cortex-A53',
   'status': 'Up',
-  'software_version': 'Version 1.1',
-  'groups': [1, 2],
+  'software_version': 'Application 0.0.1',
+  'groups': [1, 3],
   'tags': []
 }, {
   'id': 2,
-  'name': 'Device002',
-  'model': "Acme Model 1",
-  'arch': 'armv7',
+  'name': '00a0c91e6-7dec-11d0-a765-f81d4faebf2',
+  'model': "Raspberry Pi 3",
+  'arch': 'ARMv8 Cortex-A53',
   'status': 'Up',
-  'software_version': 'Version 1.1',
-  'groups': [1, 2],
+  'software_version': 'Application 0.0.1',
+  'groups': [1, 3],
   'tags': []
 }, {
   'id': 3,
-  'name': 'Device003',
-  'model': "Acme Model 1",
-  'arch': 'armv7',
+  'name': '00a0c91e6-7dec-11d0-a765-f81d4faebf3',
+  'model': "Raspberry Pi 3",
+  'arch': 'ARMv8 Cortex-A53',
   'status': 'Up',
-  'software_version': 'Version 1.1',
+  'software_version': 'Application 0.0.1',
   'groups': [1, 2],
   'tags': []
 }, {
   'id': 4,
-  'name': 'Device004',
-  'model': "Acme Model 1",
-  'arch': 'armv7',
+  'name': '00a0c91e6-7dec-11d0-a765-f81d4faebf4',
+  'model': "Raspberry Pi 3",
+  'arch': 'ARMv8 Cortex-A53',
   'status': 'Up',
-  'software_version': 'Version 1.0',
-  'groups': [1, 3],
+  'software_version': 'Application 0.0.2',
+  'groups': [1, 4],
   'tags': []
 }, {
   'id': 5,
-  'name': 'Device005',
-  'model': "Acme Model 1",
-  'arch': 'armv7',
-  'status': 'Down',
-  'software_version': 'Version 1.0',
-  'groups': [1, 3],
+  'name': '00a0c91e6-7dec-11d0-a765-f81d4faebf5',
+  'model': "Raspberry Pi 3",
+  'arch': 'ARMv8 Cortex-A53',
+  'status': 'Up',
+  'software_version': 'Application 0.0.2',
+  'groups': [1, 4],
   'tags': []
 }, {
   'id': 6,
-  'name': 'Device006',
-  'model': "Acme Model 1",
-  'arch': 'armv7',
-  'status': 'Down',
-  'software_version': 'Version 0.3',
-  'groups': [1, 3],
+  'name': '00a0c91e6-7dec-11d0-a765-f81d4faebf6',
+  'model': "Raspberry Pi 3",
+  'arch': 'ARMv8 Cortex-A53',
+  'status': 'Up',
+  'software_version': 'Application 0.0.2',
+  'groups': [1, 4],
   'tags': []
 }, {
   'id': 7,
-  'name': 'Device007',
-  'model': "Acme Model 1",
-  'arch': 'armv7',
-  'status': 'Up',
-  'software_version': 'Version 1.0',
-  'groups': [1, 4],
-  'tags': []
-}, {
-  'id': 8,
-  'name': 'Device008',
-  'model': "Acme Model 1",
-  'arch': 'armv7',
-  'status': 'Up',
-  'software_version': 'Version 1.0',
-  'groups': [1, 4],
-  'tags': []
-}, {
-  'id': 9,
-  'name': 'Wifi001',
-  'model': "Wifi Model 1",
-  'arch': 'arm64',
-  'status': 'Up',
-  'software_version': 'Version 1.0 Wifi',
-  'groups': [1, 5],
-  'tags': ['wifi']
-}, {
-  'id': 10,
-  'name': 'Wifi002',
-  'model': "Wifi Model 1",
-  'arch': 'arm64',
-  'status': 'Up',
-  'software_version': 'Version 1.0 Wifi',
+  'name': '0dde3346-4dec-11d0-a765-f81d4faebf7',
+  'model': "Raspberry Pi 2 Model B",
+  'arch': 'ARMv7 Cortex-A7',
+  'status': 'Down',
+  'software_version': 'Application 0.0.1',
   'groups': [1],
-  'tags': ['wifi']
-}, {
-  'id': 11,
-  'name': 'Wifi003',
-  'model': "Wifi Model 1",
-  'arch': 'arm64',
-  'status': 'Up',
-  'software_version': 'Version 1.0 Wifi',
-  'groups': [1],
-  'tags': ['wifi']
+  'tags': []
 }];
 
 _selectGroup(_groups[0].id);
@@ -81749,8 +81712,8 @@ function discoverDevices(array) {
   if (array.length) {
     for (var val in unique) {
       var idx = findWithAttr(array, 'name', val);
-      if (idx) {
-        array[idx].devices = unique[val];
+      if (idx !== undefined) {
+        array[idx]['devices'] = unique[val];
       }
     }
   }
@@ -81814,7 +81777,7 @@ function _getProgressUpdates(time) {
     /*
     * CHANGE FOR MOCKING API
     */
-    if (created <= time && finished < time) {
+    if (created <= time && finished > time) {
       progress.push(_allupdates[i]);
     }
   }

@@ -117,13 +117,12 @@ var Filters = React.createClass({
       </div>
     );
     return (
-      <div style={{height: "4"}}>
+      <div>
         <LeftNav 
           ref="filterNav"
           open={this.state.showFilters}
           docked={false}
           openRight={true}
-          style={{padding: "10px 20px", top:"58", overflowY:"auto"}}
         >
           {filterNav}
         </LeftNav>
