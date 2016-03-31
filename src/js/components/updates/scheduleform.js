@@ -220,7 +220,7 @@ var ScheduleForm = React.createClass({
         <IconButton className="closeSlider" iconStyle={{fontSize:"16px"}} onClick={this._showDevices} style={{borderRadius:"30px", width:"40px", height:"40", position:"absolute", left:"-18px", backgroundColor:"rgba(255,255,255,1)"}}>
           <FontIcon className="material-icons">close</FontIcon>
         </IconButton>
-        <SearchInput className="search" ref='search' onChange={this.searchUpdated} placeholder="Search devices" style={{margin:"10"}} />
+        <SearchInput className="search" ref='search' onChange={this.searchUpdated} placeholder="Search devices" />
         {deviceList}
         <p className={tmpDevices.length ? "hidden" : "italic" }>No devices match this search term</p>
         <Divider />
@@ -229,7 +229,7 @@ var ScheduleForm = React.createClass({
     );
 
     return (
-      <div style={{height: '440px'}}>
+      <div style={{overflow:"visible", height: '440px'}}>
         <LeftNav 
           ref="devicesNav"
           docked={false}
@@ -238,6 +238,7 @@ var ScheduleForm = React.createClass({
           open={this.state.showDevices}
           overlayStyle={{backgroundColor:"rgba(0, 0, 0, 0.3)"}}
           onRequestChange={this._showDevices}
+          containerStyle={this.state.showDevices ? {overflow:"visible"} : {overflow:"hidden"}}
         >
           {deviceList}
         </LeftNav>

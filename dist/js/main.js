@@ -80934,7 +80934,7 @@ var ScheduleForm = _react2.default.createClass({
           'close'
         )
       ),
-      _react2.default.createElement(_reactSearchInput2.default, { className: 'search', ref: 'search', onChange: this.searchUpdated, placeholder: 'Search devices', style: { margin: "10" } }),
+      _react2.default.createElement(_reactSearchInput2.default, { className: 'search', ref: 'search', onChange: this.searchUpdated, placeholder: 'Search devices' }),
       deviceList,
       _react2.default.createElement(
         'p',
@@ -80955,7 +80955,7 @@ var ScheduleForm = _react2.default.createClass({
 
     return _react2.default.createElement(
       'div',
-      { style: { height: '440px' } },
+      { style: { overflow: "visible", height: '440px' } },
       _react2.default.createElement(
         LeftNav,
         {
@@ -80965,7 +80965,8 @@ var ScheduleForm = _react2.default.createClass({
           style: this.state.showDevices ? { overflow: "visible" } : { overflow: "hidden" },
           open: this.state.showDevices,
           overlayStyle: { backgroundColor: "rgba(0, 0, 0, 0.3)" },
-          onRequestChange: this._showDevices
+          onRequestChange: this._showDevices,
+          containerStyle: this.state.showDevices ? { overflow: "visible" } : { overflow: "hidden" }
         },
         deviceList
       ),
