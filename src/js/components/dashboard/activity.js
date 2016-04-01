@@ -31,9 +31,7 @@ var Activity = React.createClass({
           <div className="margin-bottom">
             {activity}
           </div>
-          <div>
-            <Link to="/updates/events" className="float-right">View all</Link>
-          </div>
+          
         </div>
       </div>
     );
