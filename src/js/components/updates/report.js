@@ -18,6 +18,33 @@ var Divider = mui.Divider;
 var FontIcon = mui.FontIcon;
 var Checkbox = mui.Checkbox;
 
+var mockSuccess = [
+    {
+        "id": "00a0c91e6-7dec-11d0-a765-f81d4faebf3",
+        "finished": "2016-03-25 00:13:00 +0000 UTC",
+        "status": "success",
+        "started": "2016-03-24 24:00:00 +0000 UTC",
+        "model": "Raspberry Pi 3",
+        "version_from": "Application 0.1"
+    },
+    {
+        "id": "00a0c91e6-7dec-11d0-a765-f81d4faebf2",
+        "finished": "2016-03-25 00:12:00 +0000 UTC",
+        "status": "success",
+        "started": "2016-03-24 24:00:00 +0000 UTC",
+        "model": "Raspberry Pi 3",
+        "version_from": "Application 0.1"
+    },
+    {
+        "id": "00a0c91e6-7dec-11d0-a765-f81d4faebf1",
+        "finished": "2016-03-25 00:04:00 +0000 UTC",
+        "status": "success",
+        "started": "2016-03-24 24:00:00 +0000 UTC",
+        "model": "Raspberry Pi 3",
+        "version_from": "Application 0.1"
+    }
+];
+
 var Report = React.createClass({
   getInitialState: function() {
     return {
@@ -28,12 +55,16 @@ var Report = React.createClass({
     };
   },
    componentDidMount: function() {
-    AppActions.getSingleUpdateStats(this.props.update.id, function(stats) {
-      this._updateState("stats",stats);
-    }.bind(this));
-    AppActions.getSingleUpdateDevices(this.props.update.id, function(devices) {
-      this._updateState("devices",devices);
-    }.bind(this));
+    if (this.props.update.id === "00a0c91e6-7dec-11d0-a765-f81d4faebf6") {
+      this._updateState("devices", mockSuccess);
+    } else {
+      AppActions.getSingleUpdateStats(this.props.update.id, function(stats) {
+        this._updateState("stats",stats);
+      }.bind(this));
+      AppActions.getSingleUpdateDevices(this.props.update.id, function(devices) {
+        this._updateState("devices",devices);
+      }.bind(this));
+    }
   },
   _updateState: function (key, val) {
     var state = {};
@@ -55,8 +86,6 @@ var Report = React.createClass({
     return date.replace(' ','T').replace(/ /g, '').replace('UTC','');
   },
   exportLog: function (id) {
-
-    console.log(id, this.props.update.id, "exportio");
     AppActions.getDeviceLog(this.props.update.id, id, function(data) {
       var content = data;
       var uriContent = "data:application/octet-stream," + encodeURIComponent(content);
