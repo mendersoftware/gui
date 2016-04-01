@@ -79181,6 +79181,7 @@ var Repository = _react2.default.createClass({
               disabled: image.name ? true : false,
               hintText: 'Identifier',
               ref: 'nameField',
+              id: 'image-name',
               floatingLabelText: 'Identifier',
               onChange: this._handleFieldChange.bind(null, 'name'),
               errorStyle: { color: "rgb(171, 16, 0)" } }),
@@ -79192,6 +79193,7 @@ var Repository = _react2.default.createClass({
               onChange: this.changedFile }),
             _react2.default.createElement(TextField, {
               value: 'Acme Model 1',
+              id: 'model-name',
               disabled: true,
               style: { display: "block" },
               floatingLabelText: 'Device type compatibility',
@@ -79201,6 +79203,7 @@ var Repository = _react2.default.createClass({
               hintText: 'Description',
               floatingLabelText: 'Description',
               multiLine: true,
+              id: 'description',
               style: { display: "block" },
               onChange: this._handleFieldChange.bind(null, 'description'),
               errorStyle: { color: "rgb(171, 16, 0)" },
@@ -79386,6 +79389,7 @@ var SelectedImage = _react2.default.createClass({
       delimeters: [9, 13, 188] });
 
     var descInput = _react2.default.createElement(TextField, {
+      id: 'inline-description',
       className: this.state.descEdit ? null : "hidden",
       style: { width: "100%" }, inputStyle: { marginTop: "0" },
       multiLine: true, rowsMax: 2, ref: 'description',

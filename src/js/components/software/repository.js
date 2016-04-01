@@ -367,6 +367,7 @@ var Repository = React.createClass({
                 disabled={image.name ? true : false}
                 hintText="Identifier"
                 ref="nameField"
+                id="image-name"
                 floatingLabelText="Identifier" 
                 onChange={this._handleFieldChange.bind(null, 'name')}
                 errorStyle={{color: "rgb(171, 16, 0)"}} />
@@ -380,6 +381,7 @@ var Repository = React.createClass({
 
               <TextField
                 value="Acme Model 1"
+                id="model-name"
                 disabled={true}
                 style={{display:"block"}}
                 floatingLabelText="Device type compatibility"
@@ -390,6 +392,7 @@ var Repository = React.createClass({
                 hintText="Description"
                 floatingLabelText="Description" 
                 multiLine={true}
+                id="description"
                 style={{display:"block"}}
                 onChange={this._handleFieldChange.bind(null, 'description')}
                 errorStyle={{color: "rgb(171, 16, 0)"}}

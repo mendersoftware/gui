@@ -130,6 +130,7 @@ var SelectedImage = React.createClass({
 
     var descInput = (
       <TextField 
+        id="inline-description"
         className={this.state.descEdit ? null : "hidden"} 
         style={{width:"100%"}} inputStyle={{ marginTop:"0"}}
         multiLine={true} rowsMax={2} ref="description" 
