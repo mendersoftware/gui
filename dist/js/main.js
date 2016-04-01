@@ -79341,7 +79341,8 @@ var SelectedImage = _react2.default.createClass({
   },
   _descEdit: function _descEdit(image, event) {
     event.stopPropagation();
-    if (event.keyCode === 13) {
+    if (event.keyCode === 13 || !event.keyCode) {
+
       if (this.state.descEdit) {
         image.description = this.refs.description.getValue();
         // save change
