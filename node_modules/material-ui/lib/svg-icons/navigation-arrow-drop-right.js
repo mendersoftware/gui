@@ -26,4 +26,3 @@ var NavigationArrowDropRight = _react2.default.createClass({
 });
 
 exports.default = NavigationArrowDropRight;
-module.exports = exports['default'];

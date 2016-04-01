@@ -1,7 +1,6 @@
 var gulp = require('gulp');
 var rename = require('gulp-rename');
 var browserify = require('browserify');
-var reactify = require("reactify");
 var babelify = require("babelify");
 var source = require("vinyl-source-stream"); // gulp needs a stream not a string, from browserify
 var less = require('gulp-less');

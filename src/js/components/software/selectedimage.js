@@ -1,13 +1,13 @@
 import React from 'react';
 import Time from 'react-time';
-import Router from 'react-router';
+import { Router, Link } from 'react-router';
 
 // material ui
 import mui from 'material-ui';
 
 var List = mui.List;
 var ListItem = mui.ListItem;
-var ListDivider = mui.ListDivider;
+var Divider = mui.Divider;
 var FontIcon = mui.FontIcon;
 var FlatButton = mui.FlatButton;
 var IconButton = mui.IconButton;
@@ -23,6 +23,9 @@ var SelectedImage = React.createClass({
       tagEdit: false,
       descEdit: false
     };
+  },
+  componentDidUpdate: function(prevProps, prevState) {
+    if (this.state.descEdit) { this.refs.description.focus() };
   },
   _handleLinkClick: function(model) {
     var filters = "model="+model;
@@ -44,7 +47,8 @@ var SelectedImage = React.createClass({
   handleDrag: function(tag, currPos, newPos) {
 
   },
-  _tagsEdit: function(image) {
+  _tagsEdit: function(image, event) {
+    event.stopPropagation();
     if (this.state.tagEdit) {
       var noIds = [];
       for (var i in tagslist) {
@@ -71,27 +75,28 @@ var SelectedImage = React.createClass({
       }
     }
   },
-  _descEdit: function(image) {
-    if (this.state.descEdit) {
-      image.description = this.state.descValue;
-      // save change
-      this.props.editImage(image);
+  _descEdit: function(image, event) {
+    event.stopPropagation();
+    if (event.keyCode === 13 || !event.keyCode) {
+    
+      if (this.state.descEdit) {
+        image.description = this.refs.description.getValue();
+        // save change
+        this.props.editImage(image);
+      }
+      this.setState({descEdit: !this.state.descEdit});
     }
-    this.setState({descEdit: !this.state.descEdit});
-  },
-  handleDescChange: function(event) {
-    this.setState({
-      descValue: event.target.value
-    });
   },
   render: function() {
     var info = {name: "-", tags: ['-'], model: "-", build_date: "-", modified: "-", size: "-", checksum: "-", devices: "-", description: "-"};
     if (this.props.image) {
       for (var key in this.props.image) {
-        if (this.props.image[key] != null) { info[key] = this.props.image[key] };
+        if (this.props.image[key]) {
+          info[key] = this.props.image[key];
+        };
         if (key.indexOf("modified")!==-1) {
           info[key] = (
-            <Time style={{position:"relative", top:"4"}} value={this.props.image[key]} format="YYYY/MM/DD HH:mm" />
+            <Time style={{position:"relative", top:"4"}} value={this.props.formatTime(this.props.image[key])} format="YYYY-MM-DD HH:mm" />
           )
         }
       }
@@ -125,66 +130,80 @@ var SelectedImage = React.createClass({
     );
 
     var descInput = (
-      <TextField ref="description" defaultValue={info.description} onChange={this.handleDescChange} />
+      <TextField 
+        id="inline-description"
+        className={this.state.descEdit ? null : "hidden"} 
+        style={{width:"100%"}} inputStyle={{ marginTop:"0"}}
+        multiLine={true} rowsMax={2} ref="description" 
+        defaultValue={info.description} 
+        onKeyDown={this._descEdit.bind(null, this.props.image)} />
     );
 
     var tags = this.state.tagEdit ? tagInput : info.tags.join(', ');
-    var desc = this.state.descEdit ? descInput : info.description;
+    var devicesFilter = "software_version="+info.name;
+    devicesFilter = encodeURIComponent(devicesFilter);    
+    var devicesLink = (
+      <div>
+        <span>{info.devices}</span>
+        <Link className={info.devices == '-' ? 'hidden' : "listItem-link" } to={`/devices/0/${devicesFilter}`}>View devices</Link>
+      </div>
+    );
 
     return (
-      <div id="imageInfo" className={this.props.image.name == null ? "muted" : null}>
-        <h3>Image details</h3>
-        <div className="report-list">
-          <List>
-            <ListItem disabled={true} primaryText="Software" secondaryText={info.name} />
-            <ListDivider />
-            <ListItem disabled={this.props.image.model ? false : true} primaryText="Device type" secondaryText={info.model} onClick={this._handleLinkClick.bind(null, info.model)} />
-            <ListDivider />
-            <ListItem disabled={true} primaryText="Size" secondaryText={info.size} />
-            <ListDivider />
-          </List>
+      <div className={this.props.image.name == null ? "muted" : null}>
+        <h3 className="margin-bottom-none">Image details</h3>
+        <div>
+          <div className="image-list list-item">
+            <List style={{backgroundColor: "rgba(255,255,255,0)"}}>
+              <ListItem disabled={true} primaryText="Date built" secondaryText={info.build_date} />
+              <Divider />
+              <ListItem disabled={true} primaryText="Date uploaded" secondaryText={info.modified} />
+              <Divider />
+            </List>
+          </div>
+          <div className="image-list list-item">
+            <List style={{backgroundColor: "rgba(255,255,255,0)"}}>
+              <ListItem disabled={true} primaryText="Checksum" style={{wordWrap:"break-word"}} secondaryText={info.checksum} />
+              <Divider />
+              <ListItem disabled={true} primaryText="Size" secondaryText={info.size} />
+              <Divider />
+            </List>
+          </div>
+          <div className="image-list list-item">
+            <List style={{backgroundColor: "rgba(255,255,255,0)"}}>
+              <ListItem disabled={true} primaryText="Installed on devices" secondaryText={devicesLink} />
+              <Divider />
+              <ListItem rightIconButton={editButton} disabled={true} primaryText="Tags" secondaryText={tags} />
+              <Divider />
+            </List>
+          </div>
         </div>
-        <div className="report-list">
-          <List>
-            <ListItem disabled={true} primaryText="Date built" secondaryText={info.build_date} />
-            <ListDivider />
-            <ListItem disabled={true} primaryText="Date uploaded" secondaryText={info.modified} />
-            <ListDivider />
-            <ListItem disabled={true} primaryText="Installed on devices" secondaryText={info.devices ? info.devices : "-"} />
-            <ListDivider />
-          </List>
-        </div>
-        <div className="report-list" style={{width: "320"}}>
-          <List>
-            <ListItem rightIconButton={editButton} disabled={true} primaryText="Tags" secondaryText={tags} />
-            <ListDivider />
-            <ListItem disabled={true} primaryText="Checksum" secondaryTextLines={2} style={{wordWrap:"break-word"}} secondaryText={info.checksum} />
-            <ListDivider />
-          </List>
-        </div>
-        <div className="float-right">
-          
-        </div>
-        <div className="margin-top">
-          <div className="report-list" style={{padding:"8px 0px", width:"590", verticalAlign:"top", position:"relative"}}>
-            <div style={{padding:"20px 16px 15px", fontSize:"16", lineHeight:"16px"}}>
+
+        <div className="relative" style={{top:"-24"}}>
+          <div className="report-list" style={{padding:"8px 0px", width:"63%", position:"relative"}}>
+            <div style={{padding:"20px 16px 15px", fontSize:"15", lineHeight:"15px"}}>
               <span style={{color:"rgba(0,0,0,0.8)"}}>Description</span>
-              <div style={{color:"rgba(0,0,0,0.54)", marginRight:"30", marginTop:"4"}}>{desc}</div>
+              <div style={{color:"rgba(0,0,0,0.54)", marginRight:"30", marginTop:"7", whiteSpace: "normal"}}>
+                <span className={this.state.descEdit ? "hidden" : null}>{info.description}</span>
+                {descInput}
+              </div>
               {editButtonDesc}
             </div>
             <hr style={{margin:"0", backgroundColor:"#e0e0e0", height:"1", border:"none"}} />
           </div>
           <div className="report-list" style={{width:"320"}}>
-            <List>
+            <List style={{backgroundColor: "rgba(255,255,255,0)"}}>
               <ListItem
                 disabled={this.props.image.name ? false : true}
                 primaryText="Deploy update"
                 secondaryText="Update devices with this image"
                 onClick={this._clickImageSchedule}
                 leftIcon={<FontIcon className="material-icons">schedule</FontIcon>} />
-              <ListDivider />
+              <Divider />
             </List>
           </div>
+       
+          <div className="report-list" style={{height:"130", width:"0"}}></div>
         </div>
       </div>
     );
@@ -192,8 +211,7 @@ var SelectedImage = React.createClass({
 });
 
 SelectedImage.contextTypes = {
-  location: React.PropTypes.object,
-  history: React.PropTypes.object
+  router: React.PropTypes.object,
 };
 
 module.exports = SelectedImage;

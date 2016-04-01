@@ -2,7 +2,7 @@ import React from 'react';
 import AppStore from '../../stores/app-store';
 import { Router, Link } from 'react-router';
 import DateTime from './datetime.js';
-
+import SearchInput from 'react-search-input';
 import mui from 'material-ui';
 
 var DatePicker = mui.DatePicker;
@@ -11,7 +11,9 @@ var SelectField = mui.SelectField;
 var TextField = mui.TextField;
 var FontIcon = mui.FontIcon;
 var LeftNav = mui.LeftNav;
-var FlatButton = mui.FlatButton;
+var IconButton = mui.IconButton;
+var MenuItem = mui.MenuItem;
+var Divider = mui.Divider;
 
 
 
@@ -59,7 +61,6 @@ var ScheduleForm = React.createClass({
       groupVal.payload = this.props.groupVal.id;
       groupVal.text = this.props.groupVal.name;
     }
-    this._sendUpToParent(this.props.id, 'id');
 
     /* if single device */
     var disabled = false;
@@ -73,7 +74,6 @@ var ScheduleForm = React.createClass({
         type: 'private',
         devices: [this.props.device]
       }
-      this._sendUpToParent(group, 'group');
     }
 
     // date times
@@ -95,41 +95,40 @@ var ScheduleForm = React.createClass({
       images: AppStore.getSoftwareRepo(),
       disabled: disabled,
       group: group,
-      showDevices: false
+      showDevices: false,
     };
   },
   componentDidMount: function() {
     this._updateTimes();
   },
 
-  _handleGroupValueChange: function(e) {
+  _handleGroupValueChange: function(e, index, value) {
     var image = this.state.image ? this.state.image.model : null;
-    var group = this.props.groups[e.target.value-1];
+    var group = this.props.groups[index];
     this.setState({
       group: group,
       groupVal: {
-        payload: e.target.value,
+        payload: group.id,
         text: group.name,
       },
       devices: getDevicesFromParams(group.name, image)
     });
+    this._sendUpToParent(this.state.image, 'image');
     this._sendUpToParent(group, 'group');
   },
-  _handleImageValueChange: function(e) {
-    var elementPos = this.state.images.map(function(x) {return x.id;}).indexOf(e.target.value);
-    var image = this.state.images[elementPos];
-
+  _handleImageValueChange: function(e, index, value) {
+    var image = this.state.images[index];
     var groupname = this.state.group ? this.state.group.name : null;
     var devices = this.props.device ? [this.props.device] : getDevicesFromParams(groupname, image.model);
-    console.log(devices);
     this.setState({
       image: image,
       imageVal: {
-        payload: e.target.value,
+        payload: image.id,
         text: image.name
       },
       devices: devices
     });
+    this._sendUpToParent(this.state.group, 'group');
     this._sendUpToParent(image, 'image');
   },
 
@@ -166,20 +165,24 @@ var ScheduleForm = React.createClass({
     this.setState({showDevices: !this.state.showDevices});
   },
 
+  searchUpdated: function(term) {
+    this.setState({searchTerm: term}); // needed to force re-render
+  },
+
   render: function() {
     var imageItems = [];
     for (var i=0; i<this.state.images.length;i++) {
-      var tmp = { payload:this.state.images[i].id, text: this.state.images[i].name };
+      var tmp = <MenuItem value={this.state.images[i].id} key={i} primaryText={this.state.images[i].name} />
       imageItems.push(tmp);
     }
 
     var groupItems = [];
     if (this.props.device) {
-      groupItems[0] = { payload:0, text: this.props.device.name }
+      groupItems[0] = <MenuItem value="0" key="device" primaryText={this.props.device.name} />
     }
 
     for (var i=0; i<this.props.groups.length;i++) {
-      var tmp = { payload:this.props.groups[i].id, text: this.props.groups[i].name };
+      var tmp = <MenuItem value={this.props.groups[i].id} key={i} primaryText={this.props.groups[i].name} />;
       groupItems.push(tmp);
     }
 
@@ -191,15 +194,22 @@ var ScheduleForm = React.createClass({
 
     var defaultStartDate =  this.state.start_time;
     var defaultEndDate = this.state.end_time;
+    var tmpDevices = [];
+
+    if (this.refs.search && this.state.devices) {
+      var filters = ['name'];
+      tmpDevices = this.state.devices.filter(this.refs.search.filter(filters));
+    }
+
     var deviceList = (
         <p>No devices</p>
     );
     if (this.state.devices) {
-      deviceList = this.state.devices.map(function(item, index) {
+      deviceList = tmpDevices.map(function(item, index) {
         var singleFilter = "name="+item.name;
         singleFilter = encodeURIComponent(singleFilter);
         return (
-            <p>
+            <p key={index}>
               <Link to={`/devices/${this.state.groupVal.payload}/${singleFilter}`}>{item.name}</Link>
             </p>
         )
@@ -207,21 +217,28 @@ var ScheduleForm = React.createClass({
     }
     deviceList = (
       <div className="deviceSlider">
-        <FlatButton label="Hide devices" onClick={this._showDevices} />
+        <IconButton className="closeSlider" iconStyle={{fontSize:"16px"}} onClick={this._showDevices} style={{borderRadius:"30px", width:"40px", height:"40", position:"absolute", left:"-18px", backgroundColor:"rgba(255,255,255,1)"}}>
+          <FontIcon className="material-icons">close</FontIcon>
+        </IconButton>
+        <SearchInput className="search" ref='search' onChange={this.searchUpdated} placeholder="Search devices" />
         {deviceList}
+        <p className={tmpDevices.length ? "hidden" : "italic" }>No devices match this search term</p>
+        <Divider />
         <p className={this.state.group ? this.state.group : "hidden"}><Link to={`/devices/${this.state.groupVal.payload}/${filters}`}>Go to group ></Link></p>
       </div>
     );
 
     return (
-      <div style={{height: '440px'}}>
+      <div style={{overflow:"visible", height: '440px'}}>
         <LeftNav 
           ref="devicesNav"
           docked={false}
           openRight={true}
+          style={this.state.showDevices ? {overflow:"visible"} : {overflow:"hidden"}}
           open={this.state.showDevices}
           overlayStyle={{backgroundColor:"rgba(0, 0, 0, 0.3)"}}
           onRequestChange={this._showDevices}
+          containerStyle={this.state.showDevices ? {overflow:"visible"} : {overflow:"hidden"}}
         >
           {deviceList}
         </LeftNav>
@@ -233,7 +250,9 @@ var ScheduleForm = React.createClass({
               value={this.state.imageVal.payload}
               onChange={this._handleImageValueChange}
               floatingLabelText="Select target software"
-              menuItems={imageItems} />
+            >
+              {imageItems}
+            </SelectField>
 
             <TextField
               className="margin-left"
@@ -253,8 +272,10 @@ var ScheduleForm = React.createClass({
                 ref="group"
                 onChange={this._handleGroupValueChange}
                 floatingLabelText="Select group"
-                menuItems={groupItems}
-                style={{marginBottom:10}} />
+                style={{marginBottom:10}} 
+              >
+                {groupItems}
+              </SelectField>
             </div>
 
             <div className={this.state.disabled ? 'inline-block' : 'hidden'}>

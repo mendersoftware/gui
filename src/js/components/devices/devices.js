@@ -4,7 +4,7 @@ var AppActions = require('../../actions/app-actions');
 
 var Groups = require('./groups');
 var DeviceList = require('./devicelist');
-var SelectedDevices = require('./selecteddevices');
+
 var Filters = require('./filters');
 
 function getState() {
@@ -12,6 +12,7 @@ function getState() {
     groups: AppStore.getGroups(),
     selectedGroup: AppStore.getSelectedGroup(),
     devices: AppStore.getDevices(),
+    allDevices: AppStore.getAllDevices(),
     selectedDevices: AppStore.getSelectedDevices(),
     filters: AppStore.getFilters(),
     attributes: AppStore.getAttributes(),
@@ -55,12 +56,11 @@ var Devices = React.createClass({
     return (
       <div className="margin-top">
        <div className="leftFixed">
-          <Groups groups={this.state.groups} selectedGroup={this.state.selectedGroup} />
+          <Groups groups={this.state.groups} selectedGroup={this.state.selectedGroup} allDevices={this.state.allDevices} />
         </div>
         <div className="rightFluid padding-right">
           <Filters attributes={this.state.attributes} filters={this.state.filters} onFilterChange={this._updateFilters} />
-          <DeviceList groups={this.state.groups} devices={this.state.devices} selectedGroup={this.state.selectedGroup} />
-          <SelectedDevices images={this.state.images} devices={this.state.devices} selected={this.state.selectedDevices} selectedGroup={this.state.selectedGroup} groups={this.state.groups} />
+          <DeviceList images={this.state.images} selectedDevices={this.state.selectedDevices} groups={this.state.groups} devices={this.state.devices} selectedGroup={this.state.selectedGroup} />
         </div>
       </div>
     );

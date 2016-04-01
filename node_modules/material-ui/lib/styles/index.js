@@ -11,7 +11,7 @@ var _autoPrefix2 = _interopRequireDefault(_autoPrefix);
 
 var _colors = require('./colors');
 
-var _colors2 = _interopRequireDefault(_colors);
+var Colors = _interopRequireWildcard(_colors);
 
 var _spacing = require('./spacing');
 
@@ -29,17 +29,9 @@ var _typography = require('./typography');
 
 var _typography2 = _interopRequireDefault(_typography);
 
-var _lightRawTheme = require('./raw-themes/light-raw-theme');
-
-var _lightRawTheme2 = _interopRequireDefault(_lightRawTheme);
-
 var _lightBaseTheme = require('./baseThemes/lightBaseTheme');
 
 var _lightBaseTheme2 = _interopRequireDefault(_lightBaseTheme);
-
-var _darkRawTheme = require('./raw-themes/dark-raw-theme');
-
-var _darkRawTheme2 = _interopRequireDefault(_darkRawTheme);
 
 var _darkBaseTheme = require('./baseThemes/darkBaseTheme');
 
@@ -57,31 +49,36 @@ var _zIndex = require('./zIndex');
 
 var _zIndex2 = _interopRequireDefault(_zIndex);
 
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+var LightRawTheme = _lightBaseTheme2.default;
+var DarkRawTheme = _darkBaseTheme2.default;
+
 exports.AutoPrefix = _autoPrefix2.default;
-exports.Colors = _colors2.default;
+exports.Colors = Colors;
 exports.Spacing = _spacing2.default;
 exports.ThemeManager = _themeManager2.default;
 exports.Transitions = _transitions2.default;
 exports.Typography = _typography2.default;
 exports.lightBaseTheme = _lightBaseTheme2.default;
-exports.LightRawTheme = _lightRawTheme2.default;
-exports.DarkRawTheme = _darkRawTheme2.default;
+exports.LightRawTheme = LightRawTheme;
+exports.DarkRawTheme = DarkRawTheme;
 exports.ThemeDecorator = _themeDecorator2.default;
 exports.getMuiTheme = _getMuiTheme2.default;
 exports.ZIndex = _zIndex2.default;
 exports.default = {
   AutoPrefix: _autoPrefix2.default,
-  Colors: _colors2.default,
+  Colors: Colors,
   Spacing: _spacing2.default,
   ThemeManager: _themeManager2.default,
   Transitions: _transitions2.default,
   Typography: _typography2.default,
   lightBaseTheme: _lightBaseTheme2.default,
-  LightRawTheme: _lightRawTheme2.default,
+  LightRawTheme: LightRawTheme,
   darkBaseTheme: _darkBaseTheme2.default,
-  DarkRawTheme: _darkRawTheme2.default,
+  DarkRawTheme: DarkRawTheme,
   ThemeDecorator: _themeDecorator2.default,
   getMuiTheme: _getMuiTheme2.default,
   ZIndex: _zIndex2.default

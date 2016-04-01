@@ -6,13 +6,13 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'd
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-var _lodashArrayUnion = require('lodash/array/union');
+var _lodashUnion = require('lodash/union');
 
-var _lodashArrayUnion2 = _interopRequireDefault(_lodashArrayUnion);
+var _lodashUnion2 = _interopRequireDefault(_lodashUnion);
 
-var _lodashArrayWithout = require('lodash/array/without');
+var _lodashWithout = require('lodash/without');
 
-var _lodashArrayWithout2 = _interopRequireDefault(_lodashArrayWithout);
+var _lodashWithout2 = _interopRequireDefault(_lodashWithout);
 
 var EnterLeaveCounter = (function () {
   function EnterLeaveCounter() {
@@ -24,7 +24,7 @@ var EnterLeaveCounter = (function () {
   EnterLeaveCounter.prototype.enter = function enter(enteringNode) {
     var previousLength = this.entered.length;
 
-    this.entered = _lodashArrayUnion2['default'](this.entered.filter(function (node) {
+    this.entered = _lodashUnion2['default'](this.entered.filter(function (node) {
       return document.documentElement.contains(node) && (!node.contains || node.contains(enteringNode));
     }), [enteringNode]);
 
@@ -34,7 +34,7 @@ var EnterLeaveCounter = (function () {
   EnterLeaveCounter.prototype.leave = function leave(leavingNode) {
     var previousLength = this.entered.length;
 
-    this.entered = _lodashArrayWithout2['default'](this.entered.filter(function (node) {
+    this.entered = _lodashWithout2['default'](this.entered.filter(function (node) {
       return document.documentElement.contains(node);
     }), leavingNode);
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Router, Route } from 'react-router';
+import { Router, Route, hashHistory } from 'react-router';
 import { render } from 'react-dom';
 var routes = require('./config/routes');
 
@@ -11,9 +11,6 @@ import injectTapEventPlugin from 'react-tap-event-plugin';
 //https://github.com/zilverline/react-tap-event-plugin
 injectTapEventPlugin();
 
-import createHashHistory from 'history/lib/createHashHistory';
-let history = createHashHistory();
-
 render((
-  <Router history={history}>{routes}</Router>
+  <Router history={hashHistory}>{routes}</Router>
 ), document.getElementById('main'))

@@ -5,12 +5,12 @@ exports['default'] = isValidType;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _lodashLangIsArray = require('lodash/lang/isArray');
+var _lodashIsArray = require('lodash/isArray');
 
-var _lodashLangIsArray2 = _interopRequireDefault(_lodashLangIsArray);
+var _lodashIsArray2 = _interopRequireDefault(_lodashIsArray);
 
 function isValidType(type, allowArray) {
-       return typeof type === 'string' || typeof type === 'symbol' || allowArray && _lodashLangIsArray2['default'](type) && type.every(function (t) {
+       return typeof type === 'string' || typeof type === 'symbol' || allowArray && _lodashIsArray2['default'](type) && type.every(function (t) {
               return isValidType(t, false);
        });
 }

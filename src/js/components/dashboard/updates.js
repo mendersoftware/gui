@@ -14,6 +14,13 @@ var Updates = React.createClass({
     this.props.clickHandle(params);
   },
   render: function() {
+    var progress = this.props.progress.map(function(update, index) {
+      return (
+        <div key={index}>
+          <p>{update.name}</p>
+        </div>
+      );
+    });
     return (
       <div className="updates">
         <div className="dashboard-header">

@@ -1,7 +1,9 @@
 var AppConstants = require('../constants/app-constants');
 var AppDispatcher = require('../dispatchers/app-dispatcher');
 var Api = require('../api/api');
-var apiUrl = "http://54.229.121.179:8080/api/0.0.1/";
+var UpdatesApi = require('../api/updates-api');
+var apiUrl = "http://private-9f43d-michaelatmender.apiary-mock.com/api/0.0.1/";
+var updatesApiUrl = "http://private-9f43d-michaelatmender.apiary-mock.com/api/0.0.1/";
 
 
 var AppActions = {
@@ -27,6 +29,9 @@ var AppActions = {
       devices: deviceList
     })
   },
+
+
+  /* API */
 
   getImages: function() {
     Api
@@ -74,7 +79,58 @@ var AppActions = {
         callback();
       });
   },
-  
+
+
+
+
+  /* API */
+  getUpdates: function() {
+    UpdatesApi
+      .get(updatesApiUrl+'deployments')
+      .then(function(updates) {
+        AppDispatcher.handleViewAction({
+          actionType: AppConstants.RECEIVE_UPDATES,
+          updates: updates
+        });
+      });
+  },
+  createUpdate: function(update) {
+    UpdatesApi
+    .post(updatesApiUrl+'deployments', update)
+      .then(function(data) {
+        // inserted update data,
+        callback(data);
+      });
+  },
+  getSingleUpdate: function(id, callback) {
+    UpdatesApi
+      .get(updatesApiUrl+'deployments/'+id)
+      .then(function(data) {
+        callback(data);
+      });
+  },
+  getSingleUpdateStats: function(id, callback) {
+    UpdatesApi
+      .get(updatesApiUrl+'deployments/'+id +'/statistics')
+      .then(function(data) {
+        callback(data);
+      });
+  },
+  getSingleUpdateDevices: function(id, callback) {
+    UpdatesApi
+      .get(updatesApiUrl+'deployments/'+id +'/devices')
+      .then(function(data) {
+        callback(data);
+      });
+  },
+  getDeviceLog: function(deploymentId, deviceId, callback) {
+    UpdatesApi
+      .getText(updatesApiUrl+'deployments/'+deploymentId +'/devices/'+deviceId +"/log")
+      .then(function(data) {
+        callback(data);
+      });
+  },
+     
   saveSchedule: function(schedule, single) {
     AppDispatcher.handleViewAction({
       actionType: AppConstants.SAVE_SCHEDULE,
@@ -82,6 +138,12 @@ var AppActions = {
       single: single
     })
   },
+
+
+
+
+
+
 
   removeUpdate: function(updateId) {
     AppDispatcher.handleViewAction({

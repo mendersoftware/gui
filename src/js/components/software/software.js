@@ -15,7 +15,8 @@ var Software = React.createClass({
     return {
       repo: [],
       groups: [],
-      software: []
+      software: [],
+      selected: null
     }
   },
   componentWillMount: function() {
@@ -32,11 +33,19 @@ var Software = React.createClass({
     });
     this.setState({software: AppStore.getSoftwareRepo()}, function() {
     });
+
+    if (this.props.params) {
+      if (this.props.params.softwareVersion) {
+        // selected software
+        var image = AppStore.getSoftwareImage("name", this.props.params.softwareVersion);
+        this.setState({selected: image});
+      }
+    }
   },
   render: function() {
     return (
       <div className="contentContainer">
-        <Repository software={this.state.software} groups={this.state.groups} />
+        <Repository selected={this.state.selected} software={this.state.software} groups={this.state.groups} />
       </div>
     );
   }

@@ -2,17 +2,19 @@ import React from 'react';
 import Header from './header/header';
 
 import mui from 'material-ui';
-import ThemeManager from 'material-ui/lib/styles/theme-manager';
+import getMuiTheme from 'material-ui/lib/styles/getMuiTheme';
 import RawTheme from '../themes/mender-theme.js';
 
 var App = React.createClass({
   childContextTypes: {
+    location: React.PropTypes.object,
     muiTheme: React.PropTypes.object
   },
   getChildContext() { 
-    var theme = ThemeManager.getMuiTheme(RawTheme);
+    var theme = getMuiTheme(RawTheme);
     return {
       muiTheme: theme,
+      location: this.props.location
     };
   },
   render: function() {

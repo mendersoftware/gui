@@ -24,34 +24,28 @@ var _groups = [
   {
     id: 1,
     name: "All devices",
-    devices: [1,2,3,4,5,6,7,8,9,10,11],
+    devices: [1,2,3,4,5,6,7],
     type: "public"
   },
   {
     id: 2,
     name: "Development",
-    devices: [1,2,3],
+    devices: [3],
     type: "public"
   },
   {
     id: 3,
     name: "Test",
-    devices: [4,5,6],
+    devices: [1,2],
     type: "public"
 
   },
   {
     id: 4,
     name: "Production",
-    devices: [7,8],
+    devices: [4,5,6],
     type: "public"
   },
-  {
-    id: 5,
-    name: "Wifi",
-    devices: [9],
-    type: "public"
-  }
 ]
 
 
@@ -60,113 +54,73 @@ var _groups = [
 var _alldevices = [
   {
     'id': 1,
-    'name': 'Device001',
-    'model':"Acme Model 1",
-    'arch': 'armv7',
+    'name': '00a0c91e6-7dec-11d0-a765-f81d4faebf1',
+    'model':"Raspberry Pi 3",
+    'arch': 'ARMv8 Cortex-A53',
     'status': 'Up',
-    'software_version': 'Version 1.1',
-    'groups': [1,2],
+    'software_version': 'Application 0.0.1',
+    'groups': [1,3],
     'tags': []
   },
   {
     'id': 2,
-    'name': 'Device002',
-    'model':"Acme Model 1",
-    'arch': 'armv7',
+    'name': '00a0c91e6-7dec-11d0-a765-f81d4faebf2',
+    'model':"Raspberry Pi 3",
+    'arch': 'ARMv8 Cortex-A53',
     'status': 'Up',
-    'software_version': 'Version 1.1',
-    'groups': [1,2],
+    'software_version': 'Application 0.0.1',
+    'groups': [1,3],
     'tags': []
   },
   {
     'id': 3,
-    'name': 'Device003',
-    'model':"Acme Model 1",
-    'arch': 'armv7',
+    'name': '00a0c91e6-7dec-11d0-a765-f81d4faebf3',
+    'model':"Raspberry Pi 3",
+    'arch': 'ARMv8 Cortex-A53',
     'status': 'Up',
-    'software_version': 'Version 1.1',
+    'software_version': 'Application 0.0.1',
     'groups': [1,2],
     'tags': []
   },
   {
     'id': 4,
-    'name': 'Device004',
-    'model':"Acme Model 1",
-    'arch': 'armv7',
+    'name': '00a0c91e6-7dec-11d0-a765-f81d4faebf4',
+    'model':"Raspberry Pi 3",
+    'arch': 'ARMv8 Cortex-A53',
     'status': 'Up',
-    'software_version': 'Version 1.0',
-    'groups': [1,3],
+    'software_version': 'Application 0.0.2',
+    'groups': [1,4],
     'tags': []
   },
   {
     'id': 5,
-    'name': 'Device005',
-    'model':"Acme Model 1",
-    'arch': 'armv7',
-    'status': 'Down',
-    'software_version': 'Version 1.0',
-    'groups': [1,3],
+    'name': '00a0c91e6-7dec-11d0-a765-f81d4faebf5',
+    'model':"Raspberry Pi 3",
+    'arch': 'ARMv8 Cortex-A53',
+    'status': 'Up',
+    'software_version': 'Application 0.0.2',
+    'groups': [1,4],
     'tags': []
   },
   {
     'id': 6,
-    'name': 'Device006',
-    'model':"Acme Model 1",
-    'arch': 'armv7',
-    'status': 'Down',
-    'software_version': 'Version 0.3',
-    'groups': [1,3],
+    'name': '00a0c91e6-7dec-11d0-a765-f81d4faebf6',
+    'model':"Raspberry Pi 3",
+    'arch': 'ARMv8 Cortex-A53',
+    'status': 'Up',
+    'software_version': 'Application 0.0.2',
+    'groups': [1,4],
     'tags': []
   },
   {
     'id': 7,
-    'name': 'Device007',
-    'model':"Acme Model 1",
-    'arch': 'armv7',
-    'status': 'Up',
-    'software_version': 'Version 1.0',
-    'groups': [1,4],
-    'tags': []
-  },
-  {
-    'id': 8,
-    'name': 'Device008',
-    'model':"Acme Model 1",
-    'arch': 'armv7',
-    'status': 'Up',
-    'software_version': 'Version 1.0',
-    'groups': [1,4],
-    'tags': []
-  },
-  {
-    'id': 9,
-    'name': 'Wifi001',
-    'model':"Wifi Model 1",
-    'arch': 'arm64',
-    'status': 'Up',
-    'software_version': 'Version 1.0 Wifi',
-    'groups': [1,5],
-    'tags': ['wifi']
-  },
-  {
-    'id': 10,
-    'name': 'Wifi002',
-    'model':"Wifi Model 1",
-    'arch': 'arm64',
-    'status': 'Up',
-    'software_version': 'Version 1.0 Wifi',
+    'name': '0dde3346-4dec-11d0-a765-f81d4faebf7',
+    'model':"Raspberry Pi 2 Model B",
+    'arch': 'ARMv7 Cortex-A7',
+    'status': 'Down',
+    'software_version': 'Application 0.0.1',
     'groups': [1],
-    'tags': ['wifi']
-  },
-   {
-    'id': 11,
-    'name': 'Wifi003',
-    'model':"Wifi Model 1",
-    'arch': 'arm64',
-    'status': 'Up',
-    'software_version': 'Version 1.0 Wifi',
-    'groups': [1],
-    'tags': ['wifi']
+    'tags': []
   },
 ];
 
@@ -227,7 +181,6 @@ function _sortDevices() {
 }
 
 function _updateDeviceTags(id, tags) {
-  console.log(id, tags);
   var index = findWithAttr(_alldevices, "id", id);
   _alldevices[index].tags = tags;
 }
@@ -339,11 +292,10 @@ function discoverDevices(array) {
   if (array.length) {
     for (var val in unique) {
       var idx = findWithAttr(array, 'name', val);
-      if (idx) { array[idx].devices = unique[val] }
+      if (idx!==undefined) { array[idx]['devices'] = unique[val] }
     }
   }
   return array;
- 
 }
 
 function _uploadImage(image) {
@@ -362,284 +314,39 @@ var _recent = []
 var _schedule = [];
 var _events = [];
 
-var _allupdates = [
-  {
-    id: 1,
-    group: "Test",
-    model: "Acme Model 1",
-    software_version: "Version 1.1",
-    start_time: 1458493576000,
-    end_time: 1458497176000,
-    status: null,
-    devices: [
-     {
-        id:4,
-        name:"Device004",
-        model:"Acme Model 1",
-        last_software_version:"Version 1.0",
-        software_version:"Version 1.0",
-        start_time:null,
-        end_time:null,
-        status:"Skipped"
-      },
-      {
-        id:5,
-        name:"Device005",
-        model:"Acme Model 1",
-        last_software_version:"Version 1.0",
-        software_version:"Version 1.o",
-        start_time:null,
-        end_time:null,
-        status: "Skipped"
-      },
-      {
-        id:6,
-        name:"Device006",
-        model:"Acme Model 1",
-        last_software_version:"Version 0.3",
-        software_version:"Version 1.0",
-        start_time:null,
-        end_time: null,
-        status: "Pending"
-      }
-    ]
-  },
-  {
-    id: 2,
-    group: "Development",
-    model: "Acme Model 1",
-    software_version: "Version 1.2",
-    start_time: 1458507176000,
-    end_time: 1458510776000,
-    status: null,
-    devices: [
-      {
-        id:1,
-        name:"Device001",
-        model:"Acme Model 1",
-        last_software_version:"Version 1.1",
-        software_version:"Version 1.2",
-        start_time:null,
-        end_time:null,
-        status:"Pending"
-      },
-      {
-        id:2,
-        name:"Device002",
-        model:"Acme Model 1",
-        last_software_version:"Version 1.1",
-        software_version:"Version 1.2",
-        start_time:1447297176000,
-        end_time:1444708776000,
-        status:"Pending"
-      },
-      {
-        id:3,
-        name:"Device003",
-        model:"Acme Model 1",
-        last_software_version:"Version 1.1",
-        software_version:"Version 1.2",
-        start_time:null,
-        end_time: null,
-        status:"Pending"
-      }
-    ]
-  },
-  {
-    id: 3,
-    group: "Production",
-    model: "Acme Model 1",
-    software_version: "Version 1.0",
-    start_time: 1445309976000,
-    end_time: 1445396376000,
-    status: "Complete",
-    devices: [
-      {
-        id:7,
-        name:"Device007",
-        model:"Acme Model 1",
-        last_software_version:"Version 0.3",
-        software_version:"Version 1.0",
-        start_time:1445309976000,
-        end_time:1445396376000,
-        status:"Complete"
-      },
-      {
-        id:8,
-        name:"Device008",
-        model:"Acme Model 1",
-        last_software_version:"Version 0.3",
-        software_version:"Version 1.0",
-        start_time:1445309976000,
-        end_time:1445396376000,
-        status:"Complete"
-      },
-    ]
-  },
-  {
-    id: 4,
-    group: "Test",
-    model: "Acme Model 1",
-    software_version: "Version 0.3",
-    start_time: 1444705176000,
-    end_time: 1444708776000,
-    status: "Complete",
-    devices: [
-     {
-        id:4,
-        name:"Device004",
-        model:"Acme Model 1",
-        last_software_version:"Version 0.2",
-        software_version:"Version 0.3",
-        start_time:1444705176000,
-        end_time:1444708776000,
-        status:"Complete"
-      },
-      {
-        id:5,
-        name:"Device005",
-        model:"Acme Model 1",
-        last_software_version:"Version 0.2",
-        software_version:"Version 0.3",
-        start_time:1444705176000,
-        end_time:1444708776000,
-        status:"Complete"
-      },
-      {
-        id:6,
-        name:"Device006",
-        model:"Acme Model 1",
-        last_software_version:"Version 0.3",
-        software_version:"Version 0.3",
-        start_time:1444705176000,
-        end_time: 1444708776000,
-        status:"Complete"
-      }
-    ]
-  },
-  {
-    id: 5,
-    group: "Test",
-    model: "Acme Model 1",
-    software_version: "Version 1.0",
-    start_time: 1444708776000,
-    end_time: 1444709971000,
-    status: "Failed",
-    devices: [
-      {
-        id:4,
-        name:"Device004",
-        model:"Acme Model 1",
-        last_software_version:"Version 0.3",
-        software_version:"Version 1.0",
-        start_time:1444708776000,
-        end_time:1444709971000,
-        status:"Complete"
-      },
-      {
-        id:5,
-        name:"Device005",
-        model:"Acme Model 1",
-        last_software_version:"Version 0.3",
-        software_version:"Version 1.0",
-        start_time:1444708776000,
-        end_time:1444709971000,
-        status:"Complete"
-      },
-      {
-        id:6,
-        name:"Device006",
-        model:"Acme Model 1",
-        last_software_version:"Version 0.3",
-        software_version:"Version 0.3",
-        start_time:1444708776000,
-        end_time: 1444709971000,
-        status:"Failed"
-      }
-    ]
-  },
-  {
-    id: 6,
-    group: "Wifi",
-    model: "Wifi Model 1",
-    software_version: "Wifi Version 1.0",
-    start_time: 1453169971000,
-    end_time: 1459199971000,
-    status: "Pending",
-    devices: [
-      {
-        id:9,
-        name:"Wifi001",
-        model:"Wifi Model 1",
-        last_software_version:"Wifi Version Beta",
-        software_version:"Wifi Version 1.0",
-        start_time:1453169971000,
-        end_time:1459199971000,
-        status:"Pending"
-      },
-    ]
-  },
-  {
-    id: 7,
-    group: "Production",
-    model: "Acme Model 1",
-    software_version: "Version 1.1",
-    start_time: 1447309976000,
-    end_time: 1455396376000,
-    status: "Pending",
-    devices: [
-      {
-        id:7,
-        name:"Device007",
-        model:"Acme Model 1",
-        last_software_version:"Version 1.0",
-        software_version:"Version 1.1",
-        start_time:1447309976000,
-        end_time:1449309976000,
-        status:"Complete"
-      },
-      {
-        id:8,
-        name:"Device008",
-        model:"Acme Model 1",
-        last_software_version:"Version 1.0",
-        software_version:"Version 1.1",
-        start_time:1447309976000,
-        end_time:1455396376000,
-        status:"Pending"
-      },
-    ]
-  },
-];
-_allupdates.sort(startTimeSort);
+var _allupdates = [];
+var _selectedUpdate = {};
+
+//_allupdates.sort(startTimeSort);
 
 
 var _activityLog = [
   {
-    summary: "User Admin scheduled an update to group Wifi",
-    details: "1 devices in group Wifi will be updated to Wifi Version 1 at 2015/11/26 04:06",
-    timestamp: 1445708776000,
+    summary: "User Admin deployed an update to all devices",
+    details: "6 devices began updating to Application 0.0.2 at 2016-03-24 00:00",
+    timestamp: 1458777600000,
     negative: false
   },
   {
-    summary: "User Admin uploaded image Version 1.2",
-    details: "Software image Version 1.2 was uploaded at 2015/10/15 22:12",
-    timestamp: 1444708776000,
+    summary: "User Admin uploaded image Application 0.0.2",
+    details: "Software image Application 0.0.2 was uploaded at 2016-03-22 15:13",
+    timestamp: 1458659590000,
     negative: false
   },
   {
     summary: "User Admin cancelled an update to group Test",
-    details: "Cancelled update to 3 devices in group Test to software Version 1.1 at 2015/11/23 09:30",
-    timestamp: 1443708776000,
+    details: "Cancelled update to 2 devices in group Test to image Application 0.0.1 at 2016-03-21 09:30",
+    timestamp: 1458552600000,
     negative: true
   },
 ];
 
 function _getRecentUpdates(time) {
-
   var recent = [];
   for (var i=0;i<_allupdates.length;i++) {
-    if (_allupdates[i].start_time<time && _allupdates[i].end_time<time) {
+    var created = new Date(_allupdates[i].created);
+    var finished = new Date(_allupdates[i].finished);
+    if (created<time && finished<time) {
       recent.push(_allupdates[i]);
     }
   }
@@ -649,7 +356,12 @@ function _getRecentUpdates(time) {
 function _getProgressUpdates(time) {
   var progress = [];
   for (var i=0;i<_allupdates.length;i++) {
-    if (_allupdates[i].start_time<=time && _allupdates[i].end_time>time) {
+    var created = new Date(_allupdates[i].created);
+    var finished = new Date(_allupdates[i].finished);
+    /*
+    * CHANGE FOR MOCKING API
+    */ 
+    if (created<=time && finished>time) {
       progress.push(_allupdates[i]);
     }
   }
@@ -758,6 +470,22 @@ function setImages(images) {
 
 
 
+function setUpdates(updates) {
+  if (updates) {
+     _allupdates = updates;
+  }
+  _allupdates.sort(startTimeSort);
+}
+
+function setSelectedUpdate(update) {
+  if (update) {
+    _selectedUpdate = update;
+  }
+}
+
+
+
+
 var AppStore = assign(EventEmitter.prototype, {
   emitChange: function() {
     this.emit(CHANGE_EVENT)
@@ -787,6 +515,14 @@ var AppStore = assign(EventEmitter.prototype, {
     * Return group object for current group selection
     */
     return _currentGroup
+  },
+
+
+  getAllDevices: function() {
+    /*
+    * Return list of devices by current selected group
+    */
+    return _alldevices
   },
 
   getDevices: function() {
@@ -848,6 +584,13 @@ var AppStore = assign(EventEmitter.prototype, {
   getSingleUpdate: function(attr, val) {
     var index = findWithAttr(_allupdates, attr, val);
     return _allupdates[index];
+  },
+
+  getSelectedUpdate: function() {
+    /*
+    * Return current selected update
+    */
+    return _selectedUpdate
   },
 
   getProgressUpdates: function(date) {
@@ -930,6 +673,14 @@ var AppStore = assign(EventEmitter.prototype, {
       /* API */
       case AppConstants.RECEIVE_IMAGES:
         setImages(payload.action.images);
+        break;
+
+      /* API */
+      case AppConstants.RECEIVE_UPDATES:
+        setUpdates(payload.action.updates);
+        break;
+       case AppConstants.SINGLE_UPDATE:
+        setSelectedUpdate(payload.action.update);
         break;
     }
     

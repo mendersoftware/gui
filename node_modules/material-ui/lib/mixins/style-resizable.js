@@ -56,4 +56,3 @@ exports.default = {
     _events2.default.off(window, 'resize', this._updateDeviceSize);
   }
 };
-module.exports = exports['default'];

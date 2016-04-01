@@ -18,7 +18,7 @@ var Activity = React.createClass({
             <p className="summary">{log.summary}</p>
             <p>{log.details}</p>
           </div>
-          <Time style={{fontSize:"12"}} className="activityTime" value={log.timestamp} format="YY/MM/DD HH:mm" />
+          <Time style={{fontSize:"12"}} className="activityTime" value={log.timestamp} format="YY-MM-DD HH:mm" />
         </div>
       )
     }); 
@@ -31,9 +31,7 @@ var Activity = React.createClass({
           <div className="margin-bottom">
             {activity}
           </div>
-          <div>
-            <Link to="/updates/events" className="float-right">View all</Link>
-          </div>
+          
         </div>
       </div>
     );
@@ -41,7 +39,7 @@ var Activity = React.createClass({
 });
 
 Activity.contextTypes = {
-  router: React.PropTypes.func
+  router: React.PropTypes.object
 };
 
 module.exports = Activity;

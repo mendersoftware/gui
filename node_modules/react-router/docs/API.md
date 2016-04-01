@@ -103,7 +103,7 @@ Please see the [`examples/`](/examples) directory of the repository for extensiv
 ### `<Link>`
 The primary way to allow users to navigate around your application. `<Link>` will render a fully accessible anchor tag with the proper href.
 
-A `<Link>` can know when the route it links to is active and automatically apply an `activeClassName` and/or `activeStyle` when given either prop. The `<Link>` will be active if the current route is either the linked route or any descendant of the linked route. To have the link be active only on the exact linked route, use [`<IndexLink>`](#indexlink) instead.
+A `<Link>` can know when the route it links to is active and automatically apply an `activeClassName` and/or `activeStyle` when given either prop. The `<Link>` will be active if the current route is either the linked route or any descendant of the linked route. To have the link be active only on the exact linked route, use [`<IndexLink>`](#indexlink) instead or set the `onlyActiveOnIndex` prop.
 
 #### Props
 ##### `to`
@@ -115,7 +115,7 @@ An object of key:value pairs to be stringified.
 ##### `hash`
 A hash to put in the URL, e.g. `#a-hash`.
 
-_Note: React Router currently does not manage scroll position, and will not scroll to the element corresponding to the hash. Scroll position management utilities are available in the [scroll-behavior](https://github.com/rackt/scroll-behavior) library._
+_Note: React Router currently does not manage scroll position, and will not scroll to the element corresponding to the hash. Scroll position management utilities are available in the [scroll-behavior](https://github.com/taion/scroll-behavior) library._
 
 ##### `state`
 State to persist to the `location`.
@@ -128,6 +128,9 @@ The styles to apply to the link element when its route is active.
 
 ##### `onClick(e)`
 A custom handler for the click event. Works just like a handler on an `<a>` tag - calling `e.preventDefault()` will prevent the transition from firing, while `e.stopPropagation()` will prevent the event from bubbling.
+
+##### `onlyActiveOnIndex`
+If `true`, the `<Link>` will only be active when the current route exactly matches the linked route.
 
 ##### *others*
 You can also pass props you'd like to be on the `<a>` such as a `title`, `id`, `className`, etc.
@@ -150,7 +153,7 @@ Given a route like `<Route path="/users/:userId" />`:
 ```
 
 ### `<IndexLink>`
-An `<IndexLink>` is like a [`<Link>`](#link), except it is only active when the current route is exactly the linked route.
+An `<IndexLink>` is like a [`<Link>`](#link), except it is only active when the current route is exactly the linked route. It is equivalent to `<Link>` with the `onlyActiveOnIndex` prop set.
 
 ### `<RouterContext>`
 A `<RouterContext>` renders the component tree for a given router state. Its used by `<Router>` but also useful for server rendering and integrating in brownfield development.
@@ -196,6 +199,10 @@ Creates a URL, using the router's config. For example, it will add `#/` in front
 ##### `isActive(pathOrLoc, indexOnly)`
 Returns `true` or `false` depending on if the `pathOrLoc` is active. Will be true for every route in the route branch matched (child route is active, therefore parent is too), unless `indexOnly` is specified, in which case it will only match the exact path.
 
+A route is only considered active if all the URL parameters match, including optional parameters and their presence or absence.
+
+However, only explicitly specified query parameters will be checked. That means that `isActive({ pathname: '/foo', query: { a: 'b' } })` will return `true` when the location is `/foo?a=b&c=d`. To require that a query parameter be absent, specify its value as an explicit `undefined`, e.g. `isActive({ pathname: '/foo', query: { a: 'b', c: undefined } })`, which would be `false` in this example.
+
 
 ## Configuration Components
 
@@ -210,7 +217,7 @@ The path used in the URL.
 It will concat with the parent route's path unless it starts with `/`,
 making it an absolute path.
 
-**Note**: Absolute paths may not be used in route config that is [dynamically loaded](/docs/guides/advanced/DynamicRouting.md).
+**Note**: Absolute paths may not be used in route config that is [dynamically loaded](/docs/guides/DynamicRouting.md).
 
 If left undefined, the router will try to match the child routes.
 
@@ -315,7 +322,7 @@ code-splitting.
 ```
 
 ##### `children`
-Routes can be nested, `this.props.children` will contain the element created from the child route component. Please refer to the [Route Configuration](/docs/guides/basics/RouteConfiguration.md) since this is a very critical part of the router's design.
+Routes can be nested, `this.props.children` will contain the element created from the child route component. Please refer to the [Route Configuration](/docs/guides/RouteConfiguration.md) since this is a very critical part of the router's design.
 
 ##### `onEnter(nextState, replace, callback?)`
 Called when a route is about to be entered. It provides the next router state and a function to redirect to another path. `this` will be the route instance that triggered the hook.
@@ -377,7 +384,7 @@ let myRoute = {
 ```
 
 ##### `indexRoute`
-The [index route](/docs/guides/basics/IndexRoutes.md). This is the same as specifying an `<IndexRoute>` child when using JSX route configs.
+The [index route](/docs/guides/IndexRoutes.md). This is the same as specifying an `<IndexRoute>` child when using JSX route configs.
 
 ##### `getIndexRoute(location, callback)`
 
@@ -432,7 +439,7 @@ By default, the query parameters will just pass through but you can specify them
 </Route>
 ```
 
-Note that the `<Redirect>` can be placed anywhere in the route hierarchy, though [normal precedence](/docs/guides/basics/RouteMatching.md#precedence) rules apply. If you'd prefer the redirects to be next to their respective routes, the `from` path will match the same as a regular route `path`.
+Note that the `<Redirect>` can be placed anywhere in the route hierarchy, though [normal precedence](/docs/guides/RouteMatching.md#precedence) rules apply. If you'd prefer the redirects to be next to their respective routes, the `from` path will match the same as a regular route `path`.
 
 ```js
 <Route path="course/:courseId">
@@ -447,7 +454,7 @@ Note that the `<Redirect>` can be placed anywhere in the route hierarchy, though
 ### `<IndexRoute>`
 An `<IndexRoute>` allows you to provide a default "child" to a parent route when visitor is at the URL of the parent.
 
-Please see the [Index Routes guide](/docs/guides/basics/IndexRoutes.md).
+Please see the [Index Routes guide](/docs/guides/IndexRoutes.md).
 
 #### Props
 All the same props as [Route](#route) except for `path`.
@@ -457,7 +464,7 @@ All the same props as [Route](#route) except for `path`.
 ### `<IndexRedirect>`
 An `<IndexRedirect>` allows you to redirect from the URL of a parent route to another route. They can be used to allow a child route to serve as the default route for its parent, while still keeping a distinct URL.
 
-Please see the [Index Routes guide](/docs/guides/basics/IndexRoutes.md).
+Please see the [Index Routes guide](/docs/guides/IndexRoutes.md).
 
 #### Props
 All the same props as [Redirect](#redirect) except for `from`.
@@ -470,7 +477,7 @@ A route's component is rendered when that route matches the URL. The router will
 ### Injected Props
 
 #### `location`
-The current [location](https://github.com/rackt/history/blob/master/docs/Location.md).
+The current [location](https://github.com/reactjs/history/blob/master/docs/Location.md).
 
 #### `params`
 The dynamic segments of the URL.
@@ -482,7 +489,7 @@ The route that rendered this component.
 A subset of `this.props.params` that were directly specified in this component's route. For example, if the route's path is `users/:userId` and the URL is `/users/123/portfolios/345` then `this.props.routeParams` will be `{userId: '123'}`, and `this.props.params` will be `{userId: '123', portfolioId: 345}`.
 
 #### `children`
-The matched child route element to be rendered. If the route has [named components](https://github.com/rackt/react-router/blob/master/docs/API.md#named-components) then this will be undefined, and the components will instead be available as direct properties on `this.props`.
+The matched child route element to be rendered. If the route has [named components](/docs/API.md#named-components) then this will be undefined, and the components will instead be available as direct properties on `this.props`.
 
 ##### Example
 ```js
@@ -561,7 +568,7 @@ class Users extends React.Component {
 
 ## Histories
 
-For more details, please see the [histories guide](/docs/guides/basics/Histories.md).
+For more details, please see the [histories guide](/docs/guides/Histories.md).
 
 ### `browserHistory`
 `browserHistory` uses the HTML5 History API when available, and falls back to full refreshes otherwise. `browserHistory` requires additional configuration on the server side to serve up URLs, but is the generally preferred solution for modern web pages.

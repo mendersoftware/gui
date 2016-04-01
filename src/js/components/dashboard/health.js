@@ -15,7 +15,7 @@ var Health = React.createClass({
           <h2>Devices <span className="dashboard-number">{this.props.health.total}</span></h2>
         </div>
         <div className="dashboard-container">
-          <div className="">
+          <div className="hidden">
             <span className={this.props.health.nogroup ? "number" : "hidden"} style={{marginRight:"0"}}>+</span>
             <span className="number">{this.props.health.nogroup}</span>
             <span>Pending</span>
@@ -40,7 +40,7 @@ var Health = React.createClass({
 
 
 Health.contextTypes = {
-  router: React.PropTypes.func
+  router: React.PropTypes.object
 };
 
 module.exports = Health;

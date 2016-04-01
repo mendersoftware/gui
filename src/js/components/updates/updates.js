@@ -35,9 +35,9 @@ var tabs = {
 
 function getState() {
   return {
-    recent: AppStore.getRecentUpdates(new Date().getTime()),
-    progress: AppStore.getProgressUpdates(new Date().getTime()),
-    schedule: AppStore.getScheduledUpdates(new Date().getTime()),
+    recent: AppStore.getRecentUpdates(new Date()),
+    progress: AppStore.getProgressUpdates(new Date()),
+    schedule: AppStore.getScheduledUpdates(new Date()),
     events: AppStore.getEventLog(),
     images: AppStore.getSoftwareRepo(),
     groups: AppStore.getGroups(),
@@ -55,6 +55,7 @@ var Updates = React.createClass({
   },
   componentDidMount: function() {
     AppStore.changeListener(this._onChange);
+    AppActions.getUpdates();
       if (this.props.params) {
         this.setState({tabIndex: tabs[this.props.params.tab]});
 
@@ -70,10 +71,7 @@ var Updates = React.createClass({
           if (params.open) {
             var that = this;
             if (params.id) {
-              setTimeout(function() {
-                var report = that._getReportById(params.id);
-                that._showReport(report);
-              }, 400);
+              that._getReportById(params.id);
             } else {
               setTimeout(function() {
                 that.dialogOpen("schedule");
@@ -98,11 +96,12 @@ var Updates = React.createClass({
     this.replaceState(this.getInitialState());
   },
   dialogOpen: function(dialog) {
+    this.setState({dialog: true});
     if (dialog === 'schedule') {
       this.setState({
         dialogTitle: "Deploy an update",
         scheduleForm: true,
-        contentClass: null
+        contentClass: "dialog"
       });
     }
     if (dialog === 'report') {
@@ -112,23 +111,27 @@ var Updates = React.createClass({
         contentClass: "largeDialog"
       })
     }
-    
-    this.setState({dialog: !this.state.dialog});
-    
   },
   _changeTab: function(value, e, tab) {
     this.setState({tabIndex: value});
   },
   _onScheduleSubmit: function() {
-    var newUpdate = {
-      id: this.state.id,
-      group: this.state.group,
-      model: this.state.model,
-      start_time: this.state.start_time,
-      end_time: this.state.end_time,
-      image: this.state.image
+    var devices = AppStore.getDevicesFromParams(this.state.group.name, this.state.image.model);
+    var ids = [];
+    for (var i=0; i<devices.length; i++) {
+      ids.push(devices[i].id);
     }
-    AppActions.saveSchedule(newUpdate, this.state.disabled);
+    var newUpdate = {
+      //id: this.state.id,
+      name: this.state.group.name,
+      model: this.state.image.model,
+      //start_time: this.state.start_time,
+      //end_time: this.state.end_time,
+      version: this.state.image.name,
+      devices: ids
+    }
+    console.log(newUpdate.devices);
+    AppActions.createUpdate(newUpdate, this.state.disabled);
     this.dialogDismiss('dialog');
   },
   _updateParams: function(val, attr) {
@@ -138,13 +141,20 @@ var Updates = React.createClass({
     this.setState(tmp);
   },
   _getReportById: function (id) {
-    return AppStore.getSingleUpdate("id", Number(id));
+     AppActions.getSingleUpdate(id, function(data) {
+        var that = this;
+        setTimeout(function() {
+          that._showReport(data);
+        }, 400);
+    }.bind(this));
   },
-  _showReport: function (report) {
-     this.setState({scheduleForm: false, showReport:report});
-     this.dialogOpen("report");
+  _showReport: function (update) {
+    this.setState({scheduleForm: false, selectedUpdate: update});
+    this.dialogOpen("report");
   },
   _scheduleUpdate: function (update) {
+    this.setState({dialog:false});
+ 
     var image = '';
     var group = '';
     var start_time = null;
@@ -187,7 +197,9 @@ var Updates = React.createClass({
         ref="save" />
     ];
     var reportActions = [
-      { text: 'Close' }
+      <FlatButton
+          label="Close"
+          onClick={this.dialogDismiss.bind(null, 'dialog')} />
     ];
     var dialogContent = '';
 
@@ -197,16 +209,16 @@ var Updates = React.createClass({
       )
     } else {
       dialogContent = (
-        <Report retryUpdate={this._scheduleUpdate} update={this.state.showReport} />
+        <Report update={this.state.selectedUpdate} retryUpdate={this._scheduleUpdate} />
       )
     }
     return (
       <div className="contentContainer">
         <div>
-          <Recent recent={this.state.recent} progress={this.state.progress} showReport={this._showReport} />
-          <div style={{marginTop:"45"}} className="float-right">
+          <div className="top-right-button">
             <ScheduleButton secondary={true} openDialog={this.dialogOpen} />
           </div>
+          <Recent recent={this.state.recent} progress={this.state.progress} showReport={this._showReport} />
         </div>
       
         <Dialog

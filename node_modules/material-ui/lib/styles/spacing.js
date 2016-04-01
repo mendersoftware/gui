@@ -17,4 +17,3 @@ exports.default = {
   desktopSubheaderHeight: 48,
   desktopToolbarHeight: 56
 };
-module.exports = exports['default'];

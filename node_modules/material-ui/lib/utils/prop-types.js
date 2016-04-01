@@ -33,4 +33,3 @@ exports.default = {
   zDepth: _react2.default.PropTypes.oneOf([0, 1, 2, 3, 4, 5])
 
 };
-module.exports = exports['default'];

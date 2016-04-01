@@ -19,7 +19,9 @@ module.exports = (
         <Route path="(:filters)" />
       </Route>
     </Route>
-    <Route path="/software" component={Software} />
+    <Route path="/software" component={Software}>
+      <Route path="(:softwareVersion)" />
+    </Route>
     <Route path="/updates" component={Updates}>
       <Route path="(:tab)">
         <Route path="(:params)">

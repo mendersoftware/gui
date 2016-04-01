@@ -8,7 +8,7 @@ It's important that changes deep down in the application don't require changes a
 
 A router is the perfect place to handle code splitting: it's responsible for setting up your views.
 
-React Router does all of its [path matching](/docs/guides/basics/RouteMatching.md) and component fetching asynchronously, which allows you to not only load up the components lazily, *but also lazily load the route configuration*. You really only need one route definition in your initial bundle, the router can resolve the rest on demand.
+React Router does all of its [path matching](/docs/guides/RouteMatching.md) and component fetching asynchronously, which allows you to not only load up the components lazily, *but also lazily load the route configuration*. You really only need one route definition in your initial bundle, the router can resolve the rest on demand.
 
 Routes may define [`getChildRoutes`](/docs/API.md#getchildrouteslocation-callback), [`getIndexRoute`](/docs/API.md#getindexroutelocation-callback), and [`getComponents`](/docs/API.md#getcomponentslocation-callback) methods. These are asynchronous and only called when needed. We call it "gradual matching". React Router will gradually match the URL and fetch only the amount of route configuration and components it needs to match the URL and render.
 
@@ -46,4 +46,4 @@ const CourseRoute = {
 
 Now go look at what hacks you have in place to do this. Just kidding, I don't want to make you sad right now.
 
-Run the [huge apps](https://github.com/rackt/react-router/tree/master/examples/huge-apps) example with your web inspector open and watch code get loaded in as you navigate around the demo.
+Run the [huge apps](https://github.com/reactjs/react-router/tree/master/examples/huge-apps) example with your web inspector open and watch code get loaded in as you navigate around the demo.
