@@ -30,8 +30,12 @@ var Recent = React.createClass({
     progress = nextProps.progress;
     recent = nextProps.recent;
   },
-  _handleCellClick: function(rowNumber, columnId) {
+  _recentCellClick: function(rowNumber, columnId) {
     var report = recent[rowNumber];
+    this.props.showReport(report);
+  },
+  _progressCellClick: function(rowNumber, columnId) {
+    var report = progress[rowNumber];
     this.props.showReport(report);
   },
   _formatTime: function(date) {
@@ -80,7 +84,7 @@ var Recent = React.createClass({
         <div style={{marginBottom:"60"}}> 
           <h3>Updates in progress</h3>
           <Table
-            onCellClick={this._handleCellClick}
+            onCellClick={this._progressCellClick}
             className={progressMap.length ? null : 'hidden'}
             selectable={false}>
             <TableHeader
@@ -110,7 +114,7 @@ var Recent = React.createClass({
         <div style={{marginTop:"60"}}>
           <h3>Recent updates</h3>
           <Table
-            onCellClick={this._handleCellClick}
+            onCellClick={this._recentCellClick}
             className={recentMap.length ? null : 'hidden'}
             selectable={false}>
             <TableHeader

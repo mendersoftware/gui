@@ -79746,10 +79746,15 @@ var GroupDevices = _react2.default.createClass({
     this.getDevices();
   },
   getDevices: function getDevices() {
-    AppActions.getSingleUpdateDevices(this.props.update, function (devices) {
-      // retrieve number of devices from child
-      this.setState({ devices: devices.length });
-    }.bind(this));
+    if (this.props.update === "00a0c91e6-7dec-11d0-a765-f81d4faebf6") {
+      console.log("yes");
+      this.setState({ devices: 3 });
+    } else {
+      AppActions.getSingleUpdateDevices(this.props.update, function (devices) {
+        // retrieve number of devices from child
+        this.setState({ devices: devices.length });
+      }.bind(this));
+    }
   },
   render: function render() {
     return _react2.default.createElement(
@@ -79968,8 +79973,12 @@ var Recent = _react2.default.createClass({
     progress = nextProps.progress;
     recent = nextProps.recent;
   },
-  _handleCellClick: function _handleCellClick(rowNumber, columnId) {
+  _recentCellClick: function _recentCellClick(rowNumber, columnId) {
     var report = recent[rowNumber];
+    this.props.showReport(report);
+  },
+  _progressCellClick: function _progressCellClick(rowNumber, columnId) {
+    var report = progress[rowNumber];
     this.props.showReport(report);
   },
   _formatTime: function _formatTime(date) {
@@ -80070,7 +80079,7 @@ var Recent = _react2.default.createClass({
         _react2.default.createElement(
           Table,
           {
-            onCellClick: this._handleCellClick,
+            onCellClick: this._progressCellClick,
             className: progressMap.length ? null : 'hidden',
             selectable: false },
           _react2.default.createElement(
@@ -80143,7 +80152,7 @@ var Recent = _react2.default.createClass({
         _react2.default.createElement(
           Table,
           {
-            onCellClick: this._handleCellClick,
+            onCellClick: this._recentCellClick,
             className: recentMap.length ? null : 'hidden',
             selectable: false },
           _react2.default.createElement(
@@ -80240,6 +80249,29 @@ var Divider = mui.Divider;
 var FontIcon = mui.FontIcon;
 var Checkbox = mui.Checkbox;
 
+var mockSuccess = [{
+  "id": "00a0c91e6-7dec-11d0-a765-f81d4faebf3",
+  "finished": "2016-03-25 00:13:00 +0000 UTC",
+  "status": "success",
+  "started": "2016-03-24 24:00:00 +0000 UTC",
+  "model": "Raspberry Pi 3",
+  "version_from": "Application 0.1"
+}, {
+  "id": "00a0c91e6-7dec-11d0-a765-f81d4faebf2",
+  "finished": "2016-03-25 00:12:00 +0000 UTC",
+  "status": "success",
+  "started": "2016-03-24 24:00:00 +0000 UTC",
+  "model": "Raspberry Pi 3",
+  "version_from": "Application 0.1"
+}, {
+  "id": "00a0c91e6-7dec-11d0-a765-f81d4faebf1",
+  "finished": "2016-03-25 00:04:00 +0000 UTC",
+  "status": "success",
+  "started": "2016-03-24 24:00:00 +0000 UTC",
+  "model": "Raspberry Pi 3",
+  "version_from": "Application 0.1"
+}];
+
 var Report = _react2.default.createClass({
   displayName: 'Report',
 
@@ -80252,12 +80284,16 @@ var Report = _react2.default.createClass({
     };
   },
   componentDidMount: function componentDidMount() {
-    AppActions.getSingleUpdateStats(this.props.update.id, function (stats) {
-      this._updateState("stats", stats);
-    }.bind(this));
-    AppActions.getSingleUpdateDevices(this.props.update.id, function (devices) {
-      this._updateState("devices", devices);
-    }.bind(this));
+    if (this.props.update.id === "00a0c91e6-7dec-11d0-a765-f81d4faebf6") {
+      this._updateState("devices", mockSuccess);
+    } else {
+      AppActions.getSingleUpdateStats(this.props.update.id, function (stats) {
+        this._updateState("stats", stats);
+      }.bind(this));
+      AppActions.getSingleUpdateDevices(this.props.update.id, function (devices) {
+        this._updateState("devices", devices);
+      }.bind(this));
+    }
   },
   _updateState: function _updateState(key, val) {
     var state = {};
@@ -80279,8 +80315,6 @@ var Report = _react2.default.createClass({
     return date.replace(' ', 'T').replace(/ /g, '').replace('UTC', '');
   },
   exportLog: function exportLog(id) {
-
-    console.log(id, this.props.update.id, "exportio");
     AppActions.getDeviceLog(this.props.update.id, id, function (data) {
       var content = data;
       var uriContent = "data:application/octet-stream," + encodeURIComponent(content);
@@ -81463,18 +81497,18 @@ var _groups = [{
 }, {
   id: 2,
   name: "Development",
-  devices: [3],
+  devices: [6],
   type: "public"
 }, {
   id: 3,
   name: "Test",
-  devices: [1, 2],
+  devices: [4, 6],
   type: "public"
 
 }, {
   id: 4,
   name: "Production",
-  devices: [4, 5, 6],
+  devices: [1, 2, 3],
   type: "public"
 }];
 
@@ -81487,7 +81521,7 @@ var _alldevices = [{
   'arch': 'ARMv8 Cortex-A53',
   'status': 'Up',
   'software_version': 'Application 0.0.1',
-  'groups': [1, 3],
+  'groups': [1, 4],
   'tags': []
 }, {
   'id': 2,
@@ -81496,7 +81530,7 @@ var _alldevices = [{
   'arch': 'ARMv8 Cortex-A53',
   'status': 'Up',
   'software_version': 'Application 0.0.1',
-  'groups': [1, 3],
+  'groups': [1, 4],
   'tags': []
 }, {
   'id': 3,
@@ -81505,7 +81539,7 @@ var _alldevices = [{
   'arch': 'ARMv8 Cortex-A53',
   'status': 'Up',
   'software_version': 'Application 0.0.1',
-  'groups': [1, 2],
+  'groups': [1, 4],
   'tags': []
 }, {
   'id': 4,
@@ -81514,7 +81548,7 @@ var _alldevices = [{
   'arch': 'ARMv8 Cortex-A53',
   'status': 'Up',
   'software_version': 'Application 0.0.2',
-  'groups': [1, 4],
+  'groups': [1, 2],
   'tags': []
 }, {
   'id': 5,
@@ -81523,7 +81557,7 @@ var _alldevices = [{
   'arch': 'ARMv8 Cortex-A53',
   'status': 'Up',
   'software_version': 'Application 0.0.2',
-  'groups': [1, 4],
+  'groups': [1, 3],
   'tags': []
 }, {
   'id': 6,
@@ -81532,7 +81566,7 @@ var _alldevices = [{
   'arch': 'ARMv8 Cortex-A53',
   'status': 'Up',
   'software_version': 'Application 0.0.2',
-  'groups': [1, 4],
+  'groups': [1, 3],
   'tags': []
 }, {
   'id': 7,

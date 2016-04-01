@@ -30,20 +30,20 @@ var _groups = [
   {
     id: 2,
     name: "Development",
-    devices: [3],
+    devices: [6],
     type: "public"
   },
   {
     id: 3,
     name: "Test",
-    devices: [1,2],
+    devices: [4,6],
     type: "public"
 
   },
   {
     id: 4,
     name: "Production",
-    devices: [4,5,6],
+    devices: [1,2,3],
     type: "public"
   },
 ]
@@ -59,7 +59,7 @@ var _alldevices = [
     'arch': 'ARMv8 Cortex-A53',
     'status': 'Up',
     'software_version': 'Application 0.0.1',
-    'groups': [1,3],
+    'groups': [1,4],
     'tags': []
   },
   {
@@ -69,7 +69,7 @@ var _alldevices = [
     'arch': 'ARMv8 Cortex-A53',
     'status': 'Up',
     'software_version': 'Application 0.0.1',
-    'groups': [1,3],
+    'groups': [1,4],
     'tags': []
   },
   {
@@ -79,7 +79,7 @@ var _alldevices = [
     'arch': 'ARMv8 Cortex-A53',
     'status': 'Up',
     'software_version': 'Application 0.0.1',
-    'groups': [1,2],
+    'groups': [1,4],
     'tags': []
   },
   {
@@ -89,7 +89,7 @@ var _alldevices = [
     'arch': 'ARMv8 Cortex-A53',
     'status': 'Up',
     'software_version': 'Application 0.0.2',
-    'groups': [1,4],
+    'groups': [1,2],
     'tags': []
   },
   {
@@ -99,7 +99,7 @@ var _alldevices = [
     'arch': 'ARMv8 Cortex-A53',
     'status': 'Up',
     'software_version': 'Application 0.0.2',
-    'groups': [1,4],
+    'groups': [1,3],
     'tags': []
   },
   {
@@ -109,7 +109,7 @@ var _alldevices = [
     'arch': 'ARMv8 Cortex-A53',
     'status': 'Up',
     'software_version': 'Application 0.0.2',
-    'groups': [1,4],
+    'groups': [1,3],
     'tags': []
   },
   {
