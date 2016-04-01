@@ -44,7 +44,7 @@ var Progress = React.createClass({
             disabled={true}
             style={{paddingBottom:"12", height:"50"}}
             primaryText={progressBar}
-            secondaryText={<Time style={{fontSize:"12"}} className="progressTime" value={this._formatTime(update.created)} format="YY/MM/DD HH:mm" />}
+            secondaryText={<Time style={{fontSize:"12"}} className="progressTime" value={this._formatTime(update.created)} format="YY-MM-DD HH:mm" />}
             onClick={this._clickHandle}
             leftIcon={<div style={{width:"110", height:"auto"}}><span className="progress-version">{update.version}</span><span className="progress-group">{update.name} {this.state.devices[index]}</span></div>}
           />

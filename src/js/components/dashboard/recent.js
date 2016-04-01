@@ -53,7 +53,7 @@ var Recent = React.createClass({
               secondaryText={group}
               onClick={this._clickHandle.bind(null, update.id)}
               leftIcon={icon}
-              rightIcon={<Time style={{float:"right", position:"initial", width:"auto", marginRight:"-56", whiteSpace:"nowrap", fontSize:"14"}} value={this._formatTime(update.finished)} format="YYYY/MM/DD HH:mm" />} />
+              rightIcon={<Time style={{float:"right", position:"initial", width:"auto", marginRight:"-56", whiteSpace:"nowrap", fontSize:"14"}} value={this._formatTime(update.finished)} format="YYYY-MM-DD HH:mm" />} />
             <Divider inset={true} className={last ? "hidden" : null} />
           </div>
         )

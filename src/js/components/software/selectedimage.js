@@ -96,7 +96,7 @@ var SelectedImage = React.createClass({
         };
         if (key.indexOf("modified")!==-1) {
           info[key] = (
-            <Time style={{position:"relative", top:"4"}} value={this.props.formatTime(this.props.image[key])} format="YYYY/MM/DD HH:mm" />
+            <Time style={{position:"relative", top:"4"}} value={this.props.formatTime(this.props.image[key])} format="YYYY-MM-DD HH:mm" />
           )
         }
       }

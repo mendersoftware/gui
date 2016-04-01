@@ -87,7 +87,7 @@ var Report = React.createClass({
               <TableRowColumn>{deviceLink}</TableRowColumn>
               <TableRowColumn>{device.model}</TableRowColumn>
               <TableRowColumn>{softwareLink}</TableRowColumn>
-              <TableRowColumn><Time value={this._formatTime(device.finished)} format="YYYY/MM/DD HH:mm" /></TableRowColumn>
+              <TableRowColumn><Time value={this._formatTime(device.finished)} format="YYYY-MM-DD HH:mm" /></TableRowColumn>
               <TableRowColumn>{device.status || "--"}</TableRowColumn>
               <TableRowColumn><FlatButton onClick={this.exportLog.bind(null, device.id)} label="Export log" /></TableRowColumn>
             </TableRow>
@@ -104,7 +104,7 @@ var Report = React.createClass({
             <Divider />
             <ListItem disabled={true} primaryText="Device type" secondaryText={this.props.update.model || "--"} />
             <Divider />
-            <ListItem disabled={true} primaryText="Start time" secondaryText={<Time value={this._formatTime(this.props.update.created)} format="YYYY/MM/DD HH:mm" />} />
+            <ListItem disabled={true} primaryText="Start time" secondaryText={<Time value={this._formatTime(this.props.update.created)} format="YYYY-MM-DD HH:mm" />} />
           </List>
         </div>
         <div className="report-list">
@@ -113,7 +113,7 @@ var Report = React.createClass({
             <Divider />
             <ListItem disabled={true} primaryText="Target software" secondaryText={softwareLink} />
             <Divider />
-            <ListItem disabled={true} primaryText="End time" secondaryText={<Time value={this._formatTime(this.props.update.finished)} format="YYYY/MM/DD HH:mm" />} />
+            <ListItem disabled={true} primaryText="End time" secondaryText={<Time value={this._formatTime(this.props.update.finished)} format="YYYY-MM-DD HH:mm" />} />
           </List>
         </div>
         <div className="report-list">

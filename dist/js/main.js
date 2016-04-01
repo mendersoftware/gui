@@ -76525,7 +76525,7 @@ var Activity = _react2.default.createClass({
             log.details
           )
         ),
-        _react2.default.createElement(_reactTime2.default, { style: { fontSize: "12" }, className: 'activityTime', value: log.timestamp, format: 'YY/MM/DD HH:mm' })
+        _react2.default.createElement(_reactTime2.default, { style: { fontSize: "12" }, className: 'activityTime', value: log.timestamp, format: 'YY-MM-DD HH:mm' })
       );
     });
     return _react2.default.createElement(
@@ -76811,7 +76811,7 @@ var Progress = _react2.default.createClass({
           disabled: true,
           style: { paddingBottom: "12", height: "50" },
           primaryText: progressBar,
-          secondaryText: _react2.default.createElement(Time, { style: { fontSize: "12" }, className: 'progressTime', value: this._formatTime(update.created), format: 'YY/MM/DD HH:mm' }),
+          secondaryText: _react2.default.createElement(Time, { style: { fontSize: "12" }, className: 'progressTime', value: this._formatTime(update.created), format: 'YY-MM-DD HH:mm' }),
           onClick: this._clickHandle,
           leftIcon: _react2.default.createElement(
             'div',
@@ -76958,7 +76958,7 @@ var Recent = _react2.default.createClass({
             secondaryText: group,
             onClick: this._clickHandle.bind(null, update.id),
             leftIcon: icon,
-            rightIcon: _react2.default.createElement(Time, { style: { float: "right", position: "initial", width: "auto", marginRight: "-56", whiteSpace: "nowrap", fontSize: "14" }, value: this._formatTime(update.finished), format: 'YYYY/MM/DD HH:mm' }) }),
+            rightIcon: _react2.default.createElement(Time, { style: { float: "right", position: "initial", width: "auto", marginRight: "-56", whiteSpace: "nowrap", fontSize: "14" }, value: this._formatTime(update.finished), format: 'YYYY-MM-DD HH:mm' }) }),
           _react2.default.createElement(Divider, { inset: true, className: last ? "hidden" : null })
         );
       }
@@ -79350,7 +79350,7 @@ var SelectedImage = _react2.default.createClass({
           info[key] = this.props.image[key];
         };
         if (key.indexOf("modified") !== -1) {
-          info[key] = _react2.default.createElement(_reactTime2.default, { style: { position: "relative", top: "4" }, value: this.props.formatTime(this.props.image[key]), format: 'YYYY/MM/DD HH:mm' });
+          info[key] = _react2.default.createElement(_reactTime2.default, { style: { position: "relative", top: "4" }, value: this.props.formatTime(this.props.image[key]), format: 'YYYY-MM-DD HH:mm' });
         }
       }
     }
@@ -80335,7 +80335,7 @@ var Report = _react2.default.createClass({
             _react2.default.createElement(
               TableRowColumn,
               null,
-              _react2.default.createElement(Time, { value: this._formatTime(device.finished), format: 'YYYY/MM/DD HH:mm' })
+              _react2.default.createElement(Time, { value: this._formatTime(device.finished), format: 'YYYY-MM-DD HH:mm' })
             ),
             _react2.default.createElement(
               TableRowColumn,
@@ -80365,7 +80365,7 @@ var Report = _react2.default.createClass({
           _react2.default.createElement(Divider, null),
           _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Device type', secondaryText: this.props.update.model || "--" }),
           _react2.default.createElement(Divider, null),
-          _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Start time', secondaryText: _react2.default.createElement(Time, { value: this._formatTime(this.props.update.created), format: 'YYYY/MM/DD HH:mm' }) })
+          _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Start time', secondaryText: _react2.default.createElement(Time, { value: this._formatTime(this.props.update.created), format: 'YYYY-MM-DD HH:mm' }) })
         )
       ),
       _react2.default.createElement(
@@ -80378,7 +80378,7 @@ var Report = _react2.default.createClass({
           _react2.default.createElement(Divider, null),
           _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Target software', secondaryText: softwareLink }),
           _react2.default.createElement(Divider, null),
-          _react2.default.createElement(ListItem, { disabled: true, primaryText: 'End time', secondaryText: _react2.default.createElement(Time, { value: this._formatTime(this.props.update.finished), format: 'YYYY/MM/DD HH:mm' }) })
+          _react2.default.createElement(ListItem, { disabled: true, primaryText: 'End time', secondaryText: _react2.default.createElement(Time, { value: this._formatTime(this.props.update.finished), format: 'YYYY-MM-DD HH:mm' }) })
         )
       ),
       _react2.default.createElement(
