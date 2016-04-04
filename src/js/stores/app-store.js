@@ -173,11 +173,6 @@ function _getCurrentDevices(groupId) {
        _currentDevices.push(device);
     }
   }
-  _sortDevices();
-}
-
-function _sortDevices() {
-  _currentDevices.sort(statusSort);
 }
 
 function _updateDeviceTags(id, tags) {
@@ -237,6 +232,7 @@ function _getDevices(group, model) {
       }
     }
   }
+
   return devices;
 }
 
@@ -412,6 +408,9 @@ function _sortTable(array, column, direction) {
   switch(array) {
     case "_softwareRepo":
       _softwareRepo.sort(customSort(direction, column));
+      break;
+    case "_currentDevices":
+      _currentDevices.sort(customSort(direction, column));
       break;
   }
 }

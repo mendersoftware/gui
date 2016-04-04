@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 var AppStore = require('../../stores/app-store');
 var AppActions = require('../../actions/app-actions');
 var SelectedDevices = require('./selecteddevices');
@@ -31,6 +32,8 @@ var DeviceList = React.createClass({
         payload: '',
         text: ''
       },
+      sortCol: "status",
+      sortDown: true,
       addGroup: false
     };
   },
@@ -182,6 +185,23 @@ var DeviceList = React.createClass({
   _onClick: function(event) {
     event.stopPropagation();
   },
+
+  _sortColumn: function(col) {
+    var direction;
+    if (this.state.sortCol !== col) {
+      ReactDOM.findDOMNode(this.refs[this.state.sortCol]).className = "sortIcon material-icons";
+      ReactDOM.findDOMNode(this.refs[col]).className = "sortIcon material-icons selected";
+      this.setState({sortCol:col, sortDown: true});
+      direction = true;
+    } else {
+      direction = !(this.state.sortDown);
+      ReactDOM.findDOMNode(this.refs[this.state.sortCol]).className = "sortIcon material-icons selected " +direction;
+      this.setState({sortDown: direction});
+    }
+    // sort table
+    AppActions.sortTable("_currentDevices", col, direction);
+  },
+
   render: function() {
     var styles = {
       exampleFlatButtonIcon: {
@@ -222,6 +242,12 @@ var DeviceList = React.createClass({
         marginRight: "-6",
         color: "#fff"
       },
+      sortIcon: {
+        verticalAlign: 'middle',
+        marginLeft: "10",
+        color: "#8c8c8d",
+        cursor: "pointer",
+      }
     }
 
     var groupList = this.props.groups.map(function(group, index) {
@@ -299,11 +325,11 @@ var DeviceList = React.createClass({
             <TableHeader
             enableSelectAll={true}>
               <TableRow>
-                <TableHeaderColumn tooltip="Name">Name</TableHeaderColumn>
-                <TableHeaderColumn tooltip="Device type">Device type</TableHeaderColumn>
-                <TableHeaderColumn tooltip="Current software">Current software</TableHeaderColumn>
-                <TableHeaderColumn tooltip="Status">Status</TableHeaderColumn>
-                <TableHeaderColumn style={{width:"66", paddingRight:"12", paddingLeft:"12"}} tooltip="Show details">Show details</TableHeaderColumn>
+                <TableHeaderColumn className="columnHeader" tooltip="Name">Name<FontIcon ref="name" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "name")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
+                <TableHeaderColumn className="columnHeader" tooltip="Device type">Device type<FontIcon ref="model" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "model")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
+                <TableHeaderColumn className="columnHeader" tooltip="Current software">Current software<FontIcon ref="software_version" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "software_version")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
+                <TableHeaderColumn className="columnHeader" tooltip="Status">Status<FontIcon ref="status" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "status")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
+                <TableHeaderColumn className="columnHeader" style={{width:"66", paddingRight:"12", paddingLeft:"12"}} tooltip="Show details">Show details</TableHeaderColumn>
               </TableRow>
             </TableHeader>
             <TableBody

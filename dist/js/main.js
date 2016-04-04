@@ -77220,6 +77220,10 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
+var _reactDom = require('react-dom');
+
+var _reactDom2 = _interopRequireDefault(_reactDom);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -77258,6 +77262,8 @@ var DeviceList = _react2.default.createClass((_React$createClass = {
         payload: '',
         text: ''
       },
+      sortCol: "status",
+      sortDown: true,
       addGroup: false
     };
   },
@@ -77402,6 +77408,20 @@ var DeviceList = _react2.default.createClass((_React$createClass = {
   this.refs.customGroup.focus();
 }), _defineProperty(_React$createClass, '_onClick', function _onClick(event) {
   event.stopPropagation();
+}), _defineProperty(_React$createClass, '_sortColumn', function _sortColumn(col) {
+  var direction;
+  if (this.state.sortCol !== col) {
+    _reactDom2.default.findDOMNode(this.refs[this.state.sortCol]).className = "sortIcon material-icons";
+    _reactDom2.default.findDOMNode(this.refs[col]).className = "sortIcon material-icons selected";
+    this.setState({ sortCol: col, sortDown: true });
+    direction = true;
+  } else {
+    direction = !this.state.sortDown;
+    _reactDom2.default.findDOMNode(this.refs[this.state.sortCol]).className = "sortIcon material-icons selected " + direction;
+    this.setState({ sortDown: direction });
+  }
+  // sort table
+  AppActions.sortTable("_currentDevices", col, direction);
 }), _defineProperty(_React$createClass, 'render', function render() {
   var styles = {
     exampleFlatButtonIcon: {
@@ -77441,6 +77461,12 @@ var DeviceList = _react2.default.createClass((_React$createClass = {
       lineHeight: '36px',
       marginRight: "-6",
       color: "#fff"
+    },
+    sortIcon: {
+      verticalAlign: 'middle',
+      marginLeft: "10",
+      color: "#8c8c8d",
+      cursor: "pointer"
     }
   };
 
@@ -77568,27 +77594,47 @@ var DeviceList = _react2.default.createClass((_React$createClass = {
             null,
             _react2.default.createElement(
               TableHeaderColumn,
-              { tooltip: 'Name' },
-              'Name'
+              { className: 'columnHeader', tooltip: 'Name' },
+              'Name',
+              _react2.default.createElement(
+                FontIcon,
+                { ref: 'name', style: styles.sortIcon, onClick: this._sortColumn.bind(null, "name"), className: 'sortIcon material-icons' },
+                'sort'
+              )
             ),
             _react2.default.createElement(
               TableHeaderColumn,
-              { tooltip: 'Device type' },
-              'Device type'
+              { className: 'columnHeader', tooltip: 'Device type' },
+              'Device type',
+              _react2.default.createElement(
+                FontIcon,
+                { ref: 'model', style: styles.sortIcon, onClick: this._sortColumn.bind(null, "model"), className: 'sortIcon material-icons' },
+                'sort'
+              )
             ),
             _react2.default.createElement(
               TableHeaderColumn,
-              { tooltip: 'Current software' },
-              'Current software'
+              { className: 'columnHeader', tooltip: 'Current software' },
+              'Current software',
+              _react2.default.createElement(
+                FontIcon,
+                { ref: 'software_version', style: styles.sortIcon, onClick: this._sortColumn.bind(null, "software_version"), className: 'sortIcon material-icons' },
+                'sort'
+              )
             ),
             _react2.default.createElement(
               TableHeaderColumn,
-              { tooltip: 'Status' },
-              'Status'
+              { className: 'columnHeader', tooltip: 'Status' },
+              'Status',
+              _react2.default.createElement(
+                FontIcon,
+                { ref: 'status', style: styles.sortIcon, onClick: this._sortColumn.bind(null, "status"), className: 'sortIcon material-icons' },
+                'sort'
+              )
             ),
             _react2.default.createElement(
               TableHeaderColumn,
-              { style: { width: "66", paddingRight: "12", paddingLeft: "12" }, tooltip: 'Show details' },
+              { className: 'columnHeader', style: { width: "66", paddingRight: "12", paddingLeft: "12" }, tooltip: 'Show details' },
               'Show details'
             )
           )
@@ -77707,7 +77753,7 @@ var DeviceList = _react2.default.createClass((_React$createClass = {
 
 module.exports = DeviceList;
 
-},{"../../actions/app-actions":752,"../../stores/app-store":788,"./selecteddevices":767,"material-ui":257,"react":684}],764:[function(require,module,exports){
+},{"../../actions/app-actions":752,"../../stores/app-store":788,"./selecteddevices":767,"material-ui":257,"react":684,"react-dom":476}],764:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -81628,11 +81674,6 @@ function _getCurrentDevices(groupId) {
       _currentDevices.push(device);
     }
   }
-  _sortDevices();
-}
-
-function _sortDevices() {
-  _currentDevices.sort(statusSort);
 }
 
 function _updateDeviceTags(id, tags) {
@@ -81691,6 +81732,7 @@ function _getDevices(group, model) {
       }
     }
   }
+
   return devices;
 }
 
@@ -81858,6 +81900,9 @@ function _sortTable(array, column, direction) {
   switch (array) {
     case "_softwareRepo":
       _softwareRepo.sort(customSort(direction, column));
+      break;
+    case "_currentDevices":
+      _currentDevices.sort(customSort(direction, column));
       break;
   }
 }
