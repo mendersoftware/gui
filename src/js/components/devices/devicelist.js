@@ -22,6 +22,8 @@ var FlatButton = mui.FlatButton;
 var FontIcon = mui.FontIcon;
 var IconButton = mui.IconButton;
 
+import Snackbar from 'material-ui/lib/snackbar';
+
 var addSelection = {};
 
 var DeviceList = React.createClass({
@@ -34,7 +36,10 @@ var DeviceList = React.createClass({
       },
       sortCol: "status",
       sortDown: true,
-      addGroup: false
+      addGroup: false,
+      autoHideDuration: 5000,
+      snackMessage: 'Group has been removed',
+      openSnack: false,
     };
   },
 
@@ -62,7 +67,6 @@ var DeviceList = React.createClass({
     if (event.keyCode === 13 ) {
       if (!this.state.errorText1) {
         var group = this.props.selectedGroup;
-        console.log("val", event.target.value);
         group.name = event.target.value;
         AppActions.addToGroup(group, []);
       }
@@ -72,12 +76,9 @@ var DeviceList = React.createClass({
   },
   _validateName: function(name) {
     var errorText = null;
-    console.log(name);
     if (name) {
       for (var i=0;i<this.props.groups.length; i++) {
         if (this.props.groups[i].name === name) {
-          console.log("got a name");
-
           errorText = "A group with this name already exists";
         }
       }
@@ -202,6 +203,32 @@ var DeviceList = React.createClass({
     AppActions.sortTable("_currentDevices", col, direction);
   },
 
+  _removeCurrentGroup: function() {
+    var tmp;
+    for (var i=0; i<this.props.groups.length; i++) {
+      if (this.props.groups[i].id === this.props.selectedGroup.id) {
+        tmp = i;
+      }
+    }
+    this.setState({
+      tempGroup: this.props.selectedGroup,
+      tempIdx: tmp,
+      openSnack: true,
+    });
+    AppActions.removeGroup(this.props.selectedGroup.id);
+  },
+
+  handleRequestClose: function() {
+    this.setState({
+      openSnack: false,
+    });
+  },
+
+  handleUndoAction: function() {
+    AppActions.addGroup(this.state.tempGroup, this.state.tempIdx);
+    this.handleRequestClose();
+  },
+
   render: function() {
     var styles = {
       exampleFlatButtonIcon: {
@@ -218,7 +245,6 @@ var DeviceList = React.createClass({
       exampleFlatButton: {
         fontSize:'12',
         marginLeft:"10",
-        opacity:"0.5",
         float:"right",
         marginRight:"130"
       },
@@ -312,7 +338,7 @@ var DeviceList = React.createClass({
               errorStyle={{color: "rgb(171, 16, 0)"}}
               errorText={this.state.errorText1}
               className="hoverText" />
-              <FlatButton style={styles.exampleFlatButton} className="opacityButton" secondary={true} label="Remove group" labelPosition="after">
+              <FlatButton onClick={this._removeCurrentGroup} style={styles.exampleFlatButton} className={this.props.selectedGroup.id === 1 ? 'hidden' : null} secondary={true} label="Remove group" labelPosition="after">
                 <FontIcon style={styles.exampleFlatButtonIcon} className="material-icons">delete</FontIcon>
               </FlatButton>
           </h2>
@@ -401,6 +427,15 @@ var DeviceList = React.createClass({
             </div>
           </div>
         </Dialog>
+
+        <Snackbar
+          open={this.state.openSnack}
+          message={this.state.snackMessage}
+          action="undo"
+          autoHideDuration={this.state.autoHideDuration}
+          onActionTouchTap={this.handleUndoAction}
+          onRequestClose={this.handleRequestClose}
+        />
 
       </div>
     );

@@ -18,6 +18,9 @@ module.exports = {
     alternateTextColor: Colors.white,
     canvasColor: Colors.white,
     borderColor: "#e0e0e0",
-    disabledColor: ColorManipulator.fade(Colors.darkBlack, 0.3)
-  }
+    disabledColor: ColorManipulator.fade(Colors.darkBlack, 0.3),
+  },
+  snackbar: {
+    actionColor: "#9E6F8E"
+  },
 };

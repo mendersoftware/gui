@@ -263,6 +263,20 @@ function _addToGroup(group, devices) {
   }
 }
 
+function _removeGroup(groupId) {
+  var idx = findWithAttr(_groups, "id", groupId);
+  if (_currentGroup.id === groupId) {
+    _selectGroup(_groups[0].id);
+  }
+  _groups.splice(idx, 1);
+}
+
+function _addGroup(group, idx) {
+  if (idx !== undefined) {
+    _groups.splice(idx, 0, group);
+  }
+}
+
 function _getDeviceHealth() {
   var health = {};
   var down = collectWithAttr(_alldevices, 'status', 'Down');
@@ -649,6 +663,12 @@ var AppStore = assign(EventEmitter.prototype, {
         break;
       case AppConstants.ADD_TO_GROUP:
         _addToGroup(payload.action.group, payload.action.devices);
+        break;
+      case AppConstants.REMOVE_GROUP:
+        _removeGroup(payload.action.groupId);
+        break;
+      case AppConstants.ADD_GROUP:
+        _addGroup(payload.action.group, payload.action.index);
         break;
       case AppConstants.UPLOAD_IMAGE:
         _uploadImage(payload.action.image);

@@ -76189,6 +76189,21 @@ var AppActions = {
     });
   },
 
+  removeGroup: function removeGroup(groupId) {
+    AppDispatcher.handleViewAction({
+      actionType: AppConstants.REMOVE_GROUP,
+      groupId: groupId
+    });
+  },
+
+  addGroup: function addGroup(group, idx) {
+    AppDispatcher.handleViewAction({
+      actionType: AppConstants.ADD_GROUP,
+      group: group,
+      index: idx
+    });
+  },
+
   /* API */
 
   getImages: function getImages() {
@@ -77224,6 +77239,10 @@ var _reactDom = require('react-dom');
 
 var _reactDom2 = _interopRequireDefault(_reactDom);
 
+var _snackbar = require('material-ui/lib/snackbar');
+
+var _snackbar2 = _interopRequireDefault(_snackbar);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -77264,7 +77283,10 @@ var DeviceList = _react2.default.createClass((_React$createClass = {
       },
       sortCol: "status",
       sortDown: true,
-      addGroup: false
+      addGroup: false,
+      autoHideDuration: 5000,
+      snackMessage: 'Group has been removed',
+      openSnack: false
     };
   },
 
@@ -77292,7 +77314,6 @@ var DeviceList = _react2.default.createClass((_React$createClass = {
     if (event.keyCode === 13) {
       if (!this.state.errorText1) {
         var group = this.props.selectedGroup;
-        console.log("val", event.target.value);
         group.name = event.target.value;
         AppActions.addToGroup(group, []);
       }
@@ -77302,12 +77323,9 @@ var DeviceList = _react2.default.createClass((_React$createClass = {
   },
   _validateName: function _validateName(name) {
     var errorText = null;
-    console.log(name);
     if (name) {
       for (var i = 0; i < this.props.groups.length; i++) {
         if (this.props.groups[i].name === name) {
-          console.log("got a name");
-
           errorText = "A group with this name already exists";
         }
       }
@@ -77422,6 +77440,26 @@ var DeviceList = _react2.default.createClass((_React$createClass = {
   }
   // sort table
   AppActions.sortTable("_currentDevices", col, direction);
+}), _defineProperty(_React$createClass, '_removeCurrentGroup', function _removeCurrentGroup() {
+  var tmp;
+  for (var i = 0; i < this.props.groups.length; i++) {
+    if (this.props.groups[i].id === this.props.selectedGroup.id) {
+      tmp = i;
+    }
+  }
+  this.setState({
+    tempGroup: this.props.selectedGroup,
+    tempIdx: tmp,
+    openSnack: true
+  });
+  AppActions.removeGroup(this.props.selectedGroup.id);
+}), _defineProperty(_React$createClass, 'handleRequestClose', function handleRequestClose() {
+  this.setState({
+    openSnack: false
+  });
+}), _defineProperty(_React$createClass, 'handleUndoAction', function handleUndoAction() {
+  AppActions.addGroup(this.state.tempGroup, this.state.tempIdx);
+  this.handleRequestClose();
 }), _defineProperty(_React$createClass, 'render', function render() {
   var styles = {
     exampleFlatButtonIcon: {
@@ -77438,7 +77476,6 @@ var DeviceList = _react2.default.createClass((_React$createClass = {
     exampleFlatButton: {
       fontSize: '12',
       marginLeft: "10",
-      opacity: "0.5",
       float: "right",
       marginRight: "130"
     },
@@ -77567,7 +77604,7 @@ var DeviceList = _react2.default.createClass((_React$createClass = {
           className: 'hoverText' }),
         _react2.default.createElement(
           FlatButton,
-          { style: styles.exampleFlatButton, className: 'opacityButton', secondary: true, label: 'Remove group', labelPosition: 'after' },
+          { onClick: this._removeCurrentGroup, style: styles.exampleFlatButton, className: this.props.selectedGroup.id === 1 ? 'hidden' : null, secondary: true, label: 'Remove group', labelPosition: 'after' },
           _react2.default.createElement(
             FontIcon,
             { style: styles.exampleFlatButtonIcon, className: 'material-icons' },
@@ -77747,13 +77784,21 @@ var DeviceList = _react2.default.createClass((_React$createClass = {
           )
         )
       )
-    )
+    ),
+    _react2.default.createElement(_snackbar2.default, {
+      open: this.state.openSnack,
+      message: this.state.snackMessage,
+      action: 'undo',
+      autoHideDuration: this.state.autoHideDuration,
+      onActionTouchTap: this.handleUndoAction,
+      onRequestClose: this.handleRequestClose
+    })
   );
 }), _React$createClass));
 
 module.exports = DeviceList;
 
-},{"../../actions/app-actions":752,"../../stores/app-store":788,"./selecteddevices":767,"material-ui":257,"react":684,"react-dom":476}],764:[function(require,module,exports){
+},{"../../actions/app-actions":752,"../../stores/app-store":788,"./selecteddevices":767,"material-ui":257,"material-ui/lib/snackbar":287,"react":684,"react-dom":476}],764:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -81450,6 +81495,8 @@ module.exports = {
   SELECT_GROUP: 'SELECT_GROUP',
   ADD_TO_GROUP: 'ADD_TO_GROUP',
   REMOVE_FROM_GROUP: 'REMOVE_FROM_GROUP',
+  REMOVE_GROUP: 'REMOVE_GROUP',
+  ADD_GROUP: 'ADD_GROUP',
   SAVE_SCHEDULE: 'SAVE_SCHEDULE',
   UPDATE_FILTERS: 'UPDATE_FILTERS',
   REMOVE_UPDATE: 'REMOVE_UPDATE',
@@ -81759,6 +81806,20 @@ function _addToGroup(group, devices) {
       _addNewGroup(group, devices, 'public');
       // TODO - go through devices and add group
     }
+}
+
+function _removeGroup(groupId) {
+  var idx = findWithAttr(_groups, "id", groupId);
+  if (_currentGroup.id === groupId) {
+    _selectGroup(_groups[0].id);
+  }
+  _groups.splice(idx, 1);
+}
+
+function _addGroup(group, idx) {
+  if (idx !== undefined) {
+    _groups.splice(idx, 0, group);
+  }
 }
 
 function _getDeviceHealth() {
@@ -82131,6 +82192,12 @@ var AppStore = assign(EventEmitter.prototype, {
       case AppConstants.ADD_TO_GROUP:
         _addToGroup(payload.action.group, payload.action.devices);
         break;
+      case AppConstants.REMOVE_GROUP:
+        _removeGroup(payload.action.groupId);
+        break;
+      case AppConstants.ADD_GROUP:
+        _addGroup(payload.action.group, payload.action.index);
+        break;
       case AppConstants.UPLOAD_IMAGE:
         _uploadImage(payload.action.image);
         break;
@@ -82200,6 +82267,9 @@ module.exports = {
     canvasColor: Colors.white,
     borderColor: "#e0e0e0",
     disabledColor: _colorManipulator2.default.fade(Colors.darkBlack, 0.3)
+  },
+  snackbar: {
+    actionColor: "#9E6F8E"
   }
 };
 

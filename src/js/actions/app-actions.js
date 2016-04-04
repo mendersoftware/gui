@@ -30,6 +30,21 @@ var AppActions = {
     })
   },
 
+  removeGroup: function(groupId) {
+    AppDispatcher.handleViewAction({
+      actionType: AppConstants.REMOVE_GROUP,
+      groupId: groupId
+    })
+  },
+
+  addGroup: function(group, idx) {
+    AppDispatcher.handleViewAction({
+      actionType: AppConstants.ADD_GROUP,
+      group: group,
+      index: idx
+    })
+  },
+
 
   /* API */
 
