@@ -77286,13 +77286,22 @@ var DeviceList = _react2.default.createClass((_React$createClass = {
       addGroup: false,
       autoHideDuration: 5000,
       snackMessage: 'Group has been removed',
-      openSnack: false
+      openSnack: false,
+      nameEdit: false,
+      editValue: null,
+      groupName: this.props.selectedGroup.name
     };
   },
 
-  componentWillUpdate: function componentWillUpdate(nextProps, nextState) {
-    if (nextProps.selectedGroup !== this.props.selectedGroup) {
-      this.setState({ expanded: null });
+  componentDidUpdate: function componentDidUpdate(prevProps, prevState) {
+    if (prevProps.selectedGroup !== this.props.selectedGroup) {
+      this.setState({
+        expanded: null,
+        groupName: this.props.selectedGroup.name
+      });
+    }
+    if (this.state.nameEdit) {
+      this.refs.editGroupName.focus();
     }
   },
 
@@ -77310,16 +77319,24 @@ var DeviceList = _react2.default.createClass((_React$createClass = {
   _selectAll: function _selectAll(rows) {
     console.log("select all", rows);
   },
-  _handleGroupNameChange: function _handleGroupNameChange(event) {
-    if (event.keyCode === 13) {
-      if (!this.state.errorText1) {
+  _handleGroupNameSave: function _handleGroupNameSave(event) {
+    if (!event || event['keyCode'] === 13) {
+      if (!this.state.errorCode1) {
         var group = this.props.selectedGroup;
-        group.name = event.target.value;
+        group.name = this.state.groupName;
         AppActions.addToGroup(group, []);
       }
-    } else {
-      this._validateName(event.target.value);
     }
+    if (event && event['keyCode'] === 13) {
+      this.setState({
+        nameEdit: false,
+        errorText1: null
+      });
+    }
+  },
+  _handleGroupNameChange: function _handleGroupNameChange(event) {
+    this.setState({ groupName: event.target.value });
+    this._validateName(event.target.value);
   },
   _validateName: function _validateName(name) {
     var errorText = null;
@@ -77460,6 +77477,14 @@ var DeviceList = _react2.default.createClass((_React$createClass = {
 }), _defineProperty(_React$createClass, 'handleUndoAction', function handleUndoAction() {
   AppActions.addGroup(this.state.tempGroup, this.state.tempIdx);
   this.handleRequestClose();
+}), _defineProperty(_React$createClass, '_nameEdit', function _nameEdit() {
+  if (this.state.nameEdit) {
+    this._handleGroupNameSave();
+  }
+  this.setState({
+    nameEdit: !this.state.nameEdit,
+    errorText1: null
+  });
 }), _defineProperty(_React$createClass, 'render', function render() {
   var styles = {
     exampleFlatButtonIcon: {
@@ -77478,6 +77503,10 @@ var DeviceList = _react2.default.createClass((_React$createClass = {
       marginLeft: "10",
       float: "right",
       marginRight: "130"
+    },
+    editButton: {
+      color: "rgba(0, 0, 0, 0.54)",
+      fontSize: "20"
     },
     buttonIcon: {
       height: '100%',
@@ -77567,7 +77596,7 @@ var DeviceList = _react2.default.createClass((_React$createClass = {
       )
     );
   }, this);
-  var selectedName = this.props.selectedGroup.name;
+
   var disableAction = this.props.selectedDevices.length ? false : true;
 
   var addActions = [_react2.default.createElement(
@@ -77583,6 +77612,23 @@ var DeviceList = _react2.default.createClass((_React$createClass = {
     ref: 'save',
     disabled: this.state.invalid })];
 
+  var groupNameInputs = _react2.default.createElement(TextField, {
+    id: 'groupNameInput',
+    ref: 'editGroupName',
+    value: this.state.groupName,
+    onChange: this._handleGroupNameChange,
+    onKeyDown: this._handleGroupNameSave,
+    className: this.state.nameEdit ? "hoverText" : "hidden",
+    underlineStyle: { borderBottom: "none" },
+    underlineFocusStyle: { borderColor: "#e0e0e0" },
+    errorStyle: { color: "rgb(171, 16, 0)" },
+    errorText: this.state.errorText1 });
+
+  var correctIcon = this.state.nameEdit ? "check" : "edit";
+  if (this.state.errorText1) {
+    correctIcon = "close";
+  }
+
   return _react2.default.createElement(
     'div',
     null,
@@ -77592,16 +77638,21 @@ var DeviceList = _react2.default.createClass((_React$createClass = {
       _react2.default.createElement(
         'h2',
         { className: 'hoverEdit', tooltip: 'Rename' },
-        _react2.default.createElement(TextField, {
-          id: 'groupNameInput',
-          value: selectedName,
-          underlineStyle: { borderBottom: "none" },
-          underlineFocusStyle: { borderColor: "#e0e0e0" },
-          onKeyDown: this._handleGroupNameChange,
-          onBlur: this._handleGroupNameChange,
-          errorStyle: { color: "rgb(171, 16, 0)" },
-          errorText: this.state.errorText1,
-          className: 'hoverText' }),
+        groupNameInputs,
+        _react2.default.createElement(
+          'span',
+          { className: this.state.nameEdit ? "hidden" : null },
+          this.props.selectedGroup.name
+        ),
+        _react2.default.createElement(
+          'span',
+          { className: this.props.selectedGroup.id === 1 ? 'transparent' : null },
+          _react2.default.createElement(
+            IconButton,
+            { iconStyle: styles.editButton, onClick: this._nameEdit, iconClassName: 'material-icons', className: this.state.errorText1 ? "align-top" : null },
+            correctIcon
+          )
+        ),
         _react2.default.createElement(
           FlatButton,
           { onClick: this._removeCurrentGroup, style: styles.exampleFlatButton, className: this.props.selectedGroup.id === 1 ? 'hidden' : null, secondary: true, label: 'Remove group', labelPosition: 'after' },

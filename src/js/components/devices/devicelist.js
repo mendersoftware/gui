@@ -40,12 +40,21 @@ var DeviceList = React.createClass({
       autoHideDuration: 5000,
       snackMessage: 'Group has been removed',
       openSnack: false,
+      nameEdit: false,
+      editValue: null,
+      groupName: this.props.selectedGroup.name,
     };
   },
 
-  componentWillUpdate: function(nextProps, nextState) {
-    if (nextProps.selectedGroup !== this.props.selectedGroup) {
-      this.setState({expanded: null});
+  componentDidUpdate: function(prevProps, prevState) {
+    if (prevProps.selectedGroup !== this.props.selectedGroup) {
+      this.setState({
+        expanded: null,
+        groupName: this.props.selectedGroup.name,
+      });
+    }
+    if (this.state.nameEdit) {
+       this.refs.editGroupName.focus();
     }
   },
   
@@ -63,16 +72,24 @@ var DeviceList = React.createClass({
   _selectAll: function(rows) {
     console.log("select all", rows);
   },
-  _handleGroupNameChange: function(event) {
-    if (event.keyCode === 13 ) {
-      if (!this.state.errorText1) {
+  _handleGroupNameSave: function(event) {
+    if (!event || event['keyCode'] === 13) {
+      if (!this.state.errorCode1) {
         var group = this.props.selectedGroup;
-        group.name = event.target.value;
+        group.name = this.state.groupName;
         AppActions.addToGroup(group, []);
       }
-    } else {
-      this._validateName(event.target.value);
     }
+    if (event && event['keyCode'] === 13) {
+      this.setState({
+        nameEdit: false,
+        errorText1:null
+      });
+    }
+  },
+  _handleGroupNameChange: function(event) {
+   this.setState({groupName: event.target.value});
+   this._validateName(event.target.value);
   },
   _validateName: function(name) {
     var errorText = null;
@@ -229,6 +246,16 @@ var DeviceList = React.createClass({
     this.handleRequestClose();
   },
 
+  _nameEdit: function() {
+    if (this.state.nameEdit) {
+      this._handleGroupNameSave();
+    }
+    this.setState({
+      nameEdit: !this.state.nameEdit,
+      errorText1: null
+    });
+  },
+
   render: function() {
     var styles = {
       exampleFlatButtonIcon: {
@@ -247,6 +274,10 @@ var DeviceList = React.createClass({
         marginLeft:"10",
         float:"right",
         marginRight:"130"
+      },
+      editButton: {
+        color: "rgba(0, 0, 0, 0.54)",
+        fontSize: "20" 
       },
       buttonIcon: {
         height: '100%',
@@ -307,9 +338,9 @@ var DeviceList = React.createClass({
         </TableRow>
       )
     }, this);
-    var selectedName = this.props.selectedGroup.name;
-    var disableAction = this.props.selectedDevices.length ? false : true;
 
+    var disableAction = this.props.selectedDevices.length ? false : true;
+    
     var addActions = [
       <div style={{marginRight:"10", display:"inline-block"}}>
         <FlatButton
@@ -324,20 +355,38 @@ var DeviceList = React.createClass({
         disabled={this.state.invalid} />
     ];
 
+    var groupNameInputs = (
+      <TextField 
+        id="groupNameInput"
+        ref="editGroupName"
+        value={this.state.groupName}
+        onChange={this._handleGroupNameChange}
+        onKeyDown={this._handleGroupNameSave}
+        className={this.state.nameEdit ? "hoverText" : "hidden"}
+        underlineStyle={{borderBottom:"none"}}
+        underlineFocusStyle={{borderColor:"#e0e0e0"}}
+        errorStyle={{color: "rgb(171, 16, 0)"}}
+        errorText={this.state.errorText1} />
+    );
+
+    var correctIcon = this.state.nameEdit ? "check" : "edit";
+    if (this.state.errorText1) {
+      correctIcon = "close";
+    }
+
     return (
       <div>
         <div style={{marginLeft:"26"}}>
           <h2 className="hoverEdit" tooltip="Rename">
-            <TextField 
-              id="groupNameInput"
-              value={selectedName}
-              underlineStyle={{borderBottom:"none"}}
-              underlineFocusStyle={{borderColor:"#e0e0e0"}}
-              onKeyDown={this._handleGroupNameChange}
-              onBlur={this._handleGroupNameChange}
-              errorStyle={{color: "rgb(171, 16, 0)"}}
-              errorText={this.state.errorText1}
-              className="hoverText" />
+           
+              {groupNameInputs}
+              <span className={this.state.nameEdit ? "hidden" : null}>{this.props.selectedGroup.name}</span>
+              <span className={this.props.selectedGroup.id === 1 ? 'transparent' : null}>
+               <IconButton iconStyle={styles.editButton} onClick={this._nameEdit} iconClassName="material-icons" className={this.state.errorText1 ? "align-top" : null}>
+                {correctIcon}
+              </IconButton>
+              </span>
+
               <FlatButton onClick={this._removeCurrentGroup} style={styles.exampleFlatButton} className={this.props.selectedGroup.id === 1 ? 'hidden' : null} secondary={true} label="Remove group" labelPosition="after">
                 <FontIcon style={styles.exampleFlatButtonIcon} className="material-icons">delete</FontIcon>
               </FlatButton>
