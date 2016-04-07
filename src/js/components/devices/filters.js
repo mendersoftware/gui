@@ -47,6 +47,9 @@ var Filters = React.createClass({
       showFilters: !this.state.showFilters
     });
   },
+  _clearFilters: function() {
+    this.props.onFilterChange([{}]);
+  },
   render: function() {
     var styles = {
       exampleFlatButtonIcon: {
@@ -82,21 +85,23 @@ var Filters = React.createClass({
             style={styles.removeButton}
             onClick={this._removeFilter.bind(null, index)}
             disabled={!this.props.filters[0].key}
-            className="remove-icon">
+            className={this.props.filters[0].value ? "remove-icon" : "hidden"}>
             remove_circle
           </IconButton>
           <SelectField
-            style={{width:"100%"}}
+            fullWidth={true}
             value={item.key}
+            autoWidth={true}
             onChange={this._updateFilterKey.bind(null, index)}
             hintText="Filter by"
           >
             {attributes} 
           </SelectField>
           <TextField
-            style={{width:"100%", marginTop:"-10"}}
+            style={{marginTop:"-10"}}
             value={item.value}
             hintText="Value"
+            fullWidth={true}
             disabled={!item.key}
             errorStyle={{color: "rgb(171, 16, 0)"}}
             onChange={this._updateFilterValue.bind(null, index)} />
@@ -104,10 +109,11 @@ var Filters = React.createClass({
       )
     }, this);
     var filterNav = (
-      <div className="filterWrapper">
-        <div>
-          <FlatButton onClick={this._toggleNav} label="Hide filters" />
-        </div>
+      <div className="slider" style={{height:"100%"}}>
+        <IconButton className="closeSlider" iconStyle={{fontSize:"16px"}} onClick={this._toggleNav} style={{borderRadius:"30px", width:"40px", height:"40", position:"absolute", left:"-18px", backgroundColor:"rgba(255,255,255,1)"}}>
+          <FontIcon className="material-icons">close</FontIcon>
+        </IconButton>
+        <p className="align-right margin-bottom-small"><a onClick={this._clearFilters}>Clear all filters</a></p>
         <div>
         {filters}
         </div>
@@ -121,8 +127,11 @@ var Filters = React.createClass({
         <LeftNav 
           ref="filterNav"
           open={this.state.showFilters}
+          onRequestChange={this._toggleNav}
           docked={false}
           openRight={true}
+          overlayStyle={{top:"105"}}
+          containerStyle={this.state.showFilters ? {overflow:"visible", top:"105"} : {overflow:"hidden", top:"105"}}
         >
           {filterNav}
         </LeftNav>

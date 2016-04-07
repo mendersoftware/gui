@@ -216,7 +216,7 @@ var ScheduleForm = React.createClass({
       }, this);
     }
     deviceList = (
-      <div className="deviceSlider">
+      <div className="slider">
         <IconButton className="closeSlider" iconStyle={{fontSize:"16px"}} onClick={this._showDevices} style={{borderRadius:"30px", width:"40px", height:"40", position:"absolute", left:"-18px", backgroundColor:"rgba(255,255,255,1)"}}>
           <FontIcon className="material-icons">close</FontIcon>
         </IconButton>

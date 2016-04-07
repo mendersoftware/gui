@@ -78,6 +78,8 @@ var DeviceList = React.createClass({
         var group = this.props.selectedGroup;
         group.name = this.state.groupName;
         AppActions.addToGroup(group, []);
+      } else {
+        this.setState({groupName: this.props.selectedGroup});
       }
     }
     if (event && event['keyCode'] === 13) {

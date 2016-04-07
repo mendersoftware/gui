@@ -77325,6 +77325,8 @@ var DeviceList = _react2.default.createClass((_React$createClass = {
         var group = this.props.selectedGroup;
         group.name = this.state.groupName;
         AppActions.addToGroup(group, []);
+      } else {
+        this.setState({ groupName: this.props.selectedGroup });
       }
     }
     if (event && event['keyCode'] === 13) {
@@ -77990,6 +77992,9 @@ var Filters = _react2.default.createClass({
       showFilters: !this.state.showFilters
     });
   },
+  _clearFilters: function _clearFilters() {
+    this.props.onFilterChange([{}]);
+  },
   render: function render() {
     var styles = {
       exampleFlatButtonIcon: {
@@ -78028,23 +78033,25 @@ var Filters = _react2.default.createClass({
             style: styles.removeButton,
             onClick: this._removeFilter.bind(null, index),
             disabled: !this.props.filters[0].key,
-            className: 'remove-icon' },
+            className: this.props.filters[0].value ? "remove-icon" : "hidden" },
           'remove_circle'
         ),
         _react2.default.createElement(
           SelectField,
           {
-            style: { width: "100%" },
+            fullWidth: true,
             value: item.key,
+            autoWidth: true,
             onChange: this._updateFilterKey.bind(null, index),
             hintText: 'Filter by'
           },
           attributes
         ),
         _react2.default.createElement(TextField, {
-          style: { width: "100%", marginTop: "-10" },
+          style: { marginTop: "-10" },
           value: item.value,
           hintText: 'Value',
+          fullWidth: true,
           disabled: !item.key,
           errorStyle: { color: "rgb(171, 16, 0)" },
           onChange: this._updateFilterValue.bind(null, index) })
@@ -78052,11 +78059,24 @@ var Filters = _react2.default.createClass({
     }, this);
     var filterNav = _react2.default.createElement(
       'div',
-      { className: 'filterWrapper' },
+      { className: 'slider', style: { height: "100%" } },
       _react2.default.createElement(
-        'div',
-        null,
-        _react2.default.createElement(FlatButton, { onClick: this._toggleNav, label: 'Hide filters' })
+        IconButton,
+        { className: 'closeSlider', iconStyle: { fontSize: "16px" }, onClick: this._toggleNav, style: { borderRadius: "30px", width: "40px", height: "40", position: "absolute", left: "-18px", backgroundColor: "rgba(255,255,255,1)" } },
+        _react2.default.createElement(
+          FontIcon,
+          { className: 'material-icons' },
+          'close'
+        )
+      ),
+      _react2.default.createElement(
+        'p',
+        { className: 'align-right margin-bottom-small' },
+        _react2.default.createElement(
+          'a',
+          { onClick: this._clearFilters },
+          'Clear all filters'
+        )
       ),
       _react2.default.createElement(
         'div',
@@ -78081,8 +78101,11 @@ var Filters = _react2.default.createClass({
         {
           ref: 'filterNav',
           open: this.state.showFilters,
+          onRequestChange: this._toggleNav,
           docked: false,
-          openRight: true
+          openRight: true,
+          overlayStyle: { top: "105" },
+          containerStyle: this.state.showFilters ? { overflow: "visible", top: "105" } : { overflow: "hidden", top: "105" }
         },
         filterNav
       ),
@@ -81096,7 +81119,7 @@ var ScheduleForm = _react2.default.createClass({
     }
     deviceList = _react2.default.createElement(
       'div',
-      { className: 'deviceSlider' },
+      { className: 'slider' },
       _react2.default.createElement(
         IconButton,
         { className: 'closeSlider', iconStyle: { fontSize: "16px" }, onClick: this._showDevices, style: { borderRadius: "30px", width: "40px", height: "40", position: "absolute", left: "-18px", backgroundColor: "rgba(255,255,255,1)" } },
