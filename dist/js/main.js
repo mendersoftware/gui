@@ -77297,7 +77297,8 @@ var DeviceList = _react2.default.createClass((_React$createClass = {
     if (prevProps.selectedGroup !== this.props.selectedGroup) {
       this.setState({
         expanded: null,
-        groupName: this.props.selectedGroup.name
+        groupName: this.props.selectedGroup.name,
+        nameEdit: false
       });
     }
     if (this.state.nameEdit) {

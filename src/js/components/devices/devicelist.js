@@ -51,6 +51,7 @@ var DeviceList = React.createClass({
       this.setState({
         expanded: null,
         groupName: this.props.selectedGroup.name,
+        nameEdit: false
       });
     }
     if (this.state.nameEdit) {
