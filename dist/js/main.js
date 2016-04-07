@@ -76189,6 +76189,21 @@ var AppActions = {
     });
   },
 
+  removeGroup: function removeGroup(groupId) {
+    AppDispatcher.handleViewAction({
+      actionType: AppConstants.REMOVE_GROUP,
+      groupId: groupId
+    });
+  },
+
+  addGroup: function addGroup(group, idx) {
+    AppDispatcher.handleViewAction({
+      actionType: AppConstants.ADD_GROUP,
+      group: group,
+      index: idx
+    });
+  },
+
   /* API */
 
   getImages: function getImages() {
@@ -77220,6 +77235,14 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
+var _reactDom = require('react-dom');
+
+var _reactDom2 = _interopRequireDefault(_reactDom);
+
+var _snackbar = require('material-ui/lib/snackbar');
+
+var _snackbar2 = _interopRequireDefault(_snackbar);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -77258,13 +77281,28 @@ var DeviceList = _react2.default.createClass((_React$createClass = {
         payload: '',
         text: ''
       },
-      addGroup: false
+      sortCol: "status",
+      sortDown: true,
+      addGroup: false,
+      autoHideDuration: 5000,
+      snackMessage: 'Group has been removed',
+      openSnack: false,
+      nameEdit: false,
+      editValue: null,
+      groupName: this.props.selectedGroup.name
     };
   },
 
-  componentWillUpdate: function componentWillUpdate(nextProps, nextState) {
-    if (nextProps.selectedGroup !== this.props.selectedGroup) {
-      this.setState({ expanded: null });
+  componentDidUpdate: function componentDidUpdate(prevProps, prevState) {
+    if (prevProps.selectedGroup !== this.props.selectedGroup) {
+      this.setState({
+        expanded: null,
+        groupName: this.props.selectedGroup.name,
+        nameEdit: false
+      });
+    }
+    if (this.state.nameEdit) {
+      this.refs.editGroupName.focus();
     }
   },
 
@@ -77282,26 +77320,32 @@ var DeviceList = _react2.default.createClass((_React$createClass = {
   _selectAll: function _selectAll(rows) {
     console.log("select all", rows);
   },
-  _handleGroupNameChange: function _handleGroupNameChange(event) {
-    if (event.keyCode === 13) {
-      if (!this.state.errorText1) {
+  _handleGroupNameSave: function _handleGroupNameSave(event) {
+    if (!event || event['keyCode'] === 13) {
+      if (!this.state.errorCode1) {
         var group = this.props.selectedGroup;
-        console.log("val", event.target.value);
-        group.name = event.target.value;
+        group.name = this.state.groupName;
         AppActions.addToGroup(group, []);
+      } else {
+        this.setState({ groupName: this.props.selectedGroup });
       }
-    } else {
-      this._validateName(event.target.value);
     }
+    if (event && event['keyCode'] === 13) {
+      this.setState({
+        nameEdit: false,
+        errorText1: null
+      });
+    }
+  },
+  _handleGroupNameChange: function _handleGroupNameChange(event) {
+    this.setState({ groupName: event.target.value });
+    this._validateName(event.target.value);
   },
   _validateName: function _validateName(name) {
     var errorText = null;
-    console.log(name);
     if (name) {
       for (var i = 0; i < this.props.groups.length; i++) {
         if (this.props.groups[i].name === name) {
-          console.log("got a name");
-
           errorText = "A group with this name already exists";
         }
       }
@@ -77402,6 +77446,48 @@ var DeviceList = _react2.default.createClass((_React$createClass = {
   this.refs.customGroup.focus();
 }), _defineProperty(_React$createClass, '_onClick', function _onClick(event) {
   event.stopPropagation();
+}), _defineProperty(_React$createClass, '_sortColumn', function _sortColumn(col) {
+  var direction;
+  if (this.state.sortCol !== col) {
+    _reactDom2.default.findDOMNode(this.refs[this.state.sortCol]).className = "sortIcon material-icons";
+    _reactDom2.default.findDOMNode(this.refs[col]).className = "sortIcon material-icons selected";
+    this.setState({ sortCol: col, sortDown: true });
+    direction = true;
+  } else {
+    direction = !this.state.sortDown;
+    _reactDom2.default.findDOMNode(this.refs[this.state.sortCol]).className = "sortIcon material-icons selected " + direction;
+    this.setState({ sortDown: direction });
+  }
+  // sort table
+  AppActions.sortTable("_currentDevices", col, direction);
+}), _defineProperty(_React$createClass, '_removeCurrentGroup', function _removeCurrentGroup() {
+  var tmp;
+  for (var i = 0; i < this.props.groups.length; i++) {
+    if (this.props.groups[i].id === this.props.selectedGroup.id) {
+      tmp = i;
+    }
+  }
+  this.setState({
+    tempGroup: this.props.selectedGroup,
+    tempIdx: tmp,
+    openSnack: true
+  });
+  AppActions.removeGroup(this.props.selectedGroup.id);
+}), _defineProperty(_React$createClass, 'handleRequestClose', function handleRequestClose() {
+  this.setState({
+    openSnack: false
+  });
+}), _defineProperty(_React$createClass, 'handleUndoAction', function handleUndoAction() {
+  AppActions.addGroup(this.state.tempGroup, this.state.tempIdx);
+  this.handleRequestClose();
+}), _defineProperty(_React$createClass, '_nameEdit', function _nameEdit() {
+  if (this.state.nameEdit) {
+    this._handleGroupNameSave();
+  }
+  this.setState({
+    nameEdit: !this.state.nameEdit,
+    errorText1: null
+  });
 }), _defineProperty(_React$createClass, 'render', function render() {
   var styles = {
     exampleFlatButtonIcon: {
@@ -77418,9 +77504,12 @@ var DeviceList = _react2.default.createClass((_React$createClass = {
     exampleFlatButton: {
       fontSize: '12',
       marginLeft: "10",
-      opacity: "0.5",
       float: "right",
       marginRight: "130"
+    },
+    editButton: {
+      color: "rgba(0, 0, 0, 0.54)",
+      fontSize: "20"
     },
     buttonIcon: {
       height: '100%',
@@ -77441,6 +77530,12 @@ var DeviceList = _react2.default.createClass((_React$createClass = {
       lineHeight: '36px',
       marginRight: "-6",
       color: "#fff"
+    },
+    sortIcon: {
+      verticalAlign: 'middle',
+      marginLeft: "10",
+      color: "#8c8c8d",
+      cursor: "pointer"
     }
   };
 
@@ -77504,7 +77599,7 @@ var DeviceList = _react2.default.createClass((_React$createClass = {
       )
     );
   }, this);
-  var selectedName = this.props.selectedGroup.name;
+
   var disableAction = this.props.selectedDevices.length ? false : true;
 
   var addActions = [_react2.default.createElement(
@@ -77520,6 +77615,23 @@ var DeviceList = _react2.default.createClass((_React$createClass = {
     ref: 'save',
     disabled: this.state.invalid })];
 
+  var groupNameInputs = _react2.default.createElement(TextField, {
+    id: 'groupNameInput',
+    ref: 'editGroupName',
+    value: this.state.groupName,
+    onChange: this._handleGroupNameChange,
+    onKeyDown: this._handleGroupNameSave,
+    className: this.state.nameEdit ? "hoverText" : "hidden",
+    underlineStyle: { borderBottom: "none" },
+    underlineFocusStyle: { borderColor: "#e0e0e0" },
+    errorStyle: { color: "rgb(171, 16, 0)" },
+    errorText: this.state.errorText1 });
+
+  var correctIcon = this.state.nameEdit ? "check" : "edit";
+  if (this.state.errorText1) {
+    correctIcon = "close";
+  }
+
   return _react2.default.createElement(
     'div',
     null,
@@ -77529,19 +77641,24 @@ var DeviceList = _react2.default.createClass((_React$createClass = {
       _react2.default.createElement(
         'h2',
         { className: 'hoverEdit', tooltip: 'Rename' },
-        _react2.default.createElement(TextField, {
-          id: 'groupNameInput',
-          value: selectedName,
-          underlineStyle: { borderBottom: "none" },
-          underlineFocusStyle: { borderColor: "#e0e0e0" },
-          onKeyDown: this._handleGroupNameChange,
-          onBlur: this._handleGroupNameChange,
-          errorStyle: { color: "rgb(171, 16, 0)" },
-          errorText: this.state.errorText1,
-          className: 'hoverText' }),
+        groupNameInputs,
+        _react2.default.createElement(
+          'span',
+          { className: this.state.nameEdit ? "hidden" : null },
+          this.props.selectedGroup.name
+        ),
+        _react2.default.createElement(
+          'span',
+          { className: this.props.selectedGroup.id === 1 ? 'transparent' : null },
+          _react2.default.createElement(
+            IconButton,
+            { iconStyle: styles.editButton, onClick: this._nameEdit, iconClassName: 'material-icons', className: this.state.errorText1 ? "align-top" : null },
+            correctIcon
+          )
+        ),
         _react2.default.createElement(
           FlatButton,
-          { style: styles.exampleFlatButton, className: 'opacityButton', secondary: true, label: 'Remove group', labelPosition: 'after' },
+          { onClick: this._removeCurrentGroup, style: styles.exampleFlatButton, className: this.props.selectedGroup.id === 1 ? 'hidden' : null, secondary: true, label: 'Remove group', labelPosition: 'after' },
           _react2.default.createElement(
             FontIcon,
             { style: styles.exampleFlatButtonIcon, className: 'material-icons' },
@@ -77568,27 +77685,47 @@ var DeviceList = _react2.default.createClass((_React$createClass = {
             null,
             _react2.default.createElement(
               TableHeaderColumn,
-              { tooltip: 'Name' },
-              'Name'
+              { className: 'columnHeader', tooltip: 'Name' },
+              'Name',
+              _react2.default.createElement(
+                FontIcon,
+                { ref: 'name', style: styles.sortIcon, onClick: this._sortColumn.bind(null, "name"), className: 'sortIcon material-icons' },
+                'sort'
+              )
             ),
             _react2.default.createElement(
               TableHeaderColumn,
-              { tooltip: 'Device type' },
-              'Device type'
+              { className: 'columnHeader', tooltip: 'Device type' },
+              'Device type',
+              _react2.default.createElement(
+                FontIcon,
+                { ref: 'model', style: styles.sortIcon, onClick: this._sortColumn.bind(null, "model"), className: 'sortIcon material-icons' },
+                'sort'
+              )
             ),
             _react2.default.createElement(
               TableHeaderColumn,
-              { tooltip: 'Current software' },
-              'Current software'
+              { className: 'columnHeader', tooltip: 'Current software' },
+              'Current software',
+              _react2.default.createElement(
+                FontIcon,
+                { ref: 'software_version', style: styles.sortIcon, onClick: this._sortColumn.bind(null, "software_version"), className: 'sortIcon material-icons' },
+                'sort'
+              )
             ),
             _react2.default.createElement(
               TableHeaderColumn,
-              { tooltip: 'Status' },
-              'Status'
+              { className: 'columnHeader', tooltip: 'Status' },
+              'Status',
+              _react2.default.createElement(
+                FontIcon,
+                { ref: 'status', style: styles.sortIcon, onClick: this._sortColumn.bind(null, "status"), className: 'sortIcon material-icons' },
+                'sort'
+              )
             ),
             _react2.default.createElement(
               TableHeaderColumn,
-              { style: { width: "66", paddingRight: "12", paddingLeft: "12" }, tooltip: 'Show details' },
+              { className: 'columnHeader', style: { width: "66", paddingRight: "12", paddingLeft: "12" }, tooltip: 'Show details' },
               'Show details'
             )
           )
@@ -77701,13 +77838,21 @@ var DeviceList = _react2.default.createClass((_React$createClass = {
           )
         )
       )
-    )
+    ),
+    _react2.default.createElement(_snackbar2.default, {
+      open: this.state.openSnack,
+      message: this.state.snackMessage,
+      action: 'undo',
+      autoHideDuration: this.state.autoHideDuration,
+      onActionTouchTap: this.handleUndoAction,
+      onRequestClose: this.handleRequestClose
+    })
   );
 }), _React$createClass));
 
 module.exports = DeviceList;
 
-},{"../../actions/app-actions":752,"../../stores/app-store":788,"./selecteddevices":767,"material-ui":257,"react":684}],764:[function(require,module,exports){
+},{"../../actions/app-actions":752,"../../stores/app-store":788,"./selecteddevices":767,"material-ui":257,"material-ui/lib/snackbar":287,"react":684,"react-dom":476}],764:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -77848,6 +77993,9 @@ var Filters = _react2.default.createClass({
       showFilters: !this.state.showFilters
     });
   },
+  _clearFilters: function _clearFilters() {
+    this.props.onFilterChange([{}]);
+  },
   render: function render() {
     var styles = {
       exampleFlatButtonIcon: {
@@ -77886,23 +78034,25 @@ var Filters = _react2.default.createClass({
             style: styles.removeButton,
             onClick: this._removeFilter.bind(null, index),
             disabled: !this.props.filters[0].key,
-            className: 'remove-icon' },
+            className: this.props.filters[0].value ? "remove-icon" : "hidden" },
           'remove_circle'
         ),
         _react2.default.createElement(
           SelectField,
           {
-            style: { width: "100%" },
+            fullWidth: true,
             value: item.key,
+            autoWidth: true,
             onChange: this._updateFilterKey.bind(null, index),
             hintText: 'Filter by'
           },
           attributes
         ),
         _react2.default.createElement(TextField, {
-          style: { width: "100%", marginTop: "-10" },
+          style: { marginTop: "-10" },
           value: item.value,
           hintText: 'Value',
+          fullWidth: true,
           disabled: !item.key,
           errorStyle: { color: "rgb(171, 16, 0)" },
           onChange: this._updateFilterValue.bind(null, index) })
@@ -77910,11 +78060,24 @@ var Filters = _react2.default.createClass({
     }, this);
     var filterNav = _react2.default.createElement(
       'div',
-      { className: 'filterWrapper' },
+      { className: 'slider', style: { height: "100%" } },
       _react2.default.createElement(
-        'div',
-        null,
-        _react2.default.createElement(FlatButton, { onClick: this._toggleNav, label: 'Hide filters' })
+        IconButton,
+        { className: 'closeSlider', iconStyle: { fontSize: "16px" }, onClick: this._toggleNav, style: { borderRadius: "30px", width: "40px", height: "40", position: "absolute", left: "-18px", backgroundColor: "rgba(255,255,255,1)" } },
+        _react2.default.createElement(
+          FontIcon,
+          { className: 'material-icons' },
+          'close'
+        )
+      ),
+      _react2.default.createElement(
+        'p',
+        { className: 'align-right margin-bottom-small' },
+        _react2.default.createElement(
+          'a',
+          { onClick: this._clearFilters },
+          'Clear all filters'
+        )
       ),
       _react2.default.createElement(
         'div',
@@ -77939,8 +78102,11 @@ var Filters = _react2.default.createClass({
         {
           ref: 'filterNav',
           open: this.state.showFilters,
+          onRequestChange: this._toggleNav,
           docked: false,
-          openRight: true
+          openRight: true,
+          overlayStyle: { top: "105" },
+          containerStyle: this.state.showFilters ? { overflow: "visible", top: "105" } : { overflow: "hidden", top: "105" }
         },
         filterNav
       ),
@@ -79747,7 +79913,6 @@ var GroupDevices = _react2.default.createClass({
   },
   getDevices: function getDevices() {
     if (this.props.update === "00a0c91e6-7dec-11d0-a765-f81d4faebf6") {
-      console.log("yes");
       this.setState({ devices: 3 });
     } else {
       AppActions.getSingleUpdateDevices(this.props.update, function (devices) {
@@ -80954,7 +81119,7 @@ var ScheduleForm = _react2.default.createClass({
     }
     deviceList = _react2.default.createElement(
       'div',
-      { className: 'deviceSlider' },
+      { className: 'slider' },
       _react2.default.createElement(
         IconButton,
         { className: 'closeSlider', iconStyle: { fontSize: "16px" }, onClick: this._showDevices, style: { borderRadius: "30px", width: "40px", height: "40", position: "absolute", left: "-18px", backgroundColor: "rgba(255,255,255,1)" } },
@@ -81404,6 +81569,8 @@ module.exports = {
   SELECT_GROUP: 'SELECT_GROUP',
   ADD_TO_GROUP: 'ADD_TO_GROUP',
   REMOVE_FROM_GROUP: 'REMOVE_FROM_GROUP',
+  REMOVE_GROUP: 'REMOVE_GROUP',
+  ADD_GROUP: 'ADD_GROUP',
   SAVE_SCHEDULE: 'SAVE_SCHEDULE',
   UPDATE_FILTERS: 'UPDATE_FILTERS',
   REMOVE_UPDATE: 'REMOVE_UPDATE',
@@ -81628,11 +81795,6 @@ function _getCurrentDevices(groupId) {
       _currentDevices.push(device);
     }
   }
-  _sortDevices();
-}
-
-function _sortDevices() {
-  _currentDevices.sort(statusSort);
 }
 
 function _updateDeviceTags(id, tags) {
@@ -81691,6 +81853,7 @@ function _getDevices(group, model) {
       }
     }
   }
+
   return devices;
 }
 
@@ -81717,6 +81880,20 @@ function _addToGroup(group, devices) {
       _addNewGroup(group, devices, 'public');
       // TODO - go through devices and add group
     }
+}
+
+function _removeGroup(groupId) {
+  var idx = findWithAttr(_groups, "id", groupId);
+  if (_currentGroup.id === groupId) {
+    _selectGroup(_groups[0].id);
+  }
+  _groups.splice(idx, 1);
+}
+
+function _addGroup(group, idx) {
+  if (idx !== undefined) {
+    _groups.splice(idx, 0, group);
+  }
 }
 
 function _getDeviceHealth() {
@@ -81791,8 +81968,8 @@ var _activityLog = [{
 function _getRecentUpdates(time) {
   var recent = [];
   for (var i = 0; i < _allupdates.length; i++) {
-    var created = new Date(_allupdates[i].created);
-    var finished = new Date(_allupdates[i].finished);
+    var created = new Date(_allupdates[i].created.replace(/-/g, '/').replace(/ UTC/, ''));
+    var finished = new Date(_allupdates[i].finished.replace(/-/g, '/').replace(/ UTC/, ''));
     if (created < time && finished < time) {
       recent.push(_allupdates[i]);
     }
@@ -81803,8 +81980,8 @@ function _getRecentUpdates(time) {
 function _getProgressUpdates(time) {
   var progress = [];
   for (var i = 0; i < _allupdates.length; i++) {
-    var created = new Date(_allupdates[i].created);
-    var finished = new Date(_allupdates[i].finished);
+    var created = new Date(_allupdates[i].created.replace(/-/g, '/').replace(/ UTC/, ''));
+    var finished = new Date(_allupdates[i].finished.replace(/-/g, '/').replace(/ UTC/, ''));
     /*
     * CHANGE FOR MOCKING API
     */
@@ -81858,6 +82035,9 @@ function _sortTable(array, column, direction) {
   switch (array) {
     case "_softwareRepo":
       _softwareRepo.sort(customSort(direction, column));
+      break;
+    case "_currentDevices":
+      _currentDevices.sort(customSort(direction, column));
       break;
   }
 }
@@ -82086,6 +82266,12 @@ var AppStore = assign(EventEmitter.prototype, {
       case AppConstants.ADD_TO_GROUP:
         _addToGroup(payload.action.group, payload.action.devices);
         break;
+      case AppConstants.REMOVE_GROUP:
+        _removeGroup(payload.action.groupId);
+        break;
+      case AppConstants.ADD_GROUP:
+        _addGroup(payload.action.group, payload.action.index);
+        break;
       case AppConstants.UPLOAD_IMAGE:
         _uploadImage(payload.action.image);
         break;
@@ -82155,6 +82341,9 @@ module.exports = {
     canvasColor: Colors.white,
     borderColor: "#e0e0e0",
     disabledColor: _colorManipulator2.default.fade(Colors.darkBlack, 0.3)
+  },
+  snackbar: {
+    actionColor: "#9E6F8E"
   }
 };
 

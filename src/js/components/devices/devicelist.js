@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 var AppStore = require('../../stores/app-store');
 var AppActions = require('../../actions/app-actions');
 var SelectedDevices = require('./selecteddevices');
@@ -21,6 +22,8 @@ var FlatButton = mui.FlatButton;
 var FontIcon = mui.FontIcon;
 var IconButton = mui.IconButton;
 
+import Snackbar from 'material-ui/lib/snackbar';
+
 var addSelection = {};
 
 var DeviceList = React.createClass({
@@ -31,13 +34,28 @@ var DeviceList = React.createClass({
         payload: '',
         text: ''
       },
-      addGroup: false
+      sortCol: "status",
+      sortDown: true,
+      addGroup: false,
+      autoHideDuration: 5000,
+      snackMessage: 'Group has been removed',
+      openSnack: false,
+      nameEdit: false,
+      editValue: null,
+      groupName: this.props.selectedGroup.name,
     };
   },
 
-  componentWillUpdate: function(nextProps, nextState) {
-    if (nextProps.selectedGroup !== this.props.selectedGroup) {
-      this.setState({expanded: null});
+  componentDidUpdate: function(prevProps, prevState) {
+    if (prevProps.selectedGroup !== this.props.selectedGroup) {
+      this.setState({
+        expanded: null,
+        groupName: this.props.selectedGroup.name,
+        nameEdit: false
+      });
+    }
+    if (this.state.nameEdit) {
+       this.refs.editGroupName.focus();
     }
   },
   
@@ -55,26 +73,32 @@ var DeviceList = React.createClass({
   _selectAll: function(rows) {
     console.log("select all", rows);
   },
-  _handleGroupNameChange: function(event) {
-    if (event.keyCode === 13 ) {
-      if (!this.state.errorText1) {
+  _handleGroupNameSave: function(event) {
+    if (!event || event['keyCode'] === 13) {
+      if (!this.state.errorCode1) {
         var group = this.props.selectedGroup;
-        console.log("val", event.target.value);
-        group.name = event.target.value;
+        group.name = this.state.groupName;
         AppActions.addToGroup(group, []);
+      } else {
+        this.setState({groupName: this.props.selectedGroup});
       }
-    } else {
-      this._validateName(event.target.value);
     }
+    if (event && event['keyCode'] === 13) {
+      this.setState({
+        nameEdit: false,
+        errorText1:null
+      });
+    }
+  },
+  _handleGroupNameChange: function(event) {
+   this.setState({groupName: event.target.value});
+   this._validateName(event.target.value);
   },
   _validateName: function(name) {
     var errorText = null;
-    console.log(name);
     if (name) {
       for (var i=0;i<this.props.groups.length; i++) {
         if (this.props.groups[i].name === name) {
-          console.log("got a name");
-
           errorText = "A group with this name already exists";
         }
       }
@@ -182,6 +206,59 @@ var DeviceList = React.createClass({
   _onClick: function(event) {
     event.stopPropagation();
   },
+
+  _sortColumn: function(col) {
+    var direction;
+    if (this.state.sortCol !== col) {
+      ReactDOM.findDOMNode(this.refs[this.state.sortCol]).className = "sortIcon material-icons";
+      ReactDOM.findDOMNode(this.refs[col]).className = "sortIcon material-icons selected";
+      this.setState({sortCol:col, sortDown: true});
+      direction = true;
+    } else {
+      direction = !(this.state.sortDown);
+      ReactDOM.findDOMNode(this.refs[this.state.sortCol]).className = "sortIcon material-icons selected " +direction;
+      this.setState({sortDown: direction});
+    }
+    // sort table
+    AppActions.sortTable("_currentDevices", col, direction);
+  },
+
+  _removeCurrentGroup: function() {
+    var tmp;
+    for (var i=0; i<this.props.groups.length; i++) {
+      if (this.props.groups[i].id === this.props.selectedGroup.id) {
+        tmp = i;
+      }
+    }
+    this.setState({
+      tempGroup: this.props.selectedGroup,
+      tempIdx: tmp,
+      openSnack: true,
+    });
+    AppActions.removeGroup(this.props.selectedGroup.id);
+  },
+
+  handleRequestClose: function() {
+    this.setState({
+      openSnack: false,
+    });
+  },
+
+  handleUndoAction: function() {
+    AppActions.addGroup(this.state.tempGroup, this.state.tempIdx);
+    this.handleRequestClose();
+  },
+
+  _nameEdit: function() {
+    if (this.state.nameEdit) {
+      this._handleGroupNameSave();
+    }
+    this.setState({
+      nameEdit: !this.state.nameEdit,
+      errorText1: null
+    });
+  },
+
   render: function() {
     var styles = {
       exampleFlatButtonIcon: {
@@ -198,9 +275,12 @@ var DeviceList = React.createClass({
       exampleFlatButton: {
         fontSize:'12',
         marginLeft:"10",
-        opacity:"0.5",
         float:"right",
         marginRight:"130"
+      },
+      editButton: {
+        color: "rgba(0, 0, 0, 0.54)",
+        fontSize: "20" 
       },
       buttonIcon: {
         height: '100%',
@@ -222,6 +302,12 @@ var DeviceList = React.createClass({
         marginRight: "-6",
         color: "#fff"
       },
+      sortIcon: {
+        verticalAlign: 'middle',
+        marginLeft: "10",
+        color: "#8c8c8d",
+        cursor: "pointer",
+      }
     }
 
     var groupList = this.props.groups.map(function(group, index) {
@@ -255,9 +341,9 @@ var DeviceList = React.createClass({
         </TableRow>
       )
     }, this);
-    var selectedName = this.props.selectedGroup.name;
-    var disableAction = this.props.selectedDevices.length ? false : true;
 
+    var disableAction = this.props.selectedDevices.length ? false : true;
+    
     var addActions = [
       <div style={{marginRight:"10", display:"inline-block"}}>
         <FlatButton
@@ -272,21 +358,39 @@ var DeviceList = React.createClass({
         disabled={this.state.invalid} />
     ];
 
+    var groupNameInputs = (
+      <TextField 
+        id="groupNameInput"
+        ref="editGroupName"
+        value={this.state.groupName}
+        onChange={this._handleGroupNameChange}
+        onKeyDown={this._handleGroupNameSave}
+        className={this.state.nameEdit ? "hoverText" : "hidden"}
+        underlineStyle={{borderBottom:"none"}}
+        underlineFocusStyle={{borderColor:"#e0e0e0"}}
+        errorStyle={{color: "rgb(171, 16, 0)"}}
+        errorText={this.state.errorText1} />
+    );
+
+    var correctIcon = this.state.nameEdit ? "check" : "edit";
+    if (this.state.errorText1) {
+      correctIcon = "close";
+    }
+
     return (
       <div>
         <div style={{marginLeft:"26"}}>
           <h2 className="hoverEdit" tooltip="Rename">
-            <TextField 
-              id="groupNameInput"
-              value={selectedName}
-              underlineStyle={{borderBottom:"none"}}
-              underlineFocusStyle={{borderColor:"#e0e0e0"}}
-              onKeyDown={this._handleGroupNameChange}
-              onBlur={this._handleGroupNameChange}
-              errorStyle={{color: "rgb(171, 16, 0)"}}
-              errorText={this.state.errorText1}
-              className="hoverText" />
-              <FlatButton style={styles.exampleFlatButton} className="opacityButton" secondary={true} label="Remove group" labelPosition="after">
+           
+              {groupNameInputs}
+              <span className={this.state.nameEdit ? "hidden" : null}>{this.props.selectedGroup.name}</span>
+              <span className={this.props.selectedGroup.id === 1 ? 'transparent' : null}>
+               <IconButton iconStyle={styles.editButton} onClick={this._nameEdit} iconClassName="material-icons" className={this.state.errorText1 ? "align-top" : null}>
+                {correctIcon}
+              </IconButton>
+              </span>
+
+              <FlatButton onClick={this._removeCurrentGroup} style={styles.exampleFlatButton} className={this.props.selectedGroup.id === 1 ? 'hidden' : null} secondary={true} label="Remove group" labelPosition="after">
                 <FontIcon style={styles.exampleFlatButtonIcon} className="material-icons">delete</FontIcon>
               </FlatButton>
           </h2>
@@ -299,11 +403,11 @@ var DeviceList = React.createClass({
             <TableHeader
             enableSelectAll={true}>
               <TableRow>
-                <TableHeaderColumn tooltip="Name">Name</TableHeaderColumn>
-                <TableHeaderColumn tooltip="Device type">Device type</TableHeaderColumn>
-                <TableHeaderColumn tooltip="Current software">Current software</TableHeaderColumn>
-                <TableHeaderColumn tooltip="Status">Status</TableHeaderColumn>
-                <TableHeaderColumn style={{width:"66", paddingRight:"12", paddingLeft:"12"}} tooltip="Show details">Show details</TableHeaderColumn>
+                <TableHeaderColumn className="columnHeader" tooltip="Name">Name<FontIcon ref="name" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "name")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
+                <TableHeaderColumn className="columnHeader" tooltip="Device type">Device type<FontIcon ref="model" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "model")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
+                <TableHeaderColumn className="columnHeader" tooltip="Current software">Current software<FontIcon ref="software_version" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "software_version")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
+                <TableHeaderColumn className="columnHeader" tooltip="Status">Status<FontIcon ref="status" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "status")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
+                <TableHeaderColumn className="columnHeader" style={{width:"66", paddingRight:"12", paddingLeft:"12"}} tooltip="Show details">Show details</TableHeaderColumn>
               </TableRow>
             </TableHeader>
             <TableBody
@@ -375,6 +479,15 @@ var DeviceList = React.createClass({
             </div>
           </div>
         </Dialog>
+
+        <Snackbar
+          open={this.state.openSnack}
+          message={this.state.snackMessage}
+          action="undo"
+          autoHideDuration={this.state.autoHideDuration}
+          onActionTouchTap={this.handleUndoAction}
+          onRequestClose={this.handleRequestClose}
+        />
 
       </div>
     );

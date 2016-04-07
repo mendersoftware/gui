@@ -173,11 +173,6 @@ function _getCurrentDevices(groupId) {
        _currentDevices.push(device);
     }
   }
-  _sortDevices();
-}
-
-function _sortDevices() {
-  _currentDevices.sort(statusSort);
 }
 
 function _updateDeviceTags(id, tags) {
@@ -237,6 +232,7 @@ function _getDevices(group, model) {
       }
     }
   }
+
   return devices;
 }
 
@@ -264,6 +260,20 @@ function _addToGroup(group, devices) {
     // New group
     _addNewGroup(group, devices, 'public');
     // TODO - go through devices and add group
+  }
+}
+
+function _removeGroup(groupId) {
+  var idx = findWithAttr(_groups, "id", groupId);
+  if (_currentGroup.id === groupId) {
+    _selectGroup(_groups[0].id);
+  }
+  _groups.splice(idx, 1);
+}
+
+function _addGroup(group, idx) {
+  if (idx !== undefined) {
+    _groups.splice(idx, 0, group);
   }
 }
 
@@ -344,8 +354,8 @@ var _activityLog = [
 function _getRecentUpdates(time) {
   var recent = [];
   for (var i=0;i<_allupdates.length;i++) {
-    var created = new Date(_allupdates[i].created);
-    var finished = new Date(_allupdates[i].finished);
+    var created = new Date(_allupdates[i].created.replace(/-/g, '/').replace(/ UTC/, ''));
+    var finished = new Date(_allupdates[i].finished.replace(/-/g, '/').replace(/ UTC/, ''));
     if (created<time && finished<time) {
       recent.push(_allupdates[i]);
     }
@@ -356,8 +366,8 @@ function _getRecentUpdates(time) {
 function _getProgressUpdates(time) {
   var progress = [];
   for (var i=0;i<_allupdates.length;i++) {
-    var created = new Date(_allupdates[i].created);
-    var finished = new Date(_allupdates[i].finished);
+    var created = new Date(_allupdates[i].created.replace(/-/g, '/').replace(/ UTC/, ''));
+    var finished = new Date(_allupdates[i].finished.replace(/-/g, '/').replace(/ UTC/, ''));
     /*
     * CHANGE FOR MOCKING API
     */ 
@@ -412,6 +422,9 @@ function _sortTable(array, column, direction) {
   switch(array) {
     case "_softwareRepo":
       _softwareRepo.sort(customSort(direction, column));
+      break;
+    case "_currentDevices":
+      _currentDevices.sort(customSort(direction, column));
       break;
   }
 }
@@ -650,6 +663,12 @@ var AppStore = assign(EventEmitter.prototype, {
         break;
       case AppConstants.ADD_TO_GROUP:
         _addToGroup(payload.action.group, payload.action.devices);
+        break;
+      case AppConstants.REMOVE_GROUP:
+        _removeGroup(payload.action.groupId);
+        break;
+      case AppConstants.ADD_GROUP:
+        _addGroup(payload.action.group, payload.action.index);
         break;
       case AppConstants.UPLOAD_IMAGE:
         _uploadImage(payload.action.image);
