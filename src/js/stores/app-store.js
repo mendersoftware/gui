@@ -354,8 +354,8 @@ var _activityLog = [
 function _getRecentUpdates(time) {
   var recent = [];
   for (var i=0;i<_allupdates.length;i++) {
-    var created = new Date(_allupdates[i].created);
-    var finished = new Date(_allupdates[i].finished);
+    var created = new Date(_allupdates[i].created.replace(/-/g, '/').replace(/ UTC/, ''));
+    var finished = new Date(_allupdates[i].finished.replace(/-/g, '/').replace(/ UTC/, ''));
     if (created<time && finished<time) {
       recent.push(_allupdates[i]);
     }
@@ -366,8 +366,8 @@ function _getRecentUpdates(time) {
 function _getProgressUpdates(time) {
   var progress = [];
   for (var i=0;i<_allupdates.length;i++) {
-    var created = new Date(_allupdates[i].created);
-    var finished = new Date(_allupdates[i].finished);
+    var created = new Date(_allupdates[i].created.replace(/-/g, '/').replace(/ UTC/, ''));
+    var finished = new Date(_allupdates[i].finished.replace(/-/g, '/').replace(/ UTC/, ''));
     /*
     * CHANGE FOR MOCKING API
     */ 
