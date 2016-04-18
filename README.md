@@ -1,4 +1,5 @@
 # ui
+[![Build Status](https://travis-ci.com/mendersoftware/gui.svg?token=rx8YqsZ2ZyaopcMPmDmo&branch=master)](https://travis-ci.com/mendersoftware/gui)
 Graphical user interface for Mender.
 
 ## Hi-fi prototype
