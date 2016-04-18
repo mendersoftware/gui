@@ -24,17 +24,12 @@ script:
     # Build docker image from docker file
     - sudo docker build -t $DOCKER_REPOSITORY .
 
-before_deploy:
+after_success:
     # Master is always lastest
-    - if [ ! -z "$TRAVIS_TAG" ]; then export IMAGE_TAG=$TRAVIS_TAG; else export IMAGE_TAG=$TRAVIS_BRANCH; fi
-    - docker tag -f $DOCKER_REPOSITORY $DOCKER_REPOSITORY:$IMAGE_TAG
-
-    # Upload image to docker registry only on PUSH
-    - docker login --email=$DOCKER_HUB_EMAIL --username=$DOCKER_HUB_USERNAME --password=$DOCKER_HUB_PASSWORD
-
     # Set latest tag only for HEAD of master branch
-    - if [ "$TRAVIS_BRANCH" = "master" ]; then docker push $DOCKER_REPOSITORY:latest; fi
-    - docker push $DOCKER_REPOSITORY:$IMAGE_TAG
-
-deploy:
-    skip_cleanup: true
+    # Warning: Should be executed only on git push!
+    - if [ ! -z "$TRAVIS_TAG" ]; then export IMAGE_TAG=$TRAVIS_TAG; else export IMAGE_TAG=$TRAVIS_BRANCH; fi
+    - if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then docker tag -f $DOCKER_REPOSITORY $DOCKER_REPOSITORY:$IMAGE_TAG; fi
+    - if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then docker login --email=$DOCKER_HUB_EMAIL --username=$DOCKER_HUB_USERNAME --password=$DOCKER_HUB_PASSWORD; fi
+    - if [ "$TRAVIS_PULL_REQUEST" == "false" ] && [ "$TRAVIS_BRANCH" = "master" ]; then docker push $DOCKER_REPOSITORY:latest; fi
+    - if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then docker push $DOCKER_REPOSITORY:$IMAGE_TAG; fi
