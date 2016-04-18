@@ -35,3 +35,6 @@ before_deploy:
     # Set latest tag only for HEAD of master branch
     - if [ "$TRAVIS_BRANCH" = "master" ]; then docker push $DOCKER_REPOSITORY:latest; fi
     - docker push $DOCKER_REPOSITORY:$IMAGE_TAG
+
+deploy:
+    skip_cleanup: true
