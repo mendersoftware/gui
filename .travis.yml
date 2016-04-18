@@ -24,7 +24,7 @@ script:
     # Build docker image from docker file
     - sudo docker build -t $DOCKER_REPOSITORY .
 
-deploy:
+before_deploy:
     # Master is always lastest
     - if [ ! -z "$TRAVIS_TAG" ]; then export IMAGE_TAG=$TRAVIS_TAG; else export IMAGE_TAG=$TRAVIS_BRANCH; fi
     - docker tag -f $DOCKER_REPOSITORY $DOCKER_REPOSITORY:$IMAGE_TAG
