@@ -77577,7 +77577,7 @@ var DeviceList = _react2.default.createClass((_React$createClass = {
       ),
       _react2.default.createElement(
         TableRowColumn,
-        { style: { width: "66", paddingRight: "0", paddingLeft: "12" }, className: 'expandButton' },
+        { style: { width: "33", paddingRight: "0", paddingLeft: "12" }, className: 'expandButton' },
         _react2.default.createElement(
           IconButton,
           { className: 'float-right', onClick: this._expandRow.bind(this, index) },
@@ -77723,11 +77723,7 @@ var DeviceList = _react2.default.createClass((_React$createClass = {
                 'sort'
               )
             ),
-            _react2.default.createElement(
-              TableHeaderColumn,
-              { className: 'columnHeader', style: { width: "66", paddingRight: "12", paddingLeft: "12" }, tooltip: 'Show details' },
-              'Show details'
-            )
+            _react2.default.createElement(TableHeaderColumn, { className: 'columnHeader', style: { width: "33", paddingRight: "12", paddingLeft: "12" } })
           )
         ),
         _react2.default.createElement(
@@ -79153,7 +79149,7 @@ var Repository = _react2.default.createClass({
         ),
         _react2.default.createElement(
           TableRowColumn,
-          { style: { width: "66", paddingRight: "0", paddingLeft: "12" }, className: 'expandButton' },
+          { style: { width: "33", paddingRight: "0", paddingLeft: "12" }, className: 'expandButton' },
           _react2.default.createElement(
             IconButton,
             { className: 'float-right' },
@@ -79294,11 +79290,7 @@ var Repository = _react2.default.createClass({
                   'sort'
                 )
               ),
-              _react2.default.createElement(
-                TableHeaderColumn,
-                { style: { width: "66", paddingRight: "12", paddingLeft: "12" }, className: 'columnHeader', tooltip: 'Show details' },
-                'Show details'
-              )
+              _react2.default.createElement(TableHeaderColumn, { style: { width: "33", paddingRight: "12", paddingLeft: "12" }, className: 'columnHeader' })
             )
           ),
           _react2.default.createElement(
