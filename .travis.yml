@@ -18,7 +18,7 @@ env:
 
 before_script:
     # Set API address to docker-compose set domain. (TODO: make this configurable)
-    - sed -i '' "s/var apiUrl.*/var apiUrl = 'http:\/\/mender-deployments:8080\/api\/0.0.1\/'/g" dist/js/main.js
+    - sed -i "s/var apiUrl.*/var apiUrl = 'http:\/\/mender-deployments:8080\/api\/0.0.1\/'/g" dist/js/main.js
 
 script:
     # Build docker image from docker file
