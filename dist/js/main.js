@@ -77357,13 +77357,16 @@ var DeviceList = _react2.default.createClass((_React$createClass = {
   _onChange: function _onChange(event) {
     this._validateName(event.target.value);
   },
-  _expandRow: function _expandRow(index, event) {
-    event.stopPropagation();
-    var newIndex = index;
-    if (index == this.state.expanded) {
-      newIndex = null;
+  _expandRow: function _expandRow(rowNumber, columnId) {
+    if (columnId < 0) {
+      this.setState({ expanded: null });
+    } else {
+      var newIndex = rowNumber;
+      if (rowNumber == this.state.expanded) {
+        newIndex = null;
+      }
+      this.setState({ expanded: newIndex });
     }
-    this.setState({ expanded: newIndex });
   },
   _ifSelected: function _ifSelected(name) {
     var value = false;
@@ -77554,7 +77557,7 @@ var DeviceList = _react2.default.createClass((_React$createClass = {
     }
     return _react2.default.createElement(
       TableRow,
-      { onRowClick: this._expandRow.bind(this, index), selected: this._ifSelected(device.name), hoverable: !expanded, className: expanded ? "expand devices" : null, key: index },
+      { selected: this._ifSelected(device.name), hoverable: !expanded, className: expanded ? "expand devices" : null, key: index },
       _react2.default.createElement(
         TableRowColumn,
         null,
@@ -77567,12 +77570,12 @@ var DeviceList = _react2.default.createClass((_React$createClass = {
       ),
       _react2.default.createElement(
         TableRowColumn,
-        { onClick: this._expandRow.bind(this, index) },
+        null,
         device.software_version
       ),
       _react2.default.createElement(
         TableRowColumn,
-        { onClick: this._expandRow.bind(this, index) },
+        null,
         device.status
       ),
       _react2.default.createElement(
@@ -77673,6 +77676,7 @@ var DeviceList = _react2.default.createClass((_React$createClass = {
       _react2.default.createElement(
         Table,
         {
+          onCellClick: this._expandRow,
           onRowSelection: this._onRowSelection,
           multiSelectable: true,
           className: devices.length ? null : 'hidden' },
@@ -82333,6 +82337,14 @@ module.exports = {
     canvasColor: Colors.white,
     borderColor: "#e0e0e0",
     disabledColor: _colorManipulator2.default.fade(Colors.darkBlack, 0.3)
+  },
+  snackbar: {
+    actionColor: "#9E6F8E"
+  }
+};
+
+},{"material-ui/lib/styles/colors":291,"material-ui/lib/styles/spacing":294,"material-ui/lib/utils/color-manipulator":348}]},{},[787]);
+Colors.darkBlack, 0.3)
   },
   snackbar: {
     actionColor: "#9E6F8E"

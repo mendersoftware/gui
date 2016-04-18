@@ -110,13 +110,16 @@ var DeviceList = React.createClass({
   _onChange: function(event) {
     this._validateName(event.target.value);
   },
-  _expandRow: function(index, event) {
-    event.stopPropagation();
-    var newIndex = index;
-    if (index == this.state.expanded) {
-      newIndex = null;
+  _expandRow: function(rowNumber, columnId) {
+    if (columnId < 0) {
+      this.setState({expanded: null});
+    } else {
+      var newIndex = rowNumber;
+      if (rowNumber == this.state.expanded) {
+        newIndex = null;
+      }
+      this.setState({expanded: newIndex});
     }
-    this.setState({expanded: newIndex});
   },
   _ifSelected: function(name) {
     var value = false;
@@ -325,11 +328,11 @@ var DeviceList = React.createClass({
         expanded = <SelectedDevices images={this.props.images} devices={this.props.devices} selected={[device]} selectedGroup={this.props.selectedGroup} groups={this.props.groups} />
       }
       return (
-        <TableRow onRowClick={this._expandRow.bind(this, index)} selected={this._ifSelected(device.name)} hoverable={!expanded} className={expanded ? "expand devices" : null}  key={index}>
+        <TableRow selected={this._ifSelected(device.name)} hoverable={!expanded} className={expanded ? "expand devices" : null}  key={index}>
           <TableRowColumn>{device.name}</TableRowColumn>
           <TableRowColumn>{device.model}</TableRowColumn>
-          <TableRowColumn onClick={this._expandRow.bind(this, index)}>{device.software_version}</TableRowColumn>
-          <TableRowColumn onClick={this._expandRow.bind(this, index)}>{device.status}</TableRowColumn>
+          <TableRowColumn>{device.software_version}</TableRowColumn>
+          <TableRowColumn>{device.status}</TableRowColumn>
           <TableRowColumn style={{width:"33", paddingRight:"0", paddingLeft:"12"}} className="expandButton">
             <IconButton className="float-right" onClick={this._expandRow.bind(this, index)}><FontIcon className="material-icons">{ expanded ? "arrow_drop_up" : "arrow_drop_down"}</FontIcon></IconButton>
           </TableRowColumn>
@@ -397,6 +400,7 @@ var DeviceList = React.createClass({
         </div>
         <div className="margin-bottom">
           <Table
+            onCellClick={this._expandRow}
             onRowSelection={this._onRowSelection}
             multiSelectable={true}
             className={devices.length ? null : 'hidden'} >
