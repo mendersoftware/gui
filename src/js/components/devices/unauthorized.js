@@ -62,8 +62,8 @@ var Authorized =  React.createClass({
       )
     }, this);
     return (
-      <div className="margin-top onboard">
-        <h4 className="align-left margin-top-none">Pending authorization</h4>
+      <div className="margin-top margin-bottom onboard">
+        <h3>//TODO Devices pending authorization</h3>
         <Table
           selectable={false}
           className="unauthorized"

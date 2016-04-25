@@ -77265,6 +77265,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 var AppStore = require('../../stores/app-store');
 var AppActions = require('../../actions/app-actions');
 var SelectedDevices = require('./selecteddevices');
+var Filters = require('./filters');
 
 // material ui
 var mui = require('material-ui');
@@ -77653,6 +77654,7 @@ var DeviceList = _react2.default.createClass((_React$createClass = {
   return _react2.default.createElement(
     'div',
     null,
+    _react2.default.createElement(Filters, { attributes: this.props.attributes, filters: this.props.filters, onFilterChange: this.props.onFilterChange }),
     _react2.default.createElement(
       'div',
       { style: { marginLeft: "26" } },
@@ -77867,7 +77869,7 @@ var DeviceList = _react2.default.createClass((_React$createClass = {
 
 module.exports = DeviceList;
 
-},{"../../actions/app-actions":752,"../../stores/app-store":789,"./selecteddevices":767,"material-ui":257,"material-ui/lib/snackbar":287,"react":684,"react-dom":476}],764:[function(require,module,exports){
+},{"../../actions/app-actions":752,"../../stores/app-store":789,"./filters":765,"./selecteddevices":767,"material-ui":257,"material-ui/lib/snackbar":287,"react":684,"react-dom":476}],764:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -77882,8 +77884,6 @@ var AppActions = require('../../actions/app-actions');
 var Groups = require('./groups');
 var DeviceList = require('./devicelist');
 var Unauthorized = require('./unauthorized');
-
-var Filters = require('./filters');
 
 function getState() {
   return {
@@ -77950,9 +77950,8 @@ var Devices = _react2.default.createClass({
       _react2.default.createElement(
         'div',
         { className: 'rightFluid padding-right' },
-        _react2.default.createElement(Filters, { attributes: this.state.attributes, filters: this.state.filters, onFilterChange: this._updateFilters }),
         _react2.default.createElement(Unauthorized, { unauthorized: this.state.unauthorized }),
-        _react2.default.createElement(DeviceList, { images: this.state.images, selectedDevices: this.state.selectedDevices, groups: this.state.groups, devices: this.state.devices, selectedGroup: this.state.selectedGroup })
+        _react2.default.createElement(DeviceList, { filters: this.state.filters, attributes: this.state.attributes, onFilterChange: this._updateFilters, images: this.state.images, selectedDevices: this.state.selectedDevices, groups: this.state.groups, devices: this.state.devices, selectedGroup: this.state.selectedGroup })
       )
     );
   }
@@ -77960,7 +77959,7 @@ var Devices = _react2.default.createClass({
 
 module.exports = Devices;
 
-},{"../../actions/app-actions":752,"../../stores/app-store":789,"./devicelist":763,"./filters":765,"./groups":766,"./unauthorized":768,"react":684}],765:[function(require,module,exports){
+},{"../../actions/app-actions":752,"../../stores/app-store":789,"./devicelist":763,"./groups":766,"./unauthorized":768,"react":684}],765:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -78821,11 +78820,11 @@ var Authorized = _react2.default.createClass({
     }, this);
     return _react2.default.createElement(
       'div',
-      { className: 'margin-top onboard' },
+      { className: 'margin-top margin-bottom onboard' },
       _react2.default.createElement(
-        'h4',
-        { className: 'align-left margin-top-none' },
-        'Pending authorization'
+        'h3',
+        null,
+        '//TODO Devices pending authorization'
       ),
       _react2.default.createElement(
         Table,
@@ -82127,6 +82126,12 @@ function _getDeviceHealth() {
 function _getUnauthorized() {
   var unauthorized = [{
     'name': '33vayc91e6-7dec-11d0-a765-f81d4faebf5',
+    'model': "Raspberry Pi 3",
+    'arch': 'ARMv8 Cortex-A53',
+    'status': 'Unauthorized',
+    'software_version': 'Application 0.0.2'
+  }, {
+    'name': '4f98de-4apr-11d0-a765-f81d488y4fs',
     'model': "Raspberry Pi 3",
     'arch': 'ARMv8 Cortex-A53',
     'status': 'Unauthorized',

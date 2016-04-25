@@ -217,6 +217,13 @@ span.link:hover {
 .onboard p {
   margin-top: 0;
 }
+.onboard h3 {
+  font-family: Andale Mono;
+  font-weight: lighter;
+  color: #3F3F3F;
+  font-size: 1.1em;
+  margin-top: 10px;
+}
 .onboard .close {
   position: absolute;
   top: 10px;

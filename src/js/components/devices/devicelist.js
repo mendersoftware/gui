@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 var AppStore = require('../../stores/app-store');
 var AppActions = require('../../actions/app-actions');
 var SelectedDevices = require('./selecteddevices');
+var Filters = require('./filters');
 
 // material ui
 var mui = require('material-ui');
@@ -382,6 +383,7 @@ var DeviceList = React.createClass({
 
     return (
       <div>
+        <Filters attributes={this.props.attributes} filters={this.props.filters} onFilterChange={this.props.onFilterChange} />
         <div style={{marginLeft:"26"}}>
           <h2 className="hoverEdit" tooltip="Rename">
            

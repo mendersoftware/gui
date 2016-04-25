@@ -299,6 +299,13 @@ function _getUnauthorized() {
       'status': 'Unauthorized',
       'software_version': 'Application 0.0.2',
     },
+    {
+      'name': '4f98de-4apr-11d0-a765-f81d488y4fs',
+      'model':"Raspberry Pi 3",
+      'arch': 'ARMv8 Cortex-A53',
+      'status': 'Unauthorized',
+      'software_version': 'Application 0.0.2',
+    },
   ];
   return unauthorized;
 }

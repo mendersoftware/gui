@@ -6,8 +6,6 @@ var Groups = require('./groups');
 var DeviceList = require('./devicelist');
 var Unauthorized = require('./unauthorized');
 
-var Filters = require('./filters');
-
 function getState() {
   return {
     groups: AppStore.getGroups(),
@@ -66,9 +64,9 @@ var Devices = React.createClass({
           <Groups groups={this.state.groups} selectedGroup={this.state.selectedGroup} allDevices={this.state.allDevices} />
         </div>
         <div className="rightFluid padding-right">
-          <Filters attributes={this.state.attributes} filters={this.state.filters} onFilterChange={this._updateFilters} />
+          
           <Unauthorized unauthorized={this.state.unauthorized} />
-          <DeviceList images={this.state.images} selectedDevices={this.state.selectedDevices} groups={this.state.groups} devices={this.state.devices} selectedGroup={this.state.selectedGroup} />
+          <DeviceList filters={this.state.filters} attributes={this.state.attributes} onFilterChange={this._updateFilters} images={this.state.images} selectedDevices={this.state.selectedDevices} groups={this.state.groups} devices={this.state.devices} selectedGroup={this.state.selectedGroup} />
         </div>
       </div>
     );
