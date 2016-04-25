@@ -17,6 +17,7 @@ body {
 @lightestgrey: #F7F7F7;
 @lightgrey: #DBEDEB;
 @grey: #c7c7c7;
+@placeholder: #e7e7e7;
 
 .green {
   background-color: @green;
@@ -100,6 +101,9 @@ a, span.link {
 .margin-top-small {
   margin-top: 15px;
 }
+.margin-top-none {
+  margin-top: 0;
+}
 .margin-left {
   margin-left: 30px;
 }
@@ -145,6 +149,10 @@ a, span.link {
 
 .float-left {
   float: left;
+}
+
+.align-left {
+  text-align: left;
 }
 
 .align-right {
@@ -252,6 +260,54 @@ a, span.link {
     padding: 0;
   }
 }
+
+
+
+
+// Onboarding
+
+.onboard {
+  padding: 15px;
+  border-style: dashed;
+  border-color: @placeholder;
+  border-width: 1px;
+  text-align: center;
+  font-size: 16px;
+  position: relative;
+
+  p {
+    margin-top: 0;
+  }
+
+  .close {
+    position: absolute;
+    top:10px;
+    right: 10px;
+    width: 20px;
+    height:20px;
+    background-image: url('../assets/img/close.png');
+    cursor: pointer;
+  }
+
+}
+
+
+// Icons
+.material-icons {
+  &.green {
+    background: none;
+    color: @green !important;
+  }
+  &.red {
+    background: none;
+    color: @red !important;
+  }
+
+}
+
+
+
+
 
 .absoluteTextfieldButton {
   position: absolute;
@@ -406,6 +462,7 @@ span.length {
 .tabContainer, .contentContainer {
   padding: 30px 45px 60px;
   position: relative;
+  overflow: hidden;
 }
 
 
@@ -584,7 +641,7 @@ input[type="text"].fileInput {
 }
 
 .health {
-  height: 26vh;
+  min-height: 26vh;
   position: relative;
 
   .health-panel {
@@ -614,6 +671,18 @@ input[type="text"].fileInput {
       top: -9px;
     }
 
+  }
+}
+
+.dashboard-placeholder {
+  font-size: 16px;
+  color: @grey;
+  text-align: center;
+  padding: 30px;
+
+  img {
+    margin-top: 15px;
+    width: 74px;
   }
 }
 
@@ -685,16 +754,9 @@ span.month, span.day {
   text-align: center;
 }
 
-
-.dashboard-container {
-  position: absolute;
-  top: 40px;
-  left: 0;
-  right: 0;
-}
-
 .dashboard-header {
   border-bottom: 1px solid #d4e9e7;
+  margin-bottom: 15px;
 
   &.subsection {
     border: none;
@@ -712,7 +774,7 @@ span.month, span.day {
 
 .updates-container {
   flex:1;
-  margin: 15px 0 15px 6%;
+  margin:0 0 15px 6%;
   width:47%;
   padding-bottom: 15px;
   border-bottom: 1px solid @lightestgrey;

@@ -51,6 +51,8 @@ var _groups = [
 
 /* Temp local devices */
 
+var _alldevices1 = [];
+
 var _alldevices = [
   {
     'id': 1,
@@ -286,6 +288,19 @@ function _getDeviceHealth() {
   health.nogroup = nogroup.length;
   health.total = _alldevices.length;
   return health;
+}
+
+function _getUnauthorized() {
+  var unauthorized = [
+    {
+      'name': '33vayc91e6-7dec-11d0-a765-f81d4faebf5',
+      'model':"Raspberry Pi 3",
+      'arch': 'ARMv8 Cortex-A53',
+      'status': 'Unauthorized',
+      'software_version': 'Application 0.0.2',
+    },
+  ];
+  return unauthorized;
 }
 
 
@@ -643,6 +658,10 @@ var AppStore = assign(EventEmitter.prototype, {
 
   getHealth: function() {
     return _getDeviceHealth()
+  },
+
+  getUnauthorized: function() {
+    return _getUnauthorized()
   },
 
   getActivity: function() {

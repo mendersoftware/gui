@@ -4,6 +4,7 @@ var AppActions = require('../../actions/app-actions');
 
 var Groups = require('./groups');
 var DeviceList = require('./devicelist');
+var Unauthorized = require('./unauthorized');
 
 var Filters = require('./filters');
 
@@ -16,7 +17,8 @@ function getState() {
     selectedDevices: AppStore.getSelectedDevices(),
     filters: AppStore.getFilters(),
     attributes: AppStore.getAttributes(),
-    images: AppStore.getSoftwareRepo()
+    images: AppStore.getSoftwareRepo(),
+    unauthorized: AppStore.getUnauthorized(),
   }
 }
 
@@ -46,6 +48,11 @@ var Devices = React.createClass({
   componentWillUnmount: function () {
     AppStore.removeChangeListener(this._onChange);
   },
+  componentDidMount: function() {
+    //AppActions.getAuthorized();
+    //AppActions.getDevices();
+  },
+
   _onChange: function() {
     this.setState(getState());
   },
@@ -60,6 +67,7 @@ var Devices = React.createClass({
         </div>
         <div className="rightFluid padding-right">
           <Filters attributes={this.state.attributes} filters={this.state.filters} onFilterChange={this._updateFilters} />
+          <Unauthorized unauthorized={this.state.unauthorized} />
           <DeviceList images={this.state.images} selectedDevices={this.state.selectedDevices} groups={this.state.groups} devices={this.state.devices} selectedGroup={this.state.selectedGroup} />
         </div>
       </div>

@@ -76321,7 +76321,7 @@ var AppActions = {
 
 module.exports = AppActions;
 
-},{"../api/api":753,"../api/updates-api":754,"../constants/app-constants":785,"../dispatchers/app-dispatcher":786}],753:[function(require,module,exports){
+},{"../api/api":753,"../api/updates-api":754,"../constants/app-constants":786,"../dispatchers/app-dispatcher":787}],753:[function(require,module,exports){
 'use strict';
 
 var request = require('superagent');
@@ -76496,7 +76496,7 @@ var App = _react2.default.createClass({
 
 module.exports = App;
 
-},{"../themes/mender-theme.js":789,"./header/header":768,"material-ui":257,"material-ui/lib/styles/getMuiTheme":292,"react":684}],756:[function(require,module,exports){
+},{"../themes/mender-theme.js":790,"./header/header":769,"material-ui":257,"material-ui/lib/styles/getMuiTheme":292,"react":684}],756:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -76599,6 +76599,7 @@ function getState() {
   return {
     progress: AppStore.getProgressUpdates(new Date()),
     health: AppStore.getHealth(),
+    unauthorized: AppStore.getUnauthorized(),
     recent: AppStore.getRecentUpdates(new Date()),
     activity: AppStore.getActivity()
   };
@@ -76618,6 +76619,7 @@ var Dashboard = _react2.default.createClass({
   },
   componentDidMount: function componentDidMount() {
     AppActions.getUpdates();
+    //AppActions.getUnauthorized();
   },
   _onChange: function _onChange() {
     this.setState(getState());
@@ -76632,8 +76634,7 @@ var Dashboard = _react2.default.createClass({
         this.context.router.push('/updates/0/' + URIParams);
         break;
       case "devices":
-        var filters = "status=" + params.status;
-        filters = encodeURIComponent(filters);
+        var filters = params.status ? encodeURIComponent("status=" + params.status) : '';
         //this.context.router.transitionTo("/devices/:groupId/:filters", {groupId:1, filters: filters}, null);
         this.context.router.push('/devices/1/' + filters);
         break;
@@ -76649,7 +76650,7 @@ var Dashboard = _react2.default.createClass({
         _react2.default.createElement(
           'div',
           { className: 'leftDashboard' },
-          _react2.default.createElement(Health, { clickHandle: this._handleClick, health: this.state.health }),
+          _react2.default.createElement(Health, { clickHandle: this._handleClick, health: this.state.health, unauthorized: this.state.unauthorized }),
           _react2.default.createElement(Updates, { clickHandle: this._handleClick, progress: this.state.progress, recent: this.state.recent })
         ),
         _react2.default.createElement(Activity, { activity: this.state.activity })
@@ -76664,7 +76665,7 @@ Dashboard.contextTypes = {
 
 module.exports = Dashboard;
 
-},{"../../actions/app-actions":752,"../../stores/app-store":788,"./activity":756,"./health":758,"./updates":762,"react":684,"react-router":506}],758:[function(require,module,exports){
+},{"../../actions/app-actions":752,"../../stores/app-store":789,"./activity":756,"./health":758,"./updates":762,"react":684,"react-router":506}],758:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -76677,14 +76678,24 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 // material ui
 var mui = require('material-ui');
+var RaisedButton = mui.RaisedButton;
 
 var Health = _react2.default.createClass({
   displayName: 'Health',
 
-  _clickHandle: function _clickHandle(status) {
-    this.props.clickHandle({ route: "devices", status: status });
+  _clickHandle: function _clickHandle(route) {
+    this.props.clickHandle(route);
   },
+  _closeOnboard: function _closeOnboard() {},
   render: function render() {
+    var unauthorized_str = '';
+    if (this.props.unauthorized) {
+      if (this.props.unauthorized.length > 1) {
+        unauthorized_str = 'are ' + this.props.unauthorized.length + ' devices';
+      } else {
+        unauthorized_str = 'is ' + this.props.unauthorized.length + ' device';
+      }
+    }
     return _react2.default.createElement(
       'div',
       { className: 'health' },
@@ -76704,29 +76715,23 @@ var Health = _react2.default.createClass({
       ),
       _react2.default.createElement(
         'div',
-        { className: 'dashboard-container' },
+        { className: this.props.unauthorized ? "authorize onboard" : "hidden" },
+        _react2.default.createElement('div', { className: 'close', onClick: this._closeOnboard }),
         _react2.default.createElement(
-          'div',
-          { className: 'hidden' },
-          _react2.default.createElement(
-            'span',
-            { className: this.props.health.nogroup ? "number" : "hidden", style: { marginRight: "0" } },
-            '+'
-          ),
-          _react2.default.createElement(
-            'span',
-            { className: 'number' },
-            this.props.health.nogroup
-          ),
-          _react2.default.createElement(
-            'span',
-            null,
-            'Pending'
-          )
+          'p',
+          null,
+          'There ',
+          unauthorized_str,
+          ' waiting authorization'
         ),
+        _react2.default.createElement(RaisedButton, { onClick: this._clickHandle.bind(null, { route: "devices" }), primary: true, label: 'Review details' })
+      ),
+      _react2.default.createElement(
+        'div',
+        { className: this.props.health.total ? null : "hidden" },
         _react2.default.createElement(
           'div',
-          { className: 'health-panel red', onClick: this._clickHandle.bind(null, "down") },
+          { className: 'health-panel red', onClick: this._clickHandle.bind(null, { route: "devices", status: "down" }) },
           _react2.default.createElement(
             'span',
             { className: 'number' },
@@ -76740,7 +76745,7 @@ var Health = _react2.default.createClass({
         ),
         _react2.default.createElement(
           'div',
-          { className: 'health-panel green', onClick: this._clickHandle.bind(null, "up") },
+          { className: 'health-panel green', onClick: this._clickHandle.bind(null, { route: "devices", status: "up" }) },
           _react2.default.createElement(
             'span',
             { className: 'number' },
@@ -76761,6 +76766,16 @@ var Health = _react2.default.createClass({
             'Manage devices'
           )
         )
+      ),
+      _react2.default.createElement(
+        'div',
+        { className: this.props.health.total ? "hidden" : "dashboard-placeholder" },
+        _react2.default.createElement(
+          'p',
+          null,
+          'No connected devices yet'
+        ),
+        _react2.default.createElement('img', { src: '/assets/img/connected.png', alt: 'connected' })
       )
     );
   }
@@ -76899,7 +76914,7 @@ Progress.contextTypes = {
 
 module.exports = Progress;
 
-},{"../updates/progressBar.js":776,"material-ui":257,"react":684,"react-router":506,"react-time":522}],760:[function(require,module,exports){
+},{"../updates/progressBar.js":777,"material-ui":257,"react":684,"react-router":506,"react-time":522}],760:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -77032,7 +77047,7 @@ Recent.contextTypes = {
 
 module.exports = Recent;
 
-},{"../../actions/app-actions":752,"../updates/groupdevices":775,"material-ui":257,"react":684,"react-router":506,"react-time":522}],761:[function(require,module,exports){
+},{"../../actions/app-actions":752,"../updates/groupdevices":776,"material-ui":257,"react":684,"react-router":506,"react-time":522}],761:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -77852,7 +77867,7 @@ var DeviceList = _react2.default.createClass((_React$createClass = {
 
 module.exports = DeviceList;
 
-},{"../../actions/app-actions":752,"../../stores/app-store":788,"./selecteddevices":767,"material-ui":257,"material-ui/lib/snackbar":287,"react":684,"react-dom":476}],764:[function(require,module,exports){
+},{"../../actions/app-actions":752,"../../stores/app-store":789,"./selecteddevices":767,"material-ui":257,"material-ui/lib/snackbar":287,"react":684,"react-dom":476}],764:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -77866,6 +77881,7 @@ var AppActions = require('../../actions/app-actions');
 
 var Groups = require('./groups');
 var DeviceList = require('./devicelist');
+var Unauthorized = require('./unauthorized');
 
 var Filters = require('./filters');
 
@@ -77878,7 +77894,8 @@ function getState() {
     selectedDevices: AppStore.getSelectedDevices(),
     filters: AppStore.getFilters(),
     attributes: AppStore.getAttributes(),
-    images: AppStore.getSoftwareRepo()
+    images: AppStore.getSoftwareRepo(),
+    unauthorized: AppStore.getUnauthorized()
   };
 }
 
@@ -77910,6 +77927,11 @@ var Devices = _react2.default.createClass({
   componentWillUnmount: function componentWillUnmount() {
     AppStore.removeChangeListener(this._onChange);
   },
+  componentDidMount: function componentDidMount() {
+    //AppActions.getAuthorized();
+    //AppActions.getDevices();
+  },
+
   _onChange: function _onChange() {
     this.setState(getState());
   },
@@ -77929,6 +77951,7 @@ var Devices = _react2.default.createClass({
         'div',
         { className: 'rightFluid padding-right' },
         _react2.default.createElement(Filters, { attributes: this.state.attributes, filters: this.state.filters, onFilterChange: this._updateFilters }),
+        _react2.default.createElement(Unauthorized, { unauthorized: this.state.unauthorized }),
         _react2.default.createElement(DeviceList, { images: this.state.images, selectedDevices: this.state.selectedDevices, groups: this.state.groups, devices: this.state.devices, selectedGroup: this.state.selectedGroup })
       )
     );
@@ -77937,7 +77960,7 @@ var Devices = _react2.default.createClass({
 
 module.exports = Devices;
 
-},{"../../actions/app-actions":752,"../../stores/app-store":788,"./devicelist":763,"./filters":765,"./groups":766,"react":684}],765:[function(require,module,exports){
+},{"../../actions/app-actions":752,"../../stores/app-store":789,"./devicelist":763,"./filters":765,"./groups":766,"./unauthorized":768,"react":684}],765:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -78437,7 +78460,7 @@ var Groups = _react2.default.createClass({
 
 module.exports = Groups;
 
-},{"../../actions/app-actions":752,"../../stores/app-store":788,"material-ui":257,"material-ui/lib/Subheader":211,"react":684,"react-search-input":513}],767:[function(require,module,exports){
+},{"../../actions/app-actions":752,"../../stores/app-store":789,"material-ui":257,"material-ui/lib/Subheader":211,"react":684,"react-search-input":513}],767:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -78691,7 +78714,203 @@ var SelectedDevices = _react2.default.createClass({
 
 module.exports = SelectedDevices;
 
-},{"../../actions/app-actions":752,"../../stores/app-store":788,"../updates/scheduleform":782,"material-ui":257,"react":684,"react-router":506,"react-tag-input":516}],768:[function(require,module,exports){
+},{"../../actions/app-actions":752,"../../stores/app-store":789,"../updates/scheduleform":783,"material-ui":257,"react":684,"react-router":506,"react-tag-input":516}],768:[function(require,module,exports){
+'use strict';
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactDom = require('react-dom');
+
+var _reactDom2 = _interopRequireDefault(_reactDom);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+// material ui
+var mui = require('material-ui');
+var Table = mui.Table;
+var TableHeader = mui.TableHeader;
+var TableHeaderColumn = mui.TableHeaderColumn;
+var TableBody = mui.TableBody;
+var TableRow = mui.TableRow;
+var TableRowColumn = mui.TableRowColumn;
+var IconButton = mui.IconButton;
+var FontIcon = mui.FontIcon;
+
+var Authorized = _react2.default.createClass({
+  displayName: 'Authorized',
+
+  getInitialState: function getInitialState() {
+    return {
+      sortCol: null,
+      sortDown: true
+    };
+  },
+  _sortColumn: function _sortColumn(col) {
+    var direction;
+    if (this.state.sortCol !== col) {
+      _reactDom2.default.findDOMNode(this.refs[this.state.sortCol]).className = "sortIcon material-icons";
+      _reactDom2.default.findDOMNode(this.refs[col]).className = "sortIcon material-icons selected";
+      this.setState({ sortCol: col, sortDown: true });
+      direction = true;
+    } else {
+      direction = !this.state.sortDown;
+      _reactDom2.default.findDOMNode(this.refs[this.state.sortCol]).className = "sortIcon material-icons selected " + direction;
+      this.setState({ sortDown: direction });
+    }
+    // sort table
+    AppActions.sortTable("_unauthorized", col, direction);
+  },
+  render: function render() {
+    var styles = {
+      sortIcon: {
+        verticalAlign: 'middle',
+        marginLeft: "10",
+        color: "#8c8c8d",
+        cursor: "pointer"
+      }
+    };
+    var devices = this.props.unauthorized.map(function (device, index) {
+      return _react2.default.createElement(
+        TableRow,
+        { style: { "backgroundColor": "#e9f4f3" }, hoverable: true, key: index },
+        _react2.default.createElement(
+          TableRowColumn,
+          null,
+          device.name
+        ),
+        _react2.default.createElement(
+          TableRowColumn,
+          null,
+          device.model
+        ),
+        _react2.default.createElement(
+          TableRowColumn,
+          null,
+          device.software_version
+        ),
+        _react2.default.createElement(
+          TableRowColumn,
+          null,
+          device.status
+        ),
+        _react2.default.createElement(
+          TableRowColumn,
+          null,
+          _react2.default.createElement(
+            IconButton,
+            null,
+            _react2.default.createElement(
+              FontIcon,
+              { className: 'material-icons green' },
+              'check_circle'
+            )
+          ),
+          _react2.default.createElement(
+            IconButton,
+            null,
+            _react2.default.createElement(
+              FontIcon,
+              { className: 'material-icons red' },
+              'cancel'
+            )
+          )
+        )
+      );
+    }, this);
+    return _react2.default.createElement(
+      'div',
+      { className: 'margin-top onboard' },
+      _react2.default.createElement(
+        'h4',
+        { className: 'align-left margin-top-none' },
+        'Pending authorization'
+      ),
+      _react2.default.createElement(
+        Table,
+        {
+          selectable: false,
+          className: 'unauthorized'
+        },
+        _react2.default.createElement(
+          TableHeader,
+          {
+            displaySelectAll: false,
+            adjustForCheckbox: false
+          },
+          _react2.default.createElement(
+            TableRow,
+            null,
+            _react2.default.createElement(
+              TableHeaderColumn,
+              { className: 'columnHeader', tooltip: 'Name' },
+              'Name',
+              _react2.default.createElement(
+                FontIcon,
+                { ref: 'name', style: styles.sortIcon, onClick: this._sortColumn.bind(null, "name"), className: 'sortIcon material-icons' },
+                'sort'
+              )
+            ),
+            _react2.default.createElement(
+              TableHeaderColumn,
+              { className: 'columnHeader', tooltip: 'Device type' },
+              'Device type',
+              _react2.default.createElement(
+                FontIcon,
+                { ref: 'model', style: styles.sortIcon, onClick: this._sortColumn.bind(null, "model"), className: 'sortIcon material-icons' },
+                'sort'
+              )
+            ),
+            _react2.default.createElement(
+              TableHeaderColumn,
+              { className: 'columnHeader', tooltip: 'Current software' },
+              'Current software',
+              _react2.default.createElement(
+                FontIcon,
+                { ref: 'software_version', style: styles.sortIcon, onClick: this._sortColumn.bind(null, "software_version"), className: 'sortIcon material-icons' },
+                'sort'
+              )
+            ),
+            _react2.default.createElement(
+              TableHeaderColumn,
+              { className: 'columnHeader', tooltip: 'Status' },
+              'Status',
+              _react2.default.createElement(
+                FontIcon,
+                { ref: 'status', style: styles.sortIcon, onClick: this._sortColumn.bind(null, "status"), className: 'sortIcon material-icons' },
+                'sort'
+              )
+            ),
+            _react2.default.createElement(
+              TableHeaderColumn,
+              { className: 'columnHeader' },
+              _react2.default.createElement(
+                'a',
+                { className: 'authorize-all' },
+                'Authorize all (',
+                devices.length,
+                ')'
+              )
+            )
+          )
+        ),
+        _react2.default.createElement(
+          TableBody,
+          {
+            displayRowCheckbox: false,
+            showRowHover: true,
+            className: 'clickable' },
+          devices
+        )
+      )
+    );
+  }
+});
+
+module.exports = Authorized;
+
+},{"material-ui":257,"react":684,"react-dom":476}],769:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -78835,7 +79054,7 @@ Header.contextTypes = {
 
 module.exports = Header;
 
-},{"material-ui":257,"material-ui/lib/font-icon":252,"material-ui/lib/icon-button":256,"material-ui/lib/menus/icon-menu":264,"material-ui/lib/menus/menu-item":265,"material-ui/lib/toolbar/toolbar":341,"material-ui/lib/toolbar/toolbar-group":338,"material-ui/lib/toolbar/toolbar-title":340,"react":684,"react-router":506}],769:[function(require,module,exports){
+},{"material-ui":257,"material-ui/lib/font-icon":252,"material-ui/lib/icon-button":256,"material-ui/lib/menus/icon-menu":264,"material-ui/lib/menus/menu-item":265,"material-ui/lib/toolbar/toolbar":341,"material-ui/lib/toolbar/toolbar-group":338,"material-ui/lib/toolbar/toolbar-title":340,"react":684,"react-router":506}],770:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -79399,7 +79618,7 @@ var Repository = _react2.default.createClass({
 
 module.exports = Repository;
 
-},{"../../actions/app-actions":752,"../../stores/app-store":788,"../updates/scheduleform":782,"./selectedimage.js":770,"./updatebutton.js":772,"material-ui":257,"react":684,"react-addons-update":365,"react-dom":476,"react-file-input":478,"react-router":506,"react-search-input":513,"react-tag-input":516,"react-time":522}],770:[function(require,module,exports){
+},{"../../actions/app-actions":752,"../../stores/app-store":789,"../updates/scheduleform":783,"./selectedimage.js":771,"./updatebutton.js":773,"material-ui":257,"react":684,"react-addons-update":365,"react-dom":476,"react-file-input":478,"react-router":506,"react-search-input":513,"react-tag-input":516,"react-time":522}],771:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -79675,7 +79894,7 @@ SelectedImage.contextTypes = {
 
 module.exports = SelectedImage;
 
-},{"material-ui":257,"react":684,"react-router":506,"react-tag-input":516,"react-time":522}],771:[function(require,module,exports){
+},{"material-ui":257,"react":684,"react-router":506,"react-tag-input":516,"react-time":522}],772:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -79738,7 +79957,7 @@ var Software = _react2.default.createClass({
 
 module.exports = Software;
 
-},{"../../actions/app-actions":752,"../../stores/app-store":788,"./repository.js":769,"react":684}],772:[function(require,module,exports){
+},{"../../actions/app-actions":752,"../../stores/app-store":789,"./repository.js":770,"react":684}],773:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -79761,7 +79980,7 @@ var UpdateButton = _react2.default.createClass({
 
 module.exports = UpdateButton;
 
-},{"material-ui":257,"react":684}],773:[function(require,module,exports){
+},{"material-ui":257,"react":684}],774:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -79810,7 +80029,7 @@ var DateTime = _react2.default.createClass({
 
 module.exports = DateTime;
 
-},{"material-ui":257,"react":684}],774:[function(require,module,exports){
+},{"material-ui":257,"react":684}],775:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -79885,7 +80104,7 @@ var EventLog = _react2.default.createClass({
 
 module.exports = EventLog;
 
-},{"material-ui":257,"react":684}],775:[function(require,module,exports){
+},{"material-ui":257,"react":684}],776:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -79928,89 +80147,7 @@ var GroupDevices = _react2.default.createClass({
 
 module.exports = GroupDevices;
 
-},{"../../actions/app-actions":752,"react":684}],776:[function(require,module,exports){
-'use strict';
-
-var _react = require('react');
-
-var _react2 = _interopRequireDefault(_react);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var AppActions = require('../../actions/app-actions');
-
-// material ui
-var mui = require('material-ui');
-
-var ProgressBar = _react2.default.createClass({
-  displayName: 'ProgressBar',
-
-  getInitialState: function getInitialState() {
-    return {
-      devices: [],
-      stats: {
-        "successful": 0,
-        "pending": 0,
-        "inprogress": 0,
-        "failure": 0,
-        "noimage": 0
-      }
-    };
-  },
-  componentDidMount: function componentDidMount() {
-    AppActions.getSingleUpdateStats(this.props.update.id, function (stats) {
-      this.setState({ stats: stats });
-    }.bind(this));
-    AppActions.getSingleUpdateDevices(this.props.update.id, function (devices) {
-      this.setState({ devices: devices });
-      this.props.getDevices(devices.length, this.props.index);
-    }.bind(this));
-  },
-  _handleClick: function _handleClick() {},
-  _sendUpPercentage: function _sendUpPercentage(per) {
-    this.props.gotPercent(per);
-  },
-  render: function render() {
-    // used for MOCK API because devices.length does not equal stats length
-    var totalDevices = this.state.stats.successful + this.state.stats.failure + this.state.stats.inprogress + this.state.stats.pending;
-
-    var success = (this.state.stats.successful / totalDevices * 100).toFixed(0);
-    var failures = (this.state.stats.failure / totalDevices * 100).toFixed(0);
-    var progress = (this.state.stats.inprogress / totalDevices * 100).toFixed(0);
-    var percentDone = Number(success) + Number(failures);
-
-    var progressBar = _react2.default.createElement(
-      'div',
-      { className: this.props.noPadding ? "tableBar progressBar" : "progressBar" },
-      _react2.default.createElement(
-        'div',
-        { className: 'lightgrey' },
-        _react2.default.createElement('div', { className: 'green float-left', style: { width: success + "%" } }),
-        _react2.default.createElement('div', { className: 'red float-left', style: { width: failures + "%" } }),
-        _react2.default.createElement('div', { className: 'grey float-left', style: { width: progress + "%" } })
-      ),
-      _react2.default.createElement(
-        'div',
-        { className: 'percentage' },
-        _react2.default.createElement(
-          'span',
-          null,
-          percentDone || 0,
-          '%'
-        )
-      )
-    );
-    return _react2.default.createElement(
-      'div',
-      null,
-      progressBar
-    );
-  }
-});
-
-module.exports = ProgressBar;
-
-},{"../../actions/app-actions":752,"material-ui":257,"react":684}],777:[function(require,module,exports){
+},{"../../actions/app-actions":752,"react":684}],777:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -80093,6 +80230,88 @@ var ProgressBar = _react2.default.createClass({
 module.exports = ProgressBar;
 
 },{"../../actions/app-actions":752,"material-ui":257,"react":684}],778:[function(require,module,exports){
+'use strict';
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var AppActions = require('../../actions/app-actions');
+
+// material ui
+var mui = require('material-ui');
+
+var ProgressBar = _react2.default.createClass({
+  displayName: 'ProgressBar',
+
+  getInitialState: function getInitialState() {
+    return {
+      devices: [],
+      stats: {
+        "successful": 0,
+        "pending": 0,
+        "inprogress": 0,
+        "failure": 0,
+        "noimage": 0
+      }
+    };
+  },
+  componentDidMount: function componentDidMount() {
+    AppActions.getSingleUpdateStats(this.props.update.id, function (stats) {
+      this.setState({ stats: stats });
+    }.bind(this));
+    AppActions.getSingleUpdateDevices(this.props.update.id, function (devices) {
+      this.setState({ devices: devices });
+      this.props.getDevices(devices.length, this.props.index);
+    }.bind(this));
+  },
+  _handleClick: function _handleClick() {},
+  _sendUpPercentage: function _sendUpPercentage(per) {
+    this.props.gotPercent(per);
+  },
+  render: function render() {
+    // used for MOCK API because devices.length does not equal stats length
+    var totalDevices = this.state.stats.successful + this.state.stats.failure + this.state.stats.inprogress + this.state.stats.pending;
+
+    var success = (this.state.stats.successful / totalDevices * 100).toFixed(0);
+    var failures = (this.state.stats.failure / totalDevices * 100).toFixed(0);
+    var progress = (this.state.stats.inprogress / totalDevices * 100).toFixed(0);
+    var percentDone = Number(success) + Number(failures);
+
+    var progressBar = _react2.default.createElement(
+      'div',
+      { className: this.props.noPadding ? "tableBar progressBar" : "progressBar" },
+      _react2.default.createElement(
+        'div',
+        { className: 'lightgrey' },
+        _react2.default.createElement('div', { className: 'green float-left', style: { width: success + "%" } }),
+        _react2.default.createElement('div', { className: 'red float-left', style: { width: failures + "%" } }),
+        _react2.default.createElement('div', { className: 'grey float-left', style: { width: progress + "%" } })
+      ),
+      _react2.default.createElement(
+        'div',
+        { className: 'percentage' },
+        _react2.default.createElement(
+          'span',
+          null,
+          percentDone || 0,
+          '%'
+        )
+      )
+    );
+    return _react2.default.createElement(
+      'div',
+      null,
+      progressBar
+    );
+  }
+});
+
+module.exports = ProgressBar;
+
+},{"../../actions/app-actions":752,"material-ui":257,"react":684}],779:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -80381,7 +80600,7 @@ var Recent = _react2.default.createClass({
 
 module.exports = Recent;
 
-},{"./groupdevices":775,"./progressbar":777,"./report.js":779,"./scheduleform":782,"material-ui":257,"react":684,"react-time":522}],779:[function(require,module,exports){
+},{"./groupdevices":776,"./progressbar":778,"./report.js":780,"./scheduleform":783,"material-ui":257,"react":684,"react-time":522}],780:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -80667,7 +80886,7 @@ var Report = _react2.default.createClass({
 
 module.exports = Report;
 
-},{"../../actions/app-actions":752,"material-ui":257,"react":684,"react-router":506,"react-time":522}],780:[function(require,module,exports){
+},{"../../actions/app-actions":752,"material-ui":257,"react":684,"react-router":506,"react-time":522}],781:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -80828,7 +81047,7 @@ var Schedule = _react2.default.createClass({
 
 module.exports = Schedule;
 
-},{"material-ui":257,"react":684,"react-time":522}],781:[function(require,module,exports){
+},{"material-ui":257,"react":684,"react-time":522}],782:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -80869,7 +81088,7 @@ var ScheduleButton = _react2.default.createClass({
 
 module.exports = ScheduleButton;
 
-},{"material-ui":257,"react":684}],782:[function(require,module,exports){
+},{"material-ui":257,"react":684}],783:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -81245,7 +81464,7 @@ var ScheduleForm = _react2.default.createClass({
 
 module.exports = ScheduleForm;
 
-},{"../../stores/app-store":788,"./datetime.js":773,"material-ui":257,"react":684,"react-router":506,"react-search-input":513}],783:[function(require,module,exports){
+},{"../../stores/app-store":789,"./datetime.js":774,"material-ui":257,"react":684,"react-router":506,"react-search-input":513}],784:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -81494,7 +81713,7 @@ var Updates = _react2.default.createClass({
 
 module.exports = Updates;
 
-},{"../../actions/app-actions":752,"../../stores/app-store":788,"./eventlog.js":774,"./recentupdates.js":778,"./report.js":779,"./schedule.js":780,"./schedulebutton.js":781,"./scheduleform.js":782,"material-ui":257,"react":684}],784:[function(require,module,exports){
+},{"../../actions/app-actions":752,"../../stores/app-store":789,"./eventlog.js":775,"./recentupdates.js":779,"./report.js":780,"./schedule.js":781,"./schedulebutton.js":782,"./scheduleform.js":783,"material-ui":257,"react":684}],785:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -81558,7 +81777,7 @@ module.exports = _react2.default.createElement(
   )
 );
 
-},{"../components/app":755,"../components/dashboard/dashboard":757,"../components/devices/devices":764,"../components/software/software":771,"../components/updates/updates":783,"react":684,"react-router":506}],785:[function(require,module,exports){
+},{"../components/app":755,"../components/dashboard/dashboard":757,"../components/devices/devices":764,"../components/software/software":772,"../components/updates/updates":784,"react":684,"react-router":506}],786:[function(require,module,exports){
 'use strict';
 
 module.exports = {
@@ -81578,7 +81797,7 @@ module.exports = {
   SINGLE_UPDATE: 'SINGLE_UPDATE'
 };
 
-},{}],786:[function(require,module,exports){
+},{}],787:[function(require,module,exports){
 'use strict';
 
 var Dispatcher = require('flux').Dispatcher;
@@ -81596,7 +81815,7 @@ var AppDispatcher = assign(new Dispatcher(), {
 
 module.exports = AppDispatcher;
 
-},{"flux":94,"react/lib/Object.assign":544}],787:[function(require,module,exports){
+},{"flux":94,"react/lib/Object.assign":544}],788:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -81627,7 +81846,7 @@ var routes = require('./config/routes');
   routes
 ), document.getElementById('main'));
 
-},{"./config/routes":784,"react":684,"react-dom":476,"react-router":506,"react-tap-event-plugin":520}],788:[function(require,module,exports){
+},{"./config/routes":785,"react":684,"react-dom":476,"react-router":506,"react-tap-event-plugin":520}],789:[function(require,module,exports){
 'use strict';
 
 var AppDispatcher = require('../dispatchers/app-dispatcher');
@@ -81676,6 +81895,8 @@ var _groups = [{
 }];
 
 /* Temp local devices */
+
+var _alldevices1 = [];
 
 var _alldevices = [{
   'id': 1,
@@ -81901,6 +82122,17 @@ function _getDeviceHealth() {
   health.nogroup = nogroup.length;
   health.total = _alldevices.length;
   return health;
+}
+
+function _getUnauthorized() {
+  var unauthorized = [{
+    'name': '33vayc91e6-7dec-11d0-a765-f81d4faebf5',
+    'model': "Raspberry Pi 3",
+    'arch': 'ARMv8 Cortex-A53',
+    'status': 'Unauthorized',
+    'software_version': 'Application 0.0.2'
+  }];
+  return unauthorized;
 }
 
 function discoverDevices(array) {
@@ -82243,6 +82475,10 @@ var AppStore = assign(EventEmitter.prototype, {
     return _getDeviceHealth();
   },
 
+  getUnauthorized: function getUnauthorized() {
+    return _getUnauthorized();
+  },
+
   getActivity: function getActivity() {
     /*
     * Return activity log
@@ -82309,7 +82545,7 @@ var AppStore = assign(EventEmitter.prototype, {
 
 module.exports = AppStore;
 
-},{"../constants/app-constants":785,"../dispatchers/app-dispatcher":786,"events":92,"react/lib/Object.assign":544}],789:[function(require,module,exports){
+},{"../constants/app-constants":786,"../dispatchers/app-dispatcher":787,"events":92,"react/lib/Object.assign":544}],790:[function(require,module,exports){
 'use strict';
 
 var _colorManipulator = require('material-ui/lib/utils/color-manipulator');
@@ -82343,12 +82579,4 @@ module.exports = {
   }
 };
 
-},{"material-ui/lib/styles/colors":291,"material-ui/lib/styles/spacing":294,"material-ui/lib/utils/color-manipulator":348}]},{},[787]);
-Colors.darkBlack, 0.3)
-  },
-  snackbar: {
-    actionColor: "#9E6F8E"
-  }
-};
-
-},{"material-ui/lib/styles/colors":291,"material-ui/lib/styles/spacing":294,"material-ui/lib/utils/color-manipulator":348}]},{},[787]);
+},{"material-ui/lib/styles/colors":291,"material-ui/lib/styles/spacing":294,"material-ui/lib/utils/color-manipulator":348}]},{},[788]);

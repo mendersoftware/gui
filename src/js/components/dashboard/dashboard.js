@@ -10,6 +10,7 @@ function getState() {
   return {
     progress: AppStore.getProgressUpdates(new Date()),
     health: AppStore.getHealth(),
+    unauthorized: AppStore.getUnauthorized(),
     recent: AppStore.getRecentUpdates(new Date()),
     activity: AppStore.getActivity(),
   }
@@ -27,6 +28,7 @@ var Dashboard = React.createClass({
   },
   componentDidMount: function() {
      AppActions.getUpdates();
+     //AppActions.getUnauthorized();
   },
   _onChange: function() {
     this.setState(getState());
@@ -41,8 +43,7 @@ var Dashboard = React.createClass({
         this.context.router.push('/updates/0/'+URIParams);
         break;
       case "devices":
-        var filters = "status="+params.status;
-        filters = encodeURIComponent(filters);
+        var filters = params.status ? encodeURIComponent("status="+params.status) : '';
         //this.context.router.transitionTo("/devices/:groupId/:filters", {groupId:1, filters: filters}, null);
         this.context.router.push('/devices/1/'+filters);
         break;
@@ -53,7 +54,7 @@ var Dashboard = React.createClass({
       <div className="contentContainer">
         <div>
           <div className="leftDashboard">
-            <Health clickHandle={this._handleClick} health={this.state.health} />
+            <Health clickHandle={this._handleClick} health={this.state.health} unauthorized={this.state.unauthorized} />
             <Updates clickHandle={this._handleClick} progress={this.state.progress} recent={this.state.recent} />
           </div>
           <Activity activity={this.state.activity} />
