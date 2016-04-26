@@ -45,6 +45,13 @@ var AppActions = {
     })
   },
 
+  authorizeDevices: function (devices) {
+    AppDispatcher.handleViewAction({
+      actionType: AppConstants.AUTHORIZE_DEVICES,
+      devices: devices
+    })
+  },
+
 
   /* API */
 

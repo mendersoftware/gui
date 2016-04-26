@@ -76204,6 +76204,13 @@ var AppActions = {
     });
   },
 
+  authorizeDevices: function authorizeDevices(devices) {
+    AppDispatcher.handleViewAction({
+      actionType: AppConstants.AUTHORIZE_DEVICES,
+      devices: devices
+    });
+  },
+
   /* API */
 
   getImages: function getImages() {
@@ -76704,7 +76711,7 @@ var Health = _react2.default.createClass({
   },
   render: function render() {
     var unauthorized_str = '';
-    if (this.props.unauthorized) {
+    if (this.props.unauthorized.length) {
       if (this.props.unauthorized.length > 1) {
         unauthorized_str = 'are ' + this.props.unauthorized.length + ' devices';
       } else {
@@ -76730,7 +76737,7 @@ var Health = _react2.default.createClass({
       ),
       _react2.default.createElement(
         'div',
-        { className: this.props.unauthorized && !this.props.hideReview ? "authorize onboard" : "hidden" },
+        { className: this.props.unauthorized.length && !this.props.hideReview ? "authorize onboard" : "hidden" },
         _react2.default.createElement('div', { className: 'close', onClick: this._closeOnboard }),
         _react2.default.createElement(
           'p',
@@ -77965,7 +77972,11 @@ var Devices = _react2.default.createClass({
       _react2.default.createElement(
         'div',
         { className: 'rightFluid padding-right' },
-        _react2.default.createElement(Unauthorized, { unauthorized: this.state.unauthorized }),
+        _react2.default.createElement(
+          'div',
+          { className: this.state.unauthorized.length ? null : "hidden" },
+          _react2.default.createElement(Unauthorized, { unauthorized: this.state.unauthorized })
+        ),
         _react2.default.createElement(DeviceList, { filters: this.state.filters, attributes: this.state.attributes, onFilterChange: this._updateFilters, images: this.state.images, selectedDevices: this.state.selectedDevices, groups: this.state.groups, devices: this.state.devices, selectedGroup: this.state.selectedGroup })
       )
     );
@@ -78741,6 +78752,8 @@ var _reactDom2 = _interopRequireDefault(_reactDom);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+var AppActions = require('../../actions/app-actions');
+
 // material ui
 var mui = require('material-ui');
 var Table = mui.Table;
@@ -78775,6 +78788,10 @@ var Authorized = _react2.default.createClass({
     }
     // sort table
     AppActions.sortTable("_unauthorized", col, direction);
+  },
+  _authorizeDevices: function _authorizeDevices(devices) {
+    // array of device objects
+    AppActions.authorizeDevices(devices);
   },
   render: function render() {
     var styles = {
@@ -78814,7 +78831,7 @@ var Authorized = _react2.default.createClass({
           null,
           _react2.default.createElement(
             IconButton,
-            { style: { "paddingLeft": "0" } },
+            { onClick: this._authorizeDevices.bind(null, [device]), style: { "paddingLeft": "0" } },
             _react2.default.createElement(
               FontIcon,
               { className: 'material-icons green' },
@@ -78918,7 +78935,7 @@ var Authorized = _react2.default.createClass({
 
 module.exports = Authorized;
 
-},{"material-ui":257,"react":684,"react-dom":476}],769:[function(require,module,exports){
+},{"../../actions/app-actions":752,"material-ui":257,"react":684,"react-dom":476}],769:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -81794,6 +81811,7 @@ module.exports = {
   REMOVE_FROM_GROUP: 'REMOVE_FROM_GROUP',
   REMOVE_GROUP: 'REMOVE_GROUP',
   ADD_GROUP: 'ADD_GROUP',
+  AUTHORIZE_DEVICES: 'AUTHORIZE_DEVICES',
   SAVE_SCHEDULE: 'SAVE_SCHEDULE',
   UPDATE_FILTERS: 'UPDATE_FILTERS',
   REMOVE_UPDATE: 'REMOVE_UPDATE',
@@ -81972,6 +81990,22 @@ var _alldevices = [{
   'tags': []
 }];
 
+var _unauthorized = [{
+  'id': 8,
+  'name': '33vayc91e6-7dec-11d0-a765-f81d4faebf5',
+  'model': "Raspberry Pi 3",
+  'arch': 'ARMv8 Cortex-A53',
+  'status': 'Unauthorized',
+  'software_version': 'Application 0.0.2'
+}, {
+  'id': 9,
+  'name': '4f98de-4apr-11d0-a765-f81d488y4fs',
+  'model': "Raspberry Pi 3",
+  'arch': 'ARMv8 Cortex-A53',
+  'status': 'Unauthorized',
+  'software_version': 'Application 0.0.2'
+}];
+
 _selectGroup(_groups[0].id);
 
 function _selectGroup(id) {
@@ -82125,29 +82159,37 @@ function _addGroup(group, idx) {
 function _getDeviceHealth() {
   var health = {};
   var down = collectWithAttr(_alldevices, 'status', 'Down');
-  var nogroup = collectWithAttr(_alldevices, 'groups', [1]);
   health.down = down.length;
   health.up = _alldevices.length - health.down;
-  health.nogroup = nogroup.length;
   health.total = _alldevices.length;
   return health;
 }
 
 function _getUnauthorized() {
-  var unauthorized = [{
-    'name': '33vayc91e6-7dec-11d0-a765-f81d4faebf5',
-    'model': "Raspberry Pi 3",
-    'arch': 'ARMv8 Cortex-A53',
-    'status': 'Unauthorized',
-    'software_version': 'Application 0.0.2'
-  }, {
-    'name': '4f98de-4apr-11d0-a765-f81d488y4fs',
-    'model': "Raspberry Pi 3",
-    'arch': 'ARMv8 Cortex-A53',
-    'status': 'Unauthorized',
-    'software_version': 'Application 0.0.2'
-  }];
-  return unauthorized;
+  return _unauthorized;
+}
+
+function _authorizeDevices(devices) {
+  // for each device, get name, make sure none in _alldevices with name, if ok then push to _alldevices
+
+  for (var i = 0; i < devices.length; i++) {
+    var idx = findWithAttr(_alldevices, 'name', devices[i].name);
+
+    if (idx === undefined) {
+      devices[i].status = "Up";
+      _alldevices.push(devices[i]);
+      _groups[0].devices.push(devices[i].id);
+
+      var unIdx = findWithAttr(_unauthorized, 'name', devices[i].name);
+      if (unIdx !== undefined) {
+        _unauthorized.splice(unIdx, 1);
+      }
+    } else {
+      // id already exists - error
+      console.log("device id already exists");
+    }
+  }
+  _selectGroup(_currentGroup.id);
 }
 
 function discoverDevices(array) {
@@ -82518,6 +82560,9 @@ var AppStore = assign(EventEmitter.prototype, {
         break;
       case AppConstants.ADD_GROUP:
         _addGroup(payload.action.group, payload.action.index);
+        break;
+      case AppConstants.AUTHORIZE_DEVICES:
+        _authorizeDevices(payload.action.devices);
         break;
       case AppConstants.UPLOAD_IMAGE:
         _uploadImage(payload.action.image);

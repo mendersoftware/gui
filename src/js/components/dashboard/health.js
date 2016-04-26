@@ -14,7 +14,7 @@ var Health = React.createClass({
   },
   render: function() {
     var unauthorized_str = '';
-    if (this.props.unauthorized) {
+    if (this.props.unauthorized.length) {
       if (this.props.unauthorized.length > 1) {
         unauthorized_str = 'are ' + this.props.unauthorized.length + ' devices';
       } else {
@@ -27,7 +27,7 @@ var Health = React.createClass({
           <h2>Devices <span className="dashboard-number">{this.props.health.total}</span></h2>
         </div>
           
-        <div className={this.props.unauthorized && !this.props.hideReview ? "authorize onboard" : "hidden" }>
+        <div className={this.props.unauthorized.length && !this.props.hideReview ? "authorize onboard" : "hidden" }>
           <div className="close" onClick={this._closeOnboard}/>
           <p>There {unauthorized_str} waiting authorization</p>
           <RaisedButton onClick={this._clickHandle.bind(null, {route:"devices"})} primary={true} label="Review details" />

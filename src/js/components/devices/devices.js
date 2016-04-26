@@ -64,8 +64,9 @@ var Devices = React.createClass({
           <Groups groups={this.state.groups} selectedGroup={this.state.selectedGroup} allDevices={this.state.allDevices} />
         </div>
         <div className="rightFluid padding-right">
-          
-          <Unauthorized unauthorized={this.state.unauthorized} />
+          <div className={this.state.unauthorized.length ? null : "hidden"}>
+            <Unauthorized unauthorized={this.state.unauthorized} />
+          </div>
           <DeviceList filters={this.state.filters} attributes={this.state.attributes} onFilterChange={this._updateFilters} images={this.state.images} selectedDevices={this.state.selectedDevices} groups={this.state.groups} devices={this.state.devices} selectedGroup={this.state.selectedGroup} />
         </div>
       </div>

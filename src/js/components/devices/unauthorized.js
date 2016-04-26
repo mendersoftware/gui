@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+var AppActions = require('../../actions/app-actions');
 
 // material ui
 var mui = require('material-ui');
@@ -34,6 +35,10 @@ var Authorized =  React.createClass({
     // sort table
     AppActions.sortTable("_unauthorized", col, direction);
   },
+  _authorizeDevices: function(devices) {
+    // array of device objects
+    AppActions.authorizeDevices(devices);
+  },
   render: function() {
     var styles = {
       sortIcon: {
@@ -51,7 +56,7 @@ var Authorized =  React.createClass({
           <TableRowColumn>{device.software_version}</TableRowColumn>
           <TableRowColumn>{device.status}</TableRowColumn>
           <TableRowColumn>
-            <IconButton style={{"paddingLeft": "0"}}>
+            <IconButton onClick={this._authorizeDevices.bind(null, [device])} style={{"paddingLeft": "0"}}>
               <FontIcon className="material-icons green">check_circle</FontIcon>
             </IconButton>
             <IconButton>

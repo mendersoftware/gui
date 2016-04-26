@@ -126,6 +126,25 @@ var _alldevices = [
   },
 ];
 
+var _unauthorized = [
+  {
+    'id':8,
+    'name': '33vayc91e6-7dec-11d0-a765-f81d4faebf5',
+    'model':"Raspberry Pi 3",
+    'arch': 'ARMv8 Cortex-A53',
+    'status': 'Unauthorized',
+    'software_version': 'Application 0.0.2',
+  },
+  {
+    'id':9,
+    'name': '4f98de-4apr-11d0-a765-f81d488y4fs',
+    'model':"Raspberry Pi 3",
+    'arch': 'ARMv8 Cortex-A53',
+    'status': 'Unauthorized',
+    'software_version': 'Application 0.0.2',
+  },
+];
+
 _selectGroup(_groups[0].id);
 
 function _selectGroup(id) {
@@ -282,32 +301,37 @@ function _addGroup(group, idx) {
 function _getDeviceHealth() {
   var health = {};
   var down = collectWithAttr(_alldevices, 'status', 'Down');
-  var nogroup = collectWithAttr(_alldevices, 'groups', [1]);
   health.down = down.length;
   health.up = _alldevices.length - health.down;
-  health.nogroup = nogroup.length;
   health.total = _alldevices.length;
   return health;
 }
 
 function _getUnauthorized() {
-  var unauthorized = [
-    {
-      'name': '33vayc91e6-7dec-11d0-a765-f81d4faebf5',
-      'model':"Raspberry Pi 3",
-      'arch': 'ARMv8 Cortex-A53',
-      'status': 'Unauthorized',
-      'software_version': 'Application 0.0.2',
-    },
-    {
-      'name': '4f98de-4apr-11d0-a765-f81d488y4fs',
-      'model':"Raspberry Pi 3",
-      'arch': 'ARMv8 Cortex-A53',
-      'status': 'Unauthorized',
-      'software_version': 'Application 0.0.2',
-    },
-  ];
-  return unauthorized;
+  return _unauthorized;
+}
+
+function _authorizeDevices(devices) {
+  // for each device, get name, make sure none in _alldevices with name, if ok then push to _alldevices
+
+  for (var i=0; i<devices.length; i++) {
+    var idx = findWithAttr(_alldevices, 'name', devices[i].name);
+
+    if (idx === undefined) {
+      devices[i].status = "Up";
+      _alldevices.push(devices[i]);
+      _groups[0].devices.push(devices[i].id);
+
+      var unIdx = findWithAttr(_unauthorized, 'name', devices[i].name);
+      if (unIdx !== undefined) {
+        _unauthorized.splice(unIdx, 1);
+      }
+    } else {
+      // id already exists - error
+      console.log("device id already exists");
+    }
+  }
+  _selectGroup(_currentGroup.id);
 }
 
 
@@ -695,6 +719,9 @@ var AppStore = assign(EventEmitter.prototype, {
         break;
       case AppConstants.ADD_GROUP:
         _addGroup(payload.action.group, payload.action.index);
+        break;
+      case AppConstants.AUTHORIZE_DEVICES:
+        _authorizeDevices(payload.action.devices);
         break;
       case AppConstants.UPLOAD_IMAGE:
         _uploadImage(payload.action.image);
