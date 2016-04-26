@@ -76316,6 +76316,14 @@ var AppActions = {
       column: column,
       direction: direction
     });
+  },
+
+  setLocalStorage: function setLocalStorage(key, value) {
+    AppDispatcher.handleViewAction({
+      actionType: AppConstants.SET_LOCAL_STORAGE,
+      key: key,
+      value: value
+    });
   }
 };
 
@@ -76496,7 +76504,7 @@ var App = _react2.default.createClass({
 
 module.exports = App;
 
-},{"../themes/mender-theme.js":790,"./header/header":769,"material-ui":257,"material-ui/lib/styles/getMuiTheme":292,"react":684}],756:[function(require,module,exports){
+},{"../themes/mender-theme.js":791,"./header/header":769,"material-ui":257,"material-ui/lib/styles/getMuiTheme":292,"react":684}],756:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -76589,6 +76597,7 @@ var _reactRouter = require('react-router');
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var AppStore = require('../../stores/app-store');
+var LocalStore = require('../../stores/local-store');
 var AppActions = require('../../actions/app-actions');
 var Health = require('./health');
 var Activity = require('./activity');
@@ -76601,7 +76610,8 @@ function getState() {
     health: AppStore.getHealth(),
     unauthorized: AppStore.getUnauthorized(),
     recent: AppStore.getRecentUpdates(new Date()),
-    activity: AppStore.getActivity()
+    activity: AppStore.getActivity(),
+    hideReview: localStorage.getItem("reviewDevices")
   };
 }
 
@@ -76623,6 +76633,9 @@ var Dashboard = _react2.default.createClass({
   },
   _onChange: function _onChange() {
     this.setState(getState());
+  },
+  _setStorage: function _setStorage(key, value) {
+    AppActions.setLocalStorage(key, value);
   },
   _handleClick: function _handleClick(params) {
     switch (params.route) {
@@ -76650,7 +76663,7 @@ var Dashboard = _react2.default.createClass({
         _react2.default.createElement(
           'div',
           { className: 'leftDashboard' },
-          _react2.default.createElement(Health, { clickHandle: this._handleClick, health: this.state.health, unauthorized: this.state.unauthorized }),
+          _react2.default.createElement(Health, { closeHandle: this._setStorage, hideReview: this.state.hideReview, clickHandle: this._handleClick, health: this.state.health, unauthorized: this.state.unauthorized }),
           _react2.default.createElement(Updates, { clickHandle: this._handleClick, progress: this.state.progress, recent: this.state.recent })
         ),
         _react2.default.createElement(Activity, { activity: this.state.activity })
@@ -76665,7 +76678,7 @@ Dashboard.contextTypes = {
 
 module.exports = Dashboard;
 
-},{"../../actions/app-actions":752,"../../stores/app-store":789,"./activity":756,"./health":758,"./updates":762,"react":684,"react-router":506}],758:[function(require,module,exports){
+},{"../../actions/app-actions":752,"../../stores/app-store":789,"../../stores/local-store":790,"./activity":756,"./health":758,"./updates":762,"react":684,"react-router":506}],758:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -76686,7 +76699,9 @@ var Health = _react2.default.createClass({
   _clickHandle: function _clickHandle(route) {
     this.props.clickHandle(route);
   },
-  _closeOnboard: function _closeOnboard() {},
+  _closeOnboard: function _closeOnboard() {
+    this.props.closeHandle("reviewDevices", true);
+  },
   render: function render() {
     var unauthorized_str = '';
     if (this.props.unauthorized) {
@@ -76715,7 +76730,7 @@ var Health = _react2.default.createClass({
       ),
       _react2.default.createElement(
         'div',
-        { className: this.props.unauthorized ? "authorize onboard" : "hidden" },
+        { className: this.props.unauthorized && !this.props.hideReview ? "authorize onboard" : "hidden" },
         _react2.default.createElement('div', { className: 'close', onClick: this._closeOnboard }),
         _react2.default.createElement(
           'p',
@@ -78799,7 +78814,7 @@ var Authorized = _react2.default.createClass({
           null,
           _react2.default.createElement(
             IconButton,
-            null,
+            { style: { "paddingLeft": "0" } },
             _react2.default.createElement(
               FontIcon,
               { className: 'material-icons green' },
@@ -78883,14 +78898,8 @@ var Authorized = _react2.default.createClass({
             ),
             _react2.default.createElement(
               TableHeaderColumn,
-              { className: 'columnHeader' },
-              _react2.default.createElement(
-                'a',
-                { className: 'authorize-all' },
-                'Authorize all (',
-                devices.length,
-                ')'
-              )
+              { className: 'columnHeader', tooltip: 'Authorize device?' },
+              'Authorize?'
             )
           )
         ),
@@ -81793,7 +81802,8 @@ module.exports = {
   RECEIVE_IMAGES: 'RECEIVE_IMAGES',
   UPLOAD_IMAGE: 'UPLOAD_IMAGE',
   RECEIVE_UPDATES: 'RECEIVE_UPDATES',
-  SINGLE_UPDATE: 'SINGLE_UPDATE'
+  SINGLE_UPDATE: 'SINGLE_UPDATE',
+  SET_LOCAL_STORAGE: 'SET_LOCAL_STORAGE'
 };
 
 },{}],787:[function(require,module,exports){
@@ -82551,6 +82561,53 @@ var AppStore = assign(EventEmitter.prototype, {
 module.exports = AppStore;
 
 },{"../constants/app-constants":786,"../dispatchers/app-dispatcher":787,"events":92,"react/lib/Object.assign":544}],790:[function(require,module,exports){
+'use strict';
+
+/*
+* Store for localStorage
+*
+*/
+var AppDispatcher = require('../dispatchers/app-dispatcher');
+var AppConstants = require('../constants/app-constants');
+var assign = require('react/lib/Object.assign');
+var EventEmitter = require('events').EventEmitter; // from device
+
+var CHANGE_EVENT = "change";
+
+function _setStorage(key, value) {
+  localStorage.setItem(key, value);
+}
+
+var LocalStore = assign(EventEmitter.prototype, {
+  emitChange: function emitChange() {
+    this.emit(CHANGE_EVENT);
+  },
+
+  changeListener: function changeListener(callback) {
+    this.on(CHANGE_EVENT, callback);
+  },
+
+  removeChangeListener: function removeChangeListener(callback) {
+    this.removeListener(CHANGE_EVENT, callback);
+  },
+
+  dispatcherIndex: AppDispatcher.register(function (payload) {
+    var action = payload.action;
+    switch (action.actionType) {
+      case AppConstants.SET_LOCAL_STORAGE:
+        _setStorage(payload.action.key, payload.action.value);
+        break;
+    }
+
+    LocalStore.emitChange();
+    return true;
+  })
+
+});
+
+module.exports = LocalStore;
+
+},{"../constants/app-constants":786,"../dispatchers/app-dispatcher":787,"events":92,"react/lib/Object.assign":544}],791:[function(require,module,exports){
 'use strict';
 
 var _colorManipulator = require('material-ui/lib/utils/color-manipulator');

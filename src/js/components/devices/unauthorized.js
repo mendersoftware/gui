@@ -51,7 +51,7 @@ var Authorized =  React.createClass({
           <TableRowColumn>{device.software_version}</TableRowColumn>
           <TableRowColumn>{device.status}</TableRowColumn>
           <TableRowColumn>
-            <IconButton>
+            <IconButton style={{"paddingLeft": "0"}}>
               <FontIcon className="material-icons green">check_circle</FontIcon>
             </IconButton>
             <IconButton>
@@ -77,7 +77,7 @@ var Authorized =  React.createClass({
                 <TableHeaderColumn className="columnHeader" tooltip="Device type">Device type<FontIcon ref="model" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "model")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
                 <TableHeaderColumn className="columnHeader" tooltip="Current software">Current software<FontIcon ref="software_version" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "software_version")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
                 <TableHeaderColumn className="columnHeader" tooltip="Status">Status<FontIcon ref="status" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "status")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
-                <TableHeaderColumn className="columnHeader"><a className="authorize-all">Authorize all ({devices.length})</a></TableHeaderColumn>
+                <TableHeaderColumn className="columnHeader" tooltip="Authorize device?">Authorize?</TableHeaderColumn>
               </TableRow>
             </TableHeader>
             <TableBody

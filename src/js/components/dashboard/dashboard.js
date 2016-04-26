@@ -1,5 +1,6 @@
 import React from 'react';
 var AppStore = require('../../stores/app-store');
+var LocalStore = require('../../stores/local-store');
 var AppActions = require('../../actions/app-actions');
 var Health = require('./health');
 var Activity = require('./activity');
@@ -13,6 +14,7 @@ function getState() {
     unauthorized: AppStore.getUnauthorized(),
     recent: AppStore.getRecentUpdates(new Date()),
     activity: AppStore.getActivity(),
+    hideReview: localStorage.getItem("reviewDevices"),
   }
 }
 
@@ -32,6 +34,9 @@ var Dashboard = React.createClass({
   },
   _onChange: function() {
     this.setState(getState());
+  },
+  _setStorage: function(key, value) {
+    AppActions.setLocalStorage(key, value);
   },
   _handleClick: function(params) {
     switch(params.route){
@@ -54,7 +59,7 @@ var Dashboard = React.createClass({
       <div className="contentContainer">
         <div>
           <div className="leftDashboard">
-            <Health clickHandle={this._handleClick} health={this.state.health} unauthorized={this.state.unauthorized} />
+            <Health closeHandle={this._setStorage} hideReview={this.state.hideReview} clickHandle={this._handleClick} health={this.state.health} unauthorized={this.state.unauthorized} />
             <Updates clickHandle={this._handleClick} progress={this.state.progress} recent={this.state.recent} />
           </div>
           <Activity activity={this.state.activity} />
