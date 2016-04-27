@@ -424,7 +424,7 @@ var DeviceList = React.createClass({
             </TableBody>
           </Table>
           <p className={devices.length ? 'hidden' : 'italic muted margin-left'}>
-            No devices found. Add devices to this group by making a selection within 'All devices' and choosing 'Add selected devices to a group'.
+            No devices found
           </p>
         </div>
 

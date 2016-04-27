@@ -272,19 +272,19 @@ a, span.link {
   border-color: @placeholder;
   border-width: 1px;
   text-align: center;
-  font-size: 16px;
   position: relative;
 
   p {
     margin-top: 0;
+    font-size: 1.25em;
   }
 
   h3 {
     font-family: Andale Mono;
     font-weight: lighter;
     color: #3F3F3F;
-    font-size: 1.1em;
     margin-top: 10px;
+    font-size: 1.25em;
   }
 
   .close {
@@ -295,6 +295,12 @@ a, span.link {
     height:20px;
     background-image: url('../assets/img/close.png');
     cursor: pointer;
+  }
+
+  a.float-right {
+    position: relative;
+    bottom: 10px;
+    font-size: 1em;
   }
 
 }
@@ -578,8 +584,8 @@ tr.expand.devices {
 
 .top-right-button {
   position: absolute;
-  top: 30px;
-  right: 45px;
+  top: 0;
+  right: 0;
 }
 
 

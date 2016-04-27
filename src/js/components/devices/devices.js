@@ -6,6 +6,8 @@ var Groups = require('./groups');
 var DeviceList = require('./devicelist');
 var Unauthorized = require('./unauthorized');
 
+import { Router, Route, Link } from 'react-router';
+
 function getState() {
   return {
     groups: AppStore.getGroups(),
@@ -17,6 +19,7 @@ function getState() {
     attributes: AppStore.getAttributes(),
     images: AppStore.getSoftwareRepo(),
     unauthorized: AppStore.getUnauthorized(),
+    hideTODO: localStorage.getItem("devicesNextStep"),
   }
 }
 
@@ -50,7 +53,9 @@ var Devices = React.createClass({
     //AppActions.getAuthorized();
     //AppActions.getDevices();
   },
-
+  _closeOnboard: function() {
+    AppActions.setLocalStorage("devicesNextStep", true);
+  },
   _onChange: function() {
     this.setState(getState());
   },
@@ -64,6 +69,13 @@ var Devices = React.createClass({
           <Groups groups={this.state.groups} selectedGroup={this.state.selectedGroup} allDevices={this.state.allDevices} />
         </div>
         <div className="rightFluid padding-right">
+          <div className={this.state.hideTODO || this.state.unauthorized.length ? "hidden" : null}>
+            <div className="margin-top margin-bottom onboard">
+              <div className="close" onClick={this._closeOnboard}/>
+              <h3>//TODO Upload a new software image</h3>
+              <Link to="/software" className="float-right">Go to software</Link>
+            </div>
+          </div>
           <div className={this.state.unauthorized.length ? null : "hidden"}>
             <Unauthorized unauthorized={this.state.unauthorized} />
           </div>

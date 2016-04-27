@@ -211,18 +211,18 @@ span.link:hover {
   border-color: #e7e7e7;
   border-width: 1px;
   text-align: center;
-  font-size: 16px;
   position: relative;
 }
 .onboard p {
   margin-top: 0;
+  font-size: 1.25em;
 }
 .onboard h3 {
   font-family: Andale Mono;
   font-weight: lighter;
   color: #3F3F3F;
-  font-size: 1.1em;
   margin-top: 10px;
+  font-size: 1.25em;
 }
 .onboard .close {
   position: absolute;
@@ -232,6 +232,11 @@ span.link:hover {
   height: 20px;
   background-image: url('../assets/img/close.png');
   cursor: pointer;
+}
+.onboard a.float-right {
+  position: relative;
+  bottom: 10px;
+  font-size: 1em;
 }
 .material-icons.green {
   background: none;
@@ -494,8 +499,8 @@ tr.expand.devices td div.expanded {
 }
 .top-right-button {
   position: absolute;
-  top: 30px;
-  right: 45px;
+  top: 0;
+  right: 0;
 }
 .tagContainer {
   margin-top: 20px;

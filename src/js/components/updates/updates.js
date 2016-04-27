@@ -45,7 +45,8 @@ function getState() {
     scheduleForm: true,
     contentClass: "largeDialog", 
     invalid: true,
-    dialog: false
+    dialog: false,
+    hideTODO: localStorage.getItem("deployTODO"),
   }
 }
 
@@ -132,6 +133,7 @@ var Updates = React.createClass({
     }
     console.log(newUpdate.devices);
     AppActions.createUpdate(newUpdate, this.state.disabled);
+    AppActions.setLocalStorage("deployTODO", true);
     this.dialogDismiss('dialog');
   },
   _updateParams: function(val, attr) {
@@ -183,6 +185,9 @@ var Updates = React.createClass({
   _scheduleRemove: function(id) {
     AppActions.removeUpdate(id);
   },
+  _closeOnboard: function() {
+    AppActions.setLocalStorage("deployTODO", true);
+  },
   render: function() {
     var scheduleActions =  [
       <div style={{marginRight:"10", display:"inline-block"}}>
@@ -214,7 +219,14 @@ var Updates = React.createClass({
     }
     return (
       <div className="contentContainer">
-        <div>
+        <div className={this.state.hideTODO ? "hidden" : null}>
+          <div className="margin-bottom onboard">
+            <div className="close" onClick={this._closeOnboard}/>
+            <h3>//TODO deploy an update to all devices</h3>
+          </div>
+        </div>
+
+        <div className="relative">
           <div className="top-right-button">
             <ScheduleButton secondary={true} openDialog={this.dialogOpen} />
           </div>

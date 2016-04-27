@@ -104,6 +104,7 @@ var Repository = React.createClass({
         });
       });
     });
+    this.props.setStorage("uploaded04", true);
     this.dialogDismiss('upload');
   },
   _editImageData: function (image) {

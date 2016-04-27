@@ -16,7 +16,7 @@ var FontIcon = mui.FontIcon;
 var Authorized =  React.createClass({
   getInitialState: function() {
     return {
-       sortCol: null,
+       sortCol: "name",
        sortDown: true,
     }
   },

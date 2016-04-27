@@ -20,7 +20,7 @@ var _attributes = {
 }
 
 /* TEMP LOCAL GROUPS */
-var _groups = [
+var _groups1 = [
   {
     id: 1,
     name: "All devices",
@@ -48,12 +48,21 @@ var _groups = [
   },
 ]
 
+var _groups = [
+  {
+    id: 1,
+    name: "All devices",
+    devices: [],
+    type: "public"
+  }
+]
+
 
 /* Temp local devices */
 
-var _alldevices1 = [];
+var _alldevices = [];
 
-var _alldevices = [
+var _alldevices1 = [
   {
     'id': 1,
     'name': '00a0c91e6-7dec-11d0-a765-f81d4faebf1',
@@ -134,6 +143,8 @@ var _unauthorized = [
     'arch': 'ARMv8 Cortex-A53',
     'status': 'Unauthorized',
     'software_version': 'Application 0.0.2',
+    'groups': [],
+    'tags': []
   },
   {
     'id':9,
@@ -142,6 +153,8 @@ var _unauthorized = [
     'arch': 'ARMv8 Cortex-A53',
     'status': 'Unauthorized',
     'software_version': 'Application 0.0.2',
+    'groups': [],
+    'tags': []
   },
 ];
 
@@ -318,6 +331,7 @@ function _authorizeDevices(devices) {
     var idx = findWithAttr(_alldevices, 'name', devices[i].name);
 
     if (idx === undefined) {
+      devices[i].groups.push(1);
       devices[i].status = "Up";
       _alldevices.push(devices[i]);
       _groups[0].devices.push(devices[i].id);
@@ -471,6 +485,9 @@ function _sortTable(array, column, direction) {
       break;
     case "_currentDevices":
       _currentDevices.sort(customSort(direction, column));
+      break;
+    case "_unauthorized":
+      _unauthorized.sort(customSort(direction, column));
       break;
   }
 }

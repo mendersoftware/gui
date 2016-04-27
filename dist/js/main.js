@@ -77781,7 +77781,7 @@ var DeviceList = _react2.default.createClass((_React$createClass = {
       _react2.default.createElement(
         'p',
         { className: devices.length ? 'hidden' : 'italic muted margin-left' },
-        'No devices found. Add devices to this group by making a selection within \'All devices\' and choosing \'Add selected devices to a group\'.'
+        'No devices found'
       )
     ),
     _react2.default.createElement(
@@ -77898,6 +77898,8 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
+var _reactRouter = require('react-router');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var AppStore = require('../../stores/app-store');
@@ -77917,7 +77919,8 @@ function getState() {
     filters: AppStore.getFilters(),
     attributes: AppStore.getAttributes(),
     images: AppStore.getSoftwareRepo(),
-    unauthorized: AppStore.getUnauthorized()
+    unauthorized: AppStore.getUnauthorized(),
+    hideTODO: localStorage.getItem("devicesNextStep")
   };
 }
 
@@ -77953,7 +77956,9 @@ var Devices = _react2.default.createClass({
     //AppActions.getAuthorized();
     //AppActions.getDevices();
   },
-
+  _closeOnboard: function _closeOnboard() {
+    AppActions.setLocalStorage("devicesNextStep", true);
+  },
   _onChange: function _onChange() {
     this.setState(getState());
   },
@@ -77974,6 +77979,25 @@ var Devices = _react2.default.createClass({
         { className: 'rightFluid padding-right' },
         _react2.default.createElement(
           'div',
+          { className: this.state.hideTODO || this.state.unauthorized.length ? "hidden" : null },
+          _react2.default.createElement(
+            'div',
+            { className: 'margin-top margin-bottom onboard' },
+            _react2.default.createElement('div', { className: 'close', onClick: this._closeOnboard }),
+            _react2.default.createElement(
+              'h3',
+              null,
+              '//TODO Upload a new software image'
+            ),
+            _react2.default.createElement(
+              _reactRouter.Link,
+              { to: '/software', className: 'float-right' },
+              'Go to software'
+            )
+          )
+        ),
+        _react2.default.createElement(
+          'div',
           { className: this.state.unauthorized.length ? null : "hidden" },
           _react2.default.createElement(Unauthorized, { unauthorized: this.state.unauthorized })
         ),
@@ -77985,7 +78009,7 @@ var Devices = _react2.default.createClass({
 
 module.exports = Devices;
 
-},{"../../actions/app-actions":752,"../../stores/app-store":789,"./devicelist":763,"./groups":766,"./unauthorized":768,"react":684}],765:[function(require,module,exports){
+},{"../../actions/app-actions":752,"../../stores/app-store":789,"./devicelist":763,"./groups":766,"./unauthorized":768,"react":684,"react-router":506}],765:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -78770,7 +78794,7 @@ var Authorized = _react2.default.createClass({
 
   getInitialState: function getInitialState() {
     return {
-      sortCol: null,
+      sortCol: "name",
       sortDown: true
     };
   },
@@ -79219,6 +79243,7 @@ var Repository = _react2.default.createClass({
         });
       });
     });
+    this.props.setStorage("uploaded04", true);
     this.dialogDismiss('upload');
   },
   _editImageData: function _editImageData(image) {
@@ -79929,13 +79954,17 @@ var _react2 = _interopRequireDefault(_react);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var AppStore = require('../../stores/app-store');
+var LocalStore = require('../../stores/local-store');
 var AppActions = require('../../actions/app-actions');
 var Repository = require('./repository.js');
 
 function getState() {
   return {
-    repo: AppStore.getSoftwareRepo(),
-    groups: AppStore.getGroups()
+    software: AppStore.getSoftwareRepo(),
+    groups: AppStore.getGroups(),
+    uploadTODO: localStorage.getItem("uploaded04"),
+    updateTODO: localStorage.getItem("updateTODO"),
+    selected: null
   };
 }
 
@@ -79943,12 +79972,7 @@ var Software = _react2.default.createClass({
   displayName: 'Software',
 
   getInitialState: function getInitialState() {
-    return {
-      repo: [],
-      groups: [],
-      software: [],
-      selected: null
-    };
+    return getState();
   },
   componentWillMount: function componentWillMount() {
     AppStore.changeListener(this._onChange);
@@ -79959,9 +79983,11 @@ var Software = _react2.default.createClass({
   componentWillUnmount: function componentWillUnmount() {
     AppStore.removeChangeListener(this._onChange);
   },
+  _setStorage: function _setStorage(key, value) {
+    AppActions.setLocalStorage(key, value);
+  },
   _onChange: function _onChange() {
-    this.setState({ groups: AppStore.getGroups() }, function () {});
-    this.setState({ software: AppStore.getSoftwareRepo() }, function () {});
+    this.setState(getState());
 
     if (this.props.params) {
       if (this.props.params.softwareVersion) {
@@ -79972,17 +79998,36 @@ var Software = _react2.default.createClass({
     }
   },
   render: function render() {
+    var message = this.state.uploadTODO ? "//TODO Deploy newest image to all devices" : "//TODO Upload Version 0.4 from /folder1/folder2/menderQemuv04.tar.gz";
     return _react2.default.createElement(
       'div',
       { className: 'contentContainer' },
-      _react2.default.createElement(Repository, { selected: this.state.selected, software: this.state.software, groups: this.state.groups })
+      _react2.default.createElement(
+        'div',
+        { className: this.state.updateTODO ? "hidden" : null },
+        _react2.default.createElement(
+          'div',
+          { className: 'margin-bottom onboard' },
+          _react2.default.createElement('div', { className: 'close', onClick: this._setStorage.bind(null, "updateTODO", true) }),
+          _react2.default.createElement(
+            'h3',
+            null,
+            message
+          )
+        )
+      ),
+      _react2.default.createElement(
+        'div',
+        { className: 'relative overflow-hidden' },
+        _react2.default.createElement(Repository, { setStorage: this._setStorage, selected: this.state.selected, software: this.state.software, groups: this.state.groups })
+      )
     );
   }
 });
 
 module.exports = Software;
 
-},{"../../actions/app-actions":752,"../../stores/app-store":789,"./repository.js":770,"react":684}],773:[function(require,module,exports){
+},{"../../actions/app-actions":752,"../../stores/app-store":789,"../../stores/local-store":790,"./repository.js":770,"react":684}],773:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -81544,7 +81589,8 @@ function getState() {
     scheduleForm: true,
     contentClass: "largeDialog",
     invalid: true,
-    dialog: false
+    dialog: false,
+    hideTODO: localStorage.getItem("deployTODO")
   };
 }
 
@@ -81631,6 +81677,7 @@ var Updates = _react2.default.createClass({
     };
     console.log(newUpdate.devices);
     AppActions.createUpdate(newUpdate, this.state.disabled);
+    AppActions.setLocalStorage("deployTODO", true);
     this.dialogDismiss('dialog');
   },
   _updateParams: function _updateParams(val, attr) {
@@ -81682,6 +81729,9 @@ var Updates = _react2.default.createClass({
   _scheduleRemove: function _scheduleRemove(id) {
     AppActions.removeUpdate(id);
   },
+  _closeOnboard: function _closeOnboard() {
+    AppActions.setLocalStorage("deployTODO", true);
+  },
   render: function render() {
     var scheduleActions = [_react2.default.createElement(
       'div',
@@ -81709,7 +81759,21 @@ var Updates = _react2.default.createClass({
       { className: 'contentContainer' },
       _react2.default.createElement(
         'div',
-        null,
+        { className: this.state.hideTODO ? "hidden" : null },
+        _react2.default.createElement(
+          'div',
+          { className: 'margin-bottom onboard' },
+          _react2.default.createElement('div', { className: 'close', onClick: this._closeOnboard }),
+          _react2.default.createElement(
+            'h3',
+            null,
+            '//TODO deploy an update to all devices'
+          )
+        )
+      ),
+      _react2.default.createElement(
+        'div',
+        { className: 'relative' },
         _react2.default.createElement(
           'div',
           { className: 'top-right-button' },
@@ -81898,7 +81962,7 @@ var _attributes = {
 };
 
 /* TEMP LOCAL GROUPS */
-var _groups = [{
+var _groups1 = [{
   id: 1,
   name: "All devices",
   devices: [1, 2, 3, 4, 5, 6, 7],
@@ -81921,11 +81985,18 @@ var _groups = [{
   type: "public"
 }];
 
+var _groups = [{
+  id: 1,
+  name: "All devices",
+  devices: [],
+  type: "public"
+}];
+
 /* Temp local devices */
 
-var _alldevices1 = [];
+var _alldevices = [];
 
-var _alldevices = [{
+var _alldevices1 = [{
   'id': 1,
   'name': '00a0c91e6-7dec-11d0-a765-f81d4faebf1',
   'model': "Raspberry Pi 3",
@@ -81996,14 +82067,18 @@ var _unauthorized = [{
   'model': "Raspberry Pi 3",
   'arch': 'ARMv8 Cortex-A53',
   'status': 'Unauthorized',
-  'software_version': 'Application 0.0.2'
+  'software_version': 'Application 0.0.2',
+  'groups': [],
+  'tags': []
 }, {
   'id': 9,
   'name': '4f98de-4apr-11d0-a765-f81d488y4fs',
   'model': "Raspberry Pi 3",
   'arch': 'ARMv8 Cortex-A53',
   'status': 'Unauthorized',
-  'software_version': 'Application 0.0.2'
+  'software_version': 'Application 0.0.2',
+  'groups': [],
+  'tags': []
 }];
 
 _selectGroup(_groups[0].id);
@@ -82176,6 +82251,7 @@ function _authorizeDevices(devices) {
     var idx = findWithAttr(_alldevices, 'name', devices[i].name);
 
     if (idx === undefined) {
+      devices[i].groups.push(1);
       devices[i].status = "Up";
       _alldevices.push(devices[i]);
       _groups[0].devices.push(devices[i].id);
@@ -82323,6 +82399,9 @@ function _sortTable(array, column, direction) {
       break;
     case "_currentDevices":
       _currentDevices.sort(customSort(direction, column));
+      break;
+    case "_unauthorized":
+      _unauthorized.sort(customSort(direction, column));
       break;
   }
 }
