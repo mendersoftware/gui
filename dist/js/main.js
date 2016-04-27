@@ -77240,7 +77240,17 @@ var Updates = _react2.default.createClass({
       ),
       _react2.default.createElement(
         'div',
-        null,
+        { className: this.props.progress.length || this.props.recent.length ? "hidden" : "dashboard-placeholder" },
+        _react2.default.createElement(
+          'p',
+          null,
+          'Monitor ongoing and recent updates from here'
+        ),
+        _react2.default.createElement('img', { src: '/assets/img/updates.png', alt: 'updates' })
+      ),
+      _react2.default.createElement(
+        'div',
+        { className: this.props.progress.length || this.props.recent.length ? null : "hidden" },
         _react2.default.createElement(
           'div',
           { className: 'flexbox' },
@@ -77779,9 +77789,13 @@ var DeviceList = _react2.default.createClass((_React$createClass = {
         )
       ),
       _react2.default.createElement(
-        'p',
-        { className: devices.length ? 'hidden' : 'italic muted margin-left' },
-        'No devices found'
+        'div',
+        { className: devices.length ? 'hidden' : 'dashboard-placeholder' },
+        _react2.default.createElement(
+          'p',
+          null,
+          'No devices found'
+        )
       )
     ),
     _react2.default.createElement(
@@ -80531,7 +80545,7 @@ var Recent = _react2.default.createClass({
         _react2.default.createElement(
           'h3',
           null,
-          'Updates in progress'
+          'In progress'
         ),
         _react2.default.createElement(
           Table,
@@ -80590,12 +80604,13 @@ var Recent = _react2.default.createClass({
         ),
         _react2.default.createElement(
           'div',
-          { className: progressMap.length ? 'hidden' : null },
+          { className: progressMap.length ? 'hidden' : "dashboard-placeholder" },
           _react2.default.createElement(
             'p',
-            { className: 'italic' },
-            'No updates in progress'
-          )
+            null,
+            'Ongoing updates will appear here. Deploy an update to get started'
+          ),
+          _react2.default.createElement('img', { src: '/assets/img/updates.png', alt: 'In progress' })
         )
       ),
       _react2.default.createElement(
@@ -80604,7 +80619,7 @@ var Recent = _react2.default.createClass({
         _react2.default.createElement(
           'h3',
           null,
-          'Recent updates'
+          'Recent'
         ),
         _react2.default.createElement(
           Table,
@@ -80663,12 +80678,18 @@ var Recent = _react2.default.createClass({
         ),
         _react2.default.createElement(
           'div',
-          { className: recentMap.length ? 'hidden' : null },
+          { className: recentMap.length ? 'hidden' : "dashboard-placeholder" },
           _react2.default.createElement(
             'p',
-            { className: 'italic' },
-            'No recent updates'
-          )
+            null,
+            'Completed updates will appear here.'
+          ),
+          _react2.default.createElement(
+            'p',
+            null,
+            'You can review logs and reports for each device group you\'ve deployed to'
+          ),
+          _react2.default.createElement('img', { src: '/assets/img/history.png', alt: 'Recent' })
         )
       )
     );

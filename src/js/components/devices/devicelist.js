@@ -423,9 +423,11 @@ var DeviceList = React.createClass({
               {devices}
             </TableBody>
           </Table>
-          <p className={devices.length ? 'hidden' : 'italic muted margin-left'}>
-            No devices found
-          </p>
+          <div className={devices.length ? 'hidden' : 'dashboard-placeholder'}>
+            <p>
+              No devices found
+            </p>
+          </div>
         </div>
 
         <div className={this.props.selectedDevices.length ? "fixedButtons" : "hidden"}>

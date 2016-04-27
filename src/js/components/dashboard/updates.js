@@ -26,7 +26,14 @@ var Updates = React.createClass({
         <div className="dashboard-header">
           <h2>Updates</h2>
         </div>
-        <div>
+        
+       
+        <div className={this.props.progress.length || this.props.recent.length ? "hidden" : "dashboard-placeholder" }>
+          <p>Monitor ongoing and recent updates from here</p>
+          <img src="/assets/img/updates.png" alt="updates" />
+        </div>
+
+        <div className={this.props.progress.length || this.props.recent.length ? null : "hidden" }>
           <div className="flexbox">
             <Progress clickHandle={this._clickHandle} updates={this.props.progress} />
             <Recent clickHandle={this._clickHandle} updates={this.props.recent} />

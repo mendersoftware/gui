@@ -82,7 +82,7 @@ var Recent = React.createClass({
     return (
       <div>
         <div style={{marginBottom:"60"}}> 
-          <h3>Updates in progress</h3>
+          <h3>In progress</h3>
           <Table
             onCellClick={this._progressCellClick}
             className={progressMap.length ? null : 'hidden'}
@@ -106,13 +106,14 @@ var Recent = React.createClass({
               {progressMap}
             </TableBody>
           </Table>
-          <div className={progressMap.length ? 'hidden' : null}>
-            <p className="italic">No updates in progress</p>
+          <div className={progressMap.length ? 'hidden' : "dashboard-placeholder"}>
+            <p>Ongoing updates will appear here. Deploy an update to get started</p>
+            <img src="/assets/img/updates.png" alt="In progress" />
           </div>
         </div>
 
         <div style={{marginTop:"60"}}>
-          <h3>Recent updates</h3>
+          <h3>Recent</h3>
           <Table
             onCellClick={this._recentCellClick}
             className={recentMap.length ? null : 'hidden'}
@@ -137,8 +138,10 @@ var Recent = React.createClass({
             </TableBody>
           </Table>
 
-          <div className={recentMap.length ? 'hidden' : null}>
-            <p className="italic">No recent updates</p>
+          <div className={recentMap.length ? 'hidden' : "dashboard-placeholder"}>
+            <p>Completed updates will appear here.</p>
+            <p>You can review logs and reports for each device group you've deployed to</p>
+            <img src="/assets/img/history.png" alt="Recent" />
           </div>
         </div>
 
