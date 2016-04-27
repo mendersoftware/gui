@@ -77991,7 +77991,7 @@ var Devices = _react2.default.createClass({
             ),
             _react2.default.createElement(
               _reactRouter.Link,
-              { to: '/software', className: 'float-right' },
+              { to: '/software', className: 'float-right margin-right' },
               'Go to software'
             )
           )
@@ -79951,6 +79951,8 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
+var _reactRouter = require('react-router');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var AppStore = require('../../stores/app-store');
@@ -79998,7 +80000,7 @@ var Software = _react2.default.createClass({
     }
   },
   render: function render() {
-    var message = this.state.uploadTODO ? "//TODO Deploy newest image to all devices" : "//TODO Upload Version 0.4 from /folder1/folder2/menderQemuv04.tar.gz";
+    var message = this.state.uploadTODO ? "//TODO Deploy the new image to all devices" : "//TODO Upload Version 0.4 from /folder1/folder2/menderQemuv04.tar.gz";
     return _react2.default.createElement(
       'div',
       { className: 'contentContainer' },
@@ -80013,6 +80015,11 @@ var Software = _react2.default.createClass({
             'h3',
             null,
             message
+          ),
+          _react2.default.createElement(
+            _reactRouter.Link,
+            { className: this.state.uploadTODO ? "float-right margin-right" : "hidden", to: '/updates' },
+            'Go to updates'
           )
         )
       ),
@@ -80027,7 +80034,7 @@ var Software = _react2.default.createClass({
 
 module.exports = Software;
 
-},{"../../actions/app-actions":752,"../../stores/app-store":789,"../../stores/local-store":790,"./repository.js":770,"react":684}],773:[function(require,module,exports){
+},{"../../actions/app-actions":752,"../../stores/app-store":789,"../../stores/local-store":790,"./repository.js":770,"react":684,"react-router":506}],773:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');

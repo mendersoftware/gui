@@ -73,7 +73,7 @@ var Devices = React.createClass({
             <div className="margin-top margin-bottom onboard">
               <div className="close" onClick={this._closeOnboard}/>
               <h3>//TODO Upload a new software image</h3>
-              <Link to="/software" className="float-right">Go to software</Link>
+              <Link to="/software" className="float-right margin-right">Go to software</Link>
             </div>
           </div>
           <div className={this.state.unauthorized.length ? null : "hidden"}>

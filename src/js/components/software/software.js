@@ -4,6 +4,8 @@ var LocalStore = require('../../stores/local-store');
 var AppActions = require('../../actions/app-actions');
 var Repository = require('./repository.js');
 
+import { Router, Route, Link } from 'react-router';
+
 function getState() {
   return {
     software: AppStore.getSoftwareRepo(),
@@ -42,13 +44,14 @@ var Software = React.createClass({
     }
   },
   render: function() {
-    var message = this.state.uploadTODO ? "//TODO Deploy newest image to all devices" : "//TODO Upload Version 0.4 from /folder1/folder2/menderQemuv04.tar.gz" ;
+    var message = this.state.uploadTODO ? "//TODO Deploy the new image to all devices" : "//TODO Upload Version 0.4 from /folder1/folder2/menderQemuv04.tar.gz" ;
     return (
       <div className="contentContainer">
         <div className={this.state.updateTODO ? "hidden" : null}>
           <div className="margin-bottom onboard">
             <div className="close" onClick={this._setStorage.bind(null, "updateTODO", true)}/>
             <h3>{message}</h3>
+            <Link className={this.state.uploadTODO ? "float-right margin-right" : "hidden"} to="/updates">Go to updates</Link>
           </div>
         </div>
         <div className="relative overflow-hidden">
