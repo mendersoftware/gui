@@ -108,7 +108,7 @@ var Recent = React.createClass({
           </Table>
           <div className={progressMap.length ? 'hidden' : "dashboard-placeholder"}>
             <p>Ongoing updates will appear here. Deploy an update to get started</p>
-            <img src="/assets/img/updates.png" alt="In progress" />
+            <img src="assets/img/updates.png" alt="In progress" />
           </div>
         </div>
 
@@ -141,7 +141,7 @@ var Recent = React.createClass({
           <div className={recentMap.length ? 'hidden' : "dashboard-placeholder"}>
             <p>Completed updates will appear here.</p>
             <p>You can review logs and reports for each device group you've deployed to</p>
-            <img src="/assets/img/history.png" alt="Recent" />
+            <img src="assets/img/history.png" alt="Recent" />
           </div>
         </div>
 

@@ -76797,7 +76797,7 @@ var Health = _react2.default.createClass({
           null,
           'No connected devices yet'
         ),
-        _react2.default.createElement('img', { src: '/assets/img/connected.png', alt: 'connected' })
+        _react2.default.createElement('img', { src: 'assets/img/connected.png', alt: 'connected' })
       )
     );
   }
@@ -77246,7 +77246,7 @@ var Updates = _react2.default.createClass({
           null,
           'Monitor ongoing and recent updates from here'
         ),
-        _react2.default.createElement('img', { src: '/assets/img/updates.png', alt: 'updates' })
+        _react2.default.createElement('img', { src: 'assets/img/updates.png', alt: 'updates' })
       ),
       _react2.default.createElement(
         'div',
@@ -80610,7 +80610,7 @@ var Recent = _react2.default.createClass({
             null,
             'Ongoing updates will appear here. Deploy an update to get started'
           ),
-          _react2.default.createElement('img', { src: '/assets/img/updates.png', alt: 'In progress' })
+          _react2.default.createElement('img', { src: 'assets/img/updates.png', alt: 'In progress' })
         )
       ),
       _react2.default.createElement(
@@ -80689,7 +80689,7 @@ var Recent = _react2.default.createClass({
             null,
             'You can review logs and reports for each device group you\'ve deployed to'
           ),
-          _react2.default.createElement('img', { src: '/assets/img/history.png', alt: 'Recent' })
+          _react2.default.createElement('img', { src: 'assets/img/history.png', alt: 'Recent' })
         )
       )
     );

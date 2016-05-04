@@ -30,7 +30,7 @@ var Updates = React.createClass({
        
         <div className={this.props.progress.length || this.props.recent.length ? "hidden" : "dashboard-placeholder" }>
           <p>Monitor ongoing and recent updates from here</p>
-          <img src="/assets/img/updates.png" alt="updates" />
+          <img src="assets/img/updates.png" alt="updates" />
         </div>
 
         <div className={this.props.progress.length || this.props.recent.length ? null : "hidden" }>

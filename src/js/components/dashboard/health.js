@@ -49,7 +49,7 @@ var Health = React.createClass({
 
         <div className={this.props.health.total ? "hidden" : "dashboard-placeholder" }>
           <p>No connected devices yet</p>
-          <img src="/assets/img/connected.png" alt="connected" />
+          <img src="assets/img/connected.png" alt="connected" />
         </div>
       </div>
     );
