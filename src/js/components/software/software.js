@@ -51,7 +51,7 @@ var Software = React.createClass({
           <div className="margin-bottom onboard">
             <div className="close" onClick={this._setStorage.bind(null, "updateTODO", true)}/>
             <h3>{message}</h3>
-            <Link className={this.state.uploadTODO ? "float-right margin-right" : "hidden"} to="/updates">Go to updates</Link>
+            <Link className={this.state.uploadTODO ? "float-right margin-right" : "hidden"} to="/deployments">Go to deployments</Link>
           </div>
         </div>
         <div className="relative overflow-hidden">

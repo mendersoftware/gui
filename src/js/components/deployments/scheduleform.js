@@ -99,7 +99,7 @@ var ScheduleForm = React.createClass({
     };
   },
   componentDidMount: function() {
-    this._updateTimes();
+    this._deploymentTimes();
   },
 
   _handleGroupValueChange: function(e, index, value) {
@@ -134,30 +134,30 @@ var ScheduleForm = React.createClass({
 
   _sendUpToParent: function(val, attr) {
     // send params to parent with dialog holder
-    this.props.updateSchedule(val, attr);
+    this.props.deploymentSchedule(val, attr);
   },
-  _updateTimes: function() {
-    var newUpdate = {};
+  _deploymentTimes: function() {
+    var newDeployment = {};
 
     var start_time = this.state.start_time.getTime();
     var start_date = this.state.start_date.getTime();
    
-    newUpdate.start_time = combineDateTime(start_date, start_time).getTime();
+    newDeployment.start_time = combineDateTime(start_date, start_time).getTime();
 
     var end_time = this.state.end_time.getTime();
     var end_date = this.state.end_date.getTime();
 
-    newUpdate.end_time = combineDateTime(end_date, end_time).getTime();
+    newDeployment.end_time = combineDateTime(end_date, end_time).getTime();
 
-    this._sendUpToParent(newUpdate.start_time, "start_time");
-    this._sendUpToParent(newUpdate.end_time, "end_time");
+    this._sendUpToParent(newDeployment.start_time, "start_time");
+    this._sendUpToParent(newDeployment.end_time, "end_time");
   },
 
   _updatedDateTime: function(ref, date) {
     var set = {};
     set[ref] = date;
     this.setState(set, function() {
-      this._updateTimes();
+      this._deploymentTimes();
     });
   },
 

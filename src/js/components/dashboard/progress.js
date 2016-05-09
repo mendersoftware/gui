@@ -1,7 +1,7 @@
 import React from 'react';
 import { Router, Route, Link } from 'react-router';
 
-var ProgressBar = require('../updates/progressBar.js');
+var ProgressBar = require('../deployments/progressBar.js');
 var Time = require('react-time');
 
 // material ui
@@ -31,12 +31,12 @@ var Progress = React.createClass({
     this.setState({devices: val});
   },
   render: function() {
-    var progress = this.props.updates.map(function(update, index) {
+    var progress = this.props.deployments.map(function(deployment, index) {
       var progressBar = (
-        <ProgressBar update={update} getDevices={this.getDevices} index={index} />
+        <ProgressBar deployment={deployment} getDevices={this.getDevices} index={index} />
       );
 
-      var last = (this.props.updates.length === index+1) || index===4;
+      var last = (this.props.deployments.length === index+1) || index===4;
 
       return (
         <div key={index}>
@@ -44,9 +44,9 @@ var Progress = React.createClass({
             disabled={true}
             style={{paddingBottom:"12", height:"50"}}
             primaryText={progressBar}
-            secondaryText={<Time style={{fontSize:"12"}} className="progressTime" value={this._formatTime(update.created)} format="YY-MM-DD HH:mm" />}
+            secondaryText={<Time style={{fontSize:"12"}} className="progressTime" value={this._formatTime(deployment.created)} format="YY-MM-DD HH:mm" />}
             onClick={this._clickHandle}
-            leftIcon={<div style={{width:"110", height:"auto"}}><span className="progress-version">{update.version}</span><span className="progress-group">{update.name} {this.state.devices[index]}</span></div>}
+            leftIcon={<div style={{width:"110", height:"auto"}}><span className="progress-version">{deployment.version}</span><span className="progress-group">{deployment.name} {this.state.devices[index]}</span></div>}
           />
           <Divider className={last ? "hidden" : null} />
         </div>
@@ -55,7 +55,7 @@ var Progress = React.createClass({
     }, this);
 
     return (
-      <div className="updates-container">
+      <div className="deployments-container">
         <div className="dashboard-header subsection">
           <h3>In progress<span className="dashboard-number">{progress.length}</span></h3>
         </div>
@@ -64,9 +64,9 @@ var Progress = React.createClass({
             {progress}
           </List>
           <div className={progress.length ? 'hidden' : null}>
-            <p className="italic">No updates in progress</p>
+            <p className="italic">No deployments in progress</p>
           </div>
-          <Link to="/updates" className="float-right">All updates</Link>
+          <Link to="/deployments" className="float-right">All deployments</Link>
         </div>
       </div>
     );

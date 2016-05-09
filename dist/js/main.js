@@ -76161,9 +76161,9 @@ module.exports = warning;
 var AppConstants = require('../constants/app-constants');
 var AppDispatcher = require('../dispatchers/app-dispatcher');
 var Api = require('../api/api');
-var UpdatesApi = require('../api/updates-api');
+var DeploymentsApi = require('../api/deployments-api');
 var apiUrl = "http://private-9f43d-michaelatmender.apiary-mock.com/api/0.0.1/";
-var updatesApiUrl = "http://private-9f43d-michaelatmender.apiary-mock.com/api/0.0.1/";
+var deploymentsApiUrl = "http://private-9f43d-michaelatmender.apiary-mock.com/api/0.0.1/";
 
 var AppActions = {
 
@@ -76251,37 +76251,37 @@ var AppActions = {
   },
 
   /* API */
-  getUpdates: function getUpdates() {
-    UpdatesApi.get(updatesApiUrl + 'deployments').then(function (updates) {
+  getDeployments: function getDeployments() {
+    DeploymentsApi.get(deploymentsApiUrl + 'deployments').then(function (deployments) {
       AppDispatcher.handleViewAction({
-        actionType: AppConstants.RECEIVE_UPDATES,
-        updates: updates
+        actionType: AppConstants.RECEIVE_DEPLOYMENTS,
+        deployments: deployments
       });
     });
   },
-  createUpdate: function createUpdate(update) {
-    UpdatesApi.post(updatesApiUrl + 'deployments', update).then(function (data) {
-      // inserted update data,
+  createDeployment: function createDeployment(deployment) {
+    DeploymentsApi.post(deploymentsApiUrl + 'deployments', deployment).then(function (data) {
+      // inserted deployment data,
       callback(data);
     });
   },
-  getSingleUpdate: function getSingleUpdate(id, callback) {
-    UpdatesApi.get(updatesApiUrl + 'deployments/' + id).then(function (data) {
+  getSingleDeployment: function getSingleDeployment(id, callback) {
+    DeploymentsApi.get(deploymentsApiUrl + 'deployments/' + id).then(function (data) {
       callback(data);
     });
   },
-  getSingleUpdateStats: function getSingleUpdateStats(id, callback) {
-    UpdatesApi.get(updatesApiUrl + 'deployments/' + id + '/statistics').then(function (data) {
+  getSingleDeploymentStats: function getSingleDeploymentStats(id, callback) {
+    DeploymentsApi.get(deploymentsApiUrl + 'deployments/' + id + '/statistics').then(function (data) {
       callback(data);
     });
   },
-  getSingleUpdateDevices: function getSingleUpdateDevices(id, callback) {
-    UpdatesApi.get(updatesApiUrl + 'deployments/' + id + '/devices').then(function (data) {
+  getSingleDeploymentDevices: function getSingleDeploymentDevices(id, callback) {
+    DeploymentsApi.get(deploymentsApiUrl + 'deployments/' + id + '/devices').then(function (data) {
       callback(data);
     });
   },
   getDeviceLog: function getDeviceLog(deploymentId, deviceId, callback) {
-    UpdatesApi.getText(updatesApiUrl + 'deployments/' + deploymentId + '/devices/' + deviceId + "/log").then(function (data) {
+    DeploymentsApi.getText(deploymentsApiUrl + 'deployments/' + deploymentId + '/devices/' + deviceId + "/log").then(function (data) {
       callback(data);
     });
   },
@@ -76294,10 +76294,10 @@ var AppActions = {
     });
   },
 
-  removeUpdate: function removeUpdate(updateId) {
+  removeDeployment: function removeDeployment(deploymentId) {
     AppDispatcher.handleViewAction({
-      actionType: AppConstants.REMOVE_UPDATE,
-      id: updateId
+      actionType: AppConstants.REMOVE_DEPLOYMENT,
+      id: deploymentId
     });
   },
 
@@ -76336,7 +76336,7 @@ var AppActions = {
 
 module.exports = AppActions;
 
-},{"../api/api":753,"../api/updates-api":754,"../constants/app-constants":786,"../dispatchers/app-dispatcher":787}],753:[function(require,module,exports){
+},{"../api/api":753,"../api/deployments-api":754,"../constants/app-constants":786,"../dispatchers/app-dispatcher":787}],753:[function(require,module,exports){
 'use strict';
 
 var request = require('superagent');
@@ -76511,7 +76511,7 @@ var App = _react2.default.createClass({
 
 module.exports = App;
 
-},{"../themes/mender-theme.js":791,"./header/header":769,"material-ui":257,"material-ui/lib/styles/getMuiTheme":292,"react":684}],756:[function(require,module,exports){
+},{"../themes/mender-theme.js":791,"./header/header":780,"material-ui":257,"material-ui/lib/styles/getMuiTheme":292,"react":684}],756:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -76608,15 +76608,15 @@ var LocalStore = require('../../stores/local-store');
 var AppActions = require('../../actions/app-actions');
 var Health = require('./health');
 var Activity = require('./activity');
-var Updates = require('./updates');
+var Deployments = require('./deployments');
 
 
 function getState() {
   return {
-    progress: AppStore.getProgressUpdates(new Date()),
+    progress: AppStore.getProgressDeployments(new Date()),
     health: AppStore.getHealth(),
     unauthorized: AppStore.getUnauthorized(),
-    recent: AppStore.getRecentUpdates(new Date()),
+    recent: AppStore.getRecentDeployments(new Date()),
     activity: AppStore.getActivity(),
     hideReview: localStorage.getItem("reviewDevices")
   };
@@ -76635,7 +76635,7 @@ var Dashboard = _react2.default.createClass({
     AppStore.removeChangeListener(this._onChange);
   },
   componentDidMount: function componentDidMount() {
-    AppActions.getUpdates();
+    AppActions.getDeployments();
     //AppActions.getUnauthorized();
   },
   _onChange: function _onChange() {
@@ -76646,12 +76646,12 @@ var Dashboard = _react2.default.createClass({
   },
   _handleClick: function _handleClick(params) {
     switch (params.route) {
-      case "updates":
+      case "deployments":
         var URIParams = "open=" + params.open;
         URIParams = params.id ? URIParams + "&id=" + params.id : URIParams;
         URIParams = encodeURIComponent(URIParams);
-        //this.context.router.transitionTo("/updates/:tab/:params/", {tab:0, params:URIParams}, null);
-        this.context.router.push('/updates/0/' + URIParams);
+        //this.context.router.transitionTo("/deployments/:tab/:params/", {tab:0, params:URIParams}, null);
+        this.context.router.push('/deployments/0/' + URIParams);
         break;
       case "devices":
         var filters = params.status ? encodeURIComponent("status=" + params.status) : '';
@@ -76671,7 +76671,7 @@ var Dashboard = _react2.default.createClass({
           'div',
           { className: 'leftDashboard' },
           _react2.default.createElement(Health, { closeHandle: this._setStorage, hideReview: this.state.hideReview, clickHandle: this._handleClick, health: this.state.health, unauthorized: this.state.unauthorized }),
-          _react2.default.createElement(Updates, { clickHandle: this._handleClick, progress: this.state.progress, recent: this.state.recent })
+          _react2.default.createElement(Deployments, { clickHandle: this._handleClick, progress: this.state.progress, recent: this.state.recent })
         ),
         _react2.default.createElement(Activity, { activity: this.state.activity })
       )
@@ -76685,7 +76685,91 @@ Dashboard.contextTypes = {
 
 module.exports = Dashboard;
 
-},{"../../actions/app-actions":752,"../../stores/app-store":789,"../../stores/local-store":790,"./activity":756,"./health":758,"./updates":762,"react":684,"react-router":506}],758:[function(require,module,exports){
+},{"../../actions/app-actions":752,"../../stores/app-store":789,"../../stores/local-store":790,"./activity":756,"./deployments":758,"./health":759,"react":684,"react-router":506}],758:[function(require,module,exports){
+'use strict';
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var Schedule = require('./schedule');
+var Progress = require('./progress');
+var Recent = require('./recent');
+
+// material ui
+var mui = require('material-ui');
+var RaisedButton = mui.RaisedButton;
+var FlatButton = mui.FlatButton;
+var Dialog = mui.Dialog;
+
+var Deployments = _react2.default.createClass({
+  displayName: 'Deployments',
+
+  _clickHandle: function _clickHandle(params) {
+    this.props.clickHandle(params);
+  },
+  render: function render() {
+    var progress = this.props.progress.map(function (deployment, index) {
+      return _react2.default.createElement(
+        'div',
+        { key: index },
+        _react2.default.createElement(
+          'p',
+          null,
+          deployment.name
+        )
+      );
+    });
+    return _react2.default.createElement(
+      'div',
+      { className: 'deployments' },
+      _react2.default.createElement(
+        'div',
+        { className: 'dashboard-header' },
+        _react2.default.createElement(
+          'h2',
+          null,
+          'Deployments'
+        )
+      ),
+      _react2.default.createElement(
+        'div',
+        { className: this.props.progress.length || this.props.recent.length ? "hidden" : "dashboard-placeholder" },
+        _react2.default.createElement(
+          'p',
+          null,
+          'Monitor ongoing and recent deployments from here'
+        ),
+        _react2.default.createElement('img', { src: 'assets/img/deployments.png', alt: 'deployments' })
+      ),
+      _react2.default.createElement(
+        'div',
+        { className: this.props.progress.length || this.props.recent.length ? null : "hidden" },
+        _react2.default.createElement(
+          'div',
+          { className: 'flexbox' },
+          _react2.default.createElement(Progress, { clickHandle: this._clickHandle, deployments: this.props.progress }),
+          _react2.default.createElement(Recent, { clickHandle: this._clickHandle, deployments: this.props.recent })
+        ),
+        _react2.default.createElement(
+          'div',
+          { className: 'flexbox' },
+          _react2.default.createElement(
+            'div',
+            null,
+            _react2.default.createElement(RaisedButton, { onClick: this._clickHandle.bind(null, { route: "deployments", open: true }), label: 'Deploy an update', secondary: true })
+          )
+        )
+      )
+    );
+  }
+});
+
+module.exports = Deployments;
+
+},{"./progress":760,"./recent":761,"./schedule":762,"material-ui":257,"react":684}],759:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -76809,7 +76893,7 @@ Health.contextTypes = {
 
 module.exports = Health;
 
-},{"material-ui":257,"react":684,"react-router":506}],759:[function(require,module,exports){
+},{"material-ui":257,"react":684,"react-router":506}],760:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -76820,7 +76904,7 @@ var _reactRouter = require('react-router');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var ProgressBar = require('../updates/progressBar.js');
+var ProgressBar = require('../deployments/progressBar.js');
 var Time = require('react-time');
 
 // material ui
@@ -76851,10 +76935,10 @@ var Progress = _react2.default.createClass({
     this.setState({ devices: val });
   },
   render: function render() {
-    var progress = this.props.updates.map(function (update, index) {
-      var progressBar = _react2.default.createElement(ProgressBar, { update: update, getDevices: this.getDevices, index: index });
+    var progress = this.props.deployments.map(function (deployment, index) {
+      var progressBar = _react2.default.createElement(ProgressBar, { deployment: deployment, getDevices: this.getDevices, index: index });
 
-      var last = this.props.updates.length === index + 1 || index === 4;
+      var last = this.props.deployments.length === index + 1 || index === 4;
 
       return _react2.default.createElement(
         'div',
@@ -76863,7 +76947,7 @@ var Progress = _react2.default.createClass({
           disabled: true,
           style: { paddingBottom: "12", height: "50" },
           primaryText: progressBar,
-          secondaryText: _react2.default.createElement(Time, { style: { fontSize: "12" }, className: 'progressTime', value: this._formatTime(update.created), format: 'YY-MM-DD HH:mm' }),
+          secondaryText: _react2.default.createElement(Time, { style: { fontSize: "12" }, className: 'progressTime', value: this._formatTime(deployment.created), format: 'YY-MM-DD HH:mm' }),
           onClick: this._clickHandle,
           leftIcon: _react2.default.createElement(
             'div',
@@ -76871,12 +76955,12 @@ var Progress = _react2.default.createClass({
             _react2.default.createElement(
               'span',
               { className: 'progress-version' },
-              update.version
+              deployment.version
             ),
             _react2.default.createElement(
               'span',
               { className: 'progress-group' },
-              update.name,
+              deployment.name,
               ' ',
               this.state.devices[index]
             )
@@ -76888,7 +76972,7 @@ var Progress = _react2.default.createClass({
 
     return _react2.default.createElement(
       'div',
-      { className: 'updates-container' },
+      { className: 'deployments-container' },
       _react2.default.createElement(
         'div',
         { className: 'dashboard-header subsection' },
@@ -76917,13 +77001,13 @@ var Progress = _react2.default.createClass({
           _react2.default.createElement(
             'p',
             { className: 'italic' },
-            'No updates in progress'
+            'No deployments in progress'
           )
         ),
         _react2.default.createElement(
           _reactRouter.Link,
-          { to: '/updates', className: 'float-right' },
-          'All updates'
+          { to: '/deployments', className: 'float-right' },
+          'All deployments'
         )
       )
     );
@@ -76936,7 +77020,7 @@ Progress.contextTypes = {
 
 module.exports = Progress;
 
-},{"../updates/progressBar.js":777,"material-ui":257,"react":684,"react-router":506,"react-time":522}],760:[function(require,module,exports){
+},{"../deployments/progressBar.js":767,"material-ui":257,"react":684,"react-router":506,"react-time":522}],761:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -76947,7 +77031,7 @@ var _reactRouter = require('react-router');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var GroupDevices = require('../updates/groupdevices');
+var GroupDevices = require('../deployments/groupdevices');
 
 var Time = require('react-time');
 var AppActions = require('../../actions/app-actions');
@@ -76970,7 +77054,7 @@ var Recent = _react2.default.createClass({
   _clickHandle: function _clickHandle(id) {
     var params = {};
     params.id = id;
-    params.route = "updates";
+    params.route = "deployments";
     params.open = true;
     this.props.clickHandle(params);
   },
@@ -76978,7 +77062,7 @@ var Recent = _react2.default.createClass({
     return date.replace(' ', 'T').replace(/ /g, '').replace('UTC', '');
   },
   render: function render() {
-    var recent = this.props.updates.map(function (update, index) {
+    var recent = this.props.deployments.map(function (deployment, index) {
       if (index < 5) {
 
         var group = _react2.default.createElement(
@@ -76987,15 +77071,15 @@ var Recent = _react2.default.createClass({
           _react2.default.createElement(
             'span',
             null,
-            update.name,
+            deployment.name,
             ' '
           ),
           '(',
-          _react2.default.createElement(GroupDevices, { update: update.id }),
+          _react2.default.createElement(GroupDevices, { deployment: deployment.id }),
           ')'
         );
-        var last = this.props.updates.length === index + 1 || index === 4;
-        var status = update.status === "Failed" ? "warning" : "check";
+        var last = this.props.deployments.length === index + 1 || index === 4;
+        var status = deployment.status === "Failed" ? "warning" : "check";
         var icon = _react2.default.createElement(
           FontIcon,
           { className: 'material-icons' },
@@ -77006,18 +77090,18 @@ var Recent = _react2.default.createClass({
           { key: index, className: status === "warning" ? "fail" : null },
           _react2.default.createElement(ListItem, {
             disabled: false,
-            primaryText: update.version,
+            primaryText: deployment.version,
             secondaryText: group,
-            onClick: this._clickHandle.bind(null, update.id),
+            onClick: this._clickHandle.bind(null, deployment.id),
             leftIcon: icon,
-            rightIcon: _react2.default.createElement(Time, { style: { float: "right", position: "initial", width: "auto", marginRight: "-56", whiteSpace: "nowrap", fontSize: "14" }, value: this._formatTime(update.finished), format: 'YYYY-MM-DD HH:mm' }) }),
+            rightIcon: _react2.default.createElement(Time, { style: { float: "right", position: "initial", width: "auto", marginRight: "-56", whiteSpace: "nowrap", fontSize: "14" }, value: this._formatTime(deployment.finished), format: 'YYYY-MM-DD HH:mm' }) }),
           _react2.default.createElement(Divider, { inset: true, className: last ? "hidden" : null })
         );
       }
     }, this);
     return _react2.default.createElement(
       'div',
-      { className: 'updates-container' },
+      { className: 'deployments-container' },
       _react2.default.createElement(
         'div',
         { className: 'dashboard-header subsection' },
@@ -77046,7 +77130,7 @@ var Recent = _react2.default.createClass({
           _react2.default.createElement(
             'p',
             { className: 'italic' },
-            'No recent updates'
+            'No recent deployments'
           )
         ),
         _react2.default.createElement(
@@ -77054,8 +77138,8 @@ var Recent = _react2.default.createClass({
           null,
           _react2.default.createElement(
             _reactRouter.Link,
-            { to: '/updates', className: 'float-right' },
-            'All updates'
+            { to: '/deployments', className: 'float-right' },
+            'All deployments'
           )
         )
       )
@@ -77069,7 +77153,7 @@ Recent.contextTypes = {
 
 module.exports = Recent;
 
-},{"../../actions/app-actions":752,"../updates/groupdevices":776,"material-ui":257,"react":684,"react-router":506,"react-time":522}],761:[function(require,module,exports){
+},{"../../actions/app-actions":752,"../deployments/groupdevices":766,"material-ui":257,"react":684,"react-router":506,"react-time":522}],762:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -77098,31 +77182,31 @@ var Schedule = _react2.default.createClass({
   _clickHandle: function _clickHandle() {
     this.props.clickHandle(this.props.route);
   },
-  _clickUpdate: function _clickUpdate(e) {
+  _clickDeployment: function _clickDeployment(e) {
     console.log(e);
   },
   render: function render() {
-    var schedule = this.props.updates.map(function (update, index) {
+    var schedule = this.props.deployments.map(function (deployment, index) {
       if (index < 5) {
-        var group = update.group + " (" + update.devices.length + ")";
-        var month = new Date(update.start_time);
+        var group = deployment.group + " (" + deployment.devices.length + ")";
+        var month = new Date(deployment.start_time);
         month = monthNames[month.getMonth()];
-        var last = this.props.updates.length === index + 1 || index === 4;
+        var last = this.props.deployments.length === index + 1 || index === 4;
         return _react2.default.createElement(
           'div',
           { key: index },
           _react2.default.createElement(ListItem, {
             disabled: true,
-            primaryText: update.software_version,
+            primaryText: deployment.software_version,
             secondaryText: group,
-            onClick: this._clickUpdate,
+            onClick: this._clickDeployment,
             leftIcon: _react2.default.createElement(
               'div',
               { style: { width: "auto", height: "auto" } },
               _react2.default.createElement(
                 'span',
                 { className: 'day' },
-                _react2.default.createElement(Time, { value: update.start_time, format: 'DD' })
+                _react2.default.createElement(Time, { value: deployment.start_time, format: 'DD' })
               ),
               _react2.default.createElement(
                 'span',
@@ -77130,14 +77214,14 @@ var Schedule = _react2.default.createClass({
                 month
               )
             ),
-            rightIcon: _react2.default.createElement(Time, { style: { top: "18", right: "22" }, value: update.start_time, format: 'HH:mm' }) }),
+            rightIcon: _react2.default.createElement(Time, { style: { top: "18", right: "22" }, value: deployment.start_time, format: 'HH:mm' }) }),
           _react2.default.createElement(ListDivider, { inset: true, className: last ? "hidden" : null })
         );
       }
     }, this);
     return _react2.default.createElement(
       'div',
-      { className: 'updates-container' },
+      { className: 'deployments-container' },
       _react2.default.createElement(
         'div',
         { className: 'dashboard-header subsection' },
@@ -77166,7 +77250,7 @@ var Schedule = _react2.default.createClass({
           _react2.default.createElement(
             'p',
             { className: 'italic' },
-            'No updates scheduled'
+            'No deployments scheduled'
           )
         ),
         _react2.default.createElement(
@@ -77174,7 +77258,7 @@ var Schedule = _react2.default.createClass({
           null,
           _react2.default.createElement(
             _reactRouter.Link,
-            { to: '/updates/schedule', className: 'float-right' },
+            { to: '/deployments/schedule', className: 'float-right' },
             'View schedule'
           )
         )
@@ -77189,7 +77273,7 @@ Schedule.contextTypes = {
 
 module.exports = Schedule;
 
-},{"material-ui":257,"react":684,"react-router":506,"react-time":522}],762:[function(require,module,exports){
+},{"material-ui":257,"react":684,"react-router":506,"react-time":522}],763:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -77198,72 +77282,1169 @@ var _react2 = _interopRequireDefault(_react);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var Schedule = require('./schedule');
-var Progress = require('./progress');
-var Recent = require('./recent');
+// material ui
+var mui = require('material-ui');
+var DatePicker = mui.DatePicker;
+var TimePicker = mui.TimePicker;
+
+var DateTime = _react2.default.createClass({
+  displayName: 'DateTime',
+
+  _update: function _update(e, date) {
+    this.props.changed(this.props.my_ref, date);
+  },
+  render: function render() {
+    var element = _react2.default.createElement('div', null);
+    if (this.props.date) {
+      element = _react2.default.createElement(DatePicker, {
+        floatingLabelText: this.props.label,
+        autoOk: true,
+        ref: this.props.ref,
+        defaultDate: this.props.defaultDate,
+        minDate: this.props.minDate,
+        mode: 'landscape',
+        onChange: this._update });
+    } else if (this.props.time) {
+      element = _react2.default.createElement(TimePicker, {
+        format: '24hr',
+        ref: this.props.ref,
+        defaultTime: this.props.defaultDate,
+        floatingLabelText: this.props.label,
+        onChange: this._update });
+    }
+    return _react2.default.createElement(
+      'div',
+      null,
+      element
+    );
+  }
+});
+
+module.exports = DateTime;
+
+},{"material-ui":257,"react":684}],764:[function(require,module,exports){
+'use strict';
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var AppStore = require('../../stores/app-store');
+var AppActions = require('../../actions/app-actions');
+
+var Recent = require('./recentdeployments.js');
+var Schedule = require('./schedule.js');
+var EventLog = require('./eventlog.js');
+var ScheduleForm = require('./scheduleform.js');
+var Report = require('./report.js');
+var ScheduleButton = require('./schedulebutton.js');
+
+var mui = require('material-ui');
+var Tabs = mui.Tabs;
+var Tab = mui.Tab;
+var Dialog = mui.Dialog;
+var FlatButton = mui.FlatButton;
+var RaisedButton = mui.RaisedButton;
+
+var styles = {
+  tabs: {
+    backgroundColor: "#fff",
+    color: "#414141",
+    borderBottom: "1px solid #e0e0e0"
+  },
+  inkbar: {
+    backgroundColor: "#679BA5"
+  }
+};
+
+var tabs = {
+  deployments: '0',
+  schedule: '1',
+  events: '2'
+};
+
+function getState() {
+  return {
+    recent: AppStore.getRecentDeployments(new Date()),
+    progress: AppStore.getProgressDeployments(new Date()),
+    schedule: AppStore.getScheduledDeployments(new Date()),
+    events: AppStore.getEventLog(),
+    images: AppStore.getSoftwareRepo(),
+    groups: AppStore.getGroups(),
+    dialogTitle: "Deploy an update",
+    scheduleForm: true,
+    contentClass: "largeDialog",
+    invalid: true,
+    dialog: false,
+    hideTODO: localStorage.getItem("deployTODO")
+  };
+}
+
+var Deployments = _react2.default.createClass({
+  displayName: 'Deployments',
+
+  getInitialState: function getInitialState() {
+    return getState();
+  },
+  componentDidMount: function componentDidMount() {
+    AppStore.changeListener(this._onChange);
+    AppActions.getDeployments();
+    if (this.props.params) {
+      this.setState({ tabIndex: tabs[this.props.params.tab] });
+
+      if (this.props.params.params) {
+        var str = decodeURIComponent(this.props.params.params);
+        var obj = str.split("&");
+
+        var params = [];
+        for (var i = 0; i < obj.length; i++) {
+          var f = obj[i].split("=");
+          params[f[0]] = f[1];
+        }
+        if (params.open) {
+          var that = this;
+          if (params.id) {
+            that._getReportById(params.id);
+          } else {
+            setTimeout(function () {
+              that.dialogOpen("schedule");
+            }, 400);
+          }
+        }
+      }
+    } else {
+      this.setState({ tabIndex: "0" });
+    }
+    AppActions.getImages();
+  },
+  componentWillUnmount: function componentWillUnmount() {
+    AppStore.removeChangeListener(this._onChange);
+  },
+  _onChange: function _onChange() {
+    this.setState(getState());
+  },
+  dialogDismiss: function dialogDismiss(ref) {
+    this.replaceState(this.getInitialState());
+  },
+  dialogOpen: function dialogOpen(dialog) {
+    this.setState({ dialog: true });
+    if (dialog === 'schedule') {
+      this.setState({
+        dialogTitle: "Deploy an update",
+        scheduleForm: true,
+        contentClass: "dialog"
+      });
+    }
+    if (dialog === 'report') {
+      this.setState({
+        scheduleForm: false,
+        dialogTitle: "Results of deployment",
+        contentClass: "largeDialog"
+      });
+    }
+  },
+  _changeTab: function _changeTab(value, e, tab) {
+    this.setState({ tabIndex: value });
+  },
+  _onScheduleSubmit: function _onScheduleSubmit() {
+    var devices = AppStore.getDevicesFromParams(this.state.group.name, this.state.image.model);
+    var ids = [];
+    for (var i = 0; i < devices.length; i++) {
+      ids.push(devices[i].id);
+    }
+    var newDeployment = {
+      //id: this.state.id,
+      name: this.state.group.name,
+      model: this.state.image.model,
+      //start_time: this.state.start_time,
+      //end_time: this.state.end_time,
+      version: this.state.image.name,
+      devices: ids
+    };
+    console.log(newDeployment.devices);
+    AppActions.createDeployment(newDeployment, this.state.disabled);
+    AppActions.setLocalStorage("deployTODO", true);
+    this.dialogDismiss('dialog');
+  },
+  _deploymentParams: function _deploymentParams(val, attr) {
+    // updating params from child schedule form
+    var tmp = {};
+    tmp[attr] = val;
+    this.setState(tmp);
+  },
+  _getReportById: function _getReportById(id) {
+    AppActions.getSingleDeployment(id, function (data) {
+      var that = this;
+      setTimeout(function () {
+        that._showReport(data);
+      }, 400);
+    }.bind(this));
+  },
+  _showReport: function _showReport(deployment) {
+    this.setState({ scheduleForm: false, selectedDeployment: deployment });
+    this.dialogOpen("report");
+  },
+  _scheduleDeployment: function _scheduleDeployment(deployment) {
+    this.setState({ dialog: false });
+
+    var image = '';
+    var group = '';
+    var start_time = null;
+    var end_time = null;
+    var id = null;
+    if (deployment) {
+      if (deployment.id) {
+        id = deployment.id;
+      }
+      if (deployment.software_version) {
+        image = AppStore.getSoftwareImage('name', deployment.software_version);
+      }
+      if (deployment.group) {
+        group = AppStore.getSingleGroup('name', deployment.group);
+      }
+      if (deployment.start_time) {
+        start_time = deployment.start_time;
+      }
+      if (deployment.end_time) {
+        end_time = deployment.end_time;
+      }
+    }
+    this.setState({ scheduleForm: true, imageVal: image, id: id, start_time: start_time, end_time: end_time, image: image, group: group, groupVal: group });
+    this.dialogOpen("schedule");
+  },
+  _scheduleRemove: function _scheduleRemove(id) {
+    AppActions.removeDeployment(id);
+  },
+  _closeOnboard: function _closeOnboard() {
+    AppActions.setLocalStorage("deployTODO", true);
+  },
+  render: function render() {
+    var scheduleActions = [_react2.default.createElement(
+      'div',
+      { style: { marginRight: "10", display: "inline-block" } },
+      _react2.default.createElement(FlatButton, {
+        label: 'Cancel',
+        onClick: this.dialogDismiss.bind(null, 'dialog') })
+    ), _react2.default.createElement(RaisedButton, {
+      label: 'Deploy update',
+      primary: true,
+      onClick: this._onScheduleSubmit,
+      ref: 'save' })];
+    var reportActions = [_react2.default.createElement(FlatButton, {
+      label: 'Close',
+      onClick: this.dialogDismiss.bind(null, 'dialog') })];
+    var dialogContent = '';
+
+    if (this.state.scheduleForm) {
+      dialogContent = _react2.default.createElement(ScheduleForm, { deploymentSchedule: this._deploymentParams, id: this.state.id, images: this.state.software, image: this.state.image, imageVal: this.state.image, groups: this.state.groups, groupVal: this.state.group, start: this.state.start_time, end: this.state.end_time });
+    } else {
+      dialogContent = _react2.default.createElement(Report, { deployment: this.state.selectedDeployment, retryDeployment: this._scheduleDeployment });
+    }
+    return _react2.default.createElement(
+      'div',
+      { className: 'contentContainer' },
+      _react2.default.createElement(
+        'div',
+        { className: this.state.hideTODO ? "hidden" : null },
+        _react2.default.createElement(
+          'div',
+          { className: 'margin-bottom onboard' },
+          _react2.default.createElement('div', { className: 'close', onClick: this._closeOnboard }),
+          _react2.default.createElement(
+            'h3',
+            null,
+            '//TODO deploy an update to all devices'
+          )
+        )
+      ),
+      _react2.default.createElement(
+        'div',
+        { className: 'relative' },
+        _react2.default.createElement(
+          'div',
+          { className: 'top-right-button' },
+          _react2.default.createElement(ScheduleButton, { secondary: true, openDialog: this.dialogOpen })
+        ),
+        _react2.default.createElement(Recent, { recent: this.state.recent, progress: this.state.progress, showReport: this._showReport })
+      ),
+      _react2.default.createElement(
+        Dialog,
+        {
+          ref: 'dialog',
+          title: this.state.dialogTitle,
+          actions: this.state.scheduleForm ? scheduleActions : reportActions,
+          autoDetectWindowHeight: true, autoScrollBodyContent: true,
+          contentClassName: this.state.contentClass,
+          bodyStyle: { paddingTop: "0" },
+          open: this.state.dialog,
+          contentStyle: { overflow: "hidden", boxShadow: "0 14px 45px rgba(0, 0, 0, 0.25), 0 10px 18px rgba(0, 0, 0, 0.22)" },
+          actionsContainerStyle: { marginBottom: "0" }
+        },
+        dialogContent
+      )
+    );
+  }
+});
+
+module.exports = Deployments;
+
+},{"../../actions/app-actions":752,"../../stores/app-store":789,"./eventlog.js":765,"./recentdeployments.js":769,"./report.js":770,"./schedule.js":771,"./schedulebutton.js":772,"./scheduleform.js":773,"material-ui":257,"react":684}],765:[function(require,module,exports){
+'use strict';
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 // material ui
 var mui = require('material-ui');
-var RaisedButton = mui.RaisedButton;
+var Table = mui.Table;
+var TableHeader = mui.TableHeader;
+var TableHeaderColumn = mui.TableHeaderColumn;
+var TableBody = mui.TableBody;
+var TableRow = mui.TableRow;
+var TableRowColumn = mui.TableRowColumn;
+
 var FlatButton = mui.FlatButton;
-var Dialog = mui.Dialog;
+var RaisedButton = mui.RaisedButton;
 
-var Updates = _react2.default.createClass({
-  displayName: 'Updates',
+var EventLog = _react2.default.createClass({
+  displayName: 'EventLog',
 
-  _clickHandle: function _clickHandle(params) {
-    this.props.clickHandle(params);
-  },
   render: function render() {
-    var progress = this.props.progress.map(function (update, index) {
-      return _react2.default.createElement(
-        'div',
-        { key: index },
-        _react2.default.createElement(
-          'p',
-          null,
-          update.name
-        )
-      );
-    });
     return _react2.default.createElement(
       'div',
-      { className: 'updates' },
+      null,
+      _react2.default.createElement(
+        'p',
+        { className: 'italic' },
+        '... Coming soon ...'
+      ),
       _react2.default.createElement(
         'div',
-        { className: 'dashboard-header' },
+        null,
+        _react2.default.createElement(FlatButton, { label: 'Flat neutral' }),
+        _react2.default.createElement('div', { style: { width: "20", display: "inline-block" } }),
+        _react2.default.createElement(FlatButton, { label: 'Flat secondary', secondary: true }),
+        _react2.default.createElement('div', { style: { width: "20", display: "inline-block" } }),
+        _react2.default.createElement(FlatButton, { label: 'Flat primary', primary: true })
+      ),
+      _react2.default.createElement(
+        'div',
+        null,
+        _react2.default.createElement(FlatButton, { label: 'Flat neutral' }),
+        _react2.default.createElement('div', { style: { width: "20", display: "inline-block" } }),
+        _react2.default.createElement(FlatButton, { label: 'Flat secondary', secondary: true }),
+        _react2.default.createElement('div', { style: { width: "20", display: "inline-block" } }),
+        _react2.default.createElement(FlatButton, { label: 'Flat primary', primary: true })
+      ),
+      _react2.default.createElement(
+        'div',
+        { className: 'margin-top' },
+        _react2.default.createElement(RaisedButton, { label: 'Raised neutral' }),
+        _react2.default.createElement('div', { style: { width: "20", display: "inline-block" } }),
+        _react2.default.createElement(RaisedButton, { label: 'Raised secondary', secondary: true }),
+        _react2.default.createElement('div', { style: { width: "20", display: "inline-block" } }),
+        _react2.default.createElement(RaisedButton, { label: 'Raised primary', primary: true })
+      ),
+      _react2.default.createElement(
+        'div',
+        { className: 'margin-top' },
+        _react2.default.createElement(RaisedButton, { label: 'Raised neutral' }),
+        _react2.default.createElement('div', { style: { width: "20", display: "inline-block" } }),
+        _react2.default.createElement(RaisedButton, { label: 'Raised secondary', secondary: true }),
+        _react2.default.createElement('div', { style: { width: "20", display: "inline-block" } }),
+        _react2.default.createElement(RaisedButton, { label: 'Raised primary', primary: true })
+      )
+    );
+  }
+});
+
+module.exports = EventLog;
+
+},{"material-ui":257,"react":684}],766:[function(require,module,exports){
+'use strict';
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var AppActions = require('../../actions/app-actions');
+
+var GroupDevices = _react2.default.createClass({
+  displayName: 'GroupDevices',
+
+  getInitialState: function getInitialState() {
+    return {
+      devices: "-"
+    };
+  },
+  componentWillMount: function componentWillMount() {
+    this.getDevices();
+  },
+  getDevices: function getDevices() {
+    if (this.props.deployment === "00a0c91e6-7dec-11d0-a765-f81d4faebf6") {
+      this.setState({ devices: 3 });
+    } else {
+      AppActions.getSingleDeploymentDevices(this.props.deployment, function (devices) {
+        // retrieve number of devices from child
+        this.setState({ devices: devices.length });
+      }.bind(this));
+    }
+  },
+  render: function render() {
+    return _react2.default.createElement(
+      'span',
+      null,
+      this.state.devices
+    );
+  }
+});
+
+module.exports = GroupDevices;
+
+},{"../../actions/app-actions":752,"react":684}],767:[function(require,module,exports){
+'use strict';
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var AppActions = require('../../actions/app-actions');
+
+// material ui
+var mui = require('material-ui');
+
+var ProgressBar = _react2.default.createClass({
+  displayName: 'ProgressBar',
+
+  getInitialState: function getInitialState() {
+    return {
+      devices: [],
+      stats: {
+        "successful": 0,
+        "pending": 0,
+        "inprogress": 0,
+        "failure": 0,
+        "noimage": 0
+      }
+    };
+  },
+  componentDidMount: function componentDidMount() {
+    AppActions.getSingleDeploymentStats(this.props.deployment.id, function (stats) {
+      this.setState({ stats: stats });
+    }.bind(this));
+    AppActions.getSingleDeploymentDevices(this.props.deployment.id, function (devices) {
+      this.setState({ devices: devices });
+      this.props.getDevices(devices.length, this.props.index);
+    }.bind(this));
+  },
+  _handleClick: function _handleClick() {},
+  _sendUpPercentage: function _sendUpPercentage(per) {
+    this.props.gotPercent(per);
+  },
+  render: function render() {
+    // used for MOCK API because devices.length does not equal stats length
+    var totalDevices = this.state.stats.successful + this.state.stats.failure + this.state.stats.inprogress + this.state.stats.pending;
+
+    var success = (this.state.stats.successful / totalDevices * 100).toFixed(0);
+    var failures = (this.state.stats.failure / totalDevices * 100).toFixed(0);
+    var progress = (this.state.stats.inprogress / totalDevices * 100).toFixed(0);
+    var percentDone = Number(success) + Number(failures);
+
+    var progressBar = _react2.default.createElement(
+      'div',
+      { className: this.props.noPadding ? "tableBar progressBar" : "progressBar" },
+      _react2.default.createElement(
+        'div',
+        { className: 'lightgrey' },
+        _react2.default.createElement('div', { className: 'green float-left', style: { width: success + "%" } }),
+        _react2.default.createElement('div', { className: 'red float-left', style: { width: failures + "%" } }),
+        _react2.default.createElement('div', { className: 'grey float-left', style: { width: progress + "%" } })
+      ),
+      _react2.default.createElement(
+        'div',
+        { className: 'percentage' },
         _react2.default.createElement(
-          'h2',
+          'span',
           null,
-          'Updates'
+          percentDone || 0,
+          '%'
+        )
+      )
+    );
+    return _react2.default.createElement(
+      'div',
+      null,
+      progressBar
+    );
+  }
+});
+
+module.exports = ProgressBar;
+
+},{"../../actions/app-actions":752,"material-ui":257,"react":684}],768:[function(require,module,exports){
+'use strict';
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var AppActions = require('../../actions/app-actions');
+
+// material ui
+var mui = require('material-ui');
+
+var ProgressBar = _react2.default.createClass({
+  displayName: 'ProgressBar',
+
+  getInitialState: function getInitialState() {
+    return {
+      devices: [],
+      stats: {
+        "successful": 0,
+        "pending": 0,
+        "inprogress": 0,
+        "failure": 0,
+        "noimage": 0
+      }
+    };
+  },
+  componentDidMount: function componentDidMount() {
+    AppActions.getSingleDeploymentStats(this.props.deployment.id, function (stats) {
+      this.setState({ stats: stats });
+    }.bind(this));
+    AppActions.getSingleDeploymentDevices(this.props.deployment.id, function (devices) {
+      this.setState({ devices: devices });
+      this.props.getDevices(devices.length, this.props.index);
+    }.bind(this));
+  },
+  _handleClick: function _handleClick() {},
+  _sendUpPercentage: function _sendUpPercentage(per) {
+    this.props.gotPercent(per);
+  },
+  render: function render() {
+    // used for MOCK API because devices.length does not equal stats length
+    var totalDevices = this.state.stats.successful + this.state.stats.failure + this.state.stats.inprogress + this.state.stats.pending;
+
+    var success = (this.state.stats.successful / totalDevices * 100).toFixed(0);
+    var failures = (this.state.stats.failure / totalDevices * 100).toFixed(0);
+    var progress = (this.state.stats.inprogress / totalDevices * 100).toFixed(0);
+    var percentDone = Number(success) + Number(failures);
+
+    var progressBar = _react2.default.createElement(
+      'div',
+      { className: this.props.noPadding ? "tableBar progressBar" : "progressBar" },
+      _react2.default.createElement(
+        'div',
+        { className: 'lightgrey' },
+        _react2.default.createElement('div', { className: 'green float-left', style: { width: success + "%" } }),
+        _react2.default.createElement('div', { className: 'red float-left', style: { width: failures + "%" } }),
+        _react2.default.createElement('div', { className: 'grey float-left', style: { width: progress + "%" } })
+      ),
+      _react2.default.createElement(
+        'div',
+        { className: 'percentage' },
+        _react2.default.createElement(
+          'span',
+          null,
+          percentDone || 0,
+          '%'
+        )
+      )
+    );
+    return _react2.default.createElement(
+      'div',
+      null,
+      progressBar
+    );
+  }
+});
+
+module.exports = ProgressBar;
+
+},{"../../actions/app-actions":752,"material-ui":257,"react":684}],769:[function(require,module,exports){
+'use strict';
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var Time = require('react-time');
+var Report = require('./report.js');
+var ScheduleForm = require('./scheduleform');
+var GroupDevices = require('./groupdevices');
+
+var ProgressBar = require('./progressbar');
+
+// material ui
+var mui = require('material-ui');
+var Table = mui.Table;
+var TableHeader = mui.TableHeader;
+var TableHeaderColumn = mui.TableHeaderColumn;
+var TableBody = mui.TableBody;
+var TableRow = mui.TableRow;
+var TableRowColumn = mui.TableRowColumn;
+var FlatButton = mui.FlatButton;
+
+var progress = [];
+var recent = [];
+
+var Recent = _react2.default.createClass({
+  displayName: 'Recent',
+
+  getInitialState: function getInitialState() {
+    return {
+      showReport: null,
+      retry: false
+    };
+  },
+  componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
+    progress = nextProps.progress;
+    recent = nextProps.recent;
+  },
+  _recentCellClick: function _recentCellClick(rowNumber, columnId) {
+    var report = recent[rowNumber];
+    this.props.showReport(report);
+  },
+  _progressCellClick: function _progressCellClick(rowNumber, columnId) {
+    var report = progress[rowNumber];
+    this.props.showReport(report);
+  },
+  _formatTime: function _formatTime(date) {
+    return date.replace(' ', 'T').replace(/ /g, '').replace('UTC', '');
+  },
+  render: function render() {
+    // get statistics for each in progress
+    var progressMap = progress.map(function (deployment, index) {
+
+      return _react2.default.createElement(
+        TableRow,
+        { key: index },
+        _react2.default.createElement(
+          TableRowColumn,
+          null,
+          deployment.name
+        ),
+        _react2.default.createElement(
+          TableRowColumn,
+          null,
+          deployment.version
+        ),
+        _react2.default.createElement(
+          TableRowColumn,
+          null,
+          _react2.default.createElement(GroupDevices, { deployment: deployment.id })
+        ),
+        _react2.default.createElement(
+          TableRowColumn,
+          null,
+          _react2.default.createElement(Time, { value: this._formatTime(deployment.created), format: 'YYYY-MM-DD HH:mm' })
+        ),
+        _react2.default.createElement(
+          TableRowColumn,
+          null,
+          '--'
+        ),
+        _react2.default.createElement(
+          TableRowColumn,
+          null,
+          _react2.default.createElement(ProgressBar, { noPadding: true, deployment: deployment })
+        )
+      );
+    }, this);
+
+    var recentMap = recent.map(function (deployment, index) {
+      // if failure, get statistics
+      var status = deployment.status === "inprogress" ? "In progress" : deployment.status;
+      return _react2.default.createElement(
+        TableRow,
+        { key: index },
+        _react2.default.createElement(
+          TableRowColumn,
+          null,
+          deployment.name
+        ),
+        _react2.default.createElement(
+          TableRowColumn,
+          null,
+          deployment.version
+        ),
+        _react2.default.createElement(
+          TableRowColumn,
+          null,
+          _react2.default.createElement(GroupDevices, { deployment: deployment.id })
+        ),
+        _react2.default.createElement(
+          TableRowColumn,
+          null,
+          _react2.default.createElement(Time, { value: this._formatTime(deployment.created), format: 'YYYY-MM-DD HH:mm' })
+        ),
+        _react2.default.createElement(
+          TableRowColumn,
+          null,
+          _react2.default.createElement(Time, { value: this._formatTime(deployment.finished), format: 'YYYY-MM-DD HH:mm' })
+        ),
+        _react2.default.createElement(
+          TableRowColumn,
+          null,
+          _react2.default.createElement(FlatButton, { label: status, primary: deployment.status === 'failed', secondary: deployment.status === 'complete' })
+        )
+      );
+    }, this);
+
+    var reportActions = [{ text: 'Close' }];
+    var retryActions = [{ text: 'Cancel' }, { text: 'Deploy update', onClick: this._onUploadSubmit, primary: 'true' }];
+    return _react2.default.createElement(
+      'div',
+      null,
+      _react2.default.createElement(
+        'div',
+        { style: { marginBottom: "60" } },
+        _react2.default.createElement(
+          'h3',
+          null,
+          'In progress'
+        ),
+        _react2.default.createElement(
+          Table,
+          {
+            onCellClick: this._progressCellClick,
+            className: progressMap.length ? null : 'hidden',
+            selectable: false },
+          _react2.default.createElement(
+            TableHeader,
+            {
+              displaySelectAll: false,
+              adjustForCheckbox: false },
+            _react2.default.createElement(
+              TableRow,
+              null,
+              _react2.default.createElement(
+                TableHeaderColumn,
+                { tooltip: 'Device group' },
+                'Group'
+              ),
+              _react2.default.createElement(
+                TableHeaderColumn,
+                { tooltip: 'Target software version' },
+                'Software'
+              ),
+              _react2.default.createElement(
+                TableHeaderColumn,
+                { tooltip: 'Number of devices' },
+                '# Devices'
+              ),
+              _react2.default.createElement(
+                TableHeaderColumn,
+                { tooltip: 'Start time' },
+                'Start time'
+              ),
+              _react2.default.createElement(
+                TableHeaderColumn,
+                { tooltip: 'End time' },
+                'End time'
+              ),
+              _react2.default.createElement(
+                TableHeaderColumn,
+                { tooltip: 'Status' },
+                'Status'
+              )
+            )
+          ),
+          _react2.default.createElement(
+            TableBody,
+            {
+              showRowHover: true,
+              displayRowCheckbox: false,
+              className: 'clickable' },
+            progressMap
+          )
+        ),
+        _react2.default.createElement(
+          'div',
+          { className: progressMap.length ? 'hidden' : "dashboard-placeholder" },
+          _react2.default.createElement(
+            'p',
+            null,
+            'Ongoing deployments will appear here. Deploy an update to get started'
+          ),
+          _react2.default.createElement('img', { src: 'assets/img/deployments.png', alt: 'In progress' })
         )
       ),
       _react2.default.createElement(
         'div',
-        { className: this.props.progress.length || this.props.recent.length ? "hidden" : "dashboard-placeholder" },
+        { style: { marginTop: "60" } },
         _react2.default.createElement(
-          'p',
+          'h3',
           null,
-          'Monitor ongoing and recent updates from here'
+          'Recent'
         ),
-        _react2.default.createElement('img', { src: 'assets/img/updates.png', alt: 'updates' })
+        _react2.default.createElement(
+          Table,
+          {
+            onCellClick: this._recentCellClick,
+            className: recentMap.length ? null : 'hidden',
+            selectable: false },
+          _react2.default.createElement(
+            TableHeader,
+            {
+              displaySelectAll: false,
+              adjustForCheckbox: false },
+            _react2.default.createElement(
+              TableRow,
+              null,
+              _react2.default.createElement(
+                TableHeaderColumn,
+                { tooltip: 'Device group' },
+                'Group'
+              ),
+              _react2.default.createElement(
+                TableHeaderColumn,
+                { tooltip: 'Target software version' },
+                'Target software'
+              ),
+              _react2.default.createElement(
+                TableHeaderColumn,
+                { tooltip: 'Number of devices' },
+                '# Devices'
+              ),
+              _react2.default.createElement(
+                TableHeaderColumn,
+                { tooltip: 'Start time' },
+                'Start time'
+              ),
+              _react2.default.createElement(
+                TableHeaderColumn,
+                { tooltip: 'End time' },
+                'End time'
+              ),
+              _react2.default.createElement(
+                TableHeaderColumn,
+                { tooltip: 'Status' },
+                'Status'
+              )
+            )
+          ),
+          _react2.default.createElement(
+            TableBody,
+            {
+              showRowHover: true,
+              displayRowCheckbox: false,
+              style: { cursor: "pointer" } },
+            recentMap
+          )
+        ),
+        _react2.default.createElement(
+          'div',
+          { className: recentMap.length ? 'hidden' : "dashboard-placeholder" },
+          _react2.default.createElement(
+            'p',
+            null,
+            'Completed deployments will appear here.'
+          ),
+          _react2.default.createElement(
+            'p',
+            null,
+            'You can review logs and reports for each device group you\'ve deployed to'
+          ),
+          _react2.default.createElement('img', { src: 'assets/img/history.png', alt: 'Recent' })
+        )
+      )
+    );
+  }
+});
+
+module.exports = Recent;
+
+},{"./groupdevices":766,"./progressbar":768,"./report.js":770,"./scheduleform":773,"material-ui":257,"react":684,"react-time":522}],770:[function(require,module,exports){
+'use strict';
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactRouter = require('react-router');
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var Time = require('react-time');
+var AppActions = require('../../actions/app-actions');
+
+// material ui
+var mui = require('material-ui');
+var Table = mui.Table;
+var TableHeader = mui.TableHeader;
+var TableHeaderColumn = mui.TableHeaderColumn;
+var TableBody = mui.TableBody;
+var TableRow = mui.TableRow;
+var TableRowColumn = mui.TableRowColumn;
+var FlatButton = mui.FlatButton;
+var List = mui.List;
+var ListItem = mui.ListItem;
+var Divider = mui.Divider;
+var FontIcon = mui.FontIcon;
+var Checkbox = mui.Checkbox;
+
+var mockSuccess = [{
+  "id": "00a0c91e6-7dec-11d0-a765-f81d4faebf3",
+  "finished": "2016-03-25 00:13:00 +0000 UTC",
+  "status": "success",
+  "started": "2016-03-24 24:00:00 +0000 UTC",
+  "model": "Raspberry Pi 3",
+  "version_from": "Application 0.1"
+}, {
+  "id": "00a0c91e6-7dec-11d0-a765-f81d4faebf2",
+  "finished": "2016-03-25 00:12:00 +0000 UTC",
+  "status": "success",
+  "started": "2016-03-24 24:00:00 +0000 UTC",
+  "model": "Raspberry Pi 3",
+  "version_from": "Application 0.1"
+}, {
+  "id": "00a0c91e6-7dec-11d0-a765-f81d4faebf1",
+  "finished": "2016-03-25 00:04:00 +0000 UTC",
+  "status": "success",
+  "started": "2016-03-24 24:00:00 +0000 UTC",
+  "model": "Raspberry Pi 3",
+  "version_from": "Application 0.1"
+}];
+
+var Report = _react2.default.createClass({
+  displayName: 'Report',
+
+  getInitialState: function getInitialState() {
+    return {
+      failsOnly: this.props.deployment.status === "Failed",
+      stats: {
+        failure: null
+      }
+    };
+  },
+  componentDidMount: function componentDidMount() {
+    if (this.props.deployment.id === "00a0c91e6-7dec-11d0-a765-f81d4faebf6") {
+      this._deploymentState("devices", mockSuccess);
+    } else {
+      AppActions.getSingleDeploymentStats(this.props.deployment.id, function (stats) {
+        this._deploymentState("stats", stats);
+      }.bind(this));
+      AppActions.getSingleDeploymentDevices(this.props.deployment.id, function (devices) {
+        this._deploymentState("devices", devices);
+      }.bind(this));
+    }
+  },
+  _deploymentState: function _deploymentState(key, val) {
+    var state = {};
+    state[key] = val;
+    this.setState(state);
+  },
+  _getDeviceDetails: function _getDeviceDetails(id) {
+    // get device details not listed in schedule data
+    //return AppActions.getSingleDeviceReport(id)
+  },
+  _handleCheckbox: function _handleCheckbox(e, checked) {
+    this.setState({ failsOnly: checked });
+  },
+  _retryDeployment: function _retryDeployment() {
+    // replace contents of dialog, also change size, return contents and size on 'cancel'?
+    this.props.retryDeployment(this.props.deployment);
+  },
+  _formatTime: function _formatTime(date) {
+    return date.replace(' ', 'T').replace(/ /g, '').replace('UTC', '');
+  },
+  exportLog: function exportLog(id) {
+    AppActions.getDeviceLog(this.props.deployment.id, id, function (data) {
+      var content = data;
+      var uriContent = "data:application/octet-stream," + encodeURIComponent(content);
+      var newWindow = window.open(uriContent, 'deviceLog');
+    });
+  },
+  render: function render() {
+    var deviceList = [];
+    var encodedSoftware = encodeURIComponent(this.props.deployment.version);
+    var softwareLink = _react2.default.createElement(
+      'div',
+      null,
+      _react2.default.createElement(
+        _reactRouter.Link,
+        { style: { fontWeight: "500" }, to: '/software/' + encodedSoftware },
+        this.props.deployment.version
+      )
+    );
+
+    if (this.state.devices) {
+      deviceList = this.state.devices.map(function (device, index) {
+        var encodedDevice = encodeURIComponent("name=" + device.id);
+        var deviceLink = _react2.default.createElement(
+          'div',
+          null,
+          _react2.default.createElement(
+            _reactRouter.Link,
+            { style: { fontWeight: "500" }, to: '/devices/0/' + encodedDevice },
+            device.id
+          )
+        );
+        //var deviceDetails = this._getDeviceDetails(device.id);
+        if (device.status === "Failed" || this.state.failsOnly === false) {
+          return _react2.default.createElement(
+            TableRow,
+            { key: index },
+            _react2.default.createElement(
+              TableRowColumn,
+              null,
+              deviceLink
+            ),
+            _react2.default.createElement(
+              TableRowColumn,
+              null,
+              device.model
+            ),
+            _react2.default.createElement(
+              TableRowColumn,
+              null,
+              softwareLink
+            ),
+            _react2.default.createElement(
+              TableRowColumn,
+              null,
+              _react2.default.createElement(Time, { value: this._formatTime(device.finished), format: 'YYYY-MM-DD HH:mm' })
+            ),
+            _react2.default.createElement(
+              TableRowColumn,
+              null,
+              device.status || "--"
+            ),
+            _react2.default.createElement(
+              TableRowColumn,
+              null,
+              _react2.default.createElement(FlatButton, { onClick: this.exportLog.bind(null, device.id), label: 'Export log' })
+            )
+          );
+        }
+      }, this);
+    }
+    var status = this.props.deployment.status === "inprogress" ? "In progress" : this.props.deployment.status;
+    return _react2.default.createElement(
+      'div',
+      null,
+      _react2.default.createElement(
+        'div',
+        { className: 'report-list' },
+        _react2.default.createElement(
+          List,
+          null,
+          _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Group', secondaryText: this.props.deployment.name }),
+          _react2.default.createElement(Divider, null),
+          _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Device type', secondaryText: this.props.deployment.model || "--" }),
+          _react2.default.createElement(Divider, null),
+          _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Start time', secondaryText: _react2.default.createElement(Time, { value: this._formatTime(this.props.deployment.created), format: 'YYYY-MM-DD HH:mm' }) })
+        )
       ),
       _react2.default.createElement(
         'div',
-        { className: this.props.progress.length || this.props.recent.length ? null : "hidden" },
+        { className: 'report-list' },
         _react2.default.createElement(
-          'div',
-          { className: 'flexbox' },
-          _react2.default.createElement(Progress, { clickHandle: this._clickHandle, updates: this.props.progress }),
-          _react2.default.createElement(Recent, { clickHandle: this._clickHandle, updates: this.props.recent })
-        ),
+          List,
+          null,
+          _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Number of devices', secondaryText: deviceList.length }),
+          _react2.default.createElement(Divider, null),
+          _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Target software', secondaryText: softwareLink }),
+          _react2.default.createElement(Divider, null),
+          _react2.default.createElement(ListItem, { disabled: true, primaryText: 'End time', secondaryText: _react2.default.createElement(Time, { value: this._formatTime(this.props.deployment.finished), format: 'YYYY-MM-DD HH:mm' }) })
+        )
+      ),
+      _react2.default.createElement(
+        'div',
+        { className: 'report-list' },
         _react2.default.createElement(
-          'div',
-          { className: 'flexbox' },
+          List,
+          null,
+          _react2.default.createElement(ListItem, {
+            disabled: this.props.deployment.status !== 'Failed',
+            primaryText: 'Status',
+            secondaryText: _react2.default.createElement(
+              'p',
+              null,
+              status,
+              this.props.deployment.status !== 'Failed' ? '' : ' - Click to retry'
+            ),
+            leftIcon: _react2.default.createElement(
+              FontIcon,
+              { className: this.props.deployment.status === "inprogress" ? "hidden" : "material-icons error-icon" },
+              this.props.deployment.status !== 'Failed' ? 'check_circle' : 'error'
+            ),
+            onTouchTap: this._retryDeployment })
+        )
+      ),
+      _react2.default.createElement(
+        'div',
+        { className: this.props.deployment.status === 'Complete' ? "hidden" : null, style: { display: "inline-block", width: "200px" } },
+        _react2.default.createElement(Checkbox, {
+          label: 'Show only failures',
+          defaultChecked: this.props.deployment.status === 'Failed',
+          checked: this.state.failsOnly,
+          onCheck: this._handleCheckbox,
+          className: this.state.stats.failure ? null : "hidden" })
+      ),
+      _react2.default.createElement(
+        'div',
+        { style: { minHeight: "20vh" } },
+        _react2.default.createElement(
+          Table,
+          {
+            className: deviceList.length ? null : "hidden",
+            selectable: false },
           _react2.default.createElement(
-            'div',
-            null,
-            _react2.default.createElement(RaisedButton, { onClick: this._clickHandle.bind(null, { route: "updates", open: true }), label: 'Deploy an update', secondary: true })
+            TableHeader,
+            {
+              displaySelectAll: false,
+              adjustForCheckbox: false },
+            _react2.default.createElement(
+              TableRow,
+              null,
+              _react2.default.createElement(
+                TableHeaderColumn,
+                { tooltip: 'Device name' },
+                'Device name'
+              ),
+              _react2.default.createElement(
+                TableHeaderColumn,
+                { tooltip: 'Device type' },
+                'Device type'
+              ),
+              _react2.default.createElement(
+                TableHeaderColumn,
+                { tooltip: 'Target software' },
+                'Updated to'
+              ),
+              _react2.default.createElement(
+                TableHeaderColumn,
+                { tooltip: 'Deployment end time' },
+                'End time'
+              ),
+              _react2.default.createElement(
+                TableHeaderColumn,
+                { tooltip: 'Deployment status' },
+                'Deployment status'
+              ),
+              _react2.default.createElement(TableHeaderColumn, { tooltip: '' })
+            )
+          ),
+          _react2.default.createElement(
+            TableBody,
+            {
+              displayRowCheckbox: false },
+            deviceList
           )
         )
       )
@@ -77271,9 +78452,587 @@ var Updates = _react2.default.createClass({
   }
 });
 
-module.exports = Updates;
+module.exports = Report;
 
-},{"./progress":759,"./recent":760,"./schedule":761,"material-ui":257,"react":684}],763:[function(require,module,exports){
+},{"../../actions/app-actions":752,"material-ui":257,"react":684,"react-router":506,"react-time":522}],771:[function(require,module,exports){
+'use strict';
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var Time = require('react-time');
+
+// material ui
+var mui = require('material-ui');
+var Table = mui.Table;
+var TableHeader = mui.TableHeader;
+var TableHeaderColumn = mui.TableHeaderColumn;
+var TableBody = mui.TableBody;
+var TableRow = mui.TableRow;
+var TableRowColumn = mui.TableRowColumn;
+var FlatButton = mui.FlatButton;
+
+var Schedule = _react2.default.createClass({
+  displayName: 'Schedule',
+
+  _handleEdit: function _handleEdit(deployment) {
+    this.props.edit(deployment);
+  },
+  _handleRemove: function _handleRemove(id) {
+    this.props.remove(id);
+  },
+  render: function render() {
+    var now = new Date().getTime();
+
+    var scheduleCount = 0;
+    var schedule = this.props.schedule.map(function (deployment, index) {
+      if (deployment.start_time > now) {
+        scheduleCount++;
+        return _react2.default.createElement(
+          TableRow,
+          { key: index },
+          _react2.default.createElement(
+            TableRowColumn,
+            null,
+            deployment.group
+          ),
+          _react2.default.createElement(
+            TableRowColumn,
+            null,
+            deployment.software_version
+          ),
+          _react2.default.createElement(
+            TableRowColumn,
+            null,
+            deployment.devices.length
+          ),
+          _react2.default.createElement(
+            TableRowColumn,
+            null,
+            _react2.default.createElement(Time, { value: deployment.start_time, format: 'YYYY/MM/DD HH:mm' })
+          ),
+          _react2.default.createElement(
+            TableRowColumn,
+            null,
+            _react2.default.createElement(Time, { value: deployment.end_time, format: 'YYYY/MM/DD HH:mm' })
+          ),
+          _react2.default.createElement(
+            TableRowColumn,
+            null,
+            'Begins ',
+            _react2.default.createElement(Time, { value: deployment.start_time, format: 'YYYY/MM/DD HH:mm', relative: true })
+          ),
+          _react2.default.createElement(
+            TableRowColumn,
+            null,
+            _react2.default.createElement(
+              'div',
+              null,
+              _react2.default.createElement(FlatButton, { secondary: true, style: { padding: "0", marginRight: "4", minWidth: "55" }, label: 'Edit', onClick: this._handleEdit.bind(null, deployment) }),
+              _react2.default.createElement(FlatButton, { style: { padding: "0", marginLeft: "4", minWidth: "55" }, label: 'Remove', onClick: this._handleRemove.bind(null, deployment.id) })
+            )
+          )
+        );
+      }
+    }, this);
+    return _react2.default.createElement(
+      'div',
+      null,
+      _react2.default.createElement(
+        'h3',
+        null,
+        'Scheduled deployments'
+      ),
+      _react2.default.createElement(
+        Table,
+        {
+          className: scheduleCount ? null : 'hidden',
+          selectable: false },
+        _react2.default.createElement(
+          TableHeader,
+          {
+            displaySelectAll: false,
+            adjustForCheckbox: false },
+          _react2.default.createElement(
+            TableRow,
+            null,
+            _react2.default.createElement(
+              TableHeaderColumn,
+              { tooltip: 'Device group' },
+              'Group'
+            ),
+            _react2.default.createElement(
+              TableHeaderColumn,
+              { tooltip: 'Target software version' },
+              'Target software'
+            ),
+            _react2.default.createElement(
+              TableHeaderColumn,
+              { tooltip: 'Number of devices' },
+              '# Devices'
+            ),
+            _react2.default.createElement(
+              TableHeaderColumn,
+              { tooltip: 'Start time' },
+              'Start time'
+            ),
+            _react2.default.createElement(
+              TableHeaderColumn,
+              { tooltip: 'End time' },
+              'End time'
+            ),
+            _react2.default.createElement(
+              TableHeaderColumn,
+              { tooltip: 'Details' },
+              'Details'
+            ),
+            _react2.default.createElement(TableHeaderColumn, { tooltip: 'Actions' })
+          )
+        ),
+        _react2.default.createElement(
+          TableBody,
+          {
+            showRowHover: true,
+            displayRowCheckbox: false },
+          schedule
+        )
+      ),
+      _react2.default.createElement(
+        'div',
+        { className: scheduleCount ? 'hidden' : null },
+        _react2.default.createElement(
+          'p',
+          { className: 'italic' },
+          'No deployments scheduled'
+        )
+      )
+    );
+  }
+});
+
+module.exports = Schedule;
+
+},{"material-ui":257,"react":684,"react-time":522}],772:[function(require,module,exports){
+'use strict';
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+// material ui
+var mui = require('material-ui');
+var RaisedButton = mui.RaisedButton;
+var FlatButton = mui.FlatButton;
+
+var ScheduleButton = _react2.default.createClass({
+  displayName: 'ScheduleButton',
+
+  _handleClick: function _handleClick() {
+    var image = null;
+    if (this.props.image) {
+      image = this.props.image;
+    }
+    this.props.openDialog("schedule", image);
+  },
+  render: function render() {
+    var button = '';
+    if (this.props.buttonType === 'flat') {
+      button = _react2.default.createElement(FlatButton, { primary: this.props.primary, secondary: this.props.secondary, label: this.props.label || "Deploy an update", onClick: this._handleClick });
+    } else {
+      button = _react2.default.createElement(RaisedButton, { primary: this.props.primary, secondary: this.props.secondary, label: this.props.label || "Deploy an update", onClick: this._handleClick });
+    }
+    return _react2.default.createElement(
+      'div',
+      null,
+      button
+    );
+  }
+});
+
+module.exports = ScheduleButton;
+
+},{"material-ui":257,"react":684}],773:[function(require,module,exports){
+'use strict';
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _appStore = require('../../stores/app-store');
+
+var _appStore2 = _interopRequireDefault(_appStore);
+
+var _reactRouter = require('react-router');
+
+var _datetime = require('./datetime.js');
+
+var _datetime2 = _interopRequireDefault(_datetime);
+
+var _reactSearchInput = require('react-search-input');
+
+var _reactSearchInput2 = _interopRequireDefault(_reactSearchInput);
+
+var _materialUi = require('material-ui');
+
+var _materialUi2 = _interopRequireDefault(_materialUi);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var DatePicker = _materialUi2.default.DatePicker;
+var TimePicker = _materialUi2.default.TimePicker;
+var SelectField = _materialUi2.default.SelectField;
+var TextField = _materialUi2.default.TextField;
+var FontIcon = _materialUi2.default.FontIcon;
+var LeftNav = _materialUi2.default.LeftNav;
+var IconButton = _materialUi2.default.IconButton;
+var MenuItem = _materialUi2.default.MenuItem;
+var Divider = _materialUi2.default.Divider;
+
+function getDate() {
+  return new Date();
+}
+
+function addDate(date, days) {
+  var newDate = new Date(date);
+  newDate.setDate(newDate.getDate() + days);
+  return newDate;
+}
+
+function combineDateTime(date, time) {
+
+  var diffMs = date - time; // milliseconds
+  var diffDays = Math.round(diffMs / 86400000); // days
+
+  return addDate(time, diffDays);
+}
+
+function getDevicesFromParams(group, model) {
+  var devices = [];
+  if (model && group) {
+    devices = _appStore2.default.getDevicesFromParams(group, model);
+  }
+  return devices;
+}
+
+var ScheduleForm = _react2.default.createClass({
+  displayName: 'ScheduleForm',
+
+  getInitialState: function getInitialState() {
+    var imageVal = {
+      payload: null,
+      text: ''
+    };
+    var groupVal = {
+      payload: null,
+      text: ''
+    };
+    if (this.props.imageVal) {
+      imageVal.payload = this.props.imageVal.id;
+      imageVal.text = this.props.imageVal.name;
+    }
+    if (this.props.groupVal) {
+      groupVal.payload = this.props.groupVal.id;
+      groupVal.text = this.props.groupVal.name;
+    }
+
+    /* if single device */
+    var disabled = false;
+    var group = null;
+
+    if (this.props.device) {
+      disabled = true;
+      group = {
+        id: null,
+        name: this.props.device.name,
+        type: 'private',
+        devices: [this.props.device]
+      };
+    }
+
+    // date times
+    var start_date = this.props.start ? new Date(this.props.start) : getDate();
+    var start_time = start_date;
+    var end_date = this.props.end ? new Date(this.props.end) : addDate(getDate(), 1);
+    var end_time = end_date;
+
+    return {
+      start_time: start_time,
+      start_date: start_date,
+      end_time: end_time,
+      end_date: end_date,
+      minDate: getDate(),
+      minDate1: addDate(getDate(), 1),
+      imageVal: imageVal,
+      image: this.props.image,
+      groupVal: groupVal,
+      images: _appStore2.default.getSoftwareRepo(),
+      disabled: disabled,
+      group: group,
+      showDevices: false
+    };
+  },
+  componentDidMount: function componentDidMount() {
+    this._deploymentTimes();
+  },
+
+  _handleGroupValueChange: function _handleGroupValueChange(e, index, value) {
+    var image = this.state.image ? this.state.image.model : null;
+    var group = this.props.groups[index];
+    this.setState({
+      group: group,
+      groupVal: {
+        payload: group.id,
+        text: group.name
+      },
+      devices: getDevicesFromParams(group.name, image)
+    });
+    this._sendUpToParent(this.state.image, 'image');
+    this._sendUpToParent(group, 'group');
+  },
+  _handleImageValueChange: function _handleImageValueChange(e, index, value) {
+    var image = this.state.images[index];
+    var groupname = this.state.group ? this.state.group.name : null;
+    var devices = this.props.device ? [this.props.device] : getDevicesFromParams(groupname, image.model);
+    this.setState({
+      image: image,
+      imageVal: {
+        payload: image.id,
+        text: image.name
+      },
+      devices: devices
+    });
+    this._sendUpToParent(this.state.group, 'group');
+    this._sendUpToParent(image, 'image');
+  },
+
+  _sendUpToParent: function _sendUpToParent(val, attr) {
+    // send params to parent with dialog holder
+    this.props.deploymentSchedule(val, attr);
+  },
+  _deploymentTimes: function _deploymentTimes() {
+    var newDeployment = {};
+
+    var start_time = this.state.start_time.getTime();
+    var start_date = this.state.start_date.getTime();
+
+    newDeployment.start_time = combineDateTime(start_date, start_time).getTime();
+
+    var end_time = this.state.end_time.getTime();
+    var end_date = this.state.end_date.getTime();
+
+    newDeployment.end_time = combineDateTime(end_date, end_time).getTime();
+
+    this._sendUpToParent(newDeployment.start_time, "start_time");
+    this._sendUpToParent(newDeployment.end_time, "end_time");
+  },
+
+  _updatedDateTime: function _updatedDateTime(ref, date) {
+    var set = {};
+    set[ref] = date;
+    this.setState(set, function () {
+      this._deploymentTimes();
+    });
+  },
+
+  _showDevices: function _showDevices() {
+    this.setState({ showDevices: !this.state.showDevices });
+  },
+
+  searchUpdated: function searchUpdated(term) {
+    this.setState({ searchTerm: term }); // needed to force re-render
+  },
+
+  render: function render() {
+    var imageItems = [];
+    for (var i = 0; i < this.state.images.length; i++) {
+      var tmp = _react2.default.createElement(MenuItem, { value: this.state.images[i].id, key: i, primaryText: this.state.images[i].name });
+      imageItems.push(tmp);
+    }
+
+    var groupItems = [];
+    if (this.props.device) {
+      groupItems[0] = _react2.default.createElement(MenuItem, { value: '0', key: 'device', primaryText: this.props.device.name });
+    }
+
+    for (var i = 0; i < this.props.groups.length; i++) {
+      var tmp = _react2.default.createElement(MenuItem, { value: this.props.groups[i].id, key: i, primaryText: this.props.groups[i].name });
+      groupItems.push(tmp);
+    }
+
+    var model = this.state.image ? this.state.image.model : '';
+    var filters = "model=" + model;
+    if (this.props.device) {
+      filters = "name=" + this.props.device.name;
+    }
+    filters = encodeURIComponent(filters);
+
+    var defaultStartDate = this.state.start_time;
+    var defaultEndDate = this.state.end_time;
+    var tmpDevices = [];
+
+    if (this.refs.search && this.state.devices) {
+      var filters = ['name'];
+      tmpDevices = this.state.devices.filter(this.refs.search.filter(filters));
+    }
+
+    var deviceList = _react2.default.createElement(
+      'p',
+      null,
+      'No devices'
+    );
+    if (this.state.devices) {
+      deviceList = tmpDevices.map(function (item, index) {
+        var singleFilter = "name=" + item.name;
+        singleFilter = encodeURIComponent(singleFilter);
+        return _react2.default.createElement(
+          'p',
+          { key: index },
+          _react2.default.createElement(
+            _reactRouter.Link,
+            { to: '/devices/' + this.state.groupVal.payload + '/' + singleFilter },
+            item.name
+          )
+        );
+      }, this);
+    }
+    deviceList = _react2.default.createElement(
+      'div',
+      { className: 'slider' },
+      _react2.default.createElement(
+        IconButton,
+        { className: 'closeSlider', iconStyle: { fontSize: "16px" }, onClick: this._showDevices, style: { borderRadius: "30px", width: "40px", height: "40", position: "absolute", left: "-18px", backgroundColor: "rgba(255,255,255,1)" } },
+        _react2.default.createElement(
+          FontIcon,
+          { className: 'material-icons' },
+          'close'
+        )
+      ),
+      _react2.default.createElement(_reactSearchInput2.default, { className: 'search', ref: 'search', onChange: this.searchUpdated, placeholder: 'Search devices' }),
+      deviceList,
+      _react2.default.createElement(
+        'p',
+        { className: tmpDevices.length ? "hidden" : "italic" },
+        'No devices match this search term'
+      ),
+      _react2.default.createElement(Divider, null),
+      _react2.default.createElement(
+        'p',
+        { className: this.state.group ? this.state.group : "hidden" },
+        _react2.default.createElement(
+          _reactRouter.Link,
+          { to: '/devices/' + this.state.groupVal.payload + '/' + filters },
+          'Go to group >'
+        )
+      )
+    );
+
+    return _react2.default.createElement(
+      'div',
+      { style: { overflow: "visible", height: '440px' } },
+      _react2.default.createElement(
+        LeftNav,
+        {
+          ref: 'devicesNav',
+          docked: false,
+          openRight: true,
+          style: this.state.showDevices ? { overflow: "visible" } : { overflow: "hidden" },
+          open: this.state.showDevices,
+          overlayStyle: { backgroundColor: "rgba(0, 0, 0, 0.3)" },
+          onRequestChange: this._showDevices,
+          containerStyle: this.state.showDevices ? { overflow: "visible" } : { overflow: "hidden" }
+        },
+        deviceList
+      ),
+      _react2.default.createElement(
+        'form',
+        null,
+        _react2.default.createElement(
+          'div',
+          { style: { display: "block" } },
+          _react2.default.createElement(
+            SelectField,
+            {
+              ref: 'image',
+              value: this.state.imageVal.payload,
+              onChange: this._handleImageValueChange,
+              floatingLabelText: 'Select target software'
+            },
+            imageItems
+          ),
+          _react2.default.createElement(TextField, {
+            className: 'margin-left',
+            disabled: true,
+            hintText: 'Device type',
+            floatingLabelText: 'Device type',
+            value: model,
+            underlineDisabledStyle: { borderBottom: "none" },
+            style: { verticalAlign: "top" },
+            errorStyle: { color: "rgb(171, 16, 0)" } })
+        ),
+        _react2.default.createElement(
+          'div',
+          { style: { display: "block" } },
+          _react2.default.createElement(
+            'div',
+            { className: this.state.disabled ? 'hidden' : 'inline-block' },
+            _react2.default.createElement(
+              SelectField,
+              {
+                value: this.state.groupVal.payload,
+                ref: 'group',
+                onChange: this._handleGroupValueChange,
+                floatingLabelText: 'Select group',
+                style: { marginBottom: 10 }
+              },
+              groupItems
+            )
+          ),
+          _react2.default.createElement(
+            'div',
+            { className: this.state.disabled ? 'inline-block' : 'hidden' },
+            _react2.default.createElement(TextField, {
+              value: groupItems[0].text,
+              ref: 'device',
+              floatingLabelText: 'Device',
+              disabled: this.state.disabled,
+              underlineDisabledStyle: { borderBottom: "none" },
+              errorStyle: { color: "rgb(171, 16, 0)" } })
+          ),
+          _react2.default.createElement(
+            'div',
+            { className: this.state.devices ? null : 'hidden' },
+            this.state.devices ? this.state.devices.length : "0",
+            ' devices will be updated ',
+            _react2.default.createElement(
+              'span',
+              { onClick: this._showDevices, params: { groupId: this.state.groupVal.payload, filters: filters }, className: this.state.disabled ? "hidden" : "margin-left link" },
+              'View devices'
+            )
+          )
+        ),
+        _react2.default.createElement(
+          'p',
+          { className: 'info' },
+          _react2.default.createElement(
+            FontIcon,
+            { className: 'material-icons', style: { marginRight: "4", fontSize: "18", top: "4" } },
+            'info_outline'
+          ),
+          'Any devices that are already on the target software version will be skipped.'
+        )
+      )
+    );
+  }
+});
+
+module.exports = ScheduleForm;
+
+},{"../../stores/app-store":789,"./datetime.js":763,"material-ui":257,"react":684,"react-router":506,"react-search-input":513}],774:[function(require,module,exports){
 'use strict';
 
 var _React$createClass;
@@ -77905,7 +79664,7 @@ var DeviceList = _react2.default.createClass((_React$createClass = {
 
 module.exports = DeviceList;
 
-},{"../../actions/app-actions":752,"../../stores/app-store":789,"./filters":765,"./selecteddevices":767,"material-ui":257,"material-ui/lib/snackbar":287,"react":684,"react-dom":476}],764:[function(require,module,exports){
+},{"../../actions/app-actions":752,"../../stores/app-store":789,"./filters":776,"./selecteddevices":778,"material-ui":257,"material-ui/lib/snackbar":287,"react":684,"react-dom":476}],775:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -78023,7 +79782,7 @@ var Devices = _react2.default.createClass({
 
 module.exports = Devices;
 
-},{"../../actions/app-actions":752,"../../stores/app-store":789,"./devicelist":763,"./groups":766,"./unauthorized":768,"react":684,"react-router":506}],765:[function(require,module,exports){
+},{"../../actions/app-actions":752,"../../stores/app-store":789,"./devicelist":774,"./groups":777,"./unauthorized":779,"react":684,"react-router":506}],776:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -78215,7 +79974,7 @@ var Filters = _react2.default.createClass({
 
 module.exports = Filters;
 
-},{"material-ui":257,"react":684}],766:[function(require,module,exports){
+},{"material-ui":257,"react":684}],777:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -78523,7 +80282,7 @@ var Groups = _react2.default.createClass({
 
 module.exports = Groups;
 
-},{"../../actions/app-actions":752,"../../stores/app-store":789,"material-ui":257,"material-ui/lib/Subheader":211,"react":684,"react-search-input":513}],767:[function(require,module,exports){
+},{"../../actions/app-actions":752,"../../stores/app-store":789,"material-ui":257,"material-ui/lib/Subheader":211,"react":684,"react-search-input":513}],778:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -78536,7 +80295,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var AppStore = require('../../stores/app-store');
 var AppActions = require('../../actions/app-actions');
-var ScheduleForm = require('../updates/scheduleform');
+var ScheduleForm = require('../deployments/scheduleform');
 
 var mui = require('material-ui');
 var FlatButton = mui.FlatButton;
@@ -78602,14 +80361,14 @@ var SelectedDevices = _react2.default.createClass({
   },
 
   _onScheduleSubmit: function _onScheduleSubmit() {
-    var newUpdate = {
+    var newDeployment = {
       group: this.state.group,
       model: this.state.model,
       start_time: this.state.start_time,
       end_time: this.state.end_time,
       image: this.state.image
     };
-    AppActions.saveSchedule(newUpdate, this.props.selected.length === 1);
+    AppActions.saveSchedule(newDeployment, this.props.selected.length === 1);
     this.dialogToggle('schedule');
   },
 
@@ -78717,7 +80476,7 @@ var SelectedDevices = _react2.default.createClass({
             _react2.default.createElement(Divider, null),
             _react2.default.createElement(ListItem, {
               primaryText: 'Deploy update',
-              secondaryText: 'Click to update this device',
+              secondaryText: 'Deploy an update to this device only',
               onClick: this._clickListItem,
               leftIcon: _react2.default.createElement(
                 FontIcon,
@@ -78769,7 +80528,7 @@ var SelectedDevices = _react2.default.createClass({
           bodyStyle: { paddingTop: "0" },
           contentStyle: { overflow: "hidden", boxShadow: "0 14px 45px rgba(0, 0, 0, 0.25), 0 10px 18px rgba(0, 0, 0, 0.22)" }
         },
-        _react2.default.createElement(ScheduleForm, { images: this.props.images, device: this.props.selected[0], updateSchedule: this._updateParams, groups: this.props.groups })
+        _react2.default.createElement(ScheduleForm, { images: this.props.images, device: this.props.selected[0], deploymentSchedule: this._updateParams, groups: this.props.groups })
       )
     );
   }
@@ -78777,7 +80536,7 @@ var SelectedDevices = _react2.default.createClass({
 
 module.exports = SelectedDevices;
 
-},{"../../actions/app-actions":752,"../../stores/app-store":789,"../updates/scheduleform":783,"material-ui":257,"react":684,"react-router":506,"react-tag-input":516}],768:[function(require,module,exports){
+},{"../../actions/app-actions":752,"../../stores/app-store":789,"../deployments/scheduleform":773,"material-ui":257,"react":684,"react-router":506,"react-tag-input":516}],779:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -78973,7 +80732,7 @@ var Authorized = _react2.default.createClass({
 
 module.exports = Authorized;
 
-},{"../../actions/app-actions":752,"material-ui":257,"react":684,"react-dom":476}],769:[function(require,module,exports){
+},{"../../actions/app-actions":752,"material-ui":257,"react":684,"react-dom":476}],780:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -79019,7 +80778,7 @@ var Tabs = mui.Tabs;
 var Tab = mui.Tab;
 
 
-var menuItems = [{ route: "/", text: "Dashboard" }, { route: "/devices", text: "Devices" }, { route: "/software", text: "Software" }, { route: "/updates", text: "Updates" }];
+var menuItems = [{ route: "/", text: "Dashboard" }, { route: "/devices", text: "Devices" }, { route: "/software", text: "Software" }, { route: "/deployments", text: "Deployments" }];
 
 var styles = {
   tabs: {
@@ -79048,7 +80807,7 @@ var Header = _react2.default.createClass({
     this.setState({ tabIndex: this._updateActive() });
   },
   _updateActive: function _updateActive() {
-    return this.context.router.isActive({ pathname: '/' }, true) ? '0' : this.context.router.isActive('/devices') ? '1' : this.context.router.isActive('/software') ? '2' : this.context.router.isActive('/updates') ? '3' : '0';
+    return this.context.router.isActive({ pathname: '/' }, true) ? '0' : this.context.router.isActive('/devices') ? '1' : this.context.router.isActive('/software') ? '2' : this.context.router.isActive('/deployments') ? '3' : '0';
   },
   _handleTabActive: function _handleTabActive(tab) {
     this.context.router.push(tab.props.route);
@@ -79117,7 +80876,30 @@ Header.contextTypes = {
 
 module.exports = Header;
 
-},{"material-ui":257,"material-ui/lib/font-icon":252,"material-ui/lib/icon-button":256,"material-ui/lib/menus/icon-menu":264,"material-ui/lib/menus/menu-item":265,"material-ui/lib/toolbar/toolbar":341,"material-ui/lib/toolbar/toolbar-group":338,"material-ui/lib/toolbar/toolbar-title":340,"react":684,"react-router":506}],770:[function(require,module,exports){
+},{"material-ui":257,"material-ui/lib/font-icon":252,"material-ui/lib/icon-button":256,"material-ui/lib/menus/icon-menu":264,"material-ui/lib/menus/menu-item":265,"material-ui/lib/toolbar/toolbar":341,"material-ui/lib/toolbar/toolbar-group":338,"material-ui/lib/toolbar/toolbar-title":340,"react":684,"react-router":506}],781:[function(require,module,exports){
+'use strict';
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+// material ui
+var mui = require('material-ui');
+var RaisedButton = mui.RaisedButton;
+
+var DeploymentButton = _react2.default.createClass({
+  displayName: 'DeploymentButton',
+
+  render: function render() {
+    return _react2.default.createElement(RaisedButton, { label: 'Deploy update ' });
+  }
+});
+
+module.exports = DeploymentButton;
+
+},{"material-ui":257,"react":684}],782:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -79136,7 +80918,7 @@ var _appActions = require('../../actions/app-actions');
 
 var _appActions2 = _interopRequireDefault(_appActions);
 
-var _scheduleform = require('../updates/scheduleform');
+var _scheduleform = require('../deployments/scheduleform');
 
 var _scheduleform2 = _interopRequireDefault(_scheduleform);
 
@@ -79148,9 +80930,9 @@ var _reactSearchInput = require('react-search-input');
 
 var _reactSearchInput2 = _interopRequireDefault(_reactSearchInput);
 
-var _updatebutton = require('./updatebutton.js');
+var _deploymentbutton = require('./deploymentbutton.js');
 
-var _updatebutton2 = _interopRequireDefault(_updatebutton);
+var _deploymentbutton2 = _interopRequireDefault(_deploymentbutton);
 
 var _selectedimage = require('./selectedimage.js');
 
@@ -79233,14 +81015,14 @@ var Repository = _react2.default.createClass({
     this.setState(obj);
   },
   _onScheduleSubmit: function _onScheduleSubmit() {
-    var newUpdate = {
+    var newDeployment = {
       group: this.state.group,
       model: this.state.model,
       start_time: this.state.start_time,
       end_time: this.state.end_time,
       image: this.state.image
     };
-    _appActions2.default.saveSchedule(newUpdate, this.state.disabled);
+    _appActions2.default.saveSchedule(newDeployment, this.state.disabled);
     this.dialogDismiss('schedule');
   },
   _onUploadSubmit: function _onUploadSubmit() {
@@ -79674,7 +81456,7 @@ var Repository = _react2.default.createClass({
           contentStyle: { overflow: "hidden", boxShadow: "0 14px 45px rgba(0, 0, 0, 0.25), 0 10px 18px rgba(0, 0, 0, 0.22)" },
           actionsContainerStyle: { marginBottom: "0" }
         },
-        _react2.default.createElement(_scheduleform2.default, { updateSchedule: this._updateParams, images: software, image: this.state.image, imageVal: this.state.image, groups: this.props.groups })
+        _react2.default.createElement(_scheduleform2.default, { deploymentSchedule: this._updateParams, images: software, image: this.state.image, imageVal: this.state.image, groups: this.props.groups })
       )
     );
   }
@@ -79682,7 +81464,7 @@ var Repository = _react2.default.createClass({
 
 module.exports = Repository;
 
-},{"../../actions/app-actions":752,"../../stores/app-store":789,"../updates/scheduleform":783,"./selectedimage.js":771,"./updatebutton.js":773,"material-ui":257,"react":684,"react-addons-update":365,"react-dom":476,"react-file-input":478,"react-router":506,"react-search-input":513,"react-tag-input":516,"react-time":522}],771:[function(require,module,exports){
+},{"../../actions/app-actions":752,"../../stores/app-store":789,"../deployments/scheduleform":773,"./deploymentbutton.js":781,"./selectedimage.js":783,"material-ui":257,"react":684,"react-addons-update":365,"react-dom":476,"react-file-input":478,"react-router":506,"react-search-input":513,"react-tag-input":516,"react-time":522}],783:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -79935,8 +81717,8 @@ var SelectedImage = _react2.default.createClass({
             { style: { backgroundColor: "rgba(255,255,255,0)" } },
             _react2.default.createElement(ListItem, {
               disabled: this.props.image.name ? false : true,
-              primaryText: 'Deploy update',
-              secondaryText: 'Update devices with this image',
+              primaryText: 'Deploy as an update',
+              secondaryText: 'Deploy this image to devices',
               onClick: this._clickImageSchedule,
               leftIcon: _react2.default.createElement(
                 FontIcon,
@@ -79958,7 +81740,7 @@ SelectedImage.contextTypes = {
 
 module.exports = SelectedImage;
 
-},{"material-ui":257,"react":684,"react-router":506,"react-tag-input":516,"react-time":522}],772:[function(require,module,exports){
+},{"material-ui":257,"react":684,"react-router":506,"react-tag-input":516,"react-time":522}],784:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -80032,8 +81814,8 @@ var Software = _react2.default.createClass({
           ),
           _react2.default.createElement(
             _reactRouter.Link,
-            { className: this.state.uploadTODO ? "float-right margin-right" : "hidden", to: '/updates' },
-            'Go to updates'
+            { className: this.state.uploadTODO ? "float-right margin-right" : "hidden", to: '/deployments' },
+            'Go to deployments'
           )
         )
       ),
@@ -80048,1789 +81830,7 @@ var Software = _react2.default.createClass({
 
 module.exports = Software;
 
-},{"../../actions/app-actions":752,"../../stores/app-store":789,"../../stores/local-store":790,"./repository.js":770,"react":684,"react-router":506}],773:[function(require,module,exports){
-'use strict';
-
-var _react = require('react');
-
-var _react2 = _interopRequireDefault(_react);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-// material ui
-var mui = require('material-ui');
-var RaisedButton = mui.RaisedButton;
-
-var UpdateButton = _react2.default.createClass({
-  displayName: 'UpdateButton',
-
-  render: function render() {
-    return _react2.default.createElement(RaisedButton, { label: 'Deploy update ' });
-  }
-});
-
-module.exports = UpdateButton;
-
-},{"material-ui":257,"react":684}],774:[function(require,module,exports){
-'use strict';
-
-var _react = require('react');
-
-var _react2 = _interopRequireDefault(_react);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-// material ui
-var mui = require('material-ui');
-var DatePicker = mui.DatePicker;
-var TimePicker = mui.TimePicker;
-
-var DateTime = _react2.default.createClass({
-  displayName: 'DateTime',
-
-  _update: function _update(e, date) {
-    this.props.changed(this.props.my_ref, date);
-  },
-  render: function render() {
-    var element = _react2.default.createElement('div', null);
-    if (this.props.date) {
-      element = _react2.default.createElement(DatePicker, {
-        floatingLabelText: this.props.label,
-        autoOk: true,
-        ref: this.props.ref,
-        defaultDate: this.props.defaultDate,
-        minDate: this.props.minDate,
-        mode: 'landscape',
-        onChange: this._update });
-    } else if (this.props.time) {
-      element = _react2.default.createElement(TimePicker, {
-        format: '24hr',
-        ref: this.props.ref,
-        defaultTime: this.props.defaultDate,
-        floatingLabelText: this.props.label,
-        onChange: this._update });
-    }
-    return _react2.default.createElement(
-      'div',
-      null,
-      element
-    );
-  }
-});
-
-module.exports = DateTime;
-
-},{"material-ui":257,"react":684}],775:[function(require,module,exports){
-'use strict';
-
-var _react = require('react');
-
-var _react2 = _interopRequireDefault(_react);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-// material ui
-var mui = require('material-ui');
-var Table = mui.Table;
-var TableHeader = mui.TableHeader;
-var TableHeaderColumn = mui.TableHeaderColumn;
-var TableBody = mui.TableBody;
-var TableRow = mui.TableRow;
-var TableRowColumn = mui.TableRowColumn;
-
-var FlatButton = mui.FlatButton;
-var RaisedButton = mui.RaisedButton;
-
-var EventLog = _react2.default.createClass({
-  displayName: 'EventLog',
-
-  render: function render() {
-    return _react2.default.createElement(
-      'div',
-      null,
-      _react2.default.createElement(
-        'p',
-        { className: 'italic' },
-        '... Coming soon ...'
-      ),
-      _react2.default.createElement(
-        'div',
-        null,
-        _react2.default.createElement(FlatButton, { label: 'Flat neutral' }),
-        _react2.default.createElement('div', { style: { width: "20", display: "inline-block" } }),
-        _react2.default.createElement(FlatButton, { label: 'Flat secondary', secondary: true }),
-        _react2.default.createElement('div', { style: { width: "20", display: "inline-block" } }),
-        _react2.default.createElement(FlatButton, { label: 'Flat primary', primary: true })
-      ),
-      _react2.default.createElement(
-        'div',
-        null,
-        _react2.default.createElement(FlatButton, { label: 'Flat neutral' }),
-        _react2.default.createElement('div', { style: { width: "20", display: "inline-block" } }),
-        _react2.default.createElement(FlatButton, { label: 'Flat secondary', secondary: true }),
-        _react2.default.createElement('div', { style: { width: "20", display: "inline-block" } }),
-        _react2.default.createElement(FlatButton, { label: 'Flat primary', primary: true })
-      ),
-      _react2.default.createElement(
-        'div',
-        { className: 'margin-top' },
-        _react2.default.createElement(RaisedButton, { label: 'Raised neutral' }),
-        _react2.default.createElement('div', { style: { width: "20", display: "inline-block" } }),
-        _react2.default.createElement(RaisedButton, { label: 'Raised secondary', secondary: true }),
-        _react2.default.createElement('div', { style: { width: "20", display: "inline-block" } }),
-        _react2.default.createElement(RaisedButton, { label: 'Raised primary', primary: true })
-      ),
-      _react2.default.createElement(
-        'div',
-        { className: 'margin-top' },
-        _react2.default.createElement(RaisedButton, { label: 'Raised neutral' }),
-        _react2.default.createElement('div', { style: { width: "20", display: "inline-block" } }),
-        _react2.default.createElement(RaisedButton, { label: 'Raised secondary', secondary: true }),
-        _react2.default.createElement('div', { style: { width: "20", display: "inline-block" } }),
-        _react2.default.createElement(RaisedButton, { label: 'Raised primary', primary: true })
-      )
-    );
-  }
-});
-
-module.exports = EventLog;
-
-},{"material-ui":257,"react":684}],776:[function(require,module,exports){
-'use strict';
-
-var _react = require('react');
-
-var _react2 = _interopRequireDefault(_react);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var AppActions = require('../../actions/app-actions');
-
-var GroupDevices = _react2.default.createClass({
-  displayName: 'GroupDevices',
-
-  getInitialState: function getInitialState() {
-    return {
-      devices: "-"
-    };
-  },
-  componentWillMount: function componentWillMount() {
-    this.getDevices();
-  },
-  getDevices: function getDevices() {
-    if (this.props.update === "00a0c91e6-7dec-11d0-a765-f81d4faebf6") {
-      this.setState({ devices: 3 });
-    } else {
-      AppActions.getSingleUpdateDevices(this.props.update, function (devices) {
-        // retrieve number of devices from child
-        this.setState({ devices: devices.length });
-      }.bind(this));
-    }
-  },
-  render: function render() {
-    return _react2.default.createElement(
-      'span',
-      null,
-      this.state.devices
-    );
-  }
-});
-
-module.exports = GroupDevices;
-
-},{"../../actions/app-actions":752,"react":684}],777:[function(require,module,exports){
-'use strict';
-
-var _react = require('react');
-
-var _react2 = _interopRequireDefault(_react);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var AppActions = require('../../actions/app-actions');
-
-// material ui
-var mui = require('material-ui');
-
-var ProgressBar = _react2.default.createClass({
-  displayName: 'ProgressBar',
-
-  getInitialState: function getInitialState() {
-    return {
-      devices: [],
-      stats: {
-        "successful": 0,
-        "pending": 0,
-        "inprogress": 0,
-        "failure": 0,
-        "noimage": 0
-      }
-    };
-  },
-  componentDidMount: function componentDidMount() {
-    AppActions.getSingleUpdateStats(this.props.update.id, function (stats) {
-      this.setState({ stats: stats });
-    }.bind(this));
-    AppActions.getSingleUpdateDevices(this.props.update.id, function (devices) {
-      this.setState({ devices: devices });
-      this.props.getDevices(devices.length, this.props.index);
-    }.bind(this));
-  },
-  _handleClick: function _handleClick() {},
-  _sendUpPercentage: function _sendUpPercentage(per) {
-    this.props.gotPercent(per);
-  },
-  render: function render() {
-    // used for MOCK API because devices.length does not equal stats length
-    var totalDevices = this.state.stats.successful + this.state.stats.failure + this.state.stats.inprogress + this.state.stats.pending;
-
-    var success = (this.state.stats.successful / totalDevices * 100).toFixed(0);
-    var failures = (this.state.stats.failure / totalDevices * 100).toFixed(0);
-    var progress = (this.state.stats.inprogress / totalDevices * 100).toFixed(0);
-    var percentDone = Number(success) + Number(failures);
-
-    var progressBar = _react2.default.createElement(
-      'div',
-      { className: this.props.noPadding ? "tableBar progressBar" : "progressBar" },
-      _react2.default.createElement(
-        'div',
-        { className: 'lightgrey' },
-        _react2.default.createElement('div', { className: 'green float-left', style: { width: success + "%" } }),
-        _react2.default.createElement('div', { className: 'red float-left', style: { width: failures + "%" } }),
-        _react2.default.createElement('div', { className: 'grey float-left', style: { width: progress + "%" } })
-      ),
-      _react2.default.createElement(
-        'div',
-        { className: 'percentage' },
-        _react2.default.createElement(
-          'span',
-          null,
-          percentDone || 0,
-          '%'
-        )
-      )
-    );
-    return _react2.default.createElement(
-      'div',
-      null,
-      progressBar
-    );
-  }
-});
-
-module.exports = ProgressBar;
-
-},{"../../actions/app-actions":752,"material-ui":257,"react":684}],778:[function(require,module,exports){
-'use strict';
-
-var _react = require('react');
-
-var _react2 = _interopRequireDefault(_react);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var AppActions = require('../../actions/app-actions');
-
-// material ui
-var mui = require('material-ui');
-
-var ProgressBar = _react2.default.createClass({
-  displayName: 'ProgressBar',
-
-  getInitialState: function getInitialState() {
-    return {
-      devices: [],
-      stats: {
-        "successful": 0,
-        "pending": 0,
-        "inprogress": 0,
-        "failure": 0,
-        "noimage": 0
-      }
-    };
-  },
-  componentDidMount: function componentDidMount() {
-    AppActions.getSingleUpdateStats(this.props.update.id, function (stats) {
-      this.setState({ stats: stats });
-    }.bind(this));
-    AppActions.getSingleUpdateDevices(this.props.update.id, function (devices) {
-      this.setState({ devices: devices });
-      this.props.getDevices(devices.length, this.props.index);
-    }.bind(this));
-  },
-  _handleClick: function _handleClick() {},
-  _sendUpPercentage: function _sendUpPercentage(per) {
-    this.props.gotPercent(per);
-  },
-  render: function render() {
-    // used for MOCK API because devices.length does not equal stats length
-    var totalDevices = this.state.stats.successful + this.state.stats.failure + this.state.stats.inprogress + this.state.stats.pending;
-
-    var success = (this.state.stats.successful / totalDevices * 100).toFixed(0);
-    var failures = (this.state.stats.failure / totalDevices * 100).toFixed(0);
-    var progress = (this.state.stats.inprogress / totalDevices * 100).toFixed(0);
-    var percentDone = Number(success) + Number(failures);
-
-    var progressBar = _react2.default.createElement(
-      'div',
-      { className: this.props.noPadding ? "tableBar progressBar" : "progressBar" },
-      _react2.default.createElement(
-        'div',
-        { className: 'lightgrey' },
-        _react2.default.createElement('div', { className: 'green float-left', style: { width: success + "%" } }),
-        _react2.default.createElement('div', { className: 'red float-left', style: { width: failures + "%" } }),
-        _react2.default.createElement('div', { className: 'grey float-left', style: { width: progress + "%" } })
-      ),
-      _react2.default.createElement(
-        'div',
-        { className: 'percentage' },
-        _react2.default.createElement(
-          'span',
-          null,
-          percentDone || 0,
-          '%'
-        )
-      )
-    );
-    return _react2.default.createElement(
-      'div',
-      null,
-      progressBar
-    );
-  }
-});
-
-module.exports = ProgressBar;
-
-},{"../../actions/app-actions":752,"material-ui":257,"react":684}],779:[function(require,module,exports){
-'use strict';
-
-var _react = require('react');
-
-var _react2 = _interopRequireDefault(_react);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var Time = require('react-time');
-var Report = require('./report.js');
-var ScheduleForm = require('./scheduleform');
-var GroupDevices = require('./groupdevices');
-
-var ProgressBar = require('./progressbar');
-
-// material ui
-var mui = require('material-ui');
-var Table = mui.Table;
-var TableHeader = mui.TableHeader;
-var TableHeaderColumn = mui.TableHeaderColumn;
-var TableBody = mui.TableBody;
-var TableRow = mui.TableRow;
-var TableRowColumn = mui.TableRowColumn;
-var FlatButton = mui.FlatButton;
-
-var progress = [];
-var recent = [];
-
-var Recent = _react2.default.createClass({
-  displayName: 'Recent',
-
-  getInitialState: function getInitialState() {
-    return {
-      showReport: null,
-      retry: false
-    };
-  },
-  componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
-    progress = nextProps.progress;
-    recent = nextProps.recent;
-  },
-  _recentCellClick: function _recentCellClick(rowNumber, columnId) {
-    var report = recent[rowNumber];
-    this.props.showReport(report);
-  },
-  _progressCellClick: function _progressCellClick(rowNumber, columnId) {
-    var report = progress[rowNumber];
-    this.props.showReport(report);
-  },
-  _formatTime: function _formatTime(date) {
-    return date.replace(' ', 'T').replace(/ /g, '').replace('UTC', '');
-  },
-  render: function render() {
-    // get statistics for each in progress
-    var progressMap = progress.map(function (update, index) {
-
-      return _react2.default.createElement(
-        TableRow,
-        { key: index },
-        _react2.default.createElement(
-          TableRowColumn,
-          null,
-          update.name
-        ),
-        _react2.default.createElement(
-          TableRowColumn,
-          null,
-          update.version
-        ),
-        _react2.default.createElement(
-          TableRowColumn,
-          null,
-          _react2.default.createElement(GroupDevices, { update: update.id })
-        ),
-        _react2.default.createElement(
-          TableRowColumn,
-          null,
-          _react2.default.createElement(Time, { value: this._formatTime(update.created), format: 'YYYY-MM-DD HH:mm' })
-        ),
-        _react2.default.createElement(
-          TableRowColumn,
-          null,
-          '--'
-        ),
-        _react2.default.createElement(
-          TableRowColumn,
-          null,
-          _react2.default.createElement(ProgressBar, { noPadding: true, update: update })
-        )
-      );
-    }, this);
-
-    var recentMap = recent.map(function (update, index) {
-      // if failure, get statistics
-      var status = update.status === "inprogress" ? "In progress" : update.status;
-      return _react2.default.createElement(
-        TableRow,
-        { key: index },
-        _react2.default.createElement(
-          TableRowColumn,
-          null,
-          update.name
-        ),
-        _react2.default.createElement(
-          TableRowColumn,
-          null,
-          update.version
-        ),
-        _react2.default.createElement(
-          TableRowColumn,
-          null,
-          _react2.default.createElement(GroupDevices, { update: update.id })
-        ),
-        _react2.default.createElement(
-          TableRowColumn,
-          null,
-          _react2.default.createElement(Time, { value: this._formatTime(update.created), format: 'YYYY-MM-DD HH:mm' })
-        ),
-        _react2.default.createElement(
-          TableRowColumn,
-          null,
-          _react2.default.createElement(Time, { value: this._formatTime(update.finished), format: 'YYYY-MM-DD HH:mm' })
-        ),
-        _react2.default.createElement(
-          TableRowColumn,
-          null,
-          _react2.default.createElement(FlatButton, { label: status, primary: update.status === 'failed', secondary: update.status === 'complete' })
-        )
-      );
-    }, this);
-
-    var reportActions = [{ text: 'Close' }];
-    var retryActions = [{ text: 'Cancel' }, { text: 'Deploy update', onClick: this._onUploadSubmit, primary: 'true' }];
-    return _react2.default.createElement(
-      'div',
-      null,
-      _react2.default.createElement(
-        'div',
-        { style: { marginBottom: "60" } },
-        _react2.default.createElement(
-          'h3',
-          null,
-          'In progress'
-        ),
-        _react2.default.createElement(
-          Table,
-          {
-            onCellClick: this._progressCellClick,
-            className: progressMap.length ? null : 'hidden',
-            selectable: false },
-          _react2.default.createElement(
-            TableHeader,
-            {
-              displaySelectAll: false,
-              adjustForCheckbox: false },
-            _react2.default.createElement(
-              TableRow,
-              null,
-              _react2.default.createElement(
-                TableHeaderColumn,
-                { tooltip: 'Device group' },
-                'Group'
-              ),
-              _react2.default.createElement(
-                TableHeaderColumn,
-                { tooltip: 'Target software version' },
-                'Software'
-              ),
-              _react2.default.createElement(
-                TableHeaderColumn,
-                { tooltip: 'Number of devices' },
-                '# Devices'
-              ),
-              _react2.default.createElement(
-                TableHeaderColumn,
-                { tooltip: 'Start time' },
-                'Start time'
-              ),
-              _react2.default.createElement(
-                TableHeaderColumn,
-                { tooltip: 'End time' },
-                'End time'
-              ),
-              _react2.default.createElement(
-                TableHeaderColumn,
-                { tooltip: 'Status' },
-                'Status'
-              )
-            )
-          ),
-          _react2.default.createElement(
-            TableBody,
-            {
-              showRowHover: true,
-              displayRowCheckbox: false,
-              className: 'clickable' },
-            progressMap
-          )
-        ),
-        _react2.default.createElement(
-          'div',
-          { className: progressMap.length ? 'hidden' : "dashboard-placeholder" },
-          _react2.default.createElement(
-            'p',
-            null,
-            'Ongoing updates will appear here. Deploy an update to get started'
-          ),
-          _react2.default.createElement('img', { src: 'assets/img/updates.png', alt: 'In progress' })
-        )
-      ),
-      _react2.default.createElement(
-        'div',
-        { style: { marginTop: "60" } },
-        _react2.default.createElement(
-          'h3',
-          null,
-          'Recent'
-        ),
-        _react2.default.createElement(
-          Table,
-          {
-            onCellClick: this._recentCellClick,
-            className: recentMap.length ? null : 'hidden',
-            selectable: false },
-          _react2.default.createElement(
-            TableHeader,
-            {
-              displaySelectAll: false,
-              adjustForCheckbox: false },
-            _react2.default.createElement(
-              TableRow,
-              null,
-              _react2.default.createElement(
-                TableHeaderColumn,
-                { tooltip: 'Device group' },
-                'Group'
-              ),
-              _react2.default.createElement(
-                TableHeaderColumn,
-                { tooltip: 'Target software version' },
-                'Target software'
-              ),
-              _react2.default.createElement(
-                TableHeaderColumn,
-                { tooltip: 'Number of devices' },
-                '# Devices'
-              ),
-              _react2.default.createElement(
-                TableHeaderColumn,
-                { tooltip: 'Start time' },
-                'Start time'
-              ),
-              _react2.default.createElement(
-                TableHeaderColumn,
-                { tooltip: 'End time' },
-                'End time'
-              ),
-              _react2.default.createElement(
-                TableHeaderColumn,
-                { tooltip: 'Status' },
-                'Status'
-              )
-            )
-          ),
-          _react2.default.createElement(
-            TableBody,
-            {
-              showRowHover: true,
-              displayRowCheckbox: false,
-              style: { cursor: "pointer" } },
-            recentMap
-          )
-        ),
-        _react2.default.createElement(
-          'div',
-          { className: recentMap.length ? 'hidden' : "dashboard-placeholder" },
-          _react2.default.createElement(
-            'p',
-            null,
-            'Completed updates will appear here.'
-          ),
-          _react2.default.createElement(
-            'p',
-            null,
-            'You can review logs and reports for each device group you\'ve deployed to'
-          ),
-          _react2.default.createElement('img', { src: 'assets/img/history.png', alt: 'Recent' })
-        )
-      )
-    );
-  }
-});
-
-module.exports = Recent;
-
-},{"./groupdevices":776,"./progressbar":778,"./report.js":780,"./scheduleform":783,"material-ui":257,"react":684,"react-time":522}],780:[function(require,module,exports){
-'use strict';
-
-var _react = require('react');
-
-var _react2 = _interopRequireDefault(_react);
-
-var _reactRouter = require('react-router');
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var Time = require('react-time');
-var AppActions = require('../../actions/app-actions');
-
-// material ui
-var mui = require('material-ui');
-var Table = mui.Table;
-var TableHeader = mui.TableHeader;
-var TableHeaderColumn = mui.TableHeaderColumn;
-var TableBody = mui.TableBody;
-var TableRow = mui.TableRow;
-var TableRowColumn = mui.TableRowColumn;
-var FlatButton = mui.FlatButton;
-var List = mui.List;
-var ListItem = mui.ListItem;
-var Divider = mui.Divider;
-var FontIcon = mui.FontIcon;
-var Checkbox = mui.Checkbox;
-
-var mockSuccess = [{
-  "id": "00a0c91e6-7dec-11d0-a765-f81d4faebf3",
-  "finished": "2016-03-25 00:13:00 +0000 UTC",
-  "status": "success",
-  "started": "2016-03-24 24:00:00 +0000 UTC",
-  "model": "Raspberry Pi 3",
-  "version_from": "Application 0.1"
-}, {
-  "id": "00a0c91e6-7dec-11d0-a765-f81d4faebf2",
-  "finished": "2016-03-25 00:12:00 +0000 UTC",
-  "status": "success",
-  "started": "2016-03-24 24:00:00 +0000 UTC",
-  "model": "Raspberry Pi 3",
-  "version_from": "Application 0.1"
-}, {
-  "id": "00a0c91e6-7dec-11d0-a765-f81d4faebf1",
-  "finished": "2016-03-25 00:04:00 +0000 UTC",
-  "status": "success",
-  "started": "2016-03-24 24:00:00 +0000 UTC",
-  "model": "Raspberry Pi 3",
-  "version_from": "Application 0.1"
-}];
-
-var Report = _react2.default.createClass({
-  displayName: 'Report',
-
-  getInitialState: function getInitialState() {
-    return {
-      failsOnly: this.props.update.status === "Failed",
-      stats: {
-        failure: null
-      }
-    };
-  },
-  componentDidMount: function componentDidMount() {
-    if (this.props.update.id === "00a0c91e6-7dec-11d0-a765-f81d4faebf6") {
-      this._updateState("devices", mockSuccess);
-    } else {
-      AppActions.getSingleUpdateStats(this.props.update.id, function (stats) {
-        this._updateState("stats", stats);
-      }.bind(this));
-      AppActions.getSingleUpdateDevices(this.props.update.id, function (devices) {
-        this._updateState("devices", devices);
-      }.bind(this));
-    }
-  },
-  _updateState: function _updateState(key, val) {
-    var state = {};
-    state[key] = val;
-    this.setState(state);
-  },
-  _getDeviceDetails: function _getDeviceDetails(id) {
-    // get device details not listed in schedule data
-    //return AppActions.getSingleDeviceReport(id)
-  },
-  _handleCheckbox: function _handleCheckbox(e, checked) {
-    this.setState({ failsOnly: checked });
-  },
-  _retryUpdate: function _retryUpdate() {
-    // replace contents of dialog, also change size, return contents and size on 'cancel'?
-    this.props.retryUpdate(this.props.update);
-  },
-  _formatTime: function _formatTime(date) {
-    return date.replace(' ', 'T').replace(/ /g, '').replace('UTC', '');
-  },
-  exportLog: function exportLog(id) {
-    AppActions.getDeviceLog(this.props.update.id, id, function (data) {
-      var content = data;
-      var uriContent = "data:application/octet-stream," + encodeURIComponent(content);
-      var newWindow = window.open(uriContent, 'deviceLog');
-    });
-  },
-  render: function render() {
-    var deviceList = [];
-    var encodedSoftware = encodeURIComponent(this.props.update.version);
-    var softwareLink = _react2.default.createElement(
-      'div',
-      null,
-      _react2.default.createElement(
-        _reactRouter.Link,
-        { style: { fontWeight: "500" }, to: '/software/' + encodedSoftware },
-        this.props.update.version
-      )
-    );
-
-    if (this.state.devices) {
-      deviceList = this.state.devices.map(function (device, index) {
-        var encodedDevice = encodeURIComponent("name=" + device.id);
-        var deviceLink = _react2.default.createElement(
-          'div',
-          null,
-          _react2.default.createElement(
-            _reactRouter.Link,
-            { style: { fontWeight: "500" }, to: '/devices/0/' + encodedDevice },
-            device.id
-          )
-        );
-        //var deviceDetails = this._getDeviceDetails(device.id);
-        if (device.status === "Failed" || this.state.failsOnly === false) {
-          return _react2.default.createElement(
-            TableRow,
-            { key: index },
-            _react2.default.createElement(
-              TableRowColumn,
-              null,
-              deviceLink
-            ),
-            _react2.default.createElement(
-              TableRowColumn,
-              null,
-              device.model
-            ),
-            _react2.default.createElement(
-              TableRowColumn,
-              null,
-              softwareLink
-            ),
-            _react2.default.createElement(
-              TableRowColumn,
-              null,
-              _react2.default.createElement(Time, { value: this._formatTime(device.finished), format: 'YYYY-MM-DD HH:mm' })
-            ),
-            _react2.default.createElement(
-              TableRowColumn,
-              null,
-              device.status || "--"
-            ),
-            _react2.default.createElement(
-              TableRowColumn,
-              null,
-              _react2.default.createElement(FlatButton, { onClick: this.exportLog.bind(null, device.id), label: 'Export log' })
-            )
-          );
-        }
-      }, this);
-    }
-    var status = this.props.update.status === "inprogress" ? "In progress" : this.props.update.status;
-    return _react2.default.createElement(
-      'div',
-      null,
-      _react2.default.createElement(
-        'div',
-        { className: 'report-list' },
-        _react2.default.createElement(
-          List,
-          null,
-          _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Group', secondaryText: this.props.update.name }),
-          _react2.default.createElement(Divider, null),
-          _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Device type', secondaryText: this.props.update.model || "--" }),
-          _react2.default.createElement(Divider, null),
-          _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Start time', secondaryText: _react2.default.createElement(Time, { value: this._formatTime(this.props.update.created), format: 'YYYY-MM-DD HH:mm' }) })
-        )
-      ),
-      _react2.default.createElement(
-        'div',
-        { className: 'report-list' },
-        _react2.default.createElement(
-          List,
-          null,
-          _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Number of devices', secondaryText: deviceList.length }),
-          _react2.default.createElement(Divider, null),
-          _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Target software', secondaryText: softwareLink }),
-          _react2.default.createElement(Divider, null),
-          _react2.default.createElement(ListItem, { disabled: true, primaryText: 'End time', secondaryText: _react2.default.createElement(Time, { value: this._formatTime(this.props.update.finished), format: 'YYYY-MM-DD HH:mm' }) })
-        )
-      ),
-      _react2.default.createElement(
-        'div',
-        { className: 'report-list' },
-        _react2.default.createElement(
-          List,
-          null,
-          _react2.default.createElement(ListItem, {
-            disabled: this.props.update.status !== 'Failed',
-            primaryText: 'Status',
-            secondaryText: _react2.default.createElement(
-              'p',
-              null,
-              status,
-              this.props.update.status !== 'Failed' ? '' : ' - Click to retry'
-            ),
-            leftIcon: _react2.default.createElement(
-              FontIcon,
-              { className: this.props.update.status === "inprogress" ? "hidden" : "material-icons error-icon" },
-              this.props.update.status !== 'Failed' ? 'check_circle' : 'error'
-            ),
-            onTouchTap: this._retryUpdate })
-        )
-      ),
-      _react2.default.createElement(
-        'div',
-        { className: this.props.update.status === 'Complete' ? "hidden" : null, style: { display: "inline-block", width: "200px" } },
-        _react2.default.createElement(Checkbox, {
-          label: 'Show only failures',
-          defaultChecked: this.props.update.status === 'Failed',
-          checked: this.state.failsOnly,
-          onCheck: this._handleCheckbox,
-          className: this.state.stats.failure ? null : "hidden" })
-      ),
-      _react2.default.createElement(
-        'div',
-        { style: { minHeight: "20vh" } },
-        _react2.default.createElement(
-          Table,
-          {
-            className: deviceList.length ? null : "hidden",
-            selectable: false },
-          _react2.default.createElement(
-            TableHeader,
-            {
-              displaySelectAll: false,
-              adjustForCheckbox: false },
-            _react2.default.createElement(
-              TableRow,
-              null,
-              _react2.default.createElement(
-                TableHeaderColumn,
-                { tooltip: 'Device name' },
-                'Device name'
-              ),
-              _react2.default.createElement(
-                TableHeaderColumn,
-                { tooltip: 'Device type' },
-                'Device type'
-              ),
-              _react2.default.createElement(
-                TableHeaderColumn,
-                { tooltip: 'Target software' },
-                'Updated to'
-              ),
-              _react2.default.createElement(
-                TableHeaderColumn,
-                { tooltip: 'Update end time' },
-                'End time'
-              ),
-              _react2.default.createElement(
-                TableHeaderColumn,
-                { tooltip: 'Update status' },
-                'Update status'
-              ),
-              _react2.default.createElement(TableHeaderColumn, { tooltip: '' })
-            )
-          ),
-          _react2.default.createElement(
-            TableBody,
-            {
-              displayRowCheckbox: false },
-            deviceList
-          )
-        )
-      )
-    );
-  }
-});
-
-module.exports = Report;
-
-},{"../../actions/app-actions":752,"material-ui":257,"react":684,"react-router":506,"react-time":522}],781:[function(require,module,exports){
-'use strict';
-
-var _react = require('react');
-
-var _react2 = _interopRequireDefault(_react);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var Time = require('react-time');
-
-// material ui
-var mui = require('material-ui');
-var Table = mui.Table;
-var TableHeader = mui.TableHeader;
-var TableHeaderColumn = mui.TableHeaderColumn;
-var TableBody = mui.TableBody;
-var TableRow = mui.TableRow;
-var TableRowColumn = mui.TableRowColumn;
-var FlatButton = mui.FlatButton;
-
-var Schedule = _react2.default.createClass({
-  displayName: 'Schedule',
-
-  _handleEdit: function _handleEdit(update) {
-    this.props.edit(update);
-  },
-  _handleRemove: function _handleRemove(id) {
-    this.props.remove(id);
-  },
-  render: function render() {
-    var now = new Date().getTime();
-
-    var scheduleCount = 0;
-    var schedule = this.props.schedule.map(function (update, index) {
-      if (update.start_time > now) {
-        scheduleCount++;
-        return _react2.default.createElement(
-          TableRow,
-          { key: index },
-          _react2.default.createElement(
-            TableRowColumn,
-            null,
-            update.group
-          ),
-          _react2.default.createElement(
-            TableRowColumn,
-            null,
-            update.software_version
-          ),
-          _react2.default.createElement(
-            TableRowColumn,
-            null,
-            update.devices.length
-          ),
-          _react2.default.createElement(
-            TableRowColumn,
-            null,
-            _react2.default.createElement(Time, { value: update.start_time, format: 'YYYY/MM/DD HH:mm' })
-          ),
-          _react2.default.createElement(
-            TableRowColumn,
-            null,
-            _react2.default.createElement(Time, { value: update.end_time, format: 'YYYY/MM/DD HH:mm' })
-          ),
-          _react2.default.createElement(
-            TableRowColumn,
-            null,
-            'Begins ',
-            _react2.default.createElement(Time, { value: update.start_time, format: 'YYYY/MM/DD HH:mm', relative: true })
-          ),
-          _react2.default.createElement(
-            TableRowColumn,
-            null,
-            _react2.default.createElement(
-              'div',
-              null,
-              _react2.default.createElement(FlatButton, { secondary: true, style: { padding: "0", marginRight: "4", minWidth: "55" }, label: 'Edit', onClick: this._handleEdit.bind(null, update) }),
-              _react2.default.createElement(FlatButton, { style: { padding: "0", marginLeft: "4", minWidth: "55" }, label: 'Remove', onClick: this._handleRemove.bind(null, update.id) })
-            )
-          )
-        );
-      }
-    }, this);
-    return _react2.default.createElement(
-      'div',
-      null,
-      _react2.default.createElement(
-        'h3',
-        null,
-        'Scheduled updates'
-      ),
-      _react2.default.createElement(
-        Table,
-        {
-          className: scheduleCount ? null : 'hidden',
-          selectable: false },
-        _react2.default.createElement(
-          TableHeader,
-          {
-            displaySelectAll: false,
-            adjustForCheckbox: false },
-          _react2.default.createElement(
-            TableRow,
-            null,
-            _react2.default.createElement(
-              TableHeaderColumn,
-              { tooltip: 'Device group' },
-              'Group'
-            ),
-            _react2.default.createElement(
-              TableHeaderColumn,
-              { tooltip: 'Target software version' },
-              'Target software'
-            ),
-            _react2.default.createElement(
-              TableHeaderColumn,
-              { tooltip: 'Number of devices' },
-              '# Devices'
-            ),
-            _react2.default.createElement(
-              TableHeaderColumn,
-              { tooltip: 'Start time' },
-              'Start time'
-            ),
-            _react2.default.createElement(
-              TableHeaderColumn,
-              { tooltip: 'End time' },
-              'End time'
-            ),
-            _react2.default.createElement(
-              TableHeaderColumn,
-              { tooltip: 'Details' },
-              'Details'
-            ),
-            _react2.default.createElement(TableHeaderColumn, { tooltip: 'Actions' })
-          )
-        ),
-        _react2.default.createElement(
-          TableBody,
-          {
-            showRowHover: true,
-            displayRowCheckbox: false },
-          schedule
-        )
-      ),
-      _react2.default.createElement(
-        'div',
-        { className: scheduleCount ? 'hidden' : null },
-        _react2.default.createElement(
-          'p',
-          { className: 'italic' },
-          'No updates scheduled'
-        )
-      )
-    );
-  }
-});
-
-module.exports = Schedule;
-
-},{"material-ui":257,"react":684,"react-time":522}],782:[function(require,module,exports){
-'use strict';
-
-var _react = require('react');
-
-var _react2 = _interopRequireDefault(_react);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-// material ui
-var mui = require('material-ui');
-var RaisedButton = mui.RaisedButton;
-var FlatButton = mui.FlatButton;
-
-var ScheduleButton = _react2.default.createClass({
-  displayName: 'ScheduleButton',
-
-  _handleClick: function _handleClick() {
-    var image = null;
-    if (this.props.image) {
-      image = this.props.image;
-    }
-    this.props.openDialog("schedule", image);
-  },
-  render: function render() {
-    var button = '';
-    if (this.props.buttonType === 'flat') {
-      button = _react2.default.createElement(FlatButton, { primary: this.props.primary, secondary: this.props.secondary, label: this.props.label || "Deploy an update", onClick: this._handleClick });
-    } else {
-      button = _react2.default.createElement(RaisedButton, { primary: this.props.primary, secondary: this.props.secondary, label: this.props.label || "Deploy an update", onClick: this._handleClick });
-    }
-    return _react2.default.createElement(
-      'div',
-      null,
-      button
-    );
-  }
-});
-
-module.exports = ScheduleButton;
-
-},{"material-ui":257,"react":684}],783:[function(require,module,exports){
-'use strict';
-
-var _react = require('react');
-
-var _react2 = _interopRequireDefault(_react);
-
-var _appStore = require('../../stores/app-store');
-
-var _appStore2 = _interopRequireDefault(_appStore);
-
-var _reactRouter = require('react-router');
-
-var _datetime = require('./datetime.js');
-
-var _datetime2 = _interopRequireDefault(_datetime);
-
-var _reactSearchInput = require('react-search-input');
-
-var _reactSearchInput2 = _interopRequireDefault(_reactSearchInput);
-
-var _materialUi = require('material-ui');
-
-var _materialUi2 = _interopRequireDefault(_materialUi);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var DatePicker = _materialUi2.default.DatePicker;
-var TimePicker = _materialUi2.default.TimePicker;
-var SelectField = _materialUi2.default.SelectField;
-var TextField = _materialUi2.default.TextField;
-var FontIcon = _materialUi2.default.FontIcon;
-var LeftNav = _materialUi2.default.LeftNav;
-var IconButton = _materialUi2.default.IconButton;
-var MenuItem = _materialUi2.default.MenuItem;
-var Divider = _materialUi2.default.Divider;
-
-function getDate() {
-  return new Date();
-}
-
-function addDate(date, days) {
-  var newDate = new Date(date);
-  newDate.setDate(newDate.getDate() + days);
-  return newDate;
-}
-
-function combineDateTime(date, time) {
-
-  var diffMs = date - time; // milliseconds
-  var diffDays = Math.round(diffMs / 86400000); // days
-
-  return addDate(time, diffDays);
-}
-
-function getDevicesFromParams(group, model) {
-  var devices = [];
-  if (model && group) {
-    devices = _appStore2.default.getDevicesFromParams(group, model);
-  }
-  return devices;
-}
-
-var ScheduleForm = _react2.default.createClass({
-  displayName: 'ScheduleForm',
-
-  getInitialState: function getInitialState() {
-    var imageVal = {
-      payload: null,
-      text: ''
-    };
-    var groupVal = {
-      payload: null,
-      text: ''
-    };
-    if (this.props.imageVal) {
-      imageVal.payload = this.props.imageVal.id;
-      imageVal.text = this.props.imageVal.name;
-    }
-    if (this.props.groupVal) {
-      groupVal.payload = this.props.groupVal.id;
-      groupVal.text = this.props.groupVal.name;
-    }
-
-    /* if single device */
-    var disabled = false;
-    var group = null;
-
-    if (this.props.device) {
-      disabled = true;
-      group = {
-        id: null,
-        name: this.props.device.name,
-        type: 'private',
-        devices: [this.props.device]
-      };
-    }
-
-    // date times
-    var start_date = this.props.start ? new Date(this.props.start) : getDate();
-    var start_time = start_date;
-    var end_date = this.props.end ? new Date(this.props.end) : addDate(getDate(), 1);
-    var end_time = end_date;
-
-    return {
-      start_time: start_time,
-      start_date: start_date,
-      end_time: end_time,
-      end_date: end_date,
-      minDate: getDate(),
-      minDate1: addDate(getDate(), 1),
-      imageVal: imageVal,
-      image: this.props.image,
-      groupVal: groupVal,
-      images: _appStore2.default.getSoftwareRepo(),
-      disabled: disabled,
-      group: group,
-      showDevices: false
-    };
-  },
-  componentDidMount: function componentDidMount() {
-    this._updateTimes();
-  },
-
-  _handleGroupValueChange: function _handleGroupValueChange(e, index, value) {
-    var image = this.state.image ? this.state.image.model : null;
-    var group = this.props.groups[index];
-    this.setState({
-      group: group,
-      groupVal: {
-        payload: group.id,
-        text: group.name
-      },
-      devices: getDevicesFromParams(group.name, image)
-    });
-    this._sendUpToParent(this.state.image, 'image');
-    this._sendUpToParent(group, 'group');
-  },
-  _handleImageValueChange: function _handleImageValueChange(e, index, value) {
-    var image = this.state.images[index];
-    var groupname = this.state.group ? this.state.group.name : null;
-    var devices = this.props.device ? [this.props.device] : getDevicesFromParams(groupname, image.model);
-    this.setState({
-      image: image,
-      imageVal: {
-        payload: image.id,
-        text: image.name
-      },
-      devices: devices
-    });
-    this._sendUpToParent(this.state.group, 'group');
-    this._sendUpToParent(image, 'image');
-  },
-
-  _sendUpToParent: function _sendUpToParent(val, attr) {
-    // send params to parent with dialog holder
-    this.props.updateSchedule(val, attr);
-  },
-  _updateTimes: function _updateTimes() {
-    var newUpdate = {};
-
-    var start_time = this.state.start_time.getTime();
-    var start_date = this.state.start_date.getTime();
-
-    newUpdate.start_time = combineDateTime(start_date, start_time).getTime();
-
-    var end_time = this.state.end_time.getTime();
-    var end_date = this.state.end_date.getTime();
-
-    newUpdate.end_time = combineDateTime(end_date, end_time).getTime();
-
-    this._sendUpToParent(newUpdate.start_time, "start_time");
-    this._sendUpToParent(newUpdate.end_time, "end_time");
-  },
-
-  _updatedDateTime: function _updatedDateTime(ref, date) {
-    var set = {};
-    set[ref] = date;
-    this.setState(set, function () {
-      this._updateTimes();
-    });
-  },
-
-  _showDevices: function _showDevices() {
-    this.setState({ showDevices: !this.state.showDevices });
-  },
-
-  searchUpdated: function searchUpdated(term) {
-    this.setState({ searchTerm: term }); // needed to force re-render
-  },
-
-  render: function render() {
-    var imageItems = [];
-    for (var i = 0; i < this.state.images.length; i++) {
-      var tmp = _react2.default.createElement(MenuItem, { value: this.state.images[i].id, key: i, primaryText: this.state.images[i].name });
-      imageItems.push(tmp);
-    }
-
-    var groupItems = [];
-    if (this.props.device) {
-      groupItems[0] = _react2.default.createElement(MenuItem, { value: '0', key: 'device', primaryText: this.props.device.name });
-    }
-
-    for (var i = 0; i < this.props.groups.length; i++) {
-      var tmp = _react2.default.createElement(MenuItem, { value: this.props.groups[i].id, key: i, primaryText: this.props.groups[i].name });
-      groupItems.push(tmp);
-    }
-
-    var model = this.state.image ? this.state.image.model : '';
-    var filters = "model=" + model;
-    if (this.props.device) {
-      filters = "name=" + this.props.device.name;
-    }
-    filters = encodeURIComponent(filters);
-
-    var defaultStartDate = this.state.start_time;
-    var defaultEndDate = this.state.end_time;
-    var tmpDevices = [];
-
-    if (this.refs.search && this.state.devices) {
-      var filters = ['name'];
-      tmpDevices = this.state.devices.filter(this.refs.search.filter(filters));
-    }
-
-    var deviceList = _react2.default.createElement(
-      'p',
-      null,
-      'No devices'
-    );
-    if (this.state.devices) {
-      deviceList = tmpDevices.map(function (item, index) {
-        var singleFilter = "name=" + item.name;
-        singleFilter = encodeURIComponent(singleFilter);
-        return _react2.default.createElement(
-          'p',
-          { key: index },
-          _react2.default.createElement(
-            _reactRouter.Link,
-            { to: '/devices/' + this.state.groupVal.payload + '/' + singleFilter },
-            item.name
-          )
-        );
-      }, this);
-    }
-    deviceList = _react2.default.createElement(
-      'div',
-      { className: 'slider' },
-      _react2.default.createElement(
-        IconButton,
-        { className: 'closeSlider', iconStyle: { fontSize: "16px" }, onClick: this._showDevices, style: { borderRadius: "30px", width: "40px", height: "40", position: "absolute", left: "-18px", backgroundColor: "rgba(255,255,255,1)" } },
-        _react2.default.createElement(
-          FontIcon,
-          { className: 'material-icons' },
-          'close'
-        )
-      ),
-      _react2.default.createElement(_reactSearchInput2.default, { className: 'search', ref: 'search', onChange: this.searchUpdated, placeholder: 'Search devices' }),
-      deviceList,
-      _react2.default.createElement(
-        'p',
-        { className: tmpDevices.length ? "hidden" : "italic" },
-        'No devices match this search term'
-      ),
-      _react2.default.createElement(Divider, null),
-      _react2.default.createElement(
-        'p',
-        { className: this.state.group ? this.state.group : "hidden" },
-        _react2.default.createElement(
-          _reactRouter.Link,
-          { to: '/devices/' + this.state.groupVal.payload + '/' + filters },
-          'Go to group >'
-        )
-      )
-    );
-
-    return _react2.default.createElement(
-      'div',
-      { style: { overflow: "visible", height: '440px' } },
-      _react2.default.createElement(
-        LeftNav,
-        {
-          ref: 'devicesNav',
-          docked: false,
-          openRight: true,
-          style: this.state.showDevices ? { overflow: "visible" } : { overflow: "hidden" },
-          open: this.state.showDevices,
-          overlayStyle: { backgroundColor: "rgba(0, 0, 0, 0.3)" },
-          onRequestChange: this._showDevices,
-          containerStyle: this.state.showDevices ? { overflow: "visible" } : { overflow: "hidden" }
-        },
-        deviceList
-      ),
-      _react2.default.createElement(
-        'form',
-        null,
-        _react2.default.createElement(
-          'div',
-          { style: { display: "block" } },
-          _react2.default.createElement(
-            SelectField,
-            {
-              ref: 'image',
-              value: this.state.imageVal.payload,
-              onChange: this._handleImageValueChange,
-              floatingLabelText: 'Select target software'
-            },
-            imageItems
-          ),
-          _react2.default.createElement(TextField, {
-            className: 'margin-left',
-            disabled: true,
-            hintText: 'Device type',
-            floatingLabelText: 'Device type',
-            value: model,
-            underlineDisabledStyle: { borderBottom: "none" },
-            style: { verticalAlign: "top" },
-            errorStyle: { color: "rgb(171, 16, 0)" } })
-        ),
-        _react2.default.createElement(
-          'div',
-          { style: { display: "block" } },
-          _react2.default.createElement(
-            'div',
-            { className: this.state.disabled ? 'hidden' : 'inline-block' },
-            _react2.default.createElement(
-              SelectField,
-              {
-                value: this.state.groupVal.payload,
-                ref: 'group',
-                onChange: this._handleGroupValueChange,
-                floatingLabelText: 'Select group',
-                style: { marginBottom: 10 }
-              },
-              groupItems
-            )
-          ),
-          _react2.default.createElement(
-            'div',
-            { className: this.state.disabled ? 'inline-block' : 'hidden' },
-            _react2.default.createElement(TextField, {
-              value: groupItems[0].text,
-              ref: 'device',
-              floatingLabelText: 'Device',
-              disabled: this.state.disabled,
-              underlineDisabledStyle: { borderBottom: "none" },
-              errorStyle: { color: "rgb(171, 16, 0)" } })
-          ),
-          _react2.default.createElement(
-            'div',
-            { className: this.state.devices ? null : 'hidden' },
-            this.state.devices ? this.state.devices.length : "0",
-            ' devices will be updated ',
-            _react2.default.createElement(
-              'span',
-              { onClick: this._showDevices, params: { groupId: this.state.groupVal.payload, filters: filters }, className: this.state.disabled ? "hidden" : "margin-left link" },
-              'View devices'
-            )
-          )
-        ),
-        _react2.default.createElement(
-          'p',
-          { className: 'info' },
-          _react2.default.createElement(
-            FontIcon,
-            { className: 'material-icons', style: { marginRight: "4", fontSize: "18", top: "4" } },
-            'info_outline'
-          ),
-          'Any devices that are already on the target software version will be skipped.'
-        )
-      )
-    );
-  }
-});
-
-module.exports = ScheduleForm;
-
-},{"../../stores/app-store":789,"./datetime.js":774,"material-ui":257,"react":684,"react-router":506,"react-search-input":513}],784:[function(require,module,exports){
-'use strict';
-
-var _react = require('react');
-
-var _react2 = _interopRequireDefault(_react);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var AppStore = require('../../stores/app-store');
-var AppActions = require('../../actions/app-actions');
-
-var Recent = require('./recentupdates.js');
-var Schedule = require('./schedule.js');
-var EventLog = require('./eventlog.js');
-var ScheduleForm = require('./scheduleform.js');
-var Report = require('./report.js');
-var ScheduleButton = require('./schedulebutton.js');
-
-var mui = require('material-ui');
-var Tabs = mui.Tabs;
-var Tab = mui.Tab;
-var Dialog = mui.Dialog;
-var FlatButton = mui.FlatButton;
-var RaisedButton = mui.RaisedButton;
-
-var styles = {
-  tabs: {
-    backgroundColor: "#fff",
-    color: "#414141",
-    borderBottom: "1px solid #e0e0e0"
-  },
-  inkbar: {
-    backgroundColor: "#679BA5"
-  }
-};
-
-var tabs = {
-  updates: '0',
-  schedule: '1',
-  events: '2'
-};
-
-function getState() {
-  return {
-    recent: AppStore.getRecentUpdates(new Date()),
-    progress: AppStore.getProgressUpdates(new Date()),
-    schedule: AppStore.getScheduledUpdates(new Date()),
-    events: AppStore.getEventLog(),
-    images: AppStore.getSoftwareRepo(),
-    groups: AppStore.getGroups(),
-    dialogTitle: "Deploy an update",
-    scheduleForm: true,
-    contentClass: "largeDialog",
-    invalid: true,
-    dialog: false,
-    hideTODO: localStorage.getItem("deployTODO")
-  };
-}
-
-var Updates = _react2.default.createClass({
-  displayName: 'Updates',
-
-  getInitialState: function getInitialState() {
-    return getState();
-  },
-  componentDidMount: function componentDidMount() {
-    AppStore.changeListener(this._onChange);
-    AppActions.getUpdates();
-    if (this.props.params) {
-      this.setState({ tabIndex: tabs[this.props.params.tab] });
-
-      if (this.props.params.params) {
-        var str = decodeURIComponent(this.props.params.params);
-        var obj = str.split("&");
-
-        var params = [];
-        for (var i = 0; i < obj.length; i++) {
-          var f = obj[i].split("=");
-          params[f[0]] = f[1];
-        }
-        if (params.open) {
-          var that = this;
-          if (params.id) {
-            that._getReportById(params.id);
-          } else {
-            setTimeout(function () {
-              that.dialogOpen("schedule");
-            }, 400);
-          }
-        }
-      }
-    } else {
-      this.setState({ tabIndex: "0" });
-    }
-    AppActions.getImages();
-  },
-  componentWillUnmount: function componentWillUnmount() {
-    AppStore.removeChangeListener(this._onChange);
-  },
-  _onChange: function _onChange() {
-    this.setState(getState());
-  },
-  dialogDismiss: function dialogDismiss(ref) {
-    this.replaceState(this.getInitialState());
-  },
-  dialogOpen: function dialogOpen(dialog) {
-    this.setState({ dialog: true });
-    if (dialog === 'schedule') {
-      this.setState({
-        dialogTitle: "Deploy an update",
-        scheduleForm: true,
-        contentClass: "dialog"
-      });
-    }
-    if (dialog === 'report') {
-      this.setState({
-        scheduleForm: false,
-        dialogTitle: "Update results",
-        contentClass: "largeDialog"
-      });
-    }
-  },
-  _changeTab: function _changeTab(value, e, tab) {
-    this.setState({ tabIndex: value });
-  },
-  _onScheduleSubmit: function _onScheduleSubmit() {
-    var devices = AppStore.getDevicesFromParams(this.state.group.name, this.state.image.model);
-    var ids = [];
-    for (var i = 0; i < devices.length; i++) {
-      ids.push(devices[i].id);
-    }
-    var newUpdate = {
-      //id: this.state.id,
-      name: this.state.group.name,
-      model: this.state.image.model,
-      //start_time: this.state.start_time,
-      //end_time: this.state.end_time,
-      version: this.state.image.name,
-      devices: ids
-    };
-    console.log(newUpdate.devices);
-    AppActions.createUpdate(newUpdate, this.state.disabled);
-    AppActions.setLocalStorage("deployTODO", true);
-    this.dialogDismiss('dialog');
-  },
-  _updateParams: function _updateParams(val, attr) {
-    // updating params from child schedule form
-    var tmp = {};
-    tmp[attr] = val;
-    this.setState(tmp);
-  },
-  _getReportById: function _getReportById(id) {
-    AppActions.getSingleUpdate(id, function (data) {
-      var that = this;
-      setTimeout(function () {
-        that._showReport(data);
-      }, 400);
-    }.bind(this));
-  },
-  _showReport: function _showReport(update) {
-    this.setState({ scheduleForm: false, selectedUpdate: update });
-    this.dialogOpen("report");
-  },
-  _scheduleUpdate: function _scheduleUpdate(update) {
-    this.setState({ dialog: false });
-
-    var image = '';
-    var group = '';
-    var start_time = null;
-    var end_time = null;
-    var id = null;
-    if (update) {
-      if (update.id) {
-        id = update.id;
-      }
-      if (update.software_version) {
-        image = AppStore.getSoftwareImage('name', update.software_version);
-      }
-      if (update.group) {
-        group = AppStore.getSingleGroup('name', update.group);
-      }
-      if (update.start_time) {
-        start_time = update.start_time;
-      }
-      if (update.end_time) {
-        end_time = update.end_time;
-      }
-    }
-    this.setState({ scheduleForm: true, imageVal: image, id: id, start_time: start_time, end_time: end_time, image: image, group: group, groupVal: group });
-    this.dialogOpen("schedule");
-  },
-  _scheduleRemove: function _scheduleRemove(id) {
-    AppActions.removeUpdate(id);
-  },
-  _closeOnboard: function _closeOnboard() {
-    AppActions.setLocalStorage("deployTODO", true);
-  },
-  render: function render() {
-    var scheduleActions = [_react2.default.createElement(
-      'div',
-      { style: { marginRight: "10", display: "inline-block" } },
-      _react2.default.createElement(FlatButton, {
-        label: 'Cancel',
-        onClick: this.dialogDismiss.bind(null, 'dialog') })
-    ), _react2.default.createElement(RaisedButton, {
-      label: 'Deploy update',
-      primary: true,
-      onClick: this._onScheduleSubmit,
-      ref: 'save' })];
-    var reportActions = [_react2.default.createElement(FlatButton, {
-      label: 'Close',
-      onClick: this.dialogDismiss.bind(null, 'dialog') })];
-    var dialogContent = '';
-
-    if (this.state.scheduleForm) {
-      dialogContent = _react2.default.createElement(ScheduleForm, { updateSchedule: this._updateParams, id: this.state.id, images: this.state.software, image: this.state.image, imageVal: this.state.image, groups: this.state.groups, groupVal: this.state.group, start: this.state.start_time, end: this.state.end_time });
-    } else {
-      dialogContent = _react2.default.createElement(Report, { update: this.state.selectedUpdate, retryUpdate: this._scheduleUpdate });
-    }
-    return _react2.default.createElement(
-      'div',
-      { className: 'contentContainer' },
-      _react2.default.createElement(
-        'div',
-        { className: this.state.hideTODO ? "hidden" : null },
-        _react2.default.createElement(
-          'div',
-          { className: 'margin-bottom onboard' },
-          _react2.default.createElement('div', { className: 'close', onClick: this._closeOnboard }),
-          _react2.default.createElement(
-            'h3',
-            null,
-            '//TODO deploy an update to all devices'
-          )
-        )
-      ),
-      _react2.default.createElement(
-        'div',
-        { className: 'relative' },
-        _react2.default.createElement(
-          'div',
-          { className: 'top-right-button' },
-          _react2.default.createElement(ScheduleButton, { secondary: true, openDialog: this.dialogOpen })
-        ),
-        _react2.default.createElement(Recent, { recent: this.state.recent, progress: this.state.progress, showReport: this._showReport })
-      ),
-      _react2.default.createElement(
-        Dialog,
-        {
-          ref: 'dialog',
-          title: this.state.dialogTitle,
-          actions: this.state.scheduleForm ? scheduleActions : reportActions,
-          autoDetectWindowHeight: true, autoScrollBodyContent: true,
-          contentClassName: this.state.contentClass,
-          bodyStyle: { paddingTop: "0" },
-          open: this.state.dialog,
-          contentStyle: { overflow: "hidden", boxShadow: "0 14px 45px rgba(0, 0, 0, 0.25), 0 10px 18px rgba(0, 0, 0, 0.22)" },
-          actionsContainerStyle: { marginBottom: "0" }
-        },
-        dialogContent
-      )
-    );
-  }
-});
-
-module.exports = Updates;
-
-},{"../../actions/app-actions":752,"../../stores/app-store":789,"./eventlog.js":775,"./recentupdates.js":779,"./report.js":780,"./schedule.js":781,"./schedulebutton.js":782,"./scheduleform.js":783,"material-ui":257,"react":684}],785:[function(require,module,exports){
+},{"../../actions/app-actions":752,"../../stores/app-store":789,"../../stores/local-store":790,"./repository.js":782,"react":684,"react-router":506}],785:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -81845,9 +81845,9 @@ var _dashboard = require('../components/dashboard/dashboard');
 
 var _dashboard2 = _interopRequireDefault(_dashboard);
 
-var _updates = require('../components/updates/updates');
+var _deployments = require('../components/deployments/deployments');
 
-var _updates2 = _interopRequireDefault(_updates);
+var _deployments2 = _interopRequireDefault(_deployments);
 
 var _devices = require('../components/devices/devices');
 
@@ -81881,7 +81881,7 @@ module.exports = _react2.default.createElement(
   ),
   _react2.default.createElement(
     _reactRouter.Route,
-    { path: '/updates', component: _updates2.default },
+    { path: '/deployments', component: _deployments2.default },
     _react2.default.createElement(
       _reactRouter.Route,
       { path: '(:tab)' },
@@ -81894,7 +81894,7 @@ module.exports = _react2.default.createElement(
   )
 );
 
-},{"../components/app":755,"../components/dashboard/dashboard":757,"../components/devices/devices":764,"../components/software/software":772,"../components/updates/updates":784,"react":684,"react-router":506}],786:[function(require,module,exports){
+},{"../components/app":755,"../components/dashboard/dashboard":757,"../components/deployments/deployments":764,"../components/devices/devices":775,"../components/software/software":784,"react":684,"react-router":506}],786:[function(require,module,exports){
 'use strict';
 
 module.exports = {
@@ -81906,13 +81906,13 @@ module.exports = {
   AUTHORIZE_DEVICES: 'AUTHORIZE_DEVICES',
   SAVE_SCHEDULE: 'SAVE_SCHEDULE',
   UPDATE_FILTERS: 'UPDATE_FILTERS',
-  REMOVE_UPDATE: 'REMOVE_UPDATE',
+  REMOVE_DEPLOYMENT: 'REMOVE_DEPLOYMENT',
   SORT_TABLE: 'SORT_TABLE',
   UPDATE_DEVICE_TAGS: 'UPDATE_DEVICE_TAGS',
   RECEIVE_IMAGES: 'RECEIVE_IMAGES',
   UPLOAD_IMAGE: 'UPLOAD_IMAGE',
-  RECEIVE_UPDATES: 'RECEIVE_UPDATES',
-  SINGLE_UPDATE: 'SINGLE_UPDATE',
+  RECEIVE_DEPLOYMENTS: 'RECEIVE_DEPLOYMENTS',
+  SINGLE_DEPLOYMENT: 'SINGLE_DEPLOYMENT',
   SET_LOCAL_STORAGE: 'SET_LOCAL_STORAGE'
 };
 
@@ -82160,12 +82160,12 @@ function _getCurrentDevices(groupId) {
   }
 }
 
-function _updateDeviceTags(id, tags) {
+function updateDeviceTags(id, tags) {
   var index = findWithAttr(_alldevices, "id", id);
   _alldevices[index].tags = tags;
 }
 
-function _updateFilters(filters) {
+function updateFilters(filters) {
   _filters = filters;
   _getCurrentDevices(_currentGroup.id);
 }
@@ -82326,19 +82326,19 @@ function _uploadImage(image) {
   }
 }
 
-// UPDATES
+// Deployments
 var _progress = [];
 var _recent = [];
 var _schedule = [];
 var _events = [];
 
-var _allupdates = [];
-var _selectedUpdate = {};
+var _allDeployments = [];
+var _selectedDeployment = {};
 
-//_allupdates.sort(startTimeSort);
+//_al deployments.sort(startTimeSort);
 
 var _activityLog = [{
-  summary: "User Admin deployed an update to all devices",
+  summary: "User Admin deployed an deployment to all devices",
   details: "6 devices began updating to Application 0.0.2 at 2016-03-24 00:00",
   timestamp: 1458777600000,
   negative: false
@@ -82348,53 +82348,53 @@ var _activityLog = [{
   timestamp: 1458659590000,
   negative: false
 }, {
-  summary: "User Admin cancelled an update to group Test",
-  details: "Cancelled update to 2 devices in group Test to image Application 0.0.1 at 2016-03-21 09:30",
+  summary: "User Admin cancelled an deployment to group Test",
+  details: "Cancelled deployment to 2 devices in group Test to image Application 0.0.1 at 2016-03-21 09:30",
   timestamp: 1458552600000,
   negative: true
 }];
 
-function _getRecentUpdates(time) {
+function _getRecentDeployments(time) {
   var recent = [];
-  for (var i = 0; i < _allupdates.length; i++) {
-    var created = new Date(_allupdates[i].created.replace(/-/g, '/').replace(/ UTC/, ''));
-    var finished = new Date(_allupdates[i].finished.replace(/-/g, '/').replace(/ UTC/, ''));
+  for (var i = 0; i < _allDeployments.length; i++) {
+    var created = new Date(_allDeployments[i].created.replace(/-/g, '/').replace(/ UTC/, ''));
+    var finished = new Date(_allDeployments[i].finished.replace(/-/g, '/').replace(/ UTC/, ''));
     if (created < time && finished < time) {
-      recent.push(_allupdates[i]);
+      recent.push(_allDeployments[i]);
     }
   }
   return recent;
 }
 
-function _getProgressUpdates(time) {
+function _getProgressDeployments(time) {
   var progress = [];
-  for (var i = 0; i < _allupdates.length; i++) {
-    var created = new Date(_allupdates[i].created.replace(/-/g, '/').replace(/ UTC/, ''));
-    var finished = new Date(_allupdates[i].finished.replace(/-/g, '/').replace(/ UTC/, ''));
+  for (var i = 0; i < _allDeployments.length; i++) {
+    var created = new Date(_allDeployments[i].created.replace(/-/g, '/').replace(/ UTC/, ''));
+    var finished = new Date(_allDeployments[i].finished.replace(/-/g, '/').replace(/ UTC/, ''));
     /*
     * CHANGE FOR MOCKING API
     */
     if (created <= time && finished > time) {
-      progress.push(_allupdates[i]);
+      progress.push(_allDeployments[i]);
     }
   }
   return progress;
 }
 
 function _getProgressStatus(id) {
-  var update = _allupdates[findWithAttr(_allupdates, "id", id)];
+  var deployment = _allDeployments[findWithAttr(_allDeployments, "id", id)];
   var progress = { complete: 0, failed: 0, pending: 0 };
-  for (var key in update.devices) {
-    progress[update.devices[key].status.toLowerCase()]++;
+  for (var key in deployment.devices) {
+    progress[deployment.devices[key].status.toLowerCase()]++;
   }
   return progress;
 }
 
-function _getScheduledUpdates(time) {
+function _getScheduledDeployments(time) {
   var schedule = [];
-  for (var i = 0; i < _allupdates.length; i++) {
-    if (_allupdates[i].start_time > time) {
-      schedule.push(_allupdates[i]);
+  for (var i = 0; i < _allDeployments.length; i++) {
+    if (_allDeployments[i].start_time > time) {
+      schedule.push(_allDeployments[i]);
     }
   }
   schedule.sort(startTimeSortAscend);
@@ -82403,21 +82403,21 @@ function _getScheduledUpdates(time) {
 
 function _saveSchedule(schedule, single) {
   var tmp = {};
-  tmp.id = schedule.id || _allupdates.length + 1;
+  tmp.id = schedule.id || _allDeployments.length + 1;
   tmp.group = schedule.group.name;
   tmp.model = "Acme Model 1";
   // whether single device or group
   tmp.devices = !single ? _getDevices(tmp.group, tmp.model) : collectWithAttr(_alldevices, 'name', tmp.group);
   tmp.software_version = schedule.image.name;
-  tmp.start_time = schedule.start_time;
-  tmp.end_time = schedule.end_time;
-  var index = findWithAttr(_allupdates, 'id', tmp.id);
-  index != undefined ? _allupdates[index] = tmp : _allupdates.push(tmp);
+  tmp.created = schedule.start_time.toString();
+  tmp.finished = schedule.end_time.toString();
+  var index = findWithAttr(_allDeployments, 'id', tmp.id);
+  index != undefined ? _allDeployments[index] = tmp : _allDeployments.push(tmp);
 }
 
-function _removeUpdate(id) {
-  var idx = findWithAttr(_allupdates, 'id', id);
-  _allupdates.splice(idx, 1);
+function _removeDeployment(id) {
+  var idx = findWithAttr(_allDeployments, 'id', id);
+  _allDeployments.splice(idx, 1);
 }
 
 function _sortTable(array, column, direction) {
@@ -82481,16 +82481,16 @@ function setImages(images) {
   _softwareRepo.sort(customSort(1, "modified"));
 }
 
-function setUpdates(updates) {
-  if (updates) {
-    _allupdates = updates;
+function setDeployments(deployments) {
+  if (deployments) {
+    _allDeployments = deployments;
   }
-  _allupdates.sort(startTimeSort);
+  _allDeployments.sort(startTimeSort);
 }
 
-function setSelectedUpdate(update) {
-  if (update) {
-    _selectedUpdate = update;
+function setSelectedDeployment(deployment) {
+  if (deployment) {
+    _selectedDeployment = deployment;
   }
 }
 
@@ -82581,44 +82581,44 @@ var AppStore = assign(EventEmitter.prototype, {
     return _softwareRepo[findWithAttr(_softwareRepo, attr, val)];
   },
 
-  getRecentUpdates: function getRecentUpdates(date) {
+  getRecentDeployments: function getRecentDeployments(date) {
     /*
-    * Return list of updates before date
+    * Return list of deployments before date
     */
-    return _getRecentUpdates(date);
+    return _getRecentDeployments(date);
   },
 
-  getSingleUpdate: function getSingleUpdate(attr, val) {
-    var index = findWithAttr(_allupdates, attr, val);
-    return _allupdates[index];
+  getSingleDeployment: function getSingleDeployment(attr, val) {
+    var index = findWithAttr(_allDeployments, attr, val);
+    return _allDeployments[index];
   },
 
-  getSelectedUpdate: function getSelectedUpdate() {
+  getSelectedDeployment: function getSelectedDeployment() {
     /*
-    * Return current selected update
+    * Return current selected deployment
     */
-    return _selectedUpdate;
+    return _selectedDeployment;
   },
 
-  getProgressUpdates: function getProgressUpdates(date) {
+  getProgressDeployments: function getProgressDeployments(date) {
     /*
-    * Return list of updates in progress based on date
+    * Return list of deployments in progress based on date
     */
-    return _getProgressUpdates(date);
+    return _getProgressDeployments(date);
   },
 
   getProgressStatus: function getProgressStatus(id) {
     /*
-    * Return progress stats for a single update
+    * Return progress stats for a single deployment
     */
     return _getProgressStatus(id);
   },
 
-  getScheduledUpdates: function getScheduledUpdates(date) {
+  getScheduledDeployments: function getScheduledDeployments(date) {
     /*
-    * Return list of updates scheduled after date
+    * Return list of deployments scheduled after date
     */
-    return _getScheduledUpdates(date);
+    return _getScheduledDeployments(date);
   },
 
   getEventLog: function getEventLog() {
@@ -82678,13 +82678,13 @@ var AppStore = assign(EventEmitter.prototype, {
         _saveSchedule(payload.action.schedule, payload.action.single);
         break;
       case AppConstants.UPDATE_FILTERS:
-        _updateFilters(payload.action.filters);
+        updateFilters(payload.action.filters);
         break;
       case AppConstants.UPDATE_DEVICE_TAGS:
-        _updateDeviceTags(payload.action.id, payload.action.tags);
+        updateDeviceTags(payload.action.id, payload.action.tags);
         break;
-      case AppConstants.REMOVE_UPDATE:
-        _removeUpdate(payload.action.id);
+      case AppConstants.REMOVE_DEPLOYMENT:
+        _removeDeployment(payload.action.id);
         break;
       case AppConstants.SORT_TABLE:
         _sortTable(payload.action.table, payload.action.column, payload.action.direction);
@@ -82696,11 +82696,11 @@ var AppStore = assign(EventEmitter.prototype, {
         break;
 
       /* API */
-      case AppConstants.RECEIVE_UPDATES:
-        setUpdates(payload.action.updates);
+      case AppConstants.RECEIVE_DEPLOYMENTS:
+        setDeployments(payload.action.deployments);
         break;
-      case AppConstants.SINGLE_UPDATE:
-        setSelectedUpdate(payload.action.update);
+      case AppConstants.SINGLE_DEPLOYMENT:
+        setSelectedDeployment(payload.action.deployment);
         break;
     }
 

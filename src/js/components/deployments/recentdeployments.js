@@ -43,31 +43,31 @@ var Recent = React.createClass({
   },
   render: function() {
     // get statistics for each in progress
-    var progressMap = progress.map(function(update, index) {
+    var progressMap = progress.map(function(deployment, index) {
 
       return (
         <TableRow key={index}>
-          <TableRowColumn>{update.name}</TableRowColumn>
-          <TableRowColumn>{update.version}</TableRowColumn>
-          <TableRowColumn><GroupDevices update={update.id} /></TableRowColumn>
-          <TableRowColumn><Time value={this._formatTime(update.created)} format="YYYY-MM-DD HH:mm" /></TableRowColumn>
+          <TableRowColumn>{deployment.name}</TableRowColumn>
+          <TableRowColumn>{deployment.version}</TableRowColumn>
+          <TableRowColumn><GroupDevices deployment={deployment.id} /></TableRowColumn>
+          <TableRowColumn><Time value={this._formatTime(deployment.created)} format="YYYY-MM-DD HH:mm" /></TableRowColumn>
           <TableRowColumn>--</TableRowColumn>
-          <TableRowColumn><ProgressBar noPadding={true} update={update} /></TableRowColumn>
+          <TableRowColumn><ProgressBar noPadding={true} deployment={deployment} /></TableRowColumn>
         </TableRow>
       )
     }, this);
  
-    var recentMap = recent.map(function(update, index) {
+    var recentMap = recent.map(function(deployment, index) {
       // if failure, get statistics
-      var status = (update.status === "inprogress") ? "In progress" : update.status;
+      var status = (deployment.status === "inprogress") ? "In progress" : deployment.status;
       return (
         <TableRow key={index}>
-          <TableRowColumn>{update.name}</TableRowColumn>
-          <TableRowColumn>{update.version}</TableRowColumn>
-          <TableRowColumn><GroupDevices update={update.id} /></TableRowColumn>
-          <TableRowColumn><Time value={this._formatTime(update.created)} format="YYYY-MM-DD HH:mm" /></TableRowColumn>
-          <TableRowColumn><Time value={this._formatTime(update.finished)} format="YYYY-MM-DD HH:mm" /></TableRowColumn>
-          <TableRowColumn><FlatButton label={status} primary={update.status === 'failed'} secondary={update.status === 'complete'} /></TableRowColumn>
+          <TableRowColumn>{deployment.name}</TableRowColumn>
+          <TableRowColumn>{deployment.version}</TableRowColumn>
+          <TableRowColumn><GroupDevices deployment={deployment.id} /></TableRowColumn>
+          <TableRowColumn><Time value={this._formatTime(deployment.created)} format="YYYY-MM-DD HH:mm" /></TableRowColumn>
+          <TableRowColumn><Time value={this._formatTime(deployment.finished)} format="YYYY-MM-DD HH:mm" /></TableRowColumn>
+          <TableRowColumn><FlatButton label={status} primary={deployment.status === 'failed'} secondary={deployment.status === 'complete'} /></TableRowColumn>
         </TableRow>
       )
     }, this);
@@ -107,8 +107,8 @@ var Recent = React.createClass({
             </TableBody>
           </Table>
           <div className={progressMap.length ? 'hidden' : "dashboard-placeholder"}>
-            <p>Ongoing updates will appear here. Deploy an update to get started</p>
-            <img src="assets/img/updates.png" alt="In progress" />
+            <p>Ongoing deployments will appear here. Deploy an update to get started</p>
+            <img src="assets/img/deployments.png" alt="In progress" />
           </div>
         </div>
 
@@ -139,7 +139,7 @@ var Recent = React.createClass({
           </Table>
 
           <div className={recentMap.length ? 'hidden' : "dashboard-placeholder"}>
-            <p>Completed updates will appear here.</p>
+            <p>Completed deployments will appear here.</p>
             <p>You can review logs and reports for each device group you've deployed to</p>
             <img src="assets/img/history.png" alt="Recent" />
           </div>

@@ -670,7 +670,7 @@ input[type="text"].fileInput:last-child {
   -moz-opacity: 0.9;
   opacity: 0.9;
 }
-.updates {
+.deployments {
   position: relative;
   overflow: auto;
   margin-top: 30px;
@@ -695,7 +695,7 @@ span.day {
   margin-left: 10px;
   color: #bdbdbd;
 }
-.updates-container {
+.deployments-container {
   -webkit-box-flex: 1;
   -webkit-flex: 1;
       -ms-flex: 1;
@@ -705,7 +705,7 @@ span.day {
   padding-bottom: 15px;
   border-bottom: 1px solid #F7F7F7;
 }
-.updates-container:first-child {
+.deployments-container:first-child {
   margin-left: 0;
 }
 .fail {

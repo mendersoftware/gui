@@ -1,9 +1,9 @@
 var AppConstants = require('../constants/app-constants');
 var AppDispatcher = require('../dispatchers/app-dispatcher');
 var Api = require('../api/api');
-var UpdatesApi = require('../api/updates-api');
+var DeploymentsApi = require('../api/deployments-api');
 var apiUrl = "http://private-9f43d-michaelatmender.apiary-mock.com/api/0.0.1/";
-var updatesApiUrl = "http://private-9f43d-michaelatmender.apiary-mock.com/api/0.0.1/";
+var deploymentsApiUrl = "http://private-9f43d-michaelatmender.apiary-mock.com/api/0.0.1/";
 
 
 var AppActions = {
@@ -106,48 +106,48 @@ var AppActions = {
 
 
   /* API */
-  getUpdates: function() {
-    UpdatesApi
-      .get(updatesApiUrl+'deployments')
-      .then(function(updates) {
+  getDeployments: function() {
+    DeploymentsApi
+      .get(deploymentsApiUrl+'deployments')
+      .then(function(deployments) {
         AppDispatcher.handleViewAction({
-          actionType: AppConstants.RECEIVE_UPDATES,
-          updates: updates
+          actionType: AppConstants.RECEIVE_DEPLOYMENTS,
+          deployments: deployments
         });
       });
   },
-  createUpdate: function(update) {
-    UpdatesApi
-    .post(updatesApiUrl+'deployments', update)
+  createDeployment: function(deployment) {
+    DeploymentsApi
+    .post(deploymentsApiUrl+'deployments', deployment)
       .then(function(data) {
-        // inserted update data,
+        // inserted deployment data,
         callback(data);
       });
   },
-  getSingleUpdate: function(id, callback) {
-    UpdatesApi
-      .get(updatesApiUrl+'deployments/'+id)
-      .then(function(data) {
-        callback(data);
-      });
-  },
-  getSingleUpdateStats: function(id, callback) {
-    UpdatesApi
-      .get(updatesApiUrl+'deployments/'+id +'/statistics')
+  getSingleDeployment: function(id, callback) {
+    DeploymentsApi
+      .get(deploymentsApiUrl+'deployments/'+id)
       .then(function(data) {
         callback(data);
       });
   },
-  getSingleUpdateDevices: function(id, callback) {
-    UpdatesApi
-      .get(updatesApiUrl+'deployments/'+id +'/devices')
+  getSingleDeploymentStats: function(id, callback) {
+    DeploymentsApi
+      .get(deploymentsApiUrl+'deployments/'+id +'/statistics')
+      .then(function(data) {
+        callback(data);
+      });
+  },
+  getSingleDeploymentDevices: function(id, callback) {
+    DeploymentsApi
+      .get(deploymentsApiUrl+'deployments/'+id +'/devices')
       .then(function(data) {
         callback(data);
       });
   },
   getDeviceLog: function(deploymentId, deviceId, callback) {
-    UpdatesApi
-      .getText(updatesApiUrl+'deployments/'+deploymentId +'/devices/'+deviceId +"/log")
+    DeploymentsApi
+      .getText(deploymentsApiUrl+'deployments/'+deploymentId +'/devices/'+deviceId +"/log")
       .then(function(data) {
         callback(data);
       });
@@ -167,10 +167,10 @@ var AppActions = {
 
 
 
-  removeUpdate: function(updateId) {
+  removeDeployment: function(deploymentId) {
     AppDispatcher.handleViewAction({
-      actionType: AppConstants.REMOVE_UPDATE,
-      id: updateId
+      actionType: AppConstants.REMOVE_DEPLOYMENT,
+      id: deploymentId
     })
   },
 

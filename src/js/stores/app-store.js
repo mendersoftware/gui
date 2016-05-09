@@ -209,12 +209,12 @@ function _getCurrentDevices(groupId) {
   }
 }
 
-function _updateDeviceTags(id, tags) {
+function  updateDeviceTags(id, tags) {
   var index = findWithAttr(_alldevices, "id", id);
   _alldevices[index].tags = tags;
 }
 
-function _updateFilters(filters) {
+function  updateFilters(filters) {
   _filters = filters;
   _getCurrentDevices(_currentGroup.id);
 }
@@ -378,21 +378,21 @@ function _uploadImage(image) {
 }
 
 
-// UPDATES
+// Deployments
 var _progress = [];
 var _recent = []
 var _schedule = [];
 var _events = [];
 
-var _allupdates = [];
-var _selectedUpdate = {};
+var _allDeployments = [];
+var _selectedDeployment = {};
 
-//_allupdates.sort(startTimeSort);
+//_al deployments.sort(startTimeSort);
 
 
 var _activityLog = [
   {
-    summary: "User Admin deployed an update to all devices",
+    summary: "User Admin deployed an deployment to all devices",
     details: "6 devices began updating to Application 0.0.2 at 2016-03-24 00:00",
     timestamp: 1458777600000,
     negative: false
@@ -404,54 +404,54 @@ var _activityLog = [
     negative: false
   },
   {
-    summary: "User Admin cancelled an update to group Test",
-    details: "Cancelled update to 2 devices in group Test to image Application 0.0.1 at 2016-03-21 09:30",
+    summary: "User Admin cancelled an deployment to group Test",
+    details: "Cancelled deployment to 2 devices in group Test to image Application 0.0.1 at 2016-03-21 09:30",
     timestamp: 1458552600000,
     negative: true
   },
 ];
 
-function _getRecentUpdates(time) {
+function _getRecentDeployments(time) {
   var recent = [];
-  for (var i=0;i<_allupdates.length;i++) {
-    var created = new Date(_allupdates[i].created.replace(/-/g, '/').replace(/ UTC/, ''));
-    var finished = new Date(_allupdates[i].finished.replace(/-/g, '/').replace(/ UTC/, ''));
+  for (var i=0;i<_allDeployments.length;i++) {
+    var created = new Date(_allDeployments[i].created.replace(/-/g, '/').replace(/ UTC/, ''));
+    var finished = new Date(_allDeployments[i].finished.replace(/-/g, '/').replace(/ UTC/, ''));
     if (created<time && finished<time) {
-      recent.push(_allupdates[i]);
+      recent.push(_allDeployments[i]);
     }
   }
   return recent;
 }
 
-function _getProgressUpdates(time) {
+function _getProgressDeployments(time) {
   var progress = [];
-  for (var i=0;i<_allupdates.length;i++) {
-    var created = new Date(_allupdates[i].created.replace(/-/g, '/').replace(/ UTC/, ''));
-    var finished = new Date(_allupdates[i].finished.replace(/-/g, '/').replace(/ UTC/, ''));
+  for (var i=0;i<_allDeployments.length;i++) {
+    var created = new Date(_allDeployments[i].created.replace(/-/g, '/').replace(/ UTC/, ''));
+    var finished = new Date(_allDeployments[i].finished.replace(/-/g, '/').replace(/ UTC/, ''));
     /*
     * CHANGE FOR MOCKING API
     */ 
     if (created<=time && finished>time) {
-      progress.push(_allupdates[i]);
+      progress.push(_allDeployments[i]);
     }
   }
   return progress;
 }
 
 function _getProgressStatus(id) {
-  var update = _allupdates[findWithAttr(_allupdates, "id", id)];
+  var deployment = _allDeployments[findWithAttr(_allDeployments, "id", id)];
   var progress = {complete:0, failed: 0, pending: 0};
-  for (var key in update.devices) {
-    progress[update.devices[key].status.toLowerCase()]++;
+  for (var key in deployment.devices) {
+    progress[deployment.devices[key].status.toLowerCase()]++;
   }
   return progress;
 }
 
-function _getScheduledUpdates(time) {
+function _getScheduledDeployments(time) {
   var schedule = [];
-  for (var i=0;i<_allupdates.length;i++) {
-    if (_allupdates[i].start_time>time) {
-      schedule.push(_allupdates[i]);
+  for (var i=0;i<_allDeployments.length;i++) {
+    if (_allDeployments[i].start_time>time) {
+      schedule.push(_allDeployments[i]);
     }
   }
   schedule.sort(startTimeSortAscend);
@@ -460,21 +460,21 @@ function _getScheduledUpdates(time) {
 
 function _saveSchedule(schedule, single) {
   var tmp = {};
-  tmp.id = schedule.id || _allupdates.length+1;
+  tmp.id = schedule.id || _allDeployments.length+1;
   tmp.group = schedule.group.name;
   tmp.model = "Acme Model 1";
   // whether single device or group
   tmp.devices = !single ? _getDevices(tmp.group, tmp.model) : collectWithAttr(_alldevices, 'name', tmp.group);
   tmp.software_version = schedule.image.name;
-  tmp.start_time = schedule.start_time;
-  tmp.end_time = schedule.end_time;
-  var index = findWithAttr(_allupdates, 'id', tmp.id);
-  index != undefined ? _allupdates[index] = tmp : _allupdates.push(tmp);
+  tmp.created = schedule.start_time.toString();
+  tmp.finished = schedule.end_time.toString();
+  var index = findWithAttr(_allDeployments, 'id', tmp.id);
+  index != undefined ? _allDeployments[index] = tmp : _allDeployments.push(tmp);
 }
 
-function _removeUpdate(id) {
-  var idx = findWithAttr(_allupdates, 'id', id);
-  _allupdates.splice(idx,1);
+function _removeDeployment(id) {
+  var idx = findWithAttr(_allDeployments, 'id', id);
+  _allDeployments.splice(idx,1);
 }
 
 
@@ -546,16 +546,16 @@ function setImages(images) {
 
 
 
-function setUpdates(updates) {
-  if (updates) {
-     _allupdates = updates;
+function setDeployments(deployments) {
+  if (deployments) {
+     _allDeployments = deployments;
   }
-  _allupdates.sort(startTimeSort);
+  _allDeployments.sort(startTimeSort);
 }
 
-function setSelectedUpdate(update) {
-  if (update) {
-    _selectedUpdate = update;
+function setSelectedDeployment(deployment) {
+  if (deployment) {
+    _selectedDeployment = deployment;
   }
 }
 
@@ -650,44 +650,44 @@ var AppStore = assign(EventEmitter.prototype, {
     return _softwareRepo[findWithAttr(_softwareRepo, attr, val)];
   },
 
-  getRecentUpdates: function(date) {
+  getRecentDeployments: function(date) {
     /*
-    * Return list of updates before date
+    * Return list of deployments before date
     */
-    return _getRecentUpdates(date)
+    return _getRecentDeployments(date)
   },
 
-  getSingleUpdate: function(attr, val) {
-    var index = findWithAttr(_allupdates, attr, val);
-    return _allupdates[index];
+  getSingleDeployment: function(attr, val) {
+    var index = findWithAttr(_allDeployments, attr, val);
+    return _allDeployments[index];
   },
 
-  getSelectedUpdate: function() {
+  getSelectedDeployment: function() {
     /*
-    * Return current selected update
+    * Return current selected deployment
     */
-    return _selectedUpdate
+    return _selectedDeployment
   },
 
-  getProgressUpdates: function(date) {
+  getProgressDeployments: function(date) {
     /*
-    * Return list of updates in progress based on date
+    * Return list of deployments in progress based on date
     */
-    return _getProgressUpdates(date)
+    return _getProgressDeployments(date)
   },
 
   getProgressStatus: function(id) {
     /*
-    * Return progress stats for a single update
+    * Return progress stats for a single deployment
     */
     return _getProgressStatus(id);
   },
 
-  getScheduledUpdates: function(date) {
+  getScheduledDeployments: function(date) {
     /*
-    * Return list of updates scheduled after date
+    * Return list of deployments scheduled after date
     */
-    return _getScheduledUpdates(date)
+    return _getScheduledDeployments(date)
   }, 
 
   getEventLog: function() {
@@ -747,13 +747,13 @@ var AppStore = assign(EventEmitter.prototype, {
         _saveSchedule(payload.action.schedule, payload.action.single);
         break;
       case AppConstants.UPDATE_FILTERS:
-        _updateFilters(payload.action.filters);
+         updateFilters(payload.action.filters);
         break;
       case AppConstants.UPDATE_DEVICE_TAGS:
-        _updateDeviceTags(payload.action.id, payload.action.tags);
+         updateDeviceTags(payload.action.id, payload.action.tags);
         break;
-      case AppConstants.REMOVE_UPDATE:
-        _removeUpdate(payload.action.id);
+      case AppConstants.REMOVE_DEPLOYMENT:
+        _removeDeployment(payload.action.id);
         break;
       case AppConstants.SORT_TABLE:
         _sortTable(payload.action.table, payload.action.column, payload.action.direction);
@@ -765,11 +765,11 @@ var AppStore = assign(EventEmitter.prototype, {
         break;
 
       /* API */
-      case AppConstants.RECEIVE_UPDATES:
-        setUpdates(payload.action.updates);
+      case AppConstants.RECEIVE_DEPLOYMENTS:
+        setDeployments(payload.action.deployments);
         break;
-       case AppConstants.SINGLE_UPDATE:
-        setSelectedUpdate(payload.action.update);
+       case AppConstants.SINGLE_DEPLOYMENT:
+        setSelectedDeployment(payload.action.deployment);
         break;
     }
     

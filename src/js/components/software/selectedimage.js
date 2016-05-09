@@ -195,8 +195,8 @@ var SelectedImage = React.createClass({
             <List style={{backgroundColor: "rgba(255,255,255,0)"}}>
               <ListItem
                 disabled={this.props.image.name ? false : true}
-                primaryText="Deploy update"
-                secondaryText="Update devices with this image"
+                primaryText="Deploy as an update"
+                secondaryText="Deploy this image to devices"
                 onClick={this._clickImageSchedule}
                 leftIcon={<FontIcon className="material-icons">schedule</FontIcon>} />
               <Divider />

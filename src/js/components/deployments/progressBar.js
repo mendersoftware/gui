@@ -19,10 +19,10 @@ var ProgressBar = React.createClass({
     };
   },
   componentDidMount: function() {
-    AppActions.getSingleUpdateStats(this.props.update.id, function(stats) {
+    AppActions.getSingleDeploymentStats(this.props.deployment.id, function(stats) {
       this.setState({stats:stats});
     }.bind(this));
-    AppActions.getSingleUpdateDevices(this.props.update.id, function(devices) {
+    AppActions.getSingleDeploymentDevices(this.props.deployment.id, function(devices) {
       this.setState({devices: devices});
       this.props.getDevices(devices.length, this.props.index);
     }.bind(this));

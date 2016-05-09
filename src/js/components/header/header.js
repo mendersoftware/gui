@@ -17,7 +17,7 @@ var menuItems = [
   {route:"/", text:"Dashboard"},
   {route:"/devices", text:"Devices"},
   {route:"/software", text:"Software"},
-  {route:"/updates", text:"Updates"},
+  {route:"/deployments", text:"Deployments"},
 ];
 
 var styles = {
@@ -48,7 +48,7 @@ var Header = React.createClass({
     return this.context.router.isActive({ pathname: '/' }, true) ? '0' :
       this.context.router.isActive('/devices') ? '1' :
       this.context.router.isActive('/software') ? '2' : 
-      this.context.router.isActive('/updates') ? '3' : '0';
+      this.context.router.isActive('/deployments') ? '3' : '0';
   },
   _handleTabActive: function(tab) {
     this.context.router.push(tab.props.route);

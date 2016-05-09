@@ -2,7 +2,7 @@ import React from 'react';
 import { Router, Link } from 'react-router';
 var AppStore = require('../../stores/app-store');
 var AppActions = require('../../actions/app-actions');
-var ScheduleForm = require('../updates/scheduleform');
+var ScheduleForm = require('../deployments/scheduleform');
 
 var mui = require('material-ui');
 var FlatButton = mui.FlatButton;
@@ -66,14 +66,14 @@ var SelectedDevices = React.createClass({
   },
 
   _onScheduleSubmit: function() {
-    var newUpdate = {
+    var newDeployment = {
       group: this.state.group,
       model: this.state.model,
       start_time: this.state.start_time,
       end_time: this.state.end_time,
       image: this.state.image
     }
-    AppActions.saveSchedule(newUpdate, this.props.selected.length === 1);
+    AppActions.saveSchedule(newDeployment, this.props.selected.length === 1);
     this.dialogToggle('schedule');
   },
 
@@ -169,7 +169,7 @@ var SelectedDevices = React.createClass({
               <Divider />
               <ListItem
                 primaryText="Deploy update"
-                secondaryText="Click to update this device"
+                secondaryText="Deploy an update to this device only"
                 onClick={this._clickListItem}
                 leftIcon={<FontIcon className="material-icons">schedule</FontIcon>} />
               <Divider />
@@ -213,7 +213,7 @@ var SelectedDevices = React.createClass({
           bodyStyle={{paddingTop:"0"}}
           contentStyle={{overflow:"hidden", boxShadow:"0 14px 45px rgba(0, 0, 0, 0.25), 0 10px 18px rgba(0, 0, 0, 0.22)"}}
           >
-          <ScheduleForm images={this.props.images} device={this.props.selected[0]} updateSchedule={this._updateParams} groups={this.props.groups} />
+          <ScheduleForm images={this.props.images} device={this.props.selected[0]} deploymentSchedule={this._updateParams} groups={this.props.groups} />
 
         </Dialog>
 

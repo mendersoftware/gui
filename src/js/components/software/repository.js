@@ -2,7 +2,7 @@ import React from 'react';
 import Time from 'react-time';
 import AppStore from '../../stores/app-store';
 import AppActions from '../../actions/app-actions';
-import ScheduleForm from '../updates/scheduleform';
+import ScheduleForm from '../deployments/scheduleform';
 import ReactDOM from 'react-dom';
 var update = require('react-addons-update');
 var FileInput = require('react-file-input');
@@ -10,7 +10,7 @@ var FileInput = require('react-file-input');
 
 import SearchInput from 'react-search-input';
 
-import UpdateButton from './updatebutton.js';
+import DeploymentButton from './deploymentbutton.js';
 import SelectedImage from './selectedimage.js';
 
 import { Router, Link } from 'react-router';
@@ -80,14 +80,14 @@ var Repository = React.createClass({
     this.setState(obj);
   },
   _onScheduleSubmit: function() {
-    var newUpdate = {
+    var newDeployment = {
       group: this.state.group,
       model: this.state.model,
       start_time: this.state.start_time,
       end_time: this.state.end_time,
       image: this.state.image
     }
-    AppActions.saveSchedule(newUpdate, this.state.disabled);
+    AppActions.saveSchedule(newDeployment, this.state.disabled);
     this.dialogDismiss('schedule');
   },
   _onUploadSubmit: function() {
@@ -422,7 +422,7 @@ var Repository = React.createClass({
           contentStyle={{overflow:"hidden", boxShadow:"0 14px 45px rgba(0, 0, 0, 0.25), 0 10px 18px rgba(0, 0, 0, 0.22)"}}
           actionsContainerStyle={{marginBottom:"0"}}
           >
-          <ScheduleForm updateSchedule={this._updateParams} images={software} image={this.state.image} imageVal={this.state.image} groups={this.props.groups} />
+          <ScheduleForm deploymentSchedule={this._updateParams} images={software} image={this.state.image} imageVal={this.state.image} groups={this.props.groups} />
         </Dialog>
       </div>
     );
