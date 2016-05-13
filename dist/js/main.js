@@ -79693,7 +79693,8 @@ function getState() {
     attributes: AppStore.getAttributes(),
     images: AppStore.getSoftwareRepo(),
     unauthorized: AppStore.getUnauthorized(),
-    hideTODO: localStorage.getItem("devicesNextStep")
+    hideTODO: localStorage.getItem("devicesNextStep"),
+    groupTODO: localStorage.getItem("groupNextStep")
   };
 }
 
@@ -79733,6 +79734,18 @@ var Devices = _react2.default.createClass({
     AppActions.setLocalStorage("devicesNextStep", true);
   },
   _onChange: function _onChange() {
+
+    if (!this.state.groupTODO) {
+      if (this.state.groups[1]) {
+        if (this.state.groups[1].devices.length === 2) {
+          setTimeout(function () {
+            // avoid dispatcher clash
+            AppActions.setLocalStorage("groupNextStep", true);
+          }, 1);
+        }
+      }
+    }
+
     this.setState(getState());
   },
   _updateFilters: function _updateFilters(filters) {
@@ -79752,7 +79765,7 @@ var Devices = _react2.default.createClass({
         { className: 'rightFluid padding-right' },
         _react2.default.createElement(
           'div',
-          { className: this.state.hideTODO || this.state.unauthorized.length ? "hidden" : null },
+          { className: this.state.unauthorized.length || !this.state.groupTODO ? "hidden" : null },
           _react2.default.createElement(
             'div',
             { className: 'margin-top margin-bottom onboard' },
@@ -79766,6 +79779,20 @@ var Devices = _react2.default.createClass({
               _reactRouter.Link,
               { to: '/software', className: 'float-right margin-right' },
               'Go to software'
+            )
+          )
+        ),
+        _react2.default.createElement(
+          'div',
+          { className: this.state.groupTODO || this.state.unauthorized.length ? "hidden" : null },
+          _react2.default.createElement(
+            'div',
+            { className: 'margin-top margin-bottom onboard' },
+            _react2.default.createElement('div', { className: 'close', onClick: this._closeOnboard }),
+            _react2.default.createElement(
+              'h3',
+              null,
+              '//TODO Create a new group with these devices'
             )
           )
         ),
