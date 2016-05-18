@@ -79164,7 +79164,8 @@ var DeviceList = _react2.default.createClass((_React$createClass = {
   _onChange: function _onChange(event) {
     this._validateName(event.target.value);
   },
-  _expandRow: function _expandRow(rowNumber, columnId) {
+  _expandRow: function _expandRow(rowNumber, columnId, event) {
+    event.stopPropagation();
     if (columnId < 0) {
       this.setState({ expanded: null });
     } else {
@@ -82821,3 +82822,4 @@ module.exports = {
 };
 
 },{"material-ui/lib/styles/colors":291,"material-ui/lib/styles/spacing":294,"material-ui/lib/utils/color-manipulator":348}]},{},[788]);
+

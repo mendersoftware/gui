@@ -111,7 +111,8 @@ var DeviceList = React.createClass({
   _onChange: function(event) {
     this._validateName(event.target.value);
   },
-  _expandRow: function(rowNumber, columnId) {
+  _expandRow: function(rowNumber, columnId, event) {
+    event.stopPropagation();
     if (columnId < 0) {
       this.setState({expanded: null});
     } else {
