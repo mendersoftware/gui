@@ -77463,7 +77463,6 @@ var Deployments = _react2.default.createClass({
       artifact_name: this.state.image.name,
       devices: ids
     };
-    console.log(newDeployment.devices);
     AppActions.createDeployment(newDeployment, this.state.disabled);
     AppActions.setLocalStorage("deployTODO", true);
     this.dialogDismiss('dialog');
@@ -78718,7 +78717,6 @@ function combineDateTime(date, time) {
 
 function getDevicesFromParams(group, device_type) {
   var devices = [];
-  console.log(device_type);
   if (device_type && group) {
     devices = _appStore2.default.getDevicesFromParams(group, device_type);
   }
@@ -78804,7 +78802,6 @@ var ScheduleForm = _react2.default.createClass({
     var image = this.state.images[index];
     var groupname = this.state.group ? this.state.group.name : null;
     var devices = this.props.device ? [this.props.device] : getDevicesFromParams(groupname, image.device_type);
-    console.log(devices);
     this.setState({
       image: image,
       imageVal: {

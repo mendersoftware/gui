@@ -131,7 +131,6 @@ var Deployments = React.createClass({
       artifact_name: this.state.image.name,
       devices: ids
     }
-    console.log(newDeployment.devices);
     AppActions.createDeployment(newDeployment, this.state.disabled);
     AppActions.setLocalStorage("deployTODO", true);
     this.dialogDismiss('dialog');
