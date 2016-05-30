@@ -128,7 +128,7 @@ var Deployments = React.createClass({
       device_type: this.state.image.device_type,
       //start_time: this.state.start_time,
       //end_time: this.state.end_time,
-      version: this.state.image.name,
+      artifact_name: this.state.image.name,
       devices: ids
     }
     console.log(newDeployment.devices);
@@ -166,8 +166,8 @@ var Deployments = React.createClass({
       if (deployment.id) {
         id = deployment.id;
       }
-      if (deployment.software_version) {
-        image = AppStore.getSoftwareImage('name', deployment.software_version);
+      if (deployment.artifact_name) {
+        image = AppStore.getSoftwareImage('name', deployment.artifact_name);
       }
       if (deployment.group) {
         group = AppStore.getSingleGroup('name', deployment.group);
@@ -210,7 +210,7 @@ var Deployments = React.createClass({
 
     if (this.state.scheduleForm) {
       dialogContent = (    
-        <ScheduleForm deploymentSchedule={this._deploymentParams} id={this.state.id} images={this.state.software} image={this.state.image} imageVal={this.state.image} groups={this.state.groups} groupVal={this.state.group} start={this.state.start_time} end={this.state.end_time} />
+        <ScheduleForm deploymentSchedule={this._deploymentParams} id={this.state.id} images={this.state.images} image={this.state.image} imageVal={this.state.image} groups={this.state.groups} groupVal={this.state.group} start={this.state.start_time} end={this.state.end_time} />
       )
     } else {
       dialogContent = (

@@ -48,7 +48,7 @@ var Recent = React.createClass({
       return (
         <TableRow key={index}>
           <TableRowColumn>{deployment.name}</TableRowColumn>
-          <TableRowColumn>{deployment.version}</TableRowColumn>
+          <TableRowColumn>{deployment.artifact_name}</TableRowColumn>
           <TableRowColumn><GroupDevices deployment={deployment.id} /></TableRowColumn>
           <TableRowColumn><Time value={this._formatTime(deployment.created)} format="YYYY-MM-DD HH:mm" /></TableRowColumn>
           <TableRowColumn>--</TableRowColumn>
@@ -63,7 +63,7 @@ var Recent = React.createClass({
       return (
         <TableRow key={index}>
           <TableRowColumn>{deployment.name}</TableRowColumn>
-          <TableRowColumn>{deployment.version}</TableRowColumn>
+          <TableRowColumn>{deployment.artifact_name}</TableRowColumn>
           <TableRowColumn><GroupDevices deployment={deployment.id} /></TableRowColumn>
           <TableRowColumn><Time value={this._formatTime(deployment.created)} format="YYYY-MM-DD HH:mm" /></TableRowColumn>
           <TableRowColumn><Time value={this._formatTime(deployment.finished)} format="YYYY-MM-DD HH:mm" /></TableRowColumn>
@@ -92,7 +92,7 @@ var Recent = React.createClass({
               adjustForCheckbox={false}>
               <TableRow>
                 <TableHeaderColumn tooltip="Device group">Group</TableHeaderColumn>
-                <TableHeaderColumn tooltip="Target software version">Software</TableHeaderColumn>
+                <TableHeaderColumn tooltip="Target software version">Target software</TableHeaderColumn>
                 <TableHeaderColumn tooltip="Number of devices"># Devices</TableHeaderColumn>
                 <TableHeaderColumn tooltip="Start time">Start time</TableHeaderColumn>
                 <TableHeaderColumn tooltip="End time">End time</TableHeaderColumn>

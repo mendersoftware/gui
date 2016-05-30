@@ -140,7 +140,7 @@ var SelectedImage = React.createClass({
     );
 
     var tags = this.state.tagEdit ? tagInput : info.tags.join(', ');
-    var devicesFilter = "software_version="+info.name;
+    var devicesFilter = "artifact_name="+info.name;
     devicesFilter = encodeURIComponent(devicesFilter);    
     var devicesLink = (
       <div>

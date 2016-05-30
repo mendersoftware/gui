@@ -33,7 +33,7 @@ var Schedule = React.createClass({
           <div key={index}>
             <ListItem
               disabled={true}
-              primaryText={deployment.software_version}
+              primaryText={deployment.artifact_name}
               secondaryText={group}
               onClick={this._clickDeployment}
               leftIcon={<div style={{width:"auto", height:"auto"}}><span className="day"><Time value={deployment.start_time} format="DD" /></span><span className="month">{month}</span></div>}

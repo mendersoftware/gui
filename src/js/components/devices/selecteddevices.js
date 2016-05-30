@@ -134,10 +134,10 @@ var SelectedDevices = React.createClass({
       );
      
       var tags = this.state.tagEdit ? tagInput : this.props.selected[0].tags.join(', ') || '-';
-      var encodedSoftware = encodeURIComponent(this.props.selected[0].software_version); 
+      var encodedSoftware = encodeURIComponent(this.props.selected[0].name); 
       var softwareLink = (
         <div>
-          <Link style={{fontWeight:"500"}} to={`/software/${encodedSoftware}`}>{this.props.selected[0].software_version}</Link>
+          <Link style={{fontWeight:"500"}} to={`/software/${encodedSoftware}`}>{this.props.selected[0].name}</Link>
         </div>
       )
 
@@ -155,7 +155,7 @@ var SelectedDevices = React.createClass({
           </div>
           <div className="report-list">
             <List>
-              <ListItem disabled={true} primaryText="Software" secondaryText={softwareLink} />
+              <ListItem disabled={true} primaryText="Current software" secondaryText={softwareLink} />
               <Divider />
               <ListItem disabled={true} primaryText="Architecture" secondaryText={this.props.selected[0].arch} />
               <Divider />

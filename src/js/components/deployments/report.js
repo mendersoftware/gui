@@ -94,10 +94,10 @@ var Report = React.createClass({
   },
   render: function () {
     var deviceList = [];
-    var encodedSoftware = encodeURIComponent(this.props.deployment.version); 
+    var encodedSoftware = encodeURIComponent(this.props.deployment.artifact_name); 
     var softwareLink = (
       <div>
-        <Link style={{fontWeight:"500"}} to={`/software/${encodedSoftware}`}>{this.props.deployment.version}</Link>
+        <Link style={{fontWeight:"500"}} to={`/software/${encodedSoftware}`}>{this.props.deployment.artifact_name}</Link>
       </div>
     )
 
@@ -175,7 +175,7 @@ var Report = React.createClass({
               <TableRow>
                 <TableHeaderColumn tooltip="Device name">Device name</TableHeaderColumn>
                 <TableHeaderColumn tooltip="Device type">Device type</TableHeaderColumn>
-                <TableHeaderColumn tooltip="Target software">Updated to</TableHeaderColumn>
+                <TableHeaderColumn tooltip="Current software">Current software</TableHeaderColumn>
                 <TableHeaderColumn tooltip="Deployment end time">End time</TableHeaderColumn>
                 <TableHeaderColumn tooltip="Deployment status">Deployment status</TableHeaderColumn>
                 <TableHeaderColumn tooltip=""></TableHeaderColumn>

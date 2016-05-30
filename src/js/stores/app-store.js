@@ -15,7 +15,7 @@ var _attributes = {
   device_type: "Device type",
   arch: "Architecture",
   status: "Status",
-  software_version: "Current software",
+  artifact_name: "Current software",
   tags: "Tags"
 }
 
@@ -69,7 +69,7 @@ var _alldevices1 = [
     'device_type':"Raspberry Pi 3",
     'arch': 'ARMv8 Cortex-A53',
     'status': 'Up',
-    'software_version': 'Application 0.0.1',
+    'artifact_name': 'Application 0.0.1',
     'groups': [1,4],
     'tags': []
   },
@@ -79,7 +79,7 @@ var _alldevices1 = [
     'device_type':"Raspberry Pi 3",
     'arch': 'ARMv8 Cortex-A53',
     'status': 'Up',
-    'software_version': 'Application 0.0.1',
+    'artifact_name': 'Application 0.0.1',
     'groups': [1,4],
     'tags': []
   },
@@ -89,7 +89,7 @@ var _alldevices1 = [
     'device_type':"Raspberry Pi 3",
     'arch': 'ARMv8 Cortex-A53',
     'status': 'Up',
-    'software_version': 'Application 0.0.1',
+    'artifact_name': 'Application 0.0.1',
     'groups': [1,4],
     'tags': []
   },
@@ -99,7 +99,7 @@ var _alldevices1 = [
     'device_type':"Raspberry Pi 3",
     'arch': 'ARMv8 Cortex-A53',
     'status': 'Up',
-    'software_version': 'Application 0.0.2',
+    'artifact_name': 'Application 0.0.2',
     'groups': [1,2],
     'tags': []
   },
@@ -109,7 +109,7 @@ var _alldevices1 = [
     'device_type':"Raspberry Pi 3",
     'arch': 'ARMv8 Cortex-A53',
     'status': 'Up',
-    'software_version': 'Application 0.0.2',
+    'artifact_name': 'Application 0.0.2',
     'groups': [1,3],
     'tags': []
   },
@@ -119,7 +119,7 @@ var _alldevices1 = [
     'device_type':"Raspberry Pi 3",
     'arch': 'ARMv8 Cortex-A53',
     'status': 'Up',
-    'software_version': 'Application 0.0.2',
+    'artifact_name': 'Application 0.0.2',
     'groups': [1,3],
     'tags': []
   },
@@ -129,7 +129,7 @@ var _alldevices1 = [
     'device_type':"Raspberry Pi 2 Model B",
     'arch': 'ARMv7 Cortex-A7',
     'status': 'Down',
-    'software_version': 'Application 0.0.1',
+    'artifact_name': 'Application 0.0.1',
     'groups': [1],
     'tags': []
   },
@@ -142,7 +142,7 @@ var _unauthorized = [
     'device_type':"Raspberry Pi 3",
     'arch': 'ARMv8 Cortex-A53',
     'status': 'Unauthorized',
-    'software_version': 'Application 0.0.2',
+    'artifact_name': 'Application 0.0.2',
     'groups': [],
     'tags': []
   },
@@ -152,7 +152,7 @@ var _unauthorized = [
     'device_type':"Raspberry Pi 3",
     'arch': 'ARMv8 Cortex-A53',
     'status': 'Unauthorized',
-    'software_version': 'Application 0.0.2',
+    'artifact_name': 'Application 0.0.2',
     'groups': [],
     'tags': []
   },
@@ -353,10 +353,10 @@ function discoverDevices(array) {
   var unique = {};
 
   for (var i=0; i<_alldevices.length; i++) {
-    if (typeof(unique[_alldevices[i].software_version]) == "undefined") {
-      unique[_alldevices[i].software_version] = 0;
+    if (typeof(unique[_alldevices[i].artifact_name]) == "undefined") {
+      unique[_alldevices[i].artifact_name] = 0;
     }
-    unique[_alldevices[i].software_version]++;
+    unique[_alldevices[i].artifact_name]++;
   }
 
   if (array.length) {
@@ -465,7 +465,7 @@ function _saveSchedule(schedule, single) {
   tmp.device_type = "Acme Model 1";
   // whether single device or group
   tmp.devices = !single ? _getDevices(tmp.group, tmp.device_type) : collectWithAttr(_alldevices, 'name', tmp.group);
-  tmp.software_version = schedule.image.name;
+  tmp.artifact_name = schedule.image.name;
   tmp.created = schedule.start_time.toString();
   tmp.finished = schedule.end_time.toString();
   var index = findWithAttr(_allDeployments, 'id', tmp.id);

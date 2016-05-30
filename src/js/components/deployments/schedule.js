@@ -29,7 +29,7 @@ var Schedule = React.createClass({
         return (
           <TableRow key={index}>
             <TableRowColumn>{deployment.group}</TableRowColumn>
-            <TableRowColumn>{deployment.software_version}</TableRowColumn>
+            <TableRowColumn>{deployment.artifact_name}</TableRowColumn>
             <TableRowColumn>{deployment.devices.length}</TableRowColumn>
             <TableRowColumn><Time value={deployment.start_time} format="YYYY/MM/DD HH:mm" /></TableRowColumn>
             <TableRowColumn><Time value={deployment.end_time} format="YYYY/MM/DD HH:mm" /></TableRowColumn>

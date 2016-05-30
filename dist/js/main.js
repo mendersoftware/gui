@@ -76162,7 +76162,7 @@ var AppConstants = require('../constants/app-constants');
 var AppDispatcher = require('../dispatchers/app-dispatcher');
 var Api = require('../api/api');
 var DeploymentsApi = require('../api/deployments-api');
-var apiUrl = "http://private-9f43d-michaelatmender.apiary-mock.com/api/0.0.1/";
+var apiUrl = "http://private-62004-deployment1.apiary-mock.com/";
 var deploymentsApiUrl = "http://private-62004-deployment1.apiary-mock.com/";
 
 var AppActions = {
@@ -77197,7 +77197,7 @@ var Schedule = _react2.default.createClass({
           { key: index },
           _react2.default.createElement(ListItem, {
             disabled: true,
-            primaryText: deployment.software_version,
+            primaryText: deployment.artifact_name,
             secondaryText: group,
             onClick: this._clickDeployment,
             leftIcon: _react2.default.createElement(
@@ -77457,10 +77457,10 @@ var Deployments = _react2.default.createClass({
     var newDeployment = {
       //id: this.state.id,
       name: this.state.group.name,
-      model: this.state.image.model,
+      device_type: this.state.image.device_type,
       //start_time: this.state.start_time,
       //end_time: this.state.end_time,
-      version: this.state.image.name,
+      artifact_name: this.state.image.name,
       devices: ids
     };
     console.log(newDeployment.devices);
@@ -77498,8 +77498,8 @@ var Deployments = _react2.default.createClass({
       if (deployment.id) {
         id = deployment.id;
       }
-      if (deployment.software_version) {
-        image = AppStore.getSoftwareImage('name', deployment.software_version);
+      if (deployment.artifact_name) {
+        image = AppStore.getSoftwareImage('name', deployment.artifact_name);
       }
       if (deployment.group) {
         group = AppStore.getSingleGroup('name', deployment.group);
@@ -77538,7 +77538,7 @@ var Deployments = _react2.default.createClass({
     var dialogContent = '';
 
     if (this.state.scheduleForm) {
-      dialogContent = _react2.default.createElement(ScheduleForm, { deploymentSchedule: this._deploymentParams, id: this.state.id, images: this.state.software, image: this.state.image, imageVal: this.state.image, groups: this.state.groups, groupVal: this.state.group, start: this.state.start_time, end: this.state.end_time });
+      dialogContent = _react2.default.createElement(ScheduleForm, { deploymentSchedule: this._deploymentParams, id: this.state.id, images: this.state.images, image: this.state.image, imageVal: this.state.image, groups: this.state.groups, groupVal: this.state.group, start: this.state.start_time, end: this.state.end_time });
     } else {
       dialogContent = _react2.default.createElement(Report, { deployment: this.state.selectedDeployment, retryDeployment: this._scheduleDeployment });
     }
@@ -77940,7 +77940,7 @@ var Recent = _react2.default.createClass({
         _react2.default.createElement(
           TableRowColumn,
           null,
-          deployment.version
+          deployment.artifact_name
         ),
         _react2.default.createElement(
           TableRowColumn,
@@ -77979,7 +77979,7 @@ var Recent = _react2.default.createClass({
         _react2.default.createElement(
           TableRowColumn,
           null,
-          deployment.version
+          deployment.artifact_name
         ),
         _react2.default.createElement(
           TableRowColumn,
@@ -78039,7 +78039,7 @@ var Recent = _react2.default.createClass({
               _react2.default.createElement(
                 TableHeaderColumn,
                 { tooltip: 'Target software version' },
-                'Software'
+                'Target software'
               ),
               _react2.default.createElement(
                 TableHeaderColumn,
@@ -78202,21 +78202,21 @@ var mockSuccess = [{
   "finished": "2016-03-25 00:13:00 +0000 UTC",
   "status": "success",
   "started": "2016-03-24 24:00:00 +0000 UTC",
-  "model": "Raspberry Pi 3",
+  "device_type": "Raspberry Pi 3",
   "version_from": "Application 0.1"
 }, {
   "id": "00a0c91e6-7dec-11d0-a765-f81d4faebf2",
   "finished": "2016-03-25 00:12:00 +0000 UTC",
   "status": "success",
   "started": "2016-03-24 24:00:00 +0000 UTC",
-  "model": "Raspberry Pi 3",
+  "device_type": "Raspberry Pi 3",
   "version_from": "Application 0.1"
 }, {
   "id": "00a0c91e6-7dec-11d0-a765-f81d4faebf1",
   "finished": "2016-03-25 00:04:00 +0000 UTC",
   "status": "success",
   "started": "2016-03-24 24:00:00 +0000 UTC",
-  "model": "Raspberry Pi 3",
+  "device_type": "Raspberry Pi 3",
   "version_from": "Application 0.1"
 }];
 
@@ -78271,14 +78271,14 @@ var Report = _react2.default.createClass({
   },
   render: function render() {
     var deviceList = [];
-    var encodedSoftware = encodeURIComponent(this.props.deployment.version);
+    var encodedSoftware = encodeURIComponent(this.props.deployment.artifact_name);
     var softwareLink = _react2.default.createElement(
       'div',
       null,
       _react2.default.createElement(
         _reactRouter.Link,
         { style: { fontWeight: "500" }, to: '/software/' + encodedSoftware },
-        this.props.deployment.version
+        this.props.deployment.artifact_name
       )
     );
 
@@ -78307,7 +78307,7 @@ var Report = _react2.default.createClass({
             _react2.default.createElement(
               TableRowColumn,
               null,
-              device.model
+              device.device_type
             ),
             _react2.default.createElement(
               TableRowColumn,
@@ -78345,7 +78345,7 @@ var Report = _react2.default.createClass({
           null,
           _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Group', secondaryText: this.props.deployment.name }),
           _react2.default.createElement(Divider, null),
-          _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Device type', secondaryText: this.props.deployment.model || "--" }),
+          _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Device type', secondaryText: this.props.deployment.device_type || "--" }),
           _react2.default.createElement(Divider, null),
           _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Start time', secondaryText: _react2.default.createElement(Time, { value: this._formatTime(this.props.deployment.created), format: 'YYYY-MM-DD HH:mm' }) })
         )
@@ -78424,8 +78424,8 @@ var Report = _react2.default.createClass({
               ),
               _react2.default.createElement(
                 TableHeaderColumn,
-                { tooltip: 'Target software' },
-                'Updated to'
+                { tooltip: 'Current software' },
+                'Current software'
               ),
               _react2.default.createElement(
                 TableHeaderColumn,
@@ -78502,7 +78502,7 @@ var Schedule = _react2.default.createClass({
           _react2.default.createElement(
             TableRowColumn,
             null,
-            deployment.software_version
+            deployment.artifact_name
           ),
           _react2.default.createElement(
             TableRowColumn,
@@ -78711,10 +78711,11 @@ function combineDateTime(date, time) {
   return addDate(time, diffDays);
 }
 
-function getDevicesFromParams(group, model) {
+function getDevicesFromParams(group, device_type) {
   var devices = [];
-  if (model && group) {
-    devices = _appStore2.default.getDevicesFromParams(group, model);
+  console.log(device_type);
+  if (device_type && group) {
+    devices = _appStore2.default.getDevicesFromParams(group, device_type);
   }
   return devices;
 }
@@ -78781,7 +78782,7 @@ var ScheduleForm = _react2.default.createClass({
   },
 
   _handleGroupValueChange: function _handleGroupValueChange(e, index, value) {
-    var image = this.state.image ? this.state.image.model : null;
+    var image = this.state.image ? this.state.image.device_type : null;
     var group = this.props.groups[index];
     this.setState({
       group: group,
@@ -78797,7 +78798,8 @@ var ScheduleForm = _react2.default.createClass({
   _handleImageValueChange: function _handleImageValueChange(e, index, value) {
     var image = this.state.images[index];
     var groupname = this.state.group ? this.state.group.name : null;
-    var devices = this.props.device ? [this.props.device] : getDevicesFromParams(groupname, image.model);
+    var devices = this.props.device ? [this.props.device] : getDevicesFromParams(groupname, image.device_type);
+    console.log(devices);
     this.setState({
       image: image,
       imageVal: {
@@ -78864,8 +78866,8 @@ var ScheduleForm = _react2.default.createClass({
       groupItems.push(tmp);
     }
 
-    var model = this.state.image ? this.state.image.model : '';
-    var filters = "model=" + model;
+    var device_type = this.state.image ? this.state.image.device_type : '';
+    var filters = "device_type=" + device_type;
     if (this.props.device) {
       filters = "name=" + this.props.device.name;
     }
@@ -78969,7 +78971,7 @@ var ScheduleForm = _react2.default.createClass({
             disabled: true,
             hintText: 'Device type',
             floatingLabelText: 'Device type',
-            value: model,
+            value: device_type,
             underlineDisabledStyle: { borderBottom: "none" },
             style: { verticalAlign: "top" },
             errorStyle: { color: "rgb(171, 16, 0)" } })
@@ -79374,12 +79376,12 @@ var DeviceList = _react2.default.createClass((_React$createClass = {
       _react2.default.createElement(
         TableRowColumn,
         null,
-        device.model
+        device.device_type
       ),
       _react2.default.createElement(
         TableRowColumn,
         null,
-        device.software_version
+        device.artifact_name
       ),
       _react2.default.createElement(
         TableRowColumn,
@@ -79512,7 +79514,7 @@ var DeviceList = _react2.default.createClass((_React$createClass = {
               'Device type',
               _react2.default.createElement(
                 FontIcon,
-                { ref: 'model', style: styles.sortIcon, onClick: this._sortColumn.bind(null, "model"), className: 'sortIcon material-icons' },
+                { ref: 'device_type', style: styles.sortIcon, onClick: this._sortColumn.bind(null, "device_type"), className: 'sortIcon material-icons' },
                 'sort'
               )
             ),
@@ -79522,7 +79524,7 @@ var DeviceList = _react2.default.createClass((_React$createClass = {
               'Current software',
               _react2.default.createElement(
                 FontIcon,
-                { ref: 'software_version', style: styles.sortIcon, onClick: this._sortColumn.bind(null, "software_version"), className: 'sortIcon material-icons' },
+                { ref: 'artifact_name', style: styles.sortIcon, onClick: this._sortColumn.bind(null, "software_version"), className: 'sortIcon material-icons' },
                 'sort'
               )
             ),
@@ -80170,7 +80172,7 @@ var Groups = _react2.default.createClass({
         _react2.default.createElement(
           TableRowColumn,
           null,
-          device.model
+          device.device_type
         ),
         _react2.default.createElement(
           TableRowColumn,
@@ -80391,7 +80393,7 @@ var SelectedDevices = _react2.default.createClass({
   _onScheduleSubmit: function _onScheduleSubmit() {
     var newDeployment = {
       group: this.state.group,
-      model: this.state.model,
+      device_type: this.state.device_type,
       start_time: this.state.start_time,
       end_time: this.state.end_time,
       image: this.state.image
@@ -80452,14 +80454,14 @@ var SelectedDevices = _react2.default.createClass({
         delimeters: [9, 13, 188] });
 
       var tags = this.state.tagEdit ? tagInput : this.props.selected[0].tags.join(', ') || '-';
-      var encodedSoftware = encodeURIComponent(this.props.selected[0].software_version);
+      var encodedSoftware = encodeURIComponent(this.props.selected[0].name);
       var softwareLink = _react2.default.createElement(
         'div',
         null,
         _react2.default.createElement(
           _reactRouter.Link,
           { style: { fontWeight: "500" }, to: '/software/' + encodedSoftware },
-          this.props.selected[0].software_version
+          this.props.selected[0].name
         )
       );
 
@@ -80476,7 +80478,7 @@ var SelectedDevices = _react2.default.createClass({
             _react2.default.createElement(Divider, null),
             _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Status', secondaryText: this.props.selected[0].status }),
             _react2.default.createElement(Divider, null),
-            _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Device type', secondaryText: this.props.selected[0].model }),
+            _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Device type', secondaryText: this.props.selected[0].device_type }),
             _react2.default.createElement(Divider, null)
           )
         ),
@@ -80486,7 +80488,7 @@ var SelectedDevices = _react2.default.createClass({
           _react2.default.createElement(
             List,
             null,
-            _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Software', secondaryText: softwareLink }),
+            _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Current software', secondaryText: softwareLink }),
             _react2.default.createElement(Divider, null),
             _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Architecture', secondaryText: this.props.selected[0].arch }),
             _react2.default.createElement(Divider, null),
@@ -80639,12 +80641,12 @@ var Authorized = _react2.default.createClass({
         _react2.default.createElement(
           TableRowColumn,
           null,
-          device.model
+          device.device_type
         ),
         _react2.default.createElement(
           TableRowColumn,
           null,
-          device.software_version
+          device.artifact_name
         ),
         _react2.default.createElement(
           TableRowColumn,
@@ -80714,7 +80716,7 @@ var Authorized = _react2.default.createClass({
               'Device type',
               _react2.default.createElement(
                 FontIcon,
-                { ref: 'model', style: styles.sortIcon, onClick: this._sortColumn.bind(null, "model"), className: 'sortIcon material-icons' },
+                { ref: 'device_type', style: styles.sortIcon, onClick: this._sortColumn.bind(null, "device_type"), className: 'sortIcon material-icons' },
                 'sort'
               )
             ),
@@ -80724,7 +80726,7 @@ var Authorized = _react2.default.createClass({
               'Current software',
               _react2.default.createElement(
                 FontIcon,
-                { ref: 'software_version', style: styles.sortIcon, onClick: this._sortColumn.bind(null, "software_version"), className: 'sortIcon material-icons' },
+                { ref: 'artifact_name', style: styles.sortIcon, onClick: this._sortColumn.bind(null, "artifact_name"), className: 'sortIcon material-icons' },
                 'sort'
               )
             ),
@@ -80995,7 +80997,7 @@ var FlatButton = _materialUi2.default.FlatButton;
 var FontIcon = _materialUi2.default.FontIcon;
 var IconButton = _materialUi2.default.IconButton;
 
-var newState = { model: "Acme Model 1", tags: [] };
+var newState = { device_type: "Acme Model 1", tags: [] };
 var tags = [];
 var software = [];
 
@@ -81045,7 +81047,7 @@ var Repository = _react2.default.createClass({
   _onScheduleSubmit: function _onScheduleSubmit() {
     var newDeployment = {
       group: this.state.group,
-      model: this.state.model,
+      device_type: this.state.device_type,
       start_time: this.state.start_time,
       end_time: this.state.end_time,
       image: this.state.image
@@ -81133,7 +81135,7 @@ var Repository = _react2.default.createClass({
       this.setState({ popupLabel: "Edit image details" });
       newState = image;
     } else {
-      newState = { model: "Acme Model 1", tags: [] };
+      newState = { device_type: "Acme Model 1", tags: [] };
       this.setState({ image: newState, popupLabel: "Upload a new image" });
     }
     tags = [];
@@ -81207,7 +81209,7 @@ var Repository = _react2.default.createClass({
     var image = this.state.image;
 
     if (this.refs.search) {
-      var filters = ['name', 'model', 'tags', 'description'];
+      var filters = ['name', 'device_type', 'tags', 'description'];
       tmpSoftware = software.filter(this.refs.search.filter(filters));
     }
     var groups = this.props.groups;
@@ -81227,7 +81229,7 @@ var Repository = _react2.default.createClass({
         _react2.default.createElement(
           TableRowColumn,
           null,
-          pkg.model
+          pkg.device_type
         ),
         _react2.default.createElement(
           TableRowColumn,
@@ -81344,8 +81346,8 @@ var Repository = _react2.default.createClass({
               null,
               _react2.default.createElement(
                 TableHeaderColumn,
-                { className: 'columnHeader', tooltip: 'Software' },
-                'Software ',
+                { className: 'columnHeader', tooltip: 'Name' },
+                'Name ',
                 _react2.default.createElement(
                   FontIcon,
                   { ref: 'name', style: styles.sortIcon, onClick: this._sortColumn.bind(null, "name"), className: 'sortIcon material-icons' },
@@ -81358,7 +81360,7 @@ var Repository = _react2.default.createClass({
                 'Device type compatibility ',
                 _react2.default.createElement(
                   FontIcon,
-                  { ref: 'model', style: styles.sortIcon, onClick: this._sortColumn.bind(null, "model"), className: 'sortIcon material-icons' },
+                  { ref: 'device_type', style: styles.sortIcon, onClick: this._sortColumn.bind(null, "device_type"), className: 'sortIcon material-icons' },
                   'sort'
                 )
               ),
@@ -81439,11 +81441,11 @@ var Repository = _react2.default.createClass({
               onChange: this.changedFile }),
             _react2.default.createElement(TextField, {
               value: 'Acme Model 1',
-              id: 'model-name',
+              id: 'device_type',
               disabled: true,
               style: { display: "block" },
               floatingLabelText: 'Device type compatibility',
-              onChange: this._handleFieldChange.bind(null, 'model'),
+              onChange: this._handleFieldChange.bind(null, 'device_type'),
               errorStyle: { color: "rgb(171, 16, 0)" } }),
             _react2.default.createElement(TextField, {
               hintText: 'Description',
@@ -81539,8 +81541,8 @@ var SelectedImage = _react2.default.createClass({
       this.refs.description.focus();
     };
   },
-  _handleLinkClick: function _handleLinkClick(model) {
-    var filters = "model=" + model;
+  _handleLinkClick: function _handleLinkClick(device_type) {
+    var filters = "device_type=" + device_type;
     filters = encodeURIComponent(filters);
     this.props.history.push("/devices/:groupId/:filters", { groupId: 1, filters: filters }, null);
   },
@@ -81598,7 +81600,7 @@ var SelectedImage = _react2.default.createClass({
     }
   },
   render: function render() {
-    var info = { name: "-", tags: ['-'], model: "-", build_date: "-", modified: "-", size: "-", checksum: "-", devices: "-", description: "-" };
+    var info = { name: "-", tags: ['-'], device_type: "-", build_date: "-", modified: "-", size: "-", checksum: "-", devices: "-", description: "-" };
     if (this.props.image) {
       for (var key in this.props.image) {
         if (this.props.image[key]) {
@@ -81644,7 +81646,7 @@ var SelectedImage = _react2.default.createClass({
       onKeyDown: this._descEdit.bind(null, this.props.image) });
 
     var tags = this.state.tagEdit ? tagInput : info.tags.join(', ');
-    var devicesFilter = "software_version=" + info.name;
+    var devicesFilter = "artifact_name=" + info.name;
     devicesFilter = encodeURIComponent(devicesFilter);
     var devicesLink = _react2.default.createElement(
       'div',
@@ -82010,10 +82012,10 @@ var _selectedDevices = [];
 var _filters = [{ key: '', value: '' }];
 var _attributes = {
   name: "Name",
-  model: "Device type",
+  device_type: "Device type",
   arch: "Architecture",
   status: "Status",
-  software_version: "Current software",
+  artifact_name: "Current software",
   tags: "Tags"
 };
 
@@ -82055,64 +82057,64 @@ var _alldevices = [];
 var _alldevices1 = [{
   'id': 1,
   'name': '00a0c91e6-7dec-11d0-a765-f81d4faebf1',
-  'model': "Raspberry Pi 3",
+  'device_type': "Raspberry Pi 3",
   'arch': 'ARMv8 Cortex-A53',
   'status': 'Up',
-  'software_version': 'Application 0.0.1',
+  'artifact_name': 'Application 0.0.1',
   'groups': [1, 4],
   'tags': []
 }, {
   'id': 2,
   'name': '00a0c91e6-7dec-11d0-a765-f81d4faebf2',
-  'model': "Raspberry Pi 3",
+  'device_type': "Raspberry Pi 3",
   'arch': 'ARMv8 Cortex-A53',
   'status': 'Up',
-  'software_version': 'Application 0.0.1',
+  'artifact_name': 'Application 0.0.1',
   'groups': [1, 4],
   'tags': []
 }, {
   'id': 3,
   'name': '00a0c91e6-7dec-11d0-a765-f81d4faebf3',
-  'model': "Raspberry Pi 3",
+  'device_type': "Raspberry Pi 3",
   'arch': 'ARMv8 Cortex-A53',
   'status': 'Up',
-  'software_version': 'Application 0.0.1',
+  'artifact_name': 'Application 0.0.1',
   'groups': [1, 4],
   'tags': []
 }, {
   'id': 4,
   'name': '00a0c91e6-7dec-11d0-a765-f81d4faebf4',
-  'model': "Raspberry Pi 3",
+  'device_type': "Raspberry Pi 3",
   'arch': 'ARMv8 Cortex-A53',
   'status': 'Up',
-  'software_version': 'Application 0.0.2',
+  'artifact_name': 'Application 0.0.2',
   'groups': [1, 2],
   'tags': []
 }, {
   'id': 5,
   'name': '00a0c91e6-7dec-11d0-a765-f81d4faebf5',
-  'model': "Raspberry Pi 3",
+  'device_type': "Raspberry Pi 3",
   'arch': 'ARMv8 Cortex-A53',
   'status': 'Up',
-  'software_version': 'Application 0.0.2',
+  'artifact_name': 'Application 0.0.2',
   'groups': [1, 3],
   'tags': []
 }, {
   'id': 6,
   'name': '00a0c91e6-7dec-11d0-a765-f81d4faebf6',
-  'model': "Raspberry Pi 3",
+  'device_type': "Raspberry Pi 3",
   'arch': 'ARMv8 Cortex-A53',
   'status': 'Up',
-  'software_version': 'Application 0.0.2',
+  'artifact_name': 'Application 0.0.2',
   'groups': [1, 3],
   'tags': []
 }, {
   'id': 7,
   'name': '0dde3346-4dec-11d0-a765-f81d4faebf7',
-  'model': "Raspberry Pi 2 Model B",
+  'device_type': "Raspberry Pi 2 Model B",
   'arch': 'ARMv7 Cortex-A7',
   'status': 'Down',
-  'software_version': 'Application 0.0.1',
+  'artifact_name': 'Application 0.0.1',
   'groups': [1],
   'tags': []
 }];
@@ -82120,19 +82122,19 @@ var _alldevices1 = [{
 var _unauthorized = [{
   'id': 8,
   'name': '33vayc91e6-7dec-11d0-a765-f81d4faebf5',
-  'model': "Raspberry Pi 3",
+  'device_type': "Raspberry Pi 3",
   'arch': 'ARMv8 Cortex-A53',
   'status': 'Unauthorized',
-  'software_version': 'Application 0.0.2',
+  'artifact_name': 'Application 0.0.2',
   'groups': [],
   'tags': []
 }, {
   'id': 9,
   'name': '4f98de-4apr-11d0-a765-f81d488y4fs',
-  'model': "Raspberry Pi 3",
+  'device_type': "Raspberry Pi 3",
   'arch': 'ARMv8 Cortex-A53',
   'status': 'Unauthorized',
-  'software_version': 'Application 0.0.2',
+  'artifact_name': 'Application 0.0.2',
   'groups': [],
   'tags': []
 }];
@@ -82228,7 +82230,7 @@ function _selectDevices(devicePositions) {
   }
 }
 
-function _getDevices(group, model) {
+function _getDevices(group, device_type) {
   // get group id from name
 
   var index = findWithAttr(_groups, 'name', group);
@@ -82236,7 +82238,7 @@ function _getDevices(group, model) {
 
   var devices = [];
   for (var i = 0; i < _alldevices.length; i++) {
-    if (_alldevices[i].model === model) {
+    if (_alldevices[i].device_type === device_type) {
       for (var x = 0; x < _alldevices[i].groups.length; x++) {
         if (_alldevices[i].groups[x] === groupId) {
           devices.push(_alldevices[i]);
@@ -82328,10 +82330,10 @@ function discoverDevices(array) {
   var unique = {};
 
   for (var i = 0; i < _alldevices.length; i++) {
-    if (typeof unique[_alldevices[i].software_version] == "undefined") {
-      unique[_alldevices[i].software_version] = 0;
+    if (typeof unique[_alldevices[i].artifact_name] == "undefined") {
+      unique[_alldevices[i].artifact_name] = 0;
     }
-    unique[_alldevices[i].software_version]++;
+    unique[_alldevices[i].artifact_name]++;
   }
 
   if (array.length) {
@@ -82433,10 +82435,10 @@ function _saveSchedule(schedule, single) {
   var tmp = {};
   tmp.id = schedule.id || _allDeployments.length + 1;
   tmp.group = schedule.group.name;
-  tmp.model = "Acme Model 1";
+  tmp.device_type = "Acme Model 1";
   // whether single device or group
-  tmp.devices = !single ? _getDevices(tmp.group, tmp.model) : collectWithAttr(_alldevices, 'name', tmp.group);
-  tmp.software_version = schedule.image.name;
+  tmp.devices = !single ? _getDevices(tmp.group, tmp.device_type) : collectWithAttr(_alldevices, 'name', tmp.group);
+  tmp.artifact_name = schedule.image.name;
   tmp.created = schedule.start_time.toString();
   tmp.finished = schedule.end_time.toString();
   var index = findWithAttr(_allDeployments, 'id', tmp.id);
@@ -82656,11 +82658,11 @@ var AppStore = assign(EventEmitter.prototype, {
     return _events;
   },
 
-  getDevicesFromParams: function getDevicesFromParams(group, model) {
+  getDevicesFromParams: function getDevicesFromParams(group, device_type) {
     /*
-    * Return list of devices given group and model
+    * Return list of devices given group and device_type
     */
-    return _getDevices(group, model);
+    return _getDevices(group, device_type);
   },
 
   getHealth: function getHealth() {

@@ -37,6 +37,7 @@ function combineDateTime(date, time) {
 
 function getDevicesFromParams(group, device_type) {
   var devices = [];
+  console.log(device_type);
   if (device_type && group) {
     devices = AppStore.getDevicesFromParams(group, device_type);
   }
@@ -120,6 +121,7 @@ var ScheduleForm = React.createClass({
     var image = this.state.images[index];
     var groupname = this.state.group ? this.state.group.name : null;
     var devices = this.props.device ? [this.props.device] : getDevicesFromParams(groupname, image.device_type);
+    console.log(devices);
     this.setState({
       image: image,
       imageVal: {
