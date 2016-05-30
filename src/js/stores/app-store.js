@@ -254,19 +254,16 @@ function _getDevices(group, device_type) {
   // get group id from name
 
   var index = findWithAttr(_groups, 'name', group);
-  var groupId = _groups[index].id;
+  var group = _groups[index];
 
   var devices = [];
-  for (var i=0; i<_alldevices.length; i++) {
-    if (_alldevices[i].device_type===device_type) {
-      for (var x=0; x<_alldevices[i].groups.length;x++) {
-        if (_alldevices[i].groups[x]===groupId) {
-          devices.push(_alldevices[i]);
-        }
-      }
+  for (var i=0; i<group.devices.length; i++) {
+    var device = _alldevices[findWithAttr(_alldevices, 'id', (group.devices[i]))];
+    if (device.device_type===device_type) {
+      devices.push(device);
     }
   }
-
+  
   return devices;
 }
 
