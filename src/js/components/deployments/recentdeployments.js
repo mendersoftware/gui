@@ -43,31 +43,31 @@ var Recent = React.createClass({
   },
   render: function() {
     // get statistics for each in progress
-    var progressMap = progress.map(function(update, index) {
+    var progressMap = progress.map(function(deployment, index) {
 
       return (
         <TableRow key={index}>
-          <TableRowColumn>{update.name}</TableRowColumn>
-          <TableRowColumn>{update.version}</TableRowColumn>
-          <TableRowColumn><GroupDevices update={update.id} /></TableRowColumn>
-          <TableRowColumn><Time value={this._formatTime(update.created)} format="YYYY-MM-DD HH:mm" /></TableRowColumn>
+          <TableRowColumn>{deployment.name}</TableRowColumn>
+          <TableRowColumn>{deployment.artifact_name}</TableRowColumn>
+          <TableRowColumn><GroupDevices deployment={deployment.id} /></TableRowColumn>
+          <TableRowColumn><Time value={this._formatTime(deployment.created)} format="YYYY-MM-DD HH:mm" /></TableRowColumn>
           <TableRowColumn>--</TableRowColumn>
-          <TableRowColumn><ProgressBar noPadding={true} update={update} /></TableRowColumn>
+          <TableRowColumn><ProgressBar noPadding={true} deployment={deployment} /></TableRowColumn>
         </TableRow>
       )
     }, this);
  
-    var recentMap = recent.map(function(update, index) {
+    var recentMap = recent.map(function(deployment, index) {
       // if failure, get statistics
-      var status = (update.status === "inprogress") ? "In progress" : update.status;
+      var status = (deployment.status === "inprogress") ? "In progress" : deployment.status;
       return (
         <TableRow key={index}>
-          <TableRowColumn>{update.name}</TableRowColumn>
-          <TableRowColumn>{update.version}</TableRowColumn>
-          <TableRowColumn><GroupDevices update={update.id} /></TableRowColumn>
-          <TableRowColumn><Time value={this._formatTime(update.created)} format="YYYY-MM-DD HH:mm" /></TableRowColumn>
-          <TableRowColumn><Time value={this._formatTime(update.finished)} format="YYYY-MM-DD HH:mm" /></TableRowColumn>
-          <TableRowColumn><FlatButton label={status} primary={update.status === 'failed'} secondary={update.status === 'complete'} /></TableRowColumn>
+          <TableRowColumn>{deployment.name}</TableRowColumn>
+          <TableRowColumn>{deployment.artifact_name}</TableRowColumn>
+          <TableRowColumn><GroupDevices deployment={deployment.id} /></TableRowColumn>
+          <TableRowColumn><Time value={this._formatTime(deployment.created)} format="YYYY-MM-DD HH:mm" /></TableRowColumn>
+          <TableRowColumn><Time value={this._formatTime(deployment.finished)} format="YYYY-MM-DD HH:mm" /></TableRowColumn>
+          <TableRowColumn><FlatButton label={status} primary={deployment.status === 'failed'} secondary={deployment.status === 'complete'} /></TableRowColumn>
         </TableRow>
       )
     }, this);
@@ -82,7 +82,7 @@ var Recent = React.createClass({
     return (
       <div>
         <div style={{marginBottom:"60"}}> 
-          <h3>Updates in progress</h3>
+          <h3>In progress</h3>
           <Table
             onCellClick={this._progressCellClick}
             className={progressMap.length ? null : 'hidden'}
@@ -92,7 +92,7 @@ var Recent = React.createClass({
               adjustForCheckbox={false}>
               <TableRow>
                 <TableHeaderColumn tooltip="Device group">Group</TableHeaderColumn>
-                <TableHeaderColumn tooltip="Target software version">Software</TableHeaderColumn>
+                <TableHeaderColumn tooltip="Target software version">Target software</TableHeaderColumn>
                 <TableHeaderColumn tooltip="Number of devices"># Devices</TableHeaderColumn>
                 <TableHeaderColumn tooltip="Start time">Start time</TableHeaderColumn>
                 <TableHeaderColumn tooltip="End time">End time</TableHeaderColumn>
@@ -106,13 +106,14 @@ var Recent = React.createClass({
               {progressMap}
             </TableBody>
           </Table>
-          <div className={progressMap.length ? 'hidden' : null}>
-            <p className="italic">No updates in progress</p>
+          <div className={progressMap.length ? 'hidden' : "dashboard-placeholder"}>
+            <p>Ongoing deployments will appear here. Deploy an update to get started</p>
+            <img src="assets/img/deployments.png" alt="In progress" />
           </div>
         </div>
 
         <div style={{marginTop:"60"}}>
-          <h3>Recent updates</h3>
+          <h3>Recent</h3>
           <Table
             onCellClick={this._recentCellClick}
             className={recentMap.length ? null : 'hidden'}
@@ -137,8 +138,10 @@ var Recent = React.createClass({
             </TableBody>
           </Table>
 
-          <div className={recentMap.length ? 'hidden' : null}>
-            <p className="italic">No recent updates</p>
+          <div className={recentMap.length ? 'hidden' : "dashboard-placeholder"}>
+            <p>Completed deployments will appear here.</p>
+            <p>You can review logs and reports for each device group you've deployed to</p>
+            <img src="assets/img/history.png" alt="Recent" />
           </div>
         </div>
 

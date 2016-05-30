@@ -2,7 +2,7 @@ import React from 'react';
 var AppStore = require('../../stores/app-store');
 var AppActions = require('../../actions/app-actions');
 
-var Recent = require('./recentupdates.js');
+var Recent = require('./recentdeployments.js');
 var Schedule = require('./schedule.js');
 var EventLog = require('./eventlog.js');
 var ScheduleForm = require('./scheduleform.js');
@@ -28,16 +28,16 @@ var styles = {
 };
 
 var tabs = {
-  updates: '0',
+  deployments: '0',
   schedule: '1',
   events: '2'
 }
 
 function getState() {
   return {
-    recent: AppStore.getRecentUpdates(new Date()),
-    progress: AppStore.getProgressUpdates(new Date()),
-    schedule: AppStore.getScheduledUpdates(new Date()),
+    recent: AppStore.getRecentDeployments(new Date()),
+    progress: AppStore.getProgressDeployments(new Date()),
+    schedule: AppStore.getScheduledDeployments(new Date()),
     events: AppStore.getEventLog(),
     images: AppStore.getSoftwareRepo(),
     groups: AppStore.getGroups(),
@@ -45,17 +45,18 @@ function getState() {
     scheduleForm: true,
     contentClass: "largeDialog", 
     invalid: true,
-    dialog: false
+    dialog: false,
+    hideTODO: localStorage.getItem("deployTODO"),
   }
 }
 
-var Updates = React.createClass({
+var Deployments = React.createClass({
   getInitialState: function() {
     return getState()
   },
   componentDidMount: function() {
     AppStore.changeListener(this._onChange);
-    AppActions.getUpdates();
+    AppActions.getDeployments();
       if (this.props.params) {
         this.setState({tabIndex: tabs[this.props.params.tab]});
 
@@ -107,7 +108,7 @@ var Updates = React.createClass({
     if (dialog === 'report') {
       this.setState({
         scheduleForm: false,
-        dialogTitle: "Update results",
+        dialogTitle: "Results of deployment",
         contentClass: "largeDialog"
       })
     }
@@ -116,43 +117,44 @@ var Updates = React.createClass({
     this.setState({tabIndex: value});
   },
   _onScheduleSubmit: function() {
-    var devices = AppStore.getDevicesFromParams(this.state.group.name, this.state.image.model);
+    var devices = AppStore.getDevicesFromParams(this.state.group.name, this.state.image.device_type);
     var ids = [];
     for (var i=0; i<devices.length; i++) {
       ids.push(devices[i].id);
     }
-    var newUpdate = {
+    var newDeployment = {
       //id: this.state.id,
       name: this.state.group.name,
-      model: this.state.image.model,
+      device_type: this.state.image.device_type,
       //start_time: this.state.start_time,
       //end_time: this.state.end_time,
-      version: this.state.image.name,
+      artifact_name: this.state.image.name,
       devices: ids
     }
-    console.log(newUpdate.devices);
-    AppActions.createUpdate(newUpdate, this.state.disabled);
+    console.log(newDeployment.devices);
+    AppActions.createDeployment(newDeployment, this.state.disabled);
+    AppActions.setLocalStorage("deployTODO", true);
     this.dialogDismiss('dialog');
   },
-  _updateParams: function(val, attr) {
+  _deploymentParams: function(val, attr) {
     // updating params from child schedule form
     var tmp = {};
     tmp[attr] = val;
     this.setState(tmp);
   },
   _getReportById: function (id) {
-     AppActions.getSingleUpdate(id, function(data) {
+     AppActions.getSingleDeployment(id, function(data) {
         var that = this;
         setTimeout(function() {
           that._showReport(data);
         }, 400);
     }.bind(this));
   },
-  _showReport: function (update) {
-    this.setState({scheduleForm: false, selectedUpdate: update});
+  _showReport: function (deployment) {
+    this.setState({scheduleForm: false, selectedDeployment: deployment});
     this.dialogOpen("report");
   },
-  _scheduleUpdate: function (update) {
+  _scheduleDeployment: function (deployment) {
     this.setState({dialog:false});
  
     var image = '';
@@ -160,28 +162,31 @@ var Updates = React.createClass({
     var start_time = null;
     var end_time = null;
     var id = null;
-    if (update) {
-      if (update.id) {
-        id = update.id;
+    if (deployment) {
+      if (deployment.id) {
+        id = deployment.id;
       }
-      if (update.software_version) {
-        image = AppStore.getSoftwareImage('name', update.software_version);
+      if (deployment.artifact_name) {
+        image = AppStore.getSoftwareImage('name', deployment.artifact_name);
       }
-      if (update.group) {
-        group = AppStore.getSingleGroup('name', update.group);
+      if (deployment.group) {
+        group = AppStore.getSingleGroup('name', deployment.group);
       }
-      if (update.start_time) {
-        start_time = update.start_time;
+      if (deployment.start_time) {
+        start_time = deployment.start_time;
       }
-      if (update.end_time) {
-        end_time = update.end_time;
+      if (deployment.end_time) {
+        end_time = deployment.end_time;
       }
     }
     this.setState({scheduleForm:true, imageVal:image, id:id, start_time:start_time, end_time:end_time, image:image, group:group, groupVal:group});
     this.dialogOpen("schedule");
   },
   _scheduleRemove: function(id) {
-    AppActions.removeUpdate(id);
+    AppActions.removeDeployment(id);
+  },
+  _closeOnboard: function() {
+    AppActions.setLocalStorage("deployTODO", true);
   },
   render: function() {
     var scheduleActions =  [
@@ -205,16 +210,23 @@ var Updates = React.createClass({
 
     if (this.state.scheduleForm) {
       dialogContent = (    
-        <ScheduleForm updateSchedule={this._updateParams} id={this.state.id} images={this.state.software} image={this.state.image} imageVal={this.state.image} groups={this.state.groups} groupVal={this.state.group} start={this.state.start_time} end={this.state.end_time} />
+        <ScheduleForm deploymentSchedule={this._deploymentParams} id={this.state.id} images={this.state.images} image={this.state.image} imageVal={this.state.image} groups={this.state.groups} groupVal={this.state.group} start={this.state.start_time} end={this.state.end_time} />
       )
     } else {
       dialogContent = (
-        <Report update={this.state.selectedUpdate} retryUpdate={this._scheduleUpdate} />
+        <Report deployment={this.state.selectedDeployment} retryDeployment={this._scheduleDeployment} />
       )
     }
     return (
       <div className="contentContainer">
-        <div>
+        <div className={this.state.hideTODO ? "hidden" : null}>
+          <div className="margin-bottom onboard">
+            <div className="close" onClick={this._closeOnboard}/>
+            <h3>//TODO deploy an update to all devices</h3>
+          </div>
+        </div>
+
+        <div className="relative">
           <div className="top-right-button">
             <ScheduleButton secondary={true} openDialog={this.dialogOpen} />
           </div>
@@ -239,4 +251,4 @@ var Updates = React.createClass({
   }
 });
 
-module.exports = Updates;
+module.exports = Deployments;

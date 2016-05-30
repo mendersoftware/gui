@@ -67,6 +67,9 @@ span.link:hover {
 .margin-top-small {
   margin-top: 15px;
 }
+.margin-top-none {
+  margin-top: 0;
+}
 .margin-left {
   margin-left: 30px;
 }
@@ -105,6 +108,9 @@ span.link:hover {
 }
 .float-left {
   float: left;
+}
+.align-left {
+  text-align: left;
 }
 .align-right {
   text-align: right;
@@ -198,6 +204,47 @@ span.link:hover {
   height: 100px;
   opacity: 0;
   padding: 0;
+}
+.onboard {
+  padding: 15px;
+  border-style: dashed;
+  border-color: #e7e7e7;
+  border-width: 1px;
+  text-align: center;
+  position: relative;
+}
+.onboard p {
+  margin-top: 0;
+  font-size: 1.25em;
+}
+.onboard h3 {
+  font-family: Andale Mono;
+  font-weight: lighter;
+  color: #3F3F3F;
+  margin-top: 10px;
+  font-size: 1.25em;
+}
+.onboard .close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 20px;
+  height: 20px;
+  background-image: url('../assets/img/close.png');
+  cursor: pointer;
+}
+.onboard a.float-right {
+  position: relative;
+  bottom: 10px;
+  font-size: 1em;
+}
+.material-icons.green {
+  background: none;
+  color: #007647 !important;
+}
+.material-icons.red {
+  background: none;
+  color: #6A150C !important;
 }
 .absoluteTextfieldButton {
   position: absolute;
@@ -363,6 +410,7 @@ span.length {
 .contentContainer {
   padding: 30px 45px 60px;
   position: relative;
+  overflow: hidden;
 }
 /* Forms */
 .inputGroup {
@@ -451,8 +499,8 @@ tr.expand.devices td div.expanded {
 }
 .top-right-button {
   position: absolute;
-  top: 30px;
-  right: 45px;
+  top: 0;
+  right: 0;
 }
 .tagContainer {
   margin-top: 20px;
@@ -531,7 +579,7 @@ input[type="text"].fileInput:last-child {
   padding-right: 2%;
 }
 .health {
-  height: 26vh;
+  min-height: 26vh;
   position: relative;
 }
 .health .health-panel {
@@ -557,6 +605,16 @@ input[type="text"].fileInput:last-child {
   margin-right: 16px;
   position: relative;
   top: -9px;
+}
+.dashboard-placeholder {
+  font-size: 16px;
+  color: #c7c7c7;
+  text-align: center;
+  padding: 30px;
+}
+.dashboard-placeholder img {
+  margin-top: 15px;
+  width: 74px;
 }
 .activity-log {
   width: 25%;
@@ -612,7 +670,7 @@ input[type="text"].fileInput:last-child {
   -moz-opacity: 0.9;
   opacity: 0.9;
 }
-.updates {
+.deployments {
   position: relative;
   overflow: auto;
   margin-top: 30px;
@@ -622,14 +680,9 @@ span.day {
   display: block;
   text-align: center;
 }
-.dashboard-container {
-  position: absolute;
-  top: 40px;
-  left: 0;
-  right: 0;
-}
 .dashboard-header {
   border-bottom: 1px solid #d4e9e7;
+  margin-bottom: 15px;
 }
 .dashboard-header.subsection {
   border: none;
@@ -642,17 +695,17 @@ span.day {
   margin-left: 10px;
   color: #bdbdbd;
 }
-.updates-container {
+.deployments-container {
   -webkit-box-flex: 1;
   -webkit-flex: 1;
       -ms-flex: 1;
           flex: 1;
-  margin: 15px 0 15px 6%;
+  margin: 0 0 15px 6%;
   width: 47%;
   padding-bottom: 15px;
   border-bottom: 1px solid #F7F7F7;
 }
-.updates-container:first-child {
+.deployments-container:first-child {
   margin-left: 0;
 }
 .fail {

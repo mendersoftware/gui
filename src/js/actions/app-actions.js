@@ -1,9 +1,9 @@
 var AppConstants = require('../constants/app-constants');
 var AppDispatcher = require('../dispatchers/app-dispatcher');
 var Api = require('../api/api');
-var UpdatesApi = require('../api/updates-api');
-var apiUrl = "http://private-9f43d-michaelatmender.apiary-mock.com/api/0.0.1/";
-var updatesApiUrl = "http://private-9f43d-michaelatmender.apiary-mock.com/api/0.0.1/";
+var DeploymentsApi = require('../api/deployments-api');
+var apiUrl = "http://private-62004-deployment1.apiary-mock.com/";
+var deploymentsApiUrl = "http://private-62004-deployment1.apiary-mock.com/";
 
 
 var AppActions = {
@@ -42,6 +42,13 @@ var AppActions = {
       actionType: AppConstants.ADD_GROUP,
       group: group,
       index: idx
+    })
+  },
+
+  authorizeDevices: function (devices) {
+    AppDispatcher.handleViewAction({
+      actionType: AppConstants.AUTHORIZE_DEVICES,
+      devices: devices
     })
   },
 
@@ -87,7 +94,7 @@ var AppActions = {
   },
 
   editImage: function(image, callback) {
-    var data = {description: image.description, name: image.name, model: image.model, image: image.tags};
+    var data = {description: image.description, name: image.name, device_type: image.device_type, image: image.tags};
     Api
       .putJSON(apiUrl + "images/" + image.id, data)
       .then(function(res) {
@@ -99,48 +106,48 @@ var AppActions = {
 
 
   /* API */
-  getUpdates: function() {
-    UpdatesApi
-      .get(updatesApiUrl+'deployments')
-      .then(function(updates) {
+  getDeployments: function() {
+    DeploymentsApi
+      .get(deploymentsApiUrl+'deployments')
+      .then(function(deployments) {
         AppDispatcher.handleViewAction({
-          actionType: AppConstants.RECEIVE_UPDATES,
-          updates: updates
+          actionType: AppConstants.RECEIVE_DEPLOYMENTS,
+          deployments: deployments
         });
       });
   },
-  createUpdate: function(update) {
-    UpdatesApi
-    .post(updatesApiUrl+'deployments', update)
+  createDeployment: function(deployment) {
+    DeploymentsApi
+    .post(deploymentsApiUrl+'deployments', deployment)
       .then(function(data) {
-        // inserted update data,
+        // inserted deployment data,
         callback(data);
       });
   },
-  getSingleUpdate: function(id, callback) {
-    UpdatesApi
-      .get(updatesApiUrl+'deployments/'+id)
-      .then(function(data) {
-        callback(data);
-      });
-  },
-  getSingleUpdateStats: function(id, callback) {
-    UpdatesApi
-      .get(updatesApiUrl+'deployments/'+id +'/statistics')
+  getSingleDeployment: function(id, callback) {
+    DeploymentsApi
+      .get(deploymentsApiUrl+'deployments/'+id)
       .then(function(data) {
         callback(data);
       });
   },
-  getSingleUpdateDevices: function(id, callback) {
-    UpdatesApi
-      .get(updatesApiUrl+'deployments/'+id +'/devices')
+  getSingleDeploymentStats: function(id, callback) {
+    DeploymentsApi
+      .get(deploymentsApiUrl+'deployments/'+id +'/statistics')
+      .then(function(data) {
+        callback(data);
+      });
+  },
+  getSingleDeploymentDevices: function(id, callback) {
+    DeploymentsApi
+      .get(deploymentsApiUrl+'deployments/'+id +'/devices')
       .then(function(data) {
         callback(data);
       });
   },
   getDeviceLog: function(deploymentId, deviceId, callback) {
-    UpdatesApi
-      .getText(updatesApiUrl+'deployments/'+deploymentId +'/devices/'+deviceId +"/log")
+    DeploymentsApi
+      .getText(deploymentsApiUrl+'deployments/'+deploymentId +'/devices/'+deviceId +"/log")
       .then(function(data) {
         callback(data);
       });
@@ -160,10 +167,10 @@ var AppActions = {
 
 
 
-  removeUpdate: function(updateId) {
+  removeDeployment: function(deploymentId) {
     AppDispatcher.handleViewAction({
-      actionType: AppConstants.REMOVE_UPDATE,
-      id: updateId
+      actionType: AppConstants.REMOVE_DEPLOYMENT,
+      id: deploymentId
     })
   },
 
@@ -190,6 +197,15 @@ var AppActions = {
       direction: direction 
     })
   },
+
+
+setLocalStorage: function(key, value) {
+  AppDispatcher.handleViewAction({
+      actionType: AppConstants.SET_LOCAL_STORAGE,
+      key: key,
+      value: value
+    })
+  }
 }
 
 module.exports = AppActions;

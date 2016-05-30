@@ -27,8 +27,8 @@ var SelectedImage = React.createClass({
   componentDidUpdate: function(prevProps, prevState) {
     if (this.state.descEdit) { this.refs.description.focus() };
   },
-  _handleLinkClick: function(model) {
-    var filters = "model="+model;
+  _handleLinkClick: function(device_type) {
+    var filters = "device_type="+device_type;
     filters = encodeURIComponent(filters);
     this.props.history.push("/devices/:groupId/:filters", {groupId:1, filters: filters}, null);
   },
@@ -88,7 +88,7 @@ var SelectedImage = React.createClass({
     }
   },
   render: function() {
-    var info = {name: "-", tags: ['-'], model: "-", build_date: "-", modified: "-", size: "-", checksum: "-", devices: "-", description: "-"};
+    var info = {name: "-", tags: ['-'], device_type: "-", build_date: "-", modified: "-", size: "-", checksum: "-", devices: "-", description: "-"};
     if (this.props.image) {
       for (var key in this.props.image) {
         if (this.props.image[key]) {
@@ -140,7 +140,7 @@ var SelectedImage = React.createClass({
     );
 
     var tags = this.state.tagEdit ? tagInput : info.tags.join(', ');
-    var devicesFilter = "software_version="+info.name;
+    var devicesFilter = "artifact_name="+info.name;
     devicesFilter = encodeURIComponent(devicesFilter);    
     var devicesLink = (
       <div>
@@ -195,8 +195,8 @@ var SelectedImage = React.createClass({
             <List style={{backgroundColor: "rgba(255,255,255,0)"}}>
               <ListItem
                 disabled={this.props.image.name ? false : true}
-                primaryText="Deploy update"
-                secondaryText="Update devices with this image"
+                primaryText="Deploy as an update"
+                secondaryText="Deploy this image to devices"
                 onClick={this._clickImageSchedule}
                 leftIcon={<FontIcon className="material-icons">schedule</FontIcon>} />
               <Divider />

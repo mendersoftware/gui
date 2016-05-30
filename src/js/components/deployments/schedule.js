@@ -13,8 +13,8 @@ var FlatButton = mui.FlatButton;
 
 
 var Schedule = React.createClass({
-  _handleEdit: function (update) {
-    this.props.edit(update);
+  _handleEdit: function (deployment) {
+    this.props.edit(deployment);
   },
   _handleRemove: function (id) {
     this.props.remove(id);
@@ -23,25 +23,25 @@ var Schedule = React.createClass({
     var now = new Date().getTime();
 
     var scheduleCount = 0;
-    var schedule = this.props.schedule.map(function(update, index) {
-      if (update.start_time>now) {
+    var schedule = this.props.schedule.map(function(deployment, index) {
+      if (deployment.start_time>now) {
         scheduleCount++;
         return (
           <TableRow key={index}>
-            <TableRowColumn>{update.group}</TableRowColumn>
-            <TableRowColumn>{update.software_version}</TableRowColumn>
-            <TableRowColumn>{update.devices.length}</TableRowColumn>
-            <TableRowColumn><Time value={update.start_time} format="YYYY/MM/DD HH:mm" /></TableRowColumn>
-            <TableRowColumn><Time value={update.end_time} format="YYYY/MM/DD HH:mm" /></TableRowColumn>
-            <TableRowColumn>Begins <Time value={update.start_time} format="YYYY/MM/DD HH:mm" relative /></TableRowColumn>
-            <TableRowColumn><div><FlatButton secondary={true} style={{padding:"0", marginRight:"4", minWidth:"55"}} label="Edit" onClick={this._handleEdit.bind(null, update)} /><FlatButton style={{padding:"0", marginLeft:"4", minWidth:"55"}} label="Remove" onClick={this._handleRemove.bind(null, update.id)} /></div></TableRowColumn>
+            <TableRowColumn>{deployment.group}</TableRowColumn>
+            <TableRowColumn>{deployment.artifact_name}</TableRowColumn>
+            <TableRowColumn>{deployment.devices.length}</TableRowColumn>
+            <TableRowColumn><Time value={deployment.start_time} format="YYYY/MM/DD HH:mm" /></TableRowColumn>
+            <TableRowColumn><Time value={deployment.end_time} format="YYYY/MM/DD HH:mm" /></TableRowColumn>
+            <TableRowColumn>Begins <Time value={deployment.start_time} format="YYYY/MM/DD HH:mm" relative /></TableRowColumn>
+            <TableRowColumn><div><FlatButton secondary={true} style={{padding:"0", marginRight:"4", minWidth:"55"}} label="Edit" onClick={this._handleEdit.bind(null, deployment)} /><FlatButton style={{padding:"0", marginLeft:"4", minWidth:"55"}} label="Remove" onClick={this._handleRemove.bind(null, deployment.id)} /></div></TableRowColumn>
           </TableRow>
         )
       }
     }, this);
     return (
       <div>
-        <h3>Scheduled updates</h3>
+        <h3>Scheduled deployments</h3>
         <Table
           className={scheduleCount ? null : 'hidden'}
           selectable={false}>
@@ -65,7 +65,7 @@ var Schedule = React.createClass({
           </TableBody>
         </Table>
         <div className={scheduleCount ? 'hidden' : null}>
-          <p className="italic">No updates scheduled</p>
+          <p className="italic">No deployments scheduled</p>
         </div>
       </div>
     );

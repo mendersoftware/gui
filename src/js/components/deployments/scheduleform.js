@@ -35,10 +35,11 @@ function combineDateTime(date, time) {
   return addDate(time, diffDays);
 }
 
-function getDevicesFromParams(group, model) {
+function getDevicesFromParams(group, device_type) {
   var devices = [];
-  if (model && group) {
-    devices = AppStore.getDevicesFromParams(group, model);
+  console.log(device_type);
+  if (device_type && group) {
+    devices = AppStore.getDevicesFromParams(group, device_type);
   }
   return devices;
 }
@@ -99,11 +100,11 @@ var ScheduleForm = React.createClass({
     };
   },
   componentDidMount: function() {
-    this._updateTimes();
+    this._deploymentTimes();
   },
 
   _handleGroupValueChange: function(e, index, value) {
-    var image = this.state.image ? this.state.image.model : null;
+    var image = this.state.image ? this.state.image.device_type : null;
     var group = this.props.groups[index];
     this.setState({
       group: group,
@@ -119,7 +120,8 @@ var ScheduleForm = React.createClass({
   _handleImageValueChange: function(e, index, value) {
     var image = this.state.images[index];
     var groupname = this.state.group ? this.state.group.name : null;
-    var devices = this.props.device ? [this.props.device] : getDevicesFromParams(groupname, image.model);
+    var devices = this.props.device ? [this.props.device] : getDevicesFromParams(groupname, image.device_type);
+    console.log(devices);
     this.setState({
       image: image,
       imageVal: {
@@ -134,30 +136,30 @@ var ScheduleForm = React.createClass({
 
   _sendUpToParent: function(val, attr) {
     // send params to parent with dialog holder
-    this.props.updateSchedule(val, attr);
+    this.props.deploymentSchedule(val, attr);
   },
-  _updateTimes: function() {
-    var newUpdate = {};
+  _deploymentTimes: function() {
+    var newDeployment = {};
 
     var start_time = this.state.start_time.getTime();
     var start_date = this.state.start_date.getTime();
    
-    newUpdate.start_time = combineDateTime(start_date, start_time).getTime();
+    newDeployment.start_time = combineDateTime(start_date, start_time).getTime();
 
     var end_time = this.state.end_time.getTime();
     var end_date = this.state.end_date.getTime();
 
-    newUpdate.end_time = combineDateTime(end_date, end_time).getTime();
+    newDeployment.end_time = combineDateTime(end_date, end_time).getTime();
 
-    this._sendUpToParent(newUpdate.start_time, "start_time");
-    this._sendUpToParent(newUpdate.end_time, "end_time");
+    this._sendUpToParent(newDeployment.start_time, "start_time");
+    this._sendUpToParent(newDeployment.end_time, "end_time");
   },
 
   _updatedDateTime: function(ref, date) {
     var set = {};
     set[ref] = date;
     this.setState(set, function() {
-      this._updateTimes();
+      this._deploymentTimes();
     });
   },
 
@@ -186,8 +188,8 @@ var ScheduleForm = React.createClass({
       groupItems.push(tmp);
     }
 
-    var model = this.state.image ? this.state.image.model : '';
-    var filters = "model="+model;
+    var device_type = this.state.image ? this.state.image.device_type : '';
+    var filters = "device_type="+device_type;
     if (this.props.device) {filters = "name="+this.props.device.name}
     filters = encodeURIComponent(filters);
 
@@ -259,7 +261,7 @@ var ScheduleForm = React.createClass({
               disabled={true}
               hintText="Device type"
               floatingLabelText="Device type"
-              value={model} 
+              value={device_type} 
               underlineDisabledStyle={{borderBottom:"none"}}
               style={{verticalAlign:"top"}}
               errorStyle={{color: "rgb(171, 16, 0)"}} />

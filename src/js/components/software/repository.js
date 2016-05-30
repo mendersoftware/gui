@@ -2,7 +2,7 @@ import React from 'react';
 import Time from 'react-time';
 import AppStore from '../../stores/app-store';
 import AppActions from '../../actions/app-actions';
-import ScheduleForm from '../updates/scheduleform';
+import ScheduleForm from '../deployments/scheduleform';
 import ReactDOM from 'react-dom';
 var update = require('react-addons-update');
 var FileInput = require('react-file-input');
@@ -10,7 +10,7 @@ var FileInput = require('react-file-input');
 
 import SearchInput from 'react-search-input';
 
-import UpdateButton from './updatebutton.js';
+import DeploymentButton from './deploymentbutton.js';
 import SelectedImage from './selectedimage.js';
 
 import { Router, Link } from 'react-router';
@@ -34,7 +34,7 @@ var FlatButton = mui.FlatButton;
 var FontIcon = mui.FontIcon;
 var IconButton = mui.IconButton;
 
-var newState = {model: "Acme Model 1", tags: []};
+var newState = {device_type: "Acme Model 1", tags: []};
 var tags = [];
 var software = [];
 
@@ -80,14 +80,14 @@ var Repository = React.createClass({
     this.setState(obj);
   },
   _onScheduleSubmit: function() {
-    var newUpdate = {
+    var newDeployment = {
       group: this.state.group,
-      model: this.state.model,
+      device_type: this.state.device_type,
       start_time: this.state.start_time,
       end_time: this.state.end_time,
       image: this.state.image
     }
-    AppActions.saveSchedule(newUpdate, this.state.disabled);
+    AppActions.saveSchedule(newDeployment, this.state.disabled);
     this.dialogDismiss('schedule');
   },
   _onUploadSubmit: function() {
@@ -104,6 +104,7 @@ var Repository = React.createClass({
         });
       });
     });
+    this.props.setStorage("uploaded04", true);
     this.dialogDismiss('upload');
   },
   _editImageData: function (image) {
@@ -171,7 +172,7 @@ var Repository = React.createClass({
       this.setState({popupLabel: "Edit image details"});
       newState = image;
     } else {
-      newState = {model: "Acme Model 1", tags: []};
+      newState = {device_type: "Acme Model 1", tags: []};
       this.setState({image: newState, popupLabel: "Upload a new image"});
     }
     tags = [];
@@ -246,7 +247,7 @@ var Repository = React.createClass({
     var image = this.state.image;
     
     if (this.refs.search) {
-      var filters = ['name', 'model', 'tags', 'description'];
+      var filters = ['name', 'device_type', 'tags', 'description'];
       tmpSoftware = software.filter(this.refs.search.filter(filters));
     }
     var groups = this.props.groups;
@@ -258,11 +259,11 @@ var Repository = React.createClass({
       return (
         <TableRow hoverable={this.state.image.name !== pkg.name} className={this.state.image.name === pkg.name ? "expand" : null} key={index} >
           <TableRowColumn>{pkg.name}</TableRowColumn>
-          <TableRowColumn>{pkg.model}</TableRowColumn>
+          <TableRowColumn>{pkg.device_type}</TableRowColumn>
           <TableRowColumn>{pkg.tags || '-'}</TableRowColumn>
           <TableRowColumn><Time value={this._formatTime(pkg.modified)} format="YYYY-MM-DD HH:mm" /></TableRowColumn>
           <TableRowColumn>{pkg.devices || 0}</TableRowColumn>
-          <TableRowColumn style={{width:"66", paddingRight:"0", paddingLeft:"12"}} className="expandButton">
+          <TableRowColumn style={{width:"33", paddingRight:"0", paddingLeft:"12"}} className="expandButton">
             <IconButton className="float-right"><FontIcon className="material-icons">{ selected ? "arrow_drop_up" : "arrow_drop_down"}</FontIcon></IconButton>
           </TableRowColumn>
           <TableRowColumn style={{width:"0", overflow:"visible"}}>
@@ -329,12 +330,12 @@ var Repository = React.createClass({
               displaySelectAll={false}
               adjustForCheckbox={false} >
               <TableRow>
-                <TableHeaderColumn className="columnHeader" tooltip="Software">Software <FontIcon ref="name" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "name")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
-                <TableHeaderColumn className="columnHeader" tooltip="Device type compatibility">Device type compatibility <FontIcon ref="model" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "model")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
+                <TableHeaderColumn className="columnHeader" tooltip="Name">Name <FontIcon ref="name" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "name")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
+                <TableHeaderColumn className="columnHeader" tooltip="Device type compatibility">Device type compatibility <FontIcon ref="device_type" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "device_type")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
                 <TableHeaderColumn className="columnHeader" tooltip="Tags">Tags</TableHeaderColumn>
                 <TableHeaderColumn className="columnHeader" tooltip="Last modified">Last modified <FontIcon style={styles.sortIcon} ref="modified" onClick={this._sortColumn.bind(null, "modified")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
                 <TableHeaderColumn className="columnHeader" tooltip="Installed on devices">Installed on devices <FontIcon style={styles.sortIcon} ref="devices" onClick={this._sortColumn.bind(null, "devices")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
-                <TableHeaderColumn style={{width:"66", paddingRight:"12", paddingLeft:"12"}} className="columnHeader" tooltip="Show details">Show details</TableHeaderColumn>
+                <TableHeaderColumn style={{width:"33", paddingRight:"12", paddingLeft:"12"}} className="columnHeader"></TableHeaderColumn>
               </TableRow>
             </TableHeader>
             <TableBody
@@ -365,10 +366,10 @@ var Repository = React.createClass({
               <TextField
                 defaultValue={image.name}
                 disabled={image.name ? true : false}
-                hintText="Identifier"
+                hintText="Name"
                 ref="nameField"
                 id="image-name"
-                floatingLabelText="Identifier" 
+                floatingLabelText="Name" 
                 onChange={this._handleFieldChange.bind(null, 'name')}
                 errorStyle={{color: "rgb(171, 16, 0)"}} />
 
@@ -381,11 +382,11 @@ var Repository = React.createClass({
 
               <TextField
                 value="Acme Model 1"
-                id="model-name"
+                id="device_type"
                 disabled={true}
                 style={{display:"block"}}
                 floatingLabelText="Device type compatibility"
-                onChange={this._handleFieldChange.bind(null, 'model')} 
+                onChange={this._handleFieldChange.bind(null, 'device_type')} 
                 errorStyle={{color: "rgb(171, 16, 0)"}} />
 
               <TextField
@@ -421,7 +422,7 @@ var Repository = React.createClass({
           contentStyle={{overflow:"hidden", boxShadow:"0 14px 45px rgba(0, 0, 0, 0.25), 0 10px 18px rgba(0, 0, 0, 0.22)"}}
           actionsContainerStyle={{marginBottom:"0"}}
           >
-          <ScheduleForm updateSchedule={this._updateParams} images={software} image={this.state.image} imageVal={this.state.image} groups={this.props.groups} />
+          <ScheduleForm deploymentSchedule={this._updateParams} images={software} image={this.state.image} imageVal={this.state.image} groups={this.props.groups} />
         </Dialog>
       </div>
     );

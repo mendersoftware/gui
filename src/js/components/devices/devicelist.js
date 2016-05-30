@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 var AppStore = require('../../stores/app-store');
 var AppActions = require('../../actions/app-actions');
 var SelectedDevices = require('./selecteddevices');
+var Filters = require('./filters');
 
 // material ui
 var mui = require('material-ui');
@@ -110,13 +111,17 @@ var DeviceList = React.createClass({
   _onChange: function(event) {
     this._validateName(event.target.value);
   },
-  _expandRow: function(index, event) {
+  _expandRow: function(rowNumber, columnId, event) {
     event.stopPropagation();
-    var newIndex = index;
-    if (index == this.state.expanded) {
-      newIndex = null;
+    if (columnId < 0) {
+      this.setState({expanded: null});
+    } else {
+      var newIndex = rowNumber;
+      if (rowNumber == this.state.expanded) {
+        newIndex = null;
+      }
+      this.setState({expanded: newIndex});
     }
-    this.setState({expanded: newIndex});
   },
   _ifSelected: function(name) {
     var value = false;
@@ -325,12 +330,12 @@ var DeviceList = React.createClass({
         expanded = <SelectedDevices images={this.props.images} devices={this.props.devices} selected={[device]} selectedGroup={this.props.selectedGroup} groups={this.props.groups} />
       }
       return (
-        <TableRow onRowClick={this._expandRow.bind(this, index)} selected={this._ifSelected(device.name)} hoverable={!expanded} className={expanded ? "expand devices" : null}  key={index}>
+        <TableRow selected={this._ifSelected(device.name)} hoverable={!expanded} className={expanded ? "expand devices" : null}  key={index}>
           <TableRowColumn>{device.name}</TableRowColumn>
-          <TableRowColumn>{device.model}</TableRowColumn>
-          <TableRowColumn onClick={this._expandRow.bind(this, index)}>{device.software_version}</TableRowColumn>
-          <TableRowColumn onClick={this._expandRow.bind(this, index)}>{device.status}</TableRowColumn>
-          <TableRowColumn style={{width:"66", paddingRight:"0", paddingLeft:"12"}} className="expandButton">
+          <TableRowColumn>{device.device_type}</TableRowColumn>
+          <TableRowColumn>{device.artifact_name}</TableRowColumn>
+          <TableRowColumn>{device.status}</TableRowColumn>
+          <TableRowColumn style={{width:"33", paddingRight:"0", paddingLeft:"12"}} className="expandButton">
             <IconButton className="float-right" onClick={this._expandRow.bind(this, index)}><FontIcon className="material-icons">{ expanded ? "arrow_drop_up" : "arrow_drop_down"}</FontIcon></IconButton>
           </TableRowColumn>
           <TableRowColumn style={{width:"0", overflow:"visible"}}>
@@ -379,6 +384,7 @@ var DeviceList = React.createClass({
 
     return (
       <div>
+        <Filters attributes={this.props.attributes} filters={this.props.filters} onFilterChange={this.props.onFilterChange} />
         <div style={{marginLeft:"26"}}>
           <h2 className="hoverEdit" tooltip="Rename">
            
@@ -397,6 +403,7 @@ var DeviceList = React.createClass({
         </div>
         <div className="margin-bottom">
           <Table
+            onCellClick={this._expandRow}
             onRowSelection={this._onRowSelection}
             multiSelectable={true}
             className={devices.length ? null : 'hidden'} >
@@ -404,10 +411,10 @@ var DeviceList = React.createClass({
             enableSelectAll={true}>
               <TableRow>
                 <TableHeaderColumn className="columnHeader" tooltip="Name">Name<FontIcon ref="name" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "name")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
-                <TableHeaderColumn className="columnHeader" tooltip="Device type">Device type<FontIcon ref="model" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "model")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
-                <TableHeaderColumn className="columnHeader" tooltip="Current software">Current software<FontIcon ref="software_version" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "software_version")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
+                <TableHeaderColumn className="columnHeader" tooltip="Device type">Device type<FontIcon ref="device_type" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "device_type")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
+                <TableHeaderColumn className="columnHeader" tooltip="Current software">Current software<FontIcon ref="artifact_name" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "software_version")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
                 <TableHeaderColumn className="columnHeader" tooltip="Status">Status<FontIcon ref="status" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "status")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
-                <TableHeaderColumn className="columnHeader" style={{width:"66", paddingRight:"12", paddingLeft:"12"}} tooltip="Show details">Show details</TableHeaderColumn>
+                <TableHeaderColumn className="columnHeader" style={{width:"33", paddingRight:"12", paddingLeft:"12"}}></TableHeaderColumn>
               </TableRow>
             </TableHeader>
             <TableBody
@@ -417,9 +424,11 @@ var DeviceList = React.createClass({
               {devices}
             </TableBody>
           </Table>
-          <p className={devices.length ? 'hidden' : 'italic muted margin-left'}>
-            No devices found. Add devices to this group by making a selection within 'All devices' and choosing 'Add selected devices to a group'.
-          </p>
+          <div className={devices.length ? 'hidden' : 'dashboard-placeholder'}>
+            <p>
+              No devices found
+            </p>
+          </div>
         </div>
 
         <div className={this.props.selectedDevices.length ? "fixedButtons" : "hidden"}>

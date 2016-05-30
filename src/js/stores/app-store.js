@@ -12,15 +12,15 @@ var _selectedDevices = [];
 var _filters = [{key:'', value:''}];
 var _attributes = {
   name: "Name",
-  model: "Device type",
+  device_type: "Device type",
   arch: "Architecture",
   status: "Status",
-  software_version: "Current software",
+  artifact_name: "Current software",
   tags: "Tags"
 }
 
 /* TEMP LOCAL GROUPS */
-var _groups = [
+var _groups1 = [
   {
     id: 1,
     name: "All devices",
@@ -48,78 +48,112 @@ var _groups = [
   },
 ]
 
+var _groups = [
+  {
+    id: 1,
+    name: "All devices",
+    devices: [],
+    type: "public"
+  }
+]
+
 
 /* Temp local devices */
 
-var _alldevices = [
+var _alldevices = [];
+
+var _alldevices1 = [
   {
     'id': 1,
     'name': '00a0c91e6-7dec-11d0-a765-f81d4faebf1',
-    'model':"Raspberry Pi 3",
+    'device_type':"Raspberry Pi 3",
     'arch': 'ARMv8 Cortex-A53',
     'status': 'Up',
-    'software_version': 'Application 0.0.1',
+    'artifact_name': 'Application 0.0.1',
     'groups': [1,4],
     'tags': []
   },
   {
     'id': 2,
     'name': '00a0c91e6-7dec-11d0-a765-f81d4faebf2',
-    'model':"Raspberry Pi 3",
+    'device_type':"Raspberry Pi 3",
     'arch': 'ARMv8 Cortex-A53',
     'status': 'Up',
-    'software_version': 'Application 0.0.1',
+    'artifact_name': 'Application 0.0.1',
     'groups': [1,4],
     'tags': []
   },
   {
     'id': 3,
     'name': '00a0c91e6-7dec-11d0-a765-f81d4faebf3',
-    'model':"Raspberry Pi 3",
+    'device_type':"Raspberry Pi 3",
     'arch': 'ARMv8 Cortex-A53',
     'status': 'Up',
-    'software_version': 'Application 0.0.1',
+    'artifact_name': 'Application 0.0.1',
     'groups': [1,4],
     'tags': []
   },
   {
     'id': 4,
     'name': '00a0c91e6-7dec-11d0-a765-f81d4faebf4',
-    'model':"Raspberry Pi 3",
+    'device_type':"Raspberry Pi 3",
     'arch': 'ARMv8 Cortex-A53',
     'status': 'Up',
-    'software_version': 'Application 0.0.2',
+    'artifact_name': 'Application 0.0.2',
     'groups': [1,2],
     'tags': []
   },
   {
     'id': 5,
     'name': '00a0c91e6-7dec-11d0-a765-f81d4faebf5',
-    'model':"Raspberry Pi 3",
+    'device_type':"Raspberry Pi 3",
     'arch': 'ARMv8 Cortex-A53',
     'status': 'Up',
-    'software_version': 'Application 0.0.2',
+    'artifact_name': 'Application 0.0.2',
     'groups': [1,3],
     'tags': []
   },
   {
     'id': 6,
     'name': '00a0c91e6-7dec-11d0-a765-f81d4faebf6',
-    'model':"Raspberry Pi 3",
+    'device_type':"Raspberry Pi 3",
     'arch': 'ARMv8 Cortex-A53',
     'status': 'Up',
-    'software_version': 'Application 0.0.2',
+    'artifact_name': 'Application 0.0.2',
     'groups': [1,3],
     'tags': []
   },
   {
     'id': 7,
     'name': '0dde3346-4dec-11d0-a765-f81d4faebf7',
-    'model':"Raspberry Pi 2 Model B",
+    'device_type':"Raspberry Pi 2 Model B",
     'arch': 'ARMv7 Cortex-A7',
     'status': 'Down',
-    'software_version': 'Application 0.0.1',
+    'artifact_name': 'Application 0.0.1',
     'groups': [1],
+    'tags': []
+  },
+];
+
+var _unauthorized = [
+  {
+    'id':8,
+    'name': '33vayc91e6-7dec-11d0-a765-f81d4faebf5',
+    'device_type':"Raspberry Pi 3",
+    'arch': 'ARMv8 Cortex-A53',
+    'status': 'Unauthorized',
+    'artifact_name': 'Application 0.0.2',
+    'groups': [],
+    'tags': []
+  },
+  {
+    'id':9,
+    'name': '4f98de-4apr-11d0-a765-f81d488y4fs',
+    'device_type':"Raspberry Pi 3",
+    'arch': 'ARMv8 Cortex-A53',
+    'status': 'Unauthorized',
+    'artifact_name': 'Application 0.0.2',
+    'groups': [],
     'tags': []
   },
 ];
@@ -175,12 +209,12 @@ function _getCurrentDevices(groupId) {
   }
 }
 
-function _updateDeviceTags(id, tags) {
+function  updateDeviceTags(id, tags) {
   var index = findWithAttr(_alldevices, "id", id);
   _alldevices[index].tags = tags;
 }
 
-function _updateFilters(filters) {
+function  updateFilters(filters) {
   _filters = filters;
   _getCurrentDevices(_currentGroup.id);
 }
@@ -216,7 +250,7 @@ function _selectDevices(devicePositions) {
   }
 }
 
-function _getDevices(group, model) {
+function _getDevices(group, device_type) {
   // get group id from name
 
   var index = findWithAttr(_groups, 'name', group);
@@ -224,7 +258,7 @@ function _getDevices(group, model) {
 
   var devices = [];
   for (var i=0; i<_alldevices.length; i++) {
-    if (_alldevices[i].model===model) {
+    if (_alldevices[i].device_type===device_type) {
       for (var x=0; x<_alldevices[i].groups.length;x++) {
         if (_alldevices[i].groups[x]===groupId) {
           devices.push(_alldevices[i]);
@@ -280,12 +314,38 @@ function _addGroup(group, idx) {
 function _getDeviceHealth() {
   var health = {};
   var down = collectWithAttr(_alldevices, 'status', 'Down');
-  var nogroup = collectWithAttr(_alldevices, 'groups', [1]);
   health.down = down.length;
   health.up = _alldevices.length - health.down;
-  health.nogroup = nogroup.length;
   health.total = _alldevices.length;
   return health;
+}
+
+function _getUnauthorized() {
+  return _unauthorized;
+}
+
+function _authorizeDevices(devices) {
+  // for each device, get name, make sure none in _alldevices with name, if ok then push to _alldevices
+
+  for (var i=0; i<devices.length; i++) {
+    var idx = findWithAttr(_alldevices, 'name', devices[i].name);
+
+    if (idx === undefined) {
+      devices[i].groups.push(1);
+      devices[i].status = "Up";
+      _alldevices.push(devices[i]);
+      _groups[0].devices.push(devices[i].id);
+
+      var unIdx = findWithAttr(_unauthorized, 'name', devices[i].name);
+      if (unIdx !== undefined) {
+        _unauthorized.splice(unIdx, 1);
+      }
+    } else {
+      // id already exists - error
+      console.log("device id already exists");
+    }
+  }
+  _selectGroup(_currentGroup.id);
 }
 
 
@@ -293,10 +353,10 @@ function discoverDevices(array) {
   var unique = {};
 
   for (var i=0; i<_alldevices.length; i++) {
-    if (typeof(unique[_alldevices[i].software_version]) == "undefined") {
-      unique[_alldevices[i].software_version] = 0;
+    if (typeof(unique[_alldevices[i].artifact_name]) == "undefined") {
+      unique[_alldevices[i].artifact_name] = 0;
     }
-    unique[_alldevices[i].software_version]++;
+    unique[_alldevices[i].artifact_name]++;
   }
 
   if (array.length) {
@@ -318,21 +378,21 @@ function _uploadImage(image) {
 }
 
 
-// UPDATES
+// Deployments
 var _progress = [];
 var _recent = []
 var _schedule = [];
 var _events = [];
 
-var _allupdates = [];
-var _selectedUpdate = {};
+var _allDeployments = [];
+var _selectedDeployment = {};
 
-//_allupdates.sort(startTimeSort);
+//_al deployments.sort(startTimeSort);
 
 
 var _activityLog = [
   {
-    summary: "User Admin deployed an update to all devices",
+    summary: "User Admin deployed an deployment to all devices",
     details: "6 devices began updating to Application 0.0.2 at 2016-03-24 00:00",
     timestamp: 1458777600000,
     negative: false
@@ -344,54 +404,54 @@ var _activityLog = [
     negative: false
   },
   {
-    summary: "User Admin cancelled an update to group Test",
-    details: "Cancelled update to 2 devices in group Test to image Application 0.0.1 at 2016-03-21 09:30",
+    summary: "User Admin cancelled an deployment to group Test",
+    details: "Cancelled deployment to 2 devices in group Test to image Application 0.0.1 at 2016-03-21 09:30",
     timestamp: 1458552600000,
     negative: true
   },
 ];
 
-function _getRecentUpdates(time) {
+function _getRecentDeployments(time) {
   var recent = [];
-  for (var i=0;i<_allupdates.length;i++) {
-    var created = new Date(_allupdates[i].created.replace(/-/g, '/').replace(/ UTC/, ''));
-    var finished = new Date(_allupdates[i].finished.replace(/-/g, '/').replace(/ UTC/, ''));
+  for (var i=0;i<_allDeployments.length;i++) {
+    var created = new Date(_allDeployments[i].created.replace(/-/g, '/').replace(/ UTC/, ''));
+    var finished = new Date(_allDeployments[i].finished.replace(/-/g, '/').replace(/ UTC/, ''));
     if (created<time && finished<time) {
-      recent.push(_allupdates[i]);
+      recent.push(_allDeployments[i]);
     }
   }
   return recent;
 }
 
-function _getProgressUpdates(time) {
+function _getProgressDeployments(time) {
   var progress = [];
-  for (var i=0;i<_allupdates.length;i++) {
-    var created = new Date(_allupdates[i].created.replace(/-/g, '/').replace(/ UTC/, ''));
-    var finished = new Date(_allupdates[i].finished.replace(/-/g, '/').replace(/ UTC/, ''));
+  for (var i=0;i<_allDeployments.length;i++) {
+    var created = new Date(_allDeployments[i].created.replace(/-/g, '/').replace(/ UTC/, ''));
+    var finished = new Date(_allDeployments[i].finished.replace(/-/g, '/').replace(/ UTC/, ''));
     /*
     * CHANGE FOR MOCKING API
     */ 
     if (created<=time && finished>time) {
-      progress.push(_allupdates[i]);
+      progress.push(_allDeployments[i]);
     }
   }
   return progress;
 }
 
 function _getProgressStatus(id) {
-  var update = _allupdates[findWithAttr(_allupdates, "id", id)];
+  var deployment = _allDeployments[findWithAttr(_allDeployments, "id", id)];
   var progress = {complete:0, failed: 0, pending: 0};
-  for (var key in update.devices) {
-    progress[update.devices[key].status.toLowerCase()]++;
+  for (var key in deployment.devices) {
+    progress[deployment.devices[key].status.toLowerCase()]++;
   }
   return progress;
 }
 
-function _getScheduledUpdates(time) {
+function _getScheduledDeployments(time) {
   var schedule = [];
-  for (var i=0;i<_allupdates.length;i++) {
-    if (_allupdates[i].start_time>time) {
-      schedule.push(_allupdates[i]);
+  for (var i=0;i<_allDeployments.length;i++) {
+    if (_allDeployments[i].start_time>time) {
+      schedule.push(_allDeployments[i]);
     }
   }
   schedule.sort(startTimeSortAscend);
@@ -400,21 +460,21 @@ function _getScheduledUpdates(time) {
 
 function _saveSchedule(schedule, single) {
   var tmp = {};
-  tmp.id = schedule.id || _allupdates.length+1;
+  tmp.id = schedule.id || _allDeployments.length+1;
   tmp.group = schedule.group.name;
-  tmp.model = "Acme Model 1";
+  tmp.device_type = "Acme Model 1";
   // whether single device or group
-  tmp.devices = !single ? _getDevices(tmp.group, tmp.model) : collectWithAttr(_alldevices, 'name', tmp.group);
-  tmp.software_version = schedule.image.name;
-  tmp.start_time = schedule.start_time;
-  tmp.end_time = schedule.end_time;
-  var index = findWithAttr(_allupdates, 'id', tmp.id);
-  index != undefined ? _allupdates[index] = tmp : _allupdates.push(tmp);
+  tmp.devices = !single ? _getDevices(tmp.group, tmp.device_type) : collectWithAttr(_alldevices, 'name', tmp.group);
+  tmp.artifact_name = schedule.image.name;
+  tmp.created = schedule.start_time.toString();
+  tmp.finished = schedule.end_time.toString();
+  var index = findWithAttr(_allDeployments, 'id', tmp.id);
+  index != undefined ? _allDeployments[index] = tmp : _allDeployments.push(tmp);
 }
 
-function _removeUpdate(id) {
-  var idx = findWithAttr(_allupdates, 'id', id);
-  _allupdates.splice(idx,1);
+function _removeDeployment(id) {
+  var idx = findWithAttr(_allDeployments, 'id', id);
+  _allDeployments.splice(idx,1);
 }
 
 
@@ -425,6 +485,9 @@ function _sortTable(array, column, direction) {
       break;
     case "_currentDevices":
       _currentDevices.sort(customSort(direction, column));
+      break;
+    case "_unauthorized":
+      _unauthorized.sort(customSort(direction, column));
       break;
   }
 }
@@ -483,16 +546,16 @@ function setImages(images) {
 
 
 
-function setUpdates(updates) {
-  if (updates) {
-     _allupdates = updates;
+function setDeployments(deployments) {
+  if (deployments) {
+     _allDeployments = deployments;
   }
-  _allupdates.sort(startTimeSort);
+  _allDeployments.sort(startTimeSort);
 }
 
-function setSelectedUpdate(update) {
-  if (update) {
-    _selectedUpdate = update;
+function setSelectedDeployment(deployment) {
+  if (deployment) {
+    _selectedDeployment = deployment;
   }
 }
 
@@ -587,44 +650,44 @@ var AppStore = assign(EventEmitter.prototype, {
     return _softwareRepo[findWithAttr(_softwareRepo, attr, val)];
   },
 
-  getRecentUpdates: function(date) {
+  getRecentDeployments: function(date) {
     /*
-    * Return list of updates before date
+    * Return list of deployments before date
     */
-    return _getRecentUpdates(date)
+    return _getRecentDeployments(date)
   },
 
-  getSingleUpdate: function(attr, val) {
-    var index = findWithAttr(_allupdates, attr, val);
-    return _allupdates[index];
+  getSingleDeployment: function(attr, val) {
+    var index = findWithAttr(_allDeployments, attr, val);
+    return _allDeployments[index];
   },
 
-  getSelectedUpdate: function() {
+  getSelectedDeployment: function() {
     /*
-    * Return current selected update
+    * Return current selected deployment
     */
-    return _selectedUpdate
+    return _selectedDeployment
   },
 
-  getProgressUpdates: function(date) {
+  getProgressDeployments: function(date) {
     /*
-    * Return list of updates in progress based on date
+    * Return list of deployments in progress based on date
     */
-    return _getProgressUpdates(date)
+    return _getProgressDeployments(date)
   },
 
   getProgressStatus: function(id) {
     /*
-    * Return progress stats for a single update
+    * Return progress stats for a single deployment
     */
     return _getProgressStatus(id);
   },
 
-  getScheduledUpdates: function(date) {
+  getScheduledDeployments: function(date) {
     /*
-    * Return list of updates scheduled after date
+    * Return list of deployments scheduled after date
     */
-    return _getScheduledUpdates(date)
+    return _getScheduledDeployments(date)
   }, 
 
   getEventLog: function() {
@@ -634,15 +697,19 @@ var AppStore = assign(EventEmitter.prototype, {
     return _events
   },
 
-  getDevicesFromParams: function(group, model) {
+  getDevicesFromParams: function(group, device_type) {
     /*
-    * Return list of devices given group and model
+    * Return list of devices given group and device_type
     */
-    return _getDevices(group, model)
+    return _getDevices(group, device_type)
   },
 
   getHealth: function() {
     return _getDeviceHealth()
+  },
+
+  getUnauthorized: function() {
+    return _getUnauthorized()
   },
 
   getActivity: function() {
@@ -670,6 +737,9 @@ var AppStore = assign(EventEmitter.prototype, {
       case AppConstants.ADD_GROUP:
         _addGroup(payload.action.group, payload.action.index);
         break;
+      case AppConstants.AUTHORIZE_DEVICES:
+        _authorizeDevices(payload.action.devices);
+        break;
       case AppConstants.UPLOAD_IMAGE:
         _uploadImage(payload.action.image);
         break;
@@ -677,13 +747,13 @@ var AppStore = assign(EventEmitter.prototype, {
         _saveSchedule(payload.action.schedule, payload.action.single);
         break;
       case AppConstants.UPDATE_FILTERS:
-        _updateFilters(payload.action.filters);
+         updateFilters(payload.action.filters);
         break;
       case AppConstants.UPDATE_DEVICE_TAGS:
-        _updateDeviceTags(payload.action.id, payload.action.tags);
+         updateDeviceTags(payload.action.id, payload.action.tags);
         break;
-      case AppConstants.REMOVE_UPDATE:
-        _removeUpdate(payload.action.id);
+      case AppConstants.REMOVE_DEPLOYMENT:
+        _removeDeployment(payload.action.id);
         break;
       case AppConstants.SORT_TABLE:
         _sortTable(payload.action.table, payload.action.column, payload.action.direction);
@@ -695,11 +765,11 @@ var AppStore = assign(EventEmitter.prototype, {
         break;
 
       /* API */
-      case AppConstants.RECEIVE_UPDATES:
-        setUpdates(payload.action.updates);
+      case AppConstants.RECEIVE_DEPLOYMENTS:
+        setDeployments(payload.action.deployments);
         break;
-       case AppConstants.SINGLE_UPDATE:
-        setSelectedUpdate(payload.action.update);
+       case AppConstants.SINGLE_DEPLOYMENT:
+        setSelectedDeployment(payload.action.deployment);
         break;
     }
     

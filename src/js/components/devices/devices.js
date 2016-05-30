@@ -4,8 +4,9 @@ var AppActions = require('../../actions/app-actions');
 
 var Groups = require('./groups');
 var DeviceList = require('./devicelist');
+var Unauthorized = require('./unauthorized');
 
-var Filters = require('./filters');
+import { Router, Route, Link } from 'react-router';
 
 function getState() {
   return {
@@ -16,7 +17,10 @@ function getState() {
     selectedDevices: AppStore.getSelectedDevices(),
     filters: AppStore.getFilters(),
     attributes: AppStore.getAttributes(),
-    images: AppStore.getSoftwareRepo()
+    images: AppStore.getSoftwareRepo(),
+    unauthorized: AppStore.getUnauthorized(),
+    hideTODO: localStorage.getItem("devicesNextStep"),
+    groupTODO: localStorage.getItem("groupNextStep")
   }
 }
 
@@ -46,7 +50,26 @@ var Devices = React.createClass({
   componentWillUnmount: function () {
     AppStore.removeChangeListener(this._onChange);
   },
+  componentDidMount: function() {
+    //AppActions.getAuthorized();
+    //AppActions.getDevices();
+  },
+  _closeOnboard: function() {
+    AppActions.setLocalStorage("devicesNextStep", true);
+  },
   _onChange: function() {
+
+    if (!this.state.groupTODO) {
+      if (this.state.groups[1]) {
+        if (this.state.groups[1].devices.length===2) {
+          setTimeout(function() {
+            // avoid dispatcher clash
+            AppActions.setLocalStorage("groupNextStep", true);
+          },1);
+        }
+      }
+    }
+
     this.setState(getState());
   },
   _updateFilters: function(filters) {
@@ -59,8 +82,23 @@ var Devices = React.createClass({
           <Groups groups={this.state.groups} selectedGroup={this.state.selectedGroup} allDevices={this.state.allDevices} />
         </div>
         <div className="rightFluid padding-right">
-          <Filters attributes={this.state.attributes} filters={this.state.filters} onFilterChange={this._updateFilters} />
-          <DeviceList images={this.state.images} selectedDevices={this.state.selectedDevices} groups={this.state.groups} devices={this.state.devices} selectedGroup={this.state.selectedGroup} />
+          <div className={this.state.unauthorized.length || !this.state.groupTODO ? "hidden" : null}>
+            <div className="margin-top margin-bottom onboard">
+              <div className="close" onClick={this._closeOnboard}/>
+              <h3>//TODO Upload a new software image</h3>
+              <Link to="/software" className="float-right margin-right">Go to software</Link>
+            </div>
+          </div>
+          <div className={this.state.groupTODO || this.state.unauthorized.length ? "hidden" : null}>
+            <div className="margin-top margin-bottom onboard">
+              <div className="close" onClick={this._closeOnboard}/>
+              <h3>//TODO Create a new group with these devices</h3>
+            </div>
+          </div>
+          <div className={this.state.unauthorized.length ? null : "hidden"}>
+            <Unauthorized unauthorized={this.state.unauthorized} />
+          </div>
+          <DeviceList filters={this.state.filters} attributes={this.state.attributes} onFilterChange={this._updateFilters} images={this.state.images} selectedDevices={this.state.selectedDevices} groups={this.state.groups} devices={this.state.devices} selectedGroup={this.state.selectedGroup} />
         </div>
       </div>
     );
