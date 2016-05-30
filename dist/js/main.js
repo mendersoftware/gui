@@ -77463,7 +77463,6 @@ var Deployments = _react2.default.createClass({
       artifact_name: this.state.image.name,
       devices: ids
     };
-    console.log(newDeployment.devices);
     AppActions.createDeployment(newDeployment, this.state.disabled);
     AppActions.setLocalStorage("deployTODO", true);
     this.dialogDismiss('dialog');
@@ -77555,7 +77554,12 @@ var Deployments = _react2.default.createClass({
           _react2.default.createElement(
             'h3',
             null,
-            '//TODO deploy an update to all devices'
+            _react2.default.createElement(
+              'span',
+              { className: 'todo' },
+              '//TODO'
+            ),
+            ' deploy an update to all devices'
           )
         )
       ),
@@ -78713,7 +78717,6 @@ function combineDateTime(date, time) {
 
 function getDevicesFromParams(group, device_type) {
   var devices = [];
-  console.log(device_type);
   if (device_type && group) {
     devices = _appStore2.default.getDevicesFromParams(group, device_type);
   }
@@ -78799,7 +78802,6 @@ var ScheduleForm = _react2.default.createClass({
     var image = this.state.images[index];
     var groupname = this.state.group ? this.state.group.name : null;
     var devices = this.props.device ? [this.props.device] : getDevicesFromParams(groupname, image.device_type);
-    console.log(devices);
     this.setState({
       image: image,
       imageVal: {
@@ -79697,7 +79699,8 @@ function getState() {
     images: AppStore.getSoftwareRepo(),
     unauthorized: AppStore.getUnauthorized(),
     hideTODO: localStorage.getItem("devicesNextStep"),
-    groupTODO: localStorage.getItem("groupNextStep")
+    groupTODO: localStorage.getItem("groupNextStep"),
+    authTODO: localStorage.getItem("authStep")
   };
 }
 
@@ -79776,12 +79779,17 @@ var Devices = _react2.default.createClass({
             _react2.default.createElement(
               'h3',
               null,
-              '//TODO Upload a new software image'
+              _react2.default.createElement(
+                'span',
+                { className: 'todo' },
+                '//TODO'
+              ),
+              ' Upload a new software image'
             ),
             _react2.default.createElement(
               _reactRouter.Link,
-              { to: '/software', className: 'float-right margin-right' },
-              'Go to software'
+              { to: '/software', className: 'todo link' },
+              '> Go to software'
             )
           )
         ),
@@ -79795,7 +79803,31 @@ var Devices = _react2.default.createClass({
             _react2.default.createElement(
               'h3',
               null,
-              '//TODO Create a new group with these devices'
+              _react2.default.createElement(
+                'span',
+                { className: 'todo' },
+                '//TODO'
+              ),
+              ' Create a new group with these devices'
+            )
+          )
+        ),
+        _react2.default.createElement(
+          'div',
+          { className: !this.state.authTODO && this.state.unauthorized.length ? null : "hidden" },
+          _react2.default.createElement(
+            'div',
+            { className: 'margin-top margin-bottom onboard' },
+            _react2.default.createElement('div', { className: 'close', onClick: this._closeOnboard }),
+            _react2.default.createElement(
+              'h3',
+              null,
+              _react2.default.createElement(
+                'span',
+                { className: 'todo' },
+                '//TODO'
+              ),
+              ' Authorize the 2 pending devices'
             )
           )
         ),
@@ -80679,11 +80711,11 @@ var Authorized = _react2.default.createClass({
     }, this);
     return _react2.default.createElement(
       'div',
-      { className: 'margin-top margin-bottom onboard' },
+      { className: 'margin-top margin-bottom onboard authorize' },
       _react2.default.createElement(
-        'h3',
+        'p',
         null,
-        '//TODO Devices pending authorization'
+        'Devices pending authorization'
       ),
       _react2.default.createElement(
         Table,
@@ -81826,7 +81858,7 @@ var Software = _react2.default.createClass({
     }
   },
   render: function render() {
-    var message = this.state.uploadTODO ? "//TODO Deploy the new image to all devices" : "//TODO Upload Version 0.4 from /folder1/folder2/menderQemuv04.tar.gz";
+    var message = this.state.uploadTODO ? "Deploy the new image to all devices" : "Upload Version 0.4 from /folder1/folder2/menderQemuv04.tar.gz";
     return _react2.default.createElement(
       'div',
       { className: 'contentContainer' },
@@ -81840,12 +81872,18 @@ var Software = _react2.default.createClass({
           _react2.default.createElement(
             'h3',
             null,
+            _react2.default.createElement(
+              'span',
+              { className: 'todo' },
+              '//TODO:'
+            ),
+            ' ',
             message
           ),
           _react2.default.createElement(
             _reactRouter.Link,
-            { className: this.state.uploadTODO ? "float-right margin-right" : "hidden", to: '/deployments' },
-            'Go to deployments'
+            { className: this.state.uploadTODO ? "todo link" : "hidden", to: '/deployments' },
+            '> Go to deployments'
           )
         )
       ),

@@ -44,14 +44,14 @@ var Software = React.createClass({
     }
   },
   render: function() {
-    var message = this.state.uploadTODO ? "//TODO Deploy the new image to all devices" : "//TODO Upload Version 0.4 from /folder1/folder2/menderQemuv04.tar.gz" ;
+    var message = this.state.uploadTODO ? "Deploy the new image to all devices" : "Upload Version 0.4 from /folder1/folder2/menderQemuv04.tar.gz" ;
     return (
       <div className="contentContainer">
         <div className={this.state.updateTODO ? "hidden" : null}>
           <div className="margin-bottom onboard">
             <div className="close" onClick={this._setStorage.bind(null, "updateTODO", true)}/>
-            <h3>{message}</h3>
-            <Link className={this.state.uploadTODO ? "float-right margin-right" : "hidden"} to="/deployments">Go to deployments</Link>
+            <h3><span className="todo">//TODO:</span> {message}</h3>
+            <Link className={this.state.uploadTODO ? "todo link" : "hidden"} to="/deployments">> Go to deployments</Link>
           </div>
         </div>
         <div className="relative overflow-hidden">

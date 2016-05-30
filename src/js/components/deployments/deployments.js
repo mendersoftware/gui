@@ -131,7 +131,6 @@ var Deployments = React.createClass({
       artifact_name: this.state.image.name,
       devices: ids
     }
-    console.log(newDeployment.devices);
     AppActions.createDeployment(newDeployment, this.state.disabled);
     AppActions.setLocalStorage("deployTODO", true);
     this.dialogDismiss('dialog');
@@ -222,7 +221,7 @@ var Deployments = React.createClass({
         <div className={this.state.hideTODO ? "hidden" : null}>
           <div className="margin-bottom onboard">
             <div className="close" onClick={this._closeOnboard}/>
-            <h3>//TODO deploy an update to all devices</h3>
+            <h3><span className="todo">//TODO</span> deploy an update to all devices</h3>
           </div>
         </div>
 
