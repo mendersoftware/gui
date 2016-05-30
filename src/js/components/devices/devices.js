@@ -20,7 +20,8 @@ function getState() {
     images: AppStore.getSoftwareRepo(),
     unauthorized: AppStore.getUnauthorized(),
     hideTODO: localStorage.getItem("devicesNextStep"),
-    groupTODO: localStorage.getItem("groupNextStep")
+    groupTODO: localStorage.getItem("groupNextStep"),
+    authTODO: localStorage.getItem("authStep")
   }
 }
 
@@ -85,14 +86,20 @@ var Devices = React.createClass({
           <div className={this.state.unauthorized.length || !this.state.groupTODO ? "hidden" : null}>
             <div className="margin-top margin-bottom onboard">
               <div className="close" onClick={this._closeOnboard}/>
-              <h3>//TODO Upload a new software image</h3>
-              <Link to="/software" className="float-right margin-right">Go to software</Link>
+              <h3><span className="todo">//TODO</span> Upload a new software image</h3>
+              <Link to="/software" className="todo link">> Go to software</Link>
             </div>
           </div>
           <div className={this.state.groupTODO || this.state.unauthorized.length ? "hidden" : null}>
             <div className="margin-top margin-bottom onboard">
               <div className="close" onClick={this._closeOnboard}/>
-              <h3>//TODO Create a new group with these devices</h3>
+              <h3><span className="todo">//TODO</span> Create a new group with these devices</h3>
+            </div>
+          </div>
+         <div className={!this.state.authTODO && this.state.unauthorized.length ? null : "hidden" }>
+            <div className="margin-top margin-bottom onboard">
+              <div className="close" onClick={this._closeOnboard}/>
+              <h3><span className="todo">//TODO</span> Authorize the 2 pending devices</h3>
             </div>
           </div>
           <div className={this.state.unauthorized.length ? null : "hidden"}>

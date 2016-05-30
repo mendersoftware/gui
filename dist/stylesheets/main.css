@@ -212,6 +212,10 @@ span.link:hover {
   border-width: 1px;
   text-align: center;
   position: relative;
+  background-color: #000000;
+}
+.onboard.authorize {
+  background-color: inherit;
 }
 .onboard p {
   margin-top: 0;
@@ -220,9 +224,17 @@ span.link:hover {
 .onboard h3 {
   font-family: Andale Mono;
   font-weight: lighter;
-  color: #3F3F3F;
+  color: #e7e7e7;
   margin-top: 10px;
   font-size: 1.25em;
+}
+.onboard h3 span.todo {
+  color: yellow;
+}
+.onboard .link.todo {
+  color: lawngreen;
+  font-family: Andale Mono;
+  text-decoration: underline;
 }
 .onboard .close {
   position: absolute;

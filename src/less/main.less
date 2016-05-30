@@ -273,6 +273,11 @@ a, span.link {
   border-width: 1px;
   text-align: center;
   position: relative;
+  background-color: #000000;
+
+  &.authorize {
+    background-color: inherit;
+  }
 
   p {
     margin-top: 0;
@@ -282,9 +287,19 @@ a, span.link {
   h3 {
     font-family: Andale Mono;
     font-weight: lighter;
-    color: #3F3F3F;
+    color: @placeholder;
     margin-top: 10px;
     font-size: 1.25em;
+    
+    span.todo {
+      color: yellow;
+    }
+  }
+
+  .link.todo {
+    color: lawngreen;
+    font-family: Andale Mono;
+    text-decoration: underline;
   }
 
   .close {
