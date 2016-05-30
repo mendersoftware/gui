@@ -24,7 +24,7 @@ var mockSuccess = [
         "finished": "2016-03-25 00:13:00 +0000 UTC",
         "status": "success",
         "started": "2016-03-24 24:00:00 +0000 UTC",
-        "model": "Raspberry Pi 3",
+        "device_type": "Raspberry Pi 3",
         "version_from": "Application 0.1"
     },
     {
@@ -32,7 +32,7 @@ var mockSuccess = [
         "finished": "2016-03-25 00:12:00 +0000 UTC",
         "status": "success",
         "started": "2016-03-24 24:00:00 +0000 UTC",
-        "model": "Raspberry Pi 3",
+        "device_type": "Raspberry Pi 3",
         "version_from": "Application 0.1"
     },
     {
@@ -40,7 +40,7 @@ var mockSuccess = [
         "finished": "2016-03-25 00:04:00 +0000 UTC",
         "status": "success",
         "started": "2016-03-24 24:00:00 +0000 UTC",
-        "model": "Raspberry Pi 3",
+        "device_type": "Raspberry Pi 3",
         "version_from": "Application 0.1"
     }
 ];
@@ -114,7 +114,7 @@ var Report = React.createClass({
           return (
             <TableRow key={index}>
               <TableRowColumn>{deviceLink}</TableRowColumn>
-              <TableRowColumn>{device.model}</TableRowColumn>
+              <TableRowColumn>{device.device_type}</TableRowColumn>
               <TableRowColumn>{softwareLink}</TableRowColumn>
               <TableRowColumn><Time value={this._formatTime(device.finished)} format="YYYY-MM-DD HH:mm" /></TableRowColumn>
               <TableRowColumn>{device.status || "--"}</TableRowColumn>
@@ -131,7 +131,7 @@ var Report = React.createClass({
           <List>
             <ListItem disabled={true} primaryText="Group" secondaryText={this.props.deployment.name} />
             <Divider />
-            <ListItem disabled={true} primaryText="Device type" secondaryText={this.props.deployment.model || "--"} />
+            <ListItem disabled={true} primaryText="Device type" secondaryText={this.props.deployment.device_type || "--"} />
             <Divider />
             <ListItem disabled={true} primaryText="Start time" secondaryText={<Time value={this._formatTime(this.props.deployment.created)} format="YYYY-MM-DD HH:mm" />} />
           </List>

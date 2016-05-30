@@ -117,7 +117,7 @@ var Deployments = React.createClass({
     this.setState({tabIndex: value});
   },
   _onScheduleSubmit: function() {
-    var devices = AppStore.getDevicesFromParams(this.state.group.name, this.state.image.model);
+    var devices = AppStore.getDevicesFromParams(this.state.group.name, this.state.image.device_type);
     var ids = [];
     for (var i=0; i<devices.length; i++) {
       ids.push(devices[i].id);
@@ -125,7 +125,7 @@ var Deployments = React.createClass({
     var newDeployment = {
       //id: this.state.id,
       name: this.state.group.name,
-      model: this.state.image.model,
+      device_type: this.state.image.device_type,
       //start_time: this.state.start_time,
       //end_time: this.state.end_time,
       version: this.state.image.name,

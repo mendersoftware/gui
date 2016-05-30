@@ -35,10 +35,10 @@ function combineDateTime(date, time) {
   return addDate(time, diffDays);
 }
 
-function getDevicesFromParams(group, model) {
+function getDevicesFromParams(group, device_type) {
   var devices = [];
-  if (model && group) {
-    devices = AppStore.getDevicesFromParams(group, model);
+  if (device_type && group) {
+    devices = AppStore.getDevicesFromParams(group, device_type);
   }
   return devices;
 }
@@ -103,7 +103,7 @@ var ScheduleForm = React.createClass({
   },
 
   _handleGroupValueChange: function(e, index, value) {
-    var image = this.state.image ? this.state.image.model : null;
+    var image = this.state.image ? this.state.image.device_type : null;
     var group = this.props.groups[index];
     this.setState({
       group: group,
@@ -119,7 +119,7 @@ var ScheduleForm = React.createClass({
   _handleImageValueChange: function(e, index, value) {
     var image = this.state.images[index];
     var groupname = this.state.group ? this.state.group.name : null;
-    var devices = this.props.device ? [this.props.device] : getDevicesFromParams(groupname, image.model);
+    var devices = this.props.device ? [this.props.device] : getDevicesFromParams(groupname, image.device_type);
     this.setState({
       image: image,
       imageVal: {
@@ -186,8 +186,8 @@ var ScheduleForm = React.createClass({
       groupItems.push(tmp);
     }
 
-    var model = this.state.image ? this.state.image.model : '';
-    var filters = "model="+model;
+    var device_type = this.state.image ? this.state.image.device_type : '';
+    var filters = "device_type="+device_type;
     if (this.props.device) {filters = "name="+this.props.device.name}
     filters = encodeURIComponent(filters);
 
@@ -259,7 +259,7 @@ var ScheduleForm = React.createClass({
               disabled={true}
               hintText="Device type"
               floatingLabelText="Device type"
-              value={model} 
+              value={device_type} 
               underlineDisabledStyle={{borderBottom:"none"}}
               style={{verticalAlign:"top"}}
               errorStyle={{color: "rgb(171, 16, 0)"}} />

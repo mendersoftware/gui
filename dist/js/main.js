@@ -76163,7 +76163,7 @@ var AppDispatcher = require('../dispatchers/app-dispatcher');
 var Api = require('../api/api');
 var DeploymentsApi = require('../api/deployments-api');
 var apiUrl = "http://private-9f43d-michaelatmender.apiary-mock.com/api/0.0.1/";
-var deploymentsApiUrl = "http://private-9f43d-michaelatmender.apiary-mock.com/api/0.0.1/";
+var deploymentsApiUrl = "http://private-62004-deployment1.apiary-mock.com/";
 
 var AppActions = {
 
@@ -76244,7 +76244,7 @@ var AppActions = {
   },
 
   editImage: function editImage(image, callback) {
-    var data = { description: image.description, name: image.name, model: image.model, image: image.tags };
+    var data = { description: image.description, name: image.name, device_type: image.device_type, image: image.tags };
     Api.putJSON(apiUrl + "images/" + image.id, data).then(function (res) {
       callback();
     });
@@ -77449,7 +77449,7 @@ var Deployments = _react2.default.createClass({
     this.setState({ tabIndex: value });
   },
   _onScheduleSubmit: function _onScheduleSubmit() {
-    var devices = AppStore.getDevicesFromParams(this.state.group.name, this.state.image.model);
+    var devices = AppStore.getDevicesFromParams(this.state.group.name, this.state.image.device_type);
     var ids = [];
     for (var i = 0; i < devices.length; i++) {
       ids.push(devices[i].id);
@@ -81425,10 +81425,10 @@ var Repository = _react2.default.createClass({
             _react2.default.createElement(TextField, {
               defaultValue: image.name,
               disabled: image.name ? true : false,
-              hintText: 'Identifier',
+              hintText: 'Name',
               ref: 'nameField',
               id: 'image-name',
-              floatingLabelText: 'Identifier',
+              floatingLabelText: 'Name',
               onChange: this._handleFieldChange.bind(null, 'name'),
               errorStyle: { color: "rgb(171, 16, 0)" } }),
             _react2.default.createElement(FileInput, { name: 'myImage',
@@ -82822,4 +82822,3 @@ module.exports = {
 };
 
 },{"material-ui/lib/styles/colors":291,"material-ui/lib/styles/spacing":294,"material-ui/lib/utils/color-manipulator":348}]},{},[788]);
-

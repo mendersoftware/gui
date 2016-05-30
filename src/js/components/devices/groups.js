@@ -143,7 +143,7 @@ var Groups = React.createClass({
             {device.name}
           </TableRowColumn>
           <TableRowColumn>
-            {device.model}
+            {device.device_type}
           </TableRowColumn>
            <TableRowColumn>
             {this._getGroupNames(device.groups).join(', ')}

@@ -3,7 +3,7 @@ var AppDispatcher = require('../dispatchers/app-dispatcher');
 var Api = require('../api/api');
 var DeploymentsApi = require('../api/deployments-api');
 var apiUrl = "http://private-9f43d-michaelatmender.apiary-mock.com/api/0.0.1/";
-var deploymentsApiUrl = "http://private-9f43d-michaelatmender.apiary-mock.com/api/0.0.1/";
+var deploymentsApiUrl = "http://private-62004-deployment1.apiary-mock.com/";
 
 
 var AppActions = {
@@ -94,7 +94,7 @@ var AppActions = {
   },
 
   editImage: function(image, callback) {
-    var data = {description: image.description, name: image.name, model: image.model, image: image.tags};
+    var data = {description: image.description, name: image.name, device_type: image.device_type, image: image.tags};
     Api
       .putJSON(apiUrl + "images/" + image.id, data)
       .then(function(res) {

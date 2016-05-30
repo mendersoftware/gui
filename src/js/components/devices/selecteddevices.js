@@ -68,7 +68,7 @@ var SelectedDevices = React.createClass({
   _onScheduleSubmit: function() {
     var newDeployment = {
       group: this.state.group,
-      model: this.state.model,
+      device_type: this.state.device_type,
       start_time: this.state.start_time,
       end_time: this.state.end_time,
       image: this.state.image
@@ -149,7 +149,7 @@ var SelectedDevices = React.createClass({
               <Divider />
               <ListItem disabled={true} primaryText="Status" secondaryText={this.props.selected[0].status} />
               <Divider />
-              <ListItem disabled={true} primaryText="Device type" secondaryText={this.props.selected[0].model} />
+              <ListItem disabled={true} primaryText="Device type" secondaryText={this.props.selected[0].device_type} />
               <Divider />
             </List>
           </div>

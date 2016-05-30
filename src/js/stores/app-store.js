@@ -12,7 +12,7 @@ var _selectedDevices = [];
 var _filters = [{key:'', value:''}];
 var _attributes = {
   name: "Name",
-  model: "Device type",
+  device_type: "Device type",
   arch: "Architecture",
   status: "Status",
   software_version: "Current software",
@@ -66,7 +66,7 @@ var _alldevices1 = [
   {
     'id': 1,
     'name': '00a0c91e6-7dec-11d0-a765-f81d4faebf1',
-    'model':"Raspberry Pi 3",
+    'device_type':"Raspberry Pi 3",
     'arch': 'ARMv8 Cortex-A53',
     'status': 'Up',
     'software_version': 'Application 0.0.1',
@@ -76,7 +76,7 @@ var _alldevices1 = [
   {
     'id': 2,
     'name': '00a0c91e6-7dec-11d0-a765-f81d4faebf2',
-    'model':"Raspberry Pi 3",
+    'device_type':"Raspberry Pi 3",
     'arch': 'ARMv8 Cortex-A53',
     'status': 'Up',
     'software_version': 'Application 0.0.1',
@@ -86,7 +86,7 @@ var _alldevices1 = [
   {
     'id': 3,
     'name': '00a0c91e6-7dec-11d0-a765-f81d4faebf3',
-    'model':"Raspberry Pi 3",
+    'device_type':"Raspberry Pi 3",
     'arch': 'ARMv8 Cortex-A53',
     'status': 'Up',
     'software_version': 'Application 0.0.1',
@@ -96,7 +96,7 @@ var _alldevices1 = [
   {
     'id': 4,
     'name': '00a0c91e6-7dec-11d0-a765-f81d4faebf4',
-    'model':"Raspberry Pi 3",
+    'device_type':"Raspberry Pi 3",
     'arch': 'ARMv8 Cortex-A53',
     'status': 'Up',
     'software_version': 'Application 0.0.2',
@@ -106,7 +106,7 @@ var _alldevices1 = [
   {
     'id': 5,
     'name': '00a0c91e6-7dec-11d0-a765-f81d4faebf5',
-    'model':"Raspberry Pi 3",
+    'device_type':"Raspberry Pi 3",
     'arch': 'ARMv8 Cortex-A53',
     'status': 'Up',
     'software_version': 'Application 0.0.2',
@@ -116,7 +116,7 @@ var _alldevices1 = [
   {
     'id': 6,
     'name': '00a0c91e6-7dec-11d0-a765-f81d4faebf6',
-    'model':"Raspberry Pi 3",
+    'device_type':"Raspberry Pi 3",
     'arch': 'ARMv8 Cortex-A53',
     'status': 'Up',
     'software_version': 'Application 0.0.2',
@@ -126,7 +126,7 @@ var _alldevices1 = [
   {
     'id': 7,
     'name': '0dde3346-4dec-11d0-a765-f81d4faebf7',
-    'model':"Raspberry Pi 2 Model B",
+    'device_type':"Raspberry Pi 2 Model B",
     'arch': 'ARMv7 Cortex-A7',
     'status': 'Down',
     'software_version': 'Application 0.0.1',
@@ -139,7 +139,7 @@ var _unauthorized = [
   {
     'id':8,
     'name': '33vayc91e6-7dec-11d0-a765-f81d4faebf5',
-    'model':"Raspberry Pi 3",
+    'device_type':"Raspberry Pi 3",
     'arch': 'ARMv8 Cortex-A53',
     'status': 'Unauthorized',
     'software_version': 'Application 0.0.2',
@@ -149,7 +149,7 @@ var _unauthorized = [
   {
     'id':9,
     'name': '4f98de-4apr-11d0-a765-f81d488y4fs',
-    'model':"Raspberry Pi 3",
+    'device_type':"Raspberry Pi 3",
     'arch': 'ARMv8 Cortex-A53',
     'status': 'Unauthorized',
     'software_version': 'Application 0.0.2',
@@ -250,7 +250,7 @@ function _selectDevices(devicePositions) {
   }
 }
 
-function _getDevices(group, model) {
+function _getDevices(group, device_type) {
   // get group id from name
 
   var index = findWithAttr(_groups, 'name', group);
@@ -258,7 +258,7 @@ function _getDevices(group, model) {
 
   var devices = [];
   for (var i=0; i<_alldevices.length; i++) {
-    if (_alldevices[i].model===model) {
+    if (_alldevices[i].device_type===device_type) {
       for (var x=0; x<_alldevices[i].groups.length;x++) {
         if (_alldevices[i].groups[x]===groupId) {
           devices.push(_alldevices[i]);
@@ -462,9 +462,9 @@ function _saveSchedule(schedule, single) {
   var tmp = {};
   tmp.id = schedule.id || _allDeployments.length+1;
   tmp.group = schedule.group.name;
-  tmp.model = "Acme Model 1";
+  tmp.device_type = "Acme Model 1";
   // whether single device or group
-  tmp.devices = !single ? _getDevices(tmp.group, tmp.model) : collectWithAttr(_alldevices, 'name', tmp.group);
+  tmp.devices = !single ? _getDevices(tmp.group, tmp.device_type) : collectWithAttr(_alldevices, 'name', tmp.group);
   tmp.software_version = schedule.image.name;
   tmp.created = schedule.start_time.toString();
   tmp.finished = schedule.end_time.toString();
@@ -697,11 +697,11 @@ var AppStore = assign(EventEmitter.prototype, {
     return _events
   },
 
-  getDevicesFromParams: function(group, model) {
+  getDevicesFromParams: function(group, device_type) {
     /*
-    * Return list of devices given group and model
+    * Return list of devices given group and device_type
     */
-    return _getDevices(group, model)
+    return _getDevices(group, device_type)
   },
 
   getHealth: function() {

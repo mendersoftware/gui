@@ -27,8 +27,8 @@ var SelectedImage = React.createClass({
   componentDidUpdate: function(prevProps, prevState) {
     if (this.state.descEdit) { this.refs.description.focus() };
   },
-  _handleLinkClick: function(model) {
-    var filters = "model="+model;
+  _handleLinkClick: function(device_type) {
+    var filters = "device_type="+device_type;
     filters = encodeURIComponent(filters);
     this.props.history.push("/devices/:groupId/:filters", {groupId:1, filters: filters}, null);
   },
@@ -88,7 +88,7 @@ var SelectedImage = React.createClass({
     }
   },
   render: function() {
-    var info = {name: "-", tags: ['-'], model: "-", build_date: "-", modified: "-", size: "-", checksum: "-", devices: "-", description: "-"};
+    var info = {name: "-", tags: ['-'], device_type: "-", build_date: "-", modified: "-", size: "-", checksum: "-", devices: "-", description: "-"};
     if (this.props.image) {
       for (var key in this.props.image) {
         if (this.props.image[key]) {
