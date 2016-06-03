@@ -6,18 +6,16 @@ body {
 }
 /* General */
 .green {
-  background-color: #007647;
-  color: #FFFEFF;
+  color: #007647;
 }
 .red {
-  background-color: #6A150C;
-  color: #FFFEFF;
+  color: #6A150C;
 }
 .lightestgrey {
   background-color: #F7F7F7;
 }
 .lightgrey {
-  background-color: #DBEDEB;
+  background-color: #d4e9e7;
 }
 .grey {
   background-color: #c7c7c7;
@@ -81,6 +79,9 @@ span.link:hover {
 }
 .margin-bottom {
   margin-bottom: 30px;
+}
+.margin-bottom-large {
+  margin-bottom: 45px;
 }
 .margin-bottom-small {
   margin-bottom: 15px;
@@ -521,7 +522,7 @@ tr.expand.devices td div.expanded {
   margin-right: 10px;
   margin-bottom: 5px;
   padding: 5px;
-  background-color: #DBEDEB;
+  background-color: #d4e9e7;
   color: #679BA5;
   display: inline-block;
   margin-top: 5px;
@@ -587,36 +588,46 @@ input[type="text"].fileInput:last-child {
 .leftDashboard {
   width: 71%;
   float: left;
-  border-right: 1px solid #d4e9e7;
-  padding-right: 2%;
+}
+.rightDashboard {
+  width: 25%;
+  float: right;
+  min-height: 50vh;
+  border-left: 1px solid #d4e9e7;
+  padding-left: 2%;
 }
 .health {
-  min-height: 26vh;
   position: relative;
 }
 .health .health-panel {
-  width: 20%;
-  margin: 15px 1% 15px 0;
-  display: inline-block;
+  margin: 15px 0;
   box-sizing: border-box;
-  padding: 3%;
-  height: 80%;
+  padding: 3% 5% 6%;
   min-height: 100px;
+  border-radius: 4px;
+  border: 1px solid #eaf4f3;
 }
-.health .health-panel:last-child {
-  margin-right: 0;
+.health .health-panel .health-icon {
+  width: 50%;
+}
+.health .health-panel .health-text {
+  width: 50%;
+  text-align: center;
+}
+.health .health-panel a {
+  margin-top: -2%;
 }
 .health .health-panel span {
   font-size: 20px;
   vertical-align: text-top;
-  font-size: 1.5vw;
+  font-size: 1.1vw;
 }
 .health .health-panel .number {
   font-size: 4vw;
   font-weight: bold;
-  margin-right: 16px;
   position: relative;
-  top: -9px;
+  top: -2px;
+  display: block;
 }
 .dashboard-placeholder {
   font-size: 16px;
@@ -627,11 +638,6 @@ input[type="text"].fileInput:last-child {
 .dashboard-placeholder img {
   margin-top: 15px;
   width: 74px;
-}
-.activity-log {
-  width: 25%;
-  float: right;
-  min-height: 50vh;
 }
 .activityWrapper {
   margin-bottom: 30px;
@@ -652,7 +658,7 @@ input[type="text"].fileInput:last-child {
   height: 0;
   position: absolute;
   z-index: -1;
-  bottom: -10px;
+  bottom: -9px;
   left: 10px;
   border-bottom: 10px solid transparent;
   border-left: 10px solid #679BA5;
@@ -664,28 +670,27 @@ input[type="text"].fileInput:last-child {
   border-left: 10px solid #7D3F69;
 }
 .activityWrapper .activityTime {
-  color: #bdbdbd;
+  color: #c7c7c7;
   position: relative;
   top: 12px;
 }
-.activityEntry,
-.health-panel {
+.activityEntry {
   cursor: pointer;
-}
-.activityEntry:hover,
-.health-panel:hover {
-  -webkit-transform: scale(1.01);
-  -moz-transform: scale(1.01);
-  -ms-transform: scale(1.01);
-  -o-transform: scale(1.01);
   -webkit-opacity: 0.9;
   -moz-opacity: 0.9;
   opacity: 0.9;
 }
+.activityEntry:hover {
+  -webkit-transform: scale(1.005);
+  -moz-transform: scale(1.005);
+  -ms-transform: scale(1.005);
+  -o-transform: scale(1.005);
+  -webkit-opacity: 1;
+  -moz-opacity: 1;
+  opacity: 1;
+}
 .deployments {
   position: relative;
-  overflow: auto;
-  margin-top: 30px;
 }
 span.month,
 span.day {
@@ -705,20 +710,47 @@ span.day {
 }
 .dashboard-header .dashboard-number {
   margin-left: 10px;
-  color: #bdbdbd;
+  color: #c7c7c7;
+}
+.progress-container {
+  padding-bottom: 45px;
+  border-bottom: 1px solid #d4e9e7;
+}
+.progress-container hr {
+  background-color: #eaf4f3 !important;
+}
+.progress-container .deploymentInfo,
+.deployments-container .deploymentInfo {
+  font-size: 14px;
+  white-space: nowrap;
+}
+.progress-container .deploymentInfo > div,
+.deployments-container .deploymentInfo > div {
+  margin-bottom: 10px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.progress-container .progressLabel,
+.deployments-container .progressLabel {
+  color: #c7c7c7;
+  margin-right: 5px;
+  margin-bottom: 0;
+  width: 100px;
+  display: inline-block;
 }
 .deployments-container {
-  -webkit-box-flex: 1;
-  -webkit-flex: 1;
-      -ms-flex: 1;
-          flex: 1;
-  margin: 0 0 15px 6%;
-  width: 47%;
-  padding-bottom: 15px;
-  border-bottom: 1px solid #F7F7F7;
+  padding-bottom: 45px;
 }
-.deployments-container:first-child {
-  margin-left: 0;
+.deployments-container .deployment {
+  display: inline-block;
+  width: 25%;
+  margin-right: 2%;
+  margin-bottom: 15px;
+  min-width: 220px;
+  padding: 20px 16px;
+  min-height: 100px;
+  border-radius: 4px;
+  border: 1px solid #eaf4f3;
 }
 .fail {
   color: #6A150C;
@@ -731,59 +763,6 @@ span.day {
 }
 .fail .material-icons {
   color: #6A150C !important;
-}
-span.progress-version {
-  color: rgba(0, 0, 0, 0.8);
-  font-size: 16px;
-  display: block;
-}
-span.progress-group {
-  color: rgba(0, 0, 0, 0.54);
-  font-size: 14px;
-  margin-top: 4px;
-}
-.progressBar,
-.progressTime {
-  padding-left: 66px;
-}
-.progressBar {
-  height: 20px;
-  width: 90%;
-  position: relative;
-  top: 4px;
-  box-sizing: border-box;
-}
-.progressBar.tableBar {
-  padding-left: 0;
-  width: 86%;
-  top: 0;
-}
-.progressBar div {
-  height: 100%;
-}
-.progressBar .green,
-.progressBar .red,
-.progressBar .grey {
-  -webkit-transition: width 0.5s ease-out;
-  -moz-transition: width 0.5s ease-out;
-  -ms-transition: width 0.5s ease-out;
-  -o-transition: width 0.5s ease-out;
-  width: 0;
-}
-.progressBar .percentage {
-  position: absolute;
-  right: -50px;
-  top: 2px;
-  width: 40px;
-  text-align: right;
-}
-.progressBar.tableBar .percentage {
-  right: -40px;
-  width: 34px;
-}
-.progressTime {
-  position: relative;
-  top: 12px;
 }
 .slider {
   padding: 15px 15px 5% 30px;

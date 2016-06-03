@@ -37,21 +37,18 @@ var ProgressBar = React.createClass({
     // used for MOCK API because devices.length does not equal stats length
     var totalDevices = this.state.stats.successful + this.state.stats.failure + this.state.stats.inprogress + this.state.stats.pending;
 
-    var success = ((this.state.stats.successful / totalDevices)*100).toFixed(0);
-    var failures = ((this.state.stats.failure / totalDevices)*100).toFixed(0);
-    var progress = ((this.state.stats.inprogress / totalDevices)*100).toFixed(0);
-    var percentDone = Number(success) + Number(failures);
+    var success = this.state.stats.successful;
+    var failures = this.state.stats.failure;
+    var progress = this.state.stats.inprogress;
 
     var progressBar = (
-      <div className={this.props.noPadding ? "tableBar progressBar" : "progressBar"}>
-        <div className="lightgrey">
-          <div className="green float-left" style={{width:success +"%"}}></div>
-          <div className="red float-left" style={{width:failures +"%"}}></div>
-          <div className="grey float-left" style={{width:progress+"%"}}></div>
+      <div>
+        <div>
+          <div className="green">{success}</div>
+          <div className="red">{failures}</div>
+          <div className="grey">{progress}</div>
         </div>
-        <div className="percentage">
-          <span>{percentDone || 0}%</span>
-        </div>
+       
       </div>
     );
     return (

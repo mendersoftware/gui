@@ -36,17 +36,25 @@ var Progress = React.createClass({
         <ProgressBar deployment={deployment} getDevices={this.getDevices} index={index} />
       );
 
+      var deploymentInfo = (
+        <div className="deploymentInfo" style={{width:"260", height:"auto"}}>
+          <div><div className="progressLabel">Updating to:</div>{deployment.artifact_name}</div>
+          <div><div className="progressLabel">Device group:</div>{deployment.name}</div>
+          <div><div className="progressLabel">Started:</div><Time className="progressTime" value={this._formatTime(deployment.created)} format="YYYY-MM-DD HH:mm" /></div>
+        </div>
+      );
+
       var last = (this.props.deployments.length === index+1) || index===4;
 
       return (
         <div key={index}>
           <ListItem
             disabled={true}
-            style={{paddingBottom:"12", height:"50"}}
+            style={{minHeight:"100", paddingLeft:"280px"}}
             primaryText={progressBar}
-            secondaryText={<Time style={{fontSize:"12"}} className="progressTime" value={this._formatTime(deployment.created)} format="YY-MM-DD HH:mm" />}
+            secondaryText="view report"
             onClick={this._clickHandle}
-            leftIcon={<div style={{width:"110", height:"auto"}}><span className="progress-version">{deployment.version}</span><span className="progress-group">{deployment.name} {this.state.devices[index]}</span></div>}
+            leftIcon={deploymentInfo}
           />
           <Divider className={last ? "hidden" : null} />
         </div>
@@ -55,7 +63,7 @@ var Progress = React.createClass({
     }, this);
 
     return (
-      <div className="deployments-container">
+      <div className="progress-container">
         <div className="dashboard-header subsection">
           <h3>In progress<span className="dashboard-number">{progress.length}</span></h3>
         </div>

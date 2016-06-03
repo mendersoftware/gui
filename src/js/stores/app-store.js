@@ -60,7 +60,16 @@ var _groups = [
 
 /* Temp local devices */
 
-var _alldevices = [];
+var _alldevices = [  {
+    'id':1,
+    'name': '00a0c91e6-7dec-11d0-a765-f81d4faebf1',
+    'device_type':"Raspberry Pi 3",
+    'arch': 'ARMv8 Cortex-A53',
+    'status': 'Connected',
+    'artifact_name': 'Application 0.0.2',
+    'groups': [1],
+    'tags': []
+  },];
 
 var _alldevices1 = [
   {
@@ -310,7 +319,7 @@ function _addGroup(group, idx) {
 
 function _getDeviceHealth() {
   var health = {};
-  var down = collectWithAttr(_alldevices, 'status', 'Down');
+  var down = collectWithAttr(_alldevices, 'status', 'Not connected');
   health.down = down.length;
   health.up = _alldevices.length - health.down;
   health.total = _alldevices.length;
@@ -329,7 +338,7 @@ function _authorizeDevices(devices) {
 
     if (idx === undefined) {
       devices[i].groups.push(1);
-      devices[i].status = "Up";
+      devices[i].status = devices[0].name.indexOf("4f9") ? "Not connected" : "Connected";
       _alldevices.push(devices[i]);
       _groups[0].devices.push(devices[i].id);
 

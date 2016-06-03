@@ -76336,7 +76336,7 @@ var AppActions = {
 
 module.exports = AppActions;
 
-},{"../api/api":753,"../api/deployments-api":754,"../constants/app-constants":786,"../dispatchers/app-dispatcher":787}],753:[function(require,module,exports){
+},{"../api/api":753,"../api/deployments-api":754,"../constants/app-constants":787,"../dispatchers/app-dispatcher":788}],753:[function(require,module,exports){
 'use strict';
 
 var request = require('superagent');
@@ -76511,7 +76511,7 @@ var App = _react2.default.createClass({
 
 module.exports = App;
 
-},{"../themes/mender-theme.js":791,"./header/header":780,"material-ui":257,"material-ui/lib/styles/getMuiTheme":292,"react":684}],756:[function(require,module,exports){
+},{"../themes/mender-theme.js":792,"./header/header":781,"material-ui":257,"material-ui/lib/styles/getMuiTheme":292,"react":684}],756:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -76555,7 +76555,7 @@ var Activity = _react2.default.createClass({
             log.details
           )
         ),
-        _react2.default.createElement(_reactTime2.default, { style: { fontSize: "12" }, className: 'activityTime', value: log.timestamp, format: 'YY-MM-DD HH:mm' })
+        _react2.default.createElement(_reactTime2.default, { style: { fontSize: "12" }, className: 'activityTime', value: log.timestamp, format: 'YYYY-MM-DD HH:mm' })
       );
     });
     return _react2.default.createElement(
@@ -76563,7 +76563,7 @@ var Activity = _react2.default.createClass({
       { className: 'activity-log' },
       _react2.default.createElement(
         'div',
-        null,
+        { className: 'dashboard-header' },
         _react2.default.createElement(
           'h2',
           null,
@@ -76610,6 +76610,10 @@ var Health = require('./health');
 var Activity = require('./activity');
 var Deployments = require('./deployments');
 
+
+// material ui
+var mui = require('material-ui');
+var RaisedButton = mui.RaisedButton;
 
 function getState() {
   return {
@@ -76661,6 +76665,14 @@ var Dashboard = _react2.default.createClass({
     }
   },
   render: function render() {
+    var unauthorized_str = '';
+    if (this.state.unauthorized.length) {
+      if (this.state.unauthorized.length > 1) {
+        unauthorized_str = 'are ' + this.state.unauthorized.length + ' devices';
+      } else {
+        unauthorized_str = 'is ' + this.state.unauthorized.length + ' device';
+      }
+    }
     return _react2.default.createElement(
       'div',
       { className: 'contentContainer' },
@@ -76669,11 +76681,28 @@ var Dashboard = _react2.default.createClass({
         null,
         _react2.default.createElement(
           'div',
+          { className: this.state.unauthorized.length && !this.state.hideReview ? "authorize onboard margin-bottom" : "hidden" },
+          _react2.default.createElement('div', { className: 'close', onClick: this._setStorage.bind(null, "reviewDevices", true) }),
+          _react2.default.createElement(
+            'p',
+            null,
+            'There ',
+            unauthorized_str,
+            ' waiting authorization'
+          ),
+          _react2.default.createElement(RaisedButton, { onClick: this._handleClick.bind(null, { route: "devices" }), primary: true, label: 'Review details' })
+        ),
+        _react2.default.createElement(
+          'div',
           { className: 'leftDashboard' },
-          _react2.default.createElement(Health, { closeHandle: this._setStorage, hideReview: this.state.hideReview, clickHandle: this._handleClick, health: this.state.health, unauthorized: this.state.unauthorized }),
           _react2.default.createElement(Deployments, { clickHandle: this._handleClick, progress: this.state.progress, recent: this.state.recent })
         ),
-        _react2.default.createElement(Activity, { activity: this.state.activity })
+        _react2.default.createElement(
+          'div',
+          { className: 'rightDashboard' },
+          _react2.default.createElement(Health, { clickHandle: this._handleClick, health: this.state.health }),
+          _react2.default.createElement(Activity, { activity: this.state.activity })
+        )
       )
     );
   }
@@ -76685,7 +76714,7 @@ Dashboard.contextTypes = {
 
 module.exports = Dashboard;
 
-},{"../../actions/app-actions":752,"../../stores/app-store":789,"../../stores/local-store":790,"./activity":756,"./deployments":758,"./health":759,"react":684,"react-router":506}],758:[function(require,module,exports){
+},{"../../actions/app-actions":752,"../../stores/app-store":790,"../../stores/local-store":791,"./activity":756,"./deployments":758,"./health":759,"material-ui":257,"react":684,"react-router":506}],758:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -76749,13 +76778,21 @@ var Deployments = _react2.default.createClass({
         { className: this.props.progress.length || this.props.recent.length ? null : "hidden" },
         _react2.default.createElement(
           'div',
-          { className: 'flexbox' },
-          _react2.default.createElement(Progress, { clickHandle: this._clickHandle, deployments: this.props.progress }),
-          _react2.default.createElement(Recent, { clickHandle: this._clickHandle, deployments: this.props.recent })
+          null,
+          _react2.default.createElement(
+            'div',
+            { className: 'margin-bottom margin-top' },
+            _react2.default.createElement(Progress, { clickHandle: this._clickHandle, deployments: this.props.progress })
+          ),
+          _react2.default.createElement(
+            'div',
+            { className: 'margin-bottom-large' },
+            _react2.default.createElement(Recent, { clickHandle: this._clickHandle, deployments: this.props.recent })
+          )
         ),
         _react2.default.createElement(
           'div',
-          { className: 'flexbox' },
+          null,
           _react2.default.createElement(
             'div',
             null,
@@ -76769,7 +76806,7 @@ var Deployments = _react2.default.createClass({
 
 module.exports = Deployments;
 
-},{"./progress":760,"./recent":761,"./schedule":762,"material-ui":257,"react":684}],759:[function(require,module,exports){
+},{"./progress":760,"./recent":761,"./schedule":763,"material-ui":257,"react":684}],759:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -76780,31 +76817,18 @@ var _reactRouter = require('react-router');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-// material ui
-var mui = require('material-ui');
-var RaisedButton = mui.RaisedButton;
-
 var Health = _react2.default.createClass({
   displayName: 'Health',
 
   _clickHandle: function _clickHandle(route) {
     this.props.clickHandle(route);
   },
-  _closeOnboard: function _closeOnboard() {
-    this.props.closeHandle("reviewDevices", true);
-  },
   render: function render() {
-    var unauthorized_str = '';
-    if (this.props.unauthorized.length) {
-      if (this.props.unauthorized.length > 1) {
-        unauthorized_str = 'are ' + this.props.unauthorized.length + ' devices';
-      } else {
-        unauthorized_str = 'is ' + this.props.unauthorized.length + ' device';
-      }
-    }
+    var down = encodeURIComponent("status=not connected");
+    var up = encodeURIComponent("status=connected");
     return _react2.default.createElement(
       'div',
-      { className: 'health' },
+      { className: 'health margin-bottom-large' },
       _react2.default.createElement(
         'div',
         { className: 'dashboard-header' },
@@ -76821,57 +76845,56 @@ var Health = _react2.default.createClass({
       ),
       _react2.default.createElement(
         'div',
-        { className: this.props.unauthorized.length && !this.props.hideReview ? "authorize onboard" : "hidden" },
-        _react2.default.createElement('div', { className: 'close', onClick: this._closeOnboard }),
-        _react2.default.createElement(
-          'p',
-          null,
-          'There ',
-          unauthorized_str,
-          ' waiting authorization'
-        ),
-        _react2.default.createElement(RaisedButton, { onClick: this._clickHandle.bind(null, { route: "devices" }), primary: true, label: 'Review details' })
-      ),
-      _react2.default.createElement(
-        'div',
         { className: this.props.health.total ? null : "hidden" },
         _react2.default.createElement(
           'div',
-          { className: 'health-panel red', onClick: this._clickHandle.bind(null, { route: "devices", status: "down" }) },
+          { className: this.props.health.down ? "health-panel red" : "hidden" },
+          _react2.default.createElement('div', { className: 'health-icon down' }),
           _react2.default.createElement(
-            'span',
-            { className: 'number' },
-            this.props.health.down
+            'div',
+            { className: 'health-text' },
+            _react2.default.createElement(
+              'span',
+              { className: 'number' },
+              this.props.health.down
+            ),
+            _react2.default.createElement(
+              'span',
+              null,
+              'Not connected'
+            )
           ),
-          _react2.default.createElement(
-            'span',
-            null,
-            'down'
-          )
-        ),
-        _react2.default.createElement(
-          'div',
-          { className: 'health-panel green', onClick: this._clickHandle.bind(null, { route: "devices", status: "up" }) },
-          _react2.default.createElement(
-            'span',
-            { className: 'number' },
-            this.props.health.up
-          ),
-          _react2.default.createElement(
-            'span',
-            null,
-            'up'
-          )
-        ),
-        _react2.default.createElement(
-          'div',
-          { className: 'clear' },
           _react2.default.createElement(
             _reactRouter.Link,
-            { to: '/devices', className: 'float-right' },
-            'Manage devices'
+            { to: '/devices/' + down, className: 'float-right' },
+            'View devices'
           )
-        )
+        ),
+        _react2.default.createElement(
+          'div',
+          { className: 'health-panel green' },
+          _react2.default.createElement('div', { className: 'health-icon down' }),
+          _react2.default.createElement(
+            'div',
+            { className: 'health-text' },
+            _react2.default.createElement(
+              'span',
+              { className: 'number' },
+              this.props.health.up
+            ),
+            _react2.default.createElement(
+              'span',
+              null,
+              'Connected'
+            )
+          ),
+          _react2.default.createElement(
+            _reactRouter.Link,
+            { to: '/devices/' + up, className: this.props.health.up ? "float-right" : "hidden" },
+            'View devices'
+          )
+        ),
+        _react2.default.createElement('div', { className: 'clear' })
       ),
       _react2.default.createElement(
         'div',
@@ -76893,7 +76916,7 @@ Health.contextTypes = {
 
 module.exports = Health;
 
-},{"material-ui":257,"react":684,"react-router":506}],760:[function(require,module,exports){
+},{"react":684,"react-router":506}],760:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -76938,6 +76961,41 @@ var Progress = _react2.default.createClass({
     var progress = this.props.deployments.map(function (deployment, index) {
       var progressBar = _react2.default.createElement(ProgressBar, { deployment: deployment, getDevices: this.getDevices, index: index });
 
+      var deploymentInfo = _react2.default.createElement(
+        'div',
+        { className: 'deploymentInfo', style: { width: "260", height: "auto" } },
+        _react2.default.createElement(
+          'div',
+          null,
+          _react2.default.createElement(
+            'div',
+            { className: 'progressLabel' },
+            'Updating to:'
+          ),
+          deployment.artifact_name
+        ),
+        _react2.default.createElement(
+          'div',
+          null,
+          _react2.default.createElement(
+            'div',
+            { className: 'progressLabel' },
+            'Device group:'
+          ),
+          deployment.name
+        ),
+        _react2.default.createElement(
+          'div',
+          null,
+          _react2.default.createElement(
+            'div',
+            { className: 'progressLabel' },
+            'Started:'
+          ),
+          _react2.default.createElement(Time, { className: 'progressTime', value: this._formatTime(deployment.created), format: 'YYYY-MM-DD HH:mm' })
+        )
+      );
+
       var last = this.props.deployments.length === index + 1 || index === 4;
 
       return _react2.default.createElement(
@@ -76945,26 +77003,11 @@ var Progress = _react2.default.createClass({
         { key: index },
         _react2.default.createElement(ListItem, {
           disabled: true,
-          style: { paddingBottom: "12", height: "50" },
+          style: { minHeight: "100", paddingLeft: "280px" },
           primaryText: progressBar,
-          secondaryText: _react2.default.createElement(Time, { style: { fontSize: "12" }, className: 'progressTime', value: this._formatTime(deployment.created), format: 'YY-MM-DD HH:mm' }),
+          secondaryText: 'view report',
           onClick: this._clickHandle,
-          leftIcon: _react2.default.createElement(
-            'div',
-            { style: { width: "110", height: "auto" } },
-            _react2.default.createElement(
-              'span',
-              { className: 'progress-version' },
-              deployment.version
-            ),
-            _react2.default.createElement(
-              'span',
-              { className: 'progress-group' },
-              deployment.name,
-              ' ',
-              this.state.devices[index]
-            )
-          )
+          leftIcon: deploymentInfo
         }),
         _react2.default.createElement(Divider, { className: last ? "hidden" : null })
       );
@@ -76972,7 +77015,7 @@ var Progress = _react2.default.createClass({
 
     return _react2.default.createElement(
       'div',
-      { className: 'deployments-container' },
+      { className: 'progress-container' },
       _react2.default.createElement(
         'div',
         { className: 'dashboard-header subsection' },
@@ -77020,7 +77063,7 @@ Progress.contextTypes = {
 
 module.exports = Progress;
 
-},{"../deployments/progressBar.js":767,"material-ui":257,"react":684,"react-router":506,"react-time":522}],761:[function(require,module,exports){
+},{"../deployments/progressBar.js":768,"material-ui":257,"react":684,"react-router":506,"react-time":522}],761:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -77032,7 +77075,7 @@ var _reactRouter = require('react-router');
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var GroupDevices = require('../deployments/groupdevices');
-
+var RecentStats = require('./recentstats');
 var Time = require('react-time');
 var AppActions = require('../../actions/app-actions');
 
@@ -77065,19 +77108,6 @@ var Recent = _react2.default.createClass({
     var recent = this.props.deployments.map(function (deployment, index) {
       if (index < 5) {
 
-        var group = _react2.default.createElement(
-          'span',
-          { className: 'progress-group' },
-          _react2.default.createElement(
-            'span',
-            null,
-            deployment.name,
-            ' '
-          ),
-          '(',
-          _react2.default.createElement(GroupDevices, { deployment: deployment.id }),
-          ')'
-        );
         var last = this.props.deployments.length === index + 1 || index === 4;
         var status = deployment.status === "Failed" ? "warning" : "check";
         var icon = _react2.default.createElement(
@@ -77087,40 +77117,67 @@ var Recent = _react2.default.createClass({
         );
         return _react2.default.createElement(
           'div',
-          { key: index, className: status === "warning" ? "fail" : null },
-          _react2.default.createElement(ListItem, {
-            disabled: false,
-            primaryText: deployment.version,
-            secondaryText: group,
-            onClick: this._clickHandle.bind(null, deployment.id),
-            leftIcon: icon,
-            rightIcon: _react2.default.createElement(Time, { style: { float: "right", position: "initial", width: "auto", marginRight: "-56", whiteSpace: "nowrap", fontSize: "14" }, value: this._formatTime(deployment.finished), format: 'YYYY-MM-DD HH:mm' }) }),
-          _react2.default.createElement(Divider, { inset: true, className: last ? "hidden" : null })
+          { className: 'deployment', key: index },
+          _react2.default.createElement(
+            'div',
+            { className: 'deploymentInfo' },
+            _react2.default.createElement(
+              'div',
+              null,
+              _react2.default.createElement(
+                'div',
+                { className: 'progressLabel' },
+                'Updating to:'
+              ),
+              deployment.artifact_name
+            ),
+            _react2.default.createElement(
+              'div',
+              null,
+              _react2.default.createElement(
+                'div',
+                { className: 'progressLabel' },
+                'Device group:'
+              ),
+              deployment.name
+            ),
+            _react2.default.createElement(
+              'div',
+              null,
+              _react2.default.createElement(
+                'div',
+                { className: 'progressLabel' },
+                'Started:'
+              ),
+              _react2.default.createElement(Time, { className: 'progressTime', value: this._formatTime(deployment.created), format: 'YYYY-MM-DD HH:mm' })
+            )
+          ),
+          _react2.default.createElement(RecentStats, { id: deployment.id })
         );
       }
     }, this);
     return _react2.default.createElement(
       'div',
-      { className: 'deployments-container' },
+      null,
       _react2.default.createElement(
         'div',
-        { className: 'dashboard-header subsection' },
+        { className: 'deployments-container' },
         _react2.default.createElement(
-          'h3',
-          null,
-          'Recent',
+          'div',
+          { className: 'dashboard-header subsection' },
           _react2.default.createElement(
-            'span',
-            { className: 'dashboard-number' },
-            recent.length
+            'h3',
+            null,
+            'Recent',
+            _react2.default.createElement(
+              'span',
+              { className: 'dashboard-number' },
+              recent.length
+            )
           )
-        )
-      ),
-      _react2.default.createElement(
-        'div',
-        null,
+        ),
         _react2.default.createElement(
-          List,
+          'div',
           null,
           recent
         ),
@@ -77134,13 +77191,9 @@ var Recent = _react2.default.createClass({
           )
         ),
         _react2.default.createElement(
-          'div',
-          null,
-          _react2.default.createElement(
-            _reactRouter.Link,
-            { to: '/deployments', className: 'float-right' },
-            'All deployments'
-          )
+          _reactRouter.Link,
+          { to: '/deployments', className: 'float-right' },
+          'All deployments'
         )
       )
     );
@@ -77153,7 +77206,54 @@ Recent.contextTypes = {
 
 module.exports = Recent;
 
-},{"../../actions/app-actions":752,"../deployments/groupdevices":766,"material-ui":257,"react":684,"react-router":506,"react-time":522}],762:[function(require,module,exports){
+},{"../../actions/app-actions":752,"../deployments/groupdevices":767,"./recentstats":762,"material-ui":257,"react":684,"react-router":506,"react-time":522}],762:[function(require,module,exports){
+'use strict';
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var AppActions = require('../../actions/app-actions');
+
+var RecentStats = _react2.default.createClass({
+  displayName: 'RecentStats',
+
+  getInitialState: function getInitialState() {
+    return {
+      stats: {
+        "successful": 0,
+        "failure": 0
+      }
+    };
+  },
+  componentDidMount: function componentDidMount() {
+    AppActions.getSingleDeploymentStats(this.props.id, function (stats) {
+      this.setState({ stats: stats });
+    }.bind(this));
+  },
+  render: function render() {
+    return _react2.default.createElement(
+      'div',
+      { className: 'deploymentStats' },
+      _react2.default.createElement(
+        'div',
+        null,
+        this.state.stats.successful
+      ),
+      _react2.default.createElement(
+        'div',
+        null,
+        this.state.stats.failure
+      )
+    );
+  }
+});
+
+module.exports = RecentStats;
+
+},{"../../actions/app-actions":752,"react":684}],763:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -77273,7 +77373,7 @@ Schedule.contextTypes = {
 
 module.exports = Schedule;
 
-},{"material-ui":257,"react":684,"react-router":506,"react-time":522}],763:[function(require,module,exports){
+},{"material-ui":257,"react":684,"react-router":506,"react-time":522}],764:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -77322,7 +77422,7 @@ var DateTime = _react2.default.createClass({
 
 module.exports = DateTime;
 
-},{"material-ui":257,"react":684}],764:[function(require,module,exports){
+},{"material-ui":257,"react":684}],765:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -77594,7 +77694,7 @@ var Deployments = _react2.default.createClass({
 
 module.exports = Deployments;
 
-},{"../../actions/app-actions":752,"../../stores/app-store":789,"./eventlog.js":765,"./recentdeployments.js":769,"./report.js":770,"./schedule.js":771,"./schedulebutton.js":772,"./scheduleform.js":773,"material-ui":257,"react":684}],765:[function(require,module,exports){
+},{"../../actions/app-actions":752,"../../stores/app-store":790,"./eventlog.js":766,"./recentdeployments.js":770,"./report.js":771,"./schedule.js":772,"./schedulebutton.js":773,"./scheduleform.js":774,"material-ui":257,"react":684}],766:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -77669,7 +77769,7 @@ var EventLog = _react2.default.createClass({
 
 module.exports = EventLog;
 
-},{"material-ui":257,"react":684}],766:[function(require,module,exports){
+},{"material-ui":257,"react":684}],767:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -77712,7 +77812,7 @@ var GroupDevices = _react2.default.createClass({
 
 module.exports = GroupDevices;
 
-},{"../../actions/app-actions":752,"react":684}],767:[function(require,module,exports){
+},{"../../actions/app-actions":752,"react":684}],768:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -77758,111 +77858,30 @@ var ProgressBar = _react2.default.createClass({
     // used for MOCK API because devices.length does not equal stats length
     var totalDevices = this.state.stats.successful + this.state.stats.failure + this.state.stats.inprogress + this.state.stats.pending;
 
-    var success = (this.state.stats.successful / totalDevices * 100).toFixed(0);
-    var failures = (this.state.stats.failure / totalDevices * 100).toFixed(0);
-    var progress = (this.state.stats.inprogress / totalDevices * 100).toFixed(0);
-    var percentDone = Number(success) + Number(failures);
+    var success = this.state.stats.successful;
+    var failures = this.state.stats.failure;
+    var progress = this.state.stats.inprogress;
 
     var progressBar = _react2.default.createElement(
-      'div',
-      { className: this.props.noPadding ? "tableBar progressBar" : "progressBar" },
-      _react2.default.createElement(
-        'div',
-        { className: 'lightgrey' },
-        _react2.default.createElement('div', { className: 'green float-left', style: { width: success + "%" } }),
-        _react2.default.createElement('div', { className: 'red float-left', style: { width: failures + "%" } }),
-        _react2.default.createElement('div', { className: 'grey float-left', style: { width: progress + "%" } })
-      ),
-      _react2.default.createElement(
-        'div',
-        { className: 'percentage' },
-        _react2.default.createElement(
-          'span',
-          null,
-          percentDone || 0,
-          '%'
-        )
-      )
-    );
-    return _react2.default.createElement(
       'div',
       null,
-      progressBar
-    );
-  }
-});
-
-module.exports = ProgressBar;
-
-},{"../../actions/app-actions":752,"material-ui":257,"react":684}],768:[function(require,module,exports){
-'use strict';
-
-var _react = require('react');
-
-var _react2 = _interopRequireDefault(_react);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var AppActions = require('../../actions/app-actions');
-
-// material ui
-var mui = require('material-ui');
-
-var ProgressBar = _react2.default.createClass({
-  displayName: 'ProgressBar',
-
-  getInitialState: function getInitialState() {
-    return {
-      devices: [],
-      stats: {
-        "successful": 0,
-        "pending": 0,
-        "inprogress": 0,
-        "failure": 0,
-        "noimage": 0
-      }
-    };
-  },
-  componentDidMount: function componentDidMount() {
-    AppActions.getSingleDeploymentStats(this.props.deployment.id, function (stats) {
-      this.setState({ stats: stats });
-    }.bind(this));
-    AppActions.getSingleDeploymentDevices(this.props.deployment.id, function (devices) {
-      this.setState({ devices: devices });
-      this.props.getDevices(devices.length, this.props.index);
-    }.bind(this));
-  },
-  _handleClick: function _handleClick() {},
-  _sendUpPercentage: function _sendUpPercentage(per) {
-    this.props.gotPercent(per);
-  },
-  render: function render() {
-    // used for MOCK API because devices.length does not equal stats length
-    var totalDevices = this.state.stats.successful + this.state.stats.failure + this.state.stats.inprogress + this.state.stats.pending;
-
-    var success = (this.state.stats.successful / totalDevices * 100).toFixed(0);
-    var failures = (this.state.stats.failure / totalDevices * 100).toFixed(0);
-    var progress = (this.state.stats.inprogress / totalDevices * 100).toFixed(0);
-    var percentDone = Number(success) + Number(failures);
-
-    var progressBar = _react2.default.createElement(
-      'div',
-      { className: this.props.noPadding ? "tableBar progressBar" : "progressBar" },
       _react2.default.createElement(
         'div',
-        { className: 'lightgrey' },
-        _react2.default.createElement('div', { className: 'green float-left', style: { width: success + "%" } }),
-        _react2.default.createElement('div', { className: 'red float-left', style: { width: failures + "%" } }),
-        _react2.default.createElement('div', { className: 'grey float-left', style: { width: progress + "%" } })
-      ),
-      _react2.default.createElement(
-        'div',
-        { className: 'percentage' },
+        null,
         _react2.default.createElement(
-          'span',
-          null,
-          percentDone || 0,
-          '%'
+          'div',
+          { className: 'green' },
+          success
+        ),
+        _react2.default.createElement(
+          'div',
+          { className: 'red' },
+          failures
+        ),
+        _react2.default.createElement(
+          'div',
+          { className: 'grey' },
+          progress
         )
       )
     );
@@ -77877,6 +77896,89 @@ var ProgressBar = _react2.default.createClass({
 module.exports = ProgressBar;
 
 },{"../../actions/app-actions":752,"material-ui":257,"react":684}],769:[function(require,module,exports){
+'use strict';
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var AppActions = require('../../actions/app-actions');
+
+// material ui
+var mui = require('material-ui');
+
+var ProgressBar = _react2.default.createClass({
+  displayName: 'ProgressBar',
+
+  getInitialState: function getInitialState() {
+    return {
+      devices: [],
+      stats: {
+        "successful": 0,
+        "pending": 0,
+        "inprogress": 0,
+        "failure": 0,
+        "noimage": 0
+      }
+    };
+  },
+  componentDidMount: function componentDidMount() {
+    AppActions.getSingleDeploymentStats(this.props.deployment.id, function (stats) {
+      this.setState({ stats: stats });
+    }.bind(this));
+    AppActions.getSingleDeploymentDevices(this.props.deployment.id, function (devices) {
+      this.setState({ devices: devices });
+      this.props.getDevices(devices.length, this.props.index);
+    }.bind(this));
+  },
+  _handleClick: function _handleClick() {},
+  _sendUpPercentage: function _sendUpPercentage(per) {
+    this.props.gotPercent(per);
+  },
+  render: function render() {
+    // used for MOCK API because devices.length does not equal stats length
+    var totalDevices = this.state.stats.successful + this.state.stats.failure + this.state.stats.inprogress + this.state.stats.pending;
+
+    var success = this.state.stats.successful;
+    var failures = this.state.stats.failure;
+    var progress = this.state.stats.inprogress;
+
+    var progressBar = _react2.default.createElement(
+      'div',
+      null,
+      _react2.default.createElement(
+        'div',
+        null,
+        _react2.default.createElement(
+          'div',
+          { className: 'green' },
+          success
+        ),
+        _react2.default.createElement(
+          'div',
+          { className: 'red' },
+          failures
+        ),
+        _react2.default.createElement(
+          'div',
+          { className: 'grey' },
+          progress
+        )
+      )
+    );
+    return _react2.default.createElement(
+      'div',
+      null,
+      progressBar
+    );
+  }
+});
+
+module.exports = ProgressBar;
+
+},{"../../actions/app-actions":752,"material-ui":257,"react":684}],770:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -78172,7 +78274,7 @@ var Recent = _react2.default.createClass({
 
 module.exports = Recent;
 
-},{"./groupdevices":766,"./progressbar":768,"./report.js":770,"./scheduleform":773,"material-ui":257,"react":684,"react-time":522}],770:[function(require,module,exports){
+},{"./groupdevices":767,"./progressbar":769,"./report.js":771,"./scheduleform":774,"material-ui":257,"react":684,"react-time":522}],771:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -78458,7 +78560,7 @@ var Report = _react2.default.createClass({
 
 module.exports = Report;
 
-},{"../../actions/app-actions":752,"material-ui":257,"react":684,"react-router":506,"react-time":522}],771:[function(require,module,exports){
+},{"../../actions/app-actions":752,"material-ui":257,"react":684,"react-router":506,"react-time":522}],772:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -78619,7 +78721,7 @@ var Schedule = _react2.default.createClass({
 
 module.exports = Schedule;
 
-},{"material-ui":257,"react":684,"react-time":522}],772:[function(require,module,exports){
+},{"material-ui":257,"react":684,"react-time":522}],773:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -78660,7 +78762,7 @@ var ScheduleButton = _react2.default.createClass({
 
 module.exports = ScheduleButton;
 
-},{"material-ui":257,"react":684}],773:[function(require,module,exports){
+},{"material-ui":257,"react":684}],774:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -79036,7 +79138,7 @@ var ScheduleForm = _react2.default.createClass({
 
 module.exports = ScheduleForm;
 
-},{"../../stores/app-store":789,"./datetime.js":763,"material-ui":257,"react":684,"react-router":506,"react-search-input":513}],774:[function(require,module,exports){
+},{"../../stores/app-store":790,"./datetime.js":764,"material-ui":257,"react":684,"react-router":506,"react-search-input":513}],775:[function(require,module,exports){
 'use strict';
 
 var _React$createClass;
@@ -79669,7 +79771,7 @@ var DeviceList = _react2.default.createClass((_React$createClass = {
 
 module.exports = DeviceList;
 
-},{"../../actions/app-actions":752,"../../stores/app-store":789,"./filters":776,"./selecteddevices":778,"material-ui":257,"material-ui/lib/snackbar":287,"react":684,"react-dom":476}],775:[function(require,module,exports){
+},{"../../actions/app-actions":752,"../../stores/app-store":790,"./filters":777,"./selecteddevices":779,"material-ui":257,"material-ui/lib/snackbar":287,"react":684,"react-dom":476}],776:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -79844,7 +79946,7 @@ var Devices = _react2.default.createClass({
 
 module.exports = Devices;
 
-},{"../../actions/app-actions":752,"../../stores/app-store":789,"./devicelist":774,"./groups":777,"./unauthorized":779,"react":684,"react-router":506}],776:[function(require,module,exports){
+},{"../../actions/app-actions":752,"../../stores/app-store":790,"./devicelist":775,"./groups":778,"./unauthorized":780,"react":684,"react-router":506}],777:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -80036,7 +80138,7 @@ var Filters = _react2.default.createClass({
 
 module.exports = Filters;
 
-},{"material-ui":257,"react":684}],777:[function(require,module,exports){
+},{"material-ui":257,"react":684}],778:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -80344,7 +80446,7 @@ var Groups = _react2.default.createClass({
 
 module.exports = Groups;
 
-},{"../../actions/app-actions":752,"../../stores/app-store":789,"material-ui":257,"material-ui/lib/Subheader":211,"react":684,"react-search-input":513}],778:[function(require,module,exports){
+},{"../../actions/app-actions":752,"../../stores/app-store":790,"material-ui":257,"material-ui/lib/Subheader":211,"react":684,"react-search-input":513}],779:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -80598,7 +80700,7 @@ var SelectedDevices = _react2.default.createClass({
 
 module.exports = SelectedDevices;
 
-},{"../../actions/app-actions":752,"../../stores/app-store":789,"../deployments/scheduleform":773,"material-ui":257,"react":684,"react-router":506,"react-tag-input":516}],779:[function(require,module,exports){
+},{"../../actions/app-actions":752,"../../stores/app-store":790,"../deployments/scheduleform":774,"material-ui":257,"react":684,"react-router":506,"react-tag-input":516}],780:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -80794,7 +80896,7 @@ var Authorized = _react2.default.createClass({
 
 module.exports = Authorized;
 
-},{"../../actions/app-actions":752,"material-ui":257,"react":684,"react-dom":476}],780:[function(require,module,exports){
+},{"../../actions/app-actions":752,"material-ui":257,"react":684,"react-dom":476}],781:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -80938,7 +81040,7 @@ Header.contextTypes = {
 
 module.exports = Header;
 
-},{"material-ui":257,"material-ui/lib/font-icon":252,"material-ui/lib/icon-button":256,"material-ui/lib/menus/icon-menu":264,"material-ui/lib/menus/menu-item":265,"material-ui/lib/toolbar/toolbar":341,"material-ui/lib/toolbar/toolbar-group":338,"material-ui/lib/toolbar/toolbar-title":340,"react":684,"react-router":506}],781:[function(require,module,exports){
+},{"material-ui":257,"material-ui/lib/font-icon":252,"material-ui/lib/icon-button":256,"material-ui/lib/menus/icon-menu":264,"material-ui/lib/menus/menu-item":265,"material-ui/lib/toolbar/toolbar":341,"material-ui/lib/toolbar/toolbar-group":338,"material-ui/lib/toolbar/toolbar-title":340,"react":684,"react-router":506}],782:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -80961,7 +81063,7 @@ var DeploymentButton = _react2.default.createClass({
 
 module.exports = DeploymentButton;
 
-},{"material-ui":257,"react":684}],782:[function(require,module,exports){
+},{"material-ui":257,"react":684}],783:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -81526,7 +81628,7 @@ var Repository = _react2.default.createClass({
 
 module.exports = Repository;
 
-},{"../../actions/app-actions":752,"../../stores/app-store":789,"../deployments/scheduleform":773,"./deploymentbutton.js":781,"./selectedimage.js":783,"material-ui":257,"react":684,"react-addons-update":365,"react-dom":476,"react-file-input":478,"react-router":506,"react-search-input":513,"react-tag-input":516,"react-time":522}],783:[function(require,module,exports){
+},{"../../actions/app-actions":752,"../../stores/app-store":790,"../deployments/scheduleform":774,"./deploymentbutton.js":782,"./selectedimage.js":784,"material-ui":257,"react":684,"react-addons-update":365,"react-dom":476,"react-file-input":478,"react-router":506,"react-search-input":513,"react-tag-input":516,"react-time":522}],784:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -81802,7 +81904,7 @@ SelectedImage.contextTypes = {
 
 module.exports = SelectedImage;
 
-},{"material-ui":257,"react":684,"react-router":506,"react-tag-input":516,"react-time":522}],784:[function(require,module,exports){
+},{"material-ui":257,"react":684,"react-router":506,"react-tag-input":516,"react-time":522}],785:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -81898,7 +82000,7 @@ var Software = _react2.default.createClass({
 
 module.exports = Software;
 
-},{"../../actions/app-actions":752,"../../stores/app-store":789,"../../stores/local-store":790,"./repository.js":782,"react":684,"react-router":506}],785:[function(require,module,exports){
+},{"../../actions/app-actions":752,"../../stores/app-store":790,"../../stores/local-store":791,"./repository.js":783,"react":684,"react-router":506}],786:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -81962,7 +82064,7 @@ module.exports = _react2.default.createElement(
   )
 );
 
-},{"../components/app":755,"../components/dashboard/dashboard":757,"../components/deployments/deployments":764,"../components/devices/devices":775,"../components/software/software":784,"react":684,"react-router":506}],786:[function(require,module,exports){
+},{"../components/app":755,"../components/dashboard/dashboard":757,"../components/deployments/deployments":765,"../components/devices/devices":776,"../components/software/software":785,"react":684,"react-router":506}],787:[function(require,module,exports){
 'use strict';
 
 module.exports = {
@@ -81984,7 +82086,7 @@ module.exports = {
   SET_LOCAL_STORAGE: 'SET_LOCAL_STORAGE'
 };
 
-},{}],787:[function(require,module,exports){
+},{}],788:[function(require,module,exports){
 'use strict';
 
 var Dispatcher = require('flux').Dispatcher;
@@ -82002,7 +82104,7 @@ var AppDispatcher = assign(new Dispatcher(), {
 
 module.exports = AppDispatcher;
 
-},{"flux":94,"react/lib/Object.assign":544}],788:[function(require,module,exports){
+},{"flux":94,"react/lib/Object.assign":544}],789:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -82033,7 +82135,7 @@ var routes = require('./config/routes');
   routes
 ), document.getElementById('main'));
 
-},{"./config/routes":785,"react":684,"react-dom":476,"react-router":506,"react-tap-event-plugin":520}],789:[function(require,module,exports){
+},{"./config/routes":786,"react":684,"react-dom":476,"react-router":506,"react-tap-event-plugin":520}],790:[function(require,module,exports){
 'use strict';
 
 var AppDispatcher = require('../dispatchers/app-dispatcher');
@@ -82090,7 +82192,16 @@ var _groups = [{
 
 /* Temp local devices */
 
-var _alldevices = [];
+var _alldevices = [{
+  'id': 1,
+  'name': '00a0c91e6-7dec-11d0-a765-f81d4faebf1',
+  'device_type': "Raspberry Pi 3",
+  'arch': 'ARMv8 Cortex-A53',
+  'status': 'Connected',
+  'artifact_name': 'Application 0.0.2',
+  'groups': [1],
+  'tags': []
+}];
 
 var _alldevices1 = [{
   'id': 1,
@@ -82326,7 +82437,7 @@ function _addGroup(group, idx) {
 
 function _getDeviceHealth() {
   var health = {};
-  var down = collectWithAttr(_alldevices, 'status', 'Down');
+  var down = collectWithAttr(_alldevices, 'status', 'Not connected');
   health.down = down.length;
   health.up = _alldevices.length - health.down;
   health.total = _alldevices.length;
@@ -82345,7 +82456,7 @@ function _authorizeDevices(devices) {
 
     if (idx === undefined) {
       devices[i].groups.push(1);
-      devices[i].status = "Up";
+      devices[i].status = devices[0].name.indexOf("4f9") ? "Not connected" : "Connected";
       _alldevices.push(devices[i]);
       _groups[0].devices.push(devices[i].id);
 
@@ -82777,7 +82888,7 @@ var AppStore = assign(EventEmitter.prototype, {
 
 module.exports = AppStore;
 
-},{"../constants/app-constants":786,"../dispatchers/app-dispatcher":787,"events":92,"react/lib/Object.assign":544}],790:[function(require,module,exports){
+},{"../constants/app-constants":787,"../dispatchers/app-dispatcher":788,"events":92,"react/lib/Object.assign":544}],791:[function(require,module,exports){
 'use strict';
 
 /*
@@ -82824,7 +82935,7 @@ var LocalStore = assign(EventEmitter.prototype, {
 
 module.exports = LocalStore;
 
-},{"../constants/app-constants":786,"../dispatchers/app-dispatcher":787,"events":92,"react/lib/Object.assign":544}],791:[function(require,module,exports){
+},{"../constants/app-constants":787,"../dispatchers/app-dispatcher":788,"events":92,"react/lib/Object.assign":544}],792:[function(require,module,exports){
 'use strict';
 
 var _colorManipulator = require('material-ui/lib/utils/color-manipulator');
@@ -82858,4 +82969,4 @@ module.exports = {
   }
 };
 
-},{"material-ui/lib/styles/colors":291,"material-ui/lib/styles/spacing":294,"material-ui/lib/utils/color-manipulator":348}]},{},[788]);
+},{"material-ui/lib/styles/colors":291,"material-ui/lib/styles/spacing":294,"material-ui/lib/utils/color-manipulator":348}]},{},[789]);
