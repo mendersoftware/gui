@@ -77239,13 +77239,33 @@ var RecentStats = _react2.default.createClass({
       { className: 'deploymentStats' },
       _react2.default.createElement(
         'div',
-        null,
-        this.state.stats.successful
+        { className: 'resultIcons' },
+        _react2.default.createElement('img', { src: 'assets/img/check.png' }),
+        _react2.default.createElement(
+          'div',
+          null,
+          this.state.stats.successful
+        ),
+        _react2.default.createElement(
+          'span',
+          { className: 'iconStatLabel' },
+          'Successful'
+        )
       ),
       _react2.default.createElement(
         'div',
-        null,
-        this.state.stats.failure
+        { className: 'resultIcons' },
+        _react2.default.createElement('img', { className: this.state.stats.failure ? "alert" : null, src: 'assets/img/warning.png' }),
+        _react2.default.createElement(
+          'div',
+          null,
+          this.state.stats.failure
+        ),
+        _react2.default.createElement(
+          'span',
+          { className: 'iconStatLabel' },
+          'Failed'
+        )
       )
     );
   }

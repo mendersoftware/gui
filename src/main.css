@@ -744,13 +744,49 @@ span.day {
 .deployments-container .deployment {
   display: inline-block;
   width: 25%;
-  margin-right: 2%;
+  margin-right: 15px;
   margin-bottom: 15px;
   min-width: 220px;
-  padding: 20px 16px;
+  max-width: 320px;
+  padding: 20px;
   min-height: 100px;
   border-radius: 4px;
   border: 1px solid #eaf4f3;
+}
+.deployments-container .resultIcons {
+  display: inline-block;
+  width: 40%;
+  padding: 20px 5%;
+  font-size: 2em;
+  position: relative;
+}
+.deployments-container .resultIcons img {
+  display: inline;
+  margin: 10px 0;
+  vertical-align: middle;
+  width: 40%;
+  padding: 0 5%;
+}
+.deployments-container .resultIcons div {
+  vertical-align: middle;
+  text-align: center;
+  width: 40%;
+  padding: 0 5%;
+  display: inline-block;
+}
+.deployments-container .resultIcons span.iconStatLabel {
+  position: absolute;
+  width: 80%;
+  left: 10%;
+  bottom: 0;
+  font-size: 12px;
+  color: #c7c7c7;
+  text-align: center;
+}
+@media (min-width: 1700px) {
+  .deployments-container .progressLabel {
+    margin-right: 35px;
+  }
 }
 .fail {
   color: #6A150C;
@@ -793,6 +829,58 @@ span.day {
   }
   100% {
     opacity: 1;
+  }
+}
+div.shake-alert {
+  -webkit-animation: shake 0.72s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+          animation: shake 0.72s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+  -webkit-transform: translate3d(0, 0, 0);
+          transform: translate3d(0, 0, 0);
+}
+@-webkit-keyframes shake {
+  10%,
+  90% {
+    -webkit-transform: translate3d(-1px, 0, 0);
+            transform: translate3d(-1px, 0, 0);
+  }
+  20%,
+  80% {
+    -webkit-transform: translate3d(1px, 0, 0);
+            transform: translate3d(1px, 0, 0);
+  }
+  30%,
+  50%,
+  70% {
+    -webkit-transform: translate3d(-2px, 0, 0);
+            transform: translate3d(-2px, 0, 0);
+  }
+  40%,
+  60% {
+    -webkit-transform: translate3d(2px, 0, 0);
+            transform: translate3d(2px, 0, 0);
+  }
+}
+@keyframes shake {
+  10%,
+  90% {
+    -webkit-transform: translate3d(-1px, 0, 0);
+            transform: translate3d(-1px, 0, 0);
+  }
+  20%,
+  80% {
+    -webkit-transform: translate3d(1px, 0, 0);
+            transform: translate3d(1px, 0, 0);
+  }
+  30%,
+  50%,
+  70% {
+    -webkit-transform: translate3d(-2px, 0, 0);
+            transform: translate3d(-2px, 0, 0);
+  }
+  40%,
+  60% {
+    -webkit-transform: translate3d(2px, 0, 0);
+            transform: translate3d(2px, 0, 0);
   }
 }
 /* LESS MIXINS */

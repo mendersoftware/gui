@@ -844,13 +844,56 @@ span.month, span.day {
   .deployment {
     display: inline-block;
     width: 25%;
-    margin-right: 2%;
+    margin-right: 15px;
     margin-bottom: 15px;
     min-width: 220px;
-    padding: 20px 16px;
+    max-width: 320px;
+    padding: 20px;
     min-height: 100px;
     border-radius: 4px;
     border: 1px solid @lightergrey;
+  }
+
+
+
+  .resultIcons {
+    display: inline-block;
+    width: 40%;
+    padding: 20px 5%;
+    font-size: 2em;
+    position: relative;
+
+    img {
+      display: inline;
+      margin: 10px 0;
+      vertical-align: middle;
+      width: 40%;
+      padding: 0 5%;
+    }
+
+    div {
+      vertical-align: middle;
+      text-align: center;
+      width: 40%;
+      padding: 0 5%;
+      display: inline-block;
+    }
+
+    span.iconStatLabel {
+      position: absolute;
+      width: 80%;
+      left: 10%;
+      bottom: 0;
+      font-size: 12px;
+      color: @grey;
+      text-align: center;
+    }
+  }
+}
+
+@media (min-width: 1700px) {
+  .deployments-container .progressLabel {
+    margin-right: 35px;
   }
 }
 
@@ -895,6 +938,29 @@ span.month, span.day {
     opacity: 1;
   }
 } 
+
+div.shake-alert {
+  animation: shake 0.72s cubic-bezier(.36,.07,.19,.97) both;
+  transform: translate3d(0, 0, 0);
+}
+
+@keyframes shake {
+  10%, 90% {
+    transform: translate3d(-1px, 0, 0);
+  }
+  
+  20%, 80% {
+    transform: translate3d(1px, 0, 0);
+  }
+
+  30%, 50%, 70% {
+    transform: translate3d(-2px, 0, 0);
+  }
+
+  40%, 60% {
+    transform: translate3d(2px, 0, 0);
+  }
+}
 
 
 /* LESS MIXINS */
