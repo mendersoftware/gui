@@ -48,6 +48,9 @@ span.link:hover {
 .nowrap {
   white-space: nowrap;
 }
+.capitalized {
+  text-transform: capitalize;
+}
 .clear {
   clear: both;
 }
