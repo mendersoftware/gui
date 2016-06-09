@@ -41,7 +41,7 @@ var Recent = React.createClass({
           </FontIcon>
         );
         return (
-          <div className="deployment" key={index}>
+          <div onClick={this._clickHandle.bind(null, deployment.id)} className="deployment" key={index}>
             <div className="deploymentInfo">
               <div><div className="progressLabel">Updating to:</div>{deployment.artifact_name}</div>
               <div><div className="progressLabel">Device group:</div>{deployment.name}</div>

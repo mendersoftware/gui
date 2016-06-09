@@ -1,15 +1,16 @@
 html {
   height: 100%;
+  min-width: 1000px;
 }
 body {
   min-height: 100%;
 }
 /* General */
 .green {
-  color: #007647;
+  color: #009E73;
 }
 .red {
-  color: #6A150C;
+  color: #8F0D0D;
 }
 .lightestgrey {
   background-color: #F7F7F7;
@@ -253,11 +254,11 @@ span.link:hover {
 }
 .material-icons.green {
   background: none;
-  color: #007647 !important;
+  color: #009E73 !important;
 }
 .material-icons.red {
   background: none;
-  color: #6A150C !important;
+  color: #8F0D0D !important;
 }
 .absoluteTextfieldButton {
   position: absolute;
@@ -481,7 +482,9 @@ tr.expand td div.expanded {
 }
 tr.expand td div.expanded > div {
   -webkit-animation: fadein 0.5s 1;
-          animation: fadein 0.5s 1;
+  -moz-animation: fadein 0.5s 1;
+  -ms-animation: fadein 0.5s 1;
+  -o-animation: fadein 0.5s 1;
   background-color: #ffffff;
 }
 tr.expand td:first-child > div div {
@@ -506,7 +509,9 @@ tr.expand.devices td div.expanded {
   padding-left: 30px;
   background-color: rgba(255, 255, 255, 0.8);
   -webkit-animation: fadein 0.3s 1;
-          animation: fadein 0.3s 1;
+  -moz-animation: fadein 0.3s 1;
+  -ms-animation: fadein 0.3s 1;
+  -o-animation: fadein 0.3s 1;
   border-bottom-left-radius: 2px;
   border-top-left-radius: 2px;
 }
@@ -588,13 +593,17 @@ input[type="text"].fileInput:last-child {
 .leftDashboard {
   width: 71%;
   float: left;
+  border-right: 1px solid #d4e9e7;
+  padding-right: 30px;
 }
 .rightDashboard {
   width: 25%;
-  float: right;
-  min-height: 50vh;
-  border-left: 1px solid #d4e9e7;
-  padding-left: 2%;
+  float: left;
+}
+.rightDashboard .right {
+  position: absolute;
+  height: 100%;
+  padding: 0 30px;
 }
 .health {
   position: relative;
@@ -626,7 +635,6 @@ input[type="text"].fileInput:last-child {
   font-size: 4vw;
   font-weight: bold;
   position: relative;
-  top: -2px;
   display: block;
 }
 .dashboard-placeholder {
@@ -716,8 +724,150 @@ span.day {
   padding-bottom: 45px;
   border-bottom: 1px solid #d4e9e7;
 }
-.progress-container hr {
-  background-color: #eaf4f3 !important;
+.progress-container .device-info {
+  position: absolute;
+  width: 25%;
+  right: 0;
+  height: 106px;
+  background-color: #ffffff;
+  top: 0;
+  z-index: 300;
+  padding: 0 30px;
+  box-sizing: border-box;
+  display: none;
+  border-left: 1px #679BA5 solid;
+  font-size: 12px;
+}
+.progress-container .device-info.show {
+  display: block;
+  -webkit-animation: fadein 0.2s 1;
+  -moz-animation: fadein 0.2s 1;
+  -ms-animation: fadein 0.2s 1;
+  -o-animation: fadein 0.2s 1;
+}
+.progress-container .key {
+  color: #c7c7c7;
+  font-size: 12px;
+  clear: both;
+  vertical-align: middle;
+  margin-top: 10px;
+}
+.progress-container .key .bubble {
+  width: 10px;
+  height: 10px;
+  background-color: #d4e9e7;
+  border-radius: 50%;
+  display: inline-block;
+  margin-left: 6px;
+  margin-right: 2px;
+  margin-top: -2px;
+  vertical-align: middle;
+  position: relative;
+}
+.progress-container .key .bubble.successful {
+  background-color: #009E73;
+}
+.progress-container .key .bubble.failure {
+  background-color: #8F0D0D;
+}
+.progress-container .key .bubble.pending {
+  -webkit-animation: pulse 3s infinite;
+  -moz-animation: pulse 3s infinite;
+  -ms-animation: pulse 3s infinite;
+  -o-animation: pulse 3s infinite;
+}
+.progress-container .key .bubble.inprogress {
+  background-color: #acd4d0;
+}
+.progress-container .key .bubble.inprogress:after {
+  content: "";
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  border-radius: 50%;
+  background-image: -webkit-linear-gradient(right, transparent 50%, #d4e9e7 50%), -webkit-linear-gradient(45deg, #d4e9e7 50%, transparent 50%);
+  background-image: linear-gradient(-90deg, transparent 50%, #d4e9e7 50%), linear-gradient(45deg, #d4e9e7 50%, transparent 50%);
+}
+.progress-container .progressHeader {
+  position: absolute;
+  top: -25px;
+  left: 340px;
+  color: #757575;
+  font-size: 14px;
+}
+.progress-container .bubbles-contain {
+  height: 100px;
+  width: 350px;
+  position: relative;
+  top: -10px;
+  padding-left: 30px;
+}
+.progress-container .bubbles-contain > div {
+  float: left;
+  margin: 0 10px 10px 0;
+  position: relative;
+  cursor: pointer;
+}
+.progress-container .bubbles-contain > div:hover:after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 110%;
+  width: 500px;
+  border-bottom: 1px #679BA5 solid;
+  z-index: 200;
+  -webkit-animation: fadein 0.6s 1;
+  -moz-animation: fadein 0.6s 1;
+  -ms-animation: fadein 0.6s 1;
+  -o-animation: fadein 0.6s 1;
+}
+.progress-container .bubbles-contain .bubble {
+  border-radius: 50%;
+  background-color: #c7e2df;
+  position: relative;
+  display: block;
+  height: 100%;
+  width: 100%;
+}
+.progress-container .bubbles-contain .bubble:hover {
+  -webkit-transform: scale(1.15);
+  -moz-transform: scale(1.15);
+  -ms-transform: scale(1.15);
+  -o-transform: scale(1.15);
+  -webkit-transition: all 0.2s ease;
+  -moz-transition: all 0.2s ease;
+  -ms-transition: all 0.2s ease;
+  -o-transition: all 0.2s ease;
+  border: 1px solid #679BA5;
+}
+.progress-container .bubbles-contain .inprogress .bubble {
+  background-color: #c3e0de;
+}
+.progress-container .bubbles-contain .inprogress .bubble:after {
+  content: "";
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  border-radius: 50%;
+  background-image: -webkit-linear-gradient(bottom, transparent 50%, #d4e9e7 50%), -webkit-linear-gradient(77deg, #d4e9e7 50%, transparent 50%);
+  background-image: linear-gradient(0deg, transparent 50%, #d4e9e7 50%), linear-gradient(13deg, #d4e9e7 50%, transparent 50%);
+  -webkit-animation: spin 1.5s ease-out infinite;
+  -moz-animation: spin 1.5s ease-out infinite;
+  -ms-animation: spin 1.5s ease-out infinite;
+  -o-animation: spin 1.5s ease-out infinite;
+}
+.progress-container .bubbles-contain .pending .bubble {
+  background-color: #eaf4f3;
+  -webkit-animation: pulse 2.8s infinite;
+  -moz-animation: pulse 2.8s infinite;
+  -ms-animation: pulse 2.8s infinite;
+  -o-animation: pulse 2.8s infinite;
+}
+.progress-container .bubbles-contain .failure .bubble {
+  background-color: #8F0D0D;
+}
+.progress-container .bubbles-contain .successful .bubble {
+  background-color: #009E73;
 }
 .progress-container .deploymentInfo,
 .deployments-container .deploymentInfo {
@@ -738,6 +888,14 @@ span.day {
   width: 100px;
   display: inline-block;
 }
+.progress-container .deployment {
+  padding-top: 50px;
+  padding-bottom: 10px;
+  margin-bottom: 15px;
+  border-radius: 4px;
+  border: 1px solid #eaf4f3;
+  overflow: hidden;
+}
 .deployments-container {
   padding-bottom: 45px;
 }
@@ -752,6 +910,19 @@ span.day {
   min-height: 100px;
   border-radius: 4px;
   border: 1px solid #eaf4f3;
+  cursor: pointer;
+}
+.deployments-container .deployment:hover {
+  -webkit-transition: all 0.2s ease;
+  -moz-transition: all 0.2s ease;
+  -ms-transition: all 0.2s ease;
+  -o-transition: all 0.2s ease;
+  -webkit-transform: scale(1.005);
+  -moz-transform: scale(1.005);
+  -ms-transform: scale(1.005);
+  -o-transform: scale(1.005);
+  border: 1px solid #d4e9e7;
+  background-color: #fdfdfe;
 }
 .deployments-container .resultIcons {
   display: inline-block;
@@ -789,16 +960,16 @@ span.day {
   }
 }
 .fail {
-  color: #6A150C;
+  color: #8F0D0D;
 }
 .fail > div {
   background-color: #F6F1F1;
 }
 .fail div {
-  color: #6A150C !important;
+  color: #8F0D0D !important;
 }
 .fail .material-icons {
-  color: #6A150C !important;
+  color: #8F0D0D !important;
 }
 .slider {
   padding: 15px 15px 5% 30px;
@@ -829,6 +1000,44 @@ span.day {
   }
   100% {
     opacity: 1;
+  }
+}
+@-webkit-keyframes pulse {
+  0% {
+    background-color: #eaf4f3;
+  }
+  50% {
+    background-color: #f7fbfb;
+  }
+  100% {
+    background-color: #eaf4f3;
+  }
+}
+@keyframes pulse {
+  0% {
+    background-color: #eaf4f3;
+  }
+  50% {
+    background-color: #f7fbfb;
+  }
+  100% {
+    background-color: #eaf4f3;
+  }
+}
+@-webkit-keyframes spin {
+  100% {
+    -webkit-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -ms-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+  }
+}
+@keyframes spin {
+  100% {
+    -webkit-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -ms-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
   }
 }
 div.shake-alert {

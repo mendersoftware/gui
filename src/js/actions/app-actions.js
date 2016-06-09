@@ -2,8 +2,8 @@ var AppConstants = require('../constants/app-constants');
 var AppDispatcher = require('../dispatchers/app-dispatcher');
 var Api = require('../api/api');
 var DeploymentsApi = require('../api/deployments-api');
-var apiUrl = "http://private-62004-deployment1.apiary-mock.com/";
-var deploymentsApiUrl = "http://private-62004-deployment1.apiary-mock.com/";
+var apiUrl = "http://private-ebf220-deployments1.apiary-mock.com/api/0.0.1/";
+var deploymentsApiUrl = "http://private-ebf220-deployments1.apiary-mock.com/api/0.0.1/";
 
 
 var AppActions = {

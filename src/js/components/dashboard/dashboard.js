@@ -68,7 +68,7 @@ var Dashboard = React.createClass({
       }
     }
     return (
-      <div className="contentContainer">
+      <div className="contentContainer dashboard">
         <div>
           <div className={this.state.unauthorized.length && !this.state.hideReview ? "authorize onboard margin-bottom" : "hidden" }>
             <div className="close" onClick={this._setStorage.bind(null, "reviewDevices", true)}/>
@@ -79,8 +79,10 @@ var Dashboard = React.createClass({
             <Deployments clickHandle={this._handleClick} progress={this.state.progress} recent={this.state.recent} />
           </div>
           <div className="rightDashboard">
-            <Health clickHandle={this._handleClick} health={this.state.health} />
-            <Activity activity={this.state.activity} />
+            <div className="right">
+              <Health clickHandle={this._handleClick} health={this.state.health} />
+              <Activity activity={this.state.activity} />
+            </div>
           </div>
         </div>
       </div>

@@ -420,8 +420,8 @@ var _activityLog = [
 function _getRecentDeployments(time) {
   var recent = [];
   for (var i=0;i<_allDeployments.length;i++) {
-    var created = new Date(_allDeployments[i].created.replace(/-/g, '/').replace(/ UTC/, ''));
-    var finished = new Date(_allDeployments[i].finished.replace(/-/g, '/').replace(/ UTC/, ''));
+    var created = new Date(_allDeployments[i].created);
+    var finished = new Date(_allDeployments[i].finished);
     if (created<time && finished<time) {
       recent.push(_allDeployments[i]);
     }
@@ -432,8 +432,8 @@ function _getRecentDeployments(time) {
 function _getProgressDeployments(time) {
   var progress = [];
   for (var i=0;i<_allDeployments.length;i++) {
-    var created = new Date(_allDeployments[i].created.replace(/-/g, '/').replace(/ UTC/, ''));
-    var finished = new Date(_allDeployments[i].finished.replace(/-/g, '/').replace(/ UTC/, ''));
+    var created = new Date(_allDeployments[i].created);
+    var finished = new Date(_allDeployments[i].finished);
     /*
     * CHANGE FOR MOCKING API
     */ 
