@@ -874,6 +874,19 @@ span.day {
 }
 .progress-container .bubbles-contain .failure .bubble {
   background-color: #8F0D0D;
+  /* &:after {
+        content:"";
+        position: absolute;
+        color: #ffffff;
+        background-image: url('../assets/img/warning_white.png');
+        background-repeat: no-repeat;
+        background-size: contain;
+        width: 60%;
+        top: 20%;
+        left: 20%;
+        height: 60%;
+        z-index: 400;
+      }*/
 }
 .progress-container .bubbles-contain .successful .bubble {
   background-color: #009E73;

@@ -77277,21 +77277,6 @@ var RecentStats = _react2.default.createClass({
       _react2.default.createElement(
         'div',
         { className: 'resultIcons' },
-        _react2.default.createElement('img', { src: 'assets/img/check.png' }),
-        _react2.default.createElement(
-          'div',
-          null,
-          this.state.stats.successful
-        ),
-        _react2.default.createElement(
-          'span',
-          { className: 'iconStatLabel' },
-          'Successful'
-        )
-      ),
-      _react2.default.createElement(
-        'div',
-        { className: 'resultIcons' },
         _react2.default.createElement('img', { className: this.state.stats.failure ? "alert" : null, src: 'assets/img/warning.png' }),
         _react2.default.createElement(
           'div',
@@ -77302,6 +77287,21 @@ var RecentStats = _react2.default.createClass({
           'span',
           { className: 'iconStatLabel' },
           'Failed'
+        )
+      ),
+      _react2.default.createElement(
+        'div',
+        { className: 'resultIcons' },
+        _react2.default.createElement('img', { src: 'assets/img/check.png' }),
+        _react2.default.createElement(
+          'div',
+          null,
+          this.state.stats.successful
+        ),
+        _react2.default.createElement(
+          'span',
+          { className: 'iconStatLabel' },
+          'Successful'
         )
       )
     );
