@@ -76839,7 +76839,7 @@ var Health = _react2.default.createClass({
         _react2.default.createElement(
           'h2',
           null,
-          'Devices ',
+          'Device heartbeats ',
           _react2.default.createElement(
             'span',
             { className: 'dashboard-number' },
@@ -76872,6 +76872,26 @@ var Health = _react2.default.createClass({
             _reactRouter.Link,
             { to: '/devices/' + down, className: 'float-right' },
             'View devices'
+          )
+        ),
+        _react2.default.createElement(
+          'div',
+          { style: { padding: "0 4%" }, className: this.props.health.down ? "hidden" : "margin-bottom margin-top" },
+          _react2.default.createElement(
+            'div',
+            { className: 'health-icon healthy' },
+            _react2.default.createElement('img', { src: 'assets/img/check.png' })
+          ),
+          _react2.default.createElement(
+            'div',
+            { className: 'health-text' },
+            _react2.default.createElement(
+              'span',
+              null,
+              'All ',
+              this.props.health.total,
+              ' of your devices are reporting'
+            )
           )
         ),
         _react2.default.createElement(
@@ -77164,9 +77184,9 @@ var Recent = _react2.default.createClass({
               _react2.default.createElement(
                 'div',
                 { className: 'progressLabel' },
-                'Started:'
+                'Finished:'
               ),
-              _react2.default.createElement(Time, { className: 'progressTime', value: this._formatTime(deployment.created), format: 'YYYY-MM-DD HH:mm' })
+              _react2.default.createElement(Time, { className: 'progressTime', value: this._formatTime(deployment.finished), format: 'YYYY-MM-DD HH:mm' })
             )
           ),
           _react2.default.createElement(RecentStats, { id: deployment.id })

@@ -614,27 +614,33 @@ input[type="text"].fileInput:last-child {
 .health .health-panel {
   margin: 15px 0;
   box-sizing: border-box;
-  padding: 3% 5% 6%;
+  padding: 5% 5% 13%;
   min-height: 100px;
   border-radius: 4px;
   border: 1px solid #eaf4f3;
 }
-.health .health-panel .health-icon {
-  width: 50%;
-}
-.health .health-panel .health-text {
-  width: 50%;
-  text-align: center;
-}
 .health .health-panel a {
-  margin-top: -2%;
+  margin-top: 5%;
 }
-.health .health-panel span {
+.health .health-icon {
+  width: 33%;
+  display: inline-block;
+}
+.health .health-icon img {
+  display: block;
+  margin: auto;
+}
+.health .health-text {
+  width: 66%;
+  text-align: center;
+  display: inline-block;
+}
+.health .health-text span {
   font-size: 20px;
   vertical-align: text-top;
-  font-size: 1.1vw;
+  font-size: 16px;
 }
-.health .health-panel .number {
+.health .health-text .number {
   font-size: 4vw;
   font-weight: bold;
   position: relative;

@@ -45,7 +45,7 @@ var Recent = React.createClass({
             <div className="deploymentInfo">
               <div><div className="progressLabel">Updating to:</div>{deployment.artifact_name}</div>
               <div><div className="progressLabel">Device group:</div><span className="capitalized">{deployment.name}</span></div>
-              <div><div className="progressLabel">Started:</div><Time className="progressTime" value={this._formatTime(deployment.created)} format="YYYY-MM-DD HH:mm" /></div>
+              <div><div className="progressLabel">Finished:</div><Time className="progressTime" value={this._formatTime(deployment.finished)} format="YYYY-MM-DD HH:mm" /></div>
             </div>
             <RecentStats id={deployment.id} />
           </div>

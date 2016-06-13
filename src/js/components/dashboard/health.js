@@ -11,7 +11,7 @@ var Health = React.createClass({
     return (
       <div className="health margin-bottom-large">
         <div className="dashboard-header">
-          <h2>Devices <span className="dashboard-number">{this.props.health.total}</span></h2>
+          <h2>Device heartbeats <span className="dashboard-number">{this.props.health.total}</span></h2>
         </div>
 
         <div className={this.props.health.total ? null : "hidden" }>
@@ -22,6 +22,15 @@ var Health = React.createClass({
               <span>Not connected</span>
             </div>
             <Link to={`/devices/${down}`} className="float-right">View devices</Link>
+          </div>
+          <div style={{padding: "0 4%"}} className={this.props.health.down ? "hidden" : "margin-bottom margin-top" }>
+            <div className="health-icon healthy">
+              <img src="assets/img/check.png" />
+            </div>
+            <div className="health-text">
+              <span>All {this.props.health.total} of your devices are reporting</span>
+            </div>
+        
           </div>
           <div className="health-panel green">
             <div className="health-icon down"></div>

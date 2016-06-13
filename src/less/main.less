@@ -694,29 +694,35 @@ input[type="text"].fileInput {
   .health-panel {
     margin: 15px 0;
     box-sizing: border-box;
-    padding: 3% 5% 6%;
+    padding: 5% 5% 13%;
     min-height: 100px;
     border-radius: 4px;
-    border: 1px solid @lightergrey; 
-
-    .health-icon {
-      width: 50%;
-    }
-
-
-    .health-text {
-      width: 50%;
-      text-align: center;
-    }
+    border: 1px solid @lightergrey;
 
     a {
-      margin-top: -2%;
+      margin-top: 5%;
     }
+  }
+
+  .health-icon {
+    width: 33%;
+    display: inline-block;
+    
+    img {
+      display: block;
+      margin: auto;
+    }
+  }
+
+  .health-text {
+    width: 66%;
+    text-align: center;
+    display: inline-block;
 
     span {
       font-size: 20px;
       vertical-align: text-top;
-      font-size: 1.1vw;
+      font-size: 16px;
     }
 
     .number {
@@ -725,8 +731,8 @@ input[type="text"].fileInput {
       position: relative;
       display: block;
     }
-
   }
+  
 }
 
 .dashboard-placeholder {
