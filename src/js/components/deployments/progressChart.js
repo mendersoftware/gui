@@ -34,7 +34,7 @@ var ProgressChart = React.createClass({
           {
               "id": "00a0c91e6-7dec-11d0-a765-f81d4faebf6",
               "finished": "2016-03-11T13:03:17.063493443Z",
-              "status": "failure",
+              "status": "pending",
               "started": "2016-02-11T13:03:17.063493443Z",
               "device_type": "Raspberry Pi 3",
               "artifact_id": "60a0c91e6-7dec-11d0-a765-f81d4faebf6"
@@ -42,7 +42,7 @@ var ProgressChart = React.createClass({
           {
               "id": "00a0c91e6-7dec-11d0-a765-f81d4faebf6",
               "finished": "2016-03-11T13:03:17.063493443Z",
-              "status": "pending",
+              "status": "failure",
               "started": "2016-02-11T13:03:17.063493443Z",
               "device_type": "Raspberry Pi 3",
               "artifact_id": "60a0c91e6-7dec-11d0-a765-f81d4faebf6"

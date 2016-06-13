@@ -335,20 +335,22 @@ function _authorizeDevices(devices) {
 
   for (var i=0; i<devices.length; i++) {
     var idx = findWithAttr(_alldevices, 'name', devices[i].name);
-
     if (idx === undefined) {
       devices[i].groups.push(1);
       devices[i].status = devices[0].name.indexOf("4f9") ? "Not connected" : "Connected";
       _alldevices.push(devices[i]);
       _groups[0].devices.push(devices[i].id);
-
-      var unIdx = findWithAttr(_unauthorized, 'name', devices[i].name);
-      if (unIdx !== undefined) {
-        _unauthorized.splice(unIdx, 1);
-      }
     } else {
       // id already exists - error
       console.log("device id already exists");
+    }
+  }
+
+  // remove from _unauthorized outside of main loop so as not to interrupt
+  for (var i=devices.length-1; i>=0; i--) {
+    var unIdx = findWithAttr(_unauthorized, 'name', devices[i].name);
+    if (unIdx !== undefined) {
+      _unauthorized.splice(unIdx, 1);
     }
   }
   _selectGroup(_currentGroup.id);

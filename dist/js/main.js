@@ -77981,14 +77981,14 @@ var ProgressChart = _react2.default.createClass({
         var devices = [{
           "id": "00a0c91e6-7dec-11d0-a765-f81d4faebf6",
           "finished": "2016-03-11T13:03:17.063493443Z",
-          "status": "failure",
+          "status": "pending",
           "started": "2016-02-11T13:03:17.063493443Z",
           "device_type": "Raspberry Pi 3",
           "artifact_id": "60a0c91e6-7dec-11d0-a765-f81d4faebf6"
         }, {
           "id": "00a0c91e6-7dec-11d0-a765-f81d4faebf6",
           "finished": "2016-03-11T13:03:17.063493443Z",
-          "status": "pending",
+          "status": "failure",
           "started": "2016-02-11T13:03:17.063493443Z",
           "device_type": "Raspberry Pi 3",
           "artifact_id": "60a0c91e6-7dec-11d0-a765-f81d4faebf6"
@@ -78151,14 +78151,14 @@ var ProgressChart = _react2.default.createClass({
         var devices = [{
           "id": "00a0c91e6-7dec-11d0-a765-f81d4faebf6",
           "finished": "2016-03-11T13:03:17.063493443Z",
-          "status": "failure",
+          "status": "pending",
           "started": "2016-02-11T13:03:17.063493443Z",
           "device_type": "Raspberry Pi 3",
           "artifact_id": "60a0c91e6-7dec-11d0-a765-f81d4faebf6"
         }, {
           "id": "00a0c91e6-7dec-11d0-a765-f81d4faebf6",
           "finished": "2016-03-11T13:03:17.063493443Z",
-          "status": "pending",
+          "status": "failure",
           "started": "2016-02-11T13:03:17.063493443Z",
           "device_type": "Raspberry Pi 3",
           "artifact_id": "60a0c91e6-7dec-11d0-a765-f81d4faebf6"
@@ -81024,6 +81024,7 @@ var TableBody = mui.TableBody;
 var TableRow = mui.TableRow;
 var TableRowColumn = mui.TableRowColumn;
 var IconButton = mui.IconButton;
+var RaisedButton = mui.RaisedButton;
 var FontIcon = mui.FontIcon;
 
 var Authorized = _react2.default.createClass({
@@ -81189,7 +81190,8 @@ var Authorized = _react2.default.createClass({
             className: 'clickable' },
           devices
         )
-      )
+      ),
+      _react2.default.createElement(RaisedButton, { onClick: this._authorizeDevices.bind(null, this.props.unauthorized), className: 'float-right margin-top-small clear', primary: true, label: 'Authorize all' })
     );
   }
 });
@@ -82753,20 +82755,22 @@ function _authorizeDevices(devices) {
 
   for (var i = 0; i < devices.length; i++) {
     var idx = findWithAttr(_alldevices, 'name', devices[i].name);
-
     if (idx === undefined) {
       devices[i].groups.push(1);
       devices[i].status = devices[0].name.indexOf("4f9") ? "Not connected" : "Connected";
       _alldevices.push(devices[i]);
       _groups[0].devices.push(devices[i].id);
-
-      var unIdx = findWithAttr(_unauthorized, 'name', devices[i].name);
-      if (unIdx !== undefined) {
-        _unauthorized.splice(unIdx, 1);
-      }
     } else {
       // id already exists - error
       console.log("device id already exists");
+    }
+  }
+
+  // remove from _unauthorized outside of main loop so as not to interrupt
+  for (var i = devices.length - 1; i >= 0; i--) {
+    var unIdx = findWithAttr(_unauthorized, 'name', devices[i].name);
+    if (unIdx !== undefined) {
+      _unauthorized.splice(unIdx, 1);
     }
   }
   _selectGroup(_currentGroup.id);
@@ -83290,3 +83294,4 @@ module.exports = {
 };
 
 },{"material-ui/lib/styles/colors":291,"material-ui/lib/styles/spacing":294,"material-ui/lib/utils/color-manipulator":348}]},{},[790]);
+"material-ui/lib/styles/colors":291,"material-ui/lib/styles/spacing":294,"material-ui/lib/utils/color-manipulator":348}]},{},[790]);

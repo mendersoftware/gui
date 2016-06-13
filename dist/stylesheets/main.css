@@ -218,6 +218,7 @@ span.link:hover {
   text-align: center;
   position: relative;
   background-color: #000000;
+  overflow: hidden;
 }
 .onboard.authorize {
   background-color: inherit;

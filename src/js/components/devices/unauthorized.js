@@ -11,6 +11,7 @@ var TableBody = mui.TableBody;
 var TableRow = mui.TableRow;
 var TableRowColumn = mui.TableRowColumn;
 var IconButton = mui.IconButton;
+var RaisedButton = mui.RaisedButton;
 var FontIcon = mui.FontIcon;
 
 var Authorized =  React.createClass({
@@ -92,6 +93,7 @@ var Authorized =  React.createClass({
             {devices}
           </TableBody>
         </Table>
+        <RaisedButton onClick={this._authorizeDevices.bind(null, this.props.unauthorized)} className="float-right margin-top-small clear" primary={true} label="Authorize all" />
       </div>
     );
   }
