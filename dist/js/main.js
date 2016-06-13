@@ -77928,6 +77928,7 @@ var _reactRouter = require('react-router');
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var AppActions = require('../../actions/app-actions');
+var AppStore = require('../../stores/app-store');
 
 // material ui
 var mui = require('material-ui');
@@ -77974,7 +77975,8 @@ var ProgressChart = _react2.default.createClass({
         }];
         this.setState({ devices: devices });
       } else {
-        this.setState({ devices: devices });
+        var sortedDevices = AppStore.getOrderedDeploymentDevices(devices);
+        this.setState({ devices: sortedDevices });
       }
     }.bind(this));
   },
@@ -78084,7 +78086,7 @@ ProgressChart.contextTypes = {
 
 module.exports = ProgressChart;
 
-},{"../../actions/app-actions":752,"material-ui":257,"react":684,"react-router":506}],770:[function(require,module,exports){
+},{"../../actions/app-actions":752,"../../stores/app-store":791,"material-ui":257,"react":684,"react-router":506}],770:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -78096,6 +78098,7 @@ var _reactRouter = require('react-router');
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var AppActions = require('../../actions/app-actions');
+var AppStore = require('../../stores/app-store');
 
 // material ui
 var mui = require('material-ui');
@@ -78142,7 +78145,8 @@ var ProgressChart = _react2.default.createClass({
         }];
         this.setState({ devices: devices });
       } else {
-        this.setState({ devices: devices });
+        var sortedDevices = AppStore.getOrderedDeploymentDevices(devices);
+        this.setState({ devices: sortedDevices });
       }
     }.bind(this));
   },
@@ -78252,7 +78256,7 @@ ProgressChart.contextTypes = {
 
 module.exports = ProgressChart;
 
-},{"../../actions/app-actions":752,"material-ui":257,"react":684,"react-router":506}],771:[function(require,module,exports){
+},{"../../actions/app-actions":752,"../../stores/app-store":791,"material-ui":257,"react":684,"react-router":506}],771:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -82853,6 +82857,22 @@ function _getScheduledDeployments(time) {
   return schedule;
 }
 
+function _sortDeploymentDevices(devices) {
+  var newList = {
+    successful: [],
+    inprogress: [],
+    pending: [],
+    noimage: [],
+    failure: []
+  };
+  for (var i = 0; i < devices.length; i++) {
+    newList[devices[i].status].push(devices[i]);
+  }
+
+  var newCombine = newList.successful.concat(newList.inprogress, newList.pending, newList.noimage, newList.failure);
+  return newCombine;
+}
+
 function _saveSchedule(schedule, single) {
   var tmp = {};
   tmp.id = schedule.id || _allDeployments.length + 1;
@@ -83085,6 +83105,10 @@ var AppStore = assign(EventEmitter.prototype, {
     * Return list of devices given group and device_type
     */
     return _getDevices(group, device_type);
+  },
+
+  getOrderedDeploymentDevices: function getOrderedDeploymentDevices(devices) {
+    return _sortDeploymentDevices(devices);
   },
 
   getHealth: function getHealth() {

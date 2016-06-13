@@ -464,6 +464,22 @@ function _getScheduledDeployments(time) {
   return schedule;
 }
 
+function _sortDeploymentDevices(devices) {
+  var newList = {
+    successful:[],
+    inprogress: [],
+    pending: [],
+    noimage:[],
+    failure:[]
+  };
+  for (var i = 0; i<devices.length; i++) {
+    newList[devices[i].status].push(devices[i]);
+  }
+
+  var newCombine = newList.successful.concat(newList.inprogress, newList.pending, newList.noimage, newList.failure);
+  return newCombine;
+}
+
 function _saveSchedule(schedule, single) {
   var tmp = {};
   tmp.id = schedule.id || _allDeployments.length+1;
@@ -708,6 +724,10 @@ var AppStore = assign(EventEmitter.prototype, {
     * Return list of devices given group and device_type
     */
     return _getDevices(group, device_type)
+  },
+
+  getOrderedDeploymentDevices: function(devices) {
+    return _sortDeploymentDevices(devices);
   },
 
   getHealth: function() {

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Router, Route, Link } from 'react-router';
 var AppActions = require('../../actions/app-actions');
+var AppStore = require('../../stores/app-store');
 
 // material ui
 var mui = require('material-ui');
@@ -49,10 +50,10 @@ var ProgressChart = React.createClass({
         ];
         this.setState({devices:devices});  
       } else {
-        this.setState({devices: devices});
+        var sortedDevices = AppStore.getOrderedDeploymentDevices(devices);
+        this.setState({devices: sortedDevices});
       }
     }.bind(this));
-
   },
   _handleClick: function(id) {
     var filter = encodeURIComponent("name="+id);
