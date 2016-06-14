@@ -79451,6 +79451,10 @@ var _reactDom = require('react-dom');
 
 var _reactDom2 = _interopRequireDefault(_reactDom);
 
+var _reactTime = require('react-time');
+
+var _reactTime2 = _interopRequireDefault(_reactTime);
+
 var _snackbar = require('material-ui/lib/snackbar');
 
 var _snackbar2 = _interopRequireDefault(_snackbar);
@@ -79790,6 +79794,11 @@ var DeviceList = _react2.default.createClass((_React$createClass = {
       _react2.default.createElement(
         TableRowColumn,
         null,
+        _react2.default.createElement(_reactTime2.default, { value: device.last_heartbeat, format: 'YYYY-MM-DD HH:mm' })
+      ),
+      _react2.default.createElement(
+        TableRowColumn,
+        null,
         device.status
       ),
       _react2.default.createElement(
@@ -79934,6 +79943,16 @@ var DeviceList = _react2.default.createClass((_React$createClass = {
             ),
             _react2.default.createElement(
               TableHeaderColumn,
+              { className: 'columnHeader', tooltip: 'Last heartbeat' },
+              'Last heartbeat',
+              _react2.default.createElement(
+                FontIcon,
+                { ref: 'last_heartbeat', style: styles.sortIcon, onClick: this._sortColumn.bind(null, "last_heartbeat"), className: 'sortIcon material-icons' },
+                'sort'
+              )
+            ),
+            _react2.default.createElement(
+              TableHeaderColumn,
               { className: 'columnHeader', tooltip: 'Status' },
               'Status',
               _react2.default.createElement(
@@ -80071,7 +80090,7 @@ var DeviceList = _react2.default.createClass((_React$createClass = {
 
 module.exports = DeviceList;
 
-},{"../../actions/app-actions":752,"../../stores/app-store":791,"./filters":778,"./selecteddevices":780,"material-ui":257,"material-ui/lib/snackbar":287,"react":684,"react-dom":476}],777:[function(require,module,exports){
+},{"../../actions/app-actions":752,"../../stores/app-store":791,"./filters":778,"./selecteddevices":780,"material-ui":257,"material-ui/lib/snackbar":287,"react":684,"react-dom":476,"react-time":522}],777:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -80755,6 +80774,10 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactRouter = require('react-router');
 
+var _reactTime = require('react-time');
+
+var _reactTime2 = _interopRequireDefault(_reactTime);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var AppStore = require('../../stores/app-store');
@@ -80859,13 +80882,23 @@ var SelectedDevices = _react2.default.createClass({
     }
     this.setState({ tagEdit: !this.state.tagEdit });
   },
-
+  _handleAccept: function _handleAccept() {
+    this.props.accept(this.props.selected);
+  },
+  _handleBlock: function _handleBlock() {
+    this.props.block(this.props.selected);
+  },
   render: function render() {
 
     var styles = {
       editButton: {
         color: "rgba(0, 0, 0, 0.54)",
         fontSize: "20"
+      },
+      listStyle: {
+        fontSize: "12px",
+        paddingTop: "10px",
+        paddingBottom: "10px"
       }
     };
 
@@ -80908,11 +80941,13 @@ var SelectedDevices = _react2.default.createClass({
           _react2.default.createElement(
             List,
             null,
-            _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Name', secondaryText: this.props.selected[0].name }),
+            _react2.default.createElement(ListItem, { style: styles.listStyle, disabled: true, primaryText: 'Name', secondaryText: this.props.selected[0].name }),
             _react2.default.createElement(Divider, null),
-            _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Status', secondaryText: this.props.selected[0].status }),
+            _react2.default.createElement(ListItem, { style: styles.listStyle, disabled: true, primaryText: 'Device type', secondaryText: this.props.selected[0].device_type }),
             _react2.default.createElement(Divider, null),
-            _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Device type', secondaryText: this.props.selected[0].device_type }),
+            _react2.default.createElement(ListItem, { style: styles.listStyle, disabled: true, primaryText: 'Device serial no.', secondaryText: this.props.selected[0].device_serial }),
+            _react2.default.createElement(Divider, null),
+            _react2.default.createElement(ListItem, { style: styles.listStyle, disabled: true, primaryText: 'Architecture', secondaryText: this.props.selected[0].arch }),
             _react2.default.createElement(Divider, null)
           )
         ),
@@ -80922,30 +80957,64 @@ var SelectedDevices = _react2.default.createClass({
           _react2.default.createElement(
             List,
             null,
-            _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Current software', secondaryText: softwareLink }),
+            _react2.default.createElement(ListItem, { style: styles.listStyle, disabled: true, primaryText: 'Status', secondaryText: this.props.selected[0].status }),
             _react2.default.createElement(Divider, null),
-            _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Architecture', secondaryText: this.props.selected[0].arch }),
+            _react2.default.createElement(ListItem, { style: styles.listStyle, className: this.props.unauthorized ? null : "hidden", disabled: true, primaryText: 'Last connection request', secondaryText: _react2.default.createElement(_reactTime2.default, { value: this.props.selected[0].request_time, format: 'YYYY-MM-DD HH:mm' }) }),
+            _react2.default.createElement(ListItem, { style: styles.listStyle, className: this.props.unauthorized ? "hidden" : null, disabled: true, primaryText: 'Last heartbeat', secondaryText: _react2.default.createElement(_reactTime2.default, { value: this.props.selected[0].last_heartbeat, format: 'YYYY-MM-DD HH:mm' }) }),
             _react2.default.createElement(Divider, null),
-            _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Groups', secondaryText: this._getGroupNames(this.props.selected[0].groups).join(', ') }),
+            _react2.default.createElement(ListItem, { style: styles.listStyle, disabled: true, primaryText: 'IP address', secondaryText: this.props.selected[0].ip_address }),
+            _react2.default.createElement(Divider, null),
+            _react2.default.createElement(ListItem, { style: styles.listStyle, disabled: true, primaryText: 'MAC address', secondaryText: this.props.selected[0].mac_address }),
             _react2.default.createElement(Divider, null)
           )
         ),
         _react2.default.createElement(
           'div',
-          { className: 'report-list' },
+          { className: this.props.unauthorized ? "hidden" : "report-list" },
           _react2.default.createElement(
             List,
             null,
-            _react2.default.createElement(ListItem, { rightIconButton: editButton, disabled: true, primaryText: 'Tags', secondaryText: tags }),
+            _react2.default.createElement(ListItem, { style: styles.listStyle, disabled: true, primaryText: 'Current software', secondaryText: softwareLink }),
+            _react2.default.createElement(Divider, null),
+            _react2.default.createElement(ListItem, { style: styles.listStyle, disabled: true, primaryText: 'Groups', secondaryText: this._getGroupNames(this.props.selected[0].groups).join(', ') }),
             _react2.default.createElement(Divider, null),
             _react2.default.createElement(ListItem, {
+              style: styles.listStyle,
               primaryText: 'Deploy update',
               secondaryText: 'Deploy an update to this device only',
               onClick: this._clickListItem,
               leftIcon: _react2.default.createElement(
                 FontIcon,
-                { className: 'material-icons' },
-                'schedule'
+                { style: { marginTop: 6, marginBottom: 6 }, className: 'material-icons' },
+                'update'
+              ) }),
+            _react2.default.createElement(Divider, null)
+          )
+        ),
+        _react2.default.createElement(
+          'div',
+          { className: this.props.unauthorized ? "report-list" : "hidden" },
+          _react2.default.createElement(
+            List,
+            null,
+            _react2.default.createElement(ListItem, {
+              style: styles.listStyle,
+              onClick: this._handleAccept,
+              primaryText: 'Authorize device',
+              leftIcon: _react2.default.createElement(
+                FontIcon,
+                { className: 'material-icons green auth', style: { marginTop: 6, marginBottom: 6 } },
+                'check_circle'
+              ) }),
+            _react2.default.createElement(Divider, null),
+            _react2.default.createElement(ListItem, {
+              style: styles.listStyle,
+              primaryText: 'Block device',
+              onClick: this._handleBlock,
+              leftIcon: _react2.default.createElement(
+                FontIcon,
+                { className: 'material-icons red auth', style: { marginTop: 6, marginBottom: 6 } },
+                'cancel'
               ) }),
             _react2.default.createElement(Divider, null)
           )
@@ -80974,9 +81043,9 @@ var SelectedDevices = _react2.default.createClass({
 
     return _react2.default.createElement(
       'div',
-      null,
+      { className: 'device-info' },
       _react2.default.createElement(
-        'h3',
+        'h4',
         { className: 'margin-bottom-none' },
         'Device details'
       ),
@@ -81000,7 +81069,7 @@ var SelectedDevices = _react2.default.createClass({
 
 module.exports = SelectedDevices;
 
-},{"../../actions/app-actions":752,"../../stores/app-store":791,"../deployments/scheduleform":775,"material-ui":257,"react":684,"react-router":506,"react-tag-input":516}],781:[function(require,module,exports){
+},{"../../actions/app-actions":752,"../../stores/app-store":791,"../deployments/scheduleform":775,"material-ui":257,"react":684,"react-router":506,"react-tag-input":516,"react-time":522}],781:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -81011,9 +81080,14 @@ var _reactDom = require('react-dom');
 
 var _reactDom2 = _interopRequireDefault(_reactDom);
 
+var _reactTime = require('react-time');
+
+var _reactTime2 = _interopRequireDefault(_reactTime);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var AppActions = require('../../actions/app-actions');
+var SelectedDevices = require('./selecteddevices');
 
 // material ui
 var mui = require('material-ui');
@@ -81055,6 +81129,22 @@ var Authorized = _react2.default.createClass({
     // array of device objects
     AppActions.authorizeDevices(devices);
   },
+  _blockDevices: function _blockDevices(devices) {
+    // array of device objects
+    //AppActions.authorizeDevices(devices);
+  },
+  _expandRow: function _expandRow(rowNumber, columnId, event) {
+    event.stopPropagation();
+    if (columnId < 0) {
+      this.setState({ expanded: null });
+    } else {
+      var newIndex = rowNumber;
+      if (rowNumber == this.state.expanded) {
+        newIndex = null;
+      }
+      this.setState({ expanded: newIndex });
+    }
+  },
   render: function render() {
     var styles = {
       sortIcon: {
@@ -81065,9 +81155,13 @@ var Authorized = _react2.default.createClass({
       }
     };
     var devices = this.props.unauthorized.map(function (device, index) {
+      var expanded = '';
+      if (this.state.expanded === index) {
+        expanded = _react2.default.createElement(SelectedDevices, { accept: this._authorizeDevices, block: this._blockDevices, unauthorized: true, selected: [device] });
+      }
       return _react2.default.createElement(
         TableRow,
-        { style: { "backgroundColor": "#e9f4f3" }, hoverable: true, key: index },
+        { style: { "backgroundColor": "#e9f4f3" }, className: expanded ? "expand devices" : null, hoverable: true, key: index },
         _react2.default.createElement(
           TableRowColumn,
           null,
@@ -81081,16 +81175,16 @@ var Authorized = _react2.default.createClass({
         _react2.default.createElement(
           TableRowColumn,
           null,
-          device.artifact_name
-        ),
-        _react2.default.createElement(
-          TableRowColumn,
-          null,
           device.status
         ),
         _react2.default.createElement(
           TableRowColumn,
           null,
+          _react2.default.createElement(_reactTime2.default, { value: device.request_time, format: 'YYYY-MM-DD HH:mm' })
+        ),
+        _react2.default.createElement(
+          TableRowColumn,
+          { className: 'expandButton' },
           _react2.default.createElement(
             IconButton,
             { onClick: this._authorizeDevices.bind(null, [device]), style: { "paddingLeft": "0" } },
@@ -81109,6 +81203,15 @@ var Authorized = _react2.default.createClass({
               'cancel'
             )
           )
+        ),
+        _react2.default.createElement(
+          TableRowColumn,
+          { style: { width: "0", overflow: "visible" } },
+          _react2.default.createElement(
+            'div',
+            { className: expanded ? "expanded" : null },
+            expanded
+          )
         )
       );
     }, this);
@@ -81124,7 +81227,8 @@ var Authorized = _react2.default.createClass({
         Table,
         {
           selectable: false,
-          className: 'unauthorized'
+          className: 'unauthorized',
+          onCellClick: this._expandRow
         },
         _react2.default.createElement(
           TableHeader,
@@ -81157,21 +81261,21 @@ var Authorized = _react2.default.createClass({
             ),
             _react2.default.createElement(
               TableHeaderColumn,
-              { className: 'columnHeader', tooltip: 'Current software' },
-              'Current software',
-              _react2.default.createElement(
-                FontIcon,
-                { ref: 'artifact_name', style: styles.sortIcon, onClick: this._sortColumn.bind(null, "artifact_name"), className: 'sortIcon material-icons' },
-                'sort'
-              )
-            ),
-            _react2.default.createElement(
-              TableHeaderColumn,
               { className: 'columnHeader', tooltip: 'Status' },
               'Status',
               _react2.default.createElement(
                 FontIcon,
                 { ref: 'status', style: styles.sortIcon, onClick: this._sortColumn.bind(null, "status"), className: 'sortIcon material-icons' },
+                'sort'
+              )
+            ),
+            _react2.default.createElement(
+              TableHeaderColumn,
+              { className: 'columnHeader', tooltip: 'Last connection request' },
+              'Last connection request',
+              _react2.default.createElement(
+                FontIcon,
+                { ref: 'request_time', style: styles.sortIcon, onClick: this._sortColumn.bind(null, "request_time"), className: 'sortIcon material-icons' },
                 'sort'
               )
             ),
@@ -81198,7 +81302,7 @@ var Authorized = _react2.default.createClass({
 
 module.exports = Authorized;
 
-},{"../../actions/app-actions":752,"material-ui":257,"react":684,"react-dom":476}],782:[function(require,module,exports){
+},{"../../actions/app-actions":752,"./selecteddevices":780,"material-ui":257,"react":684,"react-dom":476,"react-time":522}],782:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -82578,7 +82682,12 @@ var _unauthorized = [{
   'status': 'Unauthorized',
   'artifact_name': 'Application 0.0.2',
   'groups': [],
-  'tags': []
+  'tags': [],
+  'ip_address': '172.16.254.1',
+  'mac_address': '00-14-22-01-23-45',
+  'device_serial': '4CE0460D0G',
+  'request_time': 1468777607000,
+  'last_heartbeat': 1468777607000
 }, {
   'id': 9,
   'name': '4f98de-4apr-11d0-a765-f81d488y4fs',
@@ -82587,7 +82696,12 @@ var _unauthorized = [{
   'status': 'Unauthorized',
   'artifact_name': 'Application 0.0.2',
   'groups': [],
-  'tags': []
+  'tags': [],
+  'ip_address': '172.16.255.1',
+  'mac_address': '00-14-22-03-23-45',
+  'device_serial': '4CE0860D1F',
+  'request_time': 1459777609000,
+  'last_heartbeat': 1459777609000
 }];
 
 _selectGroup(_groups[0].id);
@@ -83294,4 +83408,3 @@ module.exports = {
 };
 
 },{"material-ui/lib/styles/colors":291,"material-ui/lib/styles/spacing":294,"material-ui/lib/utils/color-manipulator":348}]},{},[790]);
-"material-ui/lib/styles/colors":291,"material-ui/lib/styles/spacing":294,"material-ui/lib/utils/color-manipulator":348}]},{},[790]);

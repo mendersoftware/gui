@@ -340,7 +340,6 @@ a, span.link {
     background: none;
     color: @red !important;
   }
-
 }
 
 
@@ -491,6 +490,11 @@ span.length {
   vertical-align: bottom;
 }
 
+.report-list div>span>div>div {
+  padding-top: 10px !important;
+  padding-bottom: 10px !important;
+}
+
 .listItem-link {
   float: right;
   font-size: 13px;
@@ -552,6 +556,13 @@ tr.expand {
   background-color: rgb(224,224,224);
   .transition(height 0.2s ease-out);
 
+  .device-info h3 {
+    font-family: Lato, sans-serif;
+    color: rgba(0,0,0,0.8);
+    font-size: 1.17em;
+    font-weight: 700;
+  }
+
   td {
     vertical-align: top;
     padding-top: 16px;
@@ -593,6 +604,8 @@ tr.expand.devices {
     height: 290px;
   }
 }
+
+.device-info
 
 
 .fixedButtons {

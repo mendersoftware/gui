@@ -153,7 +153,12 @@ var _unauthorized = [
     'status': 'Unauthorized',
     'artifact_name': 'Application 0.0.2',
     'groups': [],
-    'tags': []
+    'tags': [],
+    'ip_address': '172.16.254.1',
+    'mac_address': '00-14-22-01-23-45',
+    'device_serial': '4CE0460D0G',
+    'request_time': 1468777607000,
+    'last_heartbeat': 1468777607000
   },
   {
     'id':9,
@@ -163,7 +168,12 @@ var _unauthorized = [
     'status': 'Unauthorized',
     'artifact_name': 'Application 0.0.2',
     'groups': [],
-    'tags': []
+    'tags': [],
+    'ip_address': '172.16.255.1',
+    'mac_address': '00-14-22-03-23-45',
+    'device_serial': '4CE0860D1F',
+    'request_time': 1459777609000,
+    'last_heartbeat': 1459777609000
   },
 ];
 

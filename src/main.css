@@ -419,6 +419,10 @@ span.length {
   width: 30%;
   vertical-align: bottom;
 }
+.report-list div > span > div > div {
+  padding-top: 10px !important;
+  padding-bottom: 10px !important;
+}
 .listItem-link {
   float: right;
   font-size: 13px;
@@ -470,6 +474,12 @@ tr.expand {
   -ms-transition: height 0.2s ease-out;
   -o-transition: height 0.2s ease-out;
 }
+tr.expand .device-info h3 {
+  font-family: Lato, sans-serif;
+  color: rgba(0, 0, 0, 0.8);
+  font-size: 1.17em;
+  font-weight: 700;
+}
 tr.expand td {
   vertical-align: top;
   padding-top: 16px;
@@ -506,7 +516,7 @@ tr.expand.devices {
 tr.expand.devices td div.expanded {
   height: 290px;
 }
-.fixedButtons {
+.device-info .fixedButtons {
   position: fixed;
   bottom: 15px;
   right: 30px;
