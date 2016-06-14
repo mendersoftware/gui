@@ -80158,7 +80158,7 @@ var Devices = _react2.default.createClass({
     //AppActions.getDevices();
   },
   _closeOnboard: function _closeOnboard() {
-    AppActions.setLocalStorage("devicesNextStep", true);
+    this.setState({ showTODO: true });
   },
   _onChange: function _onChange() {
 
@@ -80192,63 +80192,67 @@ var Devices = _react2.default.createClass({
         { className: 'rightFluid padding-right' },
         _react2.default.createElement(
           'div',
-          { className: this.state.unauthorized.length || !this.state.groupTODO ? "hidden" : null },
+          { className: this.state.showTODO ? "hidden" : null },
           _react2.default.createElement(
             'div',
-            { className: 'margin-top margin-bottom onboard' },
-            _react2.default.createElement('div', { className: 'close', onClick: this._closeOnboard }),
+            { className: this.state.unauthorized.length || !this.state.groupTODO ? "hidden" : null },
             _react2.default.createElement(
-              'h3',
-              null,
+              'div',
+              { className: 'margin-top margin-bottom onboard' },
+              _react2.default.createElement('div', { className: 'close', onClick: this._closeOnboard }),
               _react2.default.createElement(
-                'span',
-                { className: 'todo' },
-                '//TODO'
+                'h3',
+                null,
+                _react2.default.createElement(
+                  'span',
+                  { className: 'todo' },
+                  '//TODO'
+                ),
+                ' Upload a new software image'
               ),
-              ' Upload a new software image'
-            ),
-            _react2.default.createElement(
-              _reactRouter.Link,
-              { to: '/software', className: 'todo link' },
-              '> Go to software'
+              _react2.default.createElement(
+                _reactRouter.Link,
+                { to: '/software', className: 'todo link' },
+                '> Go to software'
+              )
             )
-          )
-        ),
-        _react2.default.createElement(
-          'div',
-          { className: this.state.groupTODO || this.state.unauthorized.length ? "hidden" : null },
+          ),
           _react2.default.createElement(
             'div',
-            { className: 'margin-top margin-bottom onboard' },
-            _react2.default.createElement('div', { className: 'close', onClick: this._closeOnboard }),
+            { className: this.state.groupTODO || this.state.unauthorized.length ? "hidden" : null },
             _react2.default.createElement(
-              'h3',
-              null,
+              'div',
+              { className: 'margin-top margin-bottom onboard' },
+              _react2.default.createElement('div', { className: 'close', onClick: this._closeOnboard }),
               _react2.default.createElement(
-                'span',
-                { className: 'todo' },
-                '//TODO'
-              ),
-              ' Create a new group with these devices'
+                'h3',
+                null,
+                _react2.default.createElement(
+                  'span',
+                  { className: 'todo' },
+                  '//TODO'
+                ),
+                ' Create a new group with these devices'
+              )
             )
-          )
-        ),
-        _react2.default.createElement(
-          'div',
-          { className: !this.state.authTODO && this.state.unauthorized.length ? null : "hidden" },
+          ),
           _react2.default.createElement(
             'div',
-            { className: 'margin-top margin-bottom onboard' },
-            _react2.default.createElement('div', { className: 'close', onClick: this._closeOnboard }),
+            { className: !this.state.authTODO && this.state.unauthorized.length ? null : "hidden" },
             _react2.default.createElement(
-              'h3',
-              null,
+              'div',
+              { className: 'margin-top margin-bottom onboard' },
+              _react2.default.createElement('div', { className: 'close', onClick: this._closeOnboard }),
               _react2.default.createElement(
-                'span',
-                { className: 'todo' },
-                '//TODO'
-              ),
-              ' Authorize the 2 pending devices'
+                'h3',
+                null,
+                _react2.default.createElement(
+                  'span',
+                  { className: 'todo' },
+                  '//TODO'
+                ),
+                ' Authorize the 2 pending devices'
+              )
             )
           )
         ),
