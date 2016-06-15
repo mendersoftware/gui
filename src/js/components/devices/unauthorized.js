@@ -1,6 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import Time from 'react-time';
 var AppActions = require('../../actions/app-actions');
+var SelectedDevices = require('./selecteddevices');
 
 // material ui
 var mui = require('material-ui');
@@ -11,6 +13,7 @@ var TableBody = mui.TableBody;
 var TableRow = mui.TableRow;
 var TableRowColumn = mui.TableRowColumn;
 var IconButton = mui.IconButton;
+var RaisedButton = mui.RaisedButton;
 var FontIcon = mui.FontIcon;
 
 var Authorized =  React.createClass({
@@ -39,6 +42,22 @@ var Authorized =  React.createClass({
     // array of device objects
     AppActions.authorizeDevices(devices);
   },
+   _blockDevices: function(devices) {
+    // array of device objects
+    //AppActions.authorizeDevices(devices);
+  },
+  _expandRow: function(rowNumber, columnId, event) {
+    event.stopPropagation();
+    if (columnId < 0) {
+      this.setState({expanded: null});
+    } else {
+      var newIndex = rowNumber;
+      if (rowNumber == this.state.expanded) {
+        newIndex = null;
+      }
+      this.setState({expanded: newIndex});
+    }
+  },
   render: function() {
     var styles = {
       sortIcon: {
@@ -49,19 +68,28 @@ var Authorized =  React.createClass({
       }
     }
     var devices = this.props.unauthorized.map(function(device, index) {
+      var expanded = '';
+      if ( this.state.expanded === index ) {
+        expanded = <SelectedDevices accept={this._authorizeDevices} block={this._blockDevices} unauthorized={true} selected={[device]}  />
+      }
       return (
-        <TableRow style={{"backgroundColor": "#e9f4f3"}} hoverable={true} key={index}>
+        <TableRow style={{"backgroundColor": "#e9f4f3"}} className={expanded ? "expand devices" : null} hoverable={true} key={index}>
           <TableRowColumn>{device.name}</TableRowColumn>
           <TableRowColumn>{device.device_type}</TableRowColumn>
-          <TableRowColumn>{device.artifact_name}</TableRowColumn>
           <TableRowColumn>{device.status}</TableRowColumn>
-          <TableRowColumn>
+          <TableRowColumn><Time value={device.request_time} format="YYYY-MM-DD HH:mm" /></TableRowColumn>
+          <TableRowColumn className="expandButton">
             <IconButton onClick={this._authorizeDevices.bind(null, [device])} style={{"paddingLeft": "0"}}>
               <FontIcon className="material-icons green">check_circle</FontIcon>
             </IconButton>
             <IconButton>
               <FontIcon className="material-icons red">cancel</FontIcon>
             </IconButton>
+          </TableRowColumn>
+          <TableRowColumn style={{width:"0", overflow:"visible"}}>
+            <div className={expanded ? "expanded" : null}>
+              {expanded}
+            </div>
           </TableRowColumn>
         </TableRow>
       )
@@ -72,6 +100,7 @@ var Authorized =  React.createClass({
         <Table
           selectable={false}
           className="unauthorized"
+          onCellClick={this._expandRow}
         >
           <TableHeader
             displaySelectAll={false}
@@ -80,8 +109,8 @@ var Authorized =  React.createClass({
             <TableRow>
               <TableHeaderColumn className="columnHeader" tooltip="Name">Name<FontIcon ref="name" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "name")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
               <TableHeaderColumn className="columnHeader" tooltip="Device type">Device type<FontIcon ref="device_type" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "device_type")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
-              <TableHeaderColumn className="columnHeader" tooltip="Current software">Current software<FontIcon ref="artifact_name" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "artifact_name")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
               <TableHeaderColumn className="columnHeader" tooltip="Status">Status<FontIcon ref="status" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "status")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
+              <TableHeaderColumn className="columnHeader" tooltip="Last connection request">Last connection request<FontIcon ref="request_time" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "request_time")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
               <TableHeaderColumn className="columnHeader" tooltip="Authorize device?">Authorize?</TableHeaderColumn>
             </TableRow>
           </TableHeader>
@@ -92,6 +121,7 @@ var Authorized =  React.createClass({
             {devices}
           </TableBody>
         </Table>
+        <RaisedButton onClick={this._authorizeDevices.bind(null, this.props.unauthorized)} className="float-right margin-top-small clear" primary={true} label="Authorize all" />
       </div>
     );
   }

@@ -1,5 +1,6 @@
 html {
   height: 100%;
+  min-width: 1000px;
 }
 body {
   min-height: 100%;
@@ -8,25 +9,24 @@ body {
 /* General */
 
 // colors
-@red: #6A150C;
-@green: #007647;
+@red: #8F0D0D;
+@green: #009E73;
 @alertgreen: #679BA5;
 @alertpurple: #7D3F69;
 @linkgreen: #347A87;
 @linkhover: #679BA5;
 @lightestgrey: #F7F7F7;
-@lightgrey: #DBEDEB;
+@lightergrey: #eaf4f3;
+@lightgrey: #d4e9e7;
 @grey: #c7c7c7;
 @placeholder: #e7e7e7;
 
 .green {
-  background-color: @green;
-  color: #FFFEFF;
+  color: @green;
 }
 
 .red {
-  background-color: @red;
-  color: #FFFEFF;
+  color: @red;
 }
 
 .lightestgrey {
@@ -79,6 +79,11 @@ a, span.link {
   white-space: nowrap;
 }
 
+.capitalized {
+  text-transform: capitalize;
+}
+
+
 
 .clear {
   clear: both;
@@ -115,6 +120,9 @@ a, span.link {
 }
 .margin-bottom {
   margin-bottom: 30px;
+}
+.margin-bottom-large {
+  margin-bottom: 45px;
 }
 .margin-bottom-small {
   margin-bottom: 15px;
@@ -274,6 +282,7 @@ a, span.link {
   text-align: center;
   position: relative;
   background-color: #000000;
+  overflow: hidden;
 
   &.authorize {
     background-color: inherit;
@@ -331,7 +340,6 @@ a, span.link {
     background: none;
     color: @red !important;
   }
-
 }
 
 
@@ -482,6 +490,11 @@ span.length {
   vertical-align: bottom;
 }
 
+.report-list div>span>div>div {
+  padding-top: 10px !important;
+  padding-bottom: 10px !important;
+}
+
 .listItem-link {
   float: right;
   font-size: 13px;
@@ -543,6 +556,13 @@ tr.expand {
   background-color: rgb(224,224,224);
   .transition(height 0.2s ease-out);
 
+  .device-info h3 {
+    font-family: Lato, sans-serif;
+    color: rgba(0,0,0,0.8);
+    font-size: 1.17em;
+    font-weight: 700;
+  }
+
   td {
     vertical-align: top;
     padding-top: 16px;
@@ -559,7 +579,7 @@ tr.expand {
     }
 
     div.expanded>div {
-      animation: fadein 0.5s 1;
+      .animation(fadein 0.5s 1);
       background-color: #ffffff;
     }
 
@@ -585,6 +605,8 @@ tr.expand.devices {
   }
 }
 
+.device-info
+
 
 .fixedButtons {
   position: fixed;
@@ -592,7 +614,7 @@ tr.expand.devices {
   right: 30px;
   padding-left: 30px;
   background-color: rgba(255,255,255,0.8);
-  animation: fadein 0.3s 1;
+  .animation(fadein 0.3s 1);
   border-bottom-left-radius: 2px;
   border-top-left-radius: 2px;
 }
@@ -665,42 +687,66 @@ input[type="text"].fileInput {
 .leftDashboard {
   width: 71%;
   float: left;
-  border-right: 1px solid #d4e9e7;
-  padding-right: 2%;
+  border-right: 1px solid @lightgrey;
+  padding-right: 30px;
+}
+
+.rightDashboard {
+  width: 25%;
+  float: left;
+
+  .right {
+    position: absolute;
+    height: 100%;
+    padding: 0 30px;
+  }
 }
 
 .health {
-  min-height: 26vh;
   position: relative;
 
   .health-panel {
-    width:20%;
-    margin: 15px 1% 15px 0;
-    display: inline-block;
+    margin: 15px 0;
     box-sizing: border-box;
-    padding: 3%;
-    height: 80%;
+    padding: 5% 5% 13%;
     min-height: 100px;
+    border-radius: 4px;
+    border: 1px solid @lightergrey;
 
-    &:last-child {
-      margin-right: 0;
+    a {
+      margin-top: 5%;
     }
+  }
+
+  .health-icon {
+    width: 33%;
+    display: inline-block;
+    
+    img {
+      display: block;
+      margin: auto;
+    }
+  }
+
+  .health-text {
+    width: 66%;
+    text-align: center;
+    display: inline-block;
 
     span {
       font-size: 20px;
       vertical-align: text-top;
-      font-size: 1.5vw;
+      font-size: 16px;
     }
 
     .number {
       font-size: 4vw;
       font-weight: bold;
-      margin-right: 16px;
       position: relative;
-      top: -9px;
+      display: block;
     }
-
   }
+  
 }
 
 .dashboard-placeholder {
@@ -713,12 +759,6 @@ input[type="text"].fileInput {
     margin-top: 15px;
     width: 74px;
   }
-}
-
-.activity-log {
-  width: 25%;
-  float: right;
-  min-height: 50vh;
 }
 
 .activityWrapper {
@@ -741,7 +781,7 @@ input[type="text"].fileInput {
       height:0;
       position: absolute;
       z-index:-1;
-      bottom:-10px;
+      bottom:-9px;
       left:10px;
       border-bottom:10px solid transparent;
       border-left:10px solid @alertgreen;
@@ -756,26 +796,23 @@ input[type="text"].fileInput {
   }
 
   .activityTime {
-    color: #bdbdbd;
+    color: @grey;
     position: relative;
     top: 12px;
   }
 }
 
-
-.activityEntry, .health-panel {
+.activityEntry {
   cursor: pointer;
-
+  .opacity(0.9);
   &:hover {
-    .scale(1.01);
-    .opacity(0.9);
+    .scale(1.005);
+    .opacity(1);
   }
 }
 
 .deployments {
   position: relative;
-  overflow: auto;
-  margin-top: 30px;
 }
 
 span.month, span.day {
@@ -784,7 +821,7 @@ span.month, span.day {
 }
 
 .dashboard-header {
-  border-bottom: 1px solid #d4e9e7;
+  border-bottom: 1px solid @lightgrey;
   margin-bottom: 15px;
 
   &.subsection {
@@ -797,19 +834,267 @@ span.month, span.day {
 
   .dashboard-number {
     margin-left: 10px;
-    color: #bdbdbd;
+    color: @grey;
+  }
+}
+
+
+.progress-container {
+  padding-bottom: 45px;
+  border-bottom: 1px solid @lightgrey;
+
+  .device-info {
+    position: absolute;
+    width: 25%;
+    right: 0;
+    height: 106px;
+    background-color: #ffffff;
+    top: 0;
+    z-index: 300;
+    padding: 0 30px;
+    box-sizing: border-box;
+    display: none;
+    border-left: 1px @linkhover solid;
+    font-size: 12px;
+  
+    &.show {
+      display: block;
+      .animation(fadein 0.2s 1);
+    }
+  }
+
+  .key {
+    color: @grey;
+    font-size: 12px;
+    clear: both;
+    vertical-align: middle;
+    margin-top: 10px;
+
+    .bubble {
+      width: 10px;
+      height: 10px;
+      background-color: @lightgrey;
+      border-radius: 50%;
+      display: inline-block;
+      margin-left: 6px;
+      margin-right: 2px;
+      margin-top: -2px;
+      vertical-align: middle;
+      position: relative;
+
+      &.successful {
+        background-color: @green;
+      }
+      &.failure {
+        background-color: @red;
+      }
+      &.pending {
+        .animation(pulse 3s infinite);
+      }
+      &.inprogress {
+        background-color: darken(@lightgrey,12%);
+
+        &:after {
+          content:"";
+          width: 100%;
+          height: 100%;
+          position: absolute;
+          border-radius: 50%;
+          background-image:
+          linear-gradient(-90deg, transparent 50%, @lightgrey 50%),
+          linear-gradient(45deg, @lightgrey 50%, transparent 50%);
+        }
+      }
+    }
+  }
+
+  .progressHeader {
+    position: absolute;
+    top: -25px;
+    left: 340px;
+    color: #757575;
+    font-size: 14px;
+  }
+
+  .bubbles-contain {  
+    height: 100px;
+    width: 350px;
+    position: relative;
+    top: -10px;
+    padding-left: 30px;
+
+    > div {
+      float: left;
+      margin: 0 10px 10px 0;
+      position: relative;
+      cursor: pointer;
+
+      &:hover:after {
+        content:"";
+        position: absolute;
+        top: 50%;
+        left: 110%;
+        width: 500px;
+        border-bottom: 1px @linkhover solid;
+        z-index: 200;
+        .animation(fadein 0.6s 1);
+      }
+
+    }
+
+    .bubble {
+      border-radius: 50%;
+      background-color: darken(@lightgrey, 4%);
+      position: relative;
+      display: block;
+      height:100%;
+      width:100%;
+    
+      &:hover {
+        .scale(1.15);
+        .transition(all 0.2s ease);
+        border: 1px solid @linkhover;
+      }
+    }
+
+    .inprogress .bubble {
+      background-color: darken(@lightgrey,5%);
+
+      &:after {
+        content:"";
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        border-radius: 50%;
+        background-image:
+        linear-gradient(0deg, transparent 50%, @lightgrey 50%),
+        linear-gradient(13deg, @lightgrey 50%, transparent 50%);
+        .animation(spin 1.5s ease-out infinite);
+      }
+    }
+
+    .pending .bubble {
+      background-color: @lightergrey;
+      .animation(pulse 2.8s infinite);
+    }
+    .failure .bubble {
+      background-color: @red;
+      /* &:after {
+        content:"";
+        position: absolute;
+        color: #ffffff;
+        background-image: url('../assets/img/warning_white.png');
+        background-repeat: no-repeat;
+        background-size: contain;
+        width: 60%;
+        top: 20%;
+        left: 20%;
+        height: 60%;
+        z-index: 400;
+      }*/
+    }
+    .successful .bubble {
+      background-color: @green;
+    }
+  }
+}
+
+.progress-container, .deployments-container {
+  .deploymentInfo {
+    font-size: 14px;
+    white-space: nowrap;
+   
+   > div {
+      margin-bottom: 10px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+   }
+  }
+
+  .progressLabel {
+    color: @grey;
+    margin-right: 5px;
+    margin-bottom: 0;
+    width: 100px;
+    display: inline-block;
+  }
+}
+
+.progress-container {
+  .deployment {
+    padding-top: 50px;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+    border-radius: 4px;
+    border: 1px solid @lightergrey;
+    overflow: hidden;
   }
 }
 
 .deployments-container {
-  flex:1;
-  margin:0 0 15px 6%;
-  width:47%;
-  padding-bottom: 15px;
-  border-bottom: 1px solid @lightestgrey;
+  padding-bottom: 45px;
 
-  &:first-child {
-    margin-left: 0;
+  .deployment {
+    display: inline-block;
+    width: 25%;
+    margin-right: 15px;
+    margin-bottom: 15px;
+    min-width: 220px;
+    max-width: 320px;
+    padding: 20px;
+    min-height: 100px;
+    border-radius: 4px;
+    border: 1px solid @lightergrey;
+    cursor: pointer;
+
+    &:hover {
+      .transition(all 0.2s ease);
+      .scale(1.005);
+      border: 1px solid @lightgrey;
+      background-color: #fdfdfe;
+    }
+  }
+
+
+
+  .resultIcons {
+    display: inline-block;
+    width: 40%;
+    padding: 20px 5%;
+    font-size: 2em;
+    position: relative;
+
+    img {
+      display: inline;
+      margin: 10px 0;
+      vertical-align: middle;
+      width: 40%;
+      padding: 0 5%;
+    }
+
+    div {
+      vertical-align: middle;
+      text-align: center;
+      width: 40%;
+      padding: 0 5%;
+      display: inline-block;
+    }
+
+    span.iconStatLabel {
+      position: absolute;
+      width: 80%;
+      left: 10%;
+      bottom: 0;
+      font-size: 12px;
+      color: @grey;
+      text-align: center;
+    }
+  }
+}
+
+@media (min-width: 1700px) {
+  .deployments-container .progressLabel {
+    margin-right: 35px;
   }
 }
 
@@ -830,63 +1115,6 @@ span.month, span.day {
   }
 }
 
-span.progress-version {
-  color: rgba(0,0,0,0.8);
-  font-size: 16px;
-  display: block;
-}
-
-span.progress-group {
-  color: rgba(0, 0, 0, 0.54);
-  font-size: 14px;
-  margin-top: 4px;
-}
-
-.progressBar, .progressTime {
-  padding-left: 66px;
-}
-
-
-.progressBar {
-  height: 20px;
-  width: 90%;
-  position: relative;
-  top: 4px;
-  box-sizing: border-box;
-
-  &.tableBar {
-    padding-left: 0;
-    width: 86%;
-    top: 0;
-  }
-
-  div {
-    height: 100%;
-  }
-
-  .green, .red, .grey {
-    .transition(width 0.5s ease-out);
-    width: 0;
-  }
-
-  .percentage {
-    position: absolute;
-    right: -50px;
-    top: 2px;
-    width: 40px;
-    text-align: right;
-  }
-
-  &.tableBar .percentage {
-    right: -40px;
-    width: 34px;
-  }
-}
-
-.progressTime {
-  position: relative;
-  top: 12px;
-}
 
 
 .slider {
@@ -903,6 +1131,7 @@ span.progress-group {
   .transition(all 0.5s ease-in-out);
 }
 
+
 @keyframes fadein {
   0% {
     opacity: 0;
@@ -911,6 +1140,47 @@ span.progress-group {
     opacity: 1;
   }
 } 
+
+@keyframes pulse {
+  0% {
+    background-color: @lightergrey;
+  }
+  50% {
+    background-color: lighten(@lightergrey, 4%);
+  }
+  100% {
+    background-color: @lightergrey;
+  }
+}
+
+@keyframes spin {
+   100% {
+    .rotate(360deg); 
+  }
+}
+
+div.shake-alert {
+  animation: shake 0.72s cubic-bezier(.36,.07,.19,.97) both;
+  transform: translate3d(0, 0, 0);
+}
+
+@keyframes shake {
+  10%, 90% {
+    transform: translate3d(-1px, 0, 0);
+  }
+  
+  20%, 80% {
+    transform: translate3d(1px, 0, 0);
+  }
+
+  30%, 50%, 70% {
+    transform: translate3d(-2px, 0, 0);
+  }
+
+  40%, 60% {
+    transform: translate3d(2px, 0, 0);
+  }
+}
 
 
 /* LESS MIXINS */
@@ -928,6 +1198,13 @@ span.progress-group {
   -o-transition:      @transition;  
 }
 
+.animation (@animation) {
+  -webkit-animation: @animation;  
+  -moz-animation:    @animation;
+  -ms-animation:     @animation; 
+  -o-animation:      @animation;  
+}
+
 .opacity (@opacity: 0.5) {
   -webkit-opacity:  @opacity;
   -moz-opacity:     @opacity;
@@ -939,6 +1216,12 @@ span.progress-group {
   -moz-transform:    rotateX(@deg);
   -ms-transform:     rotateX(@deg);
   -o-transform:      rotateX(@deg);
+}
+.rotate (@deg) {
+  -webkit-transform: rotate(@deg);
+  -moz-transform:    rotate(@deg);
+  -ms-transform:     rotate(@deg);
+  -o-transform:      rotate(@deg);
 }
 
 .placeholder(@rules) {

@@ -4,7 +4,8 @@ var Report = require('./report.js');
 var ScheduleForm = require('./scheduleform');
 var GroupDevices = require('./groupdevices');
 
-var ProgressBar = require('./progressbar');
+var ProgressChart = require('./progresschart');
+var DeploymentStatus = require('./deploymentstatus');
 
 // material ui
 var mui = require('material-ui');
@@ -52,14 +53,17 @@ var Recent = React.createClass({
           <TableRowColumn><GroupDevices deployment={deployment.id} /></TableRowColumn>
           <TableRowColumn><Time value={this._formatTime(deployment.created)} format="YYYY-MM-DD HH:mm" /></TableRowColumn>
           <TableRowColumn>--</TableRowColumn>
-          <TableRowColumn><ProgressBar noPadding={true} deployment={deployment} /></TableRowColumn>
+          <TableRowColumn>In progress</TableRowColumn>
         </TableRow>
       )
     }, this);
  
     var recentMap = recent.map(function(deployment, index) {
-      // if failure, get statistics
-      var status = (deployment.status === "inprogress") ? "In progress" : deployment.status;
+      //  get statistics
+      var status = (
+        <DeploymentStatus id={deployment.id} />
+      );
+
       return (
         <TableRow key={index}>
           <TableRowColumn>{deployment.name}</TableRowColumn>
@@ -67,7 +71,7 @@ var Recent = React.createClass({
           <TableRowColumn><GroupDevices deployment={deployment.id} /></TableRowColumn>
           <TableRowColumn><Time value={this._formatTime(deployment.created)} format="YYYY-MM-DD HH:mm" /></TableRowColumn>
           <TableRowColumn><Time value={this._formatTime(deployment.finished)} format="YYYY-MM-DD HH:mm" /></TableRowColumn>
-          <TableRowColumn><FlatButton label={status} primary={deployment.status === 'failed'} secondary={deployment.status === 'complete'} /></TableRowColumn>
+          <TableRowColumn>{status}</TableRowColumn>
         </TableRow>
       )
     }, this);

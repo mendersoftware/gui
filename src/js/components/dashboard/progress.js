@@ -1,7 +1,7 @@
 import React from 'react';
 import { Router, Route, Link } from 'react-router';
 
-var ProgressBar = require('../deployments/progressBar.js');
+var ProgressChart = require('../deployments/progressChart.js');
 var Time = require('react-time');
 
 // material ui
@@ -15,52 +15,55 @@ var FontIcon = mui.FontIcon;
 var Progress = React.createClass({
   getInitialState: function() {
     return {
-      devices: {}
+      devices: {},
+      selectedDevice: {},
     };
   },
-  _clickHandle: function () {
-    this.props.clickHandle(this.props.route);
+  _clickHandle: function(id) {
+    var params = {};
+    params.id = id;
+    params.route="deployments";
+    params.open=true;
+    this.props.clickHandle(params);
   },
   _formatTime: function(date) {
     return date.replace(' ','T').replace(/ /g, '').replace('UTC','');
   },
-  getDevices: function(data, index) {
-    // retrieve number of devices from child
-    var val = {};
-    val[index] = "("+data+")";
-    this.setState({devices: val});
-  },
   render: function() {
     var progress = this.props.deployments.map(function(deployment, index) {
-      var progressBar = (
-        <ProgressBar deployment={deployment} getDevices={this.getDevices} index={index} />
+      var progressChart = (
+        <ProgressChart deployment={deployment} index={index} />
+      );
+
+      var deploymentInfo = (
+        <div className="deploymentInfo" style={{width:"240", height:"auto"}}>
+          <div><div className="progressLabel">Updating to:</div>{deployment.artifact_name}</div>
+          <div><div className="progressLabel">Device group:</div><span className="capitalized">{deployment.name}</span></div>
+          <div><div className="progressLabel">Started:</div><Time className="progressTime" value={this._formatTime(deployment.created)} format="YYYY-MM-DD HH:mm" /></div>
+          <div style={{marginTop:15}}><div className="progressLabel"></div><a onClick={this._clickHandle.bind(null, deployment.id)}>View report</a></div>
+        </div>
       );
 
       var last = (this.props.deployments.length === index+1) || index===4;
 
       return (
-        <div key={index}>
+        <div className="deployment" key={index}>
           <ListItem
             disabled={true}
-            style={{paddingBottom:"12", height:"50"}}
-            primaryText={progressBar}
-            secondaryText={<Time style={{fontSize:"12"}} className="progressTime" value={this._formatTime(deployment.created)} format="YY-MM-DD HH:mm" />}
-            onClick={this._clickHandle}
-            leftIcon={<div style={{width:"110", height:"auto"}}><span className="progress-version">{deployment.version}</span><span className="progress-group">{deployment.name} {this.state.devices[index]}</span></div>}
-          />
-          <Divider className={last ? "hidden" : null} />
+            style={{minHeight:"100", paddingLeft:"280", paddingBottom: "15"}}
+            primaryText={progressChart}
+            leftIcon={deploymentInfo} />
         </div>
       );
-   
     }, this);
 
     return (
-      <div className="deployments-container">
+      <div className="progress-container">
         <div className="dashboard-header subsection">
           <h3>In progress<span className="dashboard-number">{progress.length}</span></h3>
         </div>
         <div>
-          <List>
+          <List style={{paddingTop:0}}>
             {progress}
           </List>
           <div className={progress.length ? 'hidden' : null}>

@@ -56,7 +56,7 @@ var Devices = React.createClass({
     //AppActions.getDevices();
   },
   _closeOnboard: function() {
-    AppActions.setLocalStorage("devicesNextStep", true);
+    this.setState({showTODO: true});
   },
   _onChange: function() {
 
@@ -83,25 +83,27 @@ var Devices = React.createClass({
           <Groups groups={this.state.groups} selectedGroup={this.state.selectedGroup} allDevices={this.state.allDevices} />
         </div>
         <div className="rightFluid padding-right">
-          <div className={this.state.unauthorized.length || !this.state.groupTODO ? "hidden" : null}>
-            <div className="margin-top margin-bottom onboard">
-              <div className="close" onClick={this._closeOnboard}/>
-              <h3><span className="todo">//TODO</span> Upload a new software image</h3>
-              <Link to="/software" className="todo link">> Go to software</Link>
+          <div className={this.state.showTODO ? "hidden" : null}>
+            <div className={this.state.unauthorized.length || !this.state.groupTODO ? "hidden" : null}>
+              <div className="margin-top margin-bottom onboard">
+                <div className="close" onClick={this._closeOnboard}/>
+                <h3><span className="todo">//TODO</span> Upload a new software image</h3>
+                <Link to="/software" className="todo link">> Go to software</Link>
+              </div>
             </div>
-          </div>
-          <div className={this.state.groupTODO || this.state.unauthorized.length ? "hidden" : null}>
-            <div className="margin-top margin-bottom onboard">
-              <div className="close" onClick={this._closeOnboard}/>
-              <h3><span className="todo">//TODO</span> Create a new group with these devices</h3>
+            <div className={this.state.groupTODO || this.state.unauthorized.length ? "hidden" : null}>
+              <div className="margin-top margin-bottom onboard">
+                <div className="close" onClick={this._closeOnboard}/>
+                <h3><span className="todo">//TODO</span> Create a new group with these devices</h3>
+              </div>
             </div>
-          </div>
-         <div className={!this.state.authTODO && this.state.unauthorized.length ? null : "hidden" }>
-            <div className="margin-top margin-bottom onboard">
-              <div className="close" onClick={this._closeOnboard}/>
-              <h3><span className="todo">//TODO</span> Authorize the 2 pending devices</h3>
+           <div className={!this.state.authTODO && this.state.unauthorized.length ? null : "hidden" }>
+              <div className="margin-top margin-bottom onboard">
+                <div className="close" onClick={this._closeOnboard}/>
+                <h3><span className="todo">//TODO</span> Authorize the 2 pending devices</h3>
+              </div>
             </div>
-          </div>
+          </div>  
           <div className={this.state.unauthorized.length ? null : "hidden"}>
             <Unauthorized unauthorized={this.state.unauthorized} />
           </div>

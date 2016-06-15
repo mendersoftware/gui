@@ -18,13 +18,13 @@ var Activity = React.createClass({
             <p className="summary">{log.summary}</p>
             <p>{log.details}</p>
           </div>
-          <Time style={{fontSize:"12"}} className="activityTime" value={log.timestamp} format="YY-MM-DD HH:mm" />
+          <Time style={{fontSize:"12"}} className="activityTime" value={log.timestamp} format="YYYY-MM-DD HH:mm" />
         </div>
       )
     }); 
     return (
       <div className="activity-log">
-        <div>
+        <div className="dashboard-header">
           <h2>User activity</h2>
         </div>
         <div>

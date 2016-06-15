@@ -7,6 +7,10 @@ var Activity = require('./activity');
 var Deployments = require('./deployments');
 import { Router, Route, Link } from 'react-router';
 
+// material ui
+var mui = require('material-ui');
+var RaisedButton = mui.RaisedButton;
+
 function getState() {
   return {
     progress: AppStore.getProgressDeployments(new Date()),
@@ -55,14 +59,31 @@ var Dashboard = React.createClass({
     }
   },
   render: function() {
+    var unauthorized_str = '';
+    if (this.state.unauthorized.length) {
+      if (this.state.unauthorized.length > 1) {
+        unauthorized_str = 'are ' + this.state.unauthorized.length + ' devices';
+      } else {
+        unauthorized_str = 'is ' + this.state.unauthorized.length + ' device';
+      }
+    }
     return (
-      <div className="contentContainer">
+      <div className="contentContainer dashboard">
         <div>
+          <div className={this.state.unauthorized.length && !this.state.hideReview ? "authorize onboard margin-bottom" : "hidden" }>
+            <div className="close" onClick={this._setStorage.bind(null, "reviewDevices", true)}/>
+            <p>There {unauthorized_str} waiting authorization</p>
+            <RaisedButton onClick={this._handleClick.bind(null, {route:"devices"})} primary={true} label="Review details" />
+          </div>
           <div className="leftDashboard">
-            <Health closeHandle={this._setStorage} hideReview={this.state.hideReview} clickHandle={this._handleClick} health={this.state.health} unauthorized={this.state.unauthorized} />
             <Deployments clickHandle={this._handleClick} progress={this.state.progress} recent={this.state.recent} />
           </div>
-          <Activity activity={this.state.activity} />
+          <div className="rightDashboard">
+            <div className="right">
+              <Health clickHandle={this._handleClick} health={this.state.health} />
+              <Activity activity={this.state.activity} />
+            </div>
+          </div>
         </div>
       </div>
     );

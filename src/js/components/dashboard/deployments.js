@@ -34,11 +34,15 @@ var Deployments = React.createClass({
         </div>
 
         <div className={this.props.progress.length || this.props.recent.length ? null : "hidden" }>
-          <div className="flexbox">
-            <Progress clickHandle={this._clickHandle} deployments={this.props.progress} />
-            <Recent clickHandle={this._clickHandle} deployments={this.props.recent} />
+          <div>
+            <div className="margin-bottom margin-top">
+              <Progress clickHandle={this._clickHandle} deployments={this.props.progress} />
+            </div>
+            <div className="margin-bottom-large">
+              <Recent clickHandle={this._clickHandle} deployments={this.props.recent} />
+            </div>
           </div>
-          <div className="flexbox">
+          <div>
             <div>
               <RaisedButton onClick={this._clickHandle.bind(null, {route:"deployments",open:true})} label="Deploy an update" secondary={true} />
             </div>

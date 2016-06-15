@@ -60,7 +60,16 @@ var _groups = [
 
 /* Temp local devices */
 
-var _alldevices = [];
+var _alldevices = [  {
+    'id':1,
+    'name': '00a0c91e6-7dec-11d0-a765-f81d4faebf1',
+    'device_type':"Raspberry Pi 3",
+    'arch': 'ARMv8 Cortex-A53',
+    'status': 'Connected',
+    'artifact_name': 'Application 0.0.2',
+    'groups': [1],
+    'tags': []
+  },];
 
 var _alldevices1 = [
   {
@@ -144,7 +153,12 @@ var _unauthorized = [
     'status': 'Unauthorized',
     'artifact_name': 'Application 0.0.2',
     'groups': [],
-    'tags': []
+    'tags': [],
+    'ip_address': '172.16.254.1',
+    'mac_address': '00-14-22-01-23-45',
+    'device_serial': '4CE0460D0G',
+    'request_time': 1468777607000,
+    'last_heartbeat': 1468777607000
   },
   {
     'id':9,
@@ -154,7 +168,12 @@ var _unauthorized = [
     'status': 'Unauthorized',
     'artifact_name': 'Application 0.0.2',
     'groups': [],
-    'tags': []
+    'tags': [],
+    'ip_address': '172.16.255.1',
+    'mac_address': '00-14-22-03-23-45',
+    'device_serial': '4CE0860D1F',
+    'request_time': 1459777609000,
+    'last_heartbeat': 1459777609000
   },
 ];
 
@@ -310,7 +329,7 @@ function _addGroup(group, idx) {
 
 function _getDeviceHealth() {
   var health = {};
-  var down = collectWithAttr(_alldevices, 'status', 'Down');
+  var down = collectWithAttr(_alldevices, 'status', 'Not connected');
   health.down = down.length;
   health.up = _alldevices.length - health.down;
   health.total = _alldevices.length;
@@ -326,20 +345,22 @@ function _authorizeDevices(devices) {
 
   for (var i=0; i<devices.length; i++) {
     var idx = findWithAttr(_alldevices, 'name', devices[i].name);
-
     if (idx === undefined) {
       devices[i].groups.push(1);
-      devices[i].status = "Up";
+      devices[i].status = devices[0].name.indexOf("4f9") ? "Not connected" : "Connected";
       _alldevices.push(devices[i]);
       _groups[0].devices.push(devices[i].id);
-
-      var unIdx = findWithAttr(_unauthorized, 'name', devices[i].name);
-      if (unIdx !== undefined) {
-        _unauthorized.splice(unIdx, 1);
-      }
     } else {
       // id already exists - error
       console.log("device id already exists");
+    }
+  }
+
+  // remove from _unauthorized outside of main loop so as not to interrupt
+  for (var i=devices.length-1; i>=0; i--) {
+    var unIdx = findWithAttr(_unauthorized, 'name', devices[i].name);
+    if (unIdx !== undefined) {
+      _unauthorized.splice(unIdx, 1);
     }
   }
   _selectGroup(_currentGroup.id);
@@ -411,8 +432,8 @@ var _activityLog = [
 function _getRecentDeployments(time) {
   var recent = [];
   for (var i=0;i<_allDeployments.length;i++) {
-    var created = new Date(_allDeployments[i].created.replace(/-/g, '/').replace(/ UTC/, ''));
-    var finished = new Date(_allDeployments[i].finished.replace(/-/g, '/').replace(/ UTC/, ''));
+    var created = new Date(_allDeployments[i].created);
+    var finished = new Date(_allDeployments[i].finished);
     if (created<time && finished<time) {
       recent.push(_allDeployments[i]);
     }
@@ -423,8 +444,8 @@ function _getRecentDeployments(time) {
 function _getProgressDeployments(time) {
   var progress = [];
   for (var i=0;i<_allDeployments.length;i++) {
-    var created = new Date(_allDeployments[i].created.replace(/-/g, '/').replace(/ UTC/, ''));
-    var finished = new Date(_allDeployments[i].finished.replace(/-/g, '/').replace(/ UTC/, ''));
+    var created = new Date(_allDeployments[i].created);
+    var finished = new Date(_allDeployments[i].finished);
     /*
     * CHANGE FOR MOCKING API
     */ 
@@ -453,6 +474,22 @@ function _getScheduledDeployments(time) {
   }
   schedule.sort(startTimeSortAscend);
   return schedule;
+}
+
+function _sortDeploymentDevices(devices) {
+  var newList = {
+    successful:[],
+    inprogress: [],
+    pending: [],
+    noimage:[],
+    failure:[]
+  };
+  for (var i = 0; i<devices.length; i++) {
+    newList[devices[i].status].push(devices[i]);
+  }
+
+  var newCombine = newList.successful.concat(newList.inprogress, newList.pending, newList.noimage, newList.failure);
+  return newCombine;
 }
 
 function _saveSchedule(schedule, single) {
@@ -699,6 +736,10 @@ var AppStore = assign(EventEmitter.prototype, {
     * Return list of devices given group and device_type
     */
     return _getDevices(group, device_type)
+  },
+
+  getOrderedDeploymentDevices: function(devices) {
+    return _sortDeploymentDevices(devices);
   },
 
   getHealth: function() {

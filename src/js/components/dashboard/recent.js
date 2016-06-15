@@ -1,6 +1,6 @@
 import React from 'react';
 var GroupDevices = require('../deployments/groupdevices');
-
+var RecentStats = require('./recentstats');
 var Time = require('react-time');
 var AppActions = require('../../actions/app-actions');
 
@@ -33,11 +33,6 @@ var Recent = React.createClass({
     var recent = this.props.deployments.map(function(deployment, index) {
       if (index<5) {
 
-        var group = (
-            <span className="progress-group">
-              <span>{deployment.name} </span>(<GroupDevices deployment={deployment.id} />)
-            </span>
-        );
         var last = (this.props.deployments.length === index+1) || index===4;
         var status = deployment.status === "Failed" ? "warning" : "check";
         var icon = (
@@ -46,34 +41,30 @@ var Recent = React.createClass({
           </FontIcon>
         );
         return (
-          <div key={index} className={status==="warning" ? "fail" : null}>
-            <ListItem
-              disabled={false}
-              primaryText={deployment.version}
-              secondaryText={group}
-              onClick={this._clickHandle.bind(null, deployment.id)}
-              leftIcon={icon}
-              rightIcon={<Time style={{float:"right", position:"initial", width:"auto", marginRight:"-56", whiteSpace:"nowrap", fontSize:"14"}} value={this._formatTime(deployment.finished)} format="YYYY-MM-DD HH:mm" />} />
-            <Divider inset={true} className={last ? "hidden" : null} />
+          <div onClick={this._clickHandle.bind(null, deployment.id)} className="deployment" key={index}>
+            <div className="deploymentInfo">
+              <div><div className="progressLabel">Updating to:</div>{deployment.artifact_name}</div>
+              <div><div className="progressLabel">Device group:</div><span className="capitalized">{deployment.name}</span></div>
+              <div><div className="progressLabel">Finished:</div><Time className="progressTime" value={this._formatTime(deployment.finished)} format="YYYY-MM-DD HH:mm" /></div>
+            </div>
+            <RecentStats id={deployment.id} />
           </div>
         )
       }
     }, this);
     return (
-      <div className="deployments-container">
-        <div className="dashboard-header subsection">
-          <h3>Recent<span className="dashboard-number">{recent.length}</span></h3>
-        </div>
-        <div>
-          <List>
+      <div>
+        <div className="deployments-container">
+          <div className="dashboard-header subsection">
+            <h3>Recent<span className="dashboard-number">{recent.length}</span></h3>
+          </div>
+          <div>
             {recent}
-          </List>
+          </div>
           <div className={recent.length ? 'hidden' : null}>
             <p className="italic">No recent deployments</p>
           </div>
-          <div>
-            <Link to="/deployments" className="float-right">All deployments</Link>
-          </div>
+          <Link to="/deployments" className="float-right">All deployments</Link>
         </div>
       </div>
     );
