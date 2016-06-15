@@ -80121,7 +80121,7 @@ function getState() {
     attributes: AppStore.getAttributes(),
     images: AppStore.getSoftwareRepo(),
     unauthorized: AppStore.getUnauthorized(),
-    hideTODO: localStorage.getItem("devicesNextStep"),
+    hideTODO: localStorage.getItem("hideTODO"),
     groupTODO: localStorage.getItem("groupNextStep"),
     authTODO: localStorage.getItem("authStep")
   };
@@ -80160,7 +80160,8 @@ var Devices = _react2.default.createClass({
     //AppActions.getDevices();
   },
   _closeOnboard: function _closeOnboard() {
-    this.setState({ showTODO: true });
+    this.setState({ hideTODO: true });
+    AppActions.setLocalStorage("hideTODO", true);
   },
   _onChange: function _onChange() {
 
@@ -80194,7 +80195,7 @@ var Devices = _react2.default.createClass({
         { className: 'rightFluid padding-right' },
         _react2.default.createElement(
           'div',
-          { className: this.state.showTODO ? "hidden" : null },
+          { className: this.state.hideTODO ? "hidden" : null },
           _react2.default.createElement(
             'div',
             { className: this.state.unauthorized.length || !this.state.groupTODO ? "hidden" : null },

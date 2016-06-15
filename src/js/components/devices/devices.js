@@ -19,7 +19,7 @@ function getState() {
     attributes: AppStore.getAttributes(),
     images: AppStore.getSoftwareRepo(),
     unauthorized: AppStore.getUnauthorized(),
-    hideTODO: localStorage.getItem("devicesNextStep"),
+    hideTODO: localStorage.getItem("hideTODO"),
     groupTODO: localStorage.getItem("groupNextStep"),
     authTODO: localStorage.getItem("authStep")
   }
@@ -56,7 +56,8 @@ var Devices = React.createClass({
     //AppActions.getDevices();
   },
   _closeOnboard: function() {
-    this.setState({showTODO: true});
+    this.setState({hideTODO: true});
+    AppActions.setLocalStorage("hideTODO", true);
   },
   _onChange: function() {
 
@@ -83,7 +84,7 @@ var Devices = React.createClass({
           <Groups groups={this.state.groups} selectedGroup={this.state.selectedGroup} allDevices={this.state.allDevices} />
         </div>
         <div className="rightFluid padding-right">
-          <div className={this.state.showTODO ? "hidden" : null}>
+          <div className={this.state.hideTODO ? "hidden" : null}>
             <div className={this.state.unauthorized.length || !this.state.groupTODO ? "hidden" : null}>
               <div className="margin-top margin-bottom onboard">
                 <div className="close" onClick={this._closeOnboard}/>
