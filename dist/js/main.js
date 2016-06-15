@@ -76160,10 +76160,10 @@ module.exports = warning;
 
 var AppConstants = require('../constants/app-constants');
 var AppDispatcher = require('../dispatchers/app-dispatcher');
-var Api = require('../api/api');
+var ImagesApi = require('../api/images-api');
 var DeploymentsApi = require('../api/deployments-api');
-var apiUrl = "http://private-ebf220-deployments1.apiary-mock.com/api/0.0.1/";
-var deploymentsApiUrl = "http://private-ebf220-deployments1.apiary-mock.com/api/0.0.1/";
+var rootUrl = "http://192.168.99.100:9080";
+var deploymentsApiUrl = rootUrl + "/deployments/api/0.0.1";
 
 var AppActions = {
 
@@ -76214,7 +76214,7 @@ var AppActions = {
   /* API */
 
   getImages: function getImages() {
-    Api.get(apiUrl + 'images').then(function (images) {
+    ImagesApi.get(deploymentsApiUrl + '/images').then(function (images) {
       AppDispatcher.handleViewAction({
         actionType: AppConstants.RECEIVE_IMAGES,
         images: images
@@ -76223,14 +76223,14 @@ var AppActions = {
   },
 
   uploadImage: function uploadImage(meta, callback) {
-    Api.post(apiUrl + 'images', meta).then(function (data) {
+    ImagesApi.post(deploymentsApiUrl + '/images', meta).then(function (data) {
       // inserted image meta data, got ID in return
-      callback(data.id);
+      callback(data.location);
     });
   },
 
-  getUploadUri: function getUploadUri(id, callback) {
-    Api.get(apiUrl + 'images/' + id + "/upload?expire=60").then(function (data) {
+  getUploadUri: function getUploadUri(id_url, callback) {
+    ImagesApi.get(rootUrl + id_url + "/upload?expire=60").then(function (data) {
       var uri = data.uri;
       callback(uri);
     });
@@ -76238,21 +76238,21 @@ var AppActions = {
 
   doFileUpload: function doFileUpload(uri, image, callback) {
     // got upload uri, finish uploading file
-    Api.putImage(uri, image).then(function (data) {
+    ImagesApi.putImage(uri, image).then(function (data) {
       callback();
     });
   },
 
   editImage: function editImage(image, callback) {
     var data = { description: image.description, name: image.name, device_type: image.device_type, image: image.tags };
-    Api.putJSON(apiUrl + "images/" + image.id, data).then(function (res) {
+    ImagesApi.putJSON(deploymentsApiUrl + "/images/" + image.id, data).then(function (res) {
       callback();
     });
   },
 
   /* API */
   getDeployments: function getDeployments() {
-    DeploymentsApi.get(deploymentsApiUrl + 'deployments').then(function (deployments) {
+    DeploymentsApi.get(deploymentsApiUrl + '/deployments/').then(function (deployments) {
       AppDispatcher.handleViewAction({
         actionType: AppConstants.RECEIVE_DEPLOYMENTS,
         deployments: deployments
@@ -76260,28 +76260,28 @@ var AppActions = {
     });
   },
   createDeployment: function createDeployment(deployment) {
-    DeploymentsApi.post(deploymentsApiUrl + 'deployments', deployment).then(function (data) {
+    DeploymentsApi.post(deploymentsApiUrl + '/deployments/', deployment).then(function (data) {
       // inserted deployment data,
       callback(data);
     });
   },
   getSingleDeployment: function getSingleDeployment(id, callback) {
-    DeploymentsApi.get(deploymentsApiUrl + 'deployments/' + id).then(function (data) {
+    DeploymentsApi.get(deploymentsApiUrl + '/deployments/' + id).then(function (data) {
       callback(data);
     });
   },
   getSingleDeploymentStats: function getSingleDeploymentStats(id, callback) {
-    DeploymentsApi.get(deploymentsApiUrl + 'deployments/' + id + '/statistics').then(function (data) {
+    DeploymentsApi.get(deploymentsApiUrl + '/deployments/' + id + '/statistics').then(function (data) {
       callback(data);
     });
   },
   getSingleDeploymentDevices: function getSingleDeploymentDevices(id, callback) {
-    DeploymentsApi.get(deploymentsApiUrl + 'deployments/' + id + '/devices').then(function (data) {
+    DeploymentsApi.get(deploymentsApiUrl + '/deployments/' + id + '/devices').then(function (data) {
       callback(data);
     });
   },
   getDeviceLog: function getDeviceLog(deploymentId, deviceId, callback) {
-    DeploymentsApi.getText(deploymentsApiUrl + 'deployments/' + deploymentId + '/devices/' + deviceId + "/log").then(function (data) {
+    DeploymentsApi.getText(deploymentsApiUrl + '/deployments/' + deploymentId + '/devices/' + deviceId + "/log").then(function (data) {
       callback(data);
     });
   },
@@ -76336,73 +76336,7 @@ var AppActions = {
 
 module.exports = AppActions;
 
-},{"../api/api":753,"../api/deployments-api":754,"../constants/app-constants":788,"../dispatchers/app-dispatcher":789}],753:[function(require,module,exports){
-'use strict';
-
-var request = require('superagent');
-var Promise = require('es6-promise').Promise;
-
-var username = "admin";
-var password = "admin";
-
-var Api = {
-  get: function get(url) {
-    return new Promise(function (resolve, reject) {
-      request.get(url).end(function (err, res) {
-        if (err || !res.ok) {
-          reject();
-        } else {
-          resolve(res.body);
-        }
-      });
-    });
-  },
-  post: function post(url, data) {
-    return new Promise(function (resolve, reject) {
-      request.post(url).set('Content-Type', 'application/json').send(data).end(function (err, res) {
-        if (err || !res.ok) {
-          reject();
-        } else {
-          resolve(JSON.parse(res.text));
-        }
-      });
-    });
-  },
-  putImage: function putImage(url, image) {
-    return new Promise(function (resolve, reject) {
-      request.put(url).set("Content-Type", "application/octet-stream").send(image).end(function (err, res) {
-        if (err || !res.ok) {
-          reject();
-        } else {
-          var responsetext = "";
-          if (res.text) {
-            responsetext = JSON.parse(res.text);
-          }
-          resolve(responsetext);
-        }
-      });
-    });
-  },
-  putJSON: function putJSON(url, data) {
-    return new Promise(function (resolve, reject) {
-      request.put(url).set('Content-Type', 'application/json').send(data).end(function (err, res) {
-        if (err || !res.ok) {
-          reject();
-        } else {
-          var responsetext = "";
-          if (res.text) {
-            responsetext = JSON.parse(res.text);
-          }
-          resolve(responsetext);
-        }
-      });
-    });
-  }
-};
-
-module.exports = Api;
-
-},{"es6-promise":91,"superagent":747}],754:[function(require,module,exports){
+},{"../api/deployments-api":753,"../api/images-api":754,"../constants/app-constants":788,"../dispatchers/app-dispatcher":789}],753:[function(require,module,exports){
 'use strict';
 
 var request = require('superagent');
@@ -76447,6 +76381,74 @@ var Api = {
     });
   }
 
+};
+
+module.exports = Api;
+
+},{"es6-promise":91,"superagent":747}],754:[function(require,module,exports){
+'use strict';
+
+var request = require('superagent');
+var Promise = require('es6-promise').Promise;
+
+var username = "admin";
+var password = "admin";
+
+var Api = {
+  get: function get(url) {
+    return new Promise(function (resolve, reject) {
+      request.get(url).end(function (err, res) {
+        if (err || !res.ok) {
+          reject();
+        } else {
+          resolve(res.body);
+        }
+      });
+    });
+  },
+  post: function post(url, data) {
+    console.log(url, data);
+    return new Promise(function (resolve, reject) {
+      request.post(url).set('Content-Type', 'application/json').send(data).end(function (err, res) {
+        console.log("end", err, res);
+        if (err || !res.ok) {
+          reject();
+        } else {
+          resolve(res.header);
+        }
+      });
+    });
+  },
+  putImage: function putImage(url, image) {
+    return new Promise(function (resolve, reject) {
+      request.put(url).set("Content-Type", "application/octet-stream").send(image).end(function (err, res) {
+        if (err || !res.ok) {
+          reject();
+        } else {
+          var responsetext = "";
+          if (res.text) {
+            responsetext = JSON.parse(res.text);
+          }
+          resolve(responsetext);
+        }
+      });
+    });
+  },
+  putJSON: function putJSON(url, data) {
+    return new Promise(function (resolve, reject) {
+      request.put(url).set('Content-Type', 'application/json').send(data).end(function (err, res) {
+        if (err || !res.ok) {
+          reject();
+        } else {
+          var responsetext = "";
+          if (res.text) {
+            responsetext = JSON.parse(res.text);
+          }
+          resolve(responsetext);
+        }
+      });
+    });
+  }
 };
 
 module.exports = Api;
@@ -81541,7 +81543,7 @@ var FlatButton = _materialUi2.default.FlatButton;
 var FontIcon = _materialUi2.default.FontIcon;
 var IconButton = _materialUi2.default.IconButton;
 
-var newState = { device_type: "Acme Model 1", tags: [] };
+var newState = {};
 var tags = [];
 var software = [];
 
@@ -81552,7 +81554,8 @@ var Repository = _react2.default.createClass({
     return {
       image: {
         name: null,
-        description: null
+        description: null,
+        yocto_id: null
       },
       sortCol: "name",
       sortDown: true,
@@ -81600,14 +81603,10 @@ var Repository = _react2.default.createClass({
     this.dialogDismiss('schedule');
   },
   _onUploadSubmit: function _onUploadSubmit() {
-    //update build date, last modified, checksum, size
-    newState.modified = this.state.tmpFile.lastModified;
-    newState.size = this.state.tmpFile.size;
     var tmpFile = this.state.tmpFile;
-    //newState.md5 = "ui2ehu2h3823";
-    //newState.checksum = "b411936863d0e245292bb81a60189c7ffd95dbd3723c718e2a1694f944bd91a3";
-    _appActions2.default.uploadImage(newState, function (id) {
-      _appActions2.default.getUploadUri(id, function (uri) {
+
+    _appActions2.default.uploadImage(newState, function (id_uri) {
+      _appActions2.default.getUploadUri(id_uri, function (uri) {
         _appActions2.default.doFileUpload(uri, tmpFile, function () {
           _appActions2.default.getImages();
         });
@@ -81679,7 +81678,6 @@ var Repository = _react2.default.createClass({
       this.setState({ popupLabel: "Edit image details" });
       newState = image;
     } else {
-      newState = { device_type: "Acme Model 1", tags: [] };
       this.setState({ image: newState, popupLabel: "Upload a new image" });
     }
     tags = [];
@@ -81970,7 +81968,6 @@ var Repository = _react2.default.createClass({
             null,
             _react2.default.createElement(TextField, {
               defaultValue: image.name,
-              disabled: image.name ? true : false,
               hintText: 'Name',
               ref: 'nameField',
               id: 'image-name',
@@ -81984,9 +81981,16 @@ var Repository = _react2.default.createClass({
               style: { zIndex: "2" },
               onChange: this.changedFile }),
             _react2.default.createElement(TextField, {
-              value: 'Acme Model 1',
+              defaultValue: image.yocto_id,
+              hintText: 'Yocto ID',
+              ref: 'yoctoField',
+              id: 'yocto-id',
+              floatingLabelText: 'Yocto ID',
+              onChange: this._handleFieldChange.bind(null, 'yocto_id'),
+              errorStyle: { color: "rgb(171, 16, 0)" } }),
+            _react2.default.createElement(TextField, {
               id: 'device_type',
-              disabled: true,
+              disabled: false,
               style: { display: "block" },
               floatingLabelText: 'Device type compatibility',
               onChange: this._handleFieldChange.bind(null, 'device_type'),
@@ -81999,21 +82003,7 @@ var Repository = _react2.default.createClass({
               style: { display: "block" },
               onChange: this._handleFieldChange.bind(null, 'description'),
               errorStyle: { color: "rgb(171, 16, 0)" },
-              defaultValue: image.description }),
-            _react2.default.createElement(
-              'div',
-              { className: 'tagContainer' },
-              _react2.default.createElement(
-                'span',
-                { className: 'inputHeader' },
-                'Tags'
-              ),
-              _react2.default.createElement(ReactTags, { tags: tags,
-                autofocus: false,
-                handleDelete: this.handleDelete,
-                handleAddition: this.handleAddition,
-                handleDrag: this.handleDrag })
-            )
+              defaultValue: image.description })
           )
         )
       ),

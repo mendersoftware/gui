@@ -1,9 +1,10 @@
 var AppConstants = require('../constants/app-constants');
 var AppDispatcher = require('../dispatchers/app-dispatcher');
-var Api = require('../api/api');
+var ImagesApi = require('../api/images-api');
 var DeploymentsApi = require('../api/deployments-api');
-var apiUrl = "http://private-ebf220-deployments1.apiary-mock.com/api/0.0.1/";
-var deploymentsApiUrl = "http://private-ebf220-deployments1.apiary-mock.com/api/0.0.1/";
+var rootUrl = "http://192.168.99.100:9080";
+var deploymentsApiUrl = rootUrl + "/deployments/api/0.0.1";
+
 
 
 var AppActions = {
@@ -56,8 +57,8 @@ var AppActions = {
   /* API */
 
   getImages: function() {
-    Api
-      .get(apiUrl+'images')
+    ImagesApi
+      .get(deploymentsApiUrl+'/images')
       .then(function(images) {
         AppDispatcher.handleViewAction({
           actionType: AppConstants.RECEIVE_IMAGES,
@@ -67,17 +68,17 @@ var AppActions = {
   },
 
   uploadImage: function(meta, callback) {
-    Api
-      .post(apiUrl+'images', meta)
+    ImagesApi
+      .post(deploymentsApiUrl+'/images', meta)
       .then(function(data) {
         // inserted image meta data, got ID in return 
-        callback(data.id);
+        callback(data.location);
       });
   },
 
-  getUploadUri: function(id, callback) {
-    Api
-      .get(apiUrl + 'images/' + id + "/upload?expire=60")
+  getUploadUri: function(id_url, callback) {
+    ImagesApi
+      .get(rootUrl + id_url + "/upload?expire=60")
       .then(function(data) {
         var uri = data.uri;
         callback(uri);
@@ -86,7 +87,7 @@ var AppActions = {
   
   doFileUpload: function(uri, image, callback) {
     // got upload uri, finish uploading file
-    Api
+    ImagesApi
       .putImage(uri, image)
       .then(function(data) {
         callback();
@@ -95,8 +96,8 @@ var AppActions = {
 
   editImage: function(image, callback) {
     var data = {description: image.description, name: image.name, device_type: image.device_type, image: image.tags};
-    Api
-      .putJSON(apiUrl + "images/" + image.id, data)
+    ImagesApi
+      .putJSON(deploymentsApiUrl + "/images/" + image.id, data)
       .then(function(res) {
         callback();
       });
@@ -108,7 +109,7 @@ var AppActions = {
   /* API */
   getDeployments: function() {
     DeploymentsApi
-      .get(deploymentsApiUrl+'deployments')
+      .get(deploymentsApiUrl+'/deployments/')
       .then(function(deployments) {
         AppDispatcher.handleViewAction({
           actionType: AppConstants.RECEIVE_DEPLOYMENTS,
@@ -118,7 +119,7 @@ var AppActions = {
   },
   createDeployment: function(deployment) {
     DeploymentsApi
-    .post(deploymentsApiUrl+'deployments', deployment)
+    .post(deploymentsApiUrl+'/deployments/', deployment)
       .then(function(data) {
         // inserted deployment data,
         callback(data);
@@ -126,28 +127,28 @@ var AppActions = {
   },
   getSingleDeployment: function(id, callback) {
     DeploymentsApi
-      .get(deploymentsApiUrl+'deployments/'+id)
+      .get(deploymentsApiUrl+'/deployments/'+id)
       .then(function(data) {
         callback(data);
       });
   },
   getSingleDeploymentStats: function(id, callback) {
     DeploymentsApi
-      .get(deploymentsApiUrl+'deployments/'+id +'/statistics')
+      .get(deploymentsApiUrl+'/deployments/'+id +'/statistics')
       .then(function(data) {
         callback(data);
       });
   },
   getSingleDeploymentDevices: function(id, callback) {
     DeploymentsApi
-      .get(deploymentsApiUrl+'deployments/'+id +'/devices')
+      .get(deploymentsApiUrl+'/deployments/'+id +'/devices')
       .then(function(data) {
         callback(data);
       });
   },
   getDeviceLog: function(deploymentId, deviceId, callback) {
     DeploymentsApi
-      .getText(deploymentsApiUrl+'deployments/'+deploymentId +'/devices/'+deviceId +"/log")
+      .getText(deploymentsApiUrl+'/deployments/'+deploymentId +'/devices/'+deviceId +"/log")
       .then(function(data) {
         callback(data);
       });
@@ -160,8 +161,6 @@ var AppActions = {
       single: single
     })
   },
-
-
 
 
 

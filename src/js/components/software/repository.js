@@ -34,7 +34,7 @@ var FlatButton = mui.FlatButton;
 var FontIcon = mui.FontIcon;
 var IconButton = mui.IconButton;
 
-var newState = {device_type: "Acme Model 1", tags: []};
+var newState = {};
 var tags = [];
 var software = [];
 
@@ -43,7 +43,8 @@ var Repository = React.createClass({
     return {
       image: {
         name: null,
-        description: null
+        description: null,
+        yocto_id: null
       },
       sortCol: "name",
       sortDown: true,
@@ -91,14 +92,10 @@ var Repository = React.createClass({
     this.dialogDismiss('schedule');
   },
   _onUploadSubmit: function() {
-    //update build date, last modified, checksum, size
-    newState.modified = this.state.tmpFile.lastModified;
-    newState.size = this.state.tmpFile.size;
     var tmpFile = this.state.tmpFile;
-    //newState.md5 = "ui2ehu2h3823";
-    //newState.checksum = "b411936863d0e245292bb81a60189c7ffd95dbd3723c718e2a1694f944bd91a3";
-    AppActions.uploadImage(newState, function(id) {
-      AppActions.getUploadUri(id, function(uri) {
+
+    AppActions.uploadImage(newState, function(id_uri) {
+      AppActions.getUploadUri(id_uri, function(uri) {
         AppActions.doFileUpload(uri, tmpFile, function() {
           AppActions.getImages();
         });
@@ -172,7 +169,6 @@ var Repository = React.createClass({
       this.setState({popupLabel: "Edit image details"});
       newState = image;
     } else {
-      newState = {device_type: "Acme Model 1", tags: []};
       this.setState({image: newState, popupLabel: "Upload a new image"});
     }
     tags = [];
@@ -365,7 +361,6 @@ var Repository = React.createClass({
 
               <TextField
                 defaultValue={image.name}
-                disabled={image.name ? true : false}
                 hintText="Name"
                 ref="nameField"
                 id="image-name"
@@ -381,9 +376,17 @@ var Repository = React.createClass({
                    onChange={this.changedFile} />
 
               <TextField
-                value="Acme Model 1"
+                defaultValue={image.yocto_id}
+                hintText="Yocto ID"
+                ref="yoctoField"
+                id="yocto-id"
+                floatingLabelText="Yocto ID" 
+                onChange={this._handleFieldChange.bind(null, 'yocto_id')}
+                errorStyle={{color: "rgb(171, 16, 0)"}} />
+
+              <TextField
                 id="device_type"
-                disabled={true}
+                disabled={false}
                 style={{display:"block"}}
                 floatingLabelText="Device type compatibility"
                 onChange={this._handleFieldChange.bind(null, 'device_type')} 
@@ -399,14 +402,6 @@ var Repository = React.createClass({
                 errorStyle={{color: "rgb(171, 16, 0)"}}
                 defaultValue={image.description} />
 
-              <div className="tagContainer">
-                <span className="inputHeader">Tags</span>
-                 <ReactTags tags={tags}
-                    autofocus={false}
-                    handleDelete={this.handleDelete}
-                    handleAddition={this.handleAddition}
-                    handleDrag={this.handleDrag} />
-              </div>
             </form>
           </div>
         </Dialog>
