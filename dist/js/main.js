@@ -76407,10 +76407,8 @@ var Api = {
     });
   },
   post: function post(url, data) {
-    console.log(url, data);
     return new Promise(function (resolve, reject) {
       request.post(url).set('Content-Type', 'application/json').send(data).end(function (err, res) {
-        console.log("end", err, res);
         if (err || !res.ok) {
           reject();
         } else {
@@ -81576,6 +81574,15 @@ var Repository = _react2.default.createClass({
     }
   },
 
+  _resetImageState: function _resetImageState() {
+    var image = {
+      name: null,
+      description: null,
+      yocto_id: null
+    };
+    this.setState({ image: image });
+  },
+
   _handleFieldChange: function _handleFieldChange(field, e) {
     newState[field] = e.target.value;
   },
@@ -81615,6 +81622,7 @@ var Repository = _react2.default.createClass({
     });
     this.props.setStorage("uploaded04", true);
     this.dialogDismiss('upload');
+    this._resetImageState();
   },
   _editImageData: function _editImageData(image) {
     _appActions2.default.editImage(image, function () {

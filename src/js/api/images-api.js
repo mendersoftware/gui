@@ -19,14 +19,12 @@ var Api = {
     });
   },
   post: function(url, data) {
-    console.log(url, data);
     return new Promise(function (resolve, reject) {
       request
         .post(url)
         .set('Content-Type', 'application/json')
         .send(data)
         .end(function (err, res) {
-          console.log("end", err, res);
           if (err || !res.ok) {
             reject();
           } else {
