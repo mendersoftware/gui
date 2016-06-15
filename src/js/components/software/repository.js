@@ -64,6 +64,15 @@ var Repository = React.createClass({
     }
   },
 
+  _resetImageState: function () {
+    var image = {
+      name: null,
+      description: null,
+      yocto_id: null
+    };
+    this.setState({image: image});
+  },
+
   _handleFieldChange: function(field, e) {
     newState[field] = e.target.value;
   },
@@ -103,6 +112,7 @@ var Repository = React.createClass({
     });
     this.props.setStorage("uploaded04", true);
     this.dialogDismiss('upload');
+    this._resetImageState();
   },
   _editImageData: function (image) {
     AppActions.editImage(image, function() {
