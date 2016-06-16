@@ -379,7 +379,7 @@ var Repository = React.createClass({
                 errorStyle={{color: "rgb(171, 16, 0)"}} />
 
               <FileInput name="myImage"
-                   accept=".png,.gif"
+                   accept=".tar,.gz,.zip"
                    placeholder="Upload image"
                    className="fileInput"
                    style={{zIndex: "2"}}

@@ -81984,7 +81984,7 @@ var Repository = _react2.default.createClass({
               onChange: this._handleFieldChange.bind(null, 'name'),
               errorStyle: { color: "rgb(171, 16, 0)" } }),
             _react2.default.createElement(FileInput, { name: 'myImage',
-              accept: '.png,.gif',
+              accept: '.tar,.gz,.zip',
               placeholder: 'Upload image',
               className: 'fileInput',
               style: { zIndex: "2" },
