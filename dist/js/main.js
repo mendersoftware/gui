@@ -80860,7 +80860,6 @@ var SelectedDevices = _react2.default.createClass({
       name: this.props.selected[0].name,
       artifact_name: this.state.image.name
     };
-    console.log(newDeployment);
     AppActions.createDeployment(newDeployment, function (uri) {
       console.log(uri);
     });
