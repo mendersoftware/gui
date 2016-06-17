@@ -2,8 +2,13 @@ var AppConstants = require('../constants/app-constants');
 var AppDispatcher = require('../dispatchers/app-dispatcher');
 var ImagesApi = require('../api/images-api');
 var DeploymentsApi = require('../api/deployments-api');
-var rootUrl = "http://192.168.99.100:9080";
-var deploymentsApiUrl = rootUrl + "/deployments/api/0.0.1";
+var rootUrl = "http://192.168.99.100";
+var deploymentsRoot = rootUrl + ":9080";
+var deploymentsApiUrl = deploymentsRoot + "/deployments/api/0.0.1";
+var devicesRoot = rootUrl + ":8082";
+var devicesApiUrl = devicesRoot + "/api/0.1.0";
+var deviceAuthRoot = rootUrl + ":8082";
+var deviceAuthApiUrl = deviceAuthRoot + "/v0.1";
 
 
 
@@ -54,8 +59,13 @@ var AppActions = {
   },
 
 
-  /* API */
+  /* Devices */
 
+
+
+
+
+  /* Images */
   getImages: function() {
     ImagesApi
       .get(deploymentsApiUrl+'/images')
@@ -78,7 +88,7 @@ var AppActions = {
 
   getUploadUri: function(id_url, callback) {
     ImagesApi
-      .get(rootUrl + id_url + "/upload?expire=60")
+      .get(deploymentsRoot + id_url + "/upload?expire=60")
       .then(function(data) {
         var uri = data.uri;
         callback(uri);
@@ -106,10 +116,10 @@ var AppActions = {
 
 
 
-  /* API */
+  /*Deployments */
   getDeployments: function() {
     DeploymentsApi
-      .get(deploymentsApiUrl+'/deployments/')
+      .get(deploymentsApiUrl+'/deployments')
       .then(function(deployments) {
         AppDispatcher.handleViewAction({
           actionType: AppConstants.RECEIVE_DEPLOYMENTS,
@@ -117,13 +127,12 @@ var AppActions = {
         });
       });
   },
-  createDeployment: function(deployment) {
+  createDeployment: function(deployment, callback) {
     DeploymentsApi
-    .post(deploymentsApiUrl+'/deployments/', deployment)
-      .then(function(data) {
-        // inserted deployment data,
-        callback(data);
-      });
+    .post(deploymentsApiUrl+'/deployments', deployment)
+    .then(function(data) {
+      callback(deploymentsRoot + data.location);
+    });
   },
   getSingleDeployment: function(id, callback) {
     DeploymentsApi
