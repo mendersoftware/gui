@@ -76162,8 +76162,13 @@ var AppConstants = require('../constants/app-constants');
 var AppDispatcher = require('../dispatchers/app-dispatcher');
 var ImagesApi = require('../api/images-api');
 var DeploymentsApi = require('../api/deployments-api');
-var rootUrl = "http://192.168.99.100:9080";
-var deploymentsApiUrl = rootUrl + "/deployments/api/0.0.1";
+var rootUrl = "http://192.168.99.100";
+var deploymentsRoot = rootUrl + ":9080";
+var deploymentsApiUrl = deploymentsRoot + "/deployments/api/0.0.1";
+var devicesRoot = rootUrl + ":8082";
+var devicesApiUrl = devicesRoot + "/api/0.1.0";
+var deviceAuthRoot = rootUrl + ":8082";
+var deviceAuthApiUrl = deviceAuthRoot + "/v0.1";
 
 var AppActions = {
 
@@ -76211,8 +76216,9 @@ var AppActions = {
     });
   },
 
-  /* API */
+  /* Devices */
 
+  /* Images */
   getImages: function getImages() {
     ImagesApi.get(deploymentsApiUrl + '/images').then(function (images) {
       AppDispatcher.handleViewAction({
@@ -76230,7 +76236,7 @@ var AppActions = {
   },
 
   getUploadUri: function getUploadUri(id_url, callback) {
-    ImagesApi.get(rootUrl + id_url + "/upload?expire=60").then(function (data) {
+    ImagesApi.get(deploymentsRoot + id_url + "/upload?expire=60").then(function (data) {
       var uri = data.uri;
       callback(uri);
     });
@@ -76250,19 +76256,18 @@ var AppActions = {
     });
   },
 
-  /* API */
+  /*Deployments */
   getDeployments: function getDeployments() {
-    DeploymentsApi.get(deploymentsApiUrl + '/deployments/').then(function (deployments) {
+    DeploymentsApi.get(deploymentsApiUrl + '/deployments').then(function (deployments) {
       AppDispatcher.handleViewAction({
         actionType: AppConstants.RECEIVE_DEPLOYMENTS,
         deployments: deployments
       });
     });
   },
-  createDeployment: function createDeployment(deployment) {
-    DeploymentsApi.post(deploymentsApiUrl + '/deployments/', deployment).then(function (data) {
-      // inserted deployment data,
-      callback(data);
+  createDeployment: function createDeployment(deployment, callback) {
+    DeploymentsApi.post(deploymentsApiUrl + '/deployments', deployment).then(function (data) {
+      callback(deploymentsRoot + data.location);
     });
   },
   getSingleDeployment: function getSingleDeployment(id, callback) {
@@ -76371,11 +76376,7 @@ var Api = {
         if (err || !res.ok) {
           reject();
         } else {
-          var responsetext = "";
-          if (res.text) {
-            responsetext = JSON.parse(res.text);
-          }
-          resolve(responsetext);
+          resolve(res.header);
         }
       });
     });
@@ -77614,13 +77615,14 @@ var Deployments = _react2.default.createClass({
     var newDeployment = {
       //id: this.state.id,
       name: this.state.group.name,
-      device_type: this.state.image.device_type,
       //start_time: this.state.start_time,
       //end_time: this.state.end_time,
       artifact_name: this.state.image.name,
       devices: ids
     };
-    AppActions.createDeployment(newDeployment, this.state.disabled);
+    AppActions.createDeployment(newDeployment, function (data) {
+      AppActions.getDeployments();
+    });
     AppActions.setLocalStorage("deployTODO", true);
     this.dialogDismiss('dialog');
   },
@@ -80854,13 +80856,13 @@ var SelectedDevices = _react2.default.createClass({
 
   _onScheduleSubmit: function _onScheduleSubmit() {
     var newDeployment = {
-      group: this.state.group,
-      device_type: this.state.device_type,
-      start_time: this.state.start_time,
-      end_time: this.state.end_time,
-      image: this.state.image
+      devices: [this.props.selected[0].id],
+      name: this.props.selected[0].name,
+      artifact_name: this.state.image.name
     };
-    AppActions.saveSchedule(newDeployment, this.props.selected.length === 1);
+    AppActions.createDeployment(newDeployment, function (uri) {
+      console.log(uri);
+    });
     this.dialogToggle('schedule');
   },
 
@@ -81601,13 +81603,14 @@ var Repository = _react2.default.createClass({
   },
   _onScheduleSubmit: function _onScheduleSubmit() {
     var newDeployment = {
-      group: this.state.group,
-      device_type: this.state.device_type,
-      start_time: this.state.start_time,
-      end_time: this.state.end_time,
-      image: this.state.image
+      devices: this.state.group.devices,
+      artifact_name: this.state.image.name,
+      name: this.state.group.name
     };
-    _appActions2.default.saveSchedule(newDeployment, this.state.disabled);
+    _appActions2.default.createDeployment(newDeployment, function (uri) {
+      console.log("created", uri);
+      // redirect?
+    });
     this.dialogDismiss('schedule');
   },
   _onUploadSubmit: function _onUploadSubmit() {
@@ -81984,7 +81987,7 @@ var Repository = _react2.default.createClass({
               onChange: this._handleFieldChange.bind(null, 'name'),
               errorStyle: { color: "rgb(171, 16, 0)" } }),
             _react2.default.createElement(FileInput, { name: 'myImage',
-              accept: '.png,.gif',
+              accept: '.tar,.gz,.zip',
               placeholder: 'Upload image',
               className: 'fileInput',
               style: { zIndex: "2" },
@@ -82678,12 +82681,12 @@ var _alldevices1 = [{
 }];
 
 var _unauthorized = [{
-  'id': 8,
-  'name': '33vayc91e6-7dec-11d0-a765-f81d4faebf5',
+  'id': "63f6b7eb-b38d-44d3-91b5-fed2d1596d5c",
+  'name': "Mender QEMU test",
   'device_type': "Raspberry Pi 3",
   'arch': 'ARMv8 Cortex-A53',
   'status': 'Unauthorized',
-  'artifact_name': 'Application 0.0.2',
+  'artifact_name': 'Mender QEMU',
   'groups': [],
   'tags': [],
   'ip_address': '172.16.254.1',
@@ -82691,20 +82694,6 @@ var _unauthorized = [{
   'device_serial': '4CE0460D0G',
   'request_time': 1468777607000,
   'last_heartbeat': 1468777607000
-}, {
-  'id': 9,
-  'name': '4f98de-4apr-11d0-a765-f81d488y4fs',
-  'device_type': "Raspberry Pi 3",
-  'arch': 'ARMv8 Cortex-A53',
-  'status': 'Unauthorized',
-  'artifact_name': 'Application 0.0.2',
-  'groups': [],
-  'tags': [],
-  'ip_address': '172.16.255.1',
-  'mac_address': '00-14-22-03-23-45',
-  'device_serial': '4CE0860D1F',
-  'request_time': 1459777609000,
-  'last_heartbeat': 1459777609000
 }];
 
 _selectGroup(_groups[0].id);

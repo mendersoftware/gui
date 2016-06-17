@@ -125,13 +125,14 @@ var Deployments = React.createClass({
     var newDeployment = {
       //id: this.state.id,
       name: this.state.group.name,
-      device_type: this.state.image.device_type,
       //start_time: this.state.start_time,
       //end_time: this.state.end_time,
       artifact_name: this.state.image.name,
       devices: ids
     }
-    AppActions.createDeployment(newDeployment, this.state.disabled);
+    AppActions.createDeployment(newDeployment, function(data) {
+      AppActions.getDeployments();
+    });
     AppActions.setLocalStorage("deployTODO", true);
     this.dialogDismiss('dialog');
   },

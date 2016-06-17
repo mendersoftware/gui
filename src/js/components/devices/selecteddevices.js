@@ -69,13 +69,13 @@ var SelectedDevices = React.createClass({
 
   _onScheduleSubmit: function() {
     var newDeployment = {
-      group: this.state.group,
-      device_type: this.state.device_type,
-      start_time: this.state.start_time,
-      end_time: this.state.end_time,
-      image: this.state.image
+      devices: [this.props.selected[0].id],
+      name: this.props.selected[0].name,
+      artifact_name: this.state.image.name
     }
-    AppActions.saveSchedule(newDeployment, this.props.selected.length === 1);
+    AppActions.createDeployment(newDeployment, function(uri) {
+      console.log(uri);
+    });
     this.dialogToggle('schedule');
   },
 

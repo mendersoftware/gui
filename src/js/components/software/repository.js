@@ -91,13 +91,14 @@ var Repository = React.createClass({
   },
   _onScheduleSubmit: function() {
     var newDeployment = {
-      group: this.state.group,
-      device_type: this.state.device_type,
-      start_time: this.state.start_time,
-      end_time: this.state.end_time,
-      image: this.state.image
+      devices: this.state.group.devices,
+      artifact_name: this.state.image.name,
+      name: this.state.group.name
     }
-    AppActions.saveSchedule(newDeployment, this.state.disabled);
+    AppActions.createDeployment(newDeployment, function (uri) {
+      console.log("created", uri);
+      // redirect?
+    });
     this.dialogDismiss('schedule');
   },
   _onUploadSubmit: function() {
@@ -379,7 +380,7 @@ var Repository = React.createClass({
                 errorStyle={{color: "rgb(171, 16, 0)"}} />
 
               <FileInput name="myImage"
-                   accept=".png,.gif"
+                   accept=".tar,.gz,.zip"
                    placeholder="Upload image"
                    className="fileInput"
                    style={{zIndex: "2"}}

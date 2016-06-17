@@ -40,11 +40,7 @@ var Api = {
           if (err || !res.ok) {
             reject();
           } else {
-            var responsetext = "";
-            if (res.text) {
-              responsetext = JSON.parse(res.text);
-            }
-            resolve(responsetext);
+            resolve(res.header);
           }
         });
     });

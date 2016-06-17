@@ -146,12 +146,12 @@ var _alldevices1 = [
 
 var _unauthorized = [
   {
-    'id':8,
-    'name': '33vayc91e6-7dec-11d0-a765-f81d4faebf5',
+    'id':"63f6b7eb-b38d-44d3-91b5-fed2d1596d5c",
+    'name': "Mender QEMU test",
     'device_type':"Raspberry Pi 3",
     'arch': 'ARMv8 Cortex-A53',
     'status': 'Unauthorized',
-    'artifact_name': 'Application 0.0.2',
+    'artifact_name': 'Mender QEMU',
     'groups': [],
     'tags': [],
     'ip_address': '172.16.254.1',
@@ -159,21 +159,6 @@ var _unauthorized = [
     'device_serial': '4CE0460D0G',
     'request_time': 1468777607000,
     'last_heartbeat': 1468777607000
-  },
-  {
-    'id':9,
-    'name': '4f98de-4apr-11d0-a765-f81d488y4fs',
-    'device_type':"Raspberry Pi 3",
-    'arch': 'ARMv8 Cortex-A53',
-    'status': 'Unauthorized',
-    'artifact_name': 'Application 0.0.2',
-    'groups': [],
-    'tags': [],
-    'ip_address': '172.16.255.1',
-    'mac_address': '00-14-22-03-23-45',
-    'device_serial': '4CE0860D1F',
-    'request_time': 1459777609000,
-    'last_heartbeat': 1459777609000
   },
 ];
 
