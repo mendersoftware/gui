@@ -76250,8 +76250,7 @@ var AppActions = {
   },
 
   editImage: function editImage(image, callback) {
-    var data = { description: image.description, name: image.name, device_type: image.device_type, image: image.tags };
-    ImagesApi.putJSON(deploymentsApiUrl + "/images/" + image.id, data).then(function (res) {
+    ImagesApi.putJSON(deploymentsApiUrl + "/images/" + image.id, image).then(function (res) {
       callback();
     });
   },
