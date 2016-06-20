@@ -81796,7 +81796,7 @@ var Repository = _react2.default.createClass({
         ),
         _react2.default.createElement(
           TableRowColumn,
-          null,
+          { style: { textAlign: "right" } },
           pkg.devices || 0
         ),
         _react2.default.createElement(
@@ -81934,7 +81934,7 @@ var Repository = _react2.default.createClass({
               ),
               _react2.default.createElement(
                 TableHeaderColumn,
-                { className: 'columnHeader', tooltip: 'Installed on devices' },
+                { style: { textAlign: "right", paddingRight: "12px" }, className: 'columnHeader align-right', tooltip: 'Installed on devices' },
                 'Installed on devices ',
                 _react2.default.createElement(
                   FontIcon,
@@ -83406,4 +83406,3 @@ module.exports = {
 };
 
 },{"material-ui/lib/styles/colors":291,"material-ui/lib/styles/spacing":294,"material-ui/lib/utils/color-manipulator":348}]},{},[790]);
-
