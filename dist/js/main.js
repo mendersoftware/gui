@@ -79962,7 +79962,7 @@ var DeviceList = _react2.default.createClass((_React$createClass = {
                 'sort'
               )
             ),
-            _react2.default.createElement(TableHeaderColumn, { className: 'columnHeader', style: { width: "33", paddingRight: "12", paddingLeft: "12" } })
+            _react2.default.createElement(TableHeaderColumn, { className: 'columnHeader', style: { width: "33", paddingRight: "12", paddingLeft: "0" } })
           )
         ),
         _react2.default.createElement(
@@ -81942,7 +81942,7 @@ var Repository = _react2.default.createClass({
                   'sort'
                 )
               ),
-              _react2.default.createElement(TableHeaderColumn, { style: { width: "33", paddingRight: "12", paddingLeft: "12" }, className: 'columnHeader' })
+              _react2.default.createElement(TableHeaderColumn, { style: { width: "33", paddingRight: "12", paddingLeft: "0" }, className: 'columnHeader' })
             )
           ),
           _react2.default.createElement(
@@ -83406,3 +83406,4 @@ module.exports = {
 };
 
 },{"material-ui/lib/styles/colors":291,"material-ui/lib/styles/spacing":294,"material-ui/lib/utils/color-manipulator":348}]},{},[790]);
+

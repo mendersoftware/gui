@@ -417,7 +417,7 @@ var DeviceList = React.createClass({
                 <TableHeaderColumn className="columnHeader" tooltip="Current software">Current software<FontIcon ref="artifact_name" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "software_version")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
                 <TableHeaderColumn className="columnHeader" tooltip="Last heartbeat">Last heartbeat<FontIcon ref="last_heartbeat" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "last_heartbeat")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
                 <TableHeaderColumn className="columnHeader" tooltip="Status">Status<FontIcon ref="status" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "status")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
-                <TableHeaderColumn className="columnHeader" style={{width:"33", paddingRight:"12", paddingLeft:"12"}}></TableHeaderColumn>
+                <TableHeaderColumn className="columnHeader" style={{width:"33", paddingRight:"12", paddingLeft:"0"}}></TableHeaderColumn>
               </TableRow>
             </TableHeader>
             <TableBody
