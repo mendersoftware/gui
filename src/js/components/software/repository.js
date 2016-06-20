@@ -329,7 +329,7 @@ var Repository = React.createClass({
           <SearchInput placeholder="Search images" className="search tableSearch" ref='search' onChange={this.searchUpdated} />
         </div>
         
-        <div style={{position: "relative"}}>
+        <div style={{position: "relative", marginTop:"10px"}}>
           <Table
             onRowSelection={this._onRowSelection}
             className={items.length ? null : "hidden"}>
@@ -342,7 +342,7 @@ var Repository = React.createClass({
                 <TableHeaderColumn className="columnHeader" tooltip="Tags">Tags</TableHeaderColumn>
                 <TableHeaderColumn className="columnHeader" tooltip="Last modified">Last modified <FontIcon style={styles.sortIcon} ref="modified" onClick={this._sortColumn.bind(null, "modified")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
                 <TableHeaderColumn className="columnHeader" tooltip="Installed on devices">Installed on devices <FontIcon style={styles.sortIcon} ref="devices" onClick={this._sortColumn.bind(null, "devices")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
-                <TableHeaderColumn style={{width:"33", paddingRight:"12", paddingLeft:"12"}} className="columnHeader"></TableHeaderColumn>
+                <TableHeaderColumn style={{width:"33", paddingRight:"12", paddingLeft:"0"}} className="columnHeader"></TableHeaderColumn>
               </TableRow>
             </TableHeader>
             <TableBody

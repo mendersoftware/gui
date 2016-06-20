@@ -76250,8 +76250,7 @@ var AppActions = {
   },
 
   editImage: function editImage(image, callback) {
-    var data = { description: image.description, name: image.name, device_type: image.device_type, image: image.tags };
-    ImagesApi.putJSON(deploymentsApiUrl + "/images/" + image.id, data).then(function (res) {
+    ImagesApi.putJSON(deploymentsApiUrl + "/images/" + image.id, image).then(function (res) {
       callback();
     });
   },
@@ -77724,7 +77723,7 @@ var Deployments = _react2.default.createClass({
       ),
       _react2.default.createElement(
         'div',
-        { className: 'relative' },
+        { className: 'relative overflow-hidden' },
         _react2.default.createElement(
           'div',
           { className: 'top-right-button' },
@@ -79963,7 +79962,7 @@ var DeviceList = _react2.default.createClass((_React$createClass = {
                 'sort'
               )
             ),
-            _react2.default.createElement(TableHeaderColumn, { className: 'columnHeader', style: { width: "33", paddingRight: "12", paddingLeft: "12" } })
+            _react2.default.createElement(TableHeaderColumn, { className: 'columnHeader', style: { width: "33", paddingRight: "12", paddingLeft: "0" } })
           )
         ),
         _react2.default.createElement(
@@ -81884,7 +81883,7 @@ var Repository = _react2.default.createClass({
       ),
       _react2.default.createElement(
         'div',
-        { style: { position: "relative" } },
+        { style: { position: "relative", marginTop: "10px" } },
         _react2.default.createElement(
           Table,
           {
@@ -81943,7 +81942,7 @@ var Repository = _react2.default.createClass({
                   'sort'
                 )
               ),
-              _react2.default.createElement(TableHeaderColumn, { style: { width: "33", paddingRight: "12", paddingLeft: "12" }, className: 'columnHeader' })
+              _react2.default.createElement(TableHeaderColumn, { style: { width: "33", paddingRight: "12", paddingLeft: "0" }, className: 'columnHeader' })
             )
           ),
           _react2.default.createElement(
@@ -82164,6 +82163,12 @@ var SelectedImage = _react2.default.createClass({
       editButton: {
         color: "rgba(0, 0, 0, 0.54)",
         fontSize: "20"
+      },
+      listStyle: {
+        fontSize: "12px",
+        paddingTop: "10px",
+        paddingBottom: "10px",
+        wordWrap: "break-word"
       }
     };
     var editButton = _react2.default.createElement(
@@ -82186,7 +82191,7 @@ var SelectedImage = _react2.default.createClass({
     var descInput = _react2.default.createElement(TextField, {
       id: 'inline-description',
       className: this.state.descEdit ? null : "hidden",
-      style: { width: "100%" }, inputStyle: { marginTop: "0" },
+      style: { width: "100%", height: "38px", marginTop: "-8px" }, inputStyle: { marginTop: "0" },
       multiLine: true, rowsMax: 2, ref: 'description',
       defaultValue: info.description,
       onKeyDown: this._descEdit.bind(null, this.props.image) });
@@ -82226,9 +82231,9 @@ var SelectedImage = _react2.default.createClass({
           _react2.default.createElement(
             List,
             { style: { backgroundColor: "rgba(255,255,255,0)" } },
-            _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Date built', secondaryText: info.build_date }),
+            _react2.default.createElement(ListItem, { style: styles.listStyle, disabled: true, primaryText: 'Date built', secondaryText: info.build_date }),
             _react2.default.createElement(Divider, null),
-            _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Date uploaded', secondaryText: info.modified }),
+            _react2.default.createElement(ListItem, { style: styles.listStyle, disabled: true, primaryText: 'Date uploaded', secondaryText: info.modified }),
             _react2.default.createElement(Divider, null)
           )
         ),
@@ -82238,9 +82243,9 @@ var SelectedImage = _react2.default.createClass({
           _react2.default.createElement(
             List,
             { style: { backgroundColor: "rgba(255,255,255,0)" } },
-            _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Checksum', style: { wordWrap: "break-word" }, secondaryText: info.checksum }),
+            _react2.default.createElement(ListItem, { style: styles.listStyle, disabled: true, primaryText: 'Installed on devices', secondaryText: devicesLink }),
             _react2.default.createElement(Divider, null),
-            _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Size', secondaryText: info.size }),
+            _react2.default.createElement(ListItem, { style: styles.listStyle, disabled: true, primaryText: 'Size', secondaryText: info.size }),
             _react2.default.createElement(Divider, null)
           )
         ),
@@ -82250,22 +82255,22 @@ var SelectedImage = _react2.default.createClass({
           _react2.default.createElement(
             List,
             { style: { backgroundColor: "rgba(255,255,255,0)" } },
-            _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Installed on devices', secondaryText: devicesLink }),
+            _react2.default.createElement(ListItem, { style: styles.listStyle, disabled: true, primaryText: 'Checksum (SHA256)', secondaryText: info.checksum, secondaryTextLines: 2 }),
             _react2.default.createElement(Divider, null),
-            _react2.default.createElement(ListItem, { rightIconButton: editButton, disabled: true, primaryText: 'Tags', secondaryText: tags }),
+            _react2.default.createElement(ListItem, { className: 'hidden', style: styles.listStyle, rightIconButton: editButton, disabled: true, primaryText: 'Tags', secondaryText: tags }),
             _react2.default.createElement(Divider, null)
           )
         )
       ),
       _react2.default.createElement(
         'div',
-        { className: 'relative', style: { top: "-24" } },
+        { className: 'relative', style: { top: "-50" } },
         _react2.default.createElement(
           'div',
           { className: 'report-list', style: { padding: "8px 0px", width: "63%", position: "relative" } },
           _react2.default.createElement(
             'div',
-            { style: { padding: "20px 16px 15px", fontSize: "15", lineHeight: "15px" } },
+            { style: { padding: "10px 16px 10px", fontSize: "12", lineHeight: "12px" } },
             _react2.default.createElement(
               'span',
               { style: { color: "rgba(0,0,0,0.8)" } },
@@ -82273,7 +82278,7 @@ var SelectedImage = _react2.default.createClass({
             ),
             _react2.default.createElement(
               'div',
-              { style: { color: "rgba(0,0,0,0.54)", marginRight: "30", marginTop: "7", whiteSpace: "normal" } },
+              { style: { color: "rgba(0,0,0,0.54)", marginRight: "30", marginTop: "8", whiteSpace: "normal" } },
               _react2.default.createElement(
                 'span',
                 { className: this.state.descEdit ? "hidden" : null },
@@ -82292,6 +82297,7 @@ var SelectedImage = _react2.default.createClass({
             List,
             { style: { backgroundColor: "rgba(255,255,255,0)" } },
             _react2.default.createElement(ListItem, {
+              style: styles.listStyle,
               disabled: this.props.image.name ? false : true,
               primaryText: 'Deploy as an update',
               secondaryText: 'Deploy this image to devices',
@@ -82924,7 +82930,7 @@ var _selectedDeployment = {};
 //_al deployments.sort(startTimeSort);
 
 var _activityLog = [{
-  summary: "User Admin deployed an deployment to all devices",
+  summary: "User Admin deployed a deployment to all devices",
   details: "6 devices began updating to Application 0.0.2 at 2016-03-24 00:00",
   timestamp: 1458777600000,
   negative: false
@@ -82934,7 +82940,7 @@ var _activityLog = [{
   timestamp: 1458659590000,
   negative: false
 }, {
-  summary: "User Admin cancelled an deployment to group Test",
+  summary: "User Admin cancelled a deployment to group Test",
   details: "Cancelled deployment to 2 devices in group Test to image Application 0.0.1 at 2016-03-21 09:30",
   timestamp: 1458552600000,
   negative: true
@@ -83400,3 +83406,4 @@ module.exports = {
 };
 
 },{"material-ui/lib/styles/colors":291,"material-ui/lib/styles/spacing":294,"material-ui/lib/utils/color-manipulator":348}]},{},[790]);
+

@@ -531,7 +531,7 @@ tr.expand.devices td div.expanded {
 }
 .top-right-button {
   position: absolute;
-  top: 0;
+  top: 3px;
   right: 0;
 }
 .tagContainer {
@@ -598,6 +598,11 @@ input[type="file"].fileInput:last-child,
 input[type="text"].fileInput:last-child {
   z-index: 1 !important;
 }
+textarea#inline-description {
+  height: initial !important;
+  font-size: 12px !important;
+  margin-top: 0 !important;
+}
 .inputHeader {
   color: rgba(0, 0, 0, 0.5);
   font-size: 12px;
@@ -605,19 +610,20 @@ input[type="text"].fileInput:last-child {
 }
 /* Dashboard */
 .leftDashboard {
-  width: 71%;
-  float: left;
-  border-right: 1px solid #d4e9e7;
-  padding-right: 30px;
+  width: 70%;
+  display: inline-block;
+  padding-right: 3%;
+  vertical-align: top;
 }
 .rightDashboard {
-  width: 25%;
-  float: left;
+  width: 23%;
+  display: inline-block;
+  border-left: 1px solid #d4e9e7;
+  padding-left: 3%;
+  vertical-align: top;
 }
 .rightDashboard .right {
-  position: absolute;
   height: 100%;
-  padding: 0 30px;
 }
 .health {
   position: relative;
