@@ -610,19 +610,20 @@ textarea#inline-description {
 }
 /* Dashboard */
 .leftDashboard {
-  width: 71%;
-  float: left;
-  border-right: 1px solid #d4e9e7;
-  padding-right: 30px;
+  width: 70%;
+  display: inline-block;
+  padding-right: 3%;
+  vertical-align: top;
 }
 .rightDashboard {
-  width: 25%;
-  float: left;
+  width: 23%;
+  display: inline-block;
+  border-left: 1px solid #d4e9e7;
+  padding-left: 3%;
+  vertical-align: top;
 }
 .rightDashboard .right {
-  position: absolute;
   height: 100%;
-  padding: 0 30px;
 }
 .health {
   position: relative;

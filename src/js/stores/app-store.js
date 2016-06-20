@@ -395,7 +395,7 @@ var _selectedDeployment = {};
 
 var _activityLog = [
   {
-    summary: "User Admin deployed an deployment to all devices",
+    summary: "User Admin deployed a deployment to all devices",
     details: "6 devices began updating to Application 0.0.2 at 2016-03-24 00:00",
     timestamp: 1458777600000,
     negative: false
@@ -407,7 +407,7 @@ var _activityLog = [
     negative: false
   },
   {
-    summary: "User Admin cancelled an deployment to group Test",
+    summary: "User Admin cancelled a deployment to group Test",
     details: "Cancelled deployment to 2 devices in group Test to image Application 0.0.1 at 2016-03-21 09:30",
     timestamp: 1458552600000,
     negative: true
