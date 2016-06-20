@@ -329,7 +329,7 @@ var Repository = React.createClass({
           <SearchInput placeholder="Search images" className="search tableSearch" ref='search' onChange={this.searchUpdated} />
         </div>
         
-        <div style={{position: "relative"}}>
+        <div style={{position: "relative", marginTop:"10px"}}>
           <Table
             onRowSelection={this._onRowSelection}
             className={items.length ? null : "hidden"}>

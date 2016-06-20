@@ -77724,7 +77724,7 @@ var Deployments = _react2.default.createClass({
       ),
       _react2.default.createElement(
         'div',
-        { className: 'relative' },
+        { className: 'relative overflow-hidden' },
         _react2.default.createElement(
           'div',
           { className: 'top-right-button' },
@@ -81884,7 +81884,7 @@ var Repository = _react2.default.createClass({
       ),
       _react2.default.createElement(
         'div',
-        { style: { position: "relative" } },
+        { style: { position: "relative", marginTop: "10px" } },
         _react2.default.createElement(
           Table,
           {

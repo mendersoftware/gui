@@ -226,7 +226,7 @@ var Deployments = React.createClass({
           </div>
         </div>
 
-        <div className="relative">
+        <div className="relative overflow-hidden">
           <div className="top-right-button">
             <ScheduleButton secondary={true} openDialog={this.dialogOpen} />
           </div>
