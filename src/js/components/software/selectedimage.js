@@ -108,6 +108,12 @@ var SelectedImage = React.createClass({
       editButton: {
         color: "rgba(0, 0, 0, 0.54)",
         fontSize: "20" 
+      },
+      listStyle: {
+        fontSize: "12px",
+        paddingTop: "10px",
+        paddingBottom: "10px",
+        wordWrap:"break-word"
       }
     }
     var editButton = (
@@ -133,7 +139,7 @@ var SelectedImage = React.createClass({
       <TextField 
         id="inline-description"
         className={this.state.descEdit ? null : "hidden"} 
-        style={{width:"100%"}} inputStyle={{ marginTop:"0"}}
+        style={{width:"100%", height:"38px", marginTop:"-8px" }} inputStyle={{ marginTop:"0" }}
         multiLine={true} rowsMax={2} ref="description" 
         defaultValue={info.description} 
         onKeyDown={this._descEdit.bind(null, this.props.image)} />
@@ -155,35 +161,36 @@ var SelectedImage = React.createClass({
         <div>
           <div className="image-list list-item">
             <List style={{backgroundColor: "rgba(255,255,255,0)"}}>
-              <ListItem disabled={true} primaryText="Date built" secondaryText={info.build_date} />
+              <ListItem style={styles.listStyle} disabled={true} primaryText="Date built" secondaryText={info.build_date} />
               <Divider />
-              <ListItem disabled={true} primaryText="Date uploaded" secondaryText={info.modified} />
-              <Divider />
-            </List>
-          </div>
-          <div className="image-list list-item">
-            <List style={{backgroundColor: "rgba(255,255,255,0)"}}>
-              <ListItem disabled={true} primaryText="Checksum" style={{wordWrap:"break-word"}} secondaryText={info.checksum} />
-              <Divider />
-              <ListItem disabled={true} primaryText="Size" secondaryText={info.size} />
+              <ListItem style={styles.listStyle} disabled={true} primaryText="Date uploaded" secondaryText={info.modified} />
               <Divider />
             </List>
           </div>
           <div className="image-list list-item">
             <List style={{backgroundColor: "rgba(255,255,255,0)"}}>
-              <ListItem disabled={true} primaryText="Installed on devices" secondaryText={devicesLink} />
+              <ListItem style={styles.listStyle} disabled={true} primaryText="Installed on devices" secondaryText={devicesLink} />
               <Divider />
-              <ListItem rightIconButton={editButton} disabled={true} primaryText="Tags" secondaryText={tags} />
+              <ListItem style={styles.listStyle} disabled={true} primaryText="Size" secondaryText={info.size} />
+              <Divider />
+            </List>
+          </div>
+          <div className="image-list list-item">
+            <List style={{backgroundColor: "rgba(255,255,255,0)"}}>
+              <ListItem style={styles.listStyle} disabled={true} primaryText="Checksum" secondaryText={info.checksum}  secondaryTextLines={2} />
+              <Divider />
+             
+              <ListItem className="hidden" style={styles.listStyle} rightIconButton={editButton} disabled={true} primaryText="Tags" secondaryText={tags} />
               <Divider />
             </List>
           </div>
         </div>
 
-        <div className="relative" style={{top:"-24"}}>
+        <div className="relative" style={{top:"-50"}}>
           <div className="report-list" style={{padding:"8px 0px", width:"63%", position:"relative"}}>
-            <div style={{padding:"20px 16px 15px", fontSize:"15", lineHeight:"15px"}}>
+            <div style={{padding:"10px 16px 10px", fontSize:"12", lineHeight:"12px"}}>
               <span style={{color:"rgba(0,0,0,0.8)"}}>Description</span>
-              <div style={{color:"rgba(0,0,0,0.54)", marginRight:"30", marginTop:"7", whiteSpace: "normal"}}>
+              <div style={{color:"rgba(0,0,0,0.54)", marginRight:"30", marginTop:"8", whiteSpace: "normal"}}>
                 <span className={this.state.descEdit ? "hidden" : null}>{info.description}</span>
                 {descInput}
               </div>
@@ -194,6 +201,7 @@ var SelectedImage = React.createClass({
           <div className="report-list" style={{width:"320"}}>
             <List style={{backgroundColor: "rgba(255,255,255,0)"}}>
               <ListItem
+                style={styles.listStyle}
                 disabled={this.props.image.name ? false : true}
                 primaryText="Deploy as an update"
                 secondaryText="Deploy this image to devices"

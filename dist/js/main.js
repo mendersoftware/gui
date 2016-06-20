@@ -82164,6 +82164,12 @@ var SelectedImage = _react2.default.createClass({
       editButton: {
         color: "rgba(0, 0, 0, 0.54)",
         fontSize: "20"
+      },
+      listStyle: {
+        fontSize: "12px",
+        paddingTop: "10px",
+        paddingBottom: "10px",
+        wordWrap: "break-word"
       }
     };
     var editButton = _react2.default.createElement(
@@ -82186,7 +82192,7 @@ var SelectedImage = _react2.default.createClass({
     var descInput = _react2.default.createElement(TextField, {
       id: 'inline-description',
       className: this.state.descEdit ? null : "hidden",
-      style: { width: "100%" }, inputStyle: { marginTop: "0" },
+      style: { width: "100%", height: "38px", marginTop: "-8px" }, inputStyle: { marginTop: "0" },
       multiLine: true, rowsMax: 2, ref: 'description',
       defaultValue: info.description,
       onKeyDown: this._descEdit.bind(null, this.props.image) });
@@ -82226,9 +82232,9 @@ var SelectedImage = _react2.default.createClass({
           _react2.default.createElement(
             List,
             { style: { backgroundColor: "rgba(255,255,255,0)" } },
-            _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Date built', secondaryText: info.build_date }),
+            _react2.default.createElement(ListItem, { style: styles.listStyle, disabled: true, primaryText: 'Date built', secondaryText: info.build_date }),
             _react2.default.createElement(Divider, null),
-            _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Date uploaded', secondaryText: info.modified }),
+            _react2.default.createElement(ListItem, { style: styles.listStyle, disabled: true, primaryText: 'Date uploaded', secondaryText: info.modified }),
             _react2.default.createElement(Divider, null)
           )
         ),
@@ -82238,9 +82244,9 @@ var SelectedImage = _react2.default.createClass({
           _react2.default.createElement(
             List,
             { style: { backgroundColor: "rgba(255,255,255,0)" } },
-            _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Checksum', style: { wordWrap: "break-word" }, secondaryText: info.checksum }),
+            _react2.default.createElement(ListItem, { style: styles.listStyle, disabled: true, primaryText: 'Installed on devices', secondaryText: devicesLink }),
             _react2.default.createElement(Divider, null),
-            _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Size', secondaryText: info.size }),
+            _react2.default.createElement(ListItem, { style: styles.listStyle, disabled: true, primaryText: 'Size', secondaryText: info.size }),
             _react2.default.createElement(Divider, null)
           )
         ),
@@ -82250,22 +82256,22 @@ var SelectedImage = _react2.default.createClass({
           _react2.default.createElement(
             List,
             { style: { backgroundColor: "rgba(255,255,255,0)" } },
-            _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Installed on devices', secondaryText: devicesLink }),
+            _react2.default.createElement(ListItem, { style: styles.listStyle, disabled: true, primaryText: 'Checksum', secondaryText: info.checksum, secondaryTextLines: 2 }),
             _react2.default.createElement(Divider, null),
-            _react2.default.createElement(ListItem, { rightIconButton: editButton, disabled: true, primaryText: 'Tags', secondaryText: tags }),
+            _react2.default.createElement(ListItem, { className: 'hidden', style: styles.listStyle, rightIconButton: editButton, disabled: true, primaryText: 'Tags', secondaryText: tags }),
             _react2.default.createElement(Divider, null)
           )
         )
       ),
       _react2.default.createElement(
         'div',
-        { className: 'relative', style: { top: "-24" } },
+        { className: 'relative', style: { top: "-50" } },
         _react2.default.createElement(
           'div',
           { className: 'report-list', style: { padding: "8px 0px", width: "63%", position: "relative" } },
           _react2.default.createElement(
             'div',
-            { style: { padding: "20px 16px 15px", fontSize: "15", lineHeight: "15px" } },
+            { style: { padding: "10px 16px 10px", fontSize: "12", lineHeight: "12px" } },
             _react2.default.createElement(
               'span',
               { style: { color: "rgba(0,0,0,0.8)" } },
@@ -82273,7 +82279,7 @@ var SelectedImage = _react2.default.createClass({
             ),
             _react2.default.createElement(
               'div',
-              { style: { color: "rgba(0,0,0,0.54)", marginRight: "30", marginTop: "7", whiteSpace: "normal" } },
+              { style: { color: "rgba(0,0,0,0.54)", marginRight: "30", marginTop: "8", whiteSpace: "normal" } },
               _react2.default.createElement(
                 'span',
                 { className: this.state.descEdit ? "hidden" : null },
@@ -82292,6 +82298,7 @@ var SelectedImage = _react2.default.createClass({
             List,
             { style: { backgroundColor: "rgba(255,255,255,0)" } },
             _react2.default.createElement(ListItem, {
+              style: styles.listStyle,
               disabled: this.props.image.name ? false : true,
               primaryText: 'Deploy as an update',
               secondaryText: 'Deploy this image to devices',
