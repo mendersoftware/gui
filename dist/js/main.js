@@ -82256,7 +82256,7 @@ var SelectedImage = _react2.default.createClass({
           _react2.default.createElement(
             List,
             { style: { backgroundColor: "rgba(255,255,255,0)" } },
-            _react2.default.createElement(ListItem, { style: styles.listStyle, disabled: true, primaryText: 'Checksum', secondaryText: info.checksum, secondaryTextLines: 2 }),
+            _react2.default.createElement(ListItem, { style: styles.listStyle, disabled: true, primaryText: 'Checksum (SHA256)', secondaryText: info.checksum, secondaryTextLines: 2 }),
             _react2.default.createElement(Divider, null),
             _react2.default.createElement(ListItem, { className: 'hidden', style: styles.listStyle, rightIconButton: editButton, disabled: true, primaryText: 'Tags', secondaryText: tags }),
             _react2.default.createElement(Divider, null)

@@ -177,7 +177,7 @@ var SelectedImage = React.createClass({
           </div>
           <div className="image-list list-item">
             <List style={{backgroundColor: "rgba(255,255,255,0)"}}>
-              <ListItem style={styles.listStyle} disabled={true} primaryText="Checksum" secondaryText={info.checksum}  secondaryTextLines={2} />
+              <ListItem style={styles.listStyle} disabled={true} primaryText="Checksum (SHA256)" secondaryText={info.checksum}  secondaryTextLines={2} />
               <Divider />
              
               <ListItem className="hidden" style={styles.listStyle} rightIconButton={editButton} disabled={true} primaryText="Tags" secondaryText={tags} />
