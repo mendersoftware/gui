@@ -1,7 +1,6 @@
 var request = require('superagent');
 var Promise = require('es6-promise').Promise;
 
-
 var Api = {
   get: function(url) {
     return new Promise(function (resolve, reject) {
