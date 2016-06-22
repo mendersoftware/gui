@@ -77809,7 +77809,7 @@ var DeploymentStatus = _react2.default.createClass({
     return _react2.default.createElement(
       'div',
       null,
-      _react2.default.createElement(FlatButton, { label: label, primary: this.state.stats.failure, secondary: this.state.stats.successful })
+      _react2.default.createElement(FlatButton, { label: label, primary: this.state.stats.failure > 0 })
     );
   }
 });
@@ -80754,14 +80754,14 @@ var SelectedDevices = _react2.default.createClass({
         delimeters: [9, 13, 188] });
 
       var tags = this.state.tagEdit ? tagInput : this.props.selected[0].tags.join(', ') || '-';
-      var encodedSoftware = encodeURIComponent(this.props.selected[0].name);
+      var encodedSoftware = encodeURIComponent(this.props.selected[0].artifact_name);
       var softwareLink = _react2.default.createElement(
         'div',
         null,
         _react2.default.createElement(
           _reactRouter.Link,
           { style: { fontWeight: "500" }, to: '/software/' + encodedSoftware },
-          this.props.selected[0].name
+          this.props.selected[0].artifact_name
         )
       );
 

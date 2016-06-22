@@ -146,10 +146,10 @@ var SelectedDevices = React.createClass({
       );
 
       var tags = this.state.tagEdit ? tagInput : this.props.selected[0].tags.join(', ') || '-';
-      var encodedSoftware = encodeURIComponent(this.props.selected[0].name); 
+      var encodedSoftware = encodeURIComponent(this.props.selected[0].artifact_name); 
       var softwareLink = (
         <div>
-          <Link style={{fontWeight:"500"}} to={`/software/${encodedSoftware}`}>{this.props.selected[0].name}</Link>
+          <Link style={{fontWeight:"500"}} to={`/software/${encodedSoftware}`}>{this.props.selected[0].artifact_name}</Link>
         </div>
       )
 
