@@ -2,14 +2,12 @@ var AppConstants = require('../constants/app-constants');
 var AppDispatcher = require('../dispatchers/app-dispatcher');
 var ImagesApi = require('../api/images-api');
 var DeploymentsApi = require('../api/deployments-api');
+var DevicesApi = require('../api/devices-api');
 var rootUrl = "http://192.168.99.100";
 var deploymentsRoot = rootUrl + ":9080";
 var deploymentsApiUrl = deploymentsRoot + "/deployments/api/0.0.1";
 var devicesRoot = rootUrl + ":8082";
 var devicesApiUrl = devicesRoot + "/api/0.1.0";
-var deviceAuthRoot = rootUrl + ":8082";
-var deviceAuthApiUrl = deviceAuthRoot + "/v0.1";
-
 
 
 var AppActions = {
@@ -51,16 +49,57 @@ var AppActions = {
     })
   },
 
-  authorizeDevices: function (devices) {
+  /*authorizeDevices: function (devices) {
     AppDispatcher.handleViewAction({
       actionType: AppConstants.AUTHORIZE_DEVICES,
       devices: devices
+    })
+  },*/
+
+
+
+  /* General */
+  setSnackbar: function(message, duration) {
+    AppDispatcher.handleViewAction({
+      actionType: AppConstants.SET_SNACKBAR,
+      message: message,
+      duration: duration
     })
   },
 
 
   /* Devices */
+  getDevices: function () {
+    DevicesApi
+      .get(devicesApiUrl+"/devices")
+      .then(function(devices) {
+        AppDispatcher.handleViewAction({
+          actionType: AppConstants.RECEIVE_DEVICES,
+          devices: devices
+        });
+      });
+  },
 
+  acceptDevice: function (device, callback) {
+    DevicesApi
+      .put(devicesApiUrl+"/devices/"+device.id +"/status", {"status":"accepted"})
+      .then(function(data) {
+        callback();
+      })
+      .catch(function(err) {
+        callback(err);
+      });;
+  },
+  rejectDevice: function (device, callback) {
+    DevicesApi
+      .put(devicesApiUrl+"/devices/"+device.id +"/status", {"status":"rejected"})
+      .then(function(data) {
+        callback(data);
+      })
+      .catch(function(err) {
+        callback(err);
+      });
+  },
 
 
 

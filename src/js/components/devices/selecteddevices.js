@@ -145,7 +145,7 @@ var SelectedDevices = React.createClass({
           delimeters={[9, 13, 188]} />
       );
 
-      var tags = this.state.tagEdit ? tagInput : this.props.selected[0].tags.join(', ') || '-';
+      //var tags = this.state.tagEdit ? tagInput : this.props.selected[0].tags.join(', ') || '-';
       var encodedSoftware = encodeURIComponent(this.props.selected[0].artifact_name); 
       var softwareLink = (
         <div>

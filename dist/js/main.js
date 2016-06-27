@@ -76162,13 +76162,12 @@ var AppConstants = require('../constants/app-constants');
 var AppDispatcher = require('../dispatchers/app-dispatcher');
 var ImagesApi = require('../api/images-api');
 var DeploymentsApi = require('../api/deployments-api');
+var DevicesApi = require('../api/devices-api');
 var rootUrl = "http://192.168.99.100";
 var deploymentsRoot = rootUrl + ":9080";
 var deploymentsApiUrl = deploymentsRoot + "/deployments/api/0.0.1";
 var devicesRoot = rootUrl + ":8082";
 var devicesApiUrl = devicesRoot + "/api/0.1.0";
-var deviceAuthRoot = rootUrl + ":8082";
-var deviceAuthApiUrl = deviceAuthRoot + "/v0.1";
 
 var AppActions = {
 
@@ -76209,14 +76208,46 @@ var AppActions = {
     });
   },
 
-  authorizeDevices: function authorizeDevices(devices) {
+  /*authorizeDevices: function (devices) {
     AppDispatcher.handleViewAction({
       actionType: AppConstants.AUTHORIZE_DEVICES,
       devices: devices
+    })
+  },*/
+
+  /* General */
+  setSnackbar: function setSnackbar(message, duration) {
+    AppDispatcher.handleViewAction({
+      actionType: AppConstants.SET_SNACKBAR,
+      message: message,
+      duration: duration
     });
   },
 
   /* Devices */
+  getDevices: function getDevices() {
+    DevicesApi.get(devicesApiUrl + "/devices").then(function (devices) {
+      AppDispatcher.handleViewAction({
+        actionType: AppConstants.RECEIVE_DEVICES,
+        devices: devices
+      });
+    });
+  },
+
+  acceptDevice: function acceptDevice(device, callback) {
+    DevicesApi.put(devicesApiUrl + "/devices/" + device.id + "/status", { "status": "accepted" }).then(function (data) {
+      callback();
+    }).catch(function (err) {
+      callback(err);
+    });;
+  },
+  rejectDevice: function rejectDevice(device, callback) {
+    DevicesApi.put(devicesApiUrl + "/devices/" + device.id + "/status", { "status": "rejected" }).then(function (data) {
+      callback(data);
+    }).catch(function (err) {
+      callback(err);
+    });
+  },
 
   /* Images */
   getImages: function getImages() {
@@ -76340,7 +76371,7 @@ var AppActions = {
 
 module.exports = AppActions;
 
-},{"../api/deployments-api":753,"../api/images-api":754,"../constants/app-constants":787,"../dispatchers/app-dispatcher":788}],753:[function(require,module,exports){
+},{"../api/deployments-api":753,"../api/devices-api":754,"../api/images-api":755,"../constants/app-constants":788,"../dispatchers/app-dispatcher":789}],753:[function(require,module,exports){
 'use strict';
 
 var request = require('superagent');
@@ -76414,6 +76445,56 @@ var Api = {
       });
     });
   },
+  put: function put(url, data) {
+    return new Promise(function (resolve, reject) {
+      request.put(url).set('Content-Type', 'application/json').send(data).end(function (err, res) {
+        if (err || !res.ok) {
+          console.log("err", err, res);
+          reject(JSON.parse(res.text));
+        } else {
+          console.log(" no error ");
+          var responsetext = "";
+          if (res.text) {
+            responsetext = JSON.parse(res.text);
+          }
+          resolve(responsetext);
+        }
+      });
+    });
+  }
+};
+
+module.exports = Api;
+
+},{"es6-promise":91,"superagent":747}],755:[function(require,module,exports){
+'use strict';
+
+var request = require('superagent');
+var Promise = require('es6-promise').Promise;
+
+var Api = {
+  get: function get(url) {
+    return new Promise(function (resolve, reject) {
+      request.get(url).end(function (err, res) {
+        if (err || !res.ok) {
+          reject();
+        } else {
+          resolve(res.body);
+        }
+      });
+    });
+  },
+  post: function post(url, data) {
+    return new Promise(function (resolve, reject) {
+      request.post(url).set('Content-Type', 'application/json').send(data).end(function (err, res) {
+        if (err || !res.ok) {
+          reject();
+        } else {
+          resolve(res.header);
+        }
+      });
+    });
+  },
   putImage: function putImage(url, image) {
     return new Promise(function (resolve, reject) {
       request.put(url).set("Content-Type", "application/octet-stream").send(image).end(function (err, res) {
@@ -76448,7 +76529,7 @@ var Api = {
 
 module.exports = Api;
 
-},{"es6-promise":91,"superagent":747}],755:[function(require,module,exports){
+},{"es6-promise":91,"superagent":747}],756:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -76508,7 +76589,7 @@ var App = _react2.default.createClass({
 
 module.exports = App;
 
-},{"../themes/mender-theme.js":792,"./header/header":781,"material-ui":257,"material-ui/lib/styles/getMuiTheme":292,"react":684}],756:[function(require,module,exports){
+},{"../themes/mender-theme.js":793,"./header/header":782,"material-ui":257,"material-ui/lib/styles/getMuiTheme":292,"react":684}],757:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -76589,7 +76670,7 @@ Activity.contextTypes = {
 
 module.exports = Activity;
 
-},{"material-ui":257,"react":684,"react-router":506,"react-time":522}],757:[function(require,module,exports){
+},{"material-ui":257,"react":684,"react-router":506,"react-time":522}],758:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -76617,6 +76698,7 @@ function getState() {
     progress: AppStore.getProgressDeployments(new Date()),
     health: AppStore.getHealth(),
     unauthorized: AppStore.getUnauthorized(),
+    devices: AppStore.getAllDevices(),
     recent: AppStore.getRecentDeployments(new Date()),
     activity: AppStore.getActivity(),
     hideReview: localStorage.getItem("reviewDevices")
@@ -76637,6 +76719,7 @@ var Dashboard = _react2.default.createClass({
   },
   componentDidMount: function componentDidMount() {
     AppActions.getDeployments();
+    AppActions.getDevices();
     //AppActions.getUnauthorized();
   },
   _onChange: function _onChange() {
@@ -76700,7 +76783,7 @@ var Dashboard = _react2.default.createClass({
           _react2.default.createElement(
             'div',
             { className: 'right' },
-            _react2.default.createElement(Health, { clickHandle: this._handleClick, health: this.state.health }),
+            _react2.default.createElement(Health, { devices: this.state.devices, clickHandle: this._handleClick, health: this.state.health }),
             _react2.default.createElement(Activity, { activity: this.state.activity })
           )
         )
@@ -76715,7 +76798,7 @@ Dashboard.contextTypes = {
 
 module.exports = Dashboard;
 
-},{"../../actions/app-actions":752,"../../stores/app-store":790,"../../stores/local-store":791,"./activity":756,"./deployments":758,"./health":759,"material-ui":257,"react":684,"react-router":506}],758:[function(require,module,exports){
+},{"../../actions/app-actions":752,"../../stores/app-store":791,"../../stores/local-store":792,"./activity":757,"./deployments":759,"./health":760,"material-ui":257,"react":684,"react-router":506}],759:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -76807,7 +76890,7 @@ var Deployments = _react2.default.createClass({
 
 module.exports = Deployments;
 
-},{"./progress":760,"./recent":761,"./schedule":763,"material-ui":257,"react":684}],759:[function(require,module,exports){
+},{"./progress":761,"./recent":762,"./schedule":764,"material-ui":257,"react":684}],760:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -76937,7 +77020,7 @@ Health.contextTypes = {
 
 module.exports = Health;
 
-},{"react":684,"react-router":506}],760:[function(require,module,exports){
+},{"react":684,"react-router":506}],761:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -77093,7 +77176,7 @@ Progress.contextTypes = {
 
 module.exports = Progress;
 
-},{"../deployments/progressChart.js":769,"material-ui":257,"react":684,"react-router":506,"react-time":522}],761:[function(require,module,exports){
+},{"../deployments/progressChart.js":770,"material-ui":257,"react":684,"react-router":506,"react-time":522}],762:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -77240,7 +77323,7 @@ Recent.contextTypes = {
 
 module.exports = Recent;
 
-},{"../../actions/app-actions":752,"../deployments/groupdevices":768,"./recentstats":762,"material-ui":257,"react":684,"react-router":506,"react-time":522}],762:[function(require,module,exports){
+},{"../../actions/app-actions":752,"../deployments/groupdevices":769,"./recentstats":763,"material-ui":257,"react":684,"react-router":506,"react-time":522}],763:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -77307,7 +77390,7 @@ var RecentStats = _react2.default.createClass({
 
 module.exports = RecentStats;
 
-},{"../../actions/app-actions":752,"react":684}],763:[function(require,module,exports){
+},{"../../actions/app-actions":752,"react":684}],764:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -77427,7 +77510,7 @@ Schedule.contextTypes = {
 
 module.exports = Schedule;
 
-},{"material-ui":257,"react":684,"react-router":506,"react-time":522}],764:[function(require,module,exports){
+},{"material-ui":257,"react":684,"react-router":506,"react-time":522}],765:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -77476,7 +77559,7 @@ var DateTime = _react2.default.createClass({
 
 module.exports = DateTime;
 
-},{"material-ui":257,"react":684}],765:[function(require,module,exports){
+},{"material-ui":257,"react":684}],766:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -77749,7 +77832,7 @@ var Deployments = _react2.default.createClass({
 
 module.exports = Deployments;
 
-},{"../../actions/app-actions":752,"../../stores/app-store":790,"./eventlog.js":767,"./recentdeployments.js":770,"./report.js":771,"./schedule.js":772,"./schedulebutton.js":773,"./scheduleform.js":774,"material-ui":257,"react":684}],766:[function(require,module,exports){
+},{"../../actions/app-actions":752,"../../stores/app-store":791,"./eventlog.js":768,"./recentdeployments.js":771,"./report.js":772,"./schedule.js":773,"./schedulebutton.js":774,"./scheduleform.js":775,"material-ui":257,"react":684}],767:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -77816,7 +77899,7 @@ var DeploymentStatus = _react2.default.createClass({
 
 module.exports = DeploymentStatus;
 
-},{"../../actions/app-actions":752,"material-ui":257,"react":684}],767:[function(require,module,exports){
+},{"../../actions/app-actions":752,"material-ui":257,"react":684}],768:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -77891,7 +77974,7 @@ var EventLog = _react2.default.createClass({
 
 module.exports = EventLog;
 
-},{"material-ui":257,"react":684}],768:[function(require,module,exports){
+},{"material-ui":257,"react":684}],769:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -77934,7 +78017,7 @@ var GroupDevices = _react2.default.createClass({
 
 module.exports = GroupDevices;
 
-},{"../../actions/app-actions":752,"react":684}],769:[function(require,module,exports){
+},{"../../actions/app-actions":752,"react":684}],770:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -78104,7 +78187,7 @@ ProgressChart.contextTypes = {
 
 module.exports = ProgressChart;
 
-},{"../../actions/app-actions":752,"../../stores/app-store":790,"material-ui":257,"react":684,"react-router":506}],770:[function(require,module,exports){
+},{"../../actions/app-actions":752,"../../stores/app-store":791,"material-ui":257,"react":684,"react-router":506}],771:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -78402,7 +78485,7 @@ var Recent = _react2.default.createClass({
 
 module.exports = Recent;
 
-},{"./deploymentstatus":766,"./groupdevices":768,"./progresschart":769,"./report.js":771,"./scheduleform":774,"material-ui":257,"react":684,"react-time":522}],771:[function(require,module,exports){
+},{"./deploymentstatus":767,"./groupdevices":769,"./progresschart":770,"./report.js":772,"./scheduleform":775,"material-ui":257,"react":684,"react-time":522}],772:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -78688,7 +78771,7 @@ var Report = _react2.default.createClass({
 
 module.exports = Report;
 
-},{"../../actions/app-actions":752,"material-ui":257,"react":684,"react-router":506,"react-time":522}],772:[function(require,module,exports){
+},{"../../actions/app-actions":752,"material-ui":257,"react":684,"react-router":506,"react-time":522}],773:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -78849,7 +78932,7 @@ var Schedule = _react2.default.createClass({
 
 module.exports = Schedule;
 
-},{"material-ui":257,"react":684,"react-time":522}],773:[function(require,module,exports){
+},{"material-ui":257,"react":684,"react-time":522}],774:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -78890,7 +78973,7 @@ var ScheduleButton = _react2.default.createClass({
 
 module.exports = ScheduleButton;
 
-},{"material-ui":257,"react":684}],774:[function(require,module,exports){
+},{"material-ui":257,"react":684}],775:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -79266,7 +79349,7 @@ var ScheduleForm = _react2.default.createClass({
 
 module.exports = ScheduleForm;
 
-},{"../../stores/app-store":790,"./datetime.js":764,"material-ui":257,"react":684,"react-router":506,"react-search-input":513}],775:[function(require,module,exports){
+},{"../../stores/app-store":791,"./datetime.js":765,"material-ui":257,"react":684,"react-router":506,"react-search-input":513}],776:[function(require,module,exports){
 'use strict';
 
 var _React$createClass;
@@ -79918,7 +80001,7 @@ var DeviceList = _react2.default.createClass((_React$createClass = {
 
 module.exports = DeviceList;
 
-},{"../../actions/app-actions":752,"../../stores/app-store":790,"./filters":777,"./selecteddevices":779,"material-ui":257,"material-ui/lib/snackbar":287,"react":684,"react-dom":476,"react-time":522}],776:[function(require,module,exports){
+},{"../../actions/app-actions":752,"../../stores/app-store":791,"./filters":778,"./selecteddevices":780,"material-ui":257,"material-ui/lib/snackbar":287,"react":684,"react-dom":476,"react-time":522}],777:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -79936,20 +80019,24 @@ var Groups = require('./groups');
 var DeviceList = require('./devicelist');
 var Unauthorized = require('./unauthorized');
 
+var mui = require('material-ui');
+var Snackbar = mui.Snackbar;
+
 function getState() {
   return {
     groups: AppStore.getGroups(),
     selectedGroup: AppStore.getSelectedGroup(),
     devices: AppStore.getDevices(),
+    unauthorized: AppStore.getUnauthorized(),
     allDevices: AppStore.getAllDevices(),
     selectedDevices: AppStore.getSelectedDevices(),
     filters: AppStore.getFilters(),
     attributes: AppStore.getAttributes(),
     images: AppStore.getSoftwareRepo(),
-    unauthorized: AppStore.getUnauthorized(),
     hideTODO: localStorage.getItem("hideTODO"),
     groupTODO: localStorage.getItem("groupNextStep"),
-    authTODO: localStorage.getItem("authStep")
+    authTODO: localStorage.getItem("authStep"),
+    snackbar: AppStore.getSnackbar()
   };
 }
 
@@ -79961,6 +80048,7 @@ var Devices = _react2.default.createClass({
   },
   componentWillMount: function componentWillMount() {
     AppActions.getImages();
+    AppActions.getDevices();
     AppStore.changeListener(this._onChange);
     var filters = [];
     if (this.props.params) {
@@ -80002,10 +80090,13 @@ var Devices = _react2.default.createClass({
       }
     }
 
-    this.setState(getState());
+    this.setState(this.getInitialState());
   },
   _updateFilters: function _updateFilters(filters) {
     AppActions.updateFilters(filters);
+  },
+  _handleRequestClose: function _handleRequestClose() {
+    AppActions.setSnackbar();
   },
   render: function render() {
     return _react2.default.createElement(
@@ -80091,14 +80182,20 @@ var Devices = _react2.default.createClass({
           _react2.default.createElement(Unauthorized, { unauthorized: this.state.unauthorized })
         ),
         _react2.default.createElement(DeviceList, { filters: this.state.filters, attributes: this.state.attributes, onFilterChange: this._updateFilters, images: this.state.images, selectedDevices: this.state.selectedDevices, groups: this.state.groups, devices: this.state.devices, selectedGroup: this.state.selectedGroup })
-      )
+      ),
+      _react2.default.createElement(Snackbar, {
+        open: this.state.snackbar.open,
+        message: this.state.snackbar.message,
+        autoHideDuration: 5000,
+        onRequestClose: this.handleRequestClose
+      })
     );
   }
 });
 
 module.exports = Devices;
 
-},{"../../actions/app-actions":752,"../../stores/app-store":790,"./devicelist":775,"./groups":778,"./unauthorized":780,"react":684,"react-router":506}],777:[function(require,module,exports){
+},{"../../actions/app-actions":752,"../../stores/app-store":791,"./devicelist":776,"./groups":779,"./unauthorized":781,"material-ui":257,"react":684,"react-router":506}],778:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -80290,7 +80387,7 @@ var Filters = _react2.default.createClass({
 
 module.exports = Filters;
 
-},{"material-ui":257,"react":684}],778:[function(require,module,exports){
+},{"material-ui":257,"react":684}],779:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -80598,7 +80695,7 @@ var Groups = _react2.default.createClass({
 
 module.exports = Groups;
 
-},{"../../actions/app-actions":752,"../../stores/app-store":790,"material-ui":257,"material-ui/lib/Subheader":211,"react":684,"react-search-input":513}],779:[function(require,module,exports){
+},{"../../actions/app-actions":752,"../../stores/app-store":791,"material-ui":257,"material-ui/lib/Subheader":211,"react":684,"react-search-input":513}],780:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -80753,7 +80850,7 @@ var SelectedDevices = _react2.default.createClass({
         handleDrag: this.handleDrag,
         delimeters: [9, 13, 188] });
 
-      var tags = this.state.tagEdit ? tagInput : this.props.selected[0].tags.join(', ') || '-';
+      //var tags = this.state.tagEdit ? tagInput : this.props.selected[0].tags.join(', ') || '-';
       var encodedSoftware = encodeURIComponent(this.props.selected[0].artifact_name);
       var softwareLink = _react2.default.createElement(
         'div',
@@ -80902,7 +80999,7 @@ var SelectedDevices = _react2.default.createClass({
 
 module.exports = SelectedDevices;
 
-},{"../../actions/app-actions":752,"../../stores/app-store":790,"../deployments/scheduleform":774,"material-ui":257,"react":684,"react-router":506,"react-tag-input":516,"react-time":522}],780:[function(require,module,exports){
+},{"../../actions/app-actions":752,"../../stores/app-store":791,"../deployments/scheduleform":775,"material-ui":257,"react":684,"react-router":506,"react-tag-input":516,"react-time":522}],781:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -80960,15 +81057,30 @@ var Authorized = _react2.default.createClass({
   },
   _authorizeDevices: function _authorizeDevices(devices) {
     // array of device objects
-    AppActions.authorizeDevices(devices);
+    event.stopPropagation();
+    devices.forEach(function (element, index) {
+      AppActions.acceptDevice(element, function (err) {
+        if (err) {
+          AppActions.setSnackbar("Error: " + err.error);
+        }
+      }.bind(this));
+    });
   },
   _blockDevices: function _blockDevices(devices) {
     // array of device objects
-    //AppActions.authorizeDevices(devices);
+    event.stopPropagation();
+    devices.forEach(function (element, index) {
+      AppActions.rejectDevice(element, function (err) {
+        if (err) {
+          AppActions.setSnackbar("Error: " + err.error);
+        }
+      }.bind(this));
+    });
   },
   _expandRow: function _expandRow(rowNumber, columnId, event) {
     event.stopPropagation();
-    if (columnId < 0) {
+    // If action buttons column, no expand
+    if (columnId === 5) {
       this.setState({ expanded: null });
     } else {
       var newIndex = rowNumber;
@@ -80998,7 +81110,7 @@ var Authorized = _react2.default.createClass({
         _react2.default.createElement(
           TableRowColumn,
           null,
-          device.name
+          device.id
         ),
         _react2.default.createElement(
           TableRowColumn,
@@ -81029,7 +81141,7 @@ var Authorized = _react2.default.createClass({
           ),
           _react2.default.createElement(
             IconButton,
-            null,
+            { onClick: this._blockDevices.bind(null, [device]) },
             _react2.default.createElement(
               FontIcon,
               { className: 'material-icons red' },
@@ -81135,7 +81247,7 @@ var Authorized = _react2.default.createClass({
 
 module.exports = Authorized;
 
-},{"../../actions/app-actions":752,"./selecteddevices":779,"material-ui":257,"react":684,"react-dom":476,"react-time":522}],781:[function(require,module,exports){
+},{"../../actions/app-actions":752,"./selecteddevices":780,"material-ui":257,"react":684,"react-dom":476,"react-time":522}],782:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -81279,7 +81391,7 @@ Header.contextTypes = {
 
 module.exports = Header;
 
-},{"material-ui":257,"material-ui/lib/font-icon":252,"material-ui/lib/icon-button":256,"material-ui/lib/menus/icon-menu":264,"material-ui/lib/menus/menu-item":265,"material-ui/lib/toolbar/toolbar":341,"material-ui/lib/toolbar/toolbar-group":338,"material-ui/lib/toolbar/toolbar-title":340,"react":684,"react-router":506}],782:[function(require,module,exports){
+},{"material-ui":257,"material-ui/lib/font-icon":252,"material-ui/lib/icon-button":256,"material-ui/lib/menus/icon-menu":264,"material-ui/lib/menus/menu-item":265,"material-ui/lib/toolbar/toolbar":341,"material-ui/lib/toolbar/toolbar-group":338,"material-ui/lib/toolbar/toolbar-title":340,"react":684,"react-router":506}],783:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -81302,7 +81414,7 @@ var DeploymentButton = _react2.default.createClass({
 
 module.exports = DeploymentButton;
 
-},{"material-ui":257,"react":684}],783:[function(require,module,exports){
+},{"material-ui":257,"react":684}],784:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -81866,7 +81978,7 @@ var Repository = _react2.default.createClass({
 
 module.exports = Repository;
 
-},{"../../actions/app-actions":752,"../../stores/app-store":790,"../deployments/scheduleform":774,"./deploymentbutton.js":782,"./selectedimage.js":784,"material-ui":257,"react":684,"react-addons-update":365,"react-dom":476,"react-file-input":478,"react-router":506,"react-search-input":513,"react-tag-input":516,"react-time":522}],784:[function(require,module,exports){
+},{"../../actions/app-actions":752,"../../stores/app-store":791,"../deployments/scheduleform":775,"./deploymentbutton.js":783,"./selectedimage.js":785,"material-ui":257,"react":684,"react-addons-update":365,"react-dom":476,"react-file-input":478,"react-router":506,"react-search-input":513,"react-tag-input":516,"react-time":522}],785:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -82149,7 +82261,7 @@ SelectedImage.contextTypes = {
 
 module.exports = SelectedImage;
 
-},{"material-ui":257,"react":684,"react-router":506,"react-tag-input":516,"react-time":522}],785:[function(require,module,exports){
+},{"material-ui":257,"react":684,"react-router":506,"react-tag-input":516,"react-time":522}],786:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -82245,7 +82357,7 @@ var Software = _react2.default.createClass({
 
 module.exports = Software;
 
-},{"../../actions/app-actions":752,"../../stores/app-store":790,"../../stores/local-store":791,"./repository.js":783,"react":684,"react-router":506}],786:[function(require,module,exports){
+},{"../../actions/app-actions":752,"../../stores/app-store":791,"../../stores/local-store":792,"./repository.js":784,"react":684,"react-router":506}],787:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -82309,7 +82421,7 @@ module.exports = _react2.default.createElement(
   )
 );
 
-},{"../components/app":755,"../components/dashboard/dashboard":757,"../components/deployments/deployments":765,"../components/devices/devices":776,"../components/software/software":785,"react":684,"react-router":506}],787:[function(require,module,exports){
+},{"../components/app":756,"../components/dashboard/dashboard":758,"../components/deployments/deployments":766,"../components/devices/devices":777,"../components/software/software":786,"react":684,"react-router":506}],788:[function(require,module,exports){
 'use strict';
 
 module.exports = {
@@ -82328,10 +82440,12 @@ module.exports = {
   UPLOAD_IMAGE: 'UPLOAD_IMAGE',
   RECEIVE_DEPLOYMENTS: 'RECEIVE_DEPLOYMENTS',
   SINGLE_DEPLOYMENT: 'SINGLE_DEPLOYMENT',
-  SET_LOCAL_STORAGE: 'SET_LOCAL_STORAGE'
+  SET_LOCAL_STORAGE: 'SET_LOCAL_STORAGE',
+  RECEIVE_DEVICES: 'RECEIVE_DEVICES',
+  SET_SNACKBAR: 'SET_SNACKBAR'
 };
 
-},{}],788:[function(require,module,exports){
+},{}],789:[function(require,module,exports){
 'use strict';
 
 var Dispatcher = require('flux').Dispatcher;
@@ -82349,7 +82463,7 @@ var AppDispatcher = assign(new Dispatcher(), {
 
 module.exports = AppDispatcher;
 
-},{"flux":94,"react/lib/Object.assign":544}],789:[function(require,module,exports){
+},{"flux":94,"react/lib/Object.assign":544}],790:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -82380,7 +82494,7 @@ var routes = require('./config/routes');
   routes
 ), document.getElementById('main'));
 
-},{"./config/routes":786,"react":684,"react-dom":476,"react-router":506,"react-tap-event-plugin":520}],790:[function(require,module,exports){
+},{"./config/routes":787,"react":684,"react-dom":476,"react-router":506,"react-tap-event-plugin":520}],791:[function(require,module,exports){
 'use strict';
 
 var AppDispatcher = require('../dispatchers/app-dispatcher');
@@ -82402,6 +82516,10 @@ var _attributes = {
   status: "Status",
   artifact_name: "Current software",
   tags: "Tags"
+};
+var _snackbar = {
+  open: false,
+  message: ""
 };
 
 /* TEMP LOCAL GROUPS */
@@ -82437,97 +82555,19 @@ var _groups = [{
 
 /* Temp local devices */
 
-var _alldevices = [{
-  'id': 1,
-  'name': '00a0c91e6-7dec-11d0-a765-f81d4faebf1',
-  'device_type': "Raspberry Pi 3",
-  'arch': 'ARMv8 Cortex-A53',
-  'status': 'Connected',
-  'artifact_name': 'Application 0.0.2',
-  'groups': [1],
-  'tags': []
-}];
+var _alldevices = {
+  pending: [],
+  accepted: [],
+  rejected: []
+};
 
-var _alldevices1 = [{
-  'id': 1,
-  'name': '00a0c91e6-7dec-11d0-a765-f81d4faebf1',
-  'device_type': "Raspberry Pi 3",
-  'arch': 'ARMv8 Cortex-A53',
-  'status': 'Up',
-  'artifact_name': 'Application 0.0.1',
-  'groups': [1, 4],
-  'tags': []
-}, {
-  'id': 2,
-  'name': '00a0c91e6-7dec-11d0-a765-f81d4faebf2',
-  'device_type': "Raspberry Pi 3",
-  'arch': 'ARMv8 Cortex-A53',
-  'status': 'Up',
-  'artifact_name': 'Application 0.0.1',
-  'groups': [1, 4],
-  'tags': []
-}, {
-  'id': 3,
-  'name': '00a0c91e6-7dec-11d0-a765-f81d4faebf3',
-  'device_type': "Raspberry Pi 3",
-  'arch': 'ARMv8 Cortex-A53',
-  'status': 'Up',
-  'artifact_name': 'Application 0.0.1',
-  'groups': [1, 4],
-  'tags': []
-}, {
-  'id': 4,
-  'name': '00a0c91e6-7dec-11d0-a765-f81d4faebf4',
-  'device_type': "Raspberry Pi 3",
-  'arch': 'ARMv8 Cortex-A53',
-  'status': 'Up',
-  'artifact_name': 'Application 0.0.2',
-  'groups': [1, 2],
-  'tags': []
-}, {
-  'id': 5,
-  'name': '00a0c91e6-7dec-11d0-a765-f81d4faebf5',
-  'device_type': "Raspberry Pi 3",
-  'arch': 'ARMv8 Cortex-A53',
-  'status': 'Up',
-  'artifact_name': 'Application 0.0.2',
-  'groups': [1, 3],
-  'tags': []
-}, {
-  'id': 6,
-  'name': '00a0c91e6-7dec-11d0-a765-f81d4faebf6',
-  'device_type': "Raspberry Pi 3",
-  'arch': 'ARMv8 Cortex-A53',
-  'status': 'Up',
-  'artifact_name': 'Application 0.0.2',
-  'groups': [1, 3],
-  'tags': []
-}, {
-  'id': 7,
-  'name': '0dde3346-4dec-11d0-a765-f81d4faebf7',
-  'device_type': "Raspberry Pi 2 Model B",
-  'arch': 'ARMv7 Cortex-A7',
-  'status': 'Down',
-  'artifact_name': 'Application 0.0.1',
-  'groups': [1],
-  'tags': []
-}];
+var _alldevicelist = [];
 
-var _unauthorized = [{
-  'id': "63f6b7eb-b38d-44d3-91b5-fed2d1596d5c",
-  'name': "Mender QEMU test",
-  'device_type': "Raspberry Pi 3",
-  'arch': 'ARMv8 Cortex-A53',
-  'status': 'Unauthorized',
-  'artifact_name': 'Mender QEMU',
-  'groups': [],
-  'tags': [],
-  'ip_address': '172.16.254.1',
-  'mac_address': '00-14-22-01-23-45',
-  'device_serial': '4CE0460D0G',
-  'request_time': 1468777607000,
-  'last_heartbeat': 1468777607000
-}];
+var _health = {
+  total: 0,
+  alive: 0,
+  down: 0
+};
 
 _selectGroup(_groups[0].id);
 
@@ -82561,9 +82601,9 @@ function _addNewGroup(group, devices, type) {
 }
 
 function _getDeviceById(deviceId) {
-  for (var i = 0; i < _alldevices.length; i++) {
-    if (_alldevices[i].id === deviceId) {
-      return _alldevices[i];
+  for (var i = 0; i < _alldevicelist.length; i++) {
+    if (_alldevicelist[i].id === deviceId) {
+      return _alldevicelist[i];
     }
   }
   return;
@@ -82581,8 +82621,8 @@ function _getCurrentDevices(groupId) {
 }
 
 function updateDeviceTags(id, tags) {
-  var index = findWithAttr(_alldevices, "id", id);
-  _alldevices[index].tags = tags;
+  var index = findWithAttr(_alldevicelist, "id", id);
+  _alldevicelist[index].tags = tags;
 }
 
 function updateFilters(filters) {
@@ -82628,7 +82668,7 @@ function _getDevices(group, device_type) {
 
   var devices = [];
   for (var i = 0; i < group.devices.length; i++) {
-    var device = _alldevices[findWithAttr(_alldevices, 'id', group.devices[i])];
+    var device = _alldevicelist[findWithAttr(_alldevicelist, 'id', group.devices[i])];
     if (device.device_type === device_type) {
       devices.push(device);
     }
@@ -82676,17 +82716,8 @@ function _addGroup(group, idx) {
   }
 }
 
-function _getDeviceHealth() {
-  var health = {};
-  var down = collectWithAttr(_alldevices, 'status', 'Not connected');
-  health.down = down.length;
-  health.up = _alldevices.length - health.down;
-  health.total = _alldevices.length;
-  return health;
-}
-
 function _getUnauthorized() {
-  return _unauthorized;
+  return _alldevices.pending;
 }
 
 function _authorizeDevices(devices) {
@@ -82929,6 +82960,37 @@ function setSelectedDeployment(deployment) {
   }
 }
 
+function setDevices(devices) {
+  if (devices) {
+
+    setHealth(devices);
+
+    var newDevices = {};
+    devices.forEach(function (element, index) {
+      newDevices[element.status] = newDevices[element.status] || [];
+      newDevices[element.status].push(element);
+    });
+    _alldevicelist = devices;
+    _alldevices = newDevices;
+  }
+}
+
+function setHealth(devices) {
+  if (devices.accepted) {
+    var health = {};
+    devices.accepted.forEach(function (element, index) {
+      health[element.status] = newDevices[element.status] || [];
+      health[element.status].push(element);
+    });
+    console.log("health", health);
+  }
+}
+
+function _setSnackbar(message, duration) {
+  var show = message ? true : false;
+  _snackbar = { open: show, message: message };
+}
+
 var AppStore = assign(EventEmitter.prototype, {
   emitChange: function emitChange() {
     this.emit(CHANGE_EVENT);
@@ -83075,7 +83137,7 @@ var AppStore = assign(EventEmitter.prototype, {
   },
 
   getHealth: function getHealth() {
-    return _getDeviceHealth();
+    return _health;
   },
 
   getUnauthorized: function getUnauthorized() {
@@ -83087,6 +83149,10 @@ var AppStore = assign(EventEmitter.prototype, {
     * Return activity log
     */
     return _activityLog;
+  },
+
+  getSnackbar: function getSnackbar() {
+    return _snackbar;
   },
 
   dispatcherIndex: AppDispatcher.register(function (payload) {
@@ -83129,6 +83195,10 @@ var AppStore = assign(EventEmitter.prototype, {
         _sortTable(payload.action.table, payload.action.column, payload.action.direction);
         break;
 
+      case AppConstants.SET_SNACKBAR:
+        _setSnackbar(payload.action.message, payload.action.duration);
+        break;
+
       /* API */
       case AppConstants.RECEIVE_IMAGES:
         setImages(payload.action.images);
@@ -83141,6 +83211,11 @@ var AppStore = assign(EventEmitter.prototype, {
       case AppConstants.SINGLE_DEPLOYMENT:
         setSelectedDeployment(payload.action.deployment);
         break;
+
+      /* API */
+      case AppConstants.RECEIVE_DEVICES:
+        setDevices(payload.action.devices);
+        break;
     }
 
     AppStore.emitChange();
@@ -83151,7 +83226,7 @@ var AppStore = assign(EventEmitter.prototype, {
 
 module.exports = AppStore;
 
-},{"../constants/app-constants":787,"../dispatchers/app-dispatcher":788,"events":92,"react/lib/Object.assign":544}],791:[function(require,module,exports){
+},{"../constants/app-constants":788,"../dispatchers/app-dispatcher":789,"events":92,"react/lib/Object.assign":544}],792:[function(require,module,exports){
 'use strict';
 
 /*
@@ -83198,7 +83273,7 @@ var LocalStore = assign(EventEmitter.prototype, {
 
 module.exports = LocalStore;
 
-},{"../constants/app-constants":787,"../dispatchers/app-dispatcher":788,"events":92,"react/lib/Object.assign":544}],792:[function(require,module,exports){
+},{"../constants/app-constants":788,"../dispatchers/app-dispatcher":789,"events":92,"react/lib/Object.assign":544}],793:[function(require,module,exports){
 'use strict';
 
 var _colorManipulator = require('material-ui/lib/utils/color-manipulator');
@@ -83232,4 +83307,4 @@ module.exports = {
   }
 };
 
-},{"material-ui/lib/styles/colors":291,"material-ui/lib/styles/spacing":294,"material-ui/lib/utils/color-manipulator":348}]},{},[789]);
+},{"material-ui/lib/styles/colors":291,"material-ui/lib/styles/spacing":294,"material-ui/lib/utils/color-manipulator":348}]},{},[790]);
