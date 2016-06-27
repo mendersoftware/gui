@@ -56,10 +56,6 @@ var Devices = React.createClass({
   componentWillUnmount: function () {
     AppStore.removeChangeListener(this._onChange);
   },
-  componentDidMount: function() {
-    //AppActions.getAuthorized();
-    //AppActions.getDevices();
-  },
   _closeOnboard: function() {
     this.setState({hideTODO: true});
     AppActions.setLocalStorage("hideTODO", true);

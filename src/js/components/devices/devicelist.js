@@ -124,10 +124,10 @@ var DeviceList = React.createClass({
       this.setState({expanded: newIndex});
     }
   },
-  _ifSelected: function(name) {
+  _ifSelected: function(id) {
     var value = false;
     for (var i=0;i<this.props.selectedDevices.length;i++) {
-      if (name === this.props.selectedDevices[i].name) {
+      if (id === this.props.selectedDevices[i].id) {
         value = true;
         break;
       }
@@ -331,8 +331,8 @@ var DeviceList = React.createClass({
         expanded = <SelectedDevices images={this.props.images} devices={this.props.devices} selected={[device]} selectedGroup={this.props.selectedGroup} groups={this.props.groups} />
       }
       return (
-        <TableRow selected={this._ifSelected(device.name)} hoverable={!expanded} className={expanded ? "expand devices" : null}  key={index}>
-          <TableRowColumn>{device.name}</TableRowColumn>
+        <TableRow selected={this._ifSelected(device.id)} hoverable={!expanded} className={expanded ? "expand devices" : null}  key={index}>
+          <TableRowColumn>{device.id}</TableRowColumn>
           <TableRowColumn>{device.device_type}</TableRowColumn>
           <TableRowColumn>{device.artifact_name}</TableRowColumn>
           <TableRowColumn>{<Time value={device.last_heartbeat} format="YYYY-MM-DD HH:mm" />}</TableRowColumn>

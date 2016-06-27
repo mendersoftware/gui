@@ -79497,10 +79497,10 @@ var DeviceList = _react2.default.createClass((_React$createClass = {
       this.setState({ expanded: newIndex });
     }
   },
-  _ifSelected: function _ifSelected(name) {
+  _ifSelected: function _ifSelected(id) {
     var value = false;
     for (var i = 0; i < this.props.selectedDevices.length; i++) {
-      if (name === this.props.selectedDevices[i].name) {
+      if (id === this.props.selectedDevices[i].id) {
         value = true;
         break;
       }
@@ -79686,11 +79686,11 @@ var DeviceList = _react2.default.createClass((_React$createClass = {
     }
     return _react2.default.createElement(
       TableRow,
-      { selected: this._ifSelected(device.name), hoverable: !expanded, className: expanded ? "expand devices" : null, key: index },
+      { selected: this._ifSelected(device.id), hoverable: !expanded, className: expanded ? "expand devices" : null, key: index },
       _react2.default.createElement(
         TableRowColumn,
         null,
-        device.name
+        device.id
       ),
       _react2.default.createElement(
         TableRowColumn,
@@ -80068,10 +80068,6 @@ var Devices = _react2.default.createClass({
   },
   componentWillUnmount: function componentWillUnmount() {
     AppStore.removeChangeListener(this._onChange);
-  },
-  componentDidMount: function componentDidMount() {
-    //AppActions.getAuthorized();
-    //AppActions.getDevices();
   },
   _closeOnboard: function _closeOnboard() {
     this.setState({ hideTODO: true });
@@ -81073,6 +81069,8 @@ var Authorized = _react2.default.createClass({
       AppActions.rejectDevice(element, function (err) {
         if (err) {
           AppActions.setSnackbar("Error: " + err.error);
+        } else {
+          AppActions.setSnackbar("The device has been rejected");
         }
       }.bind(this));
     });
@@ -82505,7 +82503,7 @@ var EventEmitter = require('events').EventEmitter; // from device
 var CHANGE_EVENT = "change";
 
 var _softwareRepo = [];
-var _currentGroup = [];
+var _currentGroup = null;
 var _currentDevices = [];
 var _selectedDevices = [];
 var _filters = [{ key: '', value: '' }];
@@ -82549,7 +82547,7 @@ var _groups1 = [{
 var _groups = [{
   id: 1,
   name: "All devices",
-  devices: [],
+  devices: ["db1a77019af2e103dbaac8d1e740da98", "3a11a5bf-521f-4889-832b-a9d5e2e79f5a"],
   type: "public"
 }];
 
@@ -82569,14 +82567,14 @@ var _health = {
   down: 0
 };
 
-_selectGroup(_groups[0].id);
+_currentGroup = _currentGroup || _getGroupById(1);
 
 function _selectGroup(id) {
   _selectedDevices = [];
   _filters = [{ key: '', value: '' }];
   if (id) {
     _currentGroup = _getGroupById(id);
-    _getCurrentDevices(_currentGroup.id);
+    _setCurrentDevices(_currentGroup.id);
   }
 }
 
@@ -82609,14 +82607,19 @@ function _getDeviceById(deviceId) {
   return;
 }
 
-function _getCurrentDevices(groupId) {
+function _setCurrentDevices(groupId) {
   _currentDevices = [];
-  var devicelist = _getGroupById(groupId).devices;
-  for (var i = 0; i < devicelist.length; i++) {
-    var device = _getDeviceById(devicelist[i]);
-    if (_matchFilters(device)) {
-      _currentDevices.push(device);
+  if (groupId) {
+    var devicelist = _getGroupById(groupId).devices;
+    for (var i = 0; i < devicelist.length; i++) {
+      var device = _getDeviceById(devicelist[i]);
+      if (_matchFilters(device)) {
+        _currentDevices.push(device);
+      }
     }
+  } else {
+    _currentGroup = _getGroupById(1);
+    _currentDevices = _alldevices["accepted"];
   }
 }
 
@@ -82627,7 +82630,7 @@ function updateDeviceTags(id, tags) {
 
 function updateFilters(filters) {
   _filters = filters;
-  _getCurrentDevices(_currentGroup.id);
+  _setCurrentDevices(_currentGroup.id);
 }
 
 function _matchFilters(device) {
@@ -82692,7 +82695,7 @@ function _addToGroup(group, devices) {
 
     // reset filters
     _filters = [{ key: '', value: '' }];
-    _getCurrentDevices(tmpGroup.id);
+    _setCurrentDevices(tmpGroup.id);
 
     // TODO - delete if empty group?
   } else {
@@ -82717,7 +82720,7 @@ function _addGroup(group, idx) {
 }
 
 function _getUnauthorized() {
-  return _alldevices.pending;
+  return _alldevices.pending || [];
 }
 
 function _authorizeDevices(devices) {
@@ -82727,20 +82730,11 @@ function _authorizeDevices(devices) {
     var idx = findWithAttr(_alldevices, 'name', devices[i].name);
     if (idx === undefined) {
       devices[i].groups.push(1);
-      devices[i].status = devices[0].name.indexOf("4f9") ? "Not connected" : "Connected";
       _alldevices.push(devices[i]);
       _groups[0].devices.push(devices[i].id);
     } else {
       // id already exists - error
-      console.log("device id already exists");
-    }
-  }
-
-  // remove from _unauthorized outside of main loop so as not to interrupt
-  for (var i = devices.length - 1; i >= 0; i--) {
-    var unIdx = findWithAttr(_unauthorized, 'name', devices[i].name);
-    if (unIdx !== undefined) {
-      _unauthorized.splice(unIdx, 1);
+      _setSnackbar("Error: A device with this ID already exists");
     }
   }
   _selectGroup(_currentGroup.id);
@@ -82962,9 +82956,7 @@ function setSelectedDeployment(deployment) {
 
 function setDevices(devices) {
   if (devices) {
-
     setHealth(devices);
-
     var newDevices = {};
     devices.forEach(function (element, index) {
       newDevices[element.status] = newDevices[element.status] || [];
@@ -82972,6 +82964,7 @@ function setDevices(devices) {
     });
     _alldevicelist = devices;
     _alldevices = newDevices;
+    _setCurrentDevices(_currentGroup.id);
   }
 }
 

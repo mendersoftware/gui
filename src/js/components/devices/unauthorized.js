@@ -56,6 +56,8 @@ var Authorized =  React.createClass({
       AppActions.rejectDevice(element, function(err) {
         if (err) {
           AppActions.setSnackbar("Error: " + err.error);
+        } else {
+          AppActions.setSnackbar("The device has been rejected");
         }
       }.bind(this));
     });
