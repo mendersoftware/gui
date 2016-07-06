@@ -77791,7 +77791,7 @@ var Deployments = _react2.default.createClass({
               { className: 'todo' },
               '//TODO'
             ),
-            ' deploy an update to all devices'
+            ' deploy an update to the device group you created'
           )
         )
       ),
@@ -82307,7 +82307,18 @@ var Software = _react2.default.createClass({
     }
   },
   render: function render() {
-    var message = this.state.uploadTODO ? "Deploy the new image to all devices" : "Upload Version 0.4 from /folder1/folder2/menderQemuv04.tar.gz";
+    var image_link = _react2.default.createElement(
+      'span',
+      null,
+      'Download latest image',
+      _react2.default.createElement(
+        'a',
+        { href: 'https://s3-eu-west-1.amazonaws.com/yocto-builds/latest/latest.tar.gz', target: '_blank' },
+        ' here '
+      ),
+      'and upload the image file to the Mender server'
+    );
+    var message = this.state.uploadTODO ? "Deploy the new image to all devices" : image_link;
     return _react2.default.createElement(
       'div',
       { className: 'contentContainer' },

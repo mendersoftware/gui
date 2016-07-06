@@ -44,7 +44,14 @@ var Software = React.createClass({
     }
   },
   render: function() {
-    var message = this.state.uploadTODO ? "Deploy the new image to all devices" : "Upload Version 0.4 from /folder1/folder2/menderQemuv04.tar.gz" ;
+    var image_link = (
+      <span>
+        Download latest image 
+        <a href='https://s3-eu-west-1.amazonaws.com/yocto-builds/latest/latest.tar.gz' target='_blank'> here </a>
+         and upload the image file to the Mender server
+      </span>
+    );
+    var message = this.state.uploadTODO ? "Deploy the new image to all devices" : image_link;
     return (
       <div className="contentContainer">
         <div className={this.state.updateTODO ? "hidden" : null}>
