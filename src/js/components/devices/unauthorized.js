@@ -40,7 +40,6 @@ var Authorized =  React.createClass({
   },
   _authorizeDevices: function(devices) {
     // array of device objects
-    event.stopPropagation();
     devices.forEach( function(element, index) {
       AppActions.acceptDevice(element, function(err) {
         if (err) {
@@ -51,7 +50,6 @@ var Authorized =  React.createClass({
   },
    _blockDevices: function(devices) {
     // array of device objects
-    event.stopPropagation();
     devices.forEach( function(element, index) {
       AppActions.rejectDevice(element, function(err) {
         if (err) {

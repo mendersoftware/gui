@@ -56,7 +56,7 @@ var _groups = [
   {
     id: 1,
     name: "All devices",
-    devices: ["db1a77019af2e103dbaac8d1e740da98", "3a11a5bf-521f-4889-832b-a9d5e2e79f5a"],
+    devices: [],
     type: "public"
   }
 ]
@@ -237,6 +237,7 @@ function _addGroup(group, idx) {
 
 
 function _getUnauthorized() {
+  console.log(_alldevices);
   return _alldevices.pending || [];
 }
 

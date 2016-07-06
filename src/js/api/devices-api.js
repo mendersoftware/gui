@@ -37,6 +37,7 @@ var Api = {
         .set('Content-Type', 'application/json')
         .send(data)
         .end(function (err, res) {
+          console.log(res);
           if (err || !res.ok) {
             console.log("err", err, res);
             reject(JSON.parse(res.text));

@@ -76208,13 +76208,6 @@ var AppActions = {
     });
   },
 
-  /*authorizeDevices: function (devices) {
-    AppDispatcher.handleViewAction({
-      actionType: AppConstants.AUTHORIZE_DEVICES,
-      devices: devices
-    })
-  },*/
-
   /* General */
   setSnackbar: function setSnackbar(message, duration) {
     AppDispatcher.handleViewAction({
@@ -76448,6 +76441,7 @@ var Api = {
   put: function put(url, data) {
     return new Promise(function (resolve, reject) {
       request.put(url).set('Content-Type', 'application/json').send(data).end(function (err, res) {
+        console.log(res);
         if (err || !res.ok) {
           console.log("err", err, res);
           reject(JSON.parse(res.text));
@@ -81053,7 +81047,6 @@ var Authorized = _react2.default.createClass({
   },
   _authorizeDevices: function _authorizeDevices(devices) {
     // array of device objects
-    event.stopPropagation();
     devices.forEach(function (element, index) {
       AppActions.acceptDevice(element, function (err) {
         if (err) {
@@ -81064,7 +81057,6 @@ var Authorized = _react2.default.createClass({
   },
   _blockDevices: function _blockDevices(devices) {
     // array of device objects
-    event.stopPropagation();
     devices.forEach(function (element, index) {
       AppActions.rejectDevice(element, function (err) {
         if (err) {
@@ -82547,7 +82539,7 @@ var _groups1 = [{
 var _groups = [{
   id: 1,
   name: "All devices",
-  devices: ["db1a77019af2e103dbaac8d1e740da98", "3a11a5bf-521f-4889-832b-a9d5e2e79f5a"],
+  devices: [],
   type: "public"
 }];
 
@@ -82720,6 +82712,7 @@ function _addGroup(group, idx) {
 }
 
 function _getUnauthorized() {
+  console.log(_alldevices);
   return _alldevices.pending || [];
 }
 
