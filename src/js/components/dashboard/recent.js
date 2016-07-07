@@ -59,11 +59,12 @@ var Recent = React.createClass({
             <h2>Recent deployments</h2>
           </div>
           <div className={this.props.deployments.length ? null : "hidden" }>
-            {recent}
-
+            <div className="block">
+              {recent}
+            </div>
             <Link to="/deployments" className="float-right">All deployments</Link>
           </div> 
-
+          
           <div className={this.props.deployments.length ? "hidden" : "dashboard-placeholder" }>
             <p>View the results of recent deployments here</p>
             <img src="assets/img/history.png" alt="recent" />

@@ -77259,7 +77259,11 @@ var Recent = _react2.default.createClass({
         _react2.default.createElement(
           'div',
           { className: this.props.deployments.length ? null : "hidden" },
-          recent,
+          _react2.default.createElement(
+            'div',
+            { className: 'block' },
+            recent
+          ),
           _react2.default.createElement(
             _reactRouter.Link,
             { to: '/deployments', className: 'float-right' },
