@@ -76648,7 +76648,17 @@ var Activity = _react2.default.createClass({
         _react2.default.createElement(
           'div',
           { className: 'margin-bottom' },
-          activity
+          activity,
+          _react2.default.createElement(
+            'div',
+            { className: this.props.activity.length ? "hidden" : "dashboard-placeholder" },
+            _react2.default.createElement(
+              'p',
+              null,
+              'View the latest user activity here'
+            ),
+            _react2.default.createElement('img', { src: 'assets/img/activity.png', alt: 'activity' })
+          )
         )
       )
     );

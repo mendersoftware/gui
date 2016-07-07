@@ -30,6 +30,10 @@ var Activity = React.createClass({
         <div>
           <div className="margin-bottom">
             {activity}
+            <div className={this.props.activity.length ? "hidden" : "dashboard-placeholder" }>
+              <p>View the latest user activity here</p>
+              <img src="assets/img/activity.png" alt="activity" />
+            </div>
           </div>
           
         </div>
