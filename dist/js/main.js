@@ -78292,7 +78292,7 @@ var Recent = _react2.default.createClass({
       null,
       _react2.default.createElement(
         'div',
-        { style: { marginBottom: "60" } },
+        { className: 'deploy-table-contain' },
         _react2.default.createElement(
           'h3',
           null,
@@ -78366,7 +78366,7 @@ var Recent = _react2.default.createClass({
       ),
       _react2.default.createElement(
         'div',
-        { style: { marginTop: "60" } },
+        { className: 'deploy-table-contain' },
         _react2.default.createElement(
           'h3',
           null,
