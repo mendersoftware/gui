@@ -51,7 +51,7 @@ var Software = React.createClass({
          and upload the image file to the Mender server
       </span>
     );
-    var message = this.state.uploadTODO ? "Deploy the new image to all devices" : image_link;
+    var message = this.state.uploadTODO ? "Deploy the new image to your devices" : image_link;
     return (
       <div className="contentContainer">
         <div className={this.state.updateTODO ? "hidden" : null}>

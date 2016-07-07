@@ -82328,7 +82328,7 @@ var Software = _react2.default.createClass({
       ),
       'and upload the image file to the Mender server'
     );
-    var message = this.state.uploadTODO ? "Deploy the new image to all devices" : image_link;
+    var message = this.state.uploadTODO ? "Deploy the new image to your devices" : image_link;
     return _react2.default.createElement(
       'div',
       { className: 'contentContainer' },
@@ -83314,4 +83314,5 @@ module.exports = {
   }
 };
 
-},{"material-ui/lib/styles/colors":291,"material-ui/lib/styles/spacing":294,"material-ui/lib/utils/color-manipulator":348}]},{},[790]);
+},{"material-ui/lib/styles/colors":291,"material-ui/lib/styles/spacing":294,"material-ui/lib/utils/color-manipulator":348}]},{},[789]);
+
