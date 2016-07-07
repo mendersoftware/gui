@@ -55,16 +55,19 @@ var Recent = React.createClass({
     return (
       <div>
         <div className="deployments-container">
-          <div className="dashboard-header subsection">
-            <h3>Recent<span className="dashboard-number">{recent.length}</span></h3>
+          <div className="dashboard-header">
+            <h2>Recent deployments</h2>
           </div>
-          <div>
+          <div className={this.props.deployments.length ? null : "hidden" }>
             {recent}
-          </div>
-          <div className={recent.length ? 'hidden' : null}>
-            <p className="italic">No recent deployments</p>
-          </div>
-          <Link to="/deployments" className="float-right">All deployments</Link>
+
+            <Link to="/deployments" className="float-right">All deployments</Link>
+          </div> 
+
+          <div className={this.props.deployments.length ? "hidden" : "dashboard-placeholder" }>
+            <p>View the results of recent deployments here</p>
+            <img src="assets/img/history.png" alt="recent" />
+          </div>  
         </div>
       </div>
     );

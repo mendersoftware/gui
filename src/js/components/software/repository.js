@@ -353,9 +353,10 @@ var Repository = React.createClass({
             </TableBody>
           </Table>
 
-          <p className={items.length ? 'hidden' : 'italic margin-left'}>
-            No images found
-          </p>
+          <div className={items.length ? "hidden" : "dashboard-placeholder" }>
+            <p>No images found</p>
+            <img src="assets/img/images.png" alt="images" />
+          </div>
         </div>
 
         <Dialog

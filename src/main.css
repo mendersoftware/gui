@@ -627,6 +627,7 @@ textarea#inline-description {
 }
 .health {
   position: relative;
+  min-height: 250px;
 }
 .health .health-panel {
   margin: 15px 0;
@@ -667,7 +668,7 @@ textarea#inline-description {
   font-size: 16px;
   color: #c7c7c7;
   text-align: center;
-  padding: 30px;
+  padding: 15px;
 }
 .dashboard-placeholder img {
   margin-top: 15px;
@@ -735,9 +736,6 @@ span.day {
   border-bottom: 1px solid #d4e9e7;
   margin-bottom: 15px;
 }
-.dashboard-header.subsection {
-  border: none;
-}
 .dashboard-header h2,
 .dashboard-header h3 {
   margin: 8px 0;
@@ -748,7 +746,6 @@ span.day {
 }
 .progress-container {
   padding-bottom: 45px;
-  border-bottom: 1px solid #d4e9e7;
 }
 .progress-container .device-info {
   position: absolute;

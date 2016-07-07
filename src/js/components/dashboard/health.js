@@ -11,7 +11,7 @@ var Health = React.createClass({
     return (
       <div className="health margin-bottom-large">
         <div className="dashboard-header">
-          <h2>Device heartbeats <span className="dashboard-number">{this.props.health.total}</span></h2>
+          <h2>Device heartbeats</h2>
         </div>
 
         <div className={this.props.health.total ? null : "hidden" }>

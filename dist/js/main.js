@@ -76655,7 +76655,7 @@ var Activity = _react2.default.createClass({
             _react2.default.createElement(
               'p',
               null,
-              'View the latest user activity here'
+              'No recent user activity'
             ),
             _react2.default.createElement('img', { src: 'assets/img/activity.png', alt: 'activity' })
           )
@@ -76844,49 +76844,22 @@ var Deployments = _react2.default.createClass({
       { className: 'deployments' },
       _react2.default.createElement(
         'div',
-        { className: 'dashboard-header' },
+        null,
         _react2.default.createElement(
-          'h2',
-          null,
-          'Deployments'
+          'div',
+          { className: 'margin-bottom' },
+          _react2.default.createElement(Progress, { clickHandle: this._clickHandle, deployments: this.props.progress })
+        ),
+        _react2.default.createElement(
+          'div',
+          { className: 'margin-bottom-large' },
+          _react2.default.createElement(Recent, { clickHandle: this._clickHandle, deployments: this.props.recent })
         )
       ),
       _react2.default.createElement(
         'div',
-        { className: this.props.progress.length || this.props.recent.length ? "hidden" : "dashboard-placeholder" },
-        _react2.default.createElement(
-          'p',
-          null,
-          'Monitor ongoing and recent deployments from here'
-        ),
-        _react2.default.createElement('img', { src: 'assets/img/deployments.png', alt: 'deployments' })
-      ),
-      _react2.default.createElement(
-        'div',
-        { className: this.props.progress.length || this.props.recent.length ? null : "hidden" },
-        _react2.default.createElement(
-          'div',
-          null,
-          _react2.default.createElement(
-            'div',
-            { className: 'margin-bottom margin-top' },
-            _react2.default.createElement(Progress, { clickHandle: this._clickHandle, deployments: this.props.progress })
-          ),
-          _react2.default.createElement(
-            'div',
-            { className: 'margin-bottom-large' },
-            _react2.default.createElement(Recent, { clickHandle: this._clickHandle, deployments: this.props.recent })
-          )
-        ),
-        _react2.default.createElement(
-          'div',
-          null,
-          _react2.default.createElement(
-            'div',
-            null,
-            _react2.default.createElement(RaisedButton, { onClick: this._clickHandle.bind(null, { route: "deployments", open: true }), label: 'Deploy an update', secondary: true })
-          )
-        )
+        null,
+        _react2.default.createElement(RaisedButton, { onClick: this._clickHandle.bind(null, { route: "deployments", open: true }), label: 'Deploy an update', secondary: true })
       )
     );
   }
@@ -76923,12 +76896,7 @@ var Health = _react2.default.createClass({
         _react2.default.createElement(
           'h2',
           null,
-          'Device heartbeats ',
-          _react2.default.createElement(
-            'span',
-            { className: 'dashboard-number' },
-            this.props.health.total
-          )
+          'Device heartbeats'
         )
       ),
       _react2.default.createElement(
@@ -77135,40 +77103,36 @@ var Progress = _react2.default.createClass({
       { className: 'progress-container' },
       _react2.default.createElement(
         'div',
-        { className: 'dashboard-header subsection' },
+        { className: 'dashboard-header' },
         _react2.default.createElement(
-          'h3',
+          'h2',
           null,
-          'In progress',
-          _react2.default.createElement(
-            'span',
-            { className: 'dashboard-number' },
-            progress.length
-          )
+          'Deployments in progress'
         )
       ),
       _react2.default.createElement(
         'div',
-        null,
+        { className: this.props.deployments.length ? null : "hidden" },
         _react2.default.createElement(
           List,
           { style: { paddingTop: 0 } },
           progress
         ),
         _react2.default.createElement(
-          'div',
-          { className: progress.length ? 'hidden' : null },
-          _react2.default.createElement(
-            'p',
-            { className: 'italic' },
-            'No deployments in progress'
-          )
-        ),
-        _react2.default.createElement(
           _reactRouter.Link,
           { to: '/deployments', className: 'float-right' },
           'All deployments'
         )
+      ),
+      _react2.default.createElement(
+        'div',
+        { className: this.props.deployments.length ? "hidden" : "dashboard-placeholder" },
+        _react2.default.createElement(
+          'p',
+          null,
+          'Monitor ongoing deployments from here'
+        ),
+        _react2.default.createElement('img', { src: 'assets/img/deployments.png', alt: 'deployments' })
       )
     );
   }
@@ -77285,36 +77249,32 @@ var Recent = _react2.default.createClass({
         { className: 'deployments-container' },
         _react2.default.createElement(
           'div',
-          { className: 'dashboard-header subsection' },
+          { className: 'dashboard-header' },
           _react2.default.createElement(
-            'h3',
+            'h2',
             null,
-            'Recent',
-            _react2.default.createElement(
-              'span',
-              { className: 'dashboard-number' },
-              recent.length
-            )
+            'Recent deployments'
           )
         ),
         _react2.default.createElement(
           'div',
-          null,
-          recent
+          { className: this.props.deployments.length ? null : "hidden" },
+          recent,
+          _react2.default.createElement(
+            _reactRouter.Link,
+            { to: '/deployments', className: 'float-right' },
+            'All deployments'
+          )
         ),
         _react2.default.createElement(
           'div',
-          { className: recent.length ? 'hidden' : null },
+          { className: this.props.deployments.length ? "hidden" : "dashboard-placeholder" },
           _react2.default.createElement(
             'p',
-            { className: 'italic' },
-            'No recent deployments'
-          )
-        ),
-        _react2.default.createElement(
-          _reactRouter.Link,
-          { to: '/deployments', className: 'float-right' },
-          'All deployments'
+            null,
+            'View the results of recent deployments here'
+          ),
+          _react2.default.createElement('img', { src: 'assets/img/history.png', alt: 'recent' })
         )
       )
     );
@@ -81894,9 +81854,14 @@ var Repository = _react2.default.createClass({
           )
         ),
         _react2.default.createElement(
-          'p',
-          { className: items.length ? 'hidden' : 'italic margin-left' },
-          'No images found'
+          'div',
+          { className: items.length ? "hidden" : "dashboard-placeholder" },
+          _react2.default.createElement(
+            'p',
+            null,
+            'No images found'
+          ),
+          _react2.default.createElement('img', { src: 'assets/img/images.png', alt: 'images' })
         )
       ),
       _react2.default.createElement(
@@ -83314,5 +83279,4 @@ module.exports = {
   }
 };
 
-},{"material-ui/lib/styles/colors":291,"material-ui/lib/styles/spacing":294,"material-ui/lib/utils/color-manipulator":348}]},{},[789]);
-
+},{"material-ui/lib/styles/colors":291,"material-ui/lib/styles/spacing":294,"material-ui/lib/utils/color-manipulator":348}]},{},[790]);
