@@ -105,12 +105,13 @@ var Repository = React.createClass({
     var tmpFile = this.state.tmpFile;
 
     AppActions.uploadImage(newState, function(id_uri) {
+      this.props.startLoader();
       AppActions.getUploadUri(id_uri, function(uri) {
         AppActions.doFileUpload(uri, tmpFile, function() {
-          AppActions.getImages();
-        });
-      });
-    });
+          this.props.refreshImages();
+        }.bind(this));
+      }.bind(this));
+    }.bind(this));
     this.props.setStorage("uploaded04", true);
     this.dialogDismiss('upload');
     this._resetImageState();
@@ -334,7 +335,7 @@ var Repository = React.createClass({
         <div style={{position: "relative", marginTop:"10px"}}>
           <Table
             onRowSelection={this._onRowSelection}
-            className={items.length ? null : "hidden"}>
+            className={(!items.length || this.props.loading) ? "hidden" : null}>
             <TableHeader
               displaySelectAll={false}
               adjustForCheckbox={false} >

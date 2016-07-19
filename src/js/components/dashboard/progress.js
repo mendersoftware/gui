@@ -3,6 +3,7 @@ import { Router, Route, Link } from 'react-router';
 
 var ProgressChart = require('../deployments/progressChart.js');
 var Time = require('react-time');
+var Loader = require('../common/loader');
 
 // material ui
 var mui = require('material-ui');
@@ -69,7 +70,9 @@ var Progress = React.createClass({
           <Link to="/deployments" className="float-right">All deployments</Link>
         </div>
 
-        <div className={this.props.deployments.length ? "hidden" : "dashboard-placeholder" }>
+        <Loader show={this.props.loading} />
+
+        <div className={(this.props.deployments.length || this.props.loading) ? "hidden" : "dashboard-placeholder" }>
           <p>Monitor ongoing deployments from here</p>
           <img src="assets/img/deployments.png" alt="deployments" />
         </div>

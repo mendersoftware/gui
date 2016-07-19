@@ -34,9 +34,16 @@ var Dashboard = React.createClass({
     AppStore.removeChangeListener(this._onChange);
   },
   componentDidMount: function() {
-     AppActions.getDeployments();
-     AppActions.getDevices();
-     //AppActions.getUnauthorized();
+    AppActions.getDeployments(function() {
+      setTimeout(function() {
+        this.setState({doneDepsLoading:true});
+      }.bind(this), 300)
+    }.bind(this));
+    AppActions.getDevices(function() {
+      setTimeout(function() {
+        this.setState({doneDevsLoading:true});
+      }.bind(this), 300)
+    }.bind(this));
   },
   _onChange: function() {
     this.setState(getState());
@@ -78,12 +85,12 @@ var Dashboard = React.createClass({
             <RaisedButton onClick={this._handleClick.bind(null, {route:"devices"})} primary={true} label="Review details" />
           </div>
           <div className="leftDashboard">
-            <Deployments clickHandle={this._handleClick} progress={this.state.progress} recent={this.state.recent} />
+            <Deployments loading={!this.state.doneDepsLoading} clickHandle={this._handleClick} progress={this.state.progress} recent={this.state.recent} />
           </div>
           <div className="rightDashboard">
             <div className="right">
-              <Health devices={this.state.devices} clickHandle={this._handleClick} health={this.state.health} />
-              <Activity activity={this.state.activity} />
+              <Health loading={!this.state.doneDepsLoading}  devices={this.state.devices} clickHandle={this._handleClick} health={this.state.health} />
+              <Activity loading={!this.state.doneActivityLoading}  activity={this.state.activity} />
             </div>
           </div>
         </div>

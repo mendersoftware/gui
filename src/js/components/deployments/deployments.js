@@ -56,36 +56,41 @@ var Deployments = React.createClass({
   },
   componentDidMount: function() {
     AppStore.changeListener(this._onChange);
-    AppActions.getDeployments();
-      if (this.props.params) {
-        this.setState({tabIndex: tabs[this.props.params.tab]});
+    AppActions.getDeployments(function() {
+      setTimeout(function() {
+        this.setState({doneLoading:true});
+      }.bind(this), 300)
+    }.bind(this));
 
-        if (this.props.params.params) {
-          var str = decodeURIComponent(this.props.params.params);
-          var obj = str.split("&");
-        
-          var params = [];
-          for (var i=0;i<obj.length;i++) {
-            var f = obj[i].split("=");
-            params[f[0]] = f[1];
-          }
-          if (params.open) {
-            var that = this;
-            if (params.id) {
-              that._getReportById(params.id);
-            } else {
-              setTimeout(function() {
-                that.dialogOpen("schedule");
-              }, 400);
-            }
-          }
-          
+    if (this.props.params) {
+      this.setState({tabIndex: tabs[this.props.params.tab]});
+
+      if (this.props.params.params) {
+        var str = decodeURIComponent(this.props.params.params);
+        var obj = str.split("&");
+      
+        var params = [];
+        for (var i=0;i<obj.length;i++) {
+          var f = obj[i].split("=");
+          params[f[0]] = f[1];
         }
-
-      } else {
-        this.setState({tabIndex:"0"});
+        if (params.open) {
+          var that = this;
+          if (params.id) {
+            that._getReportById(params.id);
+          } else {
+            setTimeout(function() {
+              that.dialogOpen("schedule");
+            }, 400);
+          }
+        }
+        
       }
-      AppActions.getImages();
+
+    } else {
+      this.setState({tabIndex:"0"});
+    }
+    AppActions.getImages();
   },
   componentWillUnmount: function () {
     AppStore.removeChangeListener(this._onChange);
@@ -230,7 +235,7 @@ var Deployments = React.createClass({
           <div className="top-right-button">
             <ScheduleButton secondary={true} openDialog={this.dialogOpen} />
           </div>
-          <Recent recent={this.state.recent} progress={this.state.progress} showReport={this._showReport} />
+          <Recent loading={!this.state.doneLoading} recent={this.state.recent} progress={this.state.progress} showReport={this._showReport} />
         </div>
       
         <Dialog

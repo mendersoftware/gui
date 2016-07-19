@@ -7,6 +7,8 @@ var GroupDevices = require('./groupdevices');
 var ProgressChart = require('./progresschart');
 var DeploymentStatus = require('./deploymentstatus');
 
+var Loader = require('../common/loader');
+
 // material ui
 var mui = require('material-ui');
 var Table = mui.Table;
@@ -87,6 +89,8 @@ var Recent = React.createClass({
       <div>
         <div className="deploy-table-contain"> 
           <h3>In progress</h3>
+
+          <Loader show={this.props.loading} />
           <Table
             onCellClick={this._progressCellClick}
             className={progressMap.length ? null : 'hidden'}
@@ -110,7 +114,7 @@ var Recent = React.createClass({
               {progressMap}
             </TableBody>
           </Table>
-          <div className={progressMap.length ? 'hidden' : "dashboard-placeholder"}>
+          <div className={(progressMap.length || this.props.loading)  ? 'hidden' : "dashboard-placeholder"}>
             <p>Ongoing deployments will appear here. Deploy an update to get started</p>
             <img src="assets/img/deployments.png" alt="In progress" />
           </div>
@@ -118,6 +122,7 @@ var Recent = React.createClass({
 
         <div className="deploy-table-contain">
           <h3>Recent</h3>
+          <Loader show={this.props.loading} />
           <Table
             onCellClick={this._recentCellClick}
             className={recentMap.length ? null : 'hidden'}
@@ -142,7 +147,7 @@ var Recent = React.createClass({
             </TableBody>
           </Table>
 
-          <div className={recentMap.length ? 'hidden' : "dashboard-placeholder"}>
+          <div className={(recentMap.length || this.props.loading) ? 'hidden' : "dashboard-placeholder"}>
             <p>Completed deployments will appear here.</p>
             <p>You can review logs and reports for each device group you've deployed to</p>
             <img src="assets/img/history.png" alt="Recent" />

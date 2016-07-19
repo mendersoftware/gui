@@ -3,6 +3,7 @@ var GroupDevices = require('../deployments/groupdevices');
 var RecentStats = require('./recentstats');
 var Time = require('react-time');
 var AppActions = require('../../actions/app-actions');
+var Loader = require('../common/loader');
 
 import { Router, Route, Link } from 'react-router';
 
@@ -65,7 +66,8 @@ var Recent = React.createClass({
             <Link to="/deployments" className="float-right">All deployments</Link>
           </div> 
           
-          <div className={this.props.deployments.length ? "hidden" : "dashboard-placeholder" }>
+          <Loader show={this.props.loading} />
+          <div className={(this.props.deployments.length || this.props.loading) ? "hidden" : "dashboard-placeholder" }>
             <p>View the results of recent deployments here</p>
             <img src="assets/img/history.png" alt="recent" />
           </div>  

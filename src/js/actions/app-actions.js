@@ -126,7 +126,7 @@ var AppActions = {
 
   getUploadUri: function(id_url, callback) {
     ImagesApi
-      .get(deploymentsApiUrl + id_url + "/upload?expire=60")
+      .get(id_url + "/upload?expire=60")
       .then(function(data) {
         var uri = data.uri;
         callback(uri);
@@ -154,15 +154,19 @@ var AppActions = {
 
 
   /*Deployments */
-  getDeployments: function() {
+  getDeployments: function(callback) {
     DeploymentsApi
       .get(deploymentsApiUrl+'/deployments')
       .then(function(deployments) {
+        callback();
         AppDispatcher.handleViewAction({
           actionType: AppConstants.RECEIVE_DEPLOYMENTS,
           deployments: deployments
         });
-      });
+      })
+      .catch(function(err) {
+        callback(err);
+      })
   },
   createDeployment: function(deployment, callback) {
     DeploymentsApi
