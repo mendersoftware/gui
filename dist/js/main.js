@@ -76163,11 +76163,10 @@ var AppDispatcher = require('../dispatchers/app-dispatcher');
 var ImagesApi = require('../api/images-api');
 var DeploymentsApi = require('../api/deployments-api');
 var DevicesApi = require('../api/devices-api');
-var rootUrl = "http://192.168.99.100";
-var deploymentsRoot = rootUrl + ":9080";
-var deploymentsApiUrl = deploymentsRoot + "/deployments/api/0.0.1";
-var devicesRoot = rootUrl + ":8082";
-var devicesApiUrl = devicesRoot + "/api/0.1.0";
+var rootUrl = "https://192.168.99.100";
+var apiUrl = rootUrl + ":9080/api/integrations/0.1";
+var deploymentsApiUrl = apiUrl + "/deployments";
+var devicesApiUrl = apiUrl + "/admission";
 
 var AppActions = {
 
@@ -76260,7 +76259,7 @@ var AppActions = {
   },
 
   getUploadUri: function getUploadUri(id_url, callback) {
-    ImagesApi.get(deploymentsRoot + id_url + "/upload?expire=60").then(function (data) {
+    ImagesApi.get(deploymentsApiUrl + id_url + "/upload?expire=60").then(function (data) {
       var uri = data.uri;
       callback(uri);
     });
@@ -76290,7 +76289,7 @@ var AppActions = {
   },
   createDeployment: function createDeployment(deployment, callback) {
     DeploymentsApi.post(deploymentsApiUrl + '/deployments', deployment).then(function (data) {
-      callback(deploymentsRoot + data.location);
+      callback(deploymentsApiUrl + data.location);
     });
   },
   getSingleDeployment: function getSingleDeployment(id, callback) {
@@ -76440,13 +76439,11 @@ var Api = {
   },
   put: function put(url, data) {
     return new Promise(function (resolve, reject) {
-      request.put(url).set('Content-Type', 'application/json').send(data).end(function (err, res) {
-        console.log(res);
+      request.put(url).withCredentials().set('Content-Type', 'application/json').send(data).end(function (err, res) {
         if (err || !res.ok) {
-          console.log("err", err, res);
+          console.log(err);
           reject(JSON.parse(res.text));
         } else {
-          console.log(" no error ");
           var responsetext = "";
           if (res.text) {
             responsetext = JSON.parse(res.text);
@@ -82702,7 +82699,6 @@ function _addGroup(group, idx) {
 }
 
 function _getUnauthorized() {
-  console.log(_alldevices);
   return _alldevices.pending || [];
 }
 
@@ -82720,7 +82716,7 @@ function _authorizeDevices(devices) {
       _setSnackbar("Error: A device with this ID already exists");
     }
   }
-  _selectGroup(_currentGroup.id);
+  _selectGroup(_currentGroup.id || 1);
 }
 
 function discoverDevices(array) {

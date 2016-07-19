@@ -237,7 +237,6 @@ function _addGroup(group, idx) {
 
 
 function _getUnauthorized() {
-  console.log(_alldevices);
   return _alldevices.pending || [];
 }
 
@@ -255,7 +254,7 @@ function _authorizeDevices(devices) {
       _setSnackbar("Error: A device with this ID already exists");
     }
   }
-  _selectGroup(_currentGroup.id);
+  _selectGroup(_currentGroup.id || 1);
 }
 
 
