@@ -669,6 +669,10 @@ textarea#inline-description {
   color: #c7c7c7;
   text-align: center;
   padding: 15px;
+  -webkit-animation: fadein 0.2s 1;
+  -moz-animation: fadein 0.2s 1;
+  -ms-animation: fadein 0.2s 1;
+  -o-animation: fadein 0.2s 1;
 }
 .dashboard-placeholder img {
   margin-top: 15px;

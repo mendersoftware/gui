@@ -76285,12 +76285,15 @@ var AppActions = {
   },
 
   /*Deployments */
-  getDeployments: function getDeployments() {
+  getDeployments: function getDeployments(callback) {
     DeploymentsApi.get(deploymentsApiUrl + '/deployments').then(function (deployments) {
+      callback();
       AppDispatcher.handleViewAction({
         actionType: AppConstants.RECEIVE_DEPLOYMENTS,
         deployments: deployments
       });
+    }).catch(function (err) {
+      callback(err);
     });
   },
   createDeployment: function createDeployment(deployment, callback) {
@@ -77628,7 +77631,12 @@ var Deployments = _react2.default.createClass({
   },
   componentDidMount: function componentDidMount() {
     AppStore.changeListener(this._onChange);
-    AppActions.getDeployments();
+    AppActions.getDeployments(function () {
+      setTimeout(function () {
+        this.setState({ doneLoading: true });
+      }.bind(this), 300);
+    }.bind(this));
+
     if (this.props.params) {
       this.setState({ tabIndex: tabs[this.props.params.tab] });
 
@@ -77810,7 +77818,7 @@ var Deployments = _react2.default.createClass({
           { className: 'top-right-button' },
           _react2.default.createElement(ScheduleButton, { secondary: true, openDialog: this.dialogOpen })
         ),
-        _react2.default.createElement(Recent, { recent: this.state.recent, progress: this.state.progress, showReport: this._showReport })
+        _react2.default.createElement(Recent, { loading: !this.state.doneLoading, recent: this.state.recent, progress: this.state.progress, showReport: this._showReport })
       ),
       _react2.default.createElement(
         Dialog,
@@ -78205,6 +78213,8 @@ var GroupDevices = require('./groupdevices');
 var ProgressChart = require('./progresschart');
 var DeploymentStatus = require('./deploymentstatus');
 
+var Loader = require('../common/loader');
+
 // material ui
 var mui = require('material-ui');
 var Table = mui.Table;
@@ -78335,6 +78345,7 @@ var Recent = _react2.default.createClass({
           null,
           'In progress'
         ),
+        _react2.default.createElement(Loader, { show: this.props.loading }),
         _react2.default.createElement(
           Table,
           {
@@ -78392,7 +78403,7 @@ var Recent = _react2.default.createClass({
         ),
         _react2.default.createElement(
           'div',
-          { className: progressMap.length ? 'hidden' : "dashboard-placeholder" },
+          { className: progressMap.length || this.props.loading ? 'hidden' : "dashboard-placeholder" },
           _react2.default.createElement(
             'p',
             null,
@@ -78409,6 +78420,7 @@ var Recent = _react2.default.createClass({
           null,
           'Recent'
         ),
+        _react2.default.createElement(Loader, { show: this.props.loading }),
         _react2.default.createElement(
           Table,
           {
@@ -78466,7 +78478,7 @@ var Recent = _react2.default.createClass({
         ),
         _react2.default.createElement(
           'div',
-          { className: recentMap.length ? 'hidden' : "dashboard-placeholder" },
+          { className: recentMap.length || this.props.loading ? 'hidden' : "dashboard-placeholder" },
           _react2.default.createElement(
             'p',
             null,
@@ -78486,7 +78498,7 @@ var Recent = _react2.default.createClass({
 
 module.exports = Recent;
 
-},{"./deploymentstatus":768,"./groupdevices":770,"./progresschart":771,"./report.js":773,"./scheduleform":776,"material-ui":257,"react":684,"react-time":522}],773:[function(require,module,exports){
+},{"../common/loader":757,"./deploymentstatus":768,"./groupdevices":770,"./progresschart":771,"./report.js":773,"./scheduleform":776,"material-ui":257,"react":684,"react-time":522}],773:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -80055,11 +80067,6 @@ var Devices = _react2.default.createClass({
   },
   componentWillMount: function componentWillMount() {
     AppStore.changeListener(this._onChange);
-    AppActions.getImages();
-    AppActions.getDevices(function (devices) {
-      this.setState({ doneLoading: true });
-    }.bind(this));
-
     var filters = [];
     if (this.props.params) {
       if (this.props.params.groupId) {
@@ -80076,7 +80083,14 @@ var Devices = _react2.default.createClass({
       }
     }
   },
-
+  componentDidMount: function componentDidMount() {
+    AppActions.getImages();
+    AppActions.getDevices(function (devices) {
+      setTimeout(function () {
+        this.setState({ doneLoading: true });
+      }.bind(this), 300);
+    }.bind(this));
+  },
   componentWillUnmount: function componentWillUnmount() {
     AppStore.removeChangeListener(this._onChange);
   },
@@ -82312,7 +82326,9 @@ var Software = _react2.default.createClass({
   },
   componentDidMount: function componentDidMount() {
     AppActions.getImages(function () {
-      this.setState({ doneLoading: true });
+      setTimeout(function () {
+        this.setState({ doneLoading: true });
+      }.bind(this), 300);
     }.bind(this));
   },
   componentWillUnmount: function componentWillUnmount() {
@@ -83330,3 +83346,4 @@ module.exports = {
 };
 
 },{"material-ui/lib/styles/colors":291,"material-ui/lib/styles/spacing":294,"material-ui/lib/utils/color-manipulator":348}]},{},[791]);
+;

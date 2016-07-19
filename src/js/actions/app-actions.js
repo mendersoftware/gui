@@ -154,15 +154,19 @@ var AppActions = {
 
 
   /*Deployments */
-  getDeployments: function() {
+  getDeployments: function(callback) {
     DeploymentsApi
       .get(deploymentsApiUrl+'/deployments')
       .then(function(deployments) {
+        callback();
         AppDispatcher.handleViewAction({
           actionType: AppConstants.RECEIVE_DEPLOYMENTS,
           deployments: deployments
         });
-      });
+      })
+      .catch(function(err) {
+        callback(err);
+      })
   },
   createDeployment: function(deployment, callback) {
     DeploymentsApi

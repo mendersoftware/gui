@@ -25,7 +25,9 @@ var Software = React.createClass({
   },
   componentDidMount: function() {
     AppActions.getImages(function() {
-      this.setState({doneLoading: true});
+      setTimeout(function() {
+        this.setState({doneLoading: true});
+      }.bind(this), 300);
     }.bind(this));
   },
   componentWillUnmount: function() {

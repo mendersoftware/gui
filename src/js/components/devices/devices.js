@@ -35,11 +35,6 @@ var Devices = React.createClass({
   },
   componentWillMount: function() {
     AppStore.changeListener(this._onChange);
-    AppActions.getImages();
-    AppActions.getDevices(function(devices){
-      this.setState({doneLoading:true});
-    }.bind(this));
-    
     var filters = [];
     if (this.props.params) {
       if (this.props.params.groupId) {
@@ -54,9 +49,16 @@ var Devices = React.createClass({
         }
         this._updateFilters(filters);
       }
-    } 
+    }
   },
-   
+  componentDidMount: function() {
+    AppActions.getImages();
+    AppActions.getDevices(function(devices){
+      setTimeout(function() {
+        this.setState({doneLoading:true});
+      }.bind(this), 300)
+    }.bind(this));
+  },
   componentWillUnmount: function () {
     AppStore.removeChangeListener(this._onChange);
   },
