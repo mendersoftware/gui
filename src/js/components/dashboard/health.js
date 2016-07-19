@@ -1,5 +1,6 @@
 import React from 'react';
 import { Router, Route, Link } from 'react-router';
+var Loader = require('../common/loader');
 
 var Health = React.createClass({
   _clickHandle: function(route) {
@@ -44,7 +45,9 @@ var Health = React.createClass({
           </div>
         </div>
 
-        <div className={this.props.health.total ? "hidden" : "dashboard-placeholder" }>
+        <Loader show={this.props.loading} />
+
+        <div className={(this.props.health.total || this.props.loading) ? "hidden" : "dashboard-placeholder" }>
           <p>No connected devices yet</p>
           <img src="assets/img/connected.png" alt="connected" />
         </div>

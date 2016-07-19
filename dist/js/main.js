@@ -76758,9 +76758,16 @@ var Dashboard = _react2.default.createClass({
     AppStore.removeChangeListener(this._onChange);
   },
   componentDidMount: function componentDidMount() {
-    AppActions.getDeployments();
-    AppActions.getDevices();
-    //AppActions.getUnauthorized();
+    AppActions.getDeployments(function () {
+      setTimeout(function () {
+        this.setState({ doneDepsLoading: true });
+      }.bind(this), 300);
+    }.bind(this));
+    AppActions.getDevices(function () {
+      setTimeout(function () {
+        this.setState({ doneDevsLoading: true });
+      }.bind(this), 300);
+    }.bind(this));
   },
   _onChange: function _onChange() {
     this.setState(getState());
@@ -76815,7 +76822,7 @@ var Dashboard = _react2.default.createClass({
         _react2.default.createElement(
           'div',
           { className: 'leftDashboard' },
-          _react2.default.createElement(Deployments, { clickHandle: this._handleClick, progress: this.state.progress, recent: this.state.recent })
+          _react2.default.createElement(Deployments, { loading: !this.state.doneDepsLoading, clickHandle: this._handleClick, progress: this.state.progress, recent: this.state.recent })
         ),
         _react2.default.createElement(
           'div',
@@ -76823,8 +76830,8 @@ var Dashboard = _react2.default.createClass({
           _react2.default.createElement(
             'div',
             { className: 'right' },
-            _react2.default.createElement(Health, { devices: this.state.devices, clickHandle: this._handleClick, health: this.state.health }),
-            _react2.default.createElement(Activity, { activity: this.state.activity })
+            _react2.default.createElement(Health, { loading: !this.state.doneDepsLoading, devices: this.state.devices, clickHandle: this._handleClick, health: this.state.health }),
+            _react2.default.createElement(Activity, { loading: !this.state.doneActivityLoading, activity: this.state.activity })
           )
         )
       )
@@ -76884,12 +76891,12 @@ var Deployments = _react2.default.createClass({
         _react2.default.createElement(
           'div',
           { className: 'margin-bottom' },
-          _react2.default.createElement(Progress, { clickHandle: this._clickHandle, deployments: this.props.progress })
+          _react2.default.createElement(Progress, { loading: this.props.loading, clickHandle: this._clickHandle, deployments: this.props.progress })
         ),
         _react2.default.createElement(
           'div',
           { className: 'margin-bottom-large' },
-          _react2.default.createElement(Recent, { clickHandle: this._clickHandle, deployments: this.props.recent })
+          _react2.default.createElement(Recent, { loading: this.props.loading, clickHandle: this._clickHandle, deployments: this.props.recent })
         )
       ),
       _react2.default.createElement(
@@ -76913,6 +76920,8 @@ var _react2 = _interopRequireDefault(_react);
 var _reactRouter = require('react-router');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var Loader = require('../common/loader');
 
 var Health = _react2.default.createClass({
   displayName: 'Health',
@@ -77008,9 +77017,10 @@ var Health = _react2.default.createClass({
         ),
         _react2.default.createElement('div', { className: 'clear' })
       ),
+      _react2.default.createElement(Loader, { show: this.props.loading }),
       _react2.default.createElement(
         'div',
-        { className: this.props.health.total ? "hidden" : "dashboard-placeholder" },
+        { className: this.props.health.total || this.props.loading ? "hidden" : "dashboard-placeholder" },
         _react2.default.createElement(
           'p',
           null,
@@ -77028,7 +77038,7 @@ Health.contextTypes = {
 
 module.exports = Health;
 
-},{"react":684,"react-router":506}],762:[function(require,module,exports){
+},{"../common/loader":757,"react":684,"react-router":506}],762:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -77041,6 +77051,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var ProgressChart = require('../deployments/progressChart.js');
 var Time = require('react-time');
+var Loader = require('../common/loader');
 
 // material ui
 var mui = require('material-ui');
@@ -77160,9 +77171,10 @@ var Progress = _react2.default.createClass({
           'All deployments'
         )
       ),
+      _react2.default.createElement(Loader, { show: this.props.loading }),
       _react2.default.createElement(
         'div',
-        { className: this.props.deployments.length ? "hidden" : "dashboard-placeholder" },
+        { className: this.props.deployments.length || this.props.loading ? "hidden" : "dashboard-placeholder" },
         _react2.default.createElement(
           'p',
           null,
@@ -77180,7 +77192,7 @@ Progress.contextTypes = {
 
 module.exports = Progress;
 
-},{"../deployments/progressChart.js":771,"material-ui":257,"react":684,"react-router":506,"react-time":522}],763:[function(require,module,exports){
+},{"../common/loader":757,"../deployments/progressChart.js":771,"material-ui":257,"react":684,"react-router":506,"react-time":522}],763:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -77195,6 +77207,7 @@ var GroupDevices = require('../deployments/groupdevices');
 var RecentStats = require('./recentstats');
 var Time = require('react-time');
 var AppActions = require('../../actions/app-actions');
+var Loader = require('../common/loader');
 
 // material ui
 var mui = require('material-ui');
@@ -77306,9 +77319,10 @@ var Recent = _react2.default.createClass({
             'All deployments'
           )
         ),
+        _react2.default.createElement(Loader, { show: this.props.loading }),
         _react2.default.createElement(
           'div',
-          { className: this.props.deployments.length ? "hidden" : "dashboard-placeholder" },
+          { className: this.props.deployments.length || this.props.loading ? "hidden" : "dashboard-placeholder" },
           _react2.default.createElement(
             'p',
             null,
@@ -77327,7 +77341,7 @@ Recent.contextTypes = {
 
 module.exports = Recent;
 
-},{"../../actions/app-actions":752,"../deployments/groupdevices":770,"./recentstats":764,"material-ui":257,"react":684,"react-router":506,"react-time":522}],764:[function(require,module,exports){
+},{"../../actions/app-actions":752,"../common/loader":757,"../deployments/groupdevices":770,"./recentstats":764,"material-ui":257,"react":684,"react-router":506,"react-time":522}],764:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -83346,4 +83360,3 @@ module.exports = {
 };
 
 },{"material-ui/lib/styles/colors":291,"material-ui/lib/styles/spacing":294,"material-ui/lib/utils/color-manipulator":348}]},{},[791]);
-;
