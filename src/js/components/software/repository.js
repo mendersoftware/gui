@@ -6,7 +6,7 @@ import ScheduleForm from '../deployments/scheduleform';
 import ReactDOM from 'react-dom';
 var update = require('react-addons-update');
 var FileInput = require('react-file-input');
-
+var Loader = require('../common/loader');
 
 import SearchInput from 'react-search-input';
 
@@ -328,6 +328,8 @@ var Repository = React.createClass({
           <h3 className="inline-block">Available images</h3>
           <SearchInput placeholder="Search images" className="search tableSearch" ref='search' onChange={this.searchUpdated} />
         </div>
+
+        <Loader show={this.props.loading} />
         
         <div style={{position: "relative", marginTop:"10px"}}>
           <Table
@@ -353,7 +355,7 @@ var Repository = React.createClass({
             </TableBody>
           </Table>
 
-          <div className={items.length ? "hidden" : "dashboard-placeholder" }>
+          <div className={(items.length || this.props.loading) ? "hidden" : "dashboard-placeholder" }>
             <p>No images found</p>
             <img src="assets/img/images.png" alt="images" />
           </div>

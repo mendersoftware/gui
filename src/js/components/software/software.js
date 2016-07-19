@@ -24,7 +24,9 @@ var Software = React.createClass({
     AppStore.changeListener(this._onChange);
   },
   componentDidMount: function() {
-    AppActions.getImages();
+    AppActions.getImages(function() {
+      this.setState({doneLoading: true});
+    }.bind(this));
   },
   componentWillUnmount: function() {
     AppStore.removeChangeListener(this._onChange);
@@ -62,7 +64,7 @@ var Software = React.createClass({
           </div>
         </div>
         <div className="relative overflow-hidden">
-          <Repository setStorage={this._setStorage} selected={this.state.selected} software={this.state.software} groups={this.state.groups} />
+          <Repository loading={!this.state.doneLoading} setStorage={this._setStorage} selected={this.state.selected} software={this.state.software} groups={this.state.groups} />
         </div>
       </div>
     );
