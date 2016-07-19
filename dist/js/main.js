@@ -80573,7 +80573,7 @@ var Groups = _react2.default.createClass({
       onClick: this._createGroupHandler,
       disabled: this.state.invalid })];
 
-    if (this.refs.search && this.props.allDevices) {
+    if (this.refs.search && this.props.allDevices.length) {
       var filters = ['name'];
       tmpDevices = this.props.allDevices.filter(this.refs.search.filter(filters));
     }

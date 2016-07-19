@@ -131,7 +131,7 @@ var Groups = React.createClass({
         disabled={this.state.invalid} />
     ];
 
-    if (this.refs.search && this.props.allDevices) {
+    if (this.refs.search && this.props.allDevices.length) {
       var filters = ['name'];
       tmpDevices = this.props.allDevices.filter(this.refs.search.filter(filters));
     }
