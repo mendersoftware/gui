@@ -76265,7 +76265,7 @@ var AppActions = {
   },
 
   getUploadUri: function getUploadUri(id_url, callback) {
-    ImagesApi.get(deploymentsApiUrl + id_url + "/upload?expire=60").then(function (data) {
+    ImagesApi.get(id_url + "/upload?expire=60").then(function (data) {
       var uri = data.uri;
       callback(uri);
     });
@@ -81591,12 +81591,13 @@ var Repository = _react2.default.createClass({
     var tmpFile = this.state.tmpFile;
 
     _appActions2.default.uploadImage(newState, function (id_uri) {
+      this.props.startLoader();
       _appActions2.default.getUploadUri(id_uri, function (uri) {
         _appActions2.default.doFileUpload(uri, tmpFile, function () {
-          _appActions2.default.getImages();
-        });
-      });
-    });
+          this.props.refreshImages();
+        }.bind(this));
+      }.bind(this));
+    }.bind(this));
     this.props.setStorage("uploaded04", true);
     this.dialogDismiss('upload');
     this._resetImageState();
@@ -81864,7 +81865,7 @@ var Repository = _react2.default.createClass({
           Table,
           {
             onRowSelection: this._onRowSelection,
-            className: items.length ? null : "hidden" },
+            className: !items.length || this.props.loading ? "hidden" : null },
           _react2.default.createElement(
             TableHeader,
             {
@@ -82339,11 +82340,7 @@ var Software = _react2.default.createClass({
     AppStore.changeListener(this._onChange);
   },
   componentDidMount: function componentDidMount() {
-    AppActions.getImages(function () {
-      setTimeout(function () {
-        this.setState({ doneLoading: true });
-      }.bind(this), 300);
-    }.bind(this));
+    this._getImages();
   },
   componentWillUnmount: function componentWillUnmount() {
     AppStore.removeChangeListener(this._onChange);
@@ -82353,7 +82350,6 @@ var Software = _react2.default.createClass({
   },
   _onChange: function _onChange() {
     this.setState(getState());
-
     if (this.props.params) {
       if (this.props.params.softwareVersion) {
         // selected software
@@ -82361,6 +82357,16 @@ var Software = _react2.default.createClass({
         this.setState({ selected: image });
       }
     }
+  },
+  _startLoading: function _startLoading() {
+    this.setState({ doneLoading: false });
+  },
+  _getImages: function _getImages() {
+    AppActions.getImages(function () {
+      setTimeout(function () {
+        this.setState({ doneLoading: true });
+      }.bind(this), 300);
+    }.bind(this));
   },
   render: function render() {
     var image_link = _react2.default.createElement(
@@ -82406,7 +82412,7 @@ var Software = _react2.default.createClass({
       _react2.default.createElement(
         'div',
         { className: 'relative overflow-hidden' },
-        _react2.default.createElement(Repository, { loading: !this.state.doneLoading, setStorage: this._setStorage, selected: this.state.selected, software: this.state.software, groups: this.state.groups })
+        _react2.default.createElement(Repository, { refreshImages: this._getImages, startLoader: this._startLoading, loading: !this.state.doneLoading, setStorage: this._setStorage, selected: this.state.selected, software: this.state.software, groups: this.state.groups })
       )
     );
   }

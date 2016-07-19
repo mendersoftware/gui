@@ -24,11 +24,7 @@ var Software = React.createClass({
     AppStore.changeListener(this._onChange);
   },
   componentDidMount: function() {
-    AppActions.getImages(function() {
-      setTimeout(function() {
-        this.setState({doneLoading: true});
-      }.bind(this), 300);
-    }.bind(this));
+   this._getImages();
   },
   componentWillUnmount: function() {
     AppStore.removeChangeListener(this._onChange);
@@ -38,7 +34,6 @@ var Software = React.createClass({
   },
   _onChange: function() {
     this.setState(getState());
-
     if (this.props.params) {
       if (this.props.params.softwareVersion) {
         // selected software
@@ -46,6 +41,16 @@ var Software = React.createClass({
         this.setState({selected: image});
       }
     }
+  },
+  _startLoading: function() {
+     this.setState({doneLoading: false});
+  },
+  _getImages: function() {
+    AppActions.getImages(function() {
+      setTimeout(function() {
+        this.setState({doneLoading: true});
+      }.bind(this), 300);
+    }.bind(this));
   },
   render: function() {
     var image_link = (
@@ -66,7 +71,7 @@ var Software = React.createClass({
           </div>
         </div>
         <div className="relative overflow-hidden">
-          <Repository loading={!this.state.doneLoading} setStorage={this._setStorage} selected={this.state.selected} software={this.state.software} groups={this.state.groups} />
+          <Repository refreshImages={this._getImages} startLoader={this._startLoading} loading={!this.state.doneLoading} setStorage={this._setStorage} selected={this.state.selected} software={this.state.software} groups={this.state.groups} />
         </div>
       </div>
     );

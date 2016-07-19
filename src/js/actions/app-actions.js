@@ -126,7 +126,7 @@ var AppActions = {
 
   getUploadUri: function(id_url, callback) {
     ImagesApi
-      .get(deploymentsApiUrl + id_url + "/upload?expire=60")
+      .get(id_url + "/upload?expire=60")
       .then(function(data) {
         var uri = data.uri;
         callback(uri);
