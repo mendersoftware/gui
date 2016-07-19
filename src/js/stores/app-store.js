@@ -6,7 +6,7 @@ var EventEmitter = require('events').EventEmitter;  // from device
 var CHANGE_EVENT = "change";
 
 var _softwareRepo = [];
-var _currentGroup = [];
+var _currentGroup = null;
 var _currentDevices = [];
 var _selectedDevices = [];
 var _filters = [{key:'', value:''}];
@@ -17,7 +17,11 @@ var _attributes = {
   status: "Status",
   artifact_name: "Current software",
   tags: "Tags"
-}
+};
+var _snackbar = {
+  open: false,
+  message: ""
+};
 
 /* TEMP LOCAL GROUPS */
 var _groups1 = [
@@ -60,116 +64,29 @@ var _groups = [
 
 /* Temp local devices */
 
-var _alldevices = [  {
-    'id':1,
-    'name': '00a0c91e6-7dec-11d0-a765-f81d4faebf1',
-    'device_type':"Raspberry Pi 3",
-    'arch': 'ARMv8 Cortex-A53',
-    'status': 'Connected',
-    'artifact_name': 'Application 0.0.2',
-    'groups': [1],
-    'tags': []
-  },];
+var _alldevices = {
+  pending: [],
+  accepted: [],
+  rejected: []
+};
 
-var _alldevices1 = [
-  {
-    'id': 1,
-    'name': '00a0c91e6-7dec-11d0-a765-f81d4faebf1',
-    'device_type':"Raspberry Pi 3",
-    'arch': 'ARMv8 Cortex-A53',
-    'status': 'Up',
-    'artifact_name': 'Application 0.0.1',
-    'groups': [1,4],
-    'tags': []
-  },
-  {
-    'id': 2,
-    'name': '00a0c91e6-7dec-11d0-a765-f81d4faebf2',
-    'device_type':"Raspberry Pi 3",
-    'arch': 'ARMv8 Cortex-A53',
-    'status': 'Up',
-    'artifact_name': 'Application 0.0.1',
-    'groups': [1,4],
-    'tags': []
-  },
-  {
-    'id': 3,
-    'name': '00a0c91e6-7dec-11d0-a765-f81d4faebf3',
-    'device_type':"Raspberry Pi 3",
-    'arch': 'ARMv8 Cortex-A53',
-    'status': 'Up',
-    'artifact_name': 'Application 0.0.1',
-    'groups': [1,4],
-    'tags': []
-  },
-  {
-    'id': 4,
-    'name': '00a0c91e6-7dec-11d0-a765-f81d4faebf4',
-    'device_type':"Raspberry Pi 3",
-    'arch': 'ARMv8 Cortex-A53',
-    'status': 'Up',
-    'artifact_name': 'Application 0.0.2',
-    'groups': [1,2],
-    'tags': []
-  },
-  {
-    'id': 5,
-    'name': '00a0c91e6-7dec-11d0-a765-f81d4faebf5',
-    'device_type':"Raspberry Pi 3",
-    'arch': 'ARMv8 Cortex-A53',
-    'status': 'Up',
-    'artifact_name': 'Application 0.0.2',
-    'groups': [1,3],
-    'tags': []
-  },
-  {
-    'id': 6,
-    'name': '00a0c91e6-7dec-11d0-a765-f81d4faebf6',
-    'device_type':"Raspberry Pi 3",
-    'arch': 'ARMv8 Cortex-A53',
-    'status': 'Up',
-    'artifact_name': 'Application 0.0.2',
-    'groups': [1,3],
-    'tags': []
-  },
-  {
-    'id': 7,
-    'name': '0dde3346-4dec-11d0-a765-f81d4faebf7',
-    'device_type':"Raspberry Pi 2 Model B",
-    'arch': 'ARMv7 Cortex-A7',
-    'status': 'Down',
-    'artifact_name': 'Application 0.0.1',
-    'groups': [1],
-    'tags': []
-  },
-];
+var _alldevicelist = [];
 
-var _unauthorized = [
-  {
-    'id':"63f6b7eb-b38d-44d3-91b5-fed2d1596d5c",
-    'name': "Mender QEMU test",
-    'device_type':"Raspberry Pi 3",
-    'arch': 'ARMv8 Cortex-A53',
-    'status': 'Unauthorized',
-    'artifact_name': 'Mender QEMU',
-    'groups': [],
-    'tags': [],
-    'ip_address': '172.16.254.1',
-    'mac_address': '00-14-22-01-23-45',
-    'device_serial': '4CE0460D0G',
-    'request_time': 1468777607000,
-    'last_heartbeat': 1468777607000
-  },
-];
+var _health = {
+  total: 0,
+  alive: 0,
+  down: 0
+}
 
-_selectGroup(_groups[0].id);
+
+_currentGroup =  _currentGroup || _getGroupById(1);
 
 function _selectGroup(id) {
   _selectedDevices = [];
   _filters = [{key:'', value:''}];
   if (id) {
     _currentGroup = _getGroupById(id);
-    _getCurrentDevices(_currentGroup.id);
+    _setCurrentDevices(_currentGroup.id);
   }
 }
 
@@ -194,33 +111,38 @@ function _addNewGroup(group, devices, type) {
 }
 
 function _getDeviceById(deviceId) {
-  for (var i=0; i<_alldevices.length;i++) {
-    if (_alldevices[i].id === deviceId) {
-      return _alldevices[i];
+  for (var i=0; i<_alldevicelist.length;i++) {
+    if (_alldevicelist[i].id === deviceId) {
+      return _alldevicelist[i];
     }
   }
   return;
 }
 
-function _getCurrentDevices(groupId) {
+function _setCurrentDevices(groupId) {
   _currentDevices = [];
-  var devicelist = _getGroupById(groupId).devices;
-  for (var i=0; i<devicelist.length; i++) {
-    var device = _getDeviceById(devicelist[i]);
-    if (_matchFilters(device)) {
-       _currentDevices.push(device);
+  if (groupId) {
+    var devicelist = _getGroupById(groupId).devices;
+    for (var i=0; i<devicelist.length; i++) {
+      var device = _getDeviceById(devicelist[i]);
+      if (_matchFilters(device)) {
+         _currentDevices.push(device);
+      }
     }
+  } else {
+    _currentGroup = _getGroupById(1);
+    _currentDevices = _alldevices["accepted"];
   }
 }
 
-function  updateDeviceTags(id, tags) {
-  var index = findWithAttr(_alldevices, "id", id);
-  _alldevices[index].tags = tags;
+function updateDeviceTags(id, tags) {
+  var index = findWithAttr(_alldevicelist, "id", id);
+  _alldevicelist[index].tags = tags;
 }
 
 function  updateFilters(filters) {
   _filters = filters;
-  _getCurrentDevices(_currentGroup.id);
+  _setCurrentDevices(_currentGroup.id);
 }
 
 function _matchFilters(device) {
@@ -262,7 +184,7 @@ function _getDevices(group, device_type) {
 
   var devices = [];
   for (var i=0; i<group.devices.length; i++) {
-    var device = _alldevices[findWithAttr(_alldevices, 'id', (group.devices[i]))];
+    var device = _alldevicelist[findWithAttr(_alldevicelist, 'id', (group.devices[i]))];
     if (device.device_type===device_type) {
       devices.push(device);
     }
@@ -287,7 +209,7 @@ function _addToGroup(group, devices) {
 
     // reset filters
     _filters = [{key:'', value:''}];
-    _getCurrentDevices(tmpGroup.id);
+    _setCurrentDevices(tmpGroup.id);
 
     // TODO - delete if empty group?
 
@@ -312,17 +234,10 @@ function _addGroup(group, idx) {
   }
 }
 
-function _getDeviceHealth() {
-  var health = {};
-  var down = collectWithAttr(_alldevices, 'status', 'Not connected');
-  health.down = down.length;
-  health.up = _alldevices.length - health.down;
-  health.total = _alldevices.length;
-  return health;
-}
+
 
 function _getUnauthorized() {
-  return _unauthorized;
+  return _alldevices.pending || [];
 }
 
 function _authorizeDevices(devices) {
@@ -332,23 +247,14 @@ function _authorizeDevices(devices) {
     var idx = findWithAttr(_alldevices, 'name', devices[i].name);
     if (idx === undefined) {
       devices[i].groups.push(1);
-      devices[i].status = devices[0].name.indexOf("4f9") ? "Not connected" : "Connected";
       _alldevices.push(devices[i]);
       _groups[0].devices.push(devices[i].id);
     } else {
       // id already exists - error
-      console.log("device id already exists");
+      _setSnackbar("Error: A device with this ID already exists");
     }
   }
-
-  // remove from _unauthorized outside of main loop so as not to interrupt
-  for (var i=devices.length-1; i>=0; i--) {
-    var unIdx = findWithAttr(_unauthorized, 'name', devices[i].name);
-    if (unIdx !== undefined) {
-      _unauthorized.splice(unIdx, 1);
-    }
-  }
-  _selectGroup(_currentGroup.id);
+  _selectGroup(_currentGroup.id || 1);
 }
 
 
@@ -579,6 +485,36 @@ function setSelectedDeployment(deployment) {
 }
 
 
+function setDevices(devices) {
+  if (devices) {
+    setHealth(devices);
+    var newDevices = {};
+    devices.forEach( function(element, index) {
+      newDevices[element.status] = newDevices[element.status] || [];
+      newDevices[element.status].push(element);
+    });
+    _alldevicelist = devices;
+    _alldevices = newDevices;
+    _setCurrentDevices(_currentGroup.id);
+  }
+}
+
+function setHealth(devices) {
+  if (devices.accepted) {
+    var health = {};
+    devices.accepted.forEach( function(element, index) {
+      health[element.status] = newDevices[element.status] || [];
+      health[element.status].push(element);
+    });
+    console.log("health", health);
+  }
+}
+
+
+function _setSnackbar(message, duration) {
+  var show = message ? true : false; 
+  _snackbar = {open: show, message: message};
+}
 
 
 var AppStore = assign(EventEmitter.prototype, {
@@ -728,7 +664,7 @@ var AppStore = assign(EventEmitter.prototype, {
   },
 
   getHealth: function() {
-    return _getDeviceHealth()
+    return _health
   },
 
   getUnauthorized: function() {
@@ -740,6 +676,10 @@ var AppStore = assign(EventEmitter.prototype, {
     * Return activity log
     */
     return _activityLog
+  },
+
+  getSnackbar: function() {
+    return _snackbar
   },
 
   dispatcherIndex: AppDispatcher.register(function(payload) {
@@ -782,6 +722,10 @@ var AppStore = assign(EventEmitter.prototype, {
         _sortTable(payload.action.table, payload.action.column, payload.action.direction);
         break;
 
+      case AppConstants.SET_SNACKBAR:
+        _setSnackbar(payload.action.message, payload.action.duration);
+        break;
+
       /* API */
       case AppConstants.RECEIVE_IMAGES:
         setImages(payload.action.images);
@@ -791,8 +735,13 @@ var AppStore = assign(EventEmitter.prototype, {
       case AppConstants.RECEIVE_DEPLOYMENTS:
         setDeployments(payload.action.deployments);
         break;
-       case AppConstants.SINGLE_DEPLOYMENT:
+      case AppConstants.SINGLE_DEPLOYMENT:
         setSelectedDeployment(payload.action.deployment);
+        break;
+
+      /* API */
+      case AppConstants.RECEIVE_DEVICES:
+        setDevices(payload.action.devices);
         break;
     }
     

@@ -222,7 +222,7 @@ var Deployments = React.createClass({
         <div className={this.state.hideTODO ? "hidden" : null}>
           <div className="margin-bottom onboard">
             <div className="close" onClick={this._closeOnboard}/>
-            <h3><span className="todo">//TODO</span> deploy an update to all devices</h3>
+            <h3><span className="todo">//TODO</span> deploy an update to the device group you created</h3>
           </div>
         </div>
 

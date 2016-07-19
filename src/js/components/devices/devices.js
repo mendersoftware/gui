@@ -6,6 +6,9 @@ var Groups = require('./groups');
 var DeviceList = require('./devicelist');
 var Unauthorized = require('./unauthorized');
 
+var mui = require('material-ui');
+var Snackbar = mui.Snackbar;
+
 import { Router, Route, Link } from 'react-router';
 
 function getState() {
@@ -13,15 +16,16 @@ function getState() {
     groups: AppStore.getGroups(),
     selectedGroup: AppStore.getSelectedGroup(),
     devices: AppStore.getDevices(),
+    unauthorized: AppStore.getUnauthorized(),
     allDevices: AppStore.getAllDevices(),
     selectedDevices: AppStore.getSelectedDevices(),
     filters: AppStore.getFilters(),
     attributes: AppStore.getAttributes(),
     images: AppStore.getSoftwareRepo(),
-    unauthorized: AppStore.getUnauthorized(),
     hideTODO: localStorage.getItem("hideTODO"),
     groupTODO: localStorage.getItem("groupNextStep"),
-    authTODO: localStorage.getItem("authStep")
+    authTODO: localStorage.getItem("authStep"),
+    snackbar: AppStore.getSnackbar(),
   }
 }
 
@@ -31,6 +35,7 @@ var Devices = React.createClass({
   },
   componentWillMount: function() {
     AppActions.getImages();
+    AppActions.getDevices();
     AppStore.changeListener(this._onChange);
     var filters = [];
     if (this.props.params) {
@@ -51,10 +56,6 @@ var Devices = React.createClass({
   componentWillUnmount: function () {
     AppStore.removeChangeListener(this._onChange);
   },
-  componentDidMount: function() {
-    //AppActions.getAuthorized();
-    //AppActions.getDevices();
-  },
   _closeOnboard: function() {
     this.setState({hideTODO: true});
     AppActions.setLocalStorage("hideTODO", true);
@@ -72,10 +73,13 @@ var Devices = React.createClass({
       }
     }
 
-    this.setState(getState());
+    this.setState(this.getInitialState());
   },
   _updateFilters: function(filters) {
     AppActions.updateFilters(filters);
+  },
+  _handleRequestClose: function() {
+    AppActions.setSnackbar();
   },
   render: function() {
     return (
@@ -110,6 +114,12 @@ var Devices = React.createClass({
           </div>
           <DeviceList filters={this.state.filters} attributes={this.state.attributes} onFilterChange={this._updateFilters} images={this.state.images} selectedDevices={this.state.selectedDevices} groups={this.state.groups} devices={this.state.devices} selectedGroup={this.state.selectedGroup} />
         </div>
+        <Snackbar
+          open={this.state.snackbar.open}
+          message={this.state.snackbar.message}
+          autoHideDuration={5000}
+          onRequestClose={this.handleRequestClose}
+        />
       </div>
     );
   }

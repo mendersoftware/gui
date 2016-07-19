@@ -32,7 +32,7 @@ var DeploymentStatus = React.createClass({
     );
     return (
       <div>
-        <FlatButton label={label} primary={this.state.stats.failure} secondary={this.state.stats.successful} />
+        <FlatButton label={label} primary={this.state.stats.failure>0} />
       </div>
     );
   }

@@ -85,7 +85,7 @@ var Recent = React.createClass({
     ];
     return (
       <div>
-        <div style={{marginBottom:"60"}}> 
+        <div className="deploy-table-contain"> 
           <h3>In progress</h3>
           <Table
             onCellClick={this._progressCellClick}
@@ -116,7 +116,7 @@ var Recent = React.createClass({
           </div>
         </div>
 
-        <div style={{marginTop:"60"}}>
+        <div className="deploy-table-contain">
           <h3>Recent</h3>
           <Table
             onCellClick={this._recentCellClick}

@@ -59,17 +59,19 @@ var Progress = React.createClass({
 
     return (
       <div className="progress-container">
-        <div className="dashboard-header subsection">
-          <h3>In progress<span className="dashboard-number">{progress.length}</span></h3>
+        <div className="dashboard-header">
+          <h2>Deployments in progress</h2>
         </div>
-        <div>
+        <div className={this.props.deployments.length ? null : "hidden"}>
           <List style={{paddingTop:0}}>
             {progress}
-          </List>
-          <div className={progress.length ? 'hidden' : null}>
-            <p className="italic">No deployments in progress</p>
-          </div>
+          </List> 
           <Link to="/deployments" className="float-right">All deployments</Link>
+        </div>
+
+        <div className={this.props.deployments.length ? "hidden" : "dashboard-placeholder" }>
+          <p>Monitor ongoing deployments from here</p>
+          <img src="assets/img/deployments.png" alt="deployments" />
         </div>
       </div>
     );

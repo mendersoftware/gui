@@ -40,15 +40,30 @@ var Authorized =  React.createClass({
   },
   _authorizeDevices: function(devices) {
     // array of device objects
-    AppActions.authorizeDevices(devices);
+    devices.forEach( function(element, index) {
+      AppActions.acceptDevice(element, function(err) {
+        if (err) {
+          AppActions.setSnackbar("Error: " + err.error);
+        }
+      }.bind(this));
+    });
   },
    _blockDevices: function(devices) {
     // array of device objects
-    //AppActions.authorizeDevices(devices);
+    devices.forEach( function(element, index) {
+      AppActions.rejectDevice(element, function(err) {
+        if (err) {
+          AppActions.setSnackbar("Error: " + err.error);
+        } else {
+          AppActions.setSnackbar("The device has been rejected");
+        }
+      }.bind(this));
+    });
   },
   _expandRow: function(rowNumber, columnId, event) {
     event.stopPropagation();
-    if (columnId < 0) {
+    // If action buttons column, no expand
+    if (columnId === 5) {
       this.setState({expanded: null});
     } else {
       var newIndex = rowNumber;
@@ -74,7 +89,7 @@ var Authorized =  React.createClass({
       }
       return (
         <TableRow style={{"backgroundColor": "#e9f4f3"}} className={expanded ? "expand devices" : null} hoverable={true} key={index}>
-          <TableRowColumn>{device.name}</TableRowColumn>
+          <TableRowColumn>{device.id}</TableRowColumn>
           <TableRowColumn>{device.device_type}</TableRowColumn>
           <TableRowColumn>{device.status}</TableRowColumn>
           <TableRowColumn><Time value={device.request_time} format="YYYY-MM-DD HH:mm" /></TableRowColumn>
@@ -82,7 +97,7 @@ var Authorized =  React.createClass({
             <IconButton onClick={this._authorizeDevices.bind(null, [device])} style={{"paddingLeft": "0"}}>
               <FontIcon className="material-icons green">check_circle</FontIcon>
             </IconButton>
-            <IconButton>
+            <IconButton onClick={this._blockDevices.bind(null, [device])}>
               <FontIcon className="material-icons red">cancel</FontIcon>
             </IconButton>
           </TableRowColumn>

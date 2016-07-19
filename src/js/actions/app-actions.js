@@ -2,14 +2,11 @@ var AppConstants = require('../constants/app-constants');
 var AppDispatcher = require('../dispatchers/app-dispatcher');
 var ImagesApi = require('../api/images-api');
 var DeploymentsApi = require('../api/deployments-api');
-var rootUrl = "http://192.168.99.100";
-var deploymentsRoot = rootUrl + ":9080";
-var deploymentsApiUrl = deploymentsRoot + "/deployments/api/0.0.1";
-var devicesRoot = rootUrl + ":8082";
-var devicesApiUrl = devicesRoot + "/api/0.1.0";
-var deviceAuthRoot = rootUrl + ":8082";
-var deviceAuthApiUrl = deviceAuthRoot + "/v0.1";
-
+var DevicesApi = require('../api/devices-api');
+var rootUrl = "https://192.168.99.100";
+var apiUrl = rootUrl + ":9080/api/integrations/0.1"
+var deploymentsApiUrl = apiUrl + "/deployments";
+var devicesApiUrl = apiUrl + "/admission";
 
 
 var AppActions = {
@@ -51,16 +48,49 @@ var AppActions = {
     })
   },
 
-  authorizeDevices: function (devices) {
+
+  /* General */
+  setSnackbar: function(message, duration) {
     AppDispatcher.handleViewAction({
-      actionType: AppConstants.AUTHORIZE_DEVICES,
-      devices: devices
+      actionType: AppConstants.SET_SNACKBAR,
+      message: message,
+      duration: duration
     })
   },
 
 
   /* Devices */
+  getDevices: function () {
+    DevicesApi
+      .get(devicesApiUrl+"/devices")
+      .then(function(devices) {
+        AppDispatcher.handleViewAction({
+          actionType: AppConstants.RECEIVE_DEVICES,
+          devices: devices
+        });
+      });
+  },
 
+  acceptDevice: function (device, callback) {
+    DevicesApi
+      .put(devicesApiUrl+"/devices/"+device.id +"/status", {"status":"accepted"})
+      .then(function(data) {
+        callback();
+      })
+      .catch(function(err) {
+        callback(err);
+      });;
+  },
+  rejectDevice: function (device, callback) {
+    DevicesApi
+      .put(devicesApiUrl+"/devices/"+device.id +"/status", {"status":"rejected"})
+      .then(function(data) {
+        callback(data);
+      })
+      .catch(function(err) {
+        callback(err);
+      });
+  },
 
 
 
@@ -88,7 +118,7 @@ var AppActions = {
 
   getUploadUri: function(id_url, callback) {
     ImagesApi
-      .get(deploymentsRoot + id_url + "/upload?expire=60")
+      .get(deploymentsApiUrl + id_url + "/upload?expire=60")
       .then(function(data) {
         var uri = data.uri;
         callback(uri);
@@ -130,7 +160,7 @@ var AppActions = {
     DeploymentsApi
     .post(deploymentsApiUrl+'/deployments', deployment)
     .then(function(data) {
-      callback(deploymentsRoot + data.location);
+      callback(deploymentsApiUrl + data.location);
     });
   },
   getSingleDeployment: function(id, callback) {

@@ -16,6 +16,7 @@ function getState() {
     progress: AppStore.getProgressDeployments(new Date()),
     health: AppStore.getHealth(),
     unauthorized: AppStore.getUnauthorized(),
+    devices: AppStore.getAllDevices(),
     recent: AppStore.getRecentDeployments(new Date()),
     activity: AppStore.getActivity(),
     hideReview: localStorage.getItem("reviewDevices"),
@@ -34,6 +35,7 @@ var Dashboard = React.createClass({
   },
   componentDidMount: function() {
      AppActions.getDeployments();
+     AppActions.getDevices();
      //AppActions.getUnauthorized();
   },
   _onChange: function() {
@@ -80,7 +82,7 @@ var Dashboard = React.createClass({
           </div>
           <div className="rightDashboard">
             <div className="right">
-              <Health clickHandle={this._handleClick} health={this.state.health} />
+              <Health devices={this.state.devices} clickHandle={this._handleClick} health={this.state.health} />
               <Activity activity={this.state.activity} />
             </div>
           </div>

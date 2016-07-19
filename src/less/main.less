@@ -20,6 +20,8 @@ body {
 @lightgrey: #d4e9e7;
 @grey: #c7c7c7;
 @placeholder: #e7e7e7;
+@mendergreen: #015968;
+@mendermaroon: #5d0f43;
 
 .green {
   color: @green;
@@ -711,6 +713,7 @@ textarea#inline-description {
 
 .health {
   position: relative;
+  min-height: 250px;
 
   .health-panel {
     margin: 15px 0;
@@ -760,7 +763,7 @@ textarea#inline-description {
   font-size: 16px;
   color: @grey;
   text-align: center;
-  padding: 30px;
+  padding: 15px;
 
   img {
     margin-top: 15px;
@@ -831,10 +834,6 @@ span.month, span.day {
   border-bottom: 1px solid @lightgrey;
   margin-bottom: 15px;
 
-  &.subsection {
-    border: none;
-  }
-
   h2,h3 {
     margin: 8px 0; 
   }
@@ -848,7 +847,6 @@ span.month, span.day {
 
 .progress-container {
   padding-bottom: 45px;
-  border-bottom: 1px solid @lightgrey;
 
   .device-info {
     position: absolute;
@@ -1099,6 +1097,12 @@ span.month, span.day {
   }
 }
 
+
+.deploy-table-contain {
+  min-height: 206px;
+  margin-bottom: 60px;
+}
+
 @media (min-width: 1700px) {
   .deployments-container .progressLabel {
     margin-right: 35px;
@@ -1246,3 +1250,80 @@ div.shake-alert {
         @rules();
     }
 }
+
+
+// Loading spinner
+@animationLength: 1.5s;
+@animationRadius: 12px;
+@dotSize: 8px;
+
+.loaderContainer { margin-top: 250px; }
+
+.loader { 
+    position: relative; 
+    width: @animationRadius * 3 + @dotSize;
+    height: @dotSize; 
+    margin: @animationRadius auto; 
+}
+
+.dot {
+    display: inline-block;
+    width: @dotSize;
+    height: @dotSize;
+    border-radius: @dotSize * 0.5;
+    background: @alertgreen;
+    position: absolute;
+}
+
+.dot_1 {
+    animation: animateDot1 @animationLength linear infinite;
+    left: @animationRadius;
+    background: @alertpurple; 
+}
+
+.dot_2 {
+    animation: animateDot2 @animationLength linear infinite;
+    animation-delay: @animationLength / 3;
+    left: @animationRadius * 2;
+}
+
+.dot_3 {
+    animation: animateDot3 @animationLength linear infinite;
+    left: @animationRadius;
+}
+
+.dot_4 {
+    animation: animateDot4 @animationLength linear infinite;
+    animation-delay: @animationLength / 3;
+    left: @animationRadius * 2;
+}
+
+@keyframes animateDot1 {
+    0%{ transform: rotate(0deg) translateX(-@animationRadius); }
+    25% { transform: rotate(180deg) translateX(-@animationRadius); }
+    75% { transform: rotate(180deg) translateX(-@animationRadius); }
+    100% { transform: rotate(360deg) translateX(-@animationRadius); }
+}
+
+@keyframes animateDot2 {
+    0%{ transform: rotate(-0deg) translateX(-@animationRadius); }
+    25% { transform: rotate(-180deg) translateX(-@animationRadius); }
+    75% { transform: rotate(-180deg) translateX(-@animationRadius); }
+    100% { transform: rotate(-360deg) translateX(-@animationRadius); }
+}
+
+@keyframes animateDot3 {
+    0%{ transform: rotate(0deg) translateX(@animationRadius); }
+    25% { transform: rotate(180deg) translateX(@animationRadius); }
+    75% { transform: rotate(180deg) translateX(@animationRadius); }
+    100% { transform: rotate(360deg) translateX(@animationRadius); }
+}
+
+@keyframes animateDot4 {
+    0%{ transform: rotate(-0deg) translateX(@animationRadius); }
+    25% { transform: rotate(-180deg) translateX(@animationRadius); }
+    75% { transform: rotate(-180deg) translateX(@animationRadius); }
+    100% { transform: rotate(-360deg) translateX(@animationRadius); }
+}
+
+

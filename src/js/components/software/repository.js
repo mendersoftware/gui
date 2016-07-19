@@ -269,7 +269,7 @@ var Repository = React.createClass({
           <TableRowColumn>{pkg.device_type}</TableRowColumn>
           <TableRowColumn>{pkg.tags || '-'}</TableRowColumn>
           <TableRowColumn><Time value={this._formatTime(pkg.modified)} format="YYYY-MM-DD HH:mm" /></TableRowColumn>
-          <TableRowColumn>{pkg.devices || 0}</TableRowColumn>
+          <TableRowColumn style={{textAlign:"right"}}>{pkg.devices || 0}</TableRowColumn>
           <TableRowColumn style={{width:"33", paddingRight:"0", paddingLeft:"12"}} className="expandButton">
             <IconButton className="float-right"><FontIcon className="material-icons">{ selected ? "arrow_drop_up" : "arrow_drop_down"}</FontIcon></IconButton>
           </TableRowColumn>
@@ -341,7 +341,7 @@ var Repository = React.createClass({
                 <TableHeaderColumn className="columnHeader" tooltip="Device type compatibility">Device type compatibility <FontIcon ref="device_type" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "device_type")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
                 <TableHeaderColumn className="columnHeader" tooltip="Tags">Tags</TableHeaderColumn>
                 <TableHeaderColumn className="columnHeader" tooltip="Last modified">Last modified <FontIcon style={styles.sortIcon} ref="modified" onClick={this._sortColumn.bind(null, "modified")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
-                <TableHeaderColumn className="columnHeader" tooltip="Installed on devices">Installed on devices <FontIcon style={styles.sortIcon} ref="devices" onClick={this._sortColumn.bind(null, "devices")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
+                <TableHeaderColumn style={{textAlign:"right", paddingRight:"12px"}} className="columnHeader align-right" tooltip="Installed on devices">Installed on devices <FontIcon style={styles.sortIcon} ref="devices" onClick={this._sortColumn.bind(null, "devices")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
                 <TableHeaderColumn style={{width:"33", paddingRight:"12", paddingLeft:"0"}} className="columnHeader"></TableHeaderColumn>
               </TableRow>
             </TableHeader>
@@ -353,9 +353,10 @@ var Repository = React.createClass({
             </TableBody>
           </Table>
 
-          <p className={items.length ? 'hidden' : 'italic margin-left'}>
-            No images found
-          </p>
+          <div className={items.length ? "hidden" : "dashboard-placeholder" }>
+            <p>No images found</p>
+            <img src="assets/img/images.png" alt="images" />
+          </div>
         </div>
 
         <Dialog
