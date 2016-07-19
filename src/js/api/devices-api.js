@@ -40,7 +40,7 @@ var Api = {
         .end(function (err, res) {
           if (err || !res.ok) {
             console.log(err);
-            reject(JSON.parse(res.text));
+            reject();
           } else {
             var responsetext = "";
             if (res.text) {
