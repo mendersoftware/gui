@@ -25,7 +25,7 @@ function getState() {
     hideTODO: localStorage.getItem("hideTODO"),
     groupTODO: localStorage.getItem("groupNextStep"),
     authTODO: localStorage.getItem("authStep"),
-    snackbar: AppStore.getSnackbar(),
+    snackbar: AppStore.getSnackbar()
   }
 }
 
@@ -34,9 +34,12 @@ var Devices = React.createClass({
     return getState()
   },
   componentWillMount: function() {
-    AppActions.getImages();
-    AppActions.getDevices();
     AppStore.changeListener(this._onChange);
+    AppActions.getImages();
+    AppActions.getDevices(function(devices){
+      this.setState({doneLoading:true});
+    }.bind(this));
+    
     var filters = [];
     if (this.props.params) {
       if (this.props.params.groupId) {
@@ -51,8 +54,9 @@ var Devices = React.createClass({
         }
         this._updateFilters(filters);
       }
-    }
+    } 
   },
+   
   componentWillUnmount: function () {
     AppStore.removeChangeListener(this._onChange);
   },
@@ -112,7 +116,7 @@ var Devices = React.createClass({
           <div className={this.state.unauthorized.length ? null : "hidden"}>
             <Unauthorized unauthorized={this.state.unauthorized} />
           </div>
-          <DeviceList filters={this.state.filters} attributes={this.state.attributes} onFilterChange={this._updateFilters} images={this.state.images} selectedDevices={this.state.selectedDevices} groups={this.state.groups} devices={this.state.devices} selectedGroup={this.state.selectedGroup} />
+          <DeviceList loading={!this.state.doneLoading} filters={this.state.filters} attributes={this.state.attributes} onFilterChange={this._updateFilters} images={this.state.images} selectedDevices={this.state.selectedDevices} groups={this.state.groups} devices={this.state.devices} selectedGroup={this.state.selectedGroup} />
         </div>
         <Snackbar
           open={this.state.snackbar.open}

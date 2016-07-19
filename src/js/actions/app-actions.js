@@ -60,15 +60,19 @@ var AppActions = {
 
 
   /* Devices */
-  getDevices: function () {
+  getDevices: function (callback) {
     DevicesApi
       .get(devicesApiUrl+"/devices")
       .then(function(devices) {
+        callback();
         AppDispatcher.handleViewAction({
           actionType: AppConstants.RECEIVE_DEVICES,
           devices: devices
         });
-      });
+      })
+      .catch(function(err) {
+        callback(err);
+      })
   },
 
   acceptDevice: function (device, callback) {
@@ -96,15 +100,19 @@ var AppActions = {
 
 
   /* Images */
-  getImages: function() {
+  getImages: function(callback) {
     ImagesApi
       .get(deploymentsApiUrl+'/images')
       .then(function(images) {
+        callback();
         AppDispatcher.handleViewAction({
           actionType: AppConstants.RECEIVE_IMAGES,
           images: images
         });
-      });
+      })
+      .catch(function(err) {
+        callback(err);
+      })
   },
 
   uploadImage: function(meta, callback) {

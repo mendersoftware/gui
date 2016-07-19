@@ -1134,7 +1134,7 @@ div.shake-alert {
 }
 /* LESS MIXINS */
 .loaderContainer {
-  margin-top: 250px;
+  margin-top: 60px;
 }
 .loader {
   position: relative;

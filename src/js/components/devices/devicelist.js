@@ -5,6 +5,7 @@ var AppStore = require('../../stores/app-store');
 var AppActions = require('../../actions/app-actions');
 var SelectedDevices = require('./selecteddevices');
 var Filters = require('./filters');
+var Loader = require('../common/loader');
 
 // material ui
 var mui = require('material-ui');
@@ -49,7 +50,7 @@ var DeviceList = React.createClass({
   },
 
   componentDidUpdate: function(prevProps, prevState) {
-    if (prevProps.selectedGroup !== this.props.selectedGroup) {
+    if ((prevProps.selectedGroup !== this.props.selectedGroup) || (prevProps.loading !== this.props.loading)) {
       this.setState({
         expanded: null,
         groupName: this.props.selectedGroup.name,
@@ -387,63 +388,67 @@ var DeviceList = React.createClass({
     return (
       <div>
         <Filters attributes={this.props.attributes} filters={this.props.filters} onFilterChange={this.props.onFilterChange} />
-        <div style={{marginLeft:"26"}}>
-          <h2 className="hoverEdit" tooltip="Rename">
-           
-              {groupNameInputs}
-              <span className={this.state.nameEdit ? "hidden" : null}>{this.props.selectedGroup.name}</span>
-              <span className={this.props.selectedGroup.id === 1 ? 'transparent' : null}>
-               <IconButton iconStyle={styles.editButton} onClick={this._nameEdit} iconClassName="material-icons" className={this.state.errorText1 ? "align-top" : null}>
-                {correctIcon}
-              </IconButton>
-              </span>
 
-              <FlatButton onClick={this._removeCurrentGroup} style={styles.exampleFlatButton} className={this.props.selectedGroup.id === 1 ? 'hidden' : null} secondary={true} label="Remove group" labelPosition="after">
-                <FontIcon style={styles.exampleFlatButtonIcon} className="material-icons">delete</FontIcon>
-              </FlatButton>
-          </h2>
-        </div>
-        <div className="margin-bottom">
-          <Table
-            onCellClick={this._expandRow}
-            onRowSelection={this._onRowSelection}
-            multiSelectable={true}
-            className={devices.length ? null : 'hidden'} >
-            <TableHeader
-            enableSelectAll={true}>
-              <TableRow>
-                <TableHeaderColumn className="columnHeader" tooltip="Name">Name<FontIcon ref="name" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "name")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
-                <TableHeaderColumn className="columnHeader" tooltip="Device type">Device type<FontIcon ref="device_type" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "device_type")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
-                <TableHeaderColumn className="columnHeader" tooltip="Current software">Current software<FontIcon ref="artifact_name" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "software_version")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
-                <TableHeaderColumn className="columnHeader" tooltip="Last heartbeat">Last heartbeat<FontIcon ref="last_heartbeat" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "last_heartbeat")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
-                <TableHeaderColumn className="columnHeader" tooltip="Status">Status<FontIcon ref="status" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "status")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
-                <TableHeaderColumn className="columnHeader" style={{width:"33", paddingRight:"12", paddingLeft:"0"}}></TableHeaderColumn>
-              </TableRow>
-            </TableHeader>
-            <TableBody
-              deselectOnClickaway={false}
-              showRowHover={true}
-              className="clickable">
-              {devices}
-            </TableBody>
-          </Table>
-          <div className={devices.length ? 'hidden' : 'dashboard-placeholder'}>
-            <p>
-              No devices found
-            </p>
+        <div>
+          <div style={{marginLeft:"26"}}>
+            <h2 className="hoverEdit" tooltip="Rename">
+             
+                {groupNameInputs}
+                <span className={this.state.nameEdit ? "hidden" : null}>{this.props.selectedGroup.name}</span>
+                <span className={this.props.selectedGroup.id === 1 ? 'transparent' : null}>
+                 <IconButton iconStyle={styles.editButton} onClick={this._nameEdit} iconClassName="material-icons" className={this.state.errorText1 ? "align-top" : null}>
+                  {correctIcon}
+                </IconButton>
+                </span>
+
+                <FlatButton onClick={this._removeCurrentGroup} style={styles.exampleFlatButton} className={this.props.selectedGroup.id === 1 ? 'hidden' : null} secondary={true} label="Remove group" labelPosition="after">
+                  <FontIcon style={styles.exampleFlatButtonIcon} className="material-icons">delete</FontIcon>
+                </FlatButton>
+            </h2>
           </div>
-        </div>
+          <div className="margin-bottom">
+            <Table
+              onCellClick={this._expandRow}
+              onRowSelection={this._onRowSelection}
+              multiSelectable={true}
+              className={devices.length ? null : 'hidden'} >
+              <TableHeader
+              enableSelectAll={true}>
+                <TableRow>
+                  <TableHeaderColumn className="columnHeader" tooltip="Name">Name<FontIcon ref="name" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "name")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
+                  <TableHeaderColumn className="columnHeader" tooltip="Device type">Device type<FontIcon ref="device_type" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "device_type")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
+                  <TableHeaderColumn className="columnHeader" tooltip="Current software">Current software<FontIcon ref="artifact_name" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "software_version")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
+                  <TableHeaderColumn className="columnHeader" tooltip="Last heartbeat">Last heartbeat<FontIcon ref="last_heartbeat" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "last_heartbeat")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
+                  <TableHeaderColumn className="columnHeader" tooltip="Status">Status<FontIcon ref="status" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "status")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
+                  <TableHeaderColumn className="columnHeader" style={{width:"33", paddingRight:"12", paddingLeft:"0"}}></TableHeaderColumn>
+                </TableRow>
+              </TableHeader>
+              <TableBody
+                deselectOnClickaway={false}
+                showRowHover={true}
+                className="clickable">
+                {devices}
+              </TableBody>
+            </Table>
+            <Loader show={this.props.loading} />
+            <div className={(devices.length || this.props.loading) ? 'hidden' : 'dashboard-placeholder'}>
+              <p>
+                No devices found
+              </p>
+            </div>
+          </div>
 
-        <div className={this.props.selectedDevices.length ? "fixedButtons" : "hidden"}>
-          <span className="margin-right">{this.props.selectedDevices.length} device<span className={this.props.selectedDevices.length>1 ? null : "hidden"}>s</span> selected</span>
-          <RaisedButton disabled={disableAction} label="Add selected devices to a group" secondary={true} onClick={this.dialogToggle.bind(null, 'addGroup')}>
-            <FontIcon style={styles.raisedButtonIcon} className="material-icons">add_circle</FontIcon>
-          </RaisedButton>
-          <FlatButton disabled={disableAction} style={{marginLeft: "4"}} className={this.props.selectedGroup.id === 1 ? 'hidden' : null} label="Remove selected devices from this group" secondary={true} onClick={this._removeGroupHandler}>
-            <FontIcon style={styles.buttonIcon} className="material-icons">remove_circle_outline</FontIcon>
-          </FlatButton>
-        </div>
+          <div className={this.props.selectedDevices.length ? "fixedButtons" : "hidden"}>
+            <span className="margin-right">{this.props.selectedDevices.length} device<span className={this.props.selectedDevices.length>1 ? null : "hidden"}>s</span> selected</span>
+            <RaisedButton disabled={disableAction} label="Add selected devices to a group" secondary={true} onClick={this.dialogToggle.bind(null, 'addGroup')}>
+              <FontIcon style={styles.raisedButtonIcon} className="material-icons">add_circle</FontIcon>
+            </RaisedButton>
+            <FlatButton disabled={disableAction} style={{marginLeft: "4"}} className={this.props.selectedGroup.id === 1 ? 'hidden' : null} label="Remove selected devices from this group" secondary={true} onClick={this._removeGroupHandler}>
+              <FontIcon style={styles.buttonIcon} className="material-icons">remove_circle_outline</FontIcon>
+            </FlatButton>
+          </div>
 
+        </div>
 
         <Dialog
           open={this.state.addGroup}

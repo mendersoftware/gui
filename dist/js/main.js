@@ -76217,12 +76217,15 @@ var AppActions = {
   },
 
   /* Devices */
-  getDevices: function getDevices() {
+  getDevices: function getDevices(callback) {
     DevicesApi.get(devicesApiUrl + "/devices").then(function (devices) {
+      callback();
       AppDispatcher.handleViewAction({
         actionType: AppConstants.RECEIVE_DEVICES,
         devices: devices
       });
+    }).catch(function (err) {
+      callback(err);
     });
   },
 
@@ -76242,12 +76245,15 @@ var AppActions = {
   },
 
   /* Images */
-  getImages: function getImages() {
+  getImages: function getImages(callback) {
     ImagesApi.get(deploymentsApiUrl + '/images').then(function (images) {
+      callback();
       AppDispatcher.handleViewAction({
         actionType: AppConstants.RECEIVE_IMAGES,
         images: images
       });
+    }).catch(function (err) {
+      callback(err);
     });
   },
 
@@ -76363,7 +76369,7 @@ var AppActions = {
 
 module.exports = AppActions;
 
-},{"../api/deployments-api":753,"../api/devices-api":754,"../api/images-api":755,"../constants/app-constants":788,"../dispatchers/app-dispatcher":789}],753:[function(require,module,exports){
+},{"../api/deployments-api":753,"../api/devices-api":754,"../api/images-api":755,"../constants/app-constants":789,"../dispatchers/app-dispatcher":790}],753:[function(require,module,exports){
 'use strict';
 
 var request = require('superagent');
@@ -76580,7 +76586,37 @@ var App = _react2.default.createClass({
 
 module.exports = App;
 
-},{"../themes/mender-theme.js":793,"./header/header":782,"material-ui":257,"material-ui/lib/styles/getMuiTheme":292,"react":684}],757:[function(require,module,exports){
+},{"../themes/mender-theme.js":794,"./header/header":783,"material-ui":257,"material-ui/lib/styles/getMuiTheme":292,"react":684}],757:[function(require,module,exports){
+"use strict";
+
+var _react = require("react");
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var Loader = _react2.default.createClass({
+  displayName: "Loader",
+
+  render: function render() {
+    return _react2.default.createElement(
+      "div",
+      { className: this.props.show ? "loaderContainer" : "hidden" },
+      _react2.default.createElement(
+        "div",
+        { className: "loader" },
+        _react2.default.createElement("span", { className: "dot dot_1" }),
+        _react2.default.createElement("span", { className: "dot dot_2" }),
+        _react2.default.createElement("span", { className: "dot dot_3" }),
+        _react2.default.createElement("span", { className: "dot dot_4" })
+      )
+    );
+  }
+});
+
+module.exports = Loader;
+
+},{"react":684}],758:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -76671,7 +76707,7 @@ Activity.contextTypes = {
 
 module.exports = Activity;
 
-},{"material-ui":257,"react":684,"react-router":506,"react-time":522}],758:[function(require,module,exports){
+},{"material-ui":257,"react":684,"react-router":506,"react-time":522}],759:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -76799,7 +76835,7 @@ Dashboard.contextTypes = {
 
 module.exports = Dashboard;
 
-},{"../../actions/app-actions":752,"../../stores/app-store":791,"../../stores/local-store":792,"./activity":757,"./deployments":759,"./health":760,"material-ui":257,"react":684,"react-router":506}],759:[function(require,module,exports){
+},{"../../actions/app-actions":752,"../../stores/app-store":792,"../../stores/local-store":793,"./activity":758,"./deployments":760,"./health":761,"material-ui":257,"react":684,"react-router":506}],760:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -76864,7 +76900,7 @@ var Deployments = _react2.default.createClass({
 
 module.exports = Deployments;
 
-},{"./progress":761,"./recent":762,"./schedule":764,"material-ui":257,"react":684}],760:[function(require,module,exports){
+},{"./progress":762,"./recent":763,"./schedule":765,"material-ui":257,"react":684}],761:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -76989,7 +77025,7 @@ Health.contextTypes = {
 
 module.exports = Health;
 
-},{"react":684,"react-router":506}],761:[function(require,module,exports){
+},{"react":684,"react-router":506}],762:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -77141,7 +77177,7 @@ Progress.contextTypes = {
 
 module.exports = Progress;
 
-},{"../deployments/progressChart.js":770,"material-ui":257,"react":684,"react-router":506,"react-time":522}],762:[function(require,module,exports){
+},{"../deployments/progressChart.js":771,"material-ui":257,"react":684,"react-router":506,"react-time":522}],763:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -77288,7 +77324,7 @@ Recent.contextTypes = {
 
 module.exports = Recent;
 
-},{"../../actions/app-actions":752,"../deployments/groupdevices":769,"./recentstats":763,"material-ui":257,"react":684,"react-router":506,"react-time":522}],763:[function(require,module,exports){
+},{"../../actions/app-actions":752,"../deployments/groupdevices":770,"./recentstats":764,"material-ui":257,"react":684,"react-router":506,"react-time":522}],764:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -77355,7 +77391,7 @@ var RecentStats = _react2.default.createClass({
 
 module.exports = RecentStats;
 
-},{"../../actions/app-actions":752,"react":684}],764:[function(require,module,exports){
+},{"../../actions/app-actions":752,"react":684}],765:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -77475,7 +77511,7 @@ Schedule.contextTypes = {
 
 module.exports = Schedule;
 
-},{"material-ui":257,"react":684,"react-router":506,"react-time":522}],765:[function(require,module,exports){
+},{"material-ui":257,"react":684,"react-router":506,"react-time":522}],766:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -77524,7 +77560,7 @@ var DateTime = _react2.default.createClass({
 
 module.exports = DateTime;
 
-},{"material-ui":257,"react":684}],766:[function(require,module,exports){
+},{"material-ui":257,"react":684}],767:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -77797,7 +77833,7 @@ var Deployments = _react2.default.createClass({
 
 module.exports = Deployments;
 
-},{"../../actions/app-actions":752,"../../stores/app-store":791,"./eventlog.js":768,"./recentdeployments.js":771,"./report.js":772,"./schedule.js":773,"./schedulebutton.js":774,"./scheduleform.js":775,"material-ui":257,"react":684}],767:[function(require,module,exports){
+},{"../../actions/app-actions":752,"../../stores/app-store":792,"./eventlog.js":769,"./recentdeployments.js":772,"./report.js":773,"./schedule.js":774,"./schedulebutton.js":775,"./scheduleform.js":776,"material-ui":257,"react":684}],768:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -77864,7 +77900,7 @@ var DeploymentStatus = _react2.default.createClass({
 
 module.exports = DeploymentStatus;
 
-},{"../../actions/app-actions":752,"material-ui":257,"react":684}],768:[function(require,module,exports){
+},{"../../actions/app-actions":752,"material-ui":257,"react":684}],769:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -77939,7 +77975,7 @@ var EventLog = _react2.default.createClass({
 
 module.exports = EventLog;
 
-},{"material-ui":257,"react":684}],769:[function(require,module,exports){
+},{"material-ui":257,"react":684}],770:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -77982,7 +78018,7 @@ var GroupDevices = _react2.default.createClass({
 
 module.exports = GroupDevices;
 
-},{"../../actions/app-actions":752,"react":684}],770:[function(require,module,exports){
+},{"../../actions/app-actions":752,"react":684}],771:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -78152,7 +78188,7 @@ ProgressChart.contextTypes = {
 
 module.exports = ProgressChart;
 
-},{"../../actions/app-actions":752,"../../stores/app-store":791,"material-ui":257,"react":684,"react-router":506}],771:[function(require,module,exports){
+},{"../../actions/app-actions":752,"../../stores/app-store":792,"material-ui":257,"react":684,"react-router":506}],772:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -78450,7 +78486,7 @@ var Recent = _react2.default.createClass({
 
 module.exports = Recent;
 
-},{"./deploymentstatus":767,"./groupdevices":769,"./progresschart":770,"./report.js":772,"./scheduleform":775,"material-ui":257,"react":684,"react-time":522}],772:[function(require,module,exports){
+},{"./deploymentstatus":768,"./groupdevices":770,"./progresschart":771,"./report.js":773,"./scheduleform":776,"material-ui":257,"react":684,"react-time":522}],773:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -78736,7 +78772,7 @@ var Report = _react2.default.createClass({
 
 module.exports = Report;
 
-},{"../../actions/app-actions":752,"material-ui":257,"react":684,"react-router":506,"react-time":522}],773:[function(require,module,exports){
+},{"../../actions/app-actions":752,"material-ui":257,"react":684,"react-router":506,"react-time":522}],774:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -78897,7 +78933,7 @@ var Schedule = _react2.default.createClass({
 
 module.exports = Schedule;
 
-},{"material-ui":257,"react":684,"react-time":522}],774:[function(require,module,exports){
+},{"material-ui":257,"react":684,"react-time":522}],775:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -78938,7 +78974,7 @@ var ScheduleButton = _react2.default.createClass({
 
 module.exports = ScheduleButton;
 
-},{"material-ui":257,"react":684}],775:[function(require,module,exports){
+},{"material-ui":257,"react":684}],776:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -79314,7 +79350,7 @@ var ScheduleForm = _react2.default.createClass({
 
 module.exports = ScheduleForm;
 
-},{"../../stores/app-store":791,"./datetime.js":765,"material-ui":257,"react":684,"react-router":506,"react-search-input":513}],776:[function(require,module,exports){
+},{"../../stores/app-store":792,"./datetime.js":766,"material-ui":257,"react":684,"react-router":506,"react-search-input":513}],777:[function(require,module,exports){
 'use strict';
 
 var _React$createClass;
@@ -79343,6 +79379,7 @@ var AppStore = require('../../stores/app-store');
 var AppActions = require('../../actions/app-actions');
 var SelectedDevices = require('./selecteddevices');
 var Filters = require('./filters');
+var Loader = require('../common/loader');
 
 // material ui
 var mui = require('material-ui');
@@ -79387,7 +79424,7 @@ var DeviceList = _react2.default.createClass((_React$createClass = {
   },
 
   componentDidUpdate: function componentDidUpdate(prevProps, prevState) {
-    if (prevProps.selectedGroup !== this.props.selectedGroup) {
+    if (prevProps.selectedGroup !== this.props.selectedGroup || prevProps.loading !== this.props.loading) {
       this.setState({
         expanded: null,
         groupName: this.props.selectedGroup.name,
@@ -79740,156 +79777,161 @@ var DeviceList = _react2.default.createClass((_React$createClass = {
     _react2.default.createElement(Filters, { attributes: this.props.attributes, filters: this.props.filters, onFilterChange: this.props.onFilterChange }),
     _react2.default.createElement(
       'div',
-      { style: { marginLeft: "26" } },
+      null,
       _react2.default.createElement(
-        'h2',
-        { className: 'hoverEdit', tooltip: 'Rename' },
-        groupNameInputs,
+        'div',
+        { style: { marginLeft: "26" } },
         _react2.default.createElement(
-          'span',
-          { className: this.state.nameEdit ? "hidden" : null },
-          this.props.selectedGroup.name
-        ),
-        _react2.default.createElement(
-          'span',
-          { className: this.props.selectedGroup.id === 1 ? 'transparent' : null },
+          'h2',
+          { className: 'hoverEdit', tooltip: 'Rename' },
+          groupNameInputs,
           _react2.default.createElement(
-            IconButton,
-            { iconStyle: styles.editButton, onClick: this._nameEdit, iconClassName: 'material-icons', className: this.state.errorText1 ? "align-top" : null },
-            correctIcon
-          )
-        ),
-        _react2.default.createElement(
-          FlatButton,
-          { onClick: this._removeCurrentGroup, style: styles.exampleFlatButton, className: this.props.selectedGroup.id === 1 ? 'hidden' : null, secondary: true, label: 'Remove group', labelPosition: 'after' },
+            'span',
+            { className: this.state.nameEdit ? "hidden" : null },
+            this.props.selectedGroup.name
+          ),
           _react2.default.createElement(
-            FontIcon,
-            { style: styles.exampleFlatButtonIcon, className: 'material-icons' },
-            'delete'
-          )
-        )
-      )
-    ),
-    _react2.default.createElement(
-      'div',
-      { className: 'margin-bottom' },
-      _react2.default.createElement(
-        Table,
-        {
-          onCellClick: this._expandRow,
-          onRowSelection: this._onRowSelection,
-          multiSelectable: true,
-          className: devices.length ? null : 'hidden' },
-        _react2.default.createElement(
-          TableHeader,
-          {
-            enableSelectAll: true },
+            'span',
+            { className: this.props.selectedGroup.id === 1 ? 'transparent' : null },
+            _react2.default.createElement(
+              IconButton,
+              { iconStyle: styles.editButton, onClick: this._nameEdit, iconClassName: 'material-icons', className: this.state.errorText1 ? "align-top" : null },
+              correctIcon
+            )
+          ),
           _react2.default.createElement(
-            TableRow,
-            null,
+            FlatButton,
+            { onClick: this._removeCurrentGroup, style: styles.exampleFlatButton, className: this.props.selectedGroup.id === 1 ? 'hidden' : null, secondary: true, label: 'Remove group', labelPosition: 'after' },
             _react2.default.createElement(
-              TableHeaderColumn,
-              { className: 'columnHeader', tooltip: 'Name' },
-              'Name',
-              _react2.default.createElement(
-                FontIcon,
-                { ref: 'name', style: styles.sortIcon, onClick: this._sortColumn.bind(null, "name"), className: 'sortIcon material-icons' },
-                'sort'
-              )
-            ),
-            _react2.default.createElement(
-              TableHeaderColumn,
-              { className: 'columnHeader', tooltip: 'Device type' },
-              'Device type',
-              _react2.default.createElement(
-                FontIcon,
-                { ref: 'device_type', style: styles.sortIcon, onClick: this._sortColumn.bind(null, "device_type"), className: 'sortIcon material-icons' },
-                'sort'
-              )
-            ),
-            _react2.default.createElement(
-              TableHeaderColumn,
-              { className: 'columnHeader', tooltip: 'Current software' },
-              'Current software',
-              _react2.default.createElement(
-                FontIcon,
-                { ref: 'artifact_name', style: styles.sortIcon, onClick: this._sortColumn.bind(null, "software_version"), className: 'sortIcon material-icons' },
-                'sort'
-              )
-            ),
-            _react2.default.createElement(
-              TableHeaderColumn,
-              { className: 'columnHeader', tooltip: 'Last heartbeat' },
-              'Last heartbeat',
-              _react2.default.createElement(
-                FontIcon,
-                { ref: 'last_heartbeat', style: styles.sortIcon, onClick: this._sortColumn.bind(null, "last_heartbeat"), className: 'sortIcon material-icons' },
-                'sort'
-              )
-            ),
-            _react2.default.createElement(
-              TableHeaderColumn,
-              { className: 'columnHeader', tooltip: 'Status' },
-              'Status',
-              _react2.default.createElement(
-                FontIcon,
-                { ref: 'status', style: styles.sortIcon, onClick: this._sortColumn.bind(null, "status"), className: 'sortIcon material-icons' },
-                'sort'
-              )
-            ),
-            _react2.default.createElement(TableHeaderColumn, { className: 'columnHeader', style: { width: "33", paddingRight: "12", paddingLeft: "0" } })
+              FontIcon,
+              { style: styles.exampleFlatButtonIcon, className: 'material-icons' },
+              'delete'
+            )
           )
-        ),
-        _react2.default.createElement(
-          TableBody,
-          {
-            deselectOnClickaway: false,
-            showRowHover: true,
-            className: 'clickable' },
-          devices
         )
       ),
       _react2.default.createElement(
         'div',
-        { className: devices.length ? 'hidden' : 'dashboard-placeholder' },
+        { className: 'margin-bottom' },
         _react2.default.createElement(
-          'p',
-          null,
-          'No devices found'
+          Table,
+          {
+            onCellClick: this._expandRow,
+            onRowSelection: this._onRowSelection,
+            multiSelectable: true,
+            className: devices.length ? null : 'hidden' },
+          _react2.default.createElement(
+            TableHeader,
+            {
+              enableSelectAll: true },
+            _react2.default.createElement(
+              TableRow,
+              null,
+              _react2.default.createElement(
+                TableHeaderColumn,
+                { className: 'columnHeader', tooltip: 'Name' },
+                'Name',
+                _react2.default.createElement(
+                  FontIcon,
+                  { ref: 'name', style: styles.sortIcon, onClick: this._sortColumn.bind(null, "name"), className: 'sortIcon material-icons' },
+                  'sort'
+                )
+              ),
+              _react2.default.createElement(
+                TableHeaderColumn,
+                { className: 'columnHeader', tooltip: 'Device type' },
+                'Device type',
+                _react2.default.createElement(
+                  FontIcon,
+                  { ref: 'device_type', style: styles.sortIcon, onClick: this._sortColumn.bind(null, "device_type"), className: 'sortIcon material-icons' },
+                  'sort'
+                )
+              ),
+              _react2.default.createElement(
+                TableHeaderColumn,
+                { className: 'columnHeader', tooltip: 'Current software' },
+                'Current software',
+                _react2.default.createElement(
+                  FontIcon,
+                  { ref: 'artifact_name', style: styles.sortIcon, onClick: this._sortColumn.bind(null, "software_version"), className: 'sortIcon material-icons' },
+                  'sort'
+                )
+              ),
+              _react2.default.createElement(
+                TableHeaderColumn,
+                { className: 'columnHeader', tooltip: 'Last heartbeat' },
+                'Last heartbeat',
+                _react2.default.createElement(
+                  FontIcon,
+                  { ref: 'last_heartbeat', style: styles.sortIcon, onClick: this._sortColumn.bind(null, "last_heartbeat"), className: 'sortIcon material-icons' },
+                  'sort'
+                )
+              ),
+              _react2.default.createElement(
+                TableHeaderColumn,
+                { className: 'columnHeader', tooltip: 'Status' },
+                'Status',
+                _react2.default.createElement(
+                  FontIcon,
+                  { ref: 'status', style: styles.sortIcon, onClick: this._sortColumn.bind(null, "status"), className: 'sortIcon material-icons' },
+                  'sort'
+                )
+              ),
+              _react2.default.createElement(TableHeaderColumn, { className: 'columnHeader', style: { width: "33", paddingRight: "12", paddingLeft: "0" } })
+            )
+          ),
+          _react2.default.createElement(
+            TableBody,
+            {
+              deselectOnClickaway: false,
+              showRowHover: true,
+              className: 'clickable' },
+            devices
+          )
+        ),
+        _react2.default.createElement(Loader, { show: this.props.loading }),
+        _react2.default.createElement(
+          'div',
+          { className: devices.length || this.props.loading ? 'hidden' : 'dashboard-placeholder' },
+          _react2.default.createElement(
+            'p',
+            null,
+            'No devices found'
+          )
         )
-      )
-    ),
-    _react2.default.createElement(
-      'div',
-      { className: this.props.selectedDevices.length ? "fixedButtons" : "hidden" },
+      ),
       _react2.default.createElement(
-        'span',
-        { className: 'margin-right' },
-        this.props.selectedDevices.length,
-        ' device',
+        'div',
+        { className: this.props.selectedDevices.length ? "fixedButtons" : "hidden" },
         _react2.default.createElement(
           'span',
-          { className: this.props.selectedDevices.length > 1 ? null : "hidden" },
-          's'
+          { className: 'margin-right' },
+          this.props.selectedDevices.length,
+          ' device',
+          _react2.default.createElement(
+            'span',
+            { className: this.props.selectedDevices.length > 1 ? null : "hidden" },
+            's'
+          ),
+          ' selected'
         ),
-        ' selected'
-      ),
-      _react2.default.createElement(
-        RaisedButton,
-        { disabled: disableAction, label: 'Add selected devices to a group', secondary: true, onClick: this.dialogToggle.bind(null, 'addGroup') },
         _react2.default.createElement(
-          FontIcon,
-          { style: styles.raisedButtonIcon, className: 'material-icons' },
-          'add_circle'
-        )
-      ),
-      _react2.default.createElement(
-        FlatButton,
-        { disabled: disableAction, style: { marginLeft: "4" }, className: this.props.selectedGroup.id === 1 ? 'hidden' : null, label: 'Remove selected devices from this group', secondary: true, onClick: this._removeGroupHandler },
+          RaisedButton,
+          { disabled: disableAction, label: 'Add selected devices to a group', secondary: true, onClick: this.dialogToggle.bind(null, 'addGroup') },
+          _react2.default.createElement(
+            FontIcon,
+            { style: styles.raisedButtonIcon, className: 'material-icons' },
+            'add_circle'
+          )
+        ),
         _react2.default.createElement(
-          FontIcon,
-          { style: styles.buttonIcon, className: 'material-icons' },
-          'remove_circle_outline'
+          FlatButton,
+          { disabled: disableAction, style: { marginLeft: "4" }, className: this.props.selectedGroup.id === 1 ? 'hidden' : null, label: 'Remove selected devices from this group', secondary: true, onClick: this._removeGroupHandler },
+          _react2.default.createElement(
+            FontIcon,
+            { style: styles.buttonIcon, className: 'material-icons' },
+            'remove_circle_outline'
+          )
         )
       )
     ),
@@ -79966,7 +80008,7 @@ var DeviceList = _react2.default.createClass((_React$createClass = {
 
 module.exports = DeviceList;
 
-},{"../../actions/app-actions":752,"../../stores/app-store":791,"./filters":778,"./selecteddevices":780,"material-ui":257,"material-ui/lib/snackbar":287,"react":684,"react-dom":476,"react-time":522}],777:[function(require,module,exports){
+},{"../../actions/app-actions":752,"../../stores/app-store":792,"../common/loader":757,"./filters":779,"./selecteddevices":781,"material-ui":257,"material-ui/lib/snackbar":287,"react":684,"react-dom":476,"react-time":522}],778:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -80012,9 +80054,12 @@ var Devices = _react2.default.createClass({
     return getState();
   },
   componentWillMount: function componentWillMount() {
-    AppActions.getImages();
-    AppActions.getDevices();
     AppStore.changeListener(this._onChange);
+    AppActions.getImages();
+    AppActions.getDevices(function (devices) {
+      this.setState({ doneLoading: true });
+    }.bind(this));
+
     var filters = [];
     if (this.props.params) {
       if (this.props.params.groupId) {
@@ -80031,6 +80076,7 @@ var Devices = _react2.default.createClass({
       }
     }
   },
+
   componentWillUnmount: function componentWillUnmount() {
     AppStore.removeChangeListener(this._onChange);
   },
@@ -80142,7 +80188,7 @@ var Devices = _react2.default.createClass({
           { className: this.state.unauthorized.length ? null : "hidden" },
           _react2.default.createElement(Unauthorized, { unauthorized: this.state.unauthorized })
         ),
-        _react2.default.createElement(DeviceList, { filters: this.state.filters, attributes: this.state.attributes, onFilterChange: this._updateFilters, images: this.state.images, selectedDevices: this.state.selectedDevices, groups: this.state.groups, devices: this.state.devices, selectedGroup: this.state.selectedGroup })
+        _react2.default.createElement(DeviceList, { loading: !this.state.doneLoading, filters: this.state.filters, attributes: this.state.attributes, onFilterChange: this._updateFilters, images: this.state.images, selectedDevices: this.state.selectedDevices, groups: this.state.groups, devices: this.state.devices, selectedGroup: this.state.selectedGroup })
       ),
       _react2.default.createElement(Snackbar, {
         open: this.state.snackbar.open,
@@ -80156,7 +80202,7 @@ var Devices = _react2.default.createClass({
 
 module.exports = Devices;
 
-},{"../../actions/app-actions":752,"../../stores/app-store":791,"./devicelist":776,"./groups":779,"./unauthorized":781,"material-ui":257,"react":684,"react-router":506}],778:[function(require,module,exports){
+},{"../../actions/app-actions":752,"../../stores/app-store":792,"./devicelist":777,"./groups":780,"./unauthorized":782,"material-ui":257,"react":684,"react-router":506}],779:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -80348,7 +80394,7 @@ var Filters = _react2.default.createClass({
 
 module.exports = Filters;
 
-},{"material-ui":257,"react":684}],779:[function(require,module,exports){
+},{"material-ui":257,"react":684}],780:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -80656,7 +80702,7 @@ var Groups = _react2.default.createClass({
 
 module.exports = Groups;
 
-},{"../../actions/app-actions":752,"../../stores/app-store":791,"material-ui":257,"material-ui/lib/Subheader":211,"react":684,"react-search-input":513}],780:[function(require,module,exports){
+},{"../../actions/app-actions":752,"../../stores/app-store":792,"material-ui":257,"material-ui/lib/Subheader":211,"react":684,"react-search-input":513}],781:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -80960,7 +81006,7 @@ var SelectedDevices = _react2.default.createClass({
 
 module.exports = SelectedDevices;
 
-},{"../../actions/app-actions":752,"../../stores/app-store":791,"../deployments/scheduleform":775,"material-ui":257,"react":684,"react-router":506,"react-tag-input":516,"react-time":522}],781:[function(require,module,exports){
+},{"../../actions/app-actions":752,"../../stores/app-store":792,"../deployments/scheduleform":776,"material-ui":257,"react":684,"react-router":506,"react-tag-input":516,"react-time":522}],782:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -81208,7 +81254,7 @@ var Authorized = _react2.default.createClass({
 
 module.exports = Authorized;
 
-},{"../../actions/app-actions":752,"./selecteddevices":780,"material-ui":257,"react":684,"react-dom":476,"react-time":522}],782:[function(require,module,exports){
+},{"../../actions/app-actions":752,"./selecteddevices":781,"material-ui":257,"react":684,"react-dom":476,"react-time":522}],783:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -81352,7 +81398,7 @@ Header.contextTypes = {
 
 module.exports = Header;
 
-},{"material-ui":257,"material-ui/lib/font-icon":252,"material-ui/lib/icon-button":256,"material-ui/lib/menus/icon-menu":264,"material-ui/lib/menus/menu-item":265,"material-ui/lib/toolbar/toolbar":341,"material-ui/lib/toolbar/toolbar-group":338,"material-ui/lib/toolbar/toolbar-title":340,"react":684,"react-router":506}],783:[function(require,module,exports){
+},{"material-ui":257,"material-ui/lib/font-icon":252,"material-ui/lib/icon-button":256,"material-ui/lib/menus/icon-menu":264,"material-ui/lib/menus/menu-item":265,"material-ui/lib/toolbar/toolbar":341,"material-ui/lib/toolbar/toolbar-group":338,"material-ui/lib/toolbar/toolbar-title":340,"react":684,"react-router":506}],784:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -81375,7 +81421,7 @@ var DeploymentButton = _react2.default.createClass({
 
 module.exports = DeploymentButton;
 
-},{"material-ui":257,"react":684}],784:[function(require,module,exports){
+},{"material-ui":257,"react":684}],785:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -81424,6 +81470,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var update = require('react-addons-update');
 var FileInput = require('react-file-input');
+var Loader = require('../common/loader');
 
 var ReactTags = require('react-tag-input').WithContext;
 
@@ -81781,6 +81828,7 @@ var Repository = _react2.default.createClass({
         ),
         _react2.default.createElement(_reactSearchInput2.default, { placeholder: 'Search images', className: 'search tableSearch', ref: 'search', onChange: this.searchUpdated })
       ),
+      _react2.default.createElement(Loader, { show: this.props.loading }),
       _react2.default.createElement(
         'div',
         { style: { position: "relative", marginTop: "10px" } },
@@ -81856,7 +81904,7 @@ var Repository = _react2.default.createClass({
         ),
         _react2.default.createElement(
           'div',
-          { className: items.length ? "hidden" : "dashboard-placeholder" },
+          { className: items.length || this.props.loading ? "hidden" : "dashboard-placeholder" },
           _react2.default.createElement(
             'p',
             null,
@@ -81944,7 +81992,7 @@ var Repository = _react2.default.createClass({
 
 module.exports = Repository;
 
-},{"../../actions/app-actions":752,"../../stores/app-store":791,"../deployments/scheduleform":775,"./deploymentbutton.js":783,"./selectedimage.js":785,"material-ui":257,"react":684,"react-addons-update":365,"react-dom":476,"react-file-input":478,"react-router":506,"react-search-input":513,"react-tag-input":516,"react-time":522}],785:[function(require,module,exports){
+},{"../../actions/app-actions":752,"../../stores/app-store":792,"../common/loader":757,"../deployments/scheduleform":776,"./deploymentbutton.js":784,"./selectedimage.js":786,"material-ui":257,"react":684,"react-addons-update":365,"react-dom":476,"react-file-input":478,"react-router":506,"react-search-input":513,"react-tag-input":516,"react-time":522}],786:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -82227,7 +82275,7 @@ SelectedImage.contextTypes = {
 
 module.exports = SelectedImage;
 
-},{"material-ui":257,"react":684,"react-router":506,"react-tag-input":516,"react-time":522}],786:[function(require,module,exports){
+},{"material-ui":257,"react":684,"react-router":506,"react-tag-input":516,"react-time":522}],787:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -82263,7 +82311,9 @@ var Software = _react2.default.createClass({
     AppStore.changeListener(this._onChange);
   },
   componentDidMount: function componentDidMount() {
-    AppActions.getImages();
+    AppActions.getImages(function () {
+      this.setState({ doneLoading: true });
+    }.bind(this));
   },
   componentWillUnmount: function componentWillUnmount() {
     AppStore.removeChangeListener(this._onChange);
@@ -82326,7 +82376,7 @@ var Software = _react2.default.createClass({
       _react2.default.createElement(
         'div',
         { className: 'relative overflow-hidden' },
-        _react2.default.createElement(Repository, { setStorage: this._setStorage, selected: this.state.selected, software: this.state.software, groups: this.state.groups })
+        _react2.default.createElement(Repository, { loading: !this.state.doneLoading, setStorage: this._setStorage, selected: this.state.selected, software: this.state.software, groups: this.state.groups })
       )
     );
   }
@@ -82334,7 +82384,7 @@ var Software = _react2.default.createClass({
 
 module.exports = Software;
 
-},{"../../actions/app-actions":752,"../../stores/app-store":791,"../../stores/local-store":792,"./repository.js":784,"react":684,"react-router":506}],787:[function(require,module,exports){
+},{"../../actions/app-actions":752,"../../stores/app-store":792,"../../stores/local-store":793,"./repository.js":785,"react":684,"react-router":506}],788:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -82398,7 +82448,7 @@ module.exports = _react2.default.createElement(
   )
 );
 
-},{"../components/app":756,"../components/dashboard/dashboard":758,"../components/deployments/deployments":766,"../components/devices/devices":777,"../components/software/software":786,"react":684,"react-router":506}],788:[function(require,module,exports){
+},{"../components/app":756,"../components/dashboard/dashboard":759,"../components/deployments/deployments":767,"../components/devices/devices":778,"../components/software/software":787,"react":684,"react-router":506}],789:[function(require,module,exports){
 'use strict';
 
 module.exports = {
@@ -82422,7 +82472,7 @@ module.exports = {
   SET_SNACKBAR: 'SET_SNACKBAR'
 };
 
-},{}],789:[function(require,module,exports){
+},{}],790:[function(require,module,exports){
 'use strict';
 
 var Dispatcher = require('flux').Dispatcher;
@@ -82440,7 +82490,7 @@ var AppDispatcher = assign(new Dispatcher(), {
 
 module.exports = AppDispatcher;
 
-},{"flux":94,"react/lib/Object.assign":544}],790:[function(require,module,exports){
+},{"flux":94,"react/lib/Object.assign":544}],791:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -82471,7 +82521,7 @@ var routes = require('./config/routes');
   routes
 ), document.getElementById('main'));
 
-},{"./config/routes":787,"react":684,"react-dom":476,"react-router":506,"react-tap-event-plugin":520}],791:[function(require,module,exports){
+},{"./config/routes":788,"react":684,"react-dom":476,"react-router":506,"react-tap-event-plugin":520}],792:[function(require,module,exports){
 'use strict';
 
 var AppDispatcher = require('../dispatchers/app-dispatcher');
@@ -83198,7 +83248,7 @@ var AppStore = assign(EventEmitter.prototype, {
 
 module.exports = AppStore;
 
-},{"../constants/app-constants":788,"../dispatchers/app-dispatcher":789,"events":92,"react/lib/Object.assign":544}],792:[function(require,module,exports){
+},{"../constants/app-constants":789,"../dispatchers/app-dispatcher":790,"events":92,"react/lib/Object.assign":544}],793:[function(require,module,exports){
 'use strict';
 
 /*
@@ -83245,7 +83295,7 @@ var LocalStore = assign(EventEmitter.prototype, {
 
 module.exports = LocalStore;
 
-},{"../constants/app-constants":788,"../dispatchers/app-dispatcher":789,"events":92,"react/lib/Object.assign":544}],793:[function(require,module,exports){
+},{"../constants/app-constants":789,"../dispatchers/app-dispatcher":790,"events":92,"react/lib/Object.assign":544}],794:[function(require,module,exports){
 'use strict';
 
 var _colorManipulator = require('material-ui/lib/utils/color-manipulator');
@@ -83279,4 +83329,4 @@ module.exports = {
   }
 };
 
-},{"material-ui/lib/styles/colors":291,"material-ui/lib/styles/spacing":294,"material-ui/lib/utils/color-manipulator":348}]},{},[790]);
+},{"material-ui/lib/styles/colors":291,"material-ui/lib/styles/spacing":294,"material-ui/lib/utils/color-manipulator":348}]},{},[791]);
