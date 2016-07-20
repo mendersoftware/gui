@@ -188,7 +188,7 @@ var SelectedDevices = React.createClass({
               <Divider />
               <ListItem
                 style={styles.listStyle}
-                primaryText="Deploy update"
+                primaryText="Create a deployment"
                 secondaryText="Deploy an update to this device only"
                 onClick={this._clickListItem}
                 leftIcon={<FontIcon style={{marginTop:6, marginBottom:6}} className="material-icons">update</FontIcon>} />
@@ -229,7 +229,7 @@ var SelectedDevices = React.createClass({
           onClick={this.dialogToggle.bind(null, 'schedule')} />
       </div>,
       <RaisedButton
-        label="Deploy update"
+        label="Create deployment"
         primary={true}
         onClick={this._onScheduleSubmit}
         ref="save" />
@@ -243,7 +243,7 @@ var SelectedDevices = React.createClass({
    
         <Dialog
           open={this.state.schedule}
-          title='Deploy an update'
+          title='Create a deployment'
           actions={scheduleActions}
           autoDetectWindowHeight={true}
           autoScrollBodyContent={true}

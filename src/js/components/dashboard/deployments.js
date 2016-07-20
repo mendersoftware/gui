@@ -33,7 +33,7 @@ var Deployments = React.createClass({
         </div>
 
         <div>
-          <RaisedButton onClick={this._clickHandle.bind(null, {route:"deployments",open:true})} label="Deploy an update" secondary={true} />
+          <RaisedButton onClick={this._clickHandle.bind(null, {route:"deployments",open:true})} label="Create a deployment" secondary={true} />
         </div>
 
       </div>

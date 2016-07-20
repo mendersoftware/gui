@@ -76902,7 +76902,7 @@ var Deployments = _react2.default.createClass({
       _react2.default.createElement(
         'div',
         null,
-        _react2.default.createElement(RaisedButton, { onClick: this._clickHandle.bind(null, { route: "deployments", open: true }), label: 'Deploy an update', secondary: true })
+        _react2.default.createElement(RaisedButton, { onClick: this._clickHandle.bind(null, { route: "deployments", open: true }), label: 'Create a deployment', secondary: true })
       )
     );
   }
@@ -77628,7 +77628,7 @@ function getState() {
     events: AppStore.getEventLog(),
     images: AppStore.getSoftwareRepo(),
     groups: AppStore.getGroups(),
-    dialogTitle: "Deploy an update",
+    dialogTitle: "Create a deployment",
     scheduleForm: true,
     contentClass: "largeDialog",
     invalid: true,
@@ -77686,13 +77686,17 @@ var Deployments = _react2.default.createClass({
     this.setState(getState());
   },
   dialogDismiss: function dialogDismiss(ref) {
-    this.replaceState(this.getInitialState());
+    this.setState({
+      dialog: false,
+      image: null,
+      group: null
+    });
   },
   dialogOpen: function dialogOpen(dialog) {
     this.setState({ dialog: true });
     if (dialog === 'schedule') {
       this.setState({
-        dialogTitle: "Deploy an update",
+        dialogTitle: "Create a deployment",
         scheduleForm: true,
         contentClass: "dialog"
       });
@@ -77788,7 +77792,7 @@ var Deployments = _react2.default.createClass({
         label: 'Cancel',
         onClick: this.dialogDismiss.bind(null, 'dialog') })
     ), _react2.default.createElement(RaisedButton, {
-      label: 'Deploy update',
+      label: 'Create deployment',
       primary: true,
       onClick: this._onScheduleSubmit,
       ref: 'save' })];
@@ -77820,7 +77824,7 @@ var Deployments = _react2.default.createClass({
               { className: 'todo' },
               '//TODO'
             ),
-            ' deploy an update to the device group you created'
+            ' create a deoployment for the device group you just created'
           )
         )
       ),
@@ -78347,7 +78351,7 @@ var Recent = _react2.default.createClass({
     }, this);
 
     var reportActions = [{ text: 'Close' }];
-    var retryActions = [{ text: 'Cancel' }, { text: 'Deploy update', onClick: this._onUploadSubmit, primary: 'true' }];
+    var retryActions = [{ text: 'Cancel' }, { text: 'Create deployment', onClick: this._onUploadSubmit, primary: 'true' }];
     return _react2.default.createElement(
       'div',
       null,
@@ -78421,7 +78425,7 @@ var Recent = _react2.default.createClass({
           _react2.default.createElement(
             'p',
             null,
-            'Ongoing deployments will appear here. Deploy an update to get started'
+            'Ongoing deployments will appear here. Create a deployment to get started'
           ),
           _react2.default.createElement('img', { src: 'assets/img/deployments.png', alt: 'In progress' })
         )
@@ -78986,9 +78990,9 @@ var ScheduleButton = _react2.default.createClass({
   render: function render() {
     var button = '';
     if (this.props.buttonType === 'flat') {
-      button = _react2.default.createElement(FlatButton, { primary: this.props.primary, secondary: this.props.secondary, label: this.props.label || "Deploy an update", onClick: this._handleClick });
+      button = _react2.default.createElement(FlatButton, { primary: this.props.primary, secondary: this.props.secondary, label: this.props.label || "Create a deployment", onClick: this._handleClick });
     } else {
-      button = _react2.default.createElement(RaisedButton, { primary: this.props.primary, secondary: this.props.secondary, label: this.props.label || "Deploy an update", onClick: this._handleClick });
+      button = _react2.default.createElement(RaisedButton, { primary: this.props.primary, secondary: this.props.secondary, label: this.props.label || "Create a deployment", onClick: this._handleClick });
     }
     return _react2.default.createElement(
       'div',
@@ -80945,7 +80949,7 @@ var SelectedDevices = _react2.default.createClass({
             _react2.default.createElement(Divider, null),
             _react2.default.createElement(ListItem, {
               style: styles.listStyle,
-              primaryText: 'Deploy update',
+              primaryText: 'Create a deployment',
               secondaryText: 'Deploy an update to this device only',
               onClick: this._clickListItem,
               leftIcon: _react2.default.createElement(
@@ -81001,7 +81005,7 @@ var SelectedDevices = _react2.default.createClass({
         label: 'Cancel',
         onClick: this.dialogToggle.bind(null, 'schedule') })
     ), _react2.default.createElement(RaisedButton, {
-      label: 'Deploy update',
+      label: 'Create deployment',
       primary: true,
       onClick: this._onScheduleSubmit,
       ref: 'save' })];
@@ -81019,7 +81023,7 @@ var SelectedDevices = _react2.default.createClass({
         Dialog,
         {
           open: this.state.schedule,
-          title: 'Deploy an update',
+          title: 'Create a deployment',
           actions: scheduleActions,
           autoDetectWindowHeight: true,
           autoScrollBodyContent: true,
@@ -81443,7 +81447,7 @@ var DeploymentButton = _react2.default.createClass({
   displayName: 'DeploymentButton',
 
   render: function render() {
-    return _react2.default.createElement(RaisedButton, { label: 'Deploy update ' });
+    return _react2.default.createElement(RaisedButton, { label: 'Create deployment' });
   }
 });
 
@@ -81821,7 +81825,7 @@ var Repository = _react2.default.createClass({
         onClick: this.dialogDismiss.bind(null, 'schedule') })
     ), _react2.default.createElement(RaisedButton, {
       key: 'schedule-submit',
-      label: 'Deploy update',
+      label: 'Create deployment',
       primary: true,
       onClick: this._onScheduleSubmit })];
 
@@ -82006,7 +82010,7 @@ var Repository = _react2.default.createClass({
           key: 'schedule1',
           ref: 'schedule',
           open: this.state.schedule,
-          title: 'Deploy an update',
+          title: 'Create a deployment',
           actions: scheduleActions,
           autoDetectWindowHeight: true, autoScrollBodyContent: true,
           bodyStyle: { paddingTop: "0" },
