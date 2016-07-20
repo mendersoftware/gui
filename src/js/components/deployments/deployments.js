@@ -99,7 +99,11 @@ var Deployments = React.createClass({
     this.setState(getState());
   },
   dialogDismiss: function(ref) {
-    this.replaceState(this.getInitialState());
+    this.setState({
+      dialog: false,
+      image: null,
+      group: null
+    });
   },
   dialogOpen: function(dialog) {
     this.setState({dialog: true});

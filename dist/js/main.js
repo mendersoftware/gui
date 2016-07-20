@@ -77686,7 +77686,11 @@ var Deployments = _react2.default.createClass({
     this.setState(getState());
   },
   dialogDismiss: function dialogDismiss(ref) {
-    this.replaceState(this.getInitialState());
+    this.setState({
+      dialog: false,
+      image: null,
+      group: null
+    });
   },
   dialogOpen: function dialogOpen(dialog) {
     this.setState({ dialog: true });
