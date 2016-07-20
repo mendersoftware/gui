@@ -41,7 +41,7 @@ function getState() {
     events: AppStore.getEventLog(),
     images: AppStore.getSoftwareRepo(),
     groups: AppStore.getGroups(),
-    dialogTitle: "Deploy an update",
+    dialogTitle: "Create a deployment",
     scheduleForm: true,
     contentClass: "largeDialog", 
     invalid: true,
@@ -105,7 +105,7 @@ var Deployments = React.createClass({
     this.setState({dialog: true});
     if (dialog === 'schedule') {
       this.setState({
-        dialogTitle: "Deploy an update",
+        dialogTitle: "Create a deployment",
         scheduleForm: true,
         contentClass: "dialog"
       });
@@ -201,7 +201,7 @@ var Deployments = React.createClass({
           onClick={this.dialogDismiss.bind(null, 'dialog')} />
       </div>,
       <RaisedButton
-        label="Deploy update"
+        label="Create deployment"
         primary={true}
         onClick={this._onScheduleSubmit}
         ref="save" />
@@ -227,7 +227,7 @@ var Deployments = React.createClass({
         <div className={this.state.hideTODO ? "hidden" : null}>
           <div className="margin-bottom onboard">
             <div className="close" onClick={this._closeOnboard}/>
-            <h3><span className="todo">//TODO</span> deploy an update to the device group you created</h3>
+            <h3><span className="todo">//TODO</span> create a deoployment for the device group you just created</h3>
           </div>
         </div>
 

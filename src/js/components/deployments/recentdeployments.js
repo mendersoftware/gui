@@ -83,7 +83,7 @@ var Recent = React.createClass({
     ];
     var retryActions = [
       { text: 'Cancel' },
-      { text: 'Deploy update', onClick: this._onUploadSubmit, primary: 'true' }
+      { text: 'Create deployment', onClick: this._onUploadSubmit, primary: 'true' }
     ];
     return (
       <div>
@@ -115,7 +115,7 @@ var Recent = React.createClass({
             </TableBody>
           </Table>
           <div className={(progressMap.length || this.props.loading)  ? 'hidden' : "dashboard-placeholder"}>
-            <p>Ongoing deployments will appear here. Deploy an update to get started</p>
+            <p>Ongoing deployments will appear here. Create a deployment to get started</p>
             <img src="assets/img/deployments.png" alt="In progress" />
           </div>
         </div>
