@@ -76231,16 +76231,16 @@ var AppActions = {
 
   acceptDevice: function acceptDevice(device, callback) {
     DevicesApi.put(devicesApiUrl + "/devices/" + device.id + "/status", { "status": "accepted" }).then(function (data) {
-      callback();
+      callback.success(data);
     }).catch(function (err) {
-      callback(err);
-    });;
+      callback.error(err);
+    });
   },
   rejectDevice: function rejectDevice(device, callback) {
     DevicesApi.put(devicesApiUrl + "/devices/" + device.id + "/status", { "status": "rejected" }).then(function (data) {
-      callback(data);
+      callback.success(data);
     }).catch(function (err) {
-      callback(err);
+      callback.error(err);
     });
   },
 
@@ -76448,16 +76448,11 @@ var Api = {
   },
   put: function put(url, data) {
     return new Promise(function (resolve, reject) {
-      request.put(url).withCredentials().set('Content-Type', 'application/json').send(data).end(function (err, res) {
+      request.put(url).set('Content-Type', 'application/json').send(data).end(function (err, res) {
         if (err || !res.ok) {
-          console.log(err);
           reject();
         } else {
-          var responsetext = "";
-          if (res.text) {
-            responsetext = JSON.parse(res.text);
-          }
-          resolve(responsetext);
+          resolve(res.body);
         }
       });
     });
@@ -80103,11 +80098,7 @@ var Devices = _react2.default.createClass({
   },
   componentDidMount: function componentDidMount() {
     AppActions.getImages();
-    AppActions.getDevices(function (devices) {
-      setTimeout(function () {
-        this.setState({ doneLoading: true });
-      }.bind(this), 300);
-    }.bind(this));
+    this._refreshDevices();
   },
   componentWillUnmount: function componentWillUnmount() {
     AppStore.removeChangeListener(this._onChange);
@@ -80117,7 +80108,6 @@ var Devices = _react2.default.createClass({
     AppActions.setLocalStorage("hideTODO", true);
   },
   _onChange: function _onChange() {
-
     if (!this.state.groupTODO) {
       if (this.state.groups[1]) {
         if (this.state.groups[1].devices.length === 2) {
@@ -80128,9 +80118,16 @@ var Devices = _react2.default.createClass({
         }
       }
     }
-
     this.setState(this.getInitialState());
   },
+  _refreshDevices: function _refreshDevices() {
+    AppActions.getDevices(function (devices) {
+      setTimeout(function () {
+        this.setState({ doneLoading: true });
+      }.bind(this), 300);
+    }.bind(this));
+  },
+
   _updateFilters: function _updateFilters(filters) {
     AppActions.updateFilters(filters);
   },
@@ -80218,7 +80215,7 @@ var Devices = _react2.default.createClass({
         _react2.default.createElement(
           'div',
           { className: this.state.unauthorized.length ? null : "hidden" },
-          _react2.default.createElement(Unauthorized, { unauthorized: this.state.unauthorized })
+          _react2.default.createElement(Unauthorized, { refresh: this._refreshDevices, unauthorized: this.state.unauthorized })
         ),
         _react2.default.createElement(DeviceList, { loading: !this.state.doneLoading, filters: this.state.filters, attributes: this.state.attributes, onFilterChange: this._updateFilters, images: this.state.images, selectedDevices: this.state.selectedDevices, groups: this.state.groups, devices: this.state.devices, selectedGroup: this.state.selectedGroup })
       ),
@@ -81096,12 +81093,19 @@ var Authorized = _react2.default.createClass({
   },
   _authorizeDevices: function _authorizeDevices(devices) {
     // array of device objects
+    var callback = {
+      success: function (data) {
+        AppActions.setSnackbar("Device accepted");
+        // wait until end of forEach?
+        this.props.refresh();
+      }.bind(this),
+      error: function error(err) {
+        AppActions.setSnackbar("Error accepting device: " + err);
+      }
+    };
+
     devices.forEach(function (element, index) {
-      AppActions.acceptDevice(element, function (err) {
-        if (err) {
-          AppActions.setSnackbar("Error: " + err.error);
-        }
-      }.bind(this));
+      AppActions.acceptDevice(element, callback);
     });
   },
   _blockDevices: function _blockDevices(devices) {
@@ -82497,7 +82501,6 @@ module.exports = {
   REMOVE_FROM_GROUP: 'REMOVE_FROM_GROUP',
   REMOVE_GROUP: 'REMOVE_GROUP',
   ADD_GROUP: 'ADD_GROUP',
-  AUTHORIZE_DEVICES: 'AUTHORIZE_DEVICES',
   SAVE_SCHEDULE: 'SAVE_SCHEDULE',
   UPDATE_FILTERS: 'UPDATE_FILTERS',
   REMOVE_DEPLOYMENT: 'REMOVE_DEPLOYMENT',
@@ -83033,6 +83036,10 @@ function setDevices(devices) {
     });
     _alldevicelist = devices;
     _alldevices = newDevices;
+    _groups[0].devices = [];
+    _alldevices.accepted.forEach(function (element, index) {
+      _groups[0].devices.push(element.id);
+    });
     _setCurrentDevices(_currentGroup.id);
   }
 }
@@ -83234,9 +83241,6 @@ var AppStore = assign(EventEmitter.prototype, {
         break;
       case AppConstants.ADD_GROUP:
         _addGroup(payload.action.group, payload.action.index);
-        break;
-      case AppConstants.AUTHORIZE_DEVICES:
-        _authorizeDevices(payload.action.devices);
         break;
       case AppConstants.UPLOAD_IMAGE:
         _uploadImage(payload.action.image);

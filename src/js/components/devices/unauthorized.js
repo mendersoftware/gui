@@ -40,12 +40,19 @@ var Authorized =  React.createClass({
   },
   _authorizeDevices: function(devices) {
     // array of device objects
+    var callback = {
+      success: function(data) {
+        AppActions.setSnackbar("Device accepted");
+        // wait until end of forEach?
+        this.props.refresh();
+      }.bind(this),
+      error: function(err) {
+        AppActions.setSnackbar("Error accepting device: " + err);
+      }
+    };
+       
     devices.forEach( function(element, index) {
-      AppActions.acceptDevice(element, function(err) {
-        if (err) {
-          AppActions.setSnackbar("Error: " + err.error);
-        }
-      }.bind(this));
+      AppActions.acceptDevice(element, callback);
     });
   },
    _blockDevices: function(devices) {
