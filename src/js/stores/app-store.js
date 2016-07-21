@@ -11,7 +11,7 @@ var _currentDevices = [];
 var _selectedDevices = [];
 var _filters = [{key:'', value:''}];
 var _attributes = {
-  name: "Name",
+  id: "Name",
   device_type: "Device type",
   arch: "Architecture",
   status: "Status",
