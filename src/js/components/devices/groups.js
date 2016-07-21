@@ -131,7 +131,7 @@ var Groups = React.createClass({
         disabled={this.state.invalid} />
     ];
 
-    if (this.refs.search && this.props.allDevices) {
+    if (this.refs.search && this.props.allDevices.length) {
       var filters = ['name'];
       tmpDevices = this.props.allDevices.filter(this.refs.search.filter(filters));
     }
@@ -143,7 +143,7 @@ var Groups = React.createClass({
             {device.name}
           </TableRowColumn>
           <TableRowColumn>
-            {device.model}
+            {device.device_type}
           </TableRowColumn>
            <TableRowColumn>
             {this._getGroupNames(device.groups).join(', ')}

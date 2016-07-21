@@ -11,10 +11,10 @@ var GroupDevices = React.createClass({
     this.getDevices();
   },
   getDevices: function() {
-    if (this.props.update === "00a0c91e6-7dec-11d0-a765-f81d4faebf6") {
+    if (this.props.deployment === "00a0c91e6-7dec-11d0-a765-f81d4faebf6") {
       this.setState({devices: 3});
     } else {
-      AppActions.getSingleUpdateDevices(this.props.update, function(devices) {
+      AppActions.getSingleDeploymentDevices(this.props.deployment, function(devices) {
         // retrieve number of devices from child
         this.setState({devices: devices.length});
       }.bind(this));

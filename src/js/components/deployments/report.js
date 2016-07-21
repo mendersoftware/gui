@@ -24,7 +24,7 @@ var mockSuccess = [
         "finished": "2016-03-25 00:13:00 +0000 UTC",
         "status": "success",
         "started": "2016-03-24 24:00:00 +0000 UTC",
-        "model": "Raspberry Pi 3",
+        "device_type": "Raspberry Pi 3",
         "version_from": "Application 0.1"
     },
     {
@@ -32,7 +32,7 @@ var mockSuccess = [
         "finished": "2016-03-25 00:12:00 +0000 UTC",
         "status": "success",
         "started": "2016-03-24 24:00:00 +0000 UTC",
-        "model": "Raspberry Pi 3",
+        "device_type": "Raspberry Pi 3",
         "version_from": "Application 0.1"
     },
     {
@@ -40,7 +40,7 @@ var mockSuccess = [
         "finished": "2016-03-25 00:04:00 +0000 UTC",
         "status": "success",
         "started": "2016-03-24 24:00:00 +0000 UTC",
-        "model": "Raspberry Pi 3",
+        "device_type": "Raspberry Pi 3",
         "version_from": "Application 0.1"
     }
 ];
@@ -48,25 +48,25 @@ var mockSuccess = [
 var Report = React.createClass({
   getInitialState: function() {
     return {
-      failsOnly: this.props.update.status === "Failed",
+      failsOnly: this.props.deployment.status === "Failed",
       stats: {
         failure: null
       }
     };
   },
    componentDidMount: function() {
-    if (this.props.update.id === "00a0c91e6-7dec-11d0-a765-f81d4faebf6") {
-      this._updateState("devices", mockSuccess);
+    if (this.props.deployment.id === "00a0c91e6-7dec-11d0-a765-f81d4faebf6") {
+      this._deploymentState("devices", mockSuccess);
     } else {
-      AppActions.getSingleUpdateStats(this.props.update.id, function(stats) {
-        this._updateState("stats",stats);
+      AppActions.getSingleDeploymentStats(this.props.deployment.id, function(stats) {
+        this._deploymentState("stats",stats);
       }.bind(this));
-      AppActions.getSingleUpdateDevices(this.props.update.id, function(devices) {
-        this._updateState("devices",devices);
+      AppActions.getSingleDeploymentDevices(this.props.deployment.id, function(devices) {
+        this._deploymentState("devices",devices);
       }.bind(this));
     }
   },
-  _updateState: function (key, val) {
+  _deploymentState: function (key, val) {
     var state = {};
     state[key] = val;
     this.setState(state);
@@ -78,15 +78,15 @@ var Report = React.createClass({
   _handleCheckbox: function (e, checked) {
     this.setState({failsOnly:checked});
   },
-  _retryUpdate: function () {
+  _retryDeployment: function () {
     // replace contents of dialog, also change size, return contents and size on 'cancel'?
-    this.props.retryUpdate(this.props.update);
+    this.props.retryDeployment(this.props.deployment);
   },
   _formatTime: function (date) {
     return date.replace(' ','T').replace(/ /g, '').replace('UTC','');
   },
   exportLog: function (id) {
-    AppActions.getDeviceLog(this.props.update.id, id, function(data) {
+    AppActions.getDeviceLog(this.props.deployment.id, id, function(data) {
       var content = data;
       var uriContent = "data:application/octet-stream," + encodeURIComponent(content);
       var newWindow = window.open(uriContent, 'deviceLog');
@@ -94,10 +94,10 @@ var Report = React.createClass({
   },
   render: function () {
     var deviceList = [];
-    var encodedSoftware = encodeURIComponent(this.props.update.version); 
+    var encodedSoftware = encodeURIComponent(this.props.deployment.artifact_name); 
     var softwareLink = (
       <div>
-        <Link style={{fontWeight:"500"}} to={`/software/${encodedSoftware}`}>{this.props.update.version}</Link>
+        <Link style={{fontWeight:"500"}} to={`/software/${encodedSoftware}`}>{this.props.deployment.artifact_name}</Link>
       </div>
     )
 
@@ -114,7 +114,7 @@ var Report = React.createClass({
           return (
             <TableRow key={index}>
               <TableRowColumn>{deviceLink}</TableRowColumn>
-              <TableRowColumn>{device.model}</TableRowColumn>
+              <TableRowColumn>{device.device_type}</TableRowColumn>
               <TableRowColumn>{softwareLink}</TableRowColumn>
               <TableRowColumn><Time value={this._formatTime(device.finished)} format="YYYY-MM-DD HH:mm" /></TableRowColumn>
               <TableRowColumn>{device.status || "--"}</TableRowColumn>
@@ -124,16 +124,16 @@ var Report = React.createClass({
         }
       }, this);
     }
-    var status = (this.props.update.status === "inprogress") ? "In progress" : this.props.update.status;
+    var status = (this.props.deployment.status === "inprogress") ? "In progress" : this.props.deployment.status;
     return (
       <div>
         <div className="report-list">
           <List>
-            <ListItem disabled={true} primaryText="Group" secondaryText={this.props.update.name} />
+            <ListItem disabled={true} primaryText="Group" secondaryText={this.props.deployment.name} />
             <Divider />
-            <ListItem disabled={true} primaryText="Device type" secondaryText={this.props.update.model || "--"} />
+            <ListItem disabled={true} primaryText="Device type" secondaryText={this.props.deployment.device_type || "--"} />
             <Divider />
-            <ListItem disabled={true} primaryText="Start time" secondaryText={<Time value={this._formatTime(this.props.update.created)} format="YYYY-MM-DD HH:mm" />} />
+            <ListItem disabled={true} primaryText="Start time" secondaryText={<Time value={this._formatTime(this.props.deployment.created)} format="YYYY-MM-DD HH:mm" />} />
           </List>
         </div>
         <div className="report-list">
@@ -142,23 +142,23 @@ var Report = React.createClass({
             <Divider />
             <ListItem disabled={true} primaryText="Target software" secondaryText={softwareLink} />
             <Divider />
-            <ListItem disabled={true} primaryText="End time" secondaryText={<Time value={this._formatTime(this.props.update.finished)} format="YYYY-MM-DD HH:mm" />} />
+            <ListItem disabled={true} primaryText="End time" secondaryText={<Time value={this._formatTime(this.props.deployment.finished)} format="YYYY-MM-DD HH:mm" />} />
           </List>
         </div>
         <div className="report-list">
          <List>
             <ListItem 
-              disabled={this.props.update.status!=='Failed'}
+              disabled={this.props.deployment.status!=='Failed'}
               primaryText="Status"
-              secondaryText={<p>{status}{this.props.update.status!=='Failed' ? '' : ' - Click to retry'}</p>}
-              leftIcon={<FontIcon className={this.props.update.status==="inprogress" ? "hidden" : "material-icons error-icon"}>{this.props.update.status !=='Failed' ? 'check_circle' : 'error'}</FontIcon>} 
-              onTouchTap={this._retryUpdate} />
+              secondaryText={<p>{status}{this.props.deployment.status!=='Failed' ? '' : ' - Click to retry'}</p>}
+              leftIcon={<FontIcon className={this.props.deployment.status==="inprogress" ? "hidden" : "material-icons error-icon"}>{this.props.deployment.status !=='Failed' ? 'check_circle' : 'error'}</FontIcon>} 
+              onTouchTap={this._retryDeployment} />
           </List>
         </div>
-        <div className={this.props.update.status==='Complete' ? "hidden" : null} style={{display:"inline-block", width:"200px"}}>
+        <div className={this.props.deployment.status==='Complete' ? "hidden" : null} style={{display:"inline-block", width:"200px"}}>
           <Checkbox
             label="Show only failures"
-            defaultChecked={this.props.update.status==='Failed'}
+            defaultChecked={this.props.deployment.status==='Failed'}
             checked={this.state.failsOnly}
             onCheck={this._handleCheckbox}
             className={this.state.stats.failure ? null : "hidden"} />
@@ -175,9 +175,9 @@ var Report = React.createClass({
               <TableRow>
                 <TableHeaderColumn tooltip="Device name">Device name</TableHeaderColumn>
                 <TableHeaderColumn tooltip="Device type">Device type</TableHeaderColumn>
-                <TableHeaderColumn tooltip="Target software">Updated to</TableHeaderColumn>
-                <TableHeaderColumn tooltip="Update end time">End time</TableHeaderColumn>
-                <TableHeaderColumn tooltip="Update status">Update status</TableHeaderColumn>
+                <TableHeaderColumn tooltip="Current software">Current software</TableHeaderColumn>
+                <TableHeaderColumn tooltip="Deployment end time">End time</TableHeaderColumn>
+                <TableHeaderColumn tooltip="Deployment status">Deployment status</TableHeaderColumn>
                 <TableHeaderColumn tooltip=""></TableHeaderColumn>
               </TableRow>
             </TableHeader>

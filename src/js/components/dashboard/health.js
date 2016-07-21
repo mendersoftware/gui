@@ -1,37 +1,55 @@
 import React from 'react';
 import { Router, Route, Link } from 'react-router';
-
-// material ui
-var mui = require('material-ui');
+var Loader = require('../common/loader');
 
 var Health = React.createClass({
-  _clickHandle: function(status) {
-    this.props.clickHandle({route:"devices", status:status});
+  _clickHandle: function(route) {
+    this.props.clickHandle(route);
   },
   render: function() {
+    var down = encodeURIComponent("status=not connected");
+    var up = encodeURIComponent("status=connected");
     return (
-      <div className="health">
+      <div className="health margin-bottom-large">
         <div className="dashboard-header">
-          <h2>Devices <span className="dashboard-number">{this.props.health.total}</span></h2>
+          <h2>Device heartbeats</h2>
         </div>
-        <div className="dashboard-container">
-          <div className="hidden">
-            <span className={this.props.health.nogroup ? "number" : "hidden"} style={{marginRight:"0"}}>+</span>
-            <span className="number">{this.props.health.nogroup}</span>
-            <span>Pending</span>
-          </div>
 
-          <div className="health-panel red" onClick={this._clickHandle.bind(null, "down")}>
-            <span className="number">{this.props.health.down}</span>
-            <span>down</span>
+        <div className={this.props.health.total ? null : "hidden" }>
+          <div className={this.props.health.down ? "health-panel red" : "hidden" }>
+            <div className="health-icon down"></div>
+            <div className="health-text">
+              <span className="number">{this.props.health.down}</span>
+              <span>Not connected</span>
+            </div>
+            <Link to={`/devices/${down}`} className="float-right">View devices</Link>
           </div>
-          <div className="health-panel green" onClick={this._clickHandle.bind(null, "up")}>
-            <span className="number">{this.props.health.up}</span>
-            <span>up</span>
+          <div style={{padding: "0 4%"}} className={this.props.health.down ? "hidden" : "margin-bottom margin-top" }>
+            <div className="health-icon healthy">
+              <img src="assets/img/check.png" />
+            </div>
+            <div className="health-text">
+              <span>All {this.props.health.total} of your devices are reporting</span>
+            </div>
+        
+          </div>
+          <div className="health-panel green">
+            <div className="health-icon down"></div>
+            <div className="health-text">
+              <span className="number">{this.props.health.up}</span>
+              <span>Connected</span>
+            </div>
+            <Link to={`/devices/${up}`} className={this.props.health.up ? "float-right" : "hidden" }>View devices</Link>
           </div>
           <div className="clear">
-            <Link to="/devices" className="float-right">Manage devices</Link>
           </div>
+        </div>
+
+        <Loader show={this.props.loading} />
+
+        <div className={(this.props.health.total || this.props.loading) ? "hidden" : "dashboard-placeholder" }>
+          <p>No connected devices yet</p>
+          <img src="assets/img/connected.png" alt="connected" />
         </div>
       </div>
     );

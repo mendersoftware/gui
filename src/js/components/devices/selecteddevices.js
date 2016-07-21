@@ -1,8 +1,10 @@
 import React from 'react';
 import { Router, Link } from 'react-router';
+import Time from 'react-time';
+
 var AppStore = require('../../stores/app-store');
 var AppActions = require('../../actions/app-actions');
-var ScheduleForm = require('../updates/scheduleform');
+var ScheduleForm = require('../deployments/scheduleform');
 
 var mui = require('material-ui');
 var FlatButton = mui.FlatButton;
@@ -66,14 +68,14 @@ var SelectedDevices = React.createClass({
   },
 
   _onScheduleSubmit: function() {
-    var newUpdate = {
-      group: this.state.group,
-      model: this.state.model,
-      start_time: this.state.start_time,
-      end_time: this.state.end_time,
-      image: this.state.image
+    var newDeployment = {
+      devices: [this.props.selected[0].id],
+      name: this.props.selected[0].name,
+      artifact_name: this.state.image.name
     }
-    AppActions.saveSchedule(newUpdate, this.props.selected.length === 1);
+    AppActions.createDeployment(newDeployment, function(uri) {
+      console.log(uri);
+    });
     this.dialogToggle('schedule');
   },
 
@@ -102,13 +104,23 @@ var SelectedDevices = React.createClass({
     }
     this.setState({tagEdit: !this.state.tagEdit});
   },
-
+  _handleAccept: function () {
+    this.props.accept(this.props.selected);
+  },
+  _handleBlock: function () {
+    this.props.block(this.props.selected);
+  },
   render: function() {
    
     var styles = {
       editButton: {
         color: "rgba(0, 0, 0, 0.54)",
         fontSize: "20" 
+      },
+      listStyle: {
+        fontSize: "12px",
+        paddingTop: "10px",
+        paddingBottom: "10px"
       }
     }
 
@@ -132,12 +144,12 @@ var SelectedDevices = React.createClass({
           handleDrag={this.handleDrag}
           delimeters={[9, 13, 188]} />
       );
-     
-      var tags = this.state.tagEdit ? tagInput : this.props.selected[0].tags.join(', ') || '-';
-      var encodedSoftware = encodeURIComponent(this.props.selected[0].software_version); 
+
+      //var tags = this.state.tagEdit ? tagInput : this.props.selected[0].tags.join(', ') || '-';
+      var encodedSoftware = encodeURIComponent(this.props.selected[0].artifact_name); 
       var softwareLink = (
         <div>
-          <Link style={{fontWeight:"500"}} to={`/software/${encodedSoftware}`}>{this.props.selected[0].software_version}</Link>
+          <Link style={{fontWeight:"500"}} to={`/software/${encodedSoftware}`}>{this.props.selected[0].artifact_name}</Link>
         </div>
       )
 
@@ -145,33 +157,58 @@ var SelectedDevices = React.createClass({
         <div>
           <div className="report-list">
             <List>
-              <ListItem disabled={true} primaryText="Name" secondaryText={this.props.selected[0].name} />
+              <ListItem style={styles.listStyle} disabled={true} primaryText="Name" secondaryText={this.props.selected[0].name} />
               <Divider />
-              <ListItem disabled={true} primaryText="Status" secondaryText={this.props.selected[0].status} />
+              <ListItem style={styles.listStyle} disabled={true} primaryText="Device type" secondaryText={this.props.selected[0].device_type} />
               <Divider />
-              <ListItem disabled={true} primaryText="Device type" secondaryText={this.props.selected[0].model} />
+              <ListItem style={styles.listStyle} disabled={true} primaryText="Device serial no." secondaryText={this.props.selected[0].device_serial} />
               <Divider />
-            </List>
-          </div>
-          <div className="report-list">
-            <List>
-              <ListItem disabled={true} primaryText="Software" secondaryText={softwareLink} />
-              <Divider />
-              <ListItem disabled={true} primaryText="Architecture" secondaryText={this.props.selected[0].arch} />
-              <Divider />
-              <ListItem disabled={true} primaryText="Groups" secondaryText={this._getGroupNames(this.props.selected[0].groups).join(', ')} />
+              <ListItem style={styles.listStyle} disabled={true} primaryText="Architecture" secondaryText={this.props.selected[0].arch} />
               <Divider />
             </List>
           </div>
           <div className="report-list">
             <List>
-              <ListItem rightIconButton={editButton} disabled={true} primaryText="Tags" secondaryText={tags} />
+              <ListItem style={styles.listStyle} disabled={true} primaryText="Status" secondaryText={this.props.selected[0].status} />
+              <Divider />
+              <ListItem style={styles.listStyle} className={this.props.unauthorized ? null : "hidden" } disabled={true} primaryText="Last connection request" secondaryText={<Time value={this.props.selected[0].request_time} format="YYYY-MM-DD HH:mm" />} />
+              <ListItem style={styles.listStyle} className={this.props.unauthorized ? "hidden" : null }  disabled={true} primaryText="Last heartbeat" secondaryText={<Time value={this.props.selected[0].last_heartbeat} format="YYYY-MM-DD HH:mm" />} />
+              <Divider />
+              <ListItem style={styles.listStyle} disabled={true} primaryText="IP address" secondaryText={this.props.selected[0].ip_address} />
+              <Divider />
+              <ListItem style={styles.listStyle} disabled={true} primaryText="MAC address" secondaryText={this.props.selected[0].mac_address} />
+              <Divider />
+            </List>
+          </div>
+          <div className={this.props.unauthorized ? "hidden" :"report-list"} >
+            <List>
+              <ListItem style={styles.listStyle} disabled={true} primaryText="Current software" secondaryText={softwareLink} />
+              <Divider />
+              <ListItem style={styles.listStyle} disabled={true} primaryText="Groups" secondaryText={this._getGroupNames(this.props.selected[0].groups).join(', ')} />
               <Divider />
               <ListItem
-                primaryText="Deploy update"
-                secondaryText="Click to update this device"
+                style={styles.listStyle}
+                primaryText="Create a deployment"
+                secondaryText="Deploy an update to this device only"
                 onClick={this._clickListItem}
-                leftIcon={<FontIcon className="material-icons">schedule</FontIcon>} />
+                leftIcon={<FontIcon style={{marginTop:6, marginBottom:6}} className="material-icons">update</FontIcon>} />
+              <Divider />
+            </List>
+          </div>
+
+          <div className={this.props.unauthorized ? "report-list" :"hidden" } >
+            <List>
+              <ListItem
+                style={styles.listStyle}
+                onClick={this._handleAccept}
+                primaryText="Authorize device"
+                leftIcon={<FontIcon className="material-icons green auth" style={{marginTop:6, marginBottom:6}}>check_circle</FontIcon>} />
+              <Divider />
+              <ListItem
+                style={styles.listStyle}
+                primaryText="Block device"
+                onClick={this._handleBlock}
+                leftIcon={<FontIcon className="material-icons red auth" style={{marginTop:6, marginBottom:6}}>cancel</FontIcon>} />
               <Divider />
             </List>
           </div>
@@ -192,28 +229,28 @@ var SelectedDevices = React.createClass({
           onClick={this.dialogToggle.bind(null, 'schedule')} />
       </div>,
       <RaisedButton
-        label="Deploy update"
+        label="Create deployment"
         primary={true}
         onClick={this._onScheduleSubmit}
         ref="save" />
     ];
 
     return (
-      <div>
+      <div className="device-info">
      
-        <h3 className="margin-bottom-none">Device details</h3>
+        <h4 className="margin-bottom-none">Device details</h4>
         {deviceInfo}
    
         <Dialog
           open={this.state.schedule}
-          title='Deploy an update'
+          title='Create a deployment'
           actions={scheduleActions}
           autoDetectWindowHeight={true}
           autoScrollBodyContent={true}
           bodyStyle={{paddingTop:"0"}}
           contentStyle={{overflow:"hidden", boxShadow:"0 14px 45px rgba(0, 0, 0, 0.25), 0 10px 18px rgba(0, 0, 0, 0.22)"}}
           >
-          <ScheduleForm images={this.props.images} device={this.props.selected[0]} updateSchedule={this._updateParams} groups={this.props.groups} />
+          <ScheduleForm images={this.props.images} device={this.props.selected[0]} deploymentSchedule={this._updateParams} groups={this.props.groups} />
 
         </Dialog>
 

@@ -1,17 +1,25 @@
 import React from 'react';
 var AppStore = require('../../stores/app-store');
+var LocalStore = require('../../stores/local-store');
 var AppActions = require('../../actions/app-actions');
 var Health = require('./health');
 var Activity = require('./activity');
-var Updates = require('./updates');
+var Deployments = require('./deployments');
 import { Router, Route, Link } from 'react-router';
+
+// material ui
+var mui = require('material-ui');
+var RaisedButton = mui.RaisedButton;
 
 function getState() {
   return {
-    progress: AppStore.getProgressUpdates(new Date()),
+    progress: AppStore.getProgressDeployments(new Date()),
     health: AppStore.getHealth(),
-    recent: AppStore.getRecentUpdates(new Date()),
+    unauthorized: AppStore.getUnauthorized(),
+    devices: AppStore.getAllDevices(),
+    recent: AppStore.getRecentDeployments(new Date()),
     activity: AppStore.getActivity(),
+    hideReview: localStorage.getItem("reviewDevices"),
   }
 }
 
@@ -26,37 +34,65 @@ var Dashboard = React.createClass({
     AppStore.removeChangeListener(this._onChange);
   },
   componentDidMount: function() {
-     AppActions.getUpdates();
+    AppActions.getDeployments(function() {
+      setTimeout(function() {
+        this.setState({doneDepsLoading:true});
+      }.bind(this), 300)
+    }.bind(this));
+    AppActions.getDevices(function() {
+      setTimeout(function() {
+        this.setState({doneDevsLoading:true});
+      }.bind(this), 300)
+    }.bind(this));
   },
   _onChange: function() {
     this.setState(getState());
   },
+  _setStorage: function(key, value) {
+    AppActions.setLocalStorage(key, value);
+  },
   _handleClick: function(params) {
     switch(params.route){
-      case "updates":
+      case "deployments":
         var URIParams = "open="+params.open;
         URIParams = params.id ? URIParams + "&id="+params.id : URIParams;
         URIParams = encodeURIComponent(URIParams);
-        //this.context.router.transitionTo("/updates/:tab/:params/", {tab:0, params:URIParams}, null);
-        this.context.router.push('/updates/0/'+URIParams);
+        //this.context.router.transitionTo("/deployments/:tab/:params/", {tab:0, params:URIParams}, null);
+        this.context.router.push('/deployments/0/'+URIParams);
         break;
       case "devices":
-        var filters = "status="+params.status;
-        filters = encodeURIComponent(filters);
+        var filters = params.status ? encodeURIComponent("status="+params.status) : '';
         //this.context.router.transitionTo("/devices/:groupId/:filters", {groupId:1, filters: filters}, null);
         this.context.router.push('/devices/1/'+filters);
         break;
     }
   },
   render: function() {
+    var unauthorized_str = '';
+    if (this.state.unauthorized.length) {
+      if (this.state.unauthorized.length > 1) {
+        unauthorized_str = 'are ' + this.state.unauthorized.length + ' devices';
+      } else {
+        unauthorized_str = 'is ' + this.state.unauthorized.length + ' device';
+      }
+    }
     return (
-      <div className="contentContainer">
+      <div className="contentContainer dashboard">
         <div>
-          <div className="leftDashboard">
-            <Health clickHandle={this._handleClick} health={this.state.health} />
-            <Updates clickHandle={this._handleClick} progress={this.state.progress} recent={this.state.recent} />
+          <div className={this.state.unauthorized.length && !this.state.hideReview ? "authorize onboard margin-bottom" : "hidden" }>
+            <div className="close" onClick={this._setStorage.bind(null, "reviewDevices", true)}/>
+            <p>There {unauthorized_str} waiting authorization</p>
+            <RaisedButton onClick={this._handleClick.bind(null, {route:"devices"})} primary={true} label="Review details" />
           </div>
-          <Activity activity={this.state.activity} />
+          <div className="leftDashboard">
+            <Deployments loading={!this.state.doneDepsLoading} clickHandle={this._handleClick} progress={this.state.progress} recent={this.state.recent} />
+          </div>
+          <div className="rightDashboard">
+            <div className="right">
+              <Health loading={!this.state.doneDepsLoading}  devices={this.state.devices} clickHandle={this._handleClick} health={this.state.health} />
+              <Activity loading={!this.state.doneActivityLoading}  activity={this.state.activity} />
+            </div>
+          </div>
         </div>
       </div>
     );

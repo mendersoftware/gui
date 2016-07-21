@@ -19,32 +19,32 @@ var Schedule = React.createClass({
   _clickHandle: function() {
     this.props.clickHandle(this.props.route);
   },
-  _clickUpdate: function(e) {
+  _clickDeployment: function(e) {
     console.log(e);
   },
   render: function() {
-    var schedule = this.props.updates.map(function(update, index) {
+    var schedule = this.props.deployments.map(function(deployment, index) {
       if (index<5) {
-        var group = update.group + " (" + update.devices.length + ")";
-        var month = new Date(update.start_time);
+        var group = deployment.group + " (" + deployment.devices.length + ")";
+        var month = new Date(deployment.start_time);
         month = monthNames[month.getMonth()];
-        var last = (this.props.updates.length === index+1) || index===4;
+        var last = (this.props.deployments.length === index+1) || index===4;
         return (
           <div key={index}>
             <ListItem
               disabled={true}
-              primaryText={update.software_version}
+              primaryText={deployment.artifact_name}
               secondaryText={group}
-              onClick={this._clickUpdate}
-              leftIcon={<div style={{width:"auto", height:"auto"}}><span className="day"><Time value={update.start_time} format="DD" /></span><span className="month">{month}</span></div>}
-              rightIcon={<Time style={{top:"18", right:"22"}} value={update.start_time} format="HH:mm" />} />
+              onClick={this._clickDeployment}
+              leftIcon={<div style={{width:"auto", height:"auto"}}><span className="day"><Time value={deployment.start_time} format="DD" /></span><span className="month">{month}</span></div>}
+              rightIcon={<Time style={{top:"18", right:"22"}} value={deployment.start_time} format="HH:mm" />} />
             <ListDivider inset={true} className={last ? "hidden" : null} />
           </div>
         )
       }
     }, this);
     return (
-      <div className="updates-container">
+      <div className="deployments-container">
         <div className="dashboard-header subsection">
           <h3>Upcoming<span className="dashboard-number">{schedule.length}</span></h3>
         </div>
@@ -53,10 +53,10 @@ var Schedule = React.createClass({
             {schedule}
           </List>
           <div className={schedule.length ? 'hidden' : null}>
-            <p className="italic">No updates scheduled</p>
+            <p className="italic">No deployments scheduled</p>
           </div>
           <div>
-            <Link to="/updates/schedule" className="float-right">View schedule</Link>
+            <Link to="/deployments/schedule" className="float-right">View schedule</Link>
           </div>
         </div>
       </div>

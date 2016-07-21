@@ -1,9 +1,12 @@
 var AppConstants = require('../constants/app-constants');
 var AppDispatcher = require('../dispatchers/app-dispatcher');
-var Api = require('../api/api');
-var UpdatesApi = require('../api/updates-api');
-var apiUrl = "http://private-9f43d-michaelatmender.apiary-mock.com/api/0.0.1/";
-var updatesApiUrl = "http://private-9f43d-michaelatmender.apiary-mock.com/api/0.0.1/";
+var ImagesApi = require('../api/images-api');
+var DeploymentsApi = require('../api/deployments-api');
+var DevicesApi = require('../api/devices-api');
+var rootUrl = "https://192.168.99.100";
+var apiUrl = rootUrl + ":9080/api/integrations/0.1"
+var deploymentsApiUrl = apiUrl + "/deployments";
+var devicesApiUrl = apiUrl + "/admission";
 
 
 var AppActions = {
@@ -46,31 +49,84 @@ var AppActions = {
   },
 
 
-  /* API */
+  /* General */
+  setSnackbar: function(message, duration) {
+    AppDispatcher.handleViewAction({
+      actionType: AppConstants.SET_SNACKBAR,
+      message: message,
+      duration: duration
+    })
+  },
 
-  getImages: function() {
-    Api
-      .get(apiUrl+'images')
+
+  /* Devices */
+  getDevices: function (callback) {
+    DevicesApi
+      .get(devicesApiUrl+"/devices")
+      .then(function(devices) {
+        callback();
+        AppDispatcher.handleViewAction({
+          actionType: AppConstants.RECEIVE_DEVICES,
+          devices: devices
+        });
+      })
+      .catch(function(err) {
+        callback(err);
+      })
+  },
+
+  acceptDevice: function (device, callback) {
+    DevicesApi
+      .put(devicesApiUrl+"/devices/"+device.id +"/status", {"status":"accepted"})
+      .then(function(data) {
+        callback();
+      })
+      .catch(function(err) {
+        callback(err);
+      });;
+  },
+  rejectDevice: function (device, callback) {
+    DevicesApi
+      .put(devicesApiUrl+"/devices/"+device.id +"/status", {"status":"rejected"})
+      .then(function(data) {
+        callback(data);
+      })
+      .catch(function(err) {
+        callback(err);
+      });
+  },
+
+
+
+
+  /* Images */
+  getImages: function(callback) {
+    ImagesApi
+      .get(deploymentsApiUrl+'/images')
       .then(function(images) {
+        callback();
         AppDispatcher.handleViewAction({
           actionType: AppConstants.RECEIVE_IMAGES,
           images: images
         });
-      });
+      })
+      .catch(function(err) {
+        callback(err);
+      })
   },
 
   uploadImage: function(meta, callback) {
-    Api
-      .post(apiUrl+'images', meta)
+    ImagesApi
+      .post(deploymentsApiUrl+'/images', meta)
       .then(function(data) {
         // inserted image meta data, got ID in return 
-        callback(data.id);
+        callback(data.location);
       });
   },
 
-  getUploadUri: function(id, callback) {
-    Api
-      .get(apiUrl + 'images/' + id + "/upload?expire=60")
+  getUploadUri: function(id_url, callback) {
+    ImagesApi
+      .get(id_url + "/upload?expire=60")
       .then(function(data) {
         var uri = data.uri;
         callback(uri);
@@ -79,7 +135,7 @@ var AppActions = {
   
   doFileUpload: function(uri, image, callback) {
     // got upload uri, finish uploading file
-    Api
+    ImagesApi
       .putImage(uri, image)
       .then(function(data) {
         callback();
@@ -87,9 +143,8 @@ var AppActions = {
   },
 
   editImage: function(image, callback) {
-    var data = {description: image.description, name: image.name, model: image.model, image: image.tags};
-    Api
-      .putJSON(apiUrl + "images/" + image.id, data)
+    ImagesApi
+      .putJSON(deploymentsApiUrl + "/images/" + image.id, image)
       .then(function(res) {
         callback();
       });
@@ -98,49 +153,52 @@ var AppActions = {
 
 
 
-  /* API */
-  getUpdates: function() {
-    UpdatesApi
-      .get(updatesApiUrl+'deployments')
-      .then(function(updates) {
+  /*Deployments */
+  getDeployments: function(callback) {
+    DeploymentsApi
+      .get(deploymentsApiUrl+'/deployments')
+      .then(function(deployments) {
+        callback();
         AppDispatcher.handleViewAction({
-          actionType: AppConstants.RECEIVE_UPDATES,
-          updates: updates
+          actionType: AppConstants.RECEIVE_DEPLOYMENTS,
+          deployments: deployments
         });
-      });
+      })
+      .catch(function(err) {
+        callback(err);
+      })
   },
-  createUpdate: function(update) {
-    UpdatesApi
-    .post(updatesApiUrl+'deployments', update)
-      .then(function(data) {
-        // inserted update data,
-        callback(data);
-      });
+  createDeployment: function(deployment, callback) {
+    DeploymentsApi
+    .post(deploymentsApiUrl+'/deployments', deployment)
+    .then(function(data) {
+      callback(deploymentsApiUrl + data.location);
+    });
   },
-  getSingleUpdate: function(id, callback) {
-    UpdatesApi
-      .get(updatesApiUrl+'deployments/'+id)
-      .then(function(data) {
-        callback(data);
-      });
-  },
-  getSingleUpdateStats: function(id, callback) {
-    UpdatesApi
-      .get(updatesApiUrl+'deployments/'+id +'/statistics')
+  getSingleDeployment: function(id, callback) {
+    DeploymentsApi
+      .get(deploymentsApiUrl+'/deployments/'+id)
       .then(function(data) {
         callback(data);
       });
   },
-  getSingleUpdateDevices: function(id, callback) {
-    UpdatesApi
-      .get(updatesApiUrl+'deployments/'+id +'/devices')
+  getSingleDeploymentStats: function(id, callback) {
+    DeploymentsApi
+      .get(deploymentsApiUrl+'/deployments/'+id +'/statistics')
+      .then(function(data) {
+        callback(data);
+      });
+  },
+  getSingleDeploymentDevices: function(id, callback) {
+    DeploymentsApi
+      .get(deploymentsApiUrl+'/deployments/'+id +'/devices')
       .then(function(data) {
         callback(data);
       });
   },
   getDeviceLog: function(deploymentId, deviceId, callback) {
-    UpdatesApi
-      .getText(updatesApiUrl+'deployments/'+deploymentId +'/devices/'+deviceId +"/log")
+    DeploymentsApi
+      .getText(deploymentsApiUrl+'/deployments/'+deploymentId +'/devices/'+deviceId +"/log")
       .then(function(data) {
         callback(data);
       });
@@ -158,12 +216,10 @@ var AppActions = {
 
 
 
-
-
-  removeUpdate: function(updateId) {
+  removeDeployment: function(deploymentId) {
     AppDispatcher.handleViewAction({
-      actionType: AppConstants.REMOVE_UPDATE,
-      id: updateId
+      actionType: AppConstants.REMOVE_DEPLOYMENT,
+      id: deploymentId
     })
   },
 
@@ -190,6 +246,15 @@ var AppActions = {
       direction: direction 
     })
   },
+
+
+setLocalStorage: function(key, value) {
+  AppDispatcher.handleViewAction({
+      actionType: AppConstants.SET_LOCAL_STORAGE,
+      key: key,
+      value: value
+    })
+  }
 }
 
 module.exports = AppActions;

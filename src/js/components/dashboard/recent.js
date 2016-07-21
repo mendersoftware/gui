@@ -1,8 +1,9 @@
 import React from 'react';
-var GroupDevices = require('../updates/groupdevices');
-
+var GroupDevices = require('../deployments/groupdevices');
+var RecentStats = require('./recentstats');
 var Time = require('react-time');
 var AppActions = require('../../actions/app-actions');
+var Loader = require('../common/loader');
 
 import { Router, Route, Link } from 'react-router';
 
@@ -22,7 +23,7 @@ var Recent = React.createClass({
   _clickHandle: function(id) {
     var params = {};
     params.id = id;
-    params.route="updates";
+    params.route="deployments";
     params.open=true;
     this.props.clickHandle(params);
   },
@@ -30,50 +31,46 @@ var Recent = React.createClass({
     return date.replace(' ','T').replace(/ /g, '').replace('UTC','');
   },
   render: function() {
-    var recent = this.props.updates.map(function(update, index) {
+    var recent = this.props.deployments.map(function(deployment, index) {
       if (index<5) {
 
-        var group = (
-            <span className="progress-group">
-              <span>{update.name} </span>(<GroupDevices update={update.id} />)
-            </span>
-        );
-        var last = (this.props.updates.length === index+1) || index===4;
-        var status = update.status === "Failed" ? "warning" : "check";
+        var last = (this.props.deployments.length === index+1) || index===4;
+        var status = deployment.status === "Failed" ? "warning" : "check";
         var icon = (
           <FontIcon className="material-icons">
             {status}
           </FontIcon>
         );
         return (
-          <div key={index} className={status==="warning" ? "fail" : null}>
-            <ListItem
-              disabled={false}
-              primaryText={update.version}
-              secondaryText={group}
-              onClick={this._clickHandle.bind(null, update.id)}
-              leftIcon={icon}
-              rightIcon={<Time style={{float:"right", position:"initial", width:"auto", marginRight:"-56", whiteSpace:"nowrap", fontSize:"14"}} value={this._formatTime(update.finished)} format="YYYY-MM-DD HH:mm" />} />
-            <Divider inset={true} className={last ? "hidden" : null} />
+          <div onClick={this._clickHandle.bind(null, deployment.id)} className="deployment" key={index}>
+            <div className="deploymentInfo">
+              <div><div className="progressLabel">Updating to:</div>{deployment.artifact_name}</div>
+              <div><div className="progressLabel">Device group:</div><span className="capitalized">{deployment.name}</span></div>
+              <div><div className="progressLabel">Finished:</div><Time className="progressTime" value={this._formatTime(deployment.finished)} format="YYYY-MM-DD HH:mm" /></div>
+            </div>
+            <RecentStats id={deployment.id} />
           </div>
         )
       }
     }, this);
     return (
-      <div className="updates-container">
-        <div className="dashboard-header subsection">
-          <h3>Recent<span className="dashboard-number">{recent.length}</span></h3>
-        </div>
-        <div>
-          <List>
-            {recent}
-          </List>
-          <div className={recent.length ? 'hidden' : null}>
-            <p className="italic">No recent updates</p>
+      <div>
+        <div className="deployments-container">
+          <div className="dashboard-header">
+            <h2>Recent deployments</h2>
           </div>
-          <div>
-            <Link to="/updates" className="float-right">All updates</Link>
-          </div>
+          <div className={this.props.deployments.length ? null : "hidden" }>
+            <div className="block">
+              {recent}
+            </div>
+            <Link to="/deployments" className="float-right">All deployments</Link>
+          </div> 
+          
+          <Loader show={this.props.loading} />
+          <div className={(this.props.deployments.length || this.props.loading) ? "hidden" : "dashboard-placeholder" }>
+            <p>View the results of recent deployments here</p>
+            <img src="assets/img/history.png" alt="recent" />
+          </div>  
         </div>
       </div>
     );

@@ -28,8 +28,8 @@ var UploadForm = React.createClass({
       <form>
 
         <TextField
-          hintText="Identifier"
-          floatingLabelText="Identifier" 
+          hintText="Name"
+          floatingLabelText="Name" 
           onChange={this._handleFieldChange.bind(null, 'software')}
           errorStyle={{color: "rgb(171, 16, 0)"}}/>
 
@@ -37,8 +37,8 @@ var UploadForm = React.createClass({
 
         <TextField
           value="Acme Model 1"
-          floatingLabelText="Model compatibility"
-          onChange={this._handleFieldChange.bind(null, 'model')}
+          floatingLabelText="Device compatibility"
+          onChange={this._handleFieldChange.bind(null, 'device_type')}
           errorStyle={{color: "rgb(171, 16, 0)"}} />
 
         <TextField

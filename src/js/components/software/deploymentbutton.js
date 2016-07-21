@@ -4,12 +4,12 @@ import React from 'react';
 var mui = require('material-ui');
 var RaisedButton = mui.RaisedButton;
 
-var UpdateButton = React.createClass({
+var DeploymentButton = React.createClass({
   render: function() {
     return (
-      <RaisedButton label="Deploy update "/>
+      <RaisedButton label="Create deployment"/>
     );
   }
 });
 
-module.exports = UpdateButton;
+module.exports = DeploymentButton;
