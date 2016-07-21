@@ -80898,95 +80898,124 @@ var SelectedDevices = _react2.default.createClass({
         )
       );
 
-      var deviceInfo = _react2.default.createElement(
-        'div',
-        null,
-        _react2.default.createElement(
+      var deviceIdentity = [];
+      for (var k in this.props.selected[0].attributes) {
+        deviceIdentity.push(_react2.default.createElement(
           'div',
-          { className: 'report-list' },
-          _react2.default.createElement(
-            List,
-            null,
-            _react2.default.createElement(ListItem, { style: styles.listStyle, disabled: true, primaryText: 'Name', secondaryText: this.props.selected[0].name }),
-            _react2.default.createElement(Divider, null),
-            _react2.default.createElement(ListItem, { style: styles.listStyle, disabled: true, primaryText: 'Device type', secondaryText: this.props.selected[0].device_type }),
-            _react2.default.createElement(Divider, null),
-            _react2.default.createElement(ListItem, { style: styles.listStyle, disabled: true, primaryText: 'Device serial no.', secondaryText: this.props.selected[0].device_serial }),
-            _react2.default.createElement(Divider, null),
-            _react2.default.createElement(ListItem, { style: styles.listStyle, disabled: true, primaryText: 'Architecture', secondaryText: this.props.selected[0].arch }),
-            _react2.default.createElement(Divider, null)
-          )
-        ),
-        _react2.default.createElement(
+          null,
+          _react2.default.createElement(ListItem, { style: styles.listStyle, disabled: true, primaryText: k, secondaryText: this.props.selected[0].attributes[k] }),
+          _react2.default.createElement(Divider, null)
+        ));
+      };
+
+      var deviceInfo;
+
+      if (this.props.unauthorized) {
+        deviceInfo = _react2.default.createElement(
           'div',
-          { className: 'report-list' },
+          null,
           _react2.default.createElement(
-            List,
-            null,
-            _react2.default.createElement(ListItem, { style: styles.listStyle, disabled: true, primaryText: 'Status', secondaryText: this.props.selected[0].status }),
-            _react2.default.createElement(Divider, null),
-            _react2.default.createElement(ListItem, { style: styles.listStyle, className: this.props.unauthorized ? null : "hidden", disabled: true, primaryText: 'Last connection request', secondaryText: _react2.default.createElement(_reactTime2.default, { value: this.props.selected[0].request_time, format: 'YYYY-MM-DD HH:mm' }) }),
-            _react2.default.createElement(ListItem, { style: styles.listStyle, className: this.props.unauthorized ? "hidden" : null, disabled: true, primaryText: 'Last heartbeat', secondaryText: _react2.default.createElement(_reactTime2.default, { value: this.props.selected[0].last_heartbeat, format: 'YYYY-MM-DD HH:mm' }) }),
-            _react2.default.createElement(Divider, null),
-            _react2.default.createElement(ListItem, { style: styles.listStyle, disabled: true, primaryText: 'IP address', secondaryText: this.props.selected[0].ip_address }),
-            _react2.default.createElement(Divider, null),
-            _react2.default.createElement(ListItem, { style: styles.listStyle, disabled: true, primaryText: 'MAC address', secondaryText: this.props.selected[0].mac_address }),
-            _react2.default.createElement(Divider, null)
+            'div',
+            { className: 'report-list' },
+            _react2.default.createElement(
+              List,
+              null,
+              deviceIdentity
+            )
+          ),
+          _react2.default.createElement(
+            'div',
+            { className: 'report-list' },
+            _react2.default.createElement(
+              List,
+              null,
+              _react2.default.createElement(ListItem, {
+                style: styles.listStyle,
+                onClick: this._handleAccept,
+                primaryText: 'Authorize device',
+                leftIcon: _react2.default.createElement(
+                  FontIcon,
+                  { className: 'material-icons green auth', style: { marginTop: 6, marginBottom: 6 } },
+                  'check_circle'
+                ) }),
+              _react2.default.createElement(Divider, null),
+              _react2.default.createElement(ListItem, {
+                style: styles.listStyle,
+                primaryText: 'Block device',
+                onClick: this._handleBlock,
+                leftIcon: _react2.default.createElement(
+                  FontIcon,
+                  { className: 'material-icons red auth', style: { marginTop: 6, marginBottom: 6 } },
+                  'cancel'
+                ) }),
+              _react2.default.createElement(Divider, null)
+            )
           )
-        ),
-        _react2.default.createElement(
+        );
+      } else {
+
+        deviceInfo = _react2.default.createElement(
           'div',
-          { className: this.props.unauthorized ? "hidden" : "report-list" },
+          null,
           _react2.default.createElement(
-            List,
-            null,
-            _react2.default.createElement(ListItem, { style: styles.listStyle, disabled: true, primaryText: 'Current software', secondaryText: softwareLink }),
-            _react2.default.createElement(Divider, null),
-            _react2.default.createElement(ListItem, { style: styles.listStyle, disabled: true, primaryText: 'Groups', secondaryText: this._getGroupNames(this.props.selected[0].groups).join(', ') }),
-            _react2.default.createElement(Divider, null),
-            _react2.default.createElement(ListItem, {
-              style: styles.listStyle,
-              primaryText: 'Create a deployment',
-              secondaryText: 'Deploy an update to this device only',
-              onClick: this._clickListItem,
-              leftIcon: _react2.default.createElement(
-                FontIcon,
-                { style: { marginTop: 6, marginBottom: 6 }, className: 'material-icons' },
-                'update'
-              ) }),
-            _react2.default.createElement(Divider, null)
-          )
-        ),
-        _react2.default.createElement(
-          'div',
-          { className: this.props.unauthorized ? "report-list" : "hidden" },
+            'div',
+            { className: 'report-list' },
+            _react2.default.createElement(
+              List,
+              null,
+              _react2.default.createElement(ListItem, { style: styles.listStyle, disabled: true, primaryText: 'Name', secondaryText: this.props.selected[0].name }),
+              _react2.default.createElement(Divider, null),
+              _react2.default.createElement(ListItem, { style: styles.listStyle, disabled: true, primaryText: 'Device type', secondaryText: this.props.selected[0].device_type }),
+              _react2.default.createElement(Divider, null),
+              _react2.default.createElement(ListItem, { style: styles.listStyle, disabled: true, primaryText: 'Device serial no.', secondaryText: this.props.selected[0].device_serial }),
+              _react2.default.createElement(Divider, null),
+              _react2.default.createElement(ListItem, { style: styles.listStyle, disabled: true, primaryText: 'Architecture', secondaryText: this.props.selected[0].arch }),
+              _react2.default.createElement(Divider, null)
+            )
+          ),
           _react2.default.createElement(
-            List,
-            null,
-            _react2.default.createElement(ListItem, {
-              style: styles.listStyle,
-              onClick: this._handleAccept,
-              primaryText: 'Authorize device',
-              leftIcon: _react2.default.createElement(
-                FontIcon,
-                { className: 'material-icons green auth', style: { marginTop: 6, marginBottom: 6 } },
-                'check_circle'
-              ) }),
-            _react2.default.createElement(Divider, null),
-            _react2.default.createElement(ListItem, {
-              style: styles.listStyle,
-              primaryText: 'Block device',
-              onClick: this._handleBlock,
-              leftIcon: _react2.default.createElement(
-                FontIcon,
-                { className: 'material-icons red auth', style: { marginTop: 6, marginBottom: 6 } },
-                'cancel'
-              ) }),
-            _react2.default.createElement(Divider, null)
+            'div',
+            { className: 'report-list' },
+            _react2.default.createElement(
+              List,
+              null,
+              _react2.default.createElement(ListItem, { style: styles.listStyle, disabled: true, primaryText: 'Status', secondaryText: this.props.selected[0].status }),
+              _react2.default.createElement(Divider, null),
+              _react2.default.createElement(ListItem, { style: styles.listStyle, disabled: true, primaryText: 'Last heartbeat', secondaryText: _react2.default.createElement(_reactTime2.default, { value: this.props.selected[0].last_heartbeat, format: 'YYYY-MM-DD HH:mm' }) }),
+              _react2.default.createElement(Divider, null),
+              _react2.default.createElement(ListItem, { style: styles.listStyle, disabled: true, primaryText: 'IP address', secondaryText: this.props.selected[0].ip_address }),
+              _react2.default.createElement(Divider, null),
+              _react2.default.createElement(ListItem, { style: styles.listStyle, disabled: true, primaryText: 'MAC address', secondaryText: this.props.selected[0].mac_address }),
+              _react2.default.createElement(Divider, null)
+            )
+          ),
+          _react2.default.createElement(
+            'div',
+            { className: 'report-list' },
+            _react2.default.createElement(
+              List,
+              null,
+              _react2.default.createElement(ListItem, { style: styles.listStyle, disabled: true, primaryText: 'Current software', secondaryText: softwareLink }),
+              _react2.default.createElement(Divider, null),
+              _react2.default.createElement(ListItem, { style: styles.listStyle, disabled: true, primaryText: 'Groups', secondaryText: this._getGroupNames(this.props.selected[0].groups).join(', ') }),
+              _react2.default.createElement(Divider, null),
+              _react2.default.createElement(ListItem, {
+                style: styles.listStyle,
+                primaryText: 'Create a deployment',
+                secondaryText: 'Deploy an update to this device only',
+                onClick: this._clickListItem,
+                leftIcon: _react2.default.createElement(
+                  FontIcon,
+                  { style: { marginTop: 6, marginBottom: 6 }, className: 'material-icons' },
+                  'update'
+                ) }),
+              _react2.default.createElement(Divider, null)
+            )
           )
-        )
-      );
+        );
+      }
     }
+
     var devices = this.props.selected.map(function (device) {
       return _react2.default.createElement(
         'p',
