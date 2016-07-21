@@ -34,19 +34,13 @@ var Api = {
     return new Promise(function (resolve, reject) {
       request
         .put(url)
-        .withCredentials()
         .set('Content-Type', 'application/json')
         .send(data)
         .end(function (err, res) {
           if (err || !res.ok) {
-            console.log(err);
             reject();
           } else {
-            var responsetext = "";
-            if (res.text) {
-              responsetext = JSON.parse(res.text);
-            }
-            resolve(responsetext);
+            resolve(res.body);
           }
         });
     });

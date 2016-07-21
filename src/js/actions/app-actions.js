@@ -79,20 +79,20 @@ var AppActions = {
     DevicesApi
       .put(devicesApiUrl+"/devices/"+device.id +"/status", {"status":"accepted"})
       .then(function(data) {
-        callback();
+        callback.success(data);
       })
       .catch(function(err) {
-        callback(err);
-      });;
+        callback.error(err);
+      });
   },
   rejectDevice: function (device, callback) {
     DevicesApi
       .put(devicesApiUrl+"/devices/"+device.id +"/status", {"status":"rejected"})
       .then(function(data) {
-        callback(data);
+        callback.success(data);
       })
       .catch(function(err) {
-        callback(err);
+        callback.error(err);
       });
   },
 

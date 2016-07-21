@@ -53,11 +53,7 @@ var Devices = React.createClass({
   },
   componentDidMount: function() {
     AppActions.getImages();
-    AppActions.getDevices(function(devices){
-      setTimeout(function() {
-        this.setState({doneLoading:true});
-      }.bind(this), 300)
-    }.bind(this));
+    this._refreshDevices();
   },
   componentWillUnmount: function () {
     AppStore.removeChangeListener(this._onChange);
@@ -67,7 +63,6 @@ var Devices = React.createClass({
     AppActions.setLocalStorage("hideTODO", true);
   },
   _onChange: function() {
-
     if (!this.state.groupTODO) {
       if (this.state.groups[1]) {
         if (this.state.groups[1].devices.length===2) {
@@ -78,8 +73,14 @@ var Devices = React.createClass({
         }
       }
     }
-
     this.setState(this.getInitialState());
+  },
+  _refreshDevices() {
+    AppActions.getDevices(function(devices){
+      setTimeout(function() {
+        this.setState({doneLoading:true});
+      }.bind(this), 300)
+    }.bind(this));
   },
   _updateFilters: function(filters) {
     AppActions.updateFilters(filters);
@@ -116,7 +117,7 @@ var Devices = React.createClass({
             </div>
           </div>  
           <div className={this.state.unauthorized.length ? null : "hidden"}>
-            <Unauthorized unauthorized={this.state.unauthorized} />
+            <Unauthorized refresh={this._refreshDevices} unauthorized={this.state.unauthorized} />
           </div>
           <DeviceList loading={!this.state.doneLoading} filters={this.state.filters} attributes={this.state.attributes} onFilterChange={this._updateFilters} images={this.state.images} selectedDevices={this.state.selectedDevices} groups={this.state.groups} devices={this.state.devices} selectedGroup={this.state.selectedGroup} />
         </div>

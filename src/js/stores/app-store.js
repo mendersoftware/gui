@@ -11,7 +11,7 @@ var _currentDevices = [];
 var _selectedDevices = [];
 var _filters = [{key:'', value:''}];
 var _attributes = {
-  name: "Name",
+  id: "Name",
   device_type: "Device type",
   arch: "Architecture",
   status: "Status",
@@ -233,8 +233,6 @@ function _addGroup(group, idx) {
     _groups.splice(idx, 0, group);
   }
 }
-
-
 
 function _getUnauthorized() {
   return _alldevices.pending || [];
@@ -495,6 +493,10 @@ function setDevices(devices) {
     });
     _alldevicelist = devices;
     _alldevices = newDevices;
+    _groups[0].devices = [];
+    _alldevices.accepted.forEach( function(element, index) {
+      _groups[0].devices.push(element.id);
+    });
     _setCurrentDevices(_currentGroup.id);
   }
 }
@@ -699,9 +701,6 @@ var AppStore = assign(EventEmitter.prototype, {
         break;
       case AppConstants.ADD_GROUP:
         _addGroup(payload.action.group, payload.action.index);
-        break;
-      case AppConstants.AUTHORIZE_DEVICES:
-        _authorizeDevices(payload.action.devices);
         break;
       case AppConstants.UPLOAD_IMAGE:
         _uploadImage(payload.action.image);
