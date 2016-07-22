@@ -78958,6 +78958,7 @@ var TextInput = _react2.default.createClass({
     return _react2.default.createElement(TextField, {
       id: this.props.id,
       defaultValue: this.props.defaultValue,
+      value: this.props.value,
       hintText: this.props.hint,
       floatingLabelText: this.props.label,
       onChange: this.props.onchange,
@@ -83963,7 +83964,8 @@ var Repository = _react2.default.createClass({
       image: {
         name: null,
         description: null,
-        yocto_id: null
+        yocto_id: null,
+        device_type: null
       },
       sortCol: "name",
       sortDown: true,
@@ -83987,13 +83989,15 @@ var Repository = _react2.default.createClass({
     var image = {
       name: null,
       description: null,
-      yocto_id: null
+      yocto_id: null,
+      device_type: null
     };
     this.setState({ image: image });
   },
 
   _handleFieldChange: function _handleFieldChange(field, e) {
     newState[field] = e.target.value;
+    this.setState({ image: newState });
   },
   _openSchedule: function _openSchedule(ref, image) {
     this.dialogOpen(ref);
@@ -84098,7 +84102,8 @@ var Repository = _react2.default.createClass({
       this.setState({ popupLabel: "Edit image details" });
       newState = image;
     } else {
-      this.setState({ image: newState, popupLabel: "Upload a new image" });
+      this._resetImageState();
+      this.setState({ popupLabel: "Upload a new image" });
     }
     tags = [];
     for (var i in newState.tags) {
@@ -84111,7 +84116,9 @@ var Repository = _react2.default.createClass({
       this.setState({ tmpFile: event.target.files[0] });
       if (!this.state.image.name) {
         newState.name = event.target.files[0].name;
-        this.refs.nameField.setValue(event.target.files[0].name);
+        var image = this.state.image;
+        image.name = event.target.files[0].name;
+        this.setState({ image: image });
       }
     }
   },
@@ -84167,8 +84174,6 @@ var Repository = _react2.default.createClass({
         }
       });
     }
-
-    var image = this.state.image;
 
     if (this.refs.search) {
       var filters = ['name', 'device_type', 'tags', 'description'];
@@ -84392,13 +84397,6 @@ var Repository = _react2.default.createClass({
           _react2.default.createElement(
             _form2.default,
             null,
-            _react2.default.createElement(_textinput2.default, {
-              defaultValue: image.name,
-              hint: 'Name',
-              label: 'Name',
-              id: 'name',
-              onchange: this._handleFieldChange.bind(null, 'name'),
-              required: true }),
             _react2.default.createElement(_fileinput2.default, {
               name: 'myImage',
               id: 'imageFile',
@@ -84406,8 +84404,15 @@ var Repository = _react2.default.createClass({
               placeholder: 'Upload image',
               onchange: this.changedFile }),
             _react2.default.createElement(_textinput2.default, {
+              value: this.state.image.name,
+              hint: 'Name',
+              label: 'Name',
+              id: 'name',
+              onchange: this._handleFieldChange.bind(null, 'name'),
+              required: true }),
+            _react2.default.createElement(_textinput2.default, {
               id: 'yocto_id',
-              defaultValue: image.yocto_id,
+              value: this.state.image.yocto_id,
               hint: 'Yocto ID',
               label: 'Yocto ID',
               onchange: this._handleFieldChange.bind(null, 'yocto_id'),
@@ -84417,14 +84422,15 @@ var Repository = _react2.default.createClass({
               hint: 'Device type compatibility',
               label: 'Device type compatibility',
               onchange: this._handleFieldChange.bind(null, 'device_type'),
-              required: true }),
+              required: true,
+              value: this.state.image.device_type }),
             _react2.default.createElement(_textinput2.default, {
               id: 'description',
               hint: 'Description',
               label: 'Description',
               multiLine: true,
               onchange: this._handleFieldChange.bind(null, 'description'),
-              defaultValue: image.description })
+              value: this.state.image.description })
           )
         )
       ),
@@ -85794,3 +85800,4 @@ module.exports = {
 };
 
 },{"material-ui/lib/styles/colors":291,"material-ui/lib/styles/spacing":294,"material-ui/lib/utils/color-manipulator":348}]},{},[857]);
+

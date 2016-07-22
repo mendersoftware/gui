@@ -40,7 +40,8 @@ var Repository = React.createClass({
       image: {
         name: null,
         description: null,
-        yocto_id: null
+        yocto_id: null,
+        device_type: null
       },
       sortCol: "name",
       sortDown: true,
@@ -64,13 +65,15 @@ var Repository = React.createClass({
     var image = {
       name: null,
       description: null,
-      yocto_id: null
+      yocto_id: null,
+      device_type: null
     };
     this.setState({image: image});
   },
 
   _handleFieldChange: function(field, e) {
     newState[field] = e.target.value;
+    this.setState({image: newState});
   },
   _openSchedule: function(ref, image) {
     this.dialogOpen(ref);
@@ -177,7 +180,8 @@ var Repository = React.createClass({
       this.setState({popupLabel: "Edit image details"});
       newState = image;
     } else {
-      this.setState({image: newState, popupLabel: "Upload a new image"});
+      this._resetImageState();
+      this.setState({popupLabel: "Upload a new image"});
     }
     tags = [];
     for (var i in newState.tags) {
@@ -190,7 +194,9 @@ var Repository = React.createClass({
       this.setState({tmpFile: event.target.files[0]});
       if (!this.state.image.name) {
         newState.name = event.target.files[0].name;
-        this.refs.nameField.setValue(event.target.files[0].name);
+        var image = this.state.image;
+        image.name = event.target.files[0].name;
+        this.setState({image:image});
       }
     }
   },
@@ -247,8 +253,6 @@ var Repository = React.createClass({
         }
       });
     }
-    
-    var image = this.state.image;
     
     if (this.refs.search) {
       var filters = ['name', 'device_type', 'tags', 'description'];
@@ -370,14 +374,6 @@ var Repository = React.createClass({
           <div style={{height: '400px'}}>
             <Form>
 
-              <TextInput
-                defaultValue={image.name}
-                hint="Name"
-                label="Name"
-                id="name"
-                onchange={this._handleFieldChange.bind(null, 'name')}
-                required={true} />
-
               <FileInput 
                 name="myImage"
                 id="imageFile"
@@ -386,8 +382,16 @@ var Repository = React.createClass({
                 onchange={this.changedFile} />
 
               <TextInput
+                value={this.state.image.name}
+                hint="Name"
+                label="Name"
+                id="name"
+                onchange={this._handleFieldChange.bind(null, 'name')}
+                required={true} />
+
+              <TextInput
                 id="yocto_id"
-                defaultValue={image.yocto_id}
+                value={this.state.image.yocto_id}
                 hint="Yocto ID"
                 label="Yocto ID"
                 onchange={this._handleFieldChange.bind(null, 'yocto_id')}
@@ -398,7 +402,8 @@ var Repository = React.createClass({
                 hint="Device type compatibility"
                 label="Device type compatibility"
                 onchange={this._handleFieldChange.bind(null, 'device_type')}
-                required={true} />
+                required={true}
+                value={this.state.image.device_type} />
 
               <TextInput
                 id="description"
@@ -406,7 +411,7 @@ var Repository = React.createClass({
                 label="Description"
                 multiLine={true}
                 onchange={this._handleFieldChange.bind(null, 'description')}
-                defaultValue={image.description} />
+                value={this.state.image.description} />
 
             </Form>
           </div>

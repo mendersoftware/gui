@@ -16,13 +16,13 @@ var TextInput = React.createClass({
       validations += 'isValue';
     }
     this.setState({validations: validations});
-    
   },
   render: function () {
     return (
       <TextField
         id={this.props.id}
         defaultValue={this.props.defaultValue}
+        value={this.props.value}
         hintText={this.props.hint}
         floatingLabelText={this.props.label} 
         onChange={this.props.onchange}
