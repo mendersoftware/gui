@@ -5895,7 +5895,7 @@ function readState(key) {
   return null;
 }
 }).call(this,require('_process'))
-},{"_process":360,"warning":751}],100:[function(require,module,exports){
+},{"_process":360,"warning":814}],100:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -6027,7 +6027,7 @@ function parsePath(path) {
   };
 }
 }).call(this,require('_process'))
-},{"_process":360,"warning":751}],103:[function(require,module,exports){
+},{"_process":360,"warning":814}],103:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -6498,7 +6498,7 @@ function createHashHistory() {
 exports['default'] = createHashHistory;
 module.exports = exports['default'];
 }).call(this,require('_process'))
-},{"./Actions":97,"./DOMStateStorage":99,"./DOMUtils":100,"./ExecutionEnvironment":101,"./PathUtils":102,"./createDOMHistory":104,"_process":360,"invariant":144,"warning":751}],106:[function(require,module,exports){
+},{"./Actions":97,"./DOMStateStorage":99,"./DOMUtils":100,"./ExecutionEnvironment":101,"./PathUtils":102,"./createDOMHistory":104,"_process":360,"invariant":144,"warning":814}],106:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -6789,7 +6789,7 @@ function createHistory() {
 exports['default'] = createHistory;
 module.exports = exports['default'];
 }).call(this,require('_process'))
-},{"./Actions":97,"./AsyncUtils":98,"./PathUtils":102,"./createLocation":107,"./deprecate":109,"./runTransitionHook":110,"_process":360,"deep-equal":5,"warning":751}],107:[function(require,module,exports){
+},{"./Actions":97,"./AsyncUtils":98,"./PathUtils":102,"./createLocation":107,"./deprecate":109,"./runTransitionHook":110,"_process":360,"deep-equal":5,"warning":814}],107:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -6843,7 +6843,7 @@ function createLocation() {
 exports['default'] = createLocation;
 module.exports = exports['default'];
 }).call(this,require('_process'))
-},{"./Actions":97,"./PathUtils":102,"_process":360,"warning":751}],108:[function(require,module,exports){
+},{"./Actions":97,"./PathUtils":102,"_process":360,"warning":814}],108:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -7000,7 +7000,7 @@ function createMemoryHistory() {
 exports['default'] = createMemoryHistory;
 module.exports = exports['default'];
 }).call(this,require('_process'))
-},{"./Actions":97,"./PathUtils":102,"./createHistory":106,"_process":360,"invariant":144,"warning":751}],109:[function(require,module,exports){
+},{"./Actions":97,"./PathUtils":102,"./createHistory":106,"_process":360,"invariant":144,"warning":814}],109:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -7022,7 +7022,7 @@ function deprecate(fn, message) {
 exports['default'] = deprecate;
 module.exports = exports['default'];
 }).call(this,require('_process'))
-},{"_process":360,"warning":751}],110:[function(require,module,exports){
+},{"_process":360,"warning":814}],110:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -7049,7 +7049,7 @@ function runTransitionHook(hook, location, callback) {
 exports['default'] = runTransitionHook;
 module.exports = exports['default'];
 }).call(this,require('_process'))
-},{"_process":360,"warning":751}],111:[function(require,module,exports){
+},{"_process":360,"warning":814}],111:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -7364,7 +7364,7 @@ function useQueries(createHistory) {
 exports['default'] = useQueries;
 module.exports = exports['default'];
 }).call(this,require('_process'))
-},{"./PathUtils":102,"./deprecate":109,"./runTransitionHook":110,"_process":360,"query-string":361,"warning":751}],113:[function(require,module,exports){
+},{"./PathUtils":102,"./deprecate":109,"./runTransitionHook":110,"_process":360,"query-string":361,"warning":814}],113:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -17157,7 +17157,7 @@ var TextField = _react2.default.createClass({
 
 exports.default = TextField;
 }).call(this,require('_process'))
-},{"../enhanced-textarea":249,"../styles/getMuiTheme":292,"../styles/transitions":301,"../utils/color-manipulator":348,"../utils/deprecatedPropType":351,"../utils/shallow-equal":357,"./TextFieldHint":213,"./TextFieldLabel":214,"./TextFieldUnderline":215,"_process":360,"keycode":145,"react":684,"react-dom":476,"simple-assign":745,"warning":751}],213:[function(require,module,exports){
+},{"../enhanced-textarea":249,"../styles/getMuiTheme":292,"../styles/transitions":301,"../utils/color-manipulator":348,"../utils/deprecatedPropType":351,"../utils/shallow-equal":357,"./TextFieldHint":213,"./TextFieldLabel":214,"./TextFieldUnderline":215,"_process":360,"keycode":145,"react":684,"react-dom":476,"simple-assign":745,"warning":814}],213:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -17864,7 +17864,7 @@ var AppBar = _react2.default.createClass({
 
 exports.default = AppBar;
 }).call(this,require('_process'))
-},{"./icon-button":256,"./paper":272,"./styles/getMuiTheme":292,"./svg-icons/navigation/menu":312,"./utils/prop-types":356,"_process":360,"react":684,"simple-assign":745,"warning":751}],218:[function(require,module,exports){
+},{"./icon-button":256,"./paper":272,"./styles/getMuiTheme":292,"./svg-icons/navigation/menu":312,"./utils/prop-types":356,"_process":360,"react":684,"simple-assign":745,"warning":814}],218:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -18592,7 +18592,7 @@ AutoComplete.Divider = _divider2.default;
 
 exports.default = AutoComplete;
 }).call(this,require('_process'))
-},{"./divider":245,"./menus/menu":266,"./menus/menu-item":265,"./popover/popover":275,"./styles/getMuiTheme":292,"./text-field":327,"./utils/deprecatedPropType":351,"./utils/prop-types":356,"_process":360,"keycode":145,"react":684,"react-dom":476,"simple-assign":745,"warning":751}],220:[function(require,module,exports){
+},{"./divider":245,"./menus/menu":266,"./menus/menu-item":265,"./popover/popover":275,"./styles/getMuiTheme":292,"./text-field":327,"./utils/deprecatedPropType":351,"./utils/prop-types":356,"_process":360,"keycode":145,"react":684,"react-dom":476,"simple-assign":745,"warning":814}],220:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -24341,7 +24341,7 @@ var EnhancedSwitch = _react2.default.createClass({
 
 exports.default = EnhancedSwitch;
 }).call(this,require('_process'))
-},{"./paper":272,"./ripples/focus-ripple":282,"./ripples/touch-ripple":284,"./styles/getMuiTheme":292,"./styles/transitions":301,"_process":360,"keycode":145,"react":684,"react-event-listener":477,"simple-assign":745,"warning":751}],249:[function(require,module,exports){
+},{"./paper":272,"./ripples/focus-ripple":282,"./ripples/touch-ripple":284,"./styles/getMuiTheme":292,"./styles/transitions":301,"_process":360,"keycode":145,"react":684,"react-event-listener":477,"simple-assign":745,"warning":814}],249:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -25279,7 +25279,7 @@ var FloatingActionButton = _react2.default.createClass({
 
 exports.default = FloatingActionButton;
 }).call(this,require('_process'))
-},{"./enhanced-button":247,"./font-icon":252,"./paper":272,"./styles/getMuiTheme":292,"./styles/transitions":301,"./utils/children":347,"./utils/color-manipulator":348,"./utils/prop-types":356,"_process":360,"react":684,"simple-assign":745,"warning":751}],252:[function(require,module,exports){
+},{"./enhanced-button":247,"./font-icon":252,"./paper":272,"./styles/getMuiTheme":292,"./styles/transitions":301,"./utils/children":347,"./utils/color-manipulator":348,"./utils/prop-types":356,"_process":360,"react":684,"simple-assign":745,"warning":814}],252:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -28395,7 +28395,7 @@ var List = _react2.default.createClass({
 
 exports.default = List;
 }).call(this,require('_process'))
-},{"../Subheader":211,"../styles/getMuiTheme":292,"../utils/deprecatedPropType":351,"../utils/prop-types":356,"_process":360,"react":684,"react-addons-pure-render-mixin":363,"simple-assign":745,"warning":751}],263:[function(require,module,exports){
+},{"../Subheader":211,"../styles/getMuiTheme":292,"../utils/deprecatedPropType":351,"../utils/prop-types":356,"_process":360,"react":684,"react-addons-pure-render-mixin":363,"simple-assign":745,"warning":814}],263:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -29841,7 +29841,7 @@ var Menu = _react2.default.createClass({
 
 exports.default = Menu;
 }).call(this,require('_process'))
-},{"../ClickAwayListener":202,"../lists/list":262,"../styles/auto-prefix":288,"../styles/getMuiTheme":292,"../styles/transitions":301,"../utils/deprecatedPropType":351,"../utils/prop-types":356,"_process":360,"keycode":145,"react":684,"react-addons-update":365,"react-dom":476,"simple-assign":745,"warning":751}],267:[function(require,module,exports){
+},{"../ClickAwayListener":202,"../lists/list":262,"../styles/auto-prefix":288,"../styles/getMuiTheme":292,"../styles/transitions":301,"../utils/deprecatedPropType":351,"../utils/prop-types":356,"_process":360,"keycode":145,"react":684,"react-addons-update":365,"react-dom":476,"simple-assign":745,"warning":814}],267:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -29929,7 +29929,7 @@ exports.default = {
   }
 };
 }).call(this,require('_process'))
-},{"_process":360,"react":684,"simple-assign":745,"warning":751}],269:[function(require,module,exports){
+},{"_process":360,"react":684,"simple-assign":745,"warning":814}],269:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -31252,7 +31252,7 @@ var RadioButtonGroup = _react2.default.createClass({
 
 exports.default = RadioButtonGroup;
 }).call(this,require('_process'))
-},{"./radio-button":277,"./styles/getMuiTheme":292,"_process":360,"react":684,"simple-assign":745,"warning":751}],277:[function(require,module,exports){
+},{"./radio-button":277,"./styles/getMuiTheme":292,"_process":360,"react":684,"simple-assign":745,"warning":814}],277:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -34998,7 +34998,7 @@ exports.default = function (customTheme) {
   };
 };
 }).call(this,require('_process'))
-},{"_process":360,"react":684,"warning":751}],296:[function(require,module,exports){
+},{"_process":360,"react":684,"warning":814}],296:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -35044,7 +35044,7 @@ exports.default = {
   }
 };
 }).call(this,require('_process'))
-},{"./getMuiTheme":292,"_process":360,"lodash.merge":152,"react-addons-update":365,"warning":751}],297:[function(require,module,exports){
+},{"./getMuiTheme":292,"_process":360,"lodash.merge":152,"react-addons-update":365,"warning":814}],297:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -35104,7 +35104,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var hasWarnedAboutUserAgent = false;
 }).call(this,require('_process'))
-},{"_process":360,"inline-style-prefixer":128,"warning":751}],298:[function(require,module,exports){
+},{"_process":360,"inline-style-prefixer":128,"warning":814}],298:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -35133,7 +35133,7 @@ function callOnce() {
   }
 }
 }).call(this,require('_process'))
-},{"_process":360,"warning":751}],299:[function(require,module,exports){
+},{"_process":360,"warning":814}],299:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -38254,7 +38254,7 @@ var Tabs = _react2.default.createClass({
 
 exports.default = Tabs;
 }).call(this,require('_process'))
-},{"../ink-bar":258,"../styles/getMuiTheme":292,"./tabTemplate":325,"_process":360,"react":684,"react-dom":476,"simple-assign":745,"warning":751}],327:[function(require,module,exports){
+},{"../ink-bar":258,"../styles/getMuiTheme":292,"./tabTemplate":325,"_process":360,"react":684,"react-dom":476,"simple-assign":745,"warning":814}],327:[function(require,module,exports){
 arguments[4][216][0].apply(exports,arguments)
 },{"./TextField":216,"dup":216}],328:[function(require,module,exports){
 'use strict';
@@ -39874,7 +39874,7 @@ var TimePicker = _react2.default.createClass({
 
 exports.default = TimePicker;
 }).call(this,require('_process'))
-},{"../styles/getMuiTheme":292,"../text-field":327,"../utils/date-time.js":350,"./time-picker-dialog":335,"_process":360,"react":684,"simple-assign":745,"warning":751}],337:[function(require,module,exports){
+},{"../styles/getMuiTheme":292,"../text-field":327,"../utils/date-time.js":350,"./time-picker-dialog":335,"_process":360,"react":684,"simple-assign":745,"warning":814}],337:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -41698,7 +41698,7 @@ exports.default = {
   }
 };
 }).call(this,require('_process'))
-},{"_process":360,"warning":751}],349:[function(require,module,exports){
+},{"_process":360,"warning":814}],349:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -41971,7 +41971,7 @@ exports.default = {
   }
 };
 }).call(this,require('_process'))
-},{"_process":360,"warning":751}],351:[function(require,module,exports){
+},{"_process":360,"warning":814}],351:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -41996,7 +41996,7 @@ function deprecated(propType, explanation) {
   };
 }
 }).call(this,require('_process'))
-},{"_process":360,"warning":751}],352:[function(require,module,exports){
+},{"_process":360,"warning":814}],352:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -42250,7 +42250,7 @@ exports.default = {
   prepareStyles: prepareStyles
 };
 }).call(this,require('_process'))
-},{"_process":360,"simple-assign":745,"warning":751}],359:[function(require,module,exports){
+},{"_process":360,"simple-assign":745,"warning":814}],359:[function(require,module,exports){
 //! moment.js
 //! version : 2.12.0
 //! authors : Tim Wood, Iskren Chernev, Moment.js contributors
@@ -52397,7 +52397,7 @@ function routerWarning(falseToWarn, message) {
 
 module.exports = exports['default'];
 }).call(this,require('_process'))
-},{"_process":360,"warning":751}],511:[function(require,module,exports){
+},{"_process":360,"warning":814}],511:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -76092,6 +76092,2268 @@ function request(RequestConstructor, method, url) {
 module.exports = request;
 
 },{}],751:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _toDate = require('./lib/toDate');
+
+var _toDate2 = _interopRequireDefault(_toDate);
+
+var _toFloat = require('./lib/toFloat');
+
+var _toFloat2 = _interopRequireDefault(_toFloat);
+
+var _toInt = require('./lib/toInt');
+
+var _toInt2 = _interopRequireDefault(_toInt);
+
+var _toBoolean = require('./lib/toBoolean');
+
+var _toBoolean2 = _interopRequireDefault(_toBoolean);
+
+var _equals = require('./lib/equals');
+
+var _equals2 = _interopRequireDefault(_equals);
+
+var _contains = require('./lib/contains');
+
+var _contains2 = _interopRequireDefault(_contains);
+
+var _matches = require('./lib/matches');
+
+var _matches2 = _interopRequireDefault(_matches);
+
+var _isEmail = require('./lib/isEmail');
+
+var _isEmail2 = _interopRequireDefault(_isEmail);
+
+var _isURL = require('./lib/isURL');
+
+var _isURL2 = _interopRequireDefault(_isURL);
+
+var _isMACAddress = require('./lib/isMACAddress');
+
+var _isMACAddress2 = _interopRequireDefault(_isMACAddress);
+
+var _isIP = require('./lib/isIP');
+
+var _isIP2 = _interopRequireDefault(_isIP);
+
+var _isFQDN = require('./lib/isFQDN');
+
+var _isFQDN2 = _interopRequireDefault(_isFQDN);
+
+var _isBoolean = require('./lib/isBoolean');
+
+var _isBoolean2 = _interopRequireDefault(_isBoolean);
+
+var _isAlpha = require('./lib/isAlpha');
+
+var _isAlpha2 = _interopRequireDefault(_isAlpha);
+
+var _isAlphanumeric = require('./lib/isAlphanumeric');
+
+var _isAlphanumeric2 = _interopRequireDefault(_isAlphanumeric);
+
+var _isNumeric = require('./lib/isNumeric');
+
+var _isNumeric2 = _interopRequireDefault(_isNumeric);
+
+var _isLowercase = require('./lib/isLowercase');
+
+var _isLowercase2 = _interopRequireDefault(_isLowercase);
+
+var _isUppercase = require('./lib/isUppercase');
+
+var _isUppercase2 = _interopRequireDefault(_isUppercase);
+
+var _isAscii = require('./lib/isAscii');
+
+var _isAscii2 = _interopRequireDefault(_isAscii);
+
+var _isFullWidth = require('./lib/isFullWidth');
+
+var _isFullWidth2 = _interopRequireDefault(_isFullWidth);
+
+var _isHalfWidth = require('./lib/isHalfWidth');
+
+var _isHalfWidth2 = _interopRequireDefault(_isHalfWidth);
+
+var _isVariableWidth = require('./lib/isVariableWidth');
+
+var _isVariableWidth2 = _interopRequireDefault(_isVariableWidth);
+
+var _isMultibyte = require('./lib/isMultibyte');
+
+var _isMultibyte2 = _interopRequireDefault(_isMultibyte);
+
+var _isSurrogatePair = require('./lib/isSurrogatePair');
+
+var _isSurrogatePair2 = _interopRequireDefault(_isSurrogatePair);
+
+var _isInt = require('./lib/isInt');
+
+var _isInt2 = _interopRequireDefault(_isInt);
+
+var _isFloat = require('./lib/isFloat');
+
+var _isFloat2 = _interopRequireDefault(_isFloat);
+
+var _isDecimal = require('./lib/isDecimal');
+
+var _isDecimal2 = _interopRequireDefault(_isDecimal);
+
+var _isHexadecimal = require('./lib/isHexadecimal');
+
+var _isHexadecimal2 = _interopRequireDefault(_isHexadecimal);
+
+var _isDivisibleBy = require('./lib/isDivisibleBy');
+
+var _isDivisibleBy2 = _interopRequireDefault(_isDivisibleBy);
+
+var _isHexColor = require('./lib/isHexColor');
+
+var _isHexColor2 = _interopRequireDefault(_isHexColor);
+
+var _isJSON = require('./lib/isJSON');
+
+var _isJSON2 = _interopRequireDefault(_isJSON);
+
+var _isNull = require('./lib/isNull');
+
+var _isNull2 = _interopRequireDefault(_isNull);
+
+var _isLength = require('./lib/isLength');
+
+var _isLength2 = _interopRequireDefault(_isLength);
+
+var _isByteLength = require('./lib/isByteLength');
+
+var _isByteLength2 = _interopRequireDefault(_isByteLength);
+
+var _isUUID = require('./lib/isUUID');
+
+var _isUUID2 = _interopRequireDefault(_isUUID);
+
+var _isMongoId = require('./lib/isMongoId');
+
+var _isMongoId2 = _interopRequireDefault(_isMongoId);
+
+var _isDate = require('./lib/isDate');
+
+var _isDate2 = _interopRequireDefault(_isDate);
+
+var _isAfter = require('./lib/isAfter');
+
+var _isAfter2 = _interopRequireDefault(_isAfter);
+
+var _isBefore = require('./lib/isBefore');
+
+var _isBefore2 = _interopRequireDefault(_isBefore);
+
+var _isIn = require('./lib/isIn');
+
+var _isIn2 = _interopRequireDefault(_isIn);
+
+var _isCreditCard = require('./lib/isCreditCard');
+
+var _isCreditCard2 = _interopRequireDefault(_isCreditCard);
+
+var _isISIN = require('./lib/isISIN');
+
+var _isISIN2 = _interopRequireDefault(_isISIN);
+
+var _isISBN = require('./lib/isISBN');
+
+var _isISBN2 = _interopRequireDefault(_isISBN);
+
+var _isMobilePhone = require('./lib/isMobilePhone');
+
+var _isMobilePhone2 = _interopRequireDefault(_isMobilePhone);
+
+var _isCurrency = require('./lib/isCurrency');
+
+var _isCurrency2 = _interopRequireDefault(_isCurrency);
+
+var _isISO = require('./lib/isISO8601');
+
+var _isISO2 = _interopRequireDefault(_isISO);
+
+var _isBase = require('./lib/isBase64');
+
+var _isBase2 = _interopRequireDefault(_isBase);
+
+var _isDataURI = require('./lib/isDataURI');
+
+var _isDataURI2 = _interopRequireDefault(_isDataURI);
+
+var _ltrim = require('./lib/ltrim');
+
+var _ltrim2 = _interopRequireDefault(_ltrim);
+
+var _rtrim = require('./lib/rtrim');
+
+var _rtrim2 = _interopRequireDefault(_rtrim);
+
+var _trim = require('./lib/trim');
+
+var _trim2 = _interopRequireDefault(_trim);
+
+var _escape = require('./lib/escape');
+
+var _escape2 = _interopRequireDefault(_escape);
+
+var _unescape = require('./lib/unescape');
+
+var _unescape2 = _interopRequireDefault(_unescape);
+
+var _stripLow = require('./lib/stripLow');
+
+var _stripLow2 = _interopRequireDefault(_stripLow);
+
+var _whitelist = require('./lib/whitelist');
+
+var _whitelist2 = _interopRequireDefault(_whitelist);
+
+var _blacklist = require('./lib/blacklist');
+
+var _blacklist2 = _interopRequireDefault(_blacklist);
+
+var _isWhitelisted = require('./lib/isWhitelisted');
+
+var _isWhitelisted2 = _interopRequireDefault(_isWhitelisted);
+
+var _normalizeEmail = require('./lib/normalizeEmail');
+
+var _normalizeEmail2 = _interopRequireDefault(_normalizeEmail);
+
+var _toString = require('./lib/util/toString');
+
+var _toString2 = _interopRequireDefault(_toString);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var version = '5.5.0';
+
+var validator = {
+  version: version,
+  toDate: _toDate2.default,
+  toFloat: _toFloat2.default, toInt: _toInt2.default,
+  toBoolean: _toBoolean2.default,
+  equals: _equals2.default, contains: _contains2.default, matches: _matches2.default,
+  isEmail: _isEmail2.default, isURL: _isURL2.default, isMACAddress: _isMACAddress2.default, isIP: _isIP2.default, isFQDN: _isFQDN2.default,
+  isBoolean: _isBoolean2.default,
+  isAlpha: _isAlpha2.default, isAlphanumeric: _isAlphanumeric2.default, isNumeric: _isNumeric2.default, isLowercase: _isLowercase2.default, isUppercase: _isUppercase2.default,
+  isAscii: _isAscii2.default, isFullWidth: _isFullWidth2.default, isHalfWidth: _isHalfWidth2.default, isVariableWidth: _isVariableWidth2.default,
+  isMultibyte: _isMultibyte2.default, isSurrogatePair: _isSurrogatePair2.default,
+  isInt: _isInt2.default, isFloat: _isFloat2.default, isDecimal: _isDecimal2.default, isHexadecimal: _isHexadecimal2.default, isDivisibleBy: _isDivisibleBy2.default,
+  isHexColor: _isHexColor2.default,
+  isJSON: _isJSON2.default,
+  isNull: _isNull2.default,
+  isLength: _isLength2.default, isByteLength: _isByteLength2.default,
+  isUUID: _isUUID2.default, isMongoId: _isMongoId2.default,
+  isDate: _isDate2.default, isAfter: _isAfter2.default, isBefore: _isBefore2.default,
+  isIn: _isIn2.default,
+  isCreditCard: _isCreditCard2.default,
+  isISIN: _isISIN2.default, isISBN: _isISBN2.default,
+  isMobilePhone: _isMobilePhone2.default,
+  isCurrency: _isCurrency2.default,
+  isISO8601: _isISO2.default,
+  isBase64: _isBase2.default, isDataURI: _isDataURI2.default,
+  ltrim: _ltrim2.default, rtrim: _rtrim2.default, trim: _trim2.default,
+  escape: _escape2.default, unescape: _unescape2.default, stripLow: _stripLow2.default,
+  whitelist: _whitelist2.default, blacklist: _blacklist2.default,
+  isWhitelisted: _isWhitelisted2.default,
+  normalizeEmail: _normalizeEmail2.default,
+  toString: _toString2.default
+};
+
+exports.default = validator;
+module.exports = exports['default'];
+},{"./lib/blacklist":753,"./lib/contains":754,"./lib/equals":755,"./lib/escape":756,"./lib/isAfter":757,"./lib/isAlpha":758,"./lib/isAlphanumeric":759,"./lib/isAscii":760,"./lib/isBase64":761,"./lib/isBefore":762,"./lib/isBoolean":763,"./lib/isByteLength":764,"./lib/isCreditCard":765,"./lib/isCurrency":766,"./lib/isDataURI":767,"./lib/isDate":768,"./lib/isDecimal":769,"./lib/isDivisibleBy":770,"./lib/isEmail":771,"./lib/isFQDN":772,"./lib/isFloat":773,"./lib/isFullWidth":774,"./lib/isHalfWidth":775,"./lib/isHexColor":776,"./lib/isHexadecimal":777,"./lib/isIP":778,"./lib/isISBN":779,"./lib/isISIN":780,"./lib/isISO8601":781,"./lib/isIn":782,"./lib/isInt":783,"./lib/isJSON":784,"./lib/isLength":785,"./lib/isLowercase":786,"./lib/isMACAddress":787,"./lib/isMobilePhone":788,"./lib/isMongoId":789,"./lib/isMultibyte":790,"./lib/isNull":791,"./lib/isNumeric":792,"./lib/isSurrogatePair":793,"./lib/isURL":794,"./lib/isUUID":795,"./lib/isUppercase":796,"./lib/isVariableWidth":797,"./lib/isWhitelisted":798,"./lib/ltrim":799,"./lib/matches":800,"./lib/normalizeEmail":801,"./lib/rtrim":802,"./lib/stripLow":803,"./lib/toBoolean":804,"./lib/toDate":805,"./lib/toFloat":806,"./lib/toInt":807,"./lib/trim":808,"./lib/unescape":809,"./lib/util/toString":812,"./lib/whitelist":813}],752:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var alpha = exports.alpha = {
+  'en-US': /^[A-Z]+$/i,
+  'cs-CZ': /^[A-ZÁČĎÉĚÍŇÓŘŠŤÚŮÝŽ]+$/i,
+  'de-DE': /^[A-ZÄÖÜß]+$/i,
+  'es-ES': /^[A-ZÁÉÍÑÓÚÜ]+$/i,
+  'fr-FR': /^[A-ZÀÂÆÇÉÈÊËÏÎÔŒÙÛÜŸ]+$/i,
+  'nl-NL': /^[A-ZÉËÏÓÖÜ]+$/i,
+  'hu-HU': /^[A-ZÁÉÍÓÖŐÚÜŰ]+$/i,
+  'pl-PL': /^[A-ZĄĆĘŚŁŃÓŻŹ]+$/i,
+  'pt-PT': /^[A-ZÃÁÀÂÇÉÊÍÕÓÔÚÜ]+$/i,
+  'ru-RU': /^[А-ЯЁа-яё]+$/i,
+  'tr-TR': /^[A-ZÇĞİıÖŞÜ]+$/i,
+  ar: /^[ءآأؤإئابةتثجحخدذرزسشصضطظعغفقكلمنهوىيًٌٍَُِّْٰ]+$/
+};
+
+var alphanumeric = exports.alphanumeric = {
+  'en-US': /^[0-9A-Z]+$/i,
+  'cs-CZ': /^[0-9A-ZÁČĎÉĚÍŇÓŘŠŤÚŮÝŽ]+$/i,
+  'de-DE': /^[0-9A-ZÄÖÜß]+$/i,
+  'es-ES': /^[0-9A-ZÁÉÍÑÓÚÜ]+$/i,
+  'fr-FR': /^[0-9A-ZÀÂÆÇÉÈÊËÏÎÔŒÙÛÜŸ]+$/i,
+  'hu-HU': /^[0-9A-ZÁÉÍÓÖŐÚÜŰ]+$/i,
+  'nl-NL': /^[0-9A-ZÉËÏÓÖÜ]+$/i,
+  'pl-PL': /^[0-9A-ZĄĆĘŚŁŃÓŻŹ]+$/i,
+  'pt-PT': /^[0-9A-ZÃÁÀÂÇÉÊÍÕÓÔÚÜ]+$/i,
+  'ru-RU': /^[0-9А-ЯЁа-яё]+$/i,
+  'tr-TR': /^[0-9A-ZÇĞİıÖŞÜ]+$/i,
+  ar: /^[٠١٢٣٤٥٦٧٨٩0-9ءآأؤإئابةتثجحخدذرزسشصضطظعغفقكلمنهوىيًٌٍَُِّْٰ]+$/
+};
+
+var englishLocales = exports.englishLocales = ['AU', 'GB', 'HK', 'IN', 'NZ', 'ZA', 'ZM'];
+
+for (var locale, i = 0; i < englishLocales.length; i++) {
+  locale = 'en-' + englishLocales[i];
+  alpha[locale] = alpha['en-US'];
+  alphanumeric[locale] = alphanumeric['en-US'];
+}
+
+// Source: http://www.localeplanet.com/java/
+var arabicLocales = exports.arabicLocales = ['AE', 'BH', 'DZ', 'EG', 'IQ', 'JO', 'KW', 'LB', 'LY', 'MA', 'QM', 'QA', 'SA', 'SD', 'SY', 'TN', 'YE'];
+
+for (var _locale, _i = 0; _i < arabicLocales.length; _i++) {
+  _locale = 'ar-' + arabicLocales[_i];
+  alpha[_locale] = alpha.ar;
+  alphanumeric[_locale] = alphanumeric.ar;
+}
+},{}],753:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = blacklist;
+
+var _assertString = require('./util/assertString');
+
+var _assertString2 = _interopRequireDefault(_assertString);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function blacklist(str, chars) {
+  (0, _assertString2.default)(str);
+  return str.replace(new RegExp('[' + chars + ']+', 'g'), '');
+}
+module.exports = exports['default'];
+},{"./util/assertString":810}],754:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = contains;
+
+var _assertString = require('./util/assertString');
+
+var _assertString2 = _interopRequireDefault(_assertString);
+
+var _toString = require('./util/toString');
+
+var _toString2 = _interopRequireDefault(_toString);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function contains(str, elem) {
+  (0, _assertString2.default)(str);
+  return str.indexOf((0, _toString2.default)(elem)) >= 0;
+}
+module.exports = exports['default'];
+},{"./util/assertString":810,"./util/toString":812}],755:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = equals;
+
+var _assertString = require('./util/assertString');
+
+var _assertString2 = _interopRequireDefault(_assertString);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function equals(str, comparison) {
+  (0, _assertString2.default)(str);
+  return str === comparison;
+}
+module.exports = exports['default'];
+},{"./util/assertString":810}],756:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+      value: true
+});
+exports.default = escape;
+
+var _assertString = require('./util/assertString');
+
+var _assertString2 = _interopRequireDefault(_assertString);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function escape(str) {
+      (0, _assertString2.default)(str);
+      return str.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#x27;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\//g, '&#x2F;').replace(/`/g, '&#96;');
+}
+module.exports = exports['default'];
+},{"./util/assertString":810}],757:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = isAfter;
+
+var _assertString = require('./util/assertString');
+
+var _assertString2 = _interopRequireDefault(_assertString);
+
+var _toDate = require('./toDate');
+
+var _toDate2 = _interopRequireDefault(_toDate);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function isAfter(str) {
+  var date = arguments.length <= 1 || arguments[1] === undefined ? String(new Date()) : arguments[1];
+
+  (0, _assertString2.default)(str);
+  var comparison = (0, _toDate2.default)(date);
+  var original = (0, _toDate2.default)(str);
+  return !!(original && comparison && original > comparison);
+}
+module.exports = exports['default'];
+},{"./toDate":805,"./util/assertString":810}],758:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = isAlpha;
+
+var _assertString = require('./util/assertString');
+
+var _assertString2 = _interopRequireDefault(_assertString);
+
+var _alpha = require('./alpha');
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function isAlpha(str) {
+  var locale = arguments.length <= 1 || arguments[1] === undefined ? 'en-US' : arguments[1];
+
+  (0, _assertString2.default)(str);
+  if (locale in _alpha.alpha) {
+    return _alpha.alpha[locale].test(str);
+  }
+  throw new Error('Invalid locale \'' + locale + '\'');
+}
+module.exports = exports['default'];
+},{"./alpha":752,"./util/assertString":810}],759:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = isAlphanumeric;
+
+var _assertString = require('./util/assertString');
+
+var _assertString2 = _interopRequireDefault(_assertString);
+
+var _alpha = require('./alpha');
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function isAlphanumeric(str) {
+  var locale = arguments.length <= 1 || arguments[1] === undefined ? 'en-US' : arguments[1];
+
+  (0, _assertString2.default)(str);
+  if (locale in _alpha.alphanumeric) {
+    return _alpha.alphanumeric[locale].test(str);
+  }
+  throw new Error('Invalid locale \'' + locale + '\'');
+}
+module.exports = exports['default'];
+},{"./alpha":752,"./util/assertString":810}],760:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = isAscii;
+
+var _assertString = require('./util/assertString');
+
+var _assertString2 = _interopRequireDefault(_assertString);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/* eslint-disable no-control-regex */
+var ascii = /^[\x00-\x7F]+$/;
+/* eslint-enable no-control-regex */
+
+function isAscii(str) {
+  (0, _assertString2.default)(str);
+  return ascii.test(str);
+}
+module.exports = exports['default'];
+},{"./util/assertString":810}],761:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = isBase64;
+
+var _assertString = require('./util/assertString');
+
+var _assertString2 = _interopRequireDefault(_assertString);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var notBase64 = /[^A-Z0-9+\/=]/i;
+
+function isBase64(str) {
+  (0, _assertString2.default)(str);
+  var len = str.length;
+  if (!len || len % 4 !== 0 || notBase64.test(str)) {
+    return false;
+  }
+  var firstPaddingChar = str.indexOf('=');
+  return firstPaddingChar === -1 || firstPaddingChar === len - 1 || firstPaddingChar === len - 2 && str[len - 1] === '=';
+}
+module.exports = exports['default'];
+},{"./util/assertString":810}],762:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = isBefore;
+
+var _assertString = require('./util/assertString');
+
+var _assertString2 = _interopRequireDefault(_assertString);
+
+var _toDate = require('./toDate');
+
+var _toDate2 = _interopRequireDefault(_toDate);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function isBefore(str) {
+  var date = arguments.length <= 1 || arguments[1] === undefined ? String(new Date()) : arguments[1];
+
+  (0, _assertString2.default)(str);
+  var comparison = (0, _toDate2.default)(date);
+  var original = (0, _toDate2.default)(str);
+  return !!(original && comparison && original < comparison);
+}
+module.exports = exports['default'];
+},{"./toDate":805,"./util/assertString":810}],763:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = isBoolean;
+
+var _assertString = require('./util/assertString');
+
+var _assertString2 = _interopRequireDefault(_assertString);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function isBoolean(str) {
+  (0, _assertString2.default)(str);
+  return ['true', 'false', '1', '0'].indexOf(str) >= 0;
+}
+module.exports = exports['default'];
+},{"./util/assertString":810}],764:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+
+exports.default = isByteLength;
+
+var _assertString = require('./util/assertString');
+
+var _assertString2 = _interopRequireDefault(_assertString);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/* eslint-disable prefer-rest-params */
+function isByteLength(str, options) {
+  (0, _assertString2.default)(str);
+  var min = void 0;
+  var max = void 0;
+  if ((typeof options === 'undefined' ? 'undefined' : _typeof(options)) === 'object') {
+    min = options.min || 0;
+    max = options.max;
+  } else {
+    // backwards compatibility: isByteLength(str, min [, max])
+    min = arguments[1];
+    max = arguments[2];
+  }
+  var len = encodeURI(str).split(/%..|./).length - 1;
+  return len >= min && (typeof max === 'undefined' || len <= max);
+}
+module.exports = exports['default'];
+},{"./util/assertString":810}],765:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = isCreditCard;
+
+var _assertString = require('./util/assertString');
+
+var _assertString2 = _interopRequireDefault(_assertString);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/* eslint-disable max-len */
+var creditCard = /^(?:4[0-9]{12}(?:[0-9]{3})?|5[1-5][0-9]{14}|6(?:011|5[0-9][0-9])[0-9]{12}|3[47][0-9]{13}|3(?:0[0-5]|[68][0-9])[0-9]{11}|(?:2131|1800|35\d{3})\d{11})|62[0-9]{14}$/;
+/* eslint-enable max-len */
+
+function isCreditCard(str) {
+  (0, _assertString2.default)(str);
+  var sanitized = str.replace(/[^0-9]+/g, '');
+  if (!creditCard.test(sanitized)) {
+    return false;
+  }
+  var sum = 0;
+  var digit = void 0;
+  var tmpNum = void 0;
+  var shouldDouble = void 0;
+  for (var i = sanitized.length - 1; i >= 0; i--) {
+    digit = sanitized.substring(i, i + 1);
+    tmpNum = parseInt(digit, 10);
+    if (shouldDouble) {
+      tmpNum *= 2;
+      if (tmpNum >= 10) {
+        sum += tmpNum % 10 + 1;
+      } else {
+        sum += tmpNum;
+      }
+    } else {
+      sum += tmpNum;
+    }
+    shouldDouble = !shouldDouble;
+  }
+  return !!(sum % 10 === 0 ? sanitized : false);
+}
+module.exports = exports['default'];
+},{"./util/assertString":810}],766:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = isCurrency;
+
+var _merge = require('./util/merge');
+
+var _merge2 = _interopRequireDefault(_merge);
+
+var _assertString = require('./util/assertString');
+
+var _assertString2 = _interopRequireDefault(_assertString);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function currencyRegex(options) {
+  var symbol = '(\\' + options.symbol.replace(/\./g, '\\.') + ')' + (options.require_symbol ? '' : '?'),
+      negative = '-?',
+      whole_dollar_amount_without_sep = '[1-9]\\d*',
+      whole_dollar_amount_with_sep = '[1-9]\\d{0,2}(\\' + options.thousands_separator + '\\d{3})*',
+      valid_whole_dollar_amounts = ['0', whole_dollar_amount_without_sep, whole_dollar_amount_with_sep],
+      whole_dollar_amount = '(' + valid_whole_dollar_amounts.join('|') + ')?',
+      decimal_amount = '(\\' + options.decimal_separator + '\\d{2})?';
+  var pattern = whole_dollar_amount + decimal_amount;
+
+  // default is negative sign before symbol, but there are two other options (besides parens)
+  if (options.allow_negatives && !options.parens_for_negatives) {
+    if (options.negative_sign_after_digits) {
+      pattern += negative;
+    } else if (options.negative_sign_before_digits) {
+      pattern = negative + pattern;
+    }
+  }
+
+  // South African Rand, for example, uses R 123 (space) and R-123 (no space)
+  if (options.allow_negative_sign_placeholder) {
+    pattern = '( (?!\\-))?' + pattern;
+  } else if (options.allow_space_after_symbol) {
+    pattern = ' ?' + pattern;
+  } else if (options.allow_space_after_digits) {
+    pattern += '( (?!$))?';
+  }
+
+  if (options.symbol_after_digits) {
+    pattern += symbol;
+  } else {
+    pattern = symbol + pattern;
+  }
+
+  if (options.allow_negatives) {
+    if (options.parens_for_negatives) {
+      pattern = '(\\(' + pattern + '\\)|' + pattern + ')';
+    } else if (!(options.negative_sign_before_digits || options.negative_sign_after_digits)) {
+      pattern = negative + pattern;
+    }
+  }
+
+  /* eslint-disable prefer-template */
+  return new RegExp('^' +
+  // ensure there's a dollar and/or decimal amount, and that
+  // it doesn't start with a space or a negative sign followed by a space
+  '(?!-? )(?=.*\\d)' + pattern + '$');
+  /* eslint-enable prefer-template */
+}
+
+var default_currency_options = {
+  symbol: '$',
+  require_symbol: false,
+  allow_space_after_symbol: false,
+  symbol_after_digits: false,
+  allow_negatives: true,
+  parens_for_negatives: false,
+  negative_sign_before_digits: false,
+  negative_sign_after_digits: false,
+  allow_negative_sign_placeholder: false,
+  thousands_separator: ',',
+  decimal_separator: '.',
+  allow_space_after_digits: false
+};
+
+function isCurrency(str, options) {
+  (0, _assertString2.default)(str);
+  options = (0, _merge2.default)(options, default_currency_options);
+  return currencyRegex(options).test(str);
+}
+module.exports = exports['default'];
+},{"./util/assertString":810,"./util/merge":811}],767:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = isDataURI;
+
+var _assertString = require('./util/assertString');
+
+var _assertString2 = _interopRequireDefault(_assertString);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var dataURI = /^\s*data:([a-z]+\/[a-z0-9\-\+]+(;[a-z\-]+=[a-z0-9\-]+)?)?(;base64)?,[a-z0-9!\$&',\(\)\*\+,;=\-\._~:@\/\?%\s]*\s*$/i; // eslint-disable-line max-len
+
+function isDataURI(str) {
+  (0, _assertString2.default)(str);
+  return dataURI.test(str);
+}
+module.exports = exports['default'];
+},{"./util/assertString":810}],768:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = isDate;
+
+var _assertString = require('./util/assertString');
+
+var _assertString2 = _interopRequireDefault(_assertString);
+
+var _isISO = require('./isISO8601');
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function getTimezoneOffset(str) {
+  var iso8601Parts = str.match(_isISO.iso8601);
+  var timezone = void 0,
+      sign = void 0,
+      hours = void 0,
+      minutes = void 0;
+  if (!iso8601Parts) {
+    str = str.toLowerCase();
+    timezone = str.match(/(?:\s|gmt\s*)(-|\+)(\d{1,4})(\s|$)/);
+    if (!timezone) {
+      return str.indexOf('gmt') !== -1 ? 0 : null;
+    }
+    sign = timezone[1];
+    var offset = timezone[2];
+    if (offset.length === 3) {
+      offset = '0' + offset;
+    }
+    if (offset.length <= 2) {
+      hours = 0;
+      minutes = parseInt(offset, 10);
+    } else {
+      hours = parseInt(offset.slice(0, 2), 10);
+      minutes = parseInt(offset.slice(2, 4), 10);
+    }
+  } else {
+    timezone = iso8601Parts[21];
+    if (!timezone) {
+      // if no hour/minute was provided, the date is GMT
+      return !iso8601Parts[12] ? 0 : null;
+    }
+    if (timezone === 'z' || timezone === 'Z') {
+      return 0;
+    }
+    sign = iso8601Parts[22];
+    if (timezone.indexOf(':') !== -1) {
+      hours = parseInt(iso8601Parts[23], 10);
+      minutes = parseInt(iso8601Parts[24], 10);
+    } else {
+      hours = 0;
+      minutes = parseInt(iso8601Parts[23], 10);
+    }
+  }
+  return (hours * 60 + minutes) * (sign === '-' ? 1 : -1);
+}
+
+function isDate(str) {
+  (0, _assertString2.default)(str);
+  var normalizedDate = new Date(Date.parse(str));
+  if (isNaN(normalizedDate)) {
+    return false;
+  }
+
+  // normalizedDate is in the user's timezone. Apply the input
+  // timezone offset to the date so that the year and day match
+  // the input
+  var timezoneOffset = getTimezoneOffset(str);
+  if (timezoneOffset !== null) {
+    var timezoneDifference = normalizedDate.getTimezoneOffset() - timezoneOffset;
+    normalizedDate = new Date(normalizedDate.getTime() + 60000 * timezoneDifference);
+  }
+
+  var day = String(normalizedDate.getDate());
+  var dayOrYear = void 0,
+      dayOrYearMatches = void 0,
+      year = void 0;
+  // check for valid double digits that could be late days
+  // check for all matches since a string like '12/23' is a valid date
+  // ignore everything with nearby colons
+  dayOrYearMatches = str.match(/(^|[^:\d])[23]\d([^:\d]|$)/g);
+  if (!dayOrYearMatches) {
+    return true;
+  }
+  dayOrYear = dayOrYearMatches.map(function (digitString) {
+    return digitString.match(/\d+/g)[0];
+  }).join('/');
+
+  year = String(normalizedDate.getFullYear()).slice(-2);
+  if (dayOrYear === day || dayOrYear === year) {
+    return true;
+  } else if (dayOrYear === '' + day / year || dayOrYear === '' + year / day) {
+    return true;
+  }
+  return false;
+}
+module.exports = exports['default'];
+},{"./isISO8601":781,"./util/assertString":810}],769:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = isDecimal;
+
+var _assertString = require('./util/assertString');
+
+var _assertString2 = _interopRequireDefault(_assertString);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var decimal = /^[-+]?([0-9]+|\.[0-9]+|[0-9]+\.[0-9]+)$/;
+
+function isDecimal(str) {
+  (0, _assertString2.default)(str);
+  return str !== '' && decimal.test(str);
+}
+module.exports = exports['default'];
+},{"./util/assertString":810}],770:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = isDivisibleBy;
+
+var _assertString = require('./util/assertString');
+
+var _assertString2 = _interopRequireDefault(_assertString);
+
+var _toFloat = require('./toFloat');
+
+var _toFloat2 = _interopRequireDefault(_toFloat);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function isDivisibleBy(str, num) {
+  (0, _assertString2.default)(str);
+  return (0, _toFloat2.default)(str) % parseInt(num, 10) === 0;
+}
+module.exports = exports['default'];
+},{"./toFloat":806,"./util/assertString":810}],771:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = isEmail;
+
+var _assertString = require('./util/assertString');
+
+var _assertString2 = _interopRequireDefault(_assertString);
+
+var _merge = require('./util/merge');
+
+var _merge2 = _interopRequireDefault(_merge);
+
+var _isByteLength = require('./isByteLength');
+
+var _isByteLength2 = _interopRequireDefault(_isByteLength);
+
+var _isFQDN = require('./isFQDN');
+
+var _isFQDN2 = _interopRequireDefault(_isFQDN);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var default_email_options = {
+  allow_display_name: false,
+  allow_utf8_local_part: true,
+  require_tld: true
+};
+
+/* eslint-disable max-len */
+/* eslint-disable no-control-regex */
+var displayName = /^[a-z\d!#\$%&'\*\+\-\/=\?\^_`{\|}~\.\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]+[a-z\d!#\$%&'\*\+\-\/=\?\^_`{\|}~\.\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF\s]*<(.+)>$/i;
+var emailUserPart = /^[a-z\d!#\$%&'\*\+\-\/=\?\^_`{\|}~]+$/i;
+var quotedEmailUser = /^([\s\x01-\x08\x0b\x0c\x0e-\x1f\x7f\x21\x23-\x5b\x5d-\x7e]|(\\[\x01-\x09\x0b\x0c\x0d-\x7f]))*$/i;
+var emailUserUtf8Part = /^[a-z\d!#\$%&'\*\+\-\/=\?\^_`{\|}~\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]+$/i;
+var quotedEmailUserUtf8 = /^([\s\x01-\x08\x0b\x0c\x0e-\x1f\x7f\x21\x23-\x5b\x5d-\x7e\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]|(\\[\x01-\x09\x0b\x0c\x0d-\x7f\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))*$/i;
+/* eslint-enable max-len */
+/* eslint-enable no-control-regex */
+
+function isEmail(str, options) {
+  (0, _assertString2.default)(str);
+  options = (0, _merge2.default)(options, default_email_options);
+
+  if (options.allow_display_name) {
+    var display_email = str.match(displayName);
+    if (display_email) {
+      str = display_email[1];
+    }
+  }
+
+  var parts = str.split('@');
+  var domain = parts.pop();
+  var user = parts.join('@');
+
+  var lower_domain = domain.toLowerCase();
+  if (lower_domain === 'gmail.com' || lower_domain === 'googlemail.com') {
+    user = user.replace(/\./g, '').toLowerCase();
+  }
+
+  if (!(0, _isByteLength2.default)(user, { max: 64 }) || !(0, _isByteLength2.default)(domain, { max: 256 })) {
+    return false;
+  }
+
+  if (!(0, _isFQDN2.default)(domain, { require_tld: options.require_tld })) {
+    return false;
+  }
+
+  if (user[0] === '"') {
+    user = user.slice(1, user.length - 1);
+    return options.allow_utf8_local_part ? quotedEmailUserUtf8.test(user) : quotedEmailUser.test(user);
+  }
+
+  var pattern = options.allow_utf8_local_part ? emailUserUtf8Part : emailUserPart;
+
+  var user_parts = user.split('.');
+  for (var i = 0; i < user_parts.length; i++) {
+    if (!pattern.test(user_parts[i])) {
+      return false;
+    }
+  }
+
+  return true;
+}
+module.exports = exports['default'];
+},{"./isByteLength":764,"./isFQDN":772,"./util/assertString":810,"./util/merge":811}],772:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = isFDQN;
+
+var _assertString = require('./util/assertString');
+
+var _assertString2 = _interopRequireDefault(_assertString);
+
+var _merge = require('./util/merge');
+
+var _merge2 = _interopRequireDefault(_merge);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var default_fqdn_options = {
+  require_tld: true,
+  allow_underscores: false,
+  allow_trailing_dot: false
+};
+
+function isFDQN(str, options) {
+  (0, _assertString2.default)(str);
+  options = (0, _merge2.default)(options, default_fqdn_options);
+
+  /* Remove the optional trailing dot before checking validity */
+  if (options.allow_trailing_dot && str[str.length - 1] === '.') {
+    str = str.substring(0, str.length - 1);
+  }
+  var parts = str.split('.');
+  if (options.require_tld) {
+    var tld = parts.pop();
+    if (!parts.length || !/^([a-z\u00a1-\uffff]{2,}|xn[a-z0-9-]{2,})$/i.test(tld)) {
+      return false;
+    }
+  }
+  for (var part, i = 0; i < parts.length; i++) {
+    part = parts[i];
+    if (options.allow_underscores) {
+      part = part.replace(/_/g, '');
+    }
+    if (!/^[a-z\u00a1-\uffff0-9-]+$/i.test(part)) {
+      return false;
+    }
+    if (/[\uff01-\uff5e]/.test(part)) {
+      // disallow full-width chars
+      return false;
+    }
+    if (part[0] === '-' || part[part.length - 1] === '-') {
+      return false;
+    }
+  }
+  return true;
+}
+module.exports = exports['default'];
+},{"./util/assertString":810,"./util/merge":811}],773:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = isFloat;
+
+var _assertString = require('./util/assertString');
+
+var _assertString2 = _interopRequireDefault(_assertString);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var float = /^(?:[-+]?(?:[0-9]+))?(?:\.[0-9]*)?(?:[eE][\+\-]?(?:[0-9]+))?$/;
+
+function isFloat(str, options) {
+  (0, _assertString2.default)(str);
+  options = options || {};
+  if (str === '' || str === '.') {
+    return false;
+  }
+  return float.test(str) && (!options.hasOwnProperty('min') || str >= options.min) && (!options.hasOwnProperty('max') || str <= options.max);
+}
+module.exports = exports['default'];
+},{"./util/assertString":810}],774:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.fullWidth = undefined;
+exports.default = isFullWidth;
+
+var _assertString = require('./util/assertString');
+
+var _assertString2 = _interopRequireDefault(_assertString);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var fullWidth = exports.fullWidth = /[^\u0020-\u007E\uFF61-\uFF9F\uFFA0-\uFFDC\uFFE8-\uFFEE0-9a-zA-Z]/;
+
+function isFullWidth(str) {
+  (0, _assertString2.default)(str);
+  return fullWidth.test(str);
+}
+},{"./util/assertString":810}],775:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.halfWidth = undefined;
+exports.default = isHalfWidth;
+
+var _assertString = require('./util/assertString');
+
+var _assertString2 = _interopRequireDefault(_assertString);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var halfWidth = exports.halfWidth = /[\u0020-\u007E\uFF61-\uFF9F\uFFA0-\uFFDC\uFFE8-\uFFEE0-9a-zA-Z]/;
+
+function isHalfWidth(str) {
+  (0, _assertString2.default)(str);
+  return halfWidth.test(str);
+}
+},{"./util/assertString":810}],776:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = isHexColor;
+
+var _assertString = require('./util/assertString');
+
+var _assertString2 = _interopRequireDefault(_assertString);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var hexcolor = /^#?([0-9A-F]{3}|[0-9A-F]{6})$/i;
+
+function isHexColor(str) {
+  (0, _assertString2.default)(str);
+  return hexcolor.test(str);
+}
+module.exports = exports['default'];
+},{"./util/assertString":810}],777:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = isHexadecimal;
+
+var _assertString = require('./util/assertString');
+
+var _assertString2 = _interopRequireDefault(_assertString);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var hexadecimal = /^[0-9A-F]+$/i;
+
+function isHexadecimal(str) {
+  (0, _assertString2.default)(str);
+  return hexadecimal.test(str);
+}
+module.exports = exports['default'];
+},{"./util/assertString":810}],778:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = isIP;
+
+var _assertString = require('./util/assertString');
+
+var _assertString2 = _interopRequireDefault(_assertString);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var ipv4Maybe = /^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/;
+var ipv6Block = /^[0-9A-F]{1,4}$/i;
+
+function isIP(str) {
+  var version = arguments.length <= 1 || arguments[1] === undefined ? '' : arguments[1];
+
+  (0, _assertString2.default)(str);
+  version = String(version);
+  if (!version) {
+    return isIP(str, 4) || isIP(str, 6);
+  } else if (version === '4') {
+    if (!ipv4Maybe.test(str)) {
+      return false;
+    }
+    var parts = str.split('.').sort(function (a, b) {
+      return a - b;
+    });
+    return parts[3] <= 255;
+  } else if (version === '6') {
+    var blocks = str.split(':');
+    var foundOmissionBlock = false; // marker to indicate ::
+
+    // At least some OS accept the last 32 bits of an IPv6 address
+    // (i.e. 2 of the blocks) in IPv4 notation, and RFC 3493 says
+    // that '::ffff:a.b.c.d' is valid for IPv4-mapped IPv6 addresses,
+    // and '::a.b.c.d' is deprecated, but also valid.
+    var foundIPv4TransitionBlock = isIP(blocks[blocks.length - 1], 4);
+    var expectedNumberOfBlocks = foundIPv4TransitionBlock ? 7 : 8;
+
+    if (blocks.length > expectedNumberOfBlocks) {
+      return false;
+    }
+    // initial or final ::
+    if (str === '::') {
+      return true;
+    } else if (str.substr(0, 2) === '::') {
+      blocks.shift();
+      blocks.shift();
+      foundOmissionBlock = true;
+    } else if (str.substr(str.length - 2) === '::') {
+      blocks.pop();
+      blocks.pop();
+      foundOmissionBlock = true;
+    }
+
+    for (var i = 0; i < blocks.length; ++i) {
+      // test for a :: which can not be at the string start/end
+      // since those cases have been handled above
+      if (blocks[i] === '' && i > 0 && i < blocks.length - 1) {
+        if (foundOmissionBlock) {
+          return false; // multiple :: in address
+        }
+        foundOmissionBlock = true;
+      } else if (foundIPv4TransitionBlock && i === blocks.length - 1) {
+        // it has been checked before that the last
+        // block is a valid IPv4 address
+      } else if (!ipv6Block.test(blocks[i])) {
+        return false;
+      }
+    }
+    if (foundOmissionBlock) {
+      return blocks.length >= 1;
+    }
+    return blocks.length === expectedNumberOfBlocks;
+  }
+  return false;
+}
+module.exports = exports['default'];
+},{"./util/assertString":810}],779:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = isISBN;
+
+var _assertString = require('./util/assertString');
+
+var _assertString2 = _interopRequireDefault(_assertString);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var isbn10Maybe = /^(?:[0-9]{9}X|[0-9]{10})$/;
+var isbn13Maybe = /^(?:[0-9]{13})$/;
+var factor = [1, 3];
+
+function isISBN(str) {
+  var version = arguments.length <= 1 || arguments[1] === undefined ? '' : arguments[1];
+
+  (0, _assertString2.default)(str);
+  version = String(version);
+  if (!version) {
+    return isISBN(str, 10) || isISBN(str, 13);
+  }
+  var sanitized = str.replace(/[\s-]+/g, '');
+  var checksum = 0;
+  var i = void 0;
+  if (version === '10') {
+    if (!isbn10Maybe.test(sanitized)) {
+      return false;
+    }
+    for (i = 0; i < 9; i++) {
+      checksum += (i + 1) * sanitized.charAt(i);
+    }
+    if (sanitized.charAt(9) === 'X') {
+      checksum += 10 * 10;
+    } else {
+      checksum += 10 * sanitized.charAt(9);
+    }
+    if (checksum % 11 === 0) {
+      return !!sanitized;
+    }
+  } else if (version === '13') {
+    if (!isbn13Maybe.test(sanitized)) {
+      return false;
+    }
+    for (i = 0; i < 12; i++) {
+      checksum += factor[i % 2] * sanitized.charAt(i);
+    }
+    if (sanitized.charAt(12) - (10 - checksum % 10) % 10 === 0) {
+      return !!sanitized;
+    }
+  }
+  return false;
+}
+module.exports = exports['default'];
+},{"./util/assertString":810}],780:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = isISIN;
+
+var _assertString = require('./util/assertString');
+
+var _assertString2 = _interopRequireDefault(_assertString);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var isin = /^[A-Z]{2}[0-9A-Z]{9}[0-9]$/;
+
+function isISIN(str) {
+  (0, _assertString2.default)(str);
+  if (!isin.test(str)) {
+    return false;
+  }
+
+  var checksumStr = str.replace(/[A-Z]/g, function (character) {
+    return parseInt(character, 36);
+  });
+
+  var sum = 0;
+  var digit = void 0;
+  var tmpNum = void 0;
+  var shouldDouble = true;
+  for (var i = checksumStr.length - 2; i >= 0; i--) {
+    digit = checksumStr.substring(i, i + 1);
+    tmpNum = parseInt(digit, 10);
+    if (shouldDouble) {
+      tmpNum *= 2;
+      if (tmpNum >= 10) {
+        sum += tmpNum + 1;
+      } else {
+        sum += tmpNum;
+      }
+    } else {
+      sum += tmpNum;
+    }
+    shouldDouble = !shouldDouble;
+  }
+
+  return parseInt(str.substr(str.length - 1), 10) === (10000 - sum) % 10;
+}
+module.exports = exports['default'];
+},{"./util/assertString":810}],781:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.iso8601 = undefined;
+
+exports.default = function (str) {
+  (0, _assertString2.default)(str);
+  return iso8601.test(str);
+};
+
+var _assertString = require('./util/assertString');
+
+var _assertString2 = _interopRequireDefault(_assertString);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/* eslint-disable max-len */
+// from http://goo.gl/0ejHHW
+var iso8601 = exports.iso8601 = /^([\+-]?\d{4}(?!\d{2}\b))((-?)((0[1-9]|1[0-2])(\3([12]\d|0[1-9]|3[01]))?|W([0-4]\d|5[0-2])(-?[1-7])?|(00[1-9]|0[1-9]\d|[12]\d{2}|3([0-5]\d|6[1-6])))([T\s]((([01]\d|2[0-3])((:?)[0-5]\d)?|24:?00)([\.,]\d+(?!:))?)?(\17[0-5]\d([\.,]\d+)?)?([zZ]|([\+-])([01]\d|2[0-3]):?([0-5]\d)?)?)?)?$/;
+/* eslint-enable max-len */
+},{"./util/assertString":810}],782:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+
+exports.default = isIn;
+
+var _assertString = require('./util/assertString');
+
+var _assertString2 = _interopRequireDefault(_assertString);
+
+var _toString = require('./util/toString');
+
+var _toString2 = _interopRequireDefault(_toString);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function isIn(str, options) {
+  (0, _assertString2.default)(str);
+  var i = void 0;
+  if (Object.prototype.toString.call(options) === '[object Array]') {
+    var array = [];
+    for (i in options) {
+      if ({}.hasOwnProperty.call(options, i)) {
+        array[i] = (0, _toString2.default)(options[i]);
+      }
+    }
+    return array.indexOf(str) >= 0;
+  } else if ((typeof options === 'undefined' ? 'undefined' : _typeof(options)) === 'object') {
+    return options.hasOwnProperty(str);
+  } else if (options && typeof options.indexOf === 'function') {
+    return options.indexOf(str) >= 0;
+  }
+  return false;
+}
+module.exports = exports['default'];
+},{"./util/assertString":810,"./util/toString":812}],783:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = isInt;
+
+var _assertString = require('./util/assertString');
+
+var _assertString2 = _interopRequireDefault(_assertString);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var int = /^(?:[-+]?(?:0|[1-9][0-9]*))$/;
+var intLeadingZeroes = /^[-+]?[0-9]+$/;
+
+function isInt(str, options) {
+  (0, _assertString2.default)(str);
+  options = options || {};
+
+  // Get the regex to use for testing, based on whether
+  // leading zeroes are allowed or not.
+  var regex = options.hasOwnProperty('allow_leading_zeroes') && options.allow_leading_zeroes ? intLeadingZeroes : int;
+
+  // Check min/max
+  var minCheckPassed = !options.hasOwnProperty('min') || str >= options.min;
+  var maxCheckPassed = !options.hasOwnProperty('max') || str <= options.max;
+
+  return regex.test(str) && minCheckPassed && maxCheckPassed;
+}
+module.exports = exports['default'];
+},{"./util/assertString":810}],784:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+
+exports.default = isJSON;
+
+var _assertString = require('./util/assertString');
+
+var _assertString2 = _interopRequireDefault(_assertString);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function isJSON(str) {
+  (0, _assertString2.default)(str);
+  try {
+    var obj = JSON.parse(str);
+    return !!obj && (typeof obj === 'undefined' ? 'undefined' : _typeof(obj)) === 'object';
+  } catch (e) {/* ignore */}
+  return false;
+}
+module.exports = exports['default'];
+},{"./util/assertString":810}],785:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+
+exports.default = isLength;
+
+var _assertString = require('./util/assertString');
+
+var _assertString2 = _interopRequireDefault(_assertString);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/* eslint-disable prefer-rest-params */
+function isLength(str, options) {
+  (0, _assertString2.default)(str);
+  var min = void 0;
+  var max = void 0;
+  if ((typeof options === 'undefined' ? 'undefined' : _typeof(options)) === 'object') {
+    min = options.min || 0;
+    max = options.max;
+  } else {
+    // backwards compatibility: isLength(str, min [, max])
+    min = arguments[1];
+    max = arguments[2];
+  }
+  var surrogatePairs = str.match(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g) || [];
+  var len = str.length - surrogatePairs.length;
+  return len >= min && (typeof max === 'undefined' || len <= max);
+}
+module.exports = exports['default'];
+},{"./util/assertString":810}],786:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = isLowercase;
+
+var _assertString = require('./util/assertString');
+
+var _assertString2 = _interopRequireDefault(_assertString);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function isLowercase(str) {
+  (0, _assertString2.default)(str);
+  return str === str.toLowerCase();
+}
+module.exports = exports['default'];
+},{"./util/assertString":810}],787:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = isMACAddress;
+
+var _assertString = require('./util/assertString');
+
+var _assertString2 = _interopRequireDefault(_assertString);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var macAddress = /^([0-9a-fA-F][0-9a-fA-F]:){5}([0-9a-fA-F][0-9a-fA-F])$/;
+
+function isMACAddress(str) {
+  (0, _assertString2.default)(str);
+  return macAddress.test(str);
+}
+module.exports = exports['default'];
+},{"./util/assertString":810}],788:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = isMobilePhone;
+
+var _assertString = require('./util/assertString');
+
+var _assertString2 = _interopRequireDefault(_assertString);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/* eslint-disable max-len */
+var phones = {
+  'ar-DZ': /^(\+?213|0)(5|6|7)\d{8}$/,
+  'ar-SY': /^(!?(\+?963)|0)?9\d{8}$/,
+  'en-US': /^(\+?1)?[2-9]\d{2}[2-9](?!11)\d{6}$/,
+  'cs-CZ': /^(\+?420)? ?[1-9][0-9]{2} ?[0-9]{3} ?[0-9]{3}$/,
+  'de-DE': /^(\+?49[ \.\-])?([\(]{1}[0-9]{1,6}[\)])?([0-9 \.\-\/]{3,20})((x|ext|extension)[ ]?[0-9]{1,4})?$/,
+  'da-DK': /^(\+?45)?(\d{8})$/,
+  'el-GR': /^(\+?30)?(69\d{8})$/,
+  'en-AU': /^(\+?61|0)4\d{8}$/,
+  'en-GB': /^(\+?44|0)7\d{9}$/,
+  'en-HK': /^(\+?852\-?)?[569]\d{3}\-?\d{4}$/,
+  'en-IN': /^(\+?91|0)?[789]\d{9}$/,
+  'en-NZ': /^(\+?64|0)2\d{7,9}$/,
+  'en-ZA': /^(\+?27|0)\d{9}$/,
+  'en-ZM': /^(\+?26)?09[567]\d{7}$/,
+  'es-ES': /^(\+?34)?(6\d{1}|7[1234])\d{7}$/,
+  'fi-FI': /^(\+?358|0)\s?(4(0|1|2|4|5)?|50)\s?(\d\s?){4,8}\d$/,
+  'fr-FR': /^(\+?33|0)[67]\d{8}$/,
+  'hu-HU': /^(\+?36)(20|30|70)\d{7}$/,
+  'ms-MY': /^(\+?6?01){1}(([145]{1}(\-|\s)?\d{7,8})|([236789]{1}(\s|\-)?\d{7}))$/,
+  'nb-NO': /^(\+?47)?[49]\d{7}$/,
+  'nn-NO': /^(\+?47)?[49]\d{7}$/,
+  'pl-PL': /^(\+?48)? ?[5-8]\d ?\d{3} ?\d{2} ?\d{2}$/,
+  'pt-BR': /^(\+?55|0)\-?[1-9]{2}\-?[2-9]{1}\d{3,4}\-?\d{4}$/,
+  'pt-PT': /^(\+?351)?9[1236]\d{7}$/,
+  'ru-RU': /^(\+?7|8)?9\d{9}$/,
+  'tr-TR': /^(\+?90|0)?5\d{9}$/,
+  'vi-VN': /^(\+?84|0)?((1(2([0-9])|6([2-9])|88|99))|(9((?!5)[0-9])))([0-9]{7})$/,
+  'zh-CN': /^(\+?0?86\-?)?1[345789]\d{9}$/,
+  'zh-TW': /^(\+?886\-?|0)?9\d{8}$/
+};
+/* eslint-enable max-len */
+
+// aliases
+phones['en-CA'] = phones['en-US'];
+
+function isMobilePhone(str, locale) {
+  (0, _assertString2.default)(str);
+  if (locale in phones) {
+    return phones[locale].test(str);
+  }
+  return false;
+}
+module.exports = exports['default'];
+},{"./util/assertString":810}],789:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = isMongoId;
+
+var _assertString = require('./util/assertString');
+
+var _assertString2 = _interopRequireDefault(_assertString);
+
+var _isHexadecimal = require('./isHexadecimal');
+
+var _isHexadecimal2 = _interopRequireDefault(_isHexadecimal);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function isMongoId(str) {
+  (0, _assertString2.default)(str);
+  return (0, _isHexadecimal2.default)(str) && str.length === 24;
+}
+module.exports = exports['default'];
+},{"./isHexadecimal":777,"./util/assertString":810}],790:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = isMultibyte;
+
+var _assertString = require('./util/assertString');
+
+var _assertString2 = _interopRequireDefault(_assertString);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/* eslint-disable no-control-regex */
+var multibyte = /[^\x00-\x7F]/;
+/* eslint-enable no-control-regex */
+
+function isMultibyte(str) {
+  (0, _assertString2.default)(str);
+  return multibyte.test(str);
+}
+module.exports = exports['default'];
+},{"./util/assertString":810}],791:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = isNull;
+
+var _assertString = require('./util/assertString');
+
+var _assertString2 = _interopRequireDefault(_assertString);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function isNull(str) {
+  (0, _assertString2.default)(str);
+  return str.length === 0;
+}
+module.exports = exports['default'];
+},{"./util/assertString":810}],792:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = isNumeric;
+
+var _assertString = require('./util/assertString');
+
+var _assertString2 = _interopRequireDefault(_assertString);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var numeric = /^[-+]?[0-9]+$/;
+
+function isNumeric(str) {
+  (0, _assertString2.default)(str);
+  return numeric.test(str);
+}
+module.exports = exports['default'];
+},{"./util/assertString":810}],793:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = isSurrogatePair;
+
+var _assertString = require('./util/assertString');
+
+var _assertString2 = _interopRequireDefault(_assertString);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var surrogatePair = /[\uD800-\uDBFF][\uDC00-\uDFFF]/;
+
+function isSurrogatePair(str) {
+  (0, _assertString2.default)(str);
+  return surrogatePair.test(str);
+}
+module.exports = exports['default'];
+},{"./util/assertString":810}],794:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = isURL;
+
+var _assertString = require('./util/assertString');
+
+var _assertString2 = _interopRequireDefault(_assertString);
+
+var _isFQDN = require('./isFQDN');
+
+var _isFQDN2 = _interopRequireDefault(_isFQDN);
+
+var _isIP = require('./isIP');
+
+var _isIP2 = _interopRequireDefault(_isIP);
+
+var _merge = require('./util/merge');
+
+var _merge2 = _interopRequireDefault(_merge);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var default_url_options = {
+  protocols: ['http', 'https', 'ftp'],
+  require_tld: true,
+  require_protocol: false,
+  require_valid_protocol: true,
+  allow_underscores: false,
+  allow_trailing_dot: false,
+  allow_protocol_relative_urls: false
+};
+
+function isURL(url, options) {
+  (0, _assertString2.default)(url);
+  if (!url || url.length >= 2083 || /\s/.test(url)) {
+    return false;
+  }
+  if (url.indexOf('mailto:') === 0) {
+    return false;
+  }
+  options = (0, _merge2.default)(options, default_url_options);
+  var protocol = void 0,
+      auth = void 0,
+      host = void 0,
+      hostname = void 0,
+      port = void 0,
+      port_str = void 0,
+      split = void 0;
+
+  split = url.split('#');
+  url = split.shift();
+
+  split = url.split('?');
+  url = split.shift();
+
+  split = url.split('://');
+  if (split.length > 1) {
+    protocol = split.shift();
+    if (options.require_valid_protocol && options.protocols.indexOf(protocol) === -1) {
+      return false;
+    }
+  } else if (options.require_protocol) {
+    return false;
+  } else if (options.allow_protocol_relative_urls && url.substr(0, 2) === '//') {
+    split[0] = url.substr(2);
+  }
+  url = split.join('://');
+
+  split = url.split('/');
+  url = split.shift();
+  split = url.split('@');
+  if (split.length > 1) {
+    auth = split.shift();
+    if (auth.indexOf(':') >= 0 && auth.split(':').length > 2) {
+      return false;
+    }
+  }
+  hostname = split.join('@');
+  split = hostname.split(':');
+  host = split.shift();
+  if (split.length) {
+    port_str = split.join(':');
+    port = parseInt(port_str, 10);
+    if (!/^[0-9]+$/.test(port_str) || port <= 0 || port > 65535) {
+      return false;
+    }
+  }
+  if (!(0, _isIP2.default)(host) && !(0, _isFQDN2.default)(host, options) && host !== 'localhost') {
+    return false;
+  }
+  if (options.host_whitelist && options.host_whitelist.indexOf(host) === -1) {
+    return false;
+  }
+  if (options.host_blacklist && options.host_blacklist.indexOf(host) !== -1) {
+    return false;
+  }
+  return true;
+}
+module.exports = exports['default'];
+},{"./isFQDN":772,"./isIP":778,"./util/assertString":810,"./util/merge":811}],795:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = isUUID;
+
+var _assertString = require('./util/assertString');
+
+var _assertString2 = _interopRequireDefault(_assertString);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var uuid = {
+  3: /^[0-9A-F]{8}-[0-9A-F]{4}-3[0-9A-F]{3}-[0-9A-F]{4}-[0-9A-F]{12}$/i,
+  4: /^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i,
+  5: /^[0-9A-F]{8}-[0-9A-F]{4}-5[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i,
+  all: /^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}$/i
+};
+
+function isUUID(str) {
+  var version = arguments.length <= 1 || arguments[1] === undefined ? 'all' : arguments[1];
+
+  (0, _assertString2.default)(str);
+  var pattern = uuid[version];
+  return pattern && pattern.test(str);
+}
+module.exports = exports['default'];
+},{"./util/assertString":810}],796:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = isUppercase;
+
+var _assertString = require('./util/assertString');
+
+var _assertString2 = _interopRequireDefault(_assertString);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function isUppercase(str) {
+  (0, _assertString2.default)(str);
+  return str === str.toUpperCase();
+}
+module.exports = exports['default'];
+},{"./util/assertString":810}],797:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = isVariableWidth;
+
+var _assertString = require('./util/assertString');
+
+var _assertString2 = _interopRequireDefault(_assertString);
+
+var _isFullWidth = require('./isFullWidth');
+
+var _isHalfWidth = require('./isHalfWidth');
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function isVariableWidth(str) {
+  (0, _assertString2.default)(str);
+  return _isFullWidth.fullWidth.test(str) && _isHalfWidth.halfWidth.test(str);
+}
+module.exports = exports['default'];
+},{"./isFullWidth":774,"./isHalfWidth":775,"./util/assertString":810}],798:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = isWhitelisted;
+
+var _assertString = require('./util/assertString');
+
+var _assertString2 = _interopRequireDefault(_assertString);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function isWhitelisted(str, chars) {
+  (0, _assertString2.default)(str);
+  for (var i = str.length - 1; i >= 0; i--) {
+    if (chars.indexOf(str[i]) === -1) {
+      return false;
+    }
+  }
+  return true;
+}
+module.exports = exports['default'];
+},{"./util/assertString":810}],799:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = ltrim;
+
+var _assertString = require('./util/assertString');
+
+var _assertString2 = _interopRequireDefault(_assertString);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function ltrim(str, chars) {
+  (0, _assertString2.default)(str);
+  var pattern = chars ? new RegExp('^[' + chars + ']+', 'g') : /^\s+/g;
+  return str.replace(pattern, '');
+}
+module.exports = exports['default'];
+},{"./util/assertString":810}],800:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = matches;
+
+var _assertString = require('./util/assertString');
+
+var _assertString2 = _interopRequireDefault(_assertString);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function matches(str, pattern, modifiers) {
+  (0, _assertString2.default)(str);
+  if (Object.prototype.toString.call(pattern) !== '[object RegExp]') {
+    pattern = new RegExp(pattern, modifiers);
+  }
+  return pattern.test(str);
+}
+module.exports = exports['default'];
+},{"./util/assertString":810}],801:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = normalizeEmail;
+
+var _isEmail = require('./isEmail');
+
+var _isEmail2 = _interopRequireDefault(_isEmail);
+
+var _merge = require('./util/merge');
+
+var _merge2 = _interopRequireDefault(_merge);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var default_normalize_email_options = {
+  lowercase: true,
+  remove_dots: true,
+  remove_extension: true
+};
+
+function normalizeEmail(email, options) {
+  options = (0, _merge2.default)(options, default_normalize_email_options);
+  if (!(0, _isEmail2.default)(email)) {
+    return false;
+  }
+  var parts = email.split('@', 2);
+  parts[1] = parts[1].toLowerCase();
+  if (parts[1] === 'gmail.com' || parts[1] === 'googlemail.com') {
+    if (options.remove_extension) {
+      parts[0] = parts[0].split('+')[0];
+    }
+    if (options.remove_dots) {
+      parts[0] = parts[0].replace(/\./g, '');
+    }
+    if (!parts[0].length) {
+      return false;
+    }
+    parts[0] = parts[0].toLowerCase();
+    parts[1] = 'gmail.com';
+  } else if (options.lowercase) {
+    parts[0] = parts[0].toLowerCase();
+  }
+  return parts.join('@');
+}
+module.exports = exports['default'];
+},{"./isEmail":771,"./util/merge":811}],802:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = rtrim;
+
+var _assertString = require('./util/assertString');
+
+var _assertString2 = _interopRequireDefault(_assertString);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function rtrim(str, chars) {
+  (0, _assertString2.default)(str);
+  var pattern = chars ? new RegExp('[' + chars + ']') : /\s/;
+
+  var idx = str.length - 1;
+  while (idx >= 0 && pattern.test(str[idx])) {
+    idx--;
+  }
+
+  return idx < str.length ? str.substr(0, idx + 1) : str;
+}
+module.exports = exports['default'];
+},{"./util/assertString":810}],803:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = stripLow;
+
+var _assertString = require('./util/assertString');
+
+var _assertString2 = _interopRequireDefault(_assertString);
+
+var _blacklist = require('./blacklist');
+
+var _blacklist2 = _interopRequireDefault(_blacklist);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function stripLow(str, keep_new_lines) {
+  (0, _assertString2.default)(str);
+  var chars = keep_new_lines ? '\\x00-\\x09\\x0B\\x0C\\x0E-\\x1F\\x7F' : '\\x00-\\x1F\\x7F';
+  return (0, _blacklist2.default)(str, chars);
+}
+module.exports = exports['default'];
+},{"./blacklist":753,"./util/assertString":810}],804:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = toBoolean;
+
+var _assertString = require('./util/assertString');
+
+var _assertString2 = _interopRequireDefault(_assertString);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function toBoolean(str, strict) {
+  (0, _assertString2.default)(str);
+  if (strict) {
+    return str === '1' || str === 'true';
+  }
+  return str !== '0' && str !== 'false' && str !== '';
+}
+module.exports = exports['default'];
+},{"./util/assertString":810}],805:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = toDate;
+
+var _assertString = require('./util/assertString');
+
+var _assertString2 = _interopRequireDefault(_assertString);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function toDate(date) {
+  (0, _assertString2.default)(date);
+  date = Date.parse(date);
+  return !isNaN(date) ? new Date(date) : null;
+}
+module.exports = exports['default'];
+},{"./util/assertString":810}],806:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = toFloat;
+
+var _assertString = require('./util/assertString');
+
+var _assertString2 = _interopRequireDefault(_assertString);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function toFloat(str) {
+  (0, _assertString2.default)(str);
+  return parseFloat(str);
+}
+module.exports = exports['default'];
+},{"./util/assertString":810}],807:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = toInt;
+
+var _assertString = require('./util/assertString');
+
+var _assertString2 = _interopRequireDefault(_assertString);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function toInt(str, radix) {
+  (0, _assertString2.default)(str);
+  return parseInt(str, radix || 10);
+}
+module.exports = exports['default'];
+},{"./util/assertString":810}],808:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = trim;
+
+var _rtrim = require('./rtrim');
+
+var _rtrim2 = _interopRequireDefault(_rtrim);
+
+var _ltrim = require('./ltrim');
+
+var _ltrim2 = _interopRequireDefault(_ltrim);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function trim(str, chars) {
+  return (0, _rtrim2.default)((0, _ltrim2.default)(str, chars), chars);
+}
+module.exports = exports['default'];
+},{"./ltrim":799,"./rtrim":802}],809:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+      value: true
+});
+exports.default = unescape;
+
+var _assertString = require('./util/assertString');
+
+var _assertString2 = _interopRequireDefault(_assertString);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function unescape(str) {
+      (0, _assertString2.default)(str);
+      return str.replace(/&amp;/g, '&').replace(/&quot;/g, '"').replace(/&#x27;/g, "'").replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&#x2F;/g, '/').replace(/&#96;/g, '`');
+}
+module.exports = exports['default'];
+},{"./util/assertString":810}],810:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = assertString;
+function assertString(input) {
+  if (typeof input !== 'string') {
+    throw new TypeError('This library (validator.js) validates strings only');
+  }
+}
+module.exports = exports['default'];
+},{}],811:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = merge;
+function merge() {
+  var obj = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+  var defaults = arguments[1];
+
+  for (var key in defaults) {
+    if (typeof obj[key] === 'undefined') {
+      obj[key] = defaults[key];
+    }
+  }
+  return obj;
+}
+module.exports = exports['default'];
+},{}],812:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+
+exports.default = toString;
+function toString(input) {
+  if ((typeof input === 'undefined' ? 'undefined' : _typeof(input)) === 'object' && input !== null) {
+    if (typeof input.toString === 'function') {
+      input = input.toString();
+    } else {
+      input = '[object Object]';
+    }
+  } else if (input === null || typeof input === 'undefined' || isNaN(input) && !input.length) {
+    input = '';
+  }
+  return String(input);
+}
+module.exports = exports['default'];
+},{}],813:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = whitelist;
+
+var _assertString = require('./util/assertString');
+
+var _assertString2 = _interopRequireDefault(_assertString);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function whitelist(str, chars) {
+  (0, _assertString2.default)(str);
+  return str.replace(new RegExp('[^' + chars + ']+', 'g'), '');
+}
+module.exports = exports['default'];
+},{"./util/assertString":810}],814:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2014-2015, Facebook, Inc.
@@ -76155,7 +78417,7 @@ if (process.env.NODE_ENV !== 'production') {
 module.exports = warning;
 
 }).call(this,require('_process'))
-},{"_process":360}],752:[function(require,module,exports){
+},{"_process":360}],815:[function(require,module,exports){
 'use strict';
 
 var AppConstants = require('../constants/app-constants');
@@ -76372,7 +78634,7 @@ var AppActions = {
 
 module.exports = AppActions;
 
-},{"../api/deployments-api":753,"../api/devices-api":754,"../api/images-api":755,"../constants/app-constants":789,"../dispatchers/app-dispatcher":790}],753:[function(require,module,exports){
+},{"../api/deployments-api":816,"../api/devices-api":817,"../api/images-api":818,"../constants/app-constants":855,"../dispatchers/app-dispatcher":856}],816:[function(require,module,exports){
 'use strict';
 
 var request = require('superagent');
@@ -76417,7 +78679,7 @@ var Api = {
 
 module.exports = Api;
 
-},{"es6-promise":91,"superagent":747}],754:[function(require,module,exports){
+},{"es6-promise":91,"superagent":747}],817:[function(require,module,exports){
 'use strict';
 
 var request = require('superagent');
@@ -76461,7 +78723,7 @@ var Api = {
 
 module.exports = Api;
 
-},{"es6-promise":91,"superagent":747}],755:[function(require,module,exports){
+},{"es6-promise":91,"superagent":747}],818:[function(require,module,exports){
 'use strict';
 
 var request = require('superagent');
@@ -76524,7 +78786,7 @@ var Api = {
 
 module.exports = Api;
 
-},{"es6-promise":91,"superagent":747}],756:[function(require,module,exports){
+},{"es6-promise":91,"superagent":747}],819:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -76584,7 +78846,131 @@ var App = _react2.default.createClass({
 
 module.exports = App;
 
-},{"../themes/mender-theme.js":794,"./header/header":783,"material-ui":257,"material-ui/lib/styles/getMuiTheme":292,"react":684}],757:[function(require,module,exports){
+},{"../themes/mender-theme.js":860,"./header/header":849,"material-ui":257,"material-ui/lib/styles/getMuiTheme":292,"react":684}],820:[function(require,module,exports){
+'use strict';
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _materialUi = require('material-ui');
+
+var _materialUi2 = _interopRequireDefault(_materialUi);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var FontIcon = _materialUi2.default.FontIcon;
+var FileField = require('react-file-input');
+
+var FileInput = _react2.default.createClass({
+  displayName: 'FileInput',
+
+  render: function render() {
+    return _react2.default.createElement(
+      'div',
+      null,
+      _react2.default.createElement(FileField, {
+        id: this.props.id,
+        name: this.props.name,
+        accept: this.props.accept,
+        placeholder: this.props.placeholder,
+        className: 'fileInput',
+        style: { zIndex: "2" },
+        onChange: this.props.onchange })
+    );
+  }
+});
+
+module.exports = FileInput;
+
+},{"material-ui":257,"react":684,"react-file-input":478}],821:[function(require,module,exports){
+'use strict';
+
+var _validator = require('validator');
+
+var _validator2 = _interopRequireDefault(_validator);
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var Form = _react2.default.createClass({
+  displayName: 'Form',
+
+
+  componentWillMount: function componentWillMount() {
+
+    // If we use the required prop we add a validation rule
+    // that ensures there is a value. The input
+    // should not be valid with empty value
+    if (this.props.required) {
+      this.props.validations = this.props.validations ? this.props.validations + ',' : '';
+      this.props.validations += 'isValue';
+    }
+  },
+  render: function render() {
+    return _react2.default.createElement(
+      'form',
+      null,
+      this.props.children
+    );
+  }
+});
+
+module.exports = Form;
+
+},{"react":684,"validator":751}],822:[function(require,module,exports){
+'use strict';
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _materialUi = require('material-ui');
+
+var _materialUi2 = _interopRequireDefault(_materialUi);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var TextField = _materialUi2.default.TextField;
+// material ui
+
+
+var TextInput = _react2.default.createClass({
+  displayName: 'TextInput',
+
+
+  componentWillMount: function componentWillMount() {
+
+    // If we use the required prop we add a validation rule
+    // that ensures there is a value. The input
+    // should not be valid with empty value
+    var validations = this.props.validations;
+    if (this.props.required) {
+      validations = validations ? validations + ',' : '';
+      validations += 'isValue';
+    }
+    this.setState({ validations: validations });
+  },
+  render: function render() {
+    return _react2.default.createElement(TextField, {
+      id: this.props.id,
+      defaultValue: this.props.defaultValue,
+      hintText: this.props.hint,
+      floatingLabelText: this.props.label,
+      onChange: this.props.onchange,
+      errorStyle: { color: "rgb(171, 16, 0)" },
+      multiLine: this.props.multiLine,
+      rows: this.props.rows,
+      style: { display: "block" } });
+  }
+});
+
+module.exports = TextInput;
+
+},{"material-ui":257,"react":684}],823:[function(require,module,exports){
 "use strict";
 
 var _react = require("react");
@@ -76614,7 +79000,7 @@ var Loader = _react2.default.createClass({
 
 module.exports = Loader;
 
-},{"react":684}],758:[function(require,module,exports){
+},{"react":684}],824:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -76705,7 +79091,7 @@ Activity.contextTypes = {
 
 module.exports = Activity;
 
-},{"material-ui":257,"react":684,"react-router":506,"react-time":522}],759:[function(require,module,exports){
+},{"material-ui":257,"react":684,"react-router":506,"react-time":522}],825:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -76840,7 +79226,7 @@ Dashboard.contextTypes = {
 
 module.exports = Dashboard;
 
-},{"../../actions/app-actions":752,"../../stores/app-store":792,"../../stores/local-store":793,"./activity":758,"./deployments":760,"./health":761,"material-ui":257,"react":684,"react-router":506}],760:[function(require,module,exports){
+},{"../../actions/app-actions":815,"../../stores/app-store":858,"../../stores/local-store":859,"./activity":824,"./deployments":826,"./health":827,"material-ui":257,"react":684,"react-router":506}],826:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -76905,7 +79291,7 @@ var Deployments = _react2.default.createClass({
 
 module.exports = Deployments;
 
-},{"./progress":762,"./recent":763,"./schedule":765,"material-ui":257,"react":684}],761:[function(require,module,exports){
+},{"./progress":828,"./recent":829,"./schedule":831,"material-ui":257,"react":684}],827:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -77033,7 +79419,7 @@ Health.contextTypes = {
 
 module.exports = Health;
 
-},{"../common/loader":757,"react":684,"react-router":506}],762:[function(require,module,exports){
+},{"../common/loader":823,"react":684,"react-router":506}],828:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -77187,7 +79573,7 @@ Progress.contextTypes = {
 
 module.exports = Progress;
 
-},{"../common/loader":757,"../deployments/progressChart.js":771,"material-ui":257,"react":684,"react-router":506,"react-time":522}],763:[function(require,module,exports){
+},{"../common/loader":823,"../deployments/progressChart.js":837,"material-ui":257,"react":684,"react-router":506,"react-time":522}],829:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -77336,7 +79722,7 @@ Recent.contextTypes = {
 
 module.exports = Recent;
 
-},{"../../actions/app-actions":752,"../common/loader":757,"../deployments/groupdevices":770,"./recentstats":764,"material-ui":257,"react":684,"react-router":506,"react-time":522}],764:[function(require,module,exports){
+},{"../../actions/app-actions":815,"../common/loader":823,"../deployments/groupdevices":836,"./recentstats":830,"material-ui":257,"react":684,"react-router":506,"react-time":522}],830:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -77403,7 +79789,7 @@ var RecentStats = _react2.default.createClass({
 
 module.exports = RecentStats;
 
-},{"../../actions/app-actions":752,"react":684}],765:[function(require,module,exports){
+},{"../../actions/app-actions":815,"react":684}],831:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -77523,7 +79909,7 @@ Schedule.contextTypes = {
 
 module.exports = Schedule;
 
-},{"material-ui":257,"react":684,"react-router":506,"react-time":522}],766:[function(require,module,exports){
+},{"material-ui":257,"react":684,"react-router":506,"react-time":522}],832:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -77572,7 +79958,7 @@ var DateTime = _react2.default.createClass({
 
 module.exports = DateTime;
 
-},{"material-ui":257,"react":684}],767:[function(require,module,exports){
+},{"material-ui":257,"react":684}],833:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -77854,7 +80240,7 @@ var Deployments = _react2.default.createClass({
 
 module.exports = Deployments;
 
-},{"../../actions/app-actions":752,"../../stores/app-store":792,"./eventlog.js":769,"./recentdeployments.js":772,"./report.js":773,"./schedule.js":774,"./schedulebutton.js":775,"./scheduleform.js":776,"material-ui":257,"react":684}],768:[function(require,module,exports){
+},{"../../actions/app-actions":815,"../../stores/app-store":858,"./eventlog.js":835,"./recentdeployments.js":838,"./report.js":839,"./schedule.js":840,"./schedulebutton.js":841,"./scheduleform.js":842,"material-ui":257,"react":684}],834:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -77921,7 +80307,7 @@ var DeploymentStatus = _react2.default.createClass({
 
 module.exports = DeploymentStatus;
 
-},{"../../actions/app-actions":752,"material-ui":257,"react":684}],769:[function(require,module,exports){
+},{"../../actions/app-actions":815,"material-ui":257,"react":684}],835:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -77996,7 +80382,7 @@ var EventLog = _react2.default.createClass({
 
 module.exports = EventLog;
 
-},{"material-ui":257,"react":684}],770:[function(require,module,exports){
+},{"material-ui":257,"react":684}],836:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -78039,7 +80425,7 @@ var GroupDevices = _react2.default.createClass({
 
 module.exports = GroupDevices;
 
-},{"../../actions/app-actions":752,"react":684}],771:[function(require,module,exports){
+},{"../../actions/app-actions":815,"react":684}],837:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -78209,7 +80595,7 @@ ProgressChart.contextTypes = {
 
 module.exports = ProgressChart;
 
-},{"../../actions/app-actions":752,"../../stores/app-store":792,"material-ui":257,"react":684,"react-router":506}],772:[function(require,module,exports){
+},{"../../actions/app-actions":815,"../../stores/app-store":858,"material-ui":257,"react":684,"react-router":506}],838:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -78511,7 +80897,7 @@ var Recent = _react2.default.createClass({
 
 module.exports = Recent;
 
-},{"../common/loader":757,"./deploymentstatus":768,"./groupdevices":770,"./progresschart":771,"./report.js":773,"./scheduleform":776,"material-ui":257,"react":684,"react-time":522}],773:[function(require,module,exports){
+},{"../common/loader":823,"./deploymentstatus":834,"./groupdevices":836,"./progresschart":837,"./report.js":839,"./scheduleform":842,"material-ui":257,"react":684,"react-time":522}],839:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -78797,7 +81183,7 @@ var Report = _react2.default.createClass({
 
 module.exports = Report;
 
-},{"../../actions/app-actions":752,"material-ui":257,"react":684,"react-router":506,"react-time":522}],774:[function(require,module,exports){
+},{"../../actions/app-actions":815,"material-ui":257,"react":684,"react-router":506,"react-time":522}],840:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -78958,7 +81344,7 @@ var Schedule = _react2.default.createClass({
 
 module.exports = Schedule;
 
-},{"material-ui":257,"react":684,"react-time":522}],775:[function(require,module,exports){
+},{"material-ui":257,"react":684,"react-time":522}],841:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -78999,7 +81385,7 @@ var ScheduleButton = _react2.default.createClass({
 
 module.exports = ScheduleButton;
 
-},{"material-ui":257,"react":684}],776:[function(require,module,exports){
+},{"material-ui":257,"react":684}],842:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -79375,7 +81761,7 @@ var ScheduleForm = _react2.default.createClass({
 
 module.exports = ScheduleForm;
 
-},{"../../stores/app-store":792,"./datetime.js":766,"material-ui":257,"react":684,"react-router":506,"react-search-input":513}],777:[function(require,module,exports){
+},{"../../stores/app-store":858,"./datetime.js":832,"material-ui":257,"react":684,"react-router":506,"react-search-input":513}],843:[function(require,module,exports){
 'use strict';
 
 var _React$createClass;
@@ -80033,7 +82419,7 @@ var DeviceList = _react2.default.createClass((_React$createClass = {
 
 module.exports = DeviceList;
 
-},{"../../actions/app-actions":752,"../../stores/app-store":792,"../common/loader":757,"./filters":779,"./selecteddevices":781,"material-ui":257,"material-ui/lib/snackbar":287,"react":684,"react-dom":476,"react-time":522}],778:[function(require,module,exports){
+},{"../../actions/app-actions":815,"../../stores/app-store":858,"../common/loader":823,"./filters":845,"./selecteddevices":847,"material-ui":257,"material-ui/lib/snackbar":287,"react":684,"react-dom":476,"react-time":522}],844:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -80231,7 +82617,7 @@ var Devices = _react2.default.createClass({
 
 module.exports = Devices;
 
-},{"../../actions/app-actions":752,"../../stores/app-store":792,"./devicelist":777,"./groups":780,"./unauthorized":782,"material-ui":257,"react":684,"react-router":506}],779:[function(require,module,exports){
+},{"../../actions/app-actions":815,"../../stores/app-store":858,"./devicelist":843,"./groups":846,"./unauthorized":848,"material-ui":257,"react":684,"react-router":506}],845:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -80423,7 +82809,7 @@ var Filters = _react2.default.createClass({
 
 module.exports = Filters;
 
-},{"material-ui":257,"react":684}],780:[function(require,module,exports){
+},{"material-ui":257,"react":684}],846:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -80731,7 +83117,7 @@ var Groups = _react2.default.createClass({
 
 module.exports = Groups;
 
-},{"../../actions/app-actions":752,"../../stores/app-store":792,"material-ui":257,"material-ui/lib/Subheader":211,"react":684,"react-search-input":513}],781:[function(require,module,exports){
+},{"../../actions/app-actions":815,"../../stores/app-store":858,"material-ui":257,"material-ui/lib/Subheader":211,"react":684,"react-search-input":513}],847:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -81064,7 +83450,7 @@ var SelectedDevices = _react2.default.createClass({
 
 module.exports = SelectedDevices;
 
-},{"../../actions/app-actions":752,"../../stores/app-store":792,"../deployments/scheduleform":776,"material-ui":257,"react":684,"react-router":506,"react-tag-input":516,"react-time":522}],782:[function(require,module,exports){
+},{"../../actions/app-actions":815,"../../stores/app-store":858,"../deployments/scheduleform":842,"material-ui":257,"react":684,"react-router":506,"react-tag-input":516,"react-time":522}],848:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -81319,7 +83705,7 @@ var Authorized = _react2.default.createClass({
 
 module.exports = Authorized;
 
-},{"../../actions/app-actions":752,"./selecteddevices":781,"material-ui":257,"react":684,"react-dom":476,"react-time":522}],783:[function(require,module,exports){
+},{"../../actions/app-actions":815,"./selecteddevices":847,"material-ui":257,"react":684,"react-dom":476,"react-time":522}],849:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -81463,7 +83849,7 @@ Header.contextTypes = {
 
 module.exports = Header;
 
-},{"material-ui":257,"material-ui/lib/font-icon":252,"material-ui/lib/icon-button":256,"material-ui/lib/menus/icon-menu":264,"material-ui/lib/menus/menu-item":265,"material-ui/lib/toolbar/toolbar":341,"material-ui/lib/toolbar/toolbar-group":338,"material-ui/lib/toolbar/toolbar-title":340,"react":684,"react-router":506}],784:[function(require,module,exports){
+},{"material-ui":257,"material-ui/lib/font-icon":252,"material-ui/lib/icon-button":256,"material-ui/lib/menus/icon-menu":264,"material-ui/lib/menus/menu-item":265,"material-ui/lib/toolbar/toolbar":341,"material-ui/lib/toolbar/toolbar-group":338,"material-ui/lib/toolbar/toolbar-title":340,"react":684,"react-router":506}],850:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -81486,7 +83872,7 @@ var DeploymentButton = _react2.default.createClass({
 
 module.exports = DeploymentButton;
 
-},{"material-ui":257,"react":684}],785:[function(require,module,exports){
+},{"material-ui":257,"react":684}],851:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -81517,11 +83903,23 @@ var _reactSearchInput = require('react-search-input');
 
 var _reactSearchInput2 = _interopRequireDefault(_reactSearchInput);
 
-var _deploymentbutton = require('./deploymentbutton.js');
+var _form = require('../common/forms/form');
+
+var _form2 = _interopRequireDefault(_form);
+
+var _fileinput = require('../common/forms/fileinput');
+
+var _fileinput2 = _interopRequireDefault(_fileinput);
+
+var _textinput = require('../common/forms/textinput');
+
+var _textinput2 = _interopRequireDefault(_textinput);
+
+var _deploymentbutton = require('./deploymentbutton');
 
 var _deploymentbutton2 = _interopRequireDefault(_deploymentbutton);
 
-var _selectedimage = require('./selectedimage.js');
+var _selectedimage = require('./selectedimage');
 
 var _selectedimage2 = _interopRequireDefault(_selectedimage);
 
@@ -81534,7 +83932,6 @@ var _materialUi2 = _interopRequireDefault(_materialUi);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var update = require('react-addons-update');
-var FileInput = require('react-file-input');
 var Loader = require('../common/loader');
 
 var ReactTags = require('react-tag-input').WithContext;
@@ -81549,7 +83946,6 @@ var TableRow = _materialUi2.default.TableRow;
 var TableRowColumn = _materialUi2.default.TableRowColumn;
 var RaisedButton = _materialUi2.default.RaisedButton;
 var Dialog = _materialUi2.default.Dialog;
-var SelectField = _materialUi2.default.SelectField;
 var TextField = _materialUi2.default.TextField;
 var FlatButton = _materialUi2.default.FlatButton;
 var FontIcon = _materialUi2.default.FontIcon;
@@ -81994,45 +84390,40 @@ var Repository = _react2.default.createClass({
           'div',
           { style: { height: '400px' } },
           _react2.default.createElement(
-            'form',
+            _form2.default,
             null,
-            _react2.default.createElement(TextField, {
+            _react2.default.createElement(_textinput2.default, {
               defaultValue: image.name,
-              hintText: 'Name',
-              ref: 'nameField',
-              id: 'image-name',
-              floatingLabelText: 'Name',
-              onChange: this._handleFieldChange.bind(null, 'name'),
-              errorStyle: { color: "rgb(171, 16, 0)" } }),
-            _react2.default.createElement(FileInput, { name: 'myImage',
+              hint: 'Name',
+              label: 'Name',
+              id: 'name',
+              onchange: this._handleFieldChange.bind(null, 'name'),
+              required: true }),
+            _react2.default.createElement(_fileinput2.default, {
+              name: 'myImage',
+              id: 'imageFile',
               accept: '.tar,.gz,.zip',
               placeholder: 'Upload image',
-              className: 'fileInput',
-              style: { zIndex: "2" },
-              onChange: this.changedFile }),
-            _react2.default.createElement(TextField, {
+              onchange: this.changedFile }),
+            _react2.default.createElement(_textinput2.default, {
+              id: 'yocto_id',
               defaultValue: image.yocto_id,
-              hintText: 'Yocto ID',
-              ref: 'yoctoField',
-              id: 'yocto-id',
-              floatingLabelText: 'Yocto ID',
-              onChange: this._handleFieldChange.bind(null, 'yocto_id'),
-              errorStyle: { color: "rgb(171, 16, 0)" } }),
-            _react2.default.createElement(TextField, {
+              hint: 'Yocto ID',
+              label: 'Yocto ID',
+              onchange: this._handleFieldChange.bind(null, 'yocto_id'),
+              required: true }),
+            _react2.default.createElement(_textinput2.default, {
               id: 'device_type',
-              disabled: false,
-              style: { display: "block" },
-              floatingLabelText: 'Device type compatibility',
-              onChange: this._handleFieldChange.bind(null, 'device_type'),
-              errorStyle: { color: "rgb(171, 16, 0)" } }),
-            _react2.default.createElement(TextField, {
-              hintText: 'Description',
-              floatingLabelText: 'Description',
-              multiLine: true,
+              hint: 'Device type compatibility',
+              label: 'Device type compatibility',
+              onchange: this._handleFieldChange.bind(null, 'device_type'),
+              required: true }),
+            _react2.default.createElement(_textinput2.default, {
               id: 'description',
-              style: { display: "block" },
-              onChange: this._handleFieldChange.bind(null, 'description'),
-              errorStyle: { color: "rgb(171, 16, 0)" },
+              hint: 'Description',
+              label: 'Description',
+              multiLine: true,
+              onchange: this._handleFieldChange.bind(null, 'description'),
               defaultValue: image.description })
           )
         )
@@ -82058,7 +84449,7 @@ var Repository = _react2.default.createClass({
 
 module.exports = Repository;
 
-},{"../../actions/app-actions":752,"../../stores/app-store":792,"../common/loader":757,"../deployments/scheduleform":776,"./deploymentbutton.js":784,"./selectedimage.js":786,"material-ui":257,"react":684,"react-addons-update":365,"react-dom":476,"react-file-input":478,"react-router":506,"react-search-input":513,"react-tag-input":516,"react-time":522}],786:[function(require,module,exports){
+},{"../../actions/app-actions":815,"../../stores/app-store":858,"../common/forms/fileinput":820,"../common/forms/form":821,"../common/forms/textinput":822,"../common/loader":823,"../deployments/scheduleform":842,"./deploymentbutton":850,"./selectedimage":852,"material-ui":257,"react":684,"react-addons-update":365,"react-dom":476,"react-router":506,"react-search-input":513,"react-tag-input":516,"react-time":522}],852:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -82341,7 +84732,7 @@ SelectedImage.contextTypes = {
 
 module.exports = SelectedImage;
 
-},{"material-ui":257,"react":684,"react-router":506,"react-tag-input":516,"react-time":522}],787:[function(require,module,exports){
+},{"material-ui":257,"react":684,"react-router":506,"react-tag-input":516,"react-time":522}],853:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -82457,7 +84848,7 @@ var Software = _react2.default.createClass({
 
 module.exports = Software;
 
-},{"../../actions/app-actions":752,"../../stores/app-store":792,"../../stores/local-store":793,"./repository.js":785,"react":684,"react-router":506}],788:[function(require,module,exports){
+},{"../../actions/app-actions":815,"../../stores/app-store":858,"../../stores/local-store":859,"./repository.js":851,"react":684,"react-router":506}],854:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -82521,7 +84912,7 @@ module.exports = _react2.default.createElement(
   )
 );
 
-},{"../components/app":756,"../components/dashboard/dashboard":759,"../components/deployments/deployments":767,"../components/devices/devices":778,"../components/software/software":787,"react":684,"react-router":506}],789:[function(require,module,exports){
+},{"../components/app":819,"../components/dashboard/dashboard":825,"../components/deployments/deployments":833,"../components/devices/devices":844,"../components/software/software":853,"react":684,"react-router":506}],855:[function(require,module,exports){
 'use strict';
 
 module.exports = {
@@ -82544,7 +84935,7 @@ module.exports = {
   SET_SNACKBAR: 'SET_SNACKBAR'
 };
 
-},{}],790:[function(require,module,exports){
+},{}],856:[function(require,module,exports){
 'use strict';
 
 var Dispatcher = require('flux').Dispatcher;
@@ -82562,7 +84953,7 @@ var AppDispatcher = assign(new Dispatcher(), {
 
 module.exports = AppDispatcher;
 
-},{"flux":94,"react/lib/Object.assign":544}],791:[function(require,module,exports){
+},{"flux":94,"react/lib/Object.assign":544}],857:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -82593,7 +84984,7 @@ var routes = require('./config/routes');
   routes
 ), document.getElementById('main'));
 
-},{"./config/routes":788,"react":684,"react-dom":476,"react-router":506,"react-tap-event-plugin":520}],792:[function(require,module,exports){
+},{"./config/routes":854,"react":684,"react-dom":476,"react-router":506,"react-tap-event-plugin":520}],858:[function(require,module,exports){
 'use strict';
 
 var AppDispatcher = require('../dispatchers/app-dispatcher');
@@ -83321,7 +85712,7 @@ var AppStore = assign(EventEmitter.prototype, {
 
 module.exports = AppStore;
 
-},{"../constants/app-constants":789,"../dispatchers/app-dispatcher":790,"events":92,"react/lib/Object.assign":544}],793:[function(require,module,exports){
+},{"../constants/app-constants":855,"../dispatchers/app-dispatcher":856,"events":92,"react/lib/Object.assign":544}],859:[function(require,module,exports){
 'use strict';
 
 /*
@@ -83368,7 +85759,7 @@ var LocalStore = assign(EventEmitter.prototype, {
 
 module.exports = LocalStore;
 
-},{"../constants/app-constants":789,"../dispatchers/app-dispatcher":790,"events":92,"react/lib/Object.assign":544}],794:[function(require,module,exports){
+},{"../constants/app-constants":855,"../dispatchers/app-dispatcher":856,"events":92,"react/lib/Object.assign":544}],860:[function(require,module,exports){
 'use strict';
 
 var _colorManipulator = require('material-ui/lib/utils/color-manipulator');
@@ -83402,4 +85793,4 @@ module.exports = {
   }
 };
 
-},{"material-ui/lib/styles/colors":291,"material-ui/lib/styles/spacing":294,"material-ui/lib/utils/color-manipulator":348}]},{},[791]);
+},{"material-ui/lib/styles/colors":291,"material-ui/lib/styles/spacing":294,"material-ui/lib/utils/color-manipulator":348}]},{},[857]);

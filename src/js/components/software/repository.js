@@ -5,18 +5,15 @@ import AppActions from '../../actions/app-actions';
 import ScheduleForm from '../deployments/scheduleform';
 import ReactDOM from 'react-dom';
 var update = require('react-addons-update');
-var FileInput = require('react-file-input');
 var Loader = require('../common/loader');
-
 import SearchInput from 'react-search-input';
-
-import DeploymentButton from './deploymentbutton.js';
-import SelectedImage from './selectedimage.js';
-
+import Form from '../common/forms/form';
+import FileInput from '../common/forms/fileinput';
+import TextInput from '../common/forms/textinput';
+import DeploymentButton from './deploymentbutton';
+import SelectedImage from './selectedimage';
 import { Router, Link } from 'react-router';
-
 var ReactTags = require('react-tag-input').WithContext;
-
 
 // material ui
 import mui from 'material-ui';
@@ -28,7 +25,6 @@ var TableRow = mui.TableRow;
 var TableRowColumn = mui.TableRowColumn;
 var RaisedButton = mui.RaisedButton;
 var Dialog = mui.Dialog;
-var SelectField = mui.SelectField;
 var TextField = mui.TextField;
 var FlatButton = mui.FlatButton;
 var FontIcon = mui.FontIcon;
@@ -372,52 +368,47 @@ var Repository = React.createClass({
           actions={uploadActions}
           >
           <div style={{height: '400px'}}>
-            <form>
+            <Form>
 
-              <TextField
+              <TextInput
                 defaultValue={image.name}
-                hintText="Name"
-                ref="nameField"
-                id="image-name"
-                floatingLabelText="Name" 
-                onChange={this._handleFieldChange.bind(null, 'name')}
-                errorStyle={{color: "rgb(171, 16, 0)"}} />
+                hint="Name"
+                label="Name"
+                id="name"
+                onchange={this._handleFieldChange.bind(null, 'name')}
+                required={true} />
 
-              <FileInput name="myImage"
-                   accept=".tar,.gz,.zip"
-                   placeholder="Upload image"
-                   className="fileInput"
-                   style={{zIndex: "2"}}
-                   onChange={this.changedFile} />
+              <FileInput 
+                name="myImage"
+                id="imageFile"
+                accept=".tar,.gz,.zip"
+                placeholder="Upload image"
+                onchange={this.changedFile} />
 
-              <TextField
+              <TextInput
+                id="yocto_id"
                 defaultValue={image.yocto_id}
-                hintText="Yocto ID"
-                ref="yoctoField"
-                id="yocto-id"
-                floatingLabelText="Yocto ID" 
-                onChange={this._handleFieldChange.bind(null, 'yocto_id')}
-                errorStyle={{color: "rgb(171, 16, 0)"}} />
+                hint="Yocto ID"
+                label="Yocto ID"
+                onchange={this._handleFieldChange.bind(null, 'yocto_id')}
+                required={true} />
 
-              <TextField
+              <TextInput
                 id="device_type"
-                disabled={false}
-                style={{display:"block"}}
-                floatingLabelText="Device type compatibility"
-                onChange={this._handleFieldChange.bind(null, 'device_type')} 
-                errorStyle={{color: "rgb(171, 16, 0)"}} />
+                hint="Device type compatibility"
+                label="Device type compatibility"
+                onchange={this._handleFieldChange.bind(null, 'device_type')}
+                required={true} />
 
-              <TextField
-                hintText="Description"
-                floatingLabelText="Description" 
-                multiLine={true}
+              <TextInput
                 id="description"
-                style={{display:"block"}}
-                onChange={this._handleFieldChange.bind(null, 'description')}
-                errorStyle={{color: "rgb(171, 16, 0)"}}
+                hint="Description"
+                label="Description"
+                multiLine={true}
+                onchange={this._handleFieldChange.bind(null, 'description')}
                 defaultValue={image.description} />
 
-            </form>
+            </Form>
           </div>
         </Dialog>
 
