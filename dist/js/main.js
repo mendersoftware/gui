@@ -76164,7 +76164,7 @@ var ImagesApi = require('../api/images-api');
 var DeploymentsApi = require('../api/deployments-api');
 var DevicesApi = require('../api/devices-api');
 var rootUrl = "https://192.168.99.100";
-var apiUrl = rootUrl + ":9080/api/integrations/0.1";
+var apiUrl = rootUrl + "/api/integrations/0.1";
 var deploymentsApiUrl = apiUrl + "/deployments";
 var devicesApiUrl = apiUrl + "/admission";
 
