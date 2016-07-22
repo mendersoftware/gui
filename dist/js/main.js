@@ -78871,7 +78871,7 @@ var FileInput = _react2.default.createClass({
       null,
       _react2.default.createElement(FileField, {
         id: this.props.id,
-        name: this.props.name,
+        name: this.props.id,
         accept: this.props.accept,
         placeholder: this.props.placeholder,
         className: 'fileInput',
@@ -78894,34 +78894,78 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
+var _materialUi = require('material-ui');
+
+var _materialUi2 = _interopRequireDefault(_materialUi);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var FlatButton = _materialUi2.default.FlatButton;
+var RaisedButton = _materialUi2.default.RaisedButton;
 
 var Form = _react2.default.createClass({
   displayName: 'Form',
 
-
   componentWillMount: function componentWillMount() {
+    this.model = {};
+    this.newChildren = {};
+    this.inputs = {}; // We create a map of traversed inputs
+    this.registerInputs(); // We register inputs from the children
+  },
+  registerInputs: function registerInputs() {
+    this.newChildren = _react2.default.Children.map(this.props.children, function (child) {
+      return _react2.default.cloneElement(child, { attachToForm: this.attachToForm, detachFromForm: this.detachFromForm, updateModel: this.updateModel });
+    }.bind(this));
+  },
+  // All methods defined are bound to the component by React JS, so it is safe to use "this"
+  // even though we did not bind it. We add the input component to our inputs map
+  attachToForm: function attachToForm(component) {
+    this.inputs[component.props.id] = component;
+    this.model[component.props.id] = component.state.value;
+  },
 
-    // If we use the required prop we add a validation rule
-    // that ensures there is a value. The input
-    // should not be valid with empty value
-    if (this.props.required) {
-      this.props.validations = this.props.validations ? this.props.validations + ',' : '';
-      this.props.validations += 'isValue';
-    }
+  // We want to remove the input component from the inputs map
+  detachFromForm: function detachFromForm(component) {
+    delete this.inputs[component.props.id];
+    delete this.model[component.props.id];
+  },
+  updateModel: function updateModel(component) {
+    Object.keys(this.inputs).forEach(function (id) {
+      this.model[id] = this.inputs[id].state.value;
+    }.bind(this));
+    this.props.onSubmit(this.model);
   },
   render: function render() {
+
+    var uploadActions = _react2.default.createElement(
+      'div',
+      { className: 'float-right' },
+      _react2.default.createElement(
+        'div',
+        { key: 'cancelcontain', style: { marginRight: "10", display: "inline-block" } },
+        _react2.default.createElement(FlatButton, {
+          key: 'cancel',
+          label: 'Cancel',
+          onClick: this.props.dialogDismiss.bind(null, 'upload') })
+      ),
+      _react2.default.createElement(RaisedButton, {
+        key: 'submit',
+        label: 'Save image',
+        primary: true,
+        onClick: this.updateModel })
+    );
     return _react2.default.createElement(
       'form',
       null,
-      this.props.children
+      this.newChildren,
+      uploadActions
     );
   }
 });
 
 module.exports = Form;
 
-},{"react":684,"validator":751}],822:[function(require,module,exports){
+},{"material-ui":257,"react":684,"validator":751}],822:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -78941,9 +78985,14 @@ var TextField = _materialUi2.default.TextField;
 var TextInput = _react2.default.createClass({
   displayName: 'TextInput',
 
+  getInitialState: function getInitialState() {
+    return {
+      value: this.props.value || ''
+    };
+  },
 
   componentWillMount: function componentWillMount() {
-
+    this.props.attachToForm(this); // Attaching the component to the form
     // If we use the required prop we add a validation rule
     // that ensures there is a value. The input
     // should not be valid with empty value
@@ -78954,14 +79003,23 @@ var TextInput = _react2.default.createClass({
     }
     this.setState({ validations: validations });
   },
+  componentWillUnmount: function componentWillUnmount() {
+    this.props.detachFromForm(this); // Detaching if unmounting
+  },
+  setValue: function setValue(event) {
+    this.setState({
+      value: event.currentTarget.value
+    });
+  },
   render: function render() {
     return _react2.default.createElement(TextField, {
       id: this.props.id,
+      name: this.props.id,
       defaultValue: this.props.defaultValue,
-      value: this.props.value,
+      value: this.state.value,
       hintText: this.props.hint,
       floatingLabelText: this.props.label,
-      onChange: this.props.onchange,
+      onChange: this.setValue,
       errorStyle: { color: "rgb(171, 16, 0)" },
       multiLine: this.props.multiLine,
       rows: this.props.rows,
@@ -84024,10 +84082,10 @@ var Repository = _react2.default.createClass({
     });
     this.dialogDismiss('schedule');
   },
-  _onUploadSubmit: function _onUploadSubmit() {
+  _onUploadSubmit: function _onUploadSubmit(image) {
     var tmpFile = this.state.tmpFile;
 
-    _appActions2.default.uploadImage(newState, function (id_uri) {
+    _appActions2.default.uploadImage(image, function (id_uri) {
       this.props.startLoader();
       _appActions2.default.getUploadUri(id_uri, function (uri) {
         _appActions2.default.doFileUpload(uri, tmpFile, function () {
@@ -84237,18 +84295,6 @@ var Repository = _react2.default.createClass({
         )
       );
     }, this);
-    var uploadActions = [_react2.default.createElement(
-      'div',
-      { key: 'cancelcontain', style: { marginRight: "10", display: "inline-block" } },
-      _react2.default.createElement(FlatButton, {
-        key: 'cancel',
-        label: 'Cancel',
-        onClick: this.dialogDismiss.bind(null, 'upload') })
-    ), _react2.default.createElement(RaisedButton, {
-      key: 'submit',
-      label: 'Save image',
-      primary: true,
-      onClick: this._onUploadSubmit })];
 
     var scheduleActions = [_react2.default.createElement(
       'div',
@@ -84388,17 +84434,16 @@ var Repository = _react2.default.createClass({
           open: this.state.upload,
           title: this.state.popupLabel,
           autoDetectWindowHeight: true,
-          autoScrollBodyContent: true,
-          actions: uploadActions
+          autoScrollBodyContent: true
+
         },
         _react2.default.createElement(
           'div',
           { style: { height: '400px' } },
           _react2.default.createElement(
             _form2.default,
-            null,
+            { dialogDismiss: this.dialogDismiss, onSubmit: this._onUploadSubmit },
             _react2.default.createElement(_fileinput2.default, {
-              name: 'myImage',
               id: 'imageFile',
               accept: '.tar,.gz,.zip',
               placeholder: 'Upload image',
@@ -85800,4 +85845,3 @@ module.exports = {
 };
 
 },{"material-ui/lib/styles/colors":291,"material-ui/lib/styles/spacing":294,"material-ui/lib/utils/color-manipulator":348}]},{},[857]);
-

@@ -9,7 +9,7 @@ var FileInput = React.createClass({
       <div>
         <FileField
           id={this.props.id}
-          name={this.props.name}
+          name={this.props.id}
           accept={this.props.accept}
           placeholder={this.props.placeholder}
           className="fileInput"

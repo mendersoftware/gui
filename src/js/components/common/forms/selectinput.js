@@ -7,6 +7,8 @@ var SelectInput = React.createClass({
   render: function () {
     return (
       <TextField
+        id={this.props.id}
+        name={this.props.id}
         defaultValue={this.props.default}
         hintText={this.props.hint}
         floatingLabelText={this.props.label} 

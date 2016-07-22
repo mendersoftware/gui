@@ -100,10 +100,10 @@ var Repository = React.createClass({
     });
     this.dialogDismiss('schedule');
   },
-  _onUploadSubmit: function() {
+  _onUploadSubmit: function(image) {
     var tmpFile = this.state.tmpFile;
 
-    AppActions.uploadImage(newState, function(id_uri) {
+    AppActions.uploadImage(image, function(id_uri) {
       this.props.startLoader();
       AppActions.getUploadUri(id_uri, function(uri) {
         AppActions.doFileUpload(uri, tmpFile, function() {
@@ -282,19 +282,6 @@ var Repository = React.createClass({
         </TableRow>
       )
     }, this);
-    var uploadActions = [
-      <div key="cancelcontain" style={{marginRight:"10", display:"inline-block"}}>
-        <FlatButton
-          key="cancel"
-          label="Cancel"
-          onClick={this.dialogDismiss.bind(null, 'upload')} />
-      </div>,
-      <RaisedButton
-        key="submit"
-        label="Save image"
-        primary={true}
-        onClick={this._onUploadSubmit} />
-    ];
 
     var scheduleActions = [
       <div key="cancelcontain2" style={{marginRight:"10", display:"inline-block"}}>
@@ -369,13 +356,12 @@ var Repository = React.createClass({
           title={this.state.popupLabel}
           autoDetectWindowHeight={true}
           autoScrollBodyContent={true}
-          actions={uploadActions}
+   
           >
           <div style={{height: '400px'}}>
-            <Form>
+            <Form dialogDismiss={this.dialogDismiss} onSubmit={this._onUploadSubmit}>
 
               <FileInput 
-                name="myImage"
                 id="imageFile"
                 accept=".tar,.gz,.zip"
                 placeholder="Upload image"
