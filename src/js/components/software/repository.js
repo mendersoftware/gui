@@ -5,18 +5,15 @@ import AppActions from '../../actions/app-actions';
 import ScheduleForm from '../deployments/scheduleform';
 import ReactDOM from 'react-dom';
 var update = require('react-addons-update');
-var FileInput = require('react-file-input');
 var Loader = require('../common/loader');
-
 import SearchInput from 'react-search-input';
-
-import DeploymentButton from './deploymentbutton.js';
-import SelectedImage from './selectedimage.js';
-
+import Form from '../common/forms/form';
+import FileInput from '../common/forms/fileinput';
+import TextInput from '../common/forms/textinput';
+import DeploymentButton from './deploymentbutton';
+import SelectedImage from './selectedimage';
 import { Router, Link } from 'react-router';
-
 var ReactTags = require('react-tag-input').WithContext;
-
 
 // material ui
 import mui from 'material-ui';
@@ -28,7 +25,6 @@ var TableRow = mui.TableRow;
 var TableRowColumn = mui.TableRowColumn;
 var RaisedButton = mui.RaisedButton;
 var Dialog = mui.Dialog;
-var SelectField = mui.SelectField;
 var TextField = mui.TextField;
 var FlatButton = mui.FlatButton;
 var FontIcon = mui.FontIcon;
@@ -44,7 +40,8 @@ var Repository = React.createClass({
       image: {
         name: null,
         description: null,
-        yocto_id: null
+        yocto_id: null,
+        device_type: null
       },
       sortCol: "name",
       sortDown: true,
@@ -68,13 +65,15 @@ var Repository = React.createClass({
     var image = {
       name: null,
       description: null,
-      yocto_id: null
+      yocto_id: null,
+      device_type: null
     };
     this.setState({image: image});
   },
 
   _handleFieldChange: function(field, e) {
     newState[field] = e.target.value;
+    this.setState({image: newState});
   },
   _openSchedule: function(ref, image) {
     this.dialogOpen(ref);
@@ -101,10 +100,10 @@ var Repository = React.createClass({
     });
     this.dialogDismiss('schedule');
   },
-  _onUploadSubmit: function() {
+  _onUploadSubmit: function(image) {
     var tmpFile = this.state.tmpFile;
 
-    AppActions.uploadImage(newState, function(id_uri) {
+    AppActions.uploadImage(image, function(id_uri) {
       this.props.startLoader();
       AppActions.getUploadUri(id_uri, function(uri) {
         AppActions.doFileUpload(uri, tmpFile, function() {
@@ -181,7 +180,8 @@ var Repository = React.createClass({
       this.setState({popupLabel: "Edit image details"});
       newState = image;
     } else {
-      this.setState({image: newState, popupLabel: "Upload a new image"});
+      this._resetImageState();
+      this.setState({popupLabel: "Upload a new image"});
     }
     tags = [];
     for (var i in newState.tags) {
@@ -194,7 +194,9 @@ var Repository = React.createClass({
       this.setState({tmpFile: event.target.files[0]});
       if (!this.state.image.name) {
         newState.name = event.target.files[0].name;
-        this.refs.nameField.setValue(event.target.files[0].name);
+        var image = this.state.image;
+        image.name = event.target.files[0].name;
+        this.setState({image:image});
       }
     }
   },
@@ -252,8 +254,6 @@ var Repository = React.createClass({
       });
     }
     
-    var image = this.state.image;
-    
     if (this.refs.search) {
       var filters = ['name', 'device_type', 'tags', 'description'];
       tmpSoftware = software.filter(this.refs.search.filter(filters));
@@ -282,19 +282,6 @@ var Repository = React.createClass({
         </TableRow>
       )
     }, this);
-    var uploadActions = [
-      <div key="cancelcontain" style={{marginRight:"10", display:"inline-block"}}>
-        <FlatButton
-          key="cancel"
-          label="Cancel"
-          onClick={this.dialogDismiss.bind(null, 'upload')} />
-      </div>,
-      <RaisedButton
-        key="submit"
-        label="Save image"
-        primary={true}
-        onClick={this._onUploadSubmit} />
-    ];
 
     var scheduleActions = [
       <div key="cancelcontain2" style={{marginRight:"10", display:"inline-block"}}>
@@ -369,55 +356,54 @@ var Repository = React.createClass({
           title={this.state.popupLabel}
           autoDetectWindowHeight={true}
           autoScrollBodyContent={true}
-          actions={uploadActions}
+   
           >
           <div style={{height: '400px'}}>
-            <form>
+            <Form dialogDismiss={this.dialogDismiss} onSubmit={this._onUploadSubmit}>
 
-              <TextField
-                defaultValue={image.name}
-                hintText="Name"
-                ref="nameField"
-                id="image-name"
-                floatingLabelText="Name" 
-                onChange={this._handleFieldChange.bind(null, 'name')}
-                errorStyle={{color: "rgb(171, 16, 0)"}} />
+              <FileInput 
+                id="imageFile"
+                accept=".tar,.gz,.zip"
+                placeholder="Upload image"
+                onchange={this.changedFile}
+                required={true}
+                file={true} />
 
-              <FileInput name="myImage"
-                   accept=".tar,.gz,.zip"
-                   placeholder="Upload image"
-                   className="fileInput"
-                   style={{zIndex: "2"}}
-                   onChange={this.changedFile} />
+              <TextInput
+                value={this.state.image.name}
+                hint="Name"
+                label="Name"
+                id="name"
+                onchange={this._handleFieldChange.bind(null, 'name')}
+                required={true}
+                validations="isAlphanumeric" />
 
-              <TextField
-                defaultValue={image.yocto_id}
-                hintText="Yocto ID"
-                ref="yoctoField"
-                id="yocto-id"
-                floatingLabelText="Yocto ID" 
-                onChange={this._handleFieldChange.bind(null, 'yocto_id')}
-                errorStyle={{color: "rgb(171, 16, 0)"}} />
+              <TextInput
+                id="yocto_id"
+                value={this.state.image.yocto_id}
+                hint="Yocto ID"
+                label="Yocto ID"
+                onchange={this._handleFieldChange.bind(null, 'yocto_id')}
+                required={true}
+                validations="isLength:4,isAlphanumeric" />
 
-              <TextField
+              <TextInput
                 id="device_type"
-                disabled={false}
-                style={{display:"block"}}
-                floatingLabelText="Device type compatibility"
-                onChange={this._handleFieldChange.bind(null, 'device_type')} 
-                errorStyle={{color: "rgb(171, 16, 0)"}} />
+                hint="Device type compatibility"
+                label="Device type compatibility"
+                onchange={this._handleFieldChange.bind(null, 'device_type')}
+                required={true}
+                value={this.state.image.device_type} />
 
-              <TextField
-                hintText="Description"
-                floatingLabelText="Description" 
-                multiLine={true}
+              <TextInput
                 id="description"
-                style={{display:"block"}}
-                onChange={this._handleFieldChange.bind(null, 'description')}
-                errorStyle={{color: "rgb(171, 16, 0)"}}
-                defaultValue={image.description} />
+                hint="Description"
+                label="Description"
+                multiLine={true}
+                onchange={this._handleFieldChange.bind(null, 'description')}
+                value={this.state.image.description} />
 
-            </form>
+            </Form>
           </div>
         </Dialog>
 

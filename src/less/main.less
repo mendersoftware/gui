@@ -670,11 +670,21 @@ input[type="text"].fileInput {
   width: 256px !important;
   margin: 32px 0 10px 0;
   cursor: pointer;
+  z-index: 1 !important;
   &:first-child {
     z-index: 2 !important;
+    cursor: pointer !important;
   }
-  &:last-child {
-    z-index: 1 !important;
+
+  .placeholder({
+    background-image: url('../assets/img/file_upload.png');
+    background-position: right;
+    background-repeat: no-repeat;
+  });
+
+  &.error {
+    border-bottom-width: 2px;
+    border-bottom-color: rgb(171, 16, 0);
   }
 }
 

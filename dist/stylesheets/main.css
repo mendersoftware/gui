@@ -589,14 +589,41 @@ input[type="text"].fileInput {
   width: 256px !important;
   margin: 32px 0 10px 0;
   cursor: pointer;
+  z-index: 1 !important;
 }
 input[type="file"].fileInput:first-child,
 input[type="text"].fileInput:first-child {
   z-index: 2 !important;
+  cursor: pointer !important;
 }
-input[type="file"].fileInput:last-child,
-input[type="text"].fileInput:last-child {
-  z-index: 1 !important;
+input[type="file"].fileInput::-webkit-input-placeholder,
+input[type="text"].fileInput::-webkit-input-placeholder {
+  background-image: url('../assets/img/file_upload.png');
+  background-position: right;
+  background-repeat: no-repeat;
+}
+input[type="file"].fileInput:-moz-placeholder,
+input[type="text"].fileInput:-moz-placeholder {
+  background-image: url('../assets/img/file_upload.png');
+  background-position: right;
+  background-repeat: no-repeat;
+}
+input[type="file"].fileInput::-moz-placeholder,
+input[type="text"].fileInput::-moz-placeholder {
+  background-image: url('../assets/img/file_upload.png');
+  background-position: right;
+  background-repeat: no-repeat;
+}
+input[type="file"].fileInput:-ms-input-placeholder,
+input[type="text"].fileInput:-ms-input-placeholder {
+  background-image: url('../assets/img/file_upload.png');
+  background-position: right;
+  background-repeat: no-repeat;
+}
+input[type="file"].fileInput.error,
+input[type="text"].fileInput.error {
+  border-bottom-width: 2px;
+  border-bottom-color: #ab1000;
 }
 textarea#inline-description {
   height: initial !important;
