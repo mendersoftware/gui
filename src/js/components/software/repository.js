@@ -365,7 +365,9 @@ var Repository = React.createClass({
                 id="imageFile"
                 accept=".tar,.gz,.zip"
                 placeholder="Upload image"
-                onchange={this.changedFile} />
+                onchange={this.changedFile}
+                required={true}
+                file={true} />
 
               <TextInput
                 value={this.state.image.name}

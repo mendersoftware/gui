@@ -78865,6 +78865,25 @@ var FileField = require('react-file-input');
 var FileInput = _react2.default.createClass({
   displayName: 'FileInput',
 
+  getInitialState: function getInitialState() {
+    return {
+      value: this.props.value || '',
+      errorText: null,
+      isValid: true
+    };
+  },
+  componentWillMount: function componentWillMount() {
+    this.props.attachToForm(this); // Attaching the component to the form
+  },
+  componentWillUnmount: function componentWillUnmount() {
+    this.props.detachFromForm(this); // Detaching if unmounting
+  },
+  setValue: function setValue(event) {
+    if (event.target.files.length) {
+      this.setState({ file: event.target.files[0] });
+    }
+    this.props.validate(this, event.target.files[0]);
+  },
   render: function render() {
     return _react2.default.createElement(
       'div',
@@ -78874,9 +78893,15 @@ var FileInput = _react2.default.createClass({
         name: this.props.id,
         accept: this.props.accept,
         placeholder: this.props.placeholder,
-        className: 'fileInput',
+        className: this.state.errorText ? "fileInput error" : "fileInput",
         style: { zIndex: "2" },
-        onChange: this.props.onchange })
+        onChange: this.setValue
+      }),
+      _react2.default.createElement(
+        'span',
+        { style: { color: "rgb(171, 16, 0)", fontSize: "12px", position: "relative", top: "-6" } },
+        this.state.errorText
+      )
     );
   }
 });
@@ -78942,27 +78967,37 @@ var Form = _react2.default.createClass({
     var isValid = true;
     var errorText = '';
 
-    if (value || component.props.required) {
-      component.props.validations.split(',').forEach(function (validation) {
-        var args = validation.split(':');
-        var validateMethod = args.shift();
-        // We use JSON.parse to convert the string values passed to the
-        // correct type. Ex. 'isLength:1' will make '1' actually a number
-        args = args.map(function (arg) {
-          return JSON.parse(arg);
-        });
+    if (component.props.file) {
+      console.log(value);
+      if (component.props.required && !value) {
+        console.log("no val");
+        isValid = false;
+        errorText = "You must choose a file to upload";
+      }
+    } else {
 
-        var tmpArgs = args;
-        // We then merge two arrays, ending up with the value
-        // to pass first, then options, if any. ['valueFromInput', 5]
-        args = [value].concat(args);
-        // So the next line of code is actually:
-        // validator.isLength('valueFromInput', 5)
-        if (!_validator2.default[validateMethod].apply(_validator2.default, args)) {
-          errorText = this.getErrorMsg(validateMethod, tmpArgs);
-          isValid = false;
-        }
-      }.bind(this));
+      if (value || component.props.required) {
+        component.props.validations.split(',').forEach(function (validation) {
+          var args = validation.split(':');
+          var validateMethod = args.shift();
+          // We use JSON.parse to convert the string values passed to the
+          // correct type. Ex. 'isLength:1' will make '1' actually a number
+          args = args.map(function (arg) {
+            return JSON.parse(arg);
+          });
+
+          var tmpArgs = args;
+          // We then merge two arrays, ending up with the value
+          // to pass first, then options, if any. ['valueFromInput', 5]
+          args = [value].concat(args);
+          // So the next line of code is actually:
+          // validator.isLength('valueFromInput', 5)
+          if (!_validator2.default[validateMethod].apply(_validator2.default, args)) {
+            errorText = this.getErrorMsg(validateMethod, tmpArgs);
+            isValid = false;
+          }
+        }.bind(this));
+      }
     }
 
     // Now we set the state of the input based on the validation
@@ -78976,18 +79011,18 @@ var Form = _react2.default.createClass({
 
   getErrorMsg: function getErrorMsg(validateMethod, args) {
     switch (validateMethod) {
-      case "isAlpha":
-        return "This field must contain only letters";
-        break;
-      case "isAlphanumeric":
-        return "This field must contain only letters or numbers";
-        break;
       case "isLength":
         if (args[0] === 1) {
           return "This field is required";
         } else if (args[0] > 1) {
           return "Must be at least " + args[0] + " characters long";
         }
+        break;
+      case "isAlpha":
+        return "This field must contain only letters";
+        break;
+      case "isAlphanumeric":
+        return "This field must contain only letters or numbers";
         break;
       default:
         return "There is an error with this field";
@@ -84554,7 +84589,9 @@ var Repository = _react2.default.createClass({
               id: 'imageFile',
               accept: '.tar,.gz,.zip',
               placeholder: 'Upload image',
-              onchange: this.changedFile }),
+              onchange: this.changedFile,
+              required: true,
+              file: true }),
             _react2.default.createElement(_textinput2.default, {
               value: this.state.image.name,
               hint: 'Name',
