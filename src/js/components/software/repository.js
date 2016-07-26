@@ -373,7 +373,8 @@ var Repository = React.createClass({
                 label="Name"
                 id="name"
                 onchange={this._handleFieldChange.bind(null, 'name')}
-                required={true} />
+                required={true}
+                validations="isAlphanumeric" />
 
               <TextInput
                 id="yocto_id"
@@ -381,7 +382,8 @@ var Repository = React.createClass({
                 hint="Yocto ID"
                 label="Yocto ID"
                 onchange={this._handleFieldChange.bind(null, 'yocto_id')}
-                required={true} />
+                required={true}
+                validations="isLength:4,isAlphanumeric" />
 
               <TextInput
                 id="device_type"

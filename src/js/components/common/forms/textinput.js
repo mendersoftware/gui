@@ -6,21 +6,14 @@ var TextField = mui.TextField;
 var TextInput = React.createClass({
   getInitialState: function () {
     return {
-      value: this.props.value || ''
+      value: this.props.value || '',
+      errorText: null,
+      isValid: true
     };
   },
 
   componentWillMount: function () {
     this.props.attachToForm(this); // Attaching the component to the form
-    // If we use the required prop we add a validation rule
-    // that ensures there is a value. The input
-    // should not be valid with empty value
-    var validations = this.props.validations;
-    if (this.props.required) {
-      validations = validations ? validations + ',' : '';
-      validations += 'isValue';
-    }
-    this.setState({validations: validations});
   },
   componentWillUnmount: function () {
     this.props.detachFromForm(this); // Detaching if unmounting
@@ -29,6 +22,7 @@ var TextInput = React.createClass({
     this.setState({
       value: event.currentTarget.value
     });
+    this.props.validate(this, event.currentTarget.value);
   },
   render: function () {
     return (
@@ -43,7 +37,8 @@ var TextInput = React.createClass({
         errorStyle={{color: "rgb(171, 16, 0)"}}
         multiLine={this.props.multiLine}
         rows={this.props.rows}
-        style={{display:"block"}} />
+        style={{display:"block"}}
+        errorText={this.state.errorText} />
     )
   }
 });

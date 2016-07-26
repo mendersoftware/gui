@@ -6,6 +6,12 @@ var FlatButton = mui.FlatButton;
 var RaisedButton = mui.RaisedButton;
 
 var Form = React.createClass({
+  getInitialState: function() {
+    return {
+      isSubmitting: false,
+      isValid: false 
+    };
+  },
   componentWillMount: function () {
     this.model = {};
     this.newChildren = {};
@@ -14,15 +20,114 @@ var Form = React.createClass({
   },
   registerInputs: function() {
     this.newChildren = React.Children.map(this.props.children, function(child) {
-      return React.cloneElement(child, {attachToForm:this.attachToForm, detachFromForm:this.detachFromForm, updateModel:this.updateModel})
+
+       // If we use the required prop we add a validation rule
+      // that ensures there is a value. The input
+      // should not be valid with empty value
+      var validations = child.props.validations;
+      if (child.props.required) {
+        validations = child.props.validations ? child.props.validations + ',' : '';
+        validations += 'isLength:1';
+      }
+
+      return React.cloneElement(child, {validations: validations, attachToForm:this.attachToForm, detachFromForm:this.detachFromForm, updateModel:this.updateModel, validate:this.validate})
     }.bind(this));
   
   },
+
+  validate: function (component, value) {
+    if (!component.props.validations) {
+      return;
+    }
+  
+    var isValid = true;
+    var errorText = '';
+
+    if (value || component.props.required) {
+      component.props.validations.split(',').forEach(function (validation) {
+        var args = validation.split(':');
+        var validateMethod = args.shift();
+         // We use JSON.parse to convert the string values passed to the
+        // correct type. Ex. 'isLength:1' will make '1' actually a number
+        args = args.map(function (arg) { return JSON.parse(arg); });
+
+        var tmpArgs = args;
+        // We then merge two arrays, ending up with the value
+        // to pass first, then options, if any. ['valueFromInput', 5]
+        args = [value].concat(args);
+        // So the next line of code is actually:
+        // validator.isLength('valueFromInput', 5)
+        if (!validator[validateMethod].apply(validator, args)) {
+          errorText = this.getErrorMsg(validateMethod, tmpArgs);
+          isValid = false;
+        }
+      }.bind(this));
+    }
+
+     // Now we set the state of the input based on the validation
+    component.setState({
+      isValid: isValid,
+      errorText: errorText,
+      // We use the callback of setState to wait for the state
+      // change being propagated, then we validate the form itself
+    }, this.validateForm);
+
+  },
+
+  getErrorMsg: function (validateMethod, args) {
+    switch (validateMethod) {
+      case "isAlpha":
+        return "This field must contain only letters"
+        break;
+      case "isAlphanumeric":
+        return "This field must contain only letters or numbers"
+        break;
+      case "isLength":
+        if (args[0] === 1) {
+          return "This field is required"
+        } else if (args[0]>1) {
+           return "Must be at least " + args[0] + " characters long"
+        }
+        break;
+      default:
+         return "There is an error with this field"
+        break;
+    }
+  },
+
+  validateForm: function () {
+    
+    // We set allIsValid to true and flip it if we find any
+    // invalid input components
+    var allIsValid = true;
+    
+    // Now we run through the inputs registered and flip our state
+    // if we find an invalid input component
+    var inputs = this.inputs;
+    Object.keys(inputs).forEach(function (name) {
+      if (!inputs[name].state.isValid) {
+        allIsValid = false;
+      }
+    });
+    
+    // And last, but not least, we set the valid state of the
+    // form itself
+    this.setState({
+      isValid: allIsValid
+    });
+  },
+
+
+
   // All methods defined are bound to the component by React JS, so it is safe to use "this"
   // even though we did not bind it. We add the input component to our inputs map
   attachToForm: function (component) {
     this.inputs[component.props.id] = component;
     this.model[component.props.id] = component.state.value;
+
+    // We have to validate the input when it is attached to put the
+    // form in its correct state
+    //this.validate(component);
   },
   
   // We want to remove the input component from the inputs map
@@ -31,10 +136,18 @@ var Form = React.createClass({
     delete this.model[component.props.id];
   },
   updateModel: function (component) {
+    Object.keys(this.inputs).forEach(function (name) {
+      // re validate each input in case submit button pressed too soon
+      this.validate(this.inputs[name], this.inputs[name].state.value);
+    }.bind(this));
+
+    this.validateForm();
     Object.keys(this.inputs).forEach(function (id) {
       this.model[id] = this.inputs[id].state.value;
     }.bind(this));
-    this.props.onSubmit(this.model);
+    if (this.state.isValid) {
+      this.props.onSubmit(this.model);
+    }
   },
   render: function () {
 
