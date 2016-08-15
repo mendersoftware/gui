@@ -243,7 +243,7 @@ var Deployments = React.createClass({
           <Tab key={1}
           style={styles.tabs}
           label={"In progress"}>
-            <Progress loading={!this.state.doneLoading} progress={this.state.progress} showReport={this._showReport} />
+            <Progress loading={!this.state.doneLoading} progress={this.state.progress} showReport={this._showReport} createClick={this.dialogOpen.bind(null, "schedule")}/>
           </Tab>
 
           <Tab key={2}
@@ -258,7 +258,7 @@ var Deployments = React.createClass({
         <div className="top-right-button">
           <ScheduleButton secondary={true} openDialog={this.dialogOpen} />
         </div>
-        
+
         <Dialog
           ref="dialog"
           title={this.state.dialogTitle}

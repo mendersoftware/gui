@@ -80421,7 +80421,7 @@ var Deployments = _react2.default.createClass({
           { key: 1,
             style: styles.tabs,
             label: "In progress" },
-          _react2.default.createElement(Progress, { loading: !this.state.doneLoading, progress: this.state.progress, showReport: this._showReport })
+          _react2.default.createElement(Progress, { loading: !this.state.doneLoading, progress: this.state.progress, showReport: this._showReport, createClick: this.dialogOpen.bind(null, "schedule") })
         ),
         _react2.default.createElement(
           Tab,
@@ -80806,7 +80806,13 @@ var Progress = _react2.default.createClass({
           _react2.default.createElement(
             'p',
             null,
-            'Ongoing deployments will appear here. Create a deployment to get started'
+            'Ongoing deployments will appear here. ',
+            _react2.default.createElement(
+              'a',
+              { onClick: this.props.createClick },
+              'Create a deployment'
+            ),
+            ' to get started'
           ),
           _react2.default.createElement('img', { src: 'assets/img/deployments.png', alt: 'In progress' })
         )

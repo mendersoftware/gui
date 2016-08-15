@@ -89,7 +89,7 @@ var Progress = React.createClass({
             </TableBody>
           </Table>
           <div className={(progressMap.length || this.props.loading)  ? 'hidden' : "dashboard-placeholder"}>
-            <p>Ongoing deployments will appear here. Create a deployment to get started</p>
+            <p>Ongoing deployments will appear here. <a onClick={this.props.createClick}>Create a deployment</a> to get started</p>
             <img src="assets/img/deployments.png" alt="In progress" />
           </div>
         </div>
