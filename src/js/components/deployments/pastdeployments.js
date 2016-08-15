@@ -3,8 +3,6 @@ var Time = require('react-time');
 var Report = require('./report.js');
 var ScheduleForm = require('./scheduleform');
 var GroupDevices = require('./groupdevices');
-
-var ProgressChart = require('./progresschart');
 var DeploymentStatus = require('./deploymentstatus');
 
 var Loader = require('../common/loader');
@@ -19,10 +17,9 @@ var TableRow = mui.TableRow;
 var TableRowColumn = mui.TableRowColumn;
 var FlatButton = mui.FlatButton;
 
-var progress = [];
-var recent = [];
+var past = [];
 
-var Recent = React.createClass({
+var Past = React.createClass({
   getInitialState: function() {
     return {
       showReport: null,
@@ -30,37 +27,17 @@ var Recent = React.createClass({
     };
   },
   componentWillReceiveProps: function(nextProps) {
-    progress = nextProps.progress;
-    recent = nextProps.recent;
+    past = nextProps.past;
   },
-  _recentCellClick: function(rowNumber, columnId) {
-    var report = recent[rowNumber];
-    this.props.showReport(report);
-  },
-  _progressCellClick: function(rowNumber, columnId) {
-    var report = progress[rowNumber];
+  _pastCellClick: function(rowNumber, columnId) {
+    var report = past[rowNumber];
     this.props.showReport(report);
   },
   _formatTime: function(date) {
     return date.replace(' ','T').replace(/ /g, '').replace('UTC','');
   },
   render: function() {
-    // get statistics for each in progress
-    var progressMap = progress.map(function(deployment, index) {
-
-      return (
-        <TableRow key={index}>
-          <TableRowColumn>{deployment.name}</TableRowColumn>
-          <TableRowColumn>{deployment.artifact_name}</TableRowColumn>
-          <TableRowColumn><GroupDevices deployment={deployment.id} /></TableRowColumn>
-          <TableRowColumn><Time value={this._formatTime(deployment.created)} format="YYYY-MM-DD HH:mm" /></TableRowColumn>
-          <TableRowColumn>--</TableRowColumn>
-          <TableRowColumn>In progress</TableRowColumn>
-        </TableRow>
-      )
-    }, this);
- 
-    var recentMap = recent.map(function(deployment, index) {
+    var pastMap = past.map(function(deployment, index) {
       //  get statistics
       var status = (
         <DeploymentStatus id={deployment.id} />
@@ -87,45 +64,11 @@ var Recent = React.createClass({
     ];
     return (
       <div>
-        <div className="deploy-table-contain"> 
-          <h3>In progress</h3>
-
-          <Loader show={this.props.loading} />
-          <Table
-            onCellClick={this._progressCellClick}
-            className={progressMap.length ? null : 'hidden'}
-            selectable={false}>
-            <TableHeader
-              displaySelectAll={false}
-              adjustForCheckbox={false}>
-              <TableRow>
-                <TableHeaderColumn tooltip="Device group">Group</TableHeaderColumn>
-                <TableHeaderColumn tooltip="Target software version">Target software</TableHeaderColumn>
-                <TableHeaderColumn tooltip="Number of devices"># Devices</TableHeaderColumn>
-                <TableHeaderColumn tooltip="Start time">Start time</TableHeaderColumn>
-                <TableHeaderColumn tooltip="End time">End time</TableHeaderColumn>
-                <TableHeaderColumn tooltip="Status">Status</TableHeaderColumn>
-              </TableRow>
-            </TableHeader>
-            <TableBody
-              showRowHover={true}
-              displayRowCheckbox={false}
-              className="clickable">
-              {progressMap}
-            </TableBody>
-          </Table>
-          <div className={(progressMap.length || this.props.loading)  ? 'hidden' : "dashboard-placeholder"}>
-            <p>Ongoing deployments will appear here. Create a deployment to get started</p>
-            <img src="assets/img/deployments.png" alt="In progress" />
-          </div>
-        </div>
-
         <div className="deploy-table-contain">
-          <h3>Recent</h3>
           <Loader show={this.props.loading} />
           <Table
-            onCellClick={this._recentCellClick}
-            className={recentMap.length ? null : 'hidden'}
+            onCellClick={this._pastCellClick}
+            className={pastMap.length ? null : 'hidden'}
             selectable={false}>
             <TableHeader
               displaySelectAll={false}
@@ -143,14 +86,14 @@ var Recent = React.createClass({
               showRowHover={true}
               displayRowCheckbox={false}
               style={{cursor:"pointer"}}>
-              {recentMap}
+              {pastMap}
             </TableBody>
           </Table>
 
-          <div className={(recentMap.length || this.props.loading) ? 'hidden' : "dashboard-placeholder"}>
+          <div className={(pastMap.length || this.props.loading) ? 'hidden' : "dashboard-placeholder"}>
             <p>Completed deployments will appear here.</p>
             <p>You can review logs and reports for each device group you've deployed to</p>
-            <img src="assets/img/history.png" alt="Recent" />
+            <img src="assets/img/history.png" alt="Past" />
           </div>
         </div>
 
@@ -159,4 +102,4 @@ var Recent = React.createClass({
   }
 });
 
-module.exports = Recent;
+module.exports = Past;

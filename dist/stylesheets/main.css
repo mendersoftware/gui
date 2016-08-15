@@ -430,7 +430,7 @@ span.length {
 }
 .tabContainer,
 .contentContainer {
-  padding: 30px 45px 60px;
+  margin: 30px 45px 60px;
   position: relative;
   overflow: hidden;
 }

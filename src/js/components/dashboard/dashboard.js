@@ -17,7 +17,7 @@ function getState() {
     health: AppStore.getHealth(),
     unauthorized: AppStore.getUnauthorized(),
     devices: AppStore.getAllDevices(),
-    recent: AppStore.getRecentDeployments(new Date()),
+    recent: AppStore.getPastDeployments(new Date()),
     activity: AppStore.getActivity(),
     hideReview: localStorage.getItem("reviewDevices"),
   }

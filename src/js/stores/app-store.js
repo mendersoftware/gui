@@ -287,7 +287,7 @@ function _uploadImage(image) {
 
 // Deployments
 var _progress = [];
-var _recent = []
+var _past = []
 var _schedule = [];
 var _events = [];
 
@@ -300,16 +300,16 @@ var _selectedDeployment = {};
 var _activityLog = [
 ];
 
-function _getRecentDeployments(time) {
-  var recent = [];
+function _getPastDeployments(time) {
+  var past = [];
   for (var i=0;i<_allDeployments.length;i++) {
     var created = new Date(_allDeployments[i].created);
     var finished = new Date(_allDeployments[i].finished);
     if (created<time && finished<time) {
-      recent.push(_allDeployments[i]);
+      past.push(_allDeployments[i]);
     }
   }
-  return recent;
+  return past;
 }
 
 function _getProgressDeployments(time) {
@@ -589,11 +589,11 @@ var AppStore = assign(EventEmitter.prototype, {
     return _softwareRepo[findWithAttr(_softwareRepo, attr, val)];
   },
 
-  getRecentDeployments: function(date) {
+  getPastDeployments: function(date) {
     /*
     * Return list of deployments before date
     */
-    return _getRecentDeployments(date)
+    return _getPastDeployments(date)
   },
 
   getSingleDeployment: function(attr, val) {

@@ -2,7 +2,8 @@ import React from 'react';
 var AppStore = require('../../stores/app-store');
 var AppActions = require('../../actions/app-actions');
 
-var Recent = require('./recentdeployments.js');
+var Progress = require('./inprogressdeployments.js');
+var Past = require('./pastdeployments.js');
 var Schedule = require('./schedule.js');
 var EventLog = require('./eventlog.js');
 var ScheduleForm = require('./scheduleform.js');
@@ -28,14 +29,13 @@ var styles = {
 };
 
 var tabs = {
-  deployments: '0',
-  schedule: '1',
-  events: '2'
+  progress: '0',
+  past: '1',
 }
 
 function getState() {
   return {
-    recent: AppStore.getRecentDeployments(new Date()),
+    past: AppStore.getPastDeployments(new Date()),
     progress: AppStore.getProgressDeployments(new Date()),
     schedule: AppStore.getScheduledDeployments(new Date()),
     events: AppStore.getEventLog(),
@@ -228,20 +228,37 @@ var Deployments = React.createClass({
     }
     return (
       <div className="contentContainer">
-        <div className={this.state.hideTODO ? "hidden" : null}>
-          <div className="margin-bottom onboard">
-            <div className="close" onClick={this._closeOnboard}/>
-            <h3><span className="todo">//TODO</span> create a deoployment for the device group you just created</h3>
-          </div>
-        </div>
 
-        <div className="relative overflow-hidden">
-          <div className="top-right-button">
-            <ScheduleButton secondary={true} openDialog={this.dialogOpen} />
-          </div>
-          <Recent loading={!this.state.doneLoading} recent={this.state.recent} progress={this.state.progress} showReport={this._showReport} />
+      <div className={this.state.hideTODO ? "hidden" : null}>
+        <div className="margin-bottom onboard">
+          <div className="close" onClick={this._closeOnboard}/>
+          <h3><span className="todo">//TODO</span> create a deployment for the device group you just created</h3>
         </div>
-      
+      </div>
+
+      <Tabs
+          tabItemContainerStyle={{width: "33%"}}
+          inkBarStyle={styles.inkbar}
+          value={this.state.tabIndex}>
+          <Tab key={1}
+          style={styles.tabs}
+          label={"In progress"}>
+            <Progress loading={!this.state.doneLoading} progress={this.state.progress} showReport={this._showReport} />
+          </Tab>
+
+          <Tab key={2}
+          style={styles.tabs}
+          label={"Past deployments"}>
+            <div className="relative overflow-hidden">
+              <Past loading={!this.state.doneLoading} past={this.state.past} showReport={this._showReport} />
+            </div>
+          </Tab>
+        </Tabs>
+
+        <div className="top-right-button">
+          <ScheduleButton secondary={true} openDialog={this.dialogOpen} />
+        </div>
+        
         <Dialog
           ref="dialog"
           title={this.state.dialogTitle}
