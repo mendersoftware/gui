@@ -35,6 +35,11 @@ var Devices = React.createClass({
   },
   componentWillMount: function() {
     AppStore.changeListener(this._onChange);
+  },
+  componentDidMount: function() {
+    this._refreshDevices();
+    AppActions.getImages();
+
     var filters = [];
     if (this.props.params) {
       if (this.props.params.groupId) {
@@ -51,10 +56,6 @@ var Devices = React.createClass({
       }
     }
   },
-  componentDidMount: function() {
-    AppActions.getImages();
-    this._refreshDevices();
-  },
   componentWillUnmount: function () {
     AppStore.removeChangeListener(this._onChange);
   },
@@ -63,6 +64,8 @@ var Devices = React.createClass({
     AppActions.setLocalStorage("hideTODO", true);
   },
   _onChange: function() {
+    this.setState(this.getInitialState());
+
     if (!this.state.groupTODO) {
       if (this.state.groups[1]) {
         if (this.state.groups[1].devices.length===2) {
@@ -73,10 +76,9 @@ var Devices = React.createClass({
         }
       }
     }
-    this.setState(this.getInitialState());
   },
-  _refreshDevices() {
-    AppActions.getDevices(function(devices){
+  _refreshDevices: function() {
+    AppActions.getDevices(function() {
       setTimeout(function() {
         this.setState({doneLoading:true});
       }.bind(this), 300)

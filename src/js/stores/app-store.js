@@ -298,24 +298,6 @@ var _selectedDeployment = {};
 
 
 var _activityLog = [
-  {
-    summary: "User Admin deployed a deployment to all devices",
-    details: "6 devices began updating to Application 0.0.2 at 2016-03-24 00:00",
-    timestamp: 1458777600000,
-    negative: false
-  },
-  {
-    summary: "User Admin uploaded image Application 0.0.2",
-    details: "Software image Application 0.0.2 was uploaded at 2016-03-22 15:13",
-    timestamp: 1458659590000,
-    negative: false
-  },
-  {
-    summary: "User Admin cancelled a deployment to group Test",
-    details: "Cancelled deployment to 2 devices in group Test to image Application 0.0.1 at 2016-03-21 09:30",
-    timestamp: 1458552600000,
-    negative: true
-  },
 ];
 
 function _getRecentDeployments(time) {

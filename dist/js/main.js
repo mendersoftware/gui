@@ -82667,6 +82667,11 @@ var Devices = _react2.default.createClass({
   },
   componentWillMount: function componentWillMount() {
     AppStore.changeListener(this._onChange);
+  },
+  componentDidMount: function componentDidMount() {
+    this._refreshDevices();
+    AppActions.getImages();
+
     var filters = [];
     if (this.props.params) {
       if (this.props.params.groupId) {
@@ -82683,10 +82688,6 @@ var Devices = _react2.default.createClass({
       }
     }
   },
-  componentDidMount: function componentDidMount() {
-    AppActions.getImages();
-    this._refreshDevices();
-  },
   componentWillUnmount: function componentWillUnmount() {
     AppStore.removeChangeListener(this._onChange);
   },
@@ -82695,6 +82696,8 @@ var Devices = _react2.default.createClass({
     AppActions.setLocalStorage("hideTODO", true);
   },
   _onChange: function _onChange() {
+    this.setState(this.getInitialState());
+
     if (!this.state.groupTODO) {
       if (this.state.groups[1]) {
         if (this.state.groups[1].devices.length === 2) {
@@ -82705,16 +82708,14 @@ var Devices = _react2.default.createClass({
         }
       }
     }
-    this.setState(this.getInitialState());
   },
   _refreshDevices: function _refreshDevices() {
-    AppActions.getDevices(function (devices) {
+    AppActions.getDevices(function () {
       setTimeout(function () {
         this.setState({ doneLoading: true });
       }.bind(this), 300);
     }.bind(this));
   },
-
   _updateFilters: function _updateFilters(filters) {
     AppActions.updateFilters(filters);
   },
@@ -83489,7 +83490,7 @@ var SelectedDevices = _react2.default.createClass({
       for (var k in this.props.selected[0].attributes) {
         deviceIdentity.push(_react2.default.createElement(
           'div',
-          null,
+          { key: k },
           _react2.default.createElement(ListItem, { style: styles.listStyle, disabled: true, primaryText: k, secondaryText: this.props.selected[0].attributes[k] }),
           _react2.default.createElement(Divider, null)
         ));
@@ -83629,7 +83630,7 @@ var SelectedDevices = _react2.default.createClass({
       _react2.default.createElement(
         'h4',
         { className: 'margin-bottom-none' },
-        'Device details'
+        this.props.unauthorized ? "Device identity" : "Device details"
       ),
       deviceInfo,
       _react2.default.createElement(
@@ -85470,22 +85471,7 @@ var _selectedDeployment = {};
 
 //_al deployments.sort(startTimeSort);
 
-var _activityLog = [{
-  summary: "User Admin deployed a deployment to all devices",
-  details: "6 devices began updating to Application 0.0.2 at 2016-03-24 00:00",
-  timestamp: 1458777600000,
-  negative: false
-}, {
-  summary: "User Admin uploaded image Application 0.0.2",
-  details: "Software image Application 0.0.2 was uploaded at 2016-03-22 15:13",
-  timestamp: 1458659590000,
-  negative: false
-}, {
-  summary: "User Admin cancelled a deployment to group Test",
-  details: "Cancelled deployment to 2 devices in group Test to image Application 0.0.1 at 2016-03-21 09:30",
-  timestamp: 1458552600000,
-  negative: true
-}];
+var _activityLog = [];
 
 function _getRecentDeployments(time) {
   var recent = [];
