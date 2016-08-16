@@ -43,7 +43,7 @@ var Progress = React.createClass({
     var progressMap = progress.map(function(deployment, index) {
 
       return (
-        <TableRow key={index}>
+        <TableRow style={{height:"52"}} key={index}>
           <TableRowColumn>{deployment.name}</TableRowColumn>
           <TableRowColumn>{deployment.artifact_name}</TableRowColumn>
           <TableRowColumn><GroupDevices deployment={deployment.id} /></TableRowColumn>

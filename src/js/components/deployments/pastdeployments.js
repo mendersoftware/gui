@@ -1,4 +1,5 @@
 import React from 'react';
+
 var Time = require('react-time');
 var Report = require('./report.js');
 var ScheduleForm = require('./scheduleform');
@@ -45,12 +46,12 @@ var Past = React.createClass({
 
       return (
         <TableRow key={index}>
-          <TableRowColumn>{deployment.name}</TableRowColumn>
           <TableRowColumn>{deployment.artifact_name}</TableRowColumn>
-          <TableRowColumn><GroupDevices deployment={deployment.id} /></TableRowColumn>
+          <TableRowColumn>{deployment.name}</TableRowColumn>
           <TableRowColumn><Time value={this._formatTime(deployment.created)} format="YYYY-MM-DD HH:mm" /></TableRowColumn>
           <TableRowColumn><Time value={this._formatTime(deployment.finished)} format="YYYY-MM-DD HH:mm" /></TableRowColumn>
-          <TableRowColumn>{status}</TableRowColumn>
+          <TableRowColumn style={{textAlign:"right", width:"60"}}><GroupDevices deployment={deployment.id} /></TableRowColumn>
+          <TableRowColumn style={{overflow:"visible"}}>{status}</TableRowColumn>
         </TableRow>
       )
     }, this);
@@ -69,23 +70,27 @@ var Past = React.createClass({
           <Table
             onCellClick={this._pastCellClick}
             className={pastMap.length ? null : 'hidden'}
-            selectable={false}>
+            selectable={false}
+            style={{overflow:"visible"}}
+            wrapperStyle={{overflow:"visible"}}
+            bodyStyle={{overflow:"visible"}}>
             <TableHeader
               displaySelectAll={false}
               adjustForCheckbox={false}>
-              <TableRow>
-                <TableHeaderColumn tooltip="Device group">Group</TableHeaderColumn>
-                <TableHeaderColumn tooltip="Target software version">Target software</TableHeaderColumn>
-                <TableHeaderColumn tooltip="Number of devices"># Devices</TableHeaderColumn>
-                <TableHeaderColumn tooltip="Start time">Start time</TableHeaderColumn>
-                <TableHeaderColumn tooltip="End time">End time</TableHeaderColumn>
-                <TableHeaderColumn tooltip="Status">Status</TableHeaderColumn>
+              <TableRow
+              style={{overflow:"visible"}}>
+                <TableHeaderColumn>Updating to</TableHeaderColumn>
+                <TableHeaderColumn>Group</TableHeaderColumn>
+                <TableHeaderColumn>Started</TableHeaderColumn>
+                <TableHeaderColumn>Finished</TableHeaderColumn>
+                <TableHeaderColumn style={{textAlign:"right", width:"60"}}># Devices</TableHeaderColumn>
+                <TableHeaderColumn>Status</TableHeaderColumn>
               </TableRow>
             </TableHeader>
             <TableBody
               showRowHover={true}
               displayRowCheckbox={false}
-              style={{cursor:"pointer"}}>
+              style={{cursor:"pointer", overflow:"visible"}}>
               {pastMap}
             </TableBody>
           </Table>

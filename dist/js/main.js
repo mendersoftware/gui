@@ -80390,7 +80390,7 @@ var Deployments = _react2.default.createClass({
     }
     return _react2.default.createElement(
       'div',
-      { className: 'contentContainer' },
+      { className: 'contentContainer allow-overflow' },
       _react2.default.createElement(
         'div',
         { className: this.state.hideTODO ? "hidden" : null },
@@ -80428,11 +80428,7 @@ var Deployments = _react2.default.createClass({
           { key: 2,
             style: styles.tabs,
             label: "Past deployments" },
-          _react2.default.createElement(
-            'div',
-            { className: 'relative overflow-hidden' },
-            _react2.default.createElement(Past, { loading: !this.state.doneLoading, past: this.state.past, showReport: this._showReport })
-          )
+          _react2.default.createElement(Past, { loading: !this.state.doneLoading, past: this.state.past, showReport: this._showReport })
         )
       ),
       _react2.default.createElement(
@@ -80482,10 +80478,12 @@ var DeploymentStatus = _react2.default.createClass({
   getInitialState: function getInitialState() {
     return {
       stats: {
-        "successful": 0,
+        "success": 0,
         "pending": 0,
-        "inprogress": 0,
         "failure": 0,
+        "downloading": 0,
+        "installing": 0,
+        "rebooting": 0,
         "noimage": 0
       }
     };
@@ -80496,32 +80494,53 @@ var DeploymentStatus = _react2.default.createClass({
     }.bind(this));
   },
   render: function render() {
+    var inprogress = this.state.stats.downloading + this.state.stats.installing + this.state.stats.rebooting;
+    var finished = this.state.stats.success + this.state.stats.failure + this.state.stats.noimage;
+    var failed = this.state.stats.failure + this.state.stats.noimage;
     var label = _react2.default.createElement(
       'div',
-      null,
+      { className: 'results-status' },
       _react2.default.createElement(
-        'span',
-        { style: { marginRight: "4" } },
-        this.state.stats.failure,
-        ' failed'
+        'div',
+        { className: failed ? "hint--bottom" : "hidden", 'aria-label': 'Failures' },
+        _react2.default.createElement(
+          'span',
+          { className: "status failure" },
+          failed
+        )
       ),
       _react2.default.createElement(
-        'span',
-        { style: { marginRight: "4" } },
-        this.state.stats.successful,
-        ' successful'
+        'div',
+        { className: this.state.stats.pending ? "hint--bottom" : "hidden", 'aria-label': 'Pending' },
+        _react2.default.createElement(
+          'span',
+          { className: "status pending" },
+          this.state.stats.pending
+        )
       ),
       _react2.default.createElement(
-        'span',
-        { className: this.state.stats.pending ? null : "hidden" },
-        this.state.stats.pending,
-        ' pending'
+        'div',
+        { className: inprogress ? "hint--bottom" : "hidden", 'aria-label': 'In progress' },
+        _react2.default.createElement(
+          'span',
+          { className: "status inprogress" },
+          inprogress
+        )
+      ),
+      _react2.default.createElement(
+        'div',
+        { className: this.state.stats.success ? "hint--bottom" : "hidden", 'aria-label': 'Successful' },
+        _react2.default.createElement(
+          'span',
+          { className: 'status success' },
+          this.state.stats.success
+        )
       )
     );
     return _react2.default.createElement(
       'div',
       null,
-      _react2.default.createElement(FlatButton, { label: label, primary: this.state.stats.failure > 0 })
+      label
     );
   }
 });
@@ -80702,7 +80721,7 @@ var Progress = _react2.default.createClass({
 
       return _react2.default.createElement(
         TableRow,
-        { key: index },
+        { style: { height: "52" }, key: index },
         _react2.default.createElement(
           TableRowColumn,
           null,
@@ -80882,17 +80901,12 @@ var Past = _react2.default.createClass({
         _react2.default.createElement(
           TableRowColumn,
           null,
-          deployment.name
-        ),
-        _react2.default.createElement(
-          TableRowColumn,
-          null,
           deployment.artifact_name
         ),
         _react2.default.createElement(
           TableRowColumn,
           null,
-          _react2.default.createElement(GroupDevices, { deployment: deployment.id })
+          deployment.name
         ),
         _react2.default.createElement(
           TableRowColumn,
@@ -80906,7 +80920,12 @@ var Past = _react2.default.createClass({
         ),
         _react2.default.createElement(
           TableRowColumn,
-          null,
+          { style: { textAlign: "right", width: "60" } },
+          _react2.default.createElement(GroupDevices, { deployment: deployment.id })
+        ),
+        _react2.default.createElement(
+          TableRowColumn,
+          { style: { overflow: "visible" } },
           status
         )
       );
@@ -80926,7 +80945,10 @@ var Past = _react2.default.createClass({
           {
             onCellClick: this._pastCellClick,
             className: pastMap.length ? null : 'hidden',
-            selectable: false },
+            selectable: false,
+            style: { overflow: "visible" },
+            wrapperStyle: { overflow: "visible" },
+            bodyStyle: { overflow: "visible" } },
           _react2.default.createElement(
             TableHeader,
             {
@@ -80934,35 +80956,36 @@ var Past = _react2.default.createClass({
               adjustForCheckbox: false },
             _react2.default.createElement(
               TableRow,
-              null,
+              {
+                style: { overflow: "visible" } },
               _react2.default.createElement(
                 TableHeaderColumn,
-                { tooltip: 'Device group' },
+                null,
+                'Updating to'
+              ),
+              _react2.default.createElement(
+                TableHeaderColumn,
+                null,
                 'Group'
               ),
               _react2.default.createElement(
                 TableHeaderColumn,
-                { tooltip: 'Target software version' },
-                'Target software'
+                null,
+                'Started'
               ),
               _react2.default.createElement(
                 TableHeaderColumn,
-                { tooltip: 'Number of devices' },
+                null,
+                'Finished'
+              ),
+              _react2.default.createElement(
+                TableHeaderColumn,
+                { style: { textAlign: "right", width: "60" } },
                 '# Devices'
               ),
               _react2.default.createElement(
                 TableHeaderColumn,
-                { tooltip: 'Start time' },
-                'Start time'
-              ),
-              _react2.default.createElement(
-                TableHeaderColumn,
-                { tooltip: 'End time' },
-                'End time'
-              ),
-              _react2.default.createElement(
-                TableHeaderColumn,
-                { tooltip: 'Status' },
+                null,
                 'Status'
               )
             )
@@ -80972,7 +80995,7 @@ var Past = _react2.default.createClass({
             {
               showRowHover: true,
               displayRowCheckbox: false,
-              style: { cursor: "pointer" } },
+              style: { cursor: "pointer", overflow: "visible" } },
             pastMap
           )
         ),

@@ -6,6 +6,7 @@ var source = require("vinyl-source-stream"); // gulp needs a stream not a string
 var less = require('gulp-less');
 var prefix = require('gulp-autoprefixer');
 var minifyCSS = require('gulp-minify-css');
+var concat = require('gulp-concat');
 
 gulp.task('styles', function() {
   return gulp.src('src/less/main.less')
@@ -17,9 +18,9 @@ gulp.task('styles', function() {
 });
 
 gulp.task('minify', ['styles'], function() {
-  return gulp.src('src/main.css')
+  return gulp.src('src/*.css')
     .pipe(minifyCSS())
-    .pipe(rename('main.min.css'))
+    .pipe(concat('main.min.css'))
     .pipe(gulp.dest('dist/stylesheets'));
 });
 

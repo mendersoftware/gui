@@ -227,7 +227,7 @@ var Deployments = React.createClass({
       )
     }
     return (
-      <div className="contentContainer">
+      <div className="contentContainer allow-overflow">
 
       <div className={this.state.hideTODO ? "hidden" : null}>
         <div className="margin-bottom onboard">
@@ -237,9 +237,9 @@ var Deployments = React.createClass({
       </div>
 
       <Tabs
-          tabItemContainerStyle={{width: "33%"}}
-          inkBarStyle={styles.inkbar}
-          value={this.state.tabIndex}>
+        tabItemContainerStyle={{width: "33%"}}
+        inkBarStyle={styles.inkbar}
+        value={this.state.tabIndex}>
           <Tab key={1}
           style={styles.tabs}
           label={"In progress"}>
@@ -249,9 +249,7 @@ var Deployments = React.createClass({
           <Tab key={2}
           style={styles.tabs}
           label={"Past deployments"}>
-            <div className="relative overflow-hidden">
-              <Past loading={!this.state.doneLoading} past={this.state.past} showReport={this._showReport} />
-            </div>
+            <Past loading={!this.state.doneLoading} past={this.state.past} showReport={this._showReport} />
           </Tab>
         </Tabs>
 
