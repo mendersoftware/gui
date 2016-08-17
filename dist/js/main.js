@@ -78548,10 +78548,33 @@ var AppActions = {
 
   /*Deployments */
   getDeployments: function getDeployments(callback) {
+    // all deployments
     DeploymentsApi.get(deploymentsApiUrl + '/deployments').then(function (deployments) {
       callback();
       AppDispatcher.handleViewAction({
         actionType: AppConstants.RECEIVE_DEPLOYMENTS,
+        deployments: deployments
+      });
+    }).catch(function (err) {
+      callback(err);
+    });
+  },
+  getDeploymentsInProgress: function getDeploymentsInProgress(callback) {
+    DeploymentsApi.get(deploymentsApiUrl + '/deployments?status=inprogress').then(function (deployments) {
+      callback();
+      AppDispatcher.handleViewAction({
+        actionType: AppConstants.RECEIVE_ACTIVE_DEPLOYMENTS,
+        deployments: deployments
+      });
+    }).catch(function (err) {
+      callback(err);
+    });
+  },
+  getPastDeployments: function getPastDeployments(callback) {
+    DeploymentsApi.get(deploymentsApiUrl + '/deployments?status=finished').then(function (deployments) {
+      callback();
+      AppDispatcher.handleViewAction({
+        actionType: AppConstants.RECEIVE_PAST_DEPLOYMENTS,
         deployments: deployments
       });
     }).catch(function (err) {
@@ -79317,11 +79340,11 @@ var RaisedButton = mui.RaisedButton;
 
 function getState() {
   return {
-    progress: AppStore.getProgressDeployments(new Date()),
+    progress: AppStore.getDeploymentsInProgress(),
     health: AppStore.getHealth(),
     unauthorized: AppStore.getUnauthorized(),
     devices: AppStore.getAllDevices(),
-    recent: AppStore.getPastDeployments(new Date()),
+    recent: AppStore.getPastDeployments(),
     activity: AppStore.getActivity(),
     hideReview: localStorage.getItem("reviewDevices")
   };
@@ -79340,9 +79363,14 @@ var Dashboard = _react2.default.createClass({
     AppStore.removeChangeListener(this._onChange);
   },
   componentDidMount: function componentDidMount() {
-    AppActions.getDeployments(function () {
+    AppActions.getPastDeployments(function () {
       setTimeout(function () {
-        this.setState({ doneDepsLoading: true });
+        this.setState({ doneActiveDepsLoading: true });
+      }.bind(this), 300);
+    }.bind(this));
+    AppActions.getDeploymentsInProgress(function () {
+      setTimeout(function () {
+        this.setState({ donePastDepsLoading: true });
       }.bind(this), 300);
     }.bind(this));
     AppActions.getDevices(function () {
@@ -79404,7 +79432,7 @@ var Dashboard = _react2.default.createClass({
         _react2.default.createElement(
           'div',
           { className: 'leftDashboard' },
-          _react2.default.createElement(Deployments, { loading: !this.state.doneDepsLoading, clickHandle: this._handleClick, progress: this.state.progress, recent: this.state.recent })
+          _react2.default.createElement(Deployments, { loadingActive: !this.state.doneActiveDepsLoading, loadingRecent: !this.state.donePastDepsLoading, clickHandle: this._handleClick, progress: this.state.progress, recent: this.state.recent })
         ),
         _react2.default.createElement(
           'div',
@@ -79412,7 +79440,7 @@ var Dashboard = _react2.default.createClass({
           _react2.default.createElement(
             'div',
             { className: 'right' },
-            _react2.default.createElement(Health, { loading: !this.state.doneDepsLoading, devices: this.state.devices, clickHandle: this._handleClick, health: this.state.health }),
+            _react2.default.createElement(Health, { loading: !this.state.doneDevsLoading, devices: this.state.devices, clickHandle: this._handleClick, health: this.state.health }),
             _react2.default.createElement(Activity, { loading: !this.state.doneActivityLoading, activity: this.state.activity })
           )
         )
@@ -79473,12 +79501,12 @@ var Deployments = _react2.default.createClass({
         _react2.default.createElement(
           'div',
           { className: 'margin-bottom' },
-          _react2.default.createElement(Progress, { loading: this.props.loading, clickHandle: this._clickHandle, deployments: this.props.progress })
+          _react2.default.createElement(Progress, { loading: this.props.loadingActive, clickHandle: this._clickHandle, deployments: this.props.progress })
         ),
         _react2.default.createElement(
           'div',
           { className: 'margin-bottom-large' },
-          _react2.default.createElement(Recent, { loading: this.props.loading, clickHandle: this._clickHandle, deployments: this.props.recent })
+          _react2.default.createElement(Recent, { loading: this.props.loadingRecent, clickHandle: this._clickHandle, deployments: this.props.recent })
         )
       ),
       _react2.default.createElement(
@@ -80204,9 +80232,8 @@ var tabs = {
 
 function getState() {
   return {
-    past: AppStore.getPastDeployments(new Date()),
-    progress: AppStore.getProgressDeployments(new Date()),
-    schedule: AppStore.getScheduledDeployments(new Date()),
+    past: AppStore.getPastDeployments(),
+    progress: AppStore.getDeploymentsInProgress(),
     events: AppStore.getEventLog(),
     images: AppStore.getSoftwareRepo(),
     groups: AppStore.getGroups(),
@@ -80227,7 +80254,13 @@ var Deployments = _react2.default.createClass({
   },
   componentDidMount: function componentDidMount() {
     AppStore.changeListener(this._onChange);
-    AppActions.getDeployments(function () {
+    AppActions.getDeploymentsInProgress(function () {
+      setTimeout(function () {
+        this.setState({ doneLoading: true });
+      }.bind(this), 300);
+    }.bind(this));
+
+    AppActions.getPastDeployments(function () {
       setTimeout(function () {
         this.setState({ doneLoading: true });
       }.bind(this), 300);
@@ -80718,15 +80751,10 @@ var Progress = _react2.default.createClass({
   render: function render() {
     // get statistics for each in progress
     var progressMap = progress.map(function (deployment, index) {
-
+      var status = _react2.default.createElement(DeploymentStatus, { id: deployment.id });
       return _react2.default.createElement(
         TableRow,
         { style: { height: "52" }, key: index },
-        _react2.default.createElement(
-          TableRowColumn,
-          null,
-          deployment.name
-        ),
         _react2.default.createElement(
           TableRowColumn,
           null,
@@ -80735,7 +80763,7 @@ var Progress = _react2.default.createClass({
         _react2.default.createElement(
           TableRowColumn,
           null,
-          _react2.default.createElement(GroupDevices, { deployment: deployment.id })
+          deployment.name
         ),
         _react2.default.createElement(
           TableRowColumn,
@@ -80744,13 +80772,13 @@ var Progress = _react2.default.createClass({
         ),
         _react2.default.createElement(
           TableRowColumn,
-          null,
-          '--'
+          { style: { textAlign: "right", width: "60" } },
+          _react2.default.createElement(GroupDevices, { deployment: deployment.id })
         ),
         _react2.default.createElement(
           TableRowColumn,
-          null,
-          'In progress'
+          { style: { overflow: "visible" } },
+          status
         )
       );
     }, this);
@@ -80769,7 +80797,10 @@ var Progress = _react2.default.createClass({
           {
             onCellClick: this._progressCellClick,
             className: progressMap.length ? null : 'hidden',
-            selectable: false },
+            selectable: false,
+            style: { overflow: "visible" },
+            wrapperStyle: { overflow: "visible" },
+            bodyStyle: { overflow: "visible" } },
           _react2.default.createElement(
             TableHeader,
             {
@@ -80777,35 +80808,31 @@ var Progress = _react2.default.createClass({
               adjustForCheckbox: false },
             _react2.default.createElement(
               TableRow,
-              null,
+              {
+                style: { overflow: "visible" } },
               _react2.default.createElement(
                 TableHeaderColumn,
-                { tooltip: 'Device group' },
+                null,
+                'Updating to'
+              ),
+              _react2.default.createElement(
+                TableHeaderColumn,
+                null,
                 'Group'
               ),
               _react2.default.createElement(
                 TableHeaderColumn,
-                { tooltip: 'Target software version' },
-                'Target software'
-              ),
-              _react2.default.createElement(
-                TableHeaderColumn,
-                { tooltip: 'Number of devices' },
-                '# Devices'
-              ),
-              _react2.default.createElement(
-                TableHeaderColumn,
-                { tooltip: 'Start time' },
+                null,
                 'Start time'
               ),
               _react2.default.createElement(
                 TableHeaderColumn,
-                { tooltip: 'End time' },
-                'End time'
+                { style: { textAlign: "right", width: "60" } },
+                '# Devices'
               ),
               _react2.default.createElement(
                 TableHeaderColumn,
-                { tooltip: 'Status' },
+                null,
                 'Status'
               )
             )
@@ -85220,6 +85247,8 @@ module.exports = {
   RECEIVE_IMAGES: 'RECEIVE_IMAGES',
   UPLOAD_IMAGE: 'UPLOAD_IMAGE',
   RECEIVE_DEPLOYMENTS: 'RECEIVE_DEPLOYMENTS',
+  RECEIVE_ACTIVE_DEPLOYMENTS: 'RECEIVE_ACTIVE_DEPLOYMENTS',
+  RECEIVE_PAST_DEPLOYMENTS: 'RECEIVE_PAST_DEPLOYMENTS',
   SINGLE_DEPLOYMENT: 'SINGLE_DEPLOYMENT',
   SET_LOCAL_STORAGE: 'SET_LOCAL_STORAGE',
   RECEIVE_DEVICES: 'RECEIVE_DEVICES',
@@ -85554,8 +85583,8 @@ function _uploadImage(image) {
 }
 
 // Deployments
-var _progress = [];
-var _past = [];
+var _deploymentsInProgress = [];
+var _pastDeployments = [];
 var _schedule = [];
 var _events = [];
 
@@ -85566,31 +85595,12 @@ var _selectedDeployment = {};
 
 var _activityLog = [];
 
-function _getPastDeployments(time) {
-  var past = [];
-  for (var i = 0; i < _allDeployments.length; i++) {
-    var created = new Date(_allDeployments[i].created);
-    var finished = new Date(_allDeployments[i].finished);
-    if (created < time && finished < time) {
-      past.push(_allDeployments[i]);
-    }
-  }
-  return past;
+function _getPastDeployments() {
+  return _pastDeployments;
 }
 
-function _getProgressDeployments(time) {
-  var progress = [];
-  for (var i = 0; i < _allDeployments.length; i++) {
-    var created = new Date(_allDeployments[i].created);
-    var finished = new Date(_allDeployments[i].finished);
-    /*
-    * CHANGE FOR MOCKING API
-    */
-    if (created <= time && finished > time) {
-      progress.push(_allDeployments[i]);
-    }
-  }
-  return progress;
+function _getDeploymentsInProgress() {
+  return _deploymentsInProgress;
 }
 
 function _getProgressStatus(id) {
@@ -85714,6 +85724,16 @@ function setDeployments(deployments) {
     _allDeployments = deployments;
   }
   _allDeployments.sort(startTimeSort);
+}
+
+function setActiveDeployments(deployments) {
+  _deploymentsInProgress = deployments;
+  _deploymentsInProgress.sort(startTimeSort);
+}
+
+function setPastDeployments(deployments) {
+  _pastDeployments = deployments;
+  _pastDeployments.sort(startTimeSort);
 }
 
 function setSelectedDeployment(deployment) {
@@ -85843,11 +85863,11 @@ var AppStore = assign(EventEmitter.prototype, {
     return _softwareRepo[findWithAttr(_softwareRepo, attr, val)];
   },
 
-  getPastDeployments: function getPastDeployments(date) {
+  getPastDeployments: function getPastDeployments() {
     /*
     * Return list of deployments before date
     */
-    return _getPastDeployments(date);
+    return _getPastDeployments();
   },
 
   getSingleDeployment: function getSingleDeployment(attr, val) {
@@ -85862,11 +85882,11 @@ var AppStore = assign(EventEmitter.prototype, {
     return _selectedDeployment;
   },
 
-  getProgressDeployments: function getProgressDeployments(date) {
+  getDeploymentsInProgress: function getDeploymentsInProgress() {
     /*
     * Return list of deployments in progress based on date
     */
-    return _getProgressDeployments(date);
+    return _getDeploymentsInProgress();
   },
 
   getProgressStatus: function getProgressStatus(id) {
@@ -85969,6 +85989,12 @@ var AppStore = assign(EventEmitter.prototype, {
       /* API */
       case AppConstants.RECEIVE_DEPLOYMENTS:
         setDeployments(payload.action.deployments);
+        break;
+      case AppConstants.RECEIVE_ACTIVE_DEPLOYMENTS:
+        setActiveDeployments(payload.action.deployments);
+        break;
+      case AppConstants.RECEIVE_PAST_DEPLOYMENTS:
+        setPastDeployments(payload.action.deployments);
         break;
       case AppConstants.SINGLE_DEPLOYMENT:
         setSelectedDeployment(payload.action.deployment);

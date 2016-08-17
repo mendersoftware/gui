@@ -35,9 +35,8 @@ var tabs = {
 
 function getState() {
   return {
-    past: AppStore.getPastDeployments(new Date()),
-    progress: AppStore.getProgressDeployments(new Date()),
-    schedule: AppStore.getScheduledDeployments(new Date()),
+    past: AppStore.getPastDeployments(),
+    progress: AppStore.getDeploymentsInProgress(),
     events: AppStore.getEventLog(),
     images: AppStore.getSoftwareRepo(),
     groups: AppStore.getGroups(),
@@ -56,7 +55,13 @@ var Deployments = React.createClass({
   },
   componentDidMount: function() {
     AppStore.changeListener(this._onChange);
-    AppActions.getDeployments(function() {
+    AppActions.getDeploymentsInProgress(function() {
+      setTimeout(function() {
+        this.setState({doneLoading:true});
+      }.bind(this), 300)
+    }.bind(this));
+
+    AppActions.getPastDeployments(function() {
       setTimeout(function() {
         this.setState({doneLoading:true});
       }.bind(this), 300)

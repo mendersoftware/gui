@@ -41,15 +41,16 @@ var Progress = React.createClass({
   render: function() {
     // get statistics for each in progress
     var progressMap = progress.map(function(deployment, index) {
-
+      var status = (
+        <DeploymentStatus id={deployment.id} />
+      );
       return (
         <TableRow style={{height:"52"}} key={index}>
-          <TableRowColumn>{deployment.name}</TableRowColumn>
           <TableRowColumn>{deployment.artifact_name}</TableRowColumn>
-          <TableRowColumn><GroupDevices deployment={deployment.id} /></TableRowColumn>
+          <TableRowColumn>{deployment.name}</TableRowColumn>
           <TableRowColumn><Time value={this._formatTime(deployment.created)} format="YYYY-MM-DD HH:mm" /></TableRowColumn>
-          <TableRowColumn>--</TableRowColumn>
-          <TableRowColumn>In progress</TableRowColumn>
+          <TableRowColumn style={{textAlign:"right", width:"60"}}><GroupDevices deployment={deployment.id} /></TableRowColumn>
+          <TableRowColumn style={{overflow:"visible"}}>{status}</TableRowColumn>
         </TableRow>
       )
     }, this);
@@ -68,17 +69,20 @@ var Progress = React.createClass({
           <Table
             onCellClick={this._progressCellClick}
             className={progressMap.length ? null : 'hidden'}
-            selectable={false}>
+            selectable={false}
+            style={{overflow:"visible"}}
+            wrapperStyle={{overflow:"visible"}}
+            bodyStyle={{overflow:"visible"}}>
             <TableHeader
               displaySelectAll={false}
               adjustForCheckbox={false}>
-              <TableRow>
-                <TableHeaderColumn tooltip="Device group">Group</TableHeaderColumn>
-                <TableHeaderColumn tooltip="Target software version">Target software</TableHeaderColumn>
-                <TableHeaderColumn tooltip="Number of devices"># Devices</TableHeaderColumn>
-                <TableHeaderColumn tooltip="Start time">Start time</TableHeaderColumn>
-                <TableHeaderColumn tooltip="End time">End time</TableHeaderColumn>
-                <TableHeaderColumn tooltip="Status">Status</TableHeaderColumn>
+              <TableRow
+               style={{overflow:"visible"}}>
+                <TableHeaderColumn>Updating to</TableHeaderColumn>
+                <TableHeaderColumn>Group</TableHeaderColumn>
+                <TableHeaderColumn>Start time</TableHeaderColumn>
+                <TableHeaderColumn style={{textAlign:"right", width:"60"}}># Devices</TableHeaderColumn>
+                <TableHeaderColumn>Status</TableHeaderColumn>
               </TableRow>
             </TableHeader>
             <TableBody

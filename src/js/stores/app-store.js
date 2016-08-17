@@ -286,8 +286,8 @@ function _uploadImage(image) {
 
 
 // Deployments
-var _progress = [];
-var _past = []
+var _deploymentsInProgress = [];
+var _pastDeployments = []
 var _schedule = [];
 var _events = [];
 
@@ -300,31 +300,12 @@ var _selectedDeployment = {};
 var _activityLog = [
 ];
 
-function _getPastDeployments(time) {
-  var past = [];
-  for (var i=0;i<_allDeployments.length;i++) {
-    var created = new Date(_allDeployments[i].created);
-    var finished = new Date(_allDeployments[i].finished);
-    if (created<time && finished<time) {
-      past.push(_allDeployments[i]);
-    }
-  }
-  return past;
+function _getPastDeployments() {
+  return _pastDeployments;
 }
 
-function _getProgressDeployments(time) {
-  var progress = [];
-  for (var i=0;i<_allDeployments.length;i++) {
-    var created = new Date(_allDeployments[i].created);
-    var finished = new Date(_allDeployments[i].finished);
-    /*
-    * CHANGE FOR MOCKING API
-    */ 
-    if (created<=time && finished>time) {
-      progress.push(_allDeployments[i]);
-    }
-  }
-  return progress;
+function _getDeploymentsInProgress() {
+  return _deploymentsInProgress;
 }
 
 function _getProgressStatus(id) {
@@ -458,6 +439,16 @@ function setDeployments(deployments) {
   _allDeployments.sort(startTimeSort);
 }
 
+function setActiveDeployments(deployments) {
+  _deploymentsInProgress = deployments;
+  _deploymentsInProgress.sort(startTimeSort);
+}
+
+function setPastDeployments(deployments) {
+  _pastDeployments = deployments;
+  _pastDeployments.sort(startTimeSort);
+}
+
 function setSelectedDeployment(deployment) {
   if (deployment) {
     _selectedDeployment = deployment;
@@ -589,11 +580,11 @@ var AppStore = assign(EventEmitter.prototype, {
     return _softwareRepo[findWithAttr(_softwareRepo, attr, val)];
   },
 
-  getPastDeployments: function(date) {
+  getPastDeployments: function() {
     /*
     * Return list of deployments before date
     */
-    return _getPastDeployments(date)
+    return _getPastDeployments()
   },
 
   getSingleDeployment: function(attr, val) {
@@ -608,11 +599,11 @@ var AppStore = assign(EventEmitter.prototype, {
     return _selectedDeployment
   },
 
-  getProgressDeployments: function(date) {
+  getDeploymentsInProgress: function() {
     /*
     * Return list of deployments in progress based on date
     */
-    return _getProgressDeployments(date)
+    return _getDeploymentsInProgress()
   },
 
   getProgressStatus: function(id) {
@@ -715,6 +706,12 @@ var AppStore = assign(EventEmitter.prototype, {
       /* API */
       case AppConstants.RECEIVE_DEPLOYMENTS:
         setDeployments(payload.action.deployments);
+        break;
+      case AppConstants.RECEIVE_ACTIVE_DEPLOYMENTS:
+        setActiveDeployments(payload.action.deployments);
+        break;
+      case AppConstants.RECEIVE_PAST_DEPLOYMENTS:
+        setPastDeployments(payload.action.deployments);
         break;
       case AppConstants.SINGLE_DEPLOYMENT:
         setSelectedDeployment(payload.action.deployment);
