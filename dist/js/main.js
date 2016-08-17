@@ -78903,7 +78903,7 @@ var FileInput = _react2.default.createClass({
   },
   setValue: function setValue(event) {
     if (event.target.files.length) {
-      this.setState({ file: event.target.files[0] });
+      this.setState({ value: event.target.files[0] });
     }
     this.props.validate(this, event.target.files[0]);
   },
@@ -78918,7 +78918,8 @@ var FileInput = _react2.default.createClass({
         placeholder: this.props.placeholder,
         className: this.state.errorText ? "fileInput error" : "fileInput",
         style: { zIndex: "2" },
-        onChange: this.setValue
+        onChange: this.setValue,
+        value: this.state.value
       }),
       _react2.default.createElement(
         'span',
@@ -78991,9 +78992,7 @@ var Form = _react2.default.createClass({
     var errorText = '';
 
     if (component.props.file) {
-      console.log(value);
       if (component.props.required && !value) {
-        console.log("no val");
         isValid = false;
         errorText = "You must choose a file to upload";
       }
@@ -84315,11 +84314,6 @@ var Repository = _react2.default.createClass({
     };
     this.setState({ image: image });
   },
-
-  _handleFieldChange: function _handleFieldChange(field, e) {
-    newState[field] = e.target.value;
-    this.setState({ image: newState });
-  },
   _openSchedule: function _openSchedule(ref, image) {
     this.dialogOpen(ref);
   },
@@ -84346,7 +84340,7 @@ var Repository = _react2.default.createClass({
     this.dialogDismiss('schedule');
   },
   _onUploadSubmit: function _onUploadSubmit(image) {
-    var tmpFile = this.state.tmpFile;
+    var tmpFile = image.imageFile;
 
     _appActions2.default.uploadImage(image, function (id_uri) {
       this.props.startLoader();
@@ -84431,17 +84425,6 @@ var Repository = _react2.default.createClass({
       tags.push({ id: i, text: newState.tags[i] });
     }
     this.dialogOpen('upload');
-  },
-  changedFile: function changedFile(event) {
-    if (event.target.files.length) {
-      this.setState({ tmpFile: event.target.files[0] });
-      if (!this.state.image.name) {
-        newState.name = event.target.files[0].name;
-        var image = this.state.image;
-        image.name = event.target.files[0].name;
-        this.setState({ image: image });
-      }
-    }
   },
   _onClick: function _onClick(event) {
     event.stopPropagation();
@@ -84710,7 +84693,6 @@ var Repository = _react2.default.createClass({
               id: 'imageFile',
               accept: '.tar,.gz,.zip',
               placeholder: 'Upload image',
-              onchange: this.changedFile,
               required: true,
               file: true }),
             _react2.default.createElement(_textinput2.default, {
@@ -84718,7 +84700,6 @@ var Repository = _react2.default.createClass({
               hint: 'Name',
               label: 'Name',
               id: 'name',
-              onchange: this._handleFieldChange.bind(null, 'name'),
               required: true,
               validations: 'isAlphanumeric' }),
             _react2.default.createElement(_textinput2.default, {
@@ -84726,14 +84707,12 @@ var Repository = _react2.default.createClass({
               value: this.state.image.yocto_id,
               hint: 'Yocto ID',
               label: 'Yocto ID',
-              onchange: this._handleFieldChange.bind(null, 'yocto_id'),
               required: true,
               validations: 'isLength:4,isAlphanumeric' }),
             _react2.default.createElement(_textinput2.default, {
               id: 'device_type',
               hint: 'Device type compatibility',
               label: 'Device type compatibility',
-              onchange: this._handleFieldChange.bind(null, 'device_type'),
               required: true,
               value: this.state.image.device_type }),
             _react2.default.createElement(_textinput2.default, {
@@ -84741,7 +84720,6 @@ var Repository = _react2.default.createClass({
               hint: 'Description',
               label: 'Description',
               multiLine: true,
-              onchange: this._handleFieldChange.bind(null, 'description'),
               value: this.state.image.description })
           )
         )

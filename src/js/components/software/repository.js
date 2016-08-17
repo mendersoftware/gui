@@ -70,11 +70,6 @@ var Repository = React.createClass({
     };
     this.setState({image: image});
   },
-
-  _handleFieldChange: function(field, e) {
-    newState[field] = e.target.value;
-    this.setState({image: newState});
-  },
   _openSchedule: function(ref, image) {
     this.dialogOpen(ref);
   },
@@ -101,7 +96,7 @@ var Repository = React.createClass({
     this.dialogDismiss('schedule');
   },
   _onUploadSubmit: function(image) {
-    var tmpFile = this.state.tmpFile;
+    var tmpFile = image.imageFile;
 
     AppActions.uploadImage(image, function(id_uri) {
       this.props.startLoader();
@@ -188,17 +183,6 @@ var Repository = React.createClass({
       tags.push({id:i, text:newState.tags[i]});
     }
     this.dialogOpen('upload');
-  },
-  changedFile: function(event) {
-    if (event.target.files.length) {
-      this.setState({tmpFile: event.target.files[0]});
-      if (!this.state.image.name) {
-        newState.name = event.target.files[0].name;
-        var image = this.state.image;
-        image.name = event.target.files[0].name;
-        this.setState({image:image});
-      }
-    }
   },
   _onClick: function(event) {
     event.stopPropagation();
@@ -365,7 +349,6 @@ var Repository = React.createClass({
                 id="imageFile"
                 accept=".tar,.gz,.zip"
                 placeholder="Upload image"
-                onchange={this.changedFile}
                 required={true}
                 file={true} />
 
@@ -374,7 +357,6 @@ var Repository = React.createClass({
                 hint="Name"
                 label="Name"
                 id="name"
-                onchange={this._handleFieldChange.bind(null, 'name')}
                 required={true}
                 validations="isAlphanumeric" />
 
@@ -383,7 +365,6 @@ var Repository = React.createClass({
                 value={this.state.image.yocto_id}
                 hint="Yocto ID"
                 label="Yocto ID"
-                onchange={this._handleFieldChange.bind(null, 'yocto_id')}
                 required={true}
                 validations="isLength:4,isAlphanumeric" />
 
@@ -391,7 +372,6 @@ var Repository = React.createClass({
                 id="device_type"
                 hint="Device type compatibility"
                 label="Device type compatibility"
-                onchange={this._handleFieldChange.bind(null, 'device_type')}
                 required={true}
                 value={this.state.image.device_type} />
 
@@ -400,7 +380,6 @@ var Repository = React.createClass({
                 hint="Description"
                 label="Description"
                 multiLine={true}
-                onchange={this._handleFieldChange.bind(null, 'description')}
                 value={this.state.image.description} />
 
             </Form>
