@@ -80534,7 +80534,7 @@ var DeploymentStatus = _react2.default.createClass({
       { className: 'results-status' },
       _react2.default.createElement(
         'div',
-        { className: failed ? "hint--bottom" : "hidden", 'aria-label': 'Failures' },
+        { className: failed ? "hint--bottom" : "hint--bottom disabled", 'aria-label': 'Failures' },
         _react2.default.createElement(
           'span',
           { className: "status failure" },
@@ -80543,7 +80543,7 @@ var DeploymentStatus = _react2.default.createClass({
       ),
       _react2.default.createElement(
         'div',
-        { className: this.state.stats.pending ? "hint--bottom" : "hidden", 'aria-label': 'Pending' },
+        { className: this.state.stats.pending ? "hint--bottom" : "hint--bottom disabled", 'aria-label': 'Pending' },
         _react2.default.createElement(
           'span',
           { className: "status pending" },
@@ -80552,7 +80552,7 @@ var DeploymentStatus = _react2.default.createClass({
       ),
       _react2.default.createElement(
         'div',
-        { className: inprogress ? "hint--bottom" : "hidden", 'aria-label': 'In progress' },
+        { className: inprogress ? "hint--bottom" : "hint--bottom disabled", 'aria-label': 'In progress' },
         _react2.default.createElement(
           'span',
           { className: "status inprogress" },
@@ -80561,7 +80561,7 @@ var DeploymentStatus = _react2.default.createClass({
       ),
       _react2.default.createElement(
         'div',
-        { className: this.state.stats.success ? "hint--bottom" : "hidden", 'aria-label': 'Successful' },
+        { className: this.state.stats.success ? "hint--bottom" : "hint--bottom disabled", 'aria-label': 'Successful' },
         _react2.default.createElement(
           'span',
           { className: 'status success' },
@@ -81309,7 +81309,11 @@ var Report = _react2.default.createClass({
     this.props.retryDeployment(this.props.deployment);
   },
   _formatTime: function _formatTime(date) {
-    return date.replace(' ', 'T').replace(/ /g, '').replace('UTC', '');
+    if (date) {
+      return date.replace(' ', 'T').replace(/ /g, '').replace('UTC', '');
+    } else {
+      return "-";
+    }
   },
   exportLog: function exportLog(id) {
     AppActions.getDeviceLog(this.props.deployment.id, id, function (data) {

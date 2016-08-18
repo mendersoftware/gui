@@ -83,7 +83,11 @@ var Report = React.createClass({
     this.props.retryDeployment(this.props.deployment);
   },
   _formatTime: function (date) {
-    return date.replace(' ','T').replace(/ /g, '').replace('UTC','');
+    if (date) {
+      return date.replace(' ','T').replace(/ /g, '').replace('UTC','');
+    } else {
+      return "-";
+    }
   },
   exportLog: function (id) {
     AppActions.getDeviceLog(this.props.deployment.id, id, function(data) {

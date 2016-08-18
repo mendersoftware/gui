@@ -30,16 +30,16 @@ var DeploymentStatus = React.createClass({
     var failed = this.state.stats.failure + this.state.stats.noimage;
     var label = ( 
       <div className="results-status">
-        <div className={failed ? "hint--bottom" : "hidden"} aria-label="Failures">
+        <div className={failed ? "hint--bottom" : "hint--bottom disabled"} aria-label="Failures">
           <span className={"status failure"}>{failed}</span>
         </div>
-        <div className={this.state.stats.pending ? "hint--bottom" : "hidden"} aria-label="Pending">
+        <div className={this.state.stats.pending ? "hint--bottom" : "hint--bottom disabled"} aria-label="Pending">
           <span className={"status pending"}>{this.state.stats.pending}</span>
         </div>
-        <div className={inprogress ? "hint--bottom" : "hidden"} aria-label="In progress"> 
+        <div className={inprogress ? "hint--bottom" : "hint--bottom disabled"} aria-label="In progress"> 
           <span className={"status inprogress"}>{inprogress}</span>
         </div>
-        <div className={this.state.stats.success ? "hint--bottom" : "hidden"} aria-label="Successful">
+        <div className={this.state.stats.success ? "hint--bottom" : "hint--bottom disabled"} aria-label="Successful">
           <span className="status success">{this.state.stats.success}</span>
         </div>
       </div>
