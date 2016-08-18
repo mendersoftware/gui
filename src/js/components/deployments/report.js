@@ -18,33 +18,6 @@ var Divider = mui.Divider;
 var FontIcon = mui.FontIcon;
 var Checkbox = mui.Checkbox;
 
-var mockSuccess = [
-    {
-        "id": "00a0c91e6-7dec-11d0-a765-f81d4faebf3",
-        "finished": "2016-03-25 00:13:00 +0000 UTC",
-        "status": "success",
-        "started": "2016-03-24 24:00:00 +0000 UTC",
-        "device_type": "Raspberry Pi 3",
-        "version_from": "Application 0.1"
-    },
-    {
-        "id": "00a0c91e6-7dec-11d0-a765-f81d4faebf2",
-        "finished": "2016-03-25 00:12:00 +0000 UTC",
-        "status": "success",
-        "started": "2016-03-24 24:00:00 +0000 UTC",
-        "device_type": "Raspberry Pi 3",
-        "version_from": "Application 0.1"
-    },
-    {
-        "id": "00a0c91e6-7dec-11d0-a765-f81d4faebf1",
-        "finished": "2016-03-25 00:04:00 +0000 UTC",
-        "status": "success",
-        "started": "2016-03-24 24:00:00 +0000 UTC",
-        "device_type": "Raspberry Pi 3",
-        "version_from": "Application 0.1"
-    }
-];
-
 var Report = React.createClass({
   getInitialState: function() {
     return {
@@ -54,17 +27,13 @@ var Report = React.createClass({
       }
     };
   },
-   componentDidMount: function() {
-    if (this.props.deployment.id === "00a0c91e6-7dec-11d0-a765-f81d4faebf6") {
-      this._deploymentState("devices", mockSuccess);
-    } else {
-      AppActions.getSingleDeploymentStats(this.props.deployment.id, function(stats) {
-        this._deploymentState("stats",stats);
-      }.bind(this));
-      AppActions.getSingleDeploymentDevices(this.props.deployment.id, function(devices) {
-        this._deploymentState("devices",devices);
-      }.bind(this));
-    }
+  componentDidMount: function() {
+    AppActions.getSingleDeploymentStats(this.props.deployment.id, function(stats) {
+      this._deploymentState("stats",stats);
+    }.bind(this));
+    AppActions.getSingleDeploymentDevices(this.props.deployment.id, function(devices) {
+      this._deploymentState("devices",devices);
+    }.bind(this));
   },
   _deploymentState: function (key, val) {
     var state = {};
@@ -83,7 +52,11 @@ var Report = React.createClass({
     this.props.retryDeployment(this.props.deployment);
   },
   _formatTime: function (date) {
-    return date.replace(' ','T').replace(/ /g, '').replace('UTC','');
+    if (date) {
+      return date.replace(' ','T').replace(/ /g, '').replace('UTC','');
+    } else {
+      return "-";
+    }
   },
   exportLog: function (id) {
     AppActions.getDeviceLog(this.props.deployment.id, id, function(data) {
@@ -131,8 +104,7 @@ var Report = React.createClass({
           <List>
             <ListItem disabled={true} primaryText="Group" secondaryText={this.props.deployment.name} />
             <Divider />
-            <ListItem disabled={true} primaryText="Device type" secondaryText={this.props.deployment.device_type || "--"} />
-            <Divider />
+
             <ListItem disabled={true} primaryText="Start time" secondaryText={<Time value={this._formatTime(this.props.deployment.created)} format="YYYY-MM-DD HH:mm" />} />
           </List>
         </div>

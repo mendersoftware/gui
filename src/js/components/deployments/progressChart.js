@@ -12,11 +12,13 @@ var ProgressChart = React.createClass({
     return {
       devices: [],
       stats: {
-        "successful": 0,
-        "pending": 0,
-        "inprogress": 0,
+        "downloading": 0,
         "failure": 0,
-        "noimage": 0
+        "installing": 0,
+        "noimage": 0,
+        "pending": 0,
+        "rebooting": 0,
+        "success": 0
       },
       device: {
         name: "",
@@ -70,11 +72,11 @@ var ProgressChart = React.createClass({
   },
   render: function() {
     // used for MOCK API because devices.length does not equal stats length
-    var totalDevices = this.state.stats.successful + this.state.stats.failure + this.state.stats.inprogress + this.state.stats.pending;
+    var totalDevices = this.state.stats.success + this.state.stats.failure + this.state.stats.downloading + this.state.stats.installing + this.state.stats.rebooting + this.state.stats.noimage + this.state.stats.pending;
 
-    var success = this.state.stats.successful;
-    var failures = this.state.stats.failure;
-    var progress = this.state.stats.inprogress;
+    var success = this.state.stats.success;
+    var failures = this.state.stats.failure + this.state.stats.noimage;
+    var progress = this.state.stats.downloading + this.state.stats.rebooting + this.state.stats.installing;
     var pending = this.state.stats.pending;
 
     var rows = Math.floor(Math.sqrt(this.state.devices.length));
@@ -113,7 +115,7 @@ var ProgressChart = React.createClass({
           <p>{this.state.device.status}</p>
         </div>
         <div className="key">
-          <div className="bubble successful" /> Successful <div className="bubble failure" /> Failed <div className="bubble inprogress" /> In progress <div className="bubble pending" /> Pending 
+          <div className="bubble failure" /> Failed <div className="bubble pending" /> Pending <div className="bubble inprogress" /> In progress <div className="bubble successful" /> Successful 
         </div>
       </div>
     );

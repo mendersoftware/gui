@@ -79686,7 +79686,10 @@ var Progress = _react2.default.createClass({
     this.props.clickHandle(params);
   },
   _formatTime: function _formatTime(date) {
-    return date.replace(' ', 'T').replace(/ /g, '').replace('UTC', '');
+    if (date) {
+      return date.replace(' ', 'T').replace(/ /g, '').replace('UTC', '');
+    }
+    return;
   },
   render: function render() {
     var progress = this.props.deployments.map(function (deployment, index) {
@@ -79841,7 +79844,10 @@ var Recent = _react2.default.createClass({
     this.props.clickHandle(params);
   },
   _formatTime: function _formatTime(date) {
-    return date.replace(' ', 'T').replace(/ /g, '').replace('UTC', '');
+    if (date) {
+      return date.replace(' ', 'T').replace(/ /g, '').replace('UTC', '');
+    }
+    return;
   },
   render: function render() {
     var recent = this.props.deployments.map(function (deployment, index) {
@@ -79967,7 +79973,7 @@ var RecentStats = _react2.default.createClass({
   getInitialState: function getInitialState() {
     return {
       stats: {
-        "successful": 0,
+        "success": 0,
         "failure": 0
       }
     };
@@ -79988,7 +79994,7 @@ var RecentStats = _react2.default.createClass({
         _react2.default.createElement(
           'div',
           null,
-          this.state.stats.failure
+          this.state.stats.failure + this.state.stats.noimage
         ),
         _react2.default.createElement(
           'span',
@@ -80003,7 +80009,7 @@ var RecentStats = _react2.default.createClass({
         _react2.default.createElement(
           'div',
           null,
-          this.state.stats.successful
+          this.state.stats.success
         ),
         _react2.default.createElement(
           'span',
@@ -80534,7 +80540,7 @@ var DeploymentStatus = _react2.default.createClass({
       { className: 'results-status' },
       _react2.default.createElement(
         'div',
-        { className: failed ? "hint--bottom" : "hidden", 'aria-label': 'Failures' },
+        { className: failed ? "hint--bottom" : "hint--bottom disabled", 'aria-label': 'Failures' },
         _react2.default.createElement(
           'span',
           { className: "status failure" },
@@ -80543,7 +80549,7 @@ var DeploymentStatus = _react2.default.createClass({
       ),
       _react2.default.createElement(
         'div',
-        { className: this.state.stats.pending ? "hint--bottom" : "hidden", 'aria-label': 'Pending' },
+        { className: this.state.stats.pending ? "hint--bottom" : "hint--bottom disabled", 'aria-label': 'Pending' },
         _react2.default.createElement(
           'span',
           { className: "status pending" },
@@ -80552,7 +80558,7 @@ var DeploymentStatus = _react2.default.createClass({
       ),
       _react2.default.createElement(
         'div',
-        { className: inprogress ? "hint--bottom" : "hidden", 'aria-label': 'In progress' },
+        { className: inprogress ? "hint--bottom" : "hint--bottom disabled", 'aria-label': 'In progress' },
         _react2.default.createElement(
           'span',
           { className: "status inprogress" },
@@ -80561,7 +80567,7 @@ var DeploymentStatus = _react2.default.createClass({
       ),
       _react2.default.createElement(
         'div',
-        { className: this.state.stats.success ? "hint--bottom" : "hidden", 'aria-label': 'Successful' },
+        { className: this.state.stats.success ? "hint--bottom" : "hint--bottom disabled", 'aria-label': 'Successful' },
         _react2.default.createElement(
           'span',
           { className: 'status success' },
@@ -80745,7 +80751,10 @@ var Progress = _react2.default.createClass({
     this.props.showReport(report);
   },
   _formatTime: function _formatTime(date) {
-    return date.replace(' ', 'T').replace(/ /g, '').replace('UTC', '');
+    if (date) {
+      return date.replace(' ', 'T').replace(/ /g, '').replace('UTC', '');
+    }
+    return;
   },
   render: function render() {
     // get statistics for each in progress
@@ -80914,7 +80923,10 @@ var Past = _react2.default.createClass({
     this.props.showReport(report);
   },
   _formatTime: function _formatTime(date) {
-    return date.replace(' ', 'T').replace(/ /g, '').replace('UTC', '');
+    if (date) {
+      return date.replace(' ', 'T').replace(/ /g, '').replace('UTC', '');
+    }
+    return;
   },
   render: function render() {
     var pastMap = past.map(function (deployment, index) {
@@ -81071,11 +81083,13 @@ var ProgressChart = _react2.default.createClass({
     return {
       devices: [],
       stats: {
-        "successful": 0,
-        "pending": 0,
-        "inprogress": 0,
+        "downloading": 0,
         "failure": 0,
-        "noimage": 0
+        "installing": 0,
+        "noimage": 0,
+        "pending": 0,
+        "rebooting": 0,
+        "success": 0
       },
       device: {
         name: "",
@@ -81126,11 +81140,11 @@ var ProgressChart = _react2.default.createClass({
   },
   render: function render() {
     // used for MOCK API because devices.length does not equal stats length
-    var totalDevices = this.state.stats.successful + this.state.stats.failure + this.state.stats.inprogress + this.state.stats.pending;
+    var totalDevices = this.state.stats.success + this.state.stats.failure + this.state.stats.downloading + this.state.stats.installing + this.state.stats.rebooting + this.state.stats.noimage + this.state.stats.pending;
 
-    var success = this.state.stats.successful;
-    var failures = this.state.stats.failure;
-    var progress = this.state.stats.inprogress;
+    var success = this.state.stats.success;
+    var failures = this.state.stats.failure + this.state.stats.noimage;
+    var progress = this.state.stats.downloading + this.state.stats.rebooting + this.state.stats.installing;
     var pending = this.state.stats.pending;
 
     var rows = Math.floor(Math.sqrt(this.state.devices.length));
@@ -81193,14 +81207,14 @@ var ProgressChart = _react2.default.createClass({
       _react2.default.createElement(
         'div',
         { className: 'key' },
-        _react2.default.createElement('div', { className: 'bubble successful' }),
-        ' Successful ',
         _react2.default.createElement('div', { className: 'bubble failure' }),
         ' Failed ',
+        _react2.default.createElement('div', { className: 'bubble pending' }),
+        ' Pending ',
         _react2.default.createElement('div', { className: 'bubble inprogress' }),
         ' In progress ',
-        _react2.default.createElement('div', { className: 'bubble pending' }),
-        ' Pending'
+        _react2.default.createElement('div', { className: 'bubble successful' }),
+        ' Successful'
       )
     );
     return _react2.default.createElement(
@@ -81246,29 +81260,6 @@ var Divider = mui.Divider;
 var FontIcon = mui.FontIcon;
 var Checkbox = mui.Checkbox;
 
-var mockSuccess = [{
-  "id": "00a0c91e6-7dec-11d0-a765-f81d4faebf3",
-  "finished": "2016-03-25 00:13:00 +0000 UTC",
-  "status": "success",
-  "started": "2016-03-24 24:00:00 +0000 UTC",
-  "device_type": "Raspberry Pi 3",
-  "version_from": "Application 0.1"
-}, {
-  "id": "00a0c91e6-7dec-11d0-a765-f81d4faebf2",
-  "finished": "2016-03-25 00:12:00 +0000 UTC",
-  "status": "success",
-  "started": "2016-03-24 24:00:00 +0000 UTC",
-  "device_type": "Raspberry Pi 3",
-  "version_from": "Application 0.1"
-}, {
-  "id": "00a0c91e6-7dec-11d0-a765-f81d4faebf1",
-  "finished": "2016-03-25 00:04:00 +0000 UTC",
-  "status": "success",
-  "started": "2016-03-24 24:00:00 +0000 UTC",
-  "device_type": "Raspberry Pi 3",
-  "version_from": "Application 0.1"
-}];
-
 var Report = _react2.default.createClass({
   displayName: 'Report',
 
@@ -81281,16 +81272,12 @@ var Report = _react2.default.createClass({
     };
   },
   componentDidMount: function componentDidMount() {
-    if (this.props.deployment.id === "00a0c91e6-7dec-11d0-a765-f81d4faebf6") {
-      this._deploymentState("devices", mockSuccess);
-    } else {
-      AppActions.getSingleDeploymentStats(this.props.deployment.id, function (stats) {
-        this._deploymentState("stats", stats);
-      }.bind(this));
-      AppActions.getSingleDeploymentDevices(this.props.deployment.id, function (devices) {
-        this._deploymentState("devices", devices);
-      }.bind(this));
-    }
+    AppActions.getSingleDeploymentStats(this.props.deployment.id, function (stats) {
+      this._deploymentState("stats", stats);
+    }.bind(this));
+    AppActions.getSingleDeploymentDevices(this.props.deployment.id, function (devices) {
+      this._deploymentState("devices", devices);
+    }.bind(this));
   },
   _deploymentState: function _deploymentState(key, val) {
     var state = {};
@@ -81309,7 +81296,11 @@ var Report = _react2.default.createClass({
     this.props.retryDeployment(this.props.deployment);
   },
   _formatTime: function _formatTime(date) {
-    return date.replace(' ', 'T').replace(/ /g, '').replace('UTC', '');
+    if (date) {
+      return date.replace(' ', 'T').replace(/ /g, '').replace('UTC', '');
+    } else {
+      return "-";
+    }
   },
   exportLog: function exportLog(id) {
     AppActions.getDeviceLog(this.props.deployment.id, id, function (data) {
@@ -81393,8 +81384,6 @@ var Report = _react2.default.createClass({
           List,
           null,
           _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Group', secondaryText: this.props.deployment.name }),
-          _react2.default.createElement(Divider, null),
-          _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Device type', secondaryText: this.props.deployment.device_type || "--" }),
           _react2.default.createElement(Divider, null),
           _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Start time', secondaryText: _react2.default.createElement(Time, { value: this._formatTime(this.props.deployment.created), format: 'YYYY-MM-DD HH:mm' }) })
         )
@@ -84432,7 +84421,10 @@ var Repository = _react2.default.createClass({
     event.stopPropagation();
   },
   _formatTime: function _formatTime(date) {
-    return date.replace(' ', 'T').replace(/ /g, '').replace('UTC', '');
+    if (date) {
+      return date.replace(' ', 'T').replace(/ /g, '').replace('UTC', '');
+    }
+    return;
   },
   render: function render() {
 

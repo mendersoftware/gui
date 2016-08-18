@@ -36,7 +36,10 @@ var Progress = React.createClass({
     this.props.showReport(report);
   },
   _formatTime: function(date) {
-    return date.replace(' ','T').replace(/ /g, '').replace('UTC','');
+    if (date) {
+       return date.replace(' ','T').replace(/ /g, '').replace('UTC','');
+    }
+    return;
   },
   render: function() {
     // get statistics for each in progress

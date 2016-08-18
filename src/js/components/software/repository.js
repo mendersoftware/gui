@@ -190,7 +190,10 @@ var Repository = React.createClass({
     event.stopPropagation();
   },
   _formatTime: function(date) {
-    return date.replace(' ','T').replace(/ /g, '').replace('UTC','');
+    if (date) {
+      return date.replace(' ','T').replace(/ /g, '').replace('UTC','');
+    }
+    return;
   },
   render: function() {
 
