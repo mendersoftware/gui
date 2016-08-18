@@ -328,7 +328,7 @@ var Repository = React.createClass({
           </Table>
 
           <div className={(items.length || this.props.loading) ? "hidden" : "dashboard-placeholder" }>
-            <p>No images found</p>
+            <p>No images found. <a onClick={this._openUpload.bind(null,"upload", null)}>Upload an image</a> to the repository</p>
             <img src="assets/img/images.png" alt="images" />
           </div>
         </div>

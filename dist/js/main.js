@@ -84667,7 +84667,13 @@ var Repository = _react2.default.createClass({
           _react2.default.createElement(
             'p',
             null,
-            'No images found'
+            'No images found. ',
+            _react2.default.createElement(
+              'a',
+              { onClick: this._openUpload.bind(null, "upload", null) },
+              'Upload an image'
+            ),
+            ' to the repository'
           ),
           _react2.default.createElement('img', { src: 'assets/img/images.png', alt: 'images' })
         )
