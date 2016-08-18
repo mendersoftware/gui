@@ -3,7 +3,7 @@ var AppDispatcher = require('../dispatchers/app-dispatcher');
 var ImagesApi = require('../api/images-api');
 var DeploymentsApi = require('../api/deployments-api');
 var DevicesApi = require('../api/devices-api');
-var rootUrl = "https://192.168.99.100";
+var rootUrl = "https://192.168.99.100:9080";
 var apiUrl = rootUrl + "/api/integrations/0.1"
 var deploymentsApiUrl = apiUrl + "/deployments";
 var devicesApiUrl = apiUrl + "/admission";
@@ -171,7 +171,7 @@ var AppActions = {
   },
   getDeploymentsInProgress: function(callback) {
     DeploymentsApi
-      .get(deploymentsApiUrl+'/deployments?status=inprogress')
+      .get(deploymentsApiUrl+'/deployments?status=pending')
       .then(function(deployments) {
         callback();
         AppDispatcher.handleViewAction({
@@ -185,7 +185,7 @@ var AppActions = {
   },
   getPastDeployments: function(callback) {
     DeploymentsApi
-      .get(deploymentsApiUrl+'/deployments?status=finished')
+      .get(deploymentsApiUrl+'/deployments?status=pending')
       .then(function(deployments) {
         callback();
         AppDispatcher.handleViewAction({

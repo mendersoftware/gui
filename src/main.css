@@ -51,6 +51,10 @@ span.link:hover {
 .capitalized {
   text-transform: capitalize;
 }
+.text-overflow {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 .clear {
   clear: both;
 }

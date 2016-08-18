@@ -188,7 +188,7 @@ var ScheduleForm = React.createClass({
 
     var device_type = this.state.image ? this.state.image.device_type : '';
     var filters = "device_type="+device_type;
-    if (this.props.device) {filters = "name="+this.props.device.name}
+    if (this.props.device) {filters = "id="+this.props.device.id}
     filters = encodeURIComponent(filters);
 
 
@@ -197,31 +197,31 @@ var ScheduleForm = React.createClass({
     var tmpDevices = [];
 
     if (this.refs.search && this.state.devices) {
-      var filters = ['name'];
-      tmpDevices = this.state.devices.filter(this.refs.search.filter(filters));
+      var namefilter = ['id'];
+      tmpDevices = this.state.devices.filter(this.refs.search.filter(namefilter));
     }
 
-    var deviceList = (
+    var devices = (
         <p>No devices</p>
     );
-    if (this.state.devices) {
-      deviceList = tmpDevices.map(function(item, index) {
-        var singleFilter = "name="+item.name;
+    if (tmpDevices) {
+      devices = tmpDevices.map(function(item, index) {
+        var singleFilter = "id="+item.id;
         singleFilter = encodeURIComponent(singleFilter);
         return (
-            <p key={index}>
-              <Link to={`/devices/${this.state.groupVal.payload}/${singleFilter}`}>{item.name}</Link>
-            </p>
+          <div className="hint--bottom hint--medium" style={{width:"100%"}} aria-label={item.id} key={index}>
+            <p className="text-overflow"><Link to={`/devices/${this.state.groupVal.payload}/${singleFilter}`}>{item.id}</Link></p>
+          </div>
         )
       }, this);
     }
-    deviceList = (
+    var deviceList = (
       <div className="slider">
         <IconButton className="closeSlider" iconStyle={{fontSize:"16px"}} onClick={this._showDevices} style={{borderRadius:"30px", width:"40px", height:"40", position:"absolute", left:"-18px", backgroundColor:"rgba(255,255,255,1)"}}>
           <FontIcon className="material-icons">close</FontIcon>
         </IconButton>
-        <SearchInput className="search" ref='search' onChange={this.searchUpdated} placeholder="Search devices" />
-        {deviceList}
+        <SearchInput style={{marginBottom:"8"}} className="search" ref='search' onChange={this.searchUpdated} placeholder="Search devices" />
+        {devices}
         <p className={tmpDevices.length ? "hidden" : "italic" }>No devices match this search term</p>
         <Divider />
         <p className={this.state.group ? this.state.group : "hidden"}><Link to={`/devices/${this.state.groupVal.payload}/${filters}`}>Go to group ></Link></p>
@@ -239,6 +239,7 @@ var ScheduleForm = React.createClass({
           overlayStyle={{backgroundColor:"rgba(0, 0, 0, 0.3)"}}
           onRequestChange={this._showDevices}
           containerStyle={this.state.showDevices ? {overflow:"visible"} : {overflow:"hidden"}}
+          width={320}
         >
           {deviceList}
         </LeftNav>
@@ -289,7 +290,6 @@ var ScheduleForm = React.createClass({
             </div>
 
             <div className={this.state.devices ? null : 'hidden'}>{this.state.devices ? this.state.devices.length : "0"} devices will be updated <span onClick={this._showDevices} params={{groupId: this.state.groupVal.payload, filters:filters }} className={this.state.disabled ? "hidden" : "margin-left link"}>View devices</span></div>
-            
           </div>
             
           <p className='info'><FontIcon className="material-icons" style={{marginRight:"4", fontSize:"18", top: "4"}}>info_outline</FontIcon>Any devices that are already on the target software version will be skipped.</p>

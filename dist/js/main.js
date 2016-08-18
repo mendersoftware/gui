@@ -78425,7 +78425,7 @@ var AppDispatcher = require('../dispatchers/app-dispatcher');
 var ImagesApi = require('../api/images-api');
 var DeploymentsApi = require('../api/deployments-api');
 var DevicesApi = require('../api/devices-api');
-var rootUrl = "https://192.168.99.100";
+var rootUrl = "https://192.168.99.100:9080";
 var apiUrl = rootUrl + "/api/integrations/0.1";
 var deploymentsApiUrl = apiUrl + "/deployments";
 var devicesApiUrl = apiUrl + "/admission";
@@ -78560,7 +78560,7 @@ var AppActions = {
     });
   },
   getDeploymentsInProgress: function getDeploymentsInProgress(callback) {
-    DeploymentsApi.get(deploymentsApiUrl + '/deployments?status=inprogress').then(function (deployments) {
+    DeploymentsApi.get(deploymentsApiUrl + '/deployments?status=pending').then(function (deployments) {
       callback();
       AppDispatcher.handleViewAction({
         actionType: AppConstants.RECEIVE_ACTIVE_DEPLOYMENTS,
@@ -78571,7 +78571,7 @@ var AppActions = {
     });
   },
   getPastDeployments: function getPastDeployments(callback) {
-    DeploymentsApi.get(deploymentsApiUrl + '/deployments?status=finished').then(function (deployments) {
+    DeploymentsApi.get(deploymentsApiUrl + '/deployments?status=pending').then(function (deployments) {
       callback();
       AppDispatcher.handleViewAction({
         actionType: AppConstants.RECEIVE_PAST_DEPLOYMENTS,
@@ -81905,7 +81905,7 @@ var ScheduleForm = _react2.default.createClass({
     var device_type = this.state.image ? this.state.image.device_type : '';
     var filters = "device_type=" + device_type;
     if (this.props.device) {
-      filters = "name=" + this.props.device.name;
+      filters = "id=" + this.props.device.id;
     }
     filters = encodeURIComponent(filters);
 
@@ -81914,31 +81914,35 @@ var ScheduleForm = _react2.default.createClass({
     var tmpDevices = [];
 
     if (this.refs.search && this.state.devices) {
-      var filters = ['name'];
-      tmpDevices = this.state.devices.filter(this.refs.search.filter(filters));
+      var namefilter = ['id'];
+      tmpDevices = this.state.devices.filter(this.refs.search.filter(namefilter));
     }
 
-    var deviceList = _react2.default.createElement(
+    var devices = _react2.default.createElement(
       'p',
       null,
       'No devices'
     );
-    if (this.state.devices) {
-      deviceList = tmpDevices.map(function (item, index) {
-        var singleFilter = "name=" + item.name;
+    if (tmpDevices) {
+      devices = tmpDevices.map(function (item, index) {
+        var singleFilter = "id=" + item.id;
         singleFilter = encodeURIComponent(singleFilter);
         return _react2.default.createElement(
-          'p',
-          { key: index },
+          'div',
+          { className: 'hint--bottom hint--medium', style: { width: "100%" }, 'aria-label': item.id, key: index },
           _react2.default.createElement(
-            _reactRouter.Link,
-            { to: '/devices/' + this.state.groupVal.payload + '/' + singleFilter },
-            item.name
+            'p',
+            { className: 'text-overflow' },
+            _react2.default.createElement(
+              _reactRouter.Link,
+              { to: '/devices/' + this.state.groupVal.payload + '/' + singleFilter },
+              item.id
+            )
           )
         );
       }, this);
     }
-    deviceList = _react2.default.createElement(
+    var deviceList = _react2.default.createElement(
       'div',
       { className: 'slider' },
       _react2.default.createElement(
@@ -81950,8 +81954,8 @@ var ScheduleForm = _react2.default.createClass({
           'close'
         )
       ),
-      _react2.default.createElement(_reactSearchInput2.default, { className: 'search', ref: 'search', onChange: this.searchUpdated, placeholder: 'Search devices' }),
-      deviceList,
+      _react2.default.createElement(_reactSearchInput2.default, { style: { marginBottom: "8" }, className: 'search', ref: 'search', onChange: this.searchUpdated, placeholder: 'Search devices' }),
+      devices,
       _react2.default.createElement(
         'p',
         { className: tmpDevices.length ? "hidden" : "italic" },
@@ -81982,7 +81986,8 @@ var ScheduleForm = _react2.default.createClass({
           open: this.state.showDevices,
           overlayStyle: { backgroundColor: "rgba(0, 0, 0, 0.3)" },
           onRequestChange: this._showDevices,
-          containerStyle: this.state.showDevices ? { overflow: "visible" } : { overflow: "hidden" }
+          containerStyle: this.state.showDevices ? { overflow: "visible" } : { overflow: "hidden" },
+          width: 320
         },
         deviceList
       ),
@@ -85469,9 +85474,9 @@ function _getDevices(group, device_type) {
   var devices = [];
   for (var i = 0; i < group.devices.length; i++) {
     var device = _alldevicelist[findWithAttr(_alldevicelist, 'id', group.devices[i])];
-    if (device.device_type === device_type) {
-      devices.push(device);
-    }
+    //if (device.device_type===device_type) {
+    devices.push(device);
+    //}
   }
 
   return devices;

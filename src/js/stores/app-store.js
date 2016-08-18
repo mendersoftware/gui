@@ -185,9 +185,9 @@ function _getDevices(group, device_type) {
   var devices = [];
   for (var i=0; i<group.devices.length; i++) {
     var device = _alldevicelist[findWithAttr(_alldevicelist, 'id', (group.devices[i]))];
-    if (device.device_type===device_type) {
+    //if (device.device_type===device_type) {
       devices.push(device);
-    }
+    //}
   }
   
   return devices;
