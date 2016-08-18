@@ -84244,6 +84244,10 @@ var _materialUi = require('material-ui');
 
 var _materialUi2 = _interopRequireDefault(_materialUi);
 
+var _snackbar = require('material-ui/lib/snackbar');
+
+var _snackbar2 = _interopRequireDefault(_snackbar);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var update = require('react-addons-update');
@@ -84288,7 +84292,10 @@ var Repository = _react2.default.createClass({
       schedule: false,
       popupLabel: "Upload a new image",
       software: [],
-      tmpFile: null
+      tmpFile: null,
+      snackMessage: "Deployment created",
+      openSnack: false,
+      autoHideDuration: 5000
     };
   },
 
@@ -84328,10 +84335,12 @@ var Repository = _react2.default.createClass({
       name: this.state.group.name
     };
     _appActions2.default.createDeployment(newDeployment, function (uri) {
-      console.log("created", uri);
-      // redirect?
-    });
+      this.setState({ openSnack: true });
+    }.bind(this));
     this.dialogDismiss('schedule');
+  },
+  redirect: function redirect() {
+    this.context.router.push('/deployments');
   },
   _onUploadSubmit: function _onUploadSubmit(image) {
     var tmpFile = image.imageFile;
@@ -84750,14 +84759,26 @@ var Repository = _react2.default.createClass({
           actionsContainerStyle: { marginBottom: "0" }
         },
         _react2.default.createElement(_scheduleform2.default, { deploymentSchedule: this._updateParams, images: software, image: this.state.image, imageVal: this.state.image, groups: this.props.groups })
-      )
+      ),
+      _react2.default.createElement(_snackbar2.default, {
+        open: this.state.openSnack,
+        message: this.state.snackMessage,
+        action: 'Go to deployments',
+        autoHideDuration: this.state.autoHideDuration,
+        onActionTouchTap: this.redirect,
+        onRequestClose: this.handleRequestClose
+      })
     );
   }
 });
 
+Repository.contextTypes = {
+  router: _react2.default.PropTypes.object
+};
+
 module.exports = Repository;
 
-},{"../../actions/app-actions":815,"../../stores/app-store":859,"../common/forms/fileinput":820,"../common/forms/form":821,"../common/forms/textinput":822,"../common/loader":823,"../deployments/scheduleform":843,"./deploymentbutton":851,"./selectedimage":853,"material-ui":257,"react":684,"react-addons-update":365,"react-dom":476,"react-router":506,"react-search-input":513,"react-tag-input":516,"react-time":522}],853:[function(require,module,exports){
+},{"../../actions/app-actions":815,"../../stores/app-store":859,"../common/forms/fileinput":820,"../common/forms/form":821,"../common/forms/textinput":822,"../common/loader":823,"../deployments/scheduleform":843,"./deploymentbutton":851,"./selectedimage":853,"material-ui":257,"material-ui/lib/snackbar":287,"react":684,"react-addons-update":365,"react-dom":476,"react-router":506,"react-search-input":513,"react-tag-input":516,"react-time":522}],853:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
