@@ -940,7 +940,8 @@ span.month, span.day {
       &.successful {
         background-color: @green;
       }
-      &.failure {
+      &.failure,
+      &.noimage {
         background-color: @red;
       }
       &.pending {
@@ -1032,7 +1033,8 @@ span.month, span.day {
       background-color: @lightergrey;
       .animation(pulse 2.8s infinite);
     }
-    .failure .bubble {
+    .failure .bubble,
+    .noimage .bubble {
       background-color: @red;
       /* &:after {
         content:"";

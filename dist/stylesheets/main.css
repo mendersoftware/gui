@@ -856,7 +856,8 @@ span.day {
 .progress-container .key .bubble.successful {
   background-color: #009E73;
 }
-.progress-container .key .bubble.failure {
+.progress-container .key .bubble.failure,
+.progress-container .key .bubble.noimage {
   background-color: #8F0D0D;
 }
 .progress-container .key .bubble.pending {
@@ -952,7 +953,8 @@ span.day {
   -ms-animation: pulse 2.8s infinite;
   -o-animation: pulse 2.8s infinite;
 }
-.progress-container .bubbles-contain .failure .bubble {
+.progress-container .bubbles-contain .failure .bubble,
+.progress-container .bubbles-contain .noimage .bubble {
   background-color: #8F0D0D;
   /* &:after {
         content:"";

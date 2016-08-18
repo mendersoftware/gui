@@ -28,7 +28,10 @@ var Recent = React.createClass({
     this.props.clickHandle(params);
   },
   _formatTime: function(date) {
-    return date.replace(' ','T').replace(/ /g, '').replace('UTC','');
+    if (date) {
+      return date.replace(' ','T').replace(/ /g, '').replace('UTC','');
+    } 
+    return;
   },
   render: function() {
     var recent = this.props.deployments.map(function(deployment, index) {

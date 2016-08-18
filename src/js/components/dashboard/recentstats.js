@@ -5,7 +5,7 @@ var RecentStats = React.createClass({
   getInitialState: function() {
     return {
       stats: {
-        "successful": 0,
+        "success": 0,
         "failure": 0
       }
     };
@@ -20,12 +20,12 @@ var RecentStats = React.createClass({
       <div className="deploymentStats">
         <div className="resultIcons">
           <img className={this.state.stats.failure ? "alert" : null} src="assets/img/warning.png" />
-          <div>{this.state.stats.failure}</div>
+          <div>{this.state.stats.failure + this.state.stats.noimage}</div>
           <span className="iconStatLabel">Failed</span>
         </div>
         <div className="resultIcons">
           <img src="assets/img/check.png" />
-          <div>{this.state.stats.successful}</div>
+          <div>{this.state.stats.success}</div>
           <span className="iconStatLabel">Successful</span>
         </div>
       </div>
