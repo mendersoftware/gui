@@ -44,9 +44,7 @@ var Form = React.createClass({
     var errorText = '';
 
     if (component.props.file) {
-      console.log(value);
       if (component.props.required && !value) {
-        console.log("no val");
         isValid = false;
         errorText = "You must choose a file to upload";
       }

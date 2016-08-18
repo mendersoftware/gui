@@ -19,7 +19,7 @@ var FileInput = React.createClass({
   },
   setValue: function (event) {
    if (event.target.files.length) {
-      this.setState({file: event.target.files[0]});
+      this.setState({value: event.target.files[0]});
     }
     this.props.validate(this, event.target.files[0]);
   },
@@ -34,6 +34,7 @@ var FileInput = React.createClass({
           className={this.state.errorText ? "fileInput error" : "fileInput" }
           style={{zIndex: "2"}}
           onChange={this.setValue}
+          value={this.state.value}
           />
         <span style={{color: "rgb(171, 16, 0)", fontSize:"12px", position:"relative", top:"-6"}}>
           {this.state.errorText}

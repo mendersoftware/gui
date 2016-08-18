@@ -9,10 +9,12 @@ var DeploymentStatus = React.createClass({
   getInitialState: function() {
     return {
       stats: {
-        "successful": 0,
+        "success": 0,
         "pending": 0,
-        "inprogress": 0,
         "failure": 0,
+        "downloading": 0,
+        "installing": 0,
+        "rebooting": 0,
         "noimage": 0
       }
     };
@@ -23,16 +25,28 @@ var DeploymentStatus = React.createClass({
     }.bind(this));
   },
   render: function() {
+    var inprogress = this.state.stats.downloading + this.state.stats.installing + this.state.stats.rebooting;
+    var finished = this.state.stats.success + this.state.stats.failure + this.state.stats.noimage;
+    var failed = this.state.stats.failure + this.state.stats.noimage;
     var label = ( 
-      <div>
-        <span style={{marginRight:"4"}}>{this.state.stats.failure} failed</span>
-        <span style={{marginRight:"4"}}>{this.state.stats.successful} successful</span>
-        <span className={this.state.stats.pending ? null : "hidden" }>{this.state.stats.pending} pending</span>
+      <div className="results-status">
+        <div className={failed ? "hint--bottom" : "hidden"} aria-label="Failures">
+          <span className={"status failure"}>{failed}</span>
+        </div>
+        <div className={this.state.stats.pending ? "hint--bottom" : "hidden"} aria-label="Pending">
+          <span className={"status pending"}>{this.state.stats.pending}</span>
+        </div>
+        <div className={inprogress ? "hint--bottom" : "hidden"} aria-label="In progress"> 
+          <span className={"status inprogress"}>{inprogress}</span>
+        </div>
+        <div className={this.state.stats.success ? "hint--bottom" : "hidden"} aria-label="Successful">
+          <span className="status success">{this.state.stats.success}</span>
+        </div>
       </div>
     );
     return (
       <div>
-        <FlatButton label={label} primary={this.state.stats.failure>0} />
+        {label}
       </div>
     );
   }

@@ -155,12 +155,41 @@ var AppActions = {
 
   /*Deployments */
   getDeployments: function(callback) {
+    // all deployments
     DeploymentsApi
       .get(deploymentsApiUrl+'/deployments')
       .then(function(deployments) {
         callback();
         AppDispatcher.handleViewAction({
           actionType: AppConstants.RECEIVE_DEPLOYMENTS,
+          deployments: deployments
+        });
+      })
+      .catch(function(err) {
+        callback(err);
+      })
+  },
+  getDeploymentsInProgress: function(callback) {
+    DeploymentsApi
+      .get(deploymentsApiUrl+'/deployments?status=inprogress')
+      .then(function(deployments) {
+        callback();
+        AppDispatcher.handleViewAction({
+          actionType: AppConstants.RECEIVE_ACTIVE_DEPLOYMENTS,
+          deployments: deployments
+        });
+      })
+      .catch(function(err) {
+        callback(err);
+      })
+  },
+  getPastDeployments: function(callback) {
+    DeploymentsApi
+      .get(deploymentsApiUrl+'/deployments?status=finished')
+      .then(function(deployments) {
+        callback();
+        AppDispatcher.handleViewAction({
+          actionType: AppConstants.RECEIVE_PAST_DEPLOYMENTS,
           deployments: deployments
         });
       })

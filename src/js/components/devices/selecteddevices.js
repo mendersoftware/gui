@@ -155,7 +155,7 @@ var SelectedDevices = React.createClass({
       var deviceIdentity = [];
       for (var k in this.props.selected[0].attributes) {
         deviceIdentity.push(
-          <div>
+          <div key={k}>
             <ListItem style={styles.listStyle} disabled={true} primaryText={k} secondaryText={ this.props.selected[0].attributes[k]} />
             <Divider />
           </div>
@@ -263,7 +263,7 @@ var SelectedDevices = React.createClass({
     return (
       <div className="device-info">
      
-        <h4 className="margin-bottom-none">Device details</h4>
+        <h4 className="margin-bottom-none">{this.props.unauthorized ? "Device identity" : "Device details"}</h4>
         {deviceInfo}
    
         <Dialog

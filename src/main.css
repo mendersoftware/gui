@@ -158,6 +158,9 @@ span.link:hover {
 .overflow-hidden {
   overflow: hidden;
 }
+.allow-overflow {
+  overflow: visible;
+}
 .align-top {
   display: inline-block;
   vertical-align: top;
@@ -430,9 +433,36 @@ span.length {
 }
 .tabContainer,
 .contentContainer {
-  padding: 30px 45px 60px;
+  margin: 30px 45px 60px;
   position: relative;
-  overflow: hidden;
+}
+.results-status {
+  padding-top: 4px;
+}
+.results-status span.status {
+  margin-right: 15px;
+}
+.results-status span.status::before {
+  content: "";
+  display: inline-block;
+  width: 23px;
+  height: 23px;
+  vertical-align: middle;
+  background-position-y: -2px;
+  background-repeat: no-repeat;
+  margin-right: 5px;
+}
+.results-status span.status.success::before {
+  background-image: url('../assets/img/success_status.png');
+}
+.results-status span.status.failure::before {
+  background-image: url('../assets/img/error_status.png');
+}
+.results-status span.status.pending::before {
+  background-image: url('../assets/img/pending_status.png');
+}
+.results-status span.status.inprogress::before {
+  background-image: url('../assets/img/progress_status.png');
 }
 /* Forms */
 .inputGroup {
@@ -1024,6 +1054,7 @@ span.day {
 .deploy-table-contain {
   min-height: 206px;
   margin-bottom: 60px;
+  margin-top: 30px;
 }
 @media (min-width: 1700px) {
   .deployments-container .progressLabel {

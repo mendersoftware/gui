@@ -13,11 +13,11 @@ var RaisedButton = mui.RaisedButton;
 
 function getState() {
   return {
-    progress: AppStore.getProgressDeployments(new Date()),
+    progress: AppStore.getDeploymentsInProgress(),
     health: AppStore.getHealth(),
     unauthorized: AppStore.getUnauthorized(),
     devices: AppStore.getAllDevices(),
-    recent: AppStore.getRecentDeployments(new Date()),
+    recent: AppStore.getPastDeployments(),
     activity: AppStore.getActivity(),
     hideReview: localStorage.getItem("reviewDevices"),
   }
@@ -34,9 +34,14 @@ var Dashboard = React.createClass({
     AppStore.removeChangeListener(this._onChange);
   },
   componentDidMount: function() {
-    AppActions.getDeployments(function() {
+    AppActions.getPastDeployments(function() {
       setTimeout(function() {
-        this.setState({doneDepsLoading:true});
+        this.setState({doneActiveDepsLoading:true});
+      }.bind(this), 300)
+    }.bind(this));
+    AppActions.getDeploymentsInProgress(function() {
+      setTimeout(function() {
+        this.setState({donePastDepsLoading:true});
       }.bind(this), 300)
     }.bind(this));
     AppActions.getDevices(function() {
@@ -85,11 +90,11 @@ var Dashboard = React.createClass({
             <RaisedButton onClick={this._handleClick.bind(null, {route:"devices"})} primary={true} label="Review details" />
           </div>
           <div className="leftDashboard">
-            <Deployments loading={!this.state.doneDepsLoading} clickHandle={this._handleClick} progress={this.state.progress} recent={this.state.recent} />
+            <Deployments loadingActive={!this.state.doneActiveDepsLoading} loadingRecent={!this.state.donePastDepsLoading} clickHandle={this._handleClick} progress={this.state.progress} recent={this.state.recent} />
           </div>
           <div className="rightDashboard">
             <div className="right">
-              <Health loading={!this.state.doneDepsLoading}  devices={this.state.devices} clickHandle={this._handleClick} health={this.state.health} />
+              <Health loading={!this.state.doneDevsLoading}  devices={this.state.devices} clickHandle={this._handleClick} health={this.state.health} />
               <Activity loading={!this.state.doneActivityLoading}  activity={this.state.activity} />
             </div>
           </div>
