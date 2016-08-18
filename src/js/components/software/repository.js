@@ -97,6 +97,8 @@ var Repository = React.createClass({
   },
   _onUploadSubmit: function(image) {
     var tmpFile = image.imageFile;
+    delete image.imageFile;
+    delete image.verified;
 
     AppActions.uploadImage(image, function(id_uri) {
       this.props.startLoader();
@@ -367,6 +369,14 @@ var Repository = React.createClass({
                 label="Yocto ID"
                 required={true}
                 validations="isLength:4,isAlphanumeric" />
+
+               <TextInput
+                id="checksum"
+                value={this.state.image.checksum}
+                hint="Checksum"
+                label="Checksum"
+                required={true}
+                validations="isLength:32,isAlphanumeric" />
 
               <TextInput
                 id="device_type"

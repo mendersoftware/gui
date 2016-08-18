@@ -84341,6 +84341,8 @@ var Repository = _react2.default.createClass({
   },
   _onUploadSubmit: function _onUploadSubmit(image) {
     var tmpFile = image.imageFile;
+    delete image.imageFile;
+    delete image.verified;
 
     _appActions2.default.uploadImage(image, function (id_uri) {
       this.props.startLoader();
@@ -84715,6 +84717,13 @@ var Repository = _react2.default.createClass({
               label: 'Yocto ID',
               required: true,
               validations: 'isLength:4,isAlphanumeric' }),
+            _react2.default.createElement(_textinput2.default, {
+              id: 'checksum',
+              value: this.state.image.checksum,
+              hint: 'Checksum',
+              label: 'Checksum',
+              required: true,
+              validations: 'isLength:32,isAlphanumeric' }),
             _react2.default.createElement(_textinput2.default, {
               id: 'device_type',
               hint: 'Device type compatibility',
