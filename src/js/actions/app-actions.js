@@ -64,11 +64,11 @@ var AppActions = {
     DevicesApi
       .get(devicesApiUrl+"/devices")
       .then(function(devices) {
-        callback();
         AppDispatcher.handleViewAction({
           actionType: AppConstants.RECEIVE_DEVICES,
           devices: devices
         });
+        callback();
       })
       .catch(function(err) {
         callback(err);

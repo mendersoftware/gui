@@ -78481,11 +78481,11 @@ var AppActions = {
   /* Devices */
   getDevices: function getDevices(callback) {
     DevicesApi.get(devicesApiUrl + "/devices").then(function (devices) {
-      callback();
       AppDispatcher.handleViewAction({
         actionType: AppConstants.RECEIVE_DEVICES,
         devices: devices
       });
+      callback();
     }).catch(function (err) {
       callback(err);
     });
@@ -79362,6 +79362,12 @@ var Dashboard = _react2.default.createClass({
     AppStore.removeChangeListener(this._onChange);
   },
   componentDidMount: function componentDidMount() {
+    AppActions.getDevices(function (devices) {
+      this.setState({ devices: devices });
+      setTimeout(function () {
+        this.setState({ doneDevsLoading: true });
+      }.bind(this), 300);
+    }.bind(this));
     AppActions.getPastDeployments(function () {
       setTimeout(function () {
         this.setState({ doneActiveDepsLoading: true });
@@ -79372,14 +79378,9 @@ var Dashboard = _react2.default.createClass({
         this.setState({ donePastDepsLoading: true });
       }.bind(this), 300);
     }.bind(this));
-    AppActions.getDevices(function () {
-      setTimeout(function () {
-        this.setState({ doneDevsLoading: true });
-      }.bind(this), 300);
-    }.bind(this));
   },
   _onChange: function _onChange() {
-    this.setState(getState());
+    this.setState(this.getInitialState());
   },
   _setStorage: function _setStorage(key, value) {
     AppActions.setLocalStorage(key, value);
@@ -82782,7 +82783,8 @@ var Devices = _react2.default.createClass({
     this.setState(this.getInitialState());
   },
   _refreshDevices: function _refreshDevices() {
-    AppActions.getDevices(function () {
+    AppActions.getDevices(function (devices) {
+      this.setState(this.getInitialState());
       setTimeout(function () {
         this.setState({ doneLoading: true });
       }.bind(this), 300);

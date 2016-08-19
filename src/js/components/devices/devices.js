@@ -28,7 +28,7 @@ function getState() {
 
 var Devices = React.createClass({
   getInitialState: function() {
-    return getState()
+    return getState();
   },
   componentWillMount: function() {
     AppStore.changeListener(this._onChange);
@@ -60,7 +60,8 @@ var Devices = React.createClass({
     this.setState(this.getInitialState());
   },
   _refreshDevices: function() {
-    AppActions.getDevices(function() {
+    AppActions.getDevices(function(devices) {
+      this.setState(this.getInitialState());
       setTimeout(function() {
         this.setState({doneLoading:true});
       }.bind(this), 300)
