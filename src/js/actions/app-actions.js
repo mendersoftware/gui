@@ -171,7 +171,7 @@ var AppActions = {
   },
   getDeploymentsInProgress: function(callback) {
     DeploymentsApi
-      .get(deploymentsApiUrl+'/deployments?status=pending')
+      .get(deploymentsApiUrl+'/deployments?status=inprogress')
       .then(function(deployments) {
         callback();
         AppDispatcher.handleViewAction({
@@ -185,7 +185,7 @@ var AppActions = {
   },
   getPastDeployments: function(callback) {
     DeploymentsApi
-      .get(deploymentsApiUrl+'/deployments?status=pending')
+      .get(deploymentsApiUrl+'/deployments?status=finished')
       .then(function(deployments) {
         callback();
         AppDispatcher.handleViewAction({
