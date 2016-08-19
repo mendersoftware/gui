@@ -22,9 +22,6 @@ function getState() {
     filters: AppStore.getFilters(),
     attributes: AppStore.getAttributes(),
     images: AppStore.getSoftwareRepo(),
-    hideTODO: localStorage.getItem("hideTODO"),
-    groupTODO: localStorage.getItem("groupNextStep"),
-    authTODO: localStorage.getItem("authStep"),
     snackbar: AppStore.getSnackbar()
   }
 }
@@ -59,23 +56,8 @@ var Devices = React.createClass({
   componentWillUnmount: function () {
     AppStore.removeChangeListener(this._onChange);
   },
-  _closeOnboard: function() {
-    this.setState({hideTODO: true});
-    AppActions.setLocalStorage("hideTODO", true);
-  },
   _onChange: function() {
     this.setState(this.getInitialState());
-
-    if (!this.state.groupTODO) {
-      if (this.state.groups[1]) {
-        if (this.state.groups[1].devices.length===2) {
-          setTimeout(function() {
-            // avoid dispatcher clash
-            AppActions.setLocalStorage("groupNextStep", true);
-          },1);
-        }
-      }
-    }
   },
   _refreshDevices: function() {
     AppActions.getDevices(function() {
@@ -97,27 +79,6 @@ var Devices = React.createClass({
           <Groups groups={this.state.groups} selectedGroup={this.state.selectedGroup} allDevices={this.state.allDevices} />
         </div>
         <div className="rightFluid padding-right">
-          <div className={this.state.hideTODO ? "hidden" : null}>
-            <div className={this.state.unauthorized.length || !this.state.groupTODO ? "hidden" : null}>
-              <div className="margin-top margin-bottom onboard">
-                <div className="close" onClick={this._closeOnboard}/>
-                <h3><span className="todo">//TODO</span> Upload a new software image</h3>
-                <Link to="/software" className="todo link">> Go to software</Link>
-              </div>
-            </div>
-            <div className={this.state.groupTODO || this.state.unauthorized.length ? "hidden" : null}>
-              <div className="margin-top margin-bottom onboard">
-                <div className="close" onClick={this._closeOnboard}/>
-                <h3><span className="todo">//TODO</span> Create a new group with these devices</h3>
-              </div>
-            </div>
-           <div className={!this.state.authTODO && this.state.unauthorized.length ? null : "hidden" }>
-              <div className="margin-top margin-bottom onboard">
-                <div className="close" onClick={this._closeOnboard}/>
-                <h3><span className="todo">//TODO</span> Authorize the 2 pending devices</h3>
-              </div>
-            </div>
-          </div>  
           <div className={this.state.unauthorized.length ? null : "hidden"}>
             <Unauthorized refresh={this._refreshDevices} unauthorized={this.state.unauthorized} />
           </div>
