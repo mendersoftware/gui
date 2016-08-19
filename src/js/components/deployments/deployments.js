@@ -45,7 +45,6 @@ function getState() {
     contentClass: "largeDialog", 
     invalid: true,
     dialog: false,
-    hideTODO: localStorage.getItem("deployTODO"),
   }
 }
 
@@ -147,7 +146,7 @@ var Deployments = React.createClass({
     AppActions.createDeployment(newDeployment, function(data) {
       AppActions.getDeployments();
     });
-    AppActions.setLocalStorage("deployTODO", true);
+
     this.dialogDismiss('dialog');
   },
   _deploymentParams: function(val, attr) {
@@ -199,9 +198,6 @@ var Deployments = React.createClass({
   _scheduleRemove: function(id) {
     AppActions.removeDeployment(id);
   },
-  _closeOnboard: function() {
-    AppActions.setLocalStorage("deployTODO", true);
-  },
   render: function() {
     var scheduleActions =  [
       <div style={{marginRight:"10", display:"inline-block"}}>
@@ -233,13 +229,6 @@ var Deployments = React.createClass({
     }
     return (
       <div className="contentContainer allow-overflow">
-
-      <div className={this.state.hideTODO ? "hidden" : null}>
-        <div className="margin-bottom onboard">
-          <div className="close" onClick={this._closeOnboard}/>
-          <h3><span className="todo">//TODO</span> create a deployment for the device group you just created</h3>
-        </div>
-      </div>
 
       <Tabs
         tabItemContainerStyle={{width: "33%"}}

@@ -3,7 +3,7 @@ var AppDispatcher = require('../dispatchers/app-dispatcher');
 var ImagesApi = require('../api/images-api');
 var DeploymentsApi = require('../api/deployments-api');
 var DevicesApi = require('../api/devices-api');
-var rootUrl = "https://192.168.99.100:9080";
+var rootUrl = "https://192.168.99.100";
 var apiUrl = rootUrl + "/api/integrations/0.1"
 var deploymentsApiUrl = apiUrl + "/deployments";
 var devicesApiUrl = apiUrl + "/admission";
@@ -64,11 +64,11 @@ var AppActions = {
     DevicesApi
       .get(devicesApiUrl+"/devices")
       .then(function(devices) {
-        callback();
         AppDispatcher.handleViewAction({
           actionType: AppConstants.RECEIVE_DEVICES,
           devices: devices
         });
+        callback();
       })
       .catch(function(err) {
         callback(err);

@@ -12,7 +12,7 @@ import FileInput from '../common/forms/fileinput';
 import TextInput from '../common/forms/textinput';
 import DeploymentButton from './deploymentbutton';
 import SelectedImage from './selectedimage';
-import { Router, Link } from 'react-router';
+import { Router, Route, Link } from 'react-router';
 var ReactTags = require('react-tag-input').WithContext;
 
 // material ui
@@ -29,6 +29,8 @@ var TextField = mui.TextField;
 var FlatButton = mui.FlatButton;
 var FontIcon = mui.FontIcon;
 var IconButton = mui.IconButton;
+
+import Snackbar from 'material-ui/lib/snackbar';
 
 var newState = {};
 var tags = [];
@@ -51,6 +53,9 @@ var Repository = React.createClass({
       popupLabel: "Upload a new image",
       software: [],
       tmpFile: null,
+      snackMessage: "Deployment created",
+      openSnack: false,
+      autoHideDuration: 5000,
     };
   },
 
@@ -90,10 +95,12 @@ var Repository = React.createClass({
       name: this.state.group.name
     }
     AppActions.createDeployment(newDeployment, function (uri) {
-      console.log("created", uri);
-      // redirect?
-    });
+      this.setState({openSnack: true});
+    }.bind(this));
     this.dialogDismiss('schedule');
+  },
+  redirect: function() {
+    this.context.router.push('/deployments');
   },
   _onUploadSubmit: function(image) {
     var tmpFile = image.imageFile;
@@ -412,9 +419,22 @@ var Repository = React.createClass({
           >
           <ScheduleForm deploymentSchedule={this._updateParams} images={software} image={this.state.image} imageVal={this.state.image} groups={this.props.groups} />
         </Dialog>
+
+        <Snackbar
+          open={this.state.openSnack}
+          message={this.state.snackMessage}
+          action="Go to deployments"
+          autoHideDuration={this.state.autoHideDuration}
+          onActionTouchTap={this.redirect}
+          onRequestClose={this.handleRequestClose}
+        />
       </div>
     );
   }
 });
+
+Repository.contextTypes = {
+  router: React.PropTypes.object
+};
 
 module.exports = Repository;

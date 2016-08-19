@@ -78425,7 +78425,7 @@ var AppDispatcher = require('../dispatchers/app-dispatcher');
 var ImagesApi = require('../api/images-api');
 var DeploymentsApi = require('../api/deployments-api');
 var DevicesApi = require('../api/devices-api');
-var rootUrl = "https://192.168.99.100:9080";
+var rootUrl = "https://192.168.99.100";
 var apiUrl = rootUrl + "/api/integrations/0.1";
 var deploymentsApiUrl = apiUrl + "/deployments";
 var devicesApiUrl = apiUrl + "/admission";
@@ -78481,11 +78481,11 @@ var AppActions = {
   /* Devices */
   getDevices: function getDevices(callback) {
     DevicesApi.get(devicesApiUrl + "/devices").then(function (devices) {
-      callback();
       AppDispatcher.handleViewAction({
         actionType: AppConstants.RECEIVE_DEVICES,
         devices: devices
       });
+      callback();
     }).catch(function (err) {
       callback(err);
     });
@@ -79362,6 +79362,12 @@ var Dashboard = _react2.default.createClass({
     AppStore.removeChangeListener(this._onChange);
   },
   componentDidMount: function componentDidMount() {
+    AppActions.getDevices(function (devices) {
+      this.setState({ devices: devices });
+      setTimeout(function () {
+        this.setState({ doneDevsLoading: true });
+      }.bind(this), 300);
+    }.bind(this));
     AppActions.getPastDeployments(function () {
       setTimeout(function () {
         this.setState({ doneActiveDepsLoading: true });
@@ -79372,14 +79378,9 @@ var Dashboard = _react2.default.createClass({
         this.setState({ donePastDepsLoading: true });
       }.bind(this), 300);
     }.bind(this));
-    AppActions.getDevices(function () {
-      setTimeout(function () {
-        this.setState({ doneDevsLoading: true });
-      }.bind(this), 300);
-    }.bind(this));
   },
   _onChange: function _onChange() {
-    this.setState(getState());
+    this.setState(this.getInitialState());
   },
   _setStorage: function _setStorage(key, value) {
     AppActions.setLocalStorage(key, value);
@@ -80246,8 +80247,7 @@ function getState() {
     scheduleForm: true,
     contentClass: "largeDialog",
     invalid: true,
-    dialog: false,
-    hideTODO: localStorage.getItem("deployTODO")
+    dialog: false
   };
 }
 
@@ -80349,7 +80349,7 @@ var Deployments = _react2.default.createClass({
     AppActions.createDeployment(newDeployment, function (data) {
       AppActions.getDeployments();
     });
-    AppActions.setLocalStorage("deployTODO", true);
+
     this.dialogDismiss('dialog');
   },
   _deploymentParams: function _deploymentParams(val, attr) {
@@ -80401,9 +80401,6 @@ var Deployments = _react2.default.createClass({
   _scheduleRemove: function _scheduleRemove(id) {
     AppActions.removeDeployment(id);
   },
-  _closeOnboard: function _closeOnboard() {
-    AppActions.setLocalStorage("deployTODO", true);
-  },
   render: function render() {
     var scheduleActions = [_react2.default.createElement(
       'div',
@@ -80429,25 +80426,6 @@ var Deployments = _react2.default.createClass({
     return _react2.default.createElement(
       'div',
       { className: 'contentContainer allow-overflow' },
-      _react2.default.createElement(
-        'div',
-        { className: this.state.hideTODO ? "hidden" : null },
-        _react2.default.createElement(
-          'div',
-          { className: 'margin-bottom onboard' },
-          _react2.default.createElement('div', { className: 'close', onClick: this._closeOnboard }),
-          _react2.default.createElement(
-            'h3',
-            null,
-            _react2.default.createElement(
-              'span',
-              { className: 'todo' },
-              '//TODO'
-            ),
-            ' create a deployment for the device group you just created'
-          )
-        )
-      ),
       _react2.default.createElement(
         Tabs,
         {
@@ -82765,9 +82743,6 @@ function getState() {
     filters: AppStore.getFilters(),
     attributes: AppStore.getAttributes(),
     images: AppStore.getSoftwareRepo(),
-    hideTODO: localStorage.getItem("hideTODO"),
-    groupTODO: localStorage.getItem("groupNextStep"),
-    authTODO: localStorage.getItem("authStep"),
     snackbar: AppStore.getSnackbar()
   };
 }
@@ -82804,26 +82779,12 @@ var Devices = _react2.default.createClass({
   componentWillUnmount: function componentWillUnmount() {
     AppStore.removeChangeListener(this._onChange);
   },
-  _closeOnboard: function _closeOnboard() {
-    this.setState({ hideTODO: true });
-    AppActions.setLocalStorage("hideTODO", true);
-  },
   _onChange: function _onChange() {
     this.setState(this.getInitialState());
-
-    if (!this.state.groupTODO) {
-      if (this.state.groups[1]) {
-        if (this.state.groups[1].devices.length === 2) {
-          setTimeout(function () {
-            // avoid dispatcher clash
-            AppActions.setLocalStorage("groupNextStep", true);
-          }, 1);
-        }
-      }
-    }
   },
   _refreshDevices: function _refreshDevices() {
-    AppActions.getDevices(function () {
+    AppActions.getDevices(function (devices) {
+      this.setState(this.getInitialState());
       setTimeout(function () {
         this.setState({ doneLoading: true });
       }.bind(this), 300);
@@ -82847,72 +82808,6 @@ var Devices = _react2.default.createClass({
       _react2.default.createElement(
         'div',
         { className: 'rightFluid padding-right' },
-        _react2.default.createElement(
-          'div',
-          { className: this.state.hideTODO ? "hidden" : null },
-          _react2.default.createElement(
-            'div',
-            { className: this.state.unauthorized.length || !this.state.groupTODO ? "hidden" : null },
-            _react2.default.createElement(
-              'div',
-              { className: 'margin-top margin-bottom onboard' },
-              _react2.default.createElement('div', { className: 'close', onClick: this._closeOnboard }),
-              _react2.default.createElement(
-                'h3',
-                null,
-                _react2.default.createElement(
-                  'span',
-                  { className: 'todo' },
-                  '//TODO'
-                ),
-                ' Upload a new software image'
-              ),
-              _react2.default.createElement(
-                _reactRouter.Link,
-                { to: '/software', className: 'todo link' },
-                '> Go to software'
-              )
-            )
-          ),
-          _react2.default.createElement(
-            'div',
-            { className: this.state.groupTODO || this.state.unauthorized.length ? "hidden" : null },
-            _react2.default.createElement(
-              'div',
-              { className: 'margin-top margin-bottom onboard' },
-              _react2.default.createElement('div', { className: 'close', onClick: this._closeOnboard }),
-              _react2.default.createElement(
-                'h3',
-                null,
-                _react2.default.createElement(
-                  'span',
-                  { className: 'todo' },
-                  '//TODO'
-                ),
-                ' Create a new group with these devices'
-              )
-            )
-          ),
-          _react2.default.createElement(
-            'div',
-            { className: !this.state.authTODO && this.state.unauthorized.length ? null : "hidden" },
-            _react2.default.createElement(
-              'div',
-              { className: 'margin-top margin-bottom onboard' },
-              _react2.default.createElement('div', { className: 'close', onClick: this._closeOnboard }),
-              _react2.default.createElement(
-                'h3',
-                null,
-                _react2.default.createElement(
-                  'span',
-                  { className: 'todo' },
-                  '//TODO'
-                ),
-                ' Authorize the 2 pending devices'
-              )
-            )
-          )
-        ),
         _react2.default.createElement(
           'div',
           { className: this.state.unauthorized.length ? null : "hidden" },
@@ -84244,6 +84139,10 @@ var _materialUi = require('material-ui');
 
 var _materialUi2 = _interopRequireDefault(_materialUi);
 
+var _snackbar = require('material-ui/lib/snackbar');
+
+var _snackbar2 = _interopRequireDefault(_snackbar);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var update = require('react-addons-update');
@@ -84288,7 +84187,10 @@ var Repository = _react2.default.createClass({
       schedule: false,
       popupLabel: "Upload a new image",
       software: [],
-      tmpFile: null
+      tmpFile: null,
+      snackMessage: "Deployment created",
+      openSnack: false,
+      autoHideDuration: 5000
     };
   },
 
@@ -84328,10 +84230,12 @@ var Repository = _react2.default.createClass({
       name: this.state.group.name
     };
     _appActions2.default.createDeployment(newDeployment, function (uri) {
-      console.log("created", uri);
-      // redirect?
-    });
+      this.setState({ openSnack: true });
+    }.bind(this));
     this.dialogDismiss('schedule');
+  },
+  redirect: function redirect() {
+    this.context.router.push('/deployments');
   },
   _onUploadSubmit: function _onUploadSubmit(image) {
     var tmpFile = image.imageFile;
@@ -84750,14 +84654,26 @@ var Repository = _react2.default.createClass({
           actionsContainerStyle: { marginBottom: "0" }
         },
         _react2.default.createElement(_scheduleform2.default, { deploymentSchedule: this._updateParams, images: software, image: this.state.image, imageVal: this.state.image, groups: this.props.groups })
-      )
+      ),
+      _react2.default.createElement(_snackbar2.default, {
+        open: this.state.openSnack,
+        message: this.state.snackMessage,
+        action: 'Go to deployments',
+        autoHideDuration: this.state.autoHideDuration,
+        onActionTouchTap: this.redirect,
+        onRequestClose: this.handleRequestClose
+      })
     );
   }
 });
 
+Repository.contextTypes = {
+  router: _react2.default.PropTypes.object
+};
+
 module.exports = Repository;
 
-},{"../../actions/app-actions":815,"../../stores/app-store":859,"../common/forms/fileinput":820,"../common/forms/form":821,"../common/forms/textinput":822,"../common/loader":823,"../deployments/scheduleform":843,"./deploymentbutton":851,"./selectedimage":853,"material-ui":257,"react":684,"react-addons-update":365,"react-dom":476,"react-router":506,"react-search-input":513,"react-tag-input":516,"react-time":522}],853:[function(require,module,exports){
+},{"../../actions/app-actions":815,"../../stores/app-store":859,"../common/forms/fileinput":820,"../common/forms/form":821,"../common/forms/textinput":822,"../common/loader":823,"../deployments/scheduleform":843,"./deploymentbutton":851,"./selectedimage":853,"material-ui":257,"material-ui/lib/snackbar":287,"react":684,"react-addons-update":365,"react-dom":476,"react-router":506,"react-search-input":513,"react-tag-input":516,"react-time":522}],853:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -85060,8 +84976,6 @@ function getState() {
   return {
     software: AppStore.getSoftwareRepo(),
     groups: AppStore.getGroups(),
-    uploadTODO: localStorage.getItem("uploaded04"),
-    updateTODO: localStorage.getItem("updateTODO"),
     selected: null
   };
 }
@@ -85116,35 +85030,10 @@ var Software = _react2.default.createClass({
       ),
       'and upload the image file to the Mender server'
     );
-    var message = this.state.uploadTODO ? "Deploy the new image to your devices" : image_link;
+
     return _react2.default.createElement(
       'div',
       { className: 'contentContainer' },
-      _react2.default.createElement(
-        'div',
-        { className: this.state.updateTODO ? "hidden" : null },
-        _react2.default.createElement(
-          'div',
-          { className: 'margin-bottom onboard' },
-          _react2.default.createElement('div', { className: 'close', onClick: this._setStorage.bind(null, "updateTODO", true) }),
-          _react2.default.createElement(
-            'h3',
-            null,
-            _react2.default.createElement(
-              'span',
-              { className: 'todo' },
-              '//TODO:'
-            ),
-            ' ',
-            message
-          ),
-          _react2.default.createElement(
-            _reactRouter.Link,
-            { className: this.state.uploadTODO ? "todo link" : "hidden", to: '/deployments' },
-            '> Go to deployments'
-          )
-        )
-      ),
       _react2.default.createElement(
         'div',
         { className: 'relative overflow-hidden' },

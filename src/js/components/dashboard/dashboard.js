@@ -34,6 +34,12 @@ var Dashboard = React.createClass({
     AppStore.removeChangeListener(this._onChange);
   },
   componentDidMount: function() {
+    AppActions.getDevices(function(devices) {
+      this.setState({devices: devices});
+      setTimeout(function() {
+        this.setState({doneDevsLoading:true});
+      }.bind(this), 300)
+    }.bind(this));
     AppActions.getPastDeployments(function() {
       setTimeout(function() {
         this.setState({doneActiveDepsLoading:true});
@@ -44,14 +50,9 @@ var Dashboard = React.createClass({
         this.setState({donePastDepsLoading:true});
       }.bind(this), 300)
     }.bind(this));
-    AppActions.getDevices(function() {
-      setTimeout(function() {
-        this.setState({doneDevsLoading:true});
-      }.bind(this), 300)
-    }.bind(this));
   },
   _onChange: function() {
-    this.setState(getState());
+    this.setState(this.getInitialState());
   },
   _setStorage: function(key, value) {
     AppActions.setLocalStorage(key, value);
