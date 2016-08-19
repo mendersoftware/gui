@@ -78560,7 +78560,7 @@ var AppActions = {
     });
   },
   getDeploymentsInProgress: function getDeploymentsInProgress(callback) {
-    DeploymentsApi.get(deploymentsApiUrl + '/deployments?status=pending').then(function (deployments) {
+    DeploymentsApi.get(deploymentsApiUrl + '/deployments?status=inprogress').then(function (deployments) {
       callback();
       AppDispatcher.handleViewAction({
         actionType: AppConstants.RECEIVE_ACTIVE_DEPLOYMENTS,
@@ -78571,7 +78571,7 @@ var AppActions = {
     });
   },
   getPastDeployments: function getPastDeployments(callback) {
-    DeploymentsApi.get(deploymentsApiUrl + '/deployments?status=pending').then(function (deployments) {
+    DeploymentsApi.get(deploymentsApiUrl + '/deployments?status=finished').then(function (deployments) {
       callback();
       AppDispatcher.handleViewAction({
         actionType: AppConstants.RECEIVE_PAST_DEPLOYMENTS,
@@ -85975,3 +85975,4 @@ module.exports = {
 };
 
 },{"material-ui/lib/styles/colors":291,"material-ui/lib/styles/spacing":294,"material-ui/lib/utils/color-manipulator":348}]},{},[858]);
+8]);
