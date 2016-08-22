@@ -85975,4 +85975,3 @@ module.exports = {
 };
 
 },{"material-ui/lib/styles/colors":291,"material-ui/lib/styles/spacing":294,"material-ui/lib/utils/color-manipulator":348}]},{},[858]);
-8]);
