@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router';
 var Time = require('react-time');
 var AppActions = require('../../actions/app-actions');
+var DeploymentStatus = require('./deploymentstatus');
 
 // material ui
 var mui = require('material-ui');
@@ -18,19 +19,13 @@ var Divider = mui.Divider;
 var FontIcon = mui.FontIcon;
 var Checkbox = mui.Checkbox;
 
-var Report = React.createClass({
+var ProgressReport = React.createClass({
   getInitialState: function() {
     return {
       failsOnly: this.props.deployment.status === "Failed",
-      stats: {
-        failure: null
-      }
     };
   },
   componentDidMount: function() {
-    AppActions.getSingleDeploymentStats(this.props.deployment.id, function(stats) {
-      this._deploymentState("stats",stats);
-    }.bind(this));
     AppActions.getSingleDeploymentDevices(this.props.deployment.id, function(devices) {
       this._deploymentState("devices",devices);
     }.bind(this));
@@ -68,9 +63,7 @@ var Report = React.createClass({
     var deviceList = [];
     var encodedSoftware = encodeURIComponent(this.props.deployment.artifact_name); 
     var softwareLink = (
-      <div>
-        <Link style={{fontWeight:"500"}} to={`/software/${encodedSoftware}`}>{this.props.deployment.artifact_name}</Link>
-      </div>
+      <Link style={{fontWeight:"500"}} to={`/software/${encodedSoftware}`}>{this.props.deployment.artifact_name}</Link>
     )
 
     if (this.state.devices) {
@@ -88,7 +81,7 @@ var Report = React.createClass({
               <TableRowColumn>{deviceLink}</TableRowColumn>
               <TableRowColumn>{device.device_type}</TableRowColumn>
               <TableRowColumn>{softwareLink}</TableRowColumn>
-              <TableRowColumn><Time value={this._formatTime(device.finished)} format="YYYY-MM-DD HH:mm" /></TableRowColumn>
+              <TableRowColumn><Time value={this._formatTime(device.created)} format="YYYY-MM-DD HH:mm" /></TableRowColumn>
               <TableRowColumn>{device.status || "--"}</TableRowColumn>
               <TableRowColumn><FlatButton onClick={this.exportLog.bind(null, device.id)} label="Export log" /></TableRowColumn>
             </TableRow>
@@ -96,43 +89,21 @@ var Report = React.createClass({
         }
       }, this);
     }
-    var status = (this.props.deployment.status === "inprogress") ? "In progress" : this.props.deployment.status;
+   
     return (
       <div>
-        <div className="report-list">
-          <List>
-            <ListItem disabled={true} primaryText="Group" secondaryText={this.props.deployment.name} />
-            <Divider />
+        <div className="report-container">
+          <div className="deploymentInfo" style={{width:"240", height:"auto", margin:"30px 30px 30px 0", display:"inline-block", verticalAlign:"top"}}>
+           <div><div className="progressLabel">Updating to:</div><span>{softwareLink}</span></div>
+           <div><div className="progressLabel">Device group:</div><span>{this.props.deployment.name}</span></div>
+           <div><div className="progressLabel"># devices:</div><span>{deviceList.length}</span></div>
+          </div>
 
-            <ListItem disabled={true} primaryText="Start time" secondaryText={<Time value={this._formatTime(this.props.deployment.created)} format="YYYY-MM-DD HH:mm" />} />
-          </List>
-        </div>
-        <div className="report-list">
-         <List>
-            <ListItem disabled={true} primaryText="Number of devices" secondaryText={deviceList.length} />
-            <Divider />
-            <ListItem disabled={true} primaryText="Target software" secondaryText={softwareLink} />
-            <Divider />
-            <ListItem disabled={true} primaryText="End time" secondaryText={<Time value={this._formatTime(this.props.deployment.finished)} format="YYYY-MM-DD HH:mm" />} />
-          </List>
-        </div>
-        <div className="report-list">
-         <List>
-            <ListItem 
-              disabled={this.props.deployment.status!=='Failed'}
-              primaryText="Status"
-              secondaryText={<p>{status}{this.props.deployment.status!=='Failed' ? '' : ' - Click to retry'}</p>}
-              leftIcon={<FontIcon className={this.props.deployment.status==="inprogress" ? "hidden" : "material-icons error-icon"}>{this.props.deployment.status !=='Failed' ? 'check_circle' : 'error'}</FontIcon>} 
-              onTouchTap={this._retryDeployment} />
-          </List>
-        </div>
-        <div className={this.props.deployment.status==='Complete' ? "hidden" : null} style={{display:"inline-block", width:"200px"}}>
-          <Checkbox
-            label="Show only failures"
-            defaultChecked={this.props.deployment.status==='Failed'}
-            checked={this.state.failsOnly}
-            onCheck={this._handleCheckbox}
-            className={this.state.stats.failure ? null : "hidden"} />
+          <div className="deploymentInfo" style={{width:"240", height:"auto", margin:"30px 30px 30px 0", display:"inline-block", verticalAlign:"top"}}>
+            <div>In progress</div>
+            <div>Started: <Time value={this._formatTime(this.props.deployment.created)} format="YYYY-MM-DD HH:mm" /></div>
+            <div>Status: <DeploymentStatus id={this.props.deployment.id} /></div>
+          </div>
         </div>
 
         <div style={{minHeight:"20vh"}}>
@@ -147,8 +118,8 @@ var Report = React.createClass({
                 <TableHeaderColumn tooltip="Device name">Device name</TableHeaderColumn>
                 <TableHeaderColumn tooltip="Device type">Device type</TableHeaderColumn>
                 <TableHeaderColumn tooltip="Current software">Current software</TableHeaderColumn>
-                <TableHeaderColumn tooltip="Deployment end time">End time</TableHeaderColumn>
-                <TableHeaderColumn tooltip="Deployment status">Deployment status</TableHeaderColumn>
+                <TableHeaderColumn tooltip="Deployment start time">Start time</TableHeaderColumn>
+                <TableHeaderColumn tooltip="Deployment status">Device status</TableHeaderColumn>
                 <TableHeaderColumn tooltip=""></TableHeaderColumn>
               </TableRow>
             </TableHeader>
@@ -163,4 +134,4 @@ var Report = React.createClass({
   }
 });
 
-module.exports = Report;
+module.exports = ProgressReport;
