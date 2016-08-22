@@ -359,7 +359,6 @@ var Repository = React.createClass({
 
               <FileInput 
                 id="imageFile"
-                accept=".tar,.gz,.zip"
                 placeholder="Upload image"
                 required={true}
                 file={true} />
@@ -369,24 +368,21 @@ var Repository = React.createClass({
                 hint="Name"
                 label="Name"
                 id="name"
-                required={true}
-                validations="isAlphanumeric" />
+                required={true} />
 
               <TextInput
                 id="yocto_id"
                 value={this.state.image.yocto_id}
                 hint="Yocto ID"
                 label="Yocto ID"
-                required={true}
-                validations="isLength:4,isAlphanumeric" />
+                required={true} />
 
                <TextInput
                 id="checksum"
                 value={this.state.image.checksum}
                 hint="Checksum"
                 label="Checksum"
-                required={true}
-                validations="isLength:32,isAlphanumeric" />
+                required={true} />
 
               <TextInput
                 id="device_type"
