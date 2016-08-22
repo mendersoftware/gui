@@ -44,9 +44,9 @@ var Software = React.createClass({
      this.setState({doneLoading: false});
   },
   _getImages: function() {
-    AppActions.getImages(function() {
+    AppActions.getImages(function(images) {
       setTimeout(function() {
-        this.setState({doneLoading: true});
+        this.setState({doneLoading: true, software:images});
       }.bind(this), 300);
     }.bind(this));
   },

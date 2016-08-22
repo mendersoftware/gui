@@ -78509,7 +78509,7 @@ var AppActions = {
   /* Images */
   getImages: function getImages(callback) {
     ImagesApi.get(deploymentsApiUrl + '/images').then(function (images) {
-      callback();
+      callback(images);
       AppDispatcher.handleViewAction({
         actionType: AppConstants.RECEIVE_IMAGES,
         images: images
@@ -79363,7 +79363,7 @@ var Dashboard = _react2.default.createClass({
   },
   componentDidMount: function componentDidMount() {
     AppActions.getDevices(function (devices) {
-      this.setState({ devices: devices });
+      this.setState({ devices: devices, unauthorized: AppStore.getUnauthorized() });
       setTimeout(function () {
         this.setState({ doneDevsLoading: true });
       }.bind(this), 300);
@@ -80270,6 +80270,12 @@ var Deployments = _react2.default.createClass({
         this.setState({ doneLoading: true });
       }.bind(this), 300);
     }.bind(this));
+
+    AppActions.getImages(function (images) {
+      this.setState({ images: images });
+    }.bind(this));
+
+    AppActions.getDevices();
 
     if (this.props.params) {
       this.setState({ tabIndex: tabs[this.props.params.tab] });
@@ -85296,9 +85302,9 @@ var Software = _react2.default.createClass({
     this.setState({ doneLoading: false });
   },
   _getImages: function _getImages() {
-    AppActions.getImages(function () {
+    AppActions.getImages(function (images) {
       setTimeout(function () {
-        this.setState({ doneLoading: true });
+        this.setState({ doneLoading: true, software: images });
       }.bind(this), 300);
     }.bind(this));
   },
