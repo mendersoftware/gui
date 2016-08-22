@@ -1,6 +1,6 @@
 import React from 'react';
 var Time = require('react-time');
-var Report = require('./report.js');
+var ProgressReport = require('./progressreport.js');
 var ScheduleForm = require('./scheduleform');
 var GroupDevices = require('./groupdevices');
 
@@ -18,28 +18,35 @@ var TableBody = mui.TableBody;
 var TableRow = mui.TableRow;
 var TableRowColumn = mui.TableRowColumn;
 var FlatButton = mui.FlatButton;
+var Dialog = mui.Dialog;
 
 var progress = [];
 
 var Progress = React.createClass({
   getInitialState: function() {
     return {
-      showReport: null,
-      retry: false
+      showReport: false,
+      retry: false,
+      report: null
     };
   },
   componentWillReceiveProps: function(nextProps) {
     progress = nextProps.progress;
   },
   _progressCellClick: function(rowNumber, columnId) {
-    var report = progress[rowNumber];
-    this.props.showReport(report);
+    this.setState({report: progress[rowNumber], showReport: true});
   },
   _formatTime: function(date) {
     if (date) {
        return date.replace(' ','T').replace(/ /g, '').replace('UTC','');
     }
     return;
+  },
+  dialogDismiss: function() {
+    this.setState({
+      report: null,
+      showReport: false
+    });
   },
   render: function() {
     // get statistics for each in progress
@@ -59,12 +66,11 @@ var Progress = React.createClass({
     }, this);
 
     var reportActions = [
-      { text: 'Close' }
+      <FlatButton
+          label="Close"
+          onClick={this.dialogDismiss} />
     ];
-    var retryActions = [
-      { text: 'Cancel' },
-      { text: 'Create deployment', onClick: this._onUploadSubmit, primary: 'true' }
-    ];
+
     return (
       <div>
         <div className="deploy-table-contain"> 
@@ -100,6 +106,21 @@ var Progress = React.createClass({
             <img src="assets/img/deployments.png" alt="In progress" />
           </div>
         </div>
+
+
+         <Dialog
+          ref="dialog"
+          title="Deployment progress"
+          actions={reportActions}
+          autoDetectWindowHeight={true} autoScrollBodyContent={true}
+          contentClassName="largeDialog"
+          bodyStyle={{paddingTop:"0"}}
+          open={this.state.showReport}
+          contentStyle={{overflow:"hidden", boxShadow:"0 14px 45px rgba(0, 0, 0, 0.25), 0 10px 18px rgba(0, 0, 0, 0.22)"}}
+          actionsContainerStyle={{marginBottom:"0"}}
+          >
+          <ProgressReport deployment={this.state.report} />
+        </Dialog>
 
       </div>
     );

@@ -978,18 +978,21 @@ span.day {
   background-color: #009E73;
 }
 .progress-container .deploymentInfo,
-.deployments-container .deploymentInfo {
+.deployments-container .deploymentInfo,
+.report-container .deploymentInfo {
   font-size: 14px;
   white-space: nowrap;
 }
 .progress-container .deploymentInfo > div,
-.deployments-container .deploymentInfo > div {
+.deployments-container .deploymentInfo > div,
+.report-container .deploymentInfo > div {
   margin-bottom: 10px;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 .progress-container .progressLabel,
-.deployments-container .progressLabel {
+.deployments-container .progressLabel,
+.report-container .progressLabel {
   color: #c7c7c7;
   margin-right: 5px;
   margin-bottom: 0;

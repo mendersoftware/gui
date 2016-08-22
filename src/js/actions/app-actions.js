@@ -104,7 +104,7 @@ var AppActions = {
     ImagesApi
       .get(deploymentsApiUrl+'/images')
       .then(function(images) {
-        callback();
+        callback(images);
         AppDispatcher.handleViewAction({
           actionType: AppConstants.RECEIVE_IMAGES,
           images: images

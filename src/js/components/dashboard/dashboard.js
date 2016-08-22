@@ -35,7 +35,7 @@ var Dashboard = React.createClass({
   },
   componentDidMount: function() {
     AppActions.getDevices(function(devices) {
-      this.setState({devices: devices});
+      this.setState({devices: devices, unauthorized: AppStore.getUnauthorized()});
       setTimeout(function() {
         this.setState({doneDevsLoading:true});
       }.bind(this), 300)

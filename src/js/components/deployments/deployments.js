@@ -66,6 +66,12 @@ var Deployments = React.createClass({
       }.bind(this), 300)
     }.bind(this));
 
+    AppActions.getImages(function(images) {
+      this.setState({images:images});
+    }.bind(this));
+
+    AppActions.getDevices();
+    
     if (this.props.params) {
       this.setState({tabIndex: tabs[this.props.params.tab]});
 
