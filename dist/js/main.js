@@ -79897,9 +79897,9 @@ var Recent = _react2.default.createClass({
               _react2.default.createElement(
                 'div',
                 { className: 'progressLabel' },
-                'Finished:'
+                'Started:'
               ),
-              _react2.default.createElement(Time, { className: 'progressTime', value: this._formatTime(deployment.finished), format: 'YYYY-MM-DD HH:mm' })
+              _react2.default.createElement(Time, { className: 'progressTime', value: this._formatTime(deployment.created), format: 'YYYY-MM-DD HH:mm' })
             )
           ),
           _react2.default.createElement(RecentStats, { id: deployment.id })
@@ -81668,9 +81668,7 @@ var Report = _react2.default.createClass({
           null,
           _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Number of devices', secondaryText: deviceList.length }),
           _react2.default.createElement(Divider, null),
-          _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Target software', secondaryText: softwareLink }),
-          _react2.default.createElement(Divider, null),
-          _react2.default.createElement(ListItem, { disabled: true, primaryText: 'End time', secondaryText: _react2.default.createElement(Time, { value: this._formatTime(this.props.deployment.finished), format: 'YYYY-MM-DD HH:mm' }) })
+          _react2.default.createElement(ListItem, { disabled: true, primaryText: 'Target software', secondaryText: softwareLink })
         )
       ),
       _react2.default.createElement(
