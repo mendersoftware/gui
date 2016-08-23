@@ -82015,6 +82015,9 @@ var Report = _react2.default.createClass({
     var state = {};
     state[key] = val;
     this.setState(state);
+    if (state.failure) {
+      this.setState({ failsOnly: true });
+    }
   },
   _getDeviceDetails: function _getDeviceDetails(id) {
     // get device details not listed in schedule data
@@ -82062,7 +82065,7 @@ var Report = _react2.default.createClass({
           )
         );
         //var deviceDetails = this._getDeviceDetails(device.id);
-        if (device.status === "Failed" || this.state.failsOnly === false) {
+        if (device.status === "failure" || this.state.failsOnly === false) {
           return _react2.default.createElement(
             TableRow,
             { key: index },
@@ -82231,16 +82234,12 @@ var Report = _react2.default.createClass({
           )
         )
       ),
-      _react2.default.createElement(
-        'div',
-        { className: this.props.deployment.status === 'Complete' ? "hidden" : null, style: { display: "inline-block", width: "200px" } },
-        _react2.default.createElement(Checkbox, {
-          label: 'Show only failures',
-          defaultChecked: this.state.stats.failure > 0,
-          checked: this.state.failsOnly,
-          onCheck: this._handleCheckbox,
-          className: this.state.stats.failure ? null : "hidden" })
-      ),
+      _react2.default.createElement(Checkbox, {
+        defaultChecked: this.state.stats.failure > 0,
+        label: 'Show only failures',
+        checked: this.state.failsOnly,
+        onCheck: this._handleCheckbox,
+        className: this.state.stats.failure ? null : "hidden" }),
       _react2.default.createElement(
         'div',
         { style: { minHeight: "20vh" } },
@@ -86777,4 +86776,3 @@ module.exports = {
 };
 
 },{"material-ui/lib/styles/colors":291,"material-ui/lib/styles/spacing":294,"material-ui/lib/utils/color-manipulator":348}]},{},[860]);
-;

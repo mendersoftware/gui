@@ -40,6 +40,9 @@ var Report = React.createClass({
     var state = {};
     state[key] = val;
     this.setState(state);
+    if (state.failure) {
+      this.setState({failsOnly: true});
+    }
   },
   _getDeviceDetails: function (id) {
     // get device details not listed in schedule data
@@ -81,7 +84,7 @@ var Report = React.createClass({
         </div>
         );
         //var deviceDetails = this._getDeviceDetails(device.id);
-        if ((device.status==="Failed")||(this.state.failsOnly===false)){
+        if ((device.status==="failure")||(this.state.failsOnly===false)){
           return (
             <TableRow key={index}>
               <TableRowColumn>{deviceLink}</TableRowColumn>
@@ -131,20 +134,15 @@ var Report = React.createClass({
           </div>
         </div>
 
-
-        <div className={this.props.deployment.status==='Complete' ? "hidden" : null} style={{display:"inline-block", width:"200px"}}>
-          <Checkbox
-            label="Show only failures"
-            defaultChecked={this.state.stats.failure > 0}
-            checked={this.state.failsOnly}
-            onCheck={this._handleCheckbox}
-            className={this.state.stats.failure ? null : "hidden"} />
-        </div>
-
-
+        <Checkbox
+          defaultChecked={this.state.stats.failure>0}
+          label="Show only failures"
+          checked={this.state.failsOnly}
+          onCheck={this._handleCheckbox}
+          className={this.state.stats.failure ? null : "hidden"} />
+    
 
         <div style={{minHeight:"20vh"}}>
-
           <Table
             className={deviceList.length ? null : "hidden"}
             selectable={false}>
