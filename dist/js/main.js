@@ -81592,7 +81592,7 @@ var ProgressChart = _react2.default.createClass({
     }.bind(this));
   },
   _handleClick: function _handleClick(id) {
-    var filter = encodeURIComponent("name=" + id);
+    var filter = encodeURIComponent("id=" + id);
     this.context.router.push('/devices/1/' + filter);
   },
   _hoverDevice: function _hoverDevice(device) {
@@ -86777,3 +86777,4 @@ module.exports = {
 };
 
 },{"material-ui/lib/styles/colors":291,"material-ui/lib/styles/spacing":294,"material-ui/lib/utils/color-manipulator":348}]},{},[860]);
+;
