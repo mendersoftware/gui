@@ -103,7 +103,6 @@ var Report = React.createClass({
           <List>
             <ListItem disabled={true} primaryText="Group" secondaryText={this.props.deployment.name} />
             <Divider />
-
             <ListItem disabled={true} primaryText="Start time" secondaryText={<Time value={this._formatTime(this.props.deployment.created)} format="YYYY-MM-DD HH:mm" />} />
           </List>
         </div>
@@ -112,8 +111,6 @@ var Report = React.createClass({
             <ListItem disabled={true} primaryText="Number of devices" secondaryText={deviceList.length} />
             <Divider />
             <ListItem disabled={true} primaryText="Target software" secondaryText={softwareLink} />
-            <Divider />
-            <ListItem disabled={true} primaryText="End time" secondaryText={<Time value={this._formatTime(this.props.deployment.finished)} format="YYYY-MM-DD HH:mm" />} />
           </List>
         </div>
         <div className="report-list">

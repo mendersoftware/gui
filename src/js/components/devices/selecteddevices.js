@@ -43,17 +43,7 @@ var SelectedDevices = React.createClass({
   },
 
   _getGroupNames: function(list) {
-    /* TODO - move or tidy */
-    var nameList = [];
-    for (var i=0; i<list.length; i++) {
-      for(var x = 0; x<this.props.groups.length; x++) {
-        if(list[i] === this.props.groups[x].id) {
-          nameList.push(this.props.groups[x].name);
-        }
-      }
-    }
-
-    return nameList;
+   
   },
 
   _updateParams: function(val, attr) {
@@ -164,7 +154,7 @@ var SelectedDevices = React.createClass({
 
       var deviceInfo;
 
-      if (this.props.unauthorized) {
+      //if (this.props.unauthorized) {
         deviceInfo = (
           <div>
             <div className="report-list">
@@ -173,7 +163,7 @@ var SelectedDevices = React.createClass({
               </List>
             </div>
 
-            <div className="report-list">
+            <div className={this.props.unauthorized ? "report-list" : "hidden"}>
               <List>
                 <ListItem
                   style={styles.listStyle}
@@ -192,7 +182,7 @@ var SelectedDevices = React.createClass({
           </div>
         )
 
-      } else {
+     /* } else {
 
         deviceInfo = (
           <div>
@@ -224,7 +214,7 @@ var SelectedDevices = React.createClass({
               <List>
                 <ListItem style={styles.listStyle} disabled={true} primaryText="Current software" secondaryText={softwareLink} />
                 <Divider />
-                <ListItem style={styles.listStyle} disabled={true} primaryText="Groups" secondaryText={this._getGroupNames(this.props.selected[0].groups).join(', ')} />
+                <ListItem style={styles.listStyle} disabled={true} primaryText="Groups" secondaryText={this.props.selected[0].group} />
                 <Divider />
                 <ListItem
                   style={styles.listStyle}
@@ -237,7 +227,7 @@ var SelectedDevices = React.createClass({
             </div>
           </div>
         )
-      }
+      } */
     }
     
     var devices = this.props.selected.map(function(device) {
