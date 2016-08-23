@@ -99,10 +99,14 @@ var ProgressReport = React.createClass({
            <div><div className="progressLabel"># devices:</div><span>{deviceList.length}</span></div>
           </div>
 
-          <div className="deploymentInfo" style={{width:"240", height:"auto", margin:"30px 30px 30px 0", display:"inline-block", verticalAlign:"top"}}>
-            <div>In progress</div>
-            <div>Started: <Time value={this._formatTime(this.props.deployment.created)} format="YYYY-MM-DD HH:mm" /></div>
-            <div>Status: <DeploymentStatus id={this.props.deployment.id} /></div>
+          <div className="progressStatus" style={{height:"auto", margin:"30px 30px 30px 0", display:"inline-block", verticalAlign:"top"}}>
+            <div id="progressStatus">
+              <h3>In progress</h3>
+              <div>Started: <Time value={this._formatTime(this.props.deployment.created)} format="YYYY-MM-DD HH:mm" /></div>
+            </div>
+            <div className="inline-block">
+              <DeploymentStatus vertical={true} id={this.props.deployment.id} />
+            </div>
           </div>
         </div>
 
@@ -119,7 +123,7 @@ var ProgressReport = React.createClass({
                 <TableHeaderColumn tooltip="Device type">Device type</TableHeaderColumn>
                 <TableHeaderColumn tooltip="Current software">Current software</TableHeaderColumn>
                 <TableHeaderColumn tooltip="Deployment start time">Start time</TableHeaderColumn>
-                <TableHeaderColumn tooltip="Deployment status">Device status</TableHeaderColumn>
+                <TableHeaderColumn tooltip="Deployment status">Deployment status</TableHeaderColumn>
                 <TableHeaderColumn tooltip=""></TableHeaderColumn>
               </TableRow>
             </TableHeader>

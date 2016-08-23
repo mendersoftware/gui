@@ -518,9 +518,19 @@ span.length {
 
 .results-status {
   padding-top: 4px;
+
   .disabled {
     .opacity(0.1);
   }
+
+  &.vertical>div {
+    display: block;
+    margin-bottom: 5px;
+    &.disabled {
+      .opacity(1);
+    }
+  }
+
   span.status {
     margin-right: 15px;
     &::before {
@@ -531,7 +541,7 @@ span.length {
       vertical-align: middle;
       background-position-y: -2px;
       background-repeat: no-repeat;
-      margin-right: 5px;
+      margin-right: 10px;
     }
 
     &.success::before {
@@ -1221,10 +1231,22 @@ span.month, span.day {
       border-right: 20px solid @lightestgrey;
     }
   }
-
-
 }
 
+.progressStatus {
+  background-color: @lightestgrey;
+  padding: 15px 90px 15px;
+  position: relative;
+  top: -5px;
+
+
+  #progressStatus {
+    display: inline-block;
+    text-align: center;
+    vertical-align: top;
+    margin-right: 120px;
+  }
+}
 
 
 .slider {
