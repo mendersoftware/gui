@@ -81800,7 +81800,7 @@ var ProgressReport = _react2.default.createClass({
 
     if (this.state.devices) {
       deviceList = this.state.devices.map(function (device, index) {
-        var encodedDevice = encodeURIComponent("name=" + device.id);
+        var encodedDevice = encodeURIComponent("id=" + device.id);
         var deviceLink = _react2.default.createElement(
           'div',
           null,
@@ -82077,7 +82077,7 @@ var Report = _react2.default.createClass({
 
     if (this.state.devices) {
       deviceList = this.state.devices.map(function (device, index) {
-        var encodedDevice = encodeURIComponent("name=" + device.id);
+        var encodedDevice = encodeURIComponent("id=" + device.id);
         var deviceLink = _react2.default.createElement(
           'div',
           null,

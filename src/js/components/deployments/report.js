@@ -77,7 +77,7 @@ var Report = React.createClass({
 
     if (this.state.devices) {
       deviceList = this.state.devices.map(function(device, index) {
-        var encodedDevice = encodeURIComponent("name="+device.id); 
+        var encodedDevice = encodeURIComponent("id="+device.id); 
         var deviceLink = (
         <div>
           <Link style={{fontWeight:"500"}} to={`/devices/0/${encodedDevice}`}>{device.id}</Link>
