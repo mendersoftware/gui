@@ -80979,7 +80979,7 @@ var DeploymentStatus = _react2.default.createClass({
     var failed = this.state.stats.failure + this.state.stats.noimage;
     var label = _react2.default.createElement(
       'div',
-      { className: 'results-status' },
+      { className: this.props.vertical ? "results-status vertical" : "results-status" },
       _react2.default.createElement(
         'div',
         { className: failed ? "hint--bottom" : "hint--bottom disabled", 'aria-label': 'Failures' },
@@ -80987,6 +80987,11 @@ var DeploymentStatus = _react2.default.createClass({
           'span',
           { className: "status failure" },
           failed
+        ),
+        _react2.default.createElement(
+          'span',
+          { className: this.props.vertical ? "label" : "hidden" },
+          'Failed'
         )
       ),
       _react2.default.createElement(
@@ -80996,6 +81001,11 @@ var DeploymentStatus = _react2.default.createClass({
           'span',
           { className: "status pending" },
           this.state.stats.pending
+        ),
+        _react2.default.createElement(
+          'span',
+          { className: this.props.vertical ? "label" : "hidden" },
+          'Pending'
         )
       ),
       _react2.default.createElement(
@@ -81005,6 +81015,11 @@ var DeploymentStatus = _react2.default.createClass({
           'span',
           { className: "status inprogress" },
           inprogress
+        ),
+        _react2.default.createElement(
+          'span',
+          { className: this.props.vertical ? "label" : "hidden" },
+          'In progress'
         )
       ),
       _react2.default.createElement(
@@ -81014,6 +81029,11 @@ var DeploymentStatus = _react2.default.createClass({
           'span',
           { className: 'status success' },
           this.state.stats.success
+        ),
+        _react2.default.createElement(
+          'span',
+          { className: this.props.vertical ? "label" : "hidden" },
+          'Success'
         )
       )
     );
@@ -81592,7 +81612,7 @@ var ProgressChart = _react2.default.createClass({
     }.bind(this));
   },
   _handleClick: function _handleClick(id) {
-    var filter = encodeURIComponent("name=" + id);
+    var filter = encodeURIComponent("id=" + id);
     this.context.router.push('/devices/1/' + filter);
   },
   _hoverDevice: function _hoverDevice(device) {
@@ -81780,7 +81800,7 @@ var ProgressReport = _react2.default.createClass({
 
     if (this.state.devices) {
       deviceList = this.state.devices.map(function (device, index) {
-        var encodedDevice = encodeURIComponent("name=" + device.id);
+        var encodedDevice = encodeURIComponent("id=" + device.id);
         var deviceLink = _react2.default.createElement(
           'div',
           null,
@@ -81884,23 +81904,26 @@ var ProgressReport = _react2.default.createClass({
         ),
         _react2.default.createElement(
           'div',
-          { className: 'deploymentInfo', style: { width: "240", height: "auto", margin: "30px 30px 30px 0", display: "inline-block", verticalAlign: "top" } },
+          { className: 'progressStatus', style: { height: "auto", margin: "30px 30px 30px 0", display: "inline-block", verticalAlign: "top" } },
           _react2.default.createElement(
             'div',
-            null,
-            'In progress'
+            { id: 'progressStatus' },
+            _react2.default.createElement(
+              'h3',
+              null,
+              'In progress'
+            ),
+            _react2.default.createElement(
+              'div',
+              null,
+              'Started: ',
+              _react2.default.createElement(Time, { value: this._formatTime(this.props.deployment.created), format: 'YYYY-MM-DD HH:mm' })
+            )
           ),
           _react2.default.createElement(
             'div',
-            null,
-            'Started: ',
-            _react2.default.createElement(Time, { value: this._formatTime(this.props.deployment.created), format: 'YYYY-MM-DD HH:mm' })
-          ),
-          _react2.default.createElement(
-            'div',
-            null,
-            'Status: ',
-            _react2.default.createElement(DeploymentStatus, { id: this.props.deployment.id })
+            { className: 'inline-block' },
+            _react2.default.createElement(DeploymentStatus, { vertical: true, id: this.props.deployment.id })
           )
         )
       ),
@@ -81943,7 +81966,7 @@ var ProgressReport = _react2.default.createClass({
               _react2.default.createElement(
                 TableHeaderColumn,
                 { tooltip: 'Deployment status' },
-                'Device status'
+                'Deployment status'
               ),
               _react2.default.createElement(TableHeaderColumn, { tooltip: '' })
             )
@@ -82015,6 +82038,9 @@ var Report = _react2.default.createClass({
     var state = {};
     state[key] = val;
     this.setState(state);
+    if (state.failure) {
+      this.setState({ failsOnly: true });
+    }
   },
   _getDeviceDetails: function _getDeviceDetails(id) {
     // get device details not listed in schedule data
@@ -82051,7 +82077,7 @@ var Report = _react2.default.createClass({
 
     if (this.state.devices) {
       deviceList = this.state.devices.map(function (device, index) {
-        var encodedDevice = encodeURIComponent("name=" + device.id);
+        var encodedDevice = encodeURIComponent("id=" + device.id);
         var deviceLink = _react2.default.createElement(
           'div',
           null,
@@ -82062,7 +82088,7 @@ var Report = _react2.default.createClass({
           )
         );
         //var deviceDetails = this._getDeviceDetails(device.id);
-        if (device.status === "Failed" || this.state.failsOnly === false) {
+        if (device.status === "failure" || this.state.failsOnly === false) {
           return _react2.default.createElement(
             TableRow,
             { key: index },
@@ -82231,16 +82257,12 @@ var Report = _react2.default.createClass({
           )
         )
       ),
-      _react2.default.createElement(
-        'div',
-        { className: this.props.deployment.status === 'Complete' ? "hidden" : null, style: { display: "inline-block", width: "200px" } },
-        _react2.default.createElement(Checkbox, {
-          label: 'Show only failures',
-          defaultChecked: this.state.stats.failure > 0,
-          checked: this.state.failsOnly,
-          onCheck: this._handleCheckbox,
-          className: this.state.stats.failure ? null : "hidden" })
-      ),
+      _react2.default.createElement(Checkbox, {
+        defaultChecked: this.state.stats.failure > 0,
+        label: 'Show only failures',
+        checked: this.state.failsOnly,
+        onCheck: this._handleCheckbox,
+        className: this.state.stats.failure ? null : "hidden" }),
       _react2.default.createElement(
         'div',
         { style: { minHeight: "20vh" } },
