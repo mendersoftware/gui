@@ -133,6 +133,12 @@ span.link:hover {
 .hoverText:hover > hr {
   border-bottom: 2px solid #e0e0e0 !important;
 }
+.fadeIn {
+  -webkit-animation: fadein 0.2s 1;
+  -moz-animation: fadein 0.2s 1;
+  -ms-animation: fadein 0.2s 1;
+  -o-animation: fadein 0.2s 1;
+}
 /* Header */
 #header-nav {
   position: relative;
@@ -481,6 +487,17 @@ span.length {
 }
 .results-status span.status.inprogress::before {
   background-image: url('../assets/img/progress_status.png');
+}
+div.code {
+  font-family: monospace;
+  margin: 24px;
+  border: 1px solid #d4e9e7;
+  background-color: #F7F7F7;
+  border-radius: 4px;
+  padding: 24px;
+  max-height: 43vh;
+  overflow-y: auto;
+  position: relative;
 }
 /* Forms */
 .inputGroup {
