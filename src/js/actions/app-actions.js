@@ -104,15 +104,15 @@ var AppActions = {
     ImagesApi
       .get(deploymentsApiUrl+'/images')
       .then(function(images) {
-        callback(images);
+        callback.success(images);
         AppDispatcher.handleViewAction({
           actionType: AppConstants.RECEIVE_IMAGES,
           images: images
         });
       })
       .catch(function(err) {
-        callback(err);
-      })
+        callback.error(err);
+      });
   },
 
   uploadImage: function(meta, callback) {

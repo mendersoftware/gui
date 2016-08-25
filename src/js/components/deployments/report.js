@@ -1,8 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router';
+import CopyToClipboard from 'react-copy-to-clipboard';
 var Time = require('react-time');
 var AppActions = require('../../actions/app-actions');
 var pluralize = require('pluralize')
+
 
 // material ui
 var mui = require('material-ui');
@@ -13,11 +15,9 @@ var TableBody = mui.TableBody;
 var TableRow = mui.TableRow;
 var TableRowColumn = mui.TableRowColumn;
 var FlatButton = mui.FlatButton;
-var List = mui.List;
-var ListItem = mui.ListItem;
-var Divider = mui.Divider;
-var FontIcon = mui.FontIcon;
+var RaisedButton = mui.RaisedButton;
 var Checkbox = mui.Checkbox;
+var Dialog = mui.Dialog;
 
 var Report = React.createClass({
   getInitialState: function() {
@@ -25,7 +25,9 @@ var Report = React.createClass({
       failsOnly: false,
       stats: {
         failure: null
-      }
+      },
+      showDialog: false,
+      logData: ""
     };
   },
   componentDidMount: function() {
@@ -61,11 +63,20 @@ var Report = React.createClass({
     }
     return;
   },
-  exportLog: function (id) {
+  viewLog: function (id) {
     AppActions.getDeviceLog(this.props.deployment.id, id, function(data) {
-      var content = data;
+      this.setState({showDialog: true, logData: data, copied: false});
+    }.bind(this));
+  },
+  exportLog: function () {
+      var content = this.state.logData;
       var uriContent = "data:application/octet-stream," + encodeURIComponent(content);
       var newWindow = window.open(uriContent, 'deviceLog');
+  },
+  dialogDismiss: function() {
+    this.setState({
+      showDialog: false,
+      logData: null
     });
   },
   render: function () {
@@ -93,13 +104,28 @@ var Report = React.createClass({
               <TableRowColumn><Time value={this._formatTime(device.created)} format="YYYY-MM-DD HH:mm" /></TableRowColumn>
               <TableRowColumn><Time value={this._formatTime(device.finished)} format="YYYY-MM-DD HH:mm" /></TableRowColumn>
               <TableRowColumn>{device.status || "--"}</TableRowColumn>
-              <TableRowColumn><FlatButton onClick={this.exportLog.bind(null, device.id)} label="Export log" /></TableRowColumn>
+              <TableRowColumn><FlatButton onClick={this.viewLog.bind(null, device.id)} label="View log" /></TableRowColumn>
             </TableRow>
           )
         }
       }, this);
     }
     var status = (this.props.deployment.status === "inprogress") ? "In progress" : this.props.deployment.status;
+    var logActions =  [
+      <div style={{marginRight:"10", display:"inline-block"}}>
+        <FlatButton
+          label="Close"
+          onClick={this.dialogDismiss.bind(null, 'dialog')} />
+      </div>,
+      <CopyToClipboard style={{marginRight:"10", display:"inline-block"}} text={this.state.logData}
+        onCopy={() => this.setState({copied: true})}>
+        <FlatButton label="Copy to clipboard"/>
+      </CopyToClipboard>,
+      <RaisedButton
+        label="Export log"
+        primary={true}
+        onClick={this.exportLog}/>
+    ];
     return (
       <div>
    
@@ -165,6 +191,19 @@ var Report = React.createClass({
             </TableBody>
           </Table>
         </div>
+
+
+        <Dialog
+          title="Deployment log for device"
+          autoDetectWindowHeight={true} autoScrollBodyContent={true}
+          open={this.state.showDialog}
+          actions={logActions}
+          bodyStyle={{padding:"0", overflow:"hidden"}}>
+          <div className="code">
+            {this.state.logData}
+          </div>
+          <p style={{marginLeft:"24"}}>{this.state.copied ? <span className="green fadeIn">Copied to clipboard.</span> : null}</p>
+        </Dialog>
       </div>
     );
   }
