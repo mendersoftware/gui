@@ -44,11 +44,19 @@ var Software = React.createClass({
      this.setState({doneLoading: false});
   },
   _getImages: function() {
-    AppActions.getImages(function(images) {
-      setTimeout(function() {
-        this.setState({doneLoading: true, software:images});
-      }.bind(this), 300);
-    }.bind(this));
+    var callback = {
+      success: function(images) {
+        setTimeout(function() {
+          this.setState({doneLoading: true, software:images});
+        }.bind(this), 300);
+      }.bind(this),
+      error: function(err) {
+        setTimeout(function() {
+          this.setState({doneLoading: true});
+        }.bind(this), 300);
+      }.bind(this)
+    };
+    AppActions.getImages(callback);
   },
   render: function() {
     var image_link = (

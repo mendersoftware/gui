@@ -79173,13 +79173,13 @@ var AppActions = {
   /* Images */
   getImages: function getImages(callback) {
     ImagesApi.get(deploymentsApiUrl + '/images').then(function (images) {
-      callback(images);
+      callback.success(images);
       AppDispatcher.handleViewAction({
         actionType: AppConstants.RECEIVE_IMAGES,
         images: images
       });
     }).catch(function (err) {
-      callback(err);
+      callback.error(err);
     });
   },
 
@@ -86152,11 +86152,19 @@ var Software = _react2.default.createClass({
     this.setState({ doneLoading: false });
   },
   _getImages: function _getImages() {
-    AppActions.getImages(function (images) {
-      setTimeout(function () {
-        this.setState({ doneLoading: true, software: images });
-      }.bind(this), 300);
-    }.bind(this));
+    var callback = {
+      success: function (images) {
+        setTimeout(function () {
+          this.setState({ doneLoading: true, software: images });
+        }.bind(this), 300);
+      }.bind(this),
+      error: function (err) {
+        setTimeout(function () {
+          this.setState({ doneLoading: true });
+        }.bind(this), 300);
+      }.bind(this)
+    };
+    AppActions.getImages(callback);
   },
   render: function render() {
     var image_link = _react2.default.createElement(
