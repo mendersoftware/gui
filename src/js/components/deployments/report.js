@@ -104,7 +104,7 @@ var Report = React.createClass({
               <TableRowColumn><Time value={this._formatTime(device.created)} format="YYYY-MM-DD HH:mm" /></TableRowColumn>
               <TableRowColumn><Time value={this._formatTime(device.finished)} format="YYYY-MM-DD HH:mm" /></TableRowColumn>
               <TableRowColumn>{device.status || "--"}</TableRowColumn>
-              <TableRowColumn><FlatButton onClick={this.viewLog.bind(null, device.id)} label="View log" /></TableRowColumn>
+              <TableRowColumn><FlatButton className={device.status==='failure' ? null : "hidden"} onClick={this.viewLog.bind(null, device.id)} label="View log" /></TableRowColumn>
             </TableRow>
           )
         }

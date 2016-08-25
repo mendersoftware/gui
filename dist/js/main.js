@@ -82401,7 +82401,7 @@ var Report = _react2.default.createClass({
             _react2.default.createElement(
               TableRowColumn,
               null,
-              _react2.default.createElement(FlatButton, { onClick: this.viewLog.bind(null, device.id), label: 'View log' })
+              _react2.default.createElement(FlatButton, { className: device.status === 'failure' ? null : "hidden", onClick: this.viewLog.bind(null, device.id), label: 'View log' })
             )
           );
         }
