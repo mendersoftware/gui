@@ -80052,10 +80052,11 @@ var Dashboard = _react2.default.createClass({
   _handleClick: function _handleClick(params) {
     switch (params.route) {
       case "deployments":
+        var tab = (params.tab || "progress") + "/";
         var URIParams = "open=" + params.open;
         URIParams = params.id ? URIParams + "&id=" + params.id : URIParams;
         URIParams = encodeURIComponent(URIParams);
-        this.context.router.push('/deployments/' + params.tab + '/' + URIParams);
+        this.context.router.push('/deployments/' + tab + URIParams);
         break;
       case "devices":
         var filters = params.status ? encodeURIComponent("status=" + params.status) : '';
@@ -80942,7 +80943,7 @@ var Deployments = _react2.default.createClass({
     AppActions.getDevices();
 
     if (this.props.params) {
-      this.setState({ tabIndex: this.props.params.tab || "progress" });
+      this.setState({ tabIndex: this._checkTabValue(this.props.params.tab) });
 
       if (this.props.params.params) {
         var str = decodeURIComponent(this.props.params.params);
@@ -80974,6 +80975,16 @@ var Deployments = _react2.default.createClass({
   },
   _onChange: function _onChange() {
     this.setState(getState());
+  },
+  _checkTabValue: function _checkTabValue(value) {
+    switch (value) {
+      case "past":
+        return "past";
+        break;
+      default:
+        return "progress";
+        break;
+    }
   },
   dialogDismiss: function dialogDismiss(ref) {
     this.setState({

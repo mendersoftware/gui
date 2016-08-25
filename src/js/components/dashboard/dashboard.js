@@ -60,10 +60,11 @@ var Dashboard = React.createClass({
   _handleClick: function(params) {
     switch(params.route){
       case "deployments":
+        var tab = (params.tab || "progress") + "/";
         var URIParams = "open="+params.open;
         URIParams = params.id ? URIParams + "&id="+params.id : URIParams;
         URIParams = encodeURIComponent(URIParams);
-        this.context.router.push('/deployments/'+params.tab +'/'+URIParams);
+        this.context.router.push('/deployments/'+tab +URIParams);
         break;
       case "devices":
         var filters = params.status ? encodeURIComponent("status="+params.status) : '';
