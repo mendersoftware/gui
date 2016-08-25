@@ -23,6 +23,7 @@ var Progress = React.createClass({
   _clickHandle: function(id) {
     var params = {};
     params.id = id;
+    params.tab = "progress";
     params.route="deployments";
     params.open=true;
     this.props.clickHandle(params);
@@ -70,7 +71,7 @@ var Progress = React.createClass({
           <List style={{paddingTop:0}}>
             {progress}
           </List> 
-          <Link to="/deployments" className="float-right">All deployments</Link>
+          <Link to="/deployments/progress" className="float-right">All deployments in progress</Link>
         </div>
 
         <Loader show={this.props.loading} />

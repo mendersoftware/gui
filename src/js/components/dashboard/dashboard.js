@@ -63,12 +63,10 @@ var Dashboard = React.createClass({
         var URIParams = "open="+params.open;
         URIParams = params.id ? URIParams + "&id="+params.id : URIParams;
         URIParams = encodeURIComponent(URIParams);
-        //this.context.router.transitionTo("/deployments/:tab/:params/", {tab:0, params:URIParams}, null);
-        this.context.router.push('/deployments/0/'+URIParams);
+        this.context.router.push('/deployments/'+params.tab +'/'+URIParams);
         break;
       case "devices":
         var filters = params.status ? encodeURIComponent("status="+params.status) : '';
-        //this.context.router.transitionTo("/devices/:groupId/:filters", {groupId:1, filters: filters}, null);
         this.context.router.push('/devices/1/'+filters);
         break;
     }
