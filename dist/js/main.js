@@ -80055,12 +80055,10 @@ var Dashboard = _react2.default.createClass({
         var URIParams = "open=" + params.open;
         URIParams = params.id ? URIParams + "&id=" + params.id : URIParams;
         URIParams = encodeURIComponent(URIParams);
-        //this.context.router.transitionTo("/deployments/:tab/:params/", {tab:0, params:URIParams}, null);
-        this.context.router.push('/deployments/0/' + URIParams);
+        this.context.router.push('/deployments/' + params.tab + '/' + URIParams);
         break;
       case "devices":
         var filters = params.status ? encodeURIComponent("status=" + params.status) : '';
-        //this.context.router.transitionTo("/devices/:groupId/:filters", {groupId:1, filters: filters}, null);
         this.context.router.push('/devices/1/' + filters);
         break;
     }
@@ -80346,6 +80344,7 @@ var Progress = _react2.default.createClass({
   _clickHandle: function _clickHandle(id) {
     var params = {};
     params.id = id;
+    params.tab = "progress";
     params.route = "deployments";
     params.open = true;
     this.props.clickHandle(params);
@@ -80444,8 +80443,8 @@ var Progress = _react2.default.createClass({
         ),
         _react2.default.createElement(
           _reactRouter.Link,
-          { to: '/deployments', className: 'float-right' },
-          'All deployments'
+          { to: '/deployments/progress', className: 'float-right' },
+          'All deployments in progress'
         )
       ),
       _react2.default.createElement(Loader, { show: this.props.loading }),
@@ -80504,6 +80503,7 @@ var Recent = _react2.default.createClass({
   _clickHandle: function _clickHandle(id) {
     var params = {};
     params.id = id;
+    params.tab = "past";
     params.route = "deployments";
     params.open = true;
     this.props.clickHandle(params);
@@ -80595,8 +80595,8 @@ var Recent = _react2.default.createClass({
           ),
           _react2.default.createElement(
             _reactRouter.Link,
-            { to: '/deployments', className: 'float-right' },
-            'All deployments'
+            { to: '/deployments/past', className: 'float-right' },
+            'All past deployments'
           )
         ),
         _react2.default.createElement(Loader, { show: this.props.loading }),
@@ -80942,7 +80942,7 @@ var Deployments = _react2.default.createClass({
     AppActions.getDevices();
 
     if (this.props.params) {
-      this.setState({ tabIndex: tabs[this.props.params.tab] });
+      this.setState({ tabIndex: this.props.params.tab || "progress" });
 
       if (this.props.params.params) {
         var str = decodeURIComponent(this.props.params.params);
@@ -80965,7 +80965,7 @@ var Deployments = _react2.default.createClass({
         }
       }
     } else {
-      this.setState({ tabIndex: "0" });
+      this.setState({ tabIndex: "progress" });
     }
     AppActions.getImages();
   },
@@ -80999,7 +80999,7 @@ var Deployments = _react2.default.createClass({
       });
     }
   },
-  _changeTab: function _changeTab(value, e, tab) {
+  _changeTab: function _changeTab(value) {
     this.setState({ tabIndex: value });
   },
   _onScheduleSubmit: function _onScheduleSubmit() {
@@ -81101,19 +81101,22 @@ var Deployments = _react2.default.createClass({
         {
           tabItemContainerStyle: { width: "33%" },
           inkBarStyle: styles.inkbar,
-          value: this.state.tabIndex },
+          value: this.state.tabIndex,
+          onChange: this._changeTab },
         _react2.default.createElement(
           Tab,
-          { key: 1,
+          { key: 0,
             style: styles.tabs,
-            label: "In progress" },
+            label: "In progress",
+            value: 'progress' },
           _react2.default.createElement(Progress, { loading: !this.state.doneLoading, progress: this.state.progress, showReport: this._showReport, createClick: this.dialogOpen.bind(null, "schedule") })
         ),
         _react2.default.createElement(
           Tab,
-          { key: 2,
+          { key: 1,
             style: styles.tabs,
-            label: "Past deployments" },
+            label: "Past deployments",
+            value: 'past' },
           _react2.default.createElement(Past, { loading: !this.state.doneLoading, past: this.state.past, showReport: this._showReport })
         )
       ),

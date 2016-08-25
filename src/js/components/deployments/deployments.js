@@ -44,7 +44,7 @@ function getState() {
     scheduleForm: true,
     contentClass: "largeDialog", 
     invalid: true,
-    dialog: false,
+    dialog: false
   }
 }
 
@@ -71,9 +71,9 @@ var Deployments = React.createClass({
     }.bind(this));
 
     AppActions.getDevices();
-    
+  
     if (this.props.params) {
-      this.setState({tabIndex: tabs[this.props.params.tab]});
+      this.setState({tabIndex: this.props.params.tab || "progress"});
 
       if (this.props.params.params) {
         var str = decodeURIComponent(this.props.params.params);
@@ -94,11 +94,9 @@ var Deployments = React.createClass({
             }, 400);
           }
         }
-        
       }
-
     } else {
-      this.setState({tabIndex:"0"});
+      this.setState({tabIndex:"progress"});
     }
     AppActions.getImages();
   },
@@ -132,7 +130,7 @@ var Deployments = React.createClass({
       })
     }
   },
-  _changeTab: function(value, e, tab) {
+  _changeTab: function(value) {
     this.setState({tabIndex: value});
   },
   _onScheduleSubmit: function() {
@@ -239,16 +237,19 @@ var Deployments = React.createClass({
       <Tabs
         tabItemContainerStyle={{width: "33%"}}
         inkBarStyle={styles.inkbar}
-        value={this.state.tabIndex}>
-          <Tab key={1}
+        value={this.state.tabIndex}
+        onChange={this._changeTab}>
+          <Tab key={0}
           style={styles.tabs}
-          label={"In progress"}>
+          label={"In progress"}
+          value="progress">
             <Progress loading={!this.state.doneLoading} progress={this.state.progress} showReport={this._showReport} createClick={this.dialogOpen.bind(null, "schedule")}/>
           </Tab>
 
-          <Tab key={2}
+          <Tab key={1}
           style={styles.tabs}
-          label={"Past deployments"}>
+          label={"Past deployments"}
+          value="past">
             <Past loading={!this.state.doneLoading} past={this.state.past} showReport={this._showReport} />
           </Tab>
         </Tabs>

@@ -23,6 +23,7 @@ var Recent = React.createClass({
   _clickHandle: function(id) {
     var params = {};
     params.id = id;
+    params.tab = "past";
     params.route="deployments";
     params.open=true;
     this.props.clickHandle(params);
@@ -66,7 +67,7 @@ var Recent = React.createClass({
             <div className="block">
               {recent}
             </div>
-            <Link to="/deployments" className="float-right">All deployments</Link>
+            <Link to="/deployments/past" className="float-right">All past deployments</Link>
           </div> 
           
           <Loader show={this.props.loading} />
