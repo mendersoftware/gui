@@ -73,7 +73,7 @@ var Deployments = React.createClass({
     AppActions.getDevices();
   
     if (this.props.params) {
-      this.setState({tabIndex: this.props.params.tab || "progress"});
+      this.setState({tabIndex: this._checkTabValue(this.props.params.tab)});
 
       if (this.props.params.params) {
         var str = decodeURIComponent(this.props.params.params);
@@ -105,6 +105,16 @@ var Deployments = React.createClass({
   },
   _onChange: function() {
     this.setState(getState());
+  },
+  _checkTabValue: function(value) {
+    switch (value) {
+      case "past":
+        return "past";
+        break;
+      default:
+        return "progress";
+        break;
+    }
   },
   dialogDismiss: function(ref) {
     this.setState({
