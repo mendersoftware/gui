@@ -16,10 +16,6 @@ var TableRow = mui.TableRow;
 var TableRowColumn = mui.TableRowColumn;
 var FlatButton = mui.FlatButton;
 var RaisedButton = mui.RaisedButton;
-var List = mui.List;
-var ListItem = mui.ListItem;
-var Divider = mui.Divider;
-var FontIcon = mui.FontIcon;
 var Checkbox = mui.Checkbox;
 var Dialog = mui.Dialog;
 
