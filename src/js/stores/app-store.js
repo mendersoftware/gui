@@ -412,12 +412,11 @@ function statusSort(a,b) {
 }
 
 function startTimeSort(a,b) {
-  return (b.start_time > a.start_time) - (b.start_time < a.start_time);
+  return (b.created > a.created) - (b.created < a.created);
 }
 function startTimeSortAscend(a,b) {
-  return (a.start_time > b.start_time) - (a.start_time < b.start_time);
+  return (a.created < b.created) - (a.created > b.created);
 }
-
 
 
 /*
