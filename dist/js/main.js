@@ -79149,7 +79149,7 @@ var AppActions = {
         actionType: AppConstants.RECEIVE_DEVICES,
         devices: devices
       });
-      callback();
+      callback(devices);
     }).catch(function (err) {
       callback(err);
     });
@@ -80922,8 +80922,10 @@ var Deployments = _react2.default.createClass({
   getInitialState: function getInitialState() {
     return getState();
   },
-  componentDidMount: function componentDidMount() {
+  componentWillMount: function componentWillMount() {
     AppStore.changeListener(this._onChange);
+  },
+  componentDidMount: function componentDidMount() {
     AppActions.getDeploymentsInProgress(function () {
       setTimeout(function () {
         this.setState({ doneLoading: true });
@@ -80943,7 +80945,16 @@ var Deployments = _react2.default.createClass({
     };
     AppActions.getImages(imagesCallback);
 
-    AppActions.getDevices();
+    AppActions.getDevices(function (devices) {
+      var pending = AppStore.getUnauthorized();
+      // temporary way to find if accepted devices exist for form dropdown
+      if (devices.length - pending.length > 0) {
+        this.setState({ hasDevices: true });
+      }
+      if (pending.length) {
+        this.setState({ hasPending: true });
+      }
+    }.bind(this));
 
     if (this.props.params) {
       this.setState({ tabIndex: this._checkTabValue(this.props.params.tab) });
@@ -81105,7 +81116,7 @@ var Deployments = _react2.default.createClass({
     var dialogContent = '';
 
     if (this.state.scheduleForm) {
-      dialogContent = _react2.default.createElement(ScheduleForm, { deploymentSchedule: this._deploymentParams, id: this.state.id, images: this.state.images, image: this.state.image, imageVal: this.state.image, groups: this.state.groups, groupVal: this.state.group, start: this.state.start_time, end: this.state.end_time });
+      dialogContent = _react2.default.createElement(ScheduleForm, { hasPending: this.state.hasPending, hasDevices: this.state.hasDevices, deploymentSchedule: this._deploymentParams, id: this.state.id, images: this.state.images, image: this.state.image, imageVal: this.state.image, groups: this.state.groups, groupVal: this.state.group, start: this.state.start_time, end: this.state.end_time });
     } else {
       dialogContent = _react2.default.createElement(Report, { deployment: this.state.selectedDeployment, retryDeployment: this._scheduleDeployment });
     }
@@ -81141,6 +81152,7 @@ var Deployments = _react2.default.createClass({
         { className: 'top-right-button' },
         _react2.default.createElement(ScheduleButton, { secondary: true, openDialog: this.dialogOpen })
       ),
+      this.state.hasDevices,
       _react2.default.createElement(
         Dialog,
         {
@@ -83094,6 +83106,7 @@ var ScheduleForm = _react2.default.createClass({
 
   render: function render() {
     var imageItems = [];
+
     for (var i = 0; i < this.state.images.length; i++) {
       var tmp = _react2.default.createElement(MenuItem, { value: this.state.images[i].id, key: i, primaryText: this.state.images[i].name });
       imageItems.push(tmp);
@@ -83210,19 +83223,36 @@ var ScheduleForm = _react2.default.createClass({
               ref: 'image',
               value: this.state.imageVal.payload,
               onChange: this._handleImageValueChange,
-              floatingLabelText: 'Select target software'
+              floatingLabelText: 'Select target software',
+              disabled: !imageItems.length
             },
             imageItems
           ),
           _react2.default.createElement(TextField, {
-            className: 'margin-left',
             disabled: true,
             hintText: 'Device type',
             floatingLabelText: 'Device type',
             value: device_type,
             underlineDisabledStyle: { borderBottom: "none" },
             style: { verticalAlign: "top" },
-            errorStyle: { color: "rgb(171, 16, 0)" } })
+            errorStyle: { color: "rgb(171, 16, 0)" },
+            className: this.state.image ? "margin-left" : "hidden" }),
+          _react2.default.createElement(
+            'p',
+            { className: imageItems.length ? "hidden" : "info", style: { marginTop: "0" } },
+            _react2.default.createElement(
+              FontIcon,
+              { className: 'material-icons', style: { marginRight: "4", fontSize: "18", top: "4", color: "rgb(171, 16, 0)" } },
+              'error_outline'
+            ),
+            'There are no images available. ',
+            _react2.default.createElement(
+              _reactRouter.Link,
+              { to: '/software' },
+              'Upload one to the repository'
+            ),
+            ' to get started.'
+          )
         ),
         _react2.default.createElement(
           'div',
@@ -83237,9 +83267,30 @@ var ScheduleForm = _react2.default.createClass({
                 ref: 'group',
                 onChange: this._handleGroupValueChange,
                 floatingLabelText: 'Select group',
-                style: { marginBottom: 10 }
+                style: { marginBottom: 10 },
+                disabled: !this.props.hasDevices
               },
               groupItems
+            ),
+            _react2.default.createElement(
+              'p',
+              { className: this.props.hasDevices ? "hidden" : "info", style: { marginTop: "0" } },
+              _react2.default.createElement(
+                FontIcon,
+                { className: 'material-icons', style: { marginRight: "4", fontSize: "18", top: "4", color: "rgb(171, 16, 0)" } },
+                'error_outline'
+              ),
+              'There are no connected devices. ',
+              _react2.default.createElement(
+                'span',
+                { className: this.props.hasPending ? null : "hidden" },
+                _react2.default.createElement(
+                  _reactRouter.Link,
+                  { to: '/devices' },
+                  'Accept pending devices'
+                ),
+                ' to get started.'
+              )
             )
           ),
           _react2.default.createElement(
@@ -83267,7 +83318,7 @@ var ScheduleForm = _react2.default.createClass({
         ),
         _react2.default.createElement(
           'p',
-          { className: 'info' },
+          { className: this.props.hasDevices && imageItems.length ? 'info' : "hidden" },
           _react2.default.createElement(
             FontIcon,
             { className: 'material-icons', style: { marginRight: "4", fontSize: "18", top: "4" } },
@@ -87180,4 +87231,3 @@ module.exports = {
 };
 
 },{"material-ui/lib/styles/colors":292,"material-ui/lib/styles/spacing":295,"material-ui/lib/utils/color-manipulator":349}]},{},[864]);
-64]);

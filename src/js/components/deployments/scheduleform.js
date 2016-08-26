@@ -171,10 +171,12 @@ var ScheduleForm = React.createClass({
 
   render: function() {
     var imageItems = [];
+
     for (var i=0; i<this.state.images.length;i++) {
       var tmp = <MenuItem value={this.state.images[i].id} key={i} primaryText={this.state.images[i].name} />
       imageItems.push(tmp);
     }
+   
 
     var groupItems = [];
     if (this.props.device) {
@@ -251,19 +253,24 @@ var ScheduleForm = React.createClass({
               value={this.state.imageVal.payload}
               onChange={this._handleImageValueChange}
               floatingLabelText="Select target software"
+              disabled={!imageItems.length}
             >
               {imageItems}
             </SelectField>
 
             <TextField
-              className="margin-left"
               disabled={true}
               hintText="Device type"
               floatingLabelText="Device type"
               value={device_type} 
               underlineDisabledStyle={{borderBottom:"none"}}
               style={{verticalAlign:"top"}}
-              errorStyle={{color: "rgb(171, 16, 0)"}} />
+              errorStyle={{color: "rgb(171, 16, 0)"}}
+              className={this.state.image ? "margin-left" : "hidden"} />
+
+            <p className={imageItems.length ? "hidden" : "info"} style={{marginTop:"0"}}>
+              <FontIcon className="material-icons" style={{marginRight:"4", fontSize:"18", top: "4", color:"rgb(171, 16, 0)"}}>error_outline</FontIcon>There are no images available. <Link to={`/software`}>Upload one to the repository</Link> to get started.
+            </p>
           </div>
 
           <div style={{display:"block"}}>
@@ -273,10 +280,15 @@ var ScheduleForm = React.createClass({
                 ref="group"
                 onChange={this._handleGroupValueChange}
                 floatingLabelText="Select group"
-                style={{marginBottom:10}} 
+                style={{marginBottom:10}}
+                disabled={!this.props.hasDevices} 
               >
                 {groupItems}
               </SelectField>
+
+              <p className={this.props.hasDevices ? "hidden" : "info"} style={{marginTop:"0"}}>
+                <FontIcon className="material-icons" style={{marginRight:"4", fontSize:"18", top: "4", color:"rgb(171, 16, 0)"}}>error_outline</FontIcon>There are no connected devices. <span className={this.props.hasPending ? null : "hidden"}><Link to={`/devices`}>Accept pending devices</Link> to get started.</span>
+              </p>
             </div>
 
             <div className={this.state.disabled ? 'inline-block' : 'hidden'}>
@@ -292,7 +304,7 @@ var ScheduleForm = React.createClass({
             <div className={this.state.devices ? null : 'hidden'}>{this.state.devices ? this.state.devices.length : "0"} devices will be updated <span onClick={this._showDevices} params={{groupId: this.state.groupVal.payload, filters:filters }} className={this.state.disabled ? "hidden" : "margin-left link"}>View devices</span></div>
           </div>
             
-          <p className='info'><FontIcon className="material-icons" style={{marginRight:"4", fontSize:"18", top: "4"}}>info_outline</FontIcon>Any devices that are already on the target software version will be skipped.</p>
+          <p className={this.props.hasDevices && imageItems.length ? 'info': "hidden"}><FontIcon className="material-icons" style={{marginRight:"4", fontSize:"18", top: "4"}}>info_outline</FontIcon>Any devices that are already on the target software version will be skipped.</p>
 
         </form>
       </div>
