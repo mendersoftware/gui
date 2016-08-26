@@ -161,8 +161,10 @@ var Deployments = React.createClass({
       devices: ids
     }
     AppActions.createDeployment(newDeployment, function(data) {
-      AppActions.getDeployments();
-    });
+      AppActions.getDeploymentsInProgress(function() {
+        this.setState(this.getInitialState());
+      }.bind(this));
+    }.bind(this));
 
     this.dialogDismiss('dialog');
   },

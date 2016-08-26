@@ -81031,8 +81031,10 @@ var Deployments = _react2.default.createClass({
       devices: ids
     };
     AppActions.createDeployment(newDeployment, function (data) {
-      AppActions.getDeployments();
-    });
+      AppActions.getDeploymentsInProgress(function () {
+        this.setState(this.getInitialState());
+      }.bind(this));
+    }.bind(this));
 
     this.dialogDismiss('dialog');
   },
