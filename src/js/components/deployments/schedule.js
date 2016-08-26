@@ -52,8 +52,8 @@ var Schedule = React.createClass({
               <TableHeaderColumn tooltip="Device group">Group</TableHeaderColumn>
               <TableHeaderColumn tooltip="Target software version">Target software</TableHeaderColumn>
               <TableHeaderColumn tooltip="Number of devices"># Devices</TableHeaderColumn>
-              <TableHeaderColumn tooltip="Start time">Start time</TableHeaderColumn>
-              <TableHeaderColumn tooltip="End time">End time</TableHeaderColumn>
+              <TableHeaderColumn tooltip="Started">Started</TableHeaderColumn>
+              <TableHeaderColumn tooltip="Finished">Finished</TableHeaderColumn>
               <TableHeaderColumn tooltip="Details">Details</TableHeaderColumn>
               <TableHeaderColumn tooltip="Actions"></TableHeaderColumn>
             </TableRow>

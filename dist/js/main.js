@@ -81527,7 +81527,7 @@ var Progress = _react2.default.createClass({
               _react2.default.createElement(
                 TableHeaderColumn,
                 null,
-                'Start time'
+                'Started'
               ),
               _react2.default.createElement(
                 TableHeaderColumn,
@@ -82255,8 +82255,8 @@ var ProgressReport = _react2.default.createClass({
               ),
               _react2.default.createElement(
                 TableHeaderColumn,
-                { tooltip: 'Deployment start time' },
-                'Start time'
+                { tooltip: 'Started' },
+                'Started'
               ),
               _react2.default.createElement(
                 TableHeaderColumn,
@@ -82646,13 +82646,13 @@ var Report = _react2.default.createClass({
               ),
               _react2.default.createElement(
                 TableHeaderColumn,
-                { tooltip: 'Deployment start time' },
-                'Start time'
+                { tooltip: 'Started' },
+                'Started'
               ),
               _react2.default.createElement(
                 TableHeaderColumn,
-                { tooltip: 'Deployment end time' },
-                'End time'
+                { tooltip: 'Finished' },
+                'Finished'
               ),
               _react2.default.createElement(
                 TableHeaderColumn,
@@ -82821,13 +82821,13 @@ var Schedule = _react2.default.createClass({
             ),
             _react2.default.createElement(
               TableHeaderColumn,
-              { tooltip: 'Start time' },
-              'Start time'
+              { tooltip: 'Started' },
+              'Started'
             ),
             _react2.default.createElement(
               TableHeaderColumn,
-              { tooltip: 'End time' },
-              'End time'
+              { tooltip: 'Finished' },
+              'Finished'
             ),
             _react2.default.createElement(
               TableHeaderColumn,
@@ -87180,3 +87180,4 @@ module.exports = {
 };
 
 },{"material-ui/lib/styles/colors":292,"material-ui/lib/styles/spacing":295,"material-ui/lib/utils/color-manipulator":349}]},{},[864]);
+64]);

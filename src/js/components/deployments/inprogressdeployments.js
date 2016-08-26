@@ -89,7 +89,7 @@ var Progress = React.createClass({
                style={{overflow:"visible"}}>
                 <TableHeaderColumn>Updating to</TableHeaderColumn>
                 <TableHeaderColumn>Group</TableHeaderColumn>
-                <TableHeaderColumn>Start time</TableHeaderColumn>
+                <TableHeaderColumn>Started</TableHeaderColumn>
                 <TableHeaderColumn style={{textAlign:"right", width:"60"}}># Devices</TableHeaderColumn>
                 <TableHeaderColumn>Status</TableHeaderColumn>
               </TableRow>

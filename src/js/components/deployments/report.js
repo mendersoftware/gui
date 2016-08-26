@@ -179,8 +179,8 @@ var Report = React.createClass({
                 <TableHeaderColumn tooltip="Device name">Device name</TableHeaderColumn>
                 <TableHeaderColumn tooltip="Device type">Device type</TableHeaderColumn>
                 <TableHeaderColumn tooltip="Current software">Current software</TableHeaderColumn>
-                <TableHeaderColumn tooltip="Deployment start time">Start time</TableHeaderColumn>
-                <TableHeaderColumn tooltip="Deployment end time">End time</TableHeaderColumn>
+                <TableHeaderColumn tooltip="Started">Started</TableHeaderColumn>
+                <TableHeaderColumn tooltip="Finished">Finished</TableHeaderColumn>
                 <TableHeaderColumn tooltip="Deployment status">Deployment status</TableHeaderColumn>
                 <TableHeaderColumn tooltip=""></TableHeaderColumn>
               </TableRow>
