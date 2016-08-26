@@ -66,9 +66,12 @@ var Deployments = React.createClass({
       }.bind(this), 300)
     }.bind(this));
 
-    AppActions.getImages(function(images) {
-      this.setState({images:images});
-    }.bind(this));
+    var imagesCallback = {
+      success: function (images) {
+        this.setState({images:images});
+      }.bind(this)
+    };
+    AppActions.getImages(imagesCallback);
 
     AppActions.getDevices();
   
