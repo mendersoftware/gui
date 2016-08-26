@@ -1151,7 +1151,11 @@ span.day {
   background-color: #F7F7F7;
   padding: 15px 90px 15px;
   position: relative;
-  top: -5px;
+  top: -26px;
+  height: a uto;
+  margin: 30px 30px 0 0;
+  display: inline-block;
+  vertical-align: top;
 }
 .progressStatus #progressStatus {
   display: inline-block;

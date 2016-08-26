@@ -66,9 +66,12 @@ var Deployments = React.createClass({
       }.bind(this), 300)
     }.bind(this));
 
-    AppActions.getImages(function(images) {
-      this.setState({images:images});
-    }.bind(this));
+    var imagesCallback = {
+      success: function (images) {
+        this.setState({images:images});
+      }.bind(this)
+    };
+    AppActions.getImages(imagesCallback);
 
     AppActions.getDevices();
   
@@ -158,8 +161,10 @@ var Deployments = React.createClass({
       devices: ids
     }
     AppActions.createDeployment(newDeployment, function(data) {
-      AppActions.getDeployments();
-    });
+      AppActions.getDeploymentsInProgress(function() {
+        this.setState(this.getInitialState());
+      }.bind(this));
+    }.bind(this));
 
     this.dialogDismiss('dialog');
   },

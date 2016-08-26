@@ -17,19 +17,47 @@ var FlatButton = mui.FlatButton;
 var RaisedButton = mui.RaisedButton;
 var Checkbox = mui.Checkbox;
 var Dialog = mui.Dialog;
+var FontIcon = mui.FontIcon;
 
 var ProgressReport = React.createClass({
   getInitialState: function() {
     return {
       failsOnly: this.props.deployment.status === "Failed",
       showDialog: false,
-      logData: ""
+      logData: "",
+      elapsed: 0
     };
   },
   componentDidMount: function() {
+    this.timer = setInterval(this.tick, 50);
     AppActions.getSingleDeploymentDevices(this.props.deployment.id, function(devices) {
       this._deploymentState("devices",devices);
     }.bind(this));
+  },
+  componentWillUnmount: function() {
+    clearInterval(this.timer);
+  },
+  tick: function() {
+    var now = new Date();
+    var then = new Date(this.props.deployment.created);
+
+    // get difference in seconds
+    var difference = (now.getTime()-then.getTime())/1000;
+
+     // Calculate the number of days left
+    var days=Math.floor(difference / 86400);
+    // After deducting the days calculate the number of hours left
+    var hours = Math.floor((difference - (days * 86400 ))/3600);
+     // After days and hours , how many minutes are left
+    var minutes = Math.floor((difference - (days * 86400 ) - (hours *3600 ))/60);
+    // Finally how many seconds left after removing days, hours and minutes.
+    var secs = Math.floor((difference - (days * 86400 ) - (hours *3600 ) - (minutes*60)));
+    secs = ("0" + secs).slice(-2);
+    // Only show days if exists
+    days = days ? days + "d " : "";
+
+    var x =  days + hours + "h " + minutes + "m " + secs + "s";
+    this.setState({elapsed: x});
   },
   _deploymentState: function (key, val) {
     var state = {};
@@ -124,9 +152,10 @@ var ProgressReport = React.createClass({
            <div><div className="progressLabel"># devices:</div><span>{deviceList.length}</span></div>
           </div>
 
-          <div className="progressStatus" style={{height:"auto", margin:"30px 30px 30px 0", display:"inline-block", verticalAlign:"top"}}>
+          <div className="progressStatus">
             <div id="progressStatus">
-              <h3>In progress</h3>
+              <h3 style={{marginTop:"12"}}>In progress</h3>
+              <h2><FontIcon className="material-icons" style={{margin:"0 10px 0 -10px",color:"#ACD4D0", verticalAlign:"text-top"}}>timelapse</FontIcon>{this.state.elapsed}</h2>
               <div>Started: <Time value={this._formatTime(this.props.deployment.created)} format="YYYY-MM-DD HH:mm" /></div>
             </div>
             <div className="inline-block">

@@ -80936,9 +80936,12 @@ var Deployments = _react2.default.createClass({
       }.bind(this), 300);
     }.bind(this));
 
-    AppActions.getImages(function (images) {
-      this.setState({ images: images });
-    }.bind(this));
+    var imagesCallback = {
+      success: function (images) {
+        this.setState({ images: images });
+      }.bind(this)
+    };
+    AppActions.getImages(imagesCallback);
 
     AppActions.getDevices();
 
@@ -81028,8 +81031,10 @@ var Deployments = _react2.default.createClass({
       devices: ids
     };
     AppActions.createDeployment(newDeployment, function (data) {
-      AppActions.getDeployments();
-    });
+      AppActions.getDeploymentsInProgress(function () {
+        this.setState(this.getInitialState());
+      }.bind(this));
+    }.bind(this));
 
     this.dialogDismiss('dialog');
   },
@@ -81968,6 +81973,7 @@ var FlatButton = mui.FlatButton;
 var RaisedButton = mui.RaisedButton;
 var Checkbox = mui.Checkbox;
 var Dialog = mui.Dialog;
+var FontIcon = mui.FontIcon;
 
 var ProgressReport = _react2.default.createClass({
   displayName: 'ProgressReport',
@@ -81976,13 +81982,40 @@ var ProgressReport = _react2.default.createClass({
     return {
       failsOnly: this.props.deployment.status === "Failed",
       showDialog: false,
-      logData: ""
+      logData: "",
+      elapsed: 0
     };
   },
   componentDidMount: function componentDidMount() {
+    this.timer = setInterval(this.tick, 50);
     AppActions.getSingleDeploymentDevices(this.props.deployment.id, function (devices) {
       this._deploymentState("devices", devices);
     }.bind(this));
+  },
+  componentWillUnmount: function componentWillUnmount() {
+    clearInterval(this.timer);
+  },
+  tick: function tick() {
+    var now = new Date();
+    var then = new Date(this.props.deployment.created);
+
+    // get difference in seconds
+    var difference = (now.getTime() - then.getTime()) / 1000;
+
+    // Calculate the number of days left
+    var days = Math.floor(difference / 86400);
+    // After deducting the days calculate the number of hours left
+    var hours = Math.floor((difference - days * 86400) / 3600);
+    // After days and hours , how many minutes are left
+    var minutes = Math.floor((difference - days * 86400 - hours * 3600) / 60);
+    // Finally how many seconds left after removing days, hours and minutes.
+    var secs = Math.floor(difference - days * 86400 - hours * 3600 - minutes * 60);
+    secs = ("0" + secs).slice(-2);
+    // Only show days if exists
+    days = days ? days + "d " : "";
+
+    var x = days + hours + "h " + minutes + "m " + secs + "s";
+    this.setState({ elapsed: x });
   },
   _deploymentState: function _deploymentState(key, val) {
     var state = {};
@@ -82156,14 +82189,24 @@ var ProgressReport = _react2.default.createClass({
         ),
         _react2.default.createElement(
           'div',
-          { className: 'progressStatus', style: { height: "auto", margin: "30px 30px 30px 0", display: "inline-block", verticalAlign: "top" } },
+          { className: 'progressStatus' },
           _react2.default.createElement(
             'div',
             { id: 'progressStatus' },
             _react2.default.createElement(
               'h3',
-              null,
+              { style: { marginTop: "12" } },
               'In progress'
+            ),
+            _react2.default.createElement(
+              'h2',
+              null,
+              _react2.default.createElement(
+                FontIcon,
+                { className: 'material-icons', style: { margin: "0 10px 0 -10px", color: "#ACD4D0", verticalAlign: "text-top" } },
+                'timelapse'
+              ),
+              this.state.elapsed
             ),
             _react2.default.createElement(
               'div',
@@ -86744,10 +86787,10 @@ function statusSort(a, b) {
 }
 
 function startTimeSort(a, b) {
-  return (b.start_time > a.start_time) - (b.start_time < a.start_time);
+  return (b.created > a.created) - (b.created < a.created);
 }
 function startTimeSortAscend(a, b) {
-  return (a.start_time > b.start_time) - (a.start_time < b.start_time);
+  return (a.created < b.created) - (a.created > b.created);
 }
 
 /*
