@@ -16,21 +16,14 @@ import { Router, Route, Link } from 'react-router';
 var ReactTags = require('react-tag-input').WithContext;
 
 // material ui
-import mui from 'material-ui';
-var Table = mui.Table;
-var TableHeader = mui.TableHeader;
-var TableHeaderColumn = mui.TableHeaderColumn;
-var TableBody = mui.TableBody;
-var TableRow = mui.TableRow;
-var TableRowColumn = mui.TableRowColumn;
-var RaisedButton = mui.RaisedButton;
-var Dialog = mui.Dialog;
-var TextField = mui.TextField;
-var FlatButton = mui.FlatButton;
-var FontIcon = mui.FontIcon;
-var IconButton = mui.IconButton;
-
-import Snackbar from 'material-ui/lib/snackbar';
+import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
+import FlatButton from 'material-ui/FlatButton';
+import Dialog from 'material-ui/Dialog';
+import RaisedButton from 'material-ui/RaisedButton';
+import TextField from 'material-ui/TextField';
+import FontIcon from 'material-ui/FontIcon';
+import IconButton from 'material-ui/IconButton';
+import Snackbar from 'material-ui/Snackbar';
 
 var newState = {};
 var tags = [];
@@ -212,9 +205,9 @@ var Repository = React.createClass({
         float: 'left',
         paddingLeft: '12px',
         lineHeight: '36px',
-        marginRight: "-6",
+        marginRight: "-6px",
         color:"#ffffff",
-        fontSize:'16'
+        fontSize:'16px'
       },
       flatButtonIcon: {
         height: '100%',
@@ -223,13 +216,13 @@ var Repository = React.createClass({
         float: 'left',
         paddingLeft: '12px',
         lineHeight: '36px',
-        marginRight: "-6",
+        marginRight: "-6px",
         color:"rgba(0,0,0,0.8)",
-        fontSize:'16'
+        fontSize:'16px'
       },
       sortIcon: {
         verticalAlign: 'middle',
-        marginLeft: "10",
+        marginLeft: "10px",
         color: "#8c8c8d",
         cursor: "pointer",
       }
@@ -267,7 +260,7 @@ var Repository = React.createClass({
           <TableRowColumn>{pkg.tags || '-'}</TableRowColumn>
           <TableRowColumn><Time value={this._formatTime(pkg.modified)} format="YYYY-MM-DD HH:mm" /></TableRowColumn>
           <TableRowColumn style={{textAlign:"right"}}>{pkg.devices || 0}</TableRowColumn>
-          <TableRowColumn style={{width:"33", paddingRight:"0", paddingLeft:"12"}} className="expandButton">
+          <TableRowColumn style={{width:"33px", paddingRight:"0", paddingLeft:"12px"}} className="expandButton">
             <IconButton className="float-right"><FontIcon className="material-icons">{ selected ? "arrow_drop_up" : "arrow_drop_down"}</FontIcon></IconButton>
           </TableRowColumn>
           <TableRowColumn style={{width:"0", overflow:"visible"}}>
@@ -280,7 +273,7 @@ var Repository = React.createClass({
     }, this);
 
     var scheduleActions = [
-      <div key="cancelcontain2" style={{marginRight:"10", display:"inline-block"}}>
+      <div key="cancelcontain2" style={{marginRight:"10px", display:"inline-block"}}>
         <FlatButton
           key="cancel-schedule"
           label="Cancel"
@@ -328,7 +321,7 @@ var Repository = React.createClass({
                 <TableHeaderColumn className="columnHeader" tooltip="Tags">Tags</TableHeaderColumn>
                 <TableHeaderColumn className="columnHeader" tooltip="Last modified">Last modified <FontIcon style={styles.sortIcon} ref="modified" onClick={this._sortColumn.bind(null, "modified")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
                 <TableHeaderColumn style={{textAlign:"right", paddingRight:"12px"}} className="columnHeader align-right" tooltip="Installed on devices">Installed on devices <FontIcon style={styles.sortIcon} ref="devices" onClick={this._sortColumn.bind(null, "devices")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
-                <TableHeaderColumn style={{width:"33", paddingRight:"12", paddingLeft:"0"}} className="columnHeader"></TableHeaderColumn>
+                <TableHeaderColumn style={{width:"33px", paddingRight:"12px", paddingLeft:"0"}} className="columnHeader"></TableHeaderColumn>
               </TableRow>
             </TableHeader>
             <TableBody

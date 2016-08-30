@@ -1,8 +1,7 @@
 import React from 'react';
 import Header from './header/header';
 
-import mui from 'material-ui';
-import getMuiTheme from 'material-ui/lib/styles/getMuiTheme';
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import RawTheme from '../themes/mender-theme.js';
 
 var App = React.createClass({

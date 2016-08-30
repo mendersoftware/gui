@@ -1,6 +1,5 @@
 import React from 'react';
-import mui from 'material-ui';
-var FontIcon = mui.FontIcon;
+import FontIcon from 'material-ui/FontIcon';
 var FileField = require('react-file-input');
 
 var FileInput = React.createClass({

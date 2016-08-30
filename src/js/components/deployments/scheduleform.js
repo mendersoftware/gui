@@ -3,18 +3,16 @@ import AppStore from '../../stores/app-store';
 import { Router, Link } from 'react-router';
 import DateTime from './datetime.js';
 import SearchInput from 'react-search-input';
-import mui from 'material-ui';
 
-var DatePicker = mui.DatePicker;
-var TimePicker = mui.TimePicker;
-var SelectField = mui.SelectField;
-var TextField = mui.TextField;
-var FontIcon = mui.FontIcon;
-var LeftNav = mui.LeftNav;
-var IconButton = mui.IconButton;
-var MenuItem = mui.MenuItem;
-var Divider = mui.Divider;
-
+import DatePicker from 'material-ui/DatePicker';
+import TimePicker from 'material-ui/TimePicker';
+import SelectField from 'material-ui/SelectField';
+import TextField from 'material-ui/TextField';
+import FontIcon from 'material-ui/FontIcon';
+import Drawer from 'material-ui/Drawer';
+import IconButton from 'material-ui/IconButton';
+import MenuItem from 'material-ui/MenuItem';
+import Divider from 'material-ui/Divider';
 
 
 function getDate() {
@@ -232,7 +230,7 @@ var ScheduleForm = React.createClass({
 
     return (
       <div style={{overflow:"visible", height: '440px'}}>
-        <LeftNav 
+        <Drawer 
           ref="devicesNav"
           docked={false}
           openRight={true}
@@ -244,7 +242,7 @@ var ScheduleForm = React.createClass({
           width={320}
         >
           {deviceList}
-        </LeftNav>
+        </Drawer>
           
         <form>
           <div style={{display:"block"}}>

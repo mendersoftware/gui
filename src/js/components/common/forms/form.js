@@ -1,9 +1,8 @@
 import validator from 'validator';
 import React from 'react';
-import mui from 'material-ui';
 
-var FlatButton = mui.FlatButton;
-var RaisedButton = mui.RaisedButton;
+import FlatButton from 'material-ui/FlatButton';
+import RaisedButton from 'material-ui/RaisedButton';
 
 var Form = React.createClass({
   getInitialState: function() {

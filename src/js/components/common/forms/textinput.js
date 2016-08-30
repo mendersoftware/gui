@@ -1,7 +1,5 @@
 import React from 'react';
-// material ui
-import mui from 'material-ui';
-var TextField = mui.TextField;
+import TextField from 'material-ui/TextField';
 
 var TextInput = React.createClass({
   getInitialState: function () {

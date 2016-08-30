@@ -1,18 +1,15 @@
 import React from 'react';
 var GroupDevices = require('../deployments/groupdevices');
 var RecentStats = require('./recentstats');
-var Time = require('react-time');
+import Time from 'react-time';
 var AppActions = require('../../actions/app-actions');
 var Loader = require('../common/loader');
 
 import { Router, Route, Link } from 'react-router';
 
 // material ui
-var mui = require('material-ui');
-var List = mui.List;
-var ListItem = mui.ListItem;
-var Divider = mui.Divider;
-var FontIcon = mui.FontIcon;
+import Divider from 'material-ui/Divider';
+import FontIcon from 'material-ui/FontIcon';
 
 var Recent = React.createClass({
   getInitialState: function() {

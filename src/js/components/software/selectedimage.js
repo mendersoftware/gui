@@ -3,15 +3,12 @@ import Time from 'react-time';
 import { Router, Link } from 'react-router';
 
 // material ui
-import mui from 'material-ui';
-
-var List = mui.List;
-var ListItem = mui.ListItem;
-var Divider = mui.Divider;
-var FontIcon = mui.FontIcon;
-var FlatButton = mui.FlatButton;
-var IconButton = mui.IconButton;
-var TextField = mui.TextField;
+import { List, ListItem }  from 'material-ui/List';
+import Divider from 'material-ui/Divider';
+import FontIcon from 'material-ui/FontIcon';
+import FlatButton from 'material-ui/FlatButton';
+import IconButton from 'material-ui/IconButton';
+import TextField from 'material-ui/TextField';
 
 var ReactTags = require('react-tag-input').WithContext;
 var tagslist = [];
@@ -96,7 +93,7 @@ var SelectedImage = React.createClass({
         };
         if (key.indexOf("modified")!==-1) {
           info[key] = (
-            <Time style={{position:"relative", top:"4"}} value={this.props.formatTime(this.props.image[key])} format="YYYY-MM-DD HH:mm" />
+            <Time style={{position:"relative", top:"4px"}} value={this.props.formatTime(this.props.image[key])} format="YYYY-MM-DD HH:mm" />
           )
         }
       }
@@ -107,7 +104,7 @@ var SelectedImage = React.createClass({
     var styles = {
       editButton: {
         color: "rgba(0, 0, 0, 0.54)",
-        fontSize: "20" 
+        fontSize: "20px" 
       },
       listStyle: {
         fontSize: "12px",
@@ -122,7 +119,7 @@ var SelectedImage = React.createClass({
       </IconButton>
     );
     var editButtonDesc = (
-      <IconButton iconStyle={styles.editButton} style={{position:"absolute", right:"0", bottom: "8"}} onClick={this._descEdit.bind(null, this.props.image)} iconClassName="material-icons">
+      <IconButton iconStyle={styles.editButton} style={{position:"absolute", right:"0", bottom: "8px"}} onClick={this._descEdit.bind(null, this.props.image)} iconClassName="material-icons">
         {this.state.descEdit ? "check" : "edit"}
       </IconButton>
     );
@@ -186,19 +183,19 @@ var SelectedImage = React.createClass({
           </div>
         </div>
 
-        <div className="relative" style={{top:"-50"}}>
+        <div className="relative" style={{top:"-50px"}}>
           <div className="report-list" style={{padding:"8px 0px", width:"63%", position:"relative"}}>
-            <div style={{padding:"10px 16px 10px", fontSize:"12", lineHeight:"12px"}}>
+            <div style={{padding:"10px 16px 10px", fontSize:"12px", lineHeight:"12px"}}>
               <span style={{color:"rgba(0,0,0,0.8)"}}>Description</span>
-              <div style={{color:"rgba(0,0,0,0.54)", marginRight:"30", marginTop:"8", whiteSpace: "normal"}}>
+              <div style={{color:"rgba(0,0,0,0.54)", marginRight:"30px", marginTop:"8px", whiteSpace: "normal"}}>
                 <span className={this.state.descEdit ? "hidden" : null}>{info.description}</span>
                 {descInput}
               </div>
               {editButtonDesc}
             </div>
-            <hr style={{margin:"0", backgroundColor:"#e0e0e0", height:"1", border:"none"}} />
+            <hr style={{margin:"0", backgroundColor:"#e0e0e0", height:"1px", border:"none"}} />
           </div>
-          <div className="report-list" style={{width:"320"}}>
+          <div className="report-list" style={{width:"320px"}}>
             <List style={{backgroundColor: "rgba(255,255,255,0)"}}>
               <ListItem
                 style={styles.listStyle}
@@ -211,7 +208,7 @@ var SelectedImage = React.createClass({
             </List>
           </div>
        
-          <div className="report-list" style={{height:"130", width:"0"}}></div>
+          <div className="report-list" style={{height:"130px", width:"0"}}></div>
         </div>
       </div>
     );

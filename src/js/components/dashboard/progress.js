@@ -2,15 +2,13 @@ import React from 'react';
 import { Router, Route, Link } from 'react-router';
 
 var ProgressChart = require('../deployments/progressChart.js');
-var Time = require('react-time');
+import Time from 'react-time';
 var Loader = require('../common/loader');
 
 // material ui
-var mui = require('material-ui');
-var List = mui.List;
-var ListItem = mui.ListItem;
-var Divider = mui.Divider;
-var FontIcon = mui.FontIcon;
+import { List, ListItem } from 'material-ui/List';
+import Divider from 'material-ui/Divider';
+import FontIcon from 'material-ui/FontIcon';
 
 
 var Progress = React.createClass({

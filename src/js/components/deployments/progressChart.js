@@ -3,10 +3,6 @@ import { Router, Route, Link } from 'react-router';
 var AppActions = require('../../actions/app-actions');
 var AppStore = require('../../stores/app-store');
 
-// material ui
-var mui = require('material-ui');
-
-
 var ProgressChart = React.createClass({
   getInitialState: function() {
     return {

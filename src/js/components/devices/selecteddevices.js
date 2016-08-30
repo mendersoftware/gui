@@ -6,15 +6,14 @@ var AppStore = require('../../stores/app-store');
 var AppActions = require('../../actions/app-actions');
 var ScheduleForm = require('../deployments/scheduleform');
 
-var mui = require('material-ui');
-var FlatButton = mui.FlatButton;
-var RaisedButton = mui.RaisedButton;
-var Dialog = mui.Dialog;
-var List = mui.List;
-var ListItem = mui.ListItem;
-var Divider = mui.Divider;
-var FontIcon = mui.FontIcon;
-var IconButton = mui.IconButton;
+import { List, ListItem } from 'material-ui/List';
+import FontIcon from 'material-ui/FontIcon';
+import Dialog from 'material-ui/Dialog';
+import TextField from 'material-ui/TextField';
+import FlatButton from 'material-ui/FlatButton';
+import RaisedButton from 'material-ui/RaisedButton';
+import Divider from 'material-ui/Divider';
+import IconButton from 'material-ui/IconButton';
 
 var ReactTags = require('react-tag-input').WithContext;
 var tagslist = [];

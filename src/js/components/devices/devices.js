@@ -6,8 +6,7 @@ var Groups = require('./groups');
 var DeviceList = require('./devicelist');
 var Unauthorized = require('./unauthorized');
 
-var mui = require('material-ui');
-var Snackbar = mui.Snackbar;
+import Snackbar from 'material-ui/Snackbar';
 
 import { Router, Route, Link } from 'react-router';
 

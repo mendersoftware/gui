@@ -1,9 +1,8 @@
 import React from 'react';
 
 // material ui
-var mui = require('material-ui');
-var DatePicker = mui.DatePicker;
-var TimePicker = mui.TimePicker;
+import DatePicker from 'material-ui/DatePicker';
+import TimePicker from 'material-ui/TimePicker';
 
 var DateTime = React.createClass({
   _update: function(e, date) {

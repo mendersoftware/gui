@@ -7,9 +7,7 @@ var Activity = require('./activity');
 var Deployments = require('./deployments');
 import { Router, Route, Link } from 'react-router';
 
-// material ui
-var mui = require('material-ui');
-var RaisedButton = mui.RaisedButton;
+import RaisedButton from 'material-ui/RaisedButton';
 
 function getState() {
   return {

@@ -159,7 +159,6 @@ span.link:hover {
 }
 /* Layout */
 .flexbox {
-  display: -webkit-flex;
   display: -ms-flexbox;
   display: -webkit-box;
   display: flex;

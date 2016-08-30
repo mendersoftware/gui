@@ -4,21 +4,14 @@ var AppActions = require('../../actions/app-actions');
 import SearchInput from 'react-search-input';
 
 // material ui
-var mui = require('material-ui');
-var List = mui.List;
-var ListItem = mui.ListItem;
-var FontIcon = mui.FontIcon;
-var Dialog = mui.Dialog;
-var TextField = mui.TextField;
-var FlatButton = mui.FlatButton;
-var RaisedButton = mui.RaisedButton;
-var Table = mui.Table;
-var TableHeaderColumn = mui.TableHeaderColumn;
-var TableHeader = mui.TableHeader;
-var TableRowColumn = mui.TableRowColumn;
-var TableRow = mui.TableRow;
-var TableBody = mui.TableBody;
-import Subheader from 'material-ui/lib/Subheader';
+import { List, ListItem } from 'material-ui/List';
+import FontIcon from 'material-ui/FontIcon';
+import Dialog from 'material-ui/Dialog';
+import TextField from 'material-ui/TextField';
+import FlatButton from 'material-ui/FlatButton';
+import RaisedButton from 'material-ui/RaisedButton';
+import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
+import Subheader from 'material-ui/Subheader';
 
 
 var tmpDevices = [];
@@ -119,7 +112,7 @@ var Groups = React.createClass({
       <FontIcon className="material-icons">add</FontIcon>
     );
     var createActions = [
-      <div style={{marginRight:"10", display:"inline-block"}}>
+      <div style={{marginRight:"10px", display:"inline-block"}}>
         <FlatButton
           label="Cancel"
           onClick={this.dialogToggle} />
@@ -186,7 +179,7 @@ var Groups = React.createClass({
           autoDetectWindowHeight={true} autoScrollBodyContent={true} modal={true}
           bodyClassName="heightTransition"
           bodyStyle={{maxHeight:"50vh"}}
-          titleStyle={{paddingBottom: "15"}}
+          titleStyle={{paddingBottom: "15px"}}
           >  
 
           <div className={this.state.showDeviceList ? "absoluteTextfieldButton top-right margin-right" : "absoluteTextfieldButton" }>
@@ -201,7 +194,7 @@ var Groups = React.createClass({
               errorText={this.state.errorText1} />
 
             <div className={this.state.showDeviceList ? "hidden" : "float-left margin-left-small"}>
-              <RaisedButton disabled={this.state.invalid} style={{marginTop:"26"}} label="Next" secondary={true} onClick={this.showDeviceList}/>
+              <RaisedButton disabled={this.state.invalid} style={{marginTop:"26px"}} label="Next" secondary={true} onClick={this.showDeviceList}/>
             </div>
        
           </div>
@@ -209,7 +202,7 @@ var Groups = React.createClass({
           <div className={this.state.showDeviceList===true ? "dialogTableContainer" : "dialogTableContainer zero"}>
             <div className="fixedSearch">
               <span>Select devices to include in the new group:</span>
-              <SearchInput className="search top-right" ref='search' onChange={this.searchUpdated} placeholder="Search devices" style={{margin:"10"}} />
+              <SearchInput className="search top-right" ref='search' onChange={this.searchUpdated} placeholder="Search devices" style={{margin:"10px"}} />
             </div>
             <Table
               multiSelectable={true}

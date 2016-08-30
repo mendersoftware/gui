@@ -10,12 +10,10 @@ var ScheduleForm = require('./scheduleform.js');
 var Report = require('./report.js');
 var ScheduleButton = require('./schedulebutton.js');
 
-var mui = require('material-ui');
-var Tabs = mui.Tabs;
-var Tab = mui.Tab;
-var Dialog = mui.Dialog;
-var FlatButton = mui.FlatButton;
-var RaisedButton = mui.RaisedButton;
+import { Tabs, Tab }  from 'material-ui/Tabs';
+import Dialog from 'material-ui/Dialog';
+import FlatButton from 'material-ui/FlatButton';
+import RaisedButton from 'material-ui/RaisedButton';
 
 var styles = {
   tabs: {
