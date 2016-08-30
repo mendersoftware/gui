@@ -1,7 +1,5 @@
 import React from 'react';
-// material ui
-import mui from 'material-ui';
-var SelectField = mui.SelectField;
+import SelectField from 'material-ui/SelectField';
 
 var SelectInput = React.createClass({
   render: function () {

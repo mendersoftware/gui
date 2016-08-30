@@ -6,15 +6,10 @@ var SelectedDevices = require('./selecteddevices');
 
 // material ui
 var mui = require('material-ui');
-var Table = mui.Table;
-var TableHeader = mui.TableHeader;
-var TableHeaderColumn = mui.TableHeaderColumn;
-var TableBody = mui.TableBody;
-var TableRow = mui.TableRow;
-var TableRowColumn = mui.TableRowColumn;
-var IconButton = mui.IconButton;
-var RaisedButton = mui.RaisedButton;
-var FontIcon = mui.FontIcon;
+import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
+import IconButton from 'material-ui/IconButton';
+import RaisedButton from 'material-ui/RaisedButton';
+import FontIcon from 'material-ui/FontIcon';
 
 var Authorized =  React.createClass({
   getInitialState: function() {
@@ -84,7 +79,7 @@ var Authorized =  React.createClass({
     var styles = {
       sortIcon: {
         verticalAlign: 'middle',
-        marginLeft: "10",
+        marginLeft: "10px",
         color: "#8c8c8d",
         cursor: "pointer",
       }

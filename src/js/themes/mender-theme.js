@@ -1,8 +1,8 @@
 'use strict';
 
-var Colors = require('material-ui/lib/styles/colors');
-import ColorManipulator from 'material-ui/lib/utils/color-manipulator';
-var Spacing = require('material-ui/lib/styles/spacing');
+var Colors = require('material-ui/styles/colors');
+import { fade } from 'material-ui/utils/colorManipulator';
+var Spacing = require('material-ui/styles/spacing');
 
 module.exports = {
   spacing: Spacing,
@@ -18,7 +18,7 @@ module.exports = {
     alternateTextColor: Colors.white,
     canvasColor: Colors.white,
     borderColor: "#e0e0e0",
-    disabledColor: ColorManipulator.fade(Colors.darkBlack, 0.3),
+    disabledColor: fade(Colors.darkBlack, 0.3),
   },
   snackbar: {
     actionColor: "#9E6F8E"

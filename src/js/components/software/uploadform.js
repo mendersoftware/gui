@@ -1,10 +1,8 @@
 import React from 'react';
 var AppStore = require('../../stores/app-store');
 
-var mui = require('material-ui');
-
-var SelectField = mui.SelectField;
-var TextField = mui.TextField;
+import SelectField from 'material-ui/SelectField';
+import TextField from 'material-ui/TextField';
 
 var UploadForm = React.createClass({
   getInitialState: function() {

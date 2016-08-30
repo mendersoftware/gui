@@ -1,23 +1,16 @@
 import React from 'react';
 import { Link } from 'react-router';
 import CopyToClipboard from 'react-copy-to-clipboard';
-var Time = require('react-time');
+import Time from 'react-time';
 var AppActions = require('../../actions/app-actions');
 var pluralize = require('pluralize')
 
-
 // material ui
-var mui = require('material-ui');
-var Table = mui.Table;
-var TableHeader = mui.TableHeader;
-var TableHeaderColumn = mui.TableHeaderColumn;
-var TableBody = mui.TableBody;
-var TableRow = mui.TableRow;
-var TableRowColumn = mui.TableRowColumn;
-var FlatButton = mui.FlatButton;
-var RaisedButton = mui.RaisedButton;
-var Checkbox = mui.Checkbox;
-var Dialog = mui.Dialog;
+import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
+import FlatButton from 'material-ui/FlatButton';
+import Dialog from 'material-ui/Dialog';
+import RaisedButton from 'material-ui/RaisedButton';
+import Checkbox from 'material-ui/Checkbox';
 
 var Report = React.createClass({
   getInitialState: function() {
@@ -131,13 +124,13 @@ var Report = React.createClass({
    
 
         <div className="report-container">
-          <div className="deploymentInfo" style={{width:"260", height:"auto", margin:"30px 30px 30px 0", display:"inline-block", verticalAlign:"top"}}>
+          <div className="deploymentInfo" style={{width:"260px", height:"auto", margin:"30px 30px 30px 0", display:"inline-block", verticalAlign:"top"}}>
            <div><div className="progressLabel">Updating to:</div><span>{softwareLink}</span></div>
            <div><div className="progressLabel">Device group:</div><span>{this.props.deployment.name}</span></div>
            <div><div className="progressLabel"># devices:</div><span>{deviceList.length}</span></div>
           </div>
 
-          <div className="deploymentInfo" style={{width:"260", height:"auto", margin:"30px 30px 30px 0", display:"inline-block", verticalAlign:"top"}}>
+          <div className="deploymentInfo" style={{width:"260px", height:"auto", margin:"30px 30px 30px 0", display:"inline-block", verticalAlign:"top"}}>
            <div><div className="progressLabel">Status:</div>Completed<span className={this.state.stats.failure ? "failures" : "hidden"}> with failures</span></div>
            <div><div className="progressLabel">Started:</div><Time value={this._formatTime(this.props.deployment.created)} format="YYYY-MM-DD HH:mm" /></div>
        
@@ -179,8 +172,8 @@ var Report = React.createClass({
                 <TableHeaderColumn tooltip="Device name">Device name</TableHeaderColumn>
                 <TableHeaderColumn tooltip="Device type">Device type</TableHeaderColumn>
                 <TableHeaderColumn tooltip="Current software">Current software</TableHeaderColumn>
-                <TableHeaderColumn tooltip="Deployment start time">Start time</TableHeaderColumn>
-                <TableHeaderColumn tooltip="Deployment end time">End time</TableHeaderColumn>
+                <TableHeaderColumn tooltip="Started">Started</TableHeaderColumn>
+                <TableHeaderColumn tooltip="Finished">Finished</TableHeaderColumn>
                 <TableHeaderColumn tooltip="Deployment status">Deployment status</TableHeaderColumn>
                 <TableHeaderColumn tooltip=""></TableHeaderColumn>
               </TableRow>
@@ -202,7 +195,7 @@ var Report = React.createClass({
           <div className="code">
             {this.state.logData}
           </div>
-          <p style={{marginLeft:"24"}}>{this.state.copied ? <span className="green fadeIn">Copied to clipboard.</span> : null}</p>
+          <p style={{marginLeft:"24px"}}>{this.state.copied ? <span className="green fadeIn">Copied to clipboard.</span> : null}</p>
         </Dialog>
       </div>
     );

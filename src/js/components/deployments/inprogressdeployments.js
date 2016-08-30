@@ -1,5 +1,5 @@
 import React from 'react';
-var Time = require('react-time');
+import Time from 'react-time';
 var ProgressReport = require('./progressreport.js');
 var ScheduleForm = require('./scheduleform');
 var GroupDevices = require('./groupdevices');
@@ -10,15 +10,9 @@ var DeploymentStatus = require('./deploymentstatus');
 var Loader = require('../common/loader');
 
 // material ui
-var mui = require('material-ui');
-var Table = mui.Table;
-var TableHeader = mui.TableHeader;
-var TableHeaderColumn = mui.TableHeaderColumn;
-var TableBody = mui.TableBody;
-var TableRow = mui.TableRow;
-var TableRowColumn = mui.TableRowColumn;
-var FlatButton = mui.FlatButton;
-var Dialog = mui.Dialog;
+import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
+import FlatButton from 'material-ui/FlatButton';
+import Dialog from 'material-ui/Dialog';
 
 var progress = [];
 
@@ -55,11 +49,11 @@ var Progress = React.createClass({
         <DeploymentStatus id={deployment.id} />
       );
       return (
-        <TableRow style={{height:"52"}} key={index}>
+        <TableRow style={{height:"52px"}} key={index}>
           <TableRowColumn>{deployment.artifact_name}</TableRowColumn>
           <TableRowColumn>{deployment.name}</TableRowColumn>
           <TableRowColumn><Time value={this._formatTime(deployment.created)} format="YYYY-MM-DD HH:mm" /></TableRowColumn>
-          <TableRowColumn style={{textAlign:"right", width:"60"}}><GroupDevices deployment={deployment.id} /></TableRowColumn>
+          <TableRowColumn style={{textAlign:"right", width:"60px"}}><GroupDevices deployment={deployment.id} /></TableRowColumn>
           <TableRowColumn style={{overflow:"visible"}}>{status}</TableRowColumn>
         </TableRow>
       )
@@ -89,8 +83,8 @@ var Progress = React.createClass({
                style={{overflow:"visible"}}>
                 <TableHeaderColumn>Updating to</TableHeaderColumn>
                 <TableHeaderColumn>Group</TableHeaderColumn>
-                <TableHeaderColumn>Start time</TableHeaderColumn>
-                <TableHeaderColumn style={{textAlign:"right", width:"60"}}># Devices</TableHeaderColumn>
+                <TableHeaderColumn>Started</TableHeaderColumn>
+                <TableHeaderColumn style={{textAlign:"right", width:"60px"}}># Devices</TableHeaderColumn>
                 <TableHeaderColumn>Status</TableHeaderColumn>
               </TableRow>
             </TableHeader>

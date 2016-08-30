@@ -1,16 +1,12 @@
 import React from 'react';
-var mui = require('material-ui');
 import { Link } from 'react-router';
 
-var Tabs = mui.Tabs;
-var Tab = mui.Tab;
-import IconMenu from 'material-ui/lib/menus/icon-menu';
-import IconButton from 'material-ui/lib/icon-button';
-import MenuItem from 'material-ui/lib/menus/menu-item';
-import FontIcon from 'material-ui/lib/font-icon';
-import Toolbar from 'material-ui/lib/toolbar/toolbar';
-import ToolbarGroup from 'material-ui/lib/toolbar/toolbar-group';
-import ToolbarTitle from 'material-ui/lib/toolbar/toolbar-title';
+import { Tabs, Tab } from 'material-ui/Tabs';
+import IconMenu from 'material-ui/IconMenu';
+import IconButton from 'material-ui/IconButton';
+import MenuItem from 'material-ui/MenuItem';
+import FontIcon from 'material-ui/FontIcon';
+import { Toolbar, ToolbarGroup, ToolbarTitle } from 'material-ui/Toolbar';
 
 
 var menuItems = [
@@ -51,7 +47,7 @@ var Header = React.createClass({
       this.context.router.isActive('/deployments') ? '3' : '0';
   },
   _handleTabActive: function(tab) {
-    this.context.router.push(tab.props.route);
+    this.context.router.push(tab.props.value);
   },
   render: function() {
     var tabHandler = this._handleTabActive;
@@ -59,9 +55,8 @@ var Header = React.createClass({
       return (
         <Tab key={index}
           style={styles.tabs}
-          route={item.route}
           label={item.text}
-          value={index.toString()}
+          value={item.route}
           onActive={tabHandler} />
       )
     });
@@ -69,11 +64,11 @@ var Header = React.createClass({
     return (
       <div>
         <Toolbar style={{backgroundColor: "#fff"}}>
-          <ToolbarGroup key={0} float="left">
+          <ToolbarGroup key={0} className="float-left">
               <Link to="/" id="logo"></Link>
           </ToolbarGroup>
-          <ToolbarGroup key={1} float="right">
-            <IconMenu desktop={true} style={{marginTop:"5"}} iconButtonElement={iconButtonElement}>
+          <ToolbarGroup key={1} className="float-right">
+            <IconMenu desktop={true} style={{marginTop:"5px"}} iconButtonElement={iconButtonElement}>
               <MenuItem primaryText="Settings" />
               <MenuItem primaryText="Manage users" />
               <MenuItem primaryText="Help" />

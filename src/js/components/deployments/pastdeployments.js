@@ -1,6 +1,5 @@
 import React from 'react';
-
-var Time = require('react-time');
+import Time from 'react-time';
 var Report = require('./report.js');
 var ScheduleForm = require('./scheduleform');
 var GroupDevices = require('./groupdevices');
@@ -9,21 +8,14 @@ var DeploymentStatus = require('./deploymentstatus');
 var Loader = require('../common/loader');
 
 // material ui
-var mui = require('material-ui');
-var Table = mui.Table;
-var TableHeader = mui.TableHeader;
-var TableHeaderColumn = mui.TableHeaderColumn;
-var TableBody = mui.TableBody;
-var TableRow = mui.TableRow;
-var TableRowColumn = mui.TableRowColumn;
-var FlatButton = mui.FlatButton;
+import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
+import FlatButton from 'material-ui/FlatButton';
 
 var past = [];
 
 var Past = React.createClass({
   getInitialState: function() {
     return {
-      showReport: null,
       retry: false
     };
   },
@@ -53,7 +45,7 @@ var Past = React.createClass({
           <TableRowColumn>{deployment.name}</TableRowColumn>
           <TableRowColumn><Time value={this._formatTime(deployment.created)} format="YYYY-MM-DD HH:mm" /></TableRowColumn>
           <TableRowColumn><Time value={this._formatTime(deployment.finished)} format="YYYY-MM-DD HH:mm" /></TableRowColumn>
-          <TableRowColumn style={{textAlign:"right", width:"60"}}><GroupDevices deployment={deployment.id} /></TableRowColumn>
+          <TableRowColumn style={{textAlign:"right", width:"60px"}}><GroupDevices deployment={deployment.id} /></TableRowColumn>
           <TableRowColumn style={{overflow:"visible"}}>{status}</TableRowColumn>
         </TableRow>
       )
@@ -86,7 +78,7 @@ var Past = React.createClass({
                 <TableHeaderColumn>Group</TableHeaderColumn>
                 <TableHeaderColumn>Started</TableHeaderColumn>
                 <TableHeaderColumn>Finished</TableHeaderColumn>
-                <TableHeaderColumn style={{textAlign:"right", width:"60"}}># Devices</TableHeaderColumn>
+                <TableHeaderColumn style={{textAlign:"right", width:"60px"}}># Devices</TableHeaderColumn>
                 <TableHeaderColumn>Status</TableHeaderColumn>
               </TableRow>
             </TableHeader>

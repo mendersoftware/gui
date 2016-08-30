@@ -1,9 +1,8 @@
 import React from 'react';
 
 // material ui
-var mui = require('material-ui');
-var RaisedButton = mui.RaisedButton;
-var FlatButton = mui.FlatButton;
+import RaisedButton from 'material-ui/RaisedButton';
+import FlatButton from 'material-ui/FlatButton';
 
 
 var ScheduleButton = React.createClass({

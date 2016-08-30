@@ -4,10 +4,9 @@ var Progress = require('./progress');
 var Recent = require('./recent');
 
 // material ui
-var mui = require('material-ui');
-var RaisedButton = mui.RaisedButton;
-var FlatButton = mui.FlatButton;
-var Dialog = mui.Dialog;
+import RaisedButton from 'material-ui/RaisedButton';
+import FlatButton from 'material-ui/FlatButton';
+import Dialog from 'material-ui/Dialog';
 
 var Deployments = React.createClass({
   _clickHandle: function(params) {

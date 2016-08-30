@@ -1,10 +1,6 @@
 import React from 'react';
 import { Router, Route, Link } from 'react-router';
-
 import Time from 'react-time';
-
-// material ui
-import mui from 'material-ui';
 
 var Activity = React.createClass({
   _clickHandle: function() {

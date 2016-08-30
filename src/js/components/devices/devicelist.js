@@ -8,24 +8,17 @@ var Filters = require('./filters');
 var Loader = require('../common/loader');
 
 // material ui
-var mui = require('material-ui');
-var Table = mui.Table;
-var TableHeader = mui.TableHeader;
-var TableHeaderColumn = mui.TableHeaderColumn;
-var TableBody = mui.TableBody;
-var TableRow = mui.TableRow;
-var TableRowColumn = mui.TableRowColumn;
-var RaisedButton = mui.RaisedButton;
-var Dialog = mui.Dialog;
-var MenuItem = mui.MenuItem;
+import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
+import RaisedButton from 'material-ui/RaisedButton';
+import Dialog from 'material-ui/Dialog';
+import MenuItem from 'material-ui/MenuItem';
+import SelectField from 'material-ui/SelectField';
+import TextField from 'material-ui/TextField';
+import FlatButton from 'material-ui/FlatButton';
+import FontIcon from 'material-ui/FontIcon';
+import IconButton from 'material-ui/IconButton';
 
-var SelectField = mui.SelectField;
-var TextField = mui.TextField;
-var FlatButton = mui.FlatButton;
-var FontIcon = mui.FontIcon;
-var IconButton = mui.IconButton;
-
-import Snackbar from 'material-ui/lib/snackbar';
+import Snackbar from 'material-ui/Snackbar';
 
 var addSelection = {};
 
@@ -275,19 +268,19 @@ var DeviceList = React.createClass({
         float: 'left',
         paddingLeft: '12px',
         lineHeight: '36px',
-        marginRight: "-6",
+        marginRight: "-6px",
         color:"#679BA5",
-        fontSize:'16'
+        fontSize:'16px'
       },
       exampleFlatButton: {
-        fontSize:'12',
-        marginLeft:"10",
+        fontSize:'12px',
+        marginLeft:"10px",
         float:"right",
-        marginRight:"130"
+        marginRight:"130px"
       },
       editButton: {
         color: "rgba(0, 0, 0, 0.54)",
-        fontSize: "20" 
+        fontSize: "20px" 
       },
       buttonIcon: {
         height: '100%',
@@ -296,7 +289,7 @@ var DeviceList = React.createClass({
         float: 'left',
         paddingLeft: '12px',
         lineHeight: '36px',
-        marginRight: "-6",
+        marginRight: "-6px",
         color: "rgb(0, 188, 212)"
       },
       raisedButtonIcon: {
@@ -306,12 +299,12 @@ var DeviceList = React.createClass({
         float: 'left',
         paddingLeft: '12px',
         lineHeight: '36px',
-        marginRight: "-6",
+        marginRight: "-6px",
         color: "#fff"
       },
       sortIcon: {
         verticalAlign: 'middle',
-        marginLeft: "10",
+        marginLeft: "10px",
         color: "#8c8c8d",
         cursor: "pointer",
       }
@@ -338,7 +331,7 @@ var DeviceList = React.createClass({
           <TableRowColumn>{device.artifact_name}</TableRowColumn>
           <TableRowColumn>{<Time value={device.last_heartbeat} format="YYYY-MM-DD HH:mm" />}</TableRowColumn>
           <TableRowColumn>{device.status}</TableRowColumn>
-          <TableRowColumn style={{width:"33", paddingRight:"0", paddingLeft:"12"}} className="expandButton">
+          <TableRowColumn style={{width:"33px", paddingRight:"0", paddingLeft:"12px"}} className="expandButton">
             <IconButton className="float-right" onClick={this._expandRow.bind(this, index)}><FontIcon className="material-icons">{ expanded ? "arrow_drop_up" : "arrow_drop_down"}</FontIcon></IconButton>
           </TableRowColumn>
           <TableRowColumn style={{width:"0", overflow:"visible"}}>
@@ -353,7 +346,7 @@ var DeviceList = React.createClass({
     var disableAction = this.props.selectedDevices.length ? false : true;
     
     var addActions = [
-      <div style={{marginRight:"10", display:"inline-block"}}>
+      <div style={{marginRight:"10px", display:"inline-block"}}>
         <FlatButton
           label="Cancel"
           onClick={this.dialogToggle.bind(null, 'addGroup')} />
@@ -390,8 +383,8 @@ var DeviceList = React.createClass({
         <Filters attributes={this.props.attributes} filters={this.props.filters} onFilterChange={this.props.onFilterChange} />
 
         <div>
-          <div style={{marginLeft:"26"}}>
-            <h2 className="hoverEdit" tooltip="Rename">
+          <div style={{marginLeft:"26px"}}>
+            <h2 className="hoverEdit">
              
                 {groupNameInputs}
                 <span className={this.state.nameEdit ? "hidden" : null}>{this.props.selectedGroup.name}</span>
@@ -420,7 +413,7 @@ var DeviceList = React.createClass({
                   <TableHeaderColumn className="columnHeader" tooltip="Current software">Current software<FontIcon ref="artifact_name" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "software_version")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
                   <TableHeaderColumn className="columnHeader" tooltip="Last heartbeat">Last heartbeat<FontIcon ref="last_heartbeat" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "last_heartbeat")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
                   <TableHeaderColumn className="columnHeader" tooltip="Status">Status<FontIcon ref="status" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "status")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
-                  <TableHeaderColumn className="columnHeader" style={{width:"33", paddingRight:"12", paddingLeft:"0"}}></TableHeaderColumn>
+                  <TableHeaderColumn className="columnHeader" style={{width:"33px", paddingRight:"12px", paddingLeft:"0"}}></TableHeaderColumn>
                 </TableRow>
               </TableHeader>
               <TableBody
@@ -443,7 +436,7 @@ var DeviceList = React.createClass({
             <RaisedButton disabled={disableAction} label="Add selected devices to a group" secondary={true} onClick={this.dialogToggle.bind(null, 'addGroup')}>
               <FontIcon style={styles.raisedButtonIcon} className="material-icons">add_circle</FontIcon>
             </RaisedButton>
-            <FlatButton disabled={disableAction} style={{marginLeft: "4"}} className={this.props.selectedGroup.id === 1 ? 'hidden' : null} label="Remove selected devices from this group" secondary={true} onClick={this._removeGroupHandler}>
+            <FlatButton disabled={disableAction} style={{marginLeft: "4px"}} className={this.props.selectedGroup.id === 1 ? 'hidden' : null} label="Remove selected devices from this group" secondary={true} onClick={this._removeGroupHandler}>
               <FontIcon style={styles.buttonIcon} className="material-icons">remove_circle_outline</FontIcon>
             </FlatButton>
           </div>
@@ -471,7 +464,7 @@ var DeviceList = React.createClass({
               <div className="float-left margin-left-small">
                 <RaisedButton 
                   label="Create new"
-                  style={{marginTop:"26"}}
+                  style={{marginTop:"26px"}}
                   onClick={this._showButton}/>
               </div>
             </div>
@@ -487,7 +480,7 @@ var DeviceList = React.createClass({
                 errorText={this.state.errorText1} />
               <div className="float-left margin-left-small">
                 <RaisedButton
-                  style={{marginTop:"26"}}
+                  style={{marginTop:"26px"}}
                   secondary={true}
                   label="Save"
                   onClick={this._newGroupHandler}

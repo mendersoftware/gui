@@ -1,23 +1,17 @@
 import React from 'react';
 import { Link } from 'react-router';
 import CopyToClipboard from 'react-copy-to-clipboard';
-var Time = require('react-time');
+import Time from 'react-time';
 var AppActions = require('../../actions/app-actions');
 var DeploymentStatus = require('./deploymentstatus');
 
 // material ui
-var mui = require('material-ui');
-var Table = mui.Table;
-var TableHeader = mui.TableHeader;
-var TableHeaderColumn = mui.TableHeaderColumn;
-var TableBody = mui.TableBody;
-var TableRow = mui.TableRow;
-var TableRowColumn = mui.TableRowColumn;
-var FlatButton = mui.FlatButton;
-var RaisedButton = mui.RaisedButton;
-var Checkbox = mui.Checkbox;
-var Dialog = mui.Dialog;
-var FontIcon = mui.FontIcon;
+import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
+import FlatButton from 'material-ui/FlatButton';
+import RaisedButton from 'material-ui/RaisedButton';
+import Checkbox from 'material-ui/Checkbox';
+import Dialog from 'material-ui/Dialog';
+import FontIcon from 'material-ui/FontIcon';
 
 var ProgressReport = React.createClass({
   getInitialState: function() {
@@ -176,7 +170,7 @@ var ProgressReport = React.createClass({
                 <TableHeaderColumn tooltip="Device name">Device name</TableHeaderColumn>
                 <TableHeaderColumn tooltip="Device type">Device type</TableHeaderColumn>
                 <TableHeaderColumn tooltip="Current software">Current software</TableHeaderColumn>
-                <TableHeaderColumn tooltip="Deployment start time">Start time</TableHeaderColumn>
+                <TableHeaderColumn tooltip="Started">Started</TableHeaderColumn>
                 <TableHeaderColumn tooltip="Deployment status">Deployment status</TableHeaderColumn>
                 <TableHeaderColumn tooltip=""></TableHeaderColumn>
               </TableRow>

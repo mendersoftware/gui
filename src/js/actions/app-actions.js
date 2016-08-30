@@ -68,7 +68,7 @@ var AppActions = {
           actionType: AppConstants.RECEIVE_DEVICES,
           devices: devices
         });
-        callback();
+        callback(devices);
       })
       .catch(function(err) {
         callback(err);

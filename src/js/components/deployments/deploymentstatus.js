@@ -1,7 +1,6 @@
 import React from 'react';
 // material ui
-var mui = require('material-ui');
-var FlatButton = mui.FlatButton;
+import FlatButton from 'material-ui/FlatButton';
 
 var AppActions = require('../../actions/app-actions');
 

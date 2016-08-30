@@ -10,12 +10,10 @@ var ScheduleForm = require('./scheduleform.js');
 var Report = require('./report.js');
 var ScheduleButton = require('./schedulebutton.js');
 
-var mui = require('material-ui');
-var Tabs = mui.Tabs;
-var Tab = mui.Tab;
-var Dialog = mui.Dialog;
-var FlatButton = mui.FlatButton;
-var RaisedButton = mui.RaisedButton;
+import { Tabs, Tab }  from 'material-ui/Tabs';
+import Dialog from 'material-ui/Dialog';
+import FlatButton from 'material-ui/FlatButton';
+import RaisedButton from 'material-ui/RaisedButton';
 
 var styles = {
   tabs: {
@@ -44,7 +42,7 @@ function getState() {
     scheduleForm: true,
     contentClass: "largeDialog", 
     invalid: true,
-    dialog: false
+    dialog: false,
   }
 }
 
@@ -52,8 +50,10 @@ var Deployments = React.createClass({
   getInitialState: function() {
     return getState()
   },
-  componentDidMount: function() {
+  componentWillMount: function() {
     AppStore.changeListener(this._onChange);
+  },
+  componentDidMount: function() {
     AppActions.getDeploymentsInProgress(function() {
       setTimeout(function() {
         this.setState({doneLoading:true});
@@ -73,7 +73,14 @@ var Deployments = React.createClass({
     };
     AppActions.getImages(imagesCallback);
 
-    AppActions.getDevices();
+    AppActions.getDevices(function(devices) {
+      var pending = AppStore.getUnauthorized();
+      // temporary way to find if accepted devices exist for form dropdown
+      if ((devices.length-pending.length) > 0) {
+        this.setState({hasDevices:true});
+      }
+      if (pending.length) {this.setState({hasPending: true})}
+    }.bind(this));
   
     if (this.props.params) {
       this.setState({tabIndex: this._checkTabValue(this.props.params.tab)});
@@ -239,7 +246,7 @@ var Deployments = React.createClass({
 
     if (this.state.scheduleForm) {
       dialogContent = (    
-        <ScheduleForm deploymentSchedule={this._deploymentParams} id={this.state.id} images={this.state.images} image={this.state.image} imageVal={this.state.image} groups={this.state.groups} groupVal={this.state.group} start={this.state.start_time} end={this.state.end_time} />
+        <ScheduleForm hasPending={this.state.hasPending} hasDevices={this.state.hasDevices} deploymentSchedule={this._deploymentParams} id={this.state.id} images={this.state.images} image={this.state.image} imageVal={this.state.image} groups={this.state.groups} groupVal={this.state.group} start={this.state.start_time} end={this.state.end_time} />
       )
     } else {
       dialogContent = (
@@ -257,7 +264,7 @@ var Deployments = React.createClass({
           <Tab key={0}
           style={styles.tabs}
           label={"In progress"}
-          value="progress">
+          value="progress"> 
             <Progress loading={!this.state.doneLoading} progress={this.state.progress} showReport={this._showReport} createClick={this.dialogOpen.bind(null, "schedule")}/>
           </Tab>
 
@@ -272,6 +279,8 @@ var Deployments = React.createClass({
         <div className="top-right-button">
           <ScheduleButton secondary={true} openDialog={this.dialogOpen} />
         </div>
+
+        {this.state.hasDevices}
 
         <Dialog
           ref="dialog"

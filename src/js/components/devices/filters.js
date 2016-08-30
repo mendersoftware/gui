@@ -1,15 +1,13 @@
 import React from 'react';
 
 // material ui
-var mui = require('material-ui');
-var SelectField = mui.SelectField;
-var MenuItem = mui.MenuItem;
-var TextField = mui.TextField;
-var FlatButton = mui.FlatButton;
-var LeftNav = mui.LeftNav;
-var FontIcon = mui.FontIcon;
-var IconButton = mui.IconButton;
-
+import SelectField from 'material-ui/SelectField';
+import MenuItem from 'material-ui/MenuItem';
+import TextField from 'material-ui/TextField';
+import FlatButton from 'material-ui/FlatButton';
+import Drawer from 'material-ui/Drawer';
+import FontIcon from 'material-ui/FontIcon';
+import IconButton from 'material-ui/IconButton';
 
 var Filters = React.createClass({
   getInitialState: function() {
@@ -59,13 +57,13 @@ var Filters = React.createClass({
         float: 'left',
         paddingLeft: '12px',
         lineHeight: '36px',
-        marginRight: "-6",
+        marginRight: "-6px",
         color:"#679BA5"
       },
       removeButton: {
         position: "absolute",
-        right: "-22",
-        top: "-22",
+        right: "-22px",
+        top: "-22px",
         color: "#679BA5"
       }
     }
@@ -98,7 +96,7 @@ var Filters = React.createClass({
             {attributes} 
           </SelectField>
           <TextField
-            style={{marginTop:"-10"}}
+            style={{marginTop:"-10px"}}
             value={item.value}
             hintText="Value"
             fullWidth={true}
@@ -110,7 +108,7 @@ var Filters = React.createClass({
     }, this);
     var filterNav = (
       <div className="slider" style={{height:"100%"}}>
-        <IconButton className="closeSlider" iconStyle={{fontSize:"16px"}} onClick={this._toggleNav} style={{borderRadius:"30px", width:"40px", height:"40", position:"absolute", left:"-18px", backgroundColor:"rgba(255,255,255,1)"}}>
+        <IconButton className="closeSlider" iconStyle={{fontSize:"16px"}} onClick={this._toggleNav} style={{borderRadius:"30px", width:"40px", height:"40px", position:"absolute", left:"-18px", backgroundColor:"rgba(255,255,255,1)"}}>
           <FontIcon className="material-icons">close</FontIcon>
         </IconButton>
         <p className="align-right margin-bottom-small"><a onClick={this._clearFilters}>Clear all filters</a></p>
@@ -124,17 +122,17 @@ var Filters = React.createClass({
     );
     return (
       <div>
-        <LeftNav 
+        <Drawer 
           ref="filterNav"
           open={this.state.showFilters}
           onRequestChange={this._toggleNav}
           docked={false}
           openRight={true}
-          overlayStyle={{top:"105"}}
-          containerStyle={this.state.showFilters ? {overflow:"visible", top:"105"} : {overflow:"hidden", top:"105"}}
+          overlayStyle={{top:"105px"}}
+          containerStyle={this.state.showFilters ? {overflow:"visible", top:"105px"} : {overflow:"hidden", top:"105px"}}
         >
           {filterNav}
-        </LeftNav>
+        </Drawer>
 
         <div style={{width:"100%", position:"relative"}}>
           <FlatButton style={{position:"absolute",right:"0"}} secondary={true} onClick={this._toggleNav} label={filterCount>0 ? "Filters ("+filterCount+")" : "Filters"}>

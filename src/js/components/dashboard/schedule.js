@@ -1,5 +1,5 @@
 import React from 'react';
-var Time = require('react-time');
+import Time from 'react-time';
 import { Router, Route, Link } from 'react-router';
 
 // material ui

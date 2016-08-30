@@ -120,18 +120,17 @@ function createTapEventPlugin(shouldRejectClick) {
 
     /**
      * @param {string} topLevelType Record from `EventConstants`.
-     * @param {DOMEventTarget} topLevelTarget The listening component root node.
-     * @param {string} topLevelTargetID ID of `topLevelTarget`.
+     * @param {DOMEventTarget} targetInst The listening component root node.
      * @param {object} nativeEvent Native browser event.
      * @return {*} An accumulation of synthetic events.
      * @see {EventPluginHub.extractEvents}
      */
     extractEvents: function(
-        topLevelType,
-        topLevelTarget,
-        topLevelTargetID,
-        nativeEvent,
-        nativeEventTarget) {
+      topLevelType,
+      targetInst,
+      nativeEvent,
+      nativeEventTarget
+    ) {
 
       if (isTouch(topLevelType)) {
         lastTouchEvent = now();
@@ -149,7 +148,7 @@ function createTapEventPlugin(shouldRejectClick) {
       if (isEndish(topLevelType) && distance < tapMoveThreshold) {
         event = SyntheticUIEvent.getPooled(
           eventTypes.touchTap,
-          topLevelTargetID,
+          targetInst,
           nativeEvent,
           nativeEventTarget
         );
