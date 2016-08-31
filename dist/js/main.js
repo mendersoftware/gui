@@ -84245,7 +84245,7 @@ var ScheduleForm = _react2.default.createClass({
         {
           ref: 'devicesNav',
           docked: false,
-          openRight: true,
+          openSecondary: true,
           style: this.state.showDevices ? { overflow: "visible" } : { overflow: "hidden" },
           open: this.state.showDevices,
           overlayStyle: { backgroundColor: "rgba(0, 0, 0, 0.3)" },
@@ -85356,7 +85356,7 @@ var Filters = _react2.default.createClass({
           open: this.state.showFilters,
           onRequestChange: this._toggleNav,
           docked: false,
-          openRight: true,
+          openSecondary: true,
           overlayStyle: { top: "105px" },
           containerStyle: this.state.showFilters ? { overflow: "visible", top: "105px" } : { overflow: "hidden", top: "105px" }
         },

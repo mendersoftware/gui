@@ -127,7 +127,7 @@ var Filters = React.createClass({
           open={this.state.showFilters}
           onRequestChange={this._toggleNav}
           docked={false}
-          openRight={true}
+          openSecondary={true}
           overlayStyle={{top:"105px"}}
           containerStyle={this.state.showFilters ? {overflow:"visible", top:"105px"} : {overflow:"hidden", top:"105px"}}
         >

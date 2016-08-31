@@ -233,7 +233,7 @@ var ScheduleForm = React.createClass({
         <Drawer 
           ref="devicesNav"
           docked={false}
-          openRight={true}
+          openSecondary={true}
           style={this.state.showDevices ? {overflow:"visible"} : {overflow:"hidden"}}
           open={this.state.showDevices}
           overlayStyle={{backgroundColor:"rgba(0, 0, 0, 0.3)"}}
