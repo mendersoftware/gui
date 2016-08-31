@@ -81917,7 +81917,7 @@ var Deployments = _react2.default.createClass({
   render: function render() {
     var scheduleActions = [_react2.default.createElement(
       'div',
-      { style: { marginRight: "10", display: "inline-block" } },
+      { style: { marginRight: "10px", display: "inline-block" } },
       _react2.default.createElement(_FlatButton2.default, {
         label: 'Cancel',
         onClick: this.dialogDismiss.bind(null, 'dialog') })
@@ -81975,9 +81975,9 @@ var Deployments = _react2.default.createClass({
           ref: 'dialog',
           title: this.state.dialogTitle,
           actions: this.state.scheduleForm ? scheduleActions : reportActions,
-          autoDetectWindowHeight: true, autoScrollBodyContent: true,
+          autoDetectWindowHeight: true,
           contentClassName: this.state.contentClass,
-          bodyStyle: { paddingTop: "0" },
+          bodyStyle: { paddingTop: "0", fontSize: "13px" },
           open: this.state.dialog,
           contentStyle: { overflow: "hidden", boxShadow: "0 14px 45px rgba(0, 0, 0, 0.25), 0 10px 18px rgba(0, 0, 0, 0.22)" },
           actionsContainerStyle: { marginBottom: "0" }
@@ -84211,14 +84211,14 @@ var ScheduleForm = _react2.default.createClass({
       { className: 'slider' },
       _react2.default.createElement(
         _IconButton2.default,
-        { className: 'closeSlider', iconStyle: { fontSize: "16px" }, onClick: this._showDevices, style: { borderRadius: "30px", width: "40px", height: "40", position: "absolute", left: "-18px", backgroundColor: "rgba(255,255,255,1)" } },
+        { className: 'closeSlider', iconStyle: { fontSize: "16px" }, onClick: this._showDevices, style: { borderRadius: "30px", width: "40px", height: "40px", position: "absolute", left: "-18px", backgroundColor: "rgba(255,255,255,1)" } },
         _react2.default.createElement(
           _FontIcon2.default,
           { className: 'material-icons' },
           'close'
         )
       ),
-      _react2.default.createElement(_reactSearchInput2.default, { style: { marginBottom: "8" }, className: 'search', ref: 'search', onChange: this.searchUpdated, placeholder: 'Search devices' }),
+      _react2.default.createElement(_reactSearchInput2.default, { style: { marginBottom: "8px" }, className: 'search', ref: 'search', onChange: this.searchUpdated, placeholder: 'Search devices' }),
       devices,
       _react2.default.createElement(
         'p',
@@ -84286,7 +84286,7 @@ var ScheduleForm = _react2.default.createClass({
             { className: imageItems.length ? "hidden" : "info", style: { marginTop: "0" } },
             _react2.default.createElement(
               _FontIcon2.default,
-              { className: 'material-icons', style: { marginRight: "4", fontSize: "18", top: "4", color: "rgb(171, 16, 0)" } },
+              { className: 'material-icons', style: { marginRight: "4px", fontSize: "18px", top: "4px", color: "rgb(171, 16, 0)" } },
               'error_outline'
             ),
             'There are no images available. ',
@@ -84311,7 +84311,7 @@ var ScheduleForm = _react2.default.createClass({
                 ref: 'group',
                 onChange: this._handleGroupValueChange,
                 floatingLabelText: 'Select group',
-                style: { marginBottom: 10 },
+                style: { marginBottom: "10px" },
                 disabled: !this.props.hasDevices
               },
               groupItems
@@ -84321,7 +84321,7 @@ var ScheduleForm = _react2.default.createClass({
               { className: this.props.hasDevices ? "hidden" : "info", style: { marginTop: "0" } },
               _react2.default.createElement(
                 _FontIcon2.default,
-                { className: 'material-icons', style: { marginRight: "4", fontSize: "18", top: "4", color: "rgb(171, 16, 0)" } },
+                { className: 'material-icons', style: { marginRight: "4px", fontSize: "18px", top: "4px", color: "rgb(171, 16, 0)" } },
                 'error_outline'
               ),
               'There are no connected devices. ',
@@ -84365,7 +84365,7 @@ var ScheduleForm = _react2.default.createClass({
           { className: this.props.hasDevices && imageItems.length ? 'info' : "hidden" },
           _react2.default.createElement(
             _FontIcon2.default,
-            { className: 'material-icons', style: { marginRight: "4", fontSize: "18", top: "4" } },
+            { className: 'material-icons', style: { marginRight: "4px", fontSize: "18px", top: "4px" } },
             'info_outline'
           ),
           'Any devices that are already on the target software version will be skipped.'

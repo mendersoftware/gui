@@ -226,7 +226,7 @@ var Deployments = React.createClass({
   },
   render: function() {
     var scheduleActions =  [
-      <div style={{marginRight:"10", display:"inline-block"}}>
+      <div style={{marginRight:"10px", display:"inline-block"}}>
         <FlatButton
           label="Cancel"
           onClick={this.dialogDismiss.bind(null, 'dialog')} />
@@ -286,9 +286,9 @@ var Deployments = React.createClass({
           ref="dialog"
           title={this.state.dialogTitle}
           actions={this.state.scheduleForm ? scheduleActions : reportActions}
-          autoDetectWindowHeight={true} autoScrollBodyContent={true}
+          autoDetectWindowHeight={true}
           contentClassName={this.state.contentClass}
-          bodyStyle={{paddingTop:"0"}}
+          bodyStyle={{paddingTop:"0", fontSize:"13px"}}
           open={this.state.dialog}
           contentStyle={{overflow:"hidden", boxShadow:"0 14px 45px rgba(0, 0, 0, 0.25), 0 10px 18px rgba(0, 0, 0, 0.22)"}}
           actionsContainerStyle={{marginBottom:"0"}}
