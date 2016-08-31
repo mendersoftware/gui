@@ -1,6 +1,7 @@
 import React from 'react';
 import { Router, Link } from 'react-router';
 import Time from 'react-time';
+import Collapse from 'react-collapse';
 
 var AppStore = require('../../stores/app-store');
 var AppActions = require('../../actions/app-actions');
