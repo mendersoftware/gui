@@ -84355,7 +84355,7 @@ var ScheduleForm = _react2.default.createClass({
             ' devices will be updated ',
             _react2.default.createElement(
               'span',
-              { onClick: this._showDevices, params: { groupId: this.state.groupVal.payload, filters: filters }, className: this.state.disabled ? "hidden" : "margin-left link" },
+              { onClick: this._showDevices, className: this.state.disabled ? "hidden" : "margin-left link" },
               'View devices'
             )
           )

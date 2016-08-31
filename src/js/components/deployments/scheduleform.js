@@ -299,7 +299,7 @@ var ScheduleForm = React.createClass({
                 errorStyle={{color: "rgb(171, 16, 0)"}} />  
             </div>
 
-            <div className={this.state.devices ? null : 'hidden'}>{this.state.devices ? this.state.devices.length : "0"} devices will be updated <span onClick={this._showDevices} params={{groupId: this.state.groupVal.payload, filters:filters }} className={this.state.disabled ? "hidden" : "margin-left link"}>View devices</span></div>
+            <div className={this.state.devices ? null : 'hidden'}>{this.state.devices ? this.state.devices.length : "0"} devices will be updated <span onClick={this._showDevices} className={this.state.disabled ? "hidden" : "margin-left link"}>View devices</span></div>
           </div>
             
           <p className={this.props.hasDevices && imageItems.length ? 'info': "hidden"}><FontIcon className="material-icons" style={{marginRight:"4px", fontSize:"18px", top: "4px"}}>info_outline</FontIcon>Any devices that are already on the target software version will be skipped.</p>
