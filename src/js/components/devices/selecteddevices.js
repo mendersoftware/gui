@@ -143,6 +143,13 @@ var SelectedDevices = React.createClass({
       )
 
       var deviceIdentity = [];
+      deviceIdentity.push(
+        <div key="id_checksum">
+          <ListItem style={styles.listStyle} disabled={true} primaryText="ID checksum" secondaryText={ this.props.selected[0].id} secondaryTextLines={2} className="break-word" />
+          {i === length-1 ? null : <Divider />}
+        </div>
+      );
+ 
       var i = 0;
       var length = Object.keys(this.props.selected[0].attributes).length;
       for (var k in this.props.selected[0].attributes) {
@@ -231,7 +238,7 @@ var SelectedDevices = React.createClass({
     })
 
     var scheduleActions =  [
-      <div style={{marginRight:"10", display:"inline-block"}}>
+      <div style={{marginRight:"10px", display:"inline-block"}}>
         <FlatButton
           label="Cancel"
           onClick={this.dialogToggle.bind(null, 'schedule')} />

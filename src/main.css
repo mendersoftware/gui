@@ -55,6 +55,10 @@ span.link:hover {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+.break-word {
+  white-space: normal;
+  word-wrap: break-word;
+}
 .clear {
   clear: both;
 }

@@ -87807,6 +87807,13 @@ var SelectedDevices = _react2.default.createClass({
       );
 
       var deviceIdentity = [];
+      deviceIdentity.push(_react2.default.createElement(
+        'div',
+        { key: 'id_checksum' },
+        _react2.default.createElement(_List.ListItem, { style: styles.listStyle, disabled: true, primaryText: 'ID checksum', secondaryText: this.props.selected[0].id, secondaryTextLines: 2, className: 'break-word' }),
+        i === length - 1 ? null : _react2.default.createElement(_Divider2.default, null)
+      ));
+
       var i = 0;
       var length = Object.keys(this.props.selected[0].attributes).length;
       for (var k in this.props.selected[0].attributes) {
@@ -87930,7 +87937,7 @@ var SelectedDevices = _react2.default.createClass({
 
     var scheduleActions = [_react2.default.createElement(
       'div',
-      { style: { marginRight: "10", display: "inline-block" } },
+      { style: { marginRight: "10px", display: "inline-block" } },
       _react2.default.createElement(_FlatButton2.default, {
         label: 'Cancel',
         onClick: this.dialogToggle.bind(null, 'schedule') })
