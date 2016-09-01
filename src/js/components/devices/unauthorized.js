@@ -1,6 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Time from 'react-time';
+import { Motion, spring } from 'react-motion';
+import Collapse from 'react-collapse';
+import ReactHeight from 'react-height';
 var AppActions = require('../../actions/app-actions');
 var SelectedDevices = require('./selecteddevices');
 
@@ -16,7 +19,17 @@ var Authorized =  React.createClass({
     return {
        sortCol: "name",
        sortDown: true,
+       minHeight: 220,
+       divHeight: 148
     }
+  },
+  componentDidMount: function() {
+    var h = this.props.unauthorized.length * 50;
+    h += 170;
+    this.setState({minHeight: h});
+  },
+  _getMinHeight:function() {
+
   },
   _sortColumn: function(col) {
     var direction;
@@ -75,6 +88,9 @@ var Authorized =  React.createClass({
       this.setState({expanded: newIndex});
     }
   },
+  _adjustCellHeight: function(height) {
+    this.setState({divHeight: height+60});
+  },
   render: function() {
     var styles = {
       sortIcon: {
@@ -90,8 +106,8 @@ var Authorized =  React.createClass({
         expanded = <SelectedDevices accept={this._authorizeDevices} block={this._blockDevices} unauthorized={true} selected={[device]}  />
       }
       return (
-        <TableRow style={{"backgroundColor": "#e9f4f3"}} className={expanded ? "expand devices" : null} hoverable={true} key={index}>
-          <TableRowColumn>{device.id}</TableRowColumn>
+        <TableRow style={{"backgroundColor": "#e9f4f3"}} className={expanded ? "expand" : null} hoverable={true} key={index}>
+          <TableRowColumn style={expanded ? {height: this.state.divHeight} : null}>{device.id}</TableRowColumn>
           <TableRowColumn>{device.device_type}</TableRowColumn>
           <TableRowColumn>{device.status}</TableRowColumn>
           <TableRowColumn><Time value={device.request_time} format="YYYY-MM-DD HH:mm" /></TableRowColumn>
@@ -104,15 +120,17 @@ var Authorized =  React.createClass({
             </IconButton>
           </TableRowColumn>
           <TableRowColumn style={{width:"0", overflow:"visible"}}>
-            <div className={expanded ? "expanded" : null}>
+  
+            <Collapse springConfig={{stiffness: 210, damping: 20}} onHeightReady={this._adjustCellHeight} className="expanded" isOpened={expanded ? true : false}>
               {expanded}
-            </div>
+            </Collapse>
+
           </TableRowColumn>
         </TableRow>
       )
     }, this);
     return (
-      <div className="margin-top margin-bottom onboard authorize">
+      <Collapse springConfig={{stiffness: 190, damping: 20}} style={{minHeight:this.state.minHeight}} isOpened={true} className="margin-top margin-bottom onboard authorize">
         <p>Devices pending authorization</p>
         <Table
           selectable={false}
@@ -138,8 +156,8 @@ var Authorized =  React.createClass({
             {devices}
           </TableBody>
         </Table>
-        <RaisedButton onClick={this._authorizeDevices.bind(null, this.props.unauthorized)} className="float-right margin-top-small clear" primary={true} label="Authorize all" />
-      </div>
+        <RaisedButton onClick={this._authorizeDevices.bind(null, this.props.unauthorized)} className="bottom-right-button" primary={true} label="Authorize all" />
+      </Collapse>
     );
   }
 });

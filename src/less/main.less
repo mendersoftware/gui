@@ -300,6 +300,7 @@ a, span.link {
 
   &.authorize {
     background-color: inherit;
+    padding-bottom: 70px;
   }
 
   p {
@@ -624,15 +625,15 @@ hr.table-divider {
 // table expanding
 
 tr.expand {
-  height: 374px !important;
-  background-color: rgb(224,224,224);
-  .transition(height 0.2s ease-out);
-
-  .device-info h3 {
-    font-family: Lato, sans-serif;
-    color: rgba(0,0,0,0.8);
-    font-size: 1.17em;
-    font-weight: 700;
+  
+  .device-info {
+    margin-bottom: 10px; 
+    h3 {
+      font-family: Lato, sans-serif;
+      color: rgba(0,0,0,0.8);
+      font-size: 1.17em;
+      font-weight: 700;
+    }
   }
 
   td {
@@ -642,19 +643,10 @@ tr.expand {
     div.expanded {
       position: absolute;
       left: 0;
-      margin-top: 46px;
-      padding: 0 30px; 
+      margin-top: 45px;
+      padding: 0 45px; 
       right: 0;
-      padding-right: 45px;
-      height: 325px;
-      background-color: #ffffff;
     }
-
-    div.expanded>div {
-      .animation(fadein 0.5s 1);
-      background-color: #ffffff;
-    }
-
    
   }
 
@@ -668,16 +660,6 @@ tr.expand {
     padding-top: 2px;
   }
 }
-
-tr.expand.devices {
-  height: 340px !important;
-
-  td div.expanded {
-    height: 290px;
-  }
-}
-
-.device-info
 
 
 .fixedButtons {
@@ -695,6 +677,12 @@ tr.expand.devices {
   position: absolute;
   top: 3px;
   right: 0;
+}
+
+.bottom-right-button {
+  position: absolute;
+  bottom: 15px;
+  right: 15px;
 }
 
 

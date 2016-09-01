@@ -1,6 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Time from 'react-time';
+import { Motion, spring } from 'react-motion';
+import Collapse from 'react-collapse';
+import ReactHeight from 'react-height';
 var AppStore = require('../../stores/app-store');
 var AppActions = require('../../actions/app-actions');
 var SelectedDevices = require('./selecteddevices');
@@ -39,6 +42,7 @@ var DeviceList = React.createClass({
       nameEdit: false,
       editValue: null,
       groupName: this.props.selectedGroup.name,
+      divHeight: 148
     };
   },
 
@@ -203,9 +207,6 @@ var DeviceList = React.createClass({
     });
     this.refs.customGroup.focus();
   },
-  _onClick: function(event) {
-    event.stopPropagation();
-  },
 
   _sortColumn: function(col) {
     var direction;
@@ -257,6 +258,10 @@ var DeviceList = React.createClass({
       nameEdit: !this.state.nameEdit,
       errorText1: null
     });
+  },
+
+  _adjustCellHeight: function(height) {
+    this.setState({divHeight: height+60});
   },
 
   render: function() {
@@ -325,8 +330,8 @@ var DeviceList = React.createClass({
         expanded = <SelectedDevices images={this.props.images} devices={this.props.devices} selected={[device]} selectedGroup={this.props.selectedGroup} groups={this.props.groups} />
       }
       return (
-        <TableRow selected={this._ifSelected(device.id)} hoverable={!expanded} className={expanded ? "expand devices" : null}  key={index}>
-          <TableRowColumn>{device.id}</TableRowColumn>
+        <TableRow selected={this._ifSelected(device.id)} hoverable={!expanded} className={expanded ? "expand" : null}  key={index}>
+          <TableRowColumn style={expanded ? {height: this.state.divHeight} : null}>{device.id}</TableRowColumn>
           <TableRowColumn>{device.device_type}</TableRowColumn>
           <TableRowColumn>{device.artifact_name}</TableRowColumn>
           <TableRowColumn>{<Time value={device.last_heartbeat} format="YYYY-MM-DD HH:mm" />}</TableRowColumn>
@@ -335,9 +340,11 @@ var DeviceList = React.createClass({
             <IconButton className="float-right" onClick={this._expandRow.bind(this, index)}><FontIcon className="material-icons">{ expanded ? "arrow_drop_up" : "arrow_drop_down"}</FontIcon></IconButton>
           </TableRowColumn>
           <TableRowColumn style={{width:"0", overflow:"visible"}}>
-            <div onClick={this._onClick} className={expanded ? "expanded" : null}>
+           
+            <Collapse springConfig={{stiffness: 210, damping: 20}} onHeightReady={this._adjustCellHeight} className="expanded" isOpened={expanded ? true : false}>
               {expanded}
-            </div>
+            </Collapse>
+         
           </TableRowColumn>
         </TableRow>
       )
@@ -402,9 +409,8 @@ var DeviceList = React.createClass({
           <div className="margin-bottom">
             <Table
               onCellClick={this._expandRow}
-              onRowSelection={this._onRowSelection}
               multiSelectable={true}
-              className={devices.length ? null : 'hidden'} >
+              className={devices.length && !this.props.loading ? null : 'hidden'} >
               <TableHeader
               enableSelectAll={true}>
                 <TableRow>

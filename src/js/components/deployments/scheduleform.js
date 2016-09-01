@@ -217,10 +217,10 @@ var ScheduleForm = React.createClass({
     }
     var deviceList = (
       <div className="slider">
-        <IconButton className="closeSlider" iconStyle={{fontSize:"16px"}} onClick={this._showDevices} style={{borderRadius:"30px", width:"40px", height:"40", position:"absolute", left:"-18px", backgroundColor:"rgba(255,255,255,1)"}}>
+        <IconButton className="closeSlider" iconStyle={{fontSize:"16px"}} onClick={this._showDevices} style={{borderRadius:"30px", width:"40px", height:"40px", position:"absolute", left:"-18px", backgroundColor:"rgba(255,255,255,1)"}}>
           <FontIcon className="material-icons">close</FontIcon>
         </IconButton>
-        <SearchInput style={{marginBottom:"8"}} className="search" ref='search' onChange={this.searchUpdated} placeholder="Search devices" />
+        <SearchInput style={{marginBottom:"8px"}} className="search" ref='search' onChange={this.searchUpdated} placeholder="Search devices" />
         {devices}
         <p className={tmpDevices.length ? "hidden" : "italic" }>No devices match this search term</p>
         <Divider />
@@ -233,7 +233,7 @@ var ScheduleForm = React.createClass({
         <Drawer 
           ref="devicesNav"
           docked={false}
-          openRight={true}
+          openSecondary={true}
           style={this.state.showDevices ? {overflow:"visible"} : {overflow:"hidden"}}
           open={this.state.showDevices}
           overlayStyle={{backgroundColor:"rgba(0, 0, 0, 0.3)"}}
@@ -267,7 +267,7 @@ var ScheduleForm = React.createClass({
               className={this.state.image ? "margin-left" : "hidden"} />
 
             <p className={imageItems.length ? "hidden" : "info"} style={{marginTop:"0"}}>
-              <FontIcon className="material-icons" style={{marginRight:"4", fontSize:"18", top: "4", color:"rgb(171, 16, 0)"}}>error_outline</FontIcon>There are no images available. <Link to={`/software`}>Upload one to the repository</Link> to get started.
+              <FontIcon className="material-icons" style={{marginRight:"4px", fontSize:"18px", top: "4px", color:"rgb(171, 16, 0)"}}>error_outline</FontIcon>There are no images available. <Link to={`/software`}>Upload one to the repository</Link> to get started.
             </p>
           </div>
 
@@ -278,14 +278,14 @@ var ScheduleForm = React.createClass({
                 ref="group"
                 onChange={this._handleGroupValueChange}
                 floatingLabelText="Select group"
-                style={{marginBottom:10}}
+                style={{marginBottom:"10px"}}
                 disabled={!this.props.hasDevices} 
               >
                 {groupItems}
               </SelectField>
 
               <p className={this.props.hasDevices ? "hidden" : "info"} style={{marginTop:"0"}}>
-                <FontIcon className="material-icons" style={{marginRight:"4", fontSize:"18", top: "4", color:"rgb(171, 16, 0)"}}>error_outline</FontIcon>There are no connected devices. <span className={this.props.hasPending ? null : "hidden"}><Link to={`/devices`}>Accept pending devices</Link> to get started.</span>
+                <FontIcon className="material-icons" style={{marginRight:"4px", fontSize:"18px", top: "4px", color:"rgb(171, 16, 0)"}}>error_outline</FontIcon>There are no connected devices. <span className={this.props.hasPending ? null : "hidden"}><Link to={`/devices`}>Accept pending devices</Link> to get started.</span>
               </p>
             </div>
 
@@ -299,10 +299,10 @@ var ScheduleForm = React.createClass({
                 errorStyle={{color: "rgb(171, 16, 0)"}} />  
             </div>
 
-            <div className={this.state.devices ? null : 'hidden'}>{this.state.devices ? this.state.devices.length : "0"} devices will be updated <span onClick={this._showDevices} params={{groupId: this.state.groupVal.payload, filters:filters }} className={this.state.disabled ? "hidden" : "margin-left link"}>View devices</span></div>
+            <div className={this.state.devices ? null : 'hidden'}>{this.state.devices ? this.state.devices.length : "0"} devices will be updated <span onClick={this._showDevices} className={this.state.disabled ? "hidden" : "margin-left link"}>View devices</span></div>
           </div>
             
-          <p className={this.props.hasDevices && imageItems.length ? 'info': "hidden"}><FontIcon className="material-icons" style={{marginRight:"4", fontSize:"18", top: "4"}}>info_outline</FontIcon>Any devices that are already on the target software version will be skipped.</p>
+          <p className={this.props.hasDevices && imageItems.length ? 'info': "hidden"}><FontIcon className="material-icons" style={{marginRight:"4px", fontSize:"18px", top: "4px"}}>info_outline</FontIcon>Any devices that are already on the target software version will be skipped.</p>
 
         </form>
       </div>
