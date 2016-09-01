@@ -143,91 +143,85 @@ var SelectedDevices = React.createClass({
       )
 
       var deviceIdentity = [];
+      var i = 0;
+      var length = Object.keys(this.props.selected[0].attributes).length;
       for (var k in this.props.selected[0].attributes) {
         deviceIdentity.push(
           <div key={k}>
             <ListItem style={styles.listStyle} disabled={true} primaryText={k} secondaryText={ this.props.selected[0].attributes[k]} />
+            {i === length-1 ? null : <Divider />}
+          </div>
+        );
+        i++;
+      };
+
+      var deviceInventory = [];
+      var i = 0;
+      var length = Object.keys(deviceInventory).length;
+      for (var k in deviceInventory) {
+        deviceInventory.push(
+          <div key={k}>
+            <ListItem style={styles.listStyle} disabled={true} primaryText={k} secondaryText={ deviceInventory[k]} />
             <Divider />
           </div>
         );
+        i++;
       };
+      deviceInventory.push(
+        <div key="updateButton">
+          <ListItem
+            style={styles.listStyle}
+            primaryText="Create a deployment for this device"
+            onClick={this._clickListItem}
+            leftIcon={<FontIcon style={{marginTop:6, marginBottom:6}} className="material-icons update">replay</FontIcon>} />
+        </div>
+      );
 
-      var deviceInfo;
-
-      //if (this.props.unauthorized) {
-        deviceInfo = (
-          <div>
-            <div className="report-list">
-              <List>
-                {deviceIdentity}
-              </List>
-            </div>
-
-            <div className={this.props.unauthorized ? "report-list" : "hidden"}>
-              <List>
-                <ListItem
-                  style={styles.listStyle}
-                  onClick={this._handleAccept}
-                  primaryText="Authorize device"
-                  leftIcon={<FontIcon className="material-icons green auth" style={{marginTop:6, marginBottom:6}}>check_circle</FontIcon>} />
-                <Divider />
-                <ListItem
-                  style={styles.listStyle}
-                  primaryText="Block device"
-                  onClick={this._handleBlock}
-                  leftIcon={<FontIcon className="material-icons red auth" style={{marginTop:6, marginBottom:6}}>cancel</FontIcon>} />
-                <Divider />
-              </List>
-            </div>
+      var deviceInventory2 = [];
+      if (deviceInventory.length > deviceIdentity.length) {
+        deviceInventory2 = deviceInventory.splice((deviceInventory.length/2)+(deviceInventory.length%2),deviceInventory.length-1);
+      }
+     
+      var deviceInfo = (
+        <div key="deviceinfo">
+          <div id="device-identity" className="report-list">
+            <h4 className="margin-bottom-none">Device identity</h4>
+            <List>
+              {deviceIdentity}
+            </List>
           </div>
-        )
 
-     /* } else {
-
-        deviceInfo = (
-          <div>
-            <div className="report-list">
-              <List>
-                <ListItem style={styles.listStyle} disabled={true} primaryText="Name" secondaryText={this.props.selected[0].name} />
-                <Divider />
-                <ListItem style={styles.listStyle} disabled={true} primaryText="Device type" secondaryText={this.props.selected[0].device_type} />
-                <Divider />
-                <ListItem style={styles.listStyle} disabled={true} primaryText="Device serial no." secondaryText={this.props.selected[0].device_serial} />
-                <Divider />
-                <ListItem style={styles.listStyle} disabled={true} primaryText="Architecture" secondaryText={this.props.selected[0].arch} />
-                <Divider />
-              </List>
-            </div>
-            <div className="report-list">
-              <List>
-                <ListItem style={styles.listStyle} disabled={true} primaryText="Status" secondaryText={this.props.selected[0].status} />
-                <Divider />
-                <ListItem style={styles.listStyle}  disabled={true} primaryText="Last heartbeat" secondaryText={<Time value={this.props.selected[0].last_heartbeat} format="YYYY-MM-DD HH:mm" />} />
-                <Divider />
-                <ListItem style={styles.listStyle} disabled={true} primaryText="IP address" secondaryText={this.props.selected[0].ip_address} />
-                <Divider />
-                <ListItem style={styles.listStyle} disabled={true} primaryText="MAC address" secondaryText={this.props.selected[0].mac_address} />
-                <Divider />
-              </List>
-            </div>
-            <div className="report-list">
-              <List>
-                <ListItem style={styles.listStyle} disabled={true} primaryText="Current software" secondaryText={softwareLink} />
-                <Divider />
-                <ListItem style={styles.listStyle} disabled={true} primaryText="Groups" secondaryText={this.props.selected[0].group} />
-                <Divider />
-                <ListItem
-                  style={styles.listStyle}
-                  primaryText="Create a deployment"
-                  secondaryText="Deploy an update to this device only"
-                  onClick={this._clickListItem}
-                  leftIcon={<FontIcon style={{marginTop:6, marginBottom:6}} className="material-icons">update</FontIcon>} />
-                <Divider />
-              </List>
-            </div>
+          <div className={this.props.unauthorized ? "hidden" : "report-list"} >
+            <h4 className="margin-bottom-none">Device inventory</h4>
+            <List>
+              {deviceInventory}
+            </List>
           </div>
-        )
-      } */
+
+          <div className={this.props.unauthorized ? "hidden" : "report-list"} >
+            <List style={{marginTop:"34px"}}>
+              {deviceInventory2}
+            </List>
+          </div>
+
+          <div className={this.props.unauthorized ? "report-list" : "hidden"}>
+            <List style={{marginTop:"-8px"}}>
+              <ListItem
+                style={styles.listStyle}
+                onClick={this._handleAccept}
+                primaryText="Authorize device"
+                leftIcon={<FontIcon className="material-icons green auth" style={{marginTop:6, marginBottom:6}}>check_circle</FontIcon>} />
+              <Divider />
+              <ListItem
+                style={styles.listStyle}
+                primaryText="Block device"
+                onClick={this._handleBlock}
+                leftIcon={<FontIcon className="material-icons red auth" style={{marginTop:6, marginBottom:6}}>cancel</FontIcon>} />
+            </List>
+          </div>
+
+        </div>
+      )
     }
     
     var devices = this.props.selected.map(function(device) {
@@ -235,7 +229,6 @@ var SelectedDevices = React.createClass({
         <p>{device.name}</p>
       )
     })
-
 
     var scheduleActions =  [
       <div style={{marginRight:"10", display:"inline-block"}}>
@@ -251,9 +244,7 @@ var SelectedDevices = React.createClass({
     ];
 
     return (
-      <div className="device-info">
-     
-        <h4 className="margin-bottom-none">{this.props.unauthorized ? "Device identity" : "Device details"}</h4>
+      <div>
         {deviceInfo}
    
         <Dialog
