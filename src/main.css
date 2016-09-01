@@ -55,6 +55,10 @@ span.link:hover {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+.break-word {
+  white-space: normal;
+  word-wrap: break-word;
+}
 .clear {
   clear: both;
 }
@@ -277,6 +281,12 @@ span.link:hover {
   background: none;
   color: #8F0D0D !important;
 }
+.material-icons.update {
+  -webkit-transform: rotate(-45deg);
+  -moz-transform: rotate(-45deg);
+  -ms-transform: rotate(-45deg);
+  -o-transform: rotate(-45deg);
+}
 .absoluteTextfieldButton {
   position: absolute;
   top: 70px;
@@ -428,9 +438,9 @@ span.length {
 .report-list,
 .list-item {
   display: inline-block;
-  margin-right: 3%;
+  margin-right: 2%;
   width: 30%;
-  vertical-align: bottom;
+  vertical-align: top;
 }
 .report-list div > span > div > div {
   padding-top: 10px !important;
@@ -531,6 +541,9 @@ hr.table-divider {
   background-image: -webkit-linear-gradient(left, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.03), rgba(0, 0, 0, 0));
   background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.03), rgba(0, 0, 0, 0));
 }
+tr.expand {
+  background-color: #f5f5f5;
+}
 tr.expand .device-info {
   margin-bottom: 10px;
 }
@@ -539,6 +552,13 @@ tr.expand .device-info h3 {
   color: rgba(0, 0, 0, 0.8);
   font-size: 1.17em;
   font-weight: 700;
+}
+tr.expand #device-identity {
+  border: 1px solid #d4e9e7;
+  padding: 0 15px;
+  position: relative;
+  left: -10px;
+  border-radius: 5px;
 }
 tr.expand td {
   vertical-align: top;

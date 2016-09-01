@@ -112,9 +112,7 @@ var DeviceList = React.createClass({
   },
   _expandRow: function(rowNumber, columnId, event) {
     event.stopPropagation();
-    if (columnId < 0) {
-      this.setState({expanded: null});
-    } else {
+    if (columnId >-1 && columnId < 6) {
       var newIndex = rowNumber;
       if (rowNumber == this.state.expanded) {
         newIndex = null;
@@ -332,12 +330,12 @@ var DeviceList = React.createClass({
       return (
         <TableRow selected={this._ifSelected(device.id)} hoverable={!expanded} className={expanded ? "expand" : null}  key={index}>
           <TableRowColumn style={expanded ? {height: this.state.divHeight} : null}>{device.id}</TableRowColumn>
-          <TableRowColumn>{device.device_type}</TableRowColumn>
-          <TableRowColumn>{device.artifact_name}</TableRowColumn>
-          <TableRowColumn>{<Time value={device.last_heartbeat} format="YYYY-MM-DD HH:mm" />}</TableRowColumn>
+          <TableRowColumn>{device.device_type || "-"}</TableRowColumn>
+          <TableRowColumn>{device.artifact_name || "-"}</TableRowColumn>
+          <TableRowColumn><Time value={device.request_time} format="YYYY-MM-DD HH:mm" /></TableRowColumn>
           <TableRowColumn>{device.status}</TableRowColumn>
           <TableRowColumn style={{width:"33px", paddingRight:"0", paddingLeft:"12px"}} className="expandButton">
-            <IconButton className="float-right" onClick={this._expandRow.bind(this, index)}><FontIcon className="material-icons">{ expanded ? "arrow_drop_up" : "arrow_drop_down"}</FontIcon></IconButton>
+            <IconButton className="float-right"><FontIcon className="material-icons">{ expanded ? "arrow_drop_up" : "arrow_drop_down"}</FontIcon></IconButton>
           </TableRowColumn>
           <TableRowColumn style={{width:"0", overflow:"visible"}}>
            

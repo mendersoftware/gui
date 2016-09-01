@@ -90,6 +90,12 @@ a, span.link {
   text-overflow: ellipsis;
 }
 
+.break-word {
+  white-space: normal;
+  word-wrap: break-word;
+}
+
+
 
 .clear {
   clear: both;
@@ -355,6 +361,9 @@ a, span.link {
     background: none;
     color: @red !important;
   }
+  &.update {
+    .rotate(-45deg);
+  }
 }
 
 
@@ -500,9 +509,9 @@ span.length {
 
 .report-list, .list-item {
   display: inline-block;
-  margin-right: 3%;
+  margin-right: 2%;
   width: 30%;
-  vertical-align: bottom;
+  vertical-align: top;
 }
 
 .report-list div>span>div>div {
@@ -625,6 +634,7 @@ hr.table-divider {
 // table expanding
 
 tr.expand {
+  background-color: rgb(245,245,245);
   
   .device-info {
     margin-bottom: 10px; 
@@ -634,6 +644,14 @@ tr.expand {
       font-size: 1.17em;
       font-weight: 700;
     }
+  }
+
+  #device-identity {
+    border: 1px solid @lightgrey;
+    padding: 0 15px;
+    position:relative;
+    left: -10px;
+    border-radius: 5px;
   }
 
   td {

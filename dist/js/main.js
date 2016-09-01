@@ -86464,9 +86464,7 @@ var DeviceList = _react2.default.createClass((_React$createClass = {
   },
   _expandRow: function _expandRow(rowNumber, columnId, event) {
     event.stopPropagation();
-    if (columnId < 0) {
-      this.setState({ expanded: null });
-    } else {
+    if (columnId > -1 && columnId < 6) {
       var newIndex = rowNumber;
       if (rowNumber == this.state.expanded) {
         newIndex = null;
@@ -86672,17 +86670,17 @@ var DeviceList = _react2.default.createClass((_React$createClass = {
       _react2.default.createElement(
         _Table.TableRowColumn,
         null,
-        device.device_type
+        device.device_type || "-"
       ),
       _react2.default.createElement(
         _Table.TableRowColumn,
         null,
-        device.artifact_name
+        device.artifact_name || "-"
       ),
       _react2.default.createElement(
         _Table.TableRowColumn,
         null,
-        _react2.default.createElement(_reactTime2.default, { value: device.last_heartbeat, format: 'YYYY-MM-DD HH:mm' })
+        _react2.default.createElement(_reactTime2.default, { value: device.request_time, format: 'YYYY-MM-DD HH:mm' })
       ),
       _react2.default.createElement(
         _Table.TableRowColumn,
@@ -86694,7 +86692,7 @@ var DeviceList = _react2.default.createClass((_React$createClass = {
         { style: { width: "33px", paddingRight: "0", paddingLeft: "12px" }, className: 'expandButton' },
         _react2.default.createElement(
           _IconButton2.default,
-          { className: 'float-right', onClick: this._expandRow.bind(this, index) },
+          { className: 'float-right' },
           _react2.default.createElement(
             _FontIcon2.default,
             { className: 'material-icons' },
@@ -87809,24 +87807,67 @@ var SelectedDevices = _react2.default.createClass({
       );
 
       var deviceIdentity = [];
+      deviceIdentity.push(_react2.default.createElement(
+        'div',
+        { key: 'id_checksum' },
+        _react2.default.createElement(_List.ListItem, { style: styles.listStyle, disabled: true, primaryText: 'ID checksum', secondaryText: this.props.selected[0].id, secondaryTextLines: 2, className: 'break-word' }),
+        i === length - 1 ? null : _react2.default.createElement(_Divider2.default, null)
+      ));
+
+      var i = 0;
+      var length = Object.keys(this.props.selected[0].attributes).length;
       for (var k in this.props.selected[0].attributes) {
         deviceIdentity.push(_react2.default.createElement(
           'div',
           { key: k },
           _react2.default.createElement(_List.ListItem, { style: styles.listStyle, disabled: true, primaryText: k, secondaryText: this.props.selected[0].attributes[k] }),
-          _react2.default.createElement(_Divider2.default, null)
+          i === length - 1 ? null : _react2.default.createElement(_Divider2.default, null)
         ));
+        i++;
       };
 
-      var deviceInfo;
-
-      //if (this.props.unauthorized) {
-      deviceInfo = _react2.default.createElement(
+      var deviceInventory = [];
+      var i = 0;
+      var length = Object.keys(deviceInventory).length;
+      for (var k in deviceInventory) {
+        deviceInventory.push(_react2.default.createElement(
+          'div',
+          { key: k },
+          _react2.default.createElement(_List.ListItem, { style: styles.listStyle, disabled: true, primaryText: k, secondaryText: deviceInventory[k] }),
+          _react2.default.createElement(_Divider2.default, null)
+        ));
+        i++;
+      };
+      deviceInventory.push(_react2.default.createElement(
         'div',
-        null,
+        { key: 'updateButton' },
+        _react2.default.createElement(_List.ListItem, {
+          style: styles.listStyle,
+          primaryText: 'Create a deployment for this device',
+          onClick: this._clickListItem,
+          leftIcon: _react2.default.createElement(
+            _FontIcon2.default,
+            { style: { marginTop: 6, marginBottom: 6 }, className: 'material-icons update' },
+            'replay'
+          ) })
+      ));
+
+      var deviceInventory2 = [];
+      if (deviceInventory.length > deviceIdentity.length) {
+        deviceInventory2 = deviceInventory.splice(deviceInventory.length / 2 + deviceInventory.length % 2, deviceInventory.length - 1);
+      }
+
+      var deviceInfo = _react2.default.createElement(
+        'div',
+        { key: 'deviceinfo' },
         _react2.default.createElement(
           'div',
-          { className: 'report-list' },
+          { id: 'device-identity', className: 'report-list' },
+          _react2.default.createElement(
+            'h4',
+            { className: 'margin-bottom-none' },
+            'Device identity'
+          ),
           _react2.default.createElement(
             _List.List,
             null,
@@ -87835,10 +87876,33 @@ var SelectedDevices = _react2.default.createClass({
         ),
         _react2.default.createElement(
           'div',
-          { className: this.props.unauthorized ? "report-list" : "hidden" },
+          { className: this.props.unauthorized ? "hidden" : "report-list" },
+          _react2.default.createElement(
+            'h4',
+            { className: 'margin-bottom-none' },
+            'Device inventory'
+          ),
           _react2.default.createElement(
             _List.List,
             null,
+            deviceInventory
+          )
+        ),
+        _react2.default.createElement(
+          'div',
+          { className: this.props.unauthorized ? "hidden" : "report-list" },
+          _react2.default.createElement(
+            _List.List,
+            { style: { marginTop: "34px" } },
+            deviceInventory2
+          )
+        ),
+        _react2.default.createElement(
+          'div',
+          { className: this.props.unauthorized ? "report-list" : "hidden" },
+          _react2.default.createElement(
+            _List.List,
+            { style: { marginTop: "-8px" } },
             _react2.default.createElement(_List.ListItem, {
               style: styles.listStyle,
               onClick: this._handleAccept,
@@ -87857,57 +87921,10 @@ var SelectedDevices = _react2.default.createClass({
                 _FontIcon2.default,
                 { className: 'material-icons red auth', style: { marginTop: 6, marginBottom: 6 } },
                 'cancel'
-              ) }),
-            _react2.default.createElement(_Divider2.default, null)
+              ) })
           )
         )
       );
-
-      /* } else {
-          deviceInfo = (
-           <div>
-             <div className="report-list">
-               <List>
-                 <ListItem style={styles.listStyle} disabled={true} primaryText="Name" secondaryText={this.props.selected[0].name} />
-                 <Divider />
-                 <ListItem style={styles.listStyle} disabled={true} primaryText="Device type" secondaryText={this.props.selected[0].device_type} />
-                 <Divider />
-                 <ListItem style={styles.listStyle} disabled={true} primaryText="Device serial no." secondaryText={this.props.selected[0].device_serial} />
-                 <Divider />
-                 <ListItem style={styles.listStyle} disabled={true} primaryText="Architecture" secondaryText={this.props.selected[0].arch} />
-                 <Divider />
-               </List>
-             </div>
-             <div className="report-list">
-               <List>
-                 <ListItem style={styles.listStyle} disabled={true} primaryText="Status" secondaryText={this.props.selected[0].status} />
-                 <Divider />
-                 <ListItem style={styles.listStyle}  disabled={true} primaryText="Last heartbeat" secondaryText={<Time value={this.props.selected[0].last_heartbeat} format="YYYY-MM-DD HH:mm" />} />
-                 <Divider />
-                 <ListItem style={styles.listStyle} disabled={true} primaryText="IP address" secondaryText={this.props.selected[0].ip_address} />
-                 <Divider />
-                 <ListItem style={styles.listStyle} disabled={true} primaryText="MAC address" secondaryText={this.props.selected[0].mac_address} />
-                 <Divider />
-               </List>
-             </div>
-             <div className="report-list">
-               <List>
-                 <ListItem style={styles.listStyle} disabled={true} primaryText="Current software" secondaryText={softwareLink} />
-                 <Divider />
-                 <ListItem style={styles.listStyle} disabled={true} primaryText="Groups" secondaryText={this.props.selected[0].group} />
-                 <Divider />
-                 <ListItem
-                   style={styles.listStyle}
-                   primaryText="Create a deployment"
-                   secondaryText="Deploy an update to this device only"
-                   onClick={this._clickListItem}
-                   leftIcon={<FontIcon style={{marginTop:6, marginBottom:6}} className="material-icons">update</FontIcon>} />
-                 <Divider />
-               </List>
-             </div>
-           </div>
-         )
-       } */
     }
 
     var devices = this.props.selected.map(function (device) {
@@ -87920,7 +87937,7 @@ var SelectedDevices = _react2.default.createClass({
 
     var scheduleActions = [_react2.default.createElement(
       'div',
-      { style: { marginRight: "10", display: "inline-block" } },
+      { style: { marginRight: "10px", display: "inline-block" } },
       _react2.default.createElement(_FlatButton2.default, {
         label: 'Cancel',
         onClick: this.dialogToggle.bind(null, 'schedule') })
@@ -87932,12 +87949,7 @@ var SelectedDevices = _react2.default.createClass({
 
     return _react2.default.createElement(
       'div',
-      { className: 'device-info' },
-      _react2.default.createElement(
-        'h4',
-        { className: 'margin-bottom-none' },
-        this.props.unauthorized ? "Device identity" : "Device details"
-      ),
+      null,
       deviceInfo,
       _react2.default.createElement(
         _Dialog2.default,
@@ -88070,9 +88082,9 @@ var Authorized = _react2.default.createClass({
   _expandRow: function _expandRow(rowNumber, columnId, event) {
     event.stopPropagation();
     // If action buttons column, no expand
-    if (columnId === 5) {
+    if (columnId === 4) {
       this.setState({ expanded: null });
-    } else {
+    } else if (columnId < 5) {
       var newIndex = rowNumber;
       if (rowNumber == this.state.expanded) {
         newIndex = null;
@@ -88108,17 +88120,12 @@ var Authorized = _react2.default.createClass({
         _react2.default.createElement(
           _Table.TableRowColumn,
           null,
-          device.device_type
+          _react2.default.createElement(_reactTime2.default, { value: device.request_time, format: 'YYYY-MM-DD HH:mm' })
         ),
         _react2.default.createElement(
           _Table.TableRowColumn,
           null,
           device.status
-        ),
-        _react2.default.createElement(
-          _Table.TableRowColumn,
-          null,
-          _react2.default.createElement(_reactTime2.default, { value: device.request_time, format: 'YYYY-MM-DD HH:mm' })
         ),
         _react2.default.createElement(
           _Table.TableRowColumn,
@@ -88189,11 +88196,11 @@ var Authorized = _react2.default.createClass({
             ),
             _react2.default.createElement(
               _Table.TableHeaderColumn,
-              { className: 'columnHeader', tooltip: 'Device type' },
-              'Device type',
+              { className: 'columnHeader', tooltip: 'Last connection request' },
+              'Last connection request',
               _react2.default.createElement(
                 _FontIcon2.default,
-                { ref: 'device_type', style: styles.sortIcon, onClick: this._sortColumn.bind(null, "device_type"), className: 'sortIcon material-icons' },
+                { ref: 'request_time', style: styles.sortIcon, onClick: this._sortColumn.bind(null, "request_time"), className: 'sortIcon material-icons' },
                 'sort'
               )
             ),
@@ -88204,16 +88211,6 @@ var Authorized = _react2.default.createClass({
               _react2.default.createElement(
                 _FontIcon2.default,
                 { ref: 'status', style: styles.sortIcon, onClick: this._sortColumn.bind(null, "status"), className: 'sortIcon material-icons' },
-                'sort'
-              )
-            ),
-            _react2.default.createElement(
-              _Table.TableHeaderColumn,
-              { className: 'columnHeader', tooltip: 'Last connection request' },
-              'Last connection request',
-              _react2.default.createElement(
-                _FontIcon2.default,
-                { ref: 'request_time', style: styles.sortIcon, onClick: this._sortColumn.bind(null, "request_time"), className: 'sortIcon material-icons' },
                 'sort'
               )
             ),
