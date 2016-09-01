@@ -1,4 +1,6 @@
 language: node_js
+node_js:
+  - "4"
 
 # Forces travis to use VM insted container, required to be able to build containers.
 sudo: required
