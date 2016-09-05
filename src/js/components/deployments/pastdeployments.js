@@ -20,7 +20,7 @@ var Past = React.createClass({
     };
   },
   componentWillReceiveProps: function(nextProps) {
-    past = nextProps.past;
+    past = nextProps.past || [];
   },
   _pastCellClick: function(rowNumber, columnId) {
     var report = past[rowNumber];

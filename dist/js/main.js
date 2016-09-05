@@ -84187,7 +84187,7 @@ var Progress = _react2.default.createClass({
     };
   },
   componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
-    progress = nextProps.progress;
+    progress = nextProps.progress || [];
   },
   _progressCellClick: function _progressCellClick(rowNumber, columnId) {
     this.setState({ report: progress[rowNumber], showReport: true });
@@ -84382,7 +84382,7 @@ var Past = _react2.default.createClass({
     };
   },
   componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
-    past = nextProps.past;
+    past = nextProps.past || [];
   },
   _pastCellClick: function _pastCellClick(rowNumber, columnId) {
     var report = past[rowNumber];
