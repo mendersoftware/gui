@@ -25,7 +25,7 @@ var Progress = React.createClass({
     };
   },
   componentWillReceiveProps: function(nextProps) {
-    progress = nextProps.progress;
+    progress = nextProps.progress || [];
   },
   _progressCellClick: function(rowNumber, columnId) {
     this.setState({report: progress[rowNumber], showReport: true});
