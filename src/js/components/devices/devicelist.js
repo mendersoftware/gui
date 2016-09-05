@@ -29,10 +29,6 @@ var DeviceList = React.createClass({
   getInitialState: function() {
     return {
       errorText1: null,
-      selectedGroup: {
-        payload: '',
-        text: ''
-      },
       sortCol: "status",
       sortDown: true,
       addGroup: false,
@@ -41,7 +37,7 @@ var DeviceList = React.createClass({
       openSnack: false,
       nameEdit: false,
       editValue: null,
-      groupName: this.props.selectedGroup.name,
+      groupName: this.props.selectedGroup,
       divHeight: 148
     };
   },
@@ -50,12 +46,12 @@ var DeviceList = React.createClass({
     if ((prevProps.selectedGroup !== this.props.selectedGroup) || (prevProps.loading !== this.props.loading)) {
       this.setState({
         expanded: null,
-        groupName: this.props.selectedGroup.name,
+        groupName: this.props.selectedGroup,
         nameEdit: false
       });
     }
     if (this.state.nameEdit) {
-       this.refs.editGroupName.focus();
+      this.refs.editGroupName.focus();
     }
   },
   
@@ -77,7 +73,7 @@ var DeviceList = React.createClass({
     if (!event || event['keyCode'] === 13) {
       if (!this.state.errorCode1) {
         var group = this.props.selectedGroup;
-        group.name = this.state.groupName;
+        group = this.state.groupName;
         AppActions.addToGroup(group, []);
       } else {
         this.setState({groupName: this.props.selectedGroup});
@@ -183,12 +179,6 @@ var DeviceList = React.createClass({
     this.setState({showInput: false});
     var group = this.props.groups[index];
 
-    this.setState({
-      selectedGroup: {
-        payload:value,
-        text: group.name
-      }
-    });
     addSelection = {
       group: group,
       textFieldValue: group.name
@@ -196,13 +186,7 @@ var DeviceList = React.createClass({
   },
 
   _showButton: function() {
-    this.setState({
-      selectedGroup: {
-        payload:null,
-        text: null
-      },
-      showInput: true
-    });
+    this.setState({showInput: true});
     this.refs.customGroup.focus();
   },
 
@@ -223,18 +207,7 @@ var DeviceList = React.createClass({
   },
 
   _removeCurrentGroup: function() {
-    var tmp;
-    for (var i=0; i<this.props.groups.length; i++) {
-      if (this.props.groups[i].id === this.props.selectedGroup.id) {
-        tmp = i;
-      }
-    }
-    this.setState({
-      tempGroup: this.props.selectedGroup,
-      tempIdx: tmp,
-      openSnack: true,
-    });
-    AppActions.removeGroup(this.props.selectedGroup.id);
+    
   },
 
   handleRequestClose: function() {
@@ -368,7 +341,7 @@ var DeviceList = React.createClass({
       <TextField 
         id="groupNameInput"
         ref="editGroupName"
-        value={this.state.groupName}
+        value={this.state.groupName || ""}
         onChange={this._handleGroupNameChange}
         onKeyDown={this._handleGroupNameSave}
         className={this.state.nameEdit ? "hoverText" : "hidden"}
@@ -392,14 +365,14 @@ var DeviceList = React.createClass({
             <h2 className="hoverEdit">
              
                 {groupNameInputs}
-                <span className={this.state.nameEdit ? "hidden" : null}>{this.props.selectedGroup.name}</span>
-                <span className={this.props.selectedGroup.id === 1 ? 'transparent' : null}>
-                 <IconButton iconStyle={styles.editButton} onClick={this._nameEdit} iconClassName="material-icons" className={this.state.errorText1 ? "align-top" : null}>
-                  {correctIcon}
-                </IconButton>
+                <span className={this.state.nameEdit ? "hidden" : null}>{this.props.selectedGroup || "All devices"}</span>
+                <span className={this.props.selectedGroup ? null : 'hidden'}>
+                  <IconButton iconStyle={styles.editButton} onClick={this._nameEdit} iconClassName="material-icons" className={this.state.errorText1 ? "align-top" : null}>
+                    {correctIcon}
+                  </IconButton>
                 </span>
 
-                <FlatButton onClick={this._removeCurrentGroup} style={styles.exampleFlatButton} className={this.props.selectedGroup.id === 1 ? 'hidden' : null} secondary={true} label="Remove group" labelPosition="after">
+                <FlatButton onClick={this._removeCurrentGroup} style={styles.exampleFlatButton} className={this.props.selectedGroup ? 'hidden' : null} secondary={true} label="Remove group" labelPosition="after">
                   <FontIcon style={styles.exampleFlatButtonIcon} className="material-icons">delete</FontIcon>
                 </FlatButton>
             </h2>
@@ -440,7 +413,7 @@ var DeviceList = React.createClass({
             <RaisedButton disabled={disableAction} label="Add selected devices to a group" secondary={true} onClick={this.dialogToggle.bind(null, 'addGroup')}>
               <FontIcon style={styles.raisedButtonIcon} className="material-icons">add_circle</FontIcon>
             </RaisedButton>
-            <FlatButton disabled={disableAction} style={{marginLeft: "4px"}} className={this.props.selectedGroup.id === 1 ? 'hidden' : null} label="Remove selected devices from this group" secondary={true} onClick={this._removeGroupHandler}>
+            <FlatButton disabled={disableAction} style={{marginLeft: "4px"}} className={this.props.selectedGroup ? 'hidden' : null} label="Remove selected devices from this group" secondary={true} onClick={this._removeGroupHandler}>
               <FontIcon style={styles.buttonIcon} className="material-icons">remove_circle_outline</FontIcon>
             </FlatButton>
           </div>
@@ -459,7 +432,7 @@ var DeviceList = React.createClass({
                 ref="groupSelect"
                 onChange={this._handleSelectValueChange}
                 floatingLabelText="Select group"
-                value={this.state.selectedGroup.payload}
+                value={this.props.selectedGroup}
                 >
                  {groupList}
                 </SelectField>

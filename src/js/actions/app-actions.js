@@ -7,14 +7,15 @@ var rootUrl = "https://192.168.99.100";
 var apiUrl = rootUrl + "/api/integrations/0.1"
 var deploymentsApiUrl = apiUrl + "/deployments";
 var devicesApiUrl = apiUrl + "/admission";
+var inventoryApiUrl = "http://private-6074118-menderinventory.apiary-mock.com";
 
 
 var AppActions = {
  
-  selectGroup: function(groupId) {
+  selectGroup: function(group) {
     AppDispatcher.handleViewAction({
       actionType: AppConstants.SELECT_GROUP,
-      groupId: groupId
+      group: group
     })
   },
 
@@ -49,6 +50,49 @@ var AppActions = {
   },
 
 
+  /* Groups */
+  getGroups: function(callback) {
+    DevicesApi
+      .get(inventoryApiUrl+"/groups")
+      .then(function(groups) {
+         AppDispatcher.handleViewAction({
+          actionType: AppConstants.RECEIVE_GROUPS,
+          groups: groups
+        });
+        callback.success(groups);
+      })
+      .catch(function(err) {
+        callback.error(err);
+      });
+  },
+
+  getGroupDevices: function(group, callback) {
+    DevicesApi
+      .get(inventoryApiUrl+"/groups/" + group +"/devices")
+      .then(function(devices) {
+        callback.success(devices);
+      })
+      .catch(function(err) {
+        callback.error(err);
+      });
+  },
+
+  getDevices: function(callback) {
+    DevicesApi
+      .get(inventoryApiUrl+"/devices")
+      .then(function(devices) {
+        AppDispatcher.handleViewAction({
+          actionType: AppConstants.RECEIVE_ALL_DEVICES,
+          devices: devices
+        });
+        callback.success(devices); 
+      })
+      .catch(function(err) {
+        callback.error(err);
+      });
+  },
+
+
   /* General */
   setSnackbar: function(message, duration) {
     AppDispatcher.handleViewAction({
@@ -59,13 +103,13 @@ var AppActions = {
   },
 
 
-  /* Devices */
-  getDevices: function (callback) {
+  /* Device Admission */
+  getDevicesForAdmission: function (callback) {
     DevicesApi
       .get(devicesApiUrl+"/devices")
       .then(function(devices) {
         AppDispatcher.handleViewAction({
-          actionType: AppConstants.RECEIVE_DEVICES,
+          actionType: AppConstants.RECEIVE_ADMISSION_DEVICES,
           devices: devices
         });
         callback(devices);

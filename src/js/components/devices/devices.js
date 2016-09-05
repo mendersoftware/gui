@@ -14,8 +14,7 @@ function getState() {
   return {
     groups: AppStore.getGroups(),
     selectedGroup: AppStore.getSelectedGroup(),
-    devices: AppStore.getDevices(),
-    unauthorized: AppStore.getUnauthorized(),
+    pendingDevices: AppStore.getPendingDevices(),
     allDevices: AppStore.getAllDevices(),
     selectedDevices: AppStore.getSelectedDevices(),
     filters: AppStore.getFilters(),
@@ -33,13 +32,16 @@ var Devices = React.createClass({
     AppStore.changeListener(this._onChange);
   },
   componentDidMount: function() {
+    this._refreshAdmissions();
     this._refreshDevices();
+    this._refreshGroups();
     AppActions.getImages();
 
     var filters = [];
     if (this.props.params) {
-      if (this.props.params.groupId) {
-        AppActions.selectGroup(Number(this.props.params.groupId));
+      if (this.props.params.group) {
+        AppActions.selectGroup(this.props.params.group);
+        this.setState({selectedGroup:this.props.params.group});
       }
       if (this.props.params.filters) {
         var str = decodeURIComponent(this.props.params.filters);
@@ -59,12 +61,34 @@ var Devices = React.createClass({
     this.setState(this.getInitialState());
   },
   _refreshDevices: function() {
-    AppActions.getDevices(function(devices) {
-      this.setState(this.getInitialState());
-      setTimeout(function() {
-        this.setState({doneLoading:true});
-      }.bind(this), 300)
+    var callback = {
+      success: function(devices) {
+        this.setState(this.getInitialState({allDevices: devices}));
+        setTimeout(function() {
+          this.setState({doneLoading:true});
+        }.bind(this), 300);
+      }.bind(this),
+      error: function(err) {
+        console.log("Error: " +err);
+      }
+    };
+    AppActions.getDevices(callback);
+  },
+  _refreshAdmissions: function() {
+    AppActions.getDevicesForAdmission(function(devices) {
+      this.setState({pendingDevices: devices});
     }.bind(this));
+  },
+  _refreshGroups: function() {
+    var callback = {
+      success: function (groups) {
+        this.setState({groups: groups});
+      }.bind(this),
+      error: function(err) {
+        console.log("Error: " +err);
+      }
+    };
+    AppActions.getGroups(callback);
   },
   _updateFilters: function(filters) {
     AppActions.updateFilters(filters);
@@ -72,17 +96,36 @@ var Devices = React.createClass({
   _handleRequestClose: function() {
     AppActions.setSnackbar();
   },
+  _handleGroupChange: function(group) {
+    AppActions.selectGroup(group);
+    this.setState({selectedGroup: group});
+    var callback = {
+      success: function(devices) {
+        this.setState({devices: devices});
+      }.bind(this),
+      error: function(err) {
+        console.log("Error: " + err);
+      }
+    };
+
+    if (group) {
+      AppActions.getGroupDevices(group, callback);
+    } else {
+      this.setState({devices: null});
+    }
+    
+  },
   render: function() {
     return (
       <div className="margin-top">
        <div className="leftFixed">
-          <Groups groups={this.state.groups} selectedGroup={this.state.selectedGroup} allDevices={this.state.allDevices} />
+          <Groups changeGroup={this._handleGroupChange} groups={this.state.groups} selectedGroup={this.state.selectedGroup} allDevices={this.state.allDevices} />
         </div>
         <div className="rightFluid padding-right">
-          <div className={this.state.unauthorized.length&&this.state.doneLoading ? null : "hidden"}>
-            <Unauthorized refresh={this._refreshDevices} unauthorized={this.state.unauthorized} />
+          <div className={this.state.pendingDevices.length&&this.state.doneLoading ? null : "hidden"}>
+            <Unauthorized refresh={this._refreshDevices} pending={this.state.pendingDevices} />
           </div>
-          <DeviceList loading={!this.state.doneLoading} filters={this.state.filters} attributes={this.state.attributes} onFilterChange={this._updateFilters} images={this.state.images} selectedDevices={this.state.selectedDevices} groups={this.state.groups} devices={this.state.devices} selectedGroup={this.state.selectedGroup} />
+          <DeviceList loading={!this.state.doneLoading} filters={this.state.filters} attributes={this.state.attributes} onFilterChange={this._updateFilters} images={this.state.images} selectedDevices={this.state.selectedDevices} groups={this.state.groups} devices={this.state.devices || this.state.allDevices} selectedGroup={this.state.selectedGroup} />
         </div>
         <Snackbar
           open={this.state.snackbar.open}

@@ -13,7 +13,7 @@ function getState() {
   return {
     progress: AppStore.getDeploymentsInProgress(),
     health: AppStore.getHealth(),
-    unauthorized: AppStore.getUnauthorized(),
+    pending: AppStore.getPendingDevices(),
     devices: AppStore.getAllDevices(),
     recent: AppStore.getPastDeployments(),
     activity: AppStore.getActivity(),
@@ -32,10 +32,10 @@ var Dashboard = React.createClass({
     AppStore.removeChangeListener(this._onChange);
   },
   componentDidMount: function() {
-    AppActions.getDevices(function(devices) {
-      this.setState({devices: devices, unauthorized: AppStore.getUnauthorized()});
+    AppActions.getDevicesForAdmission(function(devices) {
+      this.setState({pending: AppStore.getPendingDevices()});
       setTimeout(function() {
-        this.setState({doneDevsLoading:true});
+        this.setState({doneAdmnsLoading:true});
       }.bind(this), 300)
     }.bind(this));
     AppActions.getPastDeployments(function() {
@@ -66,25 +66,25 @@ var Dashboard = React.createClass({
         break;
       case "devices":
         var filters = params.status ? encodeURIComponent("status="+params.status) : '';
-        this.context.router.push('/devices/1/'+filters);
+        this.context.router.push('/devices/'+filters);
         break;
     }
   },
   render: function() {
-    var unauthorized_str = '';
-    if (this.state.unauthorized.length) {
-      if (this.state.unauthorized.length > 1) {
-        unauthorized_str = 'are ' + this.state.unauthorized.length + ' devices';
+    var pending_str = '';
+    if (this.state.pending.length) {
+      if (this.state.pending.length > 1) {
+        pending_str = 'are ' + this.state.pending.length + ' devices';
       } else {
-        unauthorized_str = 'is ' + this.state.unauthorized.length + ' device';
+        pending_str = 'is ' + this.state.pending.length + ' device';
       }
     }
     return (
       <div className="contentContainer dashboard">
         <div>
-          <div className={this.state.unauthorized.length && !this.state.hideReview ? "authorize onboard margin-bottom" : "hidden" }>
+          <div className={this.state.pending.length && !this.state.hideReview ? "authorize onboard margin-bottom" : "hidden" }>
             <div className="close" onClick={this._setStorage.bind(null, "reviewDevices", true)}/>
-            <p>There {unauthorized_str} waiting authorization</p>
+            <p>There {pending_str} waiting authorization</p>
             <RaisedButton onClick={this._handleClick.bind(null, {route:"devices"})} primary={true} label="Review details" />
           </div>
           <div className="leftDashboard">
@@ -92,7 +92,7 @@ var Dashboard = React.createClass({
           </div>
           <div className="rightDashboard">
             <div className="right">
-              <Health loading={!this.state.doneDevsLoading}  devices={this.state.devices} clickHandle={this._handleClick} health={this.state.health} />
+              <Health loading={!this.state.doneAdmnsLoading}  devices={this.state.devices} clickHandle={this._handleClick} health={this.state.health} />
               <Activity loading={!this.state.doneActivityLoading}  activity={this.state.activity} />
             </div>
           </div>

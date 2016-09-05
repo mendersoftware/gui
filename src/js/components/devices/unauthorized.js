@@ -24,7 +24,7 @@ var Authorized =  React.createClass({
     }
   },
   componentDidMount: function() {
-    var h = this.props.unauthorized.length * 50;
+    var h = this.props.pending.length * 50;
     h += 170;
     this.setState({minHeight: h});
   },
@@ -44,7 +44,7 @@ var Authorized =  React.createClass({
       this.setState({sortDown: direction});
     }
     // sort table
-    AppActions.sortTable("_unauthorized", col, direction);
+    AppActions.sortTable("_pendingDevices", col, direction);
   },
   _authorizeDevices: function(devices) {
     // array of device objects
@@ -100,7 +100,7 @@ var Authorized =  React.createClass({
         cursor: "pointer",
       }
     }
-    var devices = this.props.unauthorized.map(function(device, index) {
+    var devices = this.props.pending.map(function(device, index) {
       var expanded = '';
       if ( this.state.expanded === index ) {
         expanded = <SelectedDevices accept={this._authorizeDevices} block={this._blockDevices} unauthorized={true} selected={[device]}  />
@@ -154,7 +154,7 @@ var Authorized =  React.createClass({
             {devices}
           </TableBody>
         </Table>
-        <RaisedButton onClick={this._authorizeDevices.bind(null, this.props.unauthorized)} className="bottom-right-button" primary={true} label="Authorize all" />
+        <RaisedButton onClick={this._authorizeDevices.bind(null, this.props.pending)} className="bottom-right-button" primary={true} label="Authorize all" />
       </Collapse>
     );
   }
