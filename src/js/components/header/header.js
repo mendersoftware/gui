@@ -41,10 +41,10 @@ var Header = React.createClass({
     this.setState({tabIndex: this._updateActive()});
   },
   _updateActive: function() {
-    return this.context.router.isActive({ pathname: '/' }, true) ? '0' :
-      this.context.router.isActive('/devices') ? '1' :
-      this.context.router.isActive('/software') ? '2' : 
-      this.context.router.isActive('/deployments') ? '3' : '0';
+    return this.context.router.isActive({ pathname: '/' }, true) ? '/' :
+      this.context.router.isActive('/devices') ? '/devices' :
+      this.context.router.isActive('/software') ? '/software' : 
+      this.context.router.isActive('/deployments') ? '/deployments' : '/';
   },
   _handleTabActive: function(tab) {
     this.context.router.push(tab.props.value);
