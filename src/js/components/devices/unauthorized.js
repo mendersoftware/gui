@@ -23,13 +23,10 @@ var Authorized =  React.createClass({
        divHeight: 148
     }
   },
-  componentDidMount: function() {
-    var h = this.props.pending.length * 50;
-    h += 170;
+  componentWillReceiveProps: function(nextProps) {
+    var h = nextProps.pending.length * 50;
+    h += 135;
     this.setState({minHeight: h});
-  },
-  _getMinHeight:function() {
-
   },
   _sortColumn: function(col) {
     var direction;

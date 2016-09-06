@@ -35,7 +35,12 @@ var Devices = React.createClass({
     this._refreshAdmissions();
     this._refreshDevices();
     this._refreshGroups();
-    AppActions.getImages();
+
+    AppActions.getImages({
+      success: function(images) {
+        this.setState({images:images})
+      }.bind(this)
+    });
 
     var filters = [];
     if (this.props.params) {

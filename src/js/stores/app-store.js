@@ -103,9 +103,21 @@ function _selectDevices(devicePositions) {
   }
 }
 
-function _getDevices(group, device_type) {
-  // get group id from name
-  
+function _getDevicesFromParams(group, device_type) {
+
+  // from all devices, find if eqauls group and device type
+  var devices = [];
+  for (var i=0;i<_alldevices.length;i++) {
+    var device = _alldevices[i];
+    if (group) {
+      if ((group === device.group) && (device_type === device.device_type)) {
+        devices.push(device);
+      }
+    } else if (device_type === device.group) {
+      devices.push(device);
+    }
+  }
+  console.log(_alldevices);
   return devices;
 }
 
@@ -265,7 +277,7 @@ function _saveSchedule(schedule, single) {
   tmp.group = schedule.group.name;
   tmp.device_type = "Acme Model 1";
   // whether single device or group
-  tmp.devices = !single ? _getDevices(tmp.group, tmp.device_type) : collectWithAttr(_alldevices, 'name', tmp.group);
+  tmp.devices = !single ? _getDevicesFromParams(tmp.group, tmp.device_type) : collectWithAttr(_alldevices, 'name', tmp.group);
   tmp.artifact_name = schedule.image.name;
   tmp.created = schedule.start_time.toString();
   tmp.finished = schedule.end_time.toString();
@@ -556,7 +568,7 @@ var AppStore = assign(EventEmitter.prototype, {
     /*
     * Return list of devices given group and device_type
     */
-    return _getDevices(group, device_type)
+    return _getDevicesFromParams(group, device_type)
   },
 
   getOrderedDeploymentDevices: function(devices) {

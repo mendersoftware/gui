@@ -83704,16 +83704,32 @@ var Deployments = _react2.default.createClass({
     };
     AppActions.getImages(imagesCallback);
 
-    AppActions.getDevices(function (devices) {
-      var pending = AppStore.getPendingDevices();
-      // temporary way to find if accepted devices exist for form dropdown
-      if (devices.length - pending.length > 0) {
-        this.setState({ hasDevices: true });
+    AppActions.getDevices({
+      success: function (devices) {
+        if (!devices.length) {
+          AppStore.getDevicesForAdmission(function (pending) {
+            if (pending.length) {
+              this.setState({ hasPending: true });
+            }
+          }.bind(this));
+        } else {
+          this.setState({ hasDevices: true });
+        }
+      }.bind(this),
+      error: function error(err) {
+        console.log("Error: " + err);
       }
-      if (pending.length) {
-        this.setState({ hasPending: true });
+    });
+
+    var groupCallback = {
+      success: function (groups) {
+        this.setState({ groups: groups });
+      }.bind(this),
+      error: function error(_error) {
+        console.log("Error: " + _error);
       }
-    }.bind(this));
+    };
+    AppActions.getGroups(groupCallback);
 
     if (this.props.params) {
       this.setState({ tabIndex: this._checkTabValue(this.props.params.tab) });
@@ -85885,6 +85901,10 @@ var _appStore = require('../../stores/app-store');
 
 var _appStore2 = _interopRequireDefault(_appStore);
 
+var _appActions = require('../../actions/app-actions');
+
+var _appActions2 = _interopRequireDefault(_appActions);
+
 var _reactRouter = require('react-router');
 
 var _datetime = require('./datetime.js');
@@ -85951,12 +85971,16 @@ function combineDateTime(date, time) {
   return addDate(time, diffDays);
 }
 
-function getDevicesFromParams(group, device_type) {
-  var devices = [];
-  if (device_type && group) {
-    devices = _appStore2.default.getDevicesFromParams(group, device_type);
-  }
-  return devices;
+function getGroupDevices(group) {
+  return _appActions2.default.getGroupDevices(group, {
+    success: function success(devices) {
+      return devices;
+    },
+    error: function error(err) {
+      console.log("Error: " + err);
+      return;
+    }
+  });
 }
 
 var ScheduleForm = _react2.default.createClass({
@@ -85967,31 +85991,16 @@ var ScheduleForm = _react2.default.createClass({
       payload: null,
       text: ''
     };
-    var groupVal = {
-      payload: null,
-      text: ''
-    };
     if (this.props.imageVal) {
       imageVal.payload = this.props.imageVal.id;
       imageVal.text = this.props.imageVal.name;
-    }
-    if (this.props.groupVal) {
-      groupVal.payload = this.props.groupVal.id;
-      groupVal.text = this.props.groupVal.name;
     }
 
     /* if single device */
     var disabled = false;
     var group = null;
-
     if (this.props.device) {
       disabled = true;
-      group = {
-        id: null,
-        name: this.props.device.name,
-        type: 'private',
-        devices: [this.props.device]
-      };
     }
 
     // date times
@@ -86009,7 +86018,6 @@ var ScheduleForm = _react2.default.createClass({
       minDate1: addDate(getDate(), 1),
       imageVal: imageVal,
       image: this.props.image,
-      groupVal: groupVal,
       images: _appStore2.default.getSoftwareRepo(),
       disabled: disabled,
       group: group,
@@ -86019,25 +86027,21 @@ var ScheduleForm = _react2.default.createClass({
   componentDidMount: function componentDidMount() {
     this._deploymentTimes();
   },
-
   _handleGroupValueChange: function _handleGroupValueChange(e, index, value) {
-    var image = this.state.image ? this.state.image.device_type : null;
-    var group = this.props.groups[index];
+    var device_type = this.state.image ? this.state.image.device_type : null;
+    var group = value === "All devices" ? null : this.props.groups[index - 1];
     this.setState({
-      group: group,
-      groupVal: {
-        payload: group.id,
-        text: group.name
-      },
-      devices: getDevicesFromParams(group.name, image)
+      group: value,
+      devices: _appStore2.default.getDevicesFromParams(group, device_type)
     });
     this._sendUpToParent(this.state.image, 'image');
     this._sendUpToParent(group, 'group');
   },
   _handleImageValueChange: function _handleImageValueChange(e, index, value) {
     var image = this.state.images[index];
-    var groupname = this.state.group ? this.state.group.name : null;
-    var devices = this.props.device ? [this.props.device] : getDevicesFromParams(groupname, image.device_type);
+    var groupname = this.state.group;
+    var devices = this.props.device ? [this.props.device] : _appStore2.default.getDevicesFromParams(groupname, image.device_type);
+
     this.setState({
       image: image,
       imageVal: {
@@ -86097,12 +86101,15 @@ var ScheduleForm = _react2.default.createClass({
 
     var groupItems = [];
     if (this.props.device) {
-      groupItems[0] = _react2.default.createElement(_MenuItem2.default, { value: '0', key: 'device', primaryText: this.props.device.name });
-    }
+      // If single device, don't show groups
+      groupItems[0] = _react2.default.createElement(_MenuItem2.default, { value: this.props.device.id, key: this.props.device.id, primaryText: this.props.device.id });
+    } else {
+      groupItems[0] = _react2.default.createElement(_MenuItem2.default, { value: 'All devices', key: 'All', primaryText: 'All devices' });
 
-    for (var i = 0; i < this.props.groups.length; i++) {
-      var tmp = _react2.default.createElement(_MenuItem2.default, { value: this.props.groups[i].id, key: i, primaryText: this.props.groups[i].name });
-      groupItems.push(tmp);
+      for (var i = 0; i < this.props.groups.length; i++) {
+        var tmp = _react2.default.createElement(_MenuItem2.default, { value: this.props.groups[i], key: i, primaryText: this.props.groups[i] });
+        groupItems.push(tmp);
+      }
     }
 
     var device_type = this.state.image ? this.state.image.device_type : '';
@@ -86138,7 +86145,7 @@ var ScheduleForm = _react2.default.createClass({
             { className: 'text-overflow' },
             _react2.default.createElement(
               _reactRouter.Link,
-              { to: '/devices/' + this.state.groupVal.payload + '/' + singleFilter },
+              { to: '/devices/' + this.state.group + '/' + singleFilter },
               item.id
             )
           )
@@ -86162,7 +86169,7 @@ var ScheduleForm = _react2.default.createClass({
       _react2.default.createElement(
         'p',
         { className: tmpDevices.length ? "hidden" : "italic" },
-        'No devices match this search term'
+        'No devices in this group match the device type or search term.'
       ),
       _react2.default.createElement(_Divider2.default, null),
       _react2.default.createElement(
@@ -86170,7 +86177,7 @@ var ScheduleForm = _react2.default.createClass({
         { className: this.state.group ? this.state.group : "hidden" },
         _react2.default.createElement(
           _reactRouter.Link,
-          { to: '/devices/' + this.state.groupVal.payload + '/' + filters },
+          { to: '/devices/' + this.state.group + '/' + filters },
           'Go to group >'
         )
       )
@@ -86246,7 +86253,7 @@ var ScheduleForm = _react2.default.createClass({
             _react2.default.createElement(
               _SelectField2.default,
               {
-                value: this.state.groupVal.payload,
+                value: this.state.group,
                 ref: 'group',
                 onChange: this._handleGroupValueChange,
                 floatingLabelText: 'Select group',
@@ -86278,9 +86285,10 @@ var ScheduleForm = _react2.default.createClass({
           ),
           _react2.default.createElement(
             'div',
-            { className: this.state.disabled ? 'inline-block' : 'hidden' },
+            { style: { width: "100%" }, className: this.state.disabled ? 'inline-block' : 'hidden' },
             _react2.default.createElement(_TextField2.default, {
-              value: groupItems[0].text,
+              style: { width: "100%" },
+              value: this.props.device ? this.props.device.id : "",
               ref: 'device',
               floatingLabelText: 'Device',
               disabled: this.state.disabled,
@@ -86316,7 +86324,7 @@ var ScheduleForm = _react2.default.createClass({
 
 module.exports = ScheduleForm;
 
-},{"../../stores/app-store":969,"./datetime.js":940,"material-ui/DatePicker":195,"material-ui/Divider":199,"material-ui/Drawer":201,"material-ui/FontIcon":210,"material-ui/IconButton":215,"material-ui/MenuItem":229,"material-ui/SelectField":244,"material-ui/TextField":278,"material-ui/TimePicker":287,"react":833,"react-router":644,"react-search-input":672}],954:[function(require,module,exports){
+},{"../../actions/app-actions":923,"../../stores/app-store":969,"./datetime.js":940,"material-ui/DatePicker":195,"material-ui/Divider":199,"material-ui/Drawer":201,"material-ui/FontIcon":210,"material-ui/IconButton":215,"material-ui/MenuItem":229,"material-ui/SelectField":244,"material-ui/TextField":278,"material-ui/TimePicker":287,"react":833,"react-router":644,"react-search-input":672}],954:[function(require,module,exports){
 'use strict';
 
 var _React$createClass;
@@ -87021,7 +87029,12 @@ var Devices = _react2.default.createClass({
     this._refreshAdmissions();
     this._refreshDevices();
     this._refreshGroups();
-    AppActions.getImages();
+
+    AppActions.getImages({
+      success: function (images) {
+        this.setState({ images: images });
+      }.bind(this)
+    });
 
     var filters = [];
     if (this.props.params) {
@@ -88019,8 +88032,7 @@ var SelectedDevices = _react2.default.createClass({
           title: 'Create a deployment',
           actions: scheduleActions,
           autoDetectWindowHeight: true,
-          autoScrollBodyContent: true,
-          bodyStyle: { paddingTop: "0" },
+          bodyStyle: { paddingTop: "0", fontSize: "13px" },
           contentStyle: { overflow: "hidden", boxShadow: "0 14px 45px rgba(0, 0, 0, 0.25), 0 10px 18px rgba(0, 0, 0, 0.22)" }
         },
         _react2.default.createElement(ScheduleForm, { images: this.props.images, device: this.props.selected[0], deploymentSchedule: this._updateParams, groups: this.props.groups })
@@ -88090,12 +88102,11 @@ var Authorized = _react2.default.createClass({
       divHeight: 148
     };
   },
-  componentDidMount: function componentDidMount() {
-    var h = this.props.pending.length * 50;
-    h += 170;
+  componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
+    var h = nextProps.pending.length * 50;
+    h += 135;
     this.setState({ minHeight: h });
   },
-  _getMinHeight: function _getMinHeight() {},
   _sortColumn: function _sortColumn(col) {
     var direction;
     if (this.state.sortCol !== col) {
@@ -89679,9 +89690,21 @@ function _selectDevices(devicePositions) {
   }
 }
 
-function _getDevices(group, device_type) {
-  // get group id from name
+function _getDevicesFromParams(group, device_type) {
 
+  // from all devices, find if eqauls group and device type
+  var devices = [];
+  for (var i = 0; i < _alldevices.length; i++) {
+    var device = _alldevices[i];
+    if (group) {
+      if (group === device.group && device_type === device.device_type) {
+        devices.push(device);
+      }
+    } else if (device_type === device.group) {
+      devices.push(device);
+    }
+  }
+  console.log(_alldevices);
   return devices;
 }
 
@@ -89838,7 +89861,7 @@ function _saveSchedule(schedule, single) {
   tmp.group = schedule.group.name;
   tmp.device_type = "Acme Model 1";
   // whether single device or group
-  tmp.devices = !single ? _getDevices(tmp.group, tmp.device_type) : collectWithAttr(_alldevices, 'name', tmp.group);
+  tmp.devices = !single ? _getDevicesFromParams(tmp.group, tmp.device_type) : collectWithAttr(_alldevices, 'name', tmp.group);
   tmp.artifact_name = schedule.image.name;
   tmp.created = schedule.start_time.toString();
   tmp.finished = schedule.end_time.toString();
@@ -90118,7 +90141,7 @@ var AppStore = assign(EventEmitter.prototype, {
     /*
     * Return list of devices given group and device_type
     */
-    return _getDevices(group, device_type);
+    return _getDevicesFromParams(group, device_type);
   },
 
   getOrderedDeploymentDevices: function getOrderedDeploymentDevices(devices) {
