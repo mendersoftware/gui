@@ -238,7 +238,8 @@ span.link:hover {
 }
 .onboard.authorize {
   background-color: inherit;
-  padding-bottom: 70px;
+  padding-top: 30px;
+  padding-bottom: 45px;
 }
 .onboard p {
   margin-top: 0;
