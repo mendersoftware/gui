@@ -82882,17 +82882,6 @@ var Deployments = _react2.default.createClass({
     this.props.clickHandle(params);
   },
   render: function render() {
-    var progress = this.props.progress.map(function (deployment, index) {
-      return _react2.default.createElement(
-        'div',
-        { key: index },
-        _react2.default.createElement(
-          'p',
-          null,
-          deployment.name
-        )
-      );
-    });
     return _react2.default.createElement(
       'div',
       { className: 'deployments' },
@@ -83105,7 +83094,8 @@ var Progress = _react2.default.createClass({
     return;
   },
   render: function render() {
-    var progress = this.props.deployments.map(function (deployment, index) {
+    var deployments = this.props.deployments || [];
+    var progress = deployments.map(function (deployment, index) {
       var progressChart = _react2.default.createElement(ProgressChart, { deployment: deployment, index: index });
 
       var deploymentInfo = _react2.default.createElement(
@@ -83157,7 +83147,7 @@ var Progress = _react2.default.createClass({
         )
       );
 
-      var last = this.props.deployments.length === index + 1 || index === 4;
+      var last = deployments.length === index + 1 || index === 4;
 
       return _react2.default.createElement(
         'div',
@@ -83184,7 +83174,7 @@ var Progress = _react2.default.createClass({
       ),
       _react2.default.createElement(
         'div',
-        { className: this.props.deployments.length ? null : "hidden" },
+        { className: deployments.length ? null : "hidden" },
         _react2.default.createElement(
           _List.List,
           { style: { paddingTop: 0 } },
@@ -83199,7 +83189,7 @@ var Progress = _react2.default.createClass({
       _react2.default.createElement(Loader, { show: this.props.loading }),
       _react2.default.createElement(
         'div',
-        { className: this.props.deployments.length || this.props.loading ? "hidden" : "dashboard-placeholder" },
+        { className: deployments.length || this.props.loading ? "hidden" : "dashboard-placeholder" },
         _react2.default.createElement(
           'p',
           null,
@@ -83272,10 +83262,11 @@ var Recent = _react2.default.createClass({
     return;
   },
   render: function render() {
-    var recent = this.props.deployments.map(function (deployment, index) {
+    var deployments = this.props.deployments || [];
+    var recent = deployments.map(function (deployment, index) {
       if (index < 5) {
 
-        var last = this.props.deployments.length === index + 1 || index === 4;
+        var last = deployments.length === index + 1 || index === 4;
         var status = deployment.status === "Failed" ? "warning" : "check";
         var icon = _react2.default.createElement(
           _FontIcon2.default,
@@ -83344,7 +83335,7 @@ var Recent = _react2.default.createClass({
         ),
         _react2.default.createElement(
           'div',
-          { className: this.props.deployments.length ? null : "hidden" },
+          { className: deployments.length ? null : "hidden" },
           _react2.default.createElement(
             'div',
             { className: 'block' },
@@ -83359,7 +83350,7 @@ var Recent = _react2.default.createClass({
         _react2.default.createElement(Loader, { show: this.props.loading }),
         _react2.default.createElement(
           'div',
-          { className: this.props.deployments.length || this.props.loading ? "hidden" : "dashboard-placeholder" },
+          { className: deployments.length || this.props.loading ? "hidden" : "dashboard-placeholder" },
           _react2.default.createElement(
             'p',
             null,

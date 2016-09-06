@@ -13,13 +13,6 @@ var Deployments = React.createClass({
     this.props.clickHandle(params);
   },
   render: function() {
-    var progress = this.props.progress.map(function(deployment, index) {
-      return (
-        <div key={index}>
-          <p>{deployment.name}</p>
-        </div>
-      );
-    });
     return (
       <div className="deployments">
         <div>

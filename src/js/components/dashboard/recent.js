@@ -32,10 +32,11 @@ var Recent = React.createClass({
     return;
   },
   render: function() {
-    var recent = this.props.deployments.map(function(deployment, index) {
+    var deployments = this.props.deployments || [];
+    var recent = deployments.map(function(deployment, index) {
       if (index<5) {
 
-        var last = (this.props.deployments.length === index+1) || index===4;
+        var last = (deployments.length === index+1) || index===4;
         var status = deployment.status === "Failed" ? "warning" : "check";
         var icon = (
           <FontIcon className="material-icons">
@@ -60,7 +61,7 @@ var Recent = React.createClass({
           <div className="dashboard-header">
             <h2>Recent deployments</h2>
           </div>
-          <div className={this.props.deployments.length ? null : "hidden" }>
+          <div className={deployments.length ? null : "hidden" }>
             <div className="block">
               {recent}
             </div>
@@ -68,7 +69,7 @@ var Recent = React.createClass({
           </div> 
           
           <Loader show={this.props.loading} />
-          <div className={(this.props.deployments.length || this.props.loading) ? "hidden" : "dashboard-placeholder" }>
+          <div className={(deployments.length || this.props.loading) ? "hidden" : "dashboard-placeholder" }>
             <p>View the results of recent deployments here</p>
             <img src="assets/img/history.png" alt="recent" />
           </div>  
