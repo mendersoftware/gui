@@ -73,7 +73,7 @@ var Deployments = React.createClass({
     };
     AppActions.getImages(imagesCallback);
 
-    AppActions.getAllDevices(function(devices) {
+    AppActions.getDevices(function(devices) {
       var pending = AppStore.getPendingDevices();
       // temporary way to find if accepted devices exist for form dropdown
       if ((devices.length-pending.length) > 0) {
