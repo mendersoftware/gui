@@ -82123,7 +82123,7 @@ var Api = {
     return new Promise(function (resolve, reject) {
       request.get(url).end(function (err, res) {
         if (err || !res.ok) {
-          reject();
+          reject(err);
         } else {
           resolve(res.body);
         }
@@ -82134,7 +82134,7 @@ var Api = {
     return new Promise(function (resolve, reject) {
       request.post(url).set('Content-Type', 'application/json').send(data).end(function (err, res) {
         if (err || !res.ok) {
-          reject();
+          reject(err);
         } else {
           resolve(res.header);
         }
@@ -82145,7 +82145,12 @@ var Api = {
     return new Promise(function (resolve, reject) {
       request.put(url).set('Content-Type', 'application/json').send(data).end(function (err, res) {
         if (err || !res.ok) {
-          reject();
+          var responsetext = "";
+          if (res.text) {
+            responsetext = JSON.parse(res.text);
+          }
+          var msg = responsetext.error || err;
+          reject(msg);
         } else {
           resolve(res.body);
         }
@@ -87068,14 +87073,20 @@ var Devices = _react2.default.createClass({
         }.bind(this), 300);
       }.bind(this),
       error: function error(err) {
-        console.log("Error: " + err);
+        console.log(err);
       }
     };
     AppActions.getDevices(callback);
   },
   _refreshAdmissions: function _refreshAdmissions() {
     AppActions.getDevicesForAdmission(function (devices) {
-      this.setState({ pendingDevices: devices });
+      var pending = [];
+      for (var i = 0; i < devices.length; i++) {
+        if (devices[i].status === "pending") {
+          pending.push(devices[i]);
+        }
+      }
+      this.setState({ pendingDevices: pending });
     }.bind(this));
   },
   _refreshGroups: function _refreshGroups() {
@@ -87084,7 +87095,7 @@ var Devices = _react2.default.createClass({
         this.setState({ groups: groups });
       }.bind(this),
       error: function error(err) {
-        console.log("Error: " + err);
+        console.log(err);
       }
     };
     AppActions.getGroups(callback);
@@ -87103,7 +87114,7 @@ var Devices = _react2.default.createClass({
         this.setState({ devices: devices });
       }.bind(this),
       error: function error(err) {
-        console.log("Error: " + err);
+        console.log(err);
       }
     };
 
@@ -87463,20 +87474,6 @@ var Groups = _react2.default.createClass({
     this.setState({ errorText1: errorText, invalid: invalid });
   },
 
-  _getGroupNames: function _getGroupNames(list) {
-    /* TODO - move or tidy as it is dupliacte */
-    var nameList = [];
-    for (var i = 0; i < list.length; i++) {
-      for (var x = 0; x < this.props.groups.length; x++) {
-        if (list[i] === this.props.groups[x].id) {
-          nameList.push(this.props.groups[x].name);
-        }
-      }
-    }
-
-    return nameList;
-  },
-
   searchUpdated: function searchUpdated(term) {
     this.setState({ searchTerm: term }); // needed to force re-render
   },
@@ -87552,7 +87549,7 @@ var Groups = _react2.default.createClass({
         _react2.default.createElement(
           _Table.TableRowColumn,
           null,
-          this._getGroupNames(device.groups).join(', ')
+          device.group
         )
       );
     }, this);
@@ -87781,8 +87778,6 @@ var SelectedDevices = _react2.default.createClass({
     state[ref] = !this.state[ref];
     this.setState(state);
   },
-
-  _getGroupNames: function _getGroupNames(list) {},
 
   _updateParams: function _updateParams(val, attr) {
     // updating params from child schedule form
@@ -88123,19 +88118,22 @@ var Authorized = _react2.default.createClass({
     AppActions.sortTable("_pendingDevices", col, direction);
   },
   _authorizeDevices: function _authorizeDevices(devices) {
-    // array of device objects
+    var i = 0;
+
     var callback = {
       success: function (data) {
         AppActions.setSnackbar("Device accepted");
-        // wait until end of forEach?
-        this.props.refresh();
+        if (i === devices.length) {
+          this.props.refresh();
+        }
       }.bind(this),
       error: function error(err) {
-        AppActions.setSnackbar("Error accepting device: " + err);
+        AppActions.setSnackbar("There was a problem authorizing the device: " + err);
       }
     };
 
     devices.forEach(function (element, index) {
+      i++;
       AppActions.acceptDevice(element, callback);
     });
   },
@@ -89704,7 +89702,6 @@ function _getDevicesFromParams(group, device_type) {
       devices.push(device);
     }
   }
-  console.log(_alldevices);
   return devices;
 }
 

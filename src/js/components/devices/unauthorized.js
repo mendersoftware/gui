@@ -44,19 +44,22 @@ var Authorized =  React.createClass({
     AppActions.sortTable("_pendingDevices", col, direction);
   },
   _authorizeDevices: function(devices) {
-    // array of device objects
+    var i = 0;
+
     var callback = {
       success: function(data) {
         AppActions.setSnackbar("Device accepted");
-        // wait until end of forEach?
-        this.props.refresh();
+        if (i===devices.length) {
+          this.props.refresh();
+        }
       }.bind(this),
       error: function(err) {
-        AppActions.setSnackbar("Error accepting device: " + err);
+        AppActions.setSnackbar("There was a problem authorizing the device: "+err);
       }
     };
        
     devices.forEach( function(element, index) {
+      i++;
       AppActions.acceptDevice(element, callback);
     });
   },

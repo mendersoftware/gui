@@ -71,20 +71,6 @@ var Groups = React.createClass({
     this.setState({errorText1: errorText, invalid: invalid});
   },
 
-  _getGroupNames: function(list) {
-    /* TODO - move or tidy as it is dupliacte */
-    var nameList = [];
-    for (var i=0; i<list.length; i++) {
-      for(var x = 0; x<this.props.groups.length; x++) {
-        if(list[i] === this.props.groups[x].id) {
-          nameList.push(this.props.groups[x].name);
-        }
-      }
-    }
-
-    return nameList;
-  },
-
   searchUpdated: function(term) {
     this.setState({searchTerm: term}); // needed to force re-render
   },
@@ -152,7 +138,7 @@ var Groups = React.createClass({
             {device.device_type}
           </TableRowColumn>
            <TableRowColumn>
-            {this._getGroupNames(device.groups).join(', ')}
+            {device.group}
           </TableRowColumn>
         </TableRow>
       );

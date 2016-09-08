@@ -42,10 +42,6 @@ var SelectedDevices = React.createClass({
     this.setState(state);
   },
 
-  _getGroupNames: function(list) {
-   
-  },
-
   _updateParams: function(val, attr) {
     // updating params from child schedule form
     var tmp = {};

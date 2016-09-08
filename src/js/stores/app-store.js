@@ -117,7 +117,6 @@ function _getDevicesFromParams(group, device_type) {
       devices.push(device);
     }
   }
-  console.log(_alldevices);
   return devices;
 }
 

@@ -8,7 +8,7 @@ var Api = {
         .get(url)
         .end(function (err, res) {
           if (err || !res.ok) {
-            reject();
+            reject(err);
           } else {
             resolve(res.body);
           }
@@ -23,7 +23,7 @@ var Api = {
         .send(data)
         .end(function (err, res) {
           if (err || !res.ok) {
-            reject();
+            reject(err);
           } else {
             resolve(res.header);
           }
@@ -38,7 +38,12 @@ var Api = {
         .send(data)
         .end(function (err, res) {
           if (err || !res.ok) {
-            reject();
+            var responsetext = "";
+            if (res.text) {
+              responsetext = JSON.parse(res.text);
+            }
+            var msg = responsetext.error || err;
+            reject(msg);
           } else {
             resolve(res.body);
           }

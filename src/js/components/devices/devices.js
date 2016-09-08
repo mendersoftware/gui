@@ -74,14 +74,20 @@ var Devices = React.createClass({
         }.bind(this), 300);
       }.bind(this),
       error: function(err) {
-        console.log("Error: " +err);
+        console.log(err);
       }
     };
     AppActions.getDevices(callback);
   },
   _refreshAdmissions: function() {
     AppActions.getDevicesForAdmission(function(devices) {
-      this.setState({pendingDevices: devices});
+      var pending = [];
+      for (var i=0;i<devices.length;i++) {
+        if (devices[i].status === "pending") {
+          pending.push(devices[i]);
+        }
+      }
+      this.setState({pendingDevices: pending });
     }.bind(this));
   },
   _refreshGroups: function() {
@@ -90,7 +96,7 @@ var Devices = React.createClass({
         this.setState({groups: groups});
       }.bind(this),
       error: function(err) {
-        console.log("Error: " +err);
+        console.log(err);
       }
     };
     AppActions.getGroups(callback);
@@ -109,7 +115,7 @@ var Devices = React.createClass({
         this.setState({devices: devices});
       }.bind(this),
       error: function(err) {
-        console.log("Error: " + err);
+        console.log(err);
       }
     };
 
