@@ -73,14 +73,35 @@ var Deployments = React.createClass({
     };
     AppActions.getImages(imagesCallback);
 
-    AppActions.getDevices(function(devices) {
-      var pending = AppStore.getUnauthorized();
-      // temporary way to find if accepted devices exist for form dropdown
-      if ((devices.length-pending.length) > 0) {
-        this.setState({hasDevices:true});
+
+
+    AppActions.getDevices({
+      success: function(devices) {
+        if (!devices.length) {
+          AppStore.getDevicesForAdmission(function(pending) {
+            if (pending.length) {
+              this.setState({hasPending:true});
+            }
+          }.bind(this));
+        } else {
+          this.setState({hasDevices:true});
+        }
+      }.bind(this),
+      error: function(err) {
+        console.log("Error: " +err);
       }
-      if (pending.length) {this.setState({hasPending: true})}
-    }.bind(this));
+    });
+
+
+    var groupCallback = {
+      success: function(groups) {
+        this.setState({groups: groups});
+      }.bind(this),
+      error: function(error) {
+        console.log("Error: " + error);
+      }
+    }
+    AppActions.getGroups(groupCallback);
   
     if (this.props.params) {
       this.setState({tabIndex: this._checkTabValue(this.props.params.tab)});

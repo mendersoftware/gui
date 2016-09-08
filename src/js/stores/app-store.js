@@ -23,54 +23,14 @@ var _snackbar = {
   message: ""
 };
 
-/* TEMP LOCAL GROUPS */
-var _groups1 = [
-  {
-    id: 1,
-    name: "All devices",
-    devices: [1,2,3,4,5,6,7],
-    type: "public"
-  },
-  {
-    id: 2,
-    name: "Development",
-    devices: [6],
-    type: "public"
-  },
-  {
-    id: 3,
-    name: "Test",
-    devices: [4,6],
-    type: "public"
 
-  },
-  {
-    id: 4,
-    name: "Production",
-    devices: [1,2,3],
-    type: "public"
-  },
-]
-
-var _groups = [
-  {
-    id: 1,
-    name: "All devices",
-    devices: [],
-    type: "public"
-  }
-]
+var _groups = []
 
 
 /* Temp local devices */
 
-var _alldevices = {
-  pending: [],
-  accepted: [],
-  rejected: []
-};
-
-var _alldevicelist = [];
+var _alldevices = [];
+var _pending = [];
 
 var _health = {
   total: 0,
@@ -79,25 +39,12 @@ var _health = {
 }
 
 
-_currentGroup =  _currentGroup || _getGroupById(1);
-
-function _selectGroup(id) {
+function _selectGroup(group) {
   _selectedDevices = [];
   _filters = [{key:'', value:''}];
-  if (id) {
-    _currentGroup = _getGroupById(id);
-    _setCurrentDevices(_currentGroup.id);
-  }
+  _currentGroup = group;
 }
 
-function _getGroupById(id) {
-  for (var i=0; i<_groups.length;i++) {
-    if (_groups[i].id === id) {
-      return _groups[i];
-    }
-  }
-  return;
-}
 
 function _addNewGroup(group, devices, type) {
   var tmpGroup = group;
@@ -107,42 +54,22 @@ function _addNewGroup(group, devices, type) {
   tmpGroup.id = _groups.length+1;
   tmpGroup.type = type ? type : 'public';
   _groups.push(tmpGroup);
-  _selectGroup(_groups.length);
+  _selectGroup(_groups[_groups.length]-1);
 }
 
 function _getDeviceById(deviceId) {
-  for (var i=0; i<_alldevicelist.length;i++) {
-    if (_alldevicelist[i].id === deviceId) {
-      return _alldevicelist[i];
-    }
-  }
-  return;
+  var index = findWithAttr(_alldevices, "id", deviceId);
+  return _alldevices[index];
 }
 
-function _setCurrentDevices(groupId) {
-  _currentDevices = [];
-  if (groupId) {
-    var devicelist = _getGroupById(groupId).devices;
-    for (var i=0; i<devicelist.length; i++) {
-      var device = _getDeviceById(devicelist[i]);
-      if (_matchFilters(device)) {
-         _currentDevices.push(device);
-      }
-    }
-  } else {
-    _currentGroup = _getGroupById(1);
-    _currentDevices = _alldevices["accepted"];
-  }
-}
 
 function updateDeviceTags(id, tags) {
-  var index = findWithAttr(_alldevicelist, "id", id);
-  _alldevicelist[index].tags = tags;
+  var index = findWithAttr(_alldevices, "id", id);
+  _alldevices[index].tags = tags;
 }
 
 function  updateFilters(filters) {
   _filters = filters;
-  _setCurrentDevices(_currentGroup.id);
 }
 
 function _matchFilters(device) {
@@ -176,26 +103,26 @@ function _selectDevices(devicePositions) {
   }
 }
 
-function _getDevices(group, device_type) {
-  // get group id from name
+function _getDevicesFromParams(group, device_type) {
 
-  var index = findWithAttr(_groups, 'name', group);
-  var group = _groups[index];
-
+  // from all devices, find if eqauls group and device type
   var devices = [];
-  for (var i=0; i<group.devices.length; i++) {
-    var device = _alldevicelist[findWithAttr(_alldevicelist, 'id', (group.devices[i]))];
-    //if (device.device_type===device_type) {
+  for (var i=0;i<_alldevices.length;i++) {
+    var device = _alldevices[i];
+    if (group) {
+      if ((group === device.group) && (device_type === device.device_type)) {
+        devices.push(device);
+      }
+    } else if (device_type === device.group) {
       devices.push(device);
-    //}
+    }
   }
-  
   return devices;
 }
 
 function _addToGroup(group, devices) {
   var tmpGroup = group;
-  var idx = findWithAttr(_groups, 'id', tmpGroup.id);
+  var idx = findWithAttr(_groups, 'id', tmpGroup);
   if (idx != undefined) {
     for (var i=0; i<devices.length;i++) {
       if (tmpGroup.devices.indexOf(devices[i].id)===-1) {
@@ -209,7 +136,6 @@ function _addToGroup(group, devices) {
 
     // reset filters
     _filters = [{key:'', value:''}];
-    _setCurrentDevices(tmpGroup.id);
 
     // TODO - delete if empty group?
 
@@ -222,8 +148,8 @@ function _addToGroup(group, devices) {
 
 function _removeGroup(groupId) {
   var idx = findWithAttr(_groups, "id", groupId);
-  if (_currentGroup.id === groupId) {
-    _selectGroup(_groups[0].id);
+  if (_currentGroup === group) {
+    _selectGroup();
   }
   _groups.splice(idx, 1);
 }
@@ -234,8 +160,8 @@ function _addGroup(group, idx) {
   }
 }
 
-function _getUnauthorized() {
-  return _alldevices.pending || [];
+function _getPendingDevices() {
+  return _pending || [];
 }
 
 function _authorizeDevices(devices) {
@@ -252,7 +178,7 @@ function _authorizeDevices(devices) {
       _setSnackbar("Error: A device with this ID already exists");
     }
   }
-  _selectGroup(_currentGroup.id || 1);
+  _selectGroup(_currentGroup);
 }
 
 
@@ -350,7 +276,7 @@ function _saveSchedule(schedule, single) {
   tmp.group = schedule.group.name;
   tmp.device_type = "Acme Model 1";
   // whether single device or group
-  tmp.devices = !single ? _getDevices(tmp.group, tmp.device_type) : collectWithAttr(_alldevices, 'name', tmp.group);
+  tmp.devices = !single ? _getDevicesFromParams(tmp.group, tmp.device_type) : collectWithAttr(_alldevices, 'name', tmp.group);
   tmp.artifact_name = schedule.image.name;
   tmp.created = schedule.start_time.toString();
   tmp.finished = schedule.end_time.toString();
@@ -372,8 +298,8 @@ function _sortTable(array, column, direction) {
     case "_currentDevices":
       _currentDevices.sort(customSort(direction, column));
       break;
-    case "_unauthorized":
-      _unauthorized.sort(customSort(direction, column));
+    case "_pendingDevices":
+      _pending.sort(customSort(direction, column));
       break;
   }
 }
@@ -459,24 +385,35 @@ function setDevices(devices) {
   if (devices) {
     setHealth(devices);
     var newDevices = {};
-    devices.forEach( function(element, index) {
+    devices.forEach(function(element, index) {
       newDevices[element.status] = newDevices[element.status] || [];
       newDevices[element.status].push(element);
     });
-    _alldevicelist = devices;
-    _alldevices = newDevices;
-    _groups[0].devices = [];
-    _alldevices.accepted.forEach( function(element, index) {
-      _groups[0].devices.push(element.id);
+    _alldevices = devices;
+  }
+}
+
+function setPendingDevices(devices) {
+  if (devices) {
+    var newDevices = {};
+    devices.forEach(function(element, index) {
+      newDevices[element.status] = newDevices[element.status] || [];
+      newDevices[element.status].push(element);
     });
-    _setCurrentDevices(_currentGroup.id);
+    _pending = newDevices.pending || [];
+  }
+}
+
+function setGroups(groups) {
+  if (groups) {
+    _groups = groups;
   }
 }
 
 function setHealth(devices) {
   if (devices.accepted) {
     var health = {};
-    devices.accepted.forEach( function(element, index) {
+    devices.accepted.forEach(function(element, index) {
       health[element.status] = newDevices[element.status] || [];
       health[element.status].push(element);
     });
@@ -630,7 +567,7 @@ var AppStore = assign(EventEmitter.prototype, {
     /*
     * Return list of devices given group and device_type
     */
-    return _getDevices(group, device_type)
+    return _getDevicesFromParams(group, device_type)
   },
 
   getOrderedDeploymentDevices: function(devices) {
@@ -641,8 +578,8 @@ var AppStore = assign(EventEmitter.prototype, {
     return _health
   },
 
-  getUnauthorized: function() {
-    return _getUnauthorized()
+  getPendingDevices: function() {
+    return _getPendingDevices()
   },
 
   getActivity: function() {
@@ -660,7 +597,7 @@ var AppStore = assign(EventEmitter.prototype, {
     var action = payload.action;
     switch(action.actionType) {
       case AppConstants.SELECT_GROUP:
-        _selectGroup(payload.action.groupId);
+        _selectGroup(payload.action.group);
         break;
       case AppConstants.SELECT_DEVICES:
         _selectDevices(payload.action.devices);
@@ -717,8 +654,16 @@ var AppStore = assign(EventEmitter.prototype, {
         break;
 
       /* API */
-      case AppConstants.RECEIVE_DEVICES:
+      case AppConstants.RECEIVE_ALL_DEVICES:
         setDevices(payload.action.devices);
+        break;
+
+      case AppConstants.RECEIVE_ADMISSION_DEVICES:
+        setPendingDevices(payload.action.devices);
+        break;
+
+      case AppConstants.RECEIVE_GROUPS:
+        setGroups(payload.action.groups);
         break;
     }
     

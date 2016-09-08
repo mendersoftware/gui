@@ -33,7 +33,8 @@ var Progress = React.createClass({
     return;
   },
   render: function() {
-    var progress = this.props.deployments.map(function(deployment, index) {
+    var deployments = this.props.deployments || [];
+    var progress = deployments.map(function(deployment, index) {
       var progressChart = (
         <ProgressChart deployment={deployment} index={index} />
       );
@@ -47,7 +48,7 @@ var Progress = React.createClass({
         </div>
       );
 
-      var last = (this.props.deployments.length === index+1) || index===4;
+      var last = (deployments.length === index+1) || index===4;
 
       return (
         <div className="deployment" key={index}>
@@ -65,7 +66,7 @@ var Progress = React.createClass({
         <div className="dashboard-header">
           <h2>Deployments in progress</h2>
         </div>
-        <div className={this.props.deployments.length ? null : "hidden"}>
+        <div className={deployments.length ? null : "hidden"}>
           <List style={{paddingTop:0}}>
             {progress}
           </List> 
@@ -74,7 +75,7 @@ var Progress = React.createClass({
 
         <Loader show={this.props.loading} />
 
-        <div className={(this.props.deployments.length || this.props.loading) ? "hidden" : "dashboard-placeholder" }>
+        <div className={(deployments.length || this.props.loading) ? "hidden" : "dashboard-placeholder" }>
           <p>Monitor ongoing deployments from here</p>
           <img src="assets/img/deployments.png" alt="deployments" />
         </div>

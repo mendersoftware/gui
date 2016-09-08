@@ -35,8 +35,8 @@ var Groups = React.createClass({
       return true;
     }
   },
-  _changeGroup: function(id) {
-    AppActions.selectGroup(id);
+  _changeGroup: function(group) {
+    this.props.changeGroup(group);
   },
   _createGroupHandler: function() {
     var selected = [];
@@ -71,20 +71,6 @@ var Groups = React.createClass({
     this.setState({errorText1: errorText, invalid: invalid});
   },
 
-  _getGroupNames: function(list) {
-    /* TODO - move or tidy as it is dupliacte */
-    var nameList = [];
-    for (var i=0; i<list.length; i++) {
-      for(var x = 0; x<this.props.groups.length; x++) {
-        if(list[i] === this.props.groups[x].id) {
-          nameList.push(this.props.groups[x].name);
-        }
-      }
-    }
-
-    return nameList;
-  },
-
   searchUpdated: function(term) {
     this.setState({searchTerm: term}); // needed to force re-render
   },
@@ -105,6 +91,19 @@ var Groups = React.createClass({
       selected = array;
     }
     this.setState({selectedDevices: selected});
+  },
+
+  _getGroupDevices: function(group) {
+    var callback = {
+      success: function(devices) {
+        return (devices.length);
+      }.bind(this),
+      error: function(err) {
+        console.log("Error: "+ err);
+        return "0";
+      }
+    };
+    return AppActions.getGroupDevices(group, callback);
   },
 
   render: function() {
@@ -139,31 +138,39 @@ var Groups = React.createClass({
             {device.device_type}
           </TableRowColumn>
            <TableRowColumn>
-            {this._getGroupNames(device.groups).join(', ')}
+            {device.group}
           </TableRowColumn>
         </TableRow>
       );
     },this);
 
+    var allLabel = (
+      <span>All devices<span className='float-right length'>{this.props.allDevices.length}</span></span>
+    );
+
     return (
       <div>
         <List>
           <Subheader>Groups</Subheader>
+            <ListItem 
+              key="All" 
+              primaryText={allLabel}
+              style={!this.props.selectedGroup ? {backgroundColor: "#e7e7e7"} : {backgroundColor: "transparent"}}
+              onClick={this._changeGroup.bind(null, "")} />
+   
           {this.props.groups.map(function(group) {
-            if (group.type==='public') {
-              var isSelected = group.id===this.props.selectedGroup.id ? {backgroundColor: "#e7e7e7"} : {backgroundColor: "transparent"};
-              var boundClick = this._changeGroup.bind(null, group.id);
-              var groupLabel = (
-                  <span>{group.name}<span className='float-right length'>{group.devices.length}</span></span>
-              );
-              return (
-                <ListItem 
-                  key={group.id} 
-                  primaryText={groupLabel}
-                  style={isSelected}
-                  onClick={boundClick} />
-              )
-            }
+            var isSelected = group===this.props.selectedGroup ? {backgroundColor: "#e7e7e7"} : {backgroundColor: "transparent"};
+            var boundClick = this._changeGroup.bind(null, group);
+            var groupLabel = (
+                <span>{group}<span className='float-right length'>{this._getGroupDevices.bind(null, group)}</span></span>
+            );
+            return (
+              <ListItem 
+                key={group} 
+                primaryText={groupLabel}
+                style={isSelected}
+                onClick={boundClick} />
+            )
           }, this)}
            <ListItem 
             leftIcon={createBtn}

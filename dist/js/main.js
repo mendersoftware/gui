@@ -81805,13 +81805,14 @@ var rootUrl = "https://192.168.99.100";
 var apiUrl = rootUrl + "/api/integrations/0.1";
 var deploymentsApiUrl = apiUrl + "/deployments";
 var devicesApiUrl = apiUrl + "/admission";
+var inventoryApiUrl = apiUrl + "/inventory";
 
 var AppActions = {
 
-  selectGroup: function selectGroup(groupId) {
+  selectGroup: function selectGroup(group) {
     AppDispatcher.handleViewAction({
       actionType: AppConstants.SELECT_GROUP,
-      groupId: groupId
+      group: group
     });
   },
 
@@ -81845,6 +81846,39 @@ var AppActions = {
     });
   },
 
+  /* Groups */
+  getGroups: function getGroups(callback) {
+    DevicesApi.get(inventoryApiUrl + "/groups").then(function (groups) {
+      AppDispatcher.handleViewAction({
+        actionType: AppConstants.RECEIVE_GROUPS,
+        groups: groups
+      });
+      callback.success(groups);
+    }).catch(function (err) {
+      callback.error(err);
+    });
+  },
+
+  getGroupDevices: function getGroupDevices(group, callback) {
+    DevicesApi.get(inventoryApiUrl + "/groups/" + group + "/devices").then(function (devices) {
+      callback.success(devices);
+    }).catch(function (err) {
+      callback.error(err);
+    });
+  },
+
+  getDevices: function getDevices(callback) {
+    DevicesApi.get(inventoryApiUrl + "/devices").then(function (devices) {
+      AppDispatcher.handleViewAction({
+        actionType: AppConstants.RECEIVE_ALL_DEVICES,
+        devices: devices
+      });
+      callback.success(devices);
+    }).catch(function (err) {
+      callback.error(err);
+    });
+  },
+
   /* General */
   setSnackbar: function setSnackbar(message, duration) {
     AppDispatcher.handleViewAction({
@@ -81854,11 +81888,11 @@ var AppActions = {
     });
   },
 
-  /* Devices */
-  getDevices: function getDevices(callback) {
+  /* Device Admission */
+  getDevicesForAdmission: function getDevicesForAdmission(callback) {
     DevicesApi.get(devicesApiUrl + "/devices").then(function (devices) {
       AppDispatcher.handleViewAction({
-        actionType: AppConstants.RECEIVE_DEVICES,
+        actionType: AppConstants.RECEIVE_ADMISSION_DEVICES,
         devices: devices
       });
       callback(devices);
@@ -82089,7 +82123,7 @@ var Api = {
     return new Promise(function (resolve, reject) {
       request.get(url).end(function (err, res) {
         if (err || !res.ok) {
-          reject();
+          reject(err);
         } else {
           resolve(res.body);
         }
@@ -82100,7 +82134,7 @@ var Api = {
     return new Promise(function (resolve, reject) {
       request.post(url).set('Content-Type', 'application/json').send(data).end(function (err, res) {
         if (err || !res.ok) {
-          reject();
+          reject(err);
         } else {
           resolve(res.header);
         }
@@ -82111,7 +82145,12 @@ var Api = {
     return new Promise(function (resolve, reject) {
       request.put(url).set('Content-Type', 'application/json').send(data).end(function (err, res) {
         if (err || !res.ok) {
-          reject();
+          var responsetext = "";
+          if (res.text) {
+            responsetext = JSON.parse(res.text);
+          }
+          var msg = responsetext.error || err;
+          reject(msg);
         } else {
           resolve(res.body);
         }
@@ -82700,7 +82739,7 @@ function getState() {
   return {
     progress: AppStore.getDeploymentsInProgress(),
     health: AppStore.getHealth(),
-    unauthorized: AppStore.getUnauthorized(),
+    pending: AppStore.getPendingDevices(),
     devices: AppStore.getAllDevices(),
     recent: AppStore.getPastDeployments(),
     activity: AppStore.getActivity(),
@@ -82721,10 +82760,10 @@ var Dashboard = _react2.default.createClass({
     AppStore.removeChangeListener(this._onChange);
   },
   componentDidMount: function componentDidMount() {
-    AppActions.getDevices(function (devices) {
-      this.setState({ devices: devices, unauthorized: AppStore.getUnauthorized() });
+    AppActions.getDevicesForAdmission(function (devices) {
+      this.setState({ pending: AppStore.getPendingDevices() });
       setTimeout(function () {
-        this.setState({ doneDevsLoading: true });
+        this.setState({ doneAdmnsLoading: true });
       }.bind(this), 300);
     }.bind(this));
     AppActions.getPastDeployments(function () {
@@ -82755,17 +82794,17 @@ var Dashboard = _react2.default.createClass({
         break;
       case "devices":
         var filters = params.status ? encodeURIComponent("status=" + params.status) : '';
-        this.context.router.push('/devices/1/' + filters);
+        this.context.router.push('/devices/' + filters);
         break;
     }
   },
   render: function render() {
-    var unauthorized_str = '';
-    if (this.state.unauthorized.length) {
-      if (this.state.unauthorized.length > 1) {
-        unauthorized_str = 'are ' + this.state.unauthorized.length + ' devices';
+    var pending_str = '';
+    if (this.state.pending.length) {
+      if (this.state.pending.length > 1) {
+        pending_str = 'are ' + this.state.pending.length + ' devices';
       } else {
-        unauthorized_str = 'is ' + this.state.unauthorized.length + ' device';
+        pending_str = 'is ' + this.state.pending.length + ' device';
       }
     }
     return _react2.default.createElement(
@@ -82776,13 +82815,13 @@ var Dashboard = _react2.default.createClass({
         null,
         _react2.default.createElement(
           'div',
-          { className: this.state.unauthorized.length && !this.state.hideReview ? "authorize onboard margin-bottom" : "hidden" },
+          { className: this.state.pending.length && !this.state.hideReview ? "authorize onboard margin-bottom" : "hidden" },
           _react2.default.createElement('div', { className: 'close', onClick: this._setStorage.bind(null, "reviewDevices", true) }),
           _react2.default.createElement(
             'p',
             null,
             'There ',
-            unauthorized_str,
+            pending_str,
             ' waiting authorization'
           ),
           _react2.default.createElement(_RaisedButton2.default, { onClick: this._handleClick.bind(null, { route: "devices" }), primary: true, label: 'Review details' })
@@ -82798,7 +82837,7 @@ var Dashboard = _react2.default.createClass({
           _react2.default.createElement(
             'div',
             { className: 'right' },
-            _react2.default.createElement(Health, { loading: !this.state.doneDevsLoading, devices: this.state.devices, clickHandle: this._handleClick, health: this.state.health }),
+            _react2.default.createElement(Health, { loading: !this.state.doneAdmnsLoading, devices: this.state.devices, clickHandle: this._handleClick, health: this.state.health }),
             _react2.default.createElement(Activity, { loading: !this.state.doneActivityLoading, activity: this.state.activity })
           )
         )
@@ -82848,17 +82887,6 @@ var Deployments = _react2.default.createClass({
     this.props.clickHandle(params);
   },
   render: function render() {
-    var progress = this.props.progress.map(function (deployment, index) {
-      return _react2.default.createElement(
-        'div',
-        { key: index },
-        _react2.default.createElement(
-          'p',
-          null,
-          deployment.name
-        )
-      );
-    });
     return _react2.default.createElement(
       'div',
       { className: 'deployments' },
@@ -83071,7 +83099,8 @@ var Progress = _react2.default.createClass({
     return;
   },
   render: function render() {
-    var progress = this.props.deployments.map(function (deployment, index) {
+    var deployments = this.props.deployments || [];
+    var progress = deployments.map(function (deployment, index) {
       var progressChart = _react2.default.createElement(ProgressChart, { deployment: deployment, index: index });
 
       var deploymentInfo = _react2.default.createElement(
@@ -83123,7 +83152,7 @@ var Progress = _react2.default.createClass({
         )
       );
 
-      var last = this.props.deployments.length === index + 1 || index === 4;
+      var last = deployments.length === index + 1 || index === 4;
 
       return _react2.default.createElement(
         'div',
@@ -83150,7 +83179,7 @@ var Progress = _react2.default.createClass({
       ),
       _react2.default.createElement(
         'div',
-        { className: this.props.deployments.length ? null : "hidden" },
+        { className: deployments.length ? null : "hidden" },
         _react2.default.createElement(
           _List.List,
           { style: { paddingTop: 0 } },
@@ -83165,7 +83194,7 @@ var Progress = _react2.default.createClass({
       _react2.default.createElement(Loader, { show: this.props.loading }),
       _react2.default.createElement(
         'div',
-        { className: this.props.deployments.length || this.props.loading ? "hidden" : "dashboard-placeholder" },
+        { className: deployments.length || this.props.loading ? "hidden" : "dashboard-placeholder" },
         _react2.default.createElement(
           'p',
           null,
@@ -83238,10 +83267,11 @@ var Recent = _react2.default.createClass({
     return;
   },
   render: function render() {
-    var recent = this.props.deployments.map(function (deployment, index) {
+    var deployments = this.props.deployments || [];
+    var recent = deployments.map(function (deployment, index) {
       if (index < 5) {
 
-        var last = this.props.deployments.length === index + 1 || index === 4;
+        var last = deployments.length === index + 1 || index === 4;
         var status = deployment.status === "Failed" ? "warning" : "check";
         var icon = _react2.default.createElement(
           _FontIcon2.default,
@@ -83310,7 +83340,7 @@ var Recent = _react2.default.createClass({
         ),
         _react2.default.createElement(
           'div',
-          { className: this.props.deployments.length ? null : "hidden" },
+          { className: deployments.length ? null : "hidden" },
           _react2.default.createElement(
             'div',
             { className: 'block' },
@@ -83325,7 +83355,7 @@ var Recent = _react2.default.createClass({
         _react2.default.createElement(Loader, { show: this.props.loading }),
         _react2.default.createElement(
           'div',
-          { className: this.props.deployments.length || this.props.loading ? "hidden" : "dashboard-placeholder" },
+          { className: deployments.length || this.props.loading ? "hidden" : "dashboard-placeholder" },
           _react2.default.createElement(
             'p',
             null,
@@ -83679,16 +83709,32 @@ var Deployments = _react2.default.createClass({
     };
     AppActions.getImages(imagesCallback);
 
-    AppActions.getDevices(function (devices) {
-      var pending = AppStore.getUnauthorized();
-      // temporary way to find if accepted devices exist for form dropdown
-      if (devices.length - pending.length > 0) {
-        this.setState({ hasDevices: true });
+    AppActions.getDevices({
+      success: function (devices) {
+        if (!devices.length) {
+          AppStore.getDevicesForAdmission(function (pending) {
+            if (pending.length) {
+              this.setState({ hasPending: true });
+            }
+          }.bind(this));
+        } else {
+          this.setState({ hasDevices: true });
+        }
+      }.bind(this),
+      error: function error(err) {
+        console.log("Error: " + err);
       }
-      if (pending.length) {
-        this.setState({ hasPending: true });
+    });
+
+    var groupCallback = {
+      success: function (groups) {
+        this.setState({ groups: groups });
+      }.bind(this),
+      error: function error(_error) {
+        console.log("Error: " + _error);
       }
-    }.bind(this));
+    };
+    AppActions.getGroups(groupCallback);
 
     if (this.props.params) {
       this.setState({ tabIndex: this._checkTabValue(this.props.params.tab) });
@@ -84119,14 +84165,10 @@ var GroupDevices = _react2.default.createClass({
     this.getDevices();
   },
   getDevices: function getDevices() {
-    if (this.props.deployment === "00a0c91e6-7dec-11d0-a765-f81d4faebf6") {
-      this.setState({ devices: 3 });
-    } else {
-      AppActions.getSingleDeploymentDevices(this.props.deployment, function (devices) {
-        // retrieve number of devices from child
-        this.setState({ devices: devices.length });
-      }.bind(this));
-    }
+    AppActions.getSingleDeploymentDevices(this.props.deployment, function (devices) {
+      // retrieve number of devices from child
+      this.setState({ devices: devices.length });
+    }.bind(this));
   },
   render: function render() {
     return _react2.default.createElement(
@@ -85864,6 +85906,10 @@ var _appStore = require('../../stores/app-store');
 
 var _appStore2 = _interopRequireDefault(_appStore);
 
+var _appActions = require('../../actions/app-actions');
+
+var _appActions2 = _interopRequireDefault(_appActions);
+
 var _reactRouter = require('react-router');
 
 var _datetime = require('./datetime.js');
@@ -85930,12 +85976,16 @@ function combineDateTime(date, time) {
   return addDate(time, diffDays);
 }
 
-function getDevicesFromParams(group, device_type) {
-  var devices = [];
-  if (device_type && group) {
-    devices = _appStore2.default.getDevicesFromParams(group, device_type);
-  }
-  return devices;
+function getGroupDevices(group) {
+  return _appActions2.default.getGroupDevices(group, {
+    success: function success(devices) {
+      return devices;
+    },
+    error: function error(err) {
+      console.log("Error: " + err);
+      return;
+    }
+  });
 }
 
 var ScheduleForm = _react2.default.createClass({
@@ -85946,31 +85996,16 @@ var ScheduleForm = _react2.default.createClass({
       payload: null,
       text: ''
     };
-    var groupVal = {
-      payload: null,
-      text: ''
-    };
     if (this.props.imageVal) {
       imageVal.payload = this.props.imageVal.id;
       imageVal.text = this.props.imageVal.name;
-    }
-    if (this.props.groupVal) {
-      groupVal.payload = this.props.groupVal.id;
-      groupVal.text = this.props.groupVal.name;
     }
 
     /* if single device */
     var disabled = false;
     var group = null;
-
     if (this.props.device) {
       disabled = true;
-      group = {
-        id: null,
-        name: this.props.device.name,
-        type: 'private',
-        devices: [this.props.device]
-      };
     }
 
     // date times
@@ -85988,7 +86023,6 @@ var ScheduleForm = _react2.default.createClass({
       minDate1: addDate(getDate(), 1),
       imageVal: imageVal,
       image: this.props.image,
-      groupVal: groupVal,
       images: _appStore2.default.getSoftwareRepo(),
       disabled: disabled,
       group: group,
@@ -85998,25 +86032,21 @@ var ScheduleForm = _react2.default.createClass({
   componentDidMount: function componentDidMount() {
     this._deploymentTimes();
   },
-
   _handleGroupValueChange: function _handleGroupValueChange(e, index, value) {
-    var image = this.state.image ? this.state.image.device_type : null;
-    var group = this.props.groups[index];
+    var device_type = this.state.image ? this.state.image.device_type : null;
+    var group = value === "All devices" ? null : this.props.groups[index - 1];
     this.setState({
-      group: group,
-      groupVal: {
-        payload: group.id,
-        text: group.name
-      },
-      devices: getDevicesFromParams(group.name, image)
+      group: value,
+      devices: _appStore2.default.getDevicesFromParams(group, device_type)
     });
     this._sendUpToParent(this.state.image, 'image');
     this._sendUpToParent(group, 'group');
   },
   _handleImageValueChange: function _handleImageValueChange(e, index, value) {
     var image = this.state.images[index];
-    var groupname = this.state.group ? this.state.group.name : null;
-    var devices = this.props.device ? [this.props.device] : getDevicesFromParams(groupname, image.device_type);
+    var groupname = this.state.group;
+    var devices = this.props.device ? [this.props.device] : _appStore2.default.getDevicesFromParams(groupname, image.device_type);
+
     this.setState({
       image: image,
       imageVal: {
@@ -86076,12 +86106,15 @@ var ScheduleForm = _react2.default.createClass({
 
     var groupItems = [];
     if (this.props.device) {
-      groupItems[0] = _react2.default.createElement(_MenuItem2.default, { value: '0', key: 'device', primaryText: this.props.device.name });
-    }
+      // If single device, don't show groups
+      groupItems[0] = _react2.default.createElement(_MenuItem2.default, { value: this.props.device.id, key: this.props.device.id, primaryText: this.props.device.id });
+    } else {
+      groupItems[0] = _react2.default.createElement(_MenuItem2.default, { value: 'All devices', key: 'All', primaryText: 'All devices' });
 
-    for (var i = 0; i < this.props.groups.length; i++) {
-      var tmp = _react2.default.createElement(_MenuItem2.default, { value: this.props.groups[i].id, key: i, primaryText: this.props.groups[i].name });
-      groupItems.push(tmp);
+      for (var i = 0; i < this.props.groups.length; i++) {
+        var tmp = _react2.default.createElement(_MenuItem2.default, { value: this.props.groups[i], key: i, primaryText: this.props.groups[i] });
+        groupItems.push(tmp);
+      }
     }
 
     var device_type = this.state.image ? this.state.image.device_type : '';
@@ -86117,7 +86150,7 @@ var ScheduleForm = _react2.default.createClass({
             { className: 'text-overflow' },
             _react2.default.createElement(
               _reactRouter.Link,
-              { to: '/devices/' + this.state.groupVal.payload + '/' + singleFilter },
+              { to: '/devices/' + this.state.group + '/' + singleFilter },
               item.id
             )
           )
@@ -86141,7 +86174,7 @@ var ScheduleForm = _react2.default.createClass({
       _react2.default.createElement(
         'p',
         { className: tmpDevices.length ? "hidden" : "italic" },
-        'No devices match this search term'
+        'No devices in this group match the device type or search term.'
       ),
       _react2.default.createElement(_Divider2.default, null),
       _react2.default.createElement(
@@ -86149,7 +86182,7 @@ var ScheduleForm = _react2.default.createClass({
         { className: this.state.group ? this.state.group : "hidden" },
         _react2.default.createElement(
           _reactRouter.Link,
-          { to: '/devices/' + this.state.groupVal.payload + '/' + filters },
+          { to: '/devices/' + this.state.group + '/' + filters },
           'Go to group >'
         )
       )
@@ -86225,7 +86258,7 @@ var ScheduleForm = _react2.default.createClass({
             _react2.default.createElement(
               _SelectField2.default,
               {
-                value: this.state.groupVal.payload,
+                value: this.state.group,
                 ref: 'group',
                 onChange: this._handleGroupValueChange,
                 floatingLabelText: 'Select group',
@@ -86257,9 +86290,10 @@ var ScheduleForm = _react2.default.createClass({
           ),
           _react2.default.createElement(
             'div',
-            { className: this.state.disabled ? 'inline-block' : 'hidden' },
+            { style: { width: "100%" }, className: this.state.disabled ? 'inline-block' : 'hidden' },
             _react2.default.createElement(_TextField2.default, {
-              value: groupItems[0].text,
+              style: { width: "100%" },
+              value: this.props.device ? this.props.device.id : "",
               ref: 'device',
               floatingLabelText: 'Device',
               disabled: this.state.disabled,
@@ -86295,7 +86329,7 @@ var ScheduleForm = _react2.default.createClass({
 
 module.exports = ScheduleForm;
 
-},{"../../stores/app-store":969,"./datetime.js":940,"material-ui/DatePicker":195,"material-ui/Divider":199,"material-ui/Drawer":201,"material-ui/FontIcon":210,"material-ui/IconButton":215,"material-ui/MenuItem":229,"material-ui/SelectField":244,"material-ui/TextField":278,"material-ui/TimePicker":287,"react":833,"react-router":644,"react-search-input":672}],954:[function(require,module,exports){
+},{"../../actions/app-actions":923,"../../stores/app-store":969,"./datetime.js":940,"material-ui/DatePicker":195,"material-ui/Divider":199,"material-ui/Drawer":201,"material-ui/FontIcon":210,"material-ui/IconButton":215,"material-ui/MenuItem":229,"material-ui/SelectField":244,"material-ui/TextField":278,"material-ui/TimePicker":287,"react":833,"react-router":644,"react-search-input":672}],954:[function(require,module,exports){
 'use strict';
 
 var _React$createClass;
@@ -86381,10 +86415,6 @@ var DeviceList = _react2.default.createClass((_React$createClass = {
   getInitialState: function getInitialState() {
     return {
       errorText1: null,
-      selectedGroup: {
-        payload: '',
-        text: ''
-      },
       sortCol: "status",
       sortDown: true,
       addGroup: false,
@@ -86393,7 +86423,7 @@ var DeviceList = _react2.default.createClass((_React$createClass = {
       openSnack: false,
       nameEdit: false,
       editValue: null,
-      groupName: this.props.selectedGroup.name,
+      groupName: this.props.selectedGroup,
       divHeight: 148
     };
   },
@@ -86402,7 +86432,7 @@ var DeviceList = _react2.default.createClass((_React$createClass = {
     if (prevProps.selectedGroup !== this.props.selectedGroup || prevProps.loading !== this.props.loading) {
       this.setState({
         expanded: null,
-        groupName: this.props.selectedGroup.name,
+        groupName: this.props.selectedGroup,
         nameEdit: false
       });
     }
@@ -86429,7 +86459,7 @@ var DeviceList = _react2.default.createClass((_React$createClass = {
     if (!event || event['keyCode'] === 13) {
       if (!this.state.errorCode1) {
         var group = this.props.selectedGroup;
-        group.name = this.state.groupName;
+        group = this.state.groupName;
         AppActions.addToGroup(group, []);
       } else {
         this.setState({ groupName: this.props.selectedGroup });
@@ -86532,24 +86562,12 @@ var DeviceList = _react2.default.createClass((_React$createClass = {
   this.setState({ showInput: false });
   var group = this.props.groups[index];
 
-  this.setState({
-    selectedGroup: {
-      payload: value,
-      text: group.name
-    }
-  });
   addSelection = {
     group: group,
     textFieldValue: group.name
   };
 }), _defineProperty(_React$createClass, '_showButton', function _showButton() {
-  this.setState({
-    selectedGroup: {
-      payload: null,
-      text: null
-    },
-    showInput: true
-  });
+  this.setState({ showInput: true });
   this.refs.customGroup.focus();
 }), _defineProperty(_React$createClass, '_sortColumn', function _sortColumn(col) {
   var direction;
@@ -86565,20 +86583,7 @@ var DeviceList = _react2.default.createClass((_React$createClass = {
   }
   // sort table
   AppActions.sortTable("_currentDevices", col, direction);
-}), _defineProperty(_React$createClass, '_removeCurrentGroup', function _removeCurrentGroup() {
-  var tmp;
-  for (var i = 0; i < this.props.groups.length; i++) {
-    if (this.props.groups[i].id === this.props.selectedGroup.id) {
-      tmp = i;
-    }
-  }
-  this.setState({
-    tempGroup: this.props.selectedGroup,
-    tempIdx: tmp,
-    openSnack: true
-  });
-  AppActions.removeGroup(this.props.selectedGroup.id);
-}), _defineProperty(_React$createClass, 'handleRequestClose', function handleRequestClose() {
+}), _defineProperty(_React$createClass, '_removeCurrentGroup', function _removeCurrentGroup() {}), _defineProperty(_React$createClass, 'handleRequestClose', function handleRequestClose() {
   this.setState({
     openSnack: false
   });
@@ -86730,7 +86735,7 @@ var DeviceList = _react2.default.createClass((_React$createClass = {
   var groupNameInputs = _react2.default.createElement(_TextField2.default, {
     id: 'groupNameInput',
     ref: 'editGroupName',
-    value: this.state.groupName,
+    value: this.state.groupName || "",
     onChange: this._handleGroupNameChange,
     onKeyDown: this._handleGroupNameSave,
     className: this.state.nameEdit ? "hoverText" : "hidden",
@@ -86761,11 +86766,11 @@ var DeviceList = _react2.default.createClass((_React$createClass = {
           _react2.default.createElement(
             'span',
             { className: this.state.nameEdit ? "hidden" : null },
-            this.props.selectedGroup.name
+            this.props.selectedGroup || "All devices"
           ),
           _react2.default.createElement(
             'span',
-            { className: this.props.selectedGroup.id === 1 ? 'transparent' : null },
+            { className: this.props.selectedGroup ? null : 'hidden' },
             _react2.default.createElement(
               _IconButton2.default,
               { iconStyle: styles.editButton, onClick: this._nameEdit, iconClassName: 'material-icons', className: this.state.errorText1 ? "align-top" : null },
@@ -86774,7 +86779,7 @@ var DeviceList = _react2.default.createClass((_React$createClass = {
           ),
           _react2.default.createElement(
             _FlatButton2.default,
-            { onClick: this._removeCurrentGroup, style: styles.exampleFlatButton, className: this.props.selectedGroup.id === 1 ? 'hidden' : null, secondary: true, label: 'Remove group', labelPosition: 'after' },
+            { onClick: this._removeCurrentGroup, style: styles.exampleFlatButton, className: this.props.selectedGroup ? 'hidden' : null, secondary: true, label: 'Remove group', labelPosition: 'after' },
             _react2.default.createElement(
               _FontIcon2.default,
               { style: styles.exampleFlatButtonIcon, className: 'material-icons' },
@@ -86898,7 +86903,7 @@ var DeviceList = _react2.default.createClass((_React$createClass = {
         ),
         _react2.default.createElement(
           _FlatButton2.default,
-          { disabled: disableAction, style: { marginLeft: "4px" }, className: this.props.selectedGroup.id === 1 ? 'hidden' : null, label: 'Remove selected devices from this group', secondary: true, onClick: this._removeGroupHandler },
+          { disabled: disableAction, style: { marginLeft: "4px" }, className: this.props.selectedGroup ? 'hidden' : null, label: 'Remove selected devices from this group', secondary: true, onClick: this._removeGroupHandler },
           _react2.default.createElement(
             _FontIcon2.default,
             { style: styles.buttonIcon, className: 'material-icons' },
@@ -86929,7 +86934,7 @@ var DeviceList = _react2.default.createClass((_React$createClass = {
                 ref: 'groupSelect',
                 onChange: this._handleSelectValueChange,
                 floatingLabelText: 'Select group',
-                value: this.state.selectedGroup.payload
+                value: this.props.selectedGroup
               },
               groupList
             )
@@ -87006,8 +87011,7 @@ function getState() {
   return {
     groups: AppStore.getGroups(),
     selectedGroup: AppStore.getSelectedGroup(),
-    devices: AppStore.getDevices(),
-    unauthorized: AppStore.getUnauthorized(),
+    pendingDevices: AppStore.getPendingDevices(),
     allDevices: AppStore.getAllDevices(),
     selectedDevices: AppStore.getSelectedDevices(),
     filters: AppStore.getFilters(),
@@ -87027,13 +87031,21 @@ var Devices = _react2.default.createClass({
     AppStore.changeListener(this._onChange);
   },
   componentDidMount: function componentDidMount() {
+    this._refreshAdmissions();
     this._refreshDevices();
-    AppActions.getImages();
+    this._refreshGroups();
+
+    AppActions.getImages({
+      success: function (images) {
+        this.setState({ images: images });
+      }.bind(this)
+    });
 
     var filters = [];
     if (this.props.params) {
-      if (this.props.params.groupId) {
-        AppActions.selectGroup(Number(this.props.params.groupId));
+      if (this.props.params.group) {
+        AppActions.selectGroup(this.props.params.group);
+        this.setState({ selectedGroup: this.props.params.group });
       }
       if (this.props.params.filters) {
         var str = decodeURIComponent(this.props.params.filters);
@@ -87053,18 +87065,64 @@ var Devices = _react2.default.createClass({
     this.setState(this.getInitialState());
   },
   _refreshDevices: function _refreshDevices() {
-    AppActions.getDevices(function (devices) {
-      this.setState(this.getInitialState());
-      setTimeout(function () {
-        this.setState({ doneLoading: true });
-      }.bind(this), 300);
+    var callback = {
+      success: function (devices) {
+        this.setState(this.getInitialState({ allDevices: devices }));
+        setTimeout(function () {
+          this.setState({ doneLoading: true });
+        }.bind(this), 300);
+      }.bind(this),
+      error: function error(err) {
+        console.log(err);
+      }
+    };
+    AppActions.getDevices(callback);
+  },
+  _refreshAdmissions: function _refreshAdmissions() {
+    AppActions.getDevicesForAdmission(function (devices) {
+      var pending = [];
+      for (var i = 0; i < devices.length; i++) {
+        if (devices[i].status === "pending") {
+          pending.push(devices[i]);
+        }
+      }
+      this.setState({ pendingDevices: pending });
     }.bind(this));
+  },
+  _refreshGroups: function _refreshGroups() {
+    var callback = {
+      success: function (groups) {
+        this.setState({ groups: groups });
+      }.bind(this),
+      error: function error(err) {
+        console.log(err);
+      }
+    };
+    AppActions.getGroups(callback);
   },
   _updateFilters: function _updateFilters(filters) {
     AppActions.updateFilters(filters);
   },
   _handleRequestClose: function _handleRequestClose() {
     AppActions.setSnackbar();
+  },
+  _handleGroupChange: function _handleGroupChange(group) {
+    AppActions.selectGroup(group);
+    this.setState({ selectedGroup: group });
+    var callback = {
+      success: function (devices) {
+        this.setState({ devices: devices });
+      }.bind(this),
+      error: function error(err) {
+        console.log(err);
+      }
+    };
+
+    if (group) {
+      AppActions.getGroupDevices(group, callback);
+    } else {
+      this.setState({ devices: null });
+    }
   },
   render: function render() {
     return _react2.default.createElement(
@@ -87073,17 +87131,17 @@ var Devices = _react2.default.createClass({
       _react2.default.createElement(
         'div',
         { className: 'leftFixed' },
-        _react2.default.createElement(Groups, { groups: this.state.groups, selectedGroup: this.state.selectedGroup, allDevices: this.state.allDevices })
+        _react2.default.createElement(Groups, { changeGroup: this._handleGroupChange, groups: this.state.groups, selectedGroup: this.state.selectedGroup, allDevices: this.state.allDevices })
       ),
       _react2.default.createElement(
         'div',
         { className: 'rightFluid padding-right' },
         _react2.default.createElement(
           'div',
-          { className: this.state.unauthorized.length && this.state.doneLoading ? null : "hidden" },
-          _react2.default.createElement(Unauthorized, { refresh: this._refreshDevices, unauthorized: this.state.unauthorized })
+          { className: this.state.pendingDevices.length && this.state.doneLoading ? null : "hidden" },
+          _react2.default.createElement(Unauthorized, { refresh: this._refreshDevices, refreshAdmissions: this._refreshAdmissions, pending: this.state.pendingDevices })
         ),
-        _react2.default.createElement(DeviceList, { loading: !this.state.doneLoading, filters: this.state.filters, attributes: this.state.attributes, onFilterChange: this._updateFilters, images: this.state.images, selectedDevices: this.state.selectedDevices, groups: this.state.groups, devices: this.state.devices, selectedGroup: this.state.selectedGroup })
+        _react2.default.createElement(DeviceList, { loading: !this.state.doneLoading, filters: this.state.filters, attributes: this.state.attributes, onFilterChange: this._updateFilters, images: this.state.images, selectedDevices: this.state.selectedDevices, groups: this.state.groups, devices: this.state.devices || this.state.allDevices, selectedGroup: this.state.selectedGroup })
       ),
       _react2.default.createElement(_Snackbar2.default, {
         open: this.state.snackbar.open,
@@ -87380,8 +87438,8 @@ var Groups = _react2.default.createClass({
       return true;
     }
   },
-  _changeGroup: function _changeGroup(id) {
-    AppActions.selectGroup(id);
+  _changeGroup: function _changeGroup(group) {
+    this.props.changeGroup(group);
   },
   _createGroupHandler: function _createGroupHandler() {
     var selected = [];
@@ -87416,20 +87474,6 @@ var Groups = _react2.default.createClass({
     this.setState({ errorText1: errorText, invalid: invalid });
   },
 
-  _getGroupNames: function _getGroupNames(list) {
-    /* TODO - move or tidy as it is dupliacte */
-    var nameList = [];
-    for (var i = 0; i < list.length; i++) {
-      for (var x = 0; x < this.props.groups.length; x++) {
-        if (list[i] === this.props.groups[x].id) {
-          nameList.push(this.props.groups[x].name);
-        }
-      }
-    }
-
-    return nameList;
-  },
-
   searchUpdated: function searchUpdated(term) {
     this.setState({ searchTerm: term }); // needed to force re-render
   },
@@ -87450,6 +87494,19 @@ var Groups = _react2.default.createClass({
       selected = array;
     }
     this.setState({ selectedDevices: selected });
+  },
+
+  _getGroupDevices: function _getGroupDevices(group) {
+    var callback = {
+      success: function (devices) {
+        return devices.length;
+      }.bind(this),
+      error: function error(err) {
+        console.log("Error: " + err);
+        return "0";
+      }
+    };
+    return AppActions.getGroupDevices(group, callback);
   },
 
   render: function render() {
@@ -87492,10 +87549,21 @@ var Groups = _react2.default.createClass({
         _react2.default.createElement(
           _Table.TableRowColumn,
           null,
-          this._getGroupNames(device.groups).join(', ')
+          device.group
         )
       );
     }, this);
+
+    var allLabel = _react2.default.createElement(
+      'span',
+      null,
+      'All devices',
+      _react2.default.createElement(
+        'span',
+        { className: 'float-right length' },
+        this.props.allDevices.length
+      )
+    );
 
     return _react2.default.createElement(
       'div',
@@ -87508,26 +87576,29 @@ var Groups = _react2.default.createClass({
           null,
           'Groups'
         ),
+        _react2.default.createElement(_List.ListItem, {
+          key: 'All',
+          primaryText: allLabel,
+          style: !this.props.selectedGroup ? { backgroundColor: "#e7e7e7" } : { backgroundColor: "transparent" },
+          onClick: this._changeGroup.bind(null, "") }),
         this.props.groups.map(function (group) {
-          if (group.type === 'public') {
-            var isSelected = group.id === this.props.selectedGroup.id ? { backgroundColor: "#e7e7e7" } : { backgroundColor: "transparent" };
-            var boundClick = this._changeGroup.bind(null, group.id);
-            var groupLabel = _react2.default.createElement(
+          var isSelected = group === this.props.selectedGroup ? { backgroundColor: "#e7e7e7" } : { backgroundColor: "transparent" };
+          var boundClick = this._changeGroup.bind(null, group);
+          var groupLabel = _react2.default.createElement(
+            'span',
+            null,
+            group,
+            _react2.default.createElement(
               'span',
-              null,
-              group.name,
-              _react2.default.createElement(
-                'span',
-                { className: 'float-right length' },
-                group.devices.length
-              )
-            );
-            return _react2.default.createElement(_List.ListItem, {
-              key: group.id,
-              primaryText: groupLabel,
-              style: isSelected,
-              onClick: boundClick });
-          }
+              { className: 'float-right length' },
+              this._getGroupDevices.bind(null, group)
+            )
+          );
+          return _react2.default.createElement(_List.ListItem, {
+            key: group,
+            primaryText: groupLabel,
+            style: isSelected,
+            onClick: boundClick });
         }, this),
         _react2.default.createElement(_List.ListItem, {
           leftIcon: createBtn,
@@ -87707,8 +87778,6 @@ var SelectedDevices = _react2.default.createClass({
     state[ref] = !this.state[ref];
     this.setState(state);
   },
-
-  _getGroupNames: function _getGroupNames(list) {},
 
   _updateParams: function _updateParams(val, attr) {
     // updating params from child schedule form
@@ -87958,8 +88027,7 @@ var SelectedDevices = _react2.default.createClass({
           title: 'Create a deployment',
           actions: scheduleActions,
           autoDetectWindowHeight: true,
-          autoScrollBodyContent: true,
-          bodyStyle: { paddingTop: "0" },
+          bodyStyle: { paddingTop: "0", fontSize: "13px" },
           contentStyle: { overflow: "hidden", boxShadow: "0 14px 45px rgba(0, 0, 0, 0.25), 0 10px 18px rgba(0, 0, 0, 0.22)" }
         },
         _react2.default.createElement(ScheduleForm, { images: this.props.images, device: this.props.selected[0], deploymentSchedule: this._updateParams, groups: this.props.groups })
@@ -88029,12 +88097,11 @@ var Authorized = _react2.default.createClass({
       divHeight: 148
     };
   },
-  componentDidMount: function componentDidMount() {
-    var h = this.props.unauthorized.length * 50;
-    h += 170;
+  componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
+    var h = nextProps.pending.length * 50;
+    h += 135;
     this.setState({ minHeight: h });
   },
-  _getMinHeight: function _getMinHeight() {},
   _sortColumn: function _sortColumn(col) {
     var direction;
     if (this.state.sortCol !== col) {
@@ -88048,36 +88115,40 @@ var Authorized = _react2.default.createClass({
       this.setState({ sortDown: direction });
     }
     // sort table
-    AppActions.sortTable("_unauthorized", col, direction);
+    AppActions.sortTable("_pendingDevices", col, direction);
   },
   _authorizeDevices: function _authorizeDevices(devices) {
-    // array of device objects
+    var i = 0;
+
     var callback = {
       success: function (data) {
         AppActions.setSnackbar("Device accepted");
-        // wait until end of forEach?
-        this.props.refresh();
+        if (i === devices.length) {
+          this.props.refresh();
+          this.props.refreshAdmissions();
+        }
       }.bind(this),
       error: function error(err) {
-        AppActions.setSnackbar("Error accepting device: " + err);
+        AppActions.setSnackbar("There was a problem authorizing the device: " + err);
       }
     };
 
-    devices.forEach(function (element, index) {
-      AppActions.acceptDevice(element, callback);
+    devices.forEach(function (device, index) {
+      i++;
+      AppActions.acceptDevice(device, callback);
     });
   },
-  _blockDevices: function _blockDevices(devices) {
-    // array of device objects
-    devices.forEach(function (element, index) {
-      AppActions.rejectDevice(element, function (err) {
-        if (err) {
-          AppActions.setSnackbar("Error: " + err.error);
-        } else {
-          AppActions.setSnackbar("The device has been rejected");
-        }
-      }.bind(this));
-    });
+  _blockDevices: function _blockDevices(device) {
+    var callback = {
+      success: function (data) {
+        AppActions.setSnackbar("Device rejected successfully");
+        this.props.refreshAdmissions();
+      }.bind(this),
+      error: function error(err) {
+        AppActions.setSnackbar("There was a problem rejecting the device: " + err);
+      }
+    };
+    AppActions.acceptDevice(device, callback);
   },
   _expandRow: function _expandRow(rowNumber, columnId, event) {
     event.stopPropagation();
@@ -88104,10 +88175,10 @@ var Authorized = _react2.default.createClass({
         cursor: "pointer"
       }
     };
-    var devices = this.props.unauthorized.map(function (device, index) {
+    var devices = this.props.pending.map(function (device, index) {
       var expanded = '';
       if (this.state.expanded === index) {
-        expanded = _react2.default.createElement(SelectedDevices, { accept: this._authorizeDevices, block: this._blockDevices, unauthorized: true, selected: [device] });
+        expanded = _react2.default.createElement(SelectedDevices, { accept: this._authorizeDevices, block: this._blockDevices(null, device), unauthorized: true, selected: [device] });
       }
       return _react2.default.createElement(
         _Table.TableRow,
@@ -88141,7 +88212,7 @@ var Authorized = _react2.default.createClass({
           ),
           _react2.default.createElement(
             _IconButton2.default,
-            { onClick: this._blockDevices.bind(null, [device]) },
+            { onClick: this._blockDevices.bind(null, device) },
             _react2.default.createElement(
               _FontIcon2.default,
               { className: 'material-icons red' },
@@ -88230,7 +88301,7 @@ var Authorized = _react2.default.createClass({
           devices
         )
       ),
-      _react2.default.createElement(_RaisedButton2.default, { onClick: this._authorizeDevices.bind(null, this.props.unauthorized), className: 'bottom-right-button', primary: true, label: 'Authorize all' })
+      _react2.default.createElement(_RaisedButton2.default, { onClick: this._authorizeDevices.bind(null, this.props.pending), className: 'bottom-right-button', primary: true, label: 'Authorize all' })
     );
   }
 });
@@ -88297,7 +88368,7 @@ var Header = _react2.default.createClass({
     this.setState({ tabIndex: this._updateActive() });
   },
   _updateActive: function _updateActive() {
-    return this.context.router.isActive({ pathname: '/' }, true) ? '0' : this.context.router.isActive('/devices') ? '1' : this.context.router.isActive('/software') ? '2' : this.context.router.isActive('/deployments') ? '3' : '0';
+    return this.context.router.isActive({ pathname: '/' }, true) ? '/' : this.context.router.isActive('/devices') ? '/devices' : this.context.router.isActive('/software') ? '/software' : this.context.router.isActive('/deployments') ? '/deployments' : '/';
   },
   _handleTabActive: function _handleTabActive(tab) {
     this.context.router.push(tab.props.value);
@@ -89046,7 +89117,7 @@ var SelectedImage = _react2.default.createClass({
   _handleLinkClick: function _handleLinkClick(device_type) {
     var filters = "device_type=" + device_type;
     filters = encodeURIComponent(filters);
-    this.props.history.push("/devices/:groupId/:filters", { groupId: 1, filters: filters }, null);
+    this.props.history.push("/devices/:group/:filters", { filters: filters }, null);
   },
   _clickImageSchedule: function _clickImageSchedule() {
     this.props.openSchedule("schedule", this.props.image);
@@ -89449,6 +89520,9 @@ module.exports = {
   REMOVE_FROM_GROUP: 'REMOVE_FROM_GROUP',
   REMOVE_GROUP: 'REMOVE_GROUP',
   ADD_GROUP: 'ADD_GROUP',
+  RECEIVE_GROUPS: 'RECEIVE_GROUPS',
+  RECEIVE_ALL_DEVICES: 'RECEIVE_ALL_DEVICES',
+  RECEIVE_ADMISSION_DEVICES: 'RECEIVE_ADMISSION_DEVICES',
   SAVE_SCHEDULE: 'SAVE_SCHEDULE',
   UPDATE_FILTERS: 'UPDATE_FILTERS',
   REMOVE_DEPLOYMENT: 'REMOVE_DEPLOYMENT',
@@ -89461,7 +89535,6 @@ module.exports = {
   RECEIVE_PAST_DEPLOYMENTS: 'RECEIVE_PAST_DEPLOYMENTS',
   SINGLE_DEPLOYMENT: 'SINGLE_DEPLOYMENT',
   SET_LOCAL_STORAGE: 'SET_LOCAL_STORAGE',
-  RECEIVE_DEVICES: 'RECEIVE_DEVICES',
   SET_SNACKBAR: 'SET_SNACKBAR'
 };
 
@@ -89542,46 +89615,12 @@ var _snackbar = {
   message: ""
 };
 
-/* TEMP LOCAL GROUPS */
-var _groups1 = [{
-  id: 1,
-  name: "All devices",
-  devices: [1, 2, 3, 4, 5, 6, 7],
-  type: "public"
-}, {
-  id: 2,
-  name: "Development",
-  devices: [6],
-  type: "public"
-}, {
-  id: 3,
-  name: "Test",
-  devices: [4, 6],
-  type: "public"
-
-}, {
-  id: 4,
-  name: "Production",
-  devices: [1, 2, 3],
-  type: "public"
-}];
-
-var _groups = [{
-  id: 1,
-  name: "All devices",
-  devices: [],
-  type: "public"
-}];
+var _groups = [];
 
 /* Temp local devices */
 
-var _alldevices = {
-  pending: [],
-  accepted: [],
-  rejected: []
-};
-
-var _alldevicelist = [];
+var _alldevices = [];
+var _pending = [];
 
 var _health = {
   total: 0,
@@ -89589,24 +89628,10 @@ var _health = {
   down: 0
 };
 
-_currentGroup = _currentGroup || _getGroupById(1);
-
-function _selectGroup(id) {
+function _selectGroup(group) {
   _selectedDevices = [];
   _filters = [{ key: '', value: '' }];
-  if (id) {
-    _currentGroup = _getGroupById(id);
-    _setCurrentDevices(_currentGroup.id);
-  }
-}
-
-function _getGroupById(id) {
-  for (var i = 0; i < _groups.length; i++) {
-    if (_groups[i].id === id) {
-      return _groups[i];
-    }
-  }
-  return;
+  _currentGroup = group;
 }
 
 function _addNewGroup(group, devices, type) {
@@ -89617,42 +89642,21 @@ function _addNewGroup(group, devices, type) {
   tmpGroup.id = _groups.length + 1;
   tmpGroup.type = type ? type : 'public';
   _groups.push(tmpGroup);
-  _selectGroup(_groups.length);
+  _selectGroup(_groups[_groups.length] - 1);
 }
 
 function _getDeviceById(deviceId) {
-  for (var i = 0; i < _alldevicelist.length; i++) {
-    if (_alldevicelist[i].id === deviceId) {
-      return _alldevicelist[i];
-    }
-  }
-  return;
-}
-
-function _setCurrentDevices(groupId) {
-  _currentDevices = [];
-  if (groupId) {
-    var devicelist = _getGroupById(groupId).devices;
-    for (var i = 0; i < devicelist.length; i++) {
-      var device = _getDeviceById(devicelist[i]);
-      if (_matchFilters(device)) {
-        _currentDevices.push(device);
-      }
-    }
-  } else {
-    _currentGroup = _getGroupById(1);
-    _currentDevices = _alldevices["accepted"];
-  }
+  var index = findWithAttr(_alldevices, "id", deviceId);
+  return _alldevices[index];
 }
 
 function updateDeviceTags(id, tags) {
-  var index = findWithAttr(_alldevicelist, "id", id);
-  _alldevicelist[index].tags = tags;
+  var index = findWithAttr(_alldevices, "id", id);
+  _alldevices[index].tags = tags;
 }
 
 function updateFilters(filters) {
   _filters = filters;
-  _setCurrentDevices(_currentGroup.id);
 }
 
 function _matchFilters(device) {
@@ -89685,26 +89689,26 @@ function _selectDevices(devicePositions) {
   }
 }
 
-function _getDevices(group, device_type) {
-  // get group id from name
+function _getDevicesFromParams(group, device_type) {
 
-  var index = findWithAttr(_groups, 'name', group);
-  var group = _groups[index];
-
+  // from all devices, find if eqauls group and device type
   var devices = [];
-  for (var i = 0; i < group.devices.length; i++) {
-    var device = _alldevicelist[findWithAttr(_alldevicelist, 'id', group.devices[i])];
-    //if (device.device_type===device_type) {
-    devices.push(device);
-    //}
+  for (var i = 0; i < _alldevices.length; i++) {
+    var device = _alldevices[i];
+    if (group) {
+      if (group === device.group && device_type === device.device_type) {
+        devices.push(device);
+      }
+    } else if (device_type === device.group) {
+      devices.push(device);
+    }
   }
-
   return devices;
 }
 
 function _addToGroup(group, devices) {
   var tmpGroup = group;
-  var idx = findWithAttr(_groups, 'id', tmpGroup.id);
+  var idx = findWithAttr(_groups, 'id', tmpGroup);
   if (idx != undefined) {
     for (var i = 0; i < devices.length; i++) {
       if (tmpGroup.devices.indexOf(devices[i].id) === -1) {
@@ -89717,7 +89721,6 @@ function _addToGroup(group, devices) {
 
     // reset filters
     _filters = [{ key: '', value: '' }];
-    _setCurrentDevices(tmpGroup.id);
 
     // TODO - delete if empty group?
   } else {
@@ -89729,8 +89732,8 @@ function _addToGroup(group, devices) {
 
 function _removeGroup(groupId) {
   var idx = findWithAttr(_groups, "id", groupId);
-  if (_currentGroup.id === groupId) {
-    _selectGroup(_groups[0].id);
+  if (_currentGroup === group) {
+    _selectGroup();
   }
   _groups.splice(idx, 1);
 }
@@ -89741,8 +89744,8 @@ function _addGroup(group, idx) {
   }
 }
 
-function _getUnauthorized() {
-  return _alldevices.pending || [];
+function _getPendingDevices() {
+  return _pending || [];
 }
 
 function _authorizeDevices(devices) {
@@ -89759,7 +89762,7 @@ function _authorizeDevices(devices) {
       _setSnackbar("Error: A device with this ID already exists");
     }
   }
-  _selectGroup(_currentGroup.id || 1);
+  _selectGroup(_currentGroup);
 }
 
 function discoverDevices(array) {
@@ -89856,7 +89859,7 @@ function _saveSchedule(schedule, single) {
   tmp.group = schedule.group.name;
   tmp.device_type = "Acme Model 1";
   // whether single device or group
-  tmp.devices = !single ? _getDevices(tmp.group, tmp.device_type) : collectWithAttr(_alldevices, 'name', tmp.group);
+  tmp.devices = !single ? _getDevicesFromParams(tmp.group, tmp.device_type) : collectWithAttr(_alldevices, 'name', tmp.group);
   tmp.artifact_name = schedule.image.name;
   tmp.created = schedule.start_time.toString();
   tmp.finished = schedule.end_time.toString();
@@ -89877,8 +89880,8 @@ function _sortTable(array, column, direction) {
     case "_currentDevices":
       _currentDevices.sort(customSort(direction, column));
       break;
-    case "_unauthorized":
-      _unauthorized.sort(customSort(direction, column));
+    case "_pendingDevices":
+      _pending.sort(customSort(direction, column));
       break;
   }
 }
@@ -89961,13 +89964,24 @@ function setDevices(devices) {
       newDevices[element.status] = newDevices[element.status] || [];
       newDevices[element.status].push(element);
     });
-    _alldevicelist = devices;
-    _alldevices = newDevices;
-    _groups[0].devices = [];
-    _alldevices.accepted.forEach(function (element, index) {
-      _groups[0].devices.push(element.id);
+    _alldevices = devices;
+  }
+}
+
+function setPendingDevices(devices) {
+  if (devices) {
+    var newDevices = {};
+    devices.forEach(function (element, index) {
+      newDevices[element.status] = newDevices[element.status] || [];
+      newDevices[element.status].push(element);
     });
-    _setCurrentDevices(_currentGroup.id);
+    _pending = newDevices.pending || [];
+  }
+}
+
+function setGroups(groups) {
+  if (groups) {
+    _groups = groups;
   }
 }
 
@@ -90125,7 +90139,7 @@ var AppStore = assign(EventEmitter.prototype, {
     /*
     * Return list of devices given group and device_type
     */
-    return _getDevices(group, device_type);
+    return _getDevicesFromParams(group, device_type);
   },
 
   getOrderedDeploymentDevices: function getOrderedDeploymentDevices(devices) {
@@ -90136,8 +90150,8 @@ var AppStore = assign(EventEmitter.prototype, {
     return _health;
   },
 
-  getUnauthorized: function getUnauthorized() {
-    return _getUnauthorized();
+  getPendingDevices: function getPendingDevices() {
+    return _getPendingDevices();
   },
 
   getActivity: function getActivity() {
@@ -90155,7 +90169,7 @@ var AppStore = assign(EventEmitter.prototype, {
     var action = payload.action;
     switch (action.actionType) {
       case AppConstants.SELECT_GROUP:
-        _selectGroup(payload.action.groupId);
+        _selectGroup(payload.action.group);
         break;
       case AppConstants.SELECT_DEVICES:
         _selectDevices(payload.action.devices);
@@ -90212,8 +90226,16 @@ var AppStore = assign(EventEmitter.prototype, {
         break;
 
       /* API */
-      case AppConstants.RECEIVE_DEVICES:
+      case AppConstants.RECEIVE_ALL_DEVICES:
         setDevices(payload.action.devices);
+        break;
+
+      case AppConstants.RECEIVE_ADMISSION_DEVICES:
+        setPendingDevices(payload.action.devices);
+        break;
+
+      case AppConstants.RECEIVE_GROUPS:
+        setGroups(payload.action.groups);
         break;
     }
 

@@ -1,5 +1,6 @@
 import React from 'react';
 import AppStore from '../../stores/app-store';
+import AppActions from '../../actions/app-actions';
 import { Router, Link } from 'react-router';
 import DateTime from './datetime.js';
 import SearchInput from 'react-search-input';
@@ -33,12 +34,17 @@ function combineDateTime(date, time) {
   return addDate(time, diffDays);
 }
 
-function getDevicesFromParams(group, device_type) {
-  var devices = [];
-  if (device_type && group) {
-    devices = AppStore.getDevicesFromParams(group, device_type);
-  }
-  return devices;
+
+function getGroupDevices(group) {
+  return AppActions.getGroupDevices(group, {
+    success: function (devices) {
+      return devices;
+    },
+    error: function(err) {
+      console.log("Error: " + err);
+      return;
+    }
+  });
 }
 
 var ScheduleForm = React.createClass({
@@ -47,31 +53,16 @@ var ScheduleForm = React.createClass({
       payload: null,
       text: ''
     }
-    var groupVal = {
-      payload: null,
-      text: ''
-    }
     if (this.props.imageVal) {
       imageVal.payload = this.props.imageVal.id;
       imageVal.text = this.props.imageVal.name;
-    }
-    if (this.props.groupVal) {
-      groupVal.payload = this.props.groupVal.id;
-      groupVal.text = this.props.groupVal.name;
     }
 
     /* if single device */
     var disabled = false;
     var group = null;
-
     if (this.props.device) {
       disabled = true;
-      group = {
-        id: null,
-        name: this.props.device.name,
-        type: 'private',
-        devices: [this.props.device]
-      }
     }
 
     // date times
@@ -89,7 +80,6 @@ var ScheduleForm = React.createClass({
       minDate1: addDate(getDate(),1),
       imageVal: imageVal,
       image: this.props.image,
-      groupVal: groupVal,
       images: AppStore.getSoftwareRepo(),
       disabled: disabled,
       group: group,
@@ -99,25 +89,21 @@ var ScheduleForm = React.createClass({
   componentDidMount: function() {
     this._deploymentTimes();
   },
-
   _handleGroupValueChange: function(e, index, value) {
-    var image = this.state.image ? this.state.image.device_type : null;
-    var group = this.props.groups[index];
+    var device_type = this.state.image ? this.state.image.device_type : null;
+    var group = value === "All devices" ?  null : this.props.groups[index-1];
     this.setState({
-      group: group,
-      groupVal: {
-        payload: group.id,
-        text: group.name,
-      },
-      devices: getDevicesFromParams(group.name, image)
+      group: value,
+      devices: AppStore.getDevicesFromParams(group, device_type)
     });
     this._sendUpToParent(this.state.image, 'image');
     this._sendUpToParent(group, 'group');
   },
   _handleImageValueChange: function(e, index, value) {
     var image = this.state.images[index];
-    var groupname = this.state.group ? this.state.group.name : null;
-    var devices = this.props.device ? [this.props.device] : getDevicesFromParams(groupname, image.device_type);
+    var groupname = this.state.group;
+    var devices = this.props.device ? [this.props.device] : AppStore.getDevicesFromParams(groupname, image.device_type);
+
     this.setState({
       image: image,
       imageVal: {
@@ -178,14 +164,18 @@ var ScheduleForm = React.createClass({
 
     var groupItems = [];
     if (this.props.device) {
-      groupItems[0] = <MenuItem value="0" key="device" primaryText={this.props.device.name} />
+      // If single device, don't show groups
+      groupItems[0] = <MenuItem value={this.props.device.id} key={this.props.device.id} primaryText={this.props.device.id} />
+    } else {
+      groupItems[0] = <MenuItem value="All devices" key="All" primaryText="All devices" />;
+      
+      for (var i=0; i<this.props.groups.length;i++) {
+        var tmp = <MenuItem value={this.props.groups[i]} key={i} primaryText={this.props.groups[i]} />;
+        groupItems.push(tmp);
+      }
     }
 
-    for (var i=0; i<this.props.groups.length;i++) {
-      var tmp = <MenuItem value={this.props.groups[i].id} key={i} primaryText={this.props.groups[i].name} />;
-      groupItems.push(tmp);
-    }
-
+    
     var device_type = this.state.image ? this.state.image.device_type : '';
     var filters = "device_type="+device_type;
     if (this.props.device) {filters = "id="+this.props.device.id}
@@ -210,7 +200,7 @@ var ScheduleForm = React.createClass({
         singleFilter = encodeURIComponent(singleFilter);
         return (
           <div className="hint--bottom hint--medium" style={{width:"100%"}} aria-label={item.id} key={index}>
-            <p className="text-overflow"><Link to={`/devices/${this.state.groupVal.payload}/${singleFilter}`}>{item.id}</Link></p>
+            <p className="text-overflow"><Link to={`/devices/${this.state.group}/${singleFilter}`}>{item.id}</Link></p>
           </div>
         )
       }, this);
@@ -222,9 +212,9 @@ var ScheduleForm = React.createClass({
         </IconButton>
         <SearchInput style={{marginBottom:"8px"}} className="search" ref='search' onChange={this.searchUpdated} placeholder="Search devices" />
         {devices}
-        <p className={tmpDevices.length ? "hidden" : "italic" }>No devices match this search term</p>
+        <p className={tmpDevices.length ? "hidden" : "italic" }>No devices in this group match the device type or search term.</p>
         <Divider />
-        <p className={this.state.group ? this.state.group : "hidden"}><Link to={`/devices/${this.state.groupVal.payload}/${filters}`}>Go to group ></Link></p>
+        <p className={this.state.group ? this.state.group : "hidden"}><Link to={`/devices/${this.state.group}/${filters}`}>Go to group ></Link></p>
       </div>
     );
 
@@ -274,7 +264,7 @@ var ScheduleForm = React.createClass({
           <div style={{display:"block"}}>
             <div className={this.state.disabled ? 'hidden' : 'inline-block'}>
               <SelectField
-                value={this.state.groupVal.payload}
+                value={this.state.group}
                 ref="group"
                 onChange={this._handleGroupValueChange}
                 floatingLabelText="Select group"
@@ -289,9 +279,10 @@ var ScheduleForm = React.createClass({
               </p>
             </div>
 
-            <div className={this.state.disabled ? 'inline-block' : 'hidden'}>
+            <div style={{width:"100%"}} className={this.state.disabled ? 'inline-block' : 'hidden'}>
               <TextField
-                value={groupItems[0].text}
+                style={{width:"100%"}}
+                value={this.props.device ? this.props.device.id : ""}
                 ref="device"
                 floatingLabelText="Device"
                 disabled={this.state.disabled}

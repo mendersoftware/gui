@@ -23,13 +23,10 @@ var Authorized =  React.createClass({
        divHeight: 148
     }
   },
-  componentDidMount: function() {
-    var h = this.props.unauthorized.length * 50;
-    h += 170;
+  componentWillReceiveProps: function(nextProps) {
+    var h = nextProps.pending.length * 50;
+    h += 135;
     this.setState({minHeight: h});
-  },
-  _getMinHeight:function() {
-
   },
   _sortColumn: function(col) {
     var direction;
@@ -44,36 +41,40 @@ var Authorized =  React.createClass({
       this.setState({sortDown: direction});
     }
     // sort table
-    AppActions.sortTable("_unauthorized", col, direction);
+    AppActions.sortTable("_pendingDevices", col, direction);
   },
   _authorizeDevices: function(devices) {
-    // array of device objects
+    var i = 0;
+
     var callback = {
       success: function(data) {
         AppActions.setSnackbar("Device accepted");
-        // wait until end of forEach?
-        this.props.refresh();
+        if (i===devices.length) {
+          this.props.refresh();
+          this.props.refreshAdmissions();
+        }
       }.bind(this),
       error: function(err) {
-        AppActions.setSnackbar("Error accepting device: " + err);
+        AppActions.setSnackbar("There was a problem authorizing the device: "+err);
       }
     };
        
-    devices.forEach( function(element, index) {
-      AppActions.acceptDevice(element, callback);
+    devices.forEach( function(device, index) {
+      i++;
+      AppActions.acceptDevice(device, callback);
     });
   },
-   _blockDevices: function(devices) {
-    // array of device objects
-    devices.forEach( function(element, index) {
-      AppActions.rejectDevice(element, function(err) {
-        if (err) {
-          AppActions.setSnackbar("Error: " + err.error);
-        } else {
-          AppActions.setSnackbar("The device has been rejected");
-        }
-      }.bind(this));
-    });
+  _blockDevices: function(device) {
+    var callback = {
+      success: function(data) {
+        AppActions.setSnackbar("Device rejected successfully");
+        this.props.refreshAdmissions();
+      }.bind(this),
+      error: function(err) {
+        AppActions.setSnackbar("There was a problem rejecting the device: "+err);
+      }
+    };
+    AppActions.acceptDevice(device, callback);
   },
   _expandRow: function(rowNumber, columnId, event) {
     event.stopPropagation();
@@ -100,10 +101,10 @@ var Authorized =  React.createClass({
         cursor: "pointer",
       }
     }
-    var devices = this.props.unauthorized.map(function(device, index) {
+    var devices = this.props.pending.map(function(device, index) {
       var expanded = '';
       if ( this.state.expanded === index ) {
-        expanded = <SelectedDevices accept={this._authorizeDevices} block={this._blockDevices} unauthorized={true} selected={[device]}  />
+        expanded = <SelectedDevices accept={this._authorizeDevices} block={this._blockDevices(null, device)} unauthorized={true} selected={[device]}  />
       }
       return (
         <TableRow style={{"backgroundColor": "#e9f4f3"}} className={expanded ? "expand" : null} hoverable={true} key={index}>
@@ -114,7 +115,7 @@ var Authorized =  React.createClass({
             <IconButton onClick={this._authorizeDevices.bind(null, [device])} style={{"paddingLeft": "0"}}>
               <FontIcon className="material-icons green">check_circle</FontIcon>
             </IconButton>
-            <IconButton onClick={this._blockDevices.bind(null, [device])}>
+            <IconButton onClick={this._blockDevices.bind(null, device)}>
               <FontIcon className="material-icons red">cancel</FontIcon>
             </IconButton>
           </TableRowColumn>
@@ -154,7 +155,7 @@ var Authorized =  React.createClass({
             {devices}
           </TableBody>
         </Table>
-        <RaisedButton onClick={this._authorizeDevices.bind(null, this.props.unauthorized)} className="bottom-right-button" primary={true} label="Authorize all" />
+        <RaisedButton onClick={this._authorizeDevices.bind(null, this.props.pending)} className="bottom-right-button" primary={true} label="Authorize all" />
       </Collapse>
     );
   }
