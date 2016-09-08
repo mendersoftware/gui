@@ -7,7 +7,7 @@ var rootUrl = "https://192.168.99.100";
 var apiUrl = rootUrl + "/api/integrations/0.1"
 var deploymentsApiUrl = apiUrl + "/deployments";
 var devicesApiUrl = apiUrl + "/admission";
-var inventoryApiUrl = "http://private-6074118-menderinventory.apiary-mock.com";
+var inventoryApiUrl = apiUrl + "/inventory";
 
 
 var AppActions = {
