@@ -87139,7 +87139,7 @@ var Devices = _react2.default.createClass({
         _react2.default.createElement(
           'div',
           { className: this.state.pendingDevices.length && this.state.doneLoading ? null : "hidden" },
-          _react2.default.createElement(Unauthorized, { refresh: this._refreshDevices, pending: this.state.pendingDevices })
+          _react2.default.createElement(Unauthorized, { refresh: this._refreshDevices, refreshAdmissions: this._refreshAdmissions, pending: this.state.pendingDevices })
         ),
         _react2.default.createElement(DeviceList, { loading: !this.state.doneLoading, filters: this.state.filters, attributes: this.state.attributes, onFilterChange: this._updateFilters, images: this.state.images, selectedDevices: this.state.selectedDevices, groups: this.state.groups, devices: this.state.devices || this.state.allDevices, selectedGroup: this.state.selectedGroup })
       ),
@@ -88125,6 +88125,7 @@ var Authorized = _react2.default.createClass({
         AppActions.setSnackbar("Device accepted");
         if (i === devices.length) {
           this.props.refresh();
+          this.props.refreshAdmissions();
         }
       }.bind(this),
       error: function error(err) {
@@ -88132,22 +88133,22 @@ var Authorized = _react2.default.createClass({
       }
     };
 
-    devices.forEach(function (element, index) {
+    devices.forEach(function (device, index) {
       i++;
-      AppActions.acceptDevice(element, callback);
+      AppActions.acceptDevice(device, callback);
     });
   },
-  _blockDevices: function _blockDevices(devices) {
-    // array of device objects
-    devices.forEach(function (element, index) {
-      AppActions.rejectDevice(element, function (err) {
-        if (err) {
-          AppActions.setSnackbar("Error: " + err.error);
-        } else {
-          AppActions.setSnackbar("The device has been rejected");
-        }
-      }.bind(this));
-    });
+  _blockDevices: function _blockDevices(device) {
+    var callback = {
+      success: function (data) {
+        AppActions.setSnackbar("Device rejected successfully");
+        this.props.refreshAdmissions();
+      }.bind(this),
+      error: function error(err) {
+        AppActions.setSnackbar("There was a problem rejecting the device: " + err);
+      }
+    };
+    AppActions.acceptDevice(device, callback);
   },
   _expandRow: function _expandRow(rowNumber, columnId, event) {
     event.stopPropagation();
@@ -88177,7 +88178,7 @@ var Authorized = _react2.default.createClass({
     var devices = this.props.pending.map(function (device, index) {
       var expanded = '';
       if (this.state.expanded === index) {
-        expanded = _react2.default.createElement(SelectedDevices, { accept: this._authorizeDevices, block: this._blockDevices, unauthorized: true, selected: [device] });
+        expanded = _react2.default.createElement(SelectedDevices, { accept: this._authorizeDevices, block: this._blockDevices(null, device), unauthorized: true, selected: [device] });
       }
       return _react2.default.createElement(
         _Table.TableRow,
@@ -88211,7 +88212,7 @@ var Authorized = _react2.default.createClass({
           ),
           _react2.default.createElement(
             _IconButton2.default,
-            { onClick: this._blockDevices.bind(null, [device]) },
+            { onClick: this._blockDevices.bind(null, device) },
             _react2.default.createElement(
               _FontIcon2.default,
               { className: 'material-icons red' },

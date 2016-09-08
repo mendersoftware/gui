@@ -51,6 +51,7 @@ var Authorized =  React.createClass({
         AppActions.setSnackbar("Device accepted");
         if (i===devices.length) {
           this.props.refresh();
+          this.props.refreshAdmissions();
         }
       }.bind(this),
       error: function(err) {
@@ -58,22 +59,22 @@ var Authorized =  React.createClass({
       }
     };
        
-    devices.forEach( function(element, index) {
+    devices.forEach( function(device, index) {
       i++;
-      AppActions.acceptDevice(element, callback);
+      AppActions.acceptDevice(device, callback);
     });
   },
-   _blockDevices: function(devices) {
-    // array of device objects
-    devices.forEach( function(element, index) {
-      AppActions.rejectDevice(element, function(err) {
-        if (err) {
-          AppActions.setSnackbar("Error: " + err.error);
-        } else {
-          AppActions.setSnackbar("The device has been rejected");
-        }
-      }.bind(this));
-    });
+  _blockDevices: function(device) {
+    var callback = {
+      success: function(data) {
+        AppActions.setSnackbar("Device rejected successfully");
+        this.props.refreshAdmissions();
+      }.bind(this),
+      error: function(err) {
+        AppActions.setSnackbar("There was a problem rejecting the device: "+err);
+      }
+    };
+    AppActions.acceptDevice(device, callback);
   },
   _expandRow: function(rowNumber, columnId, event) {
     event.stopPropagation();
@@ -103,7 +104,7 @@ var Authorized =  React.createClass({
     var devices = this.props.pending.map(function(device, index) {
       var expanded = '';
       if ( this.state.expanded === index ) {
-        expanded = <SelectedDevices accept={this._authorizeDevices} block={this._blockDevices} unauthorized={true} selected={[device]}  />
+        expanded = <SelectedDevices accept={this._authorizeDevices} block={this._blockDevices(null, device)} unauthorized={true} selected={[device]}  />
       }
       return (
         <TableRow style={{"backgroundColor": "#e9f4f3"}} className={expanded ? "expand" : null} hoverable={true} key={index}>
@@ -114,7 +115,7 @@ var Authorized =  React.createClass({
             <IconButton onClick={this._authorizeDevices.bind(null, [device])} style={{"paddingLeft": "0"}}>
               <FontIcon className="material-icons green">check_circle</FontIcon>
             </IconButton>
-            <IconButton onClick={this._blockDevices.bind(null, [device])}>
+            <IconButton onClick={this._blockDevices.bind(null, device)}>
               <FontIcon className="material-icons red">cancel</FontIcon>
             </IconButton>
           </TableRowColumn>

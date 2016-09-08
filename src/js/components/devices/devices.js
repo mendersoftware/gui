@@ -134,7 +134,7 @@ var Devices = React.createClass({
         </div>
         <div className="rightFluid padding-right">
           <div className={this.state.pendingDevices.length&&this.state.doneLoading ? null : "hidden"}>
-            <Unauthorized refresh={this._refreshDevices} pending={this.state.pendingDevices} />
+            <Unauthorized refresh={this._refreshDevices} refreshAdmissions={this._refreshAdmissions} pending={this.state.pendingDevices} />
           </div>
           <DeviceList loading={!this.state.doneLoading} filters={this.state.filters} attributes={this.state.attributes} onFilterChange={this._updateFilters} images={this.state.images} selectedDevices={this.state.selectedDevices} groups={this.state.groups} devices={this.state.devices || this.state.allDevices} selectedGroup={this.state.selectedGroup} />
         </div>
