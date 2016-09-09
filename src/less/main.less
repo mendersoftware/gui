@@ -6,6 +6,10 @@ body {
   min-height: 100%;
 }
 
+* {
+  box-sizing: border-box;
+}
+
 /* General */
 
 // colors
@@ -349,6 +353,18 @@ a, span.link {
     font-size: 1em;
   }
 
+}
+
+// joyride onboard
+.tooltip-info {
+  position: absolute;
+  top: 0;
+  right: 0;
+  .transition(opacity 0.42s ease-in-out);
+  cursor: pointer;
+  &:hover {
+    .opacity(.6);
+  }
 }
 
 

@@ -79,7 +79,8 @@ var Header = React.createClass({
         <div id="header-nav">
           <Tabs
             value={this.state.tabIndex}
-            inkBarStyle={styles.inkbar}>
+            inkBarStyle={styles.inkbar}
+            onChange={this.props.clearSteps}>
             {menu}
           </Tabs>
         </div>

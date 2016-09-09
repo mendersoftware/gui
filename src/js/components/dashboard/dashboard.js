@@ -6,7 +6,6 @@ var Health = require('./health');
 var Activity = require('./activity');
 var Deployments = require('./deployments');
 import { Router, Route, Link } from 'react-router';
-
 import RaisedButton from 'material-ui/RaisedButton';
 
 function getState() {
@@ -20,6 +19,17 @@ function getState() {
     hideReview: localStorage.getItem("reviewDevices"),
   }
 }
+
+/* Joyride */
+var steps = {
+  admissions: {
+    title: 'Authorize devices',
+    text: 'Devices must be authorized before you can deploy an update to them. <br/><br/>Click <b>Review details</b> to view the device\'s details before authorizing it.',
+    selector: '#authorize',
+    position: 'bottom',
+    type: 'hover'
+  }
+};
 
 var Dashboard = React.createClass({
   getInitialState: function() {
@@ -36,6 +46,8 @@ var Dashboard = React.createClass({
       this.setState({pending: AppStore.getPendingDevices()});
       setTimeout(function() {
         this.setState({doneAdmnsLoading:true});
+        this.props.addSteps([steps.admissions]);
+        this.props.makeReady(true);
       }.bind(this), 300)
     }.bind(this));
     AppActions.getPastDeployments(function() {
@@ -82,7 +94,7 @@ var Dashboard = React.createClass({
     return (
       <div className="contentContainer dashboard">
         <div>
-          <div className={this.state.pending.length && !this.state.hideReview ? "authorize onboard margin-bottom" : "hidden" }>
+          <div id="authorize" className={this.state.pending.length && !this.state.hideReview ? "authorize onboard margin-bottom" : "hidden" }>
             <div className="close" onClick={this._setStorage.bind(null, "reviewDevices", true)}/>
             <p>There {pending_str} waiting authorization</p>
             <RaisedButton onClick={this._handleClick.bind(null, {route:"devices"})} primary={true} label="Review details" />
@@ -92,8 +104,8 @@ var Dashboard = React.createClass({
           </div>
           <div className="rightDashboard">
             <div className="right">
-              <Health loading={!this.state.doneAdmnsLoading}  devices={this.state.devices} clickHandle={this._handleClick} health={this.state.health} />
-              <Activity loading={!this.state.doneActivityLoading}  activity={this.state.activity} />
+              <Health loading={!this.state.doneAdmnsLoading} devices={this.state.devices} clickHandle={this._handleClick} health={this.state.health} />
+              <Activity addTooltip={this.props.addTooltip} loading={!this.state.doneActivityLoading}  activity={this.state.activity} />
             </div>
           </div>
         </div>

@@ -5,6 +5,9 @@ html {
 body {
   min-height: 100%;
 }
+* {
+  box-sizing: border-box;
+}
 /* General */
 .green {
   color: #009E73;
@@ -273,6 +276,21 @@ span.link:hover {
   position: relative;
   bottom: 10px;
   font-size: 1em;
+}
+.tooltip-info {
+  position: absolute;
+  top: 0;
+  right: 0;
+  -webkit-transition: opacity 0.42s ease-in-out;
+  -moz-transition: opacity 0.42s ease-in-out;
+  -ms-transition: opacity 0.42s ease-in-out;
+  -o-transition: opacity 0.42s ease-in-out;
+  cursor: pointer;
+}
+.tooltip-info:hover {
+  -webkit-opacity: 0.6;
+  -moz-opacity: 0.6;
+  opacity: 0.6;
 }
 .material-icons.green {
   background: none;

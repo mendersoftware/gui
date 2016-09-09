@@ -31,6 +31,7 @@
     "react-dom": "^15.3.1",
     "react-file-input": "^0.2.5",
     "react-height": "^2.1.1",
+    "react-joyride": "^1.5.0",
     "react-motion": "^0.4.4",
     "react-paginate": "^2.2.3",
     "react-router": "^2.7.0",
