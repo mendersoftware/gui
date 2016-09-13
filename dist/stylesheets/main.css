@@ -5,6 +5,9 @@ html {
 body {
   min-height: 100%;
 }
+* {
+  box-sizing: border-box;
+}
 /* General */
 .green {
   color: #009E73;
@@ -70,6 +73,9 @@ span.link:hover {
 }
 .relative {
   position: relative;
+}
+.absolute {
+  position: absolute !important;
 }
 .margin-top {
   margin-top: 30px;
@@ -227,19 +233,14 @@ span.link:hover {
   padding: 0;
 }
 .onboard {
-  padding: 15px;
+  padding: 30px 15px;
   border-style: dashed;
   border-color: #e7e7e7;
   border-width: 1px;
   text-align: center;
   position: relative;
-  background-color: #000000;
-  overflow: hidden;
-}
-.onboard.authorize {
   background-color: inherit;
-  padding-top: 30px;
-  padding-bottom: 30px;
+  overflow: hidden;
 }
 .onboard p {
   margin-top: 0;
@@ -273,6 +274,14 @@ span.link:hover {
   position: relative;
   bottom: 10px;
   font-size: 1em;
+}
+.joyride-beacon {
+  cursor: pointer;
+}
+.joyride-beacon.bottom {
+  bottom: -18px;
+  left: 50%;
+  margin-left: -18px;
 }
 .material-icons.green {
   background: none;

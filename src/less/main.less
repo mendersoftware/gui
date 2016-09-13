@@ -6,6 +6,10 @@ body {
   min-height: 100%;
 }
 
+* {
+  box-sizing: border-box;
+}
+
 /* General */
 
 // colors
@@ -111,6 +115,10 @@ a, span.link {
 .relative {
   position: relative;
 }
+.absolute {
+  position: absolute !important;
+}
+
 
 .margin-top {
   margin-top: 30px;
@@ -295,20 +303,14 @@ a, span.link {
 // Onboarding
 
 .onboard {
-  padding: 15px;
+  padding: 30px 15px;
   border-style: dashed;
   border-color: @placeholder;
   border-width: 1px;
   text-align: center;
   position: relative;
-  background-color: #000000;
+  background-color: inherit;
   overflow: hidden;
-
-  &.authorize {
-    background-color: inherit;
-    padding-top: 30px;
-    padding-bottom: 30px;
-  }
 
   p {
     margin-top: 0;
@@ -349,6 +351,17 @@ a, span.link {
     font-size: 1em;
   }
 
+}
+
+// joyride onboard
+.joyride-beacon {
+  cursor: pointer;
+
+  &.bottom {
+    bottom: -18px;
+    left: 50%;
+    margin-left: -18px;
+  }
 }
 
 

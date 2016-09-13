@@ -2,10 +2,23 @@ import React from 'react';
 import { Router, Route, Link } from 'react-router';
 import Time from 'react-time';
 
+var tooltip = {
+  title: 'Recent activity',
+  text: 'Recent activity by you or any other users will show here - so you can see what\'s been going on!',
+  selector: '.activity',
+  position: 'top-right',
+  type: 'hover',
+  trigger: '.activity'
+};
+
 var Activity = React.createClass({
+  componentDidMount: function() {
+    // this.props.addTooltip(tooltip);
+  },
   _clickHandle: function() {
     this.props.clickHandle();
   },
+
   render: function() {
     var activity = this.props.activity.map(function(log, index) {
       return (
@@ -19,9 +32,13 @@ var Activity = React.createClass({
       )
     }); 
     return (
-      <div className="activity-log">
+      <div style={{position: "relative"}} className="activity-log">
         <div className="dashboard-header">
-          <h2>User activity</h2>
+          <h2 className="inline-block">User activity</h2>
+          <div className={this.props.showTooltips ? "activity joyride-beacon" : "hidden"}>
+            <span className="joyride-beacon__inner"></span>
+            <span className="joyride-beacon__outer"></span>
+          </div>
         </div>
         <div>
           <div className="margin-bottom">

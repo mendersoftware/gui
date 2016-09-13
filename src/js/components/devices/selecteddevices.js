@@ -90,10 +90,10 @@ var SelectedDevices = React.createClass({
     }
     this.setState({tagEdit: !this.state.tagEdit});
   },
-  _handleAccept: function () {
+  _handleAccept: function() {
     this.props.accept(this.props.selected);
   },
-  _handleBlock: function () {
+  _handleBlock: function() {
     this.props.block(this.props.selected);
   },
   render: function() {
