@@ -88985,7 +88985,7 @@ var Header = _react2.default.createClass({
           { key: 1, className: 'float-right' },
           _react2.default.createElement(
             _IconMenu2.default,
-            { desktop: true, style: { marginTop: "5px" }, iconButtonElement: iconButtonElement },
+            { anchorOrigin: { vertical: 'bottom', horizontal: 'left' }, desktop: true, style: { marginTop: "5px" }, iconButtonElement: iconButtonElement },
             _react2.default.createElement(_MenuItem2.default, { primaryText: 'Settings', disabled: true }),
             _react2.default.createElement(_MenuItem2.default, { primaryText: 'Manage users', disabled: true }),
             _react2.default.createElement(_MenuItem2.default, { primaryText: 'Help', disabled: true }),

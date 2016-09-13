@@ -68,7 +68,7 @@ var Header = React.createClass({
               <Link to="/" id="logo"></Link>
           </ToolbarGroup>
           <ToolbarGroup key={1} className="float-right">
-            <IconMenu desktop={true} style={{marginTop:"5px"}} iconButtonElement={iconButtonElement}>
+            <IconMenu anchorOrigin={{vertical: 'bottom', horizontal:'left'}} desktop={true} style={{marginTop:"5px"}} iconButtonElement={iconButtonElement}>
               <MenuItem primaryText="Settings" disabled={true} />
               <MenuItem primaryText="Manage users" disabled={true} />
               <MenuItem primaryText="Help" disabled={true} />
