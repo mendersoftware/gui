@@ -7,6 +7,7 @@ var Activity = require('./activity');
 var Deployments = require('./deployments');
 import { Router, Route, Link } from 'react-router';
 import RaisedButton from 'material-ui/RaisedButton';
+import Snackbar from 'material-ui/Snackbar';
 
 function getState() {
   return {
@@ -17,6 +18,7 @@ function getState() {
     recent: AppStore.getPastDeployments(),
     activity: AppStore.getActivity(),
     hideReview: localStorage.getItem("reviewDevices"),
+    snackbar: AppStore.getSnackbar()
   }
 }
 
@@ -122,6 +124,12 @@ var Dashboard = React.createClass({
             </div>
           </div>
         </div>
+        <Snackbar
+          open={this.state.snackbar.open}
+          message={this.state.snackbar.message}
+          autoHideDuration={5000}
+          onRequestClose={this.handleRequestClose}
+        />
       </div>
     );
   }

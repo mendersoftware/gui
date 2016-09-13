@@ -83271,6 +83271,10 @@ var _RaisedButton = require('material-ui/RaisedButton');
 
 var _RaisedButton2 = _interopRequireDefault(_RaisedButton);
 
+var _Snackbar = require('material-ui/Snackbar');
+
+var _Snackbar2 = _interopRequireDefault(_Snackbar);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var AppStore = require('../../stores/app-store');
@@ -83289,7 +83293,8 @@ function getState() {
     devices: AppStore.getAllDevices(),
     recent: AppStore.getPastDeployments(),
     activity: AppStore.getActivity(),
-    hideReview: localStorage.getItem("reviewDevices")
+    hideReview: localStorage.getItem("reviewDevices"),
+    snackbar: AppStore.getSnackbar()
   };
 }
 
@@ -83415,7 +83420,13 @@ var Dashboard = _react2.default.createClass({
             _react2.default.createElement(Activity, { addTooltip: this.props.addTooltip, loading: !this.state.doneActivityLoading, activity: this.state.activity })
           )
         )
-      )
+      ),
+      _react2.default.createElement(_Snackbar2.default, {
+        open: this.state.snackbar.open,
+        message: this.state.snackbar.message,
+        autoHideDuration: 5000,
+        onRequestClose: this.handleRequestClose
+      })
     );
   }
 });
@@ -83426,7 +83437,7 @@ Dashboard.contextTypes = {
 
 module.exports = Dashboard;
 
-},{"../../actions/app-actions":934,"../../stores/app-store":980,"../../stores/local-store":981,"./activity":943,"./deployments":945,"./health":946,"material-ui/RaisedButton":241,"react":843,"react-router":654}],945:[function(require,module,exports){
+},{"../../actions/app-actions":934,"../../stores/app-store":980,"../../stores/local-store":981,"./activity":943,"./deployments":945,"./health":946,"material-ui/RaisedButton":241,"material-ui/Snackbar":250,"react":843,"react-router":654}],945:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -87646,9 +87657,12 @@ var Devices = _react2.default.createClass({
           this.setState({ doneLoading: true });
         }.bind(this), 300);
       }.bind(this),
-      error: function error(err) {
+      error: function (err) {
+        this.setState({ doneLoading: true });
         console.log(err);
-      }
+        var errormsg = err.error || "Please check your connection";
+        AppActions.setSnackbar("Devices couldn't be loaded. " + errormsg);
+      }.bind(this)
     };
     AppActions.getDevices(callback);
   },
@@ -87678,7 +87692,7 @@ var Devices = _react2.default.createClass({
     AppActions.updateFilters(filters);
   },
   _handleRequestClose: function _handleRequestClose() {
-    AppActions.setSnackbar();
+    AppActions.setSnackbar("");
   },
   _handleGroupChange: function _handleGroupChange(group) {
     AppActions.selectGroup(group);
@@ -88917,6 +88931,8 @@ var _Toolbar = require('material-ui/Toolbar');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+var AppActions = require('../../actions/app-actions');
+
 var menuItems = [{ route: "/", text: "Dashboard" }, { route: "/devices", text: "Devices" }, { route: "/software", text: "Software" }, { route: "/deployments", text: "Deployments" }];
 
 var styles = {
@@ -88950,6 +88966,10 @@ var Header = _react2.default.createClass({
   },
   _handleTabActive: function _handleTabActive(tab) {
     this.context.router.push(tab.props.value);
+  },
+  changeTab: function changeTab() {
+    this.props.clearSteps();
+    AppActions.setSnackbar("");
   },
   render: function render() {
     var tabHandler = this._handleTabActive;
@@ -89001,7 +89021,7 @@ var Header = _react2.default.createClass({
           {
             value: this.state.tabIndex,
             inkBarStyle: styles.inkbar,
-            onChange: this.props.clearSteps },
+            onChange: this.changeTab },
           menu
         )
       )
@@ -89015,7 +89035,7 @@ Header.contextTypes = {
 
 module.exports = Header;
 
-},{"material-ui/FontIcon":211,"material-ui/IconButton":216,"material-ui/IconMenu":218,"material-ui/MenuItem":230,"material-ui/Tabs":273,"material-ui/Toolbar":296,"react":843,"react-router":654}],972:[function(require,module,exports){
+},{"../../actions/app-actions":934,"material-ui/FontIcon":211,"material-ui/IconButton":216,"material-ui/IconMenu":218,"material-ui/MenuItem":230,"material-ui/Tabs":273,"material-ui/Toolbar":296,"react":843,"react-router":654}],972:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -89938,6 +89958,10 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactRouter = require('react-router');
 
+var _Snackbar = require('material-ui/Snackbar');
+
+var _Snackbar2 = _interopRequireDefault(_Snackbar);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var AppStore = require('../../stores/app-store');
@@ -89949,7 +89973,8 @@ function getState() {
   return {
     software: AppStore.getSoftwareRepo(),
     groups: AppStore.getGroups(),
-    selected: null
+    selected: null,
+    snackbar: AppStore.getSnackbar()
   };
 }
 
@@ -89992,9 +90017,9 @@ var Software = _react2.default.createClass({
         }.bind(this), 300);
       }.bind(this),
       error: function (err) {
-        setTimeout(function () {
-          this.setState({ doneLoading: true });
-        }.bind(this), 300);
+        var errormsg = err || "Please check your connection";
+        AppActions.setSnackbar("Images couldn't be loaded. " + errormsg);
+        this.setState({ doneLoading: true });
       }.bind(this)
     };
     AppActions.getImages(callback);
@@ -90019,14 +90044,20 @@ var Software = _react2.default.createClass({
         'div',
         { className: 'relative overflow-hidden' },
         _react2.default.createElement(Repository, { refreshImages: this._getImages, startLoader: this._startLoading, loading: !this.state.doneLoading, setStorage: this._setStorage, selected: this.state.selected, software: this.state.software, groups: this.state.groups })
-      )
+      ),
+      _react2.default.createElement(_Snackbar2.default, {
+        open: this.state.snackbar.open,
+        message: this.state.snackbar.message,
+        autoHideDuration: 5000,
+        onRequestClose: this.handleRequestClose
+      })
     );
   }
 });
 
 module.exports = Software;
 
-},{"../../actions/app-actions":934,"../../stores/app-store":980,"../../stores/local-store":981,"./repository.js":973,"react":843,"react-router":654}],976:[function(require,module,exports){
+},{"../../actions/app-actions":934,"../../stores/app-store":980,"../../stores/local-store":981,"./repository.js":973,"material-ui/Snackbar":250,"react":843,"react-router":654}],976:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');

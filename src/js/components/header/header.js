@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router';
+var AppActions = require('../../actions/app-actions');
 
 import { Tabs, Tab } from 'material-ui/Tabs';
 import IconMenu from 'material-ui/IconMenu';
@@ -49,6 +50,10 @@ var Header = React.createClass({
   _handleTabActive: function(tab) {
     this.context.router.push(tab.props.value);
   },
+  changeTab: function() {
+    this.props.clearSteps();
+    AppActions.setSnackbar("");
+  },
   render: function() {
     var tabHandler = this._handleTabActive;
     var menu = menuItems.map(function(item, index) {
@@ -80,7 +85,7 @@ var Header = React.createClass({
           <Tabs
             value={this.state.tabIndex}
             inkBarStyle={styles.inkbar}
-            onChange={this.props.clearSteps}>
+            onChange={this.changeTab}>
             {menu}
           </Tabs>
         </div>

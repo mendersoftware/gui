@@ -74,8 +74,11 @@ var Devices = React.createClass({
         }.bind(this), 300);
       }.bind(this),
       error: function(err) {
+        this.setState({doneLoading:true});
         console.log(err);
-      }
+        var errormsg = err.error || "Please check your connection";
+        AppActions.setSnackbar("Devices couldn't be loaded. " +errormsg);
+      }.bind(this)
     };
     AppActions.getDevices(callback);
   },
@@ -105,7 +108,7 @@ var Devices = React.createClass({
     AppActions.updateFilters(filters);
   },
   _handleRequestClose: function() {
-    AppActions.setSnackbar();
+    AppActions.setSnackbar("");
   },
   _handleGroupChange: function(group) {
     AppActions.selectGroup(group);
