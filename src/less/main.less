@@ -115,6 +115,10 @@ a, span.link {
 .relative {
   position: relative;
 }
+.absolute {
+  position: absolute !important;
+}
+
 
 .margin-top {
   margin-top: 30px;
@@ -299,20 +303,14 @@ a, span.link {
 // Onboarding
 
 .onboard {
-  padding: 15px;
+  padding: 30px 15px;
   border-style: dashed;
   border-color: @placeholder;
   border-width: 1px;
   text-align: center;
   position: relative;
-  background-color: #000000;
+  background-color: inherit;
   overflow: hidden;
-
-  &.authorize {
-    background-color: inherit;
-    padding-top: 30px;
-    padding-bottom: 30px;
-  }
 
   p {
     margin-top: 0;
@@ -356,14 +354,13 @@ a, span.link {
 }
 
 // joyride onboard
-.tooltip-info {
-  position: absolute;
-  top: 0;
-  right: 0;
-  .transition(opacity 0.42s ease-in-out);
+.joyride-beacon {
   cursor: pointer;
-  &:hover {
-    .opacity(.6);
+
+  &.bottom {
+    bottom: -18px;
+    left: 50%;
+    margin-left: -18px;
   }
 }
 

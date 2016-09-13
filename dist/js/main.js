@@ -82751,16 +82751,15 @@ var App = _react2.default.createClass({
     return getState();
   },
   componentDidMount: function componentDidMount() {
-    this.refs.joyride.start();
+    // this.refs.joyride.start();
   },
   componentDidUpdate: function componentDidUpdate(prevProps, prevState) {
     if (!prevState.ready && this.state.ready) {
-      this.refs.joyride.start();
+      // this.refs.joyride.start();
     }
   },
 
   makeReady: function makeReady(ready) {
-    console.log("ready");
     this.setState({ ready: ready });
   },
   addSteps: function addSteps(steps) {
@@ -82781,10 +82780,10 @@ var App = _react2.default.createClass({
   },
   clearSteps: function clearSteps() {
     this.setState({ steps: [] });
-    this.refs.joyride.start();
+    // this.refs.joyride.start();
   },
   addTooltip: function addTooltip(data) {
-    this.refs.joyride.addTooltip(data);
+    // this.refs.joyride.addTooltip(data);
   },
 
   render: function render() {
@@ -83176,14 +83175,15 @@ var tooltip = {
   text: 'Recent activity by you or any other users will show here - so you can see what\'s been going on!',
   selector: '.activity',
   position: 'top-right',
-  type: 'hover'
+  type: 'hover',
+  trigger: '.activity'
 };
 
 var Activity = _react2.default.createClass({
   displayName: 'Activity',
 
   componentDidMount: function componentDidMount() {
-    this.props.addTooltip(tooltip);
+    // this.props.addTooltip(tooltip);
   },
   _clickHandle: function _clickHandle() {
     this.props.clickHandle();
@@ -83224,7 +83224,7 @@ var Activity = _react2.default.createClass({
         ),
         _react2.default.createElement(
           'div',
-          { className: 'activity joyride-beacon' },
+          { className: this.props.showTooltips ? "activity joyride-beacon" : "hidden" },
           _react2.default.createElement('span', { className: 'joyride-beacon__inner' }),
           _react2.default.createElement('span', { className: 'joyride-beacon__outer' })
         )
@@ -83294,7 +83294,7 @@ function getState() {
 }
 
 /* Joyride */
-var steps = {
+var tooltips = {
   admissions: {
     title: 'Authorize devices',
     text: 'Devices must be authorized before you can deploy an update to them. <br/><br/>Click <b>Review details</b> to view the device\'s details before authorizing it.',
@@ -83317,14 +83317,7 @@ var Dashboard = _react2.default.createClass({
     AppStore.removeChangeListener(this._onChange);
   },
   componentDidMount: function componentDidMount() {
-    AppActions.getDevicesForAdmission(function (devices) {
-      this.setState({ pending: AppStore.getPendingDevices() });
-      setTimeout(function () {
-        this.setState({ doneAdmnsLoading: true });
-        this.props.addSteps([steps.admissions]);
-        this.props.makeReady(true);
-      }.bind(this), 300);
-    }.bind(this));
+    this._refreshAdmissions();
     AppActions.getPastDeployments(function () {
       setTimeout(function () {
         this.setState({ doneActiveDepsLoading: true });
@@ -83341,6 +83334,22 @@ var Dashboard = _react2.default.createClass({
   },
   _setStorage: function _setStorage(key, value) {
     AppActions.setLocalStorage(key, value);
+  },
+  _refreshAdmissions: function _refreshAdmissions() {
+    AppActions.getDevicesForAdmission(function (devices) {
+      var pending = [];
+      for (var i = 0; i < devices.length; i++) {
+        if (devices[i].status === "pending") {
+          pending.push(devices[i]);
+        }
+      }
+      this.setState({ pendingDevices: pending });
+      setTimeout(function () {
+        this.setState({ doneAdmnsLoading: true });
+        // this.props.addTooltip(tooltips.admissions);
+        // this.props.makeReady(true);
+      }.bind(this), 300);
+    }.bind(this));
   },
   _handleClick: function _handleClick(params) {
     switch (params.route) {
@@ -83374,7 +83383,7 @@ var Dashboard = _react2.default.createClass({
         null,
         _react2.default.createElement(
           'div',
-          { id: 'authorize', className: this.state.pending.length && !this.state.hideReview ? "authorize onboard margin-bottom" : "hidden" },
+          { className: this.state.pending.length && !this.state.hideReview ? "onboard margin-bottom" : "hidden" },
           _react2.default.createElement('div', { className: 'close', onClick: this._setStorage.bind(null, "reviewDevices", true) }),
           _react2.default.createElement(
             'p',
@@ -83383,7 +83392,13 @@ var Dashboard = _react2.default.createClass({
             pending_str,
             ' waiting authorization'
           ),
-          _react2.default.createElement(_RaisedButton2.default, { onClick: this._handleClick.bind(null, { route: "devices" }), primary: true, label: 'Review details' })
+          _react2.default.createElement(_RaisedButton2.default, { onClick: this._handleClick.bind(null, { route: "devices" }), primary: true, label: 'Review details' }),
+          _react2.default.createElement(
+            'div',
+            { id: 'authorize', className: this.props.showTooltips ? "activity joyride-beacon absolute bottom" : "hidden" },
+            _react2.default.createElement('span', { className: 'joyride-beacon__inner' }),
+            _react2.default.createElement('span', { className: 'joyride-beacon__outer' })
+          )
         ),
         _react2.default.createElement(
           'div',
@@ -88652,8 +88667,8 @@ var Authorized = _react2.default.createClass({
     return {
       sortCol: "name",
       sortDown: true,
-      minHeight: 220,
-      divHeight: 148
+      minHeight: 180,
+      divHeight: 178
     };
   },
   componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
@@ -88697,7 +88712,7 @@ var Authorized = _react2.default.createClass({
       AppActions.acceptDevice(device, callback);
     });
   },
-  _blockDevices: function _blockDevices(device) {
+  _blockDevice: function _blockDevice(device) {
     var callback = {
       success: function (data) {
         AppActions.setSnackbar("Device rejected successfully");
@@ -88723,7 +88738,7 @@ var Authorized = _react2.default.createClass({
     }
   },
   _adjustCellHeight: function _adjustCellHeight(height) {
-    this.setState({ divHeight: height + 60 });
+    this.setState({ divHeight: height + 70 });
   },
   render: function render() {
     var styles = {
@@ -88737,7 +88752,7 @@ var Authorized = _react2.default.createClass({
     var devices = this.props.pending.map(function (device, index) {
       var expanded = '';
       if (this.state.expanded === index) {
-        expanded = _react2.default.createElement(SelectedDevices, { accept: this._authorizeDevices, block: this._blockDevices(null, device), unauthorized: true, selected: [device] });
+        expanded = _react2.default.createElement(SelectedDevices, { accept: this._authorizeDevices, block: this._blockDevice, unauthorized: true, selected: [device] });
       }
       return _react2.default.createElement(
         _Table.TableRow,
@@ -88771,7 +88786,7 @@ var Authorized = _react2.default.createClass({
           ),
           _react2.default.createElement(
             _IconButton2.default,
-            { onClick: this._blockDevices.bind(null, device) },
+            { onClick: this._blockDevice.bind(null, device) },
             _react2.default.createElement(
               _FontIcon2.default,
               { className: 'material-icons red' },
@@ -88860,7 +88875,11 @@ var Authorized = _react2.default.createClass({
           devices
         )
       ),
-      _react2.default.createElement(_RaisedButton2.default, { onClick: this._authorizeDevices.bind(null, this.props.pending), className: 'bottom-right-button', primary: true, label: 'Authorize all' })
+      _react2.default.createElement(
+        'div',
+        { className: 'margin-top-small' },
+        _react2.default.createElement(_RaisedButton2.default, { onClick: this._authorizeDevices.bind(null, this.props.pending), primary: true, label: 'Authorize all', className: 'float-right' })
+      )
     );
   }
 });

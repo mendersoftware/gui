@@ -7,12 +7,13 @@ var tooltip = {
   text: 'Recent activity by you or any other users will show here - so you can see what\'s been going on!',
   selector: '.activity',
   position: 'top-right',
-  type: 'hover'
+  type: 'hover',
+  trigger: '.activity'
 };
 
 var Activity = React.createClass({
   componentDidMount: function() {
-    this.props.addTooltip(tooltip);
+    // this.props.addTooltip(tooltip);
   },
   _clickHandle: function() {
     this.props.clickHandle();
@@ -34,7 +35,7 @@ var Activity = React.createClass({
       <div style={{position: "relative"}} className="activity-log">
         <div className="dashboard-header">
           <h2 className="inline-block">User activity</h2>
-          <div className="activity joyride-beacon">
+          <div className={this.props.showTooltips ? "activity joyride-beacon" : "hidden"}>
             <span className="joyride-beacon__inner"></span>
             <span className="joyride-beacon__outer"></span>
           </div>

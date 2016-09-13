@@ -28,15 +28,14 @@ var App = React.createClass({
     return getState();
   },
   componentDidMount: function() {
-    this.refs.joyride.start();
+   // this.refs.joyride.start();
   },
   componentDidUpdate (prevProps, prevState) {
     if (!prevState.ready && this.state.ready) {
-      this.refs.joyride.start();
+      // this.refs.joyride.start();
     }
   },
   makeReady: function(ready) {
-    console.log("ready");
     this.setState({ready:ready});
   },
   addSteps: function(steps) {
@@ -57,10 +56,10 @@ var App = React.createClass({
   },
   clearSteps: function() {
     this.setState({steps: []});
-    this.refs.joyride.start();
+    // this.refs.joyride.start();
   },
   addTooltip(data) {
-      this.refs.joyride.addTooltip(data);
+      // this.refs.joyride.addTooltip(data);
   },
   render: function() {
     return (

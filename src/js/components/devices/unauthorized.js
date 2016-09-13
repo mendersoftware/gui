@@ -19,8 +19,8 @@ var Authorized =  React.createClass({
     return {
        sortCol: "name",
        sortDown: true,
-       minHeight: 220,
-       divHeight: 148
+       minHeight: 180,
+       divHeight: 178
     }
   },
   componentWillReceiveProps: function(nextProps) {
@@ -64,7 +64,7 @@ var Authorized =  React.createClass({
       AppActions.acceptDevice(device, callback);
     });
   },
-  _blockDevices: function(device) {
+  _blockDevice: function(device) {
     var callback = {
       success: function(data) {
         AppActions.setSnackbar("Device rejected successfully");
@@ -90,7 +90,7 @@ var Authorized =  React.createClass({
     }
   },
   _adjustCellHeight: function(height) {
-    this.setState({divHeight: height+60});
+    this.setState({divHeight: height+70});
   },
   render: function() {
     var styles = {
@@ -104,7 +104,7 @@ var Authorized =  React.createClass({
     var devices = this.props.pending.map(function(device, index) {
       var expanded = '';
       if ( this.state.expanded === index ) {
-        expanded = <SelectedDevices accept={this._authorizeDevices} block={this._blockDevices(null, device)} unauthorized={true} selected={[device]}  />
+        expanded = <SelectedDevices accept={this._authorizeDevices} block={this._blockDevice} unauthorized={true} selected={[device]}  />
       }
       return (
         <TableRow style={{"backgroundColor": "#e9f4f3"}} className={expanded ? "expand" : null} hoverable={true} key={index}>
@@ -115,7 +115,7 @@ var Authorized =  React.createClass({
             <IconButton onClick={this._authorizeDevices.bind(null, [device])} style={{"paddingLeft": "0"}}>
               <FontIcon className="material-icons green">check_circle</FontIcon>
             </IconButton>
-            <IconButton onClick={this._blockDevices.bind(null, device)}>
+            <IconButton onClick={this._blockDevice.bind(null, device)}>
               <FontIcon className="material-icons red">cancel</FontIcon>
             </IconButton>
           </TableRowColumn>
@@ -155,7 +155,9 @@ var Authorized =  React.createClass({
             {devices}
           </TableBody>
         </Table>
-        <RaisedButton onClick={this._authorizeDevices.bind(null, this.props.pending)} className="bottom-right-button" primary={true} label="Authorize all" />
+        <div className="margin-top-small">
+          <RaisedButton onClick={this._authorizeDevices.bind(null, this.props.pending)} primary={true} label="Authorize all" className="float-right" />
+        </div>
       </Collapse>
     );
   }
