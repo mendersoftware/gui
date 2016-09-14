@@ -29,7 +29,7 @@ var styles = {
 
 var tooltip = {
   title: 'Settings & options',
-  text: '<div class="development"><i class="material-icons">build</i>Under development</div>The Mender UI will soon allow you to change settings, manage your users and more via this settings & options menu.',
+  text: '<div class="development"><i class="material-icons">build</i>Under development</div>The Mender UI will soon allow you to change settings, manage your users and more via this menu.',
   selector: '.settings-menu-tooltip',
   position: 'bottom-right',
   type: 'hover'
