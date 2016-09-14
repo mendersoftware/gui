@@ -8,7 +8,8 @@ var tooltip = {
   text: '<div class="development"><i class="material-icons">build</i>Under development</div>This feature will alert you to any devices that have lost their connection.',
   selector: '#heartbeat-info',
   position: 'bottom-right',
-  type: 'hover'
+  type: 'hover',
+  trigger: '.health'
 };
 
 var Health = React.createClass({

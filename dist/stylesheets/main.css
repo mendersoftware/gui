@@ -286,7 +286,7 @@ span.link:hover {
 .tooltip.info {
   position: absolute;
   top: 2px;
-  right: -10px;
+  right: 0px;
   cursor: pointer;
   -webkit-transition: opacity 0.4s ease-in;
   -moz-transition: opacity 0.4s ease-in;
@@ -316,16 +316,16 @@ span.link:hover {
   border-bottom: none !important;
 }
 .development {
-  background-color: #d4e9e7;
+  background-color: #679BA5;
   padding: 7px 11px;
-  color: #ffffff;
+  color: #F7F7F7;
   border-radius: 20px;
   margin: -10px 0 10px;
   display: table;
 }
 .development .material-icons {
   margin-right: 7px;
-  color: #ffffff;
+  color: #F7F7F7;
   vertical-align: text-bottom;
   font-size: 18px;
 }
@@ -783,7 +783,6 @@ textarea#inline-description {
 }
 .health .health-panel {
   margin: 15px 0;
-  box-sizing: border-box;
   padding: 5% 5% 13%;
   min-height: 100px;
   border-radius: 4px;
