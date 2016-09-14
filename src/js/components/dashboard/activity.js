@@ -1,19 +1,19 @@
 import React from 'react';
 import { Router, Route, Link } from 'react-router';
 import Time from 'react-time';
+import FontIcon from 'material-ui/FontIcon';
 
 var tooltip = {
   title: 'Recent activity',
-  text: 'Recent activity by you or any other users will show here - so you can see what\'s been going on!',
-  selector: '.activity',
+  text: '<div class="development"><i class="material-icons">build</i>Under development</div>All recent activity by you or any other users will show here - giving you full visibility of what\'s been happening with your devices and deployments.',
+  selector: '#activity-info',
   position: 'top-right',
-  type: 'hover',
-  trigger: '.activity'
+  type: 'hover'
 };
 
 var Activity = React.createClass({
   componentDidMount: function() {
-    // this.props.addTooltip(tooltip);
+    this.props.addTooltip(tooltip);
   },
   _clickHandle: function() {
     this.props.clickHandle();
@@ -44,7 +44,10 @@ var Activity = React.createClass({
           <div className="margin-bottom">
             {activity}
             <div className={this.props.activity.length ? "hidden" : "dashboard-placeholder" }>
-              <p>No recent user activity</p>
+              <p>Recent user activity will be shown here</p>
+              <div id="activity-info" className="tooltip info">
+                <FontIcon className="material-icons">info</FontIcon>
+              </div>
               <img src="assets/img/activity.png" alt="activity" />
             </div>
           </div>

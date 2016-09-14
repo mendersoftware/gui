@@ -82780,10 +82780,10 @@ var App = _react2.default.createClass({
   },
   clearSteps: function clearSteps() {
     this.setState({ steps: [] });
-    // this.refs.joyride.start();
+    this.refs.joyride.start();
   },
   addTooltip: function addTooltip(data) {
-    // this.refs.joyride.addTooltip(data);
+    this.refs.joyride.addTooltip(data);
   },
 
   render: function render() {
@@ -83168,22 +83168,25 @@ var _reactTime = require('react-time');
 
 var _reactTime2 = _interopRequireDefault(_reactTime);
 
+var _FontIcon = require('material-ui/FontIcon');
+
+var _FontIcon2 = _interopRequireDefault(_FontIcon);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var tooltip = {
   title: 'Recent activity',
-  text: 'Recent activity by you or any other users will show here - so you can see what\'s been going on!',
-  selector: '.activity',
+  text: '<div class="development"><i class="material-icons">build</i>Under development</div>All recent activity by you or any other users will show here - giving you full visibility of what\'s been happening with your devices and deployments.',
+  selector: '#activity-info',
   position: 'top-right',
-  type: 'hover',
-  trigger: '.activity'
+  type: 'hover'
 };
 
 var Activity = _react2.default.createClass({
   displayName: 'Activity',
 
   componentDidMount: function componentDidMount() {
-    // this.props.addTooltip(tooltip);
+    this.props.addTooltip(tooltip);
   },
   _clickHandle: function _clickHandle() {
     this.props.clickHandle();
@@ -83242,7 +83245,16 @@ var Activity = _react2.default.createClass({
             _react2.default.createElement(
               'p',
               null,
-              'No recent user activity'
+              'Recent user activity will be shown here'
+            ),
+            _react2.default.createElement(
+              'div',
+              { id: 'activity-info', className: 'tooltip info' },
+              _react2.default.createElement(
+                _FontIcon2.default,
+                { className: 'material-icons' },
+                'info'
+              )
             ),
             _react2.default.createElement('img', { src: 'assets/img/activity.png', alt: 'activity' })
           )
@@ -83258,7 +83270,7 @@ Activity.contextTypes = {
 
 module.exports = Activity;
 
-},{"react":843,"react-router":654,"react-time":694}],944:[function(require,module,exports){
+},{"material-ui/FontIcon":211,"react":843,"react-router":654,"react-time":694}],944:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -83416,7 +83428,7 @@ var Dashboard = _react2.default.createClass({
           _react2.default.createElement(
             'div',
             { className: 'right' },
-            _react2.default.createElement(Health, { loading: !this.state.doneAdmnsLoading, devices: this.state.devices, clickHandle: this._handleClick, health: this.state.health }),
+            _react2.default.createElement(Health, { addTooltip: this.props.addTooltip, loading: !this.state.doneAdmnsLoading, devices: this.state.devices, clickHandle: this._handleClick, health: this.state.health }),
             _react2.default.createElement(Activity, { addTooltip: this.props.addTooltip, loading: !this.state.doneActivityLoading, activity: this.state.activity })
           )
         )
@@ -83509,13 +83521,28 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactRouter = require('react-router');
 
+var _FontIcon = require('material-ui/FontIcon');
+
+var _FontIcon2 = _interopRequireDefault(_FontIcon);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var Loader = require('../common/loader');
 
+var tooltip = {
+  title: 'Device heartbeats',
+  text: '<div class="development"><i class="material-icons">build</i>Under development</div>This feature will alert you to any devices that have lost their connection.',
+  selector: '#heartbeat-info',
+  position: 'bottom-right',
+  type: 'hover'
+};
+
 var Health = _react2.default.createClass({
   displayName: 'Health',
 
+  componentDidMount: function componentDidMount() {
+    this.props.addTooltip(tooltip);
+  },
   _clickHandle: function _clickHandle(route) {
     this.props.clickHandle(route);
   },
@@ -83614,7 +83641,16 @@ var Health = _react2.default.createClass({
         _react2.default.createElement(
           'p',
           null,
-          'No connected devices yet'
+          'Information about connected devices will appear here'
+        ),
+        _react2.default.createElement(
+          'div',
+          { id: 'heartbeat-info', className: 'tooltip info' },
+          _react2.default.createElement(
+            _FontIcon2.default,
+            { className: 'material-icons' },
+            'info'
+          )
         ),
         _react2.default.createElement('img', { src: 'assets/img/connected.png', alt: 'connected' })
       )
@@ -83628,7 +83664,7 @@ Health.contextTypes = {
 
 module.exports = Health;
 
-},{"../common/loader":942,"react":843,"react-router":654}],947:[function(require,module,exports){
+},{"../common/loader":942,"material-ui/FontIcon":211,"react":843,"react-router":654}],947:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -88945,6 +88981,14 @@ var styles = {
   }
 };
 
+var tooltip = {
+  title: 'Settings & options',
+  text: '<div class="development"><i class="material-icons">build</i>Under development</div>The Mender UI will soon allow you to change settings, manage your users and more via the settings & options menu.',
+  selector: '#settings-info',
+  position: 'bottom-right',
+  type: 'hover'
+};
+
 var tab = 0;
 
 var Header = _react2.default.createClass({
@@ -88960,6 +89004,9 @@ var Header = _react2.default.createClass({
   },
   componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
     this.setState({ tabIndex: this._updateActive() });
+  },
+  componentDidMount: function componentDidMount() {
+    this.props.addTooltip(tooltip);
   },
   _updateActive: function _updateActive() {
     return this.context.router.isActive({ pathname: '/' }, true) ? '/' : this.context.router.isActive('/devices') ? '/devices' : this.context.router.isActive('/software') ? '/software' : this.context.router.isActive('/deployments') ? '/deployments' : '/';
@@ -89010,6 +89057,15 @@ var Header = _react2.default.createClass({
             _react2.default.createElement(_MenuItem2.default, { primaryText: 'Manage users', disabled: true }),
             _react2.default.createElement(_MenuItem2.default, { primaryText: 'Help', disabled: true }),
             _react2.default.createElement(_MenuItem2.default, { primaryText: 'Logout', disabled: true })
+          ),
+          _react2.default.createElement(
+            'div',
+            { id: 'settings-info', className: 'tooltip info' },
+            _react2.default.createElement(
+              _FontIcon2.default,
+              { className: 'material-icons' },
+              'info'
+            )
           )
         )
       ),

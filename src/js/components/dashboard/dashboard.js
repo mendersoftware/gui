@@ -119,7 +119,7 @@ var Dashboard = React.createClass({
           </div>
           <div className="rightDashboard">
             <div className="right">
-              <Health loading={!this.state.doneAdmnsLoading} devices={this.state.devices} clickHandle={this._handleClick} health={this.state.health} />
+              <Health addTooltip={this.props.addTooltip} loading={!this.state.doneAdmnsLoading} devices={this.state.devices} clickHandle={this._handleClick} health={this.state.health} />
               <Activity addTooltip={this.props.addTooltip} loading={!this.state.doneActivityLoading}  activity={this.state.activity} />
             </div>
           </div>
