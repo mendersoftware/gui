@@ -5,12 +5,14 @@ var AppActions = require('../../actions/app-actions');
 var Repository = require('./repository.js');
 
 import { Router, Route, Link } from 'react-router';
+import Snackbar from 'material-ui/Snackbar';
 
 function getState() {
   return {
     software: AppStore.getSoftwareRepo(),
     groups: AppStore.getGroups(),
     selected: null,
+    snackbar: AppStore.getSnackbar()
   }
 }
 
@@ -51,9 +53,9 @@ var Software = React.createClass({
         }.bind(this), 300);
       }.bind(this),
       error: function(err) {
-        setTimeout(function() {
-          this.setState({doneLoading: true});
-        }.bind(this), 300);
+        var errormsg = err || "Please check your connection";
+        AppActions.setSnackbar("Images couldn't be loaded. " +errormsg);
+        this.setState({doneLoading: true});
       }.bind(this)
     };
     AppActions.getImages(callback);
@@ -72,6 +74,12 @@ var Software = React.createClass({
         <div className="relative overflow-hidden">
           <Repository refreshImages={this._getImages} startLoader={this._startLoading} loading={!this.state.doneLoading} setStorage={this._setStorage} selected={this.state.selected} software={this.state.software} groups={this.state.groups} />
         </div>
+        <Snackbar
+          open={this.state.snackbar.open}
+          message={this.state.snackbar.message}
+          autoHideDuration={5000}
+          onRequestClose={this.handleRequestClose}
+        />
       </div>
     );
   }

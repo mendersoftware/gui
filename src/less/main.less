@@ -364,6 +364,46 @@ a, span.link {
   }
 }
 
+.tooltip.info {
+  position: absolute;
+  top: 2px;
+  right: -10px;
+  cursor: pointer;
+
+  .transition(opacity .4s ease-in);
+  .transition(transform .4s ease-in);
+  .opacity(0.6);
+
+  .material-icons {
+    color: @grey !important;
+  }
+
+  &:hover {
+    .opacity(1);
+    .animation(bounce 0.4s forwards);
+  }
+}
+
+.joyride-tooltip__header {
+  border-bottom: none !important;
+}
+
+.development {
+  background-color: @lightgrey;
+  padding: 7px 11px;
+  color: #ffffff;
+  border-radius: 20px;
+  margin: -10px 0 10px;
+  display: table;
+
+  .material-icons {
+    margin-right: 7px;
+    color: #ffffff;
+    vertical-align: text-bottom;
+    font-size: 18px
+  }
+}
+
 
 // Icons
 .material-icons {
@@ -793,14 +833,14 @@ textarea#inline-description {
 /* Dashboard */
 
 .leftDashboard {
-  width: 70%;
+  width: 71%;
   display: inline-block;
   padding-right: 3%;
   vertical-align: top;
 }
 
 .rightDashboard {
-  width: 23%;
+  width: 29%;
   display: inline-block;
   border-left: 1px solid @lightgrey;
   padding-left: 3%;
@@ -1329,6 +1369,14 @@ span.month, span.day {
    100% {
     .rotate(360deg); 
   }
+}
+
+@keyframes bounce {
+  0%   { .scale(0.9); animation-timing-function:ease-in;  }
+  37%  { .scale(1.1); animation-timing-function:ease-out; }
+  55%  { .scale(1.3); animation-timing-function:ease-in;  }
+  81%  { .scale(1.2); animation-timing-function:ease-out; }
+  100% { .scale(1.3); }
 }
 
 div.shake-alert {

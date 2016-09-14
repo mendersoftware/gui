@@ -56,10 +56,10 @@ var App = React.createClass({
   },
   clearSteps: function() {
     this.setState({steps: []});
-    // this.refs.joyride.start();
+    this.refs.joyride.start();
   },
   addTooltip(data) {
-      // this.refs.joyride.addTooltip(data);
+    this.refs.joyride.addTooltip(data);
   },
   render: function() {
     return (

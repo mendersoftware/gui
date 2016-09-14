@@ -35,6 +35,8 @@ gulp.task('browserify', function() {
 gulp.task('copy', function() {
   gulp.src('src/index.html')
     .pipe(gulp.dest('dist'));
+  gulp.src('src/favicon.ico')
+    .pipe(gulp.dest('dist'));
   gulp.src('src/assets/**/*.*')
     .pipe(gulp.dest('dist/assets'));
 });

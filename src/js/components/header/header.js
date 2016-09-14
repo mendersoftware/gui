@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router';
+var AppActions = require('../../actions/app-actions');
 
 import { Tabs, Tab } from 'material-ui/Tabs';
 import IconMenu from 'material-ui/IconMenu';
@@ -26,6 +27,14 @@ var styles = {
   }
 };
 
+var tooltip = {
+  title: 'Settings & options',
+  text: '<div class="development"><i class="material-icons">build</i>Under development</div>The Mender UI will soon allow you to change settings, manage your users and more via the settings & options menu.',
+  selector: '#settings-info',
+  position: 'bottom-right',
+  type: 'hover'
+};
+
 var tab = 0;
 
 var Header = React.createClass({
@@ -40,6 +49,9 @@ var Header = React.createClass({
   componentWillReceiveProps: function(nextProps) {
     this.setState({tabIndex: this._updateActive()});
   },
+  componentDidMount: function() {
+    this.props.addTooltip(tooltip);
+  },
   _updateActive: function() {
     return this.context.router.isActive({ pathname: '/' }, true) ? '/' :
       this.context.router.isActive('/devices') ? '/devices' :
@@ -48,6 +60,10 @@ var Header = React.createClass({
   },
   _handleTabActive: function(tab) {
     this.context.router.push(tab.props.value);
+  },
+  changeTab: function() {
+    this.props.clearSteps();
+    AppActions.setSnackbar("");
   },
   render: function() {
     var tabHandler = this._handleTabActive;
@@ -68,19 +84,22 @@ var Header = React.createClass({
               <Link to="/" id="logo"></Link>
           </ToolbarGroup>
           <ToolbarGroup key={1} className="float-right">
-            <IconMenu desktop={true} style={{marginTop:"5px"}} iconButtonElement={iconButtonElement}>
-              <MenuItem primaryText="Settings" />
-              <MenuItem primaryText="Manage users" />
-              <MenuItem primaryText="Help" />
-              <MenuItem primaryText="Logout" />
+            <IconMenu anchorOrigin={{vertical: 'bottom', horizontal:'left'}} desktop={true} style={{marginTop:"5px"}} iconButtonElement={iconButtonElement}>
+              <MenuItem primaryText="Settings" disabled={true} />
+              <MenuItem primaryText="Manage users" disabled={true} />
+              <MenuItem primaryText="Help" disabled={true} />
+              <MenuItem primaryText="Logout" disabled={true} />
             </IconMenu>
+            <div id="settings-info" className="tooltip info">
+              <FontIcon className="material-icons">info</FontIcon>
+            </div>
           </ToolbarGroup>
         </Toolbar>
         <div id="header-nav">
           <Tabs
             value={this.state.tabIndex}
             inkBarStyle={styles.inkbar}
-            onChange={this.props.clearSteps}>
+            onChange={this.changeTab}>
             {menu}
           </Tabs>
         </div>
