@@ -99,7 +99,8 @@ var Header = React.createClass({
           <Tabs
             value={this.state.tabIndex}
             inkBarStyle={styles.inkbar}
-            onChange={this.changeTab}>
+            onChange={this.changeTab}
+            tabItemContainerStyle={{backgroundColor:"inherit"}}>
             {menu}
           </Tabs>
         </div>
