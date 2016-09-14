@@ -762,13 +762,13 @@ textarea#inline-description {
 }
 /* Dashboard */
 .leftDashboard {
-  width: 70%;
+  width: 71%;
   display: inline-block;
   padding-right: 3%;
   vertical-align: top;
 }
 .rightDashboard {
-  width: 23%;
+  width: 29%;
   display: inline-block;
   border-left: 1px solid #d4e9e7;
   padding-left: 3%;
