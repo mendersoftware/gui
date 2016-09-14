@@ -5,10 +5,11 @@ import FontIcon from 'material-ui/FontIcon';
 
 var tooltip = {
   title: 'Recent activity',
-  text: '<div class="development"><i class="material-icons">build</i>Under development</div>All recent activity by you or any other users will show here - giving you full visibility of what\'s been happening with your devices and deployments.',
+  text: '<div class="development"><i class="material-icons">build</i>Under development</div>All recent activity by you or any other users will show here - giving you full visibility over what\'s been happening with your devices and deployments.',
   selector: '#activity-info',
   position: 'top-right',
-  type: 'hover'
+  type: 'hover',
+  trigger: '.activity-log'
 };
 
 var Activity = React.createClass({

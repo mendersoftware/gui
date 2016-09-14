@@ -64,7 +64,7 @@ var App = React.createClass({
   render: function() {
     return (
       <div className="wrapper">
-        <Joyride ref="joyride" steps={this.state.steps} showOverlay={false} type='single' />
+        <Joyride ref="joyride" steps={this.state.steps} showOverlay={true} type='single' tooltipOffset={12} />
         <div className="header">
           <Header addSteps={this.addSteps} addTooltip={this.addTooltip} clearSteps={this.clearSteps} history={this.props.history} />
         </div>

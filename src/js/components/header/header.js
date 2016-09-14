@@ -29,8 +29,8 @@ var styles = {
 
 var tooltip = {
   title: 'Settings & options',
-  text: '<div class="development"><i class="material-icons">build</i>Under development</div>The Mender UI will soon allow you to change settings, manage your users and more via the settings & options menu.',
-  selector: '#settings-info',
+  text: '<div class="development"><i class="material-icons">build</i>Under development</div>The Mender UI will soon allow you to change settings, manage your users and more via this menu.',
+  selector: '.settings-menu-tooltip',
   position: 'bottom-right',
   type: 'hover'
 };
@@ -76,7 +76,7 @@ var Header = React.createClass({
           onActive={tabHandler} />
       )
     });
-    var iconButtonElement = <IconButton><FontIcon className="material-icons">settings</FontIcon></IconButton>;
+    var iconButtonElement = <IconButton className="settings-menu-tooltip" style={{marginTop: "5px"}}><FontIcon className="material-icons">settings</FontIcon></IconButton>;
     return (
       <div>
         <Toolbar style={{backgroundColor: "#fff"}}>
@@ -84,15 +84,7 @@ var Header = React.createClass({
               <Link to="/" id="logo"></Link>
           </ToolbarGroup>
           <ToolbarGroup key={1} className="float-right">
-            <IconMenu anchorOrigin={{vertical: 'bottom', horizontal:'left'}} desktop={true} style={{marginTop:"5px"}} iconButtonElement={iconButtonElement}>
-              <MenuItem primaryText="Settings" disabled={true} />
-              <MenuItem primaryText="Manage users" disabled={true} />
-              <MenuItem primaryText="Help" disabled={true} />
-              <MenuItem primaryText="Logout" disabled={true} />
-            </IconMenu>
-            <div id="settings-info" className="tooltip info">
-              <FontIcon className="material-icons">info</FontIcon>
-            </div>
+            {iconButtonElement}
           </ToolbarGroup>
         </Toolbar>
         <div id="header-nav">

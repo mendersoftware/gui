@@ -82790,7 +82790,7 @@ var App = _react2.default.createClass({
     return _react2.default.createElement(
       'div',
       { className: 'wrapper' },
-      _react2.default.createElement(_reactJoyride2.default, { ref: 'joyride', steps: this.state.steps, showOverlay: false, type: 'single' }),
+      _react2.default.createElement(_reactJoyride2.default, { ref: 'joyride', steps: this.state.steps, showOverlay: true, type: 'single', tooltipOffset: 12 }),
       _react2.default.createElement(
         'div',
         { className: 'header' },
@@ -83176,10 +83176,11 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var tooltip = {
   title: 'Recent activity',
-  text: '<div class="development"><i class="material-icons">build</i>Under development</div>All recent activity by you or any other users will show here - giving you full visibility of what\'s been happening with your devices and deployments.',
+  text: '<div class="development"><i class="material-icons">build</i>Under development</div>All recent activity by you or any other users will show here - giving you full visibility over what\'s been happening with your devices and deployments.',
   selector: '#activity-info',
   position: 'top-right',
-  type: 'hover'
+  type: 'hover',
+  trigger: '.activity-log'
 };
 
 var Activity = _react2.default.createClass({
@@ -83534,7 +83535,8 @@ var tooltip = {
   text: '<div class="development"><i class="material-icons">build</i>Under development</div>This feature will alert you to any devices that have lost their connection.',
   selector: '#heartbeat-info',
   position: 'bottom-right',
-  type: 'hover'
+  type: 'hover',
+  trigger: '.health'
 };
 
 var Health = _react2.default.createClass({
@@ -88983,8 +88985,8 @@ var styles = {
 
 var tooltip = {
   title: 'Settings & options',
-  text: '<div class="development"><i class="material-icons">build</i>Under development</div>The Mender UI will soon allow you to change settings, manage your users and more via the settings & options menu.',
-  selector: '#settings-info',
+  text: '<div class="development"><i class="material-icons">build</i>Under development</div>The Mender UI will soon allow you to change settings, manage your users and more via this menu.',
+  selector: '.settings-menu-tooltip',
   position: 'bottom-right',
   type: 'hover'
 };
@@ -89029,7 +89031,7 @@ var Header = _react2.default.createClass({
     });
     var iconButtonElement = _react2.default.createElement(
       _IconButton2.default,
-      null,
+      { className: 'settings-menu-tooltip', style: { marginTop: "5px" } },
       _react2.default.createElement(
         _FontIcon2.default,
         { className: 'material-icons' },
@@ -89050,23 +89052,7 @@ var Header = _react2.default.createClass({
         _react2.default.createElement(
           _Toolbar.ToolbarGroup,
           { key: 1, className: 'float-right' },
-          _react2.default.createElement(
-            _IconMenu2.default,
-            { anchorOrigin: { vertical: 'bottom', horizontal: 'left' }, desktop: true, style: { marginTop: "5px" }, iconButtonElement: iconButtonElement },
-            _react2.default.createElement(_MenuItem2.default, { primaryText: 'Settings', disabled: true }),
-            _react2.default.createElement(_MenuItem2.default, { primaryText: 'Manage users', disabled: true }),
-            _react2.default.createElement(_MenuItem2.default, { primaryText: 'Help', disabled: true }),
-            _react2.default.createElement(_MenuItem2.default, { primaryText: 'Logout', disabled: true })
-          ),
-          _react2.default.createElement(
-            'div',
-            { id: 'settings-info', className: 'tooltip info' },
-            _react2.default.createElement(
-              _FontIcon2.default,
-              { className: 'material-icons' },
-              'info'
-            )
-          )
+          iconButtonElement
         )
       ),
       _react2.default.createElement(
