@@ -27,6 +27,7 @@ var AppActions = {
   },
 
   addToGroup: function(group, deviceList) {
+    console.log(group, deviceList);
     AppDispatcher.handleViewAction({
       actionType: AppConstants.ADD_TO_GROUP,
       group: group,

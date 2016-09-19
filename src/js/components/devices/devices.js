@@ -1,6 +1,7 @@
 import React from 'react';
 var AppStore = require('../../stores/app-store');
 var AppActions = require('../../actions/app-actions');
+var update = require('react-addons-update');
 
 var Groups = require('./groups');
 var DeviceList = require('./devicelist');
@@ -13,6 +14,7 @@ import { Router, Route, Link } from 'react-router';
 function getState() {
   return {
     groups: AppStore.getGroups(),
+    groupsForList: AppStore.getGroups(),
     selectedGroup: AppStore.getSelectedGroup(),
     pendingDevices: AppStore.getPendingDevices(),
     devices: AppStore.getGroupDevices(),
@@ -110,6 +112,11 @@ var Devices = React.createClass({
     };
     AppActions.getGroups(callback);
   },
+  _addTmpGroup: function(name) {
+    // use a tmp group so as not to affect the groups in state
+    var groups = update(this.state.groups, {$push: [name]});
+    this.setState({groupsForList: groups, selectedField: name});
+  },
   _updateFilters: function(filters) {
     AppActions.updateFilters(filters);
   },
@@ -148,7 +155,7 @@ var Devices = React.createClass({
           <div className={this.state.pendingDevices.length&&this.state.doneLoading ? null : "hidden"}>
             <Unauthorized refresh={this._refreshDevices} refreshAdmissions={this._refreshAdmissions} pending={this.state.pendingDevices} />
           </div>
-          <DeviceList loading={!this.state.doneLoading} selectedDevice={this._handleSelectDevice} filters={this.state.filters} attributes={this.state.attributes} onFilterChange={this._updateFilters} images={this.state.images} selectedDevices={this.state.selectedDevices} groups={this.state.groups} devices={this.state.devices} selectedGroup={this.state.selectedGroup} />
+          <DeviceList refreshGroups={this._refreshGroups} selectedField={this.state.selectedField} addGroup={this._addTmpGroup} loading={!this.state.doneLoading} selectedDevice={this._handleSelectDevice} filters={this.state.filters} attributes={this.state.attributes} onFilterChange={this._updateFilters} images={this.state.images} selectedDevices={this.state.selectedDevices} groups={this.state.groupsForList} devices={this.state.devices} selectedGroup={this.state.selectedGroup} />
         </div>
         <Snackbar
           open={this.state.snackbar.open}

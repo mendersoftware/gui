@@ -38,7 +38,9 @@ var DeviceList = React.createClass({
       nameEdit: false,
       editValue: null,
       groupName: this.props.selectedGroup,
-      divHeight: 148
+      divHeight: 148,
+      invalid: true,
+      groupInvalid: true
     };
   },
 
@@ -82,18 +84,28 @@ var DeviceList = React.createClass({
    this.setState({groupName: event.target.value});
    this._validateName(event.target.value);
   },
+  _handleNewGroupNameChange: function(event) {
+   this._validateName(event.target.value);
+  },
   _validateName: function(name) {
     var errorText = null;
-    if (name) {
+    var invalid = false;
+    if (name === "All devices") {
+      errorText = 'The group cannot be called "All devices". Try another name';
+      invalid = true;
+    }
+    else if (name) {
       for (var i=0;i<this.props.groups.length; i++) {
-        if (this.props.groups[i].name === name) {
+        if (this.props.groups[i] === name) {
           errorText = "A group with this name already exists";
+          invalid = true;
         }
       }
     } else {
-      errorText = "Name cannot be left blank.";
+      errorText = "Name cannot be left blank";
+      invalid = true;
     }
-    this.setState({errorText1: errorText});
+    this.setState({errorText1: errorText, invalid: invalid, editValue: name});
   },
   _onChange: function(event) {
     this._validateName(event.target.value);
@@ -130,66 +142,33 @@ var DeviceList = React.createClass({
     AppActions.getDeviceIdentity(device.id, callback);
   },
   _addGroupHandler: function() {
-    AppActions.addToGroup(addSelection.group, this.props.selectedDevices);
+    AppActions.addToGroup(addSelection, this.props.selectedDevices);
     this.dialogToggle('addGroup');
-    AppActions.selectGroup(addSelection.group.id);
+    AppActions.selectGroup(addSelection);
   },
   _removeGroupHandler: function() {
     AppActions.addToGroup(this.props.selectedGroup, this.props.selectedDevices);
   },
   _newGroupHandler: function() {
     var newGroup = this.refs['customGroup'].getValue();
-    newGroup = {
-      name: newGroup,
-      devices: [],
-      type: 'public'
-    };
-    addSelection = {
-      group: newGroup,
-      textFieldValue: null 
-    };
- 
-    newGroup.id = this.props.groups.length+1;
-    var groups = this.props.groups;
-    groups.push(newGroup);
-    this.setState({
-      showInput: false,
-      selectedGroup: {
-        payload: newGroup.id,
-        text: newGroup.name
-      }
-    });
-
-  },
-  _validateName: function(name) {
-    var newName = name;
-    var errorText = null;
-    var invalid = false;
-    for (var i=0;i<this.props.groups.length; i++) {
-      if (this.props.groups[i].name === newName) {
-        errorText = "A group with this name already exists";
-        invalid = true;
-      }
-    }
-    this.setState({errorText1: errorText, invalid: invalid});
+    this.props.addGroup(newGroup);
+    this.setState({groupInvalid: newGroup ? false : true, showInput: false});
   },
   dialogToggle: function (ref) {
     var state = {};
     state[ref] = !this.state[ref];
+    state.selectedField = "";
+    state.editValue = "";
     this.setState(state);
   },
   _handleSelectValueChange: function(event, index, value) {
-    this.setState({showInput: false});
+    this.setState({showInput: false, groupInvalid: false});
     var group = this.props.groups[index];
-
-    addSelection = {
-      group: group,
-      textFieldValue: group.name
-    };
+    addSelection = group;
   },
 
   _showButton: function() {
-    this.setState({showInput: true});
+    this.setState({showInput: true, editValue: ""});
     this.refs.customGroup.focus();
   },
 
@@ -236,6 +215,11 @@ var DeviceList = React.createClass({
 
   _adjustCellHeight: function(height) {
     this.setState({divHeight: height+60});
+  },
+
+  _cancelAdd: function() {
+    this.dialogToggle('addGroup');
+    this.props.refreshGroups();
   },
 
   render: function() {
@@ -290,13 +274,10 @@ var DeviceList = React.createClass({
     }
 
     var groupList = this.props.groups.map(function(group, index) {
-      if (group.id !== 1) {
-        return <MenuItem value={group.id} key={index} primaryText={group.name} />
-      } else {
-        return <MenuItem value='' key={index} primaryText='' />
+      if (group) {
+        return <MenuItem value={group} key={index} primaryText={group} />
       }
     });
-
 
     var devices = this.props.devices.map(function(device, index) {
       var expanded = '';
@@ -330,14 +311,14 @@ var DeviceList = React.createClass({
       <div style={{marginRight:"10px", display:"inline-block"}}>
         <FlatButton
           label="Cancel"
-          onClick={this.dialogToggle.bind(null, 'addGroup')} />
+          onClick={this._cancelAdd} />
       </div>,
       <RaisedButton
         label="Add to group"
         primary={true}
         onClick={this._addGroupHandler}
         ref="save" 
-        disabled={this.state.invalid} />
+        disabled={this.state.groupInvalid} />
     ];
 
     var groupNameInputs = (
@@ -428,15 +409,15 @@ var DeviceList = React.createClass({
           open={this.state.addGroup}
           title="Add selected devices to group"
           actions={addActions}
-          autoDetectWindowHeight={true} autoScrollBodyContent={true}>  
+          autoDetectWindowHeight={true}>  
           <div style={{height: '200px'}}>
-            <div>
+            <div className={groupList.length ? "float-left" : "hidden"}>
               <div className="float-left">
                 <SelectField
                 ref="groupSelect"
                 onChange={this._handleSelectValueChange}
                 floatingLabelText="Select group"
-                value={this.props.selectedGroup}
+                value={this.props.selectedField || ""}
                 >
                  {groupList}
                 </SelectField>
@@ -450,13 +431,14 @@ var DeviceList = React.createClass({
               </div>
             </div>
 
-            <div className={this.state.showInput ? null : 'hidden'}>
+            <div className={this.state.showInput || !groupList.length ? null : 'hidden'}>
               <TextField
                 ref="customGroup"
                 hintText="Group name"
+                value={this.state.editValue || ""}
                 floatingLabelText="Group name"
                 className="float-left clear"
-                onChange={this._validateName}
+                onChange={this._handleNewGroupNameChange}
                 errorStyle={{color: "rgb(171, 16, 0)"}}
                 errorText={this.state.errorText1} />
               <div className="float-left margin-left-small">

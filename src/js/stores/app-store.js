@@ -97,9 +97,11 @@ function _matchFilters(device) {
 
 
 function _selectDevices(device) {
+  _selectedDevices = [];
   if (device === "all") {
     for (var i=0; i<_currentGroupDevices.length; i++) {
       _currentGroupDevices[i].selected = true;
+      _selectedDevices.push(_currentGroupDevices[i].id);
     }
   } else if (device === "none") {
     for (var i=0; i<_currentGroupDevices.length; i++) {
@@ -109,6 +111,8 @@ function _selectDevices(device) {
     for (var i=0; i<_currentGroupDevices.length; i++) {
       if (device.id === _currentGroupDevices[i].id) {
         _currentGroupDevices[i].selected = !_currentGroupDevices[i].selected;
+
+        if (_currentGroupDevices[i].selected) _selectedDevices.push(_currentGroupDevices[i].id);
       }
     }
   }

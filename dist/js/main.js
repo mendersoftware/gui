@@ -82300,6 +82300,7 @@ var AppActions = {
   },
 
   addToGroup: function addToGroup(group, deviceList) {
+    console.log(group, deviceList);
     AppDispatcher.handleViewAction({
       actionType: AppConstants.ADD_TO_GROUP,
       group: group,
@@ -86963,8 +86964,6 @@ module.exports = ScheduleForm;
 },{"../../actions/app-actions":934,"../../stores/app-store":980,"./datetime.js":951,"material-ui/DatePicker":196,"material-ui/Divider":200,"material-ui/Drawer":202,"material-ui/FontIcon":211,"material-ui/IconButton":216,"material-ui/MenuItem":230,"material-ui/SelectField":245,"material-ui/TextField":279,"material-ui/TimePicker":288,"react":843,"react-router":654,"react-search-input":682}],965:[function(require,module,exports){
 'use strict';
 
-var _React$createClass;
-
 var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
@@ -87040,7 +87039,7 @@ var Loader = require('../common/loader');
 
 var addSelection = {};
 
-var DeviceList = _react2.default.createClass((_React$createClass = {
+var DeviceList = _react2.default.createClass({
   displayName: 'DeviceList',
 
   getInitialState: function getInitialState() {
@@ -87055,7 +87054,9 @@ var DeviceList = _react2.default.createClass((_React$createClass = {
       nameEdit: false,
       editValue: null,
       groupName: this.props.selectedGroup,
-      divHeight: 148
+      divHeight: 148,
+      invalid: true,
+      groupInvalid: true
     };
   },
 
@@ -87099,18 +87100,27 @@ var DeviceList = _react2.default.createClass((_React$createClass = {
     this.setState({ groupName: event.target.value });
     this._validateName(event.target.value);
   },
+  _handleNewGroupNameChange: function _handleNewGroupNameChange(event) {
+    this._validateName(event.target.value);
+  },
   _validateName: function _validateName(name) {
     var errorText = null;
-    if (name) {
+    var invalid = false;
+    if (name === "All devices") {
+      errorText = 'The group cannot be called "All devices". Try another name';
+      invalid = true;
+    } else if (name) {
       for (var i = 0; i < this.props.groups.length; i++) {
-        if (this.props.groups[i].name === name) {
+        if (this.props.groups[i] === name) {
           errorText = "A group with this name already exists";
+          invalid = true;
         }
       }
     } else {
-      errorText = "Name cannot be left blank.";
+      errorText = "Name cannot be left blank";
+      invalid = true;
     }
-    this.setState({ errorText1: errorText });
+    this.setState({ errorText1: errorText, invalid: invalid, editValue: name });
   },
   _onChange: function _onChange(event) {
     this._validateName(event.target.value);
@@ -87147,478 +87157,469 @@ var DeviceList = _react2.default.createClass((_React$createClass = {
     AppActions.getDeviceIdentity(device.id, callback);
   },
   _addGroupHandler: function _addGroupHandler() {
-    AppActions.addToGroup(addSelection.group, this.props.selectedDevices);
+    AppActions.addToGroup(addSelection, this.props.selectedDevices);
     this.dialogToggle('addGroup');
-    AppActions.selectGroup(addSelection.group.id);
+    AppActions.selectGroup(addSelection);
   },
   _removeGroupHandler: function _removeGroupHandler() {
     AppActions.addToGroup(this.props.selectedGroup, this.props.selectedDevices);
   },
   _newGroupHandler: function _newGroupHandler() {
     var newGroup = this.refs['customGroup'].getValue();
-    newGroup = {
-      name: newGroup,
-      devices: [],
-      type: 'public'
-    };
-    addSelection = {
-      group: newGroup,
-      textFieldValue: null
+    this.props.addGroup(newGroup);
+    this.setState({ groupInvalid: newGroup ? false : true, showInput: false });
+  },
+  dialogToggle: function dialogToggle(ref) {
+    var state = {};
+    state[ref] = !this.state[ref];
+    state.selectedField = "";
+    state.editValue = "";
+    this.setState(state);
+  },
+  _handleSelectValueChange: function _handleSelectValueChange(event, index, value) {
+    this.setState({ showInput: false, groupInvalid: false });
+    var group = this.props.groups[index];
+    addSelection = group;
+  },
+
+  _showButton: function _showButton() {
+    this.setState({ showInput: true, editValue: "" });
+    this.refs.customGroup.focus();
+  },
+
+  _sortColumn: function _sortColumn(col) {
+    var direction;
+    if (this.state.sortCol !== col) {
+      _reactDom2.default.findDOMNode(this.refs[this.state.sortCol]).className = "sortIcon material-icons";
+      _reactDom2.default.findDOMNode(this.refs[col]).className = "sortIcon material-icons selected";
+      this.setState({ sortCol: col, sortDown: true });
+      direction = true;
+    } else {
+      direction = !this.state.sortDown;
+      _reactDom2.default.findDOMNode(this.refs[this.state.sortCol]).className = "sortIcon material-icons selected " + direction;
+      this.setState({ sortDown: direction });
+    }
+    // sort table
+    AppActions.sortTable("_currentDevices", col, direction);
+  },
+
+  _removeCurrentGroup: function _removeCurrentGroup() {},
+
+  handleRequestClose: function handleRequestClose() {
+    this.setState({
+      openSnack: false
+    });
+  },
+
+  handleUndoAction: function handleUndoAction() {
+    AppActions.addGroup(this.state.tempGroup, this.state.tempIdx);
+    this.handleRequestClose();
+  },
+
+  _nameEdit: function _nameEdit() {
+    if (this.state.nameEdit) {
+      this._handleGroupNameSave();
+    }
+    this.setState({
+      nameEdit: !this.state.nameEdit,
+      errorText1: null
+    });
+  },
+
+  _adjustCellHeight: function _adjustCellHeight(height) {
+    this.setState({ divHeight: height + 60 });
+  },
+
+  _cancelAdd: function _cancelAdd() {
+    this.dialogToggle('addGroup');
+    this.props.refreshGroups();
+  },
+
+  render: function render() {
+    var styles = {
+      exampleFlatButtonIcon: {
+        height: '100%',
+        display: 'inline-block',
+        verticalAlign: 'middle',
+        float: 'left',
+        paddingLeft: '12px',
+        lineHeight: '36px',
+        marginRight: "-6px",
+        color: "#679BA5",
+        fontSize: '16px'
+      },
+      exampleFlatButton: {
+        fontSize: '12px',
+        marginLeft: "10px",
+        float: "right",
+        marginRight: "130px"
+      },
+      editButton: {
+        color: "rgba(0, 0, 0, 0.54)",
+        fontSize: "20px"
+      },
+      buttonIcon: {
+        height: '100%',
+        display: 'inline-block',
+        verticalAlign: 'middle',
+        float: 'left',
+        paddingLeft: '12px',
+        lineHeight: '36px',
+        marginRight: "-6px",
+        color: "rgb(0, 188, 212)"
+      },
+      raisedButtonIcon: {
+        height: '100%',
+        display: 'inline-block',
+        verticalAlign: 'middle',
+        float: 'left',
+        paddingLeft: '12px',
+        lineHeight: '36px',
+        marginRight: "-6px",
+        color: "#fff"
+      },
+      sortIcon: {
+        verticalAlign: 'middle',
+        marginLeft: "10px",
+        color: "#8c8c8d",
+        cursor: "pointer"
+      }
     };
 
-    newGroup.id = this.props.groups.length + 1;
-    var groups = this.props.groups;
-    groups.push(newGroup);
-    this.setState({
-      showInput: false,
-      selectedGroup: {
-        payload: newGroup.id,
-        text: newGroup.name
+    var groupList = this.props.groups.map(function (group, index) {
+      if (group) {
+        return _react2.default.createElement(_MenuItem2.default, { value: group, key: index, primaryText: group });
       }
     });
-  }
-}, _defineProperty(_React$createClass, '_validateName', function _validateName(name) {
-  var newName = name;
-  var errorText = null;
-  var invalid = false;
-  for (var i = 0; i < this.props.groups.length; i++) {
-    if (this.props.groups[i].name === newName) {
-      errorText = "A group with this name already exists";
-      invalid = true;
-    }
-  }
-  this.setState({ errorText1: errorText, invalid: invalid });
-}), _defineProperty(_React$createClass, 'dialogToggle', function dialogToggle(ref) {
-  var state = {};
-  state[ref] = !this.state[ref];
-  this.setState(state);
-}), _defineProperty(_React$createClass, '_handleSelectValueChange', function _handleSelectValueChange(event, index, value) {
-  this.setState({ showInput: false });
-  var group = this.props.groups[index];
 
-  addSelection = {
-    group: group,
-    textFieldValue: group.name
-  };
-}), _defineProperty(_React$createClass, '_showButton', function _showButton() {
-  this.setState({ showInput: true });
-  this.refs.customGroup.focus();
-}), _defineProperty(_React$createClass, '_sortColumn', function _sortColumn(col) {
-  var direction;
-  if (this.state.sortCol !== col) {
-    _reactDom2.default.findDOMNode(this.refs[this.state.sortCol]).className = "sortIcon material-icons";
-    _reactDom2.default.findDOMNode(this.refs[col]).className = "sortIcon material-icons selected";
-    this.setState({ sortCol: col, sortDown: true });
-    direction = true;
-  } else {
-    direction = !this.state.sortDown;
-    _reactDom2.default.findDOMNode(this.refs[this.state.sortCol]).className = "sortIcon material-icons selected " + direction;
-    this.setState({ sortDown: direction });
-  }
-  // sort table
-  AppActions.sortTable("_currentDevices", col, direction);
-}), _defineProperty(_React$createClass, '_removeCurrentGroup', function _removeCurrentGroup() {}), _defineProperty(_React$createClass, 'handleRequestClose', function handleRequestClose() {
-  this.setState({
-    openSnack: false
-  });
-}), _defineProperty(_React$createClass, 'handleUndoAction', function handleUndoAction() {
-  AppActions.addGroup(this.state.tempGroup, this.state.tempIdx);
-  this.handleRequestClose();
-}), _defineProperty(_React$createClass, '_nameEdit', function _nameEdit() {
-  if (this.state.nameEdit) {
-    this._handleGroupNameSave();
-  }
-  this.setState({
-    nameEdit: !this.state.nameEdit,
-    errorText1: null
-  });
-}), _defineProperty(_React$createClass, '_adjustCellHeight', function _adjustCellHeight(height) {
-  this.setState({ divHeight: height + 60 });
-}), _defineProperty(_React$createClass, 'render', function render() {
-  var styles = {
-    exampleFlatButtonIcon: {
-      height: '100%',
-      display: 'inline-block',
-      verticalAlign: 'middle',
-      float: 'left',
-      paddingLeft: '12px',
-      lineHeight: '36px',
-      marginRight: "-6px",
-      color: "#679BA5",
-      fontSize: '16px'
-    },
-    exampleFlatButton: {
-      fontSize: '12px',
-      marginLeft: "10px",
-      float: "right",
-      marginRight: "130px"
-    },
-    editButton: {
-      color: "rgba(0, 0, 0, 0.54)",
-      fontSize: "20px"
-    },
-    buttonIcon: {
-      height: '100%',
-      display: 'inline-block',
-      verticalAlign: 'middle',
-      float: 'left',
-      paddingLeft: '12px',
-      lineHeight: '36px',
-      marginRight: "-6px",
-      color: "rgb(0, 188, 212)"
-    },
-    raisedButtonIcon: {
-      height: '100%',
-      display: 'inline-block',
-      verticalAlign: 'middle',
-      float: 'left',
-      paddingLeft: '12px',
-      lineHeight: '36px',
-      marginRight: "-6px",
-      color: "#fff"
-    },
-    sortIcon: {
-      verticalAlign: 'middle',
-      marginLeft: "10px",
-      color: "#8c8c8d",
-      cursor: "pointer"
-    }
-  };
+    var devices = this.props.devices.map(function (device, index) {
+      var expanded = '';
+      if (this.state.expanded === index) {
+        var _React$createElement;
 
-  var groupList = this.props.groups.map(function (group, index) {
-    if (group.id !== 1) {
-      return _react2.default.createElement(_MenuItem2.default, { value: group.id, key: index, primaryText: group.name });
-    } else {
-      return _react2.default.createElement(_MenuItem2.default, { value: '', key: index, primaryText: '' });
-    }
-  });
-
-  var devices = this.props.devices.map(function (device, index) {
-    var expanded = '';
-    if (this.state.expanded === index) {
-      var _React$createElement;
-
-      expanded = _react2.default.createElement(SelectedDevices, (_React$createElement = { attributes: this.state.deviceAttributes, deviceId: this.state.deviceId, images: this.props.images, device: this.state.expandedDevice, selectedGroup: this.props.selectedGroup }, _defineProperty(_React$createElement, 'images', this.props.images), _defineProperty(_React$createElement, 'groups', this.props.groups), _React$createElement));
-    }
-    return _react2.default.createElement(
-      _Table.TableRow,
-      { selected: device.selected, hoverable: !expanded, className: expanded ? "expand" : null, key: index },
-      _react2.default.createElement(
-        _Table.TableRowColumn,
-        { style: expanded ? { height: this.state.divHeight } : null },
-        device.id
-      ),
-      _react2.default.createElement(
-        _Table.TableRowColumn,
-        null,
-        device.device_type || "-"
-      ),
-      _react2.default.createElement(
-        _Table.TableRowColumn,
-        null,
-        device.artifact_name || "-"
-      ),
-      _react2.default.createElement(
-        _Table.TableRowColumn,
-        null,
-        _react2.default.createElement(_reactTime2.default, { value: device.updated_ts, format: 'YYYY-MM-DD HH:mm' })
-      ),
-      _react2.default.createElement(
-        _Table.TableRowColumn,
-        null,
-        device.status
-      ),
-      _react2.default.createElement(
-        _Table.TableRowColumn,
-        { style: { width: "33px", paddingRight: "0", paddingLeft: "12px" }, className: 'expandButton' },
+        expanded = _react2.default.createElement(SelectedDevices, (_React$createElement = { attributes: this.state.deviceAttributes, deviceId: this.state.deviceId, images: this.props.images, device: this.state.expandedDevice, selectedGroup: this.props.selectedGroup }, _defineProperty(_React$createElement, 'images', this.props.images), _defineProperty(_React$createElement, 'groups', this.props.groups), _React$createElement));
+      }
+      return _react2.default.createElement(
+        _Table.TableRow,
+        { selected: device.selected, hoverable: !expanded, className: expanded ? "expand" : null, key: index },
         _react2.default.createElement(
-          _IconButton2.default,
-          { className: 'float-right' },
+          _Table.TableRowColumn,
+          { style: expanded ? { height: this.state.divHeight } : null },
+          device.id
+        ),
+        _react2.default.createElement(
+          _Table.TableRowColumn,
+          null,
+          device.device_type || "-"
+        ),
+        _react2.default.createElement(
+          _Table.TableRowColumn,
+          null,
+          device.artifact_name || "-"
+        ),
+        _react2.default.createElement(
+          _Table.TableRowColumn,
+          null,
+          _react2.default.createElement(_reactTime2.default, { value: device.updated_ts, format: 'YYYY-MM-DD HH:mm' })
+        ),
+        _react2.default.createElement(
+          _Table.TableRowColumn,
+          null,
+          device.status
+        ),
+        _react2.default.createElement(
+          _Table.TableRowColumn,
+          { style: { width: "33px", paddingRight: "0", paddingLeft: "12px" }, className: 'expandButton' },
           _react2.default.createElement(
-            _FontIcon2.default,
-            { className: 'material-icons' },
-            expanded ? "arrow_drop_up" : "arrow_drop_down"
+            _IconButton2.default,
+            { className: 'float-right' },
+            _react2.default.createElement(
+              _FontIcon2.default,
+              { className: 'material-icons' },
+              expanded ? "arrow_drop_up" : "arrow_drop_down"
+            )
+          )
+        ),
+        _react2.default.createElement(
+          _Table.TableRowColumn,
+          { style: { width: "0", overflow: "visible" } },
+          _react2.default.createElement(
+            _reactCollapse2.default,
+            { springConfig: { stiffness: 210, damping: 20 }, onHeightReady: this._adjustCellHeight, className: 'expanded', isOpened: expanded ? true : false },
+            expanded
           )
         )
-      ),
-      _react2.default.createElement(
-        _Table.TableRowColumn,
-        { style: { width: "0", overflow: "visible" } },
-        _react2.default.createElement(
-          _reactCollapse2.default,
-          { springConfig: { stiffness: 210, damping: 20 }, onHeightReady: this._adjustCellHeight, className: 'expanded', isOpened: expanded ? true : false },
-          expanded
-        )
-      )
-    );
-  }, this);
+      );
+    }, this);
 
-  var disableAction = this.props.selectedDevices.length ? false : true;
+    var disableAction = this.props.selectedDevices.length ? false : true;
 
-  var addActions = [_react2.default.createElement(
-    'div',
-    { style: { marginRight: "10px", display: "inline-block" } },
-    _react2.default.createElement(_FlatButton2.default, {
-      label: 'Cancel',
-      onClick: this.dialogToggle.bind(null, 'addGroup') })
-  ), _react2.default.createElement(_RaisedButton2.default, {
-    label: 'Add to group',
-    primary: true,
-    onClick: this._addGroupHandler,
-    ref: 'save',
-    disabled: this.state.invalid })];
+    var addActions = [_react2.default.createElement(
+      'div',
+      { style: { marginRight: "10px", display: "inline-block" } },
+      _react2.default.createElement(_FlatButton2.default, {
+        label: 'Cancel',
+        onClick: this._cancelAdd })
+    ), _react2.default.createElement(_RaisedButton2.default, {
+      label: 'Add to group',
+      primary: true,
+      onClick: this._addGroupHandler,
+      ref: 'save',
+      disabled: this.state.groupInvalid })];
 
-  var groupNameInputs = _react2.default.createElement(_TextField2.default, {
-    id: 'groupNameInput',
-    ref: 'editGroupName',
-    value: this.state.groupName || "",
-    onChange: this._handleGroupNameChange,
-    onKeyDown: this._handleGroupNameSave,
-    className: this.state.nameEdit ? "hoverText" : "hidden",
-    underlineStyle: { borderBottom: "none" },
-    underlineFocusStyle: { borderColor: "#e0e0e0" },
-    errorStyle: { color: "rgb(171, 16, 0)" },
-    errorText: this.state.errorText1 });
+    var groupNameInputs = _react2.default.createElement(_TextField2.default, {
+      id: 'groupNameInput',
+      ref: 'editGroupName',
+      value: this.state.groupName || "",
+      onChange: this._handleGroupNameChange,
+      onKeyDown: this._handleGroupNameSave,
+      className: this.state.nameEdit ? "hoverText" : "hidden",
+      underlineStyle: { borderBottom: "none" },
+      underlineFocusStyle: { borderColor: "#e0e0e0" },
+      errorStyle: { color: "rgb(171, 16, 0)" },
+      errorText: this.state.errorText1 });
 
-  var correctIcon = this.state.nameEdit ? "check" : "edit";
-  if (this.state.errorText1) {
-    correctIcon = "close";
-  }
+    var correctIcon = this.state.nameEdit ? "check" : "edit";
+    if (this.state.errorText1) {
+      correctIcon = "close";
+    }
 
-  return _react2.default.createElement(
-    'div',
-    null,
-    _react2.default.createElement(Filters, { attributes: this.props.attributes, filters: this.props.filters, onFilterChange: this.props.onFilterChange }),
-    _react2.default.createElement(
+    return _react2.default.createElement(
       'div',
       null,
+      _react2.default.createElement(Filters, { attributes: this.props.attributes, filters: this.props.filters, onFilterChange: this.props.onFilterChange }),
       _react2.default.createElement(
         'div',
-        { style: { marginLeft: "26px" } },
+        null,
         _react2.default.createElement(
-          'h2',
-          { className: 'hoverEdit' },
-          groupNameInputs,
+          'div',
+          { style: { marginLeft: "26px" } },
+          _react2.default.createElement(
+            'h2',
+            { className: 'hoverEdit' },
+            groupNameInputs,
+            _react2.default.createElement(
+              'span',
+              { className: this.state.nameEdit ? "hidden" : null },
+              this.props.selectedGroup || "All devices"
+            ),
+            _react2.default.createElement(
+              'span',
+              { className: this.props.selectedGroup ? null : 'hidden' },
+              _react2.default.createElement(
+                _IconButton2.default,
+                { iconStyle: styles.editButton, onClick: this._nameEdit, iconClassName: 'material-icons', className: this.state.errorText1 ? "align-top" : null },
+                correctIcon
+              )
+            ),
+            _react2.default.createElement(
+              _FlatButton2.default,
+              { onClick: this._removeCurrentGroup, style: styles.exampleFlatButton, className: this.props.selectedGroup ? 'hidden' : null, secondary: true, label: 'Remove group', labelPosition: 'after' },
+              _react2.default.createElement(
+                _FontIcon2.default,
+                { style: styles.exampleFlatButtonIcon, className: 'material-icons' },
+                'delete'
+              )
+            )
+          )
+        ),
+        _react2.default.createElement(
+          'div',
+          { className: 'margin-bottom' },
+          _react2.default.createElement(
+            _Table.Table,
+            {
+              onCellClick: this._expandRow,
+              onRowSelection: this._expandRow,
+              multiSelectable: true,
+              className: devices.length && !this.props.loading ? null : 'hidden' },
+            _react2.default.createElement(
+              _Table.TableHeader,
+              {
+                enableSelectAll: true },
+              _react2.default.createElement(
+                _Table.TableRow,
+                null,
+                _react2.default.createElement(
+                  _Table.TableHeaderColumn,
+                  { className: 'columnHeader', tooltip: 'Name' },
+                  'Name',
+                  _react2.default.createElement(
+                    _FontIcon2.default,
+                    { ref: 'name', style: styles.sortIcon, onClick: this._sortColumn.bind(null, "name"), className: 'sortIcon material-icons' },
+                    'sort'
+                  )
+                ),
+                _react2.default.createElement(
+                  _Table.TableHeaderColumn,
+                  { className: 'columnHeader', tooltip: 'Device type' },
+                  'Device type',
+                  _react2.default.createElement(
+                    _FontIcon2.default,
+                    { ref: 'device_type', style: styles.sortIcon, onClick: this._sortColumn.bind(null, "device_type"), className: 'sortIcon material-icons' },
+                    'sort'
+                  )
+                ),
+                _react2.default.createElement(
+                  _Table.TableHeaderColumn,
+                  { className: 'columnHeader', tooltip: 'Current software' },
+                  'Current software',
+                  _react2.default.createElement(
+                    _FontIcon2.default,
+                    { ref: 'artifact_name', style: styles.sortIcon, onClick: this._sortColumn.bind(null, "software_version"), className: 'sortIcon material-icons' },
+                    'sort'
+                  )
+                ),
+                _react2.default.createElement(
+                  _Table.TableHeaderColumn,
+                  { className: 'columnHeader', tooltip: 'Last heartbeat' },
+                  'Last heartbeat',
+                  _react2.default.createElement(
+                    _FontIcon2.default,
+                    { ref: 'last_heartbeat', style: styles.sortIcon, onClick: this._sortColumn.bind(null, "last_heartbeat"), className: 'sortIcon material-icons' },
+                    'sort'
+                  )
+                ),
+                _react2.default.createElement(
+                  _Table.TableHeaderColumn,
+                  { className: 'columnHeader', tooltip: 'Status' },
+                  'Status',
+                  _react2.default.createElement(
+                    _FontIcon2.default,
+                    { ref: 'status', style: styles.sortIcon, onClick: this._sortColumn.bind(null, "status"), className: 'sortIcon material-icons' },
+                    'sort'
+                  )
+                ),
+                _react2.default.createElement(_Table.TableHeaderColumn, { className: 'columnHeader', style: { width: "33px", paddingRight: "12px", paddingLeft: "0" } })
+              )
+            ),
+            _react2.default.createElement(
+              _Table.TableBody,
+              {
+                deselectOnClickaway: false,
+                showRowHover: true,
+                className: 'clickable' },
+              devices
+            )
+          ),
+          _react2.default.createElement(Loader, { show: this.props.loading }),
+          _react2.default.createElement(
+            'div',
+            { className: devices.length || this.props.loading ? 'hidden' : 'dashboard-placeholder' },
+            _react2.default.createElement(
+              'p',
+              null,
+              'No devices found'
+            )
+          )
+        ),
+        _react2.default.createElement(
+          'div',
+          { className: this.props.selectedDevices.length ? "fixedButtons" : "hidden" },
           _react2.default.createElement(
             'span',
-            { className: this.state.nameEdit ? "hidden" : null },
-            this.props.selectedGroup || "All devices"
+            { className: 'margin-right' },
+            this.props.selectedDevices.length,
+            ' device',
+            _react2.default.createElement(
+              'span',
+              { className: this.props.selectedDevices.length > 1 ? null : "hidden" },
+              's'
+            ),
+            ' selected'
           ),
           _react2.default.createElement(
-            'span',
-            { className: this.props.selectedGroup ? null : 'hidden' },
+            _RaisedButton2.default,
+            { disabled: disableAction, label: 'Add selected devices to a group', secondary: true, onClick: this.dialogToggle.bind(null, 'addGroup') },
             _react2.default.createElement(
-              _IconButton2.default,
-              { iconStyle: styles.editButton, onClick: this._nameEdit, iconClassName: 'material-icons', className: this.state.errorText1 ? "align-top" : null },
-              correctIcon
+              _FontIcon2.default,
+              { style: styles.raisedButtonIcon, className: 'material-icons' },
+              'add_circle'
             )
           ),
           _react2.default.createElement(
             _FlatButton2.default,
-            { onClick: this._removeCurrentGroup, style: styles.exampleFlatButton, className: this.props.selectedGroup ? 'hidden' : null, secondary: true, label: 'Remove group', labelPosition: 'after' },
+            { disabled: disableAction, style: { marginLeft: "4px" }, className: this.props.selectedGroup ? 'hidden' : null, label: 'Remove selected devices from this group', secondary: true, onClick: this._removeGroupHandler },
             _react2.default.createElement(
               _FontIcon2.default,
-              { style: styles.exampleFlatButtonIcon, className: 'material-icons' },
-              'delete'
+              { style: styles.buttonIcon, className: 'material-icons' },
+              'remove_circle_outline'
             )
           )
         )
       ),
       _react2.default.createElement(
-        'div',
-        { className: 'margin-bottom' },
+        _Dialog2.default,
+        {
+          open: this.state.addGroup,
+          title: 'Add selected devices to group',
+          actions: addActions,
+          autoDetectWindowHeight: true },
         _react2.default.createElement(
-          _Table.Table,
-          {
-            onCellClick: this._expandRow,
-            onRowSelection: this._expandRow,
-            multiSelectable: true,
-            className: devices.length && !this.props.loading ? null : 'hidden' },
+          'div',
+          { style: { height: '200px' } },
           _react2.default.createElement(
-            _Table.TableHeader,
-            {
-              enableSelectAll: true },
+            'div',
+            { className: groupList.length ? "float-left" : "hidden" },
             _react2.default.createElement(
-              _Table.TableRow,
-              null,
+              'div',
+              { className: 'float-left' },
               _react2.default.createElement(
-                _Table.TableHeaderColumn,
-                { className: 'columnHeader', tooltip: 'Name' },
-                'Name',
-                _react2.default.createElement(
-                  _FontIcon2.default,
-                  { ref: 'name', style: styles.sortIcon, onClick: this._sortColumn.bind(null, "name"), className: 'sortIcon material-icons' },
-                  'sort'
-                )
-              ),
-              _react2.default.createElement(
-                _Table.TableHeaderColumn,
-                { className: 'columnHeader', tooltip: 'Device type' },
-                'Device type',
-                _react2.default.createElement(
-                  _FontIcon2.default,
-                  { ref: 'device_type', style: styles.sortIcon, onClick: this._sortColumn.bind(null, "device_type"), className: 'sortIcon material-icons' },
-                  'sort'
-                )
-              ),
-              _react2.default.createElement(
-                _Table.TableHeaderColumn,
-                { className: 'columnHeader', tooltip: 'Current software' },
-                'Current software',
-                _react2.default.createElement(
-                  _FontIcon2.default,
-                  { ref: 'artifact_name', style: styles.sortIcon, onClick: this._sortColumn.bind(null, "software_version"), className: 'sortIcon material-icons' },
-                  'sort'
-                )
-              ),
-              _react2.default.createElement(
-                _Table.TableHeaderColumn,
-                { className: 'columnHeader', tooltip: 'Last heartbeat' },
-                'Last heartbeat',
-                _react2.default.createElement(
-                  _FontIcon2.default,
-                  { ref: 'last_heartbeat', style: styles.sortIcon, onClick: this._sortColumn.bind(null, "last_heartbeat"), className: 'sortIcon material-icons' },
-                  'sort'
-                )
-              ),
-              _react2.default.createElement(
-                _Table.TableHeaderColumn,
-                { className: 'columnHeader', tooltip: 'Status' },
-                'Status',
-                _react2.default.createElement(
-                  _FontIcon2.default,
-                  { ref: 'status', style: styles.sortIcon, onClick: this._sortColumn.bind(null, "status"), className: 'sortIcon material-icons' },
-                  'sort'
-                )
-              ),
-              _react2.default.createElement(_Table.TableHeaderColumn, { className: 'columnHeader', style: { width: "33px", paddingRight: "12px", paddingLeft: "0" } })
+                _SelectField2.default,
+                {
+                  ref: 'groupSelect',
+                  onChange: this._handleSelectValueChange,
+                  floatingLabelText: 'Select group',
+                  value: this.props.selectedField || ""
+                },
+                groupList
+              )
+            ),
+            _react2.default.createElement(
+              'div',
+              { className: 'float-left margin-left-small' },
+              _react2.default.createElement(_RaisedButton2.default, {
+                label: 'Create new',
+                style: { marginTop: "26px" },
+                onClick: this._showButton })
             )
           ),
           _react2.default.createElement(
-            _Table.TableBody,
-            {
-              deselectOnClickaway: false,
-              showRowHover: true,
-              className: 'clickable' },
-            devices
-          )
-        ),
-        _react2.default.createElement(Loader, { show: this.props.loading }),
-        _react2.default.createElement(
-          'div',
-          { className: devices.length || this.props.loading ? 'hidden' : 'dashboard-placeholder' },
-          _react2.default.createElement(
-            'p',
-            null,
-            'No devices found'
+            'div',
+            { className: this.state.showInput || !groupList.length ? null : 'hidden' },
+            _react2.default.createElement(_TextField2.default, {
+              ref: 'customGroup',
+              hintText: 'Group name',
+              value: this.state.editValue || "",
+              floatingLabelText: 'Group name',
+              className: 'float-left clear',
+              onChange: this._handleNewGroupNameChange,
+              errorStyle: { color: "rgb(171, 16, 0)" },
+              errorText: this.state.errorText1 }),
+            _react2.default.createElement(
+              'div',
+              { className: 'float-left margin-left-small' },
+              _react2.default.createElement(_RaisedButton2.default, {
+                style: { marginTop: "26px" },
+                secondary: true,
+                label: 'Save',
+                onClick: this._newGroupHandler,
+                disabled: this.state.invalid })
+            )
           )
         )
       ),
-      _react2.default.createElement(
-        'div',
-        { className: this.props.selectedDevices.length ? "fixedButtons" : "hidden" },
-        _react2.default.createElement(
-          'span',
-          { className: 'margin-right' },
-          this.props.selectedDevices.length,
-          ' device',
-          _react2.default.createElement(
-            'span',
-            { className: this.props.selectedDevices.length > 1 ? null : "hidden" },
-            's'
-          ),
-          ' selected'
-        ),
-        _react2.default.createElement(
-          _RaisedButton2.default,
-          { disabled: disableAction, label: 'Add selected devices to a group', secondary: true, onClick: this.dialogToggle.bind(null, 'addGroup') },
-          _react2.default.createElement(
-            _FontIcon2.default,
-            { style: styles.raisedButtonIcon, className: 'material-icons' },
-            'add_circle'
-          )
-        ),
-        _react2.default.createElement(
-          _FlatButton2.default,
-          { disabled: disableAction, style: { marginLeft: "4px" }, className: this.props.selectedGroup ? 'hidden' : null, label: 'Remove selected devices from this group', secondary: true, onClick: this._removeGroupHandler },
-          _react2.default.createElement(
-            _FontIcon2.default,
-            { style: styles.buttonIcon, className: 'material-icons' },
-            'remove_circle_outline'
-          )
-        )
-      )
-    ),
-    _react2.default.createElement(
-      _Dialog2.default,
-      {
-        open: this.state.addGroup,
-        title: 'Add selected devices to group',
-        actions: addActions,
-        autoDetectWindowHeight: true, autoScrollBodyContent: true },
-      _react2.default.createElement(
-        'div',
-        { style: { height: '200px' } },
-        _react2.default.createElement(
-          'div',
-          null,
-          _react2.default.createElement(
-            'div',
-            { className: 'float-left' },
-            _react2.default.createElement(
-              _SelectField2.default,
-              {
-                ref: 'groupSelect',
-                onChange: this._handleSelectValueChange,
-                floatingLabelText: 'Select group',
-                value: this.props.selectedGroup
-              },
-              groupList
-            )
-          ),
-          _react2.default.createElement(
-            'div',
-            { className: 'float-left margin-left-small' },
-            _react2.default.createElement(_RaisedButton2.default, {
-              label: 'Create new',
-              style: { marginTop: "26px" },
-              onClick: this._showButton })
-          )
-        ),
-        _react2.default.createElement(
-          'div',
-          { className: this.state.showInput ? null : 'hidden' },
-          _react2.default.createElement(_TextField2.default, {
-            ref: 'customGroup',
-            hintText: 'Group name',
-            floatingLabelText: 'Group name',
-            className: 'float-left clear',
-            onChange: this._validateName,
-            errorStyle: { color: "rgb(171, 16, 0)" },
-            errorText: this.state.errorText1 }),
-          _react2.default.createElement(
-            'div',
-            { className: 'float-left margin-left-small' },
-            _react2.default.createElement(_RaisedButton2.default, {
-              style: { marginTop: "26px" },
-              secondary: true,
-              label: 'Save',
-              onClick: this._newGroupHandler,
-              disabled: this.state.invalid })
-          )
-        )
-      )
-    ),
-    _react2.default.createElement(_Snackbar2.default, {
-      open: this.state.openSnack,
-      message: this.state.snackMessage,
-      action: 'undo',
-      autoHideDuration: this.state.autoHideDuration,
-      onActionTouchTap: this.handleUndoAction,
-      onRequestClose: this.handleRequestClose
-    })
-  );
-}), _React$createClass));
+      _react2.default.createElement(_Snackbar2.default, {
+        open: this.state.openSnack,
+        message: this.state.snackMessage,
+        action: 'undo',
+        autoHideDuration: this.state.autoHideDuration,
+        onActionTouchTap: this.handleUndoAction,
+        onRequestClose: this.handleRequestClose
+      })
+    );
+  }
+});
 
 module.exports = DeviceList;
 
@@ -87639,6 +87640,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var AppStore = require('../../stores/app-store');
 var AppActions = require('../../actions/app-actions');
+var update = require('react-addons-update');
 
 var Groups = require('./groups');
 var DeviceList = require('./devicelist');
@@ -87647,6 +87649,7 @@ var Unauthorized = require('./unauthorized');
 function getState() {
   return {
     groups: AppStore.getGroups(),
+    groupsForList: AppStore.getGroups(),
     selectedGroup: AppStore.getSelectedGroup(),
     pendingDevices: AppStore.getPendingDevices(),
     devices: AppStore.getGroupDevices(),
@@ -87745,6 +87748,11 @@ var Devices = _react2.default.createClass({
     };
     AppActions.getGroups(callback);
   },
+  _addTmpGroup: function _addTmpGroup(name) {
+    // use a tmp group so as not to affect the groups in state
+    var groups = update(this.state.groups, { $push: [name] });
+    this.setState({ groupsForList: groups, selectedField: name });
+  },
   _updateFilters: function _updateFilters(filters) {
     AppActions.updateFilters(filters);
   },
@@ -87789,7 +87797,7 @@ var Devices = _react2.default.createClass({
           { className: this.state.pendingDevices.length && this.state.doneLoading ? null : "hidden" },
           _react2.default.createElement(Unauthorized, { refresh: this._refreshDevices, refreshAdmissions: this._refreshAdmissions, pending: this.state.pendingDevices })
         ),
-        _react2.default.createElement(DeviceList, { loading: !this.state.doneLoading, selectedDevice: this._handleSelectDevice, filters: this.state.filters, attributes: this.state.attributes, onFilterChange: this._updateFilters, images: this.state.images, selectedDevices: this.state.selectedDevices, groups: this.state.groups, devices: this.state.devices, selectedGroup: this.state.selectedGroup })
+        _react2.default.createElement(DeviceList, { refreshGroups: this._refreshGroups, selectedField: this.state.selectedField, addGroup: this._addTmpGroup, loading: !this.state.doneLoading, selectedDevice: this._handleSelectDevice, filters: this.state.filters, attributes: this.state.attributes, onFilterChange: this._updateFilters, images: this.state.images, selectedDevices: this.state.selectedDevices, groups: this.state.groupsForList, devices: this.state.devices, selectedGroup: this.state.selectedGroup })
       ),
       _react2.default.createElement(_Snackbar2.default, {
         open: this.state.snackbar.open,
@@ -87803,7 +87811,7 @@ var Devices = _react2.default.createClass({
 
 module.exports = Devices;
 
-},{"../../actions/app-actions":934,"../../stores/app-store":980,"./devicelist":965,"./groups":968,"./unauthorized":970,"material-ui/Snackbar":250,"react":843,"react-router":654}],967:[function(require,module,exports){
+},{"../../actions/app-actions":934,"../../stores/app-store":980,"./devicelist":965,"./groups":968,"./unauthorized":970,"material-ui/Snackbar":250,"react":843,"react-addons-update":478,"react-router":654}],967:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -90302,9 +90310,11 @@ function _matchFilters(device) {
 }
 
 function _selectDevices(device) {
+  _selectedDevices = [];
   if (device === "all") {
     for (var i = 0; i < _currentGroupDevices.length; i++) {
       _currentGroupDevices[i].selected = true;
+      _selectedDevices.push(_currentGroupDevices[i].id);
     }
   } else if (device === "none") {
     for (var i = 0; i < _currentGroupDevices.length; i++) {
@@ -90314,6 +90324,8 @@ function _selectDevices(device) {
     for (var i = 0; i < _currentGroupDevices.length; i++) {
       if (device.id === _currentGroupDevices[i].id) {
         _currentGroupDevices[i].selected = !_currentGroupDevices[i].selected;
+
+        if (_currentGroupDevices[i].selected) _selectedDevices.push(_currentGroupDevices[i].id);
       }
     }
   }
