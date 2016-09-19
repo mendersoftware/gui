@@ -82376,6 +82376,14 @@ var AppActions = {
       callback(err);
     });
   },
+  /* Device Admission */
+  getDeviceIdentity: function getDeviceIdentity(id, callback) {
+    DevicesApi.get(devicesApiUrl + "/devices/" + id).then(function (devices) {
+      callback.success(devices);
+    }).catch(function (err) {
+      callback.error(err);
+    });
+  },
 
   acceptDevice: function acceptDevice(device, callback) {
     DevicesApi.put(devicesApiUrl + "/devices/" + device.id + "/status", { "status": "accepted" }).then(function (data) {
@@ -87118,11 +87126,19 @@ var DeviceList = _react2.default.createClass((_React$createClass = {
   _expandRow: function _expandRow(rowNumber, columnId, event) {
     event.stopPropagation();
     if (columnId > -1 && columnId < 6) {
+
+      if (this.props.devices[rowNumber] !== this.state.expandedDevice) {
+        this._setDeviceIdentity(this.props.devices[rowNumber]);
+        this.setState({ expandedDevice: this.props.devices[rowNumber] });
+      }
+
       var newIndex = rowNumber;
       if (rowNumber == this.state.expanded) {
         newIndex = null;
       }
       this.setState({ expanded: newIndex });
+    } else if (columnId === -1) {
+      this._onRowSelection(this.props.devices[rowNumber]);
     }
   },
   _ifSelected: function _ifSelected(id) {
@@ -87134,6 +87150,17 @@ var DeviceList = _react2.default.createClass((_React$createClass = {
       }
     }
     return value;
+  },
+  _setDeviceIdentity: function _setDeviceIdentity(device) {
+    var callback = {
+      success: function (device) {
+        this.setState({ deviceAttributes: device.attributes, deviceId: device.id });
+      }.bind(this),
+      error: function error(err) {
+        console.log("Error: " + err);
+      }
+    };
+    AppActions.getDeviceIdentity(device.id, callback);
   },
   _addGroupHandler: function _addGroupHandler() {
     AppActions.addToGroup(addSelection.group, this.props.selectedDevices);
@@ -87285,7 +87312,9 @@ var DeviceList = _react2.default.createClass((_React$createClass = {
   var devices = this.props.devices.map(function (device, index) {
     var expanded = '';
     if (this.state.expanded === index) {
-      expanded = _react2.default.createElement(SelectedDevices, { images: this.props.images, devices: this.props.devices, selected: [device], selectedGroup: this.props.selectedGroup, groups: this.props.groups });
+      var _React$createElement;
+
+      expanded = _react2.default.createElement(SelectedDevices, (_React$createElement = { attributes: this.state.deviceAttributes, deviceId: this.state.deviceId, images: this.props.images, device: this.state.expandedDevice, selectedGroup: this.props.selectedGroup }, _defineProperty(_React$createElement, 'images', this.props.images), _defineProperty(_React$createElement, 'groups', this.props.groups), _React$createElement));
     }
     return _react2.default.createElement(
       _Table.TableRow,
@@ -87308,7 +87337,7 @@ var DeviceList = _react2.default.createClass((_React$createClass = {
       _react2.default.createElement(
         _Table.TableRowColumn,
         null,
-        _react2.default.createElement(_reactTime2.default, { value: device.request_time, format: 'YYYY-MM-DD HH:mm' })
+        _react2.default.createElement(_reactTime2.default, { value: device.updated_ts, format: 'YYYY-MM-DD HH:mm' })
       ),
       _react2.default.createElement(
         _Table.TableRowColumn,
@@ -87750,6 +87779,9 @@ var Devices = _react2.default.createClass({
       this.setState({ devices: null });
     }
   },
+  _handleSelectDevice: function _handleSelectDevice(device) {
+    console.log(device);
+  },
   render: function render() {
     return _react2.default.createElement(
       'div',
@@ -87767,7 +87799,7 @@ var Devices = _react2.default.createClass({
           { className: this.state.pendingDevices.length && this.state.doneLoading ? null : "hidden" },
           _react2.default.createElement(Unauthorized, { refresh: this._refreshDevices, refreshAdmissions: this._refreshAdmissions, pending: this.state.pendingDevices })
         ),
-        _react2.default.createElement(DeviceList, { loading: !this.state.doneLoading, filters: this.state.filters, attributes: this.state.attributes, onFilterChange: this._updateFilters, images: this.state.images, selectedDevices: this.state.selectedDevices, groups: this.state.groups, devices: this.state.devices || this.state.allDevices, selectedGroup: this.state.selectedGroup })
+        _react2.default.createElement(DeviceList, { loading: !this.state.doneLoading, selectedDevice: this._handleSelectDevice, filters: this.state.filters, attributes: this.state.attributes, onFilterChange: this._updateFilters, images: this.state.images, selectedDevices: this.state.selectedDevices, groups: this.state.groups, devices: this.state.devices || this.state.allDevices, selectedGroup: this.state.selectedGroup })
       ),
       _react2.default.createElement(_Snackbar2.default, {
         open: this.state.snackbar.open,
@@ -88377,9 +88409,6 @@ var AppStore = require('../../stores/app-store');
 var AppActions = require('../../actions/app-actions');
 var ScheduleForm = require('../deployments/scheduleform');
 
-var ReactTags = require('react-tag-input').WithContext;
-var tagslist = [];
-
 function getGroups() {
   var copy = AppStore.getGroups().slice();
   return copy;
@@ -88395,10 +88424,10 @@ var SelectedDevices = _react2.default.createClass({
         payload: '',
         text: ''
       },
-      tagEdit: false,
       schedule: false
     };
   },
+
   dialogToggle: function dialogToggle(ref) {
     var state = {};
     state[ref] = !this.state[ref];
@@ -88418,38 +88447,14 @@ var SelectedDevices = _react2.default.createClass({
 
   _onScheduleSubmit: function _onScheduleSubmit() {
     var newDeployment = {
-      devices: [this.props.selected[0].id],
-      name: this.props.selected[0].name,
+      devices: [this.props.device.id],
+      name: this.props.device.name,
       artifact_name: this.state.image.name
     };
     AppActions.createDeployment(newDeployment, function (uri) {
       console.log(uri);
     });
     this.dialogToggle('schedule');
-  },
-
-  handleDelete: function handleDelete(i) {
-    tagslist.splice(i, 1);
-  },
-  handleAddition: function handleAddition(tag) {
-    tagslist.push({
-      id: tagslist.length + 1,
-      text: tag
-    });
-  },
-  handleDrag: function handleDrag(tag, currPos, newPos) {},
-  _clickedEdit: function _clickedEdit(event) {
-    event.stopPropagation();
-    if (this.state.tagEdit) {
-      var noIds = [];
-      for (var i in tagslist) {
-        noIds.push(tagslist[i].text);
-      }
-
-      // save new tag data to device
-      AppActions.updateDeviceTags(this.props.selected[0].id, noIds);
-    }
-    this.setState({ tagEdit: !this.state.tagEdit });
   },
   _handleAccept: function _handleAccept() {
     this.props.accept(this.props.selected);
@@ -88460,10 +88465,6 @@ var SelectedDevices = _react2.default.createClass({
   render: function render() {
 
     var styles = {
-      editButton: {
-        color: "rgba(0, 0, 0, 0.54)",
-        fontSize: "20"
-      },
       listStyle: {
         fontSize: "12px",
         paddingTop: "10px",
@@ -88471,164 +88472,127 @@ var SelectedDevices = _react2.default.createClass({
       }
     };
 
-    var editButton = _react2.default.createElement(
-      _IconButton2.default,
-      { iconStyle: styles.editButton, style: { top: "auto", bottom: "0" }, onClick: this._clickedEdit, iconClassName: 'material-icons' },
-      this.state.tagEdit ? "check" : "edit"
-    );
+    var deviceIdentity = [];
+    deviceIdentity.push(_react2.default.createElement(
+      'div',
+      { key: 'id_checksum' },
+      _react2.default.createElement(_List.ListItem, { style: styles.listStyle, disabled: true, primaryText: 'ID checksum', secondaryText: this.props.deviceId, secondaryTextLines: 2, className: 'break-word' }),
+      i === length - 1 ? null : _react2.default.createElement(_Divider2.default, null)
+    ));
 
-    if (this.props.selected.length === 1) {
-      tagslist = [];
-      for (var i in this.props.selected[0].tags) {
-        tagslist.push({ id: i, text: this.props.selected[0].tags[i] });
-      }
-
-      var tagInput = _react2.default.createElement(ReactTags, { tags: tagslist,
-        handleDelete: this.handleDelete,
-        handleAddition: this.handleAddition,
-        handleDrag: this.handleDrag,
-        delimeters: [9, 13, 188] });
-
-      //var tags = this.state.tagEdit ? tagInput : this.props.selected[0].tags.join(', ') || '-';
-      var encodedSoftware = encodeURIComponent(this.props.selected[0].artifact_name);
-      var softwareLink = _react2.default.createElement(
-        'div',
-        null,
-        _react2.default.createElement(
-          _reactRouter.Link,
-          { style: { fontWeight: "500" }, to: '/software/' + encodedSoftware },
-          this.props.selected[0].artifact_name
-        )
-      );
-
-      var deviceIdentity = [];
-      deviceIdentity.push(_react2.default.createElement(
-        'div',
-        { key: 'id_checksum' },
-        _react2.default.createElement(_List.ListItem, { style: styles.listStyle, disabled: true, primaryText: 'ID checksum', secondaryText: this.props.selected[0].id, secondaryTextLines: 2, className: 'break-word' }),
-        i === length - 1 ? null : _react2.default.createElement(_Divider2.default, null)
-      ));
-
-      var i = 0;
-      var length = Object.keys(this.props.selected[0].attributes).length;
-      for (var k in this.props.selected[0].attributes) {
+    var i = 0;
+    if (this.props.attributes) {
+      var length = Object.keys(this.props.attributes).length;
+      for (var k in this.props.attributes) {
         deviceIdentity.push(_react2.default.createElement(
           'div',
           { key: k },
-          _react2.default.createElement(_List.ListItem, { style: styles.listStyle, disabled: true, primaryText: k, secondaryText: this.props.selected[0].attributes[k] }),
+          _react2.default.createElement(_List.ListItem, { style: styles.listStyle, disabled: true, primaryText: k, secondaryText: this.props.attributes[k] }),
           i === length - 1 ? null : _react2.default.createElement(_Divider2.default, null)
         ));
         i++;
       };
-
-      var deviceInventory = [];
-      var i = 0;
-      var length = Object.keys(deviceInventory).length;
-      for (var k in deviceInventory) {
-        deviceInventory.push(_react2.default.createElement(
-          'div',
-          { key: k },
-          _react2.default.createElement(_List.ListItem, { style: styles.listStyle, disabled: true, primaryText: k, secondaryText: deviceInventory[k] }),
-          _react2.default.createElement(_Divider2.default, null)
-        ));
-        i++;
-      };
-      deviceInventory.push(_react2.default.createElement(
-        'div',
-        { key: 'updateButton' },
-        _react2.default.createElement(_List.ListItem, {
-          style: styles.listStyle,
-          primaryText: 'Create a deployment for this device',
-          onClick: this._clickListItem,
-          leftIcon: _react2.default.createElement(
-            _FontIcon2.default,
-            { style: { marginTop: 6, marginBottom: 6 }, className: 'material-icons update' },
-            'replay'
-          ) })
-      ));
-
-      var deviceInventory2 = [];
-      if (deviceInventory.length > deviceIdentity.length) {
-        deviceInventory2 = deviceInventory.splice(deviceInventory.length / 2 + deviceInventory.length % 2, deviceInventory.length - 1);
-      }
-
-      var deviceInfo = _react2.default.createElement(
-        'div',
-        { key: 'deviceinfo' },
-        _react2.default.createElement(
-          'div',
-          { id: 'device-identity', className: 'report-list' },
-          _react2.default.createElement(
-            'h4',
-            { className: 'margin-bottom-none' },
-            'Device identity'
-          ),
-          _react2.default.createElement(
-            _List.List,
-            null,
-            deviceIdentity
-          )
-        ),
-        _react2.default.createElement(
-          'div',
-          { className: this.props.unauthorized ? "hidden" : "report-list" },
-          _react2.default.createElement(
-            'h4',
-            { className: 'margin-bottom-none' },
-            'Device inventory'
-          ),
-          _react2.default.createElement(
-            _List.List,
-            null,
-            deviceInventory
-          )
-        ),
-        _react2.default.createElement(
-          'div',
-          { className: this.props.unauthorized ? "hidden" : "report-list" },
-          _react2.default.createElement(
-            _List.List,
-            { style: { marginTop: "34px" } },
-            deviceInventory2
-          )
-        ),
-        _react2.default.createElement(
-          'div',
-          { className: this.props.unauthorized ? "report-list" : "hidden" },
-          _react2.default.createElement(
-            _List.List,
-            { style: { marginTop: "-8px" } },
-            _react2.default.createElement(_List.ListItem, {
-              style: styles.listStyle,
-              onClick: this._handleAccept,
-              primaryText: 'Authorize device',
-              leftIcon: _react2.default.createElement(
-                _FontIcon2.default,
-                { className: 'material-icons green auth', style: { marginTop: 6, marginBottom: 6 } },
-                'check_circle'
-              ) }),
-            _react2.default.createElement(_Divider2.default, null),
-            _react2.default.createElement(_List.ListItem, {
-              style: styles.listStyle,
-              primaryText: 'Block device',
-              onClick: this._handleBlock,
-              leftIcon: _react2.default.createElement(
-                _FontIcon2.default,
-                { className: 'material-icons red auth', style: { marginTop: 6, marginBottom: 6 } },
-                'cancel'
-              ) })
-          )
-        )
-      );
     }
 
-    var devices = this.props.selected.map(function (device) {
-      return _react2.default.createElement(
-        'p',
-        null,
-        device.name
-      );
-    });
+    var deviceInventory = [];
+    var i = 0;
+    length = Object.keys(deviceInventory).length;
+    for (var k in deviceInventory) {
+      deviceInventory.push(_react2.default.createElement(
+        'div',
+        { key: k },
+        _react2.default.createElement(_List.ListItem, { style: styles.listStyle, disabled: true, primaryText: k, secondaryText: deviceInventory[k] }),
+        _react2.default.createElement(_Divider2.default, null)
+      ));
+      i++;
+    };
+    deviceInventory.push(_react2.default.createElement(
+      'div',
+      { key: 'updateButton' },
+      _react2.default.createElement(_List.ListItem, {
+        style: styles.listStyle,
+        primaryText: 'Create a deployment for this device',
+        onClick: this._clickListItem,
+        leftIcon: _react2.default.createElement(
+          _FontIcon2.default,
+          { style: { marginTop: 6, marginBottom: 6 }, className: 'material-icons update' },
+          'replay'
+        ) })
+    ));
+
+    var deviceInventory2 = [];
+    if (deviceInventory.length > deviceIdentity.length) {
+      deviceInventory2 = deviceInventory.splice(deviceInventory.length / 2 + deviceInventory.length % 2, deviceInventory.length - 1);
+    }
+
+    var deviceInfo = _react2.default.createElement(
+      'div',
+      { key: 'deviceinfo' },
+      _react2.default.createElement(
+        'div',
+        { id: 'device-identity', className: 'report-list' },
+        _react2.default.createElement(
+          'h4',
+          { className: 'margin-bottom-none' },
+          'Device identity'
+        ),
+        _react2.default.createElement(
+          _List.List,
+          null,
+          deviceIdentity
+        )
+      ),
+      _react2.default.createElement(
+        'div',
+        { className: this.props.unauthorized ? "hidden" : "report-list" },
+        _react2.default.createElement(
+          'h4',
+          { className: 'margin-bottom-none' },
+          'Device inventory'
+        ),
+        _react2.default.createElement(
+          _List.List,
+          null,
+          deviceInventory
+        )
+      ),
+      _react2.default.createElement(
+        'div',
+        { className: this.props.unauthorized ? "hidden" : "report-list" },
+        _react2.default.createElement(
+          _List.List,
+          { style: { marginTop: "34px" } },
+          deviceInventory2
+        )
+      ),
+      _react2.default.createElement(
+        'div',
+        { className: this.props.unauthorized ? "report-list" : "hidden" },
+        _react2.default.createElement(
+          _List.List,
+          { style: { marginTop: "-8px" } },
+          _react2.default.createElement(_List.ListItem, {
+            style: styles.listStyle,
+            onClick: this._handleAccept,
+            primaryText: 'Authorize device',
+            leftIcon: _react2.default.createElement(
+              _FontIcon2.default,
+              { className: 'material-icons green auth', style: { marginTop: 6, marginBottom: 6 } },
+              'check_circle'
+            ) }),
+          _react2.default.createElement(_Divider2.default, null),
+          _react2.default.createElement(_List.ListItem, {
+            style: styles.listStyle,
+            primaryText: 'Block device',
+            onClick: this._handleBlock,
+            leftIcon: _react2.default.createElement(
+              _FontIcon2.default,
+              { className: 'material-icons red auth', style: { marginTop: 6, marginBottom: 6 } },
+              'cancel'
+            ) })
+        )
+      )
+    );
 
     var scheduleActions = [_react2.default.createElement(
       'div',
@@ -88656,7 +88620,7 @@ var SelectedDevices = _react2.default.createClass({
           bodyStyle: { paddingTop: "0", fontSize: "13px" },
           contentStyle: { overflow: "hidden", boxShadow: "0 14px 45px rgba(0, 0, 0, 0.25), 0 10px 18px rgba(0, 0, 0, 0.22)" }
         },
-        _react2.default.createElement(ScheduleForm, { images: this.props.images, device: this.props.selected[0], deploymentSchedule: this._updateParams, groups: this.props.groups })
+        _react2.default.createElement(ScheduleForm, { images: this.props.images, device: this.props.device, deploymentSchedule: this._updateParams, groups: this.props.groups })
       )
     );
   }
@@ -88664,7 +88628,7 @@ var SelectedDevices = _react2.default.createClass({
 
 module.exports = SelectedDevices;
 
-},{"../../actions/app-actions":934,"../../stores/app-store":980,"../deployments/scheduleform":964,"material-ui/Dialog":198,"material-ui/Divider":200,"material-ui/FlatButton":207,"material-ui/FontIcon":211,"material-ui/IconButton":216,"material-ui/List":225,"material-ui/RaisedButton":241,"material-ui/TextField":279,"react":843,"react-collapse":482,"react-router":654,"react-tag-input":686,"react-time":694}],970:[function(require,module,exports){
+},{"../../actions/app-actions":934,"../../stores/app-store":980,"../deployments/scheduleform":964,"material-ui/Dialog":198,"material-ui/Divider":200,"material-ui/FlatButton":207,"material-ui/FontIcon":211,"material-ui/IconButton":216,"material-ui/List":225,"material-ui/RaisedButton":241,"material-ui/TextField":279,"react":843,"react-collapse":482,"react-router":654,"react-time":694}],970:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -88782,12 +88746,24 @@ var Authorized = _react2.default.createClass({
     if (columnId === 4) {
       this.setState({ expanded: null });
     } else if (columnId < 5) {
+      this._setDeviceIdentity(this.props.pending[rowNumber]);
       var newIndex = rowNumber;
       if (rowNumber == this.state.expanded) {
         newIndex = null;
       }
       this.setState({ expanded: newIndex });
     }
+  },
+  _setDeviceIdentity: function _setDeviceIdentity(device) {
+    var callback = {
+      success: function (device) {
+        this.setState({ deviceAttributes: device.attributes, deviceId: device.id });
+      }.bind(this),
+      error: function error(err) {
+        console.log("Error: " + err);
+      }
+    };
+    AppActions.getDeviceIdentity(device.id, callback);
   },
   _adjustCellHeight: function _adjustCellHeight(height) {
     this.setState({ divHeight: height + 70 });
@@ -88804,7 +88780,7 @@ var Authorized = _react2.default.createClass({
     var devices = this.props.pending.map(function (device, index) {
       var expanded = '';
       if (this.state.expanded === index) {
-        expanded = _react2.default.createElement(SelectedDevices, { accept: this._authorizeDevices, block: this._blockDevice, unauthorized: true, selected: [device] });
+        expanded = _react2.default.createElement(SelectedDevices, { attributes: this.state.deviceAttributes, deviceId: this.state.deviceId, accept: this._authorizeDevices, block: this._blockDevice, unauthorized: true, selected: [device] });
       }
       return _react2.default.createElement(
         _Table.TableRow,

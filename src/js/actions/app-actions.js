@@ -118,6 +118,17 @@ var AppActions = {
         callback(err);
       })
   },
+    /* Device Admission */
+  getDeviceIdentity: function (id, callback) {
+    DevicesApi
+      .get(devicesApiUrl+"/devices/" + id)
+      .then(function(devices) {
+        callback.success(devices);
+      })
+      .catch(function(err) {
+        callback.error(err);
+      })
+  },
 
   acceptDevice: function (device, callback) {
     DevicesApi

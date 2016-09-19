@@ -109,11 +109,19 @@ var DeviceList = React.createClass({
   _expandRow: function(rowNumber, columnId, event) {
     event.stopPropagation();
     if (columnId >-1 && columnId < 6) {
+
+      if (this.props.devices[rowNumber] !== this.state.expandedDevice) {
+        this._setDeviceIdentity(this.props.devices[rowNumber]);
+        this.setState({expandedDevice: this.props.devices[rowNumber]});
+      }
+
       var newIndex = rowNumber;
       if (rowNumber == this.state.expanded) {
         newIndex = null;
       }
       this.setState({expanded: newIndex});
+    } else if (columnId === -1) {
+      this._onRowSelection(this.props.devices[rowNumber]);
     }
   },
   _ifSelected: function(id) {
@@ -125,6 +133,17 @@ var DeviceList = React.createClass({
       }
     }
     return value;
+  },
+  _setDeviceIdentity: function(device) {
+    var callback = {
+      success: function(device) {
+        this.setState({deviceAttributes: device.attributes, deviceId: device.id});
+      }.bind(this),
+      error: function(err) {
+        console.log("Error: " + err);
+      }
+    };
+    AppActions.getDeviceIdentity(device.id, callback);
   },
   _addGroupHandler: function() {
     AppActions.addToGroup(addSelection.group, this.props.selectedDevices);
@@ -298,14 +317,14 @@ var DeviceList = React.createClass({
     var devices = this.props.devices.map(function(device, index) {
       var expanded = '';
       if ( this.state.expanded === index ) {
-        expanded = <SelectedDevices images={this.props.images} devices={this.props.devices} selected={[device]} selectedGroup={this.props.selectedGroup} groups={this.props.groups} />
+        expanded = <SelectedDevices attributes={this.state.deviceAttributes} deviceId={this.state.deviceId} images={this.props.images} device={this.state.expandedDevice} selectedGroup={this.props.selectedGroup} images={this.props.images} groups={this.props.groups} />
       }
       return (
         <TableRow selected={this._ifSelected(device.id)} hoverable={!expanded} className={expanded ? "expand" : null}  key={index}>
           <TableRowColumn style={expanded ? {height: this.state.divHeight} : null}>{device.id}</TableRowColumn>
           <TableRowColumn>{device.device_type || "-"}</TableRowColumn>
           <TableRowColumn>{device.artifact_name || "-"}</TableRowColumn>
-          <TableRowColumn><Time value={device.request_time} format="YYYY-MM-DD HH:mm" /></TableRowColumn>
+          <TableRowColumn><Time value={device.updated_ts} format="YYYY-MM-DD HH:mm" /></TableRowColumn>
           <TableRowColumn>{device.status}</TableRowColumn>
           <TableRowColumn style={{width:"33px", paddingRight:"0", paddingLeft:"12px"}} className="expandButton">
             <IconButton className="float-right"><FontIcon className="material-icons">{ expanded ? "arrow_drop_up" : "arrow_drop_down"}</FontIcon></IconButton>
