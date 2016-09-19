@@ -82299,12 +82299,11 @@ var AppActions = {
     });
   },
 
-  addToGroup: function addToGroup(group, deviceList) {
-    console.log(group, deviceList);
-    AppDispatcher.handleViewAction({
-      actionType: AppConstants.ADD_TO_GROUP,
-      group: group,
-      devices: deviceList
+  addDeviceToGroup: function addDeviceToGroup(group, device) {
+    DevicesApi.put(inventoryApiUrl + "/devices/" + device + "/group", { "group": group }).then(function (result) {
+      callback.success(result);
+    }).catch(function (err) {
+      callback.error(err);
     });
   },
 
@@ -87157,10 +87156,24 @@ var DeviceList = _react2.default.createClass({
     AppActions.getDeviceIdentity(device.id, callback);
   },
   _addGroupHandler: function _addGroupHandler() {
-    AppActions.addToGroup(addSelection, this.props.selectedDevices);
-    this.dialogToggle('addGroup');
+    var loading = true;
+    var callback = {
+      success: function (device) {
+        this.setState({ openSnack: true, snackMessage: "Device was moved to " + addSelection });
+      }.bind(this),
+      error: function error(err) {
+        this.setState({ openSnack: true, snackMessage: "Error moving device into group " + addSelection });
+        console.log("Error: " + err);
+      }
+    };
+    for (var i = 0; i < this.props.selectedDevices.length; i++) {
+      AppActions.addDeviceToGroup(addSelection, this.props.selectedDevices[i], callback);
+      if (i === this.props.selectedDevices.length - 1) this._doneAddingGroup();
+    }
     AppActions.selectGroup(addSelection);
+    this.dialogToggle('addGroup');
   },
+  _doneAddingGroup: function _doneAddingGroup() {},
   _removeGroupHandler: function _removeGroupHandler() {
     AppActions.addToGroup(this.props.selectedGroup, this.props.selectedDevices);
   },

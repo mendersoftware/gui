@@ -142,9 +142,25 @@ var DeviceList = React.createClass({
     AppActions.getDeviceIdentity(device.id, callback);
   },
   _addGroupHandler: function() {
-    AppActions.addToGroup(addSelection, this.props.selectedDevices);
-    this.dialogToggle('addGroup');
+    var loading = true;
+    var callback = {
+      success: function(device) {
+        this.setState({openSnack: true, snackMessage: "Device was moved to " + addSelection});
+      }.bind(this),
+      error: function(err) {
+        this.setState({openSnack: true, snackMessage: "Error moving device into group " + addSelection});
+        console.log("Error: " + err);
+      }
+    };
+    for (var i=0; i<this.props.selectedDevices.length; i++) {
+      AppActions.addDeviceToGroup(addSelection, this.props.selectedDevices[i], callback);
+      if (i===this.props.selectedDevices.length-1) this._doneAddingGroup();
+    }
     AppActions.selectGroup(addSelection);
+    this.dialogToggle('addGroup');
+  },
+  _doneAddingGroup: function() {
+
   },
   _removeGroupHandler: function() {
     AppActions.addToGroup(this.props.selectedGroup, this.props.selectedDevices);

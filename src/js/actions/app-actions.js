@@ -26,13 +26,15 @@ var AppActions = {
     })
   },
 
-  addToGroup: function(group, deviceList) {
-    console.log(group, deviceList);
-    AppDispatcher.handleViewAction({
-      actionType: AppConstants.ADD_TO_GROUP,
-      group: group,
-      devices: deviceList
-    })
+  addDeviceToGroup: function(group, device) {
+    DevicesApi
+      .put(inventoryApiUrl+"/devices/" + device + "/group", {"group":group})
+      .then(function(result) {
+        callback.success(result);
+      })
+      .catch(function(err) {
+        callback.error(err);
+      })
   },
 
   removeGroup: function(groupId) {
