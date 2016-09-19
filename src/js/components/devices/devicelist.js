@@ -55,16 +55,8 @@ var DeviceList = React.createClass({
     }
   },
   
-  _onRowSelection: function(rows) {
-    if (rows === "all") {
-      rows = [];
-      for (var i=0; i<this.props.devices.length;i++) {
-        rows.push(i);
-      }
-    } else if (rows === "none") {
-      rows = [];
-    }
-    AppActions.selectDevices(rows);
+  _onRowSelection: function(selected) {
+    AppActions.selectDevices(selected);
   },
   _selectAll: function(rows) {
     console.log("select all", rows);
@@ -106,8 +98,8 @@ var DeviceList = React.createClass({
   _onChange: function(event) {
     this._validateName(event.target.value);
   },
-  _expandRow: function(rowNumber, columnId, event) {
-    event.stopPropagation();
+  _expandRow: function(rowNumber, columnId) {
+    
     if (columnId >-1 && columnId < 6) {
 
       if (this.props.devices[rowNumber] !== this.state.expandedDevice) {
@@ -120,19 +112,11 @@ var DeviceList = React.createClass({
         newIndex = null;
       }
       this.setState({expanded: newIndex});
+    } else if (rowNumber === "all" || rowNumber ===  "none") {
+      this._onRowSelection(rowNumber);
     } else if (columnId === -1) {
       this._onRowSelection(this.props.devices[rowNumber]);
     }
-  },
-  _ifSelected: function(id) {
-    var value = false;
-    for (var i=0;i<this.props.selectedDevices.length;i++) {
-      if (id === this.props.selectedDevices[i].id) {
-        value = true;
-        break;
-      }
-    }
-    return value;
   },
   _setDeviceIdentity: function(device) {
     var callback = {
@@ -320,7 +304,7 @@ var DeviceList = React.createClass({
         expanded = <SelectedDevices attributes={this.state.deviceAttributes} deviceId={this.state.deviceId} images={this.props.images} device={this.state.expandedDevice} selectedGroup={this.props.selectedGroup} images={this.props.images} groups={this.props.groups} />
       }
       return (
-        <TableRow selected={this._ifSelected(device.id)} hoverable={!expanded} className={expanded ? "expand" : null}  key={index}>
+        <TableRow selected={device.selected} hoverable={!expanded} className={expanded ? "expand" : null}  key={index}>
           <TableRowColumn style={expanded ? {height: this.state.divHeight} : null}>{device.id}</TableRowColumn>
           <TableRowColumn>{device.device_type || "-"}</TableRowColumn>
           <TableRowColumn>{device.artifact_name || "-"}</TableRowColumn>
@@ -399,6 +383,7 @@ var DeviceList = React.createClass({
           <div className="margin-bottom">
             <Table
               onCellClick={this._expandRow}
+              onRowSelection={this._expandRow}
               multiSelectable={true}
               className={devices.length && !this.props.loading ? null : 'hidden'} >
               <TableHeader

@@ -87072,16 +87072,8 @@ var DeviceList = _react2.default.createClass((_React$createClass = {
     }
   },
 
-  _onRowSelection: function _onRowSelection(rows) {
-    if (rows === "all") {
-      rows = [];
-      for (var i = 0; i < this.props.devices.length; i++) {
-        rows.push(i);
-      }
-    } else if (rows === "none") {
-      rows = [];
-    }
-    AppActions.selectDevices(rows);
+  _onRowSelection: function _onRowSelection(selected) {
+    AppActions.selectDevices(selected);
   },
   _selectAll: function _selectAll(rows) {
     console.log("select all", rows);
@@ -87123,8 +87115,8 @@ var DeviceList = _react2.default.createClass((_React$createClass = {
   _onChange: function _onChange(event) {
     this._validateName(event.target.value);
   },
-  _expandRow: function _expandRow(rowNumber, columnId, event) {
-    event.stopPropagation();
+  _expandRow: function _expandRow(rowNumber, columnId) {
+
     if (columnId > -1 && columnId < 6) {
 
       if (this.props.devices[rowNumber] !== this.state.expandedDevice) {
@@ -87137,19 +87129,11 @@ var DeviceList = _react2.default.createClass((_React$createClass = {
         newIndex = null;
       }
       this.setState({ expanded: newIndex });
+    } else if (rowNumber === "all" || rowNumber === "none") {
+      this._onRowSelection(rowNumber);
     } else if (columnId === -1) {
       this._onRowSelection(this.props.devices[rowNumber]);
     }
-  },
-  _ifSelected: function _ifSelected(id) {
-    var value = false;
-    for (var i = 0; i < this.props.selectedDevices.length; i++) {
-      if (id === this.props.selectedDevices[i].id) {
-        value = true;
-        break;
-      }
-    }
-    return value;
   },
   _setDeviceIdentity: function _setDeviceIdentity(device) {
     var callback = {
@@ -87318,7 +87302,7 @@ var DeviceList = _react2.default.createClass((_React$createClass = {
     }
     return _react2.default.createElement(
       _Table.TableRow,
-      { selected: this._ifSelected(device.id), hoverable: !expanded, className: expanded ? "expand" : null, key: index },
+      { selected: device.selected, hoverable: !expanded, className: expanded ? "expand" : null, key: index },
       _react2.default.createElement(
         _Table.TableRowColumn,
         { style: expanded ? { height: this.state.divHeight } : null },
@@ -87447,6 +87431,7 @@ var DeviceList = _react2.default.createClass((_React$createClass = {
           _Table.Table,
           {
             onCellClick: this._expandRow,
+            onRowSelection: this._expandRow,
             multiSelectable: true,
             className: devices.length && !this.props.loading ? null : 'hidden' },
           _react2.default.createElement(
@@ -87664,6 +87649,7 @@ function getState() {
     groups: AppStore.getGroups(),
     selectedGroup: AppStore.getSelectedGroup(),
     pendingDevices: AppStore.getPendingDevices(),
+    devices: AppStore.getGroupDevices(),
     allDevices: AppStore.getAllDevices(),
     selectedDevices: AppStore.getSelectedDevices(),
     filters: AppStore.getFilters(),
@@ -87719,7 +87705,7 @@ var Devices = _react2.default.createClass({
   _refreshDevices: function _refreshDevices() {
     var callback = {
       success: function (devices) {
-        this.setState(this.getInitialState({ allDevices: devices }));
+        this.setState({ devices: devices });
         setTimeout(function () {
           this.setState({ doneLoading: true });
         }.bind(this), 300);
@@ -87731,7 +87717,11 @@ var Devices = _react2.default.createClass({
         AppActions.setSnackbar("Devices couldn't be loaded. " + errormsg);
       }.bind(this)
     };
-    AppActions.getDevices(callback);
+    if (!this.state.selectedGroup) {
+      AppActions.getDevices(callback);
+    } else {
+      AppActions.getGroupDevices(this.state.selectedGroup, callback);
+    }
   },
   _refreshAdmissions: function _refreshAdmissions() {
     AppActions.getDevicesForAdmission(function (devices) {
@@ -87799,7 +87789,7 @@ var Devices = _react2.default.createClass({
           { className: this.state.pendingDevices.length && this.state.doneLoading ? null : "hidden" },
           _react2.default.createElement(Unauthorized, { refresh: this._refreshDevices, refreshAdmissions: this._refreshAdmissions, pending: this.state.pendingDevices })
         ),
-        _react2.default.createElement(DeviceList, { loading: !this.state.doneLoading, selectedDevice: this._handleSelectDevice, filters: this.state.filters, attributes: this.state.attributes, onFilterChange: this._updateFilters, images: this.state.images, selectedDevices: this.state.selectedDevices, groups: this.state.groups, devices: this.state.devices || this.state.allDevices, selectedGroup: this.state.selectedGroup })
+        _react2.default.createElement(DeviceList, { loading: !this.state.doneLoading, selectedDevice: this._handleSelectDevice, filters: this.state.filters, attributes: this.state.attributes, onFilterChange: this._updateFilters, images: this.state.images, selectedDevices: this.state.selectedDevices, groups: this.state.groups, devices: this.state.devices, selectedGroup: this.state.selectedGroup })
       ),
       _react2.default.createElement(_Snackbar2.default, {
         open: this.state.snackbar.open,
@@ -90228,7 +90218,7 @@ var CHANGE_EVENT = "change";
 
 var _softwareRepo = [];
 var _currentGroup = null;
-var _currentDevices = [];
+var _currentGroupDevices = [];
 var _selectedDevices = [];
 var _filters = [{ key: '', value: '' }];
 var _attributes = {
@@ -90311,10 +90301,21 @@ function _matchFilters(device) {
   return match;
 }
 
-function _selectDevices(devicePositions) {
-  _selectedDevices = [];
-  for (var i = 0; i < devicePositions.length; i++) {
-    _selectedDevices.push(_currentDevices[devicePositions[i]]);
+function _selectDevices(device) {
+  if (device === "all") {
+    for (var i = 0; i < _currentGroupDevices.length; i++) {
+      _currentGroupDevices[i].selected = true;
+    }
+  } else if (device === "none") {
+    for (var i = 0; i < _currentGroupDevices.length; i++) {
+      _currentGroupDevices[i].selected = false;
+    }
+  } else {
+    for (var i = 0; i < _currentGroupDevices.length; i++) {
+      if (device.id === _currentGroupDevices[i].id) {
+        _currentGroupDevices[i].selected = !_currentGroupDevices[i].selected;
+      }
+    }
   }
 }
 
@@ -90506,8 +90507,8 @@ function _sortTable(array, column, direction) {
     case "_softwareRepo":
       _softwareRepo.sort(customSort(direction, column));
       break;
-    case "_currentDevices":
-      _currentDevices.sort(customSort(direction, column));
+    case "_currentGroupDevices":
+      _currentGroupDevices.sort(customSort(direction, column));
       break;
     case "_pendingDevices":
       _pending.sort(customSort(direction, column));
@@ -90594,6 +90595,9 @@ function setDevices(devices) {
       newDevices[element.status].push(element);
     });
     _alldevices = devices;
+    if (!_currentGroup) {
+      _currentGroupDevices = devices;
+    }
   }
 }
 
@@ -90668,11 +90672,11 @@ var AppStore = assign(EventEmitter.prototype, {
     return _alldevices;
   },
 
-  getDevices: function getDevices() {
+  getGroupDevices: function getGroupDevices() {
     /*
     * Return list of devices by current selected group
     */
-    return _currentDevices;
+    return _currentGroupDevices;
   },
 
   getSingleDevice: function getSingleDevice(id) {

@@ -15,6 +15,7 @@ function getState() {
     groups: AppStore.getGroups(),
     selectedGroup: AppStore.getSelectedGroup(),
     pendingDevices: AppStore.getPendingDevices(),
+    devices: AppStore.getGroupDevices(),
     allDevices: AppStore.getAllDevices(),
     selectedDevices: AppStore.getSelectedDevices(),
     filters: AppStore.getFilters(),
@@ -68,7 +69,7 @@ var Devices = React.createClass({
   _refreshDevices: function() {
     var callback = {
       success: function(devices) {
-        this.setState(this.getInitialState({allDevices: devices}));
+        this.setState({devices: devices});
         setTimeout(function() {
           this.setState({doneLoading:true});
         }.bind(this), 300);
@@ -80,7 +81,12 @@ var Devices = React.createClass({
         AppActions.setSnackbar("Devices couldn't be loaded. " +errormsg);
       }.bind(this)
     };
-    AppActions.getDevices(callback);
+    if (!this.state.selectedGroup) {
+      AppActions.getDevices(callback);
+    } else {
+      AppActions.getGroupDevices(this.state.selectedGroup, callback);
+    }
+    
   },
   _refreshAdmissions: function() {
     AppActions.getDevicesForAdmission(function(devices) {
@@ -142,7 +148,7 @@ var Devices = React.createClass({
           <div className={this.state.pendingDevices.length&&this.state.doneLoading ? null : "hidden"}>
             <Unauthorized refresh={this._refreshDevices} refreshAdmissions={this._refreshAdmissions} pending={this.state.pendingDevices} />
           </div>
-          <DeviceList loading={!this.state.doneLoading} selectedDevice={this._handleSelectDevice} filters={this.state.filters} attributes={this.state.attributes} onFilterChange={this._updateFilters} images={this.state.images} selectedDevices={this.state.selectedDevices} groups={this.state.groups} devices={this.state.devices || this.state.allDevices} selectedGroup={this.state.selectedGroup} />
+          <DeviceList loading={!this.state.doneLoading} selectedDevice={this._handleSelectDevice} filters={this.state.filters} attributes={this.state.attributes} onFilterChange={this._updateFilters} images={this.state.images} selectedDevices={this.state.selectedDevices} groups={this.state.groups} devices={this.state.devices} selectedGroup={this.state.selectedGroup} />
         </div>
         <Snackbar
           open={this.state.snackbar.open}
