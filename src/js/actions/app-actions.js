@@ -27,6 +27,7 @@ var AppActions = {
   },
 
   addToGroup: function(group, deviceList) {
+    console.log(group, deviceList);
     AppDispatcher.handleViewAction({
       actionType: AppConstants.ADD_TO_GROUP,
       group: group,
@@ -116,6 +117,17 @@ var AppActions = {
       })
       .catch(function(err) {
         callback(err);
+      })
+  },
+    /* Device Admission */
+  getDeviceIdentity: function (id, callback) {
+    DevicesApi
+      .get(devicesApiUrl+"/devices/" + id)
+      .then(function(devices) {
+        callback.success(devices);
+      })
+      .catch(function(err) {
+        callback.error(err);
       })
   },
 

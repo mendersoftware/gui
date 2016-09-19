@@ -1,6 +1,7 @@
 import React from 'react';
 var AppStore = require('../../stores/app-store');
 var AppActions = require('../../actions/app-actions');
+var update = require('react-addons-update');
 
 var Groups = require('./groups');
 var DeviceList = require('./devicelist');
@@ -13,8 +14,10 @@ import { Router, Route, Link } from 'react-router';
 function getState() {
   return {
     groups: AppStore.getGroups(),
+    groupsForList: AppStore.getGroups(),
     selectedGroup: AppStore.getSelectedGroup(),
     pendingDevices: AppStore.getPendingDevices(),
+    devices: AppStore.getGroupDevices(),
     allDevices: AppStore.getAllDevices(),
     selectedDevices: AppStore.getSelectedDevices(),
     filters: AppStore.getFilters(),
@@ -68,7 +71,7 @@ var Devices = React.createClass({
   _refreshDevices: function() {
     var callback = {
       success: function(devices) {
-        this.setState(this.getInitialState({allDevices: devices}));
+        this.setState({devices: devices});
         setTimeout(function() {
           this.setState({doneLoading:true});
         }.bind(this), 300);
@@ -80,7 +83,12 @@ var Devices = React.createClass({
         AppActions.setSnackbar("Devices couldn't be loaded. " +errormsg);
       }.bind(this)
     };
-    AppActions.getDevices(callback);
+    if (!this.state.selectedGroup) {
+      AppActions.getDevices(callback);
+    } else {
+      AppActions.getGroupDevices(this.state.selectedGroup, callback);
+    }
+    
   },
   _refreshAdmissions: function() {
     AppActions.getDevicesForAdmission(function(devices) {
@@ -103,6 +111,11 @@ var Devices = React.createClass({
       }
     };
     AppActions.getGroups(callback);
+  },
+  _addTmpGroup: function(name) {
+    // use a tmp group so as not to affect the groups in state
+    var groups = update(this.state.groups, {$push: [name]});
+    this.setState({groupsForList: groups, selectedField: name});
   },
   _updateFilters: function(filters) {
     AppActions.updateFilters(filters);
@@ -129,6 +142,9 @@ var Devices = React.createClass({
     }
     
   },
+  _handleSelectDevice: function(device) {
+    console.log(device);
+  },
   render: function() {
     return (
       <div className="margin-top">
@@ -139,7 +155,7 @@ var Devices = React.createClass({
           <div className={this.state.pendingDevices.length&&this.state.doneLoading ? null : "hidden"}>
             <Unauthorized refresh={this._refreshDevices} refreshAdmissions={this._refreshAdmissions} pending={this.state.pendingDevices} />
           </div>
-          <DeviceList loading={!this.state.doneLoading} filters={this.state.filters} attributes={this.state.attributes} onFilterChange={this._updateFilters} images={this.state.images} selectedDevices={this.state.selectedDevices} groups={this.state.groups} devices={this.state.devices || this.state.allDevices} selectedGroup={this.state.selectedGroup} />
+          <DeviceList refreshGroups={this._refreshGroups} selectedField={this.state.selectedField} addGroup={this._addTmpGroup} loading={!this.state.doneLoading} selectedDevice={this._handleSelectDevice} filters={this.state.filters} attributes={this.state.attributes} onFilterChange={this._updateFilters} images={this.state.images} selectedDevices={this.state.selectedDevices} groups={this.state.groupsForList} devices={this.state.devices} selectedGroup={this.state.selectedGroup} />
         </div>
         <Snackbar
           open={this.state.snackbar.open}

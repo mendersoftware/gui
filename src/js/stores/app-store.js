@@ -7,7 +7,7 @@ var CHANGE_EVENT = "change";
 
 var _softwareRepo = [];
 var _currentGroup = null;
-var _currentDevices = [];
+var _currentGroupDevices = [];
 var _selectedDevices = [];
 var _filters = [{key:'', value:''}];
 var _attributes = {
@@ -96,10 +96,25 @@ function _matchFilters(device) {
 }
 
 
-function _selectDevices(devicePositions) {
+function _selectDevices(device) {
   _selectedDevices = [];
-  for (var i=0; i<devicePositions.length; i++) {
-   _selectedDevices.push(_currentDevices[devicePositions[i]]);
+  if (device === "all") {
+    for (var i=0; i<_currentGroupDevices.length; i++) {
+      _currentGroupDevices[i].selected = true;
+      _selectedDevices.push(_currentGroupDevices[i].id);
+    }
+  } else if (device === "none") {
+    for (var i=0; i<_currentGroupDevices.length; i++) {
+      _currentGroupDevices[i].selected = false;
+    }
+  } else {
+    for (var i=0; i<_currentGroupDevices.length; i++) {
+      if (device.id === _currentGroupDevices[i].id) {
+        _currentGroupDevices[i].selected = !_currentGroupDevices[i].selected;
+
+        if (_currentGroupDevices[i].selected) _selectedDevices.push(_currentGroupDevices[i].id);
+      }
+    }
   }
 }
 
@@ -295,8 +310,8 @@ function _sortTable(array, column, direction) {
     case "_softwareRepo":
       _softwareRepo.sort(customSort(direction, column));
       break;
-    case "_currentDevices":
-      _currentDevices.sort(customSort(direction, column));
+    case "_currentGroupDevices":
+      _currentGroupDevices.sort(customSort(direction, column));
       break;
     case "_pendingDevices":
       _pending.sort(customSort(direction, column));
@@ -390,6 +405,9 @@ function setDevices(devices) {
       newDevices[element.status].push(element);
     });
     _alldevices = devices;
+    if (!_currentGroup) {
+      _currentGroupDevices = devices;
+    }
   }
 }
 
@@ -467,11 +485,11 @@ var AppStore = assign(EventEmitter.prototype, {
     return _alldevices
   },
 
-  getDevices: function() {
+  getGroupDevices: function() {
     /*
     * Return list of devices by current selected group
     */
-    return _currentDevices
+    return _currentGroupDevices
   },
 
   getSingleDevice: function(id) {
