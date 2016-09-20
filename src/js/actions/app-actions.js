@@ -9,6 +9,9 @@ var deploymentsApiUrl = apiUrl + "/deployments";
 var devicesApiUrl = apiUrl + "/admission";
 var inventoryApiUrl = apiUrl + "/inventory";
 
+// default per page until pagination and counting integrated
+var per_page = 200;
+
 
 var AppActions = {
  
@@ -19,10 +22,10 @@ var AppActions = {
     })
   },
 
-  selectDevices: function(deviceList) {
+  selectDevices: function(device) {
     AppDispatcher.handleViewAction({
       actionType: AppConstants.SELECT_DEVICES,
-      devices: deviceList
+      device: device
     })
   },
 
@@ -71,7 +74,7 @@ var AppActions = {
 
   getGroupDevices: function(group, callback) {
     DevicesApi
-      .get(inventoryApiUrl+"/groups/" + group +"/devices")
+      .get(inventoryApiUrl+"/groups/" + group +"/devices?per_page="+per_page)
       .then(function(devices) {
         AppDispatcher.handleViewAction({
           actionType: AppConstants.RECEIVE_GROUP_DEVICES,
@@ -86,7 +89,7 @@ var AppActions = {
 
   getDevices: function(callback) {
     DevicesApi
-      .get(inventoryApiUrl+"/devices")
+      .get(inventoryApiUrl+"/devices?per_page="+per_page)
       .then(function(devices) {
         AppDispatcher.handleViewAction({
           actionType: AppConstants.RECEIVE_ALL_DEVICES,
@@ -113,7 +116,7 @@ var AppActions = {
   /* Device Admission */
   getDevicesForAdmission: function (callback) {
     DevicesApi
-      .get(devicesApiUrl+"/devices")
+      .get(devicesApiUrl+"/devices?per_page="+per_page)
       .then(function(devices) {
         AppDispatcher.handleViewAction({
           actionType: AppConstants.RECEIVE_ADMISSION_DEVICES,

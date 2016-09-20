@@ -82283,6 +82283,9 @@ var deploymentsApiUrl = apiUrl + "/deployments";
 var devicesApiUrl = apiUrl + "/admission";
 var inventoryApiUrl = apiUrl + "/inventory";
 
+// default per page until pagination and counting integrated
+var per_page = 200;
+
 var AppActions = {
 
   selectGroup: function selectGroup(group) {
@@ -82292,10 +82295,10 @@ var AppActions = {
     });
   },
 
-  selectDevices: function selectDevices(deviceList) {
+  selectDevices: function selectDevices(device) {
     AppDispatcher.handleViewAction({
       actionType: AppConstants.SELECT_DEVICES,
-      devices: deviceList
+      device: device
     });
   },
 
@@ -82336,7 +82339,7 @@ var AppActions = {
   },
 
   getGroupDevices: function getGroupDevices(group, callback) {
-    DevicesApi.get(inventoryApiUrl + "/groups/" + group + "/devices").then(function (devices) {
+    DevicesApi.get(inventoryApiUrl + "/groups/" + group + "/devices?per_page=" + per_page).then(function (devices) {
       AppDispatcher.handleViewAction({
         actionType: AppConstants.RECEIVE_GROUP_DEVICES,
         devices: devices
@@ -82348,7 +82351,7 @@ var AppActions = {
   },
 
   getDevices: function getDevices(callback) {
-    DevicesApi.get(inventoryApiUrl + "/devices").then(function (devices) {
+    DevicesApi.get(inventoryApiUrl + "/devices?per_page=" + per_page).then(function (devices) {
       AppDispatcher.handleViewAction({
         actionType: AppConstants.RECEIVE_ALL_DEVICES,
         devices: devices
@@ -82370,7 +82373,7 @@ var AppActions = {
 
   /* Device Admission */
   getDevicesForAdmission: function getDevicesForAdmission(callback) {
-    DevicesApi.get(devicesApiUrl + "/devices").then(function (devices) {
+    DevicesApi.get(devicesApiUrl + "/devices?per_page=" + per_page).then(function (devices) {
       AppDispatcher.handleViewAction({
         actionType: AppConstants.RECEIVE_ADMISSION_DEVICES,
         devices: devices
@@ -87036,6 +87039,7 @@ var AppActions = require('../../actions/app-actions');
 var SelectedDevices = require('./selecteddevices');
 var Filters = require('./filters');
 var Loader = require('../common/loader');
+var pluralize = require('pluralize');
 
 // material ui
 
@@ -87401,6 +87405,10 @@ var DeviceList = _react2.default.createClass({
       correctIcon = "close";
     }
 
+    var pluralized = pluralize("devices", this.props.selectedDevices.length);
+    var addLabel = this.props.selectedGroup ? "Move selected " + pluralized + " to another group" : "Add selected " + pluralized + " to a group";
+    var removeLabel = "Remove selected " + pluralized + " from this group";
+
     return _react2.default.createElement(
       'div',
       null,
@@ -87537,17 +87545,13 @@ var DeviceList = _react2.default.createClass({
             'span',
             { className: 'margin-right' },
             this.props.selectedDevices.length,
-            ' device',
-            _react2.default.createElement(
-              'span',
-              { className: this.props.selectedDevices.length > 1 ? null : "hidden" },
-              's'
-            ),
+            ' ',
+            pluralized,
             ' selected'
           ),
           _react2.default.createElement(
             _RaisedButton2.default,
-            { disabled: disableAction, label: 'Add selected devices to a group', secondary: true, onClick: this.dialogToggle.bind(null, 'addGroup') },
+            { disabled: disableAction, label: addLabel, secondary: true, onClick: this.dialogToggle.bind(null, 'addGroup') },
             _react2.default.createElement(
               _FontIcon2.default,
               { style: styles.raisedButtonIcon, className: 'material-icons' },
@@ -87556,7 +87560,7 @@ var DeviceList = _react2.default.createClass({
           ),
           _react2.default.createElement(
             _FlatButton2.default,
-            { disabled: disableAction, style: { marginLeft: "4px" }, className: this.props.selectedGroup ? null : 'hidden', label: 'Remove selected devices from this group', secondary: true, onClick: this._removeGroupHandler },
+            { disabled: disableAction, style: { marginLeft: "4px" }, className: this.props.selectedGroup ? null : 'hidden', label: removeLabel, secondary: true, onClick: this._removeGroupHandler },
             _react2.default.createElement(
               _FontIcon2.default,
               { style: styles.buttonIcon, className: 'material-icons' },
@@ -87639,7 +87643,7 @@ var DeviceList = _react2.default.createClass({
 
 module.exports = DeviceList;
 
-},{"../../actions/app-actions":934,"../../stores/app-store":980,"../common/loader":942,"./filters":967,"./selecteddevices":969,"material-ui/Dialog":198,"material-ui/FlatButton":207,"material-ui/FontIcon":211,"material-ui/IconButton":216,"material-ui/MenuItem":230,"material-ui/RaisedButton":241,"material-ui/SelectField":245,"material-ui/Snackbar":250,"material-ui/Table":268,"material-ui/TextField":279,"react":843,"react-collapse":482,"react-dom":603,"react-height":607,"react-motion":619,"react-time":694}],966:[function(require,module,exports){
+},{"../../actions/app-actions":934,"../../stores/app-store":980,"../common/loader":942,"./filters":967,"./selecteddevices":969,"material-ui/Dialog":198,"material-ui/FlatButton":207,"material-ui/FontIcon":211,"material-ui/IconButton":216,"material-ui/MenuItem":230,"material-ui/RaisedButton":241,"material-ui/SelectField":245,"material-ui/Snackbar":250,"material-ui/Table":268,"material-ui/TextField":279,"pluralize":472,"react":843,"react-collapse":482,"react-dom":603,"react-height":607,"react-motion":619,"react-time":694}],966:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -90323,9 +90327,8 @@ function _selectDevices(device) {
     for (var i = 0; i < _currentGroupDevices.length; i++) {
       if (device.id === _currentGroupDevices[i].id) {
         _currentGroupDevices[i].selected = !_currentGroupDevices[i].selected;
-
-        if (_currentGroupDevices[i].selected) _selectedDevices.push(_currentGroupDevices[i].id);
       }
+      if (_currentGroupDevices[i].selected) _selectedDevices.push(_currentGroupDevices[i].id);
     }
   }
 }
@@ -90823,7 +90826,7 @@ var AppStore = assign(EventEmitter.prototype, {
         _selectGroup(payload.action.group);
         break;
       case AppConstants.SELECT_DEVICES:
-        _selectDevices(payload.action.devices);
+        _selectDevices(payload.action.device);
         break;
       case AppConstants.ADD_TO_GROUP:
         _addToGroup(payload.action.group, payload.action.devices);
