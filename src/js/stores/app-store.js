@@ -411,6 +411,13 @@ function setDevices(devices) {
   }
 }
 
+function setGroupDevices(devices) {
+  _currentGroupDevices = [];
+  devices.forEach(function(element, index) {
+     _currentGroupDevices[index] = _getDeviceById(element);
+  });
+}
+
 function setPendingDevices(devices) {
   if (devices) {
     var newDevices = {};
@@ -674,6 +681,11 @@ var AppStore = assign(EventEmitter.prototype, {
       /* API */
       case AppConstants.RECEIVE_ALL_DEVICES:
         setDevices(payload.action.devices);
+        break;
+
+       /* API */
+      case AppConstants.RECEIVE_GROUP_DEVICES:
+        setGroupDevices(payload.action.devices);
         break;
 
       case AppConstants.RECEIVE_ADMISSION_DEVICES:

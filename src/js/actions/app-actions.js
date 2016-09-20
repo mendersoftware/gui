@@ -26,7 +26,7 @@ var AppActions = {
     })
   },
 
-  addDeviceToGroup: function(group, device) {
+  addDeviceToGroup: function(group, device, callback) {
     DevicesApi
       .put(inventoryApiUrl+"/devices/" + device + "/group", {"group":group})
       .then(function(result) {
@@ -73,6 +73,10 @@ var AppActions = {
     DevicesApi
       .get(inventoryApiUrl+"/groups/" + group +"/devices")
       .then(function(devices) {
+        AppDispatcher.handleViewAction({
+          actionType: AppConstants.RECEIVE_GROUP_DEVICES,
+          devices: devices
+        });
         callback.success(devices);
       })
       .catch(function(err) {
