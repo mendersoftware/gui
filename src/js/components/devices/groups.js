@@ -24,7 +24,8 @@ var Groups = React.createClass({
       openDialog: false,
       showDeviceList: false,
       newGroup: '',
-      invalid: true,
+      nextInvalid: true,
+      createInvalid: true,
       selectedDevices: []
     };
   },
@@ -33,36 +34,50 @@ var Groups = React.createClass({
     AppActions.selectGroup(group);
   },
   _createGroupHandler: function() {
-    var selected = [];
-    if (this.state.selectedDevices.length) {
-      for (var i=0; i<this.state.selectedDevices.length; i++) {
-        selected.push(tmpDevices[this.state.selectedDevices[i]]);
-      }
-    }
-    var newGroup = {
-      name: this.state.newGroup,
-      devices: [],
-      type: 'public'
+    var i;
+    var callback = {
+      success: function() {
+        if (i===this.state.selectedDevices.length) {
+          this.setState({openDialog: false, showDeviceList: false, createInvalid: true, nextInvalid: true});
+          this._changeGroup(this.state.newGroup);
+          this.props.refreshGroups();
+        }
+      }.bind(this),
+      error: function(err) {
+        console.log(err);
+        AppActions.setSnackbar("Group could not be created: " + err);
+      }.bind(this)
     };
- 
-    AppActions.addToGroup(newGroup, selected);
-    this.setState({openDialog: false, showDeviceList: false, invalid: true});
+    for (i=0;i<this.state.selectedDevices.length;i++) {
+      AppActions.addDeviceToGroup(encodeURIComponent(this.state.newGroup), this.state.selectedDevices[i], callback);
+    }
   },
   dialogToggle: function() {
-    this.setState({openDialog: !this.state.openDialog, showDeviceList: false, newGroup: '' });
+    this.setState({openDialog: !this.state.openDialog, showDeviceList: false, newGroup: '', nextInvalid: true, createInvalid: true});
   },
   validateName: function(e) {
     var newName = e.target.value;
     this.setState({newGroup: newName});
-    var invalid = newName ? false : true;
+    var invalid = false;
     var errorText = null;
-    for (var i=0;i<this.props.groups.length; i++) {
-      if (this.props.groups[i].name.toLowerCase() === newName.toLowerCase()) {
+    if (newName) {
+      if (newName === "All devices") {
         invalid = true;
-        errorText = "A group with this name already exists";
+        errorText = 'The group cannot be called "All devices". Try another name';
+      } else {
+        for (var i=0;i<this.props.groups.length; i++) {
+          if (decodeURIComponent(this.props.groups[i]) === newName) {
+            invalid = true;
+            errorText = "A group with this name already exists";
+          }
+        }
       }
+      this.setState({errorText1: errorText, nextInvalid: invalid});
+    } else {
+      invalid = true;
+      errorText = "Name cannot be left blank";
+      this.setState({errorText1: errorText, nextInvalid: invalid});
     }
-    this.setState({errorText1: errorText, invalid: invalid});
   },
 
   searchUpdated: function(term) {
@@ -75,31 +90,21 @@ var Groups = React.createClass({
 
   _onRowSelection: function(array) {
     var selected = [];
+    var invalid = true;
     if (array === "all") {
+      invalid = false;
       for (var i=0;i<tmpDevices.length;i++) {
-        selected.push(i);  
+        selected.push(tmpDevices[i].id);  
       }
     } else if (array === "none") {
       selected = [];
     } else {
-      selected = array;
-    }
-    this.setState({selectedDevices: selected});
-  },
-
-  _getGroupDevices: function(group) {
-    console.log("getting group devices", group);
-    var callback = {
-      success: function(devices) {
-        console.log(devices);
-        return (devices.length);
-      }.bind(this),
-      error: function(err) {
-        console.log("Error: "+ err);
-        return "0";
+      for (var i=0;i<array.length;i++) {
+        selected.push(tmpDevices[array[i]].id);  
       }
-    };
-    return AppActions.getGroupDevices(group, callback);
+      invalid = selected.length ? false : true;
+    }
+    this.setState({selectedDevices: selected, createInvalid: invalid});
   },
 
   render: function() {
@@ -116,25 +121,22 @@ var Groups = React.createClass({
         label="Create group"
         primary={true}
         onClick={this._createGroupHandler}
-        disabled={this.state.invalid} />
+        disabled={this.state.createInvalid} />
     ];
 
     if (this.refs.search && this.props.allDevices.length) {
-      var filters = ['name'];
+      var filters = ['id'];
       tmpDevices = this.props.allDevices.filter(this.refs.search.filter(filters));
     }
 
     var deviceList = tmpDevices.map(function(device, index) {
       return (
-        <TableRow key={index}>
+        <TableRow key={index} selected={this.state.selectedDevices.indexOf(device.id) !== -1}>
           <TableRowColumn>
-            {device.name}
+            {device.id}
           </TableRowColumn>
           <TableRowColumn>
             {device.device_type}
-          </TableRowColumn>
-           <TableRowColumn>
-            {device.group}
           </TableRowColumn>
         </TableRow>
       );
@@ -143,8 +145,6 @@ var Groups = React.createClass({
     var allLabel = (
       <span>All devices<span className='float-right length'>{this.props.allDevices.length}</span></span>
     );
-
-   
 
     return (
       <div>
@@ -187,7 +187,7 @@ var Groups = React.createClass({
           titleStyle={{paddingBottom: "15px"}}
           >  
 
-          <div className={this.state.showDeviceList ? "absoluteTextfieldButton top-right margin-right" : "absoluteTextfieldButton" }>
+          <div className={this.state.showDeviceList ? "hidden" : "absoluteTextfieldButton" }>
             <TextField
               ref="customGroup"
               className="float-left"
@@ -199,7 +199,7 @@ var Groups = React.createClass({
               errorText={this.state.errorText1} />
 
             <div className={this.state.showDeviceList ? "hidden" : "float-left margin-left-small"}>
-              <RaisedButton disabled={this.state.invalid} style={{marginTop:"26px"}} label="Next" secondary={true} onClick={this.showDeviceList}/>
+              <RaisedButton disabled={this.state.nextInvalid} style={{marginTop:"26px"}} label="Next" secondary={true} onClick={this.showDeviceList}/>
             </div>
        
           </div>
@@ -212,12 +212,12 @@ var Groups = React.createClass({
             <Table
               multiSelectable={true}
               className={deviceList.length ? null : "hidden"}
-              onRowSelection={this._onRowSelection}>
+              onRowSelection={this._onRowSelection}
+              selectable={true}>
               <TableHeader>
                 <TableRow>
                   <TableHeaderColumn>Name</TableHeaderColumn>
                   <TableHeaderColumn>Device type</TableHeaderColumn>
-                  <TableHeaderColumn>Group</TableHeaderColumn>
                 </TableRow>
               </TableHeader>
               <TableBody
