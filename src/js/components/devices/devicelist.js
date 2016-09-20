@@ -153,8 +153,9 @@ var DeviceList = React.createClass({
         console.log("Error: " + err);
       }
     };
+    var groupEncode = encodeURIComponent(this.props.selectedField);
     for (i=0; i<this.props.selectedDevices.length; i++) {
-      AppActions.addDeviceToGroup(this.props.selectedField, this.props.selectedDevices[i], callback);
+      AppActions.addDeviceToGroup(groupEncode, this.props.selectedDevices[i], callback);
     }
     this.dialogToggle('addGroup');
   },
@@ -384,7 +385,7 @@ var DeviceList = React.createClass({
     var pluralized = pluralize("devices", this.props.selectedDevices.length); 
     var addLabel = this.props.selectedGroup ? "Move selected " + pluralized +" to another group" : "Add selected " + pluralized +" to a group";
     var removeLabel =  "Remove selected " + pluralized +" from this group";
-
+    var groupLabel = this.props.selectedGroup ? decodeURIComponent(this.props.selectedGroup) : "All devices";
 
     return (
       <div>
@@ -395,7 +396,7 @@ var DeviceList = React.createClass({
             <h2 className="hoverEdit">
              
                 {groupNameInputs}
-                <span className={this.state.nameEdit ? "hidden" : null}>{this.props.selectedGroup || "All devices"}</span>
+                <span className={this.state.nameEdit ? "hidden" : null}>{groupLabel}</span>
                 <span className={this.props.selectedGroup ? null : 'hidden'}>
                   <IconButton iconStyle={styles.editButton} onClick={this._nameEdit} iconClassName="material-icons" className={this.state.errorText1 ? "align-top" : null}>
                     {correctIcon}

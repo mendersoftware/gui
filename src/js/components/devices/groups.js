@@ -160,7 +160,7 @@ var Groups = React.createClass({
             var isSelected = group===this.props.selectedGroup ? {backgroundColor: "#e7e7e7"} : {backgroundColor: "transparent"};
             var boundClick = this._changeGroup.bind(null, group);
             var groupLabel = (
-                <span>{group}<span className='float-right length'></span></span>
+                <span>{decodeURIComponent(group)}<span className='float-right length'></span></span>
             );
             return (
               <ListItem 

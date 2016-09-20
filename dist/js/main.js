@@ -87143,8 +87143,9 @@ var DeviceList = _react2.default.createClass({
         console.log("Error: " + err);
       }
     };
+    var groupEncode = encodeURIComponent(this.props.selectedField);
     for (i = 0; i < this.props.selectedDevices.length; i++) {
-      AppActions.addDeviceToGroup(this.props.selectedField, this.props.selectedDevices[i], callback);
+      AppActions.addDeviceToGroup(groupEncode, this.props.selectedDevices[i], callback);
     }
     this.dialogToggle('addGroup');
   },
@@ -87405,6 +87406,7 @@ var DeviceList = _react2.default.createClass({
     var pluralized = pluralize("devices", this.props.selectedDevices.length);
     var addLabel = this.props.selectedGroup ? "Move selected " + pluralized + " to another group" : "Add selected " + pluralized + " to a group";
     var removeLabel = "Remove selected " + pluralized + " from this group";
+    var groupLabel = this.props.selectedGroup ? decodeURIComponent(this.props.selectedGroup) : "All devices";
 
     return _react2.default.createElement(
       'div',
@@ -87423,7 +87425,7 @@ var DeviceList = _react2.default.createClass({
             _react2.default.createElement(
               'span',
               { className: this.state.nameEdit ? "hidden" : null },
-              this.props.selectedGroup || "All devices"
+              groupLabel
             ),
             _react2.default.createElement(
               'span',
@@ -88246,7 +88248,7 @@ var Groups = _react2.default.createClass({
           var groupLabel = _react2.default.createElement(
             'span',
             null,
-            group,
+            decodeURIComponent(group),
             _react2.default.createElement('span', { className: 'float-right length' })
           );
           return _react2.default.createElement(_List.ListItem, {
