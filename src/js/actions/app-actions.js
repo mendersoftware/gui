@@ -40,11 +40,26 @@ var AppActions = {
       })
   },
 
-  removeGroup: function(groupId) {
-    AppDispatcher.handleViewAction({
-      actionType: AppConstants.REMOVE_GROUP,
-      groupId: groupId
-    })
+  addDeviceToGroup: function(group, device, callback) {
+    DevicesApi
+      .put(inventoryApiUrl+"/devices/" + device + "/group", {"group":group})
+      .then(function(result) {
+        callback.success(result);
+      })
+      .catch(function(err) {
+        callback.error(err);
+      })
+  },
+
+  removeDeviceFromGroup: function(device, group, callback) {
+    DevicesApi
+      .del(inventoryApiUrl+"/devices/" + device + "/group/" + group)
+      .then(function(result) {
+        callback.success(result);
+      })
+      .catch(function(err) {
+        callback.error(err);
+      })
   },
 
   addGroup: function(group, idx) {
