@@ -317,7 +317,7 @@ var DeviceList = React.createClass({
 
     var groupList = this.props.groups.map(function(group, index) {
       if (group) {
-        return <MenuItem value={group} key={index} primaryText={group} />
+        return <MenuItem value={group} key={index} primaryText={decodeURIComponent(group)} />
       }
     });
 
@@ -397,7 +397,7 @@ var DeviceList = React.createClass({
              
                 {groupNameInputs}
                 <span className={this.state.nameEdit ? "hidden" : null}>{groupLabel}</span>
-                <span className={this.props.selectedGroup ? null : 'hidden'}>
+                <span className={this.props.selectedGroup ? "hidden" : 'hidden'}>
                   <IconButton iconStyle={styles.editButton} onClick={this._nameEdit} iconClassName="material-icons" className={this.state.errorText1 ? "align-top" : null}>
                     {correctIcon}
                   </IconButton>
