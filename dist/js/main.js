@@ -82272,6 +82272,10 @@ module.exports = exports['default'];
 },{"./util/assertString":930}],934:[function(require,module,exports){
 'use strict';
 
+var _AppActions;
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 var AppConstants = require('../constants/app-constants');
 var AppDispatcher = require('../dispatchers/app-dispatcher');
 var ImagesApi = require('../api/images-api');
@@ -82286,7 +82290,7 @@ var inventoryApiUrl = apiUrl + "/inventory";
 // default per page until pagination and counting integrated
 var per_page = 200;
 
-var AppActions = {
+var AppActions = (_AppActions = {
 
   selectGroup: function selectGroup(group) {
     AppDispatcher.handleViewAction({
@@ -82308,253 +82312,206 @@ var AppActions = {
     }).catch(function (err) {
       callback.error(err);
     });
-  },
-
-  removeGroup: function removeGroup(groupId) {
-    AppDispatcher.handleViewAction({
-      actionType: AppConstants.REMOVE_GROUP,
-      groupId: groupId
-    });
-  },
-
-  addGroup: function addGroup(group, idx) {
-    AppDispatcher.handleViewAction({
-      actionType: AppConstants.ADD_GROUP,
-      group: group,
-      index: idx
-    });
-  },
-
-  /* Groups */
-  getGroups: function getGroups(callback) {
-    DevicesApi.get(inventoryApiUrl + "/groups").then(function (groups) {
-      AppDispatcher.handleViewAction({
-        actionType: AppConstants.RECEIVE_GROUPS,
-        groups: groups
-      });
-      callback.success(groups);
-    }).catch(function (err) {
-      callback.error(err);
-    });
-  },
-
-  getGroupDevices: function getGroupDevices(group, callback) {
-    DevicesApi.get(inventoryApiUrl + "/groups/" + group + "/devices?per_page=" + per_page).then(function (devices) {
-      AppDispatcher.handleViewAction({
-        actionType: AppConstants.RECEIVE_GROUP_DEVICES,
-        devices: devices
-      });
-      callback.success(devices);
-    }).catch(function (err) {
-      callback.error(err);
-    });
-  },
-
-  getDevices: function getDevices(callback) {
-    DevicesApi.get(inventoryApiUrl + "/devices?per_page=" + per_page).then(function (devices) {
-      AppDispatcher.handleViewAction({
-        actionType: AppConstants.RECEIVE_ALL_DEVICES,
-        devices: devices
-      });
-      callback.success(devices);
-    }).catch(function (err) {
-      callback.error(err);
-    });
-  },
-
-  /* General */
-  setSnackbar: function setSnackbar(message, duration) {
-    AppDispatcher.handleViewAction({
-      actionType: AppConstants.SET_SNACKBAR,
-      message: message,
-      duration: duration
-    });
-  },
-
-  /* Device Admission */
-  getDevicesForAdmission: function getDevicesForAdmission(callback) {
-    DevicesApi.get(devicesApiUrl + "/devices?per_page=" + per_page).then(function (devices) {
-      AppDispatcher.handleViewAction({
-        actionType: AppConstants.RECEIVE_ADMISSION_DEVICES,
-        devices: devices
-      });
-      callback(devices);
-    }).catch(function (err) {
-      callback(err);
-    });
-  },
-  /* Device Admission */
-  getDeviceIdentity: function getDeviceIdentity(id, callback) {
-    DevicesApi.get(devicesApiUrl + "/devices/" + id).then(function (devices) {
-      callback.success(devices);
-    }).catch(function (err) {
-      callback.error(err);
-    });
-  },
-
-  acceptDevice: function acceptDevice(device, callback) {
-    DevicesApi.put(devicesApiUrl + "/devices/" + device.id + "/status", { "status": "accepted" }).then(function (data) {
-      callback.success(data);
-    }).catch(function (err) {
-      callback.error(err);
-    });
-  },
-  rejectDevice: function rejectDevice(device, callback) {
-    DevicesApi.put(devicesApiUrl + "/devices/" + device.id + "/status", { "status": "rejected" }).then(function (data) {
-      callback.success(data);
-    }).catch(function (err) {
-      callback.error(err);
-    });
-  },
-
-  /* Images */
-  getImages: function getImages(callback) {
-    ImagesApi.get(deploymentsApiUrl + '/images').then(function (images) {
-      callback.success(images);
-      AppDispatcher.handleViewAction({
-        actionType: AppConstants.RECEIVE_IMAGES,
-        images: images
-      });
-    }).catch(function (err) {
-      callback.error(err);
-    });
-  },
-
-  uploadImage: function uploadImage(meta, callback) {
-    ImagesApi.post(deploymentsApiUrl + '/images', meta).then(function (data) {
-      // inserted image meta data, got ID in return 
-      callback(data.location);
-    });
-  },
-
-  getUploadUri: function getUploadUri(id_url, callback) {
-    ImagesApi.get(id_url + "/upload?expire=60").then(function (data) {
-      var uri = data.uri;
-      callback(uri);
-    });
-  },
-
-  doFileUpload: function doFileUpload(uri, image, callback) {
-    // got upload uri, finish uploading file
-    ImagesApi.putImage(uri, image).then(function (data) {
-      callback();
-    });
-  },
-
-  editImage: function editImage(image, callback) {
-    ImagesApi.putJSON(deploymentsApiUrl + "/images/" + image.id, image).then(function (res) {
-      callback();
-    });
-  },
-
-  /*Deployments */
-  getDeployments: function getDeployments(callback) {
-    // all deployments
-    DeploymentsApi.get(deploymentsApiUrl + '/deployments').then(function (deployments) {
-      callback();
-      AppDispatcher.handleViewAction({
-        actionType: AppConstants.RECEIVE_DEPLOYMENTS,
-        deployments: deployments
-      });
-    }).catch(function (err) {
-      callback(err);
-    });
-  },
-  getDeploymentsInProgress: function getDeploymentsInProgress(callback) {
-    DeploymentsApi.get(deploymentsApiUrl + '/deployments?status=inprogress').then(function (deployments) {
-      callback();
-      AppDispatcher.handleViewAction({
-        actionType: AppConstants.RECEIVE_ACTIVE_DEPLOYMENTS,
-        deployments: deployments
-      });
-    }).catch(function (err) {
-      callback(err);
-    });
-  },
-  getPastDeployments: function getPastDeployments(callback) {
-    DeploymentsApi.get(deploymentsApiUrl + '/deployments?status=finished').then(function (deployments) {
-      callback();
-      AppDispatcher.handleViewAction({
-        actionType: AppConstants.RECEIVE_PAST_DEPLOYMENTS,
-        deployments: deployments
-      });
-    }).catch(function (err) {
-      callback(err);
-    });
-  },
-  createDeployment: function createDeployment(deployment, callback) {
-    DeploymentsApi.post(deploymentsApiUrl + '/deployments', deployment).then(function (data) {
-      callback(deploymentsApiUrl + data.location);
-    });
-  },
-  getSingleDeployment: function getSingleDeployment(id, callback) {
-    DeploymentsApi.get(deploymentsApiUrl + '/deployments/' + id).then(function (data) {
-      callback(data);
-    });
-  },
-  getSingleDeploymentStats: function getSingleDeploymentStats(id, callback) {
-    DeploymentsApi.get(deploymentsApiUrl + '/deployments/' + id + '/statistics').then(function (data) {
-      callback(data);
-    });
-  },
-  getSingleDeploymentDevices: function getSingleDeploymentDevices(id, callback) {
-    DeploymentsApi.get(deploymentsApiUrl + '/deployments/' + id + '/devices').then(function (data) {
-      callback(data);
-    });
-  },
-  getDeviceLog: function getDeviceLog(deploymentId, deviceId, callback) {
-    DeploymentsApi.getText(deploymentsApiUrl + '/deployments/' + deploymentId + '/devices/' + deviceId + "/log").then(function (data) {
-      callback(data);
-    });
-  },
-
-  saveSchedule: function saveSchedule(schedule, single) {
-    AppDispatcher.handleViewAction({
-      actionType: AppConstants.SAVE_SCHEDULE,
-      schedule: schedule,
-      single: single
-    });
-  },
-
-  removeDeployment: function removeDeployment(deploymentId) {
-    AppDispatcher.handleViewAction({
-      actionType: AppConstants.REMOVE_DEPLOYMENT,
-      id: deploymentId
-    });
-  },
-
-  updateFilters: function updateFilters(filters) {
-    AppDispatcher.handleViewAction({
-      actionType: AppConstants.UPDATE_FILTERS,
-      filters: filters
-    });
-  },
-
-  updateDeviceTags: function updateDeviceTags(id, tags) {
-    AppDispatcher.handleViewAction({
-      actionType: AppConstants.UPDATE_DEVICE_TAGS,
-      id: id,
-      tags: tags
-    });
-  },
-
-  sortTable: function sortTable(table, column, direction) {
-    AppDispatcher.handleViewAction({
-      actionType: AppConstants.SORT_TABLE,
-      table: table,
-      column: column,
-      direction: direction
-    });
-  },
-
-  setLocalStorage: function setLocalStorage(key, value) {
-    AppDispatcher.handleViewAction({
-      actionType: AppConstants.SET_LOCAL_STORAGE,
-      key: key,
-      value: value
-    });
   }
-};
+
+}, _defineProperty(_AppActions, 'addDeviceToGroup', function addDeviceToGroup(group, device, callback) {
+  DevicesApi.put(inventoryApiUrl + "/devices/" + device + "/group", { "group": group }).then(function (result) {
+    callback.success(result);
+  }).catch(function (err) {
+    callback.error(err);
+  });
+}), _defineProperty(_AppActions, 'removeDeviceFromGroup', function removeDeviceFromGroup(device, group, callback) {
+  DevicesApi.del(inventoryApiUrl + "/devices/" + device + "/group/" + group).then(function (result) {
+    callback.success(result);
+  }).catch(function (err) {
+    callback.error(err);
+  });
+}), _defineProperty(_AppActions, 'addGroup', function addGroup(group, idx) {
+  AppDispatcher.handleViewAction({
+    actionType: AppConstants.ADD_GROUP,
+    group: group,
+    index: idx
+  });
+}), _defineProperty(_AppActions, 'getGroups', function getGroups(callback) {
+  DevicesApi.get(inventoryApiUrl + "/groups").then(function (groups) {
+    AppDispatcher.handleViewAction({
+      actionType: AppConstants.RECEIVE_GROUPS,
+      groups: groups
+    });
+    callback.success(groups);
+  }).catch(function (err) {
+    callback.error(err);
+  });
+}), _defineProperty(_AppActions, 'getGroupDevices', function getGroupDevices(group, callback) {
+  DevicesApi.get(inventoryApiUrl + "/groups/" + group + "/devices?per_page=" + per_page).then(function (devices) {
+    AppDispatcher.handleViewAction({
+      actionType: AppConstants.RECEIVE_GROUP_DEVICES,
+      devices: devices
+    });
+    callback.success(devices);
+  }).catch(function (err) {
+    callback.error(err);
+  });
+}), _defineProperty(_AppActions, 'getDevices', function getDevices(callback) {
+  DevicesApi.get(inventoryApiUrl + "/devices?per_page=" + per_page).then(function (devices) {
+    AppDispatcher.handleViewAction({
+      actionType: AppConstants.RECEIVE_ALL_DEVICES,
+      devices: devices
+    });
+    callback.success(devices);
+  }).catch(function (err) {
+    callback.error(err);
+  });
+}), _defineProperty(_AppActions, 'setSnackbar', function setSnackbar(message, duration) {
+  AppDispatcher.handleViewAction({
+    actionType: AppConstants.SET_SNACKBAR,
+    message: message,
+    duration: duration
+  });
+}), _defineProperty(_AppActions, 'getDevicesForAdmission', function getDevicesForAdmission(callback) {
+  DevicesApi.get(devicesApiUrl + "/devices?per_page=" + per_page).then(function (devices) {
+    AppDispatcher.handleViewAction({
+      actionType: AppConstants.RECEIVE_ADMISSION_DEVICES,
+      devices: devices
+    });
+    callback(devices);
+  }).catch(function (err) {
+    callback(err);
+  });
+}), _defineProperty(_AppActions, 'getDeviceIdentity', function getDeviceIdentity(id, callback) {
+  DevicesApi.get(devicesApiUrl + "/devices/" + id).then(function (devices) {
+    callback.success(devices);
+  }).catch(function (err) {
+    callback.error(err);
+  });
+}), _defineProperty(_AppActions, 'acceptDevice', function acceptDevice(device, callback) {
+  DevicesApi.put(devicesApiUrl + "/devices/" + device.id + "/status", { "status": "accepted" }).then(function (data) {
+    callback.success(data);
+  }).catch(function (err) {
+    callback.error(err);
+  });
+}), _defineProperty(_AppActions, 'rejectDevice', function rejectDevice(device, callback) {
+  DevicesApi.put(devicesApiUrl + "/devices/" + device.id + "/status", { "status": "rejected" }).then(function (data) {
+    callback.success(data);
+  }).catch(function (err) {
+    callback.error(err);
+  });
+}), _defineProperty(_AppActions, 'getImages', function getImages(callback) {
+  ImagesApi.get(deploymentsApiUrl + '/images').then(function (images) {
+    callback.success(images);
+    AppDispatcher.handleViewAction({
+      actionType: AppConstants.RECEIVE_IMAGES,
+      images: images
+    });
+  }).catch(function (err) {
+    callback.error(err);
+  });
+}), _defineProperty(_AppActions, 'uploadImage', function uploadImage(meta, callback) {
+  ImagesApi.post(deploymentsApiUrl + '/images', meta).then(function (data) {
+    // inserted image meta data, got ID in return 
+    callback(data.location);
+  });
+}), _defineProperty(_AppActions, 'getUploadUri', function getUploadUri(id_url, callback) {
+  ImagesApi.get(id_url + "/upload?expire=60").then(function (data) {
+    var uri = data.uri;
+    callback(uri);
+  });
+}), _defineProperty(_AppActions, 'doFileUpload', function doFileUpload(uri, image, callback) {
+  // got upload uri, finish uploading file
+  ImagesApi.putImage(uri, image).then(function (data) {
+    callback();
+  });
+}), _defineProperty(_AppActions, 'editImage', function editImage(image, callback) {
+  ImagesApi.putJSON(deploymentsApiUrl + "/images/" + image.id, image).then(function (res) {
+    callback();
+  });
+}), _defineProperty(_AppActions, 'getDeployments', function getDeployments(callback) {
+  // all deployments
+  DeploymentsApi.get(deploymentsApiUrl + '/deployments').then(function (deployments) {
+    callback();
+    AppDispatcher.handleViewAction({
+      actionType: AppConstants.RECEIVE_DEPLOYMENTS,
+      deployments: deployments
+    });
+  }).catch(function (err) {
+    callback(err);
+  });
+}), _defineProperty(_AppActions, 'getDeploymentsInProgress', function getDeploymentsInProgress(callback) {
+  DeploymentsApi.get(deploymentsApiUrl + '/deployments?status=inprogress').then(function (deployments) {
+    callback();
+    AppDispatcher.handleViewAction({
+      actionType: AppConstants.RECEIVE_ACTIVE_DEPLOYMENTS,
+      deployments: deployments
+    });
+  }).catch(function (err) {
+    callback(err);
+  });
+}), _defineProperty(_AppActions, 'getPastDeployments', function getPastDeployments(callback) {
+  DeploymentsApi.get(deploymentsApiUrl + '/deployments?status=finished').then(function (deployments) {
+    callback();
+    AppDispatcher.handleViewAction({
+      actionType: AppConstants.RECEIVE_PAST_DEPLOYMENTS,
+      deployments: deployments
+    });
+  }).catch(function (err) {
+    callback(err);
+  });
+}), _defineProperty(_AppActions, 'createDeployment', function createDeployment(deployment, callback) {
+  DeploymentsApi.post(deploymentsApiUrl + '/deployments', deployment).then(function (data) {
+    callback(deploymentsApiUrl + data.location);
+  });
+}), _defineProperty(_AppActions, 'getSingleDeployment', function getSingleDeployment(id, callback) {
+  DeploymentsApi.get(deploymentsApiUrl + '/deployments/' + id).then(function (data) {
+    callback(data);
+  });
+}), _defineProperty(_AppActions, 'getSingleDeploymentStats', function getSingleDeploymentStats(id, callback) {
+  DeploymentsApi.get(deploymentsApiUrl + '/deployments/' + id + '/statistics').then(function (data) {
+    callback(data);
+  });
+}), _defineProperty(_AppActions, 'getSingleDeploymentDevices', function getSingleDeploymentDevices(id, callback) {
+  DeploymentsApi.get(deploymentsApiUrl + '/deployments/' + id + '/devices').then(function (data) {
+    callback(data);
+  });
+}), _defineProperty(_AppActions, 'getDeviceLog', function getDeviceLog(deploymentId, deviceId, callback) {
+  DeploymentsApi.getText(deploymentsApiUrl + '/deployments/' + deploymentId + '/devices/' + deviceId + "/log").then(function (data) {
+    callback(data);
+  });
+}), _defineProperty(_AppActions, 'saveSchedule', function saveSchedule(schedule, single) {
+  AppDispatcher.handleViewAction({
+    actionType: AppConstants.SAVE_SCHEDULE,
+    schedule: schedule,
+    single: single
+  });
+}), _defineProperty(_AppActions, 'removeDeployment', function removeDeployment(deploymentId) {
+  AppDispatcher.handleViewAction({
+    actionType: AppConstants.REMOVE_DEPLOYMENT,
+    id: deploymentId
+  });
+}), _defineProperty(_AppActions, 'updateFilters', function updateFilters(filters) {
+  AppDispatcher.handleViewAction({
+    actionType: AppConstants.UPDATE_FILTERS,
+    filters: filters
+  });
+}), _defineProperty(_AppActions, 'updateDeviceTags', function updateDeviceTags(id, tags) {
+  AppDispatcher.handleViewAction({
+    actionType: AppConstants.UPDATE_DEVICE_TAGS,
+    id: id,
+    tags: tags
+  });
+}), _defineProperty(_AppActions, 'sortTable', function sortTable(table, column, direction) {
+  AppDispatcher.handleViewAction({
+    actionType: AppConstants.SORT_TABLE,
+    table: table,
+    column: column,
+    direction: direction
+  });
+}), _defineProperty(_AppActions, 'setLocalStorage', function setLocalStorage(key, value) {
+  AppDispatcher.handleViewAction({
+    actionType: AppConstants.SET_LOCAL_STORAGE,
+    key: key,
+    value: value
+  });
+}), _AppActions);
 
 module.exports = AppActions;
 
@@ -82647,7 +82604,19 @@ var Api = {
         }
       });
     });
+  },
+  del: function del(url) {
+    return new Promise(function (resolve, reject) {
+      request.del(url).end(function (err, res) {
+        if (err || !res.ok) {
+          reject(err);
+        } else {
+          resolve(res.header);
+        }
+      });
+    });
   }
+
 };
 
 module.exports = Api;
@@ -87183,8 +87152,27 @@ var DeviceList = _react2.default.createClass({
     AppActions.selectGroup(this.props.selectedField);
     this.props.refreshGroups();
   },
-  _removeGroupHandler: function _removeGroupHandler() {
-    AppActions.addToGroup(this.props.selectedGroup, this.props.selectedDevices);
+  _removeFromGroupHandler: function _removeFromGroupHandler() {
+    var i;
+    var length = this.props.selectedDevices.length;
+    var callback = {
+      success: function (result) {
+        if (i === length) {
+          if (length === this.props.devices.length) {
+            AppActions.selectGroup("");
+            this.props.refreshGroups();
+          } else {
+            this.props.refreshDevices();
+          }
+        }
+      }.bind(this),
+      error: function error(err) {
+        console.log(err);
+      }
+    };
+    for (i = 0; i < length; i++) {
+      AppActions.removeDeviceFromGroup(this.props.selectedDevices[i], this.props.selectedGroup, callback);
+    }
   },
   _newGroupHandler: function _newGroupHandler() {
     var newGroup = this.refs['customGroup'].getValue();
@@ -87560,7 +87548,7 @@ var DeviceList = _react2.default.createClass({
           ),
           _react2.default.createElement(
             _FlatButton2.default,
-            { disabled: disableAction, style: { marginLeft: "4px" }, className: this.props.selectedGroup ? null : 'hidden', label: removeLabel, secondary: true, onClick: this._removeGroupHandler },
+            { disabled: disableAction, style: { marginLeft: "4px" }, className: this.props.selectedGroup ? null : 'hidden', label: removeLabel, secondary: true, onClick: this._removeFromGroupHandler },
             _react2.default.createElement(
               _FontIcon2.default,
               { style: styles.buttonIcon, className: 'material-icons' },
@@ -87807,7 +87795,7 @@ var Devices = _react2.default.createClass({
           { className: this.state.pendingDevices.length && this.state.doneLoading ? null : "hidden" },
           _react2.default.createElement(Unauthorized, { refresh: this._refreshDevices, refreshAdmissions: this._refreshAdmissions, pending: this.state.pendingDevices })
         ),
-        _react2.default.createElement(DeviceList, { refreshGroups: this._refreshGroups, selectedField: this.state.selectedField, changeSelect: this._changeTmpGroup, addGroup: this._addTmpGroup, loading: !this.state.doneLoading, selectedDevice: this._handleSelectDevice, filters: this.state.filters, attributes: this.state.attributes, onFilterChange: this._updateFilters, images: this.state.images, selectedDevices: this.state.selectedDevices, groups: this.state.groupsForList, devices: this.state.devices, selectedGroup: this.state.selectedGroup })
+        _react2.default.createElement(DeviceList, { refreshDevices: this._refreshDevices, refreshGroups: this._refreshGroups, selectedField: this.state.selectedField, changeSelect: this._changeTmpGroup, addGroup: this._addTmpGroup, loading: !this.state.doneLoading, selectedDevice: this._handleSelectDevice, filters: this.state.filters, attributes: this.state.attributes, onFilterChange: this._updateFilters, images: this.state.images, selectedDevices: this.state.selectedDevices, groups: this.state.groupsForList, devices: this.state.devices, selectedGroup: this.state.selectedGroup })
       ),
       _react2.default.createElement(_Snackbar2.default, {
         open: this.state.snackbar.open,

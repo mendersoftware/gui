@@ -49,7 +49,21 @@ var Api = {
           }
         });
     });
-  }
+  },
+  del: function(url) {
+    return new Promise(function (resolve, reject) {
+      request
+        .del(url)
+        .end(function (err, res) {
+          if (err || !res.ok) {
+            reject(err);
+          } else {
+            resolve(res.header);
+          }
+        });
+    });
+  },
+
 }
 
 module.exports = Api;

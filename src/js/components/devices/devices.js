@@ -144,7 +144,7 @@ var Devices = React.createClass({
           <div className={this.state.pendingDevices.length&&this.state.doneLoading ? null : "hidden"}>
             <Unauthorized refresh={this._refreshDevices} refreshAdmissions={this._refreshAdmissions} pending={this.state.pendingDevices} />
           </div>
-          <DeviceList refreshGroups={this._refreshGroups} selectedField={this.state.selectedField} changeSelect={this._changeTmpGroup} addGroup={this._addTmpGroup} loading={!this.state.doneLoading} selectedDevice={this._handleSelectDevice} filters={this.state.filters} attributes={this.state.attributes} onFilterChange={this._updateFilters} images={this.state.images} selectedDevices={this.state.selectedDevices} groups={this.state.groupsForList} devices={this.state.devices} selectedGroup={this.state.selectedGroup} />
+          <DeviceList refreshDevices={this._refreshDevices} refreshGroups={this._refreshGroups} selectedField={this.state.selectedField} changeSelect={this._changeTmpGroup} addGroup={this._addTmpGroup} loading={!this.state.doneLoading} selectedDevice={this._handleSelectDevice} filters={this.state.filters} attributes={this.state.attributes} onFilterChange={this._updateFilters} images={this.state.images} selectedDevices={this.state.selectedDevices} groups={this.state.groupsForList} devices={this.state.devices} selectedGroup={this.state.selectedGroup} />
         </div>
         <Snackbar
           open={this.state.snackbar.open}
