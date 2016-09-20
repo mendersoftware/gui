@@ -87351,7 +87351,7 @@ var DeviceList = _react2.default.createClass({
 
     var groupList = this.props.groups.map(function (group, index) {
       if (group) {
-        return _react2.default.createElement(_MenuItem2.default, { value: group, key: index, primaryText: group });
+        return _react2.default.createElement(_MenuItem2.default, { value: group, key: index, primaryText: decodeURIComponent(group) });
       }
     });
 
@@ -87473,7 +87473,7 @@ var DeviceList = _react2.default.createClass({
             ),
             _react2.default.createElement(
               'span',
-              { className: this.props.selectedGroup ? null : 'hidden' },
+              { className: this.props.selectedGroup ? "hidden" : 'hidden' },
               _react2.default.createElement(
                 _IconButton2.default,
                 { iconStyle: styles.editButton, onClick: this._nameEdit, iconClassName: 'material-icons', className: this.state.errorText1 ? "align-top" : null },
