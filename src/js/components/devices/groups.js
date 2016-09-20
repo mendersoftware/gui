@@ -28,15 +28,9 @@ var Groups = React.createClass({
       selectedDevices: []
     };
   },
-  shouldComponentUpdate: function(nextProps, nextState) {
-    if (nextState.selectedDevices !== this.state.selectedDevices) {
-      return false;
-    } else {
-      return true;
-    }
-  },
+  
   _changeGroup: function(group) {
-    this.props.changeGroup(group);
+    AppActions.selectGroup(group);
   },
   _createGroupHandler: function() {
     var selected = [];
@@ -94,8 +88,10 @@ var Groups = React.createClass({
   },
 
   _getGroupDevices: function(group) {
+    console.log("getting group devices", group);
     var callback = {
       success: function(devices) {
+        console.log(devices);
         return (devices.length);
       }.bind(this),
       error: function(err) {
@@ -148,6 +144,8 @@ var Groups = React.createClass({
       <span>All devices<span className='float-right length'>{this.props.allDevices.length}</span></span>
     );
 
+   
+
     return (
       <div>
         <List>
@@ -158,11 +156,11 @@ var Groups = React.createClass({
               style={!this.props.selectedGroup ? {backgroundColor: "#e7e7e7"} : {backgroundColor: "transparent"}}
               onClick={this._changeGroup.bind(null, "")} />
    
-          {this.props.groups.map(function(group) {
+          {this.props.groups.map(function(group, index) {
             var isSelected = group===this.props.selectedGroup ? {backgroundColor: "#e7e7e7"} : {backgroundColor: "transparent"};
             var boundClick = this._changeGroup.bind(null, group);
             var groupLabel = (
-                <span>{group}<span className='float-right length'>{this._getGroupDevices.bind(null, group)}</span></span>
+                <span>{group}<span className='float-right length'></span></span>
             );
             return (
               <ListItem 

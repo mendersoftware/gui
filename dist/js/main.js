@@ -82299,12 +82299,11 @@ var AppActions = {
     });
   },
 
-  addToGroup: function addToGroup(group, deviceList) {
-    console.log(group, deviceList);
-    AppDispatcher.handleViewAction({
-      actionType: AppConstants.ADD_TO_GROUP,
-      group: group,
-      devices: deviceList
+  addDeviceToGroup: function addDeviceToGroup(group, device, callback) {
+    DevicesApi.put(inventoryApiUrl + "/devices/" + device + "/group", { "group": group }).then(function (result) {
+      callback.success(result);
+    }).catch(function (err) {
+      callback.error(err);
     });
   },
 
@@ -82338,6 +82337,10 @@ var AppActions = {
 
   getGroupDevices: function getGroupDevices(group, callback) {
     DevicesApi.get(inventoryApiUrl + "/groups/" + group + "/devices").then(function (devices) {
+      AppDispatcher.handleViewAction({
+        actionType: AppConstants.RECEIVE_GROUP_DEVICES,
+        devices: devices
+      });
       callback.success(devices);
     }).catch(function (err) {
       callback.error(err);
@@ -87037,8 +87040,6 @@ var Loader = require('../common/loader');
 // material ui
 
 
-var addSelection = {};
-
 var DeviceList = _react2.default.createClass({
   displayName: 'DeviceList',
 
@@ -87157,9 +87158,26 @@ var DeviceList = _react2.default.createClass({
     AppActions.getDeviceIdentity(device.id, callback);
   },
   _addGroupHandler: function _addGroupHandler() {
-    AppActions.addToGroup(addSelection, this.props.selectedDevices);
+    var loading = true;
+    var i;
+    var callback = {
+      success: function (device) {
+        this.setState({ openSnack: true, snackMessage: "Device was moved to " + this.props.selectedField });
+        if (i === this.props.selectedDevices.length) this._doneAddingGroup();
+      }.bind(this),
+      error: function error(err) {
+        this.setState({ openSnack: true, snackMessage: "Error moving device into group " + this.props.selectedField });
+        console.log("Error: " + err);
+      }
+    };
+    for (i = 0; i < this.props.selectedDevices.length; i++) {
+      AppActions.addDeviceToGroup(this.props.selectedField, this.props.selectedDevices[i], callback);
+    }
     this.dialogToggle('addGroup');
-    AppActions.selectGroup(addSelection);
+  },
+  _doneAddingGroup: function _doneAddingGroup() {
+    AppActions.selectGroup(this.props.selectedField);
+    this.props.refreshGroups();
   },
   _removeGroupHandler: function _removeGroupHandler() {
     AppActions.addToGroup(this.props.selectedGroup, this.props.selectedDevices);
@@ -87178,8 +87196,7 @@ var DeviceList = _react2.default.createClass({
   },
   _handleSelectValueChange: function _handleSelectValueChange(event, index, value) {
     this.setState({ showInput: false, groupInvalid: false });
-    var group = this.props.groups[index];
-    addSelection = group;
+    this.props.changeSelect(value);
   },
 
   _showButton: function _showButton() {
@@ -87414,7 +87431,7 @@ var DeviceList = _react2.default.createClass({
             ),
             _react2.default.createElement(
               _FlatButton2.default,
-              { onClick: this._removeCurrentGroup, style: styles.exampleFlatButton, className: this.props.selectedGroup ? 'hidden' : null, secondary: true, label: 'Remove group', labelPosition: 'after' },
+              { onClick: this._removeCurrentGroup, style: styles.exampleFlatButton, className: this.props.selectedGroup ? null : 'hidden', secondary: true, label: 'Remove group', labelPosition: 'after' },
               _react2.default.createElement(
                 _FontIcon2.default,
                 { style: styles.exampleFlatButtonIcon, className: 'material-icons' },
@@ -87539,7 +87556,7 @@ var DeviceList = _react2.default.createClass({
           ),
           _react2.default.createElement(
             _FlatButton2.default,
-            { disabled: disableAction, style: { marginLeft: "4px" }, className: this.props.selectedGroup ? 'hidden' : null, label: 'Remove selected devices from this group', secondary: true, onClick: this._removeGroupHandler },
+            { disabled: disableAction, style: { marginLeft: "4px" }, className: this.props.selectedGroup ? null : 'hidden', label: 'Remove selected devices from this group', secondary: true, onClick: this._removeGroupHandler },
             _react2.default.createElement(
               _FontIcon2.default,
               { style: styles.buttonIcon, className: 'material-icons' },
@@ -87612,7 +87629,6 @@ var DeviceList = _react2.default.createClass({
       _react2.default.createElement(_Snackbar2.default, {
         open: this.state.openSnack,
         message: this.state.snackMessage,
-        action: 'undo',
         autoHideDuration: this.state.autoHideDuration,
         onActionTouchTap: this.handleUndoAction,
         onRequestClose: this.handleRequestClose
@@ -87702,24 +87718,29 @@ var Devices = _react2.default.createClass({
   componentWillUnmount: function componentWillUnmount() {
     AppStore.removeChangeListener(this._onChange);
   },
+  componentDidUpdate: function componentDidUpdate(prevProps, prevState) {
+    if (prevState.selectedGroup != this.state.selectedGroup) this._refreshDevices();
+  },
   _onChange: function _onChange() {
     this.setState(this.getInitialState());
   },
   _refreshDevices: function _refreshDevices() {
     var callback = {
       success: function (devices) {
-        this.setState({ devices: devices });
+        this.setState({ devices: AppStore.getGroupDevices() });
+        AppActions.setSnackbar("");
         setTimeout(function () {
           this.setState({ doneLoading: true });
         }.bind(this), 300);
       }.bind(this),
       error: function (err) {
-        this.setState({ doneLoading: true });
+        this.setState({ doneLoading: true, devices: [] });
         console.log(err);
         var errormsg = err.error || "Please check your connection";
         AppActions.setSnackbar("Devices couldn't be loaded. " + errormsg);
       }.bind(this)
     };
+    this.setState({ doneLoading: false });
     if (!this.state.selectedGroup) {
       AppActions.getDevices(callback);
     } else {
@@ -87753,29 +87774,14 @@ var Devices = _react2.default.createClass({
     var groups = update(this.state.groups, { $push: [name] });
     this.setState({ groupsForList: groups, selectedField: name });
   },
+  _changeTmpGroup: function _changeTmpGroup(group) {
+    this.setState({ selectedField: group });
+  },
   _updateFilters: function _updateFilters(filters) {
     AppActions.updateFilters(filters);
   },
   _handleRequestClose: function _handleRequestClose() {
     AppActions.setSnackbar("");
-  },
-  _handleGroupChange: function _handleGroupChange(group) {
-    AppActions.selectGroup(group);
-    this.setState({ selectedGroup: group });
-    var callback = {
-      success: function (devices) {
-        this.setState({ devices: devices });
-      }.bind(this),
-      error: function error(err) {
-        console.log(err);
-      }
-    };
-
-    if (group) {
-      AppActions.getGroupDevices(group, callback);
-    } else {
-      this.setState({ devices: null });
-    }
   },
   _handleSelectDevice: function _handleSelectDevice(device) {
     console.log(device);
@@ -87787,7 +87793,7 @@ var Devices = _react2.default.createClass({
       _react2.default.createElement(
         'div',
         { className: 'leftFixed' },
-        _react2.default.createElement(Groups, { changeGroup: this._handleGroupChange, groups: this.state.groups, selectedGroup: this.state.selectedGroup, allDevices: this.state.allDevices })
+        _react2.default.createElement(Groups, { groups: this.state.groups, selectedGroup: this.state.selectedGroup, allDevices: this.state.allDevices })
       ),
       _react2.default.createElement(
         'div',
@@ -87797,7 +87803,7 @@ var Devices = _react2.default.createClass({
           { className: this.state.pendingDevices.length && this.state.doneLoading ? null : "hidden" },
           _react2.default.createElement(Unauthorized, { refresh: this._refreshDevices, refreshAdmissions: this._refreshAdmissions, pending: this.state.pendingDevices })
         ),
-        _react2.default.createElement(DeviceList, { refreshGroups: this._refreshGroups, selectedField: this.state.selectedField, addGroup: this._addTmpGroup, loading: !this.state.doneLoading, selectedDevice: this._handleSelectDevice, filters: this.state.filters, attributes: this.state.attributes, onFilterChange: this._updateFilters, images: this.state.images, selectedDevices: this.state.selectedDevices, groups: this.state.groupsForList, devices: this.state.devices, selectedGroup: this.state.selectedGroup })
+        _react2.default.createElement(DeviceList, { refreshGroups: this._refreshGroups, selectedField: this.state.selectedField, changeSelect: this._changeTmpGroup, addGroup: this._addTmpGroup, loading: !this.state.doneLoading, selectedDevice: this._handleSelectDevice, filters: this.state.filters, attributes: this.state.attributes, onFilterChange: this._updateFilters, images: this.state.images, selectedDevices: this.state.selectedDevices, groups: this.state.groupsForList, devices: this.state.devices, selectedGroup: this.state.selectedGroup })
       ),
       _react2.default.createElement(_Snackbar2.default, {
         open: this.state.snackbar.open,
@@ -88087,15 +88093,9 @@ var Groups = _react2.default.createClass({
       selectedDevices: []
     };
   },
-  shouldComponentUpdate: function shouldComponentUpdate(nextProps, nextState) {
-    if (nextState.selectedDevices !== this.state.selectedDevices) {
-      return false;
-    } else {
-      return true;
-    }
-  },
+
   _changeGroup: function _changeGroup(group) {
-    this.props.changeGroup(group);
+    AppActions.selectGroup(group);
   },
   _createGroupHandler: function _createGroupHandler() {
     var selected = [];
@@ -88153,8 +88153,10 @@ var Groups = _react2.default.createClass({
   },
 
   _getGroupDevices: function _getGroupDevices(group) {
+    console.log("getting group devices", group);
     var callback = {
       success: function (devices) {
+        console.log(devices);
         return devices.length;
       }.bind(this),
       error: function error(err) {
@@ -88237,18 +88239,14 @@ var Groups = _react2.default.createClass({
           primaryText: allLabel,
           style: !this.props.selectedGroup ? { backgroundColor: "#e7e7e7" } : { backgroundColor: "transparent" },
           onClick: this._changeGroup.bind(null, "") }),
-        this.props.groups.map(function (group) {
+        this.props.groups.map(function (group, index) {
           var isSelected = group === this.props.selectedGroup ? { backgroundColor: "#e7e7e7" } : { backgroundColor: "transparent" };
           var boundClick = this._changeGroup.bind(null, group);
           var groupLabel = _react2.default.createElement(
             'span',
             null,
             group,
-            _react2.default.createElement(
-              'span',
-              { className: 'float-right length' },
-              this._getGroupDevices.bind(null, group)
-            )
+            _react2.default.createElement('span', { className: 'float-right length' })
           );
           return _react2.default.createElement(_List.ListItem, {
             key: group,
@@ -90149,6 +90147,7 @@ module.exports = {
   ADD_GROUP: 'ADD_GROUP',
   RECEIVE_GROUPS: 'RECEIVE_GROUPS',
   RECEIVE_ALL_DEVICES: 'RECEIVE_ALL_DEVICES',
+  RECEIVE_GROUP_DEVICES: 'RECEIVE_GROUP_DEVICES',
   RECEIVE_ADMISSION_DEVICES: 'RECEIVE_ADMISSION_DEVICES',
   SAVE_SCHEDULE: 'SAVE_SCHEDULE',
   UPDATE_FILTERS: 'UPDATE_FILTERS',
@@ -90613,6 +90612,13 @@ function setDevices(devices) {
   }
 }
 
+function setGroupDevices(devices) {
+  _currentGroupDevices = [];
+  devices.forEach(function (element, index) {
+    _currentGroupDevices[index] = _getDeviceById(element);
+  });
+}
+
 function setPendingDevices(devices) {
   if (devices) {
     var newDevices = {};
@@ -90873,6 +90879,11 @@ var AppStore = assign(EventEmitter.prototype, {
       /* API */
       case AppConstants.RECEIVE_ALL_DEVICES:
         setDevices(payload.action.devices);
+        break;
+
+      /* API */
+      case AppConstants.RECEIVE_GROUP_DEVICES:
+        setGroupDevices(payload.action.devices);
         break;
 
       case AppConstants.RECEIVE_ADMISSION_DEVICES:

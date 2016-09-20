@@ -23,8 +23,6 @@ import IconButton from 'material-ui/IconButton';
 
 import Snackbar from 'material-ui/Snackbar';
 
-var addSelection = {};
-
 var DeviceList = React.createClass({
   getInitialState: function() {
     return {
@@ -142,9 +140,26 @@ var DeviceList = React.createClass({
     AppActions.getDeviceIdentity(device.id, callback);
   },
   _addGroupHandler: function() {
-    AppActions.addToGroup(addSelection, this.props.selectedDevices);
+    var loading = true;
+    var i;
+    var callback = {
+      success: function(device) {
+        this.setState({openSnack: true, snackMessage: "Device was moved to " + this.props.selectedField});
+        if (i===this.props.selectedDevices.length) this._doneAddingGroup();
+      }.bind(this),
+      error: function(err) {
+        this.setState({openSnack: true, snackMessage: "Error moving device into group " + this.props.selectedField});
+        console.log("Error: " + err);
+      }
+    };
+    for (i=0; i<this.props.selectedDevices.length; i++) {
+      AppActions.addDeviceToGroup(this.props.selectedField, this.props.selectedDevices[i], callback);
+    }
     this.dialogToggle('addGroup');
-    AppActions.selectGroup(addSelection);
+  },
+  _doneAddingGroup: function() {
+    AppActions.selectGroup(this.props.selectedField);
+    this.props.refreshGroups();
   },
   _removeGroupHandler: function() {
     AppActions.addToGroup(this.props.selectedGroup, this.props.selectedDevices);
@@ -163,8 +178,7 @@ var DeviceList = React.createClass({
   },
   _handleSelectValueChange: function(event, index, value) {
     this.setState({showInput: false, groupInvalid: false});
-    var group = this.props.groups[index];
-    addSelection = group;
+    this.props.changeSelect(value);
   },
 
   _showButton: function() {
@@ -356,7 +370,7 @@ var DeviceList = React.createClass({
                   </IconButton>
                 </span>
 
-                <FlatButton onClick={this._removeCurrentGroup} style={styles.exampleFlatButton} className={this.props.selectedGroup ? 'hidden' : null} secondary={true} label="Remove group" labelPosition="after">
+                <FlatButton onClick={this._removeCurrentGroup} style={styles.exampleFlatButton} className={this.props.selectedGroup ? null : 'hidden' } secondary={true} label="Remove group" labelPosition="after">
                   <FontIcon style={styles.exampleFlatButtonIcon} className="material-icons">delete</FontIcon>
                 </FlatButton>
             </h2>
@@ -398,7 +412,7 @@ var DeviceList = React.createClass({
             <RaisedButton disabled={disableAction} label="Add selected devices to a group" secondary={true} onClick={this.dialogToggle.bind(null, 'addGroup')}>
               <FontIcon style={styles.raisedButtonIcon} className="material-icons">add_circle</FontIcon>
             </RaisedButton>
-            <FlatButton disabled={disableAction} style={{marginLeft: "4px"}} className={this.props.selectedGroup ? 'hidden' : null} label="Remove selected devices from this group" secondary={true} onClick={this._removeGroupHandler}>
+            <FlatButton disabled={disableAction} style={{marginLeft: "4px"}} className={this.props.selectedGroup ? null : 'hidden'} label="Remove selected devices from this group" secondary={true} onClick={this._removeGroupHandler}>
               <FontIcon style={styles.buttonIcon} className="material-icons">remove_circle_outline</FontIcon>
             </FlatButton>
           </div>
@@ -456,7 +470,6 @@ var DeviceList = React.createClass({
         <Snackbar
           open={this.state.openSnack}
           message={this.state.snackMessage}
-          action="undo"
           autoHideDuration={this.state.autoHideDuration}
           onActionTouchTap={this.handleUndoAction}
           onRequestClose={this.handleRequestClose}
