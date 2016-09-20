@@ -111,9 +111,8 @@ function _selectDevices(device) {
     for (var i=0; i<_currentGroupDevices.length; i++) {
       if (device.id === _currentGroupDevices[i].id) {
         _currentGroupDevices[i].selected = !_currentGroupDevices[i].selected;
-
-        if (_currentGroupDevices[i].selected) _selectedDevices.push(_currentGroupDevices[i].id);
       }
+      if (_currentGroupDevices[i].selected) _selectedDevices.push(_currentGroupDevices[i].id);
     }
   }
 }
@@ -625,7 +624,7 @@ var AppStore = assign(EventEmitter.prototype, {
         _selectGroup(payload.action.group);
         break;
       case AppConstants.SELECT_DEVICES:
-        _selectDevices(payload.action.devices);
+        _selectDevices(payload.action.device);
         break;
       case AppConstants.ADD_TO_GROUP:
         _addToGroup(payload.action.group, payload.action.devices);

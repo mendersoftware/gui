@@ -9,6 +9,7 @@ var AppActions = require('../../actions/app-actions');
 var SelectedDevices = require('./selecteddevices');
 var Filters = require('./filters');
 var Loader = require('../common/loader');
+var pluralize = require('pluralize');
 
 // material ui
 import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
@@ -354,6 +355,11 @@ var DeviceList = React.createClass({
       correctIcon = "close";
     }
 
+    var pluralized = pluralize("devices", this.props.selectedDevices.length); 
+    var addLabel = this.props.selectedGroup ? "Move selected " + pluralized +" to another group" : "Add selected " + pluralized +" to a group";
+    var removeLabel =  "Remove selected " + pluralized +" from this group";
+
+
     return (
       <div>
         <Filters attributes={this.props.attributes} filters={this.props.filters} onFilterChange={this.props.onFilterChange} />
@@ -408,11 +414,11 @@ var DeviceList = React.createClass({
           </div>
 
           <div className={this.props.selectedDevices.length ? "fixedButtons" : "hidden"}>
-            <span className="margin-right">{this.props.selectedDevices.length} device<span className={this.props.selectedDevices.length>1 ? null : "hidden"}>s</span> selected</span>
-            <RaisedButton disabled={disableAction} label="Add selected devices to a group" secondary={true} onClick={this.dialogToggle.bind(null, 'addGroup')}>
+            <span className="margin-right">{this.props.selectedDevices.length} {pluralized} selected</span>
+            <RaisedButton disabled={disableAction} label={addLabel} secondary={true} onClick={this.dialogToggle.bind(null, 'addGroup')}>
               <FontIcon style={styles.raisedButtonIcon} className="material-icons">add_circle</FontIcon>
             </RaisedButton>
-            <FlatButton disabled={disableAction} style={{marginLeft: "4px"}} className={this.props.selectedGroup ? null : 'hidden'} label="Remove selected devices from this group" secondary={true} onClick={this._removeGroupHandler}>
+            <FlatButton disabled={disableAction} style={{marginLeft: "4px"}} className={this.props.selectedGroup ? null : 'hidden'} label={removeLabel} secondary={true} onClick={this._removeGroupHandler}>
               <FontIcon style={styles.buttonIcon} className="material-icons">remove_circle_outline</FontIcon>
             </FlatButton>
           </div>
