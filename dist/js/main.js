@@ -87152,9 +87152,9 @@ var DeviceList = _react2.default.createClass({
     AppActions.selectGroup(this.props.selectedField);
     this.props.refreshGroups();
   },
-  _removeFromGroupHandler: function _removeFromGroupHandler() {
+  _removeFromGroupHandler: function _removeFromGroupHandler(devices) {
     var i;
-    var length = this.props.selectedDevices.length;
+    var length = devices.length;
     var callback = {
       success: function (result) {
         if (i === length) {
@@ -87171,9 +87171,20 @@ var DeviceList = _react2.default.createClass({
       }
     };
     for (i = 0; i < length; i++) {
-      AppActions.removeDeviceFromGroup(this.props.selectedDevices[i], this.props.selectedGroup, callback);
+      AppActions.removeDeviceFromGroup(devices[i], this.props.selectedGroup, callback);
     }
   },
+  _removeSelectedDevices: function _removeSelectedDevices() {
+    this._removeFromGroupHandler(this.props.selectedDevices);
+  },
+  _removeCurrentGroup: function _removeCurrentGroup() {
+    var devices = [];
+    for (var i = 0; i < this.props.devices.length; i++) {
+      devices.push(this.props.devices[i].id);
+    }
+    this._removeFromGroupHandler(devices);
+  },
+
   _newGroupHandler: function _newGroupHandler() {
     var newGroup = this.refs['customGroup'].getValue();
     this.props.addGroup(newGroup);
@@ -87211,8 +87222,6 @@ var DeviceList = _react2.default.createClass({
     // sort table
     AppActions.sortTable("_currentDevices", col, direction);
   },
-
-  _removeCurrentGroup: function _removeCurrentGroup() {},
 
   handleRequestClose: function handleRequestClose() {
     this.setState({
@@ -87548,7 +87557,7 @@ var DeviceList = _react2.default.createClass({
           ),
           _react2.default.createElement(
             _FlatButton2.default,
-            { disabled: disableAction, style: { marginLeft: "4px" }, className: this.props.selectedGroup ? null : 'hidden', label: removeLabel, secondary: true, onClick: this._removeFromGroupHandler },
+            { disabled: disableAction, style: { marginLeft: "4px" }, className: this.props.selectedGroup ? null : 'hidden', label: removeLabel, secondary: true, onClick: this._removeSelectedDevices },
             _react2.default.createElement(
               _FontIcon2.default,
               { style: styles.buttonIcon, className: 'material-icons' },

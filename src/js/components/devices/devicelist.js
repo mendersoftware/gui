@@ -162,9 +162,9 @@ var DeviceList = React.createClass({
     AppActions.selectGroup(this.props.selectedField);
     this.props.refreshGroups();
   },
-  _removeFromGroupHandler: function() {
+  _removeFromGroupHandler: function(devices) {
     var i;
-    var length = this.props.selectedDevices.length;
+    var length = devices.length;
     var callback = {
       success: function(result) {
         if (i===length) {
@@ -181,9 +181,20 @@ var DeviceList = React.createClass({
       }
     };
     for (i=0;i<length;i++) {
-      AppActions.removeDeviceFromGroup(this.props.selectedDevices[i], this.props.selectedGroup, callback);
+      AppActions.removeDeviceFromGroup(devices[i], this.props.selectedGroup, callback);
     }
   },
+  _removeSelectedDevices: function() {
+    this._removeFromGroupHandler(this.props.selectedDevices);
+  },
+  _removeCurrentGroup: function() {
+    var devices = [];
+    for (var i=0;i<this.props.devices.length;i++) {
+      devices.push(this.props.devices[i].id);
+    }
+    this._removeFromGroupHandler(devices);
+  },
+
   _newGroupHandler: function() {
     var newGroup = this.refs['customGroup'].getValue();
     this.props.addGroup(newGroup);
@@ -220,10 +231,6 @@ var DeviceList = React.createClass({
     }
     // sort table
     AppActions.sortTable("_currentDevices", col, direction);
-  },
-
-  _removeCurrentGroup: function() {
-    
   },
 
   handleRequestClose: function() {
@@ -437,7 +444,7 @@ var DeviceList = React.createClass({
             <RaisedButton disabled={disableAction} label={addLabel} secondary={true} onClick={this.dialogToggle.bind(null, 'addGroup')}>
               <FontIcon style={styles.raisedButtonIcon} className="material-icons">add_circle</FontIcon>
             </RaisedButton>
-            <FlatButton disabled={disableAction} style={{marginLeft: "4px"}} className={this.props.selectedGroup ? null : 'hidden'} label={removeLabel} secondary={true} onClick={this._removeFromGroupHandler}>
+            <FlatButton disabled={disableAction} style={{marginLeft: "4px"}} className={this.props.selectedGroup ? null : 'hidden'} label={removeLabel} secondary={true} onClick={this._removeSelectedDevices}>
               <FontIcon style={styles.buttonIcon} className="material-icons">remove_circle_outline</FontIcon>
             </FlatButton>
           </div>
