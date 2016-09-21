@@ -89222,12 +89222,12 @@ var SelectedDevices = _react2.default.createClass({
 
     var deviceInventory = [];
     var i = 0;
-    length = Object.keys(deviceInventory).length;
-    for (var k in deviceInventory) {
+    length = this.props.device.attributes.length;
+    for (var i = 0; i < this.props.device.attributes.length; i++) {
       deviceInventory.push(_react2.default.createElement(
         'div',
-        { key: k },
-        _react2.default.createElement(_List.ListItem, { style: styles.listStyle, disabled: true, primaryText: k, secondaryText: deviceInventory[k] }),
+        { key: i },
+        _react2.default.createElement(_List.ListItem, { style: styles.listStyle, disabled: true, primaryText: this.props.device.attributes[i].name, secondaryText: this.props.device.attributes[i].value }),
         _react2.default.createElement(_Divider2.default, null)
       ));
       i++;
