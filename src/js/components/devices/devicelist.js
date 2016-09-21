@@ -264,6 +264,14 @@ var DeviceList = React.createClass({
     this.props.refreshGroups();
   },
 
+  _filter: function(array) {
+    var newArray = [];
+    for (var i=0; i<array.length;i++) {
+      if (AppStore.matchFilters(array[i])) newArray.push(array[i]);
+    }
+    return newArray;
+  },
+
   render: function() {
     var styles = {
       exampleFlatButtonIcon: {
@@ -321,7 +329,9 @@ var DeviceList = React.createClass({
       }
     });
 
-    var devices = this.props.devices.map(function(device, index) {
+    var filteredDevices = this._filter(this.props.devices);
+
+    var devices = filteredDevices.map(function(device, index) {
       var expanded = '';
       if ( this.state.expanded === index ) {
         expanded = <SelectedDevices attributes={this.state.deviceAttributes} deviceId={this.state.deviceId} images={this.props.images} device={this.state.expandedDevice} selectedGroup={this.props.selectedGroup} images={this.props.images} groups={this.props.groups} />

@@ -97,7 +97,7 @@ var Filters = React.createClass({
           </SelectField>
           <TextField
             style={{marginTop:"-10px"}}
-            value={item.value}
+            value={item.value || ""}
             hintText="Value"
             fullWidth={true}
             disabled={!item.key}
