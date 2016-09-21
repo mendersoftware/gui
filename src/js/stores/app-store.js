@@ -11,12 +11,7 @@ var _currentGroupDevices = [];
 var _selectedDevices = [];
 var _filters = [{key:'', value:''}];
 var _attributes = {
-  id: "Name",
-  device_type: "Device type",
-  arch: "Architecture",
-  status: "Status",
-  artifact_name: "Current software",
-  tags: "Tags"
+  id: "Name"
 };
 var _snackbar = {
   open: false,
@@ -517,6 +512,13 @@ var AppStore = assign(EventEmitter.prototype, {
     * Return set of filters for list of devices
     */
     return _filters
+  },
+
+  matchFilters: function(item) {
+     /*
+    * Return true or false for device matching _filters
+    */
+    return _matchFilters(item);
   },
 
   getSelectedDevices: function() {

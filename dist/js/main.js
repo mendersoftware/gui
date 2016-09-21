@@ -87975,6 +87975,14 @@ var DeviceList = _react2.default.createClass({
     this.props.refreshGroups();
   },
 
+  _filter: function _filter(array) {
+    var newArray = [];
+    for (var i = 0; i < array.length; i++) {
+      if (AppStore.matchFilters(array[i])) newArray.push(array[i]);
+    }
+    return newArray;
+  },
+
   render: function render() {
     var styles = {
       exampleFlatButtonIcon: {
@@ -88032,7 +88040,9 @@ var DeviceList = _react2.default.createClass({
       }
     });
 
-    var devices = this.props.devices.map(function (device, index) {
+    var filteredDevices = this._filter(this.props.devices);
+
+    var devices = filteredDevices.map(function (device, index) {
       var expanded = '';
       if (this.state.expanded === index) {
         var _React$createElement;
@@ -88672,7 +88682,7 @@ var Filters = _react2.default.createClass({
         ),
         _react2.default.createElement(_TextField2.default, {
           style: { marginTop: "-10px" },
-          value: item.value,
+          value: item.value || "",
           hintText: 'Value',
           fullWidth: true,
           disabled: !item.key,
@@ -89212,12 +89222,12 @@ var SelectedDevices = _react2.default.createClass({
 
     var deviceInventory = [];
     var i = 0;
-    length = Object.keys(deviceInventory).length;
-    for (var k in deviceInventory) {
+    length = this.props.device.attributes.length;
+    for (var i = 0; i < this.props.device.attributes.length; i++) {
       deviceInventory.push(_react2.default.createElement(
         'div',
-        { key: k },
-        _react2.default.createElement(_List.ListItem, { style: styles.listStyle, disabled: true, primaryText: k, secondaryText: deviceInventory[k] }),
+        { key: i },
+        _react2.default.createElement(_List.ListItem, { style: styles.listStyle, disabled: true, primaryText: this.props.device.attributes[i].name, secondaryText: this.props.device.attributes[i].value }),
         _react2.default.createElement(_Divider2.default, null)
       ));
       i++;
@@ -90949,12 +90959,7 @@ var _currentGroupDevices = [];
 var _selectedDevices = [];
 var _filters = [{ key: '', value: '' }];
 var _attributes = {
-  id: "Name",
-  device_type: "Device type",
-  arch: "Architecture",
-  status: "Status",
-  artifact_name: "Current software",
-  tags: "Tags"
+  id: "Name"
 };
 var _snackbar = {
   open: false,
@@ -91435,6 +91440,13 @@ var AppStore = assign(EventEmitter.prototype, {
     * Return set of filters for list of devices
     */
     return _filters;
+  },
+
+  matchFilters: function matchFilters(item) {
+    /*
+    * Return true or false for device matching _filters
+    */
+    return _matchFilters(item);
   },
 
   getSelectedDevices: function getSelectedDevices() {

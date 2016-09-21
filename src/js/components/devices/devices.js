@@ -138,7 +138,7 @@ var Devices = React.createClass({
     return (
       <div className="margin-top">
        <div className="leftFixed">
-          <Groups  refreshGroups={this._refreshGroups} groups={this.state.groups} selectedGroup={this.state.selectedGroup} allDevices={this.state.allDevices} />
+          <Groups refreshGroups={this._refreshGroups} groups={this.state.groups} selectedGroup={this.state.selectedGroup} allDevices={this.state.allDevices} />
         </div>
         <div className="rightFluid padding-right">
           <div className={this.state.pendingDevices.length&&this.state.doneLoading ? null : "hidden"}>
