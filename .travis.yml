@@ -39,3 +39,7 @@ deploy:
     # Force before_deploy
     provider: script
     script: /bin/true 
+    on:
+        tags: true
+        all_branches: true
+        
