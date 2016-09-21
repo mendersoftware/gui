@@ -36,10 +36,17 @@ before_deploy:
 
 
 deploy:
-    # Force before_deploy
-    provider: script
-    script: /bin/true 
-    on:
-        tags: true
-        all_branches: true
-        
+    # Force before_deploy for branches
+    -
+        provider: script
+        script: /bin/true 
+        on:
+            all_branches: true
+
+    # Force before_deploy for tags
+    -
+        provider: script
+        script: /bin/true 
+        on:
+            tags: true
+            all_branches: true
