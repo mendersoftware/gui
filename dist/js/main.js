@@ -81707,6 +81707,11 @@ var Groups = _react2.default.createClass({
     }
 
     var deviceList = tmpDevices.map(function (device, index) {
+      var attributesLength = device.attributes ? device.attributes.length : 0;
+      var attrs = {};
+      for (var i = 0; i < attributesLength; i++) {
+        attrs[device.attributes[i].name] = device.attributes[i].value;
+      }
       return _react2.default.createElement(
         _Table.TableRow,
         { key: index, selected: this.state.selectedDevices.indexOf(device.id) !== -1 },
@@ -81718,7 +81723,7 @@ var Groups = _react2.default.createClass({
         _react2.default.createElement(
           _Table.TableRowColumn,
           null,
-          device.device_type
+          attrs.device_type
         )
       );
     }, this);

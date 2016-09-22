@@ -130,13 +130,18 @@ var Groups = React.createClass({
     }
 
     var deviceList = tmpDevices.map(function(device, index) {
+      var attributesLength = device.attributes ? device.attributes.length : 0;
+      var attrs = {};
+      for (var i=0;i<attributesLength;i++) {
+        attrs[device.attributes[i].name] = device.attributes[i].value;
+      }
       return (
         <TableRow key={index} selected={this.state.selectedDevices.indexOf(device.id) !== -1}>
           <TableRowColumn>
             {device.id}
           </TableRowColumn>
           <TableRowColumn>
-            {device.device_type}
+            {attrs.device_type}
           </TableRowColumn>
         </TableRow>
       );
