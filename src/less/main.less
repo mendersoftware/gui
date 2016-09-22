@@ -526,7 +526,7 @@ span.length {
     border-right: none;
     border-bottom: solid 1px #e0e0e0;
     padding: 7px 0;
-    padding-left: 24px;
+    padding-left: 32px;
     font-size: 13px;
     font-family: Lato, sans-serif;
     color: rgba(0,0,0,0.8);
@@ -542,7 +542,6 @@ span.length {
   content: "\26b2";
   display: block;
   position: absolute;
-  top: 10px;
   width: 15px;
   z-index: 3;
   height: 15px;
@@ -550,6 +549,11 @@ span.length {
   font-size: 20px;
   line-height: 32px;
   color: rgba(0,0,0,0.3);
+}
+
+.fixedSearch .search::before {
+  top: 10px;
+  left: 8px;
 }
 
 

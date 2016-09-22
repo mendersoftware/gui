@@ -10,14 +10,9 @@ import FlatButton from 'material-ui/FlatButton';
 import IconButton from 'material-ui/IconButton';
 import TextField from 'material-ui/TextField';
 
-var ReactTags = require('react-tag-input').WithContext;
-var tagslist = [];
-
-
 var SelectedImage = React.createClass({
   getInitialState: function() {
     return {
-      tagEdit: false,
       descEdit: false
     };
   },
@@ -32,46 +27,6 @@ var SelectedImage = React.createClass({
   _clickImageSchedule: function() {
     this.props.openSchedule("schedule", this.props.image);
   },
-  handleDelete: function(i) {
-    tagslist.splice(i, 1);
-  },
-  handleAddition: function(tag) {
-    tagslist.push({
-        id: tagslist.length + 1,
-        text: tag
-    });
-  },
-  handleDrag: function(tag, currPos, newPos) {
-
-  },
-  _tagsEdit: function(image, event) {
-    event.stopPropagation();
-    if (this.state.tagEdit) {
-      var noIds = [];
-      for (var i in tagslist) {
-        noIds.push(tagslist[i].text);
-      }
-
-      // save new tag data to image
-      image.tags = noIds;
-      //this.props.uploadImage(image);
-      
-      // hacky
-      var newimage = this.props.image;
-      newimage.tags = image.tags;
-
-      // update image upstream
-      this.props.editImage(image);
-    }
-    this.setState({tagEdit: !this.state.tagEdit});
-  },
-  _initTagslist: function(list) {
-     for (var i in list) {
-      if (list[i] !== '-') {
-        tagslist.push({id: i, text:list[i]});
-      }
-    }
-  },
   _descEdit: function(image, event) {
     event.stopPropagation();
     if (event.keyCode === 13 || !event.keyCode) {
@@ -85,7 +40,7 @@ var SelectedImage = React.createClass({
     }
   },
   render: function() {
-    var info = {name: "-", tags: ['-'], device_type: "-", build_date: "-", modified: "-", size: "-", checksum: "-", devices: "-", description: "-"};
+    var info = {name: "-", device_type: "-", build_date: "-", modified: "-", size: "-", checksum: "-", devices: "-", description: "-"};
     if (this.props.image) {
       for (var key in this.props.image) {
         if (this.props.image[key]) {
@@ -98,8 +53,6 @@ var SelectedImage = React.createClass({
         }
       }
     }
-    tagslist = [];
-    this._initTagslist(info.tags);
 
     var styles = {
       editButton: {
@@ -113,23 +66,11 @@ var SelectedImage = React.createClass({
         wordWrap:"break-word"
       }
     }
-    var editButton = (
-      <IconButton iconStyle={styles.editButton} style={{top:"auto", bottom: "0"}} onClick={this._tagsEdit.bind(null, this.props.image)} iconClassName="material-icons">
-        {this.state.tagEdit ? "check" : "edit"}
-      </IconButton>
-    );
+
     var editButtonDesc = (
-      <IconButton iconStyle={styles.editButton} style={{position:"absolute", right:"0", bottom: "8px"}} onClick={this._descEdit.bind(null, this.props.image)} iconClassName="material-icons">
+      <IconButton className="hidden" iconStyle={styles.editButton} style={{position:"absolute", right:"0", bottom: "8px"}} onClick={this._descEdit.bind(null, this.props.image)} iconClassName="material-icons">
         {this.state.descEdit ? "check" : "edit"}
       </IconButton>
-    );
-
-    var tagInput = (
-      <ReactTags tags={tagslist} 
-        handleDelete={this.handleDelete}  
-        handleAddition={this.handleAddition}
-        handleDrag={this.handleDrag}
-        delimeters={[9, 13, 188]} />
     );
 
     var descInput = (
@@ -142,7 +83,6 @@ var SelectedImage = React.createClass({
         onKeyDown={this._descEdit.bind(null, this.props.image)} />
     );
 
-    var tags = this.state.tagEdit ? tagInput : info.tags.join(', ');
     var devicesFilter = "artifact_name="+info.name;
     devicesFilter = encodeURIComponent(devicesFilter);    
     var devicesLink = (
@@ -158,8 +98,6 @@ var SelectedImage = React.createClass({
         <div>
           <div className="image-list list-item">
             <List style={{backgroundColor: "rgba(255,255,255,0)"}}>
-              <ListItem style={styles.listStyle} disabled={true} primaryText="Date built" secondaryText={info.build_date} />
-              <Divider />
               <ListItem style={styles.listStyle} disabled={true} primaryText="Date uploaded" secondaryText={info.modified} />
               <Divider />
             </List>
@@ -167,25 +105,14 @@ var SelectedImage = React.createClass({
           <div className="image-list list-item">
             <List style={{backgroundColor: "rgba(255,255,255,0)"}}>
               <ListItem style={styles.listStyle} disabled={true} primaryText="Installed on devices" secondaryText={devicesLink} />
-              <Divider />
-              <ListItem style={styles.listStyle} disabled={true} primaryText="Size" secondaryText={info.size} />
-              <Divider />
-            </List>
-          </div>
-          <div className="image-list list-item">
-            <List style={{backgroundColor: "rgba(255,255,255,0)"}}>
-              <ListItem style={styles.listStyle} disabled={true} primaryText="Checksum (SHA256)" secondaryText={info.checksum}  secondaryTextLines={2} />
-              <Divider />
-             
-              <ListItem className="hidden" style={styles.listStyle} rightIconButton={editButton} disabled={true} primaryText="Tags" secondaryText={tags} />
-              <Divider />
+              <Divider /> 
             </List>
           </div>
         </div>
 
-        <div className="relative" style={{top:"-50px"}}>
-          <div className="report-list" style={{padding:"8px 0px", width:"63%", position:"relative"}}>
-            <div style={{padding:"10px 16px 10px", fontSize:"12px", lineHeight:"12px"}}>
+        <div className="relative">
+          <div className="report-list" style={{padding:"0px", width:"63%", position:"relative"}}>
+            <div style={{padding:"12px 16px 10px", fontSize:"12px", lineHeight:"12px"}}>
               <span style={{color:"rgba(0,0,0,0.8)"}}>Description</span>
               <div style={{color:"rgba(0,0,0,0.54)", marginRight:"30px", marginTop:"8px", whiteSpace: "normal"}}>
                 <span className={this.state.descEdit ? "hidden" : null}>{info.description}</span>
@@ -196,14 +123,14 @@ var SelectedImage = React.createClass({
             <hr style={{margin:"0", backgroundColor:"#e0e0e0", height:"1px", border:"none"}} />
           </div>
           <div className="report-list" style={{width:"320px"}}>
-            <List style={{backgroundColor: "rgba(255,255,255,0)"}}>
+            <List style={{backgroundColor: "rgba(255,255,255,0)", paddingTop:"0"}}>
               <ListItem
-                style={styles.listStyle}
+                style={{fontSize:"12px"}}
                 disabled={this.props.image.name ? false : true}
                 primaryText="Deploy as an update"
                 secondaryText="Deploy this image to devices"
                 onClick={this._clickImageSchedule}
-                leftIcon={<FontIcon className="material-icons">schedule</FontIcon>} />
+                leftIcon={<FontIcon style={{marginTop:"6px"}} className="material-icons">schedule</FontIcon>} />
               <Divider />
             </List>
           </div>

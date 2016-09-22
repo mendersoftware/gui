@@ -36,7 +36,6 @@
     "react-paginate": "^2.2.3",
     "react-router": "^2.7.0",
     "react-search-input": "^0.10.3",
-    "react-tag-input": "^4.3.1",
     "react-tap-event-plugin": "^1.0.0",
     "react-time": "^4.0.0",
     "reactify": "^1.1.1",
