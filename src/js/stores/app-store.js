@@ -113,16 +113,17 @@ function _selectDevices(device) {
 }
 
 function _getDevicesFromParams(group, device_type) {
-
+  // ONLY FILTERS ON DEVICE TYPE FOR NOW
   // from all devices, find if eqauls group and device type
   var devices = [];
   for (var i=0;i<_alldevices.length;i++) {
     var device = _alldevices[i];
-    if (group) {
-      if ((group === device.group) && (device_type === device.device_type)) {
-        devices.push(device);
-      }
-    } else if (device_type === device.group) {
+    var attrs = {};
+    // get device type from within attributes
+    for (var x=0;x<device.attributes.length;x++) {
+      attrs[device.attributes[x].name] = device.attributes[x].value;
+    }
+    if (device_type === attrs.device_type) {
       devices.push(device);
     }
   }

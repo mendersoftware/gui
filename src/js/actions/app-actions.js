@@ -270,8 +270,11 @@ var AppActions = {
     DeploymentsApi
     .post(deploymentsApiUrl+'/deployments', deployment)
     .then(function(data) {
-      callback(deploymentsApiUrl + data.location);
-    });
+      callback.success(data.location);
+    })
+    .catch(function(err) {
+      callback.error(err);
+    })
   },
   getSingleDeployment: function(id, callback) {
     DeploymentsApi

@@ -91,10 +91,11 @@ var ScheduleForm = React.createClass({
   },
   _handleGroupValueChange: function(e, index, value) {
     var device_type = this.state.image ? this.state.image.device_type : null;
-    var group = value === "All devices" ?  null : this.props.groups[index-1];
+    var group = (value === "All devices") ?  "" : value;
+    var devices = device_type ? AppStore.getDevicesFromParams(group, device_type) : [];
     this.setState({
-      group: value,
-      devices: AppStore.getDevicesFromParams(group, device_type)
+      group: group,
+      devices: devices
     });
     this._sendUpToParent(this.state.image, 'image');
     this._sendUpToParent(group, 'group');
@@ -103,7 +104,6 @@ var ScheduleForm = React.createClass({
     var image = this.state.images[index];
     var groupname = this.state.group;
     var devices = this.props.device ? [this.props.device] : AppStore.getDevicesFromParams(groupname, image.device_type);
-
     this.setState({
       image: image,
       imageVal: {
@@ -170,7 +170,7 @@ var ScheduleForm = React.createClass({
       groupItems[0] = <MenuItem value="All devices" key="All" primaryText="All devices" />;
       
       for (var i=0; i<this.props.groups.length;i++) {
-        var tmp = <MenuItem value={this.props.groups[i]} key={i} primaryText={this.props.groups[i]} />;
+        var tmp = <MenuItem value={this.props.groups[i]} key={i} primaryText={decodeURIComponent(this.props.groups[i])} />;
         groupItems.push(tmp);
       }
     }
@@ -185,7 +185,6 @@ var ScheduleForm = React.createClass({
     var defaultStartDate =  this.state.start_time;
     var defaultEndDate = this.state.end_time;
     var tmpDevices = [];
-
     if (this.refs.search && this.state.devices) {
       var namefilter = ['id'];
       tmpDevices = this.state.devices.filter(this.refs.search.filter(namefilter));
@@ -264,7 +263,7 @@ var ScheduleForm = React.createClass({
           <div style={{display:"block"}}>
             <div className={this.state.disabled ? 'hidden' : 'inline-block'}>
               <SelectField
-                value={this.state.group}
+                value={this.state.group || "All devices"}
                 ref="group"
                 onChange={this._handleGroupValueChange}
                 floatingLabelText="Select group"
