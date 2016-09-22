@@ -24,6 +24,7 @@ to see whole string
 - Deployment icon in image details dropdown should match the one in device 
 details
 - Software table sorting icon not changing direction
+- Device tables not sorting
 - Fonts are not vendored, so rely on user being online to display properly
 - Pagination/lazy loading for devices not implemented so there is a high max 
 per page set for GET calls
