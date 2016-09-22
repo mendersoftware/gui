@@ -53,7 +53,7 @@ var SelectedDevices = React.createClass({
   _onScheduleSubmit: function() {
     var newDeployment = {
       devices: [this.props.device.id],
-      name: this.props.device.name,
+      name: this.props.device.id,
       artifact_name: this.state.image.name
     }
     AppActions.createDeployment(newDeployment, function(uri) {
@@ -101,16 +101,18 @@ var SelectedDevices = React.createClass({
 
     var deviceInventory = [];
     var i = 0;
-    length = this.props.device.attributes.length;
-    for (var i=0;i<this.props.device.attributes.length;i++) {
-      deviceInventory.push(
-        <div key={i}>
-          <ListItem style={styles.listStyle} disabled={true} primaryText={this.props.device.attributes[i].name} secondaryText={this.props.device.attributes[i].value} />
-          <Divider />
-        </div>
-      );
-      i++;
-    };
+    if (this.props.device) {
+      var length = this.props.device.attributes.length;
+      for (var i=0;i<this.props.device.attributes.length;i++) {
+        deviceInventory.push(
+          <div key={i}>
+            <ListItem style={styles.listStyle} disabled={true} primaryText={this.props.device.attributes[i].name} secondaryText={this.props.device.attributes[i].value} />
+            <Divider />
+          </div>
+        );
+        i++;
+      };
+    }
     deviceInventory.push(
       <div key="updateButton">
         <ListItem

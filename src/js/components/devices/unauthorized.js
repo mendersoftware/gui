@@ -20,7 +20,7 @@ var Authorized =  React.createClass({
        sortCol: "name",
        sortDown: true,
        minHeight: 180,
-       divHeight: 178
+       divHeight: 178,
     }
   },
   componentWillReceiveProps: function(nextProps) {
@@ -92,8 +92,8 @@ var Authorized =  React.createClass({
   },
   _setDeviceIdentity: function(device) {
     var callback = {
-      success: function(device) {
-        this.setState({deviceAttributes: device.attributes, deviceId: device.id});
+      success: function(data) {
+        this.setState({deviceId: data.id});
       }.bind(this),
       error: function(err) {
         console.log("Error: " + err);
@@ -116,7 +116,7 @@ var Authorized =  React.createClass({
     var devices = this.props.pending.map(function(device, index) {
       var expanded = '';
       if ( this.state.expanded === index ) {
-        expanded = <SelectedDevices attributes={this.state.deviceAttributes} deviceId={this.state.deviceId} accept={this._authorizeDevices} block={this._blockDevice} unauthorized={true} selected={[device]}  />
+        expanded = <SelectedDevices attributes={device.attributes} deviceId={this.state.deviceId} accept={this._authorizeDevices} block={this._blockDevice} unauthorized={true} selected={[device]}  />
       }
       return (
         <TableRow style={{"backgroundColor": "#e9f4f3"}} className={expanded ? "expand" : null} hoverable={true} key={index}>
