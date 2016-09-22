@@ -175,25 +175,29 @@ var Deployments = React.createClass({
     this.setState({tabIndex: value});
   },
   _onScheduleSubmit: function() {
-    var devices = AppStore.getDevicesFromParams(this.state.group.name, this.state.image.device_type);
+    var devices = AppStore.getDevicesFromParams(this.state.group, this.state.image.device_type);
     var ids = [];
     for (var i=0; i<devices.length; i++) {
       ids.push(devices[i].id);
     }
     var newDeployment = {
-      //id: this.state.id,
-      name: this.state.group.name,
-      //start_time: this.state.start_time,
-      //end_time: this.state.end_time,
+      name: this.state.group || "All devices",
       artifact_name: this.state.image.name,
       devices: ids
     }
-    AppActions.createDeployment(newDeployment, function(data) {
-      AppActions.getDeploymentsInProgress(function() {
-        this.setState(this.getInitialState());
-      }.bind(this));
-    }.bind(this));
 
+    var callback = {
+      success: function(data) {
+        AppActions.getDeploymentsInProgress(function() {
+          this.setState(this.getInitialState());
+        }.bind(this));
+        AppActions.setSnackbar("Deployment created successfully");
+      }.bind(this),
+      error: function(err) {
+        AppActions.setSnackbar("Error creating deployment. "+err);
+      }
+    };
+    AppActions.createDeployment(newDeployment, callback);
     this.dialogDismiss('dialog');
   },
   _deploymentParams: function(val, attr) {

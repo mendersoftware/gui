@@ -75946,7 +75946,9 @@ var AppActions = {
   },
   createDeployment: function createDeployment(deployment, callback) {
     DeploymentsApi.post(deploymentsApiUrl + '/deployments', deployment).then(function (data) {
-      callback(deploymentsApiUrl + data.location);
+      callback.success(data.location);
+    }).catch(function (err) {
+      callback.error(err);
     });
   },
   getSingleDeployment: function getSingleDeployment(id, callback) {
@@ -77920,25 +77922,29 @@ var Deployments = _react2.default.createClass({
     this.setState({ tabIndex: value });
   },
   _onScheduleSubmit: function _onScheduleSubmit() {
-    var devices = AppStore.getDevicesFromParams(this.state.group.name, this.state.image.device_type);
+    var devices = AppStore.getDevicesFromParams(this.state.group, this.state.image.device_type);
     var ids = [];
     for (var i = 0; i < devices.length; i++) {
       ids.push(devices[i].id);
     }
     var newDeployment = {
-      //id: this.state.id,
-      name: this.state.group.name,
-      //start_time: this.state.start_time,
-      //end_time: this.state.end_time,
+      name: this.state.group || "All devices",
       artifact_name: this.state.image.name,
       devices: ids
     };
-    AppActions.createDeployment(newDeployment, function (data) {
-      AppActions.getDeploymentsInProgress(function () {
-        this.setState(this.getInitialState());
-      }.bind(this));
-    }.bind(this));
 
+    var callback = {
+      success: function (data) {
+        AppActions.getDeploymentsInProgress(function () {
+          this.setState(this.getInitialState());
+        }.bind(this));
+        AppActions.setSnackbar("Deployment created successfully");
+      }.bind(this),
+      error: function error(err) {
+        AppActions.setSnackbar("Error creating deployment. " + err);
+      }
+    };
+    AppActions.createDeployment(newDeployment, callback);
     this.dialogDismiss('dialog');
   },
   _deploymentParams: function _deploymentParams(val, attr) {
@@ -80146,10 +80152,11 @@ var ScheduleForm = _react2.default.createClass({
   },
   _handleGroupValueChange: function _handleGroupValueChange(e, index, value) {
     var device_type = this.state.image ? this.state.image.device_type : null;
-    var group = value === "All devices" ? null : this.props.groups[index - 1];
+    var group = value === "All devices" ? "" : value;
+    var devices = device_type ? _appStore2.default.getDevicesFromParams(group, device_type) : [];
     this.setState({
-      group: value,
-      devices: _appStore2.default.getDevicesFromParams(group, device_type)
+      group: group,
+      devices: devices
     });
     this._sendUpToParent(this.state.image, 'image');
     this._sendUpToParent(group, 'group');
@@ -80158,7 +80165,6 @@ var ScheduleForm = _react2.default.createClass({
     var image = this.state.images[index];
     var groupname = this.state.group;
     var devices = this.props.device ? [this.props.device] : _appStore2.default.getDevicesFromParams(groupname, image.device_type);
-
     this.setState({
       image: image,
       imageVal: {
@@ -80224,7 +80230,7 @@ var ScheduleForm = _react2.default.createClass({
       groupItems[0] = _react2.default.createElement(_MenuItem2.default, { value: 'All devices', key: 'All', primaryText: 'All devices' });
 
       for (var i = 0; i < this.props.groups.length; i++) {
-        var tmp = _react2.default.createElement(_MenuItem2.default, { value: this.props.groups[i], key: i, primaryText: this.props.groups[i] });
+        var tmp = _react2.default.createElement(_MenuItem2.default, { value: this.props.groups[i], key: i, primaryText: decodeURIComponent(this.props.groups[i]) });
         groupItems.push(tmp);
       }
     }
@@ -80239,7 +80245,6 @@ var ScheduleForm = _react2.default.createClass({
     var defaultStartDate = this.state.start_time;
     var defaultEndDate = this.state.end_time;
     var tmpDevices = [];
-
     if (this.refs.search && this.state.devices) {
       var namefilter = ['id'];
       tmpDevices = this.state.devices.filter(this.refs.search.filter(namefilter));
@@ -80370,7 +80375,7 @@ var ScheduleForm = _react2.default.createClass({
             _react2.default.createElement(
               _SelectField2.default,
               {
-                value: this.state.group,
+                value: this.state.group || "All devices",
                 ref: 'group',
                 onChange: this._handleGroupValueChange,
                 floatingLabelText: 'Select group',
@@ -81950,6 +81955,7 @@ var SelectedDevices = _react2.default.createClass({
   },
 
   _clickListItem: function _clickListItem() {
+    AppActions.setSnackbar("");
     this.dialogToggle('schedule');
   },
 
@@ -81959,9 +81965,15 @@ var SelectedDevices = _react2.default.createClass({
       name: this.props.device.id,
       artifact_name: this.state.image.name
     };
-    AppActions.createDeployment(newDeployment, function (uri) {
-      console.log(uri);
-    });
+    var callback = {
+      success: function success() {
+        AppActions.setSnackbar("Deployment created successfully");
+      },
+      error: function error(err) {
+        AppActions.setSnackbar("Error creating deployment. " + err);
+      }
+    };
+    AppActions.createDeployment(newDeployment, callback);
     this.dialogToggle('schedule');
   },
   _handleAccept: function _handleAccept() {
@@ -83733,16 +83745,17 @@ function _selectDevices(device) {
 }
 
 function _getDevicesFromParams(group, device_type) {
-
+  // ONLY FILTERS ON DEVICE TYPE FOR NOW
   // from all devices, find if eqauls group and device type
   var devices = [];
   for (var i = 0; i < _alldevices.length; i++) {
     var device = _alldevices[i];
-    if (group) {
-      if (group === device.group && device_type === device.device_type) {
-        devices.push(device);
-      }
-    } else if (device_type === device.group) {
+    var attrs = {};
+    // get device type from within attributes
+    for (var x = 0; x < device.attributes.length; x++) {
+      attrs[device.attributes[x].name] = device.attributes[x].value;
+    }
+    if (device_type === attrs.device_type) {
       devices.push(device);
     }
   }

@@ -47,6 +47,7 @@ var SelectedDevices = React.createClass({
   },
 
   _clickListItem: function() {
+  AppActions.setSnackbar("");
    this.dialogToggle('schedule');
   },
 
@@ -56,9 +57,15 @@ var SelectedDevices = React.createClass({
       name: this.props.device.id,
       artifact_name: this.state.image.name
     }
-    AppActions.createDeployment(newDeployment, function(uri) {
-      console.log(uri);
-    });
+    var callback = {
+      success: function() {
+        AppActions.setSnackbar("Deployment created successfully");
+      },
+      error: function(err) {
+        AppActions.setSnackbar("Error creating deployment. " + err);
+      }
+    }
+    AppActions.createDeployment(newDeployment, callback);
     this.dialogToggle('schedule');
   },
   _handleAccept: function() {
