@@ -76349,7 +76349,7 @@ var FileInput = _react2.default.createClass({
       }),
       _react2.default.createElement(
         'span',
-        { style: { color: "rgb(171, 16, 0)", fontSize: "12px", position: "relative", top: "-6" } },
+        { style: { color: "rgb(171, 16, 0)", fontSize: "12px", position: "relative", top: "-6px" } },
         this.state.errorText
       )
     );
@@ -76536,7 +76536,7 @@ var Form = _react2.default.createClass({
       { className: 'float-right' },
       _react2.default.createElement(
         'div',
-        { key: 'cancelcontain', style: { marginRight: "10", display: "inline-block" } },
+        { key: 'cancelcontain', style: { marginRight: "10px", display: "inline-block" } },
         _react2.default.createElement(_FlatButton2.default, {
           key: 'cancel',
           label: 'Cancel',

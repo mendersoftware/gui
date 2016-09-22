@@ -35,7 +35,7 @@ var FileInput = React.createClass({
           onChange={this.setValue}
           value={this.state.value}
           />
-        <span style={{color: "rgb(171, 16, 0)", fontSize:"12px", position:"relative", top:"-6"}}>
+        <span style={{color: "rgb(171, 16, 0)", fontSize:"12px", position:"relative", top:"-6px"}}>
           {this.state.errorText}
         </span>
       </div>
