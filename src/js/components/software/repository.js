@@ -13,7 +13,9 @@ import TextInput from '../common/forms/textinput';
 import DeploymentButton from './deploymentbutton';
 import SelectedImage from './selectedimage';
 import { Router, Route, Link } from 'react-router';
-var ReactTags = require('react-tag-input').WithContext;
+import { Motion, spring } from 'react-motion';
+import Collapse from 'react-collapse';
+import ReactHeight from 'react-height';
 
 // material ui
 import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
@@ -26,7 +28,6 @@ import IconButton from 'material-ui/IconButton';
 import Snackbar from 'material-ui/Snackbar';
 
 var newState = {};
-var tags = [];
 var software = [];
 
 var Repository = React.createClass({
@@ -49,6 +50,7 @@ var Repository = React.createClass({
       snackMessage: "Deployment created",
       openSnack: false,
       autoHideDuration: 5000,
+      divHeight: 148,
     };
   },
 
@@ -137,12 +139,12 @@ var Repository = React.createClass({
     var direction;
     if (this.state.sortCol !== col) {
       ReactDOM.findDOMNode(this.refs[this.state.sortCol]).className = "sortIcon material-icons";
-      ReactDOM.findDOMNode(this.refs[col]).className = "sortIcon material-icons selected";
+      ReactDOM.findDOMNode(this.refs[col]).className = "sortIcon material-icons expand";
       this.setState({sortCol:col, sortDown: true});
       direction = true;
     } else {
       direction = !(this.state.sortDown);
-      ReactDOM.findDOMNode(this.refs[this.state.sortCol]).className = "sortIcon material-icons selected " +direction;
+      ReactDOM.findDOMNode(this.refs[this.state.sortCol]).className = "sortIcon material-icons expand " +direction;
       this.setState({sortDown: direction});
     }
     // sort table
@@ -151,27 +153,6 @@ var Repository = React.createClass({
   searchUpdated: function(term) {
     this.setState({searchTerm: term, image: {}}); // needed to force re-render
   },
-  handleDelete: function(i) {
-    tags.splice(i, 1);
-    newState.tags = [];
-    for (var i in tags) {
-      newState.tags.push(tags[i].text);
-    }
-  },
-  handleAddition: function(tag) {
-    tags.push({
-        id: tags.length + 1,
-        text: tag
-    });
-
-    newState.tags = [];
-    for (var i in tags) {
-      newState.tags.push(tags[i].text);
-    }
-  },
-  handleDrag: function(tag, currPos, newPos) {
-
-  },
   _openUpload: function(ref, image) {
     if (image) {
       this.setState({popupLabel: "Edit image details"});
@@ -179,10 +160,6 @@ var Repository = React.createClass({
     } else {
       this._resetImageState();
       this.setState({popupLabel: "Upload a new image"});
-    }
-    tags = [];
-    for (var i in newState.tags) {
-      tags.push({id:i, text:newState.tags[i]});
     }
     this.dialogOpen('upload');
   },
@@ -194,6 +171,9 @@ var Repository = React.createClass({
       return date.replace(' ','T').replace(/ /g, '').replace('UTC','');
     }
     return;
+  },
+  _adjustCellHeight: function(height) {
+    this.setState({divHeight: height+30});
   },
   render: function() {
 
@@ -228,45 +208,30 @@ var Repository = React.createClass({
       }
     }
 
-
-    // copy array so as not to alter props
     var tmpSoftware = [];
-    for (var i in software) {
-      var replace = '';
-      if (software[i].tags) {
-        replace = software[i].tags.join(', ');
-      }
-      tmpSoftware[i] = update(software[i], {
-        'tags': {
-          $set: replace
-        }
-      });
-    }
-    
     if (this.refs.search) {
-      var filters = ['name', 'device_type', 'tags', 'description'];
+      var filters = ['name', 'device_type', 'description'];
       tmpSoftware = software.filter(this.refs.search.filter(filters));
     }
     var groups = this.props.groups;
     var items = tmpSoftware.map(function(pkg, index) {
-      var selected = '';
+      var expanded = '';
       if (this.state.image.name === pkg.name ) {
-        selected = <SelectedImage formatTime={this._formatTime} editImage={this._editImageData} buttonStyle={styles.flatButtonIcon} image={this.state.image} openSchedule={this._openSchedule} />
+        expanded = <SelectedImage formatTime={this._formatTime} editImage={this._editImageData} buttonStyle={styles.flatButtonIcon} image={this.state.image} openSchedule={this._openSchedule} />
       }
       return (
         <TableRow hoverable={this.state.image.name !== pkg.name} className={this.state.image.name === pkg.name ? "expand" : null} key={index} >
-          <TableRowColumn>{pkg.name}</TableRowColumn>
+          <TableRowColumn style={expanded ? {height: this.state.divHeight} : null}>{pkg.name}</TableRowColumn>
           <TableRowColumn>{pkg.device_type}</TableRowColumn>
-          <TableRowColumn>{pkg.tags || '-'}</TableRowColumn>
           <TableRowColumn><Time value={this._formatTime(pkg.modified)} format="YYYY-MM-DD HH:mm" /></TableRowColumn>
           <TableRowColumn style={{textAlign:"right"}}>{pkg.devices || 0}</TableRowColumn>
           <TableRowColumn style={{width:"33px", paddingRight:"0", paddingLeft:"12px"}} className="expandButton">
-            <IconButton className="float-right"><FontIcon className="material-icons">{ selected ? "arrow_drop_up" : "arrow_drop_down"}</FontIcon></IconButton>
+            <IconButton className="float-right"><FontIcon className="material-icons">{ expanded ? "arrow_drop_up" : "arrow_drop_down"}</FontIcon></IconButton>
           </TableRowColumn>
           <TableRowColumn style={{width:"0", overflow:"visible"}}>
-            <div onClick={this._onClick} className={this.state.image.name === pkg.name ? "expanded" : null}>
-              {selected}
-            </div>
+            <Collapse springConfig={{stiffness: 210, damping: 20}} onHeightReady={this._adjustCellHeight} className="expanded" isOpened={expanded ? true : false}>
+              {expanded}
+            </Collapse>
           </TableRowColumn>
         </TableRow>
       )
@@ -318,7 +283,6 @@ var Repository = React.createClass({
               <TableRow>
                 <TableHeaderColumn className="columnHeader" tooltip="Name">Name <FontIcon ref="name" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "name")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
                 <TableHeaderColumn className="columnHeader" tooltip="Device type compatibility">Device type compatibility <FontIcon ref="device_type" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "device_type")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
-                <TableHeaderColumn className="columnHeader" tooltip="Tags">Tags</TableHeaderColumn>
                 <TableHeaderColumn className="columnHeader" tooltip="Last modified">Last modified <FontIcon style={styles.sortIcon} ref="modified" onClick={this._sortColumn.bind(null, "modified")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
                 <TableHeaderColumn style={{textAlign:"right", paddingRight:"12px"}} className="columnHeader align-right" tooltip="Installed on devices">Installed on devices <FontIcon style={styles.sortIcon} ref="devices" onClick={this._sortColumn.bind(null, "devices")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
                 <TableHeaderColumn style={{width:"33px", paddingRight:"12px", paddingLeft:"0"}} className="columnHeader"></TableHeaderColumn>
