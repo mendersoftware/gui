@@ -81956,7 +81956,7 @@ var SelectedDevices = _react2.default.createClass({
   _onScheduleSubmit: function _onScheduleSubmit() {
     var newDeployment = {
       devices: [this.props.device.id],
-      name: this.props.device.name,
+      name: this.props.device.id,
       artifact_name: this.state.image.name
     };
     AppActions.createDeployment(newDeployment, function (uri) {

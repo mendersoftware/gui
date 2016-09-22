@@ -53,7 +53,7 @@ var SelectedDevices = React.createClass({
   _onScheduleSubmit: function() {
     var newDeployment = {
       devices: [this.props.device.id],
-      name: this.props.device.name,
+      name: this.props.device.id,
       artifact_name: this.state.image.name
     }
     AppActions.createDeployment(newDeployment, function(uri) {
