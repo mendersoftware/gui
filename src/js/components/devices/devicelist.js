@@ -111,7 +111,7 @@ var DeviceList = React.createClass({
   },
   _expandRow: function(rowNumber, columnId) {
     
-    if (columnId >-1 && columnId < 6) {
+    if (columnId >-1 && columnId < 5) {
 
       if (this.props.devices[rowNumber] !== this.state.expandedDevice) {
         this._setDeviceIdentity(this.props.devices[rowNumber]);
@@ -131,8 +131,8 @@ var DeviceList = React.createClass({
   },
   _setDeviceIdentity: function(device) {
     var callback = {
-      success: function(device) {
-        this.setState({deviceAttributes: device.attributes, deviceId: device.id});
+      success: function(data) {
+        this.setState({deviceAttributes: data.attributes, deviceId: data.id});
       }.bind(this),
       error: function(err) {
         console.log("Error: " + err);
@@ -333,16 +333,23 @@ var DeviceList = React.createClass({
 
     var devices = filteredDevices.map(function(device, index) {
       var expanded = '';
+      var attrs = {
+        device_type: "",
+        image_id: ""
+      };
+      var attributesLength = device.attributes ? device.attributes.length : 0; 
+      for (var i=0;i<attributesLength;i++) {
+        attrs[device.attributes[i].name] = device.attributes[i].value;
+      }
       if ( this.state.expanded === index ) {
         expanded = <SelectedDevices attributes={this.state.deviceAttributes} deviceId={this.state.deviceId} images={this.props.images} device={this.state.expandedDevice} selectedGroup={this.props.selectedGroup} images={this.props.images} groups={this.props.groups} />
       }
       return (
         <TableRow selected={device.selected} hoverable={!expanded} className={expanded ? "expand" : null}  key={index}>
           <TableRowColumn style={expanded ? {height: this.state.divHeight} : null}>{device.id}</TableRowColumn>
-          <TableRowColumn>{device.device_type || "-"}</TableRowColumn>
-          <TableRowColumn>{device.artifact_name || "-"}</TableRowColumn>
+          <TableRowColumn>{attrs.device_type || "-"}</TableRowColumn>
+          <TableRowColumn>{attrs.image_id || "-"}</TableRowColumn>
           <TableRowColumn><Time value={device.updated_ts} format="YYYY-MM-DD HH:mm" /></TableRowColumn>
-          <TableRowColumn>{device.status}</TableRowColumn>
           <TableRowColumn style={{width:"33px", paddingRight:"0", paddingLeft:"12px"}} className="expandButton">
             <IconButton className="float-right"><FontIcon className="material-icons">{ expanded ? "arrow_drop_up" : "arrow_drop_down"}</FontIcon></IconButton>
           </TableRowColumn>
@@ -431,7 +438,6 @@ var DeviceList = React.createClass({
                   <TableHeaderColumn className="columnHeader" tooltip="Device type">Device type<FontIcon ref="device_type" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "device_type")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
                   <TableHeaderColumn className="columnHeader" tooltip="Current software">Current software<FontIcon ref="artifact_name" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "software_version")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
                   <TableHeaderColumn className="columnHeader" tooltip="Last heartbeat">Last heartbeat<FontIcon ref="last_heartbeat" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "last_heartbeat")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
-                  <TableHeaderColumn className="columnHeader" tooltip="Status">Status<FontIcon ref="status" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "status")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
                   <TableHeaderColumn className="columnHeader" style={{width:"33px", paddingRight:"12px", paddingLeft:"0"}}></TableHeaderColumn>
                 </TableRow>
               </TableHeader>

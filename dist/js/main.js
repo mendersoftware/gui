@@ -80606,7 +80606,7 @@ var DeviceList = _react2.default.createClass({
   },
   _expandRow: function _expandRow(rowNumber, columnId) {
 
-    if (columnId > -1 && columnId < 6) {
+    if (columnId > -1 && columnId < 5) {
 
       if (this.props.devices[rowNumber] !== this.state.expandedDevice) {
         this._setDeviceIdentity(this.props.devices[rowNumber]);
@@ -80626,8 +80626,8 @@ var DeviceList = _react2.default.createClass({
   },
   _setDeviceIdentity: function _setDeviceIdentity(device) {
     var callback = {
-      success: function (device) {
-        this.setState({ deviceAttributes: device.attributes, deviceId: device.id });
+      success: function (data) {
+        this.setState({ deviceAttributes: data.attributes, deviceId: data.id });
       }.bind(this),
       error: function error(err) {
         console.log("Error: " + err);
@@ -80828,6 +80828,14 @@ var DeviceList = _react2.default.createClass({
 
     var devices = filteredDevices.map(function (device, index) {
       var expanded = '';
+      var attrs = {
+        device_type: "",
+        image_id: ""
+      };
+      var attributesLength = device.attributes ? device.attributes.length : 0;
+      for (var i = 0; i < attributesLength; i++) {
+        attrs[device.attributes[i].name] = device.attributes[i].value;
+      }
       if (this.state.expanded === index) {
         var _React$createElement;
 
@@ -80844,22 +80852,17 @@ var DeviceList = _react2.default.createClass({
         _react2.default.createElement(
           _Table.TableRowColumn,
           null,
-          device.device_type || "-"
+          attrs.device_type || "-"
         ),
         _react2.default.createElement(
           _Table.TableRowColumn,
           null,
-          device.artifact_name || "-"
+          attrs.image_id || "-"
         ),
         _react2.default.createElement(
           _Table.TableRowColumn,
           null,
           _react2.default.createElement(_reactTime2.default, { value: device.updated_ts, format: 'YYYY-MM-DD HH:mm' })
-        ),
-        _react2.default.createElement(
-          _Table.TableRowColumn,
-          null,
-          device.status
         ),
         _react2.default.createElement(
           _Table.TableRowColumn,
@@ -81016,16 +81019,6 @@ var DeviceList = _react2.default.createClass({
                   _react2.default.createElement(
                     _FontIcon2.default,
                     { ref: 'last_heartbeat', style: styles.sortIcon, onClick: this._sortColumn.bind(null, "last_heartbeat"), className: 'sortIcon material-icons' },
-                    'sort'
-                  )
-                ),
-                _react2.default.createElement(
-                  _Table.TableHeaderColumn,
-                  { className: 'columnHeader', tooltip: 'Status' },
-                  'Status',
-                  _react2.default.createElement(
-                    _FontIcon2.default,
-                    { ref: 'status', style: styles.sortIcon, onClick: this._sortColumn.bind(null, "status"), className: 'sortIcon material-icons' },
                     'sort'
                   )
                 ),
@@ -82006,16 +81999,18 @@ var SelectedDevices = _react2.default.createClass({
 
     var deviceInventory = [];
     var i = 0;
-    length = this.props.device.attributes.length;
-    for (var i = 0; i < this.props.device.attributes.length; i++) {
-      deviceInventory.push(_react2.default.createElement(
-        'div',
-        { key: i },
-        _react2.default.createElement(_List.ListItem, { style: styles.listStyle, disabled: true, primaryText: this.props.device.attributes[i].name, secondaryText: this.props.device.attributes[i].value }),
-        _react2.default.createElement(_Divider2.default, null)
-      ));
-      i++;
-    };
+    if (this.props.device) {
+      var length = this.props.device.attributes.length;
+      for (var i = 0; i < this.props.device.attributes.length; i++) {
+        deviceInventory.push(_react2.default.createElement(
+          'div',
+          { key: i },
+          _react2.default.createElement(_List.ListItem, { style: styles.listStyle, disabled: true, primaryText: this.props.device.attributes[i].name, secondaryText: this.props.device.attributes[i].value }),
+          _react2.default.createElement(_Divider2.default, null)
+        ));
+        i++;
+      };
+    }
     deviceInventory.push(_react2.default.createElement(
       'div',
       { key: 'updateButton' },
@@ -82266,8 +82261,8 @@ var Authorized = _react2.default.createClass({
   },
   _setDeviceIdentity: function _setDeviceIdentity(device) {
     var callback = {
-      success: function (device) {
-        this.setState({ deviceAttributes: device.attributes, deviceId: device.id });
+      success: function (data) {
+        this.setState({ deviceId: data.id });
       }.bind(this),
       error: function error(err) {
         console.log("Error: " + err);
@@ -82290,7 +82285,7 @@ var Authorized = _react2.default.createClass({
     var devices = this.props.pending.map(function (device, index) {
       var expanded = '';
       if (this.state.expanded === index) {
-        expanded = _react2.default.createElement(SelectedDevices, { attributes: this.state.deviceAttributes, deviceId: this.state.deviceId, accept: this._authorizeDevices, block: this._blockDevice, unauthorized: true, selected: [device] });
+        expanded = _react2.default.createElement(SelectedDevices, { attributes: device.attributes, deviceId: this.state.deviceId, accept: this._authorizeDevices, block: this._blockDevice, unauthorized: true, selected: [device] });
       }
       return _react2.default.createElement(
         _Table.TableRow,
