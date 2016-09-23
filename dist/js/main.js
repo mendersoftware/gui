@@ -76022,7 +76022,7 @@ var AppActions = {
 
 module.exports = AppActions;
 
-},{"../api/deployments-api":721,"../api/devices-api":722,"../api/images-api":723,"../constants/app-constants":763,"../dispatchers/app-dispatcher":764}],721:[function(require,module,exports){
+},{"../api/deployments-api":721,"../api/devices-api":722,"../api/images-api":723,"../constants/app-constants":762,"../dispatchers/app-dispatcher":763}],721:[function(require,module,exports){
 'use strict';
 
 var request = require('superagent');
@@ -76298,7 +76298,7 @@ var App = _react2.default.createClass({
 
 module.exports = App;
 
-},{"../themes/mender-theme.js":768,"./header/header":757,"material-ui/styles/getMuiTheme":352,"react":637,"react-joyride":405}],725:[function(require,module,exports){
+},{"../themes/mender-theme.js":767,"./header/header":756,"material-ui/styles/getMuiTheme":352,"react":637,"react-joyride":405}],725:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -76941,7 +76941,7 @@ Dashboard.contextTypes = {
 
 module.exports = Dashboard;
 
-},{"../../actions/app-actions":720,"../../stores/app-store":766,"../../stores/local-store":767,"./activity":729,"./deployments":731,"./health":732,"material-ui/RaisedButton":149,"material-ui/Snackbar":158,"react":637,"react-router":451}],731:[function(require,module,exports){
+},{"../../actions/app-actions":720,"../../stores/app-store":765,"../../stores/local-store":766,"./activity":729,"./deployments":731,"./health":732,"material-ui/RaisedButton":149,"material-ui/Snackbar":158,"react":637,"react-router":451}],731:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -77326,7 +77326,7 @@ Progress.contextTypes = {
 
 module.exports = Progress;
 
-},{"../common/loader":728,"../deployments/progressChart.js":744,"material-ui/Divider":108,"material-ui/FontIcon":119,"material-ui/List":133,"react":637,"react-router":451,"react-time":488}],734:[function(require,module,exports){
+},{"../common/loader":728,"../deployments/progressChart.js":743,"material-ui/Divider":108,"material-ui/FontIcon":119,"material-ui/List":133,"react":637,"react-router":451,"react-time":488}],734:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -77488,7 +77488,7 @@ Recent.contextTypes = {
 
 module.exports = Recent;
 
-},{"../../actions/app-actions":720,"../common/loader":728,"../deployments/groupdevices":741,"./recentstats":735,"material-ui/Divider":108,"material-ui/FontIcon":119,"react":637,"react-router":451,"react-time":488}],735:[function(require,module,exports){
+},{"../../actions/app-actions":720,"../common/loader":728,"../deployments/groupdevices":740,"./recentstats":735,"material-ui/Divider":108,"material-ui/FontIcon":119,"react":637,"react-router":451,"react-time":488}],735:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -77683,59 +77683,6 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
-var _DatePicker = require('material-ui/DatePicker');
-
-var _DatePicker2 = _interopRequireDefault(_DatePicker);
-
-var _TimePicker = require('material-ui/TimePicker');
-
-var _TimePicker2 = _interopRequireDefault(_TimePicker);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-// material ui
-var DateTime = _react2.default.createClass({
-  displayName: 'DateTime',
-
-  _update: function _update(e, date) {
-    this.props.changed(this.props.my_ref, date);
-  },
-  render: function render() {
-    var element = _react2.default.createElement('div', null);
-    if (this.props.date) {
-      element = _react2.default.createElement(_DatePicker2.default, {
-        floatingLabelText: this.props.label,
-        autoOk: true,
-        ref: this.props.ref,
-        defaultDate: this.props.defaultDate,
-        minDate: this.props.minDate,
-        mode: 'landscape',
-        onChange: this._update });
-    } else if (this.props.time) {
-      element = _react2.default.createElement(_TimePicker2.default, {
-        format: '24hr',
-        ref: this.props.ref,
-        defaultTime: this.props.defaultDate,
-        floatingLabelText: this.props.label,
-        onChange: this._update });
-    }
-    return _react2.default.createElement(
-      'div',
-      null,
-      element
-    );
-  }
-});
-
-module.exports = DateTime;
-
-},{"material-ui/DatePicker":104,"material-ui/TimePicker":196,"react":637}],738:[function(require,module,exports){
-'use strict';
-
-var _react = require('react');
-
-var _react2 = _interopRequireDefault(_react);
-
 var _Tabs = require('material-ui/Tabs');
 
 var _Dialog = require('material-ui/Dialog');
@@ -77786,11 +77733,13 @@ function getState() {
     events: AppStore.getEventLog(),
     images: AppStore.getSoftwareRepo(),
     groups: AppStore.getGroups(),
+    allDevices: AppStore.getAllDevices(),
     dialogTitle: "Create a deployment",
     scheduleForm: true,
     contentClass: "largeDialog",
     invalid: true,
-    dialog: false
+    dialog: false,
+    filteredDevices: []
   };
 }
 
@@ -77832,7 +77781,11 @@ var Deployments = _react2.default.createClass({
             }
           }.bind(this));
         } else {
-          this.setState({ hasDevices: true });
+          var allDevices = [];
+          for (var i = 0; i < devices.length; i++) {
+            allDevices.push(devices[i].id);
+          }
+          this.setState({ hasDevices: true, allDevices: allDevices });
         }
       }.bind(this),
       error: function error(err) {
@@ -77843,6 +77796,7 @@ var Deployments = _react2.default.createClass({
     var groupCallback = {
       success: function (groups) {
         this.setState({ groups: groups });
+        this._getGroupDevices(groups);
       }.bind(this),
       error: function error(_error) {
         console.log("Error: " + _error);
@@ -77877,6 +77831,26 @@ var Deployments = _react2.default.createClass({
       this.setState({ tabIndex: "progress" });
     }
     AppActions.getImages();
+  },
+  _getGroupDevices: function _getGroupDevices(groups) {
+    // get list of devices for each group and save them to state 
+    var i, group;
+    var callback = {
+      success: function (devices) {
+        var tmp = {};
+        var devs = [];
+        for (var x = 0; x < devices.length; x++) {
+          // get full details, not just id
+          devs.push(AppStore.getSingleDevice(devices[x]));
+        }
+        tmp[group] = devs;
+        this.setState(tmp);
+      }.bind(this)
+    };
+    for (i = 0; i < groups.length; i++) {
+      group = groups[i];
+      AppActions.getGroupDevices(groups[i], callback);
+    }
   },
   componentWillUnmount: function componentWillUnmount() {
     AppStore.removeChangeListener(this._onChange);
@@ -77922,13 +77896,12 @@ var Deployments = _react2.default.createClass({
     this.setState({ tabIndex: value });
   },
   _onScheduleSubmit: function _onScheduleSubmit() {
-    var devices = AppStore.getDevicesFromParams(this.state.group, this.state.image.device_type);
     var ids = [];
-    for (var i = 0; i < devices.length; i++) {
-      ids.push(devices[i].id);
+    for (var i = 0; i < this.state.deploymentDevices.length; i++) {
+      ids.push(this.state.deploymentDevices[i].id);
     }
     var newDeployment = {
-      name: this.state.group || "All devices",
+      name: decodeURIComponent(this.state.group) || "All devices",
       artifact_name: this.state.image.name,
       devices: ids
     };
@@ -77952,6 +77925,19 @@ var Deployments = _react2.default.createClass({
     var tmp = {};
     tmp[attr] = val;
     this.setState(tmp);
+    var group = attr === "group" ? val : this.state.group;
+    var image = attr === "image" ? val : this.state.image;
+    this._getDeploymentDevices(group, image);
+  },
+  _getDeploymentDevices: function _getDeploymentDevices(group, image) {
+    var devices = [];
+    var filteredDevices = [];
+    // set selected groups device to state to be sent to schedule form child
+    if (image && group) {
+      devices = group !== "All devices" ? this.state[group] : this.state.allDevices;
+      filteredDevices = AppStore.filterDevicesByType(devices, image.device_type);
+    }
+    this.setState({ deploymentDevices: devices, filteredDevices: filteredDevices });
   },
   _getReportById: function _getReportById(id) {
     AppActions.getSingleDeployment(id, function (data) {
@@ -78007,14 +77993,15 @@ var Deployments = _react2.default.createClass({
       label: 'Create deployment',
       primary: true,
       onClick: this._onScheduleSubmit,
-      ref: 'save' })];
+      ref: 'save',
+      disabled: !this.state.filteredDevices.length })];
     var reportActions = [_react2.default.createElement(_FlatButton2.default, {
       label: 'Close',
       onClick: this.dialogDismiss.bind(null, 'dialog') })];
     var dialogContent = '';
 
     if (this.state.scheduleForm) {
-      dialogContent = _react2.default.createElement(ScheduleForm, { hasPending: this.state.hasPending, hasDevices: this.state.hasDevices, deploymentSchedule: this._deploymentParams, id: this.state.id, images: this.state.images, image: this.state.image, imageVal: this.state.image, groups: this.state.groups, groupVal: this.state.group, start: this.state.start_time, end: this.state.end_time });
+      dialogContent = _react2.default.createElement(ScheduleForm, { deploymentDevices: this.state.deploymentDevices, filteredDevices: this.state.filteredDevices, hasPending: this.state.hasPending, hasDevices: this.state.hasDevices, deploymentSettings: this._deploymentParams, id: this.state.id, images: this.state.images, image: this.state.image, groups: this.state.groups, group: this.state.group });
     } else {
       dialogContent = _react2.default.createElement(Report, { deployment: this.state.selectedDeployment, retryDeployment: this._scheduleDeployment });
     }
@@ -78072,7 +78059,7 @@ var Deployments = _react2.default.createClass({
 
 module.exports = Deployments;
 
-},{"../../actions/app-actions":720,"../../stores/app-store":766,"./eventlog.js":740,"./inprogressdeployments.js":742,"./pastdeployments.js":743,"./report.js":747,"./schedule.js":748,"./schedulebutton.js":749,"./scheduleform.js":750,"material-ui/Dialog":106,"material-ui/FlatButton":115,"material-ui/RaisedButton":149,"material-ui/Tabs":181,"react":637}],739:[function(require,module,exports){
+},{"../../actions/app-actions":720,"../../stores/app-store":765,"./eventlog.js":739,"./inprogressdeployments.js":741,"./pastdeployments.js":742,"./report.js":746,"./schedule.js":747,"./schedulebutton.js":748,"./scheduleform.js":749,"material-ui/Dialog":106,"material-ui/FlatButton":115,"material-ui/RaisedButton":149,"material-ui/Tabs":181,"react":637}],738:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -78184,7 +78171,7 @@ var DeploymentStatus = _react2.default.createClass({
 
 module.exports = DeploymentStatus;
 
-},{"../../actions/app-actions":720,"material-ui/FlatButton":115,"react":637}],740:[function(require,module,exports){
+},{"../../actions/app-actions":720,"material-ui/FlatButton":115,"react":637}],739:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -78260,7 +78247,7 @@ var EventLog = _react2.default.createClass({
 
 module.exports = EventLog;
 
-},{"material-ui/FlatButton":115,"material-ui/RaisedButton":149,"material-ui/Table":176,"react":637}],741:[function(require,module,exports){
+},{"material-ui/FlatButton":115,"material-ui/RaisedButton":149,"material-ui/Table":176,"react":637}],740:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -78299,7 +78286,7 @@ var GroupDevices = _react2.default.createClass({
 
 module.exports = GroupDevices;
 
-},{"../../actions/app-actions":720,"react":637}],742:[function(require,module,exports){
+},{"../../actions/app-actions":720,"react":637}],741:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -78502,7 +78489,7 @@ var Progress = _react2.default.createClass({
 
 module.exports = Progress;
 
-},{"../common/loader":728,"./deploymentstatus":739,"./groupdevices":741,"./progresschart":745,"./progressreport.js":746,"./scheduleform":750,"material-ui/Dialog":106,"material-ui/FlatButton":115,"material-ui/Table":176,"react":637,"react-time":488}],743:[function(require,module,exports){
+},{"../common/loader":728,"./deploymentstatus":738,"./groupdevices":740,"./progresschart":744,"./progressreport.js":745,"./scheduleform":749,"material-ui/Dialog":106,"material-ui/FlatButton":115,"material-ui/Table":176,"react":637,"react-time":488}],742:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -78685,7 +78672,7 @@ var Past = _react2.default.createClass({
 
 module.exports = Past;
 
-},{"../common/loader":728,"./deploymentstatus":739,"./groupdevices":741,"./report.js":747,"./scheduleform":750,"material-ui/FlatButton":115,"material-ui/Table":176,"react":637,"react-time":488}],744:[function(require,module,exports){
+},{"../common/loader":728,"./deploymentstatus":738,"./groupdevices":740,"./report.js":746,"./scheduleform":749,"material-ui/FlatButton":115,"material-ui/Table":176,"react":637,"react-time":488}],743:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -78854,7 +78841,7 @@ ProgressChart.contextTypes = {
 
 module.exports = ProgressChart;
 
-},{"../../actions/app-actions":720,"../../stores/app-store":766,"react":637,"react-router":451}],745:[function(require,module,exports){
+},{"../../actions/app-actions":720,"../../stores/app-store":765,"react":637,"react-router":451}],744:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -79023,7 +79010,7 @@ ProgressChart.contextTypes = {
 
 module.exports = ProgressChart;
 
-},{"../../actions/app-actions":720,"../../stores/app-store":766,"react":637,"react-router":451}],746:[function(require,module,exports){
+},{"../../actions/app-actions":720,"../../stores/app-store":765,"react":637,"react-router":451}],745:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -79398,7 +79385,7 @@ var ProgressReport = _react2.default.createClass({
 
 module.exports = ProgressReport;
 
-},{"../../actions/app-actions":720,"./deploymentstatus":739,"material-ui/Checkbox":88,"material-ui/Dialog":106,"material-ui/FlatButton":115,"material-ui/FontIcon":119,"material-ui/RaisedButton":149,"material-ui/Table":176,"react":637,"react-copy-to-clipboard":399,"react-router":451,"react-time":488}],747:[function(require,module,exports){
+},{"../../actions/app-actions":720,"./deploymentstatus":738,"material-ui/Checkbox":88,"material-ui/Dialog":106,"material-ui/FlatButton":115,"material-ui/FontIcon":119,"material-ui/RaisedButton":149,"material-ui/Table":176,"react":637,"react-copy-to-clipboard":399,"react-router":451,"react-time":488}],746:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -79805,7 +79792,7 @@ var Report = _react2.default.createClass({
 
 module.exports = Report;
 
-},{"../../actions/app-actions":720,"material-ui/Checkbox":88,"material-ui/Dialog":106,"material-ui/FlatButton":115,"material-ui/RaisedButton":149,"material-ui/Table":176,"pluralize":387,"react":637,"react-copy-to-clipboard":399,"react-router":451,"react-time":488}],748:[function(require,module,exports){
+},{"../../actions/app-actions":720,"material-ui/Checkbox":88,"material-ui/Dialog":106,"material-ui/FlatButton":115,"material-ui/RaisedButton":149,"material-ui/Table":176,"pluralize":387,"react":637,"react-copy-to-clipboard":399,"react-router":451,"react-time":488}],747:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -79968,7 +79955,7 @@ var Schedule = _react2.default.createClass({
 
 module.exports = Schedule;
 
-},{"material-ui":205,"react":637,"react-time":488}],749:[function(require,module,exports){
+},{"material-ui":205,"react":637,"react-time":488}],748:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -80013,7 +80000,7 @@ var ScheduleButton = _react2.default.createClass({
 
 module.exports = ScheduleButton;
 
-},{"material-ui/FlatButton":115,"material-ui/RaisedButton":149,"react":637}],750:[function(require,module,exports){
+},{"material-ui/FlatButton":115,"material-ui/RaisedButton":149,"react":637}],749:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -80030,21 +80017,9 @@ var _appActions2 = _interopRequireDefault(_appActions);
 
 var _reactRouter = require('react-router');
 
-var _datetime = require('./datetime.js');
-
-var _datetime2 = _interopRequireDefault(_datetime);
-
 var _reactSearchInput = require('react-search-input');
 
 var _reactSearchInput2 = _interopRequireDefault(_reactSearchInput);
-
-var _DatePicker = require('material-ui/DatePicker');
-
-var _DatePicker2 = _interopRequireDefault(_DatePicker);
-
-var _TimePicker = require('material-ui/TimePicker');
-
-var _TimePicker2 = _interopRequireDefault(_TimePicker);
 
 var _SelectField = require('material-ui/SelectField');
 
@@ -80076,23 +80051,7 @@ var _Divider2 = _interopRequireDefault(_Divider);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function getDate() {
-  return new Date();
-}
-
-function addDate(date, days) {
-  var newDate = new Date(date);
-  newDate.setDate(newDate.getDate() + days);
-  return newDate;
-}
-
-function combineDateTime(date, time) {
-
-  var diffMs = date - time; // milliseconds 
-  var diffDays = Math.round(diffMs / 86400000); // days
-
-  return addDate(time, diffDays);
-}
+var pluralize = require('pluralize');
 
 function getGroupDevices(group) {
   return _appActions2.default.getGroupDevices(group, {
@@ -80110,14 +80069,6 @@ var ScheduleForm = _react2.default.createClass({
   displayName: 'ScheduleForm',
 
   getInitialState: function getInitialState() {
-    var imageVal = {
-      payload: null,
-      text: ''
-    };
-    if (this.props.imageVal) {
-      imageVal.payload = this.props.imageVal.id;
-      imageVal.text = this.props.imageVal.name;
-    }
 
     /* if single device */
     var disabled = false;
@@ -80126,84 +80077,26 @@ var ScheduleForm = _react2.default.createClass({
       disabled = true;
     }
 
-    // date times
-    var start_date = this.props.start ? new Date(this.props.start) : getDate();
-    var start_time = start_date;
-    var end_date = this.props.end ? new Date(this.props.end) : addDate(getDate(), 1);
-    var end_time = end_date;
-
     return {
-      start_time: start_time,
-      start_date: start_date,
-      end_time: end_time,
-      end_date: end_date,
-      minDate: getDate(),
-      minDate1: addDate(getDate(), 1),
-      imageVal: imageVal,
-      image: this.props.image,
       images: _appStore2.default.getSoftwareRepo(),
       disabled: disabled,
       group: group,
       showDevices: false
     };
   },
-  componentDidMount: function componentDidMount() {
-    this._deploymentTimes();
-  },
   _handleGroupValueChange: function _handleGroupValueChange(e, index, value) {
-    var device_type = this.state.image ? this.state.image.device_type : null;
-    var group = value === "All devices" ? "" : value;
-    var devices = device_type ? _appStore2.default.getDevicesFromParams(group, device_type) : [];
-    this.setState({
-      group: group,
-      devices: devices
-    });
-    this._sendUpToParent(this.state.image, 'image');
+    var device_type = this.props.image ? this.props.image.device_type : null;
+    var group = value;
     this._sendUpToParent(group, 'group');
   },
   _handleImageValueChange: function _handleImageValueChange(e, index, value) {
     var image = this.state.images[index];
-    var groupname = this.state.group;
-    var devices = this.props.device ? [this.props.device] : _appStore2.default.getDevicesFromParams(groupname, image.device_type);
-    this.setState({
-      image: image,
-      imageVal: {
-        payload: image.id,
-        text: image.name
-      },
-      devices: devices
-    });
-    this._sendUpToParent(this.state.group, 'group');
     this._sendUpToParent(image, 'image');
   },
 
   _sendUpToParent: function _sendUpToParent(val, attr) {
     // send params to parent with dialog holder
-    this.props.deploymentSchedule(val, attr);
-  },
-  _deploymentTimes: function _deploymentTimes() {
-    var newDeployment = {};
-
-    var start_time = this.state.start_time.getTime();
-    var start_date = this.state.start_date.getTime();
-
-    newDeployment.start_time = combineDateTime(start_date, start_time).getTime();
-
-    var end_time = this.state.end_time.getTime();
-    var end_date = this.state.end_date.getTime();
-
-    newDeployment.end_time = combineDateTime(end_date, end_time).getTime();
-
-    this._sendUpToParent(newDeployment.start_time, "start_time");
-    this._sendUpToParent(newDeployment.end_time, "end_time");
-  },
-
-  _updatedDateTime: function _updatedDateTime(ref, date) {
-    var set = {};
-    set[ref] = date;
-    this.setState(set, function () {
-      this._deploymentTimes();
-    });
+    this.props.deploymentSettings(val, attr);
   },
 
   _showDevices: function _showDevices() {
@@ -80218,7 +80111,7 @@ var ScheduleForm = _react2.default.createClass({
     var imageItems = [];
 
     for (var i = 0; i < this.state.images.length; i++) {
-      var tmp = _react2.default.createElement(_MenuItem2.default, { value: this.state.images[i].id, key: i, primaryText: this.state.images[i].name });
+      var tmp = _react2.default.createElement(_MenuItem2.default, { value: this.state.images[i], key: i, primaryText: this.state.images[i].name });
       imageItems.push(tmp);
     }
 
@@ -80235,19 +80128,17 @@ var ScheduleForm = _react2.default.createClass({
       }
     }
 
-    var device_type = this.state.image ? this.state.image.device_type : '';
+    var device_type = this.props.image ? this.props.image.device_type : '';
     var filters = "device_type=" + device_type;
     if (this.props.device) {
       filters = "id=" + this.props.device.id;
     }
     filters = encodeURIComponent(filters);
 
-    var defaultStartDate = this.state.start_time;
-    var defaultEndDate = this.state.end_time;
     var tmpDevices = [];
-    if (this.refs.search && this.state.devices) {
+    if (this.refs.search && this.props.filteredDevices) {
       var namefilter = ['id'];
-      tmpDevices = this.state.devices.filter(this.refs.search.filter(namefilter));
+      tmpDevices = this.props.filteredDevices.filter(this.refs.search.filter(namefilter));
     }
 
     var devices = _react2.default.createElement(
@@ -80296,14 +80187,16 @@ var ScheduleForm = _react2.default.createClass({
       _react2.default.createElement(_Divider2.default, null),
       _react2.default.createElement(
         'p',
-        { className: this.state.group ? this.state.group : "hidden" },
+        { className: this.props.group ? this.props.group : "hidden" },
         _react2.default.createElement(
           _reactRouter.Link,
-          { to: '/devices/' + this.state.group + '/' + filters },
+          { to: '/devices/' + this.props.group + '/' + filters },
           'Go to group >'
         )
       )
     );
+
+    var devicesLength = this.props.deploymentDevices ? this.props.deploymentDevices.length : "0";
 
     return _react2.default.createElement(
       'div',
@@ -80333,7 +80226,7 @@ var ScheduleForm = _react2.default.createClass({
             _SelectField2.default,
             {
               ref: 'image',
-              value: this.state.imageVal.payload,
+              value: this.props.image,
               onChange: this._handleImageValueChange,
               floatingLabelText: 'Select target software',
               disabled: !imageItems.length
@@ -80348,7 +80241,7 @@ var ScheduleForm = _react2.default.createClass({
             underlineDisabledStyle: { borderBottom: "none" },
             style: { verticalAlign: "top" },
             errorStyle: { color: "rgb(171, 16, 0)" },
-            className: this.state.image ? "margin-left" : "hidden" }),
+            className: this.props.image ? "margin-left" : "hidden" }),
           _react2.default.createElement(
             'p',
             { className: imageItems.length ? "hidden" : "info", style: { marginTop: "0" } },
@@ -80375,7 +80268,7 @@ var ScheduleForm = _react2.default.createClass({
             _react2.default.createElement(
               _SelectField2.default,
               {
-                value: this.state.group || "All devices",
+                value: this.props.group,
                 ref: 'group',
                 onChange: this._handleGroupValueChange,
                 floatingLabelText: 'Select group',
@@ -80419,9 +80312,13 @@ var ScheduleForm = _react2.default.createClass({
           ),
           _react2.default.createElement(
             'div',
-            { className: this.state.devices ? null : 'hidden' },
-            this.state.devices ? this.state.devices.length : "0",
-            ' devices will be updated ',
+            { className: tmpDevices ? null : 'hidden' },
+            this.props.filteredDevices ? this.props.filteredDevices.length : "0",
+            ' of ',
+            devicesLength,
+            ' ',
+            pluralize("devices", devicesLength),
+            ' will be updated ',
             _react2.default.createElement(
               'span',
               { onClick: this._showDevices, className: this.state.disabled ? "hidden" : "margin-left link" },
@@ -80437,7 +80334,7 @@ var ScheduleForm = _react2.default.createClass({
             { className: 'material-icons', style: { marginRight: "4px", fontSize: "18px", top: "4px" } },
             'info_outline'
           ),
-          'Any devices that are already on the target software version will be skipped.'
+          'the deployment will skip any devices that are already on the target software version, or that have a different device type.'
         )
       )
     );
@@ -80446,7 +80343,7 @@ var ScheduleForm = _react2.default.createClass({
 
 module.exports = ScheduleForm;
 
-},{"../../actions/app-actions":720,"../../stores/app-store":766,"./datetime.js":737,"material-ui/DatePicker":104,"material-ui/Divider":108,"material-ui/Drawer":110,"material-ui/FontIcon":119,"material-ui/IconButton":124,"material-ui/MenuItem":138,"material-ui/SelectField":153,"material-ui/TextField":187,"material-ui/TimePicker":196,"react":637,"react-router":451,"react-search-input":479}],751:[function(require,module,exports){
+},{"../../actions/app-actions":720,"../../stores/app-store":765,"material-ui/Divider":108,"material-ui/Drawer":110,"material-ui/FontIcon":119,"material-ui/IconButton":124,"material-ui/MenuItem":138,"material-ui/SelectField":153,"material-ui/TextField":187,"pluralize":387,"react":637,"react-router":451,"react-search-input":479}],750:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -81155,7 +81052,7 @@ var DeviceList = _react2.default.createClass({
 
 module.exports = DeviceList;
 
-},{"../../actions/app-actions":720,"../../stores/app-store":766,"../common/loader":728,"./filters":753,"./selecteddevices":755,"material-ui/Dialog":106,"material-ui/FlatButton":115,"material-ui/FontIcon":119,"material-ui/IconButton":124,"material-ui/MenuItem":138,"material-ui/RaisedButton":149,"material-ui/SelectField":153,"material-ui/Snackbar":158,"material-ui/Table":176,"material-ui/TextField":187,"pluralize":387,"react":637,"react-collapse":397,"react-dom":400,"react-height":404,"react-motion":416,"react-time":488}],752:[function(require,module,exports){
+},{"../../actions/app-actions":720,"../../stores/app-store":765,"../common/loader":728,"./filters":752,"./selecteddevices":754,"material-ui/Dialog":106,"material-ui/FlatButton":115,"material-ui/FontIcon":119,"material-ui/IconButton":124,"material-ui/MenuItem":138,"material-ui/RaisedButton":149,"material-ui/SelectField":153,"material-ui/Snackbar":158,"material-ui/Table":176,"material-ui/TextField":187,"pluralize":387,"react":637,"react-collapse":397,"react-dom":400,"react-height":404,"react-motion":416,"react-time":488}],751:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -81333,7 +81230,7 @@ var Devices = _react2.default.createClass({
 
 module.exports = Devices;
 
-},{"../../actions/app-actions":720,"../../stores/app-store":766,"./devicelist":751,"./groups":754,"./unauthorized":756,"material-ui/Snackbar":158,"react":637,"react-addons-update":393,"react-router":451}],753:[function(require,module,exports){
+},{"../../actions/app-actions":720,"../../stores/app-store":765,"./devicelist":750,"./groups":753,"./unauthorized":755,"material-ui/Snackbar":158,"react":637,"react-addons-update":393,"react-router":451}],752:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -81546,7 +81443,7 @@ var Filters = _react2.default.createClass({
 
 module.exports = Filters;
 
-},{"material-ui/Drawer":110,"material-ui/FlatButton":115,"material-ui/FontIcon":119,"material-ui/IconButton":124,"material-ui/MenuItem":138,"material-ui/SelectField":153,"material-ui/TextField":187,"react":637}],754:[function(require,module,exports){
+},{"material-ui/Drawer":110,"material-ui/FlatButton":115,"material-ui/FontIcon":119,"material-ui/IconButton":124,"material-ui/MenuItem":138,"material-ui/SelectField":153,"material-ui/TextField":187,"react":637}],753:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -81869,7 +81766,7 @@ var Groups = _react2.default.createClass({
 
 module.exports = Groups;
 
-},{"../../actions/app-actions":720,"../../stores/app-store":766,"material-ui/Dialog":106,"material-ui/FlatButton":115,"material-ui/FontIcon":119,"material-ui/List":133,"material-ui/RaisedButton":149,"material-ui/Subheader":166,"material-ui/Table":176,"material-ui/TextField":187,"react":637,"react-search-input":479}],755:[function(require,module,exports){
+},{"../../actions/app-actions":720,"../../stores/app-store":765,"material-ui/Dialog":106,"material-ui/FlatButton":115,"material-ui/FontIcon":119,"material-ui/List":133,"material-ui/RaisedButton":149,"material-ui/Subheader":166,"material-ui/Table":176,"material-ui/TextField":187,"react":637,"react-search-input":479}],754:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -82150,7 +82047,7 @@ var SelectedDevices = _react2.default.createClass({
 
 module.exports = SelectedDevices;
 
-},{"../../actions/app-actions":720,"../../stores/app-store":766,"../deployments/scheduleform":750,"material-ui/Dialog":106,"material-ui/Divider":108,"material-ui/FlatButton":115,"material-ui/FontIcon":119,"material-ui/IconButton":124,"material-ui/List":133,"material-ui/RaisedButton":149,"material-ui/TextField":187,"react":637,"react-collapse":397,"react-router":451,"react-time":488}],756:[function(require,module,exports){
+},{"../../actions/app-actions":720,"../../stores/app-store":765,"../deployments/scheduleform":749,"material-ui/Dialog":106,"material-ui/Divider":108,"material-ui/FlatButton":115,"material-ui/FontIcon":119,"material-ui/IconButton":124,"material-ui/List":133,"material-ui/RaisedButton":149,"material-ui/TextField":187,"react":637,"react-collapse":397,"react-router":451,"react-time":488}],755:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -82436,7 +82333,7 @@ var Authorized = _react2.default.createClass({
 
 module.exports = Authorized;
 
-},{"../../actions/app-actions":720,"./selecteddevices":755,"material-ui":205,"material-ui/FontIcon":119,"material-ui/IconButton":124,"material-ui/RaisedButton":149,"material-ui/Table":176,"react":637,"react-collapse":397,"react-dom":400,"react-height":404,"react-motion":416,"react-time":488}],757:[function(require,module,exports){
+},{"../../actions/app-actions":720,"./selecteddevices":754,"material-ui":205,"material-ui/FontIcon":119,"material-ui/IconButton":124,"material-ui/RaisedButton":149,"material-ui/Table":176,"react":637,"react-collapse":397,"react-dom":400,"react-height":404,"react-motion":416,"react-time":488}],756:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -82576,7 +82473,7 @@ Header.contextTypes = {
 
 module.exports = Header;
 
-},{"../../actions/app-actions":720,"material-ui/FontIcon":119,"material-ui/IconButton":124,"material-ui/IconMenu":126,"material-ui/MenuItem":138,"material-ui/Tabs":181,"material-ui/Toolbar":204,"react":637,"react-router":451}],758:[function(require,module,exports){
+},{"../../actions/app-actions":720,"material-ui/FontIcon":119,"material-ui/IconButton":124,"material-ui/IconMenu":126,"material-ui/MenuItem":138,"material-ui/Tabs":181,"material-ui/Toolbar":204,"react":637,"react-router":451}],757:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -82602,7 +82499,7 @@ var DeploymentButton = _react2.default.createClass({
 
 module.exports = DeploymentButton;
 
-},{"material-ui/RaisedButton":149,"react":637}],759:[function(require,module,exports){
+},{"material-ui/RaisedButton":149,"react":637}],758:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -83164,7 +83061,7 @@ Repository.contextTypes = {
 
 module.exports = Repository;
 
-},{"../../actions/app-actions":720,"../../stores/app-store":766,"../common/forms/fileinput":725,"../common/forms/form":726,"../common/forms/textinput":727,"../common/loader":728,"../deployments/scheduleform":750,"./deploymentbutton":758,"./selectedimage":760,"material-ui/Dialog":106,"material-ui/FlatButton":115,"material-ui/FontIcon":119,"material-ui/IconButton":124,"material-ui/RaisedButton":149,"material-ui/Snackbar":158,"material-ui/Table":176,"material-ui/TextField":187,"react":637,"react-addons-update":393,"react-collapse":397,"react-dom":400,"react-height":404,"react-motion":416,"react-router":451,"react-search-input":479,"react-time":488}],760:[function(require,module,exports){
+},{"../../actions/app-actions":720,"../../stores/app-store":765,"../common/forms/fileinput":725,"../common/forms/form":726,"../common/forms/textinput":727,"../common/loader":728,"../deployments/scheduleform":749,"./deploymentbutton":757,"./selectedimage":759,"material-ui/Dialog":106,"material-ui/FlatButton":115,"material-ui/FontIcon":119,"material-ui/IconButton":124,"material-ui/RaisedButton":149,"material-ui/Snackbar":158,"material-ui/Table":176,"material-ui/TextField":187,"react":637,"react-addons-update":393,"react-collapse":397,"react-dom":400,"react-height":404,"react-motion":416,"react-router":451,"react-search-input":479,"react-time":488}],759:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -83384,7 +83281,7 @@ SelectedImage.contextTypes = {
 
 module.exports = SelectedImage;
 
-},{"material-ui/Divider":108,"material-ui/FlatButton":115,"material-ui/FontIcon":119,"material-ui/IconButton":124,"material-ui/List":133,"material-ui/TextField":187,"react":637,"react-router":451,"react-time":488}],761:[function(require,module,exports){
+},{"material-ui/Divider":108,"material-ui/FlatButton":115,"material-ui/FontIcon":119,"material-ui/IconButton":124,"material-ui/List":133,"material-ui/TextField":187,"react":637,"react-router":451,"react-time":488}],760:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -83492,7 +83389,7 @@ var Software = _react2.default.createClass({
 
 module.exports = Software;
 
-},{"../../actions/app-actions":720,"../../stores/app-store":766,"../../stores/local-store":767,"./repository.js":759,"material-ui/Snackbar":158,"react":637,"react-router":451}],762:[function(require,module,exports){
+},{"../../actions/app-actions":720,"../../stores/app-store":765,"../../stores/local-store":766,"./repository.js":758,"material-ui/Snackbar":158,"react":637,"react-router":451}],761:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -83556,7 +83453,7 @@ module.exports = _react2.default.createElement(
   )
 );
 
-},{"../components/app":724,"../components/dashboard/dashboard":730,"../components/deployments/deployments":738,"../components/devices/devices":752,"../components/software/software":761,"react":637,"react-router":451}],763:[function(require,module,exports){
+},{"../components/app":724,"../components/dashboard/dashboard":730,"../components/deployments/deployments":737,"../components/devices/devices":751,"../components/software/software":760,"react":637,"react-router":451}],762:[function(require,module,exports){
 'use strict';
 
 module.exports = {
@@ -83584,7 +83481,7 @@ module.exports = {
   SET_SNACKBAR: 'SET_SNACKBAR'
 };
 
-},{}],764:[function(require,module,exports){
+},{}],763:[function(require,module,exports){
 'use strict';
 
 var Dispatcher = require('flux').Dispatcher;
@@ -83602,7 +83499,7 @@ var AppDispatcher = assign(new Dispatcher(), {
 
 module.exports = AppDispatcher;
 
-},{"flux":34,"object-assign":385}],765:[function(require,module,exports){
+},{"flux":34,"object-assign":385}],764:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -83633,7 +83530,7 @@ var routes = require('./config/routes');
   routes
 ), document.getElementById('main'));
 
-},{"./config/routes":762,"react":637,"react-dom":400,"react-router":451,"react-tap-event-plugin":486}],766:[function(require,module,exports){
+},{"./config/routes":761,"react":637,"react-dom":400,"react-router":451,"react-tap-event-plugin":486}],765:[function(require,module,exports){
 'use strict';
 
 var AppDispatcher = require('../dispatchers/app-dispatcher');
@@ -83744,22 +83641,22 @@ function _selectDevices(device) {
   }
 }
 
-function _getDevicesFromParams(group, device_type) {
-  // ONLY FILTERS ON DEVICE TYPE FOR NOW
-  // from all devices, find if eqauls group and device type
-  var devices = [];
-  for (var i = 0; i < _alldevices.length; i++) {
-    var device = _alldevices[i];
+function _filterDevicesByType(devices, device_type) {
+
+  // from all devices, find if device type
+  var filtered = [];
+  for (var i = 0; i < devices.length; i++) {
+    var device = devices[i];
     var attrs = {};
     // get device type from within attributes
     for (var x = 0; x < device.attributes.length; x++) {
       attrs[device.attributes[x].name] = device.attributes[x].value;
     }
     if (device_type === attrs.device_type) {
-      devices.push(device);
+      filtered.push(device);
     }
   }
-  return devices;
+  return filtered;
 }
 
 function _addToGroup(group, devices) {
@@ -83907,20 +83804,6 @@ function _sortDeploymentDevices(devices) {
 
   var newCombine = newList.successful.concat(newList.inprogress, newList.pending, newList.noimage, newList.failure);
   return newCombine;
-}
-
-function _saveSchedule(schedule, single) {
-  var tmp = {};
-  tmp.id = schedule.id || _allDeployments.length + 1;
-  tmp.group = schedule.group.name;
-  tmp.device_type = "Acme Model 1";
-  // whether single device or group
-  tmp.devices = !single ? _getDevicesFromParams(tmp.group, tmp.device_type) : collectWithAttr(_alldevices, 'name', tmp.group);
-  tmp.artifact_name = schedule.image.name;
-  tmp.created = schedule.start_time.toString();
-  tmp.finished = schedule.end_time.toString();
-  var index = findWithAttr(_allDeployments, 'id', tmp.id);
-  index != undefined ? _allDeployments[index] = tmp : _allDeployments.push(tmp);
 }
 
 function _removeDeployment(id) {
@@ -84208,11 +84091,11 @@ var AppStore = assign(EventEmitter.prototype, {
     return _events;
   },
 
-  getDevicesFromParams: function getDevicesFromParams(group, device_type) {
+  filterDevicesByType: function filterDevicesByType(devices, device_type) {
     /*
     * Return list of devices given group and device_type
     */
-    return _getDevicesFromParams(group, device_type);
+    return _filterDevicesByType(devices, device_type);
   },
 
   getOrderedDeploymentDevices: function getOrderedDeploymentDevices(devices) {
@@ -84258,9 +84141,6 @@ var AppStore = assign(EventEmitter.prototype, {
         break;
       case AppConstants.UPLOAD_IMAGE:
         _uploadImage(payload.action.image);
-        break;
-      case AppConstants.SAVE_SCHEDULE:
-        _saveSchedule(payload.action.schedule, payload.action.single);
         break;
       case AppConstants.UPDATE_FILTERS:
         updateFilters(payload.action.filters);
@@ -84325,7 +84205,7 @@ var AppStore = assign(EventEmitter.prototype, {
 
 module.exports = AppStore;
 
-},{"../constants/app-constants":763,"../dispatchers/app-dispatcher":764,"events":8,"object-assign":385}],767:[function(require,module,exports){
+},{"../constants/app-constants":762,"../dispatchers/app-dispatcher":763,"events":8,"object-assign":385}],766:[function(require,module,exports){
 'use strict';
 
 /*
@@ -84372,7 +84252,7 @@ var LocalStore = assign(EventEmitter.prototype, {
 
 module.exports = LocalStore;
 
-},{"../constants/app-constants":763,"../dispatchers/app-dispatcher":764,"events":8,"object-assign":385}],768:[function(require,module,exports){
+},{"../constants/app-constants":762,"../dispatchers/app-dispatcher":763,"events":8,"object-assign":385}],767:[function(require,module,exports){
 'use strict';
 
 var _colorManipulator = require('material-ui/utils/colorManipulator');
@@ -84402,4 +84282,4 @@ module.exports = {
   }
 };
 
-},{"material-ui/styles/colors":351,"material-ui/styles/spacing":353,"material-ui/utils/colorManipulator":376}]},{},[765]);
+},{"material-ui/styles/colors":351,"material-ui/styles/spacing":353,"material-ui/utils/colorManipulator":376}]},{},[764]);

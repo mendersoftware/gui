@@ -38,11 +38,13 @@ function getState() {
     events: AppStore.getEventLog(),
     images: AppStore.getSoftwareRepo(),
     groups: AppStore.getGroups(),
+    allDevices: AppStore.getAllDevices(),
     dialogTitle: "Create a deployment",
     scheduleForm: true,
     contentClass: "largeDialog", 
     invalid: true,
     dialog: false,
+    filteredDevices: []
   }
 }
 
@@ -84,7 +86,11 @@ var Deployments = React.createClass({
             }
           }.bind(this));
         } else {
-          this.setState({hasDevices:true});
+          var allDevices = [];
+          for (var i=0; i<devices.length;i++) {
+            allDevices.push(devices[i].id);
+          }
+          this.setState({hasDevices:true, allDevices: allDevices});
         }
       }.bind(this),
       error: function(err) {
@@ -96,11 +102,12 @@ var Deployments = React.createClass({
     var groupCallback = {
       success: function(groups) {
         this.setState({groups: groups});
+        this._getGroupDevices(groups);
       }.bind(this),
       error: function(error) {
         console.log("Error: " + error);
       }
-    }
+    };
     AppActions.getGroups(groupCallback);
   
     if (this.props.params) {
@@ -130,6 +137,26 @@ var Deployments = React.createClass({
       this.setState({tabIndex:"progress"});
     }
     AppActions.getImages();
+  },
+  _getGroupDevices: function(groups) {
+    // get list of devices for each group and save them to state 
+    var i, group;
+    var callback = {
+      success: function(devices) {
+        var tmp = {};
+        var devs = [];
+        for (var x=0;x<devices.length;x++) {
+          // get full details, not just id
+          devs.push(AppStore.getSingleDevice(devices[x]));
+        }
+        tmp[group] = devs;
+        this.setState(tmp);
+      }.bind(this)
+    }
+    for (i=0;i<groups.length;i++) {
+      group = groups[i];
+      AppActions.getGroupDevices(groups[i], callback);
+    }
   },
   componentWillUnmount: function () {
     AppStore.removeChangeListener(this._onChange);
@@ -175,13 +202,12 @@ var Deployments = React.createClass({
     this.setState({tabIndex: value});
   },
   _onScheduleSubmit: function() {
-    var devices = AppStore.getDevicesFromParams(this.state.group, this.state.image.device_type);
     var ids = [];
-    for (var i=0; i<devices.length; i++) {
-      ids.push(devices[i].id);
+    for (var i=0; i<this.state.deploymentDevices.length; i++) {
+      ids.push(this.state.deploymentDevices[i].id);
     }
     var newDeployment = {
-      name: this.state.group || "All devices",
+      name: decodeURIComponent(this.state.group) || "All devices",
       artifact_name: this.state.image.name,
       devices: ids
     }
@@ -205,6 +231,19 @@ var Deployments = React.createClass({
     var tmp = {};
     tmp[attr] = val;
     this.setState(tmp);
+    var group = (attr==="group") ? val : this.state.group;
+    var image = (attr==="image") ? val : this.state.image;
+    this._getDeploymentDevices(group, image);
+  },
+  _getDeploymentDevices: function(group, image) {
+    var devices = [];
+    var filteredDevices = [];
+    // set selected groups device to state to be sent to schedule form child
+    if (image && group) {
+      devices = (group!=="All devices") ? this.state[group] : this.state.allDevices;
+      filteredDevices = AppStore.filterDevicesByType(devices, image.device_type);
+    }
+    this.setState({deploymentDevices: devices, filteredDevices: filteredDevices});
   },
   _getReportById: function (id) {
      AppActions.getSingleDeployment(id, function(data) {
@@ -260,7 +299,8 @@ var Deployments = React.createClass({
         label="Create deployment"
         primary={true}
         onClick={this._onScheduleSubmit}
-        ref="save" />
+        ref="save"
+        disabled={!(this.state.filteredDevices.length)} />
     ];
     var reportActions = [
       <FlatButton
@@ -271,7 +311,7 @@ var Deployments = React.createClass({
 
     if (this.state.scheduleForm) {
       dialogContent = (    
-        <ScheduleForm hasPending={this.state.hasPending} hasDevices={this.state.hasDevices} deploymentSchedule={this._deploymentParams} id={this.state.id} images={this.state.images} image={this.state.image} imageVal={this.state.image} groups={this.state.groups} groupVal={this.state.group} start={this.state.start_time} end={this.state.end_time} />
+        <ScheduleForm deploymentDevices={this.state.deploymentDevices} filteredDevices={this.state.filteredDevices} hasPending={this.state.hasPending} hasDevices={this.state.hasDevices} deploymentSettings={this._deploymentParams} id={this.state.id} images={this.state.images} image={this.state.image} groups={this.state.groups} group={this.state.group} />
       )
     } else {
       dialogContent = (
