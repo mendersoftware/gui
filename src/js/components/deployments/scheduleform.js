@@ -2,11 +2,7 @@ import React from 'react';
 import AppStore from '../../stores/app-store';
 import AppActions from '../../actions/app-actions';
 import { Router, Link } from 'react-router';
-import DateTime from './datetime.js';
 import SearchInput from 'react-search-input';
-
-import DatePicker from 'material-ui/DatePicker';
-import TimePicker from 'material-ui/TimePicker';
 import SelectField from 'material-ui/SelectField';
 import TextField from 'material-ui/TextField';
 import FontIcon from 'material-ui/FontIcon';
@@ -14,26 +10,7 @@ import Drawer from 'material-ui/Drawer';
 import IconButton from 'material-ui/IconButton';
 import MenuItem from 'material-ui/MenuItem';
 import Divider from 'material-ui/Divider';
-
-
-function getDate() {
-  return new Date()
-}
-
-function addDate(date,days) {
-  var newDate = new Date(date);
-  newDate.setDate(newDate.getDate()+days);
-  return newDate;
-}
-
-function combineDateTime(date, time) {
-
-  var diffMs = (date - time); // milliseconds 
-  var diffDays = Math.round(diffMs / 86400000); // days
-
-  return addDate(time, diffDays);
-}
-
+var pluralize = require('pluralize');
 
 function getGroupDevices(group) {
   return AppActions.getGroupDevices(group, {
@@ -49,14 +26,6 @@ function getGroupDevices(group) {
 
 var ScheduleForm = React.createClass({
   getInitialState: function() {
-    var imageVal = {
-      payload: null,
-      text: ''
-    }
-    if (this.props.imageVal) {
-      imageVal.payload = this.props.imageVal.id;
-      imageVal.text = this.props.imageVal.name;
-    }
 
     /* if single device */
     var disabled = false;
@@ -65,84 +34,26 @@ var ScheduleForm = React.createClass({
       disabled = true;
     }
 
-    // date times
-    var start_date = this.props.start ? new Date(this.props.start) : getDate();
-    var start_time = start_date;
-    var end_date = this.props.end ? new Date(this.props.end) : addDate(getDate(),1);
-    var end_time = end_date;
-
     return {
-      start_time: start_time,
-      start_date: start_date,
-      end_time: end_time,
-      end_date: end_date,
-      minDate: getDate(),
-      minDate1: addDate(getDate(),1),
-      imageVal: imageVal,
-      image: this.props.image,
       images: AppStore.getSoftwareRepo(),
       disabled: disabled,
       group: group,
       showDevices: false,
     };
   },
-  componentDidMount: function() {
-    this._deploymentTimes();
-  },
   _handleGroupValueChange: function(e, index, value) {
-    var device_type = this.state.image ? this.state.image.device_type : null;
-    var group = (value === "All devices") ?  "" : value;
-    var devices = device_type ? AppStore.getDevicesFromParams(group, device_type) : [];
-    this.setState({
-      group: group,
-      devices: devices
-    });
-    this._sendUpToParent(this.state.image, 'image');
+    var device_type = this.props.image ? this.props.image.device_type : null;
+    var group = value;
     this._sendUpToParent(group, 'group');
   },
   _handleImageValueChange: function(e, index, value) {
     var image = this.state.images[index];
-    var groupname = this.state.group;
-    var devices = this.props.device ? [this.props.device] : AppStore.getDevicesFromParams(groupname, image.device_type);
-    this.setState({
-      image: image,
-      imageVal: {
-        payload: image.id,
-        text: image.name
-      },
-      devices: devices
-    });
-    this._sendUpToParent(this.state.group, 'group');
     this._sendUpToParent(image, 'image');
   },
 
   _sendUpToParent: function(val, attr) {
     // send params to parent with dialog holder
-    this.props.deploymentSchedule(val, attr);
-  },
-  _deploymentTimes: function() {
-    var newDeployment = {};
-
-    var start_time = this.state.start_time.getTime();
-    var start_date = this.state.start_date.getTime();
-   
-    newDeployment.start_time = combineDateTime(start_date, start_time).getTime();
-
-    var end_time = this.state.end_time.getTime();
-    var end_date = this.state.end_date.getTime();
-
-    newDeployment.end_time = combineDateTime(end_date, end_time).getTime();
-
-    this._sendUpToParent(newDeployment.start_time, "start_time");
-    this._sendUpToParent(newDeployment.end_time, "end_time");
-  },
-
-  _updatedDateTime: function(ref, date) {
-    var set = {};
-    set[ref] = date;
-    this.setState(set, function() {
-      this._deploymentTimes();
-    });
+    this.props.deploymentSettings(val, attr);
   },
 
   _showDevices: function() {
@@ -157,7 +68,7 @@ var ScheduleForm = React.createClass({
     var imageItems = [];
 
     for (var i=0; i<this.state.images.length;i++) {
-      var tmp = <MenuItem value={this.state.images[i].id} key={i} primaryText={this.state.images[i].name} />
+      var tmp = <MenuItem value={this.state.images[i]} key={i} primaryText={this.state.images[i].name} />
       imageItems.push(tmp);
     }
    
@@ -176,18 +87,15 @@ var ScheduleForm = React.createClass({
     }
 
     
-    var device_type = this.state.image ? this.state.image.device_type : '';
+    var device_type = this.props.image ? this.props.image.device_type : '';
     var filters = "device_type="+device_type;
     if (this.props.device) {filters = "id="+this.props.device.id}
     filters = encodeURIComponent(filters);
 
-
-    var defaultStartDate =  this.state.start_time;
-    var defaultEndDate = this.state.end_time;
     var tmpDevices = [];
-    if (this.refs.search && this.state.devices) {
+    if (this.refs.search && this.props.filteredDevices) {
       var namefilter = ['id'];
-      tmpDevices = this.state.devices.filter(this.refs.search.filter(namefilter));
+      tmpDevices = this.props.filteredDevices.filter(this.refs.search.filter(namefilter));
     }
 
     var devices = (
@@ -213,9 +121,11 @@ var ScheduleForm = React.createClass({
         {devices}
         <p className={tmpDevices.length ? "hidden" : "italic" }>No devices in this group match the device type or search term.</p>
         <Divider />
-        <p className={this.state.group ? this.state.group : "hidden"}><Link to={`/devices/${this.state.group}/${filters}`}>Go to group ></Link></p>
+        <p className={this.props.group ? this.props.group : "hidden"}><Link to={`/devices/${this.props.group}/${filters}`}>Go to group ></Link></p>
       </div>
     );
+
+    var devicesLength = this.props.deploymentDevices ? this.props.deploymentDevices.length : "0"; 
 
     return (
       <div style={{overflow:"visible", height: '440px'}}>
@@ -237,7 +147,7 @@ var ScheduleForm = React.createClass({
           <div style={{display:"block"}}>
             <SelectField
               ref="image"
-              value={this.state.imageVal.payload}
+              value={this.props.image}
               onChange={this._handleImageValueChange}
               floatingLabelText="Select target software"
               disabled={!imageItems.length}
@@ -253,7 +163,7 @@ var ScheduleForm = React.createClass({
               underlineDisabledStyle={{borderBottom:"none"}}
               style={{verticalAlign:"top"}}
               errorStyle={{color: "rgb(171, 16, 0)"}}
-              className={this.state.image ? "margin-left" : "hidden"} />
+              className={this.props.image ? "margin-left" : "hidden"} />
 
             <p className={imageItems.length ? "hidden" : "info"} style={{marginTop:"0"}}>
               <FontIcon className="material-icons" style={{marginRight:"4px", fontSize:"18px", top: "4px", color:"rgb(171, 16, 0)"}}>error_outline</FontIcon>There are no images available. <Link to={`/software`}>Upload one to the repository</Link> to get started.
@@ -263,7 +173,7 @@ var ScheduleForm = React.createClass({
           <div style={{display:"block"}}>
             <div className={this.state.disabled ? 'hidden' : 'inline-block'}>
               <SelectField
-                value={this.state.group || "All devices"}
+                value={this.props.group}
                 ref="group"
                 onChange={this._handleGroupValueChange}
                 floatingLabelText="Select group"
@@ -289,10 +199,10 @@ var ScheduleForm = React.createClass({
                 errorStyle={{color: "rgb(171, 16, 0)"}} />  
             </div>
 
-            <div className={this.state.devices ? null : 'hidden'}>{this.state.devices ? this.state.devices.length : "0"} devices will be updated <span onClick={this._showDevices} className={this.state.disabled ? "hidden" : "margin-left link"}>View devices</span></div>
+            <div className={tmpDevices ? null : 'hidden'}>{this.props.filteredDevices ? this.props.filteredDevices.length : "0"} of {devicesLength} {pluralize("devices",devicesLength)} will be updated <span onClick={this._showDevices} className={this.state.disabled ? "hidden" : "margin-left link"}>View devices</span></div>
           </div>
             
-          <p className={this.props.hasDevices && imageItems.length ? 'info': "hidden"}><FontIcon className="material-icons" style={{marginRight:"4px", fontSize:"18px", top: "4px"}}>info_outline</FontIcon>Any devices that are already on the target software version will be skipped.</p>
+          <p className={this.props.hasDevices && imageItems.length ? 'info': "hidden"}><FontIcon className="material-icons" style={{marginRight:"4px", fontSize:"18px", top: "4px"}}>info_outline</FontIcon>the deployment will skip any devices that are already on the target software version, or that have a different device type.</p>
 
         </form>
       </div>

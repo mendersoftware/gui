@@ -112,22 +112,22 @@ function _selectDevices(device) {
   }
 }
 
-function _getDevicesFromParams(group, device_type) {
-  // ONLY FILTERS ON DEVICE TYPE FOR NOW
-  // from all devices, find if eqauls group and device type
-  var devices = [];
-  for (var i=0;i<_alldevices.length;i++) {
-    var device = _alldevices[i];
+function _filterDevicesByType(devices, device_type) {
+
+  // from all devices, find if device type
+  var filtered = [];
+  for (var i=0;i<devices.length;i++) {
+    var device = devices[i];
     var attrs = {};
     // get device type from within attributes
     for (var x=0;x<device.attributes.length;x++) {
       attrs[device.attributes[x].name] = device.attributes[x].value;
     }
     if (device_type === attrs.device_type) {
-      devices.push(device);
+      filtered.push(device);
     }
   }
-  return devices;
+  return filtered;
 }
 
 function _addToGroup(group, devices) {
@@ -280,19 +280,6 @@ function _sortDeploymentDevices(devices) {
   return newCombine;
 }
 
-function _saveSchedule(schedule, single) {
-  var tmp = {};
-  tmp.id = schedule.id || _allDeployments.length+1;
-  tmp.group = schedule.group.name;
-  tmp.device_type = "Acme Model 1";
-  // whether single device or group
-  tmp.devices = !single ? _getDevicesFromParams(tmp.group, tmp.device_type) : collectWithAttr(_alldevices, 'name', tmp.group);
-  tmp.artifact_name = schedule.image.name;
-  tmp.created = schedule.start_time.toString();
-  tmp.finished = schedule.end_time.toString();
-  var index = findWithAttr(_allDeployments, 'id', tmp.id);
-  index != undefined ? _allDeployments[index] = tmp : _allDeployments.push(tmp);
-}
 
 function _removeDeployment(id) {
   var idx = findWithAttr(_allDeployments, 'id', id);
@@ -590,11 +577,11 @@ var AppStore = assign(EventEmitter.prototype, {
     return _events
   },
 
-  getDevicesFromParams: function(group, device_type) {
+  filterDevicesByType: function(devices, device_type) {
     /*
     * Return list of devices given group and device_type
     */
-    return _getDevicesFromParams(group, device_type)
+    return _filterDevicesByType(devices, device_type)
   },
 
   getOrderedDeploymentDevices: function(devices) {
@@ -640,9 +627,6 @@ var AppStore = assign(EventEmitter.prototype, {
         break;
       case AppConstants.UPLOAD_IMAGE:
         _uploadImage(payload.action.image);
-        break;
-      case AppConstants.SAVE_SCHEDULE:
-        _saveSchedule(payload.action.schedule, payload.action.single);
         break;
       case AppConstants.UPDATE_FILTERS:
          updateFilters(payload.action.filters);
