@@ -77901,7 +77901,7 @@ var Deployments = _react2.default.createClass({
       ids.push(this.state.deploymentDevices[i].id);
     }
     var newDeployment = {
-      name: this.state.group || "All devices",
+      name: decodeURIComponent(this.state.group) || "All devices",
       artifact_name: this.state.image.name,
       devices: ids
     };
