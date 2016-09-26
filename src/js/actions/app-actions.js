@@ -184,30 +184,11 @@ var AppActions = {
       });
   },
 
-  uploadImage: function(meta, callback) {
+  uploadImage: function(meta, file, callback) {
     ImagesApi
-      .post(deploymentsApiUrl+'/images', meta)
+      .xmlPost(deploymentsApiUrl+'/images', meta, file)
       .then(function(data) {
-        // inserted image meta data, got ID in return 
-        callback(data.location);
-      });
-  },
-
-  getUploadUri: function(id_url, callback) {
-    ImagesApi
-      .get(id_url + "/upload?expire=60")
-      .then(function(data) {
-        var uri = data.uri;
-        callback(uri);
-      });
-  },
-  
-  doFileUpload: function(uri, image, callback) {
-    // got upload uri, finish uploading file
-    ImagesApi
-      .putImage(uri, image)
-      .then(function(data) {
-        callback();
+        callback(data);
       });
   },
 
