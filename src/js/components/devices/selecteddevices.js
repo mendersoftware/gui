@@ -117,7 +117,6 @@ var SelectedDevices = React.createClass({
             <Divider />
           </div>
         );
-        i++;
       };
     }
     deviceInventory.push(
@@ -134,7 +133,7 @@ var SelectedDevices = React.createClass({
     if (deviceInventory.length > deviceIdentity.length) {
       deviceInventory2 = deviceInventory.splice((deviceInventory.length/2)+(deviceInventory.length%2),deviceInventory.length-1);
     }
-   
+
     var deviceInfo = (
       <div key="deviceinfo">
         <div id="device-identity" className="report-list">

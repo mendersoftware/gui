@@ -75738,7 +75738,7 @@ var AppDispatcher = require('../dispatchers/app-dispatcher');
 var ImagesApi = require('../api/images-api');
 var DeploymentsApi = require('../api/deployments-api');
 var DevicesApi = require('../api/devices-api');
-var rootUrl = 'https://localhost:8080'
+var rootUrl = "https://localhost:8080";
 var apiUrl = rootUrl + "/api/integrations/0.1";
 var deploymentsApiUrl = apiUrl + "/deployments";
 var devicesApiUrl = apiUrl + "/admission";
@@ -81922,7 +81922,6 @@ var SelectedDevices = _react2.default.createClass({
           _react2.default.createElement(_List.ListItem, { style: styles.listStyle, disabled: true, primaryText: this.props.device.attributes[i].name, secondaryText: this.props.device.attributes[i].value }),
           _react2.default.createElement(_Divider2.default, null)
         ));
-        i++;
       };
     }
     deviceInventory.push(_react2.default.createElement(
