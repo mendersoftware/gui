@@ -322,7 +322,7 @@ var Deployments = React.createClass({
       <div className="contentContainer allow-overflow">
 
       <Tabs
-        tabItemContainerStyle={{width: "33%"}}
+        tabItemContainerStyle={{width: "33%", backgroundColor: "inherit"}}
         inkBarStyle={styles.inkbar}
         value={this.state.tabIndex}
         onChange={this._changeTab}>

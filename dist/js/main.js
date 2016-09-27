@@ -78001,7 +78001,7 @@ var Deployments = _react2.default.createClass({
       _react2.default.createElement(
         _Tabs.Tabs,
         {
-          tabItemContainerStyle: { width: "33%" },
+          tabItemContainerStyle: { width: "33%", backgroundColor: "inherit" },
           inkBarStyle: styles.inkbar,
           value: this.state.tabIndex,
           onChange: this._changeTab },
