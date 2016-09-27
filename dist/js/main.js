@@ -77494,16 +77494,18 @@ var RecentStats = _react2.default.createClass({
     return {
       stats: {
         "success": 0,
-        "failure": 0
+        "failure": 0,
+        "noimage": 0
       }
     };
   },
-  componentDidMount: function componentDidMount() {
-    AppActions.getSingleDeploymentStats(this.props.id, function (stats) {
+  componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
+    AppActions.getSingleDeploymentStats(nextProps.id, function (stats) {
       this.setState({ stats: stats });
     }.bind(this));
   },
   render: function render() {
+    var failures = this.state.stats.failure + this.state.stats.noimage;
     return _react2.default.createElement(
       'div',
       { className: 'deploymentStats' },
@@ -77514,7 +77516,7 @@ var RecentStats = _react2.default.createClass({
         _react2.default.createElement(
           'div',
           null,
-          this.state.stats.failure + this.state.stats.noimage
+          failures
         ),
         _react2.default.createElement(
           'span',

@@ -6,21 +6,23 @@ var RecentStats = React.createClass({
     return {
       stats: {
         "success": 0,
-        "failure": 0
+        "failure": 0,
+        "noimage": 0
       }
     };
   },
-  componentDidMount: function() {
-    AppActions.getSingleDeploymentStats(this.props.id, function(stats) {
+  componentWillReceiveProps: function(nextProps) {
+    AppActions.getSingleDeploymentStats(nextProps.id, function(stats) {
       this.setState({stats:stats});
     }.bind(this));
   },
   render: function() {
+    var failures = this.state.stats.failure + this.state.stats.noimage;
     return (
       <div className="deploymentStats">
         <div className="resultIcons">
           <img className={this.state.stats.failure ? "alert" : null} src="assets/img/largeFail.png" />
-          <div>{this.state.stats.failure + this.state.stats.noimage}</div>
+          <div>{failures}</div>
           <span className="iconStatLabel">Failed</span>
         </div>
         <div className="resultIcons">
@@ -32,6 +34,5 @@ var RecentStats = React.createClass({
     );
   }
 });
-
 
 module.exports = RecentStats;
