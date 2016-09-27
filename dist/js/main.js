@@ -77771,7 +77771,7 @@ var Deployments = _react2.default.createClass({
         } else {
           var allDevices = [];
           for (var i = 0; i < devices.length; i++) {
-            allDevices.push(devices[i].id);
+            allDevices.push(devices[i]);
           }
           this.setState({ hasDevices: true, allDevices: allDevices });
         }
@@ -77920,7 +77920,7 @@ var Deployments = _react2.default.createClass({
   _getDeploymentDevices: function _getDeploymentDevices(group, image) {
     var devices = [];
     var filteredDevices = [];
-    // set selected groups device to state to be sent to schedule form child
+    // set the selected groups devices to state, to be sent down to the child schedule form
     if (image && group) {
       devices = group !== "All devices" ? this.state[group] : this.state.allDevices;
       filteredDevices = AppStore.filterDevicesByType(devices, image.device_type);
