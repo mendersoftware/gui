@@ -1113,21 +1113,17 @@ span.day {
   cursor: pointer;
 }
 .deployments-container .deployment:hover {
-  -webkit-transition: all 0.2s ease;
-  -moz-transition: all 0.2s ease;
-  -ms-transition: all 0.2s ease;
-  -o-transition: all 0.2s ease;
-  -webkit-transform: scale(1.005);
-  -moz-transform: scale(1.005);
-  -ms-transform: scale(1.005);
-  -o-transform: scale(1.005);
-  border: 1px solid #d4e9e7;
+  -webkit-transition: all 0.3s ease;
+  -moz-transition: all 0.3s ease;
+  -ms-transition: all 0.3s ease;
+  -o-transition: all 0.3s ease;
+  border: 1px solid #c7c7c7;
   background-color: #fdfdfe;
 }
 .deployments-container .resultIcons {
   display: inline-block;
-  width: 40%;
-  padding: 20px 5%;
+  width: 50%;
+  padding: 15px 2%;
   font-size: 2em;
   position: relative;
 }
@@ -1135,7 +1131,7 @@ span.day {
   display: inline;
   margin: 10px 0;
   vertical-align: middle;
-  width: 40%;
+  width: 50%;
   padding: 0 5%;
 }
 .deployments-container .resultIcons div {
