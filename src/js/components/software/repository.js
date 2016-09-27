@@ -97,20 +97,15 @@ var Repository = React.createClass({
   redirect: function() {
     this.context.router.push('/deployments');
   },
-  _onUploadSubmit: function(image) {
-    var tmpFile = image.imageFile;
-    delete image.imageFile;
-    delete image.verified;
-
-    AppActions.uploadImage(image, function(id_uri) {
-      this.props.startLoader();
-      AppActions.getUploadUri(id_uri, function(uri) {
-        AppActions.doFileUpload(uri, tmpFile, function() {
-          this.props.refreshImages();
-        }.bind(this));
-      }.bind(this));
+  _onUploadSubmit: function(meta) {
+    var tmpFile = meta.imageFile;
+    console.log("tmpfile ", tmpFile);
+    delete meta.imageFile;
+    delete meta.verified;
+    this.props.startLoader();
+    AppActions.uploadImage(meta, tmpFile, function(result) {
+      this.props.refreshImages();
     }.bind(this));
-    this.props.setStorage("uploaded04", true);
     this.dialogDismiss('upload');
     this._resetImageState();
   },

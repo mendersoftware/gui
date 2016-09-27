@@ -75882,24 +75882,9 @@ var AppActions = {
     });
   },
 
-  uploadImage: function uploadImage(meta, callback) {
-    ImagesApi.post(deploymentsApiUrl + '/images', meta).then(function (data) {
-      // inserted image meta data, got ID in return 
-      callback(data.location);
-    });
-  },
-
-  getUploadUri: function getUploadUri(id_url, callback) {
-    ImagesApi.get(id_url + "/upload?expire=60").then(function (data) {
-      var uri = data.uri;
-      callback(uri);
-    });
-  },
-
-  doFileUpload: function doFileUpload(uri, image, callback) {
-    // got upload uri, finish uploading file
-    ImagesApi.putImage(uri, image).then(function (data) {
-      callback();
+  uploadImage: function uploadImage(meta, file, callback) {
+    ImagesApi.xmlPost(deploymentsApiUrl + '/images', meta, file).then(function (data) {
+      callback(data);
     });
   },
 
@@ -76146,30 +76131,33 @@ var Api = {
       });
     });
   },
-  post: function post(url, data) {
+  xmlPost: function xmlPost(url, meta, file) {
+    // can't use superagent as it doesn't support multipart/mixed
     return new Promise(function (resolve, reject) {
-      request.post(url).set('Content-Type', 'application/json').send(data).end(function (err, res) {
-        if (err || !res.ok) {
-          reject();
-        } else {
-          resolve(res.header);
-        }
-      });
-    });
-  },
-  putImage: function putImage(url, image) {
-    return new Promise(function (resolve, reject) {
-      request.put(url).set("Content-Type", "application/octet-stream").send(image).end(function (err, res) {
-        if (err || !res.ok) {
-          reject();
-        } else {
-          var responsetext = "";
-          if (res.text) {
-            responsetext = JSON.parse(res.text);
+      var xml = new XMLHttpRequest();
+      var multipart = "";
+
+      xml.open("POST", url, true);
+
+      var boundary = Math.random().toString().substr(2);
+      xml.setRequestHeader("content-type", "multipart/mixed; boundary=" + boundary);
+
+      multipart += "--" + boundary + "\r\nContent-type: application/json" + "\r\n\r\n" + JSON.stringify(meta) + "\r\n";
+
+      multipart += "--" + boundary + "\r\nContent-type: application/octet-stream" + "\r\n\r\n" + file + "\r\n";
+
+      multipart += "--" + boundary + "--\r\n";
+
+      xml.onreadystatechange = function () {
+        try {
+          if (xml.readyState == 4) {
+            resolve(xml.responseText);
           }
-          resolve(responsetext);
+        } catch (err) {
+          reject(err.description);
         }
-      });
+      };
+      xml.send(multipart);
     });
   },
   putJSON: function putJSON(url, data) {
@@ -77506,16 +77494,18 @@ var RecentStats = _react2.default.createClass({
     return {
       stats: {
         "success": 0,
-        "failure": 0
+        "failure": 0,
+        "noimage": 0
       }
     };
   },
-  componentDidMount: function componentDidMount() {
-    AppActions.getSingleDeploymentStats(this.props.id, function (stats) {
+  componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
+    AppActions.getSingleDeploymentStats(nextProps.id, function (stats) {
       this.setState({ stats: stats });
     }.bind(this));
   },
   render: function render() {
+    var failures = this.state.stats.failure + this.state.stats.noimage;
     return _react2.default.createElement(
       'div',
       { className: 'deploymentStats' },
@@ -77526,7 +77516,7 @@ var RecentStats = _react2.default.createClass({
         _react2.default.createElement(
           'div',
           null,
-          this.state.stats.failure + this.state.stats.noimage
+          failures
         ),
         _react2.default.createElement(
           'span',
@@ -77783,7 +77773,7 @@ var Deployments = _react2.default.createClass({
         } else {
           var allDevices = [];
           for (var i = 0; i < devices.length; i++) {
-            allDevices.push(devices[i].id);
+            allDevices.push(devices[i]);
           }
           this.setState({ hasDevices: true, allDevices: allDevices });
         }
@@ -77932,7 +77922,7 @@ var Deployments = _react2.default.createClass({
   _getDeploymentDevices: function _getDeploymentDevices(group, image) {
     var devices = [];
     var filteredDevices = [];
-    // set selected groups device to state to be sent to schedule form child
+    // set the selected groups devices to state, to be sent down to the child schedule form
     if (image && group) {
       devices = group !== "All devices" ? this.state[group] : this.state.allDevices;
       filteredDevices = AppStore.filterDevicesByType(devices, image.device_type);
@@ -82671,20 +82661,15 @@ var Repository = _react2.default.createClass({
   redirect: function redirect() {
     this.context.router.push('/deployments');
   },
-  _onUploadSubmit: function _onUploadSubmit(image) {
-    var tmpFile = image.imageFile;
-    delete image.imageFile;
-    delete image.verified;
-
-    _appActions2.default.uploadImage(image, function (id_uri) {
-      this.props.startLoader();
-      _appActions2.default.getUploadUri(id_uri, function (uri) {
-        _appActions2.default.doFileUpload(uri, tmpFile, function () {
-          this.props.refreshImages();
-        }.bind(this));
-      }.bind(this));
+  _onUploadSubmit: function _onUploadSubmit(meta) {
+    var tmpFile = meta.imageFile;
+    console.log("tmpfile ", tmpFile);
+    delete meta.imageFile;
+    delete meta.verified;
+    this.props.startLoader();
+    _appActions2.default.uploadImage(meta, tmpFile, function (result) {
+      this.props.refreshImages();
     }.bind(this));
-    this.props.setStorage("uploaded04", true);
     this.dialogDismiss('upload');
     this._resetImageState();
   },
