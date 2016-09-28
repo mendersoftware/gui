@@ -61,6 +61,9 @@ var Recent = React.createClass({
           <div className="dashboard-header">
             <h2>Recent deployments</h2>
           </div>
+
+          <Loader show={this.props.loading} fade={true} />
+
           <div className={deployments.length ? "fadeIn" : "hidden" }>
             <div className="block">
               {recent}
@@ -68,7 +71,6 @@ var Recent = React.createClass({
             <Link to="/deployments/past" className="float-right">All past deployments</Link>
           </div> 
           
-          <Loader show={this.props.loading} />
           <div className={(deployments.length || this.props.loading) ? "hidden" : "dashboard-placeholder" }>
             <p>View the results of recent deployments here</p>
             <img src="assets/img/history.png" alt="recent" />

@@ -73,7 +73,7 @@ var Progress = React.createClass({
           <Link to="/deployments/progress" className="float-right">All deployments in progress</Link>
         </div>
 
-        <Loader show={this.props.loading} />
+        <Loader show={this.props.loading} fade={true} />
 
         <div className={(deployments.length || this.props.loading) ? "hidden" : "dashboard-placeholder" }>
           <p>Monitor ongoing deployments from here</p>

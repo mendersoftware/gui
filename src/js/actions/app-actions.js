@@ -173,11 +173,11 @@ var AppActions = {
     ImagesApi
       .get(deploymentsApiUrl+'/images')
       .then(function(images) {
-        callback.success(images);
         AppDispatcher.handleViewAction({
           actionType: AppConstants.RECEIVE_IMAGES,
           images: images
         });
+        callback.success(images);
       })
       .catch(function(err) {
         callback.error(err);
@@ -209,11 +209,11 @@ var AppActions = {
     DeploymentsApi
       .get(deploymentsApiUrl+'/deployments')
       .then(function(deployments) {
-        callback();
         AppDispatcher.handleViewAction({
           actionType: AppConstants.RECEIVE_DEPLOYMENTS,
           deployments: deployments
         });
+        callback();
       })
       .catch(function(err) {
         callback(err);
@@ -223,11 +223,11 @@ var AppActions = {
     DeploymentsApi
       .get(deploymentsApiUrl+'/deployments?status=inprogress')
       .then(function(deployments) {
-        callback();
         AppDispatcher.handleViewAction({
           actionType: AppConstants.RECEIVE_ACTIVE_DEPLOYMENTS,
           deployments: deployments
         });
+        callback();
       })
       .catch(function(err) {
         callback(err);
@@ -237,11 +237,11 @@ var AppActions = {
     DeploymentsApi
       .get(deploymentsApiUrl+'/deployments?status=finished')
       .then(function(deployments) {
-        callback();
         AppDispatcher.handleViewAction({
           actionType: AppConstants.RECEIVE_PAST_DEPLOYMENTS,
           deployments: deployments
         });
+        callback();
       })
       .catch(function(err) {
         callback(err);
