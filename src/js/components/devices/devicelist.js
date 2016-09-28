@@ -406,6 +406,7 @@ var DeviceList = React.createClass({
 
     return (
       <div>
+        <Loader show={this.props.loading} />
         <Filters attributes={this.props.attributes} filters={this.props.filters} onFilterChange={this.props.onFilterChange} />
 
         <div>
@@ -430,7 +431,7 @@ var DeviceList = React.createClass({
               onCellClick={this._expandRow}
               onRowSelection={this._expandRow}
               multiSelectable={true}
-              className={devices.length && !this.props.loading ? null : 'hidden'} >
+              className={devices.length ? null : 'hidden'} >
               <TableHeader
               enableSelectAll={true}>
                 <TableRow>
@@ -448,7 +449,6 @@ var DeviceList = React.createClass({
                 {devices}
               </TableBody>
             </Table>
-            <Loader show={this.props.loading} />
             <div className={(devices.length || this.props.loading) ? 'hidden' : 'dashboard-placeholder'}>
               <p>
                 No devices found

@@ -271,7 +271,7 @@ var Repository = React.createClass({
         <div style={{position: "relative", marginTop:"10px"}}>
           <Table
             onRowSelection={this._onRowSelection}
-            className={(!items.length || this.props.loading) ? "hidden" : null}>
+            className={items.length ? null : "hidden"}>
             <TableHeader
               displaySelectAll={false}
               adjustForCheckbox={false} >

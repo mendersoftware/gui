@@ -75872,11 +75872,11 @@ var AppActions = {
   /* Images */
   getImages: function getImages(callback) {
     ImagesApi.get(deploymentsApiUrl + '/images').then(function (images) {
-      callback.success(images);
       AppDispatcher.handleViewAction({
         actionType: AppConstants.RECEIVE_IMAGES,
         images: images
       });
+      callback.success(images);
     }).catch(function (err) {
       callback.error(err);
     });
@@ -75898,33 +75898,33 @@ var AppActions = {
   getDeployments: function getDeployments(callback) {
     // all deployments
     DeploymentsApi.get(deploymentsApiUrl + '/deployments').then(function (deployments) {
-      callback();
       AppDispatcher.handleViewAction({
         actionType: AppConstants.RECEIVE_DEPLOYMENTS,
         deployments: deployments
       });
+      callback();
     }).catch(function (err) {
       callback(err);
     });
   },
   getDeploymentsInProgress: function getDeploymentsInProgress(callback) {
     DeploymentsApi.get(deploymentsApiUrl + '/deployments?status=inprogress').then(function (deployments) {
-      callback();
       AppDispatcher.handleViewAction({
         actionType: AppConstants.RECEIVE_ACTIVE_DEPLOYMENTS,
         deployments: deployments
       });
+      callback();
     }).catch(function (err) {
       callback(err);
     });
   },
   getPastDeployments: function getPastDeployments(callback) {
     DeploymentsApi.get(deploymentsApiUrl + '/deployments?status=finished').then(function (deployments) {
-      callback();
       AppDispatcher.handleViewAction({
         actionType: AppConstants.RECEIVE_PAST_DEPLOYMENTS,
         deployments: deployments
       });
+      callback();
     }).catch(function (err) {
       callback(err);
     });
@@ -76617,9 +76617,10 @@ var Loader = _react2.default.createClass({
   displayName: "Loader",
 
   render: function render() {
+    var hideClass = this.props.fade ? "hidden" : "loaderContainer shrunk";
     return _react2.default.createElement(
       "div",
-      { className: this.props.show ? "loaderContainer" : "hidden" },
+      { className: this.props.show ? "loaderContainer" : hideClass },
       _react2.default.createElement(
         "div",
         { className: "loader" },
@@ -77115,7 +77116,7 @@ var Health = _react2.default.createClass({
         ),
         _react2.default.createElement('div', { className: 'clear' })
       ),
-      _react2.default.createElement(Loader, { show: this.props.loading }),
+      _react2.default.createElement(Loader, { show: this.props.loading, fade: true }),
       _react2.default.createElement(
         'div',
         { className: this.props.health.total || this.props.loading ? "hidden" : "dashboard-placeholder" },
@@ -77281,7 +77282,7 @@ var Progress = _react2.default.createClass({
       ),
       _react2.default.createElement(
         'div',
-        { className: deployments.length ? null : "hidden" },
+        { className: deployments.length ? "fadeIn" : "hidden" },
         _react2.default.createElement(
           _List.List,
           { style: { paddingTop: 0 } },
@@ -77293,7 +77294,7 @@ var Progress = _react2.default.createClass({
           'All deployments in progress'
         )
       ),
-      _react2.default.createElement(Loader, { show: this.props.loading }),
+      _react2.default.createElement(Loader, { show: this.props.loading, fade: true }),
       _react2.default.createElement(
         'div',
         { className: deployments.length || this.props.loading ? "hidden" : "dashboard-placeholder" },
@@ -77440,9 +77441,10 @@ var Recent = _react2.default.createClass({
             'Recent deployments'
           )
         ),
+        _react2.default.createElement(Loader, { show: this.props.loading, fade: true }),
         _react2.default.createElement(
           'div',
-          { className: deployments.length ? null : "hidden" },
+          { className: deployments.length ? "fadeIn" : "hidden" },
           _react2.default.createElement(
             'div',
             { className: 'block' },
@@ -77454,7 +77456,6 @@ var Recent = _react2.default.createClass({
             'All past deployments'
           )
         ),
-        _react2.default.createElement(Loader, { show: this.props.loading }),
         _react2.default.createElement(
           'div',
           { className: deployments.length || this.props.loading ? "hidden" : "dashboard-placeholder" },
@@ -80821,6 +80822,7 @@ var DeviceList = _react2.default.createClass({
     return _react2.default.createElement(
       'div',
       null,
+      _react2.default.createElement(Loader, { show: this.props.loading }),
       _react2.default.createElement(Filters, { attributes: this.props.attributes, filters: this.props.filters, onFilterChange: this.props.onFilterChange }),
       _react2.default.createElement(
         'div',
@@ -80866,7 +80868,7 @@ var DeviceList = _react2.default.createClass({
               onCellClick: this._expandRow,
               onRowSelection: this._expandRow,
               multiSelectable: true,
-              className: devices.length && !this.props.loading ? null : 'hidden' },
+              className: devices.length ? null : 'hidden' },
             _react2.default.createElement(
               _Table.TableHeader,
               {
@@ -80926,7 +80928,6 @@ var DeviceList = _react2.default.createClass({
               devices
             )
           ),
-          _react2.default.createElement(Loader, { show: this.props.loading }),
           _react2.default.createElement(
             'div',
             { className: devices.length || this.props.loading ? 'hidden' : 'dashboard-placeholder' },
@@ -81134,7 +81135,7 @@ var Devices = _react2.default.createClass({
         AppActions.setSnackbar("");
         setTimeout(function () {
           this.setState({ doneLoading: true });
-        }.bind(this), 300);
+        }.bind(this), 200);
       }.bind(this),
       error: function (err) {
         this.setState({ doneLoading: true, devices: [] });
@@ -81203,7 +81204,7 @@ var Devices = _react2.default.createClass({
         { className: 'rightFluid padding-right' },
         _react2.default.createElement(
           'div',
-          { className: this.state.pendingDevices.length && this.state.doneLoading ? null : "hidden" },
+          { className: this.state.pendingDevices.length ? "fadeIn" : "hidden" },
           _react2.default.createElement(Unauthorized, { refresh: this._refreshDevices, refreshAdmissions: this._refreshAdmissions, pending: this.state.pendingDevices })
         ),
         _react2.default.createElement(DeviceList, { refreshDevices: this._refreshDevices, refreshGroups: this._refreshGroups, selectedField: this.state.selectedField, changeSelect: this._changeTmpGroup, addGroup: this._addTmpGroup, loading: !this.state.doneLoading, selectedDevice: this._handleSelectDevice, filters: this.state.filters, attributes: this.state.attributes, onFilterChange: this._updateFilters, images: this.state.images, selectedDevices: this.state.selectedDevices, groups: this.state.groupsForList, devices: this.state.devices, selectedGroup: this.state.selectedGroup })
@@ -82879,7 +82880,7 @@ var Repository = _react2.default.createClass({
           _Table.Table,
           {
             onRowSelection: this._onRowSelection,
-            className: !items.length || this.props.loading ? "hidden" : null },
+            className: items.length ? null : "hidden" },
           _react2.default.createElement(
             _Table.TableHeader,
             {

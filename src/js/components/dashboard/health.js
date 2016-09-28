@@ -58,7 +58,7 @@ var Health = React.createClass({
           </div>
         </div>
 
-        <Loader show={this.props.loading} />
+        <Loader show={this.props.loading} fade={true} />
 
         <div className={(this.props.health.total || this.props.loading) ? "hidden" : "dashboard-placeholder" }>
           <p>Information about connected devices will appear here</p>

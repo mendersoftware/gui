@@ -66,14 +66,14 @@ var Progress = React.createClass({
         <div className="dashboard-header">
           <h2>Deployments in progress</h2>
         </div>
-        <div className={deployments.length ? null : "hidden"}>
+        <div className={deployments.length ? "fadeIn" : "hidden"}>
           <List style={{paddingTop:0}}>
             {progress}
           </List> 
           <Link to="/deployments/progress" className="float-right">All deployments in progress</Link>
         </div>
 
-        <Loader show={this.props.loading} />
+        <Loader show={this.props.loading} fade={true} />
 
         <div className={(deployments.length || this.props.loading) ? "hidden" : "dashboard-placeholder" }>
           <p>Monitor ongoing deployments from here</p>

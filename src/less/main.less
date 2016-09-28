@@ -1469,13 +1469,21 @@ div.shake-alert {
 @animationRadius: 12px;
 @dotSize: 8px;
 
-.loaderContainer { margin-top: 60px; }
+.loaderContainer { 
+  height: 50px;
+  overflow: hidden;
+  opacity: 1;
+  .transition(all .2s ease-in-out);
+  &.shrunk { 
+    height: 0;
+  }
+}
 
 .loader { 
     position: relative; 
     width: @animationRadius * 3 + @dotSize;
     height: @dotSize; 
-    margin: @animationRadius auto; 
+    margin: 30px auto 15px; 
 }
 
 .dot {
