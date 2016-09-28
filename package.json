@@ -20,6 +20,7 @@
     "material-ui": "^0.15.4",
     "moment": "^2.12.0",
     "object-assign": "^4.1.0",
+    "parse-link-header": "^0.4.1",
     "pluralize": "^3.0.0",
     "react": "^15.3.2",
     "react-addons-create-fragment": "^15.3.1",

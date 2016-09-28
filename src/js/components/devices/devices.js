@@ -23,7 +23,7 @@ function getState() {
     filters: AppStore.getFilters(),
     attributes: AppStore.getAttributes(),
     images: AppStore.getSoftwareRepo(),
-    snackbar: AppStore.getSnackbar()
+    snackbar: AppStore.getSnackbar(),
   }
 }
 
@@ -100,16 +100,12 @@ var Devices = React.createClass({
     }
     
   },
-  _refreshAdmissions: function() {
-    AppActions.getDevicesForAdmission(function(devices) {
-      var pending = [];
-      for (var i=0;i<devices.length;i++) {
-        if (devices[i].status === "pending") {
-          pending.push(devices[i]);
-        }
-      }
-      this.setState({pendingDevices: pending });
-    }.bind(this));
+  _refreshAdmissions: function(page, per_page) {
+    console.log("refreshing");
+    AppActions.getDevicesForAdmission(function(devices, links) {
+      console.log("got", devices, links);
+      this.setState({pendingDevices: devices, admissionPaginate: links});
+    }.bind(this), page, per_page);
   },
   _refreshGroups: function() {
     var callback = {
@@ -150,7 +146,7 @@ var Devices = React.createClass({
         </div>
         <div className="rightFluid padding-right">
           <div className={this.state.pendingDevices.length ? "fadeIn" : "hidden"}>
-            <Unauthorized showLoader={this._showLoader} refresh={this._refreshDevices} refreshAdmissions={this._refreshAdmissions} pending={this.state.pendingDevices} />
+            <Unauthorized showLoader={this._showLoader} links={this.state.admissionPaginate} refresh={this._refreshDevices} refreshAdmissions={this._refreshAdmissions} pending={this.state.pendingDevices} />
           </div>
           <DeviceList redirect={this._redirect} refreshDevices={this._refreshDevices} refreshGroups={this._refreshGroups} selectedField={this.state.selectedField} changeSelect={this._changeTmpGroup} addGroup={this._addTmpGroup} loading={!this.state.doneLoading} filters={this.state.filters} attributes={this.state.attributes} onFilterChange={this._updateFilters} images={this.state.images} selectedDevices={this.state.selectedDevices} groups={this.state.groupsForList} devices={this.state.devices} selectedGroup={this.state.selectedGroup} />
         </div>

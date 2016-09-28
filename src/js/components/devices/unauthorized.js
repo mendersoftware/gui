@@ -143,6 +143,24 @@ var Authorized =  React.createClass({
         </TableRow>
       )
     }, this);
+    var links = [];
+    if (this.props.links) {
+      for (var k in this.props.links) {
+        var link = (
+          <a key={k} onClick={this.props.refreshAdmissions.bind(null, this.props.links[k].page, this.props.links[k].per_page)}>{k}</a>
+        );
+        if (k==="first") {
+          links.unshift(link);
+        } else {
+          links.push(link)
+        }
+      }
+    }
+
+    var mapLinks = links.map(function(link, index) {
+      return link
+    });
+
     return (
       <Collapse springConfig={{stiffness: 190, damping: 20}} style={{minHeight:this.state.minHeight}} isOpened={true} className="margin-top margin-bottom onboard authorize">
         <p>Devices pending authorization</p>
@@ -169,6 +187,11 @@ var Authorized =  React.createClass({
             {devices}
           </TableBody>
         </Table>
+        
+        <div className={mapLinks.length>1 ? "pagination-links" : "hidden"}>
+          {mapLinks}
+        </div>
+
         <div className="margin-top-small">
           <RaisedButton onClick={this._authorizeDevices.bind(null, this.props.pending)} primary={true} label="Authorize all" className="float-right" />
         </div>
