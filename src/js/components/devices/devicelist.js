@@ -430,7 +430,7 @@ var DeviceList = React.createClass({
               onCellClick={this._expandRow}
               onRowSelection={this._expandRow}
               multiSelectable={true}
-              className={devices.length && !this.props.loading ? null : 'hidden'} >
+              className={devices.length ? null : 'hidden'} >
               <TableHeader
               enableSelectAll={true}>
                 <TableRow>

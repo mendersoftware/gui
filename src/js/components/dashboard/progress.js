@@ -66,7 +66,7 @@ var Progress = React.createClass({
         <div className="dashboard-header">
           <h2>Deployments in progress</h2>
         </div>
-        <div className={deployments.length ? null : "hidden"}>
+        <div className={deployments.length ? "fadeIn" : "hidden"}>
           <List style={{paddingTop:0}}>
             {progress}
           </List> 

@@ -77281,7 +77281,7 @@ var Progress = _react2.default.createClass({
       ),
       _react2.default.createElement(
         'div',
-        { className: deployments.length ? null : "hidden" },
+        { className: deployments.length ? "fadeIn" : "hidden" },
         _react2.default.createElement(
           _List.List,
           { style: { paddingTop: 0 } },
@@ -77442,7 +77442,7 @@ var Recent = _react2.default.createClass({
         ),
         _react2.default.createElement(
           'div',
-          { className: deployments.length ? null : "hidden" },
+          { className: deployments.length ? "fadeIn" : "hidden" },
           _react2.default.createElement(
             'div',
             { className: 'block' },
@@ -80866,7 +80866,7 @@ var DeviceList = _react2.default.createClass({
               onCellClick: this._expandRow,
               onRowSelection: this._expandRow,
               multiSelectable: true,
-              className: devices.length && !this.props.loading ? null : 'hidden' },
+              className: devices.length ? null : 'hidden' },
             _react2.default.createElement(
               _Table.TableHeader,
               {
@@ -81134,7 +81134,7 @@ var Devices = _react2.default.createClass({
         AppActions.setSnackbar("");
         setTimeout(function () {
           this.setState({ doneLoading: true });
-        }.bind(this), 300);
+        }.bind(this), 200);
       }.bind(this),
       error: function (err) {
         this.setState({ doneLoading: true, devices: [] });
@@ -81203,7 +81203,7 @@ var Devices = _react2.default.createClass({
         { className: 'rightFluid padding-right' },
         _react2.default.createElement(
           'div',
-          { className: this.state.pendingDevices.length && this.state.doneLoading ? null : "hidden" },
+          { className: this.state.pendingDevices.length && this.state.doneLoading ? "fadeIn" : "hidden" },
           _react2.default.createElement(Unauthorized, { refresh: this._refreshDevices, refreshAdmissions: this._refreshAdmissions, pending: this.state.pendingDevices })
         ),
         _react2.default.createElement(DeviceList, { refreshDevices: this._refreshDevices, refreshGroups: this._refreshGroups, selectedField: this.state.selectedField, changeSelect: this._changeTmpGroup, addGroup: this._addTmpGroup, loading: !this.state.doneLoading, selectedDevice: this._handleSelectDevice, filters: this.state.filters, attributes: this.state.attributes, onFilterChange: this._updateFilters, images: this.state.images, selectedDevices: this.state.selectedDevices, groups: this.state.groupsForList, devices: this.state.devices, selectedGroup: this.state.selectedGroup })
@@ -82879,7 +82879,7 @@ var Repository = _react2.default.createClass({
           _Table.Table,
           {
             onRowSelection: this._onRowSelection,
-            className: !items.length || this.props.loading ? "hidden" : null },
+            className: items.length ? null : "hidden" },
           _react2.default.createElement(
             _Table.TableHeader,
             {

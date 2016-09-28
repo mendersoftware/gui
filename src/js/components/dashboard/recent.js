@@ -61,7 +61,7 @@ var Recent = React.createClass({
           <div className="dashboard-header">
             <h2>Recent deployments</h2>
           </div>
-          <div className={deployments.length ? null : "hidden" }>
+          <div className={deployments.length ? "fadeIn" : "hidden" }>
             <div className="block">
               {recent}
             </div>
