@@ -75883,7 +75883,14 @@ var AppActions = {
   },
 
   uploadImage: function uploadImage(meta, file, callback) {
-    ImagesApi.xmlPost(deploymentsApiUrl + '/images', meta, file).then(function (data) {
+    var formData = new FormData();
+    formData.append('name', meta.name);
+    formData.append('yocto_id', meta.yocto_id);
+    formData.append('device_type', meta.device_type);
+    formData.append('description', meta.description);
+    formData.append('checksum', meta.checksum);
+    formData.append('firmware', file);
+    ImagesApi.postFormData(deploymentsApiUrl + '/images', formData).then(function (data) {
       callback(data);
     });
   },
@@ -76131,33 +76138,15 @@ var Api = {
       });
     });
   },
-  xmlPost: function xmlPost(url, meta, file) {
-    // can't use superagent as it doesn't support multipart/mixed
+  postFormData: function postFormData(url, formData) {
     return new Promise(function (resolve, reject) {
-      var xml = new XMLHttpRequest();
-      var multipart = "";
-
-      xml.open("POST", url, true);
-
-      var boundary = Math.random().toString().substr(2);
-      xml.setRequestHeader("content-type", "multipart/mixed; boundary=" + boundary);
-
-      multipart += "--" + boundary + "\r\nContent-type: application/json" + "\r\n\r\n" + JSON.stringify(meta) + "\r\n";
-
-      multipart += "--" + boundary + "\r\nContent-type: application/octet-stream" + "\r\n\r\n" + file + "\r\n";
-
-      multipart += "--" + boundary + "--\r\n";
-
-      xml.onreadystatechange = function () {
-        try {
-          if (xml.readyState == 4) {
-            resolve(xml.responseText);
-          }
-        } catch (err) {
-          reject(err.description);
+      request.post(url).send(formData).end(function (err, res) {
+        if (err || !res.ok) {
+          reject(err);
+        } else {
+          resolve(res.body);
         }
-      };
-      xml.send(multipart);
+      });
     });
   },
   putJSON: function putJSON(url, data) {
