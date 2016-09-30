@@ -185,8 +185,15 @@ var AppActions = {
   },
 
   uploadImage: function(meta, file, callback) {
+    var formData = new FormData();
+    formData.append('name', meta.name)
+    formData.append('yocto_id', meta.yocto_id)
+    formData.append('device_type', meta.device_type)
+    formData.append('description', meta.description)
+    formData.append('checksum', meta.checksum)
+    formData.append('firmware', file)
     ImagesApi
-      .xmlPost(deploymentsApiUrl+'/images', meta, file)
+      .postFormData(deploymentsApiUrl+'/images', formData)
       .then(function(data) {
         callback(data);
       });
@@ -325,7 +332,7 @@ var AppActions = {
       actionType: AppConstants.SORT_TABLE,
       table: table,
       column: column,
-      direction: direction 
+      direction: direction
     })
   },
 
