@@ -81406,7 +81406,7 @@ var Filters = _react2.default.createClass({
         { style: { width: "100%", position: "relative" } },
         _react2.default.createElement(
           _FlatButton2.default,
-          { style: { position: "absolute", right: "0" }, secondary: true, onClick: this._toggleNav, label: filterCount > 0 ? "Filters (" + filterCount + ")" : "Filters" },
+          { style: { position: "absolute", right: "0", top: "15px" }, secondary: true, onClick: this._toggleNav, label: filterCount > 0 ? "Filters (" + filterCount + ")" : "Filters" },
           _react2.default.createElement(
             _FontIcon2.default,
             { style: styles.exampleFlatButtonIcon, className: 'material-icons' },
