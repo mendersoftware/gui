@@ -139,6 +139,9 @@ var Devices = React.createClass({
   _showLoader: function(bool) {
     this.setState({doneLoading: !bool});
   },
+  _redirect: function(params) {
+    this.context.router.push(params.route);
+  },
   render: function() {
     return (
       <div className="margin-top">
@@ -149,7 +152,7 @@ var Devices = React.createClass({
           <div className={this.state.pendingDevices.length ? "fadeIn" : "hidden"}>
             <Unauthorized showLoader={this._showLoader} refresh={this._refreshDevices} refreshAdmissions={this._refreshAdmissions} pending={this.state.pendingDevices} />
           </div>
-          <DeviceList refreshDevices={this._refreshDevices} refreshGroups={this._refreshGroups} selectedField={this.state.selectedField} changeSelect={this._changeTmpGroup} addGroup={this._addTmpGroup} loading={!this.state.doneLoading} filters={this.state.filters} attributes={this.state.attributes} onFilterChange={this._updateFilters} images={this.state.images} selectedDevices={this.state.selectedDevices} groups={this.state.groupsForList} devices={this.state.devices} selectedGroup={this.state.selectedGroup} />
+          <DeviceList redirect={this._redirect} refreshDevices={this._refreshDevices} refreshGroups={this._refreshGroups} selectedField={this.state.selectedField} changeSelect={this._changeTmpGroup} addGroup={this._addTmpGroup} loading={!this.state.doneLoading} filters={this.state.filters} attributes={this.state.attributes} onFilterChange={this._updateFilters} images={this.state.images} selectedDevices={this.state.selectedDevices} groups={this.state.groupsForList} devices={this.state.devices} selectedGroup={this.state.selectedGroup} />
         </div>
         <Snackbar
           open={this.state.snackbar.open}
@@ -161,5 +164,9 @@ var Devices = React.createClass({
     );
   }
 });
+
+Devices.contextTypes = {
+  router: React.PropTypes.object
+};
 
 module.exports = Devices;

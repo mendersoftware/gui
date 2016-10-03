@@ -80731,7 +80731,7 @@ var DeviceList = _react2.default.createClass({
       if (this.state.expanded === index) {
         var _React$createElement;
 
-        expanded = _react2.default.createElement(SelectedDevices, (_React$createElement = { attributes: this.state.deviceAttributes, deviceId: this.state.deviceId, images: this.props.images, device: this.state.expandedDevice, selectedGroup: this.props.selectedGroup }, _defineProperty(_React$createElement, 'images', this.props.images), _defineProperty(_React$createElement, 'groups', this.props.groups), _React$createElement));
+        expanded = _react2.default.createElement(SelectedDevices, (_React$createElement = { redirect: this.props.redirect, attributes: this.state.deviceAttributes, deviceId: this.state.deviceId, images: this.props.images, device: this.state.expandedDevice, selectedGroup: this.props.selectedGroup }, _defineProperty(_React$createElement, 'images', this.props.images), _defineProperty(_React$createElement, 'groups', this.props.groups), _React$createElement));
       }
       return _react2.default.createElement(
         _Table.TableRow,
@@ -81194,6 +81194,9 @@ var Devices = _react2.default.createClass({
   _showLoader: function _showLoader(bool) {
     this.setState({ doneLoading: !bool });
   },
+  _redirect: function _redirect(params) {
+    this.context.router.push(params.route);
+  },
   render: function render() {
     return _react2.default.createElement(
       'div',
@@ -81211,7 +81214,7 @@ var Devices = _react2.default.createClass({
           { className: this.state.pendingDevices.length ? "fadeIn" : "hidden" },
           _react2.default.createElement(Unauthorized, { showLoader: this._showLoader, refresh: this._refreshDevices, refreshAdmissions: this._refreshAdmissions, pending: this.state.pendingDevices })
         ),
-        _react2.default.createElement(DeviceList, { refreshDevices: this._refreshDevices, refreshGroups: this._refreshGroups, selectedField: this.state.selectedField, changeSelect: this._changeTmpGroup, addGroup: this._addTmpGroup, loading: !this.state.doneLoading, filters: this.state.filters, attributes: this.state.attributes, onFilterChange: this._updateFilters, images: this.state.images, selectedDevices: this.state.selectedDevices, groups: this.state.groupsForList, devices: this.state.devices, selectedGroup: this.state.selectedGroup })
+        _react2.default.createElement(DeviceList, { redirect: this._redirect, refreshDevices: this._refreshDevices, refreshGroups: this._refreshGroups, selectedField: this.state.selectedField, changeSelect: this._changeTmpGroup, addGroup: this._addTmpGroup, loading: !this.state.doneLoading, filters: this.state.filters, attributes: this.state.attributes, onFilterChange: this._updateFilters, images: this.state.images, selectedDevices: this.state.selectedDevices, groups: this.state.groupsForList, devices: this.state.devices, selectedGroup: this.state.selectedGroup })
       ),
       _react2.default.createElement(_Snackbar2.default, {
         open: this.state.snackbar.open,
@@ -81222,6 +81225,10 @@ var Devices = _react2.default.createClass({
     );
   }
 });
+
+Devices.contextTypes = {
+  router: _react2.default.PropTypes.object
+};
 
 module.exports = Devices;
 
@@ -81852,6 +81859,7 @@ var SelectedDevices = _react2.default.createClass({
   },
 
   _onScheduleSubmit: function _onScheduleSubmit() {
+    var self = this;
     var newDeployment = {
       devices: [this.props.device.id],
       name: this.props.device.id,
@@ -81859,7 +81867,12 @@ var SelectedDevices = _react2.default.createClass({
     };
     var callback = {
       success: function success() {
-        AppActions.setSnackbar("Deployment created successfully");
+        AppActions.setSnackbar("Deployment created successfully. Redirecting...");
+        var params = {};
+        params.route = "deployments";
+        setTimeout(function () {
+          self.props.redirect(params);
+        }, 1200);
       },
       error: function error(err) {
         AppActions.setSnackbar("Error creating deployment. " + err);
@@ -81873,6 +81886,13 @@ var SelectedDevices = _react2.default.createClass({
   },
   _handleBlock: function _handleBlock() {
     this.props.block(this.props.selected);
+  },
+
+  _deploymentParams: function _deploymentParams(val, attr) {
+    // updating params from child schedule form
+    var tmp = {};
+    tmp[attr] = val;
+    this.setState(tmp);
   },
   render: function render() {
 
@@ -82033,7 +82053,7 @@ var SelectedDevices = _react2.default.createClass({
           bodyStyle: { paddingTop: "0", fontSize: "13px" },
           contentStyle: { overflow: "hidden", boxShadow: "0 14px 45px rgba(0, 0, 0, 0.25), 0 10px 18px rgba(0, 0, 0, 0.22)" }
         },
-        _react2.default.createElement(ScheduleForm, { images: this.props.images, device: this.props.device, deploymentSchedule: this._updateParams, groups: this.props.groups })
+        _react2.default.createElement(ScheduleForm, { deploymentDevices: [this.props.device], filteredDevices: [this.props.device], deploymentSettings: this._deploymentParams, image: this.state.image, images: this.props.images, device: this.props.device, deploymentSchedule: this._updateParams, groups: this.props.groups })
       )
     );
   }
