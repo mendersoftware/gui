@@ -1,4 +1,6 @@
 [![Build Status](https://travis-ci.com/mendersoftware/gui.svg?token=rx8YqsZ2ZyaopcMPmDmo&branch=master)](https://travis-ci.com/mendersoftware/gui)
+[![Docker pulls](https://img.shields.io/docker/pulls/mendersoftware/gui.svg?maxAge=3600)](https://hub.docker.com/r/mendersoftware/deployments/)
+
 
 Mender: GUI
 ==============================================
