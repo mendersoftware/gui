@@ -56,17 +56,8 @@ var Deployments = React.createClass({
     AppStore.changeListener(this._onChange);
   },
   componentDidMount: function() {
-    AppActions.getDeploymentsInProgress(function() {
-      setTimeout(function() {
-        this.setState({doneLoading:true});
-      }.bind(this), 300)
-    }.bind(this));
-
-    AppActions.getPastDeployments(function() {
-      setTimeout(function() {
-        this.setState({doneLoading:true});
-      }.bind(this), 300)
-    }.bind(this));
+    this.timer = setInterval(this._refreshDeployments, 10000);
+    this._refreshDeployments();
 
     var imagesCallback = {
       success: function (images) {
@@ -75,12 +66,10 @@ var Deployments = React.createClass({
     };
     AppActions.getImages(imagesCallback);
 
-
-
     AppActions.getDevices({
       success: function(devices) {
         if (!devices.length) {
-          AppStore.getDevicesForAdmission(function(pending) {
+          AppActions.getDevicesForAdmission(function(pending) {
             if (pending.length) {
               this.setState({hasPending:true});
             }
@@ -97,7 +86,6 @@ var Deployments = React.createClass({
         console.log("Error: " +err);
       }
     });
-
 
     var groupCallback = {
       success: function(groups) {
@@ -138,6 +126,24 @@ var Deployments = React.createClass({
     }
     AppActions.getImages();
   },
+  _refreshDeployments: function() {
+    this._refreshInProgress();
+    this._refreshPast();
+  },
+  _refreshInProgress: function() {
+    AppActions.getDeploymentsInProgress(function() {
+      setTimeout(function() {
+        this.setState({doneLoading:true});
+      }.bind(this), 300)
+    }.bind(this));
+  },
+  _refreshPast: function() {
+    AppActions.getPastDeployments(function() {
+      setTimeout(function() {
+        this.setState({doneLoading:true});
+      }.bind(this), 300)
+    }.bind(this));
+  },
   _getGroupDevices: function(groups) {
     // get list of devices for each group and save them to state 
     var i, group;
@@ -159,6 +165,7 @@ var Deployments = React.createClass({
     }
   },
   componentWillUnmount: function () {
+    clearInterval(this.timer);
     AppStore.removeChangeListener(this._onChange);
   },
   _onChange: function() {
@@ -215,7 +222,7 @@ var Deployments = React.createClass({
     var callback = {
       success: function(data) {
         AppActions.getDeploymentsInProgress(function() {
-          this.setState(this.getInitialState());
+          this._refreshDeployments();
         }.bind(this));
         AppActions.setSnackbar("Deployment created successfully");
       }.bind(this),
