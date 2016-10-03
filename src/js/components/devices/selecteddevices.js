@@ -52,6 +52,7 @@ var SelectedDevices = React.createClass({
   },
 
   _onScheduleSubmit: function() {
+    var self = this;
     var newDeployment = {
       devices: [this.props.device.id],
       name: this.props.device.id,
@@ -59,7 +60,12 @@ var SelectedDevices = React.createClass({
     }
     var callback = {
       success: function() {
-        AppActions.setSnackbar("Deployment created successfully");
+        AppActions.setSnackbar("Deployment created successfully. Redirecting...");
+        var params = {};
+        params.route="deployments";
+        setTimeout(function() {
+          self.props.redirect(params);
+        }, 1200)
       },
       error: function(err) {
         AppActions.setSnackbar("Error creating deployment. " + err);
@@ -73,6 +79,13 @@ var SelectedDevices = React.createClass({
   },
   _handleBlock: function() {
     this.props.block(this.props.selected);
+  },
+
+  _deploymentParams: function(val, attr) {
+    // updating params from child schedule form
+    var tmp = {};
+    tmp[attr] = val;
+    this.setState(tmp);
   },
   render: function() {
    
@@ -200,7 +213,7 @@ var SelectedDevices = React.createClass({
           bodyStyle={{paddingTop:"0", fontSize:"13px"}}
           contentStyle={{overflow:"hidden", boxShadow:"0 14px 45px rgba(0, 0, 0, 0.25), 0 10px 18px rgba(0, 0, 0, 0.22)"}}
           >
-          <ScheduleForm images={this.props.images} device={this.props.device} deploymentSchedule={this._updateParams} groups={this.props.groups} />
+          <ScheduleForm deploymentDevices={[this.props.device]} filteredDevices={[this.props.device]} deploymentSettings={this._deploymentParams} image={this.state.image} images={this.props.images} device={this.props.device} deploymentSchedule={this._updateParams} groups={this.props.groups} />
 
         </Dialog>
 
