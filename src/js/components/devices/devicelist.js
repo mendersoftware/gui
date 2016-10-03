@@ -44,7 +44,7 @@ var DeviceList = React.createClass({
   },
 
   componentDidUpdate: function(prevProps, prevState) {
-    if ((prevProps.selectedGroup !== this.props.selectedGroup) || (prevProps.loading !== this.props.loading)) {
+    if (prevProps.selectedGroup !== this.props.selectedGroup) {
       this.setState({
         expanded: null,
         groupName: this.props.selectedGroup,

@@ -35,6 +35,11 @@ var Devices = React.createClass({
     AppStore.changeListener(this._onChange);
   },
   componentDidMount: function() {
+    this.setState({doneLoading:false});
+    this.timer = setInterval(this._refreshAll, 10000);
+    this._refreshAll();
+  },
+  _refreshAll: function() {
     this._refreshAdmissions();
     this._refreshDevices();
     this._refreshGroups();
@@ -63,6 +68,7 @@ var Devices = React.createClass({
     }
   },
   componentWillUnmount: function () {
+    clearInterval(this.timer);
     AppStore.removeChangeListener(this._onChange);
   },
   componentDidUpdate: function(prevProps, prevState) {
@@ -74,7 +80,7 @@ var Devices = React.createClass({
   _refreshDevices: function() {
     var callback = {
       success: function(devices) {
-        this.setState({devices:  AppStore.getGroupDevices()});
+        this.setState({devices: AppStore.getGroupDevices()});
         AppActions.setSnackbar("");
         setTimeout(function() {
           this.setState({doneLoading:true});
@@ -87,7 +93,6 @@ var Devices = React.createClass({
         AppActions.setSnackbar("Devices couldn't be loaded. " +errormsg);
       }.bind(this)
     };
-    this.setState({doneLoading:false});
     if (!this.state.selectedGroup) {
       AppActions.getDevices(callback);
     } else {
@@ -131,8 +136,8 @@ var Devices = React.createClass({
   _handleRequestClose: function() {
     AppActions.setSnackbar("");
   },
-  _handleSelectDevice: function(device) {
-    console.log(device);
+  _showLoader: function(bool) {
+    this.setState({doneLoading: !bool});
   },
   render: function() {
     return (
@@ -142,9 +147,9 @@ var Devices = React.createClass({
         </div>
         <div className="rightFluid padding-right">
           <div className={this.state.pendingDevices.length ? "fadeIn" : "hidden"}>
-            <Unauthorized refresh={this._refreshDevices} refreshAdmissions={this._refreshAdmissions} pending={this.state.pendingDevices} />
+            <Unauthorized showLoader={this._showLoader} refresh={this._refreshDevices} refreshAdmissions={this._refreshAdmissions} pending={this.state.pendingDevices} />
           </div>
-          <DeviceList refreshDevices={this._refreshDevices} refreshGroups={this._refreshGroups} selectedField={this.state.selectedField} changeSelect={this._changeTmpGroup} addGroup={this._addTmpGroup} loading={!this.state.doneLoading} selectedDevice={this._handleSelectDevice} filters={this.state.filters} attributes={this.state.attributes} onFilterChange={this._updateFilters} images={this.state.images} selectedDevices={this.state.selectedDevices} groups={this.state.groupsForList} devices={this.state.devices} selectedGroup={this.state.selectedGroup} />
+          <DeviceList refreshDevices={this._refreshDevices} refreshGroups={this._refreshGroups} selectedField={this.state.selectedField} changeSelect={this._changeTmpGroup} addGroup={this._addTmpGroup} loading={!this.state.doneLoading} filters={this.state.filters} attributes={this.state.attributes} onFilterChange={this._updateFilters} images={this.state.images} selectedDevices={this.state.selectedDevices} groups={this.state.groupsForList} devices={this.state.devices} selectedGroup={this.state.selectedGroup} />
         </div>
         <Snackbar
           open={this.state.snackbar.open}
