@@ -123,12 +123,12 @@ var ProgressReport = React.createClass({
     }
 
     var logActions =  [
-      <div style={{marginRight:"10", display:"inline-block"}}>
+      <div style={{marginRight:"10px", display:"inline-block"}}>
         <FlatButton
           label="Cancel"
           onClick={this.dialogDismiss.bind(null, 'dialog')} />
       </div>,
-      <CopyToClipboard style={{marginRight:"10", display:"inline-block"}} text={this.state.logData}
+      <CopyToClipboard style={{marginRight:"10px", display:"inline-block"}} text={this.state.logData}
         onCopy={() => this.setState({copied: true})}>
         <FlatButton label="Copy to clipboard"/>
       </CopyToClipboard>,
@@ -140,7 +140,7 @@ var ProgressReport = React.createClass({
     return (
       <div>
         <div className="report-container">
-          <div className="deploymentInfo" style={{width:"240", height:"auto", margin:"30px 30px 30px 0", display:"inline-block", verticalAlign:"top"}}>
+          <div className="deploymentInfo" style={{width:"240px", height:"auto", margin:"30px 30px 30px 0", display:"inline-block", verticalAlign:"top"}}>
            <div><div className="progressLabel">Updating to:</div><span>{softwareLink}</span></div>
            <div><div className="progressLabel">Device group:</div><span>{this.props.deployment.name}</span></div>
            <div><div className="progressLabel"># devices:</div><span>{deviceList.length}</span></div>
@@ -148,7 +148,7 @@ var ProgressReport = React.createClass({
 
           <div className="progressStatus">
             <div id="progressStatus">
-              <h3 style={{marginTop:"12"}}>In progress</h3>
+              <h3 style={{marginTop:"12px"}}>In progress</h3>
               <h2><FontIcon className="material-icons" style={{margin:"0 10px 0 -10px",color:"#ACD4D0", verticalAlign:"text-top"}}>timelapse</FontIcon>{this.state.elapsed}</h2>
               <div>Started: <Time value={this._formatTime(this.props.deployment.created)} format="YYYY-MM-DD HH:mm" /></div>
             </div>
@@ -191,7 +191,7 @@ var ProgressReport = React.createClass({
           <div className="code">
             {this.state.logData}
           </div>
-          <p style={{marginLeft:"24"}}>{this.state.copied ? <span className="green fadeIn">Copied to clipboard.</span> : null}</p>
+          <p style={{marginLeft:"24px"}}>{this.state.copied ? <span className="green fadeIn">Copied to clipboard.</span> : null}</p>
         </Dialog>
       </div>
     );

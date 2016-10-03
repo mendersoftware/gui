@@ -79192,13 +79192,13 @@ var ProgressReport = _react2.default.createClass({
 
     var logActions = [_react2.default.createElement(
       'div',
-      { style: { marginRight: "10", display: "inline-block" } },
+      { style: { marginRight: "10px", display: "inline-block" } },
       _react2.default.createElement(_FlatButton2.default, {
         label: 'Cancel',
         onClick: this.dialogDismiss.bind(null, 'dialog') })
     ), _react2.default.createElement(
       _reactCopyToClipboard2.default,
-      { style: { marginRight: "10", display: "inline-block" }, text: this.state.logData,
+      { style: { marginRight: "10px", display: "inline-block" }, text: this.state.logData,
         onCopy: function onCopy() {
           return _this.setState({ copied: true });
         } },
@@ -79215,7 +79215,7 @@ var ProgressReport = _react2.default.createClass({
         { className: 'report-container' },
         _react2.default.createElement(
           'div',
-          { className: 'deploymentInfo', style: { width: "240", height: "auto", margin: "30px 30px 30px 0", display: "inline-block", verticalAlign: "top" } },
+          { className: 'deploymentInfo', style: { width: "240px", height: "auto", margin: "30px 30px 30px 0", display: "inline-block", verticalAlign: "top" } },
           _react2.default.createElement(
             'div',
             null,
@@ -79267,7 +79267,7 @@ var ProgressReport = _react2.default.createClass({
             { id: 'progressStatus' },
             _react2.default.createElement(
               'h3',
-              { style: { marginTop: "12" } },
+              { style: { marginTop: "12px" } },
               'In progress'
             ),
             _react2.default.createElement(
@@ -79361,7 +79361,7 @@ var ProgressReport = _react2.default.createClass({
         ),
         _react2.default.createElement(
           'p',
-          { style: { marginLeft: "24" } },
+          { style: { marginLeft: "24px" } },
           this.state.copied ? _react2.default.createElement(
             'span',
             { className: 'green fadeIn' },
