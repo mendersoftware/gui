@@ -109,8 +109,8 @@ var SelectedDevices = React.createClass({
     var deviceInventory = [];
     var i = 0;
     if (this.props.device) {
-      var length = this.props.device.attributes.length;
-      for (var i=0;i<this.props.device.attributes.length;i++) {
+      var length = this.props.device.attributes ? this.props.device.attributes.length : 0;
+      for (var i=0;i<length;i++) {
         deviceInventory.push(
           <div key={i}>
             <ListItem style={styles.listStyle} disabled={true} primaryText={this.props.device.attributes[i].name} secondaryText={this.props.device.attributes[i].value} />

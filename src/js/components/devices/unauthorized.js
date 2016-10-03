@@ -45,6 +45,7 @@ var Authorized =  React.createClass({
   },
   _authorizeDevices: function(devices) {
     var i = 0;
+    this.props.showLoader(true);
 
     var callback = {
       success: function(data) {
@@ -56,6 +57,7 @@ var Authorized =  React.createClass({
       }.bind(this),
       error: function(err) {
         AppActions.setSnackbar("There was a problem authorizing the device: "+err);
+        this.props.showLoader(false);
       }
     };
        

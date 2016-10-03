@@ -80422,7 +80422,7 @@ var DeviceList = _react2.default.createClass({
   },
 
   componentDidUpdate: function componentDidUpdate(prevProps, prevState) {
-    if (prevProps.selectedGroup !== this.props.selectedGroup || prevProps.loading !== this.props.loading) {
+    if (prevProps.selectedGroup !== this.props.selectedGroup) {
       this.setState({
         expanded: null,
         groupName: this.props.selectedGroup,
@@ -81081,6 +81081,11 @@ var Devices = _react2.default.createClass({
     AppStore.changeListener(this._onChange);
   },
   componentDidMount: function componentDidMount() {
+    this.setState({ doneLoading: false });
+    this.timer = setInterval(this._refreshAll, 10000);
+    this._refreshAll();
+  },
+  _refreshAll: function _refreshAll() {
     this._refreshAdmissions();
     this._refreshDevices();
     this._refreshGroups();
@@ -81109,6 +81114,7 @@ var Devices = _react2.default.createClass({
     }
   },
   componentWillUnmount: function componentWillUnmount() {
+    clearInterval(this.timer);
     AppStore.removeChangeListener(this._onChange);
   },
   componentDidUpdate: function componentDidUpdate(prevProps, prevState) {
@@ -81133,7 +81139,6 @@ var Devices = _react2.default.createClass({
         AppActions.setSnackbar("Devices couldn't be loaded. " + errormsg);
       }.bind(this)
     };
-    this.setState({ doneLoading: false });
     if (!this.state.selectedGroup) {
       AppActions.getDevices(callback);
     } else {
@@ -81176,8 +81181,8 @@ var Devices = _react2.default.createClass({
   _handleRequestClose: function _handleRequestClose() {
     AppActions.setSnackbar("");
   },
-  _handleSelectDevice: function _handleSelectDevice(device) {
-    console.log(device);
+  _showLoader: function _showLoader(bool) {
+    this.setState({ doneLoading: !bool });
   },
   render: function render() {
     return _react2.default.createElement(
@@ -81194,9 +81199,9 @@ var Devices = _react2.default.createClass({
         _react2.default.createElement(
           'div',
           { className: this.state.pendingDevices.length ? "fadeIn" : "hidden" },
-          _react2.default.createElement(Unauthorized, { refresh: this._refreshDevices, refreshAdmissions: this._refreshAdmissions, pending: this.state.pendingDevices })
+          _react2.default.createElement(Unauthorized, { showLoader: this._showLoader, refresh: this._refreshDevices, refreshAdmissions: this._refreshAdmissions, pending: this.state.pendingDevices })
         ),
-        _react2.default.createElement(DeviceList, { refreshDevices: this._refreshDevices, refreshGroups: this._refreshGroups, selectedField: this.state.selectedField, changeSelect: this._changeTmpGroup, addGroup: this._addTmpGroup, loading: !this.state.doneLoading, selectedDevice: this._handleSelectDevice, filters: this.state.filters, attributes: this.state.attributes, onFilterChange: this._updateFilters, images: this.state.images, selectedDevices: this.state.selectedDevices, groups: this.state.groupsForList, devices: this.state.devices, selectedGroup: this.state.selectedGroup })
+        _react2.default.createElement(DeviceList, { refreshDevices: this._refreshDevices, refreshGroups: this._refreshGroups, selectedField: this.state.selectedField, changeSelect: this._changeTmpGroup, addGroup: this._addTmpGroup, loading: !this.state.doneLoading, filters: this.state.filters, attributes: this.state.attributes, onFilterChange: this._updateFilters, images: this.state.images, selectedDevices: this.state.selectedDevices, groups: this.state.groupsForList, devices: this.state.devices, selectedGroup: this.state.selectedGroup })
       ),
       _react2.default.createElement(_Snackbar2.default, {
         open: this.state.snackbar.open,
@@ -81894,8 +81899,8 @@ var SelectedDevices = _react2.default.createClass({
     var deviceInventory = [];
     var i = 0;
     if (this.props.device) {
-      var length = this.props.device.attributes.length;
-      for (var i = 0; i < this.props.device.attributes.length; i++) {
+      var length = this.props.device.attributes ? this.props.device.attributes.length : 0;
+      for (var i = 0; i < length; i++) {
         deviceInventory.push(_react2.default.createElement(
           'div',
           { key: i },
@@ -82107,6 +82112,7 @@ var Authorized = _react2.default.createClass({
   },
   _authorizeDevices: function _authorizeDevices(devices) {
     var i = 0;
+    this.props.showLoader(true);
 
     var callback = {
       success: function (data) {
@@ -82118,6 +82124,7 @@ var Authorized = _react2.default.createClass({
       }.bind(this),
       error: function error(err) {
         AppActions.setSnackbar("There was a problem authorizing the device: " + err);
+        this.props.showLoader(false);
       }
     };
 
