@@ -84,14 +84,29 @@ var Repository = React.createClass({
     this.setState(obj);
   },
   _onScheduleSubmit: function() {
-    var newDeployment = {
-      devices: this.state.group.devices,
-      artifact_name: this.state.image.name,
-      name: this.state.group.name
+    // TODO more boilerplate, move to single source 
+    var ids = [];
+    for (var i=0; i<this.state.deploymentDevices.length; i++) {
+      ids.push(this.state.deploymentDevices[i].id);
     }
-    AppActions.createDeployment(newDeployment, function (uri) {
-      this.setState({openSnack: true});
-    }.bind(this));
+    var newDeployment = {
+      name: decodeURIComponent(this.state.group) || "All devices",
+      artifact_name: this.state.image.name,
+      devices: ids
+    }
+    var self = this;
+    var callback = {
+      success: function(data) {
+        AppActions.setSnackbar("Deployment created successfully");
+        setTimeout(function() {
+          self.redirect();
+        }, 1200);
+      },
+      error: function(err) {
+        AppActions.setSnackbar("Error creating deployment. "+err);
+      }
+    };
+    AppActions.createDeployment(newDeployment, callback);
     this.dialogDismiss('schedule');
   },
   redirect: function() {
@@ -115,19 +130,28 @@ var Repository = React.createClass({
     });
     this.setState({image:image});
   },
-  _updateParams: function(val, attr) {
+  _deploymentParams: function(val, attr) {
     // updating params from child schedule form
     var tmp = {};
     tmp[attr] = val;
     this.setState(tmp);
+    var image = (attr==="image") ? val : this.state.image;
+    var group = (attr==="group") ? val : this.state.group;
+    this._getDeploymentDevices(group, image);
+  },
+  _getDeploymentDevices: function(group, image) {
+    // TODO get rid of boilerplate, use from one common place
+    var devices = [];
+    var filteredDevices = [];
+    // set the selected groups devices to state, to be sent down to the child schedule form
+    if (image && group) {
+      devices = (group!=="All devices") ? this.props.groupDevices[group] : this.props.allDevices;
+      filteredDevices = AppStore.filterDevicesByType(devices, image.device_type);
+    }
+    this.setState({deploymentDevices: devices, filteredDevices: filteredDevices});
   },
   _onRowSelection: function(rows) {
-
-    var imageId = software[rows[0]].id;
-    var image = AppStore.getSoftwareImage("id", imageId);
-    if (image === this.state.image) {
-      image = {name:null, description: null};
-    }
+    var image = software[rows[0]];
     this.setState({image:image});
   },
   _sortColumn: function(col) {
@@ -360,12 +384,12 @@ var Repository = React.createClass({
           open={this.state.schedule}
           title='Create a deployment'
           actions={scheduleActions}
-          autoDetectWindowHeight={true} autoScrollBodyContent={true}
-          bodyStyle={{paddingTop:"0"}}
+          autoDetectWindowHeight={true}
+          bodyStyle={{paddingTop:"0", fontSize:"13px"}}
           contentStyle={{overflow:"hidden", boxShadow:"0 14px 45px rgba(0, 0, 0, 0.25), 0 10px 18px rgba(0, 0, 0, 0.22)"}}
           actionsContainerStyle={{marginBottom:"0"}}
           >
-          <ScheduleForm deploymentSchedule={this._updateParams} images={software} image={this.state.image} imageVal={this.state.image} groups={this.props.groups} />
+          <ScheduleForm hasPending={this.props.hasPending} hasDevices={this.props.hasDevices} deploymentDevices={this.state.deploymentDevices} filteredDevices={this.state.filteredDevices} deploymentSettings={this._deploymentParams} deploymentSettings={this._deploymentParams} image={this.state.image} group={this.state.group} groups={this.props.groups} />
         </Dialog>
 
         <Snackbar

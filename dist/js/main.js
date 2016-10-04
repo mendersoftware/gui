@@ -82610,6 +82610,8 @@ var _Snackbar2 = _interopRequireDefault(_Snackbar);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 var update = require('react-addons-update');
 var Loader = require('../common/loader');
 
@@ -82675,14 +82677,29 @@ var Repository = _react2.default.createClass({
     this.setState(obj);
   },
   _onScheduleSubmit: function _onScheduleSubmit() {
+    // TODO more boilerplate, move to single source 
+    var ids = [];
+    for (var i = 0; i < this.state.deploymentDevices.length; i++) {
+      ids.push(this.state.deploymentDevices[i].id);
+    }
     var newDeployment = {
-      devices: this.state.group.devices,
+      name: decodeURIComponent(this.state.group) || "All devices",
       artifact_name: this.state.image.name,
-      name: this.state.group.name
+      devices: ids
     };
-    _appActions2.default.createDeployment(newDeployment, function (uri) {
-      this.setState({ openSnack: true });
-    }.bind(this));
+    var self = this;
+    var callback = {
+      success: function success(data) {
+        _appActions2.default.setSnackbar("Deployment created successfully");
+        setTimeout(function () {
+          self.redirect();
+        }, 1200);
+      },
+      error: function error(err) {
+        _appActions2.default.setSnackbar("Error creating deployment. " + err);
+      }
+    };
+    _appActions2.default.createDeployment(newDeployment, callback);
     this.dialogDismiss('schedule');
   },
   redirect: function redirect() {
@@ -82706,19 +82723,28 @@ var Repository = _react2.default.createClass({
     });
     this.setState({ image: image });
   },
-  _updateParams: function _updateParams(val, attr) {
+  _deploymentParams: function _deploymentParams(val, attr) {
     // updating params from child schedule form
     var tmp = {};
     tmp[attr] = val;
     this.setState(tmp);
+    var image = attr === "image" ? val : this.state.image;
+    var group = attr === "group" ? val : this.state.group;
+    this._getDeploymentDevices(group, image);
+  },
+  _getDeploymentDevices: function _getDeploymentDevices(group, image) {
+    // TODO get rid of boilerplate, use from one common place
+    var devices = [];
+    var filteredDevices = [];
+    // set the selected groups devices to state, to be sent down to the child schedule form
+    if (image && group) {
+      devices = group !== "All devices" ? this.props.groupDevices[group] : this.props.allDevices;
+      filteredDevices = _appStore2.default.filterDevicesByType(devices, image.device_type);
+    }
+    this.setState({ deploymentDevices: devices, filteredDevices: filteredDevices });
   },
   _onRowSelection: function _onRowSelection(rows) {
-
-    var imageId = software[rows[0]].id;
-    var image = _appStore2.default.getSoftwareImage("id", imageId);
-    if (image === this.state.image) {
-      image = { name: null, description: null };
-    }
+    var image = software[rows[0]];
     this.setState({ image: image });
   },
   _sortColumn: function _sortColumn(col) {
@@ -82762,6 +82788,7 @@ var Repository = _react2.default.createClass({
     this.setState({ divHeight: height + 30 });
   },
   render: function render() {
+    var _React$createElement;
 
     var styles = {
       buttonIcon: {
@@ -83047,12 +83074,12 @@ var Repository = _react2.default.createClass({
           open: this.state.schedule,
           title: 'Create a deployment',
           actions: scheduleActions,
-          autoDetectWindowHeight: true, autoScrollBodyContent: true,
-          bodyStyle: { paddingTop: "0" },
+          autoDetectWindowHeight: true,
+          bodyStyle: { paddingTop: "0", fontSize: "13px" },
           contentStyle: { overflow: "hidden", boxShadow: "0 14px 45px rgba(0, 0, 0, 0.25), 0 10px 18px rgba(0, 0, 0, 0.22)" },
           actionsContainerStyle: { marginBottom: "0" }
         },
-        _react2.default.createElement(_scheduleform2.default, { deploymentSchedule: this._updateParams, images: software, image: this.state.image, imageVal: this.state.image, groups: this.props.groups })
+        _react2.default.createElement(_scheduleform2.default, (_React$createElement = { hasPending: this.props.hasPending, hasDevices: this.props.hasDevices, deploymentDevices: this.state.deploymentDevices, filteredDevices: this.state.filteredDevices, deploymentSettings: this._deploymentParams }, _defineProperty(_React$createElement, 'deploymentSettings', this._deploymentParams), _defineProperty(_React$createElement, 'image', this.state.image), _defineProperty(_React$createElement, 'group', this.state.group), _defineProperty(_React$createElement, 'groups', this.props.groups), _React$createElement))
       ),
       _react2.default.createElement(_Snackbar2.default, {
         open: this.state.openSnack,
@@ -83266,17 +83293,19 @@ var SelectedImage = _react2.default.createClass({
           _react2.default.createElement(
             _List.List,
             { style: { backgroundColor: "rgba(255,255,255,0)", paddingTop: "0" } },
-            _react2.default.createElement(_List.ListItem, {
-              style: { fontSize: "12px" },
-              disabled: this.props.image.name ? false : true,
-              primaryText: 'Deploy as an update',
-              secondaryText: 'Deploy this image to devices',
-              onClick: this._clickImageSchedule,
-              leftIcon: _react2.default.createElement(
-                _FontIcon2.default,
-                { style: { marginTop: "6px" }, className: 'material-icons' },
-                'schedule'
-              ) }),
+            _react2.default.createElement(
+              'div',
+              { key: 'updateButton' },
+              _react2.default.createElement(_List.ListItem, {
+                style: styles.listStyle,
+                primaryText: 'Create a deployment for this device',
+                onClick: this._clickImageSchedule,
+                leftIcon: _react2.default.createElement(
+                  _FontIcon2.default,
+                  { style: { marginTop: 6, marginBottom: 6 }, className: 'material-icons update' },
+                  'replay'
+                ) })
+            ),
             _react2.default.createElement(_Divider2.default, null)
           )
         ),
@@ -83332,6 +83361,8 @@ var Software = _react2.default.createClass({
   },
   componentDidMount: function componentDidMount() {
     this._getImages();
+    this._getGroups();
+    this._getDevices();
   },
   componentWillUnmount: function componentWillUnmount() {
     AppStore.removeChangeListener(this._onChange);
@@ -83367,6 +83398,60 @@ var Software = _react2.default.createClass({
     };
     AppActions.getImages(callback);
   },
+  _getGroups: function _getGroups() {
+    var callback = {
+      success: function (groups) {
+        this.setState({ groups: groups });
+        this._getGroupDevices(groups);
+      }.bind(this),
+      error: function error(err) {
+        console.log(err);
+      }
+    };
+    AppActions.getGroups(callback);
+  },
+  _getDevices: function _getDevices() {
+    AppActions.getDevices({
+      success: function (devices) {
+        if (!devices.length) {
+          AppActions.getDevicesForAdmission(function (pending) {
+            if (pending.length) {
+              this.setState({ hasPending: true });
+            }
+          }.bind(this));
+        } else {
+          var allDevices = [];
+          for (var i = 0; i < devices.length; i++) {
+            allDevices.push(devices[i]);
+          }
+          this.setState({ hasDevices: true, allDevices: allDevices });
+        }
+      }.bind(this),
+      error: function error(err) {
+        console.log("Error: " + err);
+      }
+    });
+  },
+  _getGroupDevices: function _getGroupDevices(groups) {
+    // get list of devices for each group and save them to state 
+    var i, group;
+    var callback = {
+      success: function (devices) {
+        var tmp = {};
+        var devs = [];
+        for (var x = 0; x < devices.length; x++) {
+          // get full details, not just id
+          devs.push(AppStore.getSingleDevice(devices[x]));
+        }
+        tmp[group] = devs;
+        this.setState({ groupDevices: tmp });
+      }.bind(this)
+    };
+    for (i = 0; i < groups.length; i++) {
+      group = groups[i];
+      AppActions.getGroupDevices(groups[i], callback);
+    }
+  },
   render: function render() {
     var image_link = _react2.default.createElement(
       'span',
@@ -83386,7 +83471,7 @@ var Software = _react2.default.createClass({
       _react2.default.createElement(
         'div',
         { className: 'relative overflow-hidden' },
-        _react2.default.createElement(Repository, { refreshImages: this._getImages, startLoader: this._startLoading, loading: !this.state.doneLoading, setStorage: this._setStorage, selected: this.state.selected, software: this.state.software, groups: this.state.groups })
+        _react2.default.createElement(Repository, { groupDevices: this.state.groupDevices, allDevices: this.state.allDevices, refreshImages: this._getImages, startLoader: this._startLoading, loading: !this.state.doneLoading, setStorage: this._setStorage, selected: this.state.selected, software: this.state.software, groups: this.state.groups, hasPending: this.state.hasPending, hasDevices: this.state.hasDevices })
       ),
       _react2.default.createElement(_Snackbar2.default, {
         open: this.state.snackbar.open,

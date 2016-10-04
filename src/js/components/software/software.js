@@ -24,7 +24,9 @@ var Software = React.createClass({
     AppStore.changeListener(this._onChange);
   },
   componentDidMount: function() {
-   this._getImages();
+    this._getImages();
+    this._getGroups();
+    this._getDevices();
   },
   componentWillUnmount: function() {
     AppStore.removeChangeListener(this._onChange);
@@ -60,6 +62,60 @@ var Software = React.createClass({
     };
     AppActions.getImages(callback);
   },
+  _getGroups: function() {
+    var callback = {
+      success: function (groups) {
+        this.setState({groups: groups});
+        this._getGroupDevices(groups);
+      }.bind(this),
+      error: function(err) {
+        console.log(err);
+      }
+    };
+    AppActions.getGroups(callback);
+  },
+  _getDevices: function() {
+    AppActions.getDevices({
+      success: function(devices) {
+        if (!devices.length) {
+          AppActions.getDevicesForAdmission(function(pending) {
+            if (pending.length) {
+              this.setState({hasPending:true});
+            }
+          }.bind(this));
+        } else {
+          var allDevices = [];
+          for (var i=0; i<devices.length;i++) {
+            allDevices.push(devices[i]);
+          }
+          this.setState({hasDevices:true, allDevices: allDevices});
+        }
+      }.bind(this),
+      error: function(err) {
+        console.log("Error: " +err);
+      }
+    });
+  },
+  _getGroupDevices: function(groups) {
+    // get list of devices for each group and save them to state 
+    var i, group;
+    var callback = {
+      success: function(devices) {
+        var tmp = {};
+        var devs = [];
+        for (var x=0;x<devices.length;x++) {
+          // get full details, not just id
+          devs.push(AppStore.getSingleDevice(devices[x]));
+        }
+        tmp[group] = devs;
+        this.setState({groupDevices:tmp});
+      }.bind(this)
+    }
+    for (i=0;i<groups.length;i++) {
+      group = groups[i];
+      AppActions.getGroupDevices(groups[i], callback);
+    }
+  },
   render: function() {
     var image_link = (
       <span>
@@ -72,7 +128,7 @@ var Software = React.createClass({
     return (
       <div className="contentContainer">
         <div className="relative overflow-hidden">
-          <Repository refreshImages={this._getImages} startLoader={this._startLoading} loading={!this.state.doneLoading} setStorage={this._setStorage} selected={this.state.selected} software={this.state.software} groups={this.state.groups} />
+          <Repository groupDevices={this.state.groupDevices} allDevices={this.state.allDevices} refreshImages={this._getImages} startLoader={this._startLoading} loading={!this.state.doneLoading} setStorage={this._setStorage} selected={this.state.selected} software={this.state.software} groups={this.state.groups} hasPending={this.state.hasPending} hasDevices={this.state.hasDevices} />
         </div>
         <Snackbar
           open={this.state.snackbar.open}
