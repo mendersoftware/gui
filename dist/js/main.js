@@ -83266,17 +83266,19 @@ var SelectedImage = _react2.default.createClass({
           _react2.default.createElement(
             _List.List,
             { style: { backgroundColor: "rgba(255,255,255,0)", paddingTop: "0" } },
-            _react2.default.createElement(_List.ListItem, {
-              style: { fontSize: "12px" },
-              disabled: this.props.image.name ? false : true,
-              primaryText: 'Deploy as an update',
-              secondaryText: 'Deploy this image to devices',
-              onClick: this._clickImageSchedule,
-              leftIcon: _react2.default.createElement(
-                _FontIcon2.default,
-                { style: { marginTop: "6px" }, className: 'material-icons' },
-                'schedule'
-              ) }),
+            _react2.default.createElement(
+              'div',
+              { key: 'updateButton' },
+              _react2.default.createElement(_List.ListItem, {
+                style: styles.listStyle,
+                primaryText: 'Create a deployment for this device',
+                onClick: this._clickImageSchedule,
+                leftIcon: _react2.default.createElement(
+                  _FontIcon2.default,
+                  { style: { marginTop: 6, marginBottom: 6 }, className: 'material-icons update' },
+                  'replay'
+                ) })
+            ),
             _react2.default.createElement(_Divider2.default, null)
           )
         ),

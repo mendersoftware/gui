@@ -124,13 +124,13 @@ var SelectedImage = React.createClass({
           </div>
           <div className="report-list" style={{width:"320px"}}>
             <List style={{backgroundColor: "rgba(255,255,255,0)", paddingTop:"0"}}>
-              <ListItem
-                style={{fontSize:"12px"}}
-                disabled={this.props.image.name ? false : true}
-                primaryText="Deploy as an update"
-                secondaryText="Deploy this image to devices"
-                onClick={this._clickImageSchedule}
-                leftIcon={<FontIcon style={{marginTop:"6px"}} className="material-icons">schedule</FontIcon>} />
+              <div key="updateButton">
+                <ListItem
+                  style={styles.listStyle}
+                  primaryText="Create a deployment for this device"
+                  onClick={this._clickImageSchedule}
+                  leftIcon={<FontIcon style={{marginTop:6, marginBottom:6}} className="material-icons update">replay</FontIcon>} />
+              </div>
               <Divider />
             </List>
           </div>
