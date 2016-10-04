@@ -79547,13 +79547,13 @@ var Report = _react2.default.createClass({
     var status = this.props.deployment.status === "inprogress" ? "In progress" : this.props.deployment.status;
     var logActions = [_react2.default.createElement(
       'div',
-      { style: { marginRight: "10", display: "inline-block" } },
+      { style: { marginRight: "10px", display: "inline-block" } },
       _react2.default.createElement(_FlatButton2.default, {
         label: 'Close',
         onClick: this.dialogDismiss.bind(null, 'dialog') })
     ), _react2.default.createElement(
       _reactCopyToClipboard2.default,
-      { style: { marginRight: "10", display: "inline-block" }, text: this.state.logData,
+      { style: { marginRight: "10px", display: "inline-block" }, text: this.state.logData,
         onCopy: function onCopy() {
           return _this.setState({ copied: true });
         } },
