@@ -83021,7 +83021,7 @@ var Repository = _react2.default.createClass({
           null,
           _react2.default.createElement(
             _form2.default,
-            { className: 'wide-input', dialogDismiss: this.dialogDismiss, onSubmit: this._onUploadSubmit },
+            { dialogDismiss: this.dialogDismiss, onSubmit: this._onUploadSubmit },
             _react2.default.createElement(_fileinput2.default, {
               id: 'imageFile',
               placeholder: 'Upload image',

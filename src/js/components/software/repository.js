@@ -331,7 +331,7 @@ var Repository = React.createClass({
           bodyStyle={{padding:"0 10px 10px 24px"}}
           >
           <div>
-            <Form className="wide-input" dialogDismiss={this.dialogDismiss} onSubmit={this._onUploadSubmit}>
+            <Form dialogDismiss={this.dialogDismiss} onSubmit={this._onUploadSubmit}>
 
               <FileInput 
                 id="imageFile"
