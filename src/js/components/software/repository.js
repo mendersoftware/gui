@@ -347,27 +347,6 @@ var Repository = React.createClass({
                 required={true} />
 
               <TextInput
-                id="yocto_id"
-                value={this.state.image.yocto_id}
-                hint="Yocto ID"
-                label="Yocto ID"
-                required={true} />
-
-               <TextInput
-                id="checksum"
-                value={this.state.image.checksum}
-                hint="Checksum"
-                label="Checksum"
-                required={true} />
-
-              <TextInput
-                id="device_type"
-                hint="Device type compatibility"
-                label="Device type compatibility"
-                required={true}
-                value={this.state.image.device_type} />
-
-              <TextInput
                 id="description"
                 hint="Description"
                 label="Description"

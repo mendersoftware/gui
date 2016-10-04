@@ -82622,7 +82622,9 @@ var Repository = _react2.default.createClass({
     return {
       image: {
         name: null,
-        description: null
+        description: null,
+        yocto_id: null,
+        device_type: null
       },
       sortCol: "name",
       sortDown: true,
@@ -82649,7 +82651,9 @@ var Repository = _react2.default.createClass({
   _resetImageState: function _resetImageState() {
     var image = {
       name: null,
-      description: null
+      description: null,
+      yocto_id: null,
+      device_type: null
     };
     this.setState({ image: image });
   },
