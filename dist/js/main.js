@@ -76319,7 +76319,7 @@ var FileInput = _react2.default.createClass({
         accept: this.props.accept,
         placeholder: this.props.placeholder,
         className: this.state.errorText ? "fileInput error" : "fileInput",
-        style: { zIndex: "2" },
+        style: { zIndex: "2", width: "400px" },
         onChange: this.setValue,
         value: this.state.value
       }),
@@ -76583,7 +76583,7 @@ var TextInput = _react2.default.createClass({
       errorStyle: { color: "rgb(171, 16, 0)" },
       multiLine: this.props.multiLine,
       rows: this.props.rows,
-      style: { display: "block" },
+      style: { display: "block", width: "400px" },
       errorText: this.state.errorText });
   }
 });
@@ -83013,15 +83013,15 @@ var Repository = _react2.default.createClass({
           open: this.state.upload,
           title: this.state.popupLabel,
           autoDetectWindowHeight: true,
-          autoScrollBodyContent: true
-
+          autoScrollBodyContent: true,
+          bodyStyle: { padding: "0 10px 10px 24px" }
         },
         _react2.default.createElement(
           'div',
-          { style: { height: '400px' } },
+          null,
           _react2.default.createElement(
             _form2.default,
-            { dialogDismiss: this.dialogDismiss, onSubmit: this._onUploadSubmit },
+            { className: 'wide-input', dialogDismiss: this.dialogDismiss, onSubmit: this._onUploadSubmit },
             _react2.default.createElement(_fileinput2.default, {
               id: 'imageFile',
               placeholder: 'Upload image',
@@ -83038,6 +83038,7 @@ var Repository = _react2.default.createClass({
               hint: 'Description',
               label: 'Description',
               multiLine: true,
+              className: 'margin-bottom-small',
               value: this.state.image.description })
           )
         )

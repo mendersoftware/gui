@@ -31,7 +31,7 @@ var FileInput = React.createClass({
           accept={this.props.accept}
           placeholder={this.props.placeholder}
           className={this.state.errorText ? "fileInput error" : "fileInput" }
-          style={{zIndex: "2"}}
+          style={{zIndex: "2", width:"400px"}}
           onChange={this.setValue}
           value={this.state.value}
           />
