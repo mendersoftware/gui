@@ -568,6 +568,8 @@ div.code {
   max-height: 43vh;
   overflow-y: auto;
   position: relative;
+  white-space: pre-line;
+  font-size: 14px;
 }
 /* Forms */
 .inputGroup {
