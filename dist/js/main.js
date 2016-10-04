@@ -75888,7 +75888,9 @@ var AppActions = {
     formData.append('description', meta.description);
     formData.append('firmware', file);
     ImagesApi.postFormData(deploymentsApiUrl + '/images', formData).then(function (data) {
-      callback(data);
+      callback.success(data);
+    }).catch(function (err) {
+      callback.error(err);
     });
   },
 
@@ -82700,16 +82702,25 @@ var Repository = _react2.default.createClass({
     this.context.router.push('/deployments');
   },
   _onUploadSubmit: function _onUploadSubmit(meta) {
+    var self = this;
     var tmpFile = meta.imageFile;
-    console.log("tmpfile ", tmpFile);
     delete meta.imageFile;
     delete meta.verified;
-    this.props.startLoader();
-    _appActions2.default.uploadImage(meta, tmpFile, function (result) {
-      this.props.refreshImages();
-    }.bind(this));
-    this.dialogDismiss('upload');
+
+    var callback = {
+      success: function success(result) {
+        self.props.refreshImages();
+      },
+      error: function error(err) {
+        _appActions2.default.setSnackbar("Image couldn't be uploaded. " + err);
+        self.props.startLoader(false);
+      }
+    };
+
+    _appActions2.default.uploadImage(meta, tmpFile, callback);
+    this.props.startLoader(true);
     this._resetImageState();
+    this.dialogDismiss('upload');
   },
   _editImageData: function _editImageData(image) {
     _appActions2.default.editImage(image, function () {
@@ -83021,7 +83032,7 @@ var Repository = _react2.default.createClass({
           null,
           _react2.default.createElement(
             _form2.default,
-            { className: 'wide-input', dialogDismiss: this.dialogDismiss, onSubmit: this._onUploadSubmit },
+            { dialogDismiss: this.dialogDismiss, onSubmit: this._onUploadSubmit },
             _react2.default.createElement(_fileinput2.default, {
               id: 'imageFile',
               placeholder: 'Upload image',
@@ -83357,8 +83368,8 @@ var Software = _react2.default.createClass({
       }
     }
   },
-  _startLoading: function _startLoading() {
-    this.setState({ doneLoading: false });
+  _startLoading: function _startLoading(bool) {
+    this.setState({ doneLoading: !bool });
   },
   _getImages: function _getImages() {
     var callback = {

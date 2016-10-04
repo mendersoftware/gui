@@ -113,16 +113,25 @@ var Repository = React.createClass({
     this.context.router.push('/deployments');
   },
   _onUploadSubmit: function(meta) {
+    var self = this;
     var tmpFile = meta.imageFile;
-    console.log("tmpfile ", tmpFile);
     delete meta.imageFile;
     delete meta.verified;
-    this.props.startLoader();
-    AppActions.uploadImage(meta, tmpFile, function(result) {
-      this.props.refreshImages();
-    }.bind(this));
-    this.dialogDismiss('upload');
+
+    var callback = {
+      success: function(result) {
+        self.props.refreshImages();
+      },
+      error: function(err) {
+        AppActions.setSnackbar("Image couldn't be uploaded. "+err);
+        self.props.startLoader(false);
+      }
+    };
+
+    AppActions.uploadImage(meta, tmpFile, callback);
+    this.props.startLoader(true);
     this._resetImageState();
+    this.dialogDismiss('upload');
   },
   _editImageData: function (image) {
     AppActions.editImage(image, function() {
@@ -331,7 +340,7 @@ var Repository = React.createClass({
           bodyStyle={{padding:"0 10px 10px 24px"}}
           >
           <div>
-            <Form className="wide-input" dialogDismiss={this.dialogDismiss} onSubmit={this._onUploadSubmit}>
+            <Form dialogDismiss={this.dialogDismiss} onSubmit={this._onUploadSubmit}>
 
               <FileInput 
                 id="imageFile"
