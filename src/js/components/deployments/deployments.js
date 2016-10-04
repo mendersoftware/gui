@@ -40,10 +40,7 @@ function getState() {
     groups: AppStore.getGroups(),
     allDevices: AppStore.getAllDevices(),
     dialogTitle: "Create a deployment",
-    scheduleForm: true,
-    contentClass: "largeDialog", 
     invalid: true,
-    dialog: false,
     filteredDevices: []
   }
 }
@@ -361,7 +358,7 @@ var Deployments = React.createClass({
           autoDetectWindowHeight={true}
           contentClassName={this.state.contentClass}
           bodyStyle={{paddingTop:"0", fontSize:"13px"}}
-          open={this.state.dialog}
+          open={this.state.dialog || false}
           contentStyle={{overflow:"hidden", boxShadow:"0 14px 45px rgba(0, 0, 0, 0.25), 0 10px 18px rgba(0, 0, 0, 0.22)"}}
           actionsContainerStyle={{marginBottom:"0"}}
           >
