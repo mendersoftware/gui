@@ -105,12 +105,12 @@ var Report = React.createClass({
     }
     var status = (this.props.deployment.status === "inprogress") ? "In progress" : this.props.deployment.status;
     var logActions =  [
-      <div style={{marginRight:"10", display:"inline-block"}}>
+      <div style={{marginRight:"10px", display:"inline-block"}}>
         <FlatButton
           label="Close"
           onClick={this.dialogDismiss.bind(null, 'dialog')} />
       </div>,
-      <CopyToClipboard style={{marginRight:"10", display:"inline-block"}} text={this.state.logData}
+      <CopyToClipboard style={{marginRight:"10px", display:"inline-block"}} text={this.state.logData}
         onCopy={() => this.setState({copied: true})}>
         <FlatButton label="Copy to clipboard"/>
       </CopyToClipboard>,
