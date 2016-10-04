@@ -40,11 +40,11 @@ var Progress = React.createClass({
       );
 
       var deploymentInfo = (
-        <div className="deploymentInfo" style={{width:"240", height:"auto"}}>
+        <div className="deploymentInfo" style={{width:"240px", height:"auto"}}>
           <div><div className="progressLabel">Updating to:</div>{deployment.artifact_name}</div>
           <div><div className="progressLabel">Device group:</div><span className="capitalized">{deployment.name}</span></div>
           <div><div className="progressLabel">Started:</div><Time className="progressTime" value={this._formatTime(deployment.created)} format="YYYY-MM-DD HH:mm" /></div>
-          <div style={{marginTop:15}}><div className="progressLabel"></div><a onClick={this._clickHandle.bind(null, deployment.id)}>View report</a></div>
+          <div style={{marginTop:"15px"}}><div className="progressLabel"></div><a onClick={this._clickHandle.bind(null, deployment.id)}>View report</a></div>
         </div>
       );
 
@@ -54,7 +54,7 @@ var Progress = React.createClass({
         <div className="deployment" key={index}>
           <ListItem
             disabled={true}
-            style={{minHeight:"100", paddingLeft:"280", paddingBottom: "15"}}
+            style={{minHeight:"100px", paddingLeft:"280px", paddingBottom: "15px"}}
             primaryText={progressChart}
             leftIcon={deploymentInfo} />
         </div>
@@ -67,7 +67,7 @@ var Progress = React.createClass({
           <h2>Deployments in progress</h2>
         </div>
         <div className={deployments.length ? "fadeIn" : "hidden"}>
-          <List style={{paddingTop:0}}>
+          <List style={{paddingTop:"0"}}>
             {progress}
           </List> 
           <Link to="/deployments/progress" className="float-right">All deployments in progress</Link>

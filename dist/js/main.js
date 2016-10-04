@@ -77197,7 +77197,7 @@ var Progress = _react2.default.createClass({
 
       var deploymentInfo = _react2.default.createElement(
         'div',
-        { className: 'deploymentInfo', style: { width: "240", height: "auto" } },
+        { className: 'deploymentInfo', style: { width: "240px", height: "auto" } },
         _react2.default.createElement(
           'div',
           null,
@@ -77234,7 +77234,7 @@ var Progress = _react2.default.createClass({
         ),
         _react2.default.createElement(
           'div',
-          { style: { marginTop: 15 } },
+          { style: { marginTop: "15px" } },
           _react2.default.createElement('div', { className: 'progressLabel' }),
           _react2.default.createElement(
             'a',
@@ -77251,7 +77251,7 @@ var Progress = _react2.default.createClass({
         { className: 'deployment', key: index },
         _react2.default.createElement(_List.ListItem, {
           disabled: true,
-          style: { minHeight: "100", paddingLeft: "280", paddingBottom: "15" },
+          style: { minHeight: "100px", paddingLeft: "280px", paddingBottom: "15px" },
           primaryText: progressChart,
           leftIcon: deploymentInfo })
       );
@@ -77274,7 +77274,7 @@ var Progress = _react2.default.createClass({
         { className: deployments.length ? "fadeIn" : "hidden" },
         _react2.default.createElement(
           _List.List,
-          { style: { paddingTop: 0 } },
+          { style: { paddingTop: "0" } },
           progress
         ),
         _react2.default.createElement(
