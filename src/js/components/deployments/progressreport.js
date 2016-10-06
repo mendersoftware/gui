@@ -24,12 +24,12 @@ var ProgressReport = React.createClass({
   },
   componentDidMount: function() {
     this.timer = setInterval(this.tick, 50);
-    AppActions.getSingleDeploymentDevices(this.props.deployment.id, function(devices) {
-      this._deploymentState("devices",devices);
-    }.bind(this));
+    this.timer2 = setInterval(this.refreshDeploymentDevices, 5000);
+    this.refreshDeploymentDevices();
   },
   componentWillUnmount: function() {
     clearInterval(this.timer);
+    clearInterval(this.timer2);
   },
   tick: function() {
     var now = new Date();
@@ -52,6 +52,16 @@ var ProgressReport = React.createClass({
 
     var x =  days + hours + "h " + minutes + "m " + secs + "s";
     this.setState({elapsed: x});
+  },
+  refreshDeploymentDevices: function() {
+    var self = this;
+    if (self.props.deployment.status === "finished") {
+      clearInterval(this.timer);
+    } else {
+      AppActions.getSingleDeploymentDevices(self.props.deployment.id, function(devices) {
+        self._deploymentState("devices",devices);
+      });
+    }
   },
   _deploymentState: function (key, val) {
     var state = {};
@@ -148,12 +158,12 @@ var ProgressReport = React.createClass({
 
           <div className="progressStatus">
             <div id="progressStatus">
-              <h3 style={{marginTop:"12px"}}>In progress</h3>
+              <h3 style={{marginTop:"12px"}}>{this.props.deployment.status === "finished" ? "Finished" : "In progress"}</h3>
               <h2><FontIcon className="material-icons" style={{margin:"0 10px 0 -10px",color:"#ACD4D0", verticalAlign:"text-top"}}>timelapse</FontIcon>{this.state.elapsed}</h2>
               <div>Started: <Time value={this._formatTime(this.props.deployment.created)} format="YYYY-MM-DD HH:mm" /></div>
             </div>
             <div className="inline-block">
-              <DeploymentStatus vertical={true} id={this.props.deployment.id} />
+              <DeploymentStatus refresh={true} vertical={true} id={this.props.deployment.id} />
             </div>
           </div>
         </div>
