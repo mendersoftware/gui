@@ -192,10 +192,7 @@ var AppActions = {
     ImagesApi
       .postFormData(deploymentsApiUrl+'/images', formData)
       .then(function(data) {
-        callback.success(data);
-      })
-      .catch(function(err) {
-        callback.error(err);
+        callback(data);
       });
   },
 

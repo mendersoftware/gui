@@ -44,8 +44,8 @@ var Software = React.createClass({
       }
     }
   },
-  _startLoading: function(bool) {
-     this.setState({doneLoading: !bool});
+  _startLoading: function() {
+     this.setState({doneLoading: false});
   },
   _getImages: function() {
     var callback = {
