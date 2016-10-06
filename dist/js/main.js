@@ -75885,7 +75885,10 @@ var AppActions = {
   uploadImage: function uploadImage(meta, file, callback) {
     var formData = new FormData();
     formData.append('name', meta.name);
+    formData.append('yocto_id', meta.yocto_id);
+    formData.append('device_type', meta.device_type);
     formData.append('description', meta.description);
+    formData.append('checksum', meta.checksum);
     formData.append('firmware', file);
     ImagesApi.postFormData(deploymentsApiUrl + '/images', formData).then(function (data) {
       callback(data);
@@ -82652,7 +82655,9 @@ var Repository = _react2.default.createClass({
     return {
       image: {
         name: null,
-        description: null
+        description: null,
+        yocto_id: null,
+        device_type: null
       },
       sortCol: "name",
       sortDown: true,
@@ -82679,7 +82684,9 @@ var Repository = _react2.default.createClass({
   _resetImageState: function _resetImageState() {
     var image = {
       name: null,
-      description: null
+      description: null,
+      yocto_id: null,
+      device_type: null
     };
     this.setState({ image: image });
   },
@@ -83059,6 +83066,24 @@ var Repository = _react2.default.createClass({
               label: 'Name',
               id: 'name',
               required: true }),
+            _react2.default.createElement(_textinput2.default, {
+              id: 'yocto_id',
+              value: this.state.image.yocto_id,
+              hint: 'Yocto ID',
+              label: 'Yocto ID',
+              required: true }),
+            _react2.default.createElement(_textinput2.default, {
+              id: 'checksum',
+              value: this.state.image.checksum,
+              hint: 'Checksum',
+              label: 'Checksum',
+              required: true }),
+            _react2.default.createElement(_textinput2.default, {
+              id: 'device_type',
+              hint: 'Device type compatibility',
+              label: 'Device type compatibility',
+              required: true,
+              value: this.state.image.device_type }),
             _react2.default.createElement(_textinput2.default, {
               id: 'description',
               hint: 'Description',
