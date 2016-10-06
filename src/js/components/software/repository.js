@@ -328,10 +328,10 @@ var Repository = React.createClass({
           title={this.state.popupLabel}
           autoDetectWindowHeight={true}
           autoScrollBodyContent={true}
-          bodyStyle={{padding:"0 10px 10px 24px"}}
+   
           >
-          <div>
-            <Form className="wide-input" dialogDismiss={this.dialogDismiss} onSubmit={this._onUploadSubmit}>
+          <div style={{height: '400px'}}>
+            <Form dialogDismiss={this.dialogDismiss} onSubmit={this._onUploadSubmit}>
 
               <FileInput 
                 id="imageFile"
@@ -347,11 +347,31 @@ var Repository = React.createClass({
                 required={true} />
 
               <TextInput
+                id="yocto_id"
+                value={this.state.image.yocto_id}
+                hint="Yocto ID"
+                label="Yocto ID"
+                required={true} />
+
+               <TextInput
+                id="checksum"
+                value={this.state.image.checksum}
+                hint="Checksum"
+                label="Checksum"
+                required={true} />
+
+              <TextInput
+                id="device_type"
+                hint="Device type compatibility"
+                label="Device type compatibility"
+                required={true}
+                value={this.state.image.device_type} />
+
+              <TextInput
                 id="description"
                 hint="Description"
                 label="Description"
                 multiLine={true}
-                className="margin-bottom-small"
                 value={this.state.image.description} />
 
             </Form>

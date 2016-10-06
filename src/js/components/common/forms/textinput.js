@@ -35,7 +35,7 @@ var TextInput = React.createClass({
         errorStyle={{color: "rgb(171, 16, 0)"}}
         multiLine={this.props.multiLine}
         rows={this.props.rows}
-        style={{display:"block", width:"400px"}}
+        style={{display:"block"}}
         errorText={this.state.errorText} />
     )
   }

@@ -76319,7 +76319,7 @@ var FileInput = _react2.default.createClass({
         accept: this.props.accept,
         placeholder: this.props.placeholder,
         className: this.state.errorText ? "fileInput error" : "fileInput",
-        style: { zIndex: "2", width: "400px" },
+        style: { zIndex: "2" },
         onChange: this.setValue,
         value: this.state.value
       }),
@@ -76583,7 +76583,7 @@ var TextInput = _react2.default.createClass({
       errorStyle: { color: "rgb(171, 16, 0)" },
       multiLine: this.props.multiLine,
       rows: this.props.rows,
-      style: { display: "block", width: "400px" },
+      style: { display: "block" },
       errorText: this.state.errorText });
   }
 });
@@ -82652,9 +82652,7 @@ var Repository = _react2.default.createClass({
     return {
       image: {
         name: null,
-        description: null,
-        yocto_id: null,
-        device_type: null
+        description: null
       },
       sortCol: "name",
       sortDown: true,
@@ -82681,9 +82679,7 @@ var Repository = _react2.default.createClass({
   _resetImageState: function _resetImageState() {
     var image = {
       name: null,
-      description: null,
-      yocto_id: null,
-      device_type: null
+      description: null
     };
     this.setState({ image: image });
   },
@@ -83043,15 +83039,15 @@ var Repository = _react2.default.createClass({
           open: this.state.upload,
           title: this.state.popupLabel,
           autoDetectWindowHeight: true,
-          autoScrollBodyContent: true,
-          bodyStyle: { padding: "0 10px 10px 24px" }
+          autoScrollBodyContent: true
+
         },
         _react2.default.createElement(
           'div',
-          null,
+          { style: { height: '400px' } },
           _react2.default.createElement(
             _form2.default,
-            { className: 'wide-input', dialogDismiss: this.dialogDismiss, onSubmit: this._onUploadSubmit },
+            { dialogDismiss: this.dialogDismiss, onSubmit: this._onUploadSubmit },
             _react2.default.createElement(_fileinput2.default, {
               id: 'imageFile',
               placeholder: 'Upload image',
@@ -83068,7 +83064,6 @@ var Repository = _react2.default.createClass({
               hint: 'Description',
               label: 'Description',
               multiLine: true,
-              className: 'margin-bottom-small',
               value: this.state.image.description })
           )
         )
