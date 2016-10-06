@@ -77708,14 +77708,13 @@ var tabs = {
 function getState() {
   return {
     past: AppStore.getPastDeployments(),
-    progress: AppStore.getDeploymentsInProgress(),
+    progress: AppStore.getDeploymentsInProgress() || [],
     events: AppStore.getEventLog(),
     images: AppStore.getSoftwareRepo(),
     groups: AppStore.getGroups(),
     allDevices: AppStore.getAllDevices(),
     dialogTitle: "Create a deployment",
-    invalid: true,
-    filteredDevices: []
+    invalid: true
   };
 }
 
@@ -77880,6 +77879,7 @@ var Deployments = _react2.default.createClass({
   },
   _changeTab: function _changeTab(value) {
     this.setState({ tabIndex: value });
+    this._refreshDeployments();
   },
   _onScheduleSubmit: function _onScheduleSubmit() {
     var ids = [];
@@ -77969,6 +77969,7 @@ var Deployments = _react2.default.createClass({
     AppActions.removeDeployment(id);
   },
   render: function render() {
+    var disabled = typeof this.state.filteredDevices !== 'undefined' && this.state.filteredDevices.length > 0 ? false : true;
     var scheduleActions = [_react2.default.createElement(
       'div',
       { style: { marginRight: "10px", display: "inline-block" } },
@@ -77980,7 +77981,7 @@ var Deployments = _react2.default.createClass({
       primary: true,
       onClick: this._onScheduleSubmit,
       ref: 'save',
-      disabled: !this.state.filteredDevices.length })];
+      disabled: disabled })];
     var reportActions = [_react2.default.createElement(_FlatButton2.default, {
       label: 'Close',
       onClick: this.dialogDismiss.bind(null, 'dialog') })];
@@ -78078,15 +78079,30 @@ var DeploymentStatus = _react2.default.createClass({
       }
     };
   },
+  componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
+    if (nextProps.id !== this.props.id) this.refreshStatus(nextProps.id);
+  },
   componentDidMount: function componentDidMount() {
-    AppActions.getSingleDeploymentStats(this.props.id, function (stats) {
-      this.setState({ stats: stats });
-    }.bind(this));
+    var self = this;
+    if (self.props.refresh) {
+      self.timer = setInterval(function () {
+        self.refreshStatus(self.props.id);
+      }, 5000);
+    }
+    self.refreshStatus(self.props.id);
+  },
+  componentWillUnmount: function componentWillUnmount() {
+    clearInterval(this.timer);
+  },
+  refreshStatus: function refreshStatus(id) {
+    var self = this;
+    AppActions.getSingleDeploymentStats(id, function (stats) {
+      self.setState({ stats: stats });
+    });
   },
   render: function render() {
     var inprogress = this.state.stats.downloading + this.state.stats.installing + this.state.stats.rebooting;
-    var finished = this.state.stats.success + this.state.stats.failure + this.state.stats.noimage;
-    var failed = this.state.stats.failure + this.state.stats.noimage;
+    var failed = this.state.stats.failure;
     var label = _react2.default.createElement(
       'div',
       { className: this.props.vertical ? "results-status vertical" : "results-status" },
@@ -78295,6 +78311,7 @@ var _Dialog2 = _interopRequireDefault(_Dialog);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+var update = require('react-addons-update');
 var ProgressReport = require('./progressreport.js');
 var ScheduleForm = require('./scheduleform');
 var GroupDevices = require('./groupdevices');
@@ -78307,8 +78324,6 @@ var Loader = require('../common/loader');
 // material ui
 
 
-var progress = [];
-
 var Progress = _react2.default.createClass({
   displayName: 'Progress',
 
@@ -78319,11 +78334,20 @@ var Progress = _react2.default.createClass({
       report: null
     };
   },
+  componentWillUnmount: function componentWillUnmount() {
+    clearInterval(this.timer);
+  },
   componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
-    progress = nextProps.progress || [];
+    if (nextProps.progress[this.state.rowNumber] !== this.props.progress[this.state.rowNumber]) {
+      var report = update(this.state.report, {
+        status: { $set: "finished" }
+      });
+      this.setState({ report: report });
+    }
   },
   _progressCellClick: function _progressCellClick(rowNumber, columnId) {
-    this.setState({ report: progress[rowNumber], showReport: true });
+    var self = this;
+    this.setState({ report: self.props.progress[rowNumber], showReport: true, rowNumber: rowNumber });
   },
   _formatTime: function _formatTime(date) {
     if (date) {
@@ -78336,11 +78360,12 @@ var Progress = _react2.default.createClass({
       report: null,
       showReport: false
     });
+    clearInterval(this.timer);
   },
   render: function render() {
     // get statistics for each in progress
-    var progressMap = progress.map(function (deployment, index) {
-      var status = _react2.default.createElement(DeploymentStatus, { id: deployment.id });
+    var progressMap = this.props.progress.map(function (deployment, index) {
+      var status = _react2.default.createElement(DeploymentStatus, { refresh: true, id: deployment.id });
       return _react2.default.createElement(
         _Table.TableRow,
         { style: { height: "52px" }, key: index },
@@ -78475,7 +78500,7 @@ var Progress = _react2.default.createClass({
 
 module.exports = Progress;
 
-},{"../common/loader":728,"./deploymentstatus":738,"./groupdevices":740,"./progresschart":744,"./progressreport.js":745,"./scheduleform":749,"material-ui/Dialog":106,"material-ui/FlatButton":115,"material-ui/Table":176,"react":637,"react-time":488}],742:[function(require,module,exports){
+},{"../common/loader":728,"./deploymentstatus":738,"./groupdevices":740,"./progresschart":744,"./progressreport.js":745,"./scheduleform":749,"material-ui/Dialog":106,"material-ui/FlatButton":115,"material-ui/Table":176,"react":637,"react-addons-update":393,"react-time":488}],742:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -78504,8 +78529,6 @@ var Loader = require('../common/loader');
 // material ui
 
 
-var past = [];
-
 var Past = _react2.default.createClass({
   displayName: 'Past',
 
@@ -78514,11 +78537,8 @@ var Past = _react2.default.createClass({
       retry: false
     };
   },
-  componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
-    past = nextProps.past || [];
-  },
   _pastCellClick: function _pastCellClick(rowNumber, columnId) {
-    var report = past[rowNumber];
+    var report = this.props.past[rowNumber];
     this.props.showReport(report);
   },
   _formatTime: function _formatTime(date) {
@@ -78528,7 +78548,7 @@ var Past = _react2.default.createClass({
     return;
   },
   render: function render() {
-    var pastMap = past.map(function (deployment, index) {
+    var pastMap = this.props.past.map(function (deployment, index) {
       //  get statistics
       var status = _react2.default.createElement(DeploymentStatus, { id: deployment.id });
 
@@ -79056,12 +79076,12 @@ var ProgressReport = _react2.default.createClass({
   },
   componentDidMount: function componentDidMount() {
     this.timer = setInterval(this.tick, 50);
-    AppActions.getSingleDeploymentDevices(this.props.deployment.id, function (devices) {
-      this._deploymentState("devices", devices);
-    }.bind(this));
+    this.timer2 = setInterval(this.refreshDeploymentDevices, 5000);
+    this.refreshDeploymentDevices();
   },
   componentWillUnmount: function componentWillUnmount() {
     clearInterval(this.timer);
+    clearInterval(this.timer2);
   },
   tick: function tick() {
     var now = new Date();
@@ -79084,6 +79104,16 @@ var ProgressReport = _react2.default.createClass({
 
     var x = days + hours + "h " + minutes + "m " + secs + "s";
     this.setState({ elapsed: x });
+  },
+  refreshDeploymentDevices: function refreshDeploymentDevices() {
+    var self = this;
+    if (self.props.deployment.status === "finished") {
+      clearInterval(this.timer);
+    } else {
+      AppActions.getSingleDeploymentDevices(self.props.deployment.id, function (devices) {
+        self._deploymentState("devices", devices);
+      });
+    }
   },
   _deploymentState: function _deploymentState(key, val) {
     var state = {};
@@ -79264,7 +79294,7 @@ var ProgressReport = _react2.default.createClass({
             _react2.default.createElement(
               'h3',
               { style: { marginTop: "12px" } },
-              'In progress'
+              this.props.deployment.status === "finished" ? "Finished" : "In progress"
             ),
             _react2.default.createElement(
               'h2',
@@ -79286,7 +79316,7 @@ var ProgressReport = _react2.default.createClass({
           _react2.default.createElement(
             'div',
             { className: 'inline-block' },
-            _react2.default.createElement(DeploymentStatus, { vertical: true, id: this.props.deployment.id })
+            _react2.default.createElement(DeploymentStatus, { refresh: true, vertical: true, id: this.props.deployment.id })
           )
         )
       ),

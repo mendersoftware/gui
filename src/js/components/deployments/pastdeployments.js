@@ -11,7 +11,6 @@ var Loader = require('../common/loader');
 import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
 import FlatButton from 'material-ui/FlatButton';
 
-var past = [];
 
 var Past = React.createClass({
   getInitialState: function() {
@@ -19,11 +18,8 @@ var Past = React.createClass({
       retry: false
     };
   },
-  componentWillReceiveProps: function(nextProps) {
-    past = nextProps.past || [];
-  },
   _pastCellClick: function(rowNumber, columnId) {
-    var report = past[rowNumber];
+    var report = this.props.past[rowNumber];
     this.props.showReport(report);
   },
   _formatTime: function(date) {
@@ -33,7 +29,7 @@ var Past = React.createClass({
     return;
   },
   render: function() {
-    var pastMap = past.map(function(deployment, index) {
+    var pastMap = this.props.past.map(function(deployment, index) {
       //  get statistics
       var status = (
         <DeploymentStatus id={deployment.id} />
