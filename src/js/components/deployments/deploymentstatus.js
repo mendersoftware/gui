@@ -18,15 +18,30 @@ var DeploymentStatus = React.createClass({
       }
     };
   },
+  componentWillReceiveProps: function(nextProps) {
+    if (nextProps.id!==this.props.id) this.refreshStatus(nextProps.id);
+  },
   componentDidMount: function() {
-    AppActions.getSingleDeploymentStats(this.props.id, function(stats) {
-      this.setState({stats:stats});
-    }.bind(this));
+    var self = this;
+    if (self.props.refresh) {
+      self.timer = setInterval(function() {
+        self.refreshStatus(self.props.id);
+      },5000);
+    }
+    self.refreshStatus(self.props.id)
+  },
+  componentWillUnmount: function() {
+    clearInterval(this.timer);
+  },
+  refreshStatus: function(id) {
+    var self = this;
+    AppActions.getSingleDeploymentStats(id, function(stats) {
+      self.setState({stats:stats});
+    });
   },
   render: function() {
     var inprogress = this.state.stats.downloading + this.state.stats.installing + this.state.stats.rebooting;
-    var finished = this.state.stats.success + this.state.stats.failure + this.state.stats.noimage;
-    var failed = this.state.stats.failure + this.state.stats.noimage;
+    var failed = this.state.stats.failure;
     var label = ( 
       <div className={this.props.vertical ? "results-status vertical" : "results-status"}>
         <div className={failed ? "hint--bottom" : "hint--bottom disabled"} aria-label="Failures">

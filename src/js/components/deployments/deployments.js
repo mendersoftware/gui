@@ -34,14 +34,13 @@ var tabs = {
 function getState() {
   return {
     past: AppStore.getPastDeployments(),
-    progress: AppStore.getDeploymentsInProgress(),
+    progress: AppStore.getDeploymentsInProgress() || [],
     events: AppStore.getEventLog(),
     images: AppStore.getSoftwareRepo(),
     groups: AppStore.getGroups(),
     allDevices: AppStore.getAllDevices(),
     dialogTitle: "Create a deployment",
     invalid: true,
-    filteredDevices: []
   }
 }
 
@@ -204,6 +203,7 @@ var Deployments = React.createClass({
   },
   _changeTab: function(value) {
     this.setState({tabIndex: value});
+    this._refreshDeployments();
   },
   _onScheduleSubmit: function() {
     var ids = [];
@@ -293,6 +293,7 @@ var Deployments = React.createClass({
     AppActions.removeDeployment(id);
   },
   render: function() {
+    var disabled = (typeof this.state.filteredDevices !== 'undefined' && this.state.filteredDevices.length > 0) ? false : true;
     var scheduleActions =  [
       <div style={{marginRight:"10px", display:"inline-block"}}>
         <FlatButton
@@ -304,7 +305,7 @@ var Deployments = React.createClass({
         primary={true}
         onClick={this._onScheduleSubmit}
         ref="save"
-        disabled={!(this.state.filteredDevices.length)} />
+        disabled={disabled} />
     ];
     var reportActions = [
       <FlatButton

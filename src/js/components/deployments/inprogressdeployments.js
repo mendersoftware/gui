@@ -1,5 +1,6 @@
 import React from 'react';
 import Time from 'react-time';
+var update = require('react-addons-update');
 var ProgressReport = require('./progressreport.js');
 var ScheduleForm = require('./scheduleform');
 var GroupDevices = require('./groupdevices');
@@ -14,8 +15,6 @@ import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowCol
 import FlatButton from 'material-ui/FlatButton';
 import Dialog from 'material-ui/Dialog';
 
-var progress = [];
-
 var Progress = React.createClass({
   getInitialState: function() {
     return {
@@ -24,11 +23,20 @@ var Progress = React.createClass({
       report: null
     };
   },
+  componentWillUnmount: function() {
+    clearInterval(this.timer);
+  },
   componentWillReceiveProps: function(nextProps) {
-    progress = nextProps.progress || [];
+    if (nextProps.progress[this.state.rowNumber] !== this.props.progress[this.state.rowNumber]) {
+      var report = update(this.state.report, {
+        status : {$set: "finished"}
+      });
+      this.setState({report: report});
+    }
   },
   _progressCellClick: function(rowNumber, columnId) {
-    this.setState({report: progress[rowNumber], showReport: true});
+    var self = this;
+    this.setState({report: self.props.progress[rowNumber], showReport: true, rowNumber: rowNumber});
   },
   _formatTime: function(date) {
     if (date) {
@@ -41,12 +49,13 @@ var Progress = React.createClass({
       report: null,
       showReport: false
     });
+    clearInterval(this.timer);
   },
   render: function() {
     // get statistics for each in progress
-    var progressMap = progress.map(function(deployment, index) {
+    var progressMap = this.props.progress.map(function(deployment, index) {
       var status = (
-        <DeploymentStatus id={deployment.id} />
+        <DeploymentStatus refresh={true} id={deployment.id} />
       );
       return (
         <TableRow style={{height:"52px"}} key={index}>
