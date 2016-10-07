@@ -159,9 +159,15 @@ var Repository = React.createClass({
     }
     this.setState({deploymentDevices: devices, filteredDevices: filteredDevices});
   },
-  _onRowSelection: function(rows) {
-    var image = software[rows[0]];
-    this.setState({image:image});
+  _onRowSelection: function(rowNumber, columnId) {
+    var image = software[rowNumber];
+    if (columnId<4) {
+      if (this.state.image === image) {
+        this._resetImageState();
+      } else {
+        this.setState({image:image});
+      }
+    }
   },
   _sortColumn: function(col) {
     var direction;
@@ -302,7 +308,7 @@ var Repository = React.createClass({
         
         <div style={{position: "relative", marginTop:"10px"}}>
           <Table
-            onRowSelection={this._onRowSelection}
+            onCellClick={this._onRowSelection}
             className={items.length ? null : "hidden"}>
             <TableHeader
               displaySelectAll={false}

@@ -82598,9 +82598,15 @@ var Repository = _react2.default.createClass({
     }
     this.setState({ deploymentDevices: devices, filteredDevices: filteredDevices });
   },
-  _onRowSelection: function _onRowSelection(rows) {
-    var image = software[rows[0]];
-    this.setState({ image: image });
+  _onRowSelection: function _onRowSelection(rowNumber, columnId) {
+    var image = software[rowNumber];
+    if (columnId < 4) {
+      if (this.state.image === image) {
+        this._resetImageState();
+      } else {
+        this.setState({ image: image });
+      }
+    }
   },
   _sortColumn: function _sortColumn(col) {
     var direction;
@@ -82782,7 +82788,7 @@ var Repository = _react2.default.createClass({
         _react2.default.createElement(
           _Table.Table,
           {
-            onRowSelection: this._onRowSelection,
+            onCellClick: this._onRowSelection,
             className: items.length ? null : "hidden" },
           _react2.default.createElement(
             _Table.TableHeader,
@@ -83132,7 +83138,7 @@ var SelectedImage = _react2.default.createClass({
             _react2.default.createElement(_Divider2.default, null)
           )
         ),
-        _react2.default.createElement('div', { className: 'report-list', style: { height: "130px", width: "0" } })
+        _react2.default.createElement('div', { className: 'report-list', style: { height: "98px", width: "0" } })
       )
     );
   }

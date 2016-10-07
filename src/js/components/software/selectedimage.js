@@ -135,7 +135,7 @@ var SelectedImage = React.createClass({
             </List>
           </div>
        
-          <div className="report-list" style={{height:"130px", width:"0"}}></div>
+          <div className="report-list" style={{height:"98px", width:"0"}}></div>
         </div>
       </div>
     );
