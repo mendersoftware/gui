@@ -101,6 +101,10 @@ var ProgressReport = React.createClass({
       logData: null
     });
   },
+  _setFinished: function(bool) {
+    clearInterval(this.timer);
+    this.setState({finished: bool});
+  },
   render: function () {
     var deviceList = [];
     var encodedSoftware = encodeURIComponent(this.props.deployment.artifact_name); 
@@ -158,12 +162,12 @@ var ProgressReport = React.createClass({
 
           <div className="progressStatus">
             <div id="progressStatus">
-              <h3 style={{marginTop:"12px"}}>{this.props.deployment.status === "finished" ? "Finished" : "In progress"}</h3>
+              <h3 style={{marginTop:"12px"}}>{this.state.finished ? "Finished" : "In progress"}</h3>
               <h2><FontIcon className="material-icons" style={{margin:"0 10px 0 -10px",color:"#ACD4D0", verticalAlign:"text-top"}}>timelapse</FontIcon>{this.state.elapsed}</h2>
               <div>Started: <Time value={this._formatTime(this.props.deployment.created)} format="YYYY-MM-DD HH:mm" /></div>
             </div>
             <div className="inline-block">
-              <DeploymentStatus refresh={true} vertical={true} id={this.props.deployment.id} />
+              <DeploymentStatus setFinished={this._setFinished} refresh={true} vertical={true} id={this.props.deployment.id} />
             </div>
           </div>
         </div>

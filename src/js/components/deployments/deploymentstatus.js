@@ -37,6 +37,9 @@ var DeploymentStatus = React.createClass({
     var self = this;
     AppActions.getSingleDeploymentStats(id, function(stats) {
       self.setState({stats:stats});
+      if (stats.downloading + stats.installing + stats.rebooting === 0) {
+        if (typeof self.props.setFinished !== "undefined") self.props.setFinished(true);
+      }
     });
   },
   render: function() {
