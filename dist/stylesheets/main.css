@@ -921,6 +921,7 @@ span.day {
   display: none;
   border-left: 1px #679BA5 solid;
   font-size: 12px;
+  word-break: break-all;
 }
 .progress-container .device-info.show {
   display: block;
@@ -1001,7 +1002,10 @@ span.day {
   display: block;
   height: 100%;
   width: 100%;
-  background-size: cover;
+  background-size: 66%;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: #eaf4f3;
 }
 .progress-container .bubbles-contain .bubble:hover {
   -webkit-transform: scale(1.15);
@@ -1012,13 +1016,19 @@ span.day {
   -moz-transition: all 0.2s ease;
   -ms-transition: all 0.2s ease;
   -o-transition: all 0.2s ease;
+  border: 1px solid #679BA5;
 }
 .progress-container .bubbles-contain .inprogress .bubble,
 .progress-container .bubbles-contain .installing .bubble,
 .progress-container .bubbles-contain .rebooting .bubble {
+  -webkit-animation: pulse 2.8s infinite;
+  -moz-animation: pulse 2.8s infinite;
+  -ms-animation: pulse 2.8s infinite;
+  -o-animation: pulse 2.8s infinite;
   background-image: url('../assets/img/progress_status_large.png');
 }
 .progress-container .bubbles-contain .pending .bubble {
+  background-color: #f7fbfb;
   background-image: url('../assets/img/pending_status_large.png');
 }
 .progress-container .bubbles-contain .failure .bubble {
@@ -1216,24 +1226,36 @@ span.day {
 }
 @-webkit-keyframes pulse {
   0% {
-    background-color: #eaf4f3;
+    -webkit-opacity: 1;
+    -moz-opacity: 1;
+    opacity: 1;
   }
   50% {
-    background-color: #f7fbfb;
+    -webkit-opacity: 0.5;
+    -moz-opacity: 0.5;
+    opacity: 0.5;
   }
   100% {
-    background-color: #eaf4f3;
+    -webkit-opacity: 1;
+    -moz-opacity: 1;
+    opacity: 1;
   }
 }
 @keyframes pulse {
   0% {
-    background-color: #eaf4f3;
+    -webkit-opacity: 1;
+    -moz-opacity: 1;
+    opacity: 1;
   }
   50% {
-    background-color: #f7fbfb;
+    -webkit-opacity: 0.5;
+    -moz-opacity: 0.5;
+    opacity: 0.5;
   }
   100% {
-    background-color: #eaf4f3;
+    -webkit-opacity: 1;
+    -moz-opacity: 1;
+    opacity: 1;
   }
 }
 @-webkit-keyframes spin {

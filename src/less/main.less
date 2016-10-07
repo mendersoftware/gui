@@ -1008,6 +1008,7 @@ span.month, span.day {
     display: none;
     border-left: 1px @linkhover solid;
     font-size: 12px;
+    word-break: break-all;
   
     &.show {
       display: block;
@@ -1091,21 +1092,27 @@ span.month, span.day {
       display: block;
       height:100%;
       width:100%;
-      background-size: cover;
+      background-size: 66%;
+      background-repeat: no-repeat;
+      background-position: center;
+      background-color: @lightergrey;
     
       &:hover {
         .scale(1.15);
         .transition(all 0.2s ease);
+        border: 1px solid @linkhover;
       }
     }
 
     .inprogress .bubble,
     .installing .bubble,
     .rebooting .bubble {
+      .animation(pulse 2.8s infinite);
       background-image: url('../assets/img/progress_status_large.png');
     }
 
     .pending .bubble {
+      background-color: lighten(@lightergrey, 4%);
       background-image: url('../assets/img/pending_status_large.png');
     }
     .failure .bubble {
@@ -1324,13 +1331,13 @@ span.month, span.day {
 
 @keyframes pulse {
   0% {
-    background-color: @lightergrey;
+    .opacity(1);
   }
   50% {
-    background-color: lighten(@lightergrey, 4%);
+    .opacity(0.5);
   }
   100% {
-    background-color: @lightergrey;
+    .opacity(1);
   }
 }
 
