@@ -76966,7 +76966,7 @@ var Deployments = _react2.default.createClass({
         ),
         _react2.default.createElement(
           'div',
-          { className: 'margin-bottom-large' },
+          { className: 'margin-bottom' },
           _react2.default.createElement(Recent, { loading: this.props.loadingRecent, clickHandle: this._clickHandle, deployments: this.props.recent })
         )
       ),
@@ -77360,7 +77360,7 @@ var Recent = _react2.default.createClass({
   render: function render() {
     var deployments = this.props.deployments || [];
     var recent = deployments.map(function (deployment, index) {
-      if (index < 5) {
+      if (index < 3) {
 
         var last = deployments.length === index + 1 || index === 4;
         var status = deployment.status === "Failed" ? "warning" : "check";
