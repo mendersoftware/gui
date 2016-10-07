@@ -252,7 +252,6 @@ var Repository = React.createClass({
           <TableRowColumn style={expanded ? {height: this.state.divHeight} : null}>{pkg.name}</TableRowColumn>
           <TableRowColumn>{pkg.device_type}</TableRowColumn>
           <TableRowColumn><Time value={this._formatTime(pkg.modified)} format="YYYY-MM-DD HH:mm" /></TableRowColumn>
-          <TableRowColumn style={{textAlign:"right"}}>{pkg.devices || 0}</TableRowColumn>
           <TableRowColumn style={{width:"33px", paddingRight:"0", paddingLeft:"12px"}} className="expandButton">
             <IconButton className="float-right"><FontIcon className="material-icons">{ expanded ? "arrow_drop_up" : "arrow_drop_down"}</FontIcon></IconButton>
           </TableRowColumn>
@@ -312,7 +311,6 @@ var Repository = React.createClass({
                 <TableHeaderColumn className="columnHeader" tooltip="Name">Name <FontIcon ref="name" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "name")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
                 <TableHeaderColumn className="columnHeader" tooltip="Device type compatibility">Device type compatibility <FontIcon ref="device_type" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "device_type")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
                 <TableHeaderColumn className="columnHeader" tooltip="Last modified">Last modified <FontIcon style={styles.sortIcon} ref="modified" onClick={this._sortColumn.bind(null, "modified")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
-                <TableHeaderColumn style={{textAlign:"right", paddingRight:"12px"}} className="columnHeader align-right" tooltip="Installed on devices">Installed on devices <FontIcon style={styles.sortIcon} ref="devices" onClick={this._sortColumn.bind(null, "devices")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
                 <TableHeaderColumn style={{width:"33px", paddingRight:"12px", paddingLeft:"0"}} className="columnHeader"></TableHeaderColumn>
               </TableRow>
             </TableHeader>

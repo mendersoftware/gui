@@ -102,7 +102,7 @@ var SelectedImage = React.createClass({
               <Divider />
             </List>
           </div>
-          <div className="image-list list-item">
+          <div className="hidden image-list list-item">
             <List style={{backgroundColor: "rgba(255,255,255,0)"}}>
               <ListItem style={styles.listStyle} disabled={true} primaryText="Installed on devices" secondaryText={devicesLink} />
               <Divider /> 
@@ -127,7 +127,7 @@ var SelectedImage = React.createClass({
               <div key="updateButton">
                 <ListItem
                   style={styles.listStyle}
-                  primaryText="Create a deployment for this device"
+                  primaryText="Create a deployment using this image"
                   onClick={this._clickImageSchedule}
                   leftIcon={<FontIcon style={{marginTop:6, marginBottom:6}} className="material-icons update">replay</FontIcon>} />
               </div>
