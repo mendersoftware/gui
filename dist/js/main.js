@@ -82598,9 +82598,15 @@ var Repository = _react2.default.createClass({
     }
     this.setState({ deploymentDevices: devices, filteredDevices: filteredDevices });
   },
-  _onRowSelection: function _onRowSelection(rows) {
-    var image = software[rows[0]];
-    this.setState({ image: image });
+  _onRowSelection: function _onRowSelection(rowNumber, columnId) {
+    var image = software[rowNumber];
+    if (columnId < 4) {
+      if (this.state.image === image) {
+        this._resetImageState();
+      } else {
+        this.setState({ image: image });
+      }
+    }
   },
   _sortColumn: function _sortColumn(col) {
     var direction;
@@ -82707,11 +82713,6 @@ var Repository = _react2.default.createClass({
         ),
         _react2.default.createElement(
           _Table.TableRowColumn,
-          { style: { textAlign: "right" } },
-          pkg.devices || 0
-        ),
-        _react2.default.createElement(
-          _Table.TableRowColumn,
           { style: { width: "33px", paddingRight: "0", paddingLeft: "12px" }, className: 'expandButton' },
           _react2.default.createElement(
             _IconButton2.default,
@@ -82787,7 +82788,7 @@ var Repository = _react2.default.createClass({
         _react2.default.createElement(
           _Table.Table,
           {
-            onRowSelection: this._onRowSelection,
+            onCellClick: this._onRowSelection,
             className: items.length ? null : "hidden" },
           _react2.default.createElement(
             _Table.TableHeader,
@@ -82824,16 +82825,6 @@ var Repository = _react2.default.createClass({
                 _react2.default.createElement(
                   _FontIcon2.default,
                   { style: styles.sortIcon, ref: 'modified', onClick: this._sortColumn.bind(null, "modified"), className: 'sortIcon material-icons' },
-                  'sort'
-                )
-              ),
-              _react2.default.createElement(
-                _Table.TableHeaderColumn,
-                { style: { textAlign: "right", paddingRight: "12px" }, className: 'columnHeader align-right', tooltip: 'Installed on devices' },
-                'Installed on devices ',
-                _react2.default.createElement(
-                  _FontIcon2.default,
-                  { style: styles.sortIcon, ref: 'devices', onClick: this._sortColumn.bind(null, "devices"), className: 'sortIcon material-icons' },
                   'sort'
                 )
               ),
@@ -83088,7 +83079,7 @@ var SelectedImage = _react2.default.createClass({
         ),
         _react2.default.createElement(
           'div',
-          { className: 'image-list list-item' },
+          { className: 'hidden image-list list-item' },
           _react2.default.createElement(
             _List.List,
             { style: { backgroundColor: "rgba(255,255,255,0)" } },
@@ -83136,7 +83127,7 @@ var SelectedImage = _react2.default.createClass({
               { key: 'updateButton' },
               _react2.default.createElement(_List.ListItem, {
                 style: styles.listStyle,
-                primaryText: 'Create a deployment for this device',
+                primaryText: 'Create a deployment using this image',
                 onClick: this._clickImageSchedule,
                 leftIcon: _react2.default.createElement(
                   _FontIcon2.default,
@@ -83147,7 +83138,7 @@ var SelectedImage = _react2.default.createClass({
             _react2.default.createElement(_Divider2.default, null)
           )
         ),
-        _react2.default.createElement('div', { className: 'report-list', style: { height: "130px", width: "0" } })
+        _react2.default.createElement('div', { className: 'report-list', style: { height: "98px", width: "0" } })
       )
     );
   }
