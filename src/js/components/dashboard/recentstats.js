@@ -6,8 +6,7 @@ var RecentStats = React.createClass({
     return {
       stats: {
         "success": 0,
-        "failure": 0,
-        "noimage": 0
+        "failure": 0
       }
     };
   },
@@ -17,7 +16,7 @@ var RecentStats = React.createClass({
     }.bind(this));
   },
   render: function() {
-    var failures = this.state.stats.failure + this.state.stats.noimage;
+    var failures = this.state.stats.failure;
     return (
       <div className="deploymentStats">
         <div className="resultIcons">

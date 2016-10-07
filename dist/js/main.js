@@ -77488,8 +77488,7 @@ var RecentStats = _react2.default.createClass({
     return {
       stats: {
         "success": 0,
-        "failure": 0,
-        "noimage": 0
+        "failure": 0
       }
     };
   },
@@ -77499,7 +77498,7 @@ var RecentStats = _react2.default.createClass({
     }.bind(this));
   },
   render: function render() {
-    var failures = this.state.stats.failure + this.state.stats.noimage;
+    var failures = this.state.stats.failure;
     return _react2.default.createElement(
       'div',
       { className: 'deploymentStats' },
@@ -78744,7 +78743,7 @@ var ProgressChart = _react2.default.createClass({
     var totalDevices = this.state.stats.success + this.state.stats.failure + this.state.stats.downloading + this.state.stats.installing + this.state.stats.rebooting + this.state.stats.noimage + this.state.stats.pending;
 
     var success = this.state.stats.success;
-    var failures = this.state.stats.failure + this.state.stats.noimage;
+    var failures = this.state.stats.failure;
     var progress = this.state.stats.downloading + this.state.stats.rebooting + this.state.stats.installing;
     var pending = this.state.stats.pending;
 
