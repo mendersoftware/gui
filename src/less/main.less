@@ -1008,6 +1008,7 @@ span.month, span.day {
     display: none;
     border-left: 1px @linkhover solid;
     font-size: 12px;
+    word-break: break-all;
   
     &.show {
       display: block;
@@ -1023,9 +1024,8 @@ span.month, span.day {
     margin-top: 10px;
 
     .bubble {
-      width: 10px;
-      height: 10px;
-      background-color: @lightgrey;
+      width: 14px;
+      height: 14px;
       border-radius: 50%;
       display: inline-block;
       margin-left: 6px;
@@ -1033,30 +1033,21 @@ span.month, span.day {
       margin-top: -2px;
       vertical-align: middle;
       position: relative;
+      background-size: cover;
 
       &.successful {
-        background-color: @green;
+        background-image: url('../assets/img/success_status.png');
       }
-      &.failure,
-      &.noimage {
-        background-color: @red;
+      &.failure {
+        background-image: url('../assets/img/error_status.png');
       }
       &.pending {
-        .animation(pulse 3s infinite);
+        background-image: url('../assets/img/pending_status.png');
       }
-      &.inprogress {
-        background-color: darken(@lightgrey,12%);
-
-        &:after {
-          content:"";
-          width: 100%;
-          height: 100%;
-          position: absolute;
-          border-radius: 50%;
-          background-image:
-          linear-gradient(-90deg, transparent 50%, @lightgrey 50%),
-          linear-gradient(45deg, @lightgrey 50%, transparent 50%);
-        }
+      &.inprogress,
+      &.installing,
+      &.rebooting, {
+        background-image: url('../assets/img/progress_status.png');
       }
     }
   }
@@ -1097,11 +1088,14 @@ span.month, span.day {
 
     .bubble {
       border-radius: 50%;
-      background-color: darken(@lightgrey, 4%);
       position: relative;
       display: block;
       height:100%;
       width:100%;
+      background-size: 66%;
+      background-repeat: no-repeat;
+      background-position: center;
+      background-color: @lightergrey;
     
       &:hover {
         .scale(1.15);
@@ -1110,45 +1104,22 @@ span.month, span.day {
       }
     }
 
-    .inprogress .bubble {
-      background-color: darken(@lightgrey,5%);
-
-      &:after {
-        content:"";
-        width: 100%;
-        height: 100%;
-        position: absolute;
-        border-radius: 50%;
-        background-image:
-        linear-gradient(0deg, transparent 50%, @lightgrey 50%),
-        linear-gradient(13deg, @lightgrey 50%, transparent 50%);
-        .animation(spin 1.5s ease-out infinite);
-      }
+    .inprogress .bubble,
+    .installing .bubble,
+    .rebooting .bubble {
+      .animation(pulse 2.8s infinite);
+      background-image: url('../assets/img/progress_status_large.png');
     }
 
     .pending .bubble {
-      background-color: @lightergrey;
-      .animation(pulse 2.8s infinite);
+      background-color: lighten(@lightergrey, 4%);
+      background-image: url('../assets/img/pending_status_large.png');
     }
-    .failure .bubble,
-    .noimage .bubble {
-      background-color: @red;
-      /* &:after {
-        content:"";
-        position: absolute;
-        color: #ffffff;
-        background-image: url('../assets/img/warning_white.png');
-        background-repeat: no-repeat;
-        background-size: contain;
-        width: 60%;
-        top: 20%;
-        left: 20%;
-        height: 60%;
-        z-index: 400;
-      }*/
+    .failure .bubble {
+      background-image: url('../assets/img/error_status_large.png');
     }
     .successful .bubble {
-      background-color: @green;
+      background-image: url('../assets/img/success_status_large.png');
     }
   }
 }
@@ -1360,13 +1331,13 @@ span.month, span.day {
 
 @keyframes pulse {
   0% {
-    background-color: @lightergrey;
+    .opacity(1);
   }
   50% {
-    background-color: lighten(@lightergrey, 4%);
+    .opacity(0.5);
   }
   100% {
-    background-color: @lightergrey;
+    .opacity(1);
   }
 }
 
