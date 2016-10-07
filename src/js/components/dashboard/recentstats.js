@@ -1,12 +1,14 @@
 import React from 'react';
 var AppActions = require('../../actions/app-actions');
+var pluralize = require('pluralize');
 
 var RecentStats = React.createClass({
   getInitialState: function() {
     return {
       stats: {
         "success": 0,
-        "failure": 0
+        "failure": 0,
+        "noimage": 0
       }
     };
   },
@@ -28,6 +30,9 @@ var RecentStats = React.createClass({
           <img src="assets/img/largeSuccess.png" />
           <div>{this.state.stats.success}</div>
           <span className="iconStatLabel">Successful</span>
+        </div>
+        <div className={this.state.stats.noimage ? "skipped-text" : "hidden"}>
+          {this.state.stats.noimage} {pluralize("devices", this.state.stats.noimage)} {pluralize("was", this.state.stats.noimage)} skipped
         </div>
       </div>
     );

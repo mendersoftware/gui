@@ -77480,6 +77480,7 @@ var _react2 = _interopRequireDefault(_react);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var AppActions = require('../../actions/app-actions');
+var pluralize = require('pluralize');
 
 var RecentStats = _react2.default.createClass({
   displayName: 'RecentStats',
@@ -77488,7 +77489,8 @@ var RecentStats = _react2.default.createClass({
     return {
       stats: {
         "success": 0,
-        "failure": 0
+        "failure": 0,
+        "noimage": 0
       }
     };
   },
@@ -77531,6 +77533,16 @@ var RecentStats = _react2.default.createClass({
           { className: 'iconStatLabel' },
           'Successful'
         )
+      ),
+      _react2.default.createElement(
+        'div',
+        { className: this.state.stats.noimage ? "skipped-text" : "hidden" },
+        this.state.stats.noimage,
+        ' ',
+        pluralize("devices", this.state.stats.noimage),
+        ' ',
+        pluralize("was", this.state.stats.noimage),
+        ' skipped'
       )
     );
   }
@@ -77538,7 +77550,7 @@ var RecentStats = _react2.default.createClass({
 
 module.exports = RecentStats;
 
-},{"../../actions/app-actions":720,"react":637}],736:[function(require,module,exports){
+},{"../../actions/app-actions":720,"pluralize":387,"react":637}],736:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
