@@ -76013,7 +76013,7 @@ var AppActions = {
 
 module.exports = AppActions;
 
-},{"../api/deployments-api":721,"../api/devices-api":722,"../api/images-api":723,"../constants/app-constants":762,"../dispatchers/app-dispatcher":763}],721:[function(require,module,exports){
+},{"../api/deployments-api":721,"../api/devices-api":722,"../api/images-api":723,"../constants/app-constants":761,"../dispatchers/app-dispatcher":762}],721:[function(require,module,exports){
 'use strict';
 
 var request = require('superagent');
@@ -76274,7 +76274,7 @@ var App = _react2.default.createClass({
 
 module.exports = App;
 
-},{"../themes/mender-theme.js":767,"./header/header":756,"material-ui/styles/getMuiTheme":352,"react":637,"react-joyride":405}],725:[function(require,module,exports){
+},{"../themes/mender-theme.js":766,"./header/header":755,"material-ui/styles/getMuiTheme":352,"react":637,"react-joyride":405}],725:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -76800,10 +76800,21 @@ var Dashboard = _react2.default.createClass({
     AppStore.changeListener(this._onChange);
   },
   componentWillUnmount: function componentWillUnmount() {
+    clearInterval(this.timer);
     AppStore.removeChangeListener(this._onChange);
   },
   componentDidMount: function componentDidMount() {
+    this.timer = setInterval(this._refreshDeployments, 5000);
+    this._refreshDeployments();
     this._refreshAdmissions();
+  },
+  _onChange: function _onChange() {
+    this.setState(this.getInitialState());
+  },
+  _setStorage: function _setStorage(key, value) {
+    AppActions.setLocalStorage(key, value);
+  },
+  _refreshDeployments: function _refreshDeployments() {
     AppActions.getPastDeployments(function () {
       setTimeout(function () {
         this.setState({ doneActiveDepsLoading: true });
@@ -76814,12 +76825,6 @@ var Dashboard = _react2.default.createClass({
         this.setState({ donePastDepsLoading: true });
       }.bind(this), 300);
     }.bind(this));
-  },
-  _onChange: function _onChange() {
-    this.setState(this.getInitialState());
-  },
-  _setStorage: function _setStorage(key, value) {
-    AppActions.setLocalStorage(key, value);
   },
   _refreshAdmissions: function _refreshAdmissions() {
     AppActions.getDevicesForAdmission(function (devices) {
@@ -76918,7 +76923,7 @@ Dashboard.contextTypes = {
 
 module.exports = Dashboard;
 
-},{"../../actions/app-actions":720,"../../stores/app-store":765,"../../stores/local-store":766,"./activity":729,"./deployments":731,"./health":732,"material-ui/RaisedButton":149,"material-ui/Snackbar":158,"react":637,"react-router":451}],731:[function(require,module,exports){
+},{"../../actions/app-actions":720,"../../stores/app-store":764,"../../stores/local-store":765,"./activity":729,"./deployments":731,"./health":732,"material-ui/RaisedButton":149,"material-ui/Snackbar":158,"react":637,"react-router":451}],731:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -78046,7 +78051,7 @@ var Deployments = _react2.default.createClass({
 
 module.exports = Deployments;
 
-},{"../../actions/app-actions":720,"../../stores/app-store":765,"./eventlog.js":739,"./inprogressdeployments.js":741,"./pastdeployments.js":742,"./report.js":746,"./schedule.js":747,"./schedulebutton.js":748,"./scheduleform.js":749,"material-ui/Dialog":106,"material-ui/FlatButton":115,"material-ui/RaisedButton":149,"material-ui/Tabs":181,"react":637}],738:[function(require,module,exports){
+},{"../../actions/app-actions":720,"../../stores/app-store":764,"./eventlog.js":739,"./inprogressdeployments.js":741,"./pastdeployments.js":742,"./report.js":745,"./schedule.js":746,"./schedulebutton.js":747,"./scheduleform.js":748,"material-ui/Dialog":106,"material-ui/FlatButton":115,"material-ui/RaisedButton":149,"material-ui/Tabs":181,"react":637}],738:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -78318,8 +78323,6 @@ var update = require('react-addons-update');
 var ProgressReport = require('./progressreport.js');
 var ScheduleForm = require('./scheduleform');
 var GroupDevices = require('./groupdevices');
-
-var ProgressChart = require('./progresschart');
 var DeploymentStatus = require('./deploymentstatus');
 
 var Loader = require('../common/loader');
@@ -78495,7 +78498,7 @@ var Progress = _react2.default.createClass({
 
 module.exports = Progress;
 
-},{"../common/loader":728,"./deploymentstatus":738,"./groupdevices":740,"./progresschart":744,"./progressreport.js":745,"./scheduleform":749,"material-ui/Dialog":106,"material-ui/FlatButton":115,"material-ui/Table":176,"react":637,"react-addons-update":393,"react-time":488}],742:[function(require,module,exports){
+},{"../common/loader":728,"./deploymentstatus":738,"./groupdevices":740,"./progressreport.js":744,"./scheduleform":748,"material-ui/Dialog":106,"material-ui/FlatButton":115,"material-ui/Table":176,"react":637,"react-addons-update":393,"react-time":488}],742:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -78673,7 +78676,7 @@ var Past = _react2.default.createClass({
 
 module.exports = Past;
 
-},{"../common/loader":728,"./deploymentstatus":738,"./groupdevices":740,"./report.js":746,"./scheduleform":749,"material-ui/FlatButton":115,"material-ui/Table":176,"react":637,"react-time":488}],743:[function(require,module,exports){
+},{"../common/loader":728,"./deploymentstatus":738,"./groupdevices":740,"./report.js":745,"./scheduleform":748,"material-ui/FlatButton":115,"material-ui/Table":176,"react":637,"react-time":488}],743:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -78709,6 +78712,13 @@ var ProgressChart = _react2.default.createClass({
     };
   },
   componentDidMount: function componentDidMount() {
+    this.timer = setInterval(this.refreshDeploymentDevices, 5000);
+    this.refreshDeploymentDevices();
+  },
+  componentWillUnmount: function componentWillUnmount() {
+    clearInterval(this.timer);
+  },
+  refreshDeploymentDevices: function refreshDeploymentDevices() {
     AppActions.getSingleDeploymentStats(this.props.deployment.id, function (stats) {
       this.setState({ stats: stats });
     }.bind(this));
@@ -78822,156 +78832,7 @@ ProgressChart.contextTypes = {
 
 module.exports = ProgressChart;
 
-},{"../../actions/app-actions":720,"../../stores/app-store":765,"react":637,"react-router":451}],744:[function(require,module,exports){
-'use strict';
-
-var _react = require('react');
-
-var _react2 = _interopRequireDefault(_react);
-
-var _reactRouter = require('react-router');
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var AppActions = require('../../actions/app-actions');
-var AppStore = require('../../stores/app-store');
-
-var ProgressChart = _react2.default.createClass({
-  displayName: 'ProgressChart',
-
-  getInitialState: function getInitialState() {
-    return {
-      devices: [],
-      stats: {
-        "downloading": 0,
-        "failure": 0,
-        "installing": 0,
-        "noimage": 0,
-        "pending": 0,
-        "rebooting": 0,
-        "success": 0
-      },
-      device: {
-        name: "",
-        status: ""
-      }
-    };
-  },
-  componentDidMount: function componentDidMount() {
-    AppActions.getSingleDeploymentStats(this.props.deployment.id, function (stats) {
-      this.setState({ stats: stats });
-    }.bind(this));
-    AppActions.getSingleDeploymentDevices(this.props.deployment.id, function (devices) {
-      var sortedDevices = AppStore.getOrderedDeploymentDevices(devices);
-      this.setState({ devices: sortedDevices });
-    }.bind(this));
-  },
-  _handleClick: function _handleClick(id) {
-    var filter = encodeURIComponent("id=" + id);
-    this.context.router.push('/devices/1/' + filter);
-  },
-  _hoverDevice: function _hoverDevice(device) {
-    if (!device) {
-      device = {
-        name: "",
-        status: ""
-      };
-    }
-    this.setState({ device: device });
-  },
-  render: function render() {
-    var totalDevices = this.state.stats.success + this.state.stats.failure + this.state.stats.downloading + this.state.stats.installing + this.state.stats.rebooting + this.state.stats.noimage + this.state.stats.pending;
-
-    var success = this.state.stats.success;
-    var failures = this.state.stats.failure + this.state.stats.noimage;
-    var progress = this.state.stats.downloading + this.state.stats.rebooting + this.state.stats.installing;
-    var pending = this.state.stats.pending;
-
-    var rows = Math.floor(Math.sqrt(this.state.devices.length));
-    var dev = this.state.devices.length;
-
-    while (this.state.devices.length % rows != 0) {
-      rows = rows - 1;
-    }
-
-    if (rows === 1 && dev * 80 > 300) {
-      rows = Math.ceil(this.state.devices.length / 5);
-    }
-
-    var pixelHeight = 80 / rows;
-
-    var deviceGrid = this.state.devices.map(function (device, index) {
-      var split = Math.ceil(dev / rows);
-      return _react2.default.createElement(
-        'div',
-        { key: index, className: index % split == 0 ? device.status + " clear" : device.status, style: { height: pixelHeight, width: pixelHeight } },
-        _react2.default.createElement('div', { onMouseEnter: this._hoverDevice.bind(null, device), onMouseLeave: this._hoverDevice, onClick: this._handleClick.bind(null, device.id), className: 'bubble' })
-      );
-    }, this);
-
-    var progressChart = _react2.default.createElement(
-      'div',
-      null,
-      _react2.default.createElement(
-        'div',
-        { className: 'progressHeader' },
-        success + failures,
-        ' of ',
-        totalDevices,
-        ' devices complete'
-      ),
-      _react2.default.createElement(
-        'div',
-        { className: 'bubbles-contain' },
-        deviceGrid
-      ),
-      _react2.default.createElement(
-        'div',
-        { className: !this.state.device.id ? "device-info" : "device-info show" },
-        _react2.default.createElement(
-          'b',
-          null,
-          'Device info:'
-        ),
-        _react2.default.createElement(
-          'p',
-          null,
-          this.state.device.id
-        ),
-        _react2.default.createElement(
-          'p',
-          null,
-          this.state.device.status
-        )
-      ),
-      _react2.default.createElement(
-        'div',
-        { className: 'key' },
-        _react2.default.createElement('div', { className: 'bubble failure' }),
-        ' Failed ',
-        _react2.default.createElement('div', { className: 'bubble pending' }),
-        ' Pending ',
-        _react2.default.createElement('div', { className: 'bubble inprogress' }),
-        ' In progress ',
-        _react2.default.createElement('div', { className: 'bubble successful' }),
-        ' Successful'
-      )
-    );
-    return _react2.default.createElement(
-      'div',
-      null,
-      progressChart
-    );
-  }
-});
-
-ProgressChart.contextTypes = {
-  router: _react2.default.PropTypes.object
-};
-
-module.exports = ProgressChart;
-
-},{"../../actions/app-actions":720,"../../stores/app-store":765,"react":637,"react-router":451}],745:[function(require,module,exports){
+},{"../../actions/app-actions":720,"../../stores/app-store":764,"react":637,"react-router":451}],744:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -79360,7 +79221,7 @@ var ProgressReport = _react2.default.createClass({
 
 module.exports = ProgressReport;
 
-},{"../../actions/app-actions":720,"./deploymentstatus":738,"material-ui/Checkbox":88,"material-ui/Dialog":106,"material-ui/FlatButton":115,"material-ui/FontIcon":119,"material-ui/RaisedButton":149,"material-ui/Table":176,"react":637,"react-copy-to-clipboard":399,"react-router":451,"react-time":488}],746:[function(require,module,exports){
+},{"../../actions/app-actions":720,"./deploymentstatus":738,"material-ui/Checkbox":88,"material-ui/Dialog":106,"material-ui/FlatButton":115,"material-ui/FontIcon":119,"material-ui/RaisedButton":149,"material-ui/Table":176,"react":637,"react-copy-to-clipboard":399,"react-router":451,"react-time":488}],745:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -79767,7 +79628,7 @@ var Report = _react2.default.createClass({
 
 module.exports = Report;
 
-},{"../../actions/app-actions":720,"material-ui/Checkbox":88,"material-ui/Dialog":106,"material-ui/FlatButton":115,"material-ui/RaisedButton":149,"material-ui/Table":176,"pluralize":387,"react":637,"react-copy-to-clipboard":399,"react-router":451,"react-time":488}],747:[function(require,module,exports){
+},{"../../actions/app-actions":720,"material-ui/Checkbox":88,"material-ui/Dialog":106,"material-ui/FlatButton":115,"material-ui/RaisedButton":149,"material-ui/Table":176,"pluralize":387,"react":637,"react-copy-to-clipboard":399,"react-router":451,"react-time":488}],746:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -79930,7 +79791,7 @@ var Schedule = _react2.default.createClass({
 
 module.exports = Schedule;
 
-},{"material-ui":205,"react":637,"react-time":488}],748:[function(require,module,exports){
+},{"material-ui":205,"react":637,"react-time":488}],747:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -79975,7 +79836,7 @@ var ScheduleButton = _react2.default.createClass({
 
 module.exports = ScheduleButton;
 
-},{"material-ui/FlatButton":115,"material-ui/RaisedButton":149,"react":637}],749:[function(require,module,exports){
+},{"material-ui/FlatButton":115,"material-ui/RaisedButton":149,"react":637}],748:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -80318,7 +80179,7 @@ var ScheduleForm = _react2.default.createClass({
 
 module.exports = ScheduleForm;
 
-},{"../../actions/app-actions":720,"../../stores/app-store":765,"material-ui/Divider":108,"material-ui/Drawer":110,"material-ui/FontIcon":119,"material-ui/IconButton":124,"material-ui/MenuItem":138,"material-ui/SelectField":153,"material-ui/TextField":187,"pluralize":387,"react":637,"react-router":451,"react-search-input":479}],750:[function(require,module,exports){
+},{"../../actions/app-actions":720,"../../stores/app-store":764,"material-ui/Divider":108,"material-ui/Drawer":110,"material-ui/FontIcon":119,"material-ui/IconButton":124,"material-ui/MenuItem":138,"material-ui/SelectField":153,"material-ui/TextField":187,"pluralize":387,"react":637,"react-router":451,"react-search-input":479}],749:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -81027,7 +80888,7 @@ var DeviceList = _react2.default.createClass({
 
 module.exports = DeviceList;
 
-},{"../../actions/app-actions":720,"../../stores/app-store":765,"../common/loader":728,"./filters":752,"./selecteddevices":754,"material-ui/Dialog":106,"material-ui/FlatButton":115,"material-ui/FontIcon":119,"material-ui/IconButton":124,"material-ui/MenuItem":138,"material-ui/RaisedButton":149,"material-ui/SelectField":153,"material-ui/Snackbar":158,"material-ui/Table":176,"material-ui/TextField":187,"pluralize":387,"react":637,"react-collapse":397,"react-dom":400,"react-height":404,"react-motion":416,"react-time":488}],751:[function(require,module,exports){
+},{"../../actions/app-actions":720,"../../stores/app-store":764,"../common/loader":728,"./filters":751,"./selecteddevices":753,"material-ui/Dialog":106,"material-ui/FlatButton":115,"material-ui/FontIcon":119,"material-ui/IconButton":124,"material-ui/MenuItem":138,"material-ui/RaisedButton":149,"material-ui/SelectField":153,"material-ui/Snackbar":158,"material-ui/Table":176,"material-ui/TextField":187,"pluralize":387,"react":637,"react-collapse":397,"react-dom":400,"react-height":404,"react-motion":416,"react-time":488}],750:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -81217,7 +81078,7 @@ Devices.contextTypes = {
 
 module.exports = Devices;
 
-},{"../../actions/app-actions":720,"../../stores/app-store":765,"./devicelist":750,"./groups":753,"./unauthorized":755,"material-ui/Snackbar":158,"react":637,"react-addons-update":393,"react-router":451}],752:[function(require,module,exports){
+},{"../../actions/app-actions":720,"../../stores/app-store":764,"./devicelist":749,"./groups":752,"./unauthorized":754,"material-ui/Snackbar":158,"react":637,"react-addons-update":393,"react-router":451}],751:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -81430,7 +81291,7 @@ var Filters = _react2.default.createClass({
 
 module.exports = Filters;
 
-},{"material-ui/Drawer":110,"material-ui/FlatButton":115,"material-ui/FontIcon":119,"material-ui/IconButton":124,"material-ui/MenuItem":138,"material-ui/SelectField":153,"material-ui/TextField":187,"react":637}],753:[function(require,module,exports){
+},{"material-ui/Drawer":110,"material-ui/FlatButton":115,"material-ui/FontIcon":119,"material-ui/IconButton":124,"material-ui/MenuItem":138,"material-ui/SelectField":153,"material-ui/TextField":187,"react":637}],752:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -81753,7 +81614,7 @@ var Groups = _react2.default.createClass({
 
 module.exports = Groups;
 
-},{"../../actions/app-actions":720,"../../stores/app-store":765,"material-ui/Dialog":106,"material-ui/FlatButton":115,"material-ui/FontIcon":119,"material-ui/List":133,"material-ui/RaisedButton":149,"material-ui/Subheader":166,"material-ui/Table":176,"material-ui/TextField":187,"react":637,"react-search-input":479}],754:[function(require,module,exports){
+},{"../../actions/app-actions":720,"../../stores/app-store":764,"material-ui/Dialog":106,"material-ui/FlatButton":115,"material-ui/FontIcon":119,"material-ui/List":133,"material-ui/RaisedButton":149,"material-ui/Subheader":166,"material-ui/Table":176,"material-ui/TextField":187,"react":637,"react-search-input":479}],753:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -82046,7 +81907,7 @@ var SelectedDevices = _react2.default.createClass({
 
 module.exports = SelectedDevices;
 
-},{"../../actions/app-actions":720,"../../stores/app-store":765,"../deployments/scheduleform":749,"material-ui/Dialog":106,"material-ui/Divider":108,"material-ui/FlatButton":115,"material-ui/FontIcon":119,"material-ui/IconButton":124,"material-ui/List":133,"material-ui/RaisedButton":149,"material-ui/TextField":187,"react":637,"react-collapse":397,"react-router":451,"react-time":488}],755:[function(require,module,exports){
+},{"../../actions/app-actions":720,"../../stores/app-store":764,"../deployments/scheduleform":748,"material-ui/Dialog":106,"material-ui/Divider":108,"material-ui/FlatButton":115,"material-ui/FontIcon":119,"material-ui/IconButton":124,"material-ui/List":133,"material-ui/RaisedButton":149,"material-ui/TextField":187,"react":637,"react-collapse":397,"react-router":451,"react-time":488}],754:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -82334,7 +82195,7 @@ var Authorized = _react2.default.createClass({
 
 module.exports = Authorized;
 
-},{"../../actions/app-actions":720,"./selecteddevices":754,"material-ui":205,"material-ui/FontIcon":119,"material-ui/IconButton":124,"material-ui/RaisedButton":149,"material-ui/Table":176,"react":637,"react-collapse":397,"react-dom":400,"react-height":404,"react-motion":416,"react-time":488}],756:[function(require,module,exports){
+},{"../../actions/app-actions":720,"./selecteddevices":753,"material-ui":205,"material-ui/FontIcon":119,"material-ui/IconButton":124,"material-ui/RaisedButton":149,"material-ui/Table":176,"react":637,"react-collapse":397,"react-dom":400,"react-height":404,"react-motion":416,"react-time":488}],755:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -82474,7 +82335,7 @@ Header.contextTypes = {
 
 module.exports = Header;
 
-},{"../../actions/app-actions":720,"material-ui/FontIcon":119,"material-ui/IconButton":124,"material-ui/IconMenu":126,"material-ui/MenuItem":138,"material-ui/Tabs":181,"material-ui/Toolbar":204,"react":637,"react-router":451}],757:[function(require,module,exports){
+},{"../../actions/app-actions":720,"material-ui/FontIcon":119,"material-ui/IconButton":124,"material-ui/IconMenu":126,"material-ui/MenuItem":138,"material-ui/Tabs":181,"material-ui/Toolbar":204,"react":637,"react-router":451}],756:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -82500,7 +82361,7 @@ var DeploymentButton = _react2.default.createClass({
 
 module.exports = DeploymentButton;
 
-},{"material-ui/RaisedButton":149,"react":637}],758:[function(require,module,exports){
+},{"material-ui/RaisedButton":149,"react":637}],757:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -83076,7 +82937,7 @@ Repository.contextTypes = {
 
 module.exports = Repository;
 
-},{"../../actions/app-actions":720,"../../stores/app-store":765,"../common/forms/fileinput":725,"../common/forms/form":726,"../common/forms/textinput":727,"../common/loader":728,"../deployments/scheduleform":749,"./deploymentbutton":757,"./selectedimage":759,"material-ui/Dialog":106,"material-ui/FlatButton":115,"material-ui/FontIcon":119,"material-ui/IconButton":124,"material-ui/RaisedButton":149,"material-ui/Snackbar":158,"material-ui/Table":176,"material-ui/TextField":187,"react":637,"react-addons-update":393,"react-collapse":397,"react-dom":400,"react-height":404,"react-motion":416,"react-router":451,"react-search-input":479,"react-time":488}],759:[function(require,module,exports){
+},{"../../actions/app-actions":720,"../../stores/app-store":764,"../common/forms/fileinput":725,"../common/forms/form":726,"../common/forms/textinput":727,"../common/loader":728,"../deployments/scheduleform":748,"./deploymentbutton":756,"./selectedimage":758,"material-ui/Dialog":106,"material-ui/FlatButton":115,"material-ui/FontIcon":119,"material-ui/IconButton":124,"material-ui/RaisedButton":149,"material-ui/Snackbar":158,"material-ui/Table":176,"material-ui/TextField":187,"react":637,"react-addons-update":393,"react-collapse":397,"react-dom":400,"react-height":404,"react-motion":416,"react-router":451,"react-search-input":479,"react-time":488}],758:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -83298,7 +83159,7 @@ SelectedImage.contextTypes = {
 
 module.exports = SelectedImage;
 
-},{"material-ui/Divider":108,"material-ui/FlatButton":115,"material-ui/FontIcon":119,"material-ui/IconButton":124,"material-ui/List":133,"material-ui/TextField":187,"react":637,"react-router":451,"react-time":488}],760:[function(require,module,exports){
+},{"material-ui/Divider":108,"material-ui/FlatButton":115,"material-ui/FontIcon":119,"material-ui/IconButton":124,"material-ui/List":133,"material-ui/TextField":187,"react":637,"react-router":451,"react-time":488}],759:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -83462,7 +83323,7 @@ var Software = _react2.default.createClass({
 
 module.exports = Software;
 
-},{"../../actions/app-actions":720,"../../stores/app-store":765,"../../stores/local-store":766,"./repository.js":758,"material-ui/Snackbar":158,"react":637,"react-router":451}],761:[function(require,module,exports){
+},{"../../actions/app-actions":720,"../../stores/app-store":764,"../../stores/local-store":765,"./repository.js":757,"material-ui/Snackbar":158,"react":637,"react-router":451}],760:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -83526,7 +83387,7 @@ module.exports = _react2.default.createElement(
   )
 );
 
-},{"../components/app":724,"../components/dashboard/dashboard":730,"../components/deployments/deployments":737,"../components/devices/devices":751,"../components/software/software":760,"react":637,"react-router":451}],762:[function(require,module,exports){
+},{"../components/app":724,"../components/dashboard/dashboard":730,"../components/deployments/deployments":737,"../components/devices/devices":750,"../components/software/software":759,"react":637,"react-router":451}],761:[function(require,module,exports){
 'use strict';
 
 module.exports = {
@@ -83554,7 +83415,7 @@ module.exports = {
   SET_SNACKBAR: 'SET_SNACKBAR'
 };
 
-},{}],763:[function(require,module,exports){
+},{}],762:[function(require,module,exports){
 'use strict';
 
 var Dispatcher = require('flux').Dispatcher;
@@ -83572,7 +83433,7 @@ var AppDispatcher = assign(new Dispatcher(), {
 
 module.exports = AppDispatcher;
 
-},{"flux":34,"object-assign":385}],764:[function(require,module,exports){
+},{"flux":34,"object-assign":385}],763:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -83603,7 +83464,7 @@ var routes = require('./config/routes');
   routes
 ), document.getElementById('main'));
 
-},{"./config/routes":761,"react":637,"react-dom":400,"react-router":451,"react-tap-event-plugin":486}],765:[function(require,module,exports){
+},{"./config/routes":760,"react":637,"react-dom":400,"react-router":451,"react-tap-event-plugin":486}],764:[function(require,module,exports){
 'use strict';
 
 var AppDispatcher = require('../dispatchers/app-dispatcher');
@@ -84280,7 +84141,7 @@ var AppStore = assign(EventEmitter.prototype, {
 
 module.exports = AppStore;
 
-},{"../constants/app-constants":762,"../dispatchers/app-dispatcher":763,"events":8,"object-assign":385}],766:[function(require,module,exports){
+},{"../constants/app-constants":761,"../dispatchers/app-dispatcher":762,"events":8,"object-assign":385}],765:[function(require,module,exports){
 'use strict';
 
 /*
@@ -84327,7 +84188,7 @@ var LocalStore = assign(EventEmitter.prototype, {
 
 module.exports = LocalStore;
 
-},{"../constants/app-constants":762,"../dispatchers/app-dispatcher":763,"events":8,"object-assign":385}],767:[function(require,module,exports){
+},{"../constants/app-constants":761,"../dispatchers/app-dispatcher":762,"events":8,"object-assign":385}],766:[function(require,module,exports){
 'use strict';
 
 var _colorManipulator = require('material-ui/utils/colorManipulator');
@@ -84357,4 +84218,4 @@ module.exports = {
   }
 };
 
-},{"material-ui/styles/colors":351,"material-ui/styles/spacing":353,"material-ui/utils/colorManipulator":376}]},{},[764]);
+},{"material-ui/styles/colors":351,"material-ui/styles/spacing":353,"material-ui/utils/colorManipulator":376}]},{},[763]);

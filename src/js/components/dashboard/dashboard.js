@@ -41,10 +41,21 @@ var Dashboard = React.createClass({
     AppStore.changeListener(this._onChange);
   },
   componentWillUnmount: function () {
+    clearInterval(this.timer);
     AppStore.removeChangeListener(this._onChange);
   },
   componentDidMount: function() {
+    this.timer = setInterval(this._refreshDeployments, 5000);
+    this._refreshDeployments();
     this._refreshAdmissions();
+  },
+  _onChange: function() {
+    this.setState(this.getInitialState());
+  },
+  _setStorage: function(key, value) {
+    AppActions.setLocalStorage(key, value);
+  },
+  _refreshDeployments: function() {
     AppActions.getPastDeployments(function() {
       setTimeout(function() {
         this.setState({doneActiveDepsLoading:true});
@@ -55,12 +66,6 @@ var Dashboard = React.createClass({
         this.setState({donePastDepsLoading:true});
       }.bind(this), 300)
     }.bind(this));
-  },
-  _onChange: function() {
-    this.setState(this.getInitialState());
-  },
-  _setStorage: function(key, value) {
-    AppActions.setLocalStorage(key, value);
   },
   _refreshAdmissions: function() {
     AppActions.getDevicesForAdmission(function(devices) {

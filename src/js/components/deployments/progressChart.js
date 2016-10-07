@@ -23,6 +23,13 @@ var ProgressChart = React.createClass({
     };
   },
   componentDidMount: function() {
+    this.timer = setInterval(this.refreshDeploymentDevices, 5000);
+    this.refreshDeploymentDevices();
+  },
+  componentWillUnmount: function() {
+    clearInterval(this.timer);
+  },
+  refreshDeploymentDevices: function() {
     AppActions.getSingleDeploymentStats(this.props.deployment.id, function(stats) {
       this.setState({stats:stats});
     }.bind(this));
