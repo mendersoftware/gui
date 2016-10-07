@@ -26,14 +26,6 @@ var Progress = React.createClass({
   componentWillUnmount: function() {
     clearInterval(this.timer);
   },
-  componentWillReceiveProps: function(nextProps) {
-    if (nextProps.progress[this.state.rowNumber] !== this.props.progress[this.state.rowNumber]) {
-      var report = update(this.state.report, {
-        status : {$set: "finished"}
-      });
-      this.setState({report: report});
-    }
-  },
   _progressCellClick: function(rowNumber, columnId) {
     var self = this;
     this.setState({report: self.props.progress[rowNumber], showReport: true, rowNumber: rowNumber});
