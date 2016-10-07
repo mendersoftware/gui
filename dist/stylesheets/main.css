@@ -937,9 +937,8 @@ span.day {
   margin-top: 10px;
 }
 .progress-container .key .bubble {
-  width: 10px;
-  height: 10px;
-  background-color: #d4e9e7;
+  width: 14px;
+  height: 14px;
   border-radius: 50%;
   display: inline-block;
   margin-left: 6px;
@@ -947,31 +946,21 @@ span.day {
   margin-top: -2px;
   vertical-align: middle;
   position: relative;
+  background-size: cover;
 }
 .progress-container .key .bubble.successful {
-  background-color: #009E73;
+  background-image: url('../assets/img/success_status.png');
 }
-.progress-container .key .bubble.failure,
-.progress-container .key .bubble.noimage {
-  background-color: #8F0D0D;
+.progress-container .key .bubble.failure {
+  background-image: url('../assets/img/error_status.png');
 }
 .progress-container .key .bubble.pending {
-  -webkit-animation: pulse 3s infinite;
-  -moz-animation: pulse 3s infinite;
-  -ms-animation: pulse 3s infinite;
-  -o-animation: pulse 3s infinite;
+  background-image: url('../assets/img/pending_status.png');
 }
-.progress-container .key .bubble.inprogress {
-  background-color: #acd4d0;
-}
-.progress-container .key .bubble.inprogress:after {
-  content: "";
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  border-radius: 50%;
-  background-image: -webkit-linear-gradient(right, transparent 50%, #d4e9e7 50%), -webkit-linear-gradient(45deg, #d4e9e7 50%, transparent 50%);
-  background-image: linear-gradient(-90deg, transparent 50%, #d4e9e7 50%), linear-gradient(45deg, #d4e9e7 50%, transparent 50%);
+.progress-container .key .bubble.inprogress,
+.progress-container .key .bubble.installing,
+.progress-container .key .bubble.rebooting {
+  background-image: url('../assets/img/progress_status.png');
 }
 .progress-container .progressHeader {
   position: absolute;
@@ -1008,11 +997,11 @@ span.day {
 }
 .progress-container .bubbles-contain .bubble {
   border-radius: 50%;
-  background-color: #c7e2df;
   position: relative;
   display: block;
   height: 100%;
   width: 100%;
+  background-size: cover;
 }
 .progress-container .bubbles-contain .bubble:hover {
   -webkit-transform: scale(1.15);
@@ -1023,50 +1012,20 @@ span.day {
   -moz-transition: all 0.2s ease;
   -ms-transition: all 0.2s ease;
   -o-transition: all 0.2s ease;
-  border: 1px solid #679BA5;
 }
-.progress-container .bubbles-contain .inprogress .bubble {
-  background-color: #c3e0de;
-}
-.progress-container .bubbles-contain .inprogress .bubble:after {
-  content: "";
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  border-radius: 50%;
-  background-image: -webkit-linear-gradient(bottom, transparent 50%, #d4e9e7 50%), -webkit-linear-gradient(77deg, #d4e9e7 50%, transparent 50%);
-  background-image: linear-gradient(0deg, transparent 50%, #d4e9e7 50%), linear-gradient(13deg, #d4e9e7 50%, transparent 50%);
-  -webkit-animation: spin 1.5s ease-out infinite;
-  -moz-animation: spin 1.5s ease-out infinite;
-  -ms-animation: spin 1.5s ease-out infinite;
-  -o-animation: spin 1.5s ease-out infinite;
+.progress-container .bubbles-contain .inprogress .bubble,
+.progress-container .bubbles-contain .installing .bubble,
+.progress-container .bubbles-contain .rebooting .bubble {
+  background-image: url('../assets/img/progress_status_large.png');
 }
 .progress-container .bubbles-contain .pending .bubble {
-  background-color: #eaf4f3;
-  -webkit-animation: pulse 2.8s infinite;
-  -moz-animation: pulse 2.8s infinite;
-  -ms-animation: pulse 2.8s infinite;
-  -o-animation: pulse 2.8s infinite;
+  background-image: url('../assets/img/pending_status_large.png');
 }
-.progress-container .bubbles-contain .failure .bubble,
-.progress-container .bubbles-contain .noimage .bubble {
-  background-color: #8F0D0D;
-  /* &:after {
-        content:"";
-        position: absolute;
-        color: #ffffff;
-        background-image: url('../assets/img/warning_white.png');
-        background-repeat: no-repeat;
-        background-size: contain;
-        width: 60%;
-        top: 20%;
-        left: 20%;
-        height: 60%;
-        z-index: 400;
-      }*/
+.progress-container .bubbles-contain .failure .bubble {
+  background-image: url('../assets/img/error_status_large.png');
 }
 .progress-container .bubbles-contain .successful .bubble {
-  background-color: #009E73;
+  background-image: url('../assets/img/success_status_large.png');
 }
 .progress-container .deploymentInfo,
 .deployments-container .deploymentInfo,

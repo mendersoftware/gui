@@ -27,30 +27,8 @@ var ProgressChart = React.createClass({
       this.setState({stats:stats});
     }.bind(this));
     AppActions.getSingleDeploymentDevices(this.props.deployment.id, function(devices) {
-      if (this.props.deployment.id === "30a0c91e6-7dec-11d0-a765-f81d4faebf6") {
-        var devices = [
-          {
-              "id": "00a0c91e6-7dec-11d0-a765-f81d4faebf6",
-              "finished": "2016-03-11T13:03:17.063493443Z",
-              "status": "pending",
-              "started": "2016-02-11T13:03:17.063493443Z",
-              "device_type": "Raspberry Pi 3",
-              "artifact_id": "60a0c91e6-7dec-11d0-a765-f81d4faebf6"
-          },
-          {
-              "id": "00a0c91e6-7dec-11d0-a765-f81d4faebf6",
-              "finished": "2016-03-11T13:03:17.063493443Z",
-              "status": "failure",
-              "started": "2016-02-11T13:03:17.063493443Z",
-              "device_type": "Raspberry Pi 3",
-              "artifact_id": "60a0c91e6-7dec-11d0-a765-f81d4faebf6"
-          },
-        ];
-        this.setState({devices:devices});  
-      } else {
-        var sortedDevices = AppStore.getOrderedDeploymentDevices(devices);
-        this.setState({devices: sortedDevices});
-      }
+      var sortedDevices = AppStore.getOrderedDeploymentDevices(devices);
+      this.setState({devices: sortedDevices});
     }.bind(this));
   },
   _handleClick: function(id) {
@@ -67,7 +45,6 @@ var ProgressChart = React.createClass({
     this.setState({device: device});
   },
   render: function() {
-    // used for MOCK API because devices.length does not equal stats length
     var totalDevices = this.state.stats.success + this.state.stats.failure + this.state.stats.downloading + this.state.stats.installing + this.state.stats.rebooting + this.state.stats.noimage + this.state.stats.pending;
 
     var success = this.state.stats.success;
