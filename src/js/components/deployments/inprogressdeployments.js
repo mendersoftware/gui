@@ -4,8 +4,6 @@ var update = require('react-addons-update');
 var ProgressReport = require('./progressreport.js');
 var ScheduleForm = require('./scheduleform');
 var GroupDevices = require('./groupdevices');
-
-var ProgressChart = require('./progresschart');
 var DeploymentStatus = require('./deploymentstatus');
 
 var Loader = require('../common/loader');

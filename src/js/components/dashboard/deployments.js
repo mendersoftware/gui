@@ -19,7 +19,7 @@ var Deployments = React.createClass({
           <div className="margin-bottom">
             <Progress loading={this.props.loadingActive} clickHandle={this._clickHandle} deployments={this.props.progress} />
           </div>
-          <div className="margin-bottom-large">
+          <div className="margin-bottom">
             <Recent loading={this.props.loadingRecent} clickHandle={this._clickHandle} deployments={this.props.recent} />
           </div>
         </div>

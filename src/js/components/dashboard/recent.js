@@ -34,7 +34,7 @@ var Recent = React.createClass({
   render: function() {
     var deployments = this.props.deployments || [];
     var recent = deployments.map(function(deployment, index) {
-      if (index<5) {
+      if (index<3) {
 
         var last = (deployments.length === index+1) || index===4;
         var status = deployment.status === "Failed" ? "warning" : "check";
