@@ -78099,6 +78099,9 @@ var DeploymentStatus = _react2.default.createClass({
     var self = this;
     AppActions.getSingleDeploymentStats(id, function (stats) {
       self.setState({ stats: stats });
+      if (stats.downloading + stats.installing + stats.rebooting === 0) {
+        if (typeof self.props.setFinished !== "undefined") self.props.setFinished(true);
+      }
     });
   },
   render: function render() {
@@ -78337,14 +78340,6 @@ var Progress = _react2.default.createClass({
   },
   componentWillUnmount: function componentWillUnmount() {
     clearInterval(this.timer);
-  },
-  componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
-    if (nextProps.progress[this.state.rowNumber] !== this.props.progress[this.state.rowNumber]) {
-      var report = update(this.state.report, {
-        status: { $set: "finished" }
-      });
-      this.setState({ report: report });
-    }
   },
   _progressCellClick: function _progressCellClick(rowNumber, columnId) {
     var self = this;
@@ -79154,6 +79149,10 @@ var ProgressReport = _react2.default.createClass({
       logData: null
     });
   },
+  _setFinished: function _setFinished(bool) {
+    clearInterval(this.timer);
+    this.setState({ finished: bool });
+  },
   render: function render() {
     var _this = this;
 
@@ -79295,7 +79294,7 @@ var ProgressReport = _react2.default.createClass({
             _react2.default.createElement(
               'h3',
               { style: { marginTop: "12px" } },
-              this.props.deployment.status === "finished" ? "Finished" : "In progress"
+              this.state.finished ? "Finished" : "In progress"
             ),
             _react2.default.createElement(
               'h2',
@@ -79317,7 +79316,7 @@ var ProgressReport = _react2.default.createClass({
           _react2.default.createElement(
             'div',
             { className: 'inline-block' },
-            _react2.default.createElement(DeploymentStatus, { refresh: true, vertical: true, id: this.props.deployment.id })
+            _react2.default.createElement(DeploymentStatus, { setFinished: this._setFinished, refresh: true, vertical: true, id: this.props.deployment.id })
           )
         )
       ),
