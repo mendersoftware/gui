@@ -269,6 +269,8 @@ function _sortDeploymentDevices(devices) {
     successful:[],
     inprogress: [],
     pending: [],
+    rebooting: [],
+    installing: [],
     noimage:[],
     failure:[]
   };
@@ -276,7 +278,7 @@ function _sortDeploymentDevices(devices) {
     newList[devices[i].status].push(devices[i]);
   }
 
-  var newCombine = newList.successful.concat(newList.inprogress, newList.pending, newList.noimage, newList.failure);
+  var newCombine = newList.successful.concat(newList.inprogress, newList.pending, newList.rebooting, newList.installing, newList.noimage, newList.failure);
   return newCombine;
 }
 
