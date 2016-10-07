@@ -51654,7 +51654,7 @@ var Time = (_temp = _class = function (_React$Component) {
         return _react2.default.createElement(
           'span',
           null,
-          'Invalid date'
+          '--'
         );
       }
 
@@ -77480,6 +77480,7 @@ var _react2 = _interopRequireDefault(_react);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var AppActions = require('../../actions/app-actions');
+var pluralize = require('pluralize');
 
 var RecentStats = _react2.default.createClass({
   displayName: 'RecentStats',
@@ -77499,7 +77500,7 @@ var RecentStats = _react2.default.createClass({
     }.bind(this));
   },
   render: function render() {
-    var failures = this.state.stats.failure + this.state.stats.noimage;
+    var failures = this.state.stats.failure;
     return _react2.default.createElement(
       'div',
       { className: 'deploymentStats' },
@@ -77532,6 +77533,16 @@ var RecentStats = _react2.default.createClass({
           { className: 'iconStatLabel' },
           'Successful'
         )
+      ),
+      _react2.default.createElement(
+        'div',
+        { className: this.state.stats.noimage ? "skipped-text" : "hidden" },
+        this.state.stats.noimage,
+        ' ',
+        pluralize("devices", this.state.stats.noimage),
+        ' ',
+        pluralize("was", this.state.stats.noimage),
+        ' skipped'
       )
     );
   }
@@ -77539,7 +77550,7 @@ var RecentStats = _react2.default.createClass({
 
 module.exports = RecentStats;
 
-},{"../../actions/app-actions":720,"react":637}],736:[function(require,module,exports){
+},{"../../actions/app-actions":720,"pluralize":387,"react":637}],736:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -78744,7 +78755,7 @@ var ProgressChart = _react2.default.createClass({
     var totalDevices = this.state.stats.success + this.state.stats.failure + this.state.stats.downloading + this.state.stats.installing + this.state.stats.rebooting + this.state.stats.noimage + this.state.stats.pending;
 
     var success = this.state.stats.success;
-    var failures = this.state.stats.failure + this.state.stats.noimage;
+    var failures = this.state.stats.failure;
     var progress = this.state.stats.downloading + this.state.stats.rebooting + this.state.stats.installing;
     var pending = this.state.stats.pending;
 
