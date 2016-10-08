@@ -55,7 +55,7 @@ var ProgressChart = React.createClass({
     var totalDevices = this.state.stats.success + this.state.stats.failure + this.state.stats.downloading + this.state.stats.installing + this.state.stats.rebooting + this.state.stats.noimage + this.state.stats.pending;
 
     var success = this.state.stats.success;
-    var failures = this.state.stats.failure + this.state.stats.noimage;
+    var failures = this.state.stats.failure;
     var progress = this.state.stats.downloading + this.state.stats.rebooting + this.state.stats.installing;
     var pending = this.state.stats.pending;
 

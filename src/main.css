@@ -1077,11 +1077,12 @@ span.day {
   margin-bottom: 15px;
   min-width: 220px;
   max-width: 320px;
-  padding: 20px;
-  min-height: 100px;
+  padding: 20px 20px 0;
+  min-height: 210px;
   border-radius: 4px;
   border: 1px solid #eaf4f3;
   cursor: pointer;
+  vertical-align: top;
 }
 .deployments-container .deployment:hover {
   -webkit-transition: all 0.3s ease;
@@ -1094,7 +1095,7 @@ span.day {
 .deployments-container .resultIcons {
   display: inline-block;
   width: 50%;
-  padding: 15px 2%;
+  padding: 0 2% 12px;
   font-size: 2em;
   position: relative;
 }
@@ -1120,6 +1121,12 @@ span.day {
   font-size: 12px;
   color: #c7c7c7;
   text-align: center;
+}
+.deployments-container .skipped-text {
+  color: #c7c7c7;
+  text-align: center;
+  font-size: 12px;
+  margin-top: 12px;
 }
 .deploy-table-contain {
   min-height: 206px;
