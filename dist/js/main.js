@@ -80376,7 +80376,7 @@ var DeviceList = _react2.default.createClass({
   _setDeviceIdentity: function _setDeviceIdentity(device) {
     var callback = {
       success: function (data) {
-        this.setState({ deviceAttributes: data.attributes, deviceId: data.id });
+        this.setState({ deviceAttributes: data.attributes, deviceId: data.id, admittanceTime: null });
       }.bind(this),
       error: function error(err) {
         console.log("Error: " + err);
@@ -80588,7 +80588,7 @@ var DeviceList = _react2.default.createClass({
       if (this.state.expanded === index) {
         var _React$createElement;
 
-        expanded = _react2.default.createElement(SelectedDevices, (_React$createElement = { redirect: this.props.redirect, attributes: this.state.deviceAttributes, deviceId: this.state.deviceId, images: this.props.images, device: this.state.expandedDevice, selectedGroup: this.props.selectedGroup }, _defineProperty(_React$createElement, 'images', this.props.images), _defineProperty(_React$createElement, 'groups', this.props.groups), _React$createElement));
+        expanded = _react2.default.createElement(SelectedDevices, (_React$createElement = { redirect: this.props.redirect, admittanceTime: this.state.admittanceTime, attributes: this.state.deviceAttributes, deviceId: this.state.deviceId, images: this.props.images, device: this.state.expandedDevice, selectedGroup: this.props.selectedGroup }, _defineProperty(_React$createElement, 'images', this.props.images), _defineProperty(_React$createElement, 'groups', this.props.groups), _React$createElement));
       }
       return _react2.default.createElement(
         _Table.TableRow,
@@ -81777,10 +81777,18 @@ var SelectedDevices = _react2.default.createClass({
           'div',
           { key: k },
           _react2.default.createElement(_List.ListItem, { style: styles.listStyle, disabled: true, primaryText: k, secondaryText: this.props.attributes[k] }),
-          i === length - 1 ? null : _react2.default.createElement(_Divider2.default, null)
+          this.props.admittanceTime ? _react2.default.createElement(_Divider2.default, null) : null
         ));
         i++;
       };
+    }
+
+    if (this.props.admittanceTime) {
+      deviceIdentity.push(_react2.default.createElement(
+        'div',
+        { key: 'connectionTime' },
+        _react2.default.createElement(_List.ListItem, { style: styles.listStyle, disabled: true, primaryText: 'First connection time', secondaryText: _react2.default.createElement(_reactTime2.default, { value: this.props.admittanceTime, format: 'YYYY-MM-DD HH:mm' }) })
+      ));
     }
 
     var deviceInventory = [];

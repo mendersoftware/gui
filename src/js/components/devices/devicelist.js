@@ -132,7 +132,7 @@ var DeviceList = React.createClass({
   _setDeviceIdentity: function(device) {
     var callback = {
       success: function(data) {
-        this.setState({deviceAttributes: data.attributes, deviceId: data.id});
+        this.setState({deviceAttributes: data.attributes, deviceId: data.id, admittanceTime: null});
       }.bind(this),
       error: function(err) {
         console.log("Error: " + err);
@@ -342,7 +342,7 @@ var DeviceList = React.createClass({
         attrs[device.attributes[i].name] = device.attributes[i].value;
       }
       if ( this.state.expanded === index ) {
-        expanded = <SelectedDevices redirect={this.props.redirect} attributes={this.state.deviceAttributes} deviceId={this.state.deviceId} images={this.props.images} device={this.state.expandedDevice} selectedGroup={this.props.selectedGroup} images={this.props.images} groups={this.props.groups} />
+        expanded = <SelectedDevices redirect={this.props.redirect} admittanceTime={this.state.admittanceTime} attributes={this.state.deviceAttributes} deviceId={this.state.deviceId} images={this.props.images} device={this.state.expandedDevice} selectedGroup={this.props.selectedGroup} images={this.props.images} groups={this.props.groups} />
       }
       return (
         <TableRow selected={device.selected} hoverable={!expanded} className={expanded ? "expand" : null}  key={index}>

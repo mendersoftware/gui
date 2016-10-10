@@ -112,11 +112,19 @@ var SelectedDevices = React.createClass({
         deviceIdentity.push(
           <div key={k}>
             <ListItem style={styles.listStyle} disabled={true} primaryText={k} secondaryText={ this.props.attributes[k]} />
-            {i === length-1 ? null : <Divider />}
+            { this.props.admittanceTime ? <Divider /> : null}
           </div>
         );
         i++;
       };
+    }
+
+    if (this.props.admittanceTime) {
+      deviceIdentity.push(
+        <div key="connectionTime">
+          <ListItem style={styles.listStyle} disabled={true} primaryText="First connection time" secondaryText={<Time value={this.props.admittanceTime} format="YYYY-MM-DD HH:mm" />} />
+        </div>
+      );
     }
 
     var deviceInventory = [];
