@@ -593,7 +593,7 @@ span.length {
 .report-list,
 .list-item {
   display: inline-block;
-  margin-right: 2%;
+  margin-right: 3%;
   width: 30%;
   vertical-align: top;
 }
@@ -714,7 +714,6 @@ tr.expand #device-identity {
   border: 1px solid #d4e9e7;
   padding: 0 15px;
   position: relative;
-  left: -10px;
   border-radius: 5px;
 }
 tr.expand td {
