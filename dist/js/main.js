@@ -77220,11 +77220,7 @@ var Progress = _react2.default.createClass({
             { className: 'progressLabel' },
             'Device group:'
           ),
-          _react2.default.createElement(
-            'span',
-            { className: 'capitalized' },
-            deployment.name
-          )
+          deployment.name
         ),
         _react2.default.createElement(
           'div',
@@ -77398,11 +77394,7 @@ var Recent = _react2.default.createClass({
                 { className: 'progressLabel' },
                 'Device group:'
               ),
-              _react2.default.createElement(
-                'span',
-                { className: 'capitalized' },
-                deployment.name
-              )
+              deployment.name
             ),
             _react2.default.createElement(
               'div',
@@ -77729,7 +77721,6 @@ function getState() {
     images: AppStore.getSoftwareRepo(),
     groups: AppStore.getGroups(),
     allDevices: AppStore.getAllDevices(),
-    dialogTitle: "Create a deployment",
     invalid: true
   };
 }
@@ -81793,13 +81784,15 @@ var SelectedDevices = _react2.default.createClass({
 
     var deviceInventory = [];
     var i = 0;
-    if (this.props.device) {
-      var length = this.props.device.attributes ? this.props.device.attributes.length : 0;
-      for (var i = 0; i < length; i++) {
+    if (typeof this.props.device.attributes !== 'undefined' && this.props.device.attributes.length > 0) {
+      var sortedAttributes = this.props.device.attributes.sort(function (a, b) {
+        return a.name.localeCompare(b.name);
+      });
+      for (var i = 0; i < sortedAttributes.length; i++) {
         deviceInventory.push(_react2.default.createElement(
           'div',
           { key: i },
-          _react2.default.createElement(_List.ListItem, { style: styles.listStyle, disabled: true, primaryText: this.props.device.attributes[i].name, secondaryText: this.props.device.attributes[i].value }),
+          _react2.default.createElement(_List.ListItem, { style: styles.listStyle, disabled: true, primaryText: sortedAttributes[i].name, secondaryText: sortedAttributes[i].value }),
           _react2.default.createElement(_Divider2.default, null)
         ));
       };

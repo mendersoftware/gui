@@ -129,12 +129,14 @@ var SelectedDevices = React.createClass({
 
     var deviceInventory = [];
     var i = 0;
-    if (this.props.device) {
-      var length = this.props.device.attributes ? this.props.device.attributes.length : 0;
-      for (var i=0;i<length;i++) {
+    if (typeof this.props.device.attributes !== 'undefined' && this.props.device.attributes.length>0) {
+      var sortedAttributes = this.props.device.attributes.sort(function (a, b) {
+          return a.name.localeCompare( b.name );
+      });
+      for (var i=0;i<sortedAttributes.length;i++) {
         deviceInventory.push(
           <div key={i}>
-            <ListItem style={styles.listStyle} disabled={true} primaryText={this.props.device.attributes[i].name} secondaryText={this.props.device.attributes[i].value} />
+            <ListItem style={styles.listStyle} disabled={true} primaryText={sortedAttributes[i].name} secondaryText={sortedAttributes[i].value} />
             <Divider />
           </div>
         );
