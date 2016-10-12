@@ -107,11 +107,13 @@ var ProgressReport = React.createClass({
   },
   render: function () {
     var deviceList = [];
-    var encodedSoftware = encodeURIComponent(this.props.deployment.artifact_name); 
-    var softwareLink = (
-      <Link style={{fontWeight:"500"}} to={`/software/${encodedSoftware}`}>{this.props.deployment.artifact_name}</Link>
-    )
-
+    var softwareLink;
+    if (this.props.deployment && typeof this.props.deployment.artifact_name !== 'undefined')  {
+      var encodedSoftware = encodeURIComponent(this.props.deployment.artifact_name); 
+      softwareLink = (
+        <Link style={{fontWeight:"500"}} to={`/software/${encodedSoftware}`}>{this.props.deployment.artifact_name}</Link>
+      )
+    }
     if (this.state.devices) {
       deviceList = this.state.devices.map(function(device, index) {
         var encodedDevice = encodeURIComponent("id="+device.id); 

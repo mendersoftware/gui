@@ -77868,7 +77868,6 @@ var Deployments = _react2.default.createClass({
     });
   },
   dialogOpen: function dialogOpen(dialog) {
-    this.setState({ dialog: true });
     if (dialog === 'schedule') {
       this.setState({
         dialogTitle: "Create a deployment",
@@ -77883,6 +77882,7 @@ var Deployments = _react2.default.createClass({
         contentClass: "largeDialog"
       });
     }
+    this.setState({ dialog: true });
   },
   _changeTab: function _changeTab(value) {
     this.setState({ tabIndex: value });
@@ -78979,13 +78979,15 @@ var ProgressReport = _react2.default.createClass({
     var _this = this;
 
     var deviceList = [];
-    var encodedSoftware = encodeURIComponent(this.props.deployment.artifact_name);
-    var softwareLink = _react2.default.createElement(
-      _reactRouter.Link,
-      { style: { fontWeight: "500" }, to: '/software/' + encodedSoftware },
-      this.props.deployment.artifact_name
-    );
-
+    var softwareLink;
+    if (this.props.deployment && typeof this.props.deployment.artifact_name !== 'undefined') {
+      var encodedSoftware = encodeURIComponent(this.props.deployment.artifact_name);
+      softwareLink = _react2.default.createElement(
+        _reactRouter.Link,
+        { style: { fontWeight: "500" }, to: '/software/' + encodedSoftware },
+        this.props.deployment.artifact_name
+      );
+    }
     if (this.state.devices) {
       deviceList = this.state.devices.map(function (device, index) {
         var encodedDevice = encodeURIComponent("id=" + device.id);
@@ -79332,13 +79334,15 @@ var Report = _react2.default.createClass({
     var _this = this;
 
     var deviceList = [];
-    var encodedSoftware = encodeURIComponent(this.props.deployment.artifact_name);
-    var softwareLink = _react2.default.createElement(
-      _reactRouter.Link,
-      { style: { fontWeight: "500" }, to: '/software/' + encodedSoftware },
-      this.props.deployment.artifact_name
-    );
-
+    var softwareLink;
+    if (this.props.deployment && typeof this.props.deployment.artifact_name !== 'undefined') {
+      var encodedSoftware = encodeURIComponent(this.props.deployment.artifact_name);
+      softwareLink = _react2.default.createElement(
+        _reactRouter.Link,
+        { style: { fontWeight: "500" }, to: '/software/' + encodedSoftware },
+        this.props.deployment.artifact_name
+      );
+    }
     if (this.state.devices) {
       deviceList = this.state.devices.map(function (device, index) {
         var encodedDevice = encodeURIComponent("id=" + device.id);
