@@ -184,7 +184,6 @@ var Deployments = React.createClass({
     });
   },
   dialogOpen: function(dialog) {
-    this.setState({dialog: true});
     if (dialog === 'schedule') {
       this.setState({
         dialogTitle: "Create a deployment",
@@ -199,6 +198,7 @@ var Deployments = React.createClass({
         contentClass: "largeDialog"
       })
     }
+    this.setState({dialog: true});
   },
   _changeTab: function(value) {
     this.setState({tabIndex: value});
