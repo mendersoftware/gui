@@ -1161,13 +1161,10 @@ span.day {
   border: 1px solid #eaf4f3;
   overflow: hidden;
 }
-.deployments-container {
-  padding-bottom: 45px;
-}
 .deployments-container .deployment {
   display: inline-block;
-  width: 25%;
-  margin-right: 15px;
+  width: 30%;
+  margin-right: 3%;
   margin-bottom: 15px;
   min-width: 220px;
   max-width: 320px;
@@ -1192,6 +1189,7 @@ span.day {
   padding: 0 2% 12px;
   font-size: 2em;
   position: relative;
+  max-height: 76px;
 }
 .deployments-container .resultIcons img {
   display: inline;
