@@ -80610,7 +80610,7 @@ var DeviceList = _react2.default.createClass({
         ),
         _react2.default.createElement(
           _Table.TableRowColumn,
-          { style: { width: "33px", paddingRight: "0", paddingLeft: "12px" }, className: 'expandButton' },
+          { style: { width: "55px", paddingRight: "0", paddingLeft: "12px" }, className: 'expandButton' },
           _react2.default.createElement(
             _IconButton2.default,
             { className: 'float-right' },
@@ -80623,7 +80623,7 @@ var DeviceList = _react2.default.createClass({
         ),
         _react2.default.createElement(
           _Table.TableRowColumn,
-          { style: { width: "0", overflow: "visible" } },
+          { style: { width: "0", padding: "0", overflow: "visible" } },
           _react2.default.createElement(
             _reactCollapse2.default,
             { springConfig: { stiffness: 210, damping: 20 }, onHeightReady: this._adjustCellHeight, className: 'expanded', isOpened: expanded ? true : false },
@@ -80767,7 +80767,7 @@ var DeviceList = _react2.default.createClass({
                     'sort'
                   )
                 ),
-                _react2.default.createElement(_Table.TableHeaderColumn, { className: 'columnHeader', style: { width: "33px", paddingRight: "12px", paddingLeft: "0" } })
+                _react2.default.createElement(_Table.TableHeaderColumn, { className: 'columnHeader', style: { width: "55px", paddingRight: "12px", paddingLeft: "0" } })
               )
             ),
             _react2.default.createElement(
@@ -82121,7 +82121,7 @@ var Authorized = _react2.default.createClass({
         ),
         _react2.default.createElement(
           _Table.TableRowColumn,
-          { style: { width: "0", overflow: "visible" } },
+          { style: { width: "0", padding: "0", overflow: "visible" } },
           _react2.default.createElement(
             _reactCollapse2.default,
             { springConfig: { stiffness: 210, damping: 20 }, onHeightReady: this._adjustCellHeight, className: 'expanded', isOpened: expanded ? true : false },
@@ -82616,7 +82616,7 @@ var Repository = _react2.default.createClass({
   },
   _onRowSelection: function _onRowSelection(rowNumber, columnId) {
     var image = software[rowNumber];
-    if (columnId < 4) {
+    if (columnId <= 4) {
       if (this.state.image === image) {
         this._resetImageState();
       } else {
@@ -82729,7 +82729,7 @@ var Repository = _react2.default.createClass({
         ),
         _react2.default.createElement(
           _Table.TableRowColumn,
-          { style: { width: "33px", paddingRight: "0", paddingLeft: "12px" }, className: 'expandButton' },
+          { style: { width: "55px", paddingRight: "0", paddingLeft: "12px" }, className: 'expandButton' },
           _react2.default.createElement(
             _IconButton2.default,
             { className: 'float-right' },
@@ -82742,7 +82742,7 @@ var Repository = _react2.default.createClass({
         ),
         _react2.default.createElement(
           _Table.TableRowColumn,
-          { style: { width: "0", overflow: "visible" } },
+          { style: { width: "0", padding: "0", overflow: "visible" } },
           _react2.default.createElement(
             _reactCollapse2.default,
             { springConfig: { stiffness: 210, damping: 20 }, onHeightReady: this._adjustCellHeight, className: 'expanded', isOpened: expanded ? true : false },
@@ -82844,7 +82844,7 @@ var Repository = _react2.default.createClass({
                   'sort'
                 )
               ),
-              _react2.default.createElement(_Table.TableHeaderColumn, { style: { width: "33px", paddingRight: "12px", paddingLeft: "0" }, className: 'columnHeader' })
+              _react2.default.createElement(_Table.TableHeaderColumn, { style: { width: "55px", paddingRight: "12px", paddingLeft: "0" }, className: 'columnHeader' })
             )
           ),
           _react2.default.createElement(

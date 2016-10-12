@@ -161,7 +161,7 @@ var Repository = React.createClass({
   },
   _onRowSelection: function(rowNumber, columnId) {
     var image = software[rowNumber];
-    if (columnId<4) {
+    if (columnId<=4) {
       if (this.state.image === image) {
         this._resetImageState();
       } else {
@@ -258,10 +258,10 @@ var Repository = React.createClass({
           <TableRowColumn style={expanded ? {height: this.state.divHeight} : null}>{pkg.name}</TableRowColumn>
           <TableRowColumn>{pkg.device_type}</TableRowColumn>
           <TableRowColumn><Time value={this._formatTime(pkg.modified)} format="YYYY-MM-DD HH:mm" /></TableRowColumn>
-          <TableRowColumn style={{width:"33px", paddingRight:"0", paddingLeft:"12px"}} className="expandButton">
+          <TableRowColumn style={{width:"55px", paddingRight:"0", paddingLeft:"12px"}} className="expandButton">
             <IconButton className="float-right"><FontIcon className="material-icons">{ expanded ? "arrow_drop_up" : "arrow_drop_down"}</FontIcon></IconButton>
           </TableRowColumn>
-          <TableRowColumn style={{width:"0", overflow:"visible"}}>
+          <TableRowColumn style={{width:"0", padding:"0", overflow:"visible"}}>
             <Collapse springConfig={{stiffness: 210, damping: 20}} onHeightReady={this._adjustCellHeight} className="expanded" isOpened={expanded ? true : false}>
               {expanded}
             </Collapse>
@@ -317,7 +317,7 @@ var Repository = React.createClass({
                 <TableHeaderColumn className="columnHeader" tooltip="Name">Name <FontIcon ref="name" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "name")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
                 <TableHeaderColumn className="columnHeader" tooltip="Device type compatibility">Device type compatibility <FontIcon ref="device_type" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "device_type")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
                 <TableHeaderColumn className="columnHeader" tooltip="Last modified">Last modified <FontIcon style={styles.sortIcon} ref="modified" onClick={this._sortColumn.bind(null, "modified")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
-                <TableHeaderColumn style={{width:"33px", paddingRight:"12px", paddingLeft:"0"}} className="columnHeader"></TableHeaderColumn>
+                <TableHeaderColumn style={{width:"55px", paddingRight:"12px", paddingLeft:"0"}} className="columnHeader"></TableHeaderColumn>
               </TableRow>
             </TableHeader>
             <TableBody

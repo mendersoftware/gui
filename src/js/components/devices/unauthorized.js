@@ -133,7 +133,7 @@ var Authorized =  React.createClass({
               <FontIcon className="material-icons red">cancel</FontIcon>
             </IconButton>
           </TableRowColumn>
-          <TableRowColumn style={{width:"0", overflow:"visible"}}>
+          <TableRowColumn style={{width:"0", padding:"0", overflow:"visible"}}>
   
             <Collapse springConfig={{stiffness: 210, damping: 20}} onHeightReady={this._adjustCellHeight} className="expanded" isOpened={expanded ? true : false}>
               {expanded}
