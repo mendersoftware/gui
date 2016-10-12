@@ -77220,11 +77220,7 @@ var Progress = _react2.default.createClass({
             { className: 'progressLabel' },
             'Device group:'
           ),
-          _react2.default.createElement(
-            'span',
-            { className: 'capitalized' },
-            deployment.name
-          )
+          deployment.name
         ),
         _react2.default.createElement(
           'div',
@@ -77398,11 +77394,7 @@ var Recent = _react2.default.createClass({
                 { className: 'progressLabel' },
                 'Device group:'
               ),
-              _react2.default.createElement(
-                'span',
-                { className: 'capitalized' },
-                deployment.name
-              )
+              deployment.name
             ),
             _react2.default.createElement(
               'div',

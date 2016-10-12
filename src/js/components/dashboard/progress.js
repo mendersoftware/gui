@@ -42,7 +42,7 @@ var Progress = React.createClass({
       var deploymentInfo = (
         <div className="deploymentInfo" style={{width:"240px", height:"auto"}}>
           <div><div className="progressLabel">Updating to:</div>{deployment.artifact_name}</div>
-          <div><div className="progressLabel">Device group:</div><span className="capitalized">{deployment.name}</span></div>
+          <div><div className="progressLabel">Device group:</div>{deployment.name}</div>
           <div><div className="progressLabel">Started:</div><Time className="progressTime" value={this._formatTime(deployment.created)} format="YYYY-MM-DD HH:mm" /></div>
           <div style={{marginTop:"15px"}}><div className="progressLabel"></div><a onClick={this._clickHandle.bind(null, deployment.id)}>View report</a></div>
         </div>
