@@ -77729,7 +77729,6 @@ function getState() {
     images: AppStore.getSoftwareRepo(),
     groups: AppStore.getGroups(),
     allDevices: AppStore.getAllDevices(),
-    dialogTitle: "Create a deployment",
     invalid: true
   };
 }
