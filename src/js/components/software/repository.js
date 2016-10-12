@@ -161,7 +161,7 @@ var Repository = React.createClass({
   },
   _onRowSelection: function(rowNumber, columnId) {
     var image = software[rowNumber];
-    if (columnId<4) {
+    if (columnId<=4) {
       if (this.state.image === image) {
         this._resetImageState();
       } else {
