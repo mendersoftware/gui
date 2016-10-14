@@ -89,7 +89,7 @@ var Authorized =  React.createClass({
       if (rowNumber == this.state.expanded) {
         newIndex = null;
       }
-      this.setState({expanded: newIndex});
+      this.setState({expanded: newIndex, expandedDevice: this.props.pending[rowNumber]});
     }
   },
   _setDeviceIdentity: function(device) {
@@ -118,7 +118,7 @@ var Authorized =  React.createClass({
     var devices = this.props.pending.map(function(device, index) {
       var expanded = '';
       if ( this.state.expanded === index ) {
-        expanded = <SelectedDevices attributes={device.attributes} deviceId={this.state.deviceId} accept={this._authorizeDevices} block={this._blockDevice} unauthorized={true} selected={[device]}  />
+        expanded = <SelectedDevices attributes={device.attributes} deviceId={this.state.deviceId} accept={this._authorizeDevices} block={this._blockDevice} device={this.state.expandedDevice} unauthorized={true} selected={[device]}  />
       }
       return (
         <TableRow style={{"backgroundColor": "#e9f4f3"}} className={expanded ? "expand" : null} hoverable={true} key={index}>
