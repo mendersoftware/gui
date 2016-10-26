@@ -350,14 +350,17 @@ var Repository = React.createClass({
                 id="imageFile"
                 placeholder="Upload image"
                 required={true}
-                file={true} />
+                file={true}
+                accept=".mender"
+                validations="isLength:1" />
 
               <TextInput
                 value={this.state.image.name}
                 hint="Name"
                 label="Name"
                 id="name"
-                required={true} />
+                required={true}
+                validations="isLength:1" />
 
               <TextInput
                 id="description"

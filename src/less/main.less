@@ -650,6 +650,24 @@ p.info {
   color: rgba(66,66,66,0.6);
 }
 
+form .required::after {
+  content: "* required";
+  position: absolute;
+  top: 33px;
+  left: 410px;
+  font-size: 12px;
+  color: @linkgreen;
+  width: 100px;
+}
+
+form .required.file {
+  width: 400px;
+  &:after {
+    top: -40px;
+    position: relative;
+  }
+}
+
 
 button:disabled .material-icons {
   color: rgba(0,0,0,0.3) !important;
