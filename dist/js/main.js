@@ -76312,18 +76312,21 @@ var FileInput = _react2.default.createClass({
     this.props.validate(this, event.target.files[0]);
   },
   render: function render() {
+    var className = "fileInput";
+    if (this.state.errorText) className += " error";
     return _react2.default.createElement(
       'div',
-      null,
+      { className: this.props.required ? "required file" : null },
       _react2.default.createElement(FileField, {
         id: this.props.id,
         name: this.props.id,
         accept: this.props.accept,
         placeholder: this.props.placeholder,
-        className: this.state.errorText ? "fileInput error" : "fileInput",
+        className: className,
         style: { zIndex: "2", width: "400px" },
         onChange: this.setValue,
-        value: this.state.value
+        value: this.state.value,
+        required: this.props.required
       }),
       _react2.default.createElement(
         'span',
@@ -76378,12 +76381,11 @@ var Form = _react2.default.createClass({
       // If we use the required prop we add a validation rule
       // that ensures there is a value. The input
       // should not be valid with empty value
-      var validations = child.props.validations;
-      if (child.props.required) {
-        validations = child.props.validations ? child.props.validations + ',' : '';
+      var validations = child.props.validations || "";
+      if (child.props.required && validations.indexOf('isLength') == -1) {
+        validations = validations ? validations + ", " : validations;
         validations += 'isLength:1';
       }
-
       return _react2.default.cloneElement(child, { validations: validations, attachToForm: this.attachToForm, detachFromForm: this.detachFromForm, updateModel: this.updateModel, validate: this.validate });
     }.bind(this));
   },
@@ -76465,7 +76467,7 @@ var Form = _react2.default.createClass({
     // if we find an invalid input component
     var inputs = this.inputs;
     Object.keys(inputs).forEach(function (name) {
-      if (!inputs[name].state.isValid) {
+      if (!inputs[name].state.isValid || inputs[name].props.required && !inputs[name].state.value) {
         allIsValid = false;
       }
     });
@@ -76524,7 +76526,8 @@ var Form = _react2.default.createClass({
         key: 'submit',
         label: 'Save image',
         primary: true,
-        onClick: this.updateModel })
+        onClick: this.updateModel,
+        disabled: !this.state.isValid })
     );
     return _react2.default.createElement(
       'form',
@@ -76574,6 +76577,7 @@ var TextInput = _react2.default.createClass({
     this.props.validate(this, event.currentTarget.value);
   },
   render: function render() {
+    var className = this.props.required ? "required" : "";
     return _react2.default.createElement(_TextField2.default, {
       id: this.props.id,
       name: this.props.id,
@@ -76582,11 +76586,14 @@ var TextInput = _react2.default.createClass({
       hintText: this.props.hint,
       floatingLabelText: this.props.label,
       onChange: this.setValue,
+      className: className,
       errorStyle: { color: "rgb(171, 16, 0)" },
       multiLine: this.props.multiLine,
       rows: this.props.rows,
       style: { display: "block", width: "400px" },
-      errorText: this.state.errorText });
+      errorText: this.state.errorText,
+      required: this.props.required
+    });
   }
 });
 
@@ -82894,13 +82901,16 @@ var Repository = _react2.default.createClass({
               id: 'imageFile',
               placeholder: 'Upload image',
               required: true,
-              file: true }),
+              file: true,
+              accept: '.mender',
+              validations: 'isLength:1' }),
             _react2.default.createElement(_textinput2.default, {
               value: this.state.image.name,
               hint: 'Name',
               label: 'Name',
               id: 'name',
-              required: true }),
+              required: true,
+              validations: 'isLength:1' }),
             _react2.default.createElement(_textinput2.default, {
               id: 'description',
               hint: 'Description',

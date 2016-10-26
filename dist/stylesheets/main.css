@@ -675,6 +675,22 @@ p.info {
   margin: 20px 0;
   color: rgba(66, 66, 66, 0.6);
 }
+form .required::after {
+  content: "* required";
+  position: absolute;
+  top: 33px;
+  left: 410px;
+  font-size: 12px;
+  color: #347A87;
+  width: 100px;
+}
+form .required.file {
+  width: 400px;
+}
+form .required.file:after {
+  top: -40px;
+  position: relative;
+}
 button:disabled .material-icons {
   color: rgba(0, 0, 0, 0.3) !important;
 }
