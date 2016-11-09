@@ -82173,8 +82173,8 @@ var Authorized = _react2.default.createClass({
             ),
             _react2.default.createElement(
               _Table.TableHeaderColumn,
-              { className: 'columnHeader', tooltip: 'Last connection request' },
-              'Last connection request',
+              { className: 'columnHeader', tooltip: 'Request time' },
+              'Request time',
               _react2.default.createElement(
                 _FontIcon2.default,
                 { ref: 'request_time', style: styles.sortIcon, onClick: this._sortColumn.bind(null, "request_time"), className: 'sortIcon material-icons' },
