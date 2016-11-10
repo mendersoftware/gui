@@ -101,11 +101,18 @@ var Devices = React.createClass({
     
   },
   _refreshAdmissions: function(page, per_page) {
-    console.log("refreshing");
+    if (typeof page !=="undefined") {
+       this.setState({pageNo:page});
+    }
+    if (typeof per_page !=="undefined") {
+       this.setState({perPage:per_page});
+    }
+    var pageNo = typeof page !=="undefined" ? page : this.state.pageNo;
+    var perPage = typeof per_page !=="undefined" ? per_page : this.state.perPage;
+
     AppActions.getDevicesForAdmission(function(devices, links) {
-      console.log("got", devices, links);
       this.setState({pendingDevices: devices, admissionPaginate: links});
-    }.bind(this), page, per_page);
+    }.bind(this), pageNo, perPage);
   },
   _refreshGroups: function() {
     var callback = {
