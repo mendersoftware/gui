@@ -404,6 +404,24 @@ var DeviceList = React.createClass({
     var removeLabel =  "Remove selected " + pluralized +" from this group";
     var groupLabel = this.props.selectedGroup ? decodeURIComponent(this.props.selectedGroup) : "All devices";
 
+    var links = [];
+    if (this.props.links) {
+      for (var k in this.props.links) {
+        var link = (
+          <a key={k} onClick={this.props.refreshDevices.bind(null, this.props.links[k].page, this.props.links[k].per_page)}>{k}</a>
+        );
+        if (k==="first") {
+          links.unshift(link);
+        } else {
+          links.push(link)
+        }
+      }
+    }
+
+    var mapLinks = links.map(function(link, index) {
+      return link
+    });
+
     return (
       <div>
         <Loader show={this.props.loading} />
@@ -449,6 +467,11 @@ var DeviceList = React.createClass({
                 {devices}
               </TableBody>
             </Table>
+
+            <div className={mapLinks.length>1 ? "pagination-links" : "hidden"}>
+              {mapLinks}
+            </div>
+
             <div className={(devices.length || this.props.loading) ? 'hidden' : 'dashboard-placeholder'}>
               <p>
                 No devices found

@@ -13,6 +13,7 @@ var parse = require('parse-link-header');
 
 // default per page until pagination and counting integrated
 var default_per_page = 20;
+var default_adm_per_page = 5;
 var default_page = 1;
 
 
@@ -89,7 +90,7 @@ var AppActions = {
           actionType: AppConstants.RECEIVE_GROUP_DEVICES,
           devices: res.body
         });
-        callback.success(res.body);
+        callback.success(res.body, parse(res.headers['link']));
       })
       .catch(function(err) {
         callback.error(err);
@@ -106,7 +107,7 @@ var AppActions = {
           actionType: AppConstants.RECEIVE_ALL_DEVICES,
           devices: res.body
         });
-        callback.success(res.body);
+        callback.success(res.body, parse(res.headers['link']));
       })
       .catch(function(err) {
         callback.error(err);
@@ -128,7 +129,7 @@ var AppActions = {
   getDevicesForAdmission: function (callback, page, per_page) {
     // only return pending devices
     var page = page || default_page;
-    var per_page = per_page || default_per_page;
+    var per_page = per_page || default_adm_per_page;
     DevicesApi
       .get(devicesApiUrl+"/devices?status=pending&per_page="+per_page+"&page="+page)
       .then(function(res) {

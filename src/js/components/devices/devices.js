@@ -77,10 +77,19 @@ var Devices = React.createClass({
   _onChange: function() {
     this.setState(this.getInitialState());
   },
-  _refreshDevices: function() {
+  _refreshDevices: function(page, per_page) {
+    if (typeof page !=="undefined") {
+       this.setState({pageNo:page});
+    }
+    if (typeof per_page !=="undefined") {
+       this.setState({perPage:per_page});
+    }
+    var pageNo = typeof page !=="undefined" ? page : this.state.pageNo;
+    var perPage = typeof per_page !=="undefined" ? per_page : this.state.perPage;
+
     var callback = {
-      success: function(devices) {
-        this.setState({devices: AppStore.getGroupDevices()});
+      success: function(devices, links) {
+        this.setState({devices: AppStore.getGroupDevices(), devicesPaginate: links});
         AppActions.setSnackbar("");
         setTimeout(function() {
           this.setState({doneLoading:true});
@@ -94,21 +103,21 @@ var Devices = React.createClass({
       }.bind(this)
     };
     if (!this.state.selectedGroup) {
-      AppActions.getDevices(callback);
+      AppActions.getDevices(callback, pageNo, perPage);
     } else {
-      AppActions.getGroupDevices(this.state.selectedGroup, callback);
+      AppActions.getGroupDevices(this.state.selectedGroup, callback, pageNO, perPage);
     }
     
   },
   _refreshAdmissions: function(page, per_page) {
     if (typeof page !=="undefined") {
-       this.setState({pageNo:page});
+       this.setState({admPageNo:page});
     }
     if (typeof per_page !=="undefined") {
-       this.setState({perPage:per_page});
+       this.setState({admPerPage:per_page});
     }
-    var pageNo = typeof page !=="undefined" ? page : this.state.pageNo;
-    var perPage = typeof per_page !=="undefined" ? per_page : this.state.perPage;
+    var pageNo = typeof page !=="undefined" ? page : this.state.admPageNo;
+    var perPage = typeof per_page !=="undefined" ? per_page : this.state.admPerPage;
 
     AppActions.getDevicesForAdmission(function(devices, links) {
       this.setState({pendingDevices: devices, admissionPaginate: links});
@@ -155,7 +164,7 @@ var Devices = React.createClass({
           <div className={this.state.pendingDevices.length ? "fadeIn" : "hidden"}>
             <Unauthorized showLoader={this._showLoader} links={this.state.admissionPaginate} refresh={this._refreshDevices} refreshAdmissions={this._refreshAdmissions} pending={this.state.pendingDevices} />
           </div>
-          <DeviceList redirect={this._redirect} refreshDevices={this._refreshDevices} refreshGroups={this._refreshGroups} selectedField={this.state.selectedField} changeSelect={this._changeTmpGroup} addGroup={this._addTmpGroup} loading={!this.state.doneLoading} filters={this.state.filters} attributes={this.state.attributes} onFilterChange={this._updateFilters} images={this.state.images} selectedDevices={this.state.selectedDevices} groups={this.state.groupsForList} devices={this.state.devices} selectedGroup={this.state.selectedGroup} />
+          <DeviceList links={this.state.devicesPaginate}  redirect={this._redirect} refreshDevices={this._refreshDevices} refreshGroups={this._refreshGroups} selectedField={this.state.selectedField} changeSelect={this._changeTmpGroup} addGroup={this._addTmpGroup} loading={!this.state.doneLoading} filters={this.state.filters} attributes={this.state.attributes} onFilterChange={this._updateFilters} images={this.state.images} selectedDevices={this.state.selectedDevices} groups={this.state.groupsForList} devices={this.state.devices} selectedGroup={this.state.selectedGroup} />
         </div>
         <Snackbar
           open={this.state.snackbar.open}
