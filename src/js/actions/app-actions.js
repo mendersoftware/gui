@@ -142,7 +142,29 @@ var AppActions = {
         callback(err);
       })
   },
-    /* Device Admission */
+  getNumberOfDevicesForAdmission: function (callback) {
+    var count = 0;
+    var per_page = 5;
+    var page = 1;
+    function getDeviceCount() {
+      DevicesApi
+      .get(devicesApiUrl+"/devices?status=pending&per_page=" + per_page + "&page="+page)
+      .then(function(res) {
+        var links = parse(res.headers['link']);
+        count += res.body.length;
+        if (links.next) {
+          page++;
+          getDeviceCount();
+        } else {
+          callback(count);
+        }
+      })
+      .catch(function(err) {
+        this.callback(err);
+      })
+    };
+    getDeviceCount();
+  },
   getDeviceIdentity: function (id, callback) {
     DevicesApi
       .get(devicesApiUrl+"/devices/" + id)
