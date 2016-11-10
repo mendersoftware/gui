@@ -69,7 +69,6 @@ var Dashboard = React.createClass({
   _refreshAdmissions: function() {
     AppActions.getNumberOfDevicesForAdmission(function(count) {
       var pending = count;
-      console.log("dash got " + count);
       this.setState({pending: pending});
       setTimeout(function() {
         this.setState({doneAdmnsLoading:true});
