@@ -16,7 +16,8 @@ var assign = require('lodash.assign');
 gulp.task('watchify', function() {
   var customOpts = {
     entries: ['./src/js/main.js'],
-    debug: true
+    debug: true,
+
   };
   var opts = assign({}, watchify.args, customOpts);
   var b = watchify(browserify(opts));
@@ -54,6 +55,7 @@ gulp.task('minify', ['styles'], function() {
 
 
 gulp.task('browserify', function() {
+  process.env.NODE_ENV = 'production';
   browserify('./src/js/main.js')
     .transform('babelify', {presets: ["es2015", "react"]})
     .bundle()
