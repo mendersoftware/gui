@@ -13,7 +13,7 @@ var parse = require('parse-link-header');
 
 // default per page until pagination and counting integrated
 var default_per_page = 20;
-var default_adm_per_page = 50;
+var default_adm_per_page = 20;
 var default_page = 1;
 
 

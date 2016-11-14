@@ -19,8 +19,8 @@ function getState() {
     groupsForList: AppStore.getGroups(),
     selectedGroup: AppStore.getSelectedGroup(),
     pendingDevices: AppStore.getPendingDevices(),
-    devices: AppStore.getGroupDevices(),
     allDevices: AppStore.getAllDevices(),
+    devices: AppStore.getGroupDevices(),
     selectedDevices: AppStore.getSelectedDevices(),
     filters: AppStore.getFilters(),
     attributes: AppStore.getAttributes(),
@@ -92,7 +92,7 @@ var Devices = React.createClass({
 
     var callback = {
       success: function(devices, links) {
-        this.setState({devices: AppStore.getGroupDevices(), devicesPaginate: links});
+        this.setState({devices: AppStore.getGroupDevices()});
         AppActions.setSnackbar("");
         setTimeout(function() {
           this.setState({doneLoading:true});
@@ -108,17 +108,22 @@ var Devices = React.createClass({
     if (!this.state.selectedGroup) {
       AppActions.getDevices(callback, pageNo, perPage);
       AppActions.getNumberOfDevices(function(noDevs) {
-        self.setState({totalDevices: noDevs});
+        self.setState({totalDevices: noDevs, numDevices: noDevs});
       });
     } else {
       AppActions.getGroupDevices(this.state.selectedGroup, callback, pageNo, perPage);
       AppActions.getNumberOfDevices(function(noDevs) {
-        self.setState({totalDevices: noDevs});
+        self.setState({numDevices: noDevs});
       }, this.state.selectedGroup);
     }
     
   },
   _refreshAdmissions: function(page, per_page) {
+    var self = this;
+    AppActions.getNumberOfDevicesForAdmission(function(noDevs) {
+      self.setState({totalAdmDevices: noDevs});
+    });
+
     if (typeof page !=="undefined") {
        this.setState({admPageNo:page});
     }
@@ -129,8 +134,8 @@ var Devices = React.createClass({
     var perPage = typeof per_page !=="undefined" ? per_page : this.state.admPerPage;
 
     AppActions.getDevicesForAdmission(function(devices, links) {
-      this.setState({pendingDevices: devices, admissionPaginate: links});
-    }.bind(this), pageNo, perPage);
+      self.setState({pendingDevices: devices});
+    }, pageNo, perPage);
   },
   _refreshGroups: function() {
     var callback = {
@@ -167,18 +172,23 @@ var Devices = React.createClass({
     this.setState({currentPage: pageNo});
     this._refreshDevices(pageNo);
   },
+  _handleAdmPageChange: function(pageNo) {
+    this.setState({currentAdmPage: pageNo});
+    this._refreshAdmissions(pageNo);
+  },
   render: function() {
     return (
       <div className="margin-top">
        <div className="leftFixed">
-          <Groups refreshGroups={this._refreshGroups} groups={this.state.groups} selectedGroup={this.state.selectedGroup} allDevices={this.state.allDevices} />
+          <Groups refreshGroups={this._refreshGroups} groupList={this.state.groups} selectedGroup={this.state.selectedGroup} allDevices={this.state.allDevices} totalDevices={this.state.totalDevices} />
         </div>
         <div className="rightFluid padding-right">
-          <div className={this.state.pendingDevices.length ? "fadeIn" : "hidden"}>
+          <div className={this.state.totalAdmDevices ? "fadeIn onboard" : "hidden"}>
             <Unauthorized showLoader={this._showLoader} refresh={this._refreshDevices} refreshAdmissions={this._refreshAdmissions} pending={this.state.pendingDevices} />
+            {this.state.totalAdmDevices ? <Pagination simple pageSize={20} current={this.state.currentAdmPage || 1} total={this.state.totalAdmDevices} onChange={this._handleAdmPageChange} /> : null }
           </div>
           <DeviceList redirect={this._redirect} refreshDevices={this._refreshDevices} refreshGroups={this._refreshGroups} selectedField={this.state.selectedField} changeSelect={this._changeTmpGroup} addGroup={this._addTmpGroup} loading={!this.state.doneLoading} filters={this.state.filters} attributes={this.state.attributes} onFilterChange={this._updateFilters} images={this.state.images} selectedDevices={this.state.selectedDevices} groups={this.state.groupsForList} devices={this.state.devices} selectedGroup={this.state.selectedGroup} />
-          {this.state.totalDevices ? <Pagination simple pageSize={20} current={this.state.currentPage || 1} total={this.state.totalDevices} onChange={this._handlePageChange} /> : null }
+          {this.state.totalDevices ? <Pagination simple pageSize={20} current={this.state.currentPage || 1} total={this.state.numDevices} onChange={this._handlePageChange} /> : null }
         </div>
         <Snackbar
           open={this.state.snackbar.open}
