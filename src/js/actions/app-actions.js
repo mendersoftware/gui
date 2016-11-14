@@ -13,7 +13,7 @@ var parse = require('parse-link-header');
 
 // default per page until pagination and counting integrated
 var default_per_page = 20;
-var default_adm_per_page = 5;
+var default_adm_per_page = 50;
 var default_page = 1;
 
 
@@ -112,6 +112,30 @@ var AppActions = {
       .catch(function(err) {
         callback.error(err);
       });
+  },
+  getNumberOfDevices: function (callback, group) {
+    var count = 0;
+    var per_page = 100;
+    var page = 1;
+    var forGroup = group ? '/groups/' + group : "";
+    function getDeviceCount() {
+      DevicesApi
+      .get(inventoryApiUrl+forGroup+"/devices?per_page=" + per_page + "&page="+page)
+      .then(function(res) {
+        var links = parse(res.headers['link']);
+        count += res.body.length;
+        if (links.next) {
+          page++;
+          getDeviceCount();
+        } else {
+          callback(count);
+        }
+      })
+      .catch(function(err) {
+        this.callback(err);
+      })
+    };
+    getDeviceCount();
   },
 
 

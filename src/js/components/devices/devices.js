@@ -7,6 +7,8 @@ var Groups = require('./groups');
 var DeviceList = require('./devicelist');
 var Unauthorized = require('./unauthorized');
 
+var Pagination = require('rc-pagination');
+
 import Snackbar from 'material-ui/Snackbar';
 
 import { Router, Route, Link } from 'react-router';
@@ -78,6 +80,7 @@ var Devices = React.createClass({
     this.setState(this.getInitialState());
   },
   _refreshDevices: function(page, per_page) {
+    var self = this;
     if (typeof page !=="undefined") {
        this.setState({pageNo:page});
     }
@@ -104,8 +107,14 @@ var Devices = React.createClass({
     };
     if (!this.state.selectedGroup) {
       AppActions.getDevices(callback, pageNo, perPage);
+      AppActions.getNumberOfDevices(function(noDevs) {
+        self.setState({totalDevices: noDevs});
+      });
     } else {
-      AppActions.getGroupDevices(this.state.selectedGroup, callback, pageNO, perPage);
+      AppActions.getGroupDevices(this.state.selectedGroup, callback, pageNo, perPage);
+      AppActions.getNumberOfDevices(function(noDevs) {
+        self.setState({totalDevices: noDevs});
+      }, this.state.selectedGroup);
     }
     
   },
@@ -154,6 +163,10 @@ var Devices = React.createClass({
   _redirect: function(params) {
     this.context.router.push(params.route);
   },
+  _handlePageChange: function(pageNo) {
+    this.setState({currentPage: pageNo});
+    this._refreshDevices(pageNo);
+  },
   render: function() {
     return (
       <div className="margin-top">
@@ -162,9 +175,10 @@ var Devices = React.createClass({
         </div>
         <div className="rightFluid padding-right">
           <div className={this.state.pendingDevices.length ? "fadeIn" : "hidden"}>
-            <Unauthorized showLoader={this._showLoader} links={this.state.admissionPaginate} refresh={this._refreshDevices} refreshAdmissions={this._refreshAdmissions} pending={this.state.pendingDevices} />
+            <Unauthorized showLoader={this._showLoader} refresh={this._refreshDevices} refreshAdmissions={this._refreshAdmissions} pending={this.state.pendingDevices} />
           </div>
-          <DeviceList links={this.state.devicesPaginate}  redirect={this._redirect} refreshDevices={this._refreshDevices} refreshGroups={this._refreshGroups} selectedField={this.state.selectedField} changeSelect={this._changeTmpGroup} addGroup={this._addTmpGroup} loading={!this.state.doneLoading} filters={this.state.filters} attributes={this.state.attributes} onFilterChange={this._updateFilters} images={this.state.images} selectedDevices={this.state.selectedDevices} groups={this.state.groupsForList} devices={this.state.devices} selectedGroup={this.state.selectedGroup} />
+          <DeviceList redirect={this._redirect} refreshDevices={this._refreshDevices} refreshGroups={this._refreshGroups} selectedField={this.state.selectedField} changeSelect={this._changeTmpGroup} addGroup={this._addTmpGroup} loading={!this.state.doneLoading} filters={this.state.filters} attributes={this.state.attributes} onFilterChange={this._updateFilters} images={this.state.images} selectedDevices={this.state.selectedDevices} groups={this.state.groupsForList} devices={this.state.devices} selectedGroup={this.state.selectedGroup} />
+          {this.state.totalDevices ? <Pagination simple pageSize={20} current={this.state.currentPage || 1} total={this.state.totalDevices} onChange={this._handlePageChange} /> : null }
         </div>
         <Snackbar
           open={this.state.snackbar.open}
