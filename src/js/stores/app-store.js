@@ -396,10 +396,7 @@ function setDevices(devices) {
 }
 
 function setGroupDevices(devices) {
-  _currentGroupDevices = [];
-  devices.forEach(function(element, index) {
-     _currentGroupDevices[index] = _getDeviceById(element);
-  });
+
 }
 
 function setPendingDevices(devices) {

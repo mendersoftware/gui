@@ -44737,7 +44737,7 @@ var React = require('react');
 var Pager = require('./Pager');
 var Options = require('./Options');
 var KEYCODE = require('./KeyCode');
-var LOCALE = require('./locale/zh_CN');
+var LOCALE = require('./locale/en_US');
 
 function noop() {}
 
@@ -45104,7 +45104,7 @@ Pagination.defaultProps = {
 };
 
 module.exports = Pagination;
-},{"./KeyCode":396,"./Options":397,"./Pager":398,"./locale/zh_CN":401,"react":648}],400:[function(require,module,exports){
+},{"./KeyCode":396,"./Options":397,"./Pager":398,"./locale/en_US":401,"react":648}],400:[function(require,module,exports){
 // export this package's api
 'use strict';
 
@@ -45117,15 +45117,15 @@ Object.defineProperty(exports, '__esModule', {
 });
 exports['default'] = {
   // Options.jsx
-  items_per_page: '条/页',
-  jump_to: '跳至',
-  page: '页',
+  items_per_page: '/ page',
+  jump_to: 'Goto',
+  page: '',
 
   // Pagination.jsx
-  prev_page: '上一页',
-  next_page: '下一页',
-  prev_5: '向前 5 页',
-  next_5: '向后 5 页'
+  prev_page: 'Previous Page',
+  next_page: 'Next Page',
+  prev_5: 'Previous 5 Pages',
+  next_5: 'Next 5 Pages'
 };
 module.exports = exports['default'];
 },{}],402:[function(require,module,exports){
@@ -77809,6 +77809,13 @@ var AppActions = {
       callback.error(err);
     });
   },
+  getDeviceById: function getDeviceById(id, callback) {
+    DevicesApi.get(inventoryApiUrl + "/devices/" + id).then(function (res) {
+      callback.success(res.body);
+    }).catch(function (err) {
+      callback.error(err);
+    });
+  },
   getNumberOfDevices: function getNumberOfDevices(callback, group) {
     var count = 0;
     var per_page = 100;
@@ -77857,7 +77864,7 @@ var AppActions = {
   },
   getNumberOfDevicesForAdmission: function getNumberOfDevicesForAdmission(callback) {
     var count = 0;
-    var per_page = 5;
+    var per_page = 100;
     var page = 1;
     function getDeviceCount() {
       DevicesApi.get(devicesApiUrl + "/devices?status=pending&per_page=" + per_page + "&page=" + page).then(function (res) {
@@ -82985,7 +82992,6 @@ function getState() {
     selectedGroup: AppStore.getSelectedGroup(),
     pendingDevices: AppStore.getPendingDevices(),
     allDevices: AppStore.getAllDevices(),
-    devices: AppStore.getGroupDevices(),
     selectedDevices: AppStore.getSelectedDevices(),
     filters: AppStore.getFilters(),
     attributes: AppStore.getAttributes(),
@@ -83005,7 +83011,7 @@ var Devices = _react2.default.createClass({
   },
   componentDidMount: function componentDidMount() {
     this.setState({ doneLoading: false });
-    this.timer = setInterval(this._refreshAll, 10000);
+    this.timer = setInterval(this._refreshAll, 100000);
     this._refreshAll();
   },
   _refreshAll: function _refreshAll() {
@@ -83041,7 +83047,11 @@ var Devices = _react2.default.createClass({
     AppStore.removeChangeListener(this._onChange);
   },
   componentDidUpdate: function componentDidUpdate(prevProps, prevState) {
-    if (prevState.selectedGroup != this.state.selectedGroup) this._refreshDevices();
+    if (prevState.selectedGroup != this.state.selectedGroup) {
+      clearInterval(this.timer);
+      this.timer = setInterval(this._refreshAll, 100000);
+      this._refreshDevices(1);
+    }
   },
   _onChange: function _onChange() {
     this.setState(this.getInitialState());
@@ -83049,17 +83059,17 @@ var Devices = _react2.default.createClass({
   _refreshDevices: function _refreshDevices(page, per_page) {
     var self = this;
     if (typeof page !== "undefined") {
-      this.setState({ pageNo: page });
+      this.setState({ currentPage: page });
     }
     if (typeof per_page !== "undefined") {
       this.setState({ perPage: per_page });
     }
-    var pageNo = typeof page !== "undefined" ? page : this.state.pageNo;
+    var pageNo = typeof page !== "undefined" ? page : this.state.currentPage;
     var perPage = typeof per_page !== "undefined" ? per_page : this.state.perPage;
 
-    var callback = {
+    var allCallback = {
       success: function (devices, links) {
-        this.setState({ devices: AppStore.getGroupDevices() });
+        this.setState({ devices: devices });
         AppActions.setSnackbar("");
         setTimeout(function () {
           this.setState({ doneLoading: true });
@@ -83072,13 +83082,51 @@ var Devices = _react2.default.createClass({
         AppActions.setSnackbar("Devices couldn't be loaded. " + errormsg);
       }.bind(this)
     };
+
+    var groupCallback = {
+      success: function (deviceList, links) {
+        getDevicesFromIDs(deviceList, function (devices) {
+          self.setState({ devices: devices });
+          AppActions.setSnackbar("");
+          setTimeout(function () {
+            self.setState({ doneLoading: true });
+          }, 200);
+        });
+      }.bind(this),
+      error: function (err) {
+        this.setState({ doneLoading: true, devices: [] });
+        console.log(err);
+        var errormsg = err.error || "Please check your connection";
+        AppActions.setSnackbar("Devices couldn't be loaded. " + errormsg);
+      }.bind(this)
+    };
+
+    function getDevicesFromIDs(list, callback) {
+      var devices = [];
+      var idx = 0;
+      for (var i = 0; i < list.length; i++) {
+        AppActions.getDeviceById(list[i], {
+          success: function success(device) {
+            idx++;
+            devices.push(device);
+            if (idx === list.length) {
+              callback(devices);
+            }
+          },
+          error: function error(err) {
+            console.log(err);
+          }
+        });
+      }
+    }
+
     if (!this.state.selectedGroup) {
-      AppActions.getDevices(callback, pageNo, perPage);
+      AppActions.getDevices(allCallback, pageNo, perPage);
       AppActions.getNumberOfDevices(function (noDevs) {
         self.setState({ totalDevices: noDevs, numDevices: noDevs });
       });
     } else {
-      AppActions.getGroupDevices(this.state.selectedGroup, callback, pageNo, perPage);
+      AppActions.getGroupDevices(this.state.selectedGroup, groupCallback);
       AppActions.getNumberOfDevices(function (noDevs) {
         self.setState({ numDevices: noDevs });
       }, this.state.selectedGroup);
@@ -83135,12 +83183,18 @@ var Devices = _react2.default.createClass({
     this.context.router.push(params.route);
   },
   _handlePageChange: function _handlePageChange(pageNo) {
+    clearInterval(this.timer);
     this.setState({ currentPage: pageNo });
+    this.timer = setInterval(this._refreshAll, 100000);
     this._refreshDevices(pageNo);
   },
   _handleAdmPageChange: function _handleAdmPageChange(pageNo) {
     this.setState({ currentAdmPage: pageNo });
     this._refreshAdmissions(pageNo);
+  },
+  _handleGroupChange: function _handleGroupChange(group) {
+    AppActions.selectGroup(group);
+    this.setState({ currentPage: 1 });
   },
   render: function render() {
     return _react2.default.createElement(
@@ -83149,7 +83203,7 @@ var Devices = _react2.default.createClass({
       _react2.default.createElement(
         'div',
         { className: 'leftFixed' },
-        _react2.default.createElement(Groups, { refreshGroups: this._refreshGroups, groupList: this.state.groups, selectedGroup: this.state.selectedGroup, allDevices: this.state.allDevices, totalDevices: this.state.totalDevices })
+        _react2.default.createElement(Groups, { changeGroup: this._handleGroupChange, refreshGroups: this._refreshGroups, groupList: this.state.groups, selectedGroup: this.state.selectedGroup, allDevices: this.state.allDevices, totalDevices: this.state.totalDevices })
       ),
       _react2.default.createElement(
         'div',
@@ -83160,7 +83214,7 @@ var Devices = _react2.default.createClass({
           _react2.default.createElement(Unauthorized, { showLoader: this._showLoader, refresh: this._refreshDevices, refreshAdmissions: this._refreshAdmissions, pending: this.state.pendingDevices }),
           this.state.totalAdmDevices ? _react2.default.createElement(Pagination, { simple: true, pageSize: 20, current: this.state.currentAdmPage || 1, total: this.state.totalAdmDevices, onChange: this._handleAdmPageChange }) : null
         ),
-        _react2.default.createElement(DeviceList, { redirect: this._redirect, refreshDevices: this._refreshDevices, refreshGroups: this._refreshGroups, selectedField: this.state.selectedField, changeSelect: this._changeTmpGroup, addGroup: this._addTmpGroup, loading: !this.state.doneLoading, filters: this.state.filters, attributes: this.state.attributes, onFilterChange: this._updateFilters, images: this.state.images, selectedDevices: this.state.selectedDevices, groups: this.state.groupsForList, devices: this.state.devices, selectedGroup: this.state.selectedGroup }),
+        _react2.default.createElement(DeviceList, { redirect: this._redirect, refreshDevices: this._refreshDevices, refreshGroups: this._refreshGroups, selectedField: this.state.selectedField, changeSelect: this._changeTmpGroup, addGroup: this._addTmpGroup, loading: !this.state.doneLoading, filters: this.state.filters, attributes: this.state.attributes, onFilterChange: this._updateFilters, images: this.state.images, selectedDevices: this.state.selectedDevices, groups: this.state.groupsForList, devices: this.state.devices || [], selectedGroup: this.state.selectedGroup }),
         this.state.totalDevices ? _react2.default.createElement(Pagination, { simple: true, pageSize: 20, current: this.state.currentPage || 1, total: this.state.numDevices, onChange: this._handlePageChange }) : null
       ),
       _react2.default.createElement(_Snackbar2.default, {
@@ -83465,7 +83519,7 @@ var Groups = _react2.default.createClass({
   },
 
   _changeGroup: function _changeGroup(group) {
-    AppActions.selectGroup(group);
+    this.props.changeGroup(group);
   },
   _createGroupHandler: function _createGroupHandler() {
     var i;
@@ -83544,7 +83598,7 @@ var Groups = _react2.default.createClass({
   _setNumDevices: function _setNumDevices(groupList) {
     var self = this;
     var groups = {};
-    var i = 0;
+
     for (var i = 0; i < groupList.length; i++) {
       groupDevs(i);
     }
@@ -83555,7 +83609,6 @@ var Groups = _react2.default.createClass({
         if (idx === groupList.length - 1) {
           self.setState({ groupDevs: groups });
         }
-        i++;
       }, groupList[idx]);
     }
   },
@@ -85986,12 +86039,7 @@ function setDevices(devices) {
   }
 }
 
-function setGroupDevices(devices) {
-  _currentGroupDevices = [];
-  devices.forEach(function (element, index) {
-    _currentGroupDevices[index] = _getDeviceById(element);
-  });
-}
+function setGroupDevices(devices) {}
 
 function setPendingDevices(devices) {
   if (devices) {

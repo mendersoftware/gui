@@ -86,7 +86,7 @@ var AppActions = {
     DevicesApi
       .get(inventoryApiUrl+"/groups/" + group +"/devices?per_page="+per_page + "&page="+page)
       .then(function(res) {
-        AppDispatcher.handleViewAction({
+         AppDispatcher.handleViewAction({
           actionType: AppConstants.RECEIVE_GROUP_DEVICES,
           devices: res.body
         });
@@ -108,6 +108,16 @@ var AppActions = {
           devices: res.body
         });
         callback.success(res.body, parse(res.headers['link']));
+      })
+      .catch(function(err) {
+        callback.error(err);
+      });
+  },
+  getDeviceById: function(id, callback) {
+    DevicesApi
+      .get(inventoryApiUrl+"/devices/"+id)
+      .then(function(res) {
+        callback.success(res.body);
       })
       .catch(function(err) {
         callback.error(err);
@@ -169,7 +179,7 @@ var AppActions = {
   },
   getNumberOfDevicesForAdmission: function (callback) {
     var count = 0;
-    var per_page = 5;
+    var per_page = 100;
     var page = 1;
     function getDeviceCount() {
       DevicesApi

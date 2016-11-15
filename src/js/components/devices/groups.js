@@ -39,7 +39,7 @@ var Groups = React.createClass({
   },
   
   _changeGroup: function(group) {
-    AppActions.selectGroup(group);
+    this.props.changeGroup(group);
   },
   _createGroupHandler: function() {
     var i;
@@ -118,7 +118,7 @@ var Groups = React.createClass({
   _setNumDevices: function(groupList) {
     var self = this;
     var groups = {};
-    var i = 0;
+
     for (var i=0;i<groupList.length;i++) {
       groupDevs(i);
     }
@@ -127,7 +127,6 @@ var Groups = React.createClass({
       AppActions.getNumberOfDevices(function(noDevs) {
         groups[groupList[idx]] = {numDevices: noDevs};
         if (idx===groupList.length-1) { self.setState({groupDevs: groups}) }
-        i++;
       }, groupList[idx]);
     }
   },
