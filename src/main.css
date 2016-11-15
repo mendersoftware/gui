@@ -504,18 +504,11 @@ span.length {
   -ms-transition: visibility 0.1s ease-in !important;
   -o-transition: visibility 0.1s ease-in !important;
 }
-.columnHeader:hover .sortIcon {
-  visibility: visible;
-  -webkit-opacity: 0.4;
-  -moz-opacity: 0.4;
-  opacity: 0.4;
-}
 .columnHeader:hover .sortIcon.selected,
 .columnHeader .sortIcon.selected {
   -webkit-opacity: 1;
   -moz-opacity: 1;
   opacity: 1;
-  visibility: visible;
   -webkit-transition: all 0.15s ease-in-out !important;
   -moz-transition: all 0.15s ease-in-out !important;
   -ms-transition: all 0.15s ease-in-out !important;
