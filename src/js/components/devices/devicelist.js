@@ -449,6 +449,7 @@ var DeviceList = React.createClass({
                 {devices}
               </TableBody>
             </Table>
+
             <div className={(devices.length || this.props.loading) ? 'hidden' : 'dashboard-placeholder'}>
               <p>
                 No devices found

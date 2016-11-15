@@ -143,8 +143,9 @@ var Authorized =  React.createClass({
         </TableRow>
       )
     }, this);
+
     return (
-      <Collapse springConfig={{stiffness: 190, damping: 20}} style={{minHeight:this.state.minHeight}} isOpened={true} className="margin-top margin-bottom onboard authorize">
+      <Collapse springConfig={{stiffness: 190, damping: 20}} style={{minHeight:this.state.minHeight}} isOpened={true} className="margin-top authorize">
         <p>Devices pending authorization</p>
         <Table
           selectable={false}
@@ -169,6 +170,7 @@ var Authorized =  React.createClass({
             {devices}
           </TableBody>
         </Table>
+
         <div className="margin-top-small">
           <RaisedButton onClick={this._authorizeDevices.bind(null, this.props.pending)} primary={true} label="Authorize all" className="float-right" />
         </div>

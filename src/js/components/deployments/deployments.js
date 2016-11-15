@@ -64,8 +64,8 @@ var Deployments = React.createClass({
     AppActions.getDevices({
       success: function(devices) {
         if (!devices.length) {
-          AppActions.getDevicesForAdmission(function(pending) {
-            if (pending.length) {
+          AppActions.getNumberOfDevicesForAdmission(function(count) {
+            if (count) {
               this.setState({hasPending:true});
             }
           }.bind(this));

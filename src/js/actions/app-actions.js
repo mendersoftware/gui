@@ -9,8 +9,12 @@ var deploymentsApiUrl = apiUrl + "/deployments";
 var devicesApiUrl = apiUrl + "/admission";
 var inventoryApiUrl = apiUrl + "/inventory";
 
+var parse = require('parse-link-header');
+
 // default per page until pagination and counting integrated
-var per_page = 200;
+var default_per_page = 20;
+var default_adm_per_page = 20;
+var default_page = 1;
 
 
 var AppActions = {
@@ -64,46 +68,84 @@ var AppActions = {
   getGroups: function(callback) {
     DevicesApi
       .get(inventoryApiUrl+"/groups")
-      .then(function(groups) {
+      .then(function(res) {
          AppDispatcher.handleViewAction({
           actionType: AppConstants.RECEIVE_GROUPS,
-          groups: groups
+          groups: res.body
         });
-        callback.success(groups);
+        callback.success(res.body);
       })
       .catch(function(err) {
         callback.error(err);
       });
   },
 
-  getGroupDevices: function(group, callback) {
+  getGroupDevices: function(group, callback, page, per_page) {
+    var page = page || default_page;
+    var per_page = per_page || default_per_page;
     DevicesApi
-      .get(inventoryApiUrl+"/groups/" + group +"/devices?per_page="+per_page)
-      .then(function(devices) {
-        AppDispatcher.handleViewAction({
+      .get(inventoryApiUrl+"/groups/" + group +"/devices?per_page="+per_page + "&page="+page)
+      .then(function(res) {
+         AppDispatcher.handleViewAction({
           actionType: AppConstants.RECEIVE_GROUP_DEVICES,
-          devices: devices
+          devices: res.body
         });
-        callback.success(devices);
+        callback.success(res.body, parse(res.headers['link']));
       })
       .catch(function(err) {
         callback.error(err);
       });
   },
 
-  getDevices: function(callback) {
+  getDevices: function(callback, page, per_page) {
+    var page = page || default_page;
+    var per_page = per_page || default_per_page;
     DevicesApi
-      .get(inventoryApiUrl+"/devices?per_page="+per_page)
-      .then(function(devices) {
+      .get(inventoryApiUrl+"/devices?per_page="+per_page+"&page="+page)
+      .then(function(res) {
         AppDispatcher.handleViewAction({
           actionType: AppConstants.RECEIVE_ALL_DEVICES,
-          devices: devices
+          devices: res.body
         });
-        callback.success(devices); 
+        callback.success(res.body, parse(res.headers['link']));
       })
       .catch(function(err) {
         callback.error(err);
       });
+  },
+  getDeviceById: function(id, callback) {
+    DevicesApi
+      .get(inventoryApiUrl+"/devices/"+id)
+      .then(function(res) {
+        callback.success(res.body);
+      })
+      .catch(function(err) {
+        callback.error(err);
+      });
+  },
+  getNumberOfDevices: function (callback, group) {
+    var count = 0;
+    var per_page = 100;
+    var page = 1;
+    var forGroup = group ? '/groups/' + group : "";
+    function getDeviceCount() {
+      DevicesApi
+      .get(inventoryApiUrl+forGroup+"/devices?per_page=" + per_page + "&page="+page)
+      .then(function(res) {
+        var links = parse(res.headers['link']);
+        count += res.body.length;
+        if (links.next) {
+          page++;
+          getDeviceCount();
+        } else {
+          callback(count);
+        }
+      })
+      .catch(function(err) {
+        this.callback(err);
+      })
+    };
+    getDeviceCount();
   },
 
 
@@ -118,21 +160,46 @@ var AppActions = {
 
 
   /* Device Admission */
-  getDevicesForAdmission: function (callback) {
+  getDevicesForAdmission: function (callback, page, per_page) {
+    // only return pending devices
+    var page = page || default_page;
+    var per_page = per_page || default_adm_per_page;
     DevicesApi
-      .get(devicesApiUrl+"/devices?per_page="+per_page)
-      .then(function(devices) {
+      .get(devicesApiUrl+"/devices?status=pending&per_page="+per_page+"&page="+page)
+      .then(function(res) {
         AppDispatcher.handleViewAction({
           actionType: AppConstants.RECEIVE_ADMISSION_DEVICES,
-          devices: devices
+          devices: res.body
         });
-        callback(devices);
+        callback(res.body, parse(res.headers['link']));
       })
       .catch(function(err) {
         callback(err);
       })
   },
-    /* Device Admission */
+  getNumberOfDevicesForAdmission: function (callback) {
+    var count = 0;
+    var per_page = 100;
+    var page = 1;
+    function getDeviceCount() {
+      DevicesApi
+      .get(devicesApiUrl+"/devices?status=pending&per_page=" + per_page + "&page="+page)
+      .then(function(res) {
+        var links = parse(res.headers['link']);
+        count += res.body.length;
+        if (links.next) {
+          page++;
+          getDeviceCount();
+        } else {
+          callback(count);
+        }
+      })
+      .catch(function(err) {
+        this.callback(err);
+      })
+    };
+    getDeviceCount();
+  },
   getDeviceIdentity: function (id, callback) {
     DevicesApi
       .get(devicesApiUrl+"/devices/" + id)

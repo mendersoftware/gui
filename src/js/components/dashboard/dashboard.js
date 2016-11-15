@@ -13,7 +13,6 @@ function getState() {
   return {
     progress: AppStore.getDeploymentsInProgress(),
     health: AppStore.getHealth(),
-    pending: AppStore.getPendingDevices(),
     devices: AppStore.getAllDevices(),
     recent: AppStore.getPastDeployments(),
     activity: AppStore.getActivity(),
@@ -68,14 +67,9 @@ var Dashboard = React.createClass({
     }.bind(this));
   },
   _refreshAdmissions: function() {
-    AppActions.getDevicesForAdmission(function(devices) {
-      var pending = [];
-      for (var i=0;i<devices.length;i++) {
-        if (devices[i].status === "pending") {
-          pending.push(devices[i]);
-        }
-      }
-      this.setState({pendingDevices: pending });
+    AppActions.getNumberOfDevicesForAdmission(function(count) {
+      var pending = count;
+      this.setState({pending: pending});
       setTimeout(function() {
         this.setState({doneAdmnsLoading:true});
         // this.props.addTooltip(tooltips.admissions);
@@ -100,17 +94,17 @@ var Dashboard = React.createClass({
   },
   render: function() {
     var pending_str = '';
-    if (this.state.pending.length) {
-      if (this.state.pending.length > 1) {
-        pending_str = 'are ' + this.state.pending.length + ' devices';
+    if (this.state.pending) {
+      if (this.state.pending > 1) {
+        pending_str = 'are ' + this.state.pending + ' devices';
       } else {
-        pending_str = 'is ' + this.state.pending.length + ' device';
+        pending_str = 'is ' + this.state.pending + ' device';
       }
     }
     return (
       <div className="contentContainer dashboard">
         <div>
-          <div className={this.state.pending.length && !this.state.hideReview ? "onboard margin-bottom" : "hidden" }>
+          <div className={this.state.pending && !this.state.hideReview ? "onboard margin-bottom" : "hidden" }>
             <div className="close" onClick={this._setStorage.bind(null, "reviewDevices", true)}/>
             <p>There {pending_str} waiting authorization</p>
             <RaisedButton onClick={this._handleClick.bind(null, {route:"devices"})} primary={true} label="Review details" />

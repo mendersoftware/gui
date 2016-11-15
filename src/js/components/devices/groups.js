@@ -12,6 +12,7 @@ import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
 import Subheader from 'material-ui/Subheader';
+require('../common/prototype/Array.prototype.equals');
 
 
 var tmpDevices = [];
@@ -29,9 +30,16 @@ var Groups = React.createClass({
       selectedDevices: []
     };
   },
+
+
+  componentDidUpdate: function(prevProps, prevState) {
+    if (!prevProps.groupList.equals(this.props.groupList)) {
+      this._setNumDevices(this.props.groupList);
+    }
+  },
   
   _changeGroup: function(group) {
-    AppActions.selectGroup(group);
+    this.props.changeGroup(group);
   },
   _createGroupHandler: function() {
     var i;
@@ -65,8 +73,8 @@ var Groups = React.createClass({
         invalid = true;
         errorText = 'The group cannot be called "All devices". Try another name';
       } else {
-        for (var i=0;i<this.props.groups.length; i++) {
-          if (decodeURIComponent(this.props.groups[i]) === newName) {
+        for (var i=0;i<this.props.groupList.length; i++) {
+          if (decodeURIComponent(this.props.groupList[i]) === newName) {
             invalid = true;
             errorText = "A group with this name already exists";
           }
@@ -105,6 +113,22 @@ var Groups = React.createClass({
       invalid = selected.length ? false : true;
     }
     this.setState({selectedDevices: selected, createInvalid: invalid});
+  },
+
+  _setNumDevices: function(groupList) {
+    var self = this;
+    var groups = {};
+
+    for (var i=0;i<groupList.length;i++) {
+      groupDevs(i);
+    }
+
+    function groupDevs(idx) {
+      AppActions.getNumberOfDevices(function(noDevs) {
+        groups[groupList[idx]] = {numDevices: noDevs};
+        if (idx===groupList.length-1) { self.setState({groupDevs: groups}) }
+      }, groupList[idx]);
+    }
   },
 
   render: function() {
@@ -148,7 +172,7 @@ var Groups = React.createClass({
     },this);
 
     var allLabel = (
-      <span>All devices<span className='float-right length'>{this.props.allDevices.length}</span></span>
+      <span>All devices<span className='float-right length'>{this.props.totalDevices}</span></span>
     );
 
     return (
@@ -161,11 +185,15 @@ var Groups = React.createClass({
               style={!this.props.selectedGroup ? {backgroundColor: "#e7e7e7"} : {backgroundColor: "transparent"}}
               onClick={this._changeGroup.bind(null, "")} />
    
-          {this.props.groups.map(function(group, index) {
+          {this.props.groupList.map(function(group, index) {
             var isSelected = group===this.props.selectedGroup ? {backgroundColor: "#e7e7e7"} : {backgroundColor: "transparent"};
             var boundClick = this._changeGroup.bind(null, group);
+            var numDevs;
+            if (this.state.groupDevs) {
+              numDevs = this.state.groupDevs[group] ? this.state.groupDevs[group].numDevices : null;
+            }
             var groupLabel = (
-                <span>{decodeURIComponent(group)}<span className='float-right length'></span></span>
+                <span>{decodeURIComponent(group)}<span className='float-right length'>{numDevs}</span></span>
             );
             return (
               <ListItem 
