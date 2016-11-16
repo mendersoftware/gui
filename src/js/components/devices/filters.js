@@ -135,7 +135,7 @@ var Filters = React.createClass({
         </Drawer>
 
         <div style={{width:"100%", position:"relative"}}>
-          <FlatButton style={{position:"absolute",right:"0", top:"15px"}} secondary={true} onClick={this._toggleNav} label={filterCount>0 ? "Filters ("+filterCount+")" : "Filters"}>
+          <FlatButton style={{position:"absolute",right:"0"}} secondary={true} onClick={this._toggleNav} label={filterCount>0 ? "Filters ("+filterCount+")" : "Filters"}>
               <FontIcon style={styles.exampleFlatButtonIcon} className="material-icons">filter_list</FontIcon>
           </FlatButton>
         </div>

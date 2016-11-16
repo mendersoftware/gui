@@ -82322,7 +82322,6 @@ var AppStore = require('../../stores/app-store');
 var AppActions = require('../../actions/app-actions');
 var SelectedDevices = require('./selecteddevices');
 var Filters = require('./filters');
-var Loader = require('../common/loader');
 var pluralize = require('pluralize');
 
 // material ui
@@ -82446,7 +82445,6 @@ var DeviceList = _react2.default.createClass({
     AppActions.getDeviceIdentity(device.id, callback);
   },
   _addGroupHandler: function _addGroupHandler() {
-    var loading = true;
     var i;
     var callback = {
       success: function (device) {
@@ -82739,17 +82737,16 @@ var DeviceList = _react2.default.createClass({
     return _react2.default.createElement(
       'div',
       null,
-      _react2.default.createElement(Loader, { show: this.props.loading }),
       _react2.default.createElement(Filters, { attributes: this.props.attributes, filters: this.props.filters, onFilterChange: this.props.onFilterChange }),
       _react2.default.createElement(
         'div',
-        null,
+        { className: 'margin-top-small' },
         _react2.default.createElement(
           'div',
           { style: { marginLeft: "26px" } },
           _react2.default.createElement(
             'h2',
-            { className: 'hoverEdit' },
+            { style: { marginTop: "15px" } },
             groupNameInputs,
             _react2.default.createElement(
               'span',
@@ -82960,7 +82957,7 @@ var DeviceList = _react2.default.createClass({
 
 module.exports = DeviceList;
 
-},{"../../actions/app-actions":734,"../../stores/app-store":779,"../common/loader":742,"./filters":766,"./selecteddevices":768,"material-ui/Dialog":106,"material-ui/FlatButton":115,"material-ui/FontIcon":119,"material-ui/IconButton":124,"material-ui/MenuItem":138,"material-ui/RaisedButton":149,"material-ui/SelectField":153,"material-ui/Snackbar":158,"material-ui/Table":176,"material-ui/TextField":187,"pluralize":388,"react":648,"react-collapse":408,"react-dom":411,"react-height":415,"react-motion":427,"react-time":499}],765:[function(require,module,exports){
+},{"../../actions/app-actions":734,"../../stores/app-store":779,"./filters":766,"./selecteddevices":768,"material-ui/Dialog":106,"material-ui/FlatButton":115,"material-ui/FontIcon":119,"material-ui/IconButton":124,"material-ui/MenuItem":138,"material-ui/RaisedButton":149,"material-ui/SelectField":153,"material-ui/Snackbar":158,"material-ui/Table":176,"material-ui/TextField":187,"pluralize":388,"react":648,"react-collapse":408,"react-dom":411,"react-height":415,"react-motion":427,"react-time":499}],765:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -82984,6 +82981,7 @@ var DeviceList = require('./devicelist');
 var Unauthorized = require('./unauthorized');
 
 var Pagination = require('rc-pagination');
+var Loader = require('../common/loader');
 
 function getState() {
   return {
@@ -83011,7 +83009,8 @@ var Devices = _react2.default.createClass({
   },
   componentDidMount: function componentDidMount() {
     this.setState({ doneLoading: false });
-    this.timer = setInterval(this._refreshAll, 100000);
+    this.deviceTimer = setInterval(this._refreshDevices, 10000);
+    this.admissionTimer = setInterval(this._refreshAdmissions, 60000);
     this._refreshAll();
   },
   _refreshAll: function _refreshAll() {
@@ -83043,14 +83042,14 @@ var Devices = _react2.default.createClass({
     }
   },
   componentWillUnmount: function componentWillUnmount() {
-    clearInterval(this.timer);
+    clearInterval(this.deviceTimer);
     AppStore.removeChangeListener(this._onChange);
   },
   componentDidUpdate: function componentDidUpdate(prevProps, prevState) {
-    if (prevState.selectedGroup != this.state.selectedGroup) {
-      clearInterval(this.timer);
-      this.timer = setInterval(this._refreshAll, 100000);
+    if (prevState.selectedGroup !== this.state.selectedGroup) {
+      clearInterval(this.deviceTimer);
       this._refreshDevices(1);
+      this.deviceTimer = setInterval(this._refreshDevices, 10000);
     }
   },
   _onChange: function _onChange() {
@@ -83069,14 +83068,11 @@ var Devices = _react2.default.createClass({
 
     var allCallback = {
       success: function (devices, links) {
-        this.setState({ devices: devices });
+        this.setState({ devices: devices, devLoading: false, doneLoading: true });
         AppActions.setSnackbar("");
-        setTimeout(function () {
-          this.setState({ doneLoading: true });
-        }.bind(this), 200);
       }.bind(this),
       error: function (err) {
-        this.setState({ doneLoading: true, devices: [] });
+        this.setState({ doneLoading: true, devLoading: false, devices: [] });
         console.log(err);
         var errormsg = err.error || "Please check your connection";
         AppActions.setSnackbar("Devices couldn't be loaded. " + errormsg);
@@ -83086,15 +83082,12 @@ var Devices = _react2.default.createClass({
     var groupCallback = {
       success: function (deviceList, links) {
         getDevicesFromIDs(deviceList, function (devices) {
-          self.setState({ devices: devices });
+          self.setState({ devices: devices, devLoading: false, doneLoading: true });
           AppActions.setSnackbar("");
-          setTimeout(function () {
-            self.setState({ doneLoading: true });
-          }, 200);
         });
       }.bind(this),
       error: function (err) {
-        this.setState({ doneLoading: true, devices: [] });
+        this.setState({ doneLoading: true, devLoading: false, devices: [] });
         console.log(err);
         var errormsg = err.error || "Please check your connection";
         AppActions.setSnackbar("Devices couldn't be loaded. " + errormsg);
@@ -83148,7 +83141,7 @@ var Devices = _react2.default.createClass({
     var perPage = typeof per_page !== "undefined" ? per_page : this.state.admPerPage;
 
     AppActions.getDevicesForAdmission(function (devices, links) {
-      self.setState({ pendingDevices: devices });
+      self.setState({ pendingDevices: devices, authLoading: false });
     }, pageNo, perPage);
   },
   _refreshGroups: function _refreshGroups() {
@@ -83183,18 +83176,17 @@ var Devices = _react2.default.createClass({
     this.context.router.push(params.route);
   },
   _handlePageChange: function _handlePageChange(pageNo) {
-    clearInterval(this.timer);
-    this.setState({ currentPage: pageNo });
-    this.timer = setInterval(this._refreshAll, 100000);
-    this._refreshDevices(pageNo);
+    clearInterval(this.deviceTimer);
+    this.setState({ currentPage: pageNo, devLoading: true }, this._refreshDevices(pageNo));
+    this.deviceTimer = setInterval(this._refreshDevices, 10000);
   },
   _handleAdmPageChange: function _handleAdmPageChange(pageNo) {
-    this.setState({ currentAdmPage: pageNo });
-    this._refreshAdmissions(pageNo);
+    clearInterval(this.admissionTimer);
+    this.setState({ currentAdmPage: pageNo, authLoading: true }, this._refreshAdmissions(pageNo));
+    this.admissionTimer = setInterval(this._refreshAdmissions, 60000);
   },
   _handleGroupChange: function _handleGroupChange(group) {
-    AppActions.selectGroup(group);
-    this.setState({ currentPage: 1 });
+    this.setState({ currentPage: 1, doneLoading: false }, AppActions.selectGroup(group));
   },
   render: function render() {
     return _react2.default.createElement(
@@ -83212,10 +83204,25 @@ var Devices = _react2.default.createClass({
           'div',
           { className: this.state.totalAdmDevices ? "fadeIn onboard" : "hidden" },
           _react2.default.createElement(Unauthorized, { showLoader: this._showLoader, refresh: this._refreshDevices, refreshAdmissions: this._refreshAdmissions, pending: this.state.pendingDevices }),
-          this.state.totalAdmDevices ? _react2.default.createElement(Pagination, { simple: true, pageSize: 20, current: this.state.currentAdmPage || 1, total: this.state.totalAdmDevices, onChange: this._handleAdmPageChange }) : null
+          _react2.default.createElement(
+            'div',
+            null,
+            this.state.totalAdmDevices ? _react2.default.createElement(Pagination, { simple: true, pageSize: 20, current: this.state.currentAdmPage || 1, total: this.state.totalAdmDevices, onChange: this._handleAdmPageChange }) : null,
+            this.state.authLoading ? _react2.default.createElement(
+              'div',
+              { className: 'smallLoaderContainer' },
+              _react2.default.createElement(Loader, { show: true })
+            ) : null
+          )
         ),
-        _react2.default.createElement(DeviceList, { redirect: this._redirect, refreshDevices: this._refreshDevices, refreshGroups: this._refreshGroups, selectedField: this.state.selectedField, changeSelect: this._changeTmpGroup, addGroup: this._addTmpGroup, loading: !this.state.doneLoading, filters: this.state.filters, attributes: this.state.attributes, onFilterChange: this._updateFilters, images: this.state.images, selectedDevices: this.state.selectedDevices, groups: this.state.groupsForList, devices: this.state.devices || [], selectedGroup: this.state.selectedGroup }),
-        this.state.totalDevices ? _react2.default.createElement(Pagination, { simple: true, pageSize: 20, current: this.state.currentPage || 1, total: this.state.numDevices, onChange: this._handlePageChange }) : null
+        _react2.default.createElement(Loader, { show: !this.state.doneLoading }),
+        _react2.default.createElement(DeviceList, { redirect: this._redirect, refreshDevices: this._refreshDevices, refreshGroups: this._refreshGroups, selectedField: this.state.selectedField, changeSelect: this._changeTmpGroup, addGroup: this._addTmpGroup, filters: this.state.filters, attributes: this.state.attributes, onFilterChange: this._updateFilters, images: this.state.images, selectedDevices: this.state.selectedDevices, groups: this.state.groupsForList, devices: this.state.devices || [], selectedGroup: this.state.selectedGroup }),
+        this.state.totalDevices ? _react2.default.createElement(Pagination, { simple: true, pageSize: 20, current: this.state.currentPage || 1, total: this.state.numDevices, onChange: this._handlePageChange }) : null,
+        this.state.devLoading ? _react2.default.createElement(
+          'div',
+          { className: 'smallLoaderContainer' },
+          _react2.default.createElement(Loader, { show: true })
+        ) : null
       ),
       _react2.default.createElement(_Snackbar2.default, {
         open: this.state.snackbar.open,
@@ -83233,7 +83240,7 @@ Devices.contextTypes = {
 
 module.exports = Devices;
 
-},{"../../actions/app-actions":734,"../../stores/app-store":779,"./devicelist":764,"./groups":767,"./unauthorized":769,"material-ui/Snackbar":158,"rc-pagination":400,"react":648,"react-addons-update":404,"react-router":462}],766:[function(require,module,exports){
+},{"../../actions/app-actions":734,"../../stores/app-store":779,"../common/loader":742,"./devicelist":764,"./groups":767,"./unauthorized":769,"material-ui/Snackbar":158,"rc-pagination":400,"react":648,"react-addons-update":404,"react-router":462}],766:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -83429,7 +83436,7 @@ var Filters = _react2.default.createClass({
         { style: { width: "100%", position: "relative" } },
         _react2.default.createElement(
           _FlatButton2.default,
-          { style: { position: "absolute", right: "0", top: "15px" }, secondary: true, onClick: this._toggleNav, label: filterCount > 0 ? "Filters (" + filterCount + ")" : "Filters" },
+          { style: { position: "absolute", right: "0" }, secondary: true, onClick: this._toggleNav, label: filterCount > 0 ? "Filters (" + filterCount + ")" : "Filters" },
           _react2.default.createElement(
             _FontIcon2.default,
             { style: styles.exampleFlatButtonIcon, className: 'material-icons' },

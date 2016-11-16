@@ -1710,3 +1710,14 @@ div.shake-alert {
             transform: rotate(-360deg) translateX(12px);
   }
 }
+.smallLoaderContainer {
+  position: relative;
+  top: -58px;
+}
+.smallLoaderContainer .loader {
+  margin: 30px 0 15px;
+  -webkit-transform: scale(0.5);
+  -moz-transform: scale(0.5);
+  -ms-transform: scale(0.5);
+  -o-transform: scale(0.5);
+}

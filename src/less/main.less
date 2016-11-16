@@ -1459,6 +1459,7 @@ div.shake-alert {
   height: 50px;
   overflow: hidden;
   opacity: 1;
+
   .transition(all .2s ease-in-out);
   &.shrunk { 
     height: 0;
@@ -1532,4 +1533,12 @@ div.shake-alert {
     100% { transform: rotate(-360deg) translateX(@animationRadius); }
 }
 
+.smallLoaderContainer {
+  position: relative;
+  top: -58px;
+  .loader {
+    margin: 30px 0 15px;
+    .scale(0.5);
+  }
+}
 
