@@ -8,6 +8,7 @@ var DeviceList = require('./devicelist');
 var Unauthorized = require('./unauthorized');
 
 var Pagination = require('rc-pagination');
+var Loader = require('../common/loader');
 
 import Snackbar from 'material-ui/Snackbar';
 
@@ -37,7 +38,8 @@ var Devices = React.createClass({
   },
   componentDidMount: function() {
     this.setState({doneLoading:false});
-    this.timer = setInterval(this._refreshAll, 100000);
+    this.deviceTimer = setInterval(this._refreshDevices, 10000);
+    this.admissionTimer = setInterval(this._refreshAdmissions, 60000);
     this._refreshAll();
   },
   _refreshAll: function() {
@@ -69,14 +71,14 @@ var Devices = React.createClass({
     }
   },
   componentWillUnmount: function () {
-    clearInterval(this.timer);
+    clearInterval(this.deviceTimer);
     AppStore.removeChangeListener(this._onChange);
   },
   componentDidUpdate: function(prevProps, prevState) {
-    if (prevState.selectedGroup != this.state.selectedGroup) {
-      clearInterval(this.timer);
-      this.timer = setInterval(this._refreshAll, 100000);
+    if (prevState.selectedGroup !== this.state.selectedGroup) {
+      clearInterval(this.deviceTimer);
       this._refreshDevices(1);
+      this.deviceTimer = setInterval(this._refreshDevices, 10000);
     }
   },
   _onChange: function() {
@@ -95,14 +97,11 @@ var Devices = React.createClass({
 
     var allCallback = {
       success: function(devices, links) {
-        this.setState({devices: devices});
+        this.setState({devices: devices, devLoading:false, doneLoading:true});
         AppActions.setSnackbar("");
-        setTimeout(function() {
-          this.setState({doneLoading:true});
-        }.bind(this), 200);
       }.bind(this),
       error: function(err) {
-        this.setState({doneLoading:true, devices:[]});
+        this.setState({doneLoading:true, devLoading:false, devices:[]});
         console.log(err);
         var errormsg = err.error || "Please check your connection";
         AppActions.setSnackbar("Devices couldn't be loaded. " +errormsg);
@@ -112,15 +111,12 @@ var Devices = React.createClass({
     var groupCallback = {
       success: function(deviceList, links) {
         getDevicesFromIDs(deviceList, function(devices) {
-          self.setState({devices:devices});
+          self.setState({devices:devices, devLoading:false, doneLoading:true});
           AppActions.setSnackbar("");
-          setTimeout(function() {
-            self.setState({doneLoading:true});
-          }, 200);
         });
       }.bind(this),
       error: function(err) {
-        this.setState({doneLoading:true, devices:[]});
+        this.setState({doneLoading:true, devLoading:false, devices:[]});
         console.log(err);
         var errormsg = err.error || "Please check your connection";
         AppActions.setSnackbar("Devices couldn't be loaded. " +errormsg);
@@ -173,7 +169,7 @@ var Devices = React.createClass({
     var perPage = typeof per_page !=="undefined" ? per_page : this.state.admPerPage;
 
     AppActions.getDevicesForAdmission(function(devices, links) {
-      self.setState({pendingDevices: devices});
+      self.setState({pendingDevices: devices, authLoading:false});
     }, pageNo, perPage);
   },
   _refreshGroups: function() {
@@ -208,18 +204,17 @@ var Devices = React.createClass({
     this.context.router.push(params.route);
   },
   _handlePageChange: function(pageNo) {
-    clearInterval(this.timer);
-    this.setState({currentPage: pageNo});
-    this.timer = setInterval(this._refreshAll, 100000);
-    this._refreshDevices(pageNo);
+    clearInterval(this.deviceTimer);
+    this.setState({currentPage: pageNo, devLoading:true}, this._refreshDevices(pageNo));
+    this.deviceTimer = setInterval(this._refreshDevices, 10000);
   },
   _handleAdmPageChange: function(pageNo) {
-    this.setState({currentAdmPage: pageNo});
-    this._refreshAdmissions(pageNo);
+    clearInterval(this.admissionTimer);
+    this.setState({currentAdmPage: pageNo, authLoading:true}, this._refreshAdmissions(pageNo));
+    this.admissionTimer = setInterval(this._refreshAdmissions, 60000);
   },
   _handleGroupChange: function(group) {
-    AppActions.selectGroup(group);
-    this.setState({currentPage: 1});
+    this.setState({currentPage: 1, doneLoading: false}, AppActions.selectGroup(group));
   },
   render: function() {
     return (
@@ -230,10 +225,16 @@ var Devices = React.createClass({
         <div className="rightFluid padding-right">
           <div className={this.state.totalAdmDevices ? "fadeIn onboard" : "hidden"}>
             <Unauthorized showLoader={this._showLoader} refresh={this._refreshDevices} refreshAdmissions={this._refreshAdmissions} pending={this.state.pendingDevices} />
-            {this.state.totalAdmDevices ? <Pagination simple pageSize={20} current={this.state.currentAdmPage || 1} total={this.state.totalAdmDevices} onChange={this._handleAdmPageChange} /> : null }
+            <div>
+              {this.state.totalAdmDevices ? <Pagination simple pageSize={20} current={this.state.currentAdmPage || 1} total={this.state.totalAdmDevices} onChange={this._handleAdmPageChange} /> : null }
+             
+              {this.state.authLoading ?  <div className="smallLoaderContainer"><Loader show={true} /></div> : null}
+            </div>
           </div>
-          <DeviceList redirect={this._redirect} refreshDevices={this._refreshDevices} refreshGroups={this._refreshGroups} selectedField={this.state.selectedField} changeSelect={this._changeTmpGroup} addGroup={this._addTmpGroup} loading={!this.state.doneLoading} filters={this.state.filters} attributes={this.state.attributes} onFilterChange={this._updateFilters} images={this.state.images} selectedDevices={this.state.selectedDevices} groups={this.state.groupsForList} devices={this.state.devices || []} selectedGroup={this.state.selectedGroup} />
-          {this.state.totalDevices ? <Pagination simple pageSize={20} current={this.state.currentPage || 1} total={this.state.numDevices} onChange={this._handlePageChange} /> : null }
+          <Loader show={!this.state.doneLoading} />
+          <DeviceList redirect={this._redirect} refreshDevices={this._refreshDevices} refreshGroups={this._refreshGroups} selectedField={this.state.selectedField} changeSelect={this._changeTmpGroup} addGroup={this._addTmpGroup} filters={this.state.filters} attributes={this.state.attributes} onFilterChange={this._updateFilters} images={this.state.images} selectedDevices={this.state.selectedDevices} groups={this.state.groupsForList} devices={this.state.devices || []} selectedGroup={this.state.selectedGroup} />
+            {this.state.totalDevices ? <Pagination simple pageSize={20} current={this.state.currentPage || 1} total={this.state.numDevices} onChange={this._handlePageChange} /> : null }
+            {this.state.devLoading ?  <div className="smallLoaderContainer"><Loader show={true} /></div> : null}
         </div>
         <Snackbar
           open={this.state.snackbar.open}

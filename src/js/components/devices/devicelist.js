@@ -8,7 +8,6 @@ var AppStore = require('../../stores/app-store');
 var AppActions = require('../../actions/app-actions');
 var SelectedDevices = require('./selecteddevices');
 var Filters = require('./filters');
-var Loader = require('../common/loader');
 var pluralize = require('pluralize');
 
 // material ui
@@ -141,7 +140,6 @@ var DeviceList = React.createClass({
     AppActions.getDeviceIdentity(device.id, callback);
   },
   _addGroupHandler: function() {
-    var loading = true;
     var i;
     var callback = {
       success: function(device) {
@@ -406,12 +404,11 @@ var DeviceList = React.createClass({
 
     return (
       <div>
-        <Loader show={this.props.loading} />
         <Filters attributes={this.props.attributes} filters={this.props.filters} onFilterChange={this.props.onFilterChange} />
 
-        <div>
+        <div className="margin-top-small">
           <div style={{marginLeft:"26px"}}>
-            <h2 className="hoverEdit">
+            <h2 style={{marginTop:"15px"}}>
              
                 {groupNameInputs}
                 <span className={this.state.nameEdit ? "hidden" : null}>{groupLabel}</span>

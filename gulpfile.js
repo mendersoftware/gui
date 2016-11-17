@@ -72,5 +72,7 @@ gulp.task('copy', function() {
     .pipe(gulp.dest('dist/assets'));
 });
 
-gulp.task('default', ['watchify', 'copy', 'minify']);
+gulp.task('default', ['watchify', 'copy', 'minify'], function() {
+  return gulp.watch('src/**/*.*', ['copy', 'minify']);
+});
 gulp.task('build', ['browserify', 'copy', 'minify']);
