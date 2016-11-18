@@ -390,13 +390,17 @@ function setDevices(devices) {
     });
     _alldevices = devices;
     if (!_currentGroup) {
+      // if "all devices" selected
       _currentGroupDevices = devices;
     }
   }
 }
 
 function setGroupDevices(devices) {
-
+  _currentGroupDevices = [];
+  devices.forEach(function(element, index) {
+     _currentGroupDevices[index] = element;
+  });
 }
 
 function setPendingDevices(devices) {
@@ -423,7 +427,6 @@ function setHealth(devices) {
       health[element.status] = newDevices[element.status] || [];
       health[element.status].push(element);
     });
-    console.log("health", health);
   }
 }
 

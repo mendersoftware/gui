@@ -6,6 +6,7 @@ var update = require('react-addons-update');
 var Groups = require('./groups');
 var DeviceList = require('./devicelist');
 var Unauthorized = require('./unauthorized');
+var DevicePicker = require('./devicepicker');
 
 var Pagination = require('rc-pagination');
 var Loader = require('../common/loader');
@@ -20,7 +21,6 @@ function getState() {
     groupsForList: AppStore.getGroups(),
     selectedGroup: AppStore.getSelectedGroup(),
     pendingDevices: AppStore.getPendingDevices(),
-    allDevices: AppStore.getAllDevices(),
     selectedDevices: AppStore.getSelectedDevices(),
     filters: AppStore.getFilters(),
     attributes: AppStore.getAttributes(),
@@ -111,6 +111,7 @@ var Devices = React.createClass({
     var groupCallback = {
       success: function(deviceList, links) {
         getDevicesFromIDs(deviceList, function(devices) {
+          AppActions.setGroupDevices(devices);
           self.setState({devices:devices, devLoading:false, doneLoading:true});
           AppActions.setSnackbar("");
         });
@@ -216,11 +217,37 @@ var Devices = React.createClass({
   _handleGroupChange: function(group) {
     this.setState({currentPage: 1, doneLoading: false}, AppActions.selectGroup(group));
   },
+  _handleGroupDialog: function () {
+    this.setState({openGroupDialog: !this.state.openGroupDialog, selectedDevices: []});
+  },
+  _handlePickerRequest: function(perPage, searchterm) {
+    this.setState({pickerLoading:true});
+    var self = this;
+    var per = perPage || 20;
+    var callback = {
+      success: function(devices, links) {
+        self.setState({pickerDevices: devices, hasNextPicker: (typeof links.next !== "undefined"), pickerLoading:false});
+        AppActions.setSnackbar("");
+      },
+      error: function(err) {
+        console.log(err);
+        var errormsg = err.error || "Please check your connection";
+        AppActions.setSnackbar("Devices couldn't be loaded. " +errormsg);
+      }
+    };
+    AppActions.getDevices(callback, 1, per, searchterm);
+  },
   render: function() {
     return (
       <div className="margin-top">
        <div className="leftFixed">
-          <Groups changeGroup={this._handleGroupChange} refreshGroups={this._refreshGroups} groupList={this.state.groups} selectedGroup={this.state.selectedGroup} allDevices={this.state.allDevices} totalDevices={this.state.totalDevices} />
+          <Groups
+            openGroupDialog={this._handleGroupDialog}
+            changeGroup={this._handleGroupChange}
+            groupList={this.state.groups}
+            selectedGroup={this.state.selectedGroup}
+            allDevices={this.state.allDevices}
+            totalDevices={this.state.totalDevices} />
         </div>
         <div className="rightFluid padding-right">
           <div className={this.state.totalAdmDevices ? "fadeIn onboard" : "hidden"}>
@@ -232,7 +259,22 @@ var Devices = React.createClass({
             </div>
           </div>
           <Loader show={!this.state.doneLoading} />
-          <DeviceList redirect={this._redirect} refreshDevices={this._refreshDevices} refreshGroups={this._refreshGroups} selectedField={this.state.selectedField} changeSelect={this._changeTmpGroup} addGroup={this._addTmpGroup} filters={this.state.filters} attributes={this.state.attributes} onFilterChange={this._updateFilters} images={this.state.images} selectedDevices={this.state.selectedDevices} groups={this.state.groupsForList} devices={this.state.devices || []} selectedGroup={this.state.selectedGroup} />
+          <DeviceList 
+            redirect={this._redirect}
+            refreshDevices={this._refreshDevices}
+            refreshGroups={this._refreshGroups}
+            selectedField={this.state.selectedField}
+            changeSelect={this._changeTmpGroup}
+            addGroup={this._addTmpGroup}
+            filters={this.state.filters}
+            attributes={this.state.attributes}
+            onFilterChange={this._updateFilters}
+            images={this.state.images}
+            loading={this.state.devLoading}
+            selectedDevices={this.state.selectedDevices}
+            groups={this.state.groupsForList}
+            devices={this.state.devices || []}
+            selectedGroup={this.state.selectedGroup} />
             {this.state.totalDevices ? <Pagination simple pageSize={20} current={this.state.currentPage || 1} total={this.state.numDevices} onChange={this._handlePageChange} /> : null }
             {this.state.devLoading ?  <div className="smallLoaderContainer"><Loader show={true} /></div> : null}
         </div>
@@ -241,6 +283,18 @@ var Devices = React.createClass({
           message={this.state.snackbar.message}
           autoHideDuration={5000}
           onRequestClose={this.handleRequestClose}
+        />
+        <DevicePicker
+          open={this.state.openGroupDialog || false}
+          refreshGroups={this._refreshGroups}
+          selectedDevices={this.state.selectedDevices}
+          pickerDevices={this.state.pickerDevices || []}
+          groupList={this.state.groups}
+          toggleDialog={this._handleGroupDialog}
+          getPickerDevices={this._handlePickerRequest}
+          hasNext={this.state.hasNextPicker}
+          changeGroup={this._handleGroupChange}
+          loadingDevices={this.state.pickerLoading}
         />
       </div>
     );

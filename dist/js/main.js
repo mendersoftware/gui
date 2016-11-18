@@ -77786,17 +77786,20 @@ var AppActions = {
     var page = page || default_page;
     var per_page = per_page || default_per_page;
     DevicesApi.get(inventoryApiUrl + "/groups/" + group + "/devices?per_page=" + per_page + "&page=" + page).then(function (res) {
-      AppDispatcher.handleViewAction({
-        actionType: AppConstants.RECEIVE_GROUP_DEVICES,
-        devices: res.body
-      });
       callback.success(res.body, parse(res.headers['link']));
     }).catch(function (err) {
       callback.error(err);
     });
   },
 
-  getDevices: function getDevices(callback, page, per_page) {
+  setGroupDevices: function setGroupDevices(devices) {
+    AppDispatcher.handleViewAction({
+      actionType: AppConstants.RECEIVE_GROUP_DEVICES,
+      devices: devices
+    });
+  },
+
+  getDevices: function getDevices(callback, page, per_page, search_term) {
     var page = page || default_page;
     var per_page = per_page || default_per_page;
     DevicesApi.get(inventoryApiUrl + "/devices?per_page=" + per_page + "&page=" + page).then(function (res) {
@@ -78049,7 +78052,7 @@ var AppActions = {
 
 module.exports = AppActions;
 
-},{"../api/deployments-api":735,"../api/devices-api":736,"../api/images-api":737,"../constants/app-constants":776,"../dispatchers/app-dispatcher":777,"parse-link-header":386}],735:[function(require,module,exports){
+},{"../api/deployments-api":735,"../api/devices-api":736,"../api/images-api":737,"../constants/app-constants":777,"../dispatchers/app-dispatcher":778,"parse-link-header":386}],735:[function(require,module,exports){
 'use strict';
 
 var request = require('superagent');
@@ -78310,7 +78313,7 @@ var App = _react2.default.createClass({
 
 module.exports = App;
 
-},{"../themes/mender-theme.js":781,"./header/header":770,"material-ui/styles/getMuiTheme":352,"react":648,"react-joyride":416}],739:[function(require,module,exports){
+},{"../themes/mender-theme.js":782,"./header/header":771,"material-ui/styles/getMuiTheme":352,"react":648,"react-joyride":416}],739:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -78989,7 +78992,7 @@ Dashboard.contextTypes = {
 
 module.exports = Dashboard;
 
-},{"../../actions/app-actions":734,"../../stores/app-store":779,"../../stores/local-store":780,"./activity":744,"./deployments":746,"./health":747,"material-ui/RaisedButton":149,"material-ui/Snackbar":158,"react":648,"react-router":462}],746:[function(require,module,exports){
+},{"../../actions/app-actions":734,"../../stores/app-store":780,"../../stores/local-store":781,"./activity":744,"./deployments":746,"./health":747,"material-ui/RaisedButton":149,"material-ui/Snackbar":158,"react":648,"react-router":462}],746:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -80119,7 +80122,7 @@ var Deployments = _react2.default.createClass({
 
 module.exports = Deployments;
 
-},{"../../actions/app-actions":734,"../../stores/app-store":779,"./eventlog.js":754,"./inprogressdeployments.js":756,"./pastdeployments.js":757,"./report.js":760,"./schedule.js":761,"./schedulebutton.js":762,"./scheduleform.js":763,"material-ui/Dialog":106,"material-ui/FlatButton":115,"material-ui/RaisedButton":149,"material-ui/Tabs":181,"react":648}],753:[function(require,module,exports){
+},{"../../actions/app-actions":734,"../../stores/app-store":780,"./eventlog.js":754,"./inprogressdeployments.js":756,"./pastdeployments.js":757,"./report.js":760,"./schedule.js":761,"./schedulebutton.js":762,"./scheduleform.js":763,"material-ui/Dialog":106,"material-ui/FlatButton":115,"material-ui/RaisedButton":149,"material-ui/Tabs":181,"react":648}],753:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -80900,7 +80903,7 @@ ProgressChart.contextTypes = {
 
 module.exports = ProgressChart;
 
-},{"../../actions/app-actions":734,"../../stores/app-store":779,"react":648,"react-router":462}],759:[function(require,module,exports){
+},{"../../actions/app-actions":734,"../../stores/app-store":780,"react":648,"react-router":462}],759:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -82251,7 +82254,7 @@ var ScheduleForm = _react2.default.createClass({
 
 module.exports = ScheduleForm;
 
-},{"../../actions/app-actions":734,"../../stores/app-store":779,"material-ui/Divider":108,"material-ui/Drawer":110,"material-ui/FontIcon":119,"material-ui/IconButton":124,"material-ui/MenuItem":138,"material-ui/SelectField":153,"material-ui/TextField":187,"pluralize":388,"react":648,"react-router":462,"react-search-input":490}],764:[function(require,module,exports){
+},{"../../actions/app-actions":734,"../../stores/app-store":780,"material-ui/Divider":108,"material-ui/Drawer":110,"material-ui/FontIcon":119,"material-ui/IconButton":124,"material-ui/MenuItem":138,"material-ui/SelectField":153,"material-ui/TextField":187,"pluralize":388,"react":648,"react-router":462,"react-search-input":490}],764:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -82957,7 +82960,280 @@ var DeviceList = _react2.default.createClass({
 
 module.exports = DeviceList;
 
-},{"../../actions/app-actions":734,"../../stores/app-store":779,"./filters":766,"./selecteddevices":768,"material-ui/Dialog":106,"material-ui/FlatButton":115,"material-ui/FontIcon":119,"material-ui/IconButton":124,"material-ui/MenuItem":138,"material-ui/RaisedButton":149,"material-ui/SelectField":153,"material-ui/Snackbar":158,"material-ui/Table":176,"material-ui/TextField":187,"pluralize":388,"react":648,"react-collapse":408,"react-dom":411,"react-height":415,"react-motion":427,"react-time":499}],765:[function(require,module,exports){
+},{"../../actions/app-actions":734,"../../stores/app-store":780,"./filters":767,"./selecteddevices":769,"material-ui/Dialog":106,"material-ui/FlatButton":115,"material-ui/FontIcon":119,"material-ui/IconButton":124,"material-ui/MenuItem":138,"material-ui/RaisedButton":149,"material-ui/SelectField":153,"material-ui/Snackbar":158,"material-ui/Table":176,"material-ui/TextField":187,"pluralize":388,"react":648,"react-collapse":408,"react-dom":411,"react-height":415,"react-motion":427,"react-time":499}],765:[function(require,module,exports){
+'use strict';
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _Dialog = require('material-ui/Dialog');
+
+var _Dialog2 = _interopRequireDefault(_Dialog);
+
+var _TextField = require('material-ui/TextField');
+
+var _TextField2 = _interopRequireDefault(_TextField);
+
+var _FlatButton = require('material-ui/FlatButton');
+
+var _FlatButton2 = _interopRequireDefault(_FlatButton);
+
+var _RaisedButton = require('material-ui/RaisedButton');
+
+var _RaisedButton2 = _interopRequireDefault(_RaisedButton);
+
+var _Table = require('material-ui/Table');
+
+var _reactSearchInput = require('react-search-input');
+
+var _reactSearchInput2 = _interopRequireDefault(_reactSearchInput);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var AppActions = require('../../actions/app-actions');
+var Loader = require('../common/loader');
+
+var DevicePicker = _react2.default.createClass({
+  displayName: 'DevicePicker',
+
+
+  getInitialState: function getInitialState() {
+    return {
+      errorText1: '',
+      showDeviceList: false,
+      newGroup: '',
+      nextInvalid: true,
+      createInvalid: true
+    };
+  },
+
+  componentDidUpdate: function componentDidUpdate(nextProps, nextState) {
+    if (nextProps.open !== this.props.open) {
+      this.setState({ newGroup: '', numberDevs: 0 });
+    }
+  },
+
+  _createGroupHandler: function _createGroupHandler() {
+    for (var i = 0; i < this.state.selectedDevices.length; i++) {
+      var group = encodeURIComponent(this.state.newGroup);
+      var device = this.state.selectedDevices[i];
+      this._addDeviceToGroup(i, group, device);
+    }
+  },
+
+  _addDeviceToGroup: function _addDeviceToGroup(idx, group, device) {
+    var self = this;
+    var callback = {
+      success: function success() {
+        if (idx === self.state.selectedDevices.length - 1) {
+          self.props.changeGroup(group);
+          self._toggleDialog();
+        }
+      },
+      error: function error(err) {
+        console.log(err);
+        AppActions.setSnackbar("Group could not be created: " + err);
+      }
+    };
+    AppActions.addDeviceToGroup(group, device, callback);
+  },
+
+
+  validateName: function validateName(e) {
+    var newName = e.target.value;
+    this.setState({ newGroup: newName });
+    var invalid = false;
+    var errorText = null;
+    if (newName) {
+      if (newName === "All devices") {
+        invalid = true;
+        errorText = 'The group cannot be called "All devices". Try another name';
+      } else {
+        for (var i = 0; i < this.props.groupList.length; i++) {
+          if (decodeURIComponent(this.props.groupList[i]) === newName) {
+            invalid = true;
+            errorText = "A group with this name already exists";
+          }
+        }
+      }
+      this.setState({ errorText1: errorText, nextInvalid: invalid });
+    } else {
+      invalid = true;
+      errorText = "Name cannot be left blank";
+      this.setState({ errorText1: errorText, nextInvalid: invalid });
+    }
+  },
+
+  searchUpdated: function searchUpdated(term) {
+    this.setState({ searchTerm: term }); // needed to force re-render
+  },
+
+  showDeviceList: function showDeviceList() {
+    var numberDevs = this.state.numberDevs || 0;
+    numberDevs += 10;
+    this.setState({ showDeviceList: true, numberDevs: numberDevs });
+    this.props.getPickerDevices(numberDevs);
+  },
+
+  _onRowSelection: function _onRowSelection(array) {
+    var selected = [];
+    var invalid = true;
+    if (array === "all") {
+      invalid = false;
+      for (var i = 0; i < this.props.pickerDevices.length; i++) {
+        selected.push(this.props.pickerDevices[i].id);
+      }
+    } else if (array === "none") {
+      selected = [];
+    } else {
+      for (var i = 0; i < array.length; i++) {
+        selected.push(this.props.pickerDevices[array[i]].id);
+      }
+      invalid = selected.length ? false : true;
+    }
+    this.setState({ selectedDevices: selected, createInvalid: invalid });
+  },
+
+  _toggleDialog: function _toggleDialog() {
+    this.setState({ newGroup: '', showDeviceList: false, createInvalid: true, nextInvalid: true });
+    this.props.toggleDialog();
+  },
+  render: function render() {
+    var deviceList = this.props.pickerDevices.map(function (device, index) {
+      var attributesLength = device.attributes ? device.attributes.length : 0;
+      var attrs = {};
+      for (var i = 0; i < attributesLength; i++) {
+        attrs[device.attributes[i].name] = device.attributes[i].value;
+      }
+      var selected = false;
+      if (this.state.selectedDevices) {
+        selected = this.state.selectedDevices.indexOf(device.id) !== -1;
+      }
+      return _react2.default.createElement(
+        _Table.TableRow,
+        { key: index, selected: selected },
+        _react2.default.createElement(
+          _Table.TableRowColumn,
+          null,
+          device.id
+        ),
+        _react2.default.createElement(
+          _Table.TableRowColumn,
+          null,
+          attrs.device_type
+        )
+      );
+    }, this);
+
+    var createActions = [_react2.default.createElement(
+      'div',
+      { style: { marginRight: "10px", display: "inline-block" } },
+      _react2.default.createElement(_FlatButton2.default, {
+        label: 'Cancel',
+        onClick: this._toggleDialog })
+    ), _react2.default.createElement(_RaisedButton2.default, {
+      label: 'Create group',
+      primary: true,
+      onClick: this._createGroupHandler,
+      disabled: this.state.createInvalid })];
+
+    return _react2.default.createElement(
+      _Dialog2.default,
+      {
+        ref: 'createGroup',
+        title: 'Create a new group',
+        actions: createActions,
+        open: this.props.open,
+        autoDetectWindowHeight: true, autoScrollBodyContent: true, modal: true,
+        bodyClassName: 'heightTransition',
+        bodyStyle: { maxHeight: "50vh" },
+        titleStyle: { paddingBottom: "15px", marginBottom: 0 },
+        footerStyle: { marginTop: 0 }
+      },
+      _react2.default.createElement(
+        'div',
+        { className: this.state.showDeviceList ? "hidden" : "absoluteTextfieldButton" },
+        _react2.default.createElement(_TextField2.default, {
+          ref: 'customGroup',
+          className: 'float-left',
+          hintText: 'Name your group',
+          floatingLabelText: 'Name your group',
+          value: this.state.newGroup,
+          onChange: this.validateName,
+          errorStyle: { color: "rgb(171, 16, 0)" },
+          errorText: this.state.errorText1 }),
+        _react2.default.createElement(
+          'div',
+          { className: this.state.showDeviceList ? "hidden" : "float-left margin-left-small" },
+          _react2.default.createElement(_RaisedButton2.default, { disabled: this.state.nextInvalid, style: { marginTop: "26px" }, label: 'Next', secondary: true, onClick: this.showDeviceList })
+        )
+      ),
+      _react2.default.createElement(
+        'div',
+        { className: this.state.showDeviceList === true ? "dialogTableContainer" : "dialogTableContainer zero" },
+        _react2.default.createElement(
+          'div',
+          { className: 'fixedSearch' },
+          _react2.default.createElement(
+            'span',
+            null,
+            'Select devices to include in the new group:'
+          ),
+          _react2.default.createElement(_reactSearchInput2.default, { className: 'search top-right', ref: 'search', onChange: this.searchUpdated, placeholder: 'Search devices', style: { margin: "10px" } })
+        ),
+        _react2.default.createElement(
+          _Table.Table,
+          {
+            multiSelectable: true,
+            className: deviceList.length ? null : "hidden",
+            onRowSelection: this._onRowSelection,
+            selectable: true },
+          _react2.default.createElement(
+            _Table.TableHeader,
+            null,
+            _react2.default.createElement(
+              _Table.TableRow,
+              null,
+              _react2.default.createElement(
+                _Table.TableHeaderColumn,
+                null,
+                'Name'
+              ),
+              _react2.default.createElement(
+                _Table.TableHeaderColumn,
+                null,
+                'Device type'
+              )
+            )
+          ),
+          _react2.default.createElement(
+            _Table.TableBody,
+            {
+              deselectOnClickaway: false,
+              showRowHover: true },
+            deviceList
+          )
+        ),
+        this.props.hasNext ? _react2.default.createElement(
+          'a',
+          { className: 'small', onClick: this.showDeviceList },
+          'Load more devices'
+        ) : null,
+        _react2.default.createElement(Loader, { show: this.props.loadingDevices }),
+        _react2.default.createElement(
+          'p',
+          { className: deviceList.length || this.props.loadingDevices ? "hidden" : "italic muted" },
+          'No devices match the search term'
+        )
+      )
+    );
+  }
+});
+
+module.exports = DevicePicker;
+
+},{"../../actions/app-actions":734,"../common/loader":742,"material-ui/Dialog":106,"material-ui/FlatButton":115,"material-ui/RaisedButton":149,"material-ui/Table":176,"material-ui/TextField":187,"react":648,"react-search-input":490}],766:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -82979,6 +83255,7 @@ var update = require('react-addons-update');
 var Groups = require('./groups');
 var DeviceList = require('./devicelist');
 var Unauthorized = require('./unauthorized');
+var DevicePicker = require('./devicepicker');
 
 var Pagination = require('rc-pagination');
 var Loader = require('../common/loader');
@@ -82989,7 +83266,6 @@ function getState() {
     groupsForList: AppStore.getGroups(),
     selectedGroup: AppStore.getSelectedGroup(),
     pendingDevices: AppStore.getPendingDevices(),
-    allDevices: AppStore.getAllDevices(),
     selectedDevices: AppStore.getSelectedDevices(),
     filters: AppStore.getFilters(),
     attributes: AppStore.getAttributes(),
@@ -83082,6 +83358,7 @@ var Devices = _react2.default.createClass({
     var groupCallback = {
       success: function (deviceList, links) {
         getDevicesFromIDs(deviceList, function (devices) {
+          AppActions.setGroupDevices(devices);
           self.setState({ devices: devices, devLoading: false, doneLoading: true });
           AppActions.setSnackbar("");
         });
@@ -83188,6 +83465,26 @@ var Devices = _react2.default.createClass({
   _handleGroupChange: function _handleGroupChange(group) {
     this.setState({ currentPage: 1, doneLoading: false }, AppActions.selectGroup(group));
   },
+  _handleGroupDialog: function _handleGroupDialog() {
+    this.setState({ openGroupDialog: !this.state.openGroupDialog, selectedDevices: [] });
+  },
+  _handlePickerRequest: function _handlePickerRequest(perPage, searchterm) {
+    this.setState({ pickerLoading: true });
+    var self = this;
+    var per = perPage || 20;
+    var callback = {
+      success: function success(devices, links) {
+        self.setState({ pickerDevices: devices, hasNextPicker: typeof links.next !== "undefined", pickerLoading: false });
+        AppActions.setSnackbar("");
+      },
+      error: function error(err) {
+        console.log(err);
+        var errormsg = err.error || "Please check your connection";
+        AppActions.setSnackbar("Devices couldn't be loaded. " + errormsg);
+      }
+    };
+    AppActions.getDevices(callback, 1, per, searchterm);
+  },
   render: function render() {
     return _react2.default.createElement(
       'div',
@@ -83195,7 +83492,13 @@ var Devices = _react2.default.createClass({
       _react2.default.createElement(
         'div',
         { className: 'leftFixed' },
-        _react2.default.createElement(Groups, { changeGroup: this._handleGroupChange, refreshGroups: this._refreshGroups, groupList: this.state.groups, selectedGroup: this.state.selectedGroup, allDevices: this.state.allDevices, totalDevices: this.state.totalDevices })
+        _react2.default.createElement(Groups, {
+          openGroupDialog: this._handleGroupDialog,
+          changeGroup: this._handleGroupChange,
+          groupList: this.state.groups,
+          selectedGroup: this.state.selectedGroup,
+          allDevices: this.state.allDevices,
+          totalDevices: this.state.totalDevices })
       ),
       _react2.default.createElement(
         'div',
@@ -83216,7 +83519,22 @@ var Devices = _react2.default.createClass({
           )
         ),
         _react2.default.createElement(Loader, { show: !this.state.doneLoading }),
-        _react2.default.createElement(DeviceList, { redirect: this._redirect, refreshDevices: this._refreshDevices, refreshGroups: this._refreshGroups, selectedField: this.state.selectedField, changeSelect: this._changeTmpGroup, addGroup: this._addTmpGroup, filters: this.state.filters, attributes: this.state.attributes, onFilterChange: this._updateFilters, images: this.state.images, selectedDevices: this.state.selectedDevices, groups: this.state.groupsForList, devices: this.state.devices || [], selectedGroup: this.state.selectedGroup }),
+        _react2.default.createElement(DeviceList, {
+          redirect: this._redirect,
+          refreshDevices: this._refreshDevices,
+          refreshGroups: this._refreshGroups,
+          selectedField: this.state.selectedField,
+          changeSelect: this._changeTmpGroup,
+          addGroup: this._addTmpGroup,
+          filters: this.state.filters,
+          attributes: this.state.attributes,
+          onFilterChange: this._updateFilters,
+          images: this.state.images,
+          loading: this.state.devLoading,
+          selectedDevices: this.state.selectedDevices,
+          groups: this.state.groupsForList,
+          devices: this.state.devices || [],
+          selectedGroup: this.state.selectedGroup }),
         this.state.totalDevices ? _react2.default.createElement(Pagination, { simple: true, pageSize: 20, current: this.state.currentPage || 1, total: this.state.numDevices, onChange: this._handlePageChange }) : null,
         this.state.devLoading ? _react2.default.createElement(
           'div',
@@ -83229,6 +83547,18 @@ var Devices = _react2.default.createClass({
         message: this.state.snackbar.message,
         autoHideDuration: 5000,
         onRequestClose: this.handleRequestClose
+      }),
+      _react2.default.createElement(DevicePicker, {
+        open: this.state.openGroupDialog || false,
+        refreshGroups: this._refreshGroups,
+        selectedDevices: this.state.selectedDevices,
+        pickerDevices: this.state.pickerDevices || [],
+        groupList: this.state.groups,
+        toggleDialog: this._handleGroupDialog,
+        getPickerDevices: this._handlePickerRequest,
+        hasNext: this.state.hasNextPicker,
+        changeGroup: this._handleGroupChange,
+        loadingDevices: this.state.pickerLoading
       })
     );
   }
@@ -83240,7 +83570,7 @@ Devices.contextTypes = {
 
 module.exports = Devices;
 
-},{"../../actions/app-actions":734,"../../stores/app-store":779,"../common/loader":742,"./devicelist":764,"./groups":767,"./unauthorized":769,"material-ui/Snackbar":158,"rc-pagination":400,"react":648,"react-addons-update":404,"react-router":462}],766:[function(require,module,exports){
+},{"../../actions/app-actions":734,"../../stores/app-store":780,"../common/loader":742,"./devicelist":764,"./devicepicker":765,"./groups":768,"./unauthorized":770,"material-ui/Snackbar":158,"rc-pagination":400,"react":648,"react-addons-update":404,"react-router":462}],767:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -83453,30 +83783,18 @@ var Filters = _react2.default.createClass({
 
 module.exports = Filters;
 
-},{"material-ui/Drawer":110,"material-ui/FlatButton":115,"material-ui/FontIcon":119,"material-ui/IconButton":124,"material-ui/MenuItem":138,"material-ui/SelectField":153,"material-ui/TextField":187,"react":648}],767:[function(require,module,exports){
+},{"material-ui/Drawer":110,"material-ui/FlatButton":115,"material-ui/FontIcon":119,"material-ui/IconButton":124,"material-ui/MenuItem":138,"material-ui/SelectField":153,"material-ui/TextField":187,"react":648}],768:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
-var _reactSearchInput = require('react-search-input');
-
-var _reactSearchInput2 = _interopRequireDefault(_reactSearchInput);
-
 var _List = require('material-ui/List');
 
 var _FontIcon = require('material-ui/FontIcon');
 
 var _FontIcon2 = _interopRequireDefault(_FontIcon);
-
-var _Dialog = require('material-ui/Dialog');
-
-var _Dialog2 = _interopRequireDefault(_Dialog);
-
-var _TextField = require('material-ui/TextField');
-
-var _TextField2 = _interopRequireDefault(_TextField);
 
 var _FlatButton = require('material-ui/FlatButton');
 
@@ -83486,36 +83804,24 @@ var _RaisedButton = require('material-ui/RaisedButton');
 
 var _RaisedButton2 = _interopRequireDefault(_RaisedButton);
 
-var _Table = require('material-ui/Table');
-
 var _Subheader = require('material-ui/Subheader');
 
 var _Subheader2 = _interopRequireDefault(_Subheader);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var AppStore = require('../../stores/app-store');
 var AppActions = require('../../actions/app-actions');
 
 // material ui
 
 require('../common/prototype/Array.prototype.equals');
 
-var tmpDevices = [];
-var selectedDevices = [];
-
 var Groups = _react2.default.createClass({
   displayName: 'Groups',
 
   getInitialState: function getInitialState() {
     return {
-      errorText1: '',
-      openDialog: false,
-      showDeviceList: false,
-      newGroup: '',
-      nextInvalid: true,
-      createInvalid: true,
-      selectedDevices: []
+      groupDevs: {}
     };
   },
 
@@ -83528,78 +83834,9 @@ var Groups = _react2.default.createClass({
   _changeGroup: function _changeGroup(group) {
     this.props.changeGroup(group);
   },
-  _createGroupHandler: function _createGroupHandler() {
-    var i;
-    var callback = {
-      success: function () {
-        if (i === this.state.selectedDevices.length) {
-          this.setState({ openDialog: false, showDeviceList: false, createInvalid: true, nextInvalid: true });
-          this._changeGroup(this.state.newGroup);
-          this.props.refreshGroups();
-        }
-      }.bind(this),
-      error: function (err) {
-        console.log(err);
-        AppActions.setSnackbar("Group could not be created: " + err);
-      }.bind(this)
-    };
-    for (i = 0; i < this.state.selectedDevices.length; i++) {
-      AppActions.addDeviceToGroup(encodeURIComponent(this.state.newGroup), this.state.selectedDevices[i], callback);
-    }
-  },
+
   dialogToggle: function dialogToggle() {
-    this.setState({ openDialog: !this.state.openDialog, showDeviceList: false, newGroup: '', nextInvalid: true, createInvalid: true });
-  },
-  validateName: function validateName(e) {
-    var newName = e.target.value;
-    this.setState({ newGroup: newName });
-    var invalid = false;
-    var errorText = null;
-    if (newName) {
-      if (newName === "All devices") {
-        invalid = true;
-        errorText = 'The group cannot be called "All devices". Try another name';
-      } else {
-        for (var i = 0; i < this.props.groupList.length; i++) {
-          if (decodeURIComponent(this.props.groupList[i]) === newName) {
-            invalid = true;
-            errorText = "A group with this name already exists";
-          }
-        }
-      }
-      this.setState({ errorText1: errorText, nextInvalid: invalid });
-    } else {
-      invalid = true;
-      errorText = "Name cannot be left blank";
-      this.setState({ errorText1: errorText, nextInvalid: invalid });
-    }
-  },
-
-  searchUpdated: function searchUpdated(term) {
-    this.setState({ searchTerm: term }); // needed to force re-render
-  },
-
-  showDeviceList: function showDeviceList() {
-    this.setState({ showDeviceList: true });
-  },
-
-  _onRowSelection: function _onRowSelection(array) {
-    var selected = [];
-    var invalid = true;
-    if (array === "all") {
-      invalid = false;
-      for (var i = 0; i < tmpDevices.length; i++) {
-        selected.push(tmpDevices[i].id);
-      }
-    } else if (array === "none") {
-      selected = [];
-    } else {
-      for (var i = 0; i < array.length; i++) {
-        selected.push(tmpDevices[array[i]].id);
-      }
-      invalid = selected.length ? false : true;
-    }
-    this.setState({ selectedDevices: selected, createInvalid: invalid });
+    this.props.openGroupDialog();
   },
 
   _setNumDevices: function _setNumDevices(groupList) {
@@ -83607,10 +83844,10 @@ var Groups = _react2.default.createClass({
     var groups = {};
 
     for (var i = 0; i < groupList.length; i++) {
-      groupDevs(i);
+      setGroupDevs(i);
     }
 
-    function groupDevs(idx) {
+    function setGroupDevs(idx) {
       AppActions.getNumberOfDevices(function (noDevs) {
         groups[groupList[idx]] = { numDevices: noDevs };
         if (idx === groupList.length - 1) {
@@ -83626,44 +83863,6 @@ var Groups = _react2.default.createClass({
       { className: 'material-icons' },
       'add'
     );
-    var createActions = [_react2.default.createElement(
-      'div',
-      { style: { marginRight: "10px", display: "inline-block" } },
-      _react2.default.createElement(_FlatButton2.default, {
-        label: 'Cancel',
-        onClick: this.dialogToggle })
-    ), _react2.default.createElement(_RaisedButton2.default, {
-      label: 'Create group',
-      primary: true,
-      onClick: this._createGroupHandler,
-      disabled: this.state.createInvalid })];
-
-    if (this.refs.search && this.props.allDevices.length) {
-      var filters = ['id'];
-      tmpDevices = this.props.allDevices.filter(this.refs.search.filter(filters));
-    }
-
-    var deviceList = tmpDevices.map(function (device, index) {
-      var attributesLength = device.attributes ? device.attributes.length : 0;
-      var attrs = {};
-      for (var i = 0; i < attributesLength; i++) {
-        attrs[device.attributes[i].name] = device.attributes[i].value;
-      }
-      return _react2.default.createElement(
-        _Table.TableRow,
-        { key: index, selected: this.state.selectedDevices.indexOf(device.id) !== -1 },
-        _react2.default.createElement(
-          _Table.TableRowColumn,
-          null,
-          device.id
-        ),
-        _react2.default.createElement(
-          _Table.TableRowColumn,
-          null,
-          attrs.device_type
-        )
-      );
-    }, this);
 
     var allLabel = _react2.default.createElement(
       'span',
@@ -83719,89 +83918,6 @@ var Groups = _react2.default.createClass({
           leftIcon: createBtn,
           primaryText: 'Create a group',
           onClick: this.dialogToggle })
-      ),
-      _react2.default.createElement(
-        _Dialog2.default,
-        {
-          ref: 'createGroup',
-          title: 'Create a new group',
-          actions: createActions,
-          open: this.state.openDialog,
-          autoDetectWindowHeight: true, autoScrollBodyContent: true, modal: true,
-          bodyClassName: 'heightTransition',
-          bodyStyle: { maxHeight: "50vh" },
-          titleStyle: { paddingBottom: "15px" }
-        },
-        _react2.default.createElement(
-          'div',
-          { className: this.state.showDeviceList ? "hidden" : "absoluteTextfieldButton" },
-          _react2.default.createElement(_TextField2.default, {
-            ref: 'customGroup',
-            className: 'float-left',
-            hintText: 'Name your group',
-            floatingLabelText: 'Name your group',
-            value: this.state.newGroup,
-            onChange: this.validateName,
-            errorStyle: { color: "rgb(171, 16, 0)" },
-            errorText: this.state.errorText1 }),
-          _react2.default.createElement(
-            'div',
-            { className: this.state.showDeviceList ? "hidden" : "float-left margin-left-small" },
-            _react2.default.createElement(_RaisedButton2.default, { disabled: this.state.nextInvalid, style: { marginTop: "26px" }, label: 'Next', secondary: true, onClick: this.showDeviceList })
-          )
-        ),
-        _react2.default.createElement(
-          'div',
-          { className: this.state.showDeviceList === true ? "dialogTableContainer" : "dialogTableContainer zero" },
-          _react2.default.createElement(
-            'div',
-            { className: 'fixedSearch' },
-            _react2.default.createElement(
-              'span',
-              null,
-              'Select devices to include in the new group:'
-            ),
-            _react2.default.createElement(_reactSearchInput2.default, { className: 'search top-right', ref: 'search', onChange: this.searchUpdated, placeholder: 'Search devices', style: { margin: "10px" } })
-          ),
-          _react2.default.createElement(
-            _Table.Table,
-            {
-              multiSelectable: true,
-              className: deviceList.length ? null : "hidden",
-              onRowSelection: this._onRowSelection,
-              selectable: true },
-            _react2.default.createElement(
-              _Table.TableHeader,
-              null,
-              _react2.default.createElement(
-                _Table.TableRow,
-                null,
-                _react2.default.createElement(
-                  _Table.TableHeaderColumn,
-                  null,
-                  'Name'
-                ),
-                _react2.default.createElement(
-                  _Table.TableHeaderColumn,
-                  null,
-                  'Device type'
-                )
-              )
-            ),
-            _react2.default.createElement(
-              _Table.TableBody,
-              {
-                deselectOnClickaway: false,
-                showRowHover: true },
-              deviceList
-            )
-          ),
-          _react2.default.createElement(
-            'p',
-            { className: deviceList.length ? "hidden" : "italic muted" },
-            'No devices match the search term'
-          )
-        )
       )
     );
   }
@@ -83809,7 +83925,7 @@ var Groups = _react2.default.createClass({
 
 module.exports = Groups;
 
-},{"../../actions/app-actions":734,"../../stores/app-store":779,"../common/prototype/Array.prototype.equals":743,"material-ui/Dialog":106,"material-ui/FlatButton":115,"material-ui/FontIcon":119,"material-ui/List":133,"material-ui/RaisedButton":149,"material-ui/Subheader":166,"material-ui/Table":176,"material-ui/TextField":187,"react":648,"react-search-input":490}],768:[function(require,module,exports){
+},{"../../actions/app-actions":734,"../common/prototype/Array.prototype.equals":743,"material-ui/FlatButton":115,"material-ui/FontIcon":119,"material-ui/List":133,"material-ui/RaisedButton":149,"material-ui/Subheader":166,"react":648}],769:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -84112,7 +84228,7 @@ var SelectedDevices = _react2.default.createClass({
 
 module.exports = SelectedDevices;
 
-},{"../../actions/app-actions":734,"../../stores/app-store":779,"../deployments/scheduleform":763,"material-ui/Dialog":106,"material-ui/Divider":108,"material-ui/FlatButton":115,"material-ui/FontIcon":119,"material-ui/IconButton":124,"material-ui/List":133,"material-ui/RaisedButton":149,"material-ui/TextField":187,"react":648,"react-collapse":408,"react-router":462,"react-time":499}],769:[function(require,module,exports){
+},{"../../actions/app-actions":734,"../../stores/app-store":780,"../deployments/scheduleform":763,"material-ui/Dialog":106,"material-ui/Divider":108,"material-ui/FlatButton":115,"material-ui/FontIcon":119,"material-ui/IconButton":124,"material-ui/List":133,"material-ui/RaisedButton":149,"material-ui/TextField":187,"react":648,"react-collapse":408,"react-router":462,"react-time":499}],770:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -84401,7 +84517,7 @@ var Authorized = _react2.default.createClass({
 
 module.exports = Authorized;
 
-},{"../../actions/app-actions":734,"./selecteddevices":768,"material-ui":205,"material-ui/FontIcon":119,"material-ui/IconButton":124,"material-ui/RaisedButton":149,"material-ui/Table":176,"react":648,"react-collapse":408,"react-dom":411,"react-height":415,"react-motion":427,"react-time":499}],770:[function(require,module,exports){
+},{"../../actions/app-actions":734,"./selecteddevices":769,"material-ui":205,"material-ui/FontIcon":119,"material-ui/IconButton":124,"material-ui/RaisedButton":149,"material-ui/Table":176,"react":648,"react-collapse":408,"react-dom":411,"react-height":415,"react-motion":427,"react-time":499}],771:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -84541,7 +84657,7 @@ Header.contextTypes = {
 
 module.exports = Header;
 
-},{"../../actions/app-actions":734,"material-ui/FontIcon":119,"material-ui/IconButton":124,"material-ui/IconMenu":126,"material-ui/MenuItem":138,"material-ui/Tabs":181,"material-ui/Toolbar":204,"react":648,"react-router":462}],771:[function(require,module,exports){
+},{"../../actions/app-actions":734,"material-ui/FontIcon":119,"material-ui/IconButton":124,"material-ui/IconMenu":126,"material-ui/MenuItem":138,"material-ui/Tabs":181,"material-ui/Toolbar":204,"react":648,"react-router":462}],772:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -84567,7 +84683,7 @@ var DeploymentButton = _react2.default.createClass({
 
 module.exports = DeploymentButton;
 
-},{"material-ui/RaisedButton":149,"react":648}],772:[function(require,module,exports){
+},{"material-ui/RaisedButton":149,"react":648}],773:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -85137,7 +85253,7 @@ Repository.contextTypes = {
 
 module.exports = Repository;
 
-},{"../../actions/app-actions":734,"../../stores/app-store":779,"../common/forms/fileinput":739,"../common/forms/form":740,"../common/forms/textinput":741,"../common/loader":742,"../deployments/scheduleform":763,"./deploymentbutton":771,"./selectedimage":773,"material-ui/Dialog":106,"material-ui/FlatButton":115,"material-ui/FontIcon":119,"material-ui/IconButton":124,"material-ui/RaisedButton":149,"material-ui/Snackbar":158,"material-ui/Table":176,"material-ui/TextField":187,"react":648,"react-addons-update":404,"react-collapse":408,"react-dom":411,"react-height":415,"react-motion":427,"react-router":462,"react-search-input":490,"react-time":499}],773:[function(require,module,exports){
+},{"../../actions/app-actions":734,"../../stores/app-store":780,"../common/forms/fileinput":739,"../common/forms/form":740,"../common/forms/textinput":741,"../common/loader":742,"../deployments/scheduleform":763,"./deploymentbutton":772,"./selectedimage":774,"material-ui/Dialog":106,"material-ui/FlatButton":115,"material-ui/FontIcon":119,"material-ui/IconButton":124,"material-ui/RaisedButton":149,"material-ui/Snackbar":158,"material-ui/Table":176,"material-ui/TextField":187,"react":648,"react-addons-update":404,"react-collapse":408,"react-dom":411,"react-height":415,"react-motion":427,"react-router":462,"react-search-input":490,"react-time":499}],774:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -85359,7 +85475,7 @@ SelectedImage.contextTypes = {
 
 module.exports = SelectedImage;
 
-},{"material-ui/Divider":108,"material-ui/FlatButton":115,"material-ui/FontIcon":119,"material-ui/IconButton":124,"material-ui/List":133,"material-ui/TextField":187,"react":648,"react-router":462,"react-time":499}],774:[function(require,module,exports){
+},{"material-ui/Divider":108,"material-ui/FlatButton":115,"material-ui/FontIcon":119,"material-ui/IconButton":124,"material-ui/List":133,"material-ui/TextField":187,"react":648,"react-router":462,"react-time":499}],775:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -85523,7 +85639,7 @@ var Software = _react2.default.createClass({
 
 module.exports = Software;
 
-},{"../../actions/app-actions":734,"../../stores/app-store":779,"../../stores/local-store":780,"./repository.js":772,"material-ui/Snackbar":158,"react":648,"react-router":462}],775:[function(require,module,exports){
+},{"../../actions/app-actions":734,"../../stores/app-store":780,"../../stores/local-store":781,"./repository.js":773,"material-ui/Snackbar":158,"react":648,"react-router":462}],776:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -85587,7 +85703,7 @@ module.exports = _react2.default.createElement(
   )
 );
 
-},{"../components/app":738,"../components/dashboard/dashboard":745,"../components/deployments/deployments":752,"../components/devices/devices":765,"../components/software/software":774,"react":648,"react-router":462}],776:[function(require,module,exports){
+},{"../components/app":738,"../components/dashboard/dashboard":745,"../components/deployments/deployments":752,"../components/devices/devices":766,"../components/software/software":775,"react":648,"react-router":462}],777:[function(require,module,exports){
 'use strict';
 
 module.exports = {
@@ -85615,7 +85731,7 @@ module.exports = {
   SET_SNACKBAR: 'SET_SNACKBAR'
 };
 
-},{}],777:[function(require,module,exports){
+},{}],778:[function(require,module,exports){
 'use strict';
 
 var Dispatcher = require('flux').Dispatcher;
@@ -85633,7 +85749,7 @@ var AppDispatcher = assign(new Dispatcher(), {
 
 module.exports = AppDispatcher;
 
-},{"flux":34,"object-assign":385}],778:[function(require,module,exports){
+},{"flux":34,"object-assign":385}],779:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -85664,7 +85780,7 @@ var routes = require('./config/routes');
   routes
 ), document.getElementById('main'));
 
-},{"./config/routes":775,"react":648,"react-dom":411,"react-router":462,"react-tap-event-plugin":497}],779:[function(require,module,exports){
+},{"./config/routes":776,"react":648,"react-dom":411,"react-router":462,"react-tap-event-plugin":497}],780:[function(require,module,exports){
 'use strict';
 
 var AppDispatcher = require('../dispatchers/app-dispatcher');
@@ -86041,12 +86157,18 @@ function setDevices(devices) {
     });
     _alldevices = devices;
     if (!_currentGroup) {
+      // if "all devices" selected
       _currentGroupDevices = devices;
     }
   }
 }
 
-function setGroupDevices(devices) {}
+function setGroupDevices(devices) {
+  _currentGroupDevices = [];
+  devices.forEach(function (element, index) {
+    _currentGroupDevices[index] = element;
+  });
+}
 
 function setPendingDevices(devices) {
   if (devices) {
@@ -86072,7 +86194,6 @@ function setHealth(devices) {
       health[element.status] = newDevices[element.status] || [];
       health[element.status].push(element);
     });
-    console.log("health", health);
   }
 }
 
@@ -86336,7 +86457,7 @@ var AppStore = assign(EventEmitter.prototype, {
 
 module.exports = AppStore;
 
-},{"../constants/app-constants":776,"../dispatchers/app-dispatcher":777,"events":8,"object-assign":385}],780:[function(require,module,exports){
+},{"../constants/app-constants":777,"../dispatchers/app-dispatcher":778,"events":8,"object-assign":385}],781:[function(require,module,exports){
 'use strict';
 
 /*
@@ -86383,7 +86504,7 @@ var LocalStore = assign(EventEmitter.prototype, {
 
 module.exports = LocalStore;
 
-},{"../constants/app-constants":776,"../dispatchers/app-dispatcher":777,"events":8,"object-assign":385}],781:[function(require,module,exports){
+},{"../constants/app-constants":777,"../dispatchers/app-dispatcher":778,"events":8,"object-assign":385}],782:[function(require,module,exports){
 'use strict';
 
 var _colorManipulator = require('material-ui/utils/colorManipulator');
@@ -86413,4 +86534,4 @@ module.exports = {
   }
 };
 
-},{"material-ui/styles/colors":351,"material-ui/styles/spacing":353,"material-ui/utils/colorManipulator":376}]},{},[778]);
+},{"material-ui/styles/colors":351,"material-ui/styles/spacing":353,"material-ui/utils/colorManipulator":376}]},{},[779]);
