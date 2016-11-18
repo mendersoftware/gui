@@ -1,6 +1,8 @@
 var gulp = require('gulp');
 var rename = require('gulp-rename');
 var watchify = require('watchify');
+var uglify = require('gulp-uglify');
+var htmlreplace = require('gulp-html-replace');
 var browserify = require('browserify');
 var babelify = require("babelify");
 var source = require("vinyl-source-stream"); // gulp needs a stream not a string, from browserify
@@ -10,7 +12,7 @@ var minifyCSS = require('gulp-minify-css');
 var concat = require('gulp-concat');
 var gutil = require('gulp-util');
 var assign = require('lodash.assign');
-
+var streamify = require('gulp-streamify');
 
 
 gulp.task('watchify', function() {
@@ -53,26 +55,36 @@ gulp.task('minify', ['styles'], function() {
     .pipe(gulp.dest('dist/stylesheets'));
 });
 
-
 gulp.task('browserify', function() {
   process.env.NODE_ENV = 'production';
   browserify('./src/js/main.js')
     .transform('babelify', {presets: ["es2015", "react"]})
     .bundle()
-    .pipe(source('main.js'))
+    .pipe(source('main.min.js'))
+    .pipe(streamify(uglify()))
     .pipe(gulp.dest('dist/js'));
 });
 
 gulp.task('copy', function() {
-  gulp.src('src/index.html')
-    .pipe(gulp.dest('dist'));
   gulp.src('src/favicon.ico')
     .pipe(gulp.dest('dist'));
   gulp.src('src/assets/**/*.*')
     .pipe(gulp.dest('dist/assets'));
 });
 
-gulp.task('default', ['watchify', 'copy', 'minify'], function() {
+gulp.task('html:dev', function() {
+  return gulp.src('src/index.html')
+    .pipe(htmlreplace({js: 'js/main.js'}))
+    .pipe(gulp.dest('dist'));
+});
+
+gulp.task('html:prod', function() {
+  return gulp.src('src/index.html')
+    .pipe(htmlreplace({js: 'js/main.min.js'}))
+    .pipe(gulp.dest('dist'));
+});
+
+gulp.task('default', ['watchify', 'copy', 'minify', 'html:dev'], function() {
   return gulp.watch('src/**/*.*', ['copy', 'minify']);
 });
-gulp.task('build', ['browserify', 'copy', 'minify']);
+gulp.task('build', ['browserify', 'copy', 'minify', 'html:prod']);
