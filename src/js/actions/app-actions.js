@@ -142,6 +142,12 @@ var AppActions = {
           getDeviceCount();
         } else {
           callback(count);
+          if (!group) {
+            AppDispatcher.handleViewAction({
+              actionType: AppConstants.SET_TOTAL_DEVICES,
+              total: count
+            });
+          }
         }
       })
       .catch(function(err) {

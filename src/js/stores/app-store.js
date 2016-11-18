@@ -8,6 +8,7 @@ var CHANGE_EVENT = "change";
 var _softwareRepo = [];
 var _currentGroup = null;
 var _currentGroupDevices = [];
+var _totalNumberDevices;
 var _selectedDevices = [];
 var _filters = [{key:'', value:''}];
 var _attributes = {
@@ -396,6 +397,10 @@ function setDevices(devices) {
   }
 }
 
+function setTotalDevices(count) {
+  _totalNumberDevices = count;
+}
+
 function setGroupDevices(devices) {
   _currentGroupDevices = [];
   devices.forEach(function(element, index) {
@@ -598,6 +603,10 @@ var AppStore = assign(EventEmitter.prototype, {
     return _getPendingDevices()
   },
 
+  getTotalDevices: function() {
+    return _totalNumberDevices
+  },
+
   getActivity: function() {
     /*
     * Return activity log
@@ -669,6 +678,10 @@ var AppStore = assign(EventEmitter.prototype, {
       /* API */
       case AppConstants.RECEIVE_ALL_DEVICES:
         setDevices(payload.action.devices);
+        break;
+
+      case AppConstants.SET_TOTAL_DEVICES:
+        setTotalDevices(payload.action.total);
         break;
 
        /* API */
