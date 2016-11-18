@@ -143,6 +143,10 @@ a:hover,
 span.link:hover {
   color: #679BA5;
 }
+a.small,
+span.link.small {
+  font-size: 13px;
+}
 .nowrap {
   white-space: nowrap;
 }
@@ -456,7 +460,7 @@ span.link:hover {
   position: fixed;
   left: 24px;
   right: 24px;
-  top: 74px;
+  top: 72px;
   padding: 24px 0;
   background-color: white;
   z-index: 30000;

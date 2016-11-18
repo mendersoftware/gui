@@ -86,10 +86,6 @@ var AppActions = {
     DevicesApi
       .get(inventoryApiUrl+"/groups/" + group +"/devices?per_page="+per_page + "&page="+page)
       .then(function(res) {
-         AppDispatcher.handleViewAction({
-          actionType: AppConstants.RECEIVE_GROUP_DEVICES,
-          devices: res.body
-        });
         callback.success(res.body, parse(res.headers['link']));
       })
       .catch(function(err) {
@@ -97,7 +93,14 @@ var AppActions = {
       });
   },
 
-  getDevices: function(callback, page, per_page) {
+  setGroupDevices: function(devices) {
+    AppDispatcher.handleViewAction({
+      actionType: AppConstants.RECEIVE_GROUP_DEVICES,
+      devices: devices
+    });
+  },
+
+  getDevices: function(callback, page, per_page, search_term) {
     var page = page || default_page;
     var per_page = per_page || default_per_page;
     DevicesApi
