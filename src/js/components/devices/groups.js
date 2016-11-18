@@ -16,6 +16,10 @@ var Groups = React.createClass({
     };
   },
 
+  componentDidMount: function() {
+     this._setNumDevices(this.props.groupList);
+  },
+
   componentDidUpdate: function(prevProps, prevState) {
     if (!prevProps.groupList.equals(this.props.groupList)) {
       this._setNumDevices(this.props.groupList);

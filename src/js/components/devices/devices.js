@@ -27,6 +27,8 @@ function getState() {
     attributes: AppStore.getAttributes(),
     images: AppStore.getSoftwareRepo(),
     snackbar: AppStore.getSnackbar(),
+    devices: AppStore.getGroupDevices(),
+    totalDevices: AppStore.getTotalDevices()
   }
 }
 
@@ -99,7 +101,7 @@ var Devices = React.createClass({
 
     var allCallback = {
       success: function(devices, links) {
-        this.setState({devices: devices, devLoading:false, doneLoading:true});
+        this.setState({doneLoading:true, devices: devices, devLoading:false});
         AppActions.setSnackbar("");
       }.bind(this),
       error: function(err) {
@@ -114,7 +116,7 @@ var Devices = React.createClass({
       success: function(deviceList, links) {
         getDevicesFromIDs(deviceList, function(devices) {
           AppActions.setGroupDevices(devices);
-          self.setState({devices:devices, devLoading:false, doneLoading:true});
+          self.setState({doneLoading:true, devices:devices, devLoading:false});
           AppActions.setSnackbar("");
         });
       }.bind(this),
@@ -217,7 +219,7 @@ var Devices = React.createClass({
     this.admissionTimer = setInterval(this._refreshAdmissions, 60000);
   },
   _handleGroupChange: function(group) {
-    this.setState({currentPage: 1, doneLoading: false}, AppActions.selectGroup(group));
+    this.setState({currentPage: 1, doneLoading:false}, AppActions.selectGroup(group));
   },
   _handleGroupDialog: function () {
     this.setState({openGroupDialog: !this.state.openGroupDialog, selectedDevices: []});
@@ -252,7 +254,7 @@ var Devices = React.createClass({
             totalDevices={this.state.totalDevices} />
         </div>
         <div className="rightFluid padding-right">
-          <div className={this.state.totalAdmDevices ? "fadeIn onboard" : "hidden"}>
+          <div className={this.state.pendingDevices.length ? "fadeIn onboard" : "hidden"}>
             <Unauthorized showLoader={this._showLoader} refresh={this._refreshDevices} refreshAdmissions={this._refreshAdmissions} pending={this.state.pendingDevices} />
             <div>
               {this.state.totalAdmDevices ? <Pagination simple pageSize={20} current={this.state.currentAdmPage || 1} total={this.state.totalAdmDevices} onChange={this._handleAdmPageChange} /> : null }
