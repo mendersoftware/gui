@@ -219,7 +219,7 @@ var Devices = React.createClass({
     this.admissionTimer = setInterval(this._refreshAdmissions, 60000);
   },
   _handleGroupChange: function(group) {
-    this.setState({currentPage: 1}, AppActions.selectGroup(group));
+    this.setState({currentPage: 1, doneLoading:false}, AppActions.selectGroup(group));
   },
   _handleGroupDialog: function () {
     this.setState({openGroupDialog: !this.state.openGroupDialog, selectedDevices: []});
