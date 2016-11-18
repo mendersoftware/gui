@@ -83259,6 +83259,7 @@ var DevicePicker = require('./devicepicker');
 
 var Pagination = require('rc-pagination');
 var Loader = require('../common/loader');
+require('../common/prototype/Array.prototype.equals');
 
 function getState() {
   return {
@@ -83324,6 +83325,7 @@ var Devices = _react2.default.createClass({
   componentDidUpdate: function componentDidUpdate(prevProps, prevState) {
     if (prevState.selectedGroup !== this.state.selectedGroup) {
       clearInterval(this.deviceTimer);
+      this._refreshGroups();
       this._refreshDevices(1);
       this.deviceTimer = setInterval(this._refreshDevices, 10000);
     }
@@ -83570,7 +83572,7 @@ Devices.contextTypes = {
 
 module.exports = Devices;
 
-},{"../../actions/app-actions":734,"../../stores/app-store":780,"../common/loader":742,"./devicelist":764,"./devicepicker":765,"./groups":768,"./unauthorized":770,"material-ui/Snackbar":158,"rc-pagination":400,"react":648,"react-addons-update":404,"react-router":462}],767:[function(require,module,exports){
+},{"../../actions/app-actions":734,"../../stores/app-store":780,"../common/loader":742,"../common/prototype/Array.prototype.equals":743,"./devicelist":764,"./devicepicker":765,"./groups":768,"./unauthorized":770,"material-ui/Snackbar":158,"rc-pagination":400,"react":648,"react-addons-update":404,"react-router":462}],767:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');

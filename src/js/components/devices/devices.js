@@ -10,6 +10,7 @@ var DevicePicker = require('./devicepicker');
 
 var Pagination = require('rc-pagination');
 var Loader = require('../common/loader');
+require('../common/prototype/Array.prototype.equals');
 
 import Snackbar from 'material-ui/Snackbar';
 
@@ -77,6 +78,7 @@ var Devices = React.createClass({
   componentDidUpdate: function(prevProps, prevState) {
     if (prevState.selectedGroup !== this.state.selectedGroup) {
       clearInterval(this.deviceTimer);
+      this._refreshGroups();
       this._refreshDevices(1);
       this.deviceTimer = setInterval(this._refreshDevices, 10000);
     }
