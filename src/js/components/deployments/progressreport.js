@@ -60,6 +60,7 @@ var ProgressReport = React.createClass({
     } else {
       AppActions.getSingleDeploymentDevices(self.props.deployment.id, function(devices) {
         self._deploymentState("devices",devices);
+        self._getDeviceDetails(devices);
       });
     }
   },
@@ -68,9 +69,30 @@ var ProgressReport = React.createClass({
     state[key] = val;
     this.setState(state);
   },
-  _getDeviceDetails: function (id) {
-    // get device details not listed in schedule data
-    //return AppActions.getSingleDeviceReport(id)
+  _getDeviceImage: function (device) {
+    var image = "";
+    for (var i=0;i<device.attributes.length;i++) {
+      if (device.attributes[i].name === "image_id") {
+        image = device.attributes[i].value;
+      }
+    }
+    return image;
+  },
+  _getDeviceDetails: function (devices) {
+    var self = this;
+    for (var i=0;i<devices.length;i++) {
+      // get device image details not listed in schedule data
+      AppActions.getDeviceById(devices[i].id, {
+        success: function(device) {
+          var deviceSoftware = self.state.deviceSoftware || {};
+          deviceSoftware[device.id] = self._getDeviceImage(device);
+          self.setState({deviceSoftware: deviceSoftware});
+        },
+        error: function(err) {
+          console.log("error ", err);
+        }
+      });
+    }
   },
   _handleCheckbox: function (e, checked) {
     this.setState({failsOnly:checked});
@@ -108,12 +130,7 @@ var ProgressReport = React.createClass({
   render: function () {
     var deviceList = [];
     var softwareLink;
-    if (this.props.deployment && typeof this.props.deployment.artifact_name !== 'undefined')  {
-      var encodedSoftware = encodeURIComponent(this.props.deployment.artifact_name); 
-      softwareLink = (
-        <Link style={{fontWeight:"500"}} to={`/software/${encodedSoftware}`}>{this.props.deployment.artifact_name}</Link>
-      )
-    }
+  
     if (this.state.devices) {
       deviceList = this.state.devices.map(function(device, index) {
         var encodedDevice = encodeURIComponent("id="+device.id); 
@@ -122,7 +139,16 @@ var ProgressReport = React.createClass({
           <Link style={{fontWeight:"500"}} to={`/devices/0/${encodedDevice}`}>{device.id}</Link>
         </div>
         );
-        //var deviceDetails = this._getDeviceDetails(device.id);
+        
+        if (typeof this.state.deviceSoftware !== 'undefined') {
+          if (typeof this.state.deviceSoftware[device.id] !== 'undefined')  {
+            var encodedSoftware = encodeURIComponent(this.state.deviceSoftware[device.id]);
+            softwareLink = (
+              <Link style={{fontWeight:"500"}} to={`/software/${encodedSoftware}`}>{this.state.deviceSoftware[device.id]}</Link>
+            )
+          }
+        }
+
         if ((device.status==="Failed")||(this.state.failsOnly===false)){
           return (
             <TableRow key={index}>

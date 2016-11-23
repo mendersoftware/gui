@@ -81030,6 +81030,7 @@ var ProgressReport = _react2.default.createClass({
     } else {
       AppActions.getSingleDeploymentDevices(self.props.deployment.id, function (devices) {
         self._deploymentState("devices", devices);
+        self._getDeviceDetails(devices);
       });
     }
   },
@@ -81038,9 +81039,30 @@ var ProgressReport = _react2.default.createClass({
     state[key] = val;
     this.setState(state);
   },
-  _getDeviceDetails: function _getDeviceDetails(id) {
-    // get device details not listed in schedule data
-    //return AppActions.getSingleDeviceReport(id)
+  _getDeviceImage: function _getDeviceImage(device) {
+    var image = "";
+    for (var i = 0; i < device.attributes.length; i++) {
+      if (device.attributes[i].name === "image_id") {
+        image = device.attributes[i].value;
+      }
+    }
+    return image;
+  },
+  _getDeviceDetails: function _getDeviceDetails(devices) {
+    var self = this;
+    for (var i = 0; i < devices.length; i++) {
+      // get device image details not listed in schedule data
+      AppActions.getDeviceById(devices[i].id, {
+        success: function success(device) {
+          var deviceSoftware = self.state.deviceSoftware || {};
+          deviceSoftware[device.id] = self._getDeviceImage(device);
+          self.setState({ deviceSoftware: deviceSoftware });
+        },
+        error: function error(err) {
+          console.log("error ", err);
+        }
+      });
+    }
   },
   _handleCheckbox: function _handleCheckbox(e, checked) {
     this.setState({ failsOnly: checked });
@@ -81080,14 +81102,7 @@ var ProgressReport = _react2.default.createClass({
 
     var deviceList = [];
     var softwareLink;
-    if (this.props.deployment && typeof this.props.deployment.artifact_name !== 'undefined') {
-      var encodedSoftware = encodeURIComponent(this.props.deployment.artifact_name);
-      softwareLink = _react2.default.createElement(
-        _reactRouter.Link,
-        { style: { fontWeight: "500" }, to: '/software/' + encodedSoftware },
-        this.props.deployment.artifact_name
-      );
-    }
+
     if (this.state.devices) {
       deviceList = this.state.devices.map(function (device, index) {
         var encodedDevice = encodeURIComponent("id=" + device.id);
@@ -81100,7 +81115,18 @@ var ProgressReport = _react2.default.createClass({
             device.id
           )
         );
-        //var deviceDetails = this._getDeviceDetails(device.id);
+
+        if (typeof this.state.deviceSoftware !== 'undefined') {
+          if (typeof this.state.deviceSoftware[device.id] !== 'undefined') {
+            var encodedSoftware = encodeURIComponent(this.state.deviceSoftware[device.id]);
+            softwareLink = _react2.default.createElement(
+              _reactRouter.Link,
+              { style: { fontWeight: "500" }, to: '/software/' + encodedSoftware },
+              this.state.deviceSoftware[device.id]
+            );
+          }
+        }
+
         if (device.status === "Failed" || this.state.failsOnly === false) {
           return _react2.default.createElement(
             _Table.TableRow,
