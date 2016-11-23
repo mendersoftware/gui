@@ -87,4 +87,4 @@ gulp.task('html:prod', function() {
 gulp.task('default', ['watchify', 'copy', 'minify', 'html:dev'], function() {
   return gulp.watch('src/**/*.*', ['copy', 'minify']);
 });
-gulp.task('build', ['browserify', 'copy', 'minify', 'html:prod']);
+gulp.task('build', ['browserify', 'copy', 'minify', 'html:dev']);
