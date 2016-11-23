@@ -60,8 +60,7 @@ gulp.task('browserify', function() {
   browserify('./src/js/main.js')
     .transform('babelify', {presets: ["es2015", "react"]})
     .bundle()
-    .pipe(source('main.min.js'))
-    .pipe(streamify(uglify()))
+    .pipe(source('main.js'))
     .pipe(gulp.dest('dist/js'));
 });
 
@@ -87,4 +86,4 @@ gulp.task('html:prod', function() {
 gulp.task('default', ['watchify', 'copy', 'minify', 'html:dev'], function() {
   return gulp.watch('src/**/*.*', ['copy', 'minify']);
 });
-gulp.task('build', ['browserify', 'copy', 'minify', 'html:prod']);
+gulp.task('build', ['browserify', 'copy', 'minify', 'html:dev']);
