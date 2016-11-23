@@ -60,8 +60,7 @@ gulp.task('browserify', function() {
   browserify('./src/js/main.js')
     .transform('babelify', {presets: ["es2015", "react"]})
     .bundle()
-    .pipe(source('main.min.js'))
-    .pipe(streamify(uglify()))
+    .pipe(source('main.js'))
     .pipe(gulp.dest('dist/js'));
 });
 
