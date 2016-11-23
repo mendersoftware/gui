@@ -46,7 +46,7 @@
     "react-tap-event-plugin": "^1.0.0",
     "react-time": "^4.0.0",
     "reactify": "^1.1.1",
-    "superagent": "^2.2.0",
+    "superagent": "^2.3.0",
     "validator": "^5.5.0",
     "vinyl-source-stream": "^1.1.0",
     "watchify": "^3.7.0"
