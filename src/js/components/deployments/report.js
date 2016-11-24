@@ -29,6 +29,7 @@ var Report = React.createClass({
     }.bind(this));
     AppActions.getSingleDeploymentDevices(this.props.deployment.id, function(devices) {
       this._deploymentState("devices",devices);
+      self._getDeviceDetails(devices);
     }.bind(this));
   },
   _deploymentState: function (key, val) {
@@ -66,6 +67,22 @@ var Report = React.createClass({
       var uriContent = "data:application/octet-stream," + encodeURIComponent(content);
       var newWindow = window.open(uriContent, 'deviceLog');
   },
+  _getDeviceDetails: function (devices) {
+    var self = this;
+    for (var i=0;i<devices.length;i++) {
+      // get device image details not listed in schedule data
+      AppActions.getDeviceById(devices[i].id, {
+        success: function(device) {
+          var deviceSoftware = self.state.deviceSoftware || {};
+          deviceSoftware[device.id] = self._getDeviceImage(device);
+          self.setState({deviceSoftware: deviceSoftware});
+        },
+        error: function(err) {
+          console.log("error ", err);
+        }
+      });
+    }
+  },
   dialogDismiss: function() {
     this.setState({
       showDialog: false,
@@ -89,7 +106,17 @@ var Report = React.createClass({
           <Link style={{fontWeight:"500"}} to={`/devices/0/${encodedDevice}`}>{device.id}</Link>
         </div>
         );
-        //var deviceDetails = this._getDeviceDetails(device.id);
+        
+         
+        if (typeof this.state.deviceSoftware !== 'undefined') {
+          if (typeof this.state.deviceSoftware[device.id] !== 'undefined')  {
+            var encodedSoftware = encodeURIComponent(this.state.deviceSoftware[device.id]);
+            softwareLink = (
+              <Link style={{fontWeight:"500"}} to={`/software/${encodedSoftware}`}>{this.state.deviceSoftware[device.id]}</Link>
+            )
+          }
+        }
+        
         if ((device.status==="failure")||(this.state.failsOnly===false)){
           return (
             <TableRow key={index}>
