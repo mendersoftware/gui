@@ -81354,6 +81354,8 @@ module.exports = ProgressReport;
 },{"../../actions/app-actions":734,"./deploymentstatus":753,"material-ui/Checkbox":88,"material-ui/Dialog":106,"material-ui/FlatButton":115,"material-ui/FontIcon":119,"material-ui/RaisedButton":149,"material-ui/Table":176,"react":648,"react-copy-to-clipboard":410,"react-router":462,"react-time":499}],760:[function(require,module,exports){
 'use strict';
 
+var _React$createClass;
+
 var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
@@ -81388,13 +81390,15 @@ var _Checkbox2 = _interopRequireDefault(_Checkbox);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 var AppActions = require('../../actions/app-actions');
 var pluralize = require('pluralize');
 
 // material ui
 
 
-var Report = _react2.default.createClass({
+var Report = _react2.default.createClass((_React$createClass = {
   displayName: 'Report',
 
   getInitialState: function getInitialState() {
@@ -81413,6 +81417,7 @@ var Report = _react2.default.createClass({
     }.bind(this));
     AppActions.getSingleDeploymentDevices(this.props.deployment.id, function (devices) {
       this._deploymentState("devices", devices);
+      self._getDeviceDetails(devices);
     }.bind(this));
   },
   _deploymentState: function _deploymentState(key, val) {
@@ -81449,314 +81454,338 @@ var Report = _react2.default.createClass({
     var content = this.state.logData;
     var uriContent = "data:application/octet-stream," + encodeURIComponent(content);
     var newWindow = window.open(uriContent, 'deviceLog');
-  },
-  dialogDismiss: function dialogDismiss() {
-    this.setState({
-      showDialog: false,
-      logData: null
+  }
+}, _defineProperty(_React$createClass, '_getDeviceDetails', function _getDeviceDetails(devices) {
+  var self = this;
+  for (var i = 0; i < devices.length; i++) {
+    // get device image details not listed in schedule data
+    AppActions.getDeviceById(devices[i].id, {
+      success: function success(device) {
+        var deviceSoftware = self.state.deviceSoftware || {};
+        deviceSoftware[device.id] = self._getDeviceImage(device);
+        self.setState({ deviceSoftware: deviceSoftware });
+      },
+      error: function error(err) {
+        console.log("error ", err);
+      }
     });
-  },
-  render: function render() {
-    var _this = this;
+  }
+}), _defineProperty(_React$createClass, 'dialogDismiss', function dialogDismiss() {
+  this.setState({
+    showDialog: false,
+    logData: null
+  });
+}), _defineProperty(_React$createClass, 'render', function render() {
+  var _this = this;
 
-    var deviceList = [];
-    var softwareLink;
-    if (this.props.deployment && typeof this.props.deployment.artifact_name !== 'undefined') {
-      var encodedSoftware = encodeURIComponent(this.props.deployment.artifact_name);
-      softwareLink = _react2.default.createElement(
-        _reactRouter.Link,
-        { style: { fontWeight: "500" }, to: '/software/' + encodedSoftware },
-        this.props.deployment.artifact_name
+  var deviceList = [];
+  var softwareLink;
+  if (this.props.deployment && typeof this.props.deployment.artifact_name !== 'undefined') {
+    var encodedSoftware = encodeURIComponent(this.props.deployment.artifact_name);
+    softwareLink = _react2.default.createElement(
+      _reactRouter.Link,
+      { style: { fontWeight: "500" }, to: '/software/' + encodedSoftware },
+      this.props.deployment.artifact_name
+    );
+  }
+  if (this.state.devices) {
+    deviceList = this.state.devices.map(function (device, index) {
+      var encodedDevice = encodeURIComponent("id=" + device.id);
+      var deviceLink = _react2.default.createElement(
+        'div',
+        null,
+        _react2.default.createElement(
+          _reactRouter.Link,
+          { style: { fontWeight: "500" }, to: '/devices/0/' + encodedDevice },
+          device.id
+        )
       );
-    }
-    if (this.state.devices) {
-      deviceList = this.state.devices.map(function (device, index) {
-        var encodedDevice = encodeURIComponent("id=" + device.id);
-        var deviceLink = _react2.default.createElement(
+
+      if (typeof this.state.deviceSoftware !== 'undefined') {
+        if (typeof this.state.deviceSoftware[device.id] !== 'undefined') {
+          var encodedSoftware = encodeURIComponent(this.state.deviceSoftware[device.id]);
+          softwareLink = _react2.default.createElement(
+            _reactRouter.Link,
+            { style: { fontWeight: "500" }, to: '/software/' + encodedSoftware },
+            this.state.deviceSoftware[device.id]
+          );
+        }
+      }
+
+      if (device.status === "failure" || this.state.failsOnly === false) {
+        return _react2.default.createElement(
+          _Table.TableRow,
+          { key: index },
+          _react2.default.createElement(
+            _Table.TableRowColumn,
+            null,
+            deviceLink
+          ),
+          _react2.default.createElement(
+            _Table.TableRowColumn,
+            null,
+            device.device_type
+          ),
+          _react2.default.createElement(
+            _Table.TableRowColumn,
+            null,
+            softwareLink
+          ),
+          _react2.default.createElement(
+            _Table.TableRowColumn,
+            null,
+            _react2.default.createElement(_reactTime2.default, { value: this._formatTime(device.created), format: 'YYYY-MM-DD HH:mm' })
+          ),
+          _react2.default.createElement(
+            _Table.TableRowColumn,
+            null,
+            _react2.default.createElement(_reactTime2.default, { value: this._formatTime(device.finished), format: 'YYYY-MM-DD HH:mm' })
+          ),
+          _react2.default.createElement(
+            _Table.TableRowColumn,
+            null,
+            device.status || "--"
+          ),
+          _react2.default.createElement(
+            _Table.TableRowColumn,
+            null,
+            _react2.default.createElement(_FlatButton2.default, { className: device.status === 'failure' ? null : "hidden", onClick: this.viewLog.bind(null, device.id), label: 'View log' })
+          )
+        );
+      }
+    }, this);
+  }
+  var status = this.props.deployment.status === "inprogress" ? "In progress" : this.props.deployment.status;
+  var logActions = [_react2.default.createElement(
+    'div',
+    { style: { marginRight: "10px", display: "inline-block" } },
+    _react2.default.createElement(_FlatButton2.default, {
+      label: 'Close',
+      onClick: this.dialogDismiss.bind(null, 'dialog') })
+  ), _react2.default.createElement(
+    _reactCopyToClipboard2.default,
+    { style: { marginRight: "10px", display: "inline-block" }, text: this.state.logData,
+      onCopy: function onCopy() {
+        return _this.setState({ copied: true });
+      } },
+    _react2.default.createElement(_FlatButton2.default, { label: 'Copy to clipboard' })
+  ), _react2.default.createElement(_RaisedButton2.default, {
+    label: 'Export log',
+    primary: true,
+    onClick: this.exportLog })];
+  return _react2.default.createElement(
+    'div',
+    null,
+    _react2.default.createElement(
+      'div',
+      { className: 'report-container' },
+      _react2.default.createElement(
+        'div',
+        { className: 'deploymentInfo', style: { width: "260px", height: "auto", margin: "30px 30px 30px 0", display: "inline-block", verticalAlign: "top" } },
+        _react2.default.createElement(
           'div',
           null,
           _react2.default.createElement(
-            _reactRouter.Link,
-            { style: { fontWeight: "500" }, to: '/devices/0/' + encodedDevice },
-            device.id
-          )
-        );
-        //var deviceDetails = this._getDeviceDetails(device.id);
-        if (device.status === "failure" || this.state.failsOnly === false) {
-          return _react2.default.createElement(
-            _Table.TableRow,
-            { key: index },
-            _react2.default.createElement(
-              _Table.TableRowColumn,
-              null,
-              deviceLink
-            ),
-            _react2.default.createElement(
-              _Table.TableRowColumn,
-              null,
-              device.device_type
-            ),
-            _react2.default.createElement(
-              _Table.TableRowColumn,
-              null,
-              softwareLink
-            ),
-            _react2.default.createElement(
-              _Table.TableRowColumn,
-              null,
-              _react2.default.createElement(_reactTime2.default, { value: this._formatTime(device.created), format: 'YYYY-MM-DD HH:mm' })
-            ),
-            _react2.default.createElement(
-              _Table.TableRowColumn,
-              null,
-              _react2.default.createElement(_reactTime2.default, { value: this._formatTime(device.finished), format: 'YYYY-MM-DD HH:mm' })
-            ),
-            _react2.default.createElement(
-              _Table.TableRowColumn,
-              null,
-              device.status || "--"
-            ),
-            _react2.default.createElement(
-              _Table.TableRowColumn,
-              null,
-              _react2.default.createElement(_FlatButton2.default, { className: device.status === 'failure' ? null : "hidden", onClick: this.viewLog.bind(null, device.id), label: 'View log' })
-            )
-          );
-        }
-      }, this);
-    }
-    var status = this.props.deployment.status === "inprogress" ? "In progress" : this.props.deployment.status;
-    var logActions = [_react2.default.createElement(
-      'div',
-      { style: { marginRight: "10px", display: "inline-block" } },
-      _react2.default.createElement(_FlatButton2.default, {
-        label: 'Close',
-        onClick: this.dialogDismiss.bind(null, 'dialog') })
-    ), _react2.default.createElement(
-      _reactCopyToClipboard2.default,
-      { style: { marginRight: "10px", display: "inline-block" }, text: this.state.logData,
-        onCopy: function onCopy() {
-          return _this.setState({ copied: true });
-        } },
-      _react2.default.createElement(_FlatButton2.default, { label: 'Copy to clipboard' })
-    ), _react2.default.createElement(_RaisedButton2.default, {
-      label: 'Export log',
-      primary: true,
-      onClick: this.exportLog })];
-    return _react2.default.createElement(
-      'div',
-      null,
-      _react2.default.createElement(
-        'div',
-        { className: 'report-container' },
-        _react2.default.createElement(
-          'div',
-          { className: 'deploymentInfo', style: { width: "260px", height: "auto", margin: "30px 30px 30px 0", display: "inline-block", verticalAlign: "top" } },
-          _react2.default.createElement(
             'div',
-            null,
-            _react2.default.createElement(
-              'div',
-              { className: 'progressLabel' },
-              'Updating to:'
-            ),
-            _react2.default.createElement(
-              'span',
-              null,
-              softwareLink
-            )
+            { className: 'progressLabel' },
+            'Updating to:'
           ),
           _react2.default.createElement(
-            'div',
-            null,
-            _react2.default.createElement(
-              'div',
-              { className: 'progressLabel' },
-              'Device group:'
-            ),
-            _react2.default.createElement(
-              'span',
-              null,
-              this.props.deployment.name
-            )
-          ),
-          _react2.default.createElement(
-            'div',
-            null,
-            _react2.default.createElement(
-              'div',
-              { className: 'progressLabel' },
-              '# devices:'
-            ),
-            _react2.default.createElement(
-              'span',
-              null,
-              deviceList.length
-            )
-          )
-        ),
-        _react2.default.createElement(
-          'div',
-          { className: 'deploymentInfo', style: { width: "260px", height: "auto", margin: "30px 30px 30px 0", display: "inline-block", verticalAlign: "top" } },
-          _react2.default.createElement(
-            'div',
-            null,
-            _react2.default.createElement(
-              'div',
-              { className: 'progressLabel' },
-              'Status:'
-            ),
-            'Completed',
-            _react2.default.createElement(
-              'span',
-              { className: this.state.stats.failure ? "failures" : "hidden" },
-              ' with failures'
-            )
-          ),
-          _react2.default.createElement(
-            'div',
-            null,
-            _react2.default.createElement(
-              'div',
-              { className: 'progressLabel' },
-              'Started:'
-            ),
-            _react2.default.createElement(_reactTime2.default, { value: this._formatTime(this.props.deployment.created), format: 'YYYY-MM-DD HH:mm' })
-          )
-        ),
-        _react2.default.createElement(
-          'div',
-          { className: 'deploymentInfo', style: { height: "auto", margin: "30px 30px 30px 0", display: "inline-block", verticalAlign: "top" } },
-          _react2.default.createElement(
-            'div',
-            { className: this.state.stats.failure ? "statusLarge" : "hidden" },
-            _react2.default.createElement('img', { src: 'assets/img/largeFail.png' }),
-            _react2.default.createElement(
-              'div',
-              { className: 'statusWrapper' },
-              _react2.default.createElement(
-                'b',
-                { className: 'red' },
-                this.state.stats.failure
-              ),
-              ' ',
-              pluralize("devices", this.state.stats.failure),
-              ' failed to update'
-            )
-          ),
-          _react2.default.createElement(
-            'div',
-            { className: this.state.stats.success ? "statusLarge" : "hidden" },
-            _react2.default.createElement('img', { src: 'assets/img/largeSuccess.png' }),
-            _react2.default.createElement(
-              'div',
-              { className: 'statusWrapper' },
-              _react2.default.createElement(
-                'b',
-                { className: 'green' },
-                _react2.default.createElement(
-                  'span',
-                  { className: this.state.stats.success === deviceList.length ? null : "hidden" },
-                  'All '
-                ),
-                this.state.stats.success
-              ),
-              ' ',
-              pluralize("devices", this.state.stats.success),
-              ' updated successfully'
-            )
-          )
-        )
-      ),
-      _react2.default.createElement(_Checkbox2.default, {
-        defaultChecked: this.state.stats.failure > 0,
-        label: 'Show only failures',
-        checked: this.state.failsOnly,
-        onCheck: this._handleCheckbox,
-        className: this.state.stats.failure ? null : "hidden" }),
-      _react2.default.createElement(
-        'div',
-        { style: { minHeight: "20vh" } },
-        _react2.default.createElement(
-          _Table.Table,
-          {
-            className: deviceList.length ? null : "hidden",
-            selectable: false },
-          _react2.default.createElement(
-            _Table.TableHeader,
-            {
-              displaySelectAll: false,
-              adjustForCheckbox: false },
-            _react2.default.createElement(
-              _Table.TableRow,
-              null,
-              _react2.default.createElement(
-                _Table.TableHeaderColumn,
-                { tooltip: 'Device name' },
-                'Device name'
-              ),
-              _react2.default.createElement(
-                _Table.TableHeaderColumn,
-                { tooltip: 'Device type' },
-                'Device type'
-              ),
-              _react2.default.createElement(
-                _Table.TableHeaderColumn,
-                { tooltip: 'Current software' },
-                'Current software'
-              ),
-              _react2.default.createElement(
-                _Table.TableHeaderColumn,
-                { tooltip: 'Started' },
-                'Started'
-              ),
-              _react2.default.createElement(
-                _Table.TableHeaderColumn,
-                { tooltip: 'Finished' },
-                'Finished'
-              ),
-              _react2.default.createElement(
-                _Table.TableHeaderColumn,
-                { tooltip: 'Deployment status' },
-                'Deployment status'
-              ),
-              _react2.default.createElement(_Table.TableHeaderColumn, { tooltip: '' })
-            )
-          ),
-          _react2.default.createElement(
-            _Table.TableBody,
-            {
-              displayRowCheckbox: false },
-            deviceList
-          )
-        )
-      ),
-      _react2.default.createElement(
-        _Dialog2.default,
-        {
-          title: 'Deployment log for device',
-          autoDetectWindowHeight: true, autoScrollBodyContent: true,
-          open: this.state.showDialog,
-          actions: logActions,
-          bodyStyle: { padding: "0", overflow: "hidden" } },
-        _react2.default.createElement(
-          'div',
-          { className: 'code' },
-          this.state.logData
-        ),
-        _react2.default.createElement(
-          'p',
-          { style: { marginLeft: "24px" } },
-          this.state.copied ? _react2.default.createElement(
             'span',
-            { className: 'green fadeIn' },
-            'Copied to clipboard.'
-          ) : null
+            null,
+            softwareLink
+          )
+        ),
+        _react2.default.createElement(
+          'div',
+          null,
+          _react2.default.createElement(
+            'div',
+            { className: 'progressLabel' },
+            'Device group:'
+          ),
+          _react2.default.createElement(
+            'span',
+            null,
+            this.props.deployment.name
+          )
+        ),
+        _react2.default.createElement(
+          'div',
+          null,
+          _react2.default.createElement(
+            'div',
+            { className: 'progressLabel' },
+            '# devices:'
+          ),
+          _react2.default.createElement(
+            'span',
+            null,
+            deviceList.length
+          )
+        )
+      ),
+      _react2.default.createElement(
+        'div',
+        { className: 'deploymentInfo', style: { width: "260px", height: "auto", margin: "30px 30px 30px 0", display: "inline-block", verticalAlign: "top" } },
+        _react2.default.createElement(
+          'div',
+          null,
+          _react2.default.createElement(
+            'div',
+            { className: 'progressLabel' },
+            'Status:'
+          ),
+          'Completed',
+          _react2.default.createElement(
+            'span',
+            { className: this.state.stats.failure ? "failures" : "hidden" },
+            ' with failures'
+          )
+        ),
+        _react2.default.createElement(
+          'div',
+          null,
+          _react2.default.createElement(
+            'div',
+            { className: 'progressLabel' },
+            'Started:'
+          ),
+          _react2.default.createElement(_reactTime2.default, { value: this._formatTime(this.props.deployment.created), format: 'YYYY-MM-DD HH:mm' })
+        )
+      ),
+      _react2.default.createElement(
+        'div',
+        { className: 'deploymentInfo', style: { height: "auto", margin: "30px 30px 30px 0", display: "inline-block", verticalAlign: "top" } },
+        _react2.default.createElement(
+          'div',
+          { className: this.state.stats.failure ? "statusLarge" : "hidden" },
+          _react2.default.createElement('img', { src: 'assets/img/largeFail.png' }),
+          _react2.default.createElement(
+            'div',
+            { className: 'statusWrapper' },
+            _react2.default.createElement(
+              'b',
+              { className: 'red' },
+              this.state.stats.failure
+            ),
+            ' ',
+            pluralize("devices", this.state.stats.failure),
+            ' failed to update'
+          )
+        ),
+        _react2.default.createElement(
+          'div',
+          { className: this.state.stats.success ? "statusLarge" : "hidden" },
+          _react2.default.createElement('img', { src: 'assets/img/largeSuccess.png' }),
+          _react2.default.createElement(
+            'div',
+            { className: 'statusWrapper' },
+            _react2.default.createElement(
+              'b',
+              { className: 'green' },
+              _react2.default.createElement(
+                'span',
+                { className: this.state.stats.success === deviceList.length ? null : "hidden" },
+                'All '
+              ),
+              this.state.stats.success
+            ),
+            ' ',
+            pluralize("devices", this.state.stats.success),
+            ' updated successfully'
+          )
         )
       )
-    );
-  }
-});
+    ),
+    _react2.default.createElement(_Checkbox2.default, {
+      defaultChecked: this.state.stats.failure > 0,
+      label: 'Show only failures',
+      checked: this.state.failsOnly,
+      onCheck: this._handleCheckbox,
+      className: this.state.stats.failure ? null : "hidden" }),
+    _react2.default.createElement(
+      'div',
+      { style: { minHeight: "20vh" } },
+      _react2.default.createElement(
+        _Table.Table,
+        {
+          className: deviceList.length ? null : "hidden",
+          selectable: false },
+        _react2.default.createElement(
+          _Table.TableHeader,
+          {
+            displaySelectAll: false,
+            adjustForCheckbox: false },
+          _react2.default.createElement(
+            _Table.TableRow,
+            null,
+            _react2.default.createElement(
+              _Table.TableHeaderColumn,
+              { tooltip: 'Device name' },
+              'Device name'
+            ),
+            _react2.default.createElement(
+              _Table.TableHeaderColumn,
+              { tooltip: 'Device type' },
+              'Device type'
+            ),
+            _react2.default.createElement(
+              _Table.TableHeaderColumn,
+              { tooltip: 'Current software' },
+              'Current software'
+            ),
+            _react2.default.createElement(
+              _Table.TableHeaderColumn,
+              { tooltip: 'Started' },
+              'Started'
+            ),
+            _react2.default.createElement(
+              _Table.TableHeaderColumn,
+              { tooltip: 'Finished' },
+              'Finished'
+            ),
+            _react2.default.createElement(
+              _Table.TableHeaderColumn,
+              { tooltip: 'Deployment status' },
+              'Deployment status'
+            ),
+            _react2.default.createElement(_Table.TableHeaderColumn, { tooltip: '' })
+          )
+        ),
+        _react2.default.createElement(
+          _Table.TableBody,
+          {
+            displayRowCheckbox: false },
+          deviceList
+        )
+      )
+    ),
+    _react2.default.createElement(
+      _Dialog2.default,
+      {
+        title: 'Deployment log for device',
+        autoDetectWindowHeight: true, autoScrollBodyContent: true,
+        open: this.state.showDialog,
+        actions: logActions,
+        bodyStyle: { padding: "0", overflow: "hidden" } },
+      _react2.default.createElement(
+        'div',
+        { className: 'code' },
+        this.state.logData
+      ),
+      _react2.default.createElement(
+        'p',
+        { style: { marginLeft: "24px" } },
+        this.state.copied ? _react2.default.createElement(
+          'span',
+          { className: 'green fadeIn' },
+          'Copied to clipboard.'
+        ) : null
+      )
+    )
+  );
+}), _React$createClass));
 
 module.exports = Report;
 
