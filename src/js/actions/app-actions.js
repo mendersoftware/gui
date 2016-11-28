@@ -300,6 +300,13 @@ var AppActions = {
       });
   },
 
+  setDeploymentImage: function(image) {
+    AppDispatcher.handleViewAction({
+      actionType: AppConstants.SET_DEPLOYMENT_IMAGE,
+      image: image
+    });
+  },
+
 
 
 

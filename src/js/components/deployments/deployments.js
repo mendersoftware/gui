@@ -51,6 +51,8 @@ var Deployments = React.createClass({
     AppStore.changeListener(this._onChange);
   },
   componentDidMount: function() {
+    var image = AppStore.getDeploymentImage();
+    this.setState({image: image});
     this.timer = setInterval(this._refreshDeployments, 10000);
     this._refreshDeployments();
 

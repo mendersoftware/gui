@@ -25,7 +25,7 @@ var SelectedImage = React.createClass({
     this.props.history.push("/devices/:group/:filters", {filters: filters}, null);
   },
   _clickImageSchedule: function() {
-    this.props.openSchedule("schedule", this.props.image);
+    this.props.createDeployment(this.props.image);
   },
   _descEdit: function(image, event) {
     event.stopPropagation();

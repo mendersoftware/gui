@@ -77987,6 +77987,13 @@ var AppActions = {
     });
   },
 
+  setDeploymentImage: function setDeploymentImage(image) {
+    AppDispatcher.handleViewAction({
+      actionType: AppConstants.SET_DEPLOYMENT_IMAGE,
+      image: image
+    });
+  },
+
   /*Deployments */
   getDeployments: function getDeployments(callback) {
     // all deployments
@@ -79852,6 +79859,8 @@ var Deployments = _react2.default.createClass({
     AppStore.changeListener(this._onChange);
   },
   componentDidMount: function componentDidMount() {
+    var image = AppStore.getDeploymentImage();
+    this.setState({ image: image });
     this.timer = setInterval(this._refreshDeployments, 10000);
     this._refreshDeployments();
 
@@ -82108,19 +82117,19 @@ var ScheduleForm = _react2.default.createClass({
     }
 
     return {
-      images: _appStore2.default.getSoftwareRepo(),
       disabled: disabled,
       group: group,
       showDevices: false
     };
   },
+
   _handleGroupValueChange: function _handleGroupValueChange(e, index, value) {
     var device_type = this.props.image ? this.props.image.device_type : null;
     var group = value;
     this._sendUpToParent(group, 'group');
   },
   _handleImageValueChange: function _handleImageValueChange(e, index, value) {
-    var image = this.state.images[index];
+    var image = this.props.images[index];
     this._sendUpToParent(image, 'image');
   },
 
@@ -82140,8 +82149,8 @@ var ScheduleForm = _react2.default.createClass({
   render: function render() {
     var imageItems = [];
 
-    for (var i = 0; i < this.state.images.length; i++) {
-      var tmp = _react2.default.createElement(_MenuItem2.default, { value: this.state.images[i], key: i, primaryText: this.state.images[i].name });
+    for (var i = 0; i < this.props.images.length; i++) {
+      var tmp = _react2.default.createElement(_MenuItem2.default, { value: this.props.images[i].name, key: i, primaryText: this.props.images[i].name });
       imageItems.push(tmp);
     }
 
@@ -82256,7 +82265,7 @@ var ScheduleForm = _react2.default.createClass({
             _SelectField2.default,
             {
               ref: 'image',
-              value: this.props.image,
+              value: this.props.image ? this.props.image.name : null,
               onChange: this._handleImageValueChange,
               floatingLabelText: 'Select target software',
               disabled: !imageItems.length
@@ -84829,10 +84838,6 @@ var _appActions = require('../../actions/app-actions');
 
 var _appActions2 = _interopRequireDefault(_appActions);
 
-var _scheduleform = require('../deployments/scheduleform');
-
-var _scheduleform2 = _interopRequireDefault(_scheduleform);
-
 var _reactDom = require('react-dom');
 
 var _reactDom2 = _interopRequireDefault(_reactDom);
@@ -84905,8 +84910,6 @@ var _Snackbar2 = _interopRequireDefault(_Snackbar);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
 var update = require('react-addons-update');
 var Loader = require('../common/loader');
 
@@ -84931,7 +84934,6 @@ var Repository = _react2.default.createClass({
       sortDown: true,
       searchTerm: null,
       upload: false,
-      schedule: false,
       popupLabel: "Upload a new image",
       software: [],
       tmpFile: null,
@@ -84958,8 +84960,11 @@ var Repository = _react2.default.createClass({
     };
     this.setState({ image: image });
   },
-  _openSchedule: function _openSchedule(ref, image) {
-    this.dialogOpen(ref);
+  _createDeployment: function _createDeployment(image) {
+    _appActions2.default.setDeploymentImage(image);
+    var URIParams = "open=true";
+    URIParams = encodeURIComponent(URIParams);
+    this.redirect(URIParams);
   },
   dialogOpen: function dialogOpen(ref) {
     var obj = {};
@@ -84971,34 +84976,8 @@ var Repository = _react2.default.createClass({
     obj[ref] = false;
     this.setState(obj);
   },
-  _onScheduleSubmit: function _onScheduleSubmit() {
-    // TODO more boilerplate, move to single source 
-    var ids = [];
-    for (var i = 0; i < this.state.deploymentDevices.length; i++) {
-      ids.push(this.state.deploymentDevices[i].id);
-    }
-    var newDeployment = {
-      name: decodeURIComponent(this.state.group) || "All devices",
-      artifact_name: this.state.image.name,
-      devices: ids
-    };
-    var self = this;
-    var callback = {
-      success: function success(data) {
-        _appActions2.default.setSnackbar("Deployment created successfully");
-        setTimeout(function () {
-          self.redirect();
-        }, 1200);
-      },
-      error: function error(err) {
-        _appActions2.default.setSnackbar("Error creating deployment. " + err);
-      }
-    };
-    _appActions2.default.createDeployment(newDeployment, callback);
-    this.dialogDismiss('schedule');
-  },
-  redirect: function redirect() {
-    this.context.router.push('/deployments');
+  redirect: function redirect(params) {
+    this.context.router.push('/deployments/progress/' + params);
   },
   _onUploadSubmit: function _onUploadSubmit(meta) {
     var self = this;
@@ -85027,26 +85006,7 @@ var Repository = _react2.default.createClass({
     });
     this.setState({ image: image });
   },
-  _deploymentParams: function _deploymentParams(val, attr) {
-    // updating params from child schedule form
-    var tmp = {};
-    tmp[attr] = val;
-    this.setState(tmp);
-    var image = attr === "image" ? val : this.state.image;
-    var group = attr === "group" ? val : this.state.group;
-    this._getDeploymentDevices(group, image);
-  },
-  _getDeploymentDevices: function _getDeploymentDevices(group, image) {
-    // TODO get rid of boilerplate, use from one common place
-    var devices = [];
-    var filteredDevices = [];
-    // set the selected groups devices to state, to be sent down to the child schedule form
-    if (image && group) {
-      devices = group !== "All devices" ? this.props.groupDevices[group] : this.props.allDevices;
-      filteredDevices = _appStore2.default.filterDevicesByType(devices, image.device_type);
-    }
-    this.setState({ deploymentDevices: devices, filteredDevices: filteredDevices });
-  },
+
   _onRowSelection: function _onRowSelection(rowNumber, columnId) {
     var image = software[rowNumber];
     if (columnId <= 4) {
@@ -85098,7 +85058,6 @@ var Repository = _react2.default.createClass({
     this.setState({ divHeight: height + 30 });
   },
   render: function render() {
-    var _React$createElement;
 
     var styles = {
       buttonIcon: {
@@ -85136,11 +85095,11 @@ var Repository = _react2.default.createClass({
       var filters = ['name', 'device_type', 'description'];
       tmpSoftware = software.filter(this.refs.search.filter(filters));
     }
-    var groups = this.props.groups;
+
     var items = tmpSoftware.map(function (pkg, index) {
       var expanded = '';
       if (this.state.image.name === pkg.name) {
-        expanded = _react2.default.createElement(_selectedimage2.default, { formatTime: this._formatTime, editImage: this._editImageData, buttonStyle: styles.flatButtonIcon, image: this.state.image, openSchedule: this._openSchedule });
+        expanded = _react2.default.createElement(_selectedimage2.default, { formatTime: this._formatTime, editImage: this._editImageData, buttonStyle: styles.flatButtonIcon, image: this.state.image, createDeployment: this._createDeployment });
       }
       return _react2.default.createElement(
         _Table.TableRow,
@@ -85184,25 +85143,6 @@ var Repository = _react2.default.createClass({
         )
       );
     }, this);
-
-    var scheduleActions = [_react2.default.createElement(
-      'div',
-      { key: 'cancelcontain2', style: { marginRight: "10px", display: "inline-block" } },
-      _react2.default.createElement(_FlatButton2.default, {
-        key: 'cancel-schedule',
-        label: 'Cancel',
-        onClick: this.dialogDismiss.bind(null, 'schedule') })
-    ), _react2.default.createElement(_RaisedButton2.default, {
-      key: 'schedule-submit',
-      label: 'Create deployment',
-      primary: true,
-      onClick: this._onScheduleSubmit })];
-
-    var groupItems = [];
-    for (var i = 0; i < this.props.groups.length; i++) {
-      var tmp = { payload: this.props.groups[i].id, text: this.props.groups[i].name };
-      groupItems.push(tmp);
-    }
 
     return _react2.default.createElement(
       'div',
@@ -85347,21 +85287,6 @@ var Repository = _react2.default.createClass({
           )
         )
       ),
-      _react2.default.createElement(
-        _Dialog2.default,
-        {
-          key: 'schedule1',
-          ref: 'schedule',
-          open: this.state.schedule,
-          title: 'Create a deployment',
-          actions: scheduleActions,
-          autoDetectWindowHeight: true,
-          bodyStyle: { paddingTop: "0", fontSize: "13px" },
-          contentStyle: { overflow: "hidden", boxShadow: "0 14px 45px rgba(0, 0, 0, 0.25), 0 10px 18px rgba(0, 0, 0, 0.22)" },
-          actionsContainerStyle: { marginBottom: "0" }
-        },
-        _react2.default.createElement(_scheduleform2.default, (_React$createElement = { hasPending: this.props.hasPending, hasDevices: this.props.hasDevices, deploymentDevices: this.state.deploymentDevices, filteredDevices: this.state.filteredDevices, deploymentSettings: this._deploymentParams }, _defineProperty(_React$createElement, 'deploymentSettings', this._deploymentParams), _defineProperty(_React$createElement, 'image', this.state.image), _defineProperty(_React$createElement, 'group', this.state.group), _defineProperty(_React$createElement, 'groups', this.props.groups), _React$createElement))
-      ),
       _react2.default.createElement(_Snackbar2.default, {
         open: this.state.openSnack,
         message: this.state.snackMessage,
@@ -85380,7 +85305,7 @@ Repository.contextTypes = {
 
 module.exports = Repository;
 
-},{"../../actions/app-actions":734,"../../stores/app-store":780,"../common/forms/fileinput":739,"../common/forms/form":740,"../common/forms/textinput":741,"../common/loader":742,"../deployments/scheduleform":763,"./deploymentbutton":772,"./selectedimage":774,"material-ui/Dialog":106,"material-ui/FlatButton":115,"material-ui/FontIcon":119,"material-ui/IconButton":124,"material-ui/RaisedButton":149,"material-ui/Snackbar":158,"material-ui/Table":176,"material-ui/TextField":187,"react":648,"react-addons-update":404,"react-collapse":408,"react-dom":411,"react-height":415,"react-motion":427,"react-router":462,"react-search-input":490,"react-time":499}],774:[function(require,module,exports){
+},{"../../actions/app-actions":734,"../../stores/app-store":780,"../common/forms/fileinput":739,"../common/forms/form":740,"../common/forms/textinput":741,"../common/loader":742,"./deploymentbutton":772,"./selectedimage":774,"material-ui/Dialog":106,"material-ui/FlatButton":115,"material-ui/FontIcon":119,"material-ui/IconButton":124,"material-ui/RaisedButton":149,"material-ui/Snackbar":158,"material-ui/Table":176,"material-ui/TextField":187,"react":648,"react-addons-update":404,"react-collapse":408,"react-dom":411,"react-height":415,"react-motion":427,"react-router":462,"react-search-input":490,"react-time":499}],774:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -85437,7 +85362,7 @@ var SelectedImage = _react2.default.createClass({
     this.props.history.push("/devices/:group/:filters", { filters: filters }, null);
   },
   _clickImageSchedule: function _clickImageSchedule() {
-    this.props.openSchedule("schedule", this.props.image);
+    this.props.createDeployment(this.props.image);
   },
   _descEdit: function _descEdit(image, event) {
     event.stopPropagation();
@@ -85851,6 +85776,7 @@ module.exports = {
   UPDATE_DEVICE_TAGS: 'UPDATE_DEVICE_TAGS',
   RECEIVE_IMAGES: 'RECEIVE_IMAGES',
   UPLOAD_IMAGE: 'UPLOAD_IMAGE',
+  SET_DEPLOYMENT_IMAGE: 'SET_DEPLOYMENT_IMAGE',
   RECEIVE_DEPLOYMENTS: 'RECEIVE_DEPLOYMENTS',
   RECEIVE_ACTIVE_DEPLOYMENTS: 'RECEIVE_ACTIVE_DEPLOYMENTS',
   RECEIVE_PAST_DEPLOYMENTS: 'RECEIVE_PAST_DEPLOYMENTS',
@@ -85920,6 +85846,7 @@ var CHANGE_EVENT = "change";
 
 var _softwareRepo = [];
 var _currentGroup = null;
+var _deploymentImage = null;
 var _currentGroupDevices = [];
 var _totalNumberDevices;
 var _selectedDevices = [];
@@ -86320,6 +86247,10 @@ function setGroups(groups) {
   }
 }
 
+function setDeploymentImage(image) {
+  _deploymentImage = image;
+}
+
 function setHealth(devices) {
   if (devices.accepted) {
     var health = {};
@@ -86364,6 +86295,11 @@ var AppStore = assign(EventEmitter.prototype, {
     * Return group object for current group selection
     */
     return _currentGroup;
+  },
+
+  getDeploymentImage: function getDeploymentImage() {
+    // for use when switching tab from images to create a deployment
+    return _deploymentImage;
   },
 
   getAllDevices: function getAllDevices() {
@@ -86587,6 +86523,10 @@ var AppStore = assign(EventEmitter.prototype, {
 
       case AppConstants.RECEIVE_GROUPS:
         setGroups(payload.action.groups);
+        break;
+
+      case AppConstants.SET_DEPLOYMENT_IMAGE:
+        setDeploymentImage(payload.action.image);
         break;
     }
 

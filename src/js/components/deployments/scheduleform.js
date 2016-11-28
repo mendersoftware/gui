@@ -35,19 +35,19 @@ var ScheduleForm = React.createClass({
     }
 
     return {
-      images: AppStore.getSoftwareRepo(),
       disabled: disabled,
       group: group,
       showDevices: false,
     };
   },
+
   _handleGroupValueChange: function(e, index, value) {
     var device_type = this.props.image ? this.props.image.device_type : null;
     var group = value;
     this._sendUpToParent(group, 'group');
   },
   _handleImageValueChange: function(e, index, value) {
-    var image = this.state.images[index];
+    var image = this.props.images[index];
     this._sendUpToParent(image, 'image');
   },
 
@@ -67,8 +67,8 @@ var ScheduleForm = React.createClass({
   render: function() {
     var imageItems = [];
 
-    for (var i=0; i<this.state.images.length;i++) {
-      var tmp = <MenuItem value={this.state.images[i]} key={i} primaryText={this.state.images[i].name} />
+    for (var i=0; i<this.props.images.length;i++) {
+      var tmp = <MenuItem value={this.props.images[i].name} key={i} primaryText={this.props.images[i].name} />
       imageItems.push(tmp);
     }
    
@@ -147,7 +147,7 @@ var ScheduleForm = React.createClass({
           <div style={{display:"block"}}>
             <SelectField
               ref="image"
-              value={this.props.image}
+              value={this.props.image ? this.props.image.name : null}
               onChange={this._handleImageValueChange}
               floatingLabelText="Select target software"
               disabled={!imageItems.length}

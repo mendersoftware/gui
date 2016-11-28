@@ -2,7 +2,6 @@ import React from 'react';
 import Time from 'react-time';
 import AppStore from '../../stores/app-store';
 import AppActions from '../../actions/app-actions';
-import ScheduleForm from '../deployments/scheduleform';
 import ReactDOM from 'react-dom';
 var update = require('react-addons-update');
 var Loader = require('../common/loader');
@@ -43,7 +42,6 @@ var Repository = React.createClass({
       sortDown: true,
       searchTerm: null,
       upload: false,
-      schedule: false,
       popupLabel: "Upload a new image",
       software: [],
       tmpFile: null,
@@ -70,8 +68,11 @@ var Repository = React.createClass({
     };
     this.setState({image: image});
   },
-  _openSchedule: function(ref, image) {
-    this.dialogOpen(ref);
+  _createDeployment: function(image) {
+    AppActions.setDeploymentImage(image);
+    var URIParams = "open=true";
+    URIParams = encodeURIComponent(URIParams);
+    this.redirect(URIParams);
   },
   dialogOpen: function (ref) {
     var obj = {};
@@ -83,34 +84,8 @@ var Repository = React.createClass({
     obj[ref] = false;
     this.setState(obj);
   },
-  _onScheduleSubmit: function() {
-    // TODO more boilerplate, move to single source 
-    var ids = [];
-    for (var i=0; i<this.state.deploymentDevices.length; i++) {
-      ids.push(this.state.deploymentDevices[i].id);
-    }
-    var newDeployment = {
-      name: decodeURIComponent(this.state.group) || "All devices",
-      artifact_name: this.state.image.name,
-      devices: ids
-    }
-    var self = this;
-    var callback = {
-      success: function(data) {
-        AppActions.setSnackbar("Deployment created successfully");
-        setTimeout(function() {
-          self.redirect();
-        }, 1200);
-      },
-      error: function(err) {
-        AppActions.setSnackbar("Error creating deployment. "+err);
-      }
-    };
-    AppActions.createDeployment(newDeployment, callback);
-    this.dialogDismiss('schedule');
-  },
-  redirect: function() {
-    this.context.router.push('/deployments');
+  redirect: function(params) {
+    this.context.router.push('/deployments/progress/'+params);
   },
   _onUploadSubmit: function(meta) {
     var self = this;
@@ -139,26 +114,7 @@ var Repository = React.createClass({
     });
     this.setState({image:image});
   },
-  _deploymentParams: function(val, attr) {
-    // updating params from child schedule form
-    var tmp = {};
-    tmp[attr] = val;
-    this.setState(tmp);
-    var image = (attr==="image") ? val : this.state.image;
-    var group = (attr==="group") ? val : this.state.group;
-    this._getDeploymentDevices(group, image);
-  },
-  _getDeploymentDevices: function(group, image) {
-    // TODO get rid of boilerplate, use from one common place
-    var devices = [];
-    var filteredDevices = [];
-    // set the selected groups devices to state, to be sent down to the child schedule form
-    if (image && group) {
-      devices = (group!=="All devices") ? this.props.groupDevices[group] : this.props.allDevices;
-      filteredDevices = AppStore.filterDevicesByType(devices, image.device_type);
-    }
-    this.setState({deploymentDevices: devices, filteredDevices: filteredDevices});
-  },
+
   _onRowSelection: function(rowNumber, columnId) {
     var image = software[rowNumber];
     if (columnId<=4) {
@@ -247,11 +203,11 @@ var Repository = React.createClass({
       var filters = ['name', 'device_type', 'description'];
       tmpSoftware = software.filter(this.refs.search.filter(filters));
     }
-    var groups = this.props.groups;
+    
     var items = tmpSoftware.map(function(pkg, index) {
       var expanded = '';
       if (this.state.image.name === pkg.name ) {
-        expanded = <SelectedImage formatTime={this._formatTime} editImage={this._editImageData} buttonStyle={styles.flatButtonIcon} image={this.state.image} openSchedule={this._openSchedule} />
+        expanded = <SelectedImage formatTime={this._formatTime} editImage={this._editImageData} buttonStyle={styles.flatButtonIcon} image={this.state.image} createDeployment={this._createDeployment} />
       }
       return (
         <TableRow hoverable={this.state.image.name !== pkg.name} className={this.state.image.name === pkg.name ? "expand" : null} key={index} >
@@ -269,26 +225,6 @@ var Repository = React.createClass({
         </TableRow>
       )
     }, this);
-
-    var scheduleActions = [
-      <div key="cancelcontain2" style={{marginRight:"10px", display:"inline-block"}}>
-        <FlatButton
-          key="cancel-schedule"
-          label="Cancel"
-          onClick={this.dialogDismiss.bind(null, 'schedule')} />
-      </div>,
-      <RaisedButton
-        key="schedule-submit"
-        label="Create deployment"
-        primary={true}
-        onClick={this._onScheduleSubmit} />
-    ];
-
-    var groupItems = [];
-    for (var i=0; i<this.props.groups.length;i++) {
-      var tmp = { payload:this.props.groups[i].id, text: this.props.groups[i].name };
-      groupItems.push(tmp);
-    }
 
     return (
       <div>
@@ -372,20 +308,6 @@ var Repository = React.createClass({
 
             </Form>
           </div>
-        </Dialog>
-
-        <Dialog
-          key="schedule1"
-          ref="schedule"
-          open={this.state.schedule}
-          title='Create a deployment'
-          actions={scheduleActions}
-          autoDetectWindowHeight={true}
-          bodyStyle={{paddingTop:"0", fontSize:"13px"}}
-          contentStyle={{overflow:"hidden", boxShadow:"0 14px 45px rgba(0, 0, 0, 0.25), 0 10px 18px rgba(0, 0, 0, 0.22)"}}
-          actionsContainerStyle={{marginBottom:"0"}}
-          >
-          <ScheduleForm hasPending={this.props.hasPending} hasDevices={this.props.hasDevices} deploymentDevices={this.state.deploymentDevices} filteredDevices={this.state.filteredDevices} deploymentSettings={this._deploymentParams} deploymentSettings={this._deploymentParams} image={this.state.image} group={this.state.group} groups={this.props.groups} />
         </Dialog>
 
         <Snackbar
