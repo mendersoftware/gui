@@ -100,21 +100,38 @@ var AppActions = {
     });
   },
 
-  getDevices: function(callback, page, per_page, search_term) {
+  getDevices: function(callback, page, per_page, group, search_term, all) {
+    var count = 0;
     var page = page || default_page;
     var per_page = per_page || default_per_page;
-    DevicesApi
-      .get(inventoryApiUrl+"/devices?per_page="+per_page+"&page="+page)
-      .then(function(res) {
-        AppDispatcher.handleViewAction({
-          actionType: AppConstants.RECEIVE_ALL_DEVICES,
-          devices: res.body
+    var forGroup = group ? '/groups/' + group : "";
+    var searchTerm = search_term ? "&"+search_term : "";
+    var devices = [];
+    function getDeviceList() {
+      DevicesApi
+        .get(inventoryApiUrl+forGroup+"/devices?per_page="+per_page+"&page="+page+searchTerm)
+        .then(function(res) {
+          var links = parse(res.headers['link']);
+          count += res.body.length;
+          devices = devices.concat(res.body);
+          if (all && links.next) {
+            page++;
+            getDeviceList();
+          } else {
+            if (!group) {
+              AppDispatcher.handleViewAction({
+                actionType: AppConstants.RECEIVE_ALL_DEVICES,
+                devices: devices
+              });
+            }
+            callback.success(devices, parse(res.headers['link']));
+          }
+        })
+        .catch(function(err) {
+          callback.error(err);
         });
-        callback.success(res.body, parse(res.headers['link']));
-      })
-      .catch(function(err) {
-        callback.error(err);
-      });
+    };
+    getDeviceList();
   },
   getDeviceById: function(id, callback) {
     DevicesApi

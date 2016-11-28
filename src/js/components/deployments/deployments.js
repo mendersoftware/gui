@@ -80,12 +80,14 @@ var Deployments = React.createClass({
       error: function(err) {
         console.log("Error: " +err);
       }
-    });
+    }, 1, 100, null, null, true );
 
     var groupCallback = {
       success: function(groups) {
         this.setState({groups: groups});
-        this._getGroupDevices(groups);
+        for (var x=0;x<groups.length;x++) {
+          this._getGroupDevices(groups[x]);
+        }
       }.bind(this),
       error: function(error) {
         console.log("Error: " + error);
@@ -139,25 +141,39 @@ var Deployments = React.createClass({
       }.bind(this), 300)
     }.bind(this));
   },
-  _getGroupDevices: function(groups) {
+  _getGroupDevices: function(group) {
     // get list of devices for each group and save them to state 
-    var i, group;
+    var i
+    var self = this;
+    var tmp = {};
+    var devs = [];
     var callback = {
       success: function(devices) {
-        var tmp = {};
-        var devs = [];
         for (var x=0;x<devices.length;x++) {
           // get full details, not just id
-          devs.push(AppStore.getSingleDevice(devices[x]));
+          getDevicesWithDetails(devices[x], x, devices.length);
         }
-        tmp[group] = devs;
-        this.setState(tmp);
-      }.bind(this)
+      },
+      error: function(err) {
+        console.log(err);
+      }
+    };
+
+    function getDevicesWithDetails(id, idx, max) {
+      AppActions.getDeviceById(id, {
+        success: function(device) {
+          devs.push(device);
+          if (idx === max-1) {
+            tmp[group] = devs;
+            self.setState(tmp);
+          }
+        }, 
+        error: function(err) {
+          console.log(err);
+        }
+      })
     }
-    for (i=0;i<groups.length;i++) {
-      group = groups[i];
-      AppActions.getGroupDevices(groups[i], callback);
-    }
+    AppActions.getDevices(callback, 1, 100, group, null, true);
   },
   componentWillUnmount: function () {
     clearInterval(this.timer);

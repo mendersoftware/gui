@@ -151,7 +151,7 @@ var Devices = React.createClass({
         self.setState({totalDevices: noDevs, numDevices: noDevs});
       });
     } else {
-      AppActions.getGroupDevices(this.state.selectedGroup, groupCallback);
+      AppActions.getDevices(groupCallback, pageNo, perPage, this.state.selectedGroup);
       AppActions.getNumberOfDevices(function(noDevs) {
         self.setState({numDevices: noDevs});
       }, this.state.selectedGroup);
