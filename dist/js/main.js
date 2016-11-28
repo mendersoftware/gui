@@ -77824,18 +77824,35 @@ var AppActions = {
     });
   },
 
-  getDevices: function getDevices(callback, page, per_page, search_term) {
+  getDevices: function getDevices(callback, page, per_page, group, search_term, all) {
+    var count = 0;
     var page = page || default_page;
     var per_page = per_page || default_per_page;
-    DevicesApi.get(inventoryApiUrl + "/devices?per_page=" + per_page + "&page=" + page).then(function (res) {
-      AppDispatcher.handleViewAction({
-        actionType: AppConstants.RECEIVE_ALL_DEVICES,
-        devices: res.body
+    var forGroup = group ? '/groups/' + group : "";
+    var searchTerm = search_term ? "&" + search_term : "";
+    var devices = [];
+    function getDeviceList() {
+      DevicesApi.get(inventoryApiUrl + forGroup + "/devices?per_page=" + per_page + "&page=" + page + searchTerm).then(function (res) {
+        var links = parse(res.headers['link']);
+        count += res.body.length;
+        devices = devices.concat(res.body);
+        if (all && links.next) {
+          page++;
+          getDeviceList();
+        } else {
+          if (!group) {
+            AppDispatcher.handleViewAction({
+              actionType: AppConstants.RECEIVE_ALL_DEVICES,
+              devices: devices
+            });
+          }
+          callback.success(devices, parse(res.headers['link']));
+        }
+      }).catch(function (err) {
+        callback.error(err);
       });
-      callback.success(res.body, parse(res.headers['link']));
-    }).catch(function (err) {
-      callback.error(err);
-    });
+    };
+    getDeviceList();
   },
   getDeviceById: function getDeviceById(id, callback) {
     DevicesApi.get(inventoryApiUrl + "/devices/" + id).then(function (res) {
@@ -79864,12 +79881,14 @@ var Deployments = _react2.default.createClass({
       error: function error(err) {
         console.log("Error: " + err);
       }
-    });
+    }, 1, 100, null, null, true);
 
     var groupCallback = {
       success: function (groups) {
         this.setState({ groups: groups });
-        this._getGroupDevices(groups);
+        for (var x = 0; x < groups.length; x++) {
+          this._getGroupDevices(groups[x]);
+        }
       }.bind(this),
       error: function error(_error) {
         console.log("Error: " + _error);
@@ -79923,25 +79942,39 @@ var Deployments = _react2.default.createClass({
       }.bind(this), 300);
     }.bind(this));
   },
-  _getGroupDevices: function _getGroupDevices(groups) {
+  _getGroupDevices: function _getGroupDevices(group) {
     // get list of devices for each group and save them to state 
-    var i, group;
+    var i;
+    var self = this;
+    var tmp = {};
+    var devs = [];
     var callback = {
-      success: function (devices) {
-        var tmp = {};
-        var devs = [];
+      success: function success(devices) {
         for (var x = 0; x < devices.length; x++) {
           // get full details, not just id
-          devs.push(AppStore.getSingleDevice(devices[x]));
+          getDevicesWithDetails(devices[x], x, devices.length);
         }
-        tmp[group] = devs;
-        this.setState(tmp);
-      }.bind(this)
+      },
+      error: function error(err) {
+        console.log(err);
+      }
     };
-    for (i = 0; i < groups.length; i++) {
-      group = groups[i];
-      AppActions.getGroupDevices(groups[i], callback);
+
+    function getDevicesWithDetails(id, idx, max) {
+      AppActions.getDeviceById(id, {
+        success: function success(device) {
+          devs.push(device);
+          if (idx === max - 1) {
+            tmp[group] = devs;
+            self.setState(tmp);
+          }
+        },
+        error: function error(err) {
+          console.log(err);
+        }
+      });
     }
+    AppActions.getDevices(callback, 1, 100, group, null, true);
   },
   componentWillUnmount: function componentWillUnmount() {
     clearInterval(this.timer);
@@ -83486,7 +83519,7 @@ var Devices = _react2.default.createClass({
         self.setState({ totalDevices: noDevs, numDevices: noDevs });
       });
     } else {
-      AppActions.getGroupDevices(this.state.selectedGroup, groupCallback);
+      AppActions.getDevices(groupCallback, pageNo, perPage, this.state.selectedGroup);
       AppActions.getNumberOfDevices(function (noDevs) {
         self.setState({ numDevices: noDevs });
       }, this.state.selectedGroup);
