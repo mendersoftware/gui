@@ -7,6 +7,7 @@ var CHANGE_EVENT = "change";
 
 var _softwareRepo = [];
 var _currentGroup = null;
+var _deploymentImage = null;
 var _currentGroupDevices = [];
 var _totalNumberDevices;
 var _selectedDevices = [];
@@ -425,6 +426,10 @@ function setGroups(groups) {
   }
 }
 
+function setDeploymentImage(image) {
+  _deploymentImage = image;
+}
+
 function setHealth(devices) {
   if (devices.accepted) {
     var health = {};
@@ -471,6 +476,11 @@ var AppStore = assign(EventEmitter.prototype, {
     * Return group object for current group selection
     */
     return _currentGroup
+  },
+
+  getDeploymentImage: function() {
+    // for use when switching tab from images to create a deployment
+    return _deploymentImage;
   },
 
 
@@ -695,6 +705,10 @@ var AppStore = assign(EventEmitter.prototype, {
 
       case AppConstants.RECEIVE_GROUPS:
         setGroups(payload.action.groups);
+        break;
+
+      case AppConstants.SET_DEPLOYMENT_IMAGE:
+        setDeploymentImage(payload.action.image);
         break;
     }
     
