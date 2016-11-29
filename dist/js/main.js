@@ -79808,6 +79808,10 @@ var _RaisedButton = require('material-ui/RaisedButton');
 
 var _RaisedButton2 = _interopRequireDefault(_RaisedButton);
 
+var _Snackbar = require('material-ui/Snackbar');
+
+var _Snackbar2 = _interopRequireDefault(_Snackbar);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var AppStore = require('../../stores/app-store');
@@ -79845,7 +79849,8 @@ function getState() {
     images: AppStore.getSoftwareRepo(),
     groups: AppStore.getGroups(),
     allDevices: AppStore.getAllDevices(),
-    invalid: true
+    invalid: true,
+    snackbar: AppStore.getSnackbar()
   };
 }
 
@@ -79941,6 +79946,7 @@ var Deployments = _react2.default.createClass({
     AppActions.getDeploymentsInProgress(function () {
       setTimeout(function () {
         this.setState({ doneLoading: true });
+        this._dismissSnackBar();
       }.bind(this), 300);
     }.bind(this));
   },
@@ -79948,8 +79954,14 @@ var Deployments = _react2.default.createClass({
     AppActions.getPastDeployments(function () {
       setTimeout(function () {
         this.setState({ doneLoading: true });
+        this._dismissSnackBar();
       }.bind(this), 300);
     }.bind(this));
+  },
+  _dismissSnackBar: function _dismissSnackBar() {
+    setTimeout(function () {
+      AppActions.setSnackbar("");
+    }, 1500);
   },
   _getGroupDevices: function _getGroupDevices(group) {
     // get list of devices for each group and save them to state 
@@ -80032,6 +80044,7 @@ var Deployments = _react2.default.createClass({
   },
   _onScheduleSubmit: function _onScheduleSubmit() {
     var ids = [];
+    var self = this;
     for (var i = 0; i < this.state.deploymentDevices.length; i++) {
       ids.push(this.state.deploymentDevices[i].id);
     }
@@ -80042,17 +80055,26 @@ var Deployments = _react2.default.createClass({
     };
 
     var callback = {
-      success: function (data) {
-        AppActions.getDeploymentsInProgress(function () {
-          this._refreshDeployments();
-        }.bind(this));
-        AppActions.setSnackbar("Deployment created successfully");
-      }.bind(this),
+      success: function success(data) {
+        var lastslashindex = data.lastIndexOf('/');
+        var id = data.substring(lastslashindex + 1);
+        AppActions.getSingleDeployment(id, function (data) {
+          if (data) {
+            // successfully retrieved new deployment
+            AppActions.setSnackbar("Deployment created successfully");
+            self._refreshDeployments();
+          } else {
+            AppActions.setSnackbar("Error while creating deployment");
+            self.setState({ doneLoading: true });
+          }
+        });
+      },
       error: function error(err) {
         AppActions.setSnackbar("Error creating deployment. " + err);
       }
     };
     AppActions.createDeployment(newDeployment, callback);
+    self.setState({ doneLoading: false });
     this.dialogDismiss('dialog');
   },
   _deploymentParams: function _deploymentParams(val, attr) {
@@ -80116,6 +80138,9 @@ var Deployments = _react2.default.createClass({
   },
   _scheduleRemove: function _scheduleRemove(id) {
     AppActions.removeDeployment(id);
+  },
+  _handleRequestClose: function _handleRequestClose() {
+    this._dismissSnackBar();
   },
   render: function render() {
     var disabled = typeof this.state.filteredDevices !== 'undefined' && this.state.filteredDevices.length > 0 ? false : true;
@@ -80188,14 +80213,20 @@ var Deployments = _react2.default.createClass({
           actionsContainerStyle: { marginBottom: "0" }
         },
         dialogContent
-      )
+      ),
+      _react2.default.createElement(_Snackbar2.default, {
+        open: this.state.snackbar.open,
+        message: this.state.snackbar.message,
+        autoHideDuration: 5000,
+        onRequestClose: this.handleRequestClose
+      })
     );
   }
 });
 
 module.exports = Deployments;
 
-},{"../../actions/app-actions":734,"../../stores/app-store":780,"./eventlog.js":754,"./inprogressdeployments.js":756,"./pastdeployments.js":757,"./report.js":760,"./schedule.js":761,"./schedulebutton.js":762,"./scheduleform.js":763,"material-ui/Dialog":106,"material-ui/FlatButton":115,"material-ui/RaisedButton":149,"material-ui/Tabs":181,"react":648}],753:[function(require,module,exports){
+},{"../../actions/app-actions":734,"../../stores/app-store":780,"./eventlog.js":754,"./inprogressdeployments.js":756,"./pastdeployments.js":757,"./report.js":760,"./schedule.js":761,"./schedulebutton.js":762,"./scheduleform.js":763,"material-ui/Dialog":106,"material-ui/FlatButton":115,"material-ui/RaisedButton":149,"material-ui/Snackbar":158,"material-ui/Tabs":181,"react":648}],753:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
