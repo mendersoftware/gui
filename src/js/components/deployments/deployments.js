@@ -15,6 +15,8 @@ import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 
+import Snackbar from 'material-ui/Snackbar';
+
 var styles = {
   tabs: {
     backgroundColor: "#fff",
@@ -40,6 +42,7 @@ function getState() {
     groups: AppStore.getGroups(),
     allDevices: AppStore.getAllDevices(),
     invalid: true,
+    snackbar: AppStore.getSnackbar(),
   }
 }
 
@@ -133,6 +136,7 @@ var Deployments = React.createClass({
     AppActions.getDeploymentsInProgress(function() {
       setTimeout(function() {
         this.setState({doneLoading:true});
+        this._dismissSnackBar();
       }.bind(this), 300)
     }.bind(this));
   },
@@ -140,8 +144,14 @@ var Deployments = React.createClass({
     AppActions.getPastDeployments(function() {
       setTimeout(function() {
         this.setState({doneLoading:true});
+        this._dismissSnackBar();
       }.bind(this), 300)
     }.bind(this));
+  },
+  _dismissSnackBar: function() {
+    setTimeout(function() {
+     AppActions.setSnackbar("");
+    }, 1500);
   },
   _getGroupDevices: function(group) {
     // get list of devices for each group and save them to state 
@@ -224,6 +234,7 @@ var Deployments = React.createClass({
   },
   _onScheduleSubmit: function() {
     var ids = [];
+    var self = this;
     for (var i=0; i<this.state.deploymentDevices.length; i++) {
       ids.push(this.state.deploymentDevices[i].id);
     }
@@ -235,16 +246,25 @@ var Deployments = React.createClass({
 
     var callback = {
       success: function(data) {
-        AppActions.getDeploymentsInProgress(function() {
-          this._refreshDeployments();
-        }.bind(this));
-        AppActions.setSnackbar("Deployment created successfully");
-      }.bind(this),
+        var lastslashindex = data.lastIndexOf('/');
+        var id = data.substring(lastslashindex  + 1);
+        AppActions.getSingleDeployment(id, function(data) {
+          if (data) {
+            // successfully retrieved new deployment
+            AppActions.setSnackbar("Deployment created successfully");
+            self._refreshDeployments();
+          } else {
+            AppActions.setSnackbar("Error while creating deployment");
+            self.setState({doneLoading:true});
+          }
+        });
+      },
       error: function(err) {
         AppActions.setSnackbar("Error creating deployment. "+err);
       }
     };
     AppActions.createDeployment(newDeployment, callback);
+    self.setState({doneLoading:false});
     this.dialogDismiss('dialog');
   },
   _deploymentParams: function(val, attr) {
@@ -308,6 +328,9 @@ var Deployments = React.createClass({
   },
   _scheduleRemove: function(id) {
     AppActions.removeDeployment(id);
+  },
+  _handleRequestClose: function() {
+    this._dismissSnackBar();
   },
   render: function() {
     var disabled = (typeof this.state.filteredDevices !== 'undefined' && this.state.filteredDevices.length > 0) ? false : true;
@@ -382,6 +405,13 @@ var Deployments = React.createClass({
           >
           {dialogContent}
         </Dialog>
+
+         <Snackbar
+          open={this.state.snackbar.open}
+          message={this.state.snackbar.message}
+          autoHideDuration={5000}
+          onRequestClose={this.handleRequestClose}
+        />
       </div>
     );
   }
