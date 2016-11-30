@@ -17,7 +17,7 @@ function callOnce() {
   if (process.env.NODE_ENV !== 'production') {
     return function (style) {
       if (style[CALLED_ONCE]) {
-        process.env.NODE_ENV !== "production" ? (0, _warning2.default)(false, 'You cannot call prepareStyles() on the same style object more than once.') : void 0;
+        process.env.NODE_ENV !== "production" ? (0, _warning2.default)(false, 'Material-UI: You cannot call prepareStyles() on the same style object more than once.') : void 0;
       }
       style[CALLED_ONCE] = true;
       return style;

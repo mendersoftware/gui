@@ -2,9 +2,9 @@ accord
 ======
 
 [![npm](https://img.shields.io/npm/v/accord.svg?style=flat)](http://badge.fury.io/js/accord)
-[![tests](https://img.shields.io/travis/jenius/accord/master.svg?style=flat)](https://travis-ci.org/jenius/accord)
-[![coverage](https://img.shields.io/coveralls/jenius/accord/master.svg?style=flat)](https://coveralls.io/r/jenius/accord?branch=master)
-[![dependencies](https://img.shields.io/gemnasium/jenius/accord.svg?style=flat)](https://gemnasium.com/jenius/accord)
+[![tests](https://img.shields.io/travis/jescalan/accord/master.svg?style=flat)](https://travis-ci.org/jescalan/accord)
+[![coverage](https://img.shields.io/coveralls/jescalan/accord/master.svg?style=flat)](https://coveralls.io/r/jescalan/accord?branch=master)
+[![dependencies](https://img.shields.io/david/jescalan/accord.svg?style=flat)](https://david-dm.org/jescalan/accord)
 
 A unified interface for compiled languages and templates in JavaScript.
 
@@ -114,6 +114,7 @@ It's also important to note that accord returns an object rather than a string f
 - [jsx](https://github.com/facebook/react)
 - [cjsx](https://github.com/jsdf/coffee-react-transform)
 - [typescript](http://www.typescriptlang.org/)
+- [buble](https://buble.surge.sh/guide/)
 
 #### Minifiers
 

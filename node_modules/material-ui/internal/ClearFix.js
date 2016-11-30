@@ -4,7 +4,13 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+var _extends2 = require('babel-runtime/helpers/extends');
+
+var _extends3 = _interopRequireDefault(_extends2);
+
+var _objectWithoutProperties2 = require('babel-runtime/helpers/objectWithoutProperties');
+
+var _objectWithoutProperties3 = _interopRequireDefault(_objectWithoutProperties2);
 
 var _react = require('react');
 
@@ -15,8 +21,6 @@ var _BeforeAfterWrapper = require('./BeforeAfterWrapper');
 var _BeforeAfterWrapper2 = _interopRequireDefault(_BeforeAfterWrapper);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
 
 var styles = {
   before: {
@@ -31,14 +35,12 @@ var styles = {
 };
 
 var ClearFix = function ClearFix(_ref) {
-  var style = _ref.style;
-  var children = _ref.children;
-
-  var other = _objectWithoutProperties(_ref, ['style', 'children']);
-
+  var style = _ref.style,
+      children = _ref.children,
+      other = (0, _objectWithoutProperties3.default)(_ref, ['style', 'children']);
   return _react2.default.createElement(
     _BeforeAfterWrapper2.default,
-    _extends({}, other, {
+    (0, _extends3.default)({}, other, {
       beforeStyle: styles.before,
       afterStyle: styles.after,
       style: style
@@ -49,12 +51,12 @@ var ClearFix = function ClearFix(_ref) {
 
 ClearFix.muiName = 'ClearFix';
 
-ClearFix.propTypes = {
+process.env.NODE_ENV !== "production" ? ClearFix.propTypes = {
   children: _react.PropTypes.node,
   /**
    * Override the inline-styles of the root element.
    */
   style: _react.PropTypes.object
-};
+} : void 0;
 
 exports.default = ClearFix;

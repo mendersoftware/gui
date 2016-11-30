@@ -4,7 +4,13 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+var _extends2 = require('babel-runtime/helpers/extends');
+
+var _extends3 = _interopRequireDefault(_extends2);
+
+var _objectWithoutProperties2 = require('babel-runtime/helpers/objectWithoutProperties');
+
+var _objectWithoutProperties3 = _interopRequireDefault(_objectWithoutProperties2);
 
 var _simpleAssign = require('simple-assign');
 
@@ -19,8 +25,6 @@ var _EnhancedButton = require('../internal/EnhancedButton');
 var _EnhancedButton2 = _interopRequireDefault(_EnhancedButton);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
 
 function getStyles(props, context) {
   var selected = props.selected;
@@ -42,11 +46,14 @@ function getStyles(props, context) {
     label: {
       fontSize: selected ? bottomNavigation.selectedFontSize : bottomNavigation.unselectedFontSize,
       transition: 'color 0.3s, font-size 0.3s',
-      color: color,
-      margin: 'auto'
+      color: color
     },
     icon: {
-      display: 'block'
+      display: 'block',
+      /**
+       * Used to ensure SVG icons are centered
+       */
+      width: '100%'
     },
     iconColor: color
   };
@@ -55,12 +62,10 @@ function getStyles(props, context) {
 }
 
 var BottomNavigationItem = function BottomNavigationItem(props, context) {
-  var label = props.label;
-  var icon = props.icon;
-  var style = props.style;
-
-  var other = _objectWithoutProperties(props, ['label', 'icon', 'style']);
-
+  var label = props.label,
+      icon = props.icon,
+      style = props.style,
+      other = (0, _objectWithoutProperties3.default)(props, ['label', 'icon', 'style']);
   var prepareStyles = context.muiTheme.prepareStyles;
 
   var styles = getStyles(props, context);
@@ -72,7 +77,7 @@ var BottomNavigationItem = function BottomNavigationItem(props, context) {
 
   return _react2.default.createElement(
     _EnhancedButton2.default,
-    _extends({}, other, { style: (0, _simpleAssign2.default)({}, styles.root, style) }),
+    (0, _extends3.default)({}, other, { style: (0, _simpleAssign2.default)({}, styles.root, style) }),
     styledIcon,
     _react2.default.createElement(
       'div',
@@ -82,7 +87,7 @@ var BottomNavigationItem = function BottomNavigationItem(props, context) {
   );
 };
 
-BottomNavigationItem.propTypes = {
+process.env.NODE_ENV !== "production" ? BottomNavigationItem.propTypes = {
   /**
    * Set the icon representing the view for this item.
    */
@@ -96,7 +101,7 @@ BottomNavigationItem.propTypes = {
    * Override the inline-styles of the root element.
    */
   style: _react.PropTypes.object
-};
+} : void 0;
 
 BottomNavigationItem.contextTypes = {
   muiTheme: _react.PropTypes.object.isRequired
