@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.BottomNavigationItem = exports.BottomNavigation = undefined;
+exports.default = exports.BottomNavigationItem = exports.BottomNavigation = undefined;
 
 var _BottomNavigation2 = require('./BottomNavigation');
 
@@ -17,3 +17,4 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 exports.BottomNavigation = _BottomNavigation3.default;
 exports.BottomNavigationItem = _BottomNavigationItem3.default;
+exports.default = _BottomNavigation3.default;

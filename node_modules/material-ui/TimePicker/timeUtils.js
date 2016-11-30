@@ -40,8 +40,8 @@ function clone(d) {
  * @return String A string representing the formatted time.
  */
 function formatTime(date) {
-  var format = arguments.length <= 1 || arguments[1] === undefined ? 'ampm' : arguments[1];
-  var pedantic = arguments.length <= 2 || arguments[2] === undefined ? false : arguments[2];
+  var format = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'ampm';
+  var pedantic = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
 
   if (!date) return '';
   var hours = date.getHours();

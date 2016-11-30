@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.ToolbarTitle = exports.ToolbarSeparator = exports.ToolbarGroup = exports.Toolbar = exports.Toggle = exports.TimePicker = exports.TextField = exports.TableRowColumn = exports.TableRow = exports.TableHeaderColumn = exports.TableHeader = exports.TableFooter = exports.TableBody = exports.Table = exports.Tab = exports.Tabs = exports.Snackbar = exports.Stepper = exports.StepLabel = exports.StepContent = exports.StepButton = exports.Step = exports.SvgIcon = exports.Subheader = exports.Slider = exports.SelectField = exports.RefreshIndicator = exports.RaisedButton = exports.RadioButtonGroup = exports.RadioButton = exports.Popover = exports.Paper = exports.MuiThemeProvider = exports.MenuItem = exports.Menu = exports.MakeSelectable = exports.ListItem = exports.List = exports.LinearProgress = exports.IconMenu = exports.IconButton = exports.GridTile = exports.GridList = exports.FontIcon = exports.FloatingActionButton = exports.FlatButton = exports.DropDownMenu = exports.Drawer = exports.Divider = exports.Dialog = exports.DatePicker = exports.CircularProgress = exports.Chip = exports.Checkbox = exports.CardText = exports.CardTitle = exports.CardMedia = exports.CardHeader = exports.CardActions = exports.Card = exports.Badge = exports.Avatar = exports.AutoComplete = exports.AppBar = undefined;
+exports.ToolbarTitle = exports.ToolbarSeparator = exports.ToolbarGroup = exports.Toolbar = exports.Toggle = exports.TimePicker = exports.TextField = exports.TableRowColumn = exports.TableRow = exports.TableHeaderColumn = exports.TableHeader = exports.TableFooter = exports.TableBody = exports.Table = exports.Tab = exports.Tabs = exports.Snackbar = exports.Stepper = exports.StepLabel = exports.StepContent = exports.StepButton = exports.Step = exports.SvgIcon = exports.Subheader = exports.Slider = exports.SelectField = exports.RefreshIndicator = exports.RaisedButton = exports.RadioButtonGroup = exports.RadioButton = exports.Popover = exports.Paper = exports.MuiThemeProvider = exports.MenuItem = exports.Menu = exports.makeSelectable = exports.ListItem = exports.List = exports.LinearProgress = exports.IconMenu = exports.IconButton = exports.GridTile = exports.GridList = exports.FontIcon = exports.FloatingActionButton = exports.FlatButton = exports.DropDownMenu = exports.Drawer = exports.Divider = exports.Dialog = exports.DatePicker = exports.CircularProgress = exports.Chip = exports.Checkbox = exports.CardText = exports.CardTitle = exports.CardMedia = exports.CardHeader = exports.CardActions = exports.Card = exports.BottomNavigationItem = exports.BottomNavigation = exports.Badge = exports.Avatar = exports.AutoComplete = exports.AppBar = undefined;
 
 var _AppBar2 = require('./AppBar');
 
@@ -20,6 +20,14 @@ var _Avatar3 = _interopRequireDefault(_Avatar2);
 var _Badge2 = require('./Badge');
 
 var _Badge3 = _interopRequireDefault(_Badge2);
+
+var _BottomNavigation2 = require('./BottomNavigation');
+
+var _BottomNavigation3 = _interopRequireDefault(_BottomNavigation2);
+
+var _BottomNavigationItem2 = require('./BottomNavigation/BottomNavigationItem');
+
+var _BottomNavigationItem3 = _interopRequireDefault(_BottomNavigationItem2);
 
 var _Card2 = require('./Card');
 
@@ -117,9 +125,9 @@ var _ListItem2 = require('./List/ListItem');
 
 var _ListItem3 = _interopRequireDefault(_ListItem2);
 
-var _MakeSelectable2 = require('./List/MakeSelectable');
+var _makeSelectable2 = require('./List/makeSelectable');
 
-var _MakeSelectable3 = _interopRequireDefault(_MakeSelectable2);
+var _makeSelectable3 = _interopRequireDefault(_makeSelectable2);
 
 var _Menu2 = require('./Menu');
 
@@ -267,6 +275,8 @@ exports.AppBar = _AppBar3.default;
 exports.AutoComplete = _AutoComplete3.default;
 exports.Avatar = _Avatar3.default;
 exports.Badge = _Badge3.default;
+exports.BottomNavigation = _BottomNavigation3.default;
+exports.BottomNavigationItem = _BottomNavigationItem3.default;
 exports.Card = _Card3.default;
 exports.CardActions = _CardActions3.default;
 exports.CardHeader = _CardHeader3.default;
@@ -291,7 +301,7 @@ exports.IconMenu = _IconMenu3.default;
 exports.LinearProgress = _LinearProgress3.default;
 exports.List = _List3.default;
 exports.ListItem = _ListItem3.default;
-exports.MakeSelectable = _MakeSelectable3.default;
+exports.makeSelectable = _makeSelectable3.default;
 exports.Menu = _Menu3.default;
 exports.MenuItem = _MenuItem3.default;
 exports.MuiThemeProvider = _MuiThemeProvider3.default;
