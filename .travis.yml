@@ -18,6 +18,15 @@ env:
         # Docker repository name
         - DOCKER_REPOSITORY="mendersoftware/gui"
 
+notifications:
+    webhooks:
+        urls:
+            - http://dev-gui.mender.io/notifications
+        on_success: never
+        on_failure: never
+        on_start: always
+
+
 script:
     # Build docker image from docker file
     - sudo docker build -t $DOCKER_REPOSITORY .
