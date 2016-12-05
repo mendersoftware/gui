@@ -203,16 +203,17 @@ var Repository = React.createClass({
       var filters = ['name', 'device_type', 'description'];
       tmpSoftware = software.filter(this.refs.search.filter(filters));
     }
-    
+
     var items = tmpSoftware.map(function(pkg, index) {
       var expanded = '';
       if (this.state.image.name === pkg.name ) {
         expanded = <SelectedImage formatTime={this._formatTime} editImage={this._editImageData} buttonStyle={styles.flatButtonIcon} image={this.state.image} createDeployment={this._createDeployment} />
       }
+      var compatible = pkg.device_types_compatible.join(", ");
       return (
         <TableRow hoverable={this.state.image.name !== pkg.name} className={this.state.image.name === pkg.name ? "expand" : null} key={index} >
           <TableRowColumn style={expanded ? {height: this.state.divHeight} : null}>{pkg.name}</TableRowColumn>
-          <TableRowColumn>{pkg.device_type}</TableRowColumn>
+          <TableRowColumn>{compatible}</TableRowColumn>
           <TableRowColumn><Time value={this._formatTime(pkg.modified)} format="YYYY-MM-DD HH:mm" /></TableRowColumn>
           <TableRowColumn style={{width:"55px", paddingRight:"0", paddingLeft:"12px"}} className="expandButton">
             <IconButton className="float-right"><FontIcon className="material-icons">{ expanded ? "arrow_drop_up" : "arrow_drop_down"}</FontIcon></IconButton>

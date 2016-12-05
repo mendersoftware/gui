@@ -88582,6 +88582,7 @@ var Repository = _react2.default.createClass({
       if (this.state.image.name === pkg.name) {
         expanded = _react2.default.createElement(_selectedimage2.default, { formatTime: this._formatTime, editImage: this._editImageData, buttonStyle: styles.flatButtonIcon, image: this.state.image, createDeployment: this._createDeployment });
       }
+      var compatible = pkg.device_types_compatible.join(", ");
       return _react2.default.createElement(
         _Table.TableRow,
         { hoverable: this.state.image.name !== pkg.name, className: this.state.image.name === pkg.name ? "expand" : null, key: index },
@@ -88593,7 +88594,7 @@ var Repository = _react2.default.createClass({
         _react2.default.createElement(
           _Table.TableRowColumn,
           null,
-          pkg.device_type
+          compatible
         ),
         _react2.default.createElement(
           _Table.TableRowColumn,
