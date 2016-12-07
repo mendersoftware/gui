@@ -81408,7 +81408,7 @@ var AppActions = {
 
   /* Images */
   getImages: function getImages(callback) {
-    ImagesApi.get(deploymentsApiUrl + '/images').then(function (images) {
+    ImagesApi.get(deploymentsApiUrl + '/artifacts').then(function (images) {
       AppDispatcher.handleViewAction({
         actionType: AppConstants.RECEIVE_IMAGES,
         images: images
@@ -81424,7 +81424,7 @@ var AppActions = {
     formData.append('name', meta.name);
     formData.append('description', meta.description);
     formData.append('firmware', file);
-    ImagesApi.postFormData(deploymentsApiUrl + '/images', formData).then(function (data) {
+    ImagesApi.postFormData(deploymentsApiUrl + '/artifacts', formData).then(function (data) {
       callback.success(data);
     }).catch(function (err) {
       callback.error(err);
@@ -81432,7 +81432,7 @@ var AppActions = {
   },
 
   editImage: function editImage(image, callback) {
-    ImagesApi.putJSON(deploymentsApiUrl + "/images/" + image.id, image).then(function (res) {
+    ImagesApi.putJSON(deploymentsApiUrl + "/artifacts/" + image.id, image).then(function (res) {
       callback();
     });
   },
