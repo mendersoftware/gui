@@ -92,50 +92,86 @@ var SelectedImage = React.createClass({
       </div>
     );
 
+    var files = this.props.image.updates[0].files || [];
+
+    var fileDetails = files.map(function(file, index) {
+
+      return (
+        <div key={index} className="file-details">
+          <ListItem style={styles.listStyle} disabled={true} primaryText="Name" secondaryText={file.name} />
+          <Divider />
+          <ListItem style={styles.listStyle} disabled={true} primaryText="Checksum" secondaryText={file.checksum} />
+          <Divider />
+          <ListItem style={styles.listStyle} disabled={true} primaryText="Signature" secondaryText={file.signature} />
+          <Divider />
+          <ListItem style={styles.listStyle} disabled={true} primaryText="Build date" secondaryText={file.date} />
+          <Divider />
+          <ListItem style={styles.listStyle} disabled={true} primaryText="Size" secondaryText={file.size} />
+          <Divider />
+        </div>
+      )
+    }, this);
+
     return (
       <div className={this.props.image.name == null ? "muted" : null}>
-        <h3 className="margin-bottom-none">Image details</h3>
+        <h3 className="margin-bottom-none">Artifact details</h3>
         <div>
+
           <div className="image-list list-item">
+     
+            <div style={{padding:"9px 0"}}>
+              <div style={{padding:"12px 16px 10px",  lineHeight:"12px", height:"74px"}}>
+                <span style={{color:"rgba(0,0,0,0.8)", fontSize:"12px"}}>Description</span>
+                <div style={{color:"rgba(0,0,0,0.54)", marginRight:"30px", marginTop:"8px", whiteSpace: "normal"}}>
+                  <span className={this.state.descEdit ? "hidden" : null}>{info.description}</span>
+                  {descInput}
+                </div>
+                {editButtonDesc}
+              </div>
+              <hr style={{margin:"0", backgroundColor:"#e0e0e0", height:"1px", border:"none"}} />
+            </div>
+
+          
             <List style={{backgroundColor: "rgba(255,255,255,0)"}}>
               <ListItem style={styles.listStyle} disabled={true} primaryText="Date uploaded" secondaryText={info.modified} />
               <Divider />
             </List>
           </div>
-          <div className="hidden image-list list-item">
-            <List style={{backgroundColor: "rgba(255,255,255,0)"}}>
-              <ListItem style={styles.listStyle} disabled={true} primaryText="Installed on devices" secondaryText={devicesLink} />
-              <Divider /> 
-            </List>
-          </div>
-        </div>
 
-        <div className="relative">
-          <div className="report-list" style={{padding:"0px", width:"63%", position:"relative"}}>
-            <div style={{padding:"12px 16px 10px", fontSize:"12px", lineHeight:"12px"}}>
-              <span style={{color:"rgba(0,0,0,0.8)"}}>Description</span>
-              <div style={{color:"rgba(0,0,0,0.54)", marginRight:"30px", marginTop:"8px", whiteSpace: "normal"}}>
-                <span className={this.state.descEdit ? "hidden" : null}>{info.description}</span>
-                {descInput}
-              </div>
-              {editButtonDesc}
+          <div className="image-list list-item">
+            <List style={{backgroundColor: "rgba(255,255,255,0)"}}>
+              <ListItem style={styles.listStyle} disabled={true} secondaryTextLines={2} primaryText="Device type compatibility" secondaryText={this.props.compatible} />
+              <Divider />
+            </List>
+   
+          
+            <div className="hidden">
+              <List style={{backgroundColor: "rgba(255,255,255,0)"}}>
+                <ListItem style={styles.listStyle} disabled={true} primaryText="Installed on devices" secondaryText={devicesLink} />
+                <Divider /> 
+              </List>
             </div>
-            <hr style={{margin:"0", backgroundColor:"#e0e0e0", height:"1px", border:"none"}} />
           </div>
-          <div className="report-list" style={{width:"320px"}}>
-            <List style={{backgroundColor: "rgba(255,255,255,0)", paddingTop:"0"}}>
+
+          <div className="image-list list-item" style={{width:"320px"}}>
+            <List style={{backgroundColor: "rgba(255,255,255,0)", paddingTop:"16px"}}>
               <div key="updateButton">
                 <ListItem
                   style={styles.listStyle}
-                  primaryText="Create a deployment using this image"
+                  primaryText="Create a deployment using this artifact"
                   onClick={this._clickImageSchedule}
                   leftIcon={<FontIcon style={{marginTop:6, marginBottom:6}} className="material-icons update">replay</FontIcon>} />
               </div>
               <Divider />
             </List>
           </div>
-       
-          <div className="report-list" style={{height:"98px", width:"0"}}></div>
+      
+  
+        </div>
+
+        <h4 className="margin-bottom-none">Files</h4>
+        <div>
+          {fileDetails}
         </div>
       </div>
     );
