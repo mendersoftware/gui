@@ -42,7 +42,6 @@ var ScheduleForm = React.createClass({
   },
 
   _handleGroupValueChange: function(e, index, value) {
-    var device_type = this.props.image ? this.props.image.device_type : null;
     var group = value;
     this._sendUpToParent(group, 'group');
   },
@@ -87,8 +86,9 @@ var ScheduleForm = React.createClass({
     }
 
     
-    var device_type = this.props.image ? this.props.image.device_type : '';
-    var filters = "device_type="+device_type;
+    var device_types = this.props.image ? this.props.image.device_types_compatible : [];
+    device_types = device_types.join(', ');
+    var filters = "";
     if (this.props.device) {filters = "id="+this.props.device.id}
     filters = encodeURIComponent(filters);
 
@@ -159,7 +159,7 @@ var ScheduleForm = React.createClass({
               disabled={true}
               hintText="Device type"
               floatingLabelText="Device type"
-              value={device_type} 
+              value={device_types} 
               underlineDisabledStyle={{borderBottom:"none"}}
               style={{verticalAlign:"top"}}
               errorStyle={{color: "rgb(171, 16, 0)"}}

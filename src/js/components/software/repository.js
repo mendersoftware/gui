@@ -35,8 +35,7 @@ var Repository = React.createClass({
       image: {
         name: null,
         description: null,
-        yocto_id: null,
-        device_type: null
+        device_types: null
       },
       sortCol: "name",
       sortDown: true,
@@ -63,8 +62,8 @@ var Repository = React.createClass({
     var image = {
       name: null,
       description: null,
-      yocto_id: null,
-      device_type: null
+      artifact_name: null,
+      device_types: null
     };
     this.setState({image: image});
   },
@@ -200,7 +199,7 @@ var Repository = React.createClass({
 
     var tmpSoftware = [];
     if (this.refs.search) {
-      var filters = ['name', 'device_type', 'description'];
+      var filters = ['name', 'device_types_compatible', 'description'];
       tmpSoftware = software.filter(this.refs.search.filter(filters));
     }
     
@@ -253,7 +252,7 @@ var Repository = React.createClass({
               adjustForCheckbox={false} >
               <TableRow>
                 <TableHeaderColumn className="columnHeader" tooltip="Name">Name <FontIcon ref="name" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "name")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
-                <TableHeaderColumn className="columnHeader" tooltip="Device type compatibility">Device type compatibility <FontIcon ref="device_type" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "device_type")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
+                <TableHeaderColumn className="columnHeader" tooltip="Device type compatibility">Device type compatibility <FontIcon ref="device_types" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "device_types")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
                 <TableHeaderColumn className="columnHeader" tooltip="Last modified">Last modified <FontIcon style={styles.sortIcon} ref="modified" onClick={this._sortColumn.bind(null, "modified")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
                 <TableHeaderColumn style={{width:"55px", paddingRight:"12px", paddingLeft:"0"}} className="columnHeader"></TableHeaderColumn>
               </TableRow>

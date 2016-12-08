@@ -83495,8 +83495,8 @@ var Deployments = _react2.default.createClass({
   _onScheduleSubmit: function _onScheduleSubmit() {
     var ids = [];
     var self = this;
-    for (var i = 0; i < this.state.deploymentDevices.length; i++) {
-      ids.push(this.state.deploymentDevices[i].id);
+    for (var i = 0; i < this.state.filteredDevices.length; i++) {
+      ids.push(this.state.filteredDevices[i].id);
     }
     var newDeployment = {
       name: decodeURIComponent(this.state.group) || "All devices",
@@ -83542,8 +83542,9 @@ var Deployments = _react2.default.createClass({
     // set the selected groups devices to state, to be sent down to the child schedule form
     if (image && group) {
       devices = group !== "All devices" ? this.state[group] : this.state.allDevices;
-      filteredDevices = AppStore.filterDevicesByType(devices, image.device_type);
+      filteredDevices = AppStore.filterDevicesByType(devices, image.device_types_compatible);
     }
+    console.log("setting state", filteredDevices);
     this.setState({ deploymentDevices: devices, filteredDevices: filteredDevices });
   },
   _getReportById: function _getReportById(id) {
@@ -85605,7 +85606,6 @@ var ScheduleForm = _react2.default.createClass({
   },
 
   _handleGroupValueChange: function _handleGroupValueChange(e, index, value) {
-    var device_type = this.props.image ? this.props.image.device_type : null;
     var group = value;
     this._sendUpToParent(group, 'group');
   },
@@ -85648,8 +85648,9 @@ var ScheduleForm = _react2.default.createClass({
       }
     }
 
-    var device_type = this.props.image ? this.props.image.device_type : '';
-    var filters = "device_type=" + device_type;
+    var device_types = this.props.image ? this.props.image.device_types_compatible : [];
+    device_types = device_types.join(', ');
+    var filters = "";
     if (this.props.device) {
       filters = "id=" + this.props.device.id;
     }
@@ -85757,7 +85758,7 @@ var ScheduleForm = _react2.default.createClass({
             disabled: true,
             hintText: 'Device type',
             floatingLabelText: 'Device type',
-            value: device_type,
+            value: device_types,
             underlineDisabledStyle: { borderBottom: "none" },
             style: { verticalAlign: "top" },
             errorStyle: { color: "rgb(171, 16, 0)" },
@@ -88408,8 +88409,7 @@ var Repository = _react2.default.createClass({
       image: {
         name: null,
         description: null,
-        yocto_id: null,
-        device_type: null
+        device_types: null
       },
       sortCol: "name",
       sortDown: true,
@@ -88436,8 +88436,8 @@ var Repository = _react2.default.createClass({
     var image = {
       name: null,
       description: null,
-      yocto_id: null,
-      device_type: null
+      artifact_name: null,
+      device_types: null
     };
     this.setState({ image: image });
   },
@@ -88573,7 +88573,7 @@ var Repository = _react2.default.createClass({
 
     var tmpSoftware = [];
     if (this.refs.search) {
-      var filters = ['name', 'device_type', 'description'];
+      var filters = ['name', 'device_types_compatible', 'description'];
       tmpSoftware = software.filter(this.refs.search.filter(filters));
     }
 
@@ -88686,7 +88686,7 @@ var Repository = _react2.default.createClass({
                 'Device type compatibility ',
                 _react2.default.createElement(
                   _FontIcon2.default,
-                  { ref: 'device_type', style: styles.sortIcon, onClick: this._sortColumn.bind(null, "device_type"), className: 'sortIcon material-icons' },
+                  { ref: 'device_types', style: styles.sortIcon, onClick: this._sortColumn.bind(null, "device_types"), className: 'sortIcon material-icons' },
                   'sort'
                 )
               ),
@@ -89465,21 +89465,28 @@ function _selectDevices(device) {
   }
 }
 
-function _filterDevicesByType(devices, device_type) {
-
+function _filterDevicesByType(devices, device_types) {
   // from all devices, find if device type
   var filtered = [];
+
   for (var i = 0; i < devices.length; i++) {
     var device = devices[i];
     var attrs = {};
     // get device type from within attributes
-    for (var x = 0; x < device.attributes.length; x++) {
-      attrs[device.attributes[x].name] = device.attributes[x].value;
-    }
-    if (device_type === attrs.device_type) {
-      filtered.push(device);
+    if (device.attributes) {
+      for (var x = 0; x < device.attributes.length; x++) {
+        attrs[device.attributes[x].name] = device.attributes[x].value;
+      }
+
+      for (var y = 0; y < device_types.length; y++) {
+        if (device_types[y] === attrs.device_type) {
+          filtered.push(device);
+          break;
+        }
+      }
     }
   }
+  console.log("returning", filtered);
   return filtered;
 }
 
@@ -89930,11 +89937,11 @@ var AppStore = assign(EventEmitter.prototype, {
     return _events;
   },
 
-  filterDevicesByType: function filterDevicesByType(devices, device_type) {
+  filterDevicesByType: function filterDevicesByType(devices, device_types) {
     /*
     * Return list of devices given group and device_type
     */
-    return _filterDevicesByType(devices, device_type);
+    return _filterDevicesByType(devices, device_types);
   },
 
   getOrderedDeploymentDevices: function getOrderedDeploymentDevices(devices) {

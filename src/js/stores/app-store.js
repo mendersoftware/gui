@@ -114,21 +114,28 @@ function _selectDevices(device) {
   }
 }
 
-function _filterDevicesByType(devices, device_type) {
-
+function _filterDevicesByType(devices, device_types) {
   // from all devices, find if device type
   var filtered = [];
+
   for (var i=0;i<devices.length;i++) {
     var device = devices[i];
     var attrs = {};
     // get device type from within attributes
-    for (var x=0;x<device.attributes.length;x++) {
-      attrs[device.attributes[x].name] = device.attributes[x].value;
-    }
-    if (device_type === attrs.device_type) {
-      filtered.push(device);
+    if (device.attributes) {
+      for (var x=0;x<device.attributes.length;x++) {
+        attrs[device.attributes[x].name] = device.attributes[x].value;
+      }
+      
+      for (var y=0;y<device_types.length;y++) {
+        if (device_types[y] === attrs.device_type) {
+          filtered.push(device);
+          break;
+        }
+      }
     }
   }
+  console.log("returning", filtered);
   return filtered;
 }
 
@@ -594,11 +601,11 @@ var AppStore = assign(EventEmitter.prototype, {
     return _events
   },
 
-  filterDevicesByType: function(devices, device_type) {
+  filterDevicesByType: function(devices, device_types) {
     /*
     * Return list of devices given group and device_type
     */
-    return _filterDevicesByType(devices, device_type)
+    return _filterDevicesByType(devices, device_types)
   },
 
   getOrderedDeploymentDevices: function(devices) {

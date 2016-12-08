@@ -235,8 +235,8 @@ var Deployments = React.createClass({
   _onScheduleSubmit: function() {
     var ids = [];
     var self = this;
-    for (var i=0; i<this.state.deploymentDevices.length; i++) {
-      ids.push(this.state.deploymentDevices[i].id);
+    for (var i=0; i<this.state.filteredDevices.length; i++) {
+      ids.push(this.state.filteredDevices[i].id);
     }
     var newDeployment = {
       name: decodeURIComponent(this.state.group) || "All devices",
@@ -282,8 +282,9 @@ var Deployments = React.createClass({
     // set the selected groups devices to state, to be sent down to the child schedule form
     if (image && group) {
       devices = (group!=="All devices") ? this.state[group] : this.state.allDevices;
-      filteredDevices = AppStore.filterDevicesByType(devices, image.device_type);
+      filteredDevices = AppStore.filterDevicesByType(devices, image.device_types_compatible);
     }
+    console.log("setting state", filteredDevices);
     this.setState({deploymentDevices: devices, filteredDevices: filteredDevices});
   },
   _getReportById: function (id) {
