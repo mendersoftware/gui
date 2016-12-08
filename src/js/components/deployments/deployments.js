@@ -398,6 +398,7 @@ var Deployments = React.createClass({
           title={this.state.dialogTitle}
           actions={this.state.scheduleForm ? scheduleActions : reportActions}
           autoDetectWindowHeight={true}
+          autoScrollBodyContent={true}
           contentClassName={this.state.contentClass}
           bodyStyle={{paddingTop:"0", fontSize:"13px"}}
           open={this.state.dialog || false}
