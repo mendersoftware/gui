@@ -229,8 +229,8 @@ var AppActions = {
   getDeviceIdentity: function (id, callback) {
     DevicesApi
       .get(devicesApiUrl+"/devices/" + id)
-      .then(function(devices) {
-        callback.success(devices);
+      .then(function(res) {
+        callback.success(res.body);
       })
       .catch(function(err) {
         callback.error(err);

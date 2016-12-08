@@ -81384,8 +81384,8 @@ var AppActions = {
     getDeviceCount();
   },
   getDeviceIdentity: function getDeviceIdentity(id, callback) {
-    DevicesApi.get(devicesApiUrl + "/devices/" + id).then(function (devices) {
-      callback.success(devices);
+    DevicesApi.get(devicesApiUrl + "/devices/" + id).then(function (res) {
+      callback.success(res.body);
     }).catch(function (err) {
       callback.error(err);
     });
@@ -86250,7 +86250,7 @@ var DeviceList = _react2.default.createClass({
       var expanded = '';
       var attrs = {
         device_type: "",
-        image_id: ""
+        artifact_name: ""
       };
       var attributesLength = device.attributes ? device.attributes.length : 0;
       for (var i = 0; i < attributesLength; i++) {
@@ -86277,7 +86277,7 @@ var DeviceList = _react2.default.createClass({
         _react2.default.createElement(
           _Table.TableRowColumn,
           null,
-          attrs.image_id || "-"
+          attrs.artifact_name || "-"
         ),
         _react2.default.createElement(
           _Table.TableRowColumn,
