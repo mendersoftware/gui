@@ -81384,8 +81384,8 @@ var AppActions = {
     getDeviceCount();
   },
   getDeviceIdentity: function getDeviceIdentity(id, callback) {
-    DevicesApi.get(devicesApiUrl + "/devices/" + id).then(function (devices) {
-      callback.success(devices);
+    DevicesApi.get(devicesApiUrl + "/devices/" + id).then(function (res) {
+      callback.success(res.body);
     }).catch(function (err) {
       callback.error(err);
     });
@@ -86250,7 +86250,7 @@ var DeviceList = _react2.default.createClass({
       var expanded = '';
       var attrs = {
         device_type: "",
-        image_id: ""
+        artifact_name: ""
       };
       var attributesLength = device.attributes ? device.attributes.length : 0;
       for (var i = 0; i < attributesLength; i++) {
@@ -86277,7 +86277,7 @@ var DeviceList = _react2.default.createClass({
         _react2.default.createElement(
           _Table.TableRowColumn,
           null,
-          attrs.image_id || "-"
+          attrs.artifact_name || "-"
         ),
         _react2.default.createElement(
           _Table.TableRowColumn,
@@ -88536,7 +88536,7 @@ var Repository = _react2.default.createClass({
     return;
   },
   _adjustCellHeight: function _adjustCellHeight(height) {
-    this.setState({ divHeight: height + 30 });
+    this.setState({ divHeight: height + 80 });
   },
   render: function render() {
 
@@ -88578,11 +88578,12 @@ var Repository = _react2.default.createClass({
     }
 
     var items = tmpSoftware.map(function (pkg, index) {
+      var compatible = pkg.device_types_compatible.join(", ");
       var expanded = '';
       if (this.state.image.name === pkg.name) {
-        expanded = _react2.default.createElement(_selectedimage2.default, { formatTime: this._formatTime, editImage: this._editImageData, buttonStyle: styles.flatButtonIcon, image: this.state.image, createDeployment: this._createDeployment });
+        expanded = _react2.default.createElement(_selectedimage2.default, { compatible: compatible, formatTime: this._formatTime, editImage: this._editImageData, buttonStyle: styles.flatButtonIcon, image: this.state.image, createDeployment: this._createDeployment });
       }
-      var compatible = pkg.device_types_compatible.join(", ");
+
       return _react2.default.createElement(
         _Table.TableRow,
         { hoverable: this.state.image.name !== pkg.name, className: this.state.image.name === pkg.name ? "expand" : null, key: index },
@@ -88648,9 +88649,9 @@ var Repository = _react2.default.createClass({
         _react2.default.createElement(
           'h3',
           { className: 'inline-block' },
-          'Available images'
+          'Available artifacts'
         ),
-        _react2.default.createElement(_reactSearchInput2.default, { placeholder: 'Search images', className: 'search tableSearch', ref: 'search', onChange: this.searchUpdated })
+        _react2.default.createElement(_reactSearchInput2.default, { placeholder: 'Search artifacts', className: 'search tableSearch', ref: 'search', onChange: this.searchUpdated })
       ),
       _react2.default.createElement(Loader, { show: this.props.loading }),
       _react2.default.createElement(
@@ -88915,13 +88916,33 @@ var SelectedImage = _react2.default.createClass({
       )
     );
 
+    var files = this.props.image.updates[0].files || [];
+
+    var fileDetails = files.map(function (file, index) {
+
+      return _react2.default.createElement(
+        'div',
+        { key: index, className: 'file-details' },
+        _react2.default.createElement(_List.ListItem, { style: styles.listStyle, disabled: true, primaryText: 'Name', secondaryText: file.name }),
+        _react2.default.createElement(_Divider2.default, null),
+        _react2.default.createElement(_List.ListItem, { style: styles.listStyle, disabled: true, primaryText: 'Checksum', secondaryText: file.checksum }),
+        _react2.default.createElement(_Divider2.default, null),
+        _react2.default.createElement(_List.ListItem, { style: styles.listStyle, disabled: true, primaryText: 'Signature', secondaryText: file.signature }),
+        _react2.default.createElement(_Divider2.default, null),
+        _react2.default.createElement(_List.ListItem, { style: styles.listStyle, disabled: true, primaryText: 'Build date', secondaryText: file.date }),
+        _react2.default.createElement(_Divider2.default, null),
+        _react2.default.createElement(_List.ListItem, { style: styles.listStyle, disabled: true, primaryText: 'Size', secondaryText: file.size }),
+        _react2.default.createElement(_Divider2.default, null)
+      );
+    }, this);
+
     return _react2.default.createElement(
       'div',
       { className: this.props.image.name == null ? "muted" : null },
       _react2.default.createElement(
         'h3',
         { className: 'margin-bottom-none' },
-        'Image details'
+        'Artifact details'
       ),
       _react2.default.createElement(
         'div',
@@ -88929,6 +88950,31 @@ var SelectedImage = _react2.default.createClass({
         _react2.default.createElement(
           'div',
           { className: 'image-list list-item' },
+          _react2.default.createElement(
+            'div',
+            { style: { padding: "9px 0" } },
+            _react2.default.createElement(
+              'div',
+              { style: { padding: "12px 16px 10px", lineHeight: "12px", height: "74px" } },
+              _react2.default.createElement(
+                'span',
+                { style: { color: "rgba(0,0,0,0.8)", fontSize: "12px" } },
+                'Description'
+              ),
+              _react2.default.createElement(
+                'div',
+                { style: { color: "rgba(0,0,0,0.54)", marginRight: "30px", marginTop: "8px", whiteSpace: "normal" } },
+                _react2.default.createElement(
+                  'span',
+                  { className: this.state.descEdit ? "hidden" : null },
+                  info.description
+                ),
+                descInput
+              ),
+              editButtonDesc
+            ),
+            _react2.default.createElement('hr', { style: { margin: "0", backgroundColor: "#e0e0e0", height: "1px", border: "none" } })
+          ),
           _react2.default.createElement(
             _List.List,
             { style: { backgroundColor: "rgba(255,255,255,0)" } },
@@ -88938,55 +88984,36 @@ var SelectedImage = _react2.default.createClass({
         ),
         _react2.default.createElement(
           'div',
-          { className: 'hidden image-list list-item' },
+          { className: 'image-list list-item' },
           _react2.default.createElement(
             _List.List,
             { style: { backgroundColor: "rgba(255,255,255,0)" } },
-            _react2.default.createElement(_List.ListItem, { style: styles.listStyle, disabled: true, primaryText: 'Installed on devices', secondaryText: devicesLink }),
+            _react2.default.createElement(_List.ListItem, { style: styles.listStyle, disabled: true, secondaryTextLines: 2, primaryText: 'Device type compatibility', secondaryText: this.props.compatible }),
             _react2.default.createElement(_Divider2.default, null)
-          )
-        )
-      ),
-      _react2.default.createElement(
-        'div',
-        { className: 'relative' },
-        _react2.default.createElement(
-          'div',
-          { className: 'report-list', style: { padding: "0px", width: "63%", position: "relative" } },
+          ),
           _react2.default.createElement(
             'div',
-            { style: { padding: "12px 16px 10px", fontSize: "12px", lineHeight: "12px" } },
+            { className: 'hidden' },
             _react2.default.createElement(
-              'span',
-              { style: { color: "rgba(0,0,0,0.8)" } },
-              'Description'
-            ),
-            _react2.default.createElement(
-              'div',
-              { style: { color: "rgba(0,0,0,0.54)", marginRight: "30px", marginTop: "8px", whiteSpace: "normal" } },
-              _react2.default.createElement(
-                'span',
-                { className: this.state.descEdit ? "hidden" : null },
-                info.description
-              ),
-              descInput
-            ),
-            editButtonDesc
-          ),
-          _react2.default.createElement('hr', { style: { margin: "0", backgroundColor: "#e0e0e0", height: "1px", border: "none" } })
+              _List.List,
+              { style: { backgroundColor: "rgba(255,255,255,0)" } },
+              _react2.default.createElement(_List.ListItem, { style: styles.listStyle, disabled: true, primaryText: 'Installed on devices', secondaryText: devicesLink }),
+              _react2.default.createElement(_Divider2.default, null)
+            )
+          )
         ),
         _react2.default.createElement(
           'div',
-          { className: 'report-list', style: { width: "320px" } },
+          { className: 'image-list list-item', style: { width: "320px" } },
           _react2.default.createElement(
             _List.List,
-            { style: { backgroundColor: "rgba(255,255,255,0)", paddingTop: "0" } },
+            { style: { backgroundColor: "rgba(255,255,255,0)", paddingTop: "16px" } },
             _react2.default.createElement(
               'div',
               { key: 'updateButton' },
               _react2.default.createElement(_List.ListItem, {
                 style: styles.listStyle,
-                primaryText: 'Create a deployment using this image',
+                primaryText: 'Create a deployment using this artifact',
                 onClick: this._clickImageSchedule,
                 leftIcon: _react2.default.createElement(
                   _FontIcon2.default,
@@ -88996,8 +89023,17 @@ var SelectedImage = _react2.default.createClass({
             ),
             _react2.default.createElement(_Divider2.default, null)
           )
-        ),
-        _react2.default.createElement('div', { className: 'report-list', style: { height: "98px", width: "0" } })
+        )
+      ),
+      _react2.default.createElement(
+        'h4',
+        { className: 'margin-bottom-none' },
+        'Files'
+      ),
+      _react2.default.createElement(
+        'div',
+        null,
+        fileDetails
       )
     );
   }

@@ -163,7 +163,7 @@ var Repository = React.createClass({
     return;
   },
   _adjustCellHeight: function(height) {
-    this.setState({divHeight: height+30});
+    this.setState({divHeight: height+80});
   },
   render: function() {
 
@@ -203,13 +203,14 @@ var Repository = React.createClass({
       var filters = ['name', 'device_type', 'description'];
       tmpSoftware = software.filter(this.refs.search.filter(filters));
     }
-
+    
     var items = tmpSoftware.map(function(pkg, index) {
+      var compatible = pkg.device_types_compatible.join(", ");
       var expanded = '';
       if (this.state.image.name === pkg.name ) {
-        expanded = <SelectedImage formatTime={this._formatTime} editImage={this._editImageData} buttonStyle={styles.flatButtonIcon} image={this.state.image} createDeployment={this._createDeployment} />
+        expanded = <SelectedImage compatible={compatible} formatTime={this._formatTime} editImage={this._editImageData} buttonStyle={styles.flatButtonIcon} image={this.state.image} createDeployment={this._createDeployment} />
       }
-      var compatible = pkg.device_types_compatible.join(", ");
+     
       return (
         <TableRow hoverable={this.state.image.name !== pkg.name} className={this.state.image.name === pkg.name ? "expand" : null} key={index} >
           <TableRowColumn style={expanded ? {height: this.state.divHeight} : null}>{pkg.name}</TableRowColumn>
@@ -237,8 +238,8 @@ var Repository = React.createClass({
         </div>
       
         <div>
-          <h3 className="inline-block">Available images</h3>
-          <SearchInput placeholder="Search images" className="search tableSearch" ref='search' onChange={this.searchUpdated} />
+          <h3 className="inline-block">Available artifacts</h3>
+          <SearchInput placeholder="Search artifacts" className="search tableSearch" ref='search' onChange={this.searchUpdated} />
         </div>
 
         <Loader show={this.props.loading} />

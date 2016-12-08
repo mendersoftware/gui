@@ -333,7 +333,7 @@ var DeviceList = React.createClass({
       var expanded = '';
       var attrs = {
         device_type: "",
-        image_id: ""
+        artifact_name: ""
       };
       var attributesLength = device.attributes ? device.attributes.length : 0; 
       for (var i=0;i<attributesLength;i++) {
@@ -346,7 +346,7 @@ var DeviceList = React.createClass({
         <TableRow selected={device.selected} hoverable={!expanded} className={expanded ? "expand" : null}  key={index}>
           <TableRowColumn style={expanded ? {height: this.state.divHeight} : null}>{device.id}</TableRowColumn>
           <TableRowColumn>{attrs.device_type || "-"}</TableRowColumn>
-          <TableRowColumn>{attrs.image_id || "-"}</TableRowColumn>
+          <TableRowColumn>{attrs.artifact_name || "-"}</TableRowColumn>
           <TableRowColumn><Time value={device.updated_ts} format="YYYY-MM-DD HH:mm" /></TableRowColumn>
           <TableRowColumn style={{width:"55px", paddingRight:"0", paddingLeft:"12px"}} className="expandButton">
             <IconButton className="float-right"><FontIcon className="material-icons">{ expanded ? "arrow_drop_up" : "arrow_drop_down"}</FontIcon></IconButton>
