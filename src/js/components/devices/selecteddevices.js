@@ -37,6 +37,7 @@ var SelectedDevices = React.createClass({
     var state = {};
     state[ref] = !this.state[ref];
     this.setState(state);
+    this.setState({filterByImage:null, image:null});
   },
 
   _updateParams: function(val, attr) {
@@ -86,6 +87,18 @@ var SelectedDevices = React.createClass({
     var tmp = {};
     tmp[attr] = val;
     this.setState(tmp);
+
+    // check that device type matches
+    if (attr==='image') {
+      var filteredDevs = null;
+      for (var i = 0; i<val.device_types_compatible.length; i++) {
+        if (val.device_types_compatible[i] === this.props.device_type) {
+          filteredDevs = [this.props.device];
+          break;
+        }
+      }
+    }
+    this.setState({filterByImage:filteredDevs});
   },
   render: function() {
    
@@ -207,6 +220,7 @@ var SelectedDevices = React.createClass({
       <RaisedButton
         label="Create deployment"
         primary={true}
+        disabled={!this.state.filterByImage}
         onClick={this._onScheduleSubmit}
         ref="save" />
     ];
@@ -223,7 +237,7 @@ var SelectedDevices = React.createClass({
           bodyStyle={{paddingTop:"0", fontSize:"13px"}}
           contentStyle={{overflow:"hidden", boxShadow:"0 14px 45px rgba(0, 0, 0, 0.25), 0 10px 18px rgba(0, 0, 0, 0.22)"}}
           >
-          <ScheduleForm deploymentDevices={[this.props.device]} filteredDevices={[this.props.device]} deploymentSettings={this._deploymentParams} image={this.state.image} images={this.props.images} device={this.props.device} deploymentSchedule={this._updateParams} groups={this.props.groups} />
+          <ScheduleForm deploymentDevices={[this.props.device]} filteredDevices={this.state.filterByImage} deploymentSettings={this._deploymentParams} image={this.state.image} images={this.props.images} device={this.props.device} deploymentSchedule={this._updateParams} groups={this.props.groups} />
 
         </Dialog>
 

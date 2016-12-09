@@ -86261,7 +86261,7 @@ var DeviceList = _react2.default.createClass({
       if (this.state.expanded === index) {
         var _React$createElement;
 
-        expanded = _react2.default.createElement(SelectedDevices, (_React$createElement = { redirect: this.props.redirect, admittanceTime: this.state.admittanceTime, attributes: this.state.deviceAttributes, deviceId: this.state.deviceId, images: this.props.images, device: this.state.expandedDevice, selectedGroup: this.props.selectedGroup }, _defineProperty(_React$createElement, 'images', this.props.images), _defineProperty(_React$createElement, 'groups', this.props.groups), _React$createElement));
+        expanded = _react2.default.createElement(SelectedDevices, (_React$createElement = { redirect: this.props.redirect, admittanceTime: this.state.admittanceTime, attributes: this.state.deviceAttributes, deviceId: this.state.deviceId, device_type: attrs.device_type, images: this.props.images, device: this.state.expandedDevice, selectedGroup: this.props.selectedGroup }, _defineProperty(_React$createElement, 'images', this.props.images), _defineProperty(_React$createElement, 'groups', this.props.groups), _React$createElement));
       }
       return _react2.default.createElement(
         _Table.TableRow,
@@ -87620,6 +87620,7 @@ var SelectedDevices = _react2.default.createClass({
     var state = {};
     state[ref] = !this.state[ref];
     this.setState(state);
+    this.setState({ filterByImage: null, image: null });
   },
 
   _updateParams: function _updateParams(val, attr) {
@@ -87669,6 +87670,18 @@ var SelectedDevices = _react2.default.createClass({
     var tmp = {};
     tmp[attr] = val;
     this.setState(tmp);
+
+    // check that device type matches
+    if (attr === 'image') {
+      var filteredDevs = null;
+      for (var i = 0; i < val.device_types_compatible.length; i++) {
+        if (val.device_types_compatible[i] === this.props.device_type) {
+          filteredDevs = [this.props.device];
+          break;
+        }
+      }
+    }
+    this.setState({ filterByImage: filteredDevs });
   },
   render: function render() {
 
@@ -87822,6 +87835,7 @@ var SelectedDevices = _react2.default.createClass({
     ), _react2.default.createElement(_RaisedButton2.default, {
       label: 'Create deployment',
       primary: true,
+      disabled: !this.state.filterByImage,
       onClick: this._onScheduleSubmit,
       ref: 'save' })];
 
@@ -87839,7 +87853,7 @@ var SelectedDevices = _react2.default.createClass({
           bodyStyle: { paddingTop: "0", fontSize: "13px" },
           contentStyle: { overflow: "hidden", boxShadow: "0 14px 45px rgba(0, 0, 0, 0.25), 0 10px 18px rgba(0, 0, 0, 0.22)" }
         },
-        _react2.default.createElement(ScheduleForm, { deploymentDevices: [this.props.device], filteredDevices: [this.props.device], deploymentSettings: this._deploymentParams, image: this.state.image, images: this.props.images, device: this.props.device, deploymentSchedule: this._updateParams, groups: this.props.groups })
+        _react2.default.createElement(ScheduleForm, { deploymentDevices: [this.props.device], filteredDevices: this.state.filterByImage, deploymentSettings: this._deploymentParams, image: this.state.image, images: this.props.images, device: this.props.device, deploymentSchedule: this._updateParams, groups: this.props.groups })
       )
     );
   }
