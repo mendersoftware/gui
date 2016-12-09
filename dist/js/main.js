@@ -81188,7 +81188,7 @@ function extend() {
 
 var AppConstants = require('../constants/app-constants');
 var AppDispatcher = require('../dispatchers/app-dispatcher');
-var ImagesApi = require('../api/images-api');
+var ArtifactsApi = require('../api/artifacts-api');
 var DeploymentsApi = require('../api/deployments-api');
 var DevicesApi = require('../api/devices-api');
 var rootUrl = "https://localhost:8080";
@@ -81406,41 +81406,41 @@ var AppActions = {
     });
   },
 
-  /* Images */
-  getImages: function getImages(callback) {
-    ImagesApi.get(deploymentsApiUrl + '/images').then(function (images) {
+  /* Artifacts */
+  getArtifacts: function getArtifacts(callback) {
+    ArtifactsApi.get(deploymentsApiUrl + '/artifacts').then(function (artifacts) {
       AppDispatcher.handleViewAction({
-        actionType: AppConstants.RECEIVE_IMAGES,
-        images: images
+        actionType: AppConstants.RECEIVE_ARTIFACTS,
+        artifacts: artifacts
       });
-      callback.success(images);
+      callback.success(artifacts);
     }).catch(function (err) {
       callback.error(err);
     });
   },
 
-  uploadImage: function uploadImage(meta, file, callback) {
+  uploadArtifact: function uploadArtifact(meta, file, callback) {
     var formData = new FormData();
     formData.append('name', meta.name);
     formData.append('description', meta.description);
     formData.append('firmware', file);
-    ImagesApi.postFormData(deploymentsApiUrl + '/images', formData).then(function (data) {
+    ArtifactsApi.postFormData(deploymentsApiUrl + '/artifacts', formData).then(function (data) {
       callback.success(data);
     }).catch(function (err) {
       callback.error(err);
     });
   },
 
-  editImage: function editImage(image, callback) {
-    ImagesApi.putJSON(deploymentsApiUrl + "/images/" + image.id, image).then(function (res) {
+  editArtifact: function editArtifact(artifact, callback) {
+    ArtifactsApi.putJSON(deploymentsApiUrl + "/artifacts/" + artifact.id, artifact).then(function (res) {
       callback();
     });
   },
 
-  setDeploymentImage: function setDeploymentImage(image) {
+  setDeploymentArtifact: function setDeploymentArtifact(artifact) {
     AppDispatcher.handleViewAction({
-      actionType: AppConstants.SET_DEPLOYMENT_IMAGE,
-      image: image
+      actionType: AppConstants.SET_DEPLOYMENT_ARTIFACT,
+      artifact: artifact
     });
   },
 
@@ -81557,7 +81557,55 @@ var AppActions = {
 
 module.exports = AppActions;
 
-},{"../api/deployments-api":740,"../api/devices-api":741,"../api/images-api":742,"../constants/app-constants":782,"../dispatchers/app-dispatcher":783,"parse-link-header":379}],740:[function(require,module,exports){
+},{"../api/artifacts-api":740,"../api/deployments-api":741,"../api/devices-api":742,"../constants/app-constants":782,"../dispatchers/app-dispatcher":783,"parse-link-header":379}],740:[function(require,module,exports){
+'use strict';
+
+var request = require('superagent');
+var Promise = require('es6-promise').Promise;
+
+var Api = {
+  get: function get(url) {
+    return new Promise(function (resolve, reject) {
+      request.get(url).end(function (err, res) {
+        if (err || !res.ok) {
+          reject();
+        } else {
+          resolve(res.body);
+        }
+      });
+    });
+  },
+  postFormData: function postFormData(url, formData) {
+    return new Promise(function (resolve, reject) {
+      request.post(url).send(formData).end(function (err, res) {
+        if (err || !res.ok) {
+          reject(err);
+        } else {
+          resolve(res.body);
+        }
+      });
+    });
+  },
+  putJSON: function putJSON(url, data) {
+    return new Promise(function (resolve, reject) {
+      request.put(url).set('Content-Type', 'application/json').send(data).end(function (err, res) {
+        if (err || !res.ok) {
+          reject();
+        } else {
+          var responsetext = "";
+          if (res.text) {
+            responsetext = JSON.parse(res.text);
+          }
+          resolve(responsetext);
+        }
+      });
+    });
+  }
+};
+
+module.exports = Api;
+
+},{"es6-promise":118,"superagent":665}],741:[function(require,module,exports){
 'use strict';
 
 var request = require('superagent');
@@ -81602,7 +81650,7 @@ var Api = {
 
 module.exports = Api;
 
-},{"es6-promise":118,"superagent":665}],741:[function(require,module,exports){
+},{"es6-promise":118,"superagent":665}],742:[function(require,module,exports){
 'use strict';
 
 var request = require('superagent');
@@ -81659,54 +81707,6 @@ var Api = {
     });
   }
 
-};
-
-module.exports = Api;
-
-},{"es6-promise":118,"superagent":665}],742:[function(require,module,exports){
-'use strict';
-
-var request = require('superagent');
-var Promise = require('es6-promise').Promise;
-
-var Api = {
-  get: function get(url) {
-    return new Promise(function (resolve, reject) {
-      request.get(url).end(function (err, res) {
-        if (err || !res.ok) {
-          reject();
-        } else {
-          resolve(res.body);
-        }
-      });
-    });
-  },
-  postFormData: function postFormData(url, formData) {
-    return new Promise(function (resolve, reject) {
-      request.post(url).send(formData).end(function (err, res) {
-        if (err || !res.ok) {
-          reject(err);
-        } else {
-          resolve(res.body);
-        }
-      });
-    });
-  },
-  putJSON: function putJSON(url, data) {
-    return new Promise(function (resolve, reject) {
-      request.put(url).set('Content-Type', 'application/json').send(data).end(function (err, res) {
-        if (err || !res.ok) {
-          reject();
-        } else {
-          var responsetext = "";
-          if (res.text) {
-            responsetext = JSON.parse(res.text);
-          }
-          resolve(responsetext);
-        }
-      });
-    });
-  }
 };
 
 module.exports = Api;
@@ -82068,7 +82068,7 @@ var Form = _react2.default.createClass({
       ),
       _react2.default.createElement(_RaisedButton2.default, {
         key: 'submit',
-        label: 'Save image',
+        label: 'Save artifact',
         primary: true,
         onClick: this.updateModel,
         disabled: !this.state.isValid })
@@ -83056,7 +83056,7 @@ var RecentStats = _react2.default.createClass({
       stats: {
         "success": 0,
         "failure": 0,
-        "noimage": 0
+        "noartifact": 0
       }
     };
   },
@@ -83102,12 +83102,12 @@ var RecentStats = _react2.default.createClass({
       ),
       _react2.default.createElement(
         'div',
-        { className: this.state.stats.noimage ? "skipped-text" : "hidden" },
-        this.state.stats.noimage,
+        { className: this.state.stats.noartifact ? "skipped-text" : "hidden" },
+        this.state.stats.noartifact,
         ' ',
-        pluralize("devices", this.state.stats.noimage),
+        pluralize("devices", this.state.stats.noartifact),
         ' ',
-        pluralize("was", this.state.stats.noimage),
+        pluralize("was", this.state.stats.noartifact),
         ' skipped'
       )
     );
@@ -83296,7 +83296,7 @@ function getState() {
     past: AppStore.getPastDeployments(),
     progress: AppStore.getDeploymentsInProgress() || [],
     events: AppStore.getEventLog(),
-    images: AppStore.getSoftwareRepo(),
+    artifacts: AppStore.getSoftwareRepo(),
     groups: AppStore.getGroups(),
     allDevices: AppStore.getAllDevices(),
     invalid: true,
@@ -83314,17 +83314,17 @@ var Deployments = _react2.default.createClass({
     AppStore.changeListener(this._onChange);
   },
   componentDidMount: function componentDidMount() {
-    var image = AppStore.getDeploymentImage();
-    this.setState({ image: image });
+    var artifact = AppStore.getDeploymentArtifact();
+    this.setState({ artifact: artifact });
     this.timer = setInterval(this._refreshDeployments, 10000);
     this._refreshDeployments();
 
-    var imagesCallback = {
-      success: function (images) {
-        this.setState({ images: images });
+    var artifactsCallback = {
+      success: function (artifacts) {
+        this.setState({ artifacts: artifacts });
       }.bind(this)
     };
-    AppActions.getImages(imagesCallback);
+    AppActions.getArtifacts(artifactsCallback);
 
     AppActions.getDevices({
       success: function (devices) {
@@ -83386,7 +83386,7 @@ var Deployments = _react2.default.createClass({
     } else {
       this.setState({ tabIndex: "progress" });
     }
-    AppActions.getImages();
+    AppActions.getArtifacts();
   },
   _refreshDeployments: function _refreshDeployments() {
     this._refreshInProgress();
@@ -83467,7 +83467,7 @@ var Deployments = _react2.default.createClass({
   dialogDismiss: function dialogDismiss(ref) {
     this.setState({
       dialog: false,
-      image: null,
+      artifact: null,
       group: null
     });
   },
@@ -83500,7 +83500,7 @@ var Deployments = _react2.default.createClass({
     }
     var newDeployment = {
       name: decodeURIComponent(this.state.group) || "All devices",
-      artifact_name: this.state.image.name,
+      artifact_name: this.state.artifact.name,
       devices: ids
     };
 
@@ -83533,16 +83533,16 @@ var Deployments = _react2.default.createClass({
     tmp[attr] = val;
     this.setState(tmp);
     var group = attr === "group" ? val : this.state.group;
-    var image = attr === "image" ? val : this.state.image;
-    this._getDeploymentDevices(group, image);
+    var artifact = attr === "artifact" ? val : this.state.artifact;
+    this._getDeploymentDevices(group, artifact);
   },
-  _getDeploymentDevices: function _getDeploymentDevices(group, image) {
+  _getDeploymentDevices: function _getDeploymentDevices(group, artifact) {
     var devices = [];
     var filteredDevices = [];
     // set the selected groups devices to state, to be sent down to the child schedule form
-    if (image && group) {
+    if (artifact && group) {
       devices = group !== "All devices" ? this.state[group] : this.state.allDevices;
-      filteredDevices = AppStore.filterDevicesByType(devices, image.device_types_compatible);
+      filteredDevices = AppStore.filterDevicesByType(devices, artifact.device_types_compatible);
     }
     console.log("setting state", filteredDevices);
     this.setState({ deploymentDevices: devices, filteredDevices: filteredDevices });
@@ -83562,7 +83562,7 @@ var Deployments = _react2.default.createClass({
   _scheduleDeployment: function _scheduleDeployment(deployment) {
     this.setState({ dialog: false });
 
-    var image = '';
+    var artifact = '';
     var group = '';
     var start_time = null;
     var end_time = null;
@@ -83572,7 +83572,7 @@ var Deployments = _react2.default.createClass({
         id = deployment.id;
       }
       if (deployment.artifact_name) {
-        image = AppStore.getSoftwareImage('name', deployment.artifact_name);
+        artifact = AppStore.getSoftwareArtifact('name', deployment.artifact_name);
       }
       if (deployment.group) {
         group = AppStore.getSingleGroup('name', deployment.group);
@@ -83584,7 +83584,7 @@ var Deployments = _react2.default.createClass({
         end_time = deployment.end_time;
       }
     }
-    this.setState({ scheduleForm: true, imageVal: image, id: id, start_time: start_time, end_time: end_time, image: image, group: group, groupVal: group });
+    this.setState({ scheduleForm: true, artifactVal: artifact, id: id, start_time: start_time, end_time: end_time, artifact: artifact, group: group, groupVal: group });
     this.dialogOpen("schedule");
   },
   _scheduleRemove: function _scheduleRemove(id) {
@@ -83613,7 +83613,7 @@ var Deployments = _react2.default.createClass({
     var dialogContent = '';
 
     if (this.state.scheduleForm) {
-      dialogContent = _react2.default.createElement(ScheduleForm, { deploymentDevices: this.state.deploymentDevices, filteredDevices: this.state.filteredDevices, hasPending: this.state.hasPending, hasDevices: this.state.hasDevices, deploymentSettings: this._deploymentParams, id: this.state.id, images: this.state.images, image: this.state.image, groups: this.state.groups, group: this.state.group });
+      dialogContent = _react2.default.createElement(ScheduleForm, { deploymentDevices: this.state.deploymentDevices, filteredDevices: this.state.filteredDevices, hasPending: this.state.hasPending, hasDevices: this.state.hasDevices, deploymentSettings: this._deploymentParams, id: this.state.id, artifacts: this.state.artifacts, artifact: this.state.artifact, groups: this.state.groups, group: this.state.group });
     } else {
       dialogContent = _react2.default.createElement(Report, { deployment: this.state.selectedDeployment, retryDeployment: this._scheduleDeployment });
     }
@@ -83707,7 +83707,7 @@ var DeploymentStatus = _react2.default.createClass({
         "downloading": 0,
         "installing": 0,
         "rebooting": 0,
-        "noimage": 0
+        "noartifact": 0
       }
     };
   },
@@ -84327,7 +84327,7 @@ var ProgressChart = _react2.default.createClass({
         "downloading": 0,
         "failure": 0,
         "installing": 0,
-        "noimage": 0,
+        "noartifact": 0,
         "pending": 0,
         "rebooting": 0,
         "success": 0
@@ -84368,7 +84368,7 @@ var ProgressChart = _react2.default.createClass({
     this.setState({ device: device });
   },
   render: function render() {
-    var totalDevices = this.state.stats.success + this.state.stats.failure + this.state.stats.downloading + this.state.stats.installing + this.state.stats.rebooting + this.state.stats.noimage + this.state.stats.pending;
+    var totalDevices = this.state.stats.success + this.state.stats.failure + this.state.stats.downloading + this.state.stats.installing + this.state.stats.rebooting + this.state.stats.noartifact + this.state.stats.pending;
 
     var success = this.state.stats.success;
     var failures = this.state.stats.failure;
@@ -84564,23 +84564,23 @@ var ProgressReport = _react2.default.createClass({
     state[key] = val;
     this.setState(state);
   },
-  _getDeviceImage: function _getDeviceImage(device) {
-    var image = "";
+  _getDeviceArtifact: function _getDeviceArtifact(device) {
+    var artifact = "";
     for (var i = 0; i < device.attributes.length; i++) {
-      if (device.attributes[i].name === "image_id") {
-        image = device.attributes[i].value;
+      if (device.attributes[i].name === "artifact_id") {
+        artifact = device.attributes[i].value;
       }
     }
-    return image;
+    return artifact;
   },
   _getDeviceDetails: function _getDeviceDetails(devices) {
     var self = this;
     for (var i = 0; i < devices.length; i++) {
-      // get device image details not listed in schedule data
+      // get device artifact details not listed in schedule data
       AppActions.getDeviceById(devices[i].id, {
         success: function success(device) {
           var deviceSoftware = self.state.deviceSoftware || {};
-          deviceSoftware[device.id] = self._getDeviceImage(device);
+          deviceSoftware[device.id] = self._getDeviceArtifact(device);
           self.setState({ deviceSoftware: deviceSoftware });
         },
         error: function error(err) {
@@ -84983,11 +84983,11 @@ var Report = _react2.default.createClass((_React$createClass = {
 }, _defineProperty(_React$createClass, '_getDeviceDetails', function _getDeviceDetails(devices) {
   var self = this;
   for (var i = 0; i < devices.length; i++) {
-    // get device image details not listed in schedule data
+    // get device artifact details not listed in schedule data
     AppActions.getDeviceById(devices[i].id, {
       success: function success(device) {
         var deviceSoftware = self.state.deviceSoftware || {};
-        deviceSoftware[device.id] = self._getDeviceImage(device);
+        deviceSoftware[device.id] = self._getDeviceArtifact(device);
         self.setState({ deviceSoftware: deviceSoftware });
       },
       error: function error(err) {
@@ -85499,11 +85499,11 @@ var ScheduleButton = _react2.default.createClass({
   displayName: 'ScheduleButton',
 
   _handleClick: function _handleClick() {
-    var image = null;
-    if (this.props.image) {
-      image = this.props.image;
+    var artifact = null;
+    if (this.props.artifact) {
+      artifact = this.props.artifact;
     }
-    this.props.openDialog("schedule", image);
+    this.props.openDialog("schedule", artifact);
   },
   render: function render() {
     var button = '';
@@ -85610,9 +85610,9 @@ var ScheduleForm = _react2.default.createClass({
     var group = value;
     this._sendUpToParent(group, 'group');
   },
-  _handleImageValueChange: function _handleImageValueChange(e, index, value) {
-    var image = this.props.images[index];
-    this._sendUpToParent(image, 'image');
+  _handleArtifactValueChange: function _handleArtifactValueChange(e, index, value) {
+    var artifact = this.props.artifacts[index];
+    this._sendUpToParent(artifact, 'artifact');
   },
 
   _sendUpToParent: function _sendUpToParent(val, attr) {
@@ -85629,11 +85629,11 @@ var ScheduleForm = _react2.default.createClass({
   },
 
   render: function render() {
-    var imageItems = [];
+    var artifactItems = [];
 
-    for (var i = 0; i < this.props.images.length; i++) {
-      var tmp = _react2.default.createElement(_MenuItem2.default, { value: this.props.images[i].name, key: i, primaryText: this.props.images[i].name });
-      imageItems.push(tmp);
+    for (var i = 0; i < this.props.artifacts.length; i++) {
+      var tmp = _react2.default.createElement(_MenuItem2.default, { value: this.props.artifacts[i].name, key: i, primaryText: this.props.artifacts[i].name });
+      artifactItems.push(tmp);
     }
 
     var groupItems = [];
@@ -85649,7 +85649,7 @@ var ScheduleForm = _react2.default.createClass({
       }
     }
 
-    var device_types = this.props.image ? this.props.image.device_types_compatible : [];
+    var device_types = this.props.artifact ? this.props.artifact.device_types_compatible : [];
     device_types = device_types.join(', ');
     var filters = "";
     if (this.props.device) {
@@ -85747,13 +85747,13 @@ var ScheduleForm = _react2.default.createClass({
           _react2.default.createElement(
             _SelectField2.default,
             {
-              ref: 'image',
-              value: this.props.image ? this.props.image.name : null,
-              onChange: this._handleImageValueChange,
+              ref: 'artifact',
+              value: this.props.artifact ? this.props.artifact.name : null,
+              onChange: this._handleArtifactValueChange,
               floatingLabelText: 'Select target software',
-              disabled: !imageItems.length
+              disabled: !artifactItems.length
             },
-            imageItems
+            artifactItems
           ),
           _react2.default.createElement(_TextField2.default, {
             disabled: true,
@@ -85763,16 +85763,16 @@ var ScheduleForm = _react2.default.createClass({
             underlineDisabledStyle: { borderBottom: "none" },
             style: { verticalAlign: "top" },
             errorStyle: { color: "rgb(171, 16, 0)" },
-            className: this.props.image ? "margin-left" : "hidden" }),
+            className: this.props.artifact ? "margin-left" : "hidden" }),
           _react2.default.createElement(
             'p',
-            { className: imageItems.length ? "hidden" : "info", style: { marginTop: "0" } },
+            { className: artifactItems.length ? "hidden" : "info", style: { marginTop: "0" } },
             _react2.default.createElement(
               _FontIcon2.default,
               { className: 'material-icons', style: { marginRight: "4px", fontSize: "18px", top: "4px", color: "rgb(171, 16, 0)" } },
               'error_outline'
             ),
-            'There are no images available. ',
+            'There are no artifacts available. ',
             _react2.default.createElement(
               _reactRouter.Link,
               { to: '/software' },
@@ -85850,7 +85850,7 @@ var ScheduleForm = _react2.default.createClass({
         ),
         _react2.default.createElement(
           'p',
-          { className: this.props.hasDevices && imageItems.length ? 'info' : "hidden" },
+          { className: this.props.hasDevices && artifactItems.length ? 'info' : "hidden" },
           _react2.default.createElement(
             _FontIcon2.default,
             { className: 'material-icons', style: { marginRight: "4px", fontSize: "18px", top: "4px" } },
@@ -86261,7 +86261,7 @@ var DeviceList = _react2.default.createClass({
       if (this.state.expanded === index) {
         var _React$createElement;
 
-        expanded = _react2.default.createElement(SelectedDevices, (_React$createElement = { redirect: this.props.redirect, admittanceTime: this.state.admittanceTime, attributes: this.state.deviceAttributes, deviceId: this.state.deviceId, device_type: attrs.device_type, images: this.props.images, device: this.state.expandedDevice, selectedGroup: this.props.selectedGroup }, _defineProperty(_React$createElement, 'images', this.props.images), _defineProperty(_React$createElement, 'groups', this.props.groups), _React$createElement));
+        expanded = _react2.default.createElement(SelectedDevices, (_React$createElement = { redirect: this.props.redirect, admittanceTime: this.state.admittanceTime, attributes: this.state.deviceAttributes, deviceId: this.state.deviceId, device_type: attrs.device_type, artifacts: this.props.artifacts, device: this.state.expandedDevice, selectedGroup: this.props.selectedGroup }, _defineProperty(_React$createElement, 'artifacts', this.props.artifacts), _defineProperty(_React$createElement, 'groups', this.props.groups), _React$createElement));
       }
       return _react2.default.createElement(
         _Table.TableRow,
@@ -86881,7 +86881,7 @@ function getState() {
     selectedDevices: AppStore.getSelectedDevices(),
     filters: AppStore.getFilters(),
     attributes: AppStore.getAttributes(),
-    images: AppStore.getSoftwareRepo(),
+    artifacts: AppStore.getSoftwareRepo(),
     snackbar: AppStore.getSnackbar(),
     devices: AppStore.getGroupDevices(),
     totalDevices: AppStore.getTotalDevices()
@@ -86908,9 +86908,9 @@ var Devices = _react2.default.createClass({
     this._refreshDevices();
     this._refreshGroups();
 
-    AppActions.getImages({
-      success: function (images) {
-        this.setState({ images: images });
+    AppActions.getArtifacts({
+      success: function (artifacts) {
+        this.setState({ artifacts: artifacts });
       }.bind(this)
     });
 
@@ -87144,7 +87144,7 @@ var Devices = _react2.default.createClass({
           filters: this.state.filters,
           attributes: this.state.attributes,
           onFilterChange: this._updateFilters,
-          images: this.state.images,
+          artifacts: this.state.artifacts,
           loading: this.state.devLoading,
           selectedDevices: this.state.selectedDevices,
           groups: this.state.groupsForList,
@@ -87620,7 +87620,7 @@ var SelectedDevices = _react2.default.createClass({
     var state = {};
     state[ref] = !this.state[ref];
     this.setState(state);
-    this.setState({ filterByImage: null, image: null });
+    this.setState({ filterByArtifact: null, artifact: null });
   },
 
   _updateParams: function _updateParams(val, attr) {
@@ -87640,7 +87640,7 @@ var SelectedDevices = _react2.default.createClass({
     var newDeployment = {
       devices: [this.props.device.id],
       name: this.props.device.id,
-      artifact_name: this.state.image.name
+      artifact_name: this.state.artifact.name
     };
     var callback = {
       success: function success() {
@@ -87672,7 +87672,7 @@ var SelectedDevices = _react2.default.createClass({
     this.setState(tmp);
 
     // check that device type matches
-    if (attr === 'image') {
+    if (attr === 'artifact') {
       var filteredDevs = null;
       for (var i = 0; i < val.device_types_compatible.length; i++) {
         if (val.device_types_compatible[i] === this.props.device_type) {
@@ -87681,7 +87681,7 @@ var SelectedDevices = _react2.default.createClass({
         }
       }
     }
-    this.setState({ filterByImage: filteredDevs });
+    this.setState({ filterByArtifact: filteredDevs });
   },
   render: function render() {
 
@@ -87835,7 +87835,7 @@ var SelectedDevices = _react2.default.createClass({
     ), _react2.default.createElement(_RaisedButton2.default, {
       label: 'Create deployment',
       primary: true,
-      disabled: !this.state.filterByImage,
+      disabled: !this.state.filterByArtifact,
       onClick: this._onScheduleSubmit,
       ref: 'save' })];
 
@@ -87853,7 +87853,7 @@ var SelectedDevices = _react2.default.createClass({
           bodyStyle: { paddingTop: "0", fontSize: "13px" },
           contentStyle: { overflow: "hidden", boxShadow: "0 14px 45px rgba(0, 0, 0, 0.25), 0 10px 18px rgba(0, 0, 0, 0.22)" }
         },
-        _react2.default.createElement(ScheduleForm, { deploymentDevices: [this.props.device], filteredDevices: this.state.filterByImage, deploymentSettings: this._deploymentParams, image: this.state.image, images: this.props.images, device: this.props.device, deploymentSchedule: this._updateParams, groups: this.props.groups })
+        _react2.default.createElement(ScheduleForm, { deploymentDevices: [this.props.device], filteredDevices: this.state.filterByArtifact, deploymentSettings: this._deploymentParams, artifact: this.state.artifact, artifacts: this.props.artifacts, device: this.props.device, deploymentSchedule: this._updateParams, groups: this.props.groups })
       )
     );
   }
@@ -88359,9 +88359,9 @@ var _deploymentbutton = require('./deploymentbutton');
 
 var _deploymentbutton2 = _interopRequireDefault(_deploymentbutton);
 
-var _selectedimage = require('./selectedimage');
+var _selectedartifact = require('./selectedartifact');
 
-var _selectedimage2 = _interopRequireDefault(_selectedimage);
+var _selectedartifact2 = _interopRequireDefault(_selectedartifact);
 
 var _reactRouter = require('react-router');
 
@@ -88421,7 +88421,7 @@ var Repository = _react2.default.createClass({
 
   getInitialState: function getInitialState() {
     return {
-      image: {
+      artifact: {
         name: null,
         description: null,
         device_types: null
@@ -88430,7 +88430,7 @@ var Repository = _react2.default.createClass({
       sortDown: true,
       searchTerm: null,
       upload: false,
-      popupLabel: "Upload a new image",
+      popupLabel: "Upload a new artifact",
       software: [],
       tmpFile: null,
       snackMessage: "Deployment created",
@@ -88443,21 +88443,21 @@ var Repository = _react2.default.createClass({
   componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
     software = nextProps.software;
     if (nextProps.selected) {
-      this.setState({ image: nextProps.selected });
+      this.setState({ artifact: nextProps.selected });
     }
   },
 
-  _resetImageState: function _resetImageState() {
-    var image = {
+  _resetArtifactState: function _resetArtifactState() {
+    var artifact = {
       name: null,
       description: null,
       artifact_name: null,
       device_types: null
     };
-    this.setState({ image: image });
+    this.setState({ artifact: artifact });
   },
-  _createDeployment: function _createDeployment(image) {
-    _appActions2.default.setDeploymentImage(image);
+  _createDeployment: function _createDeployment(artifact) {
+    _appActions2.default.setDeploymentArtifact(artifact);
     var URIParams = "open=true";
     URIParams = encodeURIComponent(URIParams);
     this.redirect(URIParams);
@@ -88477,39 +88477,39 @@ var Repository = _react2.default.createClass({
   },
   _onUploadSubmit: function _onUploadSubmit(meta) {
     var self = this;
-    var tmpFile = meta.imageFile;
-    delete meta.imageFile;
+    var tmpFile = meta.artifactFile;
+    delete meta.artifactFile;
     delete meta.verified;
 
     var callback = {
       success: function success(result) {
-        self.props.refreshImages();
+        self.props.refreshArtifacts();
       },
       error: function error(err) {
-        _appActions2.default.setSnackbar("Image couldn't be uploaded. " + err);
+        _appActions2.default.setSnackbar("Artifact couldn't be uploaded. " + err);
         self.props.startLoader(false);
       }
     };
 
-    _appActions2.default.uploadImage(meta, tmpFile, callback);
+    _appActions2.default.uploadArtifact(meta, tmpFile, callback);
     this.props.startLoader(true);
-    this._resetImageState();
+    this._resetArtifactState();
     this.dialogDismiss('upload');
   },
-  _editImageData: function _editImageData(image) {
-    _appActions2.default.editImage(image, function () {
-      _appActions2.default.getImages();
+  _editArtifactData: function _editArtifactData(artifact) {
+    _appActions2.default.editArtifact(artifact, function () {
+      _appActions2.default.getArtifacts();
     });
-    this.setState({ image: image });
+    this.setState({ artifact: artifact });
   },
 
   _onRowSelection: function _onRowSelection(rowNumber, columnId) {
-    var image = software[rowNumber];
+    var artifact = software[rowNumber];
     if (columnId <= 4) {
-      if (this.state.image === image) {
-        this._resetImageState();
+      if (this.state.artifact === artifact) {
+        this._resetArtifactState();
       } else {
-        this.setState({ image: image });
+        this.setState({ artifact: artifact });
       }
     }
   },
@@ -88529,15 +88529,15 @@ var Repository = _react2.default.createClass({
     _appActions2.default.sortTable("_softwareRepo", col, direction);
   },
   searchUpdated: function searchUpdated(term) {
-    this.setState({ searchTerm: term, image: {} }); // needed to force re-render
+    this.setState({ searchTerm: term, artifact: {} }); // needed to force re-render
   },
-  _openUpload: function _openUpload(ref, image) {
-    if (image) {
-      this.setState({ popupLabel: "Edit image details" });
-      newState = image;
+  _openUpload: function _openUpload(ref, artifact) {
+    if (artifact) {
+      this.setState({ popupLabel: "Edit artifact details" });
+      newState = artifact;
     } else {
-      this._resetImageState();
-      this.setState({ popupLabel: "Upload a new image" });
+      this._resetArtifactState();
+      this.setState({ popupLabel: "Upload a new artifact" });
     }
     this.dialogOpen('upload');
   },
@@ -88595,13 +88595,13 @@ var Repository = _react2.default.createClass({
     var items = tmpSoftware.map(function (pkg, index) {
       var compatible = pkg.device_types_compatible.join(", ");
       var expanded = '';
-      if (this.state.image.name === pkg.name) {
-        expanded = _react2.default.createElement(_selectedimage2.default, { compatible: compatible, formatTime: this._formatTime, editImage: this._editImageData, buttonStyle: styles.flatButtonIcon, image: this.state.image, createDeployment: this._createDeployment });
+      if (this.state.artifact.name === pkg.name) {
+        expanded = _react2.default.createElement(_selectedartifact2.default, { compatible: compatible, formatTime: this._formatTime, editArtifact: this._editArtifactData, buttonStyle: styles.flatButtonIcon, artifact: this.state.artifact, createDeployment: this._createDeployment });
       }
 
       return _react2.default.createElement(
         _Table.TableRow,
-        { hoverable: this.state.image.name !== pkg.name, className: this.state.image.name === pkg.name ? "expand" : null, key: index },
+        { hoverable: this.state.artifact.name !== pkg.name, className: this.state.artifact.name === pkg.name ? "expand" : null, key: index },
         _react2.default.createElement(
           _Table.TableRowColumn,
           { style: expanded ? { height: this.state.divHeight } : null },
@@ -88650,7 +88650,7 @@ var Repository = _react2.default.createClass({
         { className: 'top-right-button' },
         _react2.default.createElement(
           _RaisedButton2.default,
-          { key: 'file_upload', onClick: this._openUpload.bind(null, "upload", null), label: 'Upload image file', labelPosition: 'after', secondary: true },
+          { key: 'file_upload', onClick: this._openUpload.bind(null, "upload", null), label: 'Upload artifact file', labelPosition: 'after', secondary: true },
           _react2.default.createElement(
             _FontIcon2.default,
             { style: styles.buttonIcon, className: 'material-icons' },
@@ -88733,15 +88733,15 @@ var Repository = _react2.default.createClass({
           _react2.default.createElement(
             'p',
             null,
-            'No images found. ',
+            'No artifacts found. ',
             _react2.default.createElement(
               'a',
               { onClick: this._openUpload.bind(null, "upload", null) },
-              'Upload an image'
+              'Upload an artifact'
             ),
             ' to the repository'
           ),
-          _react2.default.createElement('img', { src: 'assets/img/images.png', alt: 'images' })
+          _react2.default.createElement('img', { src: 'assets/img/artifacts.png', alt: 'artifacts' })
         )
       ),
       _react2.default.createElement(
@@ -88762,14 +88762,14 @@ var Repository = _react2.default.createClass({
             _form2.default,
             { dialogDismiss: this.dialogDismiss, onSubmit: this._onUploadSubmit },
             _react2.default.createElement(_fileinput2.default, {
-              id: 'imageFile',
-              placeholder: 'Upload image',
+              id: 'artifactFile',
+              placeholder: 'Upload artifact',
               required: true,
               file: true,
               accept: '.mender',
               validations: 'isLength:1' }),
             _react2.default.createElement(_textinput2.default, {
-              value: this.state.image.name,
+              value: this.state.artifact.name,
               hint: 'Name',
               label: 'Name',
               id: 'name',
@@ -88781,7 +88781,7 @@ var Repository = _react2.default.createClass({
               label: 'Description',
               multiLine: true,
               className: 'margin-bottom-small',
-              value: this.state.image.description })
+              value: this.state.artifact.description })
           )
         )
       ),
@@ -88803,7 +88803,7 @@ Repository.contextTypes = {
 
 module.exports = Repository;
 
-},{"../../actions/app-actions":739,"../../stores/app-store":785,"../common/forms/fileinput":744,"../common/forms/form":745,"../common/forms/textinput":746,"../common/loader":747,"./deploymentbutton":777,"./selectedimage":779,"material-ui/Dialog":224,"material-ui/FlatButton":233,"material-ui/FontIcon":237,"material-ui/IconButton":242,"material-ui/RaisedButton":267,"material-ui/Snackbar":276,"material-ui/Table":294,"material-ui/TextField":305,"react":650,"react-addons-update":399,"react-collapse":403,"react-dom":406,"react-height":542,"react-motion":554,"react-router":586,"react-search-input":610,"react-time":617}],779:[function(require,module,exports){
+},{"../../actions/app-actions":739,"../../stores/app-store":785,"../common/forms/fileinput":744,"../common/forms/form":745,"../common/forms/textinput":746,"../common/loader":747,"./deploymentbutton":777,"./selectedartifact":779,"material-ui/Dialog":224,"material-ui/FlatButton":233,"material-ui/FontIcon":237,"material-ui/IconButton":242,"material-ui/RaisedButton":267,"material-ui/Snackbar":276,"material-ui/Table":294,"material-ui/TextField":305,"react":650,"react-addons-update":399,"react-collapse":403,"react-dom":406,"react-height":542,"react-motion":554,"react-router":586,"react-search-input":610,"react-time":617}],779:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -88841,8 +88841,8 @@ var _TextField2 = _interopRequireDefault(_TextField);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 // material ui
-var SelectedImage = _react2.default.createClass({
-  displayName: 'SelectedImage',
+var SelectedArtifact = _react2.default.createClass({
+  displayName: 'SelectedArtifact',
 
   getInitialState: function getInitialState() {
     return {
@@ -88859,30 +88859,30 @@ var SelectedImage = _react2.default.createClass({
     filters = encodeURIComponent(filters);
     this.props.history.push("/devices/:group/:filters", { filters: filters }, null);
   },
-  _clickImageSchedule: function _clickImageSchedule() {
-    this.props.createDeployment(this.props.image);
+  _clickArtifactSchedule: function _clickArtifactSchedule() {
+    this.props.createDeployment(this.props.artifact);
   },
-  _descEdit: function _descEdit(image, event) {
+  _descEdit: function _descEdit(artifact, event) {
     event.stopPropagation();
     if (event.keyCode === 13 || !event.keyCode) {
 
       if (this.state.descEdit) {
-        image.description = this.refs.description.getValue();
+        artifact.description = this.refs.description.getValue();
         // save change
-        this.props.editImage(image);
+        this.props.editArtifact(artifact);
       }
       this.setState({ descEdit: !this.state.descEdit });
     }
   },
   render: function render() {
     var info = { name: "-", device_type: "-", build_date: "-", modified: "-", size: "-", checksum: "-", devices: "-", description: "-" };
-    if (this.props.image) {
-      for (var key in this.props.image) {
-        if (this.props.image[key]) {
-          info[key] = this.props.image[key];
+    if (this.props.artifact) {
+      for (var key in this.props.artifact) {
+        if (this.props.artifact[key]) {
+          info[key] = this.props.artifact[key];
         };
         if (key.indexOf("modified") !== -1) {
-          info[key] = _react2.default.createElement(_reactTime2.default, { style: { position: "relative", top: "4px" }, value: this.props.formatTime(this.props.image[key]), format: 'YYYY-MM-DD HH:mm' });
+          info[key] = _react2.default.createElement(_reactTime2.default, { style: { position: "relative", top: "4px" }, value: this.props.formatTime(this.props.artifact[key]), format: 'YYYY-MM-DD HH:mm' });
         }
       }
     }
@@ -88902,7 +88902,7 @@ var SelectedImage = _react2.default.createClass({
 
     var editButtonDesc = _react2.default.createElement(
       _IconButton2.default,
-      { className: 'hidden', iconStyle: styles.editButton, style: { position: "absolute", right: "0", bottom: "8px" }, onClick: this._descEdit.bind(null, this.props.image), iconClassName: 'material-icons' },
+      { className: 'hidden', iconStyle: styles.editButton, style: { position: "absolute", right: "0", bottom: "8px" }, onClick: this._descEdit.bind(null, this.props.artifact), iconClassName: 'material-icons' },
       this.state.descEdit ? "check" : "edit"
     );
 
@@ -88912,7 +88912,7 @@ var SelectedImage = _react2.default.createClass({
       style: { width: "100%", height: "38px", marginTop: "-8px" }, inputStyle: { marginTop: "0" },
       multiLine: true, rowsMax: 2, ref: 'description',
       defaultValue: info.description,
-      onKeyDown: this._descEdit.bind(null, this.props.image) });
+      onKeyDown: this._descEdit.bind(null, this.props.artifact) });
 
     var devicesFilter = "artifact_name=" + info.name;
     devicesFilter = encodeURIComponent(devicesFilter);
@@ -88931,7 +88931,7 @@ var SelectedImage = _react2.default.createClass({
       )
     );
 
-    var files = this.props.image.updates[0].files || [];
+    var files = this.props.artifact.updates[0].files || [];
 
     var fileDetails = files.map(function (file, index) {
 
@@ -88953,7 +88953,7 @@ var SelectedImage = _react2.default.createClass({
 
     return _react2.default.createElement(
       'div',
-      { className: this.props.image.name == null ? "muted" : null },
+      { className: this.props.artifact.name == null ? "muted" : null },
       _react2.default.createElement(
         'h3',
         { className: 'margin-bottom-none' },
@@ -88964,7 +88964,7 @@ var SelectedImage = _react2.default.createClass({
         null,
         _react2.default.createElement(
           'div',
-          { className: 'image-list list-item' },
+          { className: 'artifact-list list-item' },
           _react2.default.createElement(
             'div',
             { style: { padding: "9px 0" } },
@@ -88999,7 +88999,7 @@ var SelectedImage = _react2.default.createClass({
         ),
         _react2.default.createElement(
           'div',
-          { className: 'image-list list-item' },
+          { className: 'artifact-list list-item' },
           _react2.default.createElement(
             _List.List,
             { style: { backgroundColor: "rgba(255,255,255,0)" } },
@@ -89019,7 +89019,7 @@ var SelectedImage = _react2.default.createClass({
         ),
         _react2.default.createElement(
           'div',
-          { className: 'image-list list-item', style: { width: "320px" } },
+          { className: 'artifact-list list-item', style: { width: "320px" } },
           _react2.default.createElement(
             _List.List,
             { style: { backgroundColor: "rgba(255,255,255,0)", paddingTop: "16px" } },
@@ -89029,7 +89029,7 @@ var SelectedImage = _react2.default.createClass({
               _react2.default.createElement(_List.ListItem, {
                 style: styles.listStyle,
                 primaryText: 'Create a deployment using this artifact',
-                onClick: this._clickImageSchedule,
+                onClick: this._clickArtifactSchedule,
                 leftIcon: _react2.default.createElement(
                   _FontIcon2.default,
                   { style: { marginTop: 6, marginBottom: 6 }, className: 'material-icons update' },
@@ -89054,11 +89054,11 @@ var SelectedImage = _react2.default.createClass({
   }
 });
 
-SelectedImage.contextTypes = {
+SelectedArtifact.contextTypes = {
   router: _react2.default.PropTypes.object
 };
 
-module.exports = SelectedImage;
+module.exports = SelectedArtifact;
 
 },{"material-ui/Divider":226,"material-ui/FlatButton":233,"material-ui/FontIcon":237,"material-ui/IconButton":242,"material-ui/List":250,"material-ui/TextField":305,"react":650,"react-router":586,"react-time":617}],780:[function(require,module,exports){
 'use strict';
@@ -89099,7 +89099,7 @@ var Software = _react2.default.createClass({
     AppStore.changeListener(this._onChange);
   },
   componentDidMount: function componentDidMount() {
-    this._getImages();
+    this._getArtifacts();
     this._getGroups();
     this._getDevices();
   },
@@ -89114,28 +89114,28 @@ var Software = _react2.default.createClass({
     if (this.props.params) {
       if (this.props.params.softwareVersion) {
         // selected software
-        var image = AppStore.getSoftwareImage("name", this.props.params.softwareVersion);
-        this.setState({ selected: image });
+        var artifact = AppStore.getSoftwareArtifact("name", this.props.params.softwareVersion);
+        this.setState({ selected: artifact });
       }
     }
   },
   _startLoading: function _startLoading(bool) {
     this.setState({ doneLoading: !bool });
   },
-  _getImages: function _getImages() {
+  _getArtifacts: function _getArtifacts() {
     var callback = {
-      success: function (images) {
+      success: function (artifacts) {
         setTimeout(function () {
-          this.setState({ doneLoading: true, software: images });
+          this.setState({ doneLoading: true, software: artifacts });
         }.bind(this), 300);
       }.bind(this),
       error: function (err) {
         var errormsg = err || "Please check your connection";
-        AppActions.setSnackbar("Images couldn't be loaded. " + errormsg);
+        AppActions.setSnackbar("Artifacts couldn't be loaded. " + errormsg);
         this.setState({ doneLoading: true });
       }.bind(this)
     };
-    AppActions.getImages(callback);
+    AppActions.getArtifacts(callback);
   },
   _getGroups: function _getGroups() {
     var callback = {
@@ -89192,16 +89192,16 @@ var Software = _react2.default.createClass({
     }
   },
   render: function render() {
-    var image_link = _react2.default.createElement(
+    var artifact_link = _react2.default.createElement(
       'span',
       null,
-      'Download latest image',
+      'Download latest artifact',
       _react2.default.createElement(
         'a',
         { href: 'https://s3-eu-west-1.amazonaws.com/yocto-builds/latest/latest.tar.gz', target: '_blank' },
         ' here '
       ),
-      'and upload the image file to the Mender server'
+      'and upload the artifact file to the Mender server'
     );
 
     return _react2.default.createElement(
@@ -89210,7 +89210,7 @@ var Software = _react2.default.createClass({
       _react2.default.createElement(
         'div',
         { className: 'relative overflow-hidden' },
-        _react2.default.createElement(Repository, { groupDevices: this.state.groupDevices, allDevices: this.state.allDevices, refreshImages: this._getImages, startLoader: this._startLoading, loading: !this.state.doneLoading, setStorage: this._setStorage, selected: this.state.selected, software: this.state.software, groups: this.state.groups, hasPending: this.state.hasPending, hasDevices: this.state.hasDevices })
+        _react2.default.createElement(Repository, { groupDevices: this.state.groupDevices, allDevices: this.state.allDevices, refreshArtifacts: this._getArtifacts, startLoader: this._startLoading, loading: !this.state.doneLoading, setStorage: this._setStorage, selected: this.state.selected, software: this.state.software, groups: this.state.groups, hasPending: this.state.hasPending, hasDevices: this.state.hasDevices })
       ),
       _react2.default.createElement(_Snackbar2.default, {
         open: this.state.snackbar.open,
@@ -89307,9 +89307,9 @@ module.exports = {
   REMOVE_DEPLOYMENT: 'REMOVE_DEPLOYMENT',
   SORT_TABLE: 'SORT_TABLE',
   UPDATE_DEVICE_TAGS: 'UPDATE_DEVICE_TAGS',
-  RECEIVE_IMAGES: 'RECEIVE_IMAGES',
-  UPLOAD_IMAGE: 'UPLOAD_IMAGE',
-  SET_DEPLOYMENT_IMAGE: 'SET_DEPLOYMENT_IMAGE',
+  RECEIVE_ARTIFACTS: 'RECEIVE_ARTIFACTS',
+  UPLOAD_ARTIFACT: 'UPLOAD_ARTIFACT',
+  SET_DEPLOYMENT_ARTIFACT: 'SET_DEPLOYMENT_ARTIFACT',
   RECEIVE_DEPLOYMENTS: 'RECEIVE_DEPLOYMENTS',
   RECEIVE_ACTIVE_DEPLOYMENTS: 'RECEIVE_ACTIVE_DEPLOYMENTS',
   RECEIVE_PAST_DEPLOYMENTS: 'RECEIVE_PAST_DEPLOYMENTS',
@@ -89379,7 +89379,7 @@ var CHANGE_EVENT = "change";
 
 var _softwareRepo = [];
 var _currentGroup = null;
-var _deploymentImage = null;
+var _deploymentArtifact = null;
 var _currentGroupDevices = [];
 var _totalNumberDevices;
 var _selectedDevices = [];
@@ -89585,12 +89585,12 @@ function discoverDevices(array) {
   return array;
 }
 
-function _uploadImage(image) {
-  if (image.id) {
-    _softwareRepo[findWithAttr(_softwareRepo, "id", image.id)] = image;
+function _uploadArtifact(artifact) {
+  if (artifact.id) {
+    _softwareRepo[findWithAttr(_softwareRepo, "id", artifact.id)] = artifact;
   } else {
-    image.id = _softwareRepo.length + 1;
-    _softwareRepo.push(image);
+    artifact.id = _softwareRepo.length + 1;
+    _softwareRepo.push(artifact);
   }
 }
 
@@ -89643,14 +89643,14 @@ function _sortDeploymentDevices(devices) {
     pending: [],
     rebooting: [],
     installing: [],
-    noimage: [],
+    noartifact: [],
     failure: []
   };
   for (var i = 0; i < devices.length; i++) {
     newList[devices[i].status].push(devices[i]);
   }
 
-  var newCombine = newList.successful.concat(newList.inprogress, newList.pending, newList.rebooting, newList.installing, newList.noimage, newList.failure);
+  var newCombine = newList.successful.concat(newList.inprogress, newList.pending, newList.rebooting, newList.installing, newList.noartifact, newList.failure);
   return newCombine;
 }
 
@@ -89713,9 +89713,9 @@ function startTimeSortAscend(a, b) {
 /*
 * API STARTS HERE
 */
-function setImages(images) {
-  if (images) {
-    _softwareRepo = images;
+function setArtifacts(artifacts) {
+  if (artifacts) {
+    _softwareRepo = artifacts;
   }
   _softwareRepo.sort(customSort(1, "modified"));
 }
@@ -89787,8 +89787,8 @@ function setGroups(groups) {
   }
 }
 
-function setDeploymentImage(image) {
-  _deploymentImage = image;
+function setDeploymentArtifact(artifact) {
+  _deploymentArtifact = artifact;
 }
 
 function setHealth(devices) {
@@ -89837,9 +89837,9 @@ var AppStore = assign(EventEmitter.prototype, {
     return _currentGroup;
   },
 
-  getDeploymentImage: function getDeploymentImage() {
-    // for use when switching tab from images to create a deployment
-    return _deploymentImage;
+  getDeploymentArtifact: function getDeploymentArtifact() {
+    // for use when switching tab from artifacts to create a deployment
+    return _deploymentArtifact;
   },
 
   getAllDevices: function getAllDevices() {
@@ -89898,9 +89898,9 @@ var AppStore = assign(EventEmitter.prototype, {
     return discoverDevices(_softwareRepo);
   },
 
-  getSoftwareImage: function getSoftwareImage(attr, val) {
+  getSoftwareArtifact: function getSoftwareArtifact(attr, val) {
     /*
-    * Return single image by attr
+    * Return single artifact by attr
     */
     return _softwareRepo[findWithAttr(_softwareRepo, attr, val)];
   },
@@ -90004,8 +90004,8 @@ var AppStore = assign(EventEmitter.prototype, {
       case AppConstants.ADD_GROUP:
         _addGroup(payload.action.group, payload.action.index);
         break;
-      case AppConstants.UPLOAD_IMAGE:
-        _uploadImage(payload.action.image);
+      case AppConstants.UPLOAD_ARTIFACT:
+        _uploadArtifact(payload.action.artifact);
         break;
       case AppConstants.UPDATE_FILTERS:
         updateFilters(payload.action.filters);
@@ -90025,8 +90025,8 @@ var AppStore = assign(EventEmitter.prototype, {
         break;
 
       /* API */
-      case AppConstants.RECEIVE_IMAGES:
-        setImages(payload.action.images);
+      case AppConstants.RECEIVE_ARTIFACTS:
+        setArtifacts(payload.action.artifacts);
         break;
 
       /* API */
@@ -90065,8 +90065,8 @@ var AppStore = assign(EventEmitter.prototype, {
         setGroups(payload.action.groups);
         break;
 
-      case AppConstants.SET_DEPLOYMENT_IMAGE:
-        setDeploymentImage(payload.action.image);
+      case AppConstants.SET_DEPLOYMENT_ARTIFACT:
+        setDeploymentArtifact(payload.action.artifact);
         break;
     }
 

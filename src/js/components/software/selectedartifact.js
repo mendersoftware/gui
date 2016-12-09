@@ -10,7 +10,7 @@ import FlatButton from 'material-ui/FlatButton';
 import IconButton from 'material-ui/IconButton';
 import TextField from 'material-ui/TextField';
 
-var SelectedImage = React.createClass({
+var SelectedArtifact = React.createClass({
   getInitialState: function() {
     return {
       descEdit: false
@@ -24,31 +24,31 @@ var SelectedImage = React.createClass({
     filters = encodeURIComponent(filters);
     this.props.history.push("/devices/:group/:filters", {filters: filters}, null);
   },
-  _clickImageSchedule: function() {
-    this.props.createDeployment(this.props.image);
+  _clickArtifactSchedule: function() {
+    this.props.createDeployment(this.props.artifact);
   },
-  _descEdit: function(image, event) {
+  _descEdit: function(artifact, event) {
     event.stopPropagation();
     if (event.keyCode === 13 || !event.keyCode) {
     
       if (this.state.descEdit) {
-        image.description = this.refs.description.getValue();
+        artifact.description = this.refs.description.getValue();
         // save change
-        this.props.editImage(image);
+        this.props.editArtifact(artifact);
       }
       this.setState({descEdit: !this.state.descEdit});
     }
   },
   render: function() {
     var info = {name: "-", device_type: "-", build_date: "-", modified: "-", size: "-", checksum: "-", devices: "-", description: "-"};
-    if (this.props.image) {
-      for (var key in this.props.image) {
-        if (this.props.image[key]) {
-          info[key] = this.props.image[key];
+    if (this.props.artifact) {
+      for (var key in this.props.artifact) {
+        if (this.props.artifact[key]) {
+          info[key] = this.props.artifact[key];
         };
         if (key.indexOf("modified")!==-1) {
           info[key] = (
-            <Time style={{position:"relative", top:"4px"}} value={this.props.formatTime(this.props.image[key])} format="YYYY-MM-DD HH:mm" />
+            <Time style={{position:"relative", top:"4px"}} value={this.props.formatTime(this.props.artifact[key])} format="YYYY-MM-DD HH:mm" />
           )
         }
       }
@@ -68,7 +68,7 @@ var SelectedImage = React.createClass({
     }
 
     var editButtonDesc = (
-      <IconButton className="hidden" iconStyle={styles.editButton} style={{position:"absolute", right:"0", bottom: "8px"}} onClick={this._descEdit.bind(null, this.props.image)} iconClassName="material-icons">
+      <IconButton className="hidden" iconStyle={styles.editButton} style={{position:"absolute", right:"0", bottom: "8px"}} onClick={this._descEdit.bind(null, this.props.artifact)} iconClassName="material-icons">
         {this.state.descEdit ? "check" : "edit"}
       </IconButton>
     );
@@ -80,7 +80,7 @@ var SelectedImage = React.createClass({
         style={{width:"100%", height:"38px", marginTop:"-8px" }} inputStyle={{ marginTop:"0" }}
         multiLine={true} rowsMax={2} ref="description" 
         defaultValue={info.description} 
-        onKeyDown={this._descEdit.bind(null, this.props.image)} />
+        onKeyDown={this._descEdit.bind(null, this.props.artifact)} />
     );
 
     var devicesFilter = "artifact_name="+info.name;
@@ -92,7 +92,7 @@ var SelectedImage = React.createClass({
       </div>
     );
 
-    var files = this.props.image.updates[0].files || [];
+    var files = this.props.artifact.updates[0].files || [];
 
     var fileDetails = files.map(function(file, index) {
 
@@ -113,11 +113,11 @@ var SelectedImage = React.createClass({
     }, this);
 
     return (
-      <div className={this.props.image.name == null ? "muted" : null}>
+      <div className={this.props.artifact.name == null ? "muted" : null}>
         <h3 className="margin-bottom-none">Artifact details</h3>
         <div>
 
-          <div className="image-list list-item">
+          <div className="artifact-list list-item">
      
             <div style={{padding:"9px 0"}}>
               <div style={{padding:"12px 16px 10px",  lineHeight:"12px", height:"74px"}}>
@@ -138,7 +138,7 @@ var SelectedImage = React.createClass({
             </List>
           </div>
 
-          <div className="image-list list-item">
+          <div className="artifact-list list-item">
             <List style={{backgroundColor: "rgba(255,255,255,0)"}}>
               <ListItem style={styles.listStyle} disabled={true} secondaryTextLines={2} primaryText="Device type compatibility" secondaryText={this.props.compatible} />
               <Divider />
@@ -153,13 +153,13 @@ var SelectedImage = React.createClass({
             </div>
           </div>
 
-          <div className="image-list list-item" style={{width:"320px"}}>
+          <div className="artifact-list list-item" style={{width:"320px"}}>
             <List style={{backgroundColor: "rgba(255,255,255,0)", paddingTop:"16px"}}>
               <div key="updateButton">
                 <ListItem
                   style={styles.listStyle}
                   primaryText="Create a deployment using this artifact"
-                  onClick={this._clickImageSchedule}
+                  onClick={this._clickArtifactSchedule}
                   leftIcon={<FontIcon style={{marginTop:6, marginBottom:6}} className="material-icons update">replay</FontIcon>} />
               </div>
               <Divider />
@@ -178,11 +178,11 @@ var SelectedImage = React.createClass({
   }
 });
 
-SelectedImage.contextTypes = {
+SelectedArtifact.contextTypes = {
   router: React.PropTypes.object,
 };
 
-module.exports = SelectedImage;
+module.exports = SelectedArtifact;
 
 
         

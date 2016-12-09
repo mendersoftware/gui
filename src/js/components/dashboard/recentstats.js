@@ -8,7 +8,7 @@ var RecentStats = React.createClass({
       stats: {
         "success": 0,
         "failure": 0,
-        "noimage": 0
+        "noartifact": 0
       }
     };
   },
@@ -31,8 +31,8 @@ var RecentStats = React.createClass({
           <div>{this.state.stats.success}</div>
           <span className="iconStatLabel">Successful</span>
         </div>
-        <div className={this.state.stats.noimage ? "skipped-text" : "hidden"}>
-          {this.state.stats.noimage} {pluralize("devices", this.state.stats.noimage)} {pluralize("was", this.state.stats.noimage)} skipped
+        <div className={this.state.stats.noartifact ? "skipped-text" : "hidden"}>
+          {this.state.stats.noartifact} {pluralize("devices", this.state.stats.noartifact)} {pluralize("was", this.state.stats.noartifact)} skipped
         </div>
       </div>
     );

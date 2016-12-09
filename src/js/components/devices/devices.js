@@ -25,7 +25,7 @@ function getState() {
     selectedDevices: AppStore.getSelectedDevices(),
     filters: AppStore.getFilters(),
     attributes: AppStore.getAttributes(),
-    images: AppStore.getSoftwareRepo(),
+    artifacts: AppStore.getSoftwareRepo(),
     snackbar: AppStore.getSnackbar(),
     devices: AppStore.getGroupDevices(),
     totalDevices: AppStore.getTotalDevices()
@@ -50,9 +50,9 @@ var Devices = React.createClass({
     this._refreshDevices();
     this._refreshGroups();
 
-    AppActions.getImages({
-      success: function(images) {
-        this.setState({images:images})
+    AppActions.getArtifacts({
+      success: function(artifacts) {
+        this.setState({artifacts:artifacts})
       }.bind(this)
     });
 
@@ -273,7 +273,7 @@ var Devices = React.createClass({
             filters={this.state.filters}
             attributes={this.state.attributes}
             onFilterChange={this._updateFilters}
-            images={this.state.images}
+            artifacts={this.state.artifacts}
             loading={this.state.devLoading}
             selectedDevices={this.state.selectedDevices}
             groups={this.state.groupsForList}

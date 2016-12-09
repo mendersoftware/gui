@@ -38,7 +38,7 @@ function getState() {
     past: AppStore.getPastDeployments(),
     progress: AppStore.getDeploymentsInProgress() || [],
     events: AppStore.getEventLog(),
-    images: AppStore.getSoftwareRepo(),
+    artifacts: AppStore.getSoftwareRepo(),
     groups: AppStore.getGroups(),
     allDevices: AppStore.getAllDevices(),
     invalid: true,
@@ -54,17 +54,17 @@ var Deployments = React.createClass({
     AppStore.changeListener(this._onChange);
   },
   componentDidMount: function() {
-    var image = AppStore.getDeploymentImage();
-    this.setState({image: image});
+    var artifact = AppStore.getDeploymentArtifact();
+    this.setState({artifact: artifact});
     this.timer = setInterval(this._refreshDeployments, 10000);
     this._refreshDeployments();
 
-    var imagesCallback = {
-      success: function (images) {
-        this.setState({images:images});
+    var artifactsCallback = {
+      success: function (artifacts) {
+        this.setState({artifacts:artifacts});
       }.bind(this)
     };
-    AppActions.getImages(imagesCallback);
+    AppActions.getArtifacts(artifactsCallback);
 
     AppActions.getDevices({
       success: function(devices) {
@@ -126,7 +126,7 @@ var Deployments = React.createClass({
     } else {
       this.setState({tabIndex:"progress"});
     }
-    AppActions.getImages();
+    AppActions.getArtifacts();
   },
   _refreshDeployments: function() {
     this._refreshInProgress();
@@ -207,7 +207,7 @@ var Deployments = React.createClass({
   dialogDismiss: function(ref) {
     this.setState({
       dialog: false,
-      image: null,
+      artifact: null,
       group: null
     });
   },
@@ -240,7 +240,7 @@ var Deployments = React.createClass({
     }
     var newDeployment = {
       name: decodeURIComponent(this.state.group) || "All devices",
-      artifact_name: this.state.image.name,
+      artifact_name: this.state.artifact.name,
       devices: ids
     }
 
@@ -273,16 +273,16 @@ var Deployments = React.createClass({
     tmp[attr] = val;
     this.setState(tmp);
     var group = (attr==="group") ? val : this.state.group;
-    var image = (attr==="image") ? val : this.state.image;
-    this._getDeploymentDevices(group, image);
+    var artifact = (attr==="artifact") ? val : this.state.artifact;
+    this._getDeploymentDevices(group, artifact);
   },
-  _getDeploymentDevices: function(group, image) {
+  _getDeploymentDevices: function(group, artifact) {
     var devices = [];
     var filteredDevices = [];
     // set the selected groups devices to state, to be sent down to the child schedule form
-    if (image && group) {
+    if (artifact && group) {
       devices = (group!=="All devices") ? this.state[group] : this.state.allDevices;
-      filteredDevices = AppStore.filterDevicesByType(devices, image.device_types_compatible);
+      filteredDevices = AppStore.filterDevicesByType(devices, artifact.device_types_compatible);
     }
     console.log("setting state", filteredDevices);
     this.setState({deploymentDevices: devices, filteredDevices: filteredDevices});
@@ -302,7 +302,7 @@ var Deployments = React.createClass({
   _scheduleDeployment: function (deployment) {
     this.setState({dialog:false});
  
-    var image = '';
+    var artifact = '';
     var group = '';
     var start_time = null;
     var end_time = null;
@@ -312,7 +312,7 @@ var Deployments = React.createClass({
         id = deployment.id;
       }
       if (deployment.artifact_name) {
-        image = AppStore.getSoftwareImage('name', deployment.artifact_name);
+        artifact = AppStore.getSoftwareArtifact('name', deployment.artifact_name);
       }
       if (deployment.group) {
         group = AppStore.getSingleGroup('name', deployment.group);
@@ -324,7 +324,7 @@ var Deployments = React.createClass({
         end_time = deployment.end_time;
       }
     }
-    this.setState({scheduleForm:true, imageVal:image, id:id, start_time:start_time, end_time:end_time, image:image, group:group, groupVal:group});
+    this.setState({scheduleForm:true, artifactVal:artifact, id:id, start_time:start_time, end_time:end_time, artifact:artifact, group:group, groupVal:group});
     this.dialogOpen("schedule");
   },
   _scheduleRemove: function(id) {
@@ -357,7 +357,7 @@ var Deployments = React.createClass({
 
     if (this.state.scheduleForm) {
       dialogContent = (    
-        <ScheduleForm deploymentDevices={this.state.deploymentDevices} filteredDevices={this.state.filteredDevices} hasPending={this.state.hasPending} hasDevices={this.state.hasDevices} deploymentSettings={this._deploymentParams} id={this.state.id} images={this.state.images} image={this.state.image} groups={this.state.groups} group={this.state.group} />
+        <ScheduleForm deploymentDevices={this.state.deploymentDevices} filteredDevices={this.state.filteredDevices} hasPending={this.state.hasPending} hasDevices={this.state.hasDevices} deploymentSettings={this._deploymentParams} id={this.state.id} artifacts={this.state.artifacts} artifact={this.state.artifact} groups={this.state.groups} group={this.state.group} />
       )
     } else {
       dialogContent = (

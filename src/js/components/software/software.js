@@ -24,7 +24,7 @@ var Software = React.createClass({
     AppStore.changeListener(this._onChange);
   },
   componentDidMount: function() {
-    this._getImages();
+    this._getArtifacts();
     this._getGroups();
     this._getDevices();
   },
@@ -39,28 +39,28 @@ var Software = React.createClass({
     if (this.props.params) {
       if (this.props.params.softwareVersion) {
         // selected software
-        var image = AppStore.getSoftwareImage("name", this.props.params.softwareVersion);
-        this.setState({selected: image});
+        var artifact = AppStore.getSoftwareArtifact("name", this.props.params.softwareVersion);
+        this.setState({selected: artifact});
       }
     }
   },
   _startLoading: function(bool) {
      this.setState({doneLoading: !bool});
   },
-  _getImages: function() {
+  _getArtifacts: function() {
     var callback = {
-      success: function(images) {
+      success: function(artifacts) {
         setTimeout(function() {
-          this.setState({doneLoading: true, software:images});
+          this.setState({doneLoading: true, software:artifacts});
         }.bind(this), 300);
       }.bind(this),
       error: function(err) {
         var errormsg = err || "Please check your connection";
-        AppActions.setSnackbar("Images couldn't be loaded. " +errormsg);
+        AppActions.setSnackbar("Artifacts couldn't be loaded. " +errormsg);
         this.setState({doneLoading: true});
       }.bind(this)
     };
-    AppActions.getImages(callback);
+    AppActions.getArtifacts(callback);
   },
   _getGroups: function() {
     var callback = {
@@ -117,18 +117,18 @@ var Software = React.createClass({
     }
   },
   render: function() {
-    var image_link = (
+    var artifact_link = (
       <span>
-        Download latest image 
+        Download latest artifact 
         <a href='https://s3-eu-west-1.amazonaws.com/yocto-builds/latest/latest.tar.gz' target='_blank'> here </a>
-         and upload the image file to the Mender server
+         and upload the artifact file to the Mender server
       </span>
     );
     
     return (
       <div className="contentContainer">
         <div className="relative overflow-hidden">
-          <Repository groupDevices={this.state.groupDevices} allDevices={this.state.allDevices} refreshImages={this._getImages} startLoader={this._startLoading} loading={!this.state.doneLoading} setStorage={this._setStorage} selected={this.state.selected} software={this.state.software} groups={this.state.groups} hasPending={this.state.hasPending} hasDevices={this.state.hasDevices} />
+          <Repository groupDevices={this.state.groupDevices} allDevices={this.state.allDevices} refreshArtifacts={this._getArtifacts} startLoader={this._startLoading} loading={!this.state.doneLoading} setStorage={this._setStorage} selected={this.state.selected} software={this.state.software} groups={this.state.groups} hasPending={this.state.hasPending} hasDevices={this.state.hasDevices} />
         </div>
         <Snackbar
           open={this.state.snackbar.open}

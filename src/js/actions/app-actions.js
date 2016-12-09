@@ -1,6 +1,6 @@
 var AppConstants = require('../constants/app-constants');
 var AppDispatcher = require('../dispatchers/app-dispatcher');
-var ImagesApi = require('../api/images-api');
+var ArtifactsApi = require('../api/artifacts-api');
 var DeploymentsApi = require('../api/deployments-api');
 var DevicesApi = require('../api/devices-api');
 var rootUrl = "https://localhost:8080";
@@ -261,29 +261,29 @@ var AppActions = {
 
 
 
-  /* Images */
-  getImages: function(callback) {
-    ImagesApi
-      .get(deploymentsApiUrl+'/images')
-      .then(function(images) {
+  /* Artifacts */
+  getArtifacts: function(callback) {
+    ArtifactsApi
+      .get(deploymentsApiUrl+'/artifacts')
+      .then(function(artifacts) {
         AppDispatcher.handleViewAction({
-          actionType: AppConstants.RECEIVE_IMAGES,
-          images: images
+          actionType: AppConstants.RECEIVE_ARTIFACTS,
+          artifacts: artifacts
         });
-        callback.success(images);
+        callback.success(artifacts);
       })
       .catch(function(err) {
         callback.error(err);
       });
   },
 
-  uploadImage: function(meta, file, callback) {
+  uploadArtifact: function(meta, file, callback) {
     var formData = new FormData();
     formData.append('name', meta.name)
     formData.append('description', meta.description)
     formData.append('firmware', file)
-    ImagesApi
-      .postFormData(deploymentsApiUrl+'/images', formData)
+    ArtifactsApi
+      .postFormData(deploymentsApiUrl+'/artifacts', formData)
       .then(function(data) {
         callback.success(data);
       })
@@ -292,18 +292,18 @@ var AppActions = {
       });
   },
 
-  editImage: function(image, callback) {
-    ImagesApi
-      .putJSON(deploymentsApiUrl + "/images/" + image.id, image)
+  editArtifact: function(artifact, callback) {
+    ArtifactsApi
+      .putJSON(deploymentsApiUrl + "/artifacts/" + artifact.id, artifact)
       .then(function(res) {
         callback();
       });
   },
 
-  setDeploymentImage: function(image) {
+  setDeploymentArtifact: function(artifact) {
     AppDispatcher.handleViewAction({
-      actionType: AppConstants.SET_DEPLOYMENT_IMAGE,
-      image: image
+      actionType: AppConstants.SET_DEPLOYMENT_ARTIFACT,
+      artifact: artifact
     });
   },
 
