@@ -83056,7 +83056,7 @@ var RecentStats = _react2.default.createClass({
       stats: {
         "success": 0,
         "failure": 0,
-        "noimage": 0
+        "noartifact": 0
       }
     };
   },
@@ -83102,12 +83102,12 @@ var RecentStats = _react2.default.createClass({
       ),
       _react2.default.createElement(
         'div',
-        { className: this.state.stats.noimage ? "skipped-text" : "hidden" },
-        this.state.stats.noimage,
+        { className: this.state.stats.noartifact ? "skipped-text" : "hidden" },
+        this.state.stats.noartifact,
         ' ',
-        pluralize("devices", this.state.stats.noimage),
+        pluralize("devices", this.state.stats.noartifact),
         ' ',
-        pluralize("was", this.state.stats.noimage),
+        pluralize("was", this.state.stats.noartifact),
         ' skipped'
       )
     );
@@ -83705,7 +83705,7 @@ var DeploymentStatus = _react2.default.createClass({
         "downloading": 0,
         "installing": 0,
         "rebooting": 0,
-        "noimage": 0
+        "noartifact": 0
       }
     };
   },
@@ -84325,7 +84325,7 @@ var ProgressChart = _react2.default.createClass({
         "downloading": 0,
         "failure": 0,
         "installing": 0,
-        "noimage": 0,
+        "noartifact": 0,
         "pending": 0,
         "rebooting": 0,
         "success": 0
@@ -84366,7 +84366,7 @@ var ProgressChart = _react2.default.createClass({
     this.setState({ device: device });
   },
   render: function render() {
-    var totalDevices = this.state.stats.success + this.state.stats.failure + this.state.stats.downloading + this.state.stats.installing + this.state.stats.rebooting + this.state.stats.noimage + this.state.stats.pending;
+    var totalDevices = this.state.stats.success + this.state.stats.failure + this.state.stats.downloading + this.state.stats.installing + this.state.stats.rebooting + this.state.stats.noartifact + this.state.stats.pending;
 
     var success = this.state.stats.success;
     var failures = this.state.stats.failure;
@@ -89585,14 +89585,14 @@ function _sortDeploymentDevices(devices) {
     pending: [],
     rebooting: [],
     installing: [],
-    noimage: [],
+    noartifact: [],
     failure: []
   };
   for (var i = 0; i < devices.length; i++) {
     newList[devices[i].status].push(devices[i]);
   }
 
-  var newCombine = newList.successful.concat(newList.inprogress, newList.pending, newList.rebooting, newList.installing, newList.noimage, newList.failure);
+  var newCombine = newList.successful.concat(newList.inprogress, newList.pending, newList.rebooting, newList.installing, newList.noartifact, newList.failure);
   return newCombine;
 }
 

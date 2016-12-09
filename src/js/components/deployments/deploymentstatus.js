@@ -14,7 +14,7 @@ var DeploymentStatus = React.createClass({
         "downloading": 0,
         "installing": 0,
         "rebooting": 0,
-        "noimage": 0
+        "noartifact": 0
       }
     };
   },
