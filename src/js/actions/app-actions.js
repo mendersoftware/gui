@@ -281,7 +281,7 @@ var AppActions = {
     var formData = new FormData();
     formData.append('name', meta.name)
     formData.append('description', meta.description)
-    formData.append('firmware', file)
+    formData.append('artifact', file)
     ArtifactsApi
       .postFormData(deploymentsApiUrl+'/artifacts', formData)
       .then(function(data) {
