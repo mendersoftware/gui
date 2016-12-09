@@ -10,7 +10,7 @@ import Form from '../common/forms/form';
 import FileInput from '../common/forms/fileinput';
 import TextInput from '../common/forms/textinput';
 import DeploymentButton from './deploymentbutton';
-import SelectedImage from './selectedimage';
+import SelectedArtifact from './selectedartifact';
 import { Router, Route, Link } from 'react-router';
 import { Motion, spring } from 'react-motion';
 import Collapse from 'react-collapse';
@@ -32,7 +32,7 @@ var software = [];
 var Repository = React.createClass({
   getInitialState: function() {
     return {
-      image: {
+      artifact: {
         name: null,
         description: null,
         device_types: null
@@ -41,7 +41,7 @@ var Repository = React.createClass({
       sortDown: true,
       searchTerm: null,
       upload: false,
-      popupLabel: "Upload a new image",
+      popupLabel: "Upload a new artifact",
       software: [],
       tmpFile: null,
       snackMessage: "Deployment created",
@@ -54,21 +54,21 @@ var Repository = React.createClass({
   componentWillReceiveProps: function(nextProps) {
     software = nextProps.software;
     if (nextProps.selected) {
-      this.setState({image: nextProps.selected});
+      this.setState({artifact: nextProps.selected});
     }
   },
 
-  _resetImageState: function () {
-    var image = {
+  _resetArtifactState: function () {
+    var artifact = {
       name: null,
       description: null,
       artifact_name: null,
       device_types: null
     };
-    this.setState({image: image});
+    this.setState({artifact: artifact});
   },
-  _createDeployment: function(image) {
-    AppActions.setDeploymentImage(image);
+  _createDeployment: function(artifact) {
+    AppActions.setDeploymentArtifact(artifact);
     var URIParams = "open=true";
     URIParams = encodeURIComponent(URIParams);
     this.redirect(URIParams);
@@ -88,39 +88,39 @@ var Repository = React.createClass({
   },
   _onUploadSubmit: function(meta) {
     var self = this;
-    var tmpFile = meta.imageFile;
-    delete meta.imageFile;
+    var tmpFile = meta.artifactFile;
+    delete meta.artifactFile;
     delete meta.verified;
 
     var callback = {
       success: function(result) {
-        self.props.refreshImages();
+        self.props.refreshArtifacts();
       },
       error: function(err) {
-        AppActions.setSnackbar("Image couldn't be uploaded. "+err);
+        AppActions.setSnackbar("Artifact couldn't be uploaded. "+err);
         self.props.startLoader(false);
       }
     };
 
-    AppActions.uploadImage(meta, tmpFile, callback);
+    AppActions.uploadArtifact(meta, tmpFile, callback);
     this.props.startLoader(true);
-    this._resetImageState();
+    this._resetArtifactState();
     this.dialogDismiss('upload');
   },
-  _editImageData: function (image) {
-    AppActions.editImage(image, function() {
-      AppActions.getImages();
+  _editArtifactData: function (artifact) {
+    AppActions.editArtifact(artifact, function() {
+      AppActions.getArtifacts();
     });
-    this.setState({image:image});
+    this.setState({artifact:artifact});
   },
 
   _onRowSelection: function(rowNumber, columnId) {
-    var image = software[rowNumber];
+    var artifact = software[rowNumber];
     if (columnId<=4) {
-      if (this.state.image === image) {
-        this._resetImageState();
+      if (this.state.artifact === artifact) {
+        this._resetArtifactState();
       } else {
-        this.setState({image:image});
+        this.setState({artifact:artifact});
       }
     }
   },
@@ -140,15 +140,15 @@ var Repository = React.createClass({
     AppActions.sortTable("_softwareRepo", col, direction);
   },
   searchUpdated: function(term) {
-    this.setState({searchTerm: term, image: {}}); // needed to force re-render
+    this.setState({searchTerm: term, artifact: {}}); // needed to force re-render
   },
-  _openUpload: function(ref, image) {
-    if (image) {
-      this.setState({popupLabel: "Edit image details"});
-      newState = image;
+  _openUpload: function(ref, artifact) {
+    if (artifact) {
+      this.setState({popupLabel: "Edit artifact details"});
+      newState = artifact;
     } else {
-      this._resetImageState();
-      this.setState({popupLabel: "Upload a new image"});
+      this._resetArtifactState();
+      this.setState({popupLabel: "Upload a new artifact"});
     }
     this.dialogOpen('upload');
   },
@@ -206,12 +206,12 @@ var Repository = React.createClass({
     var items = tmpSoftware.map(function(pkg, index) {
       var compatible = pkg.device_types_compatible.join(", ");
       var expanded = '';
-      if (this.state.image.name === pkg.name ) {
-        expanded = <SelectedImage compatible={compatible} formatTime={this._formatTime} editImage={this._editImageData} buttonStyle={styles.flatButtonIcon} image={this.state.image} createDeployment={this._createDeployment} />
+      if (this.state.artifact.name === pkg.name ) {
+        expanded = <SelectedArtifact compatible={compatible} formatTime={this._formatTime} editArtifact={this._editArtifactData} buttonStyle={styles.flatButtonIcon} artifact={this.state.artifact} createDeployment={this._createDeployment} />
       }
      
       return (
-        <TableRow hoverable={this.state.image.name !== pkg.name} className={this.state.image.name === pkg.name ? "expand" : null} key={index} >
+        <TableRow hoverable={this.state.artifact.name !== pkg.name} className={this.state.artifact.name === pkg.name ? "expand" : null} key={index} >
           <TableRowColumn style={expanded ? {height: this.state.divHeight} : null}>{pkg.name}</TableRowColumn>
           <TableRowColumn>{compatible}</TableRowColumn>
           <TableRowColumn><Time value={this._formatTime(pkg.modified)} format="YYYY-MM-DD HH:mm" /></TableRowColumn>
@@ -231,7 +231,7 @@ var Repository = React.createClass({
       <div>
 
         <div className="top-right-button">
-          <RaisedButton key="file_upload" onClick={this._openUpload.bind(null,"upload", null)} label="Upload image file" labelPosition="after" secondary={true}>
+          <RaisedButton key="file_upload" onClick={this._openUpload.bind(null,"upload", null)} label="Upload artifact file" labelPosition="after" secondary={true}>
             <FontIcon style={styles.buttonIcon} className="material-icons">file_upload</FontIcon>
           </RaisedButton>
         </div>
@@ -266,8 +266,8 @@ var Repository = React.createClass({
           </Table>
 
           <div className={(items.length || this.props.loading) ? "hidden" : "dashboard-placeholder" }>
-            <p>No images found. <a onClick={this._openUpload.bind(null,"upload", null)}>Upload an image</a> to the repository</p>
-            <img src="assets/img/images.png" alt="images" />
+            <p>No artifacts found. <a onClick={this._openUpload.bind(null,"upload", null)}>Upload an artifact</a> to the repository</p>
+            <img src="assets/img/artifacts.png" alt="artifacts" />
           </div>
         </div>
 
@@ -284,15 +284,15 @@ var Repository = React.createClass({
             <Form dialogDismiss={this.dialogDismiss} onSubmit={this._onUploadSubmit}>
 
               <FileInput 
-                id="imageFile"
-                placeholder="Upload image"
+                id="artifactFile"
+                placeholder="Upload artifact"
                 required={true}
                 file={true}
                 accept=".mender"
                 validations="isLength:1" />
 
               <TextInput
-                value={this.state.image.name}
+                value={this.state.artifact.name}
                 hint="Name"
                 label="Name"
                 id="name"
@@ -305,7 +305,7 @@ var Repository = React.createClass({
                 label="Description"
                 multiLine={true}
                 className="margin-bottom-small"
-                value={this.state.image.description} />
+                value={this.state.artifact.description} />
 
             </Form>
           </div>

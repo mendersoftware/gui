@@ -37,7 +37,7 @@ var SelectedDevices = React.createClass({
     var state = {};
     state[ref] = !this.state[ref];
     this.setState(state);
-    this.setState({filterByImage:null, image:null});
+    this.setState({filterByArtifact:null, artifact:null});
   },
 
   _updateParams: function(val, attr) {
@@ -57,7 +57,7 @@ var SelectedDevices = React.createClass({
     var newDeployment = {
       devices: [this.props.device.id],
       name: this.props.device.id,
-      artifact_name: this.state.image.name
+      artifact_name: this.state.artifact.name
     }
     var callback = {
       success: function() {
@@ -89,7 +89,7 @@ var SelectedDevices = React.createClass({
     this.setState(tmp);
 
     // check that device type matches
-    if (attr==='image') {
+    if (attr==='artifact') {
       var filteredDevs = null;
       for (var i = 0; i<val.device_types_compatible.length; i++) {
         if (val.device_types_compatible[i] === this.props.device_type) {
@@ -98,7 +98,7 @@ var SelectedDevices = React.createClass({
         }
       }
     }
-    this.setState({filterByImage:filteredDevs});
+    this.setState({filterByArtifact:filteredDevs});
   },
   render: function() {
    
@@ -220,7 +220,7 @@ var SelectedDevices = React.createClass({
       <RaisedButton
         label="Create deployment"
         primary={true}
-        disabled={!this.state.filterByImage}
+        disabled={!this.state.filterByArtifact}
         onClick={this._onScheduleSubmit}
         ref="save" />
     ];
@@ -237,7 +237,7 @@ var SelectedDevices = React.createClass({
           bodyStyle={{paddingTop:"0", fontSize:"13px"}}
           contentStyle={{overflow:"hidden", boxShadow:"0 14px 45px rgba(0, 0, 0, 0.25), 0 10px 18px rgba(0, 0, 0, 0.22)"}}
           >
-          <ScheduleForm deploymentDevices={[this.props.device]} filteredDevices={this.state.filterByImage} deploymentSettings={this._deploymentParams} image={this.state.image} images={this.props.images} device={this.props.device} deploymentSchedule={this._updateParams} groups={this.props.groups} />
+          <ScheduleForm deploymentDevices={[this.props.device]} filteredDevices={this.state.filterByArtifact} deploymentSettings={this._deploymentParams} artifact={this.state.artifact} artifacts={this.props.artifacts} device={this.props.device} deploymentSchedule={this._updateParams} groups={this.props.groups} />
 
         </Dialog>
 

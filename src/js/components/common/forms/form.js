@@ -167,7 +167,7 @@ var Form = React.createClass({
         </div>
         <RaisedButton
           key="submit"
-          label="Save image"
+          label="Save artifact"
           primary={true}
           onClick={this.updateModel}
           disabled={!this.state.isValid} />

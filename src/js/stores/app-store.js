@@ -7,7 +7,7 @@ var CHANGE_EVENT = "change";
 
 var _softwareRepo = [];
 var _currentGroup = null;
-var _deploymentImage = null;
+var _deploymentArtifact = null;
 var _currentGroupDevices = [];
 var _totalNumberDevices;
 var _selectedDevices = [];
@@ -220,12 +220,12 @@ function discoverDevices(array) {
   return array;
 }
 
-function _uploadImage(image) {
-  if (image.id) {
-    _softwareRepo[findWithAttr(_softwareRepo, "id", image.id)] = image;
+function _uploadArtifact(artifact) {
+  if (artifact.id) {
+    _softwareRepo[findWithAttr(_softwareRepo, "id", artifact.id)] = artifact;
   } else {
-    image.id = _softwareRepo.length+1;
-    _softwareRepo.push(image);
+    artifact.id = _softwareRepo.length+1;
+    _softwareRepo.push(artifact);
   }
 }
 
@@ -280,14 +280,14 @@ function _sortDeploymentDevices(devices) {
     pending: [],
     rebooting: [],
     installing: [],
-    noimage:[],
+    noartifact:[],
     failure:[]
   };
   for (var i = 0; i<devices.length; i++) {
     newList[devices[i].status].push(devices[i]);
   }
 
-  var newCombine = newList.successful.concat(newList.inprogress, newList.pending, newList.rebooting, newList.installing, newList.noimage, newList.failure);
+  var newCombine = newList.successful.concat(newList.inprogress, newList.pending, newList.rebooting, newList.installing, newList.noartifact, newList.failure);
   return newCombine;
 }
 
@@ -356,9 +356,9 @@ function startTimeSortAscend(a,b) {
 /*
 * API STARTS HERE
 */
-function setImages(images) {
-  if (images) {
-     _softwareRepo = images;
+function setArtifacts(artifacts) {
+  if (artifacts) {
+     _softwareRepo = artifacts;
   }
   _softwareRepo.sort(customSort(1, "modified"));
 }
@@ -433,8 +433,8 @@ function setGroups(groups) {
   }
 }
 
-function setDeploymentImage(image) {
-  _deploymentImage = image;
+function setDeploymentArtifact(artifact) {
+  _deploymentArtifact = artifact;
 }
 
 function setHealth(devices) {
@@ -485,9 +485,9 @@ var AppStore = assign(EventEmitter.prototype, {
     return _currentGroup
   },
 
-  getDeploymentImage: function() {
-    // for use when switching tab from images to create a deployment
-    return _deploymentImage;
+  getDeploymentArtifact: function() {
+    // for use when switching tab from artifacts to create a deployment
+    return _deploymentArtifact;
   },
 
 
@@ -547,9 +547,9 @@ var AppStore = assign(EventEmitter.prototype, {
     return discoverDevices(_softwareRepo);
   },
 
-  getSoftwareImage: function(attr, val) {
+  getSoftwareArtifact: function(attr, val) {
     /*
-    * Return single image by attr
+    * Return single artifact by attr
     */
     return _softwareRepo[findWithAttr(_softwareRepo, attr, val)];
   },
@@ -653,8 +653,8 @@ var AppStore = assign(EventEmitter.prototype, {
       case AppConstants.ADD_GROUP:
         _addGroup(payload.action.group, payload.action.index);
         break;
-      case AppConstants.UPLOAD_IMAGE:
-        _uploadImage(payload.action.image);
+      case AppConstants.UPLOAD_ARTIFACT:
+        _uploadArtifact(payload.action.artifact);
         break;
       case AppConstants.UPDATE_FILTERS:
          updateFilters(payload.action.filters);
@@ -674,8 +674,8 @@ var AppStore = assign(EventEmitter.prototype, {
         break;
 
       /* API */
-      case AppConstants.RECEIVE_IMAGES:
-        setImages(payload.action.images);
+      case AppConstants.RECEIVE_ARTIFACTS:
+        setArtifacts(payload.action.artifacts);
         break;
 
       /* API */
@@ -714,8 +714,8 @@ var AppStore = assign(EventEmitter.prototype, {
         setGroups(payload.action.groups);
         break;
 
-      case AppConstants.SET_DEPLOYMENT_IMAGE:
-        setDeploymentImage(payload.action.image);
+      case AppConstants.SET_DEPLOYMENT_ARTIFACT:
+        setDeploymentArtifact(payload.action.artifact);
         break;
     }
     

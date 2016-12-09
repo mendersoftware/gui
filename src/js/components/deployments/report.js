@@ -70,11 +70,11 @@ var Report = React.createClass({
   _getDeviceDetails: function (devices) {
     var self = this;
     for (var i=0;i<devices.length;i++) {
-      // get device image details not listed in schedule data
+      // get device artifact details not listed in schedule data
       AppActions.getDeviceById(devices[i].id, {
         success: function(device) {
           var deviceSoftware = self.state.deviceSoftware || {};
-          deviceSoftware[device.id] = self._getDeviceImage(device);
+          deviceSoftware[device.id] = self._getDeviceArtifact(device);
           self.setState({deviceSoftware: deviceSoftware});
         },
         error: function(err) {
