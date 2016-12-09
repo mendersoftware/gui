@@ -264,7 +264,7 @@ var AppActions = {
   /* Images */
   getImages: function(callback) {
     ImagesApi
-      .get(deploymentsApiUrl+'/images')
+      .get(deploymentsApiUrl+'/artifacts')
       .then(function(images) {
         AppDispatcher.handleViewAction({
           actionType: AppConstants.RECEIVE_IMAGES,
@@ -281,9 +281,9 @@ var AppActions = {
     var formData = new FormData();
     formData.append('name', meta.name)
     formData.append('description', meta.description)
-    formData.append('firmware', file)
+    formData.append('artifact', file)
     ImagesApi
-      .postFormData(deploymentsApiUrl+'/images', formData)
+      .postFormData(deploymentsApiUrl+'/artifacts', formData)
       .then(function(data) {
         callback.success(data);
       })
@@ -294,7 +294,7 @@ var AppActions = {
 
   editImage: function(image, callback) {
     ImagesApi
-      .putJSON(deploymentsApiUrl + "/images/" + image.id, image)
+      .putJSON(deploymentsApiUrl + "/artifacts/" + image.id, image)
       .then(function(res) {
         callback();
       });

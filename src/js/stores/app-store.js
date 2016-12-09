@@ -280,14 +280,14 @@ function _sortDeploymentDevices(devices) {
     pending: [],
     rebooting: [],
     installing: [],
-    noimage:[],
+    noartifact:[],
     failure:[]
   };
   for (var i = 0; i<devices.length; i++) {
     newList[devices[i].status].push(devices[i]);
   }
 
-  var newCombine = newList.successful.concat(newList.inprogress, newList.pending, newList.rebooting, newList.installing, newList.noimage, newList.failure);
+  var newCombine = newList.successful.concat(newList.inprogress, newList.pending, newList.rebooting, newList.installing, newList.noartifact, newList.failure);
   return newCombine;
 }
 
