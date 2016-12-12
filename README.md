@@ -25,11 +25,18 @@ deployment definition, scheduling and monitoring, device listing and admission, 
 To start using Mender, we recommend that you begin with the Getting started
 section in [the Mender documentation](https://docs.mender.io/).
 
-
 ## Contributing
 
 We welcome and ask for your contribution. If you would like to contribute to Mender, please read our guide on how to best get started [contributing code or
 documentation](https://github.com/mendersoftware/mender/blob/master/CONTRIBUTING.md).
+
+## Development
+
+In order to develop the GUI code to contribute, it is required to 
+install [gulp](https://github.com/gulpjs/gulp) and all the dependencies in 
+package.json. Work on the files in 'src'. Running 'gulp' will watch for your 
+changes as you develop and build as you go. Always run 'gulp build' to build 
+the production code in 'dist' before you commit.
 
 ## License
 
