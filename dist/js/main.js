@@ -83269,6 +83269,7 @@ var AppActions = require('../../actions/app-actions');
 
 var Progress = require('./inprogressdeployments.js');
 var Past = require('./pastdeployments.js');
+var ProgressReport = require('./progressreport.js');
 var Schedule = require('./schedule.js');
 var EventLog = require('./eventlog.js');
 var ScheduleForm = require('./scheduleform.js');
@@ -83479,10 +83480,11 @@ var Deployments = _react2.default.createClass({
         contentClass: "dialog"
       });
     }
+    var title = this.state.tabIndex === "progress" ? "Deployment progress" : "Results of deployment";
     if (dialog === 'report') {
       this.setState({
         scheduleForm: false,
-        dialogTitle: "Results of deployment",
+        dialogTitle: title,
         contentClass: "largeDialog"
       });
     }
@@ -83593,6 +83595,10 @@ var Deployments = _react2.default.createClass({
   _handleRequestClose: function _handleRequestClose() {
     this._dismissSnackBar();
   },
+  _showProgress: function _showProgress(rowNumber) {
+    var deployment = this.state.progress[rowNumber];
+    this._showReport(deployment);
+  },
   render: function render() {
     var disabled = typeof this.state.filteredDevices !== 'undefined' && this.state.filteredDevices.length > 0 ? false : true;
     var scheduleActions = [_react2.default.createElement(
@@ -83614,6 +83620,8 @@ var Deployments = _react2.default.createClass({
 
     if (this.state.scheduleForm) {
       dialogContent = _react2.default.createElement(ScheduleForm, { deploymentDevices: this.state.deploymentDevices, filteredDevices: this.state.filteredDevices, hasPending: this.state.hasPending, hasDevices: this.state.hasDevices, deploymentSettings: this._deploymentParams, id: this.state.id, artifacts: this.state.artifacts, artifact: this.state.artifact, groups: this.state.groups, group: this.state.group });
+    } else if (this.state.tabIndex === "progress") {
+      dialogContent = _react2.default.createElement(ProgressReport, { deployment: this.state.selectedDeployment });
     } else {
       dialogContent = _react2.default.createElement(Report, { deployment: this.state.selectedDeployment, retryDeployment: this._scheduleDeployment });
     }
@@ -83633,7 +83641,7 @@ var Deployments = _react2.default.createClass({
             style: styles.tabs,
             label: "In progress",
             value: 'progress' },
-          _react2.default.createElement(Progress, { loading: !this.state.doneLoading, progress: this.state.progress, showReport: this._showReport, createClick: this.dialogOpen.bind(null, "schedule") })
+          _react2.default.createElement(Progress, { openReport: this._showProgress, loading: !this.state.doneLoading, progress: this.state.progress, createClick: this.dialogOpen.bind(null, "schedule") })
         ),
         _react2.default.createElement(
           _Tabs.Tab,
@@ -83678,7 +83686,7 @@ var Deployments = _react2.default.createClass({
 
 module.exports = Deployments;
 
-},{"../../actions/app-actions":739,"../../stores/app-store":785,"./eventlog.js":759,"./inprogressdeployments.js":761,"./pastdeployments.js":762,"./report.js":765,"./schedule.js":766,"./schedulebutton.js":767,"./scheduleform.js":768,"material-ui/Dialog":224,"material-ui/FlatButton":233,"material-ui/RaisedButton":267,"material-ui/Snackbar":276,"material-ui/Tabs":299,"react":650}],758:[function(require,module,exports){
+},{"../../actions/app-actions":739,"../../stores/app-store":785,"./eventlog.js":759,"./inprogressdeployments.js":761,"./pastdeployments.js":762,"./progressreport.js":764,"./report.js":765,"./schedule.js":766,"./schedulebutton.js":767,"./scheduleform.js":768,"material-ui/Dialog":224,"material-ui/FlatButton":233,"material-ui/RaisedButton":267,"material-ui/Snackbar":276,"material-ui/Tabs":299,"react":650}],758:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -83940,14 +83948,9 @@ var _FlatButton = require('material-ui/FlatButton');
 
 var _FlatButton2 = _interopRequireDefault(_FlatButton);
 
-var _Dialog = require('material-ui/Dialog');
-
-var _Dialog2 = _interopRequireDefault(_Dialog);
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var update = require('react-addons-update');
-var ProgressReport = require('./progressreport.js');
 var ScheduleForm = require('./scheduleform');
 var GroupDevices = require('./groupdevices');
 var DeploymentStatus = require('./deploymentstatus');
@@ -83962,9 +83965,7 @@ var Progress = _react2.default.createClass({
 
   getInitialState: function getInitialState() {
     return {
-      showReport: false,
-      retry: false,
-      report: null
+      retry: false
     };
   },
   componentWillUnmount: function componentWillUnmount() {
@@ -83972,20 +83973,13 @@ var Progress = _react2.default.createClass({
   },
   _progressCellClick: function _progressCellClick(rowNumber, columnId) {
     var self = this;
-    this.setState({ report: self.props.progress[rowNumber], showReport: true, rowNumber: rowNumber });
+    this.props.openReport(rowNumber);
   },
   _formatTime: function _formatTime(date) {
     if (date) {
       return date.replace(' ', 'T').replace(/ /g, '').replace('UTC', '');
     }
     return;
-  },
-  dialogDismiss: function dialogDismiss() {
-    this.setState({
-      report: null,
-      showReport: false
-    });
-    clearInterval(this.timer);
   },
   render: function render() {
     // get statistics for each in progress
@@ -84021,10 +84015,6 @@ var Progress = _react2.default.createClass({
         )
       );
     }, this);
-
-    var reportActions = [_react2.default.createElement(_FlatButton2.default, {
-      label: 'Close',
-      onClick: this.dialogDismiss })];
 
     return _react2.default.createElement(
       'div',
@@ -84103,21 +84093,6 @@ var Progress = _react2.default.createClass({
           ),
           _react2.default.createElement('img', { src: 'assets/img/deployments.png', alt: 'In progress' })
         )
-      ),
-      _react2.default.createElement(
-        _Dialog2.default,
-        {
-          ref: 'dialog',
-          title: 'Deployment progress',
-          actions: reportActions,
-          autoDetectWindowHeight: true, autoScrollBodyContent: true,
-          contentClassName: 'largeDialog',
-          bodyStyle: { paddingTop: "0" },
-          open: this.state.showReport,
-          contentStyle: { overflow: "hidden", boxShadow: "0 14px 45px rgba(0, 0, 0, 0.25), 0 10px 18px rgba(0, 0, 0, 0.22)" },
-          actionsContainerStyle: { marginBottom: "0" }
-        },
-        _react2.default.createElement(ProgressReport, { deployment: this.state.report })
       )
     );
   }
@@ -84125,7 +84100,7 @@ var Progress = _react2.default.createClass({
 
 module.exports = Progress;
 
-},{"../common/loader":747,"./deploymentstatus":758,"./groupdevices":760,"./progressreport.js":764,"./scheduleform":768,"material-ui/Dialog":224,"material-ui/FlatButton":233,"material-ui/Table":294,"react":650,"react-addons-update":399,"react-time":617}],762:[function(require,module,exports){
+},{"../common/loader":747,"./deploymentstatus":758,"./groupdevices":760,"./scheduleform":768,"material-ui/FlatButton":233,"material-ui/Table":294,"react":650,"react-addons-update":399,"react-time":617}],762:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
