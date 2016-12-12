@@ -1074,7 +1074,10 @@ span.day {
   background-image: url('../assets/img/pending_status.png');
 }
 .progress-container .key .bubble.inprogress,
-.progress-container .key .bubble.installing,
+.progress-container .key .bubble.installing {
+  background-image: url('../assets/img/progress_status.png');
+}
+.progress-container .key .bubble.downloading,
 .progress-container .key .bubble.rebooting {
   background-image: url('../assets/img/progress_status.png');
 }
@@ -1134,13 +1137,20 @@ span.day {
   border: 1px solid #679BA5;
 }
 .progress-container .bubbles-contain .inprogress .bubble,
-.progress-container .bubbles-contain .installing .bubble,
-.progress-container .bubbles-contain .rebooting .bubble {
+.progress-container .bubbles-contain .installing .bubble {
   -webkit-animation: pulse 2.8s infinite;
   -moz-animation: pulse 2.8s infinite;
   -ms-animation: pulse 2.8s infinite;
   -o-animation: pulse 2.8s infinite;
   background-image: url('../assets/img/progress_status_large.png');
+}
+.progress-container .bubbles-contain .downloading .bubble,
+.progress-container .bubbles-contain .rebooting .bubble {
+  -webkit-animation: pulse 2.8s infinite;
+  -moz-animation: pulse 2.8s infinite;
+  -ms-animation: pulse 2.8s infinite;
+  -o-animation: pulse 2.8s infinite;
+  background-image: url('../assets/img/progress_status.png');
 }
 .progress-container .bubbles-contain .pending .bubble {
   background-color: #f7fbfb;

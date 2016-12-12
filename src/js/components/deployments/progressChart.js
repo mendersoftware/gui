@@ -71,7 +71,6 @@ var ProgressChart = React.createClass({
     }
 
     var pixelHeight = 80 / rows;
-
     var deviceGrid = this.state.devices.map(function(device, index) {
       var split = Math.ceil(dev / rows);
       return (

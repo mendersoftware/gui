@@ -135,7 +135,7 @@ function _filterDevicesByType(devices, device_types) {
       }
     }
   }
-  console.log("returning", filtered);
+
   return filtered;
 }
 
@@ -281,13 +281,15 @@ function _sortDeploymentDevices(devices) {
     rebooting: [],
     installing: [],
     noartifact:[],
-    failure:[]
+    failure:[],
+    downloading: []
   };
+
   for (var i = 0; i<devices.length; i++) {
     newList[devices[i].status].push(devices[i]);
   }
 
-  var newCombine = newList.successful.concat(newList.inprogress, newList.pending, newList.rebooting, newList.installing, newList.noartifact, newList.failure);
+  var newCombine = newList.successful.concat(newList.inprogress, newList.pending, newList.rebooting, newList.downloading, newList.installing, newList.noartifact, newList.failure);
   return newCombine;
 }
 
