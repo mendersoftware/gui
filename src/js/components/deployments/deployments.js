@@ -4,6 +4,7 @@ var AppActions = require('../../actions/app-actions');
 
 var Progress = require('./inprogressdeployments.js');
 var Past = require('./pastdeployments.js');
+var ProgressReport = require('./progressreport.js');
 var Schedule = require('./schedule.js');
 var EventLog = require('./eventlog.js');
 var ScheduleForm = require('./scheduleform.js');
@@ -219,10 +220,11 @@ var Deployments = React.createClass({
         contentClass: "dialog"
       });
     }
+    var title = this.state.tabIndex === "progress" ? "Deployment progress" : "Results of deployment";
     if (dialog === 'report') {
       this.setState({
         scheduleForm: false,
-        dialogTitle: "Results of deployment",
+        dialogTitle: title,
         contentClass: "largeDialog"
       })
     }
@@ -333,6 +335,10 @@ var Deployments = React.createClass({
   _handleRequestClose: function() {
     this._dismissSnackBar();
   },
+  _showProgress: function(rowNumber) {
+    var deployment = this.state.progress[rowNumber];
+    this._showReport(deployment);
+  },
   render: function() {
     var disabled = (typeof this.state.filteredDevices !== 'undefined' && this.state.filteredDevices.length > 0) ? false : true;
     var scheduleActions =  [
@@ -359,6 +365,10 @@ var Deployments = React.createClass({
       dialogContent = (    
         <ScheduleForm deploymentDevices={this.state.deploymentDevices} filteredDevices={this.state.filteredDevices} hasPending={this.state.hasPending} hasDevices={this.state.hasDevices} deploymentSettings={this._deploymentParams} id={this.state.id} artifacts={this.state.artifacts} artifact={this.state.artifact} groups={this.state.groups} group={this.state.group} />
       )
+    } else if (this.state.tabIndex === "progress") {
+      dialogContent = (
+        <ProgressReport deployment={this.state.selectedDeployment} />
+      )
     } else {
       dialogContent = (
         <Report deployment={this.state.selectedDeployment} retryDeployment={this._scheduleDeployment} />
@@ -376,7 +386,7 @@ var Deployments = React.createClass({
           style={styles.tabs}
           label={"In progress"}
           value="progress"> 
-            <Progress loading={!this.state.doneLoading} progress={this.state.progress} showReport={this._showReport} createClick={this.dialogOpen.bind(null, "schedule")}/>
+            <Progress openReport={this._showProgress} loading={!this.state.doneLoading} progress={this.state.progress} createClick={this.dialogOpen.bind(null, "schedule")}/>
           </Tab>
 
           <Tab key={1}

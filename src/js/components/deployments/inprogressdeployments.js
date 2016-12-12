@@ -1,7 +1,6 @@
 import React from 'react';
 import Time from 'react-time';
 var update = require('react-addons-update');
-var ProgressReport = require('./progressreport.js');
 var ScheduleForm = require('./scheduleform');
 var GroupDevices = require('./groupdevices');
 var DeploymentStatus = require('./deploymentstatus');
@@ -11,14 +10,11 @@ var Loader = require('../common/loader');
 // material ui
 import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
 import FlatButton from 'material-ui/FlatButton';
-import Dialog from 'material-ui/Dialog';
 
 var Progress = React.createClass({
   getInitialState: function() {
     return {
-      showReport: false,
       retry: false,
-      report: null
     };
   },
   componentWillUnmount: function() {
@@ -26,20 +22,13 @@ var Progress = React.createClass({
   },
   _progressCellClick: function(rowNumber, columnId) {
     var self = this;
-    this.setState({report: self.props.progress[rowNumber], showReport: true, rowNumber: rowNumber});
+    this.props.openReport(rowNumber);
   },
   _formatTime: function(date) {
     if (date) {
        return date.replace(' ','T').replace(/ /g, '').replace('UTC','');
     }
     return;
-  },
-  dialogDismiss: function() {
-    this.setState({
-      report: null,
-      showReport: false
-    });
-    clearInterval(this.timer);
   },
   render: function() {
     // get statistics for each in progress
@@ -57,12 +46,6 @@ var Progress = React.createClass({
         </TableRow>
       )
     }, this);
-
-    var reportActions = [
-      <FlatButton
-          label="Close"
-          onClick={this.dialogDismiss} />
-    ];
 
     return (
       <div>
@@ -101,19 +84,6 @@ var Progress = React.createClass({
         </div>
 
 
-         <Dialog
-          ref="dialog"
-          title="Deployment progress"
-          actions={reportActions}
-          autoDetectWindowHeight={true} autoScrollBodyContent={true}
-          contentClassName="largeDialog"
-          bodyStyle={{paddingTop:"0"}}
-          open={this.state.showReport}
-          contentStyle={{overflow:"hidden", boxShadow:"0 14px 45px rgba(0, 0, 0, 0.25), 0 10px 18px rgba(0, 0, 0, 0.22)"}}
-          actionsContainerStyle={{marginBottom:"0"}}
-          >
-          <ProgressReport deployment={this.state.report} />
-        </Dialog>
 
       </div>
     );
