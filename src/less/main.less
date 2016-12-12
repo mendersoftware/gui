@@ -1063,8 +1063,11 @@ span.month, span.day {
         background-image: url('../assets/img/pending_status.png');
       }
       &.inprogress,
-      &.installing,
-      &.rebooting, {
+      &.installing {
+        background-image: url('../assets/img/progress_status.png');
+      }
+      &.downloading,
+      &.rebooting {
         background-image: url('../assets/img/progress_status.png');
       }
     }
@@ -1123,10 +1126,15 @@ span.month, span.day {
     }
 
     .inprogress .bubble,
-    .installing .bubble,
-    .rebooting .bubble {
+    .installing .bubble {
       .animation(pulse 2.8s infinite);
       background-image: url('../assets/img/progress_status_large.png');
+    }
+    
+    .downloading .bubble,
+    .rebooting .bubble {
+      .animation(pulse 2.8s infinite);
+      background-image: url('../assets/img/progress_status.png');
     }
 
     .pending .bubble {
@@ -1438,6 +1446,12 @@ div.shake-alert {
   -moz-transform:    rotateX(@deg);
   -ms-transform:     rotateX(@deg);
   -o-transform:      rotateX(@deg);
+}
+.rotateY (@deg) {
+  -webkit-transform: rotateY(@deg);
+  -moz-transform:    rotateY(@deg);
+  -ms-transform:     rotateY(@deg);
+  -o-transform:      rotateY(@deg);
 }
 .rotate (@deg) {
   -webkit-transform: rotate(@deg);
