@@ -39,7 +39,7 @@ function getState() {
     past: AppStore.getPastDeployments(),
     progress: AppStore.getDeploymentsInProgress() || [],
     events: AppStore.getEventLog(),
-    artifacts: AppStore.getSoftwareRepo(),
+    artifacts: AppStore.getArtifactsRepo(),
     groups: AppStore.getGroups(),
     allDevices: AppStore.getAllDevices(),
     invalid: true,

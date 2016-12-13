@@ -13,7 +13,7 @@ import { Toolbar, ToolbarGroup, ToolbarTitle } from 'material-ui/Toolbar';
 var menuItems = [
   {route:"/", text:"Dashboard"},
   {route:"/devices", text:"Devices"},
-  {route:"/software", text:"Software"},
+  {route:"/artifacts", text:"Artifacts"},
   {route:"/deployments", text:"Deployments"},
 ];
 
@@ -55,7 +55,7 @@ var Header = React.createClass({
   _updateActive: function() {
     return this.context.router.isActive({ pathname: '/' }, true) ? '/' :
       this.context.router.isActive('/devices') ? '/devices' :
-      this.context.router.isActive('/software') ? '/software' : 
+      this.context.router.isActive('/artifacts') ? '/artifacts' : 
       this.context.router.isActive('/deployments') ? '/deployments' : '/';
   },
   _handleTabActive: function(tab) {

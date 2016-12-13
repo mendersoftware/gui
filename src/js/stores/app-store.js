@@ -5,7 +5,7 @@ var EventEmitter = require('events').EventEmitter;  // from device
 
 var CHANGE_EVENT = "change";
 
-var _softwareRepo = [];
+var _artifactsRepo = [];
 var _currentGroup = null;
 var _deploymentArtifact = null;
 var _currentGroupDevices = [];
@@ -222,10 +222,10 @@ function discoverDevices(array) {
 
 function _uploadArtifact(artifact) {
   if (artifact.id) {
-    _softwareRepo[findWithAttr(_softwareRepo, "id", artifact.id)] = artifact;
+    _artifactsRepo[findWithAttr(_artifactsRepo, "id", artifact.id)] = artifact;
   } else {
-    artifact.id = _softwareRepo.length+1;
-    _softwareRepo.push(artifact);
+    artifact.id = _artifactsRepo.length+1;
+    _artifactsRepo.push(artifact);
   }
 }
 
@@ -303,8 +303,8 @@ function _removeDeployment(id) {
 
 function _sortTable(array, column, direction) {
   switch(array) {
-    case "_softwareRepo":
-      _softwareRepo.sort(customSort(direction, column));
+    case "_artifactsRepo":
+      _artifactsRepo.sort(customSort(direction, column));
       break;
     case "_currentGroupDevices":
       _currentGroupDevices.sort(customSort(direction, column));
@@ -361,9 +361,9 @@ function startTimeSortAscend(a,b) {
 */
 function setArtifacts(artifacts) {
   if (artifacts) {
-     _softwareRepo = artifacts;
+     _artifactsRepo = artifacts;
   }
-  _softwareRepo.sort(customSort(1, "modified"));
+  _artifactsRepo.sort(customSort(1, "modified"));
 }
 
 
@@ -543,18 +543,18 @@ var AppStore = assign(EventEmitter.prototype, {
     return _selectedDevices
   },
 
-  getSoftwareRepo: function() {
+  getArtifactsRepo: function() {
     /*
-    * Return list of saved software objects
+    * Return list of saved artifacts objects
     */
-    return discoverDevices(_softwareRepo);
+    return discoverDevices(_artifactsRepo);
   },
 
   getSoftwareArtifact: function(attr, val) {
     /*
     * Return single artifact by attr
     */
-    return _softwareRepo[findWithAttr(_softwareRepo, attr, val)];
+    return _artifactsRepo[findWithAttr(_artifactsRepo, attr, val)];
   },
 
   getPastDeployments: function() {

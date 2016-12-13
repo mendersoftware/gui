@@ -5,7 +5,7 @@ import App from '../components/app';
 import Dashboard from '../components/dashboard/dashboard';
 import Deployments from '../components/deployments/deployments';
 import Devices from '../components/devices/devices';
-import Software from '../components/software/software';
+import Artifacts from '../components/artifacts/artifacts';
 
 
 import { Router, Route, IndexRoute } from 'react-router';
@@ -19,8 +19,8 @@ module.exports = (
         <Route path="(:filters)" />
       </Route>
     </Route>
-    <Route path="/software" component={Software}>
-      <Route path="(:softwareVersion)" />
+    <Route path="/artifacts" component={Artifacts}>
+      <Route path="(:artifactVersion)" />
     </Route>
     <Route path="/deployments" component={Deployments}>
       <Route path="(:tab)">

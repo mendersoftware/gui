@@ -9,14 +9,14 @@ import Snackbar from 'material-ui/Snackbar';
 
 function getState() {
   return {
-    software: AppStore.getSoftwareRepo(),
+    artifacts: AppStore.getArtifactsRepo(),
     groups: AppStore.getGroups(),
     selected: null,
     snackbar: AppStore.getSnackbar()
   }
 }
 
-var Software = React.createClass({
+var Artifacts = React.createClass({
   getInitialState: function() {
     return getState()
   },
@@ -37,9 +37,9 @@ var Software = React.createClass({
   _onChange: function() {
     this.setState(getState());
     if (this.props.params) {
-      if (this.props.params.softwareVersion) {
-        // selected software
-        var artifact = AppStore.getSoftwareArtifact("name", this.props.params.softwareVersion);
+      if (this.props.params.artifactVersion) {
+        // selected artifacts
+        var artifact = AppStore.getSoftwareArtifact("name", this.props.params.artifactVersion);
         this.setState({selected: artifact});
       }
     }
@@ -51,7 +51,7 @@ var Software = React.createClass({
     var callback = {
       success: function(artifacts) {
         setTimeout(function() {
-          this.setState({doneLoading: true, software:artifacts});
+          this.setState({doneLoading: true, artifacts:artifacts});
         }.bind(this), 300);
       }.bind(this),
       error: function(err) {
@@ -128,7 +128,7 @@ var Software = React.createClass({
     return (
       <div className="contentContainer">
         <div className="relative overflow-hidden">
-          <Repository groupDevices={this.state.groupDevices} allDevices={this.state.allDevices} refreshArtifacts={this._getArtifacts} startLoader={this._startLoading} loading={!this.state.doneLoading} setStorage={this._setStorage} selected={this.state.selected} software={this.state.software} groups={this.state.groups} hasPending={this.state.hasPending} hasDevices={this.state.hasDevices} />
+          <Repository groupDevices={this.state.groupDevices} allDevices={this.state.allDevices} refreshArtifacts={this._getArtifacts} startLoader={this._startLoading} loading={!this.state.doneLoading} setStorage={this._setStorage} selected={this.state.selected} artifacts={this.state.artifacts} groups={this.state.groups} hasPending={this.state.hasPending} hasDevices={this.state.hasDevices} />
         </div>
         <Snackbar
           open={this.state.snackbar.open}
@@ -141,4 +141,4 @@ var Software = React.createClass({
   }
 });
 
-module.exports = Software;
+module.exports = Artifacts;

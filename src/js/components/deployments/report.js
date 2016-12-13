@@ -73,9 +73,9 @@ var Report = React.createClass({
       // get device artifact details not listed in schedule data
       AppActions.getDeviceById(devices[i].id, {
         success: function(device) {
-          var deviceSoftware = self.state.deviceSoftware || {};
-          deviceSoftware[device.id] = self._getDeviceArtifact(device);
-          self.setState({deviceSoftware: deviceSoftware});
+          var deviceArtifact = self.state.deviceArtifact || {};
+          deviceArtifact[device.id] = self._getDeviceArtifact(device);
+          self.setState({deviceArtifact: deviceArtifact});
         },
         error: function(err) {
           console.log("error ", err);
@@ -91,11 +91,11 @@ var Report = React.createClass({
   },
   render: function () {
     var deviceList = [];
-    var softwareLink;
+    var artifactLink;
     if (this.props.deployment &&  typeof this.props.deployment.artifact_name !== 'undefined')  {
-      var encodedSoftware = encodeURIComponent(this.props.deployment.artifact_name); 
-      softwareLink = (
-        <Link style={{fontWeight:"500"}} to={`/software/${encodedSoftware}`}>{this.props.deployment.artifact_name}</Link>
+      var encodedArtifact = encodeURIComponent(this.props.deployment.artifact_name); 
+      artifactLink = (
+        <Link style={{fontWeight:"500"}} to={`/artifact/${encodedArtifact}`}>{this.props.deployment.artifact_name}</Link>
       )
     }
     if (this.state.devices) {
@@ -108,11 +108,11 @@ var Report = React.createClass({
         );
         
          
-        if (typeof this.state.deviceSoftware !== 'undefined') {
-          if (typeof this.state.deviceSoftware[device.id] !== 'undefined')  {
-            var encodedSoftware = encodeURIComponent(this.state.deviceSoftware[device.id]);
-            softwareLink = (
-              <Link style={{fontWeight:"500"}} to={`/software/${encodedSoftware}`}>{this.state.deviceSoftware[device.id]}</Link>
+        if (typeof this.state.deviceArtifact !== 'undefined') {
+          if (typeof this.state.deviceArtifact[device.id] !== 'undefined')  {
+            var encodedArtifact = encodeURIComponent(this.state.deviceArtifact[device.id]);
+            artifactLink = (
+              <Link style={{fontWeight:"500"}} to={`/artifact/${encodedArtifact}`}>{this.state.deviceArtifact[device.id]}</Link>
             )
           }
         }
@@ -122,7 +122,7 @@ var Report = React.createClass({
             <TableRow key={index}>
               <TableRowColumn>{deviceLink}</TableRowColumn>
               <TableRowColumn>{device.device_type}</TableRowColumn>
-              <TableRowColumn>{softwareLink}</TableRowColumn>
+              <TableRowColumn>{artifactLink}</TableRowColumn>
               <TableRowColumn><Time value={this._formatTime(device.created)} format="YYYY-MM-DD HH:mm" /></TableRowColumn>
               <TableRowColumn><Time value={this._formatTime(device.finished)} format="YYYY-MM-DD HH:mm" /></TableRowColumn>
               <TableRowColumn>{device.status || "--"}</TableRowColumn>
@@ -154,7 +154,7 @@ var Report = React.createClass({
 
         <div className="report-container">
           <div className="deploymentInfo" style={{width:"260px", height:"auto", margin:"30px 30px 30px 0", display:"inline-block", verticalAlign:"top"}}>
-           <div><div className="progressLabel">Updating to:</div><span>{softwareLink}</span></div>
+           <div><div className="progressLabel">Updating to:</div><span>{artifactLink}</span></div>
            <div><div className="progressLabel">Device group:</div><span>{this.props.deployment.name}</span></div>
            <div><div className="progressLabel"># devices:</div><span>{deviceList.length}</span></div>
           </div>
