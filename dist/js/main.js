@@ -83802,7 +83802,7 @@ var DeploymentStatus = _react2.default.createClass({
         _react2.default.createElement(
           'span',
           { className: this.props.vertical ? "label" : "hidden" },
-          'Success'
+          'Successful'
         )
       )
     );
@@ -89612,21 +89612,22 @@ function _getScheduledDeployments(time) {
 
 function _sortDeploymentDevices(devices) {
   var newList = {
-    successful: [],
-    inprogress: [],
-    pending: [],
-    rebooting: [],
-    installing: [],
-    noartifact: [],
-    failure: [],
-    downloading: []
+    "aborted": [],
+    "already-installed": [],
+    "downloading": [],
+    "failure": [],
+    "installing": [],
+    "noartifact": [],
+    "pending": [],
+    "rebooting": [],
+    "success": []
   };
 
   for (var i = 0; i < devices.length; i++) {
     newList[devices[i].status].push(devices[i]);
   }
 
-  var newCombine = newList.successful.concat(newList.inprogress, newList.pending, newList.rebooting, newList.downloading, newList.installing, newList.noartifact, newList.failure);
+  var newCombine = newList.success.concat(newList.pending, newList.downloading, newList.installing, newList.rebooting, newList.failure, newList.aborted, newList['already-installed'], newList.noartifact);
   return newCombine;
 }
 
