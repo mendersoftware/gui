@@ -1064,7 +1064,7 @@ span.day {
   position: relative;
   background-size: cover;
 }
-.progress-container .key .bubble.successful {
+.progress-container .key .bubble.success {
   background-image: url('../assets/img/success_status.png');
 }
 .progress-container .key .bubble.failure {
@@ -1159,7 +1159,7 @@ span.day {
 .progress-container .bubbles-contain .failure .bubble {
   background-image: url('../assets/img/error_status_large.png');
 }
-.progress-container .bubbles-contain .successful .bubble {
+.progress-container .bubbles-contain .success .bubble {
   background-image: url('../assets/img/success_status_large.png');
 }
 .progress-container .deploymentInfo,
