@@ -76,6 +76,8 @@ var Devices = React.createClass({
   componentWillUnmount: function () {
     clearInterval(this.deviceTimer);
     AppStore.removeChangeListener(this._onChange);
+    AppActions.selectGroup(null);
+    this._updateFilters([{key:'', value:''}]);
   },
   componentDidUpdate: function(prevProps, prevState) {
     if (prevState.selectedGroup !== this.state.selectedGroup) {

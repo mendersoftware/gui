@@ -86908,6 +86908,8 @@ var Devices = _react2.default.createClass({
   componentWillUnmount: function componentWillUnmount() {
     clearInterval(this.deviceTimer);
     AppStore.removeChangeListener(this._onChange);
+    AppActions.selectGroup(null);
+    this._updateFilters([{ key: '', value: '' }]);
   },
   componentDidUpdate: function componentDidUpdate(prevProps, prevState) {
     if (prevState.selectedGroup !== this.state.selectedGroup) {
