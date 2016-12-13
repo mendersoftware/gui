@@ -84,9 +84,9 @@ var ProgressReport = React.createClass({
       // get device artifact details not listed in schedule data
       AppActions.getDeviceById(devices[i].id, {
         success: function(device) {
-          var deviceSoftware = self.state.deviceSoftware || {};
-          deviceSoftware[device.id] = self._getDeviceArtifact(device);
-          self.setState({deviceSoftware: deviceSoftware});
+          var deviceArtifacts = self.state.deviceArtifacts || {};
+          deviceArtifacts[device.id] = self._getDeviceArtifact(device);
+          self.setState({deviceArtifacts: deviceArtifacts});
         },
         error: function(err) {
           console.log("error ", err);
@@ -129,7 +129,7 @@ var ProgressReport = React.createClass({
   },
   render: function () {
     var deviceList = [];
-    var softwareLink;
+    var artifactsLink;
   
     if (this.state.devices) {
       deviceList = this.state.devices.map(function(device, index) {
@@ -140,11 +140,11 @@ var ProgressReport = React.createClass({
         </div>
         );
         
-        if (typeof this.state.deviceSoftware !== 'undefined') {
-          if (typeof this.state.deviceSoftware[device.id] !== 'undefined')  {
-            var encodedSoftware = encodeURIComponent(this.state.deviceSoftware[device.id]);
-            softwareLink = (
-              <Link style={{fontWeight:"500"}} to={`/software/${encodedSoftware}`}>{this.state.deviceSoftware[device.id]}</Link>
+        if (typeof this.state.deviceArtifacts !== 'undefined') {
+          if (typeof this.state.deviceArtifacts[device.id] !== 'undefined')  {
+            var encodedArtifacts = encodeURIComponent(this.state.deviceArtifacts[device.id]);
+            artifactsLink = (
+              <Link style={{fontWeight:"500"}} to={`/artifacts/${encodedArtifacts}`}>{this.state.deviceArtifacts[device.id]}</Link>
             )
           }
         }
@@ -154,7 +154,7 @@ var ProgressReport = React.createClass({
             <TableRow key={index}>
               <TableRowColumn>{deviceLink}</TableRowColumn>
               <TableRowColumn>{device.device_type}</TableRowColumn>
-              <TableRowColumn>{softwareLink}</TableRowColumn>
+              <TableRowColumn>{artifactsLink}</TableRowColumn>
               <TableRowColumn><Time value={this._formatTime(device.created)} format="YYYY-MM-DD HH:mm" /></TableRowColumn>
               <TableRowColumn>{device.status || "--"}</TableRowColumn>
               <TableRowColumn><FlatButton className={device.status==='failure' ? null : "hidden"} onClick={this.viewLog.bind(null, device.id)} label="View log" /></TableRowColumn>
@@ -183,7 +183,7 @@ var ProgressReport = React.createClass({
       <div>
         <div className="report-container">
           <div className="deploymentInfo" style={{width:"240px", height:"auto", margin:"30px 30px 30px 0", display:"inline-block", verticalAlign:"top"}}>
-           <div><div className="progressLabel">Updating to:</div><span>{softwareLink}</span></div>
+           <div><div className="progressLabel">Updating to:</div><span>{artifactsLink}</span></div>
            <div><div className="progressLabel">Device group:</div><span>{this.props.deployment.name}</span></div>
            <div><div className="progressLabel"># devices:</div><span>{deviceList.length}</span></div>
           </div>

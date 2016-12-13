@@ -25,7 +25,7 @@ function getState() {
     selectedDevices: AppStore.getSelectedDevices(),
     filters: AppStore.getFilters(),
     attributes: AppStore.getAttributes(),
-    artifacts: AppStore.getSoftwareRepo(),
+    artifacts: AppStore.getArtifactsRepo(),
     snackbar: AppStore.getSnackbar(),
     devices: AppStore.getGroupDevices(),
     totalDevices: AppStore.getTotalDevices()

@@ -81818,7 +81818,941 @@ var App = _react2.default.createClass({
 
 module.exports = App;
 
-},{"../themes/mender-theme.js":787,"./header/header":776,"material-ui/styles/getMuiTheme":345,"react":650,"react-joyride":543}],744:[function(require,module,exports){
+},{"../themes/mender-theme.js":787,"./header/header":780,"material-ui/styles/getMuiTheme":345,"react":650,"react-joyride":543}],744:[function(require,module,exports){
+'use strict';
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactRouter = require('react-router');
+
+var _Snackbar = require('material-ui/Snackbar');
+
+var _Snackbar2 = _interopRequireDefault(_Snackbar);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var AppStore = require('../../stores/app-store');
+var LocalStore = require('../../stores/local-store');
+var AppActions = require('../../actions/app-actions');
+var Repository = require('./repository.js');
+
+function getState() {
+  return {
+    artifacts: AppStore.getArtifactsRepo(),
+    groups: AppStore.getGroups(),
+    selected: null,
+    snackbar: AppStore.getSnackbar()
+  };
+}
+
+var Artifacts = _react2.default.createClass({
+  displayName: 'Artifacts',
+
+  getInitialState: function getInitialState() {
+    return getState();
+  },
+  componentWillMount: function componentWillMount() {
+    AppStore.changeListener(this._onChange);
+  },
+  componentDidMount: function componentDidMount() {
+    this._getArtifacts();
+    this._getGroups();
+    this._getDevices();
+  },
+  componentWillUnmount: function componentWillUnmount() {
+    AppStore.removeChangeListener(this._onChange);
+  },
+  _setStorage: function _setStorage(key, value) {
+    AppActions.setLocalStorage(key, value);
+  },
+  _onChange: function _onChange() {
+    this.setState(getState());
+    if (this.props.params) {
+      if (this.props.params.artifactVersion) {
+        // selected artifacts
+        var artifact = AppStore.getSoftwareArtifact("name", this.props.params.artifactVersion);
+        this.setState({ selected: artifact });
+      }
+    }
+  },
+  _startLoading: function _startLoading(bool) {
+    this.setState({ doneLoading: !bool });
+  },
+  _getArtifacts: function _getArtifacts() {
+    var callback = {
+      success: function (artifacts) {
+        setTimeout(function () {
+          this.setState({ doneLoading: true, artifacts: artifacts });
+        }.bind(this), 300);
+      }.bind(this),
+      error: function (err) {
+        var errormsg = err || "Please check your connection";
+        AppActions.setSnackbar("Artifacts couldn't be loaded. " + errormsg);
+        this.setState({ doneLoading: true });
+      }.bind(this)
+    };
+    AppActions.getArtifacts(callback);
+  },
+  _getGroups: function _getGroups() {
+    var callback = {
+      success: function (groups) {
+        this.setState({ groups: groups });
+        this._getGroupDevices(groups);
+      }.bind(this),
+      error: function error(err) {
+        console.log(err);
+      }
+    };
+    AppActions.getGroups(callback);
+  },
+  _getDevices: function _getDevices() {
+    AppActions.getDevices({
+      success: function (devices) {
+        if (!devices.length) {
+          AppActions.getNumberOfDevicesForAdmission(function (count) {
+            if (count) {
+              this.setState({ hasPending: true });
+            }
+          }.bind(this));
+        } else {
+          var allDevices = [];
+          for (var i = 0; i < devices.length; i++) {
+            allDevices.push(devices[i]);
+          }
+          this.setState({ hasDevices: true, allDevices: allDevices });
+        }
+      }.bind(this),
+      error: function error(err) {
+        console.log("Error: " + err);
+      }
+    });
+  },
+  _getGroupDevices: function _getGroupDevices(groups) {
+    // get list of devices for each group and save them to state 
+    var i, group;
+    var callback = {
+      success: function (devices) {
+        var tmp = {};
+        var devs = [];
+        for (var x = 0; x < devices.length; x++) {
+          // get full details, not just id
+          devs.push(AppStore.getSingleDevice(devices[x]));
+        }
+        tmp[group] = devs;
+        this.setState({ groupDevices: tmp });
+      }.bind(this)
+    };
+    for (i = 0; i < groups.length; i++) {
+      group = groups[i];
+      AppActions.getGroupDevices(groups[i], callback);
+    }
+  },
+  render: function render() {
+    var artifact_link = _react2.default.createElement(
+      'span',
+      null,
+      'Download latest artifact',
+      _react2.default.createElement(
+        'a',
+        { href: 'https://s3-eu-west-1.amazonaws.com/yocto-builds/latest/latest.tar.gz', target: '_blank' },
+        ' here '
+      ),
+      'and upload the artifact file to the Mender server'
+    );
+
+    return _react2.default.createElement(
+      'div',
+      { className: 'contentContainer' },
+      _react2.default.createElement(
+        'div',
+        { className: 'relative overflow-hidden' },
+        _react2.default.createElement(Repository, { groupDevices: this.state.groupDevices, allDevices: this.state.allDevices, refreshArtifacts: this._getArtifacts, startLoader: this._startLoading, loading: !this.state.doneLoading, setStorage: this._setStorage, selected: this.state.selected, artifacts: this.state.artifacts, groups: this.state.groups, hasPending: this.state.hasPending, hasDevices: this.state.hasDevices })
+      ),
+      _react2.default.createElement(_Snackbar2.default, {
+        open: this.state.snackbar.open,
+        message: this.state.snackbar.message,
+        autoHideDuration: 5000,
+        onRequestClose: this.handleRequestClose
+      })
+    );
+  }
+});
+
+module.exports = Artifacts;
+
+},{"../../actions/app-actions":739,"../../stores/app-store":785,"../../stores/local-store":786,"./repository.js":746,"material-ui/Snackbar":276,"react":650,"react-router":586}],745:[function(require,module,exports){
+'use strict';
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _RaisedButton = require('material-ui/RaisedButton');
+
+var _RaisedButton2 = _interopRequireDefault(_RaisedButton);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var DeploymentButton = _react2.default.createClass({
+  displayName: 'DeploymentButton',
+
+  render: function render() {
+    return _react2.default.createElement(_RaisedButton2.default, { label: 'Create deployment' });
+  }
+});
+
+// material ui
+
+
+module.exports = DeploymentButton;
+
+},{"material-ui/RaisedButton":267,"react":650}],746:[function(require,module,exports){
+'use strict';
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactTime = require('react-time');
+
+var _reactTime2 = _interopRequireDefault(_reactTime);
+
+var _appStore = require('../../stores/app-store');
+
+var _appStore2 = _interopRequireDefault(_appStore);
+
+var _appActions = require('../../actions/app-actions');
+
+var _appActions2 = _interopRequireDefault(_appActions);
+
+var _reactDom = require('react-dom');
+
+var _reactDom2 = _interopRequireDefault(_reactDom);
+
+var _reactSearchInput = require('react-search-input');
+
+var _reactSearchInput2 = _interopRequireDefault(_reactSearchInput);
+
+var _form = require('../common/forms/form');
+
+var _form2 = _interopRequireDefault(_form);
+
+var _fileinput = require('../common/forms/fileinput');
+
+var _fileinput2 = _interopRequireDefault(_fileinput);
+
+var _textinput = require('../common/forms/textinput');
+
+var _textinput2 = _interopRequireDefault(_textinput);
+
+var _deploymentbutton = require('./deploymentbutton');
+
+var _deploymentbutton2 = _interopRequireDefault(_deploymentbutton);
+
+var _selectedartifact = require('./selectedartifact');
+
+var _selectedartifact2 = _interopRequireDefault(_selectedartifact);
+
+var _reactRouter = require('react-router');
+
+var _reactMotion = require('react-motion');
+
+var _reactCollapse = require('react-collapse');
+
+var _reactCollapse2 = _interopRequireDefault(_reactCollapse);
+
+var _reactHeight = require('react-height');
+
+var _reactHeight2 = _interopRequireDefault(_reactHeight);
+
+var _Table = require('material-ui/Table');
+
+var _FlatButton = require('material-ui/FlatButton');
+
+var _FlatButton2 = _interopRequireDefault(_FlatButton);
+
+var _Dialog = require('material-ui/Dialog');
+
+var _Dialog2 = _interopRequireDefault(_Dialog);
+
+var _RaisedButton = require('material-ui/RaisedButton');
+
+var _RaisedButton2 = _interopRequireDefault(_RaisedButton);
+
+var _TextField = require('material-ui/TextField');
+
+var _TextField2 = _interopRequireDefault(_TextField);
+
+var _FontIcon = require('material-ui/FontIcon');
+
+var _FontIcon2 = _interopRequireDefault(_FontIcon);
+
+var _IconButton = require('material-ui/IconButton');
+
+var _IconButton2 = _interopRequireDefault(_IconButton);
+
+var _Snackbar = require('material-ui/Snackbar');
+
+var _Snackbar2 = _interopRequireDefault(_Snackbar);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var update = require('react-addons-update');
+var Loader = require('../common/loader');
+
+// material ui
+
+
+var newState = {};
+var artifacts = [];
+
+var Repository = _react2.default.createClass({
+  displayName: 'Repository',
+
+  getInitialState: function getInitialState() {
+    return {
+      artifact: {
+        name: null,
+        description: null,
+        device_types: null
+      },
+      sortCol: "name",
+      sortDown: true,
+      searchTerm: null,
+      upload: false,
+      popupLabel: "Upload a new artifact",
+      artifacts: [],
+      tmpFile: null,
+      snackMessage: "Deployment created",
+      openSnack: false,
+      autoHideDuration: 5000,
+      divHeight: 148
+    };
+  },
+
+  componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
+    artifacts = nextProps.artifacts;
+    if (nextProps.selected) {
+      this.setState({ artifact: nextProps.selected });
+    }
+  },
+
+  _resetArtifactState: function _resetArtifactState() {
+    var artifact = {
+      name: null,
+      description: null,
+      artifact_name: null,
+      device_types: null
+    };
+    this.setState({ artifact: artifact });
+  },
+  _createDeployment: function _createDeployment(artifact) {
+    _appActions2.default.setDeploymentArtifact(artifact);
+    var URIParams = "open=true";
+    URIParams = encodeURIComponent(URIParams);
+    this.redirect(URIParams);
+  },
+  dialogOpen: function dialogOpen(ref) {
+    var obj = {};
+    obj[ref] = true;
+    this.setState(obj);
+  },
+  dialogDismiss: function dialogDismiss(ref) {
+    var obj = {};
+    obj[ref] = false;
+    this.setState(obj);
+  },
+  redirect: function redirect(params) {
+    this.context.router.push('/deployments/progress/' + params);
+  },
+  _onUploadSubmit: function _onUploadSubmit(meta) {
+    var self = this;
+    var tmpFile = meta.artifactFile;
+    delete meta.artifactFile;
+    delete meta.verified;
+
+    var callback = {
+      success: function success(result) {
+        self.props.refreshArtifacts();
+      },
+      error: function error(err) {
+        _appActions2.default.setSnackbar("Artifact couldn't be uploaded. " + err);
+        self.props.startLoader(false);
+      }
+    };
+
+    _appActions2.default.uploadArtifact(meta, tmpFile, callback);
+    this.props.startLoader(true);
+    this._resetArtifactState();
+    this.dialogDismiss('upload');
+  },
+  _editArtifactData: function _editArtifactData(artifact) {
+    _appActions2.default.editArtifact(artifact, function () {
+      _appActions2.default.getArtifacts();
+    });
+    this.setState({ artifact: artifact });
+  },
+
+  _onRowSelection: function _onRowSelection(rowNumber, columnId) {
+    var artifact = artifacts[rowNumber];
+    if (columnId <= 4) {
+      if (this.state.artifact === artifact) {
+        this._resetArtifactState();
+      } else {
+        this.setState({ artifact: artifact });
+      }
+    }
+  },
+  _sortColumn: function _sortColumn(col) {
+    var direction;
+    if (this.state.sortCol !== col) {
+      _reactDom2.default.findDOMNode(this.refs[this.state.sortCol]).className = "sortIcon material-icons";
+      _reactDom2.default.findDOMNode(this.refs[col]).className = "sortIcon material-icons expand";
+      this.setState({ sortCol: col, sortDown: true });
+      direction = true;
+    } else {
+      direction = !this.state.sortDown;
+      _reactDom2.default.findDOMNode(this.refs[this.state.sortCol]).className = "sortIcon material-icons expand " + direction;
+      this.setState({ sortDown: direction });
+    }
+    // sort table
+    _appActions2.default.sortTable("_artifactsRepo", col, direction);
+  },
+  searchUpdated: function searchUpdated(term) {
+    this.setState({ searchTerm: term, artifact: {} }); // needed to force re-render
+  },
+  _openUpload: function _openUpload(ref, artifact) {
+    if (artifact) {
+      this.setState({ popupLabel: "Edit artifact details" });
+      newState = artifact;
+    } else {
+      this._resetArtifactState();
+      this.setState({ popupLabel: "Upload a new artifact" });
+    }
+    this.dialogOpen('upload');
+  },
+  _onClick: function _onClick(event) {
+    event.stopPropagation();
+  },
+  _formatTime: function _formatTime(date) {
+    if (date) {
+      return date.replace(' ', 'T').replace(/ /g, '').replace('UTC', '');
+    }
+    return;
+  },
+  _adjustCellHeight: function _adjustCellHeight(height) {
+    this.setState({ divHeight: height + 80 });
+  },
+  render: function render() {
+
+    var styles = {
+      buttonIcon: {
+        height: '100%',
+        display: 'inline-block',
+        verticalAlign: 'middle',
+        float: 'left',
+        paddingLeft: '12px',
+        lineHeight: '36px',
+        marginRight: "-6px",
+        color: "#ffffff",
+        fontSize: '16px'
+      },
+      flatButtonIcon: {
+        height: '100%',
+        display: 'inline-block',
+        verticalAlign: 'middle',
+        float: 'left',
+        paddingLeft: '12px',
+        lineHeight: '36px',
+        marginRight: "-6px",
+        color: "rgba(0,0,0,0.8)",
+        fontSize: '16px'
+      },
+      sortIcon: {
+        verticalAlign: 'middle',
+        marginLeft: "10px",
+        color: "#8c8c8d",
+        cursor: "pointer"
+      }
+    };
+
+    var tmpArtifacts = [];
+    if (this.refs.search) {
+      var filters = ['name', 'device_types_compatible', 'description'];
+      tmpArtifacts = artifacts.filter(this.refs.search.filter(filters));
+    }
+
+    var items = tmpArtifacts.map(function (pkg, index) {
+      var compatible = pkg.device_types_compatible.join(", ");
+      var expanded = '';
+      if (this.state.artifact.name === pkg.name) {
+        expanded = _react2.default.createElement(_selectedartifact2.default, { compatible: compatible, formatTime: this._formatTime, editArtifact: this._editArtifactData, buttonStyle: styles.flatButtonIcon, artifact: this.state.artifact, createDeployment: this._createDeployment });
+      }
+
+      return _react2.default.createElement(
+        _Table.TableRow,
+        { hoverable: this.state.artifact.name !== pkg.name, className: this.state.artifact.name === pkg.name ? "expand" : null, key: index },
+        _react2.default.createElement(
+          _Table.TableRowColumn,
+          { style: expanded ? { height: this.state.divHeight } : null },
+          pkg.name
+        ),
+        _react2.default.createElement(
+          _Table.TableRowColumn,
+          null,
+          compatible
+        ),
+        _react2.default.createElement(
+          _Table.TableRowColumn,
+          null,
+          _react2.default.createElement(_reactTime2.default, { value: this._formatTime(pkg.modified), format: 'YYYY-MM-DD HH:mm' })
+        ),
+        _react2.default.createElement(
+          _Table.TableRowColumn,
+          { style: { width: "55px", paddingRight: "0", paddingLeft: "12px" }, className: 'expandButton' },
+          _react2.default.createElement(
+            _IconButton2.default,
+            { className: 'float-right' },
+            _react2.default.createElement(
+              _FontIcon2.default,
+              { className: 'material-icons' },
+              expanded ? "arrow_drop_up" : "arrow_drop_down"
+            )
+          )
+        ),
+        _react2.default.createElement(
+          _Table.TableRowColumn,
+          { style: { width: "0", padding: "0", overflow: "visible" } },
+          _react2.default.createElement(
+            _reactCollapse2.default,
+            { springConfig: { stiffness: 210, damping: 20 }, onHeightReady: this._adjustCellHeight, className: 'expanded', isOpened: expanded ? true : false },
+            expanded
+          )
+        )
+      );
+    }, this);
+
+    return _react2.default.createElement(
+      'div',
+      null,
+      _react2.default.createElement(
+        'div',
+        { className: 'top-right-button' },
+        _react2.default.createElement(
+          _RaisedButton2.default,
+          { key: 'file_upload', onClick: this._openUpload.bind(null, "upload", null), label: 'Upload artifact file', labelPosition: 'after', secondary: true },
+          _react2.default.createElement(
+            _FontIcon2.default,
+            { style: styles.buttonIcon, className: 'material-icons' },
+            'file_upload'
+          )
+        )
+      ),
+      _react2.default.createElement(
+        'div',
+        null,
+        _react2.default.createElement(
+          'h3',
+          { className: 'inline-block' },
+          'Available artifacts'
+        ),
+        _react2.default.createElement(_reactSearchInput2.default, { placeholder: 'Search artifacts', className: 'search tableSearch', ref: 'search', onChange: this.searchUpdated })
+      ),
+      _react2.default.createElement(Loader, { show: this.props.loading }),
+      _react2.default.createElement(
+        'div',
+        { style: { position: "relative", marginTop: "10px" } },
+        _react2.default.createElement(
+          _Table.Table,
+          {
+            onCellClick: this._onRowSelection,
+            className: items.length ? null : "hidden" },
+          _react2.default.createElement(
+            _Table.TableHeader,
+            {
+              displaySelectAll: false,
+              adjustForCheckbox: false },
+            _react2.default.createElement(
+              _Table.TableRow,
+              null,
+              _react2.default.createElement(
+                _Table.TableHeaderColumn,
+                { className: 'columnHeader', tooltip: 'Name' },
+                'Name ',
+                _react2.default.createElement(
+                  _FontIcon2.default,
+                  { ref: 'name', style: styles.sortIcon, onClick: this._sortColumn.bind(null, "name"), className: 'sortIcon material-icons' },
+                  'sort'
+                )
+              ),
+              _react2.default.createElement(
+                _Table.TableHeaderColumn,
+                { className: 'columnHeader', tooltip: 'Device type compatibility' },
+                'Device type compatibility ',
+                _react2.default.createElement(
+                  _FontIcon2.default,
+                  { ref: 'device_types', style: styles.sortIcon, onClick: this._sortColumn.bind(null, "device_types"), className: 'sortIcon material-icons' },
+                  'sort'
+                )
+              ),
+              _react2.default.createElement(
+                _Table.TableHeaderColumn,
+                { className: 'columnHeader', tooltip: 'Last modified' },
+                'Last modified ',
+                _react2.default.createElement(
+                  _FontIcon2.default,
+                  { style: styles.sortIcon, ref: 'modified', onClick: this._sortColumn.bind(null, "modified"), className: 'sortIcon material-icons' },
+                  'sort'
+                )
+              ),
+              _react2.default.createElement(_Table.TableHeaderColumn, { style: { width: "55px", paddingRight: "12px", paddingLeft: "0" }, className: 'columnHeader' })
+            )
+          ),
+          _react2.default.createElement(
+            _Table.TableBody,
+            {
+              displayRowCheckbox: false,
+              showRowHover: true,
+              className: 'clickable' },
+            items
+          )
+        ),
+        _react2.default.createElement(
+          'div',
+          { className: items.length || this.props.loading ? "hidden" : "dashboard-placeholder" },
+          _react2.default.createElement(
+            'p',
+            null,
+            'No artifacts found. ',
+            _react2.default.createElement(
+              'a',
+              { onClick: this._openUpload.bind(null, "upload", null) },
+              'Upload an artifact'
+            ),
+            ' to the repository'
+          ),
+          _react2.default.createElement('img', { src: 'assets/img/artifacts.png', alt: 'artifacts' })
+        )
+      ),
+      _react2.default.createElement(
+        _Dialog2.default,
+        {
+          key: 'upload1',
+          ref: 'upload',
+          open: this.state.upload,
+          title: this.state.popupLabel,
+          autoDetectWindowHeight: true,
+          autoScrollBodyContent: true,
+          bodyStyle: { padding: "0 10px 10px 24px" }
+        },
+        _react2.default.createElement(
+          'div',
+          null,
+          _react2.default.createElement(
+            _form2.default,
+            { dialogDismiss: this.dialogDismiss, onSubmit: this._onUploadSubmit },
+            _react2.default.createElement(_fileinput2.default, {
+              id: 'artifactFile',
+              placeholder: 'Upload artifact',
+              required: true,
+              file: true,
+              accept: '.mender',
+              validations: 'isLength:1' }),
+            _react2.default.createElement(_textinput2.default, {
+              value: this.state.artifact.name,
+              hint: 'Name',
+              label: 'Name',
+              id: 'name',
+              required: true,
+              validations: 'isLength:1' }),
+            _react2.default.createElement(_textinput2.default, {
+              id: 'description',
+              hint: 'Description',
+              label: 'Description',
+              multiLine: true,
+              className: 'margin-bottom-small',
+              value: this.state.artifact.description })
+          )
+        )
+      ),
+      _react2.default.createElement(_Snackbar2.default, {
+        open: this.state.openSnack,
+        message: this.state.snackMessage,
+        action: 'Go to deployments',
+        autoHideDuration: this.state.autoHideDuration,
+        onActionTouchTap: this.redirect,
+        onRequestClose: this.handleRequestClose
+      })
+    );
+  }
+});
+
+Repository.contextTypes = {
+  router: _react2.default.PropTypes.object
+};
+
+module.exports = Repository;
+
+},{"../../actions/app-actions":739,"../../stores/app-store":785,"../common/forms/fileinput":748,"../common/forms/form":749,"../common/forms/textinput":750,"../common/loader":751,"./deploymentbutton":745,"./selectedartifact":747,"material-ui/Dialog":224,"material-ui/FlatButton":233,"material-ui/FontIcon":237,"material-ui/IconButton":242,"material-ui/RaisedButton":267,"material-ui/Snackbar":276,"material-ui/Table":294,"material-ui/TextField":305,"react":650,"react-addons-update":399,"react-collapse":403,"react-dom":406,"react-height":542,"react-motion":554,"react-router":586,"react-search-input":610,"react-time":617}],747:[function(require,module,exports){
+'use strict';
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactTime = require('react-time');
+
+var _reactTime2 = _interopRequireDefault(_reactTime);
+
+var _reactRouter = require('react-router');
+
+var _List = require('material-ui/List');
+
+var _Divider = require('material-ui/Divider');
+
+var _Divider2 = _interopRequireDefault(_Divider);
+
+var _FontIcon = require('material-ui/FontIcon');
+
+var _FontIcon2 = _interopRequireDefault(_FontIcon);
+
+var _FlatButton = require('material-ui/FlatButton');
+
+var _FlatButton2 = _interopRequireDefault(_FlatButton);
+
+var _IconButton = require('material-ui/IconButton');
+
+var _IconButton2 = _interopRequireDefault(_IconButton);
+
+var _TextField = require('material-ui/TextField');
+
+var _TextField2 = _interopRequireDefault(_TextField);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+// material ui
+var SelectedArtifact = _react2.default.createClass({
+  displayName: 'SelectedArtifact',
+
+  getInitialState: function getInitialState() {
+    return {
+      descEdit: false
+    };
+  },
+  componentDidUpdate: function componentDidUpdate(prevProps, prevState) {
+    if (this.state.descEdit) {
+      this.refs.description.focus();
+    };
+  },
+  _handleLinkClick: function _handleLinkClick(device_type) {
+    var filters = "device_type=" + device_type;
+    filters = encodeURIComponent(filters);
+    this.props.history.push("/devices/:group/:filters", { filters: filters }, null);
+  },
+  _clickArtifactSchedule: function _clickArtifactSchedule() {
+    this.props.createDeployment(this.props.artifact);
+  },
+  _descEdit: function _descEdit(artifact, event) {
+    event.stopPropagation();
+    if (event.keyCode === 13 || !event.keyCode) {
+
+      if (this.state.descEdit) {
+        artifact.description = this.refs.description.getValue();
+        // save change
+        this.props.editArtifact(artifact);
+      }
+      this.setState({ descEdit: !this.state.descEdit });
+    }
+  },
+  render: function render() {
+    var info = { name: "-", device_type: "-", build_date: "-", modified: "-", size: "-", checksum: "-", devices: "-", description: "-" };
+    if (this.props.artifact) {
+      for (var key in this.props.artifact) {
+        if (this.props.artifact[key]) {
+          info[key] = this.props.artifact[key];
+        };
+        if (key.indexOf("modified") !== -1) {
+          info[key] = _react2.default.createElement(_reactTime2.default, { style: { position: "relative", top: "4px" }, value: this.props.formatTime(this.props.artifact[key]), format: 'YYYY-MM-DD HH:mm' });
+        }
+      }
+    }
+
+    var styles = {
+      editButton: {
+        color: "rgba(0, 0, 0, 0.54)",
+        fontSize: "20px"
+      },
+      listStyle: {
+        fontSize: "12px",
+        paddingTop: "10px",
+        paddingBottom: "10px",
+        wordWrap: "break-word"
+      }
+    };
+
+    var editButtonDesc = _react2.default.createElement(
+      _IconButton2.default,
+      { className: 'hidden', iconStyle: styles.editButton, style: { position: "absolute", right: "0", bottom: "8px" }, onClick: this._descEdit.bind(null, this.props.artifact), iconClassName: 'material-icons' },
+      this.state.descEdit ? "check" : "edit"
+    );
+
+    var descInput = _react2.default.createElement(_TextField2.default, {
+      id: 'inline-description',
+      className: this.state.descEdit ? null : "hidden",
+      style: { width: "100%", height: "38px", marginTop: "-8px" }, inputStyle: { marginTop: "0" },
+      multiLine: true, rowsMax: 2, ref: 'description',
+      defaultValue: info.description,
+      onKeyDown: this._descEdit.bind(null, this.props.artifact) });
+
+    var devicesFilter = "artifact_name=" + info.name;
+    devicesFilter = encodeURIComponent(devicesFilter);
+    var devicesLink = _react2.default.createElement(
+      'div',
+      null,
+      _react2.default.createElement(
+        'span',
+        null,
+        info.devices
+      ),
+      _react2.default.createElement(
+        _reactRouter.Link,
+        { className: info.devices == '-' ? 'hidden' : "listItem-link", to: '/devices/0/' + devicesFilter },
+        'View devices'
+      )
+    );
+
+    var files = this.props.artifact.updates[0].files || [];
+
+    var fileDetails = files.map(function (file, index) {
+
+      return _react2.default.createElement(
+        'div',
+        { key: index, className: 'file-details' },
+        _react2.default.createElement(_List.ListItem, { style: styles.listStyle, disabled: true, primaryText: 'Name', secondaryText: file.name }),
+        _react2.default.createElement(_Divider2.default, null),
+        _react2.default.createElement(_List.ListItem, { style: styles.listStyle, disabled: true, primaryText: 'Checksum', secondaryText: file.checksum }),
+        _react2.default.createElement(_Divider2.default, null),
+        _react2.default.createElement(_List.ListItem, { style: styles.listStyle, disabled: true, primaryText: 'Signature', secondaryText: file.signature }),
+        _react2.default.createElement(_Divider2.default, null),
+        _react2.default.createElement(_List.ListItem, { style: styles.listStyle, disabled: true, primaryText: 'Build date', secondaryText: file.date }),
+        _react2.default.createElement(_Divider2.default, null),
+        _react2.default.createElement(_List.ListItem, { style: styles.listStyle, disabled: true, primaryText: 'Size', secondaryText: file.size }),
+        _react2.default.createElement(_Divider2.default, null)
+      );
+    }, this);
+
+    return _react2.default.createElement(
+      'div',
+      { className: this.props.artifact.name == null ? "muted" : null },
+      _react2.default.createElement(
+        'h3',
+        { className: 'margin-bottom-none' },
+        'Artifact details'
+      ),
+      _react2.default.createElement(
+        'div',
+        null,
+        _react2.default.createElement(
+          'div',
+          { className: 'artifact-list list-item' },
+          _react2.default.createElement(
+            'div',
+            { style: { padding: "9px 0" } },
+            _react2.default.createElement(
+              'div',
+              { style: { padding: "12px 16px 10px", lineHeight: "12px", height: "74px" } },
+              _react2.default.createElement(
+                'span',
+                { style: { color: "rgba(0,0,0,0.8)", fontSize: "12px" } },
+                'Description'
+              ),
+              _react2.default.createElement(
+                'div',
+                { style: { color: "rgba(0,0,0,0.54)", marginRight: "30px", marginTop: "8px", whiteSpace: "normal" } },
+                _react2.default.createElement(
+                  'span',
+                  { className: this.state.descEdit ? "hidden" : null },
+                  info.description
+                ),
+                descInput
+              ),
+              editButtonDesc
+            ),
+            _react2.default.createElement('hr', { style: { margin: "0", backgroundColor: "#e0e0e0", height: "1px", border: "none" } })
+          ),
+          _react2.default.createElement(
+            _List.List,
+            { style: { backgroundColor: "rgba(255,255,255,0)" } },
+            _react2.default.createElement(_List.ListItem, { style: styles.listStyle, disabled: true, primaryText: 'Date uploaded', secondaryText: info.modified }),
+            _react2.default.createElement(_Divider2.default, null)
+          )
+        ),
+        _react2.default.createElement(
+          'div',
+          { className: 'artifact-list list-item' },
+          _react2.default.createElement(
+            _List.List,
+            { style: { backgroundColor: "rgba(255,255,255,0)" } },
+            _react2.default.createElement(_List.ListItem, { style: styles.listStyle, disabled: true, secondaryTextLines: 2, primaryText: 'Device type compatibility', secondaryText: this.props.compatible }),
+            _react2.default.createElement(_Divider2.default, null)
+          ),
+          _react2.default.createElement(
+            'div',
+            { className: 'hidden' },
+            _react2.default.createElement(
+              _List.List,
+              { style: { backgroundColor: "rgba(255,255,255,0)" } },
+              _react2.default.createElement(_List.ListItem, { style: styles.listStyle, disabled: true, primaryText: 'Installed on devices', secondaryText: devicesLink }),
+              _react2.default.createElement(_Divider2.default, null)
+            )
+          )
+        ),
+        _react2.default.createElement(
+          'div',
+          { className: 'artifact-list list-item', style: { width: "320px" } },
+          _react2.default.createElement(
+            _List.List,
+            { style: { backgroundColor: "rgba(255,255,255,0)", paddingTop: "16px" } },
+            _react2.default.createElement(
+              'div',
+              { key: 'updateButton' },
+              _react2.default.createElement(_List.ListItem, {
+                style: styles.listStyle,
+                primaryText: 'Create a deployment using this artifact',
+                onClick: this._clickArtifactSchedule,
+                leftIcon: _react2.default.createElement(
+                  _FontIcon2.default,
+                  { style: { marginTop: 6, marginBottom: 6 }, className: 'material-icons update' },
+                  'replay'
+                ) })
+            ),
+            _react2.default.createElement(_Divider2.default, null)
+          )
+        )
+      ),
+      _react2.default.createElement(
+        'h4',
+        { className: 'margin-bottom-none' },
+        'Files'
+      ),
+      _react2.default.createElement(
+        'div',
+        null,
+        fileDetails
+      )
+    );
+  }
+});
+
+SelectedArtifact.contextTypes = {
+  router: _react2.default.PropTypes.object
+};
+
+module.exports = SelectedArtifact;
+
+},{"material-ui/Divider":226,"material-ui/FlatButton":233,"material-ui/FontIcon":237,"material-ui/IconButton":242,"material-ui/List":250,"material-ui/TextField":305,"react":650,"react-router":586,"react-time":617}],748:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -81883,7 +82817,7 @@ var FileInput = _react2.default.createClass({
 
 module.exports = FileInput;
 
-},{"material-ui/FontIcon":237,"react":650,"react-file-input":540}],745:[function(require,module,exports){
+},{"material-ui/FontIcon":237,"react":650,"react-file-input":540}],749:[function(require,module,exports){
 'use strict';
 
 var _validator = require('validator');
@@ -82084,7 +83018,7 @@ var Form = _react2.default.createClass({
 
 module.exports = Form;
 
-},{"material-ui/FlatButton":233,"material-ui/RaisedButton":267,"react":650,"validator":672}],746:[function(require,module,exports){
+},{"material-ui/FlatButton":233,"material-ui/RaisedButton":267,"react":650,"validator":672}],750:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -82143,7 +83077,7 @@ var TextInput = _react2.default.createClass({
 
 module.exports = TextInput;
 
-},{"material-ui/TextField":305,"react":650}],747:[function(require,module,exports){
+},{"material-ui/TextField":305,"react":650}],751:[function(require,module,exports){
 "use strict";
 
 var _react = require("react");
@@ -82174,7 +83108,7 @@ var Loader = _react2.default.createClass({
 
 module.exports = Loader;
 
-},{"react":650}],748:[function(require,module,exports){
+},{"react":650}],752:[function(require,module,exports){
 "use strict";
 
 /**
@@ -82203,7 +83137,7 @@ Array.prototype.equals = function (other) {
   });
 };
 
-},{}],749:[function(require,module,exports){
+},{}],753:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -82319,7 +83253,7 @@ Activity.contextTypes = {
 
 module.exports = Activity;
 
-},{"material-ui/FontIcon":237,"react":650,"react-router":586,"react-time":617}],750:[function(require,module,exports){
+},{"material-ui/FontIcon":237,"react":650,"react-router":586,"react-time":617}],754:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -82497,7 +83431,7 @@ Dashboard.contextTypes = {
 
 module.exports = Dashboard;
 
-},{"../../actions/app-actions":739,"../../stores/app-store":785,"../../stores/local-store":786,"./activity":749,"./deployments":751,"./health":752,"material-ui/RaisedButton":267,"material-ui/Snackbar":276,"react":650,"react-router":586}],751:[function(require,module,exports){
+},{"../../actions/app-actions":739,"../../stores/app-store":785,"../../stores/local-store":786,"./activity":753,"./deployments":755,"./health":756,"material-ui/RaisedButton":267,"material-ui/Snackbar":276,"react":650,"react-router":586}],755:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -82560,7 +83494,7 @@ var Deployments = _react2.default.createClass({
 
 module.exports = Deployments;
 
-},{"./progress":753,"./recent":754,"./schedule":756,"material-ui/Dialog":224,"material-ui/FlatButton":233,"material-ui/RaisedButton":267,"react":650}],752:[function(require,module,exports){
+},{"./progress":757,"./recent":758,"./schedule":760,"material-ui/Dialog":224,"material-ui/FlatButton":233,"material-ui/RaisedButton":267,"react":650}],756:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -82713,7 +83647,7 @@ Health.contextTypes = {
 
 module.exports = Health;
 
-},{"../common/loader":747,"material-ui/FontIcon":237,"react":650,"react-router":586}],753:[function(require,module,exports){
+},{"../common/loader":751,"material-ui/FontIcon":237,"react":650,"react-router":586}],757:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -82878,7 +83812,7 @@ Progress.contextTypes = {
 
 module.exports = Progress;
 
-},{"../common/loader":747,"../deployments/progressChart.js":763,"material-ui/Divider":226,"material-ui/FontIcon":237,"material-ui/List":250,"react":650,"react-router":586,"react-time":617}],754:[function(require,module,exports){
+},{"../common/loader":751,"../deployments/progressChart.js":767,"material-ui/Divider":226,"material-ui/FontIcon":237,"material-ui/List":250,"react":650,"react-router":586,"react-time":617}],758:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -83036,7 +83970,7 @@ Recent.contextTypes = {
 
 module.exports = Recent;
 
-},{"../../actions/app-actions":739,"../common/loader":747,"../deployments/groupdevices":760,"./recentstats":755,"material-ui/Divider":226,"material-ui/FontIcon":237,"react":650,"react-router":586,"react-time":617}],755:[function(require,module,exports){
+},{"../../actions/app-actions":739,"../common/loader":751,"../deployments/groupdevices":764,"./recentstats":759,"material-ui/Divider":226,"material-ui/FontIcon":237,"react":650,"react-router":586,"react-time":617}],759:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -83116,7 +84050,7 @@ var RecentStats = _react2.default.createClass({
 
 module.exports = RecentStats;
 
-},{"../../actions/app-actions":739,"pluralize":381,"react":650}],756:[function(require,module,exports){
+},{"../../actions/app-actions":739,"pluralize":381,"react":650}],760:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -83237,7 +84171,7 @@ Schedule.contextTypes = {
 
 module.exports = Schedule;
 
-},{"material-ui":323,"react":650,"react-router":586,"react-time":617}],757:[function(require,module,exports){
+},{"material-ui":323,"react":650,"react-router":586,"react-time":617}],761:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -83297,7 +84231,7 @@ function getState() {
     past: AppStore.getPastDeployments(),
     progress: AppStore.getDeploymentsInProgress() || [],
     events: AppStore.getEventLog(),
-    artifacts: AppStore.getSoftwareRepo(),
+    artifacts: AppStore.getArtifactsRepo(),
     groups: AppStore.getGroups(),
     allDevices: AppStore.getAllDevices(),
     invalid: true,
@@ -83686,7 +84620,7 @@ var Deployments = _react2.default.createClass({
 
 module.exports = Deployments;
 
-},{"../../actions/app-actions":739,"../../stores/app-store":785,"./eventlog.js":759,"./inprogressdeployments.js":761,"./pastdeployments.js":762,"./progressreport.js":764,"./report.js":765,"./schedule.js":766,"./schedulebutton.js":767,"./scheduleform.js":768,"material-ui/Dialog":224,"material-ui/FlatButton":233,"material-ui/RaisedButton":267,"material-ui/Snackbar":276,"material-ui/Tabs":299,"react":650}],758:[function(require,module,exports){
+},{"../../actions/app-actions":739,"../../stores/app-store":785,"./eventlog.js":763,"./inprogressdeployments.js":765,"./pastdeployments.js":766,"./progressreport.js":768,"./report.js":769,"./schedule.js":770,"./schedulebutton.js":771,"./scheduleform.js":772,"material-ui/Dialog":224,"material-ui/FlatButton":233,"material-ui/RaisedButton":267,"material-ui/Snackbar":276,"material-ui/Tabs":299,"react":650}],762:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -83816,7 +84750,7 @@ var DeploymentStatus = _react2.default.createClass({
 
 module.exports = DeploymentStatus;
 
-},{"../../actions/app-actions":739,"material-ui/FlatButton":233,"react":650}],759:[function(require,module,exports){
+},{"../../actions/app-actions":739,"material-ui/FlatButton":233,"react":650}],763:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -83892,7 +84826,7 @@ var EventLog = _react2.default.createClass({
 
 module.exports = EventLog;
 
-},{"material-ui/FlatButton":233,"material-ui/RaisedButton":267,"material-ui/Table":294,"react":650}],760:[function(require,module,exports){
+},{"material-ui/FlatButton":233,"material-ui/RaisedButton":267,"material-ui/Table":294,"react":650}],764:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -83931,7 +84865,7 @@ var GroupDevices = _react2.default.createClass({
 
 module.exports = GroupDevices;
 
-},{"../../actions/app-actions":739,"react":650}],761:[function(require,module,exports){
+},{"../../actions/app-actions":739,"react":650}],765:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -84100,7 +85034,7 @@ var Progress = _react2.default.createClass({
 
 module.exports = Progress;
 
-},{"../common/loader":747,"./deploymentstatus":758,"./groupdevices":760,"./scheduleform":768,"material-ui/FlatButton":233,"material-ui/Table":294,"react":650,"react-addons-update":399,"react-time":617}],762:[function(require,module,exports){
+},{"../common/loader":751,"./deploymentstatus":762,"./groupdevices":764,"./scheduleform":772,"material-ui/FlatButton":233,"material-ui/Table":294,"react":650,"react-addons-update":399,"react-time":617}],766:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -84278,7 +85212,7 @@ var Past = _react2.default.createClass({
 
 module.exports = Past;
 
-},{"../common/loader":747,"./deploymentstatus":758,"./groupdevices":760,"./report.js":765,"./scheduleform":768,"material-ui/FlatButton":233,"material-ui/Table":294,"react":650,"react-time":617}],763:[function(require,module,exports){
+},{"../common/loader":751,"./deploymentstatus":762,"./groupdevices":764,"./report.js":769,"./scheduleform":772,"material-ui/FlatButton":233,"material-ui/Table":294,"react":650,"react-time":617}],767:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -84433,7 +85367,7 @@ ProgressChart.contextTypes = {
 
 module.exports = ProgressChart;
 
-},{"../../actions/app-actions":739,"../../stores/app-store":785,"react":650,"react-router":586}],764:[function(require,module,exports){
+},{"../../actions/app-actions":739,"../../stores/app-store":785,"react":650,"react-router":586}],768:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -84553,9 +85487,9 @@ var ProgressReport = _react2.default.createClass({
       // get device artifact details not listed in schedule data
       AppActions.getDeviceById(devices[i].id, {
         success: function success(device) {
-          var deviceSoftware = self.state.deviceSoftware || {};
-          deviceSoftware[device.id] = self._getDeviceArtifact(device);
-          self.setState({ deviceSoftware: deviceSoftware });
+          var deviceArtifacts = self.state.deviceArtifacts || {};
+          deviceArtifacts[device.id] = self._getDeviceArtifact(device);
+          self.setState({ deviceArtifacts: deviceArtifacts });
         },
         error: function error(err) {
           console.log("error ", err);
@@ -84600,7 +85534,7 @@ var ProgressReport = _react2.default.createClass({
     var _this = this;
 
     var deviceList = [];
-    var softwareLink;
+    var artifactsLink;
 
     if (this.state.devices) {
       deviceList = this.state.devices.map(function (device, index) {
@@ -84615,13 +85549,13 @@ var ProgressReport = _react2.default.createClass({
           )
         );
 
-        if (typeof this.state.deviceSoftware !== 'undefined') {
-          if (typeof this.state.deviceSoftware[device.id] !== 'undefined') {
-            var encodedSoftware = encodeURIComponent(this.state.deviceSoftware[device.id]);
-            softwareLink = _react2.default.createElement(
+        if (typeof this.state.deviceArtifacts !== 'undefined') {
+          if (typeof this.state.deviceArtifacts[device.id] !== 'undefined') {
+            var encodedArtifacts = encodeURIComponent(this.state.deviceArtifacts[device.id]);
+            artifactsLink = _react2.default.createElement(
               _reactRouter.Link,
-              { style: { fontWeight: "500" }, to: '/software/' + encodedSoftware },
-              this.state.deviceSoftware[device.id]
+              { style: { fontWeight: "500" }, to: '/artifacts/' + encodedArtifacts },
+              this.state.deviceArtifacts[device.id]
             );
           }
         }
@@ -84643,7 +85577,7 @@ var ProgressReport = _react2.default.createClass({
             _react2.default.createElement(
               _Table.TableRowColumn,
               null,
-              softwareLink
+              artifactsLink
             ),
             _react2.default.createElement(
               _Table.TableRowColumn,
@@ -84702,7 +85636,7 @@ var ProgressReport = _react2.default.createClass({
             _react2.default.createElement(
               'span',
               null,
-              softwareLink
+              artifactsLink
             )
           ),
           _react2.default.createElement(
@@ -84850,7 +85784,7 @@ var ProgressReport = _react2.default.createClass({
 
 module.exports = ProgressReport;
 
-},{"../../actions/app-actions":739,"./deploymentstatus":758,"material-ui/Checkbox":206,"material-ui/Dialog":224,"material-ui/FlatButton":233,"material-ui/FontIcon":237,"material-ui/RaisedButton":267,"material-ui/Table":294,"react":650,"react-copy-to-clipboard":405,"react-router":586,"react-time":617}],765:[function(require,module,exports){
+},{"../../actions/app-actions":739,"./deploymentstatus":762,"material-ui/Checkbox":206,"material-ui/Dialog":224,"material-ui/FlatButton":233,"material-ui/FontIcon":237,"material-ui/RaisedButton":267,"material-ui/Table":294,"react":650,"react-copy-to-clipboard":405,"react-router":586,"react-time":617}],769:[function(require,module,exports){
 'use strict';
 
 var _React$createClass;
@@ -84960,9 +85894,9 @@ var Report = _react2.default.createClass((_React$createClass = {
     // get device artifact details not listed in schedule data
     AppActions.getDeviceById(devices[i].id, {
       success: function success(device) {
-        var deviceSoftware = self.state.deviceSoftware || {};
-        deviceSoftware[device.id] = self._getDeviceArtifact(device);
-        self.setState({ deviceSoftware: deviceSoftware });
+        var deviceArtifact = self.state.deviceArtifact || {};
+        deviceArtifact[device.id] = self._getDeviceArtifact(device);
+        self.setState({ deviceArtifact: deviceArtifact });
       },
       error: function error(err) {
         console.log("error ", err);
@@ -84978,12 +85912,12 @@ var Report = _react2.default.createClass((_React$createClass = {
   var _this = this;
 
   var deviceList = [];
-  var softwareLink;
+  var artifactLink;
   if (this.props.deployment && typeof this.props.deployment.artifact_name !== 'undefined') {
-    var encodedSoftware = encodeURIComponent(this.props.deployment.artifact_name);
-    softwareLink = _react2.default.createElement(
+    var encodedArtifact = encodeURIComponent(this.props.deployment.artifact_name);
+    artifactLink = _react2.default.createElement(
       _reactRouter.Link,
-      { style: { fontWeight: "500" }, to: '/software/' + encodedSoftware },
+      { style: { fontWeight: "500" }, to: '/artifact/' + encodedArtifact },
       this.props.deployment.artifact_name
     );
   }
@@ -85000,13 +85934,13 @@ var Report = _react2.default.createClass((_React$createClass = {
         )
       );
 
-      if (typeof this.state.deviceSoftware !== 'undefined') {
-        if (typeof this.state.deviceSoftware[device.id] !== 'undefined') {
-          var encodedSoftware = encodeURIComponent(this.state.deviceSoftware[device.id]);
-          softwareLink = _react2.default.createElement(
+      if (typeof this.state.deviceArtifact !== 'undefined') {
+        if (typeof this.state.deviceArtifact[device.id] !== 'undefined') {
+          var encodedArtifact = encodeURIComponent(this.state.deviceArtifact[device.id]);
+          artifactLink = _react2.default.createElement(
             _reactRouter.Link,
-            { style: { fontWeight: "500" }, to: '/software/' + encodedSoftware },
-            this.state.deviceSoftware[device.id]
+            { style: { fontWeight: "500" }, to: '/artifact/' + encodedArtifact },
+            this.state.deviceArtifact[device.id]
           );
         }
       }
@@ -85028,7 +85962,7 @@ var Report = _react2.default.createClass((_React$createClass = {
           _react2.default.createElement(
             _Table.TableRowColumn,
             null,
-            softwareLink
+            artifactLink
           ),
           _react2.default.createElement(
             _Table.TableRowColumn,
@@ -85092,7 +86026,7 @@ var Report = _react2.default.createClass((_React$createClass = {
           _react2.default.createElement(
             'span',
             null,
-            softwareLink
+            artifactLink
           )
         ),
         _react2.default.createElement(
@@ -85288,7 +86222,7 @@ var Report = _react2.default.createClass((_React$createClass = {
 
 module.exports = Report;
 
-},{"../../actions/app-actions":739,"material-ui/Checkbox":206,"material-ui/Dialog":224,"material-ui/FlatButton":233,"material-ui/RaisedButton":267,"material-ui/Table":294,"pluralize":381,"react":650,"react-copy-to-clipboard":405,"react-router":586,"react-time":617}],766:[function(require,module,exports){
+},{"../../actions/app-actions":739,"material-ui/Checkbox":206,"material-ui/Dialog":224,"material-ui/FlatButton":233,"material-ui/RaisedButton":267,"material-ui/Table":294,"pluralize":381,"react":650,"react-copy-to-clipboard":405,"react-router":586,"react-time":617}],770:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -85402,8 +86336,8 @@ var Schedule = _react2.default.createClass({
             ),
             _react2.default.createElement(
               TableHeaderColumn,
-              { tooltip: 'Target software version' },
-              'Target software'
+              { tooltip: 'Target artifact version' },
+              'Target artifact'
             ),
             _react2.default.createElement(
               TableHeaderColumn,
@@ -85451,7 +86385,7 @@ var Schedule = _react2.default.createClass({
 
 module.exports = Schedule;
 
-},{"material-ui":323,"react":650,"react-time":617}],767:[function(require,module,exports){
+},{"material-ui":323,"react":650,"react-time":617}],771:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -85496,7 +86430,7 @@ var ScheduleButton = _react2.default.createClass({
 
 module.exports = ScheduleButton;
 
-},{"material-ui/FlatButton":233,"material-ui/RaisedButton":267,"react":650}],768:[function(require,module,exports){
+},{"material-ui/FlatButton":233,"material-ui/RaisedButton":267,"react":650}],772:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -85724,7 +86658,7 @@ var ScheduleForm = _react2.default.createClass({
               ref: 'artifact',
               value: this.props.artifact ? this.props.artifact.name : null,
               onChange: this._handleArtifactValueChange,
-              floatingLabelText: 'Select target software',
+              floatingLabelText: 'Select target artifact',
               disabled: !artifactItems.length
             },
             artifactItems
@@ -85749,7 +86683,7 @@ var ScheduleForm = _react2.default.createClass({
             'There are no artifacts available. ',
             _react2.default.createElement(
               _reactRouter.Link,
-              { to: '/software' },
+              { to: '/artifacts' },
               'Upload one to the repository'
             ),
             ' to get started.'
@@ -85830,7 +86764,7 @@ var ScheduleForm = _react2.default.createClass({
             { className: 'material-icons', style: { marginRight: "4px", fontSize: "18px", top: "4px" } },
             'info_outline'
           ),
-          'the deployment will skip any devices that are already on the target software version, or that have a different device type.'
+          'the deployment will skip any devices that are already on the target artifact version, or that have a different device type.'
         )
       )
     );
@@ -85839,7 +86773,7 @@ var ScheduleForm = _react2.default.createClass({
 
 module.exports = ScheduleForm;
 
-},{"../../actions/app-actions":739,"../../stores/app-store":785,"material-ui/Divider":226,"material-ui/Drawer":228,"material-ui/FontIcon":237,"material-ui/IconButton":242,"material-ui/MenuItem":256,"material-ui/SelectField":271,"material-ui/TextField":305,"pluralize":381,"react":650,"react-router":586,"react-search-input":610}],769:[function(require,module,exports){
+},{"../../actions/app-actions":739,"../../stores/app-store":785,"material-ui/Divider":226,"material-ui/Drawer":228,"material-ui/FontIcon":237,"material-ui/IconButton":242,"material-ui/MenuItem":256,"material-ui/SelectField":271,"material-ui/TextField":305,"pluralize":381,"react":650,"react-router":586,"react-search-input":610}],773:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -86404,7 +87338,7 @@ var DeviceList = _react2.default.createClass({
                   'Current software',
                   _react2.default.createElement(
                     _FontIcon2.default,
-                    { ref: 'artifact_name', style: styles.sortIcon, onClick: this._sortColumn.bind(null, "software_version"), className: 'sortIcon material-icons' },
+                    { ref: 'artifact_name', style: styles.sortIcon, onClick: this._sortColumn.bind(null, "artifact_version"), className: 'sortIcon material-icons' },
                     'sort'
                   )
                 ),
@@ -86545,7 +87479,7 @@ var DeviceList = _react2.default.createClass({
 
 module.exports = DeviceList;
 
-},{"../../actions/app-actions":739,"../../stores/app-store":785,"./filters":772,"./selecteddevices":774,"material-ui/Dialog":224,"material-ui/FlatButton":233,"material-ui/FontIcon":237,"material-ui/IconButton":242,"material-ui/MenuItem":256,"material-ui/RaisedButton":267,"material-ui/SelectField":271,"material-ui/Snackbar":276,"material-ui/Table":294,"material-ui/TextField":305,"pluralize":381,"react":650,"react-collapse":403,"react-dom":406,"react-height":542,"react-motion":554,"react-time":617}],770:[function(require,module,exports){
+},{"../../actions/app-actions":739,"../../stores/app-store":785,"./filters":776,"./selecteddevices":778,"material-ui/Dialog":224,"material-ui/FlatButton":233,"material-ui/FontIcon":237,"material-ui/IconButton":242,"material-ui/MenuItem":256,"material-ui/RaisedButton":267,"material-ui/SelectField":271,"material-ui/Snackbar":276,"material-ui/Table":294,"material-ui/TextField":305,"pluralize":381,"react":650,"react-collapse":403,"react-dom":406,"react-height":542,"react-motion":554,"react-time":617}],774:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -86818,7 +87752,7 @@ var DevicePicker = _react2.default.createClass({
 
 module.exports = DevicePicker;
 
-},{"../../actions/app-actions":739,"../common/loader":747,"material-ui/Dialog":224,"material-ui/FlatButton":233,"material-ui/RaisedButton":267,"material-ui/Table":294,"material-ui/TextField":305,"react":650,"react-search-input":610}],771:[function(require,module,exports){
+},{"../../actions/app-actions":739,"../common/loader":751,"material-ui/Dialog":224,"material-ui/FlatButton":233,"material-ui/RaisedButton":267,"material-ui/Table":294,"material-ui/TextField":305,"react":650,"react-search-input":610}],775:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -86855,7 +87789,7 @@ function getState() {
     selectedDevices: AppStore.getSelectedDevices(),
     filters: AppStore.getFilters(),
     attributes: AppStore.getAttributes(),
-    artifacts: AppStore.getSoftwareRepo(),
+    artifacts: AppStore.getArtifactsRepo(),
     snackbar: AppStore.getSnackbar(),
     devices: AppStore.getGroupDevices(),
     totalDevices: AppStore.getTotalDevices()
@@ -87161,7 +88095,7 @@ Devices.contextTypes = {
 
 module.exports = Devices;
 
-},{"../../actions/app-actions":739,"../../stores/app-store":785,"../common/loader":747,"../common/prototype/Array.prototype.equals":748,"./devicelist":769,"./devicepicker":770,"./groups":773,"./unauthorized":775,"material-ui/Snackbar":276,"rc-pagination":394,"react":650,"react-addons-update":399,"react-router":586}],772:[function(require,module,exports){
+},{"../../actions/app-actions":739,"../../stores/app-store":785,"../common/loader":751,"../common/prototype/Array.prototype.equals":752,"./devicelist":773,"./devicepicker":774,"./groups":777,"./unauthorized":779,"material-ui/Snackbar":276,"rc-pagination":394,"react":650,"react-addons-update":399,"react-router":586}],776:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -87374,7 +88308,7 @@ var Filters = _react2.default.createClass({
 
 module.exports = Filters;
 
-},{"material-ui/Drawer":228,"material-ui/FlatButton":233,"material-ui/FontIcon":237,"material-ui/IconButton":242,"material-ui/MenuItem":256,"material-ui/SelectField":271,"material-ui/TextField":305,"react":650}],773:[function(require,module,exports){
+},{"material-ui/Drawer":228,"material-ui/FlatButton":233,"material-ui/FontIcon":237,"material-ui/IconButton":242,"material-ui/MenuItem":256,"material-ui/SelectField":271,"material-ui/TextField":305,"react":650}],777:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -87520,7 +88454,7 @@ var Groups = _react2.default.createClass({
 
 module.exports = Groups;
 
-},{"../../actions/app-actions":739,"../common/prototype/Array.prototype.equals":748,"material-ui/FlatButton":233,"material-ui/FontIcon":237,"material-ui/List":250,"material-ui/RaisedButton":267,"material-ui/Subheader":284,"react":650}],774:[function(require,module,exports){
+},{"../../actions/app-actions":739,"../common/prototype/Array.prototype.equals":752,"material-ui/FlatButton":233,"material-ui/FontIcon":237,"material-ui/List":250,"material-ui/RaisedButton":267,"material-ui/Subheader":284,"react":650}],778:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -87837,7 +88771,7 @@ var SelectedDevices = _react2.default.createClass({
 
 module.exports = SelectedDevices;
 
-},{"../../actions/app-actions":739,"../../stores/app-store":785,"../deployments/scheduleform":768,"material-ui/Dialog":224,"material-ui/Divider":226,"material-ui/FlatButton":233,"material-ui/FontIcon":237,"material-ui/IconButton":242,"material-ui/List":250,"material-ui/RaisedButton":267,"material-ui/TextField":305,"react":650,"react-collapse":403,"react-router":586,"react-time":617}],775:[function(require,module,exports){
+},{"../../actions/app-actions":739,"../../stores/app-store":785,"../deployments/scheduleform":772,"material-ui/Dialog":224,"material-ui/Divider":226,"material-ui/FlatButton":233,"material-ui/FontIcon":237,"material-ui/IconButton":242,"material-ui/List":250,"material-ui/RaisedButton":267,"material-ui/TextField":305,"react":650,"react-collapse":403,"react-router":586,"react-time":617}],779:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -88126,7 +89060,7 @@ var Authorized = _react2.default.createClass({
 
 module.exports = Authorized;
 
-},{"../../actions/app-actions":739,"./selecteddevices":774,"material-ui":323,"material-ui/FontIcon":237,"material-ui/IconButton":242,"material-ui/RaisedButton":267,"material-ui/Table":294,"react":650,"react-collapse":403,"react-dom":406,"react-height":542,"react-motion":554,"react-time":617}],776:[function(require,module,exports){
+},{"../../actions/app-actions":739,"./selecteddevices":778,"material-ui":323,"material-ui/FontIcon":237,"material-ui/IconButton":242,"material-ui/RaisedButton":267,"material-ui/Table":294,"react":650,"react-collapse":403,"react-dom":406,"react-height":542,"react-motion":554,"react-time":617}],780:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -88159,7 +89093,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var AppActions = require('../../actions/app-actions');
 
-var menuItems = [{ route: "/", text: "Dashboard" }, { route: "/devices", text: "Devices" }, { route: "/software", text: "Software" }, { route: "/deployments", text: "Deployments" }];
+var menuItems = [{ route: "/", text: "Dashboard" }, { route: "/devices", text: "Devices" }, { route: "/artifacts", text: "Artifacts" }, { route: "/deployments", text: "Deployments" }];
 
 var styles = {
   tabs: {
@@ -88199,7 +89133,7 @@ var Header = _react2.default.createClass({
     this.props.addTooltip(tooltip);
   },
   _updateActive: function _updateActive() {
-    return this.context.router.isActive({ pathname: '/' }, true) ? '/' : this.context.router.isActive('/devices') ? '/devices' : this.context.router.isActive('/software') ? '/software' : this.context.router.isActive('/deployments') ? '/deployments' : '/';
+    return this.context.router.isActive({ pathname: '/' }, true) ? '/' : this.context.router.isActive('/devices') ? '/devices' : this.context.router.isActive('/artifacts') ? '/artifacts' : this.context.router.isActive('/deployments') ? '/deployments' : '/';
   },
   _handleTabActive: function _handleTabActive(tab) {
     this.context.router.push(tab.props.value);
@@ -88266,941 +89200,7 @@ Header.contextTypes = {
 
 module.exports = Header;
 
-},{"../../actions/app-actions":739,"material-ui/FontIcon":237,"material-ui/IconButton":242,"material-ui/IconMenu":244,"material-ui/MenuItem":256,"material-ui/Tabs":299,"material-ui/Toolbar":322,"react":650,"react-router":586}],777:[function(require,module,exports){
-'use strict';
-
-var _react = require('react');
-
-var _react2 = _interopRequireDefault(_react);
-
-var _RaisedButton = require('material-ui/RaisedButton');
-
-var _RaisedButton2 = _interopRequireDefault(_RaisedButton);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var DeploymentButton = _react2.default.createClass({
-  displayName: 'DeploymentButton',
-
-  render: function render() {
-    return _react2.default.createElement(_RaisedButton2.default, { label: 'Create deployment' });
-  }
-});
-
-// material ui
-
-
-module.exports = DeploymentButton;
-
-},{"material-ui/RaisedButton":267,"react":650}],778:[function(require,module,exports){
-'use strict';
-
-var _react = require('react');
-
-var _react2 = _interopRequireDefault(_react);
-
-var _reactTime = require('react-time');
-
-var _reactTime2 = _interopRequireDefault(_reactTime);
-
-var _appStore = require('../../stores/app-store');
-
-var _appStore2 = _interopRequireDefault(_appStore);
-
-var _appActions = require('../../actions/app-actions');
-
-var _appActions2 = _interopRequireDefault(_appActions);
-
-var _reactDom = require('react-dom');
-
-var _reactDom2 = _interopRequireDefault(_reactDom);
-
-var _reactSearchInput = require('react-search-input');
-
-var _reactSearchInput2 = _interopRequireDefault(_reactSearchInput);
-
-var _form = require('../common/forms/form');
-
-var _form2 = _interopRequireDefault(_form);
-
-var _fileinput = require('../common/forms/fileinput');
-
-var _fileinput2 = _interopRequireDefault(_fileinput);
-
-var _textinput = require('../common/forms/textinput');
-
-var _textinput2 = _interopRequireDefault(_textinput);
-
-var _deploymentbutton = require('./deploymentbutton');
-
-var _deploymentbutton2 = _interopRequireDefault(_deploymentbutton);
-
-var _selectedartifact = require('./selectedartifact');
-
-var _selectedartifact2 = _interopRequireDefault(_selectedartifact);
-
-var _reactRouter = require('react-router');
-
-var _reactMotion = require('react-motion');
-
-var _reactCollapse = require('react-collapse');
-
-var _reactCollapse2 = _interopRequireDefault(_reactCollapse);
-
-var _reactHeight = require('react-height');
-
-var _reactHeight2 = _interopRequireDefault(_reactHeight);
-
-var _Table = require('material-ui/Table');
-
-var _FlatButton = require('material-ui/FlatButton');
-
-var _FlatButton2 = _interopRequireDefault(_FlatButton);
-
-var _Dialog = require('material-ui/Dialog');
-
-var _Dialog2 = _interopRequireDefault(_Dialog);
-
-var _RaisedButton = require('material-ui/RaisedButton');
-
-var _RaisedButton2 = _interopRequireDefault(_RaisedButton);
-
-var _TextField = require('material-ui/TextField');
-
-var _TextField2 = _interopRequireDefault(_TextField);
-
-var _FontIcon = require('material-ui/FontIcon');
-
-var _FontIcon2 = _interopRequireDefault(_FontIcon);
-
-var _IconButton = require('material-ui/IconButton');
-
-var _IconButton2 = _interopRequireDefault(_IconButton);
-
-var _Snackbar = require('material-ui/Snackbar');
-
-var _Snackbar2 = _interopRequireDefault(_Snackbar);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var update = require('react-addons-update');
-var Loader = require('../common/loader');
-
-// material ui
-
-
-var newState = {};
-var software = [];
-
-var Repository = _react2.default.createClass({
-  displayName: 'Repository',
-
-  getInitialState: function getInitialState() {
-    return {
-      artifact: {
-        name: null,
-        description: null,
-        device_types: null
-      },
-      sortCol: "name",
-      sortDown: true,
-      searchTerm: null,
-      upload: false,
-      popupLabel: "Upload a new artifact",
-      software: [],
-      tmpFile: null,
-      snackMessage: "Deployment created",
-      openSnack: false,
-      autoHideDuration: 5000,
-      divHeight: 148
-    };
-  },
-
-  componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
-    software = nextProps.software;
-    if (nextProps.selected) {
-      this.setState({ artifact: nextProps.selected });
-    }
-  },
-
-  _resetArtifactState: function _resetArtifactState() {
-    var artifact = {
-      name: null,
-      description: null,
-      artifact_name: null,
-      device_types: null
-    };
-    this.setState({ artifact: artifact });
-  },
-  _createDeployment: function _createDeployment(artifact) {
-    _appActions2.default.setDeploymentArtifact(artifact);
-    var URIParams = "open=true";
-    URIParams = encodeURIComponent(URIParams);
-    this.redirect(URIParams);
-  },
-  dialogOpen: function dialogOpen(ref) {
-    var obj = {};
-    obj[ref] = true;
-    this.setState(obj);
-  },
-  dialogDismiss: function dialogDismiss(ref) {
-    var obj = {};
-    obj[ref] = false;
-    this.setState(obj);
-  },
-  redirect: function redirect(params) {
-    this.context.router.push('/deployments/progress/' + params);
-  },
-  _onUploadSubmit: function _onUploadSubmit(meta) {
-    var self = this;
-    var tmpFile = meta.artifactFile;
-    delete meta.artifactFile;
-    delete meta.verified;
-
-    var callback = {
-      success: function success(result) {
-        self.props.refreshArtifacts();
-      },
-      error: function error(err) {
-        _appActions2.default.setSnackbar("Artifact couldn't be uploaded. " + err);
-        self.props.startLoader(false);
-      }
-    };
-
-    _appActions2.default.uploadArtifact(meta, tmpFile, callback);
-    this.props.startLoader(true);
-    this._resetArtifactState();
-    this.dialogDismiss('upload');
-  },
-  _editArtifactData: function _editArtifactData(artifact) {
-    _appActions2.default.editArtifact(artifact, function () {
-      _appActions2.default.getArtifacts();
-    });
-    this.setState({ artifact: artifact });
-  },
-
-  _onRowSelection: function _onRowSelection(rowNumber, columnId) {
-    var artifact = software[rowNumber];
-    if (columnId <= 4) {
-      if (this.state.artifact === artifact) {
-        this._resetArtifactState();
-      } else {
-        this.setState({ artifact: artifact });
-      }
-    }
-  },
-  _sortColumn: function _sortColumn(col) {
-    var direction;
-    if (this.state.sortCol !== col) {
-      _reactDom2.default.findDOMNode(this.refs[this.state.sortCol]).className = "sortIcon material-icons";
-      _reactDom2.default.findDOMNode(this.refs[col]).className = "sortIcon material-icons expand";
-      this.setState({ sortCol: col, sortDown: true });
-      direction = true;
-    } else {
-      direction = !this.state.sortDown;
-      _reactDom2.default.findDOMNode(this.refs[this.state.sortCol]).className = "sortIcon material-icons expand " + direction;
-      this.setState({ sortDown: direction });
-    }
-    // sort table
-    _appActions2.default.sortTable("_softwareRepo", col, direction);
-  },
-  searchUpdated: function searchUpdated(term) {
-    this.setState({ searchTerm: term, artifact: {} }); // needed to force re-render
-  },
-  _openUpload: function _openUpload(ref, artifact) {
-    if (artifact) {
-      this.setState({ popupLabel: "Edit artifact details" });
-      newState = artifact;
-    } else {
-      this._resetArtifactState();
-      this.setState({ popupLabel: "Upload a new artifact" });
-    }
-    this.dialogOpen('upload');
-  },
-  _onClick: function _onClick(event) {
-    event.stopPropagation();
-  },
-  _formatTime: function _formatTime(date) {
-    if (date) {
-      return date.replace(' ', 'T').replace(/ /g, '').replace('UTC', '');
-    }
-    return;
-  },
-  _adjustCellHeight: function _adjustCellHeight(height) {
-    this.setState({ divHeight: height + 80 });
-  },
-  render: function render() {
-
-    var styles = {
-      buttonIcon: {
-        height: '100%',
-        display: 'inline-block',
-        verticalAlign: 'middle',
-        float: 'left',
-        paddingLeft: '12px',
-        lineHeight: '36px',
-        marginRight: "-6px",
-        color: "#ffffff",
-        fontSize: '16px'
-      },
-      flatButtonIcon: {
-        height: '100%',
-        display: 'inline-block',
-        verticalAlign: 'middle',
-        float: 'left',
-        paddingLeft: '12px',
-        lineHeight: '36px',
-        marginRight: "-6px",
-        color: "rgba(0,0,0,0.8)",
-        fontSize: '16px'
-      },
-      sortIcon: {
-        verticalAlign: 'middle',
-        marginLeft: "10px",
-        color: "#8c8c8d",
-        cursor: "pointer"
-      }
-    };
-
-    var tmpSoftware = [];
-    if (this.refs.search) {
-      var filters = ['name', 'device_types_compatible', 'description'];
-      tmpSoftware = software.filter(this.refs.search.filter(filters));
-    }
-
-    var items = tmpSoftware.map(function (pkg, index) {
-      var compatible = pkg.device_types_compatible.join(", ");
-      var expanded = '';
-      if (this.state.artifact.name === pkg.name) {
-        expanded = _react2.default.createElement(_selectedartifact2.default, { compatible: compatible, formatTime: this._formatTime, editArtifact: this._editArtifactData, buttonStyle: styles.flatButtonIcon, artifact: this.state.artifact, createDeployment: this._createDeployment });
-      }
-
-      return _react2.default.createElement(
-        _Table.TableRow,
-        { hoverable: this.state.artifact.name !== pkg.name, className: this.state.artifact.name === pkg.name ? "expand" : null, key: index },
-        _react2.default.createElement(
-          _Table.TableRowColumn,
-          { style: expanded ? { height: this.state.divHeight } : null },
-          pkg.name
-        ),
-        _react2.default.createElement(
-          _Table.TableRowColumn,
-          null,
-          compatible
-        ),
-        _react2.default.createElement(
-          _Table.TableRowColumn,
-          null,
-          _react2.default.createElement(_reactTime2.default, { value: this._formatTime(pkg.modified), format: 'YYYY-MM-DD HH:mm' })
-        ),
-        _react2.default.createElement(
-          _Table.TableRowColumn,
-          { style: { width: "55px", paddingRight: "0", paddingLeft: "12px" }, className: 'expandButton' },
-          _react2.default.createElement(
-            _IconButton2.default,
-            { className: 'float-right' },
-            _react2.default.createElement(
-              _FontIcon2.default,
-              { className: 'material-icons' },
-              expanded ? "arrow_drop_up" : "arrow_drop_down"
-            )
-          )
-        ),
-        _react2.default.createElement(
-          _Table.TableRowColumn,
-          { style: { width: "0", padding: "0", overflow: "visible" } },
-          _react2.default.createElement(
-            _reactCollapse2.default,
-            { springConfig: { stiffness: 210, damping: 20 }, onHeightReady: this._adjustCellHeight, className: 'expanded', isOpened: expanded ? true : false },
-            expanded
-          )
-        )
-      );
-    }, this);
-
-    return _react2.default.createElement(
-      'div',
-      null,
-      _react2.default.createElement(
-        'div',
-        { className: 'top-right-button' },
-        _react2.default.createElement(
-          _RaisedButton2.default,
-          { key: 'file_upload', onClick: this._openUpload.bind(null, "upload", null), label: 'Upload artifact file', labelPosition: 'after', secondary: true },
-          _react2.default.createElement(
-            _FontIcon2.default,
-            { style: styles.buttonIcon, className: 'material-icons' },
-            'file_upload'
-          )
-        )
-      ),
-      _react2.default.createElement(
-        'div',
-        null,
-        _react2.default.createElement(
-          'h3',
-          { className: 'inline-block' },
-          'Available artifacts'
-        ),
-        _react2.default.createElement(_reactSearchInput2.default, { placeholder: 'Search artifacts', className: 'search tableSearch', ref: 'search', onChange: this.searchUpdated })
-      ),
-      _react2.default.createElement(Loader, { show: this.props.loading }),
-      _react2.default.createElement(
-        'div',
-        { style: { position: "relative", marginTop: "10px" } },
-        _react2.default.createElement(
-          _Table.Table,
-          {
-            onCellClick: this._onRowSelection,
-            className: items.length ? null : "hidden" },
-          _react2.default.createElement(
-            _Table.TableHeader,
-            {
-              displaySelectAll: false,
-              adjustForCheckbox: false },
-            _react2.default.createElement(
-              _Table.TableRow,
-              null,
-              _react2.default.createElement(
-                _Table.TableHeaderColumn,
-                { className: 'columnHeader', tooltip: 'Name' },
-                'Name ',
-                _react2.default.createElement(
-                  _FontIcon2.default,
-                  { ref: 'name', style: styles.sortIcon, onClick: this._sortColumn.bind(null, "name"), className: 'sortIcon material-icons' },
-                  'sort'
-                )
-              ),
-              _react2.default.createElement(
-                _Table.TableHeaderColumn,
-                { className: 'columnHeader', tooltip: 'Device type compatibility' },
-                'Device type compatibility ',
-                _react2.default.createElement(
-                  _FontIcon2.default,
-                  { ref: 'device_types', style: styles.sortIcon, onClick: this._sortColumn.bind(null, "device_types"), className: 'sortIcon material-icons' },
-                  'sort'
-                )
-              ),
-              _react2.default.createElement(
-                _Table.TableHeaderColumn,
-                { className: 'columnHeader', tooltip: 'Last modified' },
-                'Last modified ',
-                _react2.default.createElement(
-                  _FontIcon2.default,
-                  { style: styles.sortIcon, ref: 'modified', onClick: this._sortColumn.bind(null, "modified"), className: 'sortIcon material-icons' },
-                  'sort'
-                )
-              ),
-              _react2.default.createElement(_Table.TableHeaderColumn, { style: { width: "55px", paddingRight: "12px", paddingLeft: "0" }, className: 'columnHeader' })
-            )
-          ),
-          _react2.default.createElement(
-            _Table.TableBody,
-            {
-              displayRowCheckbox: false,
-              showRowHover: true,
-              className: 'clickable' },
-            items
-          )
-        ),
-        _react2.default.createElement(
-          'div',
-          { className: items.length || this.props.loading ? "hidden" : "dashboard-placeholder" },
-          _react2.default.createElement(
-            'p',
-            null,
-            'No artifacts found. ',
-            _react2.default.createElement(
-              'a',
-              { onClick: this._openUpload.bind(null, "upload", null) },
-              'Upload an artifact'
-            ),
-            ' to the repository'
-          ),
-          _react2.default.createElement('img', { src: 'assets/img/artifacts.png', alt: 'artifacts' })
-        )
-      ),
-      _react2.default.createElement(
-        _Dialog2.default,
-        {
-          key: 'upload1',
-          ref: 'upload',
-          open: this.state.upload,
-          title: this.state.popupLabel,
-          autoDetectWindowHeight: true,
-          autoScrollBodyContent: true,
-          bodyStyle: { padding: "0 10px 10px 24px" }
-        },
-        _react2.default.createElement(
-          'div',
-          null,
-          _react2.default.createElement(
-            _form2.default,
-            { dialogDismiss: this.dialogDismiss, onSubmit: this._onUploadSubmit },
-            _react2.default.createElement(_fileinput2.default, {
-              id: 'artifactFile',
-              placeholder: 'Upload artifact',
-              required: true,
-              file: true,
-              accept: '.mender',
-              validations: 'isLength:1' }),
-            _react2.default.createElement(_textinput2.default, {
-              value: this.state.artifact.name,
-              hint: 'Name',
-              label: 'Name',
-              id: 'name',
-              required: true,
-              validations: 'isLength:1' }),
-            _react2.default.createElement(_textinput2.default, {
-              id: 'description',
-              hint: 'Description',
-              label: 'Description',
-              multiLine: true,
-              className: 'margin-bottom-small',
-              value: this.state.artifact.description })
-          )
-        )
-      ),
-      _react2.default.createElement(_Snackbar2.default, {
-        open: this.state.openSnack,
-        message: this.state.snackMessage,
-        action: 'Go to deployments',
-        autoHideDuration: this.state.autoHideDuration,
-        onActionTouchTap: this.redirect,
-        onRequestClose: this.handleRequestClose
-      })
-    );
-  }
-});
-
-Repository.contextTypes = {
-  router: _react2.default.PropTypes.object
-};
-
-module.exports = Repository;
-
-},{"../../actions/app-actions":739,"../../stores/app-store":785,"../common/forms/fileinput":744,"../common/forms/form":745,"../common/forms/textinput":746,"../common/loader":747,"./deploymentbutton":777,"./selectedartifact":779,"material-ui/Dialog":224,"material-ui/FlatButton":233,"material-ui/FontIcon":237,"material-ui/IconButton":242,"material-ui/RaisedButton":267,"material-ui/Snackbar":276,"material-ui/Table":294,"material-ui/TextField":305,"react":650,"react-addons-update":399,"react-collapse":403,"react-dom":406,"react-height":542,"react-motion":554,"react-router":586,"react-search-input":610,"react-time":617}],779:[function(require,module,exports){
-'use strict';
-
-var _react = require('react');
-
-var _react2 = _interopRequireDefault(_react);
-
-var _reactTime = require('react-time');
-
-var _reactTime2 = _interopRequireDefault(_reactTime);
-
-var _reactRouter = require('react-router');
-
-var _List = require('material-ui/List');
-
-var _Divider = require('material-ui/Divider');
-
-var _Divider2 = _interopRequireDefault(_Divider);
-
-var _FontIcon = require('material-ui/FontIcon');
-
-var _FontIcon2 = _interopRequireDefault(_FontIcon);
-
-var _FlatButton = require('material-ui/FlatButton');
-
-var _FlatButton2 = _interopRequireDefault(_FlatButton);
-
-var _IconButton = require('material-ui/IconButton');
-
-var _IconButton2 = _interopRequireDefault(_IconButton);
-
-var _TextField = require('material-ui/TextField');
-
-var _TextField2 = _interopRequireDefault(_TextField);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-// material ui
-var SelectedArtifact = _react2.default.createClass({
-  displayName: 'SelectedArtifact',
-
-  getInitialState: function getInitialState() {
-    return {
-      descEdit: false
-    };
-  },
-  componentDidUpdate: function componentDidUpdate(prevProps, prevState) {
-    if (this.state.descEdit) {
-      this.refs.description.focus();
-    };
-  },
-  _handleLinkClick: function _handleLinkClick(device_type) {
-    var filters = "device_type=" + device_type;
-    filters = encodeURIComponent(filters);
-    this.props.history.push("/devices/:group/:filters", { filters: filters }, null);
-  },
-  _clickArtifactSchedule: function _clickArtifactSchedule() {
-    this.props.createDeployment(this.props.artifact);
-  },
-  _descEdit: function _descEdit(artifact, event) {
-    event.stopPropagation();
-    if (event.keyCode === 13 || !event.keyCode) {
-
-      if (this.state.descEdit) {
-        artifact.description = this.refs.description.getValue();
-        // save change
-        this.props.editArtifact(artifact);
-      }
-      this.setState({ descEdit: !this.state.descEdit });
-    }
-  },
-  render: function render() {
-    var info = { name: "-", device_type: "-", build_date: "-", modified: "-", size: "-", checksum: "-", devices: "-", description: "-" };
-    if (this.props.artifact) {
-      for (var key in this.props.artifact) {
-        if (this.props.artifact[key]) {
-          info[key] = this.props.artifact[key];
-        };
-        if (key.indexOf("modified") !== -1) {
-          info[key] = _react2.default.createElement(_reactTime2.default, { style: { position: "relative", top: "4px" }, value: this.props.formatTime(this.props.artifact[key]), format: 'YYYY-MM-DD HH:mm' });
-        }
-      }
-    }
-
-    var styles = {
-      editButton: {
-        color: "rgba(0, 0, 0, 0.54)",
-        fontSize: "20px"
-      },
-      listStyle: {
-        fontSize: "12px",
-        paddingTop: "10px",
-        paddingBottom: "10px",
-        wordWrap: "break-word"
-      }
-    };
-
-    var editButtonDesc = _react2.default.createElement(
-      _IconButton2.default,
-      { className: 'hidden', iconStyle: styles.editButton, style: { position: "absolute", right: "0", bottom: "8px" }, onClick: this._descEdit.bind(null, this.props.artifact), iconClassName: 'material-icons' },
-      this.state.descEdit ? "check" : "edit"
-    );
-
-    var descInput = _react2.default.createElement(_TextField2.default, {
-      id: 'inline-description',
-      className: this.state.descEdit ? null : "hidden",
-      style: { width: "100%", height: "38px", marginTop: "-8px" }, inputStyle: { marginTop: "0" },
-      multiLine: true, rowsMax: 2, ref: 'description',
-      defaultValue: info.description,
-      onKeyDown: this._descEdit.bind(null, this.props.artifact) });
-
-    var devicesFilter = "artifact_name=" + info.name;
-    devicesFilter = encodeURIComponent(devicesFilter);
-    var devicesLink = _react2.default.createElement(
-      'div',
-      null,
-      _react2.default.createElement(
-        'span',
-        null,
-        info.devices
-      ),
-      _react2.default.createElement(
-        _reactRouter.Link,
-        { className: info.devices == '-' ? 'hidden' : "listItem-link", to: '/devices/0/' + devicesFilter },
-        'View devices'
-      )
-    );
-
-    var files = this.props.artifact.updates[0].files || [];
-
-    var fileDetails = files.map(function (file, index) {
-
-      return _react2.default.createElement(
-        'div',
-        { key: index, className: 'file-details' },
-        _react2.default.createElement(_List.ListItem, { style: styles.listStyle, disabled: true, primaryText: 'Name', secondaryText: file.name }),
-        _react2.default.createElement(_Divider2.default, null),
-        _react2.default.createElement(_List.ListItem, { style: styles.listStyle, disabled: true, primaryText: 'Checksum', secondaryText: file.checksum }),
-        _react2.default.createElement(_Divider2.default, null),
-        _react2.default.createElement(_List.ListItem, { style: styles.listStyle, disabled: true, primaryText: 'Signature', secondaryText: file.signature }),
-        _react2.default.createElement(_Divider2.default, null),
-        _react2.default.createElement(_List.ListItem, { style: styles.listStyle, disabled: true, primaryText: 'Build date', secondaryText: file.date }),
-        _react2.default.createElement(_Divider2.default, null),
-        _react2.default.createElement(_List.ListItem, { style: styles.listStyle, disabled: true, primaryText: 'Size', secondaryText: file.size }),
-        _react2.default.createElement(_Divider2.default, null)
-      );
-    }, this);
-
-    return _react2.default.createElement(
-      'div',
-      { className: this.props.artifact.name == null ? "muted" : null },
-      _react2.default.createElement(
-        'h3',
-        { className: 'margin-bottom-none' },
-        'Artifact details'
-      ),
-      _react2.default.createElement(
-        'div',
-        null,
-        _react2.default.createElement(
-          'div',
-          { className: 'artifact-list list-item' },
-          _react2.default.createElement(
-            'div',
-            { style: { padding: "9px 0" } },
-            _react2.default.createElement(
-              'div',
-              { style: { padding: "12px 16px 10px", lineHeight: "12px", height: "74px" } },
-              _react2.default.createElement(
-                'span',
-                { style: { color: "rgba(0,0,0,0.8)", fontSize: "12px" } },
-                'Description'
-              ),
-              _react2.default.createElement(
-                'div',
-                { style: { color: "rgba(0,0,0,0.54)", marginRight: "30px", marginTop: "8px", whiteSpace: "normal" } },
-                _react2.default.createElement(
-                  'span',
-                  { className: this.state.descEdit ? "hidden" : null },
-                  info.description
-                ),
-                descInput
-              ),
-              editButtonDesc
-            ),
-            _react2.default.createElement('hr', { style: { margin: "0", backgroundColor: "#e0e0e0", height: "1px", border: "none" } })
-          ),
-          _react2.default.createElement(
-            _List.List,
-            { style: { backgroundColor: "rgba(255,255,255,0)" } },
-            _react2.default.createElement(_List.ListItem, { style: styles.listStyle, disabled: true, primaryText: 'Date uploaded', secondaryText: info.modified }),
-            _react2.default.createElement(_Divider2.default, null)
-          )
-        ),
-        _react2.default.createElement(
-          'div',
-          { className: 'artifact-list list-item' },
-          _react2.default.createElement(
-            _List.List,
-            { style: { backgroundColor: "rgba(255,255,255,0)" } },
-            _react2.default.createElement(_List.ListItem, { style: styles.listStyle, disabled: true, secondaryTextLines: 2, primaryText: 'Device type compatibility', secondaryText: this.props.compatible }),
-            _react2.default.createElement(_Divider2.default, null)
-          ),
-          _react2.default.createElement(
-            'div',
-            { className: 'hidden' },
-            _react2.default.createElement(
-              _List.List,
-              { style: { backgroundColor: "rgba(255,255,255,0)" } },
-              _react2.default.createElement(_List.ListItem, { style: styles.listStyle, disabled: true, primaryText: 'Installed on devices', secondaryText: devicesLink }),
-              _react2.default.createElement(_Divider2.default, null)
-            )
-          )
-        ),
-        _react2.default.createElement(
-          'div',
-          { className: 'artifact-list list-item', style: { width: "320px" } },
-          _react2.default.createElement(
-            _List.List,
-            { style: { backgroundColor: "rgba(255,255,255,0)", paddingTop: "16px" } },
-            _react2.default.createElement(
-              'div',
-              { key: 'updateButton' },
-              _react2.default.createElement(_List.ListItem, {
-                style: styles.listStyle,
-                primaryText: 'Create a deployment using this artifact',
-                onClick: this._clickArtifactSchedule,
-                leftIcon: _react2.default.createElement(
-                  _FontIcon2.default,
-                  { style: { marginTop: 6, marginBottom: 6 }, className: 'material-icons update' },
-                  'replay'
-                ) })
-            ),
-            _react2.default.createElement(_Divider2.default, null)
-          )
-        )
-      ),
-      _react2.default.createElement(
-        'h4',
-        { className: 'margin-bottom-none' },
-        'Files'
-      ),
-      _react2.default.createElement(
-        'div',
-        null,
-        fileDetails
-      )
-    );
-  }
-});
-
-SelectedArtifact.contextTypes = {
-  router: _react2.default.PropTypes.object
-};
-
-module.exports = SelectedArtifact;
-
-},{"material-ui/Divider":226,"material-ui/FlatButton":233,"material-ui/FontIcon":237,"material-ui/IconButton":242,"material-ui/List":250,"material-ui/TextField":305,"react":650,"react-router":586,"react-time":617}],780:[function(require,module,exports){
-'use strict';
-
-var _react = require('react');
-
-var _react2 = _interopRequireDefault(_react);
-
-var _reactRouter = require('react-router');
-
-var _Snackbar = require('material-ui/Snackbar');
-
-var _Snackbar2 = _interopRequireDefault(_Snackbar);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var AppStore = require('../../stores/app-store');
-var LocalStore = require('../../stores/local-store');
-var AppActions = require('../../actions/app-actions');
-var Repository = require('./repository.js');
-
-function getState() {
-  return {
-    software: AppStore.getSoftwareRepo(),
-    groups: AppStore.getGroups(),
-    selected: null,
-    snackbar: AppStore.getSnackbar()
-  };
-}
-
-var Software = _react2.default.createClass({
-  displayName: 'Software',
-
-  getInitialState: function getInitialState() {
-    return getState();
-  },
-  componentWillMount: function componentWillMount() {
-    AppStore.changeListener(this._onChange);
-  },
-  componentDidMount: function componentDidMount() {
-    this._getArtifacts();
-    this._getGroups();
-    this._getDevices();
-  },
-  componentWillUnmount: function componentWillUnmount() {
-    AppStore.removeChangeListener(this._onChange);
-  },
-  _setStorage: function _setStorage(key, value) {
-    AppActions.setLocalStorage(key, value);
-  },
-  _onChange: function _onChange() {
-    this.setState(getState());
-    if (this.props.params) {
-      if (this.props.params.softwareVersion) {
-        // selected software
-        var artifact = AppStore.getSoftwareArtifact("name", this.props.params.softwareVersion);
-        this.setState({ selected: artifact });
-      }
-    }
-  },
-  _startLoading: function _startLoading(bool) {
-    this.setState({ doneLoading: !bool });
-  },
-  _getArtifacts: function _getArtifacts() {
-    var callback = {
-      success: function (artifacts) {
-        setTimeout(function () {
-          this.setState({ doneLoading: true, software: artifacts });
-        }.bind(this), 300);
-      }.bind(this),
-      error: function (err) {
-        var errormsg = err || "Please check your connection";
-        AppActions.setSnackbar("Artifacts couldn't be loaded. " + errormsg);
-        this.setState({ doneLoading: true });
-      }.bind(this)
-    };
-    AppActions.getArtifacts(callback);
-  },
-  _getGroups: function _getGroups() {
-    var callback = {
-      success: function (groups) {
-        this.setState({ groups: groups });
-        this._getGroupDevices(groups);
-      }.bind(this),
-      error: function error(err) {
-        console.log(err);
-      }
-    };
-    AppActions.getGroups(callback);
-  },
-  _getDevices: function _getDevices() {
-    AppActions.getDevices({
-      success: function (devices) {
-        if (!devices.length) {
-          AppActions.getNumberOfDevicesForAdmission(function (count) {
-            if (count) {
-              this.setState({ hasPending: true });
-            }
-          }.bind(this));
-        } else {
-          var allDevices = [];
-          for (var i = 0; i < devices.length; i++) {
-            allDevices.push(devices[i]);
-          }
-          this.setState({ hasDevices: true, allDevices: allDevices });
-        }
-      }.bind(this),
-      error: function error(err) {
-        console.log("Error: " + err);
-      }
-    });
-  },
-  _getGroupDevices: function _getGroupDevices(groups) {
-    // get list of devices for each group and save them to state 
-    var i, group;
-    var callback = {
-      success: function (devices) {
-        var tmp = {};
-        var devs = [];
-        for (var x = 0; x < devices.length; x++) {
-          // get full details, not just id
-          devs.push(AppStore.getSingleDevice(devices[x]));
-        }
-        tmp[group] = devs;
-        this.setState({ groupDevices: tmp });
-      }.bind(this)
-    };
-    for (i = 0; i < groups.length; i++) {
-      group = groups[i];
-      AppActions.getGroupDevices(groups[i], callback);
-    }
-  },
-  render: function render() {
-    var artifact_link = _react2.default.createElement(
-      'span',
-      null,
-      'Download latest artifact',
-      _react2.default.createElement(
-        'a',
-        { href: 'https://s3-eu-west-1.amazonaws.com/yocto-builds/latest/latest.tar.gz', target: '_blank' },
-        ' here '
-      ),
-      'and upload the artifact file to the Mender server'
-    );
-
-    return _react2.default.createElement(
-      'div',
-      { className: 'contentContainer' },
-      _react2.default.createElement(
-        'div',
-        { className: 'relative overflow-hidden' },
-        _react2.default.createElement(Repository, { groupDevices: this.state.groupDevices, allDevices: this.state.allDevices, refreshArtifacts: this._getArtifacts, startLoader: this._startLoading, loading: !this.state.doneLoading, setStorage: this._setStorage, selected: this.state.selected, software: this.state.software, groups: this.state.groups, hasPending: this.state.hasPending, hasDevices: this.state.hasDevices })
-      ),
-      _react2.default.createElement(_Snackbar2.default, {
-        open: this.state.snackbar.open,
-        message: this.state.snackbar.message,
-        autoHideDuration: 5000,
-        onRequestClose: this.handleRequestClose
-      })
-    );
-  }
-});
-
-module.exports = Software;
-
-},{"../../actions/app-actions":739,"../../stores/app-store":785,"../../stores/local-store":786,"./repository.js":778,"material-ui/Snackbar":276,"react":650,"react-router":586}],781:[function(require,module,exports){
+},{"../../actions/app-actions":739,"material-ui/FontIcon":237,"material-ui/IconButton":242,"material-ui/IconMenu":244,"material-ui/MenuItem":256,"material-ui/Tabs":299,"material-ui/Toolbar":322,"react":650,"react-router":586}],781:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -89223,9 +89223,9 @@ var _devices = require('../components/devices/devices');
 
 var _devices2 = _interopRequireDefault(_devices);
 
-var _software = require('../components/software/software');
+var _artifacts = require('../components/artifacts/artifacts');
 
-var _software2 = _interopRequireDefault(_software);
+var _artifacts2 = _interopRequireDefault(_artifacts);
 
 var _reactRouter = require('react-router');
 
@@ -89246,8 +89246,8 @@ module.exports = _react2.default.createElement(
   ),
   _react2.default.createElement(
     _reactRouter.Route,
-    { path: '/software', component: _software2.default },
-    _react2.default.createElement(_reactRouter.Route, { path: '(:softwareVersion)' })
+    { path: '/artifacts', component: _artifacts2.default },
+    _react2.default.createElement(_reactRouter.Route, { path: '(:artifactVersion)' })
   ),
   _react2.default.createElement(
     _reactRouter.Route,
@@ -89264,7 +89264,7 @@ module.exports = _react2.default.createElement(
   )
 );
 
-},{"../components/app":743,"../components/dashboard/dashboard":750,"../components/deployments/deployments":757,"../components/devices/devices":771,"../components/software/software":780,"react":650,"react-router":586}],782:[function(require,module,exports){
+},{"../components/app":743,"../components/artifacts/artifacts":744,"../components/dashboard/dashboard":754,"../components/deployments/deployments":761,"../components/devices/devices":775,"react":650,"react-router":586}],782:[function(require,module,exports){
 'use strict';
 
 module.exports = {
@@ -89353,7 +89353,7 @@ var EventEmitter = require('events').EventEmitter; // from device
 
 var CHANGE_EVENT = "change";
 
-var _softwareRepo = [];
+var _artifactsRepo = [];
 var _currentGroup = null;
 var _deploymentArtifact = null;
 var _currentGroupDevices = [];
@@ -89563,10 +89563,10 @@ function discoverDevices(array) {
 
 function _uploadArtifact(artifact) {
   if (artifact.id) {
-    _softwareRepo[findWithAttr(_softwareRepo, "id", artifact.id)] = artifact;
+    _artifactsRepo[findWithAttr(_artifactsRepo, "id", artifact.id)] = artifact;
   } else {
-    artifact.id = _softwareRepo.length + 1;
-    _softwareRepo.push(artifact);
+    artifact.id = _artifactsRepo.length + 1;
+    _artifactsRepo.push(artifact);
   }
 }
 
@@ -89640,8 +89640,8 @@ function _removeDeployment(id) {
 
 function _sortTable(array, column, direction) {
   switch (array) {
-    case "_softwareRepo":
-      _softwareRepo.sort(customSort(direction, column));
+    case "_artifactsRepo":
+      _artifactsRepo.sort(customSort(direction, column));
       break;
     case "_currentGroupDevices":
       _currentGroupDevices.sort(customSort(direction, column));
@@ -89694,9 +89694,9 @@ function startTimeSortAscend(a, b) {
 */
 function setArtifacts(artifacts) {
   if (artifacts) {
-    _softwareRepo = artifacts;
+    _artifactsRepo = artifacts;
   }
-  _softwareRepo.sort(customSort(1, "modified"));
+  _artifactsRepo.sort(customSort(1, "modified"));
 }
 
 function setDeployments(deployments) {
@@ -89870,18 +89870,18 @@ var AppStore = assign(EventEmitter.prototype, {
     return _selectedDevices;
   },
 
-  getSoftwareRepo: function getSoftwareRepo() {
+  getArtifactsRepo: function getArtifactsRepo() {
     /*
-    * Return list of saved software objects
+    * Return list of saved artifacts objects
     */
-    return discoverDevices(_softwareRepo);
+    return discoverDevices(_artifactsRepo);
   },
 
   getSoftwareArtifact: function getSoftwareArtifact(attr, val) {
     /*
     * Return single artifact by attr
     */
-    return _softwareRepo[findWithAttr(_softwareRepo, attr, val)];
+    return _artifactsRepo[findWithAttr(_artifactsRepo, attr, val)];
   },
 
   getPastDeployments: function getPastDeployments() {

@@ -149,7 +149,7 @@ var ScheduleForm = React.createClass({
               ref="artifact"
               value={this.props.artifact ? this.props.artifact.name : null}
               onChange={this._handleArtifactValueChange}
-              floatingLabelText="Select target software"
+              floatingLabelText="Select target artifact"
               disabled={!artifactItems.length}
             >
               {artifactItems}
@@ -166,7 +166,7 @@ var ScheduleForm = React.createClass({
               className={this.props.artifact ? "margin-left" : "hidden"} />
 
             <p className={artifactItems.length ? "hidden" : "info"} style={{marginTop:"0"}}>
-              <FontIcon className="material-icons" style={{marginRight:"4px", fontSize:"18px", top: "4px", color:"rgb(171, 16, 0)"}}>error_outline</FontIcon>There are no artifacts available. <Link to={`/software`}>Upload one to the repository</Link> to get started.
+              <FontIcon className="material-icons" style={{marginRight:"4px", fontSize:"18px", top: "4px", color:"rgb(171, 16, 0)"}}>error_outline</FontIcon>There are no artifacts available. <Link to={`/artifacts`}>Upload one to the repository</Link> to get started.
             </p>
           </div>
 
@@ -202,7 +202,7 @@ var ScheduleForm = React.createClass({
             <div className={tmpDevices ? null : 'hidden'}>{this.props.filteredDevices ? this.props.filteredDevices.length : "0"} of {devicesLength} {pluralize("devices",devicesLength)} will be updated <span onClick={this._showDevices} className={this.state.disabled ? "hidden" : "margin-left link"}>View devices</span></div>
           </div>
             
-          <p className={this.props.hasDevices && artifactItems.length ? 'info': "hidden"}><FontIcon className="material-icons" style={{marginRight:"4px", fontSize:"18px", top: "4px"}}>info_outline</FontIcon>the deployment will skip any devices that are already on the target software version, or that have a different device type.</p>
+          <p className={this.props.hasDevices && artifactItems.length ? 'info': "hidden"}><FontIcon className="material-icons" style={{marginRight:"4px", fontSize:"18px", top: "4px"}}>info_outline</FontIcon>the deployment will skip any devices that are already on the target artifact version, or that have a different device type.</p>
 
         </form>
       </div>

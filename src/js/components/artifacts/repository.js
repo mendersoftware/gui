@@ -27,7 +27,7 @@ import IconButton from 'material-ui/IconButton';
 import Snackbar from 'material-ui/Snackbar';
 
 var newState = {};
-var software = [];
+var artifacts = [];
 
 var Repository = React.createClass({
   getInitialState: function() {
@@ -42,7 +42,7 @@ var Repository = React.createClass({
       searchTerm: null,
       upload: false,
       popupLabel: "Upload a new artifact",
-      software: [],
+      artifacts: [],
       tmpFile: null,
       snackMessage: "Deployment created",
       openSnack: false,
@@ -52,7 +52,7 @@ var Repository = React.createClass({
   },
 
   componentWillReceiveProps: function(nextProps) {
-    software = nextProps.software;
+    artifacts = nextProps.artifacts;
     if (nextProps.selected) {
       this.setState({artifact: nextProps.selected});
     }
@@ -115,7 +115,7 @@ var Repository = React.createClass({
   },
 
   _onRowSelection: function(rowNumber, columnId) {
-    var artifact = software[rowNumber];
+    var artifact = artifacts[rowNumber];
     if (columnId<=4) {
       if (this.state.artifact === artifact) {
         this._resetArtifactState();
@@ -137,7 +137,7 @@ var Repository = React.createClass({
       this.setState({sortDown: direction});
     }
     // sort table
-    AppActions.sortTable("_softwareRepo", col, direction);
+    AppActions.sortTable("_artifactsRepo", col, direction);
   },
   searchUpdated: function(term) {
     this.setState({searchTerm: term, artifact: {}}); // needed to force re-render
@@ -197,13 +197,13 @@ var Repository = React.createClass({
       }
     }
 
-    var tmpSoftware = [];
+    var tmpArtifacts = [];
     if (this.refs.search) {
       var filters = ['name', 'device_types_compatible', 'description'];
-      tmpSoftware = software.filter(this.refs.search.filter(filters));
+      tmpArtifacts = artifacts.filter(this.refs.search.filter(filters));
     }
     
-    var items = tmpSoftware.map(function(pkg, index) {
+    var items = tmpArtifacts.map(function(pkg, index) {
       var compatible = pkg.device_types_compatible.join(", ");
       var expanded = '';
       if (this.state.artifact.name === pkg.name ) {
