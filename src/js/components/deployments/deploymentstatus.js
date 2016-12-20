@@ -14,7 +14,7 @@ var DeploymentStatus = React.createClass({
         "downloading": 0,
         "installing": 0,
         "rebooting": 0,
-        "noimage": 0
+        "noartifact": 0
       }
     };
   },
@@ -57,7 +57,7 @@ var DeploymentStatus = React.createClass({
           <span className={"status inprogress"}>{inprogress}</span><span className={this.props.vertical ? "label":"hidden"}>In progress</span>
         </div>
         <div className={this.state.stats.success ? "hint--bottom" : "hint--bottom disabled"} aria-label="Successful">
-          <span className="status success">{this.state.stats.success}</span><span className={this.props.vertical ? "label":"hidden"}>Success</span>
+          <span className="status success">{this.state.stats.success}</span><span className={this.props.vertical ? "label":"hidden"}>Successful</span>
         </div>
       </div>
     );

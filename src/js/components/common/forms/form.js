@@ -23,12 +23,11 @@ var Form = React.createClass({
        // If we use the required prop we add a validation rule
       // that ensures there is a value. The input
       // should not be valid with empty value
-      var validations = child.props.validations;
-      if (child.props.required) {
-        validations = child.props.validations ? child.props.validations + ',' : '';
+      var validations = child.props.validations || "";
+      if (child.props.required && (validations.indexOf('isLength')==-1)) {
+        validations = validations ? validations +", " : validations;
         validations += 'isLength:1';
       }
-
       return React.cloneElement(child, {validations: validations, attachToForm:this.attachToForm, detachFromForm:this.detachFromForm, updateModel:this.updateModel, validate:this.validate})
     }.bind(this));
   
@@ -112,7 +111,7 @@ var Form = React.createClass({
     // if we find an invalid input component
     var inputs = this.inputs;
     Object.keys(inputs).forEach(function (name) {
-      if (!inputs[name].state.isValid) {
+      if (!inputs[name].state.isValid || (inputs[name].props.required && !inputs[name].state.value )) {
         allIsValid = false;
       }
     });
@@ -168,9 +167,10 @@ var Form = React.createClass({
         </div>
         <RaisedButton
           key="submit"
-          label="Save image"
+          label="Save artifact"
           primary={true}
-          onClick={this.updateModel} />
+          onClick={this.updateModel}
+          disabled={!this.state.isValid} />
       </div>
     );
     return (

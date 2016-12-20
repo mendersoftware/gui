@@ -29,6 +29,7 @@ var Report = React.createClass({
     }.bind(this));
     AppActions.getSingleDeploymentDevices(this.props.deployment.id, function(devices) {
       this._deploymentState("devices",devices);
+      self._getDeviceDetails(devices);
     }.bind(this));
   },
   _deploymentState: function (key, val) {
@@ -66,6 +67,22 @@ var Report = React.createClass({
       var uriContent = "data:application/octet-stream," + encodeURIComponent(content);
       var newWindow = window.open(uriContent, 'deviceLog');
   },
+  _getDeviceDetails: function (devices) {
+    var self = this;
+    for (var i=0;i<devices.length;i++) {
+      // get device artifact details not listed in schedule data
+      AppActions.getDeviceById(devices[i].id, {
+        success: function(device) {
+          var deviceArtifact = self.state.deviceArtifact || {};
+          deviceArtifact[device.id] = self._getDeviceArtifact(device);
+          self.setState({deviceArtifact: deviceArtifact});
+        },
+        error: function(err) {
+          console.log("error ", err);
+        }
+      });
+    }
+  },
   dialogDismiss: function() {
     this.setState({
       showDialog: false,
@@ -74,11 +91,13 @@ var Report = React.createClass({
   },
   render: function () {
     var deviceList = [];
-    var encodedSoftware = encodeURIComponent(this.props.deployment.artifact_name); 
-    var softwareLink = (
-      <Link style={{fontWeight:"500"}} to={`/software/${encodedSoftware}`}>{this.props.deployment.artifact_name}</Link>
-    )
-
+    var artifactLink;
+    if (this.props.deployment &&  typeof this.props.deployment.artifact_name !== 'undefined')  {
+      var encodedArtifact = encodeURIComponent(this.props.deployment.artifact_name); 
+      artifactLink = (
+        <Link style={{fontWeight:"500"}} to={`/artifact/${encodedArtifact}`}>{this.props.deployment.artifact_name}</Link>
+      )
+    }
     if (this.state.devices) {
       deviceList = this.state.devices.map(function(device, index) {
         var encodedDevice = encodeURIComponent("id="+device.id); 
@@ -87,13 +106,23 @@ var Report = React.createClass({
           <Link style={{fontWeight:"500"}} to={`/devices/0/${encodedDevice}`}>{device.id}</Link>
         </div>
         );
-        //var deviceDetails = this._getDeviceDetails(device.id);
+        
+         
+        if (typeof this.state.deviceArtifact !== 'undefined') {
+          if (typeof this.state.deviceArtifact[device.id] !== 'undefined')  {
+            var encodedArtifact = encodeURIComponent(this.state.deviceArtifact[device.id]);
+            artifactLink = (
+              <Link style={{fontWeight:"500"}} to={`/artifact/${encodedArtifact}`}>{this.state.deviceArtifact[device.id]}</Link>
+            )
+          }
+        }
+        
         if ((device.status==="failure")||(this.state.failsOnly===false)){
           return (
             <TableRow key={index}>
               <TableRowColumn>{deviceLink}</TableRowColumn>
               <TableRowColumn>{device.device_type}</TableRowColumn>
-              <TableRowColumn>{softwareLink}</TableRowColumn>
+              <TableRowColumn>{artifactLink}</TableRowColumn>
               <TableRowColumn><Time value={this._formatTime(device.created)} format="YYYY-MM-DD HH:mm" /></TableRowColumn>
               <TableRowColumn><Time value={this._formatTime(device.finished)} format="YYYY-MM-DD HH:mm" /></TableRowColumn>
               <TableRowColumn>{device.status || "--"}</TableRowColumn>
@@ -125,7 +154,7 @@ var Report = React.createClass({
 
         <div className="report-container">
           <div className="deploymentInfo" style={{width:"260px", height:"auto", margin:"30px 30px 30px 0", display:"inline-block", verticalAlign:"top"}}>
-           <div><div className="progressLabel">Updating to:</div><span>{softwareLink}</span></div>
+           <div><div className="progressLabel">Updating to:</div><span>{artifactLink}</span></div>
            <div><div className="progressLabel">Device group:</div><span>{this.props.deployment.name}</span></div>
            <div><div className="progressLabel"># devices:</div><span>{deviceList.length}</span></div>
           </div>

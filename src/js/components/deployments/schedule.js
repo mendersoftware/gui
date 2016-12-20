@@ -50,7 +50,7 @@ var Schedule = React.createClass({
             adjustForCheckbox={false}>
             <TableRow>
               <TableHeaderColumn tooltip="Device group">Group</TableHeaderColumn>
-              <TableHeaderColumn tooltip="Target software version">Target software</TableHeaderColumn>
+              <TableHeaderColumn tooltip="Target artifact version">Target artifact</TableHeaderColumn>
               <TableHeaderColumn tooltip="Number of devices"># Devices</TableHeaderColumn>
               <TableHeaderColumn tooltip="Started">Started</TableHeaderColumn>
               <TableHeaderColumn tooltip="Finished">Finished</TableHeaderColumn>

@@ -89,7 +89,7 @@ var Authorized =  React.createClass({
       if (rowNumber == this.state.expanded) {
         newIndex = null;
       }
-      this.setState({expanded: newIndex});
+      this.setState({expanded: newIndex, expandedDevice: this.props.pending[rowNumber]});
     }
   },
   _setDeviceIdentity: function(device) {
@@ -118,7 +118,7 @@ var Authorized =  React.createClass({
     var devices = this.props.pending.map(function(device, index) {
       var expanded = '';
       if ( this.state.expanded === index ) {
-        expanded = <SelectedDevices attributes={device.attributes} deviceId={this.state.deviceId} accept={this._authorizeDevices} block={this._blockDevice} unauthorized={true} selected={[device]}  />
+        expanded = <SelectedDevices attributes={device.attributes} deviceId={this.state.deviceId} accept={this._authorizeDevices} block={this._blockDevice} device={this.state.expandedDevice} unauthorized={true} selected={[device]}  />
       }
       return (
         <TableRow style={{"backgroundColor": "#e9f4f3"}} className={expanded ? "expand" : null} hoverable={true} key={index}>
@@ -133,7 +133,7 @@ var Authorized =  React.createClass({
               <FontIcon className="material-icons red">cancel</FontIcon>
             </IconButton>
           </TableRowColumn>
-          <TableRowColumn style={{width:"0", overflow:"visible"}}>
+          <TableRowColumn style={{width:"0", padding:"0", overflow:"visible"}}>
   
             <Collapse springConfig={{stiffness: 210, damping: 20}} onHeightReady={this._adjustCellHeight} className="expanded" isOpened={expanded ? true : false}>
               {expanded}
@@ -143,8 +143,9 @@ var Authorized =  React.createClass({
         </TableRow>
       )
     }, this);
+
     return (
-      <Collapse springConfig={{stiffness: 190, damping: 20}} style={{minHeight:this.state.minHeight}} isOpened={true} className="margin-top margin-bottom onboard authorize">
+      <Collapse springConfig={{stiffness: 190, damping: 20}} style={{minHeight:this.state.minHeight}} isOpened={true} className="margin-top authorize">
         <p>Devices pending authorization</p>
         <Table
           selectable={false}
@@ -157,7 +158,7 @@ var Authorized =  React.createClass({
           >
             <TableRow>
               <TableHeaderColumn className="columnHeader" tooltip="Name">Name<FontIcon ref="name" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "name")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
-              <TableHeaderColumn className="columnHeader" tooltip="Last connection request">Last connection request<FontIcon ref="request_time" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "request_time")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
+              <TableHeaderColumn className="columnHeader" tooltip="Request time">Request time<FontIcon ref="request_time" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "request_time")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
               <TableHeaderColumn className="columnHeader" tooltip="Status">Status<FontIcon ref="status" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "status")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
               <TableHeaderColumn className="columnHeader" tooltip="Authorize device?">Authorize?</TableHeaderColumn>
             </TableRow>
@@ -169,6 +170,7 @@ var Authorized =  React.createClass({
             {devices}
           </TableBody>
         </Table>
+
         <div className="margin-top-small">
           <RaisedButton onClick={this._authorizeDevices.bind(null, this.props.pending)} primary={true} label="Authorize all" className="float-right" />
         </div>

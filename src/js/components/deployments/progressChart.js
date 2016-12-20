@@ -11,7 +11,7 @@ var ProgressChart = React.createClass({
         "downloading": 0,
         "failure": 0,
         "installing": 0,
-        "noimage": 0,
+        "noartifact": 0,
         "pending": 0,
         "rebooting": 0,
         "success": 0
@@ -52,7 +52,7 @@ var ProgressChart = React.createClass({
     this.setState({device: device});
   },
   render: function() {
-    var totalDevices = this.state.stats.success + this.state.stats.failure + this.state.stats.downloading + this.state.stats.installing + this.state.stats.rebooting + this.state.stats.noimage + this.state.stats.pending;
+    var totalDevices = this.state.stats.success + this.state.stats.failure + this.state.stats.downloading + this.state.stats.installing + this.state.stats.rebooting + this.state.stats.noartifact + this.state.stats.pending;
 
     var success = this.state.stats.success;
     var failures = this.state.stats.failure;
@@ -71,7 +71,6 @@ var ProgressChart = React.createClass({
     }
 
     var pixelHeight = 80 / rows;
-
     var deviceGrid = this.state.devices.map(function(device, index) {
       var split = Math.ceil(dev / rows);
       return (

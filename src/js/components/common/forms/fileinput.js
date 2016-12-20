@@ -17,23 +17,26 @@ var FileInput = React.createClass({
     this.props.detachFromForm(this); // Detaching if unmounting
   },
   setValue: function (event) {
-   if (event.target.files.length) {
+    if (event.target.files.length) {
       this.setState({value: event.target.files[0]});
     }
     this.props.validate(this, event.target.files[0]);
   },
   render: function () {
+    var className = "fileInput";
+    if (this.state.errorText) className += " error";
     return (
-      <div>
+      <div className={this.props.required ? "required file" : null}>
         <FileField
           id={this.props.id}
           name={this.props.id}
           accept={this.props.accept}
           placeholder={this.props.placeholder}
-          className={this.state.errorText ? "fileInput error" : "fileInput" }
+          className={className}
           style={{zIndex: "2"}}
           onChange={this.setValue}
           value={this.state.value}
+          required={this.props.required}
           />
         <span style={{color: "rgb(171, 16, 0)", fontSize:"12px", position:"relative", top:"-6px"}}>
           {this.state.errorText}

@@ -35,20 +35,19 @@ var ScheduleForm = React.createClass({
     }
 
     return {
-      images: AppStore.getSoftwareRepo(),
       disabled: disabled,
       group: group,
       showDevices: false,
     };
   },
+
   _handleGroupValueChange: function(e, index, value) {
-    var device_type = this.props.image ? this.props.image.device_type : null;
     var group = value;
     this._sendUpToParent(group, 'group');
   },
-  _handleImageValueChange: function(e, index, value) {
-    var image = this.state.images[index];
-    this._sendUpToParent(image, 'image');
+  _handleArtifactValueChange: function(e, index, value) {
+    var artifact = this.props.artifacts[index];
+    this._sendUpToParent(artifact, 'artifact');
   },
 
   _sendUpToParent: function(val, attr) {
@@ -65,11 +64,11 @@ var ScheduleForm = React.createClass({
   },
 
   render: function() {
-    var imageItems = [];
+    var artifactItems = [];
 
-    for (var i=0; i<this.state.images.length;i++) {
-      var tmp = <MenuItem value={this.state.images[i]} key={i} primaryText={this.state.images[i].name} />
-      imageItems.push(tmp);
+    for (var i=0; i<this.props.artifacts.length;i++) {
+      var tmp = <MenuItem value={this.props.artifacts[i].name} key={i} primaryText={this.props.artifacts[i].name} />
+      artifactItems.push(tmp);
     }
    
 
@@ -87,8 +86,9 @@ var ScheduleForm = React.createClass({
     }
 
     
-    var device_type = this.props.image ? this.props.image.device_type : '';
-    var filters = "device_type="+device_type;
+    var device_types = this.props.artifact ? this.props.artifact.device_types_compatible : [];
+    device_types = device_types.join(', ');
+    var filters = "";
     if (this.props.device) {filters = "id="+this.props.device.id}
     filters = encodeURIComponent(filters);
 
@@ -146,27 +146,27 @@ var ScheduleForm = React.createClass({
         <form>
           <div style={{display:"block"}}>
             <SelectField
-              ref="image"
-              value={this.props.image}
-              onChange={this._handleImageValueChange}
-              floatingLabelText="Select target software"
-              disabled={!imageItems.length}
+              ref="artifact"
+              value={this.props.artifact ? this.props.artifact.name : null}
+              onChange={this._handleArtifactValueChange}
+              floatingLabelText="Select target artifact"
+              disabled={!artifactItems.length}
             >
-              {imageItems}
+              {artifactItems}
             </SelectField>
 
             <TextField
               disabled={true}
               hintText="Device type"
               floatingLabelText="Device type"
-              value={device_type} 
+              value={device_types} 
               underlineDisabledStyle={{borderBottom:"none"}}
               style={{verticalAlign:"top"}}
               errorStyle={{color: "rgb(171, 16, 0)"}}
-              className={this.props.image ? "margin-left" : "hidden"} />
+              className={this.props.artifact ? "margin-left" : "hidden"} />
 
-            <p className={imageItems.length ? "hidden" : "info"} style={{marginTop:"0"}}>
-              <FontIcon className="material-icons" style={{marginRight:"4px", fontSize:"18px", top: "4px", color:"rgb(171, 16, 0)"}}>error_outline</FontIcon>There are no images available. <Link to={`/software`}>Upload one to the repository</Link> to get started.
+            <p className={artifactItems.length ? "hidden" : "info"} style={{marginTop:"0"}}>
+              <FontIcon className="material-icons" style={{marginRight:"4px", fontSize:"18px", top: "4px", color:"rgb(171, 16, 0)"}}>error_outline</FontIcon>There are no artifacts available. <Link to={`/artifacts`}>Upload one to the repository</Link> to get started.
             </p>
           </div>
 
@@ -202,7 +202,7 @@ var ScheduleForm = React.createClass({
             <div className={tmpDevices ? null : 'hidden'}>{this.props.filteredDevices ? this.props.filteredDevices.length : "0"} of {devicesLength} {pluralize("devices",devicesLength)} will be updated <span onClick={this._showDevices} className={this.state.disabled ? "hidden" : "margin-left link"}>View devices</span></div>
           </div>
             
-          <p className={this.props.hasDevices && imageItems.length ? 'info': "hidden"}><FontIcon className="material-icons" style={{marginRight:"4px", fontSize:"18px", top: "4px"}}>info_outline</FontIcon>the deployment will skip any devices that are already on the target software version, or that have a different device type.</p>
+          <p className={this.props.hasDevices && artifactItems.length ? 'info': "hidden"}><FontIcon className="material-icons" style={{marginRight:"4px", fontSize:"18px", top: "4px"}}>info_outline</FontIcon>the deployment will skip any devices that are already on the target artifact version, or that have a different device type.</p>
 
         </form>
       </div>

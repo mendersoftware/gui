@@ -60,6 +60,7 @@ var ProgressReport = React.createClass({
     } else {
       AppActions.getSingleDeploymentDevices(self.props.deployment.id, function(devices) {
         self._deploymentState("devices",devices);
+        self._getDeviceDetails(devices);
       });
     }
   },
@@ -68,9 +69,30 @@ var ProgressReport = React.createClass({
     state[key] = val;
     this.setState(state);
   },
-  _getDeviceDetails: function (id) {
-    // get device details not listed in schedule data
-    //return AppActions.getSingleDeviceReport(id)
+  _getDeviceArtifact: function (device) {
+    var artifact = "";
+    for (var i=0;i<device.attributes.length;i++) {
+      if (device.attributes[i].name === "artifact_id") {
+        artifact = device.attributes[i].value;
+      }
+    }
+    return artifact;
+  },
+  _getDeviceDetails: function (devices) {
+    var self = this;
+    for (var i=0;i<devices.length;i++) {
+      // get device artifact details not listed in schedule data
+      AppActions.getDeviceById(devices[i].id, {
+        success: function(device) {
+          var deviceArtifacts = self.state.deviceArtifacts || {};
+          deviceArtifacts[device.id] = self._getDeviceArtifact(device);
+          self.setState({deviceArtifacts: deviceArtifacts});
+        },
+        error: function(err) {
+          console.log("error ", err);
+        }
+      });
+    }
   },
   _handleCheckbox: function (e, checked) {
     this.setState({failsOnly:checked});
@@ -107,11 +129,8 @@ var ProgressReport = React.createClass({
   },
   render: function () {
     var deviceList = [];
-    var encodedSoftware = encodeURIComponent(this.props.deployment.artifact_name); 
-    var softwareLink = (
-      <Link style={{fontWeight:"500"}} to={`/software/${encodedSoftware}`}>{this.props.deployment.artifact_name}</Link>
-    )
-
+    var artifactsLink;
+  
     if (this.state.devices) {
       deviceList = this.state.devices.map(function(device, index) {
         var encodedDevice = encodeURIComponent("id="+device.id); 
@@ -120,13 +139,22 @@ var ProgressReport = React.createClass({
           <Link style={{fontWeight:"500"}} to={`/devices/0/${encodedDevice}`}>{device.id}</Link>
         </div>
         );
-        //var deviceDetails = this._getDeviceDetails(device.id);
+        
+        if (typeof this.state.deviceArtifacts !== 'undefined') {
+          if (typeof this.state.deviceArtifacts[device.id] !== 'undefined')  {
+            var encodedArtifacts = encodeURIComponent(this.state.deviceArtifacts[device.id]);
+            artifactsLink = (
+              <Link style={{fontWeight:"500"}} to={`/artifacts/${encodedArtifacts}`}>{this.state.deviceArtifacts[device.id]}</Link>
+            )
+          }
+        }
+
         if ((device.status==="Failed")||(this.state.failsOnly===false)){
           return (
             <TableRow key={index}>
               <TableRowColumn>{deviceLink}</TableRowColumn>
               <TableRowColumn>{device.device_type}</TableRowColumn>
-              <TableRowColumn>{softwareLink}</TableRowColumn>
+              <TableRowColumn>{artifactsLink}</TableRowColumn>
               <TableRowColumn><Time value={this._formatTime(device.created)} format="YYYY-MM-DD HH:mm" /></TableRowColumn>
               <TableRowColumn>{device.status || "--"}</TableRowColumn>
               <TableRowColumn><FlatButton className={device.status==='failure' ? null : "hidden"} onClick={this.viewLog.bind(null, device.id)} label="View log" /></TableRowColumn>
@@ -155,7 +183,7 @@ var ProgressReport = React.createClass({
       <div>
         <div className="report-container">
           <div className="deploymentInfo" style={{width:"240px", height:"auto", margin:"30px 30px 30px 0", display:"inline-block", verticalAlign:"top"}}>
-           <div><div className="progressLabel">Updating to:</div><span>{softwareLink}</span></div>
+           <div><div className="progressLabel">Updating to:</div><span>{artifactsLink}</span></div>
            <div><div className="progressLabel">Device group:</div><span>{this.props.deployment.name}</span></div>
            <div><div className="progressLabel"># devices:</div><span>{deviceList.length}</span></div>
           </div>

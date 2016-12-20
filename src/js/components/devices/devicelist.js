@@ -8,7 +8,6 @@ var AppStore = require('../../stores/app-store');
 var AppActions = require('../../actions/app-actions');
 var SelectedDevices = require('./selecteddevices');
 var Filters = require('./filters');
-var Loader = require('../common/loader');
 var pluralize = require('pluralize');
 
 // material ui
@@ -132,7 +131,7 @@ var DeviceList = React.createClass({
   _setDeviceIdentity: function(device) {
     var callback = {
       success: function(data) {
-        this.setState({deviceAttributes: data.attributes, deviceId: data.id});
+        this.setState({deviceAttributes: data.attributes, deviceId: data.id, admittanceTime: null});
       }.bind(this),
       error: function(err) {
         console.log("Error: " + err);
@@ -141,7 +140,6 @@ var DeviceList = React.createClass({
     AppActions.getDeviceIdentity(device.id, callback);
   },
   _addGroupHandler: function() {
-    var loading = true;
     var i;
     var callback = {
       success: function(device) {
@@ -335,25 +333,25 @@ var DeviceList = React.createClass({
       var expanded = '';
       var attrs = {
         device_type: "",
-        image_id: ""
+        artifact_name: ""
       };
       var attributesLength = device.attributes ? device.attributes.length : 0; 
       for (var i=0;i<attributesLength;i++) {
         attrs[device.attributes[i].name] = device.attributes[i].value;
       }
       if ( this.state.expanded === index ) {
-        expanded = <SelectedDevices redirect={this.props.redirect} attributes={this.state.deviceAttributes} deviceId={this.state.deviceId} images={this.props.images} device={this.state.expandedDevice} selectedGroup={this.props.selectedGroup} images={this.props.images} groups={this.props.groups} />
+        expanded = <SelectedDevices redirect={this.props.redirect} admittanceTime={this.state.admittanceTime} attributes={this.state.deviceAttributes} deviceId={this.state.deviceId} device_type={attrs.device_type} artifacts={this.props.artifacts} device={this.state.expandedDevice} selectedGroup={this.props.selectedGroup} artifacts={this.props.artifacts} groups={this.props.groups} />
       }
       return (
         <TableRow selected={device.selected} hoverable={!expanded} className={expanded ? "expand" : null}  key={index}>
           <TableRowColumn style={expanded ? {height: this.state.divHeight} : null}>{device.id}</TableRowColumn>
           <TableRowColumn>{attrs.device_type || "-"}</TableRowColumn>
-          <TableRowColumn>{attrs.image_id || "-"}</TableRowColumn>
+          <TableRowColumn>{attrs.artifact_name || "-"}</TableRowColumn>
           <TableRowColumn><Time value={device.updated_ts} format="YYYY-MM-DD HH:mm" /></TableRowColumn>
-          <TableRowColumn style={{width:"33px", paddingRight:"0", paddingLeft:"12px"}} className="expandButton">
+          <TableRowColumn style={{width:"55px", paddingRight:"0", paddingLeft:"12px"}} className="expandButton">
             <IconButton className="float-right"><FontIcon className="material-icons">{ expanded ? "arrow_drop_up" : "arrow_drop_down"}</FontIcon></IconButton>
           </TableRowColumn>
-          <TableRowColumn style={{width:"0", overflow:"visible"}}>
+          <TableRowColumn style={{width:"0", padding:"0", overflow:"visible"}}>
            
             <Collapse springConfig={{stiffness: 210, damping: 20}} onHeightReady={this._adjustCellHeight} className="expanded" isOpened={expanded ? true : false}>
               {expanded}
@@ -406,12 +404,11 @@ var DeviceList = React.createClass({
 
     return (
       <div>
-        <Loader show={this.props.loading} />
         <Filters attributes={this.props.attributes} filters={this.props.filters} onFilterChange={this.props.onFilterChange} />
 
-        <div>
+        <div className="margin-top-small">
           <div style={{marginLeft:"26px"}}>
-            <h2 className="hoverEdit">
+            <h2 style={{marginTop:"15px"}}>
              
                 {groupNameInputs}
                 <span className={this.state.nameEdit ? "hidden" : null}>{groupLabel}</span>
@@ -437,9 +434,9 @@ var DeviceList = React.createClass({
                 <TableRow>
                   <TableHeaderColumn className="columnHeader" tooltip="Name">Name<FontIcon ref="name" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "name")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
                   <TableHeaderColumn className="columnHeader" tooltip="Device type">Device type<FontIcon ref="device_type" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "device_type")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
-                  <TableHeaderColumn className="columnHeader" tooltip="Current software">Current software<FontIcon ref="artifact_name" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "software_version")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
+                  <TableHeaderColumn className="columnHeader" tooltip="Current software">Current software<FontIcon ref="artifact_name" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "artifact_version")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
                   <TableHeaderColumn className="columnHeader" tooltip="Last heartbeat">Last heartbeat<FontIcon ref="last_heartbeat" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "last_heartbeat")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
-                  <TableHeaderColumn className="columnHeader" style={{width:"33px", paddingRight:"12px", paddingLeft:"0"}}></TableHeaderColumn>
+                  <TableHeaderColumn className="columnHeader" style={{width:"55px", paddingRight:"12px", paddingLeft:"0"}}></TableHeaderColumn>
                 </TableRow>
               </TableHeader>
               <TableBody
@@ -449,6 +446,7 @@ var DeviceList = React.createClass({
                 {devices}
               </TableBody>
             </Table>
+
             <div className={(devices.length || this.props.loading) ? 'hidden' : 'dashboard-placeholder'}>
               <p>
                 No devices found

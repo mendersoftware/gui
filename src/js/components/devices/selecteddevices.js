@@ -37,6 +37,7 @@ var SelectedDevices = React.createClass({
     var state = {};
     state[ref] = !this.state[ref];
     this.setState(state);
+    this.setState({filterByArtifact:null, artifact:null});
   },
 
   _updateParams: function(val, attr) {
@@ -56,7 +57,7 @@ var SelectedDevices = React.createClass({
     var newDeployment = {
       devices: [this.props.device.id],
       name: this.props.device.id,
-      artifact_name: this.state.image.name
+      artifact_name: this.state.artifact.name
     }
     var callback = {
       success: function() {
@@ -86,6 +87,18 @@ var SelectedDevices = React.createClass({
     var tmp = {};
     tmp[attr] = val;
     this.setState(tmp);
+
+    // check that device type matches
+    if (attr==='artifact') {
+      var filteredDevs = null;
+      for (var i = 0; i<val.device_types_compatible.length; i++) {
+        if (val.device_types_compatible[i] === this.props.device_type) {
+          filteredDevs = [this.props.device];
+          break;
+        }
+      }
+    }
+    this.setState({filterByArtifact:filteredDevs});
   },
   render: function() {
    
@@ -112,21 +125,31 @@ var SelectedDevices = React.createClass({
         deviceIdentity.push(
           <div key={k}>
             <ListItem style={styles.listStyle} disabled={true} primaryText={k} secondaryText={ this.props.attributes[k]} />
-            {i === length-1 ? null : <Divider />}
+            { this.props.admittanceTime ? <Divider /> : null}
           </div>
         );
         i++;
       };
     }
 
+    if (this.props.admittanceTime) {
+      deviceIdentity.push(
+        <div key="connectionTime">
+          <ListItem style={styles.listStyle} disabled={true} primaryText="First connection time" secondaryText={<Time value={this.props.admittanceTime} format="YYYY-MM-DD HH:mm" />} />
+        </div>
+      );
+    }
+
     var deviceInventory = [];
     var i = 0;
-    if (this.props.device) {
-      var length = this.props.device.attributes ? this.props.device.attributes.length : 0;
-      for (var i=0;i<length;i++) {
+    if (typeof this.props.device.attributes !== 'undefined' && this.props.device.attributes.length>0) {
+      var sortedAttributes = this.props.device.attributes.sort(function (a, b) {
+          return a.name.localeCompare( b.name );
+      });
+      for (var i=0;i<sortedAttributes.length;i++) {
         deviceInventory.push(
           <div key={i}>
-            <ListItem style={styles.listStyle} disabled={true} primaryText={this.props.device.attributes[i].name} secondaryText={this.props.device.attributes[i].value} />
+            <ListItem style={styles.listStyle} disabled={true} primaryText={sortedAttributes[i].name} secondaryText={sortedAttributes[i].value} />
             <Divider />
           </div>
         );
@@ -197,6 +220,7 @@ var SelectedDevices = React.createClass({
       <RaisedButton
         label="Create deployment"
         primary={true}
+        disabled={!this.state.filterByArtifact}
         onClick={this._onScheduleSubmit}
         ref="save" />
     ];
@@ -213,7 +237,7 @@ var SelectedDevices = React.createClass({
           bodyStyle={{paddingTop:"0", fontSize:"13px"}}
           contentStyle={{overflow:"hidden", boxShadow:"0 14px 45px rgba(0, 0, 0, 0.25), 0 10px 18px rgba(0, 0, 0, 0.22)"}}
           >
-          <ScheduleForm deploymentDevices={[this.props.device]} filteredDevices={[this.props.device]} deploymentSettings={this._deploymentParams} image={this.state.image} images={this.props.images} device={this.props.device} deploymentSchedule={this._updateParams} groups={this.props.groups} />
+          <ScheduleForm deploymentDevices={[this.props.device]} filteredDevices={this.state.filterByArtifact} deploymentSettings={this._deploymentParams} artifact={this.state.artifact} artifacts={this.props.artifacts} device={this.props.device} deploymentSchedule={this._updateParams} groups={this.props.groups} />
 
         </Dialog>
 

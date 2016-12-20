@@ -34,19 +34,23 @@ var monthList = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 
 var monthLongList = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
 function dateTimeFormat(locale, options) {
-  process.env.NODE_ENV !== "production" ? (0, _warning2.default)(locale === 'en-US', 'The ' + locale + ' locale is not supported by the built-in DateTimeFormat.\n  Use the `DateTimeFormat` prop to supply an alternative implementation.') : void 0;
+  process.env.NODE_ENV !== "production" ? (0, _warning2.default)(locale === 'en-US', 'Material-UI: The ' + locale + ' locale is not supported by the built-in DateTimeFormat.\n  Use the `DateTimeFormat` prop to supply an alternative implementation.') : void 0;
 
   this.format = function (date) {
     if (options.month === 'short' && options.weekday === 'short' && options.day === '2-digit') {
       return dayList[date.getDay()] + ', ' + monthList[date.getMonth()] + ' ' + date.getDate();
-    } else if (options.day === 'numeric' && options.month === 'numeric' && options.year === 'numeric') {
+    } else if (options.year === 'numeric' && options.month === 'numeric' && options.day === 'numeric') {
       return date.getMonth() + 1 + '/' + date.getDate() + '/' + date.getFullYear();
-    } else if (options.month === 'long' && options.year === 'numeric') {
+    } else if (options.year === 'numeric' && options.month === 'long') {
       return monthLongList[date.getMonth()] + ' ' + date.getFullYear();
     } else if (options.weekday === 'narrow') {
       return dayAbbreviation[date.getDay()];
+    } else if (options.year === 'numeric') {
+      return date.getFullYear().toString();
+    } else if (options.day === 'numeric') {
+      return date.getDate();
     } else {
-      process.env.NODE_ENV !== "production" ? (0, _warning2.default)(false, 'Wrong usage of DateTimeFormat') : void 0;
+      process.env.NODE_ENV !== "production" ? (0, _warning2.default)(false, 'Material-UI: Wrong usage of DateTimeFormat') : void 0;
     }
   };
 }

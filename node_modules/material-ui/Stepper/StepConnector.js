@@ -28,8 +28,8 @@ var contextTypes = {
 };
 
 var StepConnector = function StepConnector(props, context) {
-  var muiTheme = context.muiTheme;
-  var stepper = context.stepper;
+  var muiTheme = context.muiTheme,
+      stepper = context.stepper;
 
 
   var styles = {
@@ -66,7 +66,7 @@ var StepConnector = function StepConnector(props, context) {
   );
 };
 
-StepConnector.propTypes = propTypes;
+process.env.NODE_ENV !== "production" ? StepConnector.propTypes = propTypes : void 0;
 StepConnector.contextTypes = contextTypes;
 
 exports.PlainStepConnector = StepConnector;

@@ -1,3 +1,6 @@
+@import 'variables';
+@import 'fonts';
+
 html {
   height: 100%;
   min-width: 1000px;
@@ -11,21 +14,6 @@ body {
 }
 
 /* General */
-
-// colors
-@red: #8F0D0D;
-@green: #009E73;
-@alertgreen: #679BA5;
-@alertpurple: #7D3F69;
-@linkgreen: #347A87;
-@linkhover: #679BA5;
-@lightestgrey: #F7F7F7;
-@lightergrey: #eaf4f3;
-@lightgrey: #d4e9e7;
-@grey: #c7c7c7;
-@placeholder: #e7e7e7;
-@mendergreen: #015968;
-@mendermaroon: #5d0f43;
 
 .green {
   color: @green;
@@ -78,6 +66,10 @@ a, span.link {
 
   &:hover {
     color: @linkhover;
+  }
+
+  &.small {
+    font-size: 13px;
   }
 }
 
@@ -440,7 +432,7 @@ a, span.link {
     position: fixed;
     left: 24px;
     right: 24px;
-    top: 74px;
+    top: 72px;
     padding: 24px 0;
     background-color: white;
     z-index: 30000;
@@ -496,13 +488,13 @@ span.length {
     .transition(visibility 0.1s ease-in) !important;
   }
   &:hover .sortIcon {
-    visibility: visible;
-    .opacity(.4);
+    //visibility: visible;
+    //.opacity(.4);
   }
   &:hover .sortIcon.selected,
   .sortIcon.selected {
     .opacity(1);
-    visibility: visible;
+    //visibility: visible;
     .transition(all 0.15s ease-in-out) !important;
   }
   .sortIcon.selected.false {
@@ -568,9 +560,18 @@ span.length {
 
 .report-list, .list-item {
   display: inline-block;
-  margin-right: 2%;
+  margin-right: 3%;
   width: 30%;
   vertical-align: top;
+}
+
+.file-details {
+  display: inline-block;
+  width: 22%;
+  border-radius: 4px;
+  margin-top: 10px;
+  margin-right: 3%;
+  border: 1px solid @lightgrey;
 }
 
 .report-list div>span>div>div {
@@ -662,6 +663,24 @@ p.info {
   color: rgba(66,66,66,0.6);
 }
 
+form .required::after {
+  content: "* required";
+  position: absolute;
+  top: 33px;
+  left: 410px;
+  font-size: 12px;
+  color: @linkgreen;
+  width: 100px;
+}
+
+form .required.file {
+  width: 400px;
+  &:after {
+    top: -40px;
+    position: relative;
+  }
+}
+
 
 button:disabled .material-icons {
   color: rgba(0,0,0,0.3) !important;
@@ -711,7 +730,6 @@ tr.expand {
     border: 1px solid @lightgrey;
     padding: 0 15px;
     position:relative;
-    left: -10px;
     border-radius: 5px;
   }
 
@@ -1035,7 +1053,7 @@ span.month, span.day {
       position: relative;
       background-size: cover;
 
-      &.successful {
+      &.success {
         background-image: url('../assets/img/success_status.png');
       }
       &.failure {
@@ -1045,8 +1063,11 @@ span.month, span.day {
         background-image: url('../assets/img/pending_status.png');
       }
       &.inprogress,
-      &.installing,
-      &.rebooting, {
+      &.installing {
+        background-image: url('../assets/img/progress_status.png');
+      }
+      &.downloading,
+      &.rebooting {
         background-image: url('../assets/img/progress_status.png');
       }
     }
@@ -1105,10 +1126,15 @@ span.month, span.day {
     }
 
     .inprogress .bubble,
-    .installing .bubble,
-    .rebooting .bubble {
+    .installing .bubble {
       .animation(pulse 2.8s infinite);
       background-image: url('../assets/img/progress_status_large.png');
+    }
+    
+    .downloading .bubble,
+    .rebooting .bubble {
+      .animation(pulse 2.8s infinite);
+      background-image: url('../assets/img/progress_status.png');
     }
 
     .pending .bubble {
@@ -1118,7 +1144,7 @@ span.month, span.day {
     .failure .bubble {
       background-image: url('../assets/img/error_status_large.png');
     }
-    .successful .bubble {
+    .success .bubble {
       background-image: url('../assets/img/success_status_large.png');
     }
   }
@@ -1157,12 +1183,11 @@ span.month, span.day {
 }
 
 .deployments-container {
-  padding-bottom: 45px;
 
   .deployment {
     display: inline-block;
-    width: 25%;
-    margin-right: 15px;
+    width: 30%;
+    margin-right: 3%;
     margin-bottom: 15px;
     min-width: 220px;
     max-width: 320px;
@@ -1188,6 +1213,7 @@ span.month, span.day {
     padding: 0 2% 12px;
     font-size: 2em;
     position: relative;
+    max-height: 76px;
 
     img {
       display: inline;
@@ -1421,6 +1447,12 @@ div.shake-alert {
   -ms-transform:     rotateX(@deg);
   -o-transform:      rotateX(@deg);
 }
+.rotateY (@deg) {
+  -webkit-transform: rotateY(@deg);
+  -moz-transform:    rotateY(@deg);
+  -ms-transform:     rotateY(@deg);
+  -o-transform:      rotateY(@deg);
+}
 .rotate (@deg) {
   -webkit-transform: rotate(@deg);
   -moz-transform:    rotate(@deg);
@@ -1454,6 +1486,7 @@ div.shake-alert {
   height: 50px;
   overflow: hidden;
   opacity: 1;
+
   .transition(all .2s ease-in-out);
   &.shrunk { 
     height: 0;
@@ -1527,4 +1560,12 @@ div.shake-alert {
     100% { transform: rotate(-360deg) translateX(@animationRadius); }
 }
 
+.smallLoaderContainer {
+  position: relative;
+  top: -58px;
+  .loader {
+    margin: 30px 0 15px;
+    .scale(0.5);
+  }
+}
 

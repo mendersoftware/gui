@@ -4,40 +4,56 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+var _getPrototypeOf = require('babel-runtime/core-js/object/get-prototype-of');
+
+var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
+
+var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _createClass2 = require('babel-runtime/helpers/createClass');
+
+var _createClass3 = _interopRequireDefault(_createClass2);
+
+var _possibleConstructorReturn2 = require('babel-runtime/helpers/possibleConstructorReturn');
+
+var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
+
+var _inherits2 = require('babel-runtime/helpers/inherits');
+
+var _inherits3 = _interopRequireDefault(_inherits2);
 
 var _react = require('react');
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var originalBodyOverflow = null;
 var lockingCounter = 0;
 
 var AutoLockScrolling = function (_Component) {
-  _inherits(AutoLockScrolling, _Component);
+  (0, _inherits3.default)(AutoLockScrolling, _Component);
 
   function AutoLockScrolling() {
-    var _Object$getPrototypeO;
+    var _ref;
 
     var _temp, _this, _ret;
 
-    _classCallCheck(this, AutoLockScrolling);
+    (0, _classCallCheck3.default)(this, AutoLockScrolling);
 
     for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
       args[_key] = arguments[_key];
     }
 
-    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(AutoLockScrolling)).call.apply(_Object$getPrototypeO, [this].concat(args))), _this), _this.locked = false, _temp), _possibleConstructorReturn(_this, _ret);
+    return _ret = (_temp = (_this = (0, _possibleConstructorReturn3.default)(this, (_ref = AutoLockScrolling.__proto__ || (0, _getPrototypeOf2.default)(AutoLockScrolling)).call.apply(_ref, [this].concat(args))), _this), _this.locked = false, _temp), (0, _possibleConstructorReturn3.default)(_this, _ret);
   }
 
-  _createClass(AutoLockScrolling, [{
+  (0, _createClass3.default)(AutoLockScrolling, [{
     key: 'componentDidMount',
     value: function componentDidMount() {
-      if (this.props.lock === true) this.preventScrolling();
+      if (this.props.lock === true) {
+        this.preventScrolling();
+      }
     }
   }, {
     key: 'componentWillReceiveProps',
@@ -61,7 +77,10 @@ var AutoLockScrolling = function (_Component) {
   }, {
     key: 'preventScrolling',
     value: function preventScrolling() {
-      if (this.locked === true) return;
+      if (this.locked === true) {
+        return;
+      }
+
       lockingCounter = lockingCounter + 1;
       this.locked = true;
 
@@ -92,11 +111,10 @@ var AutoLockScrolling = function (_Component) {
       return null;
     }
   }]);
-
   return AutoLockScrolling;
 }(_react.Component);
 
-AutoLockScrolling.propTypes = {
+process.env.NODE_ENV !== "production" ? AutoLockScrolling.propTypes = {
   lock: _react.PropTypes.bool.isRequired
-};
+} : void 0;
 exports.default = AutoLockScrolling;

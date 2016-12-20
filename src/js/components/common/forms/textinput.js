@@ -23,6 +23,7 @@ var TextInput = React.createClass({
     this.props.validate(this, event.currentTarget.value);
   },
   render: function () {
+    var className = this.props.required ? "required" : "";
     return (
       <TextField
         id={this.props.id}
@@ -32,11 +33,14 @@ var TextInput = React.createClass({
         hintText={this.props.hint}
         floatingLabelText={this.props.label} 
         onChange={this.setValue}
+        className={className}
         errorStyle={{color: "rgb(171, 16, 0)"}}
         multiLine={this.props.multiLine}
         rows={this.props.rows}
         style={{display:"block"}}
-        errorText={this.state.errorText} />
+        errorText={this.state.errorText}
+        required={this.props.required}
+        />
     )
   }
 });

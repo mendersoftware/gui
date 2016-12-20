@@ -5,9 +5,11 @@ var EventEmitter = require('events').EventEmitter;  // from device
 
 var CHANGE_EVENT = "change";
 
-var _softwareRepo = [];
+var _artifactsRepo = [];
 var _currentGroup = null;
+var _deploymentArtifact = null;
 var _currentGroupDevices = [];
+var _totalNumberDevices;
 var _selectedDevices = [];
 var _filters = [{key:'', value:''}];
 var _attributes = {
@@ -112,21 +114,28 @@ function _selectDevices(device) {
   }
 }
 
-function _filterDevicesByType(devices, device_type) {
-
+function _filterDevicesByType(devices, device_types) {
   // from all devices, find if device type
   var filtered = [];
+
   for (var i=0;i<devices.length;i++) {
     var device = devices[i];
     var attrs = {};
     // get device type from within attributes
-    for (var x=0;x<device.attributes.length;x++) {
-      attrs[device.attributes[x].name] = device.attributes[x].value;
-    }
-    if (device_type === attrs.device_type) {
-      filtered.push(device);
+    if (device.attributes) {
+      for (var x=0;x<device.attributes.length;x++) {
+        attrs[device.attributes[x].name] = device.attributes[x].value;
+      }
+      
+      for (var y=0;y<device_types.length;y++) {
+        if (device_types[y] === attrs.device_type) {
+          filtered.push(device);
+          break;
+        }
+      }
     }
   }
+
   return filtered;
 }
 
@@ -211,12 +220,12 @@ function discoverDevices(array) {
   return array;
 }
 
-function _uploadImage(image) {
-  if (image.id) {
-    _softwareRepo[findWithAttr(_softwareRepo, "id", image.id)] = image;
+function _uploadArtifact(artifact) {
+  if (artifact.id) {
+    _artifactsRepo[findWithAttr(_artifactsRepo, "id", artifact.id)] = artifact;
   } else {
-    image.id = _softwareRepo.length+1;
-    _softwareRepo.push(image);
+    artifact.id = _artifactsRepo.length+1;
+    _artifactsRepo.push(artifact);
   }
 }
 
@@ -266,19 +275,22 @@ function _getScheduledDeployments(time) {
 
 function _sortDeploymentDevices(devices) {
   var newList = {
-    successful:[],
-    inprogress: [],
-    pending: [],
-    rebooting: [],
-    installing: [],
-    noimage:[],
-    failure:[]
+    "aborted": [],
+    "already-installed": [],
+    "downloading": [],
+    "failure": [],
+    "installing": [],
+    "noartifact": [],
+    "pending": [],
+    "rebooting": [],
+    "success": []
   };
+
   for (var i = 0; i<devices.length; i++) {
     newList[devices[i].status].push(devices[i]);
   }
 
-  var newCombine = newList.successful.concat(newList.inprogress, newList.pending, newList.rebooting, newList.installing, newList.noimage, newList.failure);
+  var newCombine = newList.success.concat(newList.pending, newList.downloading, newList.installing, newList.rebooting, newList.failure, newList.aborted, newList['already-installed'], newList.noartifact);
   return newCombine;
 }
 
@@ -291,8 +303,8 @@ function _removeDeployment(id) {
 
 function _sortTable(array, column, direction) {
   switch(array) {
-    case "_softwareRepo":
-      _softwareRepo.sort(customSort(direction, column));
+    case "_artifactsRepo":
+      _artifactsRepo.sort(customSort(direction, column));
       break;
     case "_currentGroupDevices":
       _currentGroupDevices.sort(customSort(direction, column));
@@ -347,11 +359,11 @@ function startTimeSortAscend(a,b) {
 /*
 * API STARTS HERE
 */
-function setImages(images) {
-  if (images) {
-     _softwareRepo = images;
+function setArtifacts(artifacts) {
+  if (artifacts) {
+     _artifactsRepo = artifacts;
   }
-  _softwareRepo.sort(customSort(1, "modified"));
+  _artifactsRepo.sort(customSort(1, "modified"));
 }
 
 
@@ -390,15 +402,20 @@ function setDevices(devices) {
     });
     _alldevices = devices;
     if (!_currentGroup) {
+      // if "all devices" selected
       _currentGroupDevices = devices;
     }
   }
 }
 
+function setTotalDevices(count) {
+  _totalNumberDevices = count;
+}
+
 function setGroupDevices(devices) {
   _currentGroupDevices = [];
   devices.forEach(function(element, index) {
-     _currentGroupDevices[index] = _getDeviceById(element);
+     _currentGroupDevices[index] = element;
   });
 }
 
@@ -419,6 +436,10 @@ function setGroups(groups) {
   }
 }
 
+function setDeploymentArtifact(artifact) {
+  _deploymentArtifact = artifact;
+}
+
 function setHealth(devices) {
   if (devices.accepted) {
     var health = {};
@@ -426,7 +447,6 @@ function setHealth(devices) {
       health[element.status] = newDevices[element.status] || [];
       health[element.status].push(element);
     });
-    console.log("health", health);
   }
 }
 
@@ -466,6 +486,11 @@ var AppStore = assign(EventEmitter.prototype, {
     * Return group object for current group selection
     */
     return _currentGroup
+  },
+
+  getDeploymentArtifact: function() {
+    // for use when switching tab from artifacts to create a deployment
+    return _deploymentArtifact;
   },
 
 
@@ -518,18 +543,18 @@ var AppStore = assign(EventEmitter.prototype, {
     return _selectedDevices
   },
 
-  getSoftwareRepo: function() {
+  getArtifactsRepo: function() {
     /*
-    * Return list of saved software objects
+    * Return list of saved artifacts objects
     */
-    return discoverDevices(_softwareRepo);
+    return discoverDevices(_artifactsRepo);
   },
 
-  getSoftwareImage: function(attr, val) {
+  getSoftwareArtifact: function(attr, val) {
     /*
-    * Return single image by attr
+    * Return single artifact by attr
     */
-    return _softwareRepo[findWithAttr(_softwareRepo, attr, val)];
+    return _artifactsRepo[findWithAttr(_artifactsRepo, attr, val)];
   },
 
   getPastDeployments: function() {
@@ -579,11 +604,11 @@ var AppStore = assign(EventEmitter.prototype, {
     return _events
   },
 
-  filterDevicesByType: function(devices, device_type) {
+  filterDevicesByType: function(devices, device_types) {
     /*
     * Return list of devices given group and device_type
     */
-    return _filterDevicesByType(devices, device_type)
+    return _filterDevicesByType(devices, device_types)
   },
 
   getOrderedDeploymentDevices: function(devices) {
@@ -596,6 +621,10 @@ var AppStore = assign(EventEmitter.prototype, {
 
   getPendingDevices: function() {
     return _getPendingDevices()
+  },
+
+  getTotalDevices: function() {
+    return _totalNumberDevices
   },
 
   getActivity: function() {
@@ -627,8 +656,8 @@ var AppStore = assign(EventEmitter.prototype, {
       case AppConstants.ADD_GROUP:
         _addGroup(payload.action.group, payload.action.index);
         break;
-      case AppConstants.UPLOAD_IMAGE:
-        _uploadImage(payload.action.image);
+      case AppConstants.UPLOAD_ARTIFACT:
+        _uploadArtifact(payload.action.artifact);
         break;
       case AppConstants.UPDATE_FILTERS:
          updateFilters(payload.action.filters);
@@ -648,8 +677,8 @@ var AppStore = assign(EventEmitter.prototype, {
         break;
 
       /* API */
-      case AppConstants.RECEIVE_IMAGES:
-        setImages(payload.action.images);
+      case AppConstants.RECEIVE_ARTIFACTS:
+        setArtifacts(payload.action.artifacts);
         break;
 
       /* API */
@@ -671,6 +700,10 @@ var AppStore = assign(EventEmitter.prototype, {
         setDevices(payload.action.devices);
         break;
 
+      case AppConstants.SET_TOTAL_DEVICES:
+        setTotalDevices(payload.action.total);
+        break;
+
        /* API */
       case AppConstants.RECEIVE_GROUP_DEVICES:
         setGroupDevices(payload.action.devices);
@@ -682,6 +715,10 @@ var AppStore = assign(EventEmitter.prototype, {
 
       case AppConstants.RECEIVE_GROUPS:
         setGroups(payload.action.groups);
+        break;
+
+      case AppConstants.SET_DEPLOYMENT_ARTIFACT:
+        setDeploymentArtifact(payload.action.artifact);
         break;
     }
     

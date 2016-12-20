@@ -7,11 +7,11 @@ import FlatButton from 'material-ui/FlatButton';
 
 var ScheduleButton = React.createClass({
   _handleClick: function() {
-    var image = null;
-    if (this.props.image) {
-      image = this.props.image
+    var artifact = null;
+    if (this.props.artifact) {
+      artifact = this.props.artifact
     }
-    this.props.openDialog("schedule", image);
+    this.props.openDialog("schedule", artifact);
   },
   render: function() {
     var button = '';

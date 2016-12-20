@@ -3,7 +3,15 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+
+var _keys = require('babel-runtime/core-js/object/keys');
+
+var _keys2 = _interopRequireDefault(_keys);
+
 exports.default = rtl;
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 var reTranslate = /((^|\s)translate(3d|X)?\()(\-?[\d]+)/;
 var reSkew = /((^|\s)skew(x|y)?\()\s*(\-?[\d]+)(deg|rad|grad)(,\s*(\-?[\d]+)(deg|rad|grad))?/;
 
@@ -15,6 +23,10 @@ var reSkew = /((^|\s)skew(x|y)?\()\s*(\-?[\d]+)(deg|rad|grad)(,\s*(\-?[\d]+)(deg
 function rtl(muiTheme) {
   if (muiTheme.isRtl) {
     return function (style) {
+      if (style.directionInvariant === true) {
+        return style;
+      }
+
       var flippedAttributes = {
         // Keys and their replacements.
         right: 'left',
@@ -29,7 +41,7 @@ function rtl(muiTheme) {
 
       var newStyle = {};
 
-      Object.keys(style).forEach(function (attribute) {
+      (0, _keys2.default)(style).forEach(function (attribute) {
         var value = style[attribute];
         var key = attribute;
 
