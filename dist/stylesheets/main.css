@@ -119,6 +119,13 @@ body {
 .grey {
   background-color: #c7c7c7;
 }
+.full-screen {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
 /* Type */
 body {
   font-family: Lato, sans-serif;
@@ -684,7 +691,7 @@ form .required::after {
   content: "* required";
   position: absolute;
   top: 33px;
-  left: 410px;
+  left: 101%;
   font-size: 12px;
   color: #347A87;
   width: 100px;
@@ -695,6 +702,29 @@ form .required.file {
 form .required.file:after {
   top: -40px;
   position: relative;
+}
+#login-box {
+  -webkit-animation: fadein 1s 1;
+  -moz-animation: fadein 1s 1;
+  -ms-animation: fadein 1s 1;
+  -o-animation: fadein 1s 1;
+  width: 25%;
+  max-width: 400px;
+  min-width: 240px;
+  margin: 12% auto 0;
+}
+#login-box h3 {
+  text-transform: uppercase;
+  color: #c7c7c7;
+  font-weight: normal;
+  text-align: center;
+}
+#login-box p {
+  font-size: 16px;
+  text-align: center;
+}
+#login-box img {
+  max-width: 100%;
 }
 button:disabled .material-icons {
   color: rgba(0, 0, 0, 0.3) !important;

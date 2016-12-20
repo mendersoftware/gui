@@ -81557,7 +81557,7 @@ var AppActions = {
 
 module.exports = AppActions;
 
-},{"../api/artifacts-api":740,"../api/deployments-api":741,"../api/devices-api":742,"../constants/app-constants":782,"../dispatchers/app-dispatcher":783,"parse-link-header":379}],740:[function(require,module,exports){
+},{"../api/artifacts-api":740,"../api/deployments-api":741,"../api/devices-api":742,"../constants/app-constants":784,"../dispatchers/app-dispatcher":785,"parse-link-header":379}],740:[function(require,module,exports){
 'use strict';
 
 var request = require('superagent');
@@ -81712,6 +81712,21 @@ var Api = {
 module.exports = Api;
 
 },{"es6-promise":118,"superagent":665}],743:[function(require,module,exports){
+"use strict";
+
+module.exports = {
+  /*
+  PLaceholder before adding user auth functionality
+  */
+  login: function login() {
+    return;
+  },
+  loggedIn: function loggedIn() {
+    return true;
+  }
+};
+
+},{}],744:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -81818,7 +81833,7 @@ var App = _react2.default.createClass({
 
 module.exports = App;
 
-},{"../themes/mender-theme.js":787,"./header/header":780,"material-ui/styles/getMuiTheme":345,"react":650,"react-joyride":543}],744:[function(require,module,exports){
+},{"../themes/mender-theme.js":789,"./header/header":781,"material-ui/styles/getMuiTheme":345,"react":650,"react-joyride":543}],745:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -81982,7 +81997,7 @@ var Artifacts = _react2.default.createClass({
 
 module.exports = Artifacts;
 
-},{"../../actions/app-actions":739,"../../stores/app-store":785,"../../stores/local-store":786,"./repository.js":746,"material-ui/Snackbar":276,"react":650,"react-router":586}],745:[function(require,module,exports){
+},{"../../actions/app-actions":739,"../../stores/app-store":787,"../../stores/local-store":788,"./repository.js":747,"material-ui/Snackbar":276,"react":650,"react-router":586}],746:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -82008,7 +82023,7 @@ var DeploymentButton = _react2.default.createClass({
 
 module.exports = DeploymentButton;
 
-},{"material-ui/RaisedButton":267,"react":650}],746:[function(require,module,exports){
+},{"material-ui/RaisedButton":267,"react":650}],747:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -82452,7 +82467,7 @@ var Repository = _react2.default.createClass({
           null,
           _react2.default.createElement(
             _form2.default,
-            { dialogDismiss: this.dialogDismiss, onSubmit: this._onUploadSubmit },
+            { submitLabel: 'Save artifact', handleCancel: this.dialogDismiss.bind(null, 'upload'), onSubmit: this._onUploadSubmit },
             _react2.default.createElement(_fileinput2.default, {
               id: 'artifactFile',
               placeholder: 'Upload artifact',
@@ -82495,7 +82510,7 @@ Repository.contextTypes = {
 
 module.exports = Repository;
 
-},{"../../actions/app-actions":739,"../../stores/app-store":785,"../common/forms/fileinput":748,"../common/forms/form":749,"../common/forms/textinput":750,"../common/loader":751,"./deploymentbutton":745,"./selectedartifact":747,"material-ui/Dialog":224,"material-ui/FlatButton":233,"material-ui/FontIcon":237,"material-ui/IconButton":242,"material-ui/RaisedButton":267,"material-ui/Snackbar":276,"material-ui/Table":294,"material-ui/TextField":305,"react":650,"react-addons-update":399,"react-collapse":403,"react-dom":406,"react-height":542,"react-motion":554,"react-router":586,"react-search-input":610,"react-time":617}],747:[function(require,module,exports){
+},{"../../actions/app-actions":739,"../../stores/app-store":787,"../common/forms/fileinput":749,"../common/forms/form":750,"../common/forms/textinput":751,"../common/loader":752,"./deploymentbutton":746,"./selectedartifact":748,"material-ui/Dialog":224,"material-ui/FlatButton":233,"material-ui/FontIcon":237,"material-ui/IconButton":242,"material-ui/RaisedButton":267,"material-ui/Snackbar":276,"material-ui/Table":294,"material-ui/TextField":305,"react":650,"react-addons-update":399,"react-collapse":403,"react-dom":406,"react-height":542,"react-motion":554,"react-router":586,"react-search-input":610,"react-time":617}],748:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -82752,7 +82767,7 @@ SelectedArtifact.contextTypes = {
 
 module.exports = SelectedArtifact;
 
-},{"material-ui/Divider":226,"material-ui/FlatButton":233,"material-ui/FontIcon":237,"material-ui/IconButton":242,"material-ui/List":250,"material-ui/TextField":305,"react":650,"react-router":586,"react-time":617}],748:[function(require,module,exports){
+},{"material-ui/Divider":226,"material-ui/FlatButton":233,"material-ui/FontIcon":237,"material-ui/IconButton":242,"material-ui/List":250,"material-ui/TextField":305,"react":650,"react-router":586,"react-time":617}],749:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -82817,7 +82832,7 @@ var FileInput = _react2.default.createClass({
 
 module.exports = FileInput;
 
-},{"material-ui/FontIcon":237,"react":650,"react-file-input":540}],749:[function(require,module,exports){
+},{"material-ui/FontIcon":237,"react":650,"react-file-input":540}],750:[function(require,module,exports){
 'use strict';
 
 var _validator = require('validator');
@@ -82929,6 +82944,9 @@ var Form = _react2.default.createClass({
       case "isAlphanumeric":
         return "This field must contain only letters or numbers";
         break;
+      case "isEmail":
+        return "Please enter a valid email address";
+        break;
       default:
         return "There is an error with this field";
         break;
@@ -82994,15 +83012,15 @@ var Form = _react2.default.createClass({
       { className: 'float-right' },
       _react2.default.createElement(
         'div',
-        { key: 'cancelcontain', style: { marginRight: "10px", display: "inline-block" } },
+        { className: this.props.handleCancel ? null : "hidden", key: 'cancelcontain', style: { marginRight: "10px", display: "inline-block" } },
         _react2.default.createElement(_FlatButton2.default, {
           key: 'cancel',
           label: 'Cancel',
-          onClick: this.props.dialogDismiss.bind(null, 'upload') })
+          onClick: this.props.handleCancel })
       ),
       _react2.default.createElement(_RaisedButton2.default, {
         key: 'submit',
-        label: 'Save artifact',
+        label: this.props.submitLabel,
         primary: true,
         onClick: this.updateModel,
         disabled: !this.state.isValid })
@@ -83018,7 +83036,7 @@ var Form = _react2.default.createClass({
 
 module.exports = Form;
 
-},{"material-ui/FlatButton":233,"material-ui/RaisedButton":267,"react":650,"validator":672}],750:[function(require,module,exports){
+},{"material-ui/FlatButton":233,"material-ui/RaisedButton":267,"react":650,"validator":672}],751:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -83055,7 +83073,7 @@ var TextInput = _react2.default.createClass({
     this.props.validate(this, event.currentTarget.value);
   },
   render: function render() {
-    var className = this.props.required ? "required" : "";
+    var className = this.props.required ? this.props.className + " required" : this.props.className;
     return _react2.default.createElement(_TextField2.default, {
       id: this.props.id,
       name: this.props.id,
@@ -83068,7 +83086,7 @@ var TextInput = _react2.default.createClass({
       errorStyle: { color: "rgb(171, 16, 0)" },
       multiLine: this.props.multiLine,
       rows: this.props.rows,
-      style: { display: "block", width: "400px" },
+      style: { display: "block", width: "400px", maxWidth: "100%" },
       errorText: this.state.errorText,
       required: this.props.required
     });
@@ -83077,7 +83095,7 @@ var TextInput = _react2.default.createClass({
 
 module.exports = TextInput;
 
-},{"material-ui/TextField":305,"react":650}],751:[function(require,module,exports){
+},{"material-ui/TextField":305,"react":650}],752:[function(require,module,exports){
 "use strict";
 
 var _react = require("react");
@@ -83108,7 +83126,7 @@ var Loader = _react2.default.createClass({
 
 module.exports = Loader;
 
-},{"react":650}],752:[function(require,module,exports){
+},{"react":650}],753:[function(require,module,exports){
 "use strict";
 
 /**
@@ -83137,7 +83155,7 @@ Array.prototype.equals = function (other) {
   });
 };
 
-},{}],753:[function(require,module,exports){
+},{}],754:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -83253,7 +83271,7 @@ Activity.contextTypes = {
 
 module.exports = Activity;
 
-},{"material-ui/FontIcon":237,"react":650,"react-router":586,"react-time":617}],754:[function(require,module,exports){
+},{"material-ui/FontIcon":237,"react":650,"react-router":586,"react-time":617}],755:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -83431,7 +83449,7 @@ Dashboard.contextTypes = {
 
 module.exports = Dashboard;
 
-},{"../../actions/app-actions":739,"../../stores/app-store":785,"../../stores/local-store":786,"./activity":753,"./deployments":755,"./health":756,"material-ui/RaisedButton":267,"material-ui/Snackbar":276,"react":650,"react-router":586}],755:[function(require,module,exports){
+},{"../../actions/app-actions":739,"../../stores/app-store":787,"../../stores/local-store":788,"./activity":754,"./deployments":756,"./health":757,"material-ui/RaisedButton":267,"material-ui/Snackbar":276,"react":650,"react-router":586}],756:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -83494,7 +83512,7 @@ var Deployments = _react2.default.createClass({
 
 module.exports = Deployments;
 
-},{"./progress":757,"./recent":758,"./schedule":760,"material-ui/Dialog":224,"material-ui/FlatButton":233,"material-ui/RaisedButton":267,"react":650}],756:[function(require,module,exports){
+},{"./progress":758,"./recent":759,"./schedule":761,"material-ui/Dialog":224,"material-ui/FlatButton":233,"material-ui/RaisedButton":267,"react":650}],757:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -83647,7 +83665,7 @@ Health.contextTypes = {
 
 module.exports = Health;
 
-},{"../common/loader":751,"material-ui/FontIcon":237,"react":650,"react-router":586}],757:[function(require,module,exports){
+},{"../common/loader":752,"material-ui/FontIcon":237,"react":650,"react-router":586}],758:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -83812,7 +83830,7 @@ Progress.contextTypes = {
 
 module.exports = Progress;
 
-},{"../common/loader":751,"../deployments/progressChart.js":767,"material-ui/Divider":226,"material-ui/FontIcon":237,"material-ui/List":250,"react":650,"react-router":586,"react-time":617}],758:[function(require,module,exports){
+},{"../common/loader":752,"../deployments/progressChart.js":768,"material-ui/Divider":226,"material-ui/FontIcon":237,"material-ui/List":250,"react":650,"react-router":586,"react-time":617}],759:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -83970,7 +83988,7 @@ Recent.contextTypes = {
 
 module.exports = Recent;
 
-},{"../../actions/app-actions":739,"../common/loader":751,"../deployments/groupdevices":764,"./recentstats":759,"material-ui/Divider":226,"material-ui/FontIcon":237,"react":650,"react-router":586,"react-time":617}],759:[function(require,module,exports){
+},{"../../actions/app-actions":739,"../common/loader":752,"../deployments/groupdevices":765,"./recentstats":760,"material-ui/Divider":226,"material-ui/FontIcon":237,"react":650,"react-router":586,"react-time":617}],760:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -84050,7 +84068,7 @@ var RecentStats = _react2.default.createClass({
 
 module.exports = RecentStats;
 
-},{"../../actions/app-actions":739,"pluralize":381,"react":650}],760:[function(require,module,exports){
+},{"../../actions/app-actions":739,"pluralize":381,"react":650}],761:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -84171,7 +84189,7 @@ Schedule.contextTypes = {
 
 module.exports = Schedule;
 
-},{"material-ui":323,"react":650,"react-router":586,"react-time":617}],761:[function(require,module,exports){
+},{"material-ui":323,"react":650,"react-router":586,"react-time":617}],762:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -84619,7 +84637,7 @@ var Deployments = _react2.default.createClass({
 
 module.exports = Deployments;
 
-},{"../../actions/app-actions":739,"../../stores/app-store":785,"./eventlog.js":763,"./inprogressdeployments.js":765,"./pastdeployments.js":766,"./progressreport.js":768,"./report.js":769,"./schedule.js":770,"./schedulebutton.js":771,"./scheduleform.js":772,"material-ui/Dialog":224,"material-ui/FlatButton":233,"material-ui/RaisedButton":267,"material-ui/Snackbar":276,"material-ui/Tabs":299,"react":650}],762:[function(require,module,exports){
+},{"../../actions/app-actions":739,"../../stores/app-store":787,"./eventlog.js":764,"./inprogressdeployments.js":766,"./pastdeployments.js":767,"./progressreport.js":769,"./report.js":770,"./schedule.js":771,"./schedulebutton.js":772,"./scheduleform.js":773,"material-ui/Dialog":224,"material-ui/FlatButton":233,"material-ui/RaisedButton":267,"material-ui/Snackbar":276,"material-ui/Tabs":299,"react":650}],763:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -84749,7 +84767,7 @@ var DeploymentStatus = _react2.default.createClass({
 
 module.exports = DeploymentStatus;
 
-},{"../../actions/app-actions":739,"material-ui/FlatButton":233,"react":650}],763:[function(require,module,exports){
+},{"../../actions/app-actions":739,"material-ui/FlatButton":233,"react":650}],764:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -84825,7 +84843,7 @@ var EventLog = _react2.default.createClass({
 
 module.exports = EventLog;
 
-},{"material-ui/FlatButton":233,"material-ui/RaisedButton":267,"material-ui/Table":294,"react":650}],764:[function(require,module,exports){
+},{"material-ui/FlatButton":233,"material-ui/RaisedButton":267,"material-ui/Table":294,"react":650}],765:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -84864,7 +84882,7 @@ var GroupDevices = _react2.default.createClass({
 
 module.exports = GroupDevices;
 
-},{"../../actions/app-actions":739,"react":650}],765:[function(require,module,exports){
+},{"../../actions/app-actions":739,"react":650}],766:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -85033,7 +85051,7 @@ var Progress = _react2.default.createClass({
 
 module.exports = Progress;
 
-},{"../common/loader":751,"./deploymentstatus":762,"./groupdevices":764,"./scheduleform":772,"material-ui/FlatButton":233,"material-ui/Table":294,"react":650,"react-addons-update":399,"react-time":617}],766:[function(require,module,exports){
+},{"../common/loader":752,"./deploymentstatus":763,"./groupdevices":765,"./scheduleform":773,"material-ui/FlatButton":233,"material-ui/Table":294,"react":650,"react-addons-update":399,"react-time":617}],767:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -85211,7 +85229,7 @@ var Past = _react2.default.createClass({
 
 module.exports = Past;
 
-},{"../common/loader":751,"./deploymentstatus":762,"./groupdevices":764,"./report.js":769,"./scheduleform":772,"material-ui/FlatButton":233,"material-ui/Table":294,"react":650,"react-time":617}],767:[function(require,module,exports){
+},{"../common/loader":752,"./deploymentstatus":763,"./groupdevices":765,"./report.js":770,"./scheduleform":773,"material-ui/FlatButton":233,"material-ui/Table":294,"react":650,"react-time":617}],768:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -85366,7 +85384,7 @@ ProgressChart.contextTypes = {
 
 module.exports = ProgressChart;
 
-},{"../../actions/app-actions":739,"../../stores/app-store":785,"react":650,"react-router":586}],768:[function(require,module,exports){
+},{"../../actions/app-actions":739,"../../stores/app-store":787,"react":650,"react-router":586}],769:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -85783,7 +85801,7 @@ var ProgressReport = _react2.default.createClass({
 
 module.exports = ProgressReport;
 
-},{"../../actions/app-actions":739,"./deploymentstatus":762,"material-ui/Checkbox":206,"material-ui/Dialog":224,"material-ui/FlatButton":233,"material-ui/FontIcon":237,"material-ui/RaisedButton":267,"material-ui/Table":294,"react":650,"react-copy-to-clipboard":405,"react-router":586,"react-time":617}],769:[function(require,module,exports){
+},{"../../actions/app-actions":739,"./deploymentstatus":763,"material-ui/Checkbox":206,"material-ui/Dialog":224,"material-ui/FlatButton":233,"material-ui/FontIcon":237,"material-ui/RaisedButton":267,"material-ui/Table":294,"react":650,"react-copy-to-clipboard":405,"react-router":586,"react-time":617}],770:[function(require,module,exports){
 'use strict';
 
 var _React$createClass;
@@ -86221,7 +86239,7 @@ var Report = _react2.default.createClass((_React$createClass = {
 
 module.exports = Report;
 
-},{"../../actions/app-actions":739,"material-ui/Checkbox":206,"material-ui/Dialog":224,"material-ui/FlatButton":233,"material-ui/RaisedButton":267,"material-ui/Table":294,"pluralize":381,"react":650,"react-copy-to-clipboard":405,"react-router":586,"react-time":617}],770:[function(require,module,exports){
+},{"../../actions/app-actions":739,"material-ui/Checkbox":206,"material-ui/Dialog":224,"material-ui/FlatButton":233,"material-ui/RaisedButton":267,"material-ui/Table":294,"pluralize":381,"react":650,"react-copy-to-clipboard":405,"react-router":586,"react-time":617}],771:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -86384,7 +86402,7 @@ var Schedule = _react2.default.createClass({
 
 module.exports = Schedule;
 
-},{"material-ui":323,"react":650,"react-time":617}],771:[function(require,module,exports){
+},{"material-ui":323,"react":650,"react-time":617}],772:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -86429,7 +86447,7 @@ var ScheduleButton = _react2.default.createClass({
 
 module.exports = ScheduleButton;
 
-},{"material-ui/FlatButton":233,"material-ui/RaisedButton":267,"react":650}],772:[function(require,module,exports){
+},{"material-ui/FlatButton":233,"material-ui/RaisedButton":267,"react":650}],773:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -86772,7 +86790,7 @@ var ScheduleForm = _react2.default.createClass({
 
 module.exports = ScheduleForm;
 
-},{"../../actions/app-actions":739,"../../stores/app-store":785,"material-ui/Divider":226,"material-ui/Drawer":228,"material-ui/FontIcon":237,"material-ui/IconButton":242,"material-ui/MenuItem":256,"material-ui/SelectField":271,"material-ui/TextField":305,"pluralize":381,"react":650,"react-router":586,"react-search-input":610}],773:[function(require,module,exports){
+},{"../../actions/app-actions":739,"../../stores/app-store":787,"material-ui/Divider":226,"material-ui/Drawer":228,"material-ui/FontIcon":237,"material-ui/IconButton":242,"material-ui/MenuItem":256,"material-ui/SelectField":271,"material-ui/TextField":305,"pluralize":381,"react":650,"react-router":586,"react-search-input":610}],774:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -87478,7 +87496,7 @@ var DeviceList = _react2.default.createClass({
 
 module.exports = DeviceList;
 
-},{"../../actions/app-actions":739,"../../stores/app-store":785,"./filters":776,"./selecteddevices":778,"material-ui/Dialog":224,"material-ui/FlatButton":233,"material-ui/FontIcon":237,"material-ui/IconButton":242,"material-ui/MenuItem":256,"material-ui/RaisedButton":267,"material-ui/SelectField":271,"material-ui/Snackbar":276,"material-ui/Table":294,"material-ui/TextField":305,"pluralize":381,"react":650,"react-collapse":403,"react-dom":406,"react-height":542,"react-motion":554,"react-time":617}],774:[function(require,module,exports){
+},{"../../actions/app-actions":739,"../../stores/app-store":787,"./filters":777,"./selecteddevices":779,"material-ui/Dialog":224,"material-ui/FlatButton":233,"material-ui/FontIcon":237,"material-ui/IconButton":242,"material-ui/MenuItem":256,"material-ui/RaisedButton":267,"material-ui/SelectField":271,"material-ui/Snackbar":276,"material-ui/Table":294,"material-ui/TextField":305,"pluralize":381,"react":650,"react-collapse":403,"react-dom":406,"react-height":542,"react-motion":554,"react-time":617}],775:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -87751,7 +87769,7 @@ var DevicePicker = _react2.default.createClass({
 
 module.exports = DevicePicker;
 
-},{"../../actions/app-actions":739,"../common/loader":751,"material-ui/Dialog":224,"material-ui/FlatButton":233,"material-ui/RaisedButton":267,"material-ui/Table":294,"material-ui/TextField":305,"react":650,"react-search-input":610}],775:[function(require,module,exports){
+},{"../../actions/app-actions":739,"../common/loader":752,"material-ui/Dialog":224,"material-ui/FlatButton":233,"material-ui/RaisedButton":267,"material-ui/Table":294,"material-ui/TextField":305,"react":650,"react-search-input":610}],776:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -88094,7 +88112,7 @@ Devices.contextTypes = {
 
 module.exports = Devices;
 
-},{"../../actions/app-actions":739,"../../stores/app-store":785,"../common/loader":751,"../common/prototype/Array.prototype.equals":752,"./devicelist":773,"./devicepicker":774,"./groups":777,"./unauthorized":779,"material-ui/Snackbar":276,"rc-pagination":394,"react":650,"react-addons-update":399,"react-router":586}],776:[function(require,module,exports){
+},{"../../actions/app-actions":739,"../../stores/app-store":787,"../common/loader":752,"../common/prototype/Array.prototype.equals":753,"./devicelist":774,"./devicepicker":775,"./groups":778,"./unauthorized":780,"material-ui/Snackbar":276,"rc-pagination":394,"react":650,"react-addons-update":399,"react-router":586}],777:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -88307,7 +88325,7 @@ var Filters = _react2.default.createClass({
 
 module.exports = Filters;
 
-},{"material-ui/Drawer":228,"material-ui/FlatButton":233,"material-ui/FontIcon":237,"material-ui/IconButton":242,"material-ui/MenuItem":256,"material-ui/SelectField":271,"material-ui/TextField":305,"react":650}],777:[function(require,module,exports){
+},{"material-ui/Drawer":228,"material-ui/FlatButton":233,"material-ui/FontIcon":237,"material-ui/IconButton":242,"material-ui/MenuItem":256,"material-ui/SelectField":271,"material-ui/TextField":305,"react":650}],778:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -88453,7 +88471,7 @@ var Groups = _react2.default.createClass({
 
 module.exports = Groups;
 
-},{"../../actions/app-actions":739,"../common/prototype/Array.prototype.equals":752,"material-ui/FlatButton":233,"material-ui/FontIcon":237,"material-ui/List":250,"material-ui/RaisedButton":267,"material-ui/Subheader":284,"react":650}],778:[function(require,module,exports){
+},{"../../actions/app-actions":739,"../common/prototype/Array.prototype.equals":753,"material-ui/FlatButton":233,"material-ui/FontIcon":237,"material-ui/List":250,"material-ui/RaisedButton":267,"material-ui/Subheader":284,"react":650}],779:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -88770,7 +88788,7 @@ var SelectedDevices = _react2.default.createClass({
 
 module.exports = SelectedDevices;
 
-},{"../../actions/app-actions":739,"../../stores/app-store":785,"../deployments/scheduleform":772,"material-ui/Dialog":224,"material-ui/Divider":226,"material-ui/FlatButton":233,"material-ui/FontIcon":237,"material-ui/IconButton":242,"material-ui/List":250,"material-ui/RaisedButton":267,"material-ui/TextField":305,"react":650,"react-collapse":403,"react-router":586,"react-time":617}],779:[function(require,module,exports){
+},{"../../actions/app-actions":739,"../../stores/app-store":787,"../deployments/scheduleform":773,"material-ui/Dialog":224,"material-ui/Divider":226,"material-ui/FlatButton":233,"material-ui/FontIcon":237,"material-ui/IconButton":242,"material-ui/List":250,"material-ui/RaisedButton":267,"material-ui/TextField":305,"react":650,"react-collapse":403,"react-router":586,"react-time":617}],780:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -89059,7 +89077,7 @@ var Authorized = _react2.default.createClass({
 
 module.exports = Authorized;
 
-},{"../../actions/app-actions":739,"./selecteddevices":778,"material-ui":323,"material-ui/FontIcon":237,"material-ui/IconButton":242,"material-ui/RaisedButton":267,"material-ui/Table":294,"react":650,"react-collapse":403,"react-dom":406,"react-height":542,"react-motion":554,"react-time":617}],780:[function(require,module,exports){
+},{"../../actions/app-actions":739,"./selecteddevices":779,"material-ui":323,"material-ui/FontIcon":237,"material-ui/IconButton":242,"material-ui/RaisedButton":267,"material-ui/Table":294,"react":650,"react-collapse":403,"react-dom":406,"react-height":542,"react-motion":554,"react-time":617}],781:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -89161,7 +89179,7 @@ var Header = _react2.default.createClass({
     );
     return _react2.default.createElement(
       'div',
-      null,
+      { className: this.context.router.isActive('/login') ? "hidden" : null },
       _react2.default.createElement(
         _Toolbar.Toolbar,
         { style: { backgroundColor: "#fff" } },
@@ -89199,7 +89217,121 @@ Header.contextTypes = {
 
 module.exports = Header;
 
-},{"../../actions/app-actions":739,"material-ui/FontIcon":237,"material-ui/IconButton":242,"material-ui/IconMenu":244,"material-ui/MenuItem":256,"material-ui/Tabs":299,"material-ui/Toolbar":322,"react":650,"react-router":586}],781:[function(require,module,exports){
+},{"../../actions/app-actions":739,"material-ui/FontIcon":237,"material-ui/IconButton":242,"material-ui/IconMenu":244,"material-ui/MenuItem":256,"material-ui/Tabs":299,"material-ui/Toolbar":322,"react":650,"react-router":586}],782:[function(require,module,exports){
+'use strict';
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactRouter = require('react-router');
+
+var _form = require('../common/forms/form');
+
+var _form2 = _interopRequireDefault(_form);
+
+var _textinput = require('../common/forms/textinput');
+
+var _textinput2 = _interopRequireDefault(_textinput);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var AppActions = require('../../actions/app-actions');
+var AppStore = require('../../stores/app-store');
+
+var Login = _react2.default.createClass({
+  displayName: 'Login',
+
+  getInitialState: function getInitialState() {
+    return {
+      userExists: false
+    };
+  },
+
+  componentWillMount: function componentWillMount() {
+    AppStore.changeListener(this._onChange);
+  },
+
+  componentDidMount: function componentDidMount() {
+    this.setState({ userExists: this._checkForUsers() });
+  },
+
+  _onChange: function _onChange() {},
+
+  _handleSubmit: function _handleSubmit(event) {
+
+    /* const email = this.refs.email.value
+     const pass = this.refs.pass.value
+      auth.login(email, pass, (loggedIn) => {
+       if (!loggedIn)
+         return this.setState({ error: true })
+     */
+    var location = this.props.location;
+
+    console.log(location);
+
+    if (location.state && location.state.nextPathname) {
+      this.props.router.replace(location.state.nextPathname);
+    } else {
+      this.props.router.replace('/');
+    }
+    /* }) */
+  },
+
+  _checkForUsers: function _checkForUsers() {
+    // check to see if a user exists in the system already
+    return false;
+  },
+
+  render: function render() {
+    var title = this.state.userExists ? "Log in" : "Create a user";
+    var buttonLabel = this.state.userExists ? "Log in" : "Create user";
+    return _react2.default.createElement(
+      'div',
+      { className: 'full-screen' },
+      _react2.default.createElement(
+        'div',
+        { id: 'login-box' },
+        _react2.default.createElement(
+          'h3',
+          null,
+          title
+        ),
+        _react2.default.createElement('img', { src: 'assets/img/loginlogo.png', alt: 'mender-logo' }),
+        this.state.userExists ? null : _react2.default.createElement(
+          'p',
+          null,
+          'Create a user by entering your email and choosing a safe password'
+        ),
+        _react2.default.createElement(
+          _form2.default,
+          { onSubmit: this._handleSubmit, submitLabel: buttonLabel },
+          _react2.default.createElement(_textinput2.default, {
+            hint: 'Your email',
+            label: 'Your email',
+            id: 'email',
+            required: true,
+            validations: 'isLength:1,isEmail' }),
+          _react2.default.createElement(_textinput2.default, {
+            id: 'password',
+            hint: 'Password',
+            label: 'Password',
+            required: true,
+            validations: 'isLength:8',
+            className: 'margin-bottom' })
+        )
+      )
+    );
+  }
+});
+
+Login.contextTypes = {
+  router: _react2.default.PropTypes.object
+};
+
+module.exports = Login;
+
+},{"../../actions/app-actions":739,"../../stores/app-store":787,"../common/forms/form":750,"../common/forms/textinput":751,"react":650,"react-router":586}],783:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -89226,17 +89358,34 @@ var _artifacts = require('../components/artifacts/artifacts');
 
 var _artifacts2 = _interopRequireDefault(_artifacts);
 
+var _login = require('../components/user-management/login');
+
+var _login2 = _interopRequireDefault(_login);
+
+var _auth = require('../auth');
+
+var _auth2 = _interopRequireDefault(_auth);
+
 var _reactRouter = require('react-router');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+function requireAuth(nextState, replace) {
+  if (!_auth2.default.loggedIn()) {
+    replace({
+      pathname: '/login',
+      state: { nextPathname: nextState.location.pathname }
+    });
+  }
+}
+
 module.exports = _react2.default.createElement(
   _reactRouter.Route,
   { path: '/', component: _app2.default },
-  _react2.default.createElement(_reactRouter.IndexRoute, { component: _dashboard2.default }),
+  _react2.default.createElement(_reactRouter.IndexRoute, { component: _dashboard2.default, onEnter: requireAuth }),
   _react2.default.createElement(
     _reactRouter.Route,
-    { path: '/devices', component: _devices2.default },
+    { path: '/devices', component: _devices2.default, onEnter: requireAuth },
     _react2.default.createElement(
       _reactRouter.Route,
       { path: '(:groupId)' },
@@ -89245,12 +89394,12 @@ module.exports = _react2.default.createElement(
   ),
   _react2.default.createElement(
     _reactRouter.Route,
-    { path: '/artifacts', component: _artifacts2.default },
+    { path: '/artifacts', component: _artifacts2.default, onEnter: requireAuth },
     _react2.default.createElement(_reactRouter.Route, { path: '(:artifactVersion)' })
   ),
   _react2.default.createElement(
     _reactRouter.Route,
-    { path: '/deployments', component: _deployments2.default },
+    { path: '/deployments', component: _deployments2.default, onEnter: requireAuth },
     _react2.default.createElement(
       _reactRouter.Route,
       { path: '(:tab)' },
@@ -89260,10 +89409,11 @@ module.exports = _react2.default.createElement(
         _react2.default.createElement(_reactRouter.Route, { path: '(:Id)' })
       )
     )
-  )
+  ),
+  _react2.default.createElement(_reactRouter.Route, { path: '/login', component: _login2.default })
 );
 
-},{"../components/app":743,"../components/artifacts/artifacts":744,"../components/dashboard/dashboard":754,"../components/deployments/deployments":761,"../components/devices/devices":775,"react":650,"react-router":586}],782:[function(require,module,exports){
+},{"../auth":743,"../components/app":744,"../components/artifacts/artifacts":745,"../components/dashboard/dashboard":755,"../components/deployments/deployments":762,"../components/devices/devices":776,"../components/user-management/login":782,"react":650,"react-router":586}],784:[function(require,module,exports){
 'use strict';
 
 module.exports = {
@@ -89293,7 +89443,7 @@ module.exports = {
   SET_SNACKBAR: 'SET_SNACKBAR'
 };
 
-},{}],783:[function(require,module,exports){
+},{}],785:[function(require,module,exports){
 'use strict';
 
 var Dispatcher = require('flux').Dispatcher;
@@ -89311,7 +89461,7 @@ var AppDispatcher = assign(new Dispatcher(), {
 
 module.exports = AppDispatcher;
 
-},{"flux":144,"object-assign":378}],784:[function(require,module,exports){
+},{"flux":144,"object-assign":378}],786:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -89342,7 +89492,7 @@ var routes = require('./config/routes');
   routes
 ), document.getElementById('main'));
 
-},{"./config/routes":781,"react":650,"react-dom":406,"react-router":586,"react-tap-event-plugin":615}],785:[function(require,module,exports){
+},{"./config/routes":783,"react":650,"react-dom":406,"react-router":586,"react-tap-event-plugin":615}],787:[function(require,module,exports){
 'use strict';
 
 var AppDispatcher = require('../dispatchers/app-dispatcher');
@@ -90056,7 +90206,7 @@ var AppStore = assign(EventEmitter.prototype, {
 
 module.exports = AppStore;
 
-},{"../constants/app-constants":782,"../dispatchers/app-dispatcher":783,"events":119,"object-assign":378}],786:[function(require,module,exports){
+},{"../constants/app-constants":784,"../dispatchers/app-dispatcher":785,"events":119,"object-assign":378}],788:[function(require,module,exports){
 'use strict';
 
 /*
@@ -90103,7 +90253,7 @@ var LocalStore = assign(EventEmitter.prototype, {
 
 module.exports = LocalStore;
 
-},{"../constants/app-constants":782,"../dispatchers/app-dispatcher":783,"events":119,"object-assign":378}],787:[function(require,module,exports){
+},{"../constants/app-constants":784,"../dispatchers/app-dispatcher":785,"events":119,"object-assign":378}],789:[function(require,module,exports){
 'use strict';
 
 var _colorManipulator = require('material-ui/utils/colorManipulator');
@@ -90133,4 +90283,4 @@ module.exports = {
   }
 };
 
-},{"material-ui/styles/colors":344,"material-ui/styles/spacing":346,"material-ui/utils/colorManipulator":369}]},{},[784]);
+},{"material-ui/styles/colors":344,"material-ui/styles/spacing":346,"material-ui/utils/colorManipulator":369}]},{},[786]);

@@ -78,7 +78,7 @@ var Header = React.createClass({
     });
     var iconButtonElement = <IconButton className="settings-menu-tooltip" style={{marginTop: "5px"}}><FontIcon className="material-icons">settings</FontIcon></IconButton>;
     return (
-      <div>
+      <div className={this.context.router.isActive('/login') ? "hidden" : null}>
         <Toolbar style={{backgroundColor: "#fff"}}>
           <ToolbarGroup key={0} className="float-left">
               <Link to="/" id="logo"></Link>

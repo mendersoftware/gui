@@ -95,6 +95,9 @@ var Form = React.createClass({
       case "isAlphanumeric":
         return "This field must contain only letters or numbers"
         break;
+      case "isEmail":
+        return "Please enter a valid email address"
+        break;
       default:
          return "There is an error with this field"
         break;
@@ -159,15 +162,15 @@ var Form = React.createClass({
 
     var uploadActions = (
       <div className="float-right">
-        <div key="cancelcontain" style={{marginRight:"10px", display:"inline-block"}}>
+        <div className={this.props.handleCancel ? null : "hidden"} key="cancelcontain" style={{marginRight:"10px", display:"inline-block"}}>
           <FlatButton
             key="cancel"
             label="Cancel"
-            onClick={this.props.dialogDismiss.bind(null, 'upload')} />
+            onClick={this.props.handleCancel} />
         </div>
         <RaisedButton
           key="submit"
-          label="Save artifact"
+          label={this.props.submitLabel}
           primary={true}
           onClick={this.updateModel}
           disabled={!this.state.isValid} />
