@@ -3,6 +3,7 @@ import { Router, Route} from 'react-router';
 
 var AppActions = require('../../actions/app-actions');
 var AppStore = require('../../stores/app-store');
+var LocalStore = require('../../stores/local-store');
 
 import Form from '../common/forms/form';
 import TextInput from '../common/forms/textinput';
@@ -25,6 +26,7 @@ var Login = React.createClass({
   },
 
   componentDidMount: function() {
+    this._checkLoggedIn();
     this._checkForUsers();
   },
 
@@ -40,7 +42,10 @@ var Login = React.createClass({
     var self = this;
     AppActions.loginUser({
       success: function(token) {
-        // logged in
+        // set token in local storage
+        AppActions.setLocalStorage("JWT", token);
+
+        // logged in, so redirect
         var location = self.props;
 
         if (location.state && location.state.nextPathname) {
@@ -53,6 +58,13 @@ var Login = React.createClass({
         AppActions.setSnackbar("Wrong username or password. Please try again");
       }
     }, formData);
+  },
+
+  _checkLoggedIn: function() {
+    if (this.props.loggedIn) {
+      console.log("check logged in");
+      //self.props.router.replace('/');
+    }
   },
 
   _checkForUsers: function() {

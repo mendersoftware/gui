@@ -81820,19 +81820,15 @@ module.exports = Api;
 },{"es6-promise":118,"superagent":666,"superagent-auth-bearer":665}],745:[function(require,module,exports){
 "use strict";
 
+var LocalStore = require('./stores/local-store');
+
 module.exports = {
-  /*
-  PLaceholder before adding user auth functionality
-  */
-  login: function login() {
-    return;
-  },
-  loggedIn: function loggedIn() {
-    return true;
+  isLoggedIn: function isLoggedIn() {
+    return LocalStore.getStorageItem("JWT");
   }
 };
 
-},{}],746:[function(require,module,exports){
+},{"./stores/local-store":790}],746:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -89348,6 +89344,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var AppActions = require('../../actions/app-actions');
 var AppStore = require('../../stores/app-store');
+var LocalStore = require('../../stores/local-store');
 
 function getState() {
   return {
@@ -89367,6 +89364,7 @@ var Login = _react2.default.createClass({
   },
 
   componentDidMount: function componentDidMount() {
+    this._checkLoggedIn();
     this._checkForUsers();
   },
 
@@ -89382,7 +89380,10 @@ var Login = _react2.default.createClass({
     var self = this;
     AppActions.loginUser({
       success: function success(token) {
-        // logged in
+        // set token in local storage
+        AppActions.setLocalStorage("JWT", token);
+
+        // logged in, so redirect
         var location = self.props;
 
         if (location.state && location.state.nextPathname) {
@@ -89395,6 +89396,13 @@ var Login = _react2.default.createClass({
         AppActions.setSnackbar("Wrong username or password. Please try again");
       }
     }, formData);
+  },
+
+  _checkLoggedIn: function _checkLoggedIn() {
+    if (this.props.loggedIn) {
+      console.log("check logged in");
+      //self.props.router.replace('/');
+    }
   },
 
   _checkForUsers: function _checkForUsers() {
@@ -89478,7 +89486,7 @@ Login.contextTypes = {
 
 module.exports = Login;
 
-},{"../../actions/app-actions":740,"../../stores/app-store":789,"../common/forms/form":752,"../common/forms/textinput":753,"material-ui/Snackbar":276,"react":650,"react-router":586}],785:[function(require,module,exports){
+},{"../../actions/app-actions":740,"../../stores/app-store":789,"../../stores/local-store":790,"../common/forms/form":752,"../common/forms/textinput":753,"material-ui/Snackbar":276,"react":650,"react-router":586}],785:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -89518,10 +89526,21 @@ var _reactRouter = require('react-router');
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function requireAuth(nextState, replace) {
-  if (!_auth2.default.loggedIn()) {
+  // if not logged in, redirect to login screen
+  if (!_auth2.default.isLoggedIn()) {
     replace({
       pathname: '/login',
-      state: { nextPathname: nextState.location.pathname }
+      state: { nextPathname: nextState.location.pathname, loggedIn: false }
+    });
+  }
+}
+
+function noRequireAuth(nextState, replace) {
+  // if logged in, don't allow to show login screen
+  if (_auth2.default.isLoggedIn()) {
+    replace({
+      pathname: '/',
+      state: { nextPathname: nextState.location.pathname, loggedIn: _auth2.default.isLoggedIn() }
     });
   }
 }
@@ -89557,7 +89576,7 @@ module.exports = _react2.default.createElement(
       )
     )
   ),
-  _react2.default.createElement(_reactRouter.Route, { path: '/login', component: _login2.default })
+  _react2.default.createElement(_reactRouter.Route, { path: '/login', component: _login2.default, onEnter: noRequireAuth })
 );
 
 },{"../auth":745,"../components/app":746,"../components/artifacts/artifacts":747,"../components/dashboard/dashboard":757,"../components/deployments/deployments":764,"../components/devices/devices":778,"../components/user-management/login":784,"react":650,"react-router":586}],786:[function(require,module,exports){
@@ -90371,9 +90390,17 @@ function _setStorage(key, value) {
   localStorage.setItem(key, value);
 }
 
+function _getStorageItem(key) {
+  return localStorage.getItem(key);
+}
+
 var LocalStore = assign(EventEmitter.prototype, {
   emitChange: function emitChange() {
     this.emit(CHANGE_EVENT);
+  },
+
+  getStorageItem: function getStorageItem(key) {
+    return _getStorageItem(key);
   },
 
   changeListener: function changeListener(callback) {

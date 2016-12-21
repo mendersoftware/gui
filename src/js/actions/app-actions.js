@@ -476,8 +476,8 @@ var AppActions = {
   },
 
 
-setLocalStorage: function(key, value) {
-  AppDispatcher.handleViewAction({
+  setLocalStorage: function(key, value) {
+    AppDispatcher.handleViewAction({
       actionType: AppConstants.SET_LOCAL_STORAGE,
       key: key,
       value: value

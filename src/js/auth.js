@@ -1,13 +1,9 @@
-module.exports = {
-  /*
-  PLaceholder before adding user auth functionality
-  */
-  login() {
-    return
-  },
+var LocalStore = require('./stores/local-store');
 
-  loggedIn() {
-    return true
+module.exports = {
+ 
+  isLoggedIn() {
+    return LocalStore.getStorageItem("JWT");
   },
 
 }
