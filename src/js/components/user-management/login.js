@@ -28,28 +28,31 @@ var Login = React.createClass({
     this._checkForUsers();
   },
 
+  componentWillUnmount: function () {
+    AppStore.removeChangeListener(this._onChange);
+  },
+
   _onChange: function() {
     this.setState(getState());
   },
 
   _handleLogin: function(formData) {
+    var self = this;
+    AppActions.loginUser({
+      success: function(token) {
+        // logged in
+        var location = self.props;
 
-   /* const email = this.refs.email.value
-    const pass = this.refs.pass.value
-
-    auth.login(email, pass, (loggedIn) => {
-      if (!loggedIn)
-        return this.setState({ error: true })
-    */
-      const { location } = this.props;
-      console.log(location);
-
-      if (location.state && location.state.nextPathname) {
-        this.props.router.replace(location.state.nextPathname);
-      } else {
-        this.props.router.replace('/');
+        if (location.state && location.state.nextPathname) {
+          self.props.router.replace(location.state.nextPathname);
+        } else {
+          self.props.router.replace('/');
+        }
+      },
+      error: function(err) {
+        AppActions.setSnackbar("Wrong username or password. Please try again");
       }
-    /* }) */
+    }, formData);
   },
 
   _checkForUsers: function() {

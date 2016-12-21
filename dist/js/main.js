@@ -81376,8 +81376,16 @@ var AppActions = {
   },
 
   createInitialUser: function createInitialUser(callback, userData, token) {
-    UsersApi.post(useradmApiUrl + "/users/initial", userData, token).then(function (res) {
+    UsersApi.postWithToken(useradmApiUrl + "/users/initial", userData, token).then(function (res) {
       callback.success(parse(res.headers['link']));
+    }).catch(function (err) {
+      callback.error(err);
+    });
+  },
+
+  loginUser: function loginUser(callback, userData) {
+    UsersApi.post(useradmApiUrl + "/auth/login", userData).then(function (res) {
+      callback.success(res);
     }).catch(function (err) {
       callback.error(err);
     });
@@ -81765,7 +81773,7 @@ var Api = {
       });
     });
   },
-  post: function post(url, userData, token) {
+  postWithToken: function postWithToken(url, userData, token) {
     return new Promise(function (resolve, reject) {
       request.post(url).authBearer(token).send(userData).end(function (err, res) {
         if (err || !res.ok) {
@@ -81784,6 +81792,21 @@ var Api = {
         if (err.statusCode !== 200) {
           reject(err);
         } else {
+          var rawResponse = err.rawResponse;
+          resolve(rawResponse);
+        }
+      });
+    });
+  },
+  post: function post(url, userData) {
+    return new Promise(function (resolve, reject) {
+      request.post(url).auth(userData.email, userData.password).end(function (err, res) {
+        if (err.statusCode !== 200) {
+          // successful raw response throws err, but with status code 200
+          var errorResponse = JSON.parse(err.response.text);
+          reject(errorResponse);
+        } else {
+          // get token as raw response
           var rawResponse = err.rawResponse;
           resolve(rawResponse);
         }
@@ -89347,28 +89370,31 @@ var Login = _react2.default.createClass({
     this._checkForUsers();
   },
 
+  componentWillUnmount: function componentWillUnmount() {
+    AppStore.removeChangeListener(this._onChange);
+  },
+
   _onChange: function _onChange() {
     this.setState(getState());
   },
 
   _handleLogin: function _handleLogin(formData) {
+    var self = this;
+    AppActions.loginUser({
+      success: function success(token) {
+        // logged in
+        var location = self.props;
 
-    /* const email = this.refs.email.value
-     const pass = this.refs.pass.value
-      auth.login(email, pass, (loggedIn) => {
-       if (!loggedIn)
-         return this.setState({ error: true })
-     */
-    var location = this.props.location;
-
-    console.log(location);
-
-    if (location.state && location.state.nextPathname) {
-      this.props.router.replace(location.state.nextPathname);
-    } else {
-      this.props.router.replace('/');
-    }
-    /* }) */
+        if (location.state && location.state.nextPathname) {
+          self.props.router.replace(location.state.nextPathname);
+        } else {
+          self.props.router.replace('/');
+        }
+      },
+      error: function error(err) {
+        AppActions.setSnackbar("Wrong username or password. Please try again");
+      }
+    }, formData);
   },
 
   _checkForUsers: function _checkForUsers() {

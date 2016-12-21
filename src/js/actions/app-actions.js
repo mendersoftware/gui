@@ -202,9 +202,20 @@ var AppActions = {
 
   createInitialUser: function(callback, userData, token) {
     UsersApi
-      .post(useradmApiUrl+"/users/initial", userData, token)
+      .postWithToken(useradmApiUrl+"/users/initial", userData, token)
       .then(function(res) {
         callback.success(parse(res.headers['link']));
+      })
+      .catch(function(err) {
+        callback.error(err);
+      })
+  },
+
+  loginUser: function(callback, userData) {
+    UsersApi
+      .post(useradmApiUrl+"/auth/login", userData)
+      .then(function(res) {
+        callback.success(res);
       })
       .catch(function(err) {
         callback.error(err);

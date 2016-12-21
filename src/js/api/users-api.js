@@ -16,7 +16,7 @@ var Api = {
         });
     });
   },
-  post: function(url, userData, token) {
+  postWithToken: function(url, userData, token) {
     return new Promise(function (resolve, reject) {
       request
         .post(url)
@@ -42,6 +42,24 @@ var Api = {
           if (err.statusCode !== 200) {
             reject(err);
           } else {
+            var rawResponse = err.rawResponse;
+            resolve(rawResponse);
+          }
+        });
+    });
+  },
+  post: function(url, userData) {
+    return new Promise(function (resolve, reject) {
+      request
+        .post(url)
+        .auth(userData.email, userData.password)
+        .end(function (err, res) {
+          if (err.statusCode !== 200) {
+            // successful raw response throws err, but with status code 200
+            var errorResponse = JSON.parse(err.response.text);
+            reject(errorResponse);
+          } else {
+            // get token as raw response
             var rawResponse = err.rawResponse;
             resolve(rawResponse);
           }
