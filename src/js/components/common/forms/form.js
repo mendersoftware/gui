@@ -161,7 +161,7 @@ var Form = React.createClass({
   render: function () {
 
     var uploadActions = (
-      <div className="float-right">
+      <div className="float-right" style={{marginTop:"15px"}}>
         <div className={this.props.handleCancel ? null : "hidden"} key="cancelcontain" style={{marginRight:"10px", display:"inline-block"}}>
           <FlatButton
             key="cancel"

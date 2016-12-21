@@ -7,12 +7,13 @@ var LocalStore = require('../../stores/local-store');
 
 import Form from '../common/forms/form';
 import TextInput from '../common/forms/textinput';
+import PasswordInput from '../common/forms/passwordinput';
 import Snackbar from 'material-ui/Snackbar';
 
 
 function getState() {
   return {
-    snackbar: AppStore.getSnackbar()
+    snackbar: AppStore.getSnackbar(),
   };
 }
 
@@ -32,6 +33,7 @@ var Login = React.createClass({
 
   componentWillUnmount: function () {
     AppStore.removeChangeListener(this._onChange);
+    AppActions.setSnackbar("");
   },
 
   _onChange: function() {
@@ -42,6 +44,8 @@ var Login = React.createClass({
     var self = this;
     AppActions.loginUser({
       success: function(token) {
+
+        AppActions.setSnackbar("");
         // set token in local storage
         AppActions.setLocalStorage("JWT", token);
 
@@ -55,7 +59,7 @@ var Login = React.createClass({
         }
       },
       error: function(err) {
-        AppActions.setSnackbar("Wrong username or password. Please try again");
+        AppActions.setSnackbar("Oops! Wrong username or password. Please try again!");
       }
     }, formData);
   },
@@ -68,6 +72,7 @@ var Login = React.createClass({
   },
 
   _checkForUsers: function() {
+    AppActions.setSnackbar("");
     var self = this;
     // check to see if a user exists in the system already
     AppActions.checkForExistingUsers({
@@ -82,6 +87,7 @@ var Login = React.createClass({
   },
 
   _createUser: function(formData) {
+    AppActions.setSnackbar("");
     var self = this;
     var callback = {
       success: function(res) {
@@ -94,6 +100,7 @@ var Login = React.createClass({
     };
     AppActions.createInitialUser(callback, formData, this.state.createToken);
   },
+
 
   render: function() {
     var title = this.state.userExists ?  "Log in" : "Create a user";
@@ -114,13 +121,12 @@ var Login = React.createClass({
                 required={true}
                 validations="isLength:1,isEmail" />
 
-              <TextInput
+              <PasswordInput
                 id="password"
-                hint="Password"
+                hint="At least 8 characters"
                 label="Password"
                 required={true}
-                validations="isLength:8"
-                className="margin-bottom" />
+                validations="isLength:8" />
 
             </Form>
         </div>

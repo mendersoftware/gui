@@ -673,8 +673,8 @@ p.info {
 form .required::after {
   content: "* required";
   position: absolute;
-  top: 33px;
-  left: 101%;
+  top: 38px;
+  left: 102%;
   font-size: 12px;
   color: @linkgreen;
   width: 100px;
@@ -683,7 +683,7 @@ form .required::after {
 form .required.file {
   width: 400px;
   &:after {
-    top: -40px;
+    top: -38px;
     position: relative;
   }
 }
@@ -709,6 +709,12 @@ form .required.file {
 
   img {
     max-width: 100%;
+  }
+
+  #password-holder button {
+    position: absolute !important;
+    top: -4px;
+    right: 0;
   }
 }
 

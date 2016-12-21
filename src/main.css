@@ -690,8 +690,8 @@ p.info {
 form .required::after {
   content: "* required";
   position: absolute;
-  top: 33px;
-  left: 101%;
+  top: 38px;
+  left: 102%;
   font-size: 12px;
   color: #347A87;
   width: 100px;
@@ -700,7 +700,7 @@ form .required.file {
   width: 400px;
 }
 form .required.file:after {
-  top: -40px;
+  top: -38px;
   position: relative;
 }
 #login-box {
@@ -725,6 +725,11 @@ form .required.file:after {
 }
 #login-box img {
   max-width: 100%;
+}
+#login-box #password-holder button {
+  position: absolute !important;
+  top: -4px;
+  right: 0;
 }
 button:disabled .material-icons {
   color: rgba(0, 0, 0, 0.3) !important;

@@ -1,7 +1,7 @@
 import React from 'react';
-import TextField from 'material-ui/TextField';
+import PasswordField from 'material-ui-password-field';
 
-var TextInput = React.createClass({
+var PasswordInput = React.createClass({
   getInitialState: function () {
     return {
       value: this.props.value || '',
@@ -25,7 +25,8 @@ var TextInput = React.createClass({
   render: function () {
     var className = this.props.required ? this.props.className + " required" : this.props.className;
     return (
-      <TextField
+      <div id={this.props.id+"-holder"}>
+      <PasswordField
         id={this.props.id}
         name={this.props.id}
         defaultValue={this.props.defaultValue}
@@ -37,14 +38,14 @@ var TextInput = React.createClass({
         errorStyle={{color: "rgb(171, 16, 0)"}}
         multiLine={this.props.multiLine}
         rows={this.props.rows}
-        style={{display:"block", width:"400px", maxWidth:"100%"}}
+        style={{display:"block", width:"400px", maxWidth:"100%", position:"relative"}}
         errorText={this.state.errorText}
         required={this.props.required}
-        type={this.props.type}
         />
+      </div>
     )
   }
 });
 
-module.exports = TextInput;
+module.exports = PasswordInput;
 

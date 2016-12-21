@@ -23,6 +23,7 @@
     "history": "^4.4.1",
     "lodash.assign": "^4.2.0",
     "material-ui": "^0.16.4",
+    "material-ui-password-field": "^1.0.4",
     "moment": "^2.17.0",
     "object-assign": "^4.1.0",
     "parse-link-header": "^0.4.1",
