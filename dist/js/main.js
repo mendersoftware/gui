@@ -84480,7 +84480,6 @@ var Deployments = _react2.default.createClass({
       devices = group !== "All devices" ? this.state[group] : this.state.allDevices;
       filteredDevices = AppStore.filterDevicesByType(devices, artifact.device_types_compatible);
     }
-    console.log("setting state", filteredDevices);
     this.setState({ deploymentDevices: devices, filteredDevices: filteredDevices });
   },
   _getReportById: function _getReportById(id) {
