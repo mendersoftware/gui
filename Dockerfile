@@ -1,4 +1,4 @@
-FROM iron/base
+FROM alpine:3.4
 
 COPY ./set_gateway_host.sh /root/
 RUN chmod +x /root/set_gateway_host.sh
