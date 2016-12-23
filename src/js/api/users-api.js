@@ -24,7 +24,8 @@ var Api = {
         .send(userData)
         .end(function (err, res) {
           if (err || !res.ok) {
-            var errorResponse = JSON.parse(err.response.text);
+            console.log(err);
+            var errorResponse = err.response ? JSON.parse(err.response.text) : {error:"Oops! Something went wrong"};
             reject(errorResponse);
           } else {
             resolve(res);
