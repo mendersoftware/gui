@@ -46,6 +46,11 @@ var Form = React.createClass({
         isValid = false;
         errorText = "You must choose a file to upload";
       }
+    } else if (component.props.id === "password") {
+      if (!value) {
+        isValid = false;
+        errorText = (typeof value === 'string') ? "Password is too weak" : "";
+      }
     } else {
 
       if (value || component.props.required) {

@@ -731,6 +731,12 @@ form .required.file:after {
   top: -4px;
   right: 0;
 }
+#login-box .help-text,
+#login-box .help-text p {
+  color: rgba(66, 66, 66, 0.6);
+  text-align: left;
+  font-size: 12px;
+}
 button:disabled .material-icons {
   color: rgba(0, 0, 0, 0.3) !important;
 }

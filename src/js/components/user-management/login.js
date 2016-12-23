@@ -123,10 +123,9 @@ var Login = React.createClass({
 
               <PasswordInput
                 id="password"
-                hint="At least 8 characters"
                 label="Password"
                 required={true}
-                validations="isLength:8" />
+                showHelp={!this.state.userExists} />
 
             </Form>
         </div>
