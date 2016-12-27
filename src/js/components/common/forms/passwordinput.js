@@ -2,6 +2,8 @@ import React from 'react';
 import PasswordField from 'material-ui-password-field';
 import zxcvbn from 'zxcvbn';
 
+import CheckIcon from 'react-material-icons/icons/action/check-circle';
+
 var PasswordInput = React.createClass({
   getInitialState: function () {
     return {
@@ -82,7 +84,9 @@ var PasswordInput = React.createClass({
           required={this.props.required}
           />
         <div className={this.props.showHelp ? "help-text" : "hidden"}>
-          {this.state.value ? <div><p>Strength: {this.state.score}</p></div> : null}
+          <div id="pass-strength">Strength: <meter max={4} min={0} value={this.state.score} high={3} low={2} optimum={4}></meter>
+            {this.state.score>2 ? <CheckIcon className="fadeIn" style={{color:"#009E73", height:"18px"}}/> : null }
+          </div>
           <div>{feedback}</div>
         </div>
       </div>

@@ -731,6 +731,16 @@ form .required.file:after {
   top: -4px;
   right: 0;
 }
+#login-box #pass-strength {
+  margin-top: 10px;
+}
+#login-box #pass-strength meter {
+  margin-left: 8px;
+  margin-right: 8px;
+}
+#login-box #pass-strength svg {
+  vertical-align: middle;
+}
 #login-box .help-text,
 #login-box .help-text p {
   color: rgba(66, 66, 66, 0.6);
