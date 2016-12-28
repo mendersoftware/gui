@@ -91362,6 +91362,10 @@ var Header = _react2.default.createClass({
     this.props.clearSteps();
     AppActions.setSnackbar("");
   },
+  _logOut: function _logOut() {
+    localStorage.removeItem('JWT');
+    this.context.router.push("/login");
+  },
   render: function render() {
     var tabHandler = this._handleTabActive;
     var menu = menuItems.map(function (item, index) {
@@ -91372,13 +91376,20 @@ var Header = _react2.default.createClass({
         onActive: tabHandler });
     });
     var iconButtonElement = _react2.default.createElement(
-      _IconButton2.default,
-      { className: 'settings-menu-tooltip', style: { marginTop: "5px" } },
-      _react2.default.createElement(
-        _FontIcon2.default,
-        { className: 'material-icons' },
-        'settings'
-      )
+      _IconMenu2.default,
+      { style: { marginTop: "5px" },
+        iconButtonElement: _react2.default.createElement(
+          _IconButton2.default,
+          null,
+          _react2.default.createElement(
+            _FontIcon2.default,
+            { className: 'material-icons' },
+            'settings'
+          )
+        ),
+        targetOrigin: { horizontal: 'right', vertical: 'top' }
+      },
+      _react2.default.createElement(_MenuItem2.default, { primaryText: 'Log out', onClick: this._logOut })
     );
     return _react2.default.createElement(
       'div',

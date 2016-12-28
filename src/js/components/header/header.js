@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router';
+import { Router, Route, Link } from 'react-router';
 var AppActions = require('../../actions/app-actions');
 
 import { Tabs, Tab } from 'material-ui/Tabs';
@@ -65,6 +65,10 @@ var Header = React.createClass({
     this.props.clearSteps();
     AppActions.setSnackbar("");
   },
+  _logOut: function() {
+    localStorage.removeItem('JWT');
+    this.context.router.push("/login");
+  },
   render: function() {
     var tabHandler = this._handleTabActive;
     var menu = menuItems.map(function(item, index) {
@@ -76,7 +80,14 @@ var Header = React.createClass({
           onActive={tabHandler} />
       )
     });
-    var iconButtonElement = <IconButton className="settings-menu-tooltip" style={{marginTop: "5px"}}><FontIcon className="material-icons">settings</FontIcon></IconButton>;
+    var iconButtonElement = (
+      <IconMenu style={{marginTop: "5px"}}
+        iconButtonElement={<IconButton><FontIcon className="material-icons">settings</FontIcon></IconButton>}
+        targetOrigin={{horizontal: 'right', vertical: 'top'}}
+      >
+        <MenuItem primaryText="Log out" onClick={this._logOut} />
+      </IconMenu>
+    );
     return (
       <div className={this.context.router.isActive('/login') ? "hidden" : null}>
         <Toolbar style={{backgroundColor: "#fff"}}>
