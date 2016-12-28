@@ -13,7 +13,7 @@ import Snackbar from 'material-ui/Snackbar';
 
 function getState() {
   return {
-    snackbar: AppStore.getSnackbar(),
+    snackbar: AppStore.getSnackbar()
   };
 }
 
@@ -66,7 +66,6 @@ var Login = React.createClass({
 
   _checkLoggedIn: function() {
     if (this.props.loggedIn) {
-      console.log("check logged in");
       //self.props.router.replace('/');
     }
   },
@@ -112,7 +111,7 @@ var Login = React.createClass({
           <img src="assets/img/loginlogo.png" alt="mender-logo" />
           {this.state.userExists ? null : <p>Create a user by entering your email and choosing a safe password</p>}
 
-          <Form onSubmit={this.state.userExists ? this._handleLogin : this._createUser} submitLabel={buttonLabel}>
+          <Form hideHelp={this.state.userExists} onSubmit={this.state.userExists ? this._handleLogin : this._createUser} submitLabel={buttonLabel}>
 
               <TextInput
                 hint="Your email"
@@ -124,8 +123,7 @@ var Login = React.createClass({
               <PasswordInput
                 id="password"
                 label="Password"
-                required={true}
-                showHelp={!this.state.userExists} />
+                required={true} />
 
             </Form>
         </div>

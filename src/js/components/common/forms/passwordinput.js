@@ -18,20 +18,10 @@ var PasswordInput = React.createClass({
     this.props.attachToForm(this); // Attaching the component to the form
   },
   componentDidMount: function() {
-    //this._checkStrength("");
     this.setValue();
   },
   componentWillUnmount: function () {
     this.props.detachFromForm(this); // Detaching if unmounting
-  },
-  _checkStrength: function(value) {
-    var strength = zxcvbn(value);
-    var feedback = strength.feedback.suggestions || [];
-
-    this.setState({
-      score: strength.score,
-      feedback: feedback,
-    });
   },
   setValue: function (event) {
     var value = event ? event.currentTarget.value : "";
@@ -46,8 +36,7 @@ var PasswordInput = React.createClass({
       value: value
     });
    
-
-    if (score>2) {
+    if ((score>3)||(this.props.hideHelp)) {
       this.props.validate(this, value);
     } else {
       // check for length - if has any value, make string type otherwise null
@@ -83,9 +72,9 @@ var PasswordInput = React.createClass({
           errorText={this.state.errorText}
           required={this.props.required}
           />
-        <div className={this.props.showHelp ? "help-text" : "hidden"}>
-          <div id="pass-strength">Strength: <meter max={4} min={0} value={this.state.score} high={3} low={2} optimum={4}></meter>
-            {this.state.score>2 ? <CheckIcon className="fadeIn" style={{color:"#009E73", height:"18px"}}/> : null }
+        <div className={this.props.hideHelp ? "hidden" : "help-text"}>
+          <div id="pass-strength">Strength: <meter max={4} min={0} value={this.state.score} high={3.9} optimum={4} low={2.5}></meter>
+            {this.state.score>3 ? <CheckIcon className="fadeIn" style={{color:"#009E73", height:"18px"}}/> : null }
           </div>
           <div>{feedback}</div>
         </div>

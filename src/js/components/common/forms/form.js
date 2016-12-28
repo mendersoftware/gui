@@ -17,6 +17,13 @@ var Form = React.createClass({
     this.inputs = {}; // We create a map of traversed inputs
     this.registerInputs(); // We register inputs from the children
   },
+  componentDidUpdate: function(prevProps, prevState) {
+    this.registerInputs();
+    if (this.props.hideHelp !== prevProps.hideHelp) {
+      // check only for password help - workaround for child not updating
+      this.forceUpdate();
+    }
+  },
   registerInputs: function() {
     this.newChildren = React.Children.map(this.props.children, function(child) {
 
@@ -28,7 +35,7 @@ var Form = React.createClass({
         validations = validations ? validations +", " : validations;
         validations += 'isLength:1';
       }
-      return React.cloneElement(child, {validations: validations, attachToForm:this.attachToForm, detachFromForm:this.detachFromForm, updateModel:this.updateModel, validate:this.validate})
+      return React.cloneElement(child, {validations: validations, attachToForm:this.attachToForm, detachFromForm:this.detachFromForm, updateModel:this.updateModel, validate:this.validate, hideHelp:this.props.hideHelp})
     }.bind(this));
   
   },

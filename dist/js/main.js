@@ -84943,6 +84943,13 @@ var Form = _react2.default.createClass({
     this.inputs = {}; // We create a map of traversed inputs
     this.registerInputs(); // We register inputs from the children
   },
+  componentDidUpdate: function componentDidUpdate(prevProps, prevState) {
+    this.registerInputs();
+    if (this.props.hideHelp !== prevProps.hideHelp) {
+      // check only for password help - workaround for child not updating
+      this.forceUpdate();
+    }
+  },
   registerInputs: function registerInputs() {
     this.newChildren = _react2.default.Children.map(this.props.children, function (child) {
 
@@ -84954,7 +84961,7 @@ var Form = _react2.default.createClass({
         validations = validations ? validations + ", " : validations;
         validations += 'isLength:1';
       }
-      return _react2.default.cloneElement(child, { validations: validations, attachToForm: this.attachToForm, detachFromForm: this.detachFromForm, updateModel: this.updateModel, validate: this.validate });
+      return _react2.default.cloneElement(child, { validations: validations, attachToForm: this.attachToForm, detachFromForm: this.detachFromForm, updateModel: this.updateModel, validate: this.validate, hideHelp: this.props.hideHelp });
     }.bind(this));
   },
 
@@ -85153,20 +85160,10 @@ var PasswordInput = _react2.default.createClass({
     this.props.attachToForm(this); // Attaching the component to the form
   },
   componentDidMount: function componentDidMount() {
-    //this._checkStrength("");
     this.setValue();
   },
   componentWillUnmount: function componentWillUnmount() {
     this.props.detachFromForm(this); // Detaching if unmounting
-  },
-  _checkStrength: function _checkStrength(value) {
-    var strength = (0, _zxcvbn2.default)(value);
-    var feedback = strength.feedback.suggestions || [];
-
-    this.setState({
-      score: strength.score,
-      feedback: feedback
-    });
   },
   setValue: function setValue(event) {
     var value = event ? event.currentTarget.value : "";
@@ -85181,7 +85178,7 @@ var PasswordInput = _react2.default.createClass({
       value: value
     });
 
-    if (score > 2) {
+    if (score > 3 || this.props.hideHelp) {
       this.props.validate(this, value);
     } else {
       // check for length - if has any value, make string type otherwise null
@@ -85221,13 +85218,13 @@ var PasswordInput = _react2.default.createClass({
       }),
       _react2.default.createElement(
         'div',
-        { className: this.props.showHelp ? "help-text" : "hidden" },
+        { className: this.props.hideHelp ? "hidden" : "help-text" },
         _react2.default.createElement(
           'div',
           { id: 'pass-strength' },
           'Strength: ',
-          _react2.default.createElement('meter', { max: 4, min: 0, value: this.state.score, high: 3, low: 2, optimum: 4 }),
-          this.state.score > 2 ? _react2.default.createElement(_checkCircle2.default, { className: 'fadeIn', style: { color: "#009E73", height: "18px" } }) : null
+          _react2.default.createElement('meter', { max: 4, min: 0, value: this.state.score, high: 3.9, optimum: 4, low: 2.5 }),
+          this.state.score > 3 ? _react2.default.createElement(_checkCircle2.default, { className: 'fadeIn', style: { color: "#009E73", height: "18px" } }) : null
         ),
         _react2.default.createElement(
           'div',
@@ -91511,7 +91508,6 @@ var Login = _react2.default.createClass({
 
   _checkLoggedIn: function _checkLoggedIn() {
     if (this.props.loggedIn) {
-      console.log("check logged in");
       //self.props.router.replace('/');
     }
   },
@@ -91568,7 +91564,7 @@ var Login = _react2.default.createClass({
         ),
         _react2.default.createElement(
           _form2.default,
-          { onSubmit: this.state.userExists ? this._handleLogin : this._createUser, submitLabel: buttonLabel },
+          { hideHelp: this.state.userExists, onSubmit: this.state.userExists ? this._handleLogin : this._createUser, submitLabel: buttonLabel },
           _react2.default.createElement(_textinput2.default, {
             hint: 'Your email',
             label: 'Your email',
@@ -91578,8 +91574,7 @@ var Login = _react2.default.createClass({
           _react2.default.createElement(_passwordinput2.default, {
             id: 'password',
             label: 'Password',
-            required: true,
-            showHelp: !this.state.userExists })
+            required: true })
         )
       ),
       _react2.default.createElement(_Snackbar2.default, {
