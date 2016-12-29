@@ -16,7 +16,6 @@
   "_from": "readdirp@>=2.0.0 <3.0.0",
   "_id": "readdirp@2.1.0",
   "_inCache": true,
-  "_installable": true,
   "_location": "/readdirp",
   "_nodeVersion": "4.4.6",
   "_npmOperationalInternal": {

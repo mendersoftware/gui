@@ -43,6 +43,7 @@ exports.default = function (_ref) {
         path.remove();
       },
       ClassProperty: function ClassProperty(path) {
+        path.node.variance = null;
         path.node.typeAnnotation = null;
         if (!path.node.value) path.remove();
       },
@@ -56,8 +57,13 @@ exports.default = function (_ref) {
           }
         });
       },
-      Function: function Function(_ref4) {
+      AssignmentPattern: function AssignmentPattern(_ref4) {
         var node = _ref4.node;
+
+        node.left.optional = false;
+      },
+      Function: function Function(_ref5) {
+        var node = _ref5.node;
 
         for (var i = 0; i < node.params.length; i++) {
           var param = node.params[i];

@@ -16,7 +16,6 @@
   "_from": "detect-file@>=0.1.0 <0.2.0",
   "_id": "detect-file@0.1.0",
   "_inCache": true,
-  "_installable": true,
   "_location": "/detect-file",
   "_nodeVersion": "5.1.1",
   "_npmOperationalInternal": {

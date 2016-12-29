@@ -13,6 +13,7 @@ exports.ThisExpression = ThisExpression;
 exports.Super = Super;
 exports.Decorator = Decorator;
 exports.CallExpression = CallExpression;
+exports.Import = Import;
 exports.EmptyStatement = EmptyStatement;
 exports.ExpressionStatement = ExpressionStatement;
 exports.AssignmentPattern = AssignmentPattern;
@@ -142,6 +143,10 @@ function CallExpression(node) {
   this.token(")");
 }
 
+function Import() {
+  this.word("import");
+}
+
 function buildYieldAwait(keyword) {
   return function (node) {
     this.word(keyword);
@@ -173,6 +178,8 @@ function ExpressionStatement(node) {
 
 function AssignmentPattern(node) {
   this.print(node.left, node);
+  if (node.left.optional) this.token("?");
+  this.print(node.left.typeAnnotation, node);
   this.space();
   this.token("=");
   this.space();
