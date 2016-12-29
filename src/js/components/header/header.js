@@ -27,14 +27,6 @@ var styles = {
   }
 };
 
-var tooltip = {
-  title: 'Settings & options',
-  text: '<div class="development"><i class="material-icons">build</i>Under development</div>The Mender UI will soon allow you to change settings, manage your users and more via this menu.',
-  selector: '.settings-menu-tooltip',
-  position: 'bottom-right',
-  type: 'hover'
-};
-
 var tab = 0;
 
 var Header = React.createClass({
@@ -48,9 +40,6 @@ var Header = React.createClass({
   },
   componentWillReceiveProps: function(nextProps) {
     this.setState({tabIndex: this._updateActive()});
-  },
-  componentDidMount: function() {
-    this.props.addTooltip(tooltip);
   },
   _updateActive: function() {
     return this.context.router.isActive({ pathname: '/' }, true) ? '/' :

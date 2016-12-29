@@ -91339,14 +91339,6 @@ var styles = {
   }
 };
 
-var tooltip = {
-  title: 'Settings & options',
-  text: '<div class="development"><i class="material-icons">build</i>Under development</div>The Mender UI will soon allow you to change settings, manage your users and more via this menu.',
-  selector: '.settings-menu-tooltip',
-  position: 'bottom-right',
-  type: 'hover'
-};
-
 var tab = 0;
 
 var Header = _react2.default.createClass({
@@ -91362,9 +91354,6 @@ var Header = _react2.default.createClass({
   },
   componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
     this.setState({ tabIndex: this._updateActive() });
-  },
-  componentDidMount: function componentDidMount() {
-    this.props.addTooltip(tooltip);
   },
   _updateActive: function _updateActive() {
     return this.context.router.isActive({ pathname: '/' }, true) ? '/' : this.context.router.isActive('/devices') ? '/devices' : this.context.router.isActive('/artifacts') ? '/artifacts' : this.context.router.isActive('/deployments') ? '/deployments' : '/';
