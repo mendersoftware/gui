@@ -14,9 +14,17 @@ function _setStorage(key, value) {
   localStorage.setItem(key, value);
 }
 
+function _getStorageItem(key) {
+  return localStorage.getItem(key);
+}
+
 var LocalStore = assign(EventEmitter.prototype, {
   emitChange: function() {
     this.emit(CHANGE_EVENT)
+  },
+
+  getStorageItem: function(key) {
+    return _getStorageItem(key);
   },
 
   changeListener: function(callback) {

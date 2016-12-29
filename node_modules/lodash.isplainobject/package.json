@@ -16,7 +16,6 @@
   "_from": "lodash.isplainobject@>=4.0.4 <5.0.0",
   "_id": "lodash.isplainobject@4.0.6",
   "_inCache": true,
-  "_installable": true,
   "_location": "/lodash.isplainobject",
   "_nodeVersion": "4.4.7",
   "_npmOperationalInternal": {

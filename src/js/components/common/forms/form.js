@@ -17,6 +17,13 @@ var Form = React.createClass({
     this.inputs = {}; // We create a map of traversed inputs
     this.registerInputs(); // We register inputs from the children
   },
+  componentDidUpdate: function(prevProps, prevState) {
+    this.registerInputs();
+    if (this.props.hideHelp !== prevProps.hideHelp) {
+      // check only for password help - workaround for child not updating
+      this.forceUpdate();
+    }
+  },
   registerInputs: function() {
     this.newChildren = React.Children.map(this.props.children, function(child) {
 
@@ -28,7 +35,7 @@ var Form = React.createClass({
         validations = validations ? validations +", " : validations;
         validations += 'isLength:1';
       }
-      return React.cloneElement(child, {validations: validations, attachToForm:this.attachToForm, detachFromForm:this.detachFromForm, updateModel:this.updateModel, validate:this.validate})
+      return React.cloneElement(child, {validations: validations, attachToForm:this.attachToForm, detachFromForm:this.detachFromForm, updateModel:this.updateModel, validate:this.validate, hideHelp:this.props.hideHelp})
     }.bind(this));
   
   },
@@ -45,6 +52,11 @@ var Form = React.createClass({
       if (component.props.required && !value) {
         isValid = false;
         errorText = "You must choose a file to upload";
+      }
+    } else if (component.props.id === "password") {
+      if (!value) {
+        isValid = false;
+        errorText = (typeof value === 'string') ? "Password is too weak" : "";
       }
     } else {
 
@@ -94,6 +106,9 @@ var Form = React.createClass({
         break;
       case "isAlphanumeric":
         return "This field must contain only letters or numbers"
+        break;
+      case "isEmail":
+        return "Please enter a valid email address"
         break;
       default:
          return "There is an error with this field"
@@ -158,16 +173,16 @@ var Form = React.createClass({
   render: function () {
 
     var uploadActions = (
-      <div className="float-right">
-        <div key="cancelcontain" style={{marginRight:"10px", display:"inline-block"}}>
+      <div className="float-right" style={{marginTop:"15px"}}>
+        <div className={this.props.handleCancel ? null : "hidden"} key="cancelcontain" style={{marginRight:"10px", display:"inline-block"}}>
           <FlatButton
             key="cancel"
             label="Cancel"
-            onClick={this.props.dialogDismiss.bind(null, 'upload')} />
+            onClick={this.props.handleCancel} />
         </div>
         <RaisedButton
           key="submit"
-          label="Save artifact"
+          label={this.props.submitLabel}
           primary={true}
           onClick={this.updateModel}
           disabled={!this.state.isValid} />

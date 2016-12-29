@@ -3,11 +3,13 @@ var AppDispatcher = require('../dispatchers/app-dispatcher');
 var ArtifactsApi = require('../api/artifacts-api');
 var DeploymentsApi = require('../api/deployments-api');
 var DevicesApi = require('../api/devices-api');
+var UsersApi = require('../api/users-api');
 var rootUrl = "https://localhost:8080";
 var apiUrl = rootUrl + "/api/management/0.1"
 var deploymentsApiUrl = apiUrl + "/deployments";
 var devicesApiUrl = apiUrl + "/admission";
 var inventoryApiUrl = apiUrl + "/inventory";
+var useradmApiUrl = apiUrl + "/useradm";
 
 var parse = require('parse-link-header');
 
@@ -183,6 +185,43 @@ var AppActions = {
       duration: duration
     })
   },
+
+
+  /* User admission */
+  checkForExistingUsers: function(callback) {
+    UsersApi
+      .postEmpty(useradmApiUrl+"/auth/login")
+      .then(function(res) {
+        // successfully got token, means no existing user
+        callback.success(res);
+      })
+      .catch(function(err) {
+        callback.error(err);
+      })
+  },
+
+  createInitialUser: function(callback, userData, token) {
+    UsersApi
+      .postWithToken(useradmApiUrl+"/users/initial", userData, token)
+      .then(function(res) {
+        callback.success(parse(res.headers['link']));
+      })
+      .catch(function(err) {
+        callback.error(err);
+      })
+  },
+
+  loginUser: function(callback, userData) {
+    UsersApi
+      .post(useradmApiUrl+"/auth/login", userData)
+      .then(function(res) {
+        callback.success(res);
+      })
+      .catch(function(err) {
+        callback.error(err);
+      })
+  },
+
 
 
   /* Device Admission */
@@ -437,8 +476,8 @@ var AppActions = {
   },
 
 
-setLocalStorage: function(key, value) {
-  AppDispatcher.handleViewAction({
+  setLocalStorage: function(key, value) {
+    AppDispatcher.handleViewAction({
       actionType: AppConstants.SET_LOCAL_STORAGE,
       key: key,
       value: value

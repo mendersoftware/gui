@@ -23,6 +23,7 @@
     "history": "^4.4.1",
     "lodash.assign": "^4.2.0",
     "material-ui": "^0.16.4",
+    "material-ui-password-field": "git+https://github.com/michaelatmender/material-ui-password-field.git",
     "moment": "^2.17.0",
     "object-assign": "^4.1.0",
     "parse-link-header": "^0.4.1",
@@ -39,6 +40,7 @@
     "react-file-input": "^0.2.5",
     "react-height": "^2.1.1",
     "react-joyride": "^1.5.1",
+    "react-material-icons": "^1.0.1",
     "react-motion": "^0.4.5",
     "react-paginate": "^2.2.3",
     "react-router": "^3.0.0",
@@ -47,9 +49,11 @@
     "react-time": "^4.0.0",
     "reactify": "^1.1.1",
     "superagent": "^3.1.0",
+    "superagent-auth-bearer": "0.0.1",
     "validator": "^6.2.0",
     "vinyl-source-stream": "^1.1.0",
-    "watchify": "^3.7.0"
+    "watchify": "^3.7.0",
+    "zxcvbn": "^4.4.1"
   },
   "devDependencies": {},
   "scripts": {

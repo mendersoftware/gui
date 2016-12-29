@@ -16,7 +16,6 @@
   "_from": "lodash.isstring@>=4.0.1 <5.0.0",
   "_id": "lodash.isstring@4.0.1",
   "_inCache": true,
-  "_installable": true,
   "_location": "/lodash.isstring",
   "_nodeVersion": "5.4.0",
   "_npmOperationalInternal": {

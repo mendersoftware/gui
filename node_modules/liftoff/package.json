@@ -16,7 +16,6 @@
   "_from": "liftoff@>=2.1.0 <3.0.0",
   "_id": "liftoff@2.3.0",
   "_inCache": true,
-  "_installable": true,
   "_location": "/liftoff",
   "_nodeVersion": "0.10.41",
   "_npmOperationalInternal": {

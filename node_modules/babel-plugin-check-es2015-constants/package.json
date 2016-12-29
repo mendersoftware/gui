@@ -16,7 +16,6 @@
   "_from": "babel-plugin-check-es2015-constants@>=6.3.13 <7.0.0",
   "_id": "babel-plugin-check-es2015-constants@6.8.0",
   "_inCache": true,
-  "_installable": true,
   "_location": "/babel-plugin-check-es2015-constants",
   "_nodeVersion": "5.1.0",
   "_npmOperationalInternal": {
