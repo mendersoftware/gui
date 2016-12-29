@@ -281,7 +281,7 @@ var Repository = React.createClass({
           bodyStyle={{padding:"0 10px 10px 24px"}}
           >
           <div>
-            <Form dialogDismiss={this.dialogDismiss} onSubmit={this._onUploadSubmit}>
+            <Form submitLabel="Save artifact" handleCancel={this.dialogDismiss.bind(null, 'upload')} onSubmit={this._onUploadSubmit}>
 
               <FileInput 
                 id="artifactFile"

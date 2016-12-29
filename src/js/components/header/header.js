@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router';
+import { Router, Route, Link } from 'react-router';
 var AppActions = require('../../actions/app-actions');
 
 import { Tabs, Tab } from 'material-ui/Tabs';
@@ -27,14 +27,6 @@ var styles = {
   }
 };
 
-var tooltip = {
-  title: 'Settings & options',
-  text: '<div class="development"><i class="material-icons">build</i>Under development</div>The Mender UI will soon allow you to change settings, manage your users and more via this menu.',
-  selector: '.settings-menu-tooltip',
-  position: 'bottom-right',
-  type: 'hover'
-};
-
 var tab = 0;
 
 var Header = React.createClass({
@@ -49,9 +41,6 @@ var Header = React.createClass({
   componentWillReceiveProps: function(nextProps) {
     this.setState({tabIndex: this._updateActive()});
   },
-  componentDidMount: function() {
-    this.props.addTooltip(tooltip);
-  },
   _updateActive: function() {
     return this.context.router.isActive({ pathname: '/' }, true) ? '/' :
       this.context.router.isActive('/devices') ? '/devices' :
@@ -65,6 +54,10 @@ var Header = React.createClass({
     this.props.clearSteps();
     AppActions.setSnackbar("");
   },
+  _logOut: function() {
+    localStorage.removeItem('JWT');
+    this.context.router.push("/login");
+  },
   render: function() {
     var tabHandler = this._handleTabActive;
     var menu = menuItems.map(function(item, index) {
@@ -76,9 +69,16 @@ var Header = React.createClass({
           onActive={tabHandler} />
       )
     });
-    var iconButtonElement = <IconButton className="settings-menu-tooltip" style={{marginTop: "5px"}}><FontIcon className="material-icons">settings</FontIcon></IconButton>;
+    var iconButtonElement = (
+      <IconMenu style={{marginTop: "5px"}}
+        iconButtonElement={<IconButton><FontIcon className="material-icons">settings</FontIcon></IconButton>}
+        targetOrigin={{horizontal: 'right', vertical: 'top'}}
+      >
+        <MenuItem primaryText="Log out" onClick={this._logOut} />
+      </IconMenu>
+    );
     return (
-      <div>
+      <div className={this.context.router.isActive('/login') ? "hidden" : null}>
         <Toolbar style={{backgroundColor: "#fff"}}>
           <ToolbarGroup key={0} className="float-left">
               <Link to="/" id="logo"></Link>

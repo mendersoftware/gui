@@ -16,7 +16,6 @@
   "_from": "map-cache@>=0.2.0 <0.3.0",
   "_id": "map-cache@0.2.2",
   "_inCache": true,
-  "_installable": true,
   "_location": "/map-cache",
   "_nodeVersion": "5.5.0",
   "_npmOperationalInternal": {

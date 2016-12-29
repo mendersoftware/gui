@@ -16,7 +16,6 @@
   "_from": "regexpu-core@>=2.0.0 <3.0.0",
   "_id": "regexpu-core@2.0.0",
   "_inCache": true,
-  "_installable": true,
   "_location": "/regexpu-core",
   "_nodeVersion": "5.2.0",
   "_npmOperationalInternal": {

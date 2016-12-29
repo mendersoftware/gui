@@ -16,7 +16,6 @@
   "_from": "fs-exists-sync@>=0.1.0 <0.2.0",
   "_id": "fs-exists-sync@0.1.0",
   "_inCache": true,
-  "_installable": true,
   "_location": "/fs-exists-sync",
   "_nodeVersion": "5.5.0",
   "_npmOperationalInternal": {

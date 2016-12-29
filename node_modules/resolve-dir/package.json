@@ -16,7 +16,6 @@
   "_from": "resolve-dir@>=0.1.0 <0.2.0",
   "_id": "resolve-dir@0.1.1",
   "_inCache": true,
-  "_installable": true,
   "_location": "/resolve-dir",
   "_nodeVersion": "6.3.0",
   "_npmOperationalInternal": {

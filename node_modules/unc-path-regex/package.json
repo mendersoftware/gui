@@ -16,7 +16,6 @@
   "_from": "unc-path-regex@>=0.1.0 <0.2.0",
   "_id": "unc-path-regex@0.1.2",
   "_inCache": true,
-  "_installable": true,
   "_location": "/unc-path-regex",
   "_nodeVersion": "5.8.0",
   "_npmOperationalInternal": {

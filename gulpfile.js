@@ -1,7 +1,6 @@
 var gulp = require('gulp');
 var rename = require('gulp-rename');
 var watchify = require('watchify');
-var uglify = require('gulp-uglify');
 var htmlreplace = require('gulp-html-replace');
 var browserify = require('browserify');
 var babelify = require("babelify");
