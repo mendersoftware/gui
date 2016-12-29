@@ -83577,11 +83577,13 @@ module.exports = AppActions;
 
 var request = require('superagent');
 var Promise = require('es6-promise').Promise;
+var LocalStore = require('../stores/local-store');
 
 var Api = {
   get: function get(url) {
+    var token = LocalStore.getStorageItem("JWT");
     return new Promise(function (resolve, reject) {
-      request.get(url).end(function (err, res) {
+      request.get(url).authBearer(token).end(function (err, res) {
         if (err || !res.ok) {
           reject();
         } else {
@@ -83591,8 +83593,9 @@ var Api = {
     });
   },
   postFormData: function postFormData(url, formData) {
+    var token = LocalStore.getStorageItem("JWT");
     return new Promise(function (resolve, reject) {
-      request.post(url).send(formData).end(function (err, res) {
+      request.post(url).authBearer(token).send(formData).end(function (err, res) {
         if (err || !res.ok) {
           reject(err);
         } else {
@@ -83602,8 +83605,9 @@ var Api = {
     });
   },
   putJSON: function putJSON(url, data) {
+    var token = LocalStore.getStorageItem("JWT");
     return new Promise(function (resolve, reject) {
-      request.put(url).set('Content-Type', 'application/json').send(data).end(function (err, res) {
+      request.put(url).authBearer(token).set('Content-Type', 'application/json').send(data).end(function (err, res) {
         if (err || !res.ok) {
           reject();
         } else {
@@ -83620,16 +83624,18 @@ var Api = {
 
 module.exports = Api;
 
-},{"es6-promise":118,"superagent":670}],753:[function(require,module,exports){
+},{"../stores/local-store":802,"es6-promise":118,"superagent":670}],753:[function(require,module,exports){
 'use strict';
 
 var request = require('superagent');
 var Promise = require('es6-promise').Promise;
+var LocalStore = require('../stores/local-store');
 
 var Api = {
   get: function get(url) {
+    var token = LocalStore.getStorageItem("JWT");
     return new Promise(function (resolve, reject) {
-      request.get(url).end(function (err, res) {
+      request.get(url).authBearer(token).end(function (err, res) {
         if (err || !res.ok) {
           reject();
         } else {
@@ -83639,8 +83645,9 @@ var Api = {
     });
   },
   getText: function getText(url) {
+    var token = LocalStore.getStorageItem("JWT");
     return new Promise(function (resolve, reject) {
-      request.get(url).set('Content-Type', 'application/text').end(function (err, res) {
+      request.get(url).authBearer(token).set('Content-Type', 'application/text').end(function (err, res) {
         if (err || !res.ok) {
           reject();
         } else {
@@ -83650,8 +83657,9 @@ var Api = {
     });
   },
   post: function post(url, data) {
+    var token = LocalStore.getStorageItem("JWT");
     return new Promise(function (resolve, reject) {
-      request.post(url).set('Content-Type', 'application/json').send(data).end(function (err, res) {
+      request.post(url).authBearer(token).set('Content-Type', 'application/json').send(data).end(function (err, res) {
         if (err || !res.ok) {
           reject();
         } else {
@@ -83665,16 +83673,19 @@ var Api = {
 
 module.exports = Api;
 
-},{"es6-promise":118,"superagent":670}],754:[function(require,module,exports){
+},{"../stores/local-store":802,"es6-promise":118,"superagent":670}],754:[function(require,module,exports){
 'use strict';
 
 var request = require('superagent');
 var Promise = require('es6-promise').Promise;
+require('superagent-auth-bearer')(request);
+var LocalStore = require('../stores/local-store');
 
 var Api = {
   get: function get(url) {
+    var token = LocalStore.getStorageItem("JWT");
     return new Promise(function (resolve, reject) {
-      request.get(url).end(function (err, res) {
+      request.get(url).authBearer(token).end(function (err, res) {
         if (err || !res.ok) {
           reject(err);
         } else {
@@ -83684,8 +83695,9 @@ var Api = {
     });
   },
   post: function post(url, data) {
+    var token = LocalStore.getStorageItem("JWT");
     return new Promise(function (resolve, reject) {
-      request.post(url).set('Content-Type', 'application/json').send(data).end(function (err, res) {
+      request.post(url).authBearer(token).set('Content-Type', 'application/json').send(data).end(function (err, res) {
         if (err || !res.ok) {
           reject(err);
         } else {
@@ -83695,8 +83707,9 @@ var Api = {
     });
   },
   put: function put(url, data) {
+    var token = LocalStore.getStorageItem("JWT");
     return new Promise(function (resolve, reject) {
-      request.put(url).set('Content-Type', 'application/json').send(data).end(function (err, res) {
+      request.put(url).authBearer(token).set('Content-Type', 'application/json').send(data).end(function (err, res) {
         if (err || !res.ok) {
           var responsetext = "";
           if (res.text) {
@@ -83711,8 +83724,9 @@ var Api = {
     });
   },
   del: function del(url) {
+    var token = LocalStore.getStorageItem("JWT");
     return new Promise(function (resolve, reject) {
-      request.del(url).end(function (err, res) {
+      request.del(url).authBearer(token).end(function (err, res) {
         if (err || !res.ok) {
           reject(err);
         } else {
@@ -83726,7 +83740,7 @@ var Api = {
 
 module.exports = Api;
 
-},{"es6-promise":118,"superagent":670}],755:[function(require,module,exports){
+},{"../stores/local-store":802,"es6-promise":118,"superagent":670,"superagent-auth-bearer":669}],755:[function(require,module,exports){
 'use strict';
 
 var request = require('superagent');
