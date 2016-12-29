@@ -101,7 +101,7 @@ var Printer = function () {
   };
 
   Printer.prototype.semicolon = function semicolon() {
-    var force = arguments.length <= 0 || arguments[0] === undefined ? false : arguments[0];
+    var force = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
 
     this._maybeAddAuxComment();
     this._append(";", !force);
@@ -115,7 +115,7 @@ var Printer = function () {
   };
 
   Printer.prototype.space = function space() {
-    var force = arguments.length <= 0 || arguments[0] === undefined ? false : arguments[0];
+    var force = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
 
     if (this.format.compact) return;
 
@@ -198,7 +198,7 @@ var Printer = function () {
   };
 
   Printer.prototype._append = function _append(str) {
-    var queue = arguments.length <= 1 || arguments[1] === undefined ? false : arguments[1];
+    var queue = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
 
     this._maybeAddParen(str);
     this._maybeIndent(str);
@@ -286,6 +286,9 @@ var Printer = function () {
     this._maybeAddAuxComment(this._insideAux && !oldInAux);
 
     var needsParens = n.needsParens(node, parent, this._printStack);
+    if (this.format.retainFunctionParens && node.type === "FunctionExpression" && node.extra && node.extra.parenthesized) {
+      needsParens = true;
+    }
     if (needsParens) this.token("(");
 
     this._printLeadingComments(node, parent);
@@ -337,8 +340,6 @@ var Printer = function () {
   };
 
   Printer.prototype.getPossibleRaw = function getPossibleRaw(node) {
-    if (this.format.minified) return;
-
     var extra = node.extra;
     if (extra && extra.raw != null && extra.rawValue != null && node.value === extra.rawValue) {
       return extra.raw;
@@ -346,7 +347,7 @@ var Printer = function () {
   };
 
   Printer.prototype.printJoin = function printJoin(nodes, parent) {
-    var opts = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
+    var opts = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 
     if (!nodes || !nodes.length) return;
 
@@ -404,7 +405,7 @@ var Printer = function () {
   };
 
   Printer.prototype.printInnerComments = function printInnerComments(node) {
-    var indent = arguments.length <= 1 || arguments[1] === undefined ? true : arguments[1];
+    var indent = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
 
     if (!node.innerComments) return;
     if (indent) this.indent();
@@ -413,14 +414,14 @@ var Printer = function () {
   };
 
   Printer.prototype.printSequence = function printSequence(nodes, parent) {
-    var opts = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
+    var opts = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 
     opts.statement = true;
     return this.printJoin(nodes, parent, opts);
   };
 
   Printer.prototype.printList = function printList(items, parent) {
-    var opts = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
+    var opts = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 
     if (opts.separator == null) {
       opts.separator = commaSeparator;

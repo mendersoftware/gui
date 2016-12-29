@@ -16,7 +16,6 @@
   "_from": "babel-plugin-transform-es2015-function-name@>=6.9.0 <7.0.0",
   "_id": "babel-plugin-transform-es2015-function-name@6.9.0",
   "_inCache": true,
-  "_installable": true,
   "_location": "/babel-plugin-transform-es2015-function-name",
   "_nodeVersion": "5.1.0",
   "_npmOperationalInternal": {

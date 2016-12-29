@@ -16,7 +16,6 @@
   "_from": "global-modules@>=0.2.3 <0.3.0",
   "_id": "global-modules@0.2.3",
   "_inCache": true,
-  "_installable": true,
   "_location": "/global-modules",
   "_nodeVersion": "6.3.0",
   "_npmOperationalInternal": {

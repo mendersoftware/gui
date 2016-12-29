@@ -107,7 +107,7 @@ var PathHoister = function () {
 
         if (binding.kind === "param") continue;
 
-        if (binding.path.getStatementParent().key > path.key) return;
+        if (this.getAttachmentParentForPath(binding.path).key > path.key) return;
       }
     }
 
@@ -126,16 +126,22 @@ var PathHoister = function () {
 
         return scope.path.get("body").get("body")[0];
       } else {
-        return this.getNextScopeStatementParent();
+        return this.getNextScopeAttachmentParent();
       }
     } else if (scope.path.isProgram()) {
-      return this.getNextScopeStatementParent();
+      return this.getNextScopeAttachmentParent();
     }
   };
 
-  PathHoister.prototype.getNextScopeStatementParent = function getNextScopeStatementParent() {
+  PathHoister.prototype.getNextScopeAttachmentParent = function getNextScopeAttachmentParent() {
     var scope = this.scopes.pop();
-    if (scope) return scope.path.getStatementParent();
+    if (scope) return this.getAttachmentParentForPath(scope.path);
+  };
+
+  PathHoister.prototype.getAttachmentParentForPath = function getAttachmentParentForPath(path) {
+    do {
+      if (!path.parentPath || Array.isArray(path.container) && path.isStatement() || path.isVariableDeclarator() && path.parentPath.node.declarations.length > 1) return path;
+    } while (path = path.parentPath);
   };
 
   PathHoister.prototype.hasOwnParamBindings = function hasOwnParamBindings(scope) {
@@ -163,7 +169,9 @@ var PathHoister = function () {
     if (attachTo.getFunctionParent() === this.path.getFunctionParent()) return;
 
     var uid = attachTo.scope.generateUidIdentifier("ref");
-    attachTo.insertBefore([t.variableDeclaration("var", [t.variableDeclarator(uid, this.path.node)])]);
+    var declarator = t.variableDeclarator(uid, this.path.node);
+
+    attachTo.insertBefore([attachTo.isVariableDeclarator() ? declarator : t.variableDeclaration("var", [declarator])]);
 
     var parent = this.path.parentPath;
     if (parent.isJSXElement() && this.path.container === parent.node.children) {

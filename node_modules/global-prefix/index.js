@@ -7,10 +7,10 @@
 
 'use strict';
 
-var fs = require('fs')
+var homedir = require('homedir-polyfill');
 var path = require('path');
-var osenv = require('osenv');
 var ini = require('ini');
+var fs = require('fs')
 
 var prefix;
 
@@ -18,8 +18,12 @@ if (process.env.PREFIX) {
   prefix = process.env.PREFIX;
 } else {
   // Start by checking if the global prefix is set by the user
-  var userConfig = path.resolve(osenv.home(), '.npmrc');
-  prefix = readPrefix(userConfig);
+  var home = homedir();
+  if (home) {
+    // homedir() returns undefined if $HOME not set; path.resolve requires strings
+    var userConfig = path.resolve(home, '.npmrc');
+    prefix = readPrefix(userConfig);
+  }
 
   if (!prefix) {
     // Otherwise find the path of npm
@@ -60,10 +64,10 @@ function fallback() {
 
 function npmPath() {
   try {
-    return fs.realpathSync(require('which').sync('npm'))
+    return fs.realpathSync(require('which').sync('npm'));
   } catch (ex) {
   }
-  return false
+  return false;
 }
 
 function readPrefix(configPath) {

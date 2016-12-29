@@ -93,7 +93,7 @@ var visitor = {
 
 var ReplaceSupers = function () {
   function ReplaceSupers(opts) {
-    var inClass = arguments.length <= 1 || arguments[1] === undefined ? false : arguments[1];
+    var inClass = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
     (0, _classCallCheck3.default)(this, ReplaceSupers);
 
     this.forceSuperMemoisation = opts.forceSuperMemoisation;
@@ -172,7 +172,6 @@ var ReplaceSupers = function () {
     var property = void 0;
     var computed = void 0;
     var args = void 0;
-    var thisReference = void 0;
 
     var parent = path.parent;
     var node = path.node;
@@ -207,7 +206,7 @@ var ReplaceSupers = function () {
 
     if (!property) return;
 
-    var superProperty = this.getSuperProperty(property, computed, thisReference);
+    var superProperty = this.getSuperProperty(property, computed);
 
     if (args) {
       return this.optimiseCall(superProperty, args);

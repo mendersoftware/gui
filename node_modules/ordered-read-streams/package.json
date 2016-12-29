@@ -16,7 +16,6 @@
   "_from": "ordered-read-streams@>=0.1.0 <0.2.0",
   "_id": "ordered-read-streams@0.1.0",
   "_inCache": true,
-  "_installable": true,
   "_location": "/ordered-read-streams",
   "_npmUser": {
     "name": "armed",
