@@ -88046,7 +88046,7 @@ var ProgressChart = _react2.default.createClass({
         ' Pending ',
         _react2.default.createElement('div', { className: 'bubble inprogress' }),
         ' In progress ',
-        _react2.default.createElement('div', { className: 'bubble successful' }),
+        _react2.default.createElement('div', { className: 'bubble success' }),
         ' Successful'
       )
     );

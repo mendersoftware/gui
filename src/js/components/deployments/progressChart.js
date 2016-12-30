@@ -94,7 +94,7 @@ var ProgressChart = React.createClass({
           <p>{this.state.device.status}</p>
         </div>
         <div className="key">
-          <div className="bubble failure" /> Failed <div className="bubble pending" /> Pending <div className="bubble inprogress" /> In progress <div className="bubble successful" /> Successful 
+          <div className="bubble failure" /> Failed <div className="bubble pending" /> Pending <div className="bubble inprogress" /> In progress <div className="bubble success" /> Successful 
         </div>
       </div>
     );
