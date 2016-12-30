@@ -24,7 +24,7 @@ var ProgressReport = React.createClass({
   },
   componentDidMount: function() {
     this.timer = setInterval(this.tick, 50);
-    this.timer2 = setInterval(this.refreshDeploymentDevices, 5000);
+    this.timer2 = setInterval(this.refreshDeploymentDevices, 10000);
     this.refreshDeploymentDevices();
   },
   componentWillUnmount: function() {

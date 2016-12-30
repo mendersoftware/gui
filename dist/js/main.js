@@ -88124,7 +88124,7 @@ var ProgressReport = _react2.default.createClass({
   },
   componentDidMount: function componentDidMount() {
     this.timer = setInterval(this.tick, 50);
-    this.timer2 = setInterval(this.refreshDeploymentDevices, 5000);
+    this.timer2 = setInterval(this.refreshDeploymentDevices, 10000);
     this.refreshDeploymentDevices();
   },
   componentWillUnmount: function componentWillUnmount() {
