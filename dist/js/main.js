@@ -87992,12 +87992,18 @@ var ProgressChart = _react2.default.createClass({
       rows = Math.ceil(this.state.devices.length / 5);
     }
 
+    var split = Math.ceil(dev / rows);
+
+    if (split / rows < 1.5) {
+      split = split * 2;
+    }
+
     var pixelHeight = 80 / rows;
     var deviceGrid = this.state.devices.map(function (device, index) {
-      var split = Math.ceil(dev / rows);
+
       return _react2.default.createElement(
         'div',
-        { key: index, className: index % split == 0 ? device.status + " clear" : device.status, style: { height: pixelHeight, width: pixelHeight } },
+        { key: index, className: device.status, style: { height: pixelHeight, width: pixelHeight } },
         _react2.default.createElement('div', { onMouseEnter: this._hoverDevice.bind(null, device), onMouseLeave: this._hoverDevice, onClick: this._handleClick.bind(null, device.id), className: 'bubble' })
       );
     }, this);
