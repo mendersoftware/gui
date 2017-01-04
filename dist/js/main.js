@@ -89295,7 +89295,7 @@ var Progress = _react2.default.createClass({
         ),
         _react2.default.createElement(
           _Table.TableRowColumn,
-          { style: { textAlign: "right", width: "60px" } },
+          { style: { textAlign: "right", width: "80px" } },
           _react2.default.createElement(GroupDevices, { deployment: deployment.id })
         ),
         _react2.default.createElement(
@@ -89348,7 +89348,7 @@ var Progress = _react2.default.createClass({
               ),
               _react2.default.createElement(
                 _Table.TableHeaderColumn,
-                { style: { textAlign: "right", width: "60px" } },
+                { style: { textAlign: "right", width: "80px" } },
                 '# Devices'
               ),
               _react2.default.createElement(
