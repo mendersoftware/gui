@@ -26,7 +26,7 @@ var DeploymentStatus = React.createClass({
     if (self.props.refresh) {
       self.timer = setInterval(function() {
         self.refreshStatus(self.props.id);
-      },5000);
+      },10000);
     }
     self.refreshStatus(self.props.id)
   },

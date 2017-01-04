@@ -41,7 +41,7 @@ var Progress = React.createClass({
           <TableRowColumn>{deployment.artifact_name}</TableRowColumn>
           <TableRowColumn>{deployment.name}</TableRowColumn>
           <TableRowColumn><Time value={this._formatTime(deployment.created)} format="YYYY-MM-DD HH:mm" /></TableRowColumn>
-          <TableRowColumn style={{textAlign:"right", width:"60px"}}><GroupDevices deployment={deployment.id} /></TableRowColumn>
+          <TableRowColumn style={{textAlign:"right", width:"80px"}}><GroupDevices deployment={deployment.id} /></TableRowColumn>
           <TableRowColumn style={{overflow:"visible"}}>{status}</TableRowColumn>
         </TableRow>
       )
@@ -66,7 +66,7 @@ var Progress = React.createClass({
                 <TableHeaderColumn>Updating to</TableHeaderColumn>
                 <TableHeaderColumn>Group</TableHeaderColumn>
                 <TableHeaderColumn>Started</TableHeaderColumn>
-                <TableHeaderColumn style={{textAlign:"right", width:"60px"}}># Devices</TableHeaderColumn>
+                <TableHeaderColumn style={{textAlign:"right", width:"80px"}}># Devices</TableHeaderColumn>
                 <TableHeaderColumn>Status</TableHeaderColumn>
               </TableRow>
             </TableHeader>

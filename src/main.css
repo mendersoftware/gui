@@ -95,7 +95,7 @@
 }
 html {
   height: 100%;
-  min-width: 1000px;
+  min-width: 1200px;
 }
 body {
   min-height: 100%;
@@ -1078,9 +1078,9 @@ span.day {
   position: absolute;
   width: 25%;
   right: 0;
-  height: 106px;
   background-color: #ffffff;
   top: 0;
+  bottom: 45px;
   z-index: 300;
   padding: 0 30px;
   box-sizing: border-box;
@@ -1141,7 +1141,8 @@ span.day {
 }
 .progress-container .bubbles-contain {
   height: 100px;
-  width: 350px;
+  min-width: 300px;
+  width: 60%;
   position: relative;
   top: -10px;
   padding-left: 30px;
@@ -1363,7 +1364,7 @@ span.day {
   padding: 15px 90px 15px;
   position: relative;
   top: -26px;
-  height: a uto;
+  height: auto;
   margin: 30px 30px 0 0;
   display: inline-block;
   vertical-align: top;
