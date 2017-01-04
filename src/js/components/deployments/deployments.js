@@ -11,6 +11,8 @@ var ScheduleForm = require('./scheduleform.js');
 var Report = require('./report.js');
 var ScheduleButton = require('./schedulebutton.js');
 
+var Pagination = require('rc-pagination');
+
 import { Tabs, Tab }  from 'material-ui/Tabs';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
@@ -338,6 +340,10 @@ var Deployments = React.createClass({
     var deployment = this.state.progress[rowNumber];
     this._showReport(deployment);
   },
+  updated: function() {
+    // use to make sure re-renders dialog at correct height when device list built
+    this.setState({updated:true});
+  },
   render: function() {
     var disabled = (typeof this.state.filteredDevices !== 'undefined' && this.state.filteredDevices.length > 0) ? false : true;
     var scheduleActions =  [
@@ -366,7 +372,7 @@ var Deployments = React.createClass({
       )
     } else if (this.state.tabIndex === "progress") {
       dialogContent = (
-        <ProgressReport deployment={this.state.selectedDeployment} />
+        <ProgressReport updated={this.updated} deployment={this.state.selectedDeployment} />
       )
     } else {
       dialogContent = (

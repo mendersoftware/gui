@@ -290,7 +290,7 @@ function _sortDeploymentDevices(devices) {
     newList[devices[i].status].push(devices[i]);
   }
 
-  var newCombine = newList.success.concat(newList.pending, newList.downloading, newList.installing, newList.rebooting, newList.failure, newList.aborted, newList['already-installed'], newList.noartifact);
+  var newCombine = newList.success.concat(newList.downloading, newList.installing, newList.rebooting, newList.failure, newList.aborted, newList['already-installed'], newList.noartifact, newList.pending);
   return newCombine;
 }
 
