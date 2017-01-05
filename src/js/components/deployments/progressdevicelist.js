@@ -8,11 +8,17 @@ import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowCol
 import FlatButton from 'material-ui/FlatButton';
 
 var ProgressDeviceList = React.createClass({
+  getInitialState: function() {
+    return {
+      prevDevices:{}
+    };
+  },
   shouldComponentUpdate: function (nextProps, nextState) {
     return !isEqual(this.props, nextProps) || !isEqual(this.state, nextState);
   },
   componentDidUpdate: function(prevProps, prevState) {
     this.props.finished();
+    this.setState({prevDevices: prevProps.devices});
   },
   _formatTime: function (date) {
     if (date) {
@@ -26,6 +32,7 @@ var ProgressDeviceList = React.createClass({
  
     if (this.props.devices) {
       deviceList = this.props.devices.map(function(device, index) {
+       
         var encodedDevice = encodeURIComponent("id="+device.id); 
         var deviceLink = (
         <div>
