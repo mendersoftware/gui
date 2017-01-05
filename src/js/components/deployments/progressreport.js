@@ -7,7 +7,9 @@ var AppStore = require('../../stores/app-store');
 var DeploymentStatus = require('./deploymentstatus');
 var DeviceList = require('./progressdevicelist');
 var Pagination = require('rc-pagination');
-
+import update from 'react-addons-update';
+var isEqual = require('lodash.isequal');
+var differenceWith = require('lodash.differenceWith');
 
 // material ui
 import FlatButton from 'material-ui/FlatButton';
@@ -70,7 +72,6 @@ var ProgressReport = React.createClass({
         sortedDevices = self.state.showPending ? sortedDevices : sortedDevices.filter(self._filterPending);
         self.setState({allDevices: sortedDevices, deviceCount:devices.length});
         self._handlePageChange(self.state.currentPage);
-        self._getDeviceDetails(sortedDevices);
       });
     }
   },
@@ -86,31 +87,25 @@ var ProgressReport = React.createClass({
   _getDeviceDetails: function (devices) {
     var self = this;
     var deviceArtifacts = self.state.deviceArtifacts || {};
-    for (var i=this.state.start;i<this.state.end;i++) {
+    for (var i=0;i<devices.length;i++) {
       // get device artifact details not listed in schedule data
-      if (!(devices[i].id in deviceArtifacts) || !self.state.deviceArtifacts ) {
-        // only make new request if no artifact details exist, or if successful update (to get new current artifact)
-        setDeviceDetails(devices[i], i, i===this.state.end-1);
-      } else {
-        self.setState({doneLoading:true});
+      self._setSingleDeviceDetails(devices[i].id);
+    }
+  },
+  _setSingleDeviceDetails: function(id) {
+    var self = this;
+    AppActions.getDeviceById(id, {
+      success: function(device_inventory) {
+        var artifact = self._getDeviceArtifact(device_inventory);
+        var deviceArtifacts = self.state.deviceArtifacts || {};
+        self.setState({
+          deviceArtifacts: update(deviceArtifacts, {[id]: {$set: artifact}})
+        })
+      },
+      error: function(err) {
+        console.log("error ", err);
       }
-    }
-
-    function setDeviceDetails(device, idx, final) {
-      AppActions.getDeviceById(device.id, {
-        success: function(device_inventory) {
-          deviceArtifacts[device.id] = self._getDeviceArtifact(device_inventory);
-          if (final) {
-            //  check to find if at the end of for loop, then set state
-            self.setState({deviceArtifacts: deviceArtifacts});
-          }
-        },
-        error: function(err) {
-          console.log("error ", err);
-        }
-      });
-    }
-
+    });
   },
   _filterPending: function(device) {
     return device.status !== "pending";
@@ -148,6 +143,11 @@ var ProgressReport = React.createClass({
     var end = Math.min(this.state.allDevices.length, (pageNo*this.state.perPage));
     // cut slice from full list of devices
     var slice = this.state.allDevices.slice(start, end);
+    if (!isEqual(slice, this.state.pagedDevices)) {
+      var diff = differenceWith(slice, this.state.pagedDevices, isEqual);
+      // only update those that have changed
+      this._getDeviceDetails(diff); 
+    }
     this.setState({currentPage: pageNo, start:start, end:end, pagedDevices:slice});
   },
    _formatTime: function (date) {
@@ -221,7 +221,7 @@ var ProgressReport = React.createClass({
 
 
         <div style={{minHeight:"20vh"}}>
-          <DeviceList devices={deviceList} deviceArtifacts={this.state.deviceArtifacts} viewLog={this.viewLog} finished={this.updatedList}/>
+          <DeviceList devices={deviceList} deviceArtifacts={this.state.deviceArtifacts} viewLog={this.viewLog} finished={this.updatedList} />
           {allDevices.length ? <Pagination simple pageSize={this.state.perPage} current={this.state.currentPage || 1} total={allDevices.length} onChange={this._handlePageChange} /> : null }
         </div>
 
