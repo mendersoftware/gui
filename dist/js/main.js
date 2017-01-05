@@ -86854,8 +86854,6 @@ var SelectedArtifact = _react2.default.createClass({
         _react2.default.createElement(_Divider2.default, null),
         _react2.default.createElement(_List.ListItem, { style: styles.listStyle, disabled: true, primaryText: 'Checksum', secondaryText: file.checksum }),
         _react2.default.createElement(_Divider2.default, null),
-        _react2.default.createElement(_List.ListItem, { style: styles.listStyle, disabled: true, primaryText: 'Signature', secondaryText: file.signature }),
-        _react2.default.createElement(_Divider2.default, null),
         _react2.default.createElement(_List.ListItem, { style: styles.listStyle, disabled: true, primaryText: 'Build date', secondaryText: file.date }),
         _react2.default.createElement(_Divider2.default, null),
         _react2.default.createElement(_List.ListItem, { style: styles.listStyle, disabled: true, primaryText: 'Size', secondaryText: file.size }),

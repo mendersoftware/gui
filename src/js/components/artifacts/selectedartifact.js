@@ -102,8 +102,6 @@ var SelectedArtifact = React.createClass({
           <Divider />
           <ListItem style={styles.listStyle} disabled={true} primaryText="Checksum" secondaryText={file.checksum} />
           <Divider />
-          <ListItem style={styles.listStyle} disabled={true} primaryText="Signature" secondaryText={file.signature} />
-          <Divider />
           <ListItem style={styles.listStyle} disabled={true} primaryText="Build date" secondaryText={file.date} />
           <Divider />
           <ListItem style={styles.listStyle} disabled={true} primaryText="Size" secondaryText={file.size} />
