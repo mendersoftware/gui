@@ -88435,6 +88435,7 @@ var Form = _react2.default.createClass({
       _react2.default.createElement(_RaisedButton2.default, {
         key: 'submit',
         label: this.props.submitLabel,
+        id: this.props.submitButtonId,
         primary: true,
         onClick: this.updateModel,
         disabled: !this.state.isValid })
@@ -95022,7 +95023,7 @@ var Login = _react2.default.createClass({
         ),
         _react2.default.createElement(
           _form2.default,
-          { hideHelp: this.state.userExists, onSubmit: this.state.userExists ? this._handleLogin : this._createUser, submitLabel: buttonLabel },
+          { hideHelp: this.state.userExists, onSubmit: this.state.userExists ? this._handleLogin : this._createUser, submitLabel: buttonLabel, submitButtonId: 'login_button' },
           _react2.default.createElement(_textinput2.default, {
             hint: 'Your email',
             label: 'Your email',
