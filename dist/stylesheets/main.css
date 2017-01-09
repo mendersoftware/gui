@@ -225,6 +225,9 @@ span.link.small {
 .inline-block {
   display: inline-block;
 }
+.inline {
+  display: inline;
+}
 .block {
   display: block;
 }

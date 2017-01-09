@@ -5,11 +5,10 @@ var AppActions = require('../../actions/app-actions');
 var Pending = require('./pendingdeployments.js');
 var Progress = require('./inprogressdeployments.js');
 var Past = require('./pastdeployments.js');
-var ProgressReport = require('./progressreport.js');
+var Report = require('./report.js');
 var Schedule = require('./schedule.js');
 var EventLog = require('./eventlog.js');
 var ScheduleForm = require('./scheduleform.js');
-var Report = require('./report.js');
 var ScheduleButton = require('./schedulebutton.js');
 
 import Dialog from 'material-ui/Dialog';
@@ -353,11 +352,11 @@ var Deployments = React.createClass({
       )
     } else if (this.state.reportType === "progress") {
       dialogContent = (
-        <ProgressReport updated={this.updated} deployment={this.state.selectedDeployment} />
+        <Report updated={this.updated} deployment={this.state.selectedDeployment} />
       )
     } else {
       dialogContent = (
-        <Report deployment={this.state.selectedDeployment} retryDeployment={this._scheduleDeployment} />
+        <Report updated={this.updated} past={true} deployment={this.state.selectedDeployment} retryDeployment={this._scheduleDeployment} />
       )
     }
     return (
