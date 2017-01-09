@@ -90645,7 +90645,7 @@ var Progress = _react2.default.createClass({
         ),
         _react2.default.createElement(
           _Table.TableRowColumn,
-          { style: { overflow: "visible" } },
+          { style: { overflow: "visible", width: "307px" } },
           status
         )
       );
@@ -90703,7 +90703,7 @@ var Progress = _react2.default.createClass({
               ),
               _react2.default.createElement(
                 _Table.TableHeaderColumn,
-                null,
+                { style: { width: "307px" } },
                 'Status'
               )
             )
@@ -90830,7 +90830,7 @@ var Past = _react2.default.createClass({
           ),
           _react2.default.createElement(
             _Table.TableRowColumn,
-            { style: { overflow: "visible" } },
+            { style: { overflow: "visible", width: "307px" } },
             status
           )
         );
@@ -90896,7 +90896,7 @@ var Past = _react2.default.createClass({
               ),
               _react2.default.createElement(
                 _Table.TableHeaderColumn,
-                null,
+                { style: { width: "307px" } },
                 'Status'
               )
             )
