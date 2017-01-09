@@ -183,6 +183,7 @@ var Form = React.createClass({
         <RaisedButton
           key="submit"
           label={this.props.submitLabel}
+          id={this.props.submitButtonId}
           primary={true}
           onClick={this.updateModel}
           disabled={!this.state.isValid} />

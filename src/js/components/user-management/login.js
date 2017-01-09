@@ -111,7 +111,7 @@ var Login = React.createClass({
           <img src="assets/img/loginlogo.png" alt="mender-logo" />
           {this.state.userExists ? null : <p>Create a user by entering your email and choosing a safe password</p>}
 
-          <Form hideHelp={this.state.userExists} onSubmit={this.state.userExists ? this._handleLogin : this._createUser} submitLabel={buttonLabel}>
+          <Form hideHelp={this.state.userExists} onSubmit={this.state.userExists ? this._handleLogin : this._createUser} submitLabel={buttonLabel} submitButtonId="login_button">
 
               <TextInput
                 hint="Your email"
