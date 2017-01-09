@@ -94850,11 +94850,7 @@ var Authorized = _react2.default.createClass({
           devices
         )
       ),
-      _react2.default.createElement(
-        'div',
-        { className: 'margin-top-small' },
-        _react2.default.createElement(_RaisedButton2.default, { onClick: this._authorizeDevices.bind(null, this.props.pending), primary: true, label: 'Authorize all', className: 'float-right' })
-      )
+      _react2.default.createElement(_RaisedButton2.default, { onClick: this._authorizeDevices.bind(null, this.props.pending), primary: true, label: 'Authorize all', style: { position: "absolute", bottom: "15px", right: "15px" } })
     );
   }
 });

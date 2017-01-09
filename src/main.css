@@ -681,7 +681,7 @@ div.code {
   white-space: pre-line;
   font-size: 14px;
 }
-/* Forms */
+/* Forms and inputs*/
 .inputGroup {
   padding: 12px;
   background-color: rgba(66, 66, 66, 0.03);
@@ -705,184 +705,6 @@ form .required.file {
 form .required.file:after {
   top: -38px;
   position: relative;
-}
-#login-box {
-  -webkit-animation: fadein 1s 1;
-  -moz-animation: fadein 1s 1;
-  -ms-animation: fadein 1s 1;
-  -o-animation: fadein 1s 1;
-  width: 25%;
-  max-width: 400px;
-  min-width: 240px;
-  margin: 12% auto 0;
-}
-#login-box h3 {
-  text-transform: uppercase;
-  color: #c7c7c7;
-  font-weight: normal;
-  text-align: center;
-}
-#login-box p {
-  font-size: 16px;
-  text-align: center;
-}
-#login-box img {
-  max-width: 100%;
-}
-#login-box #password-holder button {
-  position: absolute !important;
-  top: -4px;
-  right: 0;
-}
-#login-box #pass-strength {
-  margin-top: 10px;
-}
-#login-box #pass-strength meter {
-  margin-left: 8px;
-  margin-right: 8px;
-}
-#login-box #pass-strength svg {
-  vertical-align: middle;
-}
-#login-box .help-text,
-#login-box .help-text p {
-  color: rgba(66, 66, 66, 0.6);
-  text-align: left;
-  font-size: 12px;
-}
-button:disabled .material-icons {
-  color: rgba(0, 0, 0, 0.3) !important;
-}
-button.remove-icon:disabled .material-icons {
-  color: rgba(0, 0, 0, 0.3) !important;
-}
-button.remove-icon .material-icons {
-  color: #679BA5 !important;
-}
-.inline-action {
-  position: relative;
-  top: -6px;
-  margin-left: 10px;
-}
-.material-icons.error-icon {
-  color: #ab1000 !important;
-}
-hr.table-divider {
-  border: 0;
-  height: 6px;
-  background-image: -webkit-linear-gradient(left, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.03), rgba(0, 0, 0, 0));
-  background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.03), rgba(0, 0, 0, 0));
-}
-tr.expand {
-  background-color: #f5f5f5;
-}
-tr.expand .device-info {
-  margin-bottom: 10px;
-}
-tr.expand .device-info h3 {
-  font-family: Lato, sans-serif;
-  color: rgba(0, 0, 0, 0.8);
-  font-size: 1.17em;
-  font-weight: 700;
-}
-tr.expand #device-identity {
-  border: 1px solid #d4e9e7;
-  padding: 0 15px;
-  position: relative;
-  border-radius: 5px;
-}
-tr.expand td {
-  vertical-align: top;
-  padding-top: 16px;
-}
-tr.expand td div.expanded {
-  position: absolute;
-  left: 0;
-  margin-top: 45px;
-  padding: 0 45px;
-  right: 0;
-}
-tr.expand td:first-child > div div {
-  margin-top: -1px;
-}
-tr.expand td:last-child {
-  padding-top: 3px;
-}
-tr.expand td.expandButton {
-  padding-top: 2px;
-}
-.fixedButtons {
-  position: fixed;
-  bottom: 15px;
-  right: 30px;
-  padding-left: 30px;
-  background-color: rgba(255, 255, 255, 0.8);
-  -webkit-animation: fadein 0.3s 1;
-  -moz-animation: fadein 0.3s 1;
-  -ms-animation: fadein 0.3s 1;
-  -o-animation: fadein 0.3s 1;
-  border-bottom-left-radius: 2px;
-  border-top-left-radius: 2px;
-}
-.top-right-button {
-  position: absolute;
-  top: 3px;
-  right: 0;
-}
-.bottom-right-button {
-  position: absolute;
-  bottom: 15px;
-  right: 15px;
-}
-.tagContainer {
-  margin-top: 20px;
-}
-.ReactTags__tag {
-  margin-right: 10px;
-  margin-bottom: 5px;
-  padding: 5px;
-  background-color: #d4e9e7;
-  color: #679BA5;
-  display: inline-block;
-  margin-top: 5px;
-  font-size: 13px;
-}
-.ReactTags__remove {
-  cursor: pointer;
-  padding: 10px 0 10px 10px;
-}
-.ReactTags__tagInput input,
-.ReactTags__tagInput input:focus,
-input.fileInput {
-  outline: none;
-  border-top: none;
-  border-left: none;
-  border-right: none;
-  border-bottom: solid 1px #e0e0e0;
-  padding: 7px 0;
-  font-size: 16px;
-  font-family: Lato, sans-serif;
-  color: rgba(0, 0, 0, 0.8);
-}
-.ReactTags__tagInput input::-webkit-input-placeholder,
-.ReactTags__tagInput input:focus::-webkit-input-placeholder,
-input.fileInput::-webkit-input-placeholder {
-  color: rgba(0, 0, 0, 0.3);
-}
-.ReactTags__tagInput input:-moz-placeholder,
-.ReactTags__tagInput input:focus:-moz-placeholder,
-input.fileInput:-moz-placeholder {
-  color: rgba(0, 0, 0, 0.3);
-}
-.ReactTags__tagInput input::-moz-placeholder,
-.ReactTags__tagInput input:focus::-moz-placeholder,
-input.fileInput::-moz-placeholder {
-  color: rgba(0, 0, 0, 0.3);
-}
-.ReactTags__tagInput input:-ms-input-placeholder,
-.ReactTags__tagInput input:focus:-ms-input-placeholder,
-input.fileInput:-ms-input-placeholder {
-  color: rgba(0, 0, 0, 0.3);
 }
 input[type="file"].fileInput,
 input[type="text"].fileInput {
@@ -934,6 +756,189 @@ textarea#inline-description {
   color: rgba(0, 0, 0, 0.5);
   font-size: 12px;
   display: block;
+}
+/* Log in */
+#login-box {
+  -webkit-animation: fadein 1s 1;
+  -moz-animation: fadein 1s 1;
+  -ms-animation: fadein 1s 1;
+  -o-animation: fadein 1s 1;
+  width: 25%;
+  max-width: 400px;
+  min-width: 240px;
+  margin: 12% auto 0;
+}
+#login-box h3 {
+  text-transform: uppercase;
+  color: #c7c7c7;
+  font-weight: normal;
+  text-align: center;
+}
+#login-box p {
+  font-size: 16px;
+  text-align: center;
+}
+#login-box img {
+  max-width: 100%;
+}
+#login-box #password-holder button {
+  position: absolute !important;
+  top: -4px;
+  right: 0;
+}
+#login-box #pass-strength {
+  margin-top: 10px;
+}
+#login-box #pass-strength meter {
+  margin-left: 8px;
+  margin-right: 8px;
+}
+#login-box #pass-strength svg {
+  vertical-align: middle;
+}
+#login-box .help-text,
+#login-box .help-text p {
+  color: rgba(66, 66, 66, 0.6);
+  text-align: left;
+  font-size: 12px;
+}
+/* icons */
+button:disabled .material-icons {
+  color: rgba(0, 0, 0, 0.3) !important;
+}
+button.remove-icon:disabled .material-icons {
+  color: rgba(0, 0, 0, 0.3) !important;
+}
+button.remove-icon .material-icons {
+  color: #679BA5 !important;
+}
+.inline-action {
+  position: relative;
+  top: -6px;
+  margin-left: 10px;
+}
+.material-icons.error-icon {
+  color: #ab1000 !important;
+}
+/* tables */
+hr.table-divider {
+  border: 0;
+  height: 6px;
+  background-image: -webkit-linear-gradient(left, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.03), rgba(0, 0, 0, 0));
+  background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.03), rgba(0, 0, 0, 0));
+}
+tr.expand {
+  background-color: #f5f5f5;
+}
+tr.expand .device-info {
+  margin-bottom: 10px;
+}
+tr.expand .device-info h3 {
+  font-family: Lato, sans-serif;
+  color: rgba(0, 0, 0, 0.8);
+  font-size: 1.17em;
+  font-weight: 700;
+}
+tr.expand #device-identity {
+  border: 1px solid #d4e9e7;
+  padding: 0 15px;
+  position: relative;
+  border-radius: 5px;
+}
+tr.expand td {
+  vertical-align: top;
+  padding-top: 16px;
+}
+tr.expand td div.expanded {
+  position: absolute;
+  left: 0;
+  margin-top: 45px;
+  padding: 0 45px;
+  right: 0;
+}
+tr.expand td:first-child > div div {
+  margin-top: -1px;
+}
+tr.expand td:last-child {
+  padding-top: 3px;
+}
+tr.expand td.expandButton {
+  padding-top: 2px;
+}
+/* Buttons */
+.fixedButtons {
+  position: fixed;
+  bottom: 15px;
+  right: 30px;
+  padding-left: 30px;
+  background-color: rgba(255, 255, 255, 0.8);
+  -webkit-animation: fadein 0.3s 1;
+  -moz-animation: fadein 0.3s 1;
+  -ms-animation: fadein 0.3s 1;
+  -o-animation: fadein 0.3s 1;
+  border-bottom-left-radius: 2px;
+  border-top-left-radius: 2px;
+}
+.top-right-button {
+  position: absolute;
+  top: 3px;
+  right: 0;
+}
+.bottom-right-button {
+  position: absolute;
+  bottom: 15px;
+  right: 15px;
+}
+/* Tags */
+.tagContainer {
+  margin-top: 20px;
+}
+.ReactTags__tag {
+  margin-right: 10px;
+  margin-bottom: 5px;
+  padding: 5px;
+  background-color: #d4e9e7;
+  color: #679BA5;
+  display: inline-block;
+  margin-top: 5px;
+  font-size: 13px;
+}
+.ReactTags__remove {
+  cursor: pointer;
+  padding: 10px 0 10px 10px;
+}
+.ReactTags__tagInput input,
+.ReactTags__tagInput input:focus,
+input.fileInput {
+  outline: none;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  border-bottom: solid 1px #e0e0e0;
+  padding: 7px 0;
+  font-size: 16px;
+  font-family: Lato, sans-serif;
+  color: rgba(0, 0, 0, 0.8);
+}
+.ReactTags__tagInput input::-webkit-input-placeholder,
+.ReactTags__tagInput input:focus::-webkit-input-placeholder,
+input.fileInput::-webkit-input-placeholder {
+  color: rgba(0, 0, 0, 0.3);
+}
+.ReactTags__tagInput input:-moz-placeholder,
+.ReactTags__tagInput input:focus:-moz-placeholder,
+input.fileInput:-moz-placeholder {
+  color: rgba(0, 0, 0, 0.3);
+}
+.ReactTags__tagInput input::-moz-placeholder,
+.ReactTags__tagInput input:focus::-moz-placeholder,
+input.fileInput::-moz-placeholder {
+  color: rgba(0, 0, 0, 0.3);
+}
+.ReactTags__tagInput input:-ms-input-placeholder,
+.ReactTags__tagInput input:focus:-ms-input-placeholder,
+input.fileInput:-ms-input-placeholder {
+  color: rgba(0, 0, 0, 0.3);
 }
 /* Dashboard */
 .leftDashboard {
@@ -1307,7 +1312,6 @@ span.day {
   margin-top: 12px;
 }
 .deploy-table-contain {
-  min-height: 206px;
   margin-bottom: 60px;
   margin-top: 30px;
 }

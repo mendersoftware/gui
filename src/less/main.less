@@ -663,7 +663,8 @@ div.code {
 
 
 
-/* Forms */ 
+/* Forms and inputs*/ 
+
 .inputGroup {
   padding: 12px;
   background-color: rgba(66,66,66,0.03);
@@ -692,6 +693,43 @@ form .required.file {
   }
 }
 
+input[type="file"].fileInput,
+input[type="text"].fileInput {
+  width: 400px !important;
+  margin: 32px 0 10px 0;
+  cursor: pointer;
+  z-index: 1 !important;
+  &:first-child {
+    z-index: 2 !important;
+    cursor: pointer !important;
+  }
+
+  .placeholder({
+    background-image: url('../assets/img/file_upload.png');
+    background-position: right;
+    background-repeat: no-repeat;
+  });
+
+  &.error {
+    border-bottom-width: 2px;
+    border-bottom-color: rgb(171, 16, 0);
+  }
+}
+
+textarea#inline-description {
+  height: initial !important;
+  font-size: 12px !important;
+  margin-top: 0 !important;
+}
+
+.inputHeader {
+  color:rgba(0,0,0,0.5);
+  font-size: 12px;
+  display: block;
+}
+
+
+/* Log in */
 #login-box {
   .animation(fadein 1s 1);
   width: 25%;
@@ -742,6 +780,8 @@ form .required.file {
 
 
 
+/* icons */
+
 button:disabled .material-icons {
   color: rgba(0,0,0,0.3) !important;
 }
@@ -764,6 +804,10 @@ button.remove-icon .material-icons {
   color: rgb(171, 16, 0) !important;
 }
 
+
+
+/* tables */
+
 hr.table-divider {
     border: 0;
     height: 6px;
@@ -772,7 +816,6 @@ hr.table-divider {
 
 
 // table expanding
-
 tr.expand {
   background-color: rgb(245,245,245);
   
@@ -819,6 +862,9 @@ tr.expand {
 }
 
 
+
+/* Buttons */
+
 .fixedButtons {
   position: fixed;
   bottom: 15px;
@@ -842,6 +888,9 @@ tr.expand {
   right: 15px;
 }
 
+
+
+/* Tags */
 
 .tagContainer {
   margin-top: 20px;
@@ -880,40 +929,8 @@ tr.expand {
   });
 }
 
-input[type="file"].fileInput,
-input[type="text"].fileInput {
-  width: 400px !important;
-  margin: 32px 0 10px 0;
-  cursor: pointer;
-  z-index: 1 !important;
-  &:first-child {
-    z-index: 2 !important;
-    cursor: pointer !important;
-  }
 
-  .placeholder({
-    background-image: url('../assets/img/file_upload.png');
-    background-position: right;
-    background-repeat: no-repeat;
-  });
 
-  &.error {
-    border-bottom-width: 2px;
-    border-bottom-color: rgb(171, 16, 0);
-  }
-}
-
-textarea#inline-description {
-  height: initial !important;
-  font-size: 12px !important;
-  margin-top: 0 !important;
-}
-
-.inputHeader {
-  color:rgba(0,0,0,0.5);
-  font-size: 12px;
-  display: block;
-}
 
 /* Dashboard */
 
@@ -1313,7 +1330,6 @@ span.month, span.day {
 
 
 .deploy-table-contain {
-  min-height: 206px;
   margin-bottom: 60px;
   margin-top: 30px;
 }
