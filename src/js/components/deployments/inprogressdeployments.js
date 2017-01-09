@@ -22,7 +22,7 @@ var Progress = React.createClass({
   },
   _progressCellClick: function(rowNumber, columnId) {
     var self = this;
-    this.props.openReport(rowNumber);
+    this.props.openReport(rowNumber, "progress");
   },
   _formatTime: function(date) {
     if (date) {
@@ -41,14 +41,15 @@ var Progress = React.createClass({
           <TableRowColumn>{deployment.artifact_name}</TableRowColumn>
           <TableRowColumn>{deployment.name}</TableRowColumn>
           <TableRowColumn><Time value={this._formatTime(deployment.created)} format="YYYY-MM-DD HH:mm" /></TableRowColumn>
-          <TableRowColumn style={{textAlign:"right", width:"80px"}}><GroupDevices deployment={deployment.id} /></TableRowColumn>
+          <TableRowColumn style={{textAlign:"right", width:"100px"}}><GroupDevices deployment={deployment.id} /></TableRowColumn>
           <TableRowColumn style={{overflow:"visible"}}>{status}</TableRowColumn>
         </TableRow>
       )
     }, this);
 
     return (
-      <div>
+      <div className="fadeIn">
+        <h3>In progress</h3>
         <div className="deploy-table-contain"> 
           <Loader show={this.props.loading} />
           <Table
@@ -66,7 +67,7 @@ var Progress = React.createClass({
                 <TableHeaderColumn>Updating to</TableHeaderColumn>
                 <TableHeaderColumn>Group</TableHeaderColumn>
                 <TableHeaderColumn>Started</TableHeaderColumn>
-                <TableHeaderColumn style={{textAlign:"right", width:"80px"}}># Devices</TableHeaderColumn>
+                <TableHeaderColumn style={{textAlign:"right", width:"100px"}}># Devices</TableHeaderColumn>
                 <TableHeaderColumn>Status</TableHeaderColumn>
               </TableRow>
             </TableHeader>

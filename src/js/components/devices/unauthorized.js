@@ -171,9 +171,7 @@ var Authorized =  React.createClass({
           </TableBody>
         </Table>
 
-        <div className="margin-top-small">
-          <RaisedButton onClick={this._authorizeDevices.bind(null, this.props.pending)} primary={true} label="Authorize all" className="float-right" />
-        </div>
+        <RaisedButton onClick={this._authorizeDevices.bind(null, this.props.pending)} primary={true} label="Authorize all" style={{position:"absolute", bottom: "15px", right:"15px"}} />
       </Collapse>
     );
   }
