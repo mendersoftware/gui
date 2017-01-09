@@ -12,8 +12,6 @@ var ScheduleForm = require('./scheduleform.js');
 var Report = require('./report.js');
 var ScheduleButton = require('./schedulebutton.js');
 
-var Pagination = require('rc-pagination');
-
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
@@ -374,8 +372,6 @@ var Deployments = React.createClass({
           <Progress loading={!this.state.doneLoading} openReport={this._showProgress} progress={this.state.progress} createClick={this.dialogOpen.bind(null, "schedule")}/>
 
           <Past loading={!this.state.doneLoading} past={this.state.past} showReport={this._showReport} />
-
-          {this.state.hasDevices}
 
         </div>
 

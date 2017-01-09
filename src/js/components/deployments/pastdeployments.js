@@ -5,6 +5,7 @@ var ScheduleForm = require('./scheduleform');
 var GroupDevices = require('./groupdevices');
 var DeploymentStatus = require('./deploymentstatus');
 
+var Pagination = require('rc-pagination');
 var Loader = require('../common/loader');
 
 // material ui
@@ -15,7 +16,9 @@ import FlatButton from 'material-ui/FlatButton';
 var Past = React.createClass({
   getInitialState: function() {
     return {
-      retry: false
+      retry: false,
+      pageSize: 5,
+      currentPage: 1
     };
   },
   _pastCellClick: function(rowNumber, columnId) {
@@ -28,23 +31,30 @@ var Past = React.createClass({
     }
     return;
   },
+  _handlePageChange: function(pageNo) {
+    this.setState({currentPage: pageNo});
+  },
   render: function() {
     var pastMap = this.props.past.map(function(deployment, index) {
-      //  get statistics
-      var status = (
-        <DeploymentStatus id={deployment.id} />
-      );
 
-      return (
-        <TableRow key={index}>
-          <TableRowColumn>{deployment.artifact_name}</TableRowColumn>
-          <TableRowColumn>{deployment.name}</TableRowColumn>
-          <TableRowColumn><Time value={this._formatTime(deployment.created)} format="YYYY-MM-DD HH:mm" /></TableRowColumn>
-          <TableRowColumn><Time value={this._formatTime(deployment.finished)} format="YYYY-MM-DD HH:mm" /></TableRowColumn>
-          <TableRowColumn style={{textAlign:"right", width:"100px"}}><GroupDevices deployment={deployment.id} /></TableRowColumn>
-          <TableRowColumn style={{overflow:"visible"}}>{status}</TableRowColumn>
-        </TableRow>
-      )
+      if ((index >= (this.state.currentPage-1)*this.state.pageSize) && (index < this.state.currentPage*this.state.pageSize)) {
+
+        //  get statistics
+        var status = (
+          <DeploymentStatus id={deployment.id} />
+        );
+
+        return (
+          <TableRow key={index}>
+            <TableRowColumn>{deployment.artifact_name}</TableRowColumn>
+            <TableRowColumn>{deployment.name}</TableRowColumn>
+            <TableRowColumn><Time value={this._formatTime(deployment.created)} format="YYYY-MM-DD HH:mm" /></TableRowColumn>
+            <TableRowColumn><Time value={this._formatTime(deployment.finished)} format="YYYY-MM-DD HH:mm" /></TableRowColumn>
+            <TableRowColumn style={{textAlign:"right", width:"100px"}}><GroupDevices deployment={deployment.id} /></TableRowColumn>
+            <TableRowColumn style={{overflow:"visible"}}>{status}</TableRowColumn>
+          </TableRow>
+        )
+      }
     }, this);
 
     var reportActions = [
@@ -87,11 +97,17 @@ var Past = React.createClass({
             </TableBody>
           </Table>
 
-          <div className={(pastMap.length || this.props.loading) ? 'hidden' : "dashboard-placeholder"}>
-            <p>Completed deployments will appear here.</p>
-            <p>You can review logs and reports for each device group you've deployed to</p>
-            <img src="assets/img/history.png" alt="Past" />
-          </div>
+          {
+            this.props.past.length ? 
+            <Pagination simple pageSize={this.state.pageSize} current={this.state.currentPage || 1} total={this.props.past.length} onChange={this._handlePageChange} /> 
+            :
+            <div className={this.props.loading ? 'hidden' : "dashboard-placeholder"}>
+              <p>Completed deployments will appear here.</p>
+              <p>You can review logs and reports for each device group you've deployed to</p>
+              <img src="assets/img/history.png" alt="Past" />
+            </div>
+          }
+
         </div>
 
       </div>
