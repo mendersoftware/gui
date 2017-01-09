@@ -26,9 +26,10 @@ var ProgressReport = React.createClass({
       elapsed: 0,
       currentPage: 1,
       start: 0,
-      perPage: 100,
+      perPage: 50,
       deviceCount: 0,
-      showPending: true
+      showPending: true,
+
     };
   },
   componentDidMount: function() {
@@ -98,9 +99,11 @@ var ProgressReport = React.createClass({
       success: function(device_inventory) {
         var artifact = self._getDeviceArtifact(device_inventory);
         var deviceArtifacts = self.state.deviceArtifacts || {};
-        self.setState({
-          deviceArtifacts: update(deviceArtifacts, {[id]: {$set: artifact}})
-        })
+        if (!self.state.stopRestCalls) {
+          self.setState({
+            deviceArtifacts: update(deviceArtifacts, {[id]: {$set: artifact}})
+          })
+        }
       },
       error: function(err) {
         console.log("error ", err);
@@ -131,7 +134,8 @@ var ProgressReport = React.createClass({
   dialogDismiss: function() {
     this.setState({
       showDialog: false,
-      logData: null
+      logData: null,
+      stopRestCalls: true
     });
   },
   _setFinished: function(bool) {

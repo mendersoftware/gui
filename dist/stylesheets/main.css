@@ -626,6 +626,9 @@ span.length {
 .results-status {
   padding-top: 4px;
 }
+.results-status [class*=hint--] {
+  min-width: 70px !important;
+}
 .results-status .disabled {
   -webkit-opacity: 0.1;
   -moz-opacity: 0.1;

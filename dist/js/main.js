@@ -86809,6 +86809,17 @@ var AppActions = {
       callback(err);
     });
   },
+  getPendingDeployments: function getPendingDeployments(callback) {
+    DeploymentsApi.get(deploymentsApiUrl + '/deployments?status=pending').then(function (deployments) {
+      AppDispatcher.handleViewAction({
+        actionType: AppConstants.RECEIVE_PENDING_DEPLOYMENTS,
+        deployments: deployments
+      });
+      callback();
+    }).catch(function (err) {
+      callback(err);
+    });
+  },
   createDeployment: function createDeployment(deployment, callback) {
     DeploymentsApi.post(deploymentsApiUrl + '/deployments', deployment).then(function (data) {
       callback.success(data.location);
@@ -86887,7 +86898,7 @@ var AppActions = {
 
 module.exports = AppActions;
 
-},{"../api/artifacts-api":757,"../api/deployments-api":758,"../api/devices-api":759,"../api/users-api":760,"../constants/app-constants":804,"../dispatchers/app-dispatcher":805,"parse-link-header":385}],757:[function(require,module,exports){
+},{"../api/artifacts-api":757,"../api/deployments-api":758,"../api/devices-api":759,"../api/users-api":760,"../constants/app-constants":805,"../dispatchers/app-dispatcher":806,"parse-link-header":385}],757:[function(require,module,exports){
 'use strict';
 
 var request = require('superagent');
@@ -86939,7 +86950,7 @@ var Api = {
 
 module.exports = Api;
 
-},{"../stores/local-store":808,"es6-promise":118,"superagent":673}],758:[function(require,module,exports){
+},{"../stores/local-store":809,"es6-promise":118,"superagent":673}],758:[function(require,module,exports){
 'use strict';
 
 var request = require('superagent');
@@ -86988,7 +86999,7 @@ var Api = {
 
 module.exports = Api;
 
-},{"../stores/local-store":808,"es6-promise":118,"superagent":673}],759:[function(require,module,exports){
+},{"../stores/local-store":809,"es6-promise":118,"superagent":673}],759:[function(require,module,exports){
 'use strict';
 
 var request = require('superagent');
@@ -87055,7 +87066,7 @@ var Api = {
 
 module.exports = Api;
 
-},{"../stores/local-store":808,"es6-promise":118,"superagent":673,"superagent-auth-bearer":672}],760:[function(require,module,exports){
+},{"../stores/local-store":809,"es6-promise":118,"superagent":673,"superagent-auth-bearer":672}],760:[function(require,module,exports){
 'use strict';
 
 var request = require('superagent');
@@ -87130,7 +87141,7 @@ module.exports = {
   }
 };
 
-},{"./stores/local-store":808}],762:[function(require,module,exports){
+},{"./stores/local-store":809}],762:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -87237,7 +87248,7 @@ var App = _react2.default.createClass({
 
 module.exports = App;
 
-},{"../themes/mender-theme.js":809,"./header/header":801,"material-ui/styles/getMuiTheme":348,"react":657,"react-joyride":549}],763:[function(require,module,exports){
+},{"../themes/mender-theme.js":810,"./header/header":802,"material-ui/styles/getMuiTheme":348,"react":657,"react-joyride":549}],763:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -87401,7 +87412,7 @@ var Artifacts = _react2.default.createClass({
 
 module.exports = Artifacts;
 
-},{"../../actions/app-actions":756,"../../stores/app-store":807,"../../stores/local-store":808,"./repository.js":765,"material-ui/Snackbar":279,"react":657,"react-router":593}],764:[function(require,module,exports){
+},{"../../actions/app-actions":756,"../../stores/app-store":808,"../../stores/local-store":809,"./repository.js":765,"material-ui/Snackbar":279,"react":657,"react-router":593}],764:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -87914,7 +87925,7 @@ Repository.contextTypes = {
 
 module.exports = Repository;
 
-},{"../../actions/app-actions":756,"../../stores/app-store":807,"../common/forms/fileinput":767,"../common/forms/form":768,"../common/forms/textinput":770,"../common/loader":771,"./deploymentbutton":764,"./selectedartifact":766,"material-ui/Dialog":227,"material-ui/FlatButton":236,"material-ui/FontIcon":240,"material-ui/IconButton":245,"material-ui/RaisedButton":270,"material-ui/Snackbar":279,"material-ui/Table":297,"material-ui/TextField":308,"react":657,"react-addons-update":405,"react-collapse":409,"react-dom":412,"react-height":548,"react-motion":561,"react-router":593,"react-search-input":617,"react-time":624}],766:[function(require,module,exports){
+},{"../../actions/app-actions":756,"../../stores/app-store":808,"../common/forms/fileinput":767,"../common/forms/form":768,"../common/forms/textinput":770,"../common/loader":771,"./deploymentbutton":764,"./selectedartifact":766,"material-ui/Dialog":227,"material-ui/FlatButton":236,"material-ui/FontIcon":240,"material-ui/IconButton":245,"material-ui/RaisedButton":270,"material-ui/Snackbar":279,"material-ui/Table":297,"material-ui/TextField":308,"react":657,"react-addons-update":405,"react-collapse":409,"react-dom":412,"react-height":548,"react-motion":561,"react-router":593,"react-search-input":617,"react-time":624}],766:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -88979,7 +88990,7 @@ Dashboard.contextTypes = {
 
 module.exports = Dashboard;
 
-},{"../../actions/app-actions":756,"../../stores/app-store":807,"../../stores/local-store":808,"./activity":773,"./deployments":775,"./health":776,"material-ui/RaisedButton":270,"material-ui/Snackbar":279,"react":657,"react-router":593}],775:[function(require,module,exports){
+},{"../../actions/app-actions":756,"../../stores/app-store":808,"../../stores/local-store":809,"./activity":773,"./deployments":775,"./health":776,"material-ui/RaisedButton":270,"material-ui/Snackbar":279,"react":657,"react-router":593}],775:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -89360,7 +89371,7 @@ Progress.contextTypes = {
 
 module.exports = Progress;
 
-},{"../common/loader":771,"../deployments/progressChart.js":787,"material-ui/Divider":229,"material-ui/FontIcon":240,"material-ui/List":253,"react":657,"react-router":593,"react-time":624}],778:[function(require,module,exports){
+},{"../common/loader":771,"../deployments/progressChart.js":788,"material-ui/Divider":229,"material-ui/FontIcon":240,"material-ui/List":253,"react":657,"react-router":593,"react-time":624}],778:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -89726,8 +89737,6 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
-var _Tabs = require('material-ui/Tabs');
-
 var _Dialog = require('material-ui/Dialog');
 
 var _Dialog2 = _interopRequireDefault(_Dialog);
@@ -89749,6 +89758,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var AppStore = require('../../stores/app-store');
 var AppActions = require('../../actions/app-actions');
 
+var Pending = require('./pendingdeployments.js');
 var Progress = require('./inprogressdeployments.js');
 var Past = require('./pastdeployments.js');
 var ProgressReport = require('./progressreport.js');
@@ -89760,25 +89770,10 @@ var ScheduleButton = require('./schedulebutton.js');
 
 var Pagination = require('rc-pagination');
 
-var styles = {
-  tabs: {
-    backgroundColor: "#fff",
-    color: "#414141",
-    borderBottom: "1px solid #e0e0e0"
-  },
-  inkbar: {
-    backgroundColor: "#679BA5"
-  }
-};
-
-var tabs = {
-  progress: '0',
-  past: '1'
-};
-
 function getState() {
   return {
     past: AppStore.getPastDeployments(),
+    pending: AppStore.getPendingDeployments(),
     progress: AppStore.getDeploymentsInProgress() || [],
     events: AppStore.getEventLog(),
     artifacts: AppStore.getArtifactsRepo(),
@@ -89846,7 +89841,7 @@ var Deployments = _react2.default.createClass({
     AppActions.getGroups(groupCallback);
 
     if (this.props.params) {
-      this.setState({ tabIndex: this._checkTabValue(this.props.params.tab) });
+      this.setState({ reportType: this.props.params.tab });
 
       if (this.props.params.params) {
         var str = decodeURIComponent(this.props.params.params);
@@ -89869,29 +89864,38 @@ var Deployments = _react2.default.createClass({
         }
       }
     } else {
-      this.setState({ tabIndex: "progress" });
+      this.setState({ reportType: "progress" });
     }
     AppActions.getArtifacts();
   },
   _refreshDeployments: function _refreshDeployments() {
     this._refreshInProgress();
+    this._refreshPending();
     this._refreshPast();
   },
   _refreshInProgress: function _refreshInProgress() {
+    var self = this;
     AppActions.getDeploymentsInProgress(function () {
       setTimeout(function () {
-        this.setState({ doneLoading: true });
-        this._dismissSnackBar();
-      }.bind(this), 300);
-    }.bind(this));
+        self.setState({ doneLoading: true });
+        self._dismissSnackBar();
+      }, 300);
+    });
+  },
+  _refreshPending: function _refreshPending() {
+    var self = this;
+    AppActions.getPendingDeployments(function () {
+      self._dismissSnackBar();
+    });
   },
   _refreshPast: function _refreshPast() {
+    var self = this;
     AppActions.getPastDeployments(function () {
       setTimeout(function () {
-        this.setState({ doneLoading: true });
-        this._dismissSnackBar();
-      }.bind(this), 300);
-    }.bind(this));
+        self.setState({ doneLoading: true });
+        self._dismissSnackBar();
+      }, 300);
+    });
   },
   _dismissSnackBar: function _dismissSnackBar() {
     setTimeout(function () {
@@ -89939,16 +89943,7 @@ var Deployments = _react2.default.createClass({
   _onChange: function _onChange() {
     this.setState(getState());
   },
-  _checkTabValue: function _checkTabValue(value) {
-    switch (value) {
-      case "past":
-        return "past";
-        break;
-      default:
-        return "progress";
-        break;
-    }
-  },
+
   dialogDismiss: function dialogDismiss(ref) {
     this.setState({
       dialog: false,
@@ -89964,20 +89959,15 @@ var Deployments = _react2.default.createClass({
         contentClass: "dialog"
       });
     }
-    var title = this.state.tabIndex === "progress" ? "Deployment progress" : "Results of deployment";
     if (dialog === 'report') {
       this.setState({
         scheduleForm: false,
-        dialogTitle: title,
         contentClass: "largeDialog"
       });
     }
     this.setState({ dialog: true });
   },
-  _changeTab: function _changeTab(value) {
-    this.setState({ tabIndex: value });
-    this._refreshDeployments();
-  },
+
   _onScheduleSubmit: function _onScheduleSubmit() {
     var ids = [];
     var self = this;
@@ -90033,6 +90023,7 @@ var Deployments = _react2.default.createClass({
     this.setState({ deploymentDevices: devices, filteredDevices: filteredDevices });
   },
   _getReportById: function _getReportById(id) {
+    this.setState({ reportType: "past" });
     AppActions.getSingleDeployment(id, function (data) {
       var that = this;
       setTimeout(function () {
@@ -90040,8 +90031,10 @@ var Deployments = _react2.default.createClass({
       }, 400);
     }.bind(this));
   },
-  _showReport: function _showReport(deployment) {
-    this.setState({ scheduleForm: false, selectedDeployment: deployment });
+  _showReport: function _showReport(deployment, progress) {
+    var title = progress ? "Deployment progress" : "Results of deployment";
+    var reportType = progress ? "progress" : "past";
+    this.setState({ scheduleForm: false, selectedDeployment: deployment, dialogTitle: title, reportType: reportType });
     this.dialogOpen("report");
   },
   _scheduleDeployment: function _scheduleDeployment(deployment) {
@@ -90080,7 +90073,7 @@ var Deployments = _react2.default.createClass({
   },
   _showProgress: function _showProgress(rowNumber) {
     var deployment = this.state.progress[rowNumber];
-    this._showReport(deployment);
+    this._showReport(deployment, true);
   },
   updated: function updated() {
     // use to make sure re-renders dialog at correct height when device list built
@@ -90107,7 +90100,7 @@ var Deployments = _react2.default.createClass({
 
     if (this.state.scheduleForm) {
       dialogContent = _react2.default.createElement(ScheduleForm, { deploymentDevices: this.state.deploymentDevices, filteredDevices: this.state.filteredDevices, hasPending: this.state.hasPending, hasDevices: this.state.hasDevices, deploymentSettings: this._deploymentParams, id: this.state.id, artifacts: this.state.artifacts, artifact: this.state.artifact, groups: this.state.groups, group: this.state.group });
-    } else if (this.state.tabIndex === "progress") {
+    } else if (this.state.reportType === "progress") {
       dialogContent = _react2.default.createElement(ProgressReport, { updated: this.updated, deployment: this.state.selectedDeployment });
     } else {
       dialogContent = _react2.default.createElement(Report, { deployment: this.state.selectedDeployment, retryDeployment: this._scheduleDeployment });
@@ -90116,35 +90109,18 @@ var Deployments = _react2.default.createClass({
       'div',
       { className: 'contentContainer allow-overflow' },
       _react2.default.createElement(
-        _Tabs.Tabs,
-        {
-          tabItemContainerStyle: { width: "33%", backgroundColor: "inherit" },
-          inkBarStyle: styles.inkbar,
-          value: this.state.tabIndex,
-          onChange: this._changeTab },
-        _react2.default.createElement(
-          _Tabs.Tab,
-          { key: 0,
-            style: styles.tabs,
-            label: "In progress",
-            value: 'progress' },
-          _react2.default.createElement(Progress, { openReport: this._showProgress, loading: !this.state.doneLoading, progress: this.state.progress, createClick: this.dialogOpen.bind(null, "schedule") })
-        ),
-        _react2.default.createElement(
-          _Tabs.Tab,
-          { key: 1,
-            style: styles.tabs,
-            label: "Past deployments",
-            value: 'past' },
-          _react2.default.createElement(Past, { loading: !this.state.doneLoading, past: this.state.past, showReport: this._showReport })
-        )
-      ),
-      _react2.default.createElement(
         'div',
         { className: 'top-right-button' },
         _react2.default.createElement(ScheduleButton, { secondary: true, openDialog: this.dialogOpen })
       ),
-      this.state.hasDevices,
+      _react2.default.createElement(
+        'div',
+        { style: { paddingTop: "3px" } },
+        _react2.default.createElement(Pending, { pending: this.state.pending }),
+        _react2.default.createElement(Progress, { loading: !this.state.doneLoading, openReport: this._showProgress, progress: this.state.progress, createClick: this.dialogOpen.bind(null, "schedule") }),
+        _react2.default.createElement(Past, { loading: !this.state.doneLoading, past: this.state.past, showReport: this._showReport }),
+        this.state.hasDevices
+      ),
       _react2.default.createElement(
         _Dialog2.default,
         {
@@ -90173,7 +90149,7 @@ var Deployments = _react2.default.createClass({
 
 module.exports = Deployments;
 
-},{"../../actions/app-actions":756,"../../stores/app-store":807,"./eventlog.js":783,"./inprogressdeployments.js":785,"./pastdeployments.js":786,"./progressreport.js":789,"./report.js":790,"./schedule.js":791,"./schedulebutton.js":792,"./scheduleform.js":793,"material-ui/Dialog":227,"material-ui/FlatButton":236,"material-ui/RaisedButton":270,"material-ui/Snackbar":279,"material-ui/Tabs":302,"rc-pagination":400,"react":657}],782:[function(require,module,exports){
+},{"../../actions/app-actions":756,"../../stores/app-store":808,"./eventlog.js":783,"./inprogressdeployments.js":785,"./pastdeployments.js":786,"./pendingdeployments.js":787,"./progressreport.js":790,"./report.js":791,"./schedule.js":792,"./schedulebutton.js":793,"./scheduleform.js":794,"material-ui/Dialog":227,"material-ui/FlatButton":236,"material-ui/RaisedButton":270,"material-ui/Snackbar":279,"rc-pagination":400,"react":657}],782:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -90460,7 +90436,7 @@ var Progress = _react2.default.createClass({
   },
   _progressCellClick: function _progressCellClick(rowNumber, columnId) {
     var self = this;
-    this.props.openReport(rowNumber);
+    this.props.openReport(rowNumber, "progress");
   },
   _formatTime: function _formatTime(date) {
     if (date) {
@@ -90492,7 +90468,7 @@ var Progress = _react2.default.createClass({
         ),
         _react2.default.createElement(
           _Table.TableRowColumn,
-          { style: { textAlign: "right", width: "80px" } },
+          { style: { textAlign: "right", width: "100px" } },
           _react2.default.createElement(GroupDevices, { deployment: deployment.id })
         ),
         _react2.default.createElement(
@@ -90505,7 +90481,12 @@ var Progress = _react2.default.createClass({
 
     return _react2.default.createElement(
       'div',
-      null,
+      { className: 'fadeIn' },
+      _react2.default.createElement(
+        'h3',
+        null,
+        'In progress'
+      ),
       _react2.default.createElement(
         'div',
         { className: 'deploy-table-contain' },
@@ -90545,7 +90526,7 @@ var Progress = _react2.default.createClass({
               ),
               _react2.default.createElement(
                 _Table.TableHeaderColumn,
-                { style: { textAlign: "right", width: "80px" } },
+                { style: { textAlign: "right", width: "100px" } },
                 '# Devices'
               ),
               _react2.default.createElement(
@@ -90587,7 +90568,7 @@ var Progress = _react2.default.createClass({
 
 module.exports = Progress;
 
-},{"../common/loader":771,"./deploymentstatus":782,"./groupdevices":784,"./scheduleform":793,"material-ui/FlatButton":236,"material-ui/Table":297,"react":657,"react-addons-update":405,"react-time":624}],786:[function(require,module,exports){
+},{"../common/loader":771,"./deploymentstatus":782,"./groupdevices":784,"./scheduleform":794,"material-ui/FlatButton":236,"material-ui/Table":297,"react":657,"react-addons-update":405,"react-time":624}],786:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -90664,7 +90645,7 @@ var Past = _react2.default.createClass({
         ),
         _react2.default.createElement(
           _Table.TableRowColumn,
-          { style: { textAlign: "right", width: "60px" } },
+          { style: { textAlign: "right", width: "100px" } },
           _react2.default.createElement(GroupDevices, { deployment: deployment.id })
         ),
         _react2.default.createElement(
@@ -90679,7 +90660,12 @@ var Past = _react2.default.createClass({
     var retryActions = [{ text: 'Cancel' }, { text: 'Create deployment', onClick: this._onUploadSubmit, primary: 'true' }];
     return _react2.default.createElement(
       'div',
-      null,
+      { className: 'fadeIn' },
+      _react2.default.createElement(
+        'h3',
+        null,
+        'Past deployments'
+      ),
       _react2.default.createElement(
         'div',
         { className: 'deploy-table-contain' },
@@ -90724,7 +90710,7 @@ var Past = _react2.default.createClass({
               ),
               _react2.default.createElement(
                 _Table.TableHeaderColumn,
-                { style: { textAlign: "right", width: "60px" } },
+                { style: { textAlign: "right", width: "100px" } },
                 '# Devices'
               ),
               _react2.default.createElement(
@@ -90765,7 +90751,140 @@ var Past = _react2.default.createClass({
 
 module.exports = Past;
 
-},{"../common/loader":771,"./deploymentstatus":782,"./groupdevices":784,"./report.js":790,"./scheduleform":793,"material-ui/FlatButton":236,"material-ui/Table":297,"react":657,"react-time":624}],787:[function(require,module,exports){
+},{"../common/loader":771,"./deploymentstatus":782,"./groupdevices":784,"./report.js":791,"./scheduleform":794,"material-ui/FlatButton":236,"material-ui/Table":297,"react":657,"react-time":624}],787:[function(require,module,exports){
+'use strict';
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactTime = require('react-time');
+
+var _reactTime2 = _interopRequireDefault(_reactTime);
+
+var _Table = require('material-ui/Table');
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var GroupDevices = require('./groupdevices');
+
+// material ui
+
+
+var Pending = _react2.default.createClass({
+  displayName: 'Pending',
+
+  _formatTime: function _formatTime(date) {
+    if (date) {
+      return date.replace(' ', 'T').replace(/ /g, '').replace('UTC', '');
+    }
+    return;
+  },
+  render: function render() {
+    var pendingMap = this.props.pending.map(function (deployment, index) {
+      //  get statistics
+
+      return _react2.default.createElement(
+        _Table.TableRow,
+        { key: index },
+        _react2.default.createElement(
+          _Table.TableRowColumn,
+          null,
+          deployment.artifact_name
+        ),
+        _react2.default.createElement(
+          _Table.TableRowColumn,
+          null,
+          deployment.name
+        ),
+        _react2.default.createElement(
+          _Table.TableRowColumn,
+          null,
+          _react2.default.createElement(_reactTime2.default, { value: this._formatTime(deployment.created), format: 'YYYY-MM-DD HH:mm' })
+        ),
+        _react2.default.createElement(
+          _Table.TableRowColumn,
+          { style: { textAlign: "right", width: "100px" } },
+          _react2.default.createElement(GroupDevices, { deployment: deployment.id })
+        ),
+        _react2.default.createElement(
+          _Table.TableRowColumn,
+          { style: { overflow: "visible" } },
+          deployment.status
+        )
+      );
+    }, this);
+
+    return _react2.default.createElement(
+      'div',
+      { className: pendingMap.length ? "fadeIn" : "hidden" },
+      _react2.default.createElement(
+        'h3',
+        null,
+        'Pending'
+      ),
+      _react2.default.createElement(
+        'div',
+        { className: 'deploy-table-contain' },
+        _react2.default.createElement(
+          _Table.Table,
+          {
+            selectable: false,
+            style: { overflow: "visible" },
+            wrapperStyle: { overflow: "visible" },
+            bodyStyle: { overflow: "visible" } },
+          _react2.default.createElement(
+            _Table.TableHeader,
+            {
+              displaySelectAll: false,
+              adjustForCheckbox: false },
+            _react2.default.createElement(
+              _Table.TableRow,
+              {
+                style: { overflow: "visible" } },
+              _react2.default.createElement(
+                _Table.TableHeaderColumn,
+                null,
+                'Updating to'
+              ),
+              _react2.default.createElement(
+                _Table.TableHeaderColumn,
+                null,
+                'Group'
+              ),
+              _react2.default.createElement(
+                _Table.TableHeaderColumn,
+                null,
+                'Created'
+              ),
+              _react2.default.createElement(
+                _Table.TableHeaderColumn,
+                { style: { textAlign: "right", width: "100px" } },
+                '# Devices'
+              ),
+              _react2.default.createElement(
+                _Table.TableHeaderColumn,
+                null,
+                'Status'
+              )
+            )
+          ),
+          _react2.default.createElement(
+            _Table.TableBody,
+            {
+              displayRowCheckbox: false,
+              style: { cursor: "pointer", overflow: "visible" } },
+            pendingMap
+          )
+        )
+      )
+    );
+  }
+});
+
+module.exports = Pending;
+
+},{"./groupdevices":784,"material-ui/Table":297,"react":657,"react-time":624}],788:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -90926,7 +91045,7 @@ ProgressChart.contextTypes = {
 
 module.exports = ProgressChart;
 
-},{"../../actions/app-actions":756,"../../stores/app-store":807,"react":657,"react-router":593}],788:[function(require,module,exports){
+},{"../../actions/app-actions":756,"../../stores/app-store":808,"react":657,"react-router":593}],789:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -91092,7 +91211,7 @@ var ProgressDeviceList = _react2.default.createClass({
 
 module.exports = ProgressDeviceList;
 
-},{"lodash.isequal":185,"material-ui/FlatButton":236,"material-ui/Table":297,"react":657,"react-router":593,"react-time":624}],789:[function(require,module,exports){
+},{"lodash.isequal":185,"material-ui/FlatButton":236,"material-ui/Table":297,"react":657,"react-router":593,"react-time":624}],790:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -91159,9 +91278,10 @@ var ProgressReport = _react2.default.createClass({
       elapsed: 0,
       currentPage: 1,
       start: 0,
-      perPage: 100,
+      perPage: 50,
       deviceCount: 0,
       showPending: true
+
     };
   },
   componentDidMount: function componentDidMount() {
@@ -91231,9 +91351,11 @@ var ProgressReport = _react2.default.createClass({
       success: function success(device_inventory) {
         var artifact = self._getDeviceArtifact(device_inventory);
         var deviceArtifacts = self.state.deviceArtifacts || {};
-        self.setState({
-          deviceArtifacts: (0, _reactAddonsUpdate2.default)(deviceArtifacts, _defineProperty({}, id, { $set: artifact }))
-        });
+        if (!self.state.stopRestCalls) {
+          self.setState({
+            deviceArtifacts: (0, _reactAddonsUpdate2.default)(deviceArtifacts, _defineProperty({}, id, { $set: artifact }))
+          });
+        }
       },
       error: function error(err) {
         console.log("error ", err);
@@ -91264,7 +91386,8 @@ var ProgressReport = _react2.default.createClass({
   dialogDismiss: function dialogDismiss() {
     this.setState({
       showDialog: false,
-      logData: null
+      logData: null,
+      stopRestCalls: true
     });
   },
   _setFinished: function _setFinished(bool) {
@@ -91462,7 +91585,7 @@ var ProgressReport = _react2.default.createClass({
 
 module.exports = ProgressReport;
 
-},{"../../actions/app-actions":756,"../../stores/app-store":807,"./deploymentstatus":782,"./progressdevicelist":788,"lodash.differenceWith":184,"lodash.isequal":185,"material-ui/Checkbox":209,"material-ui/Dialog":227,"material-ui/FlatButton":236,"material-ui/FontIcon":240,"material-ui/RaisedButton":270,"rc-pagination":400,"react":657,"react-addons-update":405,"react-copy-to-clipboard":411,"react-router":593,"react-time":624}],790:[function(require,module,exports){
+},{"../../actions/app-actions":756,"../../stores/app-store":808,"./deploymentstatus":782,"./progressdevicelist":789,"lodash.differenceWith":184,"lodash.isequal":185,"material-ui/Checkbox":209,"material-ui/Dialog":227,"material-ui/FlatButton":236,"material-ui/FontIcon":240,"material-ui/RaisedButton":270,"rc-pagination":400,"react":657,"react-addons-update":405,"react-copy-to-clipboard":411,"react-router":593,"react-time":624}],791:[function(require,module,exports){
 'use strict';
 
 var _React$createClass;
@@ -91900,7 +92023,7 @@ var Report = _react2.default.createClass((_React$createClass = {
 
 module.exports = Report;
 
-},{"../../actions/app-actions":756,"material-ui/Checkbox":209,"material-ui/Dialog":227,"material-ui/FlatButton":236,"material-ui/RaisedButton":270,"material-ui/Table":297,"pluralize":387,"react":657,"react-copy-to-clipboard":411,"react-router":593,"react-time":624}],791:[function(require,module,exports){
+},{"../../actions/app-actions":756,"material-ui/Checkbox":209,"material-ui/Dialog":227,"material-ui/FlatButton":236,"material-ui/RaisedButton":270,"material-ui/Table":297,"pluralize":387,"react":657,"react-copy-to-clipboard":411,"react-router":593,"react-time":624}],792:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -92063,7 +92186,7 @@ var Schedule = _react2.default.createClass({
 
 module.exports = Schedule;
 
-},{"material-ui":326,"react":657,"react-time":624}],792:[function(require,module,exports){
+},{"material-ui":326,"react":657,"react-time":624}],793:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -92108,7 +92231,7 @@ var ScheduleButton = _react2.default.createClass({
 
 module.exports = ScheduleButton;
 
-},{"material-ui/FlatButton":236,"material-ui/RaisedButton":270,"react":657}],793:[function(require,module,exports){
+},{"material-ui/FlatButton":236,"material-ui/RaisedButton":270,"react":657}],794:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -92451,7 +92574,7 @@ var ScheduleForm = _react2.default.createClass({
 
 module.exports = ScheduleForm;
 
-},{"../../actions/app-actions":756,"../../stores/app-store":807,"material-ui/Divider":229,"material-ui/Drawer":231,"material-ui/FontIcon":240,"material-ui/IconButton":245,"material-ui/MenuItem":259,"material-ui/SelectField":274,"material-ui/TextField":308,"pluralize":387,"react":657,"react-router":593,"react-search-input":617}],794:[function(require,module,exports){
+},{"../../actions/app-actions":756,"../../stores/app-store":808,"material-ui/Divider":229,"material-ui/Drawer":231,"material-ui/FontIcon":240,"material-ui/IconButton":245,"material-ui/MenuItem":259,"material-ui/SelectField":274,"material-ui/TextField":308,"pluralize":387,"react":657,"react-router":593,"react-search-input":617}],795:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -93157,7 +93280,7 @@ var DeviceList = _react2.default.createClass({
 
 module.exports = DeviceList;
 
-},{"../../actions/app-actions":756,"../../stores/app-store":807,"./filters":797,"./selecteddevices":799,"material-ui/Dialog":227,"material-ui/FlatButton":236,"material-ui/FontIcon":240,"material-ui/IconButton":245,"material-ui/MenuItem":259,"material-ui/RaisedButton":270,"material-ui/SelectField":274,"material-ui/Snackbar":279,"material-ui/Table":297,"material-ui/TextField":308,"pluralize":387,"react":657,"react-collapse":409,"react-dom":412,"react-height":548,"react-motion":561,"react-time":624}],795:[function(require,module,exports){
+},{"../../actions/app-actions":756,"../../stores/app-store":808,"./filters":798,"./selecteddevices":800,"material-ui/Dialog":227,"material-ui/FlatButton":236,"material-ui/FontIcon":240,"material-ui/IconButton":245,"material-ui/MenuItem":259,"material-ui/RaisedButton":270,"material-ui/SelectField":274,"material-ui/Snackbar":279,"material-ui/Table":297,"material-ui/TextField":308,"pluralize":387,"react":657,"react-collapse":409,"react-dom":412,"react-height":548,"react-motion":561,"react-time":624}],796:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -93430,7 +93553,7 @@ var DevicePicker = _react2.default.createClass({
 
 module.exports = DevicePicker;
 
-},{"../../actions/app-actions":756,"../common/loader":771,"material-ui/Dialog":227,"material-ui/FlatButton":236,"material-ui/RaisedButton":270,"material-ui/Table":297,"material-ui/TextField":308,"react":657,"react-search-input":617}],796:[function(require,module,exports){
+},{"../../actions/app-actions":756,"../common/loader":771,"material-ui/Dialog":227,"material-ui/FlatButton":236,"material-ui/RaisedButton":270,"material-ui/Table":297,"material-ui/TextField":308,"react":657,"react-search-input":617}],797:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -93773,7 +93896,7 @@ Devices.contextTypes = {
 
 module.exports = Devices;
 
-},{"../../actions/app-actions":756,"../../stores/app-store":807,"../common/loader":771,"../common/prototype/Array.prototype.equals":772,"./devicelist":794,"./devicepicker":795,"./groups":798,"./unauthorized":800,"material-ui/Snackbar":279,"rc-pagination":400,"react":657,"react-addons-update":405,"react-router":593}],797:[function(require,module,exports){
+},{"../../actions/app-actions":756,"../../stores/app-store":808,"../common/loader":771,"../common/prototype/Array.prototype.equals":772,"./devicelist":795,"./devicepicker":796,"./groups":799,"./unauthorized":801,"material-ui/Snackbar":279,"rc-pagination":400,"react":657,"react-addons-update":405,"react-router":593}],798:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -93986,7 +94109,7 @@ var Filters = _react2.default.createClass({
 
 module.exports = Filters;
 
-},{"material-ui/Drawer":231,"material-ui/FlatButton":236,"material-ui/FontIcon":240,"material-ui/IconButton":245,"material-ui/MenuItem":259,"material-ui/SelectField":274,"material-ui/TextField":308,"react":657}],798:[function(require,module,exports){
+},{"material-ui/Drawer":231,"material-ui/FlatButton":236,"material-ui/FontIcon":240,"material-ui/IconButton":245,"material-ui/MenuItem":259,"material-ui/SelectField":274,"material-ui/TextField":308,"react":657}],799:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -94132,7 +94255,7 @@ var Groups = _react2.default.createClass({
 
 module.exports = Groups;
 
-},{"../../actions/app-actions":756,"../common/prototype/Array.prototype.equals":772,"material-ui/FlatButton":236,"material-ui/FontIcon":240,"material-ui/List":253,"material-ui/RaisedButton":270,"material-ui/Subheader":287,"react":657}],799:[function(require,module,exports){
+},{"../../actions/app-actions":756,"../common/prototype/Array.prototype.equals":772,"material-ui/FlatButton":236,"material-ui/FontIcon":240,"material-ui/List":253,"material-ui/RaisedButton":270,"material-ui/Subheader":287,"react":657}],800:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -94449,7 +94572,7 @@ var SelectedDevices = _react2.default.createClass({
 
 module.exports = SelectedDevices;
 
-},{"../../actions/app-actions":756,"../../stores/app-store":807,"../deployments/scheduleform":793,"material-ui/Dialog":227,"material-ui/Divider":229,"material-ui/FlatButton":236,"material-ui/FontIcon":240,"material-ui/IconButton":245,"material-ui/List":253,"material-ui/RaisedButton":270,"material-ui/TextField":308,"react":657,"react-collapse":409,"react-router":593,"react-time":624}],800:[function(require,module,exports){
+},{"../../actions/app-actions":756,"../../stores/app-store":808,"../deployments/scheduleform":794,"material-ui/Dialog":227,"material-ui/Divider":229,"material-ui/FlatButton":236,"material-ui/FontIcon":240,"material-ui/IconButton":245,"material-ui/List":253,"material-ui/RaisedButton":270,"material-ui/TextField":308,"react":657,"react-collapse":409,"react-router":593,"react-time":624}],801:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -94738,7 +94861,7 @@ var Authorized = _react2.default.createClass({
 
 module.exports = Authorized;
 
-},{"../../actions/app-actions":756,"./selecteddevices":799,"material-ui":326,"material-ui/FontIcon":240,"material-ui/IconButton":245,"material-ui/RaisedButton":270,"material-ui/Table":297,"react":657,"react-collapse":409,"react-dom":412,"react-height":548,"react-motion":561,"react-time":624}],801:[function(require,module,exports){
+},{"../../actions/app-actions":756,"./selecteddevices":800,"material-ui":326,"material-ui/FontIcon":240,"material-ui/IconButton":245,"material-ui/RaisedButton":270,"material-ui/Table":297,"react":657,"react-collapse":409,"react-dom":412,"react-height":548,"react-motion":561,"react-time":624}],802:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -94878,7 +95001,7 @@ Header.contextTypes = {
 
 module.exports = Header;
 
-},{"../../actions/app-actions":756,"material-ui/FontIcon":240,"material-ui/IconButton":245,"material-ui/IconMenu":247,"material-ui/MenuItem":259,"material-ui/Tabs":302,"material-ui/Toolbar":325,"react":657,"react-router":593}],802:[function(require,module,exports){
+},{"../../actions/app-actions":756,"material-ui/FontIcon":240,"material-ui/IconButton":245,"material-ui/IconMenu":247,"material-ui/MenuItem":259,"material-ui/Tabs":302,"material-ui/Toolbar":325,"react":657,"react-router":593}],803:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -95050,7 +95173,7 @@ Login.contextTypes = {
 
 module.exports = Login;
 
-},{"../../actions/app-actions":756,"../../stores/app-store":807,"../../stores/local-store":808,"../common/forms/form":768,"../common/forms/passwordinput":769,"../common/forms/textinput":770,"material-ui/Snackbar":279,"react":657,"react-router":593}],803:[function(require,module,exports){
+},{"../../actions/app-actions":756,"../../stores/app-store":808,"../../stores/local-store":809,"../common/forms/form":768,"../common/forms/passwordinput":769,"../common/forms/textinput":770,"material-ui/Snackbar":279,"react":657,"react-router":593}],804:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -95143,7 +95266,7 @@ module.exports = _react2.default.createElement(
   _react2.default.createElement(_reactRouter.Route, { path: '/login', component: _login2.default, onEnter: noRequireAuth })
 );
 
-},{"../auth":761,"../components/app":762,"../components/artifacts/artifacts":763,"../components/dashboard/dashboard":774,"../components/deployments/deployments":781,"../components/devices/devices":796,"../components/user-management/login":802,"react":657,"react-router":593}],804:[function(require,module,exports){
+},{"../auth":761,"../components/app":762,"../components/artifacts/artifacts":763,"../components/dashboard/dashboard":774,"../components/deployments/deployments":781,"../components/devices/devices":797,"../components/user-management/login":803,"react":657,"react-router":593}],805:[function(require,module,exports){
 'use strict';
 
 module.exports = {
@@ -95166,6 +95289,7 @@ module.exports = {
   UPLOAD_ARTIFACT: 'UPLOAD_ARTIFACT',
   SET_DEPLOYMENT_ARTIFACT: 'SET_DEPLOYMENT_ARTIFACT',
   RECEIVE_DEPLOYMENTS: 'RECEIVE_DEPLOYMENTS',
+  RECEIVE_PENDING_DEPLOYMENTS: 'RECEIVE_PENDING_DEPLOYMENTS',
   RECEIVE_ACTIVE_DEPLOYMENTS: 'RECEIVE_ACTIVE_DEPLOYMENTS',
   RECEIVE_PAST_DEPLOYMENTS: 'RECEIVE_PAST_DEPLOYMENTS',
   SINGLE_DEPLOYMENT: 'SINGLE_DEPLOYMENT',
@@ -95173,7 +95297,7 @@ module.exports = {
   SET_SNACKBAR: 'SET_SNACKBAR'
 };
 
-},{}],805:[function(require,module,exports){
+},{}],806:[function(require,module,exports){
 'use strict';
 
 var Dispatcher = require('flux').Dispatcher;
@@ -95191,7 +95315,7 @@ var AppDispatcher = assign(new Dispatcher(), {
 
 module.exports = AppDispatcher;
 
-},{"flux":144,"object-assign":384}],806:[function(require,module,exports){
+},{"flux":144,"object-assign":384}],807:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -95222,7 +95346,7 @@ var routes = require('./config/routes');
   routes
 ), document.getElementById('main'));
 
-},{"./config/routes":803,"react":657,"react-dom":412,"react-router":593,"react-tap-event-plugin":622}],807:[function(require,module,exports){
+},{"./config/routes":804,"react":657,"react-dom":412,"react-router":593,"react-tap-event-plugin":622}],808:[function(require,module,exports){
 'use strict';
 
 var AppDispatcher = require('../dispatchers/app-dispatcher');
@@ -95452,6 +95576,7 @@ function _uploadArtifact(artifact) {
 // Deployments
 var _deploymentsInProgress = [];
 var _pastDeployments = [];
+var _pendingDeployments = [];
 var _schedule = [];
 var _events = [];
 
@@ -95465,6 +95590,10 @@ var _activityLog = [];
 
 function _getPastDeployments() {
   return _pastDeployments;
+}
+
+function _getPendingDeployments() {
+  return _pendingDeployments;
 }
 
 function _getDeploymentsInProgress() {
@@ -95593,6 +95722,11 @@ function setActiveDeployments(deployments) {
 function setPastDeployments(deployments) {
   _pastDeployments = deployments;
   _pastDeployments.sort(startTimeSort);
+}
+
+function setPendingDeployments(deployments) {
+  _pendingDeployments = deployments;
+  _pendingDeployments.sort(startTimeSort);
 }
 
 function setSelectedDeployment(deployment) {
@@ -95765,9 +95899,16 @@ var AppStore = assign(EventEmitter.prototype, {
 
   getPastDeployments: function getPastDeployments() {
     /*
-    * Return list of deployments before date
+    * Return list of finished deployments 
     */
     return _getPastDeployments();
+  },
+
+  getPendingDeployments: function getPendingDeployments() {
+    /*
+    * Return list of pending deployments
+    */
+    return _getPendingDeployments();
   },
 
   getSingleDeployment: function getSingleDeployment(attr, val) {
@@ -95897,6 +96038,9 @@ var AppStore = assign(EventEmitter.prototype, {
       case AppConstants.RECEIVE_PAST_DEPLOYMENTS:
         setPastDeployments(payload.action.deployments);
         break;
+      case AppConstants.RECEIVE_PENDING_DEPLOYMENTS:
+        setPendingDeployments(payload.action.deployments);
+        break;
       case AppConstants.SINGLE_DEPLOYMENT:
         setSelectedDeployment(payload.action.deployment);
         break;
@@ -95936,7 +96080,7 @@ var AppStore = assign(EventEmitter.prototype, {
 
 module.exports = AppStore;
 
-},{"../constants/app-constants":804,"../dispatchers/app-dispatcher":805,"events":119,"object-assign":384}],808:[function(require,module,exports){
+},{"../constants/app-constants":805,"../dispatchers/app-dispatcher":806,"events":119,"object-assign":384}],809:[function(require,module,exports){
 'use strict';
 
 /*
@@ -95991,7 +96135,7 @@ var LocalStore = assign(EventEmitter.prototype, {
 
 module.exports = LocalStore;
 
-},{"../constants/app-constants":804,"../dispatchers/app-dispatcher":805,"events":119,"object-assign":384}],809:[function(require,module,exports){
+},{"../constants/app-constants":805,"../dispatchers/app-dispatcher":806,"events":119,"object-assign":384}],810:[function(require,module,exports){
 'use strict';
 
 var _colorManipulator = require('material-ui/utils/colorManipulator');
@@ -96021,4 +96165,4 @@ module.exports = {
   }
 };
 
-},{"material-ui/styles/colors":347,"material-ui/styles/spacing":349,"material-ui/utils/colorManipulator":374}]},{},[806]);
+},{"material-ui/styles/colors":347,"material-ui/styles/spacing":349,"material-ui/utils/colorManipulator":374}]},{},[807]);

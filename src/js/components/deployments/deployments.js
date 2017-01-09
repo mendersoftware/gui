@@ -2,6 +2,7 @@ import React from 'react';
 var AppStore = require('../../stores/app-store');
 var AppActions = require('../../actions/app-actions');
 
+var Pending = require('./pendingdeployments.js');
 var Progress = require('./inprogressdeployments.js');
 var Past = require('./pastdeployments.js');
 var ProgressReport = require('./progressreport.js');
@@ -13,32 +14,16 @@ var ScheduleButton = require('./schedulebutton.js');
 
 var Pagination = require('rc-pagination');
 
-import { Tabs, Tab }  from 'material-ui/Tabs';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 
 import Snackbar from 'material-ui/Snackbar';
 
-var styles = {
-  tabs: {
-    backgroundColor: "#fff",
-    color: "#414141",
-    borderBottom: "1px solid #e0e0e0",
-  },
-  inkbar: {
-    backgroundColor: "#679BA5",
-  }
-};
-
-var tabs = {
-  progress: '0',
-  past: '1',
-}
-
 function getState() {
   return {
     past: AppStore.getPastDeployments(),
+    pending: AppStore.getPendingDeployments(),
     progress: AppStore.getDeploymentsInProgress() || [],
     events: AppStore.getEventLog(),
     artifacts: AppStore.getArtifactsRepo(),
@@ -104,7 +89,7 @@ var Deployments = React.createClass({
     AppActions.getGroups(groupCallback);
   
     if (this.props.params) {
-      this.setState({tabIndex: this._checkTabValue(this.props.params.tab)});
+      this.setState({reportType: this.props.params.tab});
 
       if (this.props.params.params) {
         var str = decodeURIComponent(this.props.params.params);
@@ -127,29 +112,38 @@ var Deployments = React.createClass({
         }
       }
     } else {
-      this.setState({tabIndex:"progress"});
+      this.setState({reportType:"progress"});
     }
     AppActions.getArtifacts();
   },
   _refreshDeployments: function() {
     this._refreshInProgress();
+    this._refreshPending();
     this._refreshPast();
   },
   _refreshInProgress: function() {
+    var self = this;
     AppActions.getDeploymentsInProgress(function() {
       setTimeout(function() {
-        this.setState({doneLoading:true});
-        this._dismissSnackBar();
-      }.bind(this), 300)
-    }.bind(this));
+        self.setState({doneLoading:true});
+        self._dismissSnackBar();
+      }, 300)
+    });
+  },
+  _refreshPending: function() {
+    var self = this;
+    AppActions.getPendingDeployments(function() {
+      self._dismissSnackBar();
+    });
   },
   _refreshPast: function() {
+    var self = this;
     AppActions.getPastDeployments(function() {
       setTimeout(function() {
-        this.setState({doneLoading:true});
-        this._dismissSnackBar();
-      }.bind(this), 300)
-    }.bind(this));
+        self.setState({doneLoading:true});
+        self._dismissSnackBar();
+      }, 300)
+    });
   },
   _dismissSnackBar: function() {
     setTimeout(function() {
@@ -158,7 +152,7 @@ var Deployments = React.createClass({
   },
   _getGroupDevices: function(group) {
     // get list of devices for each group and save them to state 
-    var i
+    var i;
     var self = this;
     var tmp = {};
     var devs = [];
@@ -197,16 +191,7 @@ var Deployments = React.createClass({
   _onChange: function() {
     this.setState(getState());
   },
-  _checkTabValue: function(value) {
-    switch (value) {
-      case "past":
-        return "past";
-        break;
-      default:
-        return "progress";
-        break;
-    }
-  },
+
   dialogDismiss: function(ref) {
     this.setState({
       dialog: false,
@@ -222,20 +207,15 @@ var Deployments = React.createClass({
         contentClass: "dialog"
       });
     }
-    var title = this.state.tabIndex === "progress" ? "Deployment progress" : "Results of deployment";
     if (dialog === 'report') {
       this.setState({
         scheduleForm: false,
-        dialogTitle: title,
         contentClass: "largeDialog"
       })
     }
     this.setState({dialog: true});
   },
-  _changeTab: function(value) {
-    this.setState({tabIndex: value});
-    this._refreshDeployments();
-  },
+
   _onScheduleSubmit: function() {
     var ids = [];
     var self = this;
@@ -291,6 +271,7 @@ var Deployments = React.createClass({
     this.setState({deploymentDevices: devices, filteredDevices: filteredDevices});
   },
   _getReportById: function (id) {
+    this.setState({reportType:"past"});
      AppActions.getSingleDeployment(id, function(data) {
         var that = this;
         setTimeout(function() {
@@ -298,8 +279,10 @@ var Deployments = React.createClass({
         }, 400);
     }.bind(this));
   },
-  _showReport: function (deployment) {
-    this.setState({scheduleForm: false, selectedDeployment: deployment});
+  _showReport: function (deployment, progress) {
+    var title = progress ? "Deployment progress" : "Results of deployment";
+    var reportType = progress ? "progress" : "past";
+    this.setState({scheduleForm: false, selectedDeployment: deployment, dialogTitle: title, reportType: reportType});
     this.dialogOpen("report");
   },
   _scheduleDeployment: function (deployment) {
@@ -338,7 +321,7 @@ var Deployments = React.createClass({
   },
   _showProgress: function(rowNumber) {
     var deployment = this.state.progress[rowNumber];
-    this._showReport(deployment);
+    this._showReport(deployment, true);
   },
   updated: function() {
     // use to make sure re-renders dialog at correct height when device list built
@@ -370,7 +353,7 @@ var Deployments = React.createClass({
       dialogContent = (    
         <ScheduleForm deploymentDevices={this.state.deploymentDevices} filteredDevices={this.state.filteredDevices} hasPending={this.state.hasPending} hasDevices={this.state.hasDevices} deploymentSettings={this._deploymentParams} id={this.state.id} artifacts={this.state.artifacts} artifact={this.state.artifact} groups={this.state.groups} group={this.state.group} />
       )
-    } else if (this.state.tabIndex === "progress") {
+    } else if (this.state.reportType === "progress") {
       dialogContent = (
         <ProgressReport updated={this.updated} deployment={this.state.selectedDeployment} />
       )
@@ -381,32 +364,20 @@ var Deployments = React.createClass({
     }
     return (
       <div className="contentContainer allow-overflow">
-
-      <Tabs
-        tabItemContainerStyle={{width: "33%", backgroundColor: "inherit"}}
-        inkBarStyle={styles.inkbar}
-        value={this.state.tabIndex}
-        onChange={this._changeTab}>
-          <Tab key={0}
-          style={styles.tabs}
-          label={"In progress"}
-          value="progress"> 
-            <Progress openReport={this._showProgress} loading={!this.state.doneLoading} progress={this.state.progress} createClick={this.dialogOpen.bind(null, "schedule")}/>
-          </Tab>
-
-          <Tab key={1}
-          style={styles.tabs}
-          label={"Past deployments"}
-          value="past">
-            <Past loading={!this.state.doneLoading} past={this.state.past} showReport={this._showReport} />
-          </Tab>
-        </Tabs>
-
         <div className="top-right-button">
           <ScheduleButton secondary={true} openDialog={this.dialogOpen} />
         </div>
 
-        {this.state.hasDevices}
+        <div style={{paddingTop:"3px"}}>
+          <Pending pending={this.state.pending} />
+
+          <Progress loading={!this.state.doneLoading} openReport={this._showProgress} progress={this.state.progress} createClick={this.dialogOpen.bind(null, "schedule")}/>
+
+          <Past loading={!this.state.doneLoading} past={this.state.past} showReport={this._showReport} />
+
+          {this.state.hasDevices}
+
+        </div>
 
         <Dialog
           ref="dialog"

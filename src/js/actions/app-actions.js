@@ -393,6 +393,20 @@ var AppActions = {
         callback(err);
       })
   },
+  getPendingDeployments: function(callback) {
+     DeploymentsApi
+      .get(deploymentsApiUrl+'/deployments?status=pending')
+      .then(function(deployments) {
+        AppDispatcher.handleViewAction({
+          actionType: AppConstants.RECEIVE_PENDING_DEPLOYMENTS,
+          deployments: deployments
+        });
+        callback();
+      })
+      .catch(function(err) {
+        callback(err);
+      })
+  },
   createDeployment: function(deployment, callback) {
     DeploymentsApi
     .post(deploymentsApiUrl+'/deployments', deployment)

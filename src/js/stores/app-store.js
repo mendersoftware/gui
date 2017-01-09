@@ -232,7 +232,8 @@ function _uploadArtifact(artifact) {
 
 // Deployments
 var _deploymentsInProgress = [];
-var _pastDeployments = []
+var _pastDeployments = [];
+var _pendingDeployments = [];
 var _schedule = [];
 var _events = [];
 
@@ -247,6 +248,10 @@ var _activityLog = [
 
 function _getPastDeployments() {
   return _pastDeployments;
+}
+
+function _getPendingDeployments() {
+  return _pendingDeployments;
 }
 
 function _getDeploymentsInProgress() {
@@ -383,6 +388,12 @@ function setActiveDeployments(deployments) {
 function setPastDeployments(deployments) {
   _pastDeployments = deployments;
   _pastDeployments.sort(startTimeSort);
+}
+
+
+function setPendingDeployments(deployments) {
+  _pendingDeployments = deployments;
+  _pendingDeployments.sort(startTimeSort);
 }
 
 function setSelectedDeployment(deployment) {
@@ -559,9 +570,16 @@ var AppStore = assign(EventEmitter.prototype, {
 
   getPastDeployments: function() {
     /*
-    * Return list of deployments before date
+    * Return list of finished deployments 
     */
     return _getPastDeployments()
+  },
+
+  getPendingDeployments: function() {
+    /*
+    * Return list of pending deployments
+    */
+    return _getPendingDeployments()
   },
 
   getSingleDeployment: function(attr, val) {
@@ -690,6 +708,9 @@ var AppStore = assign(EventEmitter.prototype, {
         break;
       case AppConstants.RECEIVE_PAST_DEPLOYMENTS:
         setPastDeployments(payload.action.deployments);
+        break;
+      case AppConstants.RECEIVE_PENDING_DEPLOYMENTS:
+        setPendingDeployments(payload.action.deployments);
         break;
       case AppConstants.SINGLE_DEPLOYMENT:
         setSelectedDeployment(payload.action.deployment);
