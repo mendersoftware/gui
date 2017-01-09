@@ -50674,7 +50674,7 @@ var React = require('react');
 var Pager = require('./Pager');
 var Options = require('./Options');
 var KEYCODE = require('./KeyCode');
-var LOCALE = require('./locale/zh_CN');
+var LOCALE = require('./locale/en_US');
 
 function noop() {}
 
@@ -51093,7 +51093,7 @@ Pagination.defaultProps = {
 };
 
 module.exports = Pagination;
-},{"./KeyCode":396,"./Options":397,"./Pager":398,"./locale/zh_CN":401,"react":657}],400:[function(require,module,exports){
+},{"./KeyCode":396,"./Options":397,"./Pager":398,"./locale/en_US":401,"react":657}],400:[function(require,module,exports){
 'use strict';
 
 // export this package's api
@@ -51106,15 +51106,15 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports["default"] = {
   // Options.jsx
-  items_per_page: '条/页',
-  jump_to: '跳至',
-  page: '页',
+  items_per_page: '/ page',
+  jump_to: 'Goto',
+  page: '',
 
   // Pagination.jsx
-  prev_page: '上一页',
-  next_page: '下一页',
-  prev_5: '向前 5 页',
-  next_5: '向后 5 页'
+  prev_page: 'Previous Page',
+  next_page: 'Next Page',
+  prev_5: 'Previous 5 Pages',
+  next_5: 'Next 5 Pages'
 };
 module.exports = exports['default'];
 },{}],402:[function(require,module,exports){
