@@ -1,6 +1,5 @@
 import React from 'react';
 import Time from 'react-time';
-var Report = require('./report.js');
 var ScheduleForm = require('./scheduleform');
 var GroupDevices = require('./groupdevices');
 var DeploymentStatus = require('./deploymentstatus');

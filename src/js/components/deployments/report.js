@@ -1,61 +1,136 @@
 import React from 'react';
 import { Link } from 'react-router';
-import CopyToClipboard from 'react-copy-to-clipboard';
 import Time from 'react-time';
+import CopyToClipboard from 'react-copy-to-clipboard';
 var AppActions = require('../../actions/app-actions');
+var AppStore = require('../../stores/app-store');
+var DeploymentStatus = require('./deploymentstatus');
+var DeviceList = require('./deploymentdevicelist');
+var Pagination = require('rc-pagination');
 var pluralize = require('pluralize')
+import update from 'react-addons-update';
+var isEqual = require('lodash.isequal');
+var differenceWith = require('lodash.differenceWith');
 
 // material ui
-import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
 import FlatButton from 'material-ui/FlatButton';
-import Dialog from 'material-ui/Dialog';
 import RaisedButton from 'material-ui/RaisedButton';
 import Checkbox from 'material-ui/Checkbox';
+import Dialog from 'material-ui/Dialog';
+import FontIcon from 'material-ui/FontIcon';
 
-var Report = React.createClass({
+var DeploymentReport = React.createClass({
   getInitialState: function() {
     return {
-      failsOnly: false,
       stats: {
         failure: null
       },
       showDialog: false,
-      logData: ""
+      logData: "",
+      elapsed: 0,
+      currentPage: 1,
+      start: 0,
+      perPage: 50,
+      deviceCount: 0,
+      showPending: true,
     };
   },
   componentDidMount: function() {
-    AppActions.getSingleDeploymentStats(this.props.deployment.id, function(stats) {
-      this._deploymentState("stats",stats);
-    }.bind(this));
-    AppActions.getSingleDeploymentDevices(this.props.deployment.id, function(devices) {
-      this._deploymentState("devices",devices);
-      self._getDeviceDetails(devices);
-    }.bind(this));
+    this.timer;
+    var self = this;
+    if (this.props.past) {
+      AppActions.getSingleDeploymentStats(this.props.deployment.id, function(stats) {
+        self.setState({"stats": stats});
+      });
+    } else {
+       this.timer = setInterval(this.tick, 50);
+    }
+    this.timer2 = setInterval(this.refreshDeploymentDevices, 10000);
+    this.refreshDeploymentDevices();
   },
-  _deploymentState: function (key, val) {
-    var state = {};
-    state[key] = val;
-    this.setState(state);
-    if (state.failure) {
-      this.setState({failsOnly: true});
+  componentWillUnmount: function() {
+    clearInterval(this.timer);
+    clearInterval(this.timer2);
+  },
+  tick: function() {
+    var now = new Date();
+    var then = new Date(this.props.deployment.created);
+
+    // get difference in seconds
+    var difference = (now.getTime()-then.getTime())/1000;
+
+     // Calculate the number of days left
+    var days=Math.floor(difference / 86400);
+    // After deducting the days calculate the number of hours left
+    var hours = Math.floor((difference - (days * 86400 ))/3600);
+     // After days and hours , how many minutes are left
+    var minutes = Math.floor((difference - (days * 86400 ) - (hours *3600 ))/60);
+    // Finally how many seconds left after removing days, hours and minutes.
+    var secs = Math.floor((difference - (days * 86400 ) - (hours *3600 ) - (minutes*60)));
+    secs = ("0" + secs).slice(-2);
+    // Only show days if exists
+    days = days ? days + "d " : "";
+
+    var x =  days + hours + "h " + minutes + "m " + secs + "s";
+    this.setState({elapsed: x});
+  },
+  refreshDeploymentDevices: function() {
+    var self = this;
+    if (self.props.deployment.status === "finished") {
+      clearInterval(this.timer);
+    }
+
+    AppActions.getSingleDeploymentDevices(self.props.deployment.id, function(devices) {
+      var sortedDevices = AppStore.getOrderedDeploymentDevices(devices);
+      sortedDevices = self.state.showPending ? sortedDevices : sortedDevices.filter(self._filterPending);
+      self.setState({allDevices: sortedDevices, deviceCount:devices.length});
+      self._handlePageChange(self.state.currentPage);
+    });
+  },
+  _getDeviceArtifact: function (device) {
+    var artifact = "-";
+    for (var i=0;i<device.attributes.length;i++) {
+      if (device.attributes[i].name === "artifact_id") {
+        artifact = device.attributes[i].value;
+      }
+    }
+    return artifact;
+  },
+  _getDeviceDetails: function (devices) {
+    var self = this;
+    var deviceArtifacts = self.state.deviceArtifacts || {};
+    for (var i=0;i<devices.length;i++) {
+      // get device artifact details not listed in schedule data
+      self._setSingleDeviceDetails(devices[i].id);
     }
   },
-  _getDeviceDetails: function (id) {
-    // get device details not listed in schedule data
-    //return AppActions.getSingleDeviceReport(id)
+  _setSingleDeviceDetails: function(id) {
+    var self = this;
+    AppActions.getDeviceById(id, {
+      success: function(device_inventory) {
+        var artifact = self._getDeviceArtifact(device_inventory);
+        var deviceArtifacts = self.state.deviceArtifacts || {};
+        if (!self.state.stopRestCalls) {
+          self.setState({
+            deviceArtifacts: update(deviceArtifacts, {[id]: {$set: artifact}})
+          })
+        }
+      },
+      error: function(err) {
+        console.log("error ", err);
+      }
+    });
+  },
+  _filterPending: function(device) {
+    return device.status !== "pending";
   },
   _handleCheckbox: function (e, checked) {
-    this.setState({failsOnly:checked});
+    this.setState({showPending:checked, currentPage:1});
+    this.refreshDeploymentDevices();
   },
   _retryDeployment: function () {
     // replace contents of dialog, also change size, return contents and size on 'cancel'?
     this.props.retryDeployment(this.props.deployment);
-  },
-  _formatTime: function (date) {
-    if (date) {
-      return date.replace(' ','T').replace(/ /g, '').replace('UTC','');
-    }
-    return;
   },
   viewLog: function (id) {
     AppActions.getDeviceLog(this.props.deployment.id, id, function(data) {
@@ -63,80 +138,58 @@ var Report = React.createClass({
     }.bind(this));
   },
   exportLog: function () {
-      var content = this.state.logData;
-      var uriContent = "data:application/octet-stream," + encodeURIComponent(content);
-      var newWindow = window.open(uriContent, 'deviceLog');
-  },
-  _getDeviceDetails: function (devices) {
-    var self = this;
-    for (var i=0;i<devices.length;i++) {
-      // get device artifact details not listed in schedule data
-      AppActions.getDeviceById(devices[i].id, {
-        success: function(device) {
-          var deviceArtifact = self.state.deviceArtifact || {};
-          deviceArtifact[device.id] = self._getDeviceArtifact(device);
-          self.setState({deviceArtifact: deviceArtifact});
-        },
-        error: function(err) {
-          console.log("error ", err);
-        }
-      });
-    }
+    var content = this.state.logData;
+    var uriContent = "data:application/octet-stream," + encodeURIComponent(content);
+    var newWindow = window.open(uriContent, 'deviceLog');
   },
   dialogDismiss: function() {
     this.setState({
       showDialog: false,
-      logData: null
+      logData: null,
+      stopRestCalls: true
     });
   },
+  _setFinished: function(bool) {
+    clearInterval(this.timer);
+    this.setState({finished: bool});
+  },
+  _handlePageChange: function(pageNo) {
+    var start = (pageNo*this.state.perPage)-this.state.perPage;
+    var end = Math.min(this.state.allDevices.length, (pageNo*this.state.perPage));
+    // cut slice from full list of devices
+    var slice = this.state.allDevices.slice(start, end);
+    if (!isEqual(slice, this.state.pagedDevices)) {
+      var diff = differenceWith(slice, this.state.pagedDevices, isEqual);
+      // only update those that have changed
+      this._getDeviceDetails(diff); 
+    }
+    this.setState({currentPage: pageNo, start:start, end:end, pagedDevices:slice});
+  },
+   _formatTime: function (date) {
+    if (date) {
+      return date.replace(' ','T').replace(/ /g, '').replace('UTC','');
+    }
+    return;
+  },
+  updatedList: function () {
+    // use to make sure parent re-renders dialog when device list built
+    this.props.updated();
+  },
   render: function () {
-    var deviceList = [];
-    var artifactLink;
-    if (this.props.deployment &&  typeof this.props.deployment.artifact_name !== 'undefined')  {
-      var encodedArtifact = encodeURIComponent(this.props.deployment.artifact_name); 
-      artifactLink = (
-        <Link style={{fontWeight:"500"}} to={`/artifact/${encodedArtifact}`}>{this.props.deployment.artifact_name}</Link>
-      )
-    }
-    if (this.state.devices) {
-      deviceList = this.state.devices.map(function(device, index) {
-        var encodedDevice = encodeURIComponent("id="+device.id); 
-        var deviceLink = (
-        <div>
-          <Link style={{fontWeight:"500"}} to={`/devices/0/${encodedDevice}`}>{device.id}</Link>
-        </div>
-        );
-        
-         
-        if (typeof this.state.deviceArtifact !== 'undefined') {
-          if (typeof this.state.deviceArtifact[device.id] !== 'undefined')  {
-            var encodedArtifact = encodeURIComponent(this.state.deviceArtifact[device.id]);
-            artifactLink = (
-              <Link style={{fontWeight:"500"}} to={`/artifact/${encodedArtifact}`}>{this.state.deviceArtifact[device.id]}</Link>
-            )
-          }
-        }
-        
-        if ((device.status==="failure")||(this.state.failsOnly===false)){
-          return (
-            <TableRow key={index}>
-              <TableRowColumn>{deviceLink}</TableRowColumn>
-              <TableRowColumn>{device.device_type}</TableRowColumn>
-              <TableRowColumn>{artifactLink}</TableRowColumn>
-              <TableRowColumn><Time value={this._formatTime(device.created)} format="YYYY-MM-DD HH:mm" /></TableRowColumn>
-              <TableRowColumn><Time value={this._formatTime(device.finished)} format="YYYY-MM-DD HH:mm" /></TableRowColumn>
-              <TableRowColumn>{device.status || "--"}</TableRowColumn>
-              <TableRowColumn><FlatButton className={device.status==='failure' ? null : "hidden"} onClick={this.viewLog.bind(null, device.id)} label="View log" /></TableRowColumn>
-            </TableRow>
-          )
-        }
-      }, this);
-    }
-    var status = (this.props.deployment.status === "inprogress") ? "In progress" : this.props.deployment.status;
+    var deviceList = this.state.pagedDevices || [];
+    var allDevices = this.state.allDevices || [];
+
+    var encodedArtifactName = encodeURIComponent(this.props.deployment.artifact_name);
+    var artifactLink = ( 
+      <Link style={{fontWeight:"500"}} to={`/artifacts/${encodedArtifactName}`}>{this.props.deployment.artifact_name}</Link>
+    );
+
+    var checkboxLabel = "Show pending devices";
+
     var logActions =  [
       <div style={{marginRight:"10px", display:"inline-block"}}>
         <FlatButton
-          label="Close"
+          label="Cancel"
           onClick={this.dialogDismiss.bind(null, 'dialog')} />
       </div>,
       <CopyToClipboard style={{marginRight:"10px", display:"inline-block"}} text={this.state.logData}
@@ -148,72 +201,78 @@ var Report = React.createClass({
         primary={true}
         onClick={this.exportLog}/>
     ];
+
     return (
       <div>
-   
-
         <div className="report-container">
-          <div className="deploymentInfo" style={{width:"260px", height:"auto", margin:"30px 30px 30px 0", display:"inline-block", verticalAlign:"top"}}>
+          <div className="deploymentInfo" style={{width:"240px", height:"auto", margin:"30px 30px 30px 0", display:"inline-block", verticalAlign:"top"}}>
            <div><div className="progressLabel">Updating to:</div><span>{artifactLink}</span></div>
            <div><div className="progressLabel">Device group:</div><span>{this.props.deployment.name}</span></div>
-           <div><div className="progressLabel"># devices:</div><span>{deviceList.length}</span></div>
+           <div><div className="progressLabel"># devices:</div><span>{this.state.deviceCount}</span></div>
           </div>
 
-          <div className="deploymentInfo" style={{width:"260px", height:"auto", margin:"30px 30px 30px 0", display:"inline-block", verticalAlign:"top"}}>
-           <div><div className="progressLabel">Status:</div>Completed<span className={this.state.stats.failure ? "failures" : "hidden"}> with failures</span></div>
-           <div><div className="progressLabel">Started:</div><Time value={this._formatTime(this.props.deployment.created)} format="YYYY-MM-DD HH:mm" /></div>
-       
-          </div>
-
-          <div className="deploymentInfo" style={{height:"auto", margin:"30px 30px 30px 0", display:"inline-block", verticalAlign:"top"}}>
-            <div className={this.state.stats.failure ? "statusLarge" : "hidden"}>
-              <img src="assets/img/largeFail.png" />
-              <div className="statusWrapper">
-                <b className="red">{this.state.stats.failure}</b> {pluralize("devices", this.state.stats.failure)} failed to update
+          {
+            this.props.past ?
+            <div className="inline">
+              <div className="deploymentInfo" style={{width:"260px", height:"auto", margin:"30px 30px 30px 0", display:"inline-block", verticalAlign:"top"}}>
+                <div><div className="progressLabel">Status:</div>Completed<span className={this.state.stats.failure ? "failures" : "hidden"}> with failures</span></div>
+                <div><div className="progressLabel">Started:</div><Time value={this._formatTime(this.props.deployment.created)} format="YYYY-MM-DD HH:mm" /></div>
               </div>
-            </div> 
-            <div className={this.state.stats.success ? "statusLarge" : "hidden"}>
-            <img src="assets/img/largeSuccess.png" />
-              <div className="statusWrapper">
-                <b className="green"><span className={this.state.stats.success === deviceList.length ? null : "hidden"}>All </span>{this.state.stats.success}</b> {pluralize("devices", this.state.stats.success)} updated successfully
+              <div className="deploymentInfo" style={{height:"auto", margin:"30px 30px 30px 0", display:"inline-block", verticalAlign:"top"}}>
+                <div className={this.state.stats.failure ? "statusLarge" : "hidden"}>
+                  <img src="assets/img/largeFail.png" />
+                  <div className="statusWrapper">
+                    <b className="red">{this.state.stats.failure}</b> {pluralize("devices", this.state.stats.failure)} failed to update
+                  </div>
+                </div> 
+                <div className={this.state.stats.success ? "statusLarge" : "hidden"}>
+                <img src="assets/img/largeSuccess.png" />
+                  <div className="statusWrapper">
+                    <b className="green"><span className={this.state.stats.success === deviceList.length ? null : "hidden"}>All </span>{this.state.stats.success}</b> {pluralize("devices", this.state.stats.success)} updated successfully
+                  </div>
+                </div>
+                
+              </div>
+
+              <div className="hidden" style={{width:"240px", height:"auto", margin:"30px 0 30px 30px", display:"inline-block", verticalAlign:"top"}}>
+                <Checkbox
+                  label="Show only failures"
+                  onCheck={this._handleCheckbox}/>
               </div>
             </div>
-            
-          </div>
+
+          :
+            <div className="inline">
+              <div className="progressStatus">
+                <div id="progressStatus">
+                  <h3 style={{marginTop:"12px"}}>{this.state.finished ? "Finished" : "In progress"}</h3>
+                  <h2><FontIcon className="material-icons" style={{margin:"0 10px 0 -10px",color:"#ACD4D0", verticalAlign:"text-top"}}>timelapse</FontIcon>{this.state.elapsed}</h2>
+                  <div>Started: <Time value={this._formatTime(this.props.deployment.created)} format="YYYY-MM-DD HH:mm" /></div>
+                </div>
+                <div className="inline-block">
+                  <DeploymentStatus setFinished={this._setFinished} refresh={true} vertical={true} id={this.props.deployment.id} />
+                </div>
+              </div>
+
+              <div className="hidden" style={{width:"240px", height:"auto", margin:"30px 0 30px 30px", display:"inline-block", verticalAlign:"top"}}>
+                <Checkbox
+                  label={checkboxLabel}
+                  onCheck={this._handleCheckbox}
+                />
+                <p style={{marginLeft:"40px"}} className={(this.state.deviceCount - allDevices.length) ? "info" : "hidden"}>
+                  {(this.state.deviceCount - allDevices.length)} devices pending
+                </p>
+              </div>
+            </div>
+          }
+          
         </div>
 
-        <Checkbox
-          defaultChecked={this.state.stats.failure>0}
-          label="Show only failures"
-          checked={this.state.failsOnly}
-          onCheck={this._handleCheckbox}
-          className={this.state.stats.failure ? null : "hidden"} />
-    
 
         <div style={{minHeight:"20vh"}}>
-          <Table
-            className={deviceList.length ? null : "hidden"}
-            selectable={false}>
-            <TableHeader
-              displaySelectAll={false}
-              adjustForCheckbox={false}>
-              <TableRow>
-                <TableHeaderColumn tooltip="Device name">Device name</TableHeaderColumn>
-                <TableHeaderColumn tooltip="Device type">Device type</TableHeaderColumn>
-                <TableHeaderColumn tooltip="Current software">Current software</TableHeaderColumn>
-                <TableHeaderColumn tooltip="Started">Started</TableHeaderColumn>
-                <TableHeaderColumn tooltip="Finished">Finished</TableHeaderColumn>
-                <TableHeaderColumn tooltip="Deployment status">Deployment status</TableHeaderColumn>
-                <TableHeaderColumn tooltip=""></TableHeaderColumn>
-              </TableRow>
-            </TableHeader>
-            <TableBody
-              displayRowCheckbox={false}>
-              {deviceList}
-            </TableBody>
-          </Table>
+          <DeviceList devices={deviceList} deviceArtifacts={this.state.deviceArtifacts} viewLog={this.viewLog} finished={this.updatedList} past={this.props.past} />
+          {allDevices.length ? <Pagination simple pageSize={this.state.perPage} current={this.state.currentPage || 1} total={allDevices.length} onChange={this._handlePageChange} /> : null }
         </div>
-
 
         <Dialog
           title="Deployment log for device"
@@ -226,9 +285,10 @@ var Report = React.createClass({
           </div>
           <p style={{marginLeft:"24px"}}>{this.state.copied ? <span className="green fadeIn">Copied to clipboard.</span> : null}</p>
         </Dialog>
+
       </div>
     );
   }
 });
 
-module.exports = Report;
+module.exports = DeploymentReport;
