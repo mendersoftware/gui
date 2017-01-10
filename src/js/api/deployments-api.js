@@ -11,7 +11,7 @@ var Api = {
         .authBearer(token)
         .end(function (err, res) {
           if (err || !res.ok) {
-            reject();
+            reject(err);
           } else {
             resolve(res.body);
           }
@@ -27,7 +27,7 @@ var Api = {
         .set('Content-Type', 'application/text')
         .end(function (err, res) {
           if (err || !res.ok) {
-            reject();
+            reject(err);
           } else {
             resolve(res.text);
           }
@@ -44,9 +44,26 @@ var Api = {
         .send(data)
         .end(function (err, res) {
           if (err || !res.ok) {
-            reject();
+            reject(err);
           } else {
             resolve(res.header);
+          }
+        });
+    });
+  },
+  put: function(url, data) {
+    var token = LocalStore.getStorageItem("JWT");
+    return new Promise(function (resolve, reject) {
+      request
+        .put(url)
+        .authBearer(token)
+        .set('Content-Type', 'application/json')
+        .send(data)
+        .end(function (err, res) {
+          if (err || !res.ok) {
+            reject(err);
+          } else {
+            resolve(res.body);
           }
         });
     });

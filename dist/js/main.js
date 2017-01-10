@@ -86847,12 +86847,11 @@ var AppActions = {
       callback(data);
     });
   },
-
-  saveSchedule: function saveSchedule(schedule, single) {
-    AppDispatcher.handleViewAction({
-      actionType: AppConstants.SAVE_SCHEDULE,
-      schedule: schedule,
-      single: single
+  abortDeployment: function abortDeployment(deploymentId, callback) {
+    DeploymentsApi.put(deploymentsApiUrl + '/deployments/' + deploymentId + '/status', { status: "aborted" }).then(function (data) {
+      callback.success(data);
+    }).catch(function (err) {
+      callback.error(err);
     });
   },
 
@@ -86963,7 +86962,7 @@ var Api = {
     return new Promise(function (resolve, reject) {
       request.get(url).authBearer(token).end(function (err, res) {
         if (err || !res.ok) {
-          reject();
+          reject(err);
         } else {
           resolve(res.body);
         }
@@ -86975,7 +86974,7 @@ var Api = {
     return new Promise(function (resolve, reject) {
       request.get(url).authBearer(token).set('Content-Type', 'application/text').end(function (err, res) {
         if (err || !res.ok) {
-          reject();
+          reject(err);
         } else {
           resolve(res.text);
         }
@@ -86987,9 +86986,21 @@ var Api = {
     return new Promise(function (resolve, reject) {
       request.post(url).authBearer(token).set('Content-Type', 'application/json').send(data).end(function (err, res) {
         if (err || !res.ok) {
-          reject();
+          reject(err);
         } else {
           resolve(res.header);
+        }
+      });
+    });
+  },
+  put: function put(url, data) {
+    var token = LocalStore.getStorageItem("JWT");
+    return new Promise(function (resolve, reject) {
+      request.put(url).authBearer(token).set('Content-Type', 'application/json').send(data).end(function (err, res) {
+        if (err || !res.ok) {
+          reject(err);
+        } else {
+          resolve(res.body);
         }
       });
     });
@@ -90249,6 +90260,22 @@ var Deployments = _react2.default.createClass({
     var deployment = this.state.progress[rowNumber];
     this._showReport(deployment, true);
   },
+  _abortDeployment: function _abortDeployment(id) {
+    var self = this;
+    var callback = {
+      success: function success(data) {
+        self.setState({ doneLoading: false });
+        clearInterval(self.timer);
+        self.timer = setInterval(self._refreshDeployments, 10000);
+        self._refreshDeployments();
+      },
+      error: function error(err) {
+        console.log(err);
+        AppActions.setSnackbar("There was wan error while aborting the deployment: " + err);
+      }
+    };
+    AppActions.abortDeployment(id, callback);
+  },
   updated: function updated() {
     // use to make sure re-renders dialog at correct height when device list built
     this.setState({ updated: true });
@@ -90290,7 +90317,7 @@ var Deployments = _react2.default.createClass({
       _react2.default.createElement(
         'div',
         { style: { paddingTop: "3px" } },
-        _react2.default.createElement(Pending, { pending: this.state.pending }),
+        _react2.default.createElement(Pending, { pending: this.state.pending, abort: this._abortDeployment }),
         _react2.default.createElement(Progress, { loading: !this.state.doneLoading, openReport: this._showProgress, progress: this.state.progress, createClick: this.dialogOpen.bind(null, "schedule") }),
         _react2.default.createElement(Past, { loading: !this.state.doneLoading, past: this.state.past, showReport: this._showReport })
       ),
@@ -90946,6 +90973,10 @@ var _reactTime2 = _interopRequireDefault(_reactTime);
 
 var _Table = require('material-ui/Table');
 
+var _FlatButton = require('material-ui/FlatButton');
+
+var _FlatButton2 = _interopRequireDefault(_FlatButton);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var GroupDevices = require('./groupdevices');
@@ -90961,6 +90992,9 @@ var Pending = _react2.default.createClass({
       return date.replace(' ', 'T').replace(/ /g, '').replace('UTC', '');
     }
     return;
+  },
+  _abortHandler: function _abortHandler(id) {
+    this.props.abort(id);
   },
   render: function render() {
     var pendingMap = this.props.pending.map(function (deployment, index) {
@@ -90991,8 +91025,13 @@ var Pending = _react2.default.createClass({
         ),
         _react2.default.createElement(
           _Table.TableRowColumn,
-          { style: { overflow: "visible" } },
+          null,
           deployment.status
+        ),
+        _react2.default.createElement(
+          _Table.TableRowColumn,
+          { style: { width: "126px" } },
+          _react2.default.createElement(_FlatButton2.default, { label: 'Abort', secondary: true, onClick: this._abortHandler.bind(null, deployment.id) })
         )
       );
     }, this);
@@ -91048,7 +91087,8 @@ var Pending = _react2.default.createClass({
                 _Table.TableHeaderColumn,
                 null,
                 'Status'
-              )
+              ),
+              _react2.default.createElement(_Table.TableHeaderColumn, { style: { width: "126px" } })
             )
           ),
           _react2.default.createElement(
@@ -91066,7 +91106,7 @@ var Pending = _react2.default.createClass({
 
 module.exports = Pending;
 
-},{"./groupdevices":785,"material-ui/Table":297,"react":657,"react-time":624}],789:[function(require,module,exports){
+},{"./groupdevices":785,"material-ui/FlatButton":236,"material-ui/Table":297,"react":657,"react-time":624}],789:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');

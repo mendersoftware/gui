@@ -55,7 +55,7 @@ var ProgressDeviceList = React.createClass({
             <TableRowColumn>{device.device_type}</TableRowColumn>
             <TableRowColumn>{currentArtifactLink}</TableRowColumn>
             <TableRowColumn><Time value={this._formatTime(device.created)} format="YYYY-MM-DD HH:mm" /></TableRowColumn>
-            {device.finished ? <TableRowColumn><Time value={this._formatTime(device.finished)} format="YYYY-MM-DD HH:mm" /></TableRowColumn> : null}
+            {device.finished  ? <TableRowColumn><Time value={this._formatTime(device.finished)} format="YYYY-MM-DD HH:mm" /></TableRowColumn> : null}
             <TableRowColumn>{device.status || "--"}</TableRowColumn>
             <TableRowColumn><FlatButton className={device.status==='failure' ? null : "hidden"} onClick={this.props.viewLog.bind(null, device.id)} label="View log" /></TableRowColumn>
           </TableRow>
