@@ -320,6 +320,22 @@ var Deployments = React.createClass({
     var deployment = this.state.progress[rowNumber];
     this._showReport(deployment, true);
   },
+  _abortDeployment: function(id) {
+    var self = this;
+    var callback = {
+      success: function(data) {
+        self.setState({doneLoading:false});
+        clearInterval(self.timer);
+        self.timer = setInterval(self._refreshDeployments, 10000);
+        self._refreshDeployments();
+      },
+      error: function(err) {
+        console.log(err);
+        AppActions.setSnackbar("There was wan error while aborting the deployment: "+err);
+      }
+    };
+    AppActions.abortDeployment(id, callback);
+  },
   updated: function() {
     // use to make sure re-renders dialog at correct height when device list built
     this.setState({updated:true});
@@ -366,7 +382,7 @@ var Deployments = React.createClass({
         </div>
 
         <div style={{paddingTop:"3px"}}>
-          <Pending pending={this.state.pending} />
+          <Pending pending={this.state.pending} abort={this._abortDeployment} />
 
           <Progress loading={!this.state.doneLoading} openReport={this._showProgress} progress={this.state.progress} createClick={this.dialogOpen.bind(null, "schedule")}/>
 

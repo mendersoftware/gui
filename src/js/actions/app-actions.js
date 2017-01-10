@@ -445,15 +445,16 @@ var AppActions = {
         callback(data);
       });
   },
-     
-  saveSchedule: function(schedule, single) {
-    AppDispatcher.handleViewAction({
-      actionType: AppConstants.SAVE_SCHEDULE,
-      schedule: schedule,
-      single: single
-    })
+  abortDeployment: function(deploymentId, callback) {
+    DeploymentsApi
+      .put(deploymentsApiUrl+'/deployments/'+deploymentId +'/status', {status: "aborted"})
+      .then(function(data) {
+        callback.success(data);
+      })
+      .catch(function(err) {
+        callback.error(err);
+      });
   },
-
 
 
 

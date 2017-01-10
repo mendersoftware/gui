@@ -4,7 +4,7 @@ var GroupDevices = require('./groupdevices');
 
 // material ui
 import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
-
+import FlatButton from 'material-ui/FlatButton';
 
 var Pending = React.createClass({
   _formatTime: function(date) {
@@ -12,6 +12,9 @@ var Pending = React.createClass({
       return date.replace(' ','T').replace(/ /g, '').replace('UTC','');
     }
     return;
+  },
+  _abortHandler: function(id) {
+    this.props.abort(id);
   },
   render: function() {
     var pendingMap = this.props.pending.map(function(deployment, index) {
@@ -23,7 +26,8 @@ var Pending = React.createClass({
           <TableRowColumn>{deployment.name}</TableRowColumn>
           <TableRowColumn><Time value={this._formatTime(deployment.created)} format="YYYY-MM-DD HH:mm" /></TableRowColumn>
           <TableRowColumn style={{textAlign:"right", width:"100px"}}><GroupDevices deployment={deployment.id} /></TableRowColumn>
-          <TableRowColumn style={{overflow:"visible"}}>{deployment.status}</TableRowColumn>
+          <TableRowColumn>{deployment.status}</TableRowColumn>
+          <TableRowColumn style={{width:"126px"}}><FlatButton label="Abort" secondary={true} onClick={this._abortHandler.bind(null, deployment.id)} /></TableRowColumn>
         </TableRow>
       )
     }, this);
@@ -47,6 +51,7 @@ var Pending = React.createClass({
                 <TableHeaderColumn>Created</TableHeaderColumn>
                 <TableHeaderColumn style={{textAlign:"right", width:"100px"}}># Devices</TableHeaderColumn>
                 <TableHeaderColumn>Status</TableHeaderColumn>
+                <TableHeaderColumn style={{width:"126px"}}></TableHeaderColumn>
               </TableRow>
             </TableHeader>
             <TableBody
