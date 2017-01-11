@@ -90828,7 +90828,9 @@ var Past = _react2.default.createClass({
     };
   },
   _pastCellClick: function _pastCellClick(rowNumber, columnId) {
-    var report = this.props.past[rowNumber];
+    // adjust index to allow for client side pagination
+    var index = (this.state.currentPage - 1) * this.state.pageSize + rowNumber;
+    var report = this.props.past[index];
     this.props.showReport(report);
   },
   _formatTime: function _formatTime(date) {
