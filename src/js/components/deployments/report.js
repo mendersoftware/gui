@@ -270,7 +270,7 @@ var DeploymentReport = React.createClass({
 
 
         <div style={{minHeight:"20vh"}}>
-          <DeviceList devices={deviceList} deviceArtifacts={this.state.deviceArtifacts} viewLog={this.viewLog} finished={this.updatedList} past={this.props.past} />
+          <DeviceList status={this.props.deployment.status} devices={deviceList} deviceArtifacts={this.state.deviceArtifacts} viewLog={this.viewLog} finished={this.updatedList} past={this.props.past} />
           {allDevices.length ? <Pagination simple pageSize={this.state.perPage} current={this.state.currentPage || 1} total={allDevices.length} onChange={this._handlePageChange} /> : null }
         </div>
 

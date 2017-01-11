@@ -89796,6 +89796,11 @@ var ProgressDeviceList = _react2.default.createClass({
     if (this.props.devices) {
       deviceList = this.props.devices.map(function (device, index) {
 
+        var time = "-";
+        if (device.finished) {
+          time = _react2.default.createElement(_reactTime2.default, { value: this._formatTime(device.finished), format: 'YYYY-MM-DD HH:mm' });
+        }
+
         var encodedDevice = encodeURIComponent("id=" + device.id);
         var deviceLink = _react2.default.createElement(
           'div',
@@ -89841,11 +89846,11 @@ var ProgressDeviceList = _react2.default.createClass({
             null,
             _react2.default.createElement(_reactTime2.default, { value: this._formatTime(device.created), format: 'YYYY-MM-DD HH:mm' })
           ),
-          device.finished ? _react2.default.createElement(
+          _react2.default.createElement(
             _Table.TableRowColumn,
             null,
-            _react2.default.createElement(_reactTime2.default, { value: this._formatTime(device.finished), format: 'YYYY-MM-DD HH:mm' })
-          ) : null,
+            time
+          ),
           _react2.default.createElement(
             _Table.TableRowColumn,
             null,
@@ -89893,11 +89898,11 @@ var ProgressDeviceList = _react2.default.createClass({
             { tooltip: 'Started' },
             'Started'
           ),
-          this.props.past ? _react2.default.createElement(
+          _react2.default.createElement(
             _Table.TableHeaderColumn,
             { tooltip: 'Finished' },
             'Finished'
-          ) : null,
+          ),
           _react2.default.createElement(
             _Table.TableHeaderColumn,
             { tooltip: 'Deployment status' },
@@ -91706,7 +91711,7 @@ var DeploymentReport = _react2.default.createClass({
       _react2.default.createElement(
         'div',
         { style: { minHeight: "20vh" } },
-        _react2.default.createElement(DeviceList, { devices: deviceList, deviceArtifacts: this.state.deviceArtifacts, viewLog: this.viewLog, finished: this.updatedList, past: this.props.past }),
+        _react2.default.createElement(DeviceList, { status: this.props.deployment.status, devices: deviceList, deviceArtifacts: this.state.deviceArtifacts, viewLog: this.viewLog, finished: this.updatedList, past: this.props.past }),
         allDevices.length ? _react2.default.createElement(Pagination, { simple: true, pageSize: this.state.perPage, current: this.state.currentPage || 1, total: allDevices.length, onChange: this._handlePageChange }) : null
       ),
       _react2.default.createElement(
