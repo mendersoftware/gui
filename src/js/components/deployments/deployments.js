@@ -327,6 +327,7 @@ var Deployments = React.createClass({
         clearInterval(self.timer);
         self.timer = setInterval(self._refreshDeployments, 10000);
         self._refreshDeployments();
+        AppActions.setSnackbar("The deployment was successfully aborted");
       },
       error: function(err) {
         console.log(err);
