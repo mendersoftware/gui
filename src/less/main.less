@@ -206,6 +206,9 @@ a, span.link {
 .fadeIn {
   .animation(fadein 0.2s 1);
 }
+.fadeOut {
+  .animation(fadeout 0.2s 1);
+}
 
 
 /* Header */
@@ -1442,6 +1445,14 @@ span.month, span.day {
   }
   100% {
     opacity: 1;
+  }
+} 
+@keyframes fadeout {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
   }
 } 
 

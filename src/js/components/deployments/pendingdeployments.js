@@ -1,12 +1,19 @@
 import React from 'react';
 import Time from 'react-time';
 var GroupDevices = require('./groupdevices');
+import BlockIcon from 'react-material-icons/icons/content/block';
+var ConfirmAbort = require('./confirmabort');
 
 // material ui
 import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
 import FlatButton from 'material-ui/FlatButton';
 
 var Pending = React.createClass({
+  getInitialState: function() {
+    return {
+      abort: null 
+    };
+  },
   _formatTime: function(date) {
     if (date) {
       return date.replace(' ','T').replace(/ /g, '').replace('UTC','');
@@ -16,18 +23,37 @@ var Pending = React.createClass({
   _abortHandler: function(id) {
     this.props.abort(id);
   },
+  _hideConfirm: function() {
+    var self = this;
+    setTimeout(function() {
+      self.setState({abort:null});
+    }, 200);
+  },
+  _showConfirm: function(id) {
+    this.setState({abort:id});
+  },
   render: function() {
     var pendingMap = this.props.pending.map(function(deployment, index) {
+      var abort = (
+        <FlatButton label="Abort" secondary={true} onClick={this._showConfirm.bind(null, deployment.id)} icon={<BlockIcon style={{height:"18px", width:"18px", verticalAlign:"middle"}}/>}/>
+      );
+      if (this.state.abort === deployment.id) {
+        abort = (
+          <ConfirmAbort cancel={this._hideConfirm.bind(null, deployment.id)} abort={this._abortHandler.bind(null, deployment.id)} />
+        );
+      }
+
       //  get statistics
-     
       return (
         <TableRow key={index}>
           <TableRowColumn>{deployment.artifact_name}</TableRowColumn>
           <TableRowColumn>{deployment.name}</TableRowColumn>
           <TableRowColumn><Time value={this._formatTime(deployment.created)} format="YYYY-MM-DD HH:mm" /></TableRowColumn>
           <TableRowColumn style={{textAlign:"right", width:"100px"}}><GroupDevices deployment={deployment.id} /></TableRowColumn>
-          <TableRowColumn>{deployment.status}</TableRowColumn>
-          <TableRowColumn style={{width:"126px"}}><FlatButton label="Abort" secondary={true} onClick={this._abortHandler.bind(null, deployment.id)} /></TableRowColumn>
+          <TableRowColumn style={{width:"126px"}}>{deployment.status}</TableRowColumn>
+          <TableRowColumn>
+            <div className="float-right">{abort}</div>
+          </TableRowColumn>
         </TableRow>
       )
     }, this);
@@ -50,8 +76,8 @@ var Pending = React.createClass({
                 <TableHeaderColumn>Group</TableHeaderColumn>
                 <TableHeaderColumn>Created</TableHeaderColumn>
                 <TableHeaderColumn style={{textAlign:"right", width:"100px"}}># Devices</TableHeaderColumn>
-                <TableHeaderColumn>Status</TableHeaderColumn>
-                <TableHeaderColumn style={{width:"126px"}}></TableHeaderColumn>
+                <TableHeaderColumn style={{width:"126px"}}>Status</TableHeaderColumn>
+                <TableHeaderColumn></TableHeaderColumn>
               </TableRow>
             </TableHeader>
             <TableBody

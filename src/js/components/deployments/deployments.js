@@ -7,7 +7,6 @@ var Progress = require('./inprogressdeployments.js');
 var Past = require('./pastdeployments.js');
 var Report = require('./report.js');
 var Schedule = require('./schedule.js');
-var EventLog = require('./eventlog.js');
 var ScheduleForm = require('./scheduleform.js');
 var ScheduleButton = require('./schedulebutton.js');
 
@@ -328,6 +327,7 @@ var Deployments = React.createClass({
         clearInterval(self.timer);
         self.timer = setInterval(self._refreshDeployments, 10000);
         self._refreshDeployments();
+        AppActions.setSnackbar("The deployment was successfully aborted");
       },
       error: function(err) {
         console.log(err);

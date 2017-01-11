@@ -258,6 +258,12 @@ span.link.small {
   -ms-animation: fadein 0.2s 1;
   -o-animation: fadein 0.2s 1;
 }
+.fadeOut {
+  -webkit-animation: fadeout 0.2s 1;
+  -moz-animation: fadeout 0.2s 1;
+  -ms-animation: fadeout 0.2s 1;
+  -o-animation: fadeout 0.2s 1;
+}
 /* Header */
 #header-nav {
   position: relative;
@@ -1414,6 +1420,22 @@ span.day {
   }
   100% {
     opacity: 1;
+  }
+}
+@-webkit-keyframes fadeout {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes fadeout {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
   }
 }
 @-webkit-keyframes pulse {
