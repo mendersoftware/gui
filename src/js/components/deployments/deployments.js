@@ -7,7 +7,6 @@ var Progress = require('./inprogressdeployments.js');
 var Past = require('./pastdeployments.js');
 var Report = require('./report.js');
 var Schedule = require('./schedule.js');
-var EventLog = require('./eventlog.js');
 var ScheduleForm = require('./scheduleform.js');
 var ScheduleButton = require('./schedulebutton.js');
 

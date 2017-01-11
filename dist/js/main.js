@@ -86897,7 +86897,7 @@ var AppActions = {
 
 module.exports = AppActions;
 
-},{"../api/artifacts-api":757,"../api/deployments-api":758,"../api/devices-api":759,"../api/users-api":760,"../constants/app-constants":804,"../dispatchers/app-dispatcher":805,"parse-link-header":385}],757:[function(require,module,exports){
+},{"../api/artifacts-api":757,"../api/deployments-api":758,"../api/devices-api":759,"../api/users-api":760,"../constants/app-constants":803,"../dispatchers/app-dispatcher":804,"parse-link-header":385}],757:[function(require,module,exports){
 'use strict';
 
 var request = require('superagent');
@@ -86949,7 +86949,7 @@ var Api = {
 
 module.exports = Api;
 
-},{"../stores/local-store":808,"es6-promise":118,"superagent":673}],758:[function(require,module,exports){
+},{"../stores/local-store":807,"es6-promise":118,"superagent":673}],758:[function(require,module,exports){
 'use strict';
 
 var request = require('superagent');
@@ -87010,7 +87010,7 @@ var Api = {
 
 module.exports = Api;
 
-},{"../stores/local-store":808,"es6-promise":118,"superagent":673}],759:[function(require,module,exports){
+},{"../stores/local-store":807,"es6-promise":118,"superagent":673}],759:[function(require,module,exports){
 'use strict';
 
 var request = require('superagent');
@@ -87077,7 +87077,7 @@ var Api = {
 
 module.exports = Api;
 
-},{"../stores/local-store":808,"es6-promise":118,"superagent":673,"superagent-auth-bearer":672}],760:[function(require,module,exports){
+},{"../stores/local-store":807,"es6-promise":118,"superagent":673,"superagent-auth-bearer":672}],760:[function(require,module,exports){
 'use strict';
 
 var request = require('superagent');
@@ -87152,7 +87152,7 @@ module.exports = {
   }
 };
 
-},{"./stores/local-store":808}],762:[function(require,module,exports){
+},{"./stores/local-store":807}],762:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -87259,7 +87259,7 @@ var App = _react2.default.createClass({
 
 module.exports = App;
 
-},{"../themes/mender-theme.js":809,"./header/header":801,"material-ui/styles/getMuiTheme":348,"react":657,"react-joyride":549}],763:[function(require,module,exports){
+},{"../themes/mender-theme.js":808,"./header/header":800,"material-ui/styles/getMuiTheme":348,"react":657,"react-joyride":549}],763:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -87423,7 +87423,7 @@ var Artifacts = _react2.default.createClass({
 
 module.exports = Artifacts;
 
-},{"../../actions/app-actions":756,"../../stores/app-store":807,"../../stores/local-store":808,"./repository.js":765,"material-ui/Snackbar":279,"react":657,"react-router":593}],764:[function(require,module,exports){
+},{"../../actions/app-actions":756,"../../stores/app-store":806,"../../stores/local-store":807,"./repository.js":765,"material-ui/Snackbar":279,"react":657,"react-router":593}],764:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -87936,7 +87936,7 @@ Repository.contextTypes = {
 
 module.exports = Repository;
 
-},{"../../actions/app-actions":756,"../../stores/app-store":807,"../common/forms/fileinput":767,"../common/forms/form":768,"../common/forms/textinput":770,"../common/loader":771,"./deploymentbutton":764,"./selectedartifact":766,"material-ui/Dialog":227,"material-ui/FlatButton":236,"material-ui/FontIcon":240,"material-ui/IconButton":245,"material-ui/RaisedButton":270,"material-ui/Snackbar":279,"material-ui/Table":297,"material-ui/TextField":308,"react":657,"react-addons-update":405,"react-collapse":409,"react-dom":412,"react-height":548,"react-motion":561,"react-router":593,"react-search-input":617,"react-time":624}],766:[function(require,module,exports){
+},{"../../actions/app-actions":756,"../../stores/app-store":806,"../common/forms/fileinput":767,"../common/forms/form":768,"../common/forms/textinput":770,"../common/loader":771,"./deploymentbutton":764,"./selectedartifact":766,"material-ui/Dialog":227,"material-ui/FlatButton":236,"material-ui/FontIcon":240,"material-ui/IconButton":245,"material-ui/RaisedButton":270,"material-ui/Snackbar":279,"material-ui/Table":297,"material-ui/TextField":308,"react":657,"react-addons-update":405,"react-collapse":409,"react-dom":412,"react-height":548,"react-motion":561,"react-router":593,"react-search-input":617,"react-time":624}],766:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -89002,7 +89002,7 @@ Dashboard.contextTypes = {
 
 module.exports = Dashboard;
 
-},{"../../actions/app-actions":756,"../../stores/app-store":807,"../../stores/local-store":808,"./activity":773,"./deployments":775,"./health":776,"material-ui/RaisedButton":270,"material-ui/Snackbar":279,"react":657,"react-router":593}],775:[function(require,module,exports){
+},{"../../actions/app-actions":756,"../../stores/app-store":806,"../../stores/local-store":807,"./activity":773,"./deployments":775,"./health":776,"material-ui/RaisedButton":270,"material-ui/Snackbar":279,"react":657,"react-router":593}],775:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -89383,7 +89383,7 @@ Progress.contextTypes = {
 
 module.exports = Progress;
 
-},{"../common/loader":771,"../deployments/progressChart.js":789,"material-ui/Divider":229,"material-ui/FontIcon":240,"material-ui/List":253,"react":657,"react-router":593,"react-time":624}],778:[function(require,module,exports){
+},{"../common/loader":771,"../deployments/progressChart.js":788,"material-ui/Divider":229,"material-ui/FontIcon":240,"material-ui/List":253,"react":657,"react-router":593,"react-time":624}],778:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -89541,7 +89541,7 @@ Recent.contextTypes = {
 
 module.exports = Recent;
 
-},{"../../actions/app-actions":756,"../common/loader":771,"../deployments/groupdevices":785,"./recentstats":779,"material-ui/Divider":229,"material-ui/FontIcon":240,"react":657,"react-router":593,"react-time":624}],779:[function(require,module,exports){
+},{"../../actions/app-actions":756,"../common/loader":771,"../deployments/groupdevices":784,"./recentstats":779,"material-ui/Divider":229,"material-ui/FontIcon":240,"react":657,"react-router":593,"react-time":624}],779:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -89956,7 +89956,6 @@ var Progress = require('./inprogressdeployments.js');
 var Past = require('./pastdeployments.js');
 var Report = require('./report.js');
 var Schedule = require('./schedule.js');
-var EventLog = require('./eventlog.js');
 var ScheduleForm = require('./scheduleform.js');
 var ScheduleButton = require('./schedulebutton.js');
 
@@ -90354,7 +90353,7 @@ var Deployments = _react2.default.createClass({
 
 module.exports = Deployments;
 
-},{"../../actions/app-actions":756,"../../stores/app-store":807,"./eventlog.js":784,"./inprogressdeployments.js":786,"./pastdeployments.js":787,"./pendingdeployments.js":788,"./report.js":790,"./schedule.js":791,"./schedulebutton.js":792,"./scheduleform.js":793,"material-ui/Dialog":227,"material-ui/FlatButton":236,"material-ui/RaisedButton":270,"material-ui/Snackbar":279,"react":657}],783:[function(require,module,exports){
+},{"../../actions/app-actions":756,"../../stores/app-store":806,"./inprogressdeployments.js":785,"./pastdeployments.js":786,"./pendingdeployments.js":787,"./report.js":789,"./schedule.js":790,"./schedulebutton.js":791,"./scheduleform.js":792,"material-ui/Dialog":227,"material-ui/FlatButton":236,"material-ui/RaisedButton":270,"material-ui/Snackbar":279,"react":657}],783:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -90491,82 +90490,6 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
-var _Table = require('material-ui/Table');
-
-var _FlatButton = require('material-ui/FlatButton');
-
-var _FlatButton2 = _interopRequireDefault(_FlatButton);
-
-var _RaisedButton = require('material-ui/RaisedButton');
-
-var _RaisedButton2 = _interopRequireDefault(_RaisedButton);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var EventLog = _react2.default.createClass({
-  displayName: 'EventLog',
-
-  render: function render() {
-    return _react2.default.createElement(
-      'div',
-      null,
-      _react2.default.createElement(
-        'p',
-        { className: 'italic' },
-        '... Coming soon ...'
-      ),
-      _react2.default.createElement(
-        'div',
-        null,
-        _react2.default.createElement(_FlatButton2.default, { label: 'Flat neutral' }),
-        _react2.default.createElement('div', { style: { width: "20px", display: "inline-block" } }),
-        _react2.default.createElement(_FlatButton2.default, { label: 'Flat secondary', secondary: true }),
-        _react2.default.createElement('div', { style: { width: "20px", display: "inline-block" } }),
-        _react2.default.createElement(_FlatButton2.default, { label: 'Flat primary', primary: true })
-      ),
-      _react2.default.createElement(
-        'div',
-        null,
-        _react2.default.createElement(_FlatButton2.default, { label: 'Flat neutral' }),
-        _react2.default.createElement('div', { style: { width: "20px", display: "inline-block" } }),
-        _react2.default.createElement(_FlatButton2.default, { label: 'Flat secondary', secondary: true }),
-        _react2.default.createElement('div', { style: { width: "20px", display: "inline-block" } }),
-        _react2.default.createElement(_FlatButton2.default, { label: 'Flat primary', primary: true })
-      ),
-      _react2.default.createElement(
-        'div',
-        { className: 'margin-top' },
-        _react2.default.createElement(_RaisedButton2.default, { label: 'Raised neutral' }),
-        _react2.default.createElement('div', { style: { width: "20px", display: "inline-block" } }),
-        _react2.default.createElement(_RaisedButton2.default, { label: 'Raised secondary', secondary: true }),
-        _react2.default.createElement('div', { style: { width: "20px", display: "inline-block" } }),
-        _react2.default.createElement(_RaisedButton2.default, { label: 'Raised primary', primary: true })
-      ),
-      _react2.default.createElement(
-        'div',
-        { className: 'margin-top' },
-        _react2.default.createElement(_RaisedButton2.default, { label: 'Raised neutral' }),
-        _react2.default.createElement('div', { style: { width: "20px", display: "inline-block" } }),
-        _react2.default.createElement(_RaisedButton2.default, { label: 'Raised secondary', secondary: true }),
-        _react2.default.createElement('div', { style: { width: "20px", display: "inline-block" } }),
-        _react2.default.createElement(_RaisedButton2.default, { label: 'Raised primary', primary: true })
-      )
-    );
-  }
-});
-
-// material ui
-
-
-module.exports = EventLog;
-
-},{"material-ui/FlatButton":236,"material-ui/RaisedButton":270,"material-ui/Table":297,"react":657}],785:[function(require,module,exports){
-'use strict';
-
-var _react = require('react');
-
-var _react2 = _interopRequireDefault(_react);
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var AppActions = require('../../actions/app-actions');
@@ -90599,7 +90522,7 @@ var GroupDevices = _react2.default.createClass({
 
 module.exports = GroupDevices;
 
-},{"../../actions/app-actions":756,"react":657}],786:[function(require,module,exports){
+},{"../../actions/app-actions":756,"react":657}],785:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -90773,7 +90696,7 @@ var Progress = _react2.default.createClass({
 
 module.exports = Progress;
 
-},{"../common/loader":771,"./deploymentstatus":783,"./groupdevices":785,"./scheduleform":793,"material-ui/FlatButton":236,"material-ui/Table":297,"react":657,"react-addons-update":405,"react-time":624}],787:[function(require,module,exports){
+},{"../common/loader":771,"./deploymentstatus":783,"./groupdevices":784,"./scheduleform":792,"material-ui/FlatButton":236,"material-ui/Table":297,"react":657,"react-addons-update":405,"react-time":624}],786:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -90965,7 +90888,7 @@ var Past = _react2.default.createClass({
 
 module.exports = Past;
 
-},{"../common/loader":771,"./deploymentstatus":783,"./groupdevices":785,"./scheduleform":793,"material-ui/FlatButton":236,"material-ui/Table":297,"rc-pagination":400,"react":657,"react-time":624}],788:[function(require,module,exports){
+},{"../common/loader":771,"./deploymentstatus":783,"./groupdevices":784,"./scheduleform":792,"material-ui/FlatButton":236,"material-ui/Table":297,"rc-pagination":400,"react":657,"react-time":624}],787:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -91111,7 +91034,7 @@ var Pending = _react2.default.createClass({
 
 module.exports = Pending;
 
-},{"./groupdevices":785,"material-ui/FlatButton":236,"material-ui/Table":297,"react":657,"react-time":624}],789:[function(require,module,exports){
+},{"./groupdevices":784,"material-ui/FlatButton":236,"material-ui/Table":297,"react":657,"react-time":624}],788:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -91272,7 +91195,7 @@ ProgressChart.contextTypes = {
 
 module.exports = ProgressChart;
 
-},{"../../actions/app-actions":756,"../../stores/app-store":807,"react":657,"react-router":593}],790:[function(require,module,exports){
+},{"../../actions/app-actions":756,"../../stores/app-store":806,"react":657,"react-router":593}],789:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -91743,7 +91666,7 @@ var DeploymentReport = _react2.default.createClass({
 
 module.exports = DeploymentReport;
 
-},{"../../actions/app-actions":756,"../../stores/app-store":807,"./deploymentdevicelist":781,"./deploymentstatus":783,"lodash.differenceWith":184,"lodash.isequal":185,"material-ui/Checkbox":209,"material-ui/Dialog":227,"material-ui/FlatButton":236,"material-ui/FontIcon":240,"material-ui/RaisedButton":270,"pluralize":387,"rc-pagination":400,"react":657,"react-addons-update":405,"react-copy-to-clipboard":411,"react-router":593,"react-time":624}],791:[function(require,module,exports){
+},{"../../actions/app-actions":756,"../../stores/app-store":806,"./deploymentdevicelist":781,"./deploymentstatus":783,"lodash.differenceWith":184,"lodash.isequal":185,"material-ui/Checkbox":209,"material-ui/Dialog":227,"material-ui/FlatButton":236,"material-ui/FontIcon":240,"material-ui/RaisedButton":270,"pluralize":387,"rc-pagination":400,"react":657,"react-addons-update":405,"react-copy-to-clipboard":411,"react-router":593,"react-time":624}],790:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -91906,7 +91829,7 @@ var Schedule = _react2.default.createClass({
 
 module.exports = Schedule;
 
-},{"material-ui":326,"react":657,"react-time":624}],792:[function(require,module,exports){
+},{"material-ui":326,"react":657,"react-time":624}],791:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -91951,7 +91874,7 @@ var ScheduleButton = _react2.default.createClass({
 
 module.exports = ScheduleButton;
 
-},{"material-ui/FlatButton":236,"material-ui/RaisedButton":270,"react":657}],793:[function(require,module,exports){
+},{"material-ui/FlatButton":236,"material-ui/RaisedButton":270,"react":657}],792:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -92294,7 +92217,7 @@ var ScheduleForm = _react2.default.createClass({
 
 module.exports = ScheduleForm;
 
-},{"../../actions/app-actions":756,"../../stores/app-store":807,"material-ui/Divider":229,"material-ui/Drawer":231,"material-ui/FontIcon":240,"material-ui/IconButton":245,"material-ui/MenuItem":259,"material-ui/SelectField":274,"material-ui/TextField":308,"pluralize":387,"react":657,"react-router":593,"react-search-input":617}],794:[function(require,module,exports){
+},{"../../actions/app-actions":756,"../../stores/app-store":806,"material-ui/Divider":229,"material-ui/Drawer":231,"material-ui/FontIcon":240,"material-ui/IconButton":245,"material-ui/MenuItem":259,"material-ui/SelectField":274,"material-ui/TextField":308,"pluralize":387,"react":657,"react-router":593,"react-search-input":617}],793:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -93000,7 +92923,7 @@ var DeviceList = _react2.default.createClass({
 
 module.exports = DeviceList;
 
-},{"../../actions/app-actions":756,"../../stores/app-store":807,"./filters":797,"./selecteddevices":799,"material-ui/Dialog":227,"material-ui/FlatButton":236,"material-ui/FontIcon":240,"material-ui/IconButton":245,"material-ui/MenuItem":259,"material-ui/RaisedButton":270,"material-ui/SelectField":274,"material-ui/Snackbar":279,"material-ui/Table":297,"material-ui/TextField":308,"pluralize":387,"react":657,"react-collapse":409,"react-dom":412,"react-height":548,"react-motion":561,"react-time":624}],795:[function(require,module,exports){
+},{"../../actions/app-actions":756,"../../stores/app-store":806,"./filters":796,"./selecteddevices":798,"material-ui/Dialog":227,"material-ui/FlatButton":236,"material-ui/FontIcon":240,"material-ui/IconButton":245,"material-ui/MenuItem":259,"material-ui/RaisedButton":270,"material-ui/SelectField":274,"material-ui/Snackbar":279,"material-ui/Table":297,"material-ui/TextField":308,"pluralize":387,"react":657,"react-collapse":409,"react-dom":412,"react-height":548,"react-motion":561,"react-time":624}],794:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -93273,7 +93196,7 @@ var DevicePicker = _react2.default.createClass({
 
 module.exports = DevicePicker;
 
-},{"../../actions/app-actions":756,"../common/loader":771,"material-ui/Dialog":227,"material-ui/FlatButton":236,"material-ui/RaisedButton":270,"material-ui/Table":297,"material-ui/TextField":308,"react":657,"react-search-input":617}],796:[function(require,module,exports){
+},{"../../actions/app-actions":756,"../common/loader":771,"material-ui/Dialog":227,"material-ui/FlatButton":236,"material-ui/RaisedButton":270,"material-ui/Table":297,"material-ui/TextField":308,"react":657,"react-search-input":617}],795:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -93616,7 +93539,7 @@ Devices.contextTypes = {
 
 module.exports = Devices;
 
-},{"../../actions/app-actions":756,"../../stores/app-store":807,"../common/loader":771,"../common/prototype/Array.prototype.equals":772,"./devicelist":794,"./devicepicker":795,"./groups":798,"./unauthorized":800,"material-ui/Snackbar":279,"rc-pagination":400,"react":657,"react-addons-update":405,"react-router":593}],797:[function(require,module,exports){
+},{"../../actions/app-actions":756,"../../stores/app-store":806,"../common/loader":771,"../common/prototype/Array.prototype.equals":772,"./devicelist":793,"./devicepicker":794,"./groups":797,"./unauthorized":799,"material-ui/Snackbar":279,"rc-pagination":400,"react":657,"react-addons-update":405,"react-router":593}],796:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -93829,7 +93752,7 @@ var Filters = _react2.default.createClass({
 
 module.exports = Filters;
 
-},{"material-ui/Drawer":231,"material-ui/FlatButton":236,"material-ui/FontIcon":240,"material-ui/IconButton":245,"material-ui/MenuItem":259,"material-ui/SelectField":274,"material-ui/TextField":308,"react":657}],798:[function(require,module,exports){
+},{"material-ui/Drawer":231,"material-ui/FlatButton":236,"material-ui/FontIcon":240,"material-ui/IconButton":245,"material-ui/MenuItem":259,"material-ui/SelectField":274,"material-ui/TextField":308,"react":657}],797:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -93975,7 +93898,7 @@ var Groups = _react2.default.createClass({
 
 module.exports = Groups;
 
-},{"../../actions/app-actions":756,"../common/prototype/Array.prototype.equals":772,"material-ui/FlatButton":236,"material-ui/FontIcon":240,"material-ui/List":253,"material-ui/RaisedButton":270,"material-ui/Subheader":287,"react":657}],799:[function(require,module,exports){
+},{"../../actions/app-actions":756,"../common/prototype/Array.prototype.equals":772,"material-ui/FlatButton":236,"material-ui/FontIcon":240,"material-ui/List":253,"material-ui/RaisedButton":270,"material-ui/Subheader":287,"react":657}],798:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -94292,7 +94215,7 @@ var SelectedDevices = _react2.default.createClass({
 
 module.exports = SelectedDevices;
 
-},{"../../actions/app-actions":756,"../../stores/app-store":807,"../deployments/scheduleform":793,"material-ui/Dialog":227,"material-ui/Divider":229,"material-ui/FlatButton":236,"material-ui/FontIcon":240,"material-ui/IconButton":245,"material-ui/List":253,"material-ui/RaisedButton":270,"material-ui/TextField":308,"react":657,"react-collapse":409,"react-router":593,"react-time":624}],800:[function(require,module,exports){
+},{"../../actions/app-actions":756,"../../stores/app-store":806,"../deployments/scheduleform":792,"material-ui/Dialog":227,"material-ui/Divider":229,"material-ui/FlatButton":236,"material-ui/FontIcon":240,"material-ui/IconButton":245,"material-ui/List":253,"material-ui/RaisedButton":270,"material-ui/TextField":308,"react":657,"react-collapse":409,"react-router":593,"react-time":624}],799:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -94577,7 +94500,7 @@ var Authorized = _react2.default.createClass({
 
 module.exports = Authorized;
 
-},{"../../actions/app-actions":756,"./selecteddevices":799,"material-ui":326,"material-ui/FontIcon":240,"material-ui/IconButton":245,"material-ui/RaisedButton":270,"material-ui/Table":297,"react":657,"react-collapse":409,"react-dom":412,"react-height":548,"react-motion":561,"react-time":624}],801:[function(require,module,exports){
+},{"../../actions/app-actions":756,"./selecteddevices":798,"material-ui":326,"material-ui/FontIcon":240,"material-ui/IconButton":245,"material-ui/RaisedButton":270,"material-ui/Table":297,"react":657,"react-collapse":409,"react-dom":412,"react-height":548,"react-motion":561,"react-time":624}],800:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -94717,7 +94640,7 @@ Header.contextTypes = {
 
 module.exports = Header;
 
-},{"../../actions/app-actions":756,"material-ui/FontIcon":240,"material-ui/IconButton":245,"material-ui/IconMenu":247,"material-ui/MenuItem":259,"material-ui/Tabs":302,"material-ui/Toolbar":325,"react":657,"react-router":593}],802:[function(require,module,exports){
+},{"../../actions/app-actions":756,"material-ui/FontIcon":240,"material-ui/IconButton":245,"material-ui/IconMenu":247,"material-ui/MenuItem":259,"material-ui/Tabs":302,"material-ui/Toolbar":325,"react":657,"react-router":593}],801:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -94889,7 +94812,7 @@ Login.contextTypes = {
 
 module.exports = Login;
 
-},{"../../actions/app-actions":756,"../../stores/app-store":807,"../../stores/local-store":808,"../common/forms/form":768,"../common/forms/passwordinput":769,"../common/forms/textinput":770,"material-ui/Snackbar":279,"react":657,"react-router":593}],803:[function(require,module,exports){
+},{"../../actions/app-actions":756,"../../stores/app-store":806,"../../stores/local-store":807,"../common/forms/form":768,"../common/forms/passwordinput":769,"../common/forms/textinput":770,"material-ui/Snackbar":279,"react":657,"react-router":593}],802:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -94982,7 +94905,7 @@ module.exports = _react2.default.createElement(
   _react2.default.createElement(_reactRouter.Route, { path: '/login', component: _login2.default, onEnter: noRequireAuth })
 );
 
-},{"../auth":761,"../components/app":762,"../components/artifacts/artifacts":763,"../components/dashboard/dashboard":774,"../components/deployments/deployments":782,"../components/devices/devices":796,"../components/user-management/login":802,"react":657,"react-router":593}],804:[function(require,module,exports){
+},{"../auth":761,"../components/app":762,"../components/artifacts/artifacts":763,"../components/dashboard/dashboard":774,"../components/deployments/deployments":782,"../components/devices/devices":795,"../components/user-management/login":801,"react":657,"react-router":593}],803:[function(require,module,exports){
 'use strict';
 
 module.exports = {
@@ -95013,7 +94936,7 @@ module.exports = {
   SET_SNACKBAR: 'SET_SNACKBAR'
 };
 
-},{}],805:[function(require,module,exports){
+},{}],804:[function(require,module,exports){
 'use strict';
 
 var Dispatcher = require('flux').Dispatcher;
@@ -95031,7 +94954,7 @@ var AppDispatcher = assign(new Dispatcher(), {
 
 module.exports = AppDispatcher;
 
-},{"flux":144,"object-assign":384}],806:[function(require,module,exports){
+},{"flux":144,"object-assign":384}],805:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -95062,7 +94985,7 @@ var routes = require('./config/routes');
   routes
 ), document.getElementById('main'));
 
-},{"./config/routes":803,"react":657,"react-dom":412,"react-router":593,"react-tap-event-plugin":622}],807:[function(require,module,exports){
+},{"./config/routes":802,"react":657,"react-dom":412,"react-router":593,"react-tap-event-plugin":622}],806:[function(require,module,exports){
 'use strict';
 
 var AppDispatcher = require('../dispatchers/app-dispatcher');
@@ -95796,7 +95719,7 @@ var AppStore = assign(EventEmitter.prototype, {
 
 module.exports = AppStore;
 
-},{"../constants/app-constants":804,"../dispatchers/app-dispatcher":805,"events":119,"object-assign":384}],808:[function(require,module,exports){
+},{"../constants/app-constants":803,"../dispatchers/app-dispatcher":804,"events":119,"object-assign":384}],807:[function(require,module,exports){
 'use strict';
 
 /*
@@ -95851,7 +95774,7 @@ var LocalStore = assign(EventEmitter.prototype, {
 
 module.exports = LocalStore;
 
-},{"../constants/app-constants":804,"../dispatchers/app-dispatcher":805,"events":119,"object-assign":384}],809:[function(require,module,exports){
+},{"../constants/app-constants":803,"../dispatchers/app-dispatcher":804,"events":119,"object-assign":384}],808:[function(require,module,exports){
 'use strict';
 
 var _colorManipulator = require('material-ui/utils/colorManipulator');
@@ -95881,4 +95804,4 @@ module.exports = {
   }
 };
 
-},{"material-ui/styles/colors":347,"material-ui/styles/spacing":349,"material-ui/utils/colorManipulator":374}]},{},[806]);
+},{"material-ui/styles/colors":347,"material-ui/styles/spacing":349,"material-ui/utils/colorManipulator":374}]},{},[805]);
