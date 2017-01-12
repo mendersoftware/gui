@@ -11,6 +11,8 @@ var pluralize = require('pluralize')
 import update from 'react-addons-update';
 var isEqual = require('lodash.isequal');
 var differenceWith = require('lodash.differenceWith');
+import BlockIcon from 'react-material-icons/icons/content/block';
+var ConfirmAbort = require('./confirmabort');
 
 // material ui
 import FlatButton from 'material-ui/FlatButton';
@@ -33,6 +35,7 @@ var DeploymentReport = React.createClass({
       perPage: 50,
       deviceCount: 0,
       showPending: true,
+      abort: false
     };
   },
   componentDidMount: function() {
@@ -175,6 +178,18 @@ var DeploymentReport = React.createClass({
     // use to make sure parent re-renders dialog when device list built
     this.props.updated();
   },
+  _abortHandler: function() {
+    this.props.abort(this.props.deployment.id);
+  },
+  _hideConfirm: function() {
+    var self = this;
+    setTimeout(function() {
+      self.setState({abort:false});
+    }, 150);
+  },
+  _showConfirm: function() {
+    this.setState({abort:true});
+  },
   render: function () {
     var deviceList = this.state.pagedDevices || [];
     var allDevices = this.state.allDevices || [];
@@ -201,6 +216,17 @@ var DeploymentReport = React.createClass({
         primary={true}
         onClick={this.exportLog}/>
     ];
+
+    var abort = (
+      <div className="float-right">
+        <FlatButton label="Abort" secondary={true} onClick={this._showConfirm} icon={<BlockIcon style={{height:"18px", width:"18px", verticalAlign:"middle"}}/>}/>
+      </div>
+    );
+    if (this.state.abort) {
+      abort = (
+        <ConfirmAbort cancel={this._hideConfirm} abort={this._abortHandler} />
+      );
+    }
 
     return (
       <div>
@@ -262,6 +288,10 @@ var DeploymentReport = React.createClass({
                 <p style={{marginLeft:"40px"}} className={(this.state.deviceCount - allDevices.length) ? "info" : "hidden"}>
                   {(this.state.deviceCount - allDevices.length)} devices pending
                 </p>
+              </div>
+
+              <div id="reportAbort">
+                {abort}
               </div>
             </div>
           }

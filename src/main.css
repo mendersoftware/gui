@@ -690,6 +690,12 @@ div.code {
   white-space: pre-line;
   font-size: 14px;
 }
+#reportAbort {
+  position: absolute;
+  top: 85px;
+  right: 45px;
+  width: 30%;
+}
 /* Forms and inputs*/
 .inputGroup {
   padding: 12px;
