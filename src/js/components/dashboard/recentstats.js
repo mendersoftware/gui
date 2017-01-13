@@ -18,12 +18,12 @@ var RecentStats = React.createClass({
     }.bind(this));
   },
   render: function() {
-    var failures = this.state.stats.failure;
+    var skipped = (this.state.stats.noartifact + this.state.stats["already-installed"]);
     return (
       <div className="deploymentStats">
         <div className="resultIcons">
           <img className={this.state.stats.failure ? "alert" : null} src="assets/img/largeFail.png" />
-          <div>{failures}</div>
+          <div>{this.state.stats.failure}</div>
           <span className="iconStatLabel">Failed</span>
         </div>
         <div className="resultIcons">
@@ -31,9 +31,12 @@ var RecentStats = React.createClass({
           <div>{this.state.stats.success}</div>
           <span className="iconStatLabel">Successful</span>
         </div>
-        <div className={this.state.stats.noartifact ? "skipped-text" : "hidden"}>
-          {this.state.stats.noartifact} {pluralize("devices", this.state.stats.noartifact)} {pluralize("was", this.state.stats.noartifact)} skipped
-        </div>
+        {this.state.stats.noartifact || this.state.stats["already-installed"] ?
+          (
+            <div className="skipped-text">
+             {skipped} {pluralize("devices", skipped)} {pluralize("was", skipped)} skipped
+            </div>
+        ) : null }
       </div>
     );
   }

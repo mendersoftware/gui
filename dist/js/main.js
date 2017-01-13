@@ -89594,7 +89594,7 @@ var RecentStats = _react2.default.createClass({
     }.bind(this));
   },
   render: function render() {
-    var failures = this.state.stats.failure;
+    var skipped = this.state.stats.noartifact + this.state.stats["already-installed"];
     return _react2.default.createElement(
       'div',
       { className: 'deploymentStats' },
@@ -89605,7 +89605,7 @@ var RecentStats = _react2.default.createClass({
         _react2.default.createElement(
           'div',
           null,
-          failures
+          this.state.stats.failure
         ),
         _react2.default.createElement(
           'span',
@@ -89628,16 +89628,16 @@ var RecentStats = _react2.default.createClass({
           'Successful'
         )
       ),
-      _react2.default.createElement(
+      this.state.stats.noartifact || this.state.stats["already-installed"] ? _react2.default.createElement(
         'div',
-        { className: this.state.stats.noartifact ? "skipped-text" : "hidden" },
-        this.state.stats.noartifact,
+        { className: 'skipped-text' },
+        skipped,
         ' ',
-        pluralize("devices", this.state.stats.noartifact),
+        pluralize("devices", skipped),
         ' ',
-        pluralize("was", this.state.stats.noartifact),
+        pluralize("was", skipped),
         ' skipped'
-      )
+      ) : null
     );
   }
 });
