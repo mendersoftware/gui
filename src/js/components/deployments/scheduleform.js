@@ -67,7 +67,7 @@ var ScheduleForm = React.createClass({
     var artifactItems = [];
 
     for (var i=0; i<this.props.artifacts.length;i++) {
-      var tmp = <MenuItem value={this.props.artifacts[i].artifact_name} key={i} primaryText={this.props.artifacts[i].artifact_name} />
+      var tmp = <MenuItem value={this.props.artifacts[i].name} key={i} primaryText={this.props.artifacts[i].name} />
       artifactItems.push(tmp);
     }
    
@@ -147,7 +147,7 @@ var ScheduleForm = React.createClass({
           <div style={{display:"block"}}>
             <SelectField
               ref="artifact"
-              value={this.props.artifact ? this.props.artifact.artifact_name : null}
+              value={this.props.artifact ? this.props.artifact.name : null}
               onChange={this._handleArtifactValueChange}
               floatingLabelText="Select target artifact"
               disabled={!artifactItems.length}

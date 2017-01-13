@@ -92160,7 +92160,7 @@ var ScheduleForm = _react2.default.createClass({
     var artifactItems = [];
 
     for (var i = 0; i < this.props.artifacts.length; i++) {
-      var tmp = _react2.default.createElement(_MenuItem2.default, { value: this.props.artifacts[i].artifact_name, key: i, primaryText: this.props.artifacts[i].artifact_name });
+      var tmp = _react2.default.createElement(_MenuItem2.default, { value: this.props.artifacts[i].name, key: i, primaryText: this.props.artifacts[i].name });
       artifactItems.push(tmp);
     }
 
@@ -92276,7 +92276,7 @@ var ScheduleForm = _react2.default.createClass({
             _SelectField2.default,
             {
               ref: 'artifact',
-              value: this.props.artifact ? this.props.artifact.artifact_name : null,
+              value: this.props.artifact ? this.props.artifact.name : null,
               onChange: this._handleArtifactValueChange,
               floatingLabelText: 'Select target artifact',
               disabled: !artifactItems.length
