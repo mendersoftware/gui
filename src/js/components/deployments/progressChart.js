@@ -87,7 +87,7 @@ var ProgressChart = React.createClass({
     }, this);
 
     var progressChart = (
-      <div>
+      <div className="relative">
         <div className="progressHeader">
           {success+failures} of {totalDevices} devices complete
         </div>
