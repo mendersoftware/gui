@@ -86772,6 +86772,7 @@ var AppActions = {
 
   uploadArtifact: function uploadArtifact(meta, file, callback) {
     var formData = new FormData();
+    formData.append('name', meta.name);
     formData.append('description', meta.description);
     formData.append('artifact', file);
     ArtifactsApi.postFormData(deploymentsApiUrl + '/artifacts', formData).then(function (data) {
@@ -87576,11 +87577,11 @@ var Repository = _react2.default.createClass({
   getInitialState: function getInitialState() {
     return {
       artifact: {
-        artifact_name: null,
+        name: null,
         description: null,
         device_types: null
       },
-      sortCol: "artifact_name",
+      sortCol: "name",
       sortDown: true,
       searchTerm: null,
       upload: false,
@@ -87603,6 +87604,7 @@ var Repository = _react2.default.createClass({
 
   _resetArtifactState: function _resetArtifactState() {
     var artifact = {
+      name: null,
       description: null,
       artifact_name: null,
       device_types: null
@@ -87742,24 +87744,24 @@ var Repository = _react2.default.createClass({
 
     var tmpArtifacts = [];
     if (this.refs.search) {
-      var filters = ['artifact_name', 'device_types_compatible', 'description'];
+      var filters = ['name', 'device_types_compatible', 'description'];
       tmpArtifacts = artifacts.filter(this.refs.search.filter(filters));
     }
 
     var items = tmpArtifacts.map(function (pkg, index) {
       var compatible = pkg.device_types_compatible.join(", ");
       var expanded = '';
-      if (this.state.artifact.artifact_name === pkg.artifact_name) {
+      if (this.state.artifact.name === pkg.name) {
         expanded = _react2.default.createElement(_selectedartifact2.default, { compatible: compatible, formatTime: this._formatTime, editArtifact: this._editArtifactData, buttonStyle: styles.flatButtonIcon, artifact: this.state.artifact, createDeployment: this._createDeployment });
       }
 
       return _react2.default.createElement(
         _Table.TableRow,
-        { hoverable: this.state.artifact.artifact_name !== pkg.artifact_name, className: this.state.artifact.artifact_name === pkg.artifact_name ? "expand" : null, key: index },
+        { hoverable: this.state.artifact.name !== pkg.name, className: this.state.artifact.name === pkg.name ? "expand" : null, key: index },
         _react2.default.createElement(
           _Table.TableRowColumn,
           { style: expanded ? { height: this.state.divHeight } : null },
-          pkg.artifact_name
+          pkg.name
         ),
         _react2.default.createElement(
           _Table.TableRowColumn,
@@ -87845,7 +87847,7 @@ var Repository = _react2.default.createClass({
                 'Name ',
                 _react2.default.createElement(
                   _FontIcon2.default,
-                  { ref: 'artifact_name', style: styles.sortIcon, onClick: this._sortColumn.bind(null, "artifact_name"), className: 'sortIcon material-icons' },
+                  { ref: 'name', style: styles.sortIcon, onClick: this._sortColumn.bind(null, "name"), className: 'sortIcon material-icons' },
                   'sort'
                 )
               ),
@@ -87921,6 +87923,13 @@ var Repository = _react2.default.createClass({
               required: true,
               file: true,
               accept: '.mender',
+              validations: 'isLength:1' }),
+            _react2.default.createElement(_textinput2.default, {
+              value: this.state.artifact.name,
+              hint: 'Name',
+              label: 'Name',
+              id: 'name',
+              required: true,
               validations: 'isLength:1' }),
             _react2.default.createElement(_textinput2.default, {
               id: 'description',
