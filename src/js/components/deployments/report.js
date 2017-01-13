@@ -228,6 +228,13 @@ var DeploymentReport = React.createClass({
       );
     }
 
+    var finished = "-";
+    if (this.props.deployment.finished) {
+      finished = (
+        <Time value={this._formatTime(this.props.deployment.finished)} format="YYYY-MM-DD HH:mm" />
+      )
+    }
+
     return (
       <div>
         <div className="report-container">
@@ -241,8 +248,9 @@ var DeploymentReport = React.createClass({
             this.props.past ?
             <div className="inline">
               <div className="deploymentInfo" style={{width:"260px", height:"auto", margin:"30px 30px 30px 0", display:"inline-block", verticalAlign:"top"}}>
-                <div><div className="progressLabel">Status:</div>Completed<span className={this.state.stats.failure ? "failures" : "hidden"}> with failures</span></div>
+                <div><div className="progressLabel">Status:</div>Finished<span className={this.state.stats.failure ? "failures" : "hidden"}> with failures</span></div>
                 <div><div className="progressLabel">Started:</div><Time value={this._formatTime(this.props.deployment.created)} format="YYYY-MM-DD HH:mm" /></div>
+                <div><div className="progressLabel">Finished:</div>{finished}</div>
               </div>
               <div className="deploymentInfo" style={{height:"auto", margin:"30px 30px 30px 0", display:"inline-block", verticalAlign:"top"}}>
                 <div className={this.state.stats.failure ? "statusLarge" : "hidden"}>
