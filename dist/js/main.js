@@ -90877,6 +90877,11 @@ var Past = _react2.default.createClass({
 
       if (index >= (this.state.currentPage - 1) * this.state.pageSize && index < this.state.currentPage * this.state.pageSize) {
 
+        var time = "-";
+        if (deployment.finished) {
+          time = _react2.default.createElement(_reactTime2.default, { value: this._formatTime(deployment.finished), format: 'YYYY-MM-DD HH:mm' });
+        }
+
         //  get statistics
         var status = _react2.default.createElement(DeploymentStatus, { id: deployment.id });
 
@@ -90901,7 +90906,7 @@ var Past = _react2.default.createClass({
           _react2.default.createElement(
             _Table.TableRowColumn,
             null,
-            _react2.default.createElement(_reactTime2.default, { value: this._formatTime(deployment.finished), format: 'YYYY-MM-DD HH:mm' })
+            time
           ),
           _react2.default.createElement(
             _Table.TableRowColumn,
@@ -90919,6 +90924,7 @@ var Past = _react2.default.createClass({
 
     var reportActions = [{ text: 'Close' }];
     var retryActions = [{ text: 'Cancel' }, { text: 'Create deployment', onClick: this._onUploadSubmit, primary: 'true' }];
+
     return _react2.default.createElement(
       'div',
       { className: 'fadeIn' },
@@ -91624,6 +91630,11 @@ var DeploymentReport = _react2.default.createClass({
       abort = _react2.default.createElement(ConfirmAbort, { cancel: this._hideConfirm, abort: this._abortHandler });
     }
 
+    var finished = "-";
+    if (this.props.deployment.finished) {
+      finished = _react2.default.createElement(_reactTime2.default, { value: this._formatTime(this.props.deployment.finished), format: 'YYYY-MM-DD HH:mm' });
+    }
+
     return _react2.default.createElement(
       'div',
       null,
@@ -91690,7 +91701,7 @@ var DeploymentReport = _react2.default.createClass({
                 { className: 'progressLabel' },
                 'Status:'
               ),
-              'Completed',
+              'Finished',
               _react2.default.createElement(
                 'span',
                 { className: this.state.stats.failure ? "failures" : "hidden" },
@@ -91706,6 +91717,16 @@ var DeploymentReport = _react2.default.createClass({
                 'Started:'
               ),
               _react2.default.createElement(_reactTime2.default, { value: this._formatTime(this.props.deployment.created), format: 'YYYY-MM-DD HH:mm' })
+            ),
+            _react2.default.createElement(
+              'div',
+              null,
+              _react2.default.createElement(
+                'div',
+                { className: 'progressLabel' },
+                'Finished:'
+              ),
+              finished
             )
           ),
           _react2.default.createElement(

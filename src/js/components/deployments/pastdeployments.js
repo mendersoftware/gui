@@ -40,6 +40,13 @@ var Past = React.createClass({
 
       if ((index >= (this.state.currentPage-1)*this.state.pageSize) && (index < this.state.currentPage*this.state.pageSize)) {
 
+        var time = "-";
+        if (deployment.finished) {
+          time = (
+            <Time value={this._formatTime(deployment.finished)} format="YYYY-MM-DD HH:mm" />
+          )
+        } 
+
         //  get statistics
         var status = (
           <DeploymentStatus id={deployment.id} />
@@ -50,7 +57,7 @@ var Past = React.createClass({
             <TableRowColumn>{deployment.artifact_name}</TableRowColumn>
             <TableRowColumn>{deployment.name}</TableRowColumn>
             <TableRowColumn><Time value={this._formatTime(deployment.created)} format="YYYY-MM-DD HH:mm" /></TableRowColumn>
-            <TableRowColumn><Time value={this._formatTime(deployment.finished)} format="YYYY-MM-DD HH:mm" /></TableRowColumn>
+            <TableRowColumn>{time}</TableRowColumn>
             <TableRowColumn style={{textAlign:"right", width:"100px"}}><GroupDevices deployment={deployment.id} /></TableRowColumn>
             <TableRowColumn style={{overflow:"visible", width:"307px"}}>{status}</TableRowColumn>
           </TableRow>
@@ -65,6 +72,7 @@ var Past = React.createClass({
       { text: 'Cancel' },
       { text: 'Create deployment', onClick: this._onUploadSubmit, primary: 'true' }
     ];
+       
     return (
       <div className="fadeIn">
         <h3>Past deployments</h3>
