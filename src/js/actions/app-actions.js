@@ -318,6 +318,7 @@ var AppActions = {
 
   uploadArtifact: function(meta, file, callback) {
     var formData = new FormData();
+    formData.append('name', meta.name)
     formData.append('description', meta.description)
     formData.append('artifact', file)
     ArtifactsApi
