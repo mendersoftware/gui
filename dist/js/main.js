@@ -91293,7 +91293,7 @@ var ProgressChart = _react2.default.createClass({
 
     var progressChart = _react2.default.createElement(
       'div',
-      null,
+      { className: 'relative' },
       _react2.default.createElement(
         'div',
         { className: 'progressHeader' },

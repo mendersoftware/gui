@@ -1099,11 +1099,11 @@ span.day {
 }
 .progress-container .device-info {
   position: absolute;
-  width: 25%;
-  right: 0;
-  background-color: #ffffff;
-  top: 0;
-  bottom: 45px;
+  width: 33%;
+  right: -16px;
+  background-color: #fff;
+  top: -30px;
+  bottom: 15px;
   z-index: 300;
   padding: 0 30px;
   box-sizing: border-box;
@@ -1157,8 +1157,8 @@ span.day {
 }
 .progress-container .progressHeader {
   position: absolute;
-  top: -25px;
-  left: 340px;
+  top: -45px;
+  left: 18%;
   color: #757575;
   font-size: 14px;
 }
