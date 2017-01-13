@@ -30,7 +30,7 @@ var DeviceList = React.createClass({
       sortCol: "status",
       sortDown: true,
       addGroup: false,
-      autoHideDuration: 5000,
+      autoHideDuration: 8000,
       snackMessage: 'Group has been removed',
       openSnack: false,
       nameEdit: false,

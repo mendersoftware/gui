@@ -46,7 +46,7 @@ var Repository = React.createClass({
       tmpFile: null,
       snackMessage: "Deployment created",
       openSnack: false,
-      autoHideDuration: 5000,
+      autoHideDuration: 8000,
       divHeight: 148,
     };
   },
@@ -97,7 +97,8 @@ var Repository = React.createClass({
         self.props.refreshArtifacts();
       },
       error: function(err) {
-        AppActions.setSnackbar("Artifact couldn't be uploaded. "+err);
+        console.log(err);
+        AppActions.setSnackbar("Artifact couldn't be uploaded. "+err.error);
         self.props.startLoader(false);
       }
     };
