@@ -33,11 +33,11 @@ var Repository = React.createClass({
   getInitialState: function() {
     return {
       artifact: {
-        name: null,
+        artifact_name: null,
         description: null,
         device_types: null
       },
-      sortCol: "name",
+      sortCol: "artifact_name",
       sortDown: true,
       searchTerm: null,
       upload: false,
@@ -60,7 +60,6 @@ var Repository = React.createClass({
 
   _resetArtifactState: function () {
     var artifact = {
-      name: null,
       description: null,
       artifact_name: null,
       device_types: null
@@ -200,20 +199,20 @@ var Repository = React.createClass({
 
     var tmpArtifacts = [];
     if (this.refs.search) {
-      var filters = ['name', 'device_types_compatible', 'description'];
+      var filters = ['artifact_name', 'device_types_compatible', 'description'];
       tmpArtifacts = artifacts.filter(this.refs.search.filter(filters));
     }
     
     var items = tmpArtifacts.map(function(pkg, index) {
       var compatible = pkg.device_types_compatible.join(", ");
       var expanded = '';
-      if (this.state.artifact.name === pkg.name ) {
+      if (this.state.artifact.artifact_name === pkg.artifact_name ) {
         expanded = <SelectedArtifact compatible={compatible} formatTime={this._formatTime} editArtifact={this._editArtifactData} buttonStyle={styles.flatButtonIcon} artifact={this.state.artifact} createDeployment={this._createDeployment} />
       }
      
       return (
-        <TableRow hoverable={this.state.artifact.name !== pkg.name} className={this.state.artifact.name === pkg.name ? "expand" : null} key={index} >
-          <TableRowColumn style={expanded ? {height: this.state.divHeight} : null}>{pkg.name}</TableRowColumn>
+        <TableRow hoverable={this.state.artifact.artifact_name !== pkg.artifact_name} className={this.state.artifact.artifact_name === pkg.artifact_name ? "expand" : null} key={index} >
+          <TableRowColumn style={expanded ? {height: this.state.divHeight} : null}>{pkg.artifact_name}</TableRowColumn>
           <TableRowColumn>{compatible}</TableRowColumn>
           <TableRowColumn><Time value={this._formatTime(pkg.modified)} format="YYYY-MM-DD HH:mm" /></TableRowColumn>
           <TableRowColumn style={{width:"55px", paddingRight:"0", paddingLeft:"12px"}} className="expandButton">
@@ -252,7 +251,7 @@ var Repository = React.createClass({
               displaySelectAll={false}
               adjustForCheckbox={false} >
               <TableRow>
-                <TableHeaderColumn className="columnHeader" tooltip="Name">Name <FontIcon ref="name" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "name")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
+                <TableHeaderColumn className="columnHeader" tooltip="Name">Name <FontIcon ref="artifact_name" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "artifact_name")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
                 <TableHeaderColumn className="columnHeader" tooltip="Device type compatibility">Device type compatibility <FontIcon ref="device_types" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "device_types")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
                 <TableHeaderColumn className="columnHeader" tooltip="Last modified">Last modified <FontIcon style={styles.sortIcon} ref="modified" onClick={this._sortColumn.bind(null, "modified")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
                 <TableHeaderColumn style={{width:"55px", paddingRight:"12px", paddingLeft:"0"}} className="columnHeader"></TableHeaderColumn>
@@ -290,14 +289,6 @@ var Repository = React.createClass({
                 required={true}
                 file={true}
                 accept=".mender"
-                validations="isLength:1" />
-
-              <TextInput
-                value={this.state.artifact.name}
-                hint="Name"
-                label="Name"
-                id="name"
-                required={true}
                 validations="isLength:1" />
 
               <TextInput
