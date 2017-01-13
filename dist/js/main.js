@@ -91485,7 +91485,7 @@ var DeploymentReport = _react2.default.createClass({
   _getDeviceArtifact: function _getDeviceArtifact(device) {
     var artifact = "-";
     for (var i = 0; i < device.attributes.length; i++) {
-      if (device.attributes[i].name === "artifact_id") {
+      if (device.attributes[i].name === "artifact_name") {
         artifact = device.attributes[i].value;
       }
     }
