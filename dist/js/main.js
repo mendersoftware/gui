@@ -86943,7 +86943,8 @@ var Api = {
     return new Promise(function (resolve, reject) {
       request.post(url).authBearer(token).send(formData).end(function (err, res) {
         if (err || !res.ok) {
-          reject(err);
+          var errorResponse = err.response ? JSON.parse(err.response.text) : { error: "There was an error uploading the artifact" };
+          reject(errorResponse);
         } else {
           resolve(res.body);
         }
@@ -87435,7 +87436,7 @@ var Artifacts = _react2.default.createClass({
       _react2.default.createElement(_Snackbar2.default, {
         open: this.state.snackbar.open,
         message: this.state.snackbar.message,
-        autoHideDuration: 5000,
+        autoHideDuration: 8000,
         onRequestClose: this.handleRequestClose
       })
     );
@@ -87589,7 +87590,7 @@ var Repository = _react2.default.createClass({
       tmpFile: null,
       snackMessage: "Deployment created",
       openSnack: false,
-      autoHideDuration: 5000,
+      autoHideDuration: 8000,
       divHeight: 148
     };
   },
@@ -87640,7 +87641,8 @@ var Repository = _react2.default.createClass({
         self.props.refreshArtifacts();
       },
       error: function error(err) {
-        _appActions2.default.setSnackbar("Artifact couldn't be uploaded. " + err);
+        console.log(err);
+        _appActions2.default.setSnackbar("Artifact couldn't be uploaded. " + err.error);
         self.props.startLoader(false);
       }
     };
@@ -89010,7 +89012,7 @@ var Dashboard = _react2.default.createClass({
       _react2.default.createElement(_Snackbar2.default, {
         open: this.state.snackbar.open,
         message: this.state.snackbar.message,
-        autoHideDuration: 5000,
+        autoHideDuration: 8000,
         onRequestClose: this.handleRequestClose
       })
     );
@@ -92485,7 +92487,7 @@ var DeviceList = _react2.default.createClass({
       sortCol: "status",
       sortDown: true,
       addGroup: false,
-      autoHideDuration: 5000,
+      autoHideDuration: 8000,
       snackMessage: 'Group has been removed',
       openSnack: false,
       nameEdit: false,
@@ -93697,7 +93699,7 @@ var Devices = _react2.default.createClass({
       _react2.default.createElement(_Snackbar2.default, {
         open: this.state.snackbar.open,
         message: this.state.snackbar.message,
-        autoHideDuration: 5000,
+        autoHideDuration: 8000,
         onRequestClose: this.handleRequestClose
       }),
       _react2.default.createElement(DevicePicker, {
@@ -94983,7 +94985,7 @@ var Login = _react2.default.createClass({
       _react2.default.createElement(_Snackbar2.default, {
         open: this.state.snackbar.open,
         message: this.state.snackbar.message,
-        autoHideDuration: 5000
+        autoHideDuration: 8000
       })
     );
   }

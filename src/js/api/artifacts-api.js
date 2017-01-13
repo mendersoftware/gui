@@ -27,7 +27,8 @@ var Api = {
         .send(formData)
         .end(function (err, res) {
           if (err || !res.ok) {
-            reject(err);
+            var errorResponse = err.response ? JSON.parse(err.response.text) : {error:"There was an error uploading the artifact"};
+            reject(errorResponse);
           } else {
             resolve(res.body);
           }

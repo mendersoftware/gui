@@ -133,7 +133,7 @@ var Artifacts = React.createClass({
         <Snackbar
           open={this.state.snackbar.open}
           message={this.state.snackbar.message}
-          autoHideDuration={5000}
+          autoHideDuration={8000}
           onRequestClose={this.handleRequestClose}
         />
       </div>
