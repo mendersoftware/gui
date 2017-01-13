@@ -327,6 +327,7 @@ var Deployments = React.createClass({
         clearInterval(self.timer);
         self.timer = setInterval(self._refreshDeployments, 10000);
         self._refreshDeployments();
+        self.dialogDismiss('dialog');
         AppActions.setSnackbar("The deployment was successfully aborted");
       },
       error: function(err) {
@@ -368,7 +369,7 @@ var Deployments = React.createClass({
       )
     } else if (this.state.reportType === "progress") {
       dialogContent = (
-        <Report updated={this.updated} deployment={this.state.selectedDeployment} />
+        <Report abort={this._abortDeployment} updated={this.updated} deployment={this.state.selectedDeployment} />
       )
     } else {
       dialogContent = (
@@ -384,7 +385,7 @@ var Deployments = React.createClass({
         <div style={{paddingTop:"3px"}}>
           <Pending pending={this.state.pending} abort={this._abortDeployment} />
 
-          <Progress loading={!this.state.doneLoading} openReport={this._showProgress} progress={this.state.progress} createClick={this.dialogOpen.bind(null, "schedule")}/>
+          <Progress abort={this._abortDeployment} loading={!this.state.doneLoading} openReport={this._showProgress} progress={this.state.progress} createClick={this.dialogOpen.bind(null, "schedule")}/>
 
           <Past loading={!this.state.doneLoading} past={this.state.past} showReport={this._showReport} />
 

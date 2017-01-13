@@ -27,7 +27,7 @@ var Pending = React.createClass({
     var self = this;
     setTimeout(function() {
       self.setState({abort:null});
-    }, 200);
+    }, 150);
   },
   _showConfirm: function(id) {
     this.setState({abort:id});
@@ -39,7 +39,7 @@ var Pending = React.createClass({
       );
       if (this.state.abort === deployment.id) {
         abort = (
-          <ConfirmAbort cancel={this._hideConfirm.bind(null, deployment.id)} abort={this._abortHandler.bind(null, deployment.id)} />
+          <ConfirmAbort cancel={this._hideConfirm.bind(null, deployment.id)} abort={this._abortHandler.bind(null, deployment.id)} table={true}/>
         );
       }
 
@@ -82,7 +82,7 @@ var Pending = React.createClass({
             </TableHeader>
             <TableBody
               displayRowCheckbox={false}
-              style={{cursor:"pointer", overflow:"visible"}}>
+            >
               {pendingMap}
             </TableBody>
           </Table>

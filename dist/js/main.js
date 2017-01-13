@@ -89807,24 +89807,51 @@ var ConfirmAbort = _react2.default.createClass({
     };
     return _react2.default.createElement(
       'div',
-      { className: this.state.class },
-      this.state.loading ? "Aborting..." : "Abort the deployment?",
+      { className: this.state.class, style: { marginRight: "12px" } },
       _react2.default.createElement(
-        _IconButton2.default,
-        { style: styles, onClick: this._handleAbort },
+        'div',
+        { className: 'float-right' },
+        this.state.loading ? "Aborting..." : "Abort the deployment?",
         _react2.default.createElement(
-          _FontIcon2.default,
-          { className: 'material-icons green' },
-          'check_circle'
+          _IconButton2.default,
+          { id: 'confirmAbort', style: styles, onClick: this._handleAbort },
+          _react2.default.createElement(
+            _FontIcon2.default,
+            { className: 'material-icons green' },
+            'check_circle'
+          )
+        ),
+        _react2.default.createElement(
+          _IconButton2.default,
+          { id: 'cancelAbort', style: styles, onClick: this._handleCancel },
+          _react2.default.createElement(
+            _FontIcon2.default,
+            { className: 'material-icons red' },
+            'cancel'
+          )
         )
       ),
-      _react2.default.createElement(
-        _IconButton2.default,
-        { style: styles, onClick: this._handleCancel },
+      this.props.table ? null : _react2.default.createElement(
+        'div',
+        { className: 'info fadeIn float-right', style: { marginRight: "-24px" } },
         _react2.default.createElement(
-          _FontIcon2.default,
-          { className: 'material-icons red' },
-          'cancel'
+          'ul',
+          null,
+          _react2.default.createElement(
+            'li',
+            null,
+            'Devices that have not yet started the deployment will not start the deployment. '
+          ),
+          _react2.default.createElement(
+            'li',
+            null,
+            'Devices that have already completed the deployment are not affected by the abort.'
+          ),
+          _react2.default.createElement(
+            'li',
+            null,
+            'Devices that are in the middle of the deployment at the time of abort will finish deployment normally, but will perform a rollback.'
+          )
         )
       )
     );
@@ -90363,6 +90390,7 @@ var Deployments = _react2.default.createClass({
         clearInterval(self.timer);
         self.timer = setInterval(self._refreshDeployments, 10000);
         self._refreshDeployments();
+        self.dialogDismiss('dialog');
         AppActions.setSnackbar("The deployment was successfully aborted");
       },
       error: function error(err) {
@@ -90398,7 +90426,7 @@ var Deployments = _react2.default.createClass({
     if (this.state.scheduleForm) {
       dialogContent = _react2.default.createElement(ScheduleForm, { deploymentDevices: this.state.deploymentDevices, filteredDevices: this.state.filteredDevices, hasPending: this.state.hasPending, hasDevices: this.state.hasDevices, deploymentSettings: this._deploymentParams, id: this.state.id, artifacts: this.state.artifacts, artifact: this.state.artifact, groups: this.state.groups, group: this.state.group });
     } else if (this.state.reportType === "progress") {
-      dialogContent = _react2.default.createElement(Report, { updated: this.updated, deployment: this.state.selectedDeployment });
+      dialogContent = _react2.default.createElement(Report, { abort: this._abortDeployment, updated: this.updated, deployment: this.state.selectedDeployment });
     } else {
       dialogContent = _react2.default.createElement(Report, { updated: this.updated, past: true, deployment: this.state.selectedDeployment, retryDeployment: this._scheduleDeployment });
     }
@@ -90414,7 +90442,7 @@ var Deployments = _react2.default.createClass({
         'div',
         { style: { paddingTop: "3px" } },
         _react2.default.createElement(Pending, { pending: this.state.pending, abort: this._abortDeployment }),
-        _react2.default.createElement(Progress, { loading: !this.state.doneLoading, openReport: this._showProgress, progress: this.state.progress, createClick: this.dialogOpen.bind(null, "schedule") }),
+        _react2.default.createElement(Progress, { abort: this._abortDeployment, loading: !this.state.doneLoading, openReport: this._showProgress, progress: this.state.progress, createClick: this.dialogOpen.bind(null, "schedule") }),
         _react2.default.createElement(Past, { loading: !this.state.doneLoading, past: this.state.past, showReport: this._showReport })
       ),
       _react2.default.createElement(
@@ -91033,7 +91061,7 @@ var Pending = _react2.default.createClass({
     var self = this;
     setTimeout(function () {
       self.setState({ abort: null });
-    }, 200);
+    }, 150);
   },
   _showConfirm: function _showConfirm(id) {
     this.setState({ abort: id });
@@ -91042,7 +91070,7 @@ var Pending = _react2.default.createClass({
     var pendingMap = this.props.pending.map(function (deployment, index) {
       var abort = _react2.default.createElement(_FlatButton2.default, { label: 'Abort', secondary: true, onClick: this._showConfirm.bind(null, deployment.id), icon: _react2.default.createElement(_block2.default, { style: { height: "18px", width: "18px", verticalAlign: "middle" } }) });
       if (this.state.abort === deployment.id) {
-        abort = _react2.default.createElement(ConfirmAbort, { cancel: this._hideConfirm.bind(null, deployment.id), abort: this._abortHandler.bind(null, deployment.id) });
+        abort = _react2.default.createElement(ConfirmAbort, { cancel: this._hideConfirm.bind(null, deployment.id), abort: this._abortHandler.bind(null, deployment.id), table: true });
       }
 
       //  get statistics
@@ -91144,8 +91172,8 @@ var Pending = _react2.default.createClass({
           _react2.default.createElement(
             _Table.TableBody,
             {
-              displayRowCheckbox: false,
-              style: { cursor: "pointer", overflow: "visible" } },
+              displayRowCheckbox: false
+            },
             pendingMap
           )
         )
@@ -91338,6 +91366,10 @@ var _reactAddonsUpdate = require('react-addons-update');
 
 var _reactAddonsUpdate2 = _interopRequireDefault(_reactAddonsUpdate);
 
+var _block = require('react-material-icons/icons/content/block');
+
+var _block2 = _interopRequireDefault(_block);
+
 var _FlatButton = require('material-ui/FlatButton');
 
 var _FlatButton2 = _interopRequireDefault(_FlatButton);
@@ -91372,6 +91404,8 @@ var pluralize = require('pluralize');
 var isEqual = require('lodash.isequal');
 var differenceWith = require('lodash.differenceWith');
 
+var ConfirmAbort = require('./confirmabort');
+
 // material ui
 
 
@@ -91390,7 +91424,8 @@ var DeploymentReport = _react2.default.createClass({
       start: 0,
       perPage: 50,
       deviceCount: 0,
-      showPending: true
+      showPending: true,
+      abort: false
     };
   },
   componentDidMount: function componentDidMount() {
@@ -91533,6 +91568,18 @@ var DeploymentReport = _react2.default.createClass({
     // use to make sure parent re-renders dialog when device list built
     this.props.updated();
   },
+  _abortHandler: function _abortHandler() {
+    this.props.abort(this.props.deployment.id);
+  },
+  _hideConfirm: function _hideConfirm() {
+    var self = this;
+    setTimeout(function () {
+      self.setState({ abort: false });
+    }, 150);
+  },
+  _showConfirm: function _showConfirm() {
+    this.setState({ abort: true });
+  },
   render: function render() {
     var _this = this;
 
@@ -91565,6 +91612,15 @@ var DeploymentReport = _react2.default.createClass({
       label: 'Export log',
       primary: true,
       onClick: this.exportLog })];
+
+    var abort = _react2.default.createElement(
+      'div',
+      { className: 'float-right' },
+      _react2.default.createElement(_FlatButton2.default, { label: 'Abort', secondary: true, onClick: this._showConfirm, icon: _react2.default.createElement(_block2.default, { style: { height: "18px", width: "18px", verticalAlign: "middle" } }) })
+    );
+    if (this.state.abort) {
+      abort = _react2.default.createElement(ConfirmAbort, { cancel: this._hideConfirm, abort: this._abortHandler });
+    }
 
     return _react2.default.createElement(
       'div',
@@ -91750,6 +91806,11 @@ var DeploymentReport = _react2.default.createClass({
               this.state.deviceCount - allDevices.length,
               ' devices pending'
             )
+          ),
+          _react2.default.createElement(
+            'div',
+            { id: 'reportAbort' },
+            abort
           )
         )
       ),
@@ -91788,7 +91849,7 @@ var DeploymentReport = _react2.default.createClass({
 
 module.exports = DeploymentReport;
 
-},{"../../actions/app-actions":757,"../../stores/app-store":808,"./deploymentdevicelist":783,"./deploymentstatus":785,"lodash.differenceWith":184,"lodash.isequal":185,"material-ui/Checkbox":209,"material-ui/Dialog":227,"material-ui/FlatButton":236,"material-ui/FontIcon":240,"material-ui/RaisedButton":270,"pluralize":387,"rc-pagination":400,"react":658,"react-addons-update":405,"react-copy-to-clipboard":411,"react-router":594,"react-time":625}],792:[function(require,module,exports){
+},{"../../actions/app-actions":757,"../../stores/app-store":808,"./confirmabort":782,"./deploymentdevicelist":783,"./deploymentstatus":785,"lodash.differenceWith":184,"lodash.isequal":185,"material-ui/Checkbox":209,"material-ui/Dialog":227,"material-ui/FlatButton":236,"material-ui/FontIcon":240,"material-ui/RaisedButton":270,"pluralize":387,"rc-pagination":400,"react":658,"react-addons-update":405,"react-copy-to-clipboard":411,"react-material-icons/icons/content/block":555,"react-router":594,"react-time":625}],792:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
