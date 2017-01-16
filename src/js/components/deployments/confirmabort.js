@@ -24,10 +24,17 @@ var ConfirmAbort = React.createClass({
       marginRight:"-24px",
       verticalAlign:"middle"
     }
+    var label = (
+      <ul>
+        <li>Devices that have not yet started the deployment will not start the deployment. </li>
+        <li>Devices that have already completed the deployment are not affected by the abort.</li>
+        <li>Devices that are in the middle of the deployment at the time of abort will finish deployment normally, but will perform a rollback.</li>
+      </ul>
+    );
     return (
       <div className={this.state.class} style={{marginRight:"12px"}}>
         <div className="float-right">
-          {this.state.loading ? "Aborting..." : "Abort the deployment?"}
+          <span className="bold">{this.state.loading ? "Aborting..." : "Confirm abort deployment?"}</span>
           <IconButton id="confirmAbort" style={styles} onClick={this._handleAbort}>
             <FontIcon className="material-icons green">check_circle</FontIcon>
           </IconButton>
@@ -35,16 +42,6 @@ var ConfirmAbort = React.createClass({
             <FontIcon className="material-icons red">cancel</FontIcon>
           </IconButton>
         </div>
-
-        {this.props.table ? null : (
-          <div className="info fadeIn float-right" style={{marginRight:"-24px"}}>
-            <ul>
-              <li>Devices that have not yet started the deployment will not start the deployment. </li>
-              <li>Devices that have already completed the deployment are not affected by the abort.</li>
-              <li>Devices that are in the middle of the deployment at the time of abort will finish deployment normally, but will perform a rollback.</li>
-            </ul>
-          </div>
-        )}
       </div>
     )
   }
