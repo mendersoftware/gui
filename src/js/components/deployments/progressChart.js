@@ -2,6 +2,7 @@ import React from 'react';
 import { Router, Route, Link } from 'react-router';
 var AppActions = require('../../actions/app-actions');
 var AppStore = require('../../stores/app-store');
+var pluralize = require('pluralize');
 
 var ProgressChart = React.createClass({
   getInitialState: function() {
@@ -14,7 +15,8 @@ var ProgressChart = React.createClass({
         "noartifact": 0,
         "pending": 0,
         "rebooting": 0,
-        "success": 0
+        "success": 0,
+        "already-installed": 0
       },
       device: {
         name: "",
@@ -52,7 +54,8 @@ var ProgressChart = React.createClass({
     this.setState({device: device});
   },
   render: function() {
-    var totalDevices = this.state.stats.success + this.state.stats.failure + this.state.stats.downloading + this.state.stats.installing + this.state.stats.rebooting + this.state.stats.noartifact + this.state.stats.pending;
+    var skipped = this.state.stats.noartifact +  this.state.stats["already-installed"];
+    var totalDevices = this.state.devices.length - skipped;
 
     var success = this.state.stats.success;
     var failures = this.state.stats.failure;
@@ -78,18 +81,20 @@ var ProgressChart = React.createClass({
 
     var pixelHeight = 80 / rows;
     var deviceGrid = this.state.devices.map(function(device, index) {
-      
-      return (
-        <div key={index} className={device.status} style={{height: pixelHeight, width:pixelHeight}}>
-          <div onMouseEnter={this._hoverDevice.bind(null, device)} onMouseLeave={this._hoverDevice} onClick={this._handleClick.bind(null, device.id)} className="bubble"></div>
-        </div>
-      );
+      if (device.status !== "noartifact" && device.status !== "already-installed") {
+        return (
+          <div key={index} className={device.status} style={{height: pixelHeight, width:pixelHeight}}>
+            <div onMouseEnter={this._hoverDevice.bind(null, device)} onMouseLeave={this._hoverDevice} onClick={this._handleClick.bind(null, device.id)} className="bubble"></div>
+          </div>
+        );
+      }
     }, this);
 
     var progressChart = (
       <div className="relative">
         <div className="progressHeader">
           {success+failures} of {totalDevices} devices complete
+          {skipped ? <div className="skipped-text">{skipped} {pluralize("devices", skipped)} {pluralize("was", skipped)} skipped</div> : null}
         </div>
         <div className="bubbles-contain">
           {deviceGrid}

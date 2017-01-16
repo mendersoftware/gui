@@ -609,7 +609,7 @@ span.length {
   padding-top: 4px;
 
   [class*=hint--] {
-    min-width:70px !important;
+    min-width: 65px !important;
   }
 
   .disabled {
@@ -625,7 +625,7 @@ span.length {
   }
 
   span.status {
-    margin-right: 15px;
+    margin-right: 10px;
     &::before {
       content: "";
       display: inline-block;
@@ -634,7 +634,7 @@ span.length {
       vertical-align: middle;
       background-position-y: -2px;
       background-repeat: no-repeat;
-      margin-right: 10px;
+      margin-right: 8px;
     }
 
     &.success::before {
@@ -647,6 +647,10 @@ span.length {
 
     &.pending::before {
       background-image: url('../assets/img/pending_status.png');
+    }
+
+    &.skipped::before {
+      background-image: url('../assets/img/skipped_status.png');
     }
 
     &.inprogress::before {
@@ -1262,6 +1266,13 @@ span.month, span.day {
     width: 100px;
     display: inline-block;
   }
+
+ .skipped-text {
+    color: @grey;
+    text-align: center;
+    font-size: 12px;
+    margin-top: 12px;
+  }
 }
 
 .progress-container {
@@ -1272,6 +1283,10 @@ span.month, span.day {
     border-radius: 4px;
     border: 1px solid @lightergrey;
     overflow: hidden;
+
+    .skipped-text {
+      margin-top: 2px;
+    }
   }
 }
 
@@ -1297,8 +1312,6 @@ span.month, span.day {
       background-color: #fdfdfe;
     }
   }
-
-
 
   .resultIcons {
     display: inline-block;
@@ -1333,13 +1346,6 @@ span.month, span.day {
       color: @grey;
       text-align: center;
     }
-  }
-
-  .skipped-text {
-    color: @grey;
-    text-align: center;
-    font-size: 12px;
-    margin-top: 12px;
   }
 }
 
