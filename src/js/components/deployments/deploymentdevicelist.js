@@ -56,6 +56,20 @@ var ProgressDeviceList = React.createClass({
           }
         }
 
+        var status = (function(status) {
+          switch (status) {
+            case "noartifact":
+              return "No artifact";
+              break;
+            case "already-installed":
+              return "Already installed";
+              break;
+            default:
+              return device.status.charAt(0).toUpperCase() + device.status.slice(1);
+              break;
+          }
+        })(device.status);
+
         return (
           <TableRow key={index}>
             <TableRowColumn>{deviceLink}</TableRowColumn>
@@ -63,7 +77,7 @@ var ProgressDeviceList = React.createClass({
             <TableRowColumn>{currentArtifactLink}</TableRowColumn>
             <TableRowColumn><Time value={this._formatTime(device.created)} format="YYYY-MM-DD HH:mm" /></TableRowColumn>
             <TableRowColumn>{time}</TableRowColumn>
-            <TableRowColumn>{device.status || "--"}</TableRowColumn>
+            <TableRowColumn>{status || "--"}</TableRowColumn>
             <TableRowColumn><FlatButton className={device.status==='failure' ? null : "hidden"} onClick={this.props.viewLog.bind(null, device.id)} label="View log" /></TableRowColumn>
           </TableRow>
         )

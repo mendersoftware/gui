@@ -89943,6 +89943,20 @@ var ProgressDeviceList = _react2.default.createClass({
           }
         }
 
+        var status = function (status) {
+          switch (status) {
+            case "noartifact":
+              return "No artifact";
+              break;
+            case "already-installed":
+              return "Already installed";
+              break;
+            default:
+              return device.status.charAt(0).toUpperCase() + device.status.slice(1);
+              break;
+          }
+        }(device.status);
+
         return _react2.default.createElement(
           _Table.TableRow,
           { key: index },
@@ -89974,7 +89988,7 @@ var ProgressDeviceList = _react2.default.createClass({
           _react2.default.createElement(
             _Table.TableRowColumn,
             null,
-            device.status || "--"
+            status || "--"
           ),
           _react2.default.createElement(
             _Table.TableRowColumn,
@@ -90504,7 +90518,9 @@ var DeploymentStatus = _react2.default.createClass({
         "downloading": 0,
         "installing": 0,
         "rebooting": 0,
-        "noartifact": 0
+        "noartifact": 0,
+        "aborted": 0,
+        "already-installed": 0
       }
     };
   },
@@ -90535,21 +90551,22 @@ var DeploymentStatus = _react2.default.createClass({
   render: function render() {
     var inprogress = this.state.stats.downloading + this.state.stats.installing + this.state.stats.rebooting;
     var failed = this.state.stats.failure;
+    var skipped = this.state.stats.aborted + this.state.stats.noartifact + this.state.stats["already-installed"];
     var label = _react2.default.createElement(
       'div',
       { className: this.props.vertical ? "results-status vertical" : "results-status" },
       _react2.default.createElement(
         'div',
-        { className: failed ? "hint--bottom" : "hint--bottom disabled", 'aria-label': 'Failures' },
+        { className: skipped ? "hint--bottom" : "hint--bottom disabled", 'aria-label': 'Skipped' },
         _react2.default.createElement(
           'span',
-          { className: "status failure" },
-          failed
+          { className: 'status skipped' },
+          skipped || 0
         ),
         _react2.default.createElement(
           'span',
           { className: this.props.vertical ? "label" : "hidden" },
-          'Failed'
+          'Skipped'
         )
       ),
       _react2.default.createElement(
@@ -90592,6 +90609,20 @@ var DeploymentStatus = _react2.default.createClass({
           'span',
           { className: this.props.vertical ? "label" : "hidden" },
           'Successful'
+        )
+      ),
+      _react2.default.createElement(
+        'div',
+        { className: failed ? "hint--bottom" : "hint--bottom disabled", 'aria-label': 'Failures' },
+        _react2.default.createElement(
+          'span',
+          { className: "status failure" },
+          failed
+        ),
+        _react2.default.createElement(
+          'span',
+          { className: this.props.vertical ? "label" : "hidden" },
+          'Failed'
         )
       )
     );
@@ -90723,7 +90754,7 @@ var Progress = _react2.default.createClass({
         ),
         _react2.default.createElement(
           _Table.TableRowColumn,
-          { style: { overflow: "visible", width: "307px" } },
+          { style: { overflow: "visible", width: "350px" } },
           status
         )
       );
@@ -90781,7 +90812,7 @@ var Progress = _react2.default.createClass({
               ),
               _react2.default.createElement(
                 _Table.TableHeaderColumn,
-                { style: { width: "307px" } },
+                { style: { width: "350px" } },
                 'Status'
               )
             )
@@ -90915,7 +90946,7 @@ var Past = _react2.default.createClass({
           ),
           _react2.default.createElement(
             _Table.TableRowColumn,
-            { style: { overflow: "visible", width: "307px" } },
+            { style: { overflow: "visible", width: "350px" } },
             status
           )
         );
@@ -90982,7 +91013,7 @@ var Past = _react2.default.createClass({
               ),
               _react2.default.createElement(
                 _Table.TableHeaderColumn,
-                { style: { width: "307px" } },
+                { style: { width: "350px" } },
                 'Status'
               )
             )
@@ -91205,6 +91236,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var AppActions = require('../../actions/app-actions');
 var AppStore = require('../../stores/app-store');
+var pluralize = require('pluralize');
 
 var ProgressChart = _react2.default.createClass({
   displayName: 'ProgressChart',
@@ -91219,7 +91251,8 @@ var ProgressChart = _react2.default.createClass({
         "noartifact": 0,
         "pending": 0,
         "rebooting": 0,
-        "success": 0
+        "success": 0,
+        "already-installed": 0
       },
       device: {
         name: "",
@@ -91257,7 +91290,8 @@ var ProgressChart = _react2.default.createClass({
     this.setState({ device: device });
   },
   render: function render() {
-    var totalDevices = this.state.stats.success + this.state.stats.failure + this.state.stats.downloading + this.state.stats.installing + this.state.stats.rebooting + this.state.stats.noartifact + this.state.stats.pending;
+    var skipped = this.state.stats.noartifact + this.state.stats["already-installed"];
+    var totalDevices = this.state.devices.length - skipped;
 
     var success = this.state.stats.success;
     var failures = this.state.stats.failure;
@@ -91283,12 +91317,13 @@ var ProgressChart = _react2.default.createClass({
 
     var pixelHeight = 80 / rows;
     var deviceGrid = this.state.devices.map(function (device, index) {
-
-      return _react2.default.createElement(
-        'div',
-        { key: index, className: device.status, style: { height: pixelHeight, width: pixelHeight } },
-        _react2.default.createElement('div', { onMouseEnter: this._hoverDevice.bind(null, device), onMouseLeave: this._hoverDevice, onClick: this._handleClick.bind(null, device.id), className: 'bubble' })
-      );
+      if (device.status !== "noartifact" && device.status !== "already-installed") {
+        return _react2.default.createElement(
+          'div',
+          { key: index, className: device.status, style: { height: pixelHeight, width: pixelHeight } },
+          _react2.default.createElement('div', { onMouseEnter: this._hoverDevice.bind(null, device), onMouseLeave: this._hoverDevice, onClick: this._handleClick.bind(null, device.id), className: 'bubble' })
+        );
+      }
     }, this);
 
     var progressChart = _react2.default.createElement(
@@ -91300,7 +91335,17 @@ var ProgressChart = _react2.default.createClass({
         success + failures,
         ' of ',
         totalDevices,
-        ' devices complete'
+        ' devices complete',
+        skipped ? _react2.default.createElement(
+          'div',
+          { className: 'skipped-text' },
+          skipped,
+          ' ',
+          pluralize("devices", skipped),
+          ' ',
+          pluralize("was", skipped),
+          ' skipped'
+        ) : null
       ),
       _react2.default.createElement(
         'div',
@@ -91353,7 +91398,7 @@ ProgressChart.contextTypes = {
 
 module.exports = ProgressChart;
 
-},{"../../actions/app-actions":757,"../../stores/app-store":808,"react":658,"react-router":594}],791:[function(require,module,exports){
+},{"../../actions/app-actions":757,"../../stores/app-store":808,"pluralize":387,"react":658,"react-router":594}],791:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');

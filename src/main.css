@@ -636,7 +636,7 @@ span.length {
   padding-top: 4px;
 }
 .results-status [class*=hint--] {
-  min-width: 70px !important;
+  min-width: 65px !important;
 }
 .results-status .disabled {
   -webkit-opacity: 0.1;
@@ -653,7 +653,7 @@ span.length {
   opacity: 1;
 }
 .results-status span.status {
-  margin-right: 15px;
+  margin-right: 10px;
 }
 .results-status span.status::before {
   content: "";
@@ -663,7 +663,7 @@ span.length {
   vertical-align: middle;
   background-position-y: -2px;
   background-repeat: no-repeat;
-  margin-right: 10px;
+  margin-right: 8px;
 }
 .results-status span.status.success::before {
   background-image: url('../assets/img/success_status.png');
@@ -673,6 +673,9 @@ span.length {
 }
 .results-status span.status.pending::before {
   background-image: url('../assets/img/pending_status.png');
+}
+.results-status span.status.skipped::before {
+  background-image: url('../assets/img/skipped_status.png');
 }
 .results-status span.status.inprogress::before {
   background-image: url('../assets/img/progress_status.png');
@@ -1259,6 +1262,14 @@ span.day {
   width: 100px;
   display: inline-block;
 }
+.progress-container .skipped-text,
+.deployments-container .skipped-text,
+.report-container .skipped-text {
+  color: #c7c7c7;
+  text-align: center;
+  font-size: 12px;
+  margin-top: 12px;
+}
 .progress-container .deployment {
   padding-top: 50px;
   padding-bottom: 10px;
@@ -1266,6 +1277,9 @@ span.day {
   border-radius: 4px;
   border: 1px solid #eaf4f3;
   overflow: hidden;
+}
+.progress-container .deployment .skipped-text {
+  margin-top: 2px;
 }
 .deployments-container .deployment {
   display: inline-block;
@@ -1319,12 +1333,6 @@ span.day {
   font-size: 12px;
   color: #c7c7c7;
   text-align: center;
-}
-.deployments-container .skipped-text {
-  color: #c7c7c7;
-  text-align: center;
-  font-size: 12px;
-  margin-top: 12px;
 }
 .deploy-table-contain {
   margin-bottom: 60px;

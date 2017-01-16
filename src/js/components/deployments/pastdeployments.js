@@ -59,7 +59,7 @@ var Past = React.createClass({
             <TableRowColumn><Time value={this._formatTime(deployment.created)} format="YYYY-MM-DD HH:mm" /></TableRowColumn>
             <TableRowColumn>{time}</TableRowColumn>
             <TableRowColumn style={{textAlign:"right", width:"100px"}}><GroupDevices deployment={deployment.id} /></TableRowColumn>
-            <TableRowColumn style={{overflow:"visible", width:"307px"}}>{status}</TableRowColumn>
+            <TableRowColumn style={{overflow:"visible", width:"350px"}}>{status}</TableRowColumn>
           </TableRow>
         )
       }
@@ -95,7 +95,7 @@ var Past = React.createClass({
                 <TableHeaderColumn>Started</TableHeaderColumn>
                 <TableHeaderColumn>Finished</TableHeaderColumn>
                 <TableHeaderColumn style={{textAlign:"right", width:"100px"}}># Devices</TableHeaderColumn>
-                <TableHeaderColumn style={{width:"307px"}}>Status</TableHeaderColumn>
+                <TableHeaderColumn style={{width:"350px"}}>Status</TableHeaderColumn>
               </TableRow>
             </TableHeader>
             <TableBody
