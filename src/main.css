@@ -632,11 +632,23 @@ span.length {
   margin: 30px 45px 60px;
   position: relative;
 }
+/*  hint.css tooltips */
+[class*=hint--] {
+  min-width: 65px !important;
+}
+#reportAbort[class*=hint--]:after {
+  white-space: pre-wrap !important;
+}
+.hint--info.hint--bottom-left:before,
+.hint--info.hint--bottom-right:before,
+.hint--info.hint--bottom:before {
+  border-bottom-color: #5d0f43;
+}
+.hint--info:after {
+  background-color: #5d0f43;
+}
 .results-status {
   padding-top: 4px;
-}
-.results-status [class*=hint--] {
-  min-width: 65px !important;
 }
 .results-status .disabled {
   -webkit-opacity: 0.1;
@@ -697,7 +709,8 @@ div.code {
   position: absolute;
   top: 85px;
   right: 45px;
-  width: 30%;
+  width: 280px;
+  background-color: rgba(255, 255, 255, 0.8);
 }
 /* Forms and inputs*/
 .inputGroup {

@@ -219,7 +219,7 @@ var DeploymentReport = React.createClass({
 
     var abort = (
       <div className="float-right">
-        <FlatButton label="Abort" secondary={true} onClick={this._showConfirm} icon={<BlockIcon style={{height:"18px", width:"18px", verticalAlign:"middle"}}/>}/>
+        <FlatButton label="Abort deployment" secondary={true} onClick={this._showConfirm} icon={<BlockIcon style={{height:"18px", width:"18px", verticalAlign:"middle"}}/>}/>
       </div>
     );
     if (this.state.abort) {
@@ -298,7 +298,7 @@ var DeploymentReport = React.createClass({
                 </p>
               </div>
 
-              <div id="reportAbort">
+              <div id="reportAbort" className={this.state.abort ? "hint--bottom hint--always hint--large hint--info" : "hint--bottom hint--large hint--info"} data-hint="Devices that have not yet started the deployment will not start the deployment.&#10;Devices that have already completed the deployment are not affected by the abort.&#10;Devices that are in the middle of the deployment at the time of abort will finish deployment normally, but will perform a rollback.">
                 {abort}
               </div>
             </div>

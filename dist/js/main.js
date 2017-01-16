@@ -89807,13 +89807,36 @@ var ConfirmAbort = _react2.default.createClass({
       marginRight: "-24px",
       verticalAlign: "middle"
     };
+    var label = _react2.default.createElement(
+      'ul',
+      null,
+      _react2.default.createElement(
+        'li',
+        null,
+        'Devices that have not yet started the deployment will not start the deployment. '
+      ),
+      _react2.default.createElement(
+        'li',
+        null,
+        'Devices that have already completed the deployment are not affected by the abort.'
+      ),
+      _react2.default.createElement(
+        'li',
+        null,
+        'Devices that are in the middle of the deployment at the time of abort will finish deployment normally, but will perform a rollback.'
+      )
+    );
     return _react2.default.createElement(
       'div',
       { className: this.state.class, style: { marginRight: "12px" } },
       _react2.default.createElement(
         'div',
         { className: 'float-right' },
-        this.state.loading ? "Aborting..." : "Abort the deployment?",
+        _react2.default.createElement(
+          'span',
+          { className: 'bold' },
+          this.state.loading ? "Aborting..." : "Confirm abort deployment?"
+        ),
         _react2.default.createElement(
           _IconButton2.default,
           { id: 'confirmAbort', style: styles, onClick: this._handleAbort },
@@ -89830,29 +89853,6 @@ var ConfirmAbort = _react2.default.createClass({
             _FontIcon2.default,
             { className: 'material-icons red' },
             'cancel'
-          )
-        )
-      ),
-      this.props.table ? null : _react2.default.createElement(
-        'div',
-        { className: 'info fadeIn float-right', style: { marginRight: "-24px" } },
-        _react2.default.createElement(
-          'ul',
-          null,
-          _react2.default.createElement(
-            'li',
-            null,
-            'Devices that have not yet started the deployment will not start the deployment. '
-          ),
-          _react2.default.createElement(
-            'li',
-            null,
-            'Devices that have already completed the deployment are not affected by the abort.'
-          ),
-          _react2.default.createElement(
-            'li',
-            null,
-            'Devices that are in the middle of the deployment at the time of abort will finish deployment normally, but will perform a rollback.'
           )
         )
       )
@@ -91143,7 +91143,7 @@ var Pending = _react2.default.createClass({
         ),
         _react2.default.createElement(
           _Table.TableRowColumn,
-          null,
+          { style: { overflow: "visible" } },
           _react2.default.createElement(
             'div',
             { className: 'float-right' },
@@ -91669,7 +91669,7 @@ var DeploymentReport = _react2.default.createClass({
     var abort = _react2.default.createElement(
       'div',
       { className: 'float-right' },
-      _react2.default.createElement(_FlatButton2.default, { label: 'Abort', secondary: true, onClick: this._showConfirm, icon: _react2.default.createElement(_block2.default, { style: { height: "18px", width: "18px", verticalAlign: "middle" } }) })
+      _react2.default.createElement(_FlatButton2.default, { label: 'Abort deployment', secondary: true, onClick: this._showConfirm, icon: _react2.default.createElement(_block2.default, { style: { height: "18px", width: "18px", verticalAlign: "middle" } }) })
     );
     if (this.state.abort) {
       abort = _react2.default.createElement(ConfirmAbort, { cancel: this._hideConfirm, abort: this._abortHandler });
@@ -91877,7 +91877,7 @@ var DeploymentReport = _react2.default.createClass({
           ),
           _react2.default.createElement(
             'div',
-            { id: 'reportAbort' },
+            { id: 'reportAbort', className: this.state.abort ? "hint--bottom hint--always hint--large hint--info" : "hint--bottom hint--large hint--info", 'data-hint': 'Devices that have not yet started the deployment will not start the deployment.\nDevices that have already completed the deployment are not affected by the abort.\nDevices that are in the middle of the deployment at the time of abort will finish deployment normally, but will perform a rollback.' },
             abort
           )
         )

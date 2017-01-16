@@ -51,7 +51,7 @@ var Pending = React.createClass({
           <TableRowColumn><Time value={this._formatTime(deployment.created)} format="YYYY-MM-DD HH:mm" /></TableRowColumn>
           <TableRowColumn style={{textAlign:"right", width:"100px"}}><GroupDevices deployment={deployment.id} /></TableRowColumn>
           <TableRowColumn style={{width:"126px"}}>{deployment.status}</TableRowColumn>
-          <TableRowColumn>
+          <TableRowColumn style={{overflow:"visible"}}>
             <div className="float-right">{abort}</div>
           </TableRowColumn>
         </TableRow>

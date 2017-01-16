@@ -605,12 +605,27 @@ span.length {
   position: relative;
 }
 
+
+/*  hint.css tooltips */
+[class*=hint--] {
+  min-width: 65px !important;
+}
+
+#reportAbort&[class*=hint--]:after {
+  white-space: pre-wrap !important;
+}
+
+.hint--info.hint--bottom-left:before, .hint--info.hint--bottom-right:before, .hint--info.hint--bottom:before {
+  border-bottom-color: @mendermaroon;
+}
+
+.hint--info:after {
+  background-color: @mendermaroon;
+}
+
+
 .results-status {
   padding-top: 4px;
-
-  [class*=hint--] {
-    min-width: 65px !important;
-  }
 
   .disabled {
     .opacity(0.1);
@@ -677,7 +692,8 @@ div.code {
   position: absolute;
   top: 85px;
   right: 45px;
-  width: 30%;
+  width: 280px;
+  background-color: rgba(255,255,255,0.8);
 }
 
 
