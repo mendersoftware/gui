@@ -86775,6 +86775,7 @@ var AppActions = {
     formData.append('name', meta.name);
     formData.append('description', meta.description);
     formData.append('artifact', file);
+    formData.append('size', file.size);
     ArtifactsApi.postFormData(deploymentsApiUrl + '/artifacts', formData).then(function (data) {
       callback.success(data);
     }).catch(function (err) {
