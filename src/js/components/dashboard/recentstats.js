@@ -8,7 +8,8 @@ var RecentStats = React.createClass({
       stats: {
         "success": 0,
         "failure": 0,
-        "noartifact": 0
+        "noartifact": 0,
+        "aborted": 0
       }
     };
   },
@@ -18,7 +19,7 @@ var RecentStats = React.createClass({
     }.bind(this));
   },
   render: function() {
-    var skipped = (this.state.stats.noartifact + this.state.stats["already-installed"]);
+    var skipped = (this.state.stats.noartifact + this.state.stats.aborted + this.state.stats["already-installed"]);
     return (
       <div className="deploymentStats">
         <div className="resultIcons">
@@ -31,7 +32,7 @@ var RecentStats = React.createClass({
           <div>{this.state.stats.success}</div>
           <span className="iconStatLabel">Successful</span>
         </div>
-        {this.state.stats.noartifact || this.state.stats["already-installed"] ?
+        {skipped ?
           (
             <div className="skipped-text">
              {skipped} {pluralize("devices", skipped)} {pluralize("was", skipped)} skipped
