@@ -62,7 +62,6 @@ var Repository = React.createClass({
     var artifact = {
       name: null,
       description: null,
-      artifact_name: null,
       device_types: null
     };
     this.setState({artifact: artifact});
@@ -290,14 +289,6 @@ var Repository = React.createClass({
                 required={true}
                 file={true}
                 accept=".mender"
-                validations="isLength:1" />
-
-              <TextInput
-                value={this.state.artifact.name}
-                hint="Name"
-                label="Name"
-                id="name"
-                required={true}
                 validations="isLength:1" />
 
               <TextInput
