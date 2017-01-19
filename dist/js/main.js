@@ -86772,7 +86772,6 @@ var AppActions = {
 
   uploadArtifact: function uploadArtifact(meta, file, callback) {
     var formData = new FormData();
-    formData.append('name', meta.name);
     formData.append('description', meta.description);
     formData.append('artifact', file);
     formData.append('size', file.size);
@@ -87607,7 +87606,6 @@ var Repository = _react2.default.createClass({
     var artifact = {
       name: null,
       description: null,
-      artifact_name: null,
       device_types: null
     };
     this.setState({ artifact: artifact });
@@ -87924,13 +87922,6 @@ var Repository = _react2.default.createClass({
               required: true,
               file: true,
               accept: '.mender',
-              validations: 'isLength:1' }),
-            _react2.default.createElement(_textinput2.default, {
-              value: this.state.artifact.name,
-              hint: 'Name',
-              label: 'Name',
-              id: 'name',
-              required: true,
               validations: 'isLength:1' }),
             _react2.default.createElement(_textinput2.default, {
               id: 'description',
