@@ -151,6 +151,7 @@ var ScheduleForm = React.createClass({
               onChange={this._handleArtifactValueChange}
               floatingLabelText="Select target artifact"
               disabled={!artifactItems.length}
+              id="selectArtifact"
             >
               {artifactItems}
             </SelectField>
@@ -179,6 +180,7 @@ var ScheduleForm = React.createClass({
                 floatingLabelText="Select group"
                 style={{marginBottom:"10px"}}
                 disabled={!this.props.hasDevices} 
+                id="selectGroup"
               >
                 {groupItems}
               </SelectField>
