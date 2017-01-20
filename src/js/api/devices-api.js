@@ -1,7 +1,10 @@
-var request = require('superagent');
+var request = require('superagent-use')(require('superagent'));
 var Promise = require('es6-promise').Promise;
 require('superagent-auth-bearer')(request);
 var LocalStore = require('../stores/local-store');
+import auth from '../auth';
+
+request.use(auth.unauthorizedRedirect);
 
 var Api = {
   get: function(url) {

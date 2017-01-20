@@ -1,6 +1,9 @@
-var request = require('superagent');
+var request = require('superagent-use')(require('superagent'));
 require('superagent-auth-bearer')(request);
 var Promise = require('es6-promise').Promise;
+import auth from '../auth';
+
+request.use(auth.unauthorizedRedirect);
 
 var Api = {
   get: function(url) {
@@ -24,7 +27,6 @@ var Api = {
         .send(userData)
         .end(function (err, res) {
           if (err || !res.ok) {
-            console.log(err);
             var errorResponse = err.response ? JSON.parse(err.response.text) : {error:"Oops! Something went wrong"};
             reject(errorResponse);
           } else {
