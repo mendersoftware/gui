@@ -92347,7 +92347,8 @@ var ScheduleForm = _react2.default.createClass({
               value: this.props.artifact ? this.props.artifact.name : null,
               onChange: this._handleArtifactValueChange,
               floatingLabelText: 'Select target artifact',
-              disabled: !artifactItems.length
+              disabled: !artifactItems.length,
+              id: 'selectArtifact'
             },
             artifactItems
           ),
@@ -92391,7 +92392,8 @@ var ScheduleForm = _react2.default.createClass({
                 onChange: this._handleGroupValueChange,
                 floatingLabelText: 'Select group',
                 style: { marginBottom: "10px" },
-                disabled: !this.props.hasDevices
+                disabled: !this.props.hasDevices,
+                id: 'selectGroup'
               },
               groupItems
             ),
