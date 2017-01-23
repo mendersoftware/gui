@@ -75,6 +75,7 @@ var Devices = React.createClass({
   },
   componentWillUnmount: function () {
     clearInterval(this.deviceTimer);
+    clearInterval(this.admissionTimer);
     AppStore.removeChangeListener(this._onChange);
     AppActions.selectGroup(null);
     this._updateFilters([{key:'', value:''}]);

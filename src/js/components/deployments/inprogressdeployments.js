@@ -17,9 +17,6 @@ var Progress = React.createClass({
       retry: false,
     };
   },
-  componentWillUnmount: function() {
-    clearInterval(this.timer);
-  },
   _progressCellClick: function(rowNumber, columnId) {
     var self = this;
     this.props.openReport(rowNumber, "progress");
