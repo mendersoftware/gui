@@ -360,6 +360,22 @@ function startTimeSortAscend(a,b) {
   return (a.created < b.created) - (a.created > b.created);
 }
 
+function _collateArtifacts() {
+  var newArray = [];
+  for (var i=0;i<_artifactsRepo.length;i++) {
+    var x = findWithAttr(newArray, "name", _artifactsRepo[i].name);
+    if (typeof x !== "undefined") {
+      newArray[x].device_types_compatible = newArray[x].device_types_compatible.concat(_artifactsRepo[i].device_types_compatible.filter(function(item) {
+          return newArray[x].device_types_compatible.indexOf(item)<0;
+        }
+      ));
+    } else {
+      newArray.push(_artifactsRepo[i]);
+    }
+  }
+  return newArray;
+}
+
 
 /*
 * API STARTS HERE
@@ -370,7 +386,6 @@ function setArtifacts(artifacts) {
   }
   _artifactsRepo.sort(customSort(1, "modified"));
 }
-
 
 
 function setDeployments(deployments) {
@@ -559,6 +574,13 @@ var AppStore = assign(EventEmitter.prototype, {
     * Return list of saved artifacts objects
     */
     return discoverDevices(_artifactsRepo);
+  },
+
+  getCollatedArtifacts: function() {
+    /*
+    * return list of artifacts where duplicate names are collated with device compatibility lists combined
+    */
+    return _collateArtifacts();
   },
 
   getSoftwareArtifact: function(attr, val) {

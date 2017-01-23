@@ -22,7 +22,7 @@ function getState() {
     pending: AppStore.getPendingDeployments(),
     progress: AppStore.getDeploymentsInProgress() || [],
     events: AppStore.getEventLog(),
-    artifacts: AppStore.getArtifactsRepo(),
+    collatedArtifacts: AppStore.getCollatedArtifacts(),
     groups: AppStore.getGroups(),
     allDevices: AppStore.getAllDevices(),
     invalid: true,
@@ -45,7 +45,8 @@ var Deployments = React.createClass({
 
     var artifactsCallback = {
       success: function (artifacts) {
-        this.setState({artifacts:artifacts});
+        var collated = AppStore.getCollatedArtifacts();
+        this.setState({collatedArtifacts:collated});
       }.bind(this)
     };
     AppActions.getArtifacts(artifactsCallback);
@@ -110,7 +111,6 @@ var Deployments = React.createClass({
     } else {
       this.setState({reportType:"progress"});
     }
-    AppActions.getArtifacts();
   },
   _refreshDeployments: function() {
     this._refreshInProgress();
@@ -365,7 +365,7 @@ var Deployments = React.createClass({
 
     if (this.state.scheduleForm) {
       dialogContent = (    
-        <ScheduleForm deploymentDevices={this.state.deploymentDevices} filteredDevices={this.state.filteredDevices} hasPending={this.state.hasPending} hasDevices={this.state.hasDevices} deploymentSettings={this._deploymentParams} id={this.state.id} artifacts={this.state.artifacts} artifact={this.state.artifact} groups={this.state.groups} group={this.state.group} />
+        <ScheduleForm deploymentDevices={this.state.deploymentDevices} filteredDevices={this.state.filteredDevices} hasPending={this.state.hasPending} hasDevices={this.state.hasDevices} deploymentSettings={this._deploymentParams} id={this.state.id} artifacts={this.state.collatedArtifacts} artifact={this.state.artifact} groups={this.state.groups} group={this.state.group} />
       )
     } else if (this.state.reportType === "progress") {
       dialogContent = (
