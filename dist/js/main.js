@@ -87989,13 +87989,13 @@ var Repository = _react2.default.createClass({
     var items = tmpArtifacts.map(function (pkg, index) {
       var compatible = pkg.device_types_compatible.join(", ");
       var expanded = '';
-      if (this.state.artifact.name === pkg.name) {
+      if (this.state.artifact.id === pkg.id) {
         expanded = _react2.default.createElement(_selectedartifact2.default, { compatible: compatible, formatTime: this._formatTime, editArtifact: this._editArtifactData, buttonStyle: styles.flatButtonIcon, artifact: this.state.artifact, createDeployment: this._createDeployment });
       }
 
       return _react2.default.createElement(
         _Table.TableRow,
-        { hoverable: this.state.artifact.name !== pkg.name, className: this.state.artifact.name === pkg.name ? "expand" : null, key: index },
+        { hoverable: !expanded, className: expanded ? "expand" : null, key: index },
         _react2.default.createElement(
           _Table.TableRowColumn,
           { style: expanded ? { height: this.state.divHeight } : null },
