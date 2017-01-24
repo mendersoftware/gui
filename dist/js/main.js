@@ -87110,7 +87110,7 @@ var AppActions = {
 
 module.exports = AppActions;
 
-},{"../api/artifacts-api":762,"../api/deployments-api":763,"../api/devices-api":764,"../api/users-api":765,"../constants/app-constants":809,"../dispatchers/app-dispatcher":810,"parse-link-header":388}],762:[function(require,module,exports){
+},{"../api/artifacts-api":762,"../api/deployments-api":763,"../api/devices-api":764,"../api/users-api":765,"../constants/app-constants":808,"../dispatchers/app-dispatcher":809,"parse-link-header":388}],762:[function(require,module,exports){
 'use strict';
 
 var _auth = require('../auth');
@@ -87172,7 +87172,7 @@ var Api = {
 
 module.exports = Api;
 
-},{"../auth":766,"../stores/local-store":813,"es6-promise":119,"superagent":678,"superagent-use":677}],763:[function(require,module,exports){
+},{"../auth":766,"../stores/local-store":812,"es6-promise":119,"superagent":678,"superagent-use":677}],763:[function(require,module,exports){
 'use strict';
 
 var _auth = require('../auth');
@@ -87242,7 +87242,7 @@ var Api = {
 
 module.exports = Api;
 
-},{"../auth":766,"../stores/local-store":813,"es6-promise":119,"superagent":678,"superagent-use":677}],764:[function(require,module,exports){
+},{"../auth":766,"../stores/local-store":812,"es6-promise":119,"superagent":678,"superagent-use":677}],764:[function(require,module,exports){
 'use strict';
 
 var _auth = require('../auth');
@@ -87318,7 +87318,7 @@ var Api = {
 
 module.exports = Api;
 
-},{"../auth":766,"../stores/local-store":813,"es6-promise":119,"superagent":678,"superagent-auth-bearer":676,"superagent-use":677}],765:[function(require,module,exports){
+},{"../auth":766,"../stores/local-store":812,"es6-promise":119,"superagent":678,"superagent-auth-bearer":676,"superagent-use":677}],765:[function(require,module,exports){
 'use strict';
 
 var _auth = require('../auth');
@@ -87413,7 +87413,7 @@ module.exports = {
   }
 };
 
-},{"./stores/local-store":813,"react-router":597}],767:[function(require,module,exports){
+},{"./stores/local-store":812,"react-router":597}],767:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -87520,7 +87520,7 @@ var App = _react2.default.createClass({
 
 module.exports = App;
 
-},{"../themes/mender-theme.js":814,"./header/header":806,"material-ui/styles/getMuiTheme":350,"react":661,"react-joyride":552}],768:[function(require,module,exports){
+},{"../themes/mender-theme.js":813,"./header/header":805,"material-ui/styles/getMuiTheme":350,"react":661,"react-joyride":552}],768:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -87684,33 +87684,7 @@ var Artifacts = _react2.default.createClass({
 
 module.exports = Artifacts;
 
-},{"../../actions/app-actions":761,"../../stores/app-store":812,"../../stores/local-store":813,"./repository.js":770,"material-ui/Snackbar":281,"react":661,"react-router":597}],769:[function(require,module,exports){
-'use strict';
-
-var _react = require('react');
-
-var _react2 = _interopRequireDefault(_react);
-
-var _RaisedButton = require('material-ui/RaisedButton');
-
-var _RaisedButton2 = _interopRequireDefault(_RaisedButton);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var DeploymentButton = _react2.default.createClass({
-  displayName: 'DeploymentButton',
-
-  render: function render() {
-    return _react2.default.createElement(_RaisedButton2.default, { label: 'Create deployment' });
-  }
-});
-
-// material ui
-
-
-module.exports = DeploymentButton;
-
-},{"material-ui/RaisedButton":272,"react":661}],770:[function(require,module,exports){
+},{"../../actions/app-actions":761,"../../stores/app-store":811,"../../stores/local-store":812,"./repository.js":769,"material-ui/Snackbar":281,"react":661,"react-router":597}],769:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -87748,10 +87722,6 @@ var _fileinput2 = _interopRequireDefault(_fileinput);
 var _textinput = require('../common/forms/textinput');
 
 var _textinput2 = _interopRequireDefault(_textinput);
-
-var _deploymentbutton = require('./deploymentbutton');
-
-var _deploymentbutton2 = _interopRequireDefault(_deploymentbutton);
 
 var _selectedartifact = require('./selectedartifact');
 
@@ -87827,7 +87797,6 @@ var Repository = _react2.default.createClass({
       popupLabel: "Upload a new artifact",
       artifacts: [],
       tmpFile: null,
-      snackMessage: "Deployment created",
       openSnack: false,
       autoHideDuration: 8000,
       divHeight: 148
@@ -87849,12 +87818,6 @@ var Repository = _react2.default.createClass({
     };
     this.setState({ artifact: artifact });
   },
-  _createDeployment: function _createDeployment(artifact) {
-    _appActions2.default.setDeploymentArtifact(artifact);
-    var URIParams = "open=true";
-    URIParams = encodeURIComponent(URIParams);
-    this.redirect(URIParams);
-  },
   dialogOpen: function dialogOpen(ref) {
     var obj = {};
     obj[ref] = true;
@@ -87864,9 +87827,6 @@ var Repository = _react2.default.createClass({
     var obj = {};
     obj[ref] = false;
     this.setState(obj);
-  },
-  redirect: function redirect(params) {
-    this.context.router.push('/deployments/progress/' + params);
   },
   _onUploadSubmit: function _onUploadSubmit(meta) {
     var self = this;
@@ -87990,7 +87950,7 @@ var Repository = _react2.default.createClass({
       var compatible = pkg.device_types_compatible.join(", ");
       var expanded = '';
       if (this.state.artifact.id === pkg.id) {
-        expanded = _react2.default.createElement(_selectedartifact2.default, { compatible: compatible, formatTime: this._formatTime, editArtifact: this._editArtifactData, buttonStyle: styles.flatButtonIcon, artifact: this.state.artifact, createDeployment: this._createDeployment });
+        expanded = _react2.default.createElement(_selectedartifact2.default, { compatible: compatible, formatTime: this._formatTime, editArtifact: this._editArtifactData, buttonStyle: styles.flatButtonIcon, artifact: this.state.artifact });
       }
 
       return _react2.default.createElement(
@@ -88171,15 +88131,7 @@ var Repository = _react2.default.createClass({
               value: this.state.artifact.description })
           )
         )
-      ),
-      _react2.default.createElement(_Snackbar2.default, {
-        open: this.state.openSnack,
-        message: this.state.snackMessage,
-        action: 'Go to deployments',
-        autoHideDuration: this.state.autoHideDuration,
-        onActionTouchTap: this.redirect,
-        onRequestClose: this.handleRequestClose
-      })
+      )
     );
   }
 });
@@ -88190,7 +88142,7 @@ Repository.contextTypes = {
 
 module.exports = Repository;
 
-},{"../../actions/app-actions":761,"../../stores/app-store":812,"../common/forms/fileinput":772,"../common/forms/form":773,"../common/forms/textinput":775,"../common/loader":776,"./deploymentbutton":769,"./selectedartifact":771,"material-ui/Dialog":229,"material-ui/FlatButton":238,"material-ui/FontIcon":242,"material-ui/IconButton":247,"material-ui/RaisedButton":272,"material-ui/Snackbar":281,"material-ui/Table":299,"material-ui/TextField":310,"react":661,"react-addons-update":408,"react-collapse":412,"react-dom":415,"react-height":551,"react-motion":565,"react-router":597,"react-search-input":621,"react-time":628}],771:[function(require,module,exports){
+},{"../../actions/app-actions":761,"../../stores/app-store":811,"../common/forms/fileinput":771,"../common/forms/form":772,"../common/forms/textinput":774,"../common/loader":775,"./selectedartifact":770,"material-ui/Dialog":229,"material-ui/FlatButton":238,"material-ui/FontIcon":242,"material-ui/IconButton":247,"material-ui/RaisedButton":272,"material-ui/Snackbar":281,"material-ui/Table":299,"material-ui/TextField":310,"react":661,"react-addons-update":408,"react-collapse":412,"react-dom":415,"react-height":551,"react-motion":565,"react-router":597,"react-search-input":621,"react-time":628}],770:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -88245,9 +88197,6 @@ var SelectedArtifact = _react2.default.createClass({
     var filters = "device_type=" + device_type;
     filters = encodeURIComponent(filters);
     this.props.history.push("/devices/:group/:filters", { filters: filters }, null);
-  },
-  _clickArtifactSchedule: function _clickArtifactSchedule() {
-    this.props.createDeployment(this.props.artifact);
   },
   _descEdit: function _descEdit(artifact, event) {
     event.stopPropagation();
@@ -88374,12 +88323,6 @@ var SelectedArtifact = _react2.default.createClass({
               editButtonDesc
             ),
             _react2.default.createElement('hr', { style: { margin: "0", backgroundColor: "#e0e0e0", height: "1px", border: "none" } })
-          ),
-          _react2.default.createElement(
-            _List.List,
-            { style: { backgroundColor: "rgba(255,255,255,0)" } },
-            _react2.default.createElement(_List.ListItem, { style: styles.listStyle, disabled: true, primaryText: 'Date uploaded', secondaryText: info.modified }),
-            _react2.default.createElement(_Divider2.default, null)
           )
         ),
         _react2.default.createElement(
@@ -88390,7 +88333,11 @@ var SelectedArtifact = _react2.default.createClass({
             { style: { backgroundColor: "rgba(255,255,255,0)" } },
             _react2.default.createElement(_List.ListItem, { style: styles.listStyle, disabled: true, secondaryTextLines: 2, primaryText: 'Device type compatibility', secondaryText: this.props.compatible }),
             _react2.default.createElement(_Divider2.default, null)
-          ),
+          )
+        ),
+        _react2.default.createElement(
+          'div',
+          { className: 'artifact-list list-item' },
           _react2.default.createElement(
             'div',
             { className: 'hidden' },
@@ -88400,28 +88347,6 @@ var SelectedArtifact = _react2.default.createClass({
               _react2.default.createElement(_List.ListItem, { style: styles.listStyle, disabled: true, primaryText: 'Installed on devices', secondaryText: devicesLink }),
               _react2.default.createElement(_Divider2.default, null)
             )
-          )
-        ),
-        _react2.default.createElement(
-          'div',
-          { className: 'artifact-list list-item', style: { width: "320px" } },
-          _react2.default.createElement(
-            _List.List,
-            { style: { backgroundColor: "rgba(255,255,255,0)", paddingTop: "16px" } },
-            _react2.default.createElement(
-              'div',
-              { key: 'updateButton' },
-              _react2.default.createElement(_List.ListItem, {
-                style: styles.listStyle,
-                primaryText: 'Create a deployment using this artifact',
-                onClick: this._clickArtifactSchedule,
-                leftIcon: _react2.default.createElement(
-                  _FontIcon2.default,
-                  { style: { marginTop: 6, marginBottom: 6 }, className: 'material-icons update' },
-                  'replay'
-                ) })
-            ),
-            _react2.default.createElement(_Divider2.default, null)
           )
         )
       ),
@@ -88445,7 +88370,7 @@ SelectedArtifact.contextTypes = {
 
 module.exports = SelectedArtifact;
 
-},{"material-ui/Divider":231,"material-ui/FlatButton":238,"material-ui/FontIcon":242,"material-ui/IconButton":247,"material-ui/List":255,"material-ui/TextField":310,"react":661,"react-router":597,"react-time":628}],772:[function(require,module,exports){
+},{"material-ui/Divider":231,"material-ui/FlatButton":238,"material-ui/FontIcon":242,"material-ui/IconButton":247,"material-ui/List":255,"material-ui/TextField":310,"react":661,"react-router":597,"react-time":628}],771:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -88510,7 +88435,7 @@ var FileInput = _react2.default.createClass({
 
 module.exports = FileInput;
 
-},{"material-ui/FontIcon":242,"react":661,"react-file-input":549}],773:[function(require,module,exports){
+},{"material-ui/FontIcon":242,"react":661,"react-file-input":549}],772:[function(require,module,exports){
 'use strict';
 
 var _validator = require('validator');
@@ -88727,7 +88652,7 @@ var Form = _react2.default.createClass({
 
 module.exports = Form;
 
-},{"material-ui/FlatButton":238,"material-ui/RaisedButton":272,"react":661,"validator":687}],774:[function(require,module,exports){
+},{"material-ui/FlatButton":238,"material-ui/RaisedButton":272,"react":661,"validator":687}],773:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -88842,7 +88767,7 @@ var PasswordInput = _react2.default.createClass({
 
 module.exports = PasswordInput;
 
-},{"material-ui-password-field":190,"react":661,"react-material-icons/icons/action/check-circle":557,"zxcvbn":757}],775:[function(require,module,exports){
+},{"material-ui-password-field":190,"react":661,"react-material-icons/icons/action/check-circle":557,"zxcvbn":757}],774:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -88902,7 +88827,7 @@ var TextInput = _react2.default.createClass({
 
 module.exports = TextInput;
 
-},{"material-ui/TextField":310,"react":661}],776:[function(require,module,exports){
+},{"material-ui/TextField":310,"react":661}],775:[function(require,module,exports){
 "use strict";
 
 var _react = require("react");
@@ -88933,7 +88858,7 @@ var Loader = _react2.default.createClass({
 
 module.exports = Loader;
 
-},{"react":661}],777:[function(require,module,exports){
+},{"react":661}],776:[function(require,module,exports){
 "use strict";
 
 /**
@@ -88962,7 +88887,7 @@ Array.prototype.equals = function (other) {
   });
 };
 
-},{}],778:[function(require,module,exports){
+},{}],777:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -89078,7 +89003,7 @@ Activity.contextTypes = {
 
 module.exports = Activity;
 
-},{"material-ui/FontIcon":242,"react":661,"react-router":597,"react-time":628}],779:[function(require,module,exports){
+},{"material-ui/FontIcon":242,"react":661,"react-router":597,"react-time":628}],778:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -89256,7 +89181,7 @@ Dashboard.contextTypes = {
 
 module.exports = Dashboard;
 
-},{"../../actions/app-actions":761,"../../stores/app-store":812,"../../stores/local-store":813,"./activity":778,"./deployments":780,"./health":781,"material-ui/RaisedButton":272,"material-ui/Snackbar":281,"react":661,"react-router":597}],780:[function(require,module,exports){
+},{"../../actions/app-actions":761,"../../stores/app-store":811,"../../stores/local-store":812,"./activity":777,"./deployments":779,"./health":780,"material-ui/RaisedButton":272,"material-ui/Snackbar":281,"react":661,"react-router":597}],779:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -89319,7 +89244,7 @@ var Deployments = _react2.default.createClass({
 
 module.exports = Deployments;
 
-},{"./progress":782,"./recent":783,"./schedule":785,"material-ui/Dialog":229,"material-ui/FlatButton":238,"material-ui/RaisedButton":272,"react":661}],781:[function(require,module,exports){
+},{"./progress":781,"./recent":782,"./schedule":784,"material-ui/Dialog":229,"material-ui/FlatButton":238,"material-ui/RaisedButton":272,"react":661}],780:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -89472,7 +89397,7 @@ Health.contextTypes = {
 
 module.exports = Health;
 
-},{"../common/loader":776,"material-ui/FontIcon":242,"react":661,"react-router":597}],782:[function(require,module,exports){
+},{"../common/loader":775,"material-ui/FontIcon":242,"react":661,"react-router":597}],781:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -89637,7 +89562,7 @@ Progress.contextTypes = {
 
 module.exports = Progress;
 
-},{"../common/loader":776,"../deployments/progressChart.js":794,"material-ui/Divider":231,"material-ui/FontIcon":242,"material-ui/List":255,"react":661,"react-router":597,"react-time":628}],783:[function(require,module,exports){
+},{"../common/loader":775,"../deployments/progressChart.js":793,"material-ui/Divider":231,"material-ui/FontIcon":242,"material-ui/List":255,"react":661,"react-router":597,"react-time":628}],782:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -89795,7 +89720,7 @@ Recent.contextTypes = {
 
 module.exports = Recent;
 
-},{"../../actions/app-actions":761,"../common/loader":776,"../deployments/groupdevices":790,"./recentstats":784,"material-ui/Divider":231,"material-ui/FontIcon":242,"react":661,"react-router":597,"react-time":628}],784:[function(require,module,exports){
+},{"../../actions/app-actions":761,"../common/loader":775,"../deployments/groupdevices":789,"./recentstats":783,"material-ui/Divider":231,"material-ui/FontIcon":242,"react":661,"react-router":597,"react-time":628}],783:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -89876,7 +89801,7 @@ var RecentStats = _react2.default.createClass({
 
 module.exports = RecentStats;
 
-},{"../../actions/app-actions":761,"pluralize":390,"react":661}],785:[function(require,module,exports){
+},{"../../actions/app-actions":761,"pluralize":390,"react":661}],784:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -89997,7 +89922,7 @@ Schedule.contextTypes = {
 
 module.exports = Schedule;
 
-},{"material-ui":328,"react":661,"react-router":597,"react-time":628}],786:[function(require,module,exports){
+},{"material-ui":328,"react":661,"react-router":597,"react-time":628}],785:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -90094,7 +90019,7 @@ var ConfirmAbort = _react2.default.createClass({
 
 module.exports = ConfirmAbort;
 
-},{"../common/loader":776,"material-ui/FontIcon":242,"material-ui/IconButton":247,"react":661}],787:[function(require,module,exports){
+},{"../common/loader":775,"material-ui/FontIcon":242,"material-ui/IconButton":247,"react":661}],786:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -90289,7 +90214,7 @@ var ProgressDeviceList = _react2.default.createClass({
 
 module.exports = ProgressDeviceList;
 
-},{"lodash.isequal":187,"material-ui/FlatButton":238,"material-ui/Table":299,"react":661,"react-router":597,"react-time":628}],788:[function(require,module,exports){
+},{"lodash.isequal":187,"material-ui/FlatButton":238,"material-ui/Table":299,"react":661,"react-router":597,"react-time":628}],787:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -90721,7 +90646,7 @@ var Deployments = _react2.default.createClass({
 
 module.exports = Deployments;
 
-},{"../../actions/app-actions":761,"../../stores/app-store":812,"./inprogressdeployments.js":791,"./pastdeployments.js":792,"./pendingdeployments.js":793,"./report.js":795,"./schedule.js":796,"./schedulebutton.js":797,"./scheduleform.js":798,"material-ui/Dialog":229,"material-ui/FlatButton":238,"material-ui/RaisedButton":272,"material-ui/Snackbar":281,"react":661}],789:[function(require,module,exports){
+},{"../../actions/app-actions":761,"../../stores/app-store":811,"./inprogressdeployments.js":790,"./pastdeployments.js":791,"./pendingdeployments.js":792,"./report.js":794,"./schedule.js":795,"./schedulebutton.js":796,"./scheduleform.js":797,"material-ui/Dialog":229,"material-ui/FlatButton":238,"material-ui/RaisedButton":272,"material-ui/Snackbar":281,"react":661}],788:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -90868,7 +90793,7 @@ var DeploymentStatus = _react2.default.createClass({
 
 module.exports = DeploymentStatus;
 
-},{"../../actions/app-actions":761,"material-ui/FlatButton":238,"react":661}],790:[function(require,module,exports){
+},{"../../actions/app-actions":761,"material-ui/FlatButton":238,"react":661}],789:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -90907,7 +90832,7 @@ var GroupDevices = _react2.default.createClass({
 
 module.exports = GroupDevices;
 
-},{"../../actions/app-actions":761,"react":661}],791:[function(require,module,exports){
+},{"../../actions/app-actions":761,"react":661}],790:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -91078,7 +91003,7 @@ var Progress = _react2.default.createClass({
 
 module.exports = Progress;
 
-},{"../common/loader":776,"./deploymentstatus":789,"./groupdevices":790,"./scheduleform":798,"material-ui/FlatButton":238,"material-ui/Table":299,"react":661,"react-addons-update":408,"react-time":628}],792:[function(require,module,exports){
+},{"../common/loader":775,"./deploymentstatus":788,"./groupdevices":789,"./scheduleform":797,"material-ui/FlatButton":238,"material-ui/Table":299,"react":661,"react-addons-update":408,"react-time":628}],791:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -91278,7 +91203,7 @@ var Past = _react2.default.createClass({
 
 module.exports = Past;
 
-},{"../common/loader":776,"./deploymentstatus":789,"./groupdevices":790,"./scheduleform":798,"material-ui/FlatButton":238,"material-ui/Table":299,"rc-pagination":403,"react":661,"react-time":628}],793:[function(require,module,exports){
+},{"../common/loader":775,"./deploymentstatus":788,"./groupdevices":789,"./scheduleform":797,"material-ui/FlatButton":238,"material-ui/Table":299,"rc-pagination":403,"react":661,"react-time":628}],792:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -91452,7 +91377,7 @@ var Pending = _react2.default.createClass({
 
 module.exports = Pending;
 
-},{"./confirmabort":786,"./groupdevices":790,"material-ui/FlatButton":238,"material-ui/Table":299,"react":661,"react-material-icons/icons/content/block":558,"react-time":628}],794:[function(require,module,exports){
+},{"./confirmabort":785,"./groupdevices":789,"material-ui/FlatButton":238,"material-ui/Table":299,"react":661,"react-material-icons/icons/content/block":558,"react-time":628}],793:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -91627,7 +91552,7 @@ ProgressChart.contextTypes = {
 
 module.exports = ProgressChart;
 
-},{"../../actions/app-actions":761,"../../stores/app-store":812,"pluralize":390,"react":661,"react-router":597}],795:[function(require,module,exports){
+},{"../../actions/app-actions":761,"../../stores/app-store":811,"pluralize":390,"react":661,"react-router":597}],794:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -92146,7 +92071,7 @@ var DeploymentReport = _react2.default.createClass({
 
 module.exports = DeploymentReport;
 
-},{"../../actions/app-actions":761,"../../stores/app-store":812,"./confirmabort":786,"./deploymentdevicelist":787,"./deploymentstatus":789,"lodash.differenceWith":186,"lodash.isequal":187,"material-ui/Checkbox":211,"material-ui/Dialog":229,"material-ui/FlatButton":238,"material-ui/FontIcon":242,"material-ui/RaisedButton":272,"pluralize":390,"rc-pagination":403,"react":661,"react-addons-update":408,"react-copy-to-clipboard":414,"react-material-icons/icons/content/block":558,"react-router":597,"react-time":628}],796:[function(require,module,exports){
+},{"../../actions/app-actions":761,"../../stores/app-store":811,"./confirmabort":785,"./deploymentdevicelist":786,"./deploymentstatus":788,"lodash.differenceWith":186,"lodash.isequal":187,"material-ui/Checkbox":211,"material-ui/Dialog":229,"material-ui/FlatButton":238,"material-ui/FontIcon":242,"material-ui/RaisedButton":272,"pluralize":390,"rc-pagination":403,"react":661,"react-addons-update":408,"react-copy-to-clipboard":414,"react-material-icons/icons/content/block":558,"react-router":597,"react-time":628}],795:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -92309,7 +92234,7 @@ var Schedule = _react2.default.createClass({
 
 module.exports = Schedule;
 
-},{"material-ui":328,"react":661,"react-time":628}],797:[function(require,module,exports){
+},{"material-ui":328,"react":661,"react-time":628}],796:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -92354,7 +92279,7 @@ var ScheduleButton = _react2.default.createClass({
 
 module.exports = ScheduleButton;
 
-},{"material-ui/FlatButton":238,"material-ui/RaisedButton":272,"react":661}],798:[function(require,module,exports){
+},{"material-ui/FlatButton":238,"material-ui/RaisedButton":272,"react":661}],797:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -92699,7 +92624,7 @@ var ScheduleForm = _react2.default.createClass({
 
 module.exports = ScheduleForm;
 
-},{"../../actions/app-actions":761,"../../stores/app-store":812,"material-ui/Divider":231,"material-ui/Drawer":233,"material-ui/FontIcon":242,"material-ui/IconButton":247,"material-ui/MenuItem":261,"material-ui/SelectField":276,"material-ui/TextField":310,"pluralize":390,"react":661,"react-router":597,"react-search-input":621}],799:[function(require,module,exports){
+},{"../../actions/app-actions":761,"../../stores/app-store":811,"material-ui/Divider":231,"material-ui/Drawer":233,"material-ui/FontIcon":242,"material-ui/IconButton":247,"material-ui/MenuItem":261,"material-ui/SelectField":276,"material-ui/TextField":310,"pluralize":390,"react":661,"react-router":597,"react-search-input":621}],798:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -93405,7 +93330,7 @@ var DeviceList = _react2.default.createClass({
 
 module.exports = DeviceList;
 
-},{"../../actions/app-actions":761,"../../stores/app-store":812,"./filters":802,"./selecteddevices":804,"material-ui/Dialog":229,"material-ui/FlatButton":238,"material-ui/FontIcon":242,"material-ui/IconButton":247,"material-ui/MenuItem":261,"material-ui/RaisedButton":272,"material-ui/SelectField":276,"material-ui/Snackbar":281,"material-ui/Table":299,"material-ui/TextField":310,"pluralize":390,"react":661,"react-collapse":412,"react-dom":415,"react-height":551,"react-motion":565,"react-time":628}],800:[function(require,module,exports){
+},{"../../actions/app-actions":761,"../../stores/app-store":811,"./filters":801,"./selecteddevices":803,"material-ui/Dialog":229,"material-ui/FlatButton":238,"material-ui/FontIcon":242,"material-ui/IconButton":247,"material-ui/MenuItem":261,"material-ui/RaisedButton":272,"material-ui/SelectField":276,"material-ui/Snackbar":281,"material-ui/Table":299,"material-ui/TextField":310,"pluralize":390,"react":661,"react-collapse":412,"react-dom":415,"react-height":551,"react-motion":565,"react-time":628}],799:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -93678,7 +93603,7 @@ var DevicePicker = _react2.default.createClass({
 
 module.exports = DevicePicker;
 
-},{"../../actions/app-actions":761,"../common/loader":776,"material-ui/Dialog":229,"material-ui/FlatButton":238,"material-ui/RaisedButton":272,"material-ui/Table":299,"material-ui/TextField":310,"react":661,"react-search-input":621}],801:[function(require,module,exports){
+},{"../../actions/app-actions":761,"../common/loader":775,"material-ui/Dialog":229,"material-ui/FlatButton":238,"material-ui/RaisedButton":272,"material-ui/Table":299,"material-ui/TextField":310,"react":661,"react-search-input":621}],800:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -94022,7 +93947,7 @@ Devices.contextTypes = {
 
 module.exports = Devices;
 
-},{"../../actions/app-actions":761,"../../stores/app-store":812,"../common/loader":776,"../common/prototype/Array.prototype.equals":777,"./devicelist":799,"./devicepicker":800,"./groups":803,"./unauthorized":805,"material-ui/Snackbar":281,"rc-pagination":403,"react":661,"react-addons-update":408,"react-router":597}],802:[function(require,module,exports){
+},{"../../actions/app-actions":761,"../../stores/app-store":811,"../common/loader":775,"../common/prototype/Array.prototype.equals":776,"./devicelist":798,"./devicepicker":799,"./groups":802,"./unauthorized":804,"material-ui/Snackbar":281,"rc-pagination":403,"react":661,"react-addons-update":408,"react-router":597}],801:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -94235,7 +94160,7 @@ var Filters = _react2.default.createClass({
 
 module.exports = Filters;
 
-},{"material-ui/Drawer":233,"material-ui/FlatButton":238,"material-ui/FontIcon":242,"material-ui/IconButton":247,"material-ui/MenuItem":261,"material-ui/SelectField":276,"material-ui/TextField":310,"react":661}],803:[function(require,module,exports){
+},{"material-ui/Drawer":233,"material-ui/FlatButton":238,"material-ui/FontIcon":242,"material-ui/IconButton":247,"material-ui/MenuItem":261,"material-ui/SelectField":276,"material-ui/TextField":310,"react":661}],802:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -94381,7 +94306,7 @@ var Groups = _react2.default.createClass({
 
 module.exports = Groups;
 
-},{"../../actions/app-actions":761,"../common/prototype/Array.prototype.equals":777,"material-ui/FlatButton":238,"material-ui/FontIcon":242,"material-ui/List":255,"material-ui/RaisedButton":272,"material-ui/Subheader":289,"react":661}],804:[function(require,module,exports){
+},{"../../actions/app-actions":761,"../common/prototype/Array.prototype.equals":776,"material-ui/FlatButton":238,"material-ui/FontIcon":242,"material-ui/List":255,"material-ui/RaisedButton":272,"material-ui/Subheader":289,"react":661}],803:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -94698,7 +94623,7 @@ var SelectedDevices = _react2.default.createClass({
 
 module.exports = SelectedDevices;
 
-},{"../../actions/app-actions":761,"../../stores/app-store":812,"../deployments/scheduleform":798,"material-ui/Dialog":229,"material-ui/Divider":231,"material-ui/FlatButton":238,"material-ui/FontIcon":242,"material-ui/IconButton":247,"material-ui/List":255,"material-ui/RaisedButton":272,"material-ui/TextField":310,"react":661,"react-collapse":412,"react-router":597,"react-time":628}],805:[function(require,module,exports){
+},{"../../actions/app-actions":761,"../../stores/app-store":811,"../deployments/scheduleform":797,"material-ui/Dialog":229,"material-ui/Divider":231,"material-ui/FlatButton":238,"material-ui/FontIcon":242,"material-ui/IconButton":247,"material-ui/List":255,"material-ui/RaisedButton":272,"material-ui/TextField":310,"react":661,"react-collapse":412,"react-router":597,"react-time":628}],804:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -94983,7 +94908,7 @@ var Authorized = _react2.default.createClass({
 
 module.exports = Authorized;
 
-},{"../../actions/app-actions":761,"./selecteddevices":804,"material-ui":328,"material-ui/FontIcon":242,"material-ui/IconButton":247,"material-ui/RaisedButton":272,"material-ui/Table":299,"react":661,"react-collapse":412,"react-dom":415,"react-height":551,"react-motion":565,"react-time":628}],806:[function(require,module,exports){
+},{"../../actions/app-actions":761,"./selecteddevices":803,"material-ui":328,"material-ui/FontIcon":242,"material-ui/IconButton":247,"material-ui/RaisedButton":272,"material-ui/Table":299,"react":661,"react-collapse":412,"react-dom":415,"react-height":551,"react-motion":565,"react-time":628}],805:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -95123,7 +95048,7 @@ Header.contextTypes = {
 
 module.exports = Header;
 
-},{"../../actions/app-actions":761,"material-ui/FontIcon":242,"material-ui/IconButton":247,"material-ui/IconMenu":249,"material-ui/MenuItem":261,"material-ui/Tabs":304,"material-ui/Toolbar":327,"react":661,"react-router":597}],807:[function(require,module,exports){
+},{"../../actions/app-actions":761,"material-ui/FontIcon":242,"material-ui/IconButton":247,"material-ui/IconMenu":249,"material-ui/MenuItem":261,"material-ui/Tabs":304,"material-ui/Toolbar":327,"react":661,"react-router":597}],806:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -95295,7 +95220,7 @@ Login.contextTypes = {
 
 module.exports = Login;
 
-},{"../../actions/app-actions":761,"../../stores/app-store":812,"../../stores/local-store":813,"../common/forms/form":773,"../common/forms/passwordinput":774,"../common/forms/textinput":775,"material-ui/Snackbar":281,"react":661,"react-router":597}],808:[function(require,module,exports){
+},{"../../actions/app-actions":761,"../../stores/app-store":811,"../../stores/local-store":812,"../common/forms/form":772,"../common/forms/passwordinput":773,"../common/forms/textinput":774,"material-ui/Snackbar":281,"react":661,"react-router":597}],807:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -95388,7 +95313,7 @@ module.exports = _react2.default.createElement(
   _react2.default.createElement(_reactRouter.Route, { path: '/login', component: _login2.default, onEnter: noRequireAuth })
 );
 
-},{"../auth":766,"../components/app":767,"../components/artifacts/artifacts":768,"../components/dashboard/dashboard":779,"../components/deployments/deployments":788,"../components/devices/devices":801,"../components/user-management/login":807,"react":661,"react-router":597}],809:[function(require,module,exports){
+},{"../auth":766,"../components/app":767,"../components/artifacts/artifacts":768,"../components/dashboard/dashboard":778,"../components/deployments/deployments":787,"../components/devices/devices":800,"../components/user-management/login":806,"react":661,"react-router":597}],808:[function(require,module,exports){
 'use strict';
 
 module.exports = {
@@ -95419,7 +95344,7 @@ module.exports = {
   SET_SNACKBAR: 'SET_SNACKBAR'
 };
 
-},{}],810:[function(require,module,exports){
+},{}],809:[function(require,module,exports){
 'use strict';
 
 var Dispatcher = require('flux').Dispatcher;
@@ -95437,7 +95362,7 @@ var AppDispatcher = assign(new Dispatcher(), {
 
 module.exports = AppDispatcher;
 
-},{"flux":146,"object-assign":387}],811:[function(require,module,exports){
+},{"flux":146,"object-assign":387}],810:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -95468,7 +95393,7 @@ var routes = require('./config/routes');
   routes
 ), document.getElementById('main'));
 
-},{"./config/routes":808,"react":661,"react-dom":415,"react-router":597,"react-tap-event-plugin":626}],812:[function(require,module,exports){
+},{"./config/routes":807,"react":661,"react-dom":415,"react-router":597,"react-tap-event-plugin":626}],811:[function(require,module,exports){
 'use strict';
 
 var AppDispatcher = require('../dispatchers/app-dispatcher');
@@ -96224,7 +96149,7 @@ var AppStore = assign(EventEmitter.prototype, {
 
 module.exports = AppStore;
 
-},{"../constants/app-constants":809,"../dispatchers/app-dispatcher":810,"events":120,"object-assign":387}],813:[function(require,module,exports){
+},{"../constants/app-constants":808,"../dispatchers/app-dispatcher":809,"events":120,"object-assign":387}],812:[function(require,module,exports){
 'use strict';
 
 /*
@@ -96279,7 +96204,7 @@ var LocalStore = assign(EventEmitter.prototype, {
 
 module.exports = LocalStore;
 
-},{"../constants/app-constants":809,"../dispatchers/app-dispatcher":810,"events":120,"object-assign":387}],814:[function(require,module,exports){
+},{"../constants/app-constants":808,"../dispatchers/app-dispatcher":809,"events":120,"object-assign":387}],813:[function(require,module,exports){
 'use strict';
 
 var _colorManipulator = require('material-ui/utils/colorManipulator');
@@ -96309,4 +96234,4 @@ module.exports = {
   }
 };
 
-},{"material-ui/styles/colors":349,"material-ui/styles/spacing":351,"material-ui/utils/colorManipulator":376}]},{},[811]);
+},{"material-ui/styles/colors":349,"material-ui/styles/spacing":351,"material-ui/utils/colorManipulator":376}]},{},[810]);

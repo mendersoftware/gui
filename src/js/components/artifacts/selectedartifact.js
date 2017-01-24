@@ -24,9 +24,6 @@ var SelectedArtifact = React.createClass({
     filters = encodeURIComponent(filters);
     this.props.history.push("/devices/:group/:filters", {filters: filters}, null);
   },
-  _clickArtifactSchedule: function() {
-    this.props.createDeployment(this.props.artifact);
-  },
   _descEdit: function(artifact, event) {
     event.stopPropagation();
     if (event.keyCode === 13 || !event.keyCode) {
@@ -128,12 +125,6 @@ var SelectedArtifact = React.createClass({
               </div>
               <hr style={{margin:"0", backgroundColor:"#e0e0e0", height:"1px", border:"none"}} />
             </div>
-
-          
-            <List style={{backgroundColor: "rgba(255,255,255,0)"}}>
-              <ListItem style={styles.listStyle} disabled={true} primaryText="Date uploaded" secondaryText={info.modified} />
-              <Divider />
-            </List>
           </div>
 
           <div className="artifact-list list-item">
@@ -141,8 +132,8 @@ var SelectedArtifact = React.createClass({
               <ListItem style={styles.listStyle} disabled={true} secondaryTextLines={2} primaryText="Device type compatibility" secondaryText={this.props.compatible} />
               <Divider />
             </List>
-   
-          
+          </div>
+          <div className="artifact-list list-item">
             <div className="hidden">
               <List style={{backgroundColor: "rgba(255,255,255,0)"}}>
                 <ListItem style={styles.listStyle} disabled={true} primaryText="Installed on devices" secondaryText={devicesLink} />
@@ -150,20 +141,6 @@ var SelectedArtifact = React.createClass({
               </List>
             </div>
           </div>
-
-          <div className="artifact-list list-item" style={{width:"320px"}}>
-            <List style={{backgroundColor: "rgba(255,255,255,0)", paddingTop:"16px"}}>
-              <div key="updateButton">
-                <ListItem
-                  style={styles.listStyle}
-                  primaryText="Create a deployment using this artifact"
-                  onClick={this._clickArtifactSchedule}
-                  leftIcon={<FontIcon style={{marginTop:6, marginBottom:6}} className="material-icons update">replay</FontIcon>} />
-              </div>
-              <Divider />
-            </List>
-          </div>
-      
   
         </div>
 

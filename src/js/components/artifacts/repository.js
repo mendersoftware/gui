@@ -9,7 +9,6 @@ import SearchInput from 'react-search-input';
 import Form from '../common/forms/form';
 import FileInput from '../common/forms/fileinput';
 import TextInput from '../common/forms/textinput';
-import DeploymentButton from './deploymentbutton';
 import SelectedArtifact from './selectedartifact';
 import { Router, Route, Link } from 'react-router';
 import { Motion, spring } from 'react-motion';
@@ -44,7 +43,6 @@ var Repository = React.createClass({
       popupLabel: "Upload a new artifact",
       artifacts: [],
       tmpFile: null,
-      snackMessage: "Deployment created",
       openSnack: false,
       autoHideDuration: 8000,
       divHeight: 148,
@@ -66,12 +64,6 @@ var Repository = React.createClass({
     };
     this.setState({artifact: artifact});
   },
-  _createDeployment: function(artifact) {
-    AppActions.setDeploymentArtifact(artifact);
-    var URIParams = "open=true";
-    URIParams = encodeURIComponent(URIParams);
-    this.redirect(URIParams);
-  },
   dialogOpen: function (ref) {
     var obj = {};
     obj[ref] = true;
@@ -81,9 +73,6 @@ var Repository = React.createClass({
     var obj = {};
     obj[ref] = false;
     this.setState(obj);
-  },
-  redirect: function(params) {
-    this.context.router.push('/deployments/progress/'+params);
   },
   _onUploadSubmit: function(meta) {
     var self = this;
@@ -207,7 +196,7 @@ var Repository = React.createClass({
       var compatible = pkg.device_types_compatible.join(", ");
       var expanded = '';
       if (this.state.artifact.id === pkg.id) {
-        expanded = <SelectedArtifact compatible={compatible} formatTime={this._formatTime} editArtifact={this._editArtifactData} buttonStyle={styles.flatButtonIcon} artifact={this.state.artifact} createDeployment={this._createDeployment} />
+        expanded = <SelectedArtifact compatible={compatible} formatTime={this._formatTime} editArtifact={this._editArtifactData} buttonStyle={styles.flatButtonIcon} artifact={this.state.artifact} />
       }
      
       return (
@@ -303,14 +292,6 @@ var Repository = React.createClass({
           </div>
         </Dialog>
 
-        <Snackbar
-          open={this.state.openSnack}
-          message={this.state.snackMessage}
-          action="Go to deployments"
-          autoHideDuration={this.state.autoHideDuration}
-          onActionTouchTap={this.redirect}
-          onRequestClose={this.handleRequestClose}
-        />
       </div>
     );
   }
