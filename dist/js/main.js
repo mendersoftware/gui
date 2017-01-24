@@ -87989,13 +87989,13 @@ var Repository = _react2.default.createClass({
     var items = tmpArtifacts.map(function (pkg, index) {
       var compatible = pkg.device_types_compatible.join(", ");
       var expanded = '';
-      if (this.state.artifact.name === pkg.name) {
+      if (this.state.artifact.id === pkg.id) {
         expanded = _react2.default.createElement(_selectedartifact2.default, { compatible: compatible, formatTime: this._formatTime, editArtifact: this._editArtifactData, buttonStyle: styles.flatButtonIcon, artifact: this.state.artifact, createDeployment: this._createDeployment });
       }
 
       return _react2.default.createElement(
         _Table.TableRow,
-        { hoverable: this.state.artifact.name !== pkg.name, className: this.state.artifact.name === pkg.name ? "expand" : null, key: index },
+        { hoverable: !expanded, className: expanded ? "expand" : null, key: index },
         _react2.default.createElement(
           _Table.TableRowColumn,
           { style: expanded ? { height: this.state.divHeight } : null },
@@ -90331,7 +90331,7 @@ function getState() {
     pending: AppStore.getPendingDeployments(),
     progress: AppStore.getDeploymentsInProgress() || [],
     events: AppStore.getEventLog(),
-    artifacts: AppStore.getArtifactsRepo(),
+    collatedArtifacts: AppStore.getCollatedArtifacts(),
     groups: AppStore.getGroups(),
     allDevices: AppStore.getAllDevices(),
     invalid: true,
@@ -90356,7 +90356,8 @@ var Deployments = _react2.default.createClass({
 
     var artifactsCallback = {
       success: function (artifacts) {
-        this.setState({ artifacts: artifacts });
+        var collated = AppStore.getCollatedArtifacts();
+        this.setState({ collatedArtifacts: collated });
       }.bind(this)
     };
     AppActions.getArtifacts(artifactsCallback);
@@ -90421,7 +90422,6 @@ var Deployments = _react2.default.createClass({
     } else {
       this.setState({ reportType: "progress" });
     }
-    AppActions.getArtifacts();
   },
   _refreshDeployments: function _refreshDeployments() {
     this._refreshInProgress();
@@ -90672,7 +90672,7 @@ var Deployments = _react2.default.createClass({
     var dialogContent = '';
 
     if (this.state.scheduleForm) {
-      dialogContent = _react2.default.createElement(ScheduleForm, { deploymentDevices: this.state.deploymentDevices, filteredDevices: this.state.filteredDevices, hasPending: this.state.hasPending, hasDevices: this.state.hasDevices, deploymentSettings: this._deploymentParams, id: this.state.id, artifacts: this.state.artifacts, artifact: this.state.artifact, groups: this.state.groups, group: this.state.group });
+      dialogContent = _react2.default.createElement(ScheduleForm, { deploymentDevices: this.state.deploymentDevices, filteredDevices: this.state.filteredDevices, hasPending: this.state.hasPending, hasDevices: this.state.hasDevices, deploymentSettings: this._deploymentParams, id: this.state.id, artifacts: this.state.collatedArtifacts, artifact: this.state.artifact, groups: this.state.groups, group: this.state.group });
     } else if (this.state.reportType === "progress") {
       dialogContent = _react2.default.createElement(Report, { abort: this._abortDeployment, updated: this.updated, deployment: this.state.selectedDeployment });
     } else {
@@ -95819,6 +95819,21 @@ function startTimeSortAscend(a, b) {
   return (a.created < b.created) - (a.created > b.created);
 }
 
+function _collateArtifacts() {
+  var newArray = [];
+  for (var i = 0; i < _artifactsRepo.length; i++) {
+    var x = findWithAttr(newArray, "name", _artifactsRepo[i].name);
+    if (typeof x !== "undefined") {
+      newArray[x].device_types_compatible = newArray[x].device_types_compatible.concat(_artifactsRepo[i].device_types_compatible.filter(function (item) {
+        return newArray[x].device_types_compatible.indexOf(item) < 0;
+      }));
+    } else {
+      newArray.push(_artifactsRepo[i]);
+    }
+  }
+  return newArray;
+}
+
 /*
 * API STARTS HERE
 */
@@ -96010,6 +96025,13 @@ var AppStore = assign(EventEmitter.prototype, {
     * Return list of saved artifacts objects
     */
     return discoverDevices(_artifactsRepo);
+  },
+
+  getCollatedArtifacts: function getCollatedArtifacts() {
+    /*
+    * return list of artifacts where duplicate names are collated with device compatibility lists combined
+    */
+    return _collateArtifacts();
   },
 
   getSoftwareArtifact: function getSoftwareArtifact(attr, val) {
