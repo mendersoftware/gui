@@ -86964,9 +86964,9 @@ var AppActions = {
 
   uploadArtifact: function uploadArtifact(meta, file, callback) {
     var formData = new FormData();
+    formData.append('size', file.size);
     formData.append('description', meta.description);
     formData.append('artifact', file);
-    formData.append('size', file.size);
     ArtifactsApi.postFormData(deploymentsApiUrl + '/artifacts', formData).then(function (data) {
       callback.success(data);
     }).catch(function (err) {
