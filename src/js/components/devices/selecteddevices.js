@@ -6,6 +6,7 @@ import Collapse from 'react-collapse';
 var AppStore = require('../../stores/app-store');
 var AppActions = require('../../actions/app-actions');
 var ScheduleForm = require('../deployments/scheduleform');
+var Loader = require('../common/loader');
 
 import { List, ListItem } from 'material-ui/List';
 import FontIcon from 'material-ui/FontIcon';
@@ -15,6 +16,15 @@ import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import Divider from 'material-ui/Divider';
 import IconButton from 'material-ui/IconButton';
+
+
+var tooltip = {
+  title: 'Waiting for inventory data',
+  text: 'Inventory data not yet received from the device - this can take up to 30 minutes with default installation. <p>Also see the documentation for <a href="https://docs.mender.io/Client-configuration/Polling-intervals" target="_blank">Polling intervals</a>.</p>',
+  selector: '#inventory-info',
+  position: 'bottom-right',
+  type: 'hover',
+};
 
 function getGroups() {
   var copy = AppStore.getGroups().slice();
@@ -31,6 +41,10 @@ var SelectedDevices = React.createClass({
       },
       schedule: false,
     };
+  },
+
+  componentDidMount: function() {
+    this.props.addTooltip(tooltip);
   },
 
   dialogToggle: function (ref) {
@@ -80,6 +94,10 @@ var SelectedDevices = React.createClass({
   },
   _handleBlock: function() {
     this.props.block(this.props.selected);
+  },
+
+  _handleStopProp: function(e) {
+    e.stopPropagation();
   },
 
   _deploymentParams: function(val, attr) {
@@ -154,16 +172,28 @@ var SelectedDevices = React.createClass({
           </div>
         );
       };
+
+      deviceInventory.push(
+        <div key="updateButton">
+          <ListItem
+            style={styles.listStyle}
+            primaryText="Create a deployment for this device"
+            onClick={this._clickListItem}
+            leftIcon={<FontIcon style={{marginTop:6, marginBottom:6}} className="material-icons update">replay</FontIcon>} />
+        </div>
+      );
+    } else {
+      /* No inventory data yet */
+      deviceInventory.push(
+        <div className="waiting-inventory" key="waiting-inventory">
+          <div onClick={this._handleStopProp} id="inventory-info" className="tooltip info" style={{top:"8px", right:"8px"}}>
+            <FontIcon className="material-icons">info</FontIcon>
+          </div>
+          <p>Waiting for inventory data from the device</p>
+          <Loader show={true} waiting={true} />
+        </div>
+      );
     }
-    deviceInventory.push(
-      <div key="updateButton">
-        <ListItem
-          style={styles.listStyle}
-          primaryText="Create a deployment for this device"
-          onClick={this._clickListItem}
-          leftIcon={<FontIcon style={{marginTop:6, marginBottom:6}} className="material-icons update">replay</FontIcon>} />
-      </div>
-    );
 
     var deviceInventory2 = [];
     if (deviceInventory.length > deviceIdentity.length) {

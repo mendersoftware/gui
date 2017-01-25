@@ -109,7 +109,6 @@ var DeviceList = React.createClass({
     this._validateName(event.target.value);
   },
   _expandRow: function(rowNumber, columnId) {
-    
     if (columnId >-1 && columnId < 5) {
 
       if (this.props.devices[rowNumber] !== this.state.expandedDevice) {
@@ -340,7 +339,7 @@ var DeviceList = React.createClass({
         attrs[device.attributes[i].name] = device.attributes[i].value;
       }
       if ( this.state.expanded === index ) {
-        expanded = <SelectedDevices redirect={this.props.redirect} admittanceTime={this.state.admittanceTime} attributes={this.state.deviceAttributes} deviceId={this.state.deviceId} device_type={attrs.device_type} artifacts={this.props.artifacts} device={this.state.expandedDevice} selectedGroup={this.props.selectedGroup} artifacts={this.props.artifacts} groups={this.props.groups} />
+        expanded = <SelectedDevices addTooltip={this.props.addTooltip} redirect={this.props.redirect} admittanceTime={this.state.admittanceTime} attributes={this.state.deviceAttributes} deviceId={this.state.deviceId} device_type={attrs.device_type} artifacts={this.props.artifacts} device={this.state.expandedDevice} selectedGroup={this.props.selectedGroup} artifacts={this.props.artifacts} groups={this.props.groups} />
       }
       return (
         <TableRow selected={device.selected} hoverable={!expanded} className={expanded ? "expand" : null}  key={index}>
@@ -426,7 +425,6 @@ var DeviceList = React.createClass({
           <div className="margin-bottom">
             <Table
               onCellClick={this._expandRow}
-              onRowSelection={this._expandRow}
               multiSelectable={true}
               className={devices.length ? null : 'hidden'} >
               <TableHeader

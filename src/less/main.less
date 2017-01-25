@@ -880,6 +880,20 @@ tr.expand {
     border-radius: 5px;
   }
 
+  div.waiting-inventory {
+    padding: 24px 18px 0;
+    border: 1px dashed @lightgrey;
+    border-radius: 5px;
+    color: rgba(0,0,0,0.5);
+    text-align: center;
+    white-space: normal;
+    position: relative;
+    p {
+      margin: 0.5em 0;
+      font-size: 14px;
+    }
+  }
+
   td {
     vertical-align: top;
     padding-top: 16px;
@@ -1699,4 +1713,34 @@ div.shake-alert {
     .scale(0.5);
   }
 }
+
+
+.waiting-loader {
+  margin: 10px auto 0;
+
+  .dot {
+      .animation(pulse @animationLength infinite);
+  }
+
+  .dot_1 {
+      left: 0;
+  }
+
+  .dot_2 {
+      left: @animationRadius;
+      animation-delay: @animationLength * .25;
+  }
+
+  .dot_3 {
+      left: @animationRadius * 2;
+      animation-delay: @animationLength * .5;
+  }
+
+  .dot_4 {
+      left: @animationRadius * 3;
+      animation-delay: @animationLength * .75;
+  }
+
+}
+
 

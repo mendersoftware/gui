@@ -266,7 +266,8 @@ var Devices = React.createClass({
             </div>
           </div>
           <Loader show={!this.state.doneLoading} />
-          <DeviceList 
+          <DeviceList
+            addTooltip={this.props.addTooltip} 
             redirect={this._redirect}
             refreshDevices={this._refreshDevices}
             refreshGroups={this._refreshGroups}

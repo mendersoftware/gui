@@ -884,6 +884,19 @@ tr.expand #device-identity {
   position: relative;
   border-radius: 5px;
 }
+tr.expand div.waiting-inventory {
+  padding: 24px 18px 0;
+  border: 1px dashed #d4e9e7;
+  border-radius: 5px;
+  color: rgba(0, 0, 0, 0.5);
+  text-align: center;
+  white-space: normal;
+  position: relative;
+}
+tr.expand div.waiting-inventory p {
+  margin: 0.5em 0;
+  font-size: 14px;
+}
 tr.expand td {
   vertical-align: top;
   padding-top: 16px;
@@ -1861,4 +1874,31 @@ div.shake-alert {
   -moz-transform: scale(0.5);
   -ms-transform: scale(0.5);
   -o-transform: scale(0.5);
+}
+.waiting-loader {
+  margin: 10px auto 0;
+}
+.waiting-loader .dot {
+  -webkit-animation: pulse 1.5s infinite;
+  -moz-animation: pulse 1.5s infinite;
+  -ms-animation: pulse 1.5s infinite;
+  -o-animation: pulse 1.5s infinite;
+}
+.waiting-loader .dot_1 {
+  left: 0;
+}
+.waiting-loader .dot_2 {
+  left: 12px;
+  -webkit-animation-delay: 0.375s;
+          animation-delay: 0.375s;
+}
+.waiting-loader .dot_3 {
+  left: 24px;
+  -webkit-animation-delay: 0.75s;
+          animation-delay: 0.75s;
+}
+.waiting-loader .dot_4 {
+  left: 36px;
+  -webkit-animation-delay: 1.125s;
+          animation-delay: 1.125s;
 }
