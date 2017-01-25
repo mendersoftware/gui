@@ -282,6 +282,14 @@ span.link.small {
   background-repeat: no-repeat;
   background-size: contain;
 }
+#demoBox {
+  border-style: dashed;
+  border-color: #7D3F69;
+  border-width: 2px;
+  padding: 4px 20px;
+  margin: 14px -44px 14px 0;
+  color: #7D3F69;
+}
 /* Layout */
 .flexbox {
   display: -ms-flexbox;
