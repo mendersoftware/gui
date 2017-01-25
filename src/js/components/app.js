@@ -5,10 +5,12 @@ import Joyride from 'react-joyride';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import RawTheme from '../themes/mender-theme.js';
 
+var isDemoMode = false;
+
 function getState() {
   return {
     ready: false,
-    steps: [],
+    steps: []
   }
 }
 
@@ -66,7 +68,7 @@ var App = React.createClass({
       <div className="wrapper">
         <Joyride ref="joyride" steps={this.state.steps} showOverlay={true} type='single' tooltipOffset={12} />
         <div className="header">
-          <Header addSteps={this.addSteps} addTooltip={this.addTooltip} clearSteps={this.clearSteps} history={this.props.history} />
+          <Header demo={isDemoMode} addSteps={this.addSteps} addTooltip={this.addTooltip} clearSteps={this.clearSteps} history={this.props.history} />
         </div>
         <div className="container">
           {React.cloneElement(this.props.children, {addSteps: this.addSteps, addTooltip: this.addTooltip, makeReady: this.makeReady})}
