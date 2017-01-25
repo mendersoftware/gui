@@ -88869,7 +88869,7 @@ var Loader = _react2.default.createClass({
       { className: this.props.show ? "loaderContainer" : hideClass },
       _react2.default.createElement(
         "div",
-        { className: "loader" },
+        { className: this.props.waiting ? "waiting-loader loader" : "loader" },
         _react2.default.createElement("span", { className: "dot dot_1" }),
         _react2.default.createElement("span", { className: "dot dot_2" }),
         _react2.default.createElement("span", { className: "dot dot_3" }),
@@ -92638,7 +92638,7 @@ var ScheduleForm = _react2.default.createClass({
             { className: 'material-icons', style: { marginRight: "4px", fontSize: "18px", top: "4px" } },
             'info_outline'
           ),
-          'the deployment will skip any devices that are already on the target artifact version, or that have a different device type.'
+          'The deployment will skip any devices that are already on the target artifact version, or that have a different device type.'
         )
       )
     );
@@ -92810,7 +92810,6 @@ var DeviceList = _react2.default.createClass({
     this._validateName(event.target.value);
   },
   _expandRow: function _expandRow(rowNumber, columnId) {
-
     if (columnId > -1 && columnId < 5) {
 
       if (this.props.devices[rowNumber] !== this.state.expandedDevice) {
@@ -93043,7 +93042,7 @@ var DeviceList = _react2.default.createClass({
       if (this.state.expanded === index) {
         var _React$createElement;
 
-        expanded = _react2.default.createElement(SelectedDevices, (_React$createElement = { redirect: this.props.redirect, admittanceTime: this.state.admittanceTime, attributes: this.state.deviceAttributes, deviceId: this.state.deviceId, device_type: attrs.device_type, artifacts: this.props.artifacts, device: this.state.expandedDevice, selectedGroup: this.props.selectedGroup }, _defineProperty(_React$createElement, 'artifacts', this.props.artifacts), _defineProperty(_React$createElement, 'groups', this.props.groups), _React$createElement));
+        expanded = _react2.default.createElement(SelectedDevices, (_React$createElement = { addTooltip: this.props.addTooltip, redirect: this.props.redirect, admittanceTime: this.state.admittanceTime, attributes: this.state.deviceAttributes, deviceId: this.state.deviceId, device_type: attrs.device_type, artifacts: this.props.artifacts, device: this.state.expandedDevice, selectedGroup: this.props.selectedGroup }, _defineProperty(_React$createElement, 'artifacts', this.props.artifacts), _defineProperty(_React$createElement, 'groups', this.props.groups), _React$createElement));
       }
       return _react2.default.createElement(
         _Table.TableRow,
@@ -93176,7 +93175,6 @@ var DeviceList = _react2.default.createClass({
             _Table.Table,
             {
               onCellClick: this._expandRow,
-              onRowSelection: this._expandRow,
               multiSelectable: true,
               className: devices.length ? null : 'hidden' },
             _react2.default.createElement(
@@ -93920,6 +93918,7 @@ var Devices = _react2.default.createClass({
         ),
         _react2.default.createElement(Loader, { show: !this.state.doneLoading }),
         _react2.default.createElement(DeviceList, {
+          addTooltip: this.props.addTooltip,
           redirect: this._redirect,
           refreshDevices: this._refreshDevices,
           refreshGroups: this._refreshGroups,
@@ -94381,6 +94380,15 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var AppStore = require('../../stores/app-store');
 var AppActions = require('../../actions/app-actions');
 var ScheduleForm = require('../deployments/scheduleform');
+var Loader = require('../common/loader');
+
+var tooltip = {
+  title: 'Waiting for inventory data',
+  text: 'Inventory data not yet received from the device - this can take up to 30 minutes with default installation. <p>Also see the documentation for <a href="https://docs.mender.io/Client-configuration/Polling-intervals" target="_blank">Polling intervals</a>.</p>',
+  selector: '#inventory-info',
+  position: 'bottom-right',
+  type: 'hover'
+};
 
 function getGroups() {
   var copy = AppStore.getGroups().slice();
@@ -94399,6 +94407,10 @@ var SelectedDevices = _react2.default.createClass({
       },
       schedule: false
     };
+  },
+
+  componentDidMount: function componentDidMount() {
+    this.props.addTooltip(tooltip);
   },
 
   dialogToggle: function dialogToggle(ref) {
@@ -94448,6 +94460,10 @@ var SelectedDevices = _react2.default.createClass({
   },
   _handleBlock: function _handleBlock() {
     this.props.block(this.props.selected);
+  },
+
+  _handleStopProp: function _handleStopProp(e) {
+    e.stopPropagation();
   },
 
   _deploymentParams: function _deploymentParams(val, attr) {
@@ -94522,20 +94538,42 @@ var SelectedDevices = _react2.default.createClass({
           _react2.default.createElement(_Divider2.default, null)
         ));
       };
+
+      deviceInventory.push(_react2.default.createElement(
+        'div',
+        { key: 'updateButton' },
+        _react2.default.createElement(_List.ListItem, {
+          style: styles.listStyle,
+          primaryText: 'Create a deployment for this device',
+          onClick: this._clickListItem,
+          leftIcon: _react2.default.createElement(
+            _FontIcon2.default,
+            { style: { marginTop: 6, marginBottom: 6 }, className: 'material-icons update' },
+            'replay'
+          ) })
+      ));
+    } else {
+      /* No inventory data yet */
+      deviceInventory.push(_react2.default.createElement(
+        'div',
+        { className: 'waiting-inventory', key: 'waiting-inventory' },
+        _react2.default.createElement(
+          'div',
+          { onClick: this._handleStopProp, id: 'inventory-info', className: 'tooltip info', style: { top: "8px", right: "8px" } },
+          _react2.default.createElement(
+            _FontIcon2.default,
+            { className: 'material-icons' },
+            'info'
+          )
+        ),
+        _react2.default.createElement(
+          'p',
+          null,
+          'Waiting for inventory data from the device'
+        ),
+        _react2.default.createElement(Loader, { show: true, waiting: true })
+      ));
     }
-    deviceInventory.push(_react2.default.createElement(
-      'div',
-      { key: 'updateButton' },
-      _react2.default.createElement(_List.ListItem, {
-        style: styles.listStyle,
-        primaryText: 'Create a deployment for this device',
-        onClick: this._clickListItem,
-        leftIcon: _react2.default.createElement(
-          _FontIcon2.default,
-          { style: { marginTop: 6, marginBottom: 6 }, className: 'material-icons update' },
-          'replay'
-        ) })
-    ));
 
     var deviceInventory2 = [];
     if (deviceInventory.length > deviceIdentity.length) {
@@ -94646,7 +94684,7 @@ var SelectedDevices = _react2.default.createClass({
 
 module.exports = SelectedDevices;
 
-},{"../../actions/app-actions":762,"../../stores/app-store":812,"../deployments/scheduleform":798,"material-ui/Dialog":229,"material-ui/Divider":231,"material-ui/FlatButton":238,"material-ui/FontIcon":242,"material-ui/IconButton":247,"material-ui/List":255,"material-ui/RaisedButton":272,"material-ui/TextField":310,"react":662,"react-collapse":412,"react-router":598,"react-time":629}],805:[function(require,module,exports){
+},{"../../actions/app-actions":762,"../../stores/app-store":812,"../common/loader":776,"../deployments/scheduleform":798,"material-ui/Dialog":229,"material-ui/Divider":231,"material-ui/FlatButton":238,"material-ui/FontIcon":242,"material-ui/IconButton":247,"material-ui/List":255,"material-ui/RaisedButton":272,"material-ui/TextField":310,"react":662,"react-collapse":412,"react-router":598,"react-time":629}],805:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');

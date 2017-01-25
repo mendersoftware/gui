@@ -204,7 +204,7 @@ var ScheduleForm = React.createClass({
             <div className={tmpDevices ? null : 'hidden'}>{this.props.filteredDevices ? this.props.filteredDevices.length : "0"} of {devicesLength} {pluralize("devices",devicesLength)} will be updated <span onClick={this._showDevices} className={this.state.disabled ? "hidden" : "margin-left link"}>View devices</span></div>
           </div>
             
-          <p className={this.props.hasDevices && artifactItems.length ? 'info': "hidden"}><FontIcon className="material-icons" style={{marginRight:"4px", fontSize:"18px", top: "4px"}}>info_outline</FontIcon>the deployment will skip any devices that are already on the target artifact version, or that have a different device type.</p>
+          <p className={this.props.hasDevices && artifactItems.length ? 'info': "hidden"}><FontIcon className="material-icons" style={{marginRight:"4px", fontSize:"18px", top: "4px"}}>info_outline</FontIcon>The deployment will skip any devices that are already on the target artifact version, or that have a different device type.</p>
 
         </form>
       </div>
