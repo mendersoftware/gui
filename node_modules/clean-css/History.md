@@ -1,3 +1,8 @@
+[3.4.24 / 2017-01-20](https://github.com/jakubpawlowicz/clean-css/compare/v3.4.23...v3.4.24)
+==================
+
+* Fixed issue [#859](https://github.com/jakubpawlowicz/clean-css/issues/859) - avoid `-webkit-border-radius` optimizations.
+
 [3.4.23 / 2016-12-17](https://github.com/jakubpawlowicz/clean-css/compare/v3.4.22...v3.4.23)
 ==================
 

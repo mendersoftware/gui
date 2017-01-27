@@ -27,6 +27,7 @@
     "material-ui": "^0.16.4",
     "material-ui-password-field": "git+https://github.com/michaelatmender/material-ui-password-field.git",
     "moment": "^2.17.0",
+    "npm-git-install": "^0.2.0",
     "object-assign": "^4.1.0",
     "parse-link-header": "^0.4.1",
     "pluralize": "^3.0.0",
@@ -60,7 +61,11 @@
   },
   "devDependencies": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "install": "npm-git install"
+  },
+  "gitDependencies": {
+    "public-package-name": "https://github.com/michaelatmender/material-ui-password-field"
   },
   "repository": {
     "type": "git",
