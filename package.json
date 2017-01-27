@@ -27,6 +27,7 @@
     "material-ui": "^0.16.4",
     "material-ui-password-field": "git+https://github.com/michaelatmender/material-ui-password-field.git",
     "moment": "^2.17.0",
+    "npm-git-install": "^0.2.0",
     "object-assign": "^4.1.0",
     "parse-link-header": "^0.4.1",
     "pluralize": "^3.0.0",
@@ -39,7 +40,7 @@
     "react-dnd": "^2.1.3",
     "react-dnd-html5-backend": "^2.1.2",
     "react-dom": "^15.4.1",
-    "react-file-input": "^0.2.5",
+    "react-file-input": "git+https://github.com/michaelatmender/react-file-input.git",
     "react-height": "^2.1.1",
     "react-joyride": "^1.5.1",
     "react-material-icons": "^1.0.1",
@@ -60,7 +61,11 @@
   },
   "devDependencies": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "install": "npm-git install"
+  },
+  "gitDependencies": {
+    "public-package-name": "https://github.com/michaelatmender/material-ui-password-field"
   },
   "repository": {
     "type": "git",

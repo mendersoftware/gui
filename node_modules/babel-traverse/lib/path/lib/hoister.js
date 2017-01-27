@@ -140,7 +140,7 @@ var PathHoister = function () {
 
   PathHoister.prototype.getAttachmentParentForPath = function getAttachmentParentForPath(path) {
     do {
-      if (!path.parentPath || Array.isArray(path.container) && path.isStatement() || path.isVariableDeclarator() && path.parentPath.node.declarations.length > 1) return path;
+      if (!path.parentPath || Array.isArray(path.container) && path.isStatement() || path.isVariableDeclarator() && path.parentPath.node !== null && path.parentPath.node.declarations.length > 1) return path;
     } while (path = path.parentPath);
   };
 

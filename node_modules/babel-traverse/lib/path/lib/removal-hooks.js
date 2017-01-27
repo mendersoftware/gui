@@ -2,11 +2,6 @@
 
 exports.__esModule = true;
 var hooks = exports.hooks = [function (self, parent) {
-  if (self.key === "body" && parent.isArrowFunctionExpression()) {
-    self.replaceWith(self.scope.buildUndefinedNode());
-    return true;
-  }
-}, function (self, parent) {
   var removeParent = false;
 
   removeParent = removeParent || self.key === "test" && (parent.isWhile() || parent.isSwitchCase());
@@ -38,7 +33,7 @@ var hooks = exports.hooks = [function (self, parent) {
     return true;
   }
 }, function (self, parent) {
-  if (parent.isIfStatement() && (self.key === "consequent" || self.key === "alternate") || parent.isLoop() && self.key === "body") {
+  if (parent.isIfStatement() && (self.key === "consequent" || self.key === "alternate") || self.key === "body" && (parent.isLoop() || parent.isArrowFunctionExpression())) {
     self.replaceWith({
       type: "BlockStatement",
       body: []

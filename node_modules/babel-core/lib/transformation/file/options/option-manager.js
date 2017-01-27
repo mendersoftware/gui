@@ -40,9 +40,13 @@ var messages = _interopRequireWildcard(_babelMessages);
 
 var _index = require("./index");
 
-var _resolve = require("../../../helpers/resolve");
+var _resolvePlugin = require("../../../helpers/resolve-plugin");
 
-var _resolve2 = _interopRequireDefault(_resolve);
+var _resolvePlugin2 = _interopRequireDefault(_resolvePlugin);
+
+var _resolvePreset = require("../../../helpers/resolve-preset");
+
+var _resolvePreset2 = _interopRequireDefault(_resolvePreset);
 
 var _cloneDeepWith = require("lodash/cloneDeepWith");
 
@@ -169,7 +173,7 @@ var OptionManager = function () {
       var alias = typeof plugin === "string" ? plugin : loc + "$" + i;
 
       if (typeof plugin === "string") {
-        var pluginLoc = (0, _resolve2.default)("babel-plugin-" + plugin, dirname) || (0, _resolve2.default)(plugin, dirname);
+        var pluginLoc = (0, _resolvePlugin2.default)(plugin, dirname);
         if (pluginLoc) {
           plugin = require(pluginLoc);
         } else {
@@ -282,18 +286,7 @@ var OptionManager = function () {
       var presetLoc = void 0;
       try {
         if (typeof val === "string") {
-          presetLoc = (0, _resolve2.default)("babel-preset-" + val, dirname) || (0, _resolve2.default)(val, dirname);
-
-          if (!presetLoc) {
-            var matches = val.match(/^(@[^/]+)\/(.+)$/);
-            if (matches) {
-              var orgName = matches[1],
-                  presetPath = matches[2];
-
-              val = orgName + "/babel-preset-" + presetPath;
-              presetLoc = (0, _resolve2.default)(val, dirname);
-            }
-          }
+          presetLoc = (0, _resolvePreset2.default)(val, dirname);
 
           if (!presetLoc) {
             throw new Error("Couldn't find preset " + (0, _stringify2.default)(val) + " relative to directory " + (0, _stringify2.default)(dirname));
