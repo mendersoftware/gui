@@ -721,6 +721,9 @@ div.code {
   background-color: rgba(255, 255, 255, 0.8);
 }
 /* Forms and inputs*/
+input[required]:-moz-ui-invalid {
+  box-shadow: none;
+}
 .inputGroup {
   padding: 12px;
   background-color: rgba(66, 66, 66, 0.03);
