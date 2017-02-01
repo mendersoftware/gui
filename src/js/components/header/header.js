@@ -85,7 +85,7 @@ var Header = React.createClass({
               <Link to="/" id="logo"></Link>
           </ToolbarGroup>
 
-          {this.props.demo ? <div id="demoBox"><InfoIcon style={{marginRight:"6px", height:"16px", verticalAlign:"bottom"}} />Mender is currently running in <b>demo mode</b>. <a href="https://docs.mender.io">Consult the documentation</a> for help switching to production mode</div> : null }
+          {this.props.demo ? <div id="demoBox"><InfoIcon style={{marginRight:"6px", height:"16px", verticalAlign:"bottom"}} />Mender is currently running in <b>demo mode</b>. <a href="https://docs.mender.io/Administration/Production-installation" target="_blank">See the documentation</a> for help switching to production mode</div> : null }
 
 
           <ToolbarGroup key={1} className="float-right">
