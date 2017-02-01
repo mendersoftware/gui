@@ -94612,8 +94612,8 @@ var Header = _react2.default.createClass({
           '. ',
           _react2.default.createElement(
             'a',
-            { href: 'https://docs.mender.io' },
-            'Consult the documentation'
+            { href: 'https://docs.mender.io/Administration/Production-installation', target: '_blank' },
+            'See the documentation'
           ),
           ' for help switching to production mode'
         ) : null,
