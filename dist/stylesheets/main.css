@@ -466,7 +466,7 @@ span.link.small {
   -ms-transform: rotate(-45deg);
   -o-transform: rotate(-45deg);
 }
-ul .rc-pagination {
+ul.rc-pagination {
   list-style: none;
   padding-left: 0;
 }
