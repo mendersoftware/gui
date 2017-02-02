@@ -7,6 +7,7 @@ var AppStore = require('../../stores/app-store');
 var DeploymentStatus = require('./deploymentstatus');
 var DeviceList = require('./deploymentdevicelist');
 var Pagination = require('rc-pagination');
+var _en_US = require('rc-pagination/lib/locale/en_US');
 var pluralize = require('pluralize')
 import update from 'react-addons-update';
 var isEqual = require('lodash.isequal');
@@ -309,7 +310,7 @@ var DeploymentReport = React.createClass({
 
         <div style={{minHeight:"20vh"}}>
           <DeviceList status={this.props.deployment.status} devices={deviceList} deviceArtifacts={this.state.deviceArtifacts} viewLog={this.viewLog} finished={this.updatedList} past={this.props.past} />
-          {allDevices.length ? <Pagination simple pageSize={this.state.perPage} current={this.state.currentPage || 1} total={allDevices.length} onChange={this._handlePageChange} /> : null }
+          {allDevices.length ? <Pagination locale={_en_US} simple pageSize={this.state.perPage} current={this.state.currentPage || 1} total={allDevices.length} onChange={this._handlePageChange} /> : null }
         </div>
 
         <Dialog
