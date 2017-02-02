@@ -191,6 +191,10 @@ a, span.link {
   text-align: right;
 }
 
+.align-center {
+  text-align: center;
+}
+
 .clickable {
   cursor: pointer;
 }
@@ -1633,7 +1637,24 @@ div.shake-alert {
 }
 
 
-// Loading spinner
+/* Progress bar */
+#progressBarContainer {
+  border: 1px solid @lightergrey;
+  border-radius: 4px;
+  height: 60px;
+  padding: 0 15px;
+  overflow: hidden;
+  color: @grey;
+  margin: 15px 0;
+  .transition(all .2s ease-in-out);
+  &.shrunk {
+    border: none;
+    height: 0;
+  }
+}
+
+
+/* Loading spinner */
 @animationLength: 1.5s;
 @animationRadius: 12px;
 @dotSize: 8px;

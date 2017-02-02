@@ -243,6 +243,9 @@ span.link.small {
 .align-right {
   text-align: right;
 }
+.align-center {
+  text-align: center;
+}
 .clickable {
   cursor: pointer;
 }
@@ -1676,6 +1679,25 @@ div.shake-alert {
   }
 }
 /* LESS MIXINS */
+/* Progress bar */
+#progressBarContainer {
+  border: 1px solid #eaf4f3;
+  border-radius: 4px;
+  height: 60px;
+  padding: 0 15px;
+  overflow: hidden;
+  color: #c7c7c7;
+  margin: 15px 0;
+  -webkit-transition: all 0.2s ease-in-out;
+  -moz-transition: all 0.2s ease-in-out;
+  -ms-transition: all 0.2s ease-in-out;
+  -o-transition: all 0.2s ease-in-out;
+}
+#progressBarContainer.shrunk {
+  border: none;
+  height: 0;
+}
+/* Loading spinner */
 .loaderContainer {
   height: 50px;
   overflow: hidden;

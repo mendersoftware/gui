@@ -24,6 +24,7 @@ import TextField from 'material-ui/TextField';
 import FontIcon from 'material-ui/FontIcon';
 import IconButton from 'material-ui/IconButton';
 import Snackbar from 'material-ui/Snackbar';
+import LinearProgress from 'material-ui/LinearProgress';
 
 var newState = {};
 var artifacts = [];
@@ -82,17 +83,23 @@ var Repository = React.createClass({
 
     var callback = {
       success: function(result) {
+        self.setState({progress: 0});
+        AppActions.setSnackbar("Upload successful", 4000);
         self.props.refreshArtifacts();
       },
       error: function(err) {
         console.log(err);
         AppActions.setSnackbar("Artifact couldn't be uploaded. "+err.error);
+        self.setState({progress: 0});
         self.props.startLoader(false);
+      },
+      progress: function(percent) {
+        self.setState({progress: percent});
       }
     };
 
     AppActions.uploadArtifact(meta, tmpFile, callback);
-    this.props.startLoader(true);
+    AppActions.setSnackbar("Uploading artifact", 4000);
     this._resetArtifactState();
     this.dialogDismiss('upload');
   },
@@ -231,6 +238,12 @@ var Repository = React.createClass({
         </div>
 
         <Loader show={this.props.loading} />
+     
+        <div id="progressBarContainer" className={this.state.progress ? null : "shrunk"}>
+          <p className="align-center">Upload in progress ({Math.round(this.state.progress)}%)</p>
+          <LinearProgress mode="determinate" style={{backgroundColor:"#c7c7c7", margin:"15px 0"}} value={this.state.progress} />
+        </div> 
+  
         
         <div style={{position: "relative", marginTop:"10px"}}>
           <Table
