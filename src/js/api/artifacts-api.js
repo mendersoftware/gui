@@ -21,13 +21,14 @@ var Api = {
         });
     });
   },
-  postFormData: function(url, formData) {
+  postFormData: function(url, formData, progress) {
     var token = LocalStore.getStorageItem("JWT");
     return new Promise(function (resolve, reject) {
       request
         .post(url)
         .authBearer(token)
         .send(formData)
+        .on('progress', progress)
         .end(function (err, res) {
           if (err || !res.ok) {
             var errorResponse = err.response ? JSON.parse(err.response.text) : {error:"There was an error uploading the artifact"};

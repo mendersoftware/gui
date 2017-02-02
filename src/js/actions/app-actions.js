@@ -322,7 +322,9 @@ var AppActions = {
     formData.append('description', meta.description)
     formData.append('artifact', file)
     ArtifactsApi
-      .postFormData(deploymentsApiUrl+'/artifacts', formData)
+      .postFormData(deploymentsApiUrl+'/artifacts', formData, function(e) {
+        callback.progress(e.percent);
+      })
       .then(function(data) {
         callback.success(data);
       })

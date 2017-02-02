@@ -86522,7 +86522,9 @@ var AppActions = {
     formData.append('size', file.size);
     formData.append('description', meta.description);
     formData.append('artifact', file);
-    ArtifactsApi.postFormData(deploymentsApiUrl + '/artifacts', formData).then(function (data) {
+    ArtifactsApi.postFormData(deploymentsApiUrl + '/artifacts', formData, function (e) {
+      callback.progress(e.percent);
+    }).then(function (data) {
       callback.success(data);
     }).catch(function (err) {
       callback.error(err);
@@ -86694,10 +86696,10 @@ var Api = {
       });
     });
   },
-  postFormData: function postFormData(url, formData) {
+  postFormData: function postFormData(url, formData, progress) {
     var token = LocalStore.getStorageItem("JWT");
     return new Promise(function (resolve, reject) {
-      request.post(url).authBearer(token).send(formData).end(function (err, res) {
+      request.post(url).authBearer(token).send(formData).on('progress', progress).end(function (err, res) {
         if (err || !res.ok) {
           var errorResponse = err.response ? JSON.parse(err.response.text) : { error: "There was an error uploading the artifact" };
           reject(errorResponse);
@@ -87325,6 +87327,10 @@ var _Snackbar = require('material-ui/Snackbar');
 
 var _Snackbar2 = _interopRequireDefault(_Snackbar);
 
+var _LinearProgress = require('material-ui/LinearProgress');
+
+var _LinearProgress2 = _interopRequireDefault(_LinearProgress);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var update = require('react-addons-update');
@@ -87392,17 +87398,23 @@ var Repository = _react2.default.createClass({
 
     var callback = {
       success: function success(result) {
+        self.setState({ progress: 0 });
+        _appActions2.default.setSnackbar("Upload successful", 4000);
         self.props.refreshArtifacts();
       },
       error: function error(err) {
         console.log(err);
         _appActions2.default.setSnackbar("Artifact couldn't be uploaded. " + err.error);
+        self.setState({ progress: 0 });
         self.props.startLoader(false);
+      },
+      progress: function progress(percent) {
+        self.setState({ progress: percent });
       }
     };
 
     _appActions2.default.uploadArtifact(meta, tmpFile, callback);
-    this.props.startLoader(true);
+    _appActions2.default.setSnackbar("Uploading artifact", 4000);
     this._resetArtifactState();
     this.dialogDismiss('upload');
   },
@@ -87581,6 +87593,18 @@ var Repository = _react2.default.createClass({
       _react2.default.createElement(Loader, { show: this.props.loading }),
       _react2.default.createElement(
         'div',
+        { id: 'progressBarContainer', className: this.state.progress ? null : "shrunk" },
+        _react2.default.createElement(
+          'p',
+          { className: 'align-center' },
+          'Upload in progress (',
+          Math.round(this.state.progress),
+          '%)'
+        ),
+        _react2.default.createElement(_LinearProgress2.default, { mode: 'determinate', style: { backgroundColor: "#c7c7c7", margin: "15px 0" }, value: this.state.progress })
+      ),
+      _react2.default.createElement(
+        'div',
         { style: { position: "relative", marginTop: "10px" } },
         _react2.default.createElement(
           _Table.Table,
@@ -87698,7 +87722,7 @@ Repository.contextTypes = {
 
 module.exports = Repository;
 
-},{"../../actions/app-actions":760,"../../stores/app-store":810,"../common/forms/fileinput":770,"../common/forms/form":771,"../common/forms/textinput":773,"../common/loader":774,"./selectedartifact":769,"material-ui/Dialog":229,"material-ui/FlatButton":238,"material-ui/FontIcon":242,"material-ui/IconButton":247,"material-ui/RaisedButton":272,"material-ui/Snackbar":281,"material-ui/Table":299,"material-ui/TextField":310,"react":659,"react-addons-update":409,"react-collapse":413,"react-dom":416,"react-height":549,"react-motion":564,"react-router":596,"react-search-input":620,"react-time":627}],769:[function(require,module,exports){
+},{"../../actions/app-actions":760,"../../stores/app-store":810,"../common/forms/fileinput":770,"../common/forms/form":771,"../common/forms/textinput":773,"../common/loader":774,"./selectedartifact":769,"material-ui/Dialog":229,"material-ui/FlatButton":238,"material-ui/FontIcon":242,"material-ui/IconButton":247,"material-ui/LinearProgress":251,"material-ui/RaisedButton":272,"material-ui/Snackbar":281,"material-ui/Table":299,"material-ui/TextField":310,"react":659,"react-addons-update":409,"react-collapse":413,"react-dom":416,"react-height":549,"react-motion":564,"react-router":596,"react-search-input":620,"react-time":627}],769:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
