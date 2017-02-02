@@ -5,6 +5,7 @@ var GroupDevices = require('./groupdevices');
 var DeploymentStatus = require('./deploymentstatus');
 
 var Pagination = require('rc-pagination');
+var _en_US = require('rc-pagination/lib/locale/en_US');
 var Loader = require('../common/loader');
 
 // material ui
@@ -108,7 +109,7 @@ var Past = React.createClass({
 
           {
             this.props.past.length ? 
-            <Pagination simple pageSize={this.state.pageSize} current={this.state.currentPage || 1} total={this.props.past.length} onChange={this._handlePageChange} /> 
+            <Pagination locale={_en_US} simple pageSize={this.state.pageSize} current={this.state.currentPage || 1} total={this.props.past.length} onChange={this._handlePageChange} /> 
             :
             <div className={this.props.loading ? 'hidden' : "dashboard-placeholder"}>
               <p>Completed deployments will appear here.</p>

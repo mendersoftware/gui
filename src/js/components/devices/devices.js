@@ -9,6 +9,7 @@ var Unauthorized = require('./unauthorized');
 var DevicePicker = require('./devicepicker');
 
 var Pagination = require('rc-pagination');
+var _en_US = require('rc-pagination/lib/locale/en_US');
 var Loader = require('../common/loader');
 require('../common/prototype/Array.prototype.equals');
 
@@ -258,9 +259,9 @@ var Devices = React.createClass({
         </div>
         <div className="rightFluid padding-right">
           <div className={this.state.pendingDevices.length ? "fadeIn onboard" : "hidden"}>
-            <Unauthorized showLoader={this._showLoader} refresh={this._refreshDevices} refreshAdmissions={this._refreshAdmissions} pending={this.state.pendingDevices} />
+            <Unauthorized addTooltip={this.props.addTooltip} showLoader={this._showLoader} refresh={this._refreshDevices} refreshAdmissions={this._refreshAdmissions} pending={this.state.pendingDevices} />
             <div>
-              {this.state.totalAdmDevices ? <Pagination simple pageSize={20} current={this.state.currentAdmPage || 1} total={this.state.totalAdmDevices} onChange={this._handleAdmPageChange} /> : null }
+              {this.state.totalAdmDevices ? <Pagination locale={_en_US} simple pageSize={20} current={this.state.currentAdmPage || 1} total={this.state.totalAdmDevices} onChange={this._handleAdmPageChange} /> : null }
              
               {this.state.authLoading ?  <div className="smallLoaderContainer"><Loader show={true} /></div> : null}
             </div>
@@ -283,7 +284,7 @@ var Devices = React.createClass({
             groups={this.state.groupsForList}
             devices={this.state.devices || []}
             selectedGroup={this.state.selectedGroup} />
-            {this.state.totalDevices ? <Pagination simple pageSize={20} current={this.state.currentPage || 1} total={this.state.numDevices} onChange={this._handlePageChange} /> : null }
+            {this.state.totalDevices ? <Pagination locale={_en_US} simple pageSize={20} current={this.state.currentPage || 1} total={this.state.numDevices} onChange={this._handlePageChange} /> : null }
             {this.state.devLoading ?  <div className="smallLoaderContainer"><Loader show={true} /></div> : null}
         </div>
         <Snackbar
