@@ -87055,7 +87055,6 @@ var App = _react2.default.createClass({
   addTooltip: function addTooltip(data) {
     this.refs.joyride.addTooltip(data);
   },
-
   render: function render() {
     return _react2.default.createElement(
       'div',
@@ -93441,7 +93440,7 @@ var Devices = _react2.default.createClass({
         _react2.default.createElement(
           'div',
           { className: this.state.pendingDevices.length ? "fadeIn onboard" : "hidden" },
-          _react2.default.createElement(Unauthorized, { showLoader: this._showLoader, refresh: this._refreshDevices, refreshAdmissions: this._refreshAdmissions, pending: this.state.pendingDevices }),
+          _react2.default.createElement(Unauthorized, { addTooltip: this.props.addTooltip, showLoader: this._showLoader, refresh: this._refreshDevices, refreshAdmissions: this._refreshAdmissions, pending: this.state.pendingDevices }),
           _react2.default.createElement(
             'div',
             null,
@@ -94375,7 +94374,7 @@ var Authorized = _react2.default.createClass({
     var devices = this.props.pending.map(function (device, index) {
       var expanded = '';
       if (this.state.expanded === index) {
-        expanded = _react2.default.createElement(SelectedDevices, { attributes: device.attributes, deviceId: this.state.deviceId, accept: this._authorizeDevices, block: this._blockDevice, device: this.state.expandedDevice, unauthorized: true, selected: [device] });
+        expanded = _react2.default.createElement(SelectedDevices, { addTooltip: this.props.addTooltip, attributes: device.attributes, deviceId: this.state.deviceId, accept: this._authorizeDevices, block: this._blockDevice, device: this.state.expandedDevice, unauthorized: true, selected: [device] });
       }
       return _react2.default.createElement(
         _Table.TableRow,

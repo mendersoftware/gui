@@ -60,7 +60,7 @@ var App = React.createClass({
     this.setState({steps: []});
     this.refs.joyride.start();
   },
-  addTooltip(data) {
+  addTooltip: function(data) {
     this.refs.joyride.addTooltip(data);
   },
   render: function() {
