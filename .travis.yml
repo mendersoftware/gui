@@ -31,9 +31,11 @@ notifications:
         on_start: always
 
 before_script:
+  - npm install -g gulp
   - npm install mocha selenium-webdriver@3.0.0-beta-2 saucelabs
 
 script:
+    - gulp build
     # Make sure the test environment is running the pull request
     - if [ ${TRAVIS_PULL_REQUEST} = "false" ]; then export DEPLOY=$TRAVIS_BRANCH; else export DEPLOY=$TRAVIS_PULL_REQUEST; fi
     - for i in {1..60} ; do curl -s "http://dev-gui.mender.io/deploy/" | grep $DEPLOY; if [ $? -eq 0 ]; then break; else sleep 5; fi; done
