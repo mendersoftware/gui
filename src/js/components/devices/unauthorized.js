@@ -6,6 +6,7 @@ import Collapse from 'react-collapse';
 import ReactHeight from 'react-height';
 var AppActions = require('../../actions/app-actions');
 var SelectedDevices = require('./selecteddevices');
+var pluralize = require('pluralize');
 
 // material ui
 var mui = require('material-ui');
@@ -44,26 +45,67 @@ var Authorized =  React.createClass({
     AppActions.sortTable("_pendingDevices", col, direction);
   },
   _authorizeDevices: function(devices) {
-    var i = 0;
+  
+    var self = this;
+
     this.props.showLoader(true);
 
-    var callback = {
+    // make into chunks of 5 devices
+    var arrays = [], size = 5;
+    var deviceList = devices.slice();
+    while (deviceList.length > 0) {
+      arrays.push(deviceList.splice(0, size));
+    }
+    
+    var i = 0;
+    var success = 0;
+    var loopArrays = function(arr) {
+      self.props.pauseRefresh(true);
+
+      // for each chunk, authorize one by one
+      self._authorizeBatch(arr[i], function(num) {
+        success = success+num;
+        i++;
+        if (i < arr.length) {
+          loopArrays(arr);   
+        } else {
+          setTimeout(function() {
+            AppActions.setSnackbar(success + " " + pluralize("devices", success) + " " + pluralize("were", success) + " authorized");
+          }, 2000);
+          self.props.refresh();
+          self.props.refreshAdmissions();
+          self.props.showLoader(false);
+          self.props.pauseRefresh(false);
+        }
+      });
+    }
+
+    loopArrays(arrays);
+    
+  },
+  _authorizeBatch(devices, callback) {
+    // authorize one by one, callback when finished
+    var i = 0;
+    var fail = 0;
+    var singleCallback = {
       success: function(data) {
-        AppActions.setSnackbar("Device accepted");
+        i++;
         if (i===devices.length) {
-          this.props.refresh();
-          this.props.refreshAdmissions();
+          callback(i);
         }
       }.bind(this),
       error: function(err) {
+        fail++;
+        i++;
         AppActions.setSnackbar("There was a problem authorizing the device: "+err);
-        this.props.showLoader(false);
+        if (i===devices.length) {
+          callback(i-fail);
+        }
       }
     };
-       
+
     devices.forEach( function(device, index) {
-      i++;
-      AppActions.acceptDevice(device, callback);
+      AppActions.acceptDevice(device, singleCallback);
     });
   },
   _blockDevice: function(device) {
