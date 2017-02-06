@@ -11,7 +11,7 @@ var _en_US = require('rc-pagination/lib/locale/en_US');
 var pluralize = require('pluralize')
 import update from 'react-addons-update';
 var isEqual = require('lodash.isequal');
-var differenceWith = require('lodash.differenceWith');
+var differenceWith = require('lodash.differencewith');
 import BlockIcon from 'react-material-icons/icons/content/block';
 var ConfirmAbort = require('./confirmabort');
 
