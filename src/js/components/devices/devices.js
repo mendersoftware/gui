@@ -75,8 +75,7 @@ var Devices = React.createClass({
     }
   },
   componentWillUnmount: function () {
-    clearInterval(this.deviceTimer);
-    clearInterval(this.admissionTimer);
+    this._pauseTimers(true);
     AppStore.removeChangeListener(this._onChange);
     AppActions.selectGroup(null);
     this._updateFilters([{key:'', value:''}]);
@@ -245,6 +244,15 @@ var Devices = React.createClass({
     };
     AppActions.getDevices(callback, 1, per, searchterm);
   },
+  _pauseTimers: function(val) {
+    if (val) {
+      clearInterval(this.deviceTimer);
+      clearInterval(this.admissionTimer);
+    } else {
+      this.deviceTimer = setInterval(this._refreshDevices, 10000);
+      this.admissionTimer = setInterval(this._refreshAdmissions, 60000);
+    }
+  },
   render: function() {
     return (
       <div className="margin-top">
@@ -259,7 +267,7 @@ var Devices = React.createClass({
         </div>
         <div className="rightFluid padding-right">
           <div className={this.state.pendingDevices.length ? "fadeIn onboard" : "hidden"}>
-            <Unauthorized addTooltip={this.props.addTooltip} showLoader={this._showLoader} refresh={this._refreshDevices} refreshAdmissions={this._refreshAdmissions} pending={this.state.pendingDevices} />
+            <Unauthorized pauseRefresh={this._pauseTimers} addTooltip={this.props.addTooltip} showLoader={this._showLoader} refresh={this._refreshDevices} refreshAdmissions={this._refreshAdmissions} pending={this.state.pendingDevices} />
             <div>
               {this.state.totalAdmDevices ? <Pagination locale={_en_US} simple pageSize={20} current={this.state.currentAdmPage || 1} total={this.state.totalAdmDevices} onChange={this._handleAdmPageChange} /> : null }
              

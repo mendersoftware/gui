@@ -93272,8 +93272,7 @@ var Devices = _react2.default.createClass({
     }
   },
   componentWillUnmount: function componentWillUnmount() {
-    clearInterval(this.deviceTimer);
-    clearInterval(this.admissionTimer);
+    this._pauseTimers(true);
     AppStore.removeChangeListener(this._onChange);
     AppActions.selectGroup(null);
     this._updateFilters([{ key: '', value: '' }]);
@@ -93443,6 +93442,15 @@ var Devices = _react2.default.createClass({
     };
     AppActions.getDevices(callback, 1, per, searchterm);
   },
+  _pauseTimers: function _pauseTimers(val) {
+    if (val) {
+      clearInterval(this.deviceTimer);
+      clearInterval(this.admissionTimer);
+    } else {
+      this.deviceTimer = setInterval(this._refreshDevices, 10000);
+      this.admissionTimer = setInterval(this._refreshAdmissions, 60000);
+    }
+  },
   render: function render() {
     return _react2.default.createElement(
       'div',
@@ -93464,7 +93472,7 @@ var Devices = _react2.default.createClass({
         _react2.default.createElement(
           'div',
           { className: this.state.pendingDevices.length ? "fadeIn onboard" : "hidden" },
-          _react2.default.createElement(Unauthorized, { addTooltip: this.props.addTooltip, showLoader: this._showLoader, refresh: this._refreshDevices, refreshAdmissions: this._refreshAdmissions, pending: this.state.pendingDevices }),
+          _react2.default.createElement(Unauthorized, { pauseRefresh: this._pauseTimers, addTooltip: this.props.addTooltip, showLoader: this._showLoader, refresh: this._refreshDevices, refreshAdmissions: this._refreshAdmissions, pending: this.state.pendingDevices }),
           _react2.default.createElement(
             'div',
             null,
@@ -94287,6 +94295,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var AppActions = require('../../actions/app-actions');
 var SelectedDevices = require('./selecteddevices');
+var pluralize = require('pluralize');
 
 // material ui
 var mui = require('material-ui');
@@ -94324,28 +94333,70 @@ var Authorized = _react2.default.createClass({
     AppActions.sortTable("_pendingDevices", col, direction);
   },
   _authorizeDevices: function _authorizeDevices(devices) {
-    var i = 0;
+
+    var self = this;
+
     this.props.showLoader(true);
 
-    var callback = {
+    // make into chunks of 5 devices
+    var arrays = [],
+        size = 5;
+    var deviceList = devices.slice();
+    while (deviceList.length > 0) {
+      arrays.push(deviceList.splice(0, size));
+    }
+
+    var i = 0;
+    var success = 0;
+    var loopArrays = function loopArrays(arr) {
+      self.props.pauseRefresh(true);
+
+      // for each chunk, authorize one by one
+      self._authorizeBatch(arr[i], function (num) {
+        success = success + num;
+        i++;
+        if (i < arr.length) {
+          loopArrays(arr);
+        } else {
+          setTimeout(function () {
+            AppActions.setSnackbar(success + " " + pluralize("devices", success) + " " + pluralize("were", success) + " authorized");
+          }, 2000);
+          self.props.refresh();
+          self.props.refreshAdmissions();
+          self.props.showLoader(false);
+          self.props.pauseRefresh(false);
+        }
+      });
+    };
+
+    loopArrays(arrays);
+  },
+  _authorizeBatch: function _authorizeBatch(devices, callback) {
+    // authorize one by one, callback when finished
+    var i = 0;
+    var fail = 0;
+    var singleCallback = {
       success: function (data) {
-        AppActions.setSnackbar("Device accepted");
+        i++;
         if (i === devices.length) {
-          this.props.refresh();
-          this.props.refreshAdmissions();
+          callback(i);
         }
       }.bind(this),
       error: function error(err) {
+        fail++;
+        i++;
         AppActions.setSnackbar("There was a problem authorizing the device: " + err);
-        this.props.showLoader(false);
+        if (i === devices.length) {
+          callback(i - fail);
+        }
       }
     };
 
     devices.forEach(function (device, index) {
-      i++;
-      AppActions.acceptDevice(device, callback);
+      AppActions.acceptDevice(device, singleCallback);
     });
   },
+
   _blockDevice: function _blockDevice(device) {
     var callback = {
       success: function (data) {
@@ -94529,7 +94580,7 @@ var Authorized = _react2.default.createClass({
 
 module.exports = Authorized;
 
-},{"../../actions/app-actions":760,"./selecteddevices":802,"material-ui":328,"material-ui/FontIcon":242,"material-ui/IconButton":247,"material-ui/RaisedButton":272,"material-ui/Table":299,"react":659,"react-collapse":413,"react-dom":416,"react-height":549,"react-motion":564,"react-time":627}],804:[function(require,module,exports){
+},{"../../actions/app-actions":760,"./selecteddevices":802,"material-ui":328,"material-ui/FontIcon":242,"material-ui/IconButton":247,"material-ui/RaisedButton":272,"material-ui/Table":299,"pluralize":390,"react":659,"react-collapse":413,"react-dom":416,"react-height":549,"react-motion":564,"react-time":627}],804:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
