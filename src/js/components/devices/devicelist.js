@@ -50,6 +50,10 @@ var DeviceList = React.createClass({
         nameEdit: false
       });
     }
+    if (prevProps.page !== this.props.page) {
+      // close expanded details when pagination changes
+      this.setState({expanded: null});
+    }
     if (this.state.nameEdit) {
       this.refs.editGroupName.focus();
     }
