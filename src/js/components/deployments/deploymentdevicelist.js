@@ -93,7 +93,7 @@ var ProgressDeviceList = React.createClass({
           displaySelectAll={false}
           adjustForCheckbox={false}>
           <TableRow>
-            <TableHeaderColumn tooltip="Device name">Device name</TableHeaderColumn>
+            <TableHeaderColumn tooltip="Device id">Device ID</TableHeaderColumn>
             <TableHeaderColumn tooltip="Device type">Device type</TableHeaderColumn>
             <TableHeaderColumn tooltip="Current software">Current software</TableHeaderColumn>
             <TableHeaderColumn tooltip="Started">Started</TableHeaderColumn>
