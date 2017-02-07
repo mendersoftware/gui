@@ -118,7 +118,7 @@ var Authorized =  React.createClass({
         AppActions.setSnackbar("There was a problem rejecting the device: "+err);
       }
     };
-    AppActions.acceptDevice(device, callback);
+    AppActions.rejectDevice(device, callback);
   },
   _expandRow: function(rowNumber, columnId, event) {
     event.stopPropagation();
