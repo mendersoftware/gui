@@ -52,8 +52,6 @@ before_deploy:
     # Upload image to docker registry only on PUSH
     - docker login --email=$DOCKER_HUB_EMAIL --username=$DOCKER_HUB_USERNAME --password=$DOCKER_HUB_PASSWORD
 
-    # Set latest tag only for HEAD of master branch
-    - if [ "$TRAVIS_BRANCH" = "master" ]; then docker push $DOCKER_REPOSITORY:latest; fi
     - docker push $DOCKER_REPOSITORY:$IMAGE_TAG
 
 
