@@ -41,6 +41,7 @@ var TextInput = React.createClass({
         errorText={this.state.errorText}
         required={this.props.required}
         type={this.props.type}
+        onKeyPress={this.props.handleKeyPress}
         />
     )
   }

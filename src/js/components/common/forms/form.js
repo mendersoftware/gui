@@ -35,7 +35,7 @@ var Form = React.createClass({
         validations = validations ? validations +", " : validations;
         validations += 'isLength:1';
       }
-      return React.cloneElement(child, {validations: validations, attachToForm:this.attachToForm, detachFromForm:this.detachFromForm, updateModel:this.updateModel, validate:this.validate, hideHelp:this.props.hideHelp})
+      return React.cloneElement(child, {validations: validations, attachToForm:this.attachToForm, detachFromForm:this.detachFromForm, updateModel:this.updateModel, validate:this.validate, hideHelp:this.props.hideHelp, handleKeyPress:this._handleKeyPress})
     }.bind(this));
   
   },
@@ -168,6 +168,12 @@ var Form = React.createClass({
     }.bind(this));
     if (this.state.isValid) {
       this.props.onSubmit(this.model);
+    }
+  },
+  _handleKeyPress: function(event) {
+    event.stopPropagation();
+    if (event.key === "Enter" && this.state.isValid) {
+      this.updateModel();
     }
   },
   render: function () {

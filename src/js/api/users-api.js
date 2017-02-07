@@ -59,7 +59,7 @@ var Api = {
         .end(function (err, res) {
           if (err.statusCode !== 200) {
             // successful raw response throws err, but with status code 200
-            var errorResponse = JSON.parse(err.response.text);
+            var errorResponse = err.response ? JSON.parse(err.response.text) : err;
             reject(errorResponse);
           } else {
             // get token as raw response

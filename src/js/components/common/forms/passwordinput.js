@@ -71,6 +71,7 @@ var PasswordInput = React.createClass({
           style={{display:"block", width:"400px", maxWidth:"100%", position:"relative", maxHeight:"84px"}}
           errorText={this.state.errorText}
           required={this.props.required}
+          onKeyPress={this.props.handleKeyPress}
           />
         <div className={this.props.hideHelp ? "hidden" : "help-text"}>
           <div id="pass-strength">Strength: <meter max={4} min={0} value={this.state.score} high={3.9} optimum={4} low={2.5}></meter>

@@ -267,7 +267,7 @@ var Devices = React.createClass({
         </div>
         <div className="rightFluid padding-right">
           <div className={this.state.pendingDevices.length ? "fadeIn onboard" : "hidden"}>
-            <Unauthorized pauseRefresh={this._pauseTimers} addTooltip={this.props.addTooltip} showLoader={this._showLoader} refresh={this._refreshDevices} refreshAdmissions={this._refreshAdmissions} pending={this.state.pendingDevices} />
+            <Unauthorized pauseRefresh={this._pauseTimers} addTooltip={this.props.addTooltip} showLoader={this._showLoader} refresh={this._refreshDevices} refreshAdmissions={this._refreshAdmissions} pending={this.state.pendingDevices} total={this.state.totalAdmDevices} />
             <div>
               {this.state.totalAdmDevices ? <Pagination locale={_en_US} simple pageSize={20} current={this.state.currentAdmPage || 1} total={this.state.totalAdmDevices} onChange={this._handleAdmPageChange} /> : null }
              
