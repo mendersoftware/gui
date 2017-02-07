@@ -56,10 +56,9 @@ var DeviceList = React.createClass({
   },
   
   _onRowSelection: function(selected) {
-    AppActions.selectDevices(selected);
-  },
-  _selectAll: function(rows) {
-    console.log("select all", rows);
+    if (selected === "all" || selected === "none") {
+      AppActions.selectDevices(selected);
+    }
   },
   _handleGroupNameSave: function(event) {
     if (!event || event['keyCode'] === 13) {
@@ -109,7 +108,7 @@ var DeviceList = React.createClass({
     this._validateName(event.target.value);
   },
   _expandRow: function(rowNumber, columnId) {
-    if (columnId >-1 && columnId < 5) {
+    if (columnId>-1 && columnId<5) {
 
       if (this.props.devices[rowNumber] !== this.state.expandedDevice) {
         this._setDeviceIdentity(this.props.devices[rowNumber]);
@@ -121,10 +120,8 @@ var DeviceList = React.createClass({
         newIndex = null;
       }
       this.setState({expanded: newIndex});
-    } else if (rowNumber === "all" || rowNumber ===  "none") {
-      this._onRowSelection(rowNumber);
-    } else if (columnId === -1) {
-      this._onRowSelection(this.props.devices[rowNumber]);
+    } else {
+      AppActions.selectDevices(this.props.devices[rowNumber])
     }
   },
   _setDeviceIdentity: function(device) {
@@ -343,12 +340,50 @@ var DeviceList = React.createClass({
       }
       return (
         <TableRow selected={device.selected} hoverable={!expanded} className={expanded ? "expand" : null}  key={index}>
-          <TableRowColumn style={expanded ? {height: this.state.divHeight} : null}>{device.id}</TableRowColumn>
-          <TableRowColumn>{attrs.device_type || "-"}</TableRowColumn>
-          <TableRowColumn>{attrs.artifact_name || "-"}</TableRowColumn>
-          <TableRowColumn><Time value={device.updated_ts} format="YYYY-MM-DD HH:mm" /></TableRowColumn>
+          <TableRowColumn style={expanded ? {height: this.state.divHeight} : null}>
+            <div onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              this._expandRow(index,0);
+            }}>
+            {device.id}
+            </div>
+          </TableRowColumn>
+          <TableRowColumn>
+            <div onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              this._expandRow(index,1);
+            }}>
+            {attrs.device_type || "-"}
+            </div>
+          </TableRowColumn>
+          <TableRowColumn>
+            <div onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              this._expandRow(index,2);
+            }}>
+            {attrs.artifact_name || "-"}
+            </div>
+          </TableRowColumn>
+          <TableRowColumn>
+            <div onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              this._expandRow(index,3);
+            }}>
+              <Time value={device.updated_ts} format="YYYY-MM-DD HH:mm" />
+            </div>
+          </TableRowColumn>
           <TableRowColumn style={{width:"55px", paddingRight:"0", paddingLeft:"12px"}} className="expandButton">
-            <IconButton className="float-right"><FontIcon className="material-icons">{ expanded ? "arrow_drop_up" : "arrow_drop_down"}</FontIcon></IconButton>
+             <div onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              this._expandRow(index,4);
+            }}>
+              <IconButton className="float-right"><FontIcon className="material-icons">{ expanded ? "arrow_drop_up" : "arrow_drop_down"}</FontIcon></IconButton>
+            </div>
           </TableRowColumn>
           <TableRowColumn style={{width:"0", padding:"0", overflow:"visible"}}>
            
@@ -426,7 +461,8 @@ var DeviceList = React.createClass({
             <Table
               onCellClick={this._expandRow}
               multiSelectable={true}
-              className={devices.length ? null : 'hidden'} >
+              className={devices.length ? null : 'hidden'}
+              onRowSelection={this._onRowSelection} >
               <TableHeader
               enableSelectAll={true}>
                 <TableRow>
