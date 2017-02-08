@@ -4,6 +4,7 @@ import Time from 'react-time';
 import { Motion, spring } from 'react-motion';
 import Collapse from 'react-collapse';
 import ReactHeight from 'react-height';
+import { ShortSHA } from '../../helpers';
 var AppActions = require('../../actions/app-actions');
 var SelectedDevices = require('./selecteddevices');
 var pluralize = require('pluralize');
@@ -164,7 +165,7 @@ var Authorized =  React.createClass({
       }
       return (
         <TableRow style={{"backgroundColor": "#e9f4f3"}} className={expanded ? "expand" : null} hoverable={true} key={index}>
-          <TableRowColumn style={expanded ? {height: this.state.divHeight} : null}>{device.id}</TableRowColumn>
+          <TableRowColumn style={expanded ? {height: this.state.divHeight} : null}>{ShortSHA(device.id)}</TableRowColumn>
           <TableRowColumn><Time value={device.request_time} format="YYYY-MM-DD HH:mm" /></TableRowColumn>
           <TableRowColumn>{device.status}</TableRowColumn>
           <TableRowColumn className="expandButton">

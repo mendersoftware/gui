@@ -2,11 +2,13 @@ import React from 'react';
 import { Router, Link } from 'react-router';
 import Time from 'react-time';
 import Collapse from 'react-collapse';
+import { ShortSHA } from '../../helpers';
 
 var AppStore = require('../../stores/app-store');
 var AppActions = require('../../actions/app-actions');
 var ScheduleForm = require('../deployments/scheduleform');
 var Loader = require('../common/loader');
+
 
 import { List, ListItem } from 'material-ui/List';
 import FontIcon from 'material-ui/FontIcon';
@@ -70,7 +72,7 @@ var SelectedDevices = React.createClass({
     var self = this;
     var newDeployment = {
       devices: [this.props.device.id],
-      name: this.props.device.id,
+      name: ShortSHA(this.props.device.id),
       artifact_name: this.state.artifact.name
     }
     var callback = {

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router';
 import Time from 'react-time';
+import { ShortSHA } from '../../helpers';
 var isEqual = require('lodash.isequal');
 
 // material ui
@@ -43,7 +44,7 @@ var ProgressDeviceList = React.createClass({
         var encodedDevice = encodeURIComponent("id="+device.id); 
         var deviceLink = (
         <div>
-          <Link style={{fontWeight:"500"}} to={`/devices/0/${encodedDevice}`}>{device.id}</Link>
+          <Link style={{fontWeight:"500"}} to={`/devices/0/${encodedDevice}`}>{ShortSHA(device.id)}</Link>
         </div>
         );
         

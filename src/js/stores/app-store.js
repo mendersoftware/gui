@@ -13,7 +13,7 @@ var _totalNumberDevices;
 var _selectedDevices = [];
 var _filters = [{key:'', value:''}];
 var _attributes = {
-  id: "Name"
+  id: "ID"
 };
 var _snackbar = {
   open: false,
