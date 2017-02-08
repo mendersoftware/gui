@@ -4,6 +4,7 @@ import Time from 'react-time';
 import { Motion, spring } from 'react-motion';
 import Collapse from 'react-collapse';
 import ReactHeight from 'react-height';
+import { ShortSHA } from '../../helpers';
 var AppStore = require('../../stores/app-store');
 var AppActions = require('../../actions/app-actions');
 var SelectedDevices = require('./selecteddevices');
@@ -350,7 +351,7 @@ var DeviceList = React.createClass({
               e.stopPropagation();
               this._expandRow(index,0);
             }}>
-            {device.id}
+            {ShortSHA(device.id)}
             </div>
           </TableRowColumn>
           <TableRowColumn>
