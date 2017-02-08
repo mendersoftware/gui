@@ -168,8 +168,8 @@ var Authorized =  React.createClass({
           <TableRowColumn style={expanded ? {height: this.state.divHeight} : null}>{ShortSHA(device.id)}</TableRowColumn>
           <TableRowColumn><Time value={device.request_time} format="YYYY-MM-DD HH:mm" /></TableRowColumn>
           <TableRowColumn>{device.status}</TableRowColumn>
-          <TableRowColumn className="expandButton">
-            <IconButton onClick={this._authorizeDevices.bind(null, [device])} style={{"paddingLeft": "0"}}>
+          <TableRowColumn className="expandButton" style={{"paddingLeft": "12px"}}>
+            <IconButton onClick={this._authorizeDevices.bind(null, [device])}>
               <FontIcon className="material-icons green">check_circle</FontIcon>
             </IconButton>
             <IconButton onClick={this._blockDevice.bind(null, device)}>
