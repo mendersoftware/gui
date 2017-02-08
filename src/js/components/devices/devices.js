@@ -291,7 +291,8 @@ var Devices = React.createClass({
             selectedDevices={this.state.selectedDevices}
             groups={this.state.groupsForList}
             devices={this.state.devices || []}
-            selectedGroup={this.state.selectedGroup} />
+            selectedGroup={this.state.selectedGroup}
+            page={this.state.currentPage} />
             {this.state.totalDevices ? <Pagination locale={_en_US} simple pageSize={20} current={this.state.currentPage || 1} total={this.state.numDevices} onChange={this._handlePageChange} /> : null }
             {this.state.devLoading ?  <div className="smallLoaderContainer"><Loader show={true} /></div> : null}
         </div>

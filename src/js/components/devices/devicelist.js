@@ -50,6 +50,10 @@ var DeviceList = React.createClass({
         nameEdit: false
       });
     }
+    if (prevProps.page !== this.props.page) {
+      // close expanded details when pagination changes
+      this.setState({expanded: null});
+    }
     if (this.state.nameEdit) {
       this.refs.editGroupName.focus();
     }
@@ -466,7 +470,7 @@ var DeviceList = React.createClass({
               <TableHeader
               enableSelectAll={true}>
                 <TableRow>
-                  <TableHeaderColumn className="columnHeader" tooltip="Name">Name<FontIcon ref="name" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "name")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
+                  <TableHeaderColumn className="columnHeader" tooltip="ID">ID<FontIcon ref="id" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "id")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
                   <TableHeaderColumn className="columnHeader" tooltip="Device type">Device type<FontIcon ref="device_type" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "device_type")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
                   <TableHeaderColumn className="columnHeader" tooltip="Current software">Current software<FontIcon ref="artifact_name" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "artifact_version")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
                   <TableHeaderColumn className="columnHeader" tooltip="Last heartbeat">Last heartbeat<FontIcon ref="last_heartbeat" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "last_heartbeat")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
