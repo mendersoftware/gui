@@ -46,6 +46,12 @@ var Devices = React.createClass({
     this.admissionTimer = setInterval(this._refreshAdmissions, 60000);
     this._refreshAll();
   },
+  _handleGroupsChange: function(group) {
+    AppActions.selectDevices("none");
+    AppActions.selectGroup(group);
+    this.setState({doneLoading:false, selectedDevices:[], selectedGroup:group});
+    this._refreshGroups();
+  },
   _refreshAll: function() {
     this._refreshAdmissions();
     this._refreshDevices();
@@ -181,9 +187,22 @@ var Devices = React.createClass({
     }, pageNo, perPage);
   },
   _refreshGroups: function() {
+    var self = this;
+    var groupDevices = {};
     var callback = {
       success: function (groups) {
         this.setState({groups: groups});
+        for (var i=0;i<groups.length;i++) {
+          groupDevices[groups[i]] = 0;
+          setNum(groups[i], i);
+          function setNum(group, idx) {
+            AppActions.getNumberOfDevices(function(noDevs) {
+              groupDevices[group] = noDevs;
+              self.setState({groupDevices: groupDevices});
+            }, group);
+          }
+        }
+        
       }.bind(this),
       error: function(err) {
         console.log(err);
@@ -222,7 +241,8 @@ var Devices = React.createClass({
     this.admissionTimer = setInterval(this._refreshAdmissions, 60000);
   },
   _handleGroupChange: function(group) {
-    this.setState({currentPage: 1, doneLoading:false}, AppActions.selectGroup(group));
+    AppActions.selectDevices("none");
+    this.setState({currentPage: 1, doneLoading:false, selectedDevices:[]}, AppActions.selectGroup(group)); 
   },
   _handleGroupDialog: function () {
     this.setState({openGroupDialog: !this.state.openGroupDialog, selectedDevices: []});
@@ -261,6 +281,7 @@ var Devices = React.createClass({
             openGroupDialog={this._handleGroupDialog}
             changeGroup={this._handleGroupChange}
             groupList={this.state.groups}
+            groupDevices={this.state.groupDevices}
             selectedGroup={this.state.selectedGroup}
             allDevices={this.state.allDevices}
             totalDevices={this.state.totalDevices} />
@@ -279,7 +300,7 @@ var Devices = React.createClass({
             addTooltip={this.props.addTooltip} 
             redirect={this._redirect}
             refreshDevices={this._refreshDevices}
-            refreshGroups={this._refreshGroups}
+            groupsChanged={this._handleGroupsChange}
             selectedField={this.state.selectedField}
             changeSelect={this._changeTmpGroup}
             addGroup={this._addTmpGroup}

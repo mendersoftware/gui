@@ -10,44 +10,12 @@ import Subheader from 'material-ui/Subheader';
 require('../common/prototype/Array.prototype.equals');
 
 var Groups = React.createClass({
-  getInitialState: function() {
-    return {
-      groupDevs:{} 
-    };
-  },
-
-  componentDidMount: function() {
-     this._setNumDevices(this.props.groupList);
-  },
-
-  componentDidUpdate: function(prevProps, prevState) {
-    if (!prevProps.groupList.equals(this.props.groupList)) {
-      this._setNumDevices(this.props.groupList);
-    }
-  },
-  
   _changeGroup: function(group) {
     this.props.changeGroup(group);
   },
 
   dialogToggle: function() {
     this.props.openGroupDialog();
-  },
-
-  _setNumDevices: function(groupList) {
-    var self = this;
-    var groups = {};
-
-    for (var i=0;i<groupList.length;i++) {
-      setGroupDevs(i);
-    }
-
-    function setGroupDevs(idx) {
-      AppActions.getNumberOfDevices(function(noDevs) {
-        groups[groupList[idx]] = {numDevices: noDevs};
-        if (idx===groupList.length-1) { self.setState({groupDevs: groups}) }
-      }, groupList[idx]);
-    }
   },
 
   render: function() {
@@ -73,8 +41,8 @@ var Groups = React.createClass({
             var isSelected = group===this.props.selectedGroup ? {backgroundColor: "#e7e7e7"} : {backgroundColor: "transparent"};
             var boundClick = this._changeGroup.bind(null, group);
             var numDevs;
-            if (this.state.groupDevs) {
-              numDevs = this.state.groupDevs[group] ? this.state.groupDevs[group].numDevices : null;
+            if (this.props.groupDevices) {
+              numDevs = this.props.groupDevices[group] || null;
             }
             var groupLabel = (
                 <span>{decodeURIComponent(group)}<span className='float-right length'>{numDevs}</span></span>
