@@ -4,10 +4,12 @@ import Time from 'react-time';
 import { Motion, spring } from 'react-motion';
 import Collapse from 'react-collapse';
 import ReactHeight from 'react-height';
-import { ShortSHA } from '../../helpers';
+import { ShortSHA, fullyDecodeURI } from '../../helpers';
+
 var AppStore = require('../../stores/app-store');
 var AppActions = require('../../actions/app-actions');
 var SelectedDevices = require('./selecteddevices');
+var GroupSelector = require('./groupselector');
 var Filters = require('./filters');
 var pluralize = require('pluralize');
 
@@ -15,8 +17,6 @@ var pluralize = require('pluralize');
 import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
 import RaisedButton from 'material-ui/RaisedButton';
 import Dialog from 'material-ui/Dialog';
-import MenuItem from 'material-ui/MenuItem';
-import SelectField from 'material-ui/SelectField';
 import TextField from 'material-ui/TextField';
 import FlatButton from 'material-ui/FlatButton';
 import FontIcon from 'material-ui/FontIcon';
@@ -35,16 +35,16 @@ var DeviceList = React.createClass({
       snackMessage: 'Group has been removed',
       openSnack: false,
       nameEdit: false,
-      editValue: null,
       groupName: this.props.selectedGroup,
       divHeight: 148,
-      invalid: true,
       groupInvalid: true
     };
   },
 
   componentDidUpdate: function(prevProps, prevState) {
+
     if (prevProps.selectedGroup !== this.props.selectedGroup) {
+      this.tableBody.setState({ selectedRows: [] });
       this.setState({
         expanded: null,
         groupName: this.props.selectedGroup,
@@ -65,53 +65,7 @@ var DeviceList = React.createClass({
       AppActions.selectDevices(selected);
     }
   },
-  _handleGroupNameSave: function(event) {
-    if (!event || event['keyCode'] === 13) {
-      if (!this.state.errorCode1) {
-        var group = this.props.selectedGroup;
-        group = this.state.groupName;
-        AppActions.addToGroup(group, []);
-      } else {
-        this.setState({groupName: this.props.selectedGroup});
-      }
-    }
-    if (event && event['keyCode'] === 13) {
-      this.setState({
-        nameEdit: false,
-        errorText1:null
-      });
-    }
-  },
-  _handleGroupNameChange: function(event) {
-   this.setState({groupName: event.target.value});
-   this._validateName(event.target.value);
-  },
-  _handleNewGroupNameChange: function(event) {
-   this._validateName(event.target.value);
-  },
-  _validateName: function(name) {
-    var errorText = null;
-    var invalid = false;
-    if (name === "All devices") {
-      errorText = 'The group cannot be called "All devices". Try another name';
-      invalid = true;
-    }
-    else if (name) {
-      for (var i=0;i<this.props.groups.length; i++) {
-        if (this.props.groups[i] === name) {
-          errorText = "A group with this name already exists";
-          invalid = true;
-        }
-      }
-    } else {
-      errorText = "Name cannot be left blank";
-      invalid = true;
-    }
-    this.setState({errorText1: errorText, invalid: invalid, editValue: name});
-  },
-  _onChange: function(event) {
-    this._validateName(event.target.value);
-  },
+ 
   _expandRow: function(rowNumber, columnId) {
     if (columnId>-1 && columnId<5) {
 
@@ -142,48 +96,57 @@ var DeviceList = React.createClass({
   },
   _addGroupHandler: function() {
     var i;
-    var callback = {
-      success: function(device) {
-        this.setState({openSnack: true, snackMessage: "Device was moved to " + this.props.selectedField});
-        if (i===this.props.selectedDevices.length) this._doneAddingGroup();
-      }.bind(this),
-      error: function(err) {
-        this.setState({openSnack: true, snackMessage: "Error moving device into group " + this.props.selectedField});
-        console.log("Error: " + err);
-      }
-    };
-    var groupEncode = encodeURIComponent(this.props.selectedField);
+    var group = this.state.tmpGroup || this.props.selectedField;
     for (i=0; i<this.props.selectedDevices.length; i++) {
-      AppActions.addDeviceToGroup(groupEncode, this.props.selectedDevices[i], callback);
+      this._addSingleDevice(i, this.props.selectedDevices.length, this.props.selectedDevices[i], group);
     }
     this.dialogToggle('addGroup');
   },
-  _doneAddingGroup: function() {
-    AppActions.selectGroup(this.props.selectedField);
-    this.props.refreshGroups();
-  },
   _removeFromGroupHandler: function(devices) {
-    var i;
-    var length = devices.length;
+    for (var i=0;i<devices.length;i++) {
+      this._removeSingleDevice(i, devices.length, devices[i]);
+    }
+  },
+  _addSingleDevice: function(idx, length, device, group) {
+    var self = this;
+    group = fullyDecodeURI(group);
+    var groupEncode = encodeURIComponent(group);
+
+    var callback = {
+      success: function(device) {
+        self.setState({openSnack: true, snackMessage: "Device was moved to " + group});
+        if (idx===length-1) {
+          self.props.groupsChanged(group);
+        }
+      },
+      error: function(err) {
+        self.setState({openSnack: true, snackMessage: "Error moving device into group " + group});
+        console.log("Error: " + err);
+      }
+    };
+    AppActions.addDeviceToGroup(groupEncode, device, callback);
+  },
+  _removeSingleDevice: function(idx, length, device) {
+    var self = this;
     var callback = {
       success: function(result) {
-        if (i===length) {
-          if (length === this.props.devices.length) {
-             AppActions.selectGroup("");
-            this.props.refreshGroups();
+        if (idx===length-1) {
+          if (length === self.props.devices.length) {
+            self.props.groupsChanged();
+            self.setState({openSnack: true, snackMessage: "The group was removed"});
           } else {
-            this.props.refreshDevices();
+            self.props.groupsChanged(self.props.selectedGroup);
+            self.setState({openSnack: true, snackMessage: "Device was removed from the group"});
           }
         }
-      }.bind(this),
+      },
       error: function(err) {
         console.log(err);
       }
     };
-    for (i=0;i<length;i++) {
-      AppActions.removeDeviceFromGroup(devices[i], this.props.selectedGroup, callback);
-    }
+    AppActions.removeDeviceFromGroup(device, this.props.selectedGroup, callback);
   },
+
   _removeSelectedDevices: function() {
     this._removeFromGroupHandler(this.props.selectedDevices);
   },
@@ -195,28 +158,12 @@ var DeviceList = React.createClass({
     this._removeFromGroupHandler(devices);
   },
 
-  _newGroupHandler: function() {
-    var newGroup = this.refs['customGroup'].getValue();
-    this.props.addGroup(newGroup);
-    this.setState({groupInvalid: newGroup ? false : true, showInput: false});
-  },
   dialogToggle: function (ref) {
     var state = {};
     state[ref] = !this.state[ref];
-    state.selectedField = "";
-    state.editValue = "";
     this.setState(state);
   },
-  _handleSelectValueChange: function(event, index, value) {
-    this.setState({showInput: false, groupInvalid: false});
-    this.props.changeSelect(value);
-  },
-
-  _showButton: function() {
-    this.setState({showInput: true, editValue: ""});
-    this.refs.customGroup.focus();
-  },
-
+  
   _sortColumn: function(col) {
     var direction;
     if (this.state.sortCol !== col) {
@@ -260,7 +207,6 @@ var DeviceList = React.createClass({
 
   _cancelAdd: function() {
     this.dialogToggle('addGroup');
-    this.props.refreshGroups();
   },
 
   _filter: function(array) {
@@ -269,6 +215,11 @@ var DeviceList = React.createClass({
       if (AppStore.matchFilters(array[i])) newArray.push(array[i]);
     }
     return newArray;
+  },
+
+  _validate: function(invalid, group) {
+    var name = invalid ? "" : group;
+    this.setState({groupInvalid: invalid, tmpGroup: name});
   },
 
   render: function() {
@@ -322,16 +273,11 @@ var DeviceList = React.createClass({
       }
     }
 
-    var groupList = this.props.groups.map(function(group, index) {
-      if (group) {
-        return <MenuItem value={group} key={index} primaryText={decodeURIComponent(group)} />
-      }
-    });
-
     var filteredDevices = this._filter(this.props.devices);
 
     var devices = filteredDevices.map(function(device, index) {
       var expanded = '';
+
       var attrs = {
         device_type: "",
         artifact_name: ""
@@ -344,7 +290,7 @@ var DeviceList = React.createClass({
         expanded = <SelectedDevices addTooltip={this.props.addTooltip} redirect={this.props.redirect} admittanceTime={this.state.admittanceTime} attributes={this.state.deviceAttributes} deviceId={this.state.deviceId} device_type={attrs.device_type} artifacts={this.props.artifacts} device={this.state.expandedDevice} selectedGroup={this.props.selectedGroup} artifacts={this.props.artifacts} groups={this.props.groups} />
       }
       return (
-        <TableRow selected={device.selected} hoverable={!expanded} className={expanded ? "expand" : null}  key={index}>
+        <TableRow hoverable={!expanded} className={expanded ? "expand" : null} key={device.id}>
           <TableRowColumn style={expanded ? {height: this.state.divHeight} : null}>
             <div onClick={(e) => {
               e.preventDefault();
@@ -481,7 +427,8 @@ var DeviceList = React.createClass({
               <TableBody
                 deselectOnClickaway={false}
                 showRowHover={true}
-                className="clickable">
+                className="clickable"
+                ref={(tableBody) => { this.tableBody = tableBody; }}>
                 {devices}
               </TableBody>
             </Table>
@@ -510,47 +457,7 @@ var DeviceList = React.createClass({
           title="Add selected devices to group"
           actions={addActions}
           autoDetectWindowHeight={true}>  
-          <div style={{height: '200px'}}>
-            <div className={groupList.length ? "float-left" : "hidden"}>
-              <div className="float-left">
-                <SelectField
-                ref="groupSelect"
-                onChange={this._handleSelectValueChange}
-                floatingLabelText="Select group"
-                value={this.props.selectedField || ""}
-                >
-                 {groupList}
-                </SelectField>
-              </div>
-              
-              <div className="float-left margin-left-small">
-                <RaisedButton 
-                  label="Create new"
-                  style={{marginTop:"26px"}}
-                  onClick={this._showButton}/>
-              </div>
-            </div>
-
-            <div className={this.state.showInput || !groupList.length ? null : 'hidden'}>
-              <TextField
-                ref="customGroup"
-                hintText="Group name"
-                value={this.state.editValue || ""}
-                floatingLabelText="Group name"
-                className="float-left clear"
-                onChange={this._handleNewGroupNameChange}
-                errorStyle={{color: "rgb(171, 16, 0)"}}
-                errorText={this.state.errorText1} />
-              <div className="float-left margin-left-small">
-                <RaisedButton
-                  style={{marginTop:"26px"}}
-                  secondary={true}
-                  label="Save"
-                  onClick={this._newGroupHandler}
-                  disabled={this.state.invalid} />
-              </div>
-            </div>
-          </div>
+          <GroupSelector changeSelect={this.props.changeSelect} validateName={this._validate} groups={this.props.groups} selectedField={this.props.selectedField} />
         </Dialog>
 
         <Snackbar

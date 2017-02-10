@@ -183,23 +183,6 @@ function _getPendingDevices() {
   return _pending || [];
 }
 
-function _authorizeDevices(devices) {
-  // for each device, get name, make sure none in _alldevices with name, if ok then push to _alldevices
-
-  for (var i=0; i<devices.length; i++) {
-    var idx = findWithAttr(_alldevices, 'name', devices[i].name);
-    if (idx === undefined) {
-      devices[i].groups.push(1);
-      _alldevices.push(devices[i]);
-      _groups[0].devices.push(devices[i].id);
-    } else {
-      // id already exists - error
-      _setSnackbar("Error: A device with this ID already exists");
-    }
-  }
-  _selectGroup(_currentGroup);
-}
-
 
 function discoverDevices(array) {
   var unique = {};
