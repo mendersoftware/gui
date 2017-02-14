@@ -245,7 +245,8 @@ var Devices = React.createClass({
     this.setState({currentPage: 1, doneLoading:false, selectedDevices:[]}, AppActions.selectGroup(group)); 
   },
   _handleGroupDialog: function () {
-    this.setState({openGroupDialog: !this.state.openGroupDialog, selectedDevices: []});
+    this._pauseTimers(!this.state.openGroupDialog);
+    this.setState({openGroupDialog: !this.state.openGroupDialog, pickerDevices: []});
   },
   _handlePickerRequest: function(perPage, searchterm) {
     this.setState({pickerLoading:true});
