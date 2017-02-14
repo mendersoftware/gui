@@ -79,7 +79,7 @@ var ProgressDeviceList = React.createClass({
             <TableRowColumn><Time value={this._formatTime(device.created)} format="YYYY-MM-DD HH:mm" /></TableRowColumn>
             <TableRowColumn>{time}</TableRowColumn>
             <TableRowColumn>{status || "--"}</TableRowColumn>
-            <TableRowColumn><FlatButton className={device.status==='failure' ? null : "hidden"} onClick={this.props.viewLog.bind(null, device.id)} label="View log" /></TableRowColumn>
+            <TableRowColumn><FlatButton className={device.log ? null : "hidden"} onClick={this.props.viewLog.bind(null, device.id)} label="View log" /></TableRowColumn>
           </TableRow>
         )
         
