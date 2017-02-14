@@ -2,8 +2,6 @@ import React from 'react';
 var AppStore = require('../../stores/app-store');
 var LocalStore = require('../../stores/local-store');
 var AppActions = require('../../actions/app-actions');
-var Health = require('./health');
-var Activity = require('./activity');
 var Deployments = require('./deployments');
 import { Router, Route, Link } from 'react-router';
 import RaisedButton from 'material-ui/RaisedButton';
@@ -115,12 +113,6 @@ var Dashboard = React.createClass({
           </div>
           <div className="leftDashboard">
             <Deployments loadingActive={!this.state.doneActiveDepsLoading} loadingRecent={!this.state.donePastDepsLoading} clickHandle={this._handleClick} progress={this.state.progress} recent={this.state.recent} />
-          </div>
-          <div className="rightDashboard">
-            <div className="right">
-              <Health addTooltip={this.props.addTooltip} loading={!this.state.doneAdmnsLoading} devices={this.state.devices} clickHandle={this._handleClick} health={this.state.health} />
-              <Activity addTooltip={this.props.addTooltip} loading={!this.state.doneActivityLoading}  activity={this.state.activity} />
-            </div>
           </div>
         </div>
         <Snackbar
