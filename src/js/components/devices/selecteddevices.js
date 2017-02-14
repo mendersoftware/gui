@@ -133,7 +133,7 @@ var SelectedDevices = React.createClass({
     var deviceIdentity = [];
     deviceIdentity.push(
       <div key="id_checksum">
-        <ListItem style={styles.listStyle} disabled={true} primaryText="ID checksum" secondaryText={this.props.deviceId} secondaryTextLines={2} className="break-word" />
+        <ListItem style={styles.listStyle} disabled={true} primaryText="ID" secondaryText={this.props.deviceId} secondaryTextLines={2} className="break-word" />
         {i === length-1 ? null : <Divider />}
       </div>
     );
@@ -167,9 +167,11 @@ var SelectedDevices = React.createClass({
           return a.name.localeCompare( b.name );
       });
       for (var i=0;i<sortedAttributes.length;i++) {
+        var secondaryText = (sortedAttributes[i].value instanceof Array) ? sortedAttributes[i].value.toString() : sortedAttributes[i].value;
+        var secondaryTextLines = (sortedAttributes[i].value instanceof Array) ? 2 : 1;
         deviceInventory.push(
           <div key={i}>
-            <ListItem style={styles.listStyle} disabled={true} primaryText={sortedAttributes[i].name} secondaryText={sortedAttributes[i].value} />
+            <ListItem style={styles.listStyle} disabled={true} primaryText={sortedAttributes[i].name} secondaryText={secondaryText} secondaryTextLines={secondaryTextLines} />
             <Divider />
           </div>
         );
