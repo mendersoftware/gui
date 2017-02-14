@@ -270,6 +270,15 @@ var DeviceList = React.createClass({
         marginLeft: "10px",
         color: "#8c8c8d",
         cursor: "pointer",
+      },
+      paddedCell: {
+        height: "100%",
+        paddingTop: "16px"
+      },
+      expandedCell: {
+        height: "100%",
+        paddingTop: "16px",
+        marginTop: "-16px"
       }
     }
 
@@ -292,7 +301,7 @@ var DeviceList = React.createClass({
       return (
         <TableRow hoverable={!expanded} className={expanded ? "expand" : null} key={device.id}>
           <TableRowColumn style={expanded ? {height: this.state.divHeight} : null}>
-            <div onClick={(e) => {
+            <div style={expanded ? styles.expandedCell : styles.paddedCell} onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
               this._expandRow(index,0);
@@ -301,7 +310,7 @@ var DeviceList = React.createClass({
             </div>
           </TableRowColumn>
           <TableRowColumn>
-            <div onClick={(e) => {
+            <div style={expanded ? styles.expandedCell : styles.paddedCell} onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
               this._expandRow(index,1);
@@ -310,7 +319,7 @@ var DeviceList = React.createClass({
             </div>
           </TableRowColumn>
           <TableRowColumn>
-            <div onClick={(e) => {
+            <div style={expanded ? styles.expandedCell : styles.paddedCell} onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
               this._expandRow(index,2);
@@ -319,7 +328,7 @@ var DeviceList = React.createClass({
             </div>
           </TableRowColumn>
           <TableRowColumn>
-            <div onClick={(e) => {
+            <div style={expanded ? styles.expandedCell : styles.paddedCell} onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
               this._expandRow(index,3);
