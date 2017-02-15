@@ -28,13 +28,6 @@ var AppActions = {
     })
   },
 
-  selectDevices: function(device) {
-    AppDispatcher.handleViewAction({
-      actionType: AppConstants.SELECT_DEVICES,
-      device: device
-    })
-  },
-
   addDeviceToGroup: function(group, device, callback) {
     DevicesApi
       .put(inventoryApiUrl+"/devices/" + device + "/group", {"group":group})

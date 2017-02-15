@@ -23,7 +23,6 @@ function getState() {
     groupsForList: AppStore.getGroups(),
     selectedGroup: AppStore.getSelectedGroup(),
     pendingDevices: AppStore.getPendingDevices(),
-    selectedDevices: AppStore.getSelectedDevices(),
     filters: AppStore.getFilters(),
     attributes: AppStore.getAttributes(),
     artifacts: AppStore.getArtifactsRepo(),
@@ -47,9 +46,8 @@ var Devices = React.createClass({
     this._refreshAll();
   },
   _handleGroupsChange: function(group) {
-    AppActions.selectDevices("none");
     AppActions.selectGroup(group);
-    this.setState({doneLoading:false, selectedDevices:[], selectedGroup:group});
+    this.setState({doneLoading:false, selectedGroup:group});
     this._refreshGroups();
   },
   _refreshAll: function() {
@@ -241,8 +239,7 @@ var Devices = React.createClass({
     this.admissionTimer = setInterval(this._refreshAdmissions, 60000);
   },
   _handleGroupChange: function(group) {
-    AppActions.selectDevices("none");
-    this.setState({currentPage: 1, doneLoading:false, selectedDevices:[]}, AppActions.selectGroup(group)); 
+    this.setState({currentPage: 1, doneLoading:false}, AppActions.selectGroup(group)); 
   },
   _handleGroupDialog: function () {
     this._pauseTimers(!this.state.openGroupDialog);
@@ -273,6 +270,9 @@ var Devices = React.createClass({
       this.deviceTimer = setInterval(this._refreshDevices, 10000);
       this.admissionTimer = setInterval(this._refreshAdmissions, 60000);
     }
+  },
+  _handleRows: function(rows) {
+    this.setState({selectedRows: rows});
   },
   render: function() {
     return (
@@ -310,7 +310,6 @@ var Devices = React.createClass({
             onFilterChange={this._updateFilters}
             artifacts={this.state.artifacts}
             loading={this.state.devLoading}
-            selectedDevices={this.state.selectedDevices}
             groups={this.state.groupsForList}
             devices={this.state.devices || []}
             selectedGroup={this.state.selectedGroup}
@@ -327,7 +326,6 @@ var Devices = React.createClass({
         <DevicePicker
           open={this.state.openGroupDialog || false}
           refreshGroups={this._refreshGroups}
-          selectedDevices={this.state.selectedDevices}
           pickerDevices={this.state.pickerDevices || []}
           groupList={this.state.groups}
           toggleDialog={this._handleGroupDialog}

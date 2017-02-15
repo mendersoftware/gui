@@ -37,15 +37,15 @@ var DeviceList = React.createClass({
       nameEdit: false,
       groupName: this.props.selectedGroup,
       divHeight: 148,
-      groupInvalid: true
+      groupInvalid: true,
+      selectedRows: []
     };
   },
-
   componentDidUpdate: function(prevProps, prevState) {
-
     if (prevProps.selectedGroup !== this.props.selectedGroup) {
       this.tableBody.setState({ selectedRows: [] });
       this.setState({
+        selectedRows: [],
         expanded: null,
         groupName: this.props.selectedGroup,
         nameEdit: false
@@ -62,7 +62,13 @@ var DeviceList = React.createClass({
   
   _onRowSelection: function(selected) {
     if (selected === "all" || selected === "none") {
-      AppActions.selectDevices(selected);
+      var devices = this._filter(this.props.devices);
+      var deviceArray = (selected === "all") ? Array.from(Array(devices.length).keys()) : [];
+      this.tableHeader.setState({ selectedRows: deviceArray });
+      this.setState({selectedRows: deviceArray});
+    } else {
+      this.tableHeader.setState({ selectedRows: selected });
+      this.setState({selectedRows: selected});
     }
   },
  
@@ -88,8 +94,6 @@ var DeviceList = React.createClass({
         newIndex = null;
       }
       this.setState({expanded: newIndex});
-    } else {
-      AppActions.selectDevices(this.props.devices[rowNumber])
     }
   },
   _setDeviceIdentity: function(device) {
@@ -106,14 +110,16 @@ var DeviceList = React.createClass({
   _addGroupHandler: function() {
     var i;
     var group = this.state.tmpGroup || this.props.selectedField;
-    for (i=0; i<this.props.selectedDevices.length; i++) {
-      this._addSingleDevice(i, this.props.selectedDevices.length, this.props.selectedDevices[i], group);
+    var devices = this._filter(this.props.devices);
+    for (i=0; i<this.state.selectedRows.length; i++) {
+      this._addSingleDevice(i, this.state.selectedRows.length, devices[this.state.selectedRows[i]].id, group);
     }
     this.dialogToggle('addGroup');
   },
-  _removeFromGroupHandler: function(devices) {
-    for (var i=0;i<devices.length;i++) {
-      this._removeSingleDevice(i, devices.length, devices[i]);
+  _removeFromGroupHandler: function(selectedRows) {
+    var devices = this._filter(this.props.devices);
+    for (var i=0;i<selectedRows.length;i++) {
+      this._removeSingleDevice(i, selectedRows.length, devices[selectedRows[i]].id);
     }
   },
   _addSingleDevice: function(idx, length, device, group) {
@@ -126,6 +132,7 @@ var DeviceList = React.createClass({
         self.setState({openSnack: true, snackMessage: "Device was moved to " + group});
         if (idx===length-1) {
           self.props.groupsChanged(group);
+          self.tableBody.setState({ selectedRows: []});
         }
       },
       error: function(err) {
@@ -145,7 +152,8 @@ var DeviceList = React.createClass({
             self.setState({openSnack: true, snackMessage: "The group was removed"});
           } else {
             self.props.groupsChanged(self.props.selectedGroup);
-            self.setState({openSnack: true, snackMessage: "Device was removed from the group"});
+            self.setState({openSnack: true, snackMessage: "Device was removed from the group", selectedRows: []});
+            self.tableBody.setState({ selectedRows: [] });
           }
         }
       },
@@ -157,7 +165,7 @@ var DeviceList = React.createClass({
   },
 
   _removeSelectedDevices: function() {
-    this._removeFromGroupHandler(this.props.selectedDevices);
+    this._removeFromGroupHandler(this.state.selectedRows);
   },
   _removeCurrentGroup: function() {
     var devices = [];
@@ -282,12 +290,8 @@ var DeviceList = React.createClass({
       },
       paddedCell: {
         height: "100%",
-        paddingTop: "16px"
-      },
-      expandedCell: {
-        height: "100%",
-        paddingTop: "16px",
-        marginTop: "-16px"
+        padding: "16px 24px",
+        width: "100%"
       }
     }
 
@@ -309,8 +313,8 @@ var DeviceList = React.createClass({
       }
       return (
         <TableRow hoverable={!expanded} className={expanded ? "expand" : null} key={device.id}>
-          <TableRowColumn style={expanded ? {height: this.state.divHeight} : null}>
-            <div style={expanded ? styles.expandedCell : styles.paddedCell} onClick={(e) => {
+          <TableRowColumn style={expanded ? {height: this.state.divHeight, padding: 0} : {padding: 0}}>
+            <div style={styles.paddedCell} onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
               this._expandRow(index,0);
@@ -318,8 +322,8 @@ var DeviceList = React.createClass({
             {ShortSHA(device.id)}
             </div>
           </TableRowColumn>
-          <TableRowColumn>
-            <div style={expanded ? styles.expandedCell : styles.paddedCell} onClick={(e) => {
+          <TableRowColumn style={{padding: 0}}>
+            <div style={styles.paddedCell} onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
               this._expandRow(index,1);
@@ -327,8 +331,8 @@ var DeviceList = React.createClass({
             {attrs.device_type || "-"}
             </div>
           </TableRowColumn>
-          <TableRowColumn>
-            <div style={expanded ? styles.expandedCell : styles.paddedCell} onClick={(e) => {
+          <TableRowColumn style={{padding: 0}}>
+            <div style={styles.paddedCell} onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
               this._expandRow(index,2);
@@ -336,8 +340,8 @@ var DeviceList = React.createClass({
             {attrs.artifact_name || "-"}
             </div>
           </TableRowColumn>
-          <TableRowColumn>
-            <div style={expanded ? styles.expandedCell : styles.paddedCell} onClick={(e) => {
+          <TableRowColumn style={{padding: 0}}>
+            <div style={styles.paddedCell} onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
               this._expandRow(index,3);
@@ -365,7 +369,7 @@ var DeviceList = React.createClass({
       )
     }, this);
 
-    var disableAction = this.props.selectedDevices.length ? false : true;
+    var disableAction = this.state.selectedRows.length ? false : true;
     
     var addActions = [
       <div style={{marginRight:"10px", display:"inline-block"}}>
@@ -400,7 +404,7 @@ var DeviceList = React.createClass({
       correctIcon = "close";
     }
 
-    var pluralized = pluralize("devices", this.props.selectedDevices.length); 
+    var pluralized = pluralize("devices", this.state.selectedRows.length); 
     var addLabel = this.props.selectedGroup ? "Move selected " + pluralized +" to another group" : "Add selected " + pluralized +" to a group";
     var removeLabel =  "Remove selected " + pluralized +" from this group";
     var groupLabel = this.props.selectedGroup ? decodeURIComponent(this.props.selectedGroup) : "All devices";
@@ -433,7 +437,9 @@ var DeviceList = React.createClass({
               className={devices.length ? null : 'hidden'}
               onRowSelection={this._onRowSelection} >
               <TableHeader
-              enableSelectAll={true}>
+              className="clickable"
+              enableSelectAll={true}
+              ref={(tableHeader) => { this.tableHeader = tableHeader; }}>
                 <TableRow>
                   <TableHeaderColumn className="columnHeader" tooltip="ID">ID<FontIcon ref="id" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "id")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
                   <TableHeaderColumn className="columnHeader" tooltip="Device type">Device type<FontIcon ref="device_type" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "device_type")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
@@ -444,6 +450,7 @@ var DeviceList = React.createClass({
               </TableHeader>
               <TableBody
                 deselectOnClickaway={false}
+                preScanRows={false}
                 showRowHover={true}
                 className="clickable"
                 ref={(tableBody) => { this.tableBody = tableBody; }}>
@@ -458,8 +465,8 @@ var DeviceList = React.createClass({
             </div>
           </div>
 
-          <div className={this.props.selectedDevices.length ? "fixedButtons" : "hidden"}>
-            <span className="margin-right">{this.props.selectedDevices.length} {pluralized} selected</span>
+          <div className={this.state.selectedRows.length ? "fixedButtons" : "hidden"}>
+            <span className="margin-right">{this.state.selectedRows.length} {pluralized} selected</span>
             <RaisedButton disabled={disableAction} label={addLabel} secondary={true} onClick={this.dialogToggle.bind(null, 'addGroup')}>
               <FontIcon style={styles.raisedButtonIcon} className="material-icons">add_circle</FontIcon>
             </RaisedButton>
