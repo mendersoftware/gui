@@ -263,6 +263,8 @@ var Devices = React.createClass({
     AppActions.getDevices(callback, 1, per, searchterm);
   },
   _pauseTimers: function(val) {
+    // clear dropdown value - can move this
+    this.setState({selectedField: ''});
     if (val) {
       clearInterval(this.deviceTimer);
       clearInterval(this.admissionTimer);
@@ -313,7 +315,8 @@ var Devices = React.createClass({
             groups={this.state.groupsForList}
             devices={this.state.devices || []}
             selectedGroup={this.state.selectedGroup}
-            page={this.state.currentPage} />
+            page={this.state.currentPage}
+            pauseRefresh={this._pauseTimers} />
             {this.state.totalDevices ? <Pagination locale={_en_US} simple pageSize={20} current={this.state.currentPage || 1} total={this.state.numDevices} onChange={this._handlePageChange} /> : null }
             {this.state.devLoading ?  <div className="smallLoaderContainer"><Loader show={true} /></div> : null}
         </div>

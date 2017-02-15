@@ -178,6 +178,7 @@ var DeviceList = React.createClass({
   dialogToggle: function (ref) {
     var state = {};
     state[ref] = !this.state[ref];
+    this.props.pauseRefresh(state[ref]);
     this.setState(state);
   },
   
