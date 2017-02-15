@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router';
 import Time from 'react-time';
+import { ShortSHA } from '../../helpers';
 var isEqual = require('lodash.isequal');
 
 // material ui
@@ -43,7 +44,7 @@ var ProgressDeviceList = React.createClass({
         var encodedDevice = encodeURIComponent("id="+device.id); 
         var deviceLink = (
         <div>
-          <Link style={{fontWeight:"500"}} to={`/devices/0/${encodedDevice}`}>{device.id}</Link>
+          <Link style={{fontWeight:"500"}} to={`/devices/0/${encodedDevice}`}>{ShortSHA(device.id)}</Link>
         </div>
         );
         
@@ -78,7 +79,7 @@ var ProgressDeviceList = React.createClass({
             <TableRowColumn><Time value={this._formatTime(device.created)} format="YYYY-MM-DD HH:mm" /></TableRowColumn>
             <TableRowColumn>{time}</TableRowColumn>
             <TableRowColumn>{status || "--"}</TableRowColumn>
-            <TableRowColumn><FlatButton className={device.status==='failure' ? null : "hidden"} onClick={this.props.viewLog.bind(null, device.id)} label="View log" /></TableRowColumn>
+            <TableRowColumn><FlatButton className={device.log ? null : "hidden"} onClick={this.props.viewLog.bind(null, device.id)} label="View log" /></TableRowColumn>
           </TableRow>
         )
         
@@ -93,7 +94,7 @@ var ProgressDeviceList = React.createClass({
           displaySelectAll={false}
           adjustForCheckbox={false}>
           <TableRow>
-            <TableHeaderColumn tooltip="Device name">Device name</TableHeaderColumn>
+            <TableHeaderColumn tooltip="Device id">Device ID</TableHeaderColumn>
             <TableHeaderColumn tooltip="Device type">Device type</TableHeaderColumn>
             <TableHeaderColumn tooltip="Current software">Current software</TableHeaderColumn>
             <TableHeaderColumn tooltip="Started">Started</TableHeaderColumn>

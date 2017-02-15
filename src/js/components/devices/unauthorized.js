@@ -4,6 +4,7 @@ import Time from 'react-time';
 import { Motion, spring } from 'react-motion';
 import Collapse from 'react-collapse';
 import ReactHeight from 'react-height';
+import { ShortSHA } from '../../helpers';
 var AppActions = require('../../actions/app-actions');
 var SelectedDevices = require('./selecteddevices');
 var pluralize = require('pluralize');
@@ -164,11 +165,11 @@ var Authorized =  React.createClass({
       }
       return (
         <TableRow style={{"backgroundColor": "#e9f4f3"}} className={expanded ? "expand" : null} hoverable={true} key={index}>
-          <TableRowColumn style={expanded ? {height: this.state.divHeight} : null}>{device.id}</TableRowColumn>
+          <TableRowColumn style={expanded ? {height: this.state.divHeight} : null}>{ShortSHA(device.id)}</TableRowColumn>
           <TableRowColumn><Time value={device.request_time} format="YYYY-MM-DD HH:mm" /></TableRowColumn>
           <TableRowColumn>{device.status}</TableRowColumn>
-          <TableRowColumn className="expandButton">
-            <IconButton onClick={this._authorizeDevices.bind(null, [device])} style={{"paddingLeft": "0"}}>
+          <TableRowColumn className="expandButton" style={{"paddingLeft": "12px"}}>
+            <IconButton onClick={this._authorizeDevices.bind(null, [device])}>
               <FontIcon className="material-icons green">check_circle</FontIcon>
             </IconButton>
             <IconButton onClick={this._blockDevice.bind(null, device)}>
@@ -199,7 +200,7 @@ var Authorized =  React.createClass({
             adjustForCheckbox={false} 
           >
             <TableRow>
-              <TableHeaderColumn className="columnHeader" tooltip="Name">Name<FontIcon ref="name" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "name")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
+              <TableHeaderColumn className="columnHeader" tooltip="ID">ID<FontIcon ref="id" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "id")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
               <TableHeaderColumn className="columnHeader" tooltip="Request time">Request time<FontIcon ref="request_time" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "request_time")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
               <TableHeaderColumn className="columnHeader" tooltip="Status">Status<FontIcon ref="status" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "status")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
               <TableHeaderColumn className="columnHeader" tooltip="Authorize device?">Authorize?</TableHeaderColumn>

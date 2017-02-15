@@ -517,6 +517,12 @@ span.length {
   overflow: auto;
 }
 
+// custom style for checkbox
+table tbody.clickable tr>td:first-child,
+table thead.clickable tr>th:first-child {
+  padding-right: 36px !important;
+}
+
 .columnHeader {
   .sortIcon {
     visibility: hidden;
@@ -1008,7 +1014,7 @@ tr.expand {
 /* Dashboard */
 
 .leftDashboard {
-  width: 71%;
+  width: 100%;
   display: inline-block;
   padding-right: 3%;
   vertical-align: top;
@@ -1337,6 +1343,7 @@ span.month, span.day {
     border-radius: 4px;
     border: 1px solid @lightergrey;
     overflow: hidden;
+    max-width: 1000px;
 
     .skipped-text {
       margin-top: 2px;

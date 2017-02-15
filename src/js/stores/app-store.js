@@ -10,10 +10,9 @@ var _currentGroup = null;
 var _deploymentArtifact = null;
 var _currentGroupDevices = [];
 var _totalNumberDevices;
-var _selectedDevices = [];
 var _filters = [{key:'', value:''}];
 var _attributes = {
-  id: "Name"
+  id: "ID"
 };
 var _snackbar = {
   open: false,
@@ -37,7 +36,6 @@ var _health = {
 
 
 function _selectGroup(group) {
-  _selectedDevices = [];
   _filters = [{key:'', value:''}];
   _currentGroup = group;
 }
@@ -90,28 +88,6 @@ function _matchFilters(device) {
     }
   }
   return match;
-}
-
-
-function _selectDevices(device) {
-  _selectedDevices = [];
-  if (device === "all") {
-    for (var i=0; i<_currentGroupDevices.length; i++) {
-      _currentGroupDevices[i].selected = true;
-      _selectedDevices.push(_currentGroupDevices[i].id);
-    }
-  } else if (device === "none") {
-    for (var i=0; i<_currentGroupDevices.length; i++) {
-      _currentGroupDevices[i].selected = false;
-    }
-  } else {
-    for (var i=0; i<_currentGroupDevices.length; i++) {
-      if (device.id === _currentGroupDevices[i].id) {
-        _currentGroupDevices[i].selected = !_currentGroupDevices[i].selected;
-      }
-      if (_currentGroupDevices[i].selected) _selectedDevices.push(_currentGroupDevices[i].id);
-    }
-  }
 }
 
 function _filterDevicesByType(devices, device_types) {
@@ -181,23 +157,6 @@ function _addGroup(group, idx) {
 
 function _getPendingDevices() {
   return _pending || [];
-}
-
-function _authorizeDevices(devices) {
-  // for each device, get name, make sure none in _alldevices with name, if ok then push to _alldevices
-
-  for (var i=0; i<devices.length; i++) {
-    var idx = findWithAttr(_alldevices, 'name', devices[i].name);
-    if (idx === undefined) {
-      devices[i].groups.push(1);
-      _alldevices.push(devices[i]);
-      _groups[0].devices.push(devices[i].id);
-    } else {
-      // id already exists - error
-      _setSnackbar("Error: A device with this ID already exists");
-    }
-  }
-  _selectGroup(_currentGroup);
 }
 
 
@@ -562,13 +521,6 @@ var AppStore = assign(EventEmitter.prototype, {
     return _matchFilters(item);
   },
 
-  getSelectedDevices: function() {
-    /*
-    * Return list of selected devices
-    */
-    return _selectedDevices
-  },
-
   getArtifactsRepo: function() {
     /*
     * Return list of saved artifacts objects
@@ -683,9 +635,6 @@ var AppStore = assign(EventEmitter.prototype, {
     switch(action.actionType) {
       case AppConstants.SELECT_GROUP:
         _selectGroup(payload.action.group);
-        break;
-      case AppConstants.SELECT_DEVICES:
-        _selectDevices(payload.action.device);
         break;
       case AppConstants.ADD_TO_GROUP:
         _addToGroup(payload.action.group, payload.action.devices);

@@ -5,6 +5,7 @@ import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
 import SearchInput from 'react-search-input';
+import { ShortSHA } from '../../helpers';
 var AppActions = require('../../actions/app-actions');
 var Loader = require('../common/loader');
 
@@ -124,7 +125,7 @@ var DevicePicker = React.createClass({
       return (
         <TableRow key={index} selected={selected}>
           <TableRowColumn>
-            {device.id}
+            {ShortSHA(device.id)}
           </TableRowColumn>
           <TableRowColumn>
             {attrs.device_type}
