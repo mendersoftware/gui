@@ -142,14 +142,19 @@ var DeviceList = React.createClass({
     };
     AppActions.addDeviceToGroup(groupEncode, device, callback);
   },
-  _removeSingleDevice: function(idx, length, device) {
+  _removeSingleDevice: function(idx, length, device, parentCallback) {
     var self = this;
     var callback = {
       success: function(result) {
         if (idx===length-1) {
-          if (length === self.props.devices.length) {
+          // if parentcallback, whole group is being removed
+          if (parentCallback && typeof parentCallback === "function") {
+            // whole group removed
+            parentCallback();
+          } else if (length === self.props.devices.length) {
+            // else if all in group were selected and deleted, refresh group
             self.props.groupsChanged();
-            self.setState({openSnack: true, snackMessage: "The group was removed"});
+            self.setState({openSnack: true, snackMessage: "Group was removed", selectedRows: []});
           } else {
             self.props.groupsChanged(self.props.selectedGroup);
             self.setState({openSnack: true, snackMessage: "Device was removed from the group", selectedRows: []});
@@ -168,11 +173,26 @@ var DeviceList = React.createClass({
     this._removeFromGroupHandler(this.state.selectedRows);
   },
   _removeCurrentGroup: function() {
-    var devices = [];
-    for (var i=0;i<this.props.devices.length;i++) {
-      devices.push(this.props.devices[i].id);
-    }
-    this._removeFromGroupHandler(devices);
+    var self = this;
+    self.props.pauseRefresh(true);
+    var callback = {
+      success: function(devices) {
+        // returns all group devices ids
+        for (var i=0;i<devices.length; i++) {
+          self._removeSingleDevice(i, devices.length, devices[i], finalCallback);
+        }
+      },
+      error: function(err) {
+        console.log(err);
+        self.props.pauseRefresh(false);
+      }
+    };
+    AppActions.getDevices(callback, 1, 100, this.props.selectedGroup, null, true);
+    var finalCallback = function() {
+      self.props.groupsChanged();
+      self.props.pauseRefresh(false);
+      self.setState({openSnack: true, snackMessage: "Group was removed", selectedRows: []});
+    };
   },
 
   dialogToggle: function (ref) {
