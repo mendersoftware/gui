@@ -7,6 +7,7 @@ import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowCol
 import SearchInput from 'react-search-input';
 import { ShortSHA } from '../../helpers';
 var AppActions = require('../../actions/app-actions');
+var AppStore = require('../../stores/app-store');
 var Loader = require('../common/loader');
 
 var DevicePicker = React.createClass({
@@ -78,7 +79,8 @@ var DevicePicker = React.createClass({
   },
 
   searchUpdated: function(term) {
-    this.setState({searchTerm: term}); // needed to force re-render
+    var filter = [{key:'id', value:term}];
+    this.setState({searchTerm: filter}); // needed to force re-render
   },
 
   showDeviceList: function() {
@@ -90,17 +92,18 @@ var DevicePicker = React.createClass({
 
   _onRowSelection: function(array) {
     var selected = [];
+    var devices = this._filter(this.props.pickerDevices, this.state.searchTerm);
     var invalid = true;
     if (array === "all") {
       invalid = false;
-      for (var i=0;i<this.props.pickerDevices.length;i++) {
-        selected.push(this.props.pickerDevices[i].id);  
+      for (var i=0;i<devices.length;i++) {
+        selected.push(devices[i].id);  
       }
     } else if (array === "none") {
       selected = [];
     } else {
       for (var i=0;i<array.length;i++) {
-        selected.push(this.props.pickerDevices[array[i]].id);  
+        selected.push(devices[array[i]].id);  
       }
       invalid = selected.length ? false : true;
     }
@@ -111,8 +114,16 @@ var DevicePicker = React.createClass({
     this.setState({newGroup:'', showDeviceList: false, createInvalid: true, nextInvalid: true});
     this.props.toggleDialog();
   },
+  _filter: function(array, filters) {
+    var newArray = [];
+    for (var i=0; i<array.length;i++) {
+      if (AppStore.matchFilters(array[i], filters)) newArray.push(array[i]);
+    }
+    return newArray;
+  },
   render: function() {
-    var deviceList = this.props.pickerDevices.map(function(device, index) {
+    var filteredDevices = this._filter(this.props.pickerDevices, this.state.searchTerm);
+    var deviceList = filteredDevices.map(function(device, index) {
       var attributesLength = device.attributes ? device.attributes.length : 0;
       var attrs = {};
       for (var i=0;i<attributesLength;i++) {
