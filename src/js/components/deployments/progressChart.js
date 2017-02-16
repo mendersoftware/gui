@@ -62,25 +62,31 @@ var ProgressChart = React.createClass({
     var failures = this.state.stats.failure;
     var progress = this.state.stats.downloading + this.state.stats.rebooting + this.state.stats.installing;
     var pending = this.state.stats.pending;
-
-    var rows = Math.floor(Math.sqrt(this.state.devices.length));
     var dev = this.state.devices.length;
-
-    while (this.state.devices.length % rows != 0) {
+   
+     // figure out best fit number of rows
+    var rows = Math.floor(Math.sqrt(dev));
+   
+    while (dev % rows != 0) {
       rows = rows - 1;
     }
   
-    if (rows === 1 && dev*80>300) {
+    if (rows === 1 && dev*90>400) {
       rows = Math.ceil(this.state.devices.length/5);
     }
 
-    var split = Math.ceil(dev / rows);
-
-    if ((split/rows)<1.5) {
-      split = split*2;
+    // do rough calculation for displaying circles in correct size
+    var pixelHeight = 100 / rows;
+    var real_per_row = 400/pixelHeight;
+    var real_rows = (dev/real_per_row)
+    if (real_per_row > rows) {
+      while ((pixelHeight * real_rows)<80) {
+        pixelHeight += 1;
+        real_per_row = 400/pixelHeight;
+        real_rows = (dev/real_per_row);
+      }
     }
 
-    var pixelHeight = 80 / rows;
     var deviceGrid = this.state.devices.map(function(device, index) {
       if (device.status !== "noartifact" && device.status !== "already-installed") {
         return (
