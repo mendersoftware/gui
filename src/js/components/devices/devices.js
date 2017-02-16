@@ -260,7 +260,7 @@ var Devices = React.createClass({
         AppActions.setSnackbar("Devices couldn't be loaded. " +errormsg);
       }
     };
-    AppActions.getDevices(callback, 1, per, searchterm);
+    AppActions.getDevices(callback, 1, per, null, searchterm);
   },
   _pauseTimers: function(val) {
     // clear dropdown value - can move this
