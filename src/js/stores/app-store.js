@@ -67,21 +67,22 @@ function  updateFilters(filters) {
   _filters = filters;
 }
 
-function _matchFilters(device) {
+function _matchFilters(device, filters) {
   /*
   * Match device attributes against _filters, return true or false
   */
   var match = true;
-  for (var i=0; i<_filters.length; i++) {
-    if (_filters[i].key && _filters[i].value) {
-      if (device[_filters[i].key] instanceof Array) {
+  var gotFilters = filters || _filters;
+  for (var i=0; i<gotFilters.length; i++) {
+    if (gotFilters[i].key && gotFilters[i].value) {
+      if (device[gotFilters[i].key] instanceof Array) {
         // array
-         if (device[_filters[i].key].join(', ').toLowerCase().indexOf(_filters[i].value.toLowerCase()) == -1) {
+         if (device[gotFilters[i].key].join(', ').toLowerCase().indexOf(gotFilters[i].value.toLowerCase()) == -1) {
           match = false;
         }
       } else {
         // string
-        if (device[_filters[i].key].toLowerCase().indexOf(_filters[i].value.toLowerCase()) == -1) {
+        if (device[gotFilters[i].key].toLowerCase().indexOf(gotFilters[i].value.toLowerCase()) == -1) {
           match = false;
         }
       }
@@ -514,11 +515,11 @@ var AppStore = assign(EventEmitter.prototype, {
     return _filters
   },
 
-  matchFilters: function(item) {
+  matchFilters: function(item, filters) {
      /*
     * Return true or false for device matching _filters
     */
-    return _matchFilters(item);
+    return _matchFilters(item, filters);
   },
 
   getArtifactsRepo: function() {
