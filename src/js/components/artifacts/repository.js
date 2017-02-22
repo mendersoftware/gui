@@ -6,22 +6,19 @@ import ReactDOM from 'react-dom';
 var update = require('react-addons-update');
 var Loader = require('../common/loader');
 import SearchInput from 'react-search-input';
-import Form from '../common/forms/form';
-import FileInput from '../common/forms/fileinput';
 import TextInput from '../common/forms/textinput';
 import SelectedArtifact from './selectedartifact';
 import { Router, Route, Link } from 'react-router';
 import { Motion, spring } from 'react-motion';
 import Collapse from 'react-collapse';
 import ReactHeight from 'react-height';
+var Dropzone = require('react-dropzone');
 
 // material ui
 import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
-import FlatButton from 'material-ui/FlatButton';
-import Dialog from 'material-ui/Dialog';
-import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
 import FontIcon from 'material-ui/FontIcon';
+import FileIcon from 'react-material-icons/icons/file/file-upload';
 import IconButton from 'material-ui/IconButton';
 import Snackbar from 'material-ui/Snackbar';
 import LinearProgress from 'material-ui/LinearProgress';
@@ -65,21 +62,20 @@ var Repository = React.createClass({
     };
     this.setState({artifact: artifact});
   },
-  dialogOpen: function (ref) {
-    var obj = {};
-    obj[ref] = true;
-    this.setState(obj);
+  onDrop: function (acceptedFiles, rejectedFiles) {
+    if (acceptedFiles.length) {
+      this._onUploadSubmit(acceptedFiles);
+    }
+    if (rejectedFiles.length) {
+      AppActions.setSnackbar("File '"+rejectedFiles[0].name +"'' was rejected. File must be of type .mender");
+    }
   },
-  dialogDismiss: function(ref) {
-    var obj = {};
-    obj[ref] = false;
-    this.setState(obj);
-  },
-  _onUploadSubmit: function(meta) {
+  _onUploadSubmit: function(files) {
     var self = this;
-    var tmpFile = meta.artifactFile;
-    delete meta.artifactFile;
-    delete meta.verified;
+    //var tmpFile = meta.artifactFile;
+    //delete meta.artifactFile;
+    //delete meta.verified;
+    var meta = {description: ""};
 
     var callback = {
       success: function(result) {
@@ -98,10 +94,12 @@ var Repository = React.createClass({
       }
     };
 
-    AppActions.uploadArtifact(meta, tmpFile, callback);
+    files.forEach(function (file, index) {
+      AppActions.uploadArtifact(meta, file, callback);
+    });
+    
     AppActions.setSnackbar("Uploading artifact", 4000);
     this._resetArtifactState();
-    this.dialogDismiss('upload');
   },
   _editArtifactData: function (artifact) {
     AppActions.editArtifact(artifact, function() {
@@ -137,16 +135,6 @@ var Repository = React.createClass({
   },
   searchUpdated: function(term) {
     this.setState({searchTerm: term, artifact: {}}); // needed to force re-render
-  },
-  _openUpload: function(ref, artifact) {
-    if (artifact) {
-      this.setState({popupLabel: "Edit artifact details"});
-      newState = artifact;
-    } else {
-      this._resetArtifactState();
-      this.setState({popupLabel: "Upload a new artifact"});
-    }
-    this.dialogOpen('upload');
   },
   _onClick: function(event) {
     event.stopPropagation();
@@ -226,10 +214,11 @@ var Repository = React.createClass({
     return (
       <div>
 
-        <div className="top-right-button">
-          <RaisedButton key="file_upload" onClick={this._openUpload.bind(null,"upload", null)} label="Upload artifact file" labelPosition="after" secondary={true}>
-            <FontIcon style={styles.buttonIcon} className="material-icons">file_upload</FontIcon>
-          </RaisedButton>
+        <div className={items.length ? "top-right-button fadeIn" : "top-right-button fadeOut"} >
+          <Dropzone className="dropzone onboard" activeClassName="active" rejectClassName="active" multiple={false} accept=".mender" onDrop={this.onDrop}>
+            <div className="icon inline-block"><FileIcon style={{height:"24px", width:"24px", verticalAlign:"middle", marginTop:"-2px"}}/></div>
+            <div className="dashboard-placeholder inline">Drag here or <a>browse</a> to upload an artifact file</div>
+          </Dropzone>
         </div>
       
         <div>
@@ -267,43 +256,13 @@ var Repository = React.createClass({
             </TableBody>
           </Table>
 
-          <div className={(items.length || this.props.loading) ? "hidden" : "dashboard-placeholder" }>
-            <p>No artifacts found. <a onClick={this._openUpload.bind(null,"upload", null)}>Upload an artifact</a> to the repository</p>
-            <img src="assets/img/artifacts.png" alt="artifacts" />
+          <div className={(items.length || this.props.loading) ? "hidden" : "dashboard-placeholder fadeIn" }>
+            <Dropzone className="dropzone onboard" activeClassName="active" rejectClassName="active" multiple={false} accept=".mender" onDrop={this.onDrop}>
+              <p style={{width: "500px", fontSize:"16px", margin:"auto"}} className="dashboard-placeholder">No artifacts found. Drag a file here or <a>browse</a> to upload to the repository</p>
+              <img src="assets/img/artifacts.png" alt="artifacts" />
+            </Dropzone>
           </div>
         </div>
-
-        <Dialog
-          key="upload1"
-          ref="upload"
-          open={this.state.upload}
-          title={this.state.popupLabel}
-          autoDetectWindowHeight={true}
-          autoScrollBodyContent={true}
-          bodyStyle={{padding:"0 10px 10px 24px"}}
-          >
-          <div>
-            <Form submitLabel="Save artifact" handleCancel={this.dialogDismiss.bind(null, 'upload')} onSubmit={this._onUploadSubmit}>
-
-              <FileInput 
-                id="artifactFile"
-                placeholder="Upload artifact"
-                required={true}
-                file={true}
-                accept=".mender"
-                validations="isLength:1" />
-
-              <TextInput
-                id="description"
-                hint="Description"
-                label="Description"
-                multiLine={true}
-                className="margin-bottom-small"
-                value={this.state.artifact.description} />
-
-            </Form>
-          </div>
-        </Dialog>
 
       </div>
     );
