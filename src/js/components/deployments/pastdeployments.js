@@ -25,7 +25,7 @@ var Past = React.createClass({
     // adjust index to allow for client side pagination
     var index = ((this.state.currentPage-1)*this.state.pageSize)+rowNumber;
     var report = this.props.past[index];
-    this.props.showReport(report);
+    this.props.showReport(report, "past");
   },
   _formatTime: function(date) {
     if (date) {
