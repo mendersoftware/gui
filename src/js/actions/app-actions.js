@@ -326,11 +326,14 @@ var AppActions = {
       });
   },
 
-  editArtifact: function(artifact, callback) {
+  editArtifact: function(id, body, callback) {
     ArtifactsApi
-      .putJSON(deploymentsApiUrl + "/artifacts/" + artifact.id, artifact)
-      .then(function(res) {
-        callback();
+      .putJSON(deploymentsApiUrl + "/artifacts/" + id, body)
+      .then(function(data) {
+        callback.success(data);
+      })
+      .catch(function(err) {
+        callback.error(err);
       });
   },
 

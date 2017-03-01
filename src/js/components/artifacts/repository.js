@@ -101,11 +101,26 @@ var Repository = React.createClass({
     AppActions.setSnackbar("Uploading artifact", 4000);
     this._resetArtifactState();
   },
-  _editArtifactData: function (artifact) {
-    AppActions.editArtifact(artifact, function() {
-      AppActions.getArtifacts();
-    });
-    this.setState({artifact:artifact});
+  _editArtifactData: function (id, description) {
+    var self = this;
+    var body = {
+      description: description
+    };
+    var callback = {
+      success: function(result) {
+        AppActions.setSnackbar("Artifact details were updated successfully.");
+        var updated = self.state.artifact;
+        updated.description = description;
+        self.setState({artifact: updated});
+        self.props.refreshArtifacts();
+      },
+      error: function(err) {
+        console.log(err);
+        AppActions.setSnackbar("Artifact details couldn't be updated. "+err.error);
+        self.props.refreshArtifacts();
+      }
+    };
+    AppActions.editArtifact(id, body, callback);
   },
 
   _onRowSelection: function(rowNumber, columnId) {
