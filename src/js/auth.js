@@ -11,6 +11,7 @@ module.exports = {
     //  redirect on 401 invalid token
     req.on('response', function (res) {
       if (res.status === 401) {
+        cookie.remove('JWT');
         hashHistory.replace("/login");
       }
     });
