@@ -16,6 +16,7 @@ var parse = require('parse-link-header');
 // default per page until pagination and counting integrated
 var default_per_page = 20;
 var default_adm_per_page = 20;
+var default_deps_per_page = 5;
 var default_page = 1;
 
 
@@ -352,7 +353,8 @@ var AppActions = {
     // all deployments
     DeploymentsApi
       .get(deploymentsApiUrl+'/deployments')
-      .then(function(deployments) {
+      .then(function(res) {
+        var deployments = res.body;
         AppDispatcher.handleViewAction({
           actionType: AppConstants.RECEIVE_DEPLOYMENTS,
           deployments: deployments
@@ -366,7 +368,8 @@ var AppActions = {
   getDeploymentsInProgress: function(callback) {
     DeploymentsApi
       .get(deploymentsApiUrl+'/deployments?status=inprogress')
-      .then(function(deployments) {
+      .then(function(res) {
+        var deployments = res.body;
         AppDispatcher.handleViewAction({
           actionType: AppConstants.RECEIVE_ACTIVE_DEPLOYMENTS,
           deployments: deployments
@@ -377,10 +380,13 @@ var AppActions = {
         callback(err);
       })
   },
-  getPastDeployments: function(callback) {
+  getPastDeployments: function(callback, page, per_page) {
+    var page = page || default_page;
+    var per_page = per_page || default_deps_per_page;
     DeploymentsApi
-      .get(deploymentsApiUrl+'/deployments?status=finished')
-      .then(function(deployments) {
+      .get(deploymentsApiUrl+'/deployments?status=finished&per_page='+ per_page +'&page=' + page)
+      .then(function(res) {
+        var deployments = res.body;
         AppDispatcher.handleViewAction({
           actionType: AppConstants.RECEIVE_PAST_DEPLOYMENTS,
           deployments: deployments
@@ -394,7 +400,8 @@ var AppActions = {
   getPendingDeployments: function(callback) {
      DeploymentsApi
       .get(deploymentsApiUrl+'/deployments?status=pending')
-      .then(function(deployments) {
+      .then(function(res) {
+        var deployments = res.body;
         AppDispatcher.handleViewAction({
           actionType: AppConstants.RECEIVE_PENDING_DEPLOYMENTS,
           deployments: deployments
@@ -404,6 +411,30 @@ var AppActions = {
       .catch(function(err) {
         callback(err);
       })
+  },
+  getDeploymentCount: function(status, callback) {
+    var page = 1;
+    var per_page = 100;
+    var count = 0;
+    function DeploymentCount() {
+      DeploymentsApi
+        .get(deploymentsApiUrl+'/deployments?status='+status+'&per_page='+per_page+'&page='+page)
+        .then(function(res) {
+          var links = parse(res.headers['link']);
+          count += res.body.length;
+          if (links.next) {
+            page++;
+            DeploymentCount();
+          } else {
+            callback(count);
+          }
+        })
+        .catch(function(err) {
+          console.log("err", err);
+          callback(err);
+        })
+    };
+    DeploymentCount();
   },
   createDeployment: function(deployment, callback) {
     DeploymentsApi
@@ -418,22 +449,22 @@ var AppActions = {
   getSingleDeployment: function(id, callback) {
     DeploymentsApi
       .get(deploymentsApiUrl+'/deployments/'+id)
-      .then(function(data) {
-        callback(data);
+      .then(function(res) {
+        callback(res.body);
       });
   },
   getSingleDeploymentStats: function(id, callback) {
     DeploymentsApi
       .get(deploymentsApiUrl+'/deployments/'+id +'/statistics')
-      .then(function(data) {
-        callback(data);
+      .then(function(res) {
+        callback(res.body);
       });
   },
   getSingleDeploymentDevices: function(id, callback) {
     DeploymentsApi
       .get(deploymentsApiUrl+'/deployments/'+id +'/devices')
-      .then(function(data) {
-        callback(data);
+      .then(function(res) {
+        callback(res.body);
       });
   },
   getDeviceLog: function(deploymentId, deviceId, callback) {

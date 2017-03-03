@@ -17,14 +17,12 @@ var Past = React.createClass({
   getInitialState: function() {
     return {
       retry: false,
-      pageSize: 5,
-      currentPage: 1
+      pageSize: 5
     };
   },
   _pastCellClick: function(rowNumber, columnId) {
     // adjust index to allow for client side pagination
-    var index = ((this.state.currentPage-1)*this.state.pageSize)+rowNumber;
-    var report = this.props.past[index];
+    var report = this.props.past[rowNumber];
     this.props.showReport(report, "past");
   },
   _formatTime: function(date) {
@@ -34,36 +32,35 @@ var Past = React.createClass({
     return;
   },
   _handlePageChange: function(pageNo) {
+    this.props.refreshPast(pageNo);
     this.setState({currentPage: pageNo});
   },
   render: function() {
     var pastMap = this.props.past.map(function(deployment, index) {
 
-      if ((index >= (this.state.currentPage-1)*this.state.pageSize) && (index < this.state.currentPage*this.state.pageSize)) {
-
-        var time = "-";
-        if (deployment.finished) {
-          time = (
-            <Time value={this._formatTime(deployment.finished)} format="YYYY-MM-DD HH:mm" />
-          )
-        } 
-
-        //  get statistics
-        var status = (
-          <DeploymentStatus id={deployment.id} />
-        );
-
-        return (
-          <TableRow key={index}>
-            <TableRowColumn>{deployment.artifact_name}</TableRowColumn>
-            <TableRowColumn>{deployment.name}</TableRowColumn>
-            <TableRowColumn><Time value={this._formatTime(deployment.created)} format="YYYY-MM-DD HH:mm" /></TableRowColumn>
-            <TableRowColumn>{time}</TableRowColumn>
-            <TableRowColumn style={{textAlign:"right", width:"100px"}}><GroupDevices deployment={deployment.id} /></TableRowColumn>
-            <TableRowColumn style={{overflow:"visible", width:"350px"}}>{status}</TableRowColumn>
-          </TableRow>
+      var time = "-";
+      if (deployment.finished) {
+        time = (
+          <Time value={this._formatTime(deployment.finished)} format="YYYY-MM-DD HH:mm" />
         )
-      }
+      } 
+
+      //  get statistics
+      var status = (
+        <DeploymentStatus id={deployment.id} />
+      );
+
+      return (
+        <TableRow key={index}>
+          <TableRowColumn>{deployment.artifact_name}</TableRowColumn>
+          <TableRowColumn>{deployment.name}</TableRowColumn>
+          <TableRowColumn><Time value={this._formatTime(deployment.created)} format="YYYY-MM-DD HH:mm" /></TableRowColumn>
+          <TableRowColumn>{time}</TableRowColumn>
+          <TableRowColumn style={{textAlign:"right", width:"100px"}}><GroupDevices deployment={deployment.id} /></TableRowColumn>
+          <TableRowColumn style={{overflow:"visible", width:"350px"}}>{status}</TableRowColumn>
+        </TableRow>
+      )
+
     }, this);
 
     var reportActions = [
@@ -109,7 +106,7 @@ var Past = React.createClass({
 
           {
             this.props.past.length ? 
-            <Pagination locale={_en_US} simple pageSize={this.state.pageSize} current={this.state.currentPage || 1} total={this.props.past.length} onChange={this._handlePageChange} /> 
+            <Pagination locale={_en_US} simple pageSize={this.state.pageSize} current={this.state.currentPage || 1} total={this.props.count} onChange={this._handlePageChange} /> 
             :
             <div className={this.props.loading ? 'hidden' : "dashboard-placeholder"}>
               <p>Completed deployments will appear here.</p>

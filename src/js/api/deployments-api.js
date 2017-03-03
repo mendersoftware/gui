@@ -16,7 +16,7 @@ var Api = {
           if (err || !res.ok) {
             reject(err);
           } else {
-            resolve(res.body);
+            resolve(res);
           }
         });
     });

@@ -26,7 +26,7 @@ function getState() {
     groups: AppStore.getGroups(),
     allDevices: AppStore.getAllDevices(),
     invalid: true,
-    snackbar: AppStore.getSnackbar(),
+    snackbar: AppStore.getSnackbar()
   }
 }
 
@@ -132,14 +132,17 @@ var Deployments = React.createClass({
       self._dismissSnackBar();
     });
   },
-  _refreshPast: function() {
+  _refreshPast: function(page, per_page) {
     var self = this;
-    AppActions.getPastDeployments(function() {
+    AppActions.getDeploymentCount("finished", function(count) {
+      self.setState({pastCount: count});
+    });
+    AppActions.getPastDeployments(function(deployments) {
       setTimeout(function() {
         self.setState({doneLoading:true});
         self._dismissSnackBar();
       }, 300)
-    });
+    }, page, per_page);
   },
   _dismissSnackBar: function() {
     setTimeout(function() {
@@ -386,7 +389,7 @@ var Deployments = React.createClass({
 
           <Progress abort={this._abortDeployment} loading={!this.state.doneLoading} openReport={this._showProgress} progress={this.state.progress} createClick={this.dialogOpen.bind(null, "schedule")}/>
 
-          <Past loading={!this.state.doneLoading} past={this.state.past} showReport={this._showReport} />
+          <Past count={this.state.pastCount} loading={!this.state.doneLoading} past={this.state.past} refreshPast={this._refreshPast} showReport={this._showReport} />
 
         </div>
 
