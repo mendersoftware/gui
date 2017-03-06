@@ -34,26 +34,23 @@ var Recent = React.createClass({
   render: function() {
     var deployments = this.props.deployments || [];
     var recent = deployments.map(function(deployment, index) {
-      if (index<3) {
-
-        var last = (deployments.length === index+1) || index===4;
-        var status = deployment.status === "Failed" ? "warning" : "check";
-        var icon = (
-          <FontIcon className="material-icons">
-            {status}
-          </FontIcon>
-        );
-        return (
-          <div onClick={this._clickHandle.bind(null, deployment.id)} className="deployment" key={index}>
-            <div className="deploymentInfo">
-              <div><div className="progressLabel">Updating to:</div>{deployment.artifact_name}</div>
-              <div><div className="progressLabel">Device group:</div>{deployment.name}</div>
-              <div><div className="progressLabel">Started:</div><Time className="progressTime" value={this._formatTime(deployment.created)} format="YYYY-MM-DD HH:mm" /></div>
-            </div>
-            <RecentStats id={deployment.id} />
+      var status = deployment.status === "Failed" ? "warning" : "check";
+      var icon = (
+        <FontIcon className="material-icons">
+          {status}
+        </FontIcon>
+      );
+      return (
+        <div onClick={this._clickHandle.bind(null, deployment.id)} className="deployment" key={index}>
+          <div className="deploymentInfo">
+            <div><div className="progressLabel">Updating to:</div>{deployment.artifact_name}</div>
+            <div><div className="progressLabel">Device group:</div>{deployment.name}</div>
+            <div><div className="progressLabel">Started:</div><Time className="progressTime" value={this._formatTime(deployment.created)} format="YYYY-MM-DD HH:mm" /></div>
           </div>
-        )
-      }
+          <RecentStats id={deployment.id} />
+        </div>
+      )
+      
     }, this);
     return (
       <div>
