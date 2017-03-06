@@ -349,10 +349,12 @@ var AppActions = {
 
 
   /*Deployments */
-  getDeployments: function(callback) {
+  getDeployments: function(callback, page, per_page) {
     // all deployments
+    var page = page || default_page;
+    var per_page = per_page || default_per_page;
     DeploymentsApi
-      .get(deploymentsApiUrl+'/deployments')
+      .get(deploymentsApiUrl+'/deployments?page='+page+'&per_page='+per_page)
       .then(function(res) {
         var deployments = res.body;
         AppDispatcher.handleViewAction({
@@ -365,9 +367,11 @@ var AppActions = {
         callback(err);
       })
   },
-  getDeploymentsInProgress: function(callback) {
+  getDeploymentsInProgress: function(callback, page, per_page) {
+    var page = page || default_page;
+    var per_page = per_page || default_per_page;
     DeploymentsApi
-      .get(deploymentsApiUrl+'/deployments?status=inprogress')
+      .get(deploymentsApiUrl+'/deployments?status=inprogress&page='+page+'&per_page='+per_page)
       .then(function(res) {
         var deployments = res.body;
         AppDispatcher.handleViewAction({
@@ -397,9 +401,11 @@ var AppActions = {
         callback(err);
       })
   },
-  getPendingDeployments: function(callback) {
-     DeploymentsApi
-      .get(deploymentsApiUrl+'/deployments?status=pending')
+  getPendingDeployments: function(callback, page, per_page) {
+    var page = page || default_page;
+    var per_page = per_page || default_deps_per_page;
+    DeploymentsApi
+      .get(deploymentsApiUrl+'/deployments?status=pending&page='+page+'&per_page='+per_page)
       .then(function(res) {
         var deployments = res.body;
         AppDispatcher.handleViewAction({

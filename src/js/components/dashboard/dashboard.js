@@ -57,7 +57,7 @@ var Dashboard = React.createClass({
       setTimeout(function() {
         this.setState({doneActiveDepsLoading:true});
       }.bind(this), 300)
-    }.bind(this));
+    }.bind(this), 1, 3);
     AppActions.getDeploymentsInProgress(function() {
       setTimeout(function() {
         this.setState({donePastDepsLoading:true});
