@@ -4,6 +4,9 @@ var GroupDevices = require('./groupdevices');
 import BlockIcon from 'react-material-icons/icons/content/block';
 var ConfirmAbort = require('./confirmabort');
 
+var Pagination = require('rc-pagination');
+var _en_US = require('rc-pagination/lib/locale/en_US');
+
 // material ui
 import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
 import FlatButton from 'material-ui/FlatButton';
@@ -11,7 +14,8 @@ import FlatButton from 'material-ui/FlatButton';
 var Pending = React.createClass({
   getInitialState: function() {
     return {
-      abort: null 
+      abort: null,
+      pageSize: 20
     };
   },
   _formatTime: function(date) {
@@ -31,6 +35,10 @@ var Pending = React.createClass({
   },
   _showConfirm: function(id) {
     this.setState({abort:id});
+  },
+  _handlePageChange: function(pageNo) {
+    this.props.refreshPending(pageNo);
+    this.setState({currentPage: pageNo});
   },
   render: function() {
     var pendingMap = this.props.pending.map(function(deployment, index) {
@@ -86,8 +94,14 @@ var Pending = React.createClass({
               {pendingMap}
             </TableBody>
           </Table>
+       
+          {
+            this.props.count>this.props.pending.length ? 
+            <Pagination locale={_en_US} simple pageSize={this.state.pageSize} current={this.state.currentPage || 1} total={this.props.count} onChange={this._handlePageChange} /> 
+            :
+            null
+          }
         </div>
-
       </div>
     );
   }

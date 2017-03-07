@@ -117,31 +117,88 @@ var Deployments = React.createClass({
     this._refreshPending();
     this._refreshPast();
   },
-  _refreshInProgress: function() {
+  _refreshInProgress: function(page, per_page) {
+    /*
+    / refresh only in progress deployments
+    /
+    */
     var self = this;
-    AppActions.getDeploymentsInProgress(function() {
-      setTimeout(function() {
-        self.setState({doneLoading:true});
-        self._dismissSnackBar();
-      }, 300)
-    });
-  },
-  _refreshPending: function() {
-    var self = this;
-    AppActions.getPendingDeployments(function() {
+    if (page) {
+      self.setState({prog_page: page});
+    } else {
+      page = self.state.prog_page;
+    }
+    AppActions.getDeploymentsInProgress(function(deployments, links) {
+      self.setState({doneLoading:true});
       self._dismissSnackBar();
-    });
+     
+      // Get full count of deployments for pagination
+      if (links.next || links.prev) {
+         AppActions.getDeploymentCount("inprogress", function(count) {
+          self.setState({progressCount: count});
+          if (count && !deployments.length) {
+            self._refreshInProgress(1);
+          }
+        });
+      } else {
+        self.setState({progressCount: deployments.length});
+      }
+    }, page, per_page);
+  },
+  _refreshPending: function(page, per_page) {
+    /*
+    / refresh only pending deployments
+    /
+    */
+    var self = this;
+    if (page) {
+      self.setState({pend_page: page});
+    } else {
+      page = self.state.pend_page;
+    }
+    AppActions.getPendingDeployments(function(deployments, links) {
+      self._dismissSnackBar();
+    
+      // Get full count of deployments for pagination
+      if (links.next || links.prev) {
+        AppActions.getDeploymentCount("pending", function(count) {
+          self.setState({pendingCount: count});
+          if (count && !deployments.length) {
+            self._refreshPending(1);
+          }
+        });
+      } else {
+        self.setState({pendingCount: deployments.length});
+      }
+    }, page, per_page);
   },
   _refreshPast: function(page, per_page) {
+    /*
+    / refresh only finished deployments
+    /
+    */
     var self = this;
-    AppActions.getDeploymentCount("finished", function(count) {
-      self.setState({pastCount: count});
-    });
-    AppActions.getPastDeployments(function(deployments) {
-      setTimeout(function() {
-        self.setState({doneLoading:true});
-        self._dismissSnackBar();
-      }, 300)
+    if (page) {
+      self.setState({past_page: page});
+    } else {
+      page = self.state.past_page;
+    }
+   
+    AppActions.getPastDeployments(function(deployments, links) {
+      self.setState({doneLoading:true});
+      self._dismissSnackBar();
+
+      // Get full count of deployments for pagination
+      if (links.next || links.prev) {
+        AppActions.getDeploymentCount("finished", function(count) {
+          self.setState({pastCount: count});
+          if (count && !deployments.length) {
+            self._refreshPast(1);
+          }
+        });
+      } else {
+        self.setState({pastCount: deployments.length});
+      }
     }, page, per_page);
   },
   _dismissSnackBar: function() {
@@ -385,9 +442,9 @@ var Deployments = React.createClass({
         </div>
 
         <div style={{paddingTop:"3px"}}>
-          <Pending pending={this.state.pending} abort={this._abortDeployment} />
+          <Pending count={this.state.pendingCount || this.state.pending.length}  refreshPending={this._refreshPending}  pending={this.state.pending} abort={this._abortDeployment} />
 
-          <Progress abort={this._abortDeployment} loading={!this.state.doneLoading} openReport={this._showProgress} progress={this.state.progress} createClick={this.dialogOpen.bind(null, "schedule")}/>
+          <Progress count={this.state.progressCount || this.state.progress.length} refreshProgress={this._refreshInProgress} abort={this._abortDeployment} loading={!this.state.doneLoading} openReport={this._showProgress} progress={this.state.progress} createClick={this.dialogOpen.bind(null, "schedule")}/>
 
           <Past count={this.state.pastCount} loading={!this.state.doneLoading} past={this.state.past} refreshPast={this._refreshPast} showReport={this._showReport} />
 
