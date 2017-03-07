@@ -5,6 +5,8 @@ var ScheduleForm = require('./scheduleform');
 var GroupDevices = require('./groupdevices');
 var DeploymentStatus = require('./deploymentstatus');
 
+var Pagination = require('rc-pagination');
+var _en_US = require('rc-pagination/lib/locale/en_US');
 var Loader = require('../common/loader');
 
 // material ui
@@ -15,6 +17,7 @@ var Progress = React.createClass({
   getInitialState: function() {
     return {
       retry: false,
+      pageSize: 20
     };
   },
   _progressCellClick: function(rowNumber, columnId) {
@@ -26,6 +29,10 @@ var Progress = React.createClass({
        return date.replace(' ','T').replace(/ /g, '').replace('UTC','');
     }
     return;
+  },
+  _handlePageChange: function(pageNo) {
+    this.props.refreshProgress(pageNo);
+    this.setState({currentPage: pageNo});
   },
   render: function() {
     // get statistics for each in progress
@@ -75,10 +82,18 @@ var Progress = React.createClass({
               {progressMap}
             </TableBody>
           </Table>
-          <div className={(progressMap.length || this.props.loading)  ? 'hidden' : "dashboard-placeholder"}>
-            <p>Ongoing deployments will appear here. <a onClick={this.props.createClick}>Create a deployment</a> to get started</p>
-            <img src="assets/img/deployments.png" alt="In progress" />
-          </div>
+
+
+
+          {
+            this.props.count>this.props.progress.length ? 
+            <Pagination locale={_en_US} simple pageSize={this.state.pageSize} current={this.state.currentPage || 1} total={this.props.count} onChange={this._handlePageChange} /> 
+            :
+            <div className={(progressMap.length || this.props.loading)  ? 'hidden' : "dashboard-placeholder"}>
+              <p>Ongoing deployments will appear here. <a onClick={this.props.createClick}>Create a deployment</a> to get started</p>
+              <img src="assets/img/deployments.png" alt="In progress" />
+            </div>
+          }
         </div>
 
 

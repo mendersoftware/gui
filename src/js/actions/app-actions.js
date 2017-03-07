@@ -361,7 +361,8 @@ var AppActions = {
           actionType: AppConstants.RECEIVE_DEPLOYMENTS,
           deployments: deployments
         });
-        callback();
+        var links = parse(res.headers['link']);
+        callback(res.body, links);
       })
       .catch(function(err) {
         callback(err);
@@ -378,7 +379,8 @@ var AppActions = {
           actionType: AppConstants.RECEIVE_ACTIVE_DEPLOYMENTS,
           deployments: deployments
         });
-        callback();
+        var links = parse(res.headers['link']);
+        callback(res.body, links);
       })
       .catch(function(err) {
         callback(err);
@@ -395,7 +397,8 @@ var AppActions = {
           actionType: AppConstants.RECEIVE_PAST_DEPLOYMENTS,
           deployments: deployments
         });
-        callback();
+        var links = parse(res.headers['link']);
+        callback(res.body, links);
       })
       .catch(function(err) {
         callback(err);
@@ -403,7 +406,7 @@ var AppActions = {
   },
   getPendingDeployments: function(callback, page, per_page) {
     var page = page || default_page;
-    var per_page = per_page || default_deps_per_page;
+    var per_page = per_page || default_per_page;
     DeploymentsApi
       .get(deploymentsApiUrl+'/deployments?status=pending&page='+page+'&per_page='+per_page)
       .then(function(res) {
@@ -412,7 +415,8 @@ var AppActions = {
           actionType: AppConstants.RECEIVE_PENDING_DEPLOYMENTS,
           deployments: deployments
         });
-        callback();
+        var links = parse(res.headers['link']);
+        callback(res.body, links);
       })
       .catch(function(err) {
         callback(err);
