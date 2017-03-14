@@ -31,8 +31,8 @@ notifications:
         on_start: always
 
 before_script:
-  - npm install -g gulp
-  - npm install mocha selenium-webdriver@3.0.0-beta-2 saucelabs
+    - npm install -g gulp
+    - npm install mocha selenium-webdriver@3.0.0-beta-2 saucelabs
 
 script:
     - gulp build
