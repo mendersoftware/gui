@@ -272,8 +272,20 @@ var AppActions = {
   },
 
   acceptDevice: function (device, callback) {
+    // accept single device through dev admn api
     DevicesApi
       .put(devicesApiUrl+"/devices/"+device.id +"/status", {"status":"accepted"})
+      .then(function(data) {
+        callback.success(data);
+      })
+      .catch(function(err) {
+        callback.error(err);
+      });
+  },
+  reacceptDevice: function (device, callback) {
+    // accept single device by changing status in dev auth api
+    DevicesApi
+      .put(devAuthApiUrl+"/devices/"+device.id + "/auth/" + device.auth_sets[0].id +"/status", {"status":"accepted"})
       .then(function(data) {
         callback.success(data);
       })
@@ -284,6 +296,16 @@ var AppActions = {
   rejectDevice: function (device, callback) {
     DevicesApi
       .put(devicesApiUrl+"/devices/"+device.id +"/status", {"status":"rejected"})
+      .then(function(data) {
+        callback.success(data);
+      })
+      .catch(function(err) {
+        callback.error(err);
+      });
+  },
+  blockDevice: function (device, callback) {
+    DevicesApi
+      .put(devAuthApiUrl+"/devices/"+device.id + "/auth/" + device.auth_sets[0].id +"/status", {"status":"rejected"})
       .then(function(data) {
         callback.success(data);
       })

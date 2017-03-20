@@ -109,18 +109,6 @@ var Authorized =  React.createClass({
       AppActions.acceptDevice(device, singleCallback);
     });
   },
-  _blockDevice: function(device) {
-    var callback = {
-      success: function(data) {
-        AppActions.setSnackbar("Device rejected successfully");
-        this.props.refreshAdmissions();
-      }.bind(this),
-      error: function(err) {
-        AppActions.setSnackbar("There was a problem rejecting the device: "+err);
-      }
-    };
-    AppActions.rejectDevice(device, callback);
-  },
   _expandRow: function(rowNumber, columnId, event) {
     event.stopPropagation();
     // If action buttons column, no expand
@@ -141,19 +129,14 @@ var Authorized =  React.createClass({
   _adjustCellHeight: function(height) {
     this.setState({divHeight: height+70});
   },
+  _blockDevice: function(device) {
+    this.props.block(device);
+  },
   render: function() {
-    var styles = {
-      sortIcon: {
-        verticalAlign: 'middle',
-        marginLeft: "10px",
-        color: "#8c8c8d",
-        cursor: "pointer",
-      }
-    }
     var devices = this.props.pending.map(function(device, index) {
       var expanded = '';
       if ( this.state.expanded === index ) {
-        expanded = <SelectedDevices addTooltip={this.props.addTooltip} attributes={device.attributes} deviceId={this.state.deviceId} accept={this._authorizeDevices} block={this._blockDevice} device={this.state.expandedDevice} unauthorized={true} selected={[device]}  />
+        expanded = <SelectedDevices styles={this.props.styles} addTooltip={this.props.addTooltip} attributes={device.attributes} deviceId={this.state.deviceId} accept={this._authorizeDevices} block={this.props.block} device={this.state.expandedDevice} unauthorized={true} selected={[device]}  />
       }
       return (
         <TableRow style={{"backgroundColor": "#e9f4f3"}} className={expanded ? "expand" : null} hoverable={true} key={index}>
@@ -192,9 +175,9 @@ var Authorized =  React.createClass({
             adjustForCheckbox={false} 
           >
             <TableRow>
-              <TableHeaderColumn className="columnHeader" tooltip="ID">ID<FontIcon ref="id" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "id")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
-              <TableHeaderColumn className="columnHeader" tooltip="Request time">Request time<FontIcon ref="request_time" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "request_time")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
-              <TableHeaderColumn className="columnHeader" tooltip="Status">Status<FontIcon ref="status" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "status")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
+              <TableHeaderColumn className="columnHeader" tooltip="ID">ID<FontIcon ref="id" style={this.props.styles.sortIcon} onClick={this._sortColumn.bind(null, "id")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
+              <TableHeaderColumn className="columnHeader" tooltip="Request time">Request time<FontIcon ref="request_time" style={this.props.styles.sortIcon} onClick={this._sortColumn.bind(null, "request_time")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
+              <TableHeaderColumn className="columnHeader" tooltip="Status">Status<FontIcon ref="status" style={this.props.styles.sortIcon} onClick={this._sortColumn.bind(null, "status")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
               <TableHeaderColumn className="columnHeader" tooltip="Authorize device?">Authorize?</TableHeaderColumn>
             </TableRow>
           </TableHeader>

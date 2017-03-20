@@ -14,6 +14,11 @@ var Loader = require('../common/loader');
 require('../common/prototype/Array.prototype.equals');
 
 import Snackbar from 'material-ui/Snackbar';
+import Dialog from 'material-ui/Dialog';
+import FlatButton from 'material-ui/FlatButton';
+import RaisedButton from 'material-ui/RaisedButton';
+import FontIcon from 'material-ui/FontIcon';
+import { List, ListItem } from 'material-ui/List';
 
 import { Router, Route, Link } from 'react-router';
 
@@ -27,7 +32,6 @@ function getState() {
     attributes: AppStore.getAttributes(),
     artifacts: AppStore.getArtifactsRepo(),
     snackbar: AppStore.getSnackbar(),
-    devices: AppStore.getGroupDevices(),
     totalDevices: AppStore.getTotalDevices()
   }
 }
@@ -51,24 +55,25 @@ var Devices = React.createClass({
     this._refreshGroups();
   },
   _refreshAll: function() {
+    var self = this;
     this._refreshAdmissions();
     this._refreshDevices();
     this._refreshGroups();
 
     AppActions.getArtifacts({
       success: function(artifacts) {
-        this.setState({artifacts:artifacts})
-      }.bind(this)
+        self.setState({artifacts:artifacts})
+      }
     });
 
     var filters = [];
-    if (this.props.params) {
-      if (this.props.params.group) {
-        AppActions.selectGroup(this.props.params.group);
-        this.setState({selectedGroup:this.props.params.group});
+    if (self.props.params) {
+      if (self.props.params.group) {
+        AppActions.selectGroup(self.props.params.group);
+        self.setState({selectedGroup:self.props.params.group});
       }
-      if (this.props.params.filters) {
-        var str = decodeURIComponent(this.props.params.filters);
+      if (self.props.params.filters) {
+        var str = decodeURIComponent(self.props.params.filters);
         var obj = str.split("&");
         for (var i=0;i<obj.length;i++) {
           var f = obj[i].split("=");
@@ -121,18 +126,17 @@ var Devices = React.createClass({
 
     var groupCallback = {
       success: function(deviceList, links) {
-        getDevicesFromIDs(deviceList, function(devices) {
-          AppActions.setGroupDevices(devices);
-          self.setState({doneLoading:true, devices:devices, devLoading:false});
+        getDevicesFromIDs(deviceList.sort(), function(devices) {
+          self.setState({doneLoading:true, devLoading:false, devices:devices});
           AppActions.setSnackbar("");
         });
-      }.bind(this),
+      },
       error: function(err) {
-        this.setState({doneLoading:true, devLoading:false, devices:[]});
+        self.setState({doneLoading:true, devLoading:false, devices:[]});
         console.log(err);
         var errormsg = err.error || "Please check your connection";
         AppActions.setSnackbar("Devices couldn't be loaded. " +errormsg);
-      }.bind(this)
+      }
     };
 
     function getDevicesFromIDs(list, callback) {
@@ -189,7 +193,7 @@ var Devices = React.createClass({
     var groupDevices = {};
     var callback = {
       success: function (groups) {
-        this.setState({groups: groups});
+        self.setState({groups: groups});
         for (var i=0;i<groups.length;i++) {
           groupDevices[groups[i]] = 0;
           setNum(groups[i], i);
@@ -201,7 +205,7 @@ var Devices = React.createClass({
           }
         }
         
-      }.bind(this),
+      },
       error: function(err) {
         console.log(err);
       }
@@ -276,7 +280,143 @@ var Devices = React.createClass({
   _handleRows: function(rows) {
     this.setState({selectedRows: rows});
   },
+  dialogToggle: function (ref) {
+    var state = {};
+    state[ref] = !this.state[ref];
+    console.log("setstate");
+    this.setState(state);
+  },
+  closeDialogs: function() {
+    this.setState({remove: false, block: false, schedule: false});
+  },
+  _blockDialog: function(device, remove) {
+    if (remove) {
+      this.setState({remove: true, block: false, blockDevice: device});
+    } else {
+      this.setState({block: true, remove: false, blockDevice: device});
+    }
+  },
+  _blockDevice: function(accepted) {
+    // if device already accepted, set true to use devauth api
+    // otherwise use device admn api
+    var self = this;
+    var callback = {
+      success: function(data) {
+        AppActions.setSnackbar("Device was rejected successfully");
+        self.closeDialogs();
+        self._refreshAdmissions();
+        self._setDeviceDetails(self.state.blockDevice);
+      },
+      error: function(err) {
+        AppActions.setSnackbar("There was a problem rejecting the device: "+err);
+      }
+    };
+    if (accepted) {
+      AppActions.blockDevice(self.state.blockDevice, callback);
+    } else {
+      AppActions.rejectDevice(self.state.blockDevice, callback);
+    }
+    
+  },
+  _acceptDevice: function(devices) {
+    var self = this;
+    var callback = {
+      success: function(data) {
+        AppActions.setSnackbar("Device was authorized");
+        self._refreshAdmissions();
+        self._setDeviceDetails(devices[0]);
+      },
+      error: function(err) {
+        AppActions.setSnackbar("There was a problem authorizing the device: "+err);
+      }
+    };
+    // 'devices' is an array but will always be length 1 as it comes from expanded single device row
+    AppActions.reacceptDevice(devices[0], callback);
+  },
+  _decommissionDevice: function() {
+    var self = this;
+    var callback = {
+      success: function(data) {
+        AppActions.setSnackbar("Device was successfully decommissioned");
+        self.dialogToggle("decommission");
+        self._refreshAdmissions();
+      },
+      error: function(err) {
+        AppActions.setSnackbar("There was a problem rejecting the device: "+err);
+      }
+    };
+    AppActions.decommissionDevice(self.state.blockDevice, callback);
+  },
+
+  /*
+  * Handle selecting of a row in child device list
+  */
+  _clickRow: function(device, rowNumber) {
+    // check device is not already expanded, if so, close it
+    if (!this.state.expandedDevice || (device.id !== this.state.expandedDevice.id)) {
+      this.setState({expandedRow: rowNumber, expandedDevice: device});
+      this._setDeviceDetails(device);
+    } else {
+      this.setState({expandedRow: null, expandedDevice: {}});
+    }
+  },
+
+
+  /*
+  * Get full device identity and inventory details for single selected device
+  */
+  _setDeviceDetails: function(device) {
+    var self = this;
+    var callback = {
+      success: function(data) {
+        device.auth_sets = data.auth_sets;
+        device.id_data = JSON.parse(data.id_data);
+        device.id = data.id;
+        device.created_ts = data.created_ts;
+        self.setState({expandedDevice: device});
+      },
+      error: function(err) {
+        console.log("Error: " + err);
+      }
+    };
+    AppActions.getDeviceIdentity(device.id, callback);
+  },
+
   render: function() {
+    var decommissionActions =  [
+      <div style={{marginRight:"10px", display:"inline-block"}}>
+        <FlatButton
+          label="Cancel"
+          onClick={this.closeDialogs} />
+      </div>
+    ];
+    var blockActions =  [
+      <div style={{marginRight:"10px", display:"inline-block"}}>
+        <FlatButton
+          label="Cancel"
+          onClick={this.closeDialogs} />
+      </div>,
+      <RaisedButton
+        label="Block device"
+        secondary={true}
+        onClick={this._blockDevice}
+        icon={<FontIcon style={{marginTop:"-4px"}} className="material-icons">cancel</FontIcon>} />
+    ];
+
+    var styles = {
+      listStyle: {
+        fontSize: "12px",
+        paddingTop: "10px",
+        paddingBottom: "10px"
+      },
+      sortIcon: {
+        verticalAlign: 'middle',
+        marginLeft: "10px",
+        color: "#8c8c8d",
+        cursor: "pointer",
+      }
+    }
+
     return (
       <div className="margin-top">
        <div className="leftFixed">
@@ -291,7 +431,7 @@ var Devices = React.createClass({
         </div>
         <div className="rightFluid padding-right">
           <div className={this.state.pendingDevices.length ? "fadeIn onboard" : "hidden"}>
-            <Unauthorized pauseRefresh={this._pauseTimers} addTooltip={this.props.addTooltip} showLoader={this._showLoader} refresh={this._refreshDevices} refreshAdmissions={this._refreshAdmissions} pending={this.state.pendingDevices} total={this.state.totalAdmDevices} />
+            <Unauthorized styles={styles} block={this._blockDialog} pauseRefresh={this._pauseTimers} addTooltip={this.props.addTooltip} showLoader={this._showLoader} refresh={this._refreshDevices} refreshAdmissions={this._refreshAdmissions} pending={this.state.pendingDevices} total={this.state.totalAdmDevices} />
             <div>
               {this.state.totalAdmDevices ? <Pagination locale={_en_US} simple pageSize={20} current={this.state.currentAdmPage || 1} total={this.state.totalAdmDevices} onChange={this._handleAdmPageChange} /> : null }
              
@@ -300,6 +440,7 @@ var Devices = React.createClass({
           </div>
           <Loader show={!this.state.doneLoading} />
           <DeviceList
+            styles={styles}
             addTooltip={this.props.addTooltip} 
             redirect={this._redirect}
             refreshDevices={this._refreshDevices}
@@ -316,7 +457,12 @@ var Devices = React.createClass({
             devices={this.state.devices || []}
             selectedGroup={this.state.selectedGroup}
             page={this.state.currentPage}
-            pauseRefresh={this._pauseTimers} />
+            pauseRefresh={this._pauseTimers}
+            block={this._blockDialog}
+            accept={this._acceptDevice}
+            expandRow={this._clickRow}
+            expandedRow={this.state.expandedRow}
+            expandedDevice={this.state.expandedDevice} />
             {this.state.totalDevices ? <Pagination locale={_en_US} simple pageSize={20} current={this.state.currentPage || 1} total={this.state.numDevices} onChange={this._handlePageChange} /> : null }
             {this.state.devLoading ?  <div className="smallLoaderContainer"><Loader show={true} /></div> : null}
         </div>
@@ -337,6 +483,56 @@ var Devices = React.createClass({
           changeGroup={this._handleGroupChange}
           loadingDevices={this.state.pickerLoading}
         />
+
+
+        <Dialog
+          open={this.state.block || false}
+          title='Block this device?'
+          actions={blockActions}
+          autoDetectWindowHeight={true}
+          bodyStyle={{paddingTop:"0", fontSize:"13px"}}
+          contentStyle={{overflow:"hidden", boxShadow:"0 14px 45px rgba(0, 0, 0, 0.25), 0 10px 18px rgba(0, 0, 0, 0.22)"}}
+          >
+
+          <p>
+            This device will be rejected and blocked from making authorization requests in the future.
+          </p>
+        </Dialog>
+
+        <Dialog
+          open={this.state.remove || false}
+          title='Block or decommission device?'
+          actions={decommissionActions}
+          autoDetectWindowHeight={true}
+          bodyStyle={{paddingTop:"0", fontSize:"13px"}}
+          contentStyle={{overflow:"hidden", boxShadow:"0 14px 45px rgba(0, 0, 0, 0.25), 0 10px 18px rgba(0, 0, 0, 0.22)"}}
+          >
+          {this.state.blockDevice ? <ListItem className="margin-bottom-small" style={styles.listStyle} disabled={true} primaryText="Device ID" secondaryText={this.state.blockDevice.id}  />: null}
+          <div className="split-dialog">
+            <div className="align-center">
+              <div>
+                <FontIcon className="material-icons" style={{marginTop:6, marginBottom:6, marginRight:6, verticalAlign: "middle", color:"#c7c7c7"}}>cancel</FontIcon>
+                <h3 className="inline align-middle">Block</h3>
+              </div>
+              <p>
+                De-authorize this device and block it from making authorization requests in the future.
+              </p>
+              <RaisedButton onClick={this._blockDevice.bind(null, true)} className="margin-top-small" secondary={true} label={"Block device"} icon={<FontIcon style={{marginTop:"-4px"}} className="material-icons">cancel</FontIcon>} />
+            </div>
+          </div>
+          <div className="split-dialog left-border">
+            <div className="align-center">
+              <div>
+                <FontIcon className="material-icons" style={{marginTop:6, marginBottom:6, marginRight:6, verticalAlign: "middle", color:"#c7c7c7"}}>delete_forever</FontIcon>
+                <h3 className="inline align-middle">Decommission</h3>
+              </div>
+              <p>
+                Decommission this device and remove all device data. This action is not reversible.
+              </p>
+              <RaisedButton onClick={this._decommissionDevice} className="margin-top-small" secondary={true} label={"Decommission device"} icon={<FontIcon style={{marginTop:"-4px"}} className="material-icons">delete_forever</FontIcon>} />
+            </div>
+          </div>
+        </Dialog>
       </div>
     );
   }
