@@ -99,7 +99,7 @@ var DeviceList = React.createClass({
   _setDeviceIdentity: function(device) {
     var callback = {
       success: function(data) {
-        this.setState({deviceAttributes: data.attributes, deviceId: data.id, admittanceTime: null});
+        this.setState({deviceAttributes: JSON.parse(data.id_data), deviceId: data.id, admittanceTime: data.created_ts});
       }.bind(this),
       error: function(err) {
         console.log("Error: " + err);

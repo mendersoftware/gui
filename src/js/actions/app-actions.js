@@ -8,6 +8,7 @@ var rootUrl = "https://localhost:443";
 var apiUrl = rootUrl + "/api/management/v1"
 var deploymentsApiUrl = apiUrl + "/deployments";
 var devicesApiUrl = apiUrl + "/admission";
+var devAuthApiUrl = apiUrl + "/devauth";
 var inventoryApiUrl = apiUrl + "/inventory";
 var useradmApiUrl = apiUrl + "/useradm";
 
@@ -261,7 +262,7 @@ var AppActions = {
   },
   getDeviceIdentity: function (id, callback) {
     DevicesApi
-      .get(devicesApiUrl+"/devices/" + id)
+      .get(devAuthApiUrl+"/devices/" + id)
       .then(function(res) {
         callback.success(res.body);
       })

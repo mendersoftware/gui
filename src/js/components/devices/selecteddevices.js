@@ -155,7 +155,7 @@ var SelectedDevices = React.createClass({
     if (this.props.admittanceTime) {
       deviceIdentity.push(
         <div key="connectionTime">
-          <ListItem style={styles.listStyle} disabled={true} primaryText="First connection time" secondaryText={<Time value={this.props.admittanceTime} format="YYYY-MM-DD HH:mm" />} />
+          <ListItem style={styles.listStyle} disabled={true} primaryText="First connection time" secondaryText={<div><Time value={this.props.admittanceTime} format="YYYY-MM-DD HH:mm" /></div>} />
         </div>
       );
     }

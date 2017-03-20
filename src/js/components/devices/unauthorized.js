@@ -136,15 +136,7 @@ var Authorized =  React.createClass({
     }
   },
   _setDeviceIdentity: function(device) {
-    var callback = {
-      success: function(data) {
-        this.setState({deviceId: data.id});
-      }.bind(this),
-      error: function(err) {
-        console.log("Error: " + err);
-      }
-    };
-    AppActions.getDeviceIdentity(device.id, callback);
+    this.setState({deviceId: device.device_id});
   },
   _adjustCellHeight: function(height) {
     this.setState({divHeight: height+70});
