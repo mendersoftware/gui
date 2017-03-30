@@ -1,5 +1,6 @@
 import React from 'react';
 import { Router, Route, Link } from 'react-router';
+import cookie from 'react-cookie';
 var AppActions = require('../../actions/app-actions');
 
 import { Tabs, Tab } from 'material-ui/Tabs';
@@ -56,7 +57,7 @@ var Header = React.createClass({
     AppActions.setSnackbar("");
   },
   _logOut: function() {
-    localStorage.removeItem('JWT');
+    cookie.remove('JWT');
     this.context.router.push("/login");
   },
   render: function() {

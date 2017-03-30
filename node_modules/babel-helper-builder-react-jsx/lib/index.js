@@ -110,7 +110,7 @@ exports.default = function (opts) {
 
     var useBuiltIns = file.opts.useBuiltIns || false;
     if (typeof useBuiltIns !== "boolean") {
-      throw new Error("transform-react-jsx currently only accepts a boolean option for useBuiltIns (defaults to false)");
+      throw new Error("transform-react-jsx currently only accepts a boolean option for " + "useBuiltIns (defaults to false)");
     }
 
     function pushProps() {

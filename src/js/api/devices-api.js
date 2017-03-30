@@ -1,14 +1,14 @@
 var request = require('superagent-use')(require('superagent'));
 var Promise = require('es6-promise').Promise;
 require('superagent-auth-bearer')(request);
-var LocalStore = require('../stores/local-store');
+import cookie from 'react-cookie';
 import auth from '../auth';
 
 request.use(auth.unauthorizedRedirect);
 
 var Api = {
   get: function(url) {
-    var token = LocalStore.getStorageItem("JWT");
+    var token = cookie.load("JWT");
     return new Promise(function (resolve, reject) {
       request
         .get(url)
@@ -23,7 +23,7 @@ var Api = {
     });
   },
   post: function(url, data) {
-    var token = LocalStore.getStorageItem("JWT");
+    var token = cookie.load("JWT");
     return new Promise(function (resolve, reject) {
       request
         .post(url)
@@ -40,7 +40,7 @@ var Api = {
     });
   },
   put: function(url, data) {
-    var token = LocalStore.getStorageItem("JWT");
+    var token = cookie.load("JWT");
     return new Promise(function (resolve, reject) {
       request
         .put(url)
@@ -62,7 +62,7 @@ var Api = {
     });
   },
   del: function(url) {
-    var token = LocalStore.getStorageItem("JWT");
+    var token = cookie.load("JWT");
     return new Promise(function (resolve, reject) {
       request
         .del(url)

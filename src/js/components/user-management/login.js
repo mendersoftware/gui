@@ -1,9 +1,9 @@
 import React from 'react';
 import { Router, Route} from 'react-router';
+import cookie from 'react-cookie';
 
 var AppActions = require('../../actions/app-actions');
 var AppStore = require('../../stores/app-store');
-var LocalStore = require('../../stores/local-store');
 
 import Form from '../common/forms/form';
 import TextInput from '../common/forms/textinput';
@@ -46,8 +46,8 @@ var Login = React.createClass({
       success: function(token) {
 
         AppActions.setSnackbar("");
-        // set token in local storage
-        AppActions.setLocalStorage("JWT", token);
+        // save token as cookie
+        cookie.save("JWT", token);
 
         // logged in, so redirect
         var location = self.props;

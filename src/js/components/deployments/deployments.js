@@ -267,17 +267,16 @@ var Deployments = React.createClass({
     this.setState({deploymentDevices: devices, filteredDevices: filteredDevices});
   },
   _getReportById: function (id) {
-    this.setState({reportType:"past"});
      AppActions.getSingleDeployment(id, function(data) {
         var that = this;
         setTimeout(function() {
-          that._showReport(data);
+          that._showReport(data, that.state.reportType);
         }, 400);
     }.bind(this));
   },
   _showReport: function (deployment, progress) {
-    var title = progress ? "Deployment progress" : "Results of deployment";
-    var reportType = progress ? "progress" : "past";
+    var title = progress==="progress" ? "Deployment progress" : "Results of deployment";
+    var reportType = progress;
     this.setState({scheduleForm: false, selectedDeployment: deployment, dialogTitle: title, reportType: reportType});
     this.dialogOpen("report");
   },
@@ -317,7 +316,7 @@ var Deployments = React.createClass({
   },
   _showProgress: function(rowNumber) {
     var deployment = this.state.progress[rowNumber];
-    this._showReport(deployment, true);
+    this._showReport(deployment, "progress");
   },
   _abortDeployment: function(id) {
     var self = this;

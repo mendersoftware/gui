@@ -31,9 +31,6 @@ var Artifacts = React.createClass({
   componentWillUnmount: function() {
     AppStore.removeChangeListener(this._onChange);
   },
-  _setStorage: function(key, value) {
-    AppActions.setLocalStorage(key, value);
-  },
   _onChange: function() {
     this.setState(getState());
     if (this.props.params) {
@@ -127,8 +124,8 @@ var Artifacts = React.createClass({
     
     return (
       <div className="contentContainer">
-        <div className="relative overflow-hidden">
-          <Repository groupDevices={this.state.groupDevices} allDevices={this.state.allDevices} refreshArtifacts={this._getArtifacts} startLoader={this._startLoading} loading={!this.state.doneLoading} setStorage={this._setStorage} selected={this.state.selected} artifacts={this.state.artifacts} groups={this.state.groups} hasPending={this.state.hasPending} hasDevices={this.state.hasDevices} />
+        <div className="relative">
+          <Repository groupDevices={this.state.groupDevices} allDevices={this.state.allDevices} refreshArtifacts={this._getArtifacts} startLoader={this._startLoading} loading={!this.state.doneLoading} selected={this.state.selected} artifacts={this.state.artifacts} groups={this.state.groups} hasPending={this.state.hasPending} hasDevices={this.state.hasDevices} />
         </div>
         <Snackbar
           open={this.state.snackbar.open}
