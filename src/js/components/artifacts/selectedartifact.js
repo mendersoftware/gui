@@ -24,20 +24,18 @@ var SelectedArtifact = React.createClass({
     filters = encodeURIComponent(filters);
     this.props.history.push("/devices/:group/:filters", {filters: filters}, null);
   },
-  _descEdit: function(artifact, event) {
+  _descEdit: function(event) {
     event.stopPropagation();
     if (event.keyCode === 13 || !event.keyCode) {
-    
       if (this.state.descEdit) {
-        artifact.description = this.refs.description.getValue();
         // save change
-        this.props.editArtifact(artifact);
+        this.props.editArtifact(this.props.artifact.id, this.refs.description.getValue());
       }
       this.setState({descEdit: !this.state.descEdit});
     }
   },
   render: function() {
-    var info = {name: "-", device_type: "-", build_date: "-", modified: "-", size: "-", checksum: "-", devices: "-", description: "-"};
+    var info = {name: "-", device_type: "-", build_date: "-", modified: "-", size: "-", checksum: "-", devices: "-", description: ""};
     if (this.props.artifact) {
       for (var key in this.props.artifact) {
         if (this.props.artifact[key]) {
@@ -65,7 +63,7 @@ var SelectedArtifact = React.createClass({
     }
 
     var editButtonDesc = (
-      <IconButton className="hidden" iconStyle={styles.editButton} style={{position:"absolute", right:"0", bottom: "8px"}} onClick={this._descEdit.bind(null, this.props.artifact)} iconClassName="material-icons">
+      <IconButton iconStyle={styles.editButton} style={{position:"absolute", right:"0", bottom: "8px"}} onClick={this._descEdit} iconClassName="material-icons">
         {this.state.descEdit ? "check" : "edit"}
       </IconButton>
     );
@@ -77,7 +75,7 @@ var SelectedArtifact = React.createClass({
         style={{width:"100%", height:"38px", marginTop:"-8px" }} inputStyle={{ marginTop:"0" }}
         multiLine={true} rowsMax={2} ref="description" 
         defaultValue={info.description} 
-        onKeyDown={this._descEdit.bind(null, this.props.artifact)} />
+        onKeyDown={this._descEdit} />
     );
 
     var devicesFilter = "artifact_name="+info.name;
@@ -115,10 +113,10 @@ var SelectedArtifact = React.createClass({
           <div className="artifact-list list-item">
      
             <div style={{padding:"9px 0"}}>
-              <div style={{padding:"12px 16px 10px",  lineHeight:"12px", height:"74px"}}>
+              <div style={{padding:"12px 16px 10px",  lineHeight:"12px", height:"74px", position:"relative"}}>
                 <span style={{color:"rgba(0,0,0,0.8)", fontSize:"12px"}}>Description</span>
                 <div style={{color:"rgba(0,0,0,0.54)", marginRight:"30px", marginTop:"8px", whiteSpace: "normal"}}>
-                  <span className={this.state.descEdit ? "hidden" : null}>{info.description}</span>
+                  <span className={this.state.descEdit ? "hidden" : null}>{info.description || "-"}</span>
                   {descInput}
                 </div>
                 {editButtonDesc}
