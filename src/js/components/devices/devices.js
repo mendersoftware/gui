@@ -141,19 +141,18 @@ var Devices = React.createClass({
 
     function getDevicesFromIDs(list, callback) {
       var devices = [];
-      var idx = 0;
-      for (var i=0;i<list.length;i++) {
-        AppActions.getDeviceById(list[i], {
+     
+      list.forEach( function(id, index) {
+        AppActions.getDeviceById(id, {
           success: function(device) {
-            idx++;
-            devices.push(device);
-            if (idx===list.length) { callback(devices); }
+            devices[index] = device;
+            if (index===list.length-1) { callback(devices); }
           },
           error: function(err) {
             console.log(err);
           }
         });
-      }
+      });
     }
 
     if (!this.state.selectedGroup) {
@@ -283,7 +282,6 @@ var Devices = React.createClass({
   dialogToggle: function (ref) {
     var state = {};
     state[ref] = !this.state[ref];
-    console.log("setstate");
     this.setState(state);
   },
   closeDialogs: function() {
