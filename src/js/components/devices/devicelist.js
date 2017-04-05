@@ -376,7 +376,11 @@ var DeviceList = React.createClass({
           </TableRowColumn>
           <TableRowColumn style={{width:"0", padding:"0", overflow:"visible"}}>
            
-            <Collapse springConfig={{stiffness: 210, damping: 20}} onHeightReady={this._adjustCellHeight} className="expanded" isOpened={expanded ? true : false}>
+            <Collapse springConfig={{stiffness: 210, damping: 20}} onHeightReady={this._adjustCellHeight} className="expanded" isOpened={expanded ? true : false}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+            }}>
               {expanded}
             </Collapse>
          
