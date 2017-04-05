@@ -126,7 +126,8 @@ var Devices = React.createClass({
 
     var groupCallback = {
       success: function(deviceList, links) {
-        getDevicesFromIDs(deviceList.sort(), function(devices) {
+        var sorted = deviceList.sort();
+        getDevicesFromIDs(sorted, function(devices) {
           self.setState({doneLoading:true, devLoading:false, devices:devices});
           AppActions.setSnackbar("");
         });
@@ -233,7 +234,7 @@ var Devices = React.createClass({
   },
   _handlePageChange: function(pageNo) {
     clearInterval(this.deviceTimer);
-    this.setState({currentPage: pageNo, devLoading:true}, this._refreshDevices(pageNo));
+    this.setState({currentPage: pageNo, devLoading:true, expandedRow: null, expandedDevice: {}}, this._refreshDevices(pageNo));
     this.deviceTimer = setInterval(this._refreshDevices, 10000);
   },
   _handleAdmPageChange: function(pageNo) {
@@ -242,7 +243,7 @@ var Devices = React.createClass({
     this.admissionTimer = setInterval(this._refreshAdmissions, 60000);
   },
   _handleGroupChange: function(group) {
-    this.setState({currentPage: 1, doneLoading:false}, AppActions.selectGroup(group)); 
+    this.setState({currentPage: 1, doneLoading:false, expandedRow: null, expandedDevice: {}}, AppActions.selectGroup(group)); 
   },
   _handleGroupDialog: function () {
     this._pauseTimers(!this.state.openGroupDialog);
