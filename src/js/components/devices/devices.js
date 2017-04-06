@@ -11,6 +11,7 @@ var DevicePicker = require('./devicepicker');
 var Pagination = require('rc-pagination');
 var _en_US = require('rc-pagination/lib/locale/en_US');
 var Loader = require('../common/loader');
+var pluralize = require('pluralize');
 require('../common/prototype/Array.prototype.equals');
 
 import Snackbar from 'material-ui/Snackbar';
@@ -319,6 +320,9 @@ var Devices = React.createClass({
     
   },
   _acceptDevice: function(devices) {
+    /*
+    * function for accepting a single device from expanded device details, for a previously blocked device, via devauth api
+    */
     var self = this;
     var callback = {
       success: function(data) {
@@ -334,6 +338,72 @@ var Devices = React.createClass({
     // 'devices' is an array but will always be length 1 as it comes from expanded single device row
     AppActions.reacceptDevice(devices[0], callback);
   },
+
+  _authorizeDevices: function(devices) {
+    /*
+    * function for authorizing group of devices via devadmn API
+    */
+    var self = this;
+
+    self.setState({doneLoading: false});
+
+    // make into chunks of 5 devices
+    var arrays = [], size = 5;
+    var deviceList = devices.slice();
+    while (deviceList.length > 0) {
+      arrays.push(deviceList.splice(0, size));
+    }
+    
+    var i = 0;
+    var success = 0;
+    var loopArrays = function(arr) {
+      self._pauseTimers(true); // pause periodic calls to device apis until finished authing devices
+
+      // for each chunk, authorize one by one
+      self._authorizeBatch(arr[i], function(num) {
+        success = success+num;
+        i++;
+        if (i < arr.length) {
+          loopArrays(arr);   
+        } else {
+          setTimeout(function() {
+            AppActions.setSnackbar(success + " " + pluralize("devices", success) + " " + pluralize("were", success) + " authorized");
+          }, 2000);
+          self._refreshDevices();
+          self._refreshAdmissions();
+          self._pauseTimers(false);      // unpause timers
+          self.setState({doneLoading: true, expandedAdmRow: null, expandedRow: null});
+        }
+      });
+    }
+    loopArrays(arrays);
+  },
+  _authorizeBatch(devices, callback) {
+    // authorize the batch of devices one by one, callback when finished
+    var i = 0;
+    var fail = 0;
+    var singleCallback = {
+      success: function(data) {
+        i++;
+        if (i===devices.length) {
+          callback(i);
+        }
+      }.bind(this),
+      error: function(err) {
+        fail++;
+        i++;
+        AppActions.setSnackbar("There was a problem authorizing the device: "+err);
+        if (i===devices.length) {
+          callback(i-fail);
+        }
+      }
+    };
+
+    devices.forEach( function(device, index) {
+      AppActions.acceptDevice(device, singleCallback);
+    });
+  },
+
   _decommissionDevice: function() {
     var self = this;
     var callback = {
@@ -470,7 +540,8 @@ var Devices = React.createClass({
               pending={this.state.pendingDevices} 
               total={this.state.totalAdmDevices}
               expandedAdmRow={this.state.expandedAdmRow}
-              expandRow={this._clickAdmRow} />
+              expandRow={this._clickAdmRow}
+              authorizeDevices={this._authorizeDevices} />
             <div>
               {this.state.totalAdmDevices ? <Pagination locale={_en_US} simple pageSize={20} current={this.state.currentAdmPage || 1} total={this.state.totalAdmDevices} onChange={this._handleAdmPageChange} /> : null }
              

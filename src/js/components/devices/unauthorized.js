@@ -45,70 +45,6 @@ var Authorized =  React.createClass({
     // sort table
     AppActions.sortTable("_pendingDevices", col, direction);
   },
-  _authorizeDevices: function(devices) {
-  
-    var self = this;
-
-    this.props.showLoader(true);
-
-    // make into chunks of 5 devices
-    var arrays = [], size = 5;
-    var deviceList = devices.slice();
-    while (deviceList.length > 0) {
-      arrays.push(deviceList.splice(0, size));
-    }
-    
-    var i = 0;
-    var success = 0;
-    var loopArrays = function(arr) {
-      self.props.pauseRefresh(true);
-
-      // for each chunk, authorize one by one
-      self._authorizeBatch(arr[i], function(num) {
-        success = success+num;
-        i++;
-        if (i < arr.length) {
-          loopArrays(arr);   
-        } else {
-          setTimeout(function() {
-            AppActions.setSnackbar(success + " " + pluralize("devices", success) + " " + pluralize("were", success) + " authorized");
-          }, 2000);
-          self.props.refresh();
-          self.props.refreshAdmissions();
-          self.props.showLoader(false);
-          self.props.pauseRefresh(false);
-        }
-      });
-    }
-
-    loopArrays(arrays);
-    
-  },
-  _authorizeBatch(devices, callback) {
-    // authorize one by one, callback when finished
-    var i = 0;
-    var fail = 0;
-    var singleCallback = {
-      success: function(data) {
-        i++;
-        if (i===devices.length) {
-          callback(i);
-        }
-      }.bind(this),
-      error: function(err) {
-        fail++;
-        i++;
-        AppActions.setSnackbar("There was a problem authorizing the device: "+err);
-        if (i===devices.length) {
-          callback(i-fail);
-        }
-      }
-    };
-
-    devices.forEach( function(device, index) {
-      AppActions.acceptDevice(device, singleCallback);
-    });
-  },
   _expandRow: function(rowNumber, columnId, event) {
     event.stopPropagation();
     // If action buttons column, no expand
@@ -124,6 +60,9 @@ var Authorized =  React.createClass({
   _adjustCellHeight: function(height) {
     this.setState({divHeight: height+70});
   },
+  _authorizeDevices: function(devices) {
+    this.props.authorizeDevices(devices);
+  },
   _blockDevice: function(device) {
     this.props.block(device);
   },
@@ -131,7 +70,7 @@ var Authorized =  React.createClass({
     var devices = this.props.pending.map(function(device, index) {
       var expanded = '';
       if ( this.props.expandedAdmRow === index ) {
-        expanded = <SelectedDevices styles={this.props.styles} addTooltip={this.props.addTooltip} attributes={device.attributes} deviceId={this.state.deviceId} accept={this._authorizeDevices} block={this.props.block} device={this.state.expandedDevice} unauthorized={true} selected={[device]}  />
+        expanded = <SelectedDevices styles={this.props.styles} addTooltip={this.props.addTooltip} attributes={device.attributes} deviceId={this.state.deviceId} accept={this.props.authorizeDevices} block={this.props.block} device={this.state.expandedDevice} unauthorized={true} selected={[device]}  />
       }
       return (
         <TableRow style={{"backgroundColor": "#e9f4f3"}} className={expanded ? "expand" : null} hoverable={true} key={index}>
