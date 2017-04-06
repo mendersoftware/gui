@@ -339,11 +339,12 @@ var Devices = React.createClass({
     var callback = {
       success: function(data) {
         AppActions.setSnackbar("Device was successfully decommissioned");
-        self.dialogToggle("decommission");
-        self._refreshAdmissions();
+        self.closeDialogs();
+        self.setState({expandedRow:null, expandedDevice:null});
+        self._refreshDevices();
       },
       error: function(err) {
-        AppActions.setSnackbar("There was a problem rejecting the device: "+err);
+        AppActions.setSnackbar("There was a problem decommissioning the device: "+err);
       }
     };
     AppActions.decommissionDevice(self.state.blockDevice, callback);

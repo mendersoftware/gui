@@ -43,7 +43,7 @@ var AppActions = {
 
   removeDeviceFromGroup: function(device, group, callback) {
     DevicesApi
-      .del(inventoryApiUrl+"/devices/" + device + "/group/" + group)
+      .delete(inventoryApiUrl+"/devices/" + device + "/group/" + group)
       .then(function(result) {
         callback.success(result);
       })
@@ -306,6 +306,16 @@ var AppActions = {
   blockDevice: function (device, callback) {
     DevicesApi
       .put(devAuthApiUrl+"/devices/"+device.id + "/auth/" + device.auth_sets[0].id +"/status", {"status":"rejected"})
+      .then(function(data) {
+        callback.success(data);
+      })
+      .catch(function(err) {
+        callback.error(err);
+      });
+  },
+  decommissionDevice: function(device, callback) {
+    DevicesApi
+      .delete(devAuthApiUrl+"/devices/"+device.id)
       .then(function(data) {
         callback.success(data);
       })

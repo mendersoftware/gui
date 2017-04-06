@@ -61,7 +61,7 @@ var Api = {
         });
     });
   },
-  del: function(url) {
+  delete: function(url) {
     var token = cookie.load("JWT");
     return new Promise(function (resolve, reject) {
       request
