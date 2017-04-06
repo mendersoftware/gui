@@ -239,7 +239,7 @@ var Devices = React.createClass({
   },
   _handleAdmPageChange: function(pageNo) {
     clearInterval(this.admissionTimer);
-    this.setState({currentAdmPage: pageNo, authLoading:true}, this._refreshAdmissions(pageNo));
+    this.setState({currentAdmPage: pageNo, authLoading:true, expandedAdmRow: null}, this._refreshAdmissions(pageNo));
     this.admissionTimer = setInterval(this._refreshAdmissions, 60000);
   },
   _handleGroupChange: function(group) {
@@ -304,6 +304,7 @@ var Devices = React.createClass({
         AppActions.setSnackbar("Device was rejected successfully");
         self.closeDialogs();
         self._refreshAdmissions();
+        self.setState({expandedAdmRow: null});
         if (accepted) { self._setDeviceDetails(self.state.blockDevice) }
       },
       error: function(err) {
@@ -323,6 +324,7 @@ var Devices = React.createClass({
       success: function(data) {
         AppActions.setSnackbar("Device was authorized");
         self._refreshAdmissions();
+        self.setState({expandedAdmRow: null});
         self._setDeviceDetails(devices[0]);
       },
       error: function(err) {
@@ -370,6 +372,19 @@ var Devices = React.createClass({
       }
     } else {
       this.setState({expandedRow: null, expandedDevice: {}});
+    }
+  },
+
+
+  /*
+  * Handle selecting of a row in pending authorization device list
+  */
+  _clickAdmRow: function(rowNumber) {
+    // check device is not already expanded, if so, close it
+    if (rowNumber !== this.state.expandedAdmRow) {
+      this.setState({expandedAdmRow: rowNumber});
+    } else {
+      this.setState({expandedAdmRow: null});
     }
   },
 
@@ -443,7 +458,18 @@ var Devices = React.createClass({
         </div>
         <div className="rightFluid padding-right">
           <div className={this.state.pendingDevices.length ? "fadeIn onboard" : "hidden"}>
-            <Unauthorized styles={styles} block={this._blockDialog} pauseRefresh={this._pauseTimers} addTooltip={this.props.addTooltip} showLoader={this._showLoader} refresh={this._refreshDevices} refreshAdmissions={this._refreshAdmissions} pending={this.state.pendingDevices} total={this.state.totalAdmDevices} />
+            <Unauthorized 
+              styles={styles} 
+              block={this._blockDialog} 
+              pauseRefresh={this._pauseTimers} 
+              addTooltip={this.props.addTooltip} 
+              showLoader={this._showLoader} 
+              refresh={this._refreshDevices} 
+              refreshAdmissions={this._refreshAdmissions} 
+              pending={this.state.pendingDevices} 
+              total={this.state.totalAdmDevices}
+              expandedAdmRow={this.state.expandedAdmRow}
+              expandRow={this._clickAdmRow} />
             <div>
               {this.state.totalAdmDevices ? <Pagination locale={_en_US} simple pageSize={20} current={this.state.currentAdmPage || 1} total={this.state.totalAdmDevices} onChange={this._handleAdmPageChange} /> : null }
              

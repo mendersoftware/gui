@@ -129,18 +129,18 @@ var SelectedDevices = React.createClass({
     deviceIdentity.push(
       <div key="id_checksum">
         <ListItem style={this.props.styles.listStyle} disabled={true} primaryText="ID" secondaryText={(this.props.device || {}).id || ''} secondaryTextLines={2} className="break-word" />
-        {i === length-1 ? null : <Divider />}
+        <Divider />
       </div>
     );
 
-    var i = 0;
     if ((this.props.device || {}).id_data) {
       var length = Object.keys(this.props.device.id_data).length;
       for (var k in this.props.device.id_data) {
+        var idx = Object.keys(this.props.device.id_data).indexOf(k); // use idx to tell whether or not to show divider line afterwards
         deviceIdentity.push(
           <div key={k}>
             <ListItem style={this.props.styles.listStyle} disabled={true} primaryText={k} secondaryText={ this.props.device.id_data[k]} />
-            { this.props.device.created_ts ? <Divider /> : null}
+            { (this.props.device.created_ts || (idx<length-1) ) ? <Divider /> : null}
           </div>
         );
         i++;
@@ -156,9 +156,7 @@ var SelectedDevices = React.createClass({
     }
 
     var deviceInventory = [];
-    var i = 0;
     if (this.props.device) {
-
       if (typeof this.props.device.attributes !== 'undefined' && this.props.device.attributes.length>0) {
         var sortedAttributes = this.props.device.attributes.sort(function (a, b) {
             return a.name.localeCompare( b.name );

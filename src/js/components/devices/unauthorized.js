@@ -113,18 +113,13 @@ var Authorized =  React.createClass({
     event.stopPropagation();
     // If action buttons column, no expand
     if (columnId === 4) {
-      this.setState({expanded: null});
+      this.props.expandRow(null);
     } else if (columnId < 5){
-      this._setDeviceIdentity(this.props.pending[rowNumber]);
-      var newIndex = rowNumber;
-      if (rowNumber == this.state.expanded) {
-        newIndex = null;
-      }
-      this.setState({expanded: newIndex, expandedDevice: this.props.pending[rowNumber]});
+      var device = this.props.pending[rowNumber];
+      device.id_data = device.attributes;
+      this.setState({expandedDevice: device});
+      this.props.expandRow(rowNumber);
     }
-  },
-  _setDeviceIdentity: function(device) {
-    this.setState({deviceId: device.device_id});
   },
   _adjustCellHeight: function(height) {
     this.setState({divHeight: height+70});
@@ -135,7 +130,7 @@ var Authorized =  React.createClass({
   render: function() {
     var devices = this.props.pending.map(function(device, index) {
       var expanded = '';
-      if ( this.state.expanded === index ) {
+      if ( this.props.expandedAdmRow === index ) {
         expanded = <SelectedDevices styles={this.props.styles} addTooltip={this.props.addTooltip} attributes={device.attributes} deviceId={this.state.deviceId} accept={this._authorizeDevices} block={this.props.block} device={this.state.expandedDevice} unauthorized={true} selected={[device]}  />
       }
       return (
