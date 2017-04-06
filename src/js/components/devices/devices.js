@@ -296,7 +296,7 @@ var Devices = React.createClass({
     }
   },
   _blockDevice: function(accepted) {
-    // if device already accepted, set true to use devauth api
+    // if device already accepted (accepted===true), set true to use devauth api
     // otherwise use device admn api
     var self = this;
     var callback = {
@@ -304,7 +304,7 @@ var Devices = React.createClass({
         AppActions.setSnackbar("Device was rejected successfully");
         self.closeDialogs();
         self._refreshAdmissions();
-        self._setDeviceDetails(self.state.blockDevice);
+        if (accepted) { self._setDeviceDetails(self.state.blockDevice) }
       },
       error: function(err) {
         AppActions.setSnackbar("There was a problem rejecting the device: "+err);
@@ -411,7 +411,7 @@ var Devices = React.createClass({
       <RaisedButton
         label="Block device"
         secondary={true}
-        onClick={this._blockDevice}
+        onClick={this._blockDevice.bind(null, false)}
         icon={<FontIcon style={{marginTop:"-4px"}} className="material-icons">cancel</FontIcon>} />
     ];
 
