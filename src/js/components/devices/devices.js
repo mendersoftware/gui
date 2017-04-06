@@ -351,10 +351,23 @@ var Devices = React.createClass({
   * Handle selecting of a row in child device list
   */
   _clickRow: function(device, rowNumber) {
+    clearInterval(this.inventoryInterval);
+    
     // check device is not already expanded, if so, close it
     if (!this.state.expandedDevice || (device.id !== this.state.expandedDevice.id)) {
       this.setState({expandedRow: rowNumber, expandedDevice: device});
       this._setDeviceDetails(device);
+
+      // if no inventory yet, keep updating for inventory data while expanded
+      if (!device.attributes) {
+        this.inventoryInterval = setInterval(function() {
+          if (this.state.devices[rowNumber].attributes) {
+            device.attributes = this.state.devices[rowNumber].attributes;
+            this.setState({expandedDevice: device});
+            clearInterval(this.inventoryInterval);
+          }
+        }.bind(this), 5000);
+      }
     } else {
       this.setState({expandedRow: null, expandedDevice: {}});
     }
@@ -362,7 +375,7 @@ var Devices = React.createClass({
 
 
   /*
-  * Get full device identity and inventory details for single selected device
+  * Get full device identity details for single selected device
   */
   _setDeviceDetails: function(device) {
     var self = this;

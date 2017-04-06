@@ -74,32 +74,8 @@ var DeviceList = React.createClass({
  
   _expandRow: function(rowNumber, columnId) {
     if (columnId>-1 && columnId<5) {
-      //clear interval for inventory details check
-      clearInterval(this.inventoryInterval);
       var clickedDevice = this.props.devices[rowNumber];
-
       this.props.expandRow(clickedDevice, rowNumber);
-
-      /*
-      var currentExpanded = this.state.expandedDevice ? this.state.expandedDevice.id : null;
-      // check device is not already expanded
-      if (clickedDevice !== currentExpanded) {
-        this._setDeviceIdentity(this.props.devices[rowNumber]);
-        this.setState({expandedDevice: this.props.devices[rowNumber]});
-
-        // set interval to update inventory details in child when received
-        this.inventoryInterval = setInterval(function() {
-          this.setState({expandedDevice: this.props.devices[rowNumber]});
-        }.bind(this), 5000);
-      }
-
-      var newIndex = rowNumber;
-      if (rowNumber == this.state.expanded) {
-        newIndex = null;
-      }
-      this.setState({expanded: newIndex});
-
-      */
     }
   },
   _addGroupHandler: function() {
