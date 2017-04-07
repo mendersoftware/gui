@@ -8,6 +8,7 @@ var rootUrl = "https://localhost:443";
 var apiUrl = rootUrl + "/api/management/v1"
 var deploymentsApiUrl = apiUrl + "/deployments";
 var devicesApiUrl = apiUrl + "/admission";
+var devAuthApiUrl = apiUrl + "/devauth";
 var inventoryApiUrl = apiUrl + "/inventory";
 var useradmApiUrl = apiUrl + "/useradm";
 
@@ -42,7 +43,7 @@ var AppActions = {
 
   removeDeviceFromGroup: function(device, group, callback) {
     DevicesApi
-      .del(inventoryApiUrl+"/devices/" + device + "/group/" + group)
+      .delete(inventoryApiUrl+"/devices/" + device + "/group/" + group)
       .then(function(result) {
         callback.success(result);
       })
@@ -261,7 +262,7 @@ var AppActions = {
   },
   getDeviceIdentity: function (id, callback) {
     DevicesApi
-      .get(devicesApiUrl+"/devices/" + id)
+      .get(devAuthApiUrl+"/devices/" + id)
       .then(function(res) {
         callback.success(res.body);
       })
@@ -271,8 +272,20 @@ var AppActions = {
   },
 
   acceptDevice: function (device, callback) {
+    // accept single device through dev admn api
     DevicesApi
       .put(devicesApiUrl+"/devices/"+device.id +"/status", {"status":"accepted"})
+      .then(function(data) {
+        callback.success(data);
+      })
+      .catch(function(err) {
+        callback.error(err);
+      });
+  },
+  reacceptDevice: function (device, callback) {
+    // accept single device by changing status in dev auth api
+    DevicesApi
+      .put(devAuthApiUrl+"/devices/"+device.id + "/auth/" + device.auth_sets[0].id +"/status", {"status":"accepted"})
       .then(function(data) {
         callback.success(data);
       })
@@ -283,6 +296,26 @@ var AppActions = {
   rejectDevice: function (device, callback) {
     DevicesApi
       .put(devicesApiUrl+"/devices/"+device.id +"/status", {"status":"rejected"})
+      .then(function(data) {
+        callback.success(data);
+      })
+      .catch(function(err) {
+        callback.error(err);
+      });
+  },
+  blockDevice: function (device, callback) {
+    DevicesApi
+      .put(devAuthApiUrl+"/devices/"+device.id + "/auth/" + device.auth_sets[0].id +"/status", {"status":"rejected"})
+      .then(function(data) {
+        callback.success(data);
+      })
+      .catch(function(err) {
+        callback.error(err);
+      });
+  },
+  decommissionDevice: function(device, callback) {
+    DevicesApi
+      .delete(devAuthApiUrl+"/devices/"+device.id)
       .then(function(data) {
         callback.success(data);
       })

@@ -45,123 +45,32 @@ var Authorized =  React.createClass({
     // sort table
     AppActions.sortTable("_pendingDevices", col, direction);
   },
-  _authorizeDevices: function(devices) {
-  
-    var self = this;
-
-    this.props.showLoader(true);
-
-    // make into chunks of 5 devices
-    var arrays = [], size = 5;
-    var deviceList = devices.slice();
-    while (deviceList.length > 0) {
-      arrays.push(deviceList.splice(0, size));
-    }
-    
-    var i = 0;
-    var success = 0;
-    var loopArrays = function(arr) {
-      self.props.pauseRefresh(true);
-
-      // for each chunk, authorize one by one
-      self._authorizeBatch(arr[i], function(num) {
-        success = success+num;
-        i++;
-        if (i < arr.length) {
-          loopArrays(arr);   
-        } else {
-          setTimeout(function() {
-            AppActions.setSnackbar(success + " " + pluralize("devices", success) + " " + pluralize("were", success) + " authorized");
-          }, 2000);
-          self.props.refresh();
-          self.props.refreshAdmissions();
-          self.props.showLoader(false);
-          self.props.pauseRefresh(false);
-        }
-      });
-    }
-
-    loopArrays(arrays);
-    
-  },
-  _authorizeBatch(devices, callback) {
-    // authorize one by one, callback when finished
-    var i = 0;
-    var fail = 0;
-    var singleCallback = {
-      success: function(data) {
-        i++;
-        if (i===devices.length) {
-          callback(i);
-        }
-      }.bind(this),
-      error: function(err) {
-        fail++;
-        i++;
-        AppActions.setSnackbar("There was a problem authorizing the device: "+err);
-        if (i===devices.length) {
-          callback(i-fail);
-        }
-      }
-    };
-
-    devices.forEach( function(device, index) {
-      AppActions.acceptDevice(device, singleCallback);
-    });
-  },
-  _blockDevice: function(device) {
-    var callback = {
-      success: function(data) {
-        AppActions.setSnackbar("Device rejected successfully");
-        this.props.refreshAdmissions();
-      }.bind(this),
-      error: function(err) {
-        AppActions.setSnackbar("There was a problem rejecting the device: "+err);
-      }
-    };
-    AppActions.rejectDevice(device, callback);
-  },
   _expandRow: function(rowNumber, columnId, event) {
     event.stopPropagation();
     // If action buttons column, no expand
     if (columnId === 4) {
-      this.setState({expanded: null});
+      this.props.expandRow(null);
     } else if (columnId < 5){
-      this._setDeviceIdentity(this.props.pending[rowNumber]);
-      var newIndex = rowNumber;
-      if (rowNumber == this.state.expanded) {
-        newIndex = null;
-      }
-      this.setState({expanded: newIndex, expandedDevice: this.props.pending[rowNumber]});
+      var device = this.props.pending[rowNumber];
+      device.id_data = device.attributes;
+      this.setState({expandedDevice: device});
+      this.props.expandRow(rowNumber);
     }
-  },
-  _setDeviceIdentity: function(device) {
-    var callback = {
-      success: function(data) {
-        this.setState({deviceId: data.id});
-      }.bind(this),
-      error: function(err) {
-        console.log("Error: " + err);
-      }
-    };
-    AppActions.getDeviceIdentity(device.id, callback);
   },
   _adjustCellHeight: function(height) {
     this.setState({divHeight: height+70});
   },
+  _authorizeDevices: function(devices) {
+    this.props.authorizeDevices(devices);
+  },
+  _blockDevice: function(device) {
+    this.props.block(device);
+  },
   render: function() {
-    var styles = {
-      sortIcon: {
-        verticalAlign: 'middle',
-        marginLeft: "10px",
-        color: "#8c8c8d",
-        cursor: "pointer",
-      }
-    }
     var devices = this.props.pending.map(function(device, index) {
       var expanded = '';
-      if ( this.state.expanded === index ) {
-        expanded = <SelectedDevices addTooltip={this.props.addTooltip} attributes={device.attributes} deviceId={this.state.deviceId} accept={this._authorizeDevices} block={this._blockDevice} device={this.state.expandedDevice} unauthorized={true} selected={[device]}  />
+      if ( this.props.expandedAdmRow === index ) {
+        expanded = <SelectedDevices styles={this.props.styles} addTooltip={this.props.addTooltip} attributes={device.attributes} deviceId={this.state.deviceId} accept={this.props.authorizeDevices} block={this.props.block} device={this.state.expandedDevice} unauthorized={true} selected={[device]}  />
       }
       return (
         <TableRow style={{"backgroundColor": "#e9f4f3"}} className={expanded ? "expand" : null} hoverable={true} key={index}>
@@ -200,9 +109,9 @@ var Authorized =  React.createClass({
             adjustForCheckbox={false} 
           >
             <TableRow>
-              <TableHeaderColumn className="columnHeader" tooltip="ID">ID<FontIcon ref="id" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "id")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
-              <TableHeaderColumn className="columnHeader" tooltip="Request time">Request time<FontIcon ref="request_time" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "request_time")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
-              <TableHeaderColumn className="columnHeader" tooltip="Status">Status<FontIcon ref="status" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "status")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
+              <TableHeaderColumn className="columnHeader" tooltip="ID">ID<FontIcon ref="id" style={this.props.styles.sortIcon} onClick={this._sortColumn.bind(null, "id")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
+              <TableHeaderColumn className="columnHeader" tooltip="Request time">Request time<FontIcon ref="request_time" style={this.props.styles.sortIcon} onClick={this._sortColumn.bind(null, "request_time")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
+              <TableHeaderColumn className="columnHeader" tooltip="Status">Status<FontIcon ref="status" style={this.props.styles.sortIcon} onClick={this._sortColumn.bind(null, "status")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
               <TableHeaderColumn className="columnHeader" tooltip="Authorize device?">Authorize?</TableHeaderColumn>
             </TableRow>
           </TableHeader>

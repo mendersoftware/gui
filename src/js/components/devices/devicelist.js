@@ -74,38 +74,9 @@ var DeviceList = React.createClass({
  
   _expandRow: function(rowNumber, columnId) {
     if (columnId>-1 && columnId<5) {
-      //clear interval for inventory details check
-      clearInterval(this.inventoryInterval);
-      var clickedDevice = this.props.devices[rowNumber].id;
-      var currentExpanded = this.state.expandedDevice ? this.state.expandedDevice.id : null;
-      // check device is not already expanded
-      if (clickedDevice !== currentExpanded) {
-        this._setDeviceIdentity(this.props.devices[rowNumber]);
-        this.setState({expandedDevice: this.props.devices[rowNumber]});
-
-        // set interval to update inventory details in child when received
-        this.inventoryInterval = setInterval(function() {
-          this.setState({expandedDevice: this.props.devices[rowNumber]});
-        }.bind(this), 5000);
-      }
-
-      var newIndex = rowNumber;
-      if (rowNumber == this.state.expanded) {
-        newIndex = null;
-      }
-      this.setState({expanded: newIndex});
+      var clickedDevice = this.props.devices[rowNumber];
+      this.props.expandRow(clickedDevice, rowNumber);
     }
-  },
-  _setDeviceIdentity: function(device) {
-    var callback = {
-      success: function(data) {
-        this.setState({deviceAttributes: data.attributes, deviceId: data.id, admittanceTime: null});
-      }.bind(this),
-      error: function(err) {
-        console.log("Error: " + err);
-      }
-    };
-    AppActions.getDeviceIdentity(device.id, callback);
   },
   _addGroupHandler: function() {
     var i;
@@ -329,8 +300,8 @@ var DeviceList = React.createClass({
       for (var i=0;i<attributesLength;i++) {
         attrs[device.attributes[i].name] = device.attributes[i].value;
       }
-      if ( this.state.expanded === index ) {
-        expanded = <SelectedDevices addTooltip={this.props.addTooltip} redirect={this.props.redirect} admittanceTime={this.state.admittanceTime} attributes={this.state.deviceAttributes} deviceId={this.state.deviceId} device_type={attrs.device_type} artifacts={this.props.artifacts} device={this.state.expandedDevice} selectedGroup={this.props.selectedGroup} artifacts={this.props.artifacts} groups={this.props.groups} />
+      if ( this.props.expandedRow === index ) {
+        expanded = <SelectedDevices styles={this.props.styles} block={this.props.block} accept={this.props.accept} addTooltip={this.props.addTooltip} redirect={this.props.redirect} artifacts={this.props.artifacts} device={this.props.expandedDevice} selectedGroup={this.props.selectedGroup} groups={this.props.groups} />
       }
       return (
         <TableRow hoverable={!expanded} className={expanded ? "expand" : null} key={device.id}>
@@ -381,7 +352,11 @@ var DeviceList = React.createClass({
           </TableRowColumn>
           <TableRowColumn style={{width:"0", padding:"0", overflow:"visible"}}>
            
-            <Collapse springConfig={{stiffness: 210, damping: 20}} onHeightReady={this._adjustCellHeight} className="expanded" isOpened={expanded ? true : false}>
+            <Collapse springConfig={{stiffness: 210, damping: 20}} onHeightReady={this._adjustCellHeight} className="expanded" isOpened={expanded ? true : false}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+            }}>
               {expanded}
             </Collapse>
          
