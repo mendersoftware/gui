@@ -108,7 +108,7 @@ var Past = React.createClass({
             this.props.count>this.props.past.length ? 
             <Pagination locale={_en_US} simple pageSize={this.state.pageSize} current={this.state.currentPage || 1} total={this.props.count} onChange={this._handlePageChange} /> 
             :
-            <div className={this.props.loading ? 'hidden' : "dashboard-placeholder"}>
+            <div className={this.props.loading || pastMap.length ? 'hidden' : "dashboard-placeholder"}>
               <p>Completed deployments will appear here.</p>
               <p>You can review logs and reports for each device group you've deployed to</p>
               <img src="assets/img/history.png" alt="Past" />
