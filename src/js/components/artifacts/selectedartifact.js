@@ -35,7 +35,7 @@ var SelectedArtifact = React.createClass({
     }
   },
   render: function() {
-    var info = {name: "-", device_type: "-", build_date: "-", modified: "-", size: "-", checksum: "-", devices: "-", description: ""};
+    var info = {name: "-", device_type: "-", build_date: "-", modified: "-", size: "-", checksum: "-", devices: "-", description: "", signed: false};
     if (this.props.artifact) {
       for (var key in this.props.artifact) {
         if (this.props.artifact[key]) {
@@ -58,7 +58,8 @@ var SelectedArtifact = React.createClass({
         fontSize: "12px",
         paddingTop: "10px",
         paddingBottom: "10px",
-        wordWrap:"break-word"
+        wordWrap:"break-word",
+        whiteSpace: "normal"
       }
     }
 
@@ -88,18 +89,21 @@ var SelectedArtifact = React.createClass({
     );
 
     var files = this.props.artifact.updates[0].files || [];
-
     var fileDetails = files.map(function(file, index) {
+
+      var build_date = (
+        <Time value={file.date} format="YYYY-MM-DD HH:mm" />
+      );
 
       return (
         <div key={index} className="file-details">
-          <ListItem style={styles.listStyle} disabled={true} primaryText="Name" secondaryText={file.name} />
+          <ListItem style={styles.listStyle} disabled={true} primaryText="Name" secondaryText={file.name} secondaryTextLines={2} />
           <Divider />
-          <ListItem style={styles.listStyle} disabled={true} primaryText="Checksum" secondaryText={file.checksum} />
+          <ListItem style={styles.listStyle} disabled={true} primaryText="Checksum" secondaryText={file.checksum} secondaryTextLines={2} />
           <Divider />
-          <ListItem style={styles.listStyle} disabled={true} primaryText="Build date" secondaryText={file.date} />
+          <ListItem style={styles.listStyle} disabled={true} primaryText="Build date" secondaryText={build_date} />
           <Divider />
-          <ListItem style={styles.listStyle} disabled={true} primaryText="Size" secondaryText={file.size} />
+          <ListItem style={styles.listStyle} disabled={true} primaryText="Size" secondaryText={(file.size / 1000000).toFixed(1) + " MB"} />
           <Divider />
         </div>
       )
@@ -132,12 +136,10 @@ var SelectedArtifact = React.createClass({
             </List>
           </div>
           <div className="artifact-list list-item">
-            <div className="hidden">
-              <List style={{backgroundColor: "rgba(255,255,255,0)"}}>
-                <ListItem style={styles.listStyle} disabled={true} primaryText="Installed on devices" secondaryText={devicesLink} />
-                <Divider /> 
-              </List>
-            </div>
+            <List style={{backgroundColor: "rgba(255,255,255,0)"}}>
+              <ListItem style={styles.listStyle} disabled={true} primaryText="Signed"  secondaryTextLines={2} secondaryText={info.signed ? "Yes" : "No"} />
+              <Divider /> 
+            </List>
           </div>
   
         </div>
