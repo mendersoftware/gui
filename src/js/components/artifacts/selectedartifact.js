@@ -35,7 +35,7 @@ var SelectedArtifact = React.createClass({
     }
   },
   render: function() {
-    var info = {name: "-", device_type: "-", build_date: "-", modified: "-", size: "-", checksum: "-", devices: "-", description: ""};
+    var info = {name: "-", device_type: "-", build_date: "-", modified: "-", size: "-", checksum: "-", devices: "-", description: "", signed: false};
     if (this.props.artifact) {
       for (var key in this.props.artifact) {
         if (this.props.artifact[key]) {
@@ -132,12 +132,10 @@ var SelectedArtifact = React.createClass({
             </List>
           </div>
           <div className="artifact-list list-item">
-            <div className="hidden">
-              <List style={{backgroundColor: "rgba(255,255,255,0)"}}>
-                <ListItem style={styles.listStyle} disabled={true} primaryText="Installed on devices" secondaryText={devicesLink} />
-                <Divider /> 
-              </List>
-            </div>
+            <List style={{backgroundColor: "rgba(255,255,255,0)"}}>
+              <ListItem style={styles.listStyle} disabled={true} primaryText="Signed"  secondaryTextLines={2} secondaryText={info.signed ? "Yes" : "No"} />
+              <Divider /> 
+            </List>
           </div>
   
         </div>
