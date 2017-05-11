@@ -58,7 +58,8 @@ var SelectedArtifact = React.createClass({
         fontSize: "12px",
         paddingTop: "10px",
         paddingBottom: "10px",
-        wordWrap:"break-word"
+        wordWrap:"break-word",
+        whiteSpace: "normal"
       }
     }
 
@@ -88,18 +89,21 @@ var SelectedArtifact = React.createClass({
     );
 
     var files = this.props.artifact.updates[0].files || [];
-
     var fileDetails = files.map(function(file, index) {
+
+      var build_date = (
+        <Time value={file.date} format="YYYY-MM-DD HH:mm" />
+      );
 
       return (
         <div key={index} className="file-details">
-          <ListItem style={styles.listStyle} disabled={true} primaryText="Name" secondaryText={file.name} />
+          <ListItem style={styles.listStyle} disabled={true} primaryText="Name" secondaryText={file.name} secondaryTextLines={2} />
           <Divider />
-          <ListItem style={styles.listStyle} disabled={true} primaryText="Checksum" secondaryText={file.checksum} />
+          <ListItem style={styles.listStyle} disabled={true} primaryText="Checksum" secondaryText={file.checksum} secondaryTextLines={2} />
           <Divider />
-          <ListItem style={styles.listStyle} disabled={true} primaryText="Build date" secondaryText={file.date} />
+          <ListItem style={styles.listStyle} disabled={true} primaryText="Build date" secondaryText={build_date} />
           <Divider />
-          <ListItem style={styles.listStyle} disabled={true} primaryText="Size" secondaryText={file.size} />
+          <ListItem style={styles.listStyle} disabled={true} primaryText="Size" secondaryText={(file.size / 1000000).toFixed(1) + " MB"} />
           <Divider />
         </div>
       )
