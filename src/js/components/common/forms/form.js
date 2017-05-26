@@ -56,7 +56,7 @@ var Form = React.createClass({
     } else if (component.props.id === "password") {
       if (!value) {
         isValid = false;
-        errorText = (typeof value === 'string') ? "Password is too weak" : "";
+        errorText = "Password is required";
       }
     } else {
 

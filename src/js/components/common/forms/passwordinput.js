@@ -1,7 +1,5 @@
 import React from 'react';
 import PasswordField from 'material-ui-password-field';
-import zxcvbn from 'zxcvbn';
-
 import CheckIcon from 'react-material-icons/icons/action/check-circle';
 
 var PasswordInput = React.createClass({
@@ -17,33 +15,14 @@ var PasswordInput = React.createClass({
   componentWillMount: function () {
     this.props.attachToForm(this); // Attaching the component to the form
   },
-  componentDidMount: function() {
-    this.setValue();
-  },
   componentWillUnmount: function () {
     this.props.detachFromForm(this); // Detaching if unmounting
   },
   setValue: function (event) {
+
     var value = event ? event.currentTarget.value : "";
-
-    var strength = zxcvbn(value);
-    var score = strength.score;
-    var feedback = strength.feedback.suggestions || [];
-
-    this.setState({
-      score: score,
-      feedback: feedback,
-      value: value
-    });
-   
-    if ((score>3)||(this.props.hideHelp)) {
-      this.props.validate(this, value);
-    } else {
-      // check for length - if has any value, make string type otherwise null
-      value = value ? "" : null;
-      this.props.validate(this, value );
-    }
-    
+    this.setState({value: value});
+    this.props.validate(this, value);
   },
   render: function () {
     var className = this.props.required ? this.props.className + " required" : this.props.className;
