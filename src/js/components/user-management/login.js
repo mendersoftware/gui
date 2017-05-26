@@ -28,7 +28,6 @@ var Login = React.createClass({
 
   componentDidMount: function() {
     this._checkLoggedIn();
-    this._checkForUsers();
   },
 
   componentWillUnmount: function () {
@@ -59,7 +58,7 @@ var Login = React.createClass({
         }
       },
       error: function(err) {
-        AppActions.setSnackbar("Oops! Wrong username or password. Please try again!");
+        AppActions.setSnackbar("Wrong username or password. Please try again!");
       }
     }, formData);
   },
@@ -70,48 +69,17 @@ var Login = React.createClass({
     }
   },
 
-  _checkForUsers: function() {
-    AppActions.setSnackbar("");
-    var self = this;
-    // check to see if a user exists in the system already
-    AppActions.checkForExistingUsers({
-      success: function(token) {
-        self.setState({createToken:token, userExists:false});
-      },
-      error: function(err) {
-        // getting token fails, so user(s) must exist
-        self.setState({userExists:true});
-      }
-    });
-  },
-
-  _createUser: function(formData) {
-    AppActions.setSnackbar("");
-    var self = this;
-    var callback = {
-      success: function(res) {
-        self._handleLogin(formData);
-      },
-      error: function(err) {
-        console.log(err.error);
-        AppActions.setSnackbar(err.error);
-      }
-    };
-    AppActions.createInitialUser(callback, formData, this.state.createToken);
-  },
-
 
   render: function() {
-    var title = this.state.userExists ?  "Log in" : "Create a user";
-    var buttonLabel = this.state.userExists ? "Log in" : "Create user";
+    var title = "Log in";
+    var buttonLabel = "Log in";
     return (
       <div className="full-screen">
         <div id="login-box">
           <h3>{title}</h3>
           <img src="assets/img/loginlogo.png" alt="mender-logo" />
-          {this.state.userExists ? null : <p>Create a user by entering your email and choosing a safe password</p>}
-
-          <Form hideHelp={this.state.userExists} onSubmit={this.state.userExists ? this._handleLogin : this._createUser} submitLabel={buttonLabel} submitButtonId="login_button">
+         
+          <Form hideHelp={true} onSubmit={this._handleLogin} submitLabel={buttonLabel} submitButtonId="login_button">
 
               <TextInput
                 hint="Your email"

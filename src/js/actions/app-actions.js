@@ -182,30 +182,6 @@ var AppActions = {
   },
 
 
-  /* User admission */
-  checkForExistingUsers: function(callback) {
-    UsersApi
-      .postEmpty(useradmApiUrl+"/auth/login")
-      .then(function(res) {
-        // successfully got token, means no existing user
-        callback.success(res);
-      })
-      .catch(function(err) {
-        callback.error(err);
-      })
-  },
-
-  createInitialUser: function(callback, userData, token) {
-    UsersApi
-      .postWithToken(useradmApiUrl+"/users/initial", userData, token)
-      .then(function(res) {
-        callback.success(parse(res.headers['link']));
-      })
-      .catch(function(err) {
-        callback.error(err);
-      })
-  },
-
   loginUser: function(callback, userData) {
     UsersApi
       .post(useradmApiUrl+"/auth/login", userData)
