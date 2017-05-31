@@ -10,7 +10,6 @@ import Drawer from 'material-ui/Drawer';
 import IconButton from 'material-ui/IconButton';
 import MenuItem from 'material-ui/MenuItem';
 import Divider from 'material-ui/Divider';
-import { ShortSHA } from '../../helpers';
 var pluralize = require('pluralize');
 
 function getGroupDevices(group) {
@@ -194,7 +193,7 @@ var ScheduleForm = React.createClass({
             <div style={{width:"100%"}} className={this.state.disabled ? 'inline-block' : 'hidden'}>
               <TextField
                 style={{width:"100%"}}
-                value={this.props.device ? ShortSHA(this.props.device.id) : ""}
+                value={this.props.device ? this.props.device.id : ""}
                 ref="device"
                 floatingLabelText="Device"
                 disabled={this.state.disabled}
