@@ -3,7 +3,6 @@ import { Router, Route, Link } from 'react-router';
 var AppActions = require('../../actions/app-actions');
 var AppStore = require('../../stores/app-store');
 var pluralize = require('pluralize');
-import { ShortSHA } from '../../helpers';
 
 var ProgressChart = React.createClass({
   getInitialState: function() {
@@ -108,7 +107,7 @@ var ProgressChart = React.createClass({
         </div>
         <div className={!this.state.device.id ? "device-info" : "device-info show"}>
           <b>Device info:</b>
-          <p><b>ID:</b> {ShortSHA(this.state.device.id || "")}</p>
+          <p><b>ID:</b> {(this.state.device.id || "")}</p>
           <p><b>Status:</b> {this.state.device.status}</p>
         </div>
         <div className="key">
