@@ -62,8 +62,8 @@ var SelectedDevices = React.createClass({
   },
 
   _clickListItem: function() {
-  AppActions.setSnackbar("");
-   this.dialogToggle('schedule');
+    AppActions.setSnackbar("");
+    this.dialogToggle('schedule');
   },
 
   _onScheduleSubmit: function() {
@@ -114,7 +114,7 @@ var SelectedDevices = React.createClass({
     if (attr==='artifact') {
       var filteredDevs = null;
       for (var i = 0; i<val.device_types_compatible.length; i++) {
-        if (val.device_types_compatible[i] === this.props.device.device_type) {
+        if (val.device_types_compatible[i] === this.props.device_type) {
           filteredDevs = [this.props.device];
           break;
         }

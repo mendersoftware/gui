@@ -301,7 +301,7 @@ var DeviceList = React.createClass({
         attrs[device.attributes[i].name] = device.attributes[i].value;
       }
       if ( this.props.expandedRow === index ) {
-        expanded = <SelectedDevices styles={this.props.styles} block={this.props.block} accept={this.props.accept} addTooltip={this.props.addTooltip} redirect={this.props.redirect} artifacts={this.props.artifacts} device={this.props.expandedDevice} selectedGroup={this.props.selectedGroup} groups={this.props.groups} />
+        expanded = <SelectedDevices device_type={attrs.device_type} styles={this.props.styles} block={this.props.block} accept={this.props.accept} addTooltip={this.props.addTooltip} redirect={this.props.redirect} artifacts={this.props.artifacts} device={this.props.expandedDevice} selectedGroup={this.props.selectedGroup} groups={this.props.groups} />
       }
       return (
         <TableRow hoverable={!expanded} className={expanded ? "expand" : null} key={device.id}>
