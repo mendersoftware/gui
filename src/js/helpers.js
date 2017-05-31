@@ -1,7 +1,3 @@
-export function ShortSHA(id) {
-  return id.substring(0,7);
-}
-
 export function isEncoded(uri) {
   uri = uri || '';
 
