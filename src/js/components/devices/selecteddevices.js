@@ -199,6 +199,7 @@ var SelectedDevices = React.createClass({
         deviceInventory.push(
           <div key="updateButton">
             <ListItem
+              className={status === "accepted" ? null : "hidden"}
               style={this.props.styles.listStyle}
               primaryText="Create a deployment for this device"
               onClick={this._clickListItem}
