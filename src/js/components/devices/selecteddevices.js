@@ -2,7 +2,6 @@ import React from 'react';
 import { Router, Link } from 'react-router';
 import Time from 'react-time';
 import Collapse from 'react-collapse';
-import { ShortSHA } from '../../helpers';
 
 var AppStore = require('../../stores/app-store');
 var AppActions = require('../../actions/app-actions');
@@ -63,15 +62,15 @@ var SelectedDevices = React.createClass({
   },
 
   _clickListItem: function() {
-  AppActions.setSnackbar("");
-   this.dialogToggle('schedule');
+    AppActions.setSnackbar("");
+    this.dialogToggle('schedule');
   },
 
   _onScheduleSubmit: function() {
     var self = this;
     var newDeployment = {
       devices: [this.props.device.id],
-      name: ShortSHA(this.props.device.id),
+      name: this.props.device.id,
       artifact_name: this.state.artifact.name
     }
     var callback = {
@@ -115,7 +114,7 @@ var SelectedDevices = React.createClass({
     if (attr==='artifact') {
       var filteredDevs = null;
       for (var i = 0; i<val.device_types_compatible.length; i++) {
-        if (val.device_types_compatible[i] === this.props.device.device_type) {
+        if (val.device_types_compatible[i] === this.props.device_type) {
           filteredDevs = [this.props.device];
           break;
         }
@@ -200,6 +199,7 @@ var SelectedDevices = React.createClass({
         deviceInventory.push(
           <div key="updateButton">
             <ListItem
+              className={status === "accepted" ? null : "hidden"}
               style={this.props.styles.listStyle}
               primaryText="Create a deployment for this device"
               onClick={this._clickListItem}

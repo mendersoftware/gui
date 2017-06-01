@@ -4,7 +4,7 @@ import Time from 'react-time';
 import { Motion, spring } from 'react-motion';
 import Collapse from 'react-collapse';
 import ReactHeight from 'react-height';
-import { ShortSHA, fullyDecodeURI } from '../../helpers';
+import { fullyDecodeURI } from '../../helpers';
 
 var AppStore = require('../../stores/app-store');
 var AppActions = require('../../actions/app-actions');
@@ -301,7 +301,7 @@ var DeviceList = React.createClass({
         attrs[device.attributes[i].name] = device.attributes[i].value;
       }
       if ( this.props.expandedRow === index ) {
-        expanded = <SelectedDevices styles={this.props.styles} block={this.props.block} accept={this.props.accept} addTooltip={this.props.addTooltip} redirect={this.props.redirect} artifacts={this.props.artifacts} device={this.props.expandedDevice} selectedGroup={this.props.selectedGroup} groups={this.props.groups} />
+        expanded = <SelectedDevices device_type={attrs.device_type} styles={this.props.styles} block={this.props.block} accept={this.props.accept} addTooltip={this.props.addTooltip} redirect={this.props.redirect} artifacts={this.props.artifacts} device={this.props.expandedDevice} selectedGroup={this.props.selectedGroup} groups={this.props.groups} />
       }
       return (
         <TableRow hoverable={!expanded} className={expanded ? "expand" : null} key={device.id}>
@@ -311,7 +311,7 @@ var DeviceList = React.createClass({
               e.stopPropagation();
               this._expandRow(index,0);
             }}>
-            {ShortSHA(device.id)}
+            {device.id}
             </div>
           </TableRowColumn>
           <TableRowColumn style={{padding: 0}}>
