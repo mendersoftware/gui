@@ -1,6 +1,5 @@
 import React from 'react';
 var AppStore = require('../../stores/app-store');
-var LocalStore = require('../../stores/local-store');
 var AppActions = require('../../actions/app-actions');
 var Repository = require('./repository.js');
 

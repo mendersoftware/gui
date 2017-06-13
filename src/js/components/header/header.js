@@ -4,8 +4,7 @@ import cookie from 'react-cookie';
 var AppActions = require('../../actions/app-actions');
 
 import { Tabs, Tab } from 'material-ui/Tabs';
-import IconMenu from 'material-ui/IconMenu';
-import IconButton from 'material-ui/IconButton';
+import DropDownMenu from 'material-ui/DropDownMenu';
 import MenuItem from 'material-ui/MenuItem';
 import FontIcon from 'material-ui/FontIcon';
 import { Toolbar, ToolbarGroup, ToolbarTitle } from 'material-ui/Toolbar';
@@ -34,7 +33,7 @@ var tab = 0;
 var Header = React.createClass({
   getInitialState: function() {
     return {
-      tabIndex: this._updateActive()
+      tabIndex: this._updateActive(),
     };
   },
   componentWillMount: function() {
@@ -58,6 +57,7 @@ var Header = React.createClass({
   },
   _logOut: function() {
     cookie.remove('JWT');
+    cookie.remove('userEmail');
     this.context.router.push("/login");
   },
   render: function() {
@@ -71,13 +71,12 @@ var Header = React.createClass({
           onActive={tabHandler} />
       )
     });
-    var iconButtonElement = (
-      <IconMenu style={{marginTop: "5px"}}
-        iconButtonElement={<IconButton><FontIcon className="material-icons">settings</FontIcon></IconButton>}
-        targetOrigin={{horizontal: 'right', vertical: 'top'}}
-      >
+    var dropDownElement = (
+
+      <DropDownMenu style={{marginRight: "0"}} iconStyle={{ fill: 'rgb(0, 0, 0)' }} value={cookie.load("userEmail")}>
+        <MenuItem primaryText={cookie.load("userEmail")}  value={cookie.load("userEmail")} className="hidden" />
         <MenuItem primaryText="Log out" onClick={this._logOut} />
-      </IconMenu>
+      </DropDownMenu>
     );
     return (
       <div className={this.context.router.isActive('/login') ? "hidden" : null}>
@@ -88,9 +87,8 @@ var Header = React.createClass({
 
           {this.props.demo ? <div id="demoBox"><InfoIcon style={{marginRight:"6px", height:"16px", verticalAlign:"bottom"}} />Mender is currently running in <b>demo mode</b>. <a href="https://docs.mender.io/Administration/Production-installation" target="_blank">See the documentation</a> for help switching to production mode</div> : null }
 
-
           <ToolbarGroup key={1} className="float-right">
-            {iconButtonElement}
+            {dropDownElement}
           </ToolbarGroup>
         </Toolbar>
         <div id="header-nav">

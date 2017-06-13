@@ -41,12 +41,14 @@ var Login = React.createClass({
 
   _handleLogin: function(formData) {
     var self = this;
+
     AppActions.loginUser({
       success: function(token) {
 
         AppActions.setSnackbar("");
         // save token as cookie
-        cookie.save("JWT", token);
+        cookie.save("JWT", token, {maxAge: 15*60});
+        cookie.save("userEmail", formData.email, {maxAge: 15*60});
 
         // logged in, so redirect
         var location = self.props;
