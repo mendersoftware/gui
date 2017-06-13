@@ -12,6 +12,7 @@ module.exports = {
     req.on('response', function (res) {
       if (res.status === 401) {
         cookie.remove('JWT');
+        cookie.remove('userEmail');
         hashHistory.replace("/login");
       }
     });
