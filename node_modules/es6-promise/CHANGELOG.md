@@ -1,5 +1,10 @@
 # Master
 
+# 4.1.0
+
+* [BUGFIX] Fix memory leak [#269]
+* [BUGFIX] Auto Bundles within an AMD Environment [#263]
+
 # 4.0.5
 
 * fix require('es6-promise/auto') for Node < 4
@@ -67,6 +72,10 @@
 * reduce AST size of promise constructor, to facilitate more inlining
 * Update README.md with details about PhantomJS requirement for running tests
 * Mangle and compress the minified version
+
+# 3.0.2
+
+* correctly bump both bower and package.json versions
 
 # 3.0.1
 

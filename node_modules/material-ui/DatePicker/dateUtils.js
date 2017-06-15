@@ -3,7 +3,10 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.defaultUtils = undefined;
 exports.dateTimeFormat = dateTimeFormat;
+exports.getYear = getYear;
+exports.setYear = setYear;
 exports.addDays = addDays;
 exports.addMonths = addMonths;
 exports.addYears = addYears;
@@ -53,6 +56,16 @@ function dateTimeFormat(locale, options) {
       process.env.NODE_ENV !== "production" ? (0, _warning2.default)(false, 'Material-UI: Wrong usage of DateTimeFormat') : void 0;
     }
   };
+}
+
+function getYear(d) {
+  return d.getFullYear();
+}
+
+function setYear(d, year) {
+  var newDate = cloneDate(d);
+  newDate.setFullYear(year);
+  return newDate;
 }
 
 function addDays(d, days) {
@@ -178,3 +191,14 @@ function monthDiff(d1, d2) {
 function yearDiff(d1, d2) {
   return ~~(monthDiff(d1, d2) / 12);
 }
+
+var defaultUtils = exports.defaultUtils = {
+  getYear: getYear,
+  setYear: setYear,
+  addDays: addDays,
+  addMonths: addMonths,
+  addYears: addYears,
+  getFirstDayOfMonth: getFirstDayOfMonth,
+  getWeekArray: getWeekArray,
+  monthDiff: monthDiff
+};
