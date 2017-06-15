@@ -2,8 +2,9 @@ import React from 'react';
 import IconButton from 'material-ui/IconButton';
 import FontIcon from 'material-ui/FontIcon';
 var Loader = require('../common/loader');
+var createReactClass = require('create-react-class');
 
-var ConfirmAbort = React.createClass({
+var ConfirmAbort = createReactClass({
   getInitialState: function() {
     return {
       class: "fadeIn"

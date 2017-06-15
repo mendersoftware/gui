@@ -1,5 +1,7 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Router, Route, Link } from 'react-router';
+var createReactClass = require('create-react-class');
 import FontIcon from 'material-ui/FontIcon';
 var Loader = require('../common/loader');
 
@@ -12,7 +14,7 @@ var tooltip = {
   trigger: '.health'
 };
 
-var Health = React.createClass({
+var Health = createReactClass({
   componentDidMount: function() {
     this.props.addTooltip(tooltip);
   },
@@ -74,7 +76,7 @@ var Health = React.createClass({
 
 
 Health.contextTypes = {
-  router: React.PropTypes.object
+  router: PropTypes.object
 };
 
 module.exports = Health;

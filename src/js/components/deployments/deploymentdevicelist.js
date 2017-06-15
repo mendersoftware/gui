@@ -2,12 +2,13 @@ import React from 'react';
 import { Link } from 'react-router';
 import Time from 'react-time';
 var isEqual = require('lodash.isequal');
+var createReactClass = require('create-react-class');
 
 // material ui
 import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
 import FlatButton from 'material-ui/FlatButton';
 
-var ProgressDeviceList = React.createClass({
+var ProgressDeviceList = createReactClass({
   getInitialState: function() {
     return {
       prevDevices:{}

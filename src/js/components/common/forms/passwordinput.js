@@ -1,8 +1,9 @@
 import React from 'react';
 import PasswordField from 'material-ui-password-field';
 import CheckIcon from 'react-material-icons/icons/action/check-circle';
+var createReactClass = require('create-react-class');
 
-var PasswordInput = React.createClass({
+var PasswordInput = createReactClass({
   getInitialState: function () {
     return {
       value: this.props.value || '',

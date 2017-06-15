@@ -1,7 +1,8 @@
 import React from 'react';
+var createReactClass = require('create-react-class');
 var AppActions = require('../../actions/app-actions');
 
-var GroupDevices = React.createClass({
+var GroupDevices = createReactClass({
   getInitialState: function() {
     return {
       devices: "-"

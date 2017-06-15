@@ -3,6 +3,8 @@ import AppStore from '../../stores/app-store';
 import AppActions from '../../actions/app-actions';
 import { Router, Link } from 'react-router';
 import SearchInput from 'react-search-input';
+var createReactClass = require('create-react-class');
+
 import SelectField from 'material-ui/SelectField';
 import TextField from 'material-ui/TextField';
 import FontIcon from 'material-ui/FontIcon';
@@ -24,7 +26,7 @@ function getGroupDevices(group) {
   });
 }
 
-var ScheduleForm = React.createClass({
+var ScheduleForm = createReactClass({
   getInitialState: function() {
 
     /* if single device */

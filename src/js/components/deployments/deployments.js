@@ -1,4 +1,5 @@
 import React from 'react';
+var createReactClass = require('create-react-class');
 var AppStore = require('../../stores/app-store');
 var AppActions = require('../../actions/app-actions');
 
@@ -30,7 +31,7 @@ function getState() {
   }
 }
 
-var Deployments = React.createClass({
+var Deployments = createReactClass({
   getInitialState: function() {
     return getState()
   },

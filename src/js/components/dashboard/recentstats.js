@@ -1,8 +1,9 @@
 import React from 'react';
 var AppActions = require('../../actions/app-actions');
 var pluralize = require('pluralize');
+var createReactClass = require('create-react-class');
 
-var RecentStats = React.createClass({
+var RecentStats = createReactClass({
   getInitialState: function() {
     return {
       stats: {

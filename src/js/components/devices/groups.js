@@ -1,5 +1,6 @@
 import React from 'react';
 var AppActions = require('../../actions/app-actions');
+var createReactClass = require('create-react-class');
 
 // material ui
 import { List, ListItem } from 'material-ui/List';
@@ -9,7 +10,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import Subheader from 'material-ui/Subheader';
 require('../common/prototype/Array.prototype.equals');
 
-var Groups = React.createClass({
+var Groups = createReactClass({
   _changeGroup: function(group) {
     this.props.changeGroup(group);
   },

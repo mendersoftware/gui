@@ -1,7 +1,8 @@
 import React from 'react';
+var createReactClass = require('create-react-class');
 import SelectField from 'material-ui/SelectField';
 
-var SelectInput = React.createClass({
+var SelectInput = createReactClass({
   render: function () {
     return (
       <TextField

@@ -1,10 +1,12 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Router, Route, Link } from 'react-router';
+var createReactClass = require('create-react-class');
 var AppActions = require('../../actions/app-actions');
 var AppStore = require('../../stores/app-store');
 var pluralize = require('pluralize');
 
-var ProgressChart = React.createClass({
+var ProgressChart = createReactClass({
   getInitialState: function() {
     return {
       devices: [],
@@ -124,7 +126,7 @@ var ProgressChart = React.createClass({
 });
 
 ProgressChart.contextTypes = {
-  router: React.PropTypes.object
+  router: PropTypes.object
 };
 
 module.exports = ProgressChart;

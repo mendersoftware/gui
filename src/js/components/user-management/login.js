@@ -1,9 +1,11 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Router, Route} from 'react-router';
 import cookie from 'react-cookie';
 
 var AppActions = require('../../actions/app-actions');
 var AppStore = require('../../stores/app-store');
+var createReactClass = require('create-react-class');
 
 import Form from '../common/forms/form';
 import TextInput from '../common/forms/textinput';
@@ -17,7 +19,7 @@ function getState() {
   };
 }
 
-var Login = React.createClass({
+var Login = createReactClass({
   getInitialState: function() {
     return getState();
   },
@@ -110,7 +112,7 @@ var Login = React.createClass({
 
 
 Login.contextTypes = {
-  router: React.PropTypes.object
+  router: PropTypes.object
 };
 
 module.exports = Login;

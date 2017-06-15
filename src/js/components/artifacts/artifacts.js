@@ -2,9 +2,11 @@ import React from 'react';
 var AppStore = require('../../stores/app-store');
 var AppActions = require('../../actions/app-actions');
 var Repository = require('./repository.js');
+var createReactClass = require('create-react-class');
 
 import { Router, Route, Link } from 'react-router';
 import Snackbar from 'material-ui/Snackbar';
+
 
 function getState() {
   return {
@@ -15,7 +17,7 @@ function getState() {
   }
 }
 
-var Artifacts = React.createClass({
+var Artifacts = createReactClass({
   getInitialState: function() {
     return getState()
   },

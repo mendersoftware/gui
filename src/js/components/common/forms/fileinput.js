@@ -1,8 +1,9 @@
 import React from 'react';
 import FontIcon from 'material-ui/FontIcon';
 var FileField = require('react-file-input');
+var createReactClass = require('create-react-class');
 
-var FileInput = React.createClass({
+var FileInput = createReactClass({
   getInitialState: function () {
     return {
       value: this.props.value || '',

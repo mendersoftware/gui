@@ -1,9 +1,11 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Router, Route, Link } from 'react-router';
 
 var ProgressChart = require('../deployments/progressChart.js');
 import Time from 'react-time';
 var Loader = require('../common/loader');
+var createReactClass = require('create-react-class');
 
 // material ui
 import { List, ListItem } from 'material-ui/List';
@@ -11,7 +13,7 @@ import Divider from 'material-ui/Divider';
 import FontIcon from 'material-ui/FontIcon';
 
 
-var Progress = React.createClass({
+var Progress = createReactClass({
   getInitialState: function() {
     return {
       devices: {},
@@ -85,7 +87,7 @@ var Progress = React.createClass({
 });
 
 Progress.contextTypes = {
-  router: React.PropTypes.object
+  router: PropTypes.object
 };
 
 module.exports = Progress;

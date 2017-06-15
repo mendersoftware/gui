@@ -1,8 +1,10 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 var AppStore = require('../../stores/app-store');
 var LocalStore = require('../../stores/local-store');
 var AppActions = require('../../actions/app-actions');
 var Deployments = require('./deployments');
+var createReactClass = require('create-react-class');
 import { Router, Route, Link } from 'react-router';
 import RaisedButton from 'material-ui/RaisedButton';
 import Snackbar from 'material-ui/Snackbar';
@@ -30,7 +32,7 @@ var tooltips = {
   }
 };
 
-var Dashboard = React.createClass({
+var Dashboard = createReactClass({
   getInitialState: function() {
     return getState();
   },
@@ -127,7 +129,7 @@ var Dashboard = React.createClass({
 });
 
 Dashboard.contextTypes = {
-  router: React.PropTypes.object
+  router: PropTypes.object
 };
  
 module.exports = Dashboard;

@@ -5,6 +5,7 @@ import { Motion, spring } from 'react-motion';
 import Collapse from 'react-collapse';
 import ReactHeight from 'react-height';
 import { fullyDecodeURI } from '../../helpers';
+var createReactClass = require('create-react-class');
 
 var AppStore = require('../../stores/app-store');
 var AppActions = require('../../actions/app-actions');
@@ -24,7 +25,7 @@ import IconButton from 'material-ui/IconButton';
 
 import Snackbar from 'material-ui/Snackbar';
 
-var DeviceList = React.createClass({
+var DeviceList = createReactClass({
   getInitialState: function() {
     return {
       errorText1: null,

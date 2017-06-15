@@ -1,10 +1,11 @@
 import validator from 'validator';
 import React from 'react';
+var createReactClass = require('create-react-class');
 
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 
-var Form = React.createClass({
+var Form = createReactClass({
   getInitialState: function() {
     return {
       isSubmitting: false,

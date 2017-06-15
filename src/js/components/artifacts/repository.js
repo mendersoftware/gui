@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Time from 'react-time';
 import AppStore from '../../stores/app-store';
 import AppActions from '../../actions/app-actions';
@@ -13,6 +14,7 @@ import { Motion, spring } from 'react-motion';
 import Collapse from 'react-collapse';
 import ReactHeight from 'react-height';
 var Dropzone = require('react-dropzone');
+var createReactClass = require('create-react-class');
 
 // material ui
 import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
@@ -26,7 +28,7 @@ import LinearProgress from 'material-ui/LinearProgress';
 var newState = {};
 var artifacts = [];
 
-var Repository = React.createClass({
+var Repository = createReactClass({
   getInitialState: function() {
     return {
       artifact: {
@@ -285,7 +287,7 @@ var Repository = React.createClass({
 });
 
 Repository.contextTypes = {
-  router: React.PropTypes.object
+  router: PropTypes.object
 };
 
 module.exports = Repository;

@@ -7,6 +7,7 @@ import ReactHeight from 'react-height';
 var AppActions = require('../../actions/app-actions');
 var SelectedDevices = require('./selecteddevices');
 var pluralize = require('pluralize');
+var createReactClass = require('create-react-class');
 
 // material ui
 var mui = require('material-ui');
@@ -15,7 +16,7 @@ import IconButton from 'material-ui/IconButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import FontIcon from 'material-ui/FontIcon';
 
-var Authorized =  React.createClass({
+var Authorized =  createReactClass({
   getInitialState: function() {
     return {
        sortCol: "name",

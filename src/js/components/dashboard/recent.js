@@ -1,9 +1,11 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 var GroupDevices = require('../deployments/groupdevices');
 var RecentStats = require('./recentstats');
 import Time from 'react-time';
 var AppActions = require('../../actions/app-actions');
 var Loader = require('../common/loader');
+var createReactClass = require('create-react-class');
 
 import { Router, Route, Link } from 'react-router';
 
@@ -11,7 +13,7 @@ import { Router, Route, Link } from 'react-router';
 import Divider from 'material-ui/Divider';
 import FontIcon from 'material-ui/FontIcon';
 
-var Recent = React.createClass({
+var Recent = createReactClass({
   getInitialState: function() {
     return {
       devices: {} 
@@ -79,7 +81,7 @@ var Recent = React.createClass({
 });
 
 Recent.contextTypes = {
-  router: React.PropTypes.object
+  router: PropTypes.object
 };
 
 module.exports = Recent;

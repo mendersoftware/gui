@@ -1,7 +1,9 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Router, Route, Link } from 'react-router';
 import cookie from 'react-cookie';
 var AppActions = require('../../actions/app-actions');
+var createReactClass = require('create-react-class');
 
 import { Tabs, Tab } from 'material-ui/Tabs';
 import DropDownMenu from 'material-ui/DropDownMenu';
@@ -30,7 +32,7 @@ var styles = {
 
 var tab = 0;
 
-var Header = React.createClass({
+var Header = createReactClass({
   getInitialState: function() {
     return {
       tabIndex: this._updateActive(),
@@ -106,7 +108,7 @@ var Header = React.createClass({
 });
 
 Header.contextTypes = {
-  router: React.PropTypes.object,
+  router: PropTypes.object,
 };
 
 module.exports = Header;
