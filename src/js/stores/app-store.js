@@ -228,16 +228,6 @@ function _getProgressStatus(id) {
   return progress;
 }
 
-function _getScheduledDeployments(time) {
-  var schedule = [];
-  for (var i=0;i<_allDeployments.length;i++) {
-    if (_allDeployments[i].start_time>time) {
-      schedule.push(_allDeployments[i]);
-    }
-  }
-  schedule.sort(startTimeSortAscend);
-  return schedule;
-}
 
 function _sortDeploymentDevices(devices) {
   var newList = {
@@ -588,13 +578,6 @@ var AppStore = assign(EventEmitter.prototype, {
     */
     return _getProgressStatus(id);
   },
-
-  getScheduledDeployments: function(date) {
-    /*
-    * Return list of deployments scheduled after date
-    */
-    return _getScheduledDeployments(date)
-  }, 
 
   getEventLog: function() {
     /*
