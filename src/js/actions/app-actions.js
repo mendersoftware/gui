@@ -182,9 +182,12 @@ var AppActions = {
   },
 
 
+
+/* user management */
+
   loginUser: function(callback, userData) {
     UsersApi
-      .post(useradmApiUrl+"/auth/login", userData)
+      .postLogin(useradmApiUrl+"/auth/login", userData)
       .then(function(res) {
         callback.success(res);
       })
@@ -193,6 +196,45 @@ var AppActions = {
       })
   },
 
+  getUserList: function(callback) {
+    UsersApi
+      .get(useradmApiUrl+"/users")
+      .then(function(res) {
+        callback.success(res);
+      })
+      .catch(function(err) {
+        callback.error(err);
+      })
+  },
+
+  createUser: function(userData, callback) {
+    UsersApi
+      .post(useradmApiUrl+"/users", userData)
+      .then(function(res) {
+        callback.success(res);
+      })
+      .catch(function(err) {
+        callback.error(err);
+      })
+  },
+
+  editUser: function(userId, userData, callback) {
+    UsersApi
+      .put(useradmApiUrl+"/users/"+userId, userData)
+      .then(function(res) {
+        callback.success(res);
+      })
+      .catch(function(err) {
+        callback.error(err);
+      })
+  },
+
+  refreshUserCookie: function(email) {
+    AppDispatcher.handleViewAction({
+      actionType: AppConstants.REFRESH_USER_COOKIE,
+      email: email
+    })
+  },
 
 
   /* Device Admission */

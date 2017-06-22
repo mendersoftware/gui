@@ -2,6 +2,7 @@ var AppDispatcher = require('../dispatchers/app-dispatcher');
 var AppConstants = require('../constants/app-constants');
 var assign = require('object-assign');
 var EventEmitter = require('events').EventEmitter;  // from device
+import cookie from 'react-cookie';
 
 var CHANGE_EVENT = "change";
 
@@ -443,6 +444,11 @@ function _setSnackbar(message, duration) {
 }
 
 
+function setUserCookie(email) {
+   cookie.save("userEmail", email, {maxAge: 15*60});
+}
+
+
 var AppStore = assign(EventEmitter.prototype, {
   emitChange: function() {
     this.emit(CHANGE_EVENT)
@@ -712,6 +718,10 @@ var AppStore = assign(EventEmitter.prototype, {
 
       case AppConstants.SET_DEPLOYMENT_ARTIFACT:
         setDeploymentArtifact(payload.action.artifact);
+        break;
+
+      case AppConstants.REFRESH_USER_COOKIE:
+        setUserCookie(payload.action.email);
         break;
     }
     

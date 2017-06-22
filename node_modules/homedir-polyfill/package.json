@@ -38,6 +38,7 @@
     "type": "range"
   },
   "_requiredBy": [
+    "/fined/expand-tilde",
     "/global-prefix"
   ],
   "_resolved": "https://registry.npmjs.org/homedir-polyfill/-/homedir-polyfill-1.0.1.tgz",

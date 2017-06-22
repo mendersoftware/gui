@@ -1,7 +1,9 @@
 import React from 'react';
 import { Router, Route, hashHistory } from 'react-router';
 import { render } from 'react-dom';
+import { MuiThemeProvider } from 'material-ui-next-build/styles';
 var routes = require('./config/routes');
+
 
 import injectTapEventPlugin from 'react-tap-event-plugin';
 
@@ -12,5 +14,9 @@ import injectTapEventPlugin from 'react-tap-event-plugin';
 injectTapEventPlugin();
 
 render((
-  <Router history={hashHistory}>{routes}</Router>
+  <MuiThemeProvider>
+    <Router history={hashHistory}>
+      {routes}
+    </Router>
+  </MuiThemeProvider>
 ), document.getElementById('main'))

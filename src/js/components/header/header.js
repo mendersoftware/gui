@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Router, Route, Link } from 'react-router';
 import cookie from 'react-cookie';
 var AppActions = require('../../actions/app-actions');
+var AppStore = require('../../stores/app-store');
 var createReactClass = require('create-react-class');
 
 import { Tabs, Tab } from 'material-ui/Tabs';
@@ -26,7 +27,8 @@ var styles = {
     color: "#414141"
   },
   inkbar: {
-    backgroundColor: "#7D3F69"
+    backgroundColor: "#7D3F69",
+    marginTop: "0"
   }
 };
 
@@ -36,19 +38,28 @@ var Header = createReactClass({
   getInitialState: function() {
     return {
       tabIndex: this._updateActive(),
+      userEmail: cookie.load("userEmail"),
+      tabIndex: this._updateActive()
     };
   },
   componentWillMount: function() {
-    this.setState({tabIndex: this._updateActive()});
+    AppStore.changeListener(this._onChange);
   },
   componentWillReceiveProps: function(nextProps) {
     this.setState({tabIndex: this._updateActive()});
+  },
+  componentWillUnmount: function() {
+    AppStore.removeChangeListener(this._onChange);
+  },
+  _onChange: function() {
+    this.setState(this.getInitialState());
   },
   _updateActive: function() {
     return this.context.router.isActive({ pathname: '/' }, true) ? '/' :
       this.context.router.isActive('/devices') ? '/devices' :
       this.context.router.isActive('/artifacts') ? '/artifacts' : 
-      this.context.router.isActive('/deployments') ? '/deployments' : '/';
+      this.context.router.isActive('/deployments') ? '/deployments' :
+      this.context.router.isActive('/settings') ? '/settings' : '/';
   },
   _handleTabActive: function(tab) {
     this.context.router.push(tab.props.value);
@@ -61,6 +72,9 @@ var Header = createReactClass({
     cookie.remove('JWT');
     cookie.remove('userEmail');
     this.context.router.push("/login");
+  },
+  _handleHeaderMenu: function(event, index, value) {
+    this.context.router.push(value);
   },
   render: function() {
     var tabHandler = this._handleTabActive;
@@ -75,8 +89,9 @@ var Header = createReactClass({
     });
     var dropDownElement = (
 
-      <DropDownMenu style={{marginRight: "0"}} iconStyle={{ fill: 'rgb(0, 0, 0)' }} value={cookie.load("userEmail")}>
-        <MenuItem primaryText={cookie.load("userEmail")}  value={cookie.load("userEmail")} className="hidden" />
+      <DropDownMenu anchorOrigin={{vertical: 'center', horizontal: 'middle'}} targetOrigin={{vertical: 'bottom', horizontal: 'middle'}}  style={{marginRight: "0"}} iconStyle={{ fill: 'rgb(0, 0, 0)' }} value={this.state.userEmail} onChange={this._handleHeaderMenu}>
+        <MenuItem primaryText={this.state.userEmail} value={this.state.userEmail} className="hidden" />
+        <MenuItem primaryText="User management" value="/settings/user-management" />
         <MenuItem primaryText="Log out" onClick={this._logOut} />
       </DropDownMenu>
     );
@@ -93,6 +108,7 @@ var Header = createReactClass({
             {dropDownElement}
           </ToolbarGroup>
         </Toolbar>
+       
         <div id="header-nav">
           <Tabs
             value={this.state.tabIndex}

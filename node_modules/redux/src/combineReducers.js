@@ -3,18 +3,19 @@ import isPlainObject from 'lodash/isPlainObject'
 import warning from './utils/warning'
 
 function getUndefinedStateErrorMessage(key, action) {
-  var actionType = action && action.type
-  var actionName = actionType && `"${actionType.toString()}"` || 'an action'
+  const actionType = action && action.type
+  const actionName = (actionType && `"${actionType.toString()}"`) || 'an action'
 
   return (
     `Given action ${actionName}, reducer "${key}" returned undefined. ` +
-    `To ignore an action, you must explicitly return the previous state.`
+    `To ignore an action, you must explicitly return the previous state. ` +
+    `If you want this reducer to hold no value, you can return null instead of undefined.`
   )
 }
 
 function getUnexpectedStateShapeWarningMessage(inputState, reducers, action, unexpectedKeyCache) {
-  var reducerKeys = Object.keys(reducers)
-  var argumentName = action && action.type === ActionTypes.INIT ?
+  const reducerKeys = Object.keys(reducers)
+  const argumentName = action && action.type === ActionTypes.INIT ?
     'preloadedState argument passed to createStore' :
     'previous state received by the reducer'
 
@@ -34,7 +35,7 @@ function getUnexpectedStateShapeWarningMessage(inputState, reducers, action, une
     )
   }
 
-  var unexpectedKeys = Object.keys(inputState).filter(key =>
+  const unexpectedKeys = Object.keys(inputState).filter(key =>
     !reducers.hasOwnProperty(key) &&
     !unexpectedKeyCache[key]
   )
@@ -53,21 +54,22 @@ function getUnexpectedStateShapeWarningMessage(inputState, reducers, action, une
   }
 }
 
-function assertReducerSanity(reducers) {
+function assertReducerShape(reducers) {
   Object.keys(reducers).forEach(key => {
-    var reducer = reducers[key]
-    var initialState = reducer(undefined, { type: ActionTypes.INIT })
+    const reducer = reducers[key]
+    const initialState = reducer(undefined, { type: ActionTypes.INIT })
 
     if (typeof initialState === 'undefined') {
       throw new Error(
         `Reducer "${key}" returned undefined during initialization. ` +
         `If the state passed to the reducer is undefined, you must ` +
         `explicitly return the initial state. The initial state may ` +
-        `not be undefined.`
+        `not be undefined. If you don't want to set a value for this reducer, ` +
+        `you can use null instead of undefined.`
       )
     }
 
-    var type = '@@redux/PROBE_UNKNOWN_ACTION_' + Math.random().toString(36).substring(7).split('').join('.')
+    const type = '@@redux/PROBE_UNKNOWN_ACTION_' + Math.random().toString(36).substring(7).split('').join('.')
     if (typeof reducer(undefined, { type }) === 'undefined') {
       throw new Error(
         `Reducer "${key}" returned undefined when probed with a random type. ` +
@@ -75,7 +77,7 @@ function assertReducerSanity(reducers) {
         `namespace. They are considered private. Instead, you must return the ` +
         `current state for any unknown actions, unless it is undefined, ` +
         `in which case you must return the initial state, regardless of the ` +
-        `action type. The initial state may not be undefined.`
+        `action type. The initial state may not be undefined, but can be null.`
       )
     }
   })
@@ -98,10 +100,10 @@ function assertReducerSanity(reducers) {
  * passed object, and builds a state object with the same shape.
  */
 export default function combineReducers(reducers) {
-  var reducerKeys = Object.keys(reducers)
-  var finalReducers = {}
-  for (var i = 0; i < reducerKeys.length; i++) {
-    var key = reducerKeys[i]
+  const reducerKeys = Object.keys(reducers)
+  const finalReducers = {}
+  for (let i = 0; i < reducerKeys.length; i++) {
+    const key = reducerKeys[i]
 
     if (process.env.NODE_ENV !== 'production') {
       if (typeof reducers[key] === 'undefined') {
@@ -113,40 +115,41 @@ export default function combineReducers(reducers) {
       finalReducers[key] = reducers[key]
     }
   }
-  var finalReducerKeys = Object.keys(finalReducers)
+  const finalReducerKeys = Object.keys(finalReducers)
 
+  let unexpectedKeyCache
   if (process.env.NODE_ENV !== 'production') {
-    var unexpectedKeyCache = {}
+    unexpectedKeyCache = {}
   }
 
-  var sanityError
+  let shapeAssertionError
   try {
-    assertReducerSanity(finalReducers)
+    assertReducerShape(finalReducers)
   } catch (e) {
-    sanityError = e
+    shapeAssertionError = e
   }
 
   return function combination(state = {}, action) {
-    if (sanityError) {
-      throw sanityError
+    if (shapeAssertionError) {
+      throw shapeAssertionError
     }
 
     if (process.env.NODE_ENV !== 'production') {
-      var warningMessage = getUnexpectedStateShapeWarningMessage(state, finalReducers, action, unexpectedKeyCache)
+      const warningMessage = getUnexpectedStateShapeWarningMessage(state, finalReducers, action, unexpectedKeyCache)
       if (warningMessage) {
         warning(warningMessage)
       }
     }
 
-    var hasChanged = false
-    var nextState = {}
-    for (var i = 0; i < finalReducerKeys.length; i++) {
-      var key = finalReducerKeys[i]
-      var reducer = finalReducers[key]
-      var previousStateForKey = state[key]
-      var nextStateForKey = reducer(previousStateForKey, action)
+    let hasChanged = false
+    const nextState = {}
+    for (let i = 0; i < finalReducerKeys.length; i++) {
+      const key = finalReducerKeys[i]
+      const reducer = finalReducers[key]
+      const previousStateForKey = state[key]
+      const nextStateForKey = reducer(previousStateForKey, action)
       if (typeof nextStateForKey === 'undefined') {
-        var errorMessage = getUndefinedStateErrorMessage(key, action)
+        const errorMessage = getUndefinedStateErrorMessage(key, action)
         throw new Error(errorMessage)
       }
       nextState[key] = nextStateForKey

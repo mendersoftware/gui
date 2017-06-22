@@ -83,7 +83,7 @@ var Login = createReactClass({
           <h3>{title}</h3>
           <img src="assets/img/loginlogo.png" alt="mender-logo" />
          
-          <Form hideHelp={true} onSubmit={this._handleLogin} submitLabel={buttonLabel} submitButtonId="login_button">
+          <Form onSubmit={this._handleLogin} submitLabel={buttonLabel} submitButtonId="login_button">
 
               <TextInput
                 hint="Your email"

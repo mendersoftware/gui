@@ -7,6 +7,7 @@ import Deployments from '../components/deployments/deployments';
 import Devices from '../components/devices/devices';
 import Artifacts from '../components/artifacts/artifacts';
 import Login from '../components/user-management/login';
+import Settings from '../components/settings/settings';
 
 import auth from '../auth';
 
@@ -49,6 +50,9 @@ module.exports = (
           <Route path="(:Id)" />
         </Route>
       </Route>
+    </Route>
+    <Route path="/settings" component={Settings} onEnter={requireAuth}>
+      <Route path="(:section)" />
     </Route>
     <Route path="/login" component={Login} onEnter={noRequireAuth} />
   </Route>

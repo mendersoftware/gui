@@ -17,6 +17,12 @@ var TextInput = createReactClass({
   componentWillUnmount: function () {
     this.props.detachFromForm(this); // Detaching if unmounting
   },
+  componentDidMount: function() {
+    if (this.props.value) {
+       this.props.validate(this, this.props.value);
+    }
+   
+  },
   setValue: function (event) {
     this.setState({
       value: event.currentTarget.value

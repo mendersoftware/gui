@@ -9,7 +9,7 @@ browserify will recursively analyze all the `require()` calls in your app in
 order to build a bundle you can serve up to the browser in a single `<script>`
 tag.
 
-[![build status](https://secure.travis-ci.org/substack/node-browserify.png)](https://travis-ci.org/substack/node-browserify)
+[![build status](https://img.shields.io/travis/substack/node-browserify/master.svg)](https://travis-ci.org/substack/node-browserify)
 
 ![browserify!](http://substack.net/images/browserify_logo.png)
 
@@ -163,6 +163,15 @@ Advanced Options:
 
     Turn off package.json browser field resolution. This is also handy if you
     need to run a bundle in node.
+
+  --transform-key
+
+    Instead of the default package.json#browserify#transform field to list
+    all transforms to apply when running browserify, a custom field, like, e.g.
+    package.json#browserify#production or package.json#browserify#staging
+    can be used, by for example running:
+    * `browserify index.js --transform-key=production > bundle.js`
+    * `browserify index.js --transform-key=staging > bundle.js`
 
   --node
 
@@ -451,6 +460,9 @@ When `opts.detectGlobals` is true, scan all files for `process`, `global`,
 `__filename`, and `__dirname`, defining as necessary. With this option npm
 modules are more likely to work but bundling takes longer. Default true.
 
+When `opts.ignoreMissing` is true, ignore `require()` statements that don't
+resolve to anything.
+
 When `opts.debug` is true, add a source map inline to the end of the bundle.
 This makes debugging easier because you can see all the original files if
 you are in a modern enough browser.
@@ -660,7 +672,7 @@ You can call `b.pipeline.get()` with a label name to get a handle on a stream pi
 that you can `push()`, `unshift()`, or `splice()` to insert your own transform
 streams.
 
-# b.reset(opts)
+## b.reset(opts)
 
 Reset the pipeline back to a normal state. This function is called automatically
 when `bundle()` is called multiple times.
