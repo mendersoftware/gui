@@ -35,7 +35,8 @@ var UserForm = createReactClass({
             label="Email"
             id="email"
             value={(this.props.user || {}).email}
-            validations="isLength:1,isEmail" />
+            validations="isLength:1,isEmail"
+            required={!this.props.user} />
 
           <PasswordInput
             className={this.props.editPass ? "edit-pass" : "hidden"}
@@ -44,9 +45,11 @@ var UserForm = createReactClass({
             create={this.props.editPass}
             validations="isLength:1"
             disabled={!this.props.editPass}
-            onClear={this.handleButton} />
+            onClear={this.handleButton}
+            edit={this.props.edit}
+            required={!this.props.user} />
 
-          <FormButton buttonHolder={true} className={this.props.editPass ? "hidden" : "block"} primary={true} id="change" label="Change password" handleClick={this.handleButton} />
+          <FormButton buttonHolder={this.props.edit} className={this.props.editPass ? "hidden" : "block"} primary={true} id="change" label="Change password" handleClick={this.handleButton} />
 
         </Form>
       </div>

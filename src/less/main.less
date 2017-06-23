@@ -869,12 +869,15 @@ form .button-holder {
   background-color: @lightestgrey;
   padding: 10px 20px;
   margin-left: -10px;
+  max-width: 100%;
 }
 
 #password-holder {
   position: relative;
-  width: 100%;
-  > div > div {
+  display: inline-block;
+  max-width: 100%;
+
+  > div > div > div {
     max-width: 100%;
   }
 
@@ -885,9 +888,10 @@ form .button-holder {
   }
   
   .pass-buttons {
-    position: absolute;
-    left: 440px;
-    top: 25px;
+    display: inline-block;
+    position: relative;
+    top: -20px;
+    vertical-align: text-top;
 
     button {
       position: relative !important;

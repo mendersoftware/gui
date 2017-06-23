@@ -53,10 +53,12 @@ var UserManagement =  createReactClass({
     };
     AppActions.getUserList(callback);
   },
-
+  _openCreate: function() {
+    this._openEdit();
+  },
   _openEdit: function (user) {
     AppActions.setSnackbar("");
-    this.setState({user: user, editDialog: true, removeDialog: false});
+    this.setState({user: user, editDialog: true, removeDialog: false, editPass: !user });
   },
 
   _openRemove: function (user) {
@@ -86,6 +88,23 @@ var UserManagement =  createReactClass({
     AppActions.editUser(self.state.user.id, userData, callback);
   },
 
+  _createSubmit: function (userData) {
+    var self = this;
+    var callback = {
+      success: function() {
+        self.dialogDismiss();
+        AppActions.setSnackbar("The user was created successfully.");
+        self._getUserList();
+      },
+      error: function(err) {
+        console.log(err);
+        AppActions.setSnackbar("There was an error creating the user. " +errormsg);
+      }
+    }
+
+    AppActions.createUser(userData, callback);
+  },
+
   _togglePass: function() {
     this.setState({editPass: !this.state.editPass})
   },
@@ -107,7 +126,11 @@ var UserManagement =  createReactClass({
 
     return (
 
-      <div >
+      <div>
+        <div className="float-right">
+          <RaisedButton primary={true} label="Create new user" onClick={this._openCreate} />
+        </div>
+       
         <UserList users={this.state.users || []} editUser={this._openEdit} removeUser={this._openRemove} />
         <Snackbar
           open={this.state.snackbar.open}
@@ -115,19 +138,18 @@ var UserManagement =  createReactClass({
           autoHideDuration={8000} 
         />
 
-
         <Dialog
           ref="edit"
-          title={this.state.user ? "Edit user" : "Create user"}
+          title={this.state.user ? "Edit user" : "Create new user"}
           autoDetectWindowHeight={true}
           autoScrollBodyContent={true}
           bodyStyle={{paddingTop:"0", fontSize:"13px"}}
           open={this.state.editDialog || false}
-          contentStyle={{overflow:"hidden", boxShadow:"0 14px 45px rgba(0, 0, 0, 0.25), 0 10px 18px rgba(0, 0, 0, 0.22)", maxWidth:"700px"}}
+          contentStyle={{overflow:"hidden", boxShadow:"0 14px 45px rgba(0, 0, 0, 0.25), 0 10px 18px rgba(0, 0, 0, 0.22)" }}
           actionsContainerStyle={{marginBottom:"0"}}
           repositionOnUpdate={false}
           >
-          <UserForm editPass={this.state.editPass} togglePass={this._togglePass} closeDialog={this.dialogDismiss} handleSubmit={this._editSubmit} user={this.state.user} buttonLabel={this.state.user ? "Save changes" : "Create user"} />          
+          <UserForm edit={this.state.user ? true : false} editPass={this.state.editPass} togglePass={this._togglePass} closeDialog={this.dialogDismiss} handleSubmit={this.state.user ? this._editSubmit : this._createSubmit} user={this.state.user} buttonLabel={this.state.user ? "Save changes" : "Create user"} />          
         </Dialog>
 
         <Dialog
