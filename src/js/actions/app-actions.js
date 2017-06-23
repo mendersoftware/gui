@@ -230,6 +230,17 @@ var AppActions = {
       })
   },
 
+  removeUser: function(userId, callback) {
+    UsersApi
+      .delete(useradmApiUrl+"/users/"+userId)
+      .then(function(res) {
+        callback.success(res);
+      })
+      .catch(function(err) {
+        callback.error(err);
+      })
+  },
+
   editUser: function(userId, userData, callback) {
     UsersApi
       .put(useradmApiUrl+"/users/"+userId, userData)

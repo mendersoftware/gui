@@ -3,8 +3,6 @@ var createReactClass = require('create-react-class');
 
 var AppStore = require('../../stores/app-store');
 var AppActions = require('../../actions/app-actions');
-
-import cookie from 'react-cookie';
 import Time from 'react-time';
 
 // material ui
@@ -86,6 +84,7 @@ var UserList =  createReactClass({
           </TableCell>
           <TableCell disablePadding>
             <FlatButton label="Edit" onClick={this._handleEdit.bind(this, user)} />
+            {this.props.currentUser.id !== user.id ? <FlatButton label="Remove" onClick={this._handleRemove.bind(this, user)} /> : null }
           </TableCell>
         </TableRow>
       );
