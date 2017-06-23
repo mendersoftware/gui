@@ -105,6 +105,23 @@ var UserManagement =  createReactClass({
     AppActions.createUser(userData, callback);
   },
 
+  _removeSubmit: function () {
+    var self = this;
+    var callback = {
+      success: function() {
+        self.dialogDismiss();
+        AppActions.setSnackbar("The user was removed from the system.");
+        self._getUserList();
+      },
+      error: function(err) {
+        console.log(err);
+        AppActions.setSnackbar("There was an error removing the user. " +errormsg);
+      }
+    }
+
+    AppActions.removeUser(this.state.user.id, callback);
+  },
+
   _togglePass: function() {
     this.setState({editPass: !this.state.editPass})
   },
@@ -131,7 +148,7 @@ var UserManagement =  createReactClass({
           <RaisedButton primary={true} label="Create new user" onClick={this._openCreate} />
         </div>
        
-        <UserList users={this.state.users || []} editUser={this._openEdit} removeUser={this._openRemove} />
+        <UserList users={this.state.users || []} editUser={this._openEdit} removeUser={this._openRemove} currentUser={this.state.currentUser} />
         <Snackbar
           open={this.state.snackbar.open}
           message={this.state.snackbar.message}

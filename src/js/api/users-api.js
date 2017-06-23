@@ -74,6 +74,21 @@ var Api = {
         });
     });
   },
+  delete: function(url) {
+    var token = cookie.load("JWT");
+    return new Promise(function (resolve, reject) {
+      request
+        .del(url)
+        .authBearer(token)
+        .end(function (err, res) {
+          if (err || !res.ok) {
+            reject(err);
+          } else {
+            resolve(res.header);
+          }
+        });
+    });
+  },
 }
 
 module.exports = Api;
