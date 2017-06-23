@@ -50,7 +50,6 @@ var Login = createReactClass({
         AppActions.setSnackbar("");
         // save token as cookie
         cookie.save("JWT", token, {maxAge: 15*60});
-        cookie.save("userEmail", formData.email, {maxAge: 15*60});
 
         // logged in, so redirect
         var location = self.props;

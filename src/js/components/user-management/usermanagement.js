@@ -17,7 +17,8 @@ import RaisedButton from 'material-ui/RaisedButton';
 function getState() {
   return {
     snackbar: AppStore.getSnackbar(),
-    editPass: false
+    editPass: false,
+    currentUser: AppStore.getCurrentUser(),
   };
 }
 
@@ -53,9 +54,9 @@ var UserManagement =  createReactClass({
     AppActions.getUserList(callback);
   },
 
-  _openEdit: function (user, current) {
+  _openEdit: function (user) {
     AppActions.setSnackbar("");
-    this.setState({user: user, editDialog: true, removeDialog: false, currentUser: current});
+    this.setState({user: user, editDialog: true, removeDialog: false});
   },
 
   _openRemove: function (user) {
@@ -68,15 +69,12 @@ var UserManagement =  createReactClass({
   },
   _editSubmit: function (userData) {
     var self = this;
-
     var callback = {
       success: function() {
         self.dialogDismiss();
         AppActions.setSnackbar("The user has been updated.");
         // if current logged in user
-        if (self.state.currentUser) {
-          AppActions.refreshUserCookie(userData.email);
-        }
+        if (self.state.user.id === self.state.currentUser.id) {AppActions.setCurrentUser(userData)};
         self._getUserList();
       },
       error: function(err) {

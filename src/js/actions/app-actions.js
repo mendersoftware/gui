@@ -207,6 +207,18 @@ var AppActions = {
       })
   },
 
+
+  getUser: function(id, callback) {
+    UsersApi
+      .get(useradmApiUrl+"/users/" + id)
+      .then(function(res) {
+        callback.success(res);
+      })
+      .catch(function(err) {
+        callback.error(err);
+      })
+  },
+
   createUser: function(userData, callback) {
     UsersApi
       .post(useradmApiUrl+"/users", userData)
@@ -229,13 +241,12 @@ var AppActions = {
       })
   },
 
-  refreshUserCookie: function(email) {
+  setCurrentUser: function(user) {
     AppDispatcher.handleViewAction({
-      actionType: AppConstants.REFRESH_USER_COOKIE,
-      email: email
-    })
+      actionType: AppConstants.SET_CURRENT_USER,
+      user: user
+    });
   },
-
 
   /* Device Admission */
   getDevicesForAdmission: function (callback, page, per_page) {

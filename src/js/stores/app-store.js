@@ -2,7 +2,6 @@ var AppDispatcher = require('../dispatchers/app-dispatcher');
 var AppConstants = require('../constants/app-constants');
 var assign = require('object-assign');
 var EventEmitter = require('events').EventEmitter;  // from device
-import cookie from 'react-cookie';
 
 var CHANGE_EVENT = "change";
 
@@ -19,6 +18,7 @@ var _snackbar = {
   open: false,
   message: ""
 };
+var _currentUser = {};
 
 
 var _groups = []
@@ -433,11 +433,9 @@ function _setSnackbar(message, duration) {
   _snackbar = {open: show, message: message};
 }
 
-
-function setUserCookie(email) {
-   cookie.save("userEmail", email, {maxAge: 15*60});
+function _setCurrentUser(user) {
+  _currentUser = user;
 }
-
 
 var AppStore = assign(EventEmitter.prototype, {
   emitChange: function() {
@@ -620,6 +618,11 @@ var AppStore = assign(EventEmitter.prototype, {
     return _snackbar
   },
 
+  getCurrentUser: function() {
+    return _currentUser;
+  },
+
+
   dispatcherIndex: AppDispatcher.register(function(payload) {
     var action = payload.action;
     switch(action.actionType) {
@@ -653,6 +656,10 @@ var AppStore = assign(EventEmitter.prototype, {
 
       case AppConstants.SET_SNACKBAR:
         _setSnackbar(payload.action.message, payload.action.duration);
+        break;
+
+      case AppConstants.SET_CURRENT_USER:
+        _setCurrentUser(payload.action.user);
         break;
 
       /* API */
@@ -703,9 +710,6 @@ var AppStore = assign(EventEmitter.prototype, {
         setDeploymentArtifact(payload.action.artifact);
         break;
 
-      case AppConstants.REFRESH_USER_COOKIE:
-        setUserCookie(payload.action.email);
-        break;
     }
     
     AppStore.emitChange();

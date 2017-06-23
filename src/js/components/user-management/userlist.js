@@ -85,7 +85,7 @@ var UserList =  createReactClass({
             <Time value={user.updated_ts} format="YYYY-MM-DD HH:mm" />
           </TableCell>
           <TableCell disablePadding>
-            <FlatButton label="Edit" onClick={this._handleEdit.bind(this, user, user.email === cookie.load("userEmail"))} />
+            <FlatButton label="Edit" onClick={this._handleEdit.bind(this, user)} />
           </TableCell>
         </TableRow>
       );

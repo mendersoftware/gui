@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Router, Route, Link } from 'react-router';
 import cookie from 'react-cookie';
+import { decodeSessionToken } from '../../helpers';
 var AppActions = require('../../actions/app-actions');
 var AppStore = require('../../stores/app-store');
 var createReactClass = require('create-react-class');
@@ -38,8 +39,8 @@ var Header = createReactClass({
   getInitialState: function() {
     return {
       tabIndex: this._updateActive(),
-      userEmail: cookie.load("userEmail"),
-      tabIndex: this._updateActive()
+      sessionId: cookie.load('JWT'),
+      user: AppStore.getCurrentUser()
     };
   },
   componentWillMount: function() {
@@ -53,6 +54,35 @@ var Header = createReactClass({
   },
   _onChange: function() {
     this.setState(this.getInitialState());
+  },
+  componentDidUpdate: function(prevProps, prevState) {
+    this._updateUsername();
+  },
+  componentDidMount: function() {
+    this._updateUsername();
+  },
+  _updateUsername: function() {
+    var self = this;
+    if (self.state.sessionId && !self.state.user.email) {
+      // get current user
+      if (!self.state.gettingUser) {
+        self.setState({gettingUser: true});
+
+        var callback = {
+          success: function(user) {
+            AppActions.setCurrentUser(user);
+            self.setState({user: user, gettingUser: false});
+          },
+          error: function(err) {
+            AppStore.setSnackbar("Can't get user details");
+            self.setState({gettingUser: false});
+          }
+        };
+
+        var userId = decodeSessionToken(self.state.sessionId);
+        AppActions.getUser(userId, callback);
+      }
+    }
   },
   _updateActive: function() {
     return this.context.router.isActive({ pathname: '/' }, true) ? '/' :
@@ -68,12 +98,8 @@ var Header = createReactClass({
     this.props.clearSteps();
     AppActions.setSnackbar("");
   },
-  _logOut: function() {
-    cookie.remove('JWT');
-    cookie.remove('userEmail');
-    this.context.router.push("/login");
-  },
   _handleHeaderMenu: function(event, index, value) {
+    if (value==="/login") { cookie.remove('JWT'); }
     this.context.router.push(value);
   },
   render: function() {
@@ -89,10 +115,10 @@ var Header = createReactClass({
     });
     var dropDownElement = (
 
-      <DropDownMenu anchorOrigin={{vertical: 'center', horizontal: 'middle'}} targetOrigin={{vertical: 'bottom', horizontal: 'middle'}}  style={{marginRight: "0"}} iconStyle={{ fill: 'rgb(0, 0, 0)' }} value={this.state.userEmail} onChange={this._handleHeaderMenu}>
-        <MenuItem primaryText={this.state.userEmail} value={this.state.userEmail} className="hidden" />
+      <DropDownMenu anchorOrigin={{vertical: 'center', horizontal: 'middle'}} targetOrigin={{vertical: 'bottom', horizontal: 'middle'}}  style={{marginRight: "0"}} iconStyle={{ fill: 'rgb(0, 0, 0)' }} value={this.state.user.email} onChange={this._handleHeaderMenu}>
+        <MenuItem primaryText={this.state.user.email} value={this.state.user.email} className="hidden" />
         <MenuItem primaryText="User management" value="/settings/user-management" />
-        <MenuItem primaryText="Log out" onClick={this._logOut} />
+        <MenuItem primaryText="Log out" value="/login" />
       </DropDownMenu>
     );
     return (

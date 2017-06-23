@@ -24,6 +24,7 @@
     "gulp-uglify": "^2.1.2",
     "gulp-util": "^3.0.7",
     "history": "^4.6.2",
+    "jwt-decode": "^2.2.0",
     "lodash.assign": "^4.2.0",
     "lodash.differencewith": "^4.5.0",
     "lodash.isequal": "^4.4.0",
