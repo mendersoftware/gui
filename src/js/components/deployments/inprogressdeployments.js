@@ -1,5 +1,6 @@
 import React from 'react';
 import Time from 'react-time';
+var createReactClass = require('create-react-class');
 var update = require('react-addons-update');
 var ScheduleForm = require('./scheduleform');
 var GroupDevices = require('./groupdevices');
@@ -13,7 +14,7 @@ var Loader = require('../common/loader');
 import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
 import FlatButton from 'material-ui/FlatButton';
 
-var Progress = React.createClass({
+var Progress = createReactClass({
   getInitialState: function() {
     return {
       retry: false,

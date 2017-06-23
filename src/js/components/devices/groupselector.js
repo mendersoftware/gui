@@ -1,12 +1,13 @@
 import React from 'react';
 import { fullyDecodeURI } from '../../helpers';
+var createReactClass = require('create-react-class');
 
 import MenuItem from 'material-ui/MenuItem';
 import SelectField from 'material-ui/SelectField';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 
-var GroupSelector = React.createClass({
+var GroupSelector = createReactClass({
   getInitialState: function() {
     return {
       showInput: false,

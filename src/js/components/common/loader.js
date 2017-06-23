@@ -1,6 +1,7 @@
 import React from 'react';
+var createReactClass = require('create-react-class');
 
-var Loader = React.createClass({
+var Loader = createReactClass({
   render: function () {
     var hideClass = this.props.fade ? "hidden" : "loaderContainer shrunk";
     return (

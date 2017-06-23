@@ -2,6 +2,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 import invariant from 'invariant';
 import React from 'react';
+import createReactClass from 'create-react-class';
 import hoistStatics from 'hoist-non-react-statics';
 import { ContextSubscriber } from './ContextUtils';
 import { routerShape } from './PropTypes';
@@ -13,7 +14,7 @@ function getDisplayName(WrappedComponent) {
 export default function withRouter(WrappedComponent, options) {
   var withRef = options && options.withRef;
 
-  var WithRouter = React.createClass({
+  var WithRouter = createReactClass({
     displayName: 'WithRouter',
 
     mixins: [ContextSubscriber('router')],

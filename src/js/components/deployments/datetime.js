@@ -1,10 +1,11 @@
 import React from 'react';
+var createReactClass = require('create-react-class');
 
 // material ui
 import DatePicker from 'material-ui/DatePicker';
 import TimePicker from 'material-ui/TimePicker';
 
-var DateTime = React.createClass({
+var DateTime = createReactClass({
   _update: function(e, date) {
     this.props.changed(this.props.my_ref, date);
   },

@@ -1,10 +1,11 @@
 import validator from 'validator';
 import React from 'react';
+var createReactClass = require('create-react-class');
 
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 
-var Form = React.createClass({
+var Form = createReactClass({
   getInitialState: function() {
     return {
       isSubmitting: false,
@@ -19,10 +20,6 @@ var Form = React.createClass({
   },
   componentDidUpdate: function(prevProps, prevState) {
     this.registerInputs();
-    if (this.props.hideHelp !== prevProps.hideHelp) {
-      // check only for password help - workaround for child not updating
-      this.forceUpdate();
-    }
   },
   registerInputs: function() {
     this.newChildren = React.Children.map(this.props.children, function(child) {
@@ -54,9 +51,12 @@ var Form = React.createClass({
         errorText = "You must choose a file to upload";
       }
     } else if (component.props.id === "password") {
-      if (!value) {
+      if (component.props.required && !value) {
         isValid = false;
         errorText = "Password is required";
+      } else if (value && value.length < 2) {
+        isValid = false;
+        errorText = "Password too weak";
       }
     } else {
 
@@ -179,7 +179,7 @@ var Form = React.createClass({
   render: function () {
 
     var uploadActions = (
-      <div className="float-right" style={{marginTop:"15px"}}>
+      <div className="float-right" style={this.props.dialog ? {margin:"24px -16px -16px 0"} : {marginTop: "16px"}}>
         <div className={this.props.handleCancel ? null : "hidden"} key="cancelcontain" style={{marginRight:"10px", display:"inline-block"}}>
           <FlatButton
             key="cancel"

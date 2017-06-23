@@ -2,6 +2,7 @@ import React from 'react';
 import { Router, Link } from 'react-router';
 import Time from 'react-time';
 import Collapse from 'react-collapse';
+var createReactClass = require('create-react-class');
 
 var AppStore = require('../../stores/app-store');
 var AppActions = require('../../actions/app-actions');
@@ -31,7 +32,7 @@ function getGroups() {
   return copy
 }
 
-var SelectedDevices = React.createClass({
+var SelectedDevices = createReactClass({
   getInitialState: function() {
     return {
       showInput: false,

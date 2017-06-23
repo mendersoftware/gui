@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 var AppStore = require('../../stores/app-store');
 var AppActions = require('../../actions/app-actions');
 var update = require('react-addons-update');
@@ -13,6 +14,7 @@ var _en_US = require('rc-pagination/lib/locale/en_US');
 var Loader = require('../common/loader');
 var pluralize = require('pluralize');
 require('../common/prototype/Array.prototype.equals');
+var createReactClass = require('create-react-class');
 
 import Snackbar from 'material-ui/Snackbar';
 import Dialog from 'material-ui/Dialog';
@@ -37,7 +39,7 @@ function getState() {
   }
 }
 
-var Devices = React.createClass({
+var Devices = createReactClass({
   getInitialState: function() {
     return getState();
   },
@@ -649,7 +651,7 @@ var Devices = React.createClass({
 });
 
 Devices.contextTypes = {
-  router: React.PropTypes.object
+  router: PropTypes.object
 };
 
 module.exports = Devices;

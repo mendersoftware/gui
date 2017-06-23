@@ -1,6 +1,8 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Time from 'react-time';
 import { Router, Route, Link } from 'react-router';
+var createReactClass = require('create-react-class');
 
 // material ui
 var mui = require('material-ui');
@@ -15,7 +17,7 @@ var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
 ];
 
 
-var Schedule = React.createClass({
+var Schedule = createReactClass({
   _clickHandle: function() {
     this.props.clickHandle(this.props.route);
   },
@@ -65,7 +67,7 @@ var Schedule = React.createClass({
 });
 
 Schedule.contextTypes = {
-  router: React.PropTypes.func
+  router: PropTypes.func
 };
 
 module.exports = Schedule;

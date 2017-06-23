@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router';
 import Time from 'react-time';
 import CopyToClipboard from 'react-copy-to-clipboard';
+var createReactClass = require('create-react-class');
 var AppActions = require('../../actions/app-actions');
 var AppStore = require('../../stores/app-store');
 var DeploymentStatus = require('./deploymentstatus');
@@ -22,7 +23,7 @@ import Checkbox from 'material-ui/Checkbox';
 import Dialog from 'material-ui/Dialog';
 import FontIcon from 'material-ui/FontIcon';
 
-var DeploymentReport = React.createClass({
+var DeploymentReport = createReactClass({
   getInitialState: function() {
     return {
       stats: {

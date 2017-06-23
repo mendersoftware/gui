@@ -4,6 +4,8 @@ function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in ob
 
 import invariant from 'invariant';
 import React from 'react';
+import createReactClass from 'create-react-class';
+import { func, object } from 'prop-types';
 
 import _createTransitionManager from './createTransitionManager';
 import { routes } from './InternalPropTypes';
@@ -12,32 +14,28 @@ import { createRoutes } from './RouteUtils';
 import { createRouterObject as _createRouterObject, assignRouterState } from './RouterUtils';
 import warning from './routerWarning';
 
-var _React$PropTypes = React.PropTypes,
-    func = _React$PropTypes.func,
-    object = _React$PropTypes.object;
+var propTypes = {
+  history: object,
+  children: routes,
+  routes: routes, // alias for children
+  render: func,
+  createElement: func,
+  onError: func,
+  onUpdate: func,
+
+  // PRIVATE: For client-side rehydration of server match.
+  matchContext: object
+};
 
 /**
  * A <Router> is a high-level API for automatically setting up
  * a router that renders a <RouterContext> with all the props
  * it needs each time the URL changes.
  */
-
-var Router = React.createClass({
+var Router = createReactClass({
   displayName: 'Router',
 
-
-  propTypes: {
-    history: object,
-    children: routes,
-    routes: routes, // alias for children
-    render: func,
-    createElement: func,
-    onError: func,
-    onUpdate: func,
-
-    // PRIVATE: For client-side rehydration of server match.
-    matchContext: object
-  },
+  propTypes: propTypes,
 
   getDefaultProps: function getDefaultProps() {
     return {
@@ -134,7 +132,7 @@ var Router = React.createClass({
 
     // Only forward non-Router-specific props to routing context, as those are
     // the only ones that might be custom routing context props.
-    Object.keys(Router.propTypes).forEach(function (propType) {
+    Object.keys(propTypes).forEach(function (propType) {
       return delete props[propType];
     });
 

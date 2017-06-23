@@ -1,10 +1,12 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Header from './header/header';
 import Joyride from 'react-joyride';
 
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import RawTheme from '../themes/mender-theme.js';
 
+var createReactClass = require('create-react-class');
 var isDemoMode = false;
 
 function getState() {
@@ -14,10 +16,10 @@ function getState() {
   }
 }
 
-var App = React.createClass({
+var App =createReactClass({
   childContextTypes: {
-    location: React.PropTypes.object,
-    muiTheme: React.PropTypes.object
+    location: PropTypes.object,
+    muiTheme: PropTypes.object
   },
   getChildContext() { 
     var theme = getMuiTheme(RawTheme);

@@ -182,9 +182,23 @@ var AppActions = {
   },
 
 
+
+/* user management */
+
   loginUser: function(callback, userData) {
     UsersApi
-      .post(useradmApiUrl+"/auth/login", userData)
+      .postLogin(useradmApiUrl+"/auth/login", userData)
+      .then(function(res) {
+        callback.success(res);
+      })
+      .catch(function(err) {
+        callback.error(err);
+      })
+  },
+
+  getUserList: function(callback) {
+    UsersApi
+      .get(useradmApiUrl+"/users")
       .then(function(res) {
         callback.success(res);
       })
@@ -194,6 +208,45 @@ var AppActions = {
   },
 
 
+  getUser: function(id, callback) {
+    UsersApi
+      .get(useradmApiUrl+"/users/" + id)
+      .then(function(res) {
+        callback.success(res);
+      })
+      .catch(function(err) {
+        callback.error(err);
+      })
+  },
+
+  createUser: function(userData, callback) {
+    UsersApi
+      .post(useradmApiUrl+"/users", userData)
+      .then(function(res) {
+        callback.success(res);
+      })
+      .catch(function(err) {
+        callback.error(err);
+      })
+  },
+
+  editUser: function(userId, userData, callback) {
+    UsersApi
+      .put(useradmApiUrl+"/users/"+userId, userData)
+      .then(function(res) {
+        callback.success(res);
+      })
+      .catch(function(err) {
+        callback.error(err);
+      })
+  },
+
+  setCurrentUser: function(user) {
+    AppDispatcher.handleViewAction({
+      actionType: AppConstants.SET_CURRENT_USER,
+      user: user
+    });
+  },
 
   /* Device Admission */
   getDevicesForAdmission: function (callback, page, per_page) {

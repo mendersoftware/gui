@@ -1,6 +1,9 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Router, Route, Link } from 'react-router';
 import Time from 'react-time';
+var createReactClass = require('create-react-class');
+
 import FontIcon from 'material-ui/FontIcon';
 
 var tooltip = {
@@ -12,7 +15,7 @@ var tooltip = {
   trigger: '.activity-log'
 };
 
-var Activity = React.createClass({
+var Activity = createReactClass({
   componentDidMount: function() {
     this.props.addTooltip(tooltip);
   },
@@ -60,7 +63,7 @@ var Activity = React.createClass({
 });
 
 Activity.contextTypes = {
-  router: React.PropTypes.object
+  router: PropTypes.object
 };
 
 module.exports = Activity;

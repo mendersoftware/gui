@@ -1,4 +1,5 @@
 import React from 'react';
+var createReactClass = require('create-react-class');
 var Schedule = require('./schedule');
 var Progress = require('./progress');
 var Recent = require('./recent');
@@ -8,7 +9,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 import Dialog from 'material-ui/Dialog';
 
-var Deployments = React.createClass({
+var Deployments = createReactClass({
   _clickHandle: function(params) {
     this.props.clickHandle(params);
   },

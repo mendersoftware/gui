@@ -4,8 +4,6 @@ exports.__esModule = true;
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
 exports.default = matchRoutes;
 
 var _AsyncUtils = require('./AsyncUtils');
@@ -154,38 +152,32 @@ function matchRouteDeep(route, location, remainingPathname, paramNames, paramVal
     // By assumption, pattern is non-empty here, which is the prerequisite for
     // actually terminating a match.
     if (remainingPathname === '') {
-      var _ret = function () {
-        var match = {
-          routes: [route],
-          params: createParams(paramNames, paramValues)
-        };
+      var match = {
+        routes: [route],
+        params: createParams(paramNames, paramValues)
+      };
 
-        getIndexRoute(route, location, paramNames, paramValues, function (error, indexRoute) {
-          if (error) {
-            callback(error);
-          } else {
-            if (Array.isArray(indexRoute)) {
-              var _match$routes;
+      getIndexRoute(route, location, paramNames, paramValues, function (error, indexRoute) {
+        if (error) {
+          callback(error);
+        } else {
+          if (Array.isArray(indexRoute)) {
+            var _match$routes;
 
-              process.env.NODE_ENV !== 'production' ? (0, _routerWarning2.default)(indexRoute.every(function (route) {
-                return !route.path;
-              }), 'Index routes should not have paths') : void 0;
-              (_match$routes = match.routes).push.apply(_match$routes, indexRoute);
-            } else if (indexRoute) {
-              process.env.NODE_ENV !== 'production' ? (0, _routerWarning2.default)(!indexRoute.path, 'Index routes should not have paths') : void 0;
-              match.routes.push(indexRoute);
-            }
-
-            callback(null, match);
+            process.env.NODE_ENV !== 'production' ? (0, _routerWarning2.default)(indexRoute.every(function (route) {
+              return !route.path;
+            }), 'Index routes should not have paths') : void 0;
+            (_match$routes = match.routes).push.apply(_match$routes, indexRoute);
+          } else if (indexRoute) {
+            process.env.NODE_ENV !== 'production' ? (0, _routerWarning2.default)(!indexRoute.path, 'Index routes should not have paths') : void 0;
+            match.routes.push(indexRoute);
           }
-        });
 
-        return {
-          v: void 0
-        };
-      }();
+          callback(null, match);
+        }
+      });
 
-      if ((typeof _ret === 'undefined' ? 'undefined' : _typeof(_ret)) === "object") return _ret.v;
+      return;
     }
   }
 

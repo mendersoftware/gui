@@ -12,6 +12,12 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
+var _createReactClass = require('create-react-class');
+
+var _createReactClass2 = _interopRequireDefault(_createReactClass);
+
+var _propTypes = require('prop-types');
+
 var _createTransitionManager2 = require('./createTransitionManager');
 
 var _createTransitionManager3 = _interopRequireDefault(_createTransitionManager2);
@@ -34,32 +40,28 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
 
-var _React$PropTypes = _react2.default.PropTypes,
-    func = _React$PropTypes.func,
-    object = _React$PropTypes.object;
+var propTypes = {
+  history: _propTypes.object,
+  children: _InternalPropTypes.routes,
+  routes: _InternalPropTypes.routes, // alias for children
+  render: _propTypes.func,
+  createElement: _propTypes.func,
+  onError: _propTypes.func,
+  onUpdate: _propTypes.func,
+
+  // PRIVATE: For client-side rehydration of server match.
+  matchContext: _propTypes.object
+};
 
 /**
  * A <Router> is a high-level API for automatically setting up
  * a router that renders a <RouterContext> with all the props
  * it needs each time the URL changes.
  */
-
-var Router = _react2.default.createClass({
+var Router = (0, _createReactClass2.default)({
   displayName: 'Router',
 
-
-  propTypes: {
-    history: object,
-    children: _InternalPropTypes.routes,
-    routes: _InternalPropTypes.routes, // alias for children
-    render: func,
-    createElement: func,
-    onError: func,
-    onUpdate: func,
-
-    // PRIVATE: For client-side rehydration of server match.
-    matchContext: object
-  },
+  propTypes: propTypes,
 
   getDefaultProps: function getDefaultProps() {
     return {
@@ -156,7 +158,7 @@ var Router = _react2.default.createClass({
 
     // Only forward non-Router-specific props to routing context, as those are
     // the only ones that might be custom routing context props.
-    Object.keys(Router.propTypes).forEach(function (propType) {
+    Object.keys(propTypes).forEach(function (propType) {
       return delete props[propType];
     });
 

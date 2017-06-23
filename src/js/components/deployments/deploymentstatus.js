@@ -1,10 +1,11 @@
 import React from 'react';
+var createReactClass = require('create-react-class');
 // material ui
 import FlatButton from 'material-ui/FlatButton';
 
 var AppActions = require('../../actions/app-actions');
 
-var DeploymentStatus = React.createClass({
+var DeploymentStatus = createReactClass({
   getInitialState: function() {
     return {
       stats: {

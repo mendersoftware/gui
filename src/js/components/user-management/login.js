@@ -1,9 +1,11 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Router, Route} from 'react-router';
 import cookie from 'react-cookie';
 
 var AppActions = require('../../actions/app-actions');
 var AppStore = require('../../stores/app-store');
+var createReactClass = require('create-react-class');
 
 import Form from '../common/forms/form';
 import TextInput from '../common/forms/textinput';
@@ -17,7 +19,7 @@ function getState() {
   };
 }
 
-var Login = React.createClass({
+var Login = createReactClass({
   getInitialState: function() {
     return getState();
   },
@@ -41,12 +43,13 @@ var Login = React.createClass({
 
   _handleLogin: function(formData) {
     var self = this;
+
     AppActions.loginUser({
       success: function(token) {
 
         AppActions.setSnackbar("");
         // save token as cookie
-        cookie.save("JWT", token);
+        cookie.save("JWT", token, {maxAge: 15*60});
 
         // logged in, so redirect
         var location = self.props;
@@ -79,7 +82,7 @@ var Login = React.createClass({
           <h3>{title}</h3>
           <img src="assets/img/loginlogo.png" alt="mender-logo" />
          
-          <Form hideHelp={true} onSubmit={this._handleLogin} submitLabel={buttonLabel} submitButtonId="login_button">
+          <Form onSubmit={this._handleLogin} submitLabel={buttonLabel} submitButtonId="login_button">
 
               <TextInput
                 hint="Your email"
@@ -108,7 +111,7 @@ var Login = React.createClass({
 
 
 Login.contextTypes = {
-  router: React.PropTypes.object
+  router: PropTypes.object
 };
 
 module.exports = Login;

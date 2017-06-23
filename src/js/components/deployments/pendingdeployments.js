@@ -1,5 +1,6 @@
 import React from 'react';
 import Time from 'react-time';
+var createReactClass = require('create-react-class');
 var GroupDevices = require('./groupdevices');
 import BlockIcon from 'react-material-icons/icons/content/block';
 var ConfirmAbort = require('./confirmabort');
@@ -11,7 +12,7 @@ var _en_US = require('rc-pagination/lib/locale/en_US');
 import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
 import FlatButton from 'material-ui/FlatButton';
 
-var Pending = React.createClass({
+var Pending = createReactClass({
   getInitialState: function() {
     return {
       abort: null,

@@ -1,7 +1,8 @@
 import React from 'react';
+var createReactClass = require('create-react-class');
 import TextField from 'material-ui/TextField';
 
-var TextInput = React.createClass({
+var TextInput = createReactClass({
   getInitialState: function () {
     return {
       value: this.props.value || '',
@@ -15,6 +16,12 @@ var TextInput = React.createClass({
   },
   componentWillUnmount: function () {
     this.props.detachFromForm(this); // Detaching if unmounting
+  },
+  componentDidMount: function() {
+    if (this.props.value) {
+       this.props.validate(this, this.props.value);
+    }
+   
   },
   setValue: function (event) {
     this.setState({

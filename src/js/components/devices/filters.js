@@ -1,4 +1,5 @@
 import React from 'react';
+var createReactClass = require('create-react-class');
 
 // material ui
 import SelectField from 'material-ui/SelectField';
@@ -9,7 +10,7 @@ import Drawer from 'material-ui/Drawer';
 import FontIcon from 'material-ui/FontIcon';
 import IconButton from 'material-ui/IconButton';
 
-var Filters = React.createClass({
+var Filters = createReactClass({
   getInitialState: function() {
     return {
       showFilters: false

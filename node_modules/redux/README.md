@@ -15,8 +15,9 @@ It is tiny (2kB, including dependencies).
 [![#rackt on freenode](https://img.shields.io/badge/irc-%23rackt%20%40%20freenode-61DAFB.svg?style=flat-square)](https://webchat.freenode.net/)
 [![Changelog #187](https://img.shields.io/badge/changelog-%23187-lightgrey.svg?style=flat-square)](https://changelog.com/187)
 
->**New! Learn Redux from its creator:  
->[Getting Started with Redux](https://egghead.io/series/getting-started-with-redux) (30 free videos)**
+>**Learn Redux from its creator:**  
+>**[Part 1: Getting Started with Redux](https://egghead.io/series/getting-started-with-redux) (30 free videos)**<br>
+>**[Part 2: Building React Applications with Idiomatic Redux](https://egghead.io/courses/building-react-applications-with-idiomatic-redux) (27 free videos)**
 
 ### Testimonials
 
@@ -28,6 +29,11 @@ It is tiny (2kB, including dependencies).
 
 >[“It's cool that you are inventing a better Flux by not doing Flux at all.”](https://twitter.com/andrestaltz/status/616271392930201604)  
 >André Staltz, creator of Cycle
+
+### Before Proceeding Further
+
+>**Also read:**  
+>**[You Might Not Need Redux](https://medium.com/@dan_abramov/you-might-not-need-redux-be46360cf367)**
 
 ### Developer Experience
 
@@ -47,9 +53,10 @@ npm install --save redux
 ```
 
 This assumes you are using [npm](https://www.npmjs.com/) as your package manager.  
-If you don't, you can [access these files on unpkg](https://unpkg.com/redux/), download them, or point your package manager to them.
 
-Most commonly people consume Redux as a collection of [CommonJS](http://webpack.github.io/docs/commonjs.html) modules. These modules are what you get when you import `redux` in a [Webpack](http://webpack.github.io), [Browserify](http://browserify.org/), or a Node environment. If you like to live on the edge and use [Rollup](http://rollupjs.org), we support that as well.
+If you're not, you can [access these files on unpkg](https://unpkg.com/redux/), download them, or point your package manager to them.
+
+Most commonly people consume Redux as a collection of [CommonJS](http://webpack.github.io/docs/commonjs.html) modules. These modules are what you get when you import `redux` in a [Webpack](https://webpack.js.org/), [Browserify](http://browserify.org/), or a Node environment. If you like to live on the edge and use [Rollup](http://rollupjs.org), we support that as well.
 
 If you don't use a module bundler, it's also fine. The `redux` npm package includes precompiled production and development [UMD](https://github.com/umdjs/umd) builds in the [`dist` folder](https://unpkg.com/redux/dist/). They can be used directly without a bundler and are thus compatible with many popular JavaScript module loaders and environments. For example, you can drop a UMD build as a [`<script>` tag](https://unpkg.com/redux/dist/redux.js) on the page, or [tell Bower to install it](https://github.com/reactjs/redux/pull/1181#issuecomment-167361975). The UMD builds make Redux available as a `window.Redux` global variable.
 
@@ -64,7 +71,7 @@ npm install --save react-redux
 npm install --save-dev redux-devtools
 ```
 
-Note that unlike Redux itself, many packages in the Redux ecosystem don't provide UMD builds, so we recommend using CommonJS module bundlers like [Webpack](http://webpack.github.io) and [Browserify](http://browserify.org/) for the most comfortable development experience.
+Note that unlike Redux itself, many packages in the Redux ecosystem don't provide UMD builds, so we recommend using CommonJS module bundlers like [Webpack](https://webpack.js.org/) and [Browserify](http://browserify.org/) for the most comfortable development experience.
 
 ### The Gist
 
@@ -124,7 +131,7 @@ store.dispatch({ type: 'DECREMENT' })
 
 Instead of mutating the state directly, you specify the mutations you want to happen with plain objects called *actions*. Then you write a special function called a *reducer* to decide how every action transforms the entire application's state.
 
-If you're coming from Flux, there is a single important difference you need to understand. Redux doesn't have a Dispatcher or support many stores. Instead, there is just a single store with a single root reducing function. As your app grows, instead of adding stores, you split the root reducer into smaller reducers independently operating on the different parts of the state tree. This is exactly like there is just one root component in a React app, but it is composed out of many small components.
+If you're coming from Flux, there is a single important difference you need to understand. Redux doesn't have a Dispatcher or support many stores. Instead, there is just a single store with a single root reducing function. As your app grows, instead of adding stores, you split the root reducer into smaller reducers independently operating on the different parts of the state tree. This is exactly like how there is just one root component in a React app, but it is composed out of many small components.
 
 This architecture might seem like an overkill for a counter app, but the beauty of this pattern is how well it scales to large and complex apps. It also enables very powerful developer tools, because it is possible to trace every mutation to the action that caused it. You can record user sessions and reproduce them just by replaying every action.
 
@@ -159,11 +166,14 @@ If you enjoyed my course, consider supporting Egghead by [buying a subscription]
 * [Basics](http://redux.js.org/docs/basics/index.html)
 * [Advanced](http://redux.js.org/docs/advanced/index.html)
 * [Recipes](http://redux.js.org/docs/recipes/index.html)
+* [FAQ](http://redux.js.org/docs/FAQ.html)
 * [Troubleshooting](http://redux.js.org/docs/Troubleshooting.html)
 * [Glossary](http://redux.js.org/docs/Glossary.html)
 * [API Reference](http://redux.js.org/docs/api/index.html)
 
 For PDF, ePub, and MOBI exports for offline reading, and instructions on how to create them, please see: [paulkogel/redux-offline-docs](https://github.com/paulkogel/redux-offline-docs).
+
+For Offline docs, please see: [devdocs](http://devdocs.io/redux/)
 
 ### Examples
 
@@ -189,7 +199,7 @@ Join the [#redux](https://discord.gg/0ZcbPKXt5bZ6au5t) channel of the [Reactiflu
 * [The Elm Architecture](https://github.com/evancz/elm-architecture-tutorial) for a great intro to modeling state updates with reducers;
 * [Turning the database inside-out](http://www.confluent.io/blog/turning-the-database-inside-out-with-apache-samza/) for blowing my mind;
 * [Developing ClojureScript with Figwheel](https://www.youtube.com/watch?v=j-kj2qwJa_E) for convincing me that re-evaluation should “just work”;
-* [Webpack](https://github.com/webpack/docs/wiki/hot-module-replacement-with-webpack) for Hot Module Replacement;
+* [Webpack](https://webpack.js.org/concepts/hot-module-replacement/) for Hot Module Replacement;
 * [Flummox](https://github.com/acdlite/flummox) for teaching me to approach Flux without boilerplate or singletons;
 * [disto](https://github.com/threepointone/disto) for a proof of concept of hot reloadable Stores;
 * [NuclearJS](https://github.com/optimizely/nuclear-js) for proving this architecture can be performant;
@@ -216,7 +226,7 @@ Meet some of the outstanding companies that made it possible:
 * [Webflow](https://github.com/webflow)
 * [Ximedes](https://www.ximedes.com/)
 
-[See the full list of Redux patrons.](PATRONS.md)
+[See the full list of Redux patrons.](PATRONS.md), as well as the always-growing list of [people and companies that use Redux](https://github.com/reactjs/redux/issues/310).
 
 ### License
 

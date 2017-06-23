@@ -5,6 +5,17 @@ Changelog
 
 # 1.x release
 
+(Note: `1.x` will only have backported bugfix releases beyond `1.7.0`)
+
+## v1.7.1
+
+- Fix: close local test server properly under Node 8.
+
+## v1.7.0
+
+- Fix: revert change in `v1.6.2` where 204 no-content response is handled with a special case, this conflicts with browser Fetch implementation (as browsers always throw when res.json() parses an empty string). Since this is an operational error, it's wrapped in a `FetchError` for easier error handling.
+- Fix: move code coverage tool to codecov platform and update travis config
+
 ## v1.6.3
 
 - Enhance: error handling document to explain `FetchError` design

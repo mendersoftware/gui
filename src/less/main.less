@@ -223,7 +223,7 @@ a, span.link {
   position: relative;
   border-top: 1px solid #e0e0e0;
   padding-right: 30%;
-  background-color: #f7f7f7;
+  background-color: @lightestgrey;
   border-bottom: 1px solid #e0e0e0;
 }
 
@@ -858,27 +858,52 @@ textarea#inline-description {
     max-width: 100%;
   }
 
-  #password-holder button {
-    position: absolute !important;
-    top: -4px;
-    right: 0;
-  }
-
-  #pass-strength {
-    margin-top: 10px;
-    meter {
-      margin-left: 8px;
-      margin-right: 8px;
-    }
-    svg {
-      vertical-align: middle;
-    }
-  }
-
   .help-text, .help-text p {
     color: rgba(66,66,66,0.6);
     text-align: left;
     font-size: 12px;
+  }
+}
+
+form .button-holder {
+  background-color: @lightestgrey;
+  padding: 10px 20px;
+  margin-left: -10px;
+}
+
+#password-holder {
+  position: relative;
+  width: 100%;
+  > div > div {
+    max-width: 100%;
+  }
+
+  &.edit-pass {
+    background-color: @lightestgrey;
+    padding: 0 20px 10px;
+    margin-left: -10px;
+  }
+  
+  .pass-buttons {
+    position: absolute;
+    left: 440px;
+    top: 25px;
+
+    button {
+      position: relative !important;
+      display: inline;
+    }
+  }
+}
+
+#pass-strength {
+  margin-top: 10px;
+  meter {
+    margin-left: 8px;
+    margin-right: 8px;
+  }
+  svg {
+    vertical-align: middle;
   }
 }
 

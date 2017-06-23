@@ -1,5 +1,6 @@
 import React from 'react';
 import Time from 'react-time';
+var createReactClass = require('create-react-class');
 
 // material ui
 var mui = require('material-ui');
@@ -12,7 +13,7 @@ var TableRowColumn = mui.TableRowColumn;
 var FlatButton = mui.FlatButton;
 
 
-var Schedule = React.createClass({
+var Schedule = createReactClass({
   _handleEdit: function (deployment) {
     this.props.edit(deployment);
   },

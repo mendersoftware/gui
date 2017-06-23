@@ -5,11 +5,12 @@ import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
 import SearchInput from 'react-search-input';
+var createReactClass = require('create-react-class');
 var AppActions = require('../../actions/app-actions');
 var AppStore = require('../../stores/app-store');
 var Loader = require('../common/loader');
 
-var DevicePicker = React.createClass({
+var DevicePicker = createReactClass({
 
   getInitialState: function() {
     return {

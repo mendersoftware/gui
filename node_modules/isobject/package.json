@@ -38,7 +38,8 @@
     "type": "range"
   },
   "_requiredBy": [
-    "/fill-range"
+    "/fill-range",
+    "/object.pick"
   ],
   "_resolved": "https://registry.npmjs.org/isobject/-/isobject-2.1.0.tgz",
   "_shasum": "f065561096a3f1da2ef46272f815c840d87e0c89",

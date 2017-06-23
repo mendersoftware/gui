@@ -18,6 +18,7 @@ var _snackbar = {
   open: false,
   message: ""
 };
+var _currentUser = {};
 
 
 var _groups = []
@@ -227,16 +228,6 @@ function _getProgressStatus(id) {
   return progress;
 }
 
-function _getScheduledDeployments(time) {
-  var schedule = [];
-  for (var i=0;i<_allDeployments.length;i++) {
-    if (_allDeployments[i].start_time>time) {
-      schedule.push(_allDeployments[i]);
-    }
-  }
-  schedule.sort(startTimeSortAscend);
-  return schedule;
-}
 
 function _sortDeploymentDevices(devices) {
   var newList = {
@@ -442,6 +433,9 @@ function _setSnackbar(message, duration) {
   _snackbar = {open: show, message: message};
 }
 
+function _setCurrentUser(user) {
+  _currentUser = user;
+}
 
 var AppStore = assign(EventEmitter.prototype, {
   emitChange: function() {
@@ -583,13 +577,6 @@ var AppStore = assign(EventEmitter.prototype, {
     return _getProgressStatus(id);
   },
 
-  getScheduledDeployments: function(date) {
-    /*
-    * Return list of deployments scheduled after date
-    */
-    return _getScheduledDeployments(date)
-  }, 
-
   getEventLog: function() {
     /*
     * Return list of event objects from log
@@ -631,6 +618,11 @@ var AppStore = assign(EventEmitter.prototype, {
     return _snackbar
   },
 
+  getCurrentUser: function() {
+    return _currentUser;
+  },
+
+
   dispatcherIndex: AppDispatcher.register(function(payload) {
     var action = payload.action;
     switch(action.actionType) {
@@ -664,6 +656,10 @@ var AppStore = assign(EventEmitter.prototype, {
 
       case AppConstants.SET_SNACKBAR:
         _setSnackbar(payload.action.message, payload.action.duration);
+        break;
+
+      case AppConstants.SET_CURRENT_USER:
+        _setCurrentUser(payload.action.user);
         break;
 
       /* API */
@@ -713,6 +709,7 @@ var AppStore = assign(EventEmitter.prototype, {
       case AppConstants.SET_DEPLOYMENT_ARTIFACT:
         setDeploymentArtifact(payload.action.artifact);
         break;
+
     }
     
     AppStore.emitChange();

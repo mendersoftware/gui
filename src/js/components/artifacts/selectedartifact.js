@@ -1,6 +1,8 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Time from 'react-time';
 import { Router, Link } from 'react-router';
+var createReactClass = require('create-react-class');
 
 // material ui
 import { List, ListItem }  from 'material-ui/List';
@@ -10,7 +12,7 @@ import FlatButton from 'material-ui/FlatButton';
 import IconButton from 'material-ui/IconButton';
 import TextField from 'material-ui/TextField';
 
-var SelectedArtifact = React.createClass({
+var SelectedArtifact = createReactClass({
   getInitialState: function() {
     return {
       descEdit: false
@@ -154,7 +156,7 @@ var SelectedArtifact = React.createClass({
 });
 
 SelectedArtifact.contextTypes = {
-  router: React.PropTypes.object,
+  router: PropTypes.object,
 };
 
 module.exports = SelectedArtifact;

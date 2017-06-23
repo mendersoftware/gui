@@ -1,11 +1,12 @@
 import React from 'react';
+var createReactClass = require('create-react-class');
 
 // material ui
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 
 
-var ScheduleButton = React.createClass({
+var ScheduleButton = createReactClass({
   _handleClick: function() {
     var artifact = null;
     if (this.props.artifact) {
