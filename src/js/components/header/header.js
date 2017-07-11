@@ -33,8 +33,6 @@ var styles = {
   }
 };
 
-var tab = 0;
-
 var Header = createReactClass({
   getInitialState: function() {
     return {

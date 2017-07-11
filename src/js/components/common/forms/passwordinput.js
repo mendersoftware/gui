@@ -7,16 +7,21 @@ var generator = require('generate-password');
 var createReactClass = require('create-react-class');
 import FlatButton from 'material-ui/FlatButton';
 
-var PasswordInput = createReactClass({
-  getInitialState: function () {
-    return {
-      value: this.props.value || '',
+function getState() {
+  return {
+      value: '',
       errorText: null,
       isValid: true,
+      score: '',
       feedback: [],
       visible: false,
       copied: false
     };
+}
+
+var PasswordInput = createReactClass({
+  getInitialState: function () {
+    return getState();
   },
 
   componentWillMount: function () {
@@ -24,6 +29,12 @@ var PasswordInput = createReactClass({
   },
   componentWillUnmount: function () {
     this.props.detachFromForm(this); // Detaching if unmounting
+  },
+  componentDidUpdate: function(prevProps, prevState) {
+    if (prevProps.className!==this.props.className) {
+      // resets state when "cancel" pressed
+      this.setState(getState());
+    }
   },
   setValue: function (event) {
 
@@ -78,7 +89,7 @@ var PasswordInput = createReactClass({
 
     return (
       <div id={this.props.id+"-holder"} className={className}>
-        <div>
+        <div style={{position: "relative"}}>
           <PasswordField
             id={this.props.id}
             name={this.props.id}

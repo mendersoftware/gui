@@ -93,7 +93,7 @@ var UserList =  createReactClass({
     return (
 
       <div className="margin-top-small">
-        <div style={{marginLeft: "26px"}}>
+        <div style={{marginLeft: "20px"}}>
           <h2 style={{marginTop: "15px"}}>Users</h2>
         </div>
         <div className="margin-bottom">
