@@ -179,7 +179,7 @@ var Form = createReactClass({
   render: function () {
 
     var uploadActions = (
-      <div className="float-right" style={this.props.dialog ? {margin:"24px -16px -16px 0"} : {marginTop: "16px"}}>
+      <div className={this.props.showButtons ? "float-right" : "hidden"} style={this.props.dialog ? {margin:"24px -16px -16px 0"} : {marginTop: "32px"}}>
         <div className={this.props.handleCancel ? null : "hidden"} key="cancelcontain" style={{marginRight:"10px", display:"inline-block"}}>
           <FlatButton
             key="cancel"
@@ -195,8 +195,9 @@ var Form = createReactClass({
           disabled={!this.state.isValid} />
       </div>
     );
+
     return (
-      <form>
+      <form key={this.props.uniqueId} className={this.props.className || ""}>
         {this.newChildren}
         {uploadActions}
       </form>

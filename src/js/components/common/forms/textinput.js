@@ -23,6 +23,12 @@ var TextInput = createReactClass({
     }
    
   },
+  componentDidUpdate: function(prevProps, prevState) {
+     if (this.props.focus) {
+      this.refs[this.props.id].focus();
+    }
+
+  },
   setValue: function (event) {
     this.setState({
       value: event.currentTarget.value
@@ -35,7 +41,6 @@ var TextInput = createReactClass({
       <TextField
         id={this.props.id}
         name={this.props.id}
-        defaultValue={this.props.defaultValue}
         value={this.state.value}
         hintText={this.props.hint}
         floatingLabelText={this.props.label} 
@@ -44,11 +49,13 @@ var TextInput = createReactClass({
         errorStyle={{color: "rgb(171, 16, 0)"}}
         multiLine={this.props.multiLine}
         rows={this.props.rows}
-        style={{display:"block", width:"400px", maxWidth:"100%"}}
+        style={{width:"400px", maxWidth:"100%", marginRight:"80px"}}
         errorText={this.state.errorText}
         required={this.props.required}
         type={this.props.type}
         onKeyPress={this.props.handleKeyPress}
+        disabled={this.props.disabled}
+        ref={this.props.id}
         />
     )
   }

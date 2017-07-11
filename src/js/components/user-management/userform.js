@@ -28,6 +28,7 @@ var UserForm = createReactClass({
           handleCancel={this.props.closeDialog}
           submitLabel={this.props.buttonLabel}
           submitButtonId="submit_button"
+          showButtons={true}
         >
 
           <TextInput
