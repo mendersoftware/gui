@@ -115,6 +115,7 @@ var Header = createReactClass({
 
       <DropDownMenu anchorOrigin={{vertical: 'center', horizontal: 'middle'}} targetOrigin={{vertical: 'bottom', horizontal: 'middle'}}  style={{marginRight: "0"}} iconStyle={{ fill: 'rgb(0, 0, 0)' }} value={this.state.user.email} onChange={this._handleHeaderMenu}>
         <MenuItem primaryText={this.state.user.email} value={this.state.user.email} className="hidden" />
+        <MenuItem primaryText="My account" value="/settings/my-account" />
         <MenuItem primaryText="User management" value="/settings/user-management" />
         <MenuItem primaryText="Log out" value="/login" />
       </DropDownMenu>

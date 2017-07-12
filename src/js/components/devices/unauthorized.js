@@ -48,9 +48,9 @@ var Authorized =  createReactClass({
   _expandRow: function(rowNumber, columnId, event) {
     event.stopPropagation();
     // If action buttons column, no expand
-    if (columnId === 4) {
+    if (columnId === 3) {
       this.props.expandRow(null);
-    } else if (columnId < 5){
+    } else if (columnId < 4){
       var device = this.props.pending[rowNumber];
       device.id_data = device.attributes;
       this.setState({expandedDevice: device});
@@ -78,10 +78,10 @@ var Authorized =  createReactClass({
           <TableRowColumn><Time value={device.request_time} format="YYYY-MM-DD HH:mm" /></TableRowColumn>
           <TableRowColumn>{device.status}</TableRowColumn>
           <TableRowColumn className="expandButton" style={{"paddingLeft": "12px"}}>
-            <IconButton onClick={this._authorizeDevices.bind(null, [device])}>
+            <IconButton disabled={this.props.disabled} onClick={this._authorizeDevices.bind(null, [device])}>
               <FontIcon className="material-icons green">check_circle</FontIcon>
             </IconButton>
-            <IconButton onClick={this._blockDevice.bind(null, device)}>
+            <IconButton disabled={this.props.disabled} onClick={this._blockDevice.bind(null, device)}>
               <FontIcon className="material-icons red">cancel</FontIcon>
             </IconButton>
           </TableRowColumn>

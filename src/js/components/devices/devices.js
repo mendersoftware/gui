@@ -118,6 +118,7 @@ var Devices = createReactClass({
       success: function(devices, links) {
         this.setState({doneLoading:true, devices: devices, devLoading:false});
         AppActions.setSnackbar("");
+        self._pauseTimers(false);      // unpause timers
       }.bind(this),
       error: function(err) {
         this.setState({doneLoading:true, devLoading:false, devices:[]});
@@ -189,6 +190,7 @@ var Devices = createReactClass({
 
     AppActions.getDevicesForAdmission(function(devices, links) {
       self.setState({pendingDevices: devices, authLoading:false});
+      self._pauseTimers(false);      // unpause timers
     }, pageNo, perPage);
   },
   _refreshGroups: function() {
@@ -271,11 +273,10 @@ var Devices = createReactClass({
   },
   _pauseTimers: function(val) {
     // clear dropdown value - can move this
-    this.setState({selectedField: ''});
-    if (val) {
-      clearInterval(this.deviceTimer);
-      clearInterval(this.admissionTimer);
-    } else {
+    this.setState({selectedField: '', paused: val});
+    clearInterval(this.deviceTimer);
+    clearInterval(this.admissionTimer);
+    if (!val) {
       this.deviceTimer = setInterval(this._refreshDevices, 10000);
       this.admissionTimer = setInterval(this._refreshAdmissions, 60000);
     }
@@ -360,7 +361,6 @@ var Devices = createReactClass({
     var success = 0;
     var loopArrays = function(arr) {
       self._pauseTimers(true); // pause periodic calls to device apis until finished authing devices
-
       // for each chunk, authorize one by one
       self._authorizeBatch(arr[i], function(num) {
         success = success+num;
@@ -373,7 +373,6 @@ var Devices = createReactClass({
           }, 2000);
           self._refreshDevices();
           self._refreshAdmissions();
-          self._pauseTimers(false);      // unpause timers
           self.setState({doneLoading: true, expandedAdmRow: null, expandedRow: null});
         }
       });
@@ -543,7 +542,8 @@ var Devices = createReactClass({
               total={this.state.totalAdmDevices}
               expandedAdmRow={this.state.expandedAdmRow}
               expandRow={this._clickAdmRow}
-              authorizeDevices={this._authorizeDevices} />
+              authorizeDevices={this._authorizeDevices}
+              disabled={this.state.paused} />
             <div>
               {this.state.totalAdmDevices ? <Pagination locale={_en_US} simple pageSize={20} current={this.state.currentAdmPage || 1} total={this.state.totalAdmDevices} onChange={this._handleAdmPageChange} /> : null }
              
