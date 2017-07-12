@@ -78,10 +78,10 @@ var Authorized =  createReactClass({
           <TableRowColumn><Time value={device.request_time} format="YYYY-MM-DD HH:mm" /></TableRowColumn>
           <TableRowColumn>{device.status}</TableRowColumn>
           <TableRowColumn className="expandButton" style={{"paddingLeft": "12px"}}>
-            <IconButton onClick={this._authorizeDevices.bind(null, [device])}>
+            <IconButton disabled={this.props.disabled} onClick={this._authorizeDevices.bind(null, [device])}>
               <FontIcon className="material-icons green">check_circle</FontIcon>
             </IconButton>
-            <IconButton onClick={this._blockDevice.bind(null, device)}>
+            <IconButton disabled={this.props.disabled} onClick={this._blockDevice.bind(null, device)}>
               <FontIcon className="material-icons red">cancel</FontIcon>
             </IconButton>
           </TableRowColumn>
