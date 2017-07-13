@@ -1,7 +1,7 @@
-// @flow weak
+// @flow
 
 import React from 'react';
-import PropTypes from 'prop-types';
+import type { Element } from 'react';
 import classNames from 'classnames';
 import { createStyleSheet } from 'jss-theme-reactor';
 import withStyles from '../styles/withStyles';
@@ -15,7 +15,6 @@ export const styleSheet = createStyleSheet('MuiSnackbarContent', theme => {
   return {
     root: {
       pointerEvents: 'initial',
-      fontFamily: theme.typography.fontFamily,
       color: theme.palette.getContrastText(backgroundColor),
       backgroundColor,
       display: 'flex',
@@ -44,22 +43,43 @@ export const styleSheet = createStyleSheet('MuiSnackbarContent', theme => {
   };
 });
 
-function SnackbarContent(props) {
-  const { action, classes, className, disableTypography, message, ...other } = props;
+type Props = {
+  /**
+   * The action to display.
+   */
+  action?: Element<*>,
+  /**
+   * Useful to extend the style applied to components.
+   */
+  classes: Object,
+  /**
+   * @ignore
+   */
+  className?: string,
+  /**
+   * The message to display.
+   */
+  message: Element<*>,
+};
+
+function SnackbarContent(props: Props) {
+  const { action, classes, className, message, ...other } = props;
 
   return (
     <Paper
+      component={Typography}
+      headlineMapping={{
+        body1: 'div',
+      }}
       role="alertdialog"
       square
       elevation={6}
       className={classNames(classes.root, className)}
       {...other}
     >
-      {disableTypography
-        ? message
-        : <Typography color="inherit" className={classes.message}>
-            {message}
-          </Typography>}
+      <div className={classes.message}>
+        {message}
+      </div>
       {action
         ? <div className={classes.action}>
             {action}
@@ -68,33 +88,5 @@ function SnackbarContent(props) {
     </Paper>
   );
 }
-
-SnackbarContent.propTypes = {
-  /**
-   * The action to display.
-   */
-  action: PropTypes.node,
-  /**
-   * Useful to extend the style applied to components.
-   */
-  classes: PropTypes.object.isRequired,
-  /**
-   * @ignore
-   */
-  className: PropTypes.string,
-  /**
-   * If `true`, the message won't be wrapped by a typography component.
-   * For instance, that can be usefull to can render an h4 instead of a
-   */
-  disableTypography: PropTypes.bool,
-  /**
-   * The message to display.
-   */
-  message: PropTypes.node.isRequired,
-};
-
-SnackbarContent.defaultProps = {
-  disableTypography: false,
-};
 
 export default withStyles(styleSheet)(SnackbarContent);

@@ -43,6 +43,7 @@ var DeviceList = createReactClass({
     };
   },
   componentDidUpdate: function(prevProps, prevState) {
+
     if (prevProps.selectedGroup !== this.props.selectedGroup) {
       this.tableBody.setState({ selectedRows: [] });
       this.setState({
@@ -62,14 +63,13 @@ var DeviceList = createReactClass({
   },
   
   _onRowSelection: function(selected) {
+    var self = this;
     if (selected === "all" || selected === "none") {
-      var devices = this._filter(this.props.devices);
+      var devices = self._filter(self.props.devices);
       var deviceArray = (selected === "all") ? Array.from(Array(devices.length).keys()) : [];
-      this.tableHeader.setState({ selectedRows: deviceArray });
-      this.setState({selectedRows: deviceArray});
+      self.setState({selectedRows: deviceArray}, () => self.tableBody.setState({ selectedRows: selected }));
     } else {
-      this.tableHeader.setState({ selectedRows: selected });
-      this.setState({selectedRows: selected});
+      self.setState({selectedRows: selected}, () => self.tableBody.setState({ selectedRows: selected }));
     }
   },
  
@@ -435,8 +435,7 @@ var DeviceList = createReactClass({
               onRowSelection={this._onRowSelection} >
               <TableHeader
               className="clickable"
-              enableSelectAll={true}
-              ref={(tableHeader) => { this.tableHeader = tableHeader; }}>
+              enableSelectAll={true}>
                 <TableRow>
                   <TableHeaderColumn className="columnHeader" tooltip="ID">ID<FontIcon ref="id" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "id")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
                   <TableHeaderColumn className="columnHeader" tooltip="Device type">Device type<FontIcon ref="device_type" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "device_type")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
