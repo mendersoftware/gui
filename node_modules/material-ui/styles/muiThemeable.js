@@ -14,6 +14,10 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
+var _propTypes = require('prop-types');
+
+var _propTypes2 = _interopRequireDefault(_propTypes);
+
 var _getMuiTheme = require('./getMuiTheme');
 
 var _getMuiTheme2 = _interopRequireDefault(_getMuiTheme);
@@ -40,7 +44,7 @@ function muiThemeable() {
     };
 
     MuiComponent.contextTypes = {
-      muiTheme: _react.PropTypes.object.isRequired
+      muiTheme: _propTypes2.default.object.isRequired
     };
 
     return MuiComponent;

@@ -118,6 +118,7 @@ var Authorized =  createReactClass({
           <TableBody
             displayRowCheckbox={false}
             showRowHover={true}
+            preScanRows={false}
             className="clickable">
             {devices}
           </TableBody>
