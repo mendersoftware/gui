@@ -173,6 +173,7 @@ var DeviceList = createReactClass({
   dialogToggle: function (ref) {
     var state = {};
     state[ref] = !this.state[ref];
+    state.tmpGroup = "";
     this.props.pauseRefresh(state[ref]);
     this.setState(state);
   },
@@ -483,8 +484,9 @@ var DeviceList = createReactClass({
           open={this.state.addGroup}
           title="Add selected devices to group"
           actions={addActions}
-          autoDetectWindowHeight={true}>  
-          <GroupSelector changeSelect={this.props.changeSelect} validateName={this._validate} groups={this.props.groups} selectedField={this.props.selectedField} />
+          autoDetectWindowHeight={true}
+          bodyStyle={{fontSize: "13px"}}>  
+          <GroupSelector tmpGroup={this.state.tmpGroup} selectedGroup={this.props.selectedGroup} changeSelect={this.props.changeSelect} validateName={this._validate} groups={this.props.groups} selectedField={this.props.selectedField} />
         </Dialog>
 
         <Snackbar
