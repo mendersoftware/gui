@@ -1,6 +1,7 @@
 import React from 'react';
 import { fullyDecodeURI } from '../../helpers';
 var createReactClass = require('create-react-class');
+var pluralize = require('pluralize');
 
 import MenuItem from 'material-ui/MenuItem';
 import SelectField from 'material-ui/SelectField';
@@ -132,11 +133,16 @@ var GroupSelector = createReactClass({
         <div className="block float-left clear">
           <p className={newGroup ? "info" : "hidden"}>
             { this.props.selectedGroup ? 
-              <span><FontIcon className="material-icons" style={{marginRight:"4px", fontSize:"18px", top: "4px"}}>error_outline</FontIcon>Devices will be removed from <i>{fullyDecodeURI(this.props.selectedGroup)}</i> and added to <i>{newGroup}</i>.</span>
+              <span><FontIcon className="material-icons" style={{marginRight:"4px", fontSize:"18px", top: "4px"}}>error_outline</FontIcon>{this.props.numDevices} {pluralize("devices", this.props.numDevices)} will be removed from <i>{fullyDecodeURI(this.props.selectedGroup)}</i> and added to <i>{newGroup}</i>.</span>
               :
               <span><FontIcon className="material-icons" style={{marginRight:"4px", fontSize:"18px", top: "4px"}}>error_outline</FontIcon>If a device is already in another group, it will be removed from that group and moved to <i>{newGroup}</i>.</span>
             }
           </p>
+
+          { this.props.willBeEmpty ?
+            <p className="info"><FontIcon className="material-icons" style={{marginRight:"4px", fontSize:"18px", top: "4px", color:"rgb(171, 16, 0)"}}>error_outline</FontIcon>After moving the {pluralize("devices", this.props.numDevices)}, <i>{fullyDecodeURI(this.props.selectedGroup)}</i> will be empty and so will be removed.</p>
+            : null
+          }
         </div>
       </div>
     )
