@@ -45,7 +45,6 @@ var DeviceList = createReactClass({
   componentDidUpdate: function(prevProps, prevState) {
 
     if (prevProps.selectedGroup !== this.props.selectedGroup) {
-      this.tableBody.setState({ selectedRows: [] });
       this.setState({
         selectedRows: [],
         expanded: null,
@@ -61,15 +60,19 @@ var DeviceList = createReactClass({
       this.refs.editGroupName.focus();
     }
   },
+
+  _isSelected: function (index) {
+    return this.state.selectedRows.indexOf(index) !== -1;
+  },
   
   _onRowSelection: function(selected) {
     var self = this;
     if (selected === "all" || selected === "none") {
       var devices = self._filter(self.props.devices);
       var deviceArray = (selected === "all") ? Array.from(Array(devices.length).keys()) : [];
-      self.setState({selectedRows: deviceArray}, () => self.tableBody.setState({ selectedRows: selected }));
+      self.setState({selectedRows: deviceArray});
     } else {
-      self.setState({selectedRows: selected}, () => self.tableBody.setState({ selectedRows: selected }));
+      self.setState({selectedRows: selected});
     }
   },
  
@@ -104,7 +107,7 @@ var DeviceList = createReactClass({
         self.setState({openSnack: true, snackMessage: "Device was moved to " + group});
         if (idx===length-1) {
           self.props.groupsChanged(group);
-          self.tableBody.setState({ selectedRows: []});
+          self.setState({ selectedRows: []});
         }
       },
       error: function(err) {
@@ -130,7 +133,7 @@ var DeviceList = createReactClass({
           } else {
             self.props.groupsChanged(self.props.selectedGroup);
             self.setState({openSnack: true, snackMessage: "Device was removed from the group", selectedRows: []});
-            self.tableBody.setState({ selectedRows: [] });
+            self.setState({ selectedRows: [] });
           }
         }
       },
@@ -170,6 +173,7 @@ var DeviceList = createReactClass({
   dialogToggle: function (ref) {
     var state = {};
     state[ref] = !this.state[ref];
+    state.tmpGroup = "";
     this.props.pauseRefresh(state[ref]);
     this.setState(state);
   },
@@ -305,7 +309,11 @@ var DeviceList = createReactClass({
         expanded = <SelectedDevices device_type={attrs.device_type} styles={this.props.styles} block={this.props.block} accept={this.props.accept} addTooltip={this.props.addTooltip} redirect={this.props.redirect} artifacts={this.props.artifacts} device={this.props.expandedDevice} selectedGroup={this.props.selectedGroup} groups={this.props.groups} />
       }
       return (
-        <TableRow hoverable={!expanded} className={expanded ? "expand" : null} key={device.id}>
+        <TableRow 
+          hoverable={!expanded}
+          className={expanded ? "expand" : null}
+          key={device.id}
+          selected={this._isSelected(index)}>
           <TableRowColumn style={expanded ? {height: this.state.divHeight, padding: 0} : {padding: 0}}>
             <div style={styles.paddedCell} onClick={(e) => {
               e.preventDefault();
@@ -448,8 +456,7 @@ var DeviceList = createReactClass({
                 deselectOnClickaway={false}
                 preScanRows={false}
                 showRowHover={true}
-                className="clickable"
-                ref={(tableBody) => { this.tableBody = tableBody; }}>
+                className="clickable">
                 {devices}
               </TableBody>
             </Table>
@@ -477,8 +484,9 @@ var DeviceList = createReactClass({
           open={this.state.addGroup}
           title="Add selected devices to group"
           actions={addActions}
-          autoDetectWindowHeight={true}>  
-          <GroupSelector changeSelect={this.props.changeSelect} validateName={this._validate} groups={this.props.groups} selectedField={this.props.selectedField} />
+          autoDetectWindowHeight={true}
+          bodyStyle={{fontSize: "13px"}}>  
+          <GroupSelector tmpGroup={this.state.tmpGroup} selectedGroup={this.props.selectedGroup} changeSelect={this.props.changeSelect} validateName={this._validate} groups={this.props.groups} selectedField={this.props.selectedField} />
         </Dialog>
 
         <Snackbar

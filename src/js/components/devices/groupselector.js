@@ -6,6 +6,7 @@ import MenuItem from 'material-ui/MenuItem';
 import SelectField from 'material-ui/SelectField';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
+import FontIcon from 'material-ui/FontIcon';
 
 var GroupSelector = createReactClass({
   getInitialState: function() {
@@ -90,6 +91,8 @@ var GroupSelector = createReactClass({
       }
     });
 
+    var newGroup = fullyDecodeURI(this.props.selectedField || fullyDecodeURI(this.props.tmpGroup));
+
     return (
       <div style={{height: '200px'}}>
         <div className={this.props.groups.length ? "float-left" : "hidden"}>
@@ -122,6 +125,16 @@ var GroupSelector = createReactClass({
             onChange={this._handleTextFieldChange}
             errorStyle={{color: "rgb(171, 16, 0)"}}
             errorText={this.state.errorText1} />
+        </div>
+
+        <div className="block float-left clear">
+          <p className={newGroup ? "info" : "hidden"}>
+            { this.props.selectedGroup ? 
+              <span><FontIcon className="material-icons" style={{marginRight:"4px", fontSize:"18px", top: "4px"}}>error_outline</FontIcon>Devices will be removed from <i>{fullyDecodeURI(this.props.selectedGroup)}</i> and added to <i>{newGroup}</i>.</span>
+              :
+              <span><FontIcon className="material-icons" style={{marginRight:"4px", fontSize:"18px", top: "4px"}}>error_outline</FontIcon>If a device is already in another group, it will be removed from that group and moved to <i>{newGroup}</i>.</span>
+            }
+          </p>
         </div>
       </div>
     )
