@@ -107,7 +107,7 @@ var DeviceList = createReactClass({
         self.setState({openSnack: true, snackMessage: "Device was moved to " + group});
         if (idx===length-1) {
           self.props.groupsChanged(group);
-          self.tableBody.setState({ selectedRows: []});
+          self.setState({ selectedRows: []});
         }
       },
       error: function(err) {
@@ -133,7 +133,7 @@ var DeviceList = createReactClass({
           } else {
             self.props.groupsChanged(self.props.selectedGroup);
             self.setState({openSnack: true, snackMessage: "Device was removed from the group", selectedRows: []});
-            self.tableBody.setState({ selectedRows: [] });
+            self.setState({ selectedRows: [] });
           }
         }
       },
