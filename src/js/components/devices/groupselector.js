@@ -84,18 +84,20 @@ var GroupSelector = createReactClass({
   },
 
   render: function() {
-
+    var self = this;
     var groupList = this.props.groups.map(function(group, index) {
-      if (group) {
+      if (group && (group !== self.props.selectedGroup)) {
+        // don't show the current selected group in the list
         return <MenuItem value={group} key={index} primaryText={decodeURIComponent(group)} />
       }
     });
 
     var newGroup = fullyDecodeURI(this.props.selectedField || fullyDecodeURI(this.props.tmpGroup));
+    var showSelect = self.props.selectedGroup ? this.props.groups.length-1 : this.props.groups.length;
 
     return (
       <div style={{height: '200px'}}>
-        <div className={this.props.groups.length ? "float-left" : "hidden"}>
+        <div className={showSelect ? "float-left" : "hidden"}>
           <div className="float-left">
             <SelectField
             ref="groupSelect"
@@ -115,7 +117,7 @@ var GroupSelector = createReactClass({
           </div>
         </div>
 
-        <div className={this.state.showInput || !groupList.length ? null : 'hidden'}>
+        <div className={this.state.showInput || !showSelect ? null : 'hidden'}>
           <TextField
             ref="customGroup"
             value={this.state.customName || ""}
