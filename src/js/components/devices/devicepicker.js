@@ -32,12 +32,11 @@ var DevicePicker = createReactClass({
   },
 
   _createGroupHandler: function() {
-    var seenWarning = cookie.load('groupHelpText');
-    // if another group exists, check for warning cookie
+    var seenWarning = cookie.load(this.props.user.id+'-groupHelpText');
+    // if another group exists, check for warning message cookie
     if (this.props.groupList.length && !seenWarning) {
         // if show warning message
         this.setState({showDeviceList: false, showWarning:true});
-
     } else {
        // cookie exists || if no other groups exist, continue to create group
       this._addListOfDevices();
@@ -62,7 +61,7 @@ var DevicePicker = createReactClass({
           self._toggleDialog();
 
           if (self.state.isChecked) {
-            cookie.save('groupHelpText', true);
+            cookie.save(self.props.user.id+'-groupHelpText', true);
           }
         }
       },

@@ -35,7 +35,8 @@ function getState() {
     attributes: AppStore.getAttributes(),
     artifacts: AppStore.getArtifactsRepo(),
     snackbar: AppStore.getSnackbar(),
-    totalDevices: AppStore.getTotalDevices()
+    totalDevices: AppStore.getTotalDevices(),
+    user: AppStore.getCurrentUser()
   }
 }
 
@@ -585,6 +586,7 @@ var Devices = createReactClass({
           onRequestClose={this.handleRequestClose}
         />
         <DevicePicker
+          user={this.state.user}
           open={this.state.openGroupDialog || false}
           refreshGroups={this._refreshGroups}
           pickerDevices={this.state.pickerDevices || []}
