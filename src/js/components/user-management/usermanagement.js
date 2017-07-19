@@ -81,7 +81,7 @@ var UserManagement =  createReactClass({
       },
       error: function(err) {
         console.log(err);
-        AppActions.setSnackbar("There was an error editing the user. " +errormsg);
+        AppActions.setSnackbar("There was an error editing the user. " +err.error);
       }
     }
 
@@ -98,7 +98,7 @@ var UserManagement =  createReactClass({
       },
       error: function(err) {
         console.log(err);
-        AppActions.setSnackbar("There was an error creating the user. " +errormsg);
+        AppActions.setSnackbar("There was an error creating the user. " +err.error);
       }
     }
 
@@ -115,7 +115,7 @@ var UserManagement =  createReactClass({
       },
       error: function(err) {
         console.log(err);
-        AppActions.setSnackbar("There was an error removing the user. " +errormsg);
+        AppActions.setSnackbar("There was an error removing the user. " +err.error);
       }
     }
 

@@ -174,8 +174,14 @@ var DeviceList = createReactClass({
     var state = {};
     state[ref] = !this.state[ref];
     state.tmpGroup = "";
+    state.willBeEmpty = false;
     this.props.pauseRefresh(state[ref]);
     this.setState(state);
+
+    if (ref === "addGroup" && this.props.selectedGroup) {
+       // check if group will be left empty after moving devices
+      this._checkWillBeEmpty(this.state.groupName);
+    }
   },
   
   _sortColumn: function(col) {
@@ -234,6 +240,20 @@ var DeviceList = createReactClass({
   _validate: function(invalid, group) {
     var name = invalid ? "" : group;
     this.setState({groupInvalid: invalid, tmpGroup: name});
+  },
+
+  _checkWillBeEmpty: function(groupName) {
+    // check if group will be left empty after moving devices
+    var self = this;
+    AppActions.getGroupDevices(groupName, {
+      success: function(devices) {
+        var devCount = devices.length - self.state.selectedRows.length;
+        self.setState({willBeEmpty: devCount<1});
+      },
+      error: function(err) {
+        console.log(err);
+      }
+    });
   },
 
   render: function() {
@@ -486,7 +506,7 @@ var DeviceList = createReactClass({
           actions={addActions}
           autoDetectWindowHeight={true}
           bodyStyle={{fontSize: "13px"}}>  
-          <GroupSelector tmpGroup={this.state.tmpGroup} selectedGroup={this.props.selectedGroup} changeSelect={this.props.changeSelect} validateName={this._validate} groups={this.props.groups} selectedField={this.props.selectedField} />
+          <GroupSelector numDevices={this.state.selectedRows.length} willBeEmpty={this.state.willBeEmpty} tmpGroup={this.state.tmpGroup} selectedGroup={this.props.selectedGroup} changeSelect={this.props.changeSelect} validateName={this._validate} groups={this.props.groups} selectedField={this.props.selectedField} />
         </Dialog>
 
         <Snackbar
