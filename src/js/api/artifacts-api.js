@@ -59,7 +59,23 @@ var Api = {
           }
         });
     });
-  }
+  },
+  delete: function(url) {
+    var token = cookie.load("JWT");
+    return new Promise(function (resolve, reject) {
+      request
+        .del(url)
+        .authBearer(token)
+        .end(function (err, res) {
+          if (err || !res.ok) {
+            var errorResponse = err.response ? JSON.parse(err.response.text) : {error:"There was an error removing the artifact"};
+            reject(errorResponse);
+          } else {
+            resolve(res.header);
+          }
+        });
+    });
+  },
 }
 
 module.exports = Api;

@@ -6,14 +6,17 @@ var createReactClass = require('create-react-class');
 
 import { Router, Route, Link } from 'react-router';
 import Snackbar from 'material-ui/Snackbar';
-
+import Dialog from 'material-ui/Dialog';
+import FlatButton from 'material-ui/FlatButton';
+import RaisedButton from 'material-ui/RaisedButton';
 
 function getState() {
   return {
     artifacts: AppStore.getArtifactsRepo(),
     groups: AppStore.getGroups(),
     selected: null,
-    snackbar: AppStore.getSnackbar()
+    snackbar: AppStore.getSnackbar(),
+    remove: false
   }
 }
 
@@ -114,6 +117,27 @@ var Artifacts = createReactClass({
       AppActions.getGroupDevices(groups[i], callback);
     }
   },
+  _removeDialog: function(artifact) {
+    AppActions.setSnackbar("");
+    if (artifact) {
+      this.setState({remove: true, artifact: artifact});
+    } else {
+      this.setState({remove: false, artifact: null});
+    }
+  },
+  _removeArtifact: function() {
+    var self = this;
+    var callback =  {
+      success: function() {
+        AppActions.setSnackbar("Artifact was removed");
+        self._getArtifacts();
+      },
+      error: function(err) {
+        AppActions.setSnackbar("Error removing artifact: " + err.error);
+      }
+    };   
+    AppActions.removeArtifact(self.state.artifact.id, callback);
+  },
   render: function() {
     var artifact_link = (
       <span>
@@ -122,12 +146,33 @@ var Artifacts = createReactClass({
          and upload the artifact file to the Mender server
       </span>
     );
+
+    var removeActions = [
+     <div style={{marginRight:"10px", display:"inline-block"}}>
+        <FlatButton
+          label="Cancel"
+          onClick={this._removeDialog.bind(null, null)} />
+      </div>,
+      <RaisedButton
+        label="Remove artifact"
+        secondary={true}
+        onClick={this._removeArtifact} />
+    ];
     
     return (
       <div className="contentContainer">
         <div className="relative">
-          <Repository groupDevices={this.state.groupDevices} allDevices={this.state.allDevices} refreshArtifacts={this._getArtifacts} startLoader={this._startLoading} loading={!this.state.doneLoading} selected={this.state.selected} artifacts={this.state.artifacts} groups={this.state.groups} hasPending={this.state.hasPending} hasDevices={this.state.hasDevices} />
+          <Repository removeArtifact={this._removeDialog} groupDevices={this.state.groupDevices} allDevices={this.state.allDevices} refreshArtifacts={this._getArtifacts} startLoader={this._startLoading} loading={!this.state.doneLoading} selected={this.state.selected} artifacts={this.state.artifacts} groups={this.state.groups} hasPending={this.state.hasPending} hasDevices={this.state.hasDevices} />
         </div>
+
+        <Dialog
+          open={this.state.remove}
+          title="Remove this artifact?"
+          actions={removeActions}
+        >
+        Are you sure you want to remove <i>{(this.state.artifact||{}).name}</i>?
+        </Dialog>
+
         <Snackbar
           open={this.state.snackbar.open}
           message={this.state.snackbar.message}

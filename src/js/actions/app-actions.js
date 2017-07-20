@@ -411,6 +411,17 @@ var AppActions = {
       });
   },
 
+  removeArtifact: function(id, callback) {
+    ArtifactsApi
+      .delete(deploymentsApiUrl+"/artifacts/"+id)
+      .then(function() {
+        callback.success();
+      })
+      .catch(function(err) {
+        callback.error(err);
+      })
+  },
+
   setDeploymentArtifact: function(artifact) {
     AppDispatcher.handleViewAction({
       actionType: AppConstants.SET_DEPLOYMENT_ARTIFACT,
