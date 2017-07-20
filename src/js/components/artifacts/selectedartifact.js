@@ -36,6 +36,7 @@ var SelectedArtifact = createReactClass({
       this.setState({descEdit: !this.state.descEdit});
     }
   },
+
   render: function() {
     var info = {name: "-", device_type: "-", build_date: "-", modified: "-", size: "-", checksum: "-", devices: "-", description: "", signed: false};
     if (this.props.artifact) {
@@ -140,7 +141,12 @@ var SelectedArtifact = createReactClass({
           <div className="artifact-list list-item">
             <List style={{backgroundColor: "rgba(255,255,255,0)"}}>
               <ListItem style={styles.listStyle} disabled={true} primaryText="Signed"  secondaryTextLines={2} secondaryText={info.signed ? "Yes" : "No"} />
-              <Divider /> 
+              <Divider />
+              <ListItem 
+                style={styles.listStyle}
+                primaryText="Remove this artifact?"
+                onClick={this.props.removeArtifact} 
+                leftIcon={<FontIcon className="material-icons red auth" style={{marginTop:12, marginBottom:6}}>cancel</FontIcon>} />
             </List>
           </div>
   

@@ -5,6 +5,9 @@ import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
 import SearchInput from 'react-search-input';
+import cookie from 'react-cookie';
+import FontIcon from 'material-ui/FontIcon';
+import Checkbox from 'material-ui/Checkbox';
 var createReactClass = require('create-react-class');
 var AppActions = require('../../actions/app-actions');
 var AppStore = require('../../stores/app-store');
@@ -29,6 +32,18 @@ var DevicePicker = createReactClass({
   },
 
   _createGroupHandler: function() {
+    var seenWarning = cookie.load(this.props.user.id+'-groupHelpText');
+    // if another group exists, check for warning message cookie
+    if (this.props.groupList.length && !seenWarning) {
+        // if show warning message
+        this.setState({showDeviceList: false, showWarning:true});
+    } else {
+       // cookie exists || if no other groups exist, continue to create group
+      this._addListOfDevices();
+    }
+  },
+
+  _addListOfDevices: function() {
     for (var i=0;i<this.state.selectedDevices.length;i++) {
       var group = encodeURIComponent(this.state.newGroup);
       var device = this.state.selectedDevices[i];
@@ -41,8 +56,13 @@ var DevicePicker = createReactClass({
     var callback = {
       success: function() {
         if (idx===self.state.selectedDevices.length-1) {
+          // reached end of list
           self.props.changeGroup(group);
           self._toggleDialog();
+
+          if (self.state.isChecked) {
+            cookie.save(self.props.user.id+'-groupHelpText', true);
+          }
         }
       },
       error: function(err) {
@@ -111,7 +131,7 @@ var DevicePicker = createReactClass({
   },
 
   _toggleDialog: function() {
-    this.setState({newGroup:'', showDeviceList: false, createInvalid: true, nextInvalid: true});
+    this.setState({newGroup:'', showDeviceList: false, createInvalid: true, nextInvalid: true, showWarning: false, selectedDevices: []});
     this.props.toggleDialog();
   },
   _filter: function(array, filters) {
@@ -120,6 +140,9 @@ var DevicePicker = createReactClass({
       if (AppStore.matchFilters(array[i], filters)) newArray.push(array[i]);
     }
     return newArray;
+  },
+  _handleCheckBox: function(event, isChecked) {
+    this.setState({isChecked: isChecked});
   },
   render: function() {
     var filteredDevices = this._filter(this.props.pickerDevices, this.state.searchTerm);
@@ -152,26 +175,25 @@ var DevicePicker = createReactClass({
           onClick={this._toggleDialog} />
       </div>,
       <RaisedButton
-        label="Create group"
+        label={this.state.showWarning ? "Confirm" : "Create group"}
         primary={true}
-        onClick={this._createGroupHandler}
+        onClick={this.state.showWarning ? this._addListOfDevices : this._createGroupHandler}
         disabled={this.state.createInvalid} />
     ];
 
     return (
       <Dialog
         ref="createGroup"
-        title="Create a new group"
+        title={this.state.showWarning ? "" : "Create a new group"}
         actions={createActions}
         open={this.props.open}
         autoDetectWindowHeight={true} autoScrollBodyContent={true} modal={true}
-        bodyClassName="heightTransition"
         bodyStyle={{maxHeight:"50vh"}}
         titleStyle={{paddingBottom: "15px", marginBottom:0}}
         footerStyle={{marginTop:0}}
         >  
 
-        <div className={this.state.showDeviceList ? "hidden" : "absoluteTextfieldButton" }>
+        <div className={this.state.showDeviceList || this.state.showWarning ? "hidden" : "absoluteTextfieldButton" }>
           <TextField
             ref="customGroup"
             className="float-left"
@@ -188,34 +210,52 @@ var DevicePicker = createReactClass({
      
         </div>
 
-        <div className={this.state.showDeviceList===true ? "dialogTableContainer" : "dialogTableContainer zero"}>
-          <div className="fixedSearch">
-            <span>Select devices to include in the new group:</span>
-            <SearchInput className="search top-right" ref='search' onChange={this.searchUpdated} placeholder="Search devices" style={{margin:"10px"}} />
+        {this.state.showWarning ? 
+          <div className="help-message" style={{marginTop: "-30px"}}>
+            <h2><FontIcon className="material-icons" style={{marginRight:"4px", top: "4px"}}>error_outline</FontIcon>You're creating a new group</h2>
+            <p>
+              Just a heads-up: if a device is already in another group, it will be removed from that group and moved to the new one. A device can only belong to one group at a time.
+            </p>
+          
+            
+            <Checkbox
+              label="Got it! Don't show this message again"
+              labelStyle={{fontSize: "13px", color: "rgba(0, 0, 0, 0.6)"}}
+              onCheck={this._handleCheckBox}
+            />
           </div>
-          <Table
-            multiSelectable={true}
-            className={deviceList.length ? null : "hidden"}
-            onRowSelection={this._onRowSelection}
-            selectable={true}>
-            <TableHeader>
-              <TableRow>
-                <TableHeaderColumn>Name</TableHeaderColumn>
-                <TableHeaderColumn>Device type</TableHeaderColumn>
-              </TableRow>
-            </TableHeader>
-            <TableBody
-              deselectOnClickaway={false}
-              showRowHover={true}>
-              {deviceList}
-            </TableBody>
-          </Table>
-          {this.props.hasNext ? <a className="small" onClick={this.showDeviceList}>Load more devices</a> : null }
-          <Loader show={this.props.loadingDevices} />
-          <p className={(deviceList.length||this.props.loadingDevices) ? "hidden" : "italic muted"}>
-            No devices match the search term
-          </p>
-        </div>
+          :
+
+          <div className={this.state.showDeviceList===true ? "dialogTableContainer" : "dialogTableContainer zero"}>
+            <div className="fixedSearch">
+              <span>Select devices to include in the new group:</span>
+              <SearchInput className="search top-right" ref='search' onChange={this.searchUpdated} placeholder="Search devices" style={{margin:"10px"}} />
+            </div>
+            <Table
+              multiSelectable={true}
+              className={deviceList.length ? null : "hidden"}
+              onRowSelection={this._onRowSelection}
+              selectable={true}>
+              <TableHeader>
+                <TableRow>
+                  <TableHeaderColumn>Name</TableHeaderColumn>
+                  <TableHeaderColumn>Device type</TableHeaderColumn>
+                </TableRow>
+              </TableHeader>
+              <TableBody
+                deselectOnClickaway={false}
+                showRowHover={true}>
+                {deviceList}
+              </TableBody>
+            </Table>
+            {this.props.hasNext ? <a className="small" onClick={this.showDeviceList}>Load more devices</a> : null }
+            <Loader show={this.props.loadingDevices} />
+            <p className={(deviceList.length||this.props.loadingDevices) ? "hidden" : "italic muted"}>
+              No devices match the search term
+            </p>
+          </div>
+
+        }
       </Dialog>
     )
   }

@@ -127,7 +127,7 @@ var Repository = createReactClass({
 
   _onRowSelection: function(rowNumber, columnId) {
     var artifact = artifacts[rowNumber];
-    if (columnId<=4) {
+    if (columnId<=3) {
       if (this.state.artifact === artifact) {
         this._resetArtifactState();
       } else {
@@ -164,6 +164,10 @@ var Repository = createReactClass({
   },
   _adjustCellHeight: function(height) {
     this.setState({divHeight: height+80});
+  },
+  _handleRemove: function() {
+    // pass artifact to be removed up to parent to trigger dialog
+    this.props.removeArtifact(this.state.artifact);
   },
   render: function() {
 
@@ -208,7 +212,7 @@ var Repository = createReactClass({
       var compatible = pkg.device_types_compatible.join(", ");
       var expanded = '';
       if (this.state.artifact.id === pkg.id) {
-        expanded = <SelectedArtifact compatible={compatible} formatTime={this._formatTime} editArtifact={this._editArtifactData} buttonStyle={styles.flatButtonIcon} artifact={this.state.artifact} />
+        expanded = <SelectedArtifact removeArtifact={this._handleRemove} compatible={compatible} formatTime={this._formatTime} editArtifact={this._editArtifactData} buttonStyle={styles.flatButtonIcon} artifact={this.state.artifact} />
       }
      
       return (
