@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/mendersoftware/gui.svg?branch=master)](https://travis-ci.org/mendersoftware/gui)
+[![Build Status](https://travis-ci.org/mendersoftware/gui.svg?branch=1.2.x)](https://travis-ci.org/mendersoftware/gui)
 [![Docker pulls](https://img.shields.io/docker/pulls/mendersoftware/gui.svg?maxAge=3600)](https://hub.docker.com/r/mendersoftware/deployments/)
 
 
