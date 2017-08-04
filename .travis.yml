@@ -27,7 +27,7 @@ notifications:
         on_start: always
 
 before_install:
-    - pip2.7 install -U --user paramiko fabric PyYAML pytest requests pytest-xdist filelock selenium
+    - pip2.7 install -U --user paramiko fabric PyYAML pytest requests pytest-xdist filelock selenium psutil
     - pip3 install -U --user pyyaml
 
 before_script:
