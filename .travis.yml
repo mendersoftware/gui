@@ -62,11 +62,10 @@ script:
     # Make sure the test environment is running the pull request
     - if [ ${TRAVIS_PULL_REQUEST} = "false" ]; then export DEPLOY=$TRAVIS_BRANCH; else export DEPLOY=$TRAVIS_PULL_REQUEST; fi
 
-    # MEN-1365
-    #- for i in {1..60} ; do curl -s "http://dev-gui.mender.io/deploy/" | grep $DEPLOY; if [ $? -eq 0 ]; then break; else sleep 5; fi; done
+    - for i in {1..60} ; do curl -s "http://dev-gui.mender.io/deploy/" | grep $DEPLOY; if [ $? -eq 0 ]; then break; else sleep 3; fi; done
 
-    #- ( cd integration/tests && TEST_BRANCH=master ./run.sh --get-requirements && sudo cp ./downloaded-tools/mender-artifact /usr/bin/ && cp ./*.ext4 ./e2e_tests/)
-    #- ( cd integration/tests/e2e_tests && python test_ui.py )
+    - ( cd integration/tests && TEST_BRANCH=master ./run.sh --get-requirements && sudo cp ./downloaded-tools/mender-artifact /usr/bin/ && cp ./*.ext4 ./e2e_tests/)
+    - ( cd integration/tests/e2e_tests && python2.7 -m py.test -s --verbose --junitxml=results.xml test_ui.py)
 
     # Build docker image from docker file
     - sudo docker build -t $DOCKER_REPOSITORY .
