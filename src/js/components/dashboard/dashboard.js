@@ -19,7 +19,8 @@ function getState() {
     recent: AppStore.getPastDeployments(),
     activity: AppStore.getActivity(),
     hideReview: localStorage.getItem("reviewDevices"),
-    snackbar: AppStore.getSnackbar()
+    snackbar: AppStore.getSnackbar(),
+    refreshDeploymentsLength: 10000,
   }
 }
 
@@ -58,16 +59,35 @@ var Dashboard = createReactClass({
     AppActions.setLocalStorage(key, value);
   },
   _refreshDeployments: function() {
-    AppActions.getPastDeployments(function() {
-      setTimeout(function() {
-        this.setState({doneActiveDepsLoading:true});
-      }.bind(this), 300)
-    }.bind(this), 1, 3);
-    AppActions.getDeploymentsInProgress(function() {
-      setTimeout(function() {
-        this.setState({donePastDepsLoading:true});
-      }.bind(this), 300)
-    }.bind(this));
+    var self = this;
+
+    var pastCallback = {
+      success: function () {
+        setTimeout(function() {
+          self.setState({doneActiveDepsLoading:true});
+        }, 300)
+      },
+      error: function (err) {
+        console.log(err);
+        var errormsg = err || "Please check your connection";
+        setRetryTimer("deployments", "Couldn't load deployments. " + errormsg, self.state.refreshDeploymentsLength);
+      }
+    }
+    AppActions.getPastDeployments(pastCallback, 1, 3);
+
+    var progressCallback = {
+      success: function () {
+        setTimeout(function() {
+          self.setState({donePastDepsLoading:true});
+        }, 300)
+      },
+      error: function (err) {
+        console.log(err);
+        var errormsg = err || "Please check your connection";
+        setRetryTimer("deployments", "Couldn't load deployments. " + errormsg, self.state.refreshDeploymentsLength);
+      }
+    };
+    AppActions.getDeploymentsInProgress(progressCallback);
   },
   _refreshAdmissions: function() {
     AppActions.getNumberOfDevicesForAdmission(function(count) {

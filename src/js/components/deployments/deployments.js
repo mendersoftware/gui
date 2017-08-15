@@ -153,7 +153,7 @@ var Deployments = createReactClass({
       error: function (err) {
         console.log(err);
         var errormsg = err || "Please check your connection";
-        setRetryTimer("progress", "Couldn't load deployments in progress. " + errormsg, self.state.refreshDeploymentsLength);
+        setRetryTimer("deployments", "Couldn't load deployments. " + errormsg, self.state.refreshDeploymentsLength);
       }
     };
 
@@ -190,7 +190,7 @@ var Deployments = createReactClass({
       error: function (err) {
         console.log(err);
         var errormsg = err || "Please check your connection";
-        setRetryTimer("progress", "Couldn't load pending deployments. " + errormsg, self.state.refreshDeploymentsLength);
+        setRetryTimer("deployments", "Couldn't load deployments. " + errormsg, self.state.refreshDeploymentsLength);
       }
     };
 
@@ -228,7 +228,7 @@ var Deployments = createReactClass({
       error: function (err) {
         console.log(err);
         var errormsg = err || "Please check your connection";
-        setRetryTimer("progress", "Couldn't load finished deployments. " + errormsg, self.state.refreshDeploymentsLength);
+        setRetryTimer("deployments", "Couldn't load deployments. " + errormsg, self.state.refreshDeploymentsLength);
       }
     };
    
