@@ -93,6 +93,7 @@ var Devices = createReactClass({
   },
   componentWillUnmount: function () {
     this._pauseTimers(true);
+    clearAllRetryTimers();
     AppStore.removeChangeListener(this._onChange);
     AppActions.selectGroup(null);
     this._updateFilters([{key:'', value:''}]);

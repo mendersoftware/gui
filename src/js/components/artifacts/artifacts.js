@@ -34,6 +34,7 @@ var Artifacts = createReactClass({
     this._getArtifacts();
   },
   componentWillUnmount: function() {
+    clearAllRetryTimers();
     clearInterval(this.artifactTimer);
     AppStore.removeChangeListener(this._onChange);
   },
@@ -62,7 +63,6 @@ var Artifacts = createReactClass({
       error: function(err) {
         var errormsg = err || "Please check your connection";
         setRetryTimer("artifacts", "Artifacts couldn't be loaded. " + errormsg, self.state.refreshArtifactsLength);
-        self.setState({doneLoading: true});
       }
     };
     AppActions.getArtifacts(callback);

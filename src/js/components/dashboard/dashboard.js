@@ -44,13 +44,15 @@ var Dashboard = createReactClass({
   },
   componentWillUnmount: function () {
     clearInterval(this.timer);
+    clearAllRetryTimers();
     AppStore.removeChangeListener(this._onChange);
   },
   componentDidMount: function() {
+    var self = this;
     clearAllRetryTimers();
-    this.timer = setInterval(this._refreshDeployments, 5000);
-    this._refreshDeployments();
-    this._refreshAdmissions();
+    self.timer = setInterval(self._refreshDeployments, self.state.refreshDeploymentsLength);
+    self._refreshDeployments();
+    self._refreshAdmissions();
   },
   _onChange: function() {
     this.setState(this.getInitialState());
