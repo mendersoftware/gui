@@ -12,6 +12,10 @@ var Api = {
       request
         .get(url)
         .authBearer(token)
+        .timeout({
+          response: 5000, // wait 5 seconds for server to start sending
+          deadline: 60000, // allow one minute to finish loading
+        })
         .end(function (err, res) {
           if (err || !res.ok) {
             reject();

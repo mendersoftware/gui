@@ -150,6 +150,7 @@ var UserManagement =  createReactClass({
        
         <UserList users={this.state.users || []} editUser={this._openEdit} removeUser={this._openRemove} currentUser={this.state.currentUser} />
         <Snackbar
+          bodyStyle={{maxWidth: this.state.snackbar.maxWidth}}
           open={this.state.snackbar.open}
           message={this.state.snackbar.message}
           autoHideDuration={8000} 

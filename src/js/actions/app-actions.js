@@ -271,10 +271,10 @@ var AppActions = {
           actionType: AppConstants.RECEIVE_ADMISSION_DEVICES,
           devices: res.body
         });
-        callback(res.body, parse(res.headers['link']));
+        callback.success(res.body, parse(res.headers['link']));
       })
       .catch(function(err) {
-        callback(err);
+        callback.error(err);
       })
   },
   getNumberOfDevicesForAdmission: function (callback) {

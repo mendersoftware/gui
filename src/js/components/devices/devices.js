@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { setRetryTimer, clearRetryTimer, clearAllRetryTimers } from '../../utils/retrytimer';
 var AppStore = require('../../stores/app-store');
 var AppActions = require('../../actions/app-actions');
 var update = require('react-addons-update');
@@ -36,7 +37,9 @@ function getState() {
     artifacts: AppStore.getArtifactsRepo(),
     snackbar: AppStore.getSnackbar(),
     totalDevices: AppStore.getTotalDevices(),
-    user: AppStore.getCurrentUser()
+    user: AppStore.getCurrentUser(),
+    refreshDeviceLength: 10000,
+    refreshAdmissionLength: 20000,
   }
 }
 
@@ -49,8 +52,9 @@ var Devices = createReactClass({
   },
   componentDidMount: function() {
     this.setState({doneLoading:false});
-    this.deviceTimer = setInterval(this._refreshDevices, 10000);
-    this.admissionTimer = setInterval(this._refreshAdmissions, 60000);
+    clearAllRetryTimers();
+    this.deviceTimer = setInterval(this._refreshDevices, this.state.refreshDeviceLength);
+    this.admissionTimer = setInterval(this._refreshAdmissions, this.state.refreshAdmissionLength);
     this._refreshAll();
   },
   _handleGroupsChange: function(group) {
@@ -98,7 +102,7 @@ var Devices = createReactClass({
       clearInterval(this.deviceTimer);
       this._refreshGroups();
       this._refreshDevices(1);
-      this.deviceTimer = setInterval(this._refreshDevices, 10000);
+      this.deviceTimer = setInterval(this._refreshDevices, this.state.refreshDeviceLength);
     }
   },
   _onChange: function() {
@@ -106,6 +110,7 @@ var Devices = createReactClass({
   },
   _refreshDevices: function(page, per_page) {
     var self = this;
+
     if (typeof page !=="undefined") {
        this.setState({currentPage:page});
     }
@@ -117,31 +122,37 @@ var Devices = createReactClass({
 
     var allCallback = {
       success: function(devices, links) {
-        this.setState({doneLoading:true, devices: devices, devLoading:false});
+        // clear countdown and snackbar
+        clearRetryTimer("devices");
         AppActions.setSnackbar("");
-        self._pauseTimers(false);      // unpause timers
-      }.bind(this),
+        self.setState({doneLoading:true, devices: devices, devLoading:false});
+        if (self.state.paused) {
+          self._pauseTimers(false);      // unpause timers
+        };
+      },
       error: function(err) {
-        this.setState({doneLoading:true, devLoading:false, devices:[]});
+        self.setState({doneLoading:true, devLoading:false});
         console.log(err);
-        var errormsg = err.error || "Please check your connection";
-        AppActions.setSnackbar("Devices couldn't be loaded. " +errormsg);
-      }.bind(this)
+        var errormsg = err || "Please check your connection.";
+        setRetryTimer("devices", "Devices couldn't be loaded. " + errormsg, self.state.refreshDeviceLength);
+      }
     };
 
     var groupCallback = {
       success: function(deviceList, links) {
+        // clear countdown and snackbar
+        clearRetryTimer("devices");
+        AppActions.setSnackbar("");
         var sorted = deviceList.sort();
         getDevicesFromIDs(sorted, function(devices) {
           self.setState({doneLoading:true, devLoading:false, devices:devices});
-          AppActions.setSnackbar("");
         });
       },
       error: function(err) {
-        self.setState({doneLoading:true, devLoading:false, devices:[]});
+        self.setState({doneLoading:true, devLoading:false});
         console.log(err);
-        var errormsg = err.error || "Please check your connection";
-        AppActions.setSnackbar("Devices couldn't be loaded. " +errormsg);
+        var errormsg = err || "Please check your connection";
+        setRetryTimer("devices", "Devices couldn't be loaded. " + errormsg, self.state.refreshDeviceLength);
       }
     };
 
@@ -172,7 +183,7 @@ var Devices = createReactClass({
         self.setState({numDevices: noDevs});
       }, this.state.selectedGroup);
     }
-    
+
   },
   _refreshAdmissions: function(page, per_page) {
     var self = this;
@@ -189,10 +200,21 @@ var Devices = createReactClass({
     var pageNo = typeof page !=="undefined" ? page : this.state.admPageNo;
     var perPage = typeof per_page !=="undefined" ? per_page : this.state.admPerPage;
 
-    AppActions.getDevicesForAdmission(function(devices, links) {
-      self.setState({pendingDevices: devices, authLoading:false});
-      self._pauseTimers(false);      // unpause timers
-    }, pageNo, perPage);
+    var callback = {
+      success: function(devices, links) {
+        // clear countdown and snackbar
+        clearRetryTimer("admission");
+        self.setState({pendingDevices: devices, authLoading: false});
+        self._pauseTimers(false);      // unpause timers
+      },
+      error: function(err) {
+        var errormsg = err || "Please check your connection.";
+        setRetryTimer("admission", "Pending devices couldn't be loaded. " + errormsg, self.state.refreshAdmissionLength);
+      }
+
+    };
+
+    AppActions.getDevicesForAdmission(callback, pageNo, perPage);
   },
   _refreshGroups: function() {
     var self = this;
@@ -241,12 +263,12 @@ var Devices = createReactClass({
   _handlePageChange: function(pageNo) {
     clearInterval(this.deviceTimer);
     this.setState({currentPage: pageNo, devLoading:true, expandedRow: null, expandedDevice: {}}, this._refreshDevices(pageNo));
-    this.deviceTimer = setInterval(this._refreshDevices, 10000);
+    this.deviceTimer = setInterval(this._refreshDevices, this.state.refreshDeviceLength);
   },
   _handleAdmPageChange: function(pageNo) {
     clearInterval(this.admissionTimer);
     this.setState({currentAdmPage: pageNo, authLoading:true, expandedAdmRow: null}, this._refreshAdmissions(pageNo));
-    this.admissionTimer = setInterval(this._refreshAdmissions, 60000);
+    this.admissionTimer = setInterval(this._refreshAdmissions, this.state.refreshAdmissionLength);
   },
   _handleGroupChange: function(group) {
     this.setState({currentPage: 1, doneLoading:false, expandedRow: null, expandedDevice: {}}, AppActions.selectGroup(group)); 
@@ -273,13 +295,15 @@ var Devices = createReactClass({
     AppActions.getDevices(callback, 1, per, null, searchterm);
   },
   _pauseTimers: function(val) {
+    var self = this;
     // clear dropdown value - can move this
     this.setState({selectedField: '', paused: val});
-    clearInterval(this.deviceTimer);
-    clearInterval(this.admissionTimer);
+    clearInterval(self.deviceTimer);
+    clearInterval(self.admissionTimer);
     if (!val) {
-      this.deviceTimer = setInterval(this._refreshDevices, 10000);
-      this.admissionTimer = setInterval(this._refreshAdmissions, 60000);
+      self.deviceTimer = setInterval(self._refreshDevices, self.state.refreshDeviceLength);
+      
+      self.admissionTimer = setInterval(self._refreshAdmissions, self.state.refreshAdmissionLength);
     }
   },
   _handleRows: function(rows) {
@@ -583,6 +607,7 @@ var Devices = createReactClass({
           open={this.state.snackbar.open}
           message={this.state.snackbar.message}
           autoHideDuration={8000}
+          bodyStyle={{maxWidth: this.state.snackbar.maxWidth}}
           onRequestClose={this.handleRequestClose}
         />
         <DevicePicker
