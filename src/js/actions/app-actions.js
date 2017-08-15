@@ -446,10 +446,10 @@ var AppActions = {
           deployments: deployments
         });
         var links = parse(res.headers['link']);
-        callback(res.body, links);
+        callback.success(res.body, links);
       })
       .catch(function(err) {
-        callback(err);
+        callback.error(err);
       })
   },
   getDeploymentsInProgress: function(callback, page, per_page) {
@@ -464,10 +464,10 @@ var AppActions = {
           deployments: deployments
         });
         var links = parse(res.headers['link']);
-        callback(res.body, links);
+        callback.success(res.body, links);
       })
       .catch(function(err) {
-        callback(err);
+        callback.error(err);
       })
   },
   getPastDeployments: function(callback, page, per_page) {
@@ -482,10 +482,10 @@ var AppActions = {
           deployments: deployments
         });
         var links = parse(res.headers['link']);
-        callback(res.body, links);
+        callback.success(res.body, links);
       })
       .catch(function(err) {
-        callback(err);
+        callback.error(err);
       })
   },
   getPendingDeployments: function(callback, page, per_page) {
@@ -500,10 +500,10 @@ var AppActions = {
           deployments: deployments
         });
         var links = parse(res.headers['link']);
-        callback(res.body, links);
+        callback.success(res.body, links);
       })
       .catch(function(err) {
-        callback(err);
+        callback.error(err);
       })
   },
   getDeploymentCount: function(status, callback) {
