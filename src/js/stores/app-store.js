@@ -430,7 +430,7 @@ function setHealth(devices) {
 
 function _setSnackbar(message, duration) {
   var show = message ? true : false; 
-  _snackbar = {open: show, message: message};
+  _snackbar = {open: show, message: message, maxWidth: "900px"};
 }
 
 function _setCurrentUser(user) {

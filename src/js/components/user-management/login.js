@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Router, Route} from 'react-router';
 import cookie from 'react-cookie';
+import { clearAllRetryTimers } from '../../utils/retrytimer';
 
 var AppActions = require('../../actions/app-actions');
 var AppStore = require('../../stores/app-store');
@@ -29,6 +30,7 @@ var Login = createReactClass({
   },
 
   componentDidMount: function() {
+    clearAllRetryTimers();
     this._checkLoggedIn();
   },
 
@@ -101,6 +103,7 @@ var Login = createReactClass({
 
         <Snackbar
           open={this.state.snackbar.open}
+          bodyStyle={{maxWidth: this.state.snackbar.maxWidth}}
           message={this.state.snackbar.message}
           autoHideDuration={8000}
         />

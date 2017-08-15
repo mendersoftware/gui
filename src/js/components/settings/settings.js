@@ -106,6 +106,7 @@ var Settings =  createReactClass({
         </div>
 
         <Snackbar
+          bodyStyle={{maxWidth: this.state.snackbar.maxWidth}}
           open={this.state.snackbar.open}
           message={this.state.snackbar.message}
           autoHideDuration={8000} 

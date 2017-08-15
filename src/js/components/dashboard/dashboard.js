@@ -1,11 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+
 var AppStore = require('../../stores/app-store');
 var LocalStore = require('../../stores/local-store');
 var AppActions = require('../../actions/app-actions');
 var Deployments = require('./deployments');
 var createReactClass = require('create-react-class');
 import { Router, Route, Link } from 'react-router';
+import { setRetryTimer, clearRetryTimer, clearAllRetryTimers } from '../../utils/retrytimer';
 import RaisedButton from 'material-ui/RaisedButton';
 import Snackbar from 'material-ui/Snackbar';
 
@@ -44,6 +46,7 @@ var Dashboard = createReactClass({
     AppStore.removeChangeListener(this._onChange);
   },
   componentDidMount: function() {
+    clearAllRetryTimers();
     this.timer = setInterval(this._refreshDeployments, 5000);
     this._refreshDeployments();
     this._refreshAdmissions();
@@ -120,6 +123,7 @@ var Dashboard = createReactClass({
         <Snackbar
           open={this.state.snackbar.open}
           message={this.state.snackbar.message}
+          bodyStyle={{maxWidth: this.state.snackbar.maxWidth}}
           autoHideDuration={8000}
           onRequestClose={this.handleRequestClose}
         />

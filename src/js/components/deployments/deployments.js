@@ -1,4 +1,5 @@
 import React from 'react';
+import { setRetryTimer, clearRetryTimer, clearAllRetryTimers } from '../../utils/retrytimer';
 var createReactClass = require('create-react-class');
 var AppStore = require('../../stores/app-store');
 var AppActions = require('../../actions/app-actions');
@@ -39,6 +40,7 @@ var Deployments = createReactClass({
     AppStore.changeListener(this._onChange);
   },
   componentDidMount: function() {
+    clearAllRetryTimers();
     var artifact = AppStore.getDeploymentArtifact();
     this.setState({artifact: artifact});
     this.timer = setInterval(this._refreshDeployments, 10000);
@@ -469,6 +471,7 @@ var Deployments = createReactClass({
          <Snackbar
           open={this.state.snackbar.open}
           message={this.state.snackbar.message}
+          bodyStyle={{maxWidth: this.state.snackbar.maxWidth}}
           autoHideDuration={5000}
           onRequestClose={this.handleRequestClose}
         />
