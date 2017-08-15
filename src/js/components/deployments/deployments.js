@@ -275,6 +275,7 @@ var Deployments = createReactClass({
   },
   componentWillUnmount: function () {
     clearInterval(this.timer);
+    clearAllRetryTimers();
     AppStore.removeChangeListener(this._onChange);
   },
   _onChange: function() {
