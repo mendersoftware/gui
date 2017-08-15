@@ -2,14 +2,14 @@ var AppActions = require('../actions/app-actions');
 var timerArr = {};
 
 export function setRetryTimer(service, msg, timeLeft) {
-  if (timerArr[service]) {
-    clearRetryTimer(service);
+  if (!timerArr[service]) {
+  
+    var remaining = timeLeft;
+    timerArr[service] = setInterval(function() {
+      remaining -= 1000;
+      remaining > 0 ? AppActions.setSnackbar(msg + " Retrying in " + remaining/1000 + " seconds") : clearRetryTimer(service);
+    }, 1000);
   }
-  var remaining = timeLeft;
-  timerArr[service] = setInterval(function() {
-    remaining -= 1000;
-    remaining > 0 ? AppActions.setSnackbar(msg + " Retrying in " + remaining/1000 + " seconds") : clearRetryTimer(service);
-  }, 1000);
 }
 
 export function clearRetryTimer(service) {
