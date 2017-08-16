@@ -2,7 +2,7 @@ import React from 'react';
 import { fullyDecodeURI } from '../../helpers';
 var createReactClass = require('create-react-class');
 var pluralize = require('pluralize');
-
+import validator from 'validator';
 import MenuItem from 'material-ui/MenuItem';
 import SelectField from 'material-ui/SelectField';
 import TextField from 'material-ui/TextField';
@@ -53,9 +53,9 @@ var GroupSelector = createReactClass({
     name = fullyDecodeURI(name);
     var errorText = null;
     var invalid = false;
-    if (name === "All devices") {
-      errorText = 'The group cannot be called "All devices". Try another name';
+    if  (name && !validator.isWhitelisted(name, 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-')) {
       invalid = true;
+      errorText = 'Valid characters are a-z, A-Z, 0-9, _ and -';
     }
     else if (name) {
       for (var i=0;i<this.props.groups.length; i++) {
