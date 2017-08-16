@@ -8,6 +8,7 @@ import SearchInput from 'react-search-input';
 import cookie from 'react-cookie';
 import FontIcon from 'material-ui/FontIcon';
 import Checkbox from 'material-ui/Checkbox';
+import validator from 'validator';
 var createReactClass = require('create-react-class');
 var AppActions = require('../../actions/app-actions');
 var AppStore = require('../../stores/app-store');
@@ -79,9 +80,9 @@ var DevicePicker = createReactClass({
     var invalid = false;
     var errorText = null;
     if (newName) {
-      if (newName === "All devices") {
+      if (!validator.isWhitelisted(newName, 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-')) {
         invalid = true;
-        errorText = 'The group cannot be called "All devices". Try another name';
+        errorText = 'Valid characters are a-z, A-Z, 0-9, _ and -';
       } else {
         for (var i=0;i<this.props.groupList.length; i++) {
           if (decodeURIComponent(this.props.groupList[i]) === newName) {
