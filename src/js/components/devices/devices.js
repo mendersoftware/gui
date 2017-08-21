@@ -329,11 +329,14 @@ var Devices = createReactClass({
     // if device already accepted (accepted===true), set true to use devauth api
     // otherwise use device admn api
     var self = this;
+    self.closeDialogs();
+    self._pauseTimers(true); // pause periodic calls to device apis until finished authing devices
+
     var callback = {
       success: function(data) {
         AppActions.setSnackbar("Device was rejected successfully");
-        self.closeDialogs();
         self._refreshAdmissions();
+        self._refreshDevices();
         self.setState({expandedAdmRow: null});
         if (accepted) { self._setDeviceDetails(self.state.blockDevice) }
       },
@@ -341,6 +344,7 @@ var Devices = createReactClass({
         AppActions.setSnackbar("There was a problem rejecting the device: "+err);
       }
     };
+
     if (accepted) {
       AppActions.blockDevice(self.state.blockDevice, callback);
     } else {
