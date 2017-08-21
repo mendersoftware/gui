@@ -63,7 +63,11 @@ var Authorized =  createReactClass({
   },
   _authorizeDevices: function(devices, index) {
     this.props.authorizeDevices(devices);
-    this.setState({authLoading: index});
+    if (index !== null) {
+      this.setState({authLoading: index});
+    } else {
+      this.setState({authLoading: "all"});
+    }
   },
   _blockDevice: function(device, index) {
     this.props.block(device);
@@ -147,7 +151,20 @@ var Authorized =  createReactClass({
           </TableBody>
         </Table>
 
-        <RaisedButton onClick={this._authorizeDevices.bind(null, this.props.pending)} primary={true} label={"Authorize " + devices.length +" " + pluralize("devices", devices.length)} style={{position:"absolute", bottom: "15px", right:"15px"}} />
+
+        <div style={{position:"absolute", bottom: "15px", right:"15px"}}>
+
+          {
+            (this.state.authLoading === "all" && this.props.disabled) ?
+                 <div style={{width:"150px", marginTop: "10px", position:"relative", top:"5px"}} className="inline-block">
+                    <Loader table={true} waiting={true} show={true} />
+                </div>
+            :
+            null
+          }
+     
+          <RaisedButton disabled={this.props.disabled} onClick={this._authorizeDevices.bind(null, this.props.pending, null)} primary={true} label={"Authorize " + devices.length +" " + pluralize("devices", devices.length)} />
+        </div>
       </Collapse>
     );
   }
