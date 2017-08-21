@@ -5,10 +5,9 @@ import type { Element } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import warning from 'warning';
-import { createStyleSheet } from 'jss-theme-reactor';
 import withStyles from '../styles/withStyles';
 
-export const styleSheet = createStyleSheet('MuiListItemAvatar', {
+export const styles = {
   root: {
     width: 36,
     height: 36,
@@ -19,9 +18,13 @@ export const styleSheet = createStyleSheet('MuiListItemAvatar', {
     width: 20,
     height: 20,
   },
-});
+};
 
-type Props = {
+type DefaultProps = {
+  classes: Object,
+};
+
+export type Props = {
   /**
    * The content of the component, normally `Avatar`.
    */
@@ -29,17 +32,19 @@ type Props = {
   /**
    * Useful to extend the style applied to components.
    */
-  classes: Object,
+  classes?: Object,
   /**
    * @ignore
    */
   className?: string,
 };
 
+type AllProps = DefaultProps & Props;
+
 /**
  * It's a simple wrapper to apply the `dense` mode styles to `Avatar`.
  */
-function ListItemAvatar(props: Props, context: { dense: boolean }) {
+function ListItemAvatar(props: AllProps, context: { dense: boolean }) {
   if (context.dense === undefined) {
     warning(
       false,
@@ -71,4 +76,4 @@ ListItemAvatar.contextTypes = {
 
 ListItemAvatar.muiName = 'ListItemAvatar';
 
-export default withStyles(styleSheet)(ListItemAvatar);
+export default withStyles(styles, { name: 'MuiListItemAvatar' })(ListItemAvatar);

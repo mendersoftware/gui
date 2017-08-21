@@ -3,18 +3,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import { createStyleSheet } from 'jss-theme-reactor';
 import withStyles from '../styles/withStyles';
 import Typography from '../Typography';
 
-export const styleSheet = createStyleSheet('MuiDialogTitle', theme => ({
+export const styles = (theme: Object) => ({
   root: {
     margin: 0,
     padding: `${theme.spacing.unit * 3}px ${theme.spacing.unit * 3}px \
       20px ${theme.spacing.unit * 3}px`,
     flex: '0 0 auto',
   },
-}));
+});
 
 function DialogTitle(props) {
   const { children, classes, className, disableTypography, ...other } = props;
@@ -45,7 +44,7 @@ DialogTitle.propTypes = {
   className: PropTypes.string,
   /**
    * If `true`, the children won't be wrapped by a typography component.
-   * For instance, that can be usefull to can render an h4 instead of a
+   * For instance, that can be useful to can render an h4 instead of a
    */
   disableTypography: PropTypes.bool,
 };
@@ -54,4 +53,4 @@ DialogTitle.defaultProps = {
   disableTypography: false,
 };
 
-export default withStyles(styleSheet)(DialogTitle);
+export default withStyles(styles, { name: 'MuiDialogTitle' })(DialogTitle);

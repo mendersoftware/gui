@@ -1,12 +1,11 @@
 # JSS plugin enables support for nested rules
 
+[![Gitter](https://badges.gitter.im/JoinChat.svg)](https://gitter.im/cssinjs/lobby)
+
 Make sure you read [how to use
 plugins](https://github.com/cssinjs/jss/blob/master/docs/setup.md#setup-with-plugins)
 in general.
 
-[Demo](http://cssinjs.github.io/examples/index.html#plugin-jss-nested)
-
-[![Gitter](https://badges.gitter.im/JoinChat.svg)](https://gitter.im/cssinjs/lobby)
 
 ## Use `&` to reference selector of the parent rule.
 
@@ -147,6 +146,10 @@ Compiles to:
   background: red;
 }
 ```
+
+## Demo
+
+[Simple](http://cssinjs.github.io/examples/plugins/jss-nested/simple/index.html)
 
 ## Issues
 

@@ -15,7 +15,6 @@ if (typeof window !== 'undefined') { // Browser window
 var Emitter = require('component-emitter');
 var RequestBase = require('./request-base');
 var isObject = require('./is-object');
-var isFunction = require('./is-function');
 var ResponseBase = require('./response-base');
 var shouldRetry = require('./should-retry');
 
@@ -60,7 +59,7 @@ request.getXHR = function () {
     try { return new ActiveXObject('Msxml2.XMLHTTP.3.0'); } catch(e) {}
     try { return new ActiveXObject('Msxml2.XMLHTTP'); } catch(e) {}
   }
-  throw Error("Browser-only verison of superagent could not find XHR");
+  throw Error("Browser-only version of superagent could not find XHR");
 };
 
 /**
@@ -170,7 +169,7 @@ request.parseString = parseString;
 request.types = {
   html: 'text/html',
   json: 'application/json',
-  xml: 'application/xml',
+  xml: 'text/xml',
   urlencoded: 'application/x-www-form-urlencoded',
   'form': 'application/x-www-form-urlencoded',
   'form-data': 'application/x-www-form-urlencoded'
@@ -526,10 +525,10 @@ Request.prototype.auth = function(user, pass, options){
       this.username = user;
       this.password = pass;
     break;
-      
+
     case 'bearer': // usage would be .auth(accessToken, { type: 'bearer' })
       this.set('Authorization', 'Bearer ' + user);
-    break;  
+    break;
   }
   return this;
 };
@@ -644,32 +643,6 @@ Request.prototype.pipe = Request.prototype.write = function(){
 };
 
 /**
- * Compose querystring to append to req.url
- *
- * @api private
- */
-
-Request.prototype._appendQueryString = function(){
-  var query = this._query.join('&');
-  if (query) {
-    this.url += (this.url.indexOf('?') >= 0 ? '&' : '?') + query;
-  }
-
-  if (this._sort) {
-    var index = this.url.indexOf('?');
-    if (index >= 0) {
-      var queryArr = this.url.substring(index + 1).split('&');
-      if (isFunction(this._sort)) {
-        queryArr.sort(this._sort);
-      } else {
-        queryArr.sort();
-      }
-      this.url = this.url.substring(0, index) + '?' + queryArr.join('&');
-    }
-  }
-};
-
-/**
  * Check if `obj` is a host object,
  * we don't want to serialize these :)
  *
@@ -701,7 +674,7 @@ Request.prototype.end = function(fn){
   this._callback = fn || noop;
 
   // querystring
-  this._appendQueryString();
+  this._finalizeQueryString();
 
   return this._end();
 };
@@ -834,7 +807,7 @@ request.get = function(url, data, fn){
 request.head = function(url, data, fn){
   var req = request('HEAD', url);
   if ('function' == typeof data) fn = data, data = null;
-  if (data) req.send(data);
+  if (data) req.query(data);
   if (fn) req.end(fn);
   return req;
 };

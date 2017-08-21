@@ -1,22 +1,5 @@
 (function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.superagent = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 /**
- * Check if `fn` is a function.
- *
- * @param {Function} fn
- * @return {Boolean}
- * @api private
- */
-var isObject = require('./is-object');
-
-function isFunction(fn) {
-  var tag = isObject(fn) ? Object.prototype.toString.call(fn) : '';
-  return tag === '[object Function]';
-}
-
-module.exports = isFunction;
-
-},{"./is-object":2}],2:[function(require,module,exports){
-/**
  * Check if `obj` is an object.
  *
  * @param {Object} obj
@@ -30,7 +13,7 @@ function isObject(obj) {
 
 module.exports = isObject;
 
-},{}],3:[function(require,module,exports){
+},{}],2:[function(require,module,exports){
 /**
  * Module of mixed-in functions shared between node and client code
  */
@@ -141,7 +124,7 @@ RequestBase.prototype.serialize = function serialize(fn){
  *
  * Value of 0 or false means no timeout.
  *
- * @param {Number|Object} ms or {response, read, deadline}
+ * @param {Number|Object} ms or {response, deadline}
  * @return {Request} for chaining
  * @api public
  */
@@ -588,6 +571,35 @@ RequestBase.prototype.sortQuery = function(sort) {
 };
 
 /**
+ * Compose querystring to append to req.url
+ *
+ * @api private
+ */
+RequestBase.prototype._finalizeQueryString = function(){
+  var query = this._query.join('&');
+  if (query) {
+    this.url += (this.url.indexOf('?') >= 0 ? '&' : '?') + query;
+  }
+  this._query.length = 0; // Makes the call idempotent
+
+  if (this._sort) {
+    var index = this.url.indexOf('?');
+    if (index >= 0) {
+      var queryArr = this.url.substring(index + 1).split('&');
+      if ('function' === typeof this._sort) {
+        queryArr.sort(this._sort);
+      } else {
+        queryArr.sort();
+      }
+      this.url = this.url.substring(0, index) + '?' + queryArr.join('&');
+    }
+  }
+};
+
+// For backwards compat only
+RequestBase.prototype._appendQueryString = function() {console.trace("Unsupported");}
+
+/**
  * Invoke callback with timeout error.
  *
  * @api private
@@ -623,7 +635,7 @@ RequestBase.prototype._setTimeouts = function() {
   }
 }
 
-},{"./is-object":2}],4:[function(require,module,exports){
+},{"./is-object":1}],3:[function(require,module,exports){
 
 /**
  * Module dependencies.
@@ -758,7 +770,7 @@ ResponseBase.prototype._setStatusProperties = function(status){
     this.notFound = 404 == status;
 };
 
-},{"./utils":6}],5:[function(require,module,exports){
+},{"./utils":5}],4:[function(require,module,exports){
 var ERROR_CODES = [
   'ECONNRESET',
   'ETIMEDOUT',
@@ -783,7 +795,7 @@ module.exports = function shouldRetry(err, res) {
   return false;
 };
 
-},{}],6:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 
 /**
  * Return the mime type for the given `str`.
@@ -852,7 +864,7 @@ exports.cleanHeader = function(header, shouldStripCookie){
   }
   return header;
 };
-},{}],7:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 
 /**
  * Expose `Emitter`.
@@ -1017,7 +1029,7 @@ Emitter.prototype.hasListeners = function(event){
   return !! this.listeners(event).length;
 };
 
-},{}],8:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 /**
  * Root reference for iframes.
  */
@@ -1035,7 +1047,6 @@ if (typeof window !== 'undefined') { // Browser window
 var Emitter = require('component-emitter');
 var RequestBase = require('./request-base');
 var isObject = require('./is-object');
-var isFunction = require('./is-function');
 var ResponseBase = require('./response-base');
 var shouldRetry = require('./should-retry');
 
@@ -1080,7 +1091,7 @@ request.getXHR = function () {
     try { return new ActiveXObject('Msxml2.XMLHTTP.3.0'); } catch(e) {}
     try { return new ActiveXObject('Msxml2.XMLHTTP'); } catch(e) {}
   }
-  throw Error("Browser-only verison of superagent could not find XHR");
+  throw Error("Browser-only version of superagent could not find XHR");
 };
 
 /**
@@ -1190,7 +1201,7 @@ request.parseString = parseString;
 request.types = {
   html: 'text/html',
   json: 'application/json',
-  xml: 'application/xml',
+  xml: 'text/xml',
   urlencoded: 'application/x-www-form-urlencoded',
   'form': 'application/x-www-form-urlencoded',
   'form-data': 'application/x-www-form-urlencoded'
@@ -1546,10 +1557,10 @@ Request.prototype.auth = function(user, pass, options){
       this.username = user;
       this.password = pass;
     break;
-      
+
     case 'bearer': // usage would be .auth(accessToken, { type: 'bearer' })
       this.set('Authorization', 'Bearer ' + user);
-    break;  
+    break;
   }
   return this;
 };
@@ -1664,32 +1675,6 @@ Request.prototype.pipe = Request.prototype.write = function(){
 };
 
 /**
- * Compose querystring to append to req.url
- *
- * @api private
- */
-
-Request.prototype._appendQueryString = function(){
-  var query = this._query.join('&');
-  if (query) {
-    this.url += (this.url.indexOf('?') >= 0 ? '&' : '?') + query;
-  }
-
-  if (this._sort) {
-    var index = this.url.indexOf('?');
-    if (index >= 0) {
-      var queryArr = this.url.substring(index + 1).split('&');
-      if (isFunction(this._sort)) {
-        queryArr.sort(this._sort);
-      } else {
-        queryArr.sort();
-      }
-      this.url = this.url.substring(0, index) + '?' + queryArr.join('&');
-    }
-  }
-};
-
-/**
  * Check if `obj` is a host object,
  * we don't want to serialize these :)
  *
@@ -1721,7 +1706,7 @@ Request.prototype.end = function(fn){
   this._callback = fn || noop;
 
   // querystring
-  this._appendQueryString();
+  this._finalizeQueryString();
 
   return this._end();
 };
@@ -1854,7 +1839,7 @@ request.get = function(url, data, fn){
 request.head = function(url, data, fn){
   var req = request('HEAD', url);
   if ('function' == typeof data) fn = data, data = null;
-  if (data) req.send(data);
+  if (data) req.query(data);
   if (fn) req.end(fn);
   return req;
 };
@@ -1952,5 +1937,5 @@ request.put = function(url, data, fn){
   return req;
 };
 
-},{"./is-function":1,"./is-object":2,"./request-base":3,"./response-base":4,"./should-retry":5,"component-emitter":7}]},{},[8])(8)
+},{"./is-object":1,"./request-base":2,"./response-base":3,"./should-retry":4,"component-emitter":6}]},{},[7])(7)
 });

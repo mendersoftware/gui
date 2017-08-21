@@ -108,7 +108,7 @@ RequestBase.prototype.serialize = function serialize(fn){
  *
  * Value of 0 or false means no timeout.
  *
- * @param {Number|Object} ms or {response, read, deadline}
+ * @param {Number|Object} ms or {response, deadline}
  * @return {Request} for chaining
  * @api public
  */
@@ -553,6 +553,35 @@ RequestBase.prototype.sortQuery = function(sort) {
   this._sort = typeof sort === 'undefined' ? true : sort;
   return this;
 };
+
+/**
+ * Compose querystring to append to req.url
+ *
+ * @api private
+ */
+RequestBase.prototype._finalizeQueryString = function(){
+  var query = this._query.join('&');
+  if (query) {
+    this.url += (this.url.indexOf('?') >= 0 ? '&' : '?') + query;
+  }
+  this._query.length = 0; // Makes the call idempotent
+
+  if (this._sort) {
+    var index = this.url.indexOf('?');
+    if (index >= 0) {
+      var queryArr = this.url.substring(index + 1).split('&');
+      if ('function' === typeof this._sort) {
+        queryArr.sort(this._sort);
+      } else {
+        queryArr.sort();
+      }
+      this.url = this.url.substring(0, index) + '?' + queryArr.join('&');
+    }
+  }
+};
+
+// For backwards compat only
+RequestBase.prototype._appendQueryString = function() {console.trace("Unsupported");}
 
 /**
  * Invoke callback with timeout error.
