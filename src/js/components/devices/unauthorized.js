@@ -89,7 +89,9 @@ var Authorized =  createReactClass({
       ;
       var deleteIcon = (this.state.blockLoading === index && this.props.disabled) ?
         (
-         <span>loading spinner</span>
+          <div className="inline-block">
+            <Loader table={true} waiting={true} show={true} />
+          </div>
         ) : 
         (
           <IconButton disabled={this.props.disabled} onClick={this._blockDevice.bind(null, device, index)}>
