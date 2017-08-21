@@ -1,11 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+
 var AppStore = require('../../stores/app-store');
 var LocalStore = require('../../stores/local-store');
 var AppActions = require('../../actions/app-actions');
 var Deployments = require('./deployments');
 var createReactClass = require('create-react-class');
 import { Router, Route, Link } from 'react-router';
+import { setRetryTimer, clearRetryTimer, clearAllRetryTimers } from '../../utils/retrytimer';
 import RaisedButton from 'material-ui/RaisedButton';
 import Snackbar from 'material-ui/Snackbar';
 
@@ -17,7 +19,8 @@ function getState() {
     recent: AppStore.getPastDeployments(),
     activity: AppStore.getActivity(),
     hideReview: localStorage.getItem("reviewDevices"),
-    snackbar: AppStore.getSnackbar()
+    snackbar: AppStore.getSnackbar(),
+    refreshDeploymentsLength: 10000,
   }
 }
 
@@ -41,12 +44,15 @@ var Dashboard = createReactClass({
   },
   componentWillUnmount: function () {
     clearInterval(this.timer);
+    clearAllRetryTimers();
     AppStore.removeChangeListener(this._onChange);
   },
   componentDidMount: function() {
-    this.timer = setInterval(this._refreshDeployments, 5000);
-    this._refreshDeployments();
-    this._refreshAdmissions();
+    var self = this;
+    clearAllRetryTimers();
+    self.timer = setInterval(self._refreshDeployments, self.state.refreshDeploymentsLength);
+    self._refreshDeployments();
+    self._refreshAdmissions();
   },
   _onChange: function() {
     this.setState(this.getInitialState());
@@ -55,16 +61,35 @@ var Dashboard = createReactClass({
     AppActions.setLocalStorage(key, value);
   },
   _refreshDeployments: function() {
-    AppActions.getPastDeployments(function() {
-      setTimeout(function() {
-        this.setState({doneActiveDepsLoading:true});
-      }.bind(this), 300)
-    }.bind(this), 1, 3);
-    AppActions.getDeploymentsInProgress(function() {
-      setTimeout(function() {
-        this.setState({donePastDepsLoading:true});
-      }.bind(this), 300)
-    }.bind(this));
+    var self = this;
+
+    var pastCallback = {
+      success: function () {
+        setTimeout(function() {
+          self.setState({doneActiveDepsLoading:true});
+        }, 300)
+      },
+      error: function (err) {
+        console.log(err);
+        var errormsg = err || "Please check your connection";
+        setRetryTimer("deployments", "Couldn't load deployments. " + errormsg, self.state.refreshDeploymentsLength);
+      }
+    }
+    AppActions.getPastDeployments(pastCallback, 1, 3);
+
+    var progressCallback = {
+      success: function () {
+        setTimeout(function() {
+          self.setState({donePastDepsLoading:true});
+        }, 300)
+      },
+      error: function (err) {
+        console.log(err);
+        var errormsg = err || "Please check your connection";
+        setRetryTimer("deployments", "Couldn't load deployments. " + errormsg, self.state.refreshDeploymentsLength);
+      }
+    };
+    AppActions.getDeploymentsInProgress(progressCallback);
   },
   _refreshAdmissions: function() {
     AppActions.getNumberOfDevicesForAdmission(function(count) {
@@ -120,6 +145,7 @@ var Dashboard = createReactClass({
         <Snackbar
           open={this.state.snackbar.open}
           message={this.state.snackbar.message}
+          bodyStyle={{maxWidth: this.state.snackbar.maxWidth}}
           autoHideDuration={8000}
           onRequestClose={this.handleRequestClose}
         />

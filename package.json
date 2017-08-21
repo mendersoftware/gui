@@ -62,7 +62,7 @@
     "superagent": "^3.5.2",
     "superagent-auth-bearer": "0.0.1",
     "superagent-use": "^0.1.0",
-    "validator": "^6.2.0",
+    "validator": "^8.0.0",
     "vinyl-source-stream": "^1.1.0",
     "watchify": "^3.7.0",
     "zxcvbn": "^4.4.1"

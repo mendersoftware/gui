@@ -4,6 +4,7 @@ import Time from 'react-time';
 import { Motion, spring } from 'react-motion';
 import Collapse from 'react-collapse';
 import ReactHeight from 'react-height';
+var Loader = require('../common/loader');
 var AppActions = require('../../actions/app-actions');
 var SelectedDevices = require('./selecteddevices');
 var pluralize = require('pluralize');
@@ -60,11 +61,17 @@ var Authorized =  createReactClass({
   _adjustCellHeight: function(height) {
     this.setState({divHeight: height+70});
   },
-  _authorizeDevices: function(devices) {
+  _authorizeDevices: function(devices, index) {
     this.props.authorizeDevices(devices);
+    if (index !== null) {
+      this.setState({authLoading: index});
+    } else {
+      this.setState({authLoading: "all"});
+    }
   },
-  _blockDevice: function(device) {
+  _blockDevice: function(device, index) {
     this.props.block(device);
+    this.setState({blockLoading: index});
   },
   render: function() {
     var devices = this.props.pending.map(function(device, index) {
@@ -72,18 +79,38 @@ var Authorized =  createReactClass({
       if ( this.props.expandedAdmRow === index ) {
         expanded = <SelectedDevices styles={this.props.styles} addTooltip={this.props.addTooltip} attributes={device.attributes} deviceId={this.state.deviceId} accept={this.props.authorizeDevices} block={this.props.block} device={this.state.expandedDevice} unauthorized={true} selected={[device]}  />
       }
+      var checkIcon = (this.state.authLoading === index && this.props.disabled) ?
+        (
+          <div className="inline-block">
+            <Loader table={true} waiting={true} show={true} />
+          </div>
+        ) : 
+        (
+          <IconButton disabled={this.props.disabled} onClick={this._authorizeDevices.bind(null, [device], index)}>
+              <FontIcon className="material-icons green">check_circle</FontIcon>
+          </IconButton>
+        )
+      ;
+      var deleteIcon = (this.state.blockLoading === index && this.props.disabled) ?
+        (
+          <div className="inline-block">
+            <Loader table={true} waiting={true} show={true} />
+          </div>
+        ) : 
+        (
+          <IconButton disabled={this.props.disabled} onClick={this._blockDevice.bind(null, device, index)}>
+            <FontIcon className="material-icons red">cancel</FontIcon>
+          </IconButton>
+        )
+      ;
       return (
         <TableRow style={{"backgroundColor": "#e9f4f3"}} className={expanded ? "expand" : null} hoverable={true} key={index}>
           <TableRowColumn style={expanded ? {height: this.state.divHeight} : null}>{device.id}</TableRowColumn>
           <TableRowColumn><Time value={device.request_time} format="YYYY-MM-DD HH:mm" /></TableRowColumn>
           <TableRowColumn>{device.status}</TableRowColumn>
           <TableRowColumn className="expandButton" style={{"paddingLeft": "12px"}}>
-            <IconButton disabled={this.props.disabled} onClick={this._authorizeDevices.bind(null, [device])}>
-              <FontIcon className="material-icons green">check_circle</FontIcon>
-            </IconButton>
-            <IconButton disabled={this.props.disabled} onClick={this._blockDevice.bind(null, device)}>
-              <FontIcon className="material-icons red">cancel</FontIcon>
-            </IconButton>
+            {checkIcon}
+            {deleteIcon}
           </TableRowColumn>
           <TableRowColumn style={{width:"0", padding:"0", overflow:"visible"}}>
   
@@ -124,7 +151,20 @@ var Authorized =  createReactClass({
           </TableBody>
         </Table>
 
-        <RaisedButton onClick={this._authorizeDevices.bind(null, this.props.pending)} primary={true} label={"Authorize " + devices.length +" " + pluralize("devices", devices.length)} style={{position:"absolute", bottom: "15px", right:"15px"}} />
+
+        <div style={{position:"absolute", bottom: "15px", right:"15px"}}>
+
+          {
+            (this.state.authLoading === "all" && this.props.disabled) ?
+                 <div style={{width:"150px", marginTop: "10px", position:"relative", top:"5px"}} className="inline-block">
+                    <Loader table={true} waiting={true} show={true} />
+                </div>
+            :
+            null
+          }
+     
+          <RaisedButton disabled={this.props.disabled} onClick={this._authorizeDevices.bind(null, this.props.pending, null)} primary={true} label={"Authorize " + devices.length +" " + pluralize("devices", devices.length)} />
+        </div>
       </Collapse>
     );
   }

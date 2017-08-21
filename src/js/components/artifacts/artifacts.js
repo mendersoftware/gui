@@ -5,6 +5,7 @@ var Repository = require('./repository.js');
 var createReactClass = require('create-react-class');
 
 import { Router, Route, Link } from 'react-router';
+import { setRetryTimer, clearRetryTimer, clearAllRetryTimers } from '../../utils/retrytimer';
 import Snackbar from 'material-ui/Snackbar';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
@@ -13,10 +14,10 @@ import RaisedButton from 'material-ui/RaisedButton';
 function getState() {
   return {
     artifacts: AppStore.getArtifactsRepo(),
-    groups: AppStore.getGroups(),
     selected: null,
     snackbar: AppStore.getSnackbar(),
-    remove: false
+    remove: false,
+    refreshArtifactsLength: 60000,
   }
 }
 
@@ -28,11 +29,13 @@ var Artifacts = createReactClass({
     AppStore.changeListener(this._onChange);
   },
   componentDidMount: function() {
+    clearAllRetryTimers();
+    this.artifactTimer = setInterval(this._getArtifacts, this.state.refreshArtifactsLength);
     this._getArtifacts();
-    this._getGroups();
-    this._getDevices();
   },
   componentWillUnmount: function() {
+    clearAllRetryTimers();
+    clearInterval(this.artifactTimer);
     AppStore.removeChangeListener(this._onChange);
   },
   _onChange: function() {
@@ -49,73 +52,20 @@ var Artifacts = createReactClass({
      this.setState({doneLoading: !bool});
   },
   _getArtifacts: function() {
+    var self = this;
     var callback = {
       success: function(artifacts) {
+        clearRetryTimer("artifacts");
         setTimeout(function() {
-          this.setState({doneLoading: true, artifacts:artifacts});
-        }.bind(this), 300);
-      }.bind(this),
+          self.setState({doneLoading: true, artifacts:artifacts});
+        }, 300);
+      },
       error: function(err) {
         var errormsg = err || "Please check your connection";
-        AppActions.setSnackbar("Artifacts couldn't be loaded. " +errormsg);
-        this.setState({doneLoading: true});
-      }.bind(this)
+        setRetryTimer("artifacts", "Artifacts couldn't be loaded. " + errormsg, self.state.refreshArtifactsLength);
+      }
     };
     AppActions.getArtifacts(callback);
-  },
-  _getGroups: function() {
-    var callback = {
-      success: function (groups) {
-        this.setState({groups: groups});
-        this._getGroupDevices(groups);
-      }.bind(this),
-      error: function(err) {
-        console.log(err);
-      }
-    };
-    AppActions.getGroups(callback);
-  },
-  _getDevices: function() {
-    AppActions.getDevices({
-      success: function(devices) {
-        if (!devices.length) {
-          AppActions.getNumberOfDevicesForAdmission(function(count) {
-            if (count) {
-              this.setState({hasPending:true});
-            }
-          }.bind(this));
-        } else {
-          var allDevices = [];
-          for (var i=0; i<devices.length;i++) {
-            allDevices.push(devices[i]);
-          }
-          this.setState({hasDevices:true, allDevices: allDevices});
-        }
-      }.bind(this),
-      error: function(err) {
-        console.log("Error: " +err);
-      }
-    });
-  },
-  _getGroupDevices: function(groups) {
-    // get list of devices for each group and save them to state 
-    var i, group;
-    var callback = {
-      success: function(devices) {
-        var tmp = {};
-        var devs = [];
-        for (var x=0;x<devices.length;x++) {
-          // get full details, not just id
-          devs.push(AppStore.getSingleDevice(devices[x]));
-        }
-        tmp[group] = devs;
-        this.setState({groupDevices:tmp});
-      }.bind(this)
-    }
-    for (i=0;i<groups.length;i++) {
-      group = groups[i];
-      AppActions.getGroupDevices(groups[i], callback);
-    }
   },
   _removeDialog: function(artifact) {
     AppActions.setSnackbar("");
@@ -162,7 +112,7 @@ var Artifacts = createReactClass({
     return (
       <div className="contentContainer">
         <div className="relative">
-          <Repository removeArtifact={this._removeDialog} groupDevices={this.state.groupDevices} allDevices={this.state.allDevices} refreshArtifacts={this._getArtifacts} startLoader={this._startLoading} loading={!this.state.doneLoading} selected={this.state.selected} artifacts={this.state.artifacts} groups={this.state.groups} hasPending={this.state.hasPending} hasDevices={this.state.hasDevices} />
+          <Repository removeArtifact={this._removeDialog} refreshArtifacts={this._getArtifacts} startLoader={this._startLoading} loading={!this.state.doneLoading} selected={this.state.selected} artifacts={this.state.artifacts} />
         </div>
 
         <Dialog
@@ -177,6 +127,7 @@ var Artifacts = createReactClass({
           open={this.state.snackbar.open}
           message={this.state.snackbar.message}
           autoHideDuration={8000}
+          bodyStyle={{maxWidth: this.state.snackbar.maxWidth}}
           onRequestClose={this.handleRequestClose}
         />
       </div>

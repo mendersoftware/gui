@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Router, Route, Link } from 'react-router';
 import cookie from 'react-cookie';
 import { decodeSessionToken } from '../../helpers';
+import { clearAllRetryTimers } from '../../utils/retrytimer';
 var AppActions = require('../../actions/app-actions');
 var AppStore = require('../../stores/app-store');
 var createReactClass = require('create-react-class');
@@ -97,7 +98,10 @@ var Header = createReactClass({
     AppActions.setSnackbar("");
   },
   _handleHeaderMenu: function(event, index, value) {
-    if (value==="/login") { cookie.remove('JWT'); }
+    if (value==="/login") {
+      clearAllRetryTimers();
+      cookie.remove('JWT'); 
+    }
     this.context.router.push(value);
   },
   render: function() {

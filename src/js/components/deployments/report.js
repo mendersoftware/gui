@@ -101,11 +101,19 @@ var DeploymentReport = createReactClass({
     }
     return artifact;
   },
+  _getDeviceType: function (device) {
+    var device_type = "-";
+    for (var i=0;i<device.attributes.length;i++) {
+      if (device.attributes[i].name === "device_type") {
+        device_type = device.attributes[i].value;
+      }
+    }
+    return device_type;
+  },
   _getDeviceDetails: function (devices) {
     var self = this;
-    var deviceArtifacts = self.state.deviceArtifacts || {};
     for (var i=0;i<devices.length;i++) {
-      // get device artifact details not listed in schedule data
+      // get device artifact and inventory details not listed in schedule data
       self._setSingleDeviceDetails(devices[i].id);
     }
   },
@@ -114,10 +122,13 @@ var DeploymentReport = createReactClass({
     AppActions.getDeviceById(id, {
       success: function(device_inventory) {
         var artifact = self._getDeviceArtifact(device_inventory);
-        var deviceArtifacts = self.state.deviceArtifacts || {};
+        var device_type = self._getDeviceType(device_inventory);
+        var deviceInventory = self.state.deviceInventory || {};
+        var inventory = {device_type: device_type, artifact: artifact};
+
         if (!self.state.stopRestCalls) {
           self.setState({
-            deviceArtifacts: update(deviceArtifacts, {[id]: {$set: artifact}})
+            deviceInventory: update(deviceInventory, {[id]: {$set: inventory}})
           })
         }
       },
@@ -310,7 +321,7 @@ var DeploymentReport = createReactClass({
 
 
         <div style={{minHeight:"20vh"}}>
-          <DeviceList status={this.props.deployment.status} devices={deviceList} deviceArtifacts={this.state.deviceArtifacts} viewLog={this.viewLog} finished={this.updatedList} past={this.props.past} />
+          <DeviceList status={this.props.deployment.status} devices={deviceList} deviceInventory={this.state.deviceInventory} viewLog={this.viewLog} finished={this.updatedList} past={this.props.past} />
           {allDevices.length ? <Pagination locale={_en_US} simple pageSize={this.state.perPage} current={this.state.currentPage || 1} total={allDevices.length} onChange={this._handlePageChange} /> : null }
         </div>
 
