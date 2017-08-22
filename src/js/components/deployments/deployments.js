@@ -1,4 +1,5 @@
 import React from 'react';
+import { setRetryTimer, clearRetryTimer, clearAllRetryTimers } from '../../utils/retrytimer';
 var createReactClass = require('create-react-class');
 var AppStore = require('../../stores/app-store');
 var AppActions = require('../../actions/app-actions');
@@ -27,7 +28,8 @@ function getState() {
     groups: AppStore.getGroups(),
     allDevices: AppStore.getAllDevices(),
     invalid: true,
-    snackbar: AppStore.getSnackbar()
+    snackbar: AppStore.getSnackbar(),
+    refreshDeploymentsLength: 10000,
   }
 }
 
@@ -39,9 +41,10 @@ var Deployments = createReactClass({
     AppStore.changeListener(this._onChange);
   },
   componentDidMount: function() {
+    clearAllRetryTimers();
     var artifact = AppStore.getDeploymentArtifact();
     this.setState({artifact: artifact});
-    this.timer = setInterval(this._refreshDeployments, 10000);
+    this.timer = setInterval(this._refreshDeployments, this.state.refreshDeploymentsLength);
     this._refreshDeployments();
 
     var artifactsCallback = {
@@ -129,22 +132,32 @@ var Deployments = createReactClass({
     } else {
       page = self.state.prog_page;
     }
-    AppActions.getDeploymentsInProgress(function(deployments, links) {
-      self.setState({doneLoading:true});
-      self._dismissSnackBar();
-     
-      // Get full count of deployments for pagination
-      if (links.next || links.prev) {
-         AppActions.getDeploymentCount("inprogress", function(count) {
-          self.setState({progressCount: count});
-          if (count && !deployments.length) {
-            self._refreshInProgress(1);
-          }
-        });
-      } else {
-        self.setState({progressCount: deployments.length});
+
+    var callback = {
+      success: function (deployments, links) {
+        self.setState({doneLoading:true});
+        clearRetryTimer("progress");
+       
+        // Get full count of deployments for pagination
+        if (links.next || links.prev) {
+           AppActions.getDeploymentCount("inprogress", function(count) {
+            self.setState({progressCount: count});
+            if (count && !deployments.length) {
+              self._refreshInProgress(1);
+            }
+          });
+        } else {
+          self.setState({progressCount: deployments.length});
+        }
+      },
+      error: function (err) {
+        console.log(err);
+        var errormsg = err || "Please check your connection";
+        setRetryTimer("deployments", "Couldn't load deployments. " + errormsg, self.state.refreshDeploymentsLength);
       }
-    }, page, per_page);
+    };
+
+    AppActions.getDeploymentsInProgress(callback, page, per_page);
   },
   _refreshPending: function(page, per_page) {
     /*
@@ -157,21 +170,31 @@ var Deployments = createReactClass({
     } else {
       page = self.state.pend_page;
     }
-    AppActions.getPendingDeployments(function(deployments, links) {
-      self._dismissSnackBar();
-    
-      // Get full count of deployments for pagination
-      if (links.next || links.prev) {
-        AppActions.getDeploymentCount("pending", function(count) {
-          self.setState({pendingCount: count});
-          if (count && !deployments.length) {
-            self._refreshPending(1);
-          }
-        });
-      } else {
-        self.setState({pendingCount: deployments.length});
+
+    var callback = {
+      success: function(deployments, links) {
+        self._dismissSnackBar();
+      
+        // Get full count of deployments for pagination
+        if (links.next || links.prev) {
+          AppActions.getDeploymentCount("pending", function(count) {
+            self.setState({pendingCount: count});
+            if (count && !deployments.length) {
+              self._refreshPending(1);
+            }
+          });
+        } else {
+          self.setState({pendingCount: deployments.length});
+        }
+      },
+      error: function (err) {
+        console.log(err);
+        var errormsg = err || "Please check your connection";
+        setRetryTimer("deployments", "Couldn't load deployments. " + errormsg, self.state.refreshDeploymentsLength);
       }
-    }, page, per_page);
+    };
+
+    AppActions.getPendingDeployments(callback, page, per_page);
   },
   _refreshPast: function(page, per_page) {
     /*
@@ -184,23 +207,32 @@ var Deployments = createReactClass({
     } else {
       page = self.state.past_page;
     }
-   
-    AppActions.getPastDeployments(function(deployments, links) {
-      self.setState({doneLoading:true});
-      self._dismissSnackBar();
 
-      // Get full count of deployments for pagination
-      if (links.next || links.prev) {
-        AppActions.getDeploymentCount("finished", function(count) {
-          self.setState({pastCount: count});
-          if (count && !deployments.length) {
-            self._refreshPast(1);
-          }
-        });
-      } else {
-        self.setState({pastCount: deployments.length});
+    var callback = {
+      success: function(deployments, links) {
+        self.setState({doneLoading:true});
+        self._dismissSnackBar();
+
+        // Get full count of deployments for pagination
+        if (links.next || links.prev) {
+          AppActions.getDeploymentCount("finished", function(count) {
+            self.setState({pastCount: count});
+            if (count && !deployments.length) {
+              self._refreshPast(1);
+            }
+          });
+        } else {
+          self.setState({pastCount: deployments.length});
+        }
+      },
+      error: function (err) {
+        console.log(err);
+        var errormsg = err || "Please check your connection";
+        setRetryTimer("deployments", "Couldn't load deployments. " + errormsg, self.state.refreshDeploymentsLength);
       }
-    }, page, per_page);
+    };
+   
+    AppActions.getPastDeployments(callback, page, per_page);
   },
   _dismissSnackBar: function() {
     setTimeout(function() {
@@ -243,6 +275,7 @@ var Deployments = createReactClass({
   },
   componentWillUnmount: function () {
     clearInterval(this.timer);
+    clearAllRetryTimers();
     AppStore.removeChangeListener(this._onChange);
   },
   _onChange: function() {
@@ -385,7 +418,7 @@ var Deployments = createReactClass({
       success: function(data) {
         self.setState({doneLoading:false});
         clearInterval(self.timer);
-        self.timer = setInterval(self._refreshDeployments, 10000);
+        self.timer = setInterval(self._refreshDeployments, self.state.refreshDeploymentsLength);
         self._refreshDeployments();
         self.dialogDismiss('dialog');
         AppActions.setSnackbar("The deployment was successfully aborted");
@@ -469,6 +502,7 @@ var Deployments = createReactClass({
          <Snackbar
           open={this.state.snackbar.open}
           message={this.state.snackbar.message}
+          bodyStyle={{maxWidth: this.state.snackbar.maxWidth}}
           autoHideDuration={5000}
           onRequestClose={this.handleRequestClose}
         />
