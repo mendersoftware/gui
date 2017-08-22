@@ -3,11 +3,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import { createStyleSheet } from 'jss-theme-reactor';
 import withStyles from '../styles/withStyles';
 import { capitalizeFirstLetter } from '../utils/helpers';
 
-export const styleSheet = createStyleSheet('MuiListSubheader', theme => ({
+export const styles = (theme: Object) => ({
   root: {
     boxSizing: 'border-box',
     lineHeight: '48px',
@@ -26,7 +25,7 @@ export const styleSheet = createStyleSheet('MuiListSubheader', theme => ({
   inset: {
     paddingLeft: theme.spacing.unit * 9,
   },
-}));
+});
 
 function ListSubheader(props) {
   const { classes, className: classNameProp, color, inset, children, ...other } = props;
@@ -74,4 +73,6 @@ ListSubheader.defaultProps = {
   inset: false,
 };
 
-export default withStyles(styleSheet)(ListSubheader);
+ListSubheader.muiName = 'ListSubheader';
+
+export default withStyles(styles, { name: 'MuiListSubheader' })(ListSubheader);

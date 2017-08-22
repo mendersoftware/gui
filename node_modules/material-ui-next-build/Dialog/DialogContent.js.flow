@@ -3,22 +3,21 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import { createStyleSheet } from 'jss-theme-reactor';
 import withStyles from '../styles/withStyles';
 
-export const styleSheet = createStyleSheet('MuiDialogContent', theme => {
-  const gutter = theme.spacing.unit * 3;
+export const styles = (theme: Object) => {
+  const spacing = theme.spacing.unit * 3;
   return {
     root: {
       flex: '1 1 auto',
       overflowY: 'auto',
-      padding: `0 ${gutter}px ${gutter}px ${gutter}px`,
+      padding: `0 ${spacing}px ${spacing}px ${spacing}px`,
       '&:first-child': {
-        paddingTop: gutter,
+        paddingTop: spacing,
       },
     },
   };
-});
+};
 
 function DialogContent(props) {
   const { classes, children, className, ...other } = props;
@@ -45,4 +44,4 @@ DialogContent.propTypes = {
   className: PropTypes.string,
 };
 
-export default withStyles(styleSheet)(DialogContent);
+export default withStyles(styles, { name: 'MuiDialogContent' })(DialogContent);

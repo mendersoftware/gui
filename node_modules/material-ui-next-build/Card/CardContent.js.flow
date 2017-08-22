@@ -2,33 +2,38 @@
 
 import React from 'react';
 import classNames from 'classnames';
-import { createStyleSheet } from 'jss-theme-reactor';
 import withStyles from '../styles/withStyles';
 
-export const styleSheet = createStyleSheet('MuiCardContent', theme => ({
+export const styles = (theme: Object) => ({
   root: {
     padding: theme.spacing.unit * 2,
     '&:last-child': {
       paddingBottom: theme.spacing.unit * 3,
     },
   },
-}));
+});
 
-type Props = {
+type DefaultProps = {
+  classes: Object,
+};
+
+export type Props = {
   /**
    * Useful to extend the style applied to components.
    */
-  classes: Object,
+  classes?: Object,
   /**
    * @ignore
    */
   className?: string,
 };
 
-function CardContent(props: Props) {
+type AllProps = DefaultProps & Props;
+
+function CardContent(props: AllProps) {
   const { classes, className, ...other } = props;
 
   return <div className={classNames(classes.root, className)} {...other} />;
 }
 
-export default withStyles(styleSheet)(CardContent);
+export default withStyles(styles, { name: 'MuiCardContent' })(CardContent);
