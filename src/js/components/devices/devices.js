@@ -563,8 +563,8 @@ var Devices = createReactClass({
             <Unauthorized 
               styles={styles} 
               block={this._blockDialog} 
-              pauseRefresh={this._pauseTimers} 
-              addTooltip={this.props.addTooltip} 
+              pauseRefresh={this._pauseTimers}
+              addTooltip={this.props.addTooltip}
               showLoader={this._showLoader} 
               refresh={this._refreshDevices} 
               refreshAdmissions={this._refreshAdmissions} 

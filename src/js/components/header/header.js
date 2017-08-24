@@ -94,7 +94,6 @@ var Header = createReactClass({
     this.context.router.push(tab.props.value);
   },
   changeTab: function() {
-    this.props.clearSteps();
     AppActions.setSnackbar("");
   },
   _handleHeaderMenu: function(event, index, value) {
