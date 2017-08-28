@@ -30,7 +30,6 @@ var ProgressDeviceList = createReactClass({
   render: function() {
     var deviceList = [];
     var currentArtifactLink;
- 
     if (this.props.devices) {
       deviceList = this.props.devices.map(function(device, index) {
 
@@ -48,12 +47,14 @@ var ProgressDeviceList = createReactClass({
         </div>
         );
         
-        if (typeof this.props.deviceArtifacts !== 'undefined') {
-          if (typeof this.props.deviceArtifacts[device.id] !== 'undefined')  {
-            var encodedArtifactName = encodeURIComponent(this.props.deviceArtifacts[device.id]);
+        if (typeof this.props.deviceInventory !== 'undefined') {
+          if (typeof this.props.deviceInventory[device.id] !== 'undefined')  {
+            var encodedArtifactName = encodeURIComponent((this.props.deviceInventory[device.id] || {}).artifact);
             currentArtifactLink = (
-              <Link style={{fontWeight:"500"}} to={`/artifacts/${encodedArtifactName}`}>{this.props.deviceArtifacts[device.id]}</Link>
+              <Link style={{fontWeight:"500"}} to={`/artifacts/${encodedArtifactName}`}>{(this.props.deviceInventory[device.id] || {}).artifact}</Link>
             )
+
+            var device_type = (this.props.deviceInventory[device.id] || {}).device_type;
           }
         }
 
@@ -74,7 +75,7 @@ var ProgressDeviceList = createReactClass({
         return (
           <TableRow key={index}>
             <TableRowColumn>{deviceLink}</TableRowColumn>
-            <TableRowColumn>{device.device_type}</TableRowColumn>
+            <TableRowColumn>{device_type}</TableRowColumn>
             <TableRowColumn>{currentArtifactLink}</TableRowColumn>
             <TableRowColumn><Time value={this._formatTime(device.created)} format="YYYY-MM-DD HH:mm" /></TableRowColumn>
             <TableRowColumn>{time}</TableRowColumn>
