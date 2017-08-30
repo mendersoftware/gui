@@ -90,7 +90,7 @@ before_deploy:
     # tag master builds with additional commit based tag
     - if [ "$TRAVIS_BRANCH" = master ]; then 
         export COMMIT_TAG="$TRAVIS_BRANCH"_"$TRAVIS_COMMIT";
-        docker tag $DOCKER_REPOSITORY:pr $DOCKER_REPOSITORY:$COMMIT_TAG;
+        docker tag $DOCKER_REPOSITORY:$IMAGE_TAG $DOCKER_REPOSITORY:$COMMIT_TAG;
         docker push $DOCKER_REPOSITORY:$COMMIT_TAG;
       fi;
 
