@@ -10,6 +10,11 @@ var GroupDevices = React.createClass({
   componentWillMount: function() {
     this.getDevices();
   },
+  componentDidUpdate: function(prevProps, prevState) {
+    if (prevProps.deployment !== this.props.deployment) {
+      this.getDevices();
+    }
+  },
   getDevices: function() {
     AppActions.getSingleDeploymentDevices(this.props.deployment, function(devices) {
       // retrieve number of devices from child
