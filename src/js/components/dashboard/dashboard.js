@@ -24,17 +24,6 @@ function getState() {
   }
 }
 
-/* Joyride */
-var tooltips = {
-  admissions: {
-    title: 'Authorize devices',
-    text: 'Devices must be authorized before you can deploy an update to them. <br/><br/>Click <b>Review details</b> to view the device\'s details before authorizing it.',
-    selector: '#authorize',
-    position: 'bottom',
-    type: 'hover'
-  }
-};
-
 var Dashboard = createReactClass({
   getInitialState: function() {
     return getState();
@@ -97,8 +86,6 @@ var Dashboard = createReactClass({
       this.setState({pending: pending});
       setTimeout(function() {
         this.setState({doneAdmnsLoading:true});
-        // this.props.addTooltip(tooltips.admissions);
-        // this.props.makeReady(true);
       }.bind(this), 300)
     }.bind(this));
   },
@@ -133,10 +120,6 @@ var Dashboard = createReactClass({
             <div className="close" onClick={this._setStorage.bind(null, "reviewDevices", true)}/>
             <p>There {pending_str} waiting authorization</p>
             <RaisedButton onClick={this._handleClick.bind(null, {route:"devices"})} primary={true} label="Review details" />
-            <div id="authorize" className={this.props.showTooltips ? "activity joyride-beacon absolute bottom" : "hidden"}>
-              <span className="joyride-beacon__inner"></span>
-              <span className="joyride-beacon__outer"></span>
-            </div>
           </div>
           <div className="leftDashboard">
             <Deployments loadingActive={!this.state.doneActiveDepsLoading} loadingRecent={!this.state.donePastDepsLoading} clickHandle={this._handleClick} progress={this.state.progress} recent={this.state.recent} />
