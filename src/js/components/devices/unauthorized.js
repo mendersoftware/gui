@@ -4,6 +4,8 @@ import Time from 'react-time';
 import { Motion, spring } from 'react-motion';
 import Collapse from 'react-collapse';
 import ReactHeight from 'react-height';
+import ReactTooltip from 'react-tooltip';
+import { AuthDevices, ExpandAuth, AuthButton } from '../helptips/helptooltips';
 var Loader = require('../common/loader');
 var AppActions = require('../../actions/app-actions');
 var SelectedDevices = require('./selecteddevices');
@@ -77,7 +79,7 @@ var Authorized =  createReactClass({
     var devices = this.props.pending.map(function(device, index) {
       var expanded = '';
       if ( this.props.expandedAdmRow === index ) {
-        expanded = <SelectedDevices styles={this.props.styles} addTooltip={this.props.addTooltip} attributes={device.attributes} deviceId={this.state.deviceId} accept={this.props.authorizeDevices} block={this.props.block} device={this.state.expandedDevice} unauthorized={true} selected={[device]}  />
+        expanded = <SelectedDevices styles={this.props.styles} attributes={device.attributes} deviceId={this.state.deviceId} accept={this.props.authorizeDevices} block={this.props.block} device={this.state.expandedDevice} unauthorized={true} selected={[device]}  />
       }
       var checkIcon = (this.state.authLoading === index && this.props.disabled) ?
         (
@@ -126,6 +128,29 @@ var Authorized =  createReactClass({
     return (
       <Collapse springConfig={{stiffness: 190, damping: 20}} style={{minHeight:this.state.minHeight}} isOpened={true} className="margin-top authorize">
         <p>{this.props.total} {pluralize("devices", devices.length)} pending authorization</p>
+
+        { this.props.showHelptips ?
+          <div>
+            <div 
+              id="onboard-2"
+              className={this.props.highlightHelp ? "tooltip help highlight" : "tooltip help"}
+              data-tip
+              data-for='review-devices-tip'
+              data-event='click focus'>
+              <FontIcon className="material-icons">help</FontIcon>
+            </div>
+            <ReactTooltip
+              id="review-devices-tip"
+              globalEventOff='click'
+              place="bottom"
+              type="light"
+              effect="solid"
+              className="react-tooltip">
+              <AuthDevices devices={devices.length} />
+            </ReactTooltip>
+          </div>
+        : null }
+
         <Table
           selectable={false}
           className="unauthorized"
@@ -149,8 +174,32 @@ var Authorized =  createReactClass({
             className="clickable">
             {devices}
           </TableBody>
+
         </Table>
 
+
+        { this.props.showHelptips && devices.length ?
+          <div>
+            <div 
+              id="onboard-3"
+              className="tooltip help"
+              data-tip
+              data-for='expand-auth-tip'
+              data-event='click focus'
+              style={{left:"10%"}}>
+              <FontIcon className="material-icons">help</FontIcon>
+            </div>
+            <ReactTooltip
+              id="expand-auth-tip"
+              globalEventOff='click'
+              place="bottom"
+              type="light"
+              effect="solid"
+              className="react-tooltip">
+              <ExpandAuth />
+            </ReactTooltip>
+          </div>
+        : null }
 
         <div style={{position:"absolute", bottom: "15px", right:"15px"}}>
 
@@ -164,6 +213,31 @@ var Authorized =  createReactClass({
           }
      
           <RaisedButton disabled={this.props.disabled} onClick={this._authorizeDevices.bind(null, this.props.pending, null)} primary={true} label={"Authorize " + devices.length +" " + pluralize("devices", devices.length)} />
+          
+
+          { this.props.showHelptips && devices.length ?
+            <div>
+              <div 
+                id="onboard-4"
+                className={this.props.highlightHelp ? "tooltip help highlight" : "tooltip help"}
+                data-tip
+                data-for='auth-button-tip'
+                data-event='click focus'>
+                <FontIcon className="material-icons">help</FontIcon>
+              </div>
+              <ReactTooltip
+                id="auth-button-tip"
+                globalEventOff='click'
+                place="bottom"
+                type="light"
+                effect="solid"
+                className="react-tooltip">
+                <AuthButton devices={devices.length} />
+              </ReactTooltip>
+            </div>
+          : null }
+
+
         </div>
       </Collapse>
     );

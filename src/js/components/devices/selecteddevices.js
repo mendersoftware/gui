@@ -3,6 +3,7 @@ import { Router, Link } from 'react-router';
 import Time from 'react-time';
 import Collapse from 'react-collapse';
 var createReactClass = require('create-react-class');
+import ReactTooltip from 'react-tooltip';
 
 var AppStore = require('../../stores/app-store');
 var AppActions = require('../../actions/app-actions');
@@ -17,15 +18,6 @@ import TextField from 'material-ui/TextField';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import Divider from 'material-ui/Divider';
-
-
-var tooltip = {
-  title: 'Waiting for inventory data',
-  text: 'Inventory data not yet received from the device - this can take up to 30 minutes with default installation. <p>Also see the documentation for <a href="https://docs.mender.io/Client-configuration/Polling-intervals" target="_blank">Polling intervals</a>.</p>',
-  selector: '#inventory-info',
-  position: 'bottom-right',
-  type: 'hover',
-};
 
 function getGroups() {
   var copy = AppStore.getGroups().slice();
@@ -42,10 +34,6 @@ var SelectedDevices = createReactClass({
       },
       schedule: false,
     };
-  },
-
-  componentDidMount: function() {
-    this.props.addTooltip(tooltip);
   },
 
   dialogToggle: function (ref) {
@@ -122,6 +110,9 @@ var SelectedDevices = createReactClass({
       }
     }
     this.setState({filterByArtifact:filteredDevs});
+  },
+  _clickLink: function() {
+    window.location.assign('https://docs.mender.io/Client-configuration/Polling-intervals');
   },
   render: function() {
 
@@ -211,9 +202,28 @@ var SelectedDevices = createReactClass({
         /* No inventory data yet */
         deviceInventory.push(
           <div className="waiting-inventory" key="waiting-inventory">
-            <div onClick={this._handleStopProp} id="inventory-info" className="tooltip info" style={{top:"8px", right:"8px"}}>
+            <div 
+              onClick={this._handleStopProp}
+              id="inventory-info"
+              className="tooltip info"
+              style={{top:"8px", right:"8px"}}
+              data-tip
+              data-for='inventory-wait'
+              data-event='click focus'>
               <FontIcon className="material-icons">info</FontIcon>
             </div>
+            <ReactTooltip
+              id="inventory-wait"
+              globalEventOff='click'
+              place="top"
+              type="light"
+              effect="solid"
+              className="react-tooltip">
+              <h3>Waiting for inventory data</h3>
+              <p>Inventory data not yet received from the device - this can take up to 30 minutes with default installation.</p>
+              <p>Also see the documentation for <a onClick={this._clickLink} href="https://docs.mender.io/Client-configuration/Polling-intervals">Polling intervals</a>.</p>
+            </ReactTooltip>
+            
             <p>Waiting for inventory data from the device</p>
             <Loader show={true} waiting={true} />
           </div>

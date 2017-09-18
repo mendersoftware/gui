@@ -259,6 +259,15 @@ var AppActions = {
     });
   },
 
+
+  // Onboarding
+  setShowHelptips: function(val) {
+    AppDispatcher.handleViewAction({
+      actionType: AppConstants.SET_SHOW_HELP,
+      show: val
+    });
+  },
+
   /* Device Admission */
   getDevicesForAdmission: function (callback, page, per_page) {
     // only return pending devices
@@ -577,16 +586,6 @@ var AppActions = {
       .catch(function(err) {
         callback.error(err);
       });
-  },
-
-
-
-
-  removeDeployment: function(deploymentId) {
-    AppDispatcher.handleViewAction({
-      actionType: AppConstants.REMOVE_DEPLOYMENT,
-      id: deploymentId
-    })
   },
 
   updateFilters: function(filters) {

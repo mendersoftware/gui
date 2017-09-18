@@ -18,6 +18,7 @@ function getState() {
     snackbar: AppStore.getSnackbar(),
     remove: false,
     refreshArtifactsLength: 60000,
+    showHelptips: AppStore.showHelptips(),
   }
 }
 
@@ -112,7 +113,7 @@ var Artifacts = createReactClass({
     return (
       <div className="contentContainer">
         <div className="relative">
-          <Repository removeArtifact={this._removeDialog} refreshArtifacts={this._getArtifacts} startLoader={this._startLoading} loading={!this.state.doneLoading} selected={this.state.selected} artifacts={this.state.artifacts} />
+          <Repository showHelptips={this.state.showHelptips} removeArtifact={this._removeDialog} refreshArtifacts={this._getArtifacts} startLoader={this._startLoading} loading={!this.state.doneLoading} selected={this.state.selected} artifacts={this.state.artifacts} />
         </div>
 
         <Dialog

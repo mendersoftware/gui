@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { setRetryTimer, clearRetryTimer, clearAllRetryTimers } from '../../utils/retrytimer';
+
 var AppStore = require('../../stores/app-store');
 var AppActions = require('../../actions/app-actions');
 var update = require('react-addons-update');
@@ -40,6 +41,7 @@ function getState() {
     user: AppStore.getCurrentUser(),
     refreshDeviceLength: 10000,
     refreshAdmissionLength: 20000,
+    showHelptips: AppStore.showHelptips()
   }
 }
 
@@ -556,7 +558,8 @@ var Devices = createReactClass({
             groupDevices={this.state.groupDevices}
             selectedGroup={this.state.selectedGroup}
             allDevices={this.state.allDevices}
-            totalDevices={this.state.totalDevices} />
+            totalDevices={this.state.totalDevices}
+            showHelptips={this.state.showHelptips} />
         </div>
         <div className="rightFluid padding-right">
           <div className={this.state.pendingDevices.length ? "fadeIn onboard" : "hidden"}>
@@ -564,7 +567,6 @@ var Devices = createReactClass({
               styles={styles} 
               block={this._blockDialog} 
               pauseRefresh={this._pauseTimers}
-              addTooltip={this.props.addTooltip}
               showLoader={this._showLoader} 
               refresh={this._refreshDevices} 
               refreshAdmissions={this._refreshAdmissions} 
@@ -573,7 +575,9 @@ var Devices = createReactClass({
               expandedAdmRow={this.state.expandedAdmRow}
               expandRow={this._clickAdmRow}
               authorizeDevices={this._authorizeDevices}
-              disabled={this.state.paused} />
+              disabled={this.state.paused}
+              showHelptips={this.state.showHelptips}
+              highlightHelp={!this.state.totalDevices} />
             <div>
               {this.state.totalAdmDevices ? <Pagination locale={_en_US} simple pageSize={20} current={this.state.currentAdmPage || 1} total={this.state.totalAdmDevices} onChange={this._handleAdmPageChange} /> : null }
              
@@ -583,7 +587,6 @@ var Devices = createReactClass({
           <Loader show={!this.state.doneLoading} />
           <DeviceList
             styles={styles}
-            addTooltip={this.props.addTooltip} 
             redirect={this._redirect}
             refreshDevices={this._refreshDevices}
             groupsChanged={this._handleGroupsChange}
@@ -604,7 +607,8 @@ var Devices = createReactClass({
             accept={this._acceptDevice}
             expandRow={this._clickRow}
             expandedRow={this.state.expandedRow}
-            expandedDevice={this.state.expandedDevice} />
+            expandedDevice={this.state.expandedDevice}
+            showHelptips={this.state.showHelptips} />
             {this.state.totalDevices ? <Pagination locale={_en_US} simple pageSize={20} current={this.state.currentPage || 1} total={this.state.numDevices} onChange={this._handlePageChange} /> : null }
             {this.state.devLoading ?  <div className="smallLoaderContainer"><Loader show={true} /></div> : null}
         </div>

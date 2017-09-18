@@ -3,6 +3,8 @@ import AppStore from '../../stores/app-store';
 import AppActions from '../../actions/app-actions';
 import { Router, Link } from 'react-router';
 import SearchInput from 'react-search-input';
+import ReactTooltip from 'react-tooltip';
+import { CreateDeploymentForm } from '../helptips/helptooltips';
 var createReactClass = require('create-react-class');
 
 import SelectField from 'material-ui/SelectField';
@@ -202,6 +204,29 @@ var ScheduleForm = createReactClass({
                 underlineDisabledStyle={{borderBottom:"none"}}
                 errorStyle={{color: "rgb(171, 16, 0)"}} />  
             </div>
+
+            { this.props.showHelptips && (this.props.hasDevices && (this.props.artifacts || []).length) ?
+                <div style={{position: "relative"}}>
+                  <div 
+                    id="onboard-13"
+                    className={this.props.hasDeployments ? "tooltip help" : "tooltip help highlight"}
+                    data-tip
+                    data-for='create-deployment1-tip'
+                    data-event='click focus'
+                    style={{top: "-75px", left: "45%"}}>
+                    <FontIcon className="material-icons">help</FontIcon>
+                  </div>
+                  <ReactTooltip
+                    id="create-deployment1-tip"
+                    globalEventOff='click'
+                    place="bottom"
+                    type="light"
+                    effect="solid"
+                    className="react-tooltip">
+                    <CreateDeploymentForm />
+                  </ReactTooltip>
+                </div>
+              : null }
 
             <div className={tmpDevices ? null : 'hidden'}>{this.props.filteredDevices ? this.props.filteredDevices.length : "0"} of {devicesLength} {pluralize("devices",devicesLength)} will be updated <span onClick={this._showDevices} className={this.state.disabled ? "hidden" : "margin-left link"}>View devices</span></div>
           </div>

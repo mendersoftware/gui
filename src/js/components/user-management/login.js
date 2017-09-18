@@ -31,7 +31,6 @@ var Login = createReactClass({
 
   componentDidMount: function() {
     clearAllRetryTimers();
-    this._checkLoggedIn();
   },
 
   componentWillUnmount: function () {
@@ -67,13 +66,6 @@ var Login = createReactClass({
       }
     }, formData);
   },
-
-  _checkLoggedIn: function() {
-    if (this.props.loggedIn) {
-      //self.props.router.replace('/');
-    }
-  },
-
 
   render: function() {
     var title = "Log in";

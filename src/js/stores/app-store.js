@@ -19,7 +19,7 @@ var _snackbar = {
   message: ""
 };
 var _currentUser = {};
-
+var _showHelptips = null;
 
 var _groups = []
 
@@ -198,8 +198,7 @@ var _pendingDeployments = [];
 var _schedule = [];
 var _events = [];
 
-var _allDeployments = [];
-var _selectedDeployment = {};
+var _hasDeployments = false;
 
 //_al deployments.sort(startTimeSort);
 
@@ -218,14 +217,8 @@ function _getPendingDeployments() {
 function _getDeploymentsInProgress() {
   return _deploymentsInProgress;
 }
-
-function _getProgressStatus(id) {
-  var deployment = _allDeployments[findWithAttr(_allDeployments, "id", id)];
-  var progress = {complete:0, failed: 0, pending: 0};
-  for (var key in deployment.devices) {
-    progress[deployment.devices[key].status.toLowerCase()]++;
-  }
-  return progress;
+function _getHasDeployments() {
+  return _hasDeployments;
 }
 
 
@@ -249,13 +242,6 @@ function _sortDeploymentDevices(devices) {
   var newCombine = newList.success.concat(newList.downloading, newList.installing, newList.rebooting, newList.failure, newList.aborted, newList['already-installed'], newList.noartifact, newList.pending);
   return newCombine;
 }
-
-
-function _removeDeployment(id) {
-  var idx = findWithAttr(_allDeployments, 'id', id);
-  _allDeployments.splice(idx,1);
-}
-
 
 function _sortTable(array, column, direction) {
   switch(array) {
@@ -339,33 +325,27 @@ function setArtifacts(artifacts) {
 }
 
 
-function setDeployments(deployments) {
-  if (deployments) {
-     _allDeployments = deployments;
-  }
-  _allDeployments.sort(startTimeSort);
+function setHasDeployments(deployments) {
+  _hasDeployments = (deployments == null || deployments.length === 0) ? false : true;
 }
 
 function setActiveDeployments(deployments) {
   _deploymentsInProgress = deployments;
   _deploymentsInProgress.sort(startTimeSort);
+  if (deployments.length){setHasDeployments(deployments)}
 }
 
 function setPastDeployments(deployments) {
   _pastDeployments = deployments;
   _pastDeployments.sort(startTimeSort);
+  if (deployments.length){setHasDeployments(deployments)}
 }
 
 
 function setPendingDeployments(deployments) {
   _pendingDeployments = deployments;
   _pendingDeployments.sort(startTimeSort);
-}
-
-function setSelectedDeployment(deployment) {
-  if (deployment) {
-    _selectedDeployment = deployment;
-  }
+  if (deployments.length){setHasDeployments(deployments)}
 }
 
 
@@ -435,6 +415,10 @@ function _setSnackbar(message, duration) {
 
 function _setCurrentUser(user) {
   _currentUser = user;
+}
+
+function _setShowHelptips(val) {
+  _showHelptips = val;
 }
 
 var AppStore = assign(EventEmitter.prototype, {
@@ -551,18 +535,6 @@ var AppStore = assign(EventEmitter.prototype, {
     return _getPendingDeployments()
   },
 
-  getSingleDeployment: function(attr, val) {
-    var index = findWithAttr(_allDeployments, attr, val);
-    return _allDeployments[index];
-  },
-
-  getSelectedDeployment: function() {
-    /*
-    * Return current selected deployment
-    */
-    return _selectedDeployment
-  },
-
   getDeploymentsInProgress: function() {
     /*
     * Return list of deployments in progress based on date
@@ -570,11 +542,11 @@ var AppStore = assign(EventEmitter.prototype, {
     return _getDeploymentsInProgress()
   },
 
-  getProgressStatus: function(id) {
+  getHasDeployments: function() {
     /*
-    * Return progress stats for a single deployment
+    * Return boolean whether or not any deployments exist at all
     */
-    return _getProgressStatus(id);
+    return _getHasDeployments()
   },
 
   getEventLog: function() {
@@ -622,6 +594,10 @@ var AppStore = assign(EventEmitter.prototype, {
     return _currentUser;
   },
 
+  showHelptips: function() {
+    return _showHelptips;
+  },
+
 
   dispatcherIndex: AppDispatcher.register(function(payload) {
     var action = payload.action;
@@ -647,9 +623,6 @@ var AppStore = assign(EventEmitter.prototype, {
       case AppConstants.UPDATE_DEVICE_TAGS:
          updateDeviceTags(payload.action.id, payload.action.tags);
         break;
-      case AppConstants.REMOVE_DEPLOYMENT:
-        _removeDeployment(payload.action.id);
-        break;
       case AppConstants.SORT_TABLE:
         _sortTable(payload.action.table, payload.action.column, payload.action.direction);
         break;
@@ -662,6 +635,12 @@ var AppStore = assign(EventEmitter.prototype, {
         _setCurrentUser(payload.action.user);
         break;
 
+      case AppConstants.SET_SHOW_HELP:
+        _setShowHelptips(payload.action.show);
+        break;
+
+
+
       /* API */
       case AppConstants.RECEIVE_ARTIFACTS:
         setArtifacts(payload.action.artifacts);
@@ -669,7 +648,7 @@ var AppStore = assign(EventEmitter.prototype, {
 
       /* API */
       case AppConstants.RECEIVE_DEPLOYMENTS:
-        setDeployments(payload.action.deployments);
+        setHasDeployments(payload.action.deployments);
         break;
       case AppConstants.RECEIVE_ACTIVE_DEPLOYMENTS:
         setActiveDeployments(payload.action.deployments);
@@ -680,9 +659,7 @@ var AppStore = assign(EventEmitter.prototype, {
       case AppConstants.RECEIVE_PENDING_DEPLOYMENTS:
         setPendingDeployments(payload.action.deployments);
         break;
-      case AppConstants.SINGLE_DEPLOYMENT:
-        setSelectedDeployment(payload.action.deployment);
-        break;
+
 
       /* API */
       case AppConstants.RECEIVE_ALL_DEVICES:

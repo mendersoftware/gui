@@ -1,5 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import ReactTooltip from 'react-tooltip';
+import { ReviewDevices } from '../helptips/helptooltips';
 
 var AppStore = require('../../stores/app-store');
 var LocalStore = require('../../stores/local-store');
@@ -10,6 +12,7 @@ import { Router, Route, Link } from 'react-router';
 import { setRetryTimer, clearRetryTimer, clearAllRetryTimers } from '../../utils/retrytimer';
 import RaisedButton from 'material-ui/RaisedButton';
 import Snackbar from 'material-ui/Snackbar';
+import FontIcon from 'material-ui/FontIcon';
 
 function getState() {
   return {
@@ -21,6 +24,7 @@ function getState() {
     hideReview: localStorage.getItem("reviewDevices"),
     snackbar: AppStore.getSnackbar(),
     refreshDeploymentsLength: 10000,
+    showHelptips: AppStore.showHelptips()
   }
 }
 
@@ -81,14 +85,17 @@ var Dashboard = createReactClass({
     AppActions.getDeploymentsInProgress(progressCallback);
   },
   _refreshAdmissions: function() {
+    var self = this;
     AppActions.getNumberOfDevicesForAdmission(function(count) {
       var pending = count;
-      this.setState({pending: pending});
+      self.setState({pending: pending});
+
       setTimeout(function() {
-        this.setState({doneAdmnsLoading:true});
-      }.bind(this), 300)
-    }.bind(this));
+        self.setState({doneAdmnsLoading:true});
+      }, 300)
+    });
   },
+
   _handleClick: function(params) {
     switch(params.route){
       case "deployments":
@@ -104,6 +111,11 @@ var Dashboard = createReactClass({
         break;
     }
   },
+
+  _handleStopProp: function(e) {
+    e.stopPropagation();
+  },
+
   render: function() {
     var pending_str = '';
     if (this.state.pending) {
@@ -117,13 +129,42 @@ var Dashboard = createReactClass({
       <div className="contentContainer dashboard">
         <div>
           <div className={this.state.pending && !this.state.hideReview ? "onboard margin-bottom" : "hidden" }>
-            <div className="close" onClick={this._setStorage.bind(null, "reviewDevices", true)}/>
             <p>There {pending_str} waiting authorization</p>
-            <RaisedButton onClick={this._handleClick.bind(null, {route:"devices"})} primary={true} label="Review details" />
+            <div className="relative">
+              <RaisedButton
+                onClick={this._handleClick.bind(null, {route:"devices"})}
+                primary={true}
+                label="Review details"
+              />
+
+              { this.state.showHelptips ?
+                <div>
+                  <div 
+                    id="onboard-1"
+                    className="tooltip help highlight"
+                    data-tip
+                    data-for='review-details-tip'
+                    data-event='click focus'>
+                    <FontIcon className="material-icons">help</FontIcon>
+                  </div>
+                  <ReactTooltip
+                    id="review-details-tip"
+                    globalEventOff='click'
+                    place="bottom"
+                    type="light"
+                    effect="solid"
+                    className="react-tooltip">
+                    <ReviewDevices devices={this.state.pending} />
+                  </ReactTooltip>
+                </div>
+              : null }
+            </div>
+           
+
           </div>
-          <div className="leftDashboard">
-            <Deployments loadingActive={!this.state.doneActiveDepsLoading} loadingRecent={!this.state.donePastDepsLoading} clickHandle={this._handleClick} progress={this.state.progress} recent={this.state.recent} />
-          </div>
+        </div>
+        <div className="leftDashboard">
+          <Deployments loadingActive={!this.state.doneActiveDepsLoading} loadingRecent={!this.state.donePastDepsLoading} clickHandle={this._handleClick} progress={this.state.progress} recent={this.state.recent} />
         </div>
         <Snackbar
           open={this.state.snackbar.open}
