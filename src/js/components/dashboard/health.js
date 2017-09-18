@@ -5,19 +5,7 @@ var createReactClass = require('create-react-class');
 import FontIcon from 'material-ui/FontIcon';
 var Loader = require('../common/loader');
 
-var tooltip = {
-  title: 'Device heartbeats',
-  text: '<div class="development"><i class="material-icons">build</i>Under development</div>This feature will alert you to any devices that have lost their connection.',
-  selector: '#heartbeat-info',
-  position: 'bottom-right',
-  type: 'hover',
-  trigger: '.health'
-};
-
 var Health = createReactClass({
-  componentDidMount: function() {
-    this.props.addTooltip(tooltip);
-  },
   _clickHandle: function(route) {
     this.props.clickHandle(route);
   },
@@ -64,9 +52,6 @@ var Health = createReactClass({
 
         <div className={(this.props.health.total || this.props.loading) ? "hidden" : "dashboard-placeholder" }>
           <p>Information about connected devices will appear here</p>
-          <div id="heartbeat-info" className="tooltip info">
-            <FontIcon className="material-icons">info</FontIcon>
-          </div>
           <img src="assets/img/connected.png" alt="connected" />
         </div>
       </div>

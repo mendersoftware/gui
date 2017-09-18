@@ -1,5 +1,7 @@
 import React from 'react';
 import Time from 'react-time';
+import ReactTooltip from 'react-tooltip';
+import { FinishedDeployment } from '../helptips/helptooltips';
 var createReactClass = require('create-react-class');
 var ScheduleForm = require('./scheduleform');
 var GroupDevices = require('./groupdevices');
@@ -12,6 +14,7 @@ var Loader = require('../common/loader');
 // material ui
 import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
 import FlatButton from 'material-ui/FlatButton';
+import FontIcon from 'material-ui/FontIcon';
 
 
 var Past = createReactClass({
@@ -104,6 +107,30 @@ var Past = createReactClass({
               {pastMap}
             </TableBody>
           </Table>
+
+
+           { !this.props.loading && this.props.showHelptips && pastMap.length ?
+                <div>
+                  <div 
+                    id="onboard-14"
+                    className="tooltip help"
+                    data-tip
+                    data-for='finished-deployment-tip'
+                    data-event='click focus'>
+                    <FontIcon className="material-icons">help</FontIcon>
+                  </div>
+                  <ReactTooltip
+                    id="finished-deployment-tip"
+                    globalEventOff='click'
+                    place="bottom"
+                    type="light"
+                    effect="solid"
+                    className="react-tooltip">
+                      <FinishedDeployment />
+                  </ReactTooltip>
+                </div>
+              : null }
+
 
           {
             this.props.count>this.props.past.length ? 

@@ -4,6 +4,8 @@ import Time from 'react-time';
 import AppStore from '../../stores/app-store';
 import AppActions from '../../actions/app-actions';
 import ReactDOM from 'react-dom';
+import ReactTooltip from 'react-tooltip';
+import { UploadArtifact, ExpandArtifact } from '../helptips/helptooltips';
 var update = require('react-addons-update');
 var Loader = require('../common/loader');
 import SearchInput from 'react-search-input';
@@ -277,11 +279,57 @@ var Repository = createReactClass({
             </TableBody>
           </Table>
 
+          { this.props.showHelptips && items.length ?
+            <div>
+              <div 
+                id="onboard-10"
+                className="tooltip help"
+                data-tip
+                data-for='artifact-expand-tip'
+                data-event='click focus'>
+                <FontIcon className="material-icons">help</FontIcon>
+              </div>
+              <ReactTooltip
+                id="artifact-expand-tip"
+                globalEventOff='click'
+                place="bottom"
+                type="light"
+                effect="solid"
+                className="react-tooltip">
+                <ExpandArtifact />
+              </ReactTooltip>
+            </div>
+          : null }
+
           <div className={(items.length || this.props.loading) ? "hidden" : "dashboard-placeholder fadeIn" }>
             <Dropzone className="dropzone onboard" activeClassName="active" rejectClassName="active" multiple={false} accept=".mender" onDrop={this.onDrop}>
               <p style={{width: "500px", fontSize:"16px", margin:"auto"}} className="dashboard-placeholder">No artifacts found. Drag a file here or <a>browse</a> to upload to the repository</p>
               <img src="assets/img/artifacts.png" alt="artifacts" />
             </Dropzone>
+
+            { this.props.showHelptips ?
+            <div>
+              <div 
+                id="onboard-9"
+                className="tooltip help highlight"
+                data-tip
+                data-for='artifact-upload-tip'
+                data-event='click focus'>
+                <FontIcon className="material-icons">help</FontIcon>
+              </div>
+              <ReactTooltip
+                id="artifact-upload-tip"
+                globalEventOff='click'
+                place="bottom"
+                type="light"
+                effect="solid"
+                className="react-tooltip">
+                <UploadArtifact />
+              </ReactTooltip>
+            </div>
+          : null }
+
+
           </div>
         </div>
 

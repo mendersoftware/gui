@@ -5,6 +5,8 @@ import { Motion, spring } from 'react-motion';
 import Collapse from 'react-collapse';
 import ReactHeight from 'react-height';
 import { fullyDecodeURI } from '../../helpers';
+import ReactTooltip from 'react-tooltip';
+import { ExpandDevice } from '../helptips/helptooltips';
 var createReactClass = require('create-react-class');
 
 var AppStore = require('../../stores/app-store');
@@ -326,7 +328,7 @@ var DeviceList = createReactClass({
         attrs[device.attributes[i].name] = device.attributes[i].value;
       }
       if ( this.props.expandedRow === index ) {
-        expanded = <SelectedDevices device_type={attrs.device_type} styles={this.props.styles} block={this.props.block} accept={this.props.accept} addTooltip={this.props.addTooltip} redirect={this.props.redirect} artifacts={this.props.artifacts} device={this.props.expandedDevice} selectedGroup={this.props.selectedGroup} groups={this.props.groups} />
+        expanded = <SelectedDevices device_type={attrs.device_type} styles={this.props.styles} block={this.props.block} accept={this.props.accept} redirect={this.props.redirect} artifacts={this.props.artifacts} device={this.props.expandedDevice} selectedGroup={this.props.selectedGroup} groups={this.props.groups} />
       }
       return (
         <TableRow 
@@ -480,6 +482,33 @@ var DeviceList = createReactClass({
                 {devices}
               </TableBody>
             </Table>
+
+
+
+            { this.props.showHelptips && devices.length ?
+              <div>
+                <div 
+                  id="onboard-6"
+                  className="tooltip help"
+                  data-tip
+                  data-for='expand-device-tip'
+                  data-event='click focus'
+                  style={{left: "inherit", right:"45px", bottom: "85px"}}>
+                  <FontIcon className="material-icons">help</FontIcon>
+                </div>
+                <ReactTooltip
+                  id="expand-device-tip"
+                  globalEventOff='click'
+                  place="bottom"
+                  type="light"
+                  effect="solid"
+                  className="react-tooltip">
+                  <ExpandDevice />
+                </ReactTooltip>
+              </div>
+            : null }
+
+
 
             <div className={(devices.length || this.props.loading) ? 'hidden' : 'dashboard-placeholder'}>
               <p>

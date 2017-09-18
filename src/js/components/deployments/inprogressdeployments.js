@@ -1,8 +1,9 @@
 import React from 'react';
 import Time from 'react-time';
+import ReactTooltip from 'react-tooltip';
+import { CreateDeployment, ProgressDeployment } from '../helptips/helptooltips';
 var createReactClass = require('create-react-class');
 var update = require('react-addons-update');
-var ScheduleForm = require('./scheduleform');
 var GroupDevices = require('./groupdevices');
 var DeploymentStatus = require('./deploymentstatus');
 
@@ -13,6 +14,7 @@ var Loader = require('../common/loader');
 // material ui
 import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
 import FlatButton from 'material-ui/FlatButton';
+import FontIcon from 'material-ui/FontIcon';
 
 var Progress = createReactClass({
   getInitialState: function() {
@@ -90,14 +92,44 @@ var Progress = createReactClass({
             this.props.count>this.props.progress.length ? 
             <Pagination locale={_en_US} simple pageSize={this.state.pageSize} current={this.state.currentPage || 1} total={this.props.count} onChange={this._handlePageChange} /> 
             :
+            
             <div className={(progressMap.length || this.props.loading)  ? 'hidden' : "dashboard-placeholder"}>
               <p>Ongoing deployments will appear here. <a onClick={this.props.createClick}>Create a deployment</a> to get started</p>
               <img src="assets/img/deployments.png" alt="In progress" />
             </div>
+        
           }
+
+
+          { !this.props.loading && this.props.showHelptips && (!this.props.hasDeployments || this.props.progress.length) ?
+            // if first deployment not created, or if there is one in progress, show tip
+            <div>
+              <div 
+                id="onboard-12"
+                className={this.props.hasDeployments ? "tooltip help" : "tooltip help highlight"}
+                data-tip
+                data-for='create-deployment-tip'
+                data-event='click focus'>
+                <FontIcon className="material-icons">help</FontIcon>
+              </div>
+              <ReactTooltip
+                id="create-deployment-tip"
+                globalEventOff='click'
+                place="bottom"
+                type="light"
+                effect="solid"
+                className="react-tooltip">
+                { !this.props.hasDeployments ? 
+                  <CreateDeployment devices={this.props.devices.length} artifacts={this.props.hasArtifacts} />
+                  : 
+                  <ProgressDeployment />
+                }
+                
+              </ReactTooltip>
+            </div>
+          : null }
+
         </div>
-
-
 
       </div>
     );

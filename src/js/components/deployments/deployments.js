@@ -30,6 +30,8 @@ function getState() {
     invalid: true,
     snackbar: AppStore.getSnackbar(),
     refreshDeploymentsLength: 10000,
+    hasDeployments: AppStore.getHasDeployments(),
+    showHelptips: AppStore.showHelptips()
   }
 }
 
@@ -402,9 +404,6 @@ var Deployments = createReactClass({
     this.setState({scheduleForm:true, artifactVal:artifact, id:id, start_time:start_time, end_time:end_time, artifact:artifact, group:group, groupVal:group});
     this.dialogOpen("schedule");
   },
-  _scheduleRemove: function(id) {
-    AppActions.removeDeployment(id);
-  },
   _handleRequestClose: function() {
     this._dismissSnackBar();
   },
@@ -458,7 +457,7 @@ var Deployments = createReactClass({
 
     if (this.state.scheduleForm) {
       dialogContent = (    
-        <ScheduleForm deploymentDevices={this.state.deploymentDevices} filteredDevices={this.state.filteredDevices} hasPending={this.state.hasPending} hasDevices={this.state.hasDevices} deploymentSettings={this._deploymentParams} id={this.state.id} artifacts={this.state.collatedArtifacts} artifact={this.state.artifact} groups={this.state.groups} group={this.state.group} />
+        <ScheduleForm hasDeployments={this.state.hasDeployments} showHelptips={this.state.showHelptips} deploymentDevices={this.state.deploymentDevices} filteredDevices={this.state.filteredDevices} hasPending={this.state.hasPending} hasDevices={this.state.hasDevices} deploymentSettings={this._deploymentParams} id={this.state.id} artifacts={this.state.collatedArtifacts} artifact={this.state.artifact} groups={this.state.groups} group={this.state.group} />
       )
     } else if (this.state.reportType === "progress") {
       dialogContent = (
@@ -478,9 +477,9 @@ var Deployments = createReactClass({
         <div style={{paddingTop:"3px"}}>
           <Pending count={this.state.pendingCount || this.state.pending.length}  refreshPending={this._refreshPending}  pending={this.state.pending} abort={this._abortDeployment} />
 
-          <Progress count={this.state.progressCount || this.state.progress.length} refreshProgress={this._refreshInProgress} abort={this._abortDeployment} loading={!this.state.doneLoading} openReport={this._showProgress} progress={this.state.progress} createClick={this.dialogOpen.bind(null, "schedule")}/>
+          <Progress showHelptips={this.state.showHelptips} hasDeployments={this.state.hasDeployments} devices={this.state.allDevices} hasArtifacts={this.state.collatedArtifacts.length} count={this.state.progressCount || this.state.progress.length} refreshProgress={this._refreshInProgress} abort={this._abortDeployment} loading={!this.state.doneLoading} openReport={this._showProgress} progress={this.state.progress} createClick={this.dialogOpen.bind(null, "schedule")}/>
 
-          <Past count={this.state.pastCount} loading={!this.state.doneLoading} past={this.state.past} refreshPast={this._refreshPast} showReport={this._showReport} />
+          <Past showHelptips={this.state.showHelptips} count={this.state.pastCount} loading={!this.state.doneLoading} past={this.state.past} refreshPast={this._refreshPast} showReport={this._showReport} />
 
         </div>
 

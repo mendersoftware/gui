@@ -279,6 +279,7 @@ a, span.link {
 .leftFixed {
   width: 260px;
   float: left;
+  position: relative;
 
   .innerBlock {
     width: 100%;
@@ -345,73 +346,48 @@ a, span.link {
   text-align: center;
   position: relative;
   background-color: inherit;
-  overflow: hidden;
 
   p {
     margin-top: 0;
     font-size: 1.25em;
   }
 
-  h3 {
-    font-family: Andale Mono;
-    font-weight: lighter;
-    color: @placeholder;
-    margin-top: 10px;
-    font-size: 1.25em;
-    
-    span.todo {
-      color: yellow;
-    }
-  }
-
-  .link.todo {
-    color: lawngreen;
-    font-family: Andale Mono;
-    text-decoration: underline;
-  }
-
-  .close {
-    position: absolute;
-    top:10px;
-    right: 10px;
-    width: 20px;
-    height:20px;
-    background-image: url('../assets/img/close.png');
-    cursor: pointer;
-  }
-
-  a.float-right {
-    position: relative;
-    bottom: 10px;
-    font-size: 1em;
-  }
-
 }
 
-// joyride onboard
-.joyride-beacon {
-  cursor: pointer;
 
-  &.bottom {
-    bottom: -18px;
-    left: 50%;
-    margin-left: -18px;
-  }
-}
-
-.tooltip.info {
+// tooltips
+.tooltip {
   position: absolute;
-  top: 2px;
-  right: 0px;
   cursor: pointer;
 
   .transition(opacity .4s ease-in);
   .transition(transform .4s ease-in);
-  .opacity(0.6);
 
-  .material-icons {
-    color: @grey !important;
+  &.info {
+    top: 2px;
+    right: 0px;
+    .material-icons {
+      .opacity(0.6);
+      color: @grey !important;
+    }
   }
+
+  &.help {
+    left: 50%;
+    margin-left: -16px;
+    z-index: 10;
+    .material-icons {
+      color: @alertpurple !important;
+    }
+
+    &.highlight .material-icons {
+      border-radius: 50%;
+      border: @alertpurple 4px solid;
+      .animation(highlight 2.2s infinite);
+    }
+  }
+
+
 
   &:hover {
     .opacity(1);
@@ -419,9 +395,6 @@ a, span.link {
   }
 }
 
-.joyride-tooltip__header {
-  border-bottom: none !important;
-}
 
 .development {
   background-color: @alertgreen;
@@ -436,6 +409,47 @@ a, span.link {
     color: @lightestgrey;
     vertical-align: text-bottom;
     font-size: 18px
+  }
+}
+
+
+.react-tooltip {
+  background-color: @mendermaroon !important;
+  pointer-events: auto !important;
+  box-shadow: 0 1px 6px rgba(0,0,0,.15);
+  text-align: left;
+  margin-left: 6px !important;
+  max-width: 600px;
+  color: @textsecondary !important;
+  p {
+    font-size: 14px;
+  }
+
+  a {
+    color: @linksecondary;
+  }
+
+  hr {
+    margin-bottom: 15px;
+  }
+
+  .hidehelp {
+    float: right;
+    margin-top: 15px;
+    margin-bottom: 5px;
+  }
+
+  &.place-bottom:after {
+    border-bottom-color: @mendermaroon !important;
+  }
+  &.place-right:after {
+    border-right-color: @mendermaroon !important;
+  }
+  &.place-left:after {
+    border-left-color: @mendermaroon !important;
+  }
+  &.place-top:after {
+    border-top-color: @mendermaroon !important;
   }
 }
 
@@ -1702,6 +1716,22 @@ div.shake-alert {
   -ms-transform:     rotate(@deg);
   -o-transform:      rotate(@deg);
 }
+
+@keyframes highlight {
+  0% {
+    border-color: lighten(@alertpurple, 10%);
+    animation-timing-function:ease-in;
+  }
+  50% {
+    border-color: lighten(@alertpurple, 70%);
+    animation-timing-function:ease-out;
+  }
+  100% {
+    border-color: lighten(@alertpurple, 10%);
+    animation-timing-function:ease-in;
+  }
+}
+
 
 .placeholder(@rules) {
 

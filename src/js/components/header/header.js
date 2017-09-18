@@ -4,6 +4,9 @@ import { Router, Route, Link } from 'react-router';
 import cookie from 'react-cookie';
 import { decodeSessionToken } from '../../helpers';
 import { clearAllRetryTimers } from '../../utils/retrytimer';
+import ReactTooltip from 'react-tooltip';
+import { toggleHelptips } from '../../utils/togglehelptips';
+import { DevicesNav, ArtifactsNav, DeploymentsNav } from '../helptips/helptooltips';
 var AppActions = require('../../actions/app-actions');
 var AppStore = require('../../stores/app-store');
 var createReactClass = require('create-react-class');
@@ -39,7 +42,12 @@ var Header = createReactClass({
     return {
       tabIndex: this._updateActive(),
       sessionId: cookie.load('JWT'),
-      user: AppStore.getCurrentUser()
+      user: AppStore.getCurrentUser(),
+      showHelptips: AppStore.showHelptips(),
+      totalDevices: AppStore.getTotalDevices(),
+      pendingDevices: AppStore.getPendingDevices(),
+      artifacts: AppStore.getArtifactsRepo(),
+      hasDeployments: AppStore.getHasDeployments(),
     };
   },
   componentWillMount: function() {
@@ -55,33 +63,94 @@ var Header = createReactClass({
     this.setState(this.getInitialState());
   },
   componentDidUpdate: function(prevProps, prevState) {
-    this._updateUsername();
+    if (!this.state.sessionId) {
+       this._updateUsername();
+    } else {
+      if (prevState.sessionId!==this.state.sessionId ) {
+        this._hasDeployments();
+        this._hasDevices();
+        this._hasArtifacts();
+        this._checkShowHelp();
+      }
+    }
   },
   componentDidMount: function() {
     this._updateUsername();
+    if (this.state.showHelptips === null) {
+      this._checkShowHelp();
+    }
+    this._hasDeployments();
+    this._hasDevices();
+    this._hasArtifacts();
+    this._checkShowHelp();
+  },
+  _checkShowHelp: function() {
+    //checks if user id is set and if cookie for helptips exists for that user
+    var userCookie = cookie.load(this.state.user.id);
+    // if no user cookie set, do so via togglehelptips
+    if (typeof userCookie === 'undefined' || typeof userCookie.help === 'undefined') {
+       toggleHelptips();
+    } else {
+      // got user cookie but help value not set
+      AppActions.setShowHelptips(userCookie.help);
+    }
+  },
+  _hasDeployments: function() {
+    // check if *any* deployment exists, for onboarding help tips
+    var self = this;
+    var callback = {
+      success: function(data) {
+        self.setState({hasDeployments: data.length});
+      },
+      error: function(err) {
+        console.log(err);
+      }
+    };
+    AppActions.getDeployments(callback, 1, 1);
+  },
+  _hasDevices: function() {
+    // check if *any* devices connected, for onboarding help tips
+    var self = this;
+    AppActions.getNumberOfDevices(function(count) {
+       self.setState({totalDevices: count});
+    });
+  },
+  _hasArtifacts: function() {
+    var self = this;
+    var callback = {
+      success: function(artifacts) {
+        self.setState({artifacts:artifacts});
+      },
+      error: function(err) {
+        console.log(err);
+      }
+    };
+    AppActions.getArtifacts(callback);
   },
   _updateUsername: function() {
     var self = this;
-    if (self.state.sessionId && !self.state.user.email) {
-      // get current user
-      if (!self.state.gettingUser) {
+  
+    // get current user
+    if (!self.state.gettingUser) {
+      var callback = {
+        success: function(user) {
+          AppActions.setCurrentUser(user);
+          self.setState({user: user, gettingUser: false});
+          self._checkShowHelp();
+        },
+        error: function(err) {
+          AppStore.setSnackbar("Can't get user details");
+          self.setState({gettingUser: false});
+        }
+      };
+
+      var userId = self.state.sessionId ? decodeSessionToken(self.state.sessionId) : decodeSessionToken(cookie.load('JWT'));
+      if (userId) {
         self.setState({gettingUser: true});
-
-        var callback = {
-          success: function(user) {
-            AppActions.setCurrentUser(user);
-            self.setState({user: user, gettingUser: false});
-          },
-          error: function(err) {
-            AppStore.setSnackbar("Can't get user details");
-            self.setState({gettingUser: false});
-          }
-        };
-
-        var userId = decodeSessionToken(self.state.sessionId);
         AppActions.getUser(userId, callback);
       }
     }
+  
   },
   _updateActive: function() {
     return this.context.router.isActive({ pathname: '/' }, true) ? '/' :
@@ -94,14 +163,22 @@ var Header = createReactClass({
     this.context.router.push(tab.props.value);
   },
   changeTab: function() {
+    // if onboarding
+    this._hasDeployments();
+    // end if
     AppActions.setSnackbar("");
   },
   _handleHeaderMenu: function(event, index, value) {
-    if (value==="/login") {
-      clearAllRetryTimers();
-      cookie.remove('JWT'); 
+    if (value === "toggleHelptips") {
+      toggleHelptips();
+    } else {
+      if (value==="/login") {
+        this.setState({gettingUser: false});
+        clearAllRetryTimers();
+        cookie.remove('JWT');
+      }
+      this.context.router.push(value);
     }
-    this.context.router.push(value);
   },
   render: function() {
     var tabHandler = this._handleTabActive;
@@ -120,6 +197,7 @@ var Header = createReactClass({
         <MenuItem primaryText={this.state.user.email} value={this.state.user.email} className="hidden" />
         <MenuItem primaryText="My account" value="/settings/my-account" />
         <MenuItem primaryText="User management" value="/settings/user-management" />
+        <MenuItem primaryText={ this.state.showHelptips ? "Hide help tips" : "Show help tips"} value="/settings/user-management" value="toggleHelptips" />
         <MenuItem primaryText="Log out" value="/login" />
       </DropDownMenu>
     );
@@ -138,6 +216,80 @@ var Header = createReactClass({
         </Toolbar>
        
         <div id="header-nav">
+
+          { this.state.showHelptips && this.state.totalDevices && !this.state.artifacts.length && !this.context.router.isActive('/artifacts') ?
+            <div>
+              <div 
+                id="onboard-8"
+                className="tooltip help highlight"
+                data-tip
+                data-for='artifact-nav-tip'
+                data-event='click focus'
+                style={{left: "44%", top:"40px"}}>
+                <FontIcon className="material-icons">help</FontIcon>
+              </div>
+              <ReactTooltip
+                id="artifact-nav-tip"
+                globalEventOff='click'
+                place="bottom"
+                type="light"
+                effect="solid"
+                className="react-tooltip">
+                <ArtifactsNav />
+              </ReactTooltip>
+            </div>
+          : null }
+
+
+
+          { this.state.showHelptips && !this.state.totalDevices && this.state.pendingDevices && !(this.context.router.isActive('/devices') || this.context.router.isActive({ pathname: '/' }, true)) ?
+            <div>
+              <div 
+                id="onboard-7"
+                className="tooltip help highlight"
+                data-tip
+                data-for='devices-nav-tip'
+                data-event='click focus'
+                style={{left: "26%", top:"40px"}}>
+                <FontIcon className="material-icons">help</FontIcon>
+              </div>
+              <ReactTooltip
+                id="devices-nav-tip"
+                globalEventOff='click'
+                place="bottom"
+                type="light"
+                effect="solid"
+                className="react-tooltip">
+                <DevicesNav devices={this.state.pendingDevices.length} />
+              </ReactTooltip>
+            </div>
+          : null }
+
+           { this.state.showHelptips && !this.state.hasDeployments && this.state.totalDevices && this.state.artifacts.length && !this.context.router.isActive('/deployments') ?
+            <div>
+              <div 
+                id="onboard-11"
+                className="tooltip help highlight"
+                data-tip
+                data-for='deployments-nav-tip'
+                data-event='click focus'
+                style={{left: "61%", top:"40px"}}>
+                <FontIcon className="material-icons">help</FontIcon>
+              </div>
+              <ReactTooltip
+                id="deployments-nav-tip"
+                globalEventOff='click'
+                place="bottom"
+                type="light"
+                effect="solid"
+                className="react-tooltip">
+                <DeploymentsNav devices={this.state.totalDevices} />
+              </ReactTooltip>
+            </div>
+          : null }
+
+
+
           <Tabs
             value={this.state.tabIndex}
             inkBarStyle={styles.inkbar}

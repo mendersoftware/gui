@@ -1,4 +1,6 @@
 import React from 'react';
+import ReactTooltip from 'react-tooltip';
+import { AddGroup } from '../helptips/helptooltips';
 var AppActions = require('../../actions/app-actions');
 var createReactClass = require('create-react-class');
 
@@ -61,6 +63,30 @@ var Groups = createReactClass({
             primaryText="Create a group"
             onClick={this.dialogToggle} />
         </List>
+
+
+        { this.props.showHelptips && this.props.totalDevices && !this.props.groupList.length ?
+          <div>
+            <div 
+              id="onboard-5"
+              className="tooltip help"
+              data-tip
+              data-for='groups-tip'
+              data-event='click focus'
+              style={{bottom:"-10px"}}>
+              <FontIcon className="material-icons">help</FontIcon>
+            </div>
+            <ReactTooltip
+              id="groups-tip"
+              globalEventOff='click'
+              place="bottom"
+              type="light"
+              effect="solid"
+              className="react-tooltip">
+              <AddGroup />
+            </ReactTooltip>
+          </div>
+        : null }
 
       </div>
     );
