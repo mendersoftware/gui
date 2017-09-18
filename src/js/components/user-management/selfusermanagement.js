@@ -49,7 +49,6 @@ var SelfUserManagement =  createReactClass({
     var callback = {
       success: function(user) {
         AppActions.setSnackbar("The user has been updated.");
-        console.log(user);
         var user = userData;
         user.id=self.state.currentUser.id;
         AppActions.setCurrentUser(user);
