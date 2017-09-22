@@ -11,8 +11,8 @@ var minifyCSS = require('gulp-minify-css');
 var concat = require('gulp-concat');
 var gutil = require('gulp-util');
 var assign = require('lodash.assign');
-var uglify = require('gulp-uglify');
-var buffer = require('vinyl-buffer');
+var streamify = require('gulp-streamify');
+
 
 gulp.task('watchify', function() {
   var customOpts = {
@@ -60,13 +60,6 @@ gulp.task('browserify', function() {
     .transform('babelify', {presets: ["es2015", "react"]})
     .bundle()
     .pipe(source('main.js'))
-    .pipe(buffer()) // <----- convert from streaming to buffered vinyl file object
-    .pipe(uglify({
-      output: {
-        max_line_len: 0
-      }
-    })) // now gulp-uglify works
-    .pipe(rename('main.min.js')) 
     .pipe(gulp.dest('dist/js'));
 });
 
@@ -76,7 +69,6 @@ gulp.task('copy', function() {
   gulp.src('src/assets/**/*.*')
     .pipe(gulp.dest('dist/assets'));
 });
-
 
 gulp.task('html:dev', function() {
   return gulp.src('src/index.html')
@@ -93,4 +85,4 @@ gulp.task('html:prod', function() {
 gulp.task('default', ['watchify', 'copy', 'minify', 'html:dev'], function() {
   return gulp.watch('src/**/*.*', ['copy', 'minify']);
 });
-gulp.task('build', ['browserify', 'copy', 'minify', 'html:prod']);
+gulp.task('build', ['browserify', 'copy', 'minify', 'html:dev']);

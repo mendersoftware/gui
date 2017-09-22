@@ -20,6 +20,7 @@
     "gulp-less": "^3.3.0",
     "gulp-minify-css": "^1.2.4",
     "gulp-rename": "^1.2.2",
+    "gulp-streamify": "^1.0.2",
     "gulp-uglify": "^2.1.2",
     "gulp-util": "^3.0.7",
     "history": "^4.6.2",
@@ -62,7 +63,6 @@
     "superagent-auth-bearer": "0.0.1",
     "superagent-use": "^0.1.0",
     "validator": "^8.0.0",
-    "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",
     "watchify": "^3.7.0",
     "zxcvbn": "^4.4.1"
