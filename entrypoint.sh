@@ -32,4 +32,5 @@ if [ "$DEMO" == "true" ]; then
    sed -i "s/var isDemoMode.*/var isDemoMode = true;/g" $MAINJS
 fi
 
+uglifyjs $MAINJS -c -o $MAINJS
 exec httpd -f -p 80 -c /etc/httpd.conf "$@"
