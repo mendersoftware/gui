@@ -242,7 +242,7 @@ var Header = createReactClass({
 
 
 
-          { this.state.showHelptips && !this.state.totalDevices && this.state.pendingDevices && !(this.context.router.isActive('/devices') || this.context.router.isActive({ pathname: '/' }, true)) ?
+          { this.state.showHelptips && !this.state.totalDevices && this.state.pendingDevices.length && !(this.context.router.isActive('/devices') || this.context.router.isActive({ pathname: '/' }, true)) ?
             <div>
               <div 
                 id="onboard-7"
