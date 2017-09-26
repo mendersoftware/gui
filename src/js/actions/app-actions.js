@@ -3,6 +3,7 @@ var AppDispatcher = require('../dispatchers/app-dispatcher');
 var ArtifactsApi = require('../api/artifacts-api');
 var DeploymentsApi = require('../api/deployments-api');
 var DevicesApi = require('../api/devices-api');
+var GeneralApi = require('../api/general-api');
 var UsersApi = require('../api/users-api');
 var rootUrl = "https://localhost:443";
 var apiUrl = rootUrl + "/api/management/v1"
@@ -11,6 +12,7 @@ var devicesApiUrl = apiUrl + "/admission";
 var devAuthApiUrl = apiUrl + "/devauth";
 var inventoryApiUrl = apiUrl + "/inventory";
 var useradmApiUrl = apiUrl + "/useradm";
+var tenantadmUrl = apiUrl + "/tenantadm";
 
 var parse = require('parse-link-header');
 
@@ -258,6 +260,24 @@ var AppActions = {
       user: user
     });
   },
+
+
+  /* Tenant management */
+  getUserOrganization: function(callback) {
+    GeneralApi
+      .get(tenantadmUrl+"/user/tenant")
+      .then(function(res) {
+        AppDispatcher.handleViewAction({
+          actionType: AppConstants.SET_MULTITENANCY,
+          organization: res.body
+        });
+        callback.success(res.body);
+      })
+      .catch(function(err) {
+        callback.error(err);
+      })
+  },
+
 
 
   // Onboarding
