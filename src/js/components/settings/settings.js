@@ -4,6 +4,7 @@ import { Router, Route } from 'react-router';
 import cookie from 'react-cookie';
 import SelfUserManagement from '../user-management/selfusermanagement';
 import UserManagement from '../user-management/usermanagement';
+import MyOrganization from './organization';
 var createReactClass = require('create-react-class');
 var AppStore = require('../../stores/app-store');
 var AppActions = require('../../actions/app-actions');
@@ -16,6 +17,7 @@ import { Tabs, Tab } from 'material-ui/Tabs';
 
 var listItems = [
   {route: "/settings/my-account", text: "My account", admin: false},
+  {route: "/settings/my-organization", text: "My organization", admin: true},
   {route: "/settings/user-management", text: "User management", admin: true}
 ];
 
@@ -23,7 +25,8 @@ var Settings =  createReactClass({
   getInitialState: function() {
     return {
       tabIndex: this._updateActive(),
-      snackbar: AppStore.getSnackbar()
+      snackbar: AppStore.getSnackbar(),
+      hasMultitenancy: AppStore.hasMultitenancy(),
     };
   },
 
@@ -35,6 +38,13 @@ var Settings =  createReactClass({
     AppStore.removeChangeListener(this._onChange);
   },
 
+  componentDidMount: function() {
+    if (this.state.tabIndex === "/settings/my-organization" && !this.state.hasMultitenancy) {
+      // redirect from organization screen if no multitenancy
+      this.changeTab("/settings/my-account");
+    }
+  },
+
   componentWillReceiveProps: function(nextProps) {
     this.setState({tabIndex: this._updateActive()});
   },
@@ -44,8 +54,10 @@ var Settings =  createReactClass({
   },
 
   _updateActive: function() {
+    var self = this;
     return this.context.router.isActive({ pathname: '/settings/my-account' }, true) ? '/settings/my-account' :
       this.context.router.isActive('/settings/user-management') ? '/settings/user-management' :
+      this.context.router.isActive('/settings/my-organization') ? '/settings/my-organization' :
       this.context.router.isActive('/settings') ? '/settings' : '/settings/my-account';
   },
   _handleTabActive: function(tab) {
@@ -61,14 +73,32 @@ var Settings =  createReactClass({
     var self = this;
     
     var list = listItems.map(function(item, index) {
-      return (
-        <ListItem
-          key={index}
-          style={self.state.tabIndex===item.route ? {backgroundColor: "#e7e7e7"} : null }
-          primaryText={item.text}
-          onTouchTap={self.changeTab.bind(null, item.route)} />
-      )
+      if (item.route === "/settings/my-organization" && !self.state.hasMultitenancy) {
+        // don't show organization if no multitenancy
+        return null
+      } else {
+        return (
+          <ListItem
+            key={index}
+            style={self.state.tabIndex===item.route ? {backgroundColor: "#e7e7e7"} : null }
+            primaryText={item.text}
+            onTouchTap={self.changeTab.bind(null, item.route)} />
+        )
+      }
     });
+
+    var organization = this.state.hasMultitenancy ? 
+      (
+        <Tab
+          label="My organization"
+          value="/settings/my-organization"
+          onActive={tabHandler}
+          style={this.state.hasMultitenancy ? {display:"block", width:"100%"} : {display: "none"}}>
+          <div>
+            <MyOrganization />
+          </div>
+        </Tab>
+    ) :  null;
 
     return (
       <div className="margin-top">
@@ -93,6 +123,9 @@ var Settings =  createReactClass({
                 <SelfUserManagement />
               </div>
             </Tab>
+
+            {organization}
+
             <Tab
               label="User management"
               value="/settings/user-management"

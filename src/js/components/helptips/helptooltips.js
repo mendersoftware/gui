@@ -229,6 +229,20 @@ var FinishedDeployment = createReactClass({
   }
 });
 
+var NoDevices = createReactClass({
+  render: function () {
+    return (
+      <div>
+        <h3>No devices found</h3>
+        <hr/>
+        <p>There aren't any devices connected to or requesting to join the Mender server.</p>
+        <p>If you don't see any test devices, or if you have a physical device you'd like to connect, <a href="https://docs.mender.io/getting-started">read our getting started guide for help</a>.</p>
+        <p><a className="hidehelp" onClick={toggleHelptips}>Hide all help tips</a></p>
+      </div>
+    )
+  }
+});
+
 module.exports.contextTypes = {
   router: PropTypes.object,
 };
@@ -248,6 +262,7 @@ module.exports = {
   CreateDeployment,
   CreateDeploymentForm,
   ProgressDeployment,
-  FinishedDeployment
+  FinishedDeployment,
+  NoDevices
 }
 

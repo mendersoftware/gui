@@ -48,6 +48,7 @@ var Header = createReactClass({
       pendingDevices: AppStore.getPendingDevices(),
       artifacts: AppStore.getArtifactsRepo(),
       hasDeployments: AppStore.getHasDeployments(),
+      multitenancy: AppStore.hasMultitenancy(),
     };
   },
   componentWillMount: function() {
@@ -71,6 +72,7 @@ var Header = createReactClass({
         this._hasDevices();
         this._hasArtifacts();
         this._checkShowHelp();
+        this._checkForMultitenancy();
       }
     }
   },
@@ -83,6 +85,7 @@ var Header = createReactClass({
     this._hasDevices();
     this._hasArtifacts();
     this._checkShowHelp();
+    this._checkForMultitenancy();
   },
   _checkShowHelp: function() {
     //checks if user id is set and if cookie for helptips exists for that user
@@ -180,6 +183,19 @@ var Header = createReactClass({
       this.context.router.push(value);
     }
   },
+  _checkForMultitenancy: function() {
+    var self = this;
+    var callback = {
+      success: function(res) {
+        self.setState({multitenancy: true});
+      },
+      error: function(err) {
+        console.log(err);
+        self.setState({multitenancy: false});
+      }
+    };
+    AppActions.getUserOrganization(callback);
+  },
   render: function() {
     var tabHandler = this._handleTabActive;
     var menu = menuItems.map(function(item, index) {
@@ -196,6 +212,7 @@ var Header = createReactClass({
       <DropDownMenu anchorOrigin={{vertical: 'center', horizontal: 'middle'}} targetOrigin={{vertical: 'bottom', horizontal: 'middle'}}  style={{marginRight: "0"}} iconStyle={{ fill: 'rgb(0, 0, 0)' }} value={this.state.user.email} onChange={this._handleHeaderMenu}>
         <MenuItem primaryText={this.state.user.email} value={this.state.user.email} className="hidden" />
         <MenuItem primaryText="My account" value="/settings/my-account" />
+        <MenuItem primaryText="My organization" value="/settings/my-organization" className={this.state.multitenancy ? null : "hidden" } />
         <MenuItem primaryText="User management" value="/settings/user-management" />
         <MenuItem primaryText={ this.state.showHelptips ? "Hide help tips" : "Show help tips"} value="/settings/user-management" value="toggleHelptips" />
         <MenuItem primaryText="Log out" value="/login" />
@@ -242,7 +259,7 @@ var Header = createReactClass({
 
 
 
-          { this.state.showHelptips && !this.state.totalDevices && this.state.pendingDevices && !(this.context.router.isActive('/devices') || this.context.router.isActive({ pathname: '/' }, true)) ?
+          { this.state.showHelptips && !this.state.totalDevices && this.state.pendingDevices.length && !(this.context.router.isActive('/devices') || this.context.router.isActive({ pathname: '/' }, true)) ?
             <div>
               <div 
                 id="onboard-7"

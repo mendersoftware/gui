@@ -19,8 +19,8 @@ var _snackbar = {
   message: ""
 };
 var _currentUser = {};
+var _hasMultitenancy = false;
 var _showHelptips = null;
-
 var _groups = []
 
 
@@ -417,6 +417,10 @@ function _setCurrentUser(user) {
   _currentUser = user;
 }
 
+function _setMultitenancy(val) {
+  _hasMultitenancy = typeof val !== "undefined";
+}
+
 function _setShowHelptips(val) {
   _showHelptips = val;
 }
@@ -594,6 +598,11 @@ var AppStore = assign(EventEmitter.prototype, {
     return _currentUser;
   },
 
+  hasMultitenancy: function() {
+    // return boolean rather than organization details
+    return _hasMultitenancy;
+  },
+
   showHelptips: function() {
     return _showHelptips;
   },
@@ -637,6 +646,10 @@ var AppStore = assign(EventEmitter.prototype, {
 
       case AppConstants.SET_SHOW_HELP:
         _setShowHelptips(payload.action.show);
+        break;
+
+      case AppConstants.SET_MULTITENANCY:
+        _setMultitenancy(payload.action.organization);
         break;
 
 

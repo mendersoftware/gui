@@ -18,6 +18,9 @@ var pluralize = require('pluralize');
 require('../common/prototype/Array.prototype.equals');
 var createReactClass = require('create-react-class');
 
+import ReactTooltip from 'react-tooltip';
+import { NoDevices } from '../helptips/helptooltips';
+
 import Snackbar from 'material-ui/Snackbar';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
@@ -562,6 +565,30 @@ var Devices = createReactClass({
             showHelptips={this.state.showHelptips} />
         </div>
         <div className="rightFluid padding-right">
+
+        { !this.state.pendingDevices.length && !this.state.numDevices && this.state.doneLoading ?
+          <div>
+            <div 
+              id="onboard-15"
+              className="tooltip help highlight"
+              data-tip
+              data-for='no-device-tip'
+              data-event='click focus'>
+              <FontIcon className="material-icons">help</FontIcon>
+            </div>
+            <ReactTooltip
+              id="no-device-tip"
+              globalEventOff='click'
+              place="bottom"
+              type="light"
+              effect="solid"
+              className="react-tooltip">
+              <NoDevices />
+            </ReactTooltip>
+          </div>
+        : null }
+
+
           <div className={this.state.pendingDevices.length ? "fadeIn onboard" : "hidden"}>
             <Unauthorized 
               styles={styles} 
