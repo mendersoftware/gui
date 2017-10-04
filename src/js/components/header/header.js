@@ -72,7 +72,6 @@ var Header = createReactClass({
         this._hasDevices();
         this._hasArtifacts();
         this._checkShowHelp();
-        this._checkForMultitenancy();
       }
     }
   },
@@ -85,7 +84,6 @@ var Header = createReactClass({
     this._hasDevices();
     this._hasArtifacts();
     this._checkShowHelp();
-    this._checkForMultitenancy();
   },
   _checkShowHelp: function() {
     //checks if user id is set and if cookie for helptips exists for that user
@@ -182,19 +180,6 @@ var Header = createReactClass({
       }
       this.context.router.push(value);
     }
-  },
-  _checkForMultitenancy: function() {
-    var self = this;
-    var callback = {
-      success: function(res) {
-        self.setState({multitenancy: true});
-      },
-      error: function(err) {
-        console.log(err);
-        self.setState({multitenancy: false});
-      }
-    };
-    AppActions.getUserOrganization(callback);
   },
   render: function() {
     var tabHandler = this._handleTabActive;
