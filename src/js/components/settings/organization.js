@@ -74,6 +74,7 @@ var MyOrganization = createReactClass({
             
               <p style={{marginLeft:"14px"}}>{this.state.copied ? <span className="green fadeIn">Copied to clipboard.</span> : null}</p>
             </div>
+            <Divider />
           </List>
         </div>
         : null

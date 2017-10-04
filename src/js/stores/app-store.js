@@ -417,10 +417,6 @@ function _setCurrentUser(user) {
   _currentUser = user;
 }
 
-function _setMultitenancy(val) {
-  _hasMultitenancy = typeof val !== "undefined";
-}
-
 function _setShowHelptips(val) {
   _showHelptips = val;
 }
@@ -647,11 +643,6 @@ var AppStore = assign(EventEmitter.prototype, {
       case AppConstants.SET_SHOW_HELP:
         _setShowHelptips(payload.action.show);
         break;
-
-      case AppConstants.SET_MULTITENANCY:
-        _setMultitenancy(payload.action.organization);
-        break;
-
 
 
       /* API */
