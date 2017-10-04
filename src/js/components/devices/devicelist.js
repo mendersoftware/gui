@@ -438,7 +438,6 @@ var DeviceList = createReactClass({
 
     return (
       <div>
-        <Filters attributes={this.props.attributes} filters={this.props.filters} onFilterChange={this.props.onFilterChange} />
 
         <div className="margin-top-small">
           <div style={{marginLeft:"26px"}}>
