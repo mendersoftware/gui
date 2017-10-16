@@ -240,7 +240,7 @@ var Repository = createReactClass({
       <div>
 
         <div className={items.length ? "top-right-button fadeIn" : "top-right-button fadeOut"} >
-          <Dropzone className="dropzone onboard" activeClassName="active" rejectClassName="active" multiple={false} accept=".mender" onDrop={this.onDrop}>
+          <Dropzone disabled={this.state.progress} className="dropzone onboard" activeClassName="active" rejectClassName="active" multiple={false} accept=".mender" onDrop={this.onDrop}>
             <div className="icon inline-block"><FileIcon style={{height:"24px", width:"24px", verticalAlign:"middle", marginTop:"-2px"}}/></div>
             <div className="dashboard-placeholder inline">Drag here or <a>browse</a> to upload an artifact file</div>
           </Dropzone>
@@ -304,7 +304,7 @@ var Repository = createReactClass({
           : null }
 
           <div className={(items.length || this.props.loading) ? "hidden" : "dashboard-placeholder fadeIn" }>
-            <Dropzone className="dropzone onboard" activeClassName="active" rejectClassName="active" multiple={false} accept=".mender" onDrop={this.onDrop}>
+            <Dropzone disabled={this.state.progress} className="dropzone onboard" activeClassName="active" rejectClassName="active" multiple={false} accept=".mender" onDrop={this.onDrop}>
               <p style={{width: "500px", fontSize:"16px", margin:"auto"}} className="dashboard-placeholder">No artifacts found. Drag a file here or <a>browse</a> to upload to the repository</p>
               <img src="assets/img/artifacts.png" alt="artifacts" />
             </Dropzone>
