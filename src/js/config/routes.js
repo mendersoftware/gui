@@ -9,13 +9,13 @@ import Artifacts from '../components/artifacts/artifacts';
 import Login from '../components/user-management/login';
 import Settings from '../components/settings/settings';
 
-import auth from '../auth';
+import { isLoggedIn } from '../auth';
 
 import { Router, Route, IndexRoute } from 'react-router';
 
 function requireAuth(nextState, replace) {
   // if not logged in, redirect to login screen
-  if (!auth.isLoggedIn()) {
+  if (!isLoggedIn()) {
     replace({
       pathname: '/login',
       state: { nextPathname: nextState.location.pathname, loggedIn: false }
@@ -25,10 +25,10 @@ function requireAuth(nextState, replace) {
 
 function noRequireAuth(nextState, replace) {
   // if logged in, don't allow to show login screen
-  if (auth.isLoggedIn()) {
+  if (isLoggedIn()) {
     replace({
       pathname: '/',
-      state: { nextPathname: nextState.location.pathname, loggedIn: auth.isLoggedIn() }
+      state: { nextPathname: nextState.location.pathname, loggedIn: isLoggedIn() }
     })
   }
 }

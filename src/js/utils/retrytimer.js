@@ -1,8 +1,10 @@
 var AppActions = require('../actions/app-actions');
+var AppStore = require('../stores/app-store');
 var timerArr = {};
 
 export function setRetryTimer(service, msg, timeLeft) {
-  if (!timerArr[service]) {
+  // check if logged in and if service not already retrying
+  if (!timerArr[service] && AppStore.getCurrentUser().hasOwnProperty("email") ) {
   
     var remaining = timeLeft;
     timerArr[service] = setInterval(function() {

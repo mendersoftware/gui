@@ -21,7 +21,8 @@ var _snackbar = {
 var _currentUser = {};
 var _hasMultitenancy = false;
 var _showHelptips = null;
-var _groups = []
+var _groups = [];
+var _uploadInProgress = false;
 
 
 /* Temp local devices */
@@ -188,6 +189,10 @@ function _uploadArtifact(artifact) {
     artifact.id = _artifactsRepo.length+1;
     _artifactsRepo.push(artifact);
   }
+}
+
+function _uploadProgress(bool) {
+  _uploadInProgress = bool;
 }
 
 
@@ -603,6 +608,9 @@ var AppStore = assign(EventEmitter.prototype, {
     return _showHelptips;
   },
 
+  getUploadInProgress: function() {
+    return _uploadInProgress;
+  },
 
   dispatcherIndex: AppDispatcher.register(function(payload) {
     var action = payload.action;
@@ -621,6 +629,9 @@ var AppStore = assign(EventEmitter.prototype, {
         break;
       case AppConstants.UPLOAD_ARTIFACT:
         _uploadArtifact(payload.action.artifact);
+        break;
+      case AppConstants.UPLOAD_PROGRESS:
+        _uploadProgress(payload.action.inprogress);
         break;
       case AppConstants.UPDATE_FILTERS:
          updateFilters(payload.action.filters);

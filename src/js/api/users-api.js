@@ -2,9 +2,9 @@ var request = require('superagent-use')(require('superagent'));
 require('superagent-auth-bearer')(request);
 var Promise = require('es6-promise').Promise;
 import cookie from 'react-cookie';
-import auth from '../auth';
+import { unauthorizedRedirect } from '../auth';
 
-request.use(auth.unauthorizedRedirect);
+request.use(unauthorizedRedirect);
 
 var Api = {
   get: function(url) {
@@ -27,15 +27,20 @@ var Api = {
       request
         .post(url)
         .auth(userData.email, userData.password)
+        .set('Content-Type', 'application/json')
         .end(function (err, res) {
-          if (err.statusCode !== 200) {
-            // successful raw response throws err, but with status code 200
-            var errorResponse = err.response ? JSON.parse(err.response.text) : err;
+          if ( err.status !== 200) {
+            var errorResponse = {
+              text: err.response ? JSON.parse(err.response.text) : err,
+              code: err.status
+             };
             reject(errorResponse);
           } else {
-            // get token as raw response
-            var rawResponse = err.rawResponse;
-            resolve(rawResponse);
+            var response = {
+              text: err.rawResponse,
+              code: err.status
+            };
+            resolve(response);
           }
         });
     });

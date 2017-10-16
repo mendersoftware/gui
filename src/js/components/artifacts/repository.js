@@ -80,11 +80,12 @@ var Repository = createReactClass({
     //delete meta.artifactFile;
     //delete meta.verified;
     var meta = {description: ""};
-
+    AppActions.setUploadInProgress(true);
     var callback = {
       success: function(result) {
         self.setState({progress: 0});
         AppActions.setSnackbar("Upload successful", 4000);
+        AppActions.setUploadInProgress(false);
         self.props.refreshArtifacts();
       },
       error: function(err) {
@@ -92,6 +93,7 @@ var Repository = createReactClass({
         AppActions.setSnackbar("Artifact couldn't be uploaded. "+err.error);
         self.setState({progress: 0});
         self.props.startLoader(false);
+        AppActions.setUploadInProgress(false);
       },
       progress: function(percent) {
         self.setState({progress: percent});

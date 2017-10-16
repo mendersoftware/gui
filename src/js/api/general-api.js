@@ -2,9 +2,9 @@ var request = require('superagent-use')(require('superagent'));
 require('superagent-auth-bearer')(request);
 var Promise = require('es6-promise').Promise;
 import cookie from 'react-cookie';
-import auth from '../auth';
+import { unauthorizedRedirect } from '../auth';
 
-request.use(auth.unauthorizedRedirect);
+request.use(unauthorizedRedirect);
 
 var Api = {
   get: function(url) {
