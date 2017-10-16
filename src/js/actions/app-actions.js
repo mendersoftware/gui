@@ -191,10 +191,12 @@ var AppActions = {
     UsersApi
       .postLogin(useradmApiUrl+"/auth/login", userData)
       .then(function(res) {
-        callback.success(res);
+        callback.success(res.text);
       })
       .catch(function(err) {
-        callback.error(err);
+        if (err.code && (err.code !== 200)) {
+          callback.error(err.text);
+        }
       })
   },
 
@@ -427,6 +429,13 @@ var AppActions = {
       .catch(function(err) {
         callback.error(err);
       });
+  },
+
+  setUploadInProgress: function(bool) {
+    AppDispatcher.handleViewAction({
+      actionType: AppConstants.UPLOAD_PROGRESS,
+      inprogress: bool
+    });
   },
 
   editArtifact: function(id, body, callback) {

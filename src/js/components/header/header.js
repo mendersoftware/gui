@@ -76,14 +76,15 @@ var Header = createReactClass({
     }
   },
   componentDidMount: function() {
+    // check logged in user
     this._updateUsername();
-    if (this.state.showHelptips === null) {
+    if (this.props.isLoggedIn) {
+      this._hasDeployments();
+      this._hasDevices();
+      this._hasArtifacts();
       this._checkShowHelp();
     }
-    this._hasDeployments();
-    this._hasDevices();
-    this._hasArtifacts();
-    this._checkShowHelp();
+      
   },
   _checkShowHelp: function() {
     //checks if user id is set and if cookie for helptips exists for that user
@@ -194,8 +195,8 @@ var Header = createReactClass({
     });
     var dropDownElement = (
 
-      <DropDownMenu anchorOrigin={{vertical: 'center', horizontal: 'middle'}} targetOrigin={{vertical: 'bottom', horizontal: 'middle'}}  style={{marginRight: "0"}} iconStyle={{ fill: 'rgb(0, 0, 0)' }} value={this.state.user.email} onChange={this._handleHeaderMenu}>
-        <MenuItem primaryText={this.state.user.email} value={this.state.user.email} className="hidden" />
+      <DropDownMenu anchorOrigin={{vertical: 'center', horizontal: 'middle'}} targetOrigin={{vertical: 'bottom', horizontal: 'middle'}}  style={{marginRight: "0"}} iconStyle={{ fill: 'rgb(0, 0, 0)' }} value={(this.state.user || {}).email} onChange={this._handleHeaderMenu}>
+        <MenuItem primaryText={(this.state.user || {}).email} value={(this.state.user || {}).email} className="hidden" />
         <MenuItem primaryText="My account" value="/settings/my-account" />
         <MenuItem primaryText="My organization" value="/settings/my-organization" className={this.state.multitenancy ? null : "hidden" } />
         <MenuItem primaryText="User management" value="/settings/user-management" />

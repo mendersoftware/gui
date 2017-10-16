@@ -31,6 +31,7 @@ var Login = createReactClass({
 
   componentDidMount: function() {
     clearAllRetryTimers();
+    AppActions.setCurrentUser(null);
   },
 
   componentWillUnmount: function () {
@@ -45,26 +46,28 @@ var Login = createReactClass({
   _handleLogin: function(formData) {
     var self = this;
 
-    AppActions.loginUser({
-      success: function(token) {
+    if (formData.hasOwnProperty("email")) {
+      AppActions.loginUser({
+        success: function(token) {
 
-        AppActions.setSnackbar("");
-        // save token as cookie
-        cookie.save("JWT", token, {maxAge: 15*60});
+          AppActions.setSnackbar("");
+          // save token as cookie
+          cookie.save("JWT", token);
 
-        // logged in, so redirect
-        var location = self.props;
+          // logged in, so redirect
+          var location = self.props;
 
-        if (location.state && location.state.nextPathname) {
-          self.props.router.replace(location.state.nextPathname);
-        } else {
-          self.props.router.replace('/');
+          if (location.state && location.state.nextPathname) {
+            self.props.router.replace(location.state.nextPathname);
+          } else {
+            self.props.router.replace('/');
+          }
+        },
+        error: function(err) {
+          AppActions.setSnackbar("Wrong username or password. Please try again!");
         }
-      },
-      error: function(err) {
-        AppActions.setSnackbar("Wrong username or password. Please try again!");
-      }
-    }, formData);
+      }, formData);
+    }
   },
 
   render: function() {
