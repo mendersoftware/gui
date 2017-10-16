@@ -21,7 +21,6 @@ function getState() {
     devices: AppStore.getAllDevices(),
     recent: AppStore.getPastDeployments(),
     activity: AppStore.getActivity(),
-    hideReview: localStorage.getItem("reviewDevices"),
     snackbar: AppStore.getSnackbar(),
     refreshDeploymentsLength: 10000,
     showHelptips: AppStore.showHelptips()
@@ -49,9 +48,6 @@ var Dashboard = createReactClass({
   },
   _onChange: function() {
     this.setState(this.getInitialState());
-  },
-  _setStorage: function(key, value) {
-    AppActions.setLocalStorage(key, value);
   },
   _refreshDeployments: function() {
     var self = this;
@@ -128,7 +124,7 @@ var Dashboard = createReactClass({
     return (
       <div className="contentContainer dashboard">
         <div>
-          <div className={this.state.pending && !this.state.hideReview ? "onboard margin-bottom" : "hidden" }>
+          <div className="onboard margin-bottom">
             <p>There {pending_str} waiting authorization</p>
             <div className="relative">
               <RaisedButton
