@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import { toggleHelptips } from '../../utils/togglehelptips';
 var pluralize = require('pluralize');
 var createReactClass = require('create-react-class');
+var AppStore = require('../../stores/app-store');
 
 var ReviewDevices = createReactClass({
   render: function () {
@@ -133,12 +134,15 @@ var DeploymentsNav = createReactClass({
 
 var UploadArtifact = createReactClass({
   render: function () {
+    var multitenancy = AppStore.hasMultitenancy();
     return (
       <div>
         <h3>Upload an Artifact</h3>
         <hr/>
         <p>Before we can deploy an update to devices, we need to upload an Artifact. A Mender Artifact is a file format that includes some metadata and the root file system that is to be deployed. Steps to build an Artifact are <a href="https://docs.mender.io/artifacts/building-mender-yocto-image">provided in our documentation</a>.</p>
-        <p>To make testing easier, you can <a href="https://docs.mender.io/getting-started/deploy-to-virtual-devices#upload-a-new-mender-artifact-to-the-server">download a test Mender Artifact</a> for your virtual devices. After the download finishes, upload the Artifact.</p>
+        { !multitenancy ? 
+          <p>To make testing easier, you can <a href="https://docs.mender.io/getting-started/deploy-to-virtual-devices#upload-a-new-mender-artifact-to-the-server">download a test Mender Artifact</a> for your virtual devices. After the download finishes, upload the Artifact.</p> :
+          null}
         <p><a className="hidehelp" onClick={toggleHelptips}>Hide all help tips</a></p>
       </div>
     )
