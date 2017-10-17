@@ -124,7 +124,7 @@ var Dashboard = createReactClass({
     return (
       <div className="contentContainer dashboard">
         <div>
-          <div className="onboard margin-bottom">
+          <div className={this.state.pending ? "onboard margin-bottom" : "hidden" }>
             <p>There {pending_str} waiting authorization</p>
             <div className="relative">
               <RaisedButton
