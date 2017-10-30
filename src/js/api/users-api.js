@@ -27,9 +27,9 @@ var Api = {
       request
         .post(url)
         .auth(userData.email, userData.password)
-        .set('Content-Type', 'application/json')
+        .set('Content-Type', 'application/jwt')
         .end(function (err, res) {
-          if ( err.status !== 200) {
+          if ( err || !res.ok) {
             var errorResponse = {
               text: err.response ? JSON.parse(err.response.text) : err,
               code: err.status
@@ -37,8 +37,8 @@ var Api = {
             reject(errorResponse);
           } else {
             var response = {
-              text: err.rawResponse,
-              code: err.status
+              text: res.text,
+              code: res.status
             };
             resolve(response);
           }
