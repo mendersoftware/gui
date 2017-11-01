@@ -29,6 +29,8 @@ notifications:
         on_start: always
 
 before_install:
+    - sudo apt-get update
+    - sudo apt-get install python3-pip
     - pip2.7 install -U --user paramiko fabric PyYAML pytest requests pytest-xdist filelock selenium psutil
     - pip3 install -U --user pyyaml
 
