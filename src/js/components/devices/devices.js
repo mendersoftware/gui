@@ -33,7 +33,7 @@ function getState() {
     pendingDevices: AppStore.getPendingDevices(),
     filters: AppStore.getFilters(),
     attributes: AppStore.getAttributes(),
-    artifacts: AppStore.getArtifactsRepo(),
+    artifacts: AppStore.getCollatedArtifacts(),
     snackbar: AppStore.getSnackbar(),
     totalDevices: AppStore.getTotalDevices(),
     user: AppStore.getCurrentUser()
@@ -66,7 +66,8 @@ var Devices = createReactClass({
 
     AppActions.getArtifacts({
       success: function(artifacts) {
-        self.setState({artifacts:artifacts})
+        var collated = AppStore.getCollatedArtifacts();
+        self.setState({artifacts:collated})
       }
     });
 
