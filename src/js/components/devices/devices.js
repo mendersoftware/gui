@@ -117,6 +117,7 @@ var Devices = createReactClass({
   },
   _refreshDevices: function(page, per_page) {
     var self = this;
+    var id;
 
     if (typeof page !=="undefined") {
        this.setState({currentPage:page});
@@ -124,6 +125,15 @@ var Devices = createReactClass({
     if (typeof per_page !=="undefined") {
        this.setState({perPage:per_page});
     }
+
+    // check filters for ID, tmp until full filtering functionality
+    for (var i=0;i<self.state.filters.length;i++) {
+      if (self.state.filters[i].key === "id") {
+        id = self.state.filters[i].value;
+        break;
+      }
+    }
+
     var pageNo = typeof page !=="undefined" ? page : this.state.currentPage;
     var perPage = typeof per_page !=="undefined" ? per_page : this.state.perPage;
 
@@ -179,7 +189,11 @@ var Devices = createReactClass({
       });
     }
 
-    if (!this.state.selectedGroup) {
+    if (id) {
+      getDevicesFromIDs([id], function(devices) {
+        self.setState({doneLoading:true, devLoading:false, devices:devices});
+      });
+    } else if (!this.state.selectedGroup) {
       AppActions.getDevices(allCallback, pageNo, perPage);
       AppActions.getNumberOfDevices(function(noDevs) {
         self.setState({totalDevices: noDevs, numDevices: noDevs});
@@ -256,7 +270,9 @@ var Devices = createReactClass({
     this.setState({selectedField: group});
   },
   _updateFilters: function(filters) {
+    var self = this;
     AppActions.updateFilters(filters);
+    self._refreshDevices();
   },
   _handleRequestClose: function() {
     AppActions.setSnackbar("");
