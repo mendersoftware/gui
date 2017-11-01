@@ -20,6 +20,7 @@ var createReactClass = require('create-react-class');
 
 import ReactTooltip from 'react-tooltip';
 import { NoDevices } from '../helptips/helptooltips';
+import { isEmpty } from '../../helpers';
 
 import Snackbar from 'material-ui/Snackbar';
 import Dialog from 'material-ui/Dialog';
@@ -70,7 +71,6 @@ var Devices = createReactClass({
   _refreshAll: function() {
     var self = this;
     this._refreshAdmissions();
-    this._refreshDevices();
     this._refreshGroups();
 
     AppActions.getArtifacts({
@@ -81,7 +81,7 @@ var Devices = createReactClass({
     });
 
     var filters = [];
-    if (self.props.params) {
+    if (!isEmpty(self.props.params)) {
       if (self.props.params.group) {
         AppActions.selectGroup(self.props.params.group);
         self.setState({selectedGroup:self.props.params.group});
@@ -93,9 +93,12 @@ var Devices = createReactClass({
           var f = obj[i].split("=");
           filters.push({key:f[0], value:f[1]});
         }
-        this._updateFilters(filters);
+        self._updateFilters(filters);
       }
+    } else {
+       this._refreshDevices();
     }
+   
   },
   componentWillUnmount: function () {
     this._pauseTimers(true);
@@ -184,6 +187,9 @@ var Devices = createReactClass({
           },
           error: function(err) {
             console.log(err);
+            if (id) {
+              self.setState({doneLoading:true, devLoading:false, devices:[], numDevices: 0});
+            }
           }
         });
       });
@@ -191,7 +197,7 @@ var Devices = createReactClass({
 
     if (id) {
       getDevicesFromIDs([id], function(devices) {
-        self.setState({doneLoading:true, devLoading:false, devices:devices});
+        self.setState({doneLoading:true, devLoading:false, devices:devices, numDevices: devices.length});
       });
     } else if (!this.state.selectedGroup) {
       AppActions.getDevices(allCallback, pageNo, perPage);
@@ -272,7 +278,10 @@ var Devices = createReactClass({
   _updateFilters: function(filters) {
     var self = this;
     AppActions.updateFilters(filters);
-    self._refreshDevices();
+    self.setState({filters: filters, doneLoading: false}, function() {
+      self._refreshDevices();
+
+    });
   },
   _handleRequestClose: function() {
     AppActions.setSnackbar("");
