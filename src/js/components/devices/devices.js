@@ -445,15 +445,18 @@ var Devices = createReactClass({
     var self = this;
     var callback = {
       success: function(data) {
+        self.setState({ decommission_request_pending: false });
         AppActions.setSnackbar("Device was successfully decommissioned");
         self.closeDialogs();
         self.setState({expandedRow:null, expandedDevice:null});
         self._refreshDevices();
       },
       error: function(err) {
+        self.setState({ decommission_request_pending: false });
         AppActions.setSnackbar("There was a problem decommissioning the device: "+err);
       }
     };
+    self.setState({ decommission_request_pending: true });
     AppActions.decommissionDevice(self.state.blockDevice, callback);
   },
 
@@ -705,7 +708,7 @@ var Devices = createReactClass({
               <p>
                 Decommission this device and remove all device data. This action is not reversible.
               </p>
-              <RaisedButton onClick={this._decommissionDevice} className="margin-top-small" secondary={true} label={"Decommission device"} icon={<FontIcon style={{marginTop:"-4px"}} className="material-icons">delete_forever</FontIcon>} />
+              <RaisedButton disabled={this.state.decommission_request_pending} onClick={this._decommissionDevice} className="margin-top-small" secondary={true} label={"Decommission device"} icon={<FontIcon style={{marginTop:"-4px"}} className="material-icons">delete_forever</FontIcon>} />
             </div>
           </div>
         </Dialog>
