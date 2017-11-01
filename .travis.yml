@@ -8,6 +8,8 @@ sudo: required
 services:
     - docker
 
+dist: trusty
+
 env:
     global:
         # Should be encrypted or set as private travis variables (in travis settings):
