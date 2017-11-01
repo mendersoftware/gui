@@ -68,8 +68,7 @@ var DeviceList = createReactClass({
   _onRowSelection: function(selected) {
     var self = this;
     if (selected === "all" || selected === "none") {
-      var devices = self._filter(self.props.devices);
-      var deviceArray = (selected === "all") ? Array.from(Array(devices.length).keys()) : [];
+      var deviceArray = (selected === "all") ? Array.from(Array(this.props.devices.length).keys()) : [];
       self.setState({selectedRows: deviceArray});
     } else {
       self.setState({selectedRows: selected});
@@ -85,16 +84,14 @@ var DeviceList = createReactClass({
   _addGroupHandler: function() {
     var i;
     var group = this.state.tmpGroup || this.props.selectedField;
-    var devices = this._filter(this.props.devices);
     for (i=0; i<this.state.selectedRows.length; i++) {
-      this._addSingleDevice(i, this.state.selectedRows.length, devices[this.state.selectedRows[i]].id, group);
+      this._addSingleDevice(i, this.state.selectedRows.length, this.props.devices[this.state.selectedRows[i]].id, group);
     }
     this.dialogToggle('addGroup');
   },
   _removeFromGroupHandler: function(selectedRows) {
-    var devices = this._filter(this.props.devices);
     for (var i=0;i<selectedRows.length;i++) {
-      this._removeSingleDevice(i, selectedRows.length, devices[selectedRows[i]].id);
+      this._removeSingleDevice(i, selectedRows.length, this.props.devices[selectedRows[i]].id);
     }
   },
   _addSingleDevice: function(idx, length, device, group) {
@@ -229,14 +226,6 @@ var DeviceList = createReactClass({
     this.dialogToggle('addGroup');
   },
 
-  _filter: function(array) {
-    var newArray = [];
-    for (var i=0; i<array.length;i++) {
-      if (AppStore.matchFilters(array[i])) newArray.push(array[i]);
-    }
-    return newArray;
-  },
-
   _validate: function(invalid, group) {
     var name = invalid ? "" : group;
     this.setState({groupInvalid: invalid, tmpGroup: name});
@@ -312,9 +301,7 @@ var DeviceList = createReactClass({
       }
     }
 
-    var filteredDevices = this._filter(this.props.devices);
-
-    var devices = filteredDevices.map(function(device, index) {
+    var devices = this.props.devices.map(function(device, index) {
       var expanded = '';
 
       var attrs = {
