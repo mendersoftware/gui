@@ -209,9 +209,34 @@ var Header = createReactClass({
         <Toolbar style={{backgroundColor: "#fff"}}>
           <ToolbarGroup key={0} className="float-left">
               <Link to="/" id="logo"></Link>
-          </ToolbarGroup>
 
-          {this.props.demo ? <div id="demoBox"><InfoIcon style={{marginRight:"6px", height:"16px", verticalAlign:"bottom"}} />Mender is currently running in <b>demo mode</b>. <a href="https://docs.mender.io/Administration/Production-installation" target="_blank">See the documentation</a> for help switching to production mode</div> : null }
+
+            {this.props.demo ? 
+              <div id="demoBox">
+                <a 
+                  id="demo-info"
+                  data-tip
+                  data-for='demo-mode'
+                  data-event='click focus'
+                  data-offset="{'bottom': 15, 'right': 60}">
+                  <InfoIcon style={{marginRight:"6px", height:"16px", verticalAlign:"bottom"}} />
+                  Demo mode
+                </a>
+             
+                <ReactTooltip
+                  id="demo-mode"
+                  globalEventOff='click'
+                  place="bottom"
+                  type="light"
+                  effect="solid"
+                  className="react-tooltip">
+                  <h3>Demo mode</h3>
+                  <p>Mender is currently running in <b>demo mode</b>.</p>
+                  <p><a href="https://docs.mender.io/Administration/Production-installation" target="_blank">See the documentation for help switching to production mode</a>.</p>
+                </ReactTooltip>
+              </div>
+            : null }
+          </ToolbarGroup>
 
           <ToolbarGroup key={1} className="float-right">
             {dropDownElement}
