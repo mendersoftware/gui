@@ -16,6 +16,8 @@ var pluralize = require('pluralize');
 require('../common/prototype/Array.prototype.equals');
 var createReactClass = require('create-react-class');
 
+import { isEmpty } from '../../helpers';
+
 import Snackbar from 'material-ui/Snackbar';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
@@ -61,7 +63,6 @@ var Devices = createReactClass({
   _refreshAll: function() {
     var self = this;
     this._refreshAdmissions();
-    this._refreshDevices();
     this._refreshGroups();
 
     AppActions.getArtifacts({
@@ -72,7 +73,7 @@ var Devices = createReactClass({
     });
 
     var filters = [];
-    if (self.props.params) {
+    if (!isEmpty(self.props.params)) {
       if (self.props.params.group) {
         AppActions.selectGroup(self.props.params.group);
         self.setState({selectedGroup:self.props.params.group});
@@ -84,9 +85,12 @@ var Devices = createReactClass({
           var f = obj[i].split("=");
           filters.push({key:f[0], value:f[1]});
         }
-        this._updateFilters(filters);
+        self._updateFilters(filters);
       }
+    } else {
+       this._refreshDevices();
     }
+   
   },
   componentWillUnmount: function () {
     this._pauseTimers(true);
@@ -107,12 +111,22 @@ var Devices = createReactClass({
   },
   _refreshDevices: function(page, per_page) {
     var self = this;
+    var id;
     if (typeof page !=="undefined") {
        this.setState({currentPage:page});
     }
     if (typeof per_page !=="undefined") {
        this.setState({perPage:per_page});
     }
+
+    // check filters for ID, tmp until full filtering functionality
+    for (var i=0;i<self.state.filters.length;i++) {
+      if (self.state.filters[i].key === "id") {
+        id = self.state.filters[i].value;
+        break;
+      }
+    }
+
     var pageNo = typeof page !=="undefined" ? page : this.state.currentPage;
     var perPage = typeof per_page !=="undefined" ? per_page : this.state.perPage;
 
@@ -157,12 +171,19 @@ var Devices = createReactClass({
           },
           error: function(err) {
             console.log(err);
+            if (id) {
+              self.setState({doneLoading:true, devLoading:false, devices:[], numDevices: 0});
+            }
           }
         });
       });
     }
 
-    if (!this.state.selectedGroup) {
+    if (id) {
+      getDevicesFromIDs([id], function(devices) {
+        self.setState({doneLoading:true, devLoading:false, devices:devices, numDevices: devices.length});
+      });
+    } else if (!this.state.selectedGroup) {
       AppActions.getDevices(allCallback, pageNo, perPage);
       AppActions.getNumberOfDevices(function(noDevs) {
         self.setState({totalDevices: noDevs, numDevices: noDevs});
@@ -228,7 +249,12 @@ var Devices = createReactClass({
     this.setState({selectedField: group});
   },
   _updateFilters: function(filters) {
+    var self = this;
     AppActions.updateFilters(filters);
+    self.setState({filters: filters, doneLoading: false}, function() {
+      self._refreshDevices();
+
+    });
   },
   _handleRequestClose: function() {
     AppActions.setSnackbar("");
