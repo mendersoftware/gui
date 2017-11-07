@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactTooltip from 'react-tooltip';
 import { AddGroup } from '../helptips/helptooltips';
-var AppActions = require('../../actions/app-actions');
 var createReactClass = require('create-react-class');
 
 // material ui

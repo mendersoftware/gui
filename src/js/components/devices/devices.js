@@ -41,7 +41,7 @@ function getState() {
     attributes: AppStore.getAttributes(),
     artifacts: AppStore.getCollatedArtifacts(),
     snackbar: AppStore.getSnackbar(),
-    totalDevices: AppStore.getTotalDevices(),
+    totalDevices: AppStore.getTotalAcceptedDevices(),
     user: AppStore.getCurrentUser(),
     refreshDeviceLength: 10000,
     refreshAdmissionLength: 20000,
@@ -200,13 +200,20 @@ var Devices = createReactClass({
         self.setState({doneLoading:true, devLoading:false, devices:devices, numDevices: devices.length});
       });
     } else if (!this.state.selectedGroup) {
+
+      var callbackCount = {
+        success: function(count) {
+          self.setState({totalDevices: count, numDevices: count});
+        },
+        error: function(err) {
+          console.log(err);
+        }
+      };
+      AppActions.getDeviceCount(callbackCount, "accepted");
       AppActions.getDevices(allCallback, pageNo, perPage);
-      AppActions.getNumberOfDevices(function(noDevs) {
-        self.setState({totalDevices: noDevs, numDevices: noDevs});
-      });
     } else {
       AppActions.getDevices(groupCallback, pageNo, perPage, this.state.selectedGroup);
-      AppActions.getNumberOfDevices(function(noDevs) {
+      AppActions.getNumberOfDevicesInGroup(function(noDevs) {
         self.setState({numDevices: noDevs});
       }, this.state.selectedGroup);
     }
@@ -214,9 +221,15 @@ var Devices = createReactClass({
   },
   _refreshAdmissions: function(page, per_page) {
     var self = this;
-    AppActions.getNumberOfDevicesForAdmission(function(noDevs) {
-      self.setState({totalAdmDevices: noDevs});
-    });
+    var callbackCount = {
+      success: function(count) {
+        self.setState({totalAdmDevices: count});
+      },
+      error: function(err) {
+        console.log(err);
+      }
+    };
+    AppActions.getDeviceCount(callbackCount, "pending");
 
     if (typeof page !=="undefined") {
        this.setState({admPageNo:page});
@@ -253,7 +266,7 @@ var Devices = createReactClass({
           groupDevices[groups[i]] = 0;
           setNum(groups[i], i);
           function setNum(group, idx) {
-            AppActions.getNumberOfDevices(function(noDevs) {
+            AppActions.getNumberOfDevicesInGroup(function(noDevs) {
               groupDevices[group] = noDevs;
               self.setState({groupDevices: groupDevices});
             }, group);

@@ -42,7 +42,10 @@ var Dashboard = createReactClass({
   componentDidMount: function() {
     var self = this;
     clearAllRetryTimers();
-    self.timer = setInterval(self._refreshDeployments, self.state.refreshDeploymentsLength);
+    self.timer = setInterval( function() {
+      self._refreshDeployments();
+      self._refreshAdmissions();
+    }, self.state.refreshDeploymentsLength);
     self._refreshDeployments();
     self._refreshAdmissions();
   },
@@ -82,14 +85,17 @@ var Dashboard = createReactClass({
   },
   _refreshAdmissions: function() {
     var self = this;
-    AppActions.getNumberOfDevicesForAdmission(function(count) {
-      var pending = count;
-      self.setState({pending: pending});
 
-      setTimeout(function() {
-        self.setState({doneAdmnsLoading:true});
-      }, 300)
-    });
+    var callback = {
+      success: function(count) {
+        self.setState({pending: count, doneAdmnsLoading:true});
+      },
+      error: function(err) {
+        console.log(err);
+      }
+    };
+
+    AppActions.getDeviceCount(callback, "pending");
   },
 
   _handleClick: function(params) {

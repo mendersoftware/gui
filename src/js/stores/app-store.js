@@ -10,6 +10,8 @@ var _currentGroup = null;
 var _deploymentArtifact = null;
 var _currentGroupDevices = [];
 var _totalNumberDevices;
+var _totalPendingDevices;
+var _totalAcceptedDevices;
 var _filters = [{key:'', value:''}];
 var _attributes = {
   id: "ID"
@@ -373,6 +375,12 @@ function setDevices(devices) {
 function setTotalDevices(count) {
   _totalNumberDevices = count;
 }
+function setTotalPendingDevices(count) {
+  _totalPendingDevices = count;
+}
+function setTotalAcceptedDevices(count) {
+  _totalAcceptedDevices = count;
+}
 
 function setGroupDevices(devices) {
   _currentGroupDevices = [];
@@ -583,6 +591,12 @@ var AppStore = assign(EventEmitter.prototype, {
   getTotalDevices: function() {
     return _totalNumberDevices
   },
+  getTotalPendingDevices: function() {
+    return _totalPendingDevices
+  },
+  getTotalAcceptedDevices: function() {
+    return _totalAcceptedDevices
+  },
 
   getActivity: function() {
     /*
@@ -682,7 +696,15 @@ var AppStore = assign(EventEmitter.prototype, {
         break;
 
       case AppConstants.SET_TOTAL_DEVICES:
-        setTotalDevices(payload.action.total);
+        setTotalDevices(payload.action.count);
+        break;
+
+      case AppConstants.SET_PENDING_DEVICES:
+        setTotalPendingDevices(payload.action.count);
+        break;
+
+      case AppConstants.SET_ACCEPTED_DEVICES:
+        setTotalAcceptedDevices(payload.action.count);
         break;
 
        /* API */

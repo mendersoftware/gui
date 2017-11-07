@@ -228,11 +228,16 @@ a, span.link {
   border-bottom: 1px solid #e0e0e0;
 }
 
+.header .material-icons {
+  color: @lightgrey;
+  margin-left: 7px;
+}
+
 #logo {
   display: block;
   position: relative;
   left: 5px;
-  width: 170px;
+  width: 174px;
   height: 48px;
   background-image: url('../assets/img/headerlogo.png');
   background-repeat: no-repeat;
@@ -243,11 +248,37 @@ a, span.link {
   border-left: 1px solid @lightergrey;
   padding: 4px 30px;
   margin: 14px 0;
+  font-size: 14px;
   svg {
     color: @linkgreen !important;
   }
 }
 
+.header .header-section {
+  height: 24px;
+  font-size: 14px;
+  color: @grey;
+  margin: 14px 0;
+  padding-left: 36px;
+  padding-right: 36px;
+  border-right: 1px solid @lightergrey;
+
+  &:first-of-type {
+    border-left: 1px solid @lightergrey;
+  }
+
+  &:hover {
+    color: darken(@grey, 10%);
+    cursor: pointer;
+    .material-icons {
+      color: darken(@grey, 10%) !important;
+    }
+  }
+}
+
+.header .header-dropdown:hover .material-icons {
+  color: darken(@grey, 10%) !important;
+}
 
 
 /* Layout */
@@ -1690,6 +1721,15 @@ div.shake-alert {
 
 
 /* LESS MIXINS */
+.flip-horizontal {
+  -moz-transform: scale(-1, 1);
+  -webkit-transform: scale(-1, 1);
+  -o-transform: scale(-1, 1);
+  -ms-transform: scale(-1, 1);
+  transform: scale(-1, 1);
+}
+
+
 .scale (@factor) {
   -webkit-transform: scale(@factor);
   -moz-transform:    scale(@factor);
