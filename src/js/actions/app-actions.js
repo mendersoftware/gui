@@ -142,7 +142,41 @@ var AppActions = {
         callback.error(err);
       });
   },
-  getNumberOfDevices: function (callback, group) {
+  getDeviceCount: function(callback, status) {
+    var filter = status ? "?status="+status : '';
+
+    DevicesApi
+      .get(devAuthApiUrl+"/devices/count"+filter)
+      .then(function(res) {
+        switch (status) {
+          case "pending":
+            AppDispatcher.handleViewAction({
+              actionType: AppConstants.SET_PENDING_DEVICES,
+              count: res.body.count
+            });
+            break;
+          case "accepted":
+            AppDispatcher.handleViewAction({
+              actionType: AppConstants.SET_ACCEPTED_DEVICES,
+              count: res.body.count
+            });
+            break;
+          default:
+            AppDispatcher.handleViewAction({
+              actionType: AppConstants.SET_TOTAL_DEVICES,
+              count: res.body.count
+            });
+        }
+
+        callback.success(res.body.count);
+      })
+      .catch(function(err) {
+        callback.error(err);
+      });
+  },
+
+
+  getNumberOfDevicesInGroup: function (callback, group) {
     var count = 0;
     var per_page = 100;
     var page = 1;
@@ -158,16 +192,10 @@ var AppActions = {
           getDeviceCount();
         } else {
           callback(count);
-          if (!group) {
-            AppDispatcher.handleViewAction({
-              actionType: AppConstants.SET_TOTAL_DEVICES,
-              total: count
-            });
-          }
         }
       })
       .catch(function(err) {
-        this.callback(err);
+        callback(err);
       })
     };
     getDeviceCount();
@@ -308,29 +336,7 @@ var AppActions = {
         callback.error(err);
       })
   },
-  getNumberOfDevicesForAdmission: function (callback) {
-    var count = 0;
-    var per_page = 100;
-    var page = 1;
-    function getDeviceCount() {
-      DevicesApi
-      .get(devicesApiUrl+"/devices?status=pending&per_page=" + per_page + "&page="+page)
-      .then(function(res) {
-        var links = parse(res.headers['link']);
-        count += res.body.length;
-        if (links.next) {
-          page++;
-          getDeviceCount();
-        } else {
-          callback(count);
-        }
-      })
-      .catch(function(err) {
-        this.callback(err);
-      })
-    };
-    getDeviceCount();
-  },
+  
   getDeviceIdentity: function (id, callback) {
     DevicesApi
       .get(devAuthApiUrl+"/devices/" + id)

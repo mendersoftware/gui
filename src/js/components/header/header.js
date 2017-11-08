@@ -7,6 +7,8 @@ import { clearAllRetryTimers } from '../../utils/retrytimer';
 import ReactTooltip from 'react-tooltip';
 import { toggleHelptips } from '../../utils/togglehelptips';
 import { DevicesNav, ArtifactsNav, DeploymentsNav } from '../helptips/helptooltips';
+var DeviceNotifications = require('./devicenotifications');
+
 var AppActions = require('../../actions/app-actions');
 var AppStore = require('../../stores/app-store');
 var createReactClass = require('create-react-class');
@@ -44,8 +46,8 @@ var Header = createReactClass({
       sessionId: cookie.load('JWT'),
       user: AppStore.getCurrentUser(),
       showHelptips: AppStore.showHelptips(),
-      totalDevices: AppStore.getTotalDevices(),
-      pendingDevices: AppStore.getPendingDevices(),
+      pendingDevices: AppStore.getTotalPendingDevices(),
+      acceptedDevices: AppStore.getTotalAcceptedDevices(),
       artifacts: AppStore.getArtifactsRepo(),
       hasDeployments: AppStore.getHasDeployments(),
       multitenancy: AppStore.hasMultitenancy(),
@@ -68,10 +70,9 @@ var Header = createReactClass({
        this._updateUsername();
     } else {
       if (prevState.sessionId!==this.state.sessionId ) {
-        this._hasDeployments();
-        this._hasDevices();
         this._hasArtifacts();
         this._checkShowHelp();
+        this._checkHeaderInfo();
       }
     }
   },
@@ -79,12 +80,16 @@ var Header = createReactClass({
     // check logged in user
     this._updateUsername();
     if (this.props.isLoggedIn) {
-      this._hasDeployments();
-      this._hasDevices();
+      this._checkHeaderInfo();
       this._hasArtifacts();
       this._checkShowHelp();
     }
       
+  },
+  _checkHeaderInfo: function() {
+      this._hasDeployments();
+      this._hasDevices();
+      this._hasPendingDevices();
   },
   _checkShowHelp: function() {
     //checks if user id is set and if cookie for helptips exists for that user
@@ -110,12 +115,34 @@ var Header = createReactClass({
     };
     AppActions.getDeployments(callback, 1, 1);
   },
+
   _hasDevices: function() {
-    // check if *any* devices connected, for onboarding help tips
+    // check if any devices connected + accepted
     var self = this;
-    AppActions.getNumberOfDevices(function(count) {
-       self.setState({totalDevices: count});
-    });
+    var callback = {
+      success: function(count) {
+        self.setState({acceptedDevices: count});
+      },
+      error: function(err) {
+        console.log(err);
+      }
+    };
+
+    AppActions.getDeviceCount(callback, "accepted");
+  },
+  _hasPendingDevices: function() {
+    // check if any devices connected + accepted
+    var self = this;
+    var callback = {
+      success: function(count) {
+        self.setState({pendingDevices: count});
+      },
+      error: function(err) {
+        console.log(err);
+      }
+    };
+
+    AppActions.getDeviceCount(callback, "pending");
   },
   _hasArtifacts: function() {
     var self = this;
@@ -139,6 +166,7 @@ var Header = createReactClass({
           AppActions.setCurrentUser(user);
           self.setState({user: user, gettingUser: false});
           self._checkShowHelp();
+          self._checkHeaderInfo();
         },
         error: function(err) {
           AppStore.setSnackbar("Can't get user details");
@@ -165,9 +193,7 @@ var Header = createReactClass({
     this.context.router.push(tab.props.value);
   },
   changeTab: function() {
-    // if onboarding
-    this._hasDeployments();
-    // end if
+    this._checkHeaderInfo();
     AppActions.setSnackbar("");
   },
   _handleHeaderMenu: function(event, index, value) {
@@ -193,10 +219,17 @@ var Header = createReactClass({
           onActive={tabHandler} />
       )
     });
+    var dropdownLabel = (
+      <span>
+         <FontIcon className="material-icons" style={{marginRight: '8px', top: '5px', fontSize: '20px', color: '#c7c7c7'}}>account_circle</FontIcon>
+         {(this.state.user || {}).email}
+      </span>
+    );
+
     var dropDownElement = (
 
-      <DropDownMenu anchorOrigin={{vertical: 'center', horizontal: 'middle'}} targetOrigin={{vertical: 'bottom', horizontal: 'middle'}}  style={{marginRight: "0"}} iconStyle={{ fill: 'rgb(0, 0, 0)' }} value={(this.state.user || {}).email} onChange={this._handleHeaderMenu}>
-        <MenuItem primaryText={(this.state.user || {}).email} value={(this.state.user || {}).email} className="hidden" />
+      <DropDownMenu className="header-dropdown" anchorOrigin={{vertical: 'center', horizontal: 'middle'}} targetOrigin={{vertical: 'bottom', horizontal: 'middle'}}  style={{marginRight: "0", fontSize: "14px", paddingLeft: "4px"}} iconStyle={{ fill: 'rgb(0, 0, 0)' }} value={(this.state.user || {}).email} onChange={this._handleHeaderMenu}>
+        <MenuItem primaryText={dropdownLabel} value={(this.state.user || {}).email} className="hidden" />
         <MenuItem primaryText="My account" value="/settings/my-account" />
         <MenuItem primaryText="My organization" value="/settings/my-organization" className={this.state.multitenancy ? null : "hidden" } />
         <MenuItem primaryText="User management" value="/settings/user-management" />
@@ -209,18 +242,45 @@ var Header = createReactClass({
         <Toolbar style={{backgroundColor: "#fff"}}>
           <ToolbarGroup key={0} className="float-left">
               <Link to="/" id="logo"></Link>
+
+
+            {this.props.demo ? 
+              <div id="demoBox">
+                <a 
+                  id="demo-info"
+                  data-tip
+                  data-for='demo-mode'
+                  data-event='click focus'
+                  data-offset="{'bottom': 15, 'right': 60}">
+                  <InfoIcon style={{marginRight:"2px", height:"16px", verticalAlign:"bottom"}} />
+                  Demo mode
+                </a>
+             
+                <ReactTooltip
+                  id="demo-mode"
+                  globalEventOff='click'
+                  place="bottom"
+                  type="light"
+                  effect="solid"
+                  className="react-tooltip">
+                  <h3>Demo mode</h3>
+                  <p>Mender is currently running in <b>demo mode</b>.</p>
+                  <p><a href="https://docs.mender.io/Administration/Production-installation" target="_blank">See the documentation for help switching to production mode</a>.</p>
+                </ReactTooltip>
+              </div>
+            : null }
           </ToolbarGroup>
 
-          {this.props.demo ? <div id="demoBox"><InfoIcon style={{marginRight:"6px", height:"16px", verticalAlign:"bottom"}} />Mender is currently running in <b>demo mode</b>. <a href="https://docs.mender.io/Administration/Production-installation" target="_blank">See the documentation</a> for help switching to production mode</div> : null }
-
           <ToolbarGroup key={1} className="float-right">
+            <DeviceNotifications pending={this.state.pendingDevices} total={this.state.acceptedDevices} limit={this.state.deviceLimit} />
+           
             {dropDownElement}
           </ToolbarGroup>
         </Toolbar>
        
         <div id="header-nav">
 
-          { this.state.showHelptips && this.state.totalDevices && !this.state.artifacts.length && !this.context.router.isActive('/artifacts') ?
+          { this.state.showHelptips && this.state.acceptedDevices && !this.state.artifacts.length && !this.context.router.isActive('/artifacts') ?
             <div>
               <div 
                 id="onboard-8"
@@ -245,7 +305,7 @@ var Header = createReactClass({
 
 
 
-          { this.state.showHelptips && !this.state.totalDevices && this.state.pendingDevices.length && !(this.context.router.isActive('/devices') || this.context.router.isActive({ pathname: '/' }, true)) ?
+          { this.state.showHelptips && !this.state.acceptedDevices && this.state.pendingDevices && !(this.context.router.isActive('/devices') || this.context.router.isActive({ pathname: '/' }, true)) ?
             <div>
               <div 
                 id="onboard-7"
@@ -263,12 +323,12 @@ var Header = createReactClass({
                 type="light"
                 effect="solid"
                 className="react-tooltip">
-                <DevicesNav devices={this.state.pendingDevices.length} />
+                <DevicesNav devices={this.state.pendingDevices} />
               </ReactTooltip>
             </div>
           : null }
 
-           { this.state.showHelptips && !this.state.hasDeployments && this.state.totalDevices && this.state.artifacts.length && !this.context.router.isActive('/deployments') ?
+           { this.state.showHelptips && !this.state.hasDeployments && this.state.acceptedDevices && this.state.artifacts.length && !this.context.router.isActive('/deployments') ?
             <div>
               <div 
                 id="onboard-11"
@@ -286,7 +346,7 @@ var Header = createReactClass({
                 type="light"
                 effect="solid"
                 className="react-tooltip">
-                <DeploymentsNav devices={this.state.totalDevices} />
+                <DeploymentsNav devices={this.state.acceptedDevices} />
               </ReactTooltip>
             </div>
           : null }

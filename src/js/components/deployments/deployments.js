@@ -43,6 +43,7 @@ var Deployments = createReactClass({
     AppStore.changeListener(this._onChange);
   },
   componentDidMount: function() {
+    var self = this;
     clearAllRetryTimers();
     var artifact = AppStore.getDeploymentArtifact();
     this.setState({artifact: artifact});
@@ -60,19 +61,26 @@ var Deployments = createReactClass({
     AppActions.getDevices({
       success: function(devices) {
         if (!devices.length) {
-          AppActions.getNumberOfDevicesForAdmission(function(count) {
-            if (count) {
-              this.setState({hasPending:true});
+
+          var callback = {
+            success: function(count) {
+              self.setState({hasPending:true});
+            },
+            error: function(err) {
+              console.log(err);
             }
-          }.bind(this));
+          };
+
+          AppActions.getDeviceCount(callback, "pending");
+
         } else {
           var allDevices = [];
           for (var i=0; i<devices.length;i++) {
             allDevices.push(devices[i]);
           }
-          this.setState({hasDevices:true, allDevices: allDevices});
+          self.setState({hasDevices:true, allDevices: allDevices});
         }
-      }.bind(this),
+      },
       error: function(err) {
         console.log("Error: " +err);
       }
