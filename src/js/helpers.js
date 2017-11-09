@@ -23,7 +23,7 @@ export function decodeSessionToken(token) {
     return decoded.sub;
   }
   catch (err) {
-    console.log(err);
+    //console.log(err);
     return;
   }
  

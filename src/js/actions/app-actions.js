@@ -177,13 +177,12 @@ var AppActions = {
       DevicesApi
       .get(devAuthApiUrl+"/limits/max_devices")
       .then(function(res) {
-        console.log(res);
         AppDispatcher.handleViewAction({
           actionType: AppConstants.SET_DEVICE_LIMIT,
-          limit: res
+          limit: res.count
         });
 
-        callback.success(res);
+        callback.success(res.count);
       })
       .catch(function(err) {
         callback.error(err);
