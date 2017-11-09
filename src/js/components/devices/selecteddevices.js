@@ -147,98 +147,92 @@ var SelectedDevices = createReactClass({
     }
 
     var deviceInventory = [];
-    if (this.props.device) {
-      if (typeof this.props.device.attributes !== 'undefined' && this.props.device.attributes.length>0) {
-        var sortedAttributes = this.props.device.attributes.sort(function (a, b) {
-            return a.name.localeCompare( b.name );
-        });
-        for (var i=0;i<sortedAttributes.length;i++) {
-          var secondaryText = (sortedAttributes[i].value instanceof Array) ? sortedAttributes[i].value.toString() : sortedAttributes[i].value;
-          var secondaryTextLines = (sortedAttributes[i].value instanceof Array) ? 2 : 1;
-          deviceInventory.push(
-            <div key={i}>
-              <ListItem style={this.props.styles.listStyle} disabled={true} primaryText={sortedAttributes[i].name} secondaryText={secondaryText} secondaryTextLines={secondaryTextLines} />
-              <Divider />
-            </div>
-          );
-        };
 
-        var status = this.props.device.auth_sets ? this.props.device.auth_sets[0].status : "";
-        var statusButton = null;
+    var status = this.props.device.auth_sets ? this.props.device.auth_sets[0].status : "";
 
-        if (status != "accepted") {
-          var statusButton = (
-              <div key="decommissionButton">
-                <ListItem
-                  style={this.props.styles.listStyle}
-                  primaryText={"Authorization status: "+ status}
-                  secondaryText="Re-authorize this device?"
-                  onClick={this._handleAccept.bind(null, true)}
-                  leftIcon={<FontIcon className="material-icons red auth" style={{marginTop:6, marginBottom:6}}>cancel</FontIcon>} />
-                  <Divider />
-                </div>
-              );
-        }
-
-        deviceInventory.push(statusButton);
-
+    if (typeof this.props.device.attributes !== 'undefined' && this.props.device.attributes.length>0) {
+      var sortedAttributes = this.props.device.attributes.sort(function (a, b) {
+          return a.name.localeCompare( b.name );
+      });
+      for (var i=0;i<sortedAttributes.length;i++) {
+        var secondaryText = (sortedAttributes[i].value instanceof Array) ? sortedAttributes[i].value.toString() : sortedAttributes[i].value;
+        var secondaryTextLines = (sortedAttributes[i].value instanceof Array) ? 2 : 1;
         deviceInventory.push(
-          <div key="updateButton">
-            <ListItem
-              className={status === "accepted" ? null : "hidden"}
-              style={this.props.styles.listStyle}
-              primaryText="Create a deployment for this device"
-              onClick={this._clickListItem}
-              leftIcon={<FontIcon style={{marginTop:6, marginBottom:6}} className="material-icons update">replay</FontIcon>} />
+          <div key={i}>
+            <ListItem style={this.props.styles.listStyle} disabled={true} primaryText={sortedAttributes[i].name} secondaryText={secondaryText} secondaryTextLines={secondaryTextLines} />
+            <Divider />
           </div>
         );
-      } else {
-        deviceInventory.push(
-          <div className="waiting-inventory" key="waiting-inventory">
-            <div
-              onClick={this._handleStopProp}
-              id="inventory-info"
-              className="tooltip info"
-              style={{top:"8px", right:"8px"}}
-              data-tip
-              data-for='inventory-wait'
-              data-event='click focus'>
-              <FontIcon className="material-icons">info</FontIcon>
-            </div>
-            <ReactTooltip
-              id="inventory-wait"
-              globalEventOff='click'
-              place="top"
-              type="light"
-              effect="solid"
-              className="react-tooltip">
-              <h3>Waiting for inventory data</h3>
-              <p>Inventory data not yet received from the device - this can take up to 30 minutes with default installation.</p>
-              <p>Also see the documentation for <a onClick={this._clickLink} href="https://docs.mender.io/Client-configuration/Polling-intervals">Polling intervals</a>.</p>
-            </ReactTooltip>
+      };
 
-            <p>Waiting for inventory data from the device</p>
-            <Loader show={true} waiting={true} />
+      deviceInventory.push(
+        <div key="updateButton">
+          <ListItem
+            className={status === "accepted" ? null : "hidden"}
+            style={this.props.styles.listStyle}
+            primaryText="Create a deployment for this device"
+            onClick={this._clickListItem}
+            leftIcon={<FontIcon style={{marginTop:6, marginBottom:6}} className="material-icons update">replay</FontIcon>} />
+            <Divider />
+        </div>
+      );
+    } else {
+      deviceInventory.push(
+        <div className="waiting-inventory" key="waiting-inventory">
+          <div
+            onClick={this._handleStopProp}
+            id="inventory-info"
+            className="tooltip info"
+            style={{top:"8px", right:"8px"}}
+            data-tip
+            data-for='inventory-wait'
+            data-event='click focus'>
+            <FontIcon className="material-icons">info</FontIcon>
           </div>
-        );
-      }
+          <ReactTooltip
+            id="inventory-wait"
+            globalEventOff='click'
+            place="top"
+            type="light"
+            effect="solid"
+            className="react-tooltip">
+            <h3>Waiting for inventory data</h3>
+            <p>Inventory data not yet received from the device - this can take up to 30 minutes with default installation.</p>
+            <p>Also see the documentation for <a onClick={this._clickLink} href="https://docs.mender.io/Client-configuration/Polling-intervals">Polling intervals</a>.</p>
+          </ReactTooltip>
+
+          <p>Waiting for inventory data from the device</p>
+          <Loader show={true} waiting={true} />
+        </div>
+      );
     }
+
+    var reauthButton = (
+      <div key="reauthButton">
+        <ListItem
+          style={this.props.styles.listStyle}
+          primaryText={"Authorization status: " + status}
+          secondaryText="Re-authorize this device?"
+          onClick={this._handleAccept.bind(null, true)}
+          leftIcon={<FontIcon className="material-icons red auth" style={{marginTop:6, marginBottom:6}}>cancel</FontIcon>} />
+      </div>
+    );
 
     var deviceInventory2 = [];
     if (deviceInventory.length > deviceIdentity.length) {
-      deviceInventory2 = deviceInventory.splice((deviceInventory.length/2)+(deviceInventory.length%2),deviceInventory.length-1);
+      deviceInventory2 = deviceInventory.splice((deviceInventory.length/2)+(deviceInventory.length%2),deviceInventory.length);
     }
 
     var decommission = (
       <div key="decommissionButton">
         <ListItem
           style={this.props.styles.listStyle}
-          primaryText="Block or decommission this device"
+          primaryText={status === "accepted" ? "Block or decommission this device" : "Decommission this device"}
           onClick={this._handleBlock.bind(null, true)}
           leftIcon={<FontIcon className="material-icons auth" style={{marginTop:6, marginBottom:6}}>block</FontIcon>} />
         <Divider />
       </div>
-    )
+    );
 
     var deviceInfo = (
       <div key="deviceinfo">
@@ -259,6 +253,7 @@ var SelectedDevices = createReactClass({
         <div className={this.props.unauthorized ? "hidden" : "report-list"} >
           <List style={{marginTop:"34px"}}>
             {deviceInventory2}
+            {status !== "accepted" ? reauthButton : null}
             {decommission}
           </List>
         </div>
@@ -280,7 +275,7 @@ var SelectedDevices = createReactClass({
         </div>
 
       </div>
-    )
+    );
 
     var scheduleActions =  [
       <div style={{marginRight:"10px", display:"inline-block"}}>

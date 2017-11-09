@@ -363,6 +363,9 @@ var Devices = createReactClass({
     this.setState({remove: false, block: false, schedule: false});
   },
   _blockDialog: function(device, remove) {
+
+    device.status = device.auth_sets ? device.auth_sets[0].status : "";
+
     if (remove) {
       this.setState({remove: true, block: false, blockDevice: device});
     } else {
@@ -591,7 +594,9 @@ var Devices = createReactClass({
         color: "#8c8c8d",
         cursor: "pointer",
       }
-    }
+    };
+
+    var blockedDevice = (this.state.blockDevice || {}).status !== "accepted";
 
     return (
       <div className="margin-top">
@@ -718,26 +723,28 @@ var Devices = createReactClass({
 
         <Dialog
           open={this.state.remove || false}
-          title='Block or decommission device?'
+          title={blockedDevice ? "Decommission device?" : 'Block or decommission device?'}
           actions={decommissionActions}
           autoDetectWindowHeight={true}
           bodyStyle={{paddingTop:"0", fontSize:"13px"}}
           contentStyle={{overflow:"hidden", boxShadow:"0 14px 45px rgba(0, 0, 0, 0.25), 0 10px 18px rgba(0, 0, 0, 0.22)"}}
           >
           {this.state.blockDevice ? <ListItem className="margin-bottom-small" style={styles.listStyle} disabled={true} primaryText="Device ID" secondaryText={this.state.blockDevice.id}  />: null}
-          <div className="split-dialog">
-            <div className="align-center">
-              <div>
-                <FontIcon className="material-icons" style={{marginTop:6, marginBottom:6, marginRight:6, verticalAlign: "middle", color:"#c7c7c7"}}>cancel</FontIcon>
-                <h3 className="inline align-middle">Block</h3>
+          {!blockedDevice ?
+            <div className="split-dialog">
+              <div className="align-center">
+                <div>
+                  <FontIcon className="material-icons" style={{marginTop:6, marginBottom:6, marginRight:6, verticalAlign: "middle", color:"#c7c7c7"}}>cancel</FontIcon>
+                  <h3 className="inline align-middle">Block</h3>
+                </div>
+                <p>
+                  De-authorize this device and block it from making authorization requests in the future.
+                </p>
+                <RaisedButton onClick={this._blockDevice.bind(null, true)} className="margin-top-small" secondary={true} label={"Block device"} icon={<FontIcon style={{marginTop:"-4px"}} className="material-icons">cancel</FontIcon>} />
               </div>
-              <p>
-                De-authorize this device and block it from making authorization requests in the future.
-              </p>
-              <RaisedButton onClick={this._blockDevice.bind(null, true)} className="margin-top-small" secondary={true} label={"Block device"} icon={<FontIcon style={{marginTop:"-4px"}} className="material-icons">cancel</FontIcon>} />
-            </div>
-          </div>
-          <div className="split-dialog left-border">
+            </div> 
+          : null }
+          <div className={!blockedDevice ? "split-dialog left-border" : null}>
             <div className="align-center">
               <div>
                 <FontIcon className="material-icons" style={{marginTop:6, marginBottom:6, marginRight:6, verticalAlign: "middle", color:"#c7c7c7"}}>delete_forever</FontIcon>
