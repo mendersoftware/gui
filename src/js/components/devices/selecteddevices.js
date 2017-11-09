@@ -81,7 +81,9 @@ var SelectedDevices = createReactClass({
   _handleAccept: function(accept) {
     // if previously rejected, set 'accept' to true in order for device to be handled by devauth api
     // otherwise, handled by devadmn api
-    this.props.accept([this.props.device], accept);
+    if (!this.props.disabled) {
+      this.props.accept([this.props.device], accept);
+    }
   },
   _handleBlock: function(remove) {
     // if previously rejected, set 'remove' to true in order for device to be handled by devauth api
@@ -262,10 +264,12 @@ var SelectedDevices = createReactClass({
         <div className={this.props.unauthorized ? "report-list" : "hidden"}>
           <List style={{marginTop:"-8px"}}>
             <ListItem
-              style={this.props.styles.listStyle}
               onClick={this._handleAccept}
+              disabled={this.props.disabled}
+              style={this.props.styles.listStyle}
+              innerDivStyle={this.props.disabled ? {color: "#c7c7c7", marginTop:"12px", marginBottom:"12px"} : null}
               primaryText="Authorize device"
-              leftIcon={<FontIcon className="material-icons green auth" style={{marginTop:6, marginBottom:6}}>check_circle</FontIcon>} />
+              leftIcon={<FontIcon className={this.props.disabled ? "material-icons auth" : "material-icons green auth"} style={{marginTop:6, marginBottom:6}}>check_circle</FontIcon>} />
             <Divider />
             <ListItem
               style={this.props.styles.listStyle}
