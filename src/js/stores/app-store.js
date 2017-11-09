@@ -9,9 +9,7 @@ var _artifactsRepo = [];
 var _currentGroup = null;
 var _deploymentArtifact = null;
 var _currentGroupDevices = [];
-var _totalNumberDevices;
-var _totalPendingDevices;
-var _totalAcceptedDevices;
+var _totalNumberDevices, _totalPendingDevices, _totalAcceptedDevices, _deviceLimit;
 var _filters = [{key:'', value:''}];
 var _attributes = {
   id: "ID"
@@ -381,6 +379,9 @@ function setTotalPendingDevices(count) {
 function setTotalAcceptedDevices(count) {
   _totalAcceptedDevices = count;
 }
+function setDeviceLimit(limit) {
+  _deviceLimit = limit;
+}
 
 function setGroupDevices(devices) {
   _currentGroupDevices = [];
@@ -597,6 +598,9 @@ var AppStore = assign(EventEmitter.prototype, {
   getTotalAcceptedDevices: function() {
     return _totalAcceptedDevices
   },
+  getDeviceLimit: function() {
+    return _deviceLimit
+  },
 
   getActivity: function() {
     /*
@@ -705,6 +709,10 @@ var AppStore = assign(EventEmitter.prototype, {
 
       case AppConstants.SET_ACCEPTED_DEVICES:
         setTotalAcceptedDevices(payload.action.count);
+        break;
+
+      case AppConstants.SET_DEVICE_LIMIT:
+        setDeviceLimit(payload.action.limit);
         break;
 
        /* API */

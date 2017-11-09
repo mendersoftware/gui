@@ -45,7 +45,8 @@ function getState() {
     user: AppStore.getCurrentUser(),
     refreshDeviceLength: 10000,
     refreshAdmissionLength: 20000,
-    showHelptips: AppStore.showHelptips()
+    showHelptips: AppStore.showHelptips(),
+    deviceLimit: AppStore.getDeviceLimit,
   }
 }
 
@@ -200,16 +201,7 @@ var Devices = createReactClass({
         self.setState({doneLoading:true, devLoading:false, devices:devices, numDevices: devices.length});
       });
     } else if (!this.state.selectedGroup) {
-
-      var callbackCount = {
-        success: function(count) {
-          self.setState({totalDevices: count, numDevices: count});
-        },
-        error: function(err) {
-          console.log(err);
-        }
-      };
-      AppActions.getDeviceCount(callbackCount, "accepted");
+      this._setDeviceCount("accepted");
       AppActions.getDevices(allCallback, pageNo, perPage);
     } else {
       AppActions.getDevices(groupCallback, pageNo, perPage, this.state.selectedGroup);
@@ -221,15 +213,7 @@ var Devices = createReactClass({
   },
   _refreshAdmissions: function(page, per_page) {
     var self = this;
-    var callbackCount = {
-      success: function(count) {
-        self.setState({totalAdmDevices: count});
-      },
-      error: function(err) {
-        console.log(err);
-      }
-    };
-    AppActions.getDeviceCount(callbackCount, "pending");
+    this._setDeviceCount("pending");
 
     if (typeof page !=="undefined") {
        this.setState({admPageNo:page});
@@ -363,6 +347,9 @@ var Devices = createReactClass({
     this.setState({remove: false, block: false, schedule: false});
   },
   _blockDialog: function(device, remove) {
+
+    device.status = device.auth_sets ? device.auth_sets[0].status : "";
+
     if (remove) {
       this.setState({remove: true, block: false, blockDevice: device});
     } else {
@@ -405,6 +392,7 @@ var Devices = createReactClass({
       success: function(data) {
         AppActions.setSnackbar("Device was authorized");
         self._refreshAdmissions();
+        self._setDeviceCount("accepted");
         self.setState({expandedAdmRow: null});
         self._setDeviceDetails(devices[0]);
       },
@@ -415,7 +403,6 @@ var Devices = createReactClass({
     // 'devices' is an array but will always be length 1 as it comes from expanded single device row
     AppActions.reacceptDevice(devices[0], callback);
   },
-
   _authorizeDevices: function(devices) {
     /*
     * function for authorizing group of devices via devadmn API
@@ -558,6 +545,20 @@ var Devices = createReactClass({
     AppActions.getDeviceIdentity(device.id, callback);
   },
 
+  _setDeviceCount: function(status) {
+    var self = this;
+    var callbackCount = {
+      success: function(count) {
+        var numDevices = (status === "accepted") ? {totalDevices: count, numDevices : count} : {totalAdmDevices: count}; 
+        self.setState(numDevices);
+      },
+      error: function(err) {
+        console.log(err);
+      }
+    };
+    AppActions.getDeviceCount(callbackCount, status);
+  },
+
   render: function() {
     var decommissionActions =  [
       <div style={{marginRight:"10px", display:"inline-block"}}>
@@ -591,7 +592,9 @@ var Devices = createReactClass({
         color: "#8c8c8d",
         cursor: "pointer",
       }
-    }
+    };
+
+    var blockedDevice = (this.state.blockDevice || {}).status !== "accepted";
 
     return (
       <div className="margin-top">
@@ -632,7 +635,9 @@ var Devices = createReactClass({
 
 
           <div className={this.state.pendingDevices.length ? "fadeIn onboard" : "hidden"}>
-            <Unauthorized 
+            <Unauthorized
+              deviceLimit={this.state.deviceLimit}
+              totalDevices={this.state.totalDevices}
               styles={styles} 
               block={this._blockDialog} 
               pauseRefresh={this._pauseTimers}
@@ -718,26 +723,28 @@ var Devices = createReactClass({
 
         <Dialog
           open={this.state.remove || false}
-          title='Block or decommission device?'
+          title={blockedDevice ? "Decommission device?" : 'Block or decommission device?'}
           actions={decommissionActions}
           autoDetectWindowHeight={true}
           bodyStyle={{paddingTop:"0", fontSize:"13px"}}
           contentStyle={{overflow:"hidden", boxShadow:"0 14px 45px rgba(0, 0, 0, 0.25), 0 10px 18px rgba(0, 0, 0, 0.22)"}}
           >
           {this.state.blockDevice ? <ListItem className="margin-bottom-small" style={styles.listStyle} disabled={true} primaryText="Device ID" secondaryText={this.state.blockDevice.id}  />: null}
-          <div className="split-dialog">
-            <div className="align-center">
-              <div>
-                <FontIcon className="material-icons" style={{marginTop:6, marginBottom:6, marginRight:6, verticalAlign: "middle", color:"#c7c7c7"}}>cancel</FontIcon>
-                <h3 className="inline align-middle">Block</h3>
+          {!blockedDevice ?
+            <div className="split-dialog">
+              <div className="align-center">
+                <div>
+                  <FontIcon className="material-icons" style={{marginTop:6, marginBottom:6, marginRight:6, verticalAlign: "middle", color:"#c7c7c7"}}>cancel</FontIcon>
+                  <h3 className="inline align-middle">Block</h3>
+                </div>
+                <p>
+                  De-authorize this device and block it from making authorization requests in the future.
+                </p>
+                <RaisedButton onClick={this._blockDevice.bind(null, true)} className="margin-top-small" secondary={true} label={"Block device"} icon={<FontIcon style={{marginTop:"-4px"}} className="material-icons">cancel</FontIcon>} />
               </div>
-              <p>
-                De-authorize this device and block it from making authorization requests in the future.
-              </p>
-              <RaisedButton onClick={this._blockDevice.bind(null, true)} className="margin-top-small" secondary={true} label={"Block device"} icon={<FontIcon style={{marginTop:"-4px"}} className="material-icons">cancel</FontIcon>} />
-            </div>
-          </div>
-          <div className="split-dialog left-border">
+            </div> 
+          : null }
+          <div className={!blockedDevice ? "split-dialog left-border" : null}>
             <div className="align-center">
               <div>
                 <FontIcon className="material-icons" style={{marginTop:6, marginBottom:6, marginRight:6, verticalAlign: "middle", color:"#c7c7c7"}}>delete_forever</FontIcon>

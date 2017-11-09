@@ -51,6 +51,7 @@ var Header = createReactClass({
       artifacts: AppStore.getArtifactsRepo(),
       hasDeployments: AppStore.getHasDeployments(),
       multitenancy: AppStore.hasMultitenancy(),
+      deviceLimit: AppStore.getDeviceLimit(),
     };
   },
   componentWillMount: function() {
@@ -70,6 +71,7 @@ var Header = createReactClass({
        this._updateUsername();
     } else {
       if (prevState.sessionId!==this.state.sessionId ) {
+        this._getDeviceLimit();
         this._hasArtifacts();
         this._checkShowHelp();
         this._checkHeaderInfo();
@@ -80,6 +82,7 @@ var Header = createReactClass({
     // check logged in user
     this._updateUsername();
     if (this.props.isLoggedIn) {
+      this._getDeviceLimit();
       this._checkHeaderInfo();
       this._hasArtifacts();
       this._checkShowHelp();
@@ -90,6 +93,18 @@ var Header = createReactClass({
       this._hasDeployments();
       this._hasDevices();
       this._hasPendingDevices();
+  },
+  _getDeviceLimit: function() {
+    var self = this;
+    var callback = {
+      success: function(limit) {
+        self.setState({deviceLimit: limit});
+      },
+      error: function(err) {
+        console.log(err);
+      }
+    }
+    AppActions.getDeviceLimit(callback);
   },
   _checkShowHelp: function() {
     //checks if user id is set and if cookie for helptips exists for that user

@@ -167,8 +167,22 @@ var AppActions = {
               count: res.body.count
             });
         }
-
         callback.success(res.body.count);
+      })
+      .catch(function(err) {
+        callback.error(err);
+      });
+  },
+  getDeviceLimit: function(callback) {
+      DevicesApi
+      .get(devAuthApiUrl+"/limits/max_devices")
+      .then(function(res) {
+        AppDispatcher.handleViewAction({
+          actionType: AppConstants.SET_DEVICE_LIMIT,
+          limit: res.count
+        });
+
+        callback.success(res.count);
       })
       .catch(function(err) {
         callback.error(err);
