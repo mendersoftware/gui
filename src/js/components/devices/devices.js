@@ -200,16 +200,7 @@ var Devices = createReactClass({
         self.setState({doneLoading:true, devLoading:false, devices:devices, numDevices: devices.length});
       });
     } else if (!this.state.selectedGroup) {
-
-      var callbackCount = {
-        success: function(count) {
-          self.setState({totalDevices: count, numDevices: count});
-        },
-        error: function(err) {
-          console.log(err);
-        }
-      };
-      AppActions.getDeviceCount(callbackCount, "accepted");
+      this._setDeviceCount("accepted");
       AppActions.getDevices(allCallback, pageNo, perPage);
     } else {
       AppActions.getDevices(groupCallback, pageNo, perPage, this.state.selectedGroup);
@@ -221,15 +212,7 @@ var Devices = createReactClass({
   },
   _refreshAdmissions: function(page, per_page) {
     var self = this;
-    var callbackCount = {
-      success: function(count) {
-        self.setState({totalAdmDevices: count});
-      },
-      error: function(err) {
-        console.log(err);
-      }
-    };
-    AppActions.getDeviceCount(callbackCount, "pending");
+    this._setDeviceCount("pending");
 
     if (typeof page !=="undefined") {
        this.setState({admPageNo:page});
@@ -408,6 +391,7 @@ var Devices = createReactClass({
       success: function(data) {
         AppActions.setSnackbar("Device was authorized");
         self._refreshAdmissions();
+        self._setDeviceCount("accepted");
         self.setState({expandedAdmRow: null});
         self._setDeviceDetails(devices[0]);
       },
@@ -418,7 +402,6 @@ var Devices = createReactClass({
     // 'devices' is an array but will always be length 1 as it comes from expanded single device row
     AppActions.reacceptDevice(devices[0], callback);
   },
-
   _authorizeDevices: function(devices) {
     /*
     * function for authorizing group of devices via devadmn API
@@ -559,6 +542,20 @@ var Devices = createReactClass({
       }
     };
     AppActions.getDeviceIdentity(device.id, callback);
+  },
+
+  _setDeviceCount: function(status) {
+    var self = this;
+    var callbackCount = {
+      success: function(count) {
+        var numDevices = (status === "accepted") ? {totalDevices: count, numDevices : count} : {totalAdmDevices: count}; 
+        self.setState(numDevices);
+      },
+      error: function(err) {
+        console.log(err);
+      }
+    };
+    AppActions.getDeviceCount(callbackCount, status);
   },
 
   render: function() {

@@ -215,6 +215,7 @@ var SelectedDevices = createReactClass({
           secondaryText="Re-authorize this device?"
           onClick={this._handleAccept.bind(null, true)}
           leftIcon={<FontIcon className="material-icons red auth" style={{marginTop:6, marginBottom:6}}>cancel</FontIcon>} />
+         <Divider />
       </div>
     );
 
