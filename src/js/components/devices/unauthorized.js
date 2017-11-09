@@ -77,10 +77,13 @@ var Authorized =  createReactClass({
     this.setState({blockLoading: index});
   },
   render: function() {
+    var limitMaxed = this.props.deviceLimit && (this.props.deviceLimit <= this.props.totalDevices);
+    var limitNear = this.props.deviceLimit && (this.props.deviceLimit < this.props.totalDevices + this.props.pending.length );
+
     var devices = this.props.pending.map(function(device, index) {
       var expanded = '';
       if ( this.props.expandedAdmRow === index ) {
-        expanded = <SelectedDevices styles={this.props.styles} attributes={device.attributes} deviceId={this.state.deviceId} accept={this.props.authorizeDevices} block={this.props.block} device={this.state.expandedDevice} unauthorized={true} selected={[device]}  />
+        expanded = <SelectedDevices disabled={limitMaxed} styles={this.props.styles} attributes={device.attributes} deviceId={this.state.deviceId} accept={this.props.authorizeDevices} block={this.props.block} device={this.state.expandedDevice} unauthorized={true} selected={[device]}  />
       }
       var checkIcon = (this.state.authLoading === index && this.props.disabled) ?
         (
@@ -89,7 +92,7 @@ var Authorized =  createReactClass({
           </div>
         ) : 
         (
-          <IconButton disabled={this.props.disabled} onClick={this._authorizeDevices.bind(null, [device], index)}>
+          <IconButton disabled={this.props.disabled || limitMaxed} onClick={this._authorizeDevices.bind(null, [device], index)}>
               <FontIcon className="material-icons green">check_circle</FontIcon>
           </IconButton>
         )
@@ -125,9 +128,6 @@ var Authorized =  createReactClass({
         </TableRow>
       )
     }, this);
-
-    var limitMaxed = this.props.deviceLimit && (this.props.deviceLimit <= this.props.totalDevices);
-    var limitNear = this.props.deviceLimit && (this.props.deviceLimit < this.props.totalDevices + this.props.pending.length );
     
     var deviceLimitWarning = (limitMaxed || limitNear) ?
       (
