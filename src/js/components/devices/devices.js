@@ -45,7 +45,8 @@ function getState() {
     user: AppStore.getCurrentUser(),
     refreshDeviceLength: 10000,
     refreshAdmissionLength: 20000,
-    showHelptips: AppStore.showHelptips()
+    showHelptips: AppStore.showHelptips(),
+    deviceLimit: AppStore.getDeviceLimit,
   }
 }
 
@@ -634,7 +635,9 @@ var Devices = createReactClass({
 
 
           <div className={this.state.pendingDevices.length ? "fadeIn onboard" : "hidden"}>
-            <Unauthorized 
+            <Unauthorized
+              deviceLimit={this.state.deviceLimit}
+              totalDevices={this.state.totalDevices}
               styles={styles} 
               block={this._blockDialog} 
               pauseRefresh={this._pauseTimers}

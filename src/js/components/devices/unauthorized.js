@@ -18,6 +18,7 @@ import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowCol
 import IconButton from 'material-ui/IconButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import FontIcon from 'material-ui/FontIcon';
+import InfoIcon from 'react-material-icons/icons/action/info-outline';
 
 var Authorized =  createReactClass({
   getInitialState: function() {
@@ -29,8 +30,8 @@ var Authorized =  createReactClass({
     }
   },
   componentWillReceiveProps: function(nextProps) {
-    var h = nextProps.pending.length * 50;
-    h += 135;
+    var h = nextProps.pending.length * 55;
+    h += 100;
     this.setState({minHeight: h});
   },
   _sortColumn: function(col) {
@@ -61,7 +62,7 @@ var Authorized =  createReactClass({
     }
   },
   _adjustCellHeight: function(height) {
-    this.setState({divHeight: height+70});
+    this.setState({divHeight: height+65});
   },
   _authorizeDevices: function(devices, index) {
     this.props.authorizeDevices(devices);
@@ -125,8 +126,23 @@ var Authorized =  createReactClass({
       )
     }, this);
 
+    var limitMaxed = this.props.deviceLimit && (this.props.deviceLimit <= this.props.totalDevices);
+    var limitNear = this.props.deviceLimit && (this.props.deviceLimit < this.props.totalDevices + this.props.pending.length );
+    
+    var deviceLimitWarning = (limitMaxed || limitNear) ?
+      (
+        <p className="warning">
+          <InfoIcon style={{marginRight:"2px", height:"16px", verticalAlign:"bottom"}} />
+          <span className={limitMaxed ? null : "hidden"}>You have reached</span><span className={limitNear&&!limitMaxed ? null : "hidden"}>You are nearing</span> your limit of authorized devices: {this.props.totalDevices}/{this.props.deviceLimit}
+        </p>
+    ) : null;
+
+    var minHeight = deviceLimitWarning ? this.state.minHeight + 20 : this.state.minHeight;
     return (
-      <Collapse springConfig={{stiffness: 190, damping: 20}} style={{minHeight:this.state.minHeight}} isOpened={true} className="margin-top authorize">
+      <Collapse springConfig={{stiffness: 190, damping: 20}} style={{minHeight:minHeight}} isOpened={true} id="authorize" className="margin-top-small authorize">
+        
+       {deviceLimitWarning}
+
         <p>{this.props.total} {pluralize("devices", devices.length)} pending authorization</p>
 
         { this.props.showHelptips ?
@@ -212,8 +228,10 @@ var Authorized =  createReactClass({
             null
           }
      
-          <RaisedButton disabled={this.props.disabled} onClick={this._authorizeDevices.bind(null, this.props.pending, null)} primary={true} label={"Authorize " + devices.length +" " + pluralize("devices", devices.length)} />
-          
+          <div className="align-right">
+            {deviceLimitWarning}
+            <RaisedButton disabled={this.props.disabled || limitMaxed || limitNear} onClick={this._authorizeDevices.bind(null, this.props.pending, null)} primary={true} label={"Authorize " + devices.length +" " + pluralize("devices", devices.length)} />
+          </div>
 
           { this.props.showHelptips && devices.length ?
             <div>

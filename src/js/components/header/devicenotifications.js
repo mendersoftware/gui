@@ -21,15 +21,15 @@ var DeviceNotifications = createReactClass({
     };
     var warning = this.props.limit && (this.props.limit <= this.props.total);
     return (
-      <div style={warning ? styles.warning : null} onClick={this._handleClick} className="header-section">
+      <div onClick={this._handleClick} className={warning ? "warning header-section" : "header-section"}>
         <span>{this.props.total}</span>
         {this.props.limit ? 
           <span>/{this.props.limit}</span>
         : null }
 
-        <FontIcon style={warning ? styles.warning : styles.default, {margin: '0 7px 0 14px', top: '5px', fontSize: '20px'}} className="material-icons">developer_board</FontIcon>
+        <FontIcon style={{margin: '0 7px 0 14px', top: '5px', fontSize: '20px'}} className="material-icons">developer_board</FontIcon>
         {this.props.pending ?
-          <a style={{marginLeft: "7px"}}>{this.props.pending} pending</a>
+          <a style={{marginLeft: "7px"}} className={this.props.limit && this.props.limit < this.props.pending+this.props.total ? "warning" : null }>{this.props.pending} pending</a>
         : null }
       </div>
     );

@@ -24,6 +24,14 @@ body {
   color: @red;
 }
 
+.warning {
+  color: rgb(171, 16, 0) !important;
+  font-size: 14px !important;
+}
+a.warning:hover {
+  color: lighten(rgb(171, 16, 0), 10%) !important;
+}
+
 .lightestgrey {
   background-color: @lightestgrey;
 }
@@ -229,7 +237,7 @@ a, span.link {
 }
 
 .header .material-icons {
-  color: @lightgrey;
+  color: @grey !important;
   margin-left: 7px;
 }
 
@@ -272,6 +280,25 @@ a, span.link {
     cursor: pointer;
     .material-icons {
       color: darken(@grey, 10%) !important;
+    }
+
+
+    // hover warning
+    &.warning {
+      a,
+      .material-icons,
+      span {
+        color: lighten(rgb(171, 16, 0), 10%) !important;
+      }
+    }
+  }
+
+  // no hover warngin
+  &.warning {
+    a,
+    .material-icons,
+    span {
+      color: rgb(171, 16, 0) !important;
     }
   }
 }
@@ -1055,6 +1082,10 @@ tr.expand {
     padding-top: 2px;
   }
 }
+
+#authorize > div {
+  padding-bottom: 15px;
+} 
 
 
 
