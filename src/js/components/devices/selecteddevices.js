@@ -164,27 +164,21 @@ var SelectedDevices = createReactClass({
         };
 
         var status = this.props.device.auth_sets ? this.props.device.auth_sets[0].status : "";
-        var statusButton = status === "accepted" ?
-          (
-            <div key="decommissionButton">
-              <ListItem
-                style={this.props.styles.listStyle}
-                primaryText="Block or decommission this device"
-                onClick={this._handleBlock.bind(null, true)}
-                leftIcon={<FontIcon className="material-icons auth" style={{marginTop:6, marginBottom:6}}>block</FontIcon>} />
-              <Divider />
-            </div>
-          ) : (
-            <div key="decommissionButton">
-              <ListItem
-                style={this.props.styles.listStyle}
-                primaryText={"Authorization status: "+ status}
-                secondaryText="Re-authorize this device?"
-                onClick={this._handleAccept.bind(null, true)}
-                leftIcon={<FontIcon className="material-icons red auth" style={{marginTop:6, marginBottom:6}}>cancel</FontIcon>} />
-              <Divider />
-            </div>
-          );
+        var statusButton = null;
+
+        if (status != "accepted") {
+          var statusButton = (
+              <div key="decommissionButton">
+                <ListItem
+                  style={this.props.styles.listStyle}
+                  primaryText={"Authorization status: "+ status}
+                  secondaryText="Re-authorize this device?"
+                  onClick={this._handleAccept.bind(null, true)}
+                  leftIcon={<FontIcon className="material-icons red auth" style={{marginTop:6, marginBottom:6}}>cancel</FontIcon>} />
+                  <Divider />
+                </div>
+              );
+        }
 
         deviceInventory.push(statusButton);
 
@@ -199,10 +193,9 @@ var SelectedDevices = createReactClass({
           </div>
         );
       } else {
-        /* No inventory data yet */
         deviceInventory.push(
           <div className="waiting-inventory" key="waiting-inventory">
-            <div 
+            <div
               onClick={this._handleStopProp}
               id="inventory-info"
               className="tooltip info"
@@ -223,7 +216,7 @@ var SelectedDevices = createReactClass({
               <p>Inventory data not yet received from the device - this can take up to 30 minutes with default installation.</p>
               <p>Also see the documentation for <a onClick={this._clickLink} href="https://docs.mender.io/Client-configuration/Polling-intervals">Polling intervals</a>.</p>
             </ReactTooltip>
-            
+
             <p>Waiting for inventory data from the device</p>
             <Loader show={true} waiting={true} />
           </div>
@@ -235,6 +228,17 @@ var SelectedDevices = createReactClass({
     if (deviceInventory.length > deviceIdentity.length) {
       deviceInventory2 = deviceInventory.splice((deviceInventory.length/2)+(deviceInventory.length%2),deviceInventory.length-1);
     }
+
+    var decommission = (
+      <div key="decommissionButton">
+        <ListItem
+          style={this.props.styles.listStyle}
+          primaryText="Block or decommission this device"
+          onClick={this._handleBlock.bind(null, true)}
+          leftIcon={<FontIcon className="material-icons auth" style={{marginTop:6, marginBottom:6}}>block</FontIcon>} />
+        <Divider />
+      </div>
+    )
 
     var deviceInfo = (
       <div key="deviceinfo">
@@ -255,6 +259,7 @@ var SelectedDevices = createReactClass({
         <div className={this.props.unauthorized ? "hidden" : "report-list"} >
           <List style={{marginTop:"34px"}}>
             {deviceInventory2}
+            {decommission}
           </List>
         </div>
 
@@ -276,7 +281,7 @@ var SelectedDevices = createReactClass({
 
       </div>
     )
-    
+
     var scheduleActions =  [
       <div style={{marginRight:"10px", display:"inline-block"}}>
         <FlatButton
@@ -294,7 +299,7 @@ var SelectedDevices = createReactClass({
     return (
       <div>
         {deviceInfo}
-   
+
         <Dialog
           open={this.state.schedule}
           title='Create a deployment'
