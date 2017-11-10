@@ -27,6 +27,8 @@ import IconButton from 'material-ui/IconButton';
 import Snackbar from 'material-ui/Snackbar';
 import LinearProgress from 'material-ui/LinearProgress';
 
+import { preformatWithRequestID } from '../../helpers.js'
+
 var newState = {};
 var artifacts = [];
 
@@ -90,7 +92,13 @@ var Repository = createReactClass({
       },
       error: function(err) {
         console.log(err);
-        AppActions.setSnackbar("Artifact couldn't be uploaded. "+err.error);
+        try {
+          var errMsg = err.res.body.error || ""
+          AppActions.setSnackbar(preformatWithRequestID(err.res, "Artifact couldn't be uploaded. " + errMsg));
+        } catch (e) {
+          console.log(e)
+        }
+
         self.setState({progress: 0});
         self.props.startLoader(false);
         AppActions.setUploadInProgress(false);
@@ -103,7 +111,7 @@ var Repository = createReactClass({
     files.forEach(function (file, index) {
       AppActions.uploadArtifact(meta, file, callback);
     });
-    
+
     AppActions.setSnackbar("Uploading artifact", 4000);
     this._resetArtifactState();
   },
@@ -121,8 +129,8 @@ var Repository = createReactClass({
         self.props.refreshArtifacts();
       },
       error: function(err) {
-        console.log(err);
-        AppActions.setSnackbar("Artifact details couldn't be updated. "+err.error);
+        var errMsg = err.res.body.error || ""
+        AppActions.setSnackbar(preformatWithRequestID(err.res, "Artifact details couldn't be updated. " + err.error));
         self.props.refreshArtifacts();
       }
     };
@@ -211,14 +219,14 @@ var Repository = createReactClass({
       var filters = ['name', 'device_types_compatible', 'description'];
       tmpArtifacts = artifacts.filter(this.refs.search.filter(filters));
     }
-    
+
     var items = tmpArtifacts.map(function(pkg, index) {
       var compatible = pkg.device_types_compatible.join(", ");
       var expanded = '';
       if (this.state.artifact.id === pkg.id) {
         expanded = <SelectedArtifact removeArtifact={this._handleRemove} compatible={compatible} formatTime={this._formatTime} editArtifact={this._editArtifactData} buttonStyle={styles.flatButtonIcon} artifact={this.state.artifact} />
       }
-     
+
       return (
         <TableRow hoverable={!expanded} className={expanded ? "expand" : null} key={index} >
           <TableRowColumn style={expanded ? {height: this.state.divHeight} : null}>{pkg.name}</TableRowColumn>
@@ -240,25 +248,25 @@ var Repository = createReactClass({
       <div>
 
         <div className={items.length ? "top-right-button fadeIn" : "top-right-button fadeOut"} >
-          <Dropzone disabled={this.state.progress} className="dropzone onboard" activeClassName="active" rejectClassName="active" multiple={false} accept=".mender" onDrop={this.onDrop}>
+          <Dropzone disabled={this.state.progress > 0} className="dropzone onboard" activeClassName="active" rejectClassName="active" multiple={false} accept=".mender" onDrop={this.onDrop}>
             <div className="icon inline-block"><FileIcon style={{height:"24px", width:"24px", verticalAlign:"middle", marginTop:"-2px"}}/></div>
             <div className="dashboard-placeholder inline">Drag here or <a>browse</a> to upload an artifact file</div>
           </Dropzone>
         </div>
-      
+
         <div>
           <h3 className="inline-block">Available artifacts</h3>
           <SearchInput placeholder="Search artifacts" className="search tableSearch" ref='search' onChange={this.searchUpdated} />
         </div>
 
         <Loader show={this.props.loading} />
-     
+
         <div id="progressBarContainer" className={this.state.progress ? null : "shrunk"}>
           <p className="align-center">Upload in progress ({Math.round(this.state.progress)}%)</p>
           <LinearProgress mode="determinate" style={{backgroundColor:"#c7c7c7", margin:"15px 0"}} value={this.state.progress} />
-        </div> 
-  
-        
+        </div>
+
+
         <div style={{position: "relative", marginTop:"10px"}}>
           <Table
             onCellClick={this._onRowSelection}
@@ -283,7 +291,7 @@ var Repository = createReactClass({
 
           { this.props.showHelptips && items.length ?
             <div>
-              <div 
+              <div
                 id="onboard-10"
                 className="tooltip help"
                 data-tip
@@ -304,14 +312,14 @@ var Repository = createReactClass({
           : null }
 
           <div className={(items.length || this.props.loading) ? "hidden" : "dashboard-placeholder fadeIn" }>
-            <Dropzone disabled={this.state.progress} className="dropzone onboard" activeClassName="active" rejectClassName="active" multiple={false} accept=".mender" onDrop={this.onDrop}>
+            <Dropzone disabled={this.state.progress > 0} className="dropzone onboard" activeClassName="active" rejectClassName="active" multiple={false} accept=".mender" onDrop={this.onDrop}>
               <p style={{width: "500px", fontSize:"16px", margin:"auto"}} className="dashboard-placeholder">No artifacts found. Drag a file here or <a>browse</a> to upload to the repository</p>
               <img src="assets/img/artifacts.png" alt="artifacts" />
             </Dropzone>
 
             { this.props.showHelptips ?
             <div>
-              <div 
+              <div
                 id="onboard-9"
                 className="tooltip help highlight"
                 data-tip

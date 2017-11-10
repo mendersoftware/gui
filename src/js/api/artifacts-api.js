@@ -18,7 +18,7 @@ var Api = {
         })
         .end(function (err, res) {
           if (err || !res.ok) {
-            reject(err);
+            reject({"error": err, "res": res});
           } else {
             resolve(res.body);
           }
@@ -36,7 +36,7 @@ var Api = {
         .end(function (err, res) {
           if (err || !res.ok) {
             var errorResponse = err.response ? JSON.parse(err.response.text) : {error:"There was an error uploading the artifact"};
-            reject(errorResponse);
+            reject({"error": err, "res": res});
           } else {
             resolve(res.body);
           }
@@ -53,7 +53,7 @@ var Api = {
         .send(data)
         .end(function (err, res) {
           if (err || !res.ok) {
-            reject();
+            reject({"error": err, "res": res});
           } else {
             var responsetext = "";
             if (res.text) {
@@ -73,7 +73,7 @@ var Api = {
         .end(function (err, res) {
           if (err || !res.ok) {
             var errorResponse = err.response ? JSON.parse(err.response.text) : {error:"There was an error removing the artifact"};
-            reject(errorResponse);
+            reject({"error": errorResponse, "res": res});
           } else {
             resolve(res.header);
           }

@@ -15,7 +15,7 @@ var Api = {
         .authBearer(token)
         .end(function (err, res) {
           if (err || !res.ok) {
-            reject(err);
+            reject({"error": err, "res": res});
           } else {
             resolve(res.body);
           }
@@ -34,7 +34,7 @@ var Api = {
               text: err.response ? JSON.parse(err.response.text) : err,
               code: err.status
              };
-            reject(errorResponse);
+            reject({"error": errorResponse, "res": res});
           } else {
             var response = {
               text: res.text,
@@ -55,7 +55,7 @@ var Api = {
         .send(userData)
         .end(function (err, res) {
           if (err || !res.ok) {
-            reject(err);
+            reject({"error": err, "res": res});
           } else {
             resolve(res.header);
           }
@@ -72,7 +72,7 @@ var Api = {
         .send(userData)
         .end(function (err, res) {
           if (err || !res.ok) {
-            reject(err);
+            reject({"error": err, "res": res});
           } else {
             resolve(res.header);
           }
@@ -87,7 +87,7 @@ var Api = {
         .authBearer(token)
         .end(function (err, res) {
           if (err || !res.ok) {
-            reject(err);
+            reject({"error": err, "res": res});
           } else {
             resolve(res.header);
           }

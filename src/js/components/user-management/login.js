@@ -13,6 +13,7 @@ import TextInput from '../common/forms/textinput';
 import PasswordInput from '../common/forms/passwordinput';
 import Snackbar from 'material-ui/Snackbar';
 
+import { preformatWithRequestID } from '../../helpers.js'
 
 function getState() {
   return {
@@ -64,7 +65,7 @@ var Login = createReactClass({
           }
         },
         error: function(err) {
-          AppActions.setSnackbar("Wrong username or password. Please try again!");
+          AppActions.setSnackbar(preformatWithRequestID(err.res, "Wrong username or password. Please try again!"));
         }
       }, formData);
     }

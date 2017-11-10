@@ -24,7 +24,7 @@ var default_page = 1;
 
 
 var AppActions = {
- 
+
   selectGroup: function(group) {
     AppDispatcher.handleViewAction({
       actionType: AppConstants.SELECT_GROUP,
@@ -236,8 +236,8 @@ var AppActions = {
         callback.success(res.text);
       })
       .catch(function(err) {
-        if (err.code && (err.code !== 200)) {
-          callback.error(err.text);
+        if (err.error.code && (err.error.code !== 200)) {
+          callback.error({"error": err.error, "res": err.res});
         }
       })
   },
