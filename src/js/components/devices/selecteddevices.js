@@ -112,7 +112,7 @@ var SelectedDevices = createReactClass({
     this.setState({filterByArtifact:filteredDevs});
   },
   _clickLink: function() {
-    window.location.assign('https://docs.mender.io/Client-configuration/Polling-intervals');
+    window.location.assign('https://docs.mender.io/client-configuration/configuration-file/polling-intervals');
   },
   render: function() {
 
