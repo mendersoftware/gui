@@ -15,7 +15,7 @@ var AppStore = require('../stores/app-store');
 var AppActions = require('../actions/app-actions');
 
 var createReactClass = require('create-react-class');
-var isDemoMode = true;
+var isDemoMode = false;
 
 
 function getState() {
