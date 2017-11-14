@@ -149,6 +149,7 @@ var SelectedDevices = createReactClass({
     }
 
     var deviceInventory = [];
+    var createDeployment;
 
     var status = this.props.device.auth_sets ? this.props.device.auth_sets[0].status : "";
 
@@ -167,7 +168,7 @@ var SelectedDevices = createReactClass({
         );
       };
 
-      deviceInventory.push(
+      createDeployment = (
         <div key="updateButton">
           <ListItem
             className={status === "accepted" ? null : "hidden"}
@@ -178,6 +179,7 @@ var SelectedDevices = createReactClass({
             <Divider />
         </div>
       );
+
     } else {
       deviceInventory.push(
         <div className="waiting-inventory" key="waiting-inventory">
@@ -258,6 +260,7 @@ var SelectedDevices = createReactClass({
             {deviceInventory2}
             {status !== "accepted" ? reauthButton : null}
             {decommission}
+            {createDeployment}
           </List>
         </div>
 

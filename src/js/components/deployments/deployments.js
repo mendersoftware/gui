@@ -149,16 +149,13 @@ var Deployments = createReactClass({
         clearRetryTimer("progress");
        
         // Get full count of deployments for pagination
-        if (links.next || links.prev) {
-           AppActions.getDeploymentCount("inprogress", function(count) {
-            self.setState({progressCount: count});
-            if (count && !deployments.length) {
-              self._refreshInProgress(1);
-            }
-          });
-        } else {
-          self.setState({progressCount: deployments.length});
-        }
+        AppActions.getDeploymentCount("inprogress", function(count) {
+          self.setState({progressCount: count});
+          if (count && !deployments.length) {
+            self._refreshInProgress(1);
+          }
+        });
+        
       },
       error: function (err) {
         console.log(err);

@@ -517,11 +517,12 @@ var AppActions = {
       .get(deploymentsApiUrl+'/deployments?status=inprogress&page='+page+'&per_page='+per_page)
       .then(function(res) {
         var deployments = res.body;
+        var links = parse(res.headers['link']);
         AppDispatcher.handleViewAction({
           actionType: AppConstants.RECEIVE_ACTIVE_DEPLOYMENTS,
           deployments: deployments
         });
-        var links = parse(res.headers['link']);
+       
         callback.success(res.body, links);
       })
       .catch(function(err) {
@@ -578,6 +579,12 @@ var AppActions = {
             page++;
             DeploymentCount();
           } else {
+            if (status==="inprogress") {
+              AppDispatcher.handleViewAction({
+                actionType: AppConstants.INPROGRESS_COUNT,
+                count: count
+              });
+            }
             callback(count);
           }
         })

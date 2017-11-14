@@ -27,7 +27,7 @@ var DeviceNotifications = createReactClass({
           <span>/{this.props.limit}</span>
         : null }
 
-        <FontIcon style={{margin: '0 7px 0 14px', top: '5px', fontSize: '20px'}} className="material-icons">developer_board</FontIcon>
+        <FontIcon style={{margin: '0 7px 0 10px', top: '5px', fontSize: '20px'}} className="material-icons">developer_board</FontIcon>
         {this.props.pending ?
           <a style={{marginLeft: "7px"}} className={this.props.limit && this.props.limit < this.props.pending+this.props.total ? "warning" : null }>{this.props.pending} pending</a>
         : null }
