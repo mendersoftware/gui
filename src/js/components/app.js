@@ -44,6 +44,9 @@ var App = createReactClass({
   componentWillMount: function() {
     AppStore.changeListener(this._onChange);
   },
+  componentWillUnmount: function() {
+    AppStore.removeChangeListener(this._onChange);
+  },
   _onChange: function() {
     this.setState(getState());
   },

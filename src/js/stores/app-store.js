@@ -9,7 +9,7 @@ var _artifactsRepo = [];
 var _currentGroup = null;
 var _deploymentArtifact = null;
 var _currentGroupDevices = [];
-var _totalNumberDevices, _totalPendingDevices, _totalAcceptedDevices, _deviceLimit;
+var _totalNumberDevices, _totalPendingDevices, _totalAcceptedDevices, _deviceLimit, _numberInProgress;
 var _filters = [{key:'', value:''}];
 var _attributes = {
   id: "ID"
@@ -334,10 +334,14 @@ function setHasDeployments(deployments) {
   _hasDeployments = (deployments == null || deployments.length === 0) ? false : true;
 }
 
-function setActiveDeployments(deployments) {
+function setActiveDeployments(deployments, next) {
   _deploymentsInProgress = deployments;
   _deploymentsInProgress.sort(startTimeSort);
   if (deployments.length){setHasDeployments(deployments)}
+}
+
+function setInProgressCount(count) {
+  _numberInProgress = count;
 }
 
 function setPastDeployments(deployments) {
@@ -556,6 +560,14 @@ var AppStore = assign(EventEmitter.prototype, {
     return _getDeploymentsInProgress()
   },
 
+  getNumberInProgress: function() {
+    /*
+    * return only number in progress for top bar
+    */
+    return _numberInProgress
+  },
+
+
   getHasDeployments: function() {
     /*
     * Return boolean whether or not any deployments exist at all
@@ -691,6 +703,9 @@ var AppStore = assign(EventEmitter.prototype, {
         break;
       case AppConstants.RECEIVE_PENDING_DEPLOYMENTS:
         setPendingDeployments(payload.action.deployments);
+        break;
+        case AppConstants.INPROGRESS_COUNT:
+        setInProgressCount(payload.action.count);
         break;
 
 

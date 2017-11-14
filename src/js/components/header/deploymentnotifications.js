@@ -1,20 +1,28 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+import { Router } from 'react-router';
 var createReactClass = require('create-react-class');
 
 // material ui
 import FontIcon from 'material-ui/FontIcon';
 
 var DeploymentNotifications = createReactClass({
- 
-  render: function() {
-    
-    return (
-      <div className="header-section">
-        <span>{this.props.deploymentsInProgress}</span>
-        <FontIcon style={{color: '#c7c7c7', margin: '0 7px', top: '5px', fontSize: '20px'}} className="material-icons flip-horizontal">refresh</FontIcon>
-      </div>
-    );
-  }
+    _handleClick: function() {
+    	this.context.router.push('/deployments/');
+  	},
+  	render: function() {
+	    return (
+	      <div onClick={this._handleClick} className="header-section">
+	        <span>{this.props.inprogress}</span>
+	        <FontIcon style={{color: '#c7c7c7', margin: '0 7px 0 10px', top: '5px', fontSize: '20px'}} className="material-icons flip-horizontal">refresh</FontIcon>
+	      </div>
+	    );
+  	}
 });
+
+DeploymentNotifications.contextTypes = {
+  router: PropTypes.object
+};
+
 
 module.exports = DeploymentNotifications;

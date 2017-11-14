@@ -133,7 +133,7 @@ var Authorized =  createReactClass({
       (
         <p className="warning">
           <InfoIcon style={{marginRight:"2px", height:"16px", verticalAlign:"bottom"}} />
-          <span className={limitMaxed ? null : "hidden"}>You have reached</span><span className={limitNear&&!limitMaxed ? null : "hidden"}>You are nearing</span> your limit of authorized devices: {this.props.totalDevices}/{this.props.deviceLimit}
+          <span className={limitMaxed ? null : "hidden"}>You have reached</span><span className={limitNear&&!limitMaxed ? null : "hidden"}>You are nearing</span> your limit of authorized devices: {this.props.totalDevices} of {this.props.deviceLimit}
         </p>
     ) : null;
 
@@ -221,7 +221,7 @@ var Authorized =  createReactClass({
 
           {
             (this.state.authLoading === "all" && this.props.disabled) ?
-                 <div style={{width:"150px", marginTop: "10px", position:"relative", top:"5px"}} className="inline-block">
+                 <div style={{width:"150px", position: "absolute", left: "-150px", top: "15px"}} className="inline-block">
                     <Loader table={true} waiting={true} show={true} />
                 </div>
             :

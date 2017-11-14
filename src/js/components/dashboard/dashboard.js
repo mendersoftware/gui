@@ -81,6 +81,12 @@ var Dashboard = createReactClass({
         setRetryTimer("deployments", "Couldn't load deployments. " + errormsg, self.state.refreshDeploymentsLength);
       }
     };
+
+
+    AppActions.getDeploymentCount("inprogress", function(count) {
+      // this updates header bar
+      self.setState({progressCount: count});
+    });
     AppActions.getDeploymentsInProgress(progressCallback);
   },
   _refreshAdmissions: function() {

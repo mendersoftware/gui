@@ -8,6 +8,7 @@ import ReactTooltip from 'react-tooltip';
 import { toggleHelptips } from '../../utils/togglehelptips';
 import { DevicesNav, ArtifactsNav, DeploymentsNav } from '../helptips/helptooltips';
 var DeviceNotifications = require('./devicenotifications');
+var DeploymentNotifications = require('./deploymentnotifications');
 
 var AppActions = require('../../actions/app-actions');
 var AppStore = require('../../stores/app-store');
@@ -52,6 +53,7 @@ var Header = createReactClass({
       hasDeployments: AppStore.getHasDeployments(),
       multitenancy: AppStore.hasMultitenancy(),
       deviceLimit: AppStore.getDeviceLimit(),
+      inProgress: AppStore.getNumberInProgress(),
     };
   },
   componentWillMount: function() {
@@ -72,6 +74,7 @@ var Header = createReactClass({
     } else {
       if (prevState.sessionId!==this.state.sessionId ) {
         this._getDeviceLimit();
+        this._hasDeployments();
         this._hasArtifacts();
         this._checkShowHelp();
         this._checkHeaderInfo();
@@ -83,6 +86,7 @@ var Header = createReactClass({
     this._updateUsername();
     if (this.props.isLoggedIn) {
       this._getDeviceLimit();
+      this._hasDeployments();
       this._checkHeaderInfo();
       this._hasArtifacts();
       this._checkShowHelp();
@@ -90,7 +94,7 @@ var Header = createReactClass({
       
   },
   _checkHeaderInfo: function() {
-      this._hasDeployments();
+      this._deploymentsInProgress();
       this._hasDevices();
       this._hasPendingDevices();
   },
@@ -129,6 +133,13 @@ var Header = createReactClass({
       }
     };
     AppActions.getDeployments(callback, 1, 1);
+  },
+  _deploymentsInProgress: function() {
+    // check if deployments in progress
+    var self = this;
+    AppActions.getDeploymentCount("inprogress", function(count) {
+      self.setState({inProgress: count});
+    });
   },
 
   _hasDevices: function() {
@@ -288,7 +299,7 @@ var Header = createReactClass({
 
           <ToolbarGroup key={1} className="float-right">
             <DeviceNotifications pending={this.state.pendingDevices} total={this.state.acceptedDevices} limit={this.state.deviceLimit} />
-           
+            <DeploymentNotifications inprogress={this.state.inProgress} />
             {dropDownElement}
           </ToolbarGroup>
         </Toolbar>
