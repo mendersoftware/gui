@@ -27,15 +27,19 @@ else
     sed -i "s/var rootUrl.*/var rootUrl = '';/g" $MAINJS
 fi
 
-# isDemoMode switch for Demo UI
-if [ "$DEMO" == "true" ]; then
-   sed -i "s/var isDemoMode.*/var isDemoMode = true;/g" $MAINJS
-fi
 
 # _hasMultitenancy switch for Demo UI
 if [ "$HAVE_MULTITENANT" == "true" ]; then
    sed -i "s/var _hasMultitenancy.*/var _hasMultitenancy = true;/g" $MAINJS
 fi
 
-uglifyjs $MAINJS -c -o $MAINJS
+# isDemoMode switch for Demo UI
+if [ "$DEMO" == "true" ]; then
+   sed -i "s/var isDemoMode.*/var isDemoMode = true;/g" $MAINJS
+else
+   uglifyjs $MAINJS -c -o $MAINJS
+fi
+
+
+
 exec httpd -f -p 80 -c /etc/httpd.conf "$@"
