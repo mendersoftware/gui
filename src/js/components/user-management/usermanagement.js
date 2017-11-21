@@ -14,6 +14,8 @@ import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 
+import { preformatWithRequestID } from '../../helpers';
+
 function getState() {
   return {
     snackbar: AppStore.getSnackbar(),
@@ -47,8 +49,8 @@ var UserManagement =  createReactClass({
         self.setState({users: users});
       },
       error: function(err) {
-        var errormsg = err || "Please check your connection";
-        AppActions.setSnackbar("Users couldn't be loaded. " +errormsg);
+        var errormsg = err.error || "Please check your connection";
+        AppActions.setSnackbar(preformatWithRequestID(err.res, "Users couldn't be loaded. " + errormsg));
       }
     };
     AppActions.getUserList(callback);
@@ -81,7 +83,8 @@ var UserManagement =  createReactClass({
       },
       error: function(err) {
         console.log(err);
-        AppActions.setSnackbar("There was an error editing the user. " +err.error);
+        var errMsg = err.res.body.error || "";
+        AppActions.setSnackbar(preformatWithRequestID(err.res, "There was an error editing the user. " +errMsg));
       }
     }
 
@@ -98,7 +101,8 @@ var UserManagement =  createReactClass({
       },
       error: function(err) {
         console.log(err);
-        AppActions.setSnackbar("There was an error creating the user. " +err.error);
+        var errMsg = err.res.body.error || "";
+        AppActions.setSnackbar(preformatWithRequestID(err.res, "There was an error creating the user. " +errMsg));
       }
     }
 
@@ -115,7 +119,8 @@ var UserManagement =  createReactClass({
       },
       error: function(err) {
         console.log(err);
-        AppActions.setSnackbar("There was an error removing the user. " +err.error);
+        var errMsg = err.res.body.error || "";
+        AppActions.setSnackbar(preformatWithRequestID(err.res, "There was an error removing the user. " +errMsg));
       }
     }
 
@@ -147,13 +152,13 @@ var UserManagement =  createReactClass({
         <div className="float-right">
           <RaisedButton primary={true} label="Create new user" onClick={this._openCreate} />
         </div>
-       
+
         <UserList users={this.state.users || []} editUser={this._openEdit} removeUser={this._openRemove} currentUser={this.state.currentUser} />
         <Snackbar
           bodyStyle={{maxWidth: this.state.snackbar.maxWidth}}
           open={this.state.snackbar.open}
           message={this.state.snackbar.message}
-          autoHideDuration={8000} 
+          autoHideDuration={8000}
         />
 
         <Dialog
@@ -167,7 +172,7 @@ var UserManagement =  createReactClass({
           actionsContainerStyle={{marginBottom:"0"}}
           repositionOnUpdate={false}
           >
-          <UserForm edit={this.state.user ? true : false} editPass={this.state.editPass} togglePass={this._togglePass} closeDialog={this.dialogDismiss} handleSubmit={this.state.user ? this._editSubmit : this._createSubmit} user={this.state.user} buttonLabel={this.state.user ? "Save changes" : "Create user"} />          
+          <UserForm edit={this.state.user ? true : false} editPass={this.state.editPass} togglePass={this._togglePass} closeDialog={this.dialogDismiss} handleSubmit={this.state.user ? this._editSubmit : this._createSubmit} user={this.state.user} buttonLabel={this.state.user ? "Save changes" : "Create user"} />
         </Dialog>
 
         <Dialog
@@ -181,7 +186,7 @@ var UserManagement =  createReactClass({
           contentStyle={{overflow:"hidden", boxShadow:"0 14px 45px rgba(0, 0, 0, 0.25), 0 10px 18px rgba(0, 0, 0, 0.22)"}}
           actionsContainerStyle={{marginBottom:"0"}}
           >
-          Are you sure you want to remove the user with email <b><i>{(this.state.user || {}).email}</i></b>?        
+          Are you sure you want to remove the user with email <b><i>{(this.state.user || {}).email}</i></b>?
         </Dialog>
 
       </div>

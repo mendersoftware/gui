@@ -14,6 +14,8 @@ var AppActions = require('../../actions/app-actions');
 var AppStore = require('../../stores/app-store');
 var Loader = require('../common/loader');
 
+import { preformatWithRequestID } from '../../helpers';
+
 var DevicePicker = createReactClass({
 
   getInitialState: function() {
@@ -68,7 +70,8 @@ var DevicePicker = createReactClass({
       },
       error: function(err) {
         console.log(err);
-        AppActions.setSnackbar("Group could not be created: " + err);
+        var errMsg = err.res.body.error || ""
+        AppActions.setSnackbar(preformatWithRequestID(err.res, "Group could not be created: " + errMsg));
       }
     };
     AppActions.addDeviceToGroup(group, device, callback);
@@ -118,13 +121,13 @@ var DevicePicker = createReactClass({
     if (array === "all") {
       invalid = false;
       for (var i=0;i<devices.length;i++) {
-        selected.push(devices[i].id);  
+        selected.push(devices[i].id);
       }
     } else if (array === "none") {
       selected = [];
     } else {
       for (var i=0;i<array.length;i++) {
-        selected.push(devices[array[i]].id);  
+        selected.push(devices[array[i]].id);
       }
       invalid = selected.length ? false : true;
     }
@@ -192,7 +195,7 @@ var DevicePicker = createReactClass({
         bodyStyle={{maxHeight:"50vh"}}
         titleStyle={{paddingBottom: "15px", marginBottom:0}}
         footerStyle={{marginTop:0}}
-        >  
+        >
 
         <div className={this.state.showDeviceList || this.state.showWarning ? "hidden" : "absoluteTextfieldButton" }>
           <TextField
@@ -208,17 +211,17 @@ var DevicePicker = createReactClass({
           <div className={this.state.showDeviceList ? "hidden" : "float-left margin-left-small"}>
             <RaisedButton disabled={this.state.nextInvalid} style={{marginTop:"26px"}} label="Next" secondary={true} onClick={this.showDeviceList}/>
           </div>
-     
+
         </div>
 
-        {this.state.showWarning ? 
+        {this.state.showWarning ?
           <div className="help-message" style={{marginTop: "-30px"}}>
             <h2><FontIcon className="material-icons" style={{marginRight:"4px", top: "4px"}}>error_outline</FontIcon>You're creating a new group</h2>
             <p>
               Just a heads-up: if a device is already in another group, it will be removed from that group and moved to the new one. A device can only belong to one group at a time.
             </p>
-          
-            
+
+
             <Checkbox
               label="Got it! Don't show this message again"
               labelStyle={{fontSize: "13px", color: "rgba(0, 0, 0, 0.6)"}}

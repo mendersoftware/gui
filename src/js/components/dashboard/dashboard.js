@@ -63,8 +63,8 @@ var Dashboard = createReactClass({
       },
       error: function (err) {
         console.log(err);
-        var errormsg = err || "Please check your connection";
-        setRetryTimer("deployments", "Couldn't load deployments. " + errormsg, self.state.refreshDeploymentsLength);
+        var errormsg = err.error || "Please check your connection";
+        setRetryTimer(err, "deployments", "Couldn't load deployments. " + errormsg, self.state.refreshDeploymentsLength);
       }
     }
     AppActions.getPastDeployments(pastCallback, 1, 3);
@@ -77,8 +77,8 @@ var Dashboard = createReactClass({
       },
       error: function (err) {
         console.log(err);
-        var errormsg = err || "Please check your connection";
-        setRetryTimer("deployments", "Couldn't load deployments. " + errormsg, self.state.refreshDeploymentsLength);
+        var errormsg = err.error || "Please check your connection";
+        setRetryTimer(err, "deployments", "Couldn't load deployments. " + errormsg, self.state.refreshDeploymentsLength);
       }
     };
 

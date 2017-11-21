@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Router, Route, Link } from 'react-router';
 import cookie from 'react-cookie';
-import { decodeSessionToken } from '../../helpers';
+import { decodeSessionToken, preformatWithRequestID } from '../../helpers';
 import { clearAllRetryTimers } from '../../utils/retrytimer';
 import ReactTooltip from 'react-tooltip';
 import { toggleHelptips } from '../../utils/togglehelptips';
@@ -91,7 +91,7 @@ var Header = createReactClass({
       this._hasArtifacts();
       this._checkShowHelp();
     }
-      
+
   },
   _checkHeaderInfo: function() {
       this._deploymentsInProgress();
@@ -184,7 +184,7 @@ var Header = createReactClass({
   },
   _updateUsername: function() {
     var self = this;
-  
+
     // get current user
     if (!self.state.gettingUser) {
       var callback = {
@@ -195,7 +195,8 @@ var Header = createReactClass({
           self._checkHeaderInfo();
         },
         error: function(err) {
-          AppStore.setSnackbar("Can't get user details");
+          var errMsg = err.res.body.error || ""
+          AppStore.setSnackbar(preformatWithRequestID(err.res, "Can't get user details. " + errMsg));
           self.setState({gettingUser: false});
         }
       };
@@ -206,12 +207,12 @@ var Header = createReactClass({
         AppActions.getUser(userId, callback);
       }
     }
-  
+
   },
   _updateActive: function() {
     return this.context.router.isActive({ pathname: '/' }, true) ? '/' :
       this.context.router.isActive('/devices') ? '/devices' :
-      this.context.router.isActive('/artifacts') ? '/artifacts' : 
+      this.context.router.isActive('/artifacts') ? '/artifacts' :
       this.context.router.isActive('/deployments') ? '/deployments' :
       this.context.router.isActive('/settings') ? '/settings' : '/';
   },
@@ -303,12 +304,12 @@ var Header = createReactClass({
             {dropDownElement}
           </ToolbarGroup>
         </Toolbar>
-       
+
         <div id="header-nav">
 
           { this.state.showHelptips && this.state.acceptedDevices && !this.state.artifacts.length && !this.context.router.isActive('/artifacts') ?
             <div>
-              <div 
+              <div
                 id="onboard-8"
                 className="tooltip help highlight"
                 data-tip
@@ -333,7 +334,7 @@ var Header = createReactClass({
 
           { this.state.showHelptips && !this.state.acceptedDevices && this.state.pendingDevices && !(this.context.router.isActive('/devices') || this.context.router.isActive({ pathname: '/' }, true)) ?
             <div>
-              <div 
+              <div
                 id="onboard-7"
                 className="tooltip help highlight"
                 data-tip
@@ -356,7 +357,7 @@ var Header = createReactClass({
 
            { this.state.showHelptips && !this.state.hasDeployments && this.state.acceptedDevices && this.state.artifacts.length && !this.context.router.isActive('/deployments') ?
             <div>
-              <div 
+              <div
                 id="onboard-11"
                 className="tooltip help highlight"
                 data-tip

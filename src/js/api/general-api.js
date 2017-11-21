@@ -19,7 +19,7 @@ var Api = {
         })
         .end(function (err, res) {
           if (err || !res.ok) {
-            reject(err);
+            reject({"error": err, "res": res});
           } else {
             resolve(res);
           }

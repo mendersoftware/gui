@@ -19,6 +19,8 @@ import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import Divider from 'material-ui/Divider';
 
+import { preformatWithRequestID } from '../../helpers';
+
 function getGroups() {
   var copy = AppStore.getGroups().slice();
   return copy
@@ -72,7 +74,12 @@ var SelectedDevices = createReactClass({
         }, 1200)
       },
       error: function(err) {
-        AppActions.setSnackbar("Error creating deployment. " + err);
+        try {
+          var errMsg = err.res.body.error || ""
+          AppActions.setSnackbar(preformatWithRequestID(err.res, "Error creating deployment. " + errMsg));
+        } catch (e) {
+          console.log(e)
+        }
       }
     }
     AppActions.createDeployment(newDeployment, callback);

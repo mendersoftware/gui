@@ -11,6 +11,8 @@ import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 
+import { preformatWithRequestID } from '../../helpers.js'
+
 function getState() {
   return {
     artifacts: AppStore.getArtifactsRepo(),
@@ -62,8 +64,8 @@ var Artifacts = createReactClass({
         }, 300);
       },
       error: function(err) {
-        var errormsg = err || "Please check your connection";
-        setRetryTimer("artifacts", "Artifacts couldn't be loaded. " + errormsg, self.state.refreshArtifactsLength);
+        var errormsg = err.error || "Please check your connection";
+        setRetryTimer(err, "artifacts", "Artifacts couldn't be loaded. " + errormsg, self.state.refreshArtifactsLength);
       }
     };
     AppActions.getArtifacts(callback);
@@ -84,15 +86,16 @@ var Artifacts = createReactClass({
         self._getArtifacts();
       },
       error: function(err) {
-        AppActions.setSnackbar("Error removing artifact: " + err.error);
+        var errMsg = err.res.body.error || ""
+        AppActions.setSnackbar(preformatWithRequestID(err.res, "Error removing artifact: " + errMsg));
       }
-    };   
+    };
     AppActions.removeArtifact(self.state.artifact.id, callback);
   },
   render: function() {
     var artifact_link = (
       <span>
-        Download latest artifact 
+        Download latest artifact
         <a href='https://s3-eu-west-1.amazonaws.com/yocto-builds/latest/latest.tar.gz' target='_blank'> here </a>
          and upload the artifact file to the Mender server
       </span>
@@ -109,7 +112,7 @@ var Artifacts = createReactClass({
         secondary={true}
         onClick={this._removeArtifact} />
     ];
-    
+
     return (
       <div className="contentContainer">
         <div className="relative">

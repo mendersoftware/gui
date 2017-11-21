@@ -10,6 +10,8 @@ var AppActions = require('../../actions/app-actions');
 var AppStore = require('../../stores/app-store');
 var createReactClass = require('create-react-class');
 
+import { preformatWithRequestID } from '../../helpers';
+
 function getState() {
   return {
     snackbar: AppStore.getSnackbar(),
@@ -56,7 +58,8 @@ var SelfUserManagement =  createReactClass({
       },
       error: function(err) {
         console.log(err);
-        AppActions.setSnackbar("There was an error editing the user. " +errormsg);
+        var errMsg = err.res.body.error || ""
+        AppActions.setSnackbar(preformatWithRequestID(err.res, "There was an error editing the user. " +errMsg));
       }
     }
 
@@ -67,7 +70,7 @@ var SelfUserManagement =  createReactClass({
     var uniqueId = this.state.emailFormId;
     if (this.state.editEmail) {
         uniqueId = new Date();
-        // changing unique id will reset form values 
+        // changing unique id will reset form values
     }
     this.setState({editEmail: !this.state.editEmail, emailFormId: uniqueId});
 
@@ -84,11 +87,11 @@ var SelfUserManagement =  createReactClass({
   render: function() {
     return (
       <div style={{maxWidth: "750px"}} className="margin-top-small">
-        
-        <h2 style={{marginTop: "15px"}}>My account</h2>
-  
 
-        <Form 
+        <h2 style={{marginTop: "15px"}}>My account</h2>
+
+
+        <Form
           onSubmit={this._editSubmit}
           handleCancel={this.handleEmail}
           submitLabel="Save"
@@ -110,7 +113,7 @@ var SelfUserManagement =  createReactClass({
 
         </Form>
 
-        <Form 
+        <Form
           onSubmit={this._editSubmit}
           handleCancel={this.handlePass}
           submitLabel="Save"

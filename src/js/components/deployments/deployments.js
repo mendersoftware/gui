@@ -18,6 +18,8 @@ import RaisedButton from 'material-ui/RaisedButton';
 
 import Snackbar from 'material-ui/Snackbar';
 
+import { preformatWithRequestID } from '../../helpers';
+
 function getState() {
   return {
     past: AppStore.getPastDeployments(),
@@ -98,14 +100,14 @@ var Deployments = createReactClass({
       }
     };
     AppActions.getGroups(groupCallback);
-  
+
     if (this.props.params) {
       this.setState({reportType: this.props.params.tab});
 
       if (this.props.params.params) {
         var str = decodeURIComponent(this.props.params.params);
         var obj = str.split("&");
-      
+
         var params = [];
         for (var i=0;i<obj.length;i++) {
           var f = obj[i].split("=");
@@ -147,7 +149,7 @@ var Deployments = createReactClass({
       success: function (deployments, links) {
         self.setState({doneLoading:true});
         clearRetryTimer("progress");
-       
+
         // Get full count of deployments for pagination
         AppActions.getDeploymentCount("inprogress", function(count) {
           self.setState({progressCount: count});
@@ -159,8 +161,8 @@ var Deployments = createReactClass({
       },
       error: function (err) {
         console.log(err);
-        var errormsg = err || "Please check your connection";
-        setRetryTimer("deployments", "Couldn't load deployments. " + errormsg, self.state.refreshDeploymentsLength);
+        var errormsg = err.error || "Please check your connection";
+        setRetryTimer(err, "deployments", "Couldn't load deployments. " + errormsg, self.state.refreshDeploymentsLength);
       }
     };
 
@@ -181,7 +183,7 @@ var Deployments = createReactClass({
     var callback = {
       success: function(deployments, links) {
         self._dismissSnackBar();
-      
+
         // Get full count of deployments for pagination
         if (links.next || links.prev) {
           AppActions.getDeploymentCount("pending", function(count) {
@@ -196,8 +198,8 @@ var Deployments = createReactClass({
       },
       error: function (err) {
         console.log(err);
-        var errormsg = err || "Please check your connection";
-        setRetryTimer("deployments", "Couldn't load deployments. " + errormsg, self.state.refreshDeploymentsLength);
+        var errormsg = err.error || "Please check your connection";
+        setRetryTimer(err, "deployments", "Couldn't load deployments. " + errormsg, self.state.refreshDeploymentsLength);
       }
     };
 
@@ -234,11 +236,11 @@ var Deployments = createReactClass({
       },
       error: function (err) {
         console.log(err);
-        var errormsg = err || "Please check your connection";
-        setRetryTimer("deployments", "Couldn't load deployments. " + errormsg, self.state.refreshDeploymentsLength);
+        var errormsg = err.error || "Please check your connection";
+        setRetryTimer(err, "deployments", "Couldn't load deployments. " + errormsg, self.state.refreshDeploymentsLength);
       }
     };
-   
+
     AppActions.getPastDeployments(callback, page, per_page);
   },
   _dismissSnackBar: function() {
@@ -247,7 +249,7 @@ var Deployments = createReactClass({
     }, 1500);
   },
   _getGroupDevices: function(group) {
-    // get list of devices for each group and save them to state 
+    // get list of devices for each group and save them to state
     var i;
     var self = this;
     var tmp = {};
@@ -272,7 +274,7 @@ var Deployments = createReactClass({
             tmp[group] = devs;
             self.setState(tmp);
           }
-        }, 
+        },
         error: function(err) {
           console.log(err);
         }
@@ -341,7 +343,8 @@ var Deployments = createReactClass({
         });
       },
       error: function(err) {
-        AppActions.setSnackbar("Error creating deployment. "+err);
+        var errMsg = err.res.body.error || ""
+        AppActions.setSnackbar(preformatWithRequestID(err.res, "Error creating deployment. " + errMsg))
       }
     };
     AppActions.createDeployment(newDeployment, callback);
@@ -383,7 +386,7 @@ var Deployments = createReactClass({
   },
   _scheduleDeployment: function (deployment) {
     this.setState({dialog:false});
- 
+
     var artifact = '';
     var group = '';
     var start_time = null;
@@ -429,7 +432,8 @@ var Deployments = createReactClass({
       },
       error: function(err) {
         console.log(err);
-        AppActions.setSnackbar("There was wan error while aborting the deployment: "+err);
+        var errMsg = err.res.body.error || ""
+        AppActions.setSnackbar(preformatWithRequestID(err.res, "There was wan error while aborting the deployment: " + errMsg));
       }
     };
     AppActions.abortDeployment(id, callback);
@@ -461,7 +465,7 @@ var Deployments = createReactClass({
     var dialogContent = '';
 
     if (this.state.scheduleForm) {
-      dialogContent = (    
+      dialogContent = (
         <ScheduleForm hasDeployments={this.state.hasDeployments} showHelptips={this.state.showHelptips} deploymentDevices={this.state.deploymentDevices} filteredDevices={this.state.filteredDevices} hasPending={this.state.hasPending} hasDevices={this.state.hasDevices} deploymentSettings={this._deploymentParams} id={this.state.id} artifacts={this.state.collatedArtifacts} artifact={this.state.artifact} groups={this.state.groups} group={this.state.group} />
       )
     } else if (this.state.reportType === "progress") {

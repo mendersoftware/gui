@@ -20,7 +20,7 @@ var createReactClass = require('create-react-class');
 
 import ReactTooltip from 'react-tooltip';
 import { NoDevices } from '../helptips/helptooltips';
-import { isEmpty } from '../../helpers';
+import { isEmpty, preformatWithRequestID } from '../../helpers';
 
 import Snackbar from 'material-ui/Snackbar';
 import Dialog from 'material-ui/Dialog';
@@ -99,7 +99,7 @@ var Devices = createReactClass({
     } else {
        this._refreshDevices();
     }
-   
+
   },
   componentWillUnmount: function () {
     this._pauseTimers(true);
@@ -154,8 +154,8 @@ var Devices = createReactClass({
       error: function(err) {
         self.setState({doneLoading:true, devLoading:false});
         console.log(err);
-        var errormsg = err || "Please check your connection.";
-        setRetryTimer("devices", "Devices couldn't be loaded. " + errormsg, self.state.refreshDeviceLength);
+        var errormsg = err.error || "Please check your connection.";
+        setRetryTimer(err, "devices", "Devices couldn't be loaded. " + errormsg, self.state.refreshDeviceLength);
       }
     };
 
@@ -172,14 +172,14 @@ var Devices = createReactClass({
       error: function(err) {
         self.setState({doneLoading:true, devLoading:false});
         console.log(err);
-        var errormsg = err || "Please check your connection";
-        setRetryTimer("devices", "Devices couldn't be loaded. " + errormsg, self.state.refreshDeviceLength);
+        var errormsg = err.error || "Please check your connection";
+        setRetryTimer(err, "devices", "Devices couldn't be loaded. " + errormsg, self.state.refreshDeviceLength);
       }
     };
 
     function getDevicesFromIDs(list, callback) {
       var devices = [];
-     
+
       list.forEach( function(id, index) {
         AppActions.getDeviceById(id, {
           success: function(device) {
@@ -232,8 +232,8 @@ var Devices = createReactClass({
         self._pauseTimers(false);      // unpause timers
       },
       error: function(err) {
-        var errormsg = err || "Please check your connection.";
-        setRetryTimer("admission", "Pending devices couldn't be loaded. " + errormsg, self.state.refreshAdmissionLength);
+        var errormsg = err.error || "Please check your connection.";
+        setRetryTimer(err, "admission", "Pending devices couldn't be loaded. " + errormsg, self.state.refreshAdmissionLength);
       }
 
     };
@@ -256,7 +256,7 @@ var Devices = createReactClass({
             }, group);
           }
         }
-        
+
       },
       error: function(err) {
         console.log(err);
@@ -300,7 +300,7 @@ var Devices = createReactClass({
     this.admissionTimer = setInterval(this._refreshAdmissions, this.state.refreshAdmissionLength);
   },
   _handleGroupChange: function(group) {
-    this.setState({currentPage: 1, doneLoading:false, expandedRow: null, expandedDevice: {}}, AppActions.selectGroup(group)); 
+    this.setState({currentPage: 1, doneLoading:false, expandedRow: null, expandedDevice: {}}, AppActions.selectGroup(group));
   },
   _handleGroupDialog: function () {
     this._pauseTimers(!this.state.openGroupDialog);
@@ -317,8 +317,8 @@ var Devices = createReactClass({
       },
       error: function(err) {
         console.log(err);
-        var errormsg = err.error || "Please check your connection";
-        AppActions.setSnackbar("Devices couldn't be loaded. " +errormsg);
+        var errMsg = err.res.body.error || "Please check your connection";
+        AppActions.setSnackbar(preformatWithRequestID(err.res, "Devices couldn't be loaded. " + errMsg));
       }
     };
     AppActions.getDevices(callback, 1, per, null, searchterm);
@@ -331,7 +331,7 @@ var Devices = createReactClass({
     clearInterval(self.admissionTimer);
     if (!val) {
       self.deviceTimer = setInterval(self._refreshDevices, self.state.refreshDeviceLength);
-      
+
       self.admissionTimer = setInterval(self._refreshAdmissions, self.state.refreshAdmissionLength);
     }
   },
@@ -372,7 +372,8 @@ var Devices = createReactClass({
         if (accepted) { self._setDeviceDetails(self.state.blockDevice) }
       },
       error: function(err) {
-        AppActions.setSnackbar("There was a problem rejecting the device: "+err);
+        var errMsg = err.res.body.error || ""
+        AppActions.setSnackbar(preformatWithRequestID(err.res, "There was a problem rejecting the device: "+errMsg));
       }
     };
 
@@ -381,7 +382,7 @@ var Devices = createReactClass({
     } else {
       AppActions.rejectDevice(self.state.blockDevice, callback);
     }
-    
+
   },
   _acceptDevice: function(devices) {
     /*
@@ -397,7 +398,8 @@ var Devices = createReactClass({
         self._setDeviceDetails(devices[0]);
       },
       error: function(err) {
-        AppActions.setSnackbar("There was a problem authorizing the device: "+err);
+        var errMsg = err.res.body.error || ""
+        AppActions.setSnackbar(preformatWithRequestID(err.res, "There was a problem authorizing the device: "+errMsg));
       }
     };
     // 'devices' is an array but will always be length 1 as it comes from expanded single device row
@@ -417,7 +419,7 @@ var Devices = createReactClass({
     while (deviceList.length > 0) {
       arrays.push(deviceList.splice(0, size));
     }
-    
+
     var i = 0;
     var success = 0;
     var loopArrays = function(arr) {
@@ -427,7 +429,7 @@ var Devices = createReactClass({
         success = success+num;
         i++;
         if (i < arr.length) {
-          loopArrays(arr);   
+          loopArrays(arr);
         } else {
           setTimeout(function() {
             AppActions.setSnackbar(success + " " + pluralize("devices", success) + " " + pluralize("were", success) + " authorized");
@@ -452,9 +454,12 @@ var Devices = createReactClass({
         }
       }.bind(this),
       error: function(err) {
+        var errMsg = err.res.body.error || ""
+
         fail++;
         i++;
-        AppActions.setSnackbar("There was a problem authorizing the device: "+err);
+
+        AppActions.setSnackbar(preformatWithRequestID(err.res, "There was a problem authorizing the device: "+errMsg));
         if (i===devices.length) {
           callback(i-fail);
         }
@@ -478,7 +483,8 @@ var Devices = createReactClass({
       },
       error: function(err) {
         self.setState({ decommission_request_pending: false });
-        AppActions.setSnackbar("There was a problem decommissioning the device: "+err);
+        var errMsg = err.res.body.error || ""
+        AppActions.setSnackbar(preformatWithRequestID(err.res, "There was a problem decommissioning the device: "+errMsg));
       }
     };
     self.setState({ decommission_request_pending: true });
@@ -490,7 +496,7 @@ var Devices = createReactClass({
   */
   _clickRow: function(device, rowNumber) {
     clearInterval(this.inventoryInterval);
-    
+
     // check device is not already expanded, if so, close it
     if (!this.state.expandedDevice || (device.id !== this.state.expandedDevice.id)) {
       this.setState({expandedRow: rowNumber, expandedDevice: device});
@@ -613,7 +619,7 @@ var Devices = createReactClass({
 
         { !this.state.pendingDevices.length && !this.state.numDevices && this.state.doneLoading ?
           <div>
-            <div 
+            <div
               id="onboard-15"
               className="tooltip help highlight"
               data-tip
@@ -641,10 +647,10 @@ var Devices = createReactClass({
               styles={styles} 
               block={this._blockDialog} 
               pauseRefresh={this._pauseTimers}
-              showLoader={this._showLoader} 
-              refresh={this._refreshDevices} 
-              refreshAdmissions={this._refreshAdmissions} 
-              pending={this.state.pendingDevices} 
+              showLoader={this._showLoader}
+              refresh={this._refreshDevices}
+              refreshAdmissions={this._refreshAdmissions}
+              pending={this.state.pendingDevices}
               total={this.state.totalAdmDevices}
               expandedAdmRow={this.state.expandedAdmRow}
               expandRow={this._clickAdmRow}
@@ -654,7 +660,7 @@ var Devices = createReactClass({
               highlightHelp={!this.state.totalDevices} />
             <div>
               {this.state.totalAdmDevices ? <Pagination locale={_en_US} simple pageSize={20} current={this.state.currentAdmPage || 1} total={this.state.totalAdmDevices} onChange={this._handleAdmPageChange} /> : null }
-             
+
               {this.state.authLoading ?  <div className="smallLoaderContainer"><Loader show={true} /></div> : null}
             </div>
           </div>
