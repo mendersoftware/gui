@@ -49,7 +49,7 @@ var DeploymentStatus = createReactClass({
     var inprogress = this.state.stats.downloading + this.state.stats.installing + this.state.stats.rebooting;
     var failed = this.state.stats.failure;
     var skipped = this.state.stats.aborted + this.state.stats.noartifact + this.state.stats["already-installed"];
-    var label = ( 
+    var label = (
       <div className={this.props.vertical ? "results-status vertical" : "results-status"}>
         <div className={skipped ? "hint--bottom" : "hint--bottom disabled"} aria-label="Skipped">
           <span className="status skipped">{skipped || 0}</span><span className={this.props.vertical ? "label":"hidden"}>Skipped</span>
@@ -57,7 +57,7 @@ var DeploymentStatus = createReactClass({
         <div className={this.state.stats.pending ? "hint--bottom" : "hint--bottom disabled"} aria-label="Pending">
           <span className={"status pending"}>{this.state.stats.pending}</span><span className={this.props.vertical ? "label":"hidden"}>Pending</span>
         </div>
-        <div className={inprogress ? "hint--bottom" : "hint--bottom disabled"} aria-label="In progress"> 
+        <div className={inprogress ? "hint--bottom" : "hint--bottom disabled"} aria-label="In progress">
           <span className={"status inprogress"}>{inprogress}</span><span className={this.props.vertical ? "label":"hidden"}>In progress</span>
         </div>
         <div className={this.state.stats.success ? "hint--bottom" : "hint--bottom disabled"} aria-label="Successful">

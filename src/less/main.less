@@ -78,7 +78,7 @@ a, span.link {
   font-weight: bold;
   text-decoration: none;
   color: @linkgreen;
-  cursor: pointer; 
+  cursor: pointer;
 
   &:hover {
     color: @linkhover;
@@ -373,7 +373,7 @@ a, span.link {
   position: relative;
   opacity:1;
   min-height: 53vh;
-  
+
   &.zero {
     min-height: 100px;
     height: 100px;
@@ -570,7 +570,7 @@ ul.rc-pagination {
   min-height: 200px;
   float: left;
   padding: 22px 4% 22px;
-  margin: 0 15px 30px; 
+  margin: 0 15px 30px;
 
   &.small {
     width: 20%;
@@ -810,7 +810,7 @@ div.code {
 
 
 
-/* Forms and inputs*/ 
+/* Forms and inputs*/
 
 input[required]:-moz-ui-invalid {
   box-shadow: none;
@@ -959,7 +959,7 @@ form .button-holder {
     padding: 0 20px 10px;
     margin-left: -10px;
   }
-  
+
   .pass-buttons {
     display: inline-block;
     position: relative;
@@ -1026,9 +1026,9 @@ hr.table-divider {
 // table expanding
 tr.expand {
   background-color: rgb(245,245,245);
-  
+
   .device-info {
-    margin-bottom: 10px; 
+    margin-bottom: 10px;
     h3 {
       font-family: Lato, sans-serif;
       color: rgba(0,0,0,0.8);
@@ -1061,15 +1061,15 @@ tr.expand {
   td {
     vertical-align: top;
     padding-top: 16px;
-  
+
     div.expanded {
       position: absolute;
       left: 0;
       margin-top: 45px;
-      padding: 0 45px 0 60px; 
+      padding: 0 45px 0 60px;
       right: 0;
     }
-   
+
   }
 
   td:first-child>div div {
@@ -1085,7 +1085,7 @@ tr.expand {
 
 #authorize > div {
   padding-bottom: 15px;
-} 
+}
 
 
 
@@ -1198,7 +1198,7 @@ tr.expand {
   .health-icon {
     width: 33%;
     display: inline-block;
-    
+
     img {
       display: block;
       margin: auto;
@@ -1223,7 +1223,7 @@ tr.expand {
       display: block;
     }
   }
-  
+
 }
 
 .dashboard-placeholder {
@@ -1303,7 +1303,7 @@ span.month, span.day {
   margin-bottom: 15px;
 
   h2,h3 {
-    margin: 8px 0; 
+    margin: 8px 0;
   }
 
   .dashboard-number {
@@ -1330,7 +1330,7 @@ span.month, span.day {
     border-left: 1px @linkhover solid;
     font-size: 12px;
     word-break: break-all;
-  
+
     &.show {
       display: block;
       .animation(fadein 0.2s 1);
@@ -1386,7 +1386,7 @@ span.month, span.day {
     font-size: 14px;
   }
 
-  .bubbles-contain {  
+  .bubbles-contain {
     height: 100px;
     min-width: 300px;
     width: 60%;
@@ -1425,7 +1425,7 @@ span.month, span.day {
       background-repeat: no-repeat;
       background-position: center;
       background-color: @lightergrey;
-    
+
       &:hover {
         .scale(1.15);
         .transition(all 0.2s ease);
@@ -1438,7 +1438,7 @@ span.month, span.day {
       .animation(pulse 2.8s infinite);
       background-image: url('../assets/img/progress_status_large.png');
     }
-    
+
     .downloading .bubble,
     .rebooting .bubble {
       .animation(pulse 2.8s infinite);
@@ -1462,7 +1462,7 @@ span.month, span.day {
   .deploymentInfo {
     font-size: 14px;
     white-space: nowrap;
-   
+
    > div {
       margin-bottom: 10px;
       overflow: hidden;
@@ -1636,7 +1636,7 @@ span.month, span.day {
   position: relative;
   top: -26px;
   height: auto;
-  margin: 30px 30px 0 0; 
+  margin: 30px 30px 0 0;
   display: inline-block;
   vertical-align: top;
 
@@ -1680,7 +1680,19 @@ span.month, span.day {
   }
 }
 
+.substate {
+  display: inline-block;
+  width: 64%;
+  color: @verylightgrey;
+  white-space: normal;
+  word-wrap: break-word;
+  margin-left: 5px;
+}
 
+.substateText {
+  color: @verylightgrey;
+  word-break: break-word;
+}
 
 
 @keyframes fadein {
@@ -1690,7 +1702,7 @@ span.month, span.day {
   100% {
     .opacity(1);
   }
-} 
+}
 
 @keyframes pulse {
   0% {
@@ -1706,7 +1718,7 @@ span.month, span.day {
 
 @keyframes spin {
    100% {
-    .rotate(360deg); 
+    .rotate(360deg);
   }
 }
 
@@ -1736,7 +1748,7 @@ div.shake-alert {
   10%, 90% {
     transform: translate3d(-1px, 0, 0);
   }
-  
+
   20%, 80% {
     transform: translate3d(1px, 0, 0);
   }
@@ -1769,17 +1781,17 @@ div.shake-alert {
 }
 
 .transition (@transition) {
-  -webkit-transition: @transition;  
+  -webkit-transition: @transition;
   -moz-transition:    @transition;
-  -ms-transition:     @transition; 
-  -o-transition:      @transition;  
+  -ms-transition:     @transition;
+  -o-transition:      @transition;
 }
 
 .animation (@animation) {
-  -webkit-animation: @animation;  
+  -webkit-animation: @animation;
   -moz-animation:    @animation;
-  -ms-animation:     @animation; 
-  -o-animation:      @animation;  
+  -ms-animation:     @animation;
+  -o-animation:      @animation;
 }
 
 .opacity (@opacity: 0.5) {
@@ -1855,4 +1867,3 @@ div.shake-alert {
     height: 0;
   }
 }
-

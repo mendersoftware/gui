@@ -15,6 +15,28 @@ export function fullyDecodeURI(uri){
   return uri;
 }
 
+export function statusToPercentage(state) {
+  switch(state) {
+    case "pending":
+      return 10;
+
+    case "downloading":
+      return 10;
+
+    case "installing":
+      return 70;
+
+    case "rebooting":
+      return 80;
+
+    case "aborted":
+    case "already-installed":
+    case "failure":
+    case "noartifact":
+    case "success":
+      return 100;
+  }
+}
 
 export function decodeSessionToken(token) {
 
@@ -26,7 +48,6 @@ export function decodeSessionToken(token) {
     //console.log(err);
     return;
   }
-
 }
 
 export function isEmpty( obj ) {
@@ -53,3 +74,4 @@ export function preformatWithRequestID(res, failMsg) {
   }
   return failMsg
 }
+
