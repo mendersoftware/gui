@@ -179,10 +179,10 @@ var AppActions = {
       .then(function(res) {
         AppDispatcher.handleViewAction({
           actionType: AppConstants.SET_DEVICE_LIMIT,
-          limit: res.count
+          limit: res.body.limit
         });
 
-        callback.success(res.count);
+        callback.success(res.body.limit);
       })
       .catch(function(err) {
         callback.error(err);

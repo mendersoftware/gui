@@ -73,7 +73,7 @@ var Header = createReactClass({
        this._updateUsername();
     } else {
       if (prevState.sessionId!==this.state.sessionId ) {
-        this._getDeviceLimit();
+        
         this._hasDeployments();
         this._hasArtifacts();
         this._checkShowHelp();
@@ -85,7 +85,6 @@ var Header = createReactClass({
     // check logged in user
     this._updateUsername();
     if (this.props.isLoggedIn) {
-      this._getDeviceLimit();
       this._hasDeployments();
       this._checkHeaderInfo();
       this._hasArtifacts();
@@ -94,6 +93,7 @@ var Header = createReactClass({
 
   },
   _checkHeaderInfo: function() {
+      this._getDeviceLimit();
       this._deploymentsInProgress();
       this._hasDevices();
       this._hasPendingDevices();
