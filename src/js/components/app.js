@@ -6,10 +6,9 @@ import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import RawTheme from '../themes/mender-theme.js';
 
 import IdleTimer from 'react-idle-timer';
-import cookie from 'react-cookie';
 import { clearAllRetryTimers } from '../utils/retrytimer';
 
-import { logout }from '../auth';
+import { logout, updateMaxAge }from '../auth';
 
 var AppStore = require('../stores/app-store');
 var AppActions = require('../actions/app-actions');
@@ -22,7 +21,7 @@ function getState() {
   return {
     currentUser: AppStore.getCurrentUser(),
     uploadInProgress: AppStore.getUploadInProgress(),
-    timeout: 900000 // 15 minutes
+    timeout: 900000 // 15 minutes idle time
   }
 }
 
@@ -44,7 +43,11 @@ var App = createReactClass({
   componentWillMount: function() {
     AppStore.changeListener(this._onChange);
   },
+  componentDidMount: function() {
+    window.addEventListener('mousemove', updateMaxAge, false);
+  },
   componentWillUnmount: function() {
+    window.addEventListener('mousemove', updateMaxAge, false);
     AppStore.removeChangeListener(this._onChange);
   },
   _onChange: function() {
@@ -55,6 +58,8 @@ var App = createReactClass({
     if (this.state.currentUser && !this.state.uploadInProgress) {
       logout();
       AppActions.setSnackbar("Your session has expired. You have been automatically logged out due to inactivity.");
+    } else if (this.state.currentUser && this.state.uploadInProgress) {
+      updateMaxAge();
     }
   },
   render: function() {

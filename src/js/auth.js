@@ -18,3 +18,11 @@ export function logout() {
   cookie.remove('JWT');
   hashHistory.replace("/login");
 }
+
+
+export function updateMaxAge() {
+  var userCookie = cookie.load('JWT');
+  if (userCookie) {
+    cookie.save("JWT", userCookie, {maxAge: 900});
+  }
+}
