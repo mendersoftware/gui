@@ -8,7 +8,7 @@ import RawTheme from '../themes/mender-theme.js';
 import IdleTimer from 'react-idle-timer';
 import { clearAllRetryTimers } from '../utils/retrytimer';
 
-import { logout, updateMaxAge }from '../auth';
+import { logout, updateMaxAge, expirySet }from '../auth';
 
 var AppStore = require('../stores/app-store');
 var AppActions = require('../actions/app-actions');
@@ -21,7 +21,7 @@ function getState() {
   return {
     currentUser: AppStore.getCurrentUser(),
     uploadInProgress: AppStore.getUploadInProgress(),
-    timeout: 900000 // 15 minutes idle time
+    timeout: 900000, // 15 minutes idle time
   }
 }
 
@@ -54,12 +54,14 @@ var App = createReactClass({
     this.setState(getState());
   },
   _onIdle: function() {
-    // logout user and warn
-    if (this.state.currentUser && !this.state.uploadInProgress) {
-      logout();
-      AppActions.setSnackbar("Your session has expired. You have been automatically logged out due to inactivity.");
-    } else if (this.state.currentUser && this.state.uploadInProgress) {
-      updateMaxAge();
+    if (expirySet()) {
+      // logout user and warn
+      if (this.state.currentUser && !this.state.uploadInProgress) {
+        logout();
+        AppActions.setSnackbar("Your session has expired. You have been automatically logged out due to inactivity.");
+      } else if (this.state.currentUser && this.state.uploadInProgress) {
+        updateMaxAge();
+      }
     }
   },
   render: function() {

@@ -144,7 +144,7 @@ var Form = createReactClass({
   // even though we did not bind it. We add the input component to our inputs map
   attachToForm: function (component) {
     this.inputs[component.props.id] = component;
-    this.model[component.props.id] = component.state.value;
+    this.model[component.props.id] = component.state.value  || component.state.checked;
 
     // We have to validate the input when it is attached to put the
     // form in its correct state
@@ -164,7 +164,7 @@ var Form = createReactClass({
 
     this.validateForm();
     Object.keys(this.inputs).forEach(function (id) {
-      this.model[id] = this.inputs[id].state.value;
+      this.model[id] = this.inputs[id].state.value || this.inputs[id].state.checked;
     }.bind(this));
     if (this.state.isValid) {
       this.props.onSubmit(this.model);

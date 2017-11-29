@@ -11,13 +11,15 @@ var createReactClass = require('create-react-class');
 import Form from '../common/forms/form';
 import TextInput from '../common/forms/textinput';
 import PasswordInput from '../common/forms/passwordinput';
+import FormCheckbox from '../common/forms/formcheckbox';
 import Snackbar from 'material-ui/Snackbar';
 
 import { preformatWithRequestID } from '../../helpers.js'
 
 function getState() {
   return {
-    snackbar: AppStore.getSnackbar()
+    snackbar: AppStore.getSnackbar(),
+    noExpiry: cookie.load("noExpiry")
   };
 }
 
@@ -47,13 +49,23 @@ var Login = createReactClass({
   _handleLogin: function(formData) {
     var self = this;
 
+
     if (formData.hasOwnProperty("email")) {
       AppActions.loginUser({
         success: function(token) {
 
+          var options = {};
+          if (!formData.noExpiry) {
+            options = {maxAge: 900};
+          }
+
+          // set no expiry as cookie to remember checkbox value
+          cookie.save("noExpiry", formData.noExpiry.toString());
+
           AppActions.setSnackbar("");
           // save token as cookie
-          cookie.save("JWT", token, {maxAge: 900});
+          // set maxAge if noexpiry checkbox not checked
+          cookie.save("JWT", token, options);
 
           // logged in, so redirect
           var location = self.props;
@@ -93,6 +105,13 @@ var Login = createReactClass({
                 id="password"
                 label="Password"
                 required={true} />
+
+              <FormCheckbox
+                id="noExpiry"
+                label="Keep me logged in"
+                className="margin-top"
+                checked={this.state.noExpiry === "true"}
+                />
 
             </Form>
         </div>

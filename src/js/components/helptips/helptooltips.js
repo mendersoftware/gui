@@ -1,5 +1,4 @@
 import React from 'react';
-import cookie from 'react-cookie';
 import { Router, Link } from 'react-router';
 import PropTypes from 'prop-types';
 import { toggleHelptips } from '../../utils/togglehelptips';
