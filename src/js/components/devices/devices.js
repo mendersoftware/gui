@@ -617,7 +617,7 @@ var Devices = createReactClass({
         </div>
         <div className="rightFluid padding-right">
 
-        { !this.state.pendingDevices.length && !this.state.numDevices && this.state.doneLoading ?
+        { !this.state.pendingDevices.length && !this.state.numDevices && this.state.doneLoading && this.state.showHelptips ?
           <div>
             <div
               id="onboard-15"
