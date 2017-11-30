@@ -9,7 +9,6 @@ import { UploadArtifact, ExpandArtifact } from '../helptips/helptooltips';
 var update = require('react-addons-update');
 var Loader = require('../common/loader');
 import SearchInput from 'react-search-input';
-import TextInput from '../common/forms/textinput';
 import SelectedArtifact from './selectedartifact';
 import { Router, Route, Link } from 'react-router';
 import { Motion, spring } from 'react-motion';
