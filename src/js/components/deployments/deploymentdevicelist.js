@@ -3,15 +3,18 @@ import { Link } from 'react-router';
 import Time from 'react-time';
 var isEqual = require('lodash.isequal');
 var createReactClass = require('create-react-class');
+var { statusToPercentage } = require('../../helpers')
+
 
 // material ui
 import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
 import FlatButton from 'material-ui/FlatButton';
+import LinearProgress from 'material-ui/LinearProgress';
 
 var ProgressDeviceList = createReactClass({
   getInitialState: function() {
     return {
-      prevDevices:{}
+      prevDevices:{},
     };
   },
   shouldComponentUpdate: function (nextProps, nextState) {
@@ -38,15 +41,15 @@ var ProgressDeviceList = createReactClass({
           time = (
             <Time value={this._formatTime(device.finished)} format="YYYY-MM-DD HH:mm" />
           )
-        } 
-       
-        var encodedDevice = encodeURIComponent("id="+device.id); 
+        }
+
+        var encodedDevice = encodeURIComponent("id="+device.id);
         var deviceLink = (
         <div>
           <Link style={{fontWeight:"500"}} to={`/devices/0/${encodedDevice}`}>{device.id}</Link>
         </div>
         );
-        
+
         if (typeof this.props.deviceInventory !== 'undefined') {
           if (typeof this.props.deviceInventory[device.id] !== 'undefined')  {
             var encodedArtifactName = encodeURIComponent((this.props.deviceInventory[device.id] || {}).artifact);
@@ -67,10 +70,30 @@ var ProgressDeviceList = createReactClass({
               return "Already installed";
               break;
             default:
+              device.percentage = statusToPercentage(device.status)
               return device.status.charAt(0).toUpperCase() + device.status.slice(1);
               break;
           }
         })(device.status);
+
+        var statusText = (function(status, substate) {
+          if (status && substate) {
+            return (<div>
+                      <div style={{display:"inline", verticalAlign: "top"}}>{status}: </div>
+                      <div className="substate">{device.substate}</div>
+                    </div>
+            );
+          }
+          if (status) {
+            return `${status}`
+          }
+        })(status, device.substate || "");
+
+        var devicePercentage = (function(percentage) {
+          if (device.percentage && device.percentage > 0) {
+            return `${device.percentage}%`
+          }
+        })(device.percentage)
 
         return (
           <TableRow key={index}>
@@ -79,11 +102,22 @@ var ProgressDeviceList = createReactClass({
             <TableRowColumn>{currentArtifactLink}</TableRowColumn>
             <TableRowColumn><Time value={this._formatTime(device.created)} format="YYYY-MM-DD HH:mm" /></TableRowColumn>
             <TableRowColumn>{time}</TableRowColumn>
-            <TableRowColumn>{status || "--"}</TableRowColumn>
+            <TableRowColumn style={{paddingRight: "0px"}}>
+              <div style={{marginTop: "5px"}}>
+                {statusText}
+              </div>
+              <div>
+                <div style={{textAlign: "end", color: "#aaaaaa"}}>
+                {devicePercentage}
+                </div>
+                {device.percentage > 0 &&
+                  <LinearProgress color={status && status.toLowerCase() == "failure" ? "#8f0d0d":"#009E73"} mode="determinate" value={device.percentage} />
+                }
+              </div>
+            </TableRowColumn>
             <TableRowColumn><FlatButton className={device.log ? null : "hidden"} onClick={this.props.viewLog.bind(null, device.id)} label="View log" /></TableRowColumn>
           </TableRow>
         )
-        
       }, this);
     }
 

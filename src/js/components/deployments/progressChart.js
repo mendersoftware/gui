@@ -5,6 +5,8 @@ var createReactClass = require('create-react-class');
 var AppActions = require('../../actions/app-actions');
 var AppStore = require('../../stores/app-store');
 var pluralize = require('pluralize');
+import LinearProgress from 'material-ui/LinearProgress';
+var { statusToPercentage } = require('../../helpers')
 
 var ProgressChart = createReactClass({
   getInitialState: function() {
@@ -64,14 +66,14 @@ var ProgressChart = createReactClass({
     var progress = this.state.stats.downloading + this.state.stats.rebooting + this.state.stats.installing;
     var pending = this.state.stats.pending;
     var dev = this.state.devices.length;
-   
+
      // figure out best fit number of rows
     var rows = Math.floor(Math.sqrt(dev));
-   
+
     while (dev % rows != 0) {
       rows = rows - 1;
     }
-  
+
     if (rows === 1 && dev*90>400) {
       rows = Math.ceil(this.state.devices.length/5);
     }
@@ -111,9 +113,14 @@ var ProgressChart = createReactClass({
           <b>Device info:</b>
           <p><b>ID:</b> {(this.state.device.id || "")}</p>
           <p><b>Status:</b> {this.state.device.status}</p>
+          <div className={"substateText"}>{this.state.device.substate}</div>
+          <div className={"substateText"} style={{textAlign: "end"}}>
+            {statusToPercentage(this.state.device.status)}%
+          </div>
+          <LinearProgress color={this.state.device.status && this.state.device.status.toLowerCase() == "failure" ? "#8f0d0d":"#009E73"} mode="determinate" value={statusToPercentage(this.state.device.status)} />
         </div>
         <div className="key">
-          <div className="bubble failure" /> Failed <div className="bubble pending" /> Pending <div className="bubble inprogress" /> In progress <div className="bubble success" /> Successful 
+          <div className="bubble failure" /> Failed <div className="bubble pending" /> Pending <div className="bubble inprogress" /> In progress <div className="bubble success" /> Successful
         </div>
       </div>
     );
