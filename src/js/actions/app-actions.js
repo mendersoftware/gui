@@ -13,6 +13,7 @@ var devAuthApiUrl = apiUrl + "/devauth";
 var inventoryApiUrl = apiUrl + "/inventory";
 var useradmApiUrl = apiUrl + "/useradm";
 var tenantadmUrl = apiUrl + "/tenantadm";
+var hostedLinks = "https://s3.amazonaws.com/hosted-mender-artifacts-onboarding/"
 
 var parse = require('parse-link-header');
 
@@ -312,9 +313,20 @@ var AppActions = {
       .get(tenantadmUrl+"/user/tenant")
       .then(function(res) {
         AppDispatcher.handleViewAction({
-          actionType: AppConstants.SET_MULTITENANCY,
+          actionType: AppConstants.SET_ORGANIZATION,
           organization: res.body
         });
+        callback.success(res.body);
+      })
+      .catch(function(err) {
+        callback.error(err);
+      })
+  },
+
+  getHostedLinks: function(id, callback) {
+    GeneralApi
+      .get(hostedLinks+id+"/links.json")
+      .then(function(res) {
         callback.success(res.body);
       })
       .catch(function(err) {

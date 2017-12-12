@@ -331,7 +331,7 @@ var DeploymentReport = createReactClass({
           open={this.state.showDialog}
           actions={logActions}
           bodyStyle={{padding:"0", overflow:"hidden"}}>
-          <div className="code">
+          <div className="code log">
             {this.state.logData}
           </div>
           <p style={{marginLeft:"24px"}}>{this.state.copied ? <span className="green fadeIn">Copied to clipboard.</span> : null}</p>
