@@ -9,10 +9,15 @@ var ConnectingDevices =  createReactClass({
 
 		var links = [];
 		var list = (this.props.pages||{})['connecting-devices'];
+		var toplevel = "";
 		function eachRecursive(list, level) {
 			for (var k in list) {
+
+				// fix link for nested levels
+				toplevel = level >0 ? toplevel : k;
+				var relative_path = level >0 ? toplevel + "/" + k : k;
 		 		if (typeof list[k] == "object" && list[k] !== null && k!=="component") {
-		 			links.push(<p key={k} style={{paddingLeft: level*16}}><Link to={`help/connecting-devices/${k}`}>{list[k].title}</Link></p>);
+		 			links.push(<p key={k} style={{paddingLeft: level*16}}><Link to={`help/connecting-devices/${relative_path}`}>{list[k].title}</Link></p>);
 		 			eachRecursive(list[k], level+1);
 		 		}
 		 	}
