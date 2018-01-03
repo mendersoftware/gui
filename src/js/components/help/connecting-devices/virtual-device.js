@@ -33,7 +33,7 @@ var VirtualDevice =  createReactClass({
 
             <h4>Docker Engine</h4>
             <p>If you do not have it already, please install docker on the infrastructure where you want to start the virtual Mender client.</p>
-            <p>For example, if you are using Ubuntu follow this tutorial: <a href="https://docs.docker.com/engine/installation/linux/docker-ce/ubuntu/">https://docs.docker.com/engine/installation/linux/docker-ce/ubuntu/</a></p>
+            <p>For example, if you are using Ubuntu follow this tutorial: <a href="https://docs.docker.com/engine/installation/linux/docker-ce/ubuntu/" target="_blank">https://docs.docker.com/engine/installation/linux/docker-ce/ubuntu/</a></p>
 
             {this.props.hasMultitenancy ?
 
@@ -72,8 +72,8 @@ var VirtualDevice =  createReactClass({
           <p>A virtual device is bundled with the Mender server to make it easy to test Mender.</p>
 
           <h3>Prerequisites</h3>
-          <p>The test environment should be set up and working successfully as described in the <a href="https://docs.mender.io/getting-started/create-a-test-environment">Install a Mender demo server</a> documention.</p>
-          <p>You should also download the virtual Artifacts listed on the <a href="https://docs.mender.io/getting-started/download-test-images">the download page</a>.</p>
+          <p>The test environment should be set up and working successfully as described in the <a href="https://docs.mender.io/getting-started/create-a-test-environment" target="_blank">Install a Mender demo server</a> documention.</p>
+          <p>You should also download the virtual Artifacts listed on the <a href="https://docs.mender.io/getting-started/download-test-images" target="_blank">the download page</a>.</p>
         
           <h3>Authorize the device</h3>
           <p>A minute or two after the server has started, there should be a virtual device pending authorization. This means that the Mender client, which runs as a daemon on the device, 
