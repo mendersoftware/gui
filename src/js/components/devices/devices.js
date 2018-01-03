@@ -580,7 +580,7 @@ var Devices = createReactClass({
           onClick={this.closeDialogs} />
       </div>,
       <RaisedButton
-        label="Block device"
+        label="Reject device"
         secondary={true}
         onClick={this._blockDevice.bind(null, false)}
         icon={<FontIcon style={{marginTop:"-4px"}} className="material-icons">cancel</FontIcon>} />
@@ -715,7 +715,7 @@ var Devices = createReactClass({
 
         <Dialog
           open={this.state.block || false}
-          title='Block this device?'
+          title='Reject this device?'
           actions={blockActions}
           autoDetectWindowHeight={true}
           bodyStyle={{paddingTop:"0", fontSize:"13px"}}
@@ -729,7 +729,7 @@ var Devices = createReactClass({
 
         <Dialog
           open={this.state.remove || false}
-          title={blockedDevice ? "Decommission device?" : 'Block or decommission device?'}
+          title={blockedDevice ? "Decommission device?" : 'Reject or decommission device?'}
           actions={decommissionActions}
           autoDetectWindowHeight={true}
           bodyStyle={{paddingTop:"0", fontSize:"13px"}}
@@ -741,12 +741,12 @@ var Devices = createReactClass({
               <div className="align-center">
                 <div>
                   <FontIcon className="material-icons" style={{marginTop:6, marginBottom:6, marginRight:6, verticalAlign: "middle", color:"#c7c7c7"}}>cancel</FontIcon>
-                  <h3 className="inline align-middle">Block</h3>
+                  <h3 className="inline align-middle">Reject</h3>
                 </div>
                 <p>
                   De-authorize this device and block it from making authorization requests in the future.
                 </p>
-                <RaisedButton onClick={this._blockDevice.bind(null, true)} className="margin-top-small" secondary={true} label={"Block device"} icon={<FontIcon style={{marginTop:"-4px"}} className="material-icons">cancel</FontIcon>} />
+                <RaisedButton onClick={this._blockDevice.bind(null, true)} className="margin-top-small" secondary={true} label={"Reject device"} icon={<FontIcon style={{marginTop:"-4px"}} className="material-icons">cancel</FontIcon>} />
               </div>
             </div> 
           : null }

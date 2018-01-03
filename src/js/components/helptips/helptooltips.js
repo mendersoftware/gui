@@ -55,7 +55,7 @@ var AuthButton = createReactClass({
         <h3>Authorize devices</h3>
         <hr/>
         <p>When you are ready, click to <b>authorize</b> the {pluralize("devices", this.props.devices)}.</p>
-        <p>Read more about bootstrapping devices to the server in <a href="https://docs.mender.io/getting-started/deploy-to-virtual-devices#authorize-the-device">our documentation</a>.</p>
+        <p>You can find out more about connecting different types of devices in <Link to={`/help/connecting-devices`}>the help section</Link>.</p>
         <p><a className="hidehelp" onClick={toggleHelptips}>Hide all help tips</a></p>
       </div>
     )
@@ -109,7 +109,7 @@ var ArtifactsNav = createReactClass({
       <div>
         <h3>Artifacts</h3>
         <hr/>
-        <p>Before we can create a deployment, an Artifact needs to be uploaded to the Mender server.</p>
+        <p>Before you can create a deployment, an Artifact needs to be uploaded to the Mender server.</p>
         <p>Go to the <Link to={`/artifacts`}>Artifacts tab</Link>.</p>
         <p><a className="hidehelp" onClick={toggleHelptips}>Hide all help tips</a></p>
       </div>
@@ -134,14 +134,21 @@ var DeploymentsNav = createReactClass({
 var UploadArtifact = createReactClass({
   render: function () {
     var multitenancy = AppStore.hasMultitenancy();
+    var isHosted = (window.location.hostname === "hosted.mender.io");
     return (
       <div>
         <h3>Upload an Artifact</h3>
         <hr/>
-        <p>Before we can deploy an update to devices, we need to upload an Artifact. A Mender Artifact is a file format that includes some metadata and the root file system that is to be deployed. Steps to build an Artifact are <a href="https://docs.mender.io/artifacts/building-mender-yocto-image">provided in our documentation</a>.</p>
-        { !multitenancy ? 
-          <p>To make testing easier, you can <a href="https://docs.mender.io/getting-started/deploy-to-virtual-devices#upload-a-new-mender-artifact-to-the-server">download a test Mender Artifact</a> for your virtual devices. After the download finishes, upload the Artifact.</p> :
-          null}
+        <p>Before you can deploy an update to devices, you need to upload an Artifact. A Mender Artifact is a file format that includes some metadata and the root file system that is to be deployed.</p>
+        
+        { isHosted && multitenancy ? 
+          <p>To make testing easier, you can find demo Artifacts in <Link to={`/help/connecting-devices/demo-artifacts`}>the Help section</Link>. After you have grabbed the one you want, upload it here.</p>
+          :
+          <p>To make testing easier, you can <a href="https://docs.mender.io/getting-started/download-test-images">download a test Mender Artifact</a> for your virtual devices. After the download finishes, upload the Artifact here.</p>
+        }
+
+        <p>You can also <Link to={`/help/connecting-devices/build-with-yocto`}>learn how to build your own Artifact</Link> with Yocto.</p>
+
         <p><a className="hidehelp" onClick={toggleHelptips}>Hide all help tips</a></p>
       </div>
     )

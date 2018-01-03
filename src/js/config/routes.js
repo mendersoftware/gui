@@ -8,6 +8,7 @@ import Devices from '../components/devices/devices';
 import Artifacts from '../components/artifacts/artifacts';
 import Login from '../components/user-management/login';
 import Settings from '../components/settings/settings';
+import Help from '../components/help/help';
 
 import { isLoggedIn } from '../auth';
 
@@ -53,6 +54,10 @@ module.exports = (
     </Route>
     <Route path="/settings" component={Settings} onEnter={requireAuth}>
       <Route path="(:section)" />
+    </Route>
+    <Route path="/help" component={Help} onEnter={requireAuth}>
+    </Route>
+    <Route path="/help/*" component={Help} onEnter={requireAuth}>
     </Route>
     <Route path="/login" component={Login} onEnter={noRequireAuth} />
   </Route>
