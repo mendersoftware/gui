@@ -138,8 +138,7 @@ var Help =  createReactClass({
         </div>
         <div className="rightFluid padding-right">
           <div className="margin-top-small">
-            <ComponentToShow isHosted={this.state.isHosted
-            } org={this.state.org} links={this.state.links} hasMultitenancy={this.state.hasMultitenancy} isEmpty={isEmpty} pages={components} changePage={this.changePage} />
+            <ComponentToShow isHosted={this.state.isHosted} org={this.state.org} links={this.state.links} hasMultitenancy={this.state.hasMultitenancy} isEmpty={isEmpty} pages={components} changePage={this.changePage} />
             { ComponentToShow !== HelpTopics ? <p className="margin-top-large"><a onClick={this.changePage.bind(null, "/help")}>&lsaquo; Back to help topics</a></p> : null }
           </div>
         </div>
