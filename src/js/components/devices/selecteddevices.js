@@ -223,7 +223,7 @@ var SelectedDevices = createReactClass({
         <ListItem
           style={this.props.styles.listStyle}
           primaryText={"Authorization status: " + status}
-          secondaryText="Re-authorize this device?"
+          secondaryText="Authorize this device?"
           onClick={this._handleAccept.bind(null, true)}
           leftIcon={<FontIcon className="material-icons red auth" style={{marginTop:6, marginBottom:6}}>cancel</FontIcon>} />
          <Divider />
@@ -239,7 +239,7 @@ var SelectedDevices = createReactClass({
       <div key="decommissionButton">
         <ListItem
           style={this.props.styles.listStyle}
-          primaryText={status === "accepted" ? "Block or decommission this device" : "Decommission this device"}
+          primaryText={status === "accepted" ? "Reject or decommission this device" : "Decommission this device"}
           onClick={this._handleBlock.bind(null, true)}
           leftIcon={<FontIcon className="material-icons auth" style={{marginTop:6, marginBottom:6}}>block</FontIcon>} />
         <Divider />
@@ -283,7 +283,7 @@ var SelectedDevices = createReactClass({
             <Divider />
             <ListItem
               style={this.props.styles.listStyle}
-              primaryText="Block device"
+              primaryText="Reject device"
               onClick={this._handleBlock.bind(null, false)}
               leftIcon={<FontIcon className="material-icons red auth" style={{marginTop:6, marginBottom:6}}>cancel</FontIcon>} />
           </List>
