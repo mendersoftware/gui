@@ -232,7 +232,7 @@ var SelectedDevices = createReactClass({
 
     var deviceInventory2 = [];
     if (deviceInventory.length > deviceIdentity.length) {
-      deviceInventory2 = deviceInventory.splice((deviceInventory.length/2)+(deviceInventory.length%2),deviceInventory.length);
+      deviceInventory2 = deviceInventory.splice((deviceInventory.length/2)+(deviceInventory.length%2)+1,deviceInventory.length);
     }
 
     var decommission = (
