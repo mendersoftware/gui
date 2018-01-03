@@ -54,8 +54,7 @@ var Header = createReactClass({
       hasDeployments: AppStore.getHasDeployments(),
       multitenancy: AppStore.hasMultitenancy(),
       deviceLimit: AppStore.getDeviceLimit(),
-      inProgress: AppStore.getNumberInProgress(),
-      isHosted: (window.location.hostname === "hosted.mender.io")
+      inProgress: AppStore.getNumberInProgress()
     };
   },
   componentWillMount: function() {
@@ -264,7 +263,7 @@ var Header = createReactClass({
         <MenuItem primaryText="My organization" value="/settings/my-organization" className={this.state.multitenancy ? null : "hidden" } />
         <MenuItem primaryText="User management" value="/settings/user-management" />
         <MenuItem primaryText={ this.state.showHelptips ? "Hide help tooltips" : "Show help tooltips"} value="toggleHelptips" />
-        <MenuItem primaryText="Help" value="/help" className={this.state.isHosted ? null : "hidden" } />
+        <MenuItem primaryText="Help" value="/help" />
         <MenuItem primaryText="Log out" value="/login" rightIcon={<ExitIcon style={{color: "#c7c7c7", fill: "#c7c7c7"}} />} />
       </DropDownMenu>
     );

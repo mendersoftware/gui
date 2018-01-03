@@ -42,7 +42,7 @@ var components = {
       },
     },
     "demo-artifacts": {
-      title: "Download demo artifacts",
+      title: "Download demo Artifacts",
       component: DemoArtifacts,
     },
     "build-with-yocto": {
