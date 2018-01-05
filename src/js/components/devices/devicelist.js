@@ -480,13 +480,13 @@ var DeviceList = createReactClass({
                   data-tip
                   data-for='expand-device-tip'
                   data-event='click focus'
-                  style={{left: "inherit", right:"45px", bottom: "132px"}}>
+                  style={{left: "inherit", right:"45px", bottom: "85px"}}>
                   <FontIcon className="material-icons">help</FontIcon>
                 </div>
                 <ReactTooltip
                   id="expand-device-tip"
                   globalEventOff='click'
-                  place="left"
+                  place="bottom"
                   type="light"
                   effect="solid"
                   className="react-tooltip">
