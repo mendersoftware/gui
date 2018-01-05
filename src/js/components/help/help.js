@@ -14,6 +14,7 @@ import MoreHelp from './more-help-resources';
 import { isEmpty } from '../../helpers';
 import BoardIcon from 'react-material-icons/icons/hardware/developer-board';
 import HelpIcon from 'react-material-icons/icons/action/help-outline';
+import Support from './support';
 
 var createReactClass = require('create-react-class');
 var AppStore = require('../../stores/app-store');
@@ -136,10 +137,11 @@ var Help =  createReactClass({
         <div className="leftFixed">
           <LeftNav pages={components} changePage={this.changePage} />
         </div>
-        <div className="rightFluid padding-right">
-          <div className="margin-top-small">
+        <div className="rightFluid padding-right" style={{marginRight:"290px"}}>
+          <div style={{position:"relative", top:"12px"}}>
             <ComponentToShow isHosted={this.state.isHosted} org={this.state.org} links={this.state.links} hasMultitenancy={this.state.hasMultitenancy} isEmpty={isEmpty} pages={components} changePage={this.changePage} />
             { ComponentToShow !== HelpTopics ? <p className="margin-top-large"><a onClick={this.changePage.bind(null, "/help")}>&lsaquo; Back to help topics</a></p> : null }
+            <Support />
           </div>
         </div>
       </div>

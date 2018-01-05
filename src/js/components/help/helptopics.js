@@ -22,10 +22,12 @@ var HelpTopics = createReactClass({
   	var helpSections = sections.map(function(section, index) {
   		var Icon = section.icon;
   		return (
-  			<Paper zDepth={1} key={index} className="help-section" onClick={self._clickLink.bind(null, section.path)}>
-  				<Icon />
-  				<p>{section.title}</p>
-  			</Paper>
+  			<a onClick={self._clickLink.bind(null, section.path)}>
+	  			<Paper zDepth={1} key={index} className="help-section">
+	  				<Icon />
+	  				<p>{section.title}</p>
+	  			</Paper>
+  			</a>
   		)
   	});
     return (
