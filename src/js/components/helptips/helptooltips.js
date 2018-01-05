@@ -83,6 +83,7 @@ var ExpandDevice = createReactClass({
         <h3>Device inventory</h3>
         <hr/>
         <p>Mender automatically collects identity and inventory information from connected devices. You can view this information by clicking on a device to expand the row.</p>
+        <p>Which information is collected about devices is fully configurable; <a href="https://docs.mender.io/development/client-configuration/identity" target="_blank">see the documentation for how to configure this</a>.</p>
         <p><a className="hidehelp" onClick={toggleHelptips}>Hide all help tips</a></p>
       </div>
     )
@@ -144,7 +145,7 @@ var UploadArtifact = createReactClass({
         { isHosted && multitenancy ? 
           <p>To make testing easier, you can find demo Artifacts in <Link to={`/help/connecting-devices/demo-artifacts`}>the Help section</Link>. After you have grabbed the one you want, upload it here.</p>
           :
-          <p>To make testing easier, you can <a href="https://docs.mender.io/getting-started/download-test-images">download a test Mender Artifact</a> for your virtual devices. After the download finishes, upload the Artifact here.</p>
+          <p>To make testing easier, you can <a href="https://docs.mender.io/getting-started/download-test-images" target="_blank">download a test Mender Artifact</a> for your virtual devices. After the download finishes, upload the Artifact here.</p>
         }
 
         <p>You can also <Link to={`/help/connecting-devices/build-with-yocto`}>learn how to build your own Artifact</Link> with Yocto.</p>
@@ -232,7 +233,7 @@ var FinishedDeployment = createReactClass({
         }
         
         <p>Clicking the row will open a more detailed report.</p>
-        <p>If you were using the test virtual device, you should now <a href="https://docs.mender.io/getting-started/deploy-to-physical-devices">visit our documentation for more about deploying to physical devices</a>.</p>
+        <p>If you were using the test virtual device, you should now <a href="https://docs.mender.io/getting-started/deploy-to-physical-devices" target="_blank">visit our documentation for more about deploying to physical devices</a>.</p>
         <p><a className="hidehelp" onClick={toggleHelptips}>Hide all help tips</a></p>
       </div>
     )
@@ -246,7 +247,7 @@ var NoDevices = createReactClass({
         <h3>No devices found</h3>
         <hr/>
         <p>There aren't any devices connected to or requesting to join the Mender server.</p>
-        <p>If you don't see any test devices, or if you have a physical device you'd like to connect, <a href="https://docs.mender.io/getting-started">read our getting started guide for help</a>.</p>
+        <p>If you don't see any test devices, or if you have a physical device you'd like to connect, <a href="https://docs.mender.io/getting-started" target="_blank">read our getting started guide for help</a>.</p>
         <p><a className="hidehelp" onClick={toggleHelptips}>Hide all help tips</a></p>
       </div>
     )
