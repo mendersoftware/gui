@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Router, Route, Link } from 'react-router';
 import cookie from 'react-cookie';
-import { isEmpty, decodeSessionToken, preformatWithRequestID } from '../../helpers';
+import { decodeSessionToken, preformatWithRequestID } from '../../helpers';
 import { clearAllRetryTimers } from '../../utils/retrytimer';
 import ReactTooltip from 'react-tooltip';
 import { toggleHelptips } from '../../utils/togglehelptips';
@@ -70,7 +70,7 @@ var Header = createReactClass({
     this.setState(this.getInitialState());
   },
   componentDidUpdate: function(prevProps, prevState) {
-    if (!this.state.sessionId || isEmpty(this.state.user) || (this.state.user === null) ) {
+    if (!this.state.sessionId) {
        this._updateUsername();
     } else {
       if (prevState.sessionId!==this.state.sessionId ) {
@@ -185,6 +185,7 @@ var Header = createReactClass({
   },
   _updateUsername: function() {
     var self = this;
+
     // get current user
     if (!self.state.gettingUser) {
       var callback = {
@@ -195,9 +196,9 @@ var Header = createReactClass({
           self._checkHeaderInfo();
         },
         error: function(err) {
+          var errMsg = err.res.body.error || ""
+          AppStore.setSnackbar(preformatWithRequestID(err.res, "Can't get user details. " + errMsg));
           self.setState({gettingUser: false});
-          var errMsg = err.res.error;
-          console.log(errMsg);
         }
       };
 
