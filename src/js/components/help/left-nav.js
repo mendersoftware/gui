@@ -59,7 +59,7 @@ var LeftNav =  createReactClass({
     return (
         <div>
           <List>
-            <Subheader onClick={self._clickLink.bind(null, "/help")}>Help topics</Subheader>
+            <Subheader onClick={self._clickLink.bind(null, "/help")}><div style={{cursor: "pointer"}}>Help topics</div></Subheader>
             {nav}
           </List>
         </div>
