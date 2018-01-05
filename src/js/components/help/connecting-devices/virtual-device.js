@@ -39,7 +39,8 @@ var VirtualDevice =  createReactClass({
 
               <div>
                 <h4>Your Hosted Mender tenant token</h4>
-                <p>For security reasons, devices can only authenticate with Hosted Mender if they have a valid tenant token.</p>
+                <p>For security reasons, devices can only authenticate with Hosted Mender if they have a valid tenant token. 
+                The tenant token is unique for your organization and ensures that only devices that you own are able to connect to your Hosted Mender account, so please keep it secure.</p>
                 <p>You can see your tenant token by clicking your user email at the top right and then choosing "My organization".</p>
                 <p>Note however that we have pasted your tenant token in for you in the instructions below.</p>
                 </div>
