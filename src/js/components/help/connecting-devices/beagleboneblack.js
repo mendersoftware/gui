@@ -5,12 +5,20 @@ var createReactClass = require('create-react-class');
 
 
 var BeagleBoneBlack =  createReactClass({
-
  
   render: function() {
-    var version = "1.2.1";
+    var version;
     var link = {};
     if (!this.props.isEmpty(this.props.links)) {
+
+     var versions = Object.keys(this.props.links.links.beaglebone);
+     if (versions.length >1) {
+      version = this.props.getLatest(versions);
+     } else {
+      version = versions[0];
+     }
+
+
       for (var fileName in this.props.links.links.beaglebone[version]) {
         if (fileName.indexOf('sdimg') != -1) {
           link = {name: fileName, href:this.props.links.links.beaglebone[version][fileName]};
