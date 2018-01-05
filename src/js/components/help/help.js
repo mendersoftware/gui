@@ -15,6 +15,7 @@ import { isEmpty } from '../../helpers';
 import BoardIcon from 'react-material-icons/icons/hardware/developer-board';
 import HelpIcon from 'react-material-icons/icons/action/help-outline';
 import Support from './support';
+import { versionCompare } from '../../helpers.js';
 
 var createReactClass = require('create-react-class');
 var AppStore = require('../../stores/app-store');
@@ -115,6 +116,12 @@ var Help =  createReactClass({
     this.context.router.push(path);
   },
 
+  _getLatest: function(array) {
+    // returns latest version of format x.x.x
+    array.sort(versionCompare);
+    return(array[array.length-1]);
+  },
+
   render: function() {
     var ComponentToShow = HelpTopics;
   
@@ -139,7 +146,7 @@ var Help =  createReactClass({
         </div>
         <div className="rightFluid padding-right" style={{marginRight:"290px"}}>
           <div style={{position:"relative", top:"12px"}}>
-            <ComponentToShow isHosted={this.state.isHosted} org={this.state.org} links={this.state.links} hasMultitenancy={this.state.hasMultitenancy} isEmpty={isEmpty} pages={components} changePage={this.changePage} />
+            <ComponentToShow getLatest={this._getLatest} isHosted={this.state.isHosted} org={this.state.org} links={this.state.links} hasMultitenancy={this.state.hasMultitenancy} isEmpty={isEmpty} pages={components} changePage={this.changePage} />
             { ComponentToShow !== HelpTopics ? <p className="margin-top-large"><a onClick={this.changePage.bind(null, "/help")}>&lsaquo; Back to help topics</a></p> : null }
             <Support />
           </div>

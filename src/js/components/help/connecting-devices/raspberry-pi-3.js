@@ -8,9 +8,18 @@ var RaspberryPi =  createReactClass({
 
  
   render: function() {
-    var version = "master";
+    var version;
     var link = {};
     if (!this.props.isEmpty(this.props.links)) {
+
+     var versions = Object.keys(this.props.links.links.raspberrypi3);
+     if (versions.length >1) {
+      version = this.props.getLatest(versions);
+     } else {
+      version = versions[0];
+     }
+
+
       for (var fileName in this.props.links.links.raspberrypi3[version]) {
         if (fileName.indexOf('sdimg') != -1) {
           link = {name: fileName, href:this.props.links.links.raspberrypi3[version][fileName]};
