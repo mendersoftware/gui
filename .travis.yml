@@ -83,7 +83,7 @@ before_deploy:
     - docker tag $DOCKER_REPOSITORY $DOCKER_REPOSITORY:$IMAGE_TAG
 
     # Upload image to docker registry only on PUSH
-    - docker login --email=$DOCKER_HUB_EMAIL --username=$DOCKER_HUB_USERNAME --password=$DOCKER_HUB_PASSWORD
+    - docker login --username=$DOCKER_HUB_USERNAME --password=$DOCKER_HUB_PASSWORD
 
     - docker push $DOCKER_REPOSITORY:$IMAGE_TAG
 
