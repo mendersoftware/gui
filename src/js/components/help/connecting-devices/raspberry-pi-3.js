@@ -52,7 +52,7 @@ var RaspberryPi =  createReactClass({
         {!this.props.isEmpty(link) ? 
           <p><a href={link.href}>Download the correct disk image for Raspberry Pi 3 here</a>.</p>
           :
-          <p>Download the correct disk image for Raspberry Pi 3 from <a href="https://docs.mender.io/getting-started/download-test-images" target="_blank">the downloads page</a>.</p>
+          <p>Download the correct disk image for Raspberry Pi 3 from <a href="https://docs.mender.io/development/getting-started/download-test-images" target="_blank">the downloads page</a>.</p>
         }
 
         <p>After the image has been downloaded, unpack it:</p>

@@ -73,8 +73,8 @@ var VirtualDevice =  createReactClass({
           <p>A virtual device is bundled with the Mender server to make it easy to test Mender.</p>
 
           <h3>Prerequisites</h3>
-          <p>The test environment should be set up and working successfully as described in the <a href="https://docs.mender.io/getting-started/create-a-test-environment" target="_blank">Install a Mender demo server</a> documention.</p>
-          <p>You should also download the virtual Artifacts listed on the <a href="https://docs.mender.io/getting-started/download-test-images" target="_blank">the download page</a>.</p>
+          <p>The test environment should be set up and working successfully as described in the <a href="https://docs.mender.io/development/getting-started/create-a-test-environment" target="_blank">Install a Mender demo server</a> documention.</p>
+          <p>You should also download the virtual Artifacts listed on the <a href="https://docs.mender.io/development/getting-started/download-test-images" target="_blank">the download page</a>.</p>
         
           <h3>Authorize the device</h3>
           <p>A minute or two after the server has started, there should be a virtual device pending authorization. This means that the Mender client, which runs as a daemon on the device, 

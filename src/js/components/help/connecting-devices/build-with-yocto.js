@@ -15,7 +15,7 @@ var BuildYocto =  createReactClass({
         <h2>Build with Yocto</h2>
         <p>You can build disk images and Artifacts with any software of your choosing that support Mender for any device with the Mender Yocto Project integration.</p>
 
-        <p>Follow the docs at <a href="https://docs.mender.io/artifacts/building-mender-yocto-image">https://docs.mender.io/artifacts/building-mender-yocto-image</a> to get your .sdimg and .mender files.</p>
+        <p>Follow the docs at <a href="https://docs.mender.io/development/artifacts/building-mender-yocto-image">https://docs.mender.io/development/artifacts/building-mender-yocto-image</a> to get your .sdimg and .mender files.</p>
 
         
         {this.props.isHosted ? 
@@ -37,7 +37,7 @@ var BuildYocto =  createReactClass({
               <p>MENDER_TENANT_TOKEN = "{token}"</p>
             </div>
 
-            <p>You can the use the output .sdimg and .mender files to connect to your Mender server and deploy updates, as outlined <a href="https://docs.mender.io/artifacts/building-mender-yocto-image" target="_blank">in the tutorial</a>.</p>
+            <p>You can the use the output .sdimg and .mender files to connect to your Mender server and deploy updates, as outlined <a href="https://docs.mender.io/development/artifacts/building-mender-yocto-image" target="_blank">in the tutorial</a>.</p>
           </div>
           
           :
