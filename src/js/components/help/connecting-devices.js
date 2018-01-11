@@ -31,6 +31,16 @@ var ConnectingDevices =  createReactClass({
 	         <br/>
 	         <p>Topic pages:</p>
 	         {links}
+
+	         <br/>
+	         <p>Note: there are security implications to connecting a client and server for the first time, also known as <i>bootstrapping</i>. 
+	         If a client and server have not exchanged any information in advance, they need to accept each other on trust this first time, 
+	         with the risk that the information the other party presents is spoofed. To mitigate this risk, the Mender client preinstalls 
+	         the TLS certificate of the server when it is provisioned, as part of the Yocto Project image build. So it is not possible for 
+	         a rogue server to intercept the connection from a client or pretend to be a different server, assuming server's private TLS key 
+	         is securely managed. A rogue device can still spoof the information it sends to the server in order to be authorized, and this 
+	         is why Mender asks you to make the authorization decision. However, the risk of letting the server manage a rogue device is much 
+	         lower than the risk of a rogue server managing devices.</p>
 	       </div>
 	    )
 	}

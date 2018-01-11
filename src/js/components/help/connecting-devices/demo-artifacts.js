@@ -46,8 +46,8 @@ var DemoArtifacts =  createReactClass({
     				<TableRow key={link.name+index}>
 						<TableRowColumn>{link.name}</TableRowColumn>
 						<TableRowColumn>{link.version}</TableRowColumn>
-						<TableRowColumn><a href="{link.link1}">{link.link1}</a></TableRowColumn>
-						<TableRowColumn><a href="{link.link2}">{link.link2}</a></TableRowColumn>
+						<TableRowColumn><a href={link.link1}>{link.link1}</a></TableRowColumn>
+						<TableRowColumn><a href={link.link2}>{link.link2}</a></TableRowColumn>
 					</TableRow>
 				)
 	    	}
