@@ -96,8 +96,16 @@ var DevicesNav = createReactClass({
       <div>
         <h3>Devices</h3>
         <hr/>
+        { this.props.devices ? 
+          <div>
         <p>There {this.props.devices === 1 ? "is a device" : "are devices"} waiting to be connected to the Mender server. Before you can manage any deployments, you must first authorize devices that are requesting to join.</p>
-        <p>Go to the <Link to={`/devices`}>Devices tab</Link> to add devices to the server.</p>
+        <p>Go to the <Link to={`/devices`}>Devices tab</Link> to add devices to the server.</p></div>
+        : 
+        <div>
+        <p>There aren't any devices connected yet.</p>
+        <p>The first step is to connect devices to the Mender server.</p>
+        <p>Go to the <Link to={`/devices`}>Devices tab</Link>.</p></div>
+        }
         <p><a className="hidehelp" onClick={toggleHelptips}>Hide all help tips</a></p>
       </div>
     )
@@ -162,7 +170,7 @@ var ExpandArtifact = createReactClass({
       <div>
         <h3>Device type compatibility</h3>
         <hr/>
-        <p>Mender Artifacts have <b>Device types compatible</b> as part of their metadata. All devices report which device type they are as part of their inventory information. During a deployment, Mender makes sure that a device will only get and install an Artifact it is compatible with.</p>
+        <p>Mender Artifacts have <b>Device types compatible</b> as part of their metadata. All devices report which device type they are, as part of their inventory information. During a deployment, Mender makes sure that a device will only download and install an Artifact it is compatible with.</p>
         <p>You can click on each Artifact to expand the row and view more information about it.</p>
         <p><a className="hidehelp" onClick={toggleHelptips}>Hide all help tips</a></p>
       </div>
@@ -198,7 +206,7 @@ var CreateDeploymentForm = createReactClass({
         <h3>Creating a deployment</h3>
         <hr/>
         <p>A deployment needs to know which Artifact to deploy, and which group of devices to deploy it to.</p>
-        <p>Select an Artifact and a device group containing devices of a type compatible with the selected Artifact. You can see how many devices will be updated in the deployment. When ready, <b>Create deployment</b>.</p>
+        <p>Select an Artifact and a device group containing devices of a type compatible with the selected Artifact. You can see how many devices will be updated in the deployment.</p>
         <p><a className="hidehelp" onClick={toggleHelptips}>Hide all help tips</a></p>
       </div>
     )
@@ -233,7 +241,7 @@ var FinishedDeployment = createReactClass({
         }
         
         <p>Clicking the row will open a more detailed report.</p>
-        <p>If you were using the test virtual device, you should now <a href="https://docs.mender.io/getting-started/deploy-to-physical-devices" target="_blank">visit our documentation for more about deploying to physical devices</a>.</p>
+        <p>If you were using the test virtual device, you should now <Link to={`/help/connecting-devices`}>read the help pages to learn how to provision other devices</Link>.</p>
         <p><a className="hidehelp" onClick={toggleHelptips}>Hide all help tips</a></p>
       </div>
     )
@@ -246,8 +254,9 @@ var NoDevices = createReactClass({
       <div>
         <h3>No devices found</h3>
         <hr/>
-        <p>There aren't any devices connected to or requesting to join the Mender server.</p>
-        <p>If you don't see any test devices, or if you have a physical device you'd like to connect, <a href="https://docs.mender.io/getting-started" target="_blank">read our getting started guide for help</a>.</p>
+        <p>There aren't any devices connected or requesting to join the Mender server.</p>
+        <p>When a new device is requesting to join the server it will show up here, and you will have the choice to accept it or not.</p>
+        <p>If you don't see any test devices here, or if you have a physical device you'd like to connect instead, <Link to={`/help/connecting-devices`}>try reading the help pages</Link>.</p>
         <p><a className="hidehelp" onClick={toggleHelptips}>Hide all help tips</a></p>
       </div>
     )
