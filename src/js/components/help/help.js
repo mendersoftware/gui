@@ -78,7 +78,7 @@ var Help =  createReactClass({
     var callback = {
       success: function(org) {
         self.setState({org: org});
-        self._getLinks(org.tenant_id);
+        self._getLinks(org.id);
       },
       error: function(err) {
         console.log("Error: " +err);
