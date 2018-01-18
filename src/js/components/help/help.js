@@ -78,6 +78,7 @@ var Help =  createReactClass({
     var callback = {
       success: function(org) {
         self.setState({org: org});
+        console.log("Received user's organization: " + org.id);
         self._getLinks(org.id);
       },
       error: function(err) {
@@ -94,7 +95,7 @@ var Help =  createReactClass({
         self.setState({links: response});
       },
       error: function(err) {
-        console.log("Error: " +err);
+        console.log("Error: " +err, "Tenant id: " +id);
       }
     };
     AppActions.getHostedLinks(id, callback);
