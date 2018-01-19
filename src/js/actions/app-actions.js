@@ -325,9 +325,9 @@ var AppActions = {
 
   getHostedLinks: function(id, callback) {
     GeneralApi
-      .get(hostedLinks+id+"/links.json")
+      .getNoauth(hostedLinks+id+"/links.json")
       .then(function(res) {
-        callback.success(res.body);
+        callback.success(JSON.parse(res.text));
       })
       .catch(function(err) {
         callback.error(err);
