@@ -28,7 +28,8 @@ var DemoArtifacts =  createReactClass({
 			 				var i = 0;
 
 					 		for (var tmp in versionLinks) {
-					 			if (tmp.indexOf('mender.gz') != -1) {
+					 			var lastPart = tmp.split(".").pop();
+					 			if (lastPart === "mender") {
 					 				i++;
 					 				thisRow["link"+i] = versionLinks[tmp];
 					 			}
