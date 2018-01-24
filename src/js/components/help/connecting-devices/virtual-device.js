@@ -56,9 +56,9 @@ var VirtualDevice =  createReactClass({
             {this.props.hasMultitenancy ?
 
               <div className="code">
-                <p>TENANT_TOKEN='{token}'</p>
-                <p>docker run -it -e SERVER_URL="https://hosted.mender.io" \</p>
-                <p>-e TENANT_TOKEN=$TENANT_TOKEN mendersoftware/mender-client-qemu:1.2.1</p>
+                TENANT_TOKEN='{token}'<br/>
+                docker run -it -e SERVER_URL="https://hosted.mender.io" \<br/>
+                -e TENANT_TOKEN=$TENANT_TOKEN mendersoftware/mender-client-qemu:1.2.1
               </div>
             : null }
 
