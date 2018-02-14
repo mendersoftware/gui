@@ -38,8 +38,10 @@ module.exports = (
   <Route path="/" component={App}>
     <IndexRoute component={Dashboard} onEnter={requireAuth} />
     <Route path="/devices" component={Devices} onEnter={requireAuth} >
-      <Route path="(:groupId)">
-        <Route path="(:filters)" />
+      <Route path="(:tab)">
+        <Route path="(:groupId)">
+          <Route path="(:filters)" />
+        </Route>
       </Route>
     </Route>
     <Route path="/artifacts" component={Artifacts} onEnter={requireAuth}>

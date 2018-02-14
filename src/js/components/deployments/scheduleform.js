@@ -111,7 +111,7 @@ var ScheduleForm = createReactClass({
         singleFilter = encodeURIComponent(singleFilter);
         return (
           <div className="hint--bottom hint--medium" style={{width:"100%"}} aria-label={item.id} key={index}>
-            <p className="text-overflow"><Link to={`/devices/${this.state.group}/${singleFilter}`}>{item.id}</Link></p>
+            <p className="text-overflow"><Link to={`/devices/groups/${this.state.group}/${singleFilter}`}>{item.id}</Link></p>
           </div>
         )
       }, this);
@@ -197,7 +197,7 @@ var ScheduleForm = createReactClass({
             <div style={{width:"100%"}} className={this.state.disabled ? 'inline-block' : 'hidden'}>
               <TextField
                 style={{width:"100%"}}
-                value={this.props.device ? this.props.device.id : ""}
+                value={this.props.device ? this.props.device.device_id : ""}
                 ref="device"
                 floatingLabelText="Device"
                 disabled={this.state.disabled}

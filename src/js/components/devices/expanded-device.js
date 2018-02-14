@@ -4,6 +4,7 @@ import Time from 'react-time';
 import Collapse from 'react-collapse';
 var createReactClass = require('create-react-class');
 import ReactTooltip from 'react-tooltip';
+import PropTypes from 'prop-types';
 
 var AppStore = require('../../stores/app-store');
 var AppActions = require('../../actions/app-actions');
@@ -26,7 +27,7 @@ function getGroups() {
   return copy
 }
 
-var SelectedDevices = createReactClass({
+var ExpandedDevice = createReactClass({
   getInitialState: function() {
     return {
       showInput: false,
@@ -35,7 +36,28 @@ var SelectedDevices = createReactClass({
         text: ''
       },
       schedule: false,
+      artifacts: AppStore.getArtifactsRepo(),
     };
+  },
+
+  componentDidMount: function() {
+    this._getArtifacts();
+  },
+
+  _getArtifacts: function() {
+    var self = this;
+    var callback = {
+      success: function(artifacts) {
+        
+        setTimeout(function() {
+          self.setState({artifacts:artifacts});
+        }, 300);
+      },
+      error: function(err) {
+        var errormsg = err.error || "Please check your connection";
+      }
+    };
+    AppActions.getArtifacts(callback);
   },
 
   dialogToggle: function (ref) {
@@ -60,8 +82,8 @@ var SelectedDevices = createReactClass({
   _onScheduleSubmit: function() {
     var self = this;
     var newDeployment = {
-      devices: [this.props.device.id],
-      name: this.props.device.id,
+      devices: [this.props.device.device_id],
+      name: this.props.device.device_id,
       artifact_name: this.state.artifact.name
     }
     var callback = {
@@ -70,7 +92,7 @@ var SelectedDevices = createReactClass({
         var params = {};
         params.route="deployments";
         setTimeout(function() {
-          self.props.redirect(params);
+          self.context.router.push(params.route);
         }, 1200)
       },
       error: function(err) {
@@ -92,10 +114,10 @@ var SelectedDevices = createReactClass({
       this.props.accept([this.props.device], accept);
     }
   },
-  _handleBlock: function(remove) {
+  _handleReject: function(status) {
     // if previously rejected, set 'remove' to true in order for device to be handled by devauth api
     // otherwise, handled by devadmn api
-    this.props.block(this.props.device, remove);
+    this.props.rejectOrDecomm(this.props.device, status);
   },
 
   _handleStopProp: function(e) {
@@ -127,46 +149,38 @@ var SelectedDevices = createReactClass({
 
     var deviceIdentity = [];
     deviceIdentity.push(
-      <div key="id_checksum">
-        <ListItem style={this.props.styles.listStyle} disabled={true} primaryText="ID" secondaryText={(this.props.device || {}).id || ''} secondaryTextLines={2} className="break-word" />
-        <Divider />
-      </div>
+        <ListItem key="id_checksum" style={this.props.styles.listStyle} disabled={true} primaryText="ID" secondaryText={(this.props.device || {}).device_id || ''} secondaryTextLines={2} />
     );
 
     if ((this.props.device || {}).id_data) {
-      var length = Object.keys(this.props.device.id_data).length;
-      for (var k in this.props.device.id_data) {
-        var idx = Object.keys(this.props.device.id_data).indexOf(k); // use idx to tell whether or not to show divider line afterwards
+      var data = typeof this.props.device.id_data == "object" ? this.props.device.id_data : JSON.parse(this.props.device.id_data);
+      for (var k in data) {
         deviceIdentity.push(
-          <div key={k}>
-            <ListItem style={this.props.styles.listStyle} disabled={true} primaryText={k} secondaryText={ this.props.device.id_data[k]} />
-            { (this.props.device.created_ts || (idx<length-1) ) ? <Divider /> : null}
-          </div>
+          <ListItem key={k} style={this.props.styles.listStyle} disabled={true} primaryText={k} secondaryText={ data[k] } />
         );
-        i++;
       };
     }
 
-    if ((this.props.device || {}).created_ts) {
+    if ((this.props.device || {}).request_time) {
       deviceIdentity.push(
         <div key="connectionTime">
-          <ListItem style={this.props.styles.listStyle} disabled={true} primaryText="First connection time" secondaryText={<div><Time value={this.props.device.created_ts} format="YYYY-MM-DD HH:mm" /></div>} />
+          <ListItem style={this.props.styles.listStyle} disabled={true} primaryText="First connection time" secondaryText={<div><Time value={this.props.device.request_time} format="YYYY-MM-DD HH:mm" /></div>} />
         </div>
       );
     }
 
     var deviceInventory = [];
-    var createDeployment;
 
-    var status = this.props.device.auth_sets ? this.props.device.auth_sets[0].status : "";
+    var status = this.props.device.status;
+    var waiting = false;
+    if (typeof this.props.attrs !== 'undefined' && this.props.attrs.length>0) {
 
-    if (typeof this.props.device.attributes !== 'undefined' && this.props.device.attributes.length>0) {
-      var sortedAttributes = this.props.device.attributes.sort(function (a, b) {
+      var sortedAttributes = this.props.attrs.sort(function (a, b) {
           return a.name.localeCompare( b.name );
       });
       for (var i=0;i<sortedAttributes.length;i++) {
         var secondaryText = (sortedAttributes[i].value instanceof Array) ? sortedAttributes[i].value.toString() : sortedAttributes[i].value;
-        var secondaryTextLines = (sortedAttributes[i].value instanceof Array) ? 2 : 1;
+        var secondaryTextLines = (sortedAttributes[i].value instanceof Array) || (secondaryText.length>50 ) ? 2 : 1;
         deviceInventory.push(
           <div key={i}>
             <ListItem style={this.props.styles.listStyle} disabled={true} primaryText={sortedAttributes[i].name} secondaryText={secondaryText} secondaryTextLines={secondaryTextLines} />
@@ -175,19 +189,8 @@ var SelectedDevices = createReactClass({
         );
       };
 
-      createDeployment = (
-        <div key="updateButton">
-          <ListItem
-            className={status === "accepted" ? null : "hidden"}
-            style={this.props.styles.listStyle}
-            primaryText="Create a deployment for this device"
-            onClick={this._clickListItem}
-            leftIcon={<FontIcon style={{marginTop:6, marginBottom:6}} className="material-icons update">replay</FontIcon>} />
-            <Divider />
-        </div>
-      );
-
     } else {
+      waiting = true;
       deviceInventory.push(
         <div className="waiting-inventory" key="waiting-inventory">
           <div
@@ -218,77 +221,75 @@ var SelectedDevices = createReactClass({
       );
     }
 
-    var reauthButton = (
-      <div key="reauthButton">
-        <ListItem
-          style={this.props.styles.listStyle}
-          primaryText={"Authorization status: " + status}
-          secondaryText="Authorize this device?"
-          onClick={this._handleAccept.bind(null, true)}
-          leftIcon={<FontIcon className="material-icons red auth" style={{marginTop:6, marginBottom:6}}>cancel</FontIcon>} />
-         <Divider />
-      </div>
-    );
+    var reauthButton = (status === "rejected") ? (
+      <ListItem
+        key="reauthButton"
+        style={this.props.styles.listButtonStyle}
+        primaryText={"Authorization status: " + status}
+        secondaryText="Authorize this device?"
+        onClick={this._handleAccept.bind(null, true)}
+        leftIcon={<FontIcon className="material-icons red" style={{margin: "12px 0 12px 12px"}}>cancel</FontIcon>} />
+    ) : null;
 
     var deviceInventory2 = [];
     if (deviceInventory.length > deviceIdentity.length) {
-      deviceInventory2 = deviceInventory.splice((deviceInventory.length/2)+(deviceInventory.length%2)+1,deviceInventory.length);
+      deviceInventory2 = deviceInventory.splice((deviceInventory.length/2)+(deviceInventory.length%2),deviceInventory.length);
     }
 
-    var decommission = (
-      <div key="decommissionButton">
+    var decommission = (status !== "pending") ? (
         <ListItem
-          style={this.props.styles.listStyle}
-          primaryText={status === "accepted" ? "Reject or decommission this device" : "Decommission this device"}
-          onClick={this._handleBlock.bind(null, true)}
-          leftIcon={<FontIcon className="material-icons auth" style={{marginTop:6, marginBottom:6}}>block</FontIcon>} />
-        <Divider />
-      </div>
-    );
+          key="decommissionButton"
+          style={this.props.styles.listButtonStyle}
+          primaryText={"Authorization status: " + status}
+          secondaryText={status === "accepted" ? "Reject or decommission this device?" : "Authorize or decommission this device?"}
+          onClick={this._handleReject.bind(null, status)}
+          leftIcon={<FontIcon className={status === "accepted" ? "material-icons green" : "material-icons"} style={{margin: "12px 0 12px 12px"}}>{status === "accepted" ? "check_circle" : "block" }</FontIcon>} />
+    ) : null;
+    deviceIdentity.push(decommission);
+
 
     var deviceInfo = (
       <div key="deviceinfo">
         <div id="device-identity" className="report-list">
           <h4 className="margin-bottom-none">Device identity</h4>
-          <List>
+          <List className="list-horizontal-display">
             {deviceIdentity}
           </List>
         </div>
 
-        <div className={this.props.unauthorized ? "hidden" : "report-list"} >
-          <h4 className="margin-bottom-none">Device inventory</h4>
-          <List>
-            {deviceInventory}
-          </List>
+        <div id="device-inventory">
+          <div className={this.props.unauthorized ? "hidden" : "report-list"} >
+            <h4 className="margin-bottom-none">Device inventory</h4>
+            <List>
+              {deviceInventory}
+            </List>
+          </div>
+    
+
+          <div className={this.props.unauthorized ? "hidden" : "report-list"} >
+            <List style={{marginTop:"34px"}}>
+              {deviceInventory2}
+            </List>
+          </div>
+
         </div>
 
-        <div className={this.props.unauthorized ? "hidden" : "report-list"} >
-          <List style={{marginTop:"34px"}}>
-            {deviceInventory2}
-            {status !== "accepted" ? reauthButton : null}
-            {decommission}
-            {createDeployment}
-          </List>
-        </div>
-
-        <div className={this.props.unauthorized ? "report-list" : "hidden"}>
-          <List style={{marginTop:"-8px"}}>
-            <ListItem
-              onClick={this._handleAccept}
-              disabled={this.props.disabled}
-              style={this.props.styles.listStyle}
-              innerDivStyle={this.props.disabled ? {color: "#c7c7c7", marginTop:"12px", marginBottom:"12px"} : null}
-              primaryText="Authorize device"
-              leftIcon={<FontIcon className={this.props.disabled ? "material-icons auth" : "material-icons green auth"} style={{marginTop:6, marginBottom:6}}>check_circle</FontIcon>} />
-            <Divider />
-            <ListItem
-              style={this.props.styles.listStyle}
-              primaryText="Reject device"
-              onClick={this._handleBlock.bind(null, false)}
-              leftIcon={<FontIcon className="material-icons red auth" style={{marginTop:6, marginBottom:6}}>cancel</FontIcon>} />
-          </List>
-        </div>
-
+        { (status==="accepted" && !waiting) ? 
+          (
+            <div className="report-list">
+              <List style={{marginTop:"24px", minWidth: "300px"}}>
+                <ListItem
+                key="updateButton"
+                className={status === "accepted" ? null : "hidden"}
+                style={this.props.styles.listButtonStyle}
+                primaryText="Create a deployment for this device"
+                onClick={this._clickListItem}
+                leftIcon={<FontIcon className="material-icons update" style={{margin: "12px 0 12px 12px"}}>replay</FontIcon>} />
+              </List>
+            </div>
+          ) : null
+        }
+      
       </div>
     );
 
@@ -318,7 +319,7 @@ var SelectedDevices = createReactClass({
           bodyStyle={{paddingTop:"0", fontSize:"13px"}}
           contentStyle={{overflow:"hidden", boxShadow:"0 14px 45px rgba(0, 0, 0, 0.25), 0 10px 18px rgba(0, 0, 0, 0.22)"}}
           >
-          <ScheduleForm deploymentDevices={[this.props.device]} filteredDevices={this.state.filterByArtifact} deploymentSettings={this._deploymentParams} artifact={this.state.artifact} artifacts={this.props.artifacts} device={this.props.device} deploymentSchedule={this._updateParams} groups={this.props.groups} />
+          <ScheduleForm deploymentDevices={[this.props.device]} filteredDevices={this.state.filterByArtifact} deploymentSettings={this._deploymentParams} artifact={this.state.artifact} artifacts={this.state.artifacts} device={this.props.device} deploymentSchedule={this._updateParams} groups={this.props.groups} />
 
         </Dialog>
 
@@ -327,4 +328,8 @@ var SelectedDevices = createReactClass({
   }
 });
 
-module.exports = SelectedDevices;
+ExpandedDevice.contextTypes = {
+  router: PropTypes.object
+};
+
+module.exports = ExpandedDevice;

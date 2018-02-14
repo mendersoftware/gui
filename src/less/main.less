@@ -350,9 +350,12 @@ a, span.link {
 }
 
 .rightFluid {
-  margin-left: 290px;
+  margin-left: 260px;
   padding-bottom: 30px;
+  padding-left: 30px;
   position: relative;
+  border-left: 1px solid @lightestgrey;
+  min-height: 75vh;
 }
 
 .tableActions {
@@ -370,7 +373,6 @@ a, span.link {
 }
 
 .dialogTableContainer {
-  padding-top: 60px;
   .transition(opacity 0.4s ease-in) !important;
   overflow: hidden;
   position: relative;
@@ -389,6 +391,7 @@ a, span.link {
   width: 50%;
   display: inline-block;
   padding: 10px;
+  vertical-align: top;
 
   &.left-border {
     border-left: solid 1px @lightgrey;
@@ -737,6 +740,21 @@ table thead.clickable tr>th:first-child {
   vertical-align: top;
 }
 
+#device-identity .list-horizontal-display > div {
+    float: left;
+    vertical-align: top;
+    margin-right: 30px;
+    height: 70px;
+}
+
+#device-inventory .report-list {
+    width: 45%;
+}
+
+.expandedButton {
+  margin-top: 12px;
+}
+
 .file-details {
   display: inline-block;
   width: 22%;
@@ -746,10 +764,6 @@ table thead.clickable tr>th:first-child {
   border: 1px solid @lightgrey;
 }
 
-.report-list div>span>div>div {
-  padding-top: 10px !important;
-  padding-bottom: 10px !important;
-}
 
 .listItem-link {
   float: right;
@@ -1090,10 +1104,8 @@ tr.expand {
   }
 
   #device-identity {
-    border: 1px solid @lightgrey;
-    padding: 0 15px;
     position:relative;
-    border-radius: 5px;
+    width: 100%;
   }
 
   div.waiting-inventory {
@@ -1117,8 +1129,8 @@ tr.expand {
     div.expanded {
       position: absolute;
       left: 0;
-      margin-top: 45px;
-      padding: 0 45px 0 60px;
+      margin-top: 60px;
+      padding: 0 45px 0 84px;
       right: 0;
     }
 
@@ -1140,18 +1152,26 @@ tr.expand {
 }
 
 
+td.no-click-cell {
+  padding: 0 !important;
+  > div {
+    padding: 17px 24px;
+  }
+}
+
+
 
 /* Buttons */
 
 .fixedButtons {
   position: fixed;
-  bottom: 15px;
+  bottom: 30px;
   right: 30px;
-  padding-left: 30px;
+  padding: 15px 30px;
+  width: 100%;
   background-color: rgba(255,255,255,0.8);
   .animation(fadein 0.3s 1);
-  border-bottom-left-radius: 2px;
-  border-top-left-radius: 2px;
+  z-index: 1;
 }
 
 .top-right-button {
@@ -1710,11 +1730,6 @@ span.month, span.day {
     padding: 0 15px;
   }
 }
-
-.heightTransition {
-  .transition(all 0.5s ease-in-out);
-}
-
 
 
 .material-list-item {

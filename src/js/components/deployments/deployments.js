@@ -256,30 +256,13 @@ var Deployments = createReactClass({
     var devs = [];
     var callback = {
       success: function(devices) {
-        for (var x=0;x<devices.length;x++) {
-          // get full details, not just id
-          getDevicesWithDetails(devices[x], x, devices.length);
-        }
+        tmp[group] = devices;
+        self.setState(tmp);
       },
       error: function(err) {
         console.log(err);
       }
     };
-
-    function getDevicesWithDetails(id, idx, max) {
-      AppActions.getDeviceById(id, {
-        success: function(device) {
-          devs.push(device);
-          if (idx === max-1) {
-            tmp[group] = devs;
-            self.setState(tmp);
-          }
-        },
-        error: function(err) {
-          console.log(err);
-        }
-      })
-    }
     AppActions.getDevices(callback, 1, 100, group, null, true);
   },
   componentWillUnmount: function () {

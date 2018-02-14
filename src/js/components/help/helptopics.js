@@ -22,7 +22,7 @@ var HelpTopics = createReactClass({
   	var helpSections = sections.map(function(section, index) {
   		var Icon = section.icon;
   		return (
-  			<a onClick={self._clickLink.bind(null, section.path)}>
+  			<a key={index} onClick={self._clickLink.bind(null, section.path)}>
 	  			<Paper zDepth={1} key={index} className="help-section">
 	  				<Icon />
 	  				<p>{section.title}</p>
