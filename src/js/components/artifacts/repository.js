@@ -48,7 +48,7 @@ var Repository = createReactClass({
       tmpFile: null,
       openSnack: false,
       autoHideDuration: 8000,
-      divHeight: 148,
+      divHeight: 178,
     };
   },
 
@@ -174,7 +174,7 @@ var Repository = createReactClass({
     return;
   },
   _adjustCellHeight: function(height) {
-    this.setState({divHeight: height+80});
+    this.setState({divHeight: height+110});
   },
   _handleRemove: function() {
     // pass artifact to be removed up to parent to trigger dialog
