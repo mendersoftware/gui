@@ -62,6 +62,9 @@ var Artifacts = createReactClass({
         setTimeout(function() {
           self.setState({doneLoading: true, artifacts:artifacts});
         }, 300);
+        setTimeout(function() {
+          AppActions.setSnackbar("");
+        }, 4000);
       },
       error: function(err) {
         var errormsg = err.error || "Please check your connection";

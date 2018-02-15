@@ -17,7 +17,6 @@ import FontIcon from 'material-ui/FontIcon';
 function getState() {
   return {
     progress: AppStore.getDeploymentsInProgress(),
-    health: AppStore.getHealth(),
     devices: AppStore.getAllDevices(),
     recent: AppStore.getPastDeployments(),
     activity: AppStore.getActivity(),
@@ -117,6 +116,9 @@ var Dashboard = createReactClass({
         var filters = params.status ? encodeURIComponent("status="+params.status) : '';
         this.context.router.push('/devices/'+filters);
         break;
+      case "devices/pending":
+        this.context.router.push('/devices/pending');
+        break;
     }
   },
 
@@ -140,7 +142,7 @@ var Dashboard = createReactClass({
             <p>There {pending_str} waiting authorization</p>
             <div className="relative">
               <RaisedButton
-                onClick={this._handleClick.bind(null, {route:"devices"})}
+                onClick={this._handleClick.bind(null, {route:"devices/pending"})}
                 primary={true}
                 label="Review details"
               />

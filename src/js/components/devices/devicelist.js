@@ -4,210 +4,143 @@ import Time from 'react-time';
 import { Motion, spring } from 'react-motion';
 import Collapse from 'react-collapse';
 import ReactHeight from 'react-height';
-import { fullyDecodeURI } from '../../helpers';
 import ReactTooltip from 'react-tooltip';
 import { ExpandDevice } from '../helptips/helptooltips';
-var createReactClass = require('create-react-class');
-
-var AppStore = require('../../stores/app-store');
+var Loader = require('../common/loader');
 var AppActions = require('../../actions/app-actions');
-var SelectedDevices = require('./selecteddevices');
-var GroupSelector = require('./groupselector');
-var Filters = require('./filters');
+var ExpandedDevice = require('./expanded-device');
+var createReactClass = require('create-react-class');
 var pluralize = require('pluralize');
 
 // material ui
+var mui = require('material-ui');
 import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
-import RaisedButton from 'material-ui/RaisedButton';
-import Dialog from 'material-ui/Dialog';
-import TextField from 'material-ui/TextField';
-import FlatButton from 'material-ui/FlatButton';
-import FontIcon from 'material-ui/FontIcon';
 import IconButton from 'material-ui/IconButton';
-
+import RaisedButton from 'material-ui/RaisedButton';
+import FlatButton from 'material-ui/RaisedButton';
+import FontIcon from 'material-ui/FontIcon';
+import InfoIcon from 'react-material-icons/icons/action/info-outline';
 import Snackbar from 'material-ui/Snackbar';
+import Dialog from 'material-ui/Dialog';
+import { List, ListItem } from 'material-ui/List';
+import TextField from 'material-ui/TextField';
 
-var DeviceList = createReactClass({
+var Authorized =  createReactClass({
   getInitialState: function() {
     return {
-      errorText1: null,
-      sortCol: "status",
-      sortDown: true,
-      addGroup: false,
-      autoHideDuration: 8000,
-      snackMessage: 'Group has been removed',
-      openSnack: false,
-      nameEdit: false,
-      groupName: this.props.selectedGroup,
-      divHeight: 148,
-      groupInvalid: true,
-      selectedRows: []
-    };
-  },
-  componentDidUpdate: function(prevProps, prevState) {
-
-    if (prevProps.selectedGroup !== this.props.selectedGroup) {
-      this.setState({
-        selectedRows: [],
-        expanded: null,
-        groupName: this.props.selectedGroup,
-        nameEdit: false
-      });
-    }
-    if (prevProps.page !== this.props.page) {
-      // close expanded details when pagination changes
-      this.setState({expanded: null});
-    }
-    if (this.state.nameEdit) {
-      this.refs.editGroupName.focus();
+      minHeight: 200,
+      divHeight: 178,
+      selectedRows: [],
+      textfield: this.props.group ? decodeURIComponent(this.props.group) : "All devices",
     }
   },
 
-  _isSelected: function (index) {
-    return this.state.selectedRows.indexOf(index) !== -1;
+  componentDidUpdate(prevProps, prevState) {
+    var self = this;
+    if ((prevProps.allCount !== this.props.allCount) 
+        || (prevProps.group !== this.props.group)
+        || (prevProps.devices.length !== this.props.devices.length)
+        || (prevProps.groupCount !== this.props.groupCount)
+        || (prevProps.pageNo !== this.props.pageNo)) {
+      this.setState({selectedRows:[], expandRow: null, allRowsSelected: false});
+    }
+
+    if ((prevProps.currentTab !== this.props.currentTab) && this.props.currentTab==="Device groups") {
+      this.setState({selectedRows:[], expandRow: null});
+
+      if (prevProps.devices.length !== this.props.devices.length) {
+         this._adjustHeight();
+      }
+    }
+
+    if (prevProps.group !== this.props.group) {
+      this.setState({textfield: this.props.group ? decodeURIComponent(this.props.group) : "All devices"});
+    }
+
+    if ((prevProps.paused !== this.props.paused) && this.state.device) {
+      this._setDeviceDetails(this.state.device);
+    }
   },
+
+
+  _adjustHeight: function () {
+    // do this when number of devices changes
+    var h = this.props.devices.length * 55;
+    this.setState({minHeight: h});
+  },
+  _sortColumn: function(col) {
+    console.log("sort");
+  },
+  _expandRow: function(rowNumber) {
+    var self = this;
+    AppActions.setSnackbar("");
+    var device = this.props.devices[rowNumber];
+    if (this.state.expandRow === rowNumber) {
+      rowNumber = null;
+    }
   
-  _onRowSelection: function(selected) {
-    var self = this;
-    if (selected === "all" || selected === "none") {
-      var deviceArray = (selected === "all") ? Array.from(Array(this.props.devices.length).keys()) : [];
-      self.setState({selectedRows: deviceArray});
-    } else {
-      self.setState({selectedRows: selected});
-    }
+    self.setState({expandRow: rowNumber, device: device});
+    self._setDeviceDetails(device);
+    
   },
- 
-  _expandRow: function(rowNumber, columnId) {
-    if (columnId>-1 && columnId<5) {
-      var clickedDevice = this.props.devices[rowNumber];
-      this.props.expandRow(clickedDevice, rowNumber);
-    }
+  _adjustCellHeight: function(height) {
+    this.setState({divHeight: height+85});
   },
-  _addGroupHandler: function() {
-    var i;
-    var group = this.state.tmpGroup || this.props.selectedField;
-    for (i=0; i<this.state.selectedRows.length; i++) {
-      this._addSingleDevice(i, this.state.selectedRows.length, this.props.devices[this.state.selectedRows[i]].id, group);
-    }
-    this.dialogToggle('addGroup');
-  },
-  _removeFromGroupHandler: function(selectedRows) {
-    for (var i=0;i<selectedRows.length;i++) {
-      this._removeSingleDevice(i, selectedRows.length, this.props.devices[selectedRows[i]].id);
-    }
-  },
-  _addSingleDevice: function(idx, length, device, group) {
-    var self = this;
-    group = fullyDecodeURI(group);
-    var groupEncode = encodeURIComponent(group);
 
+   /*
+  * Get full device identity details for single selected device
+  */
+  _setDeviceDetails: function(device) {
+    var self = this;
     var callback = {
-      success: function(device) {
-        self.setState({openSnack: true, snackMessage: "Device was moved to " + group});
-        if (idx===length-1) {
-          self.props.groupsChanged(group);
-          self.setState({ selectedRows: []});
-        }
+      success: function(data) {
+        device.id_data = data.id_data;
+        device.device_id = data.id;
+        device.id = data.auth_sets[0].id;
+        device.request_time = data.request_time;
+        device.status = data.auth_sets[0].status;
+        self.setState({expandedDevice: device});
       },
       error: function(err) {
-        self.setState({openSnack: true, snackMessage: "Error moving device into group " + group});
         console.log("Error: " + err);
       }
     };
-    AppActions.addDeviceToGroup(groupEncode, device, callback);
-  },
-  _removeSingleDevice: function(idx, length, device, parentCallback) {
-    var self = this;
-    var callback = {
-      success: function(result) {
-        if (idx===length-1) {
-          // if parentcallback, whole group is being removed
-          if (parentCallback && typeof parentCallback === "function") {
-            // whole group removed
-            parentCallback();
-          } else if (length === self.props.devices.length) {
-            // else if all in group were selected and deleted, refresh group
-            self.props.groupsChanged();
-            self.setState({openSnack: true, snackMessage: "Group was removed", selectedRows: []});
-          } else {
-            self.props.groupsChanged(self.props.selectedGroup);
-            self.setState({openSnack: true, snackMessage: "Device was removed from the group", selectedRows: []});
-            self.setState({ selectedRows: [] });
-          }
-        }
-      },
-      error: function(err) {
-        console.log(err);
-      }
-    };
-    AppActions.removeDeviceFromGroup(device, this.props.selectedGroup, callback);
+    var id = device.device_id ? device.device_id : device.id;
+    AppActions.getDeviceIdentity(id, callback);
   },
 
-  _removeSelectedDevices: function() {
-    this._removeFromGroupHandler(this.state.selectedRows);
-  },
-  _removeCurrentGroup: function() {
-    var self = this;
-    self.props.pauseRefresh(true);
-    var callback = {
-      success: function(devices) {
-        // returns all group devices ids
-        for (var i=0;i<devices.length; i++) {
-          self._removeSingleDevice(i, devices.length, devices[i], finalCallback);
-        }
-      },
-      error: function(err) {
-        console.log(err);
-        self.props.pauseRefresh(false);
-      }
-    };
-    AppActions.getDevices(callback, 1, 100, this.props.selectedGroup, null, true);
-    var finalCallback = function() {
-      self.props.groupsChanged();
-      self.props.pauseRefresh(false);
-      self.setState({openSnack: true, snackMessage: "Group was removed", selectedRows: []});
-    };
-  },
 
-  dialogToggle: function (ref) {
-    var state = {};
-    state[ref] = !this.state[ref];
-    state.tmpGroup = "";
-    state.willBeEmpty = false;
-    this.props.pauseRefresh(state[ref]);
-    this.setState(state);
 
-    if (ref === "addGroup" && this.props.selectedGroup) {
-       // check if group will be left empty after moving devices
-      this._checkWillBeEmpty(this.state.groupName);
-    }
-  },
-  
-  _sortColumn: function(col) {
-    var direction;
-    if (this.state.sortCol !== col) {
-      ReactDOM.findDOMNode(this.refs[this.state.sortCol]).className = "sortIcon material-icons";
-      ReactDOM.findDOMNode(this.refs[col]).className = "sortIcon material-icons selected";
-      this.setState({sortCol:col, sortDown: true});
-      direction = true;
+  _onRowSelection: function(selectedRows) {
+    if (selectedRows === "all") {
+      var rows = Array.apply(null, {length: this.props.devices.length}).map(Number.call, Number);
+      this.setState({selectedRows: rows, allRowsSelected: true});
+    } else if (selectedRows === "none") {
+      this.setState({selectedRows: [], allRowsSelected: false});
     } else {
-      direction = !(this.state.sortDown);
-      ReactDOM.findDOMNode(this.refs[this.state.sortCol]).className = "sortIcon material-icons selected " +direction;
-      this.setState({sortDown: direction});
+      this.setState({selectedRows: selectedRows, allRowsSelected: false});
     }
-    // sort table
-    AppActions.sortTable("_currentDevices", col, direction);
+    
   },
 
-  handleRequestClose: function() {
-    this.setState({
-      openSnack: false,
-    });
+  _isSelected: function(index) {
+    return this.state.selectedRows.indexOf(index) !== -1;
   },
 
-  handleUndoAction: function() {
-    AppActions.addGroup(this.state.tempGroup, this.state.tempIdx);
-    this.handleRequestClose();
+  _getDevicesFromSelectedRows: function() {
+    // use selected rows to get device from corresponding position in devices array
+    var devices = [];
+    for (var i=0; i<this.state.selectedRows.length; i++) {
+      devices.push(this.props.devices[this.state.selectedRows[i]]);
+    }
+    return devices;
+  },
+
+  _addToGroup: function () {
+    this.props.addDevicesToGroup(this.state.selectedRows);
+  },
+  _removeFromGroup: function () {
+    this.props.removeDevicesFromGroup(this.state.selectedRows);
   },
 
   _nameEdit: function() {
@@ -216,59 +149,30 @@ var DeviceList = createReactClass({
     }
     this.setState({
       nameEdit: !this.state.nameEdit,
-      errorText1: null
+      errorText: null
     });
   },
 
-  _adjustCellHeight: function(height) {
-    this.setState({divHeight: height+60});
+  _handleGroupNameSave: function() {
+    // to props - function to get all devices from group, update group one by one
   },
 
-  _cancelAdd: function() {
-    this.dialogToggle('addGroup');
-  },
-
-  _validate: function(invalid, group) {
-    var name = invalid ? "" : group;
-    this.setState({groupInvalid: invalid, tmpGroup: name});
-  },
-
-  _checkWillBeEmpty: function(groupName) {
-    // check if group will be left empty after moving devices
-    var self = this;
-    AppActions.getGroupDevices(groupName, {
-      success: function(devices) {
-        var devCount = devices.length - self.state.selectedRows.length;
-        self.setState({willBeEmpty: devCount<1});
-      },
-      error: function(err) {
-        console.log(err);
-      }
-    });
+  _handleGroupNameChange: function(event) {
+    this.setState({textfield: event.target.value});
   },
 
   render: function() {
+
+    var pluralized = pluralize("devices", this.state.selectedRows.length); 
+
+    var addLabel = this.props.group ? "Move selected " + pluralized +" to another group" : "Add selected " + pluralized +" to a group";
+    var removeLabel =  "Remove selected " + pluralized + " from this group";
+    var groupLabel = this.props.group ? decodeURIComponent(this.props.group) : "All devices";
+
     var styles = {
-      exampleFlatButtonIcon: {
-        height: '100%',
-        display: 'inline-block',
-        verticalAlign: 'middle',
-        float: 'left',
-        paddingLeft: '12px',
-        lineHeight: '36px',
-        marginRight: "-6px",
-        color:"#679BA5",
-        fontSize:'16px'
-      },
-      exampleFlatButton: {
-        fontSize:'12px',
-        marginLeft:"10px",
-        float:"right",
-        marginRight:"130px"
-      },
       editButton: {
         color: "rgba(0, 0, 0, 0.54)",
-        fontSize: "20px" 
+        fontSize: "18px" 
       },
       buttonIcon: {
         height: '100%',
@@ -301,11 +205,12 @@ var DeviceList = createReactClass({
         padding: "16px 24px",
         width: "100%"
       }
-    }
+    };
 
     var devices = this.props.devices.map(function(device, index) {
+      var self = this;
       var expanded = '';
-
+      
       var attrs = {
         device_type: "",
         artifact_name: ""
@@ -314,14 +219,16 @@ var DeviceList = createReactClass({
       for (var i=0;i<attributesLength;i++) {
         attrs[device.attributes[i].name] = device.attributes[i].value;
       }
-      if ( this.props.expandedRow === index ) {
-        expanded = <SelectedDevices device_type={attrs.device_type} styles={this.props.styles} block={this.props.block} accept={this.props.accept} redirect={this.props.redirect} artifacts={this.props.artifacts} device={this.props.expandedDevice} selectedGroup={this.props.selectedGroup} groups={this.props.groups} />
+
+      if ( self.state.expandRow === index ) {
+        expanded = <ExpandedDevice device={this.state.expandedDevice || device} rejectOrDecomm={this.props.rejectOrDecomm} attrs={device.attributes} device_type={attrs.device_type} styles={this.props.styles} block={this.props.block} accept={this.props.accept} redirect={this.props.redirect} artifacts={this.props.artifacts} selectedGroup={this.props.group} groups={this.props.groups} />
       }
+     
       return (
         <TableRow 
           hoverable={!expanded}
           className={expanded ? "expand" : null}
-          key={device.id}
+          key={device.device_id || device.id}
           selected={this._isSelected(index)}>
           <TableRowColumn style={expanded ? {height: this.state.divHeight, padding: 0} : {padding: 0}}>
             <div style={styles.paddedCell} onClick={(e) => {
@@ -329,7 +236,7 @@ var DeviceList = createReactClass({
               e.stopPropagation();
               this._expandRow(index,0);
             }}>
-            {device.id}
+            {device.device_id || device.id}
             </div>
           </TableRowColumn>
           <TableRowColumn style={{padding: 0}}>
@@ -356,7 +263,7 @@ var DeviceList = createReactClass({
               e.stopPropagation();
               this._expandRow(index,3);
             }}>
-              <Time value={device.updated_ts} format="YYYY-MM-DD HH:mm" />
+              {device.updated_ts ? <Time value={device.updated_ts} format="YYYY-MM-DD HH:mm" /> : "-" }
             </div>
           </TableRowColumn>
           <TableRowColumn style={{width:"55px", paddingRight:"0", paddingLeft:"12px"}} className="expandButton">
@@ -383,96 +290,73 @@ var DeviceList = createReactClass({
       )
     }, this);
 
-    var disableAction = this.state.selectedRows.length ? false : true;
-    
-    var addActions = [
-      <div style={{marginRight:"10px", display:"inline-block"}}>
-        <FlatButton
-          label="Cancel"
-          onClick={this._cancelAdd} />
-      </div>,
-      <RaisedButton
-        label="Add to group"
-        primary={true}
-        onClick={this._addGroupHandler}
-        ref="save" 
-        disabled={this.state.groupInvalid} />
-    ];
 
     var groupNameInputs = (
       <TextField 
         id="groupNameInput"
         ref="editGroupName"
-        value={this.state.groupName || ""}
+        value={this.state.textfield}
         onChange={this._handleGroupNameChange}
         onKeyDown={this._handleGroupNameSave}
         className={this.state.nameEdit ? "hoverText" : "hidden"}
         underlineStyle={{borderBottom:"none"}}
         underlineFocusStyle={{borderColor:"#e0e0e0"}}
         errorStyle={{color: "rgb(171, 16, 0)"}}
-        errorText={this.state.errorText1} />
+        errorText={this.state.errorText} />
     );
 
     var correctIcon = this.state.nameEdit ? "check" : "edit";
-    if (this.state.errorText1) {
+    if (this.state.errorText) {
       correctIcon = "close";
     }
 
-    var pluralized = pluralize("devices", this.state.selectedRows.length); 
-    var addLabel = this.props.selectedGroup ? "Move selected " + pluralized +" to another group" : "Add selected " + pluralized +" to a group";
-    var removeLabel =  "Remove selected " + pluralized +" from this group";
-    var groupLabel = this.props.selectedGroup ? decodeURIComponent(this.props.selectedGroup) : "All devices";
-
     return (
       <div>
-        <Filters attributes={this.props.attributes} filters={this.props.filters} onFilterChange={this.props.onFilterChange} />
+        
+      <Loader show={this.props.loading} />
 
-        <div className="margin-top-small">
-          <div style={{marginLeft:"26px"}}>
-            <h2 style={{marginTop:"15px"}}>
-             
-                {groupNameInputs}
-                <span className={this.state.nameEdit ? "hidden" : null}>{groupLabel}</span>
-                <span className={this.props.selectedGroup ? "hidden" : 'hidden'}>
-                  <IconButton iconStyle={styles.editButton} onClick={this._nameEdit} iconClassName="material-icons" className={this.state.errorText1 ? "align-top" : null}>
-                    {correctIcon}
-                  </IconButton>
-                </span>
 
-                <FlatButton onClick={this._removeCurrentGroup} style={styles.exampleFlatButton} className={this.props.selectedGroup ? null : 'hidden' } secondary={true} label="Remove group" labelPosition="after">
-                  <FontIcon style={styles.exampleFlatButtonIcon} className="material-icons">delete</FontIcon>
-                </FlatButton>
-            </h2>
-          </div>
-          <div className="margin-bottom">
+    { this.props.devices.length && !this.props.loading ?
+      <div>
+        <div style={{marginLeft:"26px"}}>
+          <h2>
+              {groupNameInputs}
+              <span className={this.state.nameEdit ? "hidden" : null}>{groupLabel}</span>
+              <span className={this.props.group ? 'hidden' : 'hidden'}>
+                <IconButton iconStyle={styles.editButton} onClick={this._nameEdit} iconClassName="material-icons" className={this.state.errorText ? "align-top" : null}>
+                  {correctIcon}
+                </IconButton>
+              </span>
+          </h2>
+        </div>
+
+
+          <div className="padding-bottom">
+
             <Table
-              onCellClick={this._expandRow}
+              allRowsSelected={this.state.allRowsSelected}
               multiSelectable={true}
-              className={devices.length ? null : 'hidden'}
-              onRowSelection={this._onRowSelection} >
+              onRowSelection={this._onRowSelection}>
               <TableHeader
-              className="clickable"
-              enableSelectAll={true}>
+                className="clickable"
+                enableSelectAll={true}>
                 <TableRow>
-                  <TableHeaderColumn className="columnHeader" tooltip="ID">ID<FontIcon ref="id" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "id")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
-                  <TableHeaderColumn className="columnHeader" tooltip="Device type">Device type<FontIcon ref="device_type" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "device_type")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
-                  <TableHeaderColumn className="columnHeader" tooltip="Current software">Current software<FontIcon ref="artifact_name" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "artifact_version")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
-                  <TableHeaderColumn className="columnHeader" tooltip="Last heartbeat">Last heartbeat<FontIcon ref="last_heartbeat" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "last_heartbeat")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
+                  <TableHeaderColumn className="columnHeader" tooltip="ID">ID</TableHeaderColumn>
+                  <TableHeaderColumn className="columnHeader" tooltip="Device type">Device type</TableHeaderColumn>
+                  <TableHeaderColumn className="columnHeader" tooltip="Current software">Current software</TableHeaderColumn>
+                  <TableHeaderColumn className="columnHeader" tooltip="Last heartbeat">Last heartbeat</TableHeaderColumn>
                   <TableHeaderColumn className="columnHeader" style={{width:"55px", paddingRight:"12px", paddingLeft:"0"}}></TableHeaderColumn>
                 </TableRow>
               </TableHeader>
               <TableBody
-                deselectOnClickaway={false}
-                preScanRows={false}
                 showRowHover={true}
+                deselectOnClickaway={false}
                 className="clickable">
                 {devices}
               </TableBody>
             </Table>
 
-
-
-            { this.props.showHelptips && devices.length ?
+            { this.props.showHelptips && this.props.devices.length ?
               <div>
                 <div 
                   id="onboard-6"
@@ -480,7 +364,7 @@ var DeviceList = createReactClass({
                   data-tip
                   data-for='expand-device-tip'
                   data-event='click focus'
-                  style={{left: "inherit", right:"45px", bottom: "132px"}}>
+                  style={{left: "inherit", right:"45px"}}>
                   <FontIcon className="material-icons">help</FontIcon>
                 </div>
                 <ReactTooltip
@@ -495,47 +379,44 @@ var DeviceList = createReactClass({
               </div>
             : null }
 
+          </div>
+          </div>
 
+          :
+       
+          <div className={(this.props.devices.length || this.props.loading) ? 'hidden' : 'dashboard-placeholder'}>
+            <p>
+              No devices found
+            </p>
+            {!this.props.allCount ? <p>No devices have been authorized to connect to the Mender server yet.</p> : null}
+          </div>
+        }
 
-            <div className={(devices.length || this.props.loading) ? 'hidden' : 'dashboard-placeholder'}>
-              <p>
-                No devices found
-              </p>
+        <div>
+
+        { this.state.selectedRows.length ? 
+          
+          <div className="fixedButtons">
+            <div className="float-right">
+              <span className="margin-right">{this.state.selectedRows.length} {pluralize("devices", this.state.selectedRows.length)} selected</span>
+              <RaisedButton disabled={!this.state.selectedRows.length} label={addLabel} secondary={true} onClick={this._addToGroup}>
+                <FontIcon style={styles.raisedButtonIcon} className="material-icons">add_circle</FontIcon>
+              </RaisedButton>
+              <FlatButton disabled={!this.state.selectedRows.length} style={{marginLeft: "4px"}} className={this.props.group ? null : 'hidden'} label={removeLabel} onClick={this._removeFromGroup}>
+                <FontIcon style={styles.buttonIcon} className="material-icons">remove_circle_outline</FontIcon>
+              </FlatButton>
             </div>
           </div>
 
-          <div className={this.state.selectedRows.length ? "fixedButtons" : "hidden"}>
-            <span className="margin-right">{this.state.selectedRows.length} {pluralized} selected</span>
-            <RaisedButton disabled={disableAction} label={addLabel} secondary={true} onClick={this.dialogToggle.bind(null, 'addGroup')}>
-              <FontIcon style={styles.raisedButtonIcon} className="material-icons">add_circle</FontIcon>
-            </RaisedButton>
-            <FlatButton disabled={disableAction} style={{marginLeft: "4px"}} className={this.props.selectedGroup ? null : 'hidden'} label={removeLabel} secondary={true} onClick={this._removeSelectedDevices}>
-              <FontIcon style={styles.buttonIcon} className="material-icons">remove_circle_outline</FontIcon>
-            </FlatButton>
-          </div>
+        : null }
 
         </div>
 
-        <Dialog
-          open={this.state.addGroup}
-          title="Add selected devices to group"
-          actions={addActions}
-          autoDetectWindowHeight={true}
-          bodyStyle={{fontSize: "13px"}}>  
-          <GroupSelector numDevices={this.state.selectedRows.length} willBeEmpty={this.state.willBeEmpty} tmpGroup={this.state.tmpGroup} selectedGroup={this.props.selectedGroup} changeSelect={this.props.changeSelect} validateName={this._validate} groups={this.props.groups} selectedField={this.props.selectedField} />
-        </Dialog>
-
-        <Snackbar
-          open={this.state.openSnack}
-          message={this.state.snackMessage}
-          autoHideDuration={this.state.autoHideDuration}
-          onActionTouchTap={this.handleUndoAction}
-          onRequestClose={this.handleRequestClose}
-        />
 
       </div>
     );
   }
 });
 
-module.exports = DeviceList;
+
+module.exports = Authorized;

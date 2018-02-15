@@ -12,8 +12,8 @@ import Subheader from 'material-ui/Subheader';
 require('../common/prototype/Array.prototype.equals');
 
 var Groups = createReactClass({
-  _changeGroup: function(group) {
-    this.props.changeGroup(group);
+  _changeGroup: function(group, numDevs) {
+    this.props.changeGroup(group, numDevs);
   },
 
   dialogToggle: function() {
@@ -22,32 +22,32 @@ var Groups = createReactClass({
 
   render: function() {
     var createBtn = (
-      <FontIcon className="material-icons">add</FontIcon>
+      <FontIcon className="material-icons" style={this.props.allCount ? null : {color:"#d4e9e7"}}>add</FontIcon>
     );
    
     var allLabel = (
-      <span>All devices<span className='float-right length'>{this.props.totalDevices}</span></span>
+      <span>All devices</span>
     );
 
     return (
       <div>
         <List>
-          <Subheader>Groups</Subheader>
             <ListItem 
               key="All" 
               primaryText={allLabel}
               style={!this.props.selectedGroup ? {backgroundColor: "#e7e7e7"} : {backgroundColor: "transparent"}}
-              onClick={this._changeGroup.bind(null, "")} />
+              onClick={this._changeGroup.bind(null, "", this.props.allCount)} />
+            <Subheader style={{marginTop:"20px"}}>Groups</Subheader>
    
-          {this.props.groupList.map(function(group, index) {
+          {this.props.groups.map(function(group, index) {
             var isSelected = group===this.props.selectedGroup ? {backgroundColor: "#e7e7e7"} : {backgroundColor: "transparent"};
-            var boundClick = this._changeGroup.bind(null, group);
             var numDevs;
             if (this.props.groupDevices) {
               numDevs = this.props.groupDevices[group] || null;
             }
+            var boundClick = this._changeGroup.bind(null, group, numDevs);
             var groupLabel = (
-                <span>{decodeURIComponent(group)}<span className='float-right length'>{numDevs}</span></span>
+                <span>{decodeURIComponent(group)}</span>
             );
             return (
               <ListItem 
@@ -57,14 +57,17 @@ var Groups = createReactClass({
                 onClick={boundClick} />
             )
           }, this)}
+
           <ListItem 
             leftIcon={createBtn}
+            disabled={!this.props.acceptedCount}
             primaryText="Create a group"
-            onClick={this.dialogToggle} />
+            style={this.props.acceptedCount ? null : {color:"#d4e9e7"}}
+            onClick={this.props.acceptedCount ? this.dialogToggle : null} />
         </List>
 
 
-        { this.props.showHelptips && this.props.totalDevices && !this.props.groupList.length ?
+        { this.props.showHelptips && this.props.acceptedCount && !this.props.groups.length ?
           <div>
             <div 
               id="onboard-5"

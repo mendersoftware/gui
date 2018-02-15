@@ -8,8 +8,6 @@
   height: 50px;
   overflow: hidden;
   opacity: 1;
-
-  .transition(all .2s ease-in-out);
   &.shrunk { 
     height: 0;
   }
@@ -100,6 +98,15 @@
   }
 }
 
+
+.dialogLoaderContainer {
+  position: relative;
+  top: 20px;
+  .loader {
+    margin: auto;
+    .scale(0.5);
+  }
+}
 
 .waiting-loader {
   margin: 10px auto 0;

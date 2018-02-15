@@ -116,9 +116,6 @@ var Filters = createReactClass({
         <div>
         {filters}
         </div>
-        <FlatButton disabled={!this.props.filters[this.props.filters.length-1].value} onClick={this._addFilter} label="Add filter" secondary={true}>
-          <FontIcon style={styles.exampleFlatButtonIcon} className="material-icons">add_circle</FontIcon>
-        </FlatButton>
       </div>
     );
     return (

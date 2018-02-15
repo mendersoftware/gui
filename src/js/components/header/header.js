@@ -254,6 +254,8 @@ var Header = createReactClass({
       </span>
     );
 
+    var helpPath = this.context.location.pathname.indexOf("/help")!=-1;
+
     var dropDownElement = (
 
       <DropDownMenu className="header-dropdown" anchorOrigin={{vertical: 'center', horizontal: 'middle'}} targetOrigin={{vertical: 'bottom', horizontal: 'middle'}}  style={{marginRight: "0", fontSize: "14px", paddingLeft: "4px"}} iconStyle={{ fill: 'rgb(0, 0, 0)' }} value={(this.state.user || {}).email} onChange={this._handleHeaderMenu}>
@@ -334,7 +336,7 @@ var Header = createReactClass({
 
 
 
-          { this.state.showHelptips && !this.state.acceptedDevices && !(this.state.pendingDevices && this.context.router.isActive({ pathname: '/' }, true)) && !this.context.router.isActive('/devices') ?
+          { this.state.showHelptips && !this.state.acceptedDevices && !(this.state.pendingDevices && this.context.router.isActive({ pathname: '/' }, true)) && !this.context.router.isActive('/devices') && !helpPath ?
             <div>
               <div
                 id="onboard-7"
@@ -397,6 +399,7 @@ var Header = createReactClass({
 
 Header.contextTypes = {
   router: PropTypes.object,
+  location: PropTypes.object,
 };
 
 module.exports = Header;

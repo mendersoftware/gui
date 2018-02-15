@@ -9,7 +9,8 @@ var _artifactsRepo = [];
 var _currentGroup = null;
 var _deploymentArtifact = null;
 var _currentGroupDevices = [];
-var _totalNumberDevices, _totalPendingDevices, _totalAcceptedDevices, _deviceLimit, _numberInProgress;
+var _totalNumberDevices, _totalPendingDevices, _totalAcceptedDevices, _totalRejectedDevices, _deviceLimit, _numberInProgress;
+_totalPendingDevices = _totalAcceptedDevices = 0;
 var _filters = [{key:'', value:''}];
 var _attributes = {
   id: "ID"
@@ -30,12 +31,6 @@ var _uploadInProgress = false;
 
 var _alldevices = [];
 var _pending = [];
-
-var _health = {
-  total: 0,
-  alive: 0,
-  down: 0
-}
 
 
 function _selectGroup(group) {
@@ -58,16 +53,6 @@ function _addNewGroup(group, devices, type) {
 function _getDeviceById(deviceId) {
   var index = findWithAttr(_alldevices, "id", deviceId);
   return _alldevices[index];
-}
-
-
-function updateDeviceTags(id, tags) {
-  var index = findWithAttr(_alldevices, "id", id);
-  _alldevices[index].tags = tags;
-}
-
-function  updateFilters(filters) {
-  _filters = filters;
 }
 
 function _matchFilters(device, filters) {
@@ -361,7 +346,7 @@ function setPendingDeployments(deployments) {
 
 function setDevices(devices) {
   if (devices) {
-    setHealth(devices);
+
     var newDevices = {};
     devices.forEach(function(element, index) {
       newDevices[element.status] = newDevices[element.status] || [];
@@ -383,6 +368,9 @@ function setTotalPendingDevices(count) {
 }
 function setTotalAcceptedDevices(count) {
   _totalAcceptedDevices = count;
+}
+function setTotalRejectedDevices(count) {
+  _totalRejectedDevices = count;
 }
 function setDeviceLimit(limit) {
   _deviceLimit = limit;
@@ -416,15 +404,6 @@ function setDeploymentArtifact(artifact) {
   _deploymentArtifact = artifact;
 }
 
-function setHealth(devices) {
-  if (devices.accepted) {
-    var health = {};
-    devices.accepted.forEach(function(element, index) {
-      health[element.status] = newDevices[element.status] || [];
-      health[element.status].push(element);
-    });
-  }
-}
 
 
 function _setSnackbar(message, duration) {
@@ -598,10 +577,6 @@ var AppStore = assign(EventEmitter.prototype, {
     return _sortDeploymentDevices(devices);
   },
 
-  getHealth: function() {
-    return _health
-  },
-
   getPendingDevices: function() {
     return _getPendingDevices()
   },
@@ -614,6 +589,9 @@ var AppStore = assign(EventEmitter.prototype, {
   },
   getTotalAcceptedDevices: function() {
     return _totalAcceptedDevices
+  },
+  getTotalRejectedDevices: function() {
+    return _totalRejectedDevices
   },
   getDeviceLimit: function() {
     return _deviceLimit
@@ -671,12 +649,6 @@ var AppStore = assign(EventEmitter.prototype, {
         break;
       case AppConstants.UPLOAD_PROGRESS:
         _uploadProgress(payload.action.inprogress);
-        break;
-      case AppConstants.UPDATE_FILTERS:
-         updateFilters(payload.action.filters);
-        break;
-      case AppConstants.UPDATE_DEVICE_TAGS:
-         updateDeviceTags(payload.action.id, payload.action.tags);
         break;
       case AppConstants.SORT_TABLE:
         _sortTable(payload.action.table, payload.action.column, payload.action.direction);
@@ -737,6 +709,10 @@ var AppStore = assign(EventEmitter.prototype, {
 
       case AppConstants.SET_ACCEPTED_DEVICES:
         setTotalAcceptedDevices(payload.action.count);
+        break;
+
+      case AppConstants.SET_REJECTED_DEVICES:
+        setTotalRejectedDevices(payload.action.count);
         break;
 
       case AppConstants.SET_DEVICE_LIMIT:

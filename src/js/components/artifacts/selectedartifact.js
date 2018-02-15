@@ -87,7 +87,7 @@ var SelectedArtifact = createReactClass({
     var devicesLink = (
       <div>
         <span>{info.devices}</span>
-        <Link className={info.devices == '-' ? 'hidden' : "listItem-link" } to={`/devices/0/${devicesFilter}`}>View devices</Link>
+        <Link className={info.devices == '-' ? 'hidden' : "listItem-link" } to={`/devices/groups/0/${devicesFilter}`}>View devices</Link>
       </div>
     );
 
