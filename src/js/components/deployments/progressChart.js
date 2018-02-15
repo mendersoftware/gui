@@ -46,7 +46,7 @@ var ProgressChart = createReactClass({
   },
   _handleClick: function(id) {
     var filter = encodeURIComponent("id="+id);
-    this.context.router.push('/devices/groups/0/'+filter);
+    this.context.router.push('/devices/groups/null/'+filter);
   },
   _hoverDevice: function(device) {
     if (!device) {

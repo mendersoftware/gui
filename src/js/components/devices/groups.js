@@ -12,6 +12,7 @@ import Subheader from 'material-ui/Subheader';
 require('../common/prototype/Array.prototype.equals');
 
 var Groups = createReactClass({
+
   _changeGroup: function(group, numDevs) {
     this.props.changeGroup(group, numDevs);
   },

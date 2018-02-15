@@ -52,19 +52,27 @@ var DeviceGroups = createReactClass({
 		clearAllRetryTimers();
 		var self = this;
 		var filters = [];
-    
-      if (self.props.params.filters) {
-        var str = decodeURIComponent(self.props.params.filters);
-        var obj = str.split("&");
-        for (var i=0;i<obj.length;i++) {
-          var f = obj[i].split("=");
-          filters.push({key:f[0], value:f[1]});
-        }
-        self._onFilterChange(filters);
-      } else {
-	    	this.deviceTimer = setInterval(this._getDevices, this.state.refreshDeviceLength);
-		    this._refreshAll();
-    	}
+
+		if (self.props.params.group && (self.props.params.group!=="null")) {
+			// select group - got to refresh groups first, then handle group change
+			self.setState({selectedGroup: self.props.params.group});
+			self._refreshGroups(function() {
+				self._handleGroupChange(self.props.params.group, self.state.groupDevices[self.props.params.group]);
+			})
+		} else if (self.props.params.filters) {
+			self._refreshGroups();
+      var str = decodeURIComponent(self.props.params.filters);
+      var obj = str.split("&");
+      for (var i=0;i<obj.length;i++) {
+        var f = obj[i].split("=");
+        filters.push({key:f[0], value:f[1]});
+      }
+      self._onFilterChange(filters);
+		} else {
+			// no group, no filters, all devices
+    	this.deviceTimer = setInterval(this._getDevices, this.state.refreshDeviceLength);
+	    this._refreshAll();
+  	}
 	},
 
 	componentWillUnmount() {
@@ -89,14 +97,14 @@ var DeviceGroups = createReactClass({
 
 	_refreshAll: function() {
 		this._refreshGroups();
-    	this._getDevices();
+    this._getDevices();
 	},
 
 
 	 /*
 	 * Groups
 	 */
-	_refreshGroups: function() {
+	_refreshGroups: function(cb) {
 	    var self = this;
 	    var groupDevices = {};
 	    var callback = {
@@ -111,6 +119,9 @@ var DeviceGroups = createReactClass({
 	            AppActions.getNumberOfDevicesInGroup(function(noDevs) {
 	              groupDevices[group] = noDevs;
 	              self.setState({groupDevices: groupDevices});
+	              if (cb && idx===groups.length-1) {
+	              	cb();
+	              }
 	            }, group);
 	          }
 	        }
@@ -125,12 +136,13 @@ var DeviceGroups = createReactClass({
 
 	_handleGroupChange: function(group, numDev) {
 		var self = this;
+		console.log(group, numDev);
 		clearInterval(self.deviceTimer);
 		setTimeout(function() {
 			AppActions.setSnackbar("");
 		}, 4000);
 		this.setState({loading: true, selectedGroup: group, groupCount: numDev, pageNo:1, filters: [{key:'', value:''}]}, function() {
-	    	self.deviceTimer = setInterval(self._getDevices, self.state.refreshDeviceLength);
+	    self.deviceTimer = setInterval(self._getDevices, self.state.refreshDeviceLength);
 			self._getDevices();
 		});
 	},
@@ -303,7 +315,7 @@ var DeviceGroups = createReactClass({
 	          self._refreshGroups();
 	          setTimeout(function() {
 	          	self._handleGroupChange(group, self.state.groupDevices[group]+length);
-	          },300);
+	          }, 500);
 	          
 	        }
 	      },
