@@ -8,7 +8,9 @@ var BeagleBoneBlack =  createReactClass({
  
   render: function() {
     var version;
-    var link = {};
+    var sdimg = {};
+    var artifacts = [];
+
     if (!this.props.isEmpty(this.props.links)) {
 
      var versions = Object.keys(this.props.links.links.beaglebone);
@@ -21,7 +23,9 @@ var BeagleBoneBlack =  createReactClass({
 
       for (var fileName in this.props.links.links.beaglebone[version]) {
         if (fileName.indexOf('sdimg') != -1) {
-          link = {name: fileName, href:this.props.links.links.beaglebone[version][fileName]};
+          sdimg = {name: fileName, href:this.props.links.links.beaglebone[version][fileName]};
+        } else if (fileName.indexOf('.mender') != -1) {
+          artifacts.push({name: fileName, href:this.props.links.links.beaglebone[version][fileName]});
         }
       }
     }
@@ -49,9 +53,11 @@ var BeagleBoneBlack =  createReactClass({
 
         <h3>Download the disk image</h3>
 
-        {!this.props.isEmpty(link) ? 
-          <p><a href={link.href}>Download the disk image for BeagleBone Black here</a>.</p>
-          <p>This demo disk image already contains configuration specific to Hosted Mender and your account (i.e. your tenant token), so it does not need any further configuration. Devices flashed with this disk image will connect to your Hosted Mender account when the devices boot.</p>
+        {!this.props.isEmpty(sdimg) ? 
+          <div>
+            <p><a href={sdimg.href}>Download the disk image for BeagleBone Black here</a>.</p>
+            <p>This demo disk image already contains configuration specific to Hosted Mender and your account (i.e. your tenant token), so it does not need any further configuration. Devices flashed with this disk image will connect to your Hosted Mender account when the devices boot.</p>
+          </div>
           :
           <p>Download the disk image for BeagleBone Black from <a href="https://docs.mender.io/development/getting-started/download-test-images" target="_blank">the downloads page</a>.</p>
         }
@@ -90,20 +96,21 @@ var BeagleBoneBlack =  createReactClass({
 
         <p> If you cannot see any new device after 10 minutes, please verify that the network connection is working, and feel free to reach out for help with diagnostics via <a onClick={this.props.changePage.bind(null, "help/more-help-resources")}>our further Help resources</a>.</p>
 
-        <p> NOTE: If you reimage the device with the disk image or switch storage (e.g. SD cards) between the devices after they have booted once, <b>authenticating the device to the Mender server will fail</b>. This is because the Mender server tracks the identity (MAC address by default) <-> device public key (randomly generated upon first run of the Mender client) binding. If this happens, you need to *decommission* the device from the Mender server and try again. <p>
+        <p> NOTE: If you reimage the device with the disk image or switch storage (e.g. SD cards) between the devices after they have booted once, <b>authenticating the device to the Mender server will fail</b>. This is because the Mender server tracks the identity (MAC address by default) device public key (randomly generated upon first run of the Mender client) binding. If this happens, you need to *decommission* the device from the Mender server and try again. </p>
 
 
         <h3>Deploy updates</h3>
 
-        {this.props.isHosted ? 
-          <p>Download these two BeagleBone Black Artifacts customized for your Hosted Mender account: TODO LINKS: Artifact1, [Artifact2].</p>
+        {this.props.isHosted && artifacts.length>1 ? 
+          <p>Download these two BeagleBone Black Artifacts customized for your Hosted Mender account: <a href={artifacts[1].href}>{artifacts[1].name}</a>, <a href={artifacts[0].href}>{artifacts[0].name}</a>.</p>
           :
           <p>Download Artifact 1 and Artifact 2 for BeagleBone Black from <a href="https://docs.mender.io/development/getting-started/download-test-images" target="_blank">the downloads page</a>.</p>
         }
 
-        After you have downloaded the two Artifacts, upload them to the Mender server in the <a onClick={this.props.changePage.bind(null, "artifacts")}>Artifacts tab</a>.
 
-        Then head over to the <a onClick={this.props.changePage.bind(null, "deployments")}>Deployments tab</a> and do some remote deployments to your device!
+        <p>After you have downloaded the two Artifacts, upload them to the Mender server in the <a onClick={this.props.changePage.bind(null, "artifacts")}>Artifacts tab</a>.</p>
+
+        <p>Then head over to the <a onClick={this.props.changePage.bind(null, "deployments")}>Deployments tab</a> and do some remote deployments to your device!</p>
 
       </div>
     )
