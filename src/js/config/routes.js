@@ -39,7 +39,7 @@ module.exports = (
     <IndexRoute component={Dashboard} onEnter={requireAuth} />
     <Route path="/devices" component={Devices} onEnter={requireAuth} >
       <Route path="(:tab)">
-        <Route path="(:groupId)">
+        <Route path="(:group)">
           <Route path="(:filters)" />
         </Route>
       </Route>

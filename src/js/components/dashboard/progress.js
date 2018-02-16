@@ -72,7 +72,7 @@ var Progress = createReactClass({
           <List style={{paddingTop:"0"}}>
             {progress}
           </List> 
-          <Link to="/deployments/progress" className="float-right">All deployments in progress</Link>
+          <Link to="/deployments" className="float-right">All deployments in progress</Link>
         </div>
 
         <Loader show={this.props.loading} fade={true} />

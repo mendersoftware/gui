@@ -28,12 +28,14 @@ function getState() {
     events: AppStore.getEventLog(),
     collatedArtifacts: AppStore.getCollatedArtifacts(),
     groups: AppStore.getGroups(),
-    allDevices: AppStore.getAllDevices(),
     invalid: true,
     snackbar: AppStore.getSnackbar(),
     refreshDeploymentsLength: 10000,
     hasDeployments: AppStore.getHasDeployments(),
-    showHelptips: AppStore.showHelptips()
+    showHelptips: AppStore.showHelptips(),
+    hasPending: AppStore.getTotalPendingDevices(),
+    hasDevices: AppStore.getTotalAcceptedDevices(),
+    rejectedCount: AppStore.getTotalRejectedDevices(),
   }
 }
 
@@ -60,33 +62,18 @@ var Deployments = createReactClass({
     };
     AppActions.getArtifacts(artifactsCallback);
 
+
+    var pageNo = 1;
+    var pageLength = self.state.hasDevices + self.state.rejectedCount;
+
     AppActions.getDevices({
       success: function(devices) {
-        if (!devices.length) {
-
-          var callback = {
-            success: function(count) {
-              self.setState({hasPending:true});
-            },
-            error: function(err) {
-              console.log(err);
-            }
-          };
-
-          AppActions.getDeviceCount(callback, "pending");
-
-        } else {
-          var allDevices = [];
-          for (var i=0; i<devices.length;i++) {
-            allDevices.push(devices[i]);
-          }
-          self.setState({hasDevices:true, allDevices: allDevices});
-        }
+        self.setState({allDevices: devices});
       },
       error: function(err) {
         console.log("Error: " +err);
       }
-    }, 1, 100, null, null, true );
+    }, pageNo, pageLength);
 
     var groupCallback = {
       success: function(groups) {
@@ -469,7 +456,7 @@ var Deployments = createReactClass({
         <div style={{paddingTop:"3px"}}>
           <Pending count={this.state.pendingCount || this.state.pending.length}  refreshPending={this._refreshPending}  pending={this.state.pending} abort={this._abortDeployment} />
 
-          <Progress showHelptips={this.state.showHelptips} hasDeployments={this.state.hasDeployments} devices={this.state.allDevices} hasArtifacts={this.state.collatedArtifacts.length} count={this.state.progressCount || this.state.progress.length} refreshProgress={this._refreshInProgress} abort={this._abortDeployment} loading={!this.state.doneLoading} openReport={this._showProgress} progress={this.state.progress} createClick={this.dialogOpen.bind(null, "schedule")}/>
+          <Progress showHelptips={this.state.showHelptips} hasDeployments={this.state.hasDeployments} devices={this.state.allDevices || []} hasArtifacts={this.state.collatedArtifacts.length} count={this.state.progressCount || this.state.progress.length} refreshProgress={this._refreshInProgress} abort={this._abortDeployment} loading={!this.state.doneLoading} openReport={this._showProgress} progress={this.state.progress} createClick={this.dialogOpen.bind(null, "schedule")}/>
 
           <Past showHelptips={this.state.showHelptips} count={this.state.pastCount} loading={!this.state.doneLoading} past={this.state.past} refreshPast={this._refreshPast} showReport={this._showReport} />
 

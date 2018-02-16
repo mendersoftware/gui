@@ -116,6 +116,8 @@ var ScheduleForm = createReactClass({
         )
       }, this);
     }
+
+    var group = (this.props.group && this.props.group!=="All devices") ? this.props.group : "";
     var deviceList = (
       <div className="slider">
         <IconButton className="closeSlider" iconStyle={{fontSize:"16px"}} onClick={this._showDevices} style={{borderRadius:"30px", width:"40px", height:"40px", position:"absolute", left:"-18px", backgroundColor:"rgba(255,255,255,1)"}}>
@@ -125,7 +127,7 @@ var ScheduleForm = createReactClass({
         {devices}
         <p className={tmpDevices.length ? "hidden" : "italic" }>No devices in this group match the device type or search term.</p>
         <Divider />
-        <p className={this.props.group ? this.props.group : "hidden"}><Link to={`/devices/${this.props.group}/${filters}`}>Go to group ></Link></p>
+        <p><Link to={`/devices/groups/${group}`}>{group ? "Go to group" : "Go to devices"}></Link></p>
       </div>
     );
 
@@ -190,7 +192,7 @@ var ScheduleForm = createReactClass({
               </SelectField>
 
               <p className={this.props.hasDevices ? "hidden" : "info"} style={{marginTop:"0"}}>
-                <FontIcon className="material-icons" style={{marginRight:"4px", fontSize:"18px", top: "4px", color:"rgb(171, 16, 0)"}}>error_outline</FontIcon>There are no connected devices. <span className={this.props.hasPending ? null : "hidden"}><Link to={`/devices`}>Accept pending devices</Link> to get started.</span>
+                <FontIcon className="material-icons" style={{marginRight:"4px", fontSize:"18px", top: "4px", color:"rgb(171, 16, 0)"}}>error_outline</FontIcon>There are no connected devices. <span className={this.props.hasPending ? null : "hidden"}><Link to={`/devices/pending`}>Accept pending devices</Link> to get started.</span>
               </p>
             </div>
 
