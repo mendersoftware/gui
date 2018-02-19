@@ -108,7 +108,7 @@ var Login = createReactClass({
 
               <FormCheckbox
                 id="noExpiry"
-                label="Keep me logged in"
+                label="Stay logged in"
                 className="margin-top"
                 checked={this.state.noExpiry === "true"}
                 />
