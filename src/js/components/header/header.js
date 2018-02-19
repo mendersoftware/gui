@@ -380,7 +380,6 @@ var Header = createReactClass({
             </div>
           : null }
 
-
           <Tabs
             value={this.state.tabIndex}
             inkBarStyle={styles.inkbar}
