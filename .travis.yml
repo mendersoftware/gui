@@ -1,6 +1,6 @@
 language: node_js
 node_js:
-  - "6"
+  - "8"
 
 # Forces travis to use VM insted container, required to be able to build containers.
 sudo: required
@@ -8,7 +8,7 @@ sudo: required
 services:
     - docker
 
-dist: trusty
+# dist: trusty
 
 env:
     global:
@@ -61,6 +61,8 @@ before_script:
 script:
     # Check commit compliance.
     - mendertesting/check_commits.sh
+
+    - npm version
 
     - gulp build
     # Make sure the test environment is running the pull request
