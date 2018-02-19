@@ -272,8 +272,7 @@ var Header = createReactClass({
       <div className={this.context.router.isActive('/login') ? "hidden" : null}>
         <Toolbar style={{backgroundColor: "#fff"}}>
           <ToolbarGroup key={0} className="float-left">
-              <Link to="/" id="logo"></Link>
-
+            <Link to="/" id="logo"></Link>
 
             {this.props.demo ? 
               <div id="demoBox">
@@ -335,7 +334,6 @@ var Header = createReactClass({
           : null }
 
 
-
           { this.state.showHelptips && !this.state.acceptedDevices && !(this.state.pendingDevices && this.context.router.isActive({ pathname: '/' }, true)) && !this.context.router.isActive('/devices') && !helpPath ?
             <div>
               <div
@@ -381,7 +379,6 @@ var Header = createReactClass({
               </ReactTooltip>
             </div>
           : null }
-
 
 
           <Tabs
