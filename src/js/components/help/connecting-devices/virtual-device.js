@@ -25,11 +25,16 @@ var VirtualDevice =  createReactClass({
           <div>
 
             <p>Mender supports virtual devices, which is handy as you do not need to configure any hardware to try Mender.</p>
+            <p>One virtual device was automatically started for you when your account was created; it will expire after 14 days from account creation. You can start your own virtual devices by following the steps below.</p>
 
             <h3>Prerequisites</h3>
 
             <h4>Infrastructure to run the virtual device</h4>
-            <p>You need to start virtual devices on your own infrastructure (e.g. your workstation or EC2 instance) and connect them to Hosted Mender over the Internet.</p>
+            <p>You need to start virtual devices on our own infrastructure (e.g. your workstation or EC2 instance).</p>
+
+            <h4>Ability to connect to Hosted Mender over the Internet</h4>
+            <p>On the infrastructure you run the virual Mender client, you need to be able to create outgoing TCP connections to hosted.mender.io and s3.amazonaws.com, both on port 443 (TLS).</p>
+            <p>As the Mender client does listen to any ports there are no incoming connections.</p>
 
             <h4>Docker Engine</h4>
             <p>If you do not have it already, please install docker on the infrastructure where you want to start the virtual Mender client.</p>
@@ -39,7 +44,7 @@ var VirtualDevice =  createReactClass({
 
               <div>
                 <h4>Your Hosted Mender tenant token</h4>
-                <p>For security reasons, devices can only authenticate with Hosted Mender if they have a valid tenant token. 
+                <p>For security reasons, devices can only authenticate with Hosted Mender if they have a valid tenant token.
                 The tenant token is unique for your organization and ensures that only devices that you own are able to connect to your Hosted Mender account, so please keep it secure.</p>
                 <p>You can see your tenant token by clicking your user email at the top right and then choosing "My organization".</p>
                 <p>Note however that we have pasted your tenant token in for you in the instructions below.</p>
@@ -50,7 +55,7 @@ var VirtualDevice =  createReactClass({
            
             <h3>Start a virtual device</h3>
 
-            <p>Note that the virtual device will run in the foreground in your terminal, so we recommend running it in a screen session you can detach (just type `screen` before running the commands below).</p>
+            <p>Note that the virtual device will run in the foreground in your terminal, so we recommend running it in a screen session you can detach (just type screen before running the commands below).</p>
             <p>To start a virtual device, just paste the following commands {this.props.hasMultitenancy ? <span>(we have pasted in your specific tenant token)</span> : null }</p>
 
             {this.props.hasMultitenancy ?
@@ -58,13 +63,28 @@ var VirtualDevice =  createReactClass({
               <div className="code">
                 TENANT_TOKEN='{token}'<br/>
                 docker run -it -e SERVER_URL="https://hosted.mender.io" \<br/>
-                -e TENANT_TOKEN=$TENANT_TOKEN mendersoftware/mender-client-qemu:1.2.1
+                -e TENANT_TOKEN=$TENANT_TOKEN mendersoftware/mender-client-qemu:latest
               </div>
             : null }
 
             <p>This will download and run the image for the virtual device. The image is about 500 MB, so be patient if your Internet connection is slow.</p>
 
-            <p>When complete, you will see the virtual device login screen in your terminal. At this point it will take a couple of more minutes before the device will appear in your Devices tab.</p>
+            <p>When complete, you will see the virtual device login screen in your terminal. At this point it will take a couple of more minutes before the device will appear in your <a onClick={this.props.changePage.bind(null, "devices")}>Devices tab</a>. Authorize the device to enable you to deploy updates to it.</p>
+
+
+            <h3>Deploy updates</h3>
+
+            <p>Artifacts for your virtual devices are already uploaded to your account so you can start deploying updates right away. Take a look at the <a onClick={this.props.changePage.bind(null, "artifacts")}>Artifacts tab</a>. If they have been removed, you can download them again from the <a onClick={this.props.changePage.bind(null, "help/connecting-devices/demo-artifacts")}>download page</a>.</p>
+
+            <p>Then head over to the <a onClick={this.props.changePage.bind(null, "deployments")}>Deployments tab</a> and do some deployments to your virtual devices!</p>
+
+
+            <h3>Manage the virtual device</h3>
+
+            <p>If you started your virtual device in screen, you can keep it running by backgrounding it with Ctrl + A, Ctrl + D. Then you can reconnect to it later with screen -r.</p>
+            <p>You may also start more than one virtual device if you want.</p>
+            <p>To stop a virtual device after you are done testing, simply switch to its terminal, login as root (no password) and type "shutdown -h now" in its terminal. You can then also decommission it in the Hosted Mender interface.</p>
+
     
           </div>
         :
