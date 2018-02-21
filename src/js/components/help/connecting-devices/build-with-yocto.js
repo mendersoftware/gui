@@ -21,7 +21,7 @@ var BuildYocto =  createReactClass({
         {this.props.isHosted ? 
         
         <div>
-          <p>Make sure to update the local.conf build configuration:</p>
+          <p>Do the following steps to integrate your build with Hosted Mender:</p>
 
           <h3>Remove demo layer if used</h3>
 
