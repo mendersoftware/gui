@@ -14,9 +14,18 @@ var RecentStats = createReactClass({
       }
     };
   },
-  componentWillReceiveProps: function(nextProps) {
-    AppActions.getSingleDeploymentStats(nextProps.id, function(stats) {
-      this.setState({stats:stats});
+  componentDidMount() {
+   this._refreshStats();
+  },
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.id !== this.props.id) {
+      this._refreshStats();
+    }
+  },
+  _refreshStats: function() {
+    var self = this;
+     AppActions.getSingleDeploymentStats(self.props.id, function(stats) {
+      self.setState({stats:stats});
     }.bind(this));
   },
   render: function() {
