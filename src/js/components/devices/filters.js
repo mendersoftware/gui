@@ -126,8 +126,8 @@ var Filters = createReactClass({
           onRequestChange={this._toggleNav}
           docked={false}
           openSecondary={true}
-          overlayStyle={{top:"105px"}}
-          containerStyle={this.state.showFilters ? {overflow:"visible", top:"105px"} : {overflow:"hidden", top:"105px"}}
+          overlayStyle={{top:"57px", backgroundColor: "rgba(0, 0, 0, 0.24)"}}
+          containerStyle={this.state.showFilters ? {overflow:"visible", top:"57px"} : {overflow:"hidden", top:"57px"}}
         >
           {filterNav}
         </Drawer>

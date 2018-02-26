@@ -2,17 +2,29 @@
 @import 'fonts';
 @import 'loader';
 
+* {
+  box-sizing: border-box;
+}
+
 html {
   height: 100%;
   min-width: 1200px;
 }
+
 body {
-  min-height: 100%;
+  height: 100%;
+  background-color: #ffffff;
 }
 
-* {
-  box-sizing: border-box;
+#main {
 }
+
+.wrapper {
+  position: relative;
+  top: 57px;
+}
+
+
 
 /* General */
 
@@ -49,11 +61,13 @@ a.warning:hover {
 }
 
 .full-screen {
-  position: absolute;
+  position: fixed;
   top:0;
   bottom:0;
   left:0;
   right: 0;
+  z-index: 100;
+  background-color: #ffffff;
 }
 
 
@@ -231,11 +245,14 @@ a, span.link {
 
 /* Header */
 
+#fixedHeader {
+  position: fixed;
+  z-index: 1400;
+  width: 100%
+}
+
 #header-nav {
   position: relative;
-  border-top: 1px solid #e0e0e0;
-  padding-right: 30%;
-  background-color: @lightestgrey;
   border-bottom: 1px solid #e0e0e0;
 }
 
@@ -347,15 +364,30 @@ a, span.link {
     margin-right: -260px;
     padding-top: 20px;
   }
+
+  &.leftNav {
+    width: 198px;
+    margin-right: -198px;
+    position: fixed;
+    top: 57px;
+    bottom: 0;
+    background-color: @lightestgrey;
+    border-right: 1px solid @lightergrey;
+  }
 }
 
 .rightFluid {
   margin-left: 260px;
-  padding-bottom: 30px;
-  padding-left: 30px;
+  padding: 30px;
   position: relative;
-  border-left: 1px solid @lightestgrey;
-  min-height: 75vh;
+  border-left: 1px solid @lightergrey;
+  min-height: 73vh;
+
+  &.container {
+    margin-left: 198px;
+    border-left: none;
+    background-color: #ffffff;
+  }
 }
 
 .tableActions {
@@ -770,12 +802,6 @@ table thead.clickable tr>th:first-child {
   font-weight: 500;
 }
 
-.tabContainer, .contentContainer {
-  margin: 30px 45px 60px;
-  position: relative;
-}
-
-
 /*  hint.css tooltips */
 [class*=hint--] {
   min-width: 65px !important;
@@ -1165,9 +1191,9 @@ td.no-click-cell {
 .fixedButtons {
   position: fixed;
   bottom: 30px;
+  left: 198px;
   right: 30px;
   padding: 15px 30px;
-  width: 100%;
   background-color: rgba(255,255,255,0.8);
   .animation(fadein 0.3s 1);
   z-index: 1;
@@ -1175,8 +1201,8 @@ td.no-click-cell {
 
 .top-right-button {
   position: absolute;
-  top: 3px;
-  right: 0;
+  top: 30px;
+  right: 30px;
 }
 
 .bottom-right-button {
@@ -1231,72 +1257,6 @@ td.no-click-cell {
 
 /* Dashboard */
 
-.leftDashboard {
-  width: 100%;
-  display: inline-block;
-  padding-right: 3%;
-  vertical-align: top;
-}
-
-.rightDashboard {
-  width: 29%;
-  display: inline-block;
-  border-left: 1px solid @lightgrey;
-  padding-left: 3%;
-  vertical-align: top;
-
-  .right {
-    height: 100%;
-  }
-}
-
-.health {
-  position: relative;
-  min-height: 250px;
-
-  .health-panel {
-    margin: 15px 0;
-    padding: 5% 5% 13%;
-    min-height: 100px;
-    border-radius: 4px;
-    border: 1px solid @lightergrey;
-
-    a {
-      margin-top: 5%;
-    }
-  }
-
-  .health-icon {
-    width: 33%;
-    display: inline-block;
-
-    img {
-      display: block;
-      margin: auto;
-    }
-  }
-
-  .health-text {
-    width: 66%;
-    text-align: center;
-    display: inline-block;
-
-    span {
-      font-size: 20px;
-      vertical-align: text-top;
-      font-size: 16px;
-    }
-
-    .number {
-      font-size: 4vw;
-      font-weight: bold;
-      position: relative;
-      display: block;
-    }
-  }
-
-}
-
 .dashboard-placeholder {
   font-size: 16px;
   color: @grey;
@@ -1307,56 +1267,6 @@ td.no-click-cell {
   img {
     margin-top: 15px;
     width: 74px;
-  }
-}
-
-.activityWrapper {
-  margin-bottom: 30px;
-  position: relative;
-
-  .activityEntry {
-    padding: 1px 12px 0.5em;
-    background-color: @alertgreen;
-    color: #E0E0E0;
-    position: relative;
-
-    p.summary {
-      color: @lightestgrey;
-    }
-
-    &:after {
-      content:"";
-      width:0;
-      height:0;
-      position: absolute;
-      z-index:-1;
-      bottom:-9px;
-      left:10px;
-      border-bottom:10px solid transparent;
-      border-left:10px solid @alertgreen;
-    }
-
-     &.negative {
-      background-color: @alertpurple;
-      &:after {
-         border-left:10px solid @alertpurple;
-      }
-    }
-  }
-
-  .activityTime {
-    color: @grey;
-    position: relative;
-    top: 12px;
-  }
-}
-
-.activityEntry {
-  cursor: pointer;
-  .opacity(0.9);
-  &:hover {
-    .scale(1.005);
-    .opacity(1);
   }
 }
 

@@ -68,7 +68,7 @@ var Login = createReactClass({
           cookie.save("JWT", token, options);
 
           // logged in, so redirect
-          var location = self.props;
+          var location = self.props.location;
 
           if (location.state && location.state.nextPathname) {
             self.props.router.replace(location.state.nextPathname);
@@ -129,7 +129,8 @@ var Login = createReactClass({
 
 
 Login.contextTypes = {
-  router: PropTypes.object
+  router: PropTypes.object,
+  location: PropTypes.object,
 };
 
 module.exports = Login;

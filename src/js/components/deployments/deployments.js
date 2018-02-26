@@ -448,7 +448,7 @@ var Deployments = createReactClass({
       )
     }
     return (
-      <div className="contentContainer allow-overflow">
+      <div className="allow-overflow">
         <div className="top-right-button">
           <ScheduleButton secondary={true} openDialog={this.dialogOpen} />
         </div>
