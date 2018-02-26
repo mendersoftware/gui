@@ -22,7 +22,6 @@ import FontIcon from 'material-ui/FontIcon';
 import InfoIcon from 'react-material-icons/icons/action/info-outline';
 import Snackbar from 'material-ui/Snackbar';
 import Dialog from 'material-ui/Dialog';
-import { List, ListItem } from 'material-ui/List';
 import TextField from 'material-ui/TextField';
 
 var Authorized =  createReactClass({

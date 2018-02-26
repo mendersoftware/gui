@@ -3,6 +3,9 @@ import { setRetryTimer, clearRetryTimer, clearAllRetryTimers } from '../../utils
 var createReactClass = require('create-react-class');
 var AppStore = require('../../stores/app-store');
 var AppActions = require('../../actions/app-actions');
+import { Router, Link } from 'react-router';
+import PropTypes from 'prop-types';
+import cookie from 'react-cookie';
 
 var Pending = require('./pendingdeployments.js');
 var Progress = require('./inprogressdeployments.js');
@@ -17,6 +20,8 @@ import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 
 import Snackbar from 'material-ui/Snackbar';
+import { List, ListItem } from 'material-ui/List';
+import Divider from 'material-ui/Divider';
 
 import { preformatWithRequestID } from '../../helpers';
 
@@ -36,6 +41,7 @@ function getState() {
     hasPending: AppStore.getTotalPendingDevices(),
     hasDevices: AppStore.getTotalAcceptedDevices(),
     rejectedCount: AppStore.getTotalRejectedDevices(),
+    user: AppStore.getCurrentUser(),
   }
 }
 
@@ -119,6 +125,10 @@ var Deployments = createReactClass({
     this._refreshInProgress();
     this._refreshPending();
     this._refreshPast();
+
+    if (this.state.showHelptips && !cookie.load(this.state.user.id+'-onboarded') && cookie.load(this.state.user.id+'-deploymentID')) {
+      this._isOnBoardFinished(cookie.load(this.state.user.id+'-deploymentID'));
+    }
   },
   _refreshInProgress: function(page, per_page) {
     /*
@@ -206,6 +216,7 @@ var Deployments = createReactClass({
 
     var callback = {
       success: function(deployments, links) {
+
         self.setState({doneLoading:true});
         self._dismissSnackBar();
 
@@ -265,7 +276,7 @@ var Deployments = createReactClass({
     this.setState({
       dialog: false,
       artifact: null,
-      group: null
+      group: null,
     });
   },
   dialogOpen: function(dialog) {
@@ -288,6 +299,7 @@ var Deployments = createReactClass({
   _onScheduleSubmit: function() {
     var ids = [];
     var self = this;
+
     for (var i=0; i<this.state.filteredDevices.length; i++) {
       ids.push(this.state.filteredDevices[i].id);
     }
@@ -301,6 +313,12 @@ var Deployments = createReactClass({
       success: function(data) {
         var lastslashindex = data.lastIndexOf('/');
         var id = data.substring(lastslashindex  + 1);
+
+        // onboarding
+        if (self.state.showHelptips && !cookie.load(self.state.user.id+'-onboarded') && !cookie.load(self.state.user.id+'-deploymentID')) {
+          cookie.save(self.state.user.id+'-deploymentID', id);
+        }
+
         AppActions.getSingleDeployment(id, function(data) {
           if (data) {
             // successfully retrieved new deployment
@@ -412,6 +430,20 @@ var Deployments = createReactClass({
     // use to make sure re-renders dialog at correct height when device list built
     this.setState({updated:true});
   },
+  _finishOnboard: function() {
+    this.setState({onboardDialog: false});
+   
+  },
+  _isOnBoardFinished: function(id) {
+    var self = this;
+    AppActions.getSingleDeployment(id, function(data) {
+      if (data.status === "finished") {
+        self.setState({onboardDialog: true});
+        cookie.save(self.state.user.id+'-onboarded', true);
+        cookie.remove(self.state.user.id+'-deploymentID');
+      }
+    });
+  },
   render: function() {
     var disabled = (typeof this.state.filteredDevices !== 'undefined' && this.state.filteredDevices.length > 0) ? false : true;
     var scheduleActions =  [
@@ -431,6 +463,12 @@ var Deployments = createReactClass({
       <FlatButton
           label="Close"
           onClick={this.dialogDismiss.bind(null, 'dialog')} />
+    ];
+    var onboardActions = [
+      <RaisedButton
+          label="Finish"
+          primary={true}
+          onClick={this._finishOnboard} />
     ];
     var dialogContent = '';
 
@@ -477,6 +515,39 @@ var Deployments = createReactClass({
           {dialogContent}
         </Dialog>
 
+        <Dialog
+          ref="onboard-complete"
+          actions={onboardActions}
+          title="Congratulations!"
+          autoDetectWindowHeight={true}
+          autoScrollBodyContent={true}
+          open={(this.state.onboardDialog && this.state.showHelptips) || false}
+          contentStyle={{overflow:"hidden", boxShadow:"0 14px 45px rgba(0, 0, 0, 0.25), 0 10px 18px rgba(0, 0, 0, 0.22)"}}
+          >
+          <h3>You've completed your first deployment - so what's next?</h3>
+
+          <List>
+            <ListItem
+              key="physical"
+              primaryText={<p>Try updating a physical device</p>}
+              secondaryText={<p>Visit the <Link to={`/help`}>help pages</Link> for guides on provisioning Raspberry Pi 3 and BeagleBone Black devices.</p>}
+              secondaryTextLines={2}
+              disabled={true}
+              />
+
+              <Divider />
+
+            <ListItem
+              key="yocto"
+              primaryText={<p>Try building your own Yocto Project images for use with Mender</p>}
+              secondaryText={<p>See our <a href="https://docs.mender.io/artifacts/building-mender-yocto-image" target="_blank">documentation site</a> for a step by step guide on how to build a Yocto Project image for a device.</p>}
+              secondaryTextLines={2}
+              disabled={true}
+              />
+          </List>
+
+        </Dialog>
+
          <Snackbar
           open={this.state.snackbar.open}
           message={this.state.snackbar.message}
@@ -488,5 +559,9 @@ var Deployments = createReactClass({
     );
   }
 });
+
+module.exports.contextTypes = {
+  router: PropTypes.object,
+};
 
 module.exports = Deployments;
