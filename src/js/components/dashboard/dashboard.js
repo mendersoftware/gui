@@ -114,7 +114,7 @@ var Dashboard = createReactClass({
         break;
       case "devices":
         var filters = params.status ? encodeURIComponent("status="+params.status) : '';
-        this.context.router.push('/devices/'+filters);
+        this.context.router.push('/devices/groups/'+filters);
         break;
       case "devices/pending":
         this.context.router.push('/devices/pending');
@@ -136,7 +136,7 @@ var Dashboard = createReactClass({
       }
     }
     return (
-      <div className="contentContainer dashboard">
+      <div className="dashboard">
         <div>
           <div className={this.state.pending ? "onboard margin-bottom" : "hidden" }>
             <p>There {pending_str} waiting authorization</p>
@@ -173,9 +173,9 @@ var Dashboard = createReactClass({
 
           </div>
         </div>
-        <div className="leftDashboard">
-          <Deployments loadingActive={!this.state.doneActiveDepsLoading} loadingRecent={!this.state.donePastDepsLoading} clickHandle={this._handleClick} progress={this.state.progress} recent={this.state.recent} />
-        </div>
+      
+        <Deployments loadingActive={!this.state.doneActiveDepsLoading} loadingRecent={!this.state.donePastDepsLoading} clickHandle={this._handleClick} progress={this.state.progress} recent={this.state.recent} />
+        
         <Snackbar
           open={this.state.snackbar.open}
           message={this.state.snackbar.message}

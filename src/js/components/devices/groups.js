@@ -38,7 +38,7 @@ var Groups = createReactClass({
               primaryText={allLabel}
               style={!this.props.selectedGroup ? {backgroundColor: "#e7e7e7"} : {backgroundColor: "transparent"}}
               onClick={this._changeGroup.bind(null, "", this.props.allCount)} />
-            <Subheader style={{marginTop:"20px"}}>Groups</Subheader>
+          
    
           {this.props.groups.map(function(group, index) {
             var isSelected = group===this.props.selectedGroup ? {backgroundColor: "#e7e7e7"} : {backgroundColor: "transparent"};

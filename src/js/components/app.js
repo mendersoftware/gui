@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Router, Route, Link } from 'react-router';
 import Header from './header/header';
+import LeftNav from './leftnav';
 
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import RawTheme from '../themes/mender-theme.js';
@@ -16,15 +18,6 @@ var AppActions = require('../actions/app-actions');
 var createReactClass = require('create-react-class');
 var isDemoMode = false;
 
-
-function getState() {
-  return {
-    currentUser: AppStore.getCurrentUser(),
-    uploadInProgress: AppStore.getUploadInProgress(),
-    timeout: 900000, // 15 minutes idle time
-  }
-}
-
 var App = createReactClass({
   childContextTypes: {
     location: PropTypes.object,
@@ -38,7 +31,12 @@ var App = createReactClass({
     };
   },
   getInitialState: function() {
-    return getState();
+    return {
+      currentUser: AppStore.getCurrentUser(),
+      uploadInProgress: AppStore.getUploadInProgress(),
+      timeout: 900000, // 15 minutes idle time,
+      currentTab: this._updateActive(),
+    }
   },
   componentWillMount: function() {
     AppStore.changeListener(this._onChange);
@@ -51,7 +49,7 @@ var App = createReactClass({
     AppStore.removeChangeListener(this._onChange);
   },
   _onChange: function() {
-    this.setState(getState());
+    this.setState(this.getInitialState());
   },
   _onIdle: function() {
     if (expirySet()) {
@@ -64,6 +62,19 @@ var App = createReactClass({
       }
     }
   },
+  _changeTab: function(tab) {
+    this.context.router.push(tab);
+    this.setState({currentTab: this._updateActive()});
+  },
+  _updateActive: function() {
+    return this.context.router.isActive({ pathname: '/' }, true) ? '/' :
+      this.context.router.isActive('/devices') ? '/devices' :
+      this.context.router.isActive('/artifacts') ? '/artifacts' :
+      this.context.router.isActive('/deployments') ? '/deployments' :
+      this.context.router.isActive('/help') ? '/help' :
+      this.context.router.isActive('/settings') ? '/settings' : '';
+  },
+
   render: function() {
     return (
       <IdleTimer
@@ -73,17 +84,29 @@ var App = createReactClass({
         timeout={this.state.timeout}
         format="MM-DD-YYYY HH:MM:ss.SSS">
 
-        <div className="wrapper">
-          <div className="header">
-            <Header demo={isDemoMode} history={this.props.history} isLoggedIn={(this.state.currentUser||{}).hasOwnProperty("email")} />
+        <div>
+          <div className="header" id="fixedHeader">
+            <Header currentTab={this.state.currentTab} demo={isDemoMode} history={this.props.history} isLoggedIn={(this.state.currentUser||{}).hasOwnProperty("email")} />
           </div>
-          <div className="container">
-            {React.cloneElement(this.props.children, { isLoggedIn:(this.state.currentUser||{}).hasOwnProperty("email") })}
+
+          <div className="wrapper">
+            <div className="leftFixed leftNav">
+              <LeftNav currentTab={this.state.currentTab} changeTab={this._changeTab} />
+            </div>
+            <div className="rightFluid container">
+              {React.cloneElement(this.props.children, { isLoggedIn:(this.state.currentUser||{}).hasOwnProperty("email") })}
+            </div>
           </div>
         </div>
       </IdleTimer>
     )
   }
 });
+
+App.contextTypes = {
+  router: PropTypes.object,
+  location: PropTypes.object,
+};
+
 
 module.exports = App;

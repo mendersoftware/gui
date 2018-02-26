@@ -287,9 +287,15 @@ var Devices = createReactClass({
 	      tabStyle : {
 	        display:"block",
 	        width:"100%",
-	        color: "rgba(0, 0, 0, 0.8)",
+	        color: "#949495",
 	        textTransform: "none"
 	      },
+        activeTabStyle : {
+          display:"block",
+          width:"100%",
+          color: "#404041",
+          textTransform: "none"
+        },
 	      listStyle: {
 	        fontSize: "12px",
 	        paddingTop: "10px",
@@ -313,20 +319,20 @@ var Devices = createReactClass({
 	    ];
 
 	    var pendingLabel = this.state.pendingCount ? "Pending (" + this.state.pendingCount + ")" : "Pending";
-
 		return (
-			<div className="contentContainer" style={{marginTop: "10px"}}>
+			<div style={{marginTop:"-15px"}}>
 
 		    <Tabs
           value={this.state.tabIndex}
           onChange={this._changeTab}
-          tabItemContainerStyle={{background: "none", width:"420px"}}>
+          tabItemContainerStyle={{background: "none", width:"420px"}}
+          inkBarStyle={{backgroundColor: "#347a87"}}>
 
           <Tab
             label="Device groups"
             value="/devices/groups"
             onActive={tabHandler}
-            style={styles.tabStyle}>
+            style={this.state.tabIndex === "/devices/groups" ? styles.activeTabStyle : styles.tabStyle}>
 
 				    <DeviceGroups 
               params={this.props.params}
@@ -345,7 +351,7 @@ var Devices = createReactClass({
             label={pendingLabel}
             value="/devices/pending"
             onActive={tabHandler}
-            style={styles.tabStyle}>
+            style={this.state.tabIndex === "/devices/pending" ? styles.activeTabStyle : styles.tabStyle}>
 
 						<PendingDevices 
               styles={styles} 
@@ -364,7 +370,7 @@ var Devices = createReactClass({
             label="Rejected"
             value="/devices/rejected"
             onActive={tabHandler}
-            style={styles.tabStyle}>
+            style={this.state.tabIndex === "/devices/rejected" ? styles.activeTabStyle : styles.tabStyle}>
 
             <RejectedDevices rejectOrDecomm={this._openRejectDialog} styles={styles} currentTab={this.state.currentTab} snackbar={this.state.snackbar} disabled={this.state.pauseAdmisson} authorizeDevices={this._authorizeDevices} count={this.state.rejectedCount} rejectDevice={this._handleRejectDevice} />
           </Tab>
@@ -435,7 +441,7 @@ var Devices = createReactClass({
                 data-tip
                 data-for='devices-nav-tip'
                 data-event='click focus'
-                style={{left: "14%", top:"40px"}}>
+                style={{left: "20%", top:"28px"}}>
                 <FontIcon className="material-icons">help</FontIcon>
               </div>
               <ReactTooltip

@@ -117,10 +117,8 @@ var Artifacts = createReactClass({
     ];
 
     return (
-      <div className="contentContainer">
-        <div className="relative">
-          <Repository showHelptips={this.state.showHelptips} removeArtifact={this._removeDialog} refreshArtifacts={this._getArtifacts} startLoader={this._startLoading} loading={!this.state.doneLoading} selected={this.state.selected} artifacts={this.state.artifacts} />
-        </div>
+      <div>
+        <Repository showHelptips={this.state.showHelptips} removeArtifact={this._removeDialog} refreshArtifacts={this._getArtifacts} startLoader={this._startLoading} loading={!this.state.doneLoading} selected={this.state.selected} artifacts={this.state.artifacts} />
 
         <Dialog
           open={this.state.remove}

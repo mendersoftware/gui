@@ -436,9 +436,7 @@ var DeviceGroups = createReactClass({
 
 		return (	
 			<div className="margin-top">
-				{!this.state.selectedGroup ?
-				<Filters attributes={this.state.attributes} filters={this.state.filters} onFilterChange={this._onFilterChange} /> : null
-				}
+			
 				<div className="leftFixed">
 		          	<Groups
 		            openGroupDialog={this._toggleDialog.bind(null, "createGroupDialog")}
@@ -450,8 +448,14 @@ var DeviceGroups = createReactClass({
 		            acceptedCount={this.props.acceptedDevices}
 		            showHelptips={this.props.showHelptips} />
 	        	</div>
-	        	<div className="rightFluid">
-		            <FlatButton onClick={this._toggleDialog.bind(null, "removeGroup")} style={styles.exampleFlatButton} className={this.state.selectedGroup ? null : 'hidden' } label="Remove group" labelPosition="after">
+	        	<div className="rightFluid" style={{paddingTop:"0"}}>
+
+	        		{!this.state.selectedGroup ?
+								<Filters attributes={this.state.attributes} filters={this.state.filters} onFilterChange={this._onFilterChange} /> : null
+							}
+
+
+		          <FlatButton onClick={this._toggleDialog.bind(null, "removeGroup")} style={styles.exampleFlatButton} className={this.state.selectedGroup ? null : 'hidden' } label="Remove group" labelPosition="after">
 		          		<FontIcon style={styles.exampleFlatButtonIcon} className="material-icons">delete</FontIcon>
 		        	</FlatButton>
 		          	
