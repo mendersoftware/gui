@@ -10,7 +10,7 @@ var AppStore = require('../../stores/app-store');
 var AppActions = require('../../actions/app-actions');
 var ScheduleForm = require('../deployments/scheduleform');
 var Loader = require('../common/loader');
-
+import cookie from 'react-cookie';
 
 import { List, ListItem } from 'material-ui/List';
 import FontIcon from 'material-ui/FontIcon';
@@ -37,6 +37,7 @@ var ExpandedDevice = createReactClass({
       },
       schedule: false,
       artifacts: AppStore.getArtifactsRepo(),
+      user: AppStore.getCurrentUser(),
     };
   },
 
@@ -87,7 +88,16 @@ var ExpandedDevice = createReactClass({
       artifact_name: this.state.artifact.name
     }
     var callback = {
-      success: function() {
+      success: function(data) {
+        // get id, if showhelptips & no onboarded cookie, this is user's first deployment - add id cookie
+        var lastslashindex = data.lastIndexOf('/');
+        var id = data.substring(lastslashindex  + 1);
+
+        // onboarding
+        if (self.props.showHelpTips && !cookie.load(self.state.user.id+'-onboarded') && !cookie.load(self.state.user.id+'-deploymentID')) {
+          cookie.save(self.state.user.id+'-deploymentID', id);
+        }
+
         AppActions.setSnackbar("Deployment created successfully. Redirecting...");
         var params = {};
         params.route="deployments";
