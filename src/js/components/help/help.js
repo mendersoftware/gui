@@ -78,7 +78,6 @@ var Help =  createReactClass({
     var callback = {
       success: function(org) {
         self.setState({org: org});
-        console.log("Received user's organization: " + org.id);
         self._getLinks(org.id);
       },
       error: function(err) {

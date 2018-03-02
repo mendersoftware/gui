@@ -1,20 +1,36 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import CopyToClipboard from 'react-copy-to-clipboard';
 var AppStore = require('../../../stores/app-store');
 
 var createReactClass = require('create-react-class');
 
-
+import FlatButton from 'material-ui/FlatButton';
+import FontIcon from 'material-ui/FontIcon';
 
 var VirtualDevice =  createReactClass({
+
+  getInitialState: function() {
+    return {
+      copied: false,
+    };
+  },
+
+  _copied: function() {
+    var self = this;
+    self.setState({copied: true});
+    setTimeout(function() {
+      self.setState({copied: false});
+    }, 5000);
+  },
  
   render: function() {
 
     var token = (this.props.org || {}).tenant_token;
 
-    return (
+    var codeToCopy =  "TENANT_TOKEN='" + token + "' \ndocker run -it -e SERVER_URL='https://hosted.mender.io' \\\n-e TENANT_TOKEN=$TENANT_TOKEN mendersoftware/mender-client-qemu:latest" ;
 
-   
+    return (
 
         <div>
 
@@ -59,11 +75,21 @@ var VirtualDevice =  createReactClass({
             <p>To start a virtual device, just paste the following commands {this.props.hasMultitenancy ? <span>(we have pasted in your specific tenant token)</span> : null }</p>
 
             {this.props.hasMultitenancy ?
+              <div>
+                <div className="code">
+                <CopyToClipboard text={codeToCopy}
+                    onCopy={() => this._copied()}>
+                    <FlatButton
+                    label="Copy to clipboard"
+                    style={{float:"right", margin:"-10px 0 0 10px"}}
+                    icon={<FontIcon className="material-icons">content_paste</FontIcon>} />
+                </CopyToClipboard>
+                <span style={{wordBreak:"break-word"}}>
+                 {codeToCopy}
+                 </span>
+                </div>
 
-              <div className="code">
-                TENANT_TOKEN='{token}'<br/>
-                docker run -it -e SERVER_URL="https://hosted.mender.io" \<br/>
-                -e TENANT_TOKEN=$TENANT_TOKEN mendersoftware/mender-client-qemu:latest
+                <p>{this.state.copied ? <span className="green fadeIn">Copied to clipboard.</span> : null}</p>
               </div>
             : null }
 

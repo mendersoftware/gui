@@ -1,10 +1,31 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import CopyToClipboard from 'react-copy-to-clipboard';
+import FlatButton from 'material-ui/FlatButton';
+import FontIcon from 'material-ui/FontIcon';
 
 var createReactClass = require('create-react-class');
 
 
 var BeagleBoneBlack =  createReactClass({
+
+  getInitialState: function() {
+    return {
+      copied1: false,
+      copied2: false,
+    };
+  },
+
+  _copied: function(ref) {
+    var self = this;
+    var toSet = {};
+    toSet[ref] = true;
+    self.setState(toSet);
+    setTimeout(function() {
+      toSet[ref] = false;
+      self.setState(toSet);
+    }, 5000);
+  },
  
   render: function() {
     var version;
@@ -30,6 +51,9 @@ var BeagleBoneBlack =  createReactClass({
       }
     }
     
+    var codeToCopy1 = 'gunzip <PATH-TO-YOUR-DISK-IMAGE>.sdimg.gz';
+    var codeToCopy2 = "SD_CARD_DEVICE=<YOUR-SD-CARD-DEVICE> \nPATH_TO_DISK_IMAGE=<PATH-TO-YOUR-DISK-IMAGE>.sdimg \nsudo dd if=$PATH_TO_DISK_IMAGE of=$SD_CARD_DEVICE bs=1M && sudo sync";
+
     return (
       <div>
 
@@ -64,7 +88,19 @@ var BeagleBoneBlack =  createReactClass({
 
         <p>After the image has been downloaded, unpack it:</p>
 
-        <div className="code">{'gunzip <PATH-TO-YOUR-DISK-IMAGE>.sdimg.gz'}</div>
+        <div className="code">
+          <CopyToClipboard text={codeToCopy1}
+            onCopy={() => this._copied("copied1")}>
+            <FlatButton
+            label="Copy to clipboard"
+            style={{float:"right", margin:"-10px 0 0 10px"}}
+            icon={<FontIcon className="material-icons">content_paste</FontIcon>} />
+          </CopyToClipboard>
+          <span style={{wordBreak:"break-word"}}>
+          {codeToCopy1}
+          </span>
+        </div>
+        <p>{this.state.copied1 ? <span className="green fadeIn">Copied to clipboard.</span> : null}</p>
 
         <h3>Write the disk image to the SD card</h3>
 
@@ -76,10 +112,18 @@ var BeagleBoneBlack =  createReactClass({
         <p> When you know the correct device for the SD card, set it and your disk image in shell variables and write it with the following commands:</p>
 
         <div className="code">
-          <p>{'SD_CARD_DEVICE=<YOUR-SD-CARD-DEVICE>'}</p>
-          <p>{'PATH_TO_DISK_IMAGE=<PATH-TO-YOUR-DISK-IMAGE>.sdimg'}</p>
-          <p>sudo dd if=$PATH_TO_DISK_IMAGE of=$SD_CARD_DEVICE bs=1M && sudo sync</p>
+          <CopyToClipboard text={codeToCopy2}
+            onCopy={() => this._copied("copied2")}>
+            <FlatButton
+            label="Copy to clipboard"
+            style={{float:"right", margin:"-10px 0 0 10px"}}
+            icon={<FontIcon className="material-icons">content_paste</FontIcon>} />
+          </CopyToClipboard>
+          <span style={{wordBreak:"break-word"}}>
+          {codeToCopy2}
+          </span>
         </div>
+        <p>{this.state.copied2 ? <span className="green fadeIn">Copied to clipboard.</span> : null}</p>
 
         <p>This may take a few minutes complete; wait until the command returns.</p>
 
