@@ -36,6 +36,7 @@ var App = createReactClass({
       uploadInProgress: AppStore.getUploadInProgress(),
       timeout: 900000, // 15 minutes idle time,
       currentTab: this._updateActive(),
+      version: AppStore.getMenderVersion(),
     }
   },
   componentWillMount: function() {
@@ -91,7 +92,7 @@ var App = createReactClass({
 
           <div className="wrapper">
             <div className="leftFixed leftNav">
-              <LeftNav currentTab={this.state.currentTab} changeTab={this._changeTab} />
+              <LeftNav version={this.state.version} currentTab={this.state.currentTab} changeTab={this._changeTab} />
             </div>
             <div className="rightFluid container">
               {React.cloneElement(this.props.children, { isLoggedIn:(this.state.currentUser||{}).hasOwnProperty("email") })}

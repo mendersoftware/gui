@@ -5,7 +5,8 @@ set -e -x
 # Uses following env variables:
 # * GATEWAY_IP - address of the API gateway
 # * GATEWAY_PORT - gateway port, defaults to no specified port
-# * DEMO [true/false] - switch for demo UI, defaults to false. 
+# * DEMO [true/false] - switch for demo UI, defaults to false.
+# * INTEGRATION_VERSION - version of integration service
 
 # main.js path
 MAINJS="./js/main.js" 
@@ -31,6 +32,11 @@ fi
 # _hasMultitenancy switch for Demo UI
 if [ "$HAVE_MULTITENANT" == "true" ]; then
    sed -i "s/var _hasMultitenancy.*/var _hasMultitenancy = true;/g" $MAINJS
+fi
+
+# version to display in UI
+if [ ! -z "$INTEGRATION_VERSION" ]; then
+   	sed -i "s/var _MenderVersion.*/var _MenderVersion = '$INTEGRATION_VERSION';/g" $MAINJS
 fi
 
 # isDemoMode switch for Demo UI

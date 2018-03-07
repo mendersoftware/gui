@@ -25,6 +25,7 @@ var _organization = {};
 var _showHelptips = null;
 var _groups = [];
 var _uploadInProgress = false;
+var _MenderVersion = null;
 
 
 /* Temp local devices */
@@ -623,6 +624,11 @@ var AppStore = assign(EventEmitter.prototype, {
 
   showHelptips: function() {
     return _showHelptips;
+  },
+
+  getMenderVersion: function() {
+    // return version number
+    return _MenderVersion;
   },
 
   getUploadInProgress: function() {
