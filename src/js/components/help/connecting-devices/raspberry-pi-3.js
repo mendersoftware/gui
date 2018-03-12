@@ -37,7 +37,13 @@ var RaspberryPi =  createReactClass({
 
      var versions = Object.keys(this.props.links.links.raspberrypi3);
      if (versions.length >1) {
-      version = this.props.getLatest(versions);
+       // check if image for the current version exists
+      if (this.props.links.links.raspberrypi3[this.props.version]) {
+        version = this.props.version;
+      } else {
+        // else get latest
+        version = this.props.getLatest(versions);
+      }
      } else {
       version = versions[0];
      }
