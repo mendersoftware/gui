@@ -83,7 +83,7 @@ var DemoArtifacts =  createReactClass({
 
 					</Table></div>
 					: 
-					<p>Download the Artifacts for your desired device types from <a href="https://docs.mender.io/development/getting-started/download-test-images" target="_blank">the downloads page.</a></p>
+					<p>Download the Artifacts for your desired device types from <a href={"https://docs.mender.io/"+this.props.docsVersion+"/getting-started/download-test-images"} target="_blank">the downloads page.</a></p>
 				}
 
 				<p>Then upload them to the <a onClick={this._changePage.bind(null, "artifacts")}>Artifacts tab</a>.</p>

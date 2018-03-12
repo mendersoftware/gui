@@ -540,7 +540,7 @@ var Deployments = createReactClass({
             <ListItem
               key="yocto"
               primaryText={<p>Try building your own Yocto Project images for use with Mender</p>}
-              secondaryText={<p>See our <a href="https://docs.mender.io/artifacts/building-mender-yocto-image" target="_blank">documentation site</a> for a step by step guide on how to build a Yocto Project image for a device.</p>}
+              secondaryText={<p>See our <a href={"https://docs.mender.io/"+this.props.docsVersion+"/artifacts/building-mender-yocto-image"} target="_blank">documentation site</a> for a step by step guide on how to build a Yocto Project image for a device.</p>}
               secondaryTextLines={2}
               disabled={true}
               />

@@ -334,18 +334,19 @@ var Devices = createReactClass({
             onActive={tabHandler}
             style={this.state.tabIndex === "/devices/groups" ? styles.activeTabStyle : styles.tabStyle}>
 
-				    <DeviceGroups 
-              params={this.props.params}
-              rejectOrDecomm={this._openRejectDialog}
-              styles={styles} 
-              paused={this.state.pauseAdmisson} 
-              rejectedDevices={this.state.rejectedCount} 
-              acceptedDevices={this.state.acceptedCount} 
-              allCount={this.state.allCount} 
-              currentTab={this.state.currentTab} 
-              snackbar={this.state.snackbar} 
-              rejectDevice={this._rejectDevice}
-              showHelptips={this.state.showHelptips} />
+			<DeviceGroups 
+				docsVersion={this.props.docsVersion}
+	            params={this.props.params}
+				rejectOrDecomm={this._openRejectDialog}
+				styles={styles} 
+				paused={this.state.pauseAdmisson} 
+				rejectedDevices={this.state.rejectedCount} 
+				acceptedDevices={this.state.acceptedCount} 
+				allCount={this.state.allCount} 
+				currentTab={this.state.currentTab} 
+				snackbar={this.state.snackbar} 
+				rejectDevice={this._rejectDevice}
+				showHelptips={this.state.showHelptips} />
 		      </Tab>
 			    <Tab
             label={pendingLabel}

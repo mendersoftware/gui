@@ -628,7 +628,22 @@ var AppStore = assign(EventEmitter.prototype, {
 
   getMenderVersion: function() {
     // return version number
-    return _MenderVersion;
+    var version = "master";
+    if (_MenderVersion && isNaN(_MenderVersion.charAt(0))) {
+      // if NaN, is master branch
+      version = _MenderVersion;
+    }
+    return version;
+  },
+
+  getDocsVersion: function() {
+    // return docs link friendly version
+    var docsVersion = "development";
+    if (_MenderVersion && !isNaN(_MenderVersion.charAt(0))) {
+      var splitArray = _MenderVersion.split(".").slice(0,2);
+      docsVersion = splitArray.join(".");
+    }
+    return docsVersion;
   },
 
   getUploadInProgress: function() {

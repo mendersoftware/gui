@@ -37,6 +37,7 @@ var App = createReactClass({
       timeout: 900000, // 15 minutes idle time,
       currentTab: this._updateActive(),
       version: AppStore.getMenderVersion(),
+      docsVersion: AppStore.getDocsVersion(),
     }
   },
   componentWillMount: function() {
@@ -87,7 +88,7 @@ var App = createReactClass({
 
         <div>
           <div className="header" id="fixedHeader">
-            <Header currentTab={this.state.currentTab} demo={isDemoMode} history={this.props.history} isLoggedIn={(this.state.currentUser||{}).hasOwnProperty("email")} />
+            <Header docsVersion={this.state.docsVersion} currentTab={this.state.currentTab} demo={isDemoMode} history={this.props.history} isLoggedIn={(this.state.currentUser||{}).hasOwnProperty("email")} />
           </div>
 
           <div className="wrapper">
@@ -95,7 +96,7 @@ var App = createReactClass({
               <LeftNav version={this.state.version} currentTab={this.state.currentTab} changeTab={this._changeTab} />
             </div>
             <div className="rightFluid container">
-              {React.cloneElement(this.props.children, { isLoggedIn:(this.state.currentUser||{}).hasOwnProperty("email") })}
+              {React.cloneElement(this.props.children, { isLoggedIn:(this.state.currentUser||{}).hasOwnProperty("email"), docsVersion: this.state.docsVersion, })}
             </div>
           </div>
         </div>
