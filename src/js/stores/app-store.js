@@ -628,10 +628,10 @@ var AppStore = assign(EventEmitter.prototype, {
 
   getMenderVersion: function() {
     // return version number
-    var version = "master";
-    if (_MenderVersion && isNaN(_MenderVersion.charAt(0))) {
-      // if NaN, is master branch
-      version = _MenderVersion;
+    var version = "";
+    if (_MenderVersion) {
+      // if first character NaN, is master branch
+      version = isNaN(_MenderVersion.charAt(0)) ? "master" : _MenderVersion;
     }
     return version;
   },
