@@ -276,7 +276,7 @@ var Header = createReactClass({
                   className="react-tooltip">
                   <h3>Demo mode</h3>
                   <p>Mender is currently running in <b>demo mode</b>.</p>
-                  <p><a href="https://docs.mender.io/Administration/Production-installation" target="_blank">See the documentation for help switching to production mode</a>.</p>
+                  <p><a href={"https://docs.mender.io/"+this.props.docsVersion+"/administration/production-installation"} target="_blank">See the documentation for help switching to production mode</a>.</p>
                 </ReactTooltip>
               </div>
             : null }

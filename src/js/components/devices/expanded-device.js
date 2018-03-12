@@ -153,7 +153,7 @@ var ExpandedDevice = createReactClass({
     this.setState({filterByArtifact:filteredDevs});
   },
   _clickLink: function() {
-    window.location.assign('https://docs.mender.io/client-configuration/configuration-file/polling-intervals');
+    window.location.assign('https://docs.mender.io/'+this.props.docsVersion+'/client-configuration/configuration-file/polling-intervals');
   },
   render: function() {
 

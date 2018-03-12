@@ -460,6 +460,7 @@ var DeviceGroups = createReactClass({
 		        	</FlatButton>
 		          	
 		          	<DeviceList
+		          		docsVersion={this.props.docsVersion}
 		          		pageNo={this.state.pageNo}
 		          		addDevicesToGroup={this._addDevicesToGroup} 
 		          		removeDevicesFromGroup={this._removeDevicesFromGroup} 

@@ -54,7 +54,13 @@ var LeftNav = createReactClass({
             primaryText="Help"
             onClick={self._changeTab.bind(null, "/help")}
             innerDivStyle={{padding:"16px 16px 16px 42px", fontSize:"14px"}} />
-          </List>
+            <ListItem
+            className={this.props.version ? "" : "hidden"}
+            style={{color: "#c7c7c7"}}
+            primaryText={"Version: " + this.props.version}
+            disabled={true}
+            innerDivStyle={{padding:"16px 16px 16px 42px", fontSize:"14px"}} />
+        </List>
 			</div>
 		)
 	}

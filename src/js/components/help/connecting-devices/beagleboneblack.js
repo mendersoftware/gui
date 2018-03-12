@@ -36,7 +36,13 @@ var BeagleBoneBlack =  createReactClass({
 
      var versions = Object.keys(this.props.links.links.beaglebone);
      if (versions.length >1) {
-      version = this.props.getLatest(versions);
+      // check if image for the current version exists
+      if (this.props.links.links.beaglebone[this.props.version]) {
+        version = this.props.version;
+      } else {
+        // else get latest
+        version = this.props.getLatest(versions);
+      }
      } else {
       version = versions[0];
      }
@@ -83,7 +89,7 @@ var BeagleBoneBlack =  createReactClass({
             <p>This demo disk image already contains configuration specific to Hosted Mender and your account (i.e. your tenant token), so it does not need any further configuration. Devices flashed with this disk image will connect to your Hosted Mender account when the devices boot.</p>
           </div>
           :
-          <p>Download the disk image for BeagleBone Black from <a href="https://docs.mender.io/development/getting-started/download-test-images" target="_blank">the downloads page</a>.</p>
+          <p>Download the disk image for BeagleBone Black from <a href={"https://docs.mender.io/"+this.props.docsVersion+"/getting-started/download-test-images"} target="_blank">the downloads page</a>.</p>
         }
 
         <p>After the image has been downloaded, unpack it:</p>
@@ -148,7 +154,7 @@ var BeagleBoneBlack =  createReactClass({
         {this.props.isHosted && artifacts.length>1 ? 
           <p>Download these two BeagleBone Black Artifacts customized for your Hosted Mender account: <a href={artifacts[1].href}>{artifacts[1].name}</a>, <a href={artifacts[0].href}>{artifacts[0].name}</a>.</p>
           :
-          <p>Download Artifact 1 and Artifact 2 for BeagleBone Black from <a href="https://docs.mender.io/development/getting-started/download-test-images" target="_blank">the downloads page</a>.</p>
+          <p>Download Artifact 1 and Artifact 2 for BeagleBone Black from <a href={"https://docs.mender.io/"+ this.props.docsVersion +"/getting-started/download-test-images"} target="_blank">the downloads page</a>.</p>
         }
 
 

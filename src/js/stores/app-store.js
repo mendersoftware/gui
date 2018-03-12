@@ -25,6 +25,7 @@ var _organization = {};
 var _showHelptips = null;
 var _groups = [];
 var _uploadInProgress = false;
+var _MenderVersion = null;
 
 
 /* Temp local devices */
@@ -623,6 +624,26 @@ var AppStore = assign(EventEmitter.prototype, {
 
   showHelptips: function() {
     return _showHelptips;
+  },
+
+  getMenderVersion: function() {
+    // return version number
+    var version = "";
+    if (_MenderVersion) {
+      // if first character NaN, is master branch
+      version = isNaN(_MenderVersion.charAt(0)) ? "master" : _MenderVersion;
+    }
+    return version;
+  },
+
+  getDocsVersion: function() {
+    // return docs link friendly version
+    var docsVersion = "development";
+    if (_MenderVersion && !isNaN(_MenderVersion.charAt(0))) {
+      var splitArray = _MenderVersion.split(".").slice(0,2);
+      docsVersion = splitArray.join(".");
+    }
+    return docsVersion;
   },
 
   getUploadInProgress: function() {

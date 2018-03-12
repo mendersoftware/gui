@@ -146,7 +146,7 @@ var Help =  createReactClass({
         </div>
         <div className="rightFluid padding-right" style={{maxWidth:"980px", paddingTop: "0", paddingLeft:"45px"}}>
           <div style={{position:"relative", top:"12px"}}>
-            <ComponentToShow getLatest={this._getLatest} isHosted={this.state.isHosted} org={this.state.org} links={this.state.links} hasMultitenancy={this.state.hasMultitenancy} isEmpty={isEmpty} pages={components} changePage={this.changePage} />
+            <ComponentToShow version={this.props.version} docsVersion={this.props.docsVersion} getLatest={this._getLatest} isHosted={this.state.isHosted} org={this.state.org} links={this.state.links} hasMultitenancy={this.state.hasMultitenancy} isEmpty={isEmpty} pages={components} changePage={this.changePage} />
             { ComponentToShow !== HelpTopics ? <p className="margin-top-large"><a onClick={this.changePage.bind(null, "/help")}>&lsaquo; Back to help topics</a></p> : null }
             <Support />
           </div>
