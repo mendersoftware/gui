@@ -20,7 +20,6 @@ var Provision =  createReactClass({
 	         <p>For demo and testing purposes, we provide pre-built demo images for the Raspberry Pi 3 and BeagleBone Black devices with the latest version of Mender.</p>
 	         <p>We also include a virtual device for you to test with, which is handy because it means that you can test Mender without having to configure any hardware.</p>
 	        
-	         <br/>
 	         <p>Learn how to provision a:</p>
 	         {links}
 	       </div>
