@@ -397,7 +397,7 @@ var Devices = createReactClass({
 		                <p style={{minHeight:"32px"}}>
 		                  De-authorize this device and block it from making authorization requests in the future.
 		                </p>
-		                <RaisedButton onClick={this._rejectDevice} className="margin-top-small" secondary={true} label={"Reject device"} icon={<FontIcon style={{marginTop:"-4px"}} className="material-icons">cancel</FontIcon>} />
+		                <RaisedButton disabled={this.state.decommission_request_pending || this.state.reject_request_pending} onClick={this._rejectDevice} className="margin-top-small" secondary={true} label={"Reject device"} icon={<FontIcon style={{marginTop:"-4px"}} className="material-icons">cancel</FontIcon>} />
 		                {this.state.reject_request_pending ?  <div className="dialogLoaderContainer"><Loader table={true} show={true} /></div> : null}
                   </div>
 		            </div> 
@@ -411,7 +411,7 @@ var Devices = createReactClass({
 			                <p style={{minHeight:"32px"}}>
 			                 	Authorize this device and allow it to connect to the server.
 			                </p>
-			                <RaisedButton onClick={this._authorizeDevice} className="margin-top-small" secondary={true} label={"Authorize device"} icon={<FontIcon style={{marginTop:"-4px"}} className="material-icons">check_circle</FontIcon>} />
+			                <RaisedButton disabled={this.state.decommission_request_pending || this.state.reject_request_pending} onClick={this._authorizeDevice} className="margin-top-small" secondary={true} label={"Authorize device"} icon={<FontIcon style={{marginTop:"-4px"}} className="material-icons">check_circle</FontIcon>} />
 			               {this.state.reject_request_pending ?  <div className="dialogLoaderContainer"><Loader table={true} show={true} /></div> : null}
                     </div>
 		            </div>
@@ -427,7 +427,7 @@ var Devices = createReactClass({
 		                Decommission this device and remove all device data. This action is not reversible.
 		              </p>
 		              
-                  <RaisedButton onClick={this._decommissionDevice} className="margin-top-small" secondary={true} label={"Decommission device"} icon={<FontIcon style={{marginTop:"-4px"}} className="material-icons">delete_forever</FontIcon>} />
+                  <RaisedButton disabled={this.state.decommission_request_pending || this.state.reject_request_pending} onClick={this._decommissionDevice} className="margin-top-small" secondary={true} label={"Decommission device"} icon={<FontIcon style={{marginTop:"-4px"}} className="material-icons">delete_forever</FontIcon>} />
 		              {this.state.decommission_request_pending ?  <div className="dialogLoaderContainer"><Loader table={true} show={true} /></div> : null}
                 </div>
 		          </div>
