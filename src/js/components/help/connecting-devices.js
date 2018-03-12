@@ -28,12 +28,14 @@ var ConnectingDevices =  createReactClass({
 	       <div>
 	         <h2>Connecting devices</h2>
 	         <p>Learn how to connect devices to the Mender server.</p>
-	         <br/>
-	         <p>Topic pages:</p>
-	         {links}
+	        
+	         
+	         <div style={{margin:"10px 0"}}>
+	         	<p>Topic pages:</p>
+	         	{links}
+	         </div>
 
-	         <br/>
-	         <p>Note: there are security implications to connecting a client and server for the first time, also known as <i>bootstrapping</i>. 
+	         <p className="note" style={{marginTop:"60px"}}>Note: there are security implications to connecting a client and server for the first time, also known as <i>bootstrapping</i>. 
 	         If a client and server have not exchanged any information in advance, they need to accept each other on trust this first time, 
 	         with the risk that the information the other party presents is spoofed. To mitigate this risk, the Mender client preinstalls 
 	         the TLS certificate of the server when it is provisioned, as part of the Yocto Project image build. So it is not possible for 
