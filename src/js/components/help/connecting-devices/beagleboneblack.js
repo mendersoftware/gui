@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import FlatButton from 'material-ui/FlatButton';
 import FontIcon from 'material-ui/FontIcon';
+var Loader = require('../../common/loader');
 
 var createReactClass = require('create-react-class');
 
@@ -31,6 +32,7 @@ var BeagleBoneBlack =  createReactClass({
     var version;
     var sdimg = {};
     var artifacts = [];
+    var placeholder;
 
     if (!this.props.isEmpty(this.props.links)) {
 
@@ -55,6 +57,14 @@ var BeagleBoneBlack =  createReactClass({
           artifacts.push({name: fileName, href:this.props.links.links.beaglebone[version][fileName]});
         }
       }
+    } else if (this.props.isHosted) {
+      // is Hosted Mender, but links don't exist yet!
+      placeholder = (
+        <div className="waiting-inventory">
+          <p>Your images are currently being generated. Download links should appear here within 5 minutes</p>
+          <Loader show={true} waiting={true} />
+        </div>
+      )
     }
     
     var codeToCopy1 = 'gunzip <PATH-TO-YOUR-DISK-IMAGE>.sdimg.gz';
@@ -83,12 +93,18 @@ var BeagleBoneBlack =  createReactClass({
 
         <h3>Download the disk image</h3>
 
-        {!this.props.isEmpty(sdimg) ? 
-          <div>
-            <p><a href={sdimg.href}>Download the disk image for BeagleBone Black here</a>.</p>
-            <p>This demo disk image already contains configuration specific to Hosted Mender and your account (i.e. your tenant token), so it does not need any further configuration. Devices flashed with this disk image will connect to your Hosted Mender account when the devices boot.</p>
-          </div>
-          :
+        {this.props.isHosted ? <div>
+
+          {!this.props.isEmpty(sdimg) ? 
+            <div>
+              <p><a href={sdimg.href}>Download the disk image for BeagleBone Black here</a>.</p>
+              <p>This demo disk image already contains configuration specific to Hosted Mender and your account (i.e. your tenant token), so it does not need any further configuration. Devices flashed with this disk image will connect to your Hosted Mender account when the devices boot.</p>
+            </div>
+            :
+            placeholder
+          }
+
+          </div> : 
           <p>Download the disk image for BeagleBone Black from <a href={"https://docs.mender.io/"+this.props.docsVersion+"/getting-started/download-test-images"} target="_blank">the downloads page</a>.</p>
         }
 
@@ -146,15 +162,20 @@ var BeagleBoneBlack =  createReactClass({
 
         <p> If you cannot see any new device after 10 minutes, please verify that the network connection is working, and feel free to reach out for help with diagnostics via <a onClick={this.props.changePage.bind(null, "help/more-help-resources")}>our further Help resources</a>.</p>
 
-        <p> NOTE: If you reimage the device with the disk image or switch storage (e.g. SD cards) between the devices after they have booted once, <b>authenticating the device to the Mender server will fail</b>. This is because the Mender server tracks the identity (MAC address by default) device public key (randomly generated upon first run of the Mender client) binding. If this happens, you need to *decommission* the device from the Mender server and try again. </p>
+        <p className="note">NOTE: If you reimage the device with the disk image or switch storage (e.g. SD cards) between the devices after they have booted once, <b>authenticating the device to the Mender server will fail</b>. This is because the Mender server tracks the identity (MAC address by default) device public key (randomly generated upon first run of the Mender client) binding. If this happens, you need to <b>decommission</b> the device from the Mender server and try again. </p>
 
 
         <h3>Deploy updates</h3>
 
-        {this.props.isHosted && artifacts.length>1 ? 
-          <p>Download these two BeagleBone Black Artifacts customized for your Hosted Mender account: <a href={artifacts[1].href}>{artifacts[1].name}</a>, <a href={artifacts[0].href}>{artifacts[0].name}</a>.</p>
-          :
-          <p>Download Artifact 1 and Artifact 2 for BeagleBone Black from <a href={"https://docs.mender.io/"+ this.props.docsVersion +"/getting-started/download-test-images"} target="_blank">the downloads page</a>.</p>
+        {this.props.isHosted ? <div>
+          {artifacts.length>1 ? 
+            <p>Download these two BeagleBone Black Artifacts customized for your Hosted Mender account: <a href={artifacts[1].href}>{artifacts[1].name}</a>, <a href={artifacts[0].href}>{artifacts[0].name}</a>.</p>
+            : placeholder
+          } 
+        </div>
+
+        : <p>Download Artifact 1 and Artifact 2 for BeagleBone Black from <a href={"https://docs.mender.io/"+ this.props.docsVersion +"/getting-started/download-test-images"} target="_blank">the downloads page</a>.</p>
+
         }
 
 

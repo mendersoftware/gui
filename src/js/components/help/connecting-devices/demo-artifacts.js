@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+var Loader = require('../../common/loader');
 
 // material ui
 import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
@@ -13,6 +14,7 @@ var DemoArtifacts =  createReactClass({
  	},
 	render: function() {
 		var links = [];
+		var placeholder;
 
 		 if (!this.props.isEmpty(this.props.links)) {
 
@@ -39,6 +41,13 @@ var DemoArtifacts =  createReactClass({
 		 			}
 		 		}
 		 	}
+	    } else if (this.props.isHosted) {
+	    	placeholder = (
+		        <div className="waiting-inventory">
+		          <p>Your images are currently being generated. Download links should appear here within 5 minutes</p>
+		          <Loader show={true} waiting={true} />
+		        </div>
+      		)
 	    }
 
 	    var tableRows = links.map(function(link, index) {
@@ -61,32 +70,36 @@ var DemoArtifacts =  createReactClass({
 	         	<p>We provide demo Artifacts that you can use with devices connected to the Mender server (see <a onClick={this._changePage.bind(null, "help/connecting-devices/provision-a-demo")}>Provision demo device</a>).</p>
 				<p>Two Artifacts are provided for each device type so that you can do several deployments (Mender will skip deployments if the Artifact installed is the same as the one being deployed).</p>
 
-				
+				{this.props.isHosted ? <div>
 
-				{ !this.props.isEmpty(this.props.links) ?
-					<div>
-					<p>Download the Artifacts for your desired device types below:</p>
-					<Table
-						selectable={false}>
-					<TableHeader adjustForCheckbox={false}
-						displaySelectAll={false}>
-						<TableRow>
-						<TableHeaderColumn>Device type</TableHeaderColumn>
-						<TableHeaderColumn>Mender version</TableHeaderColumn>
-						<TableHeaderColumn>Artifact 1</TableHeaderColumn>
-						<TableHeaderColumn>Artifact 2</TableHeaderColumn>
-						</TableRow>
-					</TableHeader>
-					<TableBody displayRowCheckbox={false}>
-						{tableRows}
-					</TableBody>
+					{ !this.props.isEmpty(this.props.links) ?
+						<div>
+						<p>Download the Artifacts for your desired device types below:</p>
+						<Table
+							selectable={false}>
+						<TableHeader adjustForCheckbox={false}
+							displaySelectAll={false}>
+							<TableRow>
+							<TableHeaderColumn>Device type</TableHeaderColumn>
+							<TableHeaderColumn>Mender version</TableHeaderColumn>
+							<TableHeaderColumn>Artifact 1</TableHeaderColumn>
+							<TableHeaderColumn>Artifact 2</TableHeaderColumn>
+							</TableRow>
+						</TableHeader>
+						<TableBody displayRowCheckbox={false}>
+							{tableRows}
+						</TableBody>
 
-					</Table></div>
-					: 
-					<p>Download the Artifacts for your desired device types from <a href={"https://docs.mender.io/"+this.props.docsVersion+"/getting-started/download-test-images"} target="_blank">the downloads page.</a></p>
+						</Table>
+						<p>Then upload them to the <a onClick={this._changePage.bind(null, "artifacts")}>Artifacts tab</a>.</p>
+						</div>
+						: placeholder
+						
+					}
+					</div> : <p>Download the Artifacts for your desired device types from <a href={"https://docs.mender.io/"+this.props.docsVersion+"/getting-started/download-test-images"} target="_blank">the downloads page.</a></p>
 				}
 
-				<p>Then upload them to the <a onClick={this._changePage.bind(null, "artifacts")}>Artifacts tab</a>.</p>
+				
 	        </div>
 	    )
 	}
