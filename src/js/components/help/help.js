@@ -73,11 +73,15 @@ var Help =  createReactClass({
       this._getUserOrganization();
     }
   },
+
   _getUserOrganization: function() {
     var self = this;
     var callback = {
       success: function(org) {
         self.setState({org: org});
+        self.linksTimer = setInterval(function() {
+          self._getLinks(org.id);
+        }, 30000);
         self._getLinks(org.id);
       },
       error: function(err) {
@@ -92,6 +96,8 @@ var Help =  createReactClass({
     var callback = {
       success: function(response) {
         self.setState({links: response});
+        // clear timer when got links successfully
+        clearInterval(self.linksTimer);
       },
       error: function(err) {
         console.log("Error: " +err, "Tenant id: " +id);
@@ -105,6 +111,7 @@ var Help =  createReactClass({
   },
 
   componentWillUnmount: function() {
+    clearInterval(this.linksTimer);
     AppStore.removeChangeListener(this._onChange);
   },
 
