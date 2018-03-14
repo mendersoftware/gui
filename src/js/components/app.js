@@ -17,6 +17,7 @@ var AppActions = require('../actions/app-actions');
 
 var createReactClass = require('create-react-class');
 var isDemoMode = false;
+var _HostedAnnouncement = "";
 
 var App = createReactClass({
   childContextTypes: {
@@ -88,7 +89,7 @@ var App = createReactClass({
 
         <div>
           <div className="header" id="fixedHeader">
-            <Header docsVersion={this.state.docsVersion} currentTab={this.state.currentTab} demo={isDemoMode} history={this.props.history} isLoggedIn={(this.state.currentUser||{}).hasOwnProperty("email")} />
+            <Header announcement={_HostedAnnouncement} docsVersion={this.state.docsVersion} currentTab={this.state.currentTab} demo={isDemoMode} history={this.props.history} isLoggedIn={(this.state.currentUser||{}).hasOwnProperty("email")} />
           </div>
 
           <div className="wrapper">

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Router, Link } from 'react-router';
 import PropTypes from 'prop-types';
-import { toggleHelptips } from '../../utils/togglehelptips';
+import { toggleHelptips } from '../../utils/toggleuseroptions';
 var pluralize = require('pluralize');
 var createReactClass = require('create-react-class');
 var AppStore = require('../../stores/app-store');

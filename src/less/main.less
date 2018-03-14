@@ -241,6 +241,14 @@ a, span.link {
   .transition(opacity 0.2s linear);
 }
 
+.fadeInSlow {
+  .animation(fadein 0.8s 1);
+}
+.fadeOutSlow {
+  .opacity(0);
+  .transition(opacity 0.6s linear);
+}
+
 
 
 /* Header */
@@ -249,6 +257,13 @@ a, span.link {
   position: fixed;
   z-index: 1400;
   width: 100%
+}
+
+@media (max-width: 1200px) {
+  #fixedHeader {
+    position: absolute;
+    min-width: 1200px;
+  }
 }
 
 #header-nav {
@@ -265,22 +280,33 @@ a, span.link {
   display: block;
   position: relative;
   left: 5px;
-  width: 174px;
+  min-width: 174px;
   height: 48px;
   background-image: url('../assets/img/headerlogo.png');
   background-repeat: no-repeat;
   background-size: contain;
 }
 
-#demoBox {
+#demoBox, #announcement {
   border-left: 1px solid @lightergrey;
   padding: 4px 30px;
   margin: 14px 0;
   font-size: 14px;
+  max-height: 56px;
+  min-width: 164px;
+  overflow: hidden;
   svg {
     color: @linkgreen !important;
+    &.red {
+      color: @red !important;
+    }
   }
 }
+
+#announcement {
+  padding: 0 15px;
+}
+
 
 .header .header-section {
   height: 24px;
@@ -373,6 +399,13 @@ a, span.link {
     bottom: 0;
     background-color: @lightestgrey;
     border-right: 1px solid @lightergrey;
+  }
+}
+
+@media (max-width: 1200px) {
+  .leftFixed.leftNav {
+    position: absolute;
+    top: 0;
   }
 }
 

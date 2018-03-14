@@ -7,6 +7,7 @@ set -e -x
 # * GATEWAY_PORT - gateway port, defaults to no specified port
 # * DEMO [true/false] - switch for demo UI, defaults to false.
 # * INTEGRATION_VERSION - version of integration service
+# * ANNOUNCEMENT - announcement to display in Hosted Mender UI
 
 # main.js path
 MAINJS="./js/main.js" 
@@ -37,6 +38,11 @@ fi
 # version to display in UI
 if [ ! -z "$INTEGRATION_VERSION" ]; then
    	sed -i "s/var _MenderVersion.*/var _MenderVersion = '$INTEGRATION_VERSION';/g" $MAINJS
+fi
+
+# announcement to display in Hosted Mender UI
+if [ ! -z "$ANNOUNCEMENT" ]; then
+   	sed -i "s/var _HostedAnnouncement.*/var _HostedAnnouncement = '$ANNOUNCEMENT';/g" $MAINJS
 fi
 
 # isDemoMode switch for Demo UI
