@@ -19,7 +19,8 @@ import { preformatWithRequestID } from '../../helpers.js'
 function getState() {
   return {
     snackbar: AppStore.getSnackbar(),
-    noExpiry: cookie.load("noExpiry")
+    noExpiry: cookie.load("noExpiry"),
+    isHosted: (window.location.hostname === "hosted.mender.io")
   };
 }
 
@@ -90,7 +91,7 @@ var Login = createReactClass({
       <div className="full-screen">
         <div id="login-box">
           <h3>{title}</h3>
-          <img src="assets/img/loginlogo.png" alt="mender-logo" />
+          <img src="assets/img/loginlogo.png" alt="mender-logo" className="margin-bottom-small" />
          
           <Form showButtons={true} onSubmit={this._handleLogin} submitLabel={buttonLabel} submitButtonId="login_button">
 
@@ -109,11 +110,18 @@ var Login = createReactClass({
               <FormCheckbox
                 id="noExpiry"
                 label="Stay logged in"
-                className="margin-top"
+                style={{display:"inline-block", marginTop:"36px", width: "200px", float:"left"}}
                 checked={this.state.noExpiry === "true"}
                 />
 
             </Form>
+            
+            <div className="clear"></div>
+            {this.state.isHosted ? 
+              <div className="flexbox margin-top" style={{color: "rgba(0, 0, 0, 0.3)", justifyContent: "center"}}>
+                <span>Don't have an account? <a style={{marginLeft:"4px"}} href="https://mender.io/signup" target="_blank">Sign up here</a></span>
+              </div>
+            : null}
         </div>
 
         <Snackbar
