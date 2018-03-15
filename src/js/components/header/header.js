@@ -2,11 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Router, Route, Link } from 'react-router';
 import cookie from 'react-cookie';
-import { isEmpty, decodeSessionToken, preformatWithRequestID } from '../../helpers';
+import { isEmpty, decodeSessionToken, preformatWithRequestID, hashString } from '../../helpers';
 import { clearAllRetryTimers } from '../../utils/retrytimer';
 import ReactTooltip from 'react-tooltip';
-import { toggleHelptips } from '../../utils/togglehelptips';
+import { toggleHelptips, hideAnnouncement } from '../../utils/toggleuseroptions';
 import { DevicesNav, ArtifactsNav, DeploymentsNav } from '../helptips/helptooltips';
+import Linkify from 'react-linkify';
 var DeviceNotifications = require('./devicenotifications');
 var DeploymentNotifications = require('./deploymentnotifications');
 
@@ -20,7 +21,9 @@ import MenuItem from 'material-ui/MenuItem';
 import FontIcon from 'material-ui/FontIcon';
 import { Toolbar, ToolbarGroup, ToolbarTitle } from 'material-ui/Toolbar';
 import InfoIcon from 'react-material-icons/icons/action/info-outline';
+import AnnounceIcon from 'react-material-icons/icons/action/announcement';
 import ExitIcon from 'react-material-icons/icons/action/exit-to-app';
+import CloseIcon from 'react-material-icons/icons/navigation/close';
 
 
 var menuItems = [
@@ -66,7 +69,6 @@ var Header = createReactClass({
        this._updateUsername();
     } else {
       if (prevState.sessionId!==this.state.sessionId ) {
-        
         this._hasDeployments();
         this._hasArtifacts();
         this._checkShowHelp();
@@ -90,6 +92,7 @@ var Header = createReactClass({
       this._deploymentsInProgress();
       this._hasDevices();
       this._hasPendingDevices();
+      this._checkAnnouncement();
   },
   _getDeviceLimit: function() {
     var self = this;
@@ -113,6 +116,19 @@ var Header = createReactClass({
       // got user cookie but help value not set
       AppActions.setShowHelptips(userCookie.help);
     }
+  },
+  _checkAnnouncement: function() {
+    var hash = this.props.announcement ? hashString(this.props.announcement) : null;
+    var announceCookie = cookie.load(this.state.user.id+hash);
+    if (hash && typeof announceCookie === 'undefined') {
+      this.setState({showAnnouncement: true, hash: hash});
+    } else {
+      this.setState({showAnnouncement: false});
+    }
+  },
+  _hideAnnouncement: function() {
+    hideAnnouncement(this.state.hash);
+    this.setState({showAnnouncement: false});
   },
   _hasDeployments: function() {
     // check if *any* deployment exists, for onboarding help tips
@@ -252,7 +268,7 @@ var Header = createReactClass({
     return (
       <div className={this.context.router.isActive('/login') ? "hidden" : null}>
         <Toolbar style={{backgroundColor: "#fff"}}>
-          <ToolbarGroup key={0} className="float-left">
+          <ToolbarGroup key={0}>
             <Link to="/" id="logo"></Link>
 
             {this.props.demo ? 
@@ -280,9 +296,20 @@ var Header = createReactClass({
                 </ReactTooltip>
               </div>
             : null }
+
           </ToolbarGroup>
 
-          <ToolbarGroup key={1} className="float-right">
+          <ToolbarGroup key={1} style={{flexGrow: "2"}}>
+            { this.props.announcement ? 
+              <div id="announcement" className={this.state.showAnnouncement ? "fadeInSlow" : "fadeOutSlow"} style={{display: "flex", alignItems:"center"}}>
+                <AnnounceIcon className="red" style={{marginRight:"4px", height:"18px", minWidth: "24px"}} />
+                <Linkify properties={{target: '_blank'}}>{this.props.announcement}</Linkify>
+                <a onClick={this._hideAnnouncement}><CloseIcon style={{marginLeft:"4px", height:"16px", verticalAlign:"bottom"}} /></a>
+              </div> 
+            : null }
+          </ToolbarGroup>
+
+          <ToolbarGroup style={{flexShrink: "0"}} key={2}>
             <DeviceNotifications pending={this.state.pendingDevices} total={this.state.acceptedDevices} limit={this.state.deviceLimit} />
             <DeploymentNotifications inprogress={this.state.inProgress} />
             {dropDownElement}

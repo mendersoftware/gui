@@ -1,4 +1,5 @@
 var jwtDecode = require('jwt-decode');
+var md5 = require('md5');
 
 export function isEncoded(uri) {
   uri = uri || '';
@@ -125,4 +126,10 @@ export function versionCompare(v1, v2, options) {
     }
 
     return 0;
+}
+
+
+
+export function hashString(str) {
+  return md5(str);
 }
