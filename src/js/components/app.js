@@ -94,7 +94,7 @@ var App = createReactClass({
 
           <div className="wrapper">
             <div className="leftFixed leftNav">
-              <LeftNav version={this.state.version} currentTab={this.state.currentTab} changeTab={this._changeTab} />
+              <LeftNav version={this.state.version} docsVersion={this.state.docsVersion} currentTab={this.state.currentTab} changeTab={this._changeTab} />
             </div>
             <div className="rightFluid container">
               {React.cloneElement(this.props.children, { isLoggedIn:(this.state.currentUser||{}).hasOwnProperty("email"), docsVersion: this.state.docsVersion, version: this.state.version })}

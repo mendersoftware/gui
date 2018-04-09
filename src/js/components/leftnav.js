@@ -39,6 +39,9 @@ var LeftNav = createReactClass({
        )
     });
 
+    var licenseUrl = "https://docs.mender.io/"+ this.props.docsVersion +"/release-information/open-source-licenses";
+    var licenseLink = <a target="_blank" href={licenseUrl} style={{fontSize:"13px", position:"relative", top:"6px", color:"#347A87"}}>License information</a>;
+
     var helpStyle = self.props.currentTab==="/help" ? {transition: "all 100ms cubic-bezier(0.23, 1, 0.32, 1) 0ms"} : {transition: "all 100ms cubic-bezier(0.23, 1, 0.32, 1) 0ms",  color:"#949495"};
 
 		return (
@@ -54,10 +57,11 @@ var LeftNav = createReactClass({
             primaryText="Help"
             onClick={self._changeTab.bind(null, "/help")}
             innerDivStyle={{padding:"16px 16px 16px 42px", fontSize:"14px"}} />
-            <ListItem
-            className={this.props.version ? "" : "hidden"}
-            style={{color: "#c7c7c7"}}
-            primaryText={"Version: " + this.props.version}
+          
+          <ListItem
+            style={{color: "#949495"}}
+            primaryText={this.props.version ? "Version: " + this.props.version : ""}
+            secondaryText={licenseLink}
             disabled={true}
             innerDivStyle={{padding:"16px 16px 16px 42px", fontSize:"14px"}} />
         </List>
