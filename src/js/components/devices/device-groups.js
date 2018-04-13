@@ -20,7 +20,6 @@ var AppStore = require('../../stores/app-store');
 var AppActions = require('../../actions/app-actions');
 
 import { Tabs, Tab } from 'material-ui/Tabs';
-import Snackbar from 'material-ui/Snackbar';
 import Dialog from 'material-ui/Dialog';
 import TextField from 'material-ui/TextField';
 import FlatButton from 'material-ui/FlatButton';
@@ -514,11 +513,6 @@ var DeviceGroups = createReactClass({
 			        addListOfDevices={this._createGroupFromDialog}
 		         />
 
-		        <Snackbar
-		          open={this.state.snackbar.open}
-		          message={this.state.snackbar.message}
-		          autoHideDuration={8000}
-		        />
 			</div>
 
 		);

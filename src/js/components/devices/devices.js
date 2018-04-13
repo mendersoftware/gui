@@ -8,6 +8,8 @@ var createReactClass = require('create-react-class');
 var DeviceGroups = require('./device-groups');
 var PendingDevices = require('./pending-devices');
 var RejectedDevices = require('./rejected-devices');
+var PreauthDevices = require('./preauthorize-devices');
+var SharedSnackbar = require('./sharedsnackbar');
 var pluralize = require('pluralize');
 var Loader = require('../common/loader');
 
@@ -31,6 +33,7 @@ var Devices = createReactClass({
 			tabIndex: this._updateActive(),
 			acceptedCount: AppStore.getTotalAcceptedDevices(),
 			rejectedCount: AppStore.getTotalRejectedDevices(),
+			preauthCount: AppStore.getTotalPreauthDevices(), 
 			pendingCount: AppStore.getTotalPendingDevices(),
 			snackbar: AppStore.getSnackbar(),
       refreshLength: 10000,
@@ -62,6 +65,7 @@ var Devices = createReactClass({
 		this._getAcceptedCount();
 		this._getRejectedCount();
 		this._getPendingCount();
+		this._getPreauthCount();
 	},
 
   _restartInterval: function() {
@@ -118,6 +122,18 @@ var Devices = createReactClass({
 		};
 		AppActions.getDeviceCount(callback, "pending");
 	},
+	_getPreauthCount: function() {
+		var self = this;
+		var callback = {
+			success: function(count) {
+				self.setState({preauthCount: count});
+			},
+			error: function(error) {
+
+			}
+		};
+		AppActions.getDeviceCount(callback, "preauthorized");
+	},
   _getAllCount: function() {
     var self = this;
     var accepted = self.state.acceptedCount ? self.state.acceptedCount : 0;
@@ -134,10 +150,11 @@ var Devices = createReactClass({
 
   _updateActive: function() {
     var self = this;
-    return this.context.router.isActive({ pathname: '/devices' }, true) ? '/devices/groups' :
-      this.context.router.isActive('/devices/groups') ? '/devices/groups' :
+    return this.context.router.isActive({ pathname: '/devices' }, true) ? '/devices' :
+      this.context.router.isActive('/devices/groups') ? '/devices' :
       this.context.router.isActive('/devices/pending') ? '/devices/pending' :
-      this.context.router.isActive('/devices/rejected') ? '/devices/rejected' : '/devices/groups';
+      this.context.router.isActive('/devices/preauthorized') ? '/devices/preauthorized' :
+      this.context.router.isActive('/devices/rejected') ? '/devices/rejected' : '/devices';
 	},
 	
 	_handleTabActive: function(tab) {
@@ -197,8 +214,8 @@ var Devices = createReactClass({
 	        }
 	      }.bind(this),
 	      error: function(err) {
-	        var errMsg = err.res.body.error || ""
-
+	        var errMsg = err.res.body.error || "";
+	        console.log("error");
 	        fail++;
 	        i++;
 
@@ -325,28 +342,27 @@ var Devices = createReactClass({
 		    <Tabs
           value={this.state.tabIndex}
           onChange={this._changeTab}
-          tabItemContainerStyle={{background: "none", width:"420px"}}
+          tabItemContainerStyle={{background: "none", width:"580px"}}
           inkBarStyle={{backgroundColor: "#347a87"}}>
 
           <Tab
             label="Device groups"
-            value="/devices/groups"
+            value="/devices"
             onActive={tabHandler}
-            style={this.state.tabIndex === "/devices/groups" ? styles.activeTabStyle : styles.tabStyle}>
+            style={this.state.tabIndex === "/devices" ? styles.activeTabStyle : styles.tabStyle}>
 
-			<DeviceGroups 
-				docsVersion={this.props.docsVersion}
-	            params={this.props.params}
-				rejectOrDecomm={this._openRejectDialog}
-				styles={styles} 
-				paused={this.state.pauseAdmisson} 
-				rejectedDevices={this.state.rejectedCount} 
-				acceptedDevices={this.state.acceptedCount} 
-				allCount={this.state.allCount} 
-				currentTab={this.state.currentTab} 
-				snackbar={this.state.snackbar} 
-				rejectDevice={this._rejectDevice}
-				showHelptips={this.state.showHelptips} />
+						<DeviceGroups 
+							docsVersion={this.props.docsVersion}
+				      params={this.props.params}
+							rejectOrDecomm={this._openRejectDialog}
+							styles={styles} 
+							paused={this.state.pauseAdmisson} 
+							rejectedDevices={this.state.rejectedCount} 
+							acceptedDevices={this.state.acceptedCount} 
+							allCount={this.state.allCount} 
+							currentTab={this.state.currentTab}  
+							rejectDevice={this._rejectDevice}
+							showHelptips={this.state.showHelptips} />
 		      </Tab>
 			    <Tab
             label={pendingLabel}
@@ -357,7 +373,6 @@ var Devices = createReactClass({
 						<PendingDevices 
               styles={styles} 
               currentTab={this.state.currentTab}
-              snackbar={this.state.snackbar} 
               disabled={this.state.pauseAdmisson} 
               authorizeDevices={this._authorizeDevices} 
               count={this.state.pendingCount} 
@@ -366,6 +381,18 @@ var Devices = createReactClass({
               highlightHelp={!this.state.acceptedCount} />
 					</Tab>
 
+					<Tab
+						label="Preauthorized"
+						value="/devices/preauthorized"
+						onActive={tabHandler}
+						style={this.state.tabIndex === "/devices/preauthorized" ? styles.activeTabStyle : styles.tabStyle}>
+
+            <PreauthDevices 
+            	styles={styles}
+            	currentTab={this.state.currentTab}
+            	count={this.state.preauthCount}
+            	disabled={this.state.pauseAdmisson} />
+					</Tab>
 
           <Tab
             label="Rejected"
@@ -373,7 +400,13 @@ var Devices = createReactClass({
             onActive={tabHandler}
             style={this.state.tabIndex === "/devices/rejected" ? styles.activeTabStyle : styles.tabStyle}>
 
-            <RejectedDevices rejectOrDecomm={this._openRejectDialog} styles={styles} currentTab={this.state.currentTab} snackbar={this.state.snackbar} disabled={this.state.pauseAdmisson} authorizeDevices={this._authorizeDevices} count={this.state.rejectedCount} rejectDevice={this._handleRejectDevice} />
+            <RejectedDevices 
+            	rejectOrDecomm={this._openRejectDialog} 
+            	styles={styles} currentTab={this.state.currentTab} 
+            	disabled={this.state.pauseAdmisson} 
+            	authorizeDevices={this._authorizeDevices} 
+            	count={this.state.rejectedCount} 
+            	rejectDevice={this._handleRejectDevice} />
           </Tab>
 				</Tabs>
 
@@ -442,7 +475,7 @@ var Devices = createReactClass({
                 data-tip
                 data-for='devices-nav-tip'
                 data-event='click focus'
-                style={{left: "20%", top:"28px"}}>
+                style={{left: "19%", top:"46px"}}>
                 <FontIcon className="material-icons">help</FontIcon>
               </div>
               <ReactTooltip
@@ -455,6 +488,8 @@ var Devices = createReactClass({
                 <DevicesNav devices={this.state.pendingCount} />
               </ReactTooltip>
             </div> : null }
+
+   			<SharedSnackbar snackbar={this.state.snackbar} />
 
 			</div>
 

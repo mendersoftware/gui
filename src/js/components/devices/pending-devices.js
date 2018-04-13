@@ -26,15 +26,14 @@ import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/RaisedButton';
 import FontIcon from 'material-ui/FontIcon';
 import InfoIcon from 'react-material-icons/icons/action/info-outline';
-import Snackbar from 'material-ui/Snackbar';
 import Dialog from 'material-ui/Dialog';
 import { List, ListItem } from 'material-ui/List';
 
 var Pending =  createReactClass({
   getInitialState: function() {
     return {
-      minHeight: 200,
-      divHeight: 178,
+      minHeight: 230,
+      divHeight: 208,
       devices: [],
       pageNo: 1,
       pageLength: 20,
@@ -57,7 +56,7 @@ var Pending =  createReactClass({
   componentDidUpdate(prevProps, prevState) {
 
     if ((prevProps.count !== this.props.count)
-      || ((prevProps.currentTab !== this.props.currentTab)&& this.props.currentTab.indexOf("Pending")) ) {
+      || ((prevProps.currentTab !== this.props.currentTab)&& (this.props.currentTab.indexOf("Pending")!==-1)) ) {
       this._getDevices();
       this._clearSelected();
     }
@@ -79,8 +78,8 @@ var Pending =  createReactClass({
       error: function(error) {
         console.log(err);
         var errormsg = err.error || "Please check your connection.";
-        self.setState({pageLoading: false, authLoading: null, rejectLoading: null, deviceToReject:{}, openReject: false });
-        setRetryTimer(err, "devices", "Devices couldn't be loaded. " + errormsg, self.state.refreshDeviceLength);
+        self.setState({pageLoading: false, authLoading: null, deviceToReject:{}, openReject: false });
+        setRetryTimer(err, "devices", "Pending devices couldn't be loaded. " + errormsg, self.state.refreshDeviceLength);
       }
     };
     AppActions.getDevicesByStatus(callback, "pending", this.state.pageNo, this.state.pageLength);
@@ -94,7 +93,7 @@ var Pending =  createReactClass({
   _adjustHeight: function () {
     // do this when number of devices changes
     var h = this.state.devices.length * 55;
-    h += 100;
+    h += 200;
     this.setState({minHeight: h});
   },
   _sortColumn: function(col) {
@@ -111,7 +110,7 @@ var Pending =  createReactClass({
     
   },
   _adjustCellHeight: function(height) {
-    this.setState({divHeight: height+65});
+    this.setState({divHeight: height+95});
   },
 
   _handlePageChange: function(pageNo) {
@@ -169,6 +168,12 @@ var Pending =  createReactClass({
     this.setState({deviceToReject: {}, openReject: false});
   },
 
+  _showKey: function() {
+    var self = this;
+    self.setState({showKey: !self.state.showKey});
+  },
+
+
   render: function() {
     var limitMaxed = this.props.deviceLimit && (this.props.deviceLimit <= this.props.totalDevices);
     var limitNear = this.props.deviceLimit && (this.props.deviceLimit < this.props.totalDevices + this.state.devices.length );
@@ -177,7 +182,7 @@ var Pending =  createReactClass({
       var self = this;
       var expanded = '';
       if ( self.state.expandRow === index ) {
-        expanded = <ExpandedDevice disabled={limitMaxed} styles={this.props.styles} deviceId={self.state.deviceId} device={self.state.expandedDevice} unauthorized={true} selected={[device]}  />
+        expanded = <ExpandedDevice _showKey={this._showKey} showKey={this.state.showKey} disabled={limitMaxed} styles={this.props.styles} deviceId={self.state.deviceId} device={self.state.expandedDevice} unauthorized={true} selected={[device]}  />
       }
       var checkIcon = (self.state.authLoading === index && self.props.disabled) ?
         (
@@ -260,7 +265,11 @@ var Pending =  createReactClass({
               e.stopPropagation();
               this._expandRow(index);
             }}>
-            <Collapse springConfig={{stiffness: 210, damping: 20}} onHeightReady={this._adjustCellHeight} className="expanded" isOpened={expanded ? true : false}>
+            <Collapse springConfig={{stiffness: 210, damping: 20}} onHeightReady={this._adjustCellHeight} className="expanded" isOpened={expanded ? true : false}
+             onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+            }}>
               {expanded}
             </Collapse>
             </div>
@@ -295,7 +304,7 @@ var Pending =  createReactClass({
 
 
     return (
-      <Collapse springConfig={{stiffness: 190, damping: 20}} style={{minHeight:minHeight, width:"100%"}} isOpened={true} id="authorize" className="absolute authorize">
+      <Collapse springConfig={{stiffness: 190, damping: 20}} style={{minHeight:minHeight, width:"100%"}} isOpened={true} id="authorize" className="absolute authorize padding-top">
         
       <Loader show={this.state.authLoading==="all"} />
 
@@ -307,7 +316,7 @@ var Pending =  createReactClass({
               data-tip
               data-for='review-devices-tip'
               data-event='click focus'
-              style={{left:"59%",top:"5px"}}>
+              style={{left:"60%",top:"35px"}}>
               <FontIcon className="material-icons">help</FontIcon>
             </div>
             <ReactTooltip
@@ -339,7 +348,7 @@ var Pending =  createReactClass({
                 enableSelectAll={true}>
                 <TableRow>
                   <TableHeaderColumn className="columnHeader" tooltip="ID">ID</TableHeaderColumn>
-                  <TableHeaderColumn className="columnHeader" tooltip="Request time">Request time</TableHeaderColumn>
+                  <TableHeaderColumn className="columnHeader" tooltip="Request time">Time of request</TableHeaderColumn>
                   <TableHeaderColumn className="columnHeader" tooltip="Status">Status</TableHeaderColumn>
                   <TableHeaderColumn className="columnHeader" tooltip="Authorize device?" style={{width:"140px"}}>Authorize?</TableHeaderColumn>
                   <TableHeaderColumn className="columnHeader" style={{width:"55px", paddingRight:"12px", paddingLeft:"0"}}></TableHeaderColumn>
@@ -376,7 +385,7 @@ var Pending =  createReactClass({
               data-tip
               data-for='expand-auth-tip'
               data-event='click focus'
-              style={{left:"10%", top:"140px"}}>
+              style={{left:"10%", top:"170px"}}>
               <FontIcon className="material-icons">help</FontIcon>
             </div>
             <ReactTooltip
@@ -417,7 +426,7 @@ var Pending =  createReactClass({
                 data-tip
                 data-for='auth-button-tip'
                 data-event='click focus'
-                style={{left:"87%",top:"148px"}}>
+                style={{left:"87%",top:"178px"}}>
                 <FontIcon className="material-icons">help</FontIcon>
               </div>
               <ReactTooltip
@@ -432,14 +441,7 @@ var Pending =  createReactClass({
             </div>
           : null }
 
-
         </div>
-
-        <Snackbar
-          open={this.props.snackbar.open}
-          message={this.props.snackbar.message}
-          autoHideDuration={8000}
-        />
 
 
 
@@ -451,7 +453,7 @@ var Pending =  createReactClass({
           bodyStyle={{paddingTop:"0", fontSize:"13px"}}
           contentStyle={{overflow:"hidden", boxShadow:"0 14px 45px rgba(0, 0, 0, 0.25), 0 10px 18px rgba(0, 0, 0, 0.22)"}}
           >
-          <ListItem className="margin-bottom-small" style={this.props.styles.listStyle} disabled={true} primaryText="Device ID" secondaryText={this.state.deviceToReject.device ? this.state.deviceToReject.device.id : null}  />
+          <ListItem className="margin-bottom-small" style={this.props.styles.listStyle} disabled={true} primaryText="Device ID" secondaryText={this.state.deviceToReject.device ? this.state.deviceToReject.device.device_id : null}  />
           <p>
             This device will be rejected and blocked from making authorization requests in the future.
           </p>

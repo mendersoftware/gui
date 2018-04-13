@@ -824,6 +824,7 @@ table thead.clickable tr>th:first-child {
   margin-right: 3%;
   width: 30%;
   vertical-align: top;
+  -webkit-line-clamp: 3;
 }
 
 #device-identity .list-horizontal-display > div {
@@ -831,6 +832,13 @@ table thead.clickable tr>th:first-child {
     vertical-align: top;
     margin-right: 30px;
     height: 70px;
+}
+
+.list-horizontal-display > div >span.key > div > div > div {
+  -webkit-line-clamp: 10!important;
+  height: auto!important;
+  word-break: break-all;
+  white-space: inherit!important;
 }
 
 #device-inventory .report-list {

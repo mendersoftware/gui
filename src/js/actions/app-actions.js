@@ -150,6 +150,12 @@ var AppActions = {
               count: res.body.count
             });
             break;
+          case "preauthorized":
+            AppDispatcher.handleViewAction({
+              actionType: AppConstants.SET_PREAUTH_DEVICES,
+              count: res.body.count
+            });
+            break;
           default:
             AppDispatcher.handleViewAction({
               actionType: AppConstants.SET_TOTAL_DEVICES,
@@ -383,6 +389,27 @@ var AppActions = {
   decommissionDevice: function(id, callback) {
     DevicesApi
       .delete(devAuthApiUrl+"/devices/"+ id)
+      .then(function(data) {
+        callback.success(data);
+      })
+      .catch(function(err) {
+        callback.error(err);
+      });
+  },
+
+  preauthDevice: function(authset, callback) {
+    DevicesApi
+      .post(devicesApiUrl+"/devices", authset)
+      .then(function(res) {
+        callback.success(res);
+      })
+      .catch(function(err) {
+        callback.error(err)
+      });
+  },
+  deletePreauth: function(id, callback) {
+    DevicesApi
+      .delete(devicesApiUrl+"/devices/"+ id)
       .then(function(data) {
         callback.success(data);
       })

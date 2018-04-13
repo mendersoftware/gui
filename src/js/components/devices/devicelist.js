@@ -28,9 +28,10 @@ var Authorized =  createReactClass({
   getInitialState: function() {
     return {
       minHeight: 200,
-      divHeight: 178,
+      divHeight: 208,
       selectedRows: [],
       textfield: this.props.group ? decodeURIComponent(this.props.group) : "All devices",
+      showKey: false,
     }
   },
 
@@ -83,7 +84,7 @@ var Authorized =  createReactClass({
     
   },
   _adjustCellHeight: function(height) {
-    this.setState({divHeight: height+85});
+    this.setState({divHeight: height+105});
   },
 
    /*
@@ -96,6 +97,7 @@ var Authorized =  createReactClass({
         device.id_data = data.id_data;
         device.device_id = data.id;
         device.id = data.auth_sets[0].id;
+        device.key = data.auth_sets[0].pubkey;
         device.request_time = data.request_time;
         device.status = data.auth_sets[0].status;
         self.setState({expandedDevice: device});
@@ -160,6 +162,11 @@ var Authorized =  createReactClass({
     this.setState({textfield: event.target.value});
   },
 
+  _showKey: function() {
+    var self = this;
+    self.setState({showKey: !self.state.showKey});
+  },
+
   render: function() {
 
     var pluralized = pluralize("devices", this.state.selectedRows.length); 
@@ -220,7 +227,7 @@ var Authorized =  createReactClass({
       }
 
       if ( self.state.expandRow === index ) {
-        expanded = <ExpandedDevice docsVersion={this.props.docsVersion} showHelpTips={this.props.showHelptips} device={this.state.expandedDevice || device} rejectOrDecomm={this.props.rejectOrDecomm} attrs={device.attributes} device_type={attrs.device_type} styles={this.props.styles} block={this.props.block} accept={this.props.accept} redirect={this.props.redirect} artifacts={this.props.artifacts} selectedGroup={this.props.group} groups={this.props.groups} />
+        expanded = <ExpandedDevice _showKey={this._showKey} showKey={this.state.showKey} docsVersion={this.props.docsVersion} showHelpTips={this.props.showHelptips} device={this.state.expandedDevice || device} rejectOrDecomm={this.props.rejectOrDecomm} attrs={device.attributes} device_type={attrs.device_type} styles={this.props.styles} block={this.props.block} accept={this.props.accept} redirect={this.props.redirect} artifacts={this.props.artifacts} selectedGroup={this.props.group} groups={this.props.groups} />
       }
      
       return (
