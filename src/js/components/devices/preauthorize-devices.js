@@ -33,7 +33,7 @@ import ContentAdd from 'material-ui/svg-icons/content/add';
 var Preauthorize =  createReactClass({
   getInitialState: function() {
     return {
-      minHeight: 230,
+      minHeight: 260,
       divHeight: 208,
       devices: [],
       pageNo: 1,
@@ -96,7 +96,7 @@ var Preauthorize =  createReactClass({
   _adjustHeight: function () {
     // do this when number of devices changes
     var h = this.state.devices.length * 55;
-    h += 200;
+    h += 230;
     this.setState({minHeight: h});
   },
   _sortColumn: function(col) {
@@ -218,6 +218,8 @@ var Preauthorize =  createReactClass({
       },
       error: function(err) {
         console.log(err);
+        var errMsg = err.res.body.error || "";
+        AppActions.setSnackbar(preformatWithRequestID(err.res, "The device could not be added: "+errMsg));
       }
     }
     AppActions.preauthDevice(authset, callback);
