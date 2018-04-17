@@ -78,7 +78,7 @@ var Pending =  createReactClass({
       error: function(error) {
         console.log(err);
         var errormsg = err.error || "Please check your connection.";
-        self.setState({pageLoading: false, authLoading: null, deviceToReject:{}, openReject: false });
+        self.setState({pageLoading: false, authLoading: null, rejectLoading: null, deviceToReject:{}, openReject: false });
         setRetryTimer(err, "devices", "Pending devices couldn't be loaded. " + errormsg, self.state.refreshDeviceLength);
       }
     };
