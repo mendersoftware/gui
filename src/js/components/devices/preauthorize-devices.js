@@ -161,27 +161,27 @@ var Preauthorize =  createReactClass({
   _updateKey: function(index, event) {
     var inputs = this.state.inputs;
     inputs[index].key = event.target.value;
-    this.setState({inputs: inputs});
+    this.setState({inputs: inputs, errorText: "", errorText1: ""});
     this._convertIdentityToString(inputs);
   },
 
   _updateValue: function(index, event) {
     var inputs = this.state.inputs;
     inputs[index].value = event.target.value;
-    this.setState({inputs: inputs});
+    this.setState({inputs: inputs, errorText: "", errorText1: ""});
     this._convertIdentityToString(inputs);
   },
 
   _addKeyValue: function() {
     var inputs = this.state.inputs;
     inputs.push({key:"", value:""}); 
-    this.setState({inputs: inputs});
+    this.setState({inputs: inputs, errorText: "", errorText1: ""});
   },
 
   _removeInput: function(index) {
     var inputs = this.state.inputs;
     inputs.splice(index, 1);
-    this.setState({inputs: inputs});
+    this.setState({inputs: inputs, errorText: "", errorText1: ""});
     this._convertIdentityToString(inputs);
   },
 
@@ -220,7 +220,12 @@ var Preauthorize =  createReactClass({
       error: function(err) {
         console.log(err);
         var errMsg = err.res.body.error || "";
-        AppActions.setSnackbar(preformatWithRequestID(err.res, "The device could not be added: "+errMsg));
+        
+        if (err.res.status === 409) {
+          self.setState({errorText: "A preauthorization with a matching identity data set already exists", errorText1: " "});
+        } else {
+          AppActions.setSnackbar(preformatWithRequestID(err.res, "The device could not be added: "+errMsg));
+        }
       }
     }
     AppActions.preauthDevice(authset, callback);
@@ -404,8 +409,10 @@ var Preauthorize =  createReactClass({
       var self = this;
       return (
         <div key={index}>
-          <TextField hintText="Key" id={"key-"+index} value={input.key} style={{marginRight:"15px"}} onChange={this._updateKey.bind(null, index)} />
-          <TextField hintText="Value" id={"value-"+index} value={input.value} onChange={this._updateValue.bind(null, index)} />
+          <TextField hintText="Key" id={"key-"+index} value={input.key} style={{marginRight:"15px", marginBottom: "15px", verticalAlign:"top"}} onChange={this._updateKey.bind(null, index)} errorStyle={{color: "rgb(171, 16, 0)"}}
+            errorText={index===this.state.inputs.length-1 ? this.state.errorText : ""} />
+          <TextField hintText="Value" id={"value-"+index} style={{verticalAlign:"top"}} value={input.value} onChange={this._updateValue.bind(null, index)} errorStyle={{color: "rgb(171, 16, 0)"}}
+            errorText={index===this.state.inputs.length-1 ? this.state.errorText1 : ""} />
           {this.state.inputs.length>1 ? <IconButton iconStyle={{width:"16px"}} disabled={!this.state.inputs[index].key || !this.state.inputs[index].value } onClick={this._removeInput.bind(null, index)}><FontIcon className="material-icons">clear</FontIcon></IconButton> : null }
         </div>
       )
