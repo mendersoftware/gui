@@ -45,6 +45,7 @@ var Preauthorize =  createReactClass({
       inputs: [{key:"", value:""}],
       public: "",
       showKey: false,
+      devicesToRemove: [],
     }
   },
 
@@ -225,26 +226,60 @@ var Preauthorize =  createReactClass({
     AppActions.preauthDevice(authset, callback);
   },
 
-  _removePreauth: function() {
+  _openRemoveDialog: function(devices) {
     var self = this;
-    var callback = {
-      success: function(res) {
-        self._dialogToggle("openRemove");
-        AppActions.setSnackbar("Device was successfully removed from the preauthorization list");
-        self._getDevices();
-      },
-      error: function(err) {
-        console.log(err);
-      }
-    }
-    AppActions.deletePreauth(this.state.deviceToRemove.id, callback);
-  },
-
-  _openRemoveDialog: function(device) {
-    var self = this;
-    this.setState({deviceToRemove: device}, function() {
+    this.setState({devicesToRemove: devices}, function() {
       self._dialogToggle("openRemove");
     })
+  },
+
+  _removeSinglePreauth: function(id, callback) {
+    var self = this;
+
+    var singleCallback = {
+      success: function(res) {
+        callback(1);
+      },
+      error: function(err) {
+        var errMsg = err.res.body.error || "";
+        AppActions.setSnackbar(preformatWithRequestID(err.res, "There was a problem removing the preauthorization: "+errMsg));
+        console.log(err);
+        callback();
+      }
+    }
+    AppActions.deletePreauth(id, singleCallback);
+  },
+
+  _removePreauth: function() {
+    var self = this;
+    var i = 0;
+    var success = 0;
+    var loopArrays = function(arr) {
+      // for each in array, authorize one by one
+      self._removeSinglePreauth(arr[i].id, function(num) {
+        i++;
+        success = num+success;
+        if (i < arr.length) {
+          loopArrays(arr);
+        } else {
+          self.setState({openRemove: false, selectedRows: [], devicesToRemove: []});
+          AppActions.setSnackbar(success + " " + pluralize("devices", success) + " " + pluralize("were", success)+ " successfully removed from the preauthorization list");
+          self._getDevices();
+        }
+      });
+    }
+    loopArrays(this.state.devicesToRemove);
+   
+  },
+
+  _removeBatch: function() {
+    var self = this;
+    // use selected rows to get device from corresponding position in devices array
+    var devices = [];
+    for (var i=0; i<self.state.selectedRows.length; i++) {
+      devices.push(self.state.devices[self.state.selectedRows[i]]);
+    }
+    self._openRemoveDialog(devices);
   },
 
   _showKey: function() {
@@ -296,7 +331,7 @@ var Preauthorize =  createReactClass({
             <div onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
-            }}><a onClick={this._openRemoveDialog.bind(null, device)}>Remove</a>
+            }}><a onClick={this._openRemoveDialog.bind(null, [device])}>Remove</a>
             </div>
           </TableRowColumn>
           <TableRowColumn style={{width:"55px", paddingRight:"0", paddingLeft:"12px"}} className="expandButton">
@@ -440,8 +475,7 @@ var Preauthorize =  createReactClass({
               </div>
 
               <span className="margin-right">{this.state.selectedRows.length} {pluralize("devices", this.state.selectedRows.length)} selected</span>
-              <RaisedButton disabled={this.props.disabled || limitMaxed || limitNear}  primary={true} label={"Remove " + this.state.selectedRows.length +" " + pluralize("devices", this.state.selectedRows.length)} />
-              {deviceLimitWarning}
+              <RaisedButton primary={true} label={"Remove " + this.state.selectedRows.length +" " + pluralize("devices", this.state.selectedRows.length)} onClick={this._removeBatch} />
             </div>
           </div>
         : null }
@@ -481,16 +515,30 @@ var Preauthorize =  createReactClass({
 
         <Dialog
           open={this.state.openRemove}
-          title='Remove this device?'
+          title={'Remove '+pluralize("this", this.state.devicesToRemove.length)+' '+ pluralize("device", this.state.devicesToRemove.length)}
           actions={removeActions}
           autoDetectWindowHeight={true}
           bodyStyle={{paddingTop:"0", fontSize:"13px"}}
           contentStyle={{overflow:"hidden", boxShadow:"0 14px 45px rgba(0, 0, 0, 0.25), 0 10px 18px rgba(0, 0, 0, 0.22)"}}
           >
-          <ListItem className="margin-bottom-small" style={this.props.styles.listStyle} disabled={true} primaryText="Device ID" secondaryText={(this.state.deviceToRemove||{}).device_id}  />
-          <p>
-            This device identity data set and public key will be removed from the preauthorization list. Are you sure?
-          </p>
+          {this.state.devicesToRemove.length>1 ? 
+
+            <div>
+              <p>
+                {this.state.devicesToRemove.length} device identity data set + public key combinations will be removed from the preauthorization list. Are you sure?
+              </p>
+            </div>
+
+            : 
+
+            <div>
+              <ListItem className="margin-bottom-small" style={this.props.styles.listStyle} disabled={true} primaryText="Device ID" secondaryText={(this.state.devicesToRemove[0]||{}).device_id}  />
+              <p>
+                This device identity data set and public key will be removed from the preauthorization list. Are you sure?
+              </p>
+            </div>
+          }
+          
         </Dialog>
 
       </Collapse>
