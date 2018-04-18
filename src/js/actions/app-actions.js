@@ -352,6 +352,19 @@ var AppActions = {
         callback.error(err);
       })
   },
+
+  getAuthSets: function (callback, id, page, per_page) { 
+    var page = page || default_page;
+    var per_page = per_page || default_adm_per_page;
+    DevicesApi
+      .get(devicesApiUrl+"/devices?device_id="+ id +"&per_page="+per_page+"&page="+page)
+      .then(function(res) {
+        callback.success(res.body, parse(res.headers['link']));
+      })
+      .catch(function(err) {
+        callback.error(err);
+      })
+  },
   
   getDeviceIdentity: function (id, callback) {
     DevicesApi
