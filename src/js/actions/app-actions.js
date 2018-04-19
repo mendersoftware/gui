@@ -101,6 +101,7 @@ var AppActions = {
   },
 
   getDevices: function(callback, page, per_page, group, search_term) {
+    // get devices from inventory
     var count = 0;
     var page = page || default_page;
     var per_page = per_page || default_per_page;

@@ -11,7 +11,7 @@ var _deploymentArtifact = null;
 var _currentGroupDevices = [];
 var _totalNumberDevices, _totalPendingDevices, _totalAcceptedDevices, _totalRejectedDevices, _totalPreauthDevices, _deviceLimit, _numberInProgress;
 _totalPendingDevices = _totalAcceptedDevices = 0;
-var _filters = [{key:'', value:''}];
+var _filters = [];
 var _attributes = {
   id: "ID"
 };
@@ -35,7 +35,7 @@ var _pending = [];
 
 
 function _selectGroup(group) {
-  _filters = [{key:'', value:''}];
+  _filters = [];
   _currentGroup = group;
 }
 
@@ -120,7 +120,7 @@ function _addToGroup(group, devices) {
     _groups[idx] = tmpGroup;
 
     // reset filters
-    _filters = [{key:'', value:''}];
+    _filters = [];
 
     // TODO - delete if empty group?
 

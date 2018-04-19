@@ -84,9 +84,17 @@ var DeviceGroups = createReactClass({
 	      this._refreshGroups();
 	    }
 
+	    if (prevProps.acceptedDevices !== this.props.acceptedDevices) {
+	    	clearInterval(this.deviceTimer);	    	
+	    	if (this.props.currentTab==="Device groups") {	
+	    		this.deviceTimer = setInterval(this._getDevices, this.state.refreshDeviceLength);
+	    		this._refreshAll();
+	    	}
+	    }
+
 	    if (prevProps.currentTab !== this.props.currentTab) {
 	    	clearInterval(this.deviceTimer);
-	    	this.setState({filters: [{key:'', value:''}]});
+	    	this.setState({filters: []});
 	    	if (this.props.currentTab==="Device groups") {	
 	    		this.deviceTimer = setInterval(this._getDevices, this.state.refreshDeviceLength);
 	    		this._refreshAll();
@@ -135,12 +143,11 @@ var DeviceGroups = createReactClass({
 
 	_handleGroupChange: function(group, numDev) {
 		var self = this;
-		console.log(group, numDev);
 		clearInterval(self.deviceTimer);
 		setTimeout(function() {
 			AppActions.setSnackbar("");
 		}, 4000);
-		this.setState({loading: true, selectedGroup: group, groupCount: numDev, pageNo:1, filters: [{key:'', value:''}]}, function() {
+		this.setState({loading: true, selectedGroup: group, groupCount: numDev, pageNo:1, filters: []}, function() {
 	    self.deviceTimer = setInterval(self._getDevices, self.state.refreshDeviceLength);
 			self._getDevices();
 		});
@@ -173,7 +180,7 @@ var DeviceGroups = createReactClass({
 
 	     	self._toggleDialog("removeGroup");
 	     	AppActions.setSnackbar("Group was removed successfully");
-	     	self.setState({selectedGroup: null, pageNo:1, groupCount: self.props.allCount}, function() {
+	     	self.setState({selectedGroup: null, pageNo:1, groupCount: self.props.acceptedDevices}, function() {
 	     		setTimeout(function() {
 	     			self.deviceTimer = setInterval(self._getDevices, self.state.refreshDeviceLength);
 	     			self._refreshAll();
@@ -212,8 +219,8 @@ var DeviceGroups = createReactClass({
 	*/ 
 	
 	_getDevices: function() {
-	   var self = this;
-       var callback =  {
+	  	var self = this;
+      var groupCallback =  {
         success: function(devices) {
           self.setState({devices: devices, loading: false, pageLoading: false});
         },
@@ -224,14 +231,57 @@ var DeviceGroups = createReactClass({
           setRetryTimer(err, "devices", "Devices couldn't be loaded. " + errormsg, self.state.refreshDeviceLength);
         }
       };
-      AppActions.getDevices(callback, this.state.pageNo, this.state.pageLength, this.state.selectedGroup);
+
+
+      var callback =  {
+        success: function(devices) {
+          self.setState({devices: devices, loading: false, pageLoading: false, groupCount: self.props.acceptedDevices}, function() {
+          	// for each device, get inventory
+          	for (var i=0; i<devices.length; i++) {
+          		// have to call inventory each time - accepted list can change order so must refresh inventory too
+          		self._getInventoryForDevice(devices[i].device_id, i, function(inventory, index) {
+        				devices[index].attributes = inventory.attributes;
+        				devices[index].updated_ts = inventory.updated_ts;
+        				self.setState({devices: devices});
+          		});
+          	}
+          });
+        },
+        error: function(error) {
+          console.log(error);
+          var errormsg = err.error || "Please check your connection.";
+          self.setState({loading: false});
+          setRetryTimer(err, "devices", "Devices couldn't be loaded. " + errormsg, self.state.refreshDeviceLength);
+        }
+      };
+
+      var hasFilters = this.state.filters.length && this.state.filters[0].value;
+
+    	if (this.state.selectedGroup || hasFilters) {
+    		// if a group or filters, must use inventory API
+    		AppActions.getDevices(groupCallback, this.state.pageNo, this.state.pageLength, this.state.selectedGroup);
+      } else {
+      	// otherwise, show accepted from device dm
+      	AppActions.getDevicesByStatus(callback, "accepted", this.state.pageNo, this.state.pageLength);
+      }
+     
 	},
 	 
 	_getDeviceById: function(id) {
+		// filter the list to show a single device only
 		var self = this;
 		var callback =  {
-        success: function(device) {
-          self.setState({devices: [device], loading: false, pageLoading: false});
+        success: function(devices) {
+        	var device = devices.length ? [devices[0]] : [];
+          self.setState({devices: device, loading: false, pageLoading: false, groupCount:devices.length}, function() {
+          	if (devices.length) {
+	          	self._getInventoryForDevice(id, 0, function(inventory, index) {
+	      				device[0].attributes = inventory.attributes;
+	      				device[0].updated_ts = inventory.updated_ts;
+	      				self.setState({devices: device});
+	          	});
+          	}
+          });
         },
         error: function(error) {
           if (error.res.statusCode === 404) {
@@ -243,21 +293,26 @@ var DeviceGroups = createReactClass({
           }
         }
       };
-		AppActions.getDeviceById(id, callback);
+
+     // do this via admn not inventory
+		AppActions.getAuthSets(callback, id);
 	},
 
-	_getInventoryForDevice: function(device, originCallback) {
+	_getInventoryForDevice: function(device_id, index, originCallback) {
 	    // get inventory for single device
 	    var callback = {
 	      success: function(device) {
-	        originCallback(device);
+	        originCallback(device, index);
 	      },
 	      error: function(err) {
-	        console.log(err);
+	      	if (err.res.statusCode !== 404) {
+	      		// don't show error if 404 - device hasn't received inventory yet
+	      		 console.log(err);
+	      	}
 	        originCallback(null);
 	      }
 	    };
-	    AppActions.getDeviceById(device.device_id, callback);
+	    AppActions.getDeviceById(device_id, callback);
 	},
 
 	_handlePageChange: function(pageNo) {
@@ -309,13 +364,13 @@ var DeviceGroups = createReactClass({
 	      success: function() {
 	        if (idx === length-1) {
 	          // reached end of list
-	          self.setState({createGroupDialog: false, addGroup: false, tmpGroup: "", selectedField:""});
-	          AppActions.setSnackbar("The group was updated successfully");
-	          self._refreshGroups();
-	          setTimeout(function() {
-	          	self._handleGroupChange(group, self.state.groupDevices[group]+length);
-	          }, 500);
-	          
+	          self.setState({createGroupDialog: false, addGroup: false, tmpGroup: "", selectedField:""}, function() {
+	          	AppActions.setSnackbar("The group was updated successfully");
+		          self._refreshGroups(function() {
+		          	self._handleGroupChange(group, self.state.groupDevices[group]);
+		          });
+		        
+	          });
 	        }
 	      },
 	      error: function(err) {
@@ -336,7 +391,7 @@ var DeviceGroups = createReactClass({
 		if (rows.length >= self.state.groupCount) {
 			callback = function() {
 				AppActions.setSnackbar("Group was removed successfully");
-		     	self.setState({loading:true, selectedGroup: null, pageNo:1, groupCount: self.props.allCount}, function() {
+		     	self.setState({loading:true, selectedGroup: null, pageNo:1, groupCount: self.props.acceptedDevices}, function() {
 		     		self._refreshAll();
 		     	});
 			};
@@ -371,11 +426,11 @@ var DeviceGroups = createReactClass({
 
     if (id) {
     	// get single device by id
-    	self.setState({filters: filters}, function() {
+    	self.setState({filters: filters, pageNo:1}, function() {
     		self._getDeviceById(id);
     	});
     } else {
-    	self.setState({filters: filters}, function() {
+    	self.setState({filters: filters, pageNo:1}, function() {
     		self.deviceTimer = setInterval(self._getDevices, self.state.refreshDeviceLength);
       	self._getDevices();
     	});
@@ -411,7 +466,7 @@ var DeviceGroups = createReactClass({
 	        onClick={this._removeCurrentGroup} />
 	    ];
 
-	  	var groupCount = this.state.groupCount ? this.state.groupCount : this.props.allCount;
+	  	var groupCount = this.state.groupCount ? this.state.groupCount : this.props.acceptedDevices;
 
 	    var styles = {
 	      exampleFlatButtonIcon: {
@@ -454,7 +509,7 @@ var DeviceGroups = createReactClass({
 							}
 
 
-		          <FlatButton onClick={this._toggleDialog.bind(null, "removeGroup")} style={styles.exampleFlatButton} className={this.state.selectedGroup ? null : 'hidden' } label="Remove group" labelPosition="after">
+		          	<FlatButton onClick={this._toggleDialog.bind(null, "removeGroup")} style={styles.exampleFlatButton} className={this.state.selectedGroup ? null : 'hidden' } label="Remove group" labelPosition="after">
 		          		<FontIcon style={styles.exampleFlatButtonIcon} className="material-icons">delete</FontIcon>
 		        	</FlatButton>
 		          	
@@ -466,7 +521,8 @@ var DeviceGroups = createReactClass({
 		          		loading={this.state.loading} 
 		          		rejectOrDecomm={this.props.rejectOrDecomm} 
 		          		currentTab={this.props.currentTab} 
-		          		allCount={this.props.allCount} 
+		          		allCount={this.props.allCount}
+		          		acceptedCount={this.props.acceptedDevices}
 		          		groupCount={groupCount} 
 		          		styles={this.props.styles} 
 		          		group={this.state.selectedGroup} 

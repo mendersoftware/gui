@@ -221,6 +221,7 @@ var Authorized =  createReactClass({
         device_type: "",
         artifact_name: ""
       };
+
       var attributesLength = device.attributes ? device.attributes.length : 0; 
       for (var i=0;i<attributesLength;i++) {
         attrs[device.attributes[i].name] = device.attributes[i].value;
