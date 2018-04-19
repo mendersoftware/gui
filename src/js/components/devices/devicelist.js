@@ -222,7 +222,10 @@ var Authorized =  createReactClass({
       if ( self.state.expandRow === index ) {
         expanded = <ExpandedDevice docsVersion={this.props.docsVersion} showHelpTips={this.props.showHelptips} device={this.state.expandedDevice || device} rejectOrDecomm={this.props.rejectOrDecomm} attrs={device.attributes} device_type={attrs.device_type} styles={this.props.styles} block={this.props.block} accept={this.props.accept} redirect={this.props.redirect} artifacts={this.props.artifacts} selectedGroup={this.props.group} groups={this.props.groups} />
       }
-     
+      var id_value = device.device_id || device.id;
+      if ( attrs.friendly_name ) {
+        id_value = attrs.friendly_name + ' (' + id_value + ')';
+      }
       return (
         <TableRow 
           hoverable={!expanded}
@@ -235,7 +238,7 @@ var Authorized =  createReactClass({
               e.stopPropagation();
               this._expandRow(index,0);
             }}>
-            {device.device_id || device.id}
+            {id_value}
             </div>
           </TableRowColumn>
           <TableRowColumn style={{padding: 0}}>
