@@ -44,9 +44,14 @@ var ProgressDeviceList = createReactClass({
         }
 
         var encodedDevice = encodeURIComponent("id="+device.id);
+        var id_value = device.id;
+        var friendly_name = (this.props.deviceInventory[device.id] || {}).friendly_name;
+        if ( friendly_name ) {
+          id_value = friendly_name + ' (' + id_value + ')';
+        }
         var deviceLink = (
         <div>
-          <Link style={{fontWeight:"500"}} to={`/devices/groups/null/${encodedDevice}`}>{device.id}</Link>
+          <Link style={{fontWeight:"500"}} to={`/devices/groups/null/${encodedDevice}`}>{id_value}</Link>
         </div>
         );
 
