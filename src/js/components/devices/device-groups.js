@@ -52,13 +52,7 @@ var DeviceGroups = createReactClass({
 		var self = this;
 		var filters = [];
 
-		if (self.props.params.group && (self.props.params.group!=="null")) {
-			// select group - got to refresh groups first, then handle group change
-			self.setState({selectedGroup: self.props.params.group});
-			self._refreshGroups(function() {
-				self._handleGroupChange(self.props.params.group, self.state.groupDevices[self.props.params.group]);
-			})
-		} else if (self.props.params.filters) {
+	if (self.props.params.filters) {
 			self._refreshGroups();
       var str = decodeURIComponent(self.props.params.filters);
       var obj = str.split("&");
@@ -415,12 +409,15 @@ var DeviceGroups = createReactClass({
 	_onFilterChange: function(filters) {
     var self = this;
     clearInterval(self.deviceTimer);
-    var id;
-    // check filters for ID, this is temporary until full filtering functionality
+    var id, group;
+    // check filters for ID or group, this is temporary until full filtering functionality
     for (var i=0;i<filters.length;i++) {
       if (filters[i].key === "id") {
         id = filters[i].value;
         break;
+      } else if (filters[i].key === "group") {
+    		group = filters[i].value;
+    		break;
       }
     }
 
@@ -429,6 +426,11 @@ var DeviceGroups = createReactClass({
     	self.setState({filters: filters, pageNo:1}, function() {
     		self._getDeviceById(id);
     	});
+    } else if (group) {
+    	self.setState({selectedGroup: group});
+			self._refreshGroups(function() {
+				self._handleGroupChange(group, self.state.groupDevices[group]);
+			});
     } else {
     	self.setState({filters: filters, pageNo:1}, function() {
     		self.deviceTimer = setInterval(self._getDevices, self.state.refreshDeviceLength);

@@ -152,7 +152,6 @@ var Devices = createReactClass({
   _updateActive: function() {
     var self = this;
     return this.context.router.isActive({ pathname: '/devices' }, true) ? '/devices' :
-      this.context.router.isActive('/devices/groups') ? '/devices' :
       this.context.router.isActive('/devices/pending') ? '/devices/pending' :
       this.context.router.isActive('/devices/preauthorized') ? '/devices/preauthorized' :
       this.context.router.isActive('/devices/rejected') ? '/devices/rejected' : '/devices';
@@ -565,11 +564,11 @@ var Devices = createReactClass({
               </TableHeader>
               <TableBody ShowrowHover={true} displayRowCheckbox={false}>
 	          {(this.state.duplicates||[]).map(function(device, index) {
-	          	var status = device.status === "accepted" ? "groups/null" : device.status ;
+	          	var status = device.status === "accepted" ? "" : "/"+device.status;
 	          	return (
 	          		<TableRow key={device.device_id}>
 	          			<TableRowColumn>
-	          				<a onClick={this._redirect.bind(null, `/devices/${status}/id%3D${device.device_id}`)} >{device.device_id}</a>
+	          				<a onClick={this._redirect.bind(null, `/devices${status}/id%3D${device.device_id}`)} >{device.device_id}</a>
 	          			</TableRowColumn>
 	          			<TableRowColumn className="capitalized">
 	          				{device.status}
