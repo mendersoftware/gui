@@ -1,5 +1,6 @@
 FROM alpine:3.4
 
+RUN echo "nobody:x:65534:65534:nobody:/nonexistent:/bin/sh" > /etc/passwd 
 COPY ./entrypoint.sh /entrypoint.sh
 
 EXPOSE 80
