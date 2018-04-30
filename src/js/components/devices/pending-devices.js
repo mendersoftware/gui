@@ -56,11 +56,17 @@ var Pending =  createReactClass({
   componentDidUpdate(prevProps, prevState) {
 
     if ((prevProps.count !== this.props.count)
-      || ((prevProps.currentTab !== this.props.currentTab)&& (this.props.currentTab.indexOf("Pending")!==-1)) ) {
+      || ((prevProps.currentTab !== this.props.currentTab) && (this.props.currentTab.indexOf("Pending")!==-1)) ) {
       this._getDevices();
       this._clearSelected();
     }
+
+    if (prevProps.currentTab !== this.props.currentTab) {
+      this._clearSelected();
+    }
   },
+
+
   /*
   * Devices to show
   */ 
@@ -175,8 +181,9 @@ var Pending =  createReactClass({
 
 
   render: function() {
-    var limitMaxed = this.props.deviceLimit && (this.props.deviceLimit <= this.props.totalDevices);
-    var limitNear = this.props.deviceLimit && (this.props.deviceLimit < this.props.totalDevices + this.state.devices.length );
+    var limitMaxed = this.props.deviceLimit && (this.props.deviceLimit <= this.props.acceptedDevices);
+    var limitNear = this.props.deviceLimit && (this.props.deviceLimit < this.props.acceptedDevices + this.state.devices.length );
+    var selectedOverLimit = this.props.deviceLimit && (this.props.deviceLimit < this.props.acceptedDevices + this.state.selectedRows.length);
 
     var devices = this.state.devices.map(function(device, index) {
       var self = this;
@@ -282,7 +289,7 @@ var Pending =  createReactClass({
       (
         <p className="warning">
           <InfoIcon style={{marginRight:"2px", height:"16px", verticalAlign:"bottom"}} />
-          <span className={limitMaxed ? null : "hidden"}>You have reached</span><span className={limitNear&&!limitMaxed ? null : "hidden"}>You are nearing</span> your limit of authorized devices: {this.props.totalDevices} of {this.props.deviceLimit}
+          <span className={limitMaxed ? null : "hidden"}>You have reached</span><span className={limitNear&&!limitMaxed ? null : "hidden"}>You are nearing</span> your limit of authorized devices: {this.props.acceptedDevices} of {this.props.deviceLimit}
         </p>
     ) : null;
 
@@ -331,12 +338,11 @@ var Pending =  createReactClass({
           </div>
         : null }
 
+        {deviceLimitWarning}
 
         { this.state.devices.length && this.state.authLoading!=="all" ?
 
           <div className="padding-bottom">
-
-            {deviceLimitWarning}
 
             <h3 className="align-center">{this.props.count} {pluralize("devices", this.props.count)} pending authorization</h3>
 
@@ -412,7 +418,7 @@ var Pending =  createReactClass({
               </div>
 
               <span className="margin-right">{this.state.selectedRows.length} {pluralize("devices", this.state.selectedRows.length)} selected</span>
-              <RaisedButton disabled={this.props.disabled || limitMaxed || limitNear} onClick={this._authorizeDevices} primary={true} label={"Authorize " + this.state.selectedRows.length +" " + pluralize("devices", this.state.selectedRows.length)} />
+              <RaisedButton disabled={this.props.disabled || limitMaxed || selectedOverLimit} onClick={this._authorizeDevices} primary={true} label={"Authorize " + this.state.selectedRows.length +" " + pluralize("devices", this.state.selectedRows.length)} />
               {deviceLimitWarning}
             </div>
           </div>

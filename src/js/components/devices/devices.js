@@ -39,6 +39,7 @@ var Devices = createReactClass({
 			snackbar: AppStore.getSnackbar(),
       refreshLength: 10000,
       showHelptips: AppStore.showHelptips(),
+      deviceLimit: AppStore.getDeviceLimit(),
 		};
 	},
 
@@ -428,9 +429,11 @@ var Devices = createReactClass({
             style={this.state.tabIndex === "/devices/pending" ? styles.activeTabStyle : styles.tabStyle}>
 
 						<PendingDevices 
+							deviceLimit={this.state.deviceLimit}
               styles={styles} 
               currentTab={this.state.currentTab}
-              disabled={this.state.pauseAdmisson} 
+              disabled={this.state.pauseAdmisson}
+              acceptedDevices={this.state.acceptedCount} 
               authorizeDevices={this._authorizeDevices} 
               count={this.state.pendingCount} 
               rejectDevice={this._handleRejectDevice}
@@ -444,7 +447,9 @@ var Devices = createReactClass({
 						onActive={tabHandler}
 						style={this.state.tabIndex === "/devices/preauthorized" ? styles.activeTabStyle : styles.tabStyle}>
 
-            <PreauthDevices 
+            <PreauthDevices
+            	deviceLimit={this.state.deviceLimit}
+            	acceptedDevices={this.state.acceptedCount} 
             	styles={styles}
             	currentTab={this.state.currentTab}
             	count={this.state.preauthCount}
@@ -457,7 +462,9 @@ var Devices = createReactClass({
             onActive={tabHandler}
             style={this.state.tabIndex === "/devices/rejected" ? styles.activeTabStyle : styles.tabStyle}>
 
-            <RejectedDevices 
+            <RejectedDevices
+            	deviceLimit={this.state.deviceLimit}
+            	acceptedDevices={this.state.acceptedCount} 
             	rejectOrDecomm={this._openRejectDialog} 
             	styles={styles} currentTab={this.state.currentTab} 
             	disabled={this.state.pauseAdmisson} 

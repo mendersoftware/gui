@@ -65,6 +65,10 @@ var Preauthorize =  createReactClass({
       this._getDevices();
       this._clearSelected();
     }
+
+    if (prevProps.currentTab !== this.props.currentTab) {
+      this._clearSelected();
+    }
   },
   /*
   * Devices to show
@@ -90,7 +94,7 @@ var Preauthorize =  createReactClass({
   },
 
   _clearSelected: function() {
-    this.setState({selectedRows:[], expandRow: null});
+    this.setState({selectedRows:[], devicesToRemove:[], expandRow: null});
   },
 
 
@@ -293,8 +297,7 @@ var Preauthorize =  createReactClass({
   },
 
   render: function() {
-    var limitMaxed = this.props.deviceLimit && (this.props.deviceLimit <= this.props.totalDevices);
-    var limitNear = this.props.deviceLimit && (this.props.deviceLimit < this.props.totalDevices + this.state.devices.length );
+    var limitMaxed = this.props.deviceLimit && (this.props.deviceLimit <= this.props.acceptedDevices);
 
     var devices = this.state.devices.map(function(device, index) {
       var self = this;
@@ -362,11 +365,11 @@ var Preauthorize =  createReactClass({
       )
     }, this);
     
-    var deviceLimitWarning = (limitMaxed || limitNear) ?
+    var deviceLimitWarning = limitMaxed ?
       (
         <p className="warning">
           <InfoIcon style={{marginRight:"2px", height:"16px", verticalAlign:"bottom"}} />
-          <span className={limitMaxed ? null : "hidden"}>You have reached</span><span className={limitNear&&!limitMaxed ? null : "hidden"}>You are nearing</span> your limit of authorized devices: {this.props.totalDevices} of {this.props.deviceLimit}
+          <span className={limitMaxed ? null : "hidden"}>You have reached</span><span className={!limitMaxed ? null : "hidden"}>You are nearing</span> your limit of authorized devices: {this.props.totalDevices} of {this.props.deviceLimit}
         </p>
     ) : null;
 
@@ -380,13 +383,13 @@ var Preauthorize =  createReactClass({
       </div>,
       <div style={{marginRight:"10px", display:"inline-block"}}>
         <RaisedButton
-          disabled={!this.state.public || !this.state.stringified}
+          disabled={!this.state.public || !this.state.stringified || limitMaxed}
           label="Save and add another"
           onClick={this._savePreauth.bind(null, false)}
           primary={true} />
       </div>,
       <RaisedButton
-        disabled={!this.state.public || !this.state.stringified}
+        disabled={!this.state.public || !this.state.stringified || limitMaxed}
         label="Save"
         onClick={this._savePreauth.bind(null, true)}
         secondary={true} />
@@ -421,18 +424,16 @@ var Preauthorize =  createReactClass({
     return (
       <Collapse springConfig={{stiffness: 190, damping: 20}} style={{minHeight:minHeight, width:"100%"}} isOpened={true} id="preauthorize" className="absolute authorize padding-top">
         
-      <RaisedButton className="top-right-button" secondary={true} label="Preauthorize devices" onClick={this._dialogToggle.bind(null, 'openPreauth')} />
+      <RaisedButton disabled={limitMaxed} className="top-right-button" secondary={true} label="Preauthorize devices" onClick={this._dialogToggle.bind(null, 'openPreauth')} />
       
       <Loader show={this.state.authLoading==="all"} />
-
+        {deviceLimitWarning}
 
         { this.state.devices.length && this.state.authLoading!=="all" ?
 
           <div className="padding-bottom">
 
             <h3 className="align-center">Preauthorized devices</h3>
-
-            {deviceLimitWarning}
 
             <Table
               multiSelectable={true}
@@ -466,7 +467,7 @@ var Preauthorize =  createReactClass({
 
           <div className={this.state.authLoading ? "hidden" : "dashboard-placeholder"}>
             <p>There are no preauthorized devices.</p>
-            <p><a onClick={this._dialogToggle.bind(null, "openPreauth")}>Preauthorize devices</a> so that when they come online, they will connect to the server immediately</p>
+            <p>{limitMaxed ? "Preauthorize devices" : <a onClick={this._dialogToggle.bind(null, "openPreauth")}>Preauthorize devices</a>} so that when they come online, they will connect to the server immediately</p>
             <img src="assets/img/preauthorize.png" alt="preauthorize" />
           </div>
         }
@@ -517,6 +518,8 @@ var Preauthorize =  createReactClass({
           <FloatingActionButton disabled={!this.state.inputs[this.state.inputs.length-1].key || !this.state.inputs[this.state.inputs.length-1].value } style={{marginTop:"10px"}} mini={true} onClick={this._addKeyValue}>
             <ContentAdd />
           </FloatingActionButton>
+
+           {deviceLimitWarning}
         </Dialog>
 
 
