@@ -105,6 +105,14 @@ function _filterDevicesByType(devices, device_types) {
   return filtered;
 }
 
+function _setFilterAttributes(attrs) {
+  // sets the available inventory attributes to be used in filtering devices
+  for (var i=0;i<attrs.length;i++) {
+    _attributes[attrs[i].name] = attrs[i].name;
+  }
+  _attributes.id = "ID";
+}
+
 function _addToGroup(group, devices) {
   var tmpGroup = group;
   var idx = findWithAttr(_groups, 'id', tmpGroup);
@@ -485,7 +493,7 @@ var AppStore = assign(EventEmitter.prototype, {
     return _alldevices[findWithAttr(_alldevices, 'id', id)]
   },
 
-  getAttributes: function() {
+  getFilterAttributes: function() {
     /*
     * Return set of filters for list of devices
     */
@@ -670,6 +678,9 @@ var AppStore = assign(EventEmitter.prototype, {
         break;
       case AppConstants.ADD_GROUP:
         _addGroup(payload.action.group, payload.action.index);
+        break;
+      case AppConstants.SET_FILTER_ATTRIBUTES:
+        _setFilterAttributes(payload.action.attrs);
         break;
       case AppConstants.UPLOAD_ARTIFACT:
         _uploadArtifact(payload.action.artifact);

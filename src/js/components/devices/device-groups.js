@@ -35,7 +35,7 @@ var DeviceGroups = createReactClass({
 	  		removeGroup: false,
 	  		groupInvalid: true,
 	  		filters: AppStore.getFilters(),
-	  		attributes: AppStore.getAttributes(),
+	  		attributes: AppStore.getFilterAttributes(),
 	  		snackbar: AppStore.getSnackbar(),
 	  		createGroupDialog: false,
 	  		devices: [],
@@ -44,6 +44,7 @@ var DeviceGroups = createReactClass({
 	  		loading: true,
 	  		tmpDevices: [],
 	  		refreshDeviceLength: 10000,
+	  		isHosted: (window.location.hostname === "hosted.mender.io")
 		};
 	},
 
@@ -52,20 +53,20 @@ var DeviceGroups = createReactClass({
 		var self = this;
 		var filters = [];
 
-	if (self.props.params.filters) {
+		if (self.props.params.filters) {
 			self._refreshGroups();
-      var str = decodeURIComponent(self.props.params.filters);
-      var obj = str.split("&");
-      for (var i=0;i<obj.length;i++) {
-        var f = obj[i].split("=");
-        filters.push({key:f[0], value:f[1]});
-      }
-      self._onFilterChange(filters);
+			var str = decodeURIComponent(self.props.params.filters);
+			var obj = str.split("&");
+			for (var i=0;i<obj.length;i++) {
+				var f = obj[i].split("=");
+				filters.push({key:f[0], value:f[1]});
+			}
+		  self._onFilterChange(filters);
 		} else {
 			// no group, no filters, all devices
-    	this.deviceTimer = setInterval(this._getDevices, this.state.refreshDeviceLength);
-	    this._refreshAll();
-  	}
+	    	this.deviceTimer = setInterval(this._getDevices, this.state.refreshDeviceLength);
+		    this._refreshAll();
+	  	}
 	},
 
 	componentWillUnmount() {
@@ -216,6 +217,7 @@ var DeviceGroups = createReactClass({
 	  	var self = this;
       var groupCallback =  {
         success: function(devices) {
+        	if (devices.length && devices[0].attributes && self.state.isHosted) { AppActions.setFilterAttributes(devices[0].attributes) }
           self.setState({devices: devices, loading: false, pageLoading: false});
         },
         error: function(error) {
@@ -236,7 +238,8 @@ var DeviceGroups = createReactClass({
           		self._getInventoryForDevice(devices[i].device_id, i, function(inventory, index) {
         				devices[index].attributes = inventory.attributes;
         				devices[index].updated_ts = inventory.updated_ts;
-        				self.setState({devices: devices});
+        				if (inventory.attributes && self.state.isHosted) { AppActions.setFilterAttributes(inventory.attributes) }
+        				self.setState({devices: devices, attributes: AppStore.getFilterAttributes()});
           		});
           	}
           });
@@ -252,14 +255,25 @@ var DeviceGroups = createReactClass({
       var hasFilters = this.state.filters.length && this.state.filters[0].value;
 
     	if (this.state.selectedGroup || hasFilters) {
+    		var params = this.state.selectedGroup ? "group="+this.state.selectedGroup : "";
+    		if (hasFilters) {
+    			var str = [];
+				  for (var i=0; i<this.state.filters.length;i++) {
+				  	if(this.state.filters[i].key && this.state.filters[i].value) {
+				    	str.push(encodeURIComponent(this.state.filters[i].key) + "=" + encodeURIComponent(this.state.filters[i].value));
+						}
+					}
+  				params = str.join("&");
+    		}
     		// if a group or filters, must use inventory API
-    		AppActions.getDevices(groupCallback, this.state.pageNo, this.state.pageLength, this.state.selectedGroup);
+    		AppActions.getDevices(groupCallback, this.state.pageNo, this.state.pageLength, params);
       } else {
-      	// otherwise, show accepted from device dm
+      	// otherwise, show accepted from device adm
       	AppActions.getDevicesByStatus(callback, "accepted", this.state.pageNo, this.state.pageLength);
       }
      
 	},
+
 	 
 	_getDeviceById: function(id) {
 		// filter the list to show a single device only
@@ -507,11 +521,10 @@ var DeviceGroups = createReactClass({
 	        	<div className="rightFluid" style={{paddingTop:"0"}}>
 
 	        		{!this.state.selectedGroup ?
-								<Filters attributes={this.state.attributes} filters={this.state.filters} onFilterChange={this._onFilterChange} /> : null
+								<Filters attributes={this.state.attributes} filters={this.state.filters} onFilterChange={this._onFilterChange} isHosted={this.state.isHosted} /> : null
 							}
 
-
-		          	<FlatButton onClick={this._toggleDialog.bind(null, "removeGroup")} style={styles.exampleFlatButton} className={this.state.selectedGroup ? null : 'hidden' } label="Remove group" labelPosition="after">
+		          <FlatButton onClick={this._toggleDialog.bind(null, "removeGroup")} style={styles.exampleFlatButton} className={this.state.selectedGroup ? null : 'hidden' } label="Remove group" labelPosition="after">
 		          		<FontIcon style={styles.exampleFlatButtonIcon} className="material-icons">delete</FontIcon>
 		        	</FlatButton>
 		          	

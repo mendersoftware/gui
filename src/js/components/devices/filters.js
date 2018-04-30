@@ -13,7 +13,7 @@ import IconButton from 'material-ui/IconButton';
 var Filters = createReactClass({
   getInitialState: function() {
     return {
-      showFilters: false
+      showFilters: false,
     };
   },
   _updateFilterKey: function (i, event, index, value) {
@@ -117,6 +117,9 @@ var Filters = createReactClass({
         <div>
         {filters}
         </div>
+        <FlatButton disabled={!filterCount} onClick={this._addFilter} label="Add filter" secondary={true}>
+          <FontIcon style={styles.exampleFlatButtonIcon} className="material-icons">add_circle</FontIcon>
+        </FlatButton>
       </div>
     );
     return (
