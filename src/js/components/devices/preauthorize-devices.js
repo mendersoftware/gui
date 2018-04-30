@@ -383,13 +383,13 @@ var Preauthorize =  createReactClass({
       </div>,
       <div style={{marginRight:"10px", display:"inline-block"}}>
         <RaisedButton
-          disabled={!this.state.public || !this.state.stringified || limitMaxed}
+          disabled={!this.state.public || !this.state.stringified || !!limitMaxed}
           label="Save and add another"
           onClick={this._savePreauth.bind(null, false)}
           primary={true} />
       </div>,
       <RaisedButton
-        disabled={!this.state.public || !this.state.stringified || limitMaxed}
+        disabled={!this.state.public || !this.state.stringified || !!limitMaxed}
         label="Save"
         onClick={this._savePreauth.bind(null, true)}
         secondary={true} />
@@ -424,7 +424,7 @@ var Preauthorize =  createReactClass({
     return (
       <Collapse springConfig={{stiffness: 190, damping: 20}} style={{minHeight:minHeight, width:"100%"}} isOpened={true} id="preauthorize" className="absolute authorize padding-top">
         
-      <RaisedButton disabled={limitMaxed} className="top-right-button" secondary={true} label="Preauthorize devices" onClick={this._dialogToggle.bind(null, 'openPreauth')} />
+      <RaisedButton disabled={!!limitMaxed} className="top-right-button" secondary={true} label="Preauthorize devices" onClick={this._dialogToggle.bind(null, 'openPreauth')} />
       
       <Loader show={this.state.authLoading==="all"} />
         {deviceLimitWarning}
