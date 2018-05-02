@@ -234,12 +234,15 @@ var DeviceGroups = createReactClass({
           self.setState({devices: devices, loading: false, pageLoading: false, groupCount: self.props.acceptedDevices}, function() {
           	// for each device, get inventory
           	for (var i=0; i<devices.length; i++) {
+          		var gotAttrs = false;
           		// have to call inventory each time - accepted list can change order so must refresh inventory too
           		self._getInventoryForDevice(devices[i].device_id, i, function(inventory, index) {
         				devices[index].attributes = inventory.attributes;
         				devices[index].updated_ts = inventory.updated_ts;
-        				if (inventory.attributes && self.state.isHosted) { AppActions.setFilterAttributes(inventory.attributes) }
-        				self.setState({devices: devices, attributes: AppStore.getFilterAttributes()});
+        				if (!gotAttrs && inventory.attributes && self.state.isHosted) { AppActions.setFilterAttributes(inventory.attributes); gotAttrs = true; }
+     						if (index == device.length-1) {
+     							self.setState({devices: devices, attributes: AppStore.getFilterAttributes()});
+     						}
           		});
           	}
           });
