@@ -69,7 +69,7 @@ var Pending =  createReactClass({
     var self = this;
     var callback =  {
       success: function(devices) {
-        self.setState({devices: devices, pageLoading: false, authLoading: null, deviceToReject:{}, openReject: false, expandRow: null});
+        self.setState({devices: devices, pageLoading: false, authLoading: null, rejectLoading: null, deviceToReject:{}, openReject: false, expandRow: null});
         if (!devices.length && self.props.count) {
           //if devices empty but count not, put back to first page
           self._handlePageChange(1);
@@ -79,7 +79,7 @@ var Pending =  createReactClass({
       error: function(error) {
         console.log(err);
         var errormsg = err.error || "Please check your connection.";
-        self.setState({pageLoading: false, authLoading: null, deviceToReject:{}, openReject: false });
+        self.setState({pageLoading: false, authLoading: null, rejectLoading: null, deviceToReject:{}, openReject: false });
         setRetryTimer(err, "devices", "Devices couldn't be loaded. " + errormsg, self.state.refreshDeviceLength);
       }
     };

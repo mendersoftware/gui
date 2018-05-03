@@ -78,7 +78,7 @@ var AddGroup = createReactClass({
 
 var ExpandDevice = createReactClass({
   render: function () {
-    var docsVersion = AppStore.geDocsVersion();
+    var docsVersion = AppStore.getDocsVersion();
     return (
       <div>
         <h3>Device inventory</h3>
