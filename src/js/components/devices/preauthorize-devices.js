@@ -11,6 +11,7 @@ var ExpandedDevice = require('./expanded-device');
 var createReactClass = require('create-react-class');
 var Pagination = require('rc-pagination');
 var _en_US = require('rc-pagination/lib/locale/en_US');
+var Dropzone = require('react-dropzone');
 var pluralize = require('pluralize');
 import { setRetryTimer, clearRetryTimer, clearAllRetryTimers } from '../../utils/retrytimer';
 import { isEmpty, preformatWithRequestID } from '../../helpers.js';
@@ -29,6 +30,7 @@ import { List, ListItem } from 'material-ui/List';
 import TextField from 'material-ui/TextField';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
+import FileIcon from 'react-material-icons/icons/file/file-upload';
 
 var Preauthorize =  createReactClass({
   getInitialState: function() {
@@ -159,7 +161,7 @@ var Preauthorize =  createReactClass({
   },
 
   _clearForm: function() {
-    this.setState({public: "", inputs: [{key:"", value:""}]});
+    this.setState({public: "", filename:"", inputs: [{key:"", value:""}]});
   },
 
   _updateKey: function(index, event) {
@@ -187,10 +189,6 @@ var Preauthorize =  createReactClass({
     inputs.splice(index, 1);
     this.setState({inputs: inputs, errorText: "", errorText1: ""});
     this._convertIdentityToString(inputs);
-  },
-
-  _updatePublicKey: function(event) {
-     this.setState({public: event.target.value});
   },
 
   _convertIdentityToString: function(arr) {
@@ -294,6 +292,29 @@ var Preauthorize =  createReactClass({
   _showKey: function() {
     var self = this;
     self.setState({showKey: !self.state.showKey});
+  },
+
+  onDrop: function (acceptedFiles, rejectedFiles) {
+    var self = this;
+    if (acceptedFiles.length) {
+      var reader = new FileReader();
+      reader.readAsBinaryString(acceptedFiles[0]);
+      reader.fileName = acceptedFiles[0].name;
+      reader.onload = function () {
+        var str = reader.result.replace(/\n|\r/g, "\\n");
+        self.setState({public: str, filename: reader.fileName});
+      };
+      reader.onerror = function (error) {
+        console.log('Error: ', error);
+      };
+    }
+    if (rejectedFiles.length) {
+      AppActions.setSnackbar("File '"+rejectedFiles[0].name +"'' was rejected. File must be of type .pub");
+    }
+  },
+
+  _removeKey: function () {
+    this.setState({public: null, filename: null});
   },
 
   render: function() {
@@ -503,14 +524,20 @@ var Preauthorize =  createReactClass({
           <p>This means when a device with the matching key and identity data comes online, it will automatically be authorized to connect to the server.</p>
 
 
-          <TextField
-            id="publickey"
-            hintText="Public key"
-            floatingLabelText="Public key"
-            style={{width:"527px"}}
-            value={this.state.public}
-            onChange={this._updatePublicKey}
-          />
+          
+         <h4 className="margin-top margin-bottom-small">Public key</h4>
+
+          {this.state.filename ? 
+            <div>
+              <TextField id="keyfile" value={this.state.filename} disabled={true} underlineStyle={{borderBottom:"1px solid rgb(224, 224, 224)"}} inputStyle={{color:"rgba(0, 0, 0, 0.8)"}} /><IconButton style={{top:"6px"}} onClick={this._removeKey}><FontIcon className="material-icons">clear</FontIcon></IconButton>
+            </div>
+            : 
+          <div>
+            <Dropzone className="dropzone onboard" activeClassName="active" rejectClassName="active" multiple={false} accept=".pub" onDrop={this.onDrop} style={{width: "528px"}}>
+              <div className="icon inline-block"><FileIcon style={{height:"24px", width:"24px", verticalAlign:"middle", marginTop:"-2px"}}/></div>
+              <div className="dashboard-placeholder inline">Drag here or <a>browse</a> to upload a public key file</div>
+            </Dropzone>
+          </div> }
 
           <h4 className="margin-bottom-none margin-top">Identity data</h4>
           {inputs}
