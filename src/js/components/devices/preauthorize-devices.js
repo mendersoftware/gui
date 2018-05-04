@@ -309,7 +309,7 @@ var Preauthorize =  createReactClass({
       };
     }
     if (rejectedFiles.length) {
-      AppActions.setSnackbar("File '"+rejectedFiles[0].name +"'' was rejected. File must be of type .pub");
+      AppActions.setSnackbar("File '"+rejectedFiles[0].name +"'' was rejected.");
     }
   },
 
@@ -533,7 +533,7 @@ var Preauthorize =  createReactClass({
             </div>
             : 
           <div>
-            <Dropzone className="dropzone onboard" activeClassName="active" rejectClassName="active" multiple={false} accept=".pub" onDrop={this.onDrop} style={{width: "528px"}}>
+            <Dropzone className="dropzone onboard" activeClassName="active" rejectClassName="active" multiple={false} onDrop={this.onDrop} style={{width: "528px"}}>
               <div className="icon inline-block"><FileIcon style={{height:"24px", width:"24px", verticalAlign:"middle", marginTop:"-2px"}}/></div>
               <div className="dashboard-placeholder inline">Drag here or <a>browse</a> to upload a public key file</div>
             </Dropzone>
