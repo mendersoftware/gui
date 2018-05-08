@@ -189,7 +189,7 @@ var Pending =  createReactClass({
       var self = this;
       var expanded = '';
       if ( self.state.expandRow === index ) {
-        expanded = <ExpandedDevice _showKey={this._showKey} showKey={this.state.showKey} disabled={limitMaxed} styles={this.props.styles} deviceId={self.state.deviceId} device={self.state.expandedDevice} unauthorized={true} selected={[device]}  />
+        expanded = <ExpandedDevice _showKey={this._showKey} showKey={this.state.showKey} disabled={!!limitMaxed} styles={this.props.styles} deviceId={self.state.deviceId} device={self.state.expandedDevice} unauthorized={true} selected={[device]}  />
       }
       var checkIcon = (self.state.authLoading === index && self.props.disabled) ?
         (
@@ -198,7 +198,7 @@ var Pending =  createReactClass({
           </div>
         ) : 
         (
-          <IconButton disabled={self.props.disabled || limitMaxed} onClick={(e) => {
+          <IconButton disabled={self.props.disabled || !!limitMaxed} onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
               self._clearSelected();
@@ -418,7 +418,7 @@ var Pending =  createReactClass({
               </div>
 
               <span className="margin-right">{this.state.selectedRows.length} {pluralize("devices", this.state.selectedRows.length)} selected</span>
-              <RaisedButton disabled={this.props.disabled || limitMaxed || selectedOverLimit} onClick={this._authorizeDevices} primary={true} label={"Authorize " + this.state.selectedRows.length +" " + pluralize("devices", this.state.selectedRows.length)} />
+              <RaisedButton disabled={this.props.disabled || !!limitMaxed || selectedOverLimit} onClick={this._authorizeDevices} primary={true} label={"Authorize " + this.state.selectedRows.length +" " + pluralize("devices", this.state.selectedRows.length)} />
               {deviceLimitWarning}
             </div>
           </div>
