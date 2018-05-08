@@ -34,7 +34,6 @@ var Devices = createReactClass({
 			tabIndex: this._updateActive(),
 			acceptedCount: AppStore.getTotalAcceptedDevices(),
 			rejectedCount: AppStore.getTotalRejectedDevices(),
-			preauthCount: AppStore.getTotalPreauthDevices(), 
 			pendingCount: AppStore.getTotalPendingDevices(),
 			snackbar: AppStore.getSnackbar(),
       refreshLength: 10000,
@@ -67,7 +66,7 @@ var Devices = createReactClass({
 		this._getAcceptedCount();
 		this._getRejectedCount();
 		this._getPendingCount();
-		this._getPreauthCount();
+		//this._getPreauthCount();
 	},
 
   _restartInterval: function() {
@@ -439,21 +438,6 @@ var Devices = createReactClass({
               rejectDevice={this._handleRejectDevice}
               showHelptips={this.state.showHelptips}
               highlightHelp={!this.state.acceptedCount} />
-					</Tab>
-
-					<Tab
-						label="Preauthorized"
-						value="/devices/preauthorized"
-						onActive={tabHandler}
-						style={this.state.tabIndex === "/devices/preauthorized" ? styles.activeTabStyle : styles.tabStyle}>
-
-            <PreauthDevices
-            	deviceLimit={this.state.deviceLimit}
-            	acceptedDevices={this.state.acceptedCount} 
-            	styles={styles}
-            	currentTab={this.state.currentTab}
-            	count={this.state.preauthCount}
-            	disabled={this.state.pauseAdmisson} />
 					</Tab>
 
           <Tab
