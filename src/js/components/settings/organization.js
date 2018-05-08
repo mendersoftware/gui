@@ -1,6 +1,7 @@
 import React from 'react';
 import cookie from 'react-cookie';
 import CopyToClipboard from 'react-copy-to-clipboard';
+import ReactTooltip from 'react-tooltip';
 var AppActions = require('../../actions/app-actions');
 var createReactClass = require('create-react-class');
 
@@ -54,16 +55,38 @@ var MyOrganization = createReactClass({
           <List>
             <ListItem
               key="name"
-              primaryText="Name"
+              primaryText="Organization name"
               disabled={true}
               secondaryText={this.state.org.name} />
             <Divider />
             <div className="material-list-item">
-              <h4>Token</h4>
+              <h4 style={{display: "inline", paddingRight: "10px"}}>Token</h4>
+
+              <div
+                id="token-info"
+                className="tooltip info"
+                data-tip
+                style={{position: "relative", display:"inline", top:"6px"}}
+                data-for='token-help'
+                data-event='click focus'>
+                <FontIcon className="material-icons">info</FontIcon>
+              </div>
+              <ReactTooltip
+                id="token-help"
+                globalEventOff='click'
+                place="top"
+                type="light"
+                effect="solid"
+                style={{}}
+                className="react-tooltip">
+                
+                <h3>Tenant token</h3>
+                <p style={{color: "#DECFD9", margin: "1em 0"}}>This token is unique for your organization and ensures that only devices that you own are able to connect to your account.</p>
+                <p style={{color: "#DECFD9", margin: "1em 0"}}>Set this variable in <i>local.conf</i> in order to make the device recognize the organization to which it belongs.</p>
+              </ReactTooltip>
+
               <p style={{wordBreak: "break-all"}}>{this.state.org.tenant_token}</p>
              
-             
-
               <CopyToClipboard text={this.state.org.tenant_token}
                 onCopy={() => this._copied()}>
                 <FlatButton
