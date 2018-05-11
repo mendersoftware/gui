@@ -96,7 +96,7 @@ var DemoArtifacts =  createReactClass({
 						: placeholder
 						
 					}
-					</div> : <p>Download the Artifacts for your desired device types from <a href={"https://docs.mender.io/"+this.props.docsVersion+"/getting-started/download-test-images"} target="_blank">the downloads page.</a></p>
+					</div> : <p>Download the Artifacts for your desired device types from <a href={"https://docs.mender.io/"+this.props.docsVersion+"getting-started/download-test-images"} target="_blank">the downloads page.</a></p>
 				}
 
 				

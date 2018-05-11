@@ -105,7 +105,7 @@ var BeagleBoneBlack =  createReactClass({
           }
 
           </div> : 
-          <p>Download the disk image for BeagleBone Black from <a href={"https://docs.mender.io/"+this.props.docsVersion+"/getting-started/download-test-images"} target="_blank">the downloads page</a>.</p>
+          <p>Download the disk image for BeagleBone Black from <a href={"https://docs.mender.io/"+this.props.docsVersion+"getting-started/download-test-images"} target="_blank">the downloads page</a>.</p>
         }
 
         <p>After the image has been downloaded, unpack it:</p>
@@ -174,7 +174,7 @@ var BeagleBoneBlack =  createReactClass({
           } 
         </div>
 
-        : <p>Download Artifact 1 and Artifact 2 for BeagleBone Black from <a href={"https://docs.mender.io/"+ this.props.docsVersion +"/getting-started/download-test-images"} target="_blank">the downloads page</a>.</p>
+        : <p>Download Artifact 1 and Artifact 2 for BeagleBone Black from <a href={"https://docs.mender.io/"+ this.props.docsVersion +"getting-started/download-test-images"} target="_blank">the downloads page</a>.</p>
 
         }
 
