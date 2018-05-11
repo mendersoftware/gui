@@ -652,7 +652,7 @@ var AppStore = assign(EventEmitter.prototype, {
 
   getDocsVersion: function() {
     // return docs link friendly version
-    var docsVersion = "development";
+    var docsVersion = "";
     if (_MenderVersion && !isNaN(_MenderVersion.charAt(0))) {
       var splitArray = _MenderVersion.split(".").slice(0,2);
       docsVersion = splitArray.join(".");

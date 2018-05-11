@@ -78,13 +78,13 @@ var AddGroup = createReactClass({
 
 var ExpandDevice = createReactClass({
   render: function () {
-    var docsVersion = AppStore.getDocsVersion();
+    var docsVersion = AppStore.getDocsVersion() ? AppStore.getDocsVersion() +"/" : "" ;
     return (
       <div>
         <h3>Device inventory</h3>
         <hr/>
         <p>Mender automatically collects identity and inventory information from connected devices. You can view this information by clicking on a device to expand the row.</p>
-        <p>Which information is collected about devices is fully configurable; <a href={"https://docs.mender.io/"+docsVersion+"/client-configuration/identity"} target="_blank">see the documentation for how to configure this</a>.</p>
+        <p>Which information is collected about devices is fully configurable; <a href={"https://docs.mender.io/"+docsVersion+"client-configuration/identity"} target="_blank">see the documentation for how to configure this</a>.</p>
         <p><a className="hidehelp" onClick={toggleHelptips}>Hide all help tips</a></p>
       </div>
     )
@@ -145,7 +145,7 @@ var UploadArtifact = createReactClass({
   render: function () {
     var multitenancy = AppStore.hasMultitenancy();
     var isHosted = (window.location.hostname === "hosted.mender.io");
-    var docsVersion = AppStore.getDocsVersion();
+    var docsVersion = AppStore.getDocsVersion() ? AppStore.getDocsVersion() +"/" : "" ;
     return (
       <div>
         <h3>Upload an Artifact</h3>
@@ -155,7 +155,7 @@ var UploadArtifact = createReactClass({
         { isHosted && multitenancy ? 
           <p>To make testing easier, you can find demo Artifacts in <Link to={`/help/connecting-devices/demo-artifacts`}>the Help section</Link>. After you have grabbed the one you want, upload it here.</p>
           :
-          <p>To make testing easier, you can <a href={"https://docs.mender.io/"+docsVersion+"/getting-started/download-test-images"} target="_blank">download a test Mender Artifact</a> for your virtual devices. After the download finishes, upload the Artifact here.</p>
+          <p>To make testing easier, you can <a href={"https://docs.mender.io/"+docsVersion+"getting-started/download-test-images"} target="_blank">download a test Mender Artifact</a> for your virtual devices. After the download finishes, upload the Artifact here.</p>
         }
 
         <p>You can also <Link to={`/help/connecting-devices/build-with-yocto`}>learn how to build your own Artifact</Link> with Yocto.</p>
