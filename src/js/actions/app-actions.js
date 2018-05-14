@@ -112,9 +112,9 @@ var AppActions = {
     var count = 0;
     var page = page || default_page;
     var per_page = per_page || default_per_page;
-
+    var search = search_term ? "&"+search_term : "";
     DevicesApi
-      .get(inventoryApiUrl+"/devices?per_page="+per_page+"&page="+page+"&"+search_term)
+      .get(inventoryApiUrl+"/devices?per_page="+per_page+"&page="+page+search)
       .then(function(res) {
         callback.success(res.body);
       })

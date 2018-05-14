@@ -40,8 +40,8 @@ function getState() {
     showHelptips: AppStore.showHelptips(),
     hasPending: AppStore.getTotalPendingDevices(),
     hasDevices: AppStore.getTotalAcceptedDevices(),
-    rejectedCount: AppStore.getTotalRejectedDevices(),
     user: AppStore.getCurrentUser(),
+    pageLength: AppStore.getTotalDevices(),
   }
 }
 
@@ -69,17 +69,18 @@ var Deployments = createReactClass({
     AppActions.getArtifacts(artifactsCallback);
 
 
-    var pageNo = 1;
-    var pageLength = self.state.hasDevices + self.state.rejectedCount;
 
-    AppActions.getDevices({
-      success: function(devices) {
-        self.setState({allDevices: devices});
+    var countCallback = {
+      success: function( count ) {
+        self.setState({pageLength: count}, function() {
+          self._getDevices();
+        });
       },
-      error: function(err) {
-        console.log("Error: " +err);
+      error: function( err ) {
+        console.log(err);
       }
-    }, pageNo, pageLength);
+    };
+    AppActions.getDeviceCount(countCallback);
 
     var groupCallback = {
       success: function(groups) {
@@ -121,6 +122,20 @@ var Deployments = createReactClass({
       this.setState({reportType:"progress"});
     }
   },
+
+  _getDevices: function() {
+    var self = this;
+    var pageNo = 1;
+    AppActions.getDevices({
+      success: function(devices) {
+        self.setState({allDevices: devices});
+      },
+      error: function(err) {
+        console.log("Error: " +err);
+      }
+    }, pageNo, self.state.pageLength);
+  },
+
   _refreshDeployments: function() {
     this._refreshInProgress();
     this._refreshPending();
@@ -261,7 +276,8 @@ var Deployments = createReactClass({
         console.log(err);
       }
     };
-    AppActions.getDevices(callback, 1, 100, group, null, true);
+    var filter = "group="+group;
+    AppActions.getDevices(callback, 1, 100, filter);
   },
   componentWillUnmount: function () {
     clearInterval(this.timer);
