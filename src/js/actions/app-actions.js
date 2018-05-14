@@ -106,15 +106,15 @@ var AppActions = {
       attrs: attrs
     })
   },
-
-  getDevices: function(callback, page, per_page, search_term) {
-    // get devices from inventory
+  
+  getDevices: function(callback, page, per_page, group, search_term) {
     var count = 0;
     var page = page || default_page;
     var per_page = per_page || default_per_page;
-
+    var forGroup = group ? "&group="+group : "";
+    var searchTerm = search_term ? "&"+search_term : "";
     DevicesApi
-      .get(inventoryApiUrl+"/devices?per_page="+per_page+"&page="+page+"&"+search_term)
+      .get(inventoryApiUrl+"/devices?per_page="+per_page+"&page="+page+searchTerm+forGroup)
       .then(function(res) {
         callback.success(res.body);
       })
