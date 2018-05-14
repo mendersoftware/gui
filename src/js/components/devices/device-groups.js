@@ -228,19 +228,22 @@ var DeviceGroups = createReactClass({
         }
       };
 
-
+      
       var callback =  {
         success: function(devices) {
           self.setState({groupCount: self.props.acceptedDevices}, function() {
           	// for each device, get inventory
           	for (var i=0; i<devices.length; i++) {
           		var gotAttrs = false;
+          		var count = 0;
           		// have to call inventory each time - accepted list can change order so must refresh inventory too
           		self._getInventoryForDevice(devices[i].device_id, i, function(inventory, index) {
+          			count++;
         				devices[index].attributes = inventory.attributes;
         				devices[index].updated_ts = inventory.updated_ts;
         				if (!gotAttrs && inventory.attributes && self.state.isHosted) { AppActions.setFilterAttributes(inventory.attributes); gotAttrs = true; }
-     						if (index === devices.length-1) {
+ 
+     						if (count === devices.length) {
      							// only set state after all devices inventory retrieved
      							self.setState({devices: devices, loading: false, pageLoading: false, attributes: AppStore.getFilterAttributes()});
      						}
