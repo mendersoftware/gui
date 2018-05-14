@@ -231,7 +231,7 @@ var DeviceGroups = createReactClass({
 
       var callback =  {
         success: function(devices) {
-          self.setState({devices: devices, loading: false, pageLoading: false, groupCount: self.props.acceptedDevices}, function() {
+          self.setState({groupCount: self.props.acceptedDevices}, function() {
           	// for each device, get inventory
           	for (var i=0; i<devices.length; i++) {
           		var gotAttrs = false;
@@ -240,8 +240,9 @@ var DeviceGroups = createReactClass({
         				devices[index].attributes = inventory.attributes;
         				devices[index].updated_ts = inventory.updated_ts;
         				if (!gotAttrs && inventory.attributes && self.state.isHosted) { AppActions.setFilterAttributes(inventory.attributes); gotAttrs = true; }
-     						if (index == device.length-1) {
-     							self.setState({devices: devices, attributes: AppStore.getFilterAttributes()});
+     						if (index === devices.length-1) {
+     							// only set state after all devices inventory retrieved
+     							self.setState({devices: devices, loading: false, pageLoading: false, attributes: AppStore.getFilterAttributes()});
      						}
           		});
           	}
@@ -320,7 +321,7 @@ var DeviceGroups = createReactClass({
 	      		// don't show error if 404 - device hasn't received inventory yet
 	      		 console.log(err);
 	      	}
-	        originCallback(null);
+	        originCallback(null, index);
 	      }
 	    };
 	    AppActions.getDeviceById(device_id, callback);
