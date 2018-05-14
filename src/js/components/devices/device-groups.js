@@ -246,6 +246,10 @@ var DeviceGroups = createReactClass({
      						}
           		});
           	}
+          	if (!devices.length) {
+          		// if none, stop loading spinners
+          		self.setState({devices: devices, loading: false, pageLoading: false, attributes: AppStore.getFilterAttributes()});
+          	}
           });
         },
         error: function(error) {
