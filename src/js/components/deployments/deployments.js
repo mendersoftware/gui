@@ -276,7 +276,8 @@ var Deployments = createReactClass({
         console.log(err);
       }
     };
-    AppActions.getDevices(callback, 1, 100, group, null, true);
+    var filter = "group="+group;
+    AppActions.getDevices(callback, 1, 100, filter);
   },
   componentWillUnmount: function () {
     clearInterval(this.timer);
