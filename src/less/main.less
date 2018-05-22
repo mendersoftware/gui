@@ -333,7 +333,7 @@ a, span.link {
 
 
     // hover warning
-    &.warning {
+    .warning {
       a,
       .material-icons,
       span {
@@ -343,11 +343,31 @@ a, span.link {
   }
 
   // no hover warngin
-  &.warning {
+  .warning {
     a,
     .material-icons,
     span {
       color: rgb(171, 16, 0) !important;
+    }
+  }
+
+
+// hover warning
+    .approaching {
+      a,
+      .material-icons,
+      span {
+        color: lighten(orange, 10%) !important;
+      }
+    }
+  
+
+  // no hover warngin
+  .approaching {
+    a,
+    .material-icons,
+    span {
+      color: orange !important;
     }
   }
 }
