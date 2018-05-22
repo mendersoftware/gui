@@ -19,10 +19,11 @@ var DeviceNotifications = createReactClass({
         color: '#c7c7c7'
       }
     };
+    var approaching = this.props.limit && ((this.props.total / this.props.limit)>.8);
     var warning = this.props.limit && (this.props.limit <= this.props.total);
     return (
-      <div className={warning ? "warning header-section" : "header-section"}>
-        <div onClick={this._handleClick.bind(null, '/devices')} className="inline">
+      <div className="header-section">
+        <div onClick={this._handleClick.bind(null, '/devices')} className={warning ? "warning inline" : approaching ? "approaching inline" : "inline"}>
           <span>{this.props.total}</span>
           {this.props.limit ? 
             <span>/{this.props.limit}</span>
@@ -32,7 +33,7 @@ var DeviceNotifications = createReactClass({
         </div>
 
         {this.props.pending ?
-          <a onClick={this._handleClick.bind(null, '/devices/pending')}  style={{marginLeft: "7px"}} className={this.props.limit && this.props.limit < this.props.pending+this.props.total ? "warning" : null }>{this.props.pending} pending</a>
+          <a onClick={this._handleClick.bind(null, '/devices/pending')}  style={{marginLeft: "7px"}} className={this.props.limit && (this.props.limit < this.props.pending+this.props.total) ? "warning" : null }>{this.props.pending} pending</a>
         : null }
       </div>
     );
