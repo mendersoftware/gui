@@ -41,6 +41,13 @@ var Artifacts = createReactClass({
     clearInterval(this.artifactTimer);
     AppStore.removeChangeListener(this._onChange);
   },
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.artifactProgress && !this.props.artifactProgress) {
+      clearInterval(this.artifactTimer);
+      this.artifactTimer = setInterval(this._getArtifacts, this.state.refreshArtifactsLength);
+      this._getArtifacts();
+    }
+  },
   _onChange: function() {
     this.setState(getState());
     if (this.props.params) {
@@ -118,7 +125,7 @@ var Artifacts = createReactClass({
 
     return (
       <div>
-        <Repository showHelptips={this.state.showHelptips} removeArtifact={this._removeDialog} refreshArtifacts={this._getArtifacts} startLoader={this._startLoading} loading={!this.state.doneLoading} selected={this.state.selected} artifacts={this.state.artifacts} />
+        <Repository uploadArtifact={this.props.uploadArtifact} progress={this.props.artifactProgress} showHelptips={this.state.showHelptips} removeArtifact={this._removeDialog} refreshArtifacts={this._getArtifacts} startLoader={this._startLoading} loading={!this.state.doneLoading} selected={this.state.selected} artifacts={this.state.artifacts} />
 
         <Dialog
           open={this.state.remove}

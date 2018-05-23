@@ -81,37 +81,10 @@ var Repository = createReactClass({
     //delete meta.artifactFile;
     //delete meta.verified;
     var meta = {description: ""};
-    AppActions.setUploadInProgress(true);
-    var callback = {
-      success: function(result) {
-        self.setState({progress: 0});
-        AppActions.setSnackbar("Upload successful", 4000);
-        AppActions.setUploadInProgress(false);
-        self.props.refreshArtifacts();
-      },
-      error: function(err) {
-        console.log(err);
-        try {
-          var errMsg = err.res.body.error || ""
-          AppActions.setSnackbar(preformatWithRequestID(err.res, "Artifact couldn't be uploaded. " + errMsg));
-        } catch (e) {
-          console.log(e)
-        }
-
-        self.setState({progress: 0});
-        self.props.startLoader(false);
-        AppActions.setUploadInProgress(false);
-      },
-      progress: function(percent) {
-        self.setState({progress: percent});
-      }
-    };
-
     files.forEach(function (file, index) {
-      AppActions.uploadArtifact(meta, file, callback);
+      self.props.uploadArtifact(meta, file);
     });
 
-    AppActions.setSnackbar("Uploading artifact", 4000);
     this._resetArtifactState();
   },
   _editArtifactData: function (id, description) {
@@ -247,7 +220,7 @@ var Repository = createReactClass({
       <div>
 
         <div className={items.length ? "top-right-button fadeIn" : "top-right-button fadeOut"} >
-          <Dropzone disabled={this.state.progress > 0} className="dropzone onboard" activeClassName="active" rejectClassName="active" multiple={false} accept=".mender" onDrop={this.onDrop}>
+          <Dropzone disabled={this.props.progress > 0} className="dropzone onboard" activeClassName="active" rejectClassName="active" multiple={false} accept=".mender" onDrop={this.onDrop}>
             <div className="icon inline-block"><FileIcon style={{height:"24px", width:"24px", verticalAlign:"middle", marginTop:"-2px"}}/></div>
             <div className="dashboard-placeholder inline">Drag here or <a>browse</a> to upload an artifact file</div>
           </Dropzone>
@@ -258,13 +231,12 @@ var Repository = createReactClass({
           <SearchInput placeholder="Search artifacts" className="search tableSearch" ref='search' onChange={this.searchUpdated} />
         </div>
 
-        <Loader show={this.props.loading} />
-
-        <div id="progressBarContainer" className={this.state.progress ? null : "shrunk"}>
-          <p className="align-center">Upload in progress ({Math.round(this.state.progress)}%)</p>
-          <LinearProgress mode="determinate" style={{backgroundColor:"#c7c7c7", margin:"15px 0"}} value={this.state.progress} />
+        <div id="progressBarContainer" className={this.props.progress ? null : "shrunk"}>
+          <p className="align-center">Upload in progress ({Math.round(this.props.progress)}%)</p>
+          <LinearProgress mode="determinate" style={{backgroundColor:"#c7c7c7", margin:"15px 0"}} value={this.props.progress} />
         </div>
 
+        <Loader show={this.props.loading} />
 
         <div style={{position: "relative", marginTop:"10px"}}>
           <Table
@@ -310,8 +282,8 @@ var Repository = createReactClass({
             </div>
           : null }
 
-          <div className={(items.length || this.props.loading) ? "hidden" : "dashboard-placeholder fadeIn" }>
-            <Dropzone disabled={this.state.progress > 0} className="dropzone onboard" activeClassName="active" rejectClassName="active" multiple={false} accept=".mender" onDrop={this.onDrop}>
+          <div className={(items.length || this.props.loading || this.props.progress) ? "hidden" : "dashboard-placeholder fadeIn" }>
+            <Dropzone disabled={this.props.progress > 0} className="dropzone onboard" activeClassName="active" rejectClassName="active" multiple={false} accept=".mender" onDrop={this.onDrop}>
               <p style={{width: "500px", fontSize:"16px", margin:"auto"}} className="dashboard-placeholder">No artifacts found. Drag a file here or <a>browse</a> to upload to the repository</p>
               <img src="assets/img/artifacts.png" alt="artifacts" />
             </Dropzone>
