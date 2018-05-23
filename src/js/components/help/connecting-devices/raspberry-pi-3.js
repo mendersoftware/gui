@@ -105,7 +105,7 @@ var RaspberryPi =  createReactClass({
            
           } </div>
 
-          : <p>Download the disk image for Raspberry Pi 3 from <a href={"https://docs.mender.io/"+this.props.docsVersion+"/getting-started/download-test-images"} target="_blank">the downloads page</a>.</p>
+          : <p>Download the disk image for Raspberry Pi 3 from <a href={"https://docs.mender.io/"+this.props.docsVersion+"getting-started/download-test-images"} target="_blank">the downloads page</a>.</p>
         }
 
         <p>After the image has been downloaded, unpack it:</p>
@@ -173,7 +173,7 @@ var RaspberryPi =  createReactClass({
             : placeholder
           }
 
-          </div> : <p>Download Artifact 1 and Artifact 2 for Raspberry Pi 3 from <a href={"https://docs.mender.io/"+this.props.docsVersion+"/getting-started/download-test-images"} target="_blank">the downloads page</a>.</p>
+          </div> : <p>Download Artifact 1 and Artifact 2 for Raspberry Pi 3 from <a href={"https://docs.mender.io/"+this.props.docsVersion+"getting-started/download-test-images"} target="_blank">the downloads page</a>.</p>
         }
 
         <p>After you have downloaded the two Artifacts, upload them to the Mender server in the <a onClick={this.props.changePage.bind(null, "artifacts")}>Artifacts tab</a>.</p>

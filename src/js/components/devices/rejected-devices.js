@@ -24,7 +24,6 @@ import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/RaisedButton';
 import FontIcon from 'material-ui/FontIcon';
 import InfoIcon from 'react-material-icons/icons/action/info-outline';
-import Snackbar from 'material-ui/Snackbar';
 import Dialog from 'material-ui/Dialog';
 import { List, ListItem } from 'material-ui/List';
 
@@ -54,7 +53,7 @@ var Rejected =  createReactClass({
   componentDidUpdate(prevProps, prevState) {
 
     if ((prevProps.count !== this.props.count)
-      || ((prevProps.currentTab !== this.props.currentTab)&& this.props.currentTab.indexOf("Rejected")) ) {
+      || ((prevProps.currentTab !== this.props.currentTab) && this.props.currentTab.indexOf("Rejected")) ) {
       this._getDevices();
       this._clearSelected();
     }
@@ -77,7 +76,7 @@ var Rejected =  createReactClass({
         console.log(err);
         var errormsg = err.error || "Please check your connection.";
         self.setState({pageLoading: false, authLoading: null, deviceToReject:{} });
-        setRetryTimer(err, "devices", "Devices couldn't be loaded. " + errormsg, self.state.refreshDeviceLength);
+        setRetryTimer(err, "devices", "Rejected devices couldn't be loaded. " + errormsg, self.state.refreshDeviceLength);
       }
     };
     AppActions.getDevicesByStatus(callback, "rejected", this.state.pageNo, this.state.pageLength);
@@ -91,7 +90,7 @@ var Rejected =  createReactClass({
   _adjustHeight: function () {
     // do this when number of devices changes
     var h = this.state.devices.length * 55;
-    h += 100;
+    h += 200;
     this.setState({minHeight: h});
   },
   _sortColumn: function(col) {
@@ -108,7 +107,7 @@ var Rejected =  createReactClass({
     
   },
   _adjustCellHeight: function(height) {
-    this.setState({divHeight: height+65});
+    this.setState({divHeight: height+95});
   },
 
   _handlePageChange: function(pageNo) {
@@ -165,6 +164,10 @@ var Rejected =  createReactClass({
   _closeReject: function() {
     this.setState({deviceToReject: {}, openReject: false});
   },
+  _showKey: function() {
+    var self = this;
+    self.setState({showKey: !self.state.showKey});
+  },
 
 
   render: function() {
@@ -176,7 +179,7 @@ var Rejected =  createReactClass({
 
       var expanded = '';
       if ( self.state.expandRow === index ) {
-        expanded = <ExpandedDevice rejectOrDecomm={this.props.rejectOrDecomm} disabled={limitMaxed} styles={this.props.styles} deviceId={self.state.deviceId} device={self.state.expandedDevice} unauthorized={true} selected={[device]}  />
+        expanded = <ExpandedDevice _showKey={this._showKey} showKey={this.state.showKey} rejectOrDecomm={this.props.rejectOrDecomm} disabled={limitMaxed} styles={this.props.styles} deviceId={self.state.deviceId} device={self.state.expandedDevice} unauthorized={true} selected={[device]}  />
       }
 
       return (
@@ -256,7 +259,7 @@ var Rejected =  createReactClass({
 
 
     return (
-      <Collapse springConfig={{stiffness: 190, damping: 20}} style={{minHeight:minHeight, width:"100%"}} isOpened={true} id="authorize" className="absolute authorize">
+      <Collapse springConfig={{stiffness: 190, damping: 20}} style={{minHeight:minHeight, width:"100%"}} isOpened={true} id="rejected" className="absolute authorize padding-top">
         
       <Loader show={this.state.authLoading==="all"} />
 
@@ -320,14 +323,7 @@ var Rejected =  createReactClass({
           </div>
         : null }
 
-
         </div>
-
-        <Snackbar
-          open={this.props.snackbar.open}
-          message={this.props.snackbar.message}
-          autoHideDuration={8000}
-        />
 
       </Collapse>
     );

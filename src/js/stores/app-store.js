@@ -9,9 +9,9 @@ var _artifactsRepo = [];
 var _currentGroup = null;
 var _deploymentArtifact = null;
 var _currentGroupDevices = [];
-var _totalNumberDevices, _totalPendingDevices, _totalAcceptedDevices, _totalRejectedDevices, _deviceLimit, _numberInProgress;
+var _totalNumberDevices, _totalPendingDevices, _totalAcceptedDevices, _totalRejectedDevices, _totalPreauthDevices, _deviceLimit, _numberInProgress;
 _totalPendingDevices = _totalAcceptedDevices = 0;
-var _filters = [{key:'', value:''}];
+var _filters = [];
 var _attributes = {
   id: "ID"
 };
@@ -35,7 +35,7 @@ var _pending = [];
 
 
 function _selectGroup(group) {
-  _filters = [{key:'', value:''}];
+  _filters = [];
   _currentGroup = group;
 }
 
@@ -105,6 +105,14 @@ function _filterDevicesByType(devices, device_types) {
   return filtered;
 }
 
+function _setFilterAttributes(attrs) {
+  // sets the available inventory attributes to be used in filtering devices
+  for (var i=0;i<attrs.length;i++) {
+    _attributes[attrs[i].name] = attrs[i].name;
+  }
+  _attributes.id = "ID";
+}
+
 function _addToGroup(group, devices) {
   var tmpGroup = group;
   var idx = findWithAttr(_groups, 'id', tmpGroup);
@@ -120,7 +128,7 @@ function _addToGroup(group, devices) {
     _groups[idx] = tmpGroup;
 
     // reset filters
-    _filters = [{key:'', value:''}];
+    _filters = [];
 
     // TODO - delete if empty group?
 
@@ -373,6 +381,9 @@ function setTotalAcceptedDevices(count) {
 function setTotalRejectedDevices(count) {
   _totalRejectedDevices = count;
 }
+function setTotalPreauthDevices(count) {
+  _totalPreauthDevices = count;
+}
 function setDeviceLimit(limit) {
   _deviceLimit = limit;
 }
@@ -482,7 +493,7 @@ var AppStore = assign(EventEmitter.prototype, {
     return _alldevices[findWithAttr(_alldevices, 'id', id)]
   },
 
-  getAttributes: function() {
+  getFilterAttributes: function() {
     /*
     * Return set of filters for list of devices
     */
@@ -594,6 +605,9 @@ var AppStore = assign(EventEmitter.prototype, {
   getTotalRejectedDevices: function() {
     return _totalRejectedDevices
   },
+  getTotalPreauthDevices: function() {
+    return _totalPreauthDevices
+  },
   getDeviceLimit: function() {
     return _deviceLimit
   },
@@ -638,7 +652,7 @@ var AppStore = assign(EventEmitter.prototype, {
 
   getDocsVersion: function() {
     // return docs link friendly version
-    var docsVersion = "development";
+    var docsVersion = "";
     if (_MenderVersion && !isNaN(_MenderVersion.charAt(0))) {
       var splitArray = _MenderVersion.split(".").slice(0,2);
       docsVersion = splitArray.join(".");
@@ -664,6 +678,9 @@ var AppStore = assign(EventEmitter.prototype, {
         break;
       case AppConstants.ADD_GROUP:
         _addGroup(payload.action.group, payload.action.index);
+        break;
+      case AppConstants.SET_FILTER_ATTRIBUTES:
+        _setFilterAttributes(payload.action.attrs);
         break;
       case AppConstants.UPLOAD_ARTIFACT:
         _uploadArtifact(payload.action.artifact);
@@ -734,6 +751,10 @@ var AppStore = assign(EventEmitter.prototype, {
 
       case AppConstants.SET_REJECTED_DEVICES:
         setTotalRejectedDevices(payload.action.count);
+        break;
+
+      case AppConstants.SET_PREAUTH_DEVICES:
+        setTotalPreauthDevices(payload.action.count);
         break;
 
       case AppConstants.SET_DEVICE_LIMIT:

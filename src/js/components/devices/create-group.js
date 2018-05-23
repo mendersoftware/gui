@@ -43,7 +43,16 @@ var CreateGroup = createReactClass({
      var self = this;
        var callback =  {
         success: function(devices) {
-          self.setState({devices: devices, loading: false, pageLoading: false});
+          self.setState({devices: devices, loading: false, pageLoading: false}, function() {
+                    // for each device, get inventory
+            for (var i=0; i<devices.length; i++) {
+              // have to call inventory each time - accepted list can change order so must refresh inventory too
+              self._getInventoryForDevice(devices[i].device_id, i, function(inventory, index) {
+                devices[index].attributes = inventory.attributes;
+                self.setState({devices: devices});
+              });
+            }
+          });
         },
         error: function(error) {
           console.log(err);
@@ -52,7 +61,25 @@ var CreateGroup = createReactClass({
              // setRetryTimer(err, "devices", "Devices couldn't be loaded. " + errormsg, self.state.refreshDeviceLength);
         }
       };
-      AppActions.getDevices(callback, this.state.pageNo, this.state.pageLength, this.state.selectedGroup);
+      AppActions.getDevicesByStatus(callback, "accepted", this.state.pageNo, this.state.pageLength);
+     
+  },
+
+  _getInventoryForDevice: function(device_id, index, originCallback) {
+      // get inventory for single device
+      var callback = {
+        success: function(device) {
+          originCallback(device, index);
+        },
+        error: function(err) {
+          if (err.res.statusCode !== 404) {
+            // don't show error if 404 - device hasn't received inventory yet
+             console.log(err);
+          }
+          originCallback(null);
+        }
+      };
+      AppActions.getDeviceById(device_id, callback);
   },
 
   _createGroupHandler: function() {
