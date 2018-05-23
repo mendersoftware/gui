@@ -105,19 +105,20 @@ var ScheduleForm = createReactClass({
     var devices = (
         <p>No devices</p>
     );
+
     if (tmpDevices) {
       devices = tmpDevices.map(function(item, index) {
-        var singleFilter = "id="+item.id;
-        singleFilter = encodeURIComponent(singleFilter);
+        var idFilter = "id="+item.id;
+
         return (
           <div className="hint--bottom hint--medium" style={{width:"100%"}} aria-label={item.id} key={index}>
-            <p className="text-overflow"><Link to={`/devices/groups/${this.state.group}/${singleFilter}`}>{item.id}</Link></p>
+            <p className="text-overflow"><Link to={`/devices/${idFilter}`}>{item.id}</Link></p>
           </div>
         )
       }, this);
     }
 
-    var group = (this.props.group && this.props.group!=="All devices") ? this.props.group : "";
+    var group = (this.props.group && this.props.group!=="All devices") ? "group="+encodeURIComponent(this.props.group) : "";
     var deviceList = (
       <div className="slider">
         <IconButton className="closeSlider" iconStyle={{fontSize:"16px"}} onClick={this._showDevices} style={{borderRadius:"30px", width:"40px", height:"40px", position:"absolute", left:"-18px", backgroundColor:"rgba(255,255,255,1)"}}>
@@ -127,7 +128,7 @@ var ScheduleForm = createReactClass({
         {devices}
         <p className={tmpDevices.length ? "hidden" : "italic" }>No devices in this group match the device type or search term.</p>
         <Divider />
-        <p><Link to={`/devices/groups/${group}`}>{group ? "Go to group" : "Go to devices"}></Link></p>
+        <p><Link to={`/devices/${group}`}>{group ? "Go to group" : "Go to devices"}></Link></p>
       </div>
     );
 

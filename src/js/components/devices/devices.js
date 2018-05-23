@@ -8,6 +8,8 @@ var createReactClass = require('create-react-class');
 var DeviceGroups = require('./device-groups');
 var PendingDevices = require('./pending-devices');
 var RejectedDevices = require('./rejected-devices');
+var PreauthDevices = require('./preauthorize-devices');
+var SharedSnackbar = require('./sharedsnackbar');
 var pluralize = require('pluralize');
 var Loader = require('../common/loader');
 
@@ -23,6 +25,7 @@ import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import { List, ListItem } from 'material-ui/List';
 import FontIcon from 'material-ui/FontIcon';
+import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
 
 
 var Devices = createReactClass({
@@ -31,10 +34,12 @@ var Devices = createReactClass({
 			tabIndex: this._updateActive(),
 			acceptedCount: AppStore.getTotalAcceptedDevices(),
 			rejectedCount: AppStore.getTotalRejectedDevices(),
+			preauthCount: AppStore.getTotalPreauthDevices(), 
 			pendingCount: AppStore.getTotalPendingDevices(),
 			snackbar: AppStore.getSnackbar(),
       refreshLength: 10000,
       showHelptips: AppStore.showHelptips(),
+      deviceLimit: AppStore.getDeviceLimit(),
 		};
 	},
 
@@ -62,6 +67,7 @@ var Devices = createReactClass({
 		this._getAcceptedCount();
 		this._getRejectedCount();
 		this._getPendingCount();
+		this._getPreauthCount();
 	},
 
   _restartInterval: function() {
@@ -118,6 +124,18 @@ var Devices = createReactClass({
 		};
 		AppActions.getDeviceCount(callback, "pending");
 	},
+	_getPreauthCount: function() {
+		var self = this;
+		var callback = {
+			success: function(count) {
+				self.setState({preauthCount: count});
+			},
+			error: function(error) {
+
+			}
+		};
+		AppActions.getDeviceCount(callback, "preauthorized");
+	},
   _getAllCount: function() {
     var self = this;
     var accepted = self.state.acceptedCount ? self.state.acceptedCount : 0;
@@ -134,10 +152,10 @@ var Devices = createReactClass({
 
   _updateActive: function() {
     var self = this;
-    return this.context.router.isActive({ pathname: '/devices' }, true) ? '/devices/groups' :
-      this.context.router.isActive('/devices/groups') ? '/devices/groups' :
+    return this.context.router.isActive({ pathname: '/devices' }, true) ? '/devices' :
       this.context.router.isActive('/devices/pending') ? '/devices/pending' :
-      this.context.router.isActive('/devices/rejected') ? '/devices/rejected' : '/devices/groups';
+      this.context.router.isActive('/devices/preauthorized') ? '/devices/preauthorized' :
+      this.context.router.isActive('/devices/rejected') ? '/devices/rejected' : '/devices';
 	},
 	
 	_handleTabActive: function(tab) {
@@ -153,7 +171,7 @@ var Devices = createReactClass({
 	    * function for authorizing group of devices via devadmn API
 	    */
 	    var self = this;
-	    self.setState({pauseAdmisson: true, reject_request_pending: true});
+	    self.setState({pauseAdmisson: true, reject_request_pending: true, duplicates: []});
 	    clearInterval(self.interval);
 
 	    // make into chunks of 5 devices
@@ -167,19 +185,23 @@ var Devices = createReactClass({
 	    var success = 0;
 	    var loopArrays = function(arr) {
 	      // for each chunk, authorize one by one
+
 	      self._authorizeBatch(arr[i], function(num) {
+
 	        success = success+num;
 	        i++;
 	        if (i < arr.length) {
 	          loopArrays(arr);
 	        } else {
 	          AppActions.setSnackbar(success + " " + pluralize("devices", success) + " " + pluralize("were", success) + " authorized");
+
 	          // refresh counts
             self._restartInterval();
             setTimeout(function() {
-              self.setState({pauseAdmisson: false, rejectDialog: false, reject_request_pending:false});
+            	var openDialog = self.state.duplicates.length ? true : false;
+              self.setState({pauseAdmisson: false, rejectDialog: false, reject_request_pending:false, openDeviceExists: openDialog});
             }, 200);
-            
+
 	        }
 	      });
 	    }
@@ -187,6 +209,7 @@ var Devices = createReactClass({
 	  },
 	  _authorizeBatch(devices, callback) {
 	    // authorize the batch of devices one by one, callback when finished
+	    var self = this;
 	    var i = 0;
 	    var fail = 0;
 	    var singleCallback = {
@@ -197,8 +220,8 @@ var Devices = createReactClass({
 	        }
 	      }.bind(this),
 	      error: function(err) {
-	        var errMsg = err.res.body.error || ""
-
+	        var errMsg = err.res.body.error || "";
+	        console.log("error");
 	        fail++;
 	        i++;
 
@@ -210,8 +233,46 @@ var Devices = createReactClass({
 	    };
 
 	    devices.forEach( function(device, index) {
-	      AppActions.acceptDevice(device.id, singleCallback);
+	    	// first:
+		    // Check if device id already exists 
+		    // for each id, call deviceadm ?device_id=
+		    // if there is a result, add it to a list, skip this (increment) and proceed
+		    // at the end of batch, show popup with list of skipped devices and links
+		    AppActions.getAuthSets({
+		    	success: function(data) {
+		    		var gotDevice = self._checkForExistingDevice(data);
+		    		if (gotDevice) {
+		    			// found a duplicate identity data set:
+		    			var duplicates = self.state.duplicates;
+		    			duplicates.push(gotDevice);
+		    			self.setState({duplicates: duplicates}, function() {
+		    				// increment count 
+		    				i++;
+			    			fail++;
+				        if (i===devices.length) {
+				          callback(i-fail);
+				        }
+		    			});
+		    		} else {
+		    			// no device found
+							AppActions.acceptDevice(device.id, singleCallback);
+		    		}
+		    	},
+		    	error: function(err) {
+		    		console.log(err);
+		    	}
+		    }, device.device_id);
 	    });
+	},
+
+	_checkForExistingDevice: function(devices) {
+		var gotDevice = null;
+		devices.forEach( function (device) {
+			if (device.status === "accepted" || device.status === "preauthorized") {
+				gotDevice = device;
+			}
+		});
+		return gotDevice; 
 	},
 
   _authorizeDevice: function() {
@@ -279,74 +340,87 @@ var Devices = createReactClass({
 	    this.setState({rejectDialog: true, deviceToReject: device});
 	},
 
+	_redirect: function(route) {
+		var self = this;
+		self.setState({openDeviceExists: false});
+		self.context.router.push(route);
+	},
 
 	render: function() {
 		// nested tabs
-	    var tabHandler = this._handleTabActive;
-	    var styles = {
-	      tabStyle : {
-	        display:"block",
-	        width:"100%",
-	        color: "#949495",
-	        textTransform: "none"
-	      },
-        activeTabStyle : {
-          display:"block",
-          width:"100%",
-          color: "#404041",
-          textTransform: "none"
-        },
-	      listStyle: {
-	        fontSize: "12px",
-	        paddingTop: "10px",
-	        paddingBottom: "10px",
-          whiteSpace: "normal",
-	      },
-	      listButtonStyle: {
-	      	fontSize: "12px",
-	      	marginTop: "-10px",
-	      	paddingRight: "12px",
-	      	marginLeft: "0px",
-	      },
-	    };
+    var tabHandler = this._handleTabActive;
+    var styles = {
+      tabStyle : {
+        display:"block",
+        width:"100%",
+        color: "#949495",
+        textTransform: "none"
+      },
+      activeTabStyle : {
+        display:"block",
+        width:"100%",
+        color: "#404041",
+        textTransform: "none"
+      },
+      listStyle: {
+        fontSize: "12px",
+        paddingTop: "10px",
+        paddingBottom: "10px",
+        whiteSpace: "normal",
+      },
+      listButtonStyle: {
+      	fontSize: "12px",
+      	marginTop: "-10px",
+      	paddingRight: "12px",
+      	marginLeft: "0px",
+      },
+    };
 
-        var rejectActions =  [
-	      <div style={{marginRight:"10px", display:"inline-block"}}>
-	        <FlatButton
-	          label="Cancel"
-	          onClick={this.dialogToggle.bind(null, "rejectDialog")} />
-	      </div>
-	    ];
+    var rejectActions =  [
+      <div style={{marginRight:"10px", display:"inline-block"}}>
+        <FlatButton
+          label="Cancel"
+          onClick={this.dialogToggle.bind(null, "rejectDialog")} />
+      </div>
+    ];
 
-	    var pendingLabel = this.state.pendingCount ? "Pending (" + this.state.pendingCount + ")" : "Pending";
+    var duplicateActions =  [
+      <div style={{marginRight:"10px", display:"inline-block"}}>
+        <FlatButton
+          label="Cancel"
+          onClick={this.dialogToggle.bind(null, "openDeviceExists")} />
+      </div>
+    ];
+
+	  var pendingLabel = this.state.pendingCount ? "Pending (" + this.state.pendingCount + ")" : "Pending";
+		
 		return (
 			<div style={{marginTop:"-15px"}}>
 
 		    <Tabs
           value={this.state.tabIndex}
           onChange={this._changeTab}
-          tabItemContainerStyle={{background: "none", width:"420px"}}
+          tabItemContainerStyle={{background: "none", width:"580px"}}
           inkBarStyle={{backgroundColor: "#347a87"}}>
 
           <Tab
             label="Device groups"
-            value="/devices/groups"
+            value="/devices"
             onActive={tabHandler}
-            style={this.state.tabIndex === "/devices/groups" ? styles.activeTabStyle : styles.tabStyle}>
+            style={this.state.tabIndex === "/devices" ? styles.activeTabStyle : styles.tabStyle}>
 
-			<DeviceGroups 
-				docsVersion={this.props.docsVersion}
-	            params={this.props.params}
-				rejectOrDecomm={this._openRejectDialog}
-				styles={styles} 
-				paused={this.state.pauseAdmisson} 
-				rejectedDevices={this.state.rejectedCount} 
-				acceptedDevices={this.state.acceptedCount} 
-				allCount={this.state.allCount} 
-				currentTab={this.state.currentTab} 
-				snackbar={this.state.snackbar} 
-				rejectDevice={this._rejectDevice}
-				showHelptips={this.state.showHelptips} />
+						<DeviceGroups 
+							docsVersion={this.props.docsVersion}
+				      params={this.props.params}
+							rejectOrDecomm={this._openRejectDialog}
+							styles={styles} 
+							paused={this.state.pauseAdmisson} 
+							rejectedDevices={this.state.rejectedCount} 
+							acceptedDevices={this.state.acceptedCount} 
+							allCount={this.state.allCount} 
+							currentTab={this.state.currentTab}  
+							rejectDevice={this._rejectDevice}
+							showHelptips={this.state.showHelptips} />
 		      </Tab>
 			    <Tab
             label={pendingLabel}
@@ -355,10 +429,11 @@ var Devices = createReactClass({
             style={this.state.tabIndex === "/devices/pending" ? styles.activeTabStyle : styles.tabStyle}>
 
 						<PendingDevices 
+							deviceLimit={this.state.deviceLimit}
               styles={styles} 
               currentTab={this.state.currentTab}
-              snackbar={this.state.snackbar} 
-              disabled={this.state.pauseAdmisson} 
+              disabled={this.state.pauseAdmisson}
+              acceptedDevices={this.state.acceptedCount} 
               authorizeDevices={this._authorizeDevices} 
               count={this.state.pendingCount} 
               rejectDevice={this._handleRejectDevice}
@@ -366,6 +441,21 @@ var Devices = createReactClass({
               highlightHelp={!this.state.acceptedCount} />
 					</Tab>
 
+					<Tab
+						label="Preauthorized"
+						value="/devices/preauthorized"
+						onActive={tabHandler}
+						style={this.state.tabIndex === "/devices/preauthorized" ? styles.activeTabStyle : styles.tabStyle}>
+
+            <PreauthDevices
+            	deviceLimit={this.state.deviceLimit}
+            	acceptedDevices={this.state.acceptedCount} 
+            	styles={styles}
+            	currentTab={this.state.currentTab}
+            	count={this.state.preauthCount}
+            	disabled={this.state.pauseAdmisson}
+            	refreshCount={this._getPreauthCount} />
+					</Tab>
 
           <Tab
             label="Rejected"
@@ -373,7 +463,15 @@ var Devices = createReactClass({
             onActive={tabHandler}
             style={this.state.tabIndex === "/devices/rejected" ? styles.activeTabStyle : styles.tabStyle}>
 
-            <RejectedDevices rejectOrDecomm={this._openRejectDialog} styles={styles} currentTab={this.state.currentTab} snackbar={this.state.snackbar} disabled={this.state.pauseAdmisson} authorizeDevices={this._authorizeDevices} count={this.state.rejectedCount} rejectDevice={this._handleRejectDevice} />
+            <RejectedDevices
+            	deviceLimit={this.state.deviceLimit}
+            	acceptedDevices={this.state.acceptedCount} 
+            	rejectOrDecomm={this._openRejectDialog} 
+            	styles={styles} currentTab={this.state.currentTab} 
+            	disabled={this.state.pauseAdmisson} 
+            	authorizeDevices={this._authorizeDevices} 
+            	count={this.state.rejectedCount} 
+            	rejectDevice={this._handleRejectDevice} />
           </Tab>
 				</Tabs>
 
@@ -442,7 +540,7 @@ var Devices = createReactClass({
                 data-tip
                 data-for='devices-nav-tip'
                 data-event='click focus'
-                style={{left: "20%", top:"28px"}}>
+                style={{left: "19%", top:"46px"}}>
                 <FontIcon className="material-icons">help</FontIcon>
               </div>
               <ReactTooltip
@@ -455,6 +553,43 @@ var Devices = createReactClass({
                 <DevicesNav devices={this.state.pendingCount} />
               </ReactTooltip>
             </div> : null }
+
+        <Dialog
+          open={this.state.openDeviceExists || false}
+          title='Device with this identity data already exists'
+          actions={duplicateActions}
+          autoDetectWindowHeight={true}
+          bodyStyle={{paddingTop:"0", fontSize:"13px"}}
+          contentStyle={{overflow:"hidden", boxShadow:"0 14px 45px rgba(0, 0, 0, 0.25), 0 10px 18px rgba(0, 0, 0, 0.22)"}}
+          >
+          <p>A device with matching identity data already exists. If you still want to accept {pluralize("this", this.state.duplicates)} pending {pluralize("device", this.state.duplicates)}, you should first remove the following {pluralize("device", this.state.duplicates)}:</p>
+          <Table>
+          	 <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
+                <TableRow>
+                  <TableHeaderColumn className="columnHeader" tooltip="ID">ID</TableHeaderColumn> 
+                  <TableHeaderColumn className="columnHeader" tooltip="Status">Status</TableHeaderColumn>
+                </TableRow>
+              </TableHeader>
+              <TableBody ShowrowHover={true} displayRowCheckbox={false}>
+	          {(this.state.duplicates||[]).map(function(device, index) {
+	          	var status = device.status === "accepted" ? "" : "/"+device.status;
+	          	return (
+	          		<TableRow key={device.device_id}>
+	          			<TableRowColumn>
+	          				<a onClick={this._redirect.bind(null, `/devices${status}/id%3D${device.device_id}`)} >{device.device_id}</a>
+	          			</TableRowColumn>
+	          			<TableRowColumn className="capitalized">
+	          				{device.status}
+	          			</TableRowColumn>
+	          		</TableRow>
+	          	)
+	          }, this)}
+	          </TableBody>
+          </Table>
+        </Dialog>
+
+
+   			<SharedSnackbar snackbar={this.state.snackbar} />
 
 			</div>
 

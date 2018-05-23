@@ -100,14 +100,21 @@ var AppActions = {
     });
   },
 
-  getDevices: function(callback, page, per_page, group, search_term) {
+  setFilterAttributes: function(attrs) {
+    AppDispatcher.handleViewAction({
+      actionType: AppConstants.SET_FILTER_ATTRIBUTES,
+      attrs: attrs
+    })
+  },
+
+  getDevices: function(callback, page, per_page, search_term) {
+    // get devices from inventory
     var count = 0;
     var page = page || default_page;
     var per_page = per_page || default_per_page;
-    var forGroup = group ? "&group="+group : "";
-    var searchTerm = search_term ? "&"+search_term : "";
+    var search = search_term ? "&"+search_term : "";
     DevicesApi
-      .get(inventoryApiUrl+"/devices?per_page="+per_page+"&page="+page+searchTerm+forGroup)
+      .get(inventoryApiUrl+"/devices?per_page="+per_page+"&page="+page+search)
       .then(function(res) {
         callback.success(res.body);
       })
@@ -147,6 +154,12 @@ var AppActions = {
           case "rejected":
             AppDispatcher.handleViewAction({
               actionType: AppConstants.SET_REJECTED_DEVICES,
+              count: res.body.count
+            });
+            break;
+          case "preauthorized":
+            AppDispatcher.handleViewAction({
+              actionType: AppConstants.SET_PREAUTH_DEVICES,
               count: res.body.count
             });
             break;
@@ -346,6 +359,19 @@ var AppActions = {
         callback.error(err);
       })
   },
+
+  getAuthSets: function (callback, id, page, per_page) { 
+    var page = page || default_page;
+    var per_page = per_page || default_adm_per_page;
+    DevicesApi
+      .get(devicesApiUrl+"/devices?device_id="+ id +"&per_page="+per_page+"&page="+page)
+      .then(function(res) {
+        callback.success(res.body, parse(res.headers['link']));
+      })
+      .catch(function(err) {
+        callback.error(err);
+      })
+  },
   
   getDeviceIdentity: function (id, callback) {
     DevicesApi
@@ -383,6 +409,27 @@ var AppActions = {
   decommissionDevice: function(id, callback) {
     DevicesApi
       .delete(devAuthApiUrl+"/devices/"+ id)
+      .then(function(data) {
+        callback.success(data);
+      })
+      .catch(function(err) {
+        callback.error(err);
+      });
+  },
+
+  preauthDevice: function(authset, callback) {
+    DevicesApi
+      .post(devicesApiUrl+"/devices", authset)
+      .then(function(res) {
+        callback.success(res);
+      })
+      .catch(function(err) {
+        callback.error(err)
+      });
+  },
+  deletePreauth: function(id, callback) {
+    DevicesApi
+      .delete(devicesApiUrl+"/devices/"+ id)
       .then(function(data) {
         callback.success(data);
       })

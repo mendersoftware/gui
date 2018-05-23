@@ -333,7 +333,7 @@ a, span.link {
 
 
     // hover warning
-    &.warning {
+    .warning {
       a,
       .material-icons,
       span {
@@ -343,11 +343,31 @@ a, span.link {
   }
 
   // no hover warngin
-  &.warning {
+  .warning {
     a,
     .material-icons,
     span {
       color: rgb(171, 16, 0) !important;
+    }
+  }
+
+
+// hover warning
+    .approaching {
+      a,
+      .material-icons,
+      span {
+        color: lighten(orange, 10%) !important;
+      }
+    }
+  
+
+  // no hover warngin
+  .approaching {
+    a,
+    .material-icons,
+    span {
+      color: orange !important;
     }
   }
 }
@@ -824,6 +844,7 @@ table thead.clickable tr>th:first-child {
   margin-right: 3%;
   width: 30%;
   vertical-align: top;
+  -webkit-line-clamp: 3;
 }
 
 #device-identity .list-horizontal-display > div {
@@ -831,6 +852,13 @@ table thead.clickable tr>th:first-child {
     vertical-align: top;
     margin-right: 30px;
     height: 70px;
+}
+
+.list-horizontal-display > div >span.key > div > div > div {
+  -webkit-line-clamp: 10!important;
+  height: auto!important;
+  word-break: break-all;
+  white-space: inherit!important;
 }
 
 #device-inventory .report-list {

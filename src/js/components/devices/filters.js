@@ -13,7 +13,7 @@ import IconButton from 'material-ui/IconButton';
 var Filters = createReactClass({
   getInitialState: function() {
     return {
-      showFilters: false
+      showFilters: false,
     };
   },
   _updateFilterKey: function (i, event, index, value) {
@@ -37,7 +37,7 @@ var Filters = createReactClass({
       filterArray.splice(index,1);
     }
     else {
-      filterArray[0].value = '';
+      filterArray = [];
     }
     this.props.onFilterChange(filterArray);
   },
@@ -47,7 +47,7 @@ var Filters = createReactClass({
     });
   },
   _clearFilters: function() {
-    this.props.onFilterChange([{}]);
+    this.props.onFilterChange([]);
   },
   render: function() {
     var styles = {
@@ -75,7 +75,8 @@ var Filters = createReactClass({
       attributes.push(tmp);
     }
     var filterCount = 0;
-    var filters = this.props.filters.map(function(item, index) {
+    var fromProps = this.props.filters.length ? this.props.filters : [{key:"", value: ""}];
+    var filters = fromProps.map(function(item, index) {
       item.value ? filterCount++ : filterCount;
       return (
         <div className="filterPair" key={index}>
@@ -83,8 +84,8 @@ var Filters = createReactClass({
             iconClassName="material-icons"
             style={styles.removeButton}
             onClick={this._removeFilter.bind(null, index)}
-            disabled={!this.props.filters[0].key}
-            className={this.props.filters[0].value ? "remove-icon" : "hidden"}>
+            disabled={!fromProps[0].key}
+            className={fromProps[0].value ? "remove-icon" : "hidden"}>
             remove_circle
           </IconButton>
           <SelectField
@@ -116,6 +117,10 @@ var Filters = createReactClass({
         <div>
         {filters}
         </div>
+        { this.props.isHosted ?
+        <FlatButton disabled={!filterCount} onClick={this._addFilter} label="Add filter" secondary={true}>
+          <FontIcon style={styles.exampleFlatButtonIcon} className="material-icons">add_circle</FontIcon>
+        </FlatButton> : null }
       </div>
     );
     return (

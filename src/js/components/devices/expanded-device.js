@@ -157,6 +157,8 @@ var ExpandedDevice = createReactClass({
   },
   render: function() {
 
+    var status = this.props.device.status;
+
     var deviceIdentity = [];
     deviceIdentity.push(
         <ListItem key="id_checksum" style={this.props.styles.listStyle} disabled={true} primaryText="ID" secondaryText={(this.props.device || {}).device_id || ''} secondaryTextLines={2} />
@@ -174,14 +176,13 @@ var ExpandedDevice = createReactClass({
     if ((this.props.device || {}).request_time) {
       deviceIdentity.push(
         <div key="connectionTime">
-          <ListItem style={this.props.styles.listStyle} disabled={true} primaryText="First connection time" secondaryText={<div><Time value={this.props.device.request_time} format="YYYY-MM-DD HH:mm" /></div>} />
+          <ListItem style={this.props.styles.listStyle} disabled={true} primaryText={status==="preauthorized" ? "Date added" : "Time of request"} secondaryText={<div><Time value={this.props.device.request_time} format="YYYY-MM-DD HH:mm" /></div>} />
         </div>
       );
     }
 
     var deviceInventory = [];
 
-    var status = this.props.device.status;
     var waiting = false;
     if (typeof this.props.attrs !== 'undefined' && this.props.attrs.length>0) {
 
@@ -231,22 +232,12 @@ var ExpandedDevice = createReactClass({
       );
     }
 
-    var reauthButton = (status === "rejected") ? (
-      <ListItem
-        key="reauthButton"
-        style={this.props.styles.listButtonStyle}
-        primaryText={"Authorization status: " + status}
-        secondaryText="Authorize this device?"
-        onClick={this._handleAccept.bind(null, true)}
-        leftIcon={<FontIcon className="material-icons red" style={{margin: "12px 0 12px 12px"}}>cancel</FontIcon>} />
-    ) : null;
-
     var deviceInventory2 = [];
     if (deviceInventory.length > deviceIdentity.length) {
       deviceInventory2 = deviceInventory.splice((deviceInventory.length/2)+(deviceInventory.length%2),deviceInventory.length);
     }
 
-    var decommission = (status !== "pending") ? (
+    var decommission = (status === "accepted" || status === "rejected") ? (
         <ListItem
           key="decommissionButton"
           style={this.props.styles.listButtonStyle}
@@ -260,6 +251,15 @@ var ExpandedDevice = createReactClass({
 
     var deviceInfo = (
       <div key="deviceinfo">
+
+        <div id="device-key" className="report-list" style={{width:"100%", display: "block"}}>
+          <h4 className="margin-bottom-none">Device public key</h4>
+          <List className="list-horizontal-display">
+            <ListItem style={this.props.styles.listStyle} className={this.props.showKey ? "key" : ""} onClick={this.props._showKey} primaryText="Key" secondaryText={this.props.device.key} secondaryTextLines={1} />
+          </List>
+        </div>
+
+
         <div id="device-identity" className="report-list">
           <h4 className="margin-bottom-none">Device identity</h4>
           <List className="list-horizontal-display">

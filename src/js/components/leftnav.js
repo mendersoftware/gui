@@ -24,6 +24,8 @@ var LeftNav = createReactClass({
 
 	render: function() {
 		var self = this;
+
+    var docsVersion = this.props.docsVersion ? this.props.docsVersion + "/" : "";
 	
     var list = listItems.map(function(item, index) {
     	var borderTop = index===0 ? "none !important" : "1px solid #eaf4f3"; 
@@ -39,7 +41,7 @@ var LeftNav = createReactClass({
        )
     });
 
-    var licenseUrl = "https://docs.mender.io/"+ this.props.docsVersion +"/release-information/open-source-licenses";
+    var licenseUrl = "https://docs.mender.io/"+ docsVersion +"release-information/open-source-licenses";
     var licenseLink = <a target="_blank" href={licenseUrl} style={{fontSize:"13px", position:"relative", top:"6px", color:"#347A87"}}>License information</a>;
 
     var helpStyle = self.props.currentTab==="/help" ? {transition: "all 100ms cubic-bezier(0.23, 1, 0.32, 1) 0ms"} : {transition: "all 100ms cubic-bezier(0.23, 1, 0.32, 1) 0ms",  color:"#949495"};
