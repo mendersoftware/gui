@@ -453,7 +453,8 @@ var Devices = createReactClass({
             	styles={styles}
             	currentTab={this.state.currentTab}
             	count={this.state.preauthCount}
-            	disabled={this.state.pauseAdmisson} />
+            	disabled={this.state.pauseAdmisson}
+            	refreshCount={this._getPreauthCount} />
 					</Tab>
 
           <Tab

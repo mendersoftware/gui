@@ -212,6 +212,7 @@ var Preauthorize =  createReactClass({
       success: function(res) {
         AppActions.setSnackbar("Device was successfully added to the preauthorization list");
         self._getDevices();
+        self.props.refreshCount();
 
         if (close) {
           self._dialogToggle("openPreauth");
@@ -272,6 +273,7 @@ var Preauthorize =  createReactClass({
           self.setState({openRemove: false, selectedRows: [], devicesToRemove: []});
           AppActions.setSnackbar(success + " " + pluralize("devices", success) + " " + pluralize("were", success)+ " successfully removed from the preauthorization list");
           self._getDevices();
+          self.props.refreshCount();
         }
       });
     }
