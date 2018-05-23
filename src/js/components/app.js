@@ -77,6 +77,35 @@ var App = createReactClass({
       this.context.router.isActive('/help') ? '/help' :
       this.context.router.isActive('/settings') ? '/settings' : '';
   },
+  _uploadArtifact: function(meta, file) {
+    var self = this;
+    AppActions.setUploadInProgress(true);
+    var callback = {
+      success: function(result) {
+        self.setState({progress: 0});
+        AppActions.setSnackbar("Upload successful", 4000);
+        AppActions.setUploadInProgress(false);
+      },
+      error: function(err) {
+        console.log(err);
+        try {
+          var errMsg = err.res.body.error || ""
+          AppActions.setSnackbar(preformatWithRequestID(err.res, "Artifact couldn't be uploaded. " + errMsg));
+        } catch (e) {
+          console.log(e)
+        }
+
+        self.setState({progress: 0});
+        AppActions.setUploadInProgress(false);
+      },
+      progress: function(percent) {
+        self.setState({progress: percent});
+      }
+    };
+
+    AppActions.setSnackbar("Uploading artifact", 4000);
+    AppActions.uploadArtifact(meta, file, callback);
+  },
 
   render: function() {
     return (
@@ -97,7 +126,7 @@ var App = createReactClass({
               <LeftNav version={this.state.version} docsVersion={this.state.docsVersion} currentTab={this.state.currentTab} changeTab={this._changeTab} />
             </div>
             <div className="rightFluid container">
-              {React.cloneElement(this.props.children, { isLoggedIn:(this.state.currentUser||{}).hasOwnProperty("email"), docsVersion: this.state.docsVersion, version: this.state.version })}
+              {React.cloneElement(this.props.children, { isLoggedIn:(this.state.currentUser||{}).hasOwnProperty("email"), docsVersion: this.state.docsVersion, version: this.state.version, uploadArtifact: this._uploadArtifact, artifactProgress: this.state.progress })}
             </div>
           </div>
         </div>
