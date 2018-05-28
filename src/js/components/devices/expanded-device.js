@@ -223,7 +223,7 @@ var ExpandedDevice = createReactClass({
             className="react-tooltip">
             <h3>Waiting for inventory data</h3>
             <p>Inventory data not yet received from the device - this can take up to 30 minutes with default installation.</p>
-            <p>Also see the documentation for <a onClick={this._clickLink} href="https://docs.mender.io/Client-configuration/Polling-intervals">Polling intervals</a>.</p>
+            <p>Also see the documentation for <a onClick={this._clickLink} href="https://docs.mender.io/client-configuration/configuration-file/polling-intervals">Polling intervals</a>.</p>
           </ReactTooltip>
 
           <p>Waiting for inventory data from the device</p>
