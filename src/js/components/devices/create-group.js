@@ -87,20 +87,25 @@ var CreateGroup = createReactClass({
     if (!this.state.user) {
       this.setState({user: AppStore.getCurrentUser()});
     }
-    var seenWarning = cookie.load(this.state.user.id+'-groupHelpText');
+    var gotCookie = cookie.load(this.state.user.id+'-groupHelpText');
     // if another group exists, check for warning message cookie
-    if (this.props.groups.length && !seenWarning) {
+    if (this.props.groups.length && !gotCookie && !this.state.showWarning) {
         // if show warning message
         this.setState({showDeviceList: false, showWarning:true});
     } else {
-      var devices = [];
-      for (var i=0;i<this.state.selectedRows.length;i++) {
-        var device = this.state.devices[this.state.selectedRows[i]];
-        devices.push(device);
-      }
-       // cookie exists || if no other groups exist, continue to create group
-      this.props.addListOfDevices(devices, this.state.newGroup);
+      self._createGroupFromSelected();
     }
+  },
+
+  _createGroupFromSelected: function() {
+    var devices = [];
+    for (var i=0;i<this.state.selectedRows.length;i++) {
+      var device = this.state.devices[this.state.selectedRows[i]];
+      devices.push(device);
+    }
+    // cookie exists || if no other groups exist, continue to create group
+    this.props.addListOfDevices(devices, this.state.newGroup);
+    this.setState({showWarning: false});
   },
 
 
@@ -207,7 +212,7 @@ var CreateGroup = createReactClass({
       <RaisedButton
         label={this.state.showWarning ? "Confirm" : "Create group"}
         primary={true}
-        onClick={this.state.showWarning ? this.props.addListOfDevices.bind(null, this.state.selectedRows, this.state.newGroup) : this._createGroupHandler}
+        onClick={this._createGroupHandler}
         disabled={this.state.createInvalid} />
     ];
 
