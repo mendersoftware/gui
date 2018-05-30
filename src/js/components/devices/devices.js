@@ -147,7 +147,7 @@ var Devices = createReactClass({
 
 	// nested tabs
 	componentWillReceiveProps: function(nextProps) {
-  	this.setState({tabIndex: this._updateActive()});
+  	this.setState({tabIndex: this._updateActive(), currentTab: this._getCurrentLabel()});
 	},
 
   _updateActive: function() {
@@ -157,11 +157,19 @@ var Devices = createReactClass({
       this.context.router.isActive('/devices/preauthorized') ? '/devices/preauthorized' :
       this.context.router.isActive('/devices/rejected') ? '/devices/rejected' : '/devices';
 	},
+
+	_getCurrentLabel: function() {
+    var self = this;
+    return this.context.router.isActive({ pathname: '/devices' }, true) ? 'Device groups' :
+      this.context.router.isActive('/devices/pending') ? 'Pending' :
+      this.context.router.isActive('/devices/preauthorized') ? 'Preauthorized' :
+      this.context.router.isActive('/devices/rejected') ? 'Rejected' : 'Device groups';
+	},
 	
 	_handleTabActive: function(tab) {
 		AppActions.setSnackbar("");
 		this.setState({currentTab: tab.props.label});
-	    this.context.router.push(tab.props.value);
+	  this.context.router.push(tab.props.value);
 	},
 
 
