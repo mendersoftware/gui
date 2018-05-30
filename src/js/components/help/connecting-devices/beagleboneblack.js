@@ -153,7 +153,7 @@ var BeagleBoneBlack =  createReactClass({
 
         <p>Connect your device to Ethernet network and insert the SD card into the device.</p>
 
-        <p>Before powering on the BeagleBone Black, please press the <a href="https://docs.mender.io/user/pages/02.1.3/01.Getting-started/05.Deploy-to-physical-devices/beaglebone_black_sdboot.png" target="_blank">S2 button</a>. Keep the button pressed for about 5 seconds after connecting power. This will make the BeagleBone Black boot from the SD card instead of internal storage.</p>
+        <p>Before powering on the BeagleBone Black, press the <a href="https://docs.mender.io/user/pages/03.1.3/01.Getting-started/05.Deploy-to-physical-devices/beaglebone_black_sdboot.png" target="_blank">S2 button</a> and keep the button pressed for about 5 seconds while booting (power is connected). This will make the BeagleBone Black boot from the SD card instead of internal storage.</p>
 
         <p>Now connect the device to power so it boots up.</p>
 
