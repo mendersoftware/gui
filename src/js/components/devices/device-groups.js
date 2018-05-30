@@ -162,7 +162,7 @@ var DeviceGroups = createReactClass({
 		      	// should handle "next page"
 		        // returns all group devices ids
 		        for (var i=0;i<devices.length; i++) {
-		          self._removeSingleDevice(i, devices.length, devices[i].id, i===devices.length-1 ? finalCallback : null);
+		          self._removeSingleDevice(i, devices.length, devices[i].id, (i===devices.length-1) ? finalCallback : null);
 		        }
 		    },
 		    error: function(err) {
@@ -170,7 +170,8 @@ var DeviceGroups = createReactClass({
 		    }
     	};
 
-	    AppActions.getDevices(callback, 1, 100, this.state.selectedGroup, null);
+    	var params = this.state.selectedGroup ? "group="+this.state.selectedGroup : "";
+	    AppActions.getDevices(callback, 1, this.state.groupCount, params);
 	    var finalCallback = function() {
 
 	     	self._toggleDialog("removeGroup");
