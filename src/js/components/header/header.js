@@ -98,7 +98,7 @@ var Header = createReactClass({
     var self = this;
     var callback = {
       success: function(limit) {
-        self.setState({deviceLimit: limit});
+        self.setState({deviceLimit: 500});
       },
       error: function(err) {
         console.log(err);
@@ -311,38 +311,11 @@ var Header = createReactClass({
 
           <ToolbarGroup style={{flexShrink: "0"}} key={2}>
 
-          {this.state.deviceLimit ? 
-              <div
-                id="limit"
-                data-tip
-                data-for='limit-tip'
-                data-offset="{'bottom': 0, 'right': 0}">
-                
-                <DeviceNotifications 
-                  pending={this.state.pendingDevices} 
-                  total={this.state.acceptedDevices}
-                  limit={this.state.deviceLimit}
-                  />
-             
-
-                <ReactTooltip
-                  id="limit-tip"
-                  globalEventOff='click'
-                  place="bottom"
-                  type="light"
-                  effect="solid"
-                  delayHide={1500}
-                  className="react-tooltip">
-                  <h3>Device limit</h3>
-                  <p>You { this.state.deviceLimit <= this.state.acceptedDevices ? <span>have reached</span> : <span>are nearing</span>} your device limit.</p>
-                  <p>Contact us by email at <a href="mailto:support@hosted.mender.io">support@hosted.mender.io</a> to request a higher limit.</p>
-                </ReactTooltip>
-               </div>
-              :   <DeviceNotifications 
-                  pending={this.state.pendingDevices} 
-                  total={this.state.acceptedDevices}
-                  limit={this.state.deviceLimit}
-                  /> }
+            <DeviceNotifications 
+              pending={this.state.pendingDevices} 
+              total={this.state.acceptedDevices}
+              limit={this.state.deviceLimit}
+              />
 
             <DeploymentNotifications inprogress={this.state.inProgress} />
             {dropDownElement}
