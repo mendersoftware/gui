@@ -35,7 +35,7 @@ var components = {
         component: VirtualDevice,
       },
       "raspberry-pi-3": {
-        title: "Rasberry Pi 3",
+        title: "Raspberry Pi 3",
         component: RaspberryPi,
       },
       "beagleboneblack": {

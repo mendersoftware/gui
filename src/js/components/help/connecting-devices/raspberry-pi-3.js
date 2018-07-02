@@ -92,9 +92,9 @@ var RaspberryPi =  createReactClass({
         <p>Specifically, your device needs to be able to create outgoing TCP connections to hosted.mender.io and s3.amazonaws.com, both on port 443 (TLS).</p>
         <p>As the Mender client does not listen to any ports there are no incoming connections.</p>
 
-        <h4>Enabling wifi in the image</h4>
-        <p>Enabling wifi is easiest done by downloading the mender-artifact tool: <a>https://docs.mender.io/development/getting-started/deploy-to-physical-devices#mender-artifact-tool</a></p>
-        <p>Then modify the image as show in: <a>https://docs.mender.io/development/getting-started/deploy-to-physical-devices#set-a-static-device-ip-address-and-subnet</a></p>
+        <h4>Enabling Wifi in the image</h4>
+        <p>Enabling Wifi is most easily done by first downloading the <a target="_blank" href={"https://docs.mender.io/"+this.props.docsVersion+"getting-started/deploy-to-physical-devices#mender-artifact-tool"}>mender-artifact tool</a>.</p>
+        <p>Then modify the image as shown in the <a href={"https://docs.mender.io/"+this.props.docsVersion+"getting-started/deploy-to-physical-devices#wifi-connectivity"} target="_blank">Wifi connectivity</a> section of the Getting Started guide.</p>
 
         <h3>Download the disk image</h3>
 
