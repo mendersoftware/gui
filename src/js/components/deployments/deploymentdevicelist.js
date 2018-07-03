@@ -14,7 +14,7 @@ import LinearProgress from 'material-ui/LinearProgress';
 var ProgressDeviceList = createReactClass({
   getInitialState: function() {
     return {
-      prevDevices:{},
+      prevDevices:{}
     };
   },
   shouldComponentUpdate: function (nextProps, nextState) {
@@ -31,6 +31,9 @@ var ProgressDeviceList = createReactClass({
     return;
   },
   render: function() {
+    var self = this;
+    var intervalsSinceStart = Math.floor((Date.now() - Date.parse(self.props.created)) / (1000 * 20));
+
     var deviceList = [];
     var currentArtifactLink;
     if (this.props.devices) {
@@ -70,7 +73,7 @@ var ProgressDeviceList = createReactClass({
               return "Already installed";
               break;
             default:
-              device.percentage = statusToPercentage(device.status)
+              device.percentage = statusToPercentage(device.status, intervalsSinceStart);
               return device.status.charAt(0).toUpperCase() + device.status.slice(1);
               break;
           }

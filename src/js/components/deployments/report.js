@@ -50,7 +50,7 @@ var DeploymentReport = createReactClass({
     } else {
        this.timer = setInterval(this.tick, 50);
     }
-    this.timer2 = setInterval(this.refreshDeploymentDevices, 10000);
+    this.timer2 = setInterval(this.refreshDeploymentDevices, 5000);
     this.refreshDeploymentDevices();
   },
   componentWillUnmount: function() {
@@ -321,7 +321,7 @@ var DeploymentReport = createReactClass({
 
 
         <div style={{minHeight:"20vh"}}>
-          <DeviceList status={this.props.deployment.status} devices={deviceList} deviceInventory={this.state.deviceInventory} viewLog={this.viewLog} finished={this.updatedList} past={this.props.past} />
+          <DeviceList created={this.props.deployment.created} status={this.props.deployment.status} devices={deviceList} deviceInventory={this.state.deviceInventory} viewLog={this.viewLog} finished={this.updatedList} past={this.props.past} />
           {allDevices.length ? <Pagination locale={_en_US} simple pageSize={this.state.perPage} current={this.state.currentPage || 1} total={allDevices.length} onChange={this._handlePageChange} /> : null }
         </div>
 

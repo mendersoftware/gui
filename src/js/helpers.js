@@ -16,19 +16,24 @@ export function fullyDecodeURI(uri){
   return uri;
 }
 
-export function statusToPercentage(state) {
+export function statusToPercentage(state, intervals) {
+  var time;
+  var minutes = intervals/3;
   switch(state) {
     case "pending":
       return 10;
 
     case "downloading":
-      return 10;
+      // increase slightly over time to show progress
+      time = (minutes < 15) ? (10+intervals) : 69;
+      return time;
 
     case "installing":
       return 70;
 
     case "rebooting":
-      return 80;
+      time = (minutes < 18) ? (80+intervals) : 99;
+      return time;
 
     case "aborted":
     case "already-installed":
