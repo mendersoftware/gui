@@ -100,6 +100,9 @@ var ProgressChart = createReactClass({
       }
     }, this);
 
+    var intervalsSinceStart = Math.floor((Date.now() - Date.parse(this.props.deployment.created)) / (1000 * 20));
+    var percentage = statusToPercentage(this.state.device.status, intervalsSinceStart);
+
     var progressChart = (
       <div className="relative">
         <div className="progressHeader">
@@ -115,9 +118,9 @@ var ProgressChart = createReactClass({
           <p><b>Status:</b> {this.state.device.status}</p>
           <div className={"substateText"}>{this.state.device.substate}</div>
           <div className={"substateText"} style={{textAlign: "end"}}>
-            {statusToPercentage(this.state.device.status)}%
+            {percentage}%
           </div>
-          <LinearProgress color={this.state.device.status && this.state.device.status.toLowerCase() == "failure" ? "#8f0d0d":"#009E73"} mode="determinate" value={statusToPercentage(this.state.device.status)} />
+          <LinearProgress color={this.state.device.status && this.state.device.status.toLowerCase() == "failure" ? "#8f0d0d":"#009E73"} mode="determinate" value={percentage} />
         </div>
         <div className="key">
           <div className="bubble failure" /> Failed <div className="bubble pending" /> Pending <div className="bubble inprogress" /> In progress <div className="bubble success" /> Successful
