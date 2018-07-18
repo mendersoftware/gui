@@ -21,7 +21,7 @@ function getState() {
     recent: AppStore.getPastDeployments(),
     activity: AppStore.getActivity(),
     snackbar: AppStore.getSnackbar(),
-    refreshDeploymentsLength: 10000,
+    refreshDeploymentsLength: 30000,
     showHelptips: AppStore.showHelptips()
   }
 }

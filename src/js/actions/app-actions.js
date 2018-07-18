@@ -588,7 +588,7 @@ var AppActions = {
   },
   getDeploymentCount: function(status, callback) {
     var page = 1;
-    var per_page = 100;
+    var per_page = 500;
     var count = 0;
     function DeploymentCount() {
       DeploymentsApi

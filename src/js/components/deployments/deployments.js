@@ -35,7 +35,7 @@ function getState() {
     groups: AppStore.getGroups(),
     invalid: true,
     snackbar: AppStore.getSnackbar(),
-    refreshDeploymentsLength: 10000,
+    refreshDeploymentsLength: 30000,
     hasDeployments: AppStore.getHasDeployments(),
     showHelptips: AppStore.showHelptips(),
     hasPending: AppStore.getTotalPendingDevices(),
@@ -223,29 +223,15 @@ var Deployments = createReactClass({
     /
     */
     var self = this;
-    if (page) {
-      self.setState({past_page: page});
-    } else {
-      page = self.state.past_page;
-    }
+    var oldCount = self.state.pastCount;
+    var newCount;
+    var oldPage = self.state.oldPage;
+
 
     var callback = {
       success: function(deployments, links) {
-
         self.setState({doneLoading:true});
         self._dismissSnackBar();
-
-        // Get full count of deployments for pagination
-        if (links.next || links.prev) {
-          AppActions.getDeploymentCount("finished", function(count) {
-            self.setState({pastCount: count});
-            if (count && !deployments.length) {
-              self._refreshPast(1);
-            }
-          });
-        } else {
-          self.setState({pastCount: deployments.length});
-        }
       },
       error: function (err) {
         console.log(err);
@@ -254,7 +240,29 @@ var Deployments = createReactClass({
       }
     };
 
-    AppActions.getPastDeployments(callback, page, per_page);
+
+    // get total count of past deployments first
+    AppActions.getDeploymentCount("finished", function(count) {
+      self.setState({pastCount: count});
+      newCount = count;
+
+      if (page) {
+        self.setState({past_page: page});
+      } else {
+        page = self.state.past_page;
+      }
+     
+      // only refresh deployments if page or count has changed
+      if ( oldPage!==page || oldCount!==count ) {
+        AppActions.getPastDeployments(callback, page, per_page);
+      }
+    });
+
+
+   
+
+  
+    
   },
   _dismissSnackBar: function() {
     setTimeout(function() {

@@ -13,7 +13,7 @@ var Api = {
         .get(url)
         .authBearer(token)
         .timeout({
-          response: 10000, // wait 10 seconds for server to start sending
+          response: 30000, // wait 10 seconds for server to start sending
           deadline: 60000, // allow one minute to finish loading
         })
         .end(function (err, res) {

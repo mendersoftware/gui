@@ -225,6 +225,7 @@ function _getHasDeployments() {
 function _sortDeploymentDevices(devices) {
   var newList = {
     "aborted": [],
+    "decommissioned": [],
     "already-installed": [],
     "downloading": [],
     "failure": [],
@@ -239,7 +240,7 @@ function _sortDeploymentDevices(devices) {
     newList[devices[i].status].push(devices[i]);
   }
 
-  var newCombine = newList.success.concat(newList.downloading, newList.installing, newList.rebooting, newList.failure, newList.aborted, newList['already-installed'], newList.noartifact, newList.pending);
+  var newCombine = newList.success.concat(newList.downloading, newList.installing, newList.rebooting, newList.failure, newList.decommissioned, newList.aborted, newList['already-installed'], newList.noartifact, newList.pending);
   return newCombine;
 }
 
