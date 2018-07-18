@@ -29,7 +29,7 @@ var ProgressChart = createReactClass({
     };
   },
   componentDidMount: function() {
-    this.timer = setInterval(this.refreshDeploymentDevices, 5000);
+    this.timer = setInterval(this.refreshDeploymentDevices, 30000);
     this.refreshDeploymentDevices();
   },
   componentWillUnmount: function() {
