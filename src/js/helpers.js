@@ -21,18 +21,18 @@ export function statusToPercentage(state, intervals) {
   var minutes = intervals/3;
   switch(state) {
     case "pending":
-      return 10;
+      return 0;
 
     case "downloading":
       // increase slightly over time to show progress
-      time = (minutes < 15) ? (10+intervals) : 69;
+      time = ((minutes < 15) && (intervals<69) ) ? (0+intervals) : 69;
       return time;
 
     case "installing":
       return 70;
 
     case "rebooting":
-      time = (minutes < 18) ? (80+intervals) : 99;
+      time = ( (minutes < 18) && ((75+intervals)<99) ) ? (75+intervals) : 99;
       return time;
 
     case "aborted":
