@@ -93,8 +93,8 @@ var RaspberryPi =  createReactClass({
         <p>As the Mender client does not listen to any ports there are no incoming connections.</p>
 
         <h4>Enabling Wifi in the image</h4>
-        <p>Enabling Wifi is most easily done by first downloading the <a target="_blank" href={"https://docs.mender.io/"+this.props.docsVersion+"getting-started/deploy-to-physical-devices#mender-artifact-tool"}>mender-artifact tool</a>.</p>
-        <p>Then modify the image as shown in the <a href={"https://docs.mender.io/"+this.props.docsVersion+"getting-started/deploy-to-physical-devices#wifi-connectivity"} target="_blank">Wifi connectivity</a> section of the Getting Started guide.</p>
+        <p>Enabling Wifi is most easily done by first downloading the <a target="_blank" href={"https://docs.mender.io/development/getting-started/deploy-to-physical-devices#mender-artifact-tool"}>mender-artifact tool</a>.</p>
+        <p>Then modify the image as shown in the <a href={"https://docs.mender.io/development/getting-started/deploy-to-physical-devices#wifi-connectivity"} target="_blank">Wifi connectivity</a> section of the Getting Started guide.</p>
 
         <h3>Download the disk image</h3>
 
