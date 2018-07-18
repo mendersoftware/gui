@@ -14,6 +14,7 @@ var ProgressChart = createReactClass({
       devices: [],
       stats: {
         "downloading": 0,
+        "decommissioned": 0,
         "failure": 0,
         "installing": 0,
         "noartifact": 0,
@@ -62,7 +63,7 @@ var ProgressChart = createReactClass({
     var totalDevices = this.state.devices.length - skipped;
 
     var success = this.state.stats.success;
-    var failures = this.state.stats.failure;
+    var failures = this.state.stats.failure + this.state.stats.decommissioned;
     var progress = this.state.stats.downloading + this.state.stats.rebooting + this.state.stats.installing;
     var pending = this.state.stats.pending;
     var dev = this.state.devices.length;
