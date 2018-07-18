@@ -4,7 +4,6 @@ import ReactTooltip from 'react-tooltip';
 import { FinishedDeployment } from '../helptips/helptooltips';
 var createReactClass = require('create-react-class');
 var ScheduleForm = require('./scheduleform');
-var GroupDevices = require('./groupdevices');
 var DeploymentStatus = require('./deploymentstatus');
 
 var Pagination = require('rc-pagination');
@@ -60,7 +59,7 @@ var Past = createReactClass({
           <TableRowColumn>{deployment.name}</TableRowColumn>
           <TableRowColumn><Time value={this._formatTime(deployment.created)} format="YYYY-MM-DD HH:mm" /></TableRowColumn>
           <TableRowColumn>{time}</TableRowColumn>
-          <TableRowColumn style={{textAlign:"right", width:"100px"}}><GroupDevices deployment={deployment.id} /></TableRowColumn>
+          <TableRowColumn style={{textAlign:"right", width:"100px"}}>{deployment.device_count}</TableRowColumn>
           <TableRowColumn style={{overflow:"visible", width:"350px"}}>{status}</TableRowColumn>
         </TableRow>
       )

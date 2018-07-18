@@ -4,7 +4,6 @@ import ReactTooltip from 'react-tooltip';
 import { CreateDeployment, ProgressDeployment } from '../helptips/helptooltips';
 var createReactClass = require('create-react-class');
 var update = require('react-addons-update');
-var GroupDevices = require('./groupdevices');
 var DeploymentStatus = require('./deploymentstatus');
 
 var Pagination = require('rc-pagination');
@@ -48,7 +47,7 @@ var Progress = createReactClass({
           <TableRowColumn>{deployment.artifact_name}</TableRowColumn>
           <TableRowColumn>{deployment.name}</TableRowColumn>
           <TableRowColumn><Time value={this._formatTime(deployment.created)} format="YYYY-MM-DD HH:mm" /></TableRowColumn>
-          <TableRowColumn style={{textAlign:"right", width:"100px"}}><GroupDevices deployment={deployment.id} /></TableRowColumn>
+          <TableRowColumn style={{textAlign:"right", width:"100px"}}>{deployment.device_count}</TableRowColumn>
           <TableRowColumn style={{overflow:"visible", width:"350px"}}>{status}</TableRowColumn>
         </TableRow>
       )

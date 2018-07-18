@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-var GroupDevices = require('../deployments/groupdevices');
 var RecentStats = require('./recentstats');
 import Time from 'react-time';
 var AppActions = require('../../actions/app-actions');

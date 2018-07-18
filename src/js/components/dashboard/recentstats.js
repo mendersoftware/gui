@@ -10,7 +10,8 @@ var RecentStats = createReactClass({
         "success": 0,
         "failure": 0,
         "noartifact": 0,
-        "aborted": 0
+        "aborted": 0,
+        "decommissioned": 0,
       }
     };
   },
@@ -29,7 +30,7 @@ var RecentStats = createReactClass({
     }.bind(this));
   },
   render: function() {
-    var skipped = (this.state.stats.noartifact + this.state.stats.aborted + this.state.stats["already-installed"]);
+    var skipped = (this.state.stats.noartifact + this.state.stats.aborted + this.state.stats.decommissioned + this.state.stats["already-installed"]);
     return (
       <div className="deploymentStats">
         <div className="resultIcons">

@@ -1,7 +1,6 @@
 import React from 'react';
 import Time from 'react-time';
 var createReactClass = require('create-react-class');
-var GroupDevices = require('./groupdevices');
 import BlockIcon from 'react-material-icons/icons/content/block';
 var ConfirmAbort = require('./confirmabort');
 
@@ -58,7 +57,7 @@ var Pending = createReactClass({
           <TableRowColumn>{deployment.artifact_name}</TableRowColumn>
           <TableRowColumn>{deployment.name}</TableRowColumn>
           <TableRowColumn><Time value={this._formatTime(deployment.created)} format="YYYY-MM-DD HH:mm" /></TableRowColumn>
-          <TableRowColumn style={{textAlign:"right", width:"100px"}}><GroupDevices deployment={deployment.id} /></TableRowColumn>
+          <TableRowColumn style={{textAlign:"right", width:"100px"}}>{deployment.device_count}</TableRowColumn>
           <TableRowColumn style={{width:"126px"}}>{deployment.status}</TableRowColumn>
           <TableRowColumn style={{overflow:"visible"}}>
             <div className="float-right">{abort}</div>
