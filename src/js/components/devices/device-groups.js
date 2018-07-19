@@ -89,7 +89,7 @@ var DeviceGroups = createReactClass({
 
 	    if (prevProps.currentTab !== this.props.currentTab) {
 	    	clearInterval(this.deviceTimer);
-	    	this.setState({filters: []});
+	    	if (prevProps.currentTab) { this.setState({filters: []});}
 	    	if (this.props.currentTab==="Device groups") {	
 	    		this.deviceTimer = setInterval(this._getDevices, this.state.refreshDeviceLength);
 	    		this._refreshAll();
