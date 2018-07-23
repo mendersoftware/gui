@@ -502,11 +502,11 @@ var Deployments = createReactClass({
       )
     } else if (this.state.reportType === "progress") {
       dialogContent = (
-        <Report abort={this._abortDeployment} updated={this.updated} deployment={this.state.selectedDeployment} />
+        <Report globalSettings={this.props.globalSettings} abort={this._abortDeployment} updated={this.updated} deployment={this.state.selectedDeployment} />
       )
     } else {
       dialogContent = (
-        <Report updated={this.updated} past={true} deployment={this.state.selectedDeployment} retryDeployment={this._scheduleDeployment} />
+        <Report globalSettings={this.props.globalSettings} updated={this.updated} past={true} deployment={this.state.selectedDeployment} retryDeployment={this._scheduleDeployment} />
       )
     }
     return (

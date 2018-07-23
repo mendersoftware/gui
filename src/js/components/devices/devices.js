@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import ReactTooltip from 'react-tooltip';
 import { setRetryTimer, clearRetryTimer, clearAllRetryTimers } from '../../utils/retrytimer';
 import { DevicesNav } from '../helptips/helptooltips';
+import Global from '../settings/global';
 
 var createReactClass = require('create-react-class');
 var DeviceGroups = require('./device-groups');
@@ -12,6 +13,7 @@ var PreauthDevices = require('./preauthorize-devices');
 var SharedSnackbar = require('./sharedsnackbar');
 var pluralize = require('pluralize');
 var Loader = require('../common/loader');
+
 
 var AppStore = require('../../stores/app-store');
 var AppActions = require('../../actions/app-actions');
@@ -354,6 +356,11 @@ var Devices = createReactClass({
 		self.context.router.push(route);
 	},
 
+	 _openSettingsDialog: function() {
+    var self = this;
+    self.setState({openIdDialog: !self.state.openIdDialog});
+  },
+
 	render: function() {
 		// nested tabs
     var tabHandler = this._handleTabActive;
@@ -428,7 +435,9 @@ var Devices = createReactClass({
 							allCount={this.state.allCount} 
 							currentTab={this.state.currentTab}  
 							rejectDevice={this._rejectDevice}
-							showHelptips={this.state.showHelptips} />
+							showHelptips={this.state.showHelptips}
+							globalSettings={this.props.globalSettings}
+							openSettingsDialog={this._openSettingsDialog} />
 		      </Tab>
 			    <Tab
             label={pendingLabel}
@@ -446,7 +455,9 @@ var Devices = createReactClass({
               count={this.state.pendingCount} 
               rejectDevice={this._handleRejectDevice}
               showHelptips={this.state.showHelptips}
-              highlightHelp={!this.state.acceptedCount} />
+              highlightHelp={!this.state.acceptedCount}
+              globalSettings={this.props.globalSettings}
+              openSettingsDialog={this._openSettingsDialog} />
 					</Tab>
 
 					<Tab
@@ -462,7 +473,9 @@ var Devices = createReactClass({
             	currentTab={this.state.currentTab}
             	count={this.state.preauthCount}
             	disabled={this.state.pauseAdmisson}
-            	refreshCount={this._getPreauthCount} />
+            	refreshCount={this._getPreauthCount}
+            	globalSettings={this.props.globalSettings}
+            	openSettingsDialog={this._openSettingsDialog} />
 					</Tab>
 
           <Tab
@@ -479,7 +492,9 @@ var Devices = createReactClass({
             	disabled={this.state.pauseAdmisson} 
             	authorizeDevices={this._authorizeDevices} 
             	count={this.state.rejectedCount} 
-            	rejectDevice={this._handleRejectDevice} />
+            	rejectDevice={this._handleRejectDevice}
+            	globalSettings={this.props.globalSettings}
+            	openSettingsDialog={this._openSettingsDialog} />
           </Tab>
 				</Tabs>
 
@@ -598,6 +613,18 @@ var Devices = createReactClass({
 
 
    			<SharedSnackbar snackbar={this.state.snackbar} />
+
+
+        <Dialog
+          open={this.state.openIdDialog || false}
+          title='Customize device identity column'
+          autoDetectWindowHeight={true}
+          bodyStyle={{paddingTop:"0", fontSize:"13px"}}
+          contentStyle={{overflow:"hidden", boxShadow:"0 14px 45px rgba(0, 0, 0, 0.25), 0 10px 18px rgba(0, 0, 0, 0.22)"}}
+          >
+          <Global dialog={true} closeDialog={this._openSettingsDialog} />
+          </Dialog>
+
 
 			</div>
 

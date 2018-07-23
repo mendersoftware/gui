@@ -8,6 +8,7 @@ import ReactTooltip from 'react-tooltip';
 import { ExpandDevice } from '../helptips/helptooltips';
 var Loader = require('../common/loader');
 var AppActions = require('../../actions/app-actions');
+var AppStore = require('../../stores/app-store');
 var ExpandedDevice = require('./expanded-device');
 var createReactClass = require('create-react-class');
 var pluralize = require('pluralize');
@@ -21,7 +22,6 @@ import FlatButton from 'material-ui/RaisedButton';
 import FontIcon from 'material-ui/FontIcon';
 import InfoIcon from 'react-material-icons/icons/action/info-outline';
 import Snackbar from 'material-ui/Snackbar';
-import Dialog from 'material-ui/Dialog';
 import TextField from 'material-ui/TextField';
 
 var Authorized =  createReactClass({
@@ -60,6 +60,7 @@ var Authorized =  createReactClass({
     if ((prevProps.paused !== this.props.paused) && this.state.device) {
       this._setDeviceDetails(this.state.device);
     }
+
   },
 
 
@@ -228,9 +229,13 @@ var Authorized =  createReactClass({
       }
 
       if ( self.state.expandRow === index ) {
-        expanded = <ExpandedDevice _showKey={this._showKey} showKey={this.state.showKey} docsVersion={this.props.docsVersion} showHelpTips={this.props.showHelptips} device={this.state.expandedDevice || device} rejectOrDecomm={this.props.rejectOrDecomm} attrs={device.attributes} device_type={attrs.device_type} styles={this.props.styles} block={this.props.block} accept={this.props.accept} redirect={this.props.redirect} artifacts={this.props.artifacts} selectedGroup={this.props.group} groups={this.props.groups} />
+        expanded = <ExpandedDevice id_attribute={(this.props.globalSettings || {}).id_attribute} _showKey={this._showKey} showKey={this.state.showKey} docsVersion={this.props.docsVersion} showHelpTips={this.props.showHelptips} device={this.state.expandedDevice || device} rejectOrDecomm={this.props.rejectOrDecomm} attrs={device.attributes} device_type={attrs.device_type} styles={this.props.styles} block={this.props.block} accept={this.props.accept} redirect={this.props.redirect} artifacts={this.props.artifacts} selectedGroup={this.props.group} groups={this.props.groups} />
       }
-     
+
+      var id_attribute = (self.props.globalSettings.id_attribute && self.props.globalSettings.id_attribute !== "Device ID") 
+        ? (device.id_attributes || {})[self.props.globalSettings.id_attribute]
+        : (device.device_id || device.id) ;
+
       return (
         <TableRow 
           hoverable={!expanded}
@@ -243,7 +248,7 @@ var Authorized =  createReactClass({
               e.stopPropagation();
               this._expandRow(index,0);
             }}>
-            {device.device_id || device.id}
+            {id_attribute}
             </div>
           </TableRowColumn>
           <TableRowColumn style={{padding: 0}}>
@@ -348,7 +353,7 @@ var Authorized =  createReactClass({
                 className="clickable"
                 enableSelectAll={true}>
                 <TableRow>
-                  <TableHeaderColumn className="columnHeader" tooltip="ID">ID</TableHeaderColumn>
+                  <TableHeaderColumn className="columnHeader" tooltip={(this.props.globalSettings || {}).id_attribute || "Device ID"}>{(this.props.globalSettings || {}).id_attribute || "Device ID"}<FontIcon onClick={this.props.openSettingsDialog} style={{fontSize: "16px"}} color={"#c7c7c7"} hoverColor={"#aeaeae"} className="material-icons hover float-right">settings</FontIcon></TableHeaderColumn>
                   <TableHeaderColumn className="columnHeader" tooltip="Device type">Device type</TableHeaderColumn>
                   <TableHeaderColumn className="columnHeader" tooltip="Current software">Current software</TableHeaderColumn>
                   <TableHeaderColumn className="columnHeader" tooltip="Last heartbeat">Last heartbeat</TableHeaderColumn>
@@ -418,8 +423,6 @@ var Authorized =  createReactClass({
         : null }
 
         </div>
-
-
       </div>
     );
   }

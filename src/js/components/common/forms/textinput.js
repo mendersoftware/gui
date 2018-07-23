@@ -5,7 +5,7 @@ import TextField from 'material-ui/TextField';
 var TextInput = createReactClass({
   getInitialState: function () {
     return {
-      value: this.props.value || '',
+      value: this.props.value,
       errorText: null,
       isValid: true
     };
@@ -21,11 +21,14 @@ var TextInput = createReactClass({
     if (this.props.value) {
        this.props.validate(this, this.props.value);
     }
-   
   },
   componentDidUpdate: function(prevProps, prevState) {
      if (this.props.focus) {
       this.refs[this.props.id].focus();
+    }
+    var self = this;
+    if ( prevProps.value !== this.props.value ) {
+     this.setState({value: this.props.value}, self.props.validate(self, self.props.value));
     }
 
   },

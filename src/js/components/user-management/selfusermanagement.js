@@ -24,16 +24,6 @@ var SelfUserManagement =  createReactClass({
      return getState()
   },
 
-  componentDidUpdate: function(prevProps, prevState) {
-    if (this.state.editPass !== prevState.editPass) {
-      this.forceUpdate();
-    }
-    if (this.state.editEmail !== prevState.editEmail) {
-      this.forceUpdate();
-    }
-  },
-
-
   componentWillMount: function() {
     AppStore.changeListener(this._onChange);
   },

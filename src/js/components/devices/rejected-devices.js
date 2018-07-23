@@ -171,16 +171,21 @@ var Rejected =  createReactClass({
 
 
   render: function() {
-    var limitMaxed = this.props.deviceLimit && (this.props.deviceLimit <= this.props.totalDevices);
-    var limitNear = this.props.deviceLimit && (this.props.deviceLimit < this.props.totalDevices + this.state.devices.length );
+    var limitMaxed = this.props.deviceLimit ? (this.props.deviceLimit <= this.props.acceptedDevices) : false;
+    var limitNear = this.props.deviceLimit ? (this.props.deviceLimit < (this.props.acceptedDevices + this.state.devices.length) ) : false;
+    var selectedOverLimit = this.props.deviceLimit ? (this.props.deviceLimit < (this.props.acceptedDevices + this.state.selectedRows.length)) : false ;
 
     var devices = this.state.devices.map(function(device, index) {
       var self = this;
 
       var expanded = '';
       if ( self.state.expandRow === index ) {
-        expanded = <ExpandedDevice _showKey={this._showKey} showKey={this.state.showKey} rejectOrDecomm={this.props.rejectOrDecomm} disabled={limitMaxed} styles={this.props.styles} deviceId={self.state.deviceId} device={self.state.expandedDevice} unauthorized={true} selected={[device]}  />
+        expanded = <ExpandedDevice id_attribute={(this.props.globalSettings || {}).id_attribute} _showKey={this._showKey} showKey={this.state.showKey} rejectOrDecomm={this.props.rejectOrDecomm} disabled={limitMaxed} styles={this.props.styles} deviceId={self.state.deviceId} device={self.state.expandedDevice} unauthorized={true} selected={[device]}  />
       }
+
+      var id_attribute  = (self.props.globalSettings.id_attribute && self.props.globalSettings.id_attribute !== "Device ID") 
+        ? (device.attributes || {})[self.props.globalSettings.id_attribute]
+        : (device.device_id || device.id) ;
 
       return (
         <TableRow selected={this._isSelected(index)} className={expanded ? "expand" : null} hoverable={true} key={index}>
@@ -190,7 +195,7 @@ var Rejected =  createReactClass({
               e.stopPropagation();
               self._expandRow(index);
             }}>
-              {device.device_id}
+              { id_attribute }
             </div>
           </TableRowColumn>
           <TableRowColumn className="no-click-cell">
@@ -237,11 +242,9 @@ var Rejected =  createReactClass({
       (
         <p className="warning">
           <InfoIcon style={{marginRight:"2px", height:"16px", verticalAlign:"bottom"}} />
-          <span className={limitMaxed ? null : "hidden"}>You have reached</span><span className={limitNear&&!limitMaxed ? null : "hidden"}>You are nearing</span> your limit of authorized devices: {this.props.totalDevices} of {this.props.deviceLimit}
+          <span className={limitMaxed ? null : "hidden"}>You have reached</span><span className={limitNear&&!limitMaxed ? null : "hidden"}>You are nearing</span> your limit of authorized devices: {this.props.acceptedDevices} of {this.props.deviceLimit}
         </p>
     ) : null;
-
-    var minHeight = deviceLimitWarning ? this.state.minHeight + 20 : this.state.minHeight;
 
 
     var rejectActions =  [
@@ -259,7 +262,7 @@ var Rejected =  createReactClass({
 
 
     return (
-      <Collapse springConfig={{stiffness: 190, damping: 20}} style={{minHeight:minHeight, width:"100%"}} isOpened={true} id="rejected" className="absolute authorize padding-top">
+      <Collapse springConfig={{stiffness: 190, damping: 20}} style={{minHeight: this.state.minHeight, width:"100%"}} isOpened={true} id="rejected" className="absolute authorize padding-top">
         
       <Loader show={this.state.authLoading==="all"} />
 
@@ -270,8 +273,6 @@ var Rejected =  createReactClass({
 
             <h3 className="align-center">Rejected devices</h3>
 
-            {deviceLimitWarning}
-
             <Table
               multiSelectable={true}
               onRowSelection={this._onRowSelection}>
@@ -279,7 +280,7 @@ var Rejected =  createReactClass({
                 className="clickable"
                 enableSelectAll={true}>
                 <TableRow>
-                  <TableHeaderColumn className="columnHeader" tooltip="ID">ID</TableHeaderColumn>
+                  <TableHeaderColumn className="columnHeader" tooltip={(this.props.globalSettings || {}).id_attribute || "Device ID"}>{(this.props.globalSettings || {}).id_attribute || "Device ID"}<FontIcon onClick={this.props.openSettingsDialog} style={{fontSize: "16px"}} color={"#c7c7c7"} hoverColor={"#aeaeae"} className="material-icons hover float-right">settings</FontIcon></TableHeaderColumn>
                   <TableHeaderColumn className="columnHeader" tooltip="Request time">Request time</TableHeaderColumn>
                   <TableHeaderColumn className="columnHeader" tooltip="Status">Status</TableHeaderColumn>
                   <TableHeaderColumn className="columnHeader" style={{width:"55px", paddingRight:"12px", paddingLeft:"0"}}></TableHeaderColumn>

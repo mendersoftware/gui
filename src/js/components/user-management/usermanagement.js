@@ -39,6 +39,11 @@ var UserManagement =  createReactClass({
   _onChange: function() {
     this.setState(getState());
   },
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.currentTab !== this.props.currentTab && this.props.currentTab==="/settings/user-management") {
+      this._getUserList();
+    }
+  },
   componentWillUnmount: function() {
     AppStore.removeChangeListener(this._onChange);
   },

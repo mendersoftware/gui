@@ -39,6 +39,7 @@ var App = createReactClass({
       currentTab: this._updateActive(),
       version: AppStore.getMenderVersion(),
       docsVersion: AppStore.getDocsVersion(),
+      globalSettings: AppStore.getGlobalSettings(),
     }
   },
   componentWillMount: function() {
@@ -126,7 +127,7 @@ var App = createReactClass({
               <LeftNav version={this.state.version} docsVersion={this.state.docsVersion} currentTab={this.state.currentTab} changeTab={this._changeTab} />
             </div>
             <div className="rightFluid container">
-              {React.cloneElement(this.props.children, { isLoggedIn:(this.state.currentUser||{}).hasOwnProperty("email"), docsVersion: this.state.docsVersion, version: this.state.version, uploadArtifact: this._uploadArtifact, artifactProgress: this.state.progress })}
+              {React.cloneElement(this.props.children, { isLoggedIn:(this.state.currentUser||{}).hasOwnProperty("email"), docsVersion: this.state.docsVersion, version: this.state.version, uploadArtifact: this._uploadArtifact, artifactProgress: this.state.progress, globalSettings:this.state.globalSettings })}
             </div>
           </div>
         </div>

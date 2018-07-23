@@ -9,6 +9,7 @@ import { AuthDevices, ExpandAuth, AuthButton } from '../helptips/helptooltips';
 import { Router, Link } from 'react-router';
 var Loader = require('../common/loader');
 var AppActions = require('../../actions/app-actions');
+var AppStore = require('../../stores/app-store');
 var ExpandedDevice = require('./expanded-device');
 var createReactClass = require('create-react-class');
 var Pagination = require('rc-pagination');
@@ -181,15 +182,15 @@ var Pending =  createReactClass({
 
 
   render: function() {
-    var limitMaxed = this.props.deviceLimit && (this.props.deviceLimit <= this.props.acceptedDevices);
-    var limitNear = this.props.deviceLimit && (this.props.deviceLimit < this.props.acceptedDevices + this.state.devices.length );
-    var selectedOverLimit = this.props.deviceLimit && (this.props.deviceLimit < this.props.acceptedDevices + this.state.selectedRows.length);
+    var limitMaxed = this.props.deviceLimit ? (this.props.deviceLimit <= this.props.acceptedDevices) : false;
+    var limitNear = this.props.deviceLimit ? (this.props.deviceLimit < (this.props.acceptedDevices + this.state.devices.length) ) : false;
+    var selectedOverLimit = this.props.deviceLimit ? (this.props.deviceLimit < (this.props.acceptedDevices + this.state.selectedRows.length)) : false ;
 
     var devices = this.state.devices.map(function(device, index) {
       var self = this;
       var expanded = '';
       if ( self.state.expandRow === index ) {
-        expanded = <ExpandedDevice _showKey={this._showKey} showKey={this.state.showKey} disabled={!!limitMaxed} styles={this.props.styles} deviceId={self.state.deviceId} device={self.state.expandedDevice} unauthorized={true} selected={[device]}  />
+        expanded = <ExpandedDevice id_attribute={(this.props.globalSettings || {}).id_attribute} _showKey={this._showKey} showKey={this.state.showKey} disabled={!!limitMaxed} styles={this.props.styles} deviceId={self.state.deviceId} device={self.state.expandedDevice} unauthorized={true} selected={[device]}  />
       }
       var checkIcon = (self.state.authLoading === index && self.props.disabled) ?
         (
@@ -220,6 +221,10 @@ var Pending =  createReactClass({
           </IconButton>
         )
       ;
+
+      var id_attribute  = (self.props.globalSettings.id_attribute && self.props.globalSettings.id_attribute !== "Device ID") 
+        ? (device.attributes || {})[self.props.globalSettings.id_attribute]
+        : (device.device_id || device.id) ;
       return (
         <TableRow selected={this._isSelected(index)} style={{"backgroundColor": "#e9f4f3"}} className={expanded ? "expand" : null} hoverable={true} key={index}>
           <TableRowColumn className="no-click-cell" style={expanded ? {height: this.state.divHeight} : null}>
@@ -228,7 +233,7 @@ var Pending =  createReactClass({
               e.stopPropagation();
               self._expandRow(index);
             }}>
-              {device.device_id}
+               {id_attribute}
             </div>
           </TableRowColumn>
           <TableRowColumn className="no-click-cell">
@@ -353,7 +358,7 @@ var Pending =  createReactClass({
                 className="clickable"
                 enableSelectAll={true}>
                 <TableRow>
-                  <TableHeaderColumn className="columnHeader" tooltip="ID">ID</TableHeaderColumn>
+                  <TableHeaderColumn className="columnHeader" tooltip={(this.props.globalSettings || {}).id_attribute || "Device ID"}>{(this.props.globalSettings || {}).id_attribute || "Device ID"}<FontIcon onClick={this.props.openSettingsDialog} style={{fontSize: "16px"}} color={"#c7c7c7"} hoverColor={"#aeaeae"} className="material-icons hover float-right">settings</FontIcon></TableHeaderColumn>
                   <TableHeaderColumn className="columnHeader" tooltip="Request time">Time of request</TableHeaderColumn>
                   <TableHeaderColumn className="columnHeader" tooltip="Status">Status</TableHeaderColumn>
                   <TableHeaderColumn className="columnHeader" tooltip="Authorize device?" style={{width:"140px"}}>Authorize?</TableHeaderColumn>
@@ -418,7 +423,7 @@ var Pending =  createReactClass({
               </div>
 
               <span className="margin-right">{this.state.selectedRows.length} {pluralize("devices", this.state.selectedRows.length)} selected</span>
-              <RaisedButton disabled={this.props.disabled || !!limitMaxed || selectedOverLimit} onClick={this._authorizeDevices} primary={true} label={"Authorize " + this.state.selectedRows.length +" " + pluralize("devices", this.state.selectedRows.length)} />
+              <RaisedButton disabled={(this.props.disabled || limitMaxed || selectedOverLimit)} onClick={this._authorizeDevices} primary={true} label={"Authorize " + this.state.selectedRows.length +" " + pluralize("devices", this.state.selectedRows.length)} />
               {deviceLimitWarning}
             </div>
           </div>
