@@ -34,7 +34,7 @@ var DeploymentReport = createReactClass({
       elapsed: 0,
       currentPage: 1,
       start: 0,
-      perPage: 50,
+      perPage: 20,
       deviceCount: 0,
       showPending: true,
       abort: false
@@ -50,7 +50,7 @@ var DeploymentReport = createReactClass({
     } else {
        this.timer = setInterval(this.tick, 50);
     }
-    this.timer2 = setInterval(this.refreshDeploymentDevices, 5000);
+    this.timer2 = this.props.past ? null : setInterval(self.refreshDeploymentDevices, 5000);
     this.refreshDeploymentDevices();
   },
   componentWillUnmount: function() {
