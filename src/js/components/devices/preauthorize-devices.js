@@ -327,8 +327,12 @@ var Preauthorize =  createReactClass({
 
       var expanded = '';
       if ( self.state.expandRow === index ) {
-        expanded = <ExpandedDevice _showKey={this._showKey} showKey={this.state.showKey} disabled={limitMaxed} styles={this.props.styles} deviceId={self.state.deviceId} device={self.state.expandedDevice} unauthorized={true} selected={[device]}  />
+        expanded = <ExpandedDevice id_attribute={(this.props.globalSettings || {}).id_attribute} _showKey={this._showKey} showKey={this.state.showKey} disabled={limitMaxed} styles={this.props.styles} deviceId={self.state.deviceId} device={self.state.expandedDevice} unauthorized={true} selected={[device]}  />
       }
+
+      var id_attribute  = (self.props.globalSettings.id_attribute && self.props.globalSettings.id_attribute !== "Device ID") 
+        ? (device.attributes || {})[self.props.globalSettings.id_attribute]
+        : (device.device_id || device.id) ;
 
       return (
         <TableRow selected={this._isSelected(index)} className={expanded ? "expand" : null} hoverable={true} key={index}>
@@ -338,7 +342,7 @@ var Preauthorize =  createReactClass({
               e.stopPropagation();
               self._expandRow(index);
             }}>
-              {device.device_id}
+              { id_attribute }
             </div>
           </TableRowColumn>
           <TableRowColumn className="no-click-cell">
@@ -465,7 +469,7 @@ var Preauthorize =  createReactClass({
                 className="clickable"
                 enableSelectAll={true}>
                 <TableRow>
-                  <TableHeaderColumn className="columnHeader" tooltip="ID">ID</TableHeaderColumn>
+                  <TableHeaderColumn className="columnHeader" tooltip={(this.props.globalSettings || {}).id_attribute || "Device ID"}>{(this.props.globalSettings || {}).id_attribute || "Device ID"}<FontIcon onClick={this.props.openSettingsDialog} style={{fontSize: "16px"}} color={"#c7c7c7"} hoverColor={"#aeaeae"} className="material-icons hover float-right">settings</FontIcon></TableHeaderColumn>
                   <TableHeaderColumn className="columnHeader" tooltip="Request time">Date added</TableHeaderColumn>
                   <TableHeaderColumn className="columnHeader" tooltip="Status">Status</TableHeaderColumn>
                   <TableHeaderColumn className="columnHeader" style={{width:"120px"}} tooltip="Remove">Remove</TableHeaderColumn>

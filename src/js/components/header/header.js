@@ -52,7 +52,8 @@ var Header = createReactClass({
       hasDeployments: AppStore.getHasDeployments(),
       multitenancy: AppStore.hasMultitenancy(),
       deviceLimit: AppStore.getDeviceLimit(),
-      inProgress: AppStore.getNumberInProgress()
+      inProgress: AppStore.getNumberInProgress(),
+      globalSettings: AppStore.getGlobalSettings(),
     };
   },
   componentWillMount: function() {
@@ -65,6 +66,7 @@ var Header = createReactClass({
     this.setState(this.getInitialState());
   },
   componentDidUpdate: function(prevProps, prevState) {
+
     if (!this.state.sessionId || isEmpty(this.state.user) || (this.state.user === null) ) {
        this._updateUsername();
     } else {
@@ -73,6 +75,7 @@ var Header = createReactClass({
         this._hasArtifacts();
         this._checkShowHelp();
         this._checkHeaderInfo();
+        this._getGlobalSettings();
       }
     }
   },
@@ -84,6 +87,7 @@ var Header = createReactClass({
       this._checkHeaderInfo();
       this._hasArtifacts();
       this._checkShowHelp();
+      this._getGlobalSettings();
     }
 
   },
@@ -93,6 +97,18 @@ var Header = createReactClass({
       this._hasDevices();
       this._hasPendingDevices();
       this._checkAnnouncement();
+  },
+  _getGlobalSettings: function() {
+    var self = this;
+    var callback = {
+      success: function(settings) {
+        // console.log(settings);
+      },
+      error: function(err) {
+        console.log("error", err);
+      }
+    };
+    AppActions.getGlobalSettings(callback);
   },
   _getDeviceLimit: function() {
     var self = this;
@@ -200,6 +216,7 @@ var Header = createReactClass({
           AppActions.setCurrentUser(user);
           self.setState({user: user, gettingUser: false});
           self._checkShowHelp();
+          self._getGlobalSettings();
           self._checkHeaderInfo();
         },
         error: function(err) {
@@ -218,6 +235,7 @@ var Header = createReactClass({
 
   },
   changeTab: function() {
+    this._getGlobalSettings();
     this._checkHeaderInfo();
     AppActions.setSnackbar("");
   },
@@ -257,6 +275,7 @@ var Header = createReactClass({
 
       <DropDownMenu className="header-dropdown" anchorOrigin={{vertical: 'center', horizontal: 'middle'}} targetOrigin={{vertical: 'bottom', horizontal: 'middle'}}  style={{marginRight: "0", fontSize: "14px", paddingLeft: "4px"}} iconStyle={{ fill: 'rgb(0, 0, 0)' }} value={(this.state.user || {}).email} onChange={this._handleHeaderMenu}>
         <MenuItem primaryText={dropdownLabel} value={(this.state.user || {}).email} className="hidden" />
+        <MenuItem primaryText="Settings" value="/settings" />
         <MenuItem primaryText="My account" value="/settings/my-account" />
         <MenuItem primaryText="My organization" value="/settings/my-organization" className={this.state.multitenancy ? null : "hidden" } />
         <MenuItem primaryText="User management" value="/settings/user-management" />

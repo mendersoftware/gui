@@ -56,7 +56,22 @@ var ProgressChart = createReactClass({
         status: "",
       };
     }
-    this.setState({device: device});
+
+    var self = this;
+    var callback = {
+      success: function(data) {
+        device.id_data = JSON.parse(data.id_data);
+        self.setState({device: device});
+      },
+      error: function(err) {
+        console.log("Error: " + err);
+      }
+    };
+
+    if (device.id) {
+      // get device id data for individual device
+      AppActions.getDeviceIdentity(device.id, callback);
+    }
   },
   render: function() {
     var skipped = this.state.stats.noartifact +  this.state.stats["already-installed"];
@@ -115,7 +130,11 @@ var ProgressChart = createReactClass({
         </div>
         <div className={!this.state.device.id ? "device-info" : "device-info show"}>
           <b>Device info:</b>
-          <p><b>ID:</b> {(this.state.device.id || "")}</p>
+          <p><b>{(this.props.globalSettings || {}).id_attribute || "Device ID"}: </b> 
+            { ((this.props.globalSettings || {}).id_attribute && (this.props.globalSettings || {}).id_attribute !== "Device ID") && this.state.device.id_data 
+              ? this.state.device.id_data[this.props.globalSettings.id_attribute] 
+              : this.state.device.id }
+          </p>
           <p><b>Status:</b> {this.state.device.status}</p>
           <div className={"substateText"}>{this.state.device.substate}</div>
           <div className={"substateText"} style={{textAlign: "end"}}>

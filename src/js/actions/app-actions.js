@@ -335,6 +335,37 @@ var AppActions = {
       })
   },
 
+  /* Global settings */
+  getGlobalSettings: function(callback) {
+    GeneralApi
+      .get(useradmApiUrl+"/settings")
+      .then(function(res) {
+        AppDispatcher.handleViewAction({
+          actionType: AppConstants.SET_GLOBAL_SETTINGS,
+          settings: res.body
+        });
+        callback.success(res.body);
+      })
+      .catch(function(err) {
+        callback.error(err);
+      })
+  },
+
+  saveGlobalSettings: function(settings, callback) {
+    UsersApi
+      .post(useradmApiUrl+"/settings", settings)
+      .then(function(res) {
+        AppDispatcher.handleViewAction({
+          actionType: AppConstants.SET_GLOBAL_SETTINGS,
+          settings: settings
+        });
+        callback.success();
+      })
+      .catch(function(err) {
+        callback.error(err);
+      })
+  },
+
 
 
   // Onboarding
@@ -348,10 +379,11 @@ var AppActions = {
   /* Device Admission */
   getDevicesByStatus: function (callback, status, page, per_page) {
    
+    var dev_status = status ? "status="+status : ""; 
     var page = page || default_page;
     var per_page = per_page || default_adm_per_page;
     DevicesApi
-      .get(devicesApiUrl+"/devices?status="+ status +"&per_page="+per_page+"&page="+page)
+      .get(devicesApiUrl+"/devices?"+dev_status+"&per_page="+per_page+"&page="+page)
       .then(function(res) {
         callback.success(res.body, parse(res.headers['link']));
       })

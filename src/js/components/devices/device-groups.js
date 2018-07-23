@@ -219,7 +219,20 @@ var DeviceGroups = createReactClass({
       var groupCallback =  {
         success: function(devices) {
         	if (devices.length && devices[0].attributes && self.state.isHosted) { AppActions.setFilterAttributes(devices[0].attributes) }
-          self.setState({devices: devices, loading: false, pageLoading: false});
+        	// for each device, get device identity info
+          	for (var i=0; i<devices.length; i++) {
+          		var count = 0;
+          		// have to call each time - accepted list can change order 
+          		self._getDeviceDetails(devices[i].id, i, function(id_data, index) {
+          			console.log("id_data", id_data);
+          			count++;
+        				devices[index].id_attributes = id_data;
+     						if (count === devices.length) {
+     							// only set state after all devices id data retrieved
+          				self.setState({devices: devices, loading: false, pageLoading: false});
+     						}
+          		});
+          	}
         },
         error: function(error) {
           console.log(error);
@@ -237,6 +250,7 @@ var DeviceGroups = createReactClass({
           	for (var i=0; i<devices.length; i++) {
           		var gotAttrs = false;
           		var count = 0;
+          		devices[i].id_attributes = devices[i].attributes;
           		// have to call inventory each time - accepted list can change order so must refresh inventory too
           		self._getInventoryForDevice(devices[i].device_id, i, function(inventory, index) {
           			count++;
@@ -293,6 +307,7 @@ var DeviceGroups = createReactClass({
 		var callback =  {
         success: function(devices) {
         	var device = devices.length ? [devices[0]] : [];
+        	device[0].id_attributes = JSON.parse(device[0].device_identity)
           self.setState({devices: device, loading: false, pageLoading: false, groupCount:devices.length}, function() {
           	if (devices.length) {
 	          	self._getInventoryForDevice(id, 0, function(inventory, index) {
@@ -317,6 +332,22 @@ var DeviceGroups = createReactClass({
      // do this via admn not inventory
 		AppActions.getAuthSets(callback, id);
 	},
+
+	  /*
+  * Get full device identity details for single selected device
+  */
+  _getDeviceDetails: function(device_id, index,  originCallback) {
+    var self = this;
+    var callback = {
+      success: function(data) {
+        originCallback(JSON.parse(data.id_data), index);
+      },
+      error: function(err) {
+        console.log("Error: " + err);
+      }
+    };
+    AppActions.getDeviceIdentity(device_id, callback);
+  },
 
 	_getInventoryForDevice: function(device_id, index, originCallback) {
 	    // get inventory for single device
@@ -533,7 +564,7 @@ var DeviceGroups = createReactClass({
 	        	<div className="rightFluid" style={{paddingTop:"0"}}>
 
 	        		{!this.state.selectedGroup ?
-								<Filters attributes={this.state.attributes} filters={this.state.filters} onFilterChange={this._onFilterChange} isHosted={this.state.isHosted} /> : null
+								<Filters globalSettings={this.props.globalSettings} attributes={this.state.attributes} filters={this.state.filters} onFilterChange={this._onFilterChange} isHosted={this.state.isHosted} /> : null
 							}
 
 		          <FlatButton onClick={this._toggleDialog.bind(null, "removeGroup")} style={styles.exampleFlatButton} className={this.state.selectedGroup ? null : 'hidden' } label="Remove group" labelPosition="after">
@@ -555,7 +586,9 @@ var DeviceGroups = createReactClass({
 		          		group={this.state.selectedGroup} 
 		          		devices={this.state.devices}
 		          		paused={this.props.paused}
-		          		showHelptips={this.props.showHelptips} />
+		          		showHelptips={this.props.showHelptips}
+		          		globalSettings={this.props.globalSettings}
+		          		openSettingsDialog={this.props.openSettingsDialog} />
 		          	
 		          	{this.state.devices.length && !this.state.loading ?
 		          	<div className="margin-top">

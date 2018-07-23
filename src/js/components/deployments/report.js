@@ -136,6 +136,21 @@ var DeploymentReport = createReactClass({
         console.log("error ", err);
       }
     });
+
+    AppActions.getDeviceIdentity(id, {
+      success: function(data) {
+        var deviceIdentity = self.state.deviceIdentity || {};
+        var identity = JSON.parse(data.id_data);
+        if (!self.state.stopRestCalls) {
+          self.setState({
+            deviceIdentity: update(deviceIdentity, {[id]: {$set: identity}})
+          })
+        }
+      },
+      error: function(err) {
+        console.log("Error: " + err);
+      }
+    });
   },
   _filterPending: function(device) {
     return device.status !== "pending";
@@ -321,7 +336,7 @@ var DeploymentReport = createReactClass({
 
 
         <div style={{minHeight:"20vh"}}>
-          <DeviceList created={this.props.deployment.created} status={this.props.deployment.status} devices={deviceList} deviceInventory={this.state.deviceInventory} viewLog={this.viewLog} finished={this.updatedList} past={this.props.past} />
+          <DeviceList globalSettings={this.props.globalSettings} created={this.props.deployment.created} status={this.props.deployment.status} devices={deviceList} deviceIdentity={this.state.deviceIdentity} deviceInventory={this.state.deviceInventory} viewLog={this.viewLog} finished={this.updatedList} past={this.props.past} />
           {allDevices.length ? <Pagination locale={_en_US} simple pageSize={this.state.perPage} current={this.state.currentPage || 1} total={allDevices.length} onChange={this._handlePageChange} /> : null }
         </div>
 

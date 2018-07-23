@@ -26,6 +26,7 @@ var _showHelptips = null;
 var _groups = [];
 var _uploadInProgress = false;
 var _MenderVersion = null;
+var _globalSettings = {};
 
 
 /* Temp local devices */
@@ -418,6 +419,10 @@ function setDeploymentArtifact(artifact) {
 }
 
 
+function setGlobalSettings(settings) {
+  _globalSettings = settings;
+}
+
 
 function _setSnackbar(message, duration) {
   var show = message ? true : false; 
@@ -665,6 +670,10 @@ var AppStore = assign(EventEmitter.prototype, {
     return _uploadInProgress;
   },
 
+  getGlobalSettings: function() {
+    return _globalSettings;
+  },
+
   dispatcherIndex: AppDispatcher.register(function(payload) {
     var action = payload.action;
     switch(action.actionType) {
@@ -777,6 +786,10 @@ var AppStore = assign(EventEmitter.prototype, {
 
       case AppConstants.SET_DEPLOYMENT_ARTIFACT:
         setDeploymentArtifact(payload.action.artifact);
+        break;
+
+      case AppConstants.SET_GLOBAL_SETTINGS:
+        setGlobalSettings(payload.action.settings);
         break;
 
     }

@@ -21,9 +21,19 @@ var Form = createReactClass({
   componentDidUpdate: function(prevProps, prevState) {
     this.registerInputs();
   },
+  componentWillUpdate(nextProps, nextState){
+    this.newChildren = React.Children.map(nextProps.children, function(child) {
+       // Use nextprops for registering components cwu
+      var validations = child.props.validations || "";
+      if (child.props.required && (validations.indexOf('isLength')==-1)) {
+        validations = validations ? validations +", " : validations;
+        validations += 'isLength:1';
+      }
+      return React.cloneElement(child, {validations: validations, attachToForm:this.attachToForm, detachFromForm:this.detachFromForm, updateModel:this.updateModel, validate:this.validate, hideHelp:this.props.hideHelp, handleKeyPress:this._handleKeyPress})
+    }.bind(this));
+  },
   registerInputs: function() {
     this.newChildren = React.Children.map(this.props.children, function(child) {
-
        // If we use the required prop we add a validation rule
       // that ensures there is a value. The input
       // should not be valid with empty value
@@ -34,7 +44,6 @@ var Form = createReactClass({
       }
       return React.cloneElement(child, {validations: validations, attachToForm:this.attachToForm, detachFromForm:this.detachFromForm, updateModel:this.updateModel, validate:this.validate, hideHelp:this.props.hideHelp, handleKeyPress:this._handleKeyPress})
     }.bind(this));
-  
   },
 
   validate: function (component, value) {
@@ -178,8 +187,8 @@ var Form = createReactClass({
   },
   render: function () {
 
-    var uploadActions = (
-      <div className={this.props.showButtons ? "float-right" : "hidden"} style={this.props.dialog ? {margin:"24px -16px -16px 0"} : {marginTop: "32px"}}>
+    var uploadActions = this.props.showButtons ? (
+      <div className="float-right" style={this.props.dialog ? {margin:"24px -16px -16px 0"} : {marginTop: "32px"}}>
         <div className={this.props.handleCancel ? null : "hidden"} key="cancelcontain" style={{marginRight:"10px", display:"inline-block"}}>
           <FlatButton
             key="cancel"
@@ -194,11 +203,12 @@ var Form = createReactClass({
           onClick={this.updateModel}
           disabled={!this.state.isValid} />
       </div>
-    );
+    ) : null;
 
     return (
       <form key={this.props.uniqueId} className={this.props.className || ""}>
         {this.newChildren}
+
         {uploadActions}
       </form>
     )

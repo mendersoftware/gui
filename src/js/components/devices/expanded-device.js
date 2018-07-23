@@ -161,7 +161,7 @@ var ExpandedDevice = createReactClass({
 
     var deviceIdentity = [];
     deviceIdentity.push(
-        <ListItem key="id_checksum" style={this.props.styles.listStyle} disabled={true} primaryText="ID" secondaryText={(this.props.device || {}).device_id || ''} secondaryTextLines={2} />
+        <ListItem key="id_checksum" style={this.props.styles.listStyle} disabled={true} primaryText="Device ID" secondaryText={(this.props.device || {}).device_id || ''} secondaryTextLines={2} />
     );
 
     if ((this.props.device || {}).id_data) {

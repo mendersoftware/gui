@@ -45,11 +45,23 @@ var ProgressDeviceList = createReactClass({
             <Time value={this._formatTime(device.finished)} format="YYYY-MM-DD HH:mm" />
           )
         }
-
         var encodedDevice = "id="+device.id;
+        var id_attribute = device.id;
+
+        if ((self.props.globalSettings || {}).id_attribute && (self.props.globalSettings || {}).id_attribute !== "Device ID") {
+          // if global setting is not "Device Id"
+          if ((self.props.deviceIdentity||{})[device.id]) {
+            // if device identity data is available, set custom attribute
+            id_attribute =  self.props.deviceIdentity[device.id][self.props.globalSettings.id_attribute];
+          } else {
+            id_attribute = "-";
+          }
+        }
+
+
         var deviceLink = (
         <div>
-          <Link style={{fontWeight:"500"}} to={`/devices/${encodedDevice}`}>{device.id}</Link>
+          <Link style={{fontWeight:"500"}} to={`/devices/${encodedDevice}`}>{ id_attribute }</Link>
         </div>
         );
 
@@ -132,7 +144,7 @@ var ProgressDeviceList = createReactClass({
           displaySelectAll={false}
           adjustForCheckbox={false}>
           <TableRow>
-            <TableHeaderColumn tooltip="Device id">Device ID</TableHeaderColumn>
+            <TableHeaderColumn tooltip={(this.props.globalSettings || {}).id_attribute || "Device ID"}>{(this.props.globalSettings || {}).id_attribute || "Device ID"}</TableHeaderColumn>
             <TableHeaderColumn tooltip="Device type">Device type</TableHeaderColumn>
             <TableHeaderColumn tooltip="Current software">Current software</TableHeaderColumn>
             <TableHeaderColumn tooltip="Started">Started</TableHeaderColumn>

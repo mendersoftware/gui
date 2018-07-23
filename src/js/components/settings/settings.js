@@ -5,6 +5,7 @@ import cookie from 'react-cookie';
 import SelfUserManagement from '../user-management/selfusermanagement';
 import UserManagement from '../user-management/usermanagement';
 import MyOrganization from './organization';
+import Global from './global';
 var createReactClass = require('create-react-class');
 var AppStore = require('../../stores/app-store');
 var AppActions = require('../../actions/app-actions');
@@ -16,9 +17,11 @@ import Subheader from 'material-ui/Subheader';
 import { Tabs, Tab } from 'material-ui/Tabs';
 
 var listItems = [
+  {route: "/settings/global-settings", text: "Global settings", admin: true},
   {route: "/settings/my-account", text: "My account", admin: false},
   {route: "/settings/my-organization", text: "My organization", admin: true},
-  {route: "/settings/user-management", text: "User management", admin: true}
+  {route: "/settings/user-management", text: "User management", admin: true},
+
 ];
 
 var Settings =  createReactClass({
@@ -58,7 +61,8 @@ var Settings =  createReactClass({
     return this.context.router.isActive({ pathname: '/settings/my-account' }, true) ? '/settings/my-account' :
       this.context.router.isActive('/settings/user-management') ? '/settings/user-management' :
       this.context.router.isActive('/settings/my-organization') ? '/settings/my-organization' :
-      this.context.router.isActive('/settings') ? '/settings' : '/settings/my-account';
+      this.context.router.isActive('/settings/global-settings') ? '/settings/global-settings' :
+      this.context.router.isActive('/settings') ? '/settings/global-settings' : '/settings/global-settings';
   },
   _handleTabActive: function(tab) {
     this.context.router.push(tab.props.value);
@@ -114,6 +118,17 @@ var Settings =  createReactClass({
             onChange={this.changeTab}
             tabItemContainerStyle={{display: "none"}}
             inkBarStyle={{display: "none"}}>
+
+            <Tab
+              label="Global settings"
+              value="/settings/global-settings"
+              onActive={tabHandler}
+              style={{display:"block", width:"100%"}}>
+              <div>
+                <Global />
+              </div>
+            </Tab>
+
             <Tab
               label="My account"
               value="/settings/my-account"
@@ -132,9 +147,10 @@ var Settings =  createReactClass({
               onActive={tabHandler}
               style={{display:"block", width:"100%"}}>
               <div>
-                <UserManagement />
+                <UserManagement currentTab={this.state.tabIndex} />
               </div>
             </Tab>
+
           </Tabs>
         </div>
 

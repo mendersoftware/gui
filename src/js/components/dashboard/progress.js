@@ -38,7 +38,7 @@ var Progress = createReactClass({
     var deployments = this.props.deployments || [];
     var progress = deployments.map(function(deployment, index) {
       var progressChart = (
-        <ProgressChart deployment={deployment} index={index} />
+        <ProgressChart globalSettings={this.props.globalSettings} deployment={deployment} index={index} />
       );
 
       var deploymentInfo = (

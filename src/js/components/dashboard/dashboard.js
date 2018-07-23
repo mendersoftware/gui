@@ -174,7 +174,7 @@ var Dashboard = createReactClass({
           </div>
         </div>
       
-        <Deployments loadingActive={!this.state.doneActiveDepsLoading} loadingRecent={!this.state.donePastDepsLoading} clickHandle={this._handleClick} progress={this.state.progress} recent={this.state.recent} />
+        <Deployments globalSettings={this.props.globalSettings} loadingActive={!this.state.doneActiveDepsLoading} loadingRecent={!this.state.donePastDepsLoading} clickHandle={this._handleClick} progress={this.state.progress} recent={this.state.recent} />
         
         <Snackbar
           open={this.state.snackbar.open}
