@@ -42,6 +42,7 @@ function getState() {
     hasDevices: AppStore.getTotalAcceptedDevices(),
     user: AppStore.getCurrentUser(),
     pageLength: AppStore.getTotalDevices(),
+    isHosted: (window.location.hostname === "hosted.mender.io"),
   }
 }
 
@@ -54,6 +55,9 @@ var Deployments = createReactClass({
   },
   componentDidMount: function() {
     var self = this;
+
+    this.setState({version: this.props.version ? this.props.version + "/" : "development/"});
+
     clearAllRetryTimers();
     var artifact = AppStore.getDeploymentArtifact();
     this.setState({artifact: artifact});
@@ -509,6 +513,13 @@ var Deployments = createReactClass({
         <Report globalSettings={this.props.globalSettings} updated={this.updated} past={true} deployment={this.state.selectedDeployment} retryDeployment={this._scheduleDeployment} />
       )
     }
+
+    var physicalLink = this.state.isHosted ?
+      <p>Visit the <Link to={`/help`}>help pages</Link> for guides on provisioning Raspberry Pi 3 and BeagleBone Black devices.</p>
+      :
+      <p><a href={"https://docs.mender.io/"+this.state.version+"getting-started/deploy-to-physical-devices"} target="_blank">Follow the tutorial</a> in our documentation to provision Raspberry Pi 3 or BeagleBone Black devices.</p>
+    ;
+
     return (
       <div className="allow-overflow">
         <div className="top-right-button">
@@ -554,7 +565,7 @@ var Deployments = createReactClass({
             <ListItem
               key="physical"
               primaryText={<p>Try updating a physical device</p>}
-              secondaryText={<p>Visit the <Link to={`/help`}>help pages</Link> for guides on provisioning Raspberry Pi 3 and BeagleBone Black devices.</p>}
+              secondaryText={physicalLink}
               secondaryTextLines={2}
               disabled={true}
               />
@@ -564,7 +575,7 @@ var Deployments = createReactClass({
             <ListItem
               key="yocto"
               primaryText={<p>Try building your own Yocto Project images for use with Mender</p>}
-              secondaryText={<p>See our <a href={"https://docs.mender.io/"+this.props.docsVersion+"/artifacts/building-mender-yocto-image"} target="_blank">documentation site</a> for a step by step guide on how to build a Yocto Project image for a device.</p>}
+              secondaryText={<p>See our <a href={"https://docs.mender.io/"+this.state.version+"artifacts/building-mender-yocto-image"} target="_blank">documentation site</a> for a step by step guide on how to build a Yocto Project image for a device.</p>}
               secondaryTextLines={2}
               disabled={true}
               />
