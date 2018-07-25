@@ -105,9 +105,7 @@ var ProgressDeviceList = createReactClass({
         })(status, device.substate || "");
 
         var devicePercentage = (function(percentage) {
-          if (device.percentage && device.percentage > 0) {
-            return `${device.percentage}%`
-          }
+          return `${device.percentage}%`
         })(device.percentage)
 
         return (
@@ -122,11 +120,13 @@ var ProgressDeviceList = createReactClass({
                 {statusText}
               </div>
               <div>
-                <div style={{textAlign: "end", color: "#aaaaaa"}}>
-                {devicePercentage}
-                </div>
-                {device.percentage > 0 &&
+               {status.toLowerCase() !== "pending" &&
+               <div>
+                  <div style={{textAlign: "end", color: "#aaaaaa"}}>
+                  {devicePercentage}
+                  </div>
                   <LinearProgress color={status && status.toLowerCase() == "failure" ? "#8f0d0d":"#009E73"} mode="determinate" value={device.percentage} />
+                </div>
                 }
               </div>
             </TableRowColumn>

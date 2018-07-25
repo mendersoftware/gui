@@ -137,10 +137,15 @@ var ProgressChart = createReactClass({
           </p>
           <p><b>Status:</b> {this.state.device.status}</p>
           <div className={"substateText"}>{this.state.device.substate}</div>
-          <div className={"substateText"} style={{textAlign: "end"}}>
-            {percentage}%
-          </div>
-          <LinearProgress color={this.state.device.status && this.state.device.status.toLowerCase() == "failure" ? "#8f0d0d":"#009E73"} mode="determinate" value={percentage} />
+          
+          {this.state.device.status.toLowerCase() !== "pending" && 
+            <div>
+              <div className={"substateText"} style={{textAlign: "end"}}>
+                {percentage}%
+              </div>
+              <LinearProgress color={this.state.device.status && this.state.device.status.toLowerCase() == "failure" ? "#8f0d0d":"#009E73"} mode="determinate" value={percentage} />
+            </div>
+          }
         </div>
         <div className="key">
           <div className="bubble failure" /> Failed <div className="bubble pending" /> Pending <div className="bubble inprogress" /> In progress <div className="bubble success" /> Successful
