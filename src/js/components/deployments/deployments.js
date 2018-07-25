@@ -56,7 +56,7 @@ var Deployments = createReactClass({
   componentDidMount: function() {
     var self = this;
 
-    this.setState({version: this.props.version ? this.props.version + "/" : "development/"});
+    this.setState({docsVersion: this.props.docsVersion  ? this.props.docsVersion + "/" : "development/"});
 
     clearAllRetryTimers();
     var artifact = AppStore.getDeploymentArtifact();
@@ -517,7 +517,7 @@ var Deployments = createReactClass({
     var physicalLink = this.state.isHosted ?
       <p>Visit the <Link to={`/help`}>help pages</Link> for guides on provisioning Raspberry Pi 3 and BeagleBone Black devices.</p>
       :
-      <p><a href={"https://docs.mender.io/"+this.state.version+"getting-started/deploy-to-physical-devices"} target="_blank">Follow the tutorial</a> in our documentation to provision Raspberry Pi 3 or BeagleBone Black devices.</p>
+      <p><a href={"https://docs.mender.io/"+this.state.docsVersion+"getting-started/deploy-to-physical-devices"} target="_blank">Follow the tutorial</a> in our documentation to provision Raspberry Pi 3 or BeagleBone Black devices.</p>
     ;
 
     return (
@@ -575,7 +575,7 @@ var Deployments = createReactClass({
             <ListItem
               key="yocto"
               primaryText={<p>Try building your own Yocto Project images for use with Mender</p>}
-              secondaryText={<p>See our <a href={"https://docs.mender.io/"+this.state.version+"artifacts/building-mender-yocto-image"} target="_blank">documentation site</a> for a step by step guide on how to build a Yocto Project image for a device.</p>}
+              secondaryText={<p>See our <a href={"https://docs.mender.io/"+this.state.docsVersion+"artifacts/building-mender-yocto-image"} target="_blank">documentation site</a> for a step by step guide on how to build a Yocto Project image for a device.</p>}
               secondaryTextLines={2}
               disabled={true}
               />
