@@ -14,7 +14,8 @@ var listItems = [
 var LeftNav = createReactClass({
 	getInitialState() {
 		return {
-			currentTab: this.props.currentTab
+			currentTab: this.props.currentTab,
+      isHosted: (window.location.hostname === "hosted.mender.io"),
 		};
 	},
 
@@ -25,7 +26,10 @@ var LeftNav = createReactClass({
 	render: function() {
 		var self = this;
 
-    var docsVersion = this.props.docsVersion ? this.props.docsVersion + "/" : "";
+    var docsVersion = "";
+    if (!this.state.isHosted) {
+      docsVersion = this.props.docsVersion ? this.props.docsVersion + "/" : "development/";
+    }
 	
     var list = listItems.map(function(item, index) {
     	var borderTop = index===0 ? "none !important" : "1px solid #eaf4f3"; 
