@@ -120,12 +120,12 @@ var ProgressDeviceList = createReactClass({
                 {statusText}
               </div>
               <div>
-               {status.toLowerCase() !== "pending" &&
+               { !["pending", "decommissioned"].includes(status.toLowerCase()) &&
                <div>
                   <div style={{textAlign: "end", color: "#aaaaaa"}}>
-                  {devicePercentage}
+                  { !["aborted", "failure", "noartifact"].includes(status.toLowerCase()) ? devicePercentage : "0%"}
                   </div>
-                  <LinearProgress color={status && status.toLowerCase() == "failure" ? "#8f0d0d":"#009E73"} mode="determinate" value={device.percentage} />
+                  <LinearProgress color={status && (status.toLowerCase() === "failure" || status.toLowerCase() === "aborted") ? "#8f0d0d":"#009E73"} mode="determinate" value={device.percentage} />
                 </div>
                 }
               </div>

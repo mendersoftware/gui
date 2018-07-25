@@ -138,7 +138,7 @@ var ProgressChart = createReactClass({
           <p><b>Status:</b> {this.state.device.status}</p>
           <div className={"substateText"}>{this.state.device.substate}</div>
           
-          {this.state.device.status.toLowerCase() !== "pending" && 
+          { !["pending", "decommissioned", "aborted"].includes(this.state.device.status.toLowerCase()) && 
             <div>
               <div className={"substateText"} style={{textAlign: "end"}}>
                 {percentage}%
