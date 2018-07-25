@@ -78,7 +78,12 @@ var Login = createReactClass({
           }
         },
         error: function(err) {
-          AppActions.setSnackbar(preformatWithRequestID(err.res, "Wrong username or password. Please try again!"));
+          var errMsg = "There was a problem logging in";
+          if (err.res.body && Object.keys(err.res.body).includes("error")) {
+            // if error message, check for "unauthorized" 
+            errMsg = err.res.body["error"] === "unauthorized" ? "The username or password is incorrect" : errMsg + ": " + err.res.body["error"];
+          }
+          AppActions.setSnackbar(preformatWithRequestID(err.res, errMsg), 10000);
         }
       }, formData);
     }
