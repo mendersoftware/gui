@@ -3,7 +3,8 @@ import { setRetryTimer, clearRetryTimer, clearAllRetryTimers } from '../../utils
 var createReactClass = require('create-react-class');
 var AppStore = require('../../stores/app-store');
 var AppActions = require('../../actions/app-actions');
-import { Router, Link } from 'react-router';
+
+import { Router, Route, Link } from 'react-router';
 import PropTypes from 'prop-types';
 import cookie from 'react-cookie';
 
@@ -25,30 +26,29 @@ import Divider from 'material-ui/Divider';
 
 import { preformatWithRequestID } from '../../helpers';
 
-function getState() {
-  return {
-    past: AppStore.getPastDeployments(),
-    pending: AppStore.getPendingDeployments(),
-    progress: AppStore.getDeploymentsInProgress() || [],
-    events: AppStore.getEventLog(),
-    collatedArtifacts: AppStore.getCollatedArtifacts(),
-    groups: AppStore.getGroups(),
-    invalid: true,
-    snackbar: AppStore.getSnackbar(),
-    refreshDeploymentsLength: 30000,
-    hasDeployments: AppStore.getHasDeployments(),
-    showHelptips: AppStore.showHelptips(),
-    hasPending: AppStore.getTotalPendingDevices(),
-    hasDevices: AppStore.getTotalAcceptedDevices(),
-    user: AppStore.getCurrentUser(),
-    pageLength: AppStore.getTotalDevices(),
-    isHosted: (window.location.hostname === "hosted.mender.io"),
-  }
-}
+import { Tabs, Tab } from 'material-ui/Tabs';
 
 var Deployments = createReactClass({
   getInitialState: function() {
-    return getState()
+    return {
+      tabIndex: this._updateActive(),
+      past: AppStore.getPastDeployments(),
+      pending: AppStore.getPendingDeployments(),
+      progress: AppStore.getDeploymentsInProgress() || [],
+      events: AppStore.getEventLog(),
+      collatedArtifacts: AppStore.getCollatedArtifacts(),
+      groups: AppStore.getGroups(),
+      invalid: true,
+      snackbar: AppStore.getSnackbar(),
+      refreshDeploymentsLength: 30000,
+      hasDeployments: AppStore.getHasDeployments(),
+      showHelptips: AppStore.showHelptips(),
+      hasPending: AppStore.getTotalPendingDevices(),
+      hasDevices: AppStore.getTotalAcceptedDevices(),
+      user: AppStore.getCurrentUser(),
+      pageLength: AppStore.getTotalDevices(),
+      isHosted: (window.location.hostname === "hosted.mender.io"),
+    }
   },
   componentWillMount: function() {
     AppStore.changeListener(this._onChange);
@@ -123,7 +123,7 @@ var Deployments = createReactClass({
         }
       }
     } else {
-      this.setState({reportType:"progress"});
+      this.setState({reportType:"active"});
     }
   },
 
@@ -141,9 +141,13 @@ var Deployments = createReactClass({
   },
 
   _refreshDeployments: function() {
-    this._refreshInProgress();
-    this._refreshPending();
-    this._refreshPast();
+    if (this._getCurrentLabel() === "Finished") {
+
+      this._refreshPast();
+    } else {
+      this._refreshInProgress();
+      this._refreshPending();
+    }
 
     if (this.state.showHelptips && !cookie.load(this.state.user.id+'-onboarded') && cookie.load(this.state.user.id+'-deploymentID')) {
       this._isOnBoardFinished(cookie.load(this.state.user.id+'-deploymentID'));
@@ -261,13 +265,8 @@ var Deployments = createReactClass({
         AppActions.getPastDeployments(callback, page, per_page);
       }
     });
-
-
-   
-
-  
-    
   },
+
   _dismissSnackBar: function() {
     setTimeout(function() {
      AppActions.setSnackbar("");
@@ -297,7 +296,7 @@ var Deployments = createReactClass({
     AppStore.removeChangeListener(this._onChange);
   },
   _onChange: function() {
-    this.setState(getState());
+    this.setState(this.getInitialState());
   },
 
   dialogDismiss: function(ref) {
@@ -341,6 +340,7 @@ var Deployments = createReactClass({
       success: function(data) {
         var lastslashindex = data.lastIndexOf('/');
         var id = data.substring(lastslashindex  + 1);
+        clearInterval(self.timer);
 
         // onboarding
         if (self.state.showHelptips && !cookie.load(self.state.user.id+'-onboarded') && !cookie.load(self.state.user.id+'-deploymentID')) {
@@ -350,8 +350,14 @@ var Deployments = createReactClass({
         AppActions.getSingleDeployment(id, function(data) {
           if (data) {
             // successfully retrieved new deployment
-            AppActions.setSnackbar("Deployment created successfully");
-            self._refreshDeployments();
+            if (self.state.currentTab !== "Active") {
+              self.context.router.push("/deployments/active");
+              self._changeTab("/deployments/active");
+              
+            } else {
+              self._refreshDeployments();
+            }
+            AppActions.setSnackbar("Deployment created successfully", 8000);
           } else {
             AppActions.setSnackbar("Error while creating deployment");
             self.setState({doneLoading:true});
@@ -394,9 +400,9 @@ var Deployments = createReactClass({
         }, 400);
     }.bind(this));
   },
-  _showReport: function (deployment, progress) {
-    var title = progress==="progress" ? "Deployment progress" : "Results of deployment";
-    var reportType = progress;
+  _showReport: function (deployment, type) {
+    var title = type==="active" ? "Deployment progress" : "Results of deployment";
+    var reportType = type;
     this.setState({scheduleForm: false, selectedDeployment: deployment, dialogTitle: title, reportType: reportType});
     this.dialogOpen("report");
   },
@@ -433,7 +439,7 @@ var Deployments = createReactClass({
   },
   _showProgress: function(rowNumber) {
     var deployment = this.state.progress[rowNumber];
-    this._showReport(deployment, "progress");
+    this._showReport(deployment, "active");
   },
   _abortDeployment: function(id) {
     var self = this;
@@ -458,6 +464,7 @@ var Deployments = createReactClass({
     // use to make sure re-renders dialog at correct height when device list built
     this.setState({updated:true});
   },
+
   _finishOnboard: function() {
     this.setState({onboardDialog: false});
    
@@ -472,6 +479,40 @@ var Deployments = createReactClass({
       }
     });
   },
+
+  // nested tabs
+  componentWillReceiveProps: function(nextProps) {
+    this.setState({tabIndex: this._updateActive(), currentTab: this._getCurrentLabel()});
+  },
+
+  _updateActive: function() {
+    var self = this;
+    return this.context.router.isActive({ pathname: '/deployments' }, true) ? '/deployments/active' :
+      this.context.router.isActive('/deployments/finished') ? '/deployments/finished' : '/deployments/active';
+  },
+
+  _getCurrentLabel: function() {
+    var self = this;
+    return this.context.router.isActive({ pathname: '/deployments' }, true) ? 'Active' :
+      this.context.router.isActive('/deployments/active') ? 'Active' :
+      this.context.router.isActive('/deployments/finished') ? 'Finished' : 'Active';
+  },
+
+  _handleTabActive: function(tab) {
+    AppActions.setSnackbar("");
+    this.setState({currentTab: tab.props.label});
+    this.context.router.push(tab.props.value);
+  },
+
+  _changeTab: function(value) {
+    var self = this;
+    clearInterval(self.timer);
+    self.timer = setInterval(self._refreshDeployments, self.state.refreshDeploymentsLength);
+    self.setState({tabIndex: value, currentTab: self._getCurrentLabel(), pend_page:1, past_page:1, prog_page:1}, function() {
+      self._refreshDeployments();
+    });
+  },
+
   render: function() {
     var disabled = (typeof this.state.filteredDevices !== 'undefined' && this.state.filteredDevices.length > 0) ? false : true;
     var scheduleActions =  [
@@ -504,7 +545,7 @@ var Deployments = createReactClass({
       dialogContent = (
         <ScheduleForm hasDeployments={this.state.hasDeployments} showHelptips={this.state.showHelptips} deploymentDevices={this.state.deploymentDevices} filteredDevices={this.state.filteredDevices} hasPending={this.state.hasPending} hasDevices={this.state.hasDevices} deploymentSettings={this._deploymentParams} id={this.state.id} artifacts={this.state.collatedArtifacts} artifact={this.state.artifact} groups={this.state.groups} group={this.state.group} />
       )
-    } else if (this.state.reportType === "progress") {
+    } else if (this.state.reportType === "active") {
       dialogContent = (
         <Report globalSettings={this.props.globalSettings} abort={this._abortDeployment} updated={this.updated} deployment={this.state.selectedDeployment} />
       )
@@ -520,83 +561,141 @@ var Deployments = createReactClass({
       <p><a href={"https://docs.mender.io/"+this.state.docsVersion+"getting-started/deploy-to-physical-devices"} target="_blank">Follow the tutorial</a> in our documentation to provision Raspberry Pi 3 or BeagleBone Black devices.</p>
     ;
 
+    // tabs
+    var tabHandler = this._handleTabActive;
+    var styles = {
+      tabStyle : {
+        display:"block",
+        width:"100%",
+        color: "#949495",
+        textTransform: "none"
+      },
+      activeTabStyle : {
+        display:"block",
+        width:"100%",
+        color: "#404041",
+        textTransform: "none"
+      },
+      listStyle: {
+        fontSize: "12px",
+        paddingTop: "10px",
+        paddingBottom: "10px",
+        whiteSpace: "normal",
+      },
+      listButtonStyle: {
+        fontSize: "12px",
+        marginTop: "-10px",
+        paddingRight: "12px",
+        marginLeft: "0px",
+      },
+    };
+
     return (
-      <div className="allow-overflow">
+
+      <div style={{marginTop:"-15px"}}>
         <div className="top-right-button">
           <ScheduleButton secondary={true} openDialog={this.dialogOpen} />
         </div>
 
-        <div style={{paddingTop:"3px"}}>
-          <Pending count={this.state.pendingCount || this.state.pending.length}  refreshPending={this._refreshPending}  pending={this.state.pending} abort={this._abortDeployment} />
+        <Tabs
+          value={this.state.tabIndex}
+          onChange={this._changeTab}
+          tabItemContainerStyle={{background: "none", width:"280px"}}
+          inkBarStyle={{backgroundColor: "#347a87"}}>
+        
+          <Tab
+            label="Active"
+            value="/deployments/active"
+            onActive={tabHandler}
+            style={this.state.tabIndex === "/deployments/active" ? styles.activeTabStyle : styles.tabStyle}>
+            
+            <div className="margin-top">
+              <Pending page={this.state.pend_page} count={this.state.pendingCount || this.state.pending.length}  refreshPending={this._refreshPending}  pending={this.state.pending} abort={this._abortDeployment} />
 
-          <Progress showHelptips={this.state.showHelptips} hasDeployments={this.state.hasDeployments} devices={this.state.allDevices || []} hasArtifacts={this.state.collatedArtifacts.length} count={this.state.progressCount || this.state.progress.length} refreshProgress={this._refreshInProgress} abort={this._abortDeployment} loading={!this.state.doneLoading} openReport={this._showProgress} progress={this.state.progress} createClick={this.dialogOpen.bind(null, "schedule")}/>
+              <Progress page={this.state.prog_page} isActiveTab={this.state.currentTab==="Active"} showHelptips={this.state.showHelptips} hasDeployments={this.state.hasDeployments} devices={this.state.allDevices || []} hasArtifacts={this.state.collatedArtifacts.length} count={this.state.progressCount || this.state.progress.length} refreshProgress={this._refreshInProgress} abort={this._abortDeployment} loading={!this.state.doneLoading} openReport={this._showProgress} progress={this.state.progress} createClick={this.dialogOpen.bind(null, "schedule")}/>
+            </div>
+          </Tab>
 
-          <Past showHelptips={this.state.showHelptips} count={this.state.pastCount} loading={!this.state.doneLoading} past={this.state.past} refreshPast={this._refreshPast} showReport={this._showReport} />
 
-        </div>
+          <Tab
+            label="Finished"
+            onActive={tabHandler}
+            value="/deployments/finished"
+            style={this.state.tabIndex === "/deployments/finished" ? styles.activeTabStyle : styles.tabStyle}>
+            
+            <div className="margin-top">
+              <Past page={this.state.past_page} isActiveTab={this.state.currentTab==="Finished"} showHelptips={this.state.showHelptips} count={this.state.pastCount} loading={!this.state.doneLoading} past={this.state.past} refreshPast={this._refreshPast} showReport={this._showReport} />
+            </div>
+          </Tab>
 
-        <Dialog
-          ref="dialog"
-          title={this.state.dialogTitle}
-          actions={this.state.scheduleForm ? scheduleActions : reportActions}
-          autoDetectWindowHeight={true}
-          autoScrollBodyContent={true}
-          contentClassName={this.state.contentClass}
-          bodyStyle={{paddingTop:"0", fontSize:"13px"}}
-          open={this.state.dialog || false}
-          contentStyle={{overflow:"hidden", boxShadow:"0 14px 45px rgba(0, 0, 0, 0.25), 0 10px 18px rgba(0, 0, 0, 0.22)"}}
-          actionsContainerStyle={{marginBottom:"0"}}
-          >
-          {dialogContent}
-        </Dialog>
+        </Tabs>
 
-        <Dialog
-          ref="onboard-complete"
-          actions={onboardActions}
-          title="Congratulations!"
-          autoDetectWindowHeight={true}
-          autoScrollBodyContent={true}
-          open={(this.state.onboardDialog && this.state.showHelptips) || false}
-          contentStyle={{overflow:"hidden", boxShadow:"0 14px 45px rgba(0, 0, 0, 0.25), 0 10px 18px rgba(0, 0, 0, 0.22)"}}
-          >
-          <h3>You've completed your first deployment - so what's next?</h3>
+       
 
-          <List>
-            <ListItem
-              key="physical"
-              primaryText={<p>Try updating a physical device</p>}
-              secondaryText={physicalLink}
-              secondaryTextLines={2}
-              disabled={true}
-              />
+          <Dialog
+            ref="dialog"
+            title={this.state.dialogTitle}
+            actions={this.state.scheduleForm ? scheduleActions : reportActions}
+            autoDetectWindowHeight={true}
+            autoScrollBodyContent={true}
+            contentClassName={this.state.contentClass}
+            bodyStyle={{paddingTop:"0", fontSize:"13px"}}
+            open={this.state.dialog || false}
+            contentStyle={{overflow:"hidden", boxShadow:"0 14px 45px rgba(0, 0, 0, 0.25), 0 10px 18px rgba(0, 0, 0, 0.22)"}}
+            actionsContainerStyle={{marginBottom:"0"}}
+            >
+            {dialogContent}
+          </Dialog>
 
-              <Divider />
+          <Dialog
+            ref="onboard-complete"
+            actions={onboardActions}
+            title="Congratulations!"
+            autoDetectWindowHeight={true}
+            autoScrollBodyContent={true}
+            open={(this.state.onboardDialog && this.state.showHelptips) || false}
+            contentStyle={{overflow:"hidden", boxShadow:"0 14px 45px rgba(0, 0, 0, 0.25), 0 10px 18px rgba(0, 0, 0, 0.22)"}}
+            >
+            <h3>You've completed your first deployment - so what's next?</h3>
 
-            <ListItem
-              key="yocto"
-              primaryText={<p>Try building your own Yocto Project images for use with Mender</p>}
-              secondaryText={<p>See our <a href={"https://docs.mender.io/"+this.state.docsVersion+"artifacts/building-mender-yocto-image"} target="_blank">documentation site</a> for a step by step guide on how to build a Yocto Project image for a device.</p>}
-              secondaryTextLines={2}
-              disabled={true}
-              />
-          </List>
+            <List>
+              <ListItem
+                key="physical"
+                primaryText={<p>Try updating a physical device</p>}
+                secondaryText={physicalLink}
+                secondaryTextLines={2}
+                disabled={true}
+                />
 
-        </Dialog>
+                <Divider />
 
-         <Snackbar
-          open={this.state.snackbar.open}
-          message={this.state.snackbar.message}
-          bodyStyle={{maxWidth: this.state.snackbar.maxWidth}}
-          autoHideDuration={5000}
-          onRequestClose={this.handleRequestClose}
-        />
+              <ListItem
+                key="yocto"
+                primaryText={<p>Try building your own Yocto Project images for use with Mender</p>}
+                secondaryText={<p>See our <a href={"https://docs.mender.io/"+this.state.docsVersion+"artifacts/building-mender-yocto-image"} target="_blank">documentation site</a> for a step by step guide on how to build a Yocto Project image for a device.</p>}
+                secondaryTextLines={2}
+                disabled={true}
+                />
+            </List>
+
+          </Dialog>
+
+           <Snackbar
+            open={this.state.snackbar.open}
+            message={this.state.snackbar.message}
+            bodyStyle={{maxWidth: this.state.snackbar.maxWidth}}
+            autoHideDuration={5000}
+            onRequestClose={this.handleRequestClose}
+          />
+      
       </div>
     );
   }
 });
 
-module.exports.contextTypes = {
-  router: PropTypes.object,
+
+Deployments.contextTypes = {
+  router: PropTypes.object
 };
 
 module.exports = Deployments;
