@@ -36,7 +36,6 @@ var Past = createReactClass({
   },
   _handlePageChange: function(pageNo) {
     this.props.refreshPast(pageNo);
-    this.setState({currentPage: pageNo});
   },
   render: function() {
     var pastMap = this.props.past.map(function(deployment, index) {
@@ -50,7 +49,7 @@ var Past = createReactClass({
 
       //  get statistics
       var status = (
-        <DeploymentStatus id={deployment.id} />
+        <DeploymentStatus isActiveTab={this.props.isActiveTab} id={deployment.id} />
       );
 
       return (
@@ -133,7 +132,7 @@ var Past = createReactClass({
 
           {
             this.props.count>this.props.past.length ? 
-            <Pagination locale={_en_US} simple pageSize={this.state.pageSize} current={this.state.currentPage || 1} total={this.props.count} onChange={this._handlePageChange} /> 
+            <Pagination locale={_en_US} simple pageSize={this.state.pageSize} current={this.props.page || 1} total={this.props.count} onChange={this._handlePageChange} /> 
             :
             <div className={this.props.loading || pastMap.length ? 'hidden' : "dashboard-placeholder"}>
               <p>Completed deployments will appear here.</p>

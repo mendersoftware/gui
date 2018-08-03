@@ -23,7 +23,7 @@ var Progress = createReactClass({
   _clickHandle: function(id) {
     var params = {};
     params.id = id;
-    params.tab = "progress";
+    params.tab = "active";
     params.route="deployments";
     params.open=true;
     this.props.clickHandle(params);

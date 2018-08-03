@@ -34,13 +34,12 @@ var Progress = createReactClass({
   },
   _handlePageChange: function(pageNo) {
     this.props.refreshProgress(pageNo);
-    this.setState({currentPage: pageNo});
   },
   render: function() {
     // get statistics for each in progress
     var progressMap = this.props.progress.map(function(deployment, index) {
       var status = (
-        <DeploymentStatus refresh={true} id={deployment.id} />
+        <DeploymentStatus isActiveTab={this.props.isActiveTab} refresh={true} id={deployment.id} />
       );
       return (
         <TableRow style={{height:"52px"}} key={index}>
@@ -89,7 +88,7 @@ var Progress = createReactClass({
 
           {
             this.props.count>this.props.progress.length ? 
-            <Pagination locale={_en_US} simple pageSize={this.state.pageSize} current={this.state.currentPage || 1} total={this.props.count} onChange={this._handlePageChange} /> 
+            <Pagination locale={_en_US} simple pageSize={this.state.pageSize} current={this.props.page || 1} total={this.props.count} onChange={this._handlePageChange} /> 
             :
             
             <div className={(progressMap.length || this.props.loading)  ? 'hidden' : "dashboard-placeholder"}>
