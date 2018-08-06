@@ -6,8 +6,9 @@ var AppActions = require('../../actions/app-actions');
 import Time from 'react-time';
 
 // material ui
-import { withStyles, createStyleSheet } from 'material-ui-next-build/styles';
-import Table, { TableBody, TableCell, TableHead, TableRow, TableSortLabel } from 'material-ui-next-build/Table';
+
+var mui = require('material-ui');
+import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
 import FontIcon from 'material-ui/FontIcon';
 import FlatButton from 'material-ui/FlatButton';
 
@@ -73,19 +74,19 @@ var UserList =  createReactClass({
           key={user.id}
           hover
         >
-          <TableCell>
+          <TableRowColumn>
             {user.email}
-          </TableCell>
-          <TableCell numeric>
+          </TableRowColumn>
+          <TableRowColumn numeric>
             <Time value={user.created_ts} format="YYYY-MM-DD HH:mm" />
-          </TableCell>
-          <TableCell numeric>
+          </TableRowColumn>
+          <TableRowColumn numeric>
             <Time value={user.updated_ts} format="YYYY-MM-DD HH:mm" />
-          </TableCell>
-          <TableCell disablePadding>
+          </TableRowColumn>
+          <TableRowColumn disablePadding>
             <FlatButton label="Edit" onClick={this._handleEdit.bind(this, user)} />
             {this.props.currentUser.id !== user.id ? <FlatButton label="Remove" onClick={this._handleRemove.bind(this, user)} /> : null }
-          </TableCell>
+          </TableRowColumn>
         </TableRow>
       );
     }.bind(this));
@@ -97,25 +98,27 @@ var UserList =  createReactClass({
           <h2 style={{marginTop: "15px"}}>Users</h2>
         </div>
         <div className="margin-bottom">
-          <Table>
-            <TableHead>
+          <Table selectable={false}>
+            <TableHeader
+              displaySelectAll={false}
+              adjustForCheckbox={false}>
               <TableRow>
                 {columnData.map(column => {
                   return (
-                    <TableCell
+                    <TableHeaderColumn
                       key={column.id}
-                      numeric={column.numeric}
                       disablePadding={column.disablePadding}
                     >
-                      <TableSortLabel>
+                      
                         {column.label}
-                      </TableSortLabel>
-                    </TableCell>
+                      
+                    </TableHeaderColumn>
                   );
                 }, this)}
               </TableRow>
-            </TableHead>
-            <TableBody>
+            </TableHeader>
+            <TableBody
+              displayRowCheckbox={false}>
               {users}
             </TableBody>
           </Table>

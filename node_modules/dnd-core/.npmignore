@@ -1,7 +1,0 @@
-test
-.babelrc
-.eslintrc
-.travis.yml
-coverage
-test-results.xml
-yarn.lock

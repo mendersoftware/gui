@@ -1,7 +1,7 @@
 var debugInfo = function(context, ctx, lineSeparator) {
-    var result = "";
+    var result = '';
     if (context.dumpLineNumbers && !context.compress) {
-        switch(context.dumpLineNumbers) {
+        switch (context.dumpLineNumbers) {
             case 'comments':
                 result = debugInfo.asComment(ctx);
                 break;
@@ -9,7 +9,7 @@ var debugInfo = function(context, ctx, lineSeparator) {
                 result = debugInfo.asMediaQuery(ctx);
                 break;
             case 'all':
-                result = debugInfo.asComment(ctx) + (lineSeparator || "") + debugInfo.asMediaQuery(ctx);
+                result = debugInfo.asComment(ctx) + (lineSeparator || '') + debugInfo.asMediaQuery(ctx);
                 break;
         }
     }

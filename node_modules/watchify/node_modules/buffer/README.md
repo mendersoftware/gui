@@ -28,7 +28,7 @@ instance methods, and class methods that are supported.
 - Manipulate binary data like a boss, in all browsers!
 - Super fast. Backed by Typed Arrays (`Uint8Array`/`ArrayBuffer`, not `Object`)
 - Extremely small bundle size (**6.75KB minified + gzipped**, 51.9KB with comments)
-- Excellent browser support (IE 11, Edge, Chrome, Firefox, Safari 5.1+, Opera, iOS, etc.)
+- Excellent browser support (Chrome, Firefox, Edge, Safari 9+, IE 11, iOS 9+, Android, etc.)
 - Preserves Node API exactly, with one minor difference (see below)
 - Square-bracket `buf[4]` notation works!
 - Does not modify any browser prototypes or put anything on `window`
@@ -154,7 +154,7 @@ sanity check (since `BrowserBuffer` uses `Uint8Array` under the hood, `Uint8Arra
 always be at least a bit faster). Finally, `NodeBuffer` is the node.js buffer module,
 which is included to compare against.
 
-NOTE: Performance has improved since these benchmarks were taken. PR welcoem to update the README.
+NOTE: Performance has improved since these benchmarks were taken. PR welcome to update the README.
 
 ### Chrome 38
 
@@ -381,13 +381,13 @@ To test locally in a browser, you can run:
     npm run test-browser-es5-local # For ES5 browsers that don't support ES6
     npm run test-browser-es6-local # For ES6 compliant browsers
 
-This will print out a URL that you can then open in a browser to run the tests, using [Zuul](https://github.com/defunctzombie/zuul).
+This will print out a URL that you can then open in a browser to run the tests, using [airtap](https://www.npmjs.com/package/airtap).
 
 To run automated browser tests using Saucelabs, ensure that your `SAUCE_USERNAME` and `SAUCE_ACCESS_KEY` environment variables are set, then run:
 
     npm test
 
-This is what's run in Travis, to check against various browsers. The list of browsers is kept in the `.zuul.yml` file.
+This is what's run in Travis, to check against various browsers. The list of browsers is kept in the `bin/airtap-es5.yml` and `bin/airtap-es6.yml` files.
 
 ## JavaScript Standard Style
 

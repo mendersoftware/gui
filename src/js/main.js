@@ -1,7 +1,7 @@
 import React from 'react';
 import { Router, Route, hashHistory } from 'react-router';
 import { render } from 'react-dom';
-import { MuiThemeProvider } from 'material-ui-next-build/styles';
+import { MuiThemeProvider } from 'material-ui/styles';
 var routes = require('./config/routes');
 
 

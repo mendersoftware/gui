@@ -224,7 +224,6 @@ var DeviceGroups = createReactClass({
           		var count = 0;
           		// have to call each time - accepted list can change order 
           		self._getDeviceDetails(devices[i].id, i, function(id_data, index) {
-          			console.log("id_data", id_data);
           			count++;
         				devices[index].id_attributes = id_data;
      						if (count === devices.length) {
@@ -626,6 +625,7 @@ var DeviceGroups = createReactClass({
 			        open={this.state.createGroupDialog}
 			        groups={this.state.groups}
 			        changeGroup={this._handleGroupChange}
+			        globalSettings={this.props.globalSettings}
 			        addListOfDevices={this._createGroupFromDialog}
 		         />
 
