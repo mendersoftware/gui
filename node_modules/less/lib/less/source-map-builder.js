@@ -26,6 +26,9 @@ module.exports = function (SourceMapOutput, environment) {
         if (this.options.sourceMapInputFilename) {
             this.sourceMapInputFilename = sourceMapOutput.normalizeFilename(this.options.sourceMapInputFilename);
         }
+        if (this.options.sourceMapBasepath !== undefined && this.sourceMapURL !== undefined) {
+            this.sourceMapURL = sourceMapOutput.removeBasepath(this.sourceMapURL);
+        }
         return css + this.getCSSAppendage();
     };
 
@@ -34,15 +37,15 @@ module.exports = function (SourceMapOutput, environment) {
         var sourceMapURL = this.sourceMapURL;
         if (this.options.sourceMapFileInline) {
             if (this.sourceMap === undefined) {
-                return "";
+                return '';
             }
-            sourceMapURL = "data:application/json;base64," + environment.encodeBase64(this.sourceMap);
+            sourceMapURL = 'data:application/json;base64,' + environment.encodeBase64(this.sourceMap);
         }
 
         if (sourceMapURL) {
-            return "/*# sourceMappingURL=" + sourceMapURL + " */";
+            return '/*# sourceMappingURL=' + sourceMapURL + ' */';
         }
-        return "";
+        return '';
     };
 
     SourceMapBuilder.prototype.getExternalSourceMap = function() {

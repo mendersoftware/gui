@@ -1,5 +1,5 @@
-var Node = require("./node"),
-    Variable = require("./variable");
+var Node = require('./node'),
+    Variable = require('./variable');
 
 var JsEvalNode = function() {
 };
@@ -10,28 +10,28 @@ JsEvalNode.prototype.evaluateJavaScript = function (expression, context) {
         that = this,
         evalContext = {};
 
-    if (context.javascriptEnabled !== undefined && !context.javascriptEnabled) {
-        throw { message: "You are using JavaScript, which has been disabled.",
-            filename: this.currentFileInfo.filename,
-            index: this.index };
+    if (!context.javascriptEnabled) {
+        throw { message: 'Inline JavaScript is not enabled. Is it set in your options?',
+            filename: this.fileInfo().filename,
+            index: this.getIndex() };
     }
 
     expression = expression.replace(/@\{([\w-]+)\}/g, function (_, name) {
-        return that.jsify(new Variable('@' + name, that.index, that.currentFileInfo).eval(context));
+        return that.jsify(new Variable('@' + name, that.getIndex(), that.fileInfo()).eval(context));
     });
 
     try {
         expression = new Function('return (' + expression + ')');
     } catch (e) {
-        throw { message: "JavaScript evaluation error: " + e.message + " from `" + expression + "`" ,
-            filename: this.currentFileInfo.filename,
-            index: this.index };
+        throw { message: 'JavaScript evaluation error: ' + e.message + ' from `' + expression + '`' ,
+            filename: this.fileInfo().filename,
+            index: this.getIndex() };
     }
 
     var variables = context.frames[0].variables();
     for (var k in variables) {
         if (variables.hasOwnProperty(k)) {
-            /*jshint loopfunc:true */
+            /* jshint loopfunc:true */
             evalContext[k.slice(1)] = {
                 value: variables[k].value,
                 toJS: function () {
@@ -44,9 +44,9 @@ JsEvalNode.prototype.evaluateJavaScript = function (expression, context) {
     try {
         result = expression.call(evalContext);
     } catch (e) {
-        throw { message: "JavaScript evaluation error: '" + e.name + ': ' + e.message.replace(/["]/g, "'") + "'" ,
-            filename: this.currentFileInfo.filename,
-            index: this.index };
+        throw { message: 'JavaScript evaluation error: \'' + e.name + ': ' + e.message.replace(/["]/g, '\'') + '\'' ,
+            filename: this.fileInfo().filename,
+            index: this.getIndex() };
     }
     return result;
 };

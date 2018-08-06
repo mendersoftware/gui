@@ -1,8 +1,9 @@
-var tree = require("../tree"),
-    Visitor = require("./visitor"),
-    logger = require("../logger");
+var tree = require('../tree'),
+    Visitor = require('./visitor'),
+    logger = require('../logger'),
+    utils = require('../utils');
 
-/*jshint loopfunc:true */
+/* jshint loopfunc:true */
 
 var ExtendFinderVisitor = function() {
     this._visitor = new Visitor(this);
@@ -16,7 +17,7 @@ ExtendFinderVisitor.prototype = {
         root.allExtends = this.allExtendsStack[0];
         return root;
     },
-    visitRule: function (ruleNode, visitArgs) {
+    visitDeclaration: function (declNode, visitArgs) {
         visitArgs.visitDeeper = false;
     },
     visitMixinDefinition: function (mixinDefinitionNode, visitArgs) {
@@ -46,7 +47,7 @@ ExtendFinderVisitor.prototype = {
                 selector = selectorPath[selectorPath.length - 1],
                 selExtendList = selector.extendList;
 
-            extendList = selExtendList ? selExtendList.slice(0).concat(allSelectorsExtendList)
+            extendList = selExtendList ? utils.copyArray(selExtendList).concat(allSelectorsExtendList)
                                        : allSelectorsExtendList;
 
             if (extendList) {
@@ -79,11 +80,11 @@ ExtendFinderVisitor.prototype = {
     visitMediaOut: function (mediaNode) {
         this.allExtendsStack.length = this.allExtendsStack.length - 1;
     },
-    visitDirective: function (directiveNode, visitArgs) {
-        directiveNode.allExtends = [];
-        this.allExtendsStack.push(directiveNode.allExtends);
+    visitAtRule: function (atRuleNode, visitArgs) {
+        atRuleNode.allExtends = [];
+        this.allExtendsStack.push(atRuleNode.allExtends);
     },
-    visitDirectiveOut: function (directiveNode) {
+    visitAtRuleOut: function (atRuleNode) {
         this.allExtendsStack.length = this.allExtendsStack.length - 1;
     }
 };
@@ -109,17 +110,17 @@ ProcessExtendsVisitor.prototype = {
         extendList.filter(function(extend) {
             return !extend.hasFoundMatches && extend.parent_ids.length == 1;
         }).forEach(function(extend) {
-                var selector = "_unknown_";
-                try {
-                    selector = extend.selector.toCSS({});
-                }
-                catch(_) {}
+            var selector = '_unknown_';
+            try {
+                selector = extend.selector.toCSS({});
+            }
+            catch (_) {}
 
-                if (!indices[extend.index + ' ' + selector]) {
-                    indices[extend.index + ' ' + selector] = true;
-                    logger.warn("extend '" + selector + "' has no matches");
-                }
-            });
+            if (!indices[extend.index + ' ' + selector]) {
+                indices[extend.index + ' ' + selector] = true;
+                logger.warn('extend \'' + selector + '\' has no matches');
+            }
+        });
     },
     doExtendChaining: function (extendsList, extendsListTarget, iterationCount) {
         //
@@ -136,7 +137,7 @@ ProcessExtendsVisitor.prototype = {
 
         iterationCount = iterationCount || 0;
 
-        //loop through comparing every extend with every target extend.
+        // loop through comparing every extend with every target extend.
         // a target extend is the one on the ruleset we are looking at copy/edit/pasting in place
         // e.g.  .a:extend(.b) {}  and .b:extend(.c) {} then the first extend extends the second one
         // and the second is the target.
@@ -166,7 +167,7 @@ ProcessExtendsVisitor.prototype = {
                         newSelector = extendVisitor.extendSelector(matches, selectorPath, selfSelector, extend.isVisible());
 
                         // but now we create a new extend from it
-                        newExtend = new(tree.Extend)(targetExtend.selector, targetExtend.option, 0, targetExtend.currentFileInfo, info);
+                        newExtend = new(tree.Extend)(targetExtend.selector, targetExtend.option, 0, targetExtend.fileInfo(), info);
                         newExtend.selfSelectors = newSelector;
 
                         // add the extend onto the list of extends for that selector
@@ -176,7 +177,7 @@ ProcessExtendsVisitor.prototype = {
                         extendsToAdd.push(newExtend);
                         newExtend.ruleset = targetExtend.ruleset;
 
-                        //remember its parents for circular references
+                        // remember its parents for circular references
                         newExtend.parent_ids = newExtend.parent_ids.concat(targetExtend.parent_ids, extend.parent_ids);
 
                         // only process the selector once.. if we have :extend(.a,.b) then multiple
@@ -196,15 +197,15 @@ ProcessExtendsVisitor.prototype = {
             // may no longer be needed.
             this.extendChainCount++;
             if (iterationCount > 100) {
-                var selectorOne = "{unable to calculate}";
-                var selectorTwo = "{unable to calculate}";
+                var selectorOne = '{unable to calculate}';
+                var selectorTwo = '{unable to calculate}';
                 try {
                     selectorOne = extendsToAdd[0].selfSelectors[0].toCSS();
                     selectorTwo = extendsToAdd[0].selector.toCSS();
                 }
-                catch(e) {}
-                throw { message: "extend circular reference detected. One of the circular extends is currently:" +
-                    selectorOne + ":extend(" + selectorTwo + ")"};
+                catch (e) {}
+                throw { message: 'extend circular reference detected. One of the circular extends is currently:' +
+                    selectorOne + ':extend(' + selectorTwo + ')'};
             }
 
             // now process the new extends on the existing rules so that we can handle a extending b extending c extending
@@ -214,7 +215,7 @@ ProcessExtendsVisitor.prototype = {
             return extendsToAdd;
         }
     },
-    visitRule: function (ruleNode, visitArgs) {
+    visitDeclaration: function (ruleNode, visitArgs) {
         visitArgs.visitDeeper = false;
     },
     visitMixinDefinition: function (mixinDefinitionNode, visitArgs) {
@@ -328,7 +329,7 @@ ProcessExtendsVisitor.prototype = {
         return matches;
     },
     isElementValuesEqual: function(elementValue1, elementValue2) {
-        if (typeof elementValue1 === "string" || typeof elementValue2 === "string") {
+        if (typeof elementValue1 === 'string' || typeof elementValue2 === 'string') {
             return elementValue1 === elementValue2;
         }
         if (elementValue1 instanceof tree.Attribute) {
@@ -367,7 +368,7 @@ ProcessExtendsVisitor.prototype = {
     },
     extendSelector:function (matches, selectorPath, replacementSelector, isVisible) {
 
-        //for a set of matches, replace each match with the replacement selector
+        // for a set of matches, replace each match with the replacement selector
 
         var currentSelectorPathIndex = 0,
             currentSelectorPathElementIndex = 0,
@@ -384,8 +385,9 @@ ProcessExtendsVisitor.prototype = {
             firstElement = new tree.Element(
                 match.initialCombinator,
                 replacementSelector.elements[0].value,
-                replacementSelector.elements[0].index,
-                replacementSelector.elements[0].currentFileInfo
+                replacementSelector.elements[0].isVariable,
+                replacementSelector.elements[0].getIndex(),
+                replacementSelector.elements[0].fileInfo()
             );
 
             if (match.pathIndex > currentSelectorPathIndex && currentSelectorPathElementIndex > 0) {
@@ -446,12 +448,12 @@ ProcessExtendsVisitor.prototype = {
         var lastIndex = this.allExtendsStack.length - 1;
         this.allExtendsStack.length = lastIndex;
     },
-    visitDirective: function (directiveNode, visitArgs) {
-        var newAllExtends = directiveNode.allExtends.concat(this.allExtendsStack[this.allExtendsStack.length - 1]);
-        newAllExtends = newAllExtends.concat(this.doExtendChaining(newAllExtends, directiveNode.allExtends));
+    visitAtRule: function (atRuleNode, visitArgs) {
+        var newAllExtends = atRuleNode.allExtends.concat(this.allExtendsStack[this.allExtendsStack.length - 1]);
+        newAllExtends = newAllExtends.concat(this.doExtendChaining(newAllExtends, atRuleNode.allExtends));
         this.allExtendsStack.push(newAllExtends);
     },
-    visitDirectiveOut: function (directiveNode) {
+    visitAtRuleOut: function (atRuleNode) {
         var lastIndex = this.allExtendsStack.length - 1;
         this.allExtendsStack.length = lastIndex;
     }
