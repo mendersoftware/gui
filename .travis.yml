@@ -61,7 +61,7 @@ before_script:
 script:
     # Check commit compliance.
     - mendertesting/check_commits.sh
-
+    - gulp --version
     - gulp build
     # Make sure the test environment is running the pull request
     - if [ ${TRAVIS_PULL_REQUEST} = "false" ]; then export DEPLOY=$TRAVIS_BRANCH; else export DEPLOY=$TRAVIS_PULL_REQUEST; fi
