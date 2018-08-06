@@ -467,7 +467,8 @@ var Deployments = createReactClass({
 
   _finishOnboard: function() {
     this.setState({onboardDialog: false});
-   
+    this.context.router.push("/deployments/finished");
+    this._changeTab("/deployments/finished");
   },
   _isOnBoardFinished: function(id) {
     var self = this;
@@ -612,7 +613,7 @@ var Deployments = createReactClass({
             <div className="margin-top">
               <Pending page={this.state.pend_page} count={this.state.pendingCount || this.state.pending.length}  refreshPending={this._refreshPending}  pending={this.state.pending} abort={this._abortDeployment} />
 
-              <Progress page={this.state.prog_page} isActiveTab={this.state.currentTab==="Active"} showHelptips={this.state.showHelptips} hasDeployments={this.state.hasDeployments} devices={this.state.allDevices || []} hasArtifacts={this.state.collatedArtifacts.length} count={this.state.progressCount || this.state.progress.length} refreshProgress={this._refreshInProgress} abort={this._abortDeployment} loading={!this.state.doneLoading} openReport={this._showProgress} progress={this.state.progress} createClick={this.dialogOpen.bind(null, "schedule")}/>
+              <Progress page={this.state.prog_page} isActiveTab={this.state.currentTab==="Active"} showHelptips={this.state.showHelptips && !cookie.load(this.state.user.id+'-onboarded')} hasDeployments={this.state.hasDeployments} devices={this.state.allDevices || []} hasArtifacts={this.state.collatedArtifacts.length} count={this.state.progressCount || this.state.progress.length} refreshProgress={this._refreshInProgress} abort={this._abortDeployment} loading={!this.state.doneLoading} openReport={this._showProgress} progress={this.state.progress} createClick={this.dialogOpen.bind(null, "schedule")}/>
             </div>
           </Tab>
 
