@@ -4055,12 +4055,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	function mapValuesByProp(value, prop, rule) {
 	  return value.map(function (item) {
-	    return objectToString(item, prop, rule);
+	    return objectToArray(item, prop, rule, false, true);
 	  });
 	}
 
 	/**
-	 * Convert array to string.
+	 * Convert array to nested array, if needed
 	 *
 	 * @param {Array} array of values
 	 * @param {String} original property
@@ -4068,27 +4068,29 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @param {Object} original rule
 	 * @return {String} converted string
 	 */
-	function arrayToString(value, prop, scheme, rule) {
-	  if (scheme[prop] == null) return value.join(',');
-	  if (value.length === 0) return '';
-	  if (Array.isArray(value[0])) return arrayToString(value[0], prop, scheme);
+	function processArray(value, prop, scheme, rule) {
+	  if (scheme[prop] == null) return value;
+	  if (value.length === 0) return [];
+	  if (Array.isArray(value[0])) return processArray(value[0], prop, scheme);
 	  if (_typeof(value[0]) === 'object') {
 	    return mapValuesByProp(value, prop, rule);
 	  }
-	  return value.join(' ');
+
+	  return [value];
 	}
 
 	/**
-	 * Convert object to string.
+	 * Convert object to array.
 	 *
 	 * @param {Object} object of values
 	 * @param {String} original property
 	 * @param {Object} original rule
 	 * @param {Boolean} is fallback prop
+	 * @param {Boolean} object is inside array
 	 * @return {String} converted string
 	 */
-	function objectToString(value, prop, rule, isFallback) {
-	  if (!(_props.propObj[prop] || _props.customPropObj[prop])) return '';
+	function objectToArray(value, prop, rule, isFallback, isInArray) {
+	  if (!(_props.propObj[prop] || _props.customPropObj[prop])) return [];
 
 	  var result = [];
 
@@ -4102,7 +4104,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    for (var baseProp in _props.propObj[prop]) {
 	      if (value[baseProp]) {
 	        if (Array.isArray(value[baseProp])) {
-	          result.push(arrayToString(value[baseProp], baseProp, _props.propArrayInObj));
+	          result.push(_props.propArrayInObj[baseProp] === null ? value[baseProp] : value[baseProp].join(' '));
 	        } else result.push(value[baseProp]);
 	        continue;
 	      }
@@ -4114,7 +4116,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	  }
 
-	  return result.join(' ');
+	  if (!result.length || isInArray) return result;
+	  return [result];
 	}
 
 	/**
@@ -4166,9 +4169,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	          continue;
 	        }
 
-	        style[prop] = arrayToString(value, prop, _props.propArray);
+	        style[prop] = processArray(value, prop, _props.propArray);
 	        // Avoid creating properties with empty values
-	        if (!style[prop]) delete style[prop];
+	        if (!style[prop].length) delete style[prop];
 	      }
 	    } else if ((typeof value === 'undefined' ? 'undefined' : _typeof(value)) === 'object') {
 	      if (prop === 'fallbacks') {
@@ -4176,9 +4179,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	        continue;
 	      }
 
-	      style[prop] = objectToString(value, prop, rule, isFallback);
+	      style[prop] = objectToArray(value, prop, rule, isFallback);
 	      // Avoid creating properties with empty values
-	      if (!style[prop]) delete style[prop];
+	      if (!style[prop].length) delete style[prop];
 	    }
 
 	    // Maybe a computed value resulting in an empty string
@@ -4235,6 +4238,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	  'border-right': true,
 	  'border-radius': true,
 	  'border-image': true,
+	  'border-width': true,
+	  'border-style': true,
+	  'border-color': true,
 	  'box-shadow': true,
 	  flex: true,
 	  margin: true,
@@ -4354,7 +4360,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	};var customPropObj = exports.customPropObj = {
 	  border: {
 	    radius: 'border-radius',
-	    image: 'border-image'
+	    image: 'border-image',
+	    width: 'border-width',
+	    style: 'border-style',
+	    color: 'border-color'
 	  },
 	  background: {
 	    size: 'background-size',
@@ -4382,6 +4391,49 @@ return /******/ (function(modules) { // webpackBootstrap
 	    self: 'align-self',
 	    items: 'align-items',
 	    content: 'align-content'
+	  },
+	  grid: {
+	    'template-columns': 'grid-template-columns',
+	    templateColumns: 'grid-template-columns',
+
+	    'template-rows': 'grid-template-rows',
+	    templateRows: 'grid-template-rows',
+
+	    'template-areas': 'grid-template-areas',
+	    templateAreas: 'grid-template-areas',
+
+	    template: 'grid-template',
+
+	    'auto-columns': 'grid-auto-columns',
+	    autoColumns: 'grid-auto-columns',
+
+	    'auto-rows': 'grid-auto-rows',
+	    autoRows: 'grid-auto-rows',
+
+	    'auto-flow': 'grid-auto-flow',
+	    autoFlow: 'grid-auto-flow',
+
+	    row: 'grid-row',
+	    column: 'grid-column',
+
+	    'row-start': 'grid-row-start',
+	    rowStart: 'grid-row-start',
+	    'row-end': 'grid-row-end',
+	    rowEnd: 'grid-row-end',
+
+	    'column-start': 'grid-column-start',
+	    columnStart: 'grid-column-start',
+	    'column-end': 'grid-column-end',
+	    columnEnd: 'grid-column-end',
+
+	    area: 'grid-area',
+	    gap: 'grid-gap',
+
+	    'row-gap': 'grid-row-gap',
+	    rowGap: 'grid-row-gap',
+
+	    'column-gap': 'grid-column-gap',
+	    columnGap: 'grid-column-gap'
 	  }
 	};
 
