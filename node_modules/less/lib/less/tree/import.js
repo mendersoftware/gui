@@ -1,9 +1,11 @@
-var Node = require("./node"),
-    Media = require("./media"),
-    URL = require("./url"),
-    Quoted = require("./quoted"),
-    Ruleset = require("./ruleset"),
-    Anonymous = require("./anonymous");
+var Node = require('./node'),
+    Media = require('./media'),
+    URL = require('./url'),
+    Quoted = require('./quoted'),
+    Ruleset = require('./ruleset'),
+    Anonymous = require('./anonymous'),
+    utils = require('../utils'),
+    LessError = require('../less-error');
 
 //
 // CSS @import node
@@ -19,21 +21,23 @@ var Node = require("./node"),
 //
 var Import = function (path, features, options, index, currentFileInfo, visibilityInfo) {
     this.options = options;
-    this.index = index;
+    this._index = index;
+    this._fileInfo = currentFileInfo;
     this.path = path;
     this.features = features;
-    this.currentFileInfo = currentFileInfo;
     this.allowRoot = true;
 
     if (this.options.less !== undefined || this.options.inline) {
         this.css = !this.options.less || this.options.inline;
     } else {
         var pathValue = this.getPath();
-        if (pathValue && /[#\.\&\?\/]css([\?;].*)?$/.test(pathValue)) {
+        if (pathValue && /[#\.\&\?]css([\?;].*)?$/.test(pathValue)) {
             this.css = true;
         }
     }
     this.copyVisibilityInfo(visibilityInfo);
+    this.setParent(this.features, this);
+    this.setParent(this.path, this);
 };
 
 //
@@ -46,22 +50,22 @@ var Import = function (path, features, options, index, currentFileInfo, visibili
 // ruleset.
 //
 Import.prototype = new Node();
-Import.prototype.type = "Import";
+Import.prototype.type = 'Import';
 Import.prototype.accept = function (visitor) {
     if (this.features) {
         this.features = visitor.visit(this.features);
     }
     this.path = visitor.visit(this.path);
-    if (!this.options.plugin && !this.options.inline && this.root) {
+    if (!this.options.isPlugin && !this.options.inline && this.root) {
         this.root = visitor.visit(this.root);
     }
 };
 Import.prototype.genCSS = function (context, output) {
-    if (this.css && this.path.currentFileInfo.reference === undefined) {
-        output.add("@import ", this.currentFileInfo, this.index);
+    if (this.css && this.path._fileInfo.reference === undefined) {
+        output.add('@import ', this._fileInfo, this._index);
         this.path.genCSS(context, output);
         if (this.features) {
-            output.add(" ");
+            output.add(' ');
             this.features.genCSS(context, output);
         }
         output.add(';');
@@ -89,21 +93,22 @@ Import.prototype.evalForImport = function (context) {
         path = path.value;
     }
 
-    return new Import(path.eval(context), this.features, this.options, this.index, this.currentFileInfo, this.visibilityInfo());
+    return new Import(path.eval(context), this.features, this.options, this._index, this._fileInfo, this.visibilityInfo());
 };
 Import.prototype.evalPath = function (context) {
     var path = this.path.eval(context);
-    var rootpath = this.currentFileInfo && this.currentFileInfo.rootpath;
+    var fileInfo = this._fileInfo;
 
     if (!(path instanceof URL)) {
-        if (rootpath) {
-            var pathValue = path.value;
-            // Add the base path if the import is relative
-            if (pathValue && context.isPathRelative(pathValue)) {
-                path.value = rootpath + pathValue;
-            }
+        // Add the rootpath if the URL requires a rewrite
+        var pathValue = path.value;
+        if (fileInfo &&
+            pathValue &&
+            context.pathRequiresRewrite(pathValue)) {
+            path.value = context.rewritePath(pathValue, fileInfo.rootpath);
+        } else {
+            path.value = context.normalizePath(path.value);
         }
-        path.value = context.normalizePath(path.value);
     }
 
     return path;
@@ -113,8 +118,8 @@ Import.prototype.eval = function (context) {
     if (this.options.reference || this.blocksVisibility()) {
         if (result.length || result.length === 0) {
             result.forEach(function (node) {
-                    node.addVisibilityBlock();
-                }
+                node.addVisibilityBlock();
+            }
             );
         } else {
             result.addVisibilityBlock();
@@ -126,16 +131,26 @@ Import.prototype.doEval = function (context) {
     var ruleset, registry,
         features = this.features && this.features.eval(context);
 
-    if (this.options.plugin) {
+    if (this.options.isPlugin) {
+        if (this.root && this.root.eval) {
+            try {
+                this.root.eval(context);
+            }
+            catch (e) {
+                e.message = 'Plugin error during evaluation';
+                throw new LessError(e, this.root.imports, this.root.filename);
+            }
+        }
         registry = context.frames[0] && context.frames[0].functionRegistry;
         if ( registry && this.root && this.root.functions ) {
             registry.addMultiple( this.root.functions );
         }
+
         return [];
     }
 
     if (this.skip) {
-        if (typeof this.skip === "function") {
+        if (typeof this.skip === 'function') {
             this.skip = this.skip();
         }
         if (this.skip) {
@@ -144,20 +159,20 @@ Import.prototype.doEval = function (context) {
     }
     if (this.options.inline) {
         var contents = new Anonymous(this.root, 0,
-          {
-              filename: this.importedFilename,
-              reference: this.path.currentFileInfo && this.path.currentFileInfo.reference
-          }, true, true);
+            {
+                filename: this.importedFilename,
+                reference: this.path._fileInfo && this.path._fileInfo.reference
+            }, true, true);
 
         return this.features ? new Media([contents], this.features.value) : [contents];
     } else if (this.css) {
-        var newImport = new Import(this.evalPath(context), features, this.options, this.index);
+        var newImport = new Import(this.evalPath(context), features, this.options, this._index);
         if (!newImport.css && this.error) {
             throw this.error;
         }
         return newImport;
     } else {
-        ruleset = new Ruleset(null, this.root.rules.slice(0));
+        ruleset = new Ruleset(null, utils.copyArray(this.root.rules));
         ruleset.evalImports(context);
 
         return this.features ? new Media(ruleset.rules, this.features.value) : ruleset.rules;

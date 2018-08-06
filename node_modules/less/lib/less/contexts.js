@@ -1,5 +1,6 @@
 var contexts = {};
 module.exports = contexts;
+var Constants = require('./constants');
 
 var copyFromOriginal = function copyFromOriginal(original, destination, propertiesToCopy) {
     if (!original) { return; }
@@ -17,7 +18,7 @@ var copyFromOriginal = function copyFromOriginal(original, destination, properti
 var parseCopyProperties = [
     // options
     'paths',            // option - unmodified - paths to search for imports on
-    'relativeUrls',     // option - whether to adjust URL's to be relative
+    'rewriteUrls',      // option - whether to adjust URL's to be relative
     'rootpath',         // option - rootpath to append to URL's
     'strictImports',    // option -
     'insecure',         // option - whether to allow imports from insecure ssl hosts
@@ -36,30 +37,46 @@ var parseCopyProperties = [
 contexts.Parse = function(options) {
     copyFromOriginal(options, this, parseCopyProperties);
 
-    if (typeof this.paths === "string") { this.paths = [this.paths]; }
+    if (typeof this.paths === 'string') { this.paths = [this.paths]; }
 };
 
 var evalCopyProperties = [
-    'paths',          // additional include paths
-    'compress',       // whether to compress
-    'ieCompat',       // whether to enforce IE compatibility (IE8 data-uri)
-    'strictMath',     // whether math has to be within parenthesis
-    'strictUnits',    // whether units need to evaluate correctly
-    'sourceMap',      // whether to output a source map
-    'importMultiple', // whether we are currently importing multiple copies
-    'urlArgs',        // whether to add args into url tokens
-    'javascriptEnabled',// option - whether JavaScript is enabled. if undefined, defaults to true
-    'pluginManager',  // Used as the plugin manager for the session
-    'importantScope'  // used to bubble up !important statements
-    ];
+    'paths',             // additional include paths
+    'compress',          // whether to compress
+    'ieCompat',          // whether to enforce IE compatibility (IE8 data-uri)
+    'math',              // whether math has to be within parenthesis
+    'strictUnits',       // whether units need to evaluate correctly
+    'sourceMap',         // whether to output a source map
+    'importMultiple',    // whether we are currently importing multiple copies
+    'urlArgs',           // whether to add args into url tokens
+    'javascriptEnabled', // option - whether Inline JavaScript is enabled. if undefined, defaults to false
+    'pluginManager',     // Used as the plugin manager for the session
+    'importantScope',    // used to bubble up !important statements
+    'rewriteUrls'        // option - whether to adjust URL's to be relative
+];
 
 contexts.Eval = function(options, frames) {
     copyFromOriginal(options, this, evalCopyProperties);
 
-    if (typeof this.paths === "string") { this.paths = [this.paths]; }
+    if (typeof this.paths === 'string') { this.paths = [this.paths]; }
 
     this.frames = frames || [];
     this.importantScope = this.importantScope || [];
+};
+
+contexts.Eval.prototype.enterCalc = function () {
+    if (!this.calcStack) {
+        this.calcStack = [];
+    }
+    this.calcStack.push(true);
+    this.inCalc = true;
+};
+
+contexts.Eval.prototype.exitCalc = function () {
+    this.calcStack.pop();
+    if (!this.calcStack) {
+        this.inCalc = false;
+    }
 };
 
 contexts.Eval.prototype.inParenthesis = function () {
@@ -73,39 +90,77 @@ contexts.Eval.prototype.outOfParenthesis = function () {
     this.parensStack.pop();
 };
 
-contexts.Eval.prototype.isMathOn = function () {
-    return this.strictMath ? (this.parensStack && this.parensStack.length) : true;
+contexts.Eval.prototype.inCalc = false;
+contexts.Eval.prototype.mathOn = true;
+contexts.Eval.prototype.isMathOn = function (op) {
+    if (!this.mathOn) {
+        return false;
+    }
+    if (op === '/' && this.math !== Constants.Math.ALWAYS && (!this.parensStack || !this.parensStack.length)) {
+        return false;
+    }
+    if (this.math > Constants.Math.PARENS_DIVISION) {
+        return this.parensStack && this.parensStack.length;
+    }
+    return true;
 };
 
-contexts.Eval.prototype.isPathRelative = function (path) {
-    return !/^(?:[a-z-]+:|\/|#)/i.test(path);
+contexts.Eval.prototype.pathRequiresRewrite = function (path) {
+    var isRelative = this.rewriteUrls === Constants.RewriteUrls.LOCAL ? isPathLocalRelative : isPathRelative;
+
+    return isRelative(path);
 };
 
-contexts.Eval.prototype.normalizePath = function( path ) {
+contexts.Eval.prototype.rewritePath = function (path, rootpath) {
+    var newPath;
+
+    rootpath = rootpath || '';
+    newPath = this.normalizePath(rootpath + path);
+
+    // If a path was explicit relative and the rootpath was not an absolute path
+    // we must ensure that the new path is also explicit relative.
+    if (isPathLocalRelative(path) &&
+        isPathRelative(rootpath) &&
+        isPathLocalRelative(newPath) === false) {
+        newPath = './' + newPath;
+    }
+
+    return newPath;
+};
+
+contexts.Eval.prototype.normalizePath = function (path) {
     var
-      segments = path.split("/").reverse(),
-      segment;
+        segments = path.split('/').reverse(),
+        segment;
 
     path = [];
-    while (segments.length !== 0 ) {
+    while (segments.length !== 0) {
         segment = segments.pop();
-        switch( segment ) {
-            case ".":
+        switch ( segment ) {
+            case '.':
                 break;
-            case "..":
-                if ((path.length === 0) || (path[path.length - 1] === "..")) {
+            case '..':
+                if ((path.length === 0) || (path[path.length - 1] === '..')) {
                     path.push( segment );
                 } else {
                     path.pop();
                 }
                 break;
             default:
-                path.push( segment );
+                path.push(segment);
                 break;
         }
     }
 
-    return path.join("/");
+    return path.join('/');
 };
 
-//todo - do the same for the toCSS ?
+function isPathRelative(path) {
+    return !/^(?:[a-z-]+:|\/|#)/i.test(path);
+}
+
+function isPathLocalRelative(path) {
+    return path.charAt(0) === '.';
+}
+
+// todo - do the same for the toCSS ?

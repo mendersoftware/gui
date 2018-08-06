@@ -17,8 +17,8 @@ module.exports = function(window, options, logger) {
                     if (modifyVars) {
                         cache.setItem(path + ':vars', JSON.stringify(modifyVars));
                     }
-                } catch(e) {
-                    //TODO - could do with adding more robust error handling
+                } catch (e) {
+                    // TODO - could do with adding more robust error handling
                     logger.error('failed to save "' + path + '" to local storage for caching.');
                 }
             }
@@ -29,11 +29,12 @@ module.exports = function(window, options, logger) {
                 vars      = cache && cache.getItem(path + ':vars');
 
             modifyVars = modifyVars || {};
+            vars = vars || "{}"; // if not set, treat as the JSON representation of an empty object
 
             if (timestamp && webInfo.lastModified &&
                 (new Date(webInfo.lastModified).valueOf() ===
                     new Date(timestamp).valueOf()) &&
-                (!modifyVars && !vars || JSON.stringify(modifyVars) === vars)) {
+                JSON.stringify(modifyVars) === vars) {
                 // Use local copy
                 return css;
             }
