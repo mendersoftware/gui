@@ -1,4 +1,4 @@
-var Expression = require("../tree/expression");
+var Expression = require('../tree/expression');
 
 var functionCaller = function(name, context, index, currentFileInfo) {
     this.name = name.toLowerCase();
@@ -11,21 +11,21 @@ var functionCaller = function(name, context, index, currentFileInfo) {
 functionCaller.prototype.isValid = function() {
     return Boolean(this.func);
 };
-functionCaller.prototype.call = function(args) {
 
+functionCaller.prototype.call = function(args) {
     // This code is terrible and should be replaced as per this issue...
     // https://github.com/less/less.js/issues/2477
     if (Array.isArray(args)) {
         args = args.filter(function (item) {
-            if (item.type === "Comment") {
+            if (item.type === 'Comment') {
                 return false;
             }
             return true;
         })
         .map(function(item) {
-            if (item.type === "Expression") {
+            if (item.type === 'Expression') {
                 var subNodes = item.value.filter(function (item) {
-                    if (item.type === "Comment") {
+                    if (item.type === 'Comment') {
                         return false;
                     }
                     return true;

@@ -21,7 +21,7 @@ var Recent = createReactClass({
   _clickHandle: function(id) {
     var params = {};
     params.id = id;
-    params.tab = "past";
+    params.tab = "finished";
     params.route="deployments";
     params.open=true;
     this.props.clickHandle(params);
@@ -67,7 +67,7 @@ var Recent = createReactClass({
             <div className="block">
               {recent}
             </div>
-            <Link to="/deployments/past" className="float-right">All past deployments</Link>
+            <Link to="/deployments/finished" className="float-right">All finished deployments</Link>
           </div> 
           
           <div className={(deployments.length || this.props.loading) ? "hidden" : "dashboard-placeholder" }>

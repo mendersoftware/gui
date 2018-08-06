@@ -1,18 +1,19 @@
-var Node = require("./node"),
-    Selector = require("./selector"),
-    MixinDefinition = require("./mixin-definition"),
-    defaultFunc = require("../functions/default");
+var Node = require('./node'),
+    Selector = require('./selector'),
+    MixinDefinition = require('./mixin-definition'),
+    defaultFunc = require('../functions/default');
 
 var MixinCall = function (elements, args, index, currentFileInfo, important) {
     this.selector = new Selector(elements);
     this.arguments = args || [];
-    this.index = index;
-    this.currentFileInfo = currentFileInfo;
+    this._index = index;
+    this._fileInfo = currentFileInfo;
     this.important = important;
     this.allowRoot = true;
+    this.setParent(this.selector, this);
 };
 MixinCall.prototype = new Node();
-MixinCall.prototype.type = "MixinCall";
+MixinCall.prototype.type = 'MixinCall';
 MixinCall.prototype.accept = function (visitor) {
     if (this.selector) {
         this.selector = visitor.visit(this.selector);
@@ -26,6 +27,8 @@ MixinCall.prototype.eval = function (context) {
         rules = [], match = false, i, m, f, isRecursive, isOneFound,
         candidates = [], candidate, conditionResult = [], defaultResult, defFalseEitherCase = -1,
         defNone = 0, defTrue = 1, defFalse = 2, count, originalRuleset, noArgumentsFilter;
+
+    this.selector = this.selector.eval(context);
 
     function calcDefGroup(mixin, mixinPath) {
         var f, p, namespace;
@@ -117,7 +120,7 @@ MixinCall.prototype.eval = function (context) {
                 if ((count[defTrue] + count[defFalse]) > 1) {
                     throw { type: 'Runtime',
                         message: 'Ambiguous use of `default()` found when matching for `' + this.format(args) + '`',
-                        index: this.index, filename: this.currentFileInfo.filename };
+                        index: this.getIndex(), filename: this.fileInfo().filename };
                 }
             }
 
@@ -128,14 +131,14 @@ MixinCall.prototype.eval = function (context) {
                         mixin = candidates[m].mixin;
                         if (!(mixin instanceof MixinDefinition)) {
                             originalRuleset = mixin.originalRuleset || mixin;
-                            mixin = new MixinDefinition("", [], mixin.rules, null, false, null, originalRuleset.visibilityInfo());
+                            mixin = new MixinDefinition('', [], mixin.rules, null, false, null, originalRuleset.visibilityInfo());
                             mixin.originalRuleset = originalRuleset;
                         }
                         var newRules = mixin.evalCall(context, args, this.important).rules;
                         this._setVisibilityToReplacement(newRules);
                         Array.prototype.push.apply(rules, newRules);
                     } catch (e) {
-                        throw { message: e.message, index: this.index, filename: this.currentFileInfo.filename, stack: e.stack };
+                        throw { message: e.message, index: this.getIndex(), filename: this.fileInfo().filename, stack: e.stack };
                     }
                 }
             }
@@ -148,11 +151,11 @@ MixinCall.prototype.eval = function (context) {
     if (isOneFound) {
         throw { type:    'Runtime',
             message: 'No matching definition was found for `' + this.format(args) + '`',
-            index:   this.index, filename: this.currentFileInfo.filename };
+            index:   this.getIndex(), filename: this.fileInfo().filename };
     } else {
         throw { type:    'Name',
-            message: this.selector.toCSS().trim() + " is undefined",
-            index:   this.index, filename: this.currentFileInfo.filename };
+            message: this.selector.toCSS().trim() + ' is undefined',
+            index:   this.getIndex(), filename: this.fileInfo().filename };
     }
 };
 
@@ -168,16 +171,16 @@ MixinCall.prototype._setVisibilityToReplacement = function (replacement) {
 MixinCall.prototype.format = function (args) {
     return this.selector.toCSS().trim() + '(' +
         (args ? args.map(function (a) {
-            var argValue = "";
+            var argValue = '';
             if (a.name) {
-                argValue += a.name + ":";
+                argValue += a.name + ':';
             }
             if (a.value.toCSS) {
                 argValue += a.value.toCSS();
             } else {
-                argValue += "???";
+                argValue += '???';
             }
             return argValue;
-        }).join(', ') : "") + ")";
+        }).join(', ') : '') + ')';
 };
 module.exports = MixinCall;

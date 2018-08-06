@@ -1,14 +1,14 @@
-var Node = require("./node");
+var Node = require('./node');
 
 var Condition = function (op, l, r, i, negate) {
     this.op = op.trim();
     this.lvalue = l;
     this.rvalue = r;
-    this.index = i;
+    this._index = i;
     this.negate = negate;
 };
 Condition.prototype = new Node();
-Condition.prototype.type = "Condition";
+Condition.prototype.type = 'Condition';
 Condition.prototype.accept = function (visitor) {
     this.lvalue = visitor.visit(this.lvalue);
     this.rvalue = visitor.visit(this.rvalue);

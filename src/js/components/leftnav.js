@@ -33,7 +33,8 @@ var LeftNav = createReactClass({
 	
     var list = listItems.map(function(item, index) {
     	var borderTop = index===0 ? "none !important" : "1px solid #eaf4f3"; 
-      var style = self.props.currentTab===item.route ? {backgroundColor: "#ffffff", marginRight: "-2px", borderTop: borderTop, borderBottom: "1px solid #eaf4f3", transition: "all 100ms cubic-bezier(0.23, 1, 0.32, 1) 0ms"} : {transition: "all 100ms cubic-bezier(0.23, 1, 0.32, 1) 0ms",  color:"#949495"};
+      var active = self.props.currentTab.split('/')[1] === item.route.split('/')[1];
+      var style = active ? {backgroundColor: "#ffffff", marginRight: "-2px", borderTop: borderTop, borderBottom: "1px solid #eaf4f3", transition: "all 100ms cubic-bezier(0.23, 1, 0.32, 1) 0ms"} : {transition: "all 100ms cubic-bezier(0.23, 1, 0.32, 1) 0ms",  color:"#949495"};
     
        return (
           <ListItem

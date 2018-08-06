@@ -38,7 +38,6 @@ var Pending = createReactClass({
   },
   _handlePageChange: function(pageNo) {
     this.props.refreshPending(pageNo);
-    this.setState({currentPage: pageNo});
   },
   render: function() {
     var pendingMap = this.props.pending.map(function(deployment, index) {
@@ -97,7 +96,7 @@ var Pending = createReactClass({
        
           {
             this.props.count>this.props.pending.length ? 
-            <Pagination locale={_en_US} simple pageSize={this.state.pageSize} current={this.state.currentPage || 1} total={this.props.count} onChange={this._handlePageChange} /> 
+            <Pagination locale={_en_US} simple pageSize={this.state.pageSize} current={this.props.page || 1} total={this.props.count} onChange={this._handlePageChange} /> 
             :
             null
           }

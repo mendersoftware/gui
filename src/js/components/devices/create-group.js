@@ -46,6 +46,8 @@ var CreateGroup = createReactClass({
           self.setState({devices: devices, loading: false, pageLoading: false}, function() {
                     // for each device, get inventory
             for (var i=0; i<devices.length; i++) {
+              devices[i].id_attributes = JSON.parse(devices[i].device_identity);
+
               // have to call inventory each time - accepted list can change order so must refresh inventory too
               self._getInventoryForDevice(devices[i].device_id, i, function(inventory, index) {
                 devices[index].attributes = inventory.attributes;
@@ -178,7 +180,7 @@ var CreateGroup = createReactClass({
   },
 
   render: function() {
-
+    var self = this;
     var deviceList = this.state.devices.map(function(device, index) {
       var attrs = {
         device_type: "",
@@ -189,10 +191,15 @@ var CreateGroup = createReactClass({
       for (var i=0;i<attributesLength;i++) {
         attrs[device.attributes[i].name] = device.attributes[i].value;
       }
+
+      var id_attribute = (self.props.globalSettings.id_attribute && self.props.globalSettings.id_attribute !== "Device ID") 
+        ? (device.id_attributes || {})[self.props.globalSettings.id_attribute]
+        : (device.device_id || device.id) ;
+
       return (
         <TableRow selected={this._isSelected(index)} key={index}>
           <TableRowColumn>
-            {device.id}
+            {id_attribute}
           </TableRowColumn>
           <TableRowColumn>
             {attrs.device_type}
@@ -269,8 +276,8 @@ var CreateGroup = createReactClass({
               selectable={true}>
               <TableHeader>
                 <TableRow>
-                  <TableHeaderColumn>ID</TableHeaderColumn>
-                  <TableHeaderColumn>Device type</TableHeaderColumn>
+                  <TableHeaderColumn tooltip={(this.props.globalSettings || {}).id_attribute || "Device ID"}>{(this.props.globalSettings || {}).id_attribute || "Device ID"}</TableHeaderColumn>
+                  <TableHeaderColumn tooltip="Device type">Device type</TableHeaderColumn>
                 </TableRow>
               </TableHeader>
               <TableBody
