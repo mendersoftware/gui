@@ -23,7 +23,20 @@ var DeploymentStatus = createReactClass({
     };
   },
   componentWillReceiveProps: function(nextProps) {
+    var self = this;
     if (nextProps.id!==this.props.id) this.refreshStatus(nextProps.id);
+    if (!nextProps.isActiveTab) {
+      clearInterval(this.timer);
+    }
+    
+    if (nextProps.isActiveTab && !self.props.isActiveTab) {
+      // isActive has changed
+      if (self.props.refresh) {
+        self.timer = setInterval(function() {
+          self.refreshStatus(self.props.id);
+        },10000);
+      }
+    }
   },
   componentDidMount: function() {
     var self = this;
