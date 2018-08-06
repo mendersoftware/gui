@@ -1,9 +1,10 @@
-var Node = require("./node"),
-    unitConversions = require("../data/unit-conversions");
+var Node = require('./node'),
+    unitConversions = require('../data/unit-conversions'),
+    utils = require('../utils');
 
 var Unit = function (numerator, denominator, backupUnit) {
-    this.numerator = numerator ? numerator.slice(0).sort() : [];
-    this.denominator = denominator ? denominator.slice(0).sort() : [];
+    this.numerator = numerator ? utils.copyArray(numerator).sort() : [];
+    this.denominator = denominator ? utils.copyArray(denominator).sort() : [];
     if (backupUnit) {
         this.backupUnit = backupUnit;
     } else if (numerator && numerator.length) {
@@ -12,9 +13,9 @@ var Unit = function (numerator, denominator, backupUnit) {
 };
 
 Unit.prototype = new Node();
-Unit.prototype.type = "Unit";
+Unit.prototype.type = 'Unit';
 Unit.prototype.clone = function () {
-    return new Unit(this.numerator.slice(0), this.denominator.slice(0), this.backupUnit);
+    return new Unit(utils.copyArray(this.numerator), utils.copyArray(this.denominator), this.backupUnit);
 };
 Unit.prototype.genCSS = function (context, output) {
     // Dimension checks the unit is singular and throws an error if in strict math mode.
@@ -28,9 +29,9 @@ Unit.prototype.genCSS = function (context, output) {
     }
 };
 Unit.prototype.toString = function () {
-    var i, returnStr = this.numerator.join("*");
+    var i, returnStr = this.numerator.join('*');
     for (i = 0; i < this.denominator.length; i++) {
-        returnStr += "/" + this.denominator[i];
+        returnStr += '/' + this.denominator[i];
     }
     return returnStr;
 };
@@ -41,7 +42,7 @@ Unit.prototype.is = function (unitString) {
     return this.toString().toUpperCase() === unitString.toUpperCase();
 };
 Unit.prototype.isLength = function () {
-    return Boolean(this.toCSS().match(/px|em|%|in|cm|mm|pc|pt|ex/));
+    return RegExp('^(px|em|ex|ch|rem|in|cm|mm|pc|pt|ex|vw|vh|vmin|vmax)$', 'gi').test(this.toCSS());
 };
 Unit.prototype.isEmpty = function () {
     return this.numerator.length === 0 && this.denominator.length === 0;
@@ -64,7 +65,7 @@ Unit.prototype.usedUnits = function() {
     var group, result = {}, mapUnit, groupName;
 
     mapUnit = function (atomicUnit) {
-        /*jshint loopfunc:true */
+        /* jshint loopfunc:true */
         if (group.hasOwnProperty(atomicUnit) && !result[groupName]) {
             result[groupName] = atomicUnit;
         }

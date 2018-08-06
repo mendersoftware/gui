@@ -1,5 +1,5 @@
-var addDataAttr = require("./utils").addDataAttr,
-    browser = require("./browser");
+var addDataAttr = require('./utils').addDataAttr,
+    browser = require('./browser');
 
 module.exports = function(window, options) {
 
@@ -43,4 +43,7 @@ module.exports = function(window, options) {
         options.onReady = true;
     }
 
+    if (options.relativeUrls) {
+        options.rewriteUrls = 'all';
+    }
 };

@@ -1,13 +1,18 @@
-var Node = require("./node");
+var Node = require('./node');
 
 var Value = function (value) {
-    this.value = value;
     if (!value) {
-        throw new Error("Value requires an array argument");
+        throw new Error('Value requires an array argument');
+    }
+    if (!Array.isArray(value)) {
+        this.value = [ value ];
+    }
+    else {
+        this.value = value;
     }
 };
 Value.prototype = new Node();
-Value.prototype.type = "Value";
+Value.prototype.type = 'Value';
 Value.prototype.accept = function (visitor) {
     if (this.value) {
         this.value = visitor.visitArray(this.value);

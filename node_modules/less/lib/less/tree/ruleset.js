@@ -1,25 +1,35 @@
-var Node = require("./node"),
-    Rule = require("./rule"),
-    Selector = require("./selector"),
-    Element = require("./element"),
-    Paren = require("./paren"),
-    contexts = require("../contexts"),
-    globalFunctionRegistry = require("../functions/function-registry"),
-    defaultFunc = require("../functions/default"),
-    getDebugInfo = require("./debug-info");
+var Node = require('./node'),
+    Declaration = require('./declaration'),
+    Keyword = require('./keyword'),
+    Comment = require('./comment'),
+    Paren = require('./paren'),
+    Selector = require('./selector'),
+    Element = require('./element'),
+    Anonymous = require('./anonymous'),
+    contexts = require('../contexts'),
+    globalFunctionRegistry = require('../functions/function-registry'),
+    defaultFunc = require('../functions/default'),
+    getDebugInfo = require('./debug-info'),
+    utils = require('../utils');
 
 var Ruleset = function (selectors, rules, strictImports, visibilityInfo) {
     this.selectors = selectors;
     this.rules = rules;
     this._lookups = {};
+    this._variables = null;
+    this._properties = null;
     this.strictImports = strictImports;
     this.copyVisibilityInfo(visibilityInfo);
     this.allowRoot = true;
+
+    this.setParent(this.selectors, this);
+    this.setParent(this.rules, this);
+
 };
 Ruleset.prototype = new Node();
-Ruleset.prototype.type = "Ruleset";
+Ruleset.prototype.type = 'Ruleset';
 Ruleset.prototype.isRuleset = true;
-Ruleset.prototype.isRulesetLike = true;
+Ruleset.prototype.isRulesetLike = function() { return true; };
 Ruleset.prototype.accept = function (visitor) {
     if (this.paths) {
         this.paths = visitor.visitArray(this.paths, true);
@@ -31,28 +41,53 @@ Ruleset.prototype.accept = function (visitor) {
     }
 };
 Ruleset.prototype.eval = function (context) {
-    var thisSelectors = this.selectors, selectors,
-        selCnt, selector, i, hasOnePassingSelector = false;
+    var that = this, selectors, selCnt, selector, i, hasVariable, hasOnePassingSelector = false;
 
-    if (thisSelectors && (selCnt = thisSelectors.length)) {
-        selectors = [];
+    if (this.selectors && (selCnt = this.selectors.length)) {
+        selectors = new Array(selCnt);
         defaultFunc.error({
-            type: "Syntax",
-            message: "it is currently only allowed in parametric mixin guards,"
+            type: 'Syntax',
+            message: 'it is currently only allowed in parametric mixin guards,'
         });
+
         for (i = 0; i < selCnt; i++) {
-            selector = thisSelectors[i].eval(context);
-            selectors.push(selector);
+            selector = this.selectors[i].eval(context);
+            for (var j = 0; j < selector.elements.length; j++) {
+                if (selector.elements[j].isVariable) {
+                    hasVariable = true;
+                    break;
+                }
+            }
+            selectors[i] = selector;
             if (selector.evaldCondition) {
                 hasOnePassingSelector = true;
             }
         }
+
+        if (hasVariable) {
+            var toParseSelectors = new Array(selCnt);
+            for (i = 0; i < selCnt; i++) {
+                selector = selectors[i];
+                toParseSelectors[i] = selector.toCSS(context);
+            }
+            this.parse.parseNode(
+                toParseSelectors.join(','),
+                ["selectors"], 
+                selectors[0].getIndex(), 
+                selectors[0].fileInfo(), 
+                function(err, result) {
+                    if (result) {
+                        selectors = utils.flattenArray(result);
+                    }
+                });
+        }
+
         defaultFunc.reset();
     } else {
         hasOnePassingSelector = true;
     }
 
-    var rules = this.rules ? this.rules.slice(0) : null,
+    var rules = this.rules ? utils.copyArray(this.rules) : null,
         ruleset = new Ruleset(selectors, rules, this.strictImports, this.visibilityInfo()),
         rule, subRule;
 
@@ -100,21 +135,21 @@ Ruleset.prototype.eval = function (context) {
 
     // Store the frames around mixin definitions,
     // so they can be evaluated like closures when the time comes.
-    var rsRules = ruleset.rules, rsRuleCnt = rsRules ? rsRules.length : 0;
-    for (i = 0; i < rsRuleCnt; i++) {
-        if (rsRules[i].evalFirst) {
-            rsRules[i] = rsRules[i].eval(context);
+    var rsRules = ruleset.rules;
+    for (i = 0; (rule = rsRules[i]); i++) {
+        if (rule.evalFirst) {
+            rsRules[i] = rule.eval(context);
         }
     }
 
     var mediaBlockCount = (context.mediaBlocks && context.mediaBlocks.length) || 0;
 
     // Evaluate mixin calls.
-    for (i = 0; i < rsRuleCnt; i++) {
-        if (rsRules[i].type === "MixinCall") {
-            /*jshint loopfunc:true */
-            rules = rsRules[i].eval(context).filter(function(r) {
-                if ((r instanceof Rule) && r.variable) {
+    for (i = 0; (rule = rsRules[i]); i++) {
+        if (rule.type === 'MixinCall') {
+            /* jshint loopfunc:true */
+            rules = rule.eval(context).filter(function(r) {
+                if ((r instanceof Declaration) && r.variable) {
                     // do not pollute the scope if the variable is
                     // already there. consider returning false here
                     // but we need a way to "return" variable from mixins
@@ -123,47 +158,44 @@ Ruleset.prototype.eval = function (context) {
                 return true;
             });
             rsRules.splice.apply(rsRules, [i, 1].concat(rules));
-            rsRuleCnt += rules.length - 1;
             i += rules.length - 1;
             ruleset.resetCache();
-        } else if (rsRules[i].type === "RulesetCall") {
-            /*jshint loopfunc:true */
-            rules = rsRules[i].eval(context).rules.filter(function(r) {
-                if ((r instanceof Rule) && r.variable) {
+        } else if (rule.type ===  'VariableCall') {
+            /* jshint loopfunc:true */
+            rules = rule.eval(context).rules.filter(function(r) {
+                if ((r instanceof Declaration) && r.variable) {
                     // do not pollute the scope at all
                     return false;
                 }
                 return true;
             });
             rsRules.splice.apply(rsRules, [i, 1].concat(rules));
-            rsRuleCnt += rules.length - 1;
             i += rules.length - 1;
             ruleset.resetCache();
         }
     }
 
     // Evaluate everything else
-    for (i = 0; i < rsRules.length; i++) {
-        rule = rsRules[i];
+    for (i = 0; (rule = rsRules[i]); i++) {
         if (!rule.evalFirst) {
             rsRules[i] = rule = rule.eval ? rule.eval(context) : rule;
         }
     }
 
     // Evaluate everything else
-    for (i = 0; i < rsRules.length; i++) {
-        rule = rsRules[i];
+    for (i = 0; (rule = rsRules[i]); i++) {
         // for rulesets, check if it is a css guard and can be removed
         if (rule instanceof Ruleset && rule.selectors && rule.selectors.length === 1) {
             // check if it can be folded in (e.g. & where)
-            if (rule.selectors[0].isJustParentSelector()) {
+            if (rule.selectors[0] && rule.selectors[0].isJustParentSelector()) {
                 rsRules.splice(i--, 1);
 
-                for (var j = 0; j < rule.rules.length; j++) {
-                    subRule = rule.rules[j];
-                    subRule.copyVisibilityInfo(rule.visibilityInfo());
-                    if (!(subRule instanceof Rule) || !subRule.variable) {
-                        rsRules.splice(++i, 0, subRule);
+                for (var j = 0; (subRule = rule.rules[j]); j++) {
+                    if (subRule instanceof Node) {
+                        subRule.copyVisibilityInfo(rule.visibilityInfo());
+                        if (!(subRule instanceof Declaration) || !subRule.variable) {
+                            rsRules.splice(++i, 0, subRule);
+                        }
                     }
                 }
             }
@@ -187,11 +219,11 @@ Ruleset.prototype.evalImports = function(context) {
     if (!rules) { return; }
 
     for (i = 0; i < rules.length; i++) {
-        if (rules[i].type === "Import") {
+        if (rules[i].type === 'Import') {
             importRules = rules[i].eval(context);
             if (importRules && (importRules.length || importRules.length === 0)) {
                 rules.splice.apply(rules, [i, 1].concat(importRules));
-                i+= importRules.length - 1;
+                i += importRules.length - 1;
             } else {
                 rules.splice(i, 1, importRules);
             }
@@ -230,22 +262,23 @@ Ruleset.prototype.matchCondition = function (args, context) {
 Ruleset.prototype.resetCache = function () {
     this._rulesets = null;
     this._variables = null;
+    this._properties = null;
     this._lookups = {};
 };
 Ruleset.prototype.variables = function () {
     if (!this._variables) {
         this._variables = !this.rules ? {} : this.rules.reduce(function (hash, r) {
-            if (r instanceof Rule && r.variable === true) {
+            if (r instanceof Declaration && r.variable === true) {
                 hash[r.name] = r;
             }
             // when evaluating variables in an import statement, imports have not been eval'd
             // so we need to go inside import statements.
             // guard against root being a string (in the case of inlined less)
-            if (r.type === "Import" && r.root && r.root.variables) {
+            if (r.type === 'Import' && r.root && r.root.variables) {
                 var vars = r.root.variables();
                 for (var name in vars) {
                     if (vars.hasOwnProperty(name)) {
-                        hash[name] = vars[name];
+                        hash[name] = r.root.variable(name);
                     }
                 }
             }
@@ -254,17 +287,93 @@ Ruleset.prototype.variables = function () {
     }
     return this._variables;
 };
+Ruleset.prototype.properties = function () {
+    if (!this._properties) {
+        this._properties = !this.rules ? {} : this.rules.reduce(function (hash, r) {
+            if (r instanceof Declaration && r.variable !== true) {
+                var name = (r.name.length === 1) && (r.name[0] instanceof Keyword) ?
+                    r.name[0].value : r.name;
+                // Properties don't overwrite as they can merge
+                if (!hash['$' + name]) {
+                    hash['$' + name] = [ r ];
+                }
+                else {
+                    hash['$' + name].push(r);
+                }
+            }
+            return hash;
+        }, {});
+    }
+    return this._properties;
+};
 Ruleset.prototype.variable = function (name) {
-    return this.variables()[name];
+    var decl = this.variables()[name];
+    if (decl) {
+        return this.parseValue(decl);
+    }
+};
+Ruleset.prototype.property = function (name) {
+    var decl = this.properties()[name];
+    if (decl) {
+        return this.parseValue(decl);
+    }
+};
+Ruleset.prototype.lastDeclaration = function () {
+    for (var i = this.rules.length; i > 0; i--) {
+        var decl = this.rules[i - 1];
+        if (decl instanceof Declaration) {
+            return this.parseValue(decl);
+        }
+    }
+};
+Ruleset.prototype.parseValue = function(toParse) {
+    var self = this;
+    function transformDeclaration(decl) {
+        if (decl.value instanceof Anonymous && !decl.parsed) {
+            if (typeof decl.value.value === 'string') {
+                this.parse.parseNode(
+                    decl.value.value,
+                    ['value', 'important'], 
+                    decl.value.getIndex(), 
+                    decl.fileInfo(), 
+                    function(err, result) {
+                        if (err) {
+                            decl.parsed = true;
+                        }
+                        if (result) {
+                            decl.value = result[0];
+                            decl.important = result[1] || '';
+                            decl.parsed = true;
+                        }
+                    });
+            } else {
+                decl.parsed = true;
+            }
+
+            return decl;
+        }
+        else {
+            return decl;
+        }
+    }
+    if (!Array.isArray(toParse)) {
+        return transformDeclaration.call(self, toParse);
+    }
+    else {
+        var nodes = [];
+        toParse.forEach(function(n) {
+            nodes.push(transformDeclaration.call(self, n));
+        });
+        return nodes;
+    }
 };
 Ruleset.prototype.rulesets = function () {
     if (!this.rules) { return []; }
 
-    var filtRules = [], rules = this.rules, cnt = rules.length,
+    var filtRules = [], rules = this.rules,
         i, rule;
 
-    for (i = 0; i < cnt; i++) {
-        rule = rules[i];
+    for (i = 0; (rule = rules[i]); i++) {
         if (rule.isRuleset) {
             filtRules.push(rule);
         }
@@ -279,6 +388,7 @@ Ruleset.prototype.prependRule = function (rule) {
     } else {
         this.rules = [ rule ];
     }
+    this.setParent(rule, this);
 };
 Ruleset.prototype.find = function (selector, self, filter) {
     self = self || this;
@@ -325,29 +435,14 @@ Ruleset.prototype.genCSS = function (context, output) {
         context.tabLevel++;
     }
 
-    var tabRuleStr = context.compress ? '' : Array(context.tabLevel + 1).join("  "),
-        tabSetStr = context.compress ? '' : Array(context.tabLevel).join("  "),
+    var tabRuleStr = context.compress ? '' : Array(context.tabLevel + 1).join('  '),
+        tabSetStr = context.compress ? '' : Array(context.tabLevel).join('  '),
         sep;
-
-    function isRulesetLikeNode(rule) {
-        // if it has nested rules, then it should be treated like a ruleset
-        // medias and comments do not have nested rules, but should be treated like rulesets anyway
-        // some directives and anonymous nodes are ruleset like, others are not
-        if (typeof rule.isRulesetLike === "boolean") {
-            return rule.isRulesetLike;
-        } else if (typeof rule.isRulesetLike === "function") {
-            return rule.isRulesetLike();
-        }
-
-        //anything else is assumed to be a rule
-        return false;
-    }
 
     var charsetNodeIndex = 0;
     var importNodeIndex = 0;
-    for (i = 0; i < this.rules.length; i++) {
-        rule = this.rules[i];
-        if (rule.type === "Comment") {
+    for (i = 0; (rule = this.rules[i]); i++) {
+        if (rule instanceof Comment) {
             if (importNodeIndex === i) {
                 importNodeIndex++;
             }
@@ -356,7 +451,7 @@ Ruleset.prototype.genCSS = function (context, output) {
             ruleNodes.splice(charsetNodeIndex, 0, rule);
             charsetNodeIndex++;
             importNodeIndex++;
-        } else if (rule.type === "Import") {
+        } else if (rule.type === 'Import') {
             ruleNodes.splice(importNodeIndex, 0, rule);
             importNodeIndex++;
         } else {
@@ -398,15 +493,14 @@ Ruleset.prototype.genCSS = function (context, output) {
     }
 
     // Compile rules and rulesets
-    for (i = 0; i < ruleNodes.length; i++) {
-        rule = ruleNodes[i];
+    for (i = 0; (rule = ruleNodes[i]); i++) {
 
         if (i + 1 === ruleNodes.length) {
             context.lastRule = true;
         }
 
         var currentLastRule = context.lastRule;
-        if (isRulesetLikeNode(rule)) {
+        if (rule.isRulesetLike(rule)) {
             context.lastRule = false;
         }
 
@@ -418,7 +512,7 @@ Ruleset.prototype.genCSS = function (context, output) {
 
         context.lastRule = currentLastRule;
 
-        if (!context.lastRule) {
+        if (!context.lastRule && rule.isVisible()) {
             output.add(context.compress ? '' : ('\n' + tabRuleStr));
         } else {
             context.lastRule = false;
@@ -448,9 +542,15 @@ Ruleset.prototype.joinSelector = function (paths, context, selector) {
         if (elementsToPak.length === 0) {
             replacementParen = new Paren(elementsToPak[0]);
         } else {
-            var insideParent = [];
+            var insideParent = new Array(elementsToPak.length);
             for (j = 0; j < elementsToPak.length; j++) {
-                insideParent.push(new Element(null, elementsToPak[j], originalElement.index, originalElement.currentFileInfo));
+                insideParent[j] = new Element(
+                    null,
+                    elementsToPak[j],
+                    originalElement.isVariable,
+                    originalElement._index,
+                    originalElement._fileInfo
+                );
             }
             replacementParen = new Paren(new Selector(insideParent));
         }
@@ -459,7 +559,7 @@ Ruleset.prototype.joinSelector = function (paths, context, selector) {
 
     function createSelector(containedElement, originalElement) {
         var element, selector;
-        element = new Element(null, containedElement, originalElement.index, originalElement.currentFileInfo);
+        element = new Element(null, containedElement, originalElement.isVariable, originalElement._index, originalElement._fileInfo);
         selector = new Selector([element]);
         return selector;
     }
@@ -472,19 +572,20 @@ Ruleset.prototype.joinSelector = function (paths, context, selector) {
         // our new selector path
         newSelectorPath = [];
 
-        //construct the joined selector - if & is the first thing this will be empty,
+        // construct the joined selector - if & is the first thing this will be empty,
         // if not newJoinedSelector will be the last set of elements in the selector
         if (beginningPath.length > 0) {
-            newSelectorPath = beginningPath.slice(0);
+            newSelectorPath = utils.copyArray(beginningPath);
             lastSelector = newSelectorPath.pop();
-            newJoinedSelector = originalSelector.createDerived(lastSelector.elements.slice(0));
+            newJoinedSelector = originalSelector.createDerived(utils.copyArray(lastSelector.elements));
         }
         else {
             newJoinedSelector = originalSelector.createDerived([]);
         }
 
         if (addPath.length > 0) {
-            // /deep/ is a combinator that is valid without anything in front of it
+            // /deep/ is a CSS4 selector - (removed, so should deprecate)
+            // that is valid without anything in front of it
             // so if the & does not have a combinator that is "" or " " then
             // and there is a combinator on the parent, then grab that.
             // this also allows + a { & .b { .a & { ... though not sure why you would want to do that
@@ -493,7 +594,13 @@ Ruleset.prototype.joinSelector = function (paths, context, selector) {
                 combinator = parentEl.combinator;
             }
             // join the elements so far with the first part of the parent
-            newJoinedSelector.elements.push(new Element(combinator, parentEl.value, replacedElement.index, replacedElement.currentFileInfo));
+            newJoinedSelector.elements.push(new Element(
+                combinator,
+                parentEl.value,
+                replacedElement.isVariable,
+                replacedElement._index,
+                replacedElement._fileInfo
+            ));
             newJoinedSelector.elements = newJoinedSelector.elements.concat(addPath[0].elements.slice(1));
         }
 
@@ -502,7 +609,7 @@ Ruleset.prototype.joinSelector = function (paths, context, selector) {
             newSelectorPath.push(newJoinedSelector);
         }
 
-        //put together the parent selectors after the join (e.g. the rest of the parent)
+        // put together the parent selectors after the join (e.g. the rest of the parent)
         if (addPath.length > 1) {
             var restOfPath = addPath.slice(1);
             restOfPath = restOfPath.map(function (selector) {
@@ -536,9 +643,7 @@ Ruleset.prototype.joinSelector = function (paths, context, selector) {
             return;
         }
 
-        for (i = 0; i < selectors.length; i++) {
-            sel = selectors[i];
-
+        for (i = 0; (sel = selectors[i]); i++) {
             // if the previous thing in sel is a parent this needs to join on to it
             if (sel.length > 0) {
                 sel[sel.length - 1] = sel[sel.length - 1].createDerived(sel[sel.length - 1].elements.concat(elements));
@@ -566,12 +671,12 @@ Ruleset.prototype.joinSelector = function (paths, context, selector) {
         var i, j, k, currentElements, newSelectors, selectorsMultiplied, sel, el, hadParentSelector = false, length, lastSelector;
         function findNestedSelector(element) {
             var maybeSelector;
-            if (element.value.type !== 'Paren') {
+            if (!(element.value instanceof Paren)) {
                 return null;
             }
 
             maybeSelector = element.value.value;
-            if (maybeSelector.type !== 'Selector') {
+            if (!(maybeSelector instanceof Selector)) {
                 return null;
             }
 
@@ -587,10 +692,9 @@ Ruleset.prototype.joinSelector = function (paths, context, selector) {
             []
         ];
 
-        for (i = 0; i < inSelector.elements.length; i++) {
-            el = inSelector.elements[i];
+        for (i = 0; (el = inSelector.elements[i]); i++) {
             // non parent reference elements just get added
-            if (el.value !== "&") {
+            if (el.value !== '&') {
                 var nestedSelector = findNestedSelector(el);
                 if (nestedSelector != null) {
                     // merge the current list of non parent selector elements
@@ -600,7 +704,7 @@ Ruleset.prototype.joinSelector = function (paths, context, selector) {
                     var nestedPaths = [], replaced, replacedNewSelectors = [];
                     replaced = replaceParentSelector(nestedPaths, context, nestedSelector);
                     hadParentSelector = hadParentSelector || replaced;
-                    //the nestedPaths array should have only one member - replaceParentSelector does not multiply selectors
+                    // the nestedPaths array should have only one member - replaceParentSelector does not multiply selectors
                     for (k = 0; k < nestedPaths.length; k++) {
                         var replacementSelector = createSelector(createParenthesis(nestedPaths[k], el), el);
                         addAllReplacementsIntoPath(newSelectors, [replacementSelector], el, inSelector, replacedNewSelectors);
@@ -630,7 +734,7 @@ Ruleset.prototype.joinSelector = function (paths, context, selector) {
                         // the combinator used on el should now be applied to the next element instead so that
                         // it is not lost
                         if (sel.length > 0) {
-                            sel[0].elements.push(new Element(el.combinator, '', el.index, el.currentFileInfo));
+                            sel[0].elements.push(new Element(el.combinator, '', el.isVariable, el._index, el._fileInfo));
                         }
                         selectorsMultiplied.push(sel);
                     }
@@ -662,7 +766,6 @@ Ruleset.prototype.joinSelector = function (paths, context, selector) {
                 paths.push(newSelectors[i]);
                 lastSelector = newSelectors[i][length - 1];
                 newSelectors[i][length - 1] = lastSelector.createDerived(lastSelector.elements, inSelector.extendList);
-                //newSelectors[i][length - 1].copyVisibilityInfo(inSelector.visibilityInfo());
             }
         }
 
@@ -685,12 +788,7 @@ Ruleset.prototype.joinSelector = function (paths, context, selector) {
         if (context.length > 0) {
             newPaths = [];
             for (i = 0; i < context.length; i++) {
-                //var concatenated = [];
-                //context[i].forEach(function(entry) {
-                //    var newEntry = entry.createDerived(entry.elements, entry.extendList, entry.evaldCondition);
-                //    newEntry.copyVisibilityInfo(selector.visibilityInfo());
-                //    concatenated.push(newEntry);
-                //}, this);
+
                 var concatenated = context[i].map(deriveSelector.bind(this, selector.visibilityInfo()));
 
                 concatenated.push(selector);

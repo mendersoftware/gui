@@ -1,34 +1,27 @@
-var Keyword = require("../tree/keyword"),
-    DetachedRuleset = require("../tree/detached-ruleset"),
-    Dimension = require("../tree/dimension"),
-    Color = require("../tree/color"),
-    Quoted = require("../tree/quoted"),
-    Anonymous = require("../tree/anonymous"),
-    URL = require("../tree/url"),
-    Operation = require("../tree/operation"),
-    functionRegistry = require("./function-registry");
+var Keyword = require('../tree/keyword'),
+    DetachedRuleset = require('../tree/detached-ruleset'),
+    Dimension = require('../tree/dimension'),
+    Color = require('../tree/color'),
+    Quoted = require('../tree/quoted'),
+    Anonymous = require('../tree/anonymous'),
+    URL = require('../tree/url'),
+    Operation = require('../tree/operation'),
+    functionRegistry = require('./function-registry');
 
 var isa = function (n, Type) {
         return (n instanceof Type) ? Keyword.True : Keyword.False;
     },
     isunit = function (n, unit) {
         if (unit === undefined) {
-            throw { type: "Argument", message: "missing the required second argument to isunit." };
+            throw { type: 'Argument', message: 'missing the required second argument to isunit.' };
         }
-        unit = typeof unit.value === "string" ? unit.value : unit;
-        if (typeof unit !== "string") {
-            throw { type: "Argument", message: "Second argument to isunit should be a unit or a string." };
+        unit = typeof unit.value === 'string' ? unit.value : unit;
+        if (typeof unit !== 'string') {
+            throw { type: 'Argument', message: 'Second argument to isunit should be a unit or a string.' };
         }
         return (n instanceof Dimension) && n.unit.is(unit) ? Keyword.True : Keyword.False;
-    },
-    getItemsFromNode = function(node) {
-        // handle non-array values as an array of length 1
-        // return 'undefined' if index is invalid
-        var items = Array.isArray(node.value) ?
-            node.value : Array(node);
-
-        return items;
     };
+
 functionRegistry.addMultiple({
     isruleset: function (n) {
         return isa(n, DetachedRuleset);
@@ -60,9 +53,9 @@ functionRegistry.addMultiple({
     isunit: isunit,
     unit: function (val, unit) {
         if (!(val instanceof Dimension)) {
-            throw { type: "Argument",
-                message: "the first argument to unit must be a number" +
-                    (val instanceof Operation ? ". Have you forgotten parenthesis?" : "") };
+            throw { type: 'Argument',
+                message: 'the first argument to unit must be a number' +
+                    (val instanceof Operation ? '. Have you forgotten parenthesis?' : '') };
         }
         if (unit) {
             if (unit instanceof Keyword) {
@@ -71,19 +64,11 @@ functionRegistry.addMultiple({
                 unit = unit.toCSS();
             }
         } else {
-            unit = "";
+            unit = '';
         }
         return new Dimension(val.value, unit);
     },
-    "get-unit": function (n) {
+    'get-unit': function (n) {
         return new Anonymous(n.unit);
-    },
-    extract: function(values, index) {
-        index = index.value - 1; // (1-based index)
-
-        return getItemsFromNode(values)[index];
-    },
-    length: function(values) {
-        return new Dimension(getItemsFromNode(values).length);
     }
 });

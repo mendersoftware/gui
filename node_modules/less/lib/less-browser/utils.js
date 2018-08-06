@@ -10,13 +10,13 @@ module.exports = {
     addDataAttr: function(options, tag) {
         for (var opt in tag.dataset) {
             if (tag.dataset.hasOwnProperty(opt)) {
-                if (opt === "env" || opt === "dumpLineNumbers" || opt === "rootpath" || opt === "errorReporting") {
+                if (opt === 'env' || opt === 'dumpLineNumbers' || opt === 'rootpath' || opt === 'errorReporting') {
                     options[opt] = tag.dataset[opt];
                 } else {
                     try {
                         options[opt] = JSON.parse(tag.dataset[opt]);
                     }
-                    catch(_) {}
+                    catch (_) {}
                 }
             }
         }

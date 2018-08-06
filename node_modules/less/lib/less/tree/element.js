@@ -1,8 +1,8 @@
-var Node = require("./node"),
-    Paren = require("./paren"),
-    Combinator = require("./combinator");
+var Node = require('./node'),
+    Paren = require('./paren'),
+    Combinator = require('./combinator');
 
-var Element = function (combinator, value, index, currentFileInfo, info) {
+var Element = function (combinator, value, isVariable, index, currentFileInfo, visibilityInfo) {
     this.combinator = combinator instanceof Combinator ?
                       combinator : new Combinator(combinator);
 
@@ -11,35 +11,39 @@ var Element = function (combinator, value, index, currentFileInfo, info) {
     } else if (value) {
         this.value = value;
     } else {
-        this.value = "";
+        this.value = '';
     }
-    this.index = index;
-    this.currentFileInfo = currentFileInfo;
-    this.copyVisibilityInfo(info);
+    this.isVariable = isVariable;
+    this._index = index;
+    this._fileInfo = currentFileInfo;
+    this.copyVisibilityInfo(visibilityInfo);
+    this.setParent(this.combinator, this);
 };
 Element.prototype = new Node();
-Element.prototype.type = "Element";
+Element.prototype.type = 'Element';
 Element.prototype.accept = function (visitor) {
     var value = this.value;
     this.combinator = visitor.visit(this.combinator);
-    if (typeof value === "object") {
+    if (typeof value === 'object') {
         this.value = visitor.visit(value);
     }
 };
 Element.prototype.eval = function (context) {
     return new Element(this.combinator,
                              this.value.eval ? this.value.eval(context) : this.value,
-                             this.index,
-                             this.currentFileInfo, this.visibilityInfo());
+                             this.isVariable,
+                             this.getIndex(),
+                             this.fileInfo(), this.visibilityInfo());
 };
 Element.prototype.clone = function () {
     return new Element(this.combinator,
         this.value,
-        this.index,
-        this.currentFileInfo, this.visibilityInfo());
+        this.isVariable,
+        this.getIndex(),
+        this.fileInfo(), this.visibilityInfo());
 };
 Element.prototype.genCSS = function (context, output) {
-    output.add(this.toCSS(context), this.currentFileInfo, this.index);
+    output.add(this.toCSS(context), this.fileInfo(), this.getIndex());
 };
 Element.prototype.toCSS = function (context) {
     context = context || {};

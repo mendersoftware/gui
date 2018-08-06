@@ -1,24 +1,25 @@
-var Node = require("./node");
+var Node = require('./node'),
+    Call = require('./call');
 
 var Variable = function (name, index, currentFileInfo) {
     this.name = name;
-    this.index = index;
-    this.currentFileInfo = currentFileInfo || {};
+    this._index = index;
+    this._fileInfo = currentFileInfo;
 };
 Variable.prototype = new Node();
-Variable.prototype.type = "Variable";
+Variable.prototype.type = 'Variable';
 Variable.prototype.eval = function (context) {
     var variable, name = this.name;
 
     if (name.indexOf('@@') === 0) {
-        name = '@' + new Variable(name.slice(1), this.index, this.currentFileInfo).eval(context).value;
+        name = '@' + new Variable(name.slice(1), this.getIndex(), this.fileInfo()).eval(context).value;
     }
 
     if (this.evaluating) {
         throw { type: 'Name',
-                message: "Recursive variable definition for " + name,
-                filename: this.currentFileInfo.filename,
-                index: this.index };
+            message: 'Recursive variable definition for ' + name,
+            filename: this.fileInfo().filename,
+            index: this.getIndex() };
     }
 
     this.evaluating = true;
@@ -30,7 +31,13 @@ Variable.prototype.eval = function (context) {
                 var importantScope = context.importantScope[context.importantScope.length - 1];
                 importantScope.important = v.important;
             }
-            return v.value.eval(context);
+            // If in calc, wrap vars in a function call to cascade evaluate args first
+            if (context.inCalc) {
+                return (new Call('_SELF', [v.value])).eval(context);
+            }
+            else {
+                return v.value.eval(context);
+            }
         }
     });
     if (variable) {
@@ -38,9 +45,9 @@ Variable.prototype.eval = function (context) {
         return variable;
     } else {
         throw { type: 'Name',
-                message: "variable " + name + " is undefined",
-                filename: this.currentFileInfo.filename,
-                index: this.index };
+            message: 'variable ' + name + ' is undefined',
+            filename: this.fileInfo().filename,
+            index: this.getIndex() };
     }
 };
 Variable.prototype.find = function (obj, fun) {

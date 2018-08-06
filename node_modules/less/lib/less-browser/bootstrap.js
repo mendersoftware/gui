@@ -3,15 +3,31 @@
  * used in the browser distributed version of less
  * to kick-start less using the browser api
  */
-/*global window, document */
+/* global window, document */
 
-// shim Promise if required
-require('promise/polyfill.js');
+// TODO - consider switching this out for a recommendation for this polyfill?
+// <script src="https://cdn.polyfill.io/v2/polyfill.min.js"></script>
+// Browsers have good Promise support
+require('promise/polyfill');
 
-var options = window.less || {};
-require("./add-default-options")(window, options);
+var options = require('../less/default-options')();
 
-var less = module.exports = require("./index")(window, options);
+if (window.less) {
+    for (key in window.less) {
+        if (window.less.hasOwnProperty(key)) {
+            options[key] = window.less[key];
+        }
+    }
+}
+require('./add-default-options')(window, options);
+
+options.plugins = options.plugins || [];
+
+if (window.LESS_PLUGINS) {
+    options.plugins = options.plugins.concat(window.LESS_PLUGINS);
+}
+
+var less = module.exports = require('./index')(window, options);
 
 window.less = less;
 
@@ -31,7 +47,7 @@ if (options.onReady) {
     if (/!watch/.test(window.location.hash)) {
         less.watch();
     }
-    // Simulate synchronous stylesheet loading by blocking page rendering
+    // Simulate synchronous stylesheet loading by hiding page rendering
     if (!options.async) {
         css = 'body { display: none !important }';
         head = document.head || document.getElementsByTagName('head')[0];
