@@ -23,7 +23,6 @@ import TextField from 'material-ui/TextField';
 import FontIcon from 'material-ui/FontIcon';
 import FileIcon from 'react-material-icons/icons/file/file-upload';
 import IconButton from 'material-ui/IconButton';
-import Snackbar from 'material-ui/Snackbar';
 import LinearProgress from 'material-ui/LinearProgress';
 
 import { preformatWithRequestID } from '../../helpers.js'
@@ -46,8 +45,6 @@ var Repository = createReactClass({
       popupLabel: "Upload a new artifact",
       artifacts: [],
       tmpFile: null,
-      openSnack: false,
-      autoHideDuration: 8000,
       divHeight: 178,
     };
   },
@@ -72,7 +69,7 @@ var Repository = createReactClass({
       this._onUploadSubmit(acceptedFiles);
     }
     if (rejectedFiles.length) {
-      AppActions.setSnackbar("File '"+rejectedFiles[0].name +"'' was rejected. File must be of type .mender");
+      AppActions.setSnackbar("File '"+rejectedFiles[0].name +"'' was rejected. File must be of type .mender", null);
     }
   },
   _onUploadSubmit: function(files) {
@@ -94,16 +91,15 @@ var Repository = createReactClass({
     };
     var callback = {
       success: function(result) {
-        AppActions.setSnackbar("Artifact details were updated successfully.");
+        AppActions.setSnackbar("Artifact details were updated successfully.", 5000, "");
         var updated = self.state.artifact;
         updated.description = description;
         self.setState({artifact: updated});
         self.props.refreshArtifacts();
       },
       error: function(err) {
-        var errMsg = err.res.body.error || ""
-        AppActions.setSnackbar(preformatWithRequestID(err.res, "Artifact details couldn't be updated. " + err.error));
-        self.props.refreshArtifacts();
+        var errMsg = err.res.body.error || "";
+        AppActions.setSnackbar(preformatWithRequestID(err.res, "Artifact details couldn't be updated. " + err.error), null, "Copy to clipboard");
       }
     };
     AppActions.editArtifact(id, body, callback);

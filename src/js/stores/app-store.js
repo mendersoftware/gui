@@ -424,9 +424,9 @@ function setGlobalSettings(settings) {
 }
 
 
-function _setSnackbar(message, duration) {
+function _setSnackbar(message, duration, action) {
   var show = message ? true : false; 
-  _snackbar = {open: show, message: message, maxWidth: "900px"};
+  _snackbar = {open: show, message: message, maxWidth: "900px", autoHideDuration: duration, action: action};
 }
 
 function _setCurrentUser(user) {
@@ -703,7 +703,7 @@ var AppStore = assign(EventEmitter.prototype, {
         break;
 
       case AppConstants.SET_SNACKBAR:
-        _setSnackbar(payload.action.message, payload.action.duration);
+        _setSnackbar(payload.action.message, payload.action.duration, payload.action.action);
         break;
 
       case AppConstants.SET_CURRENT_USER:

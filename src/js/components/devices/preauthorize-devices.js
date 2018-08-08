@@ -89,7 +89,7 @@ var Preauthorize =  createReactClass({
       error: function(error) {
         var errormsg = error.res.body.error || "Please check your connection";
         self.setState({pageLoading: false, authLoading: null });
-        AppActions.setSnackbar(preformatWithRequestID(error.res, "Preauthorized devices couldn't be loaded. " + errormsg));
+        AppActions.setSnackbar(preformatWithRequestID(error.res, "Preauthorized devices couldn't be loaded. " + errormsg), null, "Copy to clipboard");
       }
     };
     AppActions.getDevicesByStatus(callback, "preauthorized", this.state.pageNo, this.state.pageLength);
@@ -210,7 +210,7 @@ var Preauthorize =  createReactClass({
     };
     var callback = {
       success: function(res) {
-        AppActions.setSnackbar("Device was successfully added to the preauthorization list");
+        AppActions.setSnackbar("Device was successfully added to the preauthorization list", 5000);
         self._getDevices();
         self.props.refreshCount();
 
@@ -222,12 +222,12 @@ var Preauthorize =  createReactClass({
       },
       error: function(err) {
         console.log(err);
-        var errMsg = err.res.body.error || "";
+        var errMsg = (err.res.body||{}).error || "";
         
         if (err.res.status === 409) {
           self.setState({errorText: "A preauthorization with a matching identity data set already exists", errorText1: " "});
         } else {
-          AppActions.setSnackbar(preformatWithRequestID(err.res, "The device could not be added: "+errMsg));
+          AppActions.setSnackbar(preformatWithRequestID(err.res, "The device could not be added: "+errMsg), null, "Copy to clipboard");
         }
       }
     }
@@ -250,7 +250,7 @@ var Preauthorize =  createReactClass({
       },
       error: function(err) {
         var errMsg = err.res.body.error || "";
-        AppActions.setSnackbar(preformatWithRequestID(err.res, "There was a problem removing the preauthorization: "+errMsg));
+        AppActions.setSnackbar(preformatWithRequestID(err.res, "There was a problem removing the preauthorization: "+errMsg), null, "Copy to clipboard");
         console.log(err);
         callback();
       }
@@ -271,7 +271,7 @@ var Preauthorize =  createReactClass({
           loopArrays(arr);
         } else {
           self.setState({openRemove: false, selectedRows: [], devicesToRemove: []});
-          AppActions.setSnackbar(success + " " + pluralize("devices", success) + " " + pluralize("were", success)+ " successfully removed from the preauthorization list");
+          AppActions.setSnackbar(success + " " + pluralize("devices", success) + " " + pluralize("were", success)+ " successfully removed from the preauthorization list", 5000);
           self._getDevices();
           self.props.refreshCount();
         }

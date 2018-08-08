@@ -20,7 +20,6 @@ import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 
-import Snackbar from 'material-ui/Snackbar';
 import { List, ListItem } from 'material-ui/List';
 import Divider from 'material-ui/Divider';
 
@@ -39,7 +38,6 @@ var Deployments = createReactClass({
       collatedArtifacts: AppStore.getCollatedArtifacts(),
       groups: AppStore.getGroups(),
       invalid: true,
-      snackbar: AppStore.getSnackbar(),
       refreshDeploymentsLength: 30000,
       hasDeployments: AppStore.getHasDeployments(),
       showHelptips: AppStore.showHelptips(),
@@ -365,8 +363,8 @@ var Deployments = createReactClass({
         });
       },
       error: function(err) {
-        var errMsg = err.res.body.error || ""
-        AppActions.setSnackbar(preformatWithRequestID(err.res, "Error creating deployment. " + errMsg))
+        var errMsg = err.res.body.error || "";
+        AppActions.setSnackbar(preformatWithRequestID(err.res, "Error creating deployment. " + errMsg), null, "Copy to clipboard");
       }
     };
     AppActions.createDeployment(newDeployment, callback);
@@ -681,14 +679,6 @@ var Deployments = createReactClass({
 
           </Dialog>
 
-           <Snackbar
-            open={this.state.snackbar.open}
-            message={this.state.snackbar.message}
-            bodyStyle={{maxWidth: this.state.snackbar.maxWidth}}
-            autoHideDuration={5000}
-            onRequestClose={this.handleRequestClose}
-          />
-      
       </div>
     );
   }

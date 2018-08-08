@@ -12,7 +12,6 @@ var AppActions = require('../../actions/app-actions');
 
 // material ui
 import { List, ListItem } from 'material-ui/List';
-import Snackbar from 'material-ui/Snackbar';
 import Subheader from 'material-ui/Subheader';
 import { Tabs, Tab } from 'material-ui/Tabs';
 
@@ -28,7 +27,6 @@ var Settings =  createReactClass({
   getInitialState: function() {
     return {
       tabIndex: this._updateActive(),
-      snackbar: AppStore.getSnackbar(),
       hasMultitenancy: AppStore.hasMultitenancy(),
     };
   },
@@ -153,13 +151,6 @@ var Settings =  createReactClass({
 
           </Tabs>
         </div>
-
-        <Snackbar
-          bodyStyle={{maxWidth: this.state.snackbar.maxWidth}}
-          open={this.state.snackbar.open}
-          message={this.state.snackbar.message}
-          autoHideDuration={8000} 
-        />
       </div>
     )
   }
