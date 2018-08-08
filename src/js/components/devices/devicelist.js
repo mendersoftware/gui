@@ -21,7 +21,6 @@ import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/RaisedButton';
 import FontIcon from 'material-ui/FontIcon';
 import InfoIcon from 'react-material-icons/icons/action/info-outline';
-import Snackbar from 'material-ui/Snackbar';
 import TextField from 'material-ui/TextField';
 
 var Authorized =  createReactClass({

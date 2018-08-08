@@ -12,13 +12,11 @@ import Form from '../common/forms/form';
 import TextInput from '../common/forms/textinput';
 import PasswordInput from '../common/forms/passwordinput';
 import FormCheckbox from '../common/forms/formcheckbox';
-import Snackbar from 'material-ui/Snackbar';
 
 import { preformatWithRequestID } from '../../helpers.js'
 
 function getState() {
   return {
-    snackbar: AppStore.getSnackbar(),
     noExpiry: cookie.load("noExpiry"),
     isHosted: (window.location.hostname === "hosted.mender.io")
   };
@@ -83,7 +81,7 @@ var Login = createReactClass({
             // if error message, check for "unauthorized" 
             errMsg = err.res.body["error"] === "unauthorized" ? "The username or password is incorrect" : errMsg + ": " + err.res.body["error"];
           }
-          AppActions.setSnackbar(preformatWithRequestID(err.res, errMsg), 10000);
+          AppActions.setSnackbar(preformatWithRequestID(err.res, errMsg), null, "Copy to clipboard");
         }
       }, formData);
     }
@@ -128,13 +126,6 @@ var Login = createReactClass({
               </div>
             : null}
         </div>
-
-        <Snackbar
-          open={this.state.snackbar.open}
-          bodyStyle={{maxWidth: this.state.snackbar.maxWidth}}
-          message={this.state.snackbar.message}
-          autoHideDuration={8000}
-        />
       </div>
     );
   }

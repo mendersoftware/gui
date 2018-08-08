@@ -10,7 +10,7 @@ var DeviceGroups = require('./device-groups');
 var PendingDevices = require('./pending-devices');
 var RejectedDevices = require('./rejected-devices');
 var PreauthDevices = require('./preauthorize-devices');
-var SharedSnackbar = require('./sharedsnackbar');
+
 var pluralize = require('pluralize');
 var Loader = require('../common/loader');
 
@@ -20,6 +20,7 @@ var AppActions = require('../../actions/app-actions');
 
 
 import { Router, Route, Link } from 'react-router';
+import { preformatWithRequestID } from '../../helpers.js'
 
 import { Tabs, Tab } from 'material-ui/Tabs';
 import Dialog from 'material-ui/Dialog';
@@ -38,7 +39,6 @@ var Devices = createReactClass({
 			rejectedCount: AppStore.getTotalRejectedDevices(),
 			preauthCount: AppStore.getTotalPreauthDevices(), 
 			pendingCount: AppStore.getTotalPendingDevices(),
-			snackbar: AppStore.getSnackbar(),
       refreshLength: 10000,
       showHelptips: AppStore.showHelptips(),
       deviceLimit: AppStore.getDeviceLimit(),
@@ -203,8 +203,9 @@ var Devices = createReactClass({
 	        if (i < arr.length) {
 	          loopArrays(arr);
 	        } else {
-	          AppActions.setSnackbar(success + " " + pluralize("devices", success) + " " + pluralize("were", success) + " authorized");
-
+	        	if (success) {
+	          	AppActions.setSnackbar(success + " " + pluralize("devices", success) + " " + pluralize("were", success) + " authorized");
+	        	}
 	          // refresh counts
             self._restartInterval();
             setTimeout(function() {
@@ -231,11 +232,11 @@ var Devices = createReactClass({
 	      }.bind(this),
 	      error: function(err) {
 	        var errMsg = err.res.body.error || "";
-	        console.log("error");
+	        console.log("error", errMsg);
 	        fail++;
 	        i++;
 
-	        AppActions.setSnackbar(preformatWithRequestID(err.res, "There was a problem authorizing the device: "+errMsg));
+	        AppActions.setSnackbar(preformatWithRequestID(err.res, "There was a problem authorizing the device: "+errMsg), null, "Copy to clipboard");
 	        if (i===devices.length) {
 	          callback(i-fail);
 	        }
@@ -311,7 +312,7 @@ var Devices = createReactClass({
 	      error: function(err) {
 	        var errMsg = err.res.body.error || "";
 	        self.setState({pauseAdmisson: false, reject_request_pending: false});
-	        AppActions.setSnackbar(preformatWithRequestID(err.res, "There was a problem rejecting the device: "+errMsg));
+	        AppActions.setSnackbar(preformatWithRequestID(err.res, "There was a problem rejecting the device: "+errMsg), null, "Copy to clipboard");
 	      }
 	    };
 
@@ -332,7 +333,7 @@ var Devices = createReactClass({
 	      error: function(err) {
 	        var errMsg = err.res.error.message || "";
           console.log(errMsg);
-	        AppActions.setSnackbar(preformatWithRequestID(err.res, "There was a problem decommissioning the device: "+errMsg));
+	        AppActions.setSnackbar(preformatWithRequestID(err.res, "There was a problem decommissioning the device: "+errMsg), null, "Copy to clipboard");
           self.setState({pauseAdmisson: false, decommission_request_pending: false});
 	      }
 	    };
@@ -610,10 +611,6 @@ var Devices = createReactClass({
 	          </TableBody>
           </Table>
         </Dialog>
-
-
-   			<SharedSnackbar snackbar={this.state.snackbar} />
-
 
         <Dialog
           open={this.state.openIdDialog || false}

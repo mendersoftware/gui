@@ -6,10 +6,10 @@ var createReactClass = require('create-react-class');
 
 import { Router, Route, Link } from 'react-router';
 import { setRetryTimer, clearRetryTimer, clearAllRetryTimers } from '../../utils/retrytimer';
-import Snackbar from 'material-ui/Snackbar';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
+import copy from 'copy-to-clipboard';
 
 import { preformatWithRequestID } from '../../helpers.js'
 
@@ -17,7 +17,6 @@ function getState() {
   return {
     artifacts: AppStore.getArtifactsRepo(),
     selected: null,
-    snackbar: AppStore.getSnackbar(),
     remove: false,
     refreshArtifactsLength: 60000,
     showHelptips: AppStore.showHelptips(),
@@ -69,9 +68,6 @@ var Artifacts = createReactClass({
         setTimeout(function() {
           self.setState({doneLoading: true, artifacts:artifacts});
         }, 300);
-        setTimeout(function() {
-          AppActions.setSnackbar("");
-        }, 4000);
       },
       error: function(err) {
         var errormsg = err.error || "Please check your connection";
@@ -92,12 +88,13 @@ var Artifacts = createReactClass({
     var self = this;
     var callback =  {
       success: function() {
-        AppActions.setSnackbar("Artifact was removed");
+        AppActions.setSnackbar("Artifact was removed", 5000, "");
         self._getArtifacts();
       },
       error: function(err) {
-        var errMsg = err.res.body.error || ""
-        AppActions.setSnackbar(preformatWithRequestID(err.res, "Error removing artifact: " + errMsg));
+
+        var errMsg = err.res.body.error || "";
+        AppActions.setSnackbar(preformatWithRequestID(err.res, "Error removing artifact: " + errMsg), null, "Copy to clipboard");
       }
     };
     AppActions.removeArtifact(self.state.artifact.id, callback);
@@ -134,14 +131,6 @@ var Artifacts = createReactClass({
         >
         Are you sure you want to remove <i>{(this.state.artifact||{}).name}</i>?
         </Dialog>
-
-        <Snackbar
-          open={this.state.snackbar.open}
-          message={this.state.snackbar.message}
-          autoHideDuration={8000}
-          bodyStyle={{maxWidth: this.state.snackbar.maxWidth}}
-          onRequestClose={this.handleRequestClose}
-        />
       </div>
     );
   }
