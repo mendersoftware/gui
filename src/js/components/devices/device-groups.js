@@ -232,8 +232,8 @@ var DeviceGroups = createReactClass({
           		});
           	}
         },
-        error: function(error) {
-          console.log(error);
+        error: function(err) {
+          console.log(err);
           var errormsg = err.error || "Please check your connection.";
           self.setState({loading: false});
           setRetryTimer(err, "devices", "Devices couldn't be loaded. " + errormsg, self.state.refreshDeviceLength);
@@ -268,8 +268,8 @@ var DeviceGroups = createReactClass({
           	}
           });
         },
-        error: function(error) {
-          console.log(error);
+        error: function(err) {
+          console.log(err);
           var errormsg = err.error || "Please check your connection.";
           self.setState({loading: false});
           setRetryTimer(err, "devices", "Devices couldn't be loaded. " + errormsg, self.state.refreshDeviceLength);
@@ -316,8 +316,8 @@ var DeviceGroups = createReactClass({
           	}
           });
         },
-        error: function(error) {
-          if (error.res.statusCode === 404) {
+        error: function(err) {
+          if (err.res.statusCode === 404) {
           	 self.setState({loading: false, devices: []});
           } else {
           	var errormsg = err.error || "Please check your connection.";
