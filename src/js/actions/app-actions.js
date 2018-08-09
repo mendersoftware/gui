@@ -219,11 +219,12 @@ var AppActions = {
 
 
   /* General */
-  setSnackbar: function(message, duration) {
+  setSnackbar: function(message, duration, action) {
     AppDispatcher.handleViewAction({
       actionType: AppConstants.SET_SNACKBAR,
       message: message,
-      duration: duration
+      duration: duration,
+      action: action,
     })
   },
 

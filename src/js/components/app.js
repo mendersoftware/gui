@@ -10,7 +10,10 @@ import RawTheme from '../themes/mender-theme.js';
 import IdleTimer from 'react-idle-timer';
 import { clearAllRetryTimers } from '../utils/retrytimer';
 
-import { logout, updateMaxAge, expirySet }from '../auth';
+import { logout, updateMaxAge, expirySet } from '../auth';
+import { preformatWithRequestID } from '../helpers.js'
+
+var SharedSnackbar = require('../components/common/sharedsnackbar');
 
 var AppStore = require('../stores/app-store');
 var AppActions = require('../actions/app-actions');
@@ -40,6 +43,7 @@ var App = createReactClass({
       version: AppStore.getMenderVersion(),
       docsVersion: AppStore.getDocsVersion(),
       globalSettings: AppStore.getGlobalSettings(),
+      snackbar: AppStore.getSnackbar(),
     }
   },
   componentWillMount: function() {
@@ -84,27 +88,27 @@ var App = createReactClass({
     var callback = {
       success: function(result) {
         self.setState({progress: 0});
-        AppActions.setSnackbar("Upload successful", 4000);
+        AppActions.setSnackbar("Upload successful", 5000);
         AppActions.setUploadInProgress(false);
       },
       error: function(err) {
-        console.log(err);
+        self.setState({progress: 0});
+        AppActions.setUploadInProgress(false);
+     
         try {
-          var errMsg = err.res.body.error || ""
-          AppActions.setSnackbar(preformatWithRequestID(err.res, "Artifact couldn't be uploaded. " + errMsg));
+          var errMsg = err.res.body.error || "";
+          AppActions.setSnackbar(preformatWithRequestID(err.res, "Artifact couldn't be uploaded. " + errMsg), null, "Copy to clipboard");
         } catch (e) {
           console.log(e)
         }
-
-        self.setState({progress: 0});
-        AppActions.setUploadInProgress(false);
+  
       },
       progress: function(percent) {
         self.setState({progress: percent});
       }
     };
 
-    AppActions.setSnackbar("Uploading artifact", 4000);
+    AppActions.setSnackbar("Uploading artifact");
     AppActions.uploadArtifact(meta, file, callback);
   },
 
@@ -130,6 +134,8 @@ var App = createReactClass({
               {React.cloneElement(this.props.children, { isLoggedIn:(this.state.currentUser||{}).hasOwnProperty("email"), docsVersion: this.state.docsVersion, version: this.state.version, uploadArtifact: this._uploadArtifact, artifactProgress: this.state.progress, globalSettings:this.state.globalSettings })}
             </div>
           </div>
+
+          <SharedSnackbar snackbar={this.state.snackbar} />
         </div>
       </IdleTimer>
     )

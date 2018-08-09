@@ -98,7 +98,7 @@ var ExpandedDevice = createReactClass({
           cookie.save(self.state.user.id+'-deploymentID', id);
         }
 
-        AppActions.setSnackbar("Deployment created successfully. Redirecting...");
+        AppActions.setSnackbar("Deployment created successfully. Redirecting...", 5000);
         var params = {};
         params.route="deployments";
         setTimeout(function() {
@@ -108,7 +108,7 @@ var ExpandedDevice = createReactClass({
       error: function(err) {
         try {
           var errMsg = err.res.body.error || ""
-          AppActions.setSnackbar(preformatWithRequestID(err.res, "Error creating deployment. " + errMsg));
+          AppActions.setSnackbar(preformatWithRequestID(err.res, "Error creating deployment. " + errMsg), null, "Copy to clipboard");
         } catch (e) {
           console.log(e)
         }

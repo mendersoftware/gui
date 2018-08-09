@@ -7,7 +7,7 @@ var timerArr = {};
 export function setRetryTimer(err, service, msg, timeLeft) {
   // check if logged in and if service not already retrying
   if (!timerArr[service] && AppStore.getCurrentUser().hasOwnProperty("email") ) {
-    var remaining = timeLeft;
+    var remaining = timeLeft-1000;
     timerArr[service] = setInterval(function() {
       remaining -= 1000;
       remaining > 0 ? AppActions.setSnackbar(preformatWithRequestID(err.res, msg + " Retrying in " + remaining/1000 + " seconds")) : clearRetryTimer(service);
