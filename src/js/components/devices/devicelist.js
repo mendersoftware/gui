@@ -6,6 +6,7 @@ import Collapse from 'react-collapse';
 import ReactHeight from 'react-height';
 import ReactTooltip from 'react-tooltip';
 import { ExpandDevice } from '../helptips/helptooltips';
+import { calculateStatus } from '../../helpers';
 var Loader = require('../common/loader');
 var AppActions = require('../../actions/app-actions');
 var AppStore = require('../../stores/app-store');
@@ -99,7 +100,7 @@ var Authorized =  createReactClass({
         device.id = data.auth_sets[0].id;
         device.key = data.auth_sets[0].pubkey;
         device.request_time = data.request_time;
-        device.status = data.auth_sets[0].status;
+        device.status = calculateStatus(data.auth_sets);
         self.setState({expandedDevice: device});
       },
       error: function(err) {
