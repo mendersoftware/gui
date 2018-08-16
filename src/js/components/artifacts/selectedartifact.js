@@ -106,7 +106,7 @@ var SelectedArtifact = createReactClass({
           <Divider />
           <ListItem style={styles.listStyle} disabled={true} primaryText="Build date" secondaryText={build_date} />
           <Divider />
-          <ListItem style={styles.listStyle} disabled={true} primaryText="Size" secondaryText={(file.size / 1000000).toFixed(1) + " MB"} />
+          <ListItem style={styles.listStyle} disabled={true} primaryText="Size (uncompressed)" secondaryText={(file.size / 1000000).toFixed(1) + " MB"} />
           <Divider />
         </div>
       )
@@ -152,7 +152,7 @@ var SelectedArtifact = createReactClass({
   
         </div>
 
-        <h4 className="margin-bottom-none">Files</h4>
+        <h4 className="margin-bottom-none">Files in Artifact</h4>
         <div>
           {fileDetails}
         </div>
