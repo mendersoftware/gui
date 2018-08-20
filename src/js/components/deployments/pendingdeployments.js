@@ -67,8 +67,8 @@ var Pending = createReactClass({
 
     return (
       <div className={pendingMap.length ? "fadeIn" : "hidden" }>
-        <h3>Pending</h3>
         <div className="deploy-table-contain">
+          <h3>Pending</h3>
           <Table
             selectable={false}
             style={{overflow:"visible"}}

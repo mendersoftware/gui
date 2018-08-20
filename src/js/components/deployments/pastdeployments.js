@@ -14,14 +14,27 @@ var Loader = require('../common/loader');
 import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
 import FlatButton from 'material-ui/FlatButton';
 import FontIcon from 'material-ui/FontIcon';
+import DatePicker from 'material-ui/DatePicker';
 
 
 var Past = createReactClass({
   getInitialState: function() {
     return {
       retry: false,
-      pageSize: 5
+      today: new Date(),
+      active: "today",
     };
+  },
+  _setDateRange: function(after, before) {
+    var self = this;
+    var startDate = new Date();
+    startDate.setDate(startDate.getDate() - (after || 0));
+    startDate.setHours(0, 0, 0, 0);
+    var endDate = new Date();
+    endDate.setDate(endDate.getDate() - (before || 0));
+    endDate.setHours(23,59,59,999);
+
+    self._handleDateChange(1, startDate, endDate);
   },
   _pastCellClick: function(rowNumber, columnId) {
     // adjust index to allow for client side pagination
@@ -34,9 +47,45 @@ var Past = createReactClass({
     }
     return;
   },
-  _handlePageChange: function(pageNo) {
-    this.props.refreshPast(pageNo);
+  _handleDateChange: function(pageNo, createdAfter, createdBefore) {
+    createdAfter = createdAfter || this.props.startDate;
+    createdBefore = createdBefore || this.props.endDate;
+    this.props.refreshPast(pageNo, createdAfter, createdBefore, this.props.pageSize);
   },
+  _handlePageChange: function(pageNo) {
+    this.props.refreshPast(pageNo, this.props.startDate, this.props.endDate, this.props.pageSize);
+  },
+  _handleChangeStartDate: function(event, date){
+    var self = this;
+    this.setState({
+      active: "",
+    });
+
+    // refresh deployment list
+    this._handleDateChange(1, date, null);
+  },
+
+  _handleChangeEndDate: function (event, date) {
+    var self = this;
+    var startDate = this.props.startDate;
+    if (date<startDate) {
+      startDate = date;
+      startDate.setHours(0, 0, 0, 0);
+    }
+    this.setState({
+      active: "",
+    });
+    date.setHours(23,59,59,999);
+
+    // refresh deployment list
+    this._handleDateChange(1, startDate, date);
+  },
+
+  setDefaultRange: function(after, before, active) {
+    this._setDateRange(after, before);
+    this.setState({active: active});
+  },
+
   render: function() {
     var pastMap = this.props.past.map(function(deployment, index) {
 
@@ -75,7 +124,46 @@ var Past = createReactClass({
        
     return (
       <div className="fadeIn">
-        <h3>Past deployments</h3>
+
+        <div className="datepicker-container">
+          <div className="inline-block padding-right align-bottom" style={{marginBottom: "12px"}}>
+            <span>Filtered by date</span>
+            <ul className="unstyled link-list horizontal">
+              <li><a className={this.state.active==="today" ? "active" : ""} onClick={this.setDefaultRange.bind(null, 0, 0, "today")}>Today</a></li>
+              <li><a className={this.state.active==="yesterday" ? "active" : ""} onClick={this.setDefaultRange.bind(null, 1, 1, "yesterday")}>Yesterday</a></li>
+              <li><a className={this.state.active==="week" ? "active" : ""} onClick={this.setDefaultRange.bind(null, 6, 0, "week")}>Last 7 days</a></li>
+              <li><a className={this.state.active==="month" ? "active" : ""} onClick={this.setDefaultRange.bind(null, 29, 0, "month")}>Last 30 days</a></li>
+            </ul>
+          </div>
+
+          <div className="align-bottom margin-left inline-block">
+            <DatePicker
+              onChange={this._handleChangeStartDate}
+              autoOk={true}
+              floatingLabelText="From"
+              defaultDate={this.props.startDate}
+              disableYearSelection={true}
+              value={this.props.startDate}
+              maxDate={this.props.endDate || this.state.today}
+              style={{display: "inline-block", marginRight: "20px"}}
+              textFieldStyle={{width: "160px"}}
+            />
+
+            <DatePicker
+              onChange={this._handleChangeEndDate}
+              autoOk={true}
+              floatingLabelText="To"
+              defaultDate={this.props.endDate}
+              value={this.props.endDate}
+              maxDate={this.state.today}
+              disableYearSelection={true}
+              style={{display: "inline-block"}}
+              textFieldStyle={{width: "160px"}}
+            />
+          </div>
+
+        </div>
+
         <div className="deploy-table-contain">
           <Loader show={this.props.loading} />
           <Table
@@ -132,11 +220,11 @@ var Past = createReactClass({
 
           {
             this.props.count>this.props.past.length ? 
-            <Pagination locale={_en_US} simple pageSize={this.state.pageSize} current={this.props.page || 1} total={this.props.count} onChange={this._handlePageChange} /> 
+            <Pagination locale={_en_US} simple pageSize={this.props.pageSize} current={this.props.page || 1} total={this.props.count} onChange={this._handlePageChange} /> 
             :
             <div className={this.props.loading || pastMap.length ? 'hidden' : "dashboard-placeholder"}>
-              <p>Completed deployments will appear here.</p>
-              <p>You can review logs and reports for each device group you've deployed to</p>
+              <p>No finished deployments were found.</p>
+              <p>Try a different date range, or  <a onClick={this.props.createClick}>Create a new deployment</a> to get started</p>
               <img src="assets/img/history.png" alt="Past" />
             </div>
           }

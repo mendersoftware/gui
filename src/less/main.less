@@ -71,6 +71,11 @@ a.warning:hover {
   background-color: #ffffff;
 }
 
+ul.unstyled {
+  list-style: none;
+  padding-left: 0;
+}
+
 
 /* Type */
 
@@ -101,6 +106,23 @@ a, span.link {
 
   &.small {
     font-size: 13px;
+  }
+}
+
+ul.link-list {
+  .active {
+    font-weight: bold;
+    color: @text;
+    border-bottom: 1px solid @text;
+    padding-bottom: 2px;
+  }
+
+  &.horizontal {
+    li {
+      float: left;
+      margin-right: 30px;
+    }
+    margin-bottom: 10px;
   }
 }
 
@@ -166,6 +188,9 @@ a, span.link {
 }
 .margin-right-small {
   margin-right: 15px;
+}
+.margin-right-large {
+  margin-right: 45px;
 }
 .margin-bottom {
   margin-bottom: 30px;
@@ -402,6 +427,10 @@ a, span.link {
 
 .align-middle {
   vertical-align: middle;
+}
+
+.align-bottom {
+  vertical-align: bottom;
 }
 
 .leftFixed {
@@ -1753,6 +1782,12 @@ span.month, span.day {
 .substateText {
   color: @verylightgrey;
   word-break: break-word;
+}
+
+// Past deployments
+.datepicker-container {
+  background-color: @lightestgrey;
+  padding: 0px 25px 5px;
 }
 
 

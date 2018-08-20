@@ -46,6 +46,7 @@ var Deployments = createReactClass({
       user: AppStore.getCurrentUser(),
       pageLength: AppStore.getTotalDevices(),
       isHosted: (window.location.hostname === "hosted.mender.io"),
+      per_page: 20,
     }
   },
   componentWillMount: function() {
@@ -56,11 +57,20 @@ var Deployments = createReactClass({
 
     this.setState({docsVersion: this.props.docsVersion  ? this.props.docsVersion + "/" : "development/"});
 
-    clearAllRetryTimers();
     var artifact = AppStore.getDeploymentArtifact();
     this.setState({artifact: artifact});
+
+    clearAllRetryTimers();    
     this.timer = setInterval(this._refreshDeployments, this.state.refreshDeploymentsLength);
-    this._refreshDeployments();
+    // set default date range before refreshing
+    var startDate = new Date();
+    startDate.setDate(startDate.getDate());
+    startDate.setHours(0, 0, 0, 0); // set to start of day
+    var endDate = new Date();
+    endDate.setHours(23,59,59,999);
+    self.setState({startDate: startDate, endDate: endDate}, function() {
+      self._refreshDeployments();
+    });
 
     var artifactsCallback = {
       success: function (artifacts) {
@@ -140,7 +150,6 @@ var Deployments = createReactClass({
 
   _refreshDeployments: function() {
     if (this._getCurrentLabel() === "Finished") {
-
       this._refreshPast();
     } else {
       this._refreshInProgress();
@@ -223,12 +232,20 @@ var Deployments = createReactClass({
 
     AppActions.getPendingDeployments(callback, page, per_page);
   },
-  _refreshPast: function(page, per_page) {
+
+  _changePastPage: function(page, startDate, endDate, per_page) {
+    var self = this;
+    this.setState({doneLoading: false}, function() {
+      self._refreshPast(page, startDate, endDate, per_page);
+    });
+  },
+  _refreshPast: function(page, startDate, endDate, per_page) {
     /*
     / refresh only finished deployments
     /
     */
     var self = this;
+
     var oldCount = self.state.pastCount;
     var newCount;
     var oldPage = self.state.oldPage;
@@ -241,11 +258,19 @@ var Deployments = createReactClass({
       },
       error: function (err) {
         console.log(err);
+        self.setState({doneLoading:true});
         var errormsg = err.error || "Please check your connection";
         setRetryTimer(err, "deployments", "Couldn't load deployments. " + errormsg, self.state.refreshDeploymentsLength);
       }
     };
 
+    startDate = startDate || self.state.startDate;
+    endDate = endDate || self.state.endDate;
+    per_page = per_page || self.state.per_page;
+    self.setState({startDate: startDate, endDate: endDate});
+
+    startDate = Math.round(Date.parse(startDate)/1000);
+    endDate = Math.round(Date.parse(endDate)/1000);
 
     // get total count of past deployments first
     AppActions.getDeploymentCount("finished", function(count) {
@@ -258,11 +283,11 @@ var Deployments = createReactClass({
         page = self.state.past_page;
       }
      
-      // only refresh deployments if page or count has changed
-      if ( oldPage!==page || oldCount!==count ) {
-        AppActions.getPastDeployments(callback, page, per_page);
+      // only refresh deployments if page, count or date range has changed
+      if ( oldPage!==page || oldCount!==count || !self.state.doneLoading ) {
+        AppActions.getPastDeployments(callback, page, per_page, startDate, endDate);
       }
-    });
+    }, startDate, endDate);
   },
 
   _dismissSnackBar: function() {
@@ -611,7 +636,7 @@ var Deployments = createReactClass({
             <div className="margin-top">
               <Pending page={this.state.pend_page} count={this.state.pendingCount || this.state.pending.length}  refreshPending={this._refreshPending}  pending={this.state.pending} abort={this._abortDeployment} />
 
-              <Progress page={this.state.prog_page} isActiveTab={this.state.currentTab==="Active"} showHelptips={this.state.showHelptips && !cookie.load(this.state.user.id+'-onboarded')} hasDeployments={this.state.hasDeployments} devices={this.state.allDevices || []} hasArtifacts={this.state.collatedArtifacts.length} count={this.state.progressCount || this.state.progress.length} refreshProgress={this._refreshInProgress} abort={this._abortDeployment} loading={!this.state.doneLoading} openReport={this._showProgress} progress={this.state.progress} createClick={this.dialogOpen.bind(null, "schedule")}/>
+              <Progress page={this.state.prog_page} isActiveTab={this.state.currentTab==="Active"} showHelptips={this.state.showHelptips && !cookie.load(this.state.user.id+'-onboarded')} hasDeployments={this.state.hasDeployments} devices={this.state.allDevices || []} hasArtifacts={this.state.collatedArtifacts.length} count={this.state.progressCount || this.state.progress.length} pendingCount={this.state.pendingCount || this.state.pending.length}  refreshProgress={this._refreshInProgress} abort={this._abortDeployment} loading={!this.state.doneLoading} openReport={this._showProgress} progress={this.state.progress} createClick={this.dialogOpen.bind(null, "schedule")}/>
             </div>
           </Tab>
 
@@ -623,7 +648,7 @@ var Deployments = createReactClass({
             style={this.state.tabIndex === "/deployments/finished" ? styles.activeTabStyle : styles.tabStyle}>
             
             <div className="margin-top">
-              <Past page={this.state.past_page} isActiveTab={this.state.currentTab==="Finished"} showHelptips={this.state.showHelptips} count={this.state.pastCount} loading={!this.state.doneLoading} past={this.state.past} refreshPast={this._refreshPast} showReport={this._showReport} />
+              <Past createClick={this.dialogOpen.bind(null, "schedule")} pageSize={this.state.per_page} startDate={this.state.startDate} endDate={this.state.endDate} page={this.state.past_page} isActiveTab={this.state.currentTab==="Finished"} showHelptips={this.state.showHelptips} count={this.state.pastCount} loading={!this.state.doneLoading} past={this.state.past} refreshPast={this._changePastPage} showReport={this._showReport} />
             </div>
           </Tab>
 
