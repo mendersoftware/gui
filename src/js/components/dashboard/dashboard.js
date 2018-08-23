@@ -11,7 +11,6 @@ var createReactClass = require('create-react-class');
 import { Router, Route, Link } from 'react-router';
 import { setRetryTimer, clearRetryTimer, clearAllRetryTimers } from '../../utils/retrytimer';
 import RaisedButton from 'material-ui/RaisedButton';
-import Snackbar from 'material-ui/Snackbar';
 import FontIcon from 'material-ui/FontIcon';
 
 function getState() {
@@ -20,7 +19,6 @@ function getState() {
     devices: AppStore.getAllDevices(),
     recent: AppStore.getPastDeployments(),
     activity: AppStore.getActivity(),
-    snackbar: AppStore.getSnackbar(),
     refreshDeploymentsLength: 30000,
     showHelptips: AppStore.showHelptips()
   }
@@ -176,13 +174,6 @@ var Dashboard = createReactClass({
       
         <Deployments globalSettings={this.props.globalSettings} loadingActive={!this.state.doneActiveDepsLoading} loadingRecent={!this.state.donePastDepsLoading} clickHandle={this._handleClick} progress={this.state.progress} recent={this.state.recent} />
         
-        <Snackbar
-          open={this.state.snackbar.open}
-          message={this.state.snackbar.message}
-          bodyStyle={{maxWidth: this.state.snackbar.maxWidth}}
-          autoHideDuration={8000}
-          onRequestClose={this.handleRequestClose}
-        />
       </div>
     );
   }

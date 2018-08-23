@@ -66,7 +66,7 @@ export function isEmpty( obj ) {
 export function preformatWithRequestID(res, failMsg) {
   // ellipsis line
   if (failMsg.length > 100)
-      failMsg = failMsg.substring(0, 100)+'...';
+      failMsg = failMsg.substring(0, 220)+'...';
 
   try {
     if (res.body && Object.keys(res.body).includes("request_id")) {
@@ -257,4 +257,22 @@ export function deepCompare () {
 
 export function hashString(str) {
   return md5(str);
+}
+
+export function calculateStatus(authsets) {
+ var counts = {};
+  for (var i = 0; i<authsets.length; i++) {
+    var status = authsets[i].status;
+    counts[status] = counts[status] ? counts[status] + 1 : 1;
+  }
+  console.log(counts);
+  if (counts.accepted) {
+    return "accepted";
+  } else if (counts.preauthorized) {
+    return "preauthorized";
+  } else if (counts.pending) {
+    return "pending";
+  } else {
+    return "rejected";
+  }
 }

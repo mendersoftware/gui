@@ -36,7 +36,6 @@ var DeviceGroups = createReactClass({
 	  		groupInvalid: true,
 	  		filters: AppStore.getFilters(),
 	  		attributes: AppStore.getFilterAttributes(),
-	  		snackbar: AppStore.getSnackbar(),
 	  		createGroupDialog: false,
 	  		devices: [],
 	  		pageNo: 1,
@@ -175,7 +174,7 @@ var DeviceGroups = createReactClass({
 	    var finalCallback = function() {
 
 	     	self._toggleDialog("removeGroup");
-	     	AppActions.setSnackbar("Group was removed successfully");
+	     	AppActions.setSnackbar("Group was removed successfully", 5000);
 	     	self.setState({selectedGroup: null, pageNo:1, groupCount: self.props.acceptedDevices}, function() {
 	     		setTimeout(function() {
 	     			self.deviceTimer = setInterval(self._getDevices, self.state.refreshDeviceLength);
@@ -197,7 +196,7 @@ var DeviceGroups = createReactClass({
 	            // whole group removed
 	            parentCallback();
 	          } else {
-	           AppActions.setSnackbar("The " + pluralize("devices", length) + " " + pluralize("were", length) + " removed from the group");
+	           AppActions.setSnackbar("The " + pluralize("devices", length) + " " + pluralize("were", length) + " removed from the group", 5000);
 	           self._refreshAll();
 	          }
 	        }
@@ -233,8 +232,8 @@ var DeviceGroups = createReactClass({
           		});
           	}
         },
-        error: function(error) {
-          console.log(error);
+        error: function(err) {
+          console.log(err);
           var errormsg = err.error || "Please check your connection.";
           self.setState({loading: false});
           setRetryTimer(err, "devices", "Devices couldn't be loaded. " + errormsg, self.state.refreshDeviceLength);
@@ -269,8 +268,8 @@ var DeviceGroups = createReactClass({
           	}
           });
         },
-        error: function(error) {
-          console.log(error);
+        error: function(err) {
+          console.log(err);
           var errormsg = err.error || "Please check your connection.";
           self.setState({loading: false});
           setRetryTimer(err, "devices", "Devices couldn't be loaded. " + errormsg, self.state.refreshDeviceLength);
@@ -317,8 +316,8 @@ var DeviceGroups = createReactClass({
           	}
           });
         },
-        error: function(error) {
-          if (error.res.statusCode === 404) {
+        error: function(err) {
+          if (err.res.statusCode === 404) {
           	 self.setState({loading: false, devices: []});
           } else {
           	var errormsg = err.error || "Please check your connection.";
@@ -415,7 +414,7 @@ var DeviceGroups = createReactClass({
 	        if (idx === length-1) {
 	          // reached end of list
 	          self.setState({createGroupDialog: false, addGroup: false, tmpGroup: "", selectedField:""}, function() {
-	          	AppActions.setSnackbar("The group was updated successfully");
+	          	AppActions.setSnackbar("The group was updated successfully", 5000);
 		          self._refreshGroups(function() {
 		          	self._handleGroupChange(group, self.state.groupDevices[group]);
 		          });
@@ -426,7 +425,7 @@ var DeviceGroups = createReactClass({
 	      error: function(err) {
 	        console.log(err);
 	        var errMsg = err.res.body.error || "";
-	        AppActions.setSnackbar(preformatWithRequestID(err.res, "Group could not be updated: " + errMsg));
+	        AppActions.setSnackbar(preformatWithRequestID(err.res, "Group could not be updated: " + errMsg), null, "Copy to clipboard");
 	      }
 	    };
 	    AppActions.addDeviceToGroup(group, device.device_id || device.id, callback);
@@ -440,7 +439,7 @@ var DeviceGroups = createReactClass({
 		// group now empty, go to all devices 
 		if (rows.length >= self.state.groupCount) {
 			callback = function() {
-				AppActions.setSnackbar("Group was removed successfully");
+				AppActions.setSnackbar("Group was removed successfully", 5000);
 		     	self.setState({loading:true, selectedGroup: null, pageNo:1, groupCount: self.props.acceptedDevices}, function() {
 		     		self._refreshAll();
 		     	});
