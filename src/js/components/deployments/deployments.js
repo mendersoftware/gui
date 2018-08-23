@@ -84,9 +84,7 @@ var Deployments = createReactClass({
 
     var countCallback = {
       success: function( count ) {
-        self.setState({pageLength: count}, function() {
-          self._getDevices();
-        });
+        self._getDevices(count);
       },
       error: function( err ) {
         console.log(err);
@@ -135,17 +133,26 @@ var Deployments = createReactClass({
     }
   },
 
-  _getDevices: function() {
+  _getDevices: function(count) {
     var self = this;
-    var pageNo = 1;
-    AppActions.getDevices({
-      success: function(devices) {
-        self.setState({allDevices: devices});
-      },
-      error: function(err) {
-        console.log("Error: " +err);
-      }
-    }, pageNo, self.state.pageLength);
+    var pages = Math.ceil(count/500);
+    var allDevices = [];
+
+    function getDevices(pageNo) {
+      AppActions.getDevices({
+        success: function(devices) {
+          allDevices = allDevices.concat(devices);
+          self.setState({allDevices: allDevices});
+          if (pageNo < pages) {
+            getDevices(pageNo+1);
+          }
+        },
+        error: function(err) {
+          console.log("Error: " +err);
+        }
+      }, pageNo, 500);
+    }
+    getDevices(1);
   },
 
   _refreshDeployments: function() {
