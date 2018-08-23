@@ -583,14 +583,15 @@ var AppActions = {
         callback.error(err);
       })
   },
-  getPastDeployments: function(callback, page, per_page, startDate, endDate) {
+  getPastDeployments: function(callback, page, per_page, startDate, endDate, group) {
     var page = page || default_page;
     var per_page = per_page || default_deps_per_page;
     var created_after = startDate ? "&created_after="+startDate : "";
     var created_before = endDate ? "&created_before="+endDate : "";
+    var search = group ? "&search="+group : "";
 
     DeploymentsApi
-      .get(deploymentsApiUrl+'/deployments?status=finished&per_page='+ per_page +'&page=' + page + created_after + created_before)
+      .get(deploymentsApiUrl+'/deployments?status=finished&per_page='+ per_page +'&page=' + page + created_after + created_before + search)
       .then(function(res) {
         var deployments = res.body;
         AppDispatcher.handleViewAction({
@@ -622,15 +623,16 @@ var AppActions = {
         callback.error(err);
       })
   },
-  getDeploymentCount: function(status, callback, startDate, endDate) {
+  getDeploymentCount: function(status, callback, startDate, endDate, group) {
     var page = 1;
     var per_page = 500;
     var count = 0;
     var created_after = startDate ? "&created_after="+startDate : "";
     var created_before = endDate ? "&created_before="+endDate : "";
+    var search = group ? "&search="+group : "";
     function DeploymentCount() {
       DeploymentsApi
-        .get(deploymentsApiUrl+'/deployments?status='+status+'&per_page='+per_page+'&page='+page + created_after + created_before)
+        .get(deploymentsApiUrl+'/deployments?status='+status+'&per_page='+per_page+'&page='+page + created_after + created_before + search)
         .then(function(res) {
           var links = parse(res.headers['link']);
           count += res.body.length;
