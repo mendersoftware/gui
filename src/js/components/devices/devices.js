@@ -390,6 +390,11 @@ var Devices = createReactClass({
       	paddingRight: "12px",
       	marginLeft: "0px",
       },
+      iconListButtonStyle: {
+      	fontSize: "12px",
+      	paddingRight: "12px",
+      	marginLeft: "0px",
+      },
     };
 
     var rejectActions =  [

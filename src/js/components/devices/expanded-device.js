@@ -1,5 +1,5 @@
 import React from 'react';
-import { Router, Link } from 'react-router';
+import { Router, Route, Link } from 'react-router';
 import Time from 'react-time';
 import Collapse from 'react-collapse';
 var createReactClass = require('create-react-class');
@@ -11,6 +11,7 @@ var AppActions = require('../../actions/app-actions');
 var ScheduleForm = require('../deployments/scheduleform');
 var Loader = require('../common/loader');
 import cookie from 'react-cookie';
+import copy from 'copy-to-clipboard';
 
 import { List, ListItem } from 'material-ui/List';
 import FontIcon from 'material-ui/FontIcon';
@@ -155,6 +156,11 @@ var ExpandedDevice = createReactClass({
   _clickLink: function() {
     window.location.assign('https://docs.mender.io/'+this.props.docsVersion+'/client-configuration/configuration-file/polling-intervals');
   },
+  _copyLinkToClipboard: function() {
+    var location = window.location.href.substring(0, window.location.href.indexOf("/devices") + "/devices".length);
+    copy(location + "/id=" + this.props.device.device_id);
+    AppActions.setSnackbar("Link copied to clipboard");
+  },
   render: function() {
 
     var status = this.props.device.status;
@@ -248,7 +254,6 @@ var ExpandedDevice = createReactClass({
     ) : null;
     deviceIdentity.push(decommission);
 
-
     var deviceInfo = (
       <div key="deviceinfo">
 
@@ -286,12 +291,18 @@ var ExpandedDevice = createReactClass({
 
         { (status==="accepted" && !waiting) ? 
           (
-            <div className="report-list">
-              <List style={{marginTop:"24px", minWidth: "300px"}}>
+            <div id="device-actions" className="report-list">
+              <List className="list-horizontal-display" style={{marginTop:"24px"}}>
+                <ListItem
+                key="copylink"
+                style={this.props.styles.iconListButtonStyle}
+                primaryText="Copy link to this device"
+                onClick={this._copyLinkToClipboard}
+                leftIcon={<FontIcon className="material-icons update" style={{margin: "12px 0 12px 12px"}}>link</FontIcon>} />
                 <ListItem
                 key="updateButton"
                 className={status === "accepted" ? null : "hidden"}
-                style={this.props.styles.listButtonStyle}
+                style={this.props.styles.iconListButtonStyle}
                 primaryText="Create a deployment for this device"
                 onClick={this._clickListItem}
                 leftIcon={<FontIcon className="material-icons update" style={{margin: "12px 0 12px 12px"}}>replay</FontIcon>} />
@@ -339,7 +350,8 @@ var ExpandedDevice = createReactClass({
 });
 
 ExpandedDevice.contextTypes = {
-  router: PropTypes.object
+  router: PropTypes.object,
+  location: PropTypes.object,
 };
 
 module.exports = ExpandedDevice;
