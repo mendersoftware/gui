@@ -265,7 +265,6 @@ export function calculateStatus(authsets) {
     var status = authsets[i].status;
     counts[status] = counts[status] ? counts[status] + 1 : 1;
   }
-  console.log(counts);
   if (counts.accepted) {
     return "accepted";
   } else if (counts.preauthorized) {
