@@ -17,6 +17,7 @@ body {
 }
 
 #main {
+  min-height: 400px;
 }
 
 .wrapper {
@@ -70,6 +71,11 @@ a.warning:hover {
   background-color: #ffffff;
 }
 
+ul.unstyled {
+  list-style: none;
+  padding-left: 0;
+}
+
 
 /* Type */
 
@@ -100,6 +106,23 @@ a, span.link {
 
   &.small {
     font-size: 13px;
+  }
+}
+
+ul.link-list {
+  .active {
+    font-weight: bold;
+    color: @text;
+    border-bottom: 1px solid @text;
+    padding-bottom: 2px;
+  }
+
+  &.horizontal {
+    li {
+      float: left;
+      margin-right: 30px;
+    }
+    margin-bottom: 10px;
   }
 }
 
@@ -165,6 +188,9 @@ a, span.link {
 }
 .margin-right-small {
   margin-right: 15px;
+}
+.margin-right-large {
+  margin-right: 45px;
 }
 .margin-bottom {
   margin-bottom: 30px;
@@ -403,6 +429,10 @@ a, span.link {
   vertical-align: middle;
 }
 
+.align-bottom {
+  vertical-align: bottom;
+}
+
 .leftFixed {
   width: 260px;
   float: left;
@@ -422,6 +452,7 @@ a, span.link {
     bottom: 0;
     background-color: @lightestgrey;
     border-right: 1px solid @lightergrey;
+    min-height: 400px;
   }
 }
 
@@ -437,7 +468,8 @@ a, span.link {
   padding: 30px;
   position: relative;
   border-left: 1px solid @lightergrey;
-  min-height: 73vh;
+  min-height: 400px;
+  height: 91vh;
 
   &.container {
     margin-left: 198px;
@@ -847,7 +879,8 @@ table thead.clickable tr>th:first-child {
   -webkit-line-clamp: 3;
 }
 
-#device-identity .list-horizontal-display > div {
+#device-identity .list-horizontal-display > div,
+#device-actions .list-horizontal-display > div {
     float: left;
     vertical-align: top;
     margin-right: 30px;
@@ -1210,7 +1243,7 @@ tr.expand {
     }
   }
 
-  #device-identity {
+  #device-identity, #device-actions {
     position:relative;
     width: 100%;
   }
@@ -1750,6 +1783,12 @@ span.month, span.day {
 .substateText {
   color: @verylightgrey;
   word-break: break-word;
+}
+
+// Past deployments
+.datepicker-container {
+  background-color: @lightestgrey;
+  padding: 0px 25px 5px;
 }
 
 

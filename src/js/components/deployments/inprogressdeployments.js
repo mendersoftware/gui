@@ -54,48 +54,57 @@ var Progress = createReactClass({
 
     return (
       <div className="fadeIn">
-        <h3>In progress</h3>
         <div className="deploy-table-contain"> 
           <Loader show={this.props.loading} />
-          <Table
-            onCellClick={this._progressCellClick}
-            className={progressMap.length ? null : 'hidden'}
-            selectable={false}
-            style={{overflow:"visible"}}
-            wrapperStyle={{overflow:"visible"}}
-            bodyStyle={{overflow:"visible"}}>
-            <TableHeader
-              displaySelectAll={false}
-              adjustForCheckbox={false}>
-              <TableRow
-               style={{overflow:"visible"}}>
-                <TableHeaderColumn>Updating to</TableHeaderColumn>
-                <TableHeaderColumn>Group</TableHeaderColumn>
-                <TableHeaderColumn>Started</TableHeaderColumn>
-                <TableHeaderColumn style={{textAlign:"right", width:"100px"}}># Devices</TableHeaderColumn>
-                <TableHeaderColumn style={{width:"350px"}}>Status</TableHeaderColumn>
-              </TableRow>
-            </TableHeader>
-            <TableBody
-              showRowHover={true}
-              displayRowCheckbox={false}
-              className="clickable">
-              {progressMap}
-            </TableBody>
-          </Table>
+          { progressMap.length ?  
 
+            <div>
+              <h3>In progress</h3>
+              <Table
+                onCellClick={this._progressCellClick}
+                className={progressMap.length ? null : 'hidden'}
+                selectable={false}
+                style={{overflow:"visible"}}
+                wrapperStyle={{overflow:"visible"}}
+                bodyStyle={{overflow:"visible"}}>
+                <TableHeader
+                  displaySelectAll={false}
+                  adjustForCheckbox={false}>
+                  <TableRow
+                   style={{overflow:"visible"}}>
+                    <TableHeaderColumn>Updating to</TableHeaderColumn>
+                    <TableHeaderColumn>Group</TableHeaderColumn>
+                    <TableHeaderColumn>Started</TableHeaderColumn>
+                    <TableHeaderColumn style={{textAlign:"right", width:"100px"}}># Devices</TableHeaderColumn>
+                    <TableHeaderColumn style={{width:"350px"}}>Status</TableHeaderColumn>
+                  </TableRow>
+                </TableHeader>
+                <TableBody
+                  showRowHover={true}
+                  displayRowCheckbox={false}
+                  className="clickable">
+                  {progressMap}
+                </TableBody>
+              </Table>
+            </div>
+            
+            : null }
 
 
           {
             this.props.count>this.props.progress.length ? 
             <Pagination locale={_en_US} simple pageSize={this.state.pageSize} current={this.props.page || 1} total={this.props.count} onChange={this._handlePageChange} /> 
             :
-            
+            null
+          }
+
+          { this.props.count || this.props.pendingCount ? null : 
+
             <div className={(progressMap.length || this.props.loading)  ? 'hidden' : "dashboard-placeholder"}>
-              <p>Ongoing deployments will appear here. <a onClick={this.props.createClick}>Create a deployment</a> to get started</p>
+              <p>Pending and ongoing deployments will appear here. </p>
+              <p><a onClick={this.props.createClick}>Create a deployment</a> to get started</p>
               <img src="assets/img/deployments.png" alt="In progress" />
             </div>
-        
           }
 
 
