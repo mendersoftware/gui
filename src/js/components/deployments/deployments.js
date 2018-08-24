@@ -337,6 +337,7 @@ var Deployments = createReactClass({
     });
   },
   dialogOpen: function(dialog) {
+    this.setState({filteredDevices: [], deploymentDevices:[]});
     if (dialog === 'schedule') {
       this.setState({
         dialogTitle: "Create a deployment",
@@ -574,7 +575,19 @@ var Deployments = createReactClass({
 
     if (this.state.scheduleForm) {
       dialogContent = (
-        <ScheduleForm hasDeployments={this.state.hasDeployments} showHelptips={this.state.showHelptips} deploymentDevices={this.state.deploymentDevices} filteredDevices={this.state.filteredDevices} hasPending={this.state.hasPending} hasDevices={this.state.hasDevices} deploymentSettings={this._deploymentParams} id={this.state.id} artifacts={this.state.collatedArtifacts} artifact={this.state.artifact} groups={this.state.groups} group={this.state.group} />
+        <ScheduleForm 
+          hasDeployments={this.state.hasDeployments} 
+          showHelptips={this.state.showHelptips} 
+          deploymentDevices={this.state.deploymentDevices} 
+          filteredDevices={this.state.filteredDevices} 
+          hasPending={this.state.hasPending} 
+          hasDevices={this.state.hasDevices} 
+          deploymentSettings={this._deploymentParams} 
+          id={this.state.id} 
+          artifacts={this.state.collatedArtifacts} 
+          artifact={this.state.artifact} 
+          groups={this.state.groups} 
+          group={this.state.group} />
       )
     } else if (this.state.reportType === "active") {
       dialogContent = (
