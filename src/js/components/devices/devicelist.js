@@ -42,7 +42,7 @@ var Authorized =  createReactClass({
         || (prevProps.devices.length !== this.props.devices.length)
         || (prevProps.groupCount !== this.props.groupCount)
         || (prevProps.pageNo !== this.props.pageNo)) {
-      this.setState({selectedRows:[], expandRow: null, allRowsSelected: false});
+      self.setState({selectedRows:[], expandRow: null, allRowsSelected: false});
     }
 
     if ((prevProps.currentTab !== this.props.currentTab) && this.props.currentTab==="Device groups") {
