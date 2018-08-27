@@ -13,8 +13,11 @@ var Loader = require('../common/loader');
 // material ui
 import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
 import FlatButton from 'material-ui/FlatButton';
+import IconButton from 'material-ui/IconButton';
 import FontIcon from 'material-ui/FontIcon';
 import DatePicker from 'material-ui/DatePicker';
+import AutoComplete from 'material-ui/AutoComplete';
+import MenuItem from 'material-ui/MenuItem';
 
 
 var Past = createReactClass({
@@ -23,6 +26,7 @@ var Past = createReactClass({
       retry: false,
       today: new Date(),
       active: "today",
+      disableClear: true,
     };
   },
   _setDateRange: function(after, before) {
@@ -50,10 +54,10 @@ var Past = createReactClass({
   _handleDateChange: function(pageNo, createdAfter, createdBefore) {
     createdAfter = createdAfter || this.props.startDate;
     createdBefore = createdBefore || this.props.endDate;
-    this.props.refreshPast(pageNo, createdAfter, createdBefore, this.props.pageSize);
+    this.props.refreshPast(pageNo, createdAfter, createdBefore, this.props.pageSize, this.props.deviceGroup);
   },
   _handlePageChange: function(pageNo) {
-    this.props.refreshPast(pageNo, this.props.startDate, this.props.endDate, this.props.pageSize);
+    this.props.refreshPast(pageNo, this.props.startDate, this.props.endDate, this.props.pageSize, this.props.deviceGroup);
   },
   _handleChangeStartDate: function(event, date){
     var self = this;
@@ -84,6 +88,22 @@ var Past = createReactClass({
   setDefaultRange: function(after, before, active) {
     this._setDateRange(after, before);
     this.setState({active: active});
+  },
+
+  handleUpdateInput: function(value) {
+    var self = this;
+    setTimeout(function() {
+      self.setState({disableClear: !value});
+    }, 150);
+    this.props.refreshPast(1, this.props.startDate, this.props.endDate, this.props.pageSize, value);
+  },
+
+  clearAuto: function() {
+    var oldValue=this.refs["autocomplete"].state.searchText;
+    this.refs["autocomplete"].setState({searchText:''});
+    if (oldValue) {
+      this.handleUpdateInput(null);
+    }
   },
 
   render: function() {
@@ -121,13 +141,22 @@ var Past = createReactClass({
       { text: 'Cancel' },
       { text: 'Create deployment', onClick: this._onUploadSubmit, primary: 'true' }
     ];
+
+    var menuItems = [];
+    var allDevicesGroup = {text: "All devices", value: ( <MenuItem key="All devices" value="All devices" primaryText="All devices" /> )};
+    menuItems.push(allDevicesGroup);
+
+    for (var i=0; i<this.props.groups.length; i++) {
+      menuItems.push({text:this.props.groups[i], value: ( <MenuItem key={i} value={this.props.groups[i]} primaryText={this.props.groups[i]} /> )})
+    }
+   
        
     return (
       <div className="fadeIn">
 
         <div className="datepicker-container">
-          <div className="inline-block padding-right align-bottom" style={{marginBottom: "12px"}}>
-            <span>Filtered by date</span>
+          <div className="inline-block align-bottom" style={{marginBottom: "12px"}}>
+            <span>Filter by date</span>
             <ul className="unstyled link-list horizontal">
               <li><a className={this.state.active==="today" ? "active" : ""} onClick={this.setDefaultRange.bind(null, 0, 0, "today")}>Today</a></li>
               <li><a className={this.state.active==="yesterday" ? "active" : ""} onClick={this.setDefaultRange.bind(null, 1, 1, "yesterday")}>Yesterday</a></li>
@@ -136,7 +165,7 @@ var Past = createReactClass({
             </ul>
           </div>
 
-          <div className="align-bottom margin-left inline-block">
+          <div className="align-bottom margin-left margin-right inline-block">
             <DatePicker
               onChange={this._handleChangeStartDate}
               autoOk={true}
@@ -160,6 +189,24 @@ var Past = createReactClass({
               style={{display: "inline-block"}}
               textFieldStyle={{width: "160px"}}
             />
+          </div>
+
+          <div className="inline-block align-bottom margin-left">
+
+          <AutoComplete
+            ref="autocomplete"
+            hintText="Select a group"
+            dataSource={menuItems}
+            onUpdateInput={this.handleUpdateInput}
+            floatingLabelText="Filter by device group"
+            floatingLabelFixed={true}
+            floatingLabelStyle={{color: "#404041", fontSize: "17px", top:"37px"}}
+            filter={AutoComplete.fuzzyFilter}
+            openOnFocus={true}
+            />
+            <IconButton style={{marginLeft: "-10px"}} disabled={this.state.disableClear} iconStyle={{fontSize:"16px"}}  onClick={this.clearAuto}>
+              <FontIcon className="material-icons">clear</FontIcon>
+            </IconButton>
           </div>
 
         </div>
@@ -219,7 +266,7 @@ var Past = createReactClass({
 
 
           {
-            this.props.count>this.props.past.length ? 
+            this.props.past.length ? 
             <Pagination locale={_en_US} simple pageSize={this.props.pageSize} current={this.props.page || 1} total={this.props.count} onChange={this._handlePageChange} /> 
             :
             <div className={this.props.loading || pastMap.length ? 'hidden' : "dashboard-placeholder"}>

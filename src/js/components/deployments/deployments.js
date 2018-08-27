@@ -157,7 +157,7 @@ var Deployments = createReactClass({
 
   _refreshDeployments: function() {
     if (this._getCurrentLabel() === "Finished") {
-      this._refreshPast();
+      this._refreshPast(null, null, null, null, this.state.groupFilter);
     } else {
       this._refreshInProgress();
       this._refreshPending();
@@ -240,13 +240,15 @@ var Deployments = createReactClass({
     AppActions.getPendingDeployments(callback, page, per_page);
   },
 
-  _changePastPage: function(page, startDate, endDate, per_page) {
+  _changePastPage: function(page, startDate, endDate, per_page, group) {
     var self = this;
-    this.setState({doneLoading: false}, function() {
-      self._refreshPast(page, startDate, endDate, per_page);
+    self.setState({doneLoading: false}, function() {
+      clearInterval(self.timer);
+      self._refreshPast(page, startDate, endDate, per_page, group);
+      self.timer = setInterval(self._refreshDeployments, self.state.refreshDeploymentsLength);
     });
   },
-  _refreshPast: function(page, startDate, endDate, per_page) {
+  _refreshPast: function(page, startDate, endDate, per_page, group) {
     /*
     / refresh only finished deployments
     /
@@ -255,7 +257,7 @@ var Deployments = createReactClass({
 
     var oldCount = self.state.pastCount;
     var newCount;
-    var oldPage = self.state.oldPage;
+    var oldPage = self.state.past_page;
 
 
     var callback = {
@@ -274,7 +276,8 @@ var Deployments = createReactClass({
     startDate = startDate || self.state.startDate;
     endDate = endDate || self.state.endDate;
     per_page = per_page || self.state.per_page;
-    self.setState({startDate: startDate, endDate: endDate});
+ 
+    self.setState({startDate: startDate, endDate: endDate, groupFilter: group});
 
     startDate = Math.round(Date.parse(startDate)/1000);
     endDate = Math.round(Date.parse(endDate)/1000);
@@ -284,17 +287,14 @@ var Deployments = createReactClass({
       self.setState({pastCount: count});
       newCount = count;
 
-      if (page) {
-        self.setState({past_page: page});
-      } else {
-        page = self.state.past_page;
-      }
+      page = page || self.state.past_page || 1;
+      self.setState({past_page: page});
      
       // only refresh deployments if page, count or date range has changed
       if ( oldPage!==page || oldCount!==count || !self.state.doneLoading ) {
-        AppActions.getPastDeployments(callback, page, per_page, startDate, endDate);
+        AppActions.getPastDeployments(callback, page, per_page, startDate, endDate, group);
       }
-    }, startDate, endDate);
+    }, startDate, endDate, group);
   },
 
   _dismissSnackBar: function() {
@@ -668,7 +668,7 @@ var Deployments = createReactClass({
             style={this.state.tabIndex === "/deployments/finished" ? styles.activeTabStyle : styles.tabStyle}>
             
             <div className="margin-top">
-              <Past createClick={this.dialogOpen.bind(null, "schedule")} pageSize={this.state.per_page} startDate={this.state.startDate} endDate={this.state.endDate} page={this.state.past_page} isActiveTab={this.state.currentTab==="Finished"} showHelptips={this.state.showHelptips} count={this.state.pastCount} loading={!this.state.doneLoading} past={this.state.past} refreshPast={this._changePastPage} showReport={this._showReport} />
+              <Past groups={this.state.groups} deviceGroup={this.state.groupFilter} createClick={this.dialogOpen.bind(null, "schedule")} pageSize={this.state.per_page} startDate={this.state.startDate} endDate={this.state.endDate} page={this.state.past_page} isActiveTab={this.state.currentTab==="Finished"} showHelptips={this.state.showHelptips} count={this.state.pastCount} loading={!this.state.doneLoading} past={this.state.past} refreshPast={this._changePastPage} showReport={this._showReport} />
             </div>
           </Tab>
 
