@@ -205,6 +205,7 @@ var DeviceGroups = createReactClass({
       var groupCallback =  {
         success: function(devices) {
         	if (devices.length && devices[0].attributes && self.state.isHosted) { AppActions.setFilterAttributes(devices[0].attributes) }
+        	self.setState({devices: devices});
         	// for each device, get device identity info
           	for (var i=0; i<devices.length; i++) {
           		var count = 0;
@@ -292,7 +293,7 @@ var DeviceGroups = createReactClass({
 		var callback =  {
         success: function(devices) {
         	var device = devices.length ? [devices[0]] : [];
-        	device[0].id_attributes = JSON.parse(device[0].device_identity)
+        	if (device[0]) { device[0].id_attributes = JSON.parse(device[0].device_identity); }
           self.setState({devices: device, loading: false, pageLoading: false, groupCount:devices.length}, function() {
           	if (devices.length) {
 	          	self._getInventoryForDevice(id, 0, function(inventory, index) {
