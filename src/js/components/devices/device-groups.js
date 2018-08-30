@@ -30,20 +30,20 @@ var DeviceGroups = createReactClass({
 	getInitialState() {
 		return {
 			groups: AppStore.getGroups(),
-	  		selectedGroup: AppStore.getSelectedGroup(),
-	  		addGroup: false,
-	  		removeGroup: false,
-	  		groupInvalid: true,
-	  		filters: AppStore.getFilters(),
-	  		attributes: AppStore.getFilterAttributes(),
-	  		createGroupDialog: false,
-	  		devices: [],
-	  		pageNo: 1,
-	  		pageLength: 20,
-	  		loading: true,
-	  		tmpDevices: [],
-	  		refreshDeviceLength: 10000,
-	  		isHosted: (window.location.hostname === "hosted.mender.io")
+  		selectedGroup: AppStore.getSelectedGroup(),
+  		addGroup: false,
+  		removeGroup: false,
+  		groupInvalid: true,
+  		filters: AppStore.getFilters(),
+  		attributes: AppStore.getFilterAttributes(),
+  		createGroupDialog: false,
+  		devices: [],
+  		pageNo: 1,
+  		pageLength: 20,
+  		loading: true,
+  		tmpDevices: [],
+  		refreshDeviceLength: 10000,
+  		isHosted: (window.location.hostname === "hosted.mender.io")
 		};
 	},
 
@@ -107,26 +107,10 @@ var DeviceGroups = createReactClass({
 	 */
 	_refreshGroups: function(cb) {
 	    var self = this;
-	    var groupDevices = {};
 	    var callback = {
 	      success: function (groups) {
 	        self.setState({groups: groups});
-
-	        for (var i=0;i<groups.length;i++) {
-	          groupDevices[groups[i]] = 0;
-	          setNum(groups[i], i);
-	          function setNum(group, idx) {
-	            
-	            AppActions.getNumberOfDevicesInGroup(function(noDevs) {
-	              groupDevices[group] = noDevs;
-	              self.setState({groupDevices: groupDevices});
-	              if (cb && idx===groups.length-1) {
-	              	cb();
-	              }
-	            }, group);
-	          }
-	        }
-
+	        if (cb) { cb(); }
 	      },
 	      error: function(err) {
 	        console.log(err);
@@ -135,16 +119,19 @@ var DeviceGroups = createReactClass({
 	    AppActions.getGroups(callback);
 	},
 
-	_handleGroupChange: function(group, numDev) {
+	_handleGroupChange: function(group) {
 		var self = this;
+
 		clearInterval(self.deviceTimer);
-		setTimeout(function() {
-			AppActions.setSnackbar("");
-		}, 4000);
-		this.setState({loading: true, selectedGroup: group, groupCount: numDev, pageNo:1, filters: []}, function() {
-	    self.deviceTimer = setInterval(self._getDevices, self.state.refreshDeviceLength);
-			self._getDevices();
-		});
+		
+		// get number of devices in group first for pagination
+    AppActions.getNumberOfDevicesInGroup(function(count) {
+      self.setState({loading: true, selectedGroup: group, groupCount: count, pageNo:1, filters: []}, function() {
+		    self.deviceTimer = setInterval(self._getDevices, self.state.refreshDeviceLength);
+				self._getDevices();
+			});
+    }, group);
+
 	},
 
 	_toggleDialog: function(ref) {
@@ -414,10 +401,10 @@ var DeviceGroups = createReactClass({
 	      success: function() {
 	        if (idx === length-1) {
 	          // reached end of list
-	          self.setState({createGroupDialog: false, addGroup: false, tmpGroup: "", selectedField:""}, function() {
+	          self.setState({createGroupDialog: false, addGroup: false, tmpGroup: "", selectedField:"", }, function() {
 	          	AppActions.setSnackbar("The group was updated successfully", 5000);
 		          self._refreshGroups(function() {
-		          	self._handleGroupChange(group, self.state.groupDevices[group]);
+		          	self._handleGroupChange(group);
 		          });
 		        
 	          });
@@ -485,7 +472,7 @@ var DeviceGroups = createReactClass({
     } else if (group) {
     	self.setState({selectedGroup: group});
 			self._refreshGroups(function() {
-				self._handleGroupChange(group, self.state.groupDevices[group]);
+				self._handleGroupChange(group);
 			});
     } else {
     	self.setState({filters: filters, pageNo:1}, function() {
@@ -550,84 +537,82 @@ var DeviceGroups = createReactClass({
 			<div className="margin-top">
 			
 				<div className="leftFixed">
-		          	<Groups
-		            openGroupDialog={this._toggleDialog.bind(null, "createGroupDialog")}
-		            changeGroup={this._handleGroupChange}
-		            groups={this.state.groups}
-		            groupDevices={this.state.groupDevices}
-		            selectedGroup={this.state.selectedGroup}
-		            allCount={this.props.allCount}
-		            acceptedCount={this.props.acceptedDevices}
-		            showHelptips={this.props.showHelptips} />
-	        	</div>
-	        	<div className="rightFluid" style={{paddingTop:"0"}}>
+		      <Groups
+            openGroupDialog={this._toggleDialog.bind(null, "createGroupDialog")}
+            changeGroup={this._handleGroupChange}
+            groups={this.state.groups}
+            selectedGroup={this.state.selectedGroup}
+            allCount={this.props.allCount}
+            acceptedCount={this.props.acceptedDevices}
+            showHelptips={this.props.showHelptips} />
+      	</div>
+	      <div className="rightFluid" style={{paddingTop:"0"}}>
 
-	        		{!this.state.selectedGroup ?
-								<Filters globalSettings={this.props.globalSettings} attributes={this.state.attributes} filters={this.state.filters} onFilterChange={this._onFilterChange} isHosted={this.state.isHosted} /> : null
-							}
+      		{!this.state.selectedGroup ?
+						<Filters globalSettings={this.props.globalSettings} attributes={this.state.attributes} filters={this.state.filters} onFilterChange={this._onFilterChange} isHosted={this.state.isHosted} /> : null
+					}
 
-		          <FlatButton onClick={this._toggleDialog.bind(null, "removeGroup")} style={styles.exampleFlatButton} className={this.state.selectedGroup ? null : 'hidden' } label="Remove group" labelPosition="after">
-		          		<FontIcon style={styles.exampleFlatButtonIcon} className="material-icons">delete</FontIcon>
-		        	</FlatButton>
-		          	
-		          	<DeviceList
-		          		docsVersion={this.props.docsVersion}
-		          		pageNo={this.state.pageNo}
-		          		addDevicesToGroup={this._addDevicesToGroup} 
-		          		removeDevicesFromGroup={this._removeDevicesFromGroup} 
-		          		loading={this.state.loading} 
-		          		rejectOrDecomm={this.props.rejectOrDecomm} 
-		          		currentTab={this.props.currentTab} 
-		          		allCount={this.props.allCount}
-		          		acceptedCount={this.props.acceptedDevices}
-		          		groupCount={groupCount} 
-		          		styles={this.props.styles} 
-		          		group={this.state.selectedGroup} 
-		          		devices={this.state.devices}
-		          		paused={this.props.paused}
-		          		showHelptips={this.props.showHelptips}
-		          		globalSettings={this.props.globalSettings}
-		          		openSettingsDialog={this.props.openSettingsDialog} />
-		          	
-		          	{this.state.devices.length && !this.state.loading ?
-		          	<div className="margin-top">
-		           		<Pagination locale={_en_US} simple pageSize={this.state.pageLength} current={this.state.pageNo} total={groupCount} onChange={this._handlePageChange} />
-		             		{this.state.pageLoading ?  <div className="smallLoaderContainer"><Loader show={true} /></div> : null}
-		          	</div> : null }
-	          	</div>
+          <FlatButton onClick={this._toggleDialog.bind(null, "removeGroup")} style={styles.exampleFlatButton} className={this.state.selectedGroup ? null : 'hidden' } label="Remove group" labelPosition="after">
+          		<FontIcon style={styles.exampleFlatButtonIcon} className="material-icons">delete</FontIcon>
+        	</FlatButton>
+          	
+        	<DeviceList
+        		docsVersion={this.props.docsVersion}
+        		pageNo={this.state.pageNo}
+        		addDevicesToGroup={this._addDevicesToGroup} 
+        		removeDevicesFromGroup={this._removeDevicesFromGroup} 
+        		loading={this.state.loading} 
+        		rejectOrDecomm={this.props.rejectOrDecomm} 
+        		currentTab={this.props.currentTab} 
+        		allCount={this.props.allCount}
+        		acceptedCount={this.props.acceptedDevices}
+        		groupCount={groupCount} 
+        		styles={this.props.styles} 
+        		group={this.state.selectedGroup} 
+        		devices={this.state.devices}
+        		paused={this.props.paused}
+        		showHelptips={this.props.showHelptips}
+        		globalSettings={this.props.globalSettings}
+        		openSettingsDialog={this.props.openSettingsDialog} />
+          	
+          	{this.state.devices.length && !this.state.loading ?
+          	<div className="margin-top">
+           		<Pagination locale={_en_US} simple pageSize={this.state.pageLength} current={this.state.pageNo} total={groupCount} onChange={this._handlePageChange} />
+             		{this.state.pageLoading ?  <div className="smallLoaderContainer"><Loader show={true} /></div> : null}
+          	</div> : null }
+        	</div>
 
+        <Dialog
+          ref="addGroup"
+          open={this.state.addGroup}
+          title="Add selected devices to group"
+          actions={addActions}
+          autoDetectWindowHeight={true}
+          bodyStyle={{fontSize: "13px"}}>  
+          <GroupSelector devices={this.state.tmpDevices.length} willBeEmpty={this.state.willBeEmpty} tmpGroup={this.state.tmpGroup} selectedGroup={this.state.selectedGroup} changeSelect={this._changeTmpGroup} validateName={this._validate} groups={this.state.groups} selectedField={this.state.selectedField} />
+        </Dialog>
 
-
-		        <Dialog
-		          ref="addGroup"
-		          open={this.state.addGroup}
-		          title="Add selected devices to group"
-		          actions={addActions}
-		          autoDetectWindowHeight={true}
-		          bodyStyle={{fontSize: "13px"}}>  
-		          <GroupSelector devices={this.state.tmpDevices.length} willBeEmpty={this.state.willBeEmpty} tmpGroup={this.state.tmpGroup} selectedGroup={this.state.selectedGroup} changeSelect={this._changeTmpGroup} validateName={this._validate} groups={this.state.groups} selectedField={this.state.selectedField} />
-		        </Dialog>
-
-		        <Dialog
-		        	ref="removeGroup"
-			        open={this.state.removeGroup}
-			        title="Remove this group?"
-			        actions={removeActions}
-			        autoDetectWindowHeight={true}
-			        bodyStyle={{fontSize: "13px"}}>  
-			        <p>This will remove the group from the list. Are you sure you want to continue?</p>
-		        </Dialog>
+        <Dialog
+        	ref="removeGroup"
+	        open={this.state.removeGroup}
+	        title="Remove this group?"
+	        actions={removeActions}
+	        autoDetectWindowHeight={true}
+	        bodyStyle={{fontSize: "13px"}}>  
+	        <p>This will remove the group from the list. Are you sure you want to continue?</p>
+        </Dialog>
 
 
-		        <CreateGroup
-		        	ref="createGroupDialog"
-		        	toggleDialog={this._toggleDialog}
-			        open={this.state.createGroupDialog}
-			        groups={this.state.groups}
-			        changeGroup={this._handleGroupChange}
-			        globalSettings={this.props.globalSettings}
-			        addListOfDevices={this._createGroupFromDialog}
-		         />
+        <CreateGroup
+        	ref="createGroupDialog"
+        	toggleDialog={this._toggleDialog}
+	        open={this.state.createGroupDialog}
+	        groups={this.state.groups}
+	        changeGroup={this._handleGroupChange}
+	        globalSettings={this.props.globalSettings}
+	        addListOfDevices={this._createGroupFromDialog}
+	        acceptedCount={this.props.acceptedDevices}
+        />
 
 			</div>
 

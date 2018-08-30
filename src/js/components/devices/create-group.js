@@ -286,7 +286,7 @@ var CreateGroup = createReactClass({
                 {deviceList}
               </TableBody>
             </Table>
-            {this.state.hasNext ? <a className="small" onClick={this._loadMoreDevs}>Load more devices</a> : null }
+            {this.props.acceptedCount > deviceList.length ? <a className="small" onClick={this._loadMoreDevs}>Load more devices</a> : null }
             <Loader show={this.props.loadingDevices} />
             <p className={(deviceList.length||this.props.loadingDevices) ? "hidden" : "italic muted"}>
               No devices match the search term

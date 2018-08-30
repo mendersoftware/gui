@@ -76,7 +76,6 @@ var Devices = createReactClass({
     var self = this;
     clearInterval(self.interval);
     self.interval = setInterval(function() {
-      AppActions.setSnackbar("");
       self._refreshAll()
     }, self.state.refreshLength);
     self._refreshAll();
