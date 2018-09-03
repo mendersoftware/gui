@@ -84,9 +84,7 @@ var ScheduleForm = createReactClass({
 
     for (var i=0; i<this.props.artifacts.length;i++) {
       var tmp = {text:this.props.artifacts[i].name, value: (<MenuItem value={this.props.artifacts[i]} key={i} primaryText={this.props.artifacts[i].name} />)}
-      var tmp1 = {text:this.props.artifacts[i].name, value: (<MenuItem value={this.props.artifacts[i]} key={i} primaryText={this.props.artifacts[i].name} />)}
-      var tmp2 = {text:this.props.artifacts[i].name, value: (<MenuItem value={this.props.artifacts[i]} key={i} primaryText={this.props.artifacts[i].name} />)}
-      artifactItems.push(tmp, tmp1, tmp2);
+      artifactItems.push(tmp);
     }
    
 
