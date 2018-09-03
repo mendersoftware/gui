@@ -8,6 +8,7 @@ import { CreateDeploymentForm } from '../helptips/helptooltips';
 var createReactClass = require('create-react-class');
 
 import SelectField from 'material-ui/SelectField';
+import AutoComplete from 'material-ui/AutoComplete';
 import TextField from 'material-ui/TextField';
 import FontIcon from 'material-ui/FontIcon';
 import Drawer from 'material-ui/Drawer';
@@ -49,9 +50,20 @@ var ScheduleForm = createReactClass({
     var group = value;
     this._sendUpToParent(group, 'group');
   },
-  _handleArtifactValueChange: function(e, index, value) {
-    var artifact = this.props.artifacts[index];
+  _handleArtifactValueChange: function(chosenRequest, index) {
+    var artifact;
+    if (index !== -1) {
+      artifact = this.props.artifacts[index];
+    } else {
+      var result  = this.props.artifacts.filter(function(o){return o.name == chosenRequest;} );
+      artifact = result.length ? result[0] : null;
+    }
+    this.setState({autoCompleteErrorText: artifact ? "" : "Please select an Artifact from the list" });
     this._sendUpToParent(artifact, 'artifact');
+  },
+  _handleArtifactInputChange: function() {
+    this.setState({autoCompleteErrorText: "Please select an Artifact from the list"});
+    this._sendUpToParent(null, 'artifact');
   },
 
   _sendUpToParent: function(val, attr) {
@@ -71,8 +83,10 @@ var ScheduleForm = createReactClass({
     var artifactItems = [];
 
     for (var i=0; i<this.props.artifacts.length;i++) {
-      var tmp = <MenuItem value={this.props.artifacts[i].name} key={i} primaryText={this.props.artifacts[i].name} />
-      artifactItems.push(tmp);
+      var tmp = {text:this.props.artifacts[i].name, value: (<MenuItem value={this.props.artifacts[i]} key={i} primaryText={this.props.artifacts[i].name} />)}
+      var tmp1 = {text:this.props.artifacts[i].name, value: (<MenuItem value={this.props.artifacts[i]} key={i} primaryText={this.props.artifacts[i].name} />)}
+      var tmp2 = {text:this.props.artifacts[i].name, value: (<MenuItem value={this.props.artifacts[i]} key={i} primaryText={this.props.artifacts[i].name} />)}
+      artifactItems.push(tmp, tmp1, tmp2);
     }
    
 
@@ -135,7 +149,7 @@ var ScheduleForm = createReactClass({
     var devicesLength = this.props.deploymentDevices ? this.props.deploymentDevices.length : "0"; 
 
     return (
-      <div style={{overflow:"visible", height: '440px'}}>
+      <div style={{overflow:"visible", height: '400px'}}>
         <Drawer 
           ref="devicesNav"
           docked={false}
@@ -151,25 +165,29 @@ var ScheduleForm = createReactClass({
         </Drawer>
           
         <form>
-          <div style={{display:"block"}}>
-            <SelectField
-              ref="artifact"
-              value={this.props.artifact ? this.props.artifact.name : null}
-              onChange={this._handleArtifactValueChange}
-              floatingLabelText="Select target artifact"
-              disabled={!artifactItems.length}
-              id="selectArtifact"
-            >
-              {artifactItems}
-            </SelectField>
+          <div style={{display:"block", marginBottom:"15px"}}>
 
+          <AutoComplete
+            ref="artifact"
+            hintText="Select target artifact"
+            dataSource={artifactItems}
+            onNewRequest={this._handleArtifactValueChange}
+            onUpdateInput={this._handleArtifactInputChange}
+            floatingLabelText="Select target artifact"
+            filter={AutoComplete.fuzzyFilter}
+            openOnFocus={true}
+            listStyle={{overflow: "auto", maxHeight: "360px"}}
+            errorStyle={{color: "rgb(171, 16, 0)"}}
+            errorText={this.state.autoCompleteErrorText}
+            />
             <TextField
               disabled={true}
-              hintText="Device type"
-              floatingLabelText="Device type"
+              hintText="Device types"
+              floatingLabelText="Device types"
               value={device_types} 
               underlineDisabledStyle={{borderBottom:"none"}}
-              style={{verticalAlign:"top"}}
+              style={{verticalAlign:"top", width:"400px"}}
+              multiLine={true}
               errorStyle={{color: "rgb(171, 16, 0)"}}
               className={this.props.artifact ? "margin-left" : "hidden"} />
 
@@ -180,6 +198,7 @@ var ScheduleForm = createReactClass({
 
           <div style={{display:"block"}}>
             <div className={this.state.disabled ? 'hidden' : 'inline-block'}>
+
               <SelectField
                 value={this.props.group}
                 ref="group"
@@ -231,11 +250,12 @@ var ScheduleForm = createReactClass({
                 </div>
               : null }
 
-            <div className={tmpDevices ? null : 'hidden'}>{this.props.filteredDevices ? this.props.filteredDevices.length : "0"} of {devicesLength} {pluralize("devices",devicesLength)} will be updated <span onClick={this._showDevices} className={this.state.disabled ? "hidden" : "margin-left link"}>View devices</span></div>
           </div>
             
-          <p className={this.props.hasDevices && artifactItems.length ? 'info': "hidden"}><FontIcon className="material-icons" style={{marginRight:"4px", fontSize:"18px", top: "4px"}}>info_outline</FontIcon>The deployment will skip any devices that are already on the target artifact version, or that have a different device type.</p>
-
+          <div className="margin-top">
+            <p className={tmpDevices ? null : 'hidden'} >{this.props.filteredDevices ? this.props.filteredDevices.length : "0"} of {devicesLength} {pluralize("devices",devicesLength)} will be updated. <span onClick={this._showDevices} className={this.state.disabled ? "hidden" : "link"}>View the devices</span></p>
+            <p className={this.props.hasDevices && artifactItems.length ? 'info': "hidden"}><FontIcon className="material-icons" style={{marginRight:"4px", fontSize:"18px", top: "4px"}}>info_outline</FontIcon>The deployment will skip any devices that are already on the target artifact version, or that have a different device type.</p>
+          </div>
         </form>
       </div>
     );
