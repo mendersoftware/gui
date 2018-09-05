@@ -7,7 +7,6 @@ import ReactTooltip from 'react-tooltip';
 import { CreateDeploymentForm } from '../helptips/helptooltips';
 var createReactClass = require('create-react-class');
 
-import SelectField from 'material-ui/SelectField';
 import AutoComplete from 'material-ui/AutoComplete';
 import TextField from 'material-ui/TextField';
 import FontIcon from 'material-ui/FontIcon';
@@ -46,10 +45,22 @@ var ScheduleForm = createReactClass({
     };
   },
 
-  _handleGroupValueChange: function(e, index, value) {
-    var group = value;
+  _handleGroupValueChange: function(chosenRequest, index) {
+    var group;
+    if (index !== -1) {
+      group = chosenRequest.text;
+    } else {
+      var result  = this.props.groups.filter(function(o){return o == chosenRequest;} );
+      group = result.length ? result[0] : null;
+    }
+    this.setState({groupErrorText: group ? "" : "Please select a group from the list" });
     this._sendUpToParent(group, 'group');
   },
+  _handleGroupInputChange: function() {
+    this.setState({groupErrorText: "Please select a group from the list"});
+    this._sendUpToParent(null, 'group');
+  },
+
   _handleArtifactValueChange: function(chosenRequest, index) {
     var artifact;
     if (index !== -1) {
@@ -58,12 +69,17 @@ var ScheduleForm = createReactClass({
       var result  = this.props.artifacts.filter(function(o){return o.name == chosenRequest;} );
       artifact = result.length ? result[0] : null;
     }
-    this.setState({autoCompleteErrorText: artifact ? "" : "Please select an Artifact from the list" });
+    this.setState({autoCompleteErrorText: artifact ? "" : "Choose an Artifact to be deployed" });
     this._sendUpToParent(artifact, 'artifact');
   },
   _handleArtifactInputChange: function() {
-    this.setState({autoCompleteErrorText: "Please select an Artifact from the list"});
+    this.setState({autoCompleteErrorText: "Choose an Artifact to be deployed"});
     this._sendUpToParent(null, 'artifact');
+  },
+  _clearOnClick: function(ref) {
+    this.refs[ref].setState({searchText:''});
+    this.refs[ref].focus();
+    this._sendUpToParent(null, ref);
   },
 
   _sendUpToParent: function(val, attr) {
@@ -91,12 +107,12 @@ var ScheduleForm = createReactClass({
     var groupItems = [];
     if (this.props.device) {
       // If single device, don't show groups
-      groupItems[0] = <MenuItem value={this.props.device.id} key={this.props.device.id} primaryText={this.props.device.id} />
+      groupItems[0] = {text:this.props.device.id, value: (<MenuItem value={this.props.device.id} key={this.props.device.id} primaryText={this.props.device.id} />)}
     } else {
-      groupItems[0] = <MenuItem value="All devices" key="All" primaryText="All devices" />;
+      groupItems[0] = {text: "All devices", value: (<MenuItem value="All devices" key="All" primaryText="All devices" />)};
       
       for (var i=0; i<this.props.groups.length;i++) {
-        var tmp = <MenuItem value={this.props.groups[i]} key={i} primaryText={decodeURIComponent(this.props.groups[i])} />;
+        var tmp = {text: decodeURIComponent(this.props.groups[i]), value:(<MenuItem value={this.props.groups[i]} key={i} primaryText={decodeURIComponent(this.props.groups[i])} />)};
         groupItems.push(tmp);
       }
     }
@@ -177,6 +193,7 @@ var ScheduleForm = createReactClass({
             listStyle={{overflow: "auto", maxHeight: "360px"}}
             errorStyle={{color: "rgb(171, 16, 0)"}}
             errorText={this.state.autoCompleteErrorText}
+            onClick={this._clearOnClick.bind(null, "artifact")}
             />
             <TextField
               disabled={true}
@@ -197,17 +214,21 @@ var ScheduleForm = createReactClass({
           <div style={{display:"block"}}>
             <div className={this.state.disabled ? 'hidden' : 'inline-block'}>
 
-              <SelectField
-                value={this.props.group}
-                ref="group"
-                onChange={this._handleGroupValueChange}
-                floatingLabelText="Select group"
-                style={{marginBottom:"10px"}}
-                disabled={!this.props.hasDevices} 
-                id="selectGroup"
-              >
-                {groupItems}
-              </SelectField>
+            <AutoComplete
+              ref="group"
+              hintText="Select target group"
+              dataSource={groupItems}
+              onNewRequest={this._handleGroupValueChange}
+              onUpdateInput={this._handleGroupInputChange}
+              floatingLabelText="Select target group"
+              filter={AutoComplete.fuzzyFilter}
+              openOnFocus={true}
+              listStyle={{overflow: "auto", maxHeight: "360px"}}
+              errorStyle={{color: "rgb(171, 16, 0)"}}
+              errorText={this.state.groupErrorText}
+              disabled={!this.props.hasDevices}
+              onClick={this._clearOnClick.bind(null, "group")}
+              />
 
               <p className={this.props.hasDevices ? "hidden" : "info"} style={{marginTop:"0"}}>
                 <FontIcon className="material-icons" style={{marginRight:"4px", fontSize:"18px", top: "4px", color:"rgb(171, 16, 0)"}}>error_outline</FontIcon>There are no connected devices. <span className={this.props.hasPending ? null : "hidden"}><Link to={`/devices/pending`}>Accept pending devices</Link> to get started.</span>
