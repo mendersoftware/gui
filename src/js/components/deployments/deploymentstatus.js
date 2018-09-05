@@ -10,6 +10,7 @@ var DeploymentStatus = createReactClass({
     return {
       stats: {
         "success": 0,
+        "decommissioned": 0,
         "pending": 0,
         "failure": 0,
         "downloading": 0,
@@ -48,7 +49,7 @@ var DeploymentStatus = createReactClass({
   render: function() {
     var inprogress = this.state.stats.downloading + this.state.stats.installing + this.state.stats.rebooting;
     var failed = this.state.stats.failure;
-    var skipped = this.state.stats.aborted + this.state.stats.noartifact + this.state.stats["already-installed"];
+    var skipped = this.state.stats.aborted + this.state.stats.noartifact + this.state.stats["already-installed"] + this.state.stats.decommissioned;
     var label = (
       <div className={this.props.vertical ? "results-status vertical" : "results-status"}>
         <div className={skipped ? "hint--bottom" : "hint--bottom disabled"} aria-label="Skipped">
