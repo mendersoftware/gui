@@ -142,8 +142,8 @@ var ExpandedDevice = createReactClass({
     this.setState(tmp);
 
     // check that device type matches
-    if (attr==='artifact') {
-      var filteredDevs = null;
+    var filteredDevs = null;
+    if (attr==='artifact' && val) {
       for (var i = 0; i<val.device_types_compatible.length; i++) {
         if (val.device_types_compatible[i] === this.props.device_type) {
           filteredDevs = [this.props.device];
