@@ -82,6 +82,7 @@ var ProgressDeviceList = createReactClass({
               return "No artifact";
               break;
             case "already-installed":
+              device.percentage = 100;
               return "Already installed";
               break;
             default:
@@ -120,10 +121,10 @@ var ProgressDeviceList = createReactClass({
                 {statusText}
               </div>
               <div>
-               { !["pending", "decommissioned"].includes(status.toLowerCase()) &&
+               { !["pending", "decommissioned", "already-installed"].includes(device.status.toLowerCase()) &&
                <div>
                   <div style={{textAlign: "end", color: "#aaaaaa"}}>
-                  { !["aborted", "failure", "noartifact"].includes(status.toLowerCase()) ? devicePercentage : "0%"}
+                  { !["aborted", "failure", "noartifact"].includes(device.status.toLowerCase()) ? devicePercentage : "0%"}
                   </div>
                   <LinearProgress color={status && (status.toLowerCase() === "failure" || status.toLowerCase() === "aborted") ? "#8f0d0d":"#009E73"} mode="determinate" value={device.percentage} />
                 </div>
