@@ -354,6 +354,14 @@ var Deployments = createReactClass({
     this.setState({dialog: true});
   },
 
+  _retryDeployment: function(deployment, devices) {
+    var self = this;
+    var artifact = {name: deployment.artifact_name};
+    this.setState({artifact: artifact, group: deployment.name, filteredDevices: devices}, function() {
+      self._onScheduleSubmit();
+    });
+  },
+
   _onScheduleSubmit: function() {
     var ids = [];
     var self = this;
@@ -386,6 +394,7 @@ var Deployments = createReactClass({
               self._changeTab("/deployments/active");
               
             } else {
+              self.timer = setInterval(self._refreshDeployments, self.state.refreshDeploymentsLength);
               self._refreshDeployments();
             }
             AppActions.setSnackbar("Deployment created successfully", 8000);
@@ -595,7 +604,7 @@ var Deployments = createReactClass({
       )
     } else {
       dialogContent = (
-        <Report globalSettings={this.props.globalSettings} updated={this.updated} past={true} deployment={this.state.selectedDeployment} retryDeployment={this._scheduleDeployment} />
+        <Report retry={this._retryDeployment} globalSettings={this.props.globalSettings} updated={this.updated} past={true} deployment={this.state.selectedDeployment} />
       )
     }
 
