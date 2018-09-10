@@ -14,7 +14,9 @@ import update from 'react-addons-update';
 var isEqual = require('lodash.isequal');
 var differenceWith = require('lodash.differencewith');
 import BlockIcon from 'react-material-icons/icons/content/block';
+import RefreshIcon from 'react-material-icons/icons/navigation/refresh';
 var ConfirmAbort = require('./confirmabort');
+var ConfirmRetry = require('./confirmretry');
 
 // material ui
 import FlatButton from 'material-ui/FlatButton';
@@ -159,10 +161,6 @@ var DeploymentReport = createReactClass({
     this.setState({showPending:checked, currentPage:1});
     this.refreshDeploymentDevices();
   },
-  _retryDeployment: function () {
-    // replace contents of dialog, also change size, return contents and size on 'cancel'?
-    this.props.retryDeployment(this.props.deployment);
-  },
   viewLog: function (id) {
     AppActions.getDeviceLog(this.props.deployment.id, id, function(data) {
       this.setState({showDialog: true, logData: data, copied: false});
@@ -209,14 +207,22 @@ var DeploymentReport = createReactClass({
   _abortHandler: function() {
     this.props.abort(this.props.deployment.id);
   },
-  _hideConfirm: function() {
+  _handleRetry: function() {
+    this.props.retry(this.props.deployment, this.state.allDevices);
+  },
+  _hideConfirm: function(ref) {
     var self = this;
+    var newState = {};
+    newState[ref] = false;
+    this.setState(newState);
     setTimeout(function() {
-      self.setState({abort:false});
+      self.setState(newState);
     }, 150);
   },
-  _showConfirm: function() {
-    this.setState({abort:true});
+  _showConfirm: function(ref) {
+    var newState = {};
+    newState[ref] = true;
+    this.setState(newState);
   },
   render: function () {
     var deviceList = this.state.pagedDevices || [];
@@ -247,12 +253,12 @@ var DeploymentReport = createReactClass({
 
     var abort = (
       <div className="float-right">
-        <FlatButton label="Abort deployment" secondary={true} onClick={this._showConfirm} icon={<BlockIcon style={{height:"18px", width:"18px", verticalAlign:"middle"}}/>}/>
+        <FlatButton label="Abort deployment" secondary={true} onClick={this._showConfirm.bind(null, "abort")} icon={<BlockIcon style={{height:"18px", width:"18px", verticalAlign:"middle"}}/>}/>
       </div>
     );
     if (this.state.abort) {
       abort = (
-        <ConfirmAbort cancel={this._hideConfirm} abort={this._abortHandler} />
+        <ConfirmAbort cancel={this._hideConfirm.bind(null, "abort")} abort={this._abortHandler} />
       );
     }
 
@@ -274,32 +280,51 @@ var DeploymentReport = createReactClass({
 
           {
             this.props.past ?
+            
             <div className="inline">
-              <div className="deploymentInfo" style={{width:"260px", height:"auto", margin:"30px 30px 30px 0", display:"inline-block", verticalAlign:"top"}}>
-                <div><div className="progressLabel">Status:</div>Finished<span className={this.state.stats.failure ? "failures" : "hidden"}> with failures</span></div>
-                <div><div className="progressLabel">Started:</div><Time value={this._formatTime(this.props.deployment.created)} format="YYYY-MM-DD HH:mm" /></div>
-                <div><div className="progressLabel">Finished:</div>{finished}</div>
-              </div>
-              <div className="deploymentInfo" style={{height:"auto", margin:"30px 30px 30px 0", display:"inline-block", verticalAlign:"top"}}>
-                <div className={this.state.stats.failure ? "statusLarge" : "hidden"}>
-                  <img src="assets/img/largeFail.png" />
-                  <div className="statusWrapper">
-                    <b className="red">{this.state.stats.failure}</b> {pluralize("devices", this.state.stats.failure)} failed to update
-                  </div>
-                </div> 
-                <div className={this.state.stats.success ? "statusLarge" : "hidden"}>
-                <img src="assets/img/largeSuccess.png" />
-                  <div className="statusWrapper">
-                    <b className="green"><span className={this.state.stats.success === deviceList.length ? null : "hidden"}>All </span>{this.state.stats.success}</b> {pluralize("devices", this.state.stats.success)} updated successfully
-                  </div>
+              <div className="inline">
+                <div className="deploymentInfo" style={{width:"260px", height:"auto", margin:"30px 30px 30px 0", display:"inline-block", verticalAlign:"top"}}>
+                  <div><div className="progressLabel">Status:</div>Finished<span className={this.state.stats.failure ? "failures" : "hidden"}> with failures</span></div>
+                  <div><div className="progressLabel">Started:</div><Time value={this._formatTime(this.props.deployment.created)} format="YYYY-MM-DD HH:mm" /></div>
+                  <div><div className="progressLabel">Finished:</div>{finished}</div>
                 </div>
-                
-              </div>
+                <div className="deploymentInfo" style={{height:"auto", margin:"30px 30px 30px 0", display:"inline-block", verticalAlign:"top"}}>
+                  <div className={this.state.stats.failure ? "statusLarge" : "hidden"}>
+                    <img src="assets/img/largeFail.png" />
+                    <div className="statusWrapper">
+                      <b className="red">{this.state.stats.failure}</b> {pluralize("devices", this.state.stats.failure)} failed to update
+                    </div>
+          
+                    <div>
+                      <div id="reportRetry" className={this.state.retry ? "float-right hint--bottom hint--always hint--large hint--info" : "float-right hint--bottom hint--large hint--info"} data-hint="This will create a new deployment with the same device group and Artifact.&#10;Devices with this Artifact already installed will be skipped, all others will be updated.">
+                  
+                      {this.state.retry ?
+                       <ConfirmRetry cancel={this._hideConfirm.bind(null, "retry")} retry={this._handleRetry} />
+                       :
+                        <FlatButton
+                          label="Retry deployment?"
+                          secondary={true}
+                          icon={<RefreshIcon style={{height:"18px", width:"18px", verticalAlign:"middle"}}/>}
+                          onClick={this._showConfirm.bind(null, "retry")}
+                        /> 
+                      }
+                      </div>
+                    </div> 
+                  </div> 
+                  <div className={this.state.stats.success ? "statusLarge" : "hidden"}>
+                  <img src="assets/img/largeSuccess.png" />
+                    <div className="statusWrapper">
+                      <b className="green"><span className={this.state.stats.success === deviceList.length ? null : "hidden"}>All </span>{this.state.stats.success}</b> {pluralize("devices", this.state.stats.success)} updated successfully
+                    </div>
+                  </div>
+                  
+                </div>
 
-              <div className="hidden" style={{width:"240px", height:"auto", margin:"30px 0 30px 30px", display:"inline-block", verticalAlign:"top"}}>
-                <Checkbox
-                  label="Show only failures"
-                  onCheck={this._handleCheckbox}/>
+                <div className="hidden" style={{width:"240px", height:"auto", margin:"30px 0 30px 30px", display:"inline-block", verticalAlign:"top"}}>
+                  <Checkbox
+                    label="Show only failures"
+                    onCheck={this._handleCheckbox}/>
+                </div>
               </div>
             </div>
 

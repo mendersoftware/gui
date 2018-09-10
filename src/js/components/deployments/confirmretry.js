@@ -4,7 +4,7 @@ import FontIcon from 'material-ui/FontIcon';
 var Loader = require('../common/loader');
 var createReactClass = require('create-react-class');
 
-var ConfirmAbort = createReactClass({
+var ConfirmRetry = createReactClass({
   getInitialState: function() {
     return {
       class: "fadeIn"
@@ -14,9 +14,9 @@ var ConfirmAbort = createReactClass({
     this.setState({class: "fadeOut"});
     this.props.cancel();
   },
-  _handleAbort: function() {
+  _handleRetry: function() {
     this.setState({loading:true});
-    this.props.abort();
+    this.props.retry();
   },
   render: function() {
     var styles = {
@@ -28,11 +28,11 @@ var ConfirmAbort = createReactClass({
     return (
       <div className={this.state.class} style={{marginRight:"12px"}}>
         <div className="float-right">
-          <span className="bold">{this.state.loading ? "Aborting..." : "Confirm abort deployment?"}</span>
-          <IconButton id="confirmAbort" style={styles} onClick={this._handleAbort}>
+          <span className="bold">{this.state.loading ? "Creating new deployment..." : "Confirm retry deployment?"}</span>
+          <IconButton id="confirmRetry" style={styles} onClick={this._handleRetry}>
             <FontIcon className="material-icons green">check_circle</FontIcon>
           </IconButton>
-          <IconButton id="cancelAbort" style={styles} onClick={this._handleCancel}>
+          <IconButton id="cancelRetry" style={styles} onClick={this._handleCancel}>
             <FontIcon className="material-icons red">cancel</FontIcon>
           </IconButton>
         </div>
@@ -41,4 +41,4 @@ var ConfirmAbort = createReactClass({
   }
 });
 
-module.exports = ConfirmAbort;
+module.exports = ConfirmRetry;
