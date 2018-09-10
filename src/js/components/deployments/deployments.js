@@ -386,6 +386,7 @@ var Deployments = createReactClass({
               self._changeTab("/deployments/active");
               
             } else {
+              self.timer = setInterval(self._refreshDeployments, self.state.refreshDeploymentsLength);
               self._refreshDeployments();
             }
             AppActions.setSnackbar("Deployment created successfully", 8000);
