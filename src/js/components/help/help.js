@@ -71,7 +71,7 @@ var Help =  createReactClass({
   componentDidMount: function() {
     if (this.state.hasMultitenancy && this.state.isHosted) {
       this._getUserOrganization();
-      this.setState({version: ""});
+      this.setState({version: "", docsVersion: ""}); // if hosted, use latest docs version 
     } else {
       this.setState({docsVersion: this.props.docsVersion ? this.props.docsVersion + "/" : "development/"});
     }

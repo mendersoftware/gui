@@ -40,7 +40,7 @@ var BuildYocto =  createReactClass({
         <h2>Build with Yocto</h2>
         <p>You can build your own Yocto Project images for use with Mender. By updating a small part of your build configuration, your newly provisioned devices will securely connect to the Mender server the first time they boot.</p>
 
-        <p>Follow the docs at <a href={"https://docs.mender.io/"+this.props.docsVersion+"artifacts/building-mender-yocto-image"}>https://docs.mender.io/{this.props.docsVersion}artifacts/building-mender-yocto-image</a> to build your .sdimg and .mender files.</p>
+        <p>Follow the docs at <a href={"https://docs.mender.io/"+this.props.docsVersion+"artifacts/building-mender-yocto-image"}>{"https://docs.mender.io/"+this.props.docsVersion+"artifacts/building-mender-yocto-image"}</a> to build your .sdimg and .mender files.</p>
 
         
         {this.props.isHosted ? 
