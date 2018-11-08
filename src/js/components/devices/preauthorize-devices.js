@@ -40,7 +40,6 @@ var Preauthorize =  createReactClass({
       devices: [],
       pageNo: 1,
       pageLength: 20,
-      selectedRows: [],
       authLoading: "all",
       openPreauth: false,
       openRemove: false,
@@ -65,11 +64,6 @@ var Preauthorize =  createReactClass({
     if ((prevProps.count !== this.props.count)
       || ((prevProps.currentTab !== this.props.currentTab) && (this.props.currentTab.indexOf("Preauthorized")!== -1)) ) {
       this._getDevices();
-      this._clearSelected();
-    }
-
-    if (prevProps.currentTab !== this.props.currentTab) {
-      this._clearSelected();
     }
   },
   /*
@@ -95,11 +89,6 @@ var Preauthorize =  createReactClass({
     AppActions.getDevicesByStatus(callback, "preauthorized", this.state.pageNo, this.state.pageLength);
   },
 
-  _clearSelected: function() {
-    this.setState({selectedRows:[], devicesToRemove:[], expandRow: null});
-  },
-
-
   _adjustHeight: function () {
     // do this when number of devices changes
     var h = this.state.devices.length * 55;
@@ -115,7 +104,6 @@ var Preauthorize =  createReactClass({
     if (this.state.expandRow === rowNumber) {
       rowNumber = null;
     }
-    device.id_data = device.attributes;
     this.setState({expandedDevice: device, expandRow: rowNumber});
     
   },
@@ -125,32 +113,7 @@ var Preauthorize =  createReactClass({
 
   _handlePageChange: function(pageNo) {
     var self = this;
-    self.setState({selectedRows:[], pageLoading:true, expandRow: null, pageNo: pageNo}, () => {self._getDevices()});
-  },
-
-  _onRowSelection: function(selectedRows) {
-    if (selectedRows === "all") {
-      var rows = Array.apply(null, {length: this.state.devices.length}).map(Number.call, Number);
-      this.setState({selectedRows: rows});
-    } else if (selectedRows === "none") {
-      this.setState({selectedRows: []});
-    } else {
-      this.setState({selectedRows: selectedRows});
-    }
-    
-  },
-
-  _isSelected: function(index) {
-    return this.state.selectedRows.indexOf(index) !== -1;
-  },
-
-  _getDevicesFromSelectedRows: function() {
-    // use selected rows to get device from corresponding position in devices array
-    var devices = [];
-    for (var i=0; i<this.state.selectedRows.length; i++) {
-      devices.push(this.state.devices[this.state.selectedRows[i]]);
-    }
-    return devices;
+    self.setState({pageLoading:true, expandRow: null, pageNo: pageNo}, () => {self._getDevices()});
   },
 
   _dialogToggle: function(ref) {
@@ -168,14 +131,14 @@ var Preauthorize =  createReactClass({
     var inputs = this.state.inputs;
     inputs[index].key = event.target.value;
     this.setState({inputs: inputs, errorText: "", errorText1: ""});
-    this._convertIdentityToString(inputs);
+    this._convertIdentityToJSON(inputs);
   },
 
   _updateValue: function(index, event) {
     var inputs = this.state.inputs;
     inputs[index].value = event.target.value;
     this.setState({inputs: inputs, errorText: "", errorText1: ""});
-    this._convertIdentityToString(inputs);
+    this._convertIdentityToJSON(inputs);
   },
 
   _addKeyValue: function() {
@@ -188,25 +151,25 @@ var Preauthorize =  createReactClass({
     var inputs = this.state.inputs;
     inputs.splice(index, 1);
     this.setState({inputs: inputs, errorText: "", errorText1: ""});
-    this._convertIdentityToString(inputs);
+    this._convertIdentityToJSON(inputs);
   },
 
-  _convertIdentityToString: function(arr) {
+  _convertIdentityToJSON: function(arr) {
     var obj = {};
     for (var i=0; i<arr.length; i++) {
       if (arr[i].value) {
         obj[arr[i].key] = arr[i].value;
       }
     }
-    var stringed = isEmpty(obj) ? "" : JSON.stringify(obj);
-    this.setState({stringified: stringed});
+    console.log(obj);
+    this.setState({json_identity: obj});
   },
 
   _savePreauth: function(close) {
     var self = this;
     var authset = {
-      key: this.state.public,
-      device_identity: this.state.stringified,
+      pubkey: this.state.public,
+      identity_data: this.state.json_identity,
     };
     var callback = {
       success: function(res) {
@@ -225,75 +188,13 @@ var Preauthorize =  createReactClass({
         var errMsg = (err.res.body||{}).error || "";
         
         if (err.res.status === 409) {
-          self.setState({errorText: "A preauthorization with a matching identity data set already exists", errorText1: " "});
+          self.setState({errorText: "A device with a matching identity data set already exists", errorText1: " "});
         } else {
           AppActions.setSnackbar(preformatWithRequestID(err.res, "The device could not be added: "+errMsg), null, "Copy to clipboard");
         }
       }
     }
     AppActions.preauthDevice(authset, callback);
-  },
-
-  _openRemoveDialog: function(devices) {
-    var self = this;
-    this.setState({devicesToRemove: devices}, function() {
-      self._dialogToggle("openRemove");
-    })
-  },
-
-  _removeSinglePreauth: function(id, callback) {
-    var self = this;
-
-    var singleCallback = {
-      success: function(res) {
-        callback(1);
-      },
-      error: function(err) {
-        var errMsg = err.res.body.error || "";
-        AppActions.setSnackbar(preformatWithRequestID(err.res, "There was a problem removing the preauthorization: "+errMsg), null, "Copy to clipboard");
-        console.log(err);
-        callback();
-      }
-    }
-    AppActions.deletePreauth(id, singleCallback);
-  },
-
-  _removePreauth: function() {
-    var self = this;
-    var i = 0;
-    var success = 0;
-    var loopArrays = function(arr) {
-      // for each in array, authorize one by one
-      self._removeSinglePreauth(arr[i].id, function(num) {
-        i++;
-        success = num+success;
-        if (i < arr.length) {
-          loopArrays(arr);
-        } else {
-          self.setState({openRemove: false, selectedRows: [], devicesToRemove: []});
-          AppActions.setSnackbar(success + " " + pluralize("devices", success) + " " + pluralize("were", success)+ " successfully removed from the preauthorization list", 5000);
-          self._getDevices();
-          self.props.refreshCount();
-        }
-      });
-    }
-    loopArrays(this.state.devicesToRemove);
-   
-  },
-
-  _removeBatch: function() {
-    var self = this;
-    // use selected rows to get device from corresponding position in devices array
-    var devices = [];
-    for (var i=0; i<self.state.selectedRows.length; i++) {
-      devices.push(self.state.devices[self.state.selectedRows[i]]);
-    }
-    self._openRemoveDialog(devices);
-  },
-
-  _showKey: function() {
-    var self = this;
-    self.setState({showKey: !self.state.showKey});
   },
 
   onDrop: function (acceptedFiles, rejectedFiles) {
@@ -325,17 +226,30 @@ var Preauthorize =  createReactClass({
     var devices = this.state.devices.map(function(device, index) {
       var self = this;
 
-      var expanded = '';
-      if ( self.state.expandRow === index ) {
-        expanded = <ExpandedDevice id_attribute={(this.props.globalSettings || {}).id_attribute} _showKey={this._showKey} showKey={this.state.showKey} disabled={limitMaxed} styles={this.props.styles} deviceId={self.state.deviceId} device={self.state.expandedDevice} unauthorized={true} selected={[device]}  />
-      }
-
-      var id_attribute  = (self.props.globalSettings.id_attribute && self.props.globalSettings.id_attribute !== "Device ID") 
-        ? (device.attributes || {})[self.props.globalSettings.id_attribute]
+    var id_attribute  = (self.props.globalSettings.id_attribute && self.props.globalSettings.id_attribute !== "Device ID") 
+        ? (device.identity_data || {})[self.props.globalSettings.id_attribute]
         : (device.device_id || device.id) ;
 
+      var expanded = '';
+      if ( self.state.expandRow === index ) {
+        expanded = <ExpandedDevice 
+                    id_attribute={(this.props.globalSettings || {}).id_attribute} 
+                    _showKey={this._showKey} 
+                    showKey={this.state.showKey} 
+                    limitMaxed={limitMaxed} 
+                    styles={this.props.styles} 
+                    deviceId={self.state.deviceId}
+                    id_attribute={(this.props.globalSettings || {}).id_attribute} 
+                    id_value={id_attribute}
+                    device={self.state.expandedDevice} 
+                    unauthorized={true} 
+                    pause={self.props.pause}  />
+      }
+
+
+
       return (
-        <TableRow selected={this._isSelected(index)} className={expanded ? "expand" : null} hoverable={true} key={index}>
+        <TableRow className={expanded ? "expand" : null} hoverable={true} key={index}>
           <TableRowColumn className="no-click-cell" style={expanded ? {height: this.state.divHeight} : null}>
              <div onClick={(e) => {
               e.preventDefault();
@@ -351,7 +265,7 @@ var Preauthorize =  createReactClass({
               e.stopPropagation();
               self._expandRow(index);
             }}>
-            <Time value={device.request_time} format="YYYY-MM-DD HH:mm" />
+            <Time value={device.created_ts} format="YYYY-MM-DD HH:mm" />
             </div>
           </TableRowColumn>
           <TableRowColumn className="no-click-cell capitalized">
@@ -360,13 +274,6 @@ var Preauthorize =  createReactClass({
               e.stopPropagation();
               self._expandRow(index);
             }}>{device.status}
-            </div>
-          </TableRowColumn>
-          <TableRowColumn style={{width:"120px"}} className="no-click-cell capitalized">
-            <div onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-            }}><a onClick={this._openRemoveDialog.bind(null, [device])}>Remove</a>
             </div>
           </TableRowColumn>
           <TableRowColumn style={{width:"55px", paddingRight:"0", paddingLeft:"12px"}} className="expandButton">
@@ -392,11 +299,11 @@ var Preauthorize =  createReactClass({
       )
     }, this);
     
-    var deviceLimitWarning = limitMaxed ?
+     var deviceLimitWarning = limitMaxed ?
       (
         <p className="warning">
           <InfoIcon style={{marginRight:"2px", height:"16px", verticalAlign:"bottom"}} />
-          <span className={limitMaxed ? null : "hidden"}>You have reached</span><span className={!limitMaxed ? null : "hidden"}>You are nearing</span> your limit of authorized devices: {this.props.totalDevices} of {this.props.deviceLimit}
+          You have reached your limit of authorized devices: {this.props.acceptedDevices} of {this.props.deviceLimit}
         </p>
     ) : null;
 
@@ -410,31 +317,19 @@ var Preauthorize =  createReactClass({
       </div>,
       <div style={{marginRight:"10px", display:"inline-block"}}>
         <RaisedButton
-          disabled={!this.state.public || !this.state.stringified || !!limitMaxed}
+          disabled={!this.state.public || isEmpty(this.state.json_identity) || !!limitMaxed}
           label="Save and add another"
           onClick={this._savePreauth.bind(null, false)}
           primary={true} />
       </div>,
       <RaisedButton
-        disabled={!this.state.public || !this.state.stringified || !!limitMaxed}
+        disabled={!this.state.public || isEmpty(this.state.json_identity) || !!limitMaxed}
         label="Save"
         onClick={this._savePreauth.bind(null, true)}
         secondary={true} />
     ];
 
-    var removeActions =  [
-      <div style={{marginRight:"10px", display:"inline-block"}}>
-        <FlatButton
-          label="Cancel"
-          onClick={this._dialogToggle.bind(null, "openRemove")} />
-      </div>,
-      <RaisedButton
-        label="Remove"
-        onClick={this._removePreauth}
-        secondary={true}
-        icon={<FontIcon style={{marginTop:"-4px"}} className="material-icons">cancel</FontIcon>} />
-    ];
-
+  
     var inputs = this.state.inputs.map(function(input, index) {
       var self = this;
       return (
@@ -454,31 +349,30 @@ var Preauthorize =  createReactClass({
       <RaisedButton disabled={!!limitMaxed} className="top-right-button" secondary={true} label="Preauthorize devices" onClick={this._dialogToggle.bind(null, 'openPreauth')} />
       
       <Loader show={this.state.authLoading==="all"} />
-        {deviceLimitWarning}
 
         { this.state.devices.length && this.state.authLoading!=="all" ?
 
           <div className="padding-bottom">
 
             <h3 className="align-center">Preauthorized devices</h3>
-
+            {deviceLimitWarning}
+            
             <Table
-              multiSelectable={true}
-              onRowSelection={this._onRowSelection}>
+              selectable={false}>
               <TableHeader
                 className="clickable"
-                enableSelectAll={true}>
+                displaySelectAll={false}
+                adjustForCheckbox={false}>>
                 <TableRow>
                   <TableHeaderColumn className="columnHeader" tooltip={(this.props.globalSettings || {}).id_attribute || "Device ID"}>{(this.props.globalSettings || {}).id_attribute || "Device ID"}<FontIcon onClick={this.props.openSettingsDialog} style={{fontSize: "16px"}} color={"#c7c7c7"} hoverColor={"#aeaeae"} className="material-icons hover float-right">settings</FontIcon></TableHeaderColumn>
-                  <TableHeaderColumn className="columnHeader" tooltip="Request time">Date added</TableHeaderColumn>
+                  <TableHeaderColumn className="columnHeader" tooltip="Date added">Date added</TableHeaderColumn>
                   <TableHeaderColumn className="columnHeader" tooltip="Status">Status</TableHeaderColumn>
-                  <TableHeaderColumn className="columnHeader" style={{width:"120px"}} tooltip="Remove">Remove</TableHeaderColumn>
                   <TableHeaderColumn className="columnHeader" style={{width:"55px", paddingRight:"12px", paddingLeft:"0"}}></TableHeaderColumn>
                 </TableRow>
               </TableHeader>
               <TableBody
                 showRowHover={true}
-                deselectOnClickaway={false}
+                displayRowCheckbox={false}
                 className="clickable">
                 {devices}
               </TableBody>
@@ -499,24 +393,6 @@ var Preauthorize =  createReactClass({
           </div>
         }
 
-        <div>
-
-        { this.state.selectedRows.length ? 
-          <div className="fixedButtons">
-            <div className="float-right">
-
-              <div style={{width:"100px", top:"7px", position:"relative"}} className={this.props.disabled ? "inline-block" : "hidden"}>
-                <Loader table={true} waiting={true} show={true} />
-              </div>
-
-              <span className="margin-right">{this.state.selectedRows.length} {pluralize("devices", this.state.selectedRows.length)} selected</span>
-              <RaisedButton primary={true} label={"Remove " + this.state.selectedRows.length +" " + pluralize("devices", this.state.selectedRows.length)} onClick={this._removeBatch} />
-            </div>
-          </div>
-        : null }
-
-
-        </div>
 
         <Dialog
           open={this.state.openPreauth}
@@ -532,7 +408,6 @@ var Preauthorize =  createReactClass({
 
           
          <h4 className="margin-top margin-bottom-small">Public key</h4>
-
           {this.state.filename ? 
             <div>
               <TextField id="keyfile" value={this.state.filename} disabled={true} underlineStyle={{borderBottom:"1px solid rgb(224, 224, 224)"}} inputStyle={{color:"rgba(0, 0, 0, 0.8)"}} /><IconButton style={{top:"6px"}} onClick={this._removeKey}><FontIcon className="material-icons">clear</FontIcon></IconButton>
@@ -555,34 +430,6 @@ var Preauthorize =  createReactClass({
            {deviceLimitWarning}
         </Dialog>
 
-
-        <Dialog
-          open={this.state.openRemove}
-          title={'Remove '+pluralize("this", this.state.devicesToRemove.length)+' '+ pluralize("device", this.state.devicesToRemove.length)}
-          actions={removeActions}
-          autoDetectWindowHeight={true}
-          bodyStyle={{paddingTop:"0", fontSize:"13px"}}
-          contentStyle={{overflow:"hidden", boxShadow:"0 14px 45px rgba(0, 0, 0, 0.25), 0 10px 18px rgba(0, 0, 0, 0.22)"}}
-          >
-          {this.state.devicesToRemove.length>1 ? 
-
-            <div>
-              <p>
-                {this.state.devicesToRemove.length} device identity data set + public key combinations will be removed from the preauthorization list. Are you sure?
-              </p>
-            </div>
-
-            : 
-
-            <div>
-              <ListItem className="margin-bottom-small" style={this.props.styles.listStyle} disabled={true} primaryText="Device ID" secondaryText={(this.state.devicesToRemove[0]||{}).device_id}  />
-              <p>
-                This device identity data set and public key will be removed from the preauthorization list. Are you sure?
-              </p>
-            </div>
-          }
-          
-        </Dialog>
 
       </Collapse>
     );

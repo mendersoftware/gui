@@ -5,7 +5,7 @@ import { Motion, spring } from 'react-motion';
 import Collapse from 'react-collapse';
 import ReactHeight from 'react-height';
 import ReactTooltip from 'react-tooltip';
-import { AuthDevices, ExpandAuth, AuthButton } from '../helptips/helptooltips';
+import { AuthDevices, ExpandAuth } from '../helptips/helptooltips';
 import { Router, Link } from 'react-router';
 var Loader = require('../common/loader');
 var AppActions = require('../../actions/app-actions');
@@ -38,7 +38,6 @@ var Pending =  createReactClass({
       devices: [],
       pageNo: 1,
       pageLength: 20,
-      selectedRows: [],
       authLoading: "all",
       deviceToReject: {},
       openReject: false,
@@ -59,12 +58,8 @@ var Pending =  createReactClass({
     if ((prevProps.count !== this.props.count)
       || ((prevProps.currentTab !== this.props.currentTab) && (this.props.currentTab.indexOf("Pending")!==-1)) ) {
       this._getDevices();
-      this._clearSelected();
     }
 
-    if (prevProps.currentTab !== this.props.currentTab) {
-      this._clearSelected();
-    }
   },
 
 
@@ -92,11 +87,6 @@ var Pending =  createReactClass({
     AppActions.getDevicesByStatus(callback, "pending", this.state.pageNo, this.state.pageLength);
   },
 
-  _clearSelected: function() {
-    this.setState({selectedRows:[], expandRow: null});
-  },
-
-
   _adjustHeight: function () {
     // do this when number of devices changes
     var h = this.state.devices.length * 55;
@@ -112,7 +102,6 @@ var Pending =  createReactClass({
     if (this.state.expandRow === rowNumber) {
       rowNumber = null;
     }
-    device.id_data = device.attributes;
     this.setState({expandedDevice: device, expandRow: rowNumber});
     
   },
@@ -122,111 +111,40 @@ var Pending =  createReactClass({
 
   _handlePageChange: function(pageNo) {
     var self = this;
-    self.setState({selectedRows:[], currentPage: pageNo, pageLoading:true, expandRow: null, pageNo: pageNo}, () => {self._getDevices()});
+    self.setState({currentPage: pageNo, pageLoading:true, expandRow: null, pageNo: pageNo}, () => {self._getDevices()});
   },
-
-  _onRowSelection: function(selectedRows) {
-    if (selectedRows === "all") {
-      var rows = Array.apply(null, {length: this.state.devices.length}).map(Number.call, Number);
-      this.setState({selectedRows: rows});
-    } else if (selectedRows === "none") {
-      this.setState({selectedRows: []});
-    } else {
-      this.setState({selectedRows: selectedRows});
-    }
-    
-  },
-
-  _isSelected: function(index) {
-    return this.state.selectedRows.indexOf(index) !== -1;
-  },
-
-  _getDevicesFromSelectedRows: function() {
-    // use selected rows to get device from corresponding position in devices array
-    var devices = [];
-    for (var i=0; i<this.state.selectedRows.length; i++) {
-      devices.push(this.state.devices[this.state.selectedRows[i]]);
-    }
-    return devices;
-  },
-
-  _authorizeDevices: function(devices, index) {
-    if (Array.isArray(devices)) {
-      this.props.authorizeDevices(devices);
-    } else if (this.state.selectedRows) {
-      this.props.authorizeDevices(this._getDevicesFromSelectedRows());
-    }
-    if (index !== undefined) {
-      this.setState({authLoading: index});
-    } else {
-      this.setState({authLoading: "selected"});
-    }
-  },
-
-  _openRejectDialog: function(device, index) {
-    AppActions.setSnackbar("");
-    var reject = {
-      device: device,
-      index: index
-    };
-    this.setState({deviceToReject: reject, openReject: true, rejectLoading: index, selectedRows:[]});
-  },
-  _closeReject: function() {
-    this.setState({deviceToReject: {}, openReject: false});
-  },
-
-  _showKey: function() {
-    var self = this;
-    self.setState({showKey: !self.state.showKey});
-  },
-
 
   render: function() {
     var limitMaxed = this.props.deviceLimit ? (this.props.deviceLimit <= this.props.acceptedDevices) : false;
     var limitNear = this.props.deviceLimit ? (this.props.deviceLimit < (this.props.acceptedDevices + this.state.devices.length) ) : false;
-    var selectedOverLimit = this.props.deviceLimit ? (this.props.deviceLimit < (this.props.acceptedDevices + this.state.selectedRows.length)) : false ;
 
     var devices = this.state.devices.map(function(device, index) {
       var self = this;
       var expanded = '';
-      if ( self.state.expandRow === index ) {
-        expanded = <ExpandedDevice id_attribute={(this.props.globalSettings || {}).id_attribute} _showKey={this._showKey} showKey={this.state.showKey} disabled={!!limitMaxed} styles={this.props.styles} deviceId={self.state.deviceId} device={self.state.expandedDevice} unauthorized={true} selected={[device]}  />
-      }
-      var checkIcon = (self.state.authLoading === index && self.props.disabled) ?
-        (
-          <div className="inline-block">
-            <Loader table={true} waiting={true} show={true} />
-          </div>
-        ) : 
-        (
-          <IconButton disabled={self.props.disabled || !!limitMaxed} onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              self._clearSelected();
-              self._authorizeDevices([device], index);
-            }}>
-              <FontIcon className="material-icons green">check_circle</FontIcon>
-          </IconButton>
-        )
-      ;
-      var deleteIcon = (self.state.rejectLoading === index && self.props.disabled) ?
-        (
-          <div className="inline-block">
-            <Loader table={true} waiting={true} show={true} />
-          </div>
-        ) : 
-        (
-          <IconButton disabled={self.props.disabled} onClick={self._openRejectDialog.bind(null, device, index)}>
-            <FontIcon className="material-icons red">cancel</FontIcon>
-          </IconButton>
-        )
-      ;
 
       var id_attribute  = (self.props.globalSettings.id_attribute && self.props.globalSettings.id_attribute !== "Device ID") 
-        ? (device.attributes || {})[self.props.globalSettings.id_attribute]
-        : (device.device_id || device.id) ;
+        ? (device.identity_data || {})[self.props.globalSettings.id_attribute]
+        : device.id;
+
+
+      if ( self.state.expandRow === index ) {
+        expanded = <ExpandedDevice 
+                    highlightHelp={self.props.highlightHelp}
+                    showHelptips={self.props.showHelptips} 
+                    id_attribute={(self.props.globalSettings || {}).id_attribute} 
+                    id_value={id_attribute}
+                    _showKey={self._showKey} 
+                    showKey={self.state.showKey} 
+                    limitMaxed={limitMaxed} 
+                    styles={self.props.styles} 
+                    deviceId={self.state.deviceId} 
+                    device={self.state.expandedDevice} 
+                    unauthorized={true} 
+                    pause={self.props.pause} />
+      }
+     
       return (
-        <TableRow selected={this._isSelected(index)} style={{"backgroundColor": "#e9f4f3"}} className={expanded ? "expand" : null} hoverable={true} key={index}>
+        <TableRow style={{"backgroundColor": "#e9f4f3"}} className={expanded ? "expand" : null} hoverable={true} key={index}>
           <TableRowColumn className="no-click-cell" style={expanded ? {height: this.state.divHeight} : null}>
              <div onClick={(e) => {
               e.preventDefault();
@@ -242,7 +160,16 @@ var Pending =  createReactClass({
               e.stopPropagation();
               self._expandRow(index);
             }}>
-            <Time value={device.request_time} format="YYYY-MM-DD HH:mm" />
+            <Time value={device.created_ts} format="YYYY-MM-DD HH:mm" />
+            </div>
+          </TableRowColumn>
+          <TableRowColumn className="no-click-cell">
+              <div onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              self._expandRow(index);
+            }}>
+            <Time value={device.updated_ts} format="YYYY-MM-DD HH:mm" />
             </div>
           </TableRowColumn>
           <TableRowColumn className="no-click-cell capitalized">
@@ -253,15 +180,7 @@ var Pending =  createReactClass({
             }}>{device.status}
             </div>
           </TableRowColumn>
-          <TableRowColumn className="expandButton" style={{"paddingLeft": "12px", width: "140px"}}>
-            <div onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-              }}>
-              {checkIcon}
-              {deleteIcon}
-            </div>
-          </TableRowColumn>
+
           <TableRowColumn style={{width:"55px", paddingRight:"0", paddingLeft:"12px"}} className="expandButton">
              <div onClick={(e) => {
               e.preventDefault();
@@ -300,21 +219,6 @@ var Pending =  createReactClass({
 
     var minHeight = deviceLimitWarning ? this.state.minHeight + 20 : this.state.minHeight;
 
-
-    var rejectActions =  [
-      <div style={{marginRight:"10px", display:"inline-block"}}>
-        <FlatButton
-          label="Cancel"
-          onClick={this._closeReject} />
-      </div>,
-      <RaisedButton
-        label="Reject device"
-        secondary={true}
-        onClick={this.props.rejectDevice.bind(null, this.state.deviceToReject.device)}
-        icon={<FontIcon style={{marginTop:"-4px"}} className="material-icons">cancel</FontIcon>} />
-    ];
-
-
     return (
       <Collapse springConfig={{stiffness: 190, damping: 20}} style={{minHeight:minHeight, width:"100%"}} isOpened={true} id="authorize" className="absolute authorize padding-top">
         
@@ -343,31 +247,31 @@ var Pending =  createReactClass({
           </div>
         : null }
 
-        {deviceLimitWarning}
-
         { this.state.devices.length && this.state.authLoading!=="all" ?
 
           <div className="padding-bottom">
 
             <h3 className="align-center">{this.props.count} {pluralize("devices", this.props.count)} pending authorization</h3>
 
+            {deviceLimitWarning}
+
             <Table
-              multiSelectable={true}
-              onRowSelection={this._onRowSelection}>
+              selectable={false}>
               <TableHeader
                 className="clickable"
-                enableSelectAll={true}>
+                displaySelectAll={false}
+                adjustForCheckbox={false}>
                 <TableRow>
                   <TableHeaderColumn className="columnHeader" tooltip={(this.props.globalSettings || {}).id_attribute || "Device ID"}>{(this.props.globalSettings || {}).id_attribute || "Device ID"}<FontIcon onClick={this.props.openSettingsDialog} style={{fontSize: "16px"}} color={"#c7c7c7"} hoverColor={"#aeaeae"} className="material-icons hover float-right">settings</FontIcon></TableHeaderColumn>
-                  <TableHeaderColumn className="columnHeader" tooltip="Request time">Time of request</TableHeaderColumn>
+                  <TableHeaderColumn className="columnHeader" tooltip="First request">First request</TableHeaderColumn>
+                  <TableHeaderColumn className="columnHeader" tooltip="Last updated">Last updated</TableHeaderColumn>
                   <TableHeaderColumn className="columnHeader" tooltip="Status">Status</TableHeaderColumn>
-                  <TableHeaderColumn className="columnHeader" tooltip="Authorize device?" style={{width:"140px"}}>Authorize?</TableHeaderColumn>
                   <TableHeaderColumn className="columnHeader" style={{width:"55px", paddingRight:"12px", paddingLeft:"0"}}></TableHeaderColumn>
                 </TableRow>
               </TableHeader>
               <TableBody
                 showRowHover={true}
-                deselectOnClickaway={false}
+                displayRowCheckbox={false}
                 className="clickable">
                 {devices}
               </TableBody>
@@ -392,11 +296,11 @@ var Pending =  createReactClass({
           <div>
             <div 
               id="onboard-3"
-              className="tooltip help"
+              className="tooltip highlight help"
               data-tip
               data-for='expand-auth-tip'
               data-event='click focus'
-              style={{left:"10%", top:"170px"}}>
+              style={{left:"16%", top:"170px"}}>
               <FontIcon className="material-icons">help</FontIcon>
             </div>
             <ReactTooltip
@@ -410,65 +314,6 @@ var Pending =  createReactClass({
             </ReactTooltip>
           </div>
         : null }
-
-        <div>
-     
-
-        { this.state.selectedRows.length ? 
-          <div className="fixedButtons">
-            <div className="float-right">
-
-              <div style={{width:"100px", top:"7px", position:"relative"}} className={this.props.disabled ? "inline-block" : "hidden"}>
-                <Loader table={true} waiting={true} show={true} />
-              </div>
-
-              <span className="margin-right">{this.state.selectedRows.length} {pluralize("devices", this.state.selectedRows.length)} selected</span>
-              <RaisedButton disabled={(this.props.disabled || limitMaxed || selectedOverLimit)} onClick={this._authorizeDevices} primary={true} label={"Authorize " + this.state.selectedRows.length +" " + pluralize("devices", this.state.selectedRows.length)} />
-              {deviceLimitWarning}
-            </div>
-          </div>
-        : null }
-
-          { this.props.showHelptips && this.state.devices.length ?
-            <div>
-              <div 
-                id="onboard-4"
-                className={this.props.highlightHelp ? "tooltip help highlight" : "tooltip help"}
-                data-tip
-                data-for='auth-button-tip'
-                data-event='click focus'
-                style={{left:"87%",top:"178px"}}>
-                <FontIcon className="material-icons">help</FontIcon>
-              </div>
-              <ReactTooltip
-                id="auth-button-tip"
-                globalEventOff='click'
-                place="bottom"
-                type="light"
-                effect="solid"
-                className="react-tooltip">
-                <AuthButton devices={this.state.devices.length} />
-              </ReactTooltip>
-            </div>
-          : null }
-
-        </div>
-
-
-
-        <Dialog
-          open={this.state.openReject}
-          title='Reject this device?'
-          actions={rejectActions}
-          autoDetectWindowHeight={true}
-          bodyStyle={{paddingTop:"0", fontSize:"13px"}}
-          contentStyle={{overflow:"hidden", boxShadow:"0 14px 45px rgba(0, 0, 0, 0.25), 0 10px 18px rgba(0, 0, 0, 0.22)"}}
-          >
-          <ListItem className="margin-bottom-small" style={this.props.styles.listStyle} disabled={true} primaryText="Device ID" secondaryText={this.state.deviceToReject.device ? this.state.deviceToReject.device.device_id : null}  />
-          <p>
-            This device will be rejected and blocked from making authorization requests in the future.
-          </p>
-        </Dialog>
       </Collapse>
     );
   }

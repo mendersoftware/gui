@@ -60,7 +60,7 @@ var ProgressChart = createReactClass({
     var self = this;
     var callback = {
       success: function(data) {
-        device.id_data = JSON.parse(data.id_data);
+        device.identity_data = data.identity_data;
         self.setState({device: device});
       },
       error: function(err) {
@@ -70,7 +70,7 @@ var ProgressChart = createReactClass({
 
     if (device.id) {
       // get device id data for individual device
-      AppActions.getDeviceIdentity(device.id, callback);
+      AppActions.getDeviceAuth(callback, device.id);
     }
   },
   render: function() {
@@ -131,11 +131,11 @@ var ProgressChart = createReactClass({
         <div className={!this.state.device.id ? "device-info" : "device-info show"}>
           <b>Device info:</b>
           <p><b>{(this.props.globalSettings || {}).id_attribute || "Device ID"}: </b> 
-            { ((this.props.globalSettings || {}).id_attribute && (this.props.globalSettings || {}).id_attribute !== "Device ID") && this.state.device.id_data 
-              ? this.state.device.id_data[this.props.globalSettings.id_attribute] 
+            { ((this.props.globalSettings || {}).id_attribute && (this.props.globalSettings || {}).id_attribute !== "Device ID") && this.state.device.identity_data 
+              ? this.state.device.identity_data[this.props.globalSettings.id_attribute] 
               : this.state.device.id }
           </p>
-          <p><b>Status:</b> {this.state.device.status}</p>
+          <p><b>Status: </b>{this.state.device.status}</p>
           <div className={"substateText"}>{this.state.device.substate}</div>
           
           { !["pending", "decommissioned", "aborted"].includes(this.state.device.status.toLowerCase()) && 

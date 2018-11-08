@@ -210,9 +210,11 @@ var DeviceGroups = createReactClass({
           	for (var i=0; i<devices.length; i++) {
           		var count = 0;
           		// have to call each time - accepted list can change order 
-          		self._getDeviceDetails(devices[i].id, i, function(id_data, index) {
+          		self._getDeviceDetails(devices[i].id, i, function(deviceAuth, index) {
           			count++;
-        				devices[index].id_attributes = id_data;
+        				devices[index].identity_data = deviceAuth.identity_data;
+        				devices[index].auth_sets = deviceAuth.auth_sets;
+        				devices[index].status = deviceAuth.status;
      						if (count === devices.length) {
      							// only set state after all devices id data retrieved
           				self.setState({devices: devices, loading: false, pageLoading: false});
@@ -238,7 +240,7 @@ var DeviceGroups = createReactClass({
           		var count = 0;
           		devices[i].id_attributes = devices[i].attributes;
           		// have to call inventory each time - accepted list can change order so must refresh inventory too
-          		self._getInventoryForDevice(devices[i].device_id, i, function(inventory, index) {
+          		self._getInventoryForDevice(devices[i].id, i, function(inventory, index) {
           			count++;
         				devices[index].attributes = inventory.attributes;
         				devices[index].updated_ts = inventory.updated_ts;
@@ -269,13 +271,7 @@ var DeviceGroups = createReactClass({
     	if (this.state.selectedGroup || hasFilters) {
     		var params = this.state.selectedGroup ? "group="+this.state.selectedGroup : "";
     		if (hasFilters) {
-    			var str = [];
-				  for (var i=0; i<this.state.filters.length;i++) {
-				  	if(this.state.filters[i].key && this.state.filters[i].value) {
-				    	str.push(encodeURIComponent(this.state.filters[i].key) + "=" + encodeURIComponent(this.state.filters[i].value));
-						}
-					}
-  				params = str.join("&");
+    		  params = this.encodeFilters(this.state.filters);
     		}
     		// if a group or filters, must use inventory API
     		AppActions.getDevices(groupCallback, this.state.pageNo, this.state.pageLength, params);
@@ -286,20 +282,26 @@ var DeviceGroups = createReactClass({
      
 	},
 
+	encodeFilters: function(filters) {
+		var str = [];
+	  for (var i=0; i<this.state.filters.length;i++) {
+	  	if(this.state.filters[i].key && this.state.filters[i].value) {
+	    	str.push(encodeURIComponent(this.state.filters[i].key) + "=" + encodeURIComponent(this.state.filters[i].value));
+			}
+		}
+		return str.join("&");
+	},
 	 
 	_getDeviceById: function(id) {
 		// filter the list to show a single device only
 		var self = this;
 		var callback =  {
-        success: function(devices) {
-        	var device = devices.length ? [devices[0]] : [];
-        	if (device[0]) { device[0].id_attributes = JSON.parse(device[0].device_identity); }
-          self.setState({devices: device, loading: false, pageLoading: false, groupCount:devices.length}, function() {
-          	if (devices.length) {
+        success: function(device) {
+          self.setState({devices: [device], loading: false, pageLoading: false, groupCount:!!device}, function() {
+          	if (!isEmpty(device)) {
 	          	self._getInventoryForDevice(id, 0, function(inventory, index) {
-	      				device[0].attributes = inventory.attributes;
-	      				device[0].updated_ts = inventory.updated_ts;
-	      				self.setState({devices: device});
+	      				device.attributes = inventory.attributes;
+	      				self.setState({devices: [device]});
 	          	});
           	}
           });
@@ -315,8 +317,8 @@ var DeviceGroups = createReactClass({
         }
       };
 
-     // do this via admn not inventory
-		AppActions.getAuthSets(callback, id);
+    // do this via deviceauth not inventory
+		AppActions.getDeviceAuth(callback, id);
 	},
 
 	  /*
@@ -326,13 +328,13 @@ var DeviceGroups = createReactClass({
     var self = this;
     var callback = {
       success: function(data) {
-        originCallback(JSON.parse(data.id_data), index);
+        originCallback(data, index);
       },
       error: function(err) {
         console.log("Error: " + err);
       }
     };
-    AppActions.getDeviceIdentity(device_id, callback);
+    AppActions.getDeviceAuth(callback, device_id);
   },
 
 	_getInventoryForDevice: function(device_id, index, originCallback) {
@@ -353,46 +355,46 @@ var DeviceGroups = createReactClass({
 	},
 
 	_handlePageChange: function(pageNo) {
-    	var self = this;
-    	self.setState({pageLoading: true, pageNo: pageNo}, () => {self._getDevices()});
-  	},
+  	var self = this;
+  	self.setState({pageLoading: true, pageNo: pageNo}, () => {self._getDevices()});
+	},
 
 
-  	// Edit groups from device selection
-  	_addDevicesToGroup: function(devices) {
-  		var self = this;
-  		// (save selected devices in state, open dialog)
-  		this.setState({tmpDevices: devices}, function() {
-  			self._toggleDialog("addGroup");
-  		});
-  	},
+	// Edit groups from device selection
+	_addDevicesToGroup: function(devices) {
+		var self = this;
+		// (save selected devices in state, open dialog)
+		this.setState({tmpDevices: devices}, function() {
+			self._toggleDialog("addGroup");
+		});
+	},
 
-  	_validate: function(invalid, group) {
-	    var name = invalid ? "" : group;
-	    this.setState({groupInvalid: invalid, tmpGroup: name});
+	_validate: function(invalid, group) {
+    var name = invalid ? "" : group;
+    this.setState({groupInvalid: invalid, tmpGroup: name});
 	},
 	_changeTmpGroup: function(group) {
 		var self = this;
     	this.setState({selectedField: group, tmpGroup: group});
   	},
-  	_addToGroup: function() {
-  		this._addListOfDevices(this.state.tmpDevices, this.state.selectedField || this.state.tmpGroup);
-  	},
+  _addToGroup: function() {
+  	this._addListOfDevices(this.state.tmpDevices, this.state.selectedField || this.state.tmpGroup);
+  },
 
-  	_createGroupFromDialog: function(devices, group) {
-  		var self = this;
-	    for (var i=0;i<devices.length;i++) {
-	      var group = encodeURIComponent(group);
-	      self._addDeviceToGroup(group, devices[i], i, devices.length);
-	    }
-  	},
+  _createGroupFromDialog: function(devices, group) {
+		var self = this;
+    for (var i=0;i<devices.length;i++) {
+      var group = encodeURIComponent(group);
+      self._addDeviceToGroup(group, devices[i], i, devices.length);
+    }
+  },
 
 	_addListOfDevices: function(rows, group) {
 		var self = this;
-	    for (var i=0;i<rows.length;i++) {
-	      var group = encodeURIComponent(group);
-	      self._addDeviceToGroup(group, self.state.devices[rows[i]], i, rows.length);
-	    }
+    for (var i=0;i<rows.length;i++) {
+      var group = encodeURIComponent(group);
+      self._addDeviceToGroup(group, self.state.devices[rows[i]], i, rows.length);
+    }
 	},
 
 	_addDeviceToGroup: function(group, device, idx, length) {
@@ -416,7 +418,7 @@ var DeviceGroups = createReactClass({
 	        AppActions.setSnackbar(preformatWithRequestID(err.res, "Group could not be updated: " + errMsg), null, "Copy to clipboard");
 	      }
 	    };
-	    AppActions.addDeviceToGroup(group, device.device_id || device.id, callback);
+	    AppActions.addDeviceToGroup(group, device.id, callback);
 	},
 
 	_removeDevicesFromGroup: function(rows) {
@@ -482,6 +484,21 @@ var DeviceGroups = createReactClass({
     }
    
   },
+
+  _pauseInterval: function() {
+  	this.props.pause();
+  	var self = this;
+  	this.setState({pause: !self.state.pause}, function() {
+  		// pause refresh interval when authset dialog is open, restart when it closes
+			if (self.state.pause) {
+				clearInterval(self.deviceTimer);
+			} else {
+  			self.deviceTimer = setInterval(self._getDevices, self.state.refreshDeviceLength);
+				self._refreshAll();
+			}
+  	});
+  },
+
 
 	render: function() {
 		// Add to group dialog 
@@ -562,7 +579,6 @@ var DeviceGroups = createReactClass({
         		addDevicesToGroup={this._addDevicesToGroup} 
         		removeDevicesFromGroup={this._removeDevicesFromGroup} 
         		loading={this.state.loading} 
-        		rejectOrDecomm={this.props.rejectOrDecomm} 
         		currentTab={this.props.currentTab} 
         		allCount={this.props.allCount}
         		acceptedCount={this.props.acceptedDevices}
@@ -573,7 +589,8 @@ var DeviceGroups = createReactClass({
         		paused={this.props.paused}
         		showHelptips={this.props.showHelptips}
         		globalSettings={this.props.globalSettings}
-        		openSettingsDialog={this.props.openSettingsDialog} />
+        		openSettingsDialog={this.props.openSettingsDialog}
+        		pause={this._pauseInterval} />
           	
           	{this.state.devices.length && !this.state.loading ?
           	<div className="margin-top">

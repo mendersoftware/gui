@@ -139,20 +139,19 @@ var DeploymentReport = createReactClass({
       }
     });
 
-    AppActions.getDeviceIdentity(id, {
+    AppActions.getDeviceAuth({
       success: function(data) {
         var deviceIdentity = self.state.deviceIdentity || {};
-        var identity = JSON.parse(data.id_data);
         if (!self.state.stopRestCalls) {
           self.setState({
-            deviceIdentity: update(deviceIdentity, {[id]: {$set: identity}})
+            deviceIdentity: update(deviceIdentity, {[id]: {$set: data.identity_data}})
           })
         }
       },
       error: function(err) {
         console.log("Error: " + err);
       }
-    });
+    }, id);
   },
   _filterPending: function(device) {
     return device.status !== "pending";

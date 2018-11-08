@@ -35,9 +35,7 @@ var Rejected =  createReactClass({
       devices: [],
       pageNo: 1,
       pageLength: 20,
-      selectedRows: [],
       authLoading: "all",
-      deviceToReject: {},
     }
   },
 
@@ -55,7 +53,6 @@ var Rejected =  createReactClass({
     if ((prevProps.count !== this.props.count)
       || ((prevProps.currentTab !== this.props.currentTab) && this.props.currentTab.indexOf("Rejected")) ) {
       this._getDevices();
-      this._clearSelected();
     }
   },
   /*
@@ -65,7 +62,7 @@ var Rejected =  createReactClass({
     var self = this;
     var callback =  {
       success: function(devices) {
-        self.setState({devices: devices, pageLoading: false, authLoading: null, deviceToReject:{}, expandRow: null});
+        self.setState({devices: devices, pageLoading: false, authLoading: null, expandRow: null});
         if (!devices.length && self.props.count) {
           //if devices empty but count not, put back to first page
           self._handlePageChange(1);
@@ -75,17 +72,12 @@ var Rejected =  createReactClass({
       error: function(error) {
         console.log(err);
         var errormsg = err.error || "Please check your connection.";
-        self.setState({pageLoading: false, authLoading: null, deviceToReject:{} });
+        self.setState({pageLoading: false, authLoading: null });
         setRetryTimer(err, "devices", "Rejected devices couldn't be loaded. " + errormsg, self.state.refreshDeviceLength);
       }
     };
     AppActions.getDevicesByStatus(callback, "rejected", this.state.pageNo, this.state.pageLength);
   },
-
-  _clearSelected: function() {
-    this.setState({selectedRows:[], expandRow: null});
-  },
-
 
   _adjustHeight: function () {
     // do this when number of devices changes
@@ -102,7 +94,6 @@ var Rejected =  createReactClass({
     if (this.state.expandRow === rowNumber) {
       rowNumber = null;
     }
-    device.id_data = device.attributes;
     this.setState({expandedDevice: device, expandRow: rowNumber});
     
   },
@@ -112,83 +103,38 @@ var Rejected =  createReactClass({
 
   _handlePageChange: function(pageNo) {
     var self = this;
-    self.setState({selectedRows:[], pageLoading:true, expandRow: null, pageNo: pageNo}, () => {self._getDevices()});
+    self.setState({pageLoading:true, expandRow: null, pageNo: pageNo}, () => {self._getDevices()});
   },
-
-  _onRowSelection: function(selectedRows) {
-    if (selectedRows === "all") {
-      var rows = Array.apply(null, {length: this.state.devices.length}).map(Number.call, Number);
-      this.setState({selectedRows: rows});
-    } else if (selectedRows === "none") {
-      this.setState({selectedRows: []});
-    } else {
-      this.setState({selectedRows: selectedRows});
-    }
-    
-  },
-
-  _isSelected: function(index) {
-    return this.state.selectedRows.indexOf(index) !== -1;
-  },
-
-  _getDevicesFromSelectedRows: function() {
-    // use selected rows to get device from corresponding position in devices array
-    var devices = [];
-    for (var i=0; i<this.state.selectedRows.length; i++) {
-      devices.push(this.state.devices[this.state.selectedRows[i]]);
-    }
-    return devices;
-  },
-
-  _authorizeDevices: function(devices, index) {
-    if (Array.isArray(devices)) {
-      this.props.authorizeDevices(devices);
-    } else if (this.state.selectedRows) {
-      this.props.authorizeDevices(this._getDevicesFromSelectedRows());
-    }
-    if (index !== undefined) {
-      this.setState({authLoading: index});
-    } else {
-      this.setState({authLoading: "selected"});
-    }
-  },
-
-  _openRejectDialog: function(device, index) {
-    AppActions.setSnackbar("");
-    var reject = {
-      device: device,
-      index: index
-    };
-    this.setState({deviceToReject: reject, openReject: true, rejectLoading: index, selectedRows:[]});
-  },
-  _closeReject: function() {
-    this.setState({deviceToReject: {}, openReject: false});
-  },
-  _showKey: function() {
-    var self = this;
-    self.setState({showKey: !self.state.showKey});
-  },
-
 
   render: function() {
     var limitMaxed = this.props.deviceLimit ? (this.props.deviceLimit <= this.props.acceptedDevices) : false;
     var limitNear = this.props.deviceLimit ? (this.props.deviceLimit < (this.props.acceptedDevices + this.state.devices.length) ) : false;
-    var selectedOverLimit = this.props.deviceLimit ? (this.props.deviceLimit < (this.props.acceptedDevices + this.state.selectedRows.length)) : false ;
-
+   
     var devices = this.state.devices.map(function(device, index) {
       var self = this;
 
+      var id_attribute  = (self.props.globalSettings.id_attribute && self.props.globalSettings.id_attribute !== "Device ID") 
+        ? (device.identity_data || {})[self.props.globalSettings.id_attribute]
+        : device.id;
+
       var expanded = '';
       if ( self.state.expandRow === index ) {
-        expanded = <ExpandedDevice id_attribute={(this.props.globalSettings || {}).id_attribute} _showKey={this._showKey} showKey={this.state.showKey} rejectOrDecomm={this.props.rejectOrDecomm} disabled={limitMaxed} styles={this.props.styles} deviceId={self.state.deviceId} device={self.state.expandedDevice} unauthorized={true} selected={[device]}  />
+        expanded = <ExpandedDevice 
+                    id_attribute={(this.props.globalSettings || {}).id_attribute} 
+                    _showKey={this._showKey} 
+                    showKey={this.state.showKey} 
+                    limitMaxed={limitMaxed} 
+                    styles={this.props.styles} 
+                    deviceId={self.state.deviceId} 
+                    id_attribute={(this.props.globalSettings || {}).id_attribute} 
+                    id_value={id_attribute}
+                    device={self.state.expandedDevice} 
+                    unauthorized={true}
+                    pause={self.props.pause}  />
       }
 
-      var id_attribute  = (self.props.globalSettings.id_attribute && self.props.globalSettings.id_attribute !== "Device ID") 
-        ? (device.attributes || {})[self.props.globalSettings.id_attribute]
-        : (device.device_id || device.id) ;
-
       return (
-        <TableRow selected={this._isSelected(index)} className={expanded ? "expand" : null} hoverable={true} key={index}>
+        <TableRow className={expanded ? "expand" : null} hoverable={true} key={index}>
           <TableRowColumn className="no-click-cell" style={expanded ? {height: this.state.divHeight} : null}>
              <div onClick={(e) => {
               e.preventDefault();
@@ -204,7 +150,16 @@ var Rejected =  createReactClass({
               e.stopPropagation();
               self._expandRow(index);
             }}>
-            <Time value={device.request_time} format="YYYY-MM-DD HH:mm" />
+            <Time value={device.created_ts} format="YYYY-MM-DD HH:mm" />
+            </div>
+          </TableRowColumn>
+          <TableRowColumn className="no-click-cell">
+              <div onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              self._expandRow(index);
+            }}>
+            <Time value={device.updated_ts} format="YYYY-MM-DD HH:mm" />
             </div>
           </TableRowColumn>
           <TableRowColumn className="no-click-cell capitalized">
@@ -246,21 +201,6 @@ var Rejected =  createReactClass({
         </p>
     ) : null;
 
-
-    var rejectActions =  [
-      <div style={{marginRight:"10px", display:"inline-block"}}>
-        <FlatButton
-          label="Cancel"
-          onClick={this._closeReject} />
-      </div>,
-      <RaisedButton
-        label="Reject device"
-        secondary={true}
-        onClick={this.props.rejectDevice.bind(null, this.state.deviceToReject.device)}
-        icon={<FontIcon style={{marginTop:"-4px"}} className="material-icons">cancel</FontIcon>} />
-    ];
-
-
     return (
       <Collapse springConfig={{stiffness: 190, damping: 20}} style={{minHeight: this.state.minHeight, width:"100%"}} isOpened={true} id="rejected" className="absolute authorize padding-top">
         
@@ -281,7 +221,8 @@ var Rejected =  createReactClass({
                 enableSelectAll={true}>
                 <TableRow>
                   <TableHeaderColumn className="columnHeader" tooltip={(this.props.globalSettings || {}).id_attribute || "Device ID"}>{(this.props.globalSettings || {}).id_attribute || "Device ID"}<FontIcon onClick={this.props.openSettingsDialog} style={{fontSize: "16px"}} color={"#c7c7c7"} hoverColor={"#aeaeae"} className="material-icons hover float-right">settings</FontIcon></TableHeaderColumn>
-                  <TableHeaderColumn className="columnHeader" tooltip="Request time">Request time</TableHeaderColumn>
+                  <TableHeaderColumn className="columnHeader" tooltip="First request">First request</TableHeaderColumn>
+                  <TableHeaderColumn className="columnHeader" tooltip="Last updated">Last updated</TableHeaderColumn>
                   <TableHeaderColumn className="columnHeader" tooltip="Status">Status</TableHeaderColumn>
                   <TableHeaderColumn className="columnHeader" style={{width:"55px", paddingRight:"12px", paddingLeft:"0"}}></TableHeaderColumn>
                 </TableRow>
@@ -306,25 +247,6 @@ var Rejected =  createReactClass({
             <p>There are no rejected devices</p>
           </div>
         }
-
-        <div>
-
-        { this.state.selectedRows.length ? 
-          <div className="fixedButtons">
-            <div className="float-right">
-
-              <div style={{width:"100px", top:"7px", position:"relative"}} className={this.props.disabled ? "inline-block" : "hidden"}>
-                <Loader table={true} waiting={true} show={true} />
-              </div>
-
-              <span className="margin-right">{this.state.selectedRows.length} {pluralize("devices", this.state.selectedRows.length)} selected</span>
-              <RaisedButton disabled={this.props.disabled || limitMaxed || limitNear} onClick={this._authorizeDevices} primary={true} label={"Authorize " + this.state.selectedRows.length +" " + pluralize("devices", this.state.selectedRows.length)} />
-              {deviceLimitWarning}
-            </div>
-          </div>
-        : null }
-
-        </div>
 
       </Collapse>
     );

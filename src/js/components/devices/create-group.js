@@ -46,10 +46,8 @@ var CreateGroup = createReactClass({
           self.setState({devices: devices, loading: false, pageLoading: false}, function() {
                     // for each device, get inventory
             for (var i=0; i<devices.length; i++) {
-              devices[i].id_attributes = JSON.parse(devices[i].device_identity);
-
               // have to call inventory each time - accepted list can change order so must refresh inventory too
-              self._getInventoryForDevice(devices[i].device_id, i, function(inventory, index) {
+              self._getInventoryForDevice(devices[i].id, i, function(inventory, index) {
                 devices[index].attributes = inventory.attributes;
                 self.setState({devices: devices});
               });
@@ -193,7 +191,7 @@ var CreateGroup = createReactClass({
       }
 
       var id_attribute = (self.props.globalSettings.id_attribute && self.props.globalSettings.id_attribute !== "Device ID") 
-        ? (device.id_attributes || {})[self.props.globalSettings.id_attribute]
+        ? (device.identity_data || {})[self.props.globalSettings.id_attribute]
         : (device.device_id || device.id) ;
 
       return (

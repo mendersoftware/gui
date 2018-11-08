@@ -2,7 +2,7 @@ import React from 'react';
 import Form from '../common/forms/form';
 import SelectInput from '../common/forms/selectinput';
 import PasswordInput from '../common/forms/passwordinput';
-import { isEmpty, preformatWithRequestID, deepCompare } from '../../helpers.js';
+import { isEmpty, preformatWithRequestID, deepCompare, intersection } from '../../helpers.js';
 
 require('../common/prototype/Array.prototype.equals');
 
@@ -50,9 +50,16 @@ var Global = createReactClass({
 		var callback = {
 			success: function(devices) {
 				if (!isEmpty(devices)) {
-					// if devices found, get id attributes from first
 					var attributes = [{value:"Device ID", label:"Device ID"}];
-					Object.keys(devices[0].attributes).forEach(function (x) {
+					var common1 = devices[0].identity_data;
+					var common2 = {};
+					// if more than 1 devices, get common keys from attributes
+					if (devices.length>1) {
+						common2 = devices[1].identity_data;
+						common1[intersection(common1,common2)] = intersection(common1,common2); 
+					}
+					
+					Object.keys(common1).forEach(function (x) {
 						attributes.push({value: x, label: x});
 					});
 					self.setState({id_attributes: attributes});

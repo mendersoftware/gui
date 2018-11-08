@@ -189,7 +189,7 @@ var Header = createReactClass({
         self.setState({pendingDevices: count});
       },
       error: function(err) {
-        console.log(err);
+        console.log(err.error);
       }
     };
 

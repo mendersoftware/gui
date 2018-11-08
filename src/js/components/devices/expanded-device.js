@@ -1,15 +1,17 @@
 import React from 'react';
 import { Router, Route, Link } from 'react-router';
 import Time from 'react-time';
-import Collapse from 'react-collapse';
 var createReactClass = require('create-react-class');
 import ReactTooltip from 'react-tooltip';
+import { AuthButton } from '../helptips/helptooltips';
 import PropTypes from 'prop-types';
 
 var AppStore = require('../../stores/app-store');
 var AppActions = require('../../actions/app-actions');
 var ScheduleForm = require('../deployments/scheduleform');
+var Authsets = require('./authsets');
 var Loader = require('../common/loader');
+var pluralize = require('pluralize');
 import cookie from 'react-cookie';
 import copy from 'copy-to-clipboard';
 
@@ -37,6 +39,7 @@ var ExpandedDevice = createReactClass({
         text: ''
       },
       schedule: false,
+      authsets: false,
       artifacts: AppStore.getArtifactsRepo(),
       user: AppStore.getCurrentUser(),
     };
@@ -59,13 +62,20 @@ var ExpandedDevice = createReactClass({
         var errormsg = err.error || "Please check your connection";
       }
     };
-    AppActions.getArtifacts(callback);
+    if (this.props.device.status==="accepted") {
+      AppActions.getArtifacts(callback);
+    }
   },
 
   dialogToggle: function (ref) {
+    var self = this;
     var state = {};
     state[ref] = !this.state[ref];
-    this.setState(state);
+    this.setState(state, function() {
+      if (ref = "authsets") {
+        self.props.pause();
+      }
+    });
     this.setState({filterByArtifact:null, artifact:null});
   },
 
@@ -81,11 +91,16 @@ var ExpandedDevice = createReactClass({
     this.dialogToggle('schedule');
   },
 
+  _showAuthsets: function() {
+    AppActions.setSnackbar("");
+    this.dialogToggle('authsets');
+  },
+
   _onScheduleSubmit: function() {
     var self = this;
     var newDeployment = {
-      devices: [this.props.device.device_id],
-      name: this.props.device.device_id,
+      devices: [this.props.device.id],
+      name: this.props.device.id,
       artifact_name: this.state.artifact.name
     }
     var callback = {
@@ -118,18 +133,6 @@ var ExpandedDevice = createReactClass({
     AppActions.createDeployment(newDeployment, callback);
     this.dialogToggle('schedule');
   },
-  _handleAccept: function(accept) {
-    // if previously rejected, set 'accept' to true in order for device to be handled by devauth api
-    // otherwise, handled by devadmn api
-    if (!this.props.disabled) {
-      this.props.accept([this.props.device], accept);
-    }
-  },
-  _handleReject: function(status) {
-    // if previously rejected, set 'remove' to true in order for device to be handled by devauth api
-    // otherwise, handled by devadmn api
-    this.props.rejectOrDecomm(this.props.device, status);
-  },
 
   _handleStopProp: function(e) {
     e.stopPropagation();
@@ -158,20 +161,42 @@ var ExpandedDevice = createReactClass({
   },
   _copyLinkToClipboard: function() {
     var location = window.location.href.substring(0, window.location.href.indexOf("/devices") + "/devices".length);
-    copy(location + "/id=" + this.props.device.device_id);
+    copy(location + "/id=" + this.props.device.id);
     AppActions.setSnackbar("Link copied to clipboard");
   },
+
+  _decommissionDevice: function(device_id) {
+     var self = this;
+
+      var callback = {
+        success: function(data) {
+          // close dialog!
+          self.dialogToggle("authsets");
+          // close expanded device
+
+          // trigger reset of list!
+          AppActions.setSnackbar("Device was decommissioned successfully");
+        },
+        error: function(err) {
+          var errMsg = err.res.error.message || "";
+          console.log(errMsg);
+          AppActions.setSnackbar(preformatWithRequestID(err.res, "There was a problem decommissioning the device: "+errMsg), null, "Copy to clipboard");
+        }
+      };
+    AppActions.decommissionDevice(device_id, callback);
+  },
+
   render: function() {
 
     var status = this.props.device.status;
 
     var deviceIdentity = [];
     deviceIdentity.push(
-        <ListItem key="id_checksum" style={this.props.styles.listStyle} disabled={true} primaryText="Device ID" secondaryText={(this.props.device || {}).device_id || ''} secondaryTextLines={2} />
+        <ListItem key="id_checksum" style={this.props.styles.listStyle} disabled={true} primaryText="Device ID" secondaryText={(this.props.device || {}).id || ''} secondaryTextLines={2} />
     );
 
-    if ((this.props.device || {}).id_data) {
-      var data = typeof this.props.device.id_data == "object" ? this.props.device.id_data : JSON.parse(this.props.device.id_data);
+    if ((this.props.device || {}).identity_data) {
+      var data = typeof this.props.device.identity_data == "object" ? this.props.device.identity_data : JSON.parse(this.props.device.identity_data);
       for (var k in data) {
         deviceIdentity.push(
           <ListItem key={k} style={this.props.styles.listStyle} disabled={true} primaryText={k} secondaryText={ data[k] } />
@@ -179,10 +204,10 @@ var ExpandedDevice = createReactClass({
       };
     }
 
-    if ((this.props.device || {}).request_time) {
+    if ((this.props.device || {}).created_ts) {
       deviceIdentity.push(
         <div key="connectionTime">
-          <ListItem style={this.props.styles.listStyle} disabled={true} primaryText={status==="preauthorized" ? "Date added" : "Time of request"} secondaryText={<div><Time value={this.props.device.request_time} format="YYYY-MM-DD HH:mm" /></div>} />
+          <ListItem style={this.props.styles.listStyle} disabled={true} primaryText={status==="preauthorized" ? "Date added" : "First request"} secondaryText={<div><Time value={this.props.device.created_ts} format="YYYY-MM-DD HH:mm" /></div>} />
         </div>
       );
     }
@@ -243,51 +268,94 @@ var ExpandedDevice = createReactClass({
       deviceInventory2 = deviceInventory.splice((deviceInventory.length/2)+(deviceInventory.length%2),deviceInventory.length);
     }
 
-    var decommission = (status === "accepted" || status === "rejected") ? (
-        <ListItem
-          key="decommissionButton"
-          style={this.props.styles.listButtonStyle}
-          primaryText={"Authorization status: " + status}
-          secondaryText={status === "accepted" ? "Reject or decommission this device?" : "Authorize or decommission this device?"}
-          onClick={this._handleReject.bind(null, status)}
-          leftIcon={<FontIcon className={status === "accepted" ? "material-icons green" : "material-icons"} style={{margin: "12px 0 12px 12px"}}>{status === "accepted" ? "check_circle" : "block" }</FontIcon>} />
-    ) : null;
-    deviceIdentity.push(decommission);
+    var statusIcon = "";
+    switch (status) {
+      case "accepted":
+        statusIcon = (<FontIcon className="material-icons green" style={{margin: "12px 0 12px 12px"}}>check_circle</FontIcon>)
+        break;
+      case "pending":
+        statusIcon = (<div className="pending-icon" style={{margin: "12px 0 12px 12px"}}></div>)
+        break;
+      case "rejected":
+        statusIcon = (<FontIcon className="material-icons red" style={{margin: "12px 0 12px 12px"}}>block</FontIcon>)
+        break;
+      case "preauthorized":
+        statusIcon = (<FontIcon className="material-icons" style={{margin: "12px 0 12px 12px"}}>check</FontIcon>)
+        break;
+    }
+
+    var formatStatus = (
+      <span className="text-color">
+        {status.charAt(0).toUpperCase() + status.slice(1)}
+      </span>
+    );
+
+    var hasPending = "";
+    if (status === "accepted" && this.props.device.auth_sets.length>1) {
+      for (var i=0; i<this.props.device.auth_sets.length; i++) {
+        if (this.props.device.auth_sets[i].status === "pending") {
+          hasPending = "This device has a pending authentication set";
+        }
+      }
+    }
+
+
+    var authLabel = (
+      <span style={{fontSize:'14px'}}>
+        {
+        hasPending ? hasPending :
+        status === "pending" ? "Accept, reject or dismiss the device?" :
+        status === "accepted" ? "Reject, dismiss or decommission this device?" :
+        status === "rejected" ? "Accept, dismiss or decommission this device" : "Remove this device from preauthorization?" }
+      </span>
+    );
 
     var deviceInfo = (
       <div key="deviceinfo">
 
-        <div id="device-key" className="report-list" style={{width:"100%", display: "block"}}>
-          <h4 className="margin-bottom-none">Device public key</h4>
-          <List className="list-horizontal-display">
-            <ListItem style={this.props.styles.listStyle} className={this.props.showKey ? "key" : ""} onClick={this.props._showKey} primaryText="Key" secondaryText={this.props.device.key} secondaryTextLines={1} />
-          </List>
-        </div>
-
-
-        <div id="device-identity" className="report-list">
+        <div id="device-identity" className="report-list bordered">
           <h4 className="margin-bottom-none">Device identity</h4>
           <List className="list-horizontal-display">
             {deviceIdentity}
           </List>
+
+          <List className="block list-horizontal-display">
+            <ListItem
+              key="statusButton"
+              disabled={true}
+              style={this.props.styles.listButtonStyle}
+              primaryText={"Device status"}
+              secondaryText={formatStatus}
+              leftIcon={statusIcon} />
+
+            <ListItem
+              key="authsetsButton"
+              disabled={false}
+              style={this.props.styles.listButtonStyle}
+              primaryText={authLabel}
+              secondaryText={"Click to adjust authorization status for this device"}
+              onClick={this._showAuthsets}
+              leftIcon={hasPending ? <FontIcon className="material-icons auth" style={{marginTop:12, marginBottom:6}}>warning</FontIcon> : null} />
+          </List>
         </div>
 
-        <div id="device-inventory">
-          <div className={this.props.unauthorized ? "hidden" : "report-list"} >
-            <h4 className="margin-bottom-none">Device inventory</h4>
-            <List>
-              {deviceInventory}
-            </List>
-          </div>
-    
+        {this.props.attrs || status==="accepted" ? 
+          <div id="device-inventory" className="bordered">
+            <div className={this.props.unauthorized ? "hidden" : "report-list"} >
+              <h4 className="margin-bottom-none">Device inventory</h4>
+              <List>
+                {deviceInventory}
+              </List>
+            </div>
+      
 
-          <div className={this.props.unauthorized ? "hidden" : "report-list"} >
-            <List style={{marginTop:"34px"}}>
-              {deviceInventory2}
-            </List>
-          </div>
+            <div className={this.props.unauthorized ? "hidden" : "report-list"} >
+              <List style={{marginTop:"34px"}}>
+                {deviceInventory2}
+              </List>
+            </div>
 
-        </div>
+          </div> : null }
 
         { (status==="accepted" && !waiting) ? 
           (
@@ -328,9 +396,71 @@ var ExpandedDevice = createReactClass({
         ref="save" />
     ];
 
+
+    var authsetActions =  [
+      <div style={{marginRight:"10px", display:"inline-block"}}>
+        <FlatButton
+          label="Close"
+          onClick={this.dialogToggle.bind(null, 'authsets')} />
+      </div>
+    ];
+
+    var authsetTitle = (
+      <div style={{width:"fit-content", position:"relative"}}>
+        {
+          this.props.device.status==="pending" ? 'Authorization '+pluralize("request", this.props.device.auth_sets.length)+' for this device' : 'Authorization status for this device'
+        }
+          <div
+            onClick={this._handleStopProp}
+            id="inventory-info"
+            className="tooltip info"
+            style={{top:"28px", right:"-18px"}}
+            data-tip
+            data-for='inventory-wait'
+            data-event='click focus'>
+            <FontIcon className="material-icons">info</FontIcon>
+          </div>
+          <ReactTooltip
+            id="inventory-wait"
+            globalEventOff='click'
+            place="bottom"
+            type="light"
+            effect="solid"
+            className="react-tooltip">
+            <h3>Device authorization status</h3>
+            <p>Each device sends an authentication request containing its identity attributes and its current public key. You can accept, reject or dismiss these requests to determine the authorization status of the device.</p>
+            <p>In cases such as key rotation, each device may have more than one identity/key combination listed. See the documentation for more on <a onClick={this._clickLink} href="https://docs.mender.io/architecture/device-authentication">Device authentication</a>.</p>
+          </ReactTooltip>
+      </div>
+    );
+
+
     return (
       <div>
         {deviceInfo}
+
+          { this.props.showHelptips && status==="pending" ?
+            <div>
+              <div 
+                id="onboard-4"
+                className={this.props.highlightHelp ? "tooltip help highlight" : "tooltip help"}
+                data-tip
+                data-for='auth-button-tip'
+                data-event='click focus'
+                style={{left:"580px",top:"178px"}}>
+                <FontIcon className="material-icons">help</FontIcon>
+              </div>
+              <ReactTooltip
+                id="auth-button-tip"
+                globalEventOff='click'
+                place="bottom"
+                type="light"
+                effect="solid"
+                className="react-tooltip">
+                <AuthButton devices={[this.props.device]} />
+              </ReactTooltip>
+            </div>
+          : null }
 
         <Dialog
           open={this.state.schedule}
@@ -343,6 +473,25 @@ var ExpandedDevice = createReactClass({
           <ScheduleForm deploymentDevices={[this.props.device]} filteredDevices={this.state.filterByArtifact} deploymentSettings={this._deploymentParams} artifact={this.state.artifact} artifacts={this.state.artifacts} device={this.props.device} deploymentSchedule={this._updateParams} groups={this.props.groups} />
 
         </Dialog>
+
+
+        <Dialog
+          open={this.state.authsets}
+          title={authsetTitle}
+          autoDetectWindowHeight={false}
+          actions={authsetActions}
+          bodyStyle={{paddingTop:"0", fontSize:"13px"}}
+          contentStyle={{width: "80%", maxWidth: "1500px", overflow:"hidden", boxShadow:"0 14px 45px rgba(0, 0, 0, 0.25), 0 10px 18px rgba(0, 0, 0, 0.22)"}}
+          >
+          <Authsets 
+            dialogToggle={this.dialogToggle} 
+            decommission={this._decommissionDevice} 
+            device={this.props.device} 
+            id_attribute={this.props.id_attribute}  
+            id_value={this.props.id_value}
+            limitMaxed={this.props.limitMaxed} />
+        </Dialog>
+
 
       </div>
     );
