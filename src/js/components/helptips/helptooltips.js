@@ -40,7 +40,7 @@ var ExpandAuth = createReactClass({
       <div>
         <h3>Review device details</h3>
         <hr/>
-        <p>You can review each device before authorizing it to join the server.</p>
+        <p>You should review each device before authorizing it to join the server.</p>
         <p>Click to expand the row to view further information about the device's identity.</p>
         <p><a className="hidehelp" onClick={toggleHelptips}>Hide all help tips</a></p>
       </div>
@@ -51,10 +51,10 @@ var ExpandAuth = createReactClass({
 var AuthButton = createReactClass({
   render: function () {
     return (
-      <div>
+      <div style={{whiteSpace: "normal"}}>
         <h3>Authorize devices</h3>
         <hr/>
-        <p>When you are ready, click to <b>authorize</b> the {pluralize("devices", this.props.devices)}.</p>
+        <p>Click this button to view the authentication options for this device. You can decide whether to accept it, reject it, or just dismiss this device for now.</p>
         <p>You can find out more about connecting different types of devices in <Link to={`/help/connecting-devices`}>the help section</Link>.</p>
         <p><a className="hidehelp" onClick={toggleHelptips}>Hide all help tips</a></p>
       </div>
