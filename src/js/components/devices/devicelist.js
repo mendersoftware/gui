@@ -6,7 +6,6 @@ import Collapse from 'react-collapse';
 import ReactHeight from 'react-height';
 import ReactTooltip from 'react-tooltip';
 import { ExpandDevice } from '../helptips/helptooltips';
-import { calculateStatus } from '../../helpers';
 var Loader = require('../common/loader');
 var AppActions = require('../../actions/app-actions');
 var AppStore = require('../../stores/app-store');
@@ -95,20 +94,18 @@ var Authorized =  createReactClass({
     var self = this;
     var callback = {
       success: function(data) {
-        device.id_data = data.id_data;
-        device.device_id = data.id;
-        device.id = data.auth_sets[0].id;
-        device.key = data.auth_sets[0].pubkey;
-        device.request_time = data.request_time;
-        device.status = calculateStatus(data.auth_sets);
+        device.identity_data = data.identity_data;
+        device.id = data.id;
+        device.updated_ts = data.updated_ts;
+        device.created_ts = data.created_ts;
+        device.status = data.status;
         self.setState({expandedDevice: device});
       },
       error: function(err) {
         console.log("Error: " + err);
       }
     };
-    var id = device.device_id ? device.device_id : device.id;
-    AppActions.getDeviceIdentity(id, callback);
+    AppActions.getDeviceAuth(callback, device.id);
   },
 
 
@@ -228,19 +225,33 @@ var Authorized =  createReactClass({
         attrs[device.attributes[i].name] = device.attributes[i].value;
       }
 
-      if ( self.state.expandRow === index ) {
-        expanded = <ExpandedDevice id_attribute={(this.props.globalSettings || {}).id_attribute} _showKey={this._showKey} showKey={this.state.showKey} docsVersion={this.props.docsVersion} showHelpTips={this.props.showHelptips} device={this.state.expandedDevice || device} rejectOrDecomm={this.props.rejectOrDecomm} attrs={device.attributes} device_type={attrs.device_type} styles={this.props.styles} block={this.props.block} accept={this.props.accept} redirect={this.props.redirect} artifacts={this.props.artifacts} selectedGroup={this.props.group} groups={this.props.groups} />
-      }
-
       var id_attribute = (self.props.globalSettings.id_attribute && self.props.globalSettings.id_attribute !== "Device ID") 
-        ? (device.id_attributes || {})[self.props.globalSettings.id_attribute]
-        : (device.device_id || device.id) ;
+        ? (device.identity_data || {})[self.props.globalSettings.id_attribute]
+        : device.id ;
+
+
+      if ( self.state.expandRow === index ) {
+        expanded = <ExpandedDevice 
+                    id_attribute={(this.props.globalSettings || {}).id_attribute} 
+                    id_value={id_attribute}
+                    docsVersion={this.props.docsVersion} 
+                    showHelpTips={this.props.showHelptips} 
+                    device={this.state.expandedDevice || device} 
+                    attrs={device.attributes} 
+                    device_type={attrs.device_type} 
+                    styles={this.props.styles} 
+                    redirect={this.props.redirect} 
+                    artifacts={this.props.artifacts} 
+                    selectedGroup={this.props.group} 
+                    groups={this.props.groups}
+                    pause={this.props.pause} />
+      }
 
       return (
         <TableRow 
           hoverable={!expanded}
           className={expanded ? "expand" : null}
-          key={device.device_id || device.id}
+          key={device.id}
           selected={this._isSelected(index)}>
           <TableRowColumn style={expanded ? {height: this.state.divHeight, padding: 0} : {padding: 0}}>
             <div style={styles.paddedCell} onClick={(e) => {
@@ -289,7 +300,7 @@ var Authorized =  createReactClass({
           </TableRowColumn>
           <TableRowColumn style={{width:"0", padding:"0", overflow:"visible"}}>
            
-            <Collapse springConfig={{stiffness: 210, damping: 20}} onHeightReady={this._adjustCellHeight} className="expanded" isOpened={expanded ? true : false}
+            <Collapse springConfig={{stiffness: 210, damping: 20}} onHeightReady={this._adjustCellHeight} className="expanded accepted" isOpened={expanded ? true : false}
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
@@ -356,7 +367,7 @@ var Authorized =  createReactClass({
                   <TableHeaderColumn className="columnHeader" tooltip={(this.props.globalSettings || {}).id_attribute || "Device ID"}>{(this.props.globalSettings || {}).id_attribute || "Device ID"}<FontIcon onClick={this.props.openSettingsDialog} style={{fontSize: "16px"}} color={"#c7c7c7"} hoverColor={"#aeaeae"} className="material-icons hover float-right">settings</FontIcon></TableHeaderColumn>
                   <TableHeaderColumn className="columnHeader" tooltip="Device type">Device type</TableHeaderColumn>
                   <TableHeaderColumn className="columnHeader" tooltip="Current software">Current software</TableHeaderColumn>
-                  <TableHeaderColumn className="columnHeader" tooltip="Last heartbeat">Last heartbeat</TableHeaderColumn>
+                  <TableHeaderColumn className="columnHeader" tooltip="Last updated">Last updated</TableHeaderColumn>
                   <TableHeaderColumn className="columnHeader" style={{width:"55px", paddingRight:"12px", paddingLeft:"0"}}></TableHeaderColumn>
                 </TableRow>
               </TableHeader>

@@ -7,13 +7,15 @@ var GeneralApi = require('../api/general-api');
 var UsersApi = require('../api/users-api');
 var rootUrl = "https://localhost:443";
 var apiUrl = rootUrl + "/api/management/v1"
+var apiUrlV2 = rootUrl + "/api/management/v2"
 var deploymentsApiUrl = apiUrl + "/deployments";
 var devicesApiUrl = apiUrl + "/admission";
 var devAuthApiUrl = apiUrl + "/devauth";
+var deviceAuthV2 = apiUrlV2 + "/devauth";
 var inventoryApiUrl = apiUrl + "/inventory";
 var useradmApiUrl = apiUrl + "/useradm";
 var tenantadmUrl = apiUrl + "/tenantadm";
-var hostedLinks = "https://s3.amazonaws.com/hosted-mender-artifacts-onboarding/"
+var hostedLinks = "https://s3.amazonaws.com/hosted-mender-artifacts-onboarding/";
 
 var parse = require('parse-link-header');
 
@@ -26,6 +28,9 @@ var default_page = 1;
 
 var AppActions = {
 
+/*
+  Device inventory functions
+*/
   selectGroup: function(group) {
     AppDispatcher.handleViewAction({
       actionType: AppConstants.SELECT_GROUP,
@@ -62,7 +67,6 @@ var AppActions = {
       index: idx
     })
   },
-
 
   /* Groups */
   getGroups: function(callback) {
@@ -132,11 +136,42 @@ var AppActions = {
         callback.error(err);
       });
   },
+
+  getNumberOfDevicesInGroup: function (callback, group) {
+    var count = 0;
+    var per_page = 100;
+    var page = 1;
+    var forGroup = group ? '/groups/' + group : "";
+    function getDeviceCount() {
+      DevicesApi
+      .get(inventoryApiUrl+forGroup+"/devices?per_page=" + per_page + "&page="+page)
+      .then(function(res) {
+        var links = parse(res.headers['link']);
+        count += res.body.length;
+        if (links.next) {
+          page++;
+          getDeviceCount();
+        } else {
+          callback(count);
+        }
+      })
+      .catch(function(err) {
+        callback(err);
+      })
+    };
+    getDeviceCount();
+  },
+
+
+  /* 
+    Device Auth + admission 
+  */
+
   getDeviceCount: function(callback, status) {
     var filter = status ? "?status="+status : '';
 
     DevicesApi
-      .get(devAuthApiUrl+"/devices/count"+filter)
+      .get(deviceAuthV2+"/devices/count"+filter)
       .then(function(res) {
         switch (status) {
           case "pending":
@@ -175,9 +210,10 @@ var AppActions = {
         callback.error(err);
       });
   },
+
   getDeviceLimit: function(callback) {
       DevicesApi
-      .get(devAuthApiUrl+"/limits/max_devices")
+      .get(deviceAuthV2+"/limits/max_devices")
       .then(function(res) {
         AppDispatcher.handleViewAction({
           actionType: AppConstants.SET_DEVICE_LIMIT,
@@ -191,34 +227,81 @@ var AppActions = {
       });
   },
 
-
-  getNumberOfDevicesInGroup: function (callback, group) {
-    var count = 0;
-    var per_page = 100;
-    var page = 1;
-    var forGroup = group ? '/groups/' + group : "";
-    function getDeviceCount() {
-      DevicesApi
-      .get(inventoryApiUrl+forGroup+"/devices?per_page=" + per_page + "&page="+page)
+  getDevicesByStatus: function (callback, status, page, per_page) {
+    var dev_status = status ? "status="+status : ""; 
+    var page = page || default_page;
+    var per_page = per_page || default_adm_per_page;
+    DevicesApi
+      .get(deviceAuthV2+"/devices?"+dev_status+"&per_page="+per_page+"&page="+page)
       .then(function(res) {
-        var links = parse(res.headers['link']);
-        count += res.body.length;
-        if (links.next) {
-          page++;
-          getDeviceCount();
-        } else {
-          callback(count);
-        }
+        callback.success(res.body, parse(res.headers['link']));
       })
       .catch(function(err) {
-        callback(err);
+        callback.error(err);
       })
-    };
-    getDeviceCount();
   },
 
+  getDeviceAuth: function (callback, id) { 
+    DevicesApi
+      .get(deviceAuthV2+"/devices/"+ id)
+      .then(function(res) {
+        callback.success(res.body, parse(res.headers['link']));
+      })
+      .catch(function(err) {
+        callback.error(err);
+      })
+  },
 
-  /* General */
+  updateDeviceAuth: function (device_id, auth_id, status, callback) {
+    DevicesApi
+      .put(deviceAuthV2+"/devices/"+device_id + "/auth/" + auth_id +"/status", {"status":status})
+      .then(function(data) {
+        callback.success(data);
+      })
+      .catch(function(err) {
+        callback.error(err);
+      });
+  },
+
+  deleteAuthset: function (device_id, auth_id, callback) {
+    DevicesApi
+      .delete(deviceAuthV2+"/devices/"+device_id + "/auth/" + auth_id)
+      .then(function(data) {
+        callback.success(data);
+      })
+      .catch(function(err) {
+        callback.error(err);
+      });
+  },
+
+  preauthDevice: function(authset, callback) {
+    console.log(authset);
+    DevicesApi
+      .post(deviceAuthV2+"/devices", authset)
+      .then(function(res) {
+        callback.success(res);
+      })
+      .catch(function(err) {
+        callback.error(err)
+      });
+  },
+
+  decommissionDevice: function(id, callback) {
+    DevicesApi
+      .delete(devAuthApiUrl+"/devices/"+ id)
+      .then(function(data) {
+        callback.success(data);
+      })
+      .catch(function(err) {
+        callback.error(err);
+      });
+  },
+  
+
+
+  /* 
+    General 
+  */
   setSnackbar: function(message, duration, action) {
     AppDispatcher.handleViewAction({
       actionType: AppConstants.SET_SNACKBAR,
@@ -230,8 +313,9 @@ var AppActions = {
 
 
 
-/* user management */
-
+/* 
+  User management 
+*/
   loginUser: function(callback, userData) {
     UsersApi
       .postLogin(useradmApiUrl+"/auth/login", userData)
@@ -309,7 +393,9 @@ var AppActions = {
   },
 
 
-  /* Tenant management */
+  /* 
+    Tenant management + Hosted Mender
+  */
   getUserOrganization: function(callback) {
     GeneralApi
       .get(tenantadmUrl+"/user/tenant")
@@ -336,7 +422,11 @@ var AppActions = {
       })
   },
 
-  /* Global settings */
+  
+
+  /* 
+    Global settings 
+  */
   getGlobalSettings: function(callback) {
     GeneralApi
       .get(useradmApiUrl+"/settings")
@@ -369,7 +459,9 @@ var AppActions = {
 
 
 
-  // Onboarding
+  /*
+    Onboarding
+  */
   setShowHelptips: function(val) {
     AppDispatcher.handleViewAction({
       actionType: AppConstants.SET_SHOW_HELP,
@@ -377,99 +469,6 @@ var AppActions = {
     });
   },
 
-  /* Device Admission */
-  getDevicesByStatus: function (callback, status, page, per_page) {
-   
-    var dev_status = status ? "status="+status : ""; 
-    var page = page || default_page;
-    var per_page = per_page || default_adm_per_page;
-    DevicesApi
-      .get(devicesApiUrl+"/devices?"+dev_status+"&per_page="+per_page+"&page="+page)
-      .then(function(res) {
-        callback.success(res.body, parse(res.headers['link']));
-      })
-      .catch(function(err) {
-        callback.error(err);
-      })
-  },
-
-  getAuthSets: function (callback, id, page, per_page) { 
-    var page = page || default_page;
-    var per_page = per_page || default_adm_per_page;
-    DevicesApi
-      .get(devicesApiUrl+"/devices?device_id="+ id +"&per_page="+per_page+"&page="+page)
-      .then(function(res) {
-        callback.success(res.body, parse(res.headers['link']));
-      })
-      .catch(function(err) {
-        callback.error(err);
-      })
-  },
-  
-  getDeviceIdentity: function (id, callback) {
-    DevicesApi
-      .get(devAuthApiUrl+"/devices/" + id)
-      .then(function(res) {
-        callback.success(res.body);
-      })
-      .catch(function(err) {
-        callback.error(err);
-      })
-  },
-
-  acceptDevice: function (id, callback) {
-    // accept single device through dev admn api
-    DevicesApi
-      .put(devicesApiUrl+"/devices/"+id +"/status", {"status":"accepted"})
-      .then(function(data) {
-        callback.success(data);
-      })
-      .catch(function(err) {
-        callback.error(err);
-      });
-  },
-  
-  rejectDevice: function (id, callback) {
-    DevicesApi
-      .put(devicesApiUrl+"/devices/"+ id +"/status", {"status":"rejected"})
-      .then(function(data) {
-        callback.success(data);
-      })
-      .catch(function(err) {
-        callback.error(err);
-      });
-  },
-  decommissionDevice: function(id, callback) {
-    DevicesApi
-      .delete(devAuthApiUrl+"/devices/"+ id)
-      .then(function(data) {
-        callback.success(data);
-      })
-      .catch(function(err) {
-        callback.error(err);
-      });
-  },
-
-  preauthDevice: function(authset, callback) {
-    DevicesApi
-      .post(devicesApiUrl+"/devices", authset)
-      .then(function(res) {
-        callback.success(res);
-      })
-      .catch(function(err) {
-        callback.error(err)
-      });
-  },
-  deletePreauth: function(id, callback) {
-    DevicesApi
-      .delete(devicesApiUrl+"/devices/"+ id)
-      .then(function(data) {
-        callback.success(data);
-      })
-      .catch(function(err) {
-        callback.error(err);
-      });
-  },
 
 
   /* Artifacts */
@@ -705,13 +704,6 @@ var AppActions = {
       });
   },
 
-  updateDeviceTags: function(id, tags) {
-    AppDispatcher.handleViewAction({
-      actionType: AppConstants.UPDATE_DEVICE_TAGS,
-      id: id,
-      tags: tags
-    })
-  },
 
   sortTable: function(table, column, direction) {
     AppDispatcher.handleViewAction({

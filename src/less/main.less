@@ -37,6 +37,10 @@ body {
   color: @red;
 }
 
+.text-color {
+  color: @text!important;
+}
+
 .warning {
   color: rgb(171, 16, 0) !important;
   font-size: 14px !important;
@@ -74,6 +78,22 @@ a.warning:hover {
 ul.unstyled {
   list-style: none;
   padding-left: 0;
+}
+
+.auto {
+  display: block;
+  margin: auto;
+}
+
+.invisible {
+  visibility: hidden;
+}
+
+
+/* icon */
+
+.pending-icon {
+  background-image: url('../assets/img/pending_status.png');
 }
 
 
@@ -887,6 +907,21 @@ table thead.clickable tr>th:first-child {
     height: 70px;
 }
 
+.list-horizontal-display {
+  overflow: hidden;
+}
+
+#device-identity.report-list.bordered,
+#device-inventory.bordered {
+  border: 1px solid @lightgrey;
+  margin-top: 10px;
+  padding: 5px 20px;
+}
+
+#device-inventory.bordered {
+  padding-bottom: 20px;
+}
+
 .list-horizontal-display > div >span.key > div > div > div {
   -webkit-line-clamp: 10!important;
   height: auto!important;
@@ -1256,8 +1291,12 @@ tr.expand {
       position: absolute;
       left: 0;
       margin-top: 60px;
-      padding: 0 45px 0 84px;
+      padding: 0 45px 0 24px;
       right: 0;
+    
+      &.accepted {
+        padding-left: 93px;
+      }
     }
 
   }
@@ -1299,6 +1338,17 @@ td.no-click-cell {
   }
 }
 
+
+/* device auth */
+.actionButtons > span, 
+.actionButtons > a {
+  margin-right: 20px;
+}
+
+.expand-confirm {
+  overflow: hidden;
+  padding: 0 5px 5px 0;
+}
 
 
 /* Buttons */

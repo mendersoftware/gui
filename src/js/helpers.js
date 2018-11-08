@@ -259,19 +259,25 @@ export function hashString(str) {
   return md5(str);
 }
 
-export function calculateStatus(authsets) {
- var counts = {};
-  for (var i = 0; i<authsets.length; i++) {
-    var status = authsets[i].status;
-    counts[status] = counts[status] ? counts[status] + 1 : 1;
+
+export function formatTime(date) {
+  if (date) {
+    return date.replace(' ','T').replace(/ /g, '').replace('UTC','');
   }
-  if (counts.accepted) {
-    return "accepted";
-  } else if (counts.preauthorized) {
-    return "preauthorized";
-  } else if (counts.pending) {
-    return "pending";
-  } else {
-    return "rejected";
-  }
+  return;
+}
+
+export function formatPublicKey(key) {
+  key = key.replace("-----BEGIN PUBLIC KEY-----","");
+  key = key.replace("-----END PUBLIC KEY-----","");
+  return (key.substring(0,15) + " ... "+key.substring(key.length-15));
+}
+
+export function intersection(o1, o2) {
+  return Object.keys(o1).concat(Object.keys(o2)).sort().reduce(function (r, a, i, aa) {
+    if (i && aa[i - 1] === a) {
+        r.push(a);
+    }
+    return r;
+  }, []);
 }
