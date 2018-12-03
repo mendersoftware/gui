@@ -39,18 +39,19 @@ var DeploymentReport = createReactClass({
       perPage: 20,
       deviceCount: 0,
       showPending: true,
-      abort: false
+      abort: false,
+      finished: false
     };
   },
   componentDidMount: function() {
-    this.timer;
     var self = this;
-    if (this.props.past) {
+    self.timer;
+    if (self.props.past) {
       AppActions.getSingleDeploymentStats(this.props.deployment.id, function(stats) {
-        self.setState({"stats": stats});
+        self.setState({"stats": stats, "finished":true});
       });
     } else {
-       this.timer = setInterval(this.tick, 50);
+       self.timer = setInterval(this.tick, 50);
     }
     this.timer2 = this.props.past ? null : setInterval(self.refreshDeploymentDevices, 5000);
     this.refreshDeploymentDevices();
@@ -83,9 +84,6 @@ var DeploymentReport = createReactClass({
   },
   refreshDeploymentDevices: function() {
     var self = this;
-    if (self.props.deployment.status === "finished") {
-      clearInterval(this.timer);
-    }
 
     AppActions.getSingleDeploymentDevices(self.props.deployment.id, function(devices) {
       var sortedDevices = AppStore.getOrderedDeploymentDevices(devices);
@@ -178,7 +176,9 @@ var DeploymentReport = createReactClass({
     });
   },
   _setFinished: function(bool) {
+    // deployment has finished, stop counter 
     clearInterval(this.timer);
+    clearInterval(this.timer2);
     this.setState({finished: bool});
   },
   _handlePageChange: function(pageNo) {
@@ -288,10 +288,10 @@ var DeploymentReport = createReactClass({
                   <div><div className="progressLabel">Finished:</div>{finished}</div>
                 </div>
                 <div className="deploymentInfo" style={{height:"auto", margin:"30px 30px 30px 0", display:"inline-block", verticalAlign:"top"}}>
-                  <div className={this.state.stats.failure ? "statusLarge" : "hidden"}>
+                  <div className={this.state.stats.failure || this.state.stats.aborted ? "statusLarge" : "hidden"}>
                     <img src="assets/img/largeFail.png" />
                     <div className="statusWrapper">
-                      <b className="red">{this.state.stats.failure}</b> {pluralize("devices", this.state.stats.failure)} failed to update
+                      <b className="red">{this.state.stats.failure || this.state.stats.aborted}</b> {pluralize("devices", this.state.stats.failure)} failed to update
                     </div>
           
                     <div>
@@ -336,7 +336,7 @@ var DeploymentReport = createReactClass({
                   <div>Started: <Time value={this._formatTime(this.props.deployment.created)} format="YYYY-MM-DD HH:mm" /></div>
                 </div>
                 <div className="inline-block">
-                  <DeploymentStatus setFinished={this._setFinished} refresh={true} vertical={true} id={this.props.deployment.id} />
+                  <DeploymentStatus isActiveTab={true} setFinished={this._setFinished} finished={this.state.finished} refresh={true} vertical={true} id={this.props.deployment.id} />
                 </div>
               </div>
 
@@ -350,9 +350,10 @@ var DeploymentReport = createReactClass({
                 </p>
               </div>
 
+              { !this.state.finished ?
               <div id="reportAbort" className={this.state.abort ? "hint--bottom hint--always hint--large hint--info" : "hint--bottom hint--large hint--info"} data-hint="Devices that have not yet started the deployment will not start the deployment.&#10;Devices that have already completed the deployment are not affected by the abort.&#10;Devices that are in the middle of the deployment at the time of abort will finish deployment normally, but will perform a rollback.">
                 {abort}
-              </div>
+              </div> : null }
             </div>
           }
           

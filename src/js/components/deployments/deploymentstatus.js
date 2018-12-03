@@ -54,8 +54,10 @@ var DeploymentStatus = createReactClass({
     var self = this;
     AppActions.getSingleDeploymentStats(id, function(stats) {
       self.setState({stats:stats});
-      if (stats.downloading + stats.installing + stats.rebooting + stats.pending === 0) {
-        if (typeof self.props.setFinished !== "undefined") self.props.setFinished(true);
+      if ((stats.downloading + stats.installing + stats.rebooting + stats.pending) <= 0) {
+        // if no more devices in "progress" statuses, send message to parent that it's finished
+        clearInterval(self.timer);
+        self.props.setFinished(true);
       }
     });
   },
