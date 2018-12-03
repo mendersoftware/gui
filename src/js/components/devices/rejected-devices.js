@@ -214,11 +214,11 @@ var Rejected =  createReactClass({
             <h3 className="align-center">Rejected devices</h3>
 
             <Table
-              multiSelectable={true}
-              onRowSelection={this._onRowSelection}>
+              selectable={false}>>
               <TableHeader
                 className="clickable"
-                enableSelectAll={true}>
+                displaySelectAll={false}
+                adjustForCheckbox={false}>
                 <TableRow>
                   <TableHeaderColumn className="columnHeader" tooltip={(this.props.globalSettings || {}).id_attribute || "Device ID"}>{(this.props.globalSettings || {}).id_attribute || "Device ID"}<FontIcon onClick={this.props.openSettingsDialog} style={{fontSize: "16px"}} color={"#c7c7c7"} hoverColor={"#aeaeae"} className="material-icons hover float-right">settings</FontIcon></TableHeaderColumn>
                   <TableHeaderColumn className="columnHeader" tooltip="First request">First request</TableHeaderColumn>
@@ -229,7 +229,7 @@ var Rejected =  createReactClass({
               </TableHeader>
               <TableBody
                 showRowHover={true}
-                deselectOnClickaway={false}
+                displayRowCheckbox={false}
                 className="clickable">
                 {devices}
               </TableBody>
