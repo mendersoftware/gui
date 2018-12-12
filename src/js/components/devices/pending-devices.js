@@ -38,9 +38,8 @@ var Pending =  createReactClass({
       devices: [],
       pageNo: 1,
       pageLength: 20,
+      selectedRows: [],
       authLoading: "all",
-      deviceToReject: {},
-      openReject: false,
     }
   },
 
@@ -58,6 +57,11 @@ var Pending =  createReactClass({
     if ((prevProps.count !== this.props.count)
       || ((prevProps.currentTab !== this.props.currentTab) && (this.props.currentTab.indexOf("Pending")!==-1)) ) {
       this._getDevices();
+      this._clearSelected();
+    }
+
+    if (prevProps.currentTab !== this.props.currentTab) {
+      this._clearSelected();
     }
 
   },
@@ -70,7 +74,7 @@ var Pending =  createReactClass({
     var self = this;
     var callback =  {
       success: function(devices) {
-        self.setState({devices: devices, pageLoading: false, authLoading: null, rejectLoading: null, deviceToReject:{}, openReject: false, expandRow: null});
+        self.setState({devices: devices, pageLoading: false, authLoading: null, expandRow: null});
         if (!devices.length && self.props.count) {
           //if devices empty but count not, put back to first page
           self._handlePageChange(1);
@@ -80,11 +84,20 @@ var Pending =  createReactClass({
       error: function(error) {
         console.log(err);
         var errormsg = err.error || "Please check your connection.";
-        self.setState({pageLoading: false, authLoading: null, rejectLoading: null, deviceToReject:{}, openReject: false });
+        self.setState({pageLoading: false, authLoading: null});
         setRetryTimer(err, "devices", "Pending devices couldn't be loaded. " + errormsg, self.state.refreshDeviceLength);
       }
     };
     AppActions.getDevicesByStatus(callback, "pending", this.state.pageNo, this.state.pageLength);
+  },
+
+  _clearSelected: function() {
+    var self = this;
+    this.setState({selectedRows:[], expandRow: null, allRowsSelected: true}, function() {
+      // workaround to ensure all rows deselected
+      self.setState({allRowsSelected: false});
+    });
+
   },
 
   _adjustHeight: function () {
@@ -111,12 +124,95 @@ var Pending =  createReactClass({
 
   _handlePageChange: function(pageNo) {
     var self = this;
-    self.setState({currentPage: pageNo, pageLoading:true, expandRow: null, pageNo: pageNo}, () => {self._getDevices()});
+    self.setState({selectedRows:[], currentPage: pageNo, pageLoading:true, expandRow: null, pageNo: pageNo}, () => {self._getDevices()});
+  },
+
+  _onRowSelection: function(selectedRows) {
+    if (selectedRows === "all") {
+      var rows = Array.apply(null, {length: this.state.devices.length}).map(Number.call, Number);
+      this.setState({selectedRows: rows});
+    } else if (selectedRows === "none") {
+      this.setState({selectedRows: []});
+    } else {
+      this.setState({selectedRows: selectedRows});
+    }
+    
+  },
+
+  _isSelected: function(index) {
+    return this.state.selectedRows.indexOf(index) !== -1;
+  },
+
+  _getDevicesFromSelectedRows: function() {
+    // use selected rows to get device from corresponding position in devices array
+    var devices = [];
+    for (var i=0; i<this.state.selectedRows.length; i++) {
+      devices.push(this.state.devices[this.state.selectedRows[i]]);
+    }
+    return devices;
+  },
+
+  _getSnackbarMessage: function(skipped, done) {
+    pluralize.addIrregularRule('its', 'their')
+    var skipText = skipped ? skipped + " " + pluralize("devices", skipped) +" " + pluralize("have", skipped) + " more than one pending authset. Expand " + pluralize("this", skipped) +" " + pluralize("device", skipped) +" to individually adjust "+ pluralize("their", skipped) +" authorization status. " : "";
+    var doneText = done ? done + " " + pluralize("device", done)+" "+pluralize("was", done) +" updated successfully. " : "";
+    AppActions.setSnackbar(doneText + skipText);
+  },
+
+  _authorizeDevices: function() {
+    var self = this;
+    var devices = this._getDevicesFromSelectedRows();
+    self.setState({authLoading: true});
+    var skipped = 0;
+    var count = 0;
+
+    // for each device, get id and id of authset & make api call to accept
+    // if >1 authset, skip instead
+    for (var i=0; i<devices.length; i++) {
+      var device=devices[i];
+      var idx = i;
+      if (device.auth_sets.length === 1) {
+        // api call device.id and device.authsets[0].id
+        AppActions.updateDeviceAuth(device.id, device.auth_sets[0].id, "accepted", {
+          success: function(data) {
+            count++;
+            if (count+skipped === devices.length) {
+              // if last device in list:
+              self._getSnackbarMessage(skipped, count);
+              // refresh devices by calling function in parent
+              self.props.restart();
+            }
+          },
+          error: function(err) {
+            var errMsg = err.res.error.message || "";
+            console.log(errMsg);
+            // break if an error occurs, display status up til this point before error message
+            self._getSnackbarMessage(skipped, count);
+            setTimeout(function() {
+              AppActions.setSnackbar(preformatWithRequestID(err.res, "The action was stopped as there was a problem updating a device authorization status: "+errMsg), null, "Copy to clipboard");
+              self.setState({selectedRows:[] });
+              self.props.restart();
+            }, 4000);
+            self.break;
+          }
+        });
+      } else {
+        skipped++;
+        if (skipped + count === devices.length) {
+          self._getSnackbarMessage(skipped, count);
+          self.props.restart();
+          self.setState({selectedRows:[] });
+        }
+      }
+
+    }
   },
 
   render: function() {
     var limitMaxed = this.props.deviceLimit ? (this.props.deviceLimit <= this.props.acceptedDevices) : false;
     var limitNear = this.props.deviceLimit ? (this.props.deviceLimit < (this.props.acceptedDevices + this.state.devices.length) ) : false;
+    var selectedOverLimit = this.props.deviceLimit ? (this.props.deviceLimit < (this.props.acceptedDevices + this.state.selectedRows.length)) : false ;
+
 
     var devices = this.state.devices.map(function(device, index) {
       var self = this;
@@ -144,7 +240,7 @@ var Pending =  createReactClass({
       }
      
       return (
-        <TableRow style={{"backgroundColor": "#e9f4f3"}} className={expanded ? "expand" : null} hoverable={true} key={index}>
+        <TableRow selected={this._isSelected(index)} style={{"backgroundColor": "#e9f4f3"}} className={expanded ? "expand" : null} hoverable={true} key={index}>
           <TableRowColumn className="no-click-cell" style={expanded ? {height: this.state.divHeight} : null}>
              <div onClick={(e) => {
               e.preventDefault();
@@ -222,7 +318,7 @@ var Pending =  createReactClass({
     return (
       <Collapse springConfig={{stiffness: 190, damping: 20}} style={{minHeight:minHeight, width:"100%"}} isOpened={true} id="authorize" className="absolute authorize padding-top">
         
-      <Loader show={this.state.authLoading==="all"} />
+      <Loader show={this.state.authLoading} />
 
         { this.props.showHelptips && this.state.devices.length ?
           <div>
@@ -256,11 +352,13 @@ var Pending =  createReactClass({
             {deviceLimitWarning}
 
             <Table
-              selectable={false}>
+              multiSelectable={true}
+              onRowSelection={this._onRowSelection}
+              allRowsSelected={this.state.allRowsSelected}>
               <TableHeader
                 className="clickable"
-                displaySelectAll={false}
-                adjustForCheckbox={false}>
+                displaySelectAll={true}
+                adjustForCheckbox={true}>
                 <TableRow>
                   <TableHeaderColumn className="columnHeader" tooltip={(this.props.globalSettings || {}).id_attribute || "Device ID"}>{(this.props.globalSettings || {}).id_attribute || "Device ID"}<FontIcon onClick={this.props.openSettingsDialog} style={{fontSize: "16px"}} color={"#c7c7c7"} hoverColor={"#aeaeae"} className="material-icons hover float-right">settings</FontIcon></TableHeaderColumn>
                   <TableHeaderColumn className="columnHeader" tooltip="First request">First request</TableHeaderColumn>
@@ -271,8 +369,9 @@ var Pending =  createReactClass({
               </TableHeader>
               <TableBody
                 showRowHover={true}
-                displayRowCheckbox={false}
-                className="clickable">
+                displayRowCheckbox={true}
+                className="clickable"
+                deselectOnClickaway={false}>
                 {devices}
               </TableBody>
             </Table>
@@ -290,6 +389,24 @@ var Pending =  createReactClass({
             {this.props.highlightHelp ? <p>Visit the <Link to={`/help/connecting-devices`}>Help section</Link> to learn how to connect devices to the Mender server.</p> : null }
           </div>
         }
+
+
+
+        { this.state.selectedRows.length ? 
+          <div className="fixedButtons">
+            <div className="float-right">
+
+              <div style={{width:"100px", top:"7px", position:"relative"}} className={this.state.authLoading ? "inline-block" : "hidden"}>
+                <Loader table={true} waiting={true} show={true} />
+              </div>
+
+              <span className="margin-right">{this.state.selectedRows.length} {pluralize("devices", this.state.selectedRows.length)} selected</span>
+              <RaisedButton disabled={(this.props.disabled || limitMaxed || selectedOverLimit)} onClick={this._authorizeDevices} primary={true} label={"Authorize " + this.state.selectedRows.length +" " + pluralize("devices", this.state.selectedRows.length)} />
+              {deviceLimitWarning}
+
+            </div>
+          </div>
+        : null }
 
 
         { this.props.showHelptips && this.state.devices.length ?
