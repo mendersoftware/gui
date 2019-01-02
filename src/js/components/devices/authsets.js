@@ -59,12 +59,12 @@ var Authsets = createReactClass({
         	self._refreshAuth(device_id);
         	self.setState({loading: null});
         }
-        AppActions.setSnackbar("Device auth status was updated successfully");
+        AppActions.setSnackbar("Device authorization status was updated successfully");
       },
       error: function(err) {
         var errMsg = err.res.error.message || "";
         console.log(errMsg);
-        AppActions.setSnackbar(preformatWithRequestID(err.res, "There was a problem updating the device auth status: "+errMsg), null, "Copy to clipboard");
+        AppActions.setSnackbar(preformatWithRequestID(err.res, "There was a problem updating the device authorization status: "+errMsg), null, "Copy to clipboard");
       }
     };
 

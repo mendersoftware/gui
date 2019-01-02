@@ -275,7 +275,6 @@ var Devices = createReactClass({
 							docsVersion={this.props.docsVersion}
 				      params={this.props.params}
 							styles={styles} 
-							paused={this.state.pauseAdmisson} 
 							rejectedDevices={this.state.rejectedCount} 
 							acceptedDevices={this.state.acceptedCount} 
 							allCount={this.state.allCount} 
@@ -295,13 +294,13 @@ var Devices = createReactClass({
 							deviceLimit={this.state.deviceLimit}
               styles={styles} 
               currentTab={this.state.currentTab}
-              disabled={this.state.pauseAdmisson}
               acceptedDevices={this.state.acceptedCount} 
               count={this.state.pendingCount} 
               showHelptips={this.state.showHelptips}
               highlightHelp={!this.state.acceptedCount}
               globalSettings={this.props.globalSettings}
               openSettingsDialog={this._openSettingsDialog}
+              restart={this._restartInterval}
               pause={this._pauseInterval} />
 					</Tab>
 
@@ -317,7 +316,6 @@ var Devices = createReactClass({
             	styles={styles}
             	currentTab={this.state.currentTab}
             	count={this.state.preauthCount}
-            	disabled={this.state.pauseAdmisson}
             	refreshCount={this._getPreauthCount}
             	globalSettings={this.props.globalSettings}
             	openSettingsDialog={this._openSettingsDialog}
@@ -333,8 +331,7 @@ var Devices = createReactClass({
             <RejectedDevices
             	deviceLimit={this.state.deviceLimit}
             	acceptedDevices={this.state.acceptedCount} 
-            	styles={styles} currentTab={this.state.currentTab} 
-            	disabled={this.state.pauseAdmisson}  
+            	styles={styles} currentTab={this.state.currentTab}  
             	count={this.state.rejectedCount} 
             	globalSettings={this.props.globalSettings}
             	openSettingsDialog={this._openSettingsDialog}
