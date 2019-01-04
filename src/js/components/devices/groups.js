@@ -1,14 +1,13 @@
 import React from 'react';
 import ReactTooltip from 'react-tooltip';
 import { AddGroup } from '../helptips/helptooltips';
+import createReactClass from 'create-react-class';
+
 import { UNGROUPED_GROUP } from '../../constants/app-constants';
 
 // material ui
 import { List, ListItem } from 'material-ui/List';
 import FontIcon from 'material-ui/FontIcon';
-import FlatButton from 'material-ui/FlatButton';
-import RaisedButton from 'material-ui/RaisedButton';
-import Subheader from 'material-ui/Subheader';
 require('../common/prototype/Array.prototype.equals');
 
 var Groups = createReactClass({
@@ -33,12 +32,12 @@ var Groups = createReactClass({
     return (
       <div>
         <List>
-            <ListItem 
-              key="All" 
-              primaryText={allLabel}
-              style={!this.props.selectedGroup ? {backgroundColor: "#e7e7e7"} : {backgroundColor: "transparent"}}
-              onClick={this._changeGroup.bind(null, "", this.props.allCount)} />
-          
+          <ListItem 
+            key="All" 
+            primaryText={allLabel}
+            style={!this.props.selectedGroup ? {backgroundColor: "#e7e7e7"} : {backgroundColor: "transparent"}}
+            onClick={this._changeGroup.bind(null, "", this.props.allCount)} />
+           
           {this.props.groups.map(function(group, index) {
             var isSelected = group===this.props.selectedGroup ? {backgroundColor: "#e7e7e7"} : {backgroundColor: "transparent"};
             var numDevs;
