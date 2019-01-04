@@ -66,6 +66,7 @@ var DeviceGroups = createReactClass({
 	    	this.deviceTimer = setInterval(this._getDevices, this.state.refreshDeviceLength);
 		    this._refreshAll();
 	  	}
+      self._refreshUngroupedCount();
 	},
 
 	componentWillUnmount() {
@@ -109,7 +110,10 @@ var DeviceGroups = createReactClass({
 	    var self = this;
 	    var callback = {
 	      success: function (groups) {
-	        self.setState({groups: groups});
+          if (self.state.ungroupedCount) {
+            groups.push(UNGROUPED_GROUP.id);
+          }
+	        self.setState({groups});
 	        if (cb) { cb(); }
 	      },
 	      error: function(err) {
@@ -118,6 +122,17 @@ var DeviceGroups = createReactClass({
 	    };
 	    AppActions.getGroups(callback);
 	},
+
+  _refreshUngroupedCount: function() {
+    var self = this;
+    AppActions.getNumberOfDevicesInGroup(count => {
+      var groups = self.state.groups;
+      if (count > 0 && !groups.find(item => item === UNGROUPED_GROUP.id)) {
+        groups.push(UNGROUPED_GROUP.id);
+      }
+      self.setState({ ungroupedCount: count, groups });
+    }, null);
+  },
 
 	_handleGroupChange: function(group) {
 		var self = this;
@@ -185,6 +200,7 @@ var DeviceGroups = createReactClass({
 	          } else {
 	           AppActions.setSnackbar("The " + pluralize("devices", length) + " " + pluralize("were", length) + " removed from the group", 5000);
 	           self._refreshAll();
+             self._refreshUngroupedCount();
 	          }
 	        }
 	      },
@@ -410,6 +426,7 @@ var DeviceGroups = createReactClass({
 	          // reached end of list
 	          self.setState({createGroupDialog: false, addGroup: false, tmpGroup: "", selectedField:"", }, function() {
 	          	AppActions.setSnackbar("The group was updated successfully", 5000);
+              self._refreshUngroupedCount();
 		          self._refreshGroups(function() {
 		          	self._handleGroupChange(group);
 		          });
