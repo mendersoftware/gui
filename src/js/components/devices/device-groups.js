@@ -19,9 +19,9 @@ import { isEmpty, preformatWithRequestID } from '../../helpers.js';
 var AppStore = require('../../stores/app-store');
 var AppActions = require('../../actions/app-actions');
 
-import { Tabs, Tab } from 'material-ui/Tabs';
+import { UNGROUPED_GROUP } from '../../constants/app-constants';
+
 import Dialog from 'material-ui/Dialog';
-import TextField from 'material-ui/TextField';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import FontIcon from 'material-ui/FontIcon';
@@ -130,7 +130,7 @@ var DeviceGroups = createReactClass({
 		    self.deviceTimer = setInterval(self._getDevices, self.state.refreshDeviceLength);
 				self._getDevices();
 			});
-    }, group);
+    }, (group === UNGROUPED_GROUP.id) ? null : group);
 
 	},
 
@@ -269,9 +269,14 @@ var DeviceGroups = createReactClass({
       var hasFilters = this.state.filters.length && this.state.filters[0].value;
 
     	if (this.state.selectedGroup || hasFilters) {
-    		var params = this.state.selectedGroup ? "group="+this.state.selectedGroup : "";
+				var params = '';
+				if (this.state.selectedGroup && this.state.selectedGroup === UNGROUPED_GROUP.id) {
+					params += this.encodeFilters([{ key: 'has_group', value: 'false' }]);
+				} else {
+					params += this.state.selectedGroup ? "group="+this.state.selectedGroup : "";
+				}
     		if (hasFilters) {
-    		  params = this.encodeFilters(this.state.filters);
+    		  params += this.encodeFilters(this.state.filters);
     		}
     		// if a group or filters, must use inventory API
     		AppActions.getDevices(groupCallback, this.state.pageNo, this.state.pageLength, params);
