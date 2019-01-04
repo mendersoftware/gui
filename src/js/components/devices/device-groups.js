@@ -535,6 +535,9 @@ var DeviceGroups = createReactClass({
 
 	  	var groupCount = this.state.groupCount ? this.state.groupCount : this.props.acceptedDevices;
 
+      var groupName = this.state.selectedGroup === UNGROUPED_GROUP.id ? UNGROUPED_GROUP.name : this.state.selectedGroup;
+      var allowDeviceGroupRemoval = this.state.selectedGroup !== UNGROUPED_GROUP.id;
+
 	    var styles = {
 	      exampleFlatButtonIcon: {
 	        height: '100%',
@@ -574,22 +577,24 @@ var DeviceGroups = createReactClass({
 						<Filters globalSettings={this.props.globalSettings} attributes={this.state.attributes} filters={this.state.filters} onFilterChange={this._onFilterChange} isHosted={this.state.isHosted} /> : null
 					}
 
-          <FlatButton onClick={this._toggleDialog.bind(null, "removeGroup")} style={styles.exampleFlatButton} className={this.state.selectedGroup ? null : 'hidden' } label="Remove group" labelPosition="after">
+          { !this.state.selectedGroup || this.state.selectedGroup === UNGROUPED_GROUP.id ? null :
+            <FlatButton onClick={this._toggleDialog.bind(null, "removeGroup")} style={styles.exampleFlatButton} label="Remove group" labelPosition="after">
           		<FontIcon style={styles.exampleFlatButtonIcon} className="material-icons">delete</FontIcon>
         	</FlatButton>
-          	
+          }
         	<DeviceList
         		docsVersion={this.props.docsVersion}
         		pageNo={this.state.pageNo}
         		addDevicesToGroup={this._addDevicesToGroup} 
         		removeDevicesFromGroup={this._removeDevicesFromGroup} 
+            allowDeviceGroupRemoval={allowDeviceGroupRemoval}
         		loading={this.state.loading} 
         		currentTab={this.props.currentTab} 
         		allCount={this.props.allCount}
         		acceptedCount={this.props.acceptedDevices}
         		groupCount={groupCount} 
         		styles={this.props.styles} 
-        		group={this.state.selectedGroup} 
+        		group={groupName} 
         		devices={this.state.devices}
         		paused={this.props.paused}
         		showHelptips={this.props.showHelptips}
@@ -611,7 +616,16 @@ var DeviceGroups = createReactClass({
           actions={addActions}
           autoDetectWindowHeight={true}
           bodyStyle={{fontSize: "13px"}}>  
-          <GroupSelector devices={this.state.tmpDevices.length} willBeEmpty={this.state.willBeEmpty} tmpGroup={this.state.tmpGroup} selectedGroup={this.state.selectedGroup} changeSelect={this._changeTmpGroup} validateName={this._validate} groups={this.state.groups} selectedField={this.state.selectedField} />
+          <GroupSelector
+            devices={this.state.tmpDevices.length}
+            willBeEmpty={this.state.willBeEmpty}
+            tmpGroup={this.state.tmpGroup}
+            selectedGroup={this.state.selectedGroup}
+            selectedGroupName={groupName}
+            changeSelect={this._changeTmpGroup}
+            validateName={this._validate}
+            groups={this.state.groups}
+            selectedField={this.state.selectedField} />
         </Dialog>
 
         <Dialog

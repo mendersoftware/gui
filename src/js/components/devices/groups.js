@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactTooltip from 'react-tooltip';
 import { AddGroup } from '../helptips/helptooltips';
-var createReactClass = require('create-react-class');
+import { UNGROUPED_GROUP } from '../../constants/app-constants';
 
 // material ui
 import { List, ListItem } from 'material-ui/List';
@@ -39,7 +39,6 @@ var Groups = createReactClass({
               style={!this.props.selectedGroup ? {backgroundColor: "#e7e7e7"} : {backgroundColor: "transparent"}}
               onClick={this._changeGroup.bind(null, "", this.props.allCount)} />
           
-   
           {this.props.groups.map(function(group, index) {
             var isSelected = group===this.props.selectedGroup ? {backgroundColor: "#e7e7e7"} : {backgroundColor: "transparent"};
             var numDevs;
@@ -47,6 +46,9 @@ var Groups = createReactClass({
               numDevs = this.props.groupDevices[group] || null;
             }
             var boundClick = this._changeGroup.bind(null, group, numDevs);
+            if (group === UNGROUPED_GROUP.id) {
+              group = UNGROUPED_GROUP.name;
+            }
             var groupLabel = (
                 <span>{decodeURIComponent(group)}</span>
             );
