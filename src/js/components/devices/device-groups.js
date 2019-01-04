@@ -288,12 +288,12 @@ var DeviceGroups = createReactClass({
 	},
 
 	encodeFilters: function(filters) {
-		var str = [];
-	  for (var i=0; i<this.state.filters.length;i++) {
-	  	if(this.state.filters[i].key && this.state.filters[i].value) {
-	    	str.push(encodeURIComponent(this.state.filters[i].key) + "=" + encodeURIComponent(this.state.filters[i].value));
-			}
+    var str = filters.reduce((accu, filter) => {
+      if(filter.key && filter.value) {
+        accu.push(encodeURIComponent(filter.key) + "=" + encodeURIComponent(filter.value));
 		}
+      return accu;
+    }, []);
 		return str.join("&");
 	},
 	 
