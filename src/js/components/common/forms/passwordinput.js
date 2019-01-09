@@ -30,7 +30,7 @@ var PasswordInput = createReactClass({
   componentWillUnmount: function () {
     this.props.detachFromForm(this); // Detaching if unmounting
   },
-  componentDidUpdate: function(prevProps, prevState) {
+  componentDidUpdate: function(prevProps) {
     if (prevProps.className!==this.props.className) {
       // resets state when "cancel" pressed
       this.setState(getState());

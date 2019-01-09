@@ -1,5 +1,5 @@
 import cookie from 'react-cookie';
-import { Router, hashHistory } from 'react-router';
+import { hashHistory } from 'react-router';
 
 export function isLoggedIn() {
   return cookie.load('JWT');

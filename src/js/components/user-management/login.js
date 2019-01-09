@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Router, Route} from 'react-router';
 import cookie from 'react-cookie';
 import { clearAllRetryTimers } from '../../utils/retrytimer';
 

@@ -1,13 +1,10 @@
 import React from 'react';
 var createReactClass = require('create-react-class');
-var Schedule = require('./schedule');
 var Progress = require('./progress');
 var Recent = require('./recent');
 
 // material ui
 import RaisedButton from 'material-ui/RaisedButton';
-import FlatButton from 'material-ui/FlatButton';
-import Dialog from 'material-ui/Dialog';
 
 var Deployments = createReactClass({
   _clickHandle: function(params) {
@@ -18,7 +15,12 @@ var Deployments = createReactClass({
       <div className="deployments">
         <div>
           <div className="margin-bottom">
-            <Progress globalSettings={this.props.globalSettings} loading={this.props.loadingActive} clickHandle={this._clickHandle} deployments={this.props.progress} />
+            <Progress
+              globalSettings={this.props.globalSettings}
+              loading={this.props.loadingActive}
+              clickHandle={this._clickHandle}
+              deployments={this.props.progress}
+            />
           </div>
           <div className="margin-bottom">
             <Recent loading={this.props.loadingRecent} clickHandle={this._clickHandle} deployments={this.props.recent} />
@@ -26,9 +28,8 @@ var Deployments = createReactClass({
         </div>
 
         <div>
-          <RaisedButton onClick={this._clickHandle.bind(null, {route:"deployments",open:true})} label="Create a deployment" secondary={true} />
+          <RaisedButton onClick={this._clickHandle.bind(null, { route: 'deployments', open: true })} label="Create a deployment" secondary={true} />
         </div>
-
       </div>
     );
   }

@@ -1,7 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Router, Route } from 'react-router';
-import cookie from 'react-cookie';
 import SelfUserManagement from '../user-management/selfusermanagement';
 import UserManagement from '../user-management/usermanagement';
 import MyOrganization from './organization';
@@ -46,16 +44,15 @@ var Settings =  createReactClass({
     }
   },
 
-  componentWillReceiveProps: function(nextProps) {
+  componentWillReceiveProps: function() {
     this.setState({tabIndex: this._updateActive()});
   },
 
-  _onChange: function(x) {
+  _onChange: function() {
     this.setState(this.getInitialState());
   },
 
   _updateActive: function() {
-    var self = this;
     return this.context.router.isActive({ pathname: '/settings/my-account' }, true) ? '/settings/my-account' :
       this.context.router.isActive('/settings/user-management') ? '/settings/user-management' :
       this.context.router.isActive('/settings/my-organization') ? '/settings/my-organization' :

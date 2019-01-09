@@ -36,5 +36,5 @@ module.exports = {
   SET_GLOBAL_SETTINGS: 'SET_GLOBAL_SETTINGS',
   // workaround to support showing ungrouped devices, relying on the fact that
   // '*', '|', '=' should not be whitelisted characters in a group name
-  UNGROUPED_GROUP: { id: '*|=ungrouped=|*', name: 'Ungrouped' },
-}
+  UNGROUPED_GROUP: { id: '*|=ungrouped=|*', name: 'Ungrouped' }
+};

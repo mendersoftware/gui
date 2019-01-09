@@ -12,7 +12,7 @@ import Help from '../components/help/help';
 
 import { isLoggedIn } from '../auth';
 
-import { Router, Route, IndexRoute } from 'react-router';
+import { Route, IndexRoute } from 'react-router';
 
 function requireAuth(nextState, replace) {
   // if not logged in, redirect to login screen

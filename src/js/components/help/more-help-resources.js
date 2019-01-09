@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 var createReactClass = require('create-react-class');
 
@@ -8,7 +7,7 @@ var MoreHelp =  createReactClass({
   render: function() {
 
     var support = this.props.isHosted ? "mailto:support@hosted.mender.io" : "mailto:contact@mender.io";
-  	
+    
     return (
       <div>
         <h2>More help resources</h2>

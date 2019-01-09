@@ -8,7 +8,7 @@ var Support =  createReactClass({
  
   render: function() {
     var supportLink = "https://mender.io/product/software-support"; // change when website is updated
-  	
+    
     return (
       <div id="software-support">
         <hr />

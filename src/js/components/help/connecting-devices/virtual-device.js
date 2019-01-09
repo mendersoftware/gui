@@ -1,14 +1,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import CopyToClipboard from 'react-copy-to-clipboard';
-var AppStore = require('../../../stores/app-store');
 
 var createReactClass = require('create-react-class');
 
 import FlatButton from 'material-ui/FlatButton';
 import FontIcon from 'material-ui/FontIcon';
 
-var VirtualDevice =  createReactClass({
+var VirtualDevice = createReactClass({
+  propTypes: {
+    org: PropTypes.string,
+    isHosted: PropTypes.bool,
+    changePage: PropTypes.func,
+    hasMultitenancy: PropTypes.bool,
+    docsVersion: PropTypes.number
+  },
 
   getInitialState: function() {
     return {

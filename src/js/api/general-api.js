@@ -28,7 +28,6 @@ var Api = {
   },
 
   getNoauth: function(url) {
-    var token = cookie.load("JWT");
     return new Promise(function (resolve, reject) {
       request
         .get(url)

@@ -36,7 +36,7 @@ var Api = {
         .end(function (err, res) {
           if (err || !res.ok) {
             var errorResponse = err.response ? JSON.parse(err.response.text) : {error:"There was an error uploading the artifact"};
-            reject({"error": err, "res": res});
+            reject({"error": errorResponse, "res": res});
           } else {
             resolve(res.body);
           }

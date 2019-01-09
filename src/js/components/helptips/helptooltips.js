@@ -1,5 +1,5 @@
 import React from 'react';
-import { Router, Link } from 'react-router';
+import { Link } from 'react-router';
 import PropTypes from 'prop-types';
 import { toggleHelptips } from '../../utils/toggleuseroptions';
 var pluralize = require('pluralize');

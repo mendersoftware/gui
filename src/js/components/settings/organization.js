@@ -1,5 +1,4 @@
 import React from 'react';
-import cookie from 'react-cookie';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import ReactTooltip from 'react-tooltip';
 var AppActions = require('../../actions/app-actions');

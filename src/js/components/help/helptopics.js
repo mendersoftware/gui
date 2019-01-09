@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import Paper from 'material-ui/Paper';
 
@@ -12,24 +11,24 @@ var HelpTopics = createReactClass({
   },
  
   render: function() {
-  	
-  	var self = this;
-  	var sections = [];
-  	for (var k in self.props.pages) {
-  		sections.push({title: self.props.pages[k].title, icon: self.props.pages[k].icon, path: "help/"+k});
-  	};
+    
+    var self = this;
+    var sections = [];
+    for (var k in self.props.pages) {
+        sections.push({title: self.props.pages[k].title, icon: self.props.pages[k].icon, path: "help/"+k});
+    };
 
-  	var helpSections = sections.map(function(section, index) {
-  		var Icon = section.icon;
-  		return (
-  			<a key={index} onClick={self._clickLink.bind(null, section.path)}>
-	  			<Paper zDepth={1} key={index} className="help-section">
-	  				<Icon />
-	  				<p>{section.title}</p>
-	  			</Paper>
-  			</a>
-  		)
-  	});
+    var helpSections = sections.map(function(section, index) {
+        var Icon = section.icon;
+        return (
+            <a key={index} onClick={self._clickLink.bind(null, section.path)}>
+                <Paper zDepth={1} key={index} className="help-section">
+                    <Icon />
+                    <p>{section.title}</p>
+                </Paper>
+            </a>
+        )
+    });
     return (
         <div>
          <h2>Help topics</h2>

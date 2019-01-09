@@ -4,12 +4,10 @@ import ReactTooltip from 'react-tooltip';
 import { ReviewDevices } from '../helptips/helptooltips';
 
 var AppStore = require('../../stores/app-store');
-var LocalStore = require('../../stores/local-store');
 var AppActions = require('../../actions/app-actions');
 var Deployments = require('./deployments');
 var createReactClass = require('create-react-class');
-import { Router, Route, Link } from 'react-router';
-import { setRetryTimer, clearRetryTimer, clearAllRetryTimers } from '../../utils/retrytimer';
+import { setRetryTimer, clearAllRetryTimers } from '../../utils/retrytimer';
 import RaisedButton from 'material-ui/RaisedButton';
 import FontIcon from 'material-ui/FontIcon';
 
@@ -21,7 +19,7 @@ function getState() {
     activity: AppStore.getActivity(),
     refreshDeploymentsLength: 30000,
     showHelptips: AppStore.showHelptips()
-  }
+  };
 }
 
 var Dashboard = createReactClass({
@@ -31,7 +29,7 @@ var Dashboard = createReactClass({
   componentWillMount: function() {
     AppStore.changeListener(this._onChange);
   },
-  componentWillUnmount: function () {
+  componentWillUnmount: function() {
     clearInterval(this.timer);
     clearAllRetryTimers();
     AppStore.removeChangeListener(this._onChange);
@@ -39,7 +37,7 @@ var Dashboard = createReactClass({
   componentDidMount: function() {
     var self = this;
     clearAllRetryTimers();
-    self.timer = setInterval( function() {
+    self.timer = setInterval(function() {
       self._refreshDeployments();
       self._refreshAdmissions();
     }, self.state.refreshDeploymentsLength);
@@ -53,36 +51,35 @@ var Dashboard = createReactClass({
     var self = this;
 
     var pastCallback = {
-      success: function () {
+      success: function() {
         setTimeout(function() {
-          self.setState({doneActiveDepsLoading:true});
-        }, 300)
+          self.setState({ doneActiveDepsLoading: true });
+        }, 300);
       },
-      error: function (err) {
+      error: function(err) {
         console.log(err);
-        var errormsg = err.error || "Please check your connection";
-        setRetryTimer(err, "deployments", "Couldn't load deployments. " + errormsg, self.state.refreshDeploymentsLength);
+        var errormsg = err.error || 'Please check your connection';
+        setRetryTimer(err, 'deployments', 'Couldn\'t load deployments. ' + errormsg, self.state.refreshDeploymentsLength);
       }
-    }
+    };
     AppActions.getPastDeployments(pastCallback, 1, 3);
 
     var progressCallback = {
-      success: function () {
+      success: function() {
         setTimeout(function() {
-          self.setState({donePastDepsLoading:true});
-        }, 300)
+          self.setState({ donePastDepsLoading: true });
+        }, 300);
       },
-      error: function (err) {
+      error: function(err) {
         console.log(err);
-        var errormsg = err.error || "Please check your connection";
-        setRetryTimer(err, "deployments", "Couldn't load deployments. " + errormsg, self.state.refreshDeploymentsLength);
+        var errormsg = err.error || 'Please check your connection';
+        setRetryTimer(err, 'deployments', 'Couldn\'t load deployments. ' + errormsg, self.state.refreshDeploymentsLength);
       }
     };
 
-
-    AppActions.getDeploymentCount("inprogress", function(count) {
+    AppActions.getDeploymentCount('inprogress', function(count) {
       // this updates header bar
-      self.setState({progressCount: count});
+      self.setState({ progressCount: count });
     });
     AppActions.getDeploymentsInProgress(progressCallback);
   },
@@ -91,32 +88,32 @@ var Dashboard = createReactClass({
 
     var callback = {
       success: function(count) {
-        self.setState({pending: count, doneAdmnsLoading:true});
+        self.setState({ pending: count, doneAdmnsLoading: true });
       },
       error: function(err) {
         console.log(err);
       }
     };
 
-    AppActions.getDeviceCount(callback, "pending");
+    AppActions.getDeviceCount(callback, 'pending');
   },
 
   _handleClick: function(params) {
-    switch(params.route){
-      case "deployments":
-        var tab = (params.tab || "progress") + "/";
-        var URIParams = "open="+params.open;
-        URIParams = params.id ? URIParams + "&id="+params.id : URIParams;
-        URIParams = encodeURIComponent(URIParams);
-        this.context.router.push('/deployments/'+tab +URIParams);
-        break;
-      case "devices":
-        var filters = params.status ? encodeURIComponent("status="+params.status) : '';
-        this.context.router.push('/devices/groups/'+filters);
-        break;
-      case "devices/pending":
-        this.context.router.push('/devices/pending');
-        break;
+    switch (params.route) {
+    case 'deployments':
+      var tab = (params.tab || 'progress') + '/';
+      var URIParams = 'open=' + params.open;
+      URIParams = params.id ? URIParams + '&id=' + params.id : URIParams;
+      URIParams = encodeURIComponent(URIParams);
+      this.context.router.push('/deployments/' + tab + URIParams);
+      break;
+    case 'devices':
+      var filters = params.status ? encodeURIComponent('status=' + params.status) : '';
+      this.context.router.push('/devices/groups/' + filters);
+      break;
+    case 'devices/pending':
+      this.context.router.push('/devices/pending');
+      break;
     }
   },
 
@@ -136,44 +133,33 @@ var Dashboard = createReactClass({
     return (
       <div className="dashboard">
         <div>
-          <div className={this.state.pending ? "onboard margin-bottom" : "hidden" }>
+          <div className={this.state.pending ? 'onboard margin-bottom' : 'hidden'}>
             <p>There {pending_str} waiting authorization</p>
             <div className="relative">
-              <RaisedButton
-                onClick={this._handleClick.bind(null, {route:"devices/pending"})}
-                primary={true}
-                label="Review details"
-              />
+              <RaisedButton onClick={this._handleClick.bind(null, { route: 'devices/pending' })} primary={true} label="Review details" />
 
-              { this.state.showHelptips ?
+              {this.state.showHelptips ? (
                 <div>
-                  <div 
-                    id="onboard-1"
-                    className="tooltip help highlight"
-                    data-tip
-                    data-for='review-details-tip'
-                    data-event='click focus'>
+                  <div id="onboard-1" className="tooltip help highlight" data-tip data-for="review-details-tip" data-event="click focus">
                     <FontIcon className="material-icons">help</FontIcon>
                   </div>
-                  <ReactTooltip
-                    id="review-details-tip"
-                    globalEventOff='click'
-                    place="bottom"
-                    type="light"
-                    effect="solid"
-                    className="react-tooltip">
+                  <ReactTooltip id="review-details-tip" globalEventOff="click" place="bottom" type="light" effect="solid" className="react-tooltip">
                     <ReviewDevices devices={this.state.pending} />
                   </ReactTooltip>
                 </div>
-              : null }
+              ) : null}
             </div>
-           
-
           </div>
         </div>
-      
-        <Deployments globalSettings={this.props.globalSettings} loadingActive={!this.state.doneActiveDepsLoading} loadingRecent={!this.state.donePastDepsLoading} clickHandle={this._handleClick} progress={this.state.progress} recent={this.state.recent} />
-        
+
+        <Deployments
+          globalSettings={this.props.globalSettings}
+          loadingActive={!this.state.doneActiveDepsLoading}
+          loadingRecent={!this.state.donePastDepsLoading}
+          clickHandle={this._handleClick}
+          progress={this.state.progress}
+          recent={this.state.recent}
+        />
       </div>
     );
   }
@@ -182,5 +168,5 @@ var Dashboard = createReactClass({
 Dashboard.contextTypes = {
   router: PropTypes.object
 };
- 
+
 module.exports = Dashboard;

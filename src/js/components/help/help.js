@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Router, Route } from 'react-router';
 import HelpTopics from './helptopics';
 import LeftNav from './left-nav';
 import ConnectingDevices from './connecting-devices';
