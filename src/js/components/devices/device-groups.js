@@ -37,6 +37,8 @@ var DeviceGroups = createReactClass({
       attributes: AppStore.getFilterAttributes(),
   		createGroupDialog: false,
   		devices: [],
+      acceptedDevices: [],
+      ungroupedDevices: [],
   		pageNo: 1,
   		pageLength: 20,
   		loading: true,
@@ -65,7 +67,8 @@ var DeviceGroups = createReactClass({
 	    	this.deviceTimer = setInterval(this._getDevices, this.state.refreshDeviceLength);
 		    this._refreshAll();
       }
-      self._refreshUngroupedCount();
+    self._refreshUngroupedDevices();
+    self._refreshAcceptedDevices();
 	},
 
 	componentWillUnmount() {
@@ -105,47 +108,79 @@ var DeviceGroups = createReactClass({
 	 /*
 	 * Groups
 	 */
-	_refreshGroups: function(cb) {
+  _refreshGroups: function (cb) {
 	    var self = this;
 	    var callback = {
 	      success: function (groups) {
-          if (self.state.ungroupedCount) {
+        if (self.state.ungroupedDevices.length) {
             groups.push(UNGROUPED_GROUP.id);
           }
-	        self.setState({groups});
+        self.setState({ groups });
 	        if (cb) { cb(); }
 	      },
-	      error: function(err) {
+      error: function (err) {
 	        console.log(err);
 	      }
 	    };
 	    AppActions.getGroups(callback);
   },
   
-  _refreshUngroupedCount: function() {
+  _pickAcceptedUngroupedDevices: (acceptedDevs, ungroupedDevs) => {
+    const devices = ungroupedDevs.reduce((accu, device) => {
+      const isContained = acceptedDevs.find(item => item.id === device.id);
+      if (isContained) {
+        accu.push(device);
+      }
+      return accu;
+    }, []);
+    return devices;
+  },
+
+  _refreshAcceptedDevices: function () {
+    const self = this;
+    AppActions
+      .getAllDevicesByStatus('accepted')
+      .then(acceptedDevices => {
+        if (self.state.ungroupedDevices.length && acceptedDevices.length) {
+          const ungroupedDevices = self._pickAcceptedUngroupedDevices(acceptedDevices, self.state.ungroupedDevices);
+          self.setState({ ungroupedDevices, acceptedDevices });
+        } else {
+          self.setState({ acceptedDevices });
+        }
+      })
+      .catch(console.err);
+  },
+
+  _refreshUngroupedDevices: function () {
     var self = this;
-    AppActions.getNumberOfDevicesInGroup(count => {
+    AppActions.getNumberOfDevicesInGroup((count, devices) => {
       var groups = self.state.groups;
-      if (count > 0 && !groups.find(item => item === UNGROUPED_GROUP.id)) {
+      if (devices.length > 0 && !groups.find(item => item === UNGROUPED_GROUP.id)) {
         groups.push(UNGROUPED_GROUP.id);
       }
-      self.setState({ ungroupedCount: count, groups });
+      var ungroupedDevices = devices;
+      if (self.state.acceptedDevices.length && devices.length) {
+        ungroupedDevices = self._pickAcceptedUngroupedDevices(self.state.acceptedDevices, devices);
+      }
+      self.setState({ ungroupedDevices, groups });
     }, null);
   },
 
 	_handleGroupChange: function(group) {
 		var self = this;
-
 		clearInterval(self.deviceTimer);
-		
+    self.setState({ loading: true, selectedGroup: group, pageNo: 1, filters: [] }, () => {
 		// get number of devices in group first for pagination
-    AppActions.getNumberOfDevicesInGroup(function(count) {
-      self.setState({loading: true, selectedGroup: group, groupCount: count, pageNo:1, filters: []}, function() {
+      AppActions.getNumberOfDevicesInGroup((count, devices) => {
+        var ungroupedDevices = self.state.ungroupedDevices;
+        if ((group === UNGROUPED_GROUP.id) && self.state.acceptedDevices.length) {
+          ungroupedDevices = self._pickAcceptedUngroupedDevices(self.state.acceptedDevices, devices);
+        }
+        self.setState({ groupCount: devices.length, ungroupedDevices });
 		    self.deviceTimer = setInterval(self._getDevices, self.state.refreshDeviceLength);
 				self._getDevices();
-			});
     }, (group === UNGROUPED_GROUP.id) ? null : group);
-
+    });
 	},
 
 	_toggleDialog: function(ref) {
@@ -199,7 +234,8 @@ var DeviceGroups = createReactClass({
 	          } else {
 	           AppActions.setSnackbar("The " + pluralize("devices", length) + " " + pluralize("were", length) + " removed from the group", 5000);
              self._refreshAll();
-             self._refreshUngroupedCount();
+            self._refreshUngroupedDevices();
+            self._refreshAcceptedDevices();
 	          }
 	        }
 	      },
@@ -217,22 +253,25 @@ var DeviceGroups = createReactClass({
 	
 	_getDevices: function() {
 	  	var self = this;
-      var groupCallback =  {
-        success: function(devices) {
+    var groupCallback = {
+      success: function (devices) {
+        if (self.state.selectedGroup === UNGROUPED_GROUP.id) {
+          devices = self.state.ungroupedDevices;
+        }
         	if (devices.length && devices[0].attributes && self.state.isHosted) { AppActions.setFilterAttributes(devices[0].attributes) }
-        	self.setState({devices: devices});
+        self.setState({ devices: devices });
         	// for each device, get device identity info
-          	for (var i=0; i<devices.length; i++) {
+        for (var i = 0; i < devices.length; i++) {
           		var count = 0;
           		// have to call each time - accepted list can change order 
-          		self._getDeviceDetails(devices[i].id, i, function(deviceAuth, index) {
+          self._getDeviceDetails(devices[i].id, i, function (deviceAuth, index) {
           			count++;
         				devices[index].identity_data = deviceAuth.identity_data;
         				devices[index].auth_sets = deviceAuth.auth_sets;
         				devices[index].status = deviceAuth.status;
      						if (count === devices.length) {
      							// only set state after all devices id data retrieved
-          				self.setState({devices: devices, loading: false, pageLoading: false});
+              self.setState({ devices: devices, loading: false, pageLoading: false });
      						}
           		});
           	}
@@ -423,10 +462,11 @@ var DeviceGroups = createReactClass({
 	      success: function() {
 	        if (idx === length-1) {
 	          // reached end of list
-	          self.setState({createGroupDialog: false, addGroup: false, tmpGroup: "", selectedField:"", }, function() {
+          self.setState({ createGroupDialog: false, addGroup: false, tmpGroup: "", selectedField: "", }, function () {
               AppActions.setSnackbar("The group was updated successfully", 5000);
-              self._refreshUngroupedCount();
-		          self._refreshGroups(function() {
+            self._refreshUngroupedDevices();
+            self._refreshAcceptedDevices();
+            self._refreshGroups(function () {
 		          	self._handleGroupChange(group);
 		          });
 		        

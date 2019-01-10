@@ -143,17 +143,19 @@ var AppActions = {
     var page = 1;
     var forGroup = group ? `/groups/${group}` : '';
     var ungroupedFilter = group ? '' : '&has_group=false';
+    var devices = [];
     function getDeviceCount() {
       DevicesApi
       .get(`${inventoryApiUrl}${forGroup}/devices?per_page=${per_page}&page=${page}${ungroupedFilter}`)
       .then(function(res) {
         var links = parse(res.headers['link']);
         count += res.body.length;
+          devices.push(...res.body);
         if (links.next) {
           page++;
           getDeviceCount();
         } else {
-          callback(count);
+            callback(count, devices);
         }
       })
       .catch(function(err) {
@@ -240,6 +242,25 @@ var AppActions = {
       .catch(function(err) {
         callback.error(err);
       })
+  },
+
+  getAllDevicesByStatus: function (status) {
+    var per_page = 100;
+    var page = 1;
+    var devices = [];
+    const getAllDevices = () =>
+      DevicesApi
+        .get(`${deviceAuthV2}/devices?status=${status}&per_page=${per_page}&page${page}`)
+        .then(res => {
+          var links = parse(res.headers['link']);
+          devices.push(...res.body);
+          if (links.next) {
+            page++;
+            getAllDevices();
+          }
+          return Promise.resolve(devices);
+        });
+    return getAllDevices();
   },
 
   getDeviceAuth: function (callback, id) { 
