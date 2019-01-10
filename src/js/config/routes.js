@@ -1,7 +1,6 @@
 import React from 'react';
 
 import App from '../components/app';
-
 import Dashboard from '../components/dashboard/dashboard';
 import Deployments from '../components/deployments/deployments';
 import Devices from '../components/devices/devices';
@@ -20,7 +19,7 @@ function requireAuth(nextState, replace) {
     replace({
       pathname: '/login',
       state: { nextPathname: nextState.location.pathname, loggedIn: false }
-    })
+    });
   }
 }
 
@@ -30,7 +29,7 @@ function noRequireAuth(nextState, replace) {
     replace({
       pathname: '/',
       state: { nextPathname: nextState.location.pathname, loggedIn: isLoggedIn() }
-    })
+    });
   }
 }
 
@@ -43,7 +42,7 @@ module.exports = (
       <Route path="preauthorized" component={Devices} />
       <Route path="(:filters)" />
     </Route>
-      
+
     <Route path="/artifacts" component={Artifacts} onEnter={requireAuth}>
       <Route path="(:artifactVersion)" />
     </Route>
@@ -62,4 +61,4 @@ module.exports = (
     </Route>
     <Route path="/login" component={Login} onEnter={noRequireAuth} />
   </Route>
-);  
+);

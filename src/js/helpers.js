@@ -1,5 +1,5 @@
-var jwtDecode = require('jwt-decode');
-var md5 = require('md5');
+import jwtDecode from 'jwt-decode';
+import md5 from 'md5';
 
 export function isEncoded(uri) {
   uri = uri || '';

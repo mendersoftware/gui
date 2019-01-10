@@ -1,25 +1,29 @@
 {
-    "env": {
-       "es6": true,
-       "browser": true,
-       "node": true
-    },
-    "extends" : ["eslint:recommended", "plugin:react/recommended"],
-    "settings": {
-        "react": {
-            "pragma": "React",
-            "version": "detect"
-        }
-    },
-    "parser": "babel-eslint",
-    "parserOptions": {
-        "sourceType": "module"
-    },
-    "plugins": [
-        "react"
-    ],
-    "rules" : {
-        "indent": ["error", 2],
-        "quotes": [2, "single", { "allowTemplateLiterals": true }]
+  "env": {
+    "es6": true,
+    "browser": true,
+    "node": true
+  },
+  "extends": ["eslint:recommended", "plugin:react/recommended", "plugin:import/errors", "plugin:import/warnings"],
+  "settings": {
+    "react": {
+      "pragma": "React",
+      "version": "detect"
     }
+  },
+  "parser": "babel-eslint",
+  "parserOptions": {
+    "sourceType": "module"
+  },
+  "plugins": ["react"],
+  "rules": {
+    "indent": ["error", 2],
+    "quotes": [2, "single", { "allowTemplateLiterals": true }],
+    "react/jsx-no-target-blank": 0,
+    "react/no-string-refs": 0,
+    "react/prop-types": 0,
+    "react/no-unescaped-entities": 0,
+    "no-console": 0,
+    "no-multiple-empty-lines": 2
+  }
 }

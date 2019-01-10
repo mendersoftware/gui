@@ -1,10 +1,12 @@
-var AppConstants = require('../constants/app-constants');
-var AppDispatcher = require('../dispatchers/app-dispatcher');
-var ArtifactsApi = require('../api/artifacts-api');
-var DeploymentsApi = require('../api/deployments-api');
-var DevicesApi = require('../api/devices-api');
-var GeneralApi = require('../api/general-api');
-var UsersApi = require('../api/users-api');
+import AppConstants from '../constants/app-constants';
+import AppDispatcher from '../dispatchers/app-dispatcher';
+import ArtifactsApi from '../api/artifacts-api';
+import DeploymentsApi from '../api/deployments-api';
+import DevicesApi from '../api/devices-api';
+import GeneralApi from '../api/general-api';
+import UsersApi from '../api/users-api';
+import parse from 'parse-link-header';
+
 var rootUrl = 'https://localhost:443';
 var apiUrl = rootUrl + '/api/management/v1';
 var apiUrlV2 = rootUrl + '/api/management/v2';
@@ -15,8 +17,6 @@ var inventoryApiUrl = apiUrl + '/inventory';
 var useradmApiUrl = apiUrl + '/useradm';
 var tenantadmUrl = apiUrl + '/tenantadm';
 var hostedLinks = 'https://s3.amazonaws.com/hosted-mender-artifacts-onboarding/';
-
-var parse = require('parse-link-header');
 
 // default per page until pagination and counting integrated
 var default_per_page = 20;
