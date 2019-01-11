@@ -169,7 +169,7 @@ var DeviceGroups = createReactClass({
 	_handleGroupChange: function(group) {
 		var self = this;
 		clearInterval(self.deviceTimer);
-    self.setState({ loading: true, selectedGroup: group, pageNo: 1, filters: [] }, () => {
+    self.setState({ devices: [], loading: true, selectedGroup: group, pageNo: 1, filters: [] }, () => {
 		// get number of devices in group first for pagination
       AppActions.getNumberOfDevicesInGroup((count, devices) => {
         var ungroupedDevices = self.state.ungroupedDevices;
@@ -680,7 +680,7 @@ var DeviceGroups = createReactClass({
             selectedGroupName={groupName}
             changeSelect={this._changeTmpGroup}
             validateName={this._validate}
-            groups={this.state.groups}
+            groups={this.state.groups.filter(group => (group !== UNGROUPED_GROUP.id) && (group !== this.props.selectedGroup))}
             selectedField={this.state.selectedField} />
         </Dialog>
 

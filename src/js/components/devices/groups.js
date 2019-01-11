@@ -53,7 +53,7 @@ var Groups = createReactClass({
             );
             return (
               <ListItem 
-                key={group} 
+                key={group + index}
                 primaryText={groupLabel}
                 style={isSelected}
                 onClick={boundClick} />
