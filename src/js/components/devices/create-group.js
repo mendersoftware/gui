@@ -108,6 +108,9 @@ export default class CreateGroup extends React.Component {
       if (!validator.isWhitelisted(newName, 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-')) {
         invalid = true;
         errorText = 'Valid characters are a-z, A-Z, 0-9, _ and -';
+      } else if (validator.contains(newName.toLowerCase(), UNGROUPED_GROUP.name.toLowerCase())) {
+        invalid = true;
+        errorText = `${newName} is a reserved group name`;
       } else {
         for (var i = 0; i < this.props.groups.length; i++) {
           if (decodeURIComponent(this.props.groups[i]) === newName) {
