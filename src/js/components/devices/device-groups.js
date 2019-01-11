@@ -256,7 +256,8 @@ var DeviceGroups = createReactClass({
     var groupCallback = {
       success: function (devices) {
         if (self.state.selectedGroup === UNGROUPED_GROUP.id) {
-          devices = self.state.ungroupedDevices;
+          const offset = (self.state.pageNo - 1) * self.state.pageLength;
+          devices = self.state.ungroupedDevices.slice(offset, offset + self.state.pageLength);
         }
         	if (devices.length && devices[0].attributes && self.state.isHosted) { AppActions.setFilterAttributes(devices[0].attributes) }
         self.setState({ devices: devices });
