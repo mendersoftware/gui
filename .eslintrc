@@ -26,6 +26,6 @@
     "react/no-find-dom-node": 1,
     "no-console": 0,
     "no-multiple-empty-lines": 2,
-    "import/default": 0
+    "consistent-this": ["error", "self"]
   }
 }
