@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router';
+import { matchPath } from 'react-router';
+import { Link } from 'react-router-dom';
+
 import cookie from 'react-cookie';
 import { isEmpty, decodeSessionToken, hashString } from '../../helpers';
 import { clearAllRetryTimers } from '../../utils/retrytimer';
@@ -8,12 +10,11 @@ import ReactTooltip from 'react-tooltip';
 import { toggleHelptips, hideAnnouncement } from '../../utils/toggleuseroptions';
 import { DevicesNav, ArtifactsNav, DeploymentsNav } from '../helptips/helptooltips';
 import Linkify from 'react-linkify';
-var DeviceNotifications = require('./devicenotifications');
-var DeploymentNotifications = require('./deploymentnotifications');
+import DeviceNotifications from './devicenotifications';
+import DeploymentNotifications from './deploymentnotifications';
 
-var AppActions = require('../../actions/app-actions');
-var AppStore = require('../../stores/app-store');
-var createReactClass = require('create-react-class');
+import AppActions from '../../actions/app-actions';
+import AppStore from '../../stores/app-store';
 
 import { Tabs, Tab } from 'material-ui/Tabs';
 import DropDownMenu from 'material-ui/DropDownMenu';
@@ -39,8 +40,47 @@ var styles = {
   }
 };
 
-var Header = createReactClass({
-  getInitialState: function() {
+export default class Header extends React.Component {
+  static contextTypes = {
+    router: PropTypes.object,
+    location: PropTypes.object
+  };
+
+  constructor(props, context) {
+    super(props, context);
+    this.state = this._getInitialState();
+  }
+  componentWillMount() {
+    AppStore.changeListener(this._onChange.bind(this));
+  }
+  componentWillUnmount() {
+    AppStore.removeChangeListener(this._onChange.bind(this));
+  }
+  componentDidUpdate(prevProps, prevState) {
+    if (!this.state.sessionId || isEmpty(this.state.user) || this.state.user === null) {
+      this._updateUsername();
+    } else {
+      if (prevState.sessionId !== this.state.sessionId) {
+        this._hasDeployments();
+        this._hasArtifacts();
+        this._checkShowHelp();
+        this._checkHeaderInfo();
+        this._getGlobalSettings();
+      }
+    }
+  }
+  componentDidMount() {
+    // check logged in user
+    if (this.props.isLoggedIn) {
+      this._updateUsername();
+      this._hasDeployments();
+      this._checkHeaderInfo();
+      this._hasArtifacts();
+      this._checkShowHelp();
+      this._getGlobalSettings();
+    }
+  }
+  _getInitialState() {
     return {
       sessionId: cookie.load('JWT'),
       user: AppStore.getCurrentUser(),
@@ -54,71 +94,27 @@ var Header = createReactClass({
       inProgress: AppStore.getNumberInProgress(),
       globalSettings: AppStore.getGlobalSettings()
     };
-  },
-  componentWillMount: function() {
-    AppStore.changeListener(this._onChange);
-  },
-  componentWillUnmount: function() {
-    AppStore.removeChangeListener(this._onChange);
-  },
-  _onChange: function() {
-    this.setState(this.getInitialState());
-  },
-  componentDidUpdate: function(prevProps, prevState) {
-    if (!this.state.sessionId || isEmpty(this.state.user) || this.state.user === null) {
-      this._updateUsername();
-    } else {
-      if (prevState.sessionId !== this.state.sessionId) {
-        this._hasDeployments();
-        this._hasArtifacts();
-        this._checkShowHelp();
-        this._checkHeaderInfo();
-        this._getGlobalSettings();
-      }
-    }
-  },
-  componentDidMount: function() {
-    // check logged in user
-    this._updateUsername();
-    if (this.props.isLoggedIn) {
-      this._hasDeployments();
-      this._checkHeaderInfo();
-      this._hasArtifacts();
-      this._checkShowHelp();
-      this._getGlobalSettings();
-    }
-  },
-  _checkHeaderInfo: function() {
+  }
+  _onChange() {
+    this.setState(this._getInitialState());
+  }
+  _checkHeaderInfo() {
     this._getDeviceLimit();
     this._deploymentsInProgress();
     this._hasDevices();
     this._hasPendingDevices();
     this._checkAnnouncement();
-  },
-  _getGlobalSettings: function() {
-    var callback = {
-      success: function() {
-        // console.log(settings);
-      },
-      error: function(err) {
-        console.log('error', err);
-      }
-    };
-    AppActions.getGlobalSettings(callback);
-  },
-  _getDeviceLimit: function() {
+  }
+  _getGlobalSettings() {
+    return AppActions.getGlobalSettings()
+      .then(settings => console.warn(settings))
+      .catch(err => console.log('error', err));
+  }
+  _getDeviceLimit() {
     var self = this;
-    var callback = {
-      success: function() {
-        self.setState({ deviceLimit: 500 });
-      },
-      error: function(err) {
-        console.log(err);
-      }
-    };
-    AppActions.getDeviceLimit(callback);
-  },
-  _checkShowHelp: function() {
+    return AppActions.getDeviceLimit().then(limit => self.setState({ deviceLimit: limit ? limit : 500 }));
+  }
+  _checkShowHelp() {
     //checks if user id is set and if cookie for helptips exists for that user
     var userCookie = cookie.load(this.state.user.id);
     // if no user cookie set, do so via togglehelptips
@@ -128,8 +124,8 @@ var Header = createReactClass({
       // got user cookie but help value not set
       AppActions.setShowHelptips(userCookie.help);
     }
-  },
-  _checkAnnouncement: function() {
+  }
+  _checkAnnouncement() {
     var hash = this.props.announcement ? hashString(this.props.announcement) : null;
     var announceCookie = cookie.load(this.state.user.id + hash);
     if (hash && typeof announceCookie === 'undefined') {
@@ -137,104 +133,75 @@ var Header = createReactClass({
     } else {
       this.setState({ showAnnouncement: false });
     }
-  },
-  _hideAnnouncement: function() {
+  }
+  _hideAnnouncement() {
     hideAnnouncement(this.state.hash);
     this.setState({ showAnnouncement: false });
-  },
-  _hasDeployments: function() {
+  }
+  _hasDeployments() {
     // check if *any* deployment exists, for onboarding help tips
     var self = this;
-    var callback = {
-      success: function(data) {
-        self.setState({ hasDeployments: data.length });
-      },
-      error: function(err) {
-        console.log(err);
-      }
-    };
-    AppActions.getDeployments(callback, 1, 1);
-  },
-  _deploymentsInProgress: function() {
+    return AppActions.getDeployments(1, 1)
+      .then(deployments => self.setState({ hasDeployments: deployments.length }))
+      .catch(err => console.log(err));
+  }
+  _deploymentsInProgress() {
     // check if deployments in progress
     var self = this;
-    AppActions.getDeploymentCount('inprogress', function(count) {
-      self.setState({ inProgress: count });
-    });
-  },
+    AppActions.getDeploymentCount('inprogress')
+      .then(inProgress => self.setState({ inProgress }));
+  }
 
-  _hasDevices: function() {
+  _hasDevices() {
     // check if any devices connected + accepted
     var self = this;
-    var callback = {
-      success: function(count) {
-        self.setState({ acceptedDevices: count });
-      },
-      error: function(err) {
-        console.log(err);
-      }
-    };
-
-    AppActions.getDeviceCount(callback, 'accepted');
-  },
-  _hasPendingDevices: function() {
+    return AppActions.getDeviceCount('accepted')
+      .then(acceptedDevices => self.setState({ acceptedDevices }))
+      .catch(err => console.log(err));
+  }
+  _hasPendingDevices() {
     // check if any devices connected + accepted
     var self = this;
-    var callback = {
-      success: function(count) {
-        self.setState({ pendingDevices: count });
-      },
-      error: function(err) {
-        console.log(err.error);
-      }
-    };
-
-    AppActions.getDeviceCount(callback, 'pending');
-  },
-  _hasArtifacts: function() {
+    return AppActions.getDeviceCount('pending')
+      .then(pendingDevices => self.setState({ pendingDevices }))
+      .catch(err => console.log(err.error));
+  }
+  _hasArtifacts() {
     var self = this;
-    var callback = {
-      success: function(artifacts) {
-        self.setState({ artifacts: artifacts });
-      },
-      error: function(err) {
-        console.log(err);
-      }
-    };
-    AppActions.getArtifacts(callback);
-  },
-  _updateUsername: function() {
+    return AppActions.getArtifacts()
+      .then(artifacts => self.setState({ artifacts }))
+      .catch(err => console.log(err));
+  }
+  _updateUsername() {
     var self = this;
     // get current user
     if (!self.state.gettingUser) {
-      var callback = {
-        success: function(user) {
+      var userId = self.state.sessionId ? decodeSessionToken(self.state.sessionId) : decodeSessionToken(cookie.load('JWT'));
+      if (!userId) {
+        return Promise.reject();
+      }
+      self.setState({ gettingUser: true });
+      return AppActions.getUser(userId)
+        .then(user => {
           AppActions.setCurrentUser(user);
           self.setState({ user: user, gettingUser: false });
           self._checkShowHelp();
           self._getGlobalSettings();
           self._checkHeaderInfo();
-        },
-        error: function(err) {
+        })
+        .catch(err => {
           self.setState({ gettingUser: false });
           var errMsg = err.res.error;
           console.log(errMsg);
-        }
-      };
-
-      var userId = self.state.sessionId ? decodeSessionToken(self.state.sessionId) : decodeSessionToken(cookie.load('JWT'));
-      if (userId) {
-        self.setState({ gettingUser: true });
-        AppActions.getUser(userId, callback);
-      }
+        });
     }
-  },
-  changeTab: function() {
+  }
+  changeTab() {
     this._getGlobalSettings();
     this._checkHeaderInfo();
     AppActions.setSnackbar('');
-  },
-  _handleHeaderMenu: function(event, index, value) {
+  }
+  _handleHeaderMenu(event, index, value) {
     if (value === 'toggleHelptips') {
       toggleHelptips();
     } else {
@@ -243,12 +210,12 @@ var Header = createReactClass({
         clearAllRetryTimers();
         cookie.remove('JWT');
       }
-      this.context.router.push(value);
+      this.context.router.history.push(value);
     }
-  },
-  render: function() {
+  }
+  render() {
     var tabHandler = this._handleTabActive;
-    var menu = menuItems.map(function(item, index) {
+    var menu = menuItems.map((item, index) => {
       return <Tab key={index} style={styles.tabs} label={item.text} value={item.route} onActive={tabHandler} />;
     });
     var dropdownLabel = (
@@ -260,7 +227,7 @@ var Header = createReactClass({
       </span>
     );
 
-    var helpPath = this.context.location.pathname.indexOf('/help') != -1;
+    var helpPath = this.props.history.location.pathname.indexOf('/help') != -1;
 
     var dropDownElement = (
       <DropDownMenu
@@ -270,7 +237,7 @@ var Header = createReactClass({
         style={{ marginRight: '0', fontSize: '14px', paddingLeft: '4px' }}
         iconStyle={{ fill: 'rgb(0, 0, 0)' }}
         value={(this.state.user || {}).email}
-        onChange={this._handleHeaderMenu}
+        onChange={(...args) => this._handleHeaderMenu(...args)}
       >
         <MenuItem primaryText={dropdownLabel} value={(this.state.user || {}).email} className="hidden" />
         <MenuItem primaryText="Settings" value="/settings" />
@@ -282,8 +249,9 @@ var Header = createReactClass({
         <MenuItem primaryText="Log out" value="/login" rightIcon={<ExitIcon style={{ color: '#c7c7c7', fill: '#c7c7c7' }} />} />
       </DropDownMenu>
     );
+
     return (
-      <div className={this.context.router.isActive('/login') ? 'hidden' : null}>
+      <div className={(this.context.location.pathname === '/login') ? 'hidden' : null}>
         <Toolbar style={{ backgroundColor: '#fff' }}>
           <ToolbarGroup key={0}>
             <Link to="/" id="logo" />
@@ -301,7 +269,7 @@ var Header = createReactClass({
                     Mender is currently running in <b>demo mode</b>.
                   </p>
                   <p>
-                    <a href={'https://docs.mender.io/' + this.props.docsVersion + '/administration/production-installation'} target="_blank">
+                    <a href={`https://docs.mender.io/${this.props.docsVersion}/administration/production-installation`} target="_blank">
                       See the documentation for help switching to production mode
                     </a>
                     .
@@ -316,7 +284,7 @@ var Header = createReactClass({
               <div id="announcement" className={this.state.showAnnouncement ? 'fadeInSlow' : 'fadeOutSlow'} style={{ display: 'flex', alignItems: 'center' }}>
                 <AnnounceIcon className="red" style={{ marginRight: '4px', height: '18px', minWidth: '24px' }} />
                 <Linkify properties={{ target: '_blank' }}>{this.props.announcement}</Linkify>
-                <a onClick={this._hideAnnouncement}>
+                <a onClick={() => this._hideAnnouncement()}>
                   <CloseIcon style={{ marginLeft: '4px', height: '16px', verticalAlign: 'bottom' }} />
                 </a>
               </div>
@@ -332,7 +300,7 @@ var Header = createReactClass({
         </Toolbar>
 
         <div id="header-nav">
-          {this.state.showHelptips && this.state.acceptedDevices && !this.state.artifacts.length && !this.context.router.isActive('/artifacts') ? (
+          {this.state.showHelptips && this.state.acceptedDevices && !this.state.artifacts.length && !matchPath('/artifacts') ? (
             <div>
               <div
                 id="onboard-8"
@@ -352,8 +320,8 @@ var Header = createReactClass({
 
           {this.state.showHelptips &&
           !this.state.acceptedDevices &&
-          !(this.state.pendingDevices && this.context.router.isActive({ pathname: '/' }, true)) &&
-          !this.context.router.isActive('/devices') &&
+          !(this.state.pendingDevices && matchPath({ pathname: '/' }, true)) &&
+          !matchPath('/devices') &&
           !helpPath ? (
               <div>
                 <div
@@ -372,40 +340,29 @@ var Header = createReactClass({
               </div>
             ) : null}
 
-          {this.state.showHelptips &&
-          !this.state.hasDeployments &&
-          this.state.acceptedDevices &&
-          this.state.artifacts.length &&
-          !this.context.router.isActive('/deployments') ? (
-              <div>
-                <div
-                  id="onboard-11"
-                  className="tooltip help highlight"
-                  data-tip
-                  data-for="deployments-nav-tip"
-                  data-event="click focus"
-                  style={{ left: '150px', top: '196px' }}
-                >
-                  <FontIcon className="material-icons">help</FontIcon>
-                </div>
-                <ReactTooltip id="deployments-nav-tip" globalEventOff="click" place="bottom" type="light" effect="solid" className="react-tooltip">
-                  <DeploymentsNav devices={this.state.acceptedDevices} />
-                </ReactTooltip>
+          {this.state.showHelptips && !this.state.hasDeployments && this.state.acceptedDevices && this.state.artifacts.length && !matchPath('/deployments') ? (
+            <div>
+              <div
+                id="onboard-11"
+                className="tooltip help highlight"
+                data-tip
+                data-for="deployments-nav-tip"
+                data-event="click focus"
+                style={{ left: '150px', top: '196px' }}
+              >
+                <FontIcon className="material-icons">help</FontIcon>
               </div>
-            ) : null}
+              <ReactTooltip id="deployments-nav-tip" globalEventOff="click" place="bottom" type="light" effect="solid" className="react-tooltip">
+                <DeploymentsNav devices={this.state.acceptedDevices} />
+              </ReactTooltip>
+            </div>
+          ) : null}
 
-          <Tabs value={this.props.currentTab} onChange={this.changeTab} tabItemContainerStyle={{ display: 'none' }} inkBarStyle={{ display: 'none' }}>
+          <Tabs value={this.props.currentTab} onChange={() => this.changeTab()} tabItemContainerStyle={{ display: 'none' }} inkBarStyle={{ display: 'none' }}>
             {menu}
           </Tabs>
         </div>
       </div>
     );
   }
-});
-
-Header.contextTypes = {
-  router: PropTypes.object,
-  location: PropTypes.object
-};
-
-module.exports = Header;
+}

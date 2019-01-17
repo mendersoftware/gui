@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Time from 'react-time';
-var createReactClass = require('create-react-class');
 
 // material ui
 import { List, ListItem } from 'material-ui/List';
@@ -10,23 +9,27 @@ import FontIcon from 'material-ui/FontIcon';
 import IconButton from 'material-ui/IconButton';
 import TextField from 'material-ui/TextField';
 
-var SelectedArtifact = createReactClass({
-  getInitialState: function() {
-    return {
+export default class SelectedArtifact extends React.Component {
+  static contextTypes = {
+    router: PropTypes.object
+  };
+  constructor(props, context) {
+    super(props, context);
+    this.state = {
       descEdit: false
     };
-  },
-  componentDidUpdate: function() {
+  }
+  componentDidUpdate() {
     if (this.state.descEdit) {
       this.refs.description.focus();
     }
-  },
-  _handleLinkClick: function(device_type) {
-    var filters = 'device_type=' + device_type;
+  }
+  _handleLinkClick(device_type) {
+    var filters = `device_type=${device_type}`;
     filters = encodeURIComponent(filters);
     this.props.history.push('/devices/:group/:filters', { filters: filters }, null);
-  },
-  _descEdit: function(event) {
+  }
+  _descEdit(event) {
     event.stopPropagation();
     if (event.keyCode === 13 || !event.keyCode) {
       if (this.state.descEdit) {
@@ -35,9 +38,9 @@ var SelectedArtifact = createReactClass({
       }
       this.setState({ descEdit: !this.state.descEdit });
     }
-  },
+  }
 
-  render: function() {
+  render() {
     var info = { name: '-', device_type: '-', build_date: '-', modified: '-', size: '-', checksum: '-', devices: '-', description: '', signed: false };
     if (this.props.artifact) {
       for (var key in this.props.artifact) {
@@ -68,7 +71,7 @@ var SelectedArtifact = createReactClass({
       <IconButton
         iconStyle={styles.editButton}
         style={{ position: 'absolute', right: '0', bottom: '8px' }}
-        onClick={this._descEdit}
+        onClick={e => this._descEdit(e)}
         iconClassName="material-icons"
       >
         {this.state.descEdit ? 'check' : 'edit'}
@@ -85,12 +88,12 @@ var SelectedArtifact = createReactClass({
         rowsMax={2}
         ref="description"
         defaultValue={info.description}
-        onKeyDown={this._descEdit}
+        onKeyDown={e => this._descEdit(e)}
       />
     );
 
     var files = this.props.artifact.updates[0].files || [];
-    var fileDetails = files.map(function(file, index) {
+    var fileDetails = files.map((file, index) => {
       var build_date = <Time value={file.date} format="YYYY-MM-DD HH:mm" />;
 
       return (
@@ -101,7 +104,7 @@ var SelectedArtifact = createReactClass({
           <Divider />
           <ListItem style={styles.listStyle} disabled={true} primaryText="Build date" secondaryText={build_date} />
           <Divider />
-          <ListItem style={styles.listStyle} disabled={true} primaryText="Size (uncompressed)" secondaryText={(file.size / 1000000).toFixed(1) + ' MB'} />
+          <ListItem style={styles.listStyle} disabled={true} primaryText="Size (uncompressed)" secondaryText={`${(file.size / 1000000).toFixed(1)} MB`} />
           <Divider />
         </div>
       );
@@ -160,10 +163,4 @@ var SelectedArtifact = createReactClass({
       </div>
     );
   }
-});
-
-SelectedArtifact.contextTypes = {
-  router: PropTypes.object
-};
-
-module.exports = SelectedArtifact;
+}

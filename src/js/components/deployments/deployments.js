@@ -1,11 +1,5 @@
 import React from 'react';
-import { setRetryTimer, clearRetryTimer, clearAllRetryTimers } from '../../utils/retrytimer';
-var createReactClass = require('create-react-class');
-var AppStore = require('../../stores/app-store');
-var AppActions = require('../../actions/app-actions');
-
-import { Link } from 'react-router';
-import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 import cookie from 'react-cookie';
 import PropTypes from 'prop-types';
 import Dialog from 'material-ui/Dialog';
@@ -26,8 +20,83 @@ import Report from './report';
 import ScheduleForm from './scheduleform';
 import ScheduleButton from './schedulebutton';
 
-var Deployments = createReactClass({
-  getInitialState: function() {
+import { preformatWithRequestID } from '../../helpers';
+
+export default class Deployments extends React.Component {
+  static contextTypes = {
+    router: PropTypes.object
+  };
+
+  constructor(props, context) {
+    super(props, context);
+    this.state = this._getInitialState();
+  }
+
+  componentWillMount() {
+    AppStore.changeListener(this._onChange.bind(this));
+  }
+  componentDidMount() {
+    var self = this;
+
+    this.setState({ docsVersion: this.props.docsVersion ? `${this.props.docsVersion}/` : 'development/' });
+
+    var artifact = AppStore.getDeploymentArtifact();
+    this.setState({ artifact: artifact });
+
+    clearAllRetryTimers();
+    this.timer = setInterval(() => this._refreshDeployments(), this.state.refreshDeploymentsLength);
+    // set default date range before refreshing
+    var startDate = new Date();
+    startDate.setDate(startDate.getDate());
+    startDate.setHours(0, 0, 0, 0); // set to start of day
+    var endDate = new Date();
+    endDate.setHours(23, 59, 59, 999);
+    self.setState({ startDate: startDate, endDate: endDate });
+    // , () => {
+    //   self._refreshDeployments();
+    // });
+
+    AppActions.getArtifacts().then(() => {
+      var collated = AppStore.getCollatedArtifacts();
+      self.setState({ collatedArtifacts: collated });
+    });
+    AppActions.getDeviceCount()
+      .then(count => self._getDevices(count))
+      .catch(err => console.log(err));
+    AppActions.getGroups()
+      .then(groups => {
+        this.setState({ groups });
+        return groups.map(group => this._getGroupDevices(group));
+      })
+      .catch(error => console.log(`Error: ${error}`));
+
+    if (this.props.params) {
+      this.setState({ reportType: this.props.params.tab });
+
+      if (this.props.params.params) {
+        var str = decodeURIComponent(this.props.params.params);
+        var obj = str.split('&');
+
+        var params = [];
+        for (var i = 0; i < obj.length; i++) {
+          var f = obj[i].split('=');
+          params[f[0]] = f[1];
+        }
+        if (params.open) {
+          if (params.id) {
+            self._getReportById(params.id);
+          } else {
+            setTimeout(() => {
+              self.dialogOpen('schedule');
+            }, 400);
+          }
+        }
+      }
+    } else {
+      this.setState({ reportType: 'active' });
+    }
+  }
+  _getInitialState() {
     return {
       tabIndex: this._updateActive(),
       past: AppStore.getPastDeployments(),
@@ -47,116 +116,27 @@ var Deployments = createReactClass({
       isHosted: window.location.hostname === 'hosted.mender.io',
       per_page: 20
     };
-  },
-  componentWillMount: function() {
-    AppStore.changeListener(this._onChange);
-  },
-  componentDidMount: function() {
-    var self = this;
+  }
 
-    this.setState({ docsVersion: this.props.docsVersion ? this.props.docsVersion + '/' : 'development/' });
-
-    var artifact = AppStore.getDeploymentArtifact();
-    this.setState({ artifact: artifact });
-
-    clearAllRetryTimers();
-    this.timer = setInterval(this._refreshDeployments, this.state.refreshDeploymentsLength);
-    // set default date range before refreshing
-    var startDate = new Date();
-    startDate.setDate(startDate.getDate());
-    startDate.setHours(0, 0, 0, 0); // set to start of day
-    var endDate = new Date();
-    endDate.setHours(23, 59, 59, 999);
-    self.setState({ startDate: startDate, endDate: endDate }, function() {
-      self._refreshDeployments();
-    });
-
-    var artifactsCallback = {
-      success: function() {
-        var collated = AppStore.getCollatedArtifacts();
-        this.setState({ collatedArtifacts: collated });
-      }.bind(this)
-    };
-    AppActions.getArtifacts(artifactsCallback);
-
-    var countCallback = {
-      success: function(count) {
-        self._getDevices(count);
-      },
-      error: function(err) {
-        console.log(err);
-      }
-    };
-    AppActions.getDeviceCount(countCallback);
-
-    var groupCallback = {
-      success: function(groups) {
-        this.setState({ groups: groups });
-        for (var x = 0; x < groups.length; x++) {
-          this._getGroupDevices(groups[x]);
-        }
-      }.bind(this),
-      error: function(error) {
-        console.log('Error: ' + error);
-      }
-    };
-    AppActions.getGroups(groupCallback);
-
-    if (this.props.params) {
-      this.setState({ reportType: this.props.params.tab });
-
-      if (this.props.params.params) {
-        var str = decodeURIComponent(this.props.params.params);
-        var obj = str.split('&');
-
-        var params = [];
-        for (var i = 0; i < obj.length; i++) {
-          var f = obj[i].split('=');
-          params[f[0]] = f[1];
-        }
-        if (params.open) {
-          var that = this;
-          if (params.id) {
-            that._getReportById(params.id);
-          } else {
-            setTimeout(function() {
-              that.dialogOpen('schedule');
-            }, 400);
-          }
-        }
-      }
-    } else {
-      this.setState({ reportType: 'active' });
-    }
-  },
-
-  _getDevices: function(count) {
+  _getDevices(count) {
     var self = this;
     var pages = Math.ceil(count / 500);
     var allDevices = [];
 
-    function getDevices(pageNo) {
-      AppActions.getDevices(
-        {
-          success: function(devices) {
-            allDevices = allDevices.concat(devices);
-            self.setState({ allDevices: allDevices });
-            if (pageNo < pages) {
-              getDevices(pageNo + 1);
-            }
-          },
-          error: function(err) {
-            console.log('Error: ' + err);
+    const getDevices = pageNo =>
+      AppActions.getDevices(pageNo, 500)
+        .then(devices => {
+          allDevices = allDevices.concat(devices);
+          self.setState({ allDevices });
+          if (pageNo < pages) {
+            getDevices(pageNo + 1);
           }
-        },
-        pageNo,
-        500
-      );
-    }
+        })
+        .catch(err => console.log(`Error: ${err}`));
     getDevices(1);
-  },
+  }
 
-  _refreshDeployments: function() {
+  _refreshDeployments() {
     if (this._getCurrentLabel() === 'Finished') {
       this._refreshPast(null, null, null, null, this.state.groupFilter);
     } else {
@@ -164,11 +144,11 @@ var Deployments = createReactClass({
       this._refreshPending();
     }
 
-    if (this.state.showHelptips && !cookie.load(this.state.user.id + '-onboarded') && cookie.load(this.state.user.id + '-deploymentID')) {
-      this._isOnBoardFinished(cookie.load(this.state.user.id + '-deploymentID'));
+    if (this.state.showHelptips && !cookie.load(`${this.state.user.id}-onboarded`) && cookie.load(`${this.state.user.id}-deploymentID`)) {
+      this._isOnBoardFinished(cookie.load(`${this.state.user.id}-deploymentID`));
     }
-  },
-  _refreshInProgress: function(page, per_page) {
+  }
+  _refreshInProgress(page, per_page) {
     /*
     / refresh only in progress deployments
     /
@@ -180,29 +160,27 @@ var Deployments = createReactClass({
       page = self.state.prog_page;
     }
 
-    var callback = {
-      success: function(deployments) {
-        self.setState({ doneLoading: true });
+    return Promise.all([
+      AppActions.getDeploymentsInProgress(page, per_page),
+      // Get full count of deployments for pagination
+      AppActions.getDeploymentCount('inprogress')
+    ])
+      .then(results => {
+        const deployments = results[0];
+        const progressCount = results[1];
+        self.setState({ doneLoading: true, progressCount });
         clearRetryTimer('progress');
-
-        // Get full count of deployments for pagination
-        AppActions.getDeploymentCount('inprogress', function(count) {
-          self.setState({ progressCount: count });
-          if (count && !deployments.length) {
-            self._refreshInProgress(1);
-          }
-        });
-      },
-      error: function(err) {
+        if (progressCount && !deployments.length) {
+          self._refreshInProgress(1);
+        }
+      })
+      .catch(err => {
         console.log(err);
         var errormsg = err.error || 'Please check your connection';
-        setRetryTimer(err, 'deployments', 'Couldn\'t load deployments. ' + errormsg, self.state.refreshDeploymentsLength);
-      }
-    };
-
-    AppActions.getDeploymentsInProgress(callback, page, per_page);
-  },
-  _refreshPending: function(page, per_page) {
+        setRetryTimer(err, 'deployments', `Couldn't load deployments. ${errormsg}`, self.state.refreshDeploymentsLength);
+      });
+  }
+  _refreshPending(page, per_page) {
     /*
     / refresh only pending deployments
     /
@@ -214,41 +192,39 @@ var Deployments = createReactClass({
       page = self.state.pend_page;
     }
 
-    var callback = {
-      success: function(deployments, links) {
+    return AppActions.getPendingDeployments(page, per_page)
+      .then(result => {
         self._dismissSnackBar();
+        const { deployments, links } = result;
 
         // Get full count of deployments for pagination
         if (links.next || links.prev) {
-          AppActions.getDeploymentCount('pending', function(count) {
-            self.setState({ pendingCount: count });
-            if (count && !deployments.length) {
+          return AppActions.getDeploymentCount('pending').then(pendingCount => {
+            self.setState({ pendingCount });
+            if (pendingCount && !deployments.length) {
               self._refreshPending(1);
             }
           });
         } else {
           self.setState({ pendingCount: deployments.length });
         }
-      },
-      error: function(err) {
+      })
+      .catch(err => {
         console.log(err);
         var errormsg = err.error || 'Please check your connection';
-        setRetryTimer(err, 'deployments', 'Couldn\'t load deployments. ' + errormsg, self.state.refreshDeploymentsLength);
-      }
-    };
+        setRetryTimer(err, 'deployments', `Couldn't load deployments. ${errormsg}`, self.state.refreshDeploymentsLength);
+      });
+  }
 
-    AppActions.getPendingDeployments(callback, page, per_page);
-  },
-
-  _changePastPage: function(page, startDate, endDate, per_page, group) {
+  _changePastPage(page, startDate, endDate, per_page, group) {
     var self = this;
-    self.setState({ doneLoading: false }, function() {
+    self.setState({ doneLoading: false }, () => {
       clearInterval(self.timer);
       self._refreshPast(page, startDate, endDate, per_page, group);
-      self.timer = setInterval(self._refreshDeployments, self.state.refreshDeploymentsLength);
+      self.timer = setInterval(() => self._refreshDeployments(), self.state.refreshDeploymentsLength);
     });
-  },
-  _refreshPast: function(page, startDate, endDate, per_page, group) {
+  }
+  _refreshPast(page, startDate, endDate, per_page, group) {
     /*
     / refresh only finished deployments
     /
@@ -258,85 +234,67 @@ var Deployments = createReactClass({
     var oldCount = self.state.pastCount;
     var oldPage = self.state.past_page;
 
-    var callback = {
-      success: function() {
-        self.setState({ doneLoading: true });
-        self._dismissSnackBar();
-      },
-      error: function(err) {
-        console.log(err);
-        self.setState({ doneLoading: true });
-        var errormsg = err.error || 'Please check your connection';
-        setRetryTimer(err, 'deployments', 'Couldn\'t load deployments. ' + errormsg, self.state.refreshDeploymentsLength);
-      }
-    };
-
     startDate = startDate || self.state.startDate;
     endDate = endDate || self.state.endDate;
     per_page = per_page || self.state.per_page;
 
-    self.setState({ startDate: startDate, endDate: endDate, groupFilter: group });
+    // self.setState({ startDate, endDate, groupFilter: group });
 
     startDate = Math.round(Date.parse(startDate) / 1000);
     endDate = Math.round(Date.parse(endDate) / 1000);
 
     // get total count of past deployments first
-    AppActions.getDeploymentCount(
-      'finished',
-      function(count) {
-        self.setState({ pastCount: count });
+    return AppActions.getDeploymentCount('finished', startDate, endDate, group)
+      .then(count => {
         page = page || self.state.past_page || 1;
-        self.setState({ past_page: page });
-
+        self.setState({ pastCount: count, past_page: page });
         // only refresh deployments if page, count or date range has changed
         if (oldPage !== page || oldCount !== count || !self.state.doneLoading) {
-          AppActions.getPastDeployments(callback, page, per_page, startDate, endDate, group);
+          return AppActions.getPastDeployments(page, per_page, startDate, endDate, group);
         }
-      },
-      startDate,
-      endDate,
-      group
-    );
-  },
+      })
+      .then(() => {
+        self.setState({ doneLoading: true });
+        self._dismissSnackBar();
+      })
+      .catch(err => {
+        console.log(err);
+        self.setState({ doneLoading: true });
+        var errormsg = err.error || 'Please check your connection';
+        setRetryTimer(err, 'deployments', `Couldn't load deployments. ${errormsg}`, self.state.refreshDeploymentsLength);
+      });
+  }
 
-  _dismissSnackBar: function() {
-    setTimeout(function() {
+  _dismissSnackBar() {
+    setTimeout(() => {
       AppActions.setSnackbar('');
     }, 1500);
-  },
-  _getGroupDevices: function(group) {
+  }
+  _getGroupDevices(group) {
     // get list of devices for each group and save them to state
     var self = this;
-    var tmp = {};
-    var callback = {
-      success: function(devices) {
-        tmp[group] = devices;
-        self.setState(tmp);
-      },
-      error: function(err) {
-        console.log(err);
-      }
-    };
-    var filter = 'group=' + group;
-    AppActions.getDevices(callback, 1, 100, filter);
-  },
-  componentWillUnmount: function() {
+    var filter = `group=${group}`;
+    return AppActions.getDevices(1, 100, filter)
+      .then(devices => self.setState({ devices }))
+      .catch(err => console.log(err));
+  }
+  componentWillUnmount() {
     clearInterval(this.timer);
     clearAllRetryTimers();
-    AppStore.removeChangeListener(this._onChange);
-  },
-  _onChange: function() {
-    this.setState(this.getInitialState());
-  },
+    AppStore.removeChangeListener(this._onChange.bind(this));
+  }
+  _onChange() {
+    this.setState(this._getInitialState());
+  }
 
-  dialogDismiss: function() {
+  dialogDismiss() {
     this.setState({
       dialog: false,
       artifact: null,
       group: null
     });
-  },
-  dialogOpen: function(dialog) {
+  }
+  dialogOpen(dialog) {
     this.setState({ filteredDevices: [], deploymentDevices: [] });
     if (dialog === 'schedule') {
       this.setState({
@@ -352,67 +310,60 @@ var Deployments = createReactClass({
       });
     }
     this.setState({ dialog: true });
-  },
+  }
 
-  _retryDeployment: function(deployment, devices) {
+  _retryDeployment(deployment, devices) {
     var self = this;
     var artifact = { name: deployment.artifact_name };
-    this.setState({ artifact: artifact, group: deployment.name, filteredDevices: devices }, function() {
-      self._onScheduleSubmit();
-    });
-  },
+    this.setState({ artifact: artifact, group: deployment.name, filteredDevices: devices }, () => self._onScheduleSubmit());
+  }
 
-  _onScheduleSubmit: function() {
-    var ids = [];
+  _onScheduleSubmit() {
     var self = this;
-
-    for (var i = 0; i < this.state.filteredDevices.length; i++) {
-      ids.push(this.state.filteredDevices[i].id);
-    }
+    var ids = this.state.filteredDevices.map(device => device.id);
     var newDeployment = {
       name: decodeURIComponent(this.state.group) || 'All devices',
       artifact_name: this.state.artifact.name,
       devices: ids
     };
+    self.setState({ doneLoading: false });
+    self.dialogDismiss('dialog');
 
-    var callback = {
-      success: function(data) {
+    return AppActions.createDeployment(newDeployment)
+      .then(data => {
         var lastslashindex = data.lastIndexOf('/');
         var id = data.substring(lastslashindex + 1);
         clearInterval(self.timer);
 
         // onboarding
-        if (self.state.showHelptips && !cookie.load(self.state.user.id + '-onboarded') && !cookie.load(self.state.user.id + '-deploymentID')) {
-          cookie.save(self.state.user.id + '-deploymentID', id);
+        if (self.state.showHelptips && !cookie.load(`${self.state.user.id}-onboarded`) && !cookie.load(`${self.state.user.id}-deploymentID`)) {
+          cookie.save(`${self.state.user.id}-deploymentID`, id);
         }
 
-        AppActions.getSingleDeployment(id, function(data) {
+        return AppActions.getSingleDeployment(id).then(data => {
           if (data) {
             // successfully retrieved new deployment
             if (self.state.currentTab !== 'Active') {
-              self.context.router.push('/deployments/active');
+              self.context.router.history.push('/deployments/active');
               self._changeTab('/deployments/active');
             } else {
-              self.timer = setInterval(self._refreshDeployments, self.state.refreshDeploymentsLength);
+              self.timer = setInterval(() => self._refreshDeployments(), self.state.refreshDeploymentsLength);
               self._refreshDeployments();
             }
             AppActions.setSnackbar('Deployment created successfully', 8000);
           } else {
             AppActions.setSnackbar('Error while creating deployment');
-            self.setState({ doneLoading: true });
           }
+          return Promise.resolve();
         });
-      },
-      error: function(err) {
+      })
+      .then(() => self.setState({ doneLoading: true }))
+      .catch(err => {
         var errMsg = err.res.body.error || '';
-        AppActions.setSnackbar(preformatWithRequestID(err.res, 'Error creating deployment. ' + errMsg), null, 'Copy to clipboard');
-      }
-    };
-    AppActions.createDeployment(newDeployment, callback);
-    self.setState({ doneLoading: false });
-    this.dialogDismiss('dialog');
-  },
-  _deploymentParams: function(val, attr) {
+        AppActions.setSnackbar(preformatWithRequestID(err.res, `Error creating deployment. ${errMsg}`), null, 'Copy to clipboard');
+      });
+  }
+  _deploymentParams(val, attr) {
     // updating params from child schedule form
     var tmp = {};
     tmp[attr] = val;
@@ -420,35 +371,28 @@ var Deployments = createReactClass({
     var group = attr === 'group' ? val : this.state.group;
     var artifact = attr === 'artifact' ? val : this.state.artifact;
     this._getDeploymentDevices(group, artifact);
-  },
-  _getDeploymentDevices: function(group, artifact) {
+  }
+  _getDeploymentDevices(group, artifact) {
     var devices = [];
     var filteredDevices = [];
     // set the selected groups devices to state, to be sent down to the child schedule form
     if (artifact && group) {
-      devices = group !== 'All devices' ? this.state[group] : this.state.allDevices;
+      devices = (group !== 'All devices' ? this.state[group] : this.state.allDevices) || [];
       filteredDevices = AppStore.filterDevicesByType(devices, artifact.device_types_compatible);
     }
     this.setState({ deploymentDevices: devices, filteredDevices: filteredDevices });
-  },
-  _getReportById: function(id) {
-    AppActions.getSingleDeployment(
-      id,
-      function(data) {
-        var that = this;
-        setTimeout(function() {
-          that._showReport(data, that.state.reportType);
-        }, 400);
-      }.bind(this)
-    );
-  },
-  _showReport: function(deployment, type) {
+  }
+  _getReportById(id) {
+    var self = this;
+    return AppActions.getSingleDeployment(id).then(data => setTimeout(() => self._showReport(data, self.state.reportType), 400));
+  }
+  _showReport(deployment, type) {
     var title = type === 'active' ? 'Deployment progress' : 'Results of deployment';
     var reportType = type;
     this.setState({ scheduleForm: false, selectedDeployment: deployment, dialogTitle: title, reportType: reportType });
     this.dialogOpen('report');
-  },
-  _scheduleDeployment: function(deployment) {
+  }
+  _scheduleDeployment(deployment) {
     this.setState({ dialog: false });
 
     var artifact = '';
@@ -484,21 +428,21 @@ var Deployments = createReactClass({
       groupVal: group
     });
     this.dialogOpen('schedule');
-  },
-  _handleRequestClose: function() {
+  }
+  _handleRequestClose() {
     this._dismissSnackBar();
-  },
-  _showProgress: function(rowNumber) {
+  }
+  _showProgress(rowNumber) {
     var deployment = this.state.progress[rowNumber];
     this._showReport(deployment, 'active');
-  },
-  _abortDeployment: function(id) {
+  }
+  _abortDeployment(id) {
     var self = this;
     var callback = {
       success: function() {
         self.setState({ doneLoading: false });
         clearInterval(self.timer);
-        self.timer = setInterval(self._refreshDeployments, self.state.refreshDeploymentsLength);
+        self.timer = setInterval(() => self._refreshDeployments(), self.state.refreshDeploymentsLength);
         self._refreshDeployments();
         self.dialogDismiss('dialog');
         AppActions.setSnackbar('The deployment was successfully aborted');
@@ -506,80 +450,89 @@ var Deployments = createReactClass({
       error: function(err) {
         console.log(err);
         var errMsg = err.res.body.error || '';
-        AppActions.setSnackbar(preformatWithRequestID(err.res, 'There was wan error while aborting the deployment: ' + errMsg));
+        AppActions.setSnackbar(preformatWithRequestID(err.res, `There was wan error while aborting the deployment: ${errMsg}`));
       }
     };
     AppActions.abortDeployment(id, callback);
-  },
-  updated: function() {
+  }
+  updated() {
     // use to make sure re-renders dialog at correct height when device list built
     this.setState({ updated: true });
-  },
+  }
 
-  _finishOnboard: function() {
+  _finishOnboard() {
     this.setState({ onboardDialog: false });
-    this.context.router.push('/deployments/finished');
+    this.context.router.history.push('/deployments/finished');
     this._changeTab('/deployments/finished');
-  },
-  _isOnBoardFinished: function(id) {
+  }
+  _isOnBoardFinished(id) {
     var self = this;
-    AppActions.getSingleDeployment(id, function(data) {
+    return AppActions.getSingleDeployment(id).then(data => {
       if (data.status === 'finished') {
         self.setState({ onboardDialog: true });
-        cookie.save(self.state.user.id + '-onboarded', true);
-        cookie.remove(self.state.user.id + '-deploymentID');
+        cookie.save(`${self.state.user.id}-onboarded`, true);
+        cookie.remove(`${self.state.user.id}-deploymentID`);
       }
     });
-  },
+  }
 
   // nested tabs
-  componentWillReceiveProps: function() {
-    this.setState({ tabIndex: this._updateActive(), currentTab: this._getCurrentLabel() });
-  },
+  componentWillReceiveProps() {
+    // this.setState({ tabIndex: this._updateActive(), currentTab: this._getCurrentLabel() });
+  }
 
-  _updateActive: function() {
-    return this.context.router.isActive({ pathname: '/deployments' }, true)
-      ? '/deployments/active'
-      : this.context.router.isActive('/deployments/finished')
-        ? '/deployments/finished'
-        : '/deployments/active';
-  },
+  _updateActive() {
+    switch (this.context.router.route.match.params.tab) {
+    case 'active':
+      return '/deployments/active';
+    case 'finished':
+      return '/deployments/finished';
+    default:
+      return '/deployments/active';
+    }
+  }
 
-  _getCurrentLabel: function() {
-    return this.context.router.isActive({ pathname: '/deployments' }, true)
-      ? 'Active'
-      : this.context.router.isActive('/deployments/active')
-        ? 'Active'
-        : this.context.router.isActive('/deployments/finished')
-          ? 'Finished'
-          : 'Active';
-  },
+  _getCurrentLabel() {
+    switch (this.context.router.route.match.params.tab) {
+    case 'active':
+      return 'Active';
+    case 'finished':
+      return 'Finished';
+    default:
+      return 'Active';
+    }
+  }
 
-  _handleTabActive: function(tab) {
+  _handleTabActive(tab) {
     AppActions.setSnackbar('');
     this.setState({ currentTab: tab.props.label });
-    this.context.router.push(tab.props.value);
-  },
+    this.context.router.history.push(tab.props.value);
+  }
 
-  _changeTab: function(value) {
+  _changeTab(tabIndex) {
     var self = this;
     clearInterval(self.timer);
-    self.timer = setInterval(self._refreshDeployments, self.state.refreshDeploymentsLength);
-    self.setState({ tabIndex: value, currentTab: self._getCurrentLabel(), pend_page: 1, past_page: 1, prog_page: 1 }, function() {
-      self._refreshDeployments();
-    });
-  },
+    self.timer = setInterval(() => self._refreshDeployments(), self.state.refreshDeploymentsLength);
+    self.setState({ tabIndex, currentTab: self._getCurrentLabel(), pend_page: 1, past_page: 1, prog_page: 1 }, () => self._refreshDeployments());
+  }
 
-  render: function() {
+  render() {
     var disabled = typeof this.state.filteredDevices !== 'undefined' && this.state.filteredDevices.length > 0 ? false : true;
     var scheduleActions = [
       <div key="schedule-action-button-1" style={{ marginRight: '10px', display: 'inline-block' }}>
-        <FlatButton label="Cancel" onClick={this.dialogDismiss.bind(null, 'dialog')} />
+        <FlatButton label="Cancel" onClick={() => this.dialogDismiss('dialog')} />
       </div>,
-      <RaisedButton key="schedule-action-button-2" label="Create deployment" primary={true} onClick={this._onScheduleSubmit} ref="save" disabled={disabled} />
+      <RaisedButton
+        key="schedule-action-button-2"
+        label="Create deployment"
+        primary={true}
+        onClick={() => this._onScheduleSubmit()}
+        ref="save"
+        disabled={disabled}
+      />
     ];
-    var reportActions = [<FlatButton key="report-action-button-1" label="Close" onClick={this.dialogDismiss.bind(null, 'dialog')} />];
-    var onboardActions = [<RaisedButton key="onboard-action-button-1" label="Finish" primary={true} onClick={this._finishOnboard} />];
+    var reportActions = [<FlatButton key="report-action-button-1" label="Close" onClick={() => this.dialogDismiss('dialog')} />];
+    var onboardActions = [<RaisedButton key="onboard-action-button-1" label="Finish" primary={true} onClick={() => this._finishOnboard()} />];
     var dialogContent = '';
 
     if (this.state.scheduleForm) {
@@ -591,7 +544,7 @@ var Deployments = createReactClass({
           filteredDevices={this.state.filteredDevices}
           hasPending={this.state.hasPending}
           hasDevices={this.state.hasDevices}
-          deploymentSettings={this._deploymentParams}
+          deploymentSettings={(...args) => this._deploymentParams(...args)}
           id={this.state.id}
           artifacts={this.state.collatedArtifacts}
           artifact={this.state.artifact}
@@ -601,14 +554,19 @@ var Deployments = createReactClass({
       );
     } else if (this.state.reportType === 'active') {
       dialogContent = (
-        <Report globalSettings={this.props.globalSettings} abort={this._abortDeployment} updated={this.updated} deployment={this.state.selectedDeployment} />
+        <Report
+          globalSettings={this.props.globalSettings}
+          abort={id => this._abortDeployment(id)}
+          updated={() => this.updated()}
+          deployment={this.state.selectedDeployment}
+        />
       );
     } else {
       dialogContent = (
         <Report
-          retry={this._retryDeployment}
+          retry={(deployment, devices) => this._retryDeployment(deployment, devices)}
           globalSettings={this.props.globalSettings}
-          updated={this.updated}
+          updated={() => this.updated()}
           past={true}
           deployment={this.state.selectedDeployment}
         />
@@ -621,23 +579,25 @@ var Deployments = createReactClass({
       </p>
     ) : (
       <p>
-        <a href={'https://docs.mender.io/' + this.state.docsVersion + 'getting-started/deploy-to-physical-devices'} target="_blank">
+        <a href={`https://docs.mender.io/${this.state.docsVersion}getting-started/deploy-to-physical-devices`} target="_blank">
           Follow the tutorial
         </a>{' '}
         in our documentation to provision Raspberry Pi 3 or BeagleBone Black devices.
       </p>
     );
     // tabs
-    var tabHandler = this._handleTabActive;
+    var tabHandler = tab => this._handleTabActive(tab);
     var styles = {
       tabStyle: {
         display: 'block',
+        height: '100%',
         width: '100%',
         color: '#949495',
         textTransform: 'none'
       },
       activeTabStyle: {
         display: 'block',
+        height: '100%',
         width: '100%',
         color: '#404041',
         textTransform: 'none'
@@ -659,12 +619,12 @@ var Deployments = createReactClass({
     return (
       <div style={{ marginTop: '-15px' }}>
         <div className="top-right-button">
-          <ScheduleButton secondary={true} openDialog={this.dialogOpen} />
+          <ScheduleButton secondary={true} openDialog={dialog => this.dialogOpen(dialog)} />
         </div>
 
         <Tabs
           value={this.state.tabIndex}
-          onChange={this._changeTab}
+          onChange={tabIndex => this._changeTab(tabIndex)}
           tabItemContainerStyle={{ background: 'none', width: '280px' }}
           inkBarStyle={{ backgroundColor: '#347a87' }}
         >
@@ -672,32 +632,33 @@ var Deployments = createReactClass({
             label="Active"
             value="/deployments/active"
             onActive={tabHandler}
-            style={this.state.tabIndex === '/deployments/active' ? styles.activeTabStyle : styles.tabStyle}
+            // style={this.state.tabIndex === '/deployments/active' ? styles.activeTabStyle : styles.tabStyle}
+            style={styles.activeTabStyle}
           >
             <div className="margin-top">
               <Pending
                 page={this.state.pend_page}
                 count={this.state.pendingCount || this.state.pending.length}
-                refreshPending={this._refreshPending}
+                refreshPending={(...args) => this._refreshPending(...args)}
                 pending={this.state.pending}
-                abort={this._abortDeployment}
+                abort={id => this._abortDeployment(id)}
               />
 
               <Progress
                 page={this.state.prog_page}
                 isActiveTab={this.state.currentTab === 'Active'}
-                showHelptips={this.state.showHelptips && !cookie.load(this.state.user.id + '-onboarded')}
+                showHelptips={this.state.showHelptips && !cookie.load(`${this.state.user.id}-onboarded`)}
                 hasDeployments={this.state.hasDeployments}
                 devices={this.state.allDevices || []}
                 hasArtifacts={this.state.collatedArtifacts.length}
                 count={this.state.progressCount || this.state.progress.length}
                 pendingCount={this.state.pendingCount || this.state.pending.length}
-                refreshProgress={this._refreshInProgress}
-                abort={this._abortDeployment}
+                refreshProgress={(...args) => this._refreshInProgress(...args)}
+                abort={id => this._abortDeployment(id)}
                 loading={!this.state.doneLoading}
-                openReport={this._showProgress}
+                openReport={rowNum => this._showProgress(rowNum)}
                 progress={this.state.progress}
-                createClick={this.dialogOpen.bind(null, 'schedule')}
+                createClick={() => this.dialogOpen('schedule')}
               />
             </div>
           </Tab>
@@ -706,13 +667,14 @@ var Deployments = createReactClass({
             label="Finished"
             onActive={tabHandler}
             value="/deployments/finished"
-            style={this.state.tabIndex === '/deployments/finished' ? styles.activeTabStyle : styles.tabStyle}
+            // style={this.state.tabIndex === '/deployments/finished' ? styles.activeTabStyle : styles.tabStyle}
+            style={styles.activeTabStyle}
           >
             <div className="margin-top">
               <Past
                 groups={this.state.groups}
                 deviceGroup={this.state.groupFilter}
-                createClick={this.dialogOpen.bind(null, 'schedule')}
+                createClick={() => this.dialogOpen('schedule')}
                 pageSize={this.state.per_page}
                 startDate={this.state.startDate}
                 endDate={this.state.endDate}
@@ -722,8 +684,8 @@ var Deployments = createReactClass({
                 count={this.state.pastCount}
                 loading={!this.state.doneLoading}
                 past={this.state.past}
-                refreshPast={this._changePastPage}
-                showReport={this._showReport}
+                refreshPast={(...args) => this._changePastPage(...args)}
+                showReport={(deployment, type) => this._showReport(deployment, type)}
               />
             </div>
           </Tab>
@@ -766,7 +728,7 @@ var Deployments = createReactClass({
               secondaryText={
                 <p>
                   See our{' '}
-                  <a href={'https://docs.mender.io/' + this.state.docsVersion + 'artifacts/building-mender-yocto-image'} target="_blank">
+                  <a href={`https://docs.mender.io/${this.state.docsVersion}artifacts/building-mender-yocto-image`} target="_blank">
                     documentation site
                   </a>{' '}
                   for a step by step guide on how to build a Yocto Project image for a device.
@@ -780,10 +742,4 @@ var Deployments = createReactClass({
       </div>
     );
   }
-});
-
-Deployments.contextTypes = {
-  router: PropTypes.object
-};
-
-module.exports = Deployments;
+}

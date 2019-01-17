@@ -1,7 +1,7 @@
 import React from 'react';
 import { fullyDecodeURI } from '../../helpers';
-var createReactClass = require('create-react-class');
-var pluralize = require('pluralize');
+
+import pluralize from 'pluralize';
 import validator from 'validator';
 import MenuItem from 'material-ui/MenuItem';
 import SelectField from 'material-ui/SelectField';
@@ -11,26 +11,27 @@ import FontIcon from 'material-ui/FontIcon';
 
 import AppActions from '../../actions/app-actions';
 
-var GroupSelector = createReactClass({
-  getInitialState: function() {
-    return {
+export default class GroupSelector extends React.Component {
+  constructor(props, context) {
+    super(props, context);
+    this.state = {
       showInput: false,
       invalid: true
     };
-  },
+  }
 
-  componentDidMount: function() {
+  componentDidMount() {
     this.changeTimer;
-  },
+  }
 
-  _showButton: function() {
+  _showButton() {
     this.setState({ showInput: true, customName: '' });
     this.props.changeSelect('');
     this.refs.customGroup.focus();
     this.props.validateName(true, '');
-  },
+  }
 
-  _handleGroupNameSave: function(event) {
+  _handleGroupNameSave(event) {
     if (!event || event['keyCode'] === 13) {
       if (!this.state.errorCode1) {
         var group = this.props.selectedGroup;
@@ -46,12 +47,12 @@ var GroupSelector = createReactClass({
         errorText1: null
       });
     }
-  },
-  _handleGroupNameChange: function(event) {
+  }
+  _handleGroupNameChange(event) {
     this.setState({ groupName: event.target.value });
     this._validateName(event.target.value);
-  },
-  _validateName: function(name) {
+  }
+  _validateName(name) {
     name = fullyDecodeURI(name);
     var errorText = null;
     var invalid = false;
@@ -71,23 +72,23 @@ var GroupSelector = createReactClass({
     }
     this.setState({ errorText1: errorText, invalid: invalid });
     this.props.validateName(invalid, name);
-  },
-  _onChange: function(event) {
+  }
+  _onChange(event) {
     this._validateName(event.target.value);
-  },
-  _handleTextFieldChange: function(event) {
+  }
+  _handleTextFieldChange(event) {
     this.setState({ customName: event.target.value });
     this._validateName(event.target.value);
-  },
-  _handleSelectValueChange: function(event, index, value) {
+  }
+  _handleSelectValueChange(value) {
     this.setState({ showInput: false, groupName: '' });
     this.props.changeSelect(value);
     this.props.validateName(false);
-  },
+  }
 
-  render: function() {
+  render() {
     var self = this;
-    var groupList = this.props.groups.map(function(group, index) {
+    var groupList = this.props.groups.map((group, index) => {
       if (group && group !== self.props.selectedGroup) {
         // don't show the current selected group in the list
         return <MenuItem value={group} key={index} primaryText={decodeURIComponent(group)} />;
@@ -101,13 +102,18 @@ var GroupSelector = createReactClass({
       <div style={{ height: '200px' }}>
         <div className={showSelect ? 'float-left' : 'hidden'}>
           <div className="float-left">
-            <SelectField ref="groupSelect" onChange={this._handleSelectValueChange} floatingLabelText="Select group" value={this.props.selectedField || ''}>
+            <SelectField
+              ref="groupSelect"
+              onChange={(event, select, value) => this._handleSelectValueChange(value)}
+              floatingLabelText="Select group"
+              value={this.props.selectedField || ''}
+            >
               {groupList}
             </SelectField>
           </div>
 
           <div className="float-left margin-left-small">
-            <RaisedButton label="Create new" style={{ marginTop: '26px' }} onClick={this._showButton} />
+            <RaisedButton label="Create new" style={{ marginTop: '26px' }} onClick={() => this._showButton()} />
           </div>
         </div>
 
@@ -118,7 +124,7 @@ var GroupSelector = createReactClass({
             hintText="Name of new group"
             floatingLabelText="Name of new group"
             className="float-left clear"
-            onChange={this._handleTextFieldChange}
+            onChange={(event, select, value) => this._handleTextFieldChange(value)}
             errorStyle={{ color: 'rgb(171, 16, 0)' }}
             errorText={this.state.errorText1}
           />
@@ -157,6 +163,4 @@ var GroupSelector = createReactClass({
       </div>
     );
   }
-});
-
-module.exports = GroupSelector;
+}

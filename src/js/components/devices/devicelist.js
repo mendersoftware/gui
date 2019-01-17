@@ -1,32 +1,33 @@
 import React from 'react';
 import Time from 'react-time';
-import Collapse from 'react-collapse';
+import { Collapse } from 'react-collapse';
 import ReactTooltip from 'react-tooltip';
 import { ExpandDevice } from '../helptips/helptooltips';
-var Loader = require('../common/loader');
-var AppActions = require('../../actions/app-actions');
-var ExpandedDevice = require('./expanded-device');
-var createReactClass = require('create-react-class');
-var pluralize = require('pluralize');
+import Loader from '../common/loader';
+import AppActions from '../../actions/app-actions';
+import ExpandedDevice from './expanded-device';
+
+import pluralize from 'pluralize';
 
 // material ui
 import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
 import IconButton from 'material-ui/IconButton';
 import RaisedButton from 'material-ui/RaisedButton';
-import FlatButton from 'material-ui/RaisedButton';
+import FlatButton from 'material-ui/FlatButton';
 import FontIcon from 'material-ui/FontIcon';
 import TextField from 'material-ui/TextField';
 
-var Authorized = createReactClass({
-  getInitialState: function() {
-    return {
+export default class Authorized extends React.Component {
+  constructor(props, context) {
+    super(props, context);
+    this.state = {
       minHeight: 200,
       divHeight: 208,
       selectedRows: [],
       textfield: this.props.group ? decodeURIComponent(this.props.group) : 'All devices',
       showKey: false
     };
-  },
+  }
 
   componentDidUpdate(prevProps) {
     var self = this;
@@ -55,17 +56,17 @@ var Authorized = createReactClass({
     if (prevProps.paused !== this.props.paused && this.state.device) {
       this._setDeviceDetails(this.state.device);
     }
-  },
+  }
 
-  _adjustHeight: function() {
+  _adjustHeight() {
     // do this when number of devices changes
     var h = this.props.devices.length * 55;
     this.setState({ minHeight: h });
-  },
-  _sortColumn: function() {
+  }
+  _sortColumn() {
     console.log('sort');
-  },
-  _expandRow: function(rowNumber) {
+  }
+  _expandRow(rowNumber) {
     var self = this;
     AppActions.setSnackbar('');
     var device = this.props.devices[rowNumber];
@@ -75,33 +76,29 @@ var Authorized = createReactClass({
 
     self.setState({ expandRow: rowNumber, device: device });
     self._setDeviceDetails(device);
-  },
-  _adjustCellHeight: function(height) {
+  }
+  _adjustCellHeight(height) {
     this.setState({ divHeight: height + 105 });
-  },
+  }
 
   /*
    * Get full device identity details for single selected device
    */
-  _setDeviceDetails: function(device) {
+  _setDeviceDetails(device) {
     var self = this;
-    var callback = {
-      success: function(data) {
+    return AppActions.getDeviceAuth(device.id)
+      .then(data => {
         device.identity_data = data.identity_data;
         device.id = data.id;
         device.updated_ts = data.updated_ts;
         device.created_ts = data.created_ts;
         device.status = data.status;
         self.setState({ expandedDevice: device });
-      },
-      error: function(err) {
-        console.log('Error: ' + err);
-      }
-    };
-    AppActions.getDeviceAuth(callback, device.id);
-  },
+      })
+      .catch(err => console.log(`Error: ${err}`));
+  }
 
-  _onRowSelection: function(selectedRows) {
+  _onRowSelection(selectedRows) {
     if (selectedRows === 'all') {
       var rows = Array.apply(null, { length: this.props.devices.length }).map(Number.call, Number);
       this.setState({ selectedRows: rows, allRowsSelected: true });
@@ -110,29 +107,29 @@ var Authorized = createReactClass({
     } else {
       this.setState({ selectedRows: selectedRows, allRowsSelected: false });
     }
-  },
+  }
 
-  _isSelected: function(index) {
+  _isSelected(index) {
     return this.state.selectedRows.indexOf(index) !== -1;
-  },
+  }
 
-  _getDevicesFromSelectedRows: function() {
+  _getDevicesFromSelectedRows() {
     // use selected rows to get device from corresponding position in devices array
     var devices = [];
     for (var i = 0; i < this.state.selectedRows.length; i++) {
       devices.push(this.props.devices[this.state.selectedRows[i]]);
     }
     return devices;
-  },
+  }
 
-  _addToGroup: function() {
+  _addToGroup() {
     this.props.addDevicesToGroup(this.state.selectedRows);
-  },
-  _removeFromGroup: function() {
+  }
+  _removeFromGroup() {
     this.props.removeDevicesFromGroup(this.state.selectedRows);
-  },
+  }
 
-  _nameEdit: function() {
+  _nameEdit() {
     if (this.state.nameEdit) {
       this._handleGroupNameSave();
     }
@@ -140,26 +137,26 @@ var Authorized = createReactClass({
       nameEdit: !this.state.nameEdit,
       errorText: null
     });
-  },
+  }
 
-  _handleGroupNameSave: function() {
+  _handleGroupNameSave() {
     // to props - function to get all devices from group, update group one by one
-  },
+  }
 
-  _handleGroupNameChange: function(event) {
+  _handleGroupNameChange(event) {
     this.setState({ textfield: event.target.value });
-  },
+  }
 
-  _showKey: function() {
+  _showKey() {
     var self = this;
     self.setState({ showKey: !self.state.showKey });
-  },
+  }
 
-  render: function() {
+  render() {
     var pluralized = pluralize('devices', this.state.selectedRows.length);
 
-    var addLabel = this.props.group ? 'Move selected ' + pluralized + ' to another group' : 'Add selected ' + pluralized + ' to a group';
-    var removeLabel = 'Remove selected ' + pluralized + ' from this group';
+    var addLabel = this.props.group ? `Move selected ${pluralized} to another group` : `Add selected ${pluralized} to a group`;
+    var removeLabel = `Remove selected ${pluralized} from this group`;
     var groupLabel = this.props.group ? decodeURIComponent(this.props.group) : 'All devices';
 
     var styles = {
@@ -215,7 +212,7 @@ var Authorized = createReactClass({
       }
 
       var id_attribute =
-        self.props.globalSettings.id_attribute && self.props.globalSettings.id_attribute !== 'Device ID'
+        self.props.globalSettings && self.props.globalSettings.id_attribute && self.props.globalSettings.id_attribute !== 'Device ID'
           ? (device.identity_data || {})[self.props.globalSettings.id_attribute]
           : device.id;
 
@@ -305,7 +302,7 @@ var Authorized = createReactClass({
           <TableRowColumn style={{ width: '0', padding: '0', overflow: 'visible' }}>
             <Collapse
               springConfig={{ stiffness: 210, damping: 20 }}
-              onHeightReady={this._adjustCellHeight}
+              onMeasure={height => this._adjustCellHeight(height)}
               className="expanded accepted"
               isOpened={expanded ? true : false}
               onClick={e => {
@@ -325,8 +322,8 @@ var Authorized = createReactClass({
         id="groupNameInput"
         ref="editGroupName"
         value={this.state.textfield}
-        onChange={this._handleGroupNameChange}
-        onKeyDown={this._handleGroupNameSave}
+        onChange={e => this._handleGroupNameChange(e)}
+        onKeyDown={() => this._handleGroupNameSave()}
         className={this.state.nameEdit ? 'hoverText' : 'hidden'}
         underlineStyle={{ borderBottom: 'none' }}
         underlineFocusStyle={{ borderColor: '#e0e0e0' }}
@@ -353,7 +350,7 @@ var Authorized = createReactClass({
                 <span className={this.props.group ? 'hidden' : 'hidden'}>
                   <IconButton
                     iconStyle={styles.editButton}
-                    onClick={this._nameEdit}
+                    onClick={() => this._nameEdit()}
                     iconClassName="material-icons"
                     className={this.state.errorText ? 'align-top' : null}
                   >
@@ -364,7 +361,7 @@ var Authorized = createReactClass({
             </div>
 
             <div className="padding-bottom">
-              <Table allRowsSelected={this.state.allRowsSelected} multiSelectable={true} onRowSelection={this._onRowSelection}>
+              <Table allRowsSelected={this.state.allRowsSelected} multiSelectable={true} onRowSelection={rows => this._onRowSelection(rows)}>
                 <TableHeader className="clickable" enableSelectAll={true}>
                   <TableRow>
                     <TableHeaderColumn className="columnHeader" tooltip={(this.props.globalSettings || {}).id_attribute || 'Device ID'}>
@@ -429,7 +426,7 @@ var Authorized = createReactClass({
                 <span className="margin-right">
                   {this.state.selectedRows.length} {pluralize('devices', this.state.selectedRows.length)} selected
                 </span>
-                <RaisedButton disabled={!this.state.selectedRows.length} label={addLabel} secondary={true} onClick={this._addToGroup}>
+                <RaisedButton disabled={!this.state.selectedRows.length} label={addLabel} secondary={true} onClick={() => this._addToGroup()}>
                   <FontIcon style={styles.raisedButtonIcon} className="material-icons">
                     add_circle
                   </FontIcon>
@@ -440,7 +437,7 @@ var Authorized = createReactClass({
                     style={{ marginLeft: '4px' }}
                     className={this.props.group ? null : 'hidden'}
                     label={removeLabel}
-                    onClick={this._removeFromGroup}
+                    onClick={() => this._removeFromGroup()}
                   >
                     <FontIcon style={styles.buttonIcon} className="material-icons">
                       remove_circle_outline
@@ -454,6 +451,4 @@ var Authorized = createReactClass({
       </div>
     );
   }
-});
-
-module.exports = Authorized;
+}

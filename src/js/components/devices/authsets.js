@@ -10,102 +10,98 @@ import FlatButton from 'material-ui/RaisedButton';
 import InfoIcon from 'react-material-icons/icons/action/info-outline';
 import TrashIcon from 'react-material-icons/icons/action/delete';
 
-var Authsets = createReactClass({
-  getInitialState() {
-    return {
+export default class Authsets extends React.Component {
+  constructor(props, context) {
+    super(props, context);
+    this.state = {
       active: [],
       inactive: [],
       device: this.props.device
     };
-  },
+  }
 
   componentDidMount() {
     this._getActiveAuthsets(this.state.device.auth_sets);
-  },
+  }
 
-  _getActiveAuthsets: function(authsets) {
+  _getActiveAuthsets(authsets) {
     // for each authset compare the device status and if it matches authset status, put it in correct listv
     var self = this;
-    var active = [],
-      inactive = [];
-    for (var i = 0; i < authsets.length; i++) {
-      if (authsets[i].status === self.state.device.status) {
-        active.push(authsets[i]);
-      } else {
-        inactive.push(authsets[i]);
-      }
-    }
-    self.setState({ active: active, inactive: inactive });
-  },
+    const state = authsets.reduce(
+      (accu, authset) => {
+        if (authset.status === self.state.device.status) {
+          accu.active.push(authset);
+        } else {
+          accu.inactive.push(authset);
+        }
+        return accu;
+      },
+      { active: [], inactive: [] }
+    );
+    self.setState(state);
+  }
 
-  _updateDeviceAuthStatus: function(device_id, auth_id, status) {
+  _updateDeviceAuthStatus(device_id, auth_id, status) {
     var self = this;
-
     self.setState({ loading: auth_id });
-    // on finish, change "loading" back to null
-    var callback = {
-      success: function() {
+    status = status === 'accept' ? 'accepted' : status === 'reject' ? 'rejected' : status;
+    let changeRequest;
+    if (status === 'dismiss') {
+      changeRequest = AppActions.deleteAuthset(device_id, auth_id);
+    } else {
+      // call API to update authset
+      changeRequest = AppActions.updateDeviceAuth(device_id, auth_id, status);
+    }
+    return changeRequest
+      .then(() => {
         // if only authset, close dialog and refresh!
         if (self.state.device.auth_sets.length <= 1) {
           self.props.dialogToggle('authsets');
         } else {
           // refresh authset list
           self._refreshAuth(device_id);
+          // on finish, change "loading" back to null
           self.setState({ loading: null });
         }
         AppActions.setSnackbar('Device authorization status was updated successfully');
-      },
-      error: function(err) {
+      })
+      .catch(err => {
         var errMsg = err.res.error.message || '';
         console.log(errMsg);
         AppActions.setSnackbar(
-          preformatWithRequestID(err.res, 'There was a problem updating the device authorization status: ' + errMsg),
+          preformatWithRequestID(err.res, `There was a problem updating the device authorization status: ${errMsg}`),
           null,
           'Copy to clipboard'
         );
-      }
-    };
+      });
+  }
 
-    status = status === 'accept' ? 'accepted' : status === 'reject' ? 'rejected' : status;
-
-    if (status === 'dismiss') {
-      AppActions.deleteAuthset(device_id, auth_id, callback);
-    } else {
-      // call API to update authset
-      AppActions.updateDeviceAuth(device_id, auth_id, status, callback);
-    }
-  },
-
-  _showConfirm: function() {
+  _showConfirm() {
     var decommission = !this.state.decommission;
     this.setState({ decommission: decommission });
-  },
+  }
 
-  _decommissionHandler: function() {
+  _decommissionHandler() {
     //handle decommission, close dialog when done
     this.props.decommission(this.state.device.id);
-  },
+  }
 
-  _refreshAuth: function(device_id) {
+  _refreshAuth(device_id) {
     var self = this;
-    var callback = {
-      success: function(device) {
-        self.setState({ device: device });
+    return AppActions.getDeviceAuth(device_id)
+      .then(device => {
+        self.setState({ device });
         self._getActiveAuthsets(device.auth_sets);
-      },
-      error: function(err) {
-        console.log('Error: ' + err);
-      }
-    };
-    AppActions.getDeviceAuth(callback, device_id);
-  },
+      })
+      .catch(err => console.log(`Error: ${err}`));
+  }
 
-  render: function() {
+  render() {
     var activeList = (
       <Authsetlist
         limitMaxed={this.props.limitMaxed}
         total={this.state.device.auth_sets.length}
-        confirm={this._updateDeviceAuthStatus}
+        confirm={(...args) => this._updateDeviceAuthStatus(...args)}
         loading={this.state.loading}
         device={this.state.device}
         active={true}
@@ -116,7 +112,7 @@ var Authsets = createReactClass({
       <Authsetlist
         limitMaxed={this.props.limitMaxed}
         total={this.state.device.auth_sets.length}
-        confirm={this._updateDeviceAuthStatus}
+        confirm={(...args) => this._updateDeviceAuthStatus(...args)}
         loading={this.state.loading}
         device={this.state.device}
         hideHeader={this.state.active.length}
@@ -129,7 +125,7 @@ var Authsets = createReactClass({
         <FlatButton
           label="Decommission device"
           secondary={true}
-          onClick={this._showConfirm}
+          onClick={() => this._showConfirm()}
           icon={<TrashIcon style={{ height: '18px', width: '18px', verticalAlign: 'middle' }} />}
         />
       </div>
@@ -176,6 +172,4 @@ var Authsets = createReactClass({
       </div>
     );
   }
-});
-
-module.exports = Authsets;
+}

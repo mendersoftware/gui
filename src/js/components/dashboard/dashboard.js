@@ -3,131 +3,111 @@ import PropTypes from 'prop-types';
 import ReactTooltip from 'react-tooltip';
 import { ReviewDevices } from '../helptips/helptooltips';
 
-var AppStore = require('../../stores/app-store');
-var AppActions = require('../../actions/app-actions');
-var Deployments = require('./deployments');
-var createReactClass = require('create-react-class');
+import AppStore from '../../stores/app-store';
+import AppActions from '../../actions/app-actions';
+import Deployments from './deployments';
 import { setRetryTimer, clearAllRetryTimers } from '../../utils/retrytimer';
 import RaisedButton from 'material-ui/RaisedButton';
 import FontIcon from 'material-ui/FontIcon';
 
-function getState() {
-  return {
-    progress: AppStore.getDeploymentsInProgress(),
-    devices: AppStore.getAllDevices(),
-    recent: AppStore.getPastDeployments(),
-    activity: AppStore.getActivity(),
-    refreshDeploymentsLength: 30000,
-    showHelptips: AppStore.showHelptips()
+export default class Dashboard extends React.Component {
+  static contextTypes = {
+    router: PropTypes.object
   };
-}
 
-var Dashboard = createReactClass({
-  getInitialState: function() {
-    return getState();
-  },
-  componentWillMount: function() {
-    AppStore.changeListener(this._onChange);
-  },
-  componentWillUnmount: function() {
+  constructor(props, context) {
+    super(props, context);
+    this.state = this._getInitialState();
+  }
+  componentWillMount() {
+    AppStore.changeListener(this._onChange.bind(this));
+  }
+  componentWillUnmount() {
     clearInterval(this.timer);
     clearAllRetryTimers();
-    AppStore.removeChangeListener(this._onChange);
-  },
-  componentDidMount: function() {
+    AppStore.removeChangeListener(this._onChange.bind(this));
+  }
+  componentDidMount() {
     var self = this;
     clearAllRetryTimers();
-    self.timer = setInterval(function() {
+    self.timer = setInterval(() => {
       self._refreshDeployments();
       self._refreshAdmissions();
     }, self.state.refreshDeploymentsLength);
     self._refreshDeployments();
     self._refreshAdmissions();
-  },
-  _onChange: function() {
-    this.setState(this.getInitialState());
-  },
-  _refreshDeployments: function() {
+  }
+  _getInitialState() {
+    return {
+      progress: AppStore.getDeploymentsInProgress(),
+      devices: AppStore.getAllDevices(),
+      recent: AppStore.getPastDeployments(),
+      activity: AppStore.getActivity(),
+      refreshDeploymentsLength: 30000,
+      showHelptips: AppStore.showHelptips()
+    };
+  }
+  _onChange() {
+    this.setState(this._getInitialState());
+  }
+  _refreshDeployments() {
     var self = this;
 
-    var pastCallback = {
-      success: function() {
-        setTimeout(function() {
-          self.setState({ doneActiveDepsLoading: true });
-        }, 300);
-      },
-      error: function(err) {
-        console.log(err);
-        var errormsg = err.error || 'Please check your connection';
-        setRetryTimer(err, 'deployments', 'Couldn\'t load deployments. ' + errormsg, self.state.refreshDeploymentsLength);
-      }
-    };
-    AppActions.getPastDeployments(pastCallback, 1, 3);
-
-    var progressCallback = {
-      success: function() {
-        setTimeout(function() {
-          self.setState({ donePastDepsLoading: true });
-        }, 300);
-      },
-      error: function(err) {
-        console.log(err);
-        var errormsg = err.error || 'Please check your connection';
-        setRetryTimer(err, 'deployments', 'Couldn\'t load deployments. ' + errormsg, self.state.refreshDeploymentsLength);
-      }
+    const deploymentErrored = err => {
+      console.log(err);
+      var errormsg = err.error || 'Please check your connection';
+      setRetryTimer(err, 'deployments', `Couldn't load deployments. ${errormsg}`, self.state.refreshDeploymentsLength);
     };
 
-    AppActions.getDeploymentCount('inprogress', function(count) {
+    const pastDeploymentRefresh = AppActions.getPastDeployments(1, 3)
+      .then(() => setTimeout(() => self.setState({ doneActiveDepsLoading: true }), 300))
+      .catch(err => deploymentErrored(err));
+    const inProgressDeploymentRefresh = AppActions.getDeploymentCount('inprogress')
       // this updates header bar
-      self.setState({ progressCount: count });
-    });
-    AppActions.getDeploymentsInProgress(progressCallback);
-  },
-  _refreshAdmissions: function() {
+      .then(count => self.setState({ progressCount: count }));
+    const inProgressDeploymentRefresh2 = AppActions.getDeploymentsInProgress()
+      .then(() => setTimeout(() => self.setState({ donePastDepsLoading: true }), 300))
+      .catch(err => deploymentErrored(err));
+
+    return Promise.all([pastDeploymentRefresh, inProgressDeploymentRefresh, inProgressDeploymentRefresh2]);
+  }
+  _refreshAdmissions() {
     var self = this;
+    AppActions.getDeviceCount('pending')
+      .then(count => self.setState({ pending: count, doneAdmnsLoading: true }))
+      .catch(err => console.log(err));
+  }
 
-    var callback = {
-      success: function(count) {
-        self.setState({ pending: count, doneAdmnsLoading: true });
-      },
-      error: function(err) {
-        console.log(err);
-      }
-    };
-
-    AppActions.getDeviceCount(callback, 'pending');
-  },
-
-  _handleClick: function(params) {
+  _handleClick(params) {
     switch (params.route) {
     case 'deployments':
-      var tab = (params.tab || 'progress') + '/';
-      var URIParams = 'open=' + params.open;
-      URIParams = params.id ? URIParams + '&id=' + params.id : URIParams;
+      var tab = `${params.tab || 'progress'}/`;
+      var URIParams = `open=${params.open}`;
+      URIParams = params.id ? `${URIParams}&id=${params.id}` : URIParams;
       URIParams = encodeURIComponent(URIParams);
-      this.context.router.push('/deployments/' + tab + URIParams);
+      this.context.router.history.push(`/deployments/${tab}${URIParams}`);
       break;
     case 'devices':
-      var filters = params.status ? encodeURIComponent('status=' + params.status) : '';
-      this.context.router.push('/devices/groups/' + filters);
+      var filters = params.status ? encodeURIComponent(`status=${params.status}`) : '';
+      this.context.router.history.push(`/devices/groups/${filters}`);
       break;
     case 'devices/pending':
-      this.context.router.push('/devices/pending');
+      this.context.router.history.push('/devices/pending');
       break;
     }
-  },
+  }
 
-  _handleStopProp: function(e) {
+  _handleStopProp(e) {
     e.stopPropagation();
-  },
+  }
 
-  render: function() {
+  render() {
     var pending_str = '';
     if (this.state.pending) {
       if (this.state.pending > 1) {
-        pending_str = 'are ' + this.state.pending + ' devices';
+        pending_str = `are ${this.state.pending} devices`;
       } else {
-        pending_str = 'is ' + this.state.pending + ' device';
+        pending_str = `is ${this.state.pending} device`;
       }
     }
     return (
@@ -136,8 +116,7 @@ var Dashboard = createReactClass({
           <div className={this.state.pending ? 'onboard margin-bottom' : 'hidden'}>
             <p>There {pending_str} waiting authorization</p>
             <div className="relative">
-              <RaisedButton onClick={this._handleClick.bind(null, { route: 'devices/pending' })} primary={true} label="Review details" />
-
+              <RaisedButton onClick={() => this._handleClick({ route: 'devices/pending' })} primary={true} label="Review details" />
               {this.state.showHelptips ? (
                 <div>
                   <div id="onboard-1" className="tooltip help highlight" data-tip data-for="review-details-tip" data-event="click focus">
@@ -156,17 +135,11 @@ var Dashboard = createReactClass({
           globalSettings={this.props.globalSettings}
           loadingActive={!this.state.doneActiveDepsLoading}
           loadingRecent={!this.state.donePastDepsLoading}
-          clickHandle={this._handleClick}
+          clickHandle={params => this._handleClick(params)}
           progress={this.state.progress}
           recent={this.state.recent}
         />
       </div>
     );
   }
-});
-
-Dashboard.contextTypes = {
-  router: PropTypes.object
-};
-
-module.exports = Dashboard;
+}

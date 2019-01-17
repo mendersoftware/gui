@@ -1,4 +1,6 @@
 import React from 'react';
+import { matchPath, withRouter } from 'react-router';
+
 import PropTypes from 'prop-types';
 import Header from './header/header';
 import LeftNav from './leftnav';
@@ -19,19 +21,27 @@ import AppActions from '../actions/app-actions';
 var isDemoMode = false;
 var _HostedAnnouncement = '';
 
-var App = createReactClass({
-  childContextTypes: {
-    location: PropTypes.object,
-    muiTheme: PropTypes.object
-  },
+class AppRoot extends React.Component {
+  static childContextTypes = {
+    muiTheme: PropTypes.object,
+    router: PropTypes.object,
+    location: PropTypes.object
+  };
+
+  constructor(props, context) {
+    super(props, context);
+    this.state = this._getInitialState();
+  }
+
   getChildContext() {
     var theme = getMuiTheme(RawTheme);
     return {
       muiTheme: theme,
       location: this.props.location
     };
-  },
-  getInitialState: function() {
+  }
+
+  _getInitialState() {
     return {
       currentUser: AppStore.getCurrentUser(),
       uploadInProgress: AppStore.getUploadInProgress(),
@@ -42,21 +52,21 @@ var App = createReactClass({
       globalSettings: AppStore.getGlobalSettings(),
       snackbar: AppStore.getSnackbar()
     };
-  },
-  componentWillMount: function() {
-    AppStore.changeListener(this._onChange);
-  },
-  componentDidMount: function() {
+  }
+  componentWillMount() {
+    AppStore.changeListener(this._onChange.bind(this));
+  }
+  componentDidMount() {
     window.addEventListener('mousemove', updateMaxAge, false);
-  },
-  componentWillUnmount: function() {
+  }
+  componentWillUnmount() {
     window.addEventListener('mousemove', updateMaxAge, false);
-    AppStore.removeChangeListener(this._onChange);
-  },
-  _onChange: function() {
-    this.setState(this.getInitialState());
-  },
-  _onIdle: function() {
+    AppStore.removeChangeListener(this._onChange.bind(this));
+  }
+  _onChange() {
+    this.setState(this._getInitialState());
+  }
+  _onIdle() {
     if (expirySet()) {
       // logout user and warn
       if (this.state.currentUser && !this.state.uploadInProgress) {
@@ -66,56 +76,53 @@ var App = createReactClass({
         updateMaxAge();
       }
     }
-  },
-  _changeTab: function(tab) {
-    this.context.router.push(tab);
+  }
+  _changeTab(tab) {
+    this.props.history.push(tab);
     this.setState({ currentTab: this._updateActive() });
-  },
-  _updateActive: function() {
-    return this.context.router.isActive({ pathname: '/' }, true)
-      ? '/'
-      : this.context.router.isActive('/devices')
-        ? '/devices'
-        : this.context.router.isActive('/artifacts')
-          ? '/artifacts'
-          : this.context.router.isActive('/deployments')
-            ? '/deployments'
-            : this.context.router.isActive('/help')
-              ? '/help'
-              : this.context.router.isActive('/settings')
-                ? '/settings'
-                : '';
-  },
-  _uploadArtifact: function(meta, file) {
+  }
+  _updateActive() {
+    const pathParams = matchPath(this.props.location.pathname, { path: '/:location?' });
+    switch (pathParams.location) {
+    case 'devices':
+      return '/devices';
+    case 'artifacts':
+      return '/artifacts';
+    case 'deployments':
+      return '/deployments';
+    case 'help':
+      return '/help';
+    case 'settings':
+      return '/settings';
+    default:
+      return '';
+    }
+  }
+  _uploadArtifact(meta, file) {
     var self = this;
     AppActions.setUploadInProgress(true);
-    var callback = {
-      success: function() {
+    var progress = percent => self.setState({ progress: percent });
+
+    AppActions.setSnackbar('Uploading artifact');
+    AppActions.uploadArtifact(meta, file, progress)
+      .then(() => {
         self.setState({ progress: 0 });
         AppActions.setSnackbar('Upload successful', 5000);
         AppActions.setUploadInProgress(false);
-      },
-      error: function(err) {
+      })
+      .catch(err => {
         self.setState({ progress: 0 });
         AppActions.setUploadInProgress(false);
-
         try {
           var errMsg = err.res.body.error || '';
-          AppActions.setSnackbar(preformatWithRequestID(err.res, 'Artifact couldn\'t be uploaded. ' + errMsg), null, 'Copy to clipboard');
+          AppActions.setSnackbar(preformatWithRequestID(err.res, `Artifact couldn't be uploaded. ${errMsg}`), null, 'Copy to clipboard');
         } catch (e) {
           console.log(e);
         }
-      },
-      progress: function(percent) {
-        self.setState({ progress: percent });
-      }
-    };
+      });
+  }
 
-    AppActions.setSnackbar('Uploading artifact');
-    AppActions.uploadArtifact(meta, file, callback);
-  },
-
-  render: function() {
+  render() {
     return (
       <IdleTimer ref="idleTimer" element={document} idleAction={this._onIdle} timeout={this.state.timeout} format="MM-DD-YYYY HH:MM:ss.SSS">
         <div>
@@ -132,14 +139,19 @@ var App = createReactClass({
 
           <div className="wrapper">
             <div className="leftFixed leftNav">
-              <LeftNav version={this.state.version} docsVersion={this.state.docsVersion} currentTab={this.state.currentTab} changeTab={this._changeTab} />
+              <LeftNav
+                version={this.state.version}
+                docsVersion={this.state.docsVersion}
+                currentTab={this.state.currentTab}
+                changeTab={tabIndex => this._changeTab(tabIndex)}
+              />
             </div>
             <div className="rightFluid container">
               {React.cloneElement(this.props.children, {
                 isLoggedIn: (this.state.currentUser || {}).hasOwnProperty('email'),
                 docsVersion: this.state.docsVersion,
                 version: this.state.version,
-                uploadArtifact: this._uploadArtifact,
+                uploadArtifact: (...args) => this._uploadArtifact(...args),
                 artifactProgress: this.state.progress,
                 globalSettings: this.state.globalSettings
               })}
@@ -151,11 +163,6 @@ var App = createReactClass({
       </IdleTimer>
     );
   }
-});
-
-App.contextTypes = {
-  router: PropTypes.object,
-  location: PropTypes.object
-};
-
-module.exports = App;
+}
+const App = withRouter(AppRoot);
+export default App;

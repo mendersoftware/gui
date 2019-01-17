@@ -1,15 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Time from 'react-time';
-var createReactClass = require('create-react-class');
 
-var Activity = createReactClass({
-  _clickHandle: function() {
+export default class Activity extends React.Component {
+  static contextTypes = {
+    router: PropTypes.object
+  };
+  _clickHandle() {
     this.props.clickHandle();
-  },
+  }
 
-  render: function() {
-    var activity = this.props.activity.map(function(log, index) {
+  render() {
+    var activity = this.props.activity.map((log, index) => {
       return (
         <div key={index} className="activityWrapper">
           <div className={log.negative ? 'activityEntry negative' : 'activityEntry'}>
@@ -37,10 +39,4 @@ var Activity = createReactClass({
       </div>
     );
   }
-});
-
-Activity.contextTypes = {
-  router: PropTypes.object
-};
-
-module.exports = Activity;
+}

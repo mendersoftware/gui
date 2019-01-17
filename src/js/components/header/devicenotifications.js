@@ -1,17 +1,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import ReactTooltip from 'react-tooltip';
-var pluralize = require('pluralize');
-var createReactClass = require('create-react-class');
+import pluralize from 'pluralize';
 
 // material ui
 import FontIcon from 'material-ui/FontIcon';
 
-var DeviceNotifications = createReactClass({
-  _handleClick: function(path) {
-    this.context.router.push(path);
-  },
-  render: function() {
+export default class DeviceNotifications extends React.Component {
+  static contextTypes = {
+    router: PropTypes.object
+  };
+
+  _handleClick(path) {
+    this.context.router.history.push(path);
+  }
+  render() {
     var approaching = this.props.limit && this.props.total / this.props.limit > 0.8;
     var warning = this.props.limit && this.props.limit <= this.props.total;
     return (
@@ -41,7 +44,7 @@ var DeviceNotifications = createReactClass({
           </ReactTooltip>
 
           <div className="header-section">
-            <div onClick={this._handleClick.bind(null, '/devices')} className={warning ? 'warning inline' : approaching ? 'approaching inline' : 'inline'}>
+            <div onClick={() => this._handleClick('/devices')} className={warning ? 'warning inline' : approaching ? 'approaching inline' : 'inline'}>
               <span>{this.props.total}</span>
               {this.props.limit ? <span>/{this.props.limit}</span> : null}
 
@@ -52,7 +55,7 @@ var DeviceNotifications = createReactClass({
 
             {this.props.pending ? (
               <a
-                onClick={this._handleClick.bind(null, '/devices/pending')}
+                onClick={() => this._handleClick('/devices/pending')}
                 style={{ marginLeft: '7px' }}
                 className={this.props.limit && this.props.limit < this.props.pending + this.props.total ? 'warning' : null}
               >
@@ -64,10 +67,4 @@ var DeviceNotifications = createReactClass({
       </div>
     );
   }
-});
-
-DeviceNotifications.contextTypes = {
-  router: PropTypes.object
-};
-
-module.exports = DeviceNotifications;
+}

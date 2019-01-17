@@ -21,9 +21,13 @@ import { preformatWithRequestID } from '../../helpers';
 
 var artifacts = [];
 
-var Repository = createReactClass({
-  getInitialState: function() {
-    return {
+export default class Repository extends React.Component {
+  static contextTypes = {
+    router: PropTypes.object
+  };
+  constructor(props, context) {
+    super(props, context);
+    this.state = {
       artifact: {
         name: null,
         description: null,
@@ -38,65 +42,63 @@ var Repository = createReactClass({
       tmpFile: null,
       divHeight: 178
     };
-  },
+  }
 
-  componentWillReceiveProps: function(nextProps) {
+  componentWillReceiveProps(nextProps) {
     artifacts = nextProps.artifacts;
     if (nextProps.selected) {
       this.setState({ artifact: nextProps.selected });
     }
-  },
+  }
 
-  _resetArtifactState: function() {
+  _resetArtifactState() {
     var artifact = {
       name: null,
       description: null,
       device_types: null
     };
     this.setState({ artifact: artifact });
-  },
-  onDrop: function(acceptedFiles, rejectedFiles) {
+  }
+  onDrop(acceptedFiles, rejectedFiles) {
     if (acceptedFiles.length) {
       this._onUploadSubmit(acceptedFiles);
     }
     if (rejectedFiles.length) {
-      AppActions.setSnackbar('File \'' + rejectedFiles[0].name + '\'\' was rejected. File must be of type .mender', null);
+      AppActions.setSnackbar(`File '${rejectedFiles[0].name}' was rejected. File must be of type .mender`, null);
     }
-  },
-  _onUploadSubmit: function(files) {
+  }
+  _onUploadSubmit(files) {
     var self = this;
     //var tmpFile = meta.artifactFile;
     //delete meta.artifactFile;
     //delete meta.verified;
     var meta = { description: '' };
-    files.forEach(function(file) {
+    files.forEach(file => {
       self.props.uploadArtifact(meta, file);
     });
 
     this._resetArtifactState();
-  },
-  _editArtifactData: function(id, description) {
+  }
+  _editArtifactData(id, description) {
     var self = this;
     var body = {
       description: description
     };
-    var callback = {
-      success: function() {
+    return AppActions.editArtifact(id, body)
+      .then(() => {
         AppActions.setSnackbar('Artifact details were updated successfully.', 5000, '');
         var updated = self.state.artifact;
         updated.description = description;
         self.setState({ artifact: updated });
         self.props.refreshArtifacts();
-      },
-      error: function(err) {
+      })
+      .catch(err => {
         var errMsg = err.res.body.error || '';
-        AppActions.setSnackbar(preformatWithRequestID(errMsg, 'Artifact details couldn\'t be updated. ' + err.error), null, 'Copy to clipboard');
-      }
-    };
-    AppActions.editArtifact(id, body, callback);
-  },
+        AppActions.setSnackbar(preformatWithRequestID(errMsg, `Artifact details couldn't be updated. ${err.error}`), null, 'Copy to clipboard');
+      });
+  }
 
-  _onRowSelection: function(rowNumber, columnId) {
+  _onRowSelection(rowNumber, columnId) {
     var artifact = artifacts[rowNumber];
     if (columnId <= 3) {
       if (this.state.artifact === artifact) {
@@ -105,8 +107,8 @@ var Repository = createReactClass({
         this.setState({ artifact: artifact });
       }
     }
-  },
-  _sortColumn: function(col) {
+  }
+  _sortColumn(col) {
     var direction;
     if (this.state.sortCol !== col) {
       ReactDOM.findDOMNode(this.refs[this.state.sortCol]).className = 'sortIcon material-icons';
@@ -115,19 +117,19 @@ var Repository = createReactClass({
       direction = true;
     } else {
       direction = !this.state.sortDown;
-      ReactDOM.findDOMNode(this.refs[this.state.sortCol]).className = 'sortIcon material-icons expand ' + direction;
+      ReactDOM.findDOMNode(this.refs[this.state.sortCol]).className = `sortIcon material-icons expand ${direction}`;
       this.setState({ sortDown: direction });
     }
     // sort table
     AppActions.sortTable('_artifactsRepo', col, direction);
-  },
-  searchUpdated: function(term) {
+  }
+  searchUpdated(term) {
     this.setState({ searchTerm: term, artifact: {} }); // needed to force re-render
-  },
-  _onClick: function(event) {
+  }
+  _onClick(event) {
     event.stopPropagation();
-  },
-  _formatTime: function(date) {
+  }
+  _formatTime(date) {
     if (date) {
       return date
         .replace(' ', 'T')
@@ -135,15 +137,15 @@ var Repository = createReactClass({
         .replace('UTC', '');
     }
     return;
-  },
-  _adjustCellHeight: function(height) {
+  }
+  _adjustCellHeight(height) {
     this.setState({ divHeight: height + 110 });
-  },
-  _handleRemove: function() {
+  }
+  _handleRemove() {
     // pass artifact to be removed up to parent to trigger dialog
     this.props.removeArtifact(this.state.artifact);
-  },
-  render: function() {
+  }
+  render() {
     var styles = {
       buttonIcon: {
         height: '100%',
@@ -187,7 +189,7 @@ var Repository = createReactClass({
       if (this.state.artifact.id === pkg.id) {
         expanded = (
           <SelectedArtifact
-            removeArtifact={this._handleRemove}
+            removeArtifact={() => this._handleRemove()}
             compatible={compatible}
             formatTime={this._formatTime}
             editArtifact={this._editArtifactData}
@@ -212,7 +214,7 @@ var Repository = createReactClass({
           <TableRowColumn style={{ width: '0', padding: '0', overflow: 'visible' }}>
             <Collapse
               springConfig={{ stiffness: 210, damping: 20 }}
-              onHeightReady={this._adjustCellHeight}
+              onMeasure={(...args) => this._adjustCellHeight(...args)}
               className="expanded"
               isOpened={expanded ? true : false}
             >
@@ -228,25 +230,30 @@ var Repository = createReactClass({
         <div className={items.length ? 'top-right-button fadeIn' : 'top-right-button fadeOut'}>
           <Dropzone
             disabled={this.props.progress > 0}
-            className="dropzone onboard"
+            className=""
             activeClassName="active"
             rejectClassName="active"
             multiple={false}
             accept=".mender"
-            onDrop={this.onDrop}
+            onDrop={(accepted, rejected) => this.onDrop(accepted, rejected)}
           >
-            <div className="icon inline-block">
-              <FileIcon style={{ height: '24px', width: '24px', verticalAlign: 'middle', marginTop: '-2px' }} />
-            </div>
-            <div className="dashboard-placeholder inline">
-              Drag here or <a>browse</a> to upload an artifact file
-            </div>
+            {({ getRootProps, getInputProps }) => (
+              <div {...getRootProps()} className="dropzone onboard dashboard-placeholder">
+                <input {...getInputProps()} />
+                <div className="icon inline-block">
+                  <FileIcon style={{ height: '24px', width: '24px', verticalAlign: 'middle', marginTop: '-2px' }} />
+                </div>
+                <div className="dashboard-placeholder inline">
+                  Drag here or <a>browse</a> to upload an artifact file
+                </div>
+              </div>
+            )}
           </Dropzone>
         </div>
 
         <div>
           <h3 className="inline-block">Available artifacts</h3>
-          <SearchInput placeholder="Search artifacts" className="search tableSearch" ref="search" onChange={this.searchUpdated} />
+          <SearchInput placeholder="Search artifacts" className="search tableSearch" ref="search" onChange={term => this.searchUpdated(term)} />
         </div>
 
         <div id="progressBarContainer" className={this.props.progress ? null : 'shrunk'}>
@@ -257,29 +264,24 @@ var Repository = createReactClass({
         <Loader show={this.props.loading} />
 
         <div style={{ position: 'relative', marginTop: '10px' }}>
-          <Table onCellClick={this._onRowSelection} className={items.length ? null : 'hidden'}>
+          <Table onCellClick={(row, col) => this._onRowSelection(row, col)} className={items.length ? null : 'hidden'}>
             <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
               <TableRow>
                 <TableHeaderColumn className="columnHeader" tooltip="Name">
                   Name{' '}
-                  <FontIcon ref="name" style={styles.sortIcon} onClick={this._sortColumn.bind(null, 'name')} className="sortIcon material-icons">
+                  <FontIcon ref="name" style={styles.sortIcon} onClick={() => this._sortColumn('name')} className="sortIcon material-icons">
                     sort
                   </FontIcon>
                 </TableHeaderColumn>
                 <TableHeaderColumn className="columnHeader" tooltip="Device type compatibility">
                   Device type compatibility{' '}
-                  <FontIcon
-                    ref="device_types"
-                    style={styles.sortIcon}
-                    onClick={this._sortColumn.bind(null, 'device_types')}
-                    className="sortIcon material-icons"
-                  >
+                  <FontIcon ref="device_types" style={styles.sortIcon} onClick={() => this._sortColumn('device_types')} className="sortIcon material-icons">
                     sort
                   </FontIcon>
                 </TableHeaderColumn>
                 <TableHeaderColumn className="columnHeader" tooltip="Last modified">
                   Last modified{' '}
-                  <FontIcon style={styles.sortIcon} ref="modified" onClick={this._sortColumn.bind(null, 'modified')} className="sortIcon material-icons">
+                  <FontIcon style={styles.sortIcon} ref="modified" onClick={() => this._sortColumn('modified')} className="sortIcon material-icons">
                     sort
                   </FontIcon>
                 </TableHeaderColumn>
@@ -305,19 +307,23 @@ var Repository = createReactClass({
           <div className={items.length || this.props.loading || this.props.progress ? 'hidden' : 'dashboard-placeholder fadeIn'}>
             <Dropzone
               disabled={this.props.progress > 0}
-              className="dropzone onboard"
+              className=""
               activeClassName="active"
               rejectClassName="active"
               multiple={false}
               accept=".mender"
-              onDrop={this.onDrop}
+              onDrop={(accepted, rejected) => this.onDrop(accepted, rejected)}
             >
-              <p style={{ width: '500px', fontSize: '16px', margin: 'auto' }} className="dashboard-placeholder">
-                No artifacts found. Drag a file here or <a>browse</a> to upload to the repository
-              </p>
-              <img src="assets/img/artifacts.png" alt="artifacts" />
+              {({ getRootProps, getInputProps }) => (
+                <div {...getRootProps()} style={{ width: '500px', fontSize: '16px', margin: 'auto' }} className="dropzone onboard dashboard-placeholder">
+                  <input {...getInputProps()} />
+                  <p>
+                    No artifacts found. Drag a file here or <a>browse</a> to upload to the repository
+                  </p>
+                  <img src="assets/img/artifacts.png" alt="artifacts" />
+                </div>
+              )}
             </Dropzone>
-
             {this.props.showHelptips ? (
               <div>
                 <div id="onboard-9" className="tooltip help highlight" data-tip data-for="artifact-upload-tip" data-event="click focus">
@@ -333,10 +339,4 @@ var Repository = createReactClass({
       </div>
     );
   }
-});
-
-Repository.contextTypes = {
-  router: PropTypes.object
-};
-
-module.exports = Repository;
+}

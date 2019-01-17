@@ -1,10 +1,11 @@
 import React from 'react';
-var createReactClass = require('create-react-class');
-var AppActions = require('../../actions/app-actions');
 
-var DeploymentStatus = createReactClass({
-  getInitialState: function() {
-    return {
+import AppActions from '../../actions/app-actions';
+
+export default class DeploymentStatus extends React.Component {
+  constructor(props, context) {
+    super(props, context);
+    this.state = {
       stats: {
         success: 0,
         decommissioned: 0,
@@ -18,8 +19,8 @@ var DeploymentStatus = createReactClass({
         'already-installed': 0
       }
     };
-  },
-  componentWillReceiveProps: function(nextProps) {
+  }
+  componentWillReceiveProps(nextProps) {
     var self = this;
     if (nextProps.id !== this.props.id) this.refreshStatus(nextProps.id);
     if (!nextProps.isActiveTab) {
@@ -29,36 +30,36 @@ var DeploymentStatus = createReactClass({
     if (nextProps.isActiveTab && !self.props.isActiveTab) {
       // isActive has changed
       if (self.props.refresh) {
-        self.timer = setInterval(function() {
+        self.timer = setInterval(() => {
           self.refreshStatus(self.props.id);
         }, 10000);
       }
     }
-  },
-  componentDidMount: function() {
+  }
+  componentDidMount() {
     var self = this;
     if (self.props.refresh) {
-      self.timer = setInterval(function() {
+      self.timer = setInterval(() => {
         self.refreshStatus(self.props.id);
       }, 10000);
     }
     self.refreshStatus(self.props.id);
-  },
-  componentWillUnmount: function() {
+  }
+  componentWillUnmount() {
     clearInterval(this.timer);
-  },
-  refreshStatus: function(id) {
+  }
+  refreshStatus(id) {
     var self = this;
-    AppActions.getSingleDeploymentStats(id, function(stats) {
-      self.setState({ stats: stats });
+    return AppActions.getSingleDeploymentStats(id).then(stats => {
+      self.setState({ stats });
       if (stats.downloading + stats.installing + stats.rebooting + stats.pending <= 0) {
         // if no more devices in "progress" statuses, send message to parent that it's finished
         clearInterval(self.timer);
         self.props.setFinished(true);
       }
     });
-  },
-  render: function() {
+  }
+  render() {
     var inprogress = this.state.stats.downloading + this.state.stats.installing + this.state.stats.rebooting;
     var failed = this.state.stats.failure;
     var skipped = this.state.stats.aborted + this.state.stats.noartifact + this.state.stats['already-installed'] + this.state.stats.decommissioned;
@@ -88,6 +89,4 @@ var DeploymentStatus = createReactClass({
     );
     return <div>{label}</div>;
   }
-});
-
-module.exports = DeploymentStatus;
+}

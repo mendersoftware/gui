@@ -1,16 +1,16 @@
 import React from 'react';
-var createReactClass = require('create-react-class');
-var Progress = require('./progress');
-var Recent = require('./recent');
+
+import Progress from './progress';
+import Recent from './recent';
 
 // material ui
 import RaisedButton from 'material-ui/RaisedButton';
 
-var Deployments = createReactClass({
-  _clickHandle: function(params) {
+export default class Deployments extends React.Component {
+  _clickHandle(params) {
     this.props.clickHandle(params);
-  },
-  render: function() {
+  }
+  render() {
     return (
       <div className="deployments">
         <div>
@@ -18,21 +18,19 @@ var Deployments = createReactClass({
             <Progress
               globalSettings={this.props.globalSettings}
               loading={this.props.loadingActive}
-              clickHandle={this._clickHandle}
+              clickHandle={params => this._clickHandle(params)}
               deployments={this.props.progress}
             />
           </div>
           <div className="margin-bottom">
-            <Recent loading={this.props.loadingRecent} clickHandle={this._clickHandle} deployments={this.props.recent} />
+            <Recent loading={this.props.loadingRecent} clickHandle={params => this._clickHandle(params)} deployments={this.props.recent} />
           </div>
         </div>
 
         <div>
-          <RaisedButton onClick={this._clickHandle.bind(null, { route: 'deployments', open: true })} label="Create a deployment" secondary={true} />
+          <RaisedButton onClick={() => this._clickHandle({ route: 'deployments', open: true })} label="Create a deployment" secondary={true} />
         </div>
       </div>
     );
   }
-});
-
-module.exports = Deployments;
+}

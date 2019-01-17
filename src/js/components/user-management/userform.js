@@ -1,23 +1,22 @@
 import React from 'react';
-var createReactClass = require('create-react-class');
 
 import Form from '../common/forms/form';
 import TextInput from '../common/forms/textinput';
 import PasswordInput from '../common/forms/passwordinput';
 import FormButton from '../common/forms/formbutton';
 
-var UserForm = createReactClass({
-  componentDidUpdate: function(prevProps) {
+export default class UserForm extends React.Component {
+  componentDidUpdate(prevProps) {
     if (this.props.editPass !== prevProps.editPass) {
       this.forceUpdate();
     }
-  },
+  }
 
-  handleButton: function() {
+  handleButton() {
     this.props.togglePass();
-  },
+  }
 
-  render: function() {
+  render() {
     return (
       <div>
         <Form
@@ -37,7 +36,7 @@ var UserForm = createReactClass({
             create={this.props.editPass}
             validations="isLength:1"
             disabled={!this.props.editPass}
-            onClear={this.handleButton}
+            onClear={() => this.handleButton()}
             edit={this.props.edit}
             required={!this.props.user}
           />
@@ -48,12 +47,10 @@ var UserForm = createReactClass({
             primary={true}
             id="change"
             label="Change password"
-            handleClick={this.handleButton}
+            handleClick={() => this.handleButton()}
           />
         </Form>
       </div>
     );
   }
-});
-
-module.exports = UserForm;
+}

@@ -1,12 +1,12 @@
 import React from 'react';
 import Time from 'react-time';
-import Collapse from 'react-collapse';
-var Loader = require('../common/loader');
-var AppActions = require('../../actions/app-actions');
-var ExpandedDevice = require('./expanded-device');
-var createReactClass = require('create-react-class');
-var Pagination = require('rc-pagination');
-var _en_US = require('rc-pagination/lib/locale/en_US');
+import { Collapse } from 'react-collapse';
+import Loader from '../common/loader';
+import AppActions from '../../actions/app-actions';
+import ExpandedDevice from './expanded-device';
+
+import Pagination from 'rc-pagination';
+import _en_US from 'rc-pagination/lib/locale/en_US';
 import { setRetryTimer, clearAllRetryTimers } from '../../utils/retrytimer';
 
 // material ui
@@ -14,9 +14,10 @@ import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowCol
 import IconButton from 'material-ui/IconButton';
 import FontIcon from 'material-ui/FontIcon';
 
-var Rejected = createReactClass({
-  getInitialState: function() {
-    return {
+export default class Rejected extends React.Component {
+  constructor(props, context) {
+    super(props, context);
+    this.state = {
       minHeight: 200,
       divHeight: 178,
       devices: [],
@@ -24,83 +25,81 @@ var Rejected = createReactClass({
       pageLength: 20,
       authLoading: 'all'
     };
-  },
+  }
 
   componentDidMount() {
     clearAllRetryTimers();
     this._getDevices();
-  },
+  }
 
   componentWillUnmount() {
     clearAllRetryTimers();
-  },
+  }
 
   componentDidUpdate(prevProps) {
     if (prevProps.count !== this.props.count || (prevProps.currentTab !== this.props.currentTab && this.props.currentTab.indexOf('Rejected'))) {
       this._getDevices();
     }
-  },
+  }
+
   /*
    * Devices to show
    */
-
-  _getDevices: function() {
+  _getDevices() {
     var self = this;
-    var callback = {
-      success: function(devices) {
-        self.setState({ devices: devices, pageLoading: false, authLoading: null, expandRow: null });
+    AppActions.getDevicesByStatus('rejected', this.state.pageNo, this.state.pageLength)
+      .then(devices => {
+        self.setState({ devices, pageLoading: false, authLoading: null, expandRow: null });
         if (!devices.length && self.props.count) {
           //if devices empty but count not, put back to first page
           self._handlePageChange(1);
         }
         self._adjustHeight();
-      },
-      error: function(error) {
+      })
+      .catch(error => {
         console.log(error);
         var errormsg = error.error || 'Please check your connection.';
         self.setState({ pageLoading: false, authLoading: null });
-        setRetryTimer(error, 'devices', 'Rejected devices couldn\'t be loaded. ' + errormsg, self.state.refreshDeviceLength);
-      }
-    };
-    AppActions.getDevicesByStatus(callback, 'rejected', this.state.pageNo, this.state.pageLength);
-  },
+        setRetryTimer(error, 'devices', `Rejected devices couldn't be loaded. ${errormsg}`, self.state.refreshDeviceLength);
+      });
+  }
 
-  _adjustHeight: function() {
+  _adjustHeight() {
     // do this when number of devices changes
     var h = this.state.devices.length * 55;
     h += 200;
     this.setState({ minHeight: h });
-  },
-  _sortColumn: function(col) {
-    console.log('sort:' + col);
-  },
-  _expandRow: function(rowNumber) {
+  }
+  _sortColumn(col) {
+    console.log(`sort: ${col}`);
+  }
+  _expandRow(rowNumber) {
     AppActions.setSnackbar('');
     var device = this.state.devices[rowNumber];
     if (this.state.expandRow === rowNumber) {
       rowNumber = null;
     }
     this.setState({ expandedDevice: device, expandRow: rowNumber });
-  },
-  _adjustCellHeight: function(height) {
+  }
+  _adjustCellHeight(height) {
     this.setState({ divHeight: height + 95 });
-  },
+  }
 
-  _handlePageChange: function(pageNo) {
+  _handlePageChange(pageNo) {
     var self = this;
     self.setState({ pageLoading: true, expandRow: null, pageNo: pageNo }, () => {
       self._getDevices();
     });
-  },
+  }
 
-  render: function() {
+  render() {
     var limitMaxed = this.props.deviceLimit ? this.props.deviceLimit <= this.props.acceptedDevices : false;
 
     var devices = this.state.devices.map(function(device, index) {
       var self = this;
 
       var id_attribute =
-        self.props.globalSettings.id_attribute && self.props.globalSettings.id_attribute !== 'Device ID'
+        self.props.globalSettings && self.props.globalSettings.id_attribute && self.props.globalSettings.id_attribute !== 'Device ID'
           ? (device.identity_data || {})[self.props.globalSettings.id_attribute]
           : device.id;
 
@@ -184,7 +183,7 @@ var Rejected = createReactClass({
           <TableRowColumn style={{ width: '0', padding: '0', overflow: 'visible' }}>
             <Collapse
               springConfig={{ stiffness: 210, damping: 20 }}
-              onHeightReady={this._adjustCellHeight}
+              onMeasure={height => this._adjustCellHeight(height)}
               className="expanded"
               isOpened={expanded ? true : false}
               onClick={e => {
@@ -253,7 +252,7 @@ var Rejected = createReactClass({
                 pageSize={this.state.pageLength}
                 current={this.state.pageNo || 1}
                 total={this.props.count}
-                onChange={this._handlePageChange}
+                onChange={page => this._handlePageChange(page)}
               />
               {this.state.pageLoading ? (
                 <div className="smallLoaderContainer">
@@ -270,6 +269,4 @@ var Rejected = createReactClass({
       </Collapse>
     );
   }
-});
-
-module.exports = Rejected;
+}

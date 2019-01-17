@@ -1,11 +1,11 @@
 import React from 'react';
-var AppActions = require('../../actions/app-actions');
-var pluralize = require('pluralize');
-var createReactClass = require('create-react-class');
+import AppActions from '../../actions/app-actions';
+import pluralize from 'pluralize';
 
-var RecentStats = createReactClass({
-  getInitialState: function() {
-    return {
+export default class RecentStats extends React.Component {
+  constructor(props, context) {
+    super(props, context);
+    this.state = {
       stats: {
         success: 0,
         failure: 0,
@@ -14,25 +14,20 @@ var RecentStats = createReactClass({
         decommissioned: 0
       }
     };
-  },
+  }
   componentDidMount() {
     this._refreshStats();
-  },
+  }
   componentDidUpdate(prevProps) {
     if (prevProps.id !== this.props.id) {
       this._refreshStats();
     }
-  },
-  _refreshStats: function() {
+  }
+  _refreshStats() {
     var self = this;
-    AppActions.getSingleDeploymentStats(
-      self.props.id,
-      function(stats) {
-        self.setState({ stats: stats });
-      }.bind(this)
-    );
-  },
-  render: function() {
+    return AppActions.getSingleDeploymentStats(self.props.id).then(stats => self.setState({ stats }));
+  }
+  render() {
     var skipped = this.state.stats.noartifact + this.state.stats.aborted + this.state.stats.decommissioned + this.state.stats['already-installed'];
     return (
       <div className="deploymentStats">
@@ -54,6 +49,4 @@ var RecentStats = createReactClass({
       </div>
     );
   }
-});
-
-module.exports = RecentStats;
+}

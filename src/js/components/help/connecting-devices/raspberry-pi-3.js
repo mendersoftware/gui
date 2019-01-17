@@ -1,39 +1,30 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import FlatButton from 'material-ui/FlatButton';
 import FontIcon from 'material-ui/FontIcon';
-var Loader = require('../../common/loader');
+import Loader from '../../common/loader';
 
-var createReactClass = require('create-react-class');
-
-var RaspberryPi = createReactClass({
-  propTypes: {
-    org: PropTypes.string,
-    isHosted: PropTypes.bool,
-    changePage: PropTypes.func,
-    hasMultitenancy: PropTypes.bool
-  },
-
-  getInitialState: function() {
-    return {
+export default class RaspberryPi extends React.Component {
+  constructor(props, context) {
+    super(props, context);
+    this.state = {
       copied1: false,
       copied2: false
     };
-  },
+  }
 
-  _copied: function(ref) {
+  _copied(ref) {
     var self = this;
     var toSet = {};
     toSet[ref] = true;
     self.setState(toSet);
-    setTimeout(function() {
+    setTimeout(() => {
       toSet[ref] = false;
       self.setState(toSet);
     }, 5000);
-  },
+  }
 
-  render: function() {
+  render() {
     var version;
     var sdimg = {};
     var artifacts = [];
@@ -84,8 +75,8 @@ var RaspberryPi = createReactClass({
             <p>The purpose of this is to make it easier for you to test Mender with a physical device.</p>
             <p>
               If you would like to use a different device type, please see the page on{' '}
-              <a onClick={this.props.changePage.bind(null, 'help/connecting-devices/provision-a-demo/beagleboneblack')}>BeagleBone Black</a> or{' '}
-              <a onClick={this.props.changePage.bind(null, 'help/connecting-devices/build-with-yocto')}>Build with Yocto Project</a>.
+              <a onClick={() => this.props.changePage('help/connecting-devices/provision-a-demo/beagleboneblack')}>BeagleBone Black</a> or{' '}
+              <a onClick={() => this.props.changePage('help/connecting-devices/build-with-yocto')}>Build with Yocto Project</a>.
             </p>
             <h3>Prerequisites</h3>
             <h4>A device to test with</h4>
@@ -179,12 +170,12 @@ var RaspberryPi = createReactClass({
             <p>Now connect the device to power so it boots up.</p>
             <p>Wait for 3-4 minutes until the device has fully booted and the Mender client has been able to connect to the Mender server.</p>
             <p>
-              You should see your device pending in the <a onClick={this.props.changePage.bind(null, 'devices')}>Devices tab</a>. Simply Authorize the pending
+              You should see your device pending in the <a onClick={() => this.props.changePage('devices')}>Devices tab</a>. Simply Authorize the pending
               device.
             </p>
             <p>
               If you cannot see any new device after 10 minutes, please verify that the network connection is working, and feel free to reach out for help with
-              diagnostics via <a onClick={this.props.changePage.bind(null, 'help/more-help-resources')}>our further Help resources</a>.
+              diagnostics via <a onClick={() => this.props.changePage('help/more-help-resources')}>our further Help resources</a>.
             </p>
             <p className="note">
               NOTE: If you reimage the device with the disk image or switch storage (e.g. SD cards) between the devices after they have booted once,{' '}
@@ -203,18 +194,17 @@ var RaspberryPi = createReactClass({
             )}
             <p>
               After you have downloaded the two Artifacts, upload them to the Mender server in the{' '}
-              <a onClick={this.props.changePage.bind(null, 'artifacts')}>Artifacts tab</a>.
+              <a onClick={() => this.props.changePage('artifacts')}>Artifacts tab</a>.
             </p>
             <p>
-              Then head over to the <a onClick={this.props.changePage.bind(null, 'deployments')}>Deployments tab</a> and do some remote deployments to your
-              device!
+              Then head over to the <a onClick={() => this.props.changePage('deployments')}>Deployments tab</a> and do some remote deployments to your device!
             </p>
           </div>
         ) : (
           <div>
             <p>
               A full tutorial for deploying to physical devices - including RaspberryPi 3 - is available{' '}
-              <a href={'https://docs.mender.io/' + this.props.docsVersion + 'getting-started/deploy-to-physical-devices'} target="_blank">
+              <a href={`https://docs.mender.io/${this.props.docsVersion}getting-started/deploy-to-physical-devices`} target="_blank">
                 here on our docs site
               </a>
               . To make testing easy, we also provide demo images for RaspberryPi 3 in the tutorial.
@@ -224,6 +214,4 @@ var RaspberryPi = createReactClass({
       </div>
     );
   }
-});
-
-module.exports = RaspberryPi;
+}

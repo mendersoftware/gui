@@ -1,15 +1,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-var createReactClass = require('create-react-class');
-var AppActions = require('../../actions/app-actions');
-var AppStore = require('../../stores/app-store');
-var pluralize = require('pluralize');
-import LinearProgress from 'material-ui/LinearProgress';
-var { statusToPercentage } = require('../../helpers');
 
-var ProgressChart = createReactClass({
-  getInitialState: function() {
-    return {
+import AppActions from '../../actions/app-actions';
+import AppStore from '../../stores/app-store';
+import pluralize from 'pluralize';
+import LinearProgress from 'material-ui/LinearProgress';
+import { statusToPercentage } from '../../helpers';
+
+export default class ProgressChart extends React.Component {
+  static contextTypes = {
+    router: PropTypes.object
+  };
+
+  constructor(props, context) {
+    super(props, context);
+    this.state = {
       devices: [],
       stats: {
         downloading: 0,
@@ -27,34 +32,28 @@ var ProgressChart = createReactClass({
         status: ''
       }
     };
-  },
-  componentDidMount: function() {
-    this.timer = setInterval(this.refreshDeploymentDevices, 30000);
+  }
+  componentDidMount() {
+    this.timer = setInterval(() => this.refreshDeploymentDevices(), 30000);
     this.refreshDeploymentDevices();
-  },
-  componentWillUnmount: function() {
+  }
+  componentWillUnmount() {
     clearInterval(this.timer);
-  },
-  refreshDeploymentDevices: function() {
-    AppActions.getSingleDeploymentStats(
-      this.props.deployment.id,
-      function(stats) {
-        this.setState({ stats: stats });
-      }.bind(this)
-    );
-    AppActions.getSingleDeploymentDevices(
-      this.props.deployment.id,
-      function(devices) {
-        var sortedDevices = AppStore.getOrderedDeploymentDevices(devices);
-        this.setState({ devices: sortedDevices });
-      }.bind(this)
-    );
-  },
-  _handleClick: function(id) {
-    var filter = 'id=' + id;
-    this.context.router.push('/devices/' + filter);
-  },
-  _hoverDevice: function(device) {
+  }
+  refreshDeploymentDevices() {
+    const self = this;
+    const deploymentStatsRequest = AppActions.getSingleDeploymentStats(self.props.deployment.id).then(stats => self.setState({ stats: stats }));
+    const deploymentDevicesRequest = AppActions.getSingleDeploymentDevices(self.props.deployment.id).then(devices => {
+      var sortedDevices = AppStore.getOrderedDeploymentDevices(devices);
+      self.setState({ devices: sortedDevices });
+    });
+    return Promise.all([deploymentStatsRequest, deploymentDevicesRequest]);
+  }
+  _handleClick(id) {
+    var filter = `id=${id}`;
+    this.context.router.history.push(`/devices/${filter}`);
+  }
+  _hoverDevice(device) {
     if (!device) {
       device = {
         name: '',
@@ -63,22 +62,18 @@ var ProgressChart = createReactClass({
     }
 
     var self = this;
-    var callback = {
-      success: function(data) {
-        device.identity_data = data.identity_data;
-        self.setState({ device: device });
-      },
-      error: function(err) {
-        console.log('Error: ' + err);
-      }
-    };
 
     if (device.id) {
       // get device id data for individual device
-      AppActions.getDeviceAuth(callback, device.id);
+      return AppActions.getDeviceAuth(device.id)
+        .then(data => {
+          device.identity_data = data.identity_data;
+          self.setState({ device: device });
+        })
+        .catch(err => console.log(`Error: ${err}`));
     }
-  },
-  render: function() {
+  }
+  render() {
     var skipped = this.state.stats.noartifact + this.state.stats['already-installed'];
     var totalDevices = this.state.devices.length - skipped;
 
@@ -114,9 +109,9 @@ var ProgressChart = createReactClass({
         return (
           <div key={index} className={device.status} style={{ height: pixelHeight, width: pixelHeight }}>
             <div
-              onMouseEnter={this._hoverDevice.bind(null, device)}
+              onMouseEnter={() => this._hoverDevice(device)}
               onMouseLeave={this._hoverDevice}
-              onClick={this._handleClick.bind(null, device.id)}
+              onClick={() => this._handleClick(device.id)}
               className="bubble"
             />
           </div>
@@ -173,10 +168,4 @@ var ProgressChart = createReactClass({
     );
     return <div>{progressChart}</div>;
   }
-});
-
-ProgressChart.contextTypes = {
-  router: PropTypes.object
-};
-
-module.exports = ProgressChart;
+}

@@ -2,28 +2,29 @@ import React from 'react';
 import Time from 'react-time';
 import ReactTooltip from 'react-tooltip';
 import { CreateDeployment, ProgressDeployment } from '../helptips/helptooltips';
-var createReactClass = require('create-react-class');
-var DeploymentStatus = require('./deploymentstatus');
 
-var Pagination = require('rc-pagination');
-var _en_US = require('rc-pagination/lib/locale/en_US');
-var Loader = require('../common/loader');
+import DeploymentStatus from './deploymentstatus';
+
+import Pagination from 'rc-pagination';
+import _en_US from 'rc-pagination/lib/locale/en_US';
+import Loader from '../common/loader';
 
 // material ui
 import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
 import FontIcon from 'material-ui/FontIcon';
 
-var Progress = createReactClass({
-  getInitialState: function() {
-    return {
+export default class Progress extends React.Component {
+  constructor(props, context) {
+    super(props, context);
+    this.state = {
       retry: false,
       pageSize: 20
     };
-  },
-  _progressCellClick: function(rowNumber) {
+  }
+  _progressCellClick(rowNumber) {
     this.props.openReport(rowNumber, 'progress');
-  },
-  _formatTime: function(date) {
+  }
+  _formatTime(date) {
     if (date) {
       return date
         .replace(' ', 'T')
@@ -31,11 +32,11 @@ var Progress = createReactClass({
         .replace('UTC', '');
     }
     return;
-  },
-  _handlePageChange: function(pageNo) {
+  }
+  _handlePageChange(pageNo) {
     this.props.refreshProgress(pageNo);
-  },
-  render: function() {
+  }
+  render() {
     // get statistics for each in progress
     var progressMap = this.props.progress.map(function(deployment, index) {
       var status = <DeploymentStatus isActiveTab={this.props.isActiveTab} refresh={true} id={deployment.id} />;
@@ -60,7 +61,7 @@ var Progress = createReactClass({
             <div>
               <h3>In progress</h3>
               <Table
-                onCellClick={this._progressCellClick}
+                onCellClick={row => this._progressCellClick(row)}
                 className={progressMap.length ? null : 'hidden'}
                 selectable={false}
                 style={{ overflow: 'visible' }}
@@ -90,7 +91,7 @@ var Progress = createReactClass({
               pageSize={this.state.pageSize}
               current={this.props.page || 1}
               total={this.props.count}
-              onChange={this._handlePageChange}
+              onChange={page => this._handlePageChange(page)}
             />
           ) : null}
 
@@ -129,6 +130,4 @@ var Progress = createReactClass({
       </div>
     );
   }
-});
-
-module.exports = Progress;
+}

@@ -1,31 +1,35 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 
-var ProgressChart = require('../deployments/progressChart.js');
+import ProgressChart from '../deployments/progressChart';
 import Time from 'react-time';
-var Loader = require('../common/loader');
-var createReactClass = require('create-react-class');
+import Loader from '../common/loader';
 
 // material ui
 import { List, ListItem } from 'material-ui/List';
 
-var Progress = createReactClass({
-  getInitialState: function() {
-    return {
+export default class Progress extends React.Component {
+  static contextTypes = {
+    router: PropTypes.object
+  };
+
+  constructor(props, context) {
+    super(props, context);
+    this.state = {
       devices: {},
       selectedDevice: {}
     };
-  },
-  _clickHandle: function(id) {
+  }
+  _clickHandle(id) {
     var params = {};
     params.id = id;
     params.tab = 'active';
     params.route = 'deployments';
     params.open = true;
     this.props.clickHandle(params);
-  },
-  _formatTime: function(date) {
+  }
+  _formatTime(date) {
     if (date) {
       return date
         .replace(' ', 'T')
@@ -33,8 +37,8 @@ var Progress = createReactClass({
         .replace('UTC', '');
     }
     return;
-  },
-  render: function() {
+  }
+  render() {
     var deployments = this.props.deployments || [];
     var progress = deployments.map(function(deployment, index) {
       var progressChart = <ProgressChart globalSettings={this.props.globalSettings} deployment={deployment} index={index} />;
@@ -55,7 +59,7 @@ var Progress = createReactClass({
           </div>
           <div style={{ marginTop: '15px' }}>
             <div className="progressLabel" />
-            <a onClick={this._clickHandle.bind(null, deployment.id)}>View report</a>
+            <a onClick={() => this._clickHandle(deployment.id)}>View report</a>
           </div>
         </div>
       );
@@ -93,10 +97,4 @@ var Progress = createReactClass({
       </div>
     );
   }
-});
-
-Progress.contextTypes = {
-  router: PropTypes.object
-};
-
-module.exports = Progress;
+}

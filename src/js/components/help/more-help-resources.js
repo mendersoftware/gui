@@ -1,29 +1,51 @@
 import React from 'react';
 
-var createReactClass = require('create-react-class');
+export default class MoreHelp extends React.Component {
+  render() {
+    var support = this.props.isHosted ? 'mailto:support@hosted.mender.io' : 'mailto:contact@mender.io';
 
-var MoreHelp =  createReactClass({
- 
-  render: function() {
-
-    var support = this.props.isHosted ? "mailto:support@hosted.mender.io" : "mailto:contact@mender.io";
-    
     return (
       <div>
         <h2>More help resources</h2>
-         
+
         <p>If you can't find what you're looking for here, there are other places to find help getting started with Mender:</p>
         <br />
 
-        <p>Visit our <a href={"https://docs.mender.io/"+this.props.docsVersion} target="_blank">documentation site</a></p>
-        <p>Read our <a href={"https://docs.mender.io/"+this.props.docsVersion+"troubleshooting"} target="_blank">troubleshooting pages</a> or <a href="https://mender.io/faq" target="_blank">FAQs</a></p>
-        <p><a href={support} target="_blank">Email us</a> with a question</p>
-        <p>Browse the topic or ask a question on our <a href="https://groups.google.com/a/lists.mender.io/forum/#!forum/mender" target="_blank">mailing list</a></p>
-        <p>Submit a bug using <a href="https://tracker.mender.io" target="_blank">our bug tracker</a></p>
+        <p>
+          Visit our{' '}
+          <a href={`https://docs.mender.io/${this.props.docsVersion}`} target="_blank">
+            documentation site
+          </a>
+        </p>
+        <p>
+          Read our{' '}
+          <a href={`https://docs.mender.io/${this.props.docsVersion}troubleshooting`} target="_blank">
+            troubleshooting pages
+          </a>{' '}
+          or{' '}
+          <a href="https://mender.io/faq" target="_blank">
+            FAQs
+          </a>
+        </p>
+        <p>
+          <a href={support} target="_blank">
+            Email us
+          </a>{' '}
+          with a question
+        </p>
+        <p>
+          Browse the topic or ask a question on our{' '}
+          <a href="https://groups.google.com/a/lists.mender.io/forum/#!forum/mender" target="_blank">
+            mailing list
+          </a>
+        </p>
+        <p>
+          Submit a bug using{' '}
+          <a href="https://tracker.mender.io" target="_blank">
+            our bug tracker
+          </a>
+        </p>
       </div>
-    )
+    );
   }
-});
-
-
-module.exports = MoreHelp;
+}

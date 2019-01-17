@@ -1,5 +1,4 @@
 import cookie from 'react-cookie';
-import { hashHistory } from 'react-router';
 
 export function isLoggedIn() {
   return cookie.load('JWT');
@@ -16,7 +15,7 @@ export function unauthorizedRedirect(req) {
 
 export function logout() {
   cookie.remove('JWT');
-  hashHistory.replace('/login');
+  window.location.replace('#/login');
 }
 
 export function updateMaxAge() {

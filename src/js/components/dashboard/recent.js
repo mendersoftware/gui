@@ -1,27 +1,31 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-var RecentStats = require('./recentstats');
+import RecentStats from './recentstats';
 import Time from 'react-time';
-var Loader = require('../common/loader');
-var createReactClass = require('create-react-class');
+import Loader from '../common/loader';
 
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 
-var Recent = createReactClass({
-  getInitialState: function() {
-    return {
+export default class Recent extends React.Component {
+  static contextTypes = {
+    router: PropTypes.object
+  };
+
+  constructor(props, context) {
+    super(props, context);
+    this.state = {
       devices: {}
     };
-  },
-  _clickHandle: function(id) {
+  }
+  _clickHandle(id) {
     var params = {};
     params.id = id;
     params.tab = 'finished';
     params.route = 'deployments';
     params.open = true;
     this.props.clickHandle(params);
-  },
-  _formatTime: function(date) {
+  }
+  _formatTime(date) {
     if (date) {
       return date
         .replace(' ', 'T')
@@ -29,13 +33,13 @@ var Recent = createReactClass({
         .replace('UTC', '');
     }
     return;
-  },
-  render: function() {
+  }
+  render() {
     var deployments = this.props.deployments || [];
     var recent = deployments.map(function(deployment, index) {
       if (index < 3) {
         return (
-          <div onClick={this._clickHandle.bind(null, deployment.id)} className="deployment" key={index}>
+          <div onClick={() => this._clickHandle(deployment.id)} className="deployment" key={index}>
             <div className="deploymentInfo">
               <div>
                 <div className="progressLabel">Updating to:</div>
@@ -79,10 +83,4 @@ var Recent = createReactClass({
       </div>
     );
   }
-});
-
-Recent.contextTypes = {
-  router: PropTypes.object
-};
-
-module.exports = Recent;
+}

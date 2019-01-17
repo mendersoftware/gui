@@ -2,12 +2,12 @@ import React from 'react';
 import Time from 'react-time';
 import ReactTooltip from 'react-tooltip';
 import { FinishedDeployment } from '../helptips/helptooltips';
-var createReactClass = require('create-react-class');
-var DeploymentStatus = require('./deploymentstatus');
 
-var Pagination = require('rc-pagination');
-var _en_US = require('rc-pagination/lib/locale/en_US');
-var Loader = require('../common/loader');
+import DeploymentStatus from './deploymentstatus';
+
+import Pagination from 'rc-pagination';
+import _en_US from 'rc-pagination/lib/locale/en_US';
+import Loader from '../common/loader';
 
 // material ui
 import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
@@ -17,16 +17,17 @@ import DatePicker from 'material-ui/DatePicker';
 import AutoComplete from 'material-ui/AutoComplete';
 import MenuItem from 'material-ui/MenuItem';
 
-var Past = createReactClass({
-  getInitialState: function() {
-    return {
+export default class Past extends React.Component {
+  constructor(props, context) {
+    super(props, context);
+    this.state = {
       retry: false,
       today: new Date(),
       active: 'today',
       disableClear: true
     };
-  },
-  _setDateRange: function(after, before) {
+  }
+  _setDateRange(after, before) {
     var self = this;
     var startDate = new Date();
     startDate.setDate(startDate.getDate() - (after || 0));
@@ -36,13 +37,13 @@ var Past = createReactClass({
     endDate.setHours(23, 59, 59, 999);
 
     self._handleDateChange(1, startDate, endDate);
-  },
-  _pastCellClick: function(rowNumber) {
+  }
+  _pastCellClick(rowNumber) {
     // adjust index to allow for client side pagination
     var report = this.props.past[rowNumber];
     this.props.showReport(report, 'past');
-  },
-  _formatTime: function(date) {
+  }
+  _formatTime(date) {
     if (date) {
       return date
         .replace(' ', 'T')
@@ -50,25 +51,25 @@ var Past = createReactClass({
         .replace('UTC', '');
     }
     return;
-  },
-  _handleDateChange: function(pageNo, createdAfter, createdBefore) {
+  }
+  _handleDateChange(pageNo, createdAfter, createdBefore) {
     createdAfter = createdAfter || this.props.startDate;
     createdBefore = createdBefore || this.props.endDate;
     this.props.refreshPast(pageNo, createdAfter, createdBefore, this.props.pageSize, this.props.deviceGroup);
-  },
-  _handlePageChange: function(pageNo) {
+  }
+  _handlePageChange(pageNo) {
     this.props.refreshPast(pageNo, this.props.startDate, this.props.endDate, this.props.pageSize, this.props.deviceGroup);
-  },
-  _handleChangeStartDate: function(event, date) {
+  }
+  _handleChangeStartDate(event, date) {
     this.setState({
       active: ''
     });
 
     // refresh deployment list
     this._handleDateChange(1, date, null);
-  },
+  }
 
-  _handleChangeEndDate: function(event, date) {
+  _handleChangeEndDate(event, date) {
     var startDate = this.props.startDate;
     if (date < startDate) {
       startDate = date;
@@ -81,30 +82,30 @@ var Past = createReactClass({
 
     // refresh deployment list
     this._handleDateChange(1, startDate, date);
-  },
+  }
 
-  setDefaultRange: function(after, before, active) {
+  setDefaultRange(after, before, active) {
     this._setDateRange(after, before);
     this.setState({ active: active });
-  },
+  }
 
-  handleUpdateInput: function(value) {
+  handleUpdateInput(value) {
     var self = this;
-    setTimeout(function() {
+    setTimeout(() => {
       self.setState({ disableClear: !value });
     }, 150);
     this.props.refreshPast(1, this.props.startDate, this.props.endDate, this.props.pageSize, value);
-  },
+  }
 
-  clearAuto: function() {
+  clearAuto() {
     var oldValue = this.refs['autocomplete'].state.searchText;
     this.refs['autocomplete'].setState({ searchText: '' });
     if (oldValue) {
       this.handleUpdateInput(null);
     }
-  },
+  }
 
-  render: function() {
+  render() {
     var pastMap = this.props.past.map(function(deployment, index) {
       var time = '-';
       if (deployment.finished) {
@@ -129,12 +130,24 @@ var Past = createReactClass({
     }, this);
 
     var menuItems = [];
-    var allDevicesGroup = { text: 'All devices', value: <MenuItem key="All devices" value="All devices" primaryText="All devices" /> };
+    var allDevicesGroup = {
+      text: 'All devices',
+      value: (
+        <MenuItem key="All devices" value="All devices">
+          All devices
+        </MenuItem>
+      )
+    };
     menuItems.push(allDevicesGroup);
-
-    for (var i = 0; i < this.props.groups.length; i++) {
-      menuItems.push({ text: this.props.groups[i], value: <MenuItem key={i} value={this.props.groups[i]} primaryText={this.props.groups[i]} /> });
-    }
+    const menuGroupItems = this.props.groups.map((group, i) => ({
+      text: group,
+      value: (
+        <MenuItem key={i} value={group}>
+          {group}
+        </MenuItem>
+      )
+    }));
+    menuItems.push(...menuGroupItems);
 
     return (
       <div className="fadeIn">
@@ -143,22 +156,22 @@ var Past = createReactClass({
             <span>Filter by date</span>
             <ul className="unstyled link-list horizontal">
               <li>
-                <a className={this.state.active === 'today' ? 'active' : ''} onClick={this.setDefaultRange.bind(null, 0, 0, 'today')}>
+                <a className={this.state.active === 'today' ? 'active' : ''} onClick={() => this.setDefaultRange(0, 0, 'today')}>
                   Today
                 </a>
               </li>
               <li>
-                <a className={this.state.active === 'yesterday' ? 'active' : ''} onClick={this.setDefaultRange.bind(null, 1, 1, 'yesterday')}>
+                <a className={this.state.active === 'yesterday' ? 'active' : ''} onClick={() => this.setDefaultRange(1, 1, 'yesterday')}>
                   Yesterday
                 </a>
               </li>
               <li>
-                <a className={this.state.active === 'week' ? 'active' : ''} onClick={this.setDefaultRange.bind(null, 6, 0, 'week')}>
+                <a className={this.state.active === 'week' ? 'active' : ''} onClick={() => this.setDefaultRange(6, 0, 'week')}>
                   Last 7 days
                 </a>
               </li>
               <li>
-                <a className={this.state.active === 'month' ? 'active' : ''} onClick={this.setDefaultRange.bind(null, 29, 0, 'month')}>
+                <a className={this.state.active === 'month' ? 'active' : ''} onClick={() => this.setDefaultRange(29, 0, 'month')}>
                   Last 30 days
                 </a>
               </li>
@@ -167,7 +180,7 @@ var Past = createReactClass({
 
           <div className="align-bottom margin-left margin-right inline-block">
             <DatePicker
-              onChange={this._handleChangeStartDate}
+              onChange={(event, date) => this._handleChangeStartDate(event, date)}
               autoOk={true}
               floatingLabelText="From"
               defaultDate={this.props.startDate}
@@ -179,7 +192,7 @@ var Past = createReactClass({
             />
 
             <DatePicker
-              onChange={this._handleChangeEndDate}
+              onChange={(event, date) => this._handleChangeEndDate(event, date)}
               autoOk={true}
               floatingLabelText="To"
               defaultDate={this.props.endDate}
@@ -196,23 +209,22 @@ var Past = createReactClass({
               ref="autocomplete"
               hintText="Select a group"
               dataSource={menuItems}
-              onUpdateInput={this.handleUpdateInput}
+              onUpdateInput={value => this.handleUpdateInput(value)}
               floatingLabelText="Filter by device group"
               floatingLabelFixed={true}
               floatingLabelStyle={{ color: '#404041', fontSize: '17px', top: '37px' }}
               filter={AutoComplete.fuzzyFilter}
               openOnFocus={true}
             />
-            <IconButton style={{ marginLeft: '-10px' }} disabled={this.state.disableClear} iconStyle={{ fontSize: '16px' }} onClick={this.clearAuto}>
+            <IconButton style={{ marginLeft: '-10px' }} disabled={this.state.disableClear} iconStyle={{ fontSize: '16px' }} onClick={() => this.clearAuto()}>
               <FontIcon className="material-icons">clear</FontIcon>
             </IconButton>
           </div>
         </div>
-
         <div className="deploy-table-contain">
           <Loader show={this.props.loading} />
           <Table
-            onCellClick={this._pastCellClick}
+            onCellClick={row => this._pastCellClick(row)}
             className={pastMap.length ? null : 'hidden'}
             selectable={false}
             style={{ overflow: 'visible' }}
@@ -252,7 +264,7 @@ var Past = createReactClass({
               pageSize={this.props.pageSize}
               current={this.props.page || 1}
               total={this.props.count}
-              onChange={this._handlePageChange}
+              onChange={page => this._handlePageChange(page)}
             />
           ) : (
             <div className={this.props.loading || pastMap.length ? 'hidden' : 'dashboard-placeholder'}>
@@ -267,6 +279,4 @@ var Past = createReactClass({
       </div>
     );
   }
-});
-
-module.exports = Past;
+}

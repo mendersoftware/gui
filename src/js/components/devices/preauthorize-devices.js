@@ -1,21 +1,21 @@
 import React from 'react';
 import Time from 'react-time';
-import Collapse from 'react-collapse';
-var Loader = require('../common/loader');
-var AppActions = require('../../actions/app-actions');
-var ExpandedDevice = require('./expanded-device');
-var createReactClass = require('create-react-class');
-var Pagination = require('rc-pagination');
-var _en_US = require('rc-pagination/lib/locale/en_US');
-var Dropzone = require('react-dropzone');
+import { Collapse } from 'react-collapse';
+import Loader from '../common/loader';
+import AppActions from '../../actions/app-actions';
+import ExpandedDevice from './expanded-device';
+
+import Pagination from 'rc-pagination';
+import _en_US from 'rc-pagination/lib/locale/en_US';
+import Dropzone from 'react-dropzone';
 import { clearAllRetryTimers } from '../../utils/retrytimer';
-import { isEmpty, preformatWithRequestID } from '../../helpers.js';
+import { isEmpty, preformatWithRequestID } from '../../helpers';
 
 // material ui
 import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
 import IconButton from 'material-ui/IconButton';
 import RaisedButton from 'material-ui/RaisedButton';
-import FlatButton from 'material-ui/RaisedButton';
+import FlatButton from 'material-ui/FlatButton';
 import FontIcon from 'material-ui/FontIcon';
 import InfoIcon from 'react-material-icons/icons/action/info-outline';
 import Dialog from 'material-ui/Dialog';
@@ -24,9 +24,10 @@ import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import FileIcon from 'react-material-icons/icons/file/file-upload';
 
-var Preauthorize = createReactClass({
-  getInitialState: function() {
-    return {
+export default class Preauthorize extends React.Component {
+  constructor(props, context) {
+    super(props, context);
+    this.state = {
       minHeight: 260,
       divHeight: 208,
       devices: [],
@@ -40,131 +41,128 @@ var Preauthorize = createReactClass({
       showKey: false,
       devicesToRemove: []
     };
-  },
+  }
 
   componentDidMount() {
     clearAllRetryTimers();
     this._getDevices();
-  },
+  }
 
   componentWillUnmount() {
     clearAllRetryTimers();
-  },
+  }
 
   componentDidUpdate(prevProps) {
     if (prevProps.count !== this.props.count || (prevProps.currentTab !== this.props.currentTab && this.props.currentTab.indexOf('Preauthorized') !== -1)) {
       this._getDevices();
     }
-  },
+  }
+
   /*
    * Devices to show
    */
-
-  _getDevices: function() {
+  _getDevices() {
     var self = this;
-    var callback = {
-      success: function(devices) {
-        self.setState({ devices: devices, pageLoading: false, authLoading: null, expandRow: null });
+    AppActions.getDevicesByStatus('preauthorized', this.state.pageNo, this.state.pageLength)
+      .then(devices => {
+        self.setState({ devices, pageLoading: false, authLoading: null, expandRow: null });
         if (!devices.length && self.props.count) {
           //if devices empty but count not, put back to first page
           self._handlePageChange(1);
         }
         self._adjustHeight();
-      },
-      error: function(error) {
+      })
+      .catch(error => {
         var errormsg = error.res.body.error || 'Please check your connection';
         self.setState({ pageLoading: false, authLoading: null });
-        AppActions.setSnackbar(preformatWithRequestID(error.res, 'Preauthorized devices couldn\'t be loaded. ' + errormsg), null, 'Copy to clipboard');
-      }
-    };
-    AppActions.getDevicesByStatus(callback, 'preauthorized', this.state.pageNo, this.state.pageLength);
-  },
+        AppActions.setSnackbar(preformatWithRequestID(error.res, `Preauthorized devices couldn't be loaded. ${errormsg}`), null, 'Copy to clipboard');
+      });
+  }
 
-  _adjustHeight: function() {
+  _adjustHeight() {
     // do this when number of devices changes
     var h = this.state.devices.length * 55;
     h += 230;
     this.setState({ minHeight: h });
-  },
-  _sortColumn: function() {
+  }
+  _sortColumn() {
     console.log('sort');
-  },
-  _expandRow: function(rowNumber) {
+  }
+  _expandRow(rowNumber) {
     AppActions.setSnackbar('');
     var device = this.state.devices[rowNumber];
     if (this.state.expandRow === rowNumber) {
       rowNumber = null;
     }
     this.setState({ expandedDevice: device, expandRow: rowNumber });
-  },
-  _adjustCellHeight: function(height) {
+  }
+  _adjustCellHeight(height) {
     this.setState({ divHeight: height + 95 });
-  },
+  }
 
-  _handlePageChange: function(pageNo) {
+  _handlePageChange(pageNo) {
     var self = this;
     self.setState({ pageLoading: true, expandRow: null, pageNo: pageNo }, () => {
       self._getDevices();
     });
-  },
+  }
 
-  _dialogToggle: function(ref) {
+  _dialogToggle(ref) {
     var state = {};
     state[ref] = !this.state[ref];
     this.setState(state);
     this._clearForm();
-  },
+  }
 
-  _clearForm: function() {
+  _clearForm() {
     this.setState({ public: '', filename: '', inputs: [{ key: '', value: '' }] });
-  },
+  }
 
-  _updateKey: function(index, event) {
+  _updateKey(index, event) {
     var inputs = this.state.inputs;
     inputs[index].key = event.target.value;
     this.setState({ inputs: inputs, errorText: '', errorText1: '' });
     this._convertIdentityToJSON(inputs);
-  },
+  }
 
-  _updateValue: function(index, event) {
+  _updateValue(index, event) {
     var inputs = this.state.inputs;
     inputs[index].value = event.target.value;
     this.setState({ inputs: inputs, errorText: '', errorText1: '' });
     this._convertIdentityToJSON(inputs);
-  },
+  }
 
-  _addKeyValue: function() {
+  _addKeyValue() {
     var inputs = this.state.inputs;
     inputs.push({ key: '', value: '' });
     this.setState({ inputs: inputs, errorText: '', errorText1: '' });
-  },
+  }
 
-  _removeInput: function(index) {
+  _removeInput(index) {
     var inputs = this.state.inputs;
     inputs.splice(index, 1);
     this.setState({ inputs: inputs, errorText: '', errorText1: '' });
     this._convertIdentityToJSON(inputs);
-  },
+  }
 
-  _convertIdentityToJSON: function(arr) {
+  _convertIdentityToJSON(arr) {
     var obj = {};
     for (var i = 0; i < arr.length; i++) {
       if (arr[i].value) {
         obj[arr[i].key] = arr[i].value;
       }
     }
-    console.log(obj);
     this.setState({ json_identity: obj });
-  },
+  }
 
-  _savePreauth: function(close) {
+  _savePreauth(close) {
     var self = this;
     var authset = {
       pubkey: this.state.public,
       identity_data: this.state.json_identity
     };
-    var callback = {
-      success: function() {
+    AppActions.preauthDevice(authset)
+      .then(() => {
         AppActions.setSnackbar('Device was successfully added to the preauthorization list', 5000);
         self._getDevices();
         self.props.refreshCount();
@@ -174,22 +172,20 @@ var Preauthorize = createReactClass({
         } else {
           self._clearForm();
         }
-      },
-      error: function(err) {
+      })
+      .catch(err => {
         console.log(err);
         var errMsg = (err.res.body || {}).error || '';
 
         if (err.res.status === 409) {
           self.setState({ errorText: 'A device with a matching identity data set already exists', errorText1: ' ' });
         } else {
-          AppActions.setSnackbar(preformatWithRequestID(err.res, 'The device could not be added: ' + errMsg), null, 'Copy to clipboard');
+          AppActions.setSnackbar(preformatWithRequestID(err.res, `The device could not be added: ${errMsg}`), null, 'Copy to clipboard');
         }
-      }
-    };
-    AppActions.preauthDevice(authset, callback);
-  },
+      });
+  }
 
-  onDrop: function(acceptedFiles, rejectedFiles) {
+  onDrop(acceptedFiles, rejectedFiles) {
     var self = this;
     if (acceptedFiles.length) {
       var reader = new FileReader();
@@ -204,15 +200,15 @@ var Preauthorize = createReactClass({
       };
     }
     if (rejectedFiles.length) {
-      AppActions.setSnackbar('File \'' + rejectedFiles[0].name + '\'\' was rejected.');
+      AppActions.setSnackbar(`File '${rejectedFiles[0].name}' was rejected.`);
     }
-  },
+  }
 
-  _removeKey: function() {
+  _removeKey() {
     this.setState({ public: null, filename: null });
-  },
+  }
 
-  render: function() {
+  render() {
     var limitMaxed = this.props.deviceLimit && this.props.deviceLimit <= this.props.acceptedDevices;
 
     var devices = this.state.devices.map(function(device, index) {
@@ -292,7 +288,7 @@ var Preauthorize = createReactClass({
           <TableRowColumn style={{ width: '0', padding: '0', overflow: 'visible' }}>
             <Collapse
               springConfig={{ stiffness: 210, damping: 20 }}
-              onHeightReady={this._adjustCellHeight}
+              onMeasure={height => this._adjustCellHeight(height)}
               className="expanded"
               isOpened={expanded ? true : false}
               onClick={e => {
@@ -318,13 +314,13 @@ var Preauthorize = createReactClass({
 
     var preauthActions = [
       <div key="auth-button-1" style={{ marginRight: '10px', display: 'inline-block' }}>
-        <FlatButton label="Cancel" onClick={this._dialogToggle.bind(null, 'openPreauth')} />
+        <FlatButton label="Cancel" onClick={() => this._dialogToggle('openPreauth')} />
       </div>,
       <div key="auth-button-2" style={{ marginRight: '10px', display: 'inline-block' }}>
         <RaisedButton
           disabled={!this.state.public || isEmpty(this.state.json_identity) || !!limitMaxed}
           label="Save and add another"
-          onClick={this._savePreauth.bind(null, false)}
+          onClick={() => this._savePreauth(false)}
           primary={true}
         />
       </div>,
@@ -332,7 +328,7 @@ var Preauthorize = createReactClass({
         key="auth-button-3"
         disabled={!this.state.public || isEmpty(this.state.json_identity) || !!limitMaxed}
         label="Save"
-        onClick={this._savePreauth.bind(null, true)}
+        onClick={() => this._savePreauth(true)}
         secondary={true}
       />
     ];
@@ -342,19 +338,19 @@ var Preauthorize = createReactClass({
         <div key={index}>
           <TextField
             hintText="Key"
-            id={'key-' + index}
+            id={`key-${index}`}
             value={input.key}
             style={{ marginRight: '15px', marginBottom: '15px', verticalAlign: 'top' }}
-            onChange={this._updateKey.bind(null, index)}
+            onChange={e => this._updateKey(index, e)}
             errorStyle={{ color: 'rgb(171, 16, 0)' }}
             errorText={index === this.state.inputs.length - 1 ? this.state.errorText : ''}
           />
           <TextField
             hintText="Value"
-            id={'value-' + index}
+            id={`value-${index}`}
             style={{ verticalAlign: 'top' }}
             value={input.value}
-            onChange={this._updateValue.bind(null, index)}
+            onChange={e => this._updateValue(index, e)}
             errorStyle={{ color: 'rgb(171, 16, 0)' }}
             errorText={index === this.state.inputs.length - 1 ? this.state.errorText1 : ''}
           />
@@ -362,7 +358,7 @@ var Preauthorize = createReactClass({
             <IconButton
               iconStyle={{ width: '16px' }}
               disabled={!this.state.inputs[index].key || !this.state.inputs[index].value}
-              onClick={this._removeInput.bind(null, index)}
+              onClick={() => this._removeInput(index)}
             >
               <FontIcon className="material-icons">clear</FontIcon>
             </IconButton>
@@ -384,7 +380,7 @@ var Preauthorize = createReactClass({
           className="top-right-button"
           secondary={true}
           label="Preauthorize devices"
-          onClick={this._dialogToggle.bind(null, 'openPreauth')}
+          onClick={() => this._dialogToggle('openPreauth')}
         />
 
         <Loader show={this.state.authLoading === 'all'} />
@@ -431,7 +427,7 @@ var Preauthorize = createReactClass({
                 pageSize={this.state.pageLength}
                 current={this.state.pageNo || 1}
                 total={this.props.count}
-                onChange={this._handlePageChange}
+                onChange={page => this._handlePageChange(page)}
               />
               {this.state.pageLoading ? (
                 <div className="smallLoaderContainer">
@@ -444,7 +440,7 @@ var Preauthorize = createReactClass({
           <div className={this.state.authLoading ? 'hidden' : 'dashboard-placeholder'}>
             <p>There are no preauthorized devices.</p>
             <p>
-              {limitMaxed ? 'Preauthorize devices' : <a onClick={this._dialogToggle.bind(null, 'openPreauth')}>Preauthorize devices</a>} so that when they come
+              {limitMaxed ? 'Preauthorize devices' : <a onClick={() => this._dialogToggle('openPreauth')}>Preauthorize devices</a>} so that when they come
               online, they will connect to the server immediately
             </p>
             <img src="assets/img/preauthorize.png" alt="preauthorize" />
@@ -472,7 +468,7 @@ var Preauthorize = createReactClass({
                 underlineStyle={{ borderBottom: '1px solid rgb(224, 224, 224)' }}
                 inputStyle={{ color: 'rgba(0, 0, 0, 0.8)' }}
               />
-              <IconButton style={{ top: '6px' }} onClick={this._removeKey}>
+              <IconButton style={{ top: '6px' }} onClick={() => this._removeKey()}>
                 <FontIcon className="material-icons">clear</FontIcon>
               </IconButton>
             </div>
@@ -483,15 +479,20 @@ var Preauthorize = createReactClass({
                 activeClassName="active"
                 rejectClassName="active"
                 multiple={false}
-                onDrop={this.onDrop}
+                onDrop={(accepted, rejected) => this.onDrop(accepted, rejected)}
                 style={{ width: '528px' }}
               >
-                <div className="icon inline-block">
-                  <FileIcon style={{ height: '24px', width: '24px', verticalAlign: 'middle', marginTop: '-2px' }} />
-                </div>
-                <div className="dashboard-placeholder inline">
-                  Drag here or <a>browse</a> to upload a public key file
-                </div>
+                {({ getRootProps, getInputProps }) => (
+                  <div {...getRootProps()} style={{ width: '500px', fontSize: '16px', margin: 'auto' }} className="dashboard-placeholder">
+                    <input {...getInputProps()} />
+                    <div className="icon inline-block">
+                      <FileIcon style={{ height: '24px', width: '24px', verticalAlign: 'middle', marginTop: '-2px' }} />
+                    </div>
+                    <div className="dashboard-placeholder inline">
+                      Drag here or <a>browse</a> to upload a public key file
+                    </div>
+                  </div>
+                )}
               </Dropzone>
             </div>
           )}
@@ -503,7 +504,7 @@ var Preauthorize = createReactClass({
             disabled={!this.state.inputs[this.state.inputs.length - 1].key || !this.state.inputs[this.state.inputs.length - 1].value}
             style={{ marginTop: '10px' }}
             mini={true}
-            onClick={this._addKeyValue}
+            onClick={() => this._addKeyValue()}
           >
             <ContentAdd />
           </FloatingActionButton>
@@ -513,6 +514,4 @@ var Preauthorize = createReactClass({
       </Collapse>
     );
   }
-});
-
-module.exports = Preauthorize;
+}

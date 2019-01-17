@@ -1,16 +1,16 @@
 import React from 'react';
 import Time from 'react-time';
-var createReactClass = require('create-react-class');
+
 import ReactTooltip from 'react-tooltip';
 import { AuthButton } from '../helptips/helptooltips';
 import PropTypes from 'prop-types';
 
-var AppStore = require('../../stores/app-store');
-var AppActions = require('../../actions/app-actions');
-var ScheduleForm = require('../deployments/scheduleform');
-var Authsets = require('./authsets');
-var Loader = require('../common/loader');
-var pluralize = require('pluralize');
+import AppStore from '../../stores/app-store';
+import AppActions from '../../actions/app-actions';
+import ScheduleForm from '../deployments/scheduleform';
+import Authsets from './authsets';
+import Loader from '../common/loader';
+import pluralize from 'pluralize';
 import cookie from 'react-cookie';
 import copy from 'copy-to-clipboard';
 
@@ -23,9 +23,15 @@ import Divider from 'material-ui/Divider';
 
 import { preformatWithRequestID } from '../../helpers';
 
-var ExpandedDevice = createReactClass({
-  getInitialState: function() {
-    return {
+export default class ExpandedDevice extends React.Component {
+  static contextTypes = {
+    router: PropTypes.object,
+    location: PropTypes.object
+  };
+
+  constructor(props, context) {
+    super(props, context);
+    this.state = {
       showInput: false,
       selectedGroup: {
         payload: '',
@@ -36,101 +42,94 @@ var ExpandedDevice = createReactClass({
       artifacts: AppStore.getArtifactsRepo(),
       user: AppStore.getCurrentUser()
     };
-  },
+  }
 
-  componentDidMount: function() {
+  componentDidMount() {
     this._getArtifacts();
-  },
+  }
 
-  _getArtifacts: function() {
+  _getArtifacts() {
     var self = this;
-    var callback = {
-      success: function(artifacts) {
-        setTimeout(function() {
-          self.setState({ artifacts: artifacts });
-        }, 300);
-      },
-      error: function(err) {
-        console.log(err.error || 'Please check your connection');
-      }
-    };
     if (this.props.device.status === 'accepted') {
-      AppActions.getArtifacts(callback);
+      AppActions.getArtifacts()
+        .then(artifacts =>
+          setTimeout(() => {
+            self.setState({ artifacts });
+          }, 300)
+        )
+        .catch(err => console.log(err.error || 'Please check your connection'));
     }
-  },
+  }
 
-  dialogToggle: function(ref) {
+  dialogToggle(ref) {
     var self = this;
     var state = {};
     state[ref] = !this.state[ref];
-    this.setState(state, function() {
+    this.setState(state, () => {
       if (ref === 'authsets') {
         self.props.pause();
       }
     });
     this.setState({ filterByArtifact: null, artifact: null });
-  },
+  }
 
-  _updateParams: function(val, attr) {
+  _updateParams(val, attr) {
     // updating params from child schedule form
     var tmp = {};
     tmp[attr] = val;
     this.setState(tmp);
-  },
+  }
 
-  _clickListItem: function() {
+  _clickListItem() {
     AppActions.setSnackbar('');
     this.dialogToggle('schedule');
-  },
+  }
 
-  _showAuthsets: function() {
+  _showAuthsets() {
     AppActions.setSnackbar('');
     this.dialogToggle('authsets');
-  },
+  }
 
-  _onScheduleSubmit: function() {
+  _onScheduleSubmit() {
     var self = this;
     var newDeployment = {
       devices: [this.props.device.id],
       name: this.props.device.id,
       artifact_name: this.state.artifact.name
     };
-    var callback = {
-      success: function(data) {
+    this.dialogToggle('schedule');
+    return AppActions.createDeployment(newDeployment)
+      .then(data => {
         // get id, if showhelptips & no onboarded cookie, this is user's first deployment - add id cookie
         var lastslashindex = data.lastIndexOf('/');
         var id = data.substring(lastslashindex + 1);
 
         // onboarding
-        if (self.props.showHelpTips && !cookie.load(self.state.user.id + '-onboarded') && !cookie.load(self.state.user.id + '-deploymentID')) {
-          cookie.save(self.state.user.id + '-deploymentID', id);
+        if (self.props.showHelpTips && !cookie.load(`${self.state.user.id  }-onboarded`) && !cookie.load(`${self.state.user.id  }-deploymentID`)) {
+          cookie.save(`${self.state.user.id  }-deploymentID`, id);
         }
 
         AppActions.setSnackbar('Deployment created successfully. Redirecting...', 5000);
-        var params = {};
-        params.route = 'deployments';
-        setTimeout(function() {
-          self.context.router.push(params.route);
+        var params = { route: 'deployments' };
+        setTimeout(() => {
+          self.context.router.history.push(params.route);
         }, 1200);
-      },
-      error: function(err) {
+      })
+      .catch(err => {
         try {
           var errMsg = err.res.body.error || '';
-          AppActions.setSnackbar(preformatWithRequestID(err.res, 'Error creating deployment. ' + errMsg), null, 'Copy to clipboard');
+          AppActions.setSnackbar(preformatWithRequestID(err.res, `Error creating deployment. ${  errMsg}`), null, 'Copy to clipboard');
         } catch (e) {
           console.log(e);
         }
-      }
-    };
-    AppActions.createDeployment(newDeployment, callback);
-    this.dialogToggle('schedule');
-  },
+      });
+  }
 
-  _handleStopProp: function(e) {
+  _handleStopProp(e) {
     e.stopPropagation();
-  },
+  }
 
-  _deploymentParams: function(val, attr) {
+  _deploymentParams(val, attr) {
     // updating params from child schedule form
     var tmp = {};
     tmp[attr] = val;
@@ -147,38 +146,34 @@ var ExpandedDevice = createReactClass({
       }
     }
     this.setState({ filterByArtifact: filteredDevs });
-  },
-  _clickLink: function() {
-    window.location.assign('https://docs.mender.io/' + this.props.docsVersion + '/client-configuration/configuration-file/polling-intervals');
-  },
-  _copyLinkToClipboard: function() {
+  }
+  _clickLink() {
+    window.location.assign(`https://docs.mender.io/${  this.props.docsVersion  }/client-configuration/configuration-file/polling-intervals`);
+  }
+  _copyLinkToClipboard() {
     var location = window.location.href.substring(0, window.location.href.indexOf('/devices') + '/devices'.length);
-    copy(location + '/id=' + this.props.device.id);
+    copy(`${location  }/id=${  this.props.device.id}`);
     AppActions.setSnackbar('Link copied to clipboard');
-  },
+  }
 
-  _decommissionDevice: function(device_id) {
+  _decommissionDevice(device_id) {
     var self = this;
-
-    var callback = {
-      success: function() {
+    return AppActions.decommissionDevice(device_id)
+      .then(() => {
         // close dialog!
         self.dialogToggle('authsets');
         // close expanded device
-
         // trigger reset of list!
         AppActions.setSnackbar('Device was decommissioned successfully');
-      },
-      error: function(err) {
+      })
+      .catch(err => {
         var errMsg = err.res.error.message || '';
         console.log(errMsg);
-        AppActions.setSnackbar(preformatWithRequestID(err.res, 'There was a problem decommissioning the device: ' + errMsg), null, 'Copy to clipboard');
-      }
-    };
-    AppActions.decommissionDevice(device_id, callback);
-  },
+        AppActions.setSnackbar(preformatWithRequestID(err.res, `There was a problem decommissioning the device: ${  errMsg}`), null, 'Copy to clipboard');
+      });
+  }
 
-  render: function() {
+  render() {
     var status = this.props.device.status;
 
     var deviceIdentity = [];
@@ -221,7 +216,7 @@ var ExpandedDevice = createReactClass({
 
     var waiting = false;
     if (typeof this.props.attrs !== 'undefined' && this.props.attrs.length > 0) {
-      var sortedAttributes = this.props.attrs.sort(function(a, b) {
+      var sortedAttributes = this.props.attrs.sort((a, b) => {
         return a.name.localeCompare(b.name);
       });
       for (var i = 0; i < sortedAttributes.length; i++) {
@@ -245,7 +240,7 @@ var ExpandedDevice = createReactClass({
       deviceInventory.push(
         <div className="waiting-inventory" key="waiting-inventory">
           <div
-            onClick={this._handleStopProp}
+            onClick={e => this._handleStopProp(e)}
             id="inventory-info"
             className="tooltip info"
             style={{ top: '8px', right: '8px' }}
@@ -260,7 +255,7 @@ var ExpandedDevice = createReactClass({
             <p>Inventory data not yet received from the device - this can take up to 30 minutes with default installation.</p>
             <p>
               Also see the documentation for{' '}
-              <a onClick={this._clickLink} href="https://docs.mender.io/client-configuration/configuration-file/polling-intervals">
+              <a onClick={() => this._clickLink()} href="https://docs.mender.io/client-configuration/configuration-file/polling-intervals">
                 Polling intervals
               </a>
               .
@@ -351,7 +346,7 @@ var ExpandedDevice = createReactClass({
               style={this.props.styles.listButtonStyle}
               primaryText={authLabel}
               secondaryText={'Click to adjust authorization status for this device'}
-              onClick={this._showAuthsets}
+              onClick={() => this._showAuthsets()}
               leftIcon={
                 hasPending ? (
                   <FontIcon className="material-icons auth" style={{ marginTop: 12, marginBottom: 6 }}>
@@ -383,7 +378,7 @@ var ExpandedDevice = createReactClass({
                 key="copylink"
                 style={this.props.styles.iconListButtonStyle}
                 primaryText="Copy link to this device"
-                onClick={this._copyLinkToClipboard}
+                onClick={() => this._copyLinkToClipboard()}
                 leftIcon={
                   <FontIcon className="material-icons update" style={{ margin: '12px 0 12px 12px' }}>
                     link
@@ -395,7 +390,7 @@ var ExpandedDevice = createReactClass({
                 className={status === 'accepted' ? null : 'hidden'}
                 style={this.props.styles.iconListButtonStyle}
                 primaryText="Create a deployment for this device"
-                onClick={this._clickListItem}
+                onClick={() => this._clickListItem()}
                 leftIcon={
                   <FontIcon className="material-icons update" style={{ margin: '12px 0 12px 12px' }}>
                     replay
@@ -410,31 +405,31 @@ var ExpandedDevice = createReactClass({
 
     var scheduleActions = [
       <div key="schedule-action-button-1" style={{ marginRight: '10px', display: 'inline-block' }}>
-        <FlatButton label="Cancel" onClick={this.dialogToggle.bind(null, 'schedule')} />
+        <FlatButton label="Cancel" onClick={() => this.dialogToggle('schedule')} />
       </div>,
       <RaisedButton
         key="schedule-action-button-1"
         label="Create deployment"
         primary={true}
         disabled={!this.state.filterByArtifact}
-        onClick={this._onScheduleSubmit}
+        onClick={() => this._onScheduleSubmit()}
         ref="save"
       />
     ];
 
     var authsetActions = [
       <div key="authset-button-1" style={{ marginRight: '10px', display: 'inline-block' }}>
-        <FlatButton label="Close" onClick={this.dialogToggle.bind(null, 'authsets')} />
+        <FlatButton label="Close" onClick={() => this.dialogToggle('authsets')} />
       </div>
     ];
 
     var authsetTitle = (
       <div style={{ width: 'fit-content', position: 'relative' }}>
         {this.props.device.status === 'pending'
-          ? 'Authorization ' + pluralize('request', this.props.device.auth_sets.length) + ' for this device'
+          ? `Authorization ${  pluralize('request', this.props.device.auth_sets.length)  } for this device`
           : 'Authorization status for this device'}
         <div
-          onClick={this._handleStopProp}
+          onClick={e => this._handleStopProp(e)}
           id="inventory-info"
           className="tooltip info"
           style={{ top: '28px', right: '-18px' }}
@@ -452,7 +447,7 @@ var ExpandedDevice = createReactClass({
           </p>
           <p>
             In cases such as key rotation, each device may have more than one identity/key combination listed. See the documentation for more on{' '}
-            <a onClick={this._clickLink} href="https://docs.mender.io/architecture/device-authentication">
+            <a onClick={() => this._clickLink()} href="https://docs.mender.io/architecture/device-authentication">
               Device authentication
             </a>
             .
@@ -494,7 +489,7 @@ var ExpandedDevice = createReactClass({
           <ScheduleForm
             deploymentDevices={[this.props.device]}
             filteredDevices={this.state.filterByArtifact}
-            deploymentSettings={this._deploymentParams}
+            deploymentSettings={(...args) => this._deploymentParams(...args)}
             artifact={this.state.artifact}
             artifacts={this.state.artifacts}
             device={this.props.device}
@@ -523,11 +518,4 @@ var ExpandedDevice = createReactClass({
       </div>
     );
   }
-});
-
-ExpandedDevice.contextTypes = {
-  router: PropTypes.object,
-  location: PropTypes.object
-};
-
-module.exports = ExpandedDevice;
+}

@@ -1,8 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Time from 'react-time';
-import { Link } from 'react-router';
-var createReactClass = require('create-react-class');
+import { Link } from 'react-router-dom';
 
 // material ui
 import List from 'material-ui/List/List';
@@ -11,17 +10,21 @@ import ListDivider from 'material-ui/Divider';
 
 var monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
-var Schedule = createReactClass({
-  _clickHandle: function() {
+export default class Schedule extends React.Component {
+  static contextTypes = {
+    router: PropTypes.func
+  };
+
+  _clickHandle() {
     this.props.clickHandle(this.props.route);
-  },
-  _clickDeployment: function(e) {
+  }
+  _clickDeployment(e) {
     console.log(e);
-  },
-  render: function() {
+  }
+  render() {
     var schedule = this.props.deployments.map(function(deployment, index) {
       if (index < 5) {
-        var group = deployment.group + ' (' + deployment.devices.length + ')';
+        var group = `${deployment.group} (${deployment.devices.length})`;
         var month = new Date(deployment.start_time);
         month = monthNames[month.getMonth()];
         var last = this.props.deployments.length === index + 1 || index === 4;
@@ -31,7 +34,7 @@ var Schedule = createReactClass({
               disabled={true}
               primaryText={deployment.artifact_name}
               secondaryText={group}
-              onClick={this._clickDeployment}
+              onClick={e => this._clickDeployment(e)}
               leftIcon={
                 <div style={{ width: 'auto', height: 'auto' }}>
                   <span className="day">
@@ -68,10 +71,4 @@ var Schedule = createReactClass({
       </div>
     );
   }
-});
-
-Schedule.contextTypes = {
-  router: PropTypes.func
-};
-
-module.exports = Schedule;
+}

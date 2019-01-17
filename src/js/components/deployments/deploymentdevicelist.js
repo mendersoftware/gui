@@ -1,29 +1,30 @@
 import React from 'react';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 import Time from 'react-time';
-var isEqual = require('lodash.isequal');
-var createReactClass = require('create-react-class');
-var { statusToPercentage } = require('../../helpers');
+import isEqual from 'lodash.isequal';
+
+import { statusToPercentage } from '../../helpers';
 
 // material ui
 import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
 import FlatButton from 'material-ui/FlatButton';
 import LinearProgress from 'material-ui/LinearProgress';
 
-var ProgressDeviceList = createReactClass({
-  getInitialState: function() {
-    return {
+export default class ProgressDeviceList extends React.Component {
+  constructor(props, context) {
+    super(props, context);
+    this.state = {
       prevDevices: {}
     };
-  },
-  shouldComponentUpdate: function(nextProps, nextState) {
+  }
+  shouldComponentUpdate(nextProps, nextState) {
     return !isEqual(this.props, nextProps) || !isEqual(this.state, nextState);
-  },
-  componentDidUpdate: function(prevProps) {
+  }
+  componentDidUpdate(prevProps) {
     this.props.finished();
     this.setState({ prevDevices: prevProps.devices });
-  },
-  _formatTime: function(date) {
+  }
+  _formatTime(date) {
     if (date) {
       return date
         .replace(' ', 'T')
@@ -31,8 +32,8 @@ var ProgressDeviceList = createReactClass({
         .replace('UTC', '');
     }
     return;
-  },
-  render: function() {
+  }
+  render() {
     var self = this;
     var intervalsSinceStart = Math.floor((Date.now() - Date.parse(self.props.created)) / (1000 * 20));
 
@@ -44,7 +45,7 @@ var ProgressDeviceList = createReactClass({
         if (device.finished) {
           time = <Time value={this._formatTime(device.finished)} format="YYYY-MM-DD HH:mm" />;
         }
-        var encodedDevice = 'id=' + device.id;
+        var encodedDevice = `id=${device.id}`;
         var id_attribute = device.id;
 
         if ((self.props.globalSettings || {}).id_attribute && (self.props.globalSettings || {}).id_attribute !== 'Device ID') {
@@ -136,7 +137,7 @@ var ProgressDeviceList = createReactClass({
               </div>
             </TableRowColumn>
             <TableRowColumn>
-              <FlatButton className={device.log ? null : 'hidden'} onClick={this.props.viewLog.bind(null, device.id)} label="View log" />
+              <FlatButton className={device.log ? null : 'hidden'} onClick={() => this.props.viewLog(device.id)} label="View log" />
             </TableRowColumn>
           </TableRow>
         );
@@ -162,6 +163,4 @@ var ProgressDeviceList = createReactClass({
       </Table>
     );
   }
-});
-
-module.exports = ProgressDeviceList;
+}

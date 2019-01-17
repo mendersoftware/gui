@@ -1,28 +1,29 @@
 import React from 'react';
-var createReactClass = require('create-react-class');
+
 import TextField from 'material-ui/TextField';
 
-var TextInput = createReactClass({
-  getInitialState: function() {
-    return {
+export default class TextInput extends React.Component {
+  constructor(props, context) {
+    super(props, context);
+    this.state = {
       value: this.props.value,
       errorText: null,
       isValid: true
     };
-  },
+  }
 
-  componentWillMount: function() {
+  componentWillMount() {
     this.props.attachToForm(this); // Attaching the component to the form
-  },
-  componentWillUnmount: function() {
+  }
+  componentWillUnmount() {
     this.props.detachFromForm(this); // Detaching if unmounting
-  },
-  componentDidMount: function() {
+  }
+  componentDidMount() {
     if (this.props.value) {
       this.props.validate(this, this.props.value);
     }
-  },
-  componentDidUpdate: function(prevProps) {
+  }
+  componentDidUpdate(prevProps) {
     if (this.props.focus) {
       this.refs[this.props.id].focus();
     }
@@ -30,15 +31,15 @@ var TextInput = createReactClass({
     if (prevProps.value !== this.props.value) {
       this.setState({ value: this.props.value }, self.props.validate(self, self.props.value));
     }
-  },
-  setValue: function(event) {
+  }
+  setValue(event) {
     this.setState({
       value: event.currentTarget.value
     });
     this.props.validate(this, event.currentTarget.value);
-  },
-  render: function() {
-    var className = this.props.required ? this.props.className + ' required' : this.props.className;
+  }
+  render() {
+    var className = this.props.required ? `${this.props.className  } required` : this.props.className;
     return (
       <TextField
         id={this.props.id}
@@ -46,7 +47,7 @@ var TextInput = createReactClass({
         value={this.state.value}
         hintText={this.props.hint}
         floatingLabelText={this.props.label}
-        onChange={this.setValue}
+        onChange={e => this.setValue(e)}
         className={className}
         errorStyle={{ color: 'rgb(171, 16, 0)' }}
         multiLine={this.props.multiLine}
@@ -61,6 +62,4 @@ var TextInput = createReactClass({
       />
     );
   }
-});
-
-module.exports = TextInput;
+}

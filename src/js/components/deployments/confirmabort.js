@@ -1,23 +1,23 @@
 import React from 'react';
 import IconButton from 'material-ui/IconButton';
 import FontIcon from 'material-ui/FontIcon';
-var createReactClass = require('create-react-class');
 
-var ConfirmAbort = createReactClass({
-  getInitialState: function() {
-    return {
+export default class ConfirmAbort extends React.Component {
+  constructor(props, context) {
+    super(props, context);
+    this.state = {
       class: 'fadeIn'
     };
-  },
-  _handleCancel: function() {
+  }
+  _handleCancel() {
     this.setState({ class: 'fadeOut' });
     this.props.cancel();
-  },
-  _handleAbort: function() {
+  }
+  _handleAbort() {
     this.setState({ loading: true });
     this.props.abort();
-  },
-  render: function() {
+  }
+  render() {
     var styles = {
       padding: '0',
       marginLeft: '12px',
@@ -28,16 +28,14 @@ var ConfirmAbort = createReactClass({
       <div className={this.state.class} style={{ marginRight: '12px' }}>
         <div className="float-right">
           <span className="bold">{this.state.loading ? 'Aborting...' : 'Confirm abort deployment?'}</span>
-          <IconButton id="confirmAbort" style={styles} onClick={this._handleAbort}>
+          <IconButton id="confirmAbort" style={styles} onClick={() => this._handleAbort()}>
             <FontIcon className="material-icons green">check_circle</FontIcon>
           </IconButton>
-          <IconButton id="cancelAbort" style={styles} onClick={this._handleCancel}>
+          <IconButton id="cancelAbort" style={styles} onClick={() => this._handleCancel()}>
             <FontIcon className="material-icons red">cancel</FontIcon>
           </IconButton>
         </div>
       </div>
     );
   }
-});
-
-module.exports = ConfirmAbort;
+}

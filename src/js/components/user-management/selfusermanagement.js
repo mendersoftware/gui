@@ -4,81 +4,77 @@ import TextInput from '../common/forms/textinput';
 import PasswordInput from '../common/forms/passwordinput';
 import FormButton from '../common/forms/formbutton';
 
-var AppActions = require('../../actions/app-actions');
-var AppStore = require('../../stores/app-store');
-var createReactClass = require('create-react-class');
+import AppActions from '../../actions/app-actions';
+import AppStore from '../../stores/app-store';
 
 import { preformatWithRequestID } from '../../helpers';
 
-function getState() {
-  return {
-    snackbar: AppStore.getSnackbar(),
-    currentUser: AppStore.getCurrentUser()
-  };
-}
+export default class SelfUserManagement extends React.Component {
+  constructor(props, context) {
+    super(props, context);
+    this.state = this._getState();
+  }
+  componentWillMount() {
+    AppStore.changeListener(this._onChange.bind(this));
+  }
 
-var SelfUserManagement = createReactClass({
-  getInitialState: function() {
-    return getState();
-  },
+  _getState() {
+    return {
+      snackbar: AppStore.getSnackbar(),
+      currentUser: AppStore.getCurrentUser()
+    };
+  }
 
-  componentWillMount: function() {
-    AppStore.changeListener(this._onChange);
-  },
+  _onChange() {
+    this.setState(this._getState());
+  }
 
-  _onChange: function() {
-    this.setState(getState());
-  },
+  componentWillUnmount() {
+    AppStore.removeChangeListener(this._onChange.bind(this));
+  }
 
-  componentWillUnmount: function() {
-    AppStore.removeChangeListener(this._onChange);
-  },
-
-  _editSubmit: function(userData) {
+  _editSubmit(userData) {
     var self = this;
-    var callback = {
-      success: function(user = userData) {
-        AppActions.setSnackbar('The user has been updated.');
+    return AppActions.editUser(self.state.currentUser.id, userData)
+      .then(user => {
         user = userData;
         user.id = self.state.currentUser.id;
         AppActions.setCurrentUser(user);
+        AppActions.setSnackbar('The user has been updated.');
         self.setState({ editPass: false, editEmail: false });
-      },
-      error: function(err) {
+      })
+      .catch(err => {
         console.log(err);
         var errMsg = err.res.body.error || '';
-        AppActions.setSnackbar(preformatWithRequestID(err.res, 'There was an error editing the user. ' + errMsg));
-      }
-    };
+        AppActions.setSnackbar(preformatWithRequestID(err.res, `There was an error editing the user. ${errMsg}`));
+      });
+  }
 
-    AppActions.editUser(self.state.currentUser.id, userData, callback);
-  },
-
-  handleEmail: function() {
+  handleEmail() {
     var uniqueId = this.state.emailFormId;
     if (this.state.editEmail) {
       uniqueId = new Date();
       // changing unique id will reset form values
     }
     this.setState({ editEmail: !this.state.editEmail, emailFormId: uniqueId });
-  },
+  }
 
-  handlePass: function() {
+  handlePass() {
     this.setState({ editPass: !this.state.editPass });
-  },
+  }
 
-  _togglePass: function() {
+  _togglePass() {
     this.setState({ editPass: !this.state.editPass });
-  },
+  }
 
-  render: function() {
+  render() {
     return (
       <div style={{ maxWidth: '750px' }} className="margin-top-small">
         <h2 style={{ marginTop: '15px' }}>My account</h2>
 
         <Form
-          onSubmit={this._editSubmit}
-          handleCancel={this.handleEmail}
+          onSubmit={userdata => this._editSubmit(userdata)}
+          handleCancel={() => this.handleEmail()}
           submitLabel="Save"
           showButtons={this.state.editEmail}
           submitButtonId="submit_email"
@@ -99,13 +95,13 @@ var SelfUserManagement = createReactClass({
             primary={true}
             id="change_email"
             label="Change email"
-            handleClick={this.handleEmail}
+            handleClick={() => this.handleEmail()}
           />
         </Form>
 
         <Form
-          onSubmit={this._editSubmit}
-          handleCancel={this.handlePass}
+          onSubmit={userdata => this._editSubmit(userdata)}
+          handleCancel={() => this.handlePass()}
           submitLabel="Save"
           submitButtonId="submit_pass"
           showButtons={this.state.editPass}
@@ -118,7 +114,7 @@ var SelfUserManagement = createReactClass({
             create={this.state.editPass}
             validations="isLength:1"
             disabled={!this.state.editPass}
-            onClear={this.handleButton}
+            onClear={() => this.handleButton()}
             edit={false}
           />
 
@@ -128,12 +124,10 @@ var SelfUserManagement = createReactClass({
             primary={true}
             id="change_pass"
             label="Change password"
-            handleClick={this.handlePass}
+            handleClick={() => this.handlePass()}
           />
         </Form>
       </div>
     );
   }
-});
-
-module.exports = SelfUserManagement;
+}
