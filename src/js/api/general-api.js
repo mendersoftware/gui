@@ -7,7 +7,7 @@ import { unauthorizedRedirect } from '../auth';
 request.use(unauthorizedRedirect);
 
 const Api = {
-  get: function(url) {
+  get: url => {
     var token = cookie.load('JWT');
     return new Promise((resolve, reject) => {
       request
@@ -27,7 +27,7 @@ const Api = {
     });
   },
 
-  getNoauth: function(url) {
+  getNoauth: url => {
     return new Promise((resolve, reject) => {
       request
         .get(url)

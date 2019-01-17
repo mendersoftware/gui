@@ -7,7 +7,7 @@ import { unauthorizedRedirect } from '../auth';
 request.use(unauthorizedRedirect);
 
 const Api = {
-  get: function(url) {
+  get: url => {
     var token = cookie.load('JWT');
     return new Promise((resolve, reject) => {
       request
@@ -26,7 +26,7 @@ const Api = {
         });
     });
   },
-  post: function(url, data) {
+  post: (url, data) => {
     var token = cookie.load('JWT');
     return new Promise((resolve, reject) => {
       request
@@ -43,7 +43,7 @@ const Api = {
         });
     });
   },
-  put: function(url, data) {
+  put: (url, data) => {
     var token = cookie.load('JWT');
     return new Promise((resolve, reject) => {
       request
@@ -65,7 +65,7 @@ const Api = {
         });
     });
   },
-  delete: function(url) {
+  delete: url => {
     var token = cookie.load('JWT');
     return new Promise((resolve, reject) => {
       request

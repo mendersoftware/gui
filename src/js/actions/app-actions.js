@@ -24,9 +24,9 @@ var default_page = 1;
 
 var AppActions = {
   /*
-  Device inventory functions
-*/
-  selectGroup: function(group) {
+   * Device inventory functions
+   */
+  selectGroup: group => {
     AppDispatcher.handleViewAction({
       actionType: AppConstants.SELECT_GROUP,
       group: group
@@ -62,34 +62,31 @@ var AppActions = {
   getGroupDevices: (group, page = default_page, per_page = default_per_page) =>
     DevicesApi.get(`${inventoryApiUrl}/groups/${group}/devices?per_page=${per_page}&page=${page}`),
 
-  setGroupDevices: function(devices) {
+  setGroupDevices: devices => {
     AppDispatcher.handleViewAction({
       actionType: AppConstants.RECEIVE_GROUP_DEVICES,
       devices: devices
     });
   },
 
-  setFilterAttributes: function(attrs) {
+  setFilterAttributes: attrs =>
     AppDispatcher.handleViewAction({
       actionType: AppConstants.SET_FILTER_ATTRIBUTES,
       attrs: attrs
-    });
-  },
+    }),
 
-  getDevices: function(page = default_page, per_page = default_per_page, search_term) {
+  getDevices: (page = default_page, per_page = default_per_page, search_term) => {
     // get devices from inventory
     var search = search_term ? `&${search_term}` : '';
     return DevicesApi.get(`${inventoryApiUrl}/devices?per_page=${per_page}&page=${page}${search}`).then(res => res.body);
   },
 
-  getDeviceById: function(id) {
-    return DevicesApi.get(`${inventoryApiUrl}/devices/${id}`).then(res => res.body);
-  },
+  getDeviceById: id => DevicesApi.get(`${inventoryApiUrl}/devices/${id}`).then(res => res.body),
 
-  getNumberOfDevicesInGroup: function(group) {
+  getNumberOfDevicesInGroup: group => {
     const forGroup = group ? `/groups/${group}` : '';
     const ungroupedFilter = group ? '' : '&has_group=false';
-    function getDeviceCount(page = 1, per_page = 100, count = 0) {
+    const getDeviceCount = (page = 1, per_page = 100, count = 0) => {
       return DevicesApi.get(`${inventoryApiUrl}${forGroup}/devices?per_page=${per_page}&page=${page}${ungroupedFilter}`).then(res => {
         var links = parse(res.headers['link']);
         count += res.body.length;
@@ -99,7 +96,7 @@ var AppActions = {
         }
         return Promise.resolve(count);
       });
-    }
+    };
     return getDeviceCount();
   },
 
@@ -107,7 +104,7 @@ var AppActions = {
     Device Auth + admission 
   */
 
-  getDeviceCount: function(status) {
+  getDeviceCount: status => {
     var filter = status ? `?status=${status}` : '';
 
     return DevicesApi.get(`${deviceAuthV2}/devices/count${filter}`).then(res => {
@@ -158,6 +155,23 @@ var AppActions = {
   getDevicesByStatus: (status, page = default_page, per_page = default_per_page) => {
     var dev_status = status ? `status=${status}` : '';
     return DevicesApi.get(`${deviceAuthV2}/devices?${dev_status}&per_page=${per_page}&page=${page}`).then(response => response.body);
+  },
+
+  getAllDevicesByStatus: status => {
+    var per_page = 100;
+    var page = 1;
+    var devices = [];
+    const getAllDevices = () =>
+      DevicesApi.get(`${deviceAuthV2}/devices?status=${status}&per_page=${per_page}&page=${page}`).then(res => {
+        var links = parse(res.headers['link']);
+        devices.push(...res.body);
+        if (links.next) {
+          page++;
+          getAllDevices();
+        }
+        return Promise.resolve(devices);
+      });
+    return getAllDevices();
   },
 
   getDeviceAuth: id => DevicesApi.get(`${deviceAuthV2}/devices/${id}`).then(res => res.body),

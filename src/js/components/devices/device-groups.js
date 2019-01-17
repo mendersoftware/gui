@@ -136,7 +136,22 @@ export default class DeviceGroups extends React.Component {
         }
         self.setState({ ungroupedCount: count, groups });
       })
-      .catch(err => console.log(err));
+      .catch(console.err);
+  }
+
+  _refreshUngroupedDevices() {
+    var self = this;
+    AppActions.getNumberOfDevicesInGroup().then(devices => {
+      var groups = self.state.groups;
+      if (devices.length > 0 && !groups.find(item => item === UNGROUPED_GROUP.id)) {
+        groups.push(UNGROUPED_GROUP.id);
+      }
+      var ungroupedDevices = devices;
+      if (self.state.acceptedDevices.length && devices.length) {
+        ungroupedDevices = self._pickAcceptedUngroupedDevices(self.state.acceptedDevices, devices);
+      }
+      self.setState({ ungroupedDevices, groups });
+    });
   }
 
   _handleGroupChange(group) {
@@ -191,13 +206,13 @@ export default class DeviceGroups extends React.Component {
     return AppActions.removeDeviceFromGroup(device, this.state.selectedGroup)
       .then(() => {
         if (idx === length - 1 && !isGroupRemoval) {
-          // if parentcallback, whole group is being removed
+          // if isGroupRemoval, whole group is being removed
           AppActions.setSnackbar(`The ${pluralize('devices', length)} ${pluralize('were', length)} removed from the group`, 5000);
           self._refreshAll();
           self._refreshUngroupedCount();
         }
-      })
-      .catch(err => console.log(err));
+        return Promise.resolve();
+      });
   }
 
   /*
@@ -408,32 +423,26 @@ export default class DeviceGroups extends React.Component {
 
   _removeDevicesFromGroup(rows) {
     var self = this;
-    var callback;
     clearInterval(self.deviceTimer);
-    // if rows.length === groupCount
-    // group now empty, go to all devices
-    if (rows.length >= self.state.groupCount) {
-      callback = function() {
-        AppActions.setSnackbar('Group was removed successfully', 5000);
-        self.setState({ loading: true, selectedGroup: null, pageNo: 1, groupCount: self.props.acceptedDevices }, () => {
-          self._refreshAll();
-        });
-      };
-    }
-
-    // if rows.length = number on page but < groupCount
-    // move page back to pageNO 1 in callback
-    else if (self.state.devices.length <= rows.length) {
-      callback = function() {
-        self.setState({ pageNo: 1, pageLoading: true, groupCount: self.state.groupCount - rows.length }, () => {
-          self._refreshAll();
-        });
-      };
-    }
-
-    for (var i = 0; i < rows.length; i++) {
-      self._removeSingleDevice(i, rows.length, self.state.devices[rows[i]].id, callback);
-    }
+    const isGroupRemoval = (rows.length >= self.state.groupCount);
+    const isPageRemoval = (self.state.devices.length <= rows.length);
+    const refresh = () => self._refreshAll();
+    const deviceRemovals = rows.map((row, i) => self._removeSingleDevice(i, rows.length, self.state.devices[row].id, isGroupRemoval));
+    return Promise.all(deviceRemovals)
+      .then(() => {
+        // if rows.length = number on page but < groupCount
+        // move page back to pageNO 1
+        if (isPageRemoval) {
+          self.setState({ pageNo: 1, pageLoading: true, groupCount: self.state.groupCount - rows.length }, refresh);
+        }
+        // if rows.length === groupCount
+        // group now empty, go to all devices
+        if (isGroupRemoval) {
+          AppActions.setSnackbar('Group was removed successfully', 5000);
+          self.setState({ loading: true, selectedGroup: null, pageNo: 1, groupCount: self.props.acceptedDevices }, refresh);
+        }
+      })
+      .catch(err => console.log(err));
   }
 
   _onFilterChange(filters) {

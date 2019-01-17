@@ -438,22 +438,21 @@ export default class Deployments extends React.Component {
   }
   _abortDeployment(id) {
     var self = this;
-    var callback = {
-      success: function() {
+    return AppActions.abortDeployment(id)
+      .then(() => {
         self.setState({ doneLoading: false });
         clearInterval(self.timer);
         self.timer = setInterval(() => self._refreshDeployments(), self.state.refreshDeploymentsLength);
         self._refreshDeployments();
         self.dialogDismiss('dialog');
         AppActions.setSnackbar('The deployment was successfully aborted');
-      },
-      error: function(err) {
+      })
+      .catch(err => {
         console.log(err);
         var errMsg = err.res.body.error || '';
         AppActions.setSnackbar(preformatWithRequestID(err.res, `There was wan error while aborting the deployment: ${errMsg}`));
-      }
-    };
-    AppActions.abortDeployment(id, callback);
+      });
+
   }
   updated() {
     // use to make sure re-renders dialog at correct height when device list built
