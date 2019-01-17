@@ -5,10 +5,10 @@ var createReactClass = require('create-react-class');
 import { List, ListItem } from 'material-ui/List';
 
 var listItems = [
-  {route:"/", text:"Dashboard"},
-  {route:"/devices", text:"Devices"},
-  {route:"/artifacts", text:"Artifacts"},
-  {route:"/deployments", text:"Deployments"},
+  { route: '/', text: 'Dashboard' },
+  { route: '/devices', text: 'Devices' },
+  { route: '/artifacts', text: 'Artifacts' },
+  { route: '/deployments', text: 'Deployments' }
 ];
 
 var LeftNav = createReactClass({

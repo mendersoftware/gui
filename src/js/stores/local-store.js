@@ -34,7 +34,7 @@ var LocalStore = assign(EventEmitter.prototype, {
     this.removeListener(CHANGE_EVENT, callback);
   },
 
-  dispatcherIndex: AppDispatcher.register(function(payload) {
+  dispatcherIndex: AppDispatcher.register(payload => {
     var action = payload.action;
     switch (action.actionType) {
     case AppConstants.SET_LOCAL_STORAGE:

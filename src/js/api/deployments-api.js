@@ -5,10 +5,10 @@ import { unauthorizedRedirect } from '../auth';
 
 request.use(unauthorizedRedirect);
 
-var Api = {
-  get: function(url) {
+const Api = {
+  get: url => {
     var token = cookie.load('JWT');
-    return new Promise(function(resolve, reject) {
+    return new Promise((resolve, reject) => {
       request
         .get(url)
         .authBearer(token)
@@ -16,7 +16,7 @@ var Api = {
           response: 30000, // wait 10 seconds for server to start sending
           deadline: 60000 // allow one minute to finish loading
         })
-        .end(function(err, res) {
+        .end((err, res) => {
           if (err || !res.ok) {
             reject({ error: err, res: res });
           } else {
@@ -25,14 +25,14 @@ var Api = {
         });
     });
   },
-  getText: function(url) {
+  getText: url => {
     var token = cookie.load('JWT');
-    return new Promise(function(resolve, reject) {
+    return new Promise((resolve, reject) => {
       request
         .get(url)
         .authBearer(token)
         .set('Content-Type', 'application/text')
-        .end(function(err, res) {
+        .end((err, res) => {
           if (err || !res.ok) {
             reject({ error: err, res: res });
           } else {
@@ -41,15 +41,15 @@ var Api = {
         });
     });
   },
-  post: function(url, data) {
+  post: (url, data) => {
     var token = cookie.load('JWT');
-    return new Promise(function(resolve, reject) {
+    return new Promise((resolve, reject) => {
       request
         .post(url)
         .authBearer(token)
         .set('Content-Type', 'application/json')
         .send(data)
-        .end(function(err, res) {
+        .end((err, res) => {
           if (err || !res.ok) {
             reject({ error: err, res: res });
           } else {
@@ -58,15 +58,15 @@ var Api = {
         });
     });
   },
-  put: function(url, data) {
+  put: (url, data) => {
     var token = cookie.load('JWT');
-    return new Promise(function(resolve, reject) {
+    return new Promise((resolve, reject) => {
       request
         .put(url)
         .authBearer(token)
         .set('Content-Type', 'application/json')
         .send(data)
-        .end(function(err, res) {
+        .end((err, res) => {
           if (err || !res.ok) {
             reject({ error: err, res: res });
           } else {
@@ -77,4 +77,4 @@ var Api = {
   }
 };
 
-module.exports = Api;
+export default Api;

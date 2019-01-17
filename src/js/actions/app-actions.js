@@ -8,14 +8,14 @@ import UsersApi from '../api/users-api';
 import parse from 'parse-link-header';
 
 var rootUrl = 'https://localhost:443';
-var apiUrl = rootUrl + '/api/management/v1';
-var apiUrlV2 = rootUrl + '/api/management/v2';
-var deploymentsApiUrl = apiUrl + '/deployments';
-var devAuthApiUrl = apiUrl + '/devauth';
-var deviceAuthV2 = apiUrlV2 + '/devauth';
-var inventoryApiUrl = apiUrl + '/inventory';
-var useradmApiUrl = apiUrl + '/useradm';
-var tenantadmUrl = apiUrl + '/tenantadm';
+var apiUrl = `${rootUrl}/api/management/v1`;
+var apiUrlV2 = `${rootUrl}/api/management/v2`;
+var deploymentsApiUrl = `${apiUrl}/deployments`;
+var devAuthApiUrl = `${apiUrl}/devauth`;
+var deviceAuthV2 = `${apiUrlV2}/devauth`;
+var inventoryApiUrl = `${apiUrl}/inventory`;
+var useradmApiUrl = `${apiUrl}/useradm`;
+var tenantadmUrl = `${apiUrl}/tenantadm`;
 var hostedLinks = 'https://s3.amazonaws.com/hosted-mender-artifacts-onboarding/';
 
 // default per page until pagination and counting integrated
@@ -53,7 +53,7 @@ var AppActions = {
       });
   },
 
-  addGroup: function(group, idx) {
+  addGroup: (group, idx) => {
     AppDispatcher.handleViewAction({
       actionType: AppConstants.ADD_GROUP,
       group: group,
@@ -480,12 +480,11 @@ var AppActions = {
       });
   },
 
-  setDeploymentArtifact: function(artifact) {
+  setDeploymentArtifact: artifact =>
     AppDispatcher.handleViewAction({
       actionType: AppConstants.SET_DEPLOYMENT_ARTIFACT,
       artifact: artifact
-    });
-  },
+    }),
 
   /*Deployments */
   getDeployments: function(callback, page = default_page, per_page = default_per_page) {
@@ -627,22 +626,20 @@ var AppActions = {
       });
   },
 
-  sortTable: function(table, column, direction) {
+  sortTable: (table, column, direction) =>
     AppDispatcher.handleViewAction({
       actionType: AppConstants.SORT_TABLE,
       table: table,
       column: column,
       direction: direction
-    });
-  },
+    }),
 
-  setLocalStorage: function(key, value) {
+  setLocalStorage: (key, value) =>
     AppDispatcher.handleViewAction({
       actionType: AppConstants.SET_LOCAL_STORAGE,
       key: key,
       value: value
-    });
-  }
+    })
 };
 
-module.exports = AppActions;
+export default AppActions;

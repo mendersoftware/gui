@@ -1,7 +1,7 @@
 import { Dispatcher } from 'flux';
 import assign from 'object-assign';
 
-var AppDispatcher = assign(new Dispatcher(), {
+const AppDispatcher = assign(new Dispatcher(), {
   handleViewAction: function(action) {
     this.dispatch({
       source: 'VIEW_ACTION',
@@ -10,4 +10,4 @@ var AppDispatcher = assign(new Dispatcher(), {
   }
 });
 
-module.exports = AppDispatcher;
+export default AppDispatcher;

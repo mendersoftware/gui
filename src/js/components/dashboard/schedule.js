@@ -5,10 +5,9 @@ import { Link } from 'react-router';
 var createReactClass = require('create-react-class');
 
 // material ui
-var mui = require('material-ui');
-var List = mui.List;
-var ListItem = mui.ListItem;
-var ListDivider = mui.ListDivider;
+import List from 'material-ui/List/List';
+import ListItem from 'material-ui/List/ListItem';
+import ListDivider from 'material-ui/Divider';
 
 var monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 

@@ -1,10 +1,9 @@
 import React from 'react';
-var createReactClass = require('create-react-class');
 
-var AppActions = require('../../actions/app-actions');
-var Authsetlist = require('./authsetlist');
-var ConfirmDecommission = require('./confirmdecommission');
-import { preformatWithRequestID } from '../../helpers.js';
+import AppActions from '../../actions/app-actions';
+import Authsetlist from './authsetlist';
+import ConfirmDecommission from './confirmdecommission';
+import { preformatWithRequestID } from '../../helpers';
 
 // material ui
 import FlatButton from 'material-ui/RaisedButton';

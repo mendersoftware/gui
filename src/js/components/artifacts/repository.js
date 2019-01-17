@@ -5,12 +5,11 @@ import AppActions from '../../actions/app-actions';
 import ReactDOM from 'react-dom';
 import ReactTooltip from 'react-tooltip';
 import { UploadArtifact, ExpandArtifact } from '../helptips/helptooltips';
-var Loader = require('../common/loader');
+import Loader from '../common/loader';
 import SearchInput from 'react-search-input';
 import SelectedArtifact from './selectedartifact';
-import Collapse from 'react-collapse';
-var Dropzone = require('react-dropzone');
-var createReactClass = require('create-react-class');
+import { Collapse } from 'react-collapse';
+import Dropzone from 'react-dropzone';
 
 // material ui
 import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
@@ -18,8 +17,7 @@ import FontIcon from 'material-ui/FontIcon';
 import FileIcon from 'react-material-icons/icons/file/file-upload';
 import IconButton from 'material-ui/IconButton';
 import LinearProgress from 'material-ui/LinearProgress';
-
-import { preformatWithRequestID } from '../../helpers.js';
+import { preformatWithRequestID } from '../../helpers';
 
 var artifacts = [];
 

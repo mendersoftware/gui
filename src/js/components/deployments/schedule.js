@@ -3,14 +3,13 @@ import Time from 'react-time';
 var createReactClass = require('create-react-class');
 
 // material ui
-var mui = require('material-ui');
-var Table = mui.Table;
-var TableHeader = mui.TableHeader;
-var TableHeaderColumn = mui.TableHeaderColumn;
-var TableBody = mui.TableBody;
-var TableRow = mui.TableRow;
-var TableRowColumn = mui.TableRowColumn;
-var FlatButton = mui.FlatButton;
+import FlatButton from 'material-ui/FlatButton';
+import Table from 'material-ui/Table/Table';
+import TableHeader from 'material-ui/Table/TableHeader';
+import TableHeaderColumn from 'material-ui/Table/TableHeaderColumn';
+import TableBody from 'material-ui/Table/TableBody';
+import TableRow from 'material-ui/Table/TableRow';
+import TableRowColumn from 'material-ui/Table/TableRowColumn';
 
 
 var Schedule = createReactClass({

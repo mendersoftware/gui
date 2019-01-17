@@ -1,15 +1,14 @@
 import React from 'react';
-var AppStore = require('../../stores/app-store');
-var AppActions = require('../../actions/app-actions');
-var Repository = require('./repository.js');
-var createReactClass = require('create-react-class');
+import AppStore from '../../stores/app-store';
+import AppActions from '../../actions/app-actions';
+import Repository from './repository';
 
 import { setRetryTimer, clearRetryTimer, clearAllRetryTimers } from '../../utils/retrytimer';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 
-import { preformatWithRequestID } from '../../helpers.js';
+import { preformatWithRequestID } from '../../helpers';
 
 function getState() {
   return {

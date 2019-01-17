@@ -7,24 +7,24 @@ var AppActions = require('../../actions/app-actions');
 import { Link } from 'react-router';
 import PropTypes from 'prop-types';
 import cookie from 'react-cookie';
-
-var Pending = require('./pendingdeployments.js');
-var Progress = require('./inprogressdeployments.js');
-var Past = require('./pastdeployments.js');
-var Report = require('./report.js');
-var ScheduleForm = require('./scheduleform.js');
-var ScheduleButton = require('./schedulebutton.js');
-
+import PropTypes from 'prop-types';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
-
+import { Tabs, Tab } from 'material-ui/Tabs';
 import { List, ListItem } from 'material-ui/List';
 import Divider from 'material-ui/Divider';
 
-import { preformatWithRequestID } from '../../helpers';
+import AppStore from '../../stores/app-store';
+import AppActions from '../../actions/app-actions';
+import { setRetryTimer, clearRetryTimer, clearAllRetryTimers } from '../../utils/retrytimer';
 
-import { Tabs, Tab } from 'material-ui/Tabs';
+import Pending from './pendingdeployments';
+import Progress from './inprogressdeployments';
+import Past from './pastdeployments';
+import Report from './report';
+import ScheduleForm from './scheduleform';
+import ScheduleButton from './schedulebutton';
 
 var Deployments = createReactClass({
   getInitialState: function() {

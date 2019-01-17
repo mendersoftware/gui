@@ -7,7 +7,7 @@ export function isLoggedIn() {
 
 export function unauthorizedRedirect(req) {
   //  redirect on 401 invalid token
-  req.on('response', function(res) {
+  req.on('response', res => {
     if (res.status === 401) {
       logout();
     }

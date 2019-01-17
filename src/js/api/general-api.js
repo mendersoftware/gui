@@ -6,10 +6,10 @@ import { unauthorizedRedirect } from '../auth';
 
 request.use(unauthorizedRedirect);
 
-var Api = {
+const Api = {
   get: function(url) {
     var token = cookie.load('JWT');
-    return new Promise(function(resolve, reject) {
+    return new Promise((resolve, reject) => {
       request
         .get(url)
         .authBearer(token)
@@ -17,7 +17,7 @@ var Api = {
           response: 10000, // wait 10 seconds for server to start sending
           deadline: 60000 // allow one minute to finish loading
         })
-        .end(function(err, res) {
+        .end((err, res) => {
           if (err || !res.ok) {
             reject({ error: err, res: res });
           } else {
@@ -28,14 +28,14 @@ var Api = {
   },
 
   getNoauth: function(url) {
-    return new Promise(function(resolve, reject) {
+    return new Promise((resolve, reject) => {
       request
         .get(url)
         .timeout({
           response: 10000, // wait 10 seconds for server to start sending
           deadline: 60000 // allow one minute to finish loading
         })
-        .end(function(err, res) {
+        .end((err, res) => {
           if (err || !res.ok) {
             reject({ error: err, res: res });
           } else {
@@ -46,4 +46,4 @@ var Api = {
   }
 };
 
-module.exports = Api;
+export default Api;

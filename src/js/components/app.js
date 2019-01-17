@@ -9,14 +9,13 @@ import RawTheme from '../themes/mender-theme.js';
 import IdleTimer from 'react-idle-timer';
 
 import { logout, updateMaxAge, expirySet } from '../auth';
-import { preformatWithRequestID } from '../helpers.js';
+import { preformatWithRequestID } from '../helpers';
 
-var SharedSnackbar = require('../components/common/sharedsnackbar');
+import SharedSnackbar from '../components/common/sharedsnackbar';
 
-var AppStore = require('../stores/app-store');
-var AppActions = require('../actions/app-actions');
+import AppStore from '../stores/app-store';
+import AppActions from '../actions/app-actions';
 
-var createReactClass = require('create-react-class');
 var isDemoMode = false;
 var _HostedAnnouncement = '';
 

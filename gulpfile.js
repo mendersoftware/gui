@@ -14,7 +14,7 @@ var gutil = require('gulp-util');
 var assign = require('lodash.assign');
 var streamify = require('gulp-streamify');
 
-gulp.task('watchify', function() {
+gulp.task('watchify', () => {
   var customOpts = {
     entries: ['./src/js/main.js'],
     debug: true
@@ -39,7 +39,7 @@ gulp.task('watchify', function() {
   return bundle();
 });
 
-gulp.task('styles', function() {
+gulp.task('styles', () => {
   return gulp
     .src('src/less/main.less')
     .pipe(less())
@@ -49,18 +49,17 @@ gulp.task('styles', function() {
     .pipe(gulp.dest('dist/stylesheets'));
 });
 
-gulp.task('lint', function() {
+gulp.task('lint', () => {
   return gulp
     .src(['src/**/*.js', '!node_modules/', '!dist/'])
     .pipe(eslint())
-    .pipe(eslint.format())
-    .pipe(eslint.failAfterError());
+    .pipe(eslint.format());
 });
 
-gulp.task('lint-fix', function() {
+gulp.task('lint-fix', () => {
   return (
     gulp
-      .src('src/**/*.js')
+      .src(['src/**/*.js', '!node_modules/', '!dist/'])
       .pipe(
         eslint({
           fix: true
@@ -72,7 +71,7 @@ gulp.task('lint-fix', function() {
   );
 });
 
-gulp.task('minify', ['styles'], function() {
+gulp.task('minify', ['styles'], () => {
   return gulp
     .src('src/*.css')
     .pipe(minifyCSS())
@@ -80,7 +79,7 @@ gulp.task('minify', ['styles'], function() {
     .pipe(gulp.dest('dist/stylesheets'));
 });
 
-gulp.task('browserify', function() {
+gulp.task('browserify', () => {
   process.env.NODE_ENV = 'production';
   browserify('./src/js/main.js')
     .transform('babelify', { presets: ['es2015', 'react'] })
@@ -89,26 +88,26 @@ gulp.task('browserify', function() {
     .pipe(gulp.dest('dist/js'));
 });
 
-gulp.task('copy', function() {
+gulp.task('copy', () => {
   gulp.src('src/favicon.ico').pipe(gulp.dest('dist'));
   gulp.src('src/assets/**/*.*').pipe(gulp.dest('dist/assets'));
 });
 
-gulp.task('html:dev', function() {
+gulp.task('html:dev', () => {
   return gulp
     .src('src/index.html')
     .pipe(htmlreplace({ js: 'js/main.js' }))
     .pipe(gulp.dest('dist'));
 });
 
-gulp.task('html:prod', function() {
+gulp.task('html:prod', () => {
   return gulp
     .src('src/index.html')
     .pipe(htmlreplace({ js: 'js/main.min.js' }))
     .pipe(gulp.dest('dist'));
 });
 
-gulp.task('default', ['watchify', 'copy', 'minify', 'html:dev'], function() {
+gulp.task('default', ['watchify', 'copy', 'minify', 'html:dev'], () => {
   return gulp.watch('src/**/*.*', ['lint', 'copy', 'minify']);
 });
 gulp.task('build', ['browserify', 'copy', 'minify', 'html:dev']);

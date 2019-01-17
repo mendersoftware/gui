@@ -287,7 +287,7 @@ function _collateArtifacts() {
     var x = findWithAttr(newArray, 'name', _artifactsRepo[i].name);
     if (typeof x !== 'undefined') {
       newArray[x].device_types_compatible = newArray[x].device_types_compatible.concat(
-        _artifactsRepo[i].device_types_compatible.filter(function(item) {
+        _artifactsRepo[i].device_types_compatible.filter(item => {
           return newArray[x].device_types_compatible.indexOf(item) < 0;
         })
       );
@@ -343,7 +343,7 @@ function setPendingDeployments(deployments) {
 function setDevices(devices) {
   if (devices) {
     var newDevices = {};
-    devices.forEach(function(element) {
+    devices.forEach(element => {
       newDevices[element.status] = newDevices[element.status] || [];
       newDevices[element.status].push(element);
     });
@@ -376,7 +376,7 @@ function setDeviceLimit(limit) {
 
 function setGroupDevices(devices) {
   _currentGroupDevices = [];
-  devices.forEach(function(element, index) {
+  devices.forEach((element, index) => {
     _currentGroupDevices[index] = element;
   });
 }
@@ -384,7 +384,7 @@ function setGroupDevices(devices) {
 function setPendingDevices(devices) {
   if (devices) {
     var newDevices = {};
-    devices.forEach(function(element) {
+    devices.forEach(element => {
       newDevices[element.status] = newDevices[element.status] || [];
       newDevices[element.status].push(element);
     });
@@ -436,195 +436,132 @@ var AppStore = assign(EventEmitter.prototype, {
     this.removeListener(CHANGE_EVENT, callback);
   },
 
-  getGroups: function() {
-    /*
-     * Return list of groups
-     */
-    return _groups;
-  },
+  /*
+   * Return list of groups
+   */
+  getGroups: () => _groups,
 
-  getSingleGroup: function(attr, val) {
-    return _groups[findWithAttr(_groups, attr, val)];
-  },
+  getSingleGroup: (attr, val) => _groups[findWithAttr(_groups, attr, val)],
 
-  getSelectedGroup: function() {
-    /*
-     * Return group object for current group selection
-     */
-    return _currentGroup;
-  },
+  /*
+   * Return group object for current group selection
+   */
+  getSelectedGroup: () => _currentGroup,
 
-  getDeploymentArtifact: function() {
-    // for use when switching tab from artifacts to create a deployment
-    return _deploymentArtifact;
-  },
+  // for use when switching tab from artifacts to create a deployment
+  getDeploymentArtifact: () => _deploymentArtifact,
 
-  getAllDevices: function() {
-    /*
-     * Return list of devices by current selected group
-     */
-    return _alldevices;
-  },
+  /*
+   * Return list of devices by current selected group
+   */
+  getAllDevices: () => _alldevices,
+  
+  /*
+   * Return list of devices by current selected group
+   */
+  getGroupDevices: () => _currentGroupDevices,
 
-  getGroupDevices: function() {
-    /*
-     * Return list of devices by current selected group
-     */
-    return _currentGroupDevices;
-  },
+  /*
+   * Return single device by id
+   */
+  getSingleDevice: id => _alldevices[findWithAttr(_alldevices, 'id', id)],
 
-  getSingleDevice: function(id) {
-    /*
-     * Return single device by id
-     */
-    return _alldevices[findWithAttr(_alldevices, 'id', id)];
-  },
+  /*
+   * Return set of filters for list of devices
+   */
+  getFilterAttributes: () => _attributes,
 
-  getFilterAttributes: function() {
-    /*
-     * Return set of filters for list of devices
-     */
-    return _attributes;
-  },
+  /*
+   * Return set of filters for list of devices
+   */
+  getFilters: () => _filters,
 
-  getFilters: function() {
-    /*
-     * Return set of filters for list of devices
-     */
-    return _filters;
-  },
+  /*
+   * Return true or false for device matching _filters
+   */
+  matchFilters: (item, filters) => _matchFilters(item, filters),
 
-  matchFilters: function(item, filters) {
-    /*
-     * Return true or false for device matching _filters
-     */
-    return _matchFilters(item, filters);
-  },
+  /*
+   * Return list of saved artifacts objects
+   */
+  getArtifactsRepo: () => discoverDevices(_artifactsRepo),
 
-  getArtifactsRepo: function() {
-    /*
-     * Return list of saved artifacts objects
-     */
-    return discoverDevices(_artifactsRepo);
-  },
+  /*
+   * return list of artifacts where duplicate names are collated with device compatibility lists combined
+   */
+  getCollatedArtifacts: () => _collateArtifacts(),
 
-  getCollatedArtifacts: function() {
-    /*
-     * return list of artifacts where duplicate names are collated with device compatibility lists combined
-     */
-    return _collateArtifacts();
-  },
+  /*
+   * Return single artifact by attr
+   */
+  getSoftwareArtifact: (attr, val) => _artifactsRepo[findWithAttr(_artifactsRepo, attr, val)],
 
-  getSoftwareArtifact: function(attr, val) {
-    /*
-     * Return single artifact by attr
-     */
-    return _artifactsRepo[findWithAttr(_artifactsRepo, attr, val)];
-  },
+  /*
+   * Return list of finished deployments
+   */
+  getPastDeployments: () => _getPastDeployments(),
 
-  getPastDeployments: function() {
-    /*
-     * Return list of finished deployments
-     */
-    return _getPastDeployments();
-  },
+  /*
+   * Return list of pending deployments
+   */
+  getPendingDeployments: () => _getPendingDeployments(),
 
-  getPendingDeployments: function() {
-    /*
-     * Return list of pending deployments
-     */
-    return _getPendingDeployments();
-  },
+  /*
+   * Return list of deployments in progress based on date
+   */
+  getDeploymentsInProgress: () => _getDeploymentsInProgress(),
 
-  getDeploymentsInProgress: function() {
-    /*
-     * Return list of deployments in progress based on date
-     */
-    return _getDeploymentsInProgress();
-  },
+  /*
+   * return only number in progress for top bar
+   */
+  getNumberInProgress: () => _numberInProgress,
 
-  getNumberInProgress: function() {
-    /*
-     * return only number in progress for top bar
-     */
-    return _numberInProgress;
-  },
+  /*
+   * Return boolean whether or not any deployments exist at all
+   */
+  getHasDeployments: () => _getHasDeployments(),
 
-  getHasDeployments: function() {
-    /*
-     * Return boolean whether or not any deployments exist at all
-     */
-    return _getHasDeployments();
-  },
+  /*
+   * Return list of event objects from log
+   */
+  getEventLog: () => _events,
 
-  getEventLog: function() {
-    /*
-     * Return list of event objects from log
-     */
-    return _events;
-  },
+  /*
+   * Return list of devices given group and device_type
+   */
+  filterDevicesByType: (devices, device_types) => _filterDevicesByType(devices, device_types),
 
-  filterDevicesByType: function(devices, device_types) {
-    /*
-     * Return list of devices given group and device_type
-     */
-    return _filterDevicesByType(devices, device_types);
-  },
+  getOrderedDeploymentDevices: devices => _sortDeploymentDevices(devices),
 
-  getOrderedDeploymentDevices: function(devices) {
-    return _sortDeploymentDevices(devices);
-  },
+  getPendingDevices: () => _getPendingDevices(),
 
-  getPendingDevices: function() {
-    return _getPendingDevices();
-  },
+  getTotalDevices: () => _totalNumberDevices,
 
-  getTotalDevices: function() {
-    return _totalNumberDevices;
-  },
-  getTotalPendingDevices: function() {
-    return _totalPendingDevices;
-  },
-  getTotalAcceptedDevices: function() {
-    return _totalAcceptedDevices;
-  },
-  getTotalRejectedDevices: function() {
-    return _totalRejectedDevices;
-  },
-  getTotalPreauthDevices: function() {
-    return _totalPreauthDevices;
-  },
-  getDeviceLimit: function() {
-    return _deviceLimit;
-  },
+  getTotalPendingDevices: () => _totalPendingDevices,
 
-  getActivity: function() {
-    /*
-     * Return activity log
-     */
-    return _activityLog;
-  },
+  getTotalAcceptedDevices: () => _totalAcceptedDevices,
 
-  getSnackbar: function() {
-    return _snackbar;
-  },
+  getTotalRejectedDevices: () => _totalRejectedDevices,
 
-  getCurrentUser: function() {
-    return _currentUser;
-  },
+  getTotalPreauthDevices: () => _totalPreauthDevices,
 
-  hasMultitenancy: function() {
-    // return boolean rather than organization details
-    return _hasMultitenancy;
-  },
+  getDeviceLimit: () => _deviceLimit,
 
-  getOrganization: function() {
-    return _organization;
-  },
+  /*
+   * Return activity log
+   */
+  getActivity: () => _activityLog,
 
-  showHelptips: function() {
-    return _showHelptips;
-  },
+  getSnackbar: () => _snackbar,
+
+  getCurrentUser: () => _currentUser,
+
+  // return boolean rather than organization details
+  hasMultitenancy: () => _hasMultitenancy,
+
+  getOrganization: () => _organization,
+
+  showHelptips: () => _showHelptips,
 
   getMenderVersion: function() {
     // return version number
@@ -646,15 +583,11 @@ var AppStore = assign(EventEmitter.prototype, {
     return docsVersion;
   },
 
-  getUploadInProgress: function() {
-    return _uploadInProgress;
-  },
+  getUploadInProgress: () => _uploadInProgress,
 
-  getGlobalSettings: function() {
-    return _globalSettings;
-  },
+  getGlobalSettings: () => _globalSettings,
 
-  dispatcherIndex: AppDispatcher.register(function(payload) {
+  dispatcherIndex: AppDispatcher.register(payload => {
     var action = payload.action;
     switch (action.actionType) {
     case AppConstants.SELECT_GROUP:
@@ -776,4 +709,4 @@ var AppStore = assign(EventEmitter.prototype, {
   })
 });
 
-module.exports = AppStore;
+export default AppStore;

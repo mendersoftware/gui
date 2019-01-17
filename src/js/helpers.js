@@ -62,7 +62,7 @@ export function isEmpty(obj) {
 
 export function preformatWithRequestID(res, failMsg) {
   // ellipsis line
-  if (failMsg.length > 100) failMsg = failMsg.substring(0, 220) + '...';
+  if (failMsg.length > 100) failMsg = `${failMsg.substring(0, 220)}...`;
 
   try {
     if (res.body && Object.keys(res.body).includes('request_id')) {
@@ -260,14 +260,14 @@ export function formatTime(date) {
 export function formatPublicKey(key) {
   key = key.replace('-----BEGIN PUBLIC KEY-----', '');
   key = key.replace('-----END PUBLIC KEY-----', '');
-  return key.substring(0, 15) + ' ... ' + key.substring(key.length - 15);
+  return `${key.substring(0, 15)} ... ${key.substring(key.length - 15)}`;
 }
 
 export function intersection(o1, o2) {
   return Object.keys(o1)
     .concat(Object.keys(o2))
     .sort()
-    .reduce(function(r, a, i, aa) {
+    .reduce((r, a, i, aa) => {
       if (i && aa[i - 1] === a) {
         r.push(a);
       }
