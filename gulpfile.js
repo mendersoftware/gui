@@ -82,7 +82,7 @@ gulp.task('minify', ['styles'], () => {
 gulp.task('browserify', () => {
   process.env.NODE_ENV = 'production';
   browserify('./src/js/main.js')
-    .transform('babelify', { presets: ['es2015', 'react'] })
+    .transform('babelify', { presets: ['@babel/preset-env', '@babel/preset-react'], plugins: ['@babel/plugin-proposal-class-properties'] })
     .bundle()
     .pipe(source('main.js'))
     .pipe(gulp.dest('dist/js'));
