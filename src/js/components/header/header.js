@@ -148,8 +148,7 @@ export default class Header extends React.Component {
   _deploymentsInProgress() {
     // check if deployments in progress
     var self = this;
-    AppActions.getDeploymentCount('inprogress')
-      .then(inProgress => self.setState({ inProgress }));
+    AppActions.getDeploymentCount('inprogress').then(inProgress => self.setState({ inProgress }));
   }
 
   _hasDevices() {
@@ -251,7 +250,7 @@ export default class Header extends React.Component {
     );
 
     return (
-      <div className={(this.context.location.pathname === '/login') ? 'hidden' : null}>
+      <div className={this.context.location.pathname === '/login' ? 'hidden' : null}>
         <Toolbar style={{ backgroundColor: '#fff' }}>
           <ToolbarGroup key={0}>
             <Link to="/" id="logo" />

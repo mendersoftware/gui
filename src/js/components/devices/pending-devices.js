@@ -140,7 +140,10 @@ export default class Pending extends React.Component {
   _getSnackbarMessage(skipped, done) {
     pluralize.addIrregularRule('its', 'their');
     var skipText = skipped
-      ? `${skipped} ${pluralize('devices', skipped)} ${pluralize('have', skipped)} more than one pending authset. Expand ${pluralize('this', skipped)} ${pluralize('device', skipped)} to individually adjust ${pluralize('their', skipped)} authorization status. `
+      ? `${skipped} ${pluralize('devices', skipped)} ${pluralize('have', skipped)} more than one pending authset. Expand ${pluralize(
+        'this',
+        skipped
+      )} ${pluralize('device', skipped)} to individually adjust ${pluralize('their', skipped)} authorization status. `
       : '';
     var doneText = done ? `${done} ${pluralize('device', done)} ${pluralize('was', done)} updated successfully. ` : '';
     AppActions.setSnackbar(doneText + skipText);
@@ -158,7 +161,7 @@ export default class Pending extends React.Component {
     const deviceAuthUpdates = devices.map(device => {
       if (device.auth_sets.length !== 1) {
         skipped++;
-        return Promise.resolve()
+        return Promise.resolve();
       }
       // api call device.id and device.authsets[0].id
       return AppActions.updateDeviceAuth(device.id, device.auth_sets[0].id, 'accepted')
@@ -179,14 +182,13 @@ export default class Pending extends React.Component {
           }, 4000);
           self.break;
         });
-    })
-    return Promise.all(deviceAuthUpdates)
-      .then(() => {
-        self._getSnackbarMessage(skipped, count);
-        // refresh devices by calling function in parent
-        self.props.restart();
-        self.setState({ selectedRows: [] });
-      });
+    });
+    return Promise.all(deviceAuthUpdates).then(() => {
+      self._getSnackbarMessage(skipped, count);
+      // refresh devices by calling function in parent
+      self.props.restart();
+      self.setState({ selectedRows: [] });
+    });
   }
 
   render() {
@@ -427,7 +429,7 @@ export default class Pending extends React.Component {
               </span>
               <RaisedButton
                 disabled={this.props.disabled || limitMaxed || selectedOverLimit}
-                onClick={() =>this._authorizeDevices()}
+                onClick={() => this._authorizeDevices()}
                 primary={true}
                 label={`Authorize ${this.state.selectedRows.length} ${pluralize('devices', this.state.selectedRows.length)}`}
               />

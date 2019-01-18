@@ -1,6 +1,5 @@
 import React from 'react';
 import Time from 'react-time';
-
 import ReactTooltip from 'react-tooltip';
 import { AuthButton } from '../helptips/helptooltips';
 import PropTypes from 'prop-types';
@@ -105,8 +104,8 @@ export default class ExpandedDevice extends React.Component {
         var id = data.substring(lastslashindex + 1);
 
         // onboarding
-        if (self.props.showHelpTips && !cookie.load(`${self.state.user.id  }-onboarded`) && !cookie.load(`${self.state.user.id  }-deploymentID`)) {
-          cookie.save(`${self.state.user.id  }-deploymentID`, id);
+        if (self.props.showHelpTips && !cookie.load(`${self.state.user.id}-onboarded`) && !cookie.load(`${self.state.user.id}-deploymentID`)) {
+          cookie.save(`${self.state.user.id}-deploymentID`, id);
         }
 
         AppActions.setSnackbar('Deployment created successfully. Redirecting...', 5000);
@@ -118,7 +117,7 @@ export default class ExpandedDevice extends React.Component {
       .catch(err => {
         try {
           var errMsg = err.res.body.error || '';
-          AppActions.setSnackbar(preformatWithRequestID(err.res, `Error creating deployment. ${  errMsg}`), null, 'Copy to clipboard');
+          AppActions.setSnackbar(preformatWithRequestID(err.res, `Error creating deployment. ${errMsg}`), null, 'Copy to clipboard');
         } catch (e) {
           console.log(e);
         }
@@ -148,11 +147,11 @@ export default class ExpandedDevice extends React.Component {
     this.setState({ filterByArtifact: filteredDevs });
   }
   _clickLink() {
-    window.location.assign(`https://docs.mender.io/${  this.props.docsVersion  }/client-configuration/configuration-file/polling-intervals`);
+    window.location.assign(`https://docs.mender.io/${this.props.docsVersion}/client-configuration/configuration-file/polling-intervals`);
   }
   _copyLinkToClipboard() {
     var location = window.location.href.substring(0, window.location.href.indexOf('/devices') + '/devices'.length);
-    copy(`${location  }/id=${  this.props.device.id}`);
+    copy(`${location}/id=${this.props.device.id}`);
     AppActions.setSnackbar('Link copied to clipboard');
   }
 
@@ -169,7 +168,7 @@ export default class ExpandedDevice extends React.Component {
       .catch(err => {
         var errMsg = err.res.error.message || '';
         console.log(errMsg);
-        AppActions.setSnackbar(preformatWithRequestID(err.res, `There was a problem decommissioning the device: ${  errMsg}`), null, 'Copy to clipboard');
+        AppActions.setSnackbar(preformatWithRequestID(err.res, `There was a problem decommissioning the device: ${errMsg}`), null, 'Copy to clipboard');
       });
   }
 
@@ -426,7 +425,7 @@ export default class ExpandedDevice extends React.Component {
     var authsetTitle = (
       <div style={{ width: 'fit-content', position: 'relative' }}>
         {this.props.device.status === 'pending'
-          ? `Authorization ${  pluralize('request', this.props.device.auth_sets.length)  } for this device`
+          ? `Authorization ${pluralize('request', this.props.device.auth_sets.length)} for this device`
           : 'Authorization status for this device'}
         <div
           onClick={e => this._handleStopProp(e)}

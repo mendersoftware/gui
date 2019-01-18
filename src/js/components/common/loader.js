@@ -1,6 +1,5 @@
 import React from 'react';
 
-
 export default class Loader extends React.Component {
   render() {
     var hideClass = this.props.fade ? 'hidden' : 'loaderContainer shrunk';

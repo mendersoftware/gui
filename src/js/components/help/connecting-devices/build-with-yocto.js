@@ -28,7 +28,7 @@ export default class BuildYocto extends React.Component {
   render() {
     var token = (this.props.org || {}).tenant_token;
     var codeToCopy1 = 'bitbake-layers remove-layer ../meta-mender/meta-mender-demo';
-    var codeToCopy2 = `MENDER_SERVER_URL = 'https://hosted.mender.io' \nMENDER_TENANT_TOKEN = '${  token  }'`;
+    var codeToCopy2 = `MENDER_SERVER_URL = 'https://hosted.mender.io' \nMENDER_TENANT_TOKEN = '${token}'`;
 
     return (
       <div>
@@ -93,7 +93,7 @@ export default class BuildYocto extends React.Component {
 
             <p>
               You can the use the output .sdimg and .mender files to connect to your Mender server and deploy updates, as outlined{' '}
-              <a href={`https://docs.mender.io/${  this.props.docsVersion  }artifacts/building-mender-yocto-image`} target="_blank">
+              <a href={`https://docs.mender.io/${this.props.docsVersion}artifacts/building-mender-yocto-image`} target="_blank">
                 in the tutorial
               </a>
               .
