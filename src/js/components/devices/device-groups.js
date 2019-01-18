@@ -25,6 +25,8 @@ import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import FontIcon from 'material-ui/FontIcon';
 
+const UNGROUPED_GROUP = AppConstants.UNGROUPED_GROUP;
+
 export default class DeviceGroups extends React.Component {
   static contextTypes = {
     router: PropTypes.object
@@ -42,6 +44,8 @@ export default class DeviceGroups extends React.Component {
       attributes: AppStore.getFilterAttributes(),
       createGroupDialog: false,
       devices: [],
+      acceptedDevices: [],
+      ungroupedDevices: [],
       pageNo: 1,
       pageLength: 20,
       loading: true,
@@ -70,7 +74,8 @@ export default class DeviceGroups extends React.Component {
       this.deviceTimer = setInterval(() => this._getDevices(), this.state.refreshDeviceLength);
       this._refreshAll();
     }
-    self._refreshUngroupedCount();
+    self._refreshUngroupedDevices();
+    self._refreshAcceptedDevices();
   }
 
   componentWillUnmount() {
@@ -115,8 +120,8 @@ export default class DeviceGroups extends React.Component {
     var self = this;
     AppActions.getGroups()
       .then(groups => {
-        if (self.state.ungroupedCount) {
-          groups.push(AppConstants.UNGROUPED_GROUP.id);
+        if (self.state.ungroupedDevices.length) {
+          groups.push(UNGROUPED_GROUP.id);
         }
         self.setState({ groups });
         if (cb) {
@@ -126,22 +131,34 @@ export default class DeviceGroups extends React.Component {
       .catch(err => console.log(err));
   }
 
-  _refreshUngroupedCount() {
-    var self = this;
-    return AppActions.getNumberOfDevicesInGroup()
-      .then(count => {
-        var groups = self.state.groups;
-        if (count > 0 && !groups.find(item => item === AppConstants.UNGROUPED_GROUP.id)) {
-          groups.push(AppConstants.UNGROUPED_GROUP.id);
+  _pickAcceptedUngroupedDevices(acceptedDevs, ungroupedDevs) {
+    const devices = ungroupedDevs.reduce((accu, device) => {
+      const isContained = acceptedDevs.find(item => item.id === device.id);
+      if (isContained) {
+        accu.push(device);
+      }
+      return accu;
+    }, []);
+    return devices;
+  }
+
+  _refreshAcceptedDevices() {
+    const self = this;
+    AppActions.getAllDevicesByStatus('accepted')
+      .then(acceptedDevices => {
+        if (self.state.ungroupedDevices.length && acceptedDevices.length) {
+          const ungroupedDevices = self._pickAcceptedUngroupedDevices(acceptedDevices, self.state.ungroupedDevices);
+          self.setState({ ungroupedDevices, acceptedDevices });
+        } else {
+          self.setState({ acceptedDevices });
         }
-        self.setState({ ungroupedCount: count, groups });
       })
       .catch(console.err);
   }
 
   _refreshUngroupedDevices() {
     var self = this;
-    AppActions.getNumberOfDevicesInGroup().then(devices => {
+    AppActions.getAllDevicesInGroup().then(devices => {
       var groups = self.state.groups;
       if (devices.length > 0 && !groups.find(item => item === UNGROUPED_GROUP.id)) {
         groups.push(UNGROUPED_GROUP.id);
@@ -158,11 +175,15 @@ export default class DeviceGroups extends React.Component {
     var self = this;
 
     clearInterval(self.deviceTimer);
-
-    const isUngroupedGroup = group === AppConstants.UNGROUPED_GROUP.id || group === AppConstants.UNGROUPED_GROUP.name;
-    // get number of devices in group first for pagination
-    return AppActions.getNumberOfDevicesInGroup(isUngroupedGroup ? null : group).then(count => {
-      self.setState({ loading: true, selectedGroup: group, groupCount: count, pageNo: 1, filters: [] }, () => {
+    self.setState({ devices: [], loading: true, selectedGroup: group, pageNo: 1, filters: [] }, () => {
+      const groupInQuestion = UNGROUPED_GROUP.id ? null : group;
+      // get number of devices in group first for pagination
+      AppActions.getAllDevicesInGroup(groupInQuestion).then(devices => {
+        var ungroupedDevices = self.state.ungroupedDevices;
+        if (this._isUngroupedGroup(group) && self.state.acceptedDevices.length) {
+          ungroupedDevices = self._pickAcceptedUngroupedDevices(self.state.acceptedDevices, devices);
+        }
+        self.setState({ groupCount: devices.length, ungroupedDevices });
         self.deviceTimer = setInterval(() => self._getDevices(), self.state.refreshDeviceLength);
         self._getDevices();
       });
@@ -203,29 +224,35 @@ export default class DeviceGroups extends React.Component {
     // remove single device from group
     var self = this;
     clearInterval(self.deviceTimer);
-    return AppActions.removeDeviceFromGroup(device, this.state.selectedGroup)
-      .then(() => {
-        if (idx === length - 1 && !isGroupRemoval) {
-          // if isGroupRemoval, whole group is being removed
-          AppActions.setSnackbar(`The ${pluralize('devices', length)} ${pluralize('were', length)} removed from the group`, 5000);
-          self._refreshAll();
-          self._refreshUngroupedCount();
-        }
-        return Promise.resolve();
-      });
+    return AppActions.removeDeviceFromGroup(device, this.state.selectedGroup).then(() => {
+      if (idx === length - 1 && !isGroupRemoval) {
+        // if isGroupRemoval, whole group is being removed
+        AppActions.setSnackbar(`The ${pluralize('devices', length)} ${pluralize('were', length)} removed from the group`, 5000);
+        self._refreshAll();
+        self._refreshUngroupedDevices();
+        self._refreshAcceptedDevices();
+      }
+      return Promise.resolve();
+    });
+  }
+
+  _isUngroupedGroup(group) {
+    if (!group) {
+      return false;
+    }
+    return group === UNGROUPED_GROUP.id || group === UNGROUPED_GROUP.name;
   }
 
   /*
    * Devices
    */
-
   _getDevices() {
     var self = this;
     var hasFilters = this.state.filters.length && this.state.filters[0].value;
 
     if (this.state.selectedGroup || hasFilters) {
       var params = '';
-      if (this.state.selectedGroup && this.state.selectedGroup === AppConstants.UNGROUPED_GROUP.id) {
+      if (this.state.selectedGroup && this._isUngroupedGroup(this.state.selectedGroup)) {
         params += this.encodeFilters([{ key: 'has_group', value: 'false' }]);
       } else {
         params += this.state.selectedGroup ? `group=${this.state.selectedGroup}` : '';
@@ -236,6 +263,10 @@ export default class DeviceGroups extends React.Component {
       // if a group or filters, must use inventory API
       AppActions.getDevices(this.state.pageNo, this.state.pageLength, params)
         .then(devices => {
+          if (this._isUngroupedGroup(this.state.selectedGroup)) {
+            const offset = (self.state.pageNo - 1) * self.state.pageLength;
+            devices = self.state.ungroupedDevices.slice(offset, offset + self.state.pageLength);
+          }
           if (devices.length && devices[0].attributes && self.state.isHosted) {
             AppActions.setFilterAttributes(devices[0].attributes);
           }
@@ -385,8 +416,8 @@ export default class DeviceGroups extends React.Component {
 
   _createGroupFromDialog(devices, group) {
     var self = this;
+    group = encodeURIComponent(group);
     for (var i = 0; i < devices.length; i++) {
-      group = encodeURIComponent(group);
       self._addDeviceToGroup(group, devices[i], i, devices.length);
     }
   }
@@ -407,7 +438,6 @@ export default class DeviceGroups extends React.Component {
           // reached end of list
           self.setState({ createGroupDialog: false, addGroup: false, tmpGroup: '', selectedField: '' }, () => {
             AppActions.setSnackbar('The group was updated successfully', 5000);
-            self._refreshUngroupedCount();
             self._refreshGroups(() => {
               self._handleGroupChange(group);
             });
@@ -424,8 +454,8 @@ export default class DeviceGroups extends React.Component {
   _removeDevicesFromGroup(rows) {
     var self = this;
     clearInterval(self.deviceTimer);
-    const isGroupRemoval = (rows.length >= self.state.groupCount);
-    const isPageRemoval = (self.state.devices.length <= rows.length);
+    const isGroupRemoval = rows.length >= self.state.groupCount;
+    const isPageRemoval = self.state.devices.length <= rows.length;
     const refresh = () => self._refreshAll();
     const deviceRemovals = rows.map((row, i) => self._removeSingleDevice(i, rows.length, self.state.devices[row].id, isGroupRemoval));
     return Promise.all(deviceRemovals)
@@ -517,8 +547,8 @@ export default class DeviceGroups extends React.Component {
 
     var groupCount = this.state.groupCount ? this.state.groupCount : this.props.acceptedDevices;
 
-    var groupName = this.state.selectedGroup === AppConstants.UNGROUPED_GROUP.id ? AppConstants.UNGROUPED_GROUP.name : this.state.selectedGroup;
-    var allowDeviceGroupRemoval = this.state.selectedGroup !== AppConstants.UNGROUPED_GROUP.id;
+    var groupName = this._isUngroupedGroup(this.state.selectedGroup) ? UNGROUPED_GROUP.name : this.state.selectedGroup;
+    var allowDeviceGroupRemoval = this.state.selectedGroup !== UNGROUPED_GROUP.id;
 
     var styles = {
       exampleFlatButtonIcon: {
@@ -564,7 +594,7 @@ export default class DeviceGroups extends React.Component {
             />
           ) : null}
 
-          {!this.state.selectedGroup || this.state.selectedGroup === AppConstants.UNGROUPED_GROUP.id ? null : (
+          {!this._isUngroupedGroup(this.state.selectedGroup) ? null : (
             <FlatButton onClick={() => this._toggleDialog('removeGroup')} style={styles.exampleFlatButton} label="Remove group" labelPosition="after">
               <FontIcon style={styles.exampleFlatButtonIcon} className="material-icons">
                 delete
@@ -627,7 +657,7 @@ export default class DeviceGroups extends React.Component {
             selectedGroupName={groupName}
             changeSelect={group => this._changeTmpGroup(group)}
             validateName={(invalid, group) => this._validate(invalid, group)}
-            groups={this.state.groups}
+            groups={this.state.groups.filter(group => group !== UNGROUPED_GROUP.id && group !== this.props.selectedGroup)}
             selectedField={this.state.selectedField}
           />
         </Dialog>

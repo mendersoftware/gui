@@ -83,18 +83,18 @@ var AppActions = {
 
   getDeviceById: id => DevicesApi.get(`${inventoryApiUrl}/devices/${id}`).then(res => res.body),
 
-  getNumberOfDevicesInGroup: group => {
+  getAllDevicesInGroup: group => {
     const forGroup = group ? `/groups/${group}` : '';
     const ungroupedFilter = group ? '' : '&has_group=false';
-    const getDeviceCount = (page = 1, per_page = 100, count = 0) => {
+    const getDeviceCount = (page = 1, per_page = 100, devices = []) => {
       return DevicesApi.get(`${inventoryApiUrl}${forGroup}/devices?per_page=${per_page}&page=${page}${ungroupedFilter}`).then(res => {
         var links = parse(res.headers['link']);
-        count += res.body.length;
+        devices.push(...res.body);
         if (links.next) {
           page++;
-          return getDeviceCount(page, per_page, count);
+          return getDeviceCount(page, per_page, devices);
         }
-        return Promise.resolve(count);
+        return Promise.resolve(devices);
       });
     };
     return getDeviceCount();
