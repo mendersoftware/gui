@@ -76,9 +76,9 @@ export default class GroupSelector extends React.Component {
   _onChange(event) {
     this._validateName(event.target.value);
   }
-  _handleTextFieldChange(event) {
-    this.setState({ customName: event.target.value });
-    this._validateName(event.target.value);
+  _handleTextFieldChange(value) {
+    this.setState({ customName: value });
+    this._validateName(value);
   }
   _handleSelectValueChange(value) {
     this.setState({ showInput: false, groupName: '' });
@@ -124,7 +124,7 @@ export default class GroupSelector extends React.Component {
             hintText="Name of new group"
             floatingLabelText="Name of new group"
             className="float-left clear"
-            onChange={(event, select, value) => this._handleTextFieldChange(value)}
+            onChange={(event, value) => this._handleTextFieldChange(value)}
             errorStyle={{ color: 'rgb(171, 16, 0)' }}
             errorText={this.state.errorText1}
           />
