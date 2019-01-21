@@ -15,7 +15,7 @@ export default class Groups extends React.Component {
   }
 
   dialogToggle() {
-    this.props.openGroupDialog();
+    this.props.acceptedCount ? this.props.openGroupDialog() : null;
   }
 
   render() {
@@ -55,7 +55,7 @@ export default class Groups extends React.Component {
             disabled={!this.props.acceptedCount}
             primaryText="Create a group"
             style={this.props.acceptedCount ? null : { color: '#d4e9e7' }}
-            onClick={this.props.acceptedCount ? () => () => this.dialogToggle() : null}
+            onClick={() => this.dialogToggle()}
           />
         </List>
 
