@@ -19,7 +19,7 @@ export default class ConnectingDevices extends React.Component {
         if (typeof list[k] == 'object' && list[k] !== null && k !== 'component') {
           links.push(
             <p key={k} style={{ paddingLeft: level * 16 }}>
-              <Link to={`help/connecting-devices/${relative_path}`}>{list[k].title}</Link>
+              <Link to={`connecting-devices/${relative_path}`}>{list[k].title}</Link>
             </p>
           );
           eachRecursive(list[k], level + 1);
