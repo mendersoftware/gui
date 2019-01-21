@@ -11,6 +11,7 @@ import Settings from '../components/settings/settings';
 import Help from '../components/help/help';
 
 import { isLoggedIn } from '../auth';
+import { AppContext } from '../contexts/app-context';
 
 const PrivateRoute = ({ component: Component, ...rest }) => {
   // if not logged in, redirect to login screen
@@ -35,22 +36,18 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
 
 export default (
   <App>
-    <Switch>
-      <PrivateRoute exact path="/" component={Dashboard} />
-      <PrivateRoute path="/devices/:status?/:filters?" component={Devices} />
-      <PrivateRoute path="/artifacts/:artifactVersion?" component={Artifacts} />
-      <PrivateRoute path="/deployments/:tab?/:params?/:Id?" component={Deployments} />
-      {/* render={({ match: { url } }) => (
-          <>
-            <Route exact path={`${url}/`} component={Deployments} />
-            <Route path={`${url}/:tab/:params?/:Id?`} component={Deployments} />
-          </>
-        )}
-      /> */}
-      <PrivateRoute path="/settings/:section?" component={Settings} />
-      <PrivateRoute path="/help" component={Help} />
-      <Route path="/login" component={Login} />
-      {/* <Route component={Login} /> */}
-    </Switch>
+    <AppContext.Consumer>
+      {(docsVersion, artifactProgress, uploadArtifact, version) => (
+        <Switch>
+          <PrivateRoute exact path="/" component={Dashboard} />
+          <PrivateRoute path="/devices/:status?/:filters?" component={Devices} />
+          <PrivateRoute path="/artifacts/:artifactVersion?" component={Artifacts} artifactProgress={artifactProgress} uploadArtifact={uploadArtifact} />
+          <PrivateRoute path="/deployments/:tab?/:params?/:Id?" component={Deployments} docsVersion={docsVersion} />
+          <PrivateRoute path="/settings/:section?" component={Settings} />
+          <PrivateRoute path="/help" component={Help} docsVersion={docsVersion} version={version} />
+          <Route path="/login" component={Login} />
+        </Switch>
+      )}
+    </AppContext.Consumer>
   </App>
 );

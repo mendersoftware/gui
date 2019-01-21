@@ -17,6 +17,7 @@ import DeviceGroups from './device-groups';
 import PendingDevices from './pending-devices';
 import RejectedDevices from './rejected-devices';
 import PreauthDevices from './preauthorize-devices';
+import { AppContext } from '../../contexts/app-context';
 
 export default class Devices extends React.Component {
   static contextTypes = {
@@ -224,90 +225,94 @@ export default class Devices extends React.Component {
 
     return (
       <div style={{ marginTop: '-15px' }}>
-        <Tabs
-          value={this.state.tabIndex}
-          onChange={() => this._changeTab()}
-          tabItemContainerStyle={{ background: 'none', width: '580px' }}
-          inkBarStyle={{ backgroundColor: '#347a87' }}
-        >
-          <Tab
-            label="Device groups"
-            value="/devices"
-            onActive={tabHandler}
-            style={this.state.tabIndex === '/devices' ? styles.activeTabStyle : styles.tabStyle}
-          >
-            <DeviceGroups
-              docsVersion={this.props.docsVersion}
-              params={this.props.params}
-              styles={styles}
-              rejectedDevices={this.state.rejectedCount}
-              acceptedDevices={this.state.acceptedCount}
-              allCount={this.state.allCount}
-              currentTab={this.state.currentTab}
-              showHelptips={this.state.showHelptips}
-              globalSettings={this.props.globalSettings}
-              openSettingsDialog={() => this._openSettingsDialog()}
-              pause={() => this._pauseInterval()}
-            />
-          </Tab>
-          <Tab
-            label={pendingLabel}
-            value="/devices/pending"
-            onActive={tabHandler}
-            style={this.state.tabIndex === '/devices/pending' ? styles.activeTabStyle : styles.tabStyle}
-          >
-            <PendingDevices
-              deviceLimit={this.state.deviceLimit}
-              styles={styles}
-              currentTab={this.state.currentTab}
-              acceptedDevices={this.state.acceptedCount}
-              count={this.state.pendingCount}
-              showHelptips={this.state.showHelptips}
-              highlightHelp={!this.state.acceptedCount}
-              globalSettings={this.props.globalSettings}
-              openSettingsDialog={() => this._openSettingsDialog()}
-              restart={this._restartInterval}
-              pause={() => this._pauseInterval()}
-            />
-          </Tab>
+        <AppContext.Consumer>
+          {(globalSettings, docsVersion) => (
+            <Tabs
+              value={this.state.tabIndex}
+              onChange={() => this._changeTab()}
+              tabItemContainerStyle={{ background: 'none', width: '580px' }}
+              inkBarStyle={{ backgroundColor: '#347a87' }}
+            >
+              <Tab
+                label="Device groups"
+                value="/devices"
+                onActive={tabHandler}
+                style={this.state.tabIndex === '/devices' ? styles.activeTabStyle : styles.tabStyle}
+              >
+                <DeviceGroups
+                  docsVersion={docsVersion}
+                  params={this.props.params}
+                  styles={styles}
+                  rejectedDevices={this.state.rejectedCount}
+                  acceptedDevices={this.state.acceptedCount}
+                  allCount={this.state.allCount}
+                  currentTab={this.state.currentTab}
+                  showHelptips={this.state.showHelptips}
+                  globalSettings={globalSettings}
+                  openSettingsDialog={() => this._openSettingsDialog()}
+                  pause={() => this._pauseInterval()}
+                />
+              </Tab>
+              <Tab
+                label={pendingLabel}
+                value="/devices/pending"
+                onActive={tabHandler}
+                style={this.state.tabIndex === '/devices/pending' ? styles.activeTabStyle : styles.tabStyle}
+              >
+                <PendingDevices
+                  deviceLimit={this.state.deviceLimit}
+                  styles={styles}
+                  currentTab={this.state.currentTab}
+                  acceptedDevices={this.state.acceptedCount}
+                  count={this.state.pendingCount}
+                  showHelptips={this.state.showHelptips}
+                  highlightHelp={!this.state.acceptedCount}
+                  globalSettings={globalSettings}
+                  openSettingsDialog={() => this._openSettingsDialog()}
+                  restart={this._restartInterval}
+                  pause={() => this._pauseInterval()}
+                />
+              </Tab>
 
-          <Tab
-            label="Preauthorized"
-            value="/devices/preauthorized"
-            onActive={tabHandler}
-            style={this.state.tabIndex === '/devices/preauthorized' ? styles.activeTabStyle : styles.tabStyle}
-          >
-            <PreauthDevices
-              deviceLimit={this.state.deviceLimit}
-              acceptedDevices={this.state.acceptedCount}
-              styles={styles}
-              currentTab={this.state.currentTab}
-              count={this.state.preauthCount}
-              refreshCount={() => this._getPreauthCount()}
-              globalSettings={this.props.globalSettings}
-              openSettingsDialog={() => this._openSettingsDialog()}
-              pause={() => this._pauseInterval()}
-            />
-          </Tab>
+              <Tab
+                label="Preauthorized"
+                value="/devices/preauthorized"
+                onActive={tabHandler}
+                style={this.state.tabIndex === '/devices/preauthorized' ? styles.activeTabStyle : styles.tabStyle}
+              >
+                <PreauthDevices
+                  deviceLimit={this.state.deviceLimit}
+                  acceptedDevices={this.state.acceptedCount}
+                  styles={styles}
+                  currentTab={this.state.currentTab}
+                  count={this.state.preauthCount}
+                  refreshCount={() => this._getPreauthCount()}
+                  globalSettings={globalSettings}
+                  openSettingsDialog={() => this._openSettingsDialog()}
+                  pause={() => this._pauseInterval()}
+                />
+              </Tab>
 
-          <Tab
-            label="Rejected"
-            value="/devices/rejected"
-            onActive={tabHandler}
-            style={this.state.tabIndex === '/devices/rejected' ? styles.activeTabStyle : styles.tabStyle}
-          >
-            <RejectedDevices
-              deviceLimit={this.state.deviceLimit}
-              acceptedDevices={this.state.acceptedCount}
-              styles={styles}
-              currentTab={this.state.currentTab}
-              count={this.state.rejectedCount}
-              globalSettings={this.props.globalSettings}
-              openSettingsDialog={() => this._openSettingsDialog()}
-              pause={() => this._pauseInterval()}
-            />
-          </Tab>
-        </Tabs>
+              <Tab
+                label="Rejected"
+                value="/devices/rejected"
+                onActive={tabHandler}
+                style={this.state.tabIndex === '/devices/rejected' ? styles.activeTabStyle : styles.tabStyle}
+              >
+                <RejectedDevices
+                  deviceLimit={this.state.deviceLimit}
+                  acceptedDevices={this.state.acceptedCount}
+                  styles={styles}
+                  currentTab={this.state.currentTab}
+                  count={this.state.rejectedCount}
+                  globalSettings={globalSettings}
+                  openSettingsDialog={() => this._openSettingsDialog()}
+                  pause={() => this._pauseInterval()}
+                />
+              </Tab>
+            </Tabs>
+          )}
+        </AppContext.Consumer>
 
         {!this.state.acceptedCount && this.state.showHelptips && this.state.tabIndex !== '/devices/pending' ? (
           <div>

@@ -23,6 +23,7 @@ import Dialog from 'material-ui/Dialog';
 import FontIcon from 'material-ui/FontIcon';
 import BlockIcon from 'react-material-icons/icons/content/block';
 import RefreshIcon from 'react-material-icons/icons/navigation/refresh';
+import { AppContext } from '../../contexts/app-context';
 
 export default class DeploymentReport extends React.Component {
   constructor(props, state) {
@@ -388,17 +389,22 @@ export default class DeploymentReport extends React.Component {
         </div>
 
         <div style={{ minHeight: '20vh' }}>
-          <DeviceList
-            globalSettings={this.props.globalSettings}
-            created={this.props.deployment.created}
-            status={this.props.deployment.status}
-            devices={deviceList}
-            deviceIdentity={this.state.deviceIdentity}
-            deviceInventory={this.state.deviceInventory}
-            viewLog={this.viewLog}
-            finished={() => this.updatedList()}
-            past={this.props.past}
-          />
+          <AppContext.Consumer>
+            {(docsVersion, globalSettings) => (
+              <DeviceList
+                docsVersion={docsVersion}
+                globalSettings={globalSettings}
+                created={this.props.deployment.created}
+                status={this.props.deployment.status}
+                devices={deviceList}
+                deviceIdentity={this.state.deviceIdentity}
+                deviceInventory={this.state.deviceInventory}
+                viewLog={this.viewLog}
+                finished={() => this.updatedList()}
+                past={this.props.past}
+              />
+            )}
+          </AppContext.Consumer>
           {allDevices.length ? (
             <Pagination
               locale={_en_US}

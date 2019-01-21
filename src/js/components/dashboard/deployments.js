@@ -15,12 +15,7 @@ export default class Deployments extends React.Component {
       <div className="deployments">
         <div>
           <div className="margin-bottom">
-            <Progress
-              globalSettings={this.props.globalSettings}
-              loading={this.props.loadingActive}
-              clickHandle={params => this._clickHandle(params)}
-              deployments={this.props.progress}
-            />
+            <Progress loading={this.props.loadingActive} clickHandle={params => this._clickHandle(params)} deployments={this.props.progress} />
           </div>
           <div className="margin-bottom">
             <Recent loading={this.props.loadingRecent} clickHandle={params => this._clickHandle(params)} deployments={this.props.recent} />

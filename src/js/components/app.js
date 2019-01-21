@@ -17,6 +17,7 @@ import SharedSnackbar from '../components/common/sharedsnackbar';
 
 import AppStore from '../stores/app-store';
 import AppActions from '../actions/app-actions';
+import { AppContext } from '../contexts/app-context';
 
 var isDemoMode = false;
 var _HostedAnnouncement = '';
@@ -50,7 +51,9 @@ class AppRoot extends React.Component {
       version: AppStore.getMenderVersion(),
       docsVersion: AppStore.getDocsVersion(),
       globalSettings: AppStore.getGlobalSettings(),
-      snackbar: AppStore.getSnackbar()
+      snackbar: AppStore.getSnackbar(),
+      uploadArtifact: this._uploadArtifact,
+      artifactProgress: 0
     };
   }
   componentWillMount() {
@@ -101,17 +104,17 @@ class AppRoot extends React.Component {
   _uploadArtifact(meta, file) {
     var self = this;
     AppActions.setUploadInProgress(true);
-    var progress = percent => self.setState({ progress: percent });
+    var progress = percent => self.setState({ artifactProgress: percent });
 
     AppActions.setSnackbar('Uploading artifact');
     AppActions.uploadArtifact(meta, file, progress)
       .then(() => {
-        self.setState({ progress: 0 });
+        self.setState({ artifactProgress: 0 });
         AppActions.setSnackbar('Upload successful', 5000);
         AppActions.setUploadInProgress(false);
       })
       .catch(err => {
-        self.setState({ progress: 0 });
+        self.setState({ artifactProgress: 0 });
         AppActions.setUploadInProgress(false);
         try {
           var errMsg = err.res.body.error || '';
@@ -147,14 +150,7 @@ class AppRoot extends React.Component {
               />
             </div>
             <div className="rightFluid container">
-              {React.cloneElement(this.props.children, {
-                isLoggedIn: (this.state.currentUser || {}).hasOwnProperty('email'),
-                docsVersion: this.state.docsVersion,
-                version: this.state.version,
-                uploadArtifact: (...args) => this._uploadArtifact(...args),
-                artifactProgress: this.state.progress,
-                globalSettings: this.state.globalSettings
-              })}
+              <AppContext.Provider value={this.state}>{this.props.children}</AppContext.Provider>
             </div>
           </div>
 

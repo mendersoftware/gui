@@ -24,6 +24,7 @@ import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import FontIcon from 'material-ui/FontIcon';
+import { AppContext } from '../../contexts/app-context';
 
 const UNGROUPED_GROUP = AppConstants.UNGROUPED_GROUP;
 
@@ -586,7 +587,6 @@ export default class DeviceGroups extends React.Component {
         <div className="rightFluid" style={{ paddingTop: '0' }}>
           {!this.state.selectedGroup ? (
             <Filters
-              globalSettings={this.props.globalSettings}
               attributes={this.state.attributes}
               filters={this.state.filters}
               onFilterChange={filters => this._onFilterChange(filters)}
@@ -601,27 +601,30 @@ export default class DeviceGroups extends React.Component {
               </FontIcon>
             </FlatButton>
           )}
-          <DeviceList
-            docsVersion={this.props.docsVersion}
-            pageNo={this.state.pageNo}
-            addDevicesToGroup={devices => this._addDevicesToGroup(devices)}
-            removeDevicesFromGroup={rows => this._removeDevicesFromGroup(rows)}
-            allowDeviceGroupRemoval={allowDeviceGroupRemoval}
-            loading={this.state.loading}
-            currentTab={this.props.currentTab}
-            allCount={this.props.allCount}
-            acceptedCount={this.props.acceptedDevices}
-            groupCount={groupCount}
-            styles={this.props.styles}
-            group={groupName}
-            devices={this.state.devices}
-            paused={this.props.paused}
-            showHelptips={this.props.showHelptips}
-            globalSettings={this.props.globalSettings}
-            openSettingsDialog={this.props.openSettingsDialog}
-            pause={() => this._pauseInterval()}
-          />
-
+          <AppContext.Consumer>
+            {(globalSettings, docsVersion) => (
+              <DeviceList
+                docsVersion={docsVersion}
+                pageNo={this.state.pageNo}
+                addDevicesToGroup={devices => this._addDevicesToGroup(devices)}
+                removeDevicesFromGroup={rows => this._removeDevicesFromGroup(rows)}
+                allowDeviceGroupRemoval={allowDeviceGroupRemoval}
+                loading={this.state.loading}
+                currentTab={this.props.currentTab}
+                allCount={this.props.allCount}
+                acceptedCount={this.props.acceptedDevices}
+                groupCount={groupCount}
+                styles={this.props.styles}
+                group={groupName}
+                devices={this.state.devices}
+                paused={this.props.paused}
+                showHelptips={this.props.showHelptips}
+                globalSettings={globalSettings}
+                openSettingsDialog={this.props.openSettingsDialog}
+                pause={() => this._pauseInterval()}
+              />
+            )}
+          </AppContext.Consumer>
           {this.state.devices.length && !this.state.loading ? (
             <div className="margin-top">
               <Pagination
@@ -673,16 +676,19 @@ export default class DeviceGroups extends React.Component {
           <p>This will remove the group from the list. Are you sure you want to continue?</p>
         </Dialog>
 
-        <CreateGroup
-          ref="createGroupDialog"
-          toggleDialog={e => this._toggleDialog(e)}
-          open={this.state.createGroupDialog}
-          groups={this.state.groups}
-          changeGroup={() => this._handleGroupChange()}
-          globalSettings={this.props.globalSettings}
-          addListOfDevices={(devices, group) => this._createGroupFromDialog(devices, group)}
-          acceptedCount={this.props.acceptedDevices}
-        />
+        <AppContext.Consumer>
+          {globalSettings => (
+            <CreateGroup
+              toggleDialog={() => this._toggleDialog('createGroupDialog')}
+              open={this.state.createGroupDialog}
+              groups={this.state.groups}
+              changeGroup={() => this._handleGroupChange()}
+              globalSettings={globalSettings}
+              addListOfDevices={(devices, group) => this._createGroupFromDialog(devices, group)}
+              acceptedCount={this.props.acceptedDevices}
+            />
+          )}
+        </AppContext.Consumer>
       </div>
     );
   }

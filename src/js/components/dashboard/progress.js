@@ -41,7 +41,7 @@ export default class Progress extends React.Component {
   render() {
     var deployments = this.props.deployments || [];
     var progress = deployments.map(function(deployment, index) {
-      var progressChart = <ProgressChart globalSettings={this.props.globalSettings} deployment={deployment} index={index} />;
+      var progressChart = <ProgressChart deployment={deployment} index={index} />;
 
       var deploymentInfo = (
         <div className="deploymentInfo" style={{ width: '240px', height: 'auto' }}>

@@ -554,7 +554,6 @@ export default class Deployments extends React.Component {
     } else if (this.state.reportType === 'active') {
       dialogContent = (
         <Report
-          globalSettings={this.props.globalSettings}
           abort={id => this._abortDeployment(id)}
           updated={() => this.updated()}
           deployment={this.state.selectedDeployment}
@@ -564,7 +563,6 @@ export default class Deployments extends React.Component {
       dialogContent = (
         <Report
           retry={(deployment, devices) => this._retryDeployment(deployment, devices)}
-          globalSettings={this.props.globalSettings}
           updated={() => this.updated()}
           past={true}
           deployment={this.state.selectedDeployment}

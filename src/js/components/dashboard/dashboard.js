@@ -132,7 +132,6 @@ export default class Dashboard extends React.Component {
         </div>
 
         <Deployments
-          globalSettings={this.props.globalSettings}
           loadingActive={!this.state.doneActiveDepsLoading}
           loadingRecent={!this.state.donePastDepsLoading}
           clickHandle={params => this._handleClick(params)}

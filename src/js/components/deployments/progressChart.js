@@ -6,6 +6,7 @@ import AppStore from '../../stores/app-store';
 import pluralize from 'pluralize';
 import LinearProgress from 'material-ui/LinearProgress';
 import { statusToPercentage } from '../../helpers';
+import { AppContext } from '../../contexts/app-context';
 
 export default class ProgressChart extends React.Component {
   static contextTypes = {
@@ -123,48 +124,52 @@ export default class ProgressChart extends React.Component {
     var percentage = statusToPercentage(this.state.device.status, intervalsSinceStart);
 
     var progressChart = (
-      <div className="relative">
-        <div className="progressHeader">
-          {success + failures} of {totalDevices} devices complete
-          {skipped ? (
-            <div className="skipped-text">
-              {skipped} {pluralize('devices', skipped)} {pluralize('was', skipped)} skipped
+      <AppContext.Consumer>
+        {globalSettings => (
+          <div className="relative">
+            <div className="progressHeader">
+              {success + failures} of {totalDevices} devices complete
+              {skipped ? (
+                <div className="skipped-text">
+                  {skipped} {pluralize('devices', skipped)} {pluralize('was', skipped)} skipped
+                </div>
+              ) : null}
             </div>
-          ) : null}
-        </div>
-        <div className="bubbles-contain">{deviceGrid}</div>
-        <div className={!this.state.device.id ? 'device-info' : 'device-info show'}>
-          <b>Device info:</b>
-          <p>
-            <b>{(this.props.globalSettings || {}).id_attribute || 'Device ID'}: </b>
-            {(this.props.globalSettings || {}).id_attribute && (this.props.globalSettings || {}).id_attribute !== 'Device ID' && this.state.device.identity_data
-              ? this.state.device.identity_data[this.props.globalSettings.id_attribute]
-              : this.state.device.id}
-          </p>
-          <p>
-            <b>Status: </b>
-            {this.state.device.status}
-          </p>
-          <div className={'substateText'}>{this.state.device.substate}</div>
+            <div className="bubbles-contain">{deviceGrid}</div>
+            <div className={!this.state.device.id ? 'device-info' : 'device-info show'}>
+              <b>Device info:</b>
+              <p>
+                <b>{(globalSettings || {}).id_attribute || 'Device ID'}: </b>
+                {(globalSettings || {}).id_attribute && (globalSettings || {}).id_attribute !== 'Device ID' && this.state.device.identity_data
+                  ? this.state.device.identity_data[globalSettings.id_attribute]
+                  : this.state.device.id}
+              </p>
+              <p>
+                <b>Status: </b>
+                {this.state.device.status}
+              </p>
+              <div className={'substateText'}>{this.state.device.substate}</div>
 
-          {!['pending', 'decommissioned', 'aborted'].includes(this.state.device.status.toLowerCase()) && (
-            <div>
-              <div className={'substateText'} style={{ textAlign: 'end' }}>
-                {percentage}%
-              </div>
-              <LinearProgress
-                color={this.state.device.status && this.state.device.status.toLowerCase() == 'failure' ? '#8f0d0d' : '#009E73'}
-                mode="determinate"
-                value={percentage}
-              />
+              {!['pending', 'decommissioned', 'aborted'].includes(this.state.device.status.toLowerCase()) && (
+                <div>
+                  <div className={'substateText'} style={{ textAlign: 'end' }}>
+                    {percentage}%
+                  </div>
+                  <LinearProgress
+                    color={this.state.device.status && this.state.device.status.toLowerCase() == 'failure' ? '#8f0d0d' : '#009E73'}
+                    mode="determinate"
+                    value={percentage}
+                  />
+                </div>
+              )}
             </div>
-          )}
-        </div>
-        <div className="key">
-          <div className="bubble failure" /> Failed <div className="bubble pending" /> Pending <div className="bubble inprogress" /> In progress{' '}
-          <div className="bubble success" /> Successful
-        </div>
-      </div>
+            <div className="key">
+              <div className="bubble failure" /> Failed <div className="bubble pending" /> Pending <div className="bubble inprogress" /> In progress{' '}
+              <div className="bubble success" /> Successful
+            </div>
+          </div>
+        )}
+      </AppContext.Consumer>
     );
     return <div>{progressChart}</div>;
   }
