@@ -46,7 +46,7 @@ var VirtualDevice =  createReactClass({
             <h3>Prerequisites</h3>
 
             <h4>Infrastructure to run the virtual device</h4>
-            <p>You need to start virtual devices on our own infrastructure (e.g. your workstation or EC2 instance).</p>
+            <p>You need to start virtual devices on your own infrastructure (e.g. your workstation or EC2 instance).</p>
 
             <h4>Ability to connect to Hosted Mender over the Internet</h4>
             <p>On the infrastructure you run the virual Mender client, you need to be able to create outgoing TCP connections to hosted.mender.io and s3.amazonaws.com, both on port 443 (TLS).</p>
