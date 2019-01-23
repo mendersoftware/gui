@@ -425,9 +425,11 @@ var Authorized =  createReactClass({
               <RaisedButton disabled={!this.state.selectedRows.length} label={addLabel} secondary={true} onClick={this._addToGroup}>
                 <FontIcon style={styles.raisedButtonIcon} className="material-icons">add_circle</FontIcon>
               </RaisedButton>
-              <FlatButton disabled={!this.state.selectedRows.length} style={{marginLeft: "4px"}} className={this.props.group ? null : 'hidden'} label={removeLabel} onClick={this._removeFromGroup}>
-                <FontIcon style={styles.buttonIcon} className="material-icons">remove_circle_outline</FontIcon>
-              </FlatButton>
+              { this.props.allowDeviceGroupRemoval ?
+                <FlatButton disabled={!this.state.selectedRows.length} style={{marginLeft: "4px"}} className={this.props.group ? null : 'hidden'} label={removeLabel} onClick={this._removeFromGroup}>
+                  <FontIcon style={styles.buttonIcon} className="material-icons">remove_circle_outline</FontIcon>
+                </FlatButton>
+                : null }
             </div>
           </div>
 

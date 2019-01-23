@@ -1,32 +1,24 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import ReactTooltip from 'react-tooltip';
-import { setRetryTimer, clearRetryTimer, clearAllRetryTimers } from '../../utils/retrytimer';
+import { clearAllRetryTimers } from '../../utils/retrytimer';
 import { DevicesNav } from '../helptips/helptooltips';
 import Global from '../settings/global';
 
-var createReactClass = require('create-react-class');
-var DeviceGroups = require('./device-groups');
-var PendingDevices = require('./pending-devices');
-var RejectedDevices = require('./rejected-devices');
-var PreauthDevices = require('./preauthorize-devices');
+import createReactClass from 'create-react-class';
+import DeviceGroups from './device-groups';
+import PendingDevices from './pending-devices';
+import RejectedDevices from './rejected-devices';
+import PreauthDevices from './preauthorize-devices';
 
-var pluralize = require('pluralize');
-var Loader = require('../common/loader');
+import pluralize from 'pluralize';
 
-
-var AppStore = require('../../stores/app-store');
-var AppActions = require('../../actions/app-actions');
-
-
-import { Router, Route, Link } from 'react-router';
-import { preformatWithRequestID } from '../../helpers.js'
+import AppStore from '../../stores/app-store';
+import AppActions from '../../actions/app-actions';
 
 import { Tabs, Tab } from 'material-ui/Tabs';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
-import RaisedButton from 'material-ui/RaisedButton';
-import { List, ListItem } from 'material-ui/List';
 import FontIcon from 'material-ui/FontIcon';
 import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
 

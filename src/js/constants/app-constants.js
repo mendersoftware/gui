@@ -34,4 +34,7 @@ module.exports = {
   SET_ORGANIZATION: 'SET_ORGANIZATION',
   SET_FILTER_ATTRIBUTES: 'SET_FILTER_ATTRIBUTES',
   SET_GLOBAL_SETTINGS: 'SET_GLOBAL_SETTINGS',
+  // workaround to support showing ungrouped devices, relying on the fact that
+  // '*', '|', '=' should not be whitelisted characters in a group name
+  UNGROUPED_GROUP: { id: '*|=ungrouped=|*', name: 'Ungrouped' },
 }
