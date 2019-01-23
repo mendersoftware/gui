@@ -7,6 +7,7 @@ import AppConstants from '../../constants/app-constants';
 // material ui
 import { List, ListItem } from 'material-ui/List';
 import FontIcon from 'material-ui/FontIcon';
+import Divider from 'material-ui/Divider';
 require('../common/prototype/Array.prototype.equals');
 
 export default class Groups extends React.Component {
@@ -27,6 +28,30 @@ export default class Groups extends React.Component {
 
     var allLabel = <span>All devices</span>;
 
+    const groupItems = this.props.groups.reduce(
+      (accu, group, index) => {
+        var isSelected = group === this.props.selectedGroup ? { backgroundColor: '#e7e7e7' } : { backgroundColor: 'transparent' };
+        const isUngroupedGroup = group === AppConstants.UNGROUPED_GROUP.id || group === AppConstants.UNGROUPED_GROUP.name;
+        var numDevs;
+        if (this.props.groupDevices) {
+          numDevs = this.props.groupDevices[group] || null;
+        }
+        var boundClick = this._changeGroup.bind(null, group, numDevs);
+        if (isUngroupedGroup) {
+          group = AppConstants.UNGROUPED_GROUP.name;
+        }
+        var groupLabel = <span>{decodeURIComponent(group)}</span>;
+
+        if (isUngroupedGroup) {
+          accu.ungroupedsItem = <ListItem key={group + index} primaryText={groupLabel} style={isSelected} onClick={boundClick} />;
+        } else {
+          accu.groups.push(<ListItem key={group + index} primaryText={groupLabel} style={isSelected} onClick={boundClick} />);
+        }
+        return accu;
+      },
+      { groups: [], ungroupedsItem: null }
+    );
+
     return (
       <div>
         <List>
@@ -34,28 +59,17 @@ export default class Groups extends React.Component {
             key="All"
             primaryText={allLabel}
             style={!this.props.selectedGroup ? { backgroundColor: '#e7e7e7' } : { backgroundColor: 'transparent' }}
-            onClick={() => this._changeGroup('', this.props.allCount)}
+            onClick={this._changeGroup.bind(null, '', this.props.allCount)}
           />
-
-          {this.props.groups.map(function(group, index) {
-            var isSelected = group === this.props.selectedGroup ? { backgroundColor: '#e7e7e7' } : { backgroundColor: 'transparent' };
-            var numDevs;
-            if (this.props.groupDevices) {
-              numDevs = this.props.groupDevices[group] || null;
-            }
-            if (group === AppConstants.UNGROUPED_GROUP.id) {
-              group = AppConstants.UNGROUPED_GROUP.name;
-            }
-            var groupLabel = <span>{decodeURIComponent(group)}</span>;
-            return <ListItem key={group + index} primaryText={groupLabel} style={isSelected} onClick={() => this._changeGroup(group, numDevs)} />;
-          }, this)}
-
+          {groupItems.ungroupedsItem ? groupItems.ungroupedsItem : null}
+          <Divider />
+          {groupItems.groups}
           <ListItem
             leftIcon={createBtn}
             disabled={!this.props.acceptedCount}
             primaryText="Create a group"
             style={this.props.acceptedCount ? null : { color: '#d4e9e7' }}
-            onClick={() => this.dialogToggle()}
+            onClick={this.props.acceptedCount ? () => this.dialogToggle() : null}
           />
         </List>
 

@@ -177,12 +177,7 @@ export default class RaspberryPi extends React.Component {
               If you cannot see any new device after 10 minutes, please verify that the network connection is working, and feel free to reach out for help with
               diagnostics via <a onClick={() => this.props.changePage('help/more-help-resources')}>our further Help resources</a>.
             </p>
-            <p className="note">
-              NOTE: If you reimage the device with the disk image or switch storage (e.g. SD cards) between the devices after they have booted once,{' '}
-              <b>authenticating the device to the Mender server will fail</b>. This is because the Mender server tracks the identity (MAC address by default)
-              device public key (randomly generated upon first run of the Mender client) binding. If this happens, you need to <b>decommission</b> the device
-              from the Mender server and try again.{' '}
-            </p>
+            <p className="note">NOTE: If you reimage the device with the disk image or switch storage (e.g. SD cards) between the devices after they have booted once, <b>authenticating the device to the Mender server will fail</b>. This is because the Mender server tracks the identity (MAC address by default) device public key (randomly generated upon first run of the Mender client) binding. If this happens, simply accept the device again when it appears with a new admission request.</p>
             <h3>Deploy updates</h3>
             {artifacts.length > 1 ? (
               <p>

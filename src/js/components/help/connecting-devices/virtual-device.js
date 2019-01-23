@@ -41,7 +41,7 @@ export default class VirtualDevice extends React.Component {
             <h3>Prerequisites</h3>
 
             <h4>Infrastructure to run the virtual device</h4>
-            <p>You need to start virtual devices on our own infrastructure (e.g. your workstation or EC2 instance).</p>
+            <p>You need to start virtual devices on your own infrastructure (e.g. your workstation or EC2 instance).</p>
 
             <h4>Ability to connect to Hosted Mender over the Internet</h4>
             <p>

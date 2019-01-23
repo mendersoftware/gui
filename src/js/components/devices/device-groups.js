@@ -439,6 +439,8 @@ export default class DeviceGroups extends React.Component {
           // reached end of list
           self.setState({ createGroupDialog: false, addGroup: false, tmpGroup: '', selectedField: '' }, () => {
             AppActions.setSnackbar('The group was updated successfully', 5000);
+            self._refreshUngroupedDevices();
+            self._refreshAcceptedDevices();
             self._refreshGroups(() => {
               self._handleGroupChange(group);
             });
@@ -660,7 +662,7 @@ export default class DeviceGroups extends React.Component {
             selectedGroupName={groupName}
             changeSelect={group => this._changeTmpGroup(group)}
             validateName={(invalid, group) => this._validate(invalid, group)}
-            groups={this.state.groups.filter(group => group !== UNGROUPED_GROUP.id && group !== this.props.selectedGroup)}
+            groups={this.state.groups.filter(!this._isUngroupedGroup)}
             selectedField={this.state.selectedField}
           />
         </Dialog>
