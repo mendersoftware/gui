@@ -112,6 +112,8 @@ var Dashboard = createReactClass({
       case "devices/pending":
         this.context.router.push('/devices/pending');
         break;
+      default:
+        this.context.router.push(params.route);
     }
   },
 
@@ -122,7 +124,9 @@ var Dashboard = createReactClass({
   render: function() {
     return (
       <div className="dashboard">
-        <Devices showHelptips={this.state.showHelptips} />
+        <Devices
+          showHelptips={this.state.showHelptips}
+          clickHandle={this._handleClick} />
         <Deployments
           globalSettings={this.props.globalSettings}
           loadingActive={!this.state.doneActiveDepsLoading}

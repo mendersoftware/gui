@@ -3,11 +3,12 @@ import { Link } from 'react-router';
 
 // material ui
 import RaisedButton from 'material-ui/RaisedButton';
+import { styles } from './baseWidget';
 
 export class RedirectionWidget extends React.Component {
   render() {
     return (
-      <div style={this.props.itemStyle} className="onboard">
+      <div className="onboard widget" onClick={this.props.onClick}>
         <div>
           <p>{this.props.content}</p>
         </div>
