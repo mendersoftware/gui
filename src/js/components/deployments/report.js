@@ -399,7 +399,7 @@ export default class DeploymentReport extends React.Component {
                 devices={deviceList}
                 deviceIdentity={this.state.deviceIdentity}
                 deviceInventory={this.state.deviceInventory}
-                viewLog={this.viewLog}
+                viewLog={id => this.viewLog(id)}
                 finished={() => this.updatedList()}
                 past={this.props.past}
               />
