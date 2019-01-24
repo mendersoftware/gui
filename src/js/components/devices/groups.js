@@ -11,10 +11,6 @@ import Divider from 'material-ui/Divider';
 require('../common/prototype/Array.prototype.equals');
 
 export default class Groups extends React.Component {
-  _changeGroup(group, numDevs) {
-    this.props.changeGroup(group, numDevs);
-  }
-
   dialogToggle() {
     this.props.acceptedCount ? this.props.openGroupDialog() : null;
   }
@@ -36,7 +32,7 @@ export default class Groups extends React.Component {
         if (this.props.groupDevices) {
           numDevs = this.props.groupDevices[group] || null;
         }
-        var boundClick = this._changeGroup.bind(null, group, numDevs);
+        var boundClick = () => this.props.changeGroup(group, numDevs);
         if (isUngroupedGroup) {
           group = AppConstants.UNGROUPED_GROUP.name;
         }
@@ -59,7 +55,7 @@ export default class Groups extends React.Component {
             key="All"
             primaryText={allLabel}
             style={!this.props.selectedGroup ? { backgroundColor: '#e7e7e7' } : { backgroundColor: 'transparent' }}
-            onClick={this._changeGroup.bind(null, '', this.props.allCount)}
+            onClick={() => this.props.changeGroup('', this.props.allCount)}
           />
           {groupItems.ungroupedsItem ? groupItems.ungroupedsItem : null}
           <Divider />

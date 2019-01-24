@@ -80,10 +80,6 @@ class AppRoot extends React.Component {
       }
     }
   }
-  _changeTab(tab) {
-    this.props.history.push(tab);
-    this.setState({ currentTab: this._updateActive() });
-  }
   _updateActive() {
     const pathParams = matchPath(this.props.location.pathname, { path: '/:location?' });
     switch (pathParams.location) {

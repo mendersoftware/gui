@@ -1,5 +1,5 @@
 import React from 'react';
-import { matchPath } from 'react-router';
+import { Link, NavLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 // material ui
@@ -28,10 +28,6 @@ export default class LeftNav extends React.Component {
     }
   }
 
-  _clickLink(path) {
-    this.props.changePage(path);
-  }
-
   _setNavLinks() {
     var self = this;
     var links = [];
@@ -52,23 +48,17 @@ export default class LeftNav extends React.Component {
 
   render() {
     var self = this;
-    var nav = self.state.links.map(link => {
-      var bgColor = matchPath(link.path) ? '#E7E7E7' : '#FFFFFF';
-      return (
-        <ListItem
-          primaryText={link.title}
-          style={{ paddingLeft: link.level * 16, backgroundColor: bgColor }}
-          onClick={() => self._clickLink(link.path)}
-          key={link.path}
-        />
-      );
-    });
+    var nav = self.state.links.map(link => (
+      <NavLink className="navLink helpNav" exact={true} key={link.path} to={link.path}>
+        <ListItem primaryText={link.title} style={{ paddingLeft: link.level * 16 }} />
+      </NavLink>
+    ));
     return (
       <div>
         <List>
-          <Subheader onClick={() => self._clickLink('/help')}>
-            <div style={{ cursor: 'pointer' }}>Help topics</div>
-          </Subheader>
+          <Link to="/help" key="/help">
+            <Subheader>Help topics</Subheader>
+          </Link>
           {nav}
         </List>
       </div>

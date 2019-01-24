@@ -1,5 +1,5 @@
 import React from 'react';
-import { matchPath } from 'react-router-dom';
+import { Link, matchPath } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import HelpTopics from './helptopics';
 import LeftNav from './left-nav';
@@ -118,10 +118,6 @@ export default class Help extends React.Component {
     this.setState(this._getInitialState());
   }
 
-  changePage(path) {
-    this.context.router.history.push(path);
-  }
-
   _getLatest(array) {
     // returns latest version of format x.x.x
     array.sort(versionCompare);
@@ -161,11 +157,10 @@ export default class Help extends React.Component {
               hasMultitenancy={this.state.hasMultitenancy}
               isEmpty={isEmpty}
               pages={components}
-              changePage={path => this.changePage(path)}
             />
             {ComponentToShow !== HelpTopics ? (
               <p className="margin-top-large">
-                <a onClick={() => this.changePage('/help')}>&lsaquo; Back to help topics</a>
+                <Link to="/help">&lsaquo; Back to help topics</Link>
               </p>
             ) : null}
             <Support />

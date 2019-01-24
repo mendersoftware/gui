@@ -1,4 +1,5 @@
 import React from 'react';
+import { NavLink } from 'react-router-dom';
 
 // material ui
 import { List, ListItem } from 'material-ui/List';
@@ -23,31 +24,15 @@ export default class LeftNav extends React.Component {
     var self = this;
 
     var docsVersion = '';
-    if (!this.state.isHosted) {
-      docsVersion = this.props.docsVersion ? `${this.props.docsVersion}/` : 'development/';
+    if (!self.state.isHosted) {
+      docsVersion = self.props.docsVersion ? `${self.props.docsVersion}/` : 'development/';
     }
 
     var list = listItems.map((item, index) => {
-      var borderTop = index === 0 ? 'none !important' : '1px solid #eaf4f3';
-      var active = self.props.currentTab.split('/')[1] === item.route.split('/')[1];
-      var style = active
-        ? {
-          backgroundColor: '#ffffff',
-          marginRight: '-2px',
-          borderTop: borderTop,
-          borderBottom: '1px solid #eaf4f3',
-          transition: 'all 100ms cubic-bezier(0.23, 1, 0.32, 1) 0ms'
-        }
-        : { transition: 'all 100ms cubic-bezier(0.23, 1, 0.32, 1) 0ms', color: '#949495' };
-
       return (
-        <ListItem
-          key={index}
-          style={style}
-          primaryText={item.text}
-          onClick={() => self.props.changeTab(item.route)}
-          innerDivStyle={{ padding: '22px 16px 22px 42px', fontSize: '14px', textTransform: 'uppercase' }}
-        />
+        <NavLink key={index} className="navLink leftNav" to={item.route} exact={item.route === '/'}>
+          <ListItem primaryText={item.text} innerDivStyle={{ padding: '22px 16px 22px 42px', fontSize: '14px', textTransform: 'uppercase' }} />
+        </NavLink>
       );
     });
 
@@ -58,26 +43,17 @@ export default class LeftNav extends React.Component {
       </a>
     );
 
-    var helpStyle =
-      self.props.currentTab === '/help'
-        ? { transition: 'all 100ms cubic-bezier(0.23, 1, 0.32, 1) 0ms' }
-        : { transition: 'all 100ms cubic-bezier(0.23, 1, 0.32, 1) 0ms', color: '#949495' };
-
     return (
       <div>
         <List style={{ padding: '0' }}>{list}</List>
 
         <List style={{ padding: '0', position: 'absolute', bottom: '30px', left: '0px', right: '0px' }}>
-          <ListItem
-            style={helpStyle}
-            primaryText="Help"
-            onClick={() => self.props.changeTab('/help')}
-            innerDivStyle={{ padding: '16px 16px 16px 42px', fontSize: '14px' }}
-          />
-
+          <NavLink className="navLink leftNav " to="/help">
+            <ListItem primaryText="Help" innerDivStyle={{ padding: '16px 16px 16px 42px', fontSize: '14px' }} />
+          </NavLink>
           <ListItem
             style={{ color: '#949495' }}
-            primaryText={this.props.version ? `Version: ${this.props.version}` : ''}
+            primaryText={self.props.version ? `Version: ${self.props.version}` : ''}
             secondaryText={licenseLink}
             disabled={true}
             innerDivStyle={{ padding: '16px 16px 16px 42px', fontSize: '14px' }}
