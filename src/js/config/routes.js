@@ -46,6 +46,7 @@ export default (
           <PrivateRoute path="/settings/:section?" component={Settings} />
           <PrivateRoute path="/help" component={Help} docsVersion={docsVersion} version={version} />
           <Route path="/login" component={Login} />
+          <PrivateRoute component={Dashboard} />
         </Switch>
       )}
     </AppContext.Consumer>
