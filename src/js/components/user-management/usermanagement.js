@@ -38,7 +38,7 @@ export default class UserManagement extends React.Component {
     this.setState(this._getState());
   }
   componentDidUpdate(prevProps) {
-    if (prevProps.currentTab !== this.props.currentTab && this.props.currentTab === '/settings/user-management') {
+    if (prevProps !== this.props) {
       this._getUserList();
     }
   }
