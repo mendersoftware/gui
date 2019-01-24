@@ -662,7 +662,7 @@ export default class DeviceGroups extends React.Component {
             selectedGroupName={groupName}
             changeSelect={group => this._changeTmpGroup(group)}
             validateName={(invalid, group) => this._validate(invalid, group)}
-            groups={this.state.groups.filter(!this._isUngroupedGroup)}
+            groups={this.state.groups.filter(group => !this._isUngroupedGroup(group))}
             selectedField={this.state.selectedField}
           />
         </Dialog>
