@@ -1,4 +1,5 @@
 import React from 'react';
+import { NavLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import SelfUserManagement from '../user-management/selfusermanagement';
 import UserManagement from '../user-management/usermanagement';
@@ -91,12 +92,9 @@ export default class Settings extends React.Component {
         return null;
       } else {
         return (
-          <ListItem
-            key={index}
-            style={self.state.tabIndex === item.route ? { backgroundColor: '#e7e7e7' } : null}
-            primaryText={item.text}
-            onClick={() => self.changeTab(item.route)}
-          />
+          <NavLink className="navLink settingsNav" to={item.route} key={index}>
+            <ListItem primaryText={item.text} />
+          </NavLink>
         );
       }
     });
