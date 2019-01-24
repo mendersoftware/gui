@@ -37,11 +37,11 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
 export default (
   <App>
     <AppContext.Consumer>
-      {(docsVersion, artifactProgress, uploadArtifact, version) => (
+      {(docsVersion, artifactProgress, version) => (
         <Switch>
           <PrivateRoute exact path="/" component={Dashboard} />
           <PrivateRoute path="/devices/:status?/:filters?" component={Devices} />
-          <PrivateRoute path="/artifacts/:artifactVersion?" component={Artifacts} artifactProgress={artifactProgress} uploadArtifact={uploadArtifact} />
+          <PrivateRoute path="/artifacts/:artifactVersion?" component={Artifacts} artifactProgress={artifactProgress} />
           <PrivateRoute path="/deployments/:tab?/:params?/:Id?" component={Deployments} docsVersion={docsVersion} />
           <PrivateRoute path="/settings/:section?" component={Settings} />
           <PrivateRoute path="/help" component={Help} docsVersion={docsVersion} version={version} />

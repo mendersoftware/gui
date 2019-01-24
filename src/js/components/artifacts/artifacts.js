@@ -1,14 +1,13 @@
 import React from 'react';
-import AppStore from '../../stores/app-store';
-import AppActions from '../../actions/app-actions';
-import Repository from './repository';
-
-import { setRetryTimer, clearRetryTimer, clearAllRetryTimers } from '../../utils/retrytimer';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
-
+import AppActions from '../../actions/app-actions';
+import { AppContext } from '../../contexts/app-context';
 import { preformatWithRequestID } from '../../helpers';
+import AppStore from '../../stores/app-store';
+import { setRetryTimer, clearRetryTimer, clearAllRetryTimers } from '../../utils/retrytimer';
+import Repository from './repository';
 
 export default class Artifacts extends React.Component {
   constructor(props, context) {
@@ -101,17 +100,21 @@ export default class Artifacts extends React.Component {
 
     return (
       <div>
-        <Repository
-          uploadArtifact={(...args) => this.props.uploadArtifact(...args)}
-          progress={this.props.artifactProgress}
-          showHelptips={this.state.showHelptips}
-          removeArtifact={artifact => this._removeDialog(artifact)}
-          refreshArtifacts={this._getArtifacts}
-          startLoader={this._startLoading}
-          loading={!this.state.doneLoading}
-          selected={this.state.selected}
-          artifacts={this.state.artifacts}
-        />
+        <AppContext.Consumer>
+          {({ uploadArtifact }) => (
+            <Repository
+              uploadArtifact={uploadArtifact}
+              progress={this.props.artifactProgress}
+              showHelptips={this.state.showHelptips}
+              removeArtifact={artifact => this._removeDialog(artifact)}
+              refreshArtifacts={this._getArtifacts}
+              startLoader={this._startLoading}
+              loading={!this.state.doneLoading}
+              selected={this.state.selected}
+              artifacts={this.state.artifacts}
+            />
+          )}
+        </AppContext.Consumer>
 
         <Dialog open={this.state.remove} title="Remove this artifact?" actions={removeActions}>
           Are you sure you want to remove <i>{(this.state.artifact || {}).name}</i>?

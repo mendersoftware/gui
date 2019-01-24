@@ -52,7 +52,7 @@ class AppRoot extends React.Component {
       docsVersion: AppStore.getDocsVersion(),
       globalSettings: AppStore.getGlobalSettings(),
       snackbar: AppStore.getSnackbar(),
-      uploadArtifact: this._uploadArtifact,
+      uploadArtifact: (meta, file) => this._uploadArtifact(meta, file),
       artifactProgress: 0
     };
   }
