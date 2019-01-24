@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import ReactTooltip from 'react-tooltip';
 import { ReviewDevices } from '../helptips/helptooltips';
@@ -116,7 +117,9 @@ export default class Dashboard extends React.Component {
           <div className={this.state.pending ? 'onboard margin-bottom' : 'hidden'}>
             <p>There {pending_str} waiting authorization</p>
             <div className="relative">
-              <RaisedButton onClick={() => this._handleClick({ route: 'devices/pending' })} primary={true} label="Review details" />
+              <Link to="/devices/pending">
+                <RaisedButton primary={true} label="Review details" />
+              </Link>
               {this.state.showHelptips ? (
                 <div>
                   <div id="onboard-1" className="tooltip help highlight" data-tip data-for="review-details-tip" data-event="click focus">
@@ -134,7 +137,6 @@ export default class Dashboard extends React.Component {
         <Deployments
           loadingActive={!this.state.doneActiveDepsLoading}
           loadingRecent={!this.state.donePastDepsLoading}
-          clickHandle={params => this._handleClick(params)}
           progress={this.state.progress}
           recent={this.state.recent}
         />

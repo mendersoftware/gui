@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import ReactTooltip from 'react-tooltip';
 import pluralize from 'pluralize';
@@ -11,9 +12,6 @@ export default class DeviceNotifications extends React.Component {
     router: PropTypes.object
   };
 
-  _handleClick(path) {
-    this.context.router.history.push(path);
-  }
   render() {
     var approaching = this.props.limit && this.props.total / this.props.limit > 0.8;
     var warning = this.props.limit && this.props.limit <= this.props.total;
@@ -44,23 +42,23 @@ export default class DeviceNotifications extends React.Component {
           </ReactTooltip>
 
           <div className="header-section">
-            <div onClick={() => this._handleClick('/devices')} className={warning ? 'warning inline' : approaching ? 'approaching inline' : 'inline'}>
+            <Link to="/devices" className={warning ? 'warning inline' : approaching ? 'approaching inline' : 'inline'}>
               <span>{this.props.total}</span>
               {this.props.limit ? <span>/{this.props.limit}</span> : null}
 
               <FontIcon style={{ margin: '0 7px 0 10px', top: '5px', fontSize: '20px' }} className="material-icons">
                 developer_board
               </FontIcon>
-            </div>
+            </Link>
 
             {this.props.pending ? (
-              <a
-                onClick={() => this._handleClick('/devices/pending')}
+              <Link
+                to="/devices/pending"
                 style={{ marginLeft: '7px' }}
                 className={this.props.limit && this.props.limit < this.props.pending + this.props.total ? 'warning' : null}
               >
                 {this.props.pending} pending
-              </a>
+              </Link>
             ) : null}
           </div>
         </div>

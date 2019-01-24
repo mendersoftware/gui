@@ -14,7 +14,7 @@ export default class Provision extends React.Component {
       if (typeof list[k] == 'object' && list[k] !== null && k !== 'component') {
         links.push(
           <p key={k}>
-            <Link to={`help/connecting-devices/provision-a-demo/${k}`}>{list[k].title}</Link>
+            <Link to={`/help/connecting-devices/provision-a-demo/${k}`}>{list[k].title}</Link>
           </p>
         );
       }

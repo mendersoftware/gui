@@ -14,8 +14,8 @@ export class ReviewDevices extends React.Component {
         <p>If this is the first time you've used Mender, we have provided a virtual device for you to create a test deployment.</p>
         <p>
           {this.props.devices} {pluralize('devices', this.props.devices)} {pluralize('are', this.props.devices)} waiting to be authorized by you. Click{' '}
-          <Link to={`/devices/pending`}>'Review details'</Link> to see the {pluralize('devices', this.props.devices)} which{' '}
-          {pluralize('are', this.props.devices)} requesting to be accepted.
+          <Link to="/devices/pending">'Review details'</Link> to see the {pluralize('devices', this.props.devices)} which {pluralize('are', this.props.devices)}{' '}
+          requesting to be accepted.
         </p>
         <p>
           <a className="hidehelp" onClick={toggleHelptips}>
@@ -79,7 +79,7 @@ export class AuthButton extends React.Component {
           now.
         </p>
         <p>
-          You can find out more about connecting different types of devices in <Link to={`/help/connecting-devices`}>the help section</Link>.
+          You can find out more about connecting different types of devices in <Link to="/help/connecting-devices">the help section</Link>.
         </p>
         <p>
           <a className="hidehelp" onClick={toggleHelptips}>
@@ -153,7 +153,7 @@ export class DevicesNav extends React.Component {
               deployments, you must first authorize devices that are requesting to join.
             </p>
             <p>
-              Go to the <Link to={`/devices/pending`}>Pending devices tab</Link> to add devices to the server.
+              Go to the <Link to="/devices/pending">Pending devices tab</Link> to add devices to the server.
             </p>
           </div>
         ) : (
@@ -161,7 +161,7 @@ export class DevicesNav extends React.Component {
             <p>There aren't any devices connected yet.</p>
             <p>The first step is to connect devices to the Mender server.</p>
             <p>
-              Go to the <Link to={`/devices/pending`}>Pending devices tab</Link>.
+              Go to the <Link to="/devices/pending">Pending devices tab</Link>.
             </p>
           </div>
         )}
@@ -183,7 +183,7 @@ export class ArtifactsNav extends React.Component {
         <hr />
         <p>Before you can create a deployment, an Artifact needs to be uploaded to the Mender server.</p>
         <p>
-          Go to the <Link to={`/artifacts`}>Artifacts tab</Link>.
+          Go to the <Link to="/artifacts">Artifacts tab</Link>.
         </p>
         <p>
           <a className="hidehelp" onClick={toggleHelptips}>
@@ -204,7 +204,7 @@ export class DeploymentsNav extends React.Component {
         <p>Looks like you're ready to make your first deployment!</p>
         <p>
           You have connected {this.props.devices === 1 ? 'a device' : 'devices'} to your server and uploaded an Artifact, so now go to the{' '}
-          <Link to={`/deployments`}>Deployments tab</Link> to create a deployment.
+          <Link to="/deployments">Deployments tab</Link> to create a deployment.
         </p>
         <p>
           <a className="hidehelp" onClick={toggleHelptips}>
@@ -232,7 +232,7 @@ export class UploadArtifact extends React.Component {
 
         {isHosted && multitenancy ? (
           <p>
-            To make testing easier, you can find demo Artifacts in <Link to={`/help/connecting-devices/demo-artifacts`}>the Help section</Link>. After you have
+            To make testing easier, you can find demo Artifacts in <Link to="/help/connecting-devices/demo-artifacts">the Help section</Link>. After you have
             grabbed the one you want, upload it here.
           </p>
         ) : (
@@ -246,7 +246,7 @@ export class UploadArtifact extends React.Component {
         )}
 
         <p>
-          You can also <Link to={`/help/connecting-devices/build-with-yocto`}>learn how to build your own Artifact</Link> with Yocto.
+          You can also <Link to="/help/connecting-devices/build-with-yocto">learn how to build your own Artifact</Link> with Yocto.
         </p>
 
         <p>
@@ -296,12 +296,12 @@ export class CreateDeployment extends React.Component {
         ) : this.props.devices ? (
           <p>
             You're not quite ready to make your first deployment yet - you have {this.props.devices === 1 ? 'a device' : 'devices'} connected to the server, but
-            no Artifact uploaded. Go to the <Link to={`/artifacts`}>Artifacts tab</Link>.
+            no Artifact uploaded. Go to the <Link to="/artifacts">Artifacts tab</Link>.
           </p>
         ) : (
           <p>
             You're not quite ready to make your first deployment yet - there are no devices connected to the server. Go to the{' '}
-            <Link to={`/devices/pending`}>Pending devices tab</Link>.
+            <Link to="/devices/pending">Pending devices tab</Link>.
           </p>
         )}
         <p>
@@ -368,7 +368,7 @@ export class FinishedDeployment extends React.Component {
         <p>Clicking the row will open a more detailed report.</p>
         <p>
           If you were using the test virtual device, you should now{' '}
-          <Link to={`/help/connecting-devices`}>read the help pages to learn how to provision other devices</Link>.
+          <Link to="/help/connecting-devices">read the help pages to learn how to provision other devices</Link>.
         </p>
         <p>
           <a className="hidehelp" onClick={toggleHelptips}>
@@ -390,7 +390,7 @@ export class NoDevices extends React.Component {
         <p>When a new device is requesting to join the server it will show up here, and you will have the choice to accept it or not.</p>
         <p>
           If you don't see any test devices here, or if you have a physical device you'd like to connect instead,{' '}
-          <Link to={`/help/connecting-devices`}>try reading the help pages</Link>.
+          <Link to="/help/connecting-devices">try reading the help pages</Link>.
         </p>
         <p>
           <a className="hidehelp" onClick={toggleHelptips}>

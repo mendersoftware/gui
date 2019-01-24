@@ -1,10 +1,9 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+import Time from 'react-time';
 import PropTypes from 'prop-types';
 import RecentStats from './recentstats';
-import Time from 'react-time';
 import Loader from '../common/loader';
-
-import { Link } from 'react-router-dom';
 
 export default class Recent extends React.Component {
   static contextTypes = {
@@ -16,14 +15,6 @@ export default class Recent extends React.Component {
     this.state = {
       devices: {}
     };
-  }
-  _clickHandle(id) {
-    var params = {};
-    params.id = id;
-    params.tab = 'finished';
-    params.route = 'deployments';
-    params.open = true;
-    this.props.clickHandle(params);
   }
   _formatTime(date) {
     if (date) {
@@ -39,7 +30,7 @@ export default class Recent extends React.Component {
     var recent = deployments.map(function(deployment, index) {
       if (index < 3) {
         return (
-          <div onClick={() => this._clickHandle(deployment.id)} className="deployment" key={index}>
+          <Link className="deployment" key={index} to={`/deployments/finished/open=true&id=${deployment.id}`}>
             <div className="deploymentInfo">
               <div>
                 <div className="progressLabel">Updating to:</div>
@@ -55,7 +46,7 @@ export default class Recent extends React.Component {
               </div>
             </div>
             <RecentStats id={deployment.id} />
-          </div>
+          </Link>
         );
       }
     }, this);

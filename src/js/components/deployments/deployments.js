@@ -452,7 +452,6 @@ export default class Deployments extends React.Component {
         var errMsg = err.res.body.error || '';
         AppActions.setSnackbar(preformatWithRequestID(err.res, `There was wan error while aborting the deployment: ${errMsg}`));
       });
-
   }
   updated() {
     // use to make sure re-renders dialog at correct height when device list built
@@ -552,13 +551,7 @@ export default class Deployments extends React.Component {
         />
       );
     } else if (this.state.reportType === 'active') {
-      dialogContent = (
-        <Report
-          abort={id => this._abortDeployment(id)}
-          updated={() => this.updated()}
-          deployment={this.state.selectedDeployment}
-        />
-      );
+      dialogContent = <Report abort={id => this._abortDeployment(id)} updated={() => this.updated()} deployment={this.state.selectedDeployment} />;
     } else {
       dialogContent = (
         <Report
@@ -572,7 +565,7 @@ export default class Deployments extends React.Component {
 
     var physicalLink = this.state.isHosted ? (
       <p>
-        Visit the <Link to={`/help`}>help pages</Link> for guides on provisioning Raspberry Pi 3 and BeagleBone Black devices.
+        Visit the <Link to="/help">help pages</Link> for guides on provisioning Raspberry Pi 3 and BeagleBone Black devices.
       </p>
     ) : (
       <p>

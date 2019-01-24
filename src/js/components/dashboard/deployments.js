@@ -1,5 +1,5 @@
 import React from 'react';
-
+import { Link } from 'react-router-dom';
 import Progress from './progress';
 import Recent from './recent';
 
@@ -7,24 +7,21 @@ import Recent from './recent';
 import RaisedButton from 'material-ui/RaisedButton';
 
 export default class Deployments extends React.Component {
-  _clickHandle(params) {
-    this.props.clickHandle(params);
-  }
   render() {
     return (
       <div className="deployments">
         <div>
           <div className="margin-bottom">
-            <Progress loading={this.props.loadingActive} clickHandle={params => this._clickHandle(params)} deployments={this.props.progress} />
+            <Progress loading={this.props.loadingActive} deployments={this.props.progress} />
           </div>
           <div className="margin-bottom">
-            <Recent loading={this.props.loadingRecent} clickHandle={params => this._clickHandle(params)} deployments={this.props.recent} />
+            <Recent loading={this.props.loadingRecent} deployments={this.props.recent} />
           </div>
         </div>
 
-        <div>
-          <RaisedButton onClick={() => this._clickHandle({ route: 'deployments', open: true })} label="Create a deployment" secondary={true} />
-        </div>
+        <Link to="/deployments?open=true">
+          <RaisedButton label="Create a deployment" secondary={true} />
+        </Link>
       </div>
     );
   }

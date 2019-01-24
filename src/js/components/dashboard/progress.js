@@ -21,14 +21,6 @@ export default class Progress extends React.Component {
       selectedDevice: {}
     };
   }
-  _clickHandle(id) {
-    var params = {};
-    params.id = id;
-    params.tab = 'active';
-    params.route = 'deployments';
-    params.open = true;
-    this.props.clickHandle(params);
-  }
   _formatTime(date) {
     if (date) {
       return date
@@ -40,7 +32,7 @@ export default class Progress extends React.Component {
   }
   render() {
     var deployments = this.props.deployments || [];
-    var progress = deployments.map(function(deployment, index) {
+    var progress = deployments.map((deployment, index) => {
       var progressChart = <ProgressChart deployment={deployment} index={index} />;
 
       var deploymentInfo = (
@@ -59,7 +51,7 @@ export default class Progress extends React.Component {
           </div>
           <div style={{ marginTop: '15px' }}>
             <div className="progressLabel" />
-            <a onClick={() => this._clickHandle(deployment.id)}>View report</a>
+            <Link to={`/deployments/active/open=true&id=${deployment.id}`}>View report</Link>
           </div>
         </div>
       );

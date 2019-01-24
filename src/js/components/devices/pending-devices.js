@@ -411,7 +411,7 @@ export default class Pending extends React.Component {
             <p>There are no devices pending authorization</p>
             {this.props.highlightHelp ? (
               <p>
-                Visit the <Link to={`/help/connecting-devices`}>Help section</Link> to learn how to connect devices to the Mender server.
+                Visit the <Link to='/help/connecting-devices'>Help section</Link> to learn how to connect devices to the Mender server.
               </p>
             ) : null}
           </div>
