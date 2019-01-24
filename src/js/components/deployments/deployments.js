@@ -60,9 +60,11 @@ export default class Deployments extends React.Component {
       var collated = AppStore.getCollatedArtifacts();
       self.setState({ collatedArtifacts: collated });
     });
-    AppActions.getDeviceCount()
-      .then(count => self._getDevices(count))
-      .catch(err => console.log(err));
+    AppActions.getAllDevices()
+      .then(allDevices => {
+        self.setState({ allDevices });
+      })
+      .catch(err => console.log(`Error: ${err}`));
     AppActions.getGroups()
       .then(groups => {
         this.setState({ groups });
@@ -96,6 +98,13 @@ export default class Deployments extends React.Component {
       this.setState({ reportType: 'active' });
     }
   }
+
+  componentWillUnmount() {
+    clearInterval(this.timer);
+    clearAllRetryTimers();
+    AppStore.removeChangeListener(this._onChange.bind(this));
+  }
+
   _getInitialState() {
     return {
       tabIndex: this._updateActive(),
@@ -116,24 +125,6 @@ export default class Deployments extends React.Component {
       isHosted: window.location.hostname === 'hosted.mender.io',
       per_page: 20
     };
-  }
-
-  _getDevices(count) {
-    var self = this;
-    var pages = Math.ceil(count / 500);
-    var allDevices = [];
-
-    const getDevices = pageNo =>
-      AppActions.getDevices(pageNo, 500)
-        .then(devices => {
-          allDevices = allDevices.concat(devices);
-          self.setState({ allDevices });
-          if (pageNo < pages) {
-            getDevices(pageNo + 1);
-          }
-        })
-        .catch(err => console.log(`Error: ${err}`));
-    getDevices(1);
   }
 
   _refreshDeployments() {
@@ -273,15 +264,9 @@ export default class Deployments extends React.Component {
   _getGroupDevices(group) {
     // get list of devices for each group and save them to state
     var self = this;
-    var filter = `group=${group}`;
-    return AppActions.getDevices(1, 100, filter)
+    return AppActions.getAllDevices(group)
       .then(devices => self.setState({ devices }))
       .catch(err => console.log(err));
-  }
-  componentWillUnmount() {
-    clearInterval(this.timer);
-    clearAllRetryTimers();
-    AppStore.removeChangeListener(this._onChange.bind(this));
   }
   _onChange() {
     this.setState(this._getInitialState());

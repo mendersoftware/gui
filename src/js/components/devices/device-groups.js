@@ -159,7 +159,7 @@ export default class DeviceGroups extends React.Component {
 
   _refreshUngroupedDevices() {
     var self = this;
-    AppActions.getAllDevicesInGroup().then(devices => {
+    AppActions.getAllDevices().then(devices => {
       var groups = self.state.groups;
       if (devices.length > 0 && !groups.find(item => item === UNGROUPED_GROUP.id)) {
         groups.push(UNGROUPED_GROUP.id);
@@ -179,7 +179,7 @@ export default class DeviceGroups extends React.Component {
     self.setState({ devices: [], loading: true, selectedGroup: group, pageNo: 1, filters: [] }, () => {
       const groupInQuestion = UNGROUPED_GROUP.id ? null : group;
       // get number of devices in group first for pagination
-      AppActions.getAllDevicesInGroup(groupInQuestion).then(devices => {
+      AppActions.getAllDevices(groupInQuestion).then(devices => {
         var ungroupedDevices = self.state.ungroupedDevices;
         if (this._isUngroupedGroup(group) && self.state.acceptedDevices.length) {
           ungroupedDevices = self._pickAcceptedUngroupedDevices(self.state.acceptedDevices, devices);

@@ -75,18 +75,18 @@ var AppActions = {
       attrs: attrs
     }),
 
+  getDeviceById: id => DevicesApi.get(`${inventoryApiUrl}/devices/${id}`).then(res => res.body),
+
   getDevices: (page = default_page, per_page = default_per_page, search_term) => {
     // get devices from inventory
     var search = search_term ? `&${search_term}` : '';
     return DevicesApi.get(`${inventoryApiUrl}/devices?per_page=${per_page}&page=${page}${search}`).then(res => res.body);
   },
 
-  getDeviceById: id => DevicesApi.get(`${inventoryApiUrl}/devices/${id}`).then(res => res.body),
-
-  getAllDevicesInGroup: group => {
+  getAllDevices: (group, getUngrouped) => {
     const forGroup = group ? `/groups/${group}` : '';
-    const ungroupedFilter = group ? '' : '&has_group=false';
-    const getDeviceCount = (page = 1, per_page = 100, devices = []) => {
+    const ungroupedFilter = getUngrouped ? '&has_group=false' : '';
+    const getDeviceCount = (page = 1, per_page = 500, devices = []) => {
       return DevicesApi.get(`${inventoryApiUrl}${forGroup}/devices?per_page=${per_page}&page=${page}${ungroupedFilter}`).then(res => {
         var links = parse(res.headers['link']);
         devices.push(...res.body);
