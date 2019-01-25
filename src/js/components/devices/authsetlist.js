@@ -146,7 +146,7 @@ export default class AuthsetList extends React.Component {
             style={{ whiteSpace: 'normal' }}
           >
             {authset.pubkey}{' '}
-            <a onClick={() => self.showKey(index)} className="margin-left-small">
+            <a onClick={() => self.showKey()} className="margin-left-small">
               show less
             </a>
           </Collapse>

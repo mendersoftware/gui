@@ -309,17 +309,18 @@ export default class ExpandedDevice extends React.Component {
       }, '');
     }
 
+    const states = {
+      pending: 'Accept, reject or dismiss the device?',
+      accepted: 'Reject, dismiss or decommission this device?',
+      rejected: 'Accept, dismiss or decommission this device',
+      default: 'Remove this device from preauthorization?'
+    }
+
+    const authLabelText = hasPending ? hasPending : (states[status] || states.default);
+
     var authLabel = (
       <span style={{ fontSize: '14px' }}>
-        {hasPending
-          ? hasPending
-          : status === 'pending'
-            ? 'Accept, reject or dismiss the device?'
-            : status === 'accepted'
-              ? 'Reject, dismiss or decommission this device?'
-              : status === 'rejected'
-                ? 'Accept, dismiss or decommission this device'
-                : 'Remove this device from preauthorization?'}
+        {authLabelText}
       </span>
     );
 
@@ -407,7 +408,7 @@ export default class ExpandedDevice extends React.Component {
         <FlatButton label="Cancel" onClick={() => this.dialogToggle('schedule')} />
       </div>,
       <RaisedButton
-        key="schedule-action-button-1"
+        key="schedule-action-button-2"
         label="Create deployment"
         primary={true}
         disabled={!this.state.filterByArtifact}
@@ -506,8 +507,8 @@ export default class ExpandedDevice extends React.Component {
           contentStyle={{ width: '80%', maxWidth: '1500px', overflow: 'hidden', boxShadow: '0 14px 45px rgba(0, 0, 0, 0.25), 0 10px 18px rgba(0, 0, 0, 0.22)' }}
         >
           <Authsets
-            dialogToggle={this.dialogToggle}
-            decommission={this._decommissionDevice}
+            dialogToggle={() => this.dialogToggle('authsets')}
+            decommission={id => this._decommissionDevice(id)}
             device={this.props.device}
             id_attribute={this.props.id_attribute}
             id_value={this.props.id_value}

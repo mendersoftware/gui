@@ -526,6 +526,7 @@ export default class DeviceGroups extends React.Component {
   }
 
   render() {
+    const self = this;
     // Add to group dialog
     var addActions = [
       <div key="add-action-button-1" style={{ marginRight: '10px', display: 'inline-block' }}>
@@ -551,7 +552,7 @@ export default class DeviceGroups extends React.Component {
     var groupCount = this.state.groupCount ? this.state.groupCount : this.props.acceptedDevices;
 
     var groupName = this._isUngroupedGroup(this.state.selectedGroup) ? UNGROUPED_GROUP.name : this.state.selectedGroup;
-    var allowDeviceGroupRemoval = this.state.selectedGroup !== UNGROUPED_GROUP.id;
+    var allowDeviceGroupRemoval = !this._isUngroupedGroup(this.state.selectedGroup);
 
     var styles = {
       exampleFlatButtonIcon: {
@@ -596,13 +597,13 @@ export default class DeviceGroups extends React.Component {
             />
           ) : null}
 
-          {!this._isUngroupedGroup(this.state.selectedGroup) ? null : (
+          {self.state.selectedGroup && allowDeviceGroupRemoval ? (
             <FlatButton onClick={() => this._toggleDialog('removeGroup')} style={styles.exampleFlatButton} label="Remove group" labelPosition="after">
               <FontIcon style={styles.exampleFlatButtonIcon} className="material-icons">
                 delete
               </FontIcon>
             </FlatButton>
-          )}
+          ) : null}
           <AppContext.Consumer>
             {(globalSettings, docsVersion) => (
               <DeviceList

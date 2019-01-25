@@ -238,7 +238,7 @@ export default class Authorized extends React.Component {
 
       return (
         <TableRow hoverable={!expanded} className={expanded ? 'expand' : null} key={device.id} selected={this._isSelected(index)}>
-          <TableRowColumn style={expanded ? { height: this.state.divHeight, padding: 0 } : { padding: 0 }}>
+          <TableRowColumn style={expanded ? { height: self.state.divHeight, padding: 0 } : { padding: 0 }}>
             <div
               style={styles.paddedCell}
               onClick={e => {
@@ -302,7 +302,7 @@ export default class Authorized extends React.Component {
           <TableRowColumn style={{ width: '0', padding: '0', overflow: 'visible' }}>
             <Collapse
               springConfig={{ stiffness: 210, damping: 20 }}
-              onMeasure={height => this._adjustCellHeight(height)}
+              onMeasure={measurements => self._adjustCellHeight(measurements.height)}
               className="expanded accepted"
               isOpened={expanded ? true : false}
               onClick={e => {

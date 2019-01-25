@@ -13,6 +13,7 @@ import AppActions from '../../actions/app-actions';
 import AppConstants from '../../constants/app-constants';
 import AppStore from '../../stores/app-store';
 import Loader from '../common/loader';
+import { mapDeviceAttributes } from '../../helpers';
 
 export default class CreateGroup extends React.Component {
   constructor(props, context) {
@@ -181,15 +182,7 @@ export default class CreateGroup extends React.Component {
   render() {
     var self = this;
     var deviceList = this.state.devices.map(function(device, index) {
-      var attrs = {
-        device_type: '',
-        artifact_name: ''
-      };
-
-      var attributesLength = device.attributes ? device.attributes.length : 0;
-      for (var i = 0; i < attributesLength; i++) {
-        attrs[device.attributes[i].name] = device.attributes[i].value;
-      }
+      var attrs = mapDeviceAttributes(device.attributes);
 
       var id_attribute =
         self.props.globalSettings.id_attribute && self.props.globalSettings.id_attribute !== 'Device ID'

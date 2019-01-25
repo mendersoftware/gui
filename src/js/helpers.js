@@ -274,3 +274,6 @@ export function intersection(o1, o2) {
       return r;
     }, []);
 }
+
+export const mapDeviceAttributes = attributes =>
+  attributes.reduce((accu, attribute) => Object.assign(accu, { [attribute.name]: attribute.value }), { device_type: '', artifact_name: '' });

@@ -131,7 +131,7 @@ export default class Authsets extends React.Component {
       </div>
     );
     if (this.state.decommission) {
-      decommission = <ConfirmDecommission cancel={this._showConfirm} decommission={this._decommissionHandler} />;
+      decommission = <ConfirmDecommission cancel={() => this._showConfirm()} decommission={() => this._decommissionHandler()} />;
     }
 
     return (
