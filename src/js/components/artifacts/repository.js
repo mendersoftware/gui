@@ -146,6 +146,7 @@ export default class Repository extends React.Component {
     this.props.removeArtifact(this.state.artifact);
   }
   render() {
+    const self = this;
     var styles = {
       buttonIcon: {
         height: '100%',
@@ -230,7 +231,6 @@ export default class Repository extends React.Component {
         <div className={items.length ? 'top-right-button fadeIn' : 'top-right-button fadeOut'}>
           <Dropzone
             disabled={this.props.progress > 0}
-            className=""
             activeClassName="active"
             rejectClassName="active"
             multiple={false}
@@ -307,7 +307,6 @@ export default class Repository extends React.Component {
           <div className={items.length || this.props.loading || this.props.progress ? 'hidden' : 'dashboard-placeholder fadeIn'}>
             <Dropzone
               disabled={this.props.progress > 0}
-              className=""
               activeClassName="active"
               rejectClassName="active"
               multiple={false}
@@ -315,9 +314,9 @@ export default class Repository extends React.Component {
               onDrop={(accepted, rejected) => this.onDrop(accepted, rejected)}
             >
               {({ getRootProps, getInputProps }) => (
-                <div {...getRootProps()} style={{ width: '500px', fontSize: '16px', margin: 'auto' }} className="dropzone onboard dashboard-placeholder">
+                <div {...getRootProps()} className="dropzone onboard dashboard-placeholder">
                   <input {...getInputProps()} />
-                  <p>
+                  <p style={{ width: '500px', fontSize: '16px', margin: 'auto' }}>
                     No artifacts found. Drag a file here or <a>browse</a> to upload to the repository
                   </p>
                   <img src="assets/img/artifacts.png" alt="artifacts" />

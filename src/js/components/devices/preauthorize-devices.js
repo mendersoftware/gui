@@ -475,7 +475,6 @@ export default class Preauthorize extends React.Component {
           ) : (
             <div>
               <Dropzone
-                className="dropzone onboard"
                 activeClassName="active"
                 rejectClassName="active"
                 multiple={false}
@@ -483,7 +482,7 @@ export default class Preauthorize extends React.Component {
                 style={{ width: '528px' }}
               >
                 {({ getRootProps, getInputProps }) => (
-                  <div {...getRootProps()} style={{ width: '500px', fontSize: '16px', margin: 'auto' }} className="dashboard-placeholder">
+                  <div {...getRootProps()} style={{ width: '500px', fontSize: '16px', margin: 'auto' }} className="dropzone onboard dashboard-placeholder">
                     <input {...getInputProps()} />
                     <div className="icon inline-block">
                       <FileIcon style={{ height: '24px', width: '24px', verticalAlign: 'middle', marginTop: '-2px' }} />
