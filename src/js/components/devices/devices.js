@@ -366,7 +366,7 @@ export default class Devices extends React.Component {
 
         <Dialog
           open={this.state.openIdDialog || false}
-          title="Customize device identity column"
+          title="Default device identity attribute"
           autoDetectWindowHeight={true}
           bodyStyle={{ paddingTop: '0', fontSize: '13px' }}
           contentStyle={{ overflow: 'hidden', boxShadow: '0 14px 45px rgba(0, 0, 0, 0.25), 0 10px 18px rgba(0, 0, 0, 0.22)' }}
