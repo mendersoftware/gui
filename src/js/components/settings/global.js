@@ -111,7 +111,12 @@ var Global = createReactClass({
 
 	render: function() {
 		var changed = this.hasChanged();
-		var id_hint = "Choose which device identity attribute is displayed by default in the UI (this does not have any effect on the operation of the devices)";
+		var id_hint = (
+			<div>
+			<p>Choose a device identity attribute to use to identify your devices throughout the UI.</p>
+			<p><a href="https://docs.mender.io/client-configuration/identity" target="_blank">Learn how to add custom identity attributes</a> to your devices.</p>
+			</div>
+		);
 
 		return (
 			<div style={{maxWidth: "750px"}} className="margin-top-small">
@@ -126,8 +131,8 @@ var Global = createReactClass({
 		        <Form>
 
 		          <SelectInput
-		          	hint="Default device identity attribute"
-		            label="Default device identity attribute"
+		          	hint="Device identity attribute"
+		            label="Device identity attribute"
 		            id="deviceid"
 		            onChange={this.changeIdAttribute}
 		            menuItems={this.state.id_attributes}
