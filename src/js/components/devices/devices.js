@@ -19,6 +19,25 @@ import RejectedDevices from './rejected-devices';
 import PreauthDevices from './preauthorize-devices';
 import { AppContext } from '../../contexts/app-context';
 
+const routes = {
+  pending: {
+    route: '/devices/pending',
+    title: 'Pending'
+  },
+  preauthorized: {
+    route: '/devices/preauthorized',
+    title: 'Preauthorized'
+  },
+  rejected: {
+    route: '/devices/rejected',
+    title: 'Rejected'
+  },
+  devices: {
+    route: '/devices',
+    title: 'Device groups'
+  }
+};
+
 export default class Devices extends React.Component {
   static contextTypes = {
     router: PropTypes.object
@@ -75,8 +94,13 @@ export default class Devices extends React.Component {
     self._refreshAll();
   }
 
-  _changeTab() {
-    //this._restartInterval();
+  _changeTab(tab) {
+    const self = this;
+    const tabIndex = self._updateActive(tab);
+    self.setState({ tabIndex }, () => {
+      self.context.router.history.push(tabIndex);
+      AppActions.setSnackbar('');
+    });
   }
 
   /*
@@ -118,36 +142,18 @@ export default class Devices extends React.Component {
     this.setState({ tabIndex: this._updateActive(), currentTab: this._getCurrentLabel() });
   }
 
-  _updateActive() {
-    switch (this.context.router.route.match.params.status) {
-    case 'pending':
-      return '/devices/pending';
-    case 'preauthorized':
-      return '/devices/preauthorized';
-    case 'rejected':
-      return '/devices/rejected';
-    default:
-      return '/devices';
+  _updateActive(tab = this.context.router.route.match.params.status) {
+    if (routes.hasOwnProperty(tab)) {
+      return routes[tab].route;
     }
+    return routes.devices.route;
   }
 
-  _getCurrentLabel() {
-    switch (this.context.router.route.match.params.status) {
-    case 'pending':
-      return 'Pending';
-    case 'preauthorized':
-      return 'Preauthorized';
-    case 'rejected':
-      return 'Rejected';
-    default:
-      return 'Device groups';
+  _getCurrentLabel(tab = this.context.router.route.match.params.status) {
+    if (routes.hasOwnProperty(tab)) {
+      return routes[tab].route;
     }
-  }
-
-  _handleTabActive(tab) {
-    AppActions.setSnackbar('');
-    this.setState({ currentTab: tab.props.label });
-    this.context.router.history.push(tab.props.value);
+    return routes.devices.route;
   }
 
   dialogToggle(ref) {
@@ -182,7 +188,6 @@ export default class Devices extends React.Component {
 
   render() {
     // nested tabs
-    var tabHandler = this._handleTabActive.bind(this);
     var styles = {
       tabStyle: {
         display: 'block',
@@ -228,17 +233,12 @@ export default class Devices extends React.Component {
         <AppContext.Consumer>
           {(globalSettings, docsVersion) => (
             <Tabs
-              value={this.state.tabIndex}
-              onChange={() => this._changeTab()}
+              value={this.context.router.route.match.params.status || 'devices'}
+              onChange={tab => this._changeTab(tab)}
               tabItemContainerStyle={{ background: 'none', width: '580px' }}
               inkBarStyle={{ backgroundColor: '#347a87' }}
             >
-              <Tab
-                label="Device groups"
-                value="/devices"
-                onActive={tabHandler}
-                style={this.state.tabIndex === '/devices' ? styles.activeTabStyle : styles.tabStyle}
-              >
+              <Tab label={routes.devices.title} value="devices" style={this.state.tabIndex === routes.devices.route ? styles.activeTabStyle : styles.tabStyle}>
                 <DeviceGroups
                   docsVersion={docsVersion}
                   params={this.props.params}
@@ -253,12 +253,7 @@ export default class Devices extends React.Component {
                   pause={() => this._pauseInterval()}
                 />
               </Tab>
-              <Tab
-                label={pendingLabel}
-                value="/devices/pending"
-                onActive={tabHandler}
-                style={this.state.tabIndex === '/devices/pending' ? styles.activeTabStyle : styles.tabStyle}
-              >
+              <Tab label={pendingLabel} value="pending" style={this.state.tabIndex === routes.devices.route ? styles.activeTabStyle : styles.tabStyle}>
                 <PendingDevices
                   deviceLimit={this.state.deviceLimit}
                   styles={styles}
@@ -275,10 +270,9 @@ export default class Devices extends React.Component {
               </Tab>
 
               <Tab
-                label="Preauthorized"
-                value="/devices/preauthorized"
-                onActive={tabHandler}
-                style={this.state.tabIndex === '/devices/preauthorized' ? styles.activeTabStyle : styles.tabStyle}
+                label={routes.preauthorized.title}
+                value="preauthorized"
+                style={this.state.tabIndex === routes.devices.route ? styles.activeTabStyle : styles.tabStyle}
               >
                 <PreauthDevices
                   deviceLimit={this.state.deviceLimit}
@@ -294,10 +288,9 @@ export default class Devices extends React.Component {
               </Tab>
 
               <Tab
-                label="Rejected"
-                value="/devices/rejected"
-                onActive={tabHandler}
-                style={this.state.tabIndex === '/devices/rejected' ? styles.activeTabStyle : styles.tabStyle}
+                label={routes.rejected.title}
+                value="rejected"
+                style={this.state.tabIndex === routes.devices.route ? styles.activeTabStyle : styles.tabStyle}
               >
                 <RejectedDevices
                   deviceLimit={this.state.deviceLimit}
@@ -314,7 +307,7 @@ export default class Devices extends React.Component {
           )}
         </AppContext.Consumer>
 
-        {!this.state.acceptedCount && this.state.showHelptips && this.state.tabIndex !== '/devices/pending' ? (
+        {!this.state.acceptedCount && this.state.showHelptips && this.state.tabIndex !== routes.pending.route ? (
           <div>
             <div
               id="onboard-15"
