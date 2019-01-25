@@ -35,42 +35,30 @@ export default class Deployments extends React.Component {
   componentWillMount() {
     AppStore.changeListener(this._onChange.bind(this));
   }
+
   componentDidMount() {
     var self = this;
 
-    this.setState({ docsVersion: this.props.docsVersion ? `${this.props.docsVersion}/` : 'development/' });
-
-    var artifact = AppStore.getDeploymentArtifact();
-    this.setState({ artifact: artifact });
-
     clearAllRetryTimers();
     this.timer = setInterval(() => this._refreshDeployments(), this.state.refreshDeploymentsLength);
-    // set default date range before refreshing
-    var startDate = new Date();
-    startDate.setDate(startDate.getDate());
-    startDate.setHours(0, 0, 0, 0); // set to start of day
-    var endDate = new Date();
-    endDate.setHours(23, 59, 59, 999);
-    self.setState({ startDate: startDate, endDate: endDate });
-    // , () => {
-    //   self._refreshDeployments();
-    // });
+    this._refreshDeployments()
 
-    AppActions.getArtifacts().then(() => {
-      var collated = AppStore.getCollatedArtifacts();
-      self.setState({ collatedArtifacts: collated });
-    });
-    AppActions.getAllDevices()
-      .then(allDevices => {
-        self.setState({ allDevices });
+    var artifact = AppStore.getDeploymentArtifact();
+    this.setState({ artifact });
+
+    Promise.all([AppActions.getArtifacts(), AppActions.getAllDevices(), AppActions.getGroups()])
+      .catch(err => console.log(`Error: ${err}`))
+      .then(([artifacts, allDevices, groups]) => {
+        const collatedArtifacts = AppStore.getCollatedArtifacts(artifacts);
+        self.setState({ allDevices, collatedArtifacts, groups });
+        return Promise.all(groups.map(group => AppActions.getAllDevices(group)
+          .then(devices => Promise.resolve({[group]: devices}))
+        ));
       })
-      .catch(err => console.log(`Error: ${err}`));
-    AppActions.getGroups()
-      .then(groups => {
-        this.setState({ groups });
-        return groups.map(group => this._getGroupDevices(group));
-      })
-      .catch(error => console.log(`Error: ${error}`));
+      .then(groupedDevices => {
+        const state = groupedDevices.reduce((accu, item) => Object.assign(accu, item), {doneLoading:true});
+        self.setState(state);
+      });
 
     if (this.props.params) {
       this.setState({ reportType: this.props.params.tab });
@@ -106,7 +94,15 @@ export default class Deployments extends React.Component {
   }
 
   _getInitialState() {
+    // set default date range before refreshing
+    var startDate = new Date();
+    startDate.setDate(startDate.getDate());
+    startDate.setHours(0, 0, 0, 0); // set to start of day
+    var endDate = new Date();
+    endDate.setHours(23, 59, 59, 999);
+
     return {
+      docsVersion: this.props.docsVersion ? `${this.props.docsVersion}/` : 'development/',
       tabIndex: this._updateActive(),
       past: AppStore.getPastDeployments(),
       pending: AppStore.getPendingDeployments(),
@@ -123,7 +119,9 @@ export default class Deployments extends React.Component {
       user: AppStore.getCurrentUser(),
       pageLength: AppStore.getTotalDevices(),
       isHosted: window.location.hostname === 'hosted.mender.io',
-      per_page: 20
+      per_page: 20,
+      startDate,
+      endDate
     };
   }
 
@@ -261,13 +259,7 @@ export default class Deployments extends React.Component {
       AppActions.setSnackbar('');
     }, 1500);
   }
-  _getGroupDevices(group) {
-    // get list of devices for each group and save them to state
-    var self = this;
-    return AppActions.getAllDevices(group)
-      .then(devices => self.setState({ devices }))
-      .catch(err => console.log(err));
-  }
+
   _onChange() {
     this.setState(this._getInitialState());
   }
@@ -300,7 +292,7 @@ export default class Deployments extends React.Component {
   _retryDeployment(deployment, devices) {
     var self = this;
     var artifact = { name: deployment.artifact_name };
-    this.setState({ artifact: artifact, group: deployment.name, filteredDevices: devices }, () => self._onScheduleSubmit());
+    this.setState({ artifact, group: deployment.name, filteredDevices: devices }, () => self._onScheduleSubmit());
   }
 
   _onScheduleSubmit() {
