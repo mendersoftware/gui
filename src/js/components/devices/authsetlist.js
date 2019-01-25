@@ -140,7 +140,7 @@ export default class AuthsetList extends React.Component {
         self.state.showKey === index ? (
           <Collapse
             springConfig={{ stiffness: 210, damping: 20 }}
-            onMeasure={height => self._adjustCellHeight(height)}
+            onMeasure={measurements => self._adjustCellHeight(measurements.height)}
             className="expanded"
             isOpened={true}
             style={{ whiteSpace: 'normal' }}
@@ -183,7 +183,7 @@ export default class AuthsetList extends React.Component {
           <TableRowColumn style={{ width: '0', padding: '0', overflow: 'visible' }}>
             <Collapse
               springConfig={{ stiffness: 210, damping: 20 }}
-              onMeasure={height => self._adjustCellHeight(height)}
+              onMeasure={measurements => self._adjustCellHeight(measurements.height)}
               className="expanded"
               isOpened={expanded ? true : false}
             >

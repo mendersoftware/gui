@@ -294,7 +294,7 @@ export default class Pending extends React.Component {
             >
               <Collapse
                 springConfig={{ stiffness: 210, damping: 20 }}
-                onMeasure={height => this._adjustCellHeight(height)}
+                onMeasure={measurements => self._adjustCellHeight(measurements.height)}
                 className="expanded"
                 isOpened={expanded ? true : false}
                 onClick={e => {

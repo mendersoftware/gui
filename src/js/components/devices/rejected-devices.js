@@ -183,7 +183,7 @@ export default class Rejected extends React.Component {
           <TableRowColumn style={{ width: '0', padding: '0', overflow: 'visible' }}>
             <Collapse
               springConfig={{ stiffness: 210, damping: 20 }}
-              onMeasure={height => this._adjustCellHeight(height)}
+              onMeasure={measurements => self._adjustCellHeight(measurements.height)}
               className="expanded"
               isOpened={expanded ? true : false}
               onClick={e => {
