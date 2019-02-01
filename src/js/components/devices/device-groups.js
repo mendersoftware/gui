@@ -331,6 +331,10 @@ var DeviceGroups = createReactClass({
 					params += this.state.selectedGroup ? "group="+this.state.selectedGroup : "";
 				}
     		if (hasFilters) {
+        const filterId = this.state.filters.find(item => item.key === 'id');
+        if (filterId) {
+          return AppActions.getDeviceById(filterId);
+        }
     		  params += this.encodeFilters(this.state.filters);
     		}
     		// if a group or filters, must use inventory API
