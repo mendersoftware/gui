@@ -16,9 +16,8 @@ const notificationStyles = {
 }
 
 export class AcceptedDevices extends React.Component {
-
   render() {
-    const timeframe = '24 Hours';
+    const timeframe = '24h';
     let timeframeNote = 'Active in';
     let activityNotificationText = 'All devices online';
     let notificationSymbol = <CheckCircle style={Object.assign({}, notificationStyles.base, notificationStyles.green)} />;
@@ -46,8 +45,13 @@ export class AcceptedDevices extends React.Component {
 
     let widgetFooter;
     if (this.props.delta) {
-      const deltaSymbol = this.props.delta > 0 ? '⬆' : '⬇';
-      widgetFooter = `${deltaSymbol} ${this.props.delta} Last ${timeframe}`;
+      let deltaSymbol = '+';
+      let deltaNotification = `${pluralize('device', this.props.delta)}`;
+      if (this.props.delta < 0) {
+        deltaSymbol = '-';
+        deltaNotification = `${pluralize('device', this.props.delta)}`;
+      }
+      widgetFooter = `${deltaSymbol}${this.props.delta} ${deltaNotification} within the last ${timeframe}`;
     }
     return (
       <BaseWidget
