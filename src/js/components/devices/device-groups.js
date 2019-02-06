@@ -136,50 +136,52 @@ var DeviceGroups = createReactClass({
     return devices;
   },
 
-  _refreshAcceptedDevices: function () {
-    const self = this;
-    AppActions
-      .getAllDevicesByStatus('accepted')
-      .then(acceptedDevices => {
-        if (self.state.ungroupedDevices.length && acceptedDevices.length) {
-          const ungroupedDevices = self._pickAcceptedUngroupedDevices(acceptedDevices, self.state.ungroupedDevices);
-          self.setState({ ungroupedDevices, acceptedDevices });
-        } else {
-          self.setState({ acceptedDevices });
-        }
-      })
-      .catch(console.err);
+  _refreshAcceptedDevices: function() {
+    var callback = {
+      success: () => {},
+      error: () => {}
+    };
+    AppActions.getDeviceCount(callback, 'accepted').catch(console.err);
   },
 
-  _refreshUngroupedDevices: function () {
+  _refreshUngroupedDevices: function() {
     var self = this;
-    AppActions.getNumberOfDevicesInGroup((count, devices) => {
+    const noGroupDevices = AppActions.getAllDevicesInGroup();
+    const acceptedDevs = AppActions.getAllDevicesByStatus('accepted');
+    return Promise.all([noGroupDevices, acceptedDevs]).then(results => {
+      let ungroupedDevices = results[0];
+      const acceptedDevices = results[1];
       var groups = self.state.groups;
-      if (devices.length > 0 && !groups.find(item => item === UNGROUPED_GROUP.id)) {
+      if (ungroupedDevices.length > 0 && !groups.find(item => item === UNGROUPED_GROUP.id)) {
         groups.push(UNGROUPED_GROUP.id);
       }
-      var ungroupedDevices = devices;
-      if (self.state.acceptedDevices.length && devices.length) {
-        ungroupedDevices = self._pickAcceptedUngroupedDevices(self.state.acceptedDevices, devices);
+      if (acceptedDevices.length && ungroupedDevices.length) {
+        ungroupedDevices = self._pickAcceptedUngroupedDevices(acceptedDevices, ungroupedDevices);
+        return new Promise(resolve => {
+          self.setState({ ungroupedDevices, groups }, () => resolve());
+        });
       }
-      self.setState({ ungroupedDevices, groups });
-    }, null);
+      return Promise.resolve();
+    });
   },
 
 	_handleGroupChange: function(group) {
 		var self = this;
 		clearInterval(self.deviceTimer);
     self.setState({ devices: [], loading: true, selectedGroup: group, pageNo: 1, filters: [] }, () => {
+      const theGroup = group === UNGROUPED_GROUP.id ? null : group;
 		// get number of devices in group first for pagination
-      AppActions.getNumberOfDevicesInGroup((count, devices) => {
-        var ungroupedDevices = self.state.ungroupedDevices;
-        if ((group === UNGROUPED_GROUP.id) && self.state.acceptedDevices.length) {
-          ungroupedDevices = self._pickAcceptedUngroupedDevices(self.state.acceptedDevices, devices);
+      let promisedGroupCount;
+      if (group === UNGROUPED_GROUP.id) {
+        promisedGroupCount = self._refreshUngroupedDevices().then(() => Promise.resolve(self.state.ungroupedDevices.length));
+      } else {
+        promisedGroupCount = AppActions.getNumberOfDevicesInGroup(theGroup);
         }
-        self.setState({ groupCount: devices.length, ungroupedDevices });
+      promisedGroupCount.then(groupCount => {
+        self.setState({ groupCount });
 		    self.deviceTimer = setInterval(self._getDevices, self.state.refreshDeviceLength);
 				self._getDevices();
-    }, (group === UNGROUPED_GROUP.id) ? null : group);
+    });
     });
 	},
 
