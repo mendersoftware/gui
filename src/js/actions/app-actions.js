@@ -136,33 +136,25 @@ var AppActions = {
         callback.error(err);
       });
   },
-
-  getNumberOfDevicesInGroup: function (callback, group) {
-    var count = 0;
-    var per_page = 100;
-    var page = 1;
+  getNumberOfDevicesInGroup: function(group) {
+    var forGroup = group ? `/groups/${group}` : '';
+    var ungroupedFilter = group ? '' : '&has_group=false';
+    return DevicesApi.get(`${inventoryApiUrl}${forGroup}/devices?per_page=1&page=1${ungroupedFilter}`).then(res => Promise.resolve(res.headers.groupcount));
+  },
+  getAllDevicesInGroup: function(group) {
     var forGroup = group ? `/groups/${group}` : '';
     var ungroupedFilter = group ? '' : '&has_group=false';
     var devices = [];
-    function getDeviceCount() {
-      DevicesApi
-      .get(`${inventoryApiUrl}${forGroup}/devices?per_page=${per_page}&page=${page}${ungroupedFilter}`)
-      .then(function(res) {
+    const getDeviceCount = (per_page = 200, page = 1) =>
+      DevicesApi.get(`${inventoryApiUrl}${forGroup}/devices?per_page=${per_page}&page=${page}${ungroupedFilter}`).then(function(res) {
         var links = parse(res.headers['link']);
-        count += res.body.length;
           devices.push(...res.body);
         if (links.next) {
-          page++;
-          getDeviceCount();
-        } else {
-            callback(count, devices);
+          return getDeviceCount(per_page, page + 1);
         }
-      })
-      .catch(function(err) {
-        callback(err);
-      })
-    };
-    getDeviceCount();
+        return Promise.resolve(devices);
+      });
+    return getDeviceCount();
   },
 
 
