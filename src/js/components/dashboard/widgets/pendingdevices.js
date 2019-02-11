@@ -31,7 +31,7 @@ export class PendingDevices extends React.Component {
 
     return (
       <div style={{ position: 'relative' }}>
-        <Link to='/help/connecting-devices/provision-a-demo/virtual-device' style={{ position: 'absolute', top: '-28px', left: '10%' }}>
+        <Link to='/devices/pending' style={{ position: 'absolute', top: '-28px', left: '15px' }}>
           <FloatingActionButton>
             <ContentAdd />
           </FloatingActionButton>

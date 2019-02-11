@@ -70,13 +70,13 @@ export class Devices extends React.Component {
   render() {
     const { devices, inactiveDevices, pendingDevices, deltaActivity } = this.state;
     const hasPending = pendingDevices.length > 0;
-    const noDevicesAvailable = !(devices.length && pendingDevices.length);
+    const noDevicesAvailable = !(devices.length || pendingDevices.length);
     return (
       <div>
         <div className="dashboard-header">
-          <h2>
+          <h3>
             <BoardIcon /> Devices
-          </h2>
+          </h3>
         </div>
         <div style={styles.container}>
           <PendingDevices itemStyle={styles.containedItems} pendingDevices={pendingDevices} isActive={hasPending} showHelptips={this.props.showHelptips} onClick={this.props.clickHandle} />
