@@ -1,5 +1,5 @@
 import React from 'react';
-import { matchPath, withRouter } from 'react-router';
+import { matchPath, withRouter } from 'react-router-dom';
 
 import PropTypes from 'prop-types';
 import Header from './header/header';

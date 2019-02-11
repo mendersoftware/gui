@@ -11,7 +11,6 @@ var prefix = require('gulp-autoprefixer');
 var minifyCSS = require('gulp-minify-css');
 var concat = require('gulp-concat');
 var gutil = require('gulp-util');
-var assign = require('lodash.assign');
 var streamify = require('gulp-streamify');
 
 gulp.task('watchify', () => {
@@ -19,7 +18,7 @@ gulp.task('watchify', () => {
     entries: ['./src/js/main.js'],
     debug: true
   };
-  var opts = assign({}, watchify.args, customOpts);
+  var opts = Object.assign({}, watchify.args, customOpts);
   var b = watchify(browserify(opts));
 
   b.transform('babelify', { presets: ['@babel/preset-env', '@babel/preset-react'], plugins: ['@babel/plugin-proposal-class-properties'] });
