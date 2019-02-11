@@ -1,6 +1,5 @@
 import AppDispatcher from '../dispatchers/app-dispatcher';
 import AppConstants from '../constants/app-constants';
-import assign from 'object-assign';
 import { EventEmitter } from 'events'; // from device
 
 var CHANGE_EVENT = 'change';
@@ -423,7 +422,7 @@ function _setShowHelptips(val) {
   _showHelptips = val;
 }
 
-var AppStore = assign(EventEmitter.prototype, {
+var AppStore = Object.assign(EventEmitter.prototype, {
   emitChange: function() {
     this.emit(CHANGE_EVENT);
   },
@@ -455,7 +454,7 @@ var AppStore = assign(EventEmitter.prototype, {
    * Return list of devices by current selected group
    */
   getAllDevices: () => _alldevices,
-  
+
   /*
    * Return list of devices by current selected group
    */

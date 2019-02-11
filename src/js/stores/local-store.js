@@ -4,7 +4,6 @@
  */
 import AppDispatcher from '../dispatchers/app-dispatcher';
 import AppConstants from '../constants/app-constants';
-import assign from 'object-assign';
 import { EventEmitter } from 'events'; // from device
 
 var CHANGE_EVENT = 'change';
@@ -17,7 +16,7 @@ function _getStorageItem(key) {
   return localStorage.getItem(key);
 }
 
-var LocalStore = assign(EventEmitter.prototype, {
+var LocalStore = Object.assign(EventEmitter.prototype, {
   emitChange: function() {
     this.emit(CHANGE_EVENT);
   },
