@@ -1,6 +1,6 @@
 import React from 'react';
 
-import FlatButton from 'material-ui/FlatButton';
+import Button from '@material-ui/core/Button';
 
 export default class FormButton extends React.Component {
   render() {
@@ -8,14 +8,9 @@ export default class FormButton extends React.Component {
 
     return (
       <div className={className}>
-        <FlatButton
-          id={this.props.id}
-          label={this.props.label}
-          onClick={this.props.handleClick}
-          style={this.props.style}
-          primary={this.props.primary}
-          secondary={this.props.secondary}
-        />
+        <Button id={this.props.id} onClick={this.props.handleClick} style={this.props.style} primary={this.props.primary} secondary={this.props.secondary}>
+          {this.props.label}
+        </Button>
       </div>
     );
   }

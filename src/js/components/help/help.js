@@ -12,8 +12,8 @@ import DemoArtifacts from './connecting-devices/demo-artifacts';
 import BuildYocto from './connecting-devices/build-with-yocto';
 import MoreHelp from './more-help-resources';
 import { isEmpty, versionCompare } from '../../helpers';
-import BoardIcon from 'react-material-icons/icons/hardware/developer-board';
-import HelpIcon from 'react-material-icons/icons/action/help-outline';
+import BoardIcon from '@material-ui/icons/DeveloperBoard';
+import HelpIcon from '@material-ui/icons/HelpOutline';
 import Support from './support';
 
 import AppStore from '../../stores/app-store';

@@ -1,13 +1,20 @@
 import React from 'react';
-import Dialog from 'material-ui/Dialog';
-import TextField from 'material-ui/TextField';
-import FlatButton from 'material-ui/FlatButton';
-import RaisedButton from 'material-ui/RaisedButton';
-import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
-import FontIcon from 'material-ui/FontIcon';
-import Checkbox from 'material-ui/Checkbox';
 import cookie from 'react-cookie';
 import validator from 'validator';
+import Button from '@material-ui/core/Button';
+import Checkbox from '@material-ui/core/Checkbox';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogContent from '@material-ui/core/DialogContent';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Icon from '@material-ui/core/Icon';
+import Table from '@material-ui/core/Table';
+import TableHead from '@material-ui/core/TableHead';
+import TableCell from '@material-ui/core/TableCell';
+import TableBody from '@material-ui/core/TableBody';
+import TableRow from '@material-ui/core/TableRow';
+import TextField from '@material-ui/core/TextField';
 
 import AppActions from '../../actions/app-actions';
 import AppConstants from '../../constants/app-constants';
@@ -139,21 +146,31 @@ export default class CreateGroup extends React.Component {
     });
   }
 
-  _onRowSelection(selectedRows) {
-    var invalid = true;
-    if (selectedRows === 'all') {
-      var rows = Array.apply(null, { length: this.state.devices.length }).map(Number.call, Number);
-      invalid = false;
-      this.setState({ selectedRows: rows, createInvalid: invalid });
-    } else if (selectedRows === 'none') {
-      this.setState({ selectedRows: [], createInvalid: invalid });
+  _onRowSelection(selectedRow) {
+    const self = this;
+    const { selectedRows } = self.state;
+    const selectedIndex = selectedRows.indexOf(selectedRow);
+    let updatedSelection = [];
+    if (selectedIndex === -1) {
+      updatedSelection = updatedSelection.concat(selectedRows, selectedRow);
     } else {
-      invalid = false;
-      this.setState({ selectedRows: selectedRows, createInvalid: invalid });
+      updatedSelection = selectedRows.splice(selectedIndex, 1);
     }
+    self.setState({ selectedRows: updatedSelection, createInvalid: updatedSelection.length > 0 });
   }
 
-  _handleCheckBox(event, isChecked) {
+  onSelectAllClick() {
+    const self = this;
+    let createInvalid = true;
+    let selectedRows = Array.apply(null, { length: this.state.devices.length }).map(Number.call, Number);
+    if (self.state.selectedRows.length !== self.state.devices.length) {
+      selectedRows = [];
+      createInvalid = false;
+    }
+    self.setState({ selectedRows, createInvalid });
+  }
+
+  _handleCheckBox(isChecked) {
     var self = this;
     this.setState({ isChecked: isChecked });
     if (isChecked) {
@@ -181,108 +198,116 @@ export default class CreateGroup extends React.Component {
 
   render() {
     var self = this;
-    var deviceList = this.state.devices.map(function(device, index) {
-      var attrs = mapDeviceAttributes(device.attributes);
-
+    var deviceList = self.state.devices.map((device, index) => {
       var id_attribute =
         self.props.globalSettings.id_attribute && self.props.globalSettings.id_attribute !== 'Device ID'
           ? (device.identity_data || {})[self.props.globalSettings.id_attribute]
           : device.device_id || device.id;
 
+      var attrs = mapDeviceAttributes(device.attributes);
       return (
-        <TableRow selected={this._isSelected(index)} key={index}>
-          <TableRowColumn>{id_attribute}</TableRowColumn>
-          <TableRowColumn>{attrs.device_type}</TableRowColumn>
+        <TableRow selected={self._isSelected(index)} hover key={index} onClick={row => this._onRowSelection(row)}>
+          <TableCell padding="checkbox">
+            <Checkbox checked={self._isSelected(index)} />
+          </TableCell>
+          <TableCell>{id_attribute}</TableCell>
+          <TableCell>{attrs.device_type}</TableCell>
         </TableRow>
       );
-    }, this);
+    });
 
-    var createActions = [
-      <div key="create-action-button-1" style={{ marginRight: '10px', display: 'inline-block' }}>
-        <FlatButton label="Cancel" onClick={() => this._handleClose()} />
-      </div>,
-      <RaisedButton
-        key="create-action-button-2"
-        label={this.state.showWarning ? 'Confirm' : 'Create group'}
-        primary={true}
-        onClick={() => this._createGroupHandler()}
-        disabled={this.state.createInvalid}
-      />
-    ];
+    const numSelected = self.state.selectedRows.length;
 
     return (
-      <Dialog
-        ref="createGroup"
-        title={this.state.showWarning ? '' : 'Create a new group'}
-        actions={createActions}
-        open={self.props.open}
-        autoDetectWindowHeight={true}
-        autoScrollBodyContent={true}
-        modal={true}
-        bodyStyle={{ maxHeight: '50vh' }}
-        titleStyle={{ paddingBottom: '15px', marginBottom: 0 }}
-        footerStyle={{ marginTop: 0 }}
-      >
-        <div className={self.state.showDeviceList || self.state.showWarning ? 'hidden' : 'absoluteTextfieldButton'}>
-          <TextField
-            ref="customGroup"
-            className="float-left"
-            hintText="Name your group"
-            floatingLabelText="Name your group"
-            value={self.state.newGroup}
-            onChange={e => self.validateName(e)}
-            errorStyle={{ color: 'rgb(171, 16, 0)' }}
-            errorText={self.state.errorText}
-          />
+      <Dialog disableBackdropClick disableEscapeKeyDown open={self.props.open} scroll={'paper'}>
+        <DialogTitle style={{ paddingBottom: '15px', marginBottom: 0 }}>{this.state.showWarning ? '' : 'Create a new group'}</DialogTitle>
 
-          <div className={self.state.showDeviceList ? 'hidden' : 'float-left margin-left-small'}>
-            <RaisedButton disabled={self.state.nextInvalid} style={{ marginTop: '26px' }} label="Next" secondary={true} onClick={() => self._loadMoreDevs()} />
-          </div>
-        </div>
-
-        {self.state.showWarning ? (
-          <div className="help-message" style={{ marginTop: '-30px' }}>
-            <h2>
-              <FontIcon className="material-icons" style={{ marginRight: '4px', top: '4px' }}>
-                error_outline
-              </FontIcon>
-              You're creating a new group
-            </h2>
-            <p>
-              Just a heads-up: if a device is already in another group, it will be removed from that group and moved to the new one. A device can only belong to
-              one group at a time.
-            </p>
-
-            <Checkbox
-              label="Got it! Don't show this message again"
-              labelStyle={{ fontSize: '13px', color: 'rgba(0, 0, 0, 0.6)' }}
-              onCheck={(e, checked) => this._handleCheckBox(e, checked)}
+        <DialogContent style={{ maxHeight: '50vh' }}>
+          <div className={self.state.showDeviceList || self.state.showWarning ? 'hidden' : 'absoluteTextfieldButton'}>
+            <TextField
+              ref="customGroup"
+              className="float-left"
+              placeholder="Name your group"
+              label="Name your group"
+              value={self.state.newGroup}
+              onChange={e => self.validateName(e)}
+              errorStyle={{ color: 'rgb(171, 16, 0)' }}
+              errorText={self.state.errorText}
             />
+
+            <div className={self.state.showDeviceList ? 'hidden' : 'float-left margin-left-small'}>
+              <Button variant="contained" disabled={self.state.nextInvalid} style={{ marginTop: '26px' }} secondary="true" onClick={() => self._loadMoreDevs()}>
+                Next
+              </Button>
+            </div>
           </div>
-        ) : (
-          <div className={this.state.showDeviceList === true ? 'dialogTableContainer' : 'dialogTableContainer zero'}>
-            <Table multiSelectable={true} className={deviceList.length ? null : 'hidden'} onRowSelection={rows => this._onRowSelection(rows)} selectable={true}>
-              <TableHeader>
-                <TableRow>
-                  <TableHeaderColumn tooltip={(this.props.globalSettings || {}).id_attribute || 'Device ID'}>
-                    {(this.props.globalSettings || {}).id_attribute || 'Device ID'}
-                  </TableHeaderColumn>
-                  <TableHeaderColumn tooltip="Device type">Device type</TableHeaderColumn>
-                </TableRow>
-              </TableHeader>
-              <TableBody deselectOnClickaway={false} showRowHover={true}>
-                {deviceList}
-              </TableBody>
-            </Table>
-            {this.props.acceptedCount > deviceList.length ? (
-              <a className="small" onClick={() => this._loadMoreDevs()}>
-                Load more devices
-              </a>
-            ) : null}
-            <Loader show={this.props.loadingDevices} />
-            <p className={deviceList.length || this.props.loadingDevices ? 'hidden' : 'italic muted'}>No devices match the search term</p>
+
+          {self.state.showWarning ? (
+            <div className="help-message" style={{ marginTop: '-30px' }}>
+              <h2>
+                <Icon className="material-icons" style={{ marginRight: '4px', top: '4px' }}>
+                  error_outline
+                </Icon>
+                You're creating a new group
+              </h2>
+              <p>
+                Just a heads-up: if a device is already in another group, it will be removed from that group and moved to the new one. A device can only belong
+                to one group at a time.
+              </p>
+
+              <FormControlLabel
+                className={this.props.className}
+                control={<Checkbox onChange={(e, checked) => self._handleCheckBox(checked)} />}
+                label="Got it! Don't show this message again"
+                labelStyle={{ fontSize: '13px', color: 'rgba(0, 0, 0, 0.6)' }}
+              />
+            </div>
+          ) : (
+            <div className={this.state.showDeviceList === true ? 'dialogTableContainer' : 'dialogTableContainer zero'}>
+              <Table className={deviceList.length ? null : 'hidden'}>
+                <TableHead>
+                  <TableRow>
+                    <TableCell padding="checkbox">
+                      <Checkbox
+                        indeterminate={numSelected > 0 && numSelected < self.state.devices.length}
+                        checked={numSelected === self.state.devices.length}
+                        onChange={() => self.onSelectAllClick()}
+                      />
+                    </TableCell>
+                    <TableCell tooltip={(this.props.globalSettings || {}).id_attribute || 'Device ID'}>
+                      {(this.props.globalSettings || {}).id_attribute || 'Device ID'}
+                    </TableCell>
+                    <TableCell tooltip="Device type">Device type</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody deselectOnClickaway={false}>{deviceList}</TableBody>
+              </Table>
+              {this.props.acceptedCount > deviceList.length ? (
+                <a className="small" onClick={() => this._loadMoreDevs()}>
+                  Load more devices
+                </a>
+              ) : null}
+              <Loader show={this.props.loadingDevices} />
+              <p className={deviceList.length || this.props.loadingDevices ? 'hidden' : 'italic muted'}>No devices match the search term</p>
+            </div>
+          )}
+        </DialogContent>
+
+        <DialogActions style={{ marginTop: 0 }}>
+          <div key="create-action-button-1" style={{ marginRight: '10px', display: 'inline-block' }}>
+            <Button onClick={() => this._handleClose()}>Cancel</Button>
           </div>
-        )}
+          ,
+          <Button
+            variant="contained"
+            key="create-action-button-2"
+            primary="true"
+            onClick={() => this._createGroupHandler()}
+            disabled={this.state.createInvalid}
+          >
+            {this.state.showWarning ? 'Confirm' : 'Create group'}
+          </Button>
+        </DialogActions>
       </Dialog>
     );
   }

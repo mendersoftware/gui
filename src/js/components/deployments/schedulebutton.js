@@ -1,8 +1,7 @@
 import React from 'react';
 
 // material ui
-import RaisedButton from 'material-ui/RaisedButton';
-import FlatButton from 'material-ui/FlatButton';
+import Button from '@material-ui/core/Button';
 
 export default class ScheduleButton extends React.Component {
   _handleClick() {
@@ -14,25 +13,20 @@ export default class ScheduleButton extends React.Component {
   }
   render() {
     var button = '';
+    const label = this.props.label || 'Create a deployment';
     if (this.props.buttonType === 'flat') {
       button = (
-        <FlatButton
-          primary={this.props.primary}
-          secondary={this.props.secondary}
-          label={this.props.label || 'Create a deployment'}
-          onClick={() => this._handleClick()}
-        />
+        <Button primary={this.props.primary} secondary={this.props.secondary} onClick={() => this._handleClick()}>
+          {label}
+        </Button>
       );
     } else {
       button = (
-        <RaisedButton
-          primary={this.props.primary}
-          secondary={this.props.secondary}
-          label={this.props.label || 'Create a deployment'}
-          onClick={() => this._handleClick()}
-        />
+        <Button variant="contained" primary={this.props.primary} secondary={this.props.secondary} onClick={() => this._handleClick()}>
+          {label}
+        </Button>
       );
     }
-    return <div>{button}</div>;
+    return button;
   }
 }

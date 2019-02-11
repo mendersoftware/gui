@@ -2,7 +2,11 @@ import React from 'react';
 import Loader from '../../common/loader';
 
 // material ui
-import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
+import Table from '@material-ui/core/Table';
+import TableHead from '@material-ui/core/TableHead';
+import TableCell from '@material-ui/core/TableCell';
+import TableBody from '@material-ui/core/TableBody';
+import TableRow from '@material-ui/core/TableRow';
 
 export default class DemoArtifacts extends React.Component {
   _changePage(path) {
@@ -48,14 +52,14 @@ export default class DemoArtifacts extends React.Component {
       if (link.link1) {
         return (
           <TableRow key={link.name + index}>
-            <TableRowColumn>{link.name}</TableRowColumn>
-            <TableRowColumn>{link.version}</TableRowColumn>
-            <TableRowColumn>
+            <TableCell>{link.name}</TableCell>
+            <TableCell>{link.version}</TableCell>
+            <TableCell>
               <a href={link.link2}>{link.link2}</a>
-            </TableRowColumn>
-            <TableRowColumn>
+            </TableCell>
+            <TableCell>
               <a href={link.link1}>{link.link1}</a>
-            </TableRowColumn>
+            </TableCell>
           </TableRow>
         );
       }
@@ -79,16 +83,16 @@ export default class DemoArtifacts extends React.Component {
             {!this.props.isEmpty(this.props.links) ? (
               <div>
                 <p>Download the Artifacts for your desired device types below:</p>
-                <Table selectable={false}>
-                  <TableHeader adjustForCheckbox={false} displaySelectAll={false}>
+                <Table>
+                  <TableHead>
                     <TableRow>
-                      <TableHeaderColumn>Device type</TableHeaderColumn>
-                      <TableHeaderColumn>Mender version</TableHeaderColumn>
-                      <TableHeaderColumn>Artifact 1</TableHeaderColumn>
-                      <TableHeaderColumn>Artifact 2</TableHeaderColumn>
+                      <TableCell>Device type</TableCell>
+                      <TableCell>Mender version</TableCell>
+                      <TableCell>Artifact 1</TableCell>
+                      <TableCell>Artifact 2</TableCell>
                     </TableRow>
-                  </TableHeader>
-                  <TableBody displayRowCheckbox={false}>{tableRows}</TableBody>
+                  </TableHead>
+                  <TableBody>{tableRows}</TableBody>
                 </Table>
                 <p>
                   Then upload them to the <a onClick={() => this._changePage('artifacts')}>Artifacts tab</a>.

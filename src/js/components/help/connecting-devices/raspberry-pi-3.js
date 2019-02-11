@@ -1,7 +1,7 @@
 import React from 'react';
 import CopyToClipboard from 'react-copy-to-clipboard';
-import FlatButton from 'material-ui/FlatButton';
-import FontIcon from 'material-ui/FontIcon';
+import Button from '@material-ui/core/Button';
+import Icon from '@material-ui/core/Icon';
 import Loader from '../../common/loader';
 
 export default class RaspberryPi extends React.Component {
@@ -123,11 +123,9 @@ export default class RaspberryPi extends React.Component {
             }<p>After the image has been downloaded, unpack it:</p>
             <div className="code">
               <CopyToClipboard text={codeToCopy1} onCopy={() => this._copied('copied1')}>
-                <FlatButton
-                  label="Copy to clipboard"
-                  style={{ float: 'right', margin: '-10px 0 0 10px' }}
-                  icon={<FontIcon className="material-icons">content_paste</FontIcon>}
-                />
+                <Button style={{ float: 'right', margin: '-10px 0 0 10px' }} icon={<Icon className="material-icons">content_paste</Icon>}>
+                  Copy to clipboard
+                </Button>
               </CopyToClipboard>
               <span style={{ wordBreak: 'break-word' }}>{codeToCopy1}</span>
             </div>
@@ -155,11 +153,9 @@ export default class RaspberryPi extends React.Component {
             <p> When you know the correct device for the SD card, set it and your disk image in shell variables and write it with the following commands:</p>
             <div className="code">
               <CopyToClipboard text={codeToCopy2} onCopy={() => this._copied('copied2')}>
-                <FlatButton
-                  label="Copy to clipboard"
-                  style={{ float: 'right', margin: '-10px 0 0 10px' }}
-                  icon={<FontIcon className="material-icons">content_paste</FontIcon>}
-                />
+                <Button style={{ float: 'right', margin: '-10px 0 0 10px' }} icon={<Icon className="material-icons">content_paste</Icon>}>
+                  Copy to clipboard
+                </Button>
               </CopyToClipboard>
               <span style={{ wordBreak: 'break-word' }}>{codeToCopy2}</span>
             </div>
@@ -177,7 +173,12 @@ export default class RaspberryPi extends React.Component {
               If you cannot see any new device after 10 minutes, please verify that the network connection is working, and feel free to reach out for help with
               diagnostics via <a onClick={() => this.props.changePage('help/more-help-resources')}>our further Help resources</a>.
             </p>
-            <p className="note">NOTE: If you reimage the device with the disk image or switch storage (e.g. SD cards) between the devices after they have booted once, <b>authenticating the device to the Mender server will fail</b>. This is because the Mender server tracks the identity (MAC address by default) device public key (randomly generated upon first run of the Mender client) binding. If this happens, simply accept the device again when it appears with a new admission request.</p>
+            <p className="note">
+              NOTE: If you reimage the device with the disk image or switch storage (e.g. SD cards) between the devices after they have booted once,{' '}
+              <b>authenticating the device to the Mender server will fail</b>. This is because the Mender server tracks the identity (MAC address by default)
+              device public key (randomly generated upon first run of the Mender client) binding. If this happens, simply accept the device again when it
+              appears with a new admission request.
+            </p>
             <h3>Deploy updates</h3>
             {artifacts.length > 1 ? (
               <p>

@@ -3,11 +3,14 @@ import PropTypes from 'prop-types';
 import Time from 'react-time';
 
 // material ui
-import { List, ListItem } from 'material-ui/List';
-import Divider from 'material-ui/Divider';
-import FontIcon from 'material-ui/FontIcon';
-import IconButton from 'material-ui/IconButton';
-import TextField from 'material-ui/TextField';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import ListItemAvatar from '@material-ui/core/ListItemAvatar';
+import Divider from '@material-ui/core/Divider';
+import Icon from '@material-ui/core/Icon';
+import IconButton from '@material-ui/core/IconButton';
+import TextField from '@material-ui/core/TextField';
 
 export default class SelectedArtifact extends React.Component {
   static contextTypes = {
@@ -53,27 +56,8 @@ export default class SelectedArtifact extends React.Component {
       }
     }
 
-    var styles = {
-      editButton: {
-        color: 'rgba(0, 0, 0, 0.54)',
-        fontSize: '20px'
-      },
-      listStyle: {
-        fontSize: '12px',
-        paddingTop: '10px',
-        paddingBottom: '10px',
-        wordWrap: 'break-word',
-        whiteSpace: 'normal'
-      }
-    };
-
     var editButtonDesc = (
-      <IconButton
-        iconStyle={styles.editButton}
-        style={{ position: 'absolute', right: '0', bottom: '8px' }}
-        onClick={e => this._descEdit(e)}
-        iconClassName="material-icons"
-      >
+      <IconButton style={Object.assign({ position: 'absolute', right: '0', bottom: '8px' })} onClick={e => this._descEdit(e)} className="material-icons">
         {this.state.descEdit ? 'check' : 'edit'}
       </IconButton>
     );
@@ -82,9 +66,8 @@ export default class SelectedArtifact extends React.Component {
       <TextField
         id="inline-description"
         className={this.state.descEdit ? null : 'hidden'}
-        style={{ width: '100%', height: '38px', marginTop: '-8px' }}
-        inputStyle={{ marginTop: '0' }}
-        multiLine={true}
+        style={{ width: '100%', height: '38px', marginTop: '0' }}
+        multiLine
         rowsMax={2}
         ref="description"
         defaultValue={info.description}
@@ -98,13 +81,21 @@ export default class SelectedArtifact extends React.Component {
 
       return (
         <div key={index} className="file-details">
-          <ListItem style={styles.listStyle} disabled={true} primaryText="Name" secondaryText={file.name} secondaryTextLines={2} />
+          <ListItem disabled={true}>
+            <ListItemText primary="Name" secondary={file.name} />
+          </ListItem>
           <Divider />
-          <ListItem style={styles.listStyle} disabled={true} primaryText="Checksum" secondaryText={file.checksum} secondaryTextLines={2} />
+          <ListItem disabled={true}>
+            <ListItemText primary="Checksum" secondary={file.checksum} />
+          </ListItem>
           <Divider />
-          <ListItem style={styles.listStyle} disabled={true} primaryText="Build date" secondaryText={build_date} />
+          <ListItem disabled={true}>
+            <ListItemText primary="Build date" secondary={build_date} />
+          </ListItem>
           <Divider />
-          <ListItem style={styles.listStyle} disabled={true} primaryText="Size (uncompressed)" secondaryText={`${(file.size / 1000000).toFixed(1)} MB`} />
+          <ListItem disabled={true}>
+            <ListItemText primary="Size (uncompressed)" secondary={`${(file.size / 1000000).toFixed(1)} MB`} />
+          </ListItem>
           <Divider />
         </div>
       );
@@ -130,30 +121,26 @@ export default class SelectedArtifact extends React.Component {
 
           <div className="artifact-list list-item">
             <List style={{ backgroundColor: 'rgba(255,255,255,0)' }}>
-              <ListItem
-                style={styles.listStyle}
-                disabled={true}
-                secondaryTextLines={2}
-                primaryText="Device type compatibility"
-                secondaryText={this.props.compatible}
-              />
+              <ListItem disabled={true}>
+                <ListItemText primary="Device type compatibility" secondary={this.props.compatible} />
+              </ListItem>
               <Divider />
             </List>
           </div>
           <div className="artifact-list list-item">
             <List style={{ backgroundColor: 'rgba(255,255,255,0)' }}>
-              <ListItem style={styles.listStyle} disabled={true} primaryText="Signed" secondaryTextLines={2} secondaryText={info.signed ? 'Yes' : 'No'} />
+              <ListItem disabled={true}>
+                <ListItemText primary="Signed" secondary={info.signed ? 'Yes' : 'No'} />
+              </ListItem>
               <Divider />
-              <ListItem
-                style={styles.listStyle}
-                primaryText="Remove this artifact?"
-                onClick={this.props.removeArtifact}
-                leftIcon={
-                  <FontIcon className="material-icons red auth" style={{ marginTop: 12, marginBottom: 6 }}>
+              <ListItem onClick={this.props.removeArtifact}>
+                <ListItemAvatar>
+                  <Icon className="material-icons red auth" style={{ marginTop: 12, marginBottom: 6 }}>
                     cancel
-                  </FontIcon>
-                }
-              />
+                  </Icon>
+                </ListItemAvatar>
+                <ListItemText primary="Remove this artifact?" />
+              </ListItem>
             </List>
           </div>
         </div>

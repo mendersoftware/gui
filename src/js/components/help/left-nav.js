@@ -3,8 +3,10 @@ import { Link, NavLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 // material ui
-import { List, ListItem } from 'material-ui/List';
-import Subheader from 'material-ui/Subheader';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListSubheader from '@material-ui/core/ListSubheader';
+import ListItemText from '@material-ui/core/ListItemText';
 
 export default class LeftNav extends React.Component {
   static contextTypes = {
@@ -48,20 +50,17 @@ export default class LeftNav extends React.Component {
 
   render() {
     var self = this;
-    var nav = self.state.links.map(link => (
-      <NavLink className="navLink helpNav" exact={true} key={link.path} to={link.path}>
-        <ListItem primaryText={link.title} style={{ paddingLeft: link.level * 16 }} />
-      </NavLink>
-    ));
     return (
-      <div>
-        <List>
-          <Link to="/help" key="/help">
-            <Subheader>Help topics</Subheader>
-          </Link>
-          {nav}
-        </List>
-      </div>
+      <List>
+        <ListSubheader component={Link} to="/help" key="/help">
+          Help topics
+        </ListSubheader>
+        {self.state.links.map(link => (
+          <ListItem className="navLink helpNav" component={NavLink} exact={true} key={link.path} style={{ paddingLeft: link.level * 16 }} to={link.path}>
+            <ListItemText primary={link.title} />
+          </ListItem>
+        ))}
+      </List>
     );
   }
 }

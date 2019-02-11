@@ -8,8 +8,9 @@ import AppStore from '../../stores/app-store';
 import AppActions from '../../actions/app-actions';
 import Deployments from './deployments';
 import { setRetryTimer, clearAllRetryTimers } from '../../utils/retrytimer';
-import RaisedButton from 'material-ui/RaisedButton';
-import FontIcon from 'material-ui/FontIcon';
+import Button from '@material-ui/core/Button';
+
+import HelpIcon from '@material-ui/icons/Help';
 
 export default class Dashboard extends React.Component {
   static contextTypes = {
@@ -117,13 +118,13 @@ export default class Dashboard extends React.Component {
           <div className={this.state.pending ? 'onboard margin-bottom' : 'hidden'}>
             <p>There {pending_str} waiting authorization</p>
             <div className="relative">
-              <Link to="/devices/pending">
-                <RaisedButton primary={true} label="Review details" />
-              </Link>
+              <Button component={Link} variant="contained" primary="true" to="/devices/pending">
+                Review details
+              </Button>
               {this.state.showHelptips ? (
                 <div>
                   <div id="onboard-1" className="tooltip help highlight" data-tip data-for="review-details-tip" data-event="click focus">
-                    <FontIcon className="material-icons">help</FontIcon>
+                    <HelpIcon />
                   </div>
                   <ReactTooltip id="review-details-tip" globalEventOff="click" place="bottom" type="light" effect="solid" className="react-tooltip">
                     <ReviewDevices devices={this.state.pending} />

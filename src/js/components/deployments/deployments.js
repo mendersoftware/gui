@@ -2,12 +2,16 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import cookie from 'react-cookie';
 import PropTypes from 'prop-types';
-import Dialog from 'material-ui/Dialog';
-import FlatButton from 'material-ui/FlatButton';
-import RaisedButton from 'material-ui/RaisedButton';
-import { Tabs, Tab } from 'material-ui/Tabs';
-import { List, ListItem } from 'material-ui/List';
-import Divider from 'material-ui/Divider';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Button from '@material-ui/core/Button';
+import Tab from '@material-ui/core/Tab';
+import Tabs from '@material-ui/core/Tabs';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import Divider from '@material-ui/core/Divider';
 
 import AppStore from '../../stores/app-store';
 import AppActions from '../../actions/app-actions';
@@ -21,6 +25,18 @@ import ScheduleForm from './scheduleform';
 import ScheduleButton from './schedulebutton';
 
 import { preformatWithRequestID } from '../../helpers';
+import { ListItemText } from '@material-ui/core';
+
+const routes = {
+  active: {
+    route: '/deployments/active',
+    title: 'Active'
+  },
+  finished: {
+    route: '/deployments/finished',
+    title: 'Finished'
+  }
+};
 
 export default class Deployments extends React.Component {
   static contextTypes = {
@@ -41,7 +57,7 @@ export default class Deployments extends React.Component {
 
     clearAllRetryTimers();
     this.timer = setInterval(() => this._refreshDeployments(), this.state.refreshDeploymentsLength);
-    this._refreshDeployments()
+    this._refreshDeployments();
 
     var artifact = AppStore.getDeploymentArtifact();
     this.setState({ artifact });
@@ -51,12 +67,10 @@ export default class Deployments extends React.Component {
       .then(([artifacts, allDevices, groups]) => {
         const collatedArtifacts = AppStore.getCollatedArtifacts(artifacts);
         self.setState({ allDevices, collatedArtifacts, groups });
-        return Promise.all(groups.map(group => AppActions.getAllDevices(group)
-          .then(devices => Promise.resolve({[group]: devices}))
-        ));
+        return Promise.all(groups.map(group => AppActions.getAllDevices(group).then(devices => Promise.resolve({ [group]: devices }))));
       })
       .then(groupedDevices => {
-        const state = groupedDevices.reduce((accu, item) => Object.assign(accu, item), {doneLoading:true});
+        const state = groupedDevices.reduce((accu, item) => Object.assign(accu, item), { doneLoading: true });
         self.setState(state);
       });
 
@@ -272,7 +286,6 @@ export default class Deployments extends React.Component {
     });
   }
   dialogOpen(dialog) {
-    this.setState({ filteredDevices: [], deploymentDevices: [] });
     if (dialog === 'schedule') {
       this.setState({
         dialogTitle: 'Create a deployment',
@@ -286,7 +299,7 @@ export default class Deployments extends React.Component {
         contentClass: 'largeDialog'
       });
     }
-    this.setState({ dialog: true });
+    this.setState({ dialog: true, filteredDevices: [], deploymentDevices: [] });
   }
 
   _retryDeployment(deployment, devices) {
@@ -456,32 +469,18 @@ export default class Deployments extends React.Component {
     // this.setState({ tabIndex: this._updateActive(), currentTab: this._getCurrentLabel() });
   }
 
-  _updateActive() {
-    switch (this.context.router.route.match.params.tab) {
-    case 'active':
-      return '/deployments/active';
-    case 'finished':
-      return '/deployments/finished';
-    default:
-      return '/deployments/active';
+  _updateActive(tab = this.context.router.route.match.params.tab) {
+    if (routes.hasOwnProperty(tab)) {
+      return routes[tab].route;
     }
+    return routes.active.route;
   }
 
-  _getCurrentLabel() {
-    switch (this.context.router.route.match.params.tab) {
-    case 'active':
-      return 'Active';
-    case 'finished':
-      return 'Finished';
-    default:
-      return 'Active';
+  _getCurrentLabel(tab = this.context.router.route.match.params.status) {
+    if (routes.hasOwnProperty(tab)) {
+      return routes[tab].title;
     }
-  }
-
-  _handleTabActive(tab) {
-    AppActions.setSnackbar('');
-    this.setState({ currentTab: tab.props.label });
-    this.context.router.history.push(tab.props.value);
+    return routes.active.title;
   }
 
   _changeTab(tabIndex) {
@@ -489,25 +488,30 @@ export default class Deployments extends React.Component {
     clearInterval(self.timer);
     self.timer = setInterval(() => self._refreshDeployments(), self.state.refreshDeploymentsLength);
     self.setState({ tabIndex, currentTab: self._getCurrentLabel(), pend_page: 1, past_page: 1, prog_page: 1 }, () => self._refreshDeployments());
+    // self.context.router.history.push(tab.props.value);
+    AppActions.setSnackbar('');
   }
 
   render() {
     var disabled = typeof this.state.filteredDevices !== 'undefined' && this.state.filteredDevices.length > 0 ? false : true;
     var scheduleActions = [
       <div key="schedule-action-button-1" style={{ marginRight: '10px', display: 'inline-block' }}>
-        <FlatButton label="Cancel" onClick={() => this.dialogDismiss('dialog')} />
+        <Button onClick={() => this.dialogDismiss('dialog')}>Cancel</Button>
       </div>,
-      <RaisedButton
-        key="schedule-action-button-2"
-        label="Create deployment"
-        primary={true}
-        onClick={() => this._onScheduleSubmit()}
-        ref="save"
-        disabled={disabled}
-      />
+      <Button variant="contained" key="schedule-action-button-2" primary="true" onClick={() => this._onScheduleSubmit()} ref="save" disabled={disabled}>
+        Create deployment
+      </Button>
     ];
-    var reportActions = [<FlatButton key="report-action-button-1" label="Close" onClick={() => this.dialogDismiss('dialog')} />];
-    var onboardActions = [<RaisedButton key="onboard-action-button-1" label="Finish" primary={true} onClick={() => this._finishOnboard()} />];
+    var reportActions = [
+      <Button key="report-action-button-1" onClick={() => this.dialogDismiss('dialog')}>
+        Close
+      </Button>
+    ];
+    var onboardActions = [
+      <Button variant="contained" key="onboard-action-button-1" primary="true" onClick={() => this._finishOnboard()}>
+        Finish
+      </Button>
+    ];
     var dialogContent = '';
 
     if (this.state.scheduleForm) {
@@ -553,158 +557,115 @@ export default class Deployments extends React.Component {
       </p>
     );
     // tabs
-    var tabHandler = tab => this._handleTabActive(tab);
-    var styles = {
-      tabStyle: {
-        display: 'block',
-        height: '100%',
-        width: '100%',
-        color: '#949495',
-        textTransform: 'none'
-      },
-      activeTabStyle: {
-        display: 'block',
-        height: '100%',
-        width: '100%',
-        color: '#404041',
-        textTransform: 'none'
-      },
-      listStyle: {
-        fontSize: '12px',
-        paddingTop: '10px',
-        paddingBottom: '10px',
-        whiteSpace: 'normal'
-      },
-      listButtonStyle: {
-        fontSize: '12px',
-        marginTop: '-10px',
-        paddingRight: '12px',
-        marginLeft: '0px'
-      }
-    };
+    const { tabIndex } = this.state;
 
     return (
       <div style={{ marginTop: '-15px' }}>
         <div className="top-right-button">
-          <ScheduleButton secondary={true} openDialog={dialog => this.dialogOpen(dialog)} />
+          <ScheduleButton secondary="true" openDialog={dialog => this.dialogOpen(dialog)} />
         </div>
 
-        <Tabs
-          value={this.state.tabIndex}
-          onChange={tabIndex => this._changeTab(tabIndex)}
-          tabItemContainerStyle={{ background: 'none', width: '280px' }}
-          inkBarStyle={{ backgroundColor: '#347a87' }}
-        >
-          <Tab
-            label="Active"
-            value="/deployments/active"
-            onActive={tabHandler}
-            // style={this.state.tabIndex === '/deployments/active' ? styles.activeTabStyle : styles.tabStyle}
-            style={styles.activeTabStyle}
-          >
-            <div className="margin-top">
-              <Pending
-                page={this.state.pend_page}
-                count={this.state.pendingCount || this.state.pending.length}
-                refreshPending={(...args) => this._refreshPending(...args)}
-                pending={this.state.pending}
-                abort={id => this._abortDeployment(id)}
-              />
-
-              <Progress
-                page={this.state.prog_page}
-                isActiveTab={this.state.currentTab === 'Active'}
-                showHelptips={this.state.showHelptips && !cookie.load(`${this.state.user.id}-onboarded`)}
-                hasDeployments={this.state.hasDeployments}
-                devices={this.state.allDevices || []}
-                hasArtifacts={this.state.collatedArtifacts.length}
-                count={this.state.progressCount || this.state.progress.length}
-                pendingCount={this.state.pendingCount || this.state.pending.length}
-                refreshProgress={(...args) => this._refreshInProgress(...args)}
-                abort={id => this._abortDeployment(id)}
-                loading={!this.state.doneLoading}
-                openReport={rowNum => this._showProgress(rowNum)}
-                progress={this.state.progress}
-                createClick={() => this.dialogOpen('schedule')}
-              />
-            </div>
-          </Tab>
-
-          <Tab
-            label="Finished"
-            onActive={tabHandler}
-            value="/deployments/finished"
-            // style={this.state.tabIndex === '/deployments/finished' ? styles.activeTabStyle : styles.tabStyle}
-            style={styles.activeTabStyle}
-          >
-            <div className="margin-top">
-              <Past
-                groups={this.state.groups}
-                deviceGroup={this.state.groupFilter}
-                createClick={() => this.dialogOpen('schedule')}
-                pageSize={this.state.per_page}
-                startDate={this.state.startDate}
-                endDate={this.state.endDate}
-                page={this.state.past_page}
-                isActiveTab={this.state.currentTab === 'Finished'}
-                showHelptips={this.state.showHelptips}
-                count={this.state.pastCount}
-                loading={!this.state.doneLoading}
-                past={this.state.past}
-                refreshPast={(...args) => this._changePastPage(...args)}
-                showReport={(deployment, type) => this._showReport(deployment, type)}
-              />
-            </div>
-          </Tab>
+        <Tabs value={tabIndex} onChange={tabIndex => this._changeTab(tabIndex)} style={{ display: 'inline-block' }}>
+          {Object.values(routes).map(route => (
+            <Tab component={Link} key={route.route} label={route.title} to={route.route} value={route.route} />
+          ))}
         </Tabs>
+
+        {tabIndex === routes.active.route && (
+          <div className="margin-top">
+            <Pending
+              page={this.state.pend_page}
+              count={this.state.pendingCount || this.state.pending.length}
+              refreshPending={(...args) => this._refreshPending(...args)}
+              pending={this.state.pending}
+              abort={id => this._abortDeployment(id)}
+            />
+            <Progress
+              page={this.state.prog_page}
+              isActiveTab={this.state.currentTab === 'Active'}
+              showHelptips={this.state.showHelptips && !cookie.load(`${this.state.user.id}-onboarded`)}
+              hasDeployments={this.state.hasDeployments}
+              devices={this.state.allDevices || []}
+              hasArtifacts={this.state.collatedArtifacts.length}
+              count={this.state.progressCount || this.state.progress.length}
+              pendingCount={this.state.pendingCount || this.state.pending.length}
+              refreshProgress={(...args) => this._refreshInProgress(...args)}
+              abort={id => this._abortDeployment(id)}
+              loading={!this.state.doneLoading}
+              openReport={rowNum => this._showProgress(rowNum)}
+              progress={this.state.progress}
+              createClick={() => this.dialogOpen('schedule')}
+            />
+          </div>
+        )}
+        {tabIndex === routes.finished.route && (
+          <div className="margin-top">
+            <Past
+              groups={this.state.groups}
+              deviceGroup={this.state.groupFilter}
+              createClick={() => this.dialogOpen('schedule')}
+              pageSize={this.state.per_page}
+              startDate={this.state.startDate}
+              endDate={this.state.endDate}
+              page={this.state.past_page}
+              isActiveTab={this.state.currentTab === 'Finished'}
+              showHelptips={this.state.showHelptips}
+              count={this.state.pastCount}
+              loading={!this.state.doneLoading}
+              past={this.state.past}
+              refreshPast={(...args) => this._changePastPage(...args)}
+              showReport={(deployment, type) => this._showReport(deployment, type)}
+            />
+          </div>
+        )}
 
         <Dialog
           ref="dialog"
-          title={this.state.dialogTitle}
-          actions={this.state.scheduleForm ? scheduleActions : reportActions}
-          autoDetectWindowHeight={true}
-          autoScrollBodyContent={true}
-          contentClassName={this.state.contentClass}
-          bodyStyle={{ paddingTop: '0', fontSize: '13px' }}
           open={this.state.dialog || false}
-          contentStyle={{ overflow: 'hidden', boxShadow: '0 14px 45px rgba(0, 0, 0, 0.25), 0 10px 18px rgba(0, 0, 0, 0.22)' }}
-          actionsContainerStyle={{ marginBottom: '0' }}
+          scroll={'body'}
+          style={{ paddingTop: '0', fontSize: '13px', boxShadow: '0 14px 45px rgba(0, 0, 0, 0.25), 0 10px 18px rgba(0, 0, 0, 0.22)' }}
         >
-          {dialogContent}
+          <DialogTitle>{this.state.dialogTitle}</DialogTitle>
+          <DialogContent className={this.state.contentClass} style={{ overflow: 'hidden' }}>
+            {dialogContent}
+          </DialogContent>
+          <DialogActions style={{ marginBottom: '0' }}>{this.state.scheduleForm ? scheduleActions : reportActions}</DialogActions>
         </Dialog>
 
         <Dialog
           ref="onboard-complete"
-          actions={onboardActions}
-          title="Congratulations!"
-          autoDetectWindowHeight={true}
-          autoScrollBodyContent={true}
+          scroll={'body'}
           open={(this.state.onboardDialog && this.state.showHelptips) || false}
-          contentStyle={{ overflow: 'hidden', boxShadow: '0 14px 45px rgba(0, 0, 0, 0.25), 0 10px 18px rgba(0, 0, 0, 0.22)' }}
+          style={{ boxShadow: '0 14px 45px rgba(0, 0, 0, 0.25), 0 10px 18px rgba(0, 0, 0, 0.22)' }}
         >
-          <h3>You've completed your first deployment - so what's next?</h3>
+          <DialogTitle>Congratulations!</DialogTitle>
+          <DialogContent style={{ overflow: 'hidden' }}>
+            <h3>You've completed your first deployment - so what's next?</h3>
 
-          <List>
-            <ListItem key="physical" primaryText={<p>Try updating a physical device</p>} secondaryText={physicalLink} secondaryTextLines={2} disabled={true} />
+            <List>
+              <ListItem key="physical" disabled={true}>
+                <ListItemText primary={<p>Try updating a physical device</p>} secondary={physicalLink} />
+              </ListItem>
 
-            <Divider />
+              <Divider />
 
-            <ListItem
-              key="yocto"
-              primaryText={<p>Try building your own Yocto Project images for use with Mender</p>}
-              secondaryText={
-                <p>
-                  See our{' '}
-                  <a href={`https://docs.mender.io/${this.state.docsVersion}artifacts/building-mender-yocto-image`} target="_blank">
-                    documentation site
-                  </a>{' '}
-                  for a step by step guide on how to build a Yocto Project image for a device.
-                </p>
-              }
-              secondaryTextLines={2}
-              disabled={true}
-            />
-          </List>
+              <ListItem key="yocto" disabled={true}>
+                <ListItemText
+                  primary={<p>Try building your own Yocto Project images for use with Mender</p>}
+                  secondary={
+                    <p>
+                      See our{' '}
+                      <a href={`https://docs.mender.io/${this.state.docsVersion}artifacts/building-mender-yocto-image`} target="_blank">
+                        documentation site
+                      </a>{' '}
+                      for a step by step guide on how to build a Yocto Project image for a device.
+                    </p>
+                  }
+                />
+              </ListItem>
+            </List>
+          </DialogContent>
+          <DialogActions>{onboardActions}</DialogActions>
         </Dialog>
       </div>
     );

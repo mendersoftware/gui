@@ -1,13 +1,19 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 // material ui
-import SelectField from 'material-ui/SelectField';
-import MenuItem from 'material-ui/MenuItem';
-import TextField from 'material-ui/TextField';
-import FlatButton from 'material-ui/FlatButton';
-import Drawer from 'material-ui/Drawer';
-import FontIcon from 'material-ui/FontIcon';
-import IconButton from 'material-ui/IconButton';
+import Button from '@material-ui/core/Button';
+import Drawer from '@material-ui/core/Drawer';
+import IconButton from '@material-ui/core/IconButton';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import MenuItem from '@material-ui/core/MenuItem';
+import Select from '@material-ui/core/Select';
+import TextField from '@material-ui/core/TextField';
+
+import AddCircleIcon from '@material-ui/icons/AddCircle';
+import CloseIcon from '@material-ui/icons/Close';
+import FilterListIcon from '@material-ui/icons/FilterList';
 
 export default class Filters extends React.Component {
   constructor(props, context) {
@@ -45,113 +51,98 @@ export default class Filters extends React.Component {
       showFilters: !this.state.showFilters
     });
   }
+  _closeNav() {
+    if (!this.state.showFilters) {
+      return;
+    }
+    this.setState({
+      showFilters: false
+    });
+  }
   _clearFilters() {
     this.props.onFilterChange([]);
   }
   render() {
-    var styles = {
-      exampleFlatButtonIcon: {
-        height: '100%',
-        display: 'inline-block',
-        verticalAlign: 'middle',
-        float: 'left',
-        paddingLeft: '12px',
-        lineHeight: '36px',
-        marginRight: '-6px',
-        color: '#679BA5'
+    var attributes = Object.entries(this.props.attributes).reduce(
+      (accu, item, index) => {
+        accu.push(
+          <MenuItem component={Link} to={item[0]} key={index}>
+            {item[1]}
+          </MenuItem>
+        );
+        return accu;
       },
-      removeButton: {
-        position: 'absolute',
-        right: '-22px',
-        top: '-22px',
-        color: '#679BA5'
-      }
-    };
-    var attributes = [];
-    for (var key in this.props.attributes) {
-      var i = Object.keys(this.props.attributes).indexOf(key);
-      var tmp = <MenuItem value={key} key={i} primaryText={this.props.attributes[key]} />;
-      attributes.push(tmp);
-    }
+      [
+        <MenuItem key="filter-placeholder" disabled>
+          Filter by
+        </MenuItem>
+      ]
+    );
+
     var filterCount = 0;
     var fromProps = this.props.filters.length ? this.props.filters : [{ key: '', value: '' }];
     var filters = fromProps.map(function(item, index) {
       item.value ? filterCount++ : filterCount;
       return (
-        <div className="filterPair" key={index}>
-          <IconButton
-            iconClassName="material-icons"
-            style={styles.removeButton}
-            onClick={() => this._removeFilter(index)}
-            disabled={!fromProps[0].key}
-            className={fromProps[0].value ? 'remove-icon' : 'hidden'}
-          >
-            remove_circle
-          </IconButton>
-          <SelectField fullWidth={true} value={item.key} autoWidth={true} onChange={() => this._updateFilterKey(index)} hintText="Filter by">
-            {attributes}
-          </SelectField>
+        <ListItem className="filterPair" key={index}>
+          <div>
+            <IconButton
+              className={`material-icons ${fromProps[0].value ? 'remove-icon' : 'hidden'}`}
+              onClick={() => this._removeFilter(index)}
+              disabled={!fromProps[0].key}
+            >
+              remove_circle
+            </IconButton>
+            <Select fullWidth={true} value={item.key} autoWidth={true} onChange={() => this._updateFilterKey(index)}>
+              {attributes}
+            </Select>
+          </div>
           <TextField
             style={{ marginTop: '-10px' }}
             value={item.value || ''}
-            hintText="Value"
+            placeholder="Value"
             fullWidth={true}
             disabled={!item.key}
             errorStyle={{ color: 'rgb(171, 16, 0)' }}
             onChange={() => this._updateFilterValue(index)}
           />
-        </div>
+        </ListItem>
       );
     }, this);
     var filterNav = (
-      <div className="slider" style={{ height: '100%' }}>
-        <IconButton
-          className="closeSlider"
-          iconStyle={{ fontSize: '16px' }}
-          onClick={() => this._toggleNav()}
-          style={{ borderRadius: '30px', width: '40px', height: '40px', position: 'absolute', left: '-18px', backgroundColor: 'rgba(255,255,255,1)' }}
-        >
-          <FontIcon className="material-icons">close</FontIcon>
+      <div className="slider">
+        <IconButton className="closeSlider" onClick={() => this._toggleNav()}>
+          <CloseIcon />
         </IconButton>
         <p className="align-right margin-bottom-small">
           <a onClick={() => this._clearFilters()}>Clear all filters</a>
         </p>
-        <div>{filters}</div>
+        <List>{filters}</List>
         {this.props.isHosted ? (
-          <FlatButton disabled={!filterCount} onClick={() => this._addFilter()} label="Add filter" secondary={true}>
-            <FontIcon style={styles.exampleFlatButtonIcon} className="material-icons">
-              add_circle
-            </FontIcon>
-          </FlatButton>
+          <Button disabled={!filterCount} onClick={() => this._addFilter()} secondary="true">
+            <AddCircleIcon />
+            Add filter
+          </Button>
         ) : null}
       </div>
     );
     return (
-      <div>
+      <div style={{ position: 'relative' }}>
+        <Button style={{ position: 'absolute', right: '0' }} secondary="true" onClick={() => this._toggleNav()}>
+          <FilterListIcon />
+          {filterCount > 0 ? `Filters (${filterCount})` : 'Filters'}
+        </Button>
         <Drawer
-          ref="filterNav"
           open={this.state.showFilters}
-          onRequestChange={() => this._toggleNav()}
-          docked={false}
-          openSecondary={true}
+          docked="false"
+          anchor="right"
+          opensecondary="true"
           overlayStyle={{ top: '57px', backgroundColor: 'rgba(0, 0, 0, 0.24)' }}
-          containerStyle={this.state.showFilters ? { overflow: 'visible', top: '57px' } : { overflow: 'hidden', top: '57px' }}
+          style={this.state.showFilters ? { overflow: 'visible', top: '57px' } : { overflow: 'hidden', top: '57px' }}
+          onClose={() => this._closeNav()}
         >
           {filterNav}
         </Drawer>
-
-        <div style={{ width: '100%', position: 'relative' }}>
-          <FlatButton
-            style={{ position: 'absolute', right: '0' }}
-            secondary={true}
-            onClick={() => this._toggleNav()}
-            label={filterCount > 0 ? `Filters (${filterCount})` : 'Filters'}
-          >
-            <FontIcon style={styles.exampleFlatButtonIcon} className="material-icons">
-              filter_list
-            </FontIcon>
-          </FlatButton>
-        </div>
       </div>
     );
   }

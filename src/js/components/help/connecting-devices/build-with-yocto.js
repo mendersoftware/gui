@@ -2,8 +2,8 @@ import React from 'react';
 
 import CopyToClipboard from 'react-copy-to-clipboard';
 
-import FlatButton from 'material-ui/FlatButton';
-import FontIcon from 'material-ui/FontIcon';
+import Button from '@material-ui/core/Button';
+import Icon from '@material-ui/core/Icon';
 
 export default class BuildYocto extends React.Component {
   constructor(props, context) {
@@ -61,11 +61,9 @@ export default class BuildYocto extends React.Component {
 
             <div className="code">
               <CopyToClipboard text={codeToCopy1} onCopy={() => this._copied('copied1')}>
-                <FlatButton
-                  label="Copy to clipboard"
-                  style={{ float: 'right', margin: '-10px 0 0 10px' }}
-                  icon={<FontIcon className="material-icons">content_paste</FontIcon>}
-                />
+                <Button style={{ float: 'right', margin: '-10px 0 0 10px' }} icon={<Icon className="material-icons">content_paste</Icon>}>
+                  Copy to clipboard
+                </Button>
               </CopyToClipboard>
               <span style={{ wordBreak: 'break-word' }}>{codeToCopy1}</span>
             </div>
@@ -80,11 +78,9 @@ export default class BuildYocto extends React.Component {
 
             <div className="code">
               <CopyToClipboard text={codeToCopy2} onCopy={() => this._copied('copied2')}>
-                <FlatButton
-                  label="Copy to clipboard"
-                  style={{ float: 'right', margin: '-10px 0 0 10px' }}
-                  icon={<FontIcon className="material-icons">content_paste</FontIcon>}
-                />
+                <Button style={{ float: 'right', margin: '-10px 0 0 10px' }} icon={<Icon className="material-icons">content_paste</Icon>}>
+                  Copy to clipboard
+                </Button>
               </CopyToClipboard>
               <span style={{ wordBreak: 'break-word' }}>{codeToCopy2}</span>
             </div>

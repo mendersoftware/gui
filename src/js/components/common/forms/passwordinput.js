@@ -1,11 +1,11 @@
 import React from 'react';
 import PasswordField from 'material-ui-password-field';
-import CheckIcon from 'react-material-icons/icons/action/check-circle';
+import CheckIcon from '@material-ui/icons/CheckCircle';
 import zxcvbn from 'zxcvbn';
 import copy from 'copy-to-clipboard';
 import generator from 'generate-password';
 
-import FlatButton from 'material-ui/FlatButton';
+import Button from '@material-ui/core/Button';
 
 export default class PasswordInput extends React.Component {
   constructor(props, context) {
@@ -91,7 +91,7 @@ export default class PasswordInput extends React.Component {
             defaultValue={this.props.defaultValue}
             value={this.state.value}
             hintText={this.props.hint}
-            floatingLabelText={this.props.label}
+            label={this.props.label}
             onChange={e => this.setValue(e)}
             errorStyle={{ color: 'rgb(171, 16, 0)' }}
             style={{ maxWidth: '100%', width: '400px' }}
@@ -104,8 +104,14 @@ export default class PasswordInput extends React.Component {
             visible={this.state.visible}
           />
           <div className={this.props.create ? 'pass-buttons' : 'hidden'}>
-            <FlatButton label="Generate" primary={true} onClick={() => this.generatePass()} style={{ top: '20px !important' }} />
-            {this.props.edit ? <FlatButton label="Cancel" onClick={() => this.clearPass()} style={{ top: '20px !important' }} /> : null}
+            <Button primary="true" onClick={() => this.generatePass()} style={{ top: '20px !important' }}>
+              Generate
+            </Button>
+            {this.props.edit ? (
+              <Button onClick={() => this.clearPass()} style={{ top: '20px !important' }}>
+                Cancel
+              </Button>
+            ) : null}
           </div>
         </div>
         {this.state.copied ? <span className="green fadeIn margin-bottom-small">Copied to clipboard</span> : null}

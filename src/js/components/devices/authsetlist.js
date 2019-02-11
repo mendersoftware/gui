@@ -5,9 +5,12 @@ import Time from 'react-time';
 import { Collapse } from 'react-collapse';
 import Loader from '../common/loader';
 
-import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
-import FlatButton from 'material-ui/FlatButton';
-import RaisedButton from 'material-ui/RaisedButton';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import TableCell from '@material-ui/core/TableCell';
+import Button from '@material-ui/core/Button';
 
 export default class AuthsetList extends React.Component {
   constructor(props, context) {
@@ -96,12 +99,12 @@ export default class AuthsetList extends React.Component {
                   <Loader table={true} waiting={true} show={true} style={{ height: '4px' }} />
                 ) : (
                   <div>
-                    <FlatButton style={{ marginRight: '10px' }} onClick={() => self.setConfirmStatus(null, null, null)}>
+                    <Button style={{ marginRight: '10px' }} onClick={() => self.setConfirmStatus(null, null, null)}>
                       Cancel
-                    </FlatButton>
-                    <RaisedButton onClick={() => self.confirm(authset, self.state.newStatus)}>
+                    </Button>
+                    <Button variant="contained" onClick={() => self.confirm(authset, self.state.newStatus)}>
                       <span className="capitalized">{self.state.newStatus}</span>
-                    </RaisedButton>
+                    </Button>
                   </div>
                 )}
               </div>
@@ -160,18 +163,18 @@ export default class AuthsetList extends React.Component {
         );
 
       return (
-        <TableRow hoverable={true} style={self.props.active ? { backgroundColor: '#e9f4f3' } : {}} className={expanded ? 'expand' : null} key={index}>
-          <TableRowColumn
+        <TableRow hover style={self.props.active ? { backgroundColor: '#e9f4f3' } : {}} className={expanded ? 'expand' : null} key={index}>
+          <TableCell
             style={self.state.showKey === index ? { whiteSpace: 'normal', width: '400px' } : { width: '400px' }}
             className={self.state.showKey === index ? 'break-word' : ''}
           >
             {key}
-          </TableRowColumn>
-          <TableRowColumn style={expanded ? { height: self.state.divHeight } : null}>
+          </TableCell>
+          <TableCell style={expanded ? { height: self.state.divHeight } : null}>
             <Time value={formatTime(authset.ts)} format="YYYY-MM-DD HH:mm" />
-          </TableRowColumn>
-          <TableRowColumn className="capitalized">{authset.status}</TableRowColumn>
-          <TableRowColumn>
+          </TableCell>
+          <TableCell className="capitalized">{authset.status}</TableCell>
+          <TableCell>
             {self.props.loading === authset.id ? (
               <span>
                 Updating status <Loader table={true} waiting={true} show={true} style={{ height: '4px', marginLeft: '10px' }} />
@@ -179,8 +182,8 @@ export default class AuthsetList extends React.Component {
             ) : (
               actionButtons
             )}
-          </TableRowColumn>
-          <TableRowColumn style={{ width: '0', padding: '0', overflow: 'visible' }}>
+          </TableCell>
+          <TableCell style={{ width: '0', padding: '0', overflow: 'visible' }}>
             <Collapse
               springConfig={{ stiffness: 210, damping: 20 }}
               onMeasure={measurements => self._adjustCellHeight(measurements.height)}
@@ -189,25 +192,23 @@ export default class AuthsetList extends React.Component {
             >
               {expanded}
             </Collapse>
-          </TableRowColumn>
+          </TableCell>
         </TableRow>
       );
     });
 
     return (
-      <Table fixedHeader={false} selectable={false}>
-        <TableHeader displaySelectAll={false} adjustForCheckbox={false} style={this.props.hideHeader ? { display: 'none' } : {}}>
+      <Table>
+        <TableHead style={this.props.hideHeader ? { display: 'none' } : {}}>
           <TableRow>
-            <TableHeaderColumn style={{ width: '400px' }}>Public key</TableHeaderColumn>
-            <TableHeaderColumn>Request time</TableHeaderColumn>
-            <TableHeaderColumn>Status</TableHeaderColumn>
-            <TableHeaderColumn>Actions</TableHeaderColumn>
-            <TableHeaderColumn className="columnHeader" style={{ width: '0px', paddingRight: '0', paddingLeft: '0' }} />
+            <TableCell style={{ width: '400px' }}>Public key</TableCell>
+            <TableCell>Request time</TableCell>
+            <TableCell>Status</TableCell>
+            <TableCell>Actions</TableCell>
+            <TableCell className="columnHeader" style={{ width: '0px', paddingRight: '0', paddingLeft: '0' }} />
           </TableRow>
-        </TableHeader>
-        <TableBody displayRowCheckbox={false} showRowHover={true}>
-          {list}
-        </TableBody>
+        </TableHead>
+        <TableBody>{list}</TableBody>
       </Table>
     );
   }

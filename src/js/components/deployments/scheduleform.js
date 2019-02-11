@@ -2,16 +2,20 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import SearchInput from 'react-search-input';
 import ReactTooltip from 'react-tooltip';
-import { CreateDeploymentForm } from '../helptips/helptooltips';
-
-import AutoComplete from 'material-ui/AutoComplete';
-import TextField from 'material-ui/TextField';
-import FontIcon from 'material-ui/FontIcon';
-import Drawer from 'material-ui/Drawer';
-import IconButton from 'material-ui/IconButton';
-import MenuItem from 'material-ui/MenuItem';
-import Divider from 'material-ui/Divider';
 import pluralize from 'pluralize';
+
+import TextField from '@material-ui/core/TextField';
+import Icon from '@material-ui/core/Icon';
+import Drawer from '@material-ui/core/Drawer';
+import IconButton from '@material-ui/core/IconButton';
+import MenuItem from '@material-ui/core/MenuItem';
+import Divider from '@material-ui/core/Divider';
+import Autosuggest, { defaultProps } from '@plan-three/material-ui-autosuggest';
+
+import CloseIcon from '@material-ui/icons/Close';
+import HelpIcon from '@material-ui/icons/Help';
+
+import { CreateDeploymentForm } from '../helptips/helptooltips';
 
 export default class ScheduleForm extends React.Component {
   constructor(props, context) {
@@ -88,7 +92,7 @@ export default class ScheduleForm extends React.Component {
       accu.push({
         text: artifact.name,
         value: (
-          <MenuItem value={artifact} key={i}>
+          <MenuItem component={Link} to={artifact} key={i}>
             {artifact.name}
           </MenuItem>
         )
@@ -101,14 +105,29 @@ export default class ScheduleForm extends React.Component {
       // If single device, don't show groups
       groupItems[0] = {
         text: this.props.device.id,
-        value: <MenuItem value={this.props.device.id} key={this.props.device.id} primaryText={this.props.device.id} />
+        value: (
+          <MenuItem component={Link} to={this.props.device.id} key={this.props.device.id}>
+            {this.props.device.id}
+          </MenuItem>
+        )
       };
     } else {
-      groupItems[0] = { text: 'All devices', value: <MenuItem value="All devices" key="All" primaryText="All devices" /> };
+      groupItems[0] = {
+        text: 'All devices',
+        value: (
+          <MenuItem component={Link} to="All devices" key="All">
+            All devices
+          </MenuItem>
+        )
+      };
       groupItems = this.props.groups.reduce((accu, group, i) => {
         accu.push({
           text: decodeURIComponent(group),
-          value: <MenuItem value={group} key={i} primaryText={decodeURIComponent(group)} />
+          value: (
+            <MenuItem component={Link} to={group} key={i}>
+              {decodeURIComponent(group)}
+            </MenuItem>
+          )
         });
         return accu;
       }, groupItems);
@@ -144,11 +163,18 @@ export default class ScheduleForm extends React.Component {
       <div className="slider">
         <IconButton
           className="closeSlider"
-          iconStyle={{ fontSize: '16px' }}
           onClick={() => this._showDevices()}
-          style={{ borderRadius: '30px', width: '40px', height: '40px', position: 'absolute', left: '-18px', backgroundColor: 'rgba(255,255,255,1)' }}
+          style={{
+            borderRadius: '30px',
+            fontSize: '16px',
+            width: '40px',
+            height: '40px',
+            position: 'absolute',
+            left: '-18px',
+            backgroundColor: 'rgba(255,255,255,1)'
+          }}
         >
-          <FontIcon className="material-icons">close</FontIcon>
+          <CloseIcon />
         </IconButton>
         <SearchInput style={{ marginBottom: '8px' }} className="search" ref="search" onChange={term => this.searchUpdated(term)} placeholder="Search devices" />
         {devices}
@@ -167,12 +193,11 @@ export default class ScheduleForm extends React.Component {
         <Drawer
           ref="devicesNav"
           docked={false}
-          openSecondary={true}
+          opensecondary="true"
           style={this.state.showDevices ? { overflow: 'visible' } : { overflow: 'hidden' }}
           open={this.state.showDevices}
           overlayStyle={{ backgroundColor: 'rgba(0, 0, 0, 0.3)' }}
           onRequestChange={() => this._showDevices()}
-          containerStyle={this.state.showDevices ? { overflow: 'visible' } : { overflow: 'hidden' }}
           width={320}
         >
           {deviceList}
@@ -180,14 +205,17 @@ export default class ScheduleForm extends React.Component {
 
         <form>
           <div style={{ display: 'block', marginBottom: '15px' }}>
-            <AutoComplete
+            <Autosuggest
               ref="artifact"
-              hintText="Select target artifact"
-              dataSource={artifactItems}
+              helperText="Select target artifact"
+              suggestions={artifactItems}
               onNewRequest={(request, index) => this._handleArtifactValueChange(request, index)}
-              onUpdateInput={() => this._handleArtifactInputChange()}
-              floatingLabelText="Select target artifact"
-              filter={AutoComplete.fuzzyFilter}
+              onChange={() => this._handleArtifactInputChange()}
+              label="Select target artifact"
+              fuzzySearchOpts={{
+                ...defaultProps.fuzzySearchOpts,
+                keys: ['text']
+              }}
               openOnFocus={true}
               listStyle={{ overflow: 'auto', maxHeight: '360px' }}
               errorStyle={{ color: 'rgb(171, 16, 0)' }}
@@ -196,34 +224,37 @@ export default class ScheduleForm extends React.Component {
             />
             <TextField
               disabled={true}
-              hintText="Device types"
-              floatingLabelText="Device types"
+              placeholder="Device types"
+              label="Device types"
               value={device_types}
               underlineDisabledStyle={{ borderBottom: 'none' }}
               style={{ verticalAlign: 'top', width: '400px' }}
-              multiLine={true}
+              multiLine
               errorStyle={{ color: 'rgb(171, 16, 0)' }}
               className={this.props.artifact ? 'margin-left' : 'hidden'}
             />
 
             <p className={artifactItems.length ? 'hidden' : 'info'} style={{ marginTop: '0' }}>
-              <FontIcon className="material-icons" style={{ marginRight: '4px', fontSize: '18px', top: '4px', color: 'rgb(171, 16, 0)' }}>
+              <Icon className="material-icons" style={{ marginRight: '4px', fontSize: '18px', top: '4px', color: 'rgb(171, 16, 0)' }}>
                 error_outline
-              </FontIcon>
+              </Icon>
               There are no artifacts available. <Link to="/artifacts">Upload one to the repository</Link> to get started.
             </p>
           </div>
 
           <div style={{ display: 'block' }}>
             <div className={this.state.disabled ? 'hidden' : 'inline-block'}>
-              <AutoComplete
+              <Autosuggest
                 ref="group"
-                hintText="Select target group"
-                dataSource={groupItems}
+                helperText="Select target group"
+                suggestions={groupItems}
                 onNewRequest={(...args) => this._handleGroupValueChange(...args)}
                 onUpdateInput={() => this._handleGroupInputChange()}
-                floatingLabelText="Select target group"
-                filter={AutoComplete.fuzzyFilter}
+                label="Select target group"
+                fuzzySearchOpts={{
+                  ...defaultProps.fuzzySearchOpts,
+                  keys: ['text']
+                }}
                 openOnFocus={true}
                 listStyle={{ overflow: 'auto', maxHeight: '360px' }}
                 errorStyle={{ color: 'rgb(171, 16, 0)' }}
@@ -233,9 +264,9 @@ export default class ScheduleForm extends React.Component {
               />
 
               <p className={this.props.hasDevices ? 'hidden' : 'info'} style={{ marginTop: '0' }}>
-                <FontIcon className="material-icons" style={{ marginRight: '4px', fontSize: '18px', top: '4px', color: 'rgb(171, 16, 0)' }}>
+                <Icon className="material-icons" style={{ marginRight: '4px', fontSize: '18px', top: '4px', color: 'rgb(171, 16, 0)' }}>
                   error_outline
-                </FontIcon>
+                </Icon>
                 There are no connected devices.{' '}
                 <span className={this.props.hasPending ? null : 'hidden'}>
                   <Link to="/devices/pending">Accept pending devices</Link> to get started.
@@ -248,7 +279,7 @@ export default class ScheduleForm extends React.Component {
                 style={{ width: '100%' }}
                 value={this.props.device ? this.props.device.device_id : ''}
                 ref="device"
-                floatingLabelText="Device"
+                label="Device"
                 disabled={this.state.disabled}
                 underlineDisabledStyle={{ borderBottom: 'none' }}
                 errorStyle={{ color: 'rgb(171, 16, 0)' }}
@@ -265,7 +296,7 @@ export default class ScheduleForm extends React.Component {
                   data-event="click focus"
                   style={{ top: '-75px', left: '45%' }}
                 >
-                  <FontIcon className="material-icons">help</FontIcon>
+                  <HelpIcon />
                 </div>
                 <ReactTooltip id="create-deployment1-tip" globalEventOff="click" place="bottom" type="light" effect="solid" className="react-tooltip">
                   <CreateDeploymentForm />
@@ -282,9 +313,9 @@ export default class ScheduleForm extends React.Component {
               </span>
             </p>
             <p className={this.props.hasDevices && artifactItems.length ? 'info' : 'hidden'}>
-              <FontIcon className="material-icons" style={{ marginRight: '4px', fontSize: '18px', top: '4px' }}>
+              <Icon className="material-icons" style={{ marginRight: '4px', fontSize: '18px', top: '4px' }}>
                 info_outline
-              </FontIcon>
+              </Icon>
               The deployment will skip any devices that are already on the target artifact version, or that have a different device type.
             </p>
           </div>

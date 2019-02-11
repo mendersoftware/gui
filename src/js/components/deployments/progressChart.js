@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import AppActions from '../../actions/app-actions';
 import AppStore from '../../stores/app-store';
 import pluralize from 'pluralize';
-import LinearProgress from 'material-ui/LinearProgress';
+import LinearProgress from '@material-ui/core/LinearProgress';
 import { statusToPercentage } from '../../helpers';
 import { AppContext } from '../../contexts/app-context';
 

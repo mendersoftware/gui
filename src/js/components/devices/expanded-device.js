@@ -13,12 +13,19 @@ import pluralize from 'pluralize';
 import cookie from 'react-cookie';
 import copy from 'copy-to-clipboard';
 
-import { List, ListItem } from 'material-ui/List';
-import FontIcon from 'material-ui/FontIcon';
-import Dialog from 'material-ui/Dialog';
-import FlatButton from 'material-ui/FlatButton';
-import RaisedButton from 'material-ui/RaisedButton';
-import Divider from 'material-ui/Divider';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemAvatar from '@material-ui/core/ListItemAvatar';
+import ListItemText from '@material-ui/core/ListItemText';
+import Icon from '@material-ui/core/Icon';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Button from '@material-ui/core/Button';
+import Divider from '@material-ui/core/Divider';
+import InfoIcon from '@material-ui/icons/Info';
+import HelpIcon from '@material-ui/icons/Help';
 
 import { preformatWithRequestID } from '../../helpers';
 
@@ -177,36 +184,35 @@ export default class ExpandedDevice extends React.Component {
 
     var deviceIdentity = [];
     deviceIdentity.push(
-      <ListItem
-        key="id_checksum"
-        style={this.props.styles.listStyle}
-        disabled={true}
-        primaryText="Device ID"
-        secondaryText={(this.props.device || {}).id || ''}
-        secondaryTextLines={2}
-      />
+      <ListItem key="id_checksum" disabled={true}>
+        <ListItemText primary="Device ID" secondary={(this.props.device || {}).id || ''} />
+      </ListItem>
     );
 
     if ((this.props.device || {}).identity_data) {
       var data = typeof this.props.device.identity_data == 'object' ? this.props.device.identity_data : JSON.parse(this.props.device.identity_data);
       for (var k in data) {
-        deviceIdentity.push(<ListItem key={k} style={this.props.styles.listStyle} disabled={true} primaryText={k} secondaryText={data[k]} />);
+        deviceIdentity.push(
+          <ListItem key={k} disabled={true}>
+            <ListItemText primary={k} secondary={data[k]} />
+          </ListItem>
+        );
       }
     }
 
     if ((this.props.device || {}).created_ts) {
       deviceIdentity.push(
         <div key="connectionTime">
-          <ListItem
-            style={this.props.styles.listStyle}
-            disabled={true}
-            primaryText={status === 'preauthorized' ? 'Date added' : 'First request'}
-            secondaryText={
-              <div>
-                <Time value={this.props.device.created_ts} format="YYYY-MM-DD HH:mm" />
-              </div>
-            }
-          />
+          <ListItem disabled={true}>
+            <ListItemText
+              primary={status === 'preauthorized' ? 'Date added' : 'First request'}
+              secondary={
+                <div>
+                  <Time value={this.props.device.created_ts} format="YYYY-MM-DD HH:mm" />
+                </div>
+              }
+            />
+          </ListItem>
         </div>
       );
     }
@@ -220,16 +226,11 @@ export default class ExpandedDevice extends React.Component {
       });
       for (var i = 0; i < sortedAttributes.length; i++) {
         var secondaryText = sortedAttributes[i].value instanceof Array ? sortedAttributes[i].value.toString() : sortedAttributes[i].value;
-        var secondaryTextLines = sortedAttributes[i].value instanceof Array || secondaryText.length > 50 ? 2 : 1;
         deviceInventory.push(
           <div key={i}>
-            <ListItem
-              style={this.props.styles.listStyle}
-              disabled={true}
-              primaryText={sortedAttributes[i].name}
-              secondaryText={secondaryText}
-              secondaryTextLines={secondaryTextLines}
-            />
+            <ListItem disabled={true}>
+              <ListItemText primary={sortedAttributes[i].name} secondary={secondaryText} />
+            </ListItem>
             <Divider />
           </div>
         );
@@ -247,7 +248,7 @@ export default class ExpandedDevice extends React.Component {
             data-for="inventory-wait"
             data-event="click focus"
           >
-            <FontIcon className="material-icons">info</FontIcon>
+            <InfoIcon />
           </div>
           <ReactTooltip id="inventory-wait" globalEventOff="click" place="top" type="light" effect="solid" className="react-tooltip">
             <h3>Waiting for inventory data</h3>
@@ -276,9 +277,9 @@ export default class ExpandedDevice extends React.Component {
     switch (status) {
     case 'accepted':
       statusIcon = (
-        <FontIcon className="material-icons green" style={{ margin: '12px 0 12px 12px' }}>
+        <Icon className="material-icons green" style={{ margin: '12px 0 12px 12px' }}>
             check_circle
-        </FontIcon>
+        </Icon>
       );
       break;
     case 'pending':
@@ -286,16 +287,16 @@ export default class ExpandedDevice extends React.Component {
       break;
     case 'rejected':
       statusIcon = (
-        <FontIcon className="material-icons red" style={{ margin: '12px 0 12px 12px' }}>
+        <Icon className="material-icons red" style={{ margin: '12px 0 12px 12px' }}>
             block
-        </FontIcon>
+        </Icon>
       );
       break;
     case 'preauthorized':
       statusIcon = (
-        <FontIcon className="material-icons" style={{ margin: '12px 0 12px 12px' }}>
+        <Icon className="material-icons" style={{ margin: '12px 0 12px 12px' }}>
             check
-        </FontIcon>
+        </Icon>
       );
       break;
     }
@@ -314,15 +315,11 @@ export default class ExpandedDevice extends React.Component {
       accepted: 'Reject, dismiss or decommission this device?',
       rejected: 'Accept, dismiss or decommission this device',
       default: 'Remove this device from preauthorization?'
-    }
+    };
 
-    const authLabelText = hasPending ? hasPending : (states[status] || states.default);
+    const authLabelText = hasPending ? hasPending : states[status] || states.default;
 
-    var authLabel = (
-      <span style={{ fontSize: '14px' }}>
-        {authLabelText}
-      </span>
-    );
+    var authLabel = <span style={{ fontSize: '14px' }}>{authLabelText}</span>;
 
     var deviceInfo = (
       <div key="deviceinfo">
@@ -331,30 +328,22 @@ export default class ExpandedDevice extends React.Component {
           <List className="list-horizontal-display">{deviceIdentity}</List>
 
           <List className="block list-horizontal-display">
-            <ListItem
-              key="statusButton"
-              disabled={true}
-              style={this.props.styles.listButtonStyle}
-              primaryText={'Device status'}
-              secondaryText={formatStatus}
-              leftIcon={statusIcon}
-            />
+            <ListItem key="statusButton" disabled={true}>
+              <ListItemAvatar>{statusIcon}</ListItemAvatar>
+              <ListItemText primary={'Device status'} secondary={formatStatus} />
+            </ListItem>
 
-            <ListItem
-              key="authsetsButton"
-              disabled={false}
-              style={this.props.styles.listButtonStyle}
-              primaryText={authLabel}
-              secondaryText={'Click to adjust authorization status for this device'}
-              onClick={() => this._showAuthsets()}
-              leftIcon={
-                hasPending ? (
-                  <FontIcon className="material-icons auth" style={{ marginTop: 12, marginBottom: 6 }}>
+            <ListItem key="authsetsButton" disabled={false} onClick={() => this._showAuthsets()}>
+              {hasPending ? (
+                <ListItemAvatar>
+                  <Icon className="material-icons auth" style={{ marginTop: 12, marginBottom: 6 }}>
                     warning
-                  </FontIcon>
-                ) : null
-              }
-            />
+                  </Icon>
+                </ListItemAvatar>
+              ) : null}
+
+              <ListItemText primary={authLabel} secondary={'Click to adjust authorization status for this device'} />
+            </ListItem>
           </List>
         </div>
 
@@ -374,29 +363,22 @@ export default class ExpandedDevice extends React.Component {
         {status === 'accepted' && !waiting ? (
           <div id="device-actions" className="report-list">
             <List className="list-horizontal-display" style={{ marginTop: '24px' }}>
-              <ListItem
-                key="copylink"
-                style={this.props.styles.iconListButtonStyle}
-                primaryText="Copy link to this device"
-                onClick={() => this._copyLinkToClipboard()}
-                leftIcon={
-                  <FontIcon className="material-icons update" style={{ margin: '12px 0 12px 12px' }}>
+              <ListItem key="copylink" onClick={() => this._copyLinkToClipboard()}>
+                <ListItemAvatar>
+                  <Icon className="material-icons update" style={{ margin: '12px 0 12px 12px' }}>
                     link
-                  </FontIcon>
-                }
-              />
-              <ListItem
-                key="updateButton"
-                className={status === 'accepted' ? null : 'hidden'}
-                style={this.props.styles.iconListButtonStyle}
-                primaryText="Create a deployment for this device"
-                onClick={() => this._clickListItem()}
-                leftIcon={
-                  <FontIcon className="material-icons update" style={{ margin: '12px 0 12px 12px' }}>
+                  </Icon>
+                </ListItemAvatar>
+                <ListItemText primary="Copy link to this device" />
+              </ListItem>
+              <ListItem key="updateButton" className={status === 'accepted' ? null : 'hidden'} onClick={() => this._clickListItem()}>
+                <ListItemAvatar>
+                  <Icon className="material-icons update" style={{ margin: '12px 0 12px 12px' }}>
                     replay
-                  </FontIcon>
-                }
-              />
+                  </Icon>
+                </ListItemAvatar>
+                <ListItemText primary="Create a deployment for this device" />
+              </ListItem>
             </List>
           </div>
         ) : null}
@@ -405,21 +387,23 @@ export default class ExpandedDevice extends React.Component {
 
     var scheduleActions = [
       <div key="schedule-action-button-1" style={{ marginRight: '10px', display: 'inline-block' }}>
-        <FlatButton label="Cancel" onClick={() => this.dialogToggle('schedule')} />
+        <Button onClick={() => this.dialogToggle('schedule')}>Cancel</Button>
       </div>,
-      <RaisedButton
+      <Button
+        variant="contained"
         key="schedule-action-button-2"
-        label="Create deployment"
-        primary={true}
+        primary="true"
         disabled={!this.state.filterByArtifact}
         onClick={() => this._onScheduleSubmit()}
         ref="save"
-      />
+      >
+        Create deployment
+      </Button>
     ];
 
     var authsetActions = [
       <div key="authset-button-1" style={{ marginRight: '10px', display: 'inline-block' }}>
-        <FlatButton label="Close" onClick={() => this.dialogToggle('authsets')} />
+        <Button onClick={() => this.dialogToggle('authsets')}>Close</Button>
       </div>
     ];
 
@@ -437,7 +421,7 @@ export default class ExpandedDevice extends React.Component {
           data-for="inventory-wait"
           data-event="click focus"
         >
-          <FontIcon className="material-icons">info</FontIcon>
+          <InfoIcon />
         </div>
         <ReactTooltip id="inventory-wait" globalEventOff="click" place="bottom" type="light" effect="solid" className="react-tooltip">
           <h3>Device authorization status</h3>
@@ -470,7 +454,7 @@ export default class ExpandedDevice extends React.Component {
               data-event="click focus"
               style={{ left: '580px', top: '178px' }}
             >
-              <FontIcon className="material-icons">help</FontIcon>
+              <HelpIcon />
             </div>
             <ReactTooltip id="auth-button-tip" globalEventOff="click" place="bottom" type="light" effect="solid" className="react-tooltip">
               <AuthButton devices={[this.props.device]} />
@@ -480,40 +464,39 @@ export default class ExpandedDevice extends React.Component {
 
         <Dialog
           open={this.state.schedule}
-          title="Create a deployment"
-          actions={scheduleActions}
-          autoDetectWindowHeight={true}
-          bodyStyle={{ paddingTop: '0', fontSize: '13px' }}
-          contentStyle={{ overflow: 'hidden', boxShadow: '0 14px 45px rgba(0, 0, 0, 0.25), 0 10px 18px rgba(0, 0, 0, 0.22)' }}
+          style={{ paddingTop: '0', fontSize: '13px', boxShadow: '0 14px 45px rgba(0, 0, 0, 0.25), 0 10px 18px rgba(0, 0, 0, 0.22)' }}
         >
-          <ScheduleForm
-            deploymentDevices={[this.props.device]}
-            filteredDevices={this.state.filterByArtifact}
-            deploymentSettings={(...args) => this._deploymentParams(...args)}
-            artifact={this.state.artifact}
-            artifacts={this.state.artifacts}
-            device={this.props.device}
-            deploymentSchedule={this._updateParams}
-            groups={this.props.groups}
-          />
+          <DialogTitle>Create a deployment</DialogTitle>
+          <DialogContent style={{ overflow: 'hidden' }}>
+            <ScheduleForm
+              deploymentDevices={[this.props.device]}
+              filteredDevices={this.state.filterByArtifact}
+              deploymentSettings={(...args) => this._deploymentParams(...args)}
+              artifact={this.state.artifact}
+              artifacts={this.state.artifacts}
+              device={this.props.device}
+              deploymentSchedule={this._updateParams}
+              groups={this.props.groups}
+            />
+          </DialogContent>
+          <DialogActions>{scheduleActions}</DialogActions>
         </Dialog>
 
-        <Dialog
-          open={this.state.authsets}
-          title={authsetTitle}
-          autoDetectWindowHeight={false}
-          actions={authsetActions}
-          bodyStyle={{ paddingTop: '0', fontSize: '13px' }}
-          contentStyle={{ width: '80%', maxWidth: '1500px', overflow: 'hidden', boxShadow: '0 14px 45px rgba(0, 0, 0, 0.25), 0 10px 18px rgba(0, 0, 0, 0.22)' }}
-        >
-          <Authsets
-            dialogToggle={() => this.dialogToggle('authsets')}
-            decommission={id => this._decommissionDevice(id)}
-            device={this.props.device}
-            id_attribute={this.props.id_attribute}
-            id_value={this.props.id_value}
-            limitMaxed={this.props.limitMaxed}
-          />
+        <Dialog open={this.state.authsets} style={{ paddingTop: '0', fontSize: '13px' }}>
+          <DialogTitle>{authsetTitle}</DialogTitle>
+          <DialogContent
+            style={{ width: '80%', maxWidth: '1500px', overflow: 'hidden', boxShadow: '0 14px 45px rgba(0, 0, 0, 0.25), 0 10px 18px rgba(0, 0, 0, 0.22)' }}
+          >
+            <Authsets
+              dialogToggle={() => this.dialogToggle('authsets')}
+              decommission={id => this._decommissionDevice(id)}
+              device={this.props.device}
+              id_attribute={this.props.id_attribute}
+              id_value={this.props.id_value}
+              limitMaxed={this.props.limitMaxed}
+            />{' '}
+          </DialogContent>
+          <DialogActions>{authsetActions}</DialogActions>
         </Dialog>
       </div>
     );

@@ -5,9 +5,6 @@ import PropTypes from 'prop-types';
 import Header from './header/header';
 import LeftNav from './leftnav';
 
-import getMuiTheme from 'material-ui/styles/getMuiTheme';
-import RawTheme from '../themes/mender-theme.js';
-
 import IdleTimer from 'react-idle-timer';
 
 import { logout, updateMaxAge, expirySet } from '../auth';
@@ -35,9 +32,7 @@ class AppRoot extends React.Component {
   }
 
   getChildContext() {
-    var theme = getMuiTheme(RawTheme);
     return {
-      muiTheme: theme,
       location: this.props.location
     };
   }
@@ -94,7 +89,7 @@ class AppRoot extends React.Component {
     case 'settings':
       return '/settings';
     default:
-      return '';
+      return '/';
     }
   }
   _uploadArtifact(meta, file) {

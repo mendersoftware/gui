@@ -15,17 +15,22 @@ import { setRetryTimer, clearAllRetryTimers } from '../../utils/retrytimer';
 import { preformatWithRequestID } from '../../helpers';
 
 // material ui
-import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
-import IconButton from 'material-ui/IconButton';
-import RaisedButton from 'material-ui/RaisedButton';
-import FontIcon from 'material-ui/FontIcon';
-import InfoIcon from 'react-material-icons/icons/action/info-outline';
+import Button from '@material-ui/core/Button';
+import Checkbox from '@material-ui/core/Checkbox';
+import HelpIcon from '@material-ui/icons/Help';
+import Icon from '@material-ui/core/Icon';
+import IconButton from '@material-ui/core/IconButton';
+import InfoIcon from '@material-ui/icons/InfoOutlined';
+import Table from '@material-ui/core/Table';
+import TableHead from '@material-ui/core/TableHead';
+import TableCell from '@material-ui/core/TableCell';
+import TableBody from '@material-ui/core/TableBody';
+import TableRow from '@material-ui/core/TableRow';
 
 export default class Pending extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      minHeight: 230,
       divHeight: 208,
       devices: [],
       pageNo: 1,
@@ -67,7 +72,6 @@ export default class Pending extends React.Component {
           //if devices empty but count not, put back to first page
           self._handlePageChange(1);
         }
-        self._adjustHeight();
       })
       .catch(err => {
         console.log(err);
@@ -85,12 +89,6 @@ export default class Pending extends React.Component {
     });
   }
 
-  _adjustHeight() {
-    // do this when number of devices changes
-    var h = this.state.devices.length * 55;
-    h += 200;
-    this.setState({ minHeight: h });
-  }
   _sortColumn() {
     console.log('sort');
   }
@@ -113,15 +111,26 @@ export default class Pending extends React.Component {
     });
   }
 
-  _onRowSelection(selectedRows) {
-    if (selectedRows === 'all') {
-      var rows = Array.apply(null, { length: this.state.devices.length }).map(Number.call, Number);
-      this.setState({ selectedRows: rows });
-    } else if (selectedRows === 'none') {
-      this.setState({ selectedRows: [] });
+  _onRowSelection(selectedRow) {
+    const self = this;
+    const { selectedRows } = self.state;
+    const selectedIndex = selectedRows.indexOf(selectedRow);
+    let updatedSelection = [];
+    if (selectedIndex === -1) {
+      updatedSelection = updatedSelection.concat(selectedRows, selectedRow);
     } else {
-      this.setState({ selectedRows: selectedRows });
+      updatedSelection = selectedRows.splice(selectedIndex, 1);
     }
+    self.setState({ selectedRows: updatedSelection });
+  }
+
+  onSelectAllClick() {
+    const self = this;
+    let selectedRows = Array.apply(null, { length: this.state.devices.length }).map(Number.call, Number);
+    if (self.state.selectedRows.length !== self.state.devices.length) {
+      selectedRows = [];
+    }
+    self.setState({ selectedRows });
   }
 
   _isSelected(index) {
@@ -192,6 +201,7 @@ export default class Pending extends React.Component {
   }
 
   render() {
+    const self = this;
     var limitMaxed = this.props.deviceLimit ? this.props.deviceLimit <= this.props.acceptedDevices : false;
     var limitNear = this.props.deviceLimit ? this.props.deviceLimit < this.props.acceptedDevices + this.state.devices.length : false;
     var selectedOverLimit = this.props.deviceLimit ? this.props.deviceLimit < this.props.acceptedDevices + this.state.selectedRows.length : false;
@@ -215,7 +225,6 @@ export default class Pending extends React.Component {
             _showKey={self._showKey}
             showKey={self.state.showKey}
             limitMaxed={limitMaxed}
-            styles={self.props.styles}
             deviceId={self.state.deviceId}
             device={self.state.expandedDevice}
             unauthorized={true}
@@ -225,8 +234,18 @@ export default class Pending extends React.Component {
       }
 
       return (
-        <TableRow selected={this._isSelected(index)} style={{ backgroundColor: '#e9f4f3' }} className={expanded ? 'expand' : null} hoverable={true} key={index}>
-          <TableRowColumn className="no-click-cell" style={expanded ? { height: this.state.divHeight } : null}>
+        <TableRow
+          selected={this._isSelected(index)}
+          style={{ backgroundColor: '#e9f4f3' }}
+          className={expanded ? 'expand' : null}
+          hover
+          key={index}
+          onClick={row => this._onRowSelection(row)}
+        >
+          <TableCell padding="checkbox">
+            <Checkbox checked={this._isSelected(index)} />
+          </TableCell>
+          <TableCell className="no-click-cell" style={expanded ? { height: this.state.divHeight } : null}>
             <div
               onClick={e => {
                 e.preventDefault();
@@ -236,8 +255,8 @@ export default class Pending extends React.Component {
             >
               {id_attribute}
             </div>
-          </TableRowColumn>
-          <TableRowColumn className="no-click-cell">
+          </TableCell>
+          <TableCell className="no-click-cell">
             <div
               onClick={e => {
                 e.preventDefault();
@@ -247,8 +266,8 @@ export default class Pending extends React.Component {
             >
               <Time value={device.created_ts} format="YYYY-MM-DD HH:mm" />
             </div>
-          </TableRowColumn>
-          <TableRowColumn className="no-click-cell">
+          </TableCell>
+          <TableCell className="no-click-cell">
             <div
               onClick={e => {
                 e.preventDefault();
@@ -258,8 +277,8 @@ export default class Pending extends React.Component {
             >
               <Time value={device.updated_ts} format="YYYY-MM-DD HH:mm" />
             </div>
-          </TableRowColumn>
-          <TableRowColumn className="no-click-cell capitalized">
+          </TableCell>
+          <TableCell className="no-click-cell capitalized">
             <div
               onClick={e => {
                 e.preventDefault();
@@ -269,9 +288,9 @@ export default class Pending extends React.Component {
             >
               {device.status}
             </div>
-          </TableRowColumn>
+          </TableCell>
 
-          <TableRowColumn style={{ width: '55px', paddingRight: '0', paddingLeft: '12px' }} className="expandButton">
+          <TableCell style={{ width: '55px', paddingRight: '0', paddingLeft: '12px' }} className="expandButton">
             <div
               onClick={e => {
                 e.preventDefault();
@@ -280,11 +299,11 @@ export default class Pending extends React.Component {
               }}
             >
               <IconButton className="float-right">
-                <FontIcon className="material-icons">{expanded ? 'arrow_drop_up' : 'arrow_drop_down'}</FontIcon>
+                <Icon className="material-icons">{expanded ? 'arrow_drop_up' : 'arrow_drop_down'}</Icon>
               </IconButton>
             </div>
-          </TableRowColumn>
-          <TableRowColumn style={{ width: '0', padding: '0', overflow: 'visible' }}>
+          </TableCell>
+          <TableCell style={{ width: '0', padding: '0', overflow: 'visible' }}>
             <div
               onClick={e => {
                 e.preventDefault();
@@ -305,7 +324,7 @@ export default class Pending extends React.Component {
                 {expanded}
               </Collapse>
             </div>
-          </TableRowColumn>
+          </TableCell>
         </TableRow>
       );
     }, this);
@@ -320,16 +339,10 @@ export default class Pending extends React.Component {
         </p>
       ) : null;
 
-    var minHeight = deviceLimitWarning ? this.state.minHeight + 20 : this.state.minHeight;
+    const numSelected = self.state.selectedRows.length;
 
     return (
-      <Collapse
-        springConfig={{ stiffness: 190, damping: 20 }}
-        style={{ minHeight: minHeight, width: '100%' }}
-        isOpened={true}
-        id="authorize"
-        className="absolute authorize padding-top"
-      >
+      <div>
         <Loader show={this.state.authLoading} />
 
         {this.props.showHelptips && this.state.devices.length ? (
@@ -342,7 +355,7 @@ export default class Pending extends React.Component {
               data-event="click focus"
               style={{ left: '60%', top: '35px' }}
             >
-              <FontIcon className="material-icons">help</FontIcon>
+              <HelpIcon />
             </div>
             <ReactTooltip id="review-devices-tip" globalEventOff="click" place="bottom" type="light" effect="solid" className="react-tooltip">
               <AuthDevices devices={this.state.devices.length} />
@@ -358,36 +371,35 @@ export default class Pending extends React.Component {
 
             {deviceLimitWarning}
 
-            <Table multiSelectable={true} onRowSelection={rows => this._onRowSelection(rows)} allRowsSelected={this.state.allRowsSelected}>
-              <TableHeader className="clickable" displaySelectAll={true} adjustForCheckbox={true}>
+            <Table>
+              <TableHead className="clickable">
                 <TableRow>
-                  <TableHeaderColumn className="columnHeader" tooltip={(this.props.globalSettings || {}).id_attribute || 'Device ID'}>
+                  <TableCell padding="checkbox">
+                    <Checkbox
+                      indeterminate={numSelected > 0 && numSelected < self.state.devices.length}
+                      checked={numSelected === self.state.devices.length}
+                      onChange={() => self.onSelectAllClick()}
+                    />
+                  </TableCell>
+                  <TableCell className="columnHeader" tooltip={(this.props.globalSettings || {}).id_attribute || 'Device ID'}>
                     {(this.props.globalSettings || {}).id_attribute || 'Device ID'}
-                    <FontIcon
-                      onClick={this.props.openSettingsDialog}
-                      style={{ fontSize: '16px' }}
-                      color={'#c7c7c7'}
-                      hoverColor={'#aeaeae'}
-                      className="material-icons hover float-right"
-                    >
+                    <Icon onClick={this.props.openSettingsDialog} style={{ fontSize: '16px' }} className="material-icons hover float-right">
                       settings
-                    </FontIcon>
-                  </TableHeaderColumn>
-                  <TableHeaderColumn className="columnHeader" tooltip="First request">
+                    </Icon>
+                  </TableCell>
+                  <TableCell className="columnHeader" tooltip="First request">
                     First request
-                  </TableHeaderColumn>
-                  <TableHeaderColumn className="columnHeader" tooltip="Last updated">
+                  </TableCell>
+                  <TableCell className="columnHeader" tooltip="Last updated">
                     Last updated
-                  </TableHeaderColumn>
-                  <TableHeaderColumn className="columnHeader" tooltip="Status">
+                  </TableCell>
+                  <TableCell className="columnHeader" tooltip="Status">
                     Status
-                  </TableHeaderColumn>
-                  <TableHeaderColumn className="columnHeader" style={{ width: '55px', paddingRight: '12px', paddingLeft: '0' }} />
+                  </TableCell>
+                  <TableCell className="columnHeader" style={{ width: '55px', paddingRight: '12px', paddingLeft: '0' }} />
                 </TableRow>
-              </TableHeader>
-              <TableBody showRowHover={true} displayRowCheckbox={true} className="clickable" deselectOnClickaway={false}>
-                {devices}
-              </TableBody>
+              </TableHead>
+              <TableBody className="clickable">{devices}</TableBody>
             </Table>
 
             <div className="margin-top">
@@ -411,7 +423,7 @@ export default class Pending extends React.Component {
             <p>There are no devices pending authorization</p>
             {this.props.highlightHelp ? (
               <p>
-                Visit the <Link to='/help/connecting-devices'>Help section</Link> to learn how to connect devices to the Mender server.
+                Visit the <Link to="/help/connecting-devices">Help section</Link> to learn how to connect devices to the Mender server.
               </p>
             ) : null}
           </div>
@@ -427,12 +439,14 @@ export default class Pending extends React.Component {
               <span className="margin-right">
                 {this.state.selectedRows.length} {pluralize('devices', this.state.selectedRows.length)} selected
               </span>
-              <RaisedButton
+              <Button
+                variant="contained"
                 disabled={this.props.disabled || limitMaxed || selectedOverLimit}
                 onClick={() => this._authorizeDevices()}
-                primary={true}
-                label={`Authorize ${this.state.selectedRows.length} ${pluralize('devices', this.state.selectedRows.length)}`}
-              />
+                primary="true"
+              >
+                {`Authorize ${this.state.selectedRows.length} ${pluralize('devices', this.state.selectedRows.length)}`}
+              </Button>
               {deviceLimitWarning}
             </div>
           </div>
@@ -448,14 +462,14 @@ export default class Pending extends React.Component {
               data-event="click focus"
               style={{ left: '16%', top: '170px' }}
             >
-              <FontIcon className="material-icons">help</FontIcon>
+              <HelpIcon />
             </div>
             <ReactTooltip id="expand-auth-tip" globalEventOff="click" place="bottom" type="light" effect="solid" className="react-tooltip">
               <ExpandAuth />
             </ReactTooltip>
           </div>
         ) : null}
-      </Collapse>
+      </div>
     );
   }
 }

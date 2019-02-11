@@ -1,21 +1,29 @@
 import React from 'react';
 import Time from 'react-time';
 import ReactTooltip from 'react-tooltip';
-import { FinishedDeployment } from '../helptips/helptooltips';
-
-import DeploymentStatus from './deploymentstatus';
-
 import Pagination from 'rc-pagination';
 import _en_US from 'rc-pagination/lib/locale/en_US';
-import Loader from '../common/loader';
 
 // material ui
-import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
-import IconButton from 'material-ui/IconButton';
-import FontIcon from 'material-ui/FontIcon';
-import DatePicker from 'material-ui/DatePicker';
-import AutoComplete from 'material-ui/AutoComplete';
-import MenuItem from 'material-ui/MenuItem';
+import Table from '@material-ui/core/Table';
+import TableHead from '@material-ui/core/TableHead';
+import TableCell from '@material-ui/core/TableCell';
+import TableBody from '@material-ui/core/TableBody';
+import TableRow from '@material-ui/core/TableRow';
+import IconButton from '@material-ui/core/IconButton';
+
+import Autosuggest, { defaultProps } from '@plan-three/material-ui-autosuggest';
+
+import ClearIcon from '@material-ui/icons/Clear';
+import HelpIcon from '@material-ui/icons/Help';
+
+import InlineDatePicker from 'material-ui-pickers/DatePicker';
+import MuiPickersUtilsProvider from 'material-ui-pickers/MuiPickersUtilsProvider';
+import MomentUtils from '@date-io/moment';
+
+import Loader from '../common/loader';
+import { FinishedDeployment } from '../helptips/helptooltips';
+import DeploymentStatus from './deploymentstatus';
 
 export default class Past extends React.Component {
   constructor(props, context) {
@@ -116,43 +124,31 @@ export default class Past extends React.Component {
       var status = <DeploymentStatus isActiveTab={this.props.isActiveTab} id={deployment.id} />;
 
       return (
-        <TableRow key={index}>
-          <TableRowColumn>{deployment.artifact_name}</TableRowColumn>
-          <TableRowColumn>{deployment.name}</TableRowColumn>
-          <TableRowColumn>
+        <TableRow hover key={index} onClick={row => this._pastCellClick(row)}>
+          <TableCell>{deployment.artifact_name}</TableCell>
+          <TableCell>{deployment.name}</TableCell>
+          <TableCell>
             <Time value={this._formatTime(deployment.created)} format="YYYY-MM-DD HH:mm" />
-          </TableRowColumn>
-          <TableRowColumn>{time}</TableRowColumn>
-          <TableRowColumn style={{ textAlign: 'right', width: '100px' }}>{deployment.device_count}</TableRowColumn>
-          <TableRowColumn style={{ overflow: 'visible', width: '350px' }}>{status}</TableRowColumn>
+          </TableCell>
+          <TableCell>{time}</TableCell>
+          <TableCell style={{ textAlign: 'right', width: '100px' }}>{deployment.device_count}</TableCell>
+          <TableCell style={{ overflow: 'visible', width: '350px' }}>{status}</TableCell>
         </TableRow>
       );
     }, this);
 
-    var menuItems = [];
-    var allDevicesGroup = {
-      text: 'All devices',
-      value: (
-        <MenuItem key="All devices" value="All devices">
-          All devices
-        </MenuItem>
-      )
-    };
-    menuItems.push(allDevicesGroup);
-    const menuGroupItems = this.props.groups.map((group, i) => ({
-      text: group,
-      value: (
-        <MenuItem key={i} value={group}>
-          {group}
-        </MenuItem>
-      )
-    }));
-    menuItems.push(...menuGroupItems);
+    const menuItems = this.props.groups.reduce(
+      (accu, item) => {
+        accu.push({ text: item });
+        return accu;
+      },
+      [{ text: 'All devices' }]
+    );
 
     return (
       <div className="fadeIn">
         <div className="datepicker-container">
-          <div className="inline-block align-bottom" style={{ marginBottom: '12px' }}>
+          <div className="inline-block">
             <span>Filter by date</span>
             <ul className="unstyled link-list horizontal">
               <li>
@@ -178,78 +174,66 @@ export default class Past extends React.Component {
             </ul>
           </div>
 
-          <div className="align-bottom margin-left margin-right inline-block">
-            <DatePicker
+          <MuiPickersUtilsProvider utils={MomentUtils} className="margin-left margin-right inline-block">
+            <InlineDatePicker
               onChange={(event, date) => this._handleChangeStartDate(event, date)}
               autoOk={true}
-              floatingLabelText="From"
-              defaultDate={this.props.startDate}
-              disableYearSelection={true}
+              label="From"
+              onlyCalendar
               value={this.props.startDate}
               maxDate={this.props.endDate || this.state.today}
-              style={{ display: 'inline-block', marginRight: '20px' }}
-              textFieldStyle={{ width: '160px' }}
+              style={{ marginRight: '20px', width: '160px' }}
             />
 
-            <DatePicker
+            <InlineDatePicker
               onChange={(event, date) => this._handleChangeEndDate(event, date)}
               autoOk={true}
-              floatingLabelText="To"
-              defaultDate={this.props.endDate}
+              label="To"
               value={this.props.endDate}
               maxDate={this.state.today}
-              disableYearSelection={true}
-              style={{ display: 'inline-block' }}
-              textFieldStyle={{ width: '160px' }}
+              onlyCalendar
+              style={{ width: '160px' }}
             />
-          </div>
+          </MuiPickersUtilsProvider>
 
-          <div className="inline-block align-bottom margin-left">
-            <AutoComplete
-              ref="autocomplete"
-              hintText="Select a group"
-              dataSource={menuItems}
-              onUpdateInput={value => this.handleUpdateInput(value)}
-              floatingLabelText="Filter by device group"
-              floatingLabelFixed={true}
-              floatingLabelStyle={{ color: '#404041', fontSize: '17px', top: '37px' }}
-              filter={AutoComplete.fuzzyFilter}
-              openOnFocus={true}
-            />
-            <IconButton style={{ marginLeft: '-10px' }} disabled={this.state.disableClear} iconStyle={{ fontSize: '16px' }} onClick={() => this.clearAuto()}>
-              <FontIcon className="material-icons">clear</FontIcon>
-            </IconButton>
-          </div>
+          <Autosuggest
+            className="inline-block margin-left"
+            // ref="autocomplete"
+            label="Filter by device group"
+            suggestions={menuItems}
+            fullWidth={false}
+            helperText="Select a group"
+            onChange={value => this.handleUpdateInput(value)}
+            fuzzySearchOpts={{
+              ...defaultProps.fuzzySearchOpts,
+              keys: ['text']
+            }}
+            openOnFocus={true}
+          />
+          <IconButton className="inline-block" style={{ fontSize: '16px' }} disabled={this.state.disableClear} onClick={() => this.clearAuto()}>
+            <ClearIcon />
+          </IconButton>
         </div>
         <div className="deploy-table-contain">
           <Loader show={this.props.loading} />
-          <Table
-            onCellClick={row => this._pastCellClick(row)}
-            className={pastMap.length ? null : 'hidden'}
-            selectable={false}
-            style={{ overflow: 'visible' }}
-            wrapperStyle={{ overflow: 'visible' }}
-            bodyStyle={{ overflow: 'visible' }}
-          >
-            <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
+          <Table className={pastMap.length ? null : 'hidden'} style={{ overflow: 'visible' }}>
+            <TableHead>
               <TableRow style={{ overflow: 'visible' }}>
-                <TableHeaderColumn>Updating to</TableHeaderColumn>
-                <TableHeaderColumn>Group</TableHeaderColumn>
-                <TableHeaderColumn>Started</TableHeaderColumn>
-                <TableHeaderColumn>Finished</TableHeaderColumn>
-                <TableHeaderColumn style={{ textAlign: 'right', width: '100px' }}># Devices</TableHeaderColumn>
-                <TableHeaderColumn style={{ width: '350px' }}>Status</TableHeaderColumn>
+                <TableCell>Updating to</TableCell>
+                <TableCell>Group</TableCell>
+                <TableCell>Started</TableCell>
+                <TableCell>Finished</TableCell>
+                <TableCell style={{ textAlign: 'right', width: '100px' }}># Devices</TableCell>
+                <TableCell style={{ width: '350px' }}>Status</TableCell>
               </TableRow>
-            </TableHeader>
-            <TableBody showRowHover={true} displayRowCheckbox={false} style={{ cursor: 'pointer', overflow: 'visible' }}>
-              {pastMap}
-            </TableBody>
+            </TableHead>
+            <TableBody style={{ cursor: 'pointer', overflow: 'visible' }}>{pastMap}</TableBody>
           </Table>
 
           {!this.props.loading && this.props.showHelptips && pastMap.length ? (
             <div>
               <div id="onboard-14" className="tooltip help" data-tip data-for="finished-deployment-tip" data-event="click focus">
-                <FontIcon className="material-icons">help</FontIcon>
+                <HelpIcon />
               </div>
               <ReactTooltip id="finished-deployment-tip" globalEventOff="click" place="bottom" type="light" effect="solid" className="react-tooltip">
                 <FinishedDeployment />

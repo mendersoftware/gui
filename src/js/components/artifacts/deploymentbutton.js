@@ -1,10 +1,10 @@
 import React from 'react';
 
 // material ui
-import RaisedButton from 'material-ui/RaisedButton';
+import Button from '@material-ui/core/Button';
 
 export default class DeploymentButton extends React.Component {
   render() {
-    return <RaisedButton label="Create deployment" />;
+    return <Button variant="contained">Create deployment</Button>;
   }
 }

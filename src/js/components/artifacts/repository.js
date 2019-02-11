@@ -8,15 +8,22 @@ import { UploadArtifact, ExpandArtifact } from '../helptips/helptooltips';
 import Loader from '../common/loader';
 import SearchInput from 'react-search-input';
 import SelectedArtifact from './selectedartifact';
-import { Collapse } from 'react-collapse';
 import Dropzone from 'react-dropzone';
 
 // material ui
-import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
-import FontIcon from 'material-ui/FontIcon';
-import FileIcon from 'react-material-icons/icons/file/file-upload';
-import IconButton from 'material-ui/IconButton';
-import LinearProgress from 'material-ui/LinearProgress';
+import Collapse from '@material-ui/core/Collapse';
+import Icon from '@material-ui/core/Icon';
+import IconButton from '@material-ui/core/IconButton';
+import LinearProgress from '@material-ui/core/LinearProgress';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+
+import FileIcon from '@material-ui/icons/CloudUpload';
+import HelpIcon from '@material-ui/icons/Help';
+
 import { preformatWithRequestID } from '../../helpers';
 
 var artifacts = [];
@@ -98,13 +105,13 @@ export default class Repository extends React.Component {
       });
   }
 
-  _onRowSelection(rowNumber, columnId) {
+  _onRowSelection(rowNumber, shouldToggleRow) {
     var artifact = artifacts[rowNumber];
-    if (columnId <= 3) {
+    if (shouldToggleRow) {
       if (this.state.artifact === artifact) {
         this._resetArtifactState();
       } else {
-        this.setState({ artifact: artifact });
+        this.setState({ artifact });
       }
     }
   }
@@ -147,81 +154,57 @@ export default class Repository extends React.Component {
   }
   render() {
     const self = this;
-    var styles = {
-      buttonIcon: {
-        height: '100%',
-        display: 'inline-block',
-        verticalAlign: 'middle',
-        float: 'left',
-        paddingLeft: '12px',
-        lineHeight: '36px',
-        marginRight: '-6px',
-        color: '#ffffff',
-        fontSize: '16px'
-      },
-      flatButtonIcon: {
-        height: '100%',
-        display: 'inline-block',
-        verticalAlign: 'middle',
-        float: 'left',
-        paddingLeft: '12px',
-        lineHeight: '36px',
-        marginRight: '-6px',
-        color: 'rgba(0,0,0,0.8)',
-        fontSize: '16px'
-      },
-      sortIcon: {
-        verticalAlign: 'middle',
-        marginLeft: '10px',
-        color: '#8c8c8d',
-        cursor: 'pointer'
-      }
-    };
 
     var tmpArtifacts = [];
-    if (this.refs.search) {
+    if (self.refs.search) {
       var filters = ['name', 'device_types_compatible', 'description'];
-      tmpArtifacts = artifacts.filter(this.refs.search.filter(filters));
+      tmpArtifacts = artifacts.filter(self.refs.search.filter(filters));
     }
 
     var items = tmpArtifacts.map(function(pkg, index) {
       var compatible = pkg.device_types_compatible.join(', ');
       var expanded = '';
-      if (this.state.artifact.id === pkg.id) {
+      if (self.state.artifact.id === pkg.id) {
         expanded = (
           <SelectedArtifact
-            removeArtifact={() => this._handleRemove()}
+            removeArtifact={() => self._handleRemove()}
             compatible={compatible}
-            formatTime={this._formatTime}
-            editArtifact={this._editArtifactData}
-            buttonStyle={styles.flatButtonIcon}
-            artifact={this.state.artifact}
+            formatTime={self._formatTime}
+            editArtifact={self._editArtifactData}
+            // buttonStyle={styles.flatButtonIcon}
+            artifact={self.state.artifact}
           />
         );
       }
 
       return (
-        <TableRow hoverable={!expanded} className={expanded ? 'expand' : null} key={index}>
-          <TableRowColumn style={expanded ? { height: this.state.divHeight } : null}>{pkg.name}</TableRowColumn>
-          <TableRowColumn>{compatible}</TableRowColumn>
-          <TableRowColumn>
-            <Time value={this._formatTime(pkg.modified)} format="YYYY-MM-DD HH:mm" />
-          </TableRowColumn>
-          <TableRowColumn style={{ width: '55px', paddingRight: '0', paddingLeft: '12px' }} className="expandButton">
+        <TableRow hover={!expanded} className={expanded ? 'expand' : null} key={index} onClick={() => self._onRowSelection(index)}>
+          <TableCell style={expanded ? { height: self.state.divHeight } : null}>{pkg.name}</TableCell>
+          <TableCell>{compatible}</TableCell>
+          <TableCell>
+            <Time value={self._formatTime(pkg.modified)} format="YYYY-MM-DD HH:mm" />
+          </TableCell>
+          <TableCell
+            className="expandButton"
+            onClick={() => self._onRowSelection(index, true)}
+            style={{ width: '55px', paddingRight: '0', paddingLeft: '12px' }}
+          >
             <IconButton className="float-right">
-              <FontIcon className="material-icons">{expanded ? 'arrow_drop_up' : 'arrow_drop_down'}</FontIcon>
+              <Icon className="material-icons">{expanded ? 'arrow_drop_up' : 'arrow_drop_down'}</Icon>
             </IconButton>
-          </TableRowColumn>
-          <TableRowColumn style={{ width: '0', padding: '0', overflow: 'visible' }}>
+          </TableCell>
+          <TableCell padding={'none'} style={{ width: '0' }} colSpan="4">
             <Collapse
-              springConfig={{ stiffness: 210, damping: 20 }}
-              onMeasure={measurements => self._adjustCellHeight(measurements.height)}
-              className="expanded"
-              isOpened={expanded ? true : false}
+              hidden={!expanded}
+              in={!!expanded}
+              // springConfig={{ stiffness: 210, damping: 20 }}
+              // onMeasure={measurements => self._adjustCellHeight(measurements.height)}
+              // className="expanded"
+              unmountOnExit
             >
               {expanded}
             </Collapse>
-          </TableRowColumn>
+          </TableCell>
         </TableRow>
       );
     }, this);
@@ -253,50 +236,48 @@ export default class Repository extends React.Component {
 
         <div>
           <h3 className="inline-block">Available artifacts</h3>
-          <SearchInput placeholder="Search artifacts" className="search tableSearch" ref="search" onChange={term => this.searchUpdated(term)} />
+          <SearchInput placeholder="Search artifacts" className="search tableSearch" ref="search" onChange={term => self.searchUpdated(term)} />
         </div>
 
-        <div id="progressBarContainer" className={this.props.progress ? null : 'shrunk'}>
-          <p className="align-center">Upload in progress ({Math.round(this.props.progress)}%)</p>
-          <LinearProgress mode="determinate" style={{ backgroundColor: '#c7c7c7', margin: '15px 0' }} value={this.props.progress} />
+        <div id="progressBarContainer" className={self.props.progress ? null : 'shrunk'}>
+          <p className="align-center">Upload in progress ({Math.round(self.props.progress)}%)</p>
+          <LinearProgress mode="determinate" style={{ backgroundColor: '#c7c7c7', margin: '15px 0' }} value={self.props.progress} />
         </div>
 
-        <Loader show={this.props.loading} />
+        <Loader show={self.props.loading} />
 
         <div style={{ position: 'relative', marginTop: '10px' }}>
-          <Table onCellClick={(row, col) => this._onRowSelection(row, col)} className={items.length ? null : 'hidden'}>
-            <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
+          <Table className={items.length ? null : 'hidden'}>
+            <TableHead>
               <TableRow>
-                <TableHeaderColumn className="columnHeader" tooltip="Name">
+                <TableCell className="columnHeader" tooltip="Name">
                   Name{' '}
-                  <FontIcon ref="name" style={styles.sortIcon} onClick={() => this._sortColumn('name')} className="sortIcon material-icons">
+                  <Icon ref="name" onClick={() => self._sortColumn('name')} className="sortIcon material-icons">
                     sort
-                  </FontIcon>
-                </TableHeaderColumn>
-                <TableHeaderColumn className="columnHeader" tooltip="Device type compatibility">
+                  </Icon>
+                </TableCell>
+                <TableCell className="columnHeader" tooltip="Device type compatibility">
                   Device type compatibility{' '}
-                  <FontIcon ref="device_types" style={styles.sortIcon} onClick={() => this._sortColumn('device_types')} className="sortIcon material-icons">
+                  <Icon ref="device_types" onClick={() => self._sortColumn('device_types')} className="sortIcon material-icons">
                     sort
-                  </FontIcon>
-                </TableHeaderColumn>
-                <TableHeaderColumn className="columnHeader" tooltip="Last modified">
+                  </Icon>
+                </TableCell>
+                <TableCell className="columnHeader" tooltip="Last modified">
                   Last modified{' '}
-                  <FontIcon style={styles.sortIcon} ref="modified" onClick={() => this._sortColumn('modified')} className="sortIcon material-icons">
+                  <Icon ref="modified" onClick={() => self._sortColumn('modified')} className="sortIcon material-icons">
                     sort
-                  </FontIcon>
-                </TableHeaderColumn>
-                <TableHeaderColumn style={{ width: '55px', paddingRight: '12px', paddingLeft: '0' }} className="columnHeader" />
+                  </Icon>
+                </TableCell>
+                <TableCell style={{ width: '55px', paddingRight: '12px', paddingLeft: '0' }} className="columnHeader" />
               </TableRow>
-            </TableHeader>
-            <TableBody displayRowCheckbox={false} showRowHover={true} className="clickable">
-              {items}
-            </TableBody>
+            </TableHead>
+            <TableBody className="clickable">{items}</TableBody>
           </Table>
 
-          {this.props.showHelptips && items.length ? (
+          {self.props.showHelptips && items.length ? (
             <div>
               <div id="onboard-10" className="tooltip help" data-tip data-for="artifact-expand-tip" data-event="click focus">
-                <FontIcon className="material-icons">help</FontIcon>
+                <HelpIcon />
               </div>
               <ReactTooltip id="artifact-expand-tip" globalEventOff="click" place="bottom" type="light" effect="solid" className="react-tooltip">
                 <ExpandArtifact />
@@ -304,14 +285,14 @@ export default class Repository extends React.Component {
             </div>
           ) : null}
 
-          <div className={items.length || this.props.loading || this.props.progress ? 'hidden' : 'dashboard-placeholder fadeIn'}>
+          <div className={items.length || self.props.loading || self.props.progress ? 'hidden' : 'dashboard-placeholder fadeIn'}>
             <Dropzone
-              disabled={this.props.progress > 0}
+              disabled={self.props.progress > 0}
               activeClassName="active"
               rejectClassName="active"
               multiple={false}
               accept=".mender"
-              onDrop={(accepted, rejected) => this.onDrop(accepted, rejected)}
+              onDrop={(accepted, rejected) => self.onDrop(accepted, rejected)}
             >
               {({ getRootProps, getInputProps }) => (
                 <div {...getRootProps()} className="dropzone onboard dashboard-placeholder">
@@ -326,7 +307,7 @@ export default class Repository extends React.Component {
             {this.props.showHelptips ? (
               <div>
                 <div id="onboard-9" className="tooltip help highlight" data-tip data-for="artifact-upload-tip" data-event="click focus">
-                  <FontIcon className="material-icons">help</FontIcon>
+                  <HelpIcon />
                 </div>
                 <ReactTooltip id="artifact-upload-tip" globalEventOff="click" place="bottom" type="light" effect="solid" className="react-tooltip">
                   <UploadArtifact />

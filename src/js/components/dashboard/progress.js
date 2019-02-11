@@ -7,7 +7,9 @@ import Time from 'react-time';
 import Loader from '../common/loader';
 
 // material ui
-import { List, ListItem } from 'material-ui/List';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import { ListItemText, ListItemAvatar } from '@material-ui/core';
 
 export default class Progress extends React.Component {
   static contextTypes = {
@@ -58,12 +60,10 @@ export default class Progress extends React.Component {
 
       return (
         <div className="deployment" key={index}>
-          <ListItem
-            disabled={true}
-            style={{ minHeight: '100px', paddingLeft: '280px', paddingBottom: '15px' }}
-            primaryText={progressChart}
-            leftIcon={deploymentInfo}
-          />
+          <ListItem disabled={true} style={{ minHeight: '100px', paddingLeft: '280px', paddingBottom: '15px' }}>
+            <ListItemAvatar>{deploymentInfo}</ListItemAvatar>
+            <ListItemText primary={progressChart} />
+          </ListItem>
         </div>
       );
     }, this);

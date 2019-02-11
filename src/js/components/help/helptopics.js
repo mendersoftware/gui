@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import Paper from 'material-ui/Paper';
+import Paper from '@material-ui/core/Paper';
 
 export default class HelpTopics extends React.Component {
   render() {
@@ -13,12 +13,10 @@ export default class HelpTopics extends React.Component {
     var helpSections = sections.map((section, index) => {
       var Icon = section.icon;
       return (
-        <Link key={index} to={section.path}>
-          <Paper zDepth={1} key={index} className="help-section">
-            <Icon />
-            <p>{section.title}</p>
-          </Paper>
-        </Link>
+        <Paper key={index} component={Link} className="help-section" to={section.path}>
+          <Icon />
+          <p>{section.title}</p>
+        </Paper>
       );
     });
     return (

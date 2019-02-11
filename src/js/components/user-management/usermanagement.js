@@ -6,10 +6,12 @@ import AppActions from '../../actions/app-actions';
 import AppStore from '../../stores/app-store';
 
 // material ui
-import Snackbar from 'material-ui/Snackbar';
-import Dialog from 'material-ui/Dialog';
-import FlatButton from 'material-ui/FlatButton';
-import RaisedButton from 'material-ui/RaisedButton';
+import Snackbar from '@material-ui/core/Snackbar';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Button from '@material-ui/core/Button';
 
 import { preformatWithRequestID } from '../../helpers';
 
@@ -126,15 +128,19 @@ export default class UserManagement extends React.Component {
   render() {
     var removeActions = [
       <div key="remove-button-1" style={{ marginRight: '10px', display: 'inline-block' }}>
-        <FlatButton label="Cancel" onClick={() => this.dialogDismiss()} />
+        <Button onClick={() => this.dialogDismiss()}>Cancel</Button>
       </div>,
-      <RaisedButton key="remove-button-2" label="Remove user" primary={true} onClick={() => this._removeSubmit()} ref="save" />
+      <Button variant="contained" key="remove-button-2" primary="true" onClick={() => this._removeSubmit()} ref="save">
+        Remove user
+      </Button>
     ];
 
     return (
       <div>
         <div className="float-right">
-          <RaisedButton primary={true} label="Create new user" onClick={() => this._openCreate()} />
+          <Button variant="contained" primary="true" onClick={() => this._openCreate()}>
+            Create new user
+          </Button>
         </div>
 
         <UserList
@@ -152,42 +158,41 @@ export default class UserManagement extends React.Component {
 
         <Dialog
           ref="edit"
-          title={this.state.user ? 'Edit user' : 'Create new user'}
-          autoDetectWindowHeight={true}
-          autoScrollBodyContent={true}
-          bodyStyle={{ paddingTop: '0', fontSize: '13px' }}
+          scroll="body"
+          style={{ paddingTop: '0', fontSize: '13px', boxShadow: '0 14px 45px rgba(0, 0, 0, 0.25), 0 10px 18px rgba(0, 0, 0, 0.22)' }}
           open={this.state.editDialog || false}
-          contentStyle={{ overflow: 'hidden', boxShadow: '0 14px 45px rgba(0, 0, 0, 0.25), 0 10px 18px rgba(0, 0, 0, 0.22)' }}
-          actionsContainerStyle={{ marginBottom: '0' }}
           repositionOnUpdate={false}
         >
-          <UserForm
-            edit={this.state.user ? true : false}
-            editPass={this.state.editPass}
-            togglePass={this._togglePass}
-            closeDialog={() => this.dialogDismiss()}
-            handleSubmit={this.state.user ? this._editSubmit : this._createSubmit}
-            user={this.state.user}
-            buttonLabel={this.state.user ? 'Save changes' : 'Create user'}
-          />
+          <DialogTitle>{this.state.user ? 'Edit user' : 'Create new user'}</DialogTitle>
+          <DialogContent style={{ overflow: 'hidden' }}>
+            <UserForm
+              edit={this.state.user ? true : false}
+              editPass={this.state.editPass}
+              togglePass={this._togglePass}
+              closeDialog={() => this.dialogDismiss()}
+              handleSubmit={this.state.user ? this._editSubmit : this._createSubmit}
+              user={this.state.user}
+              buttonLabel={this.state.user ? 'Save changes' : 'Create user'}
+            />
+          </DialogContent>
+          <DialogActions style={{ marginBottom: '0' }} />
         </Dialog>
 
         <Dialog
           ref="remove"
-          title="Remove user"
-          actions={removeActions}
-          autoDetectWindowHeight={true}
-          autoScrollBodyContent={true}
-          bodyStyle={{ paddingTop: '0' }}
+          scroll="body"
+          style={{ paddingTop: '0', boxShadow: '0 14px 45px rgba(0, 0, 0, 0.25), 0 10px 18px rgba(0, 0, 0, 0.22)' }}
           open={this.state.removeDialog || false}
-          contentStyle={{ overflow: 'hidden', boxShadow: '0 14px 45px rgba(0, 0, 0, 0.25), 0 10px 18px rgba(0, 0, 0, 0.22)' }}
-          actionsContainerStyle={{ marginBottom: '0' }}
         >
-          Are you sure you want to remove the user with email{' '}
-          <b>
-            <i>{(this.state.user || {}).email}</i>
-          </b>
-          ?
+          <DialogTitle>Remove user?</DialogTitle>
+          <DialogContent style={{ overflow: 'hidden' }}>
+            Are you sure you want to remove the user with email{' '}
+            <b>
+              <i>{(this.state.user || {}).email}</i>
+            </b>
+            ?
+          </DialogContent>
+          <DialogActions style={{ marginBottom: '0' }}>{removeActions}</DialogActions>
         </Dialog>
       </div>
     );

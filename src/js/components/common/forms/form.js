@@ -1,8 +1,7 @@
 import validator from 'validator';
 import React from 'react';
 
-import FlatButton from 'material-ui/FlatButton';
-import RaisedButton from 'material-ui/RaisedButton';
+import Button from '@material-ui/core/Button';
 
 export default class Form extends React.Component {
   constructor(props, context) {
@@ -194,23 +193,26 @@ export default class Form extends React.Component {
     var uploadActions = this.props.showButtons ? (
       <div className="float-right" style={this.props.dialog ? { margin: '24px -16px -16px 0' } : { marginTop: '32px' }}>
         <div className={this.props.handleCancel ? null : 'hidden'} key="cancelcontain" style={{ marginRight: '10px', display: 'inline-block' }}>
-          <FlatButton key="cancel" label="Cancel" onClick={this.props.handleCancel} />
+          <Button key="cancel" onClick={this.props.handleCancel}>
+            Cancel
+          </Button>
         </div>
-        <RaisedButton
+        <Button
+          variant="contained"
           key="submit"
-          label={this.props.submitLabel}
           id={this.props.submitButtonId}
-          primary={true}
+          primary="true"
           onClick={() => this.updateModel()}
           disabled={!this.state.isValid}
-        />
+        >
+          {this.props.submitLabel}
+        </Button>
       </div>
     ) : null;
 
     return (
       <form key={this.props.uniqueId} className={this.props.className || ''}>
         {this.newChildren}
-
         {uploadActions}
       </form>
     );

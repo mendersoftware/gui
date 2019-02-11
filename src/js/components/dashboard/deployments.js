@@ -4,24 +4,20 @@ import Progress from './progress';
 import Recent from './recent';
 
 // material ui
-import RaisedButton from 'material-ui/RaisedButton';
+import Button from '@material-ui/core/Button';
 
 export default class Deployments extends React.Component {
   render() {
     return (
       <div className="deployments">
         <div>
-          <div className="margin-bottom">
-            <Progress loading={this.props.loadingActive} deployments={this.props.progress} />
-          </div>
-          <div className="margin-bottom">
-            <Recent loading={this.props.loadingRecent} deployments={this.props.recent} />
-          </div>
+          <Progress className="margin-bottom" loading={this.props.loadingActive} deployments={this.props.progress} />
+          <Recent className="margin-bottom" loading={this.props.loadingRecent} deployments={this.props.recent} />
         </div>
 
-        <Link to="/deployments?open=true">
-          <RaisedButton label="Create a deployment" secondary={true} />
-        </Link>
+        <Button component={Link} variant="contained" secondary="true" to="/deployments?open=true">
+          Create a deployment
+        </Button>
       </div>
     );
   }

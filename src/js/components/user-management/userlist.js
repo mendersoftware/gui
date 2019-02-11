@@ -4,8 +4,12 @@ import AppStore from '../../stores/app-store';
 import Time from 'react-time';
 
 // material ui
-import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
-import FlatButton from 'material-ui/FlatButton';
+import Table from '@material-ui/core/Table';
+import TableHead from '@material-ui/core/TableHead';
+import TableCell from '@material-ui/core/TableCell';
+import TableBody from '@material-ui/core/TableBody';
+import TableRow from '@material-ui/core/TableRow';
+import Button from '@material-ui/core/Button';
 
 const columnData = [
   { id: 'email', numeric: 'false', disablePadding: false, label: 'Email' },
@@ -35,18 +39,18 @@ export default class UserList extends React.Component {
 
     var users = filteredUsers.map(user => {
       return (
-        <TableRow key={user.id} hover="true">
-          <TableRowColumn>{user.email}</TableRowColumn>
-          <TableRowColumn numeric="true">
+        <TableRow key={user.id} hover>
+          <TableCell>{user.email}</TableCell>
+          <TableCell align="left">
             <Time value={user.created_ts} format="YYYY-MM-DD HH:mm" />
-          </TableRowColumn>
-          <TableRowColumn numeric="true">
+          </TableCell>
+          <TableCell align="left">
             <Time value={user.updated_ts} format="YYYY-MM-DD HH:mm" />
-          </TableRowColumn>
-          <TableRowColumn padding="none">
-            <FlatButton label="Edit" onClick={() => this._handleEdit(user)} />
-            {this.props.currentUser.id !== user.id ? <FlatButton label="Remove" onClick={() => this._handleRemove(user)} /> : null}
-          </TableRowColumn>
+          </TableCell>
+          <TableCell padding="none">
+            <Button onClick={() => this._handleEdit(user)}>Edit</Button>
+            {this.props.currentUser.id !== user.id ? <Button onClick={() => this._handleRemove(user)}>Remove</Button> : null}
+          </TableCell>
         </TableRow>
       );
     });
@@ -57,19 +61,19 @@ export default class UserList extends React.Component {
           <h2 style={{ marginTop: '15px' }}>Users</h2>
         </div>
         <div className="margin-bottom">
-          <Table selectable={false}>
-            <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
+          <Table>
+            <TableHead>
               <TableRow>
                 {columnData.map(column => {
                   return (
-                    <TableHeaderColumn key={column.id} padding={column.disablePadding ? 'none' : 'default'}>
+                    <TableCell key={column.id} padding={column.disablePadding ? 'none' : 'default'}>
                       {column.label}
-                    </TableHeaderColumn>
+                    </TableCell>
                   );
                 }, this)}
               </TableRow>
-            </TableHeader>
-            <TableBody displayRowCheckbox={false}>{users}</TableBody>
+            </TableHead>
+            <TableBody>{users}</TableBody>
           </Table>
         </div>
       </div>

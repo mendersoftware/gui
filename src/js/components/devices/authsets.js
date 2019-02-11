@@ -6,9 +6,9 @@ import ConfirmDecommission from './confirmdecommission';
 import { preformatWithRequestID } from '../../helpers';
 
 // material ui
-import FlatButton from 'material-ui/RaisedButton';
-import InfoIcon from 'react-material-icons/icons/action/info-outline';
-import TrashIcon from 'react-material-icons/icons/action/delete';
+import Button from '@material-ui/core/Button';
+import InfoIcon from '@material-ui/icons/InfoOutlined';
+import TrashIcon from '@material-ui/icons/Delete';
 
 export default class Authsets extends React.Component {
   constructor(props, context) {
@@ -122,12 +122,9 @@ export default class Authsets extends React.Component {
 
     var decommission = (
       <div className="float-right">
-        <FlatButton
-          label="Decommission device"
-          secondary={true}
-          onClick={() => this._showConfirm()}
-          icon={<TrashIcon style={{ height: '18px', width: '18px', verticalAlign: 'middle' }} />}
-        />
+        <Button secondary="true" onClick={() => this._showConfirm()} icon={<TrashIcon style={{ height: '18px', width: '18px', verticalAlign: 'middle' }} />}>
+          Decommission device
+        </Button>
       </div>
     );
     if (this.state.decommission) {

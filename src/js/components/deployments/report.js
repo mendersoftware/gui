@@ -16,13 +16,15 @@ import ConfirmAbort from './confirmabort';
 import ConfirmRetry from './confirmretry';
 
 // material ui
-import FlatButton from 'material-ui/FlatButton';
-import RaisedButton from 'material-ui/RaisedButton';
-import Checkbox from 'material-ui/Checkbox';
-import Dialog from 'material-ui/Dialog';
-import FontIcon from 'material-ui/FontIcon';
-import BlockIcon from 'react-material-icons/icons/content/block';
-import RefreshIcon from 'react-material-icons/icons/navigation/refresh';
+import Button from '@material-ui/core/Button';
+import Checkbox from '@material-ui/core/Checkbox';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Icon from '@material-ui/core/Icon';
+import BlockIcon from '@material-ui/icons/Block';
+import RefreshIcon from '@material-ui/icons/Refresh';
 import { AppContext } from '../../contexts/app-context';
 
 export default class DeploymentReport extends React.Component {
@@ -139,7 +141,7 @@ export default class DeploymentReport extends React.Component {
   _filterPending(device) {
     return device.status !== 'pending';
   }
-  _handleCheckbox(e, checked) {
+  _handleCheckbox(checked) {
     this.setState({ showPending: checked, currentPage: 1 });
     this.refreshDeploymentDevices();
   }
@@ -225,7 +227,7 @@ export default class DeploymentReport extends React.Component {
 
     var logActions = [
       <div key="log-action-button-1" style={{ marginRight: '10px', display: 'inline-block' }}>
-        <FlatButton label="Cancel" onClick={() => this.dialogDismiss('dialog')} />
+        <Button onClick={() => this.dialogDismiss('dialog')}>Cancel</Button>
       </div>,
       <CopyToClipboard
         key="log-action-button-2"
@@ -233,19 +235,22 @@ export default class DeploymentReport extends React.Component {
         text={this.state.logData}
         onCopy={() => this.setState({ copied: true })}
       >
-        <FlatButton label="Copy to clipboard" />
+        <Button>Copy to clipboard</Button>
       </CopyToClipboard>,
-      <RaisedButton key="log-action-button-3" label="Export log" primary={true} onClick={() => this.exportLog()} />
+      <Button variant="contained" key="log-action-button-3" primary="true" onClick={() => this.exportLog()}>
+        Export log
+      </Button>
     ];
 
     var abort = (
       <div className="float-right">
-        <FlatButton
-          label="Abort deployment"
-          secondary={true}
+        <Button
+          secondary="true"
           onClick={() => this._showConfirm('abort')}
           icon={<BlockIcon style={{ height: '18px', width: '18px', verticalAlign: 'middle' }} />}
-        />
+        >
+          Abort deployment
+        </Button>
       </div>
     );
     if (this.state.abort) {
@@ -313,12 +318,13 @@ export default class DeploymentReport extends React.Component {
                         {this.state.retry ? (
                           <ConfirmRetry cancel={() => this._hideConfirm('retry')} retry={() => this._handleRetry()} />
                         ) : (
-                          <FlatButton
-                            label="Retry deployment?"
-                            secondary={true}
+                          <Button
+                            secondary="true"
                             icon={<RefreshIcon style={{ height: '18px', width: '18px', verticalAlign: 'middle' }} />}
                             onClick={() => this._showConfirm('retry')}
-                          />
+                          >
+                            Retry deployment?
+                          </Button>
                         )}
                       </div>
                     </div>
@@ -336,7 +342,7 @@ export default class DeploymentReport extends React.Component {
                 </div>
 
                 <div className="hidden" style={{ width: '240px', height: 'auto', margin: '30px 0 30px 30px', display: 'inline-block', verticalAlign: 'top' }}>
-                  <Checkbox label="Show only failures" onCheck={(e, checked) => this._handleCheckbox(e, checked)} />
+                  <Checkbox label="Show only failures" onChange={(e, checked) => this._handleCheckbox(checked)} />
                 </div>
               </div>
             </div>
@@ -346,9 +352,9 @@ export default class DeploymentReport extends React.Component {
                 <div id="progressStatus">
                   <h3 style={{ marginTop: '12px' }}>{this.state.finished ? 'Finished' : 'In progress'}</h3>
                   <h2>
-                    <FontIcon className="material-icons" style={{ margin: '0 10px 0 -10px', color: '#ACD4D0', verticalAlign: 'text-top' }}>
+                    <Icon className="material-icons" style={{ margin: '0 10px 0 -10px', color: '#ACD4D0', verticalAlign: 'text-top' }}>
                       timelapse
-                    </FontIcon>
+                    </Icon>
                     {this.state.elapsed}
                   </h2>
                   <div>
@@ -369,7 +375,7 @@ export default class DeploymentReport extends React.Component {
               </div>
 
               <div className="hidden" style={{ width: '240px', height: 'auto', margin: '30px 0 30px 30px', display: 'inline-block', verticalAlign: 'top' }}>
-                <Checkbox label={checkboxLabel} onCheck={(e, checked) => this._handleCheckbox(e, checked)} />
+                <Checkbox label={checkboxLabel} onChange={(e, checked) => this._handleCheckbox(checked)} />
                 <p style={{ marginLeft: '40px' }} className={this.state.deviceCount - allDevices.length ? 'info' : 'hidden'}>
                   {this.state.deviceCount - allDevices.length} devices pending
                 </p>
@@ -417,16 +423,13 @@ export default class DeploymentReport extends React.Component {
           ) : null}
         </div>
 
-        <Dialog
-          title="Deployment log for device"
-          autoDetectWindowHeight={true}
-          autoScrollBodyContent={true}
-          open={this.state.showDialog}
-          actions={logActions}
-          bodyStyle={{ padding: '0', overflow: 'hidden' }}
-        >
-          <div className="code log">{this.state.logData}</div>
-          <p style={{ marginLeft: '24px' }}>{this.state.copied ? <span className="green fadeIn">Copied to clipboard.</span> : null}</p>
+        <Dialog open={this.state.showDialog} scroll="body" style={{ padding: '0', overflow: 'hidden' }}>
+          <DialogTitle>Deployment log for device</DialogTitle>
+          <DialogContent>
+            <div className="code log">{this.state.logData}</div>
+            <p style={{ marginLeft: '24px' }}>{this.state.copied ? <span className="green fadeIn">Copied to clipboard.</span> : null}</p>
+          </DialogContent>
+          <DialogActions>{logActions}</DialogActions>
         </Dialog>
       </div>
     );

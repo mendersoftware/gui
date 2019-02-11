@@ -1,8 +1,10 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 
 // material ui
-import { List, ListItem } from 'material-ui/List';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
 
 var listItems = [
   { route: '/', text: 'Dashboard' },
@@ -27,14 +29,23 @@ export default class LeftNav extends React.Component {
     if (!self.state.isHosted) {
       docsVersion = self.props.docsVersion ? `${self.props.docsVersion}/` : 'development/';
     }
+    const listItemStyle = {
+      container: { padding: '16px 16px 16px 42px' },
+      font: { fontSize: '14px' }
+    };
 
-    var list = listItems.map((item, index) => {
-      return (
-        <NavLink key={index} className="navLink leftNav" to={item.route} exact={item.route === '/'}>
-          <ListItem primaryText={item.text} innerDivStyle={{ padding: '22px 16px 22px 42px', fontSize: '14px', textTransform: 'uppercase' }} />
-        </NavLink>
-      );
-    });
+    var list = listItems.map((item, index) => (
+      <ListItem
+        className="navLink leftNav"
+        component={NavLink}
+        exact={item.route === '/'}
+        key={index}
+        style={{ padding: '22px 16px 22px 42px' }}
+        to={item.route}
+      >
+        <ListItemText primary={item.text} style={Object.assign({ textTransform: 'uppercase' }, listItemStyle.font)} />
+      </ListItem>
+    ));
 
     var licenseUrl = `https://docs.mender.io/${docsVersion}release-information/open-source-licenses`;
     var licenseLink = (
@@ -48,16 +59,12 @@ export default class LeftNav extends React.Component {
         <List style={{ padding: '0' }}>{list}</List>
 
         <List style={{ padding: '0', position: 'absolute', bottom: '30px', left: '0px', right: '0px' }}>
-          <NavLink className="navLink leftNav " to="/help">
-            <ListItem primaryText="Help" innerDivStyle={{ padding: '16px 16px 16px 42px', fontSize: '14px' }} />
-          </NavLink>
-          <ListItem
-            style={{ color: '#949495' }}
-            primaryText={self.props.version ? `Version: ${self.props.version}` : ''}
-            secondaryText={licenseLink}
-            disabled={true}
-            innerDivStyle={{ padding: '16px 16px 16px 42px', fontSize: '14px' }}
-          />
+          <ListItem className="navLink leftNav" component={Link} style={listItemStyle.container} to="/help">
+            <ListItemText primary="Help" style={listItemStyle.font} />
+          </ListItem>
+          <ListItem style={Object.assign({ color: '#949495' }, listItemStyle.container)} disabled={true}>
+            <ListItemText primary={self.props.version ? `Version: ${self.props.version}` : ''} secondary={licenseLink} style={listItemStyle.font} />
+          </ListItem>
         </List>
       </div>
     );

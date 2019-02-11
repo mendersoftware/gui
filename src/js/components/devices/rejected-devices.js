@@ -10,15 +10,18 @@ import _en_US from 'rc-pagination/lib/locale/en_US';
 import { setRetryTimer, clearAllRetryTimers } from '../../utils/retrytimer';
 
 // material ui
-import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
-import IconButton from 'material-ui/IconButton';
-import FontIcon from 'material-ui/FontIcon';
+import Table from '@material-ui/core/Table';
+import TableHead from '@material-ui/core/TableHead';
+import TableCell from '@material-ui/core/TableCell';
+import TableBody from '@material-ui/core/TableBody';
+import TableRow from '@material-ui/core/TableRow';
+import IconButton from '@material-ui/core/IconButton';
+import Icon from '@material-ui/core/Icon';
 
 export default class Rejected extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      minHeight: 200,
       divHeight: 178,
       devices: [],
       pageNo: 1,
@@ -54,7 +57,6 @@ export default class Rejected extends React.Component {
           //if devices empty but count not, put back to first page
           self._handlePageChange(1);
         }
-        self._adjustHeight();
       })
       .catch(error => {
         console.log(error);
@@ -62,13 +64,6 @@ export default class Rejected extends React.Component {
         self.setState({ pageLoading: false, authLoading: null });
         setRetryTimer(error, 'devices', `Rejected devices couldn't be loaded. ${errormsg}`, self.state.refreshDeviceLength);
       });
-  }
-
-  _adjustHeight() {
-    // do this when number of devices changes
-    var h = this.state.devices.length * 55;
-    h += 200;
-    this.setState({ minHeight: h });
   }
   _sortColumn(col) {
     console.log(`sort: ${col}`);
@@ -111,7 +106,6 @@ export default class Rejected extends React.Component {
             _showKey={this._showKey}
             showKey={this.state.showKey}
             limitMaxed={limitMaxed}
-            styles={this.props.styles}
             deviceId={self.state.deviceId}
             id_value={id_attribute}
             device={self.state.expandedDevice}
@@ -122,8 +116,8 @@ export default class Rejected extends React.Component {
       }
 
       return (
-        <TableRow className={expanded ? 'expand' : null} hoverable={true} key={index}>
-          <TableRowColumn className="no-click-cell" style={expanded ? { height: this.state.divHeight } : null}>
+        <TableRow className={expanded ? 'expand' : null} hover key={index}>
+          <TableCell className="no-click-cell" style={expanded ? { height: this.state.divHeight } : null}>
             <div
               onClick={e => {
                 e.preventDefault();
@@ -133,8 +127,8 @@ export default class Rejected extends React.Component {
             >
               {id_attribute}
             </div>
-          </TableRowColumn>
-          <TableRowColumn className="no-click-cell">
+          </TableCell>
+          <TableCell className="no-click-cell">
             <div
               onClick={e => {
                 e.preventDefault();
@@ -144,8 +138,8 @@ export default class Rejected extends React.Component {
             >
               <Time value={device.created_ts} format="YYYY-MM-DD HH:mm" />
             </div>
-          </TableRowColumn>
-          <TableRowColumn className="no-click-cell">
+          </TableCell>
+          <TableCell className="no-click-cell">
             <div
               onClick={e => {
                 e.preventDefault();
@@ -155,8 +149,8 @@ export default class Rejected extends React.Component {
             >
               <Time value={device.updated_ts} format="YYYY-MM-DD HH:mm" />
             </div>
-          </TableRowColumn>
-          <TableRowColumn className="no-click-cell capitalized">
+          </TableCell>
+          <TableCell className="no-click-cell capitalized">
             <div
               onClick={e => {
                 e.preventDefault();
@@ -166,8 +160,8 @@ export default class Rejected extends React.Component {
             >
               {device.status}
             </div>
-          </TableRowColumn>
-          <TableRowColumn style={{ width: '55px', paddingRight: '0', paddingLeft: '12px' }} className="expandButton">
+          </TableCell>
+          <TableCell style={{ width: '55px', paddingRight: '0', paddingLeft: '12px' }} className="expandButton">
             <div
               onClick={e => {
                 e.preventDefault();
@@ -176,11 +170,11 @@ export default class Rejected extends React.Component {
               }}
             >
               <IconButton className="float-right">
-                <FontIcon className="material-icons">{expanded ? 'arrow_drop_up' : 'arrow_drop_down'}</FontIcon>
+                <Icon className="material-icons">{expanded ? 'arrow_drop_up' : 'arrow_drop_down'}</Icon>
               </IconButton>
             </div>
-          </TableRowColumn>
-          <TableRowColumn style={{ width: '0', padding: '0', overflow: 'visible' }}>
+          </TableCell>
+          <TableCell style={{ width: '0', padding: '0', overflow: 'visible' }}>
             <Collapse
               springConfig={{ stiffness: 210, damping: 20 }}
               onMeasure={measurements => self._adjustCellHeight(measurements.height)}
@@ -193,56 +187,41 @@ export default class Rejected extends React.Component {
             >
               {expanded}
             </Collapse>
-          </TableRowColumn>
+          </TableCell>
         </TableRow>
       );
     }, this);
 
     return (
-      <Collapse
-        springConfig={{ stiffness: 190, damping: 20 }}
-        style={{ minHeight: this.state.minHeight, width: '100%' }}
-        isOpened={true}
-        id="rejected"
-        className="absolute authorize padding-top"
-      >
+      <div>
         <Loader show={this.state.authLoading === 'all'} />
 
         {this.state.devices.length && this.state.authLoading !== 'all' ? (
           <div className="padding-bottom">
             <h3 className="align-center">Rejected devices</h3>
 
-            <Table selectable={false}>
-              >
-              <TableHeader className="clickable" displaySelectAll={false} adjustForCheckbox={false}>
+            <Table>
+              <TableHead className="clickable">
                 <TableRow>
-                  <TableHeaderColumn className="columnHeader" tooltip={(this.props.globalSettings || {}).id_attribute || 'Device ID'}>
+                  <TableCell className="columnHeader" tooltip={(this.props.globalSettings || {}).id_attribute || 'Device ID'}>
                     {(this.props.globalSettings || {}).id_attribute || 'Device ID'}
-                    <FontIcon
-                      onClick={this.props.openSettingsDialog}
-                      style={{ fontSize: '16px' }}
-                      color={'#c7c7c7'}
-                      hoverColor={'#aeaeae'}
-                      className="material-icons hover float-right"
-                    >
+                    <Icon onClick={this.props.openSettingsDialog} style={{ fontSize: '16px' }} className="material-icons hover float-right">
                       settings
-                    </FontIcon>
-                  </TableHeaderColumn>
-                  <TableHeaderColumn className="columnHeader" tooltip="First request">
+                    </Icon>
+                  </TableCell>
+                  <TableCell className="columnHeader" tooltip="First request">
                     First request
-                  </TableHeaderColumn>
-                  <TableHeaderColumn className="columnHeader" tooltip="Last updated">
+                  </TableCell>
+                  <TableCell className="columnHeader" tooltip="Last updated">
                     Last updated
-                  </TableHeaderColumn>
-                  <TableHeaderColumn className="columnHeader" tooltip="Status">
+                  </TableCell>
+                  <TableCell className="columnHeader" tooltip="Status">
                     Status
-                  </TableHeaderColumn>
-                  <TableHeaderColumn className="columnHeader" style={{ width: '55px', paddingRight: '12px', paddingLeft: '0' }} />
+                  </TableCell>
+                  <TableCell className="columnHeader" style={{ width: '55px', paddingRight: '12px', paddingLeft: '0' }} />
                 </TableRow>
-              </TableHeader>
-              <TableBody showRowHover={true} displayRowCheckbox={false} className="clickable">
-                {devices}
-              </TableBody>
+              </TableHead>
+              <TableBody className="clickable">{devices}</TableBody>
             </Table>
 
             <div className="margin-top">
@@ -266,7 +245,7 @@ export default class Rejected extends React.Component {
             <p>There are no rejected devices</p>
           </div>
         )}
-      </Collapse>
+      </div>
     );
   }
 }

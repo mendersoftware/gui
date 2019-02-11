@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import SelfUserManagement from '../user-management/selfusermanagement';
 import UserManagement from '../user-management/usermanagement';
@@ -9,9 +9,12 @@ import Global from './global';
 import AppStore from '../../stores/app-store';
 
 // material ui
-import { List, ListItem } from 'material-ui/List';
-import Subheader from 'material-ui/Subheader';
-import { Tabs, Tab } from 'material-ui/Tabs';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListSubheader from '@material-ui/core/ListSubheader';
+import Tab from '@material-ui/core/Tab';
+import Tabs from '@material-ui/core/Tabs';
+import { ListItemText } from '@material-ui/core';
 
 const listItems = [
   { route: '/settings/global-settings', text: 'Global settings', admin: true, component: <Global /> },
@@ -57,31 +60,29 @@ export default class Settings extends React.Component {
       relevantItems.splice(organization.tabIndex, 0, organization);
     }
     var list = relevantItems.map((item, index) => (
-      <NavLink className="navLink settingsNav" to={item.route} key={index}>
-        <ListItem primaryText={item.text} />
-      </NavLink>
+      <ListItem component={NavLink} className="navLink settingsNav" to={item.route} key={index}>
+        <ListItemText>{item.text}</ListItemText>
+      </ListItem>
     ));
 
     const style = { display: 'block', width: '100%' };
+    const tabIndex = this.props.history.location.pathname;
 
     return (
       <div className="margin-top">
         <div className="leftFixed">
           <List>
-            <Subheader>Settings</Subheader>
+            <ListSubheader>Settings</ListSubheader>
             {list}
           </List>
         </div>
         <div className="rightFluid padding-right">
-          <Tabs value={this.props.history.location.pathname} tabItemContainerStyle={{ display: 'none' }} inkBarStyle={{ display: 'none' }}>
-            {listItems.map(item => {
-              return (
-                <Tab key={item.route} value={item.route} label={item.text} style={style}>
-                  {item.component}
-                </Tab>
-              );
-            })}
+          <Tabs value={tabIndex}>
+            {listItems.map(item => (
+              <Tab component={Link} key={item.route} label={item.text} style={style} to={item.route} value={item.route} />
+            ))}
           </Tabs>
+          {listItems.find(item => tabIndex === item.route).component}
         </div>
       </div>
     );

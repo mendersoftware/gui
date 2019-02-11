@@ -4,10 +4,13 @@ import ReactTooltip from 'react-tooltip';
 import AppActions from '../../actions/app-actions';
 
 // material ui
-import { List, ListItem } from 'material-ui/List';
-import Divider from 'material-ui/Divider';
-import FlatButton from 'material-ui/FlatButton';
-import FontIcon from 'material-ui/FontIcon';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import Divider from '@material-ui/core/Divider';
+import Button from '@material-ui/core/Button';
+import Icon from '@material-ui/core/Icon';
+import InfoIcon from '@material-ui/icons/Info';
+import { ListItemText } from '@material-ui/core';
 
 export default class MyOrganization extends React.Component {
   constructor(props, context) {
@@ -44,11 +47,12 @@ export default class MyOrganization extends React.Component {
         {this.state.org ? (
           <div>
             <List>
-              <ListItem key="name" primaryText="Organization name" disabled={true} secondaryText={this.state.org.name} />
+              <ListItem key="name" disabled={true} secondaryText={this.state.org.name}>
+                <ListItemText primary="Organization name" />
+              </ListItem>
               <Divider />
               <div className="material-list-item">
                 <h4 style={{ display: 'inline', paddingRight: '10px' }}>Token</h4>
-
                 <div
                   id="token-info"
                   className="tooltip info"
@@ -57,7 +61,7 @@ export default class MyOrganization extends React.Component {
                   data-for="token-help"
                   data-event="click focus"
                 >
-                  <FontIcon className="material-icons">info</FontIcon>
+                  <InfoIcon />
                 </div>
                 <ReactTooltip id="token-help" globalEventOff="click" place="top" type="light" effect="solid" style={{}} className="react-tooltip">
                   <h3>Tenant token</h3>
@@ -72,7 +76,9 @@ export default class MyOrganization extends React.Component {
                 <p style={{ wordBreak: 'break-all' }}>{this.state.org.tenant_token}</p>
 
                 <CopyToClipboard text={this.state.org.tenant_token} onCopy={() => this._copied()}>
-                  <FlatButton label="Copy to clipboard" style={{ marginTop: '15px' }} icon={<FontIcon className="material-icons">content_paste</FontIcon>} />
+                  <Button style={{ marginTop: '15px' }} icon={<Icon className="material-icons">content_paste</Icon>}>
+                    Copy to clipboard
+                  </Button>
                 </CopyToClipboard>
 
                 <p style={{ marginLeft: '14px' }}>{this.state.copied ? <span className="green fadeIn">Copied to clipboard.</span> : null}</p>
