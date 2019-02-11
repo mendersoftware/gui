@@ -13,7 +13,7 @@ const notificationStyles = {
     width: '14px'
   },
   green: { color: '#009E73' }
-}
+};
 
 export class AcceptedDevices extends React.Component {
   render() {
@@ -21,30 +21,29 @@ export class AcceptedDevices extends React.Component {
     let timeframeNote = 'Active in';
     let activityNotificationText = 'All devices online';
     let notificationSymbol = <CheckCircle style={Object.assign({}, notificationStyles.base, notificationStyles.green)} />;
-    if (this.props.inactiveDevices.length) {
+    if (this.props.inactiveCount) {
       notificationSymbol = <ReportProblem style={notificationStyles.base} className={'warning'} />;
       timeframeNote = 'Inactive for';
-      const inactives = this.props.inactiveDevices.length;
-      activityNotificationText = `${inactives} ${pluralize('devices', inactives)} may be offline`;
+      activityNotificationText = `${this.props.inactiveCount} ${pluralize('devices', this.props.inactiveCount)} may be offline`;
     }
 
-    let widgetHeader; 
-    if (this.props.devices.length) { 
-      widgetHeader = (<div style={styles.rowStyle}>
-        {notificationSymbol}
-        <div style={styles.columnStyle} >
-          <div className="hint">{activityNotificationText}</div>
-          <div className="tiny">
-            {`${timeframeNote} past ${timeframe}`}
+    let widgetHeader;
+    if (this.props.devicesCount) {
+      widgetHeader = (
+        <div style={styles.rowStyle}>
+          {notificationSymbol}
+          <div style={styles.columnStyle}>
+            <div className="hint">{activityNotificationText}</div>
+            <div className="tiny">{`${timeframeNote} past ${timeframe}`}</div>
           </div>
         </div>
-      </div>);
+      );
     }
 
     const widgetMain = {
-      header: `Accepted ${pluralize('devices', this.props.devices.length)}`,
-      counter: this.props.devices.length
-    }
+      header: `Accepted ${pluralize('devices', this.props.devicesCount)}`,
+      counter: this.props.devicesCount
+    };
 
     let widgetFooter;
     if (this.props.delta) {
@@ -57,12 +56,7 @@ export class AcceptedDevices extends React.Component {
       widgetFooter = `${deltaSymbol}${this.props.delta} ${deltaNotification} within the last ${timeframe}`;
     }
     return (
-      <BaseWidget
-        {...this.props}
-        header={widgetHeader}
-        main={widgetMain}
-        footer={widgetFooter}
-        onClick={() => this.props.onClick({ route: 'devices' })} />
+      <BaseWidget {...this.props} header={widgetHeader} main={widgetMain} footer={widgetFooter} onClick={() => this.props.onClick({ route: 'devices' })} />
     );
   }
 }
