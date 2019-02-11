@@ -28,15 +28,18 @@ export class AcceptedDevices extends React.Component {
       activityNotificationText = `${inactives} ${pluralize('devices', inactives)} may be offline`;
     }
 
-    const widgetHeader = <div style={styles.rowStyle}>
-      {notificationSymbol}
-      <div style={styles.columnStyle} >
-        <div className="hint">{activityNotificationText}</div>
-        <div className="tiny">
-          {`${timeframeNote} past ${timeframe}`}
+    let widgetHeader; 
+    if (this.props.devices.length) { 
+      widgetHeader = (<div style={styles.rowStyle}>
+        {notificationSymbol}
+        <div style={styles.columnStyle} >
+          <div className="hint">{activityNotificationText}</div>
+          <div className="tiny">
+            {`${timeframeNote} past ${timeframe}`}
+          </div>
         </div>
-      </div>
-    </div>;
+      </div>);
+    }
 
     const widgetMain = {
       header: `Accepted ${pluralize('devices', this.props.devices.length)}`,

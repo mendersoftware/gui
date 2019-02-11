@@ -10,7 +10,7 @@ export class RedirectionWidget extends React.Component {
     return (
       <div className="onboard widget" onClick={this.props.onClick}>
         <div>
-          <p>{this.props.content}</p>
+          <p className={this.props.isActive ? "" : "muted" }>{this.props.content}</p>
         </div>
         <Link to={this.props.target}>
           <RaisedButton label={this.props.buttonContent} />
