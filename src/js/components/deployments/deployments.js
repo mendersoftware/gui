@@ -304,23 +304,14 @@ var Deployments = createReactClass({
   },
   _getGroupDevices: function(group) {
     // get list of devices for each group and save them to state
-    var i;
     var self = this;
-    var tmp = {};
-    var devs = [];
-    var callback = {
-      success: function(devices) {
-        tmp[group] = devices;
-        self.setState(tmp);
+    AppActions.getNumberOfDevicesInGroup((count, devices) => {
+      let state = {};
+      state[group] = devices;
+      self.setState(state);
+    }, group);
       },
-      error: function(err) {
-        console.log(err);
-      }
-    };
-    var filter = "group="+group;
-    AppActions.getDevices(callback, 1, 100, filter);
-  },
-  componentWillUnmount: function () {
+  componentWillUnmount: function() {
     clearInterval(this.timer);
     clearAllRetryTimers();
     AppStore.removeChangeListener(this._onChange);
