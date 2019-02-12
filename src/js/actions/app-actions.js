@@ -256,7 +256,7 @@ var AppActions = {
           devices.push(...res.body);
           if (links.next) {
             page++;
-            getAllDevices();
+            return getAllDevices();
           }
           return Promise.resolve(devices);
         });
