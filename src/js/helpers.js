@@ -1,5 +1,6 @@
 var jwtDecode = require('jwt-decode');
 var md5 = require('md5');
+import React from 'react';
 
 export function isEncoded(uri) {
   uri = uri || '';

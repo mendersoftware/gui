@@ -86,22 +86,6 @@ var SelectedArtifact = createReactClass({
         onKeyDown={this._descEdit} />
     );
 
-    var devicesFilter = "artifact_name="+info.name;
-    devicesFilter = encodeURIComponent(devicesFilter);    
-    var devicesLink = (
-      <div>
-        <span>{info.devices}</span>
-        <Link className={info.devices == '-' ? 'hidden' : "listItem-link" } to={`/devices/groups/null/${devicesFilter}`}>View devices</Link>
-      </div>
-    );
-
-    var files = this.props.artifact.updates[0].files || [];
-    var fileDetails = files.map(function(file, index) {
-
-      var build_date = (
-        <Time value={file.date} format="YYYY-MM-DD HH:mm" />
-      );
-
     var files = this.props.artifact.updates.map((update, index) => <ArtifactPayload payload={update} key={`artifact-update-${index}`} />);
 
     return (

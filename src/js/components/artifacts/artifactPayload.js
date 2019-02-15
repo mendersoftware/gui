@@ -26,14 +26,8 @@ export default class ArtifactPayload extends React.PureComponent {
     const summedSize = files.reduce((accu, item) => accu + item.size, 0);
     const attributes = ['Name', 'Checksum', 'Build date', 'Size (uncompressed)'];
     // potential metadata would just have to be added to this list once the backend allows it
-    const metaDataObject = this.props.payload.metaData || {};
-    const metaData = Object.entries(metaDataObject).reduce(
-      (accu, item) => {
-        accu.push({ title: item.key, value: item.value });
-        return accu;
-      },
-      [{ title: 'Type', value: this.props.payload.type_info.type }, { title: 'Total size', value: getFormattedSize(summedSize) }]
-    );
+    const metaDataObject = this.props.payload.meta_data || {};
+    const metaData = [{ title: 'Type', value: this.props.payload.type_info.type }, { title: 'Total size', value: getFormattedSize(summedSize) }];
     return (
       <div className="file-details">
         <List style={style.metadataList}>
@@ -43,6 +37,12 @@ export default class ArtifactPayload extends React.PureComponent {
             </ListItem>
           ))}
         </List>
+        {Object.keys(metaDataObject).length ? (
+          <div>
+            <pre>{JSON.stringify(metaDataObject)}</pre>
+          </div>
+        ) : null}
+
         {files.length ? (
           <div>
             <h4>Files</h4>
