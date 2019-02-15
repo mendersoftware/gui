@@ -312,7 +312,7 @@ var Repository = createReactClass({
               <img src="assets/img/artifacts.png" alt="artifacts" />
             </Dropzone>
 
-            { this.props.showHelptips ?
+          {this.props.showHelptips ? (
             <div>
               <div
                 id="onboard-9"
@@ -332,12 +332,8 @@ var Repository = createReactClass({
                 <UploadArtifact />
               </ReactTooltip>
             </div>
-          : null }
-
-
-          </div>
+          ) : null}
         </div>
-
       </div>
     );
   }
