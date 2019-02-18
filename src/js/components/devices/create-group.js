@@ -280,7 +280,7 @@ export default class CreateGroup extends React.Component {
                     <TableCell tooltip="Device type">Device type</TableCell>
                   </TableRow>
                 </TableHead>
-                <TableBody deselectOnClickaway={false}>{deviceList}</TableBody>
+                <TableBody>{deviceList}</TableBody>
               </Table>
               {this.props.acceptedCount > deviceList.length ? (
                 <a className="small" onClick={() => this._loadMoreDevs()}>

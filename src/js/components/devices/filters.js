@@ -7,6 +7,7 @@ import Drawer from '@material-ui/core/Drawer';
 import IconButton from '@material-ui/core/IconButton';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import TextField from '@material-ui/core/TextField';
@@ -63,6 +64,7 @@ export default class Filters extends React.Component {
     this.props.onFilterChange([]);
   }
   render() {
+    const self = this;
     var attributes = Object.entries(this.props.attributes).reduce(
       (accu, item, index) => {
         accu.push(
@@ -80,35 +82,37 @@ export default class Filters extends React.Component {
     );
 
     var filterCount = 0;
-    var fromProps = this.props.filters.length ? this.props.filters : [{ key: '', value: '' }];
-    var filters = fromProps.map(function(item, index) {
-      item.value ? filterCount++ : filterCount;
+    var fromProps = self.props.filters.length ? self.props.filters : [{ key: '', value: '' }];
+    var filters = fromProps.map((item, index) => {
+      filterCount = item.value ? filterCount + 1 : filterCount;
       return (
         <ListItem className="filterPair" key={index}>
-          <div>
-            <IconButton
-              className={`material-icons ${fromProps[0].value ? 'remove-icon' : 'hidden'}`}
-              onClick={() => this._removeFilter(index)}
-              disabled={!fromProps[0].key}
-            >
-              remove_circle
-            </IconButton>
-            <Select fullWidth={true} value={item.key} autoWidth={true} onChange={() => this._updateFilterKey(index)}>
-              {attributes}
-            </Select>
-          </div>
-          <TextField
-            style={{ marginTop: '-10px' }}
-            value={item.value || ''}
-            placeholder="Value"
-            fullWidth={true}
-            disabled={!item.key}
-            errorStyle={{ color: 'rgb(171, 16, 0)' }}
-            onChange={() => this._updateFilterValue(index)}
-          />
+          <ListItemText>
+            <div>
+              <IconButton
+                className={`material-icons ${fromProps[0].value ? 'remove-icon' : 'hidden'}`}
+                onClick={() => self._removeFilter(index)}
+                disabled={!fromProps[0].key}
+              >
+                remove_circle
+              </IconButton>
+              <Select fullWidth={true} value={item.key} autoWidth={true} onChange={() => self._updateFilterKey(index)}>
+                {attributes}
+              </Select>
+            </div>
+            <TextField
+              style={{ marginTop: '-10px' }}
+              value={item.value || ''}
+              placeholder="Value"
+              fullWidth={true}
+              disabled={!item.key}
+              errorStyle={{ color: 'rgb(171, 16, 0)' }}
+              onChange={() => self._updateFilterValue(index)}
+            />
+          </ListItemText>
         </ListItem>
       );
-    }, this);
+    });
     var filterNav = (
       <div className="slider">
         <IconButton className="closeSlider" onClick={() => this._toggleNav()}>
@@ -137,7 +141,6 @@ export default class Filters extends React.Component {
           docked="false"
           anchor="right"
           opensecondary="true"
-          overlayStyle={{ top: '57px', backgroundColor: 'rgba(0, 0, 0, 0.24)' }}
           style={this.state.showFilters ? { overflow: 'visible', top: '57px' } : { overflow: 'hidden', top: '57px' }}
           onClose={() => this._closeNav()}
         >

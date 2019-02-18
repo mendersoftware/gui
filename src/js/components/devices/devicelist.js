@@ -259,7 +259,7 @@ export default class Authorized extends React.Component {
         onChange={e => this._handleGroupNameChange(e)}
         onKeyDown={() => this._handleGroupNameSave()}
         className={this.state.nameEdit ? 'hoverText' : 'hidden'}
-        underlineStyle={{ borderBottom: 'none' }}
+        style={{ borderBottom: 'none' }}
         underlineFocusStyle={{ borderColor: '#e0e0e0' }}
         errorStyle={{ color: 'rgb(171, 16, 0)' }}
         errorText={this.state.errorText}
@@ -319,9 +319,7 @@ export default class Authorized extends React.Component {
                     <TableCell className="columnHeader" style={{ width: '55px', paddingRight: '12px', paddingLeft: '0' }} />
                   </TableRow>
                 </TableHead>
-                <TableBody deselectOnClickaway={false} className="clickable">
-                  {devices}
-                </TableBody>
+                <TableBody className="clickable">{devices}</TableBody>
               </Table>
 
               {this.props.showHelptips && this.props.devices.length ? (
