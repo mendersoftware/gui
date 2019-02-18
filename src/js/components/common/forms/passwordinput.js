@@ -104,14 +104,10 @@ export default class PasswordInput extends React.Component {
             visible={this.state.visible}
           />
           <div className={this.props.create ? 'pass-buttons' : 'hidden'}>
-            <Button primary="true" onClick={() => this.generatePass()} style={{ top: '20px !important' }}>
+            <Button primary="true" onClick={() => this.generatePass()}>
               Generate
             </Button>
-            {this.props.edit ? (
-              <Button onClick={() => this.clearPass()} style={{ top: '20px !important' }}>
-                Cancel
-              </Button>
-            ) : null}
+            {this.props.edit ? <Button onClick={() => this.clearPass()}>Cancel</Button> : null}
           </div>
         </div>
         {this.state.copied ? <span className="green fadeIn margin-bottom-small">Copied to clipboard</span> : null}
