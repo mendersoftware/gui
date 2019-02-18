@@ -259,42 +259,48 @@ export default class DeviceGroups extends React.Component {
         params += this.state.selectedGroup ? `group=${this.state.selectedGroup}` : '';
       }
       if (hasFilters) {
+        const filterId = this.state.filters.find(item => item.key === 'id');
+        if (filterId) {
+          return AppActions.getDeviceById(filterId);
+        }
         params += this.encodeFilters(this.state.filters);
       }
       // if a group or filters, must use inventory API
-      AppActions.getDevices(this.state.pageNo, this.state.pageLength, params)
-        .then(devices => {
-          if (this._isUngroupedGroup(this.state.selectedGroup)) {
-            const offset = (self.state.pageNo - 1) * self.state.pageLength;
-            devices = self.state.ungroupedDevices.slice(offset, offset + self.state.pageLength);
-          }
-          if (devices.length && devices[0].attributes && self.state.isHosted) {
-            AppActions.setFilterAttributes(devices[0].attributes);
-          }
-          self.setState({ devices });
-          // for each device, get device identity info
-          const allDeviceDetails = devices.map(device => {
-            // have to call each time - accepted list can change order
-            return self._getDeviceDetails(device.id).then(deviceAuth => {
-              device.identity_data = deviceAuth.identity_data;
-              device.auth_sets = deviceAuth.auth_sets;
-              device.status = deviceAuth.status;
-              return Promise.resolve(device);
+      return (
+        AppActions.getDevices(this.state.pageNo, this.state.pageLength, params)
+          .then(devices => {
+            if (this._isUngroupedGroup(this.state.selectedGroup)) {
+              const offset = (self.state.pageNo - 1) * self.state.pageLength;
+              devices = self.state.ungroupedDevices.slice(offset, offset + self.state.pageLength);
+            }
+            if (devices.length && devices[0].attributes && self.state.isHosted) {
+              AppActions.setFilterAttributes(devices[0].attributes);
+            }
+            self.setState({ devices });
+            // for each device, get device identity info
+            const allDeviceDetails = devices.map(device => {
+              // have to call each time - accepted list can change order
+              return self._getDeviceDetails(device.id).then(deviceAuth => {
+                device.identity_data = deviceAuth.identity_data;
+                device.auth_sets = deviceAuth.auth_sets;
+                device.status = deviceAuth.status;
+                return Promise.resolve(device);
+              });
             });
-          });
-          return Promise.all(allDeviceDetails);
-        })
-        // only set state after all devices id data retrieved
-        .then(detailedDevices => self.setState({ devices: detailedDevices, loading: false, pageLoading: false }))
-        .catch(err => {
-          console.log(err);
-          var errormsg = err.error || 'Please check your connection.';
-          self.setState({ loading: false });
-          setRetryTimer(err, 'devices', `Devices couldn't be loaded. ${errormsg}`, self.state.refreshDeviceLength);
-        });
+            return Promise.all(allDeviceDetails);
+          })
+          // only set state after all devices id data retrieved
+          .then(detailedDevices => self.setState({ devices: detailedDevices, loading: false, pageLoading: false }))
+          .catch(err => {
+            console.log(err);
+            var errormsg = err.error || 'Please check your connection.';
+            self.setState({ loading: false });
+            setRetryTimer(err, 'devices', `Devices couldn't be loaded. ${errormsg}`, self.state.refreshDeviceLength);
+          })
+      );
     } else {
       // otherwise, show accepted from device adm
-      AppActions.getDevicesByStatus('accepted', this.state.pageNo, this.state.pageLength)
+      return AppActions.getDevicesByStatus('accepted', this.state.pageNo, this.state.pageLength)
         .then(devices => {
           var state = { groupCount: self.props.acceptedDevices };
           if (!devices.length) {

@@ -162,15 +162,17 @@ var AppActions = {
     var page = 1;
     var devices = [];
     const getAllDevices = () =>
-      DevicesApi.get(`${deviceAuthV2}/devices?status=${status}&per_page=${per_page}&page=${page}`).then(res => {
-        var links = parse(res.headers['link']);
-        devices.push(...res.body);
-        if (links.next) {
-          page++;
-          getAllDevices();
-        }
-        return Promise.resolve(devices);
-      });
+      DevicesApi
+        .get(`${deviceAuthV2}/devices?status=${status}&per_page=${per_page}&page=${page}`)
+        .then(res => {
+          var links = parse(res.headers['link']);
+          devices.push(...res.body);
+          if (links.next) {
+            page++;
+            return getAllDevices();
+          }
+          return Promise.resolve(devices);
+        });
     return getAllDevices();
   },
 
