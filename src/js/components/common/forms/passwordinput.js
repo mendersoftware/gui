@@ -90,7 +90,7 @@ export default class PasswordInput extends React.Component {
             name={this.props.id}
             defaultValue={this.props.defaultValue}
             value={this.state.value}
-            hintText={this.props.hint}
+            placeholder={this.props.hint}
             label={this.props.label}
             onChange={e => this.setValue(e)}
             errorStyle={{ color: 'rgb(171, 16, 0)' }}

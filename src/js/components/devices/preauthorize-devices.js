@@ -28,7 +28,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import TextField from '@material-ui/core/TextField';
 import Fab from '@material-ui/core/Fab';
-import ContentAdd from '@material-ui/icons/Add';
+import ContentAddIcon from '@material-ui/icons/Add';
 import FileIcon from '@material-ui/icons/CloudUpload';
 
 export default class Preauthorize extends React.Component {
@@ -441,8 +441,7 @@ export default class Preauthorize extends React.Component {
                   id="keyfile"
                   value={this.state.filename}
                   disabled={true}
-                  underlineStyle={{ borderBottom: '1px solid rgb(224, 224, 224)' }}
-                  style={{ color: 'rgba(0, 0, 0, 0.8)' }}
+                  style={{ color: 'rgba(0, 0, 0, 0.8)', borderBottom: '1px solid rgb(224, 224, 224)' }}
                 />
                 <IconButton style={{ top: '6px' }} onClick={() => this._removeKey()}>
                   <ClearIcon />
@@ -481,7 +480,7 @@ export default class Preauthorize extends React.Component {
               size="small"
               onClick={() => this._addKeyValue()}
             >
-              <ContentAdd />
+              <ContentAddIcon />
             </Fab>
 
             {deviceLimitWarning}

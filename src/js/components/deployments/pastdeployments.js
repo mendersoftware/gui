@@ -179,7 +179,7 @@ export default class Past extends React.Component {
               onChange={(event, date) => this._handleChangeStartDate(event, date)}
               autoOk={true}
               label="From"
-              onlyCalendar
+              onlyCalendar={true}
               value={this.props.startDate}
               maxDate={this.props.endDate || this.state.today}
               style={{ marginRight: '20px', width: '160px' }}
@@ -191,7 +191,7 @@ export default class Past extends React.Component {
               label="To"
               value={this.props.endDate}
               maxDate={this.state.today}
-              onlyCalendar
+              onlyCalendar={true}
               style={{ width: '160px' }}
             />
           </MuiPickersUtilsProvider>

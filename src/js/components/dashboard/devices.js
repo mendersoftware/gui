@@ -1,11 +1,11 @@
 import React from 'react';
-import BoardIcon from 'react-material-icons/icons/hardware/developer-board';
+import BoardIcon from '@material-ui/icons/DeveloperBoard';
 
 import AppActions from '../../actions/app-actions';
 import AppStore from '../../stores/app-store';
-import { AcceptedDevices } from './widgets/accepteddevices';
-import { RedirectionWidget } from './widgets/redirectionwidget';
-import { PendingDevices } from './widgets/pendingdevices';
+import AcceptedDevices from './widgets/accepteddevices';
+import RedirectionWidget from './widgets/redirectionwidget';
+import PendingDevices from './widgets/pendingdevices';
 
 const styles = {
   container: {
@@ -97,22 +97,9 @@ export default class Devices extends React.Component {
           </h3>
         </div>
         <div style={styles.container}>
-          <PendingDevices
-            itemStyle={styles.containedItems}
-            pendingDevicesCount={pendingDevices}
-            isActive={hasPending}
-            showHelptips={this.props.showHelptips}
-            onClick={this.props.clickHandle}
-          />
-          <AcceptedDevices
-            itemStyle={styles.containedItems}
-            devicesCount={devices}
-            inactiveCount={inactiveDevices}
-            delta={deltaActivity}
-            onClick={this.props.clickHandle}
-          />
+          <PendingDevices pendingDevicesCount={pendingDevices} isActive={hasPending} showHelptips={this.props.showHelptips} onClick={this.props.clickHandle} />
+          <AcceptedDevices devicesCount={devices} inactiveCount={inactiveDevices} delta={deltaActivity} onClick={this.props.clickHandle} />
           <RedirectionWidget
-            itemStyle={styles.containedItems}
             target={'/help/connecting-devices'}
             content={'Learn how to connect more devices'}
             buttonContent={'Learn more'}

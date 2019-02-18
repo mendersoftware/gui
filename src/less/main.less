@@ -562,7 +562,6 @@ ul.link-list {
   &.widget p {
     font-size: inherit;
   }
-
 }
 
 // tooltips
@@ -632,12 +631,14 @@ ul.link-list {
     &.onboard:hover {
       border-color: darken(@placeholder, 10%);
     }
-
   }
-  .widgetHeader, .widgetMainContent, .widgetFooter {
+  .widgetHeader,
+  .widgetMainContent,
+  .widgetFooter {
     width: 100%;
   }
-  .widgetHeader, .widgetFooter {
+  .widgetHeader,
+  .widgetFooter {
     color: @verylightgrey;
     border-color: @placeholder;
     border-width: 1px;
@@ -1338,7 +1339,7 @@ tr.expand {
       position: absolute;
       left: 0;
       margin-top: 60px;
-      padding: 0 45px 0 24px;
+      padding: 0 45px;
       right: 0;
 
       &.accepted {

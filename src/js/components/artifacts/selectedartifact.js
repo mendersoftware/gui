@@ -19,7 +19,8 @@ export default class SelectedArtifact extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      descEdit: false
+      descEdit: false,
+      description: this.props.artifact.description || '-'
     };
   }
   componentDidUpdate() {
@@ -30,14 +31,19 @@ export default class SelectedArtifact extends React.Component {
   _handleLinkClick(device_type) {
     var filters = `device_type=${device_type}`;
     filters = encodeURIComponent(filters);
-    this.props.history.push('/devices/:group/:filters', { filters: filters }, null);
+    this.props.history.push('/devices/:group/:filters', { filters }, null);
   }
-  _descEdit(event) {
+
+  _descEdit(description) {
+    this.setState({ description });
+  }
+
+  _onToggleEditing(event) {
     event.stopPropagation();
     if (event.keyCode === 13 || !event.keyCode) {
       if (this.state.descEdit) {
         // save change
-        this.props.editArtifact(this.props.artifact.id, this.refs.description.getValue());
+        this.props.editArtifact(this.props.artifact.id, this.state.description);
       }
       this.setState({ descEdit: !this.state.descEdit });
     }
@@ -57,7 +63,7 @@ export default class SelectedArtifact extends React.Component {
     }
 
     var editButtonDesc = (
-      <IconButton style={Object.assign({ position: 'absolute', right: '0', bottom: '8px' })} onClick={e => this._descEdit(e)} className="material-icons">
+      <IconButton style={Object.assign({ position: 'absolute', right: '0', bottom: '8px' })} onClick={e => this._onToggleEditing(e)} className="material-icons">
         {this.state.descEdit ? 'check' : 'edit'}
       </IconButton>
     );
@@ -65,13 +71,14 @@ export default class SelectedArtifact extends React.Component {
     var descInput = (
       <TextField
         id="inline-description"
+        autoFocus={true}
         className={this.state.descEdit ? null : 'hidden'}
         style={{ width: '100%', height: '38px', marginTop: '0' }}
-        multiLine
+        multiLine={true}
         rowsMax={2}
-        ref="description"
-        defaultValue={info.description}
-        onKeyDown={e => this._descEdit(e)}
+        value={this.state.description}
+        onChange={e => this._descEdit(e.target.value)}
+        onKeyDown={e => this._onToggleEditing(e)}
       />
     );
 
@@ -110,7 +117,7 @@ export default class SelectedArtifact extends React.Component {
               <div style={{ padding: '12px 16px 10px', lineHeight: '12px', height: '74px', position: 'relative' }}>
                 <span style={{ color: 'rgba(0,0,0,0.8)', fontSize: '12px' }}>Description</span>
                 <div style={{ color: 'rgba(0,0,0,0.54)', marginRight: '30px', marginTop: '8px', whiteSpace: 'normal' }}>
-                  <span className={this.state.descEdit ? 'hidden' : null}>{info.description || '-'}</span>
+                  <span className={this.state.descEdit ? 'hidden' : null}>{this.state.description}</span>
                   {descInput}
                 </div>
                 {editButtonDesc}

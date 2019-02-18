@@ -196,7 +196,6 @@ export default class ScheduleForm extends React.Component {
           opensecondary="true"
           style={this.state.showDevices ? { overflow: 'visible' } : { overflow: 'hidden' }}
           open={this.state.showDevices}
-          overlayStyle={{ backgroundColor: 'rgba(0, 0, 0, 0.3)' }}
           onRequestChange={() => this._showDevices()}
           width={320}
         >
@@ -229,7 +228,7 @@ export default class ScheduleForm extends React.Component {
               value={device_types}
               underlineDisabledStyle={{ borderBottom: 'none' }}
               style={{ verticalAlign: 'top', width: '400px' }}
-              multiLine
+              multiLine={true}
               errorStyle={{ color: 'rgb(171, 16, 0)' }}
               className={this.props.artifact ? 'margin-left' : 'hidden'}
             />
