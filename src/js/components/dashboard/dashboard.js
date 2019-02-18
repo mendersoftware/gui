@@ -1,15 +1,10 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import ReactTooltip from 'react-tooltip';
-import { ReviewDevices } from '../helptips/helptooltips';
 
 import AppStore from '../../stores/app-store';
 import AppActions from '../../actions/app-actions';
 import Deployments from './deployments';
 import { setRetryTimer, clearAllRetryTimers } from '../../utils/retrytimer';
-import RaisedButton from 'material-ui/RaisedButton';
-import FontIcon from 'material-ui/FontIcon';
 
 export default class Dashboard extends React.Component {
   static contextTypes = {
@@ -95,48 +90,20 @@ export default class Dashboard extends React.Component {
     case 'devices/pending':
       this.context.router.history.push('/devices/pending');
       break;
+    default:
+      this.context.router.push(params.route);
     }
-  }
-
-  _handleStopProp(e) {
-    e.stopPropagation();
   }
 
   render() {
-    var pending_str = '';
-    if (this.state.pending) {
-      if (this.state.pending > 1) {
-        pending_str = `are ${this.state.pending} devices`;
-      } else {
-        pending_str = `is ${this.state.pending} device`;
-      }
-    }
     return (
       <div className="dashboard">
-        <div>
-          <div className={this.state.pending ? 'onboard margin-bottom' : 'hidden'}>
-            <p>There {pending_str} waiting authorization</p>
-            <div className="relative">
-              <Link to="/devices/pending">
-                <RaisedButton primary={true} label="Review details" />
-              </Link>
-              {this.state.showHelptips ? (
-                <div>
-                  <div id="onboard-1" className="tooltip help highlight" data-tip data-for="review-details-tip" data-event="click focus">
-                    <FontIcon className="material-icons">help</FontIcon>
-                  </div>
-                  <ReactTooltip id="review-details-tip" globalEventOff="click" place="bottom" type="light" effect="solid" className="react-tooltip">
-                    <ReviewDevices devices={this.state.pending} />
-                  </ReactTooltip>
-                </div>
-              ) : null}
-            </div>
-          </div>
-        </div>
-
+        <Devices showHelptips={this.state.showHelptips} clickHandle={this._handleClick} />
         <Deployments
+          globalSettings={this.props.globalSettings}
           loadingActive={!this.state.doneActiveDepsLoading}
           loadingRecent={!this.state.donePastDepsLoading}
+          clickHandle={this._handleClick}
           progress={this.state.progress}
           recent={this.state.recent}
         />
