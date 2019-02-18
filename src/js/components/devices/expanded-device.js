@@ -482,11 +482,18 @@ export default class ExpandedDevice extends React.Component {
           <DialogActions>{scheduleActions}</DialogActions>
         </Dialog>
 
-        <Dialog open={this.state.authsets} style={{ paddingTop: '0', fontSize: '13px' }}>
+        <Dialog
+          open={this.state.authsets}
+          fullWidth={true}
+          maxWidth="lg"
+          style={{
+            paddingTop: '0',
+            fontSize: '13px',
+            overflow: 'hidden'
+          }}
+        >
           <DialogTitle>{authsetTitle}</DialogTitle>
-          <DialogContent
-            style={{ width: '80%', maxWidth: '1500px', overflow: 'hidden', boxShadow: '0 14px 45px rgba(0, 0, 0, 0.25), 0 10px 18px rgba(0, 0, 0, 0.22)' }}
-          >
+          <DialogContent>
             <Authsets
               dialogToggle={() => this.dialogToggle('authsets')}
               decommission={id => this._decommissionDevice(id)}
@@ -494,7 +501,7 @@ export default class ExpandedDevice extends React.Component {
               id_attribute={this.props.id_attribute}
               id_value={this.props.id_value}
               limitMaxed={this.props.limitMaxed}
-            />{' '}
+            />
           </DialogContent>
           <DialogActions>{authsetActions}</DialogActions>
         </Dialog>

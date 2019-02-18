@@ -156,12 +156,7 @@ export default class UserManagement extends React.Component {
           autoHideDuration={8000}
         />
 
-        <Dialog
-          ref="edit"
-          scroll="body"
-          style={{ paddingTop: '0', fontSize: '13px', boxShadow: '0 14px 45px rgba(0, 0, 0, 0.25), 0 10px 18px rgba(0, 0, 0, 0.22)' }}
-          open={this.state.editDialog || false}
-        >
+        <Dialog ref="edit" scroll="body" open={this.state.editDialog || false}>
           <DialogTitle>{this.state.user ? 'Edit user' : 'Create new user'}</DialogTitle>
           <DialogContent style={{ overflow: 'hidden' }}>
             <UserForm
@@ -177,12 +172,7 @@ export default class UserManagement extends React.Component {
           <DialogActions style={{ marginBottom: '0' }} />
         </Dialog>
 
-        <Dialog
-          ref="remove"
-          scroll="body"
-          style={{ paddingTop: '0', boxShadow: '0 14px 45px rgba(0, 0, 0, 0.25), 0 10px 18px rgba(0, 0, 0, 0.22)' }}
-          open={this.state.removeDialog || false}
-        >
+        <Dialog ref="remove" scroll="body" open={this.state.removeDialog || false}>
           <DialogTitle>Remove user?</DialogTitle>
           <DialogContent style={{ overflow: 'hidden' }}>
             Are you sure you want to remove the user with email{' '}
