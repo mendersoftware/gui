@@ -58,7 +58,8 @@ export default class Global extends React.Component {
   }
 
   changeIdAttribute(value) {
-    this.setState({ updatedSettings: { id_attribute: value } });
+    const updatedSettings = Object.assign({}, this.state.updatedSettings, { id_attribute: value });
+    this.setState({ updatedSettings });
   }
 
   hasChanged() {

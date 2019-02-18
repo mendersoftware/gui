@@ -22,9 +22,7 @@ export default class SelectInput extends React.Component {
   }
 
   setValue(value) {
-    this.setState({
-      value: value
-    });
+    this.setState({ value });
     this.props.onChange(value);
   }
 
@@ -38,7 +36,11 @@ export default class SelectInput extends React.Component {
         );
         return accu;
       },
-      [<MenuItem key="selection-placeholder">{this.props.hint}</MenuItem>]
+      [
+        <MenuItem key="selection-placeholder" value="" disabled>
+          {this.props.hint}
+        </MenuItem>
+      ]
     );
 
     return (
@@ -47,9 +49,8 @@ export default class SelectInput extends React.Component {
         <Select
           id={this.props.id}
           name={this.props.id}
-          defaultValue={this.props.default}
-          value={this.props.value || this.props.default}
-          onChange={(event, target, value) => this.setValue(value)}
+          value={this.state.value || this.props.value || this.props.default}
+          onChange={event => this.setValue(event.target.value)}
           inputProps={{
             name: 'selector',
             id: 'simple-select'
