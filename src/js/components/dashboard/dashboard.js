@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import AppStore from '../../stores/app-store';
 import AppActions from '../../actions/app-actions';
 import Deployments from './deployments';
+import Devices from './devices';
 import { setRetryTimer, clearAllRetryTimers } from '../../utils/retrytimer';
 
 export default class Dashboard extends React.Component {

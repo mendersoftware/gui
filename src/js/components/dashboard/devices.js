@@ -17,7 +17,7 @@ const styles = {
   }
 };
 
-export class Devices extends React.Component {
+export default class Devices extends React.Component {
   constructor(props, state) {
     super(props, state);
     const self = this;

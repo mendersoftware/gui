@@ -12,8 +12,16 @@ export class ReviewDevices extends React.Component {
         <h3>Getting started</h3>
         <hr />
         <p>If this is the first time you've used Mender, we have provided a virtual device for you to create a test deployment.</p>
-        <p>{this.props.devices} {pluralize("devices", this.props.devices)} {pluralize("are", this.props.devices)} waiting to be authorized by you. Click <Link to={`/devices/pending`}>'View details'</Link> to see the {pluralize("devices", this.props.devices)} which {pluralize("are", this.props.devices)} requesting to be accepted.</p>
-        <p><a className="hidehelp" onClick={toggleHelptips}>Hide all help tips</a></p>
+        <p>
+          {this.props.devices} {pluralize('devices', this.props.devices)} {pluralize('are', this.props.devices)} waiting to be authorized by you. Click{' '}
+          <Link to={`/devices/pending`}>'View details'</Link> to see the {pluralize('devices', this.props.devices)} which {pluralize('are', this.props.devices)}{' '}
+          requesting to be accepted.
+        </p>
+        <p>
+          <a className="hidehelp" onClick={toggleHelptips}>
+            Hide all help tips
+          </a>
+        </p>
       </div>
     );
   }
