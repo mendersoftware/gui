@@ -21,9 +21,9 @@ export default class SharedSnackbar extends React.Component {
         message={this.props.snackbar.message}
         autoHideDuration={this.props.snackbar.autoHideDuration}
         action={this.props.snackbar.action}
-        bodyStyle={{ maxWidth: this.props.snackbar.maxWidth, height: 'auto', lineHeight: '28px', padding: 24, whiteSpace: 'pre-line' }}
+        style={{ maxWidth: this.props.snackbar.maxWidth, height: 'auto', lineHeight: '28px', padding: 24, whiteSpace: 'pre-line' }}
         onClick={() => this.handleActionClick()}
-        onRequestClose={() => this.handleRequestClose()}
+        onClose={() => this.handleRequestClose()}
       />
     );
   }

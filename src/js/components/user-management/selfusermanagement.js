@@ -63,10 +63,6 @@ export default class SelfUserManagement extends React.Component {
     this.setState({ editPass: !this.state.editPass });
   }
 
-  _togglePass() {
-    this.setState({ editPass: !this.state.editPass });
-  }
-
   render() {
     return (
       <div style={{ maxWidth: '750px' }} className="margin-top-small">

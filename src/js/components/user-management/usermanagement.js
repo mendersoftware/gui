@@ -168,7 +168,7 @@ export default class UserManagement extends React.Component {
             <UserForm
               edit={this.state.user ? true : false}
               editPass={this.state.editPass}
-              togglePass={this._togglePass}
+              togglePass={() => this._togglePass()}
               closeDialog={() => this.dialogDismiss()}
               handleSubmit={this.state.user ? this._editSubmit : this._createSubmit}
               user={this.state.user}

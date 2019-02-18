@@ -111,7 +111,7 @@ export default class GroupSelector extends React.Component {
           <FormControl className="float-left">
             <InputLabel htmlFor="group-select">Select group</InputLabel>
             <Select
-              onChange={(event, select, value) => this._handleSelectValueChange(value)}
+              onChange={event => this._handleSelectValueChange(event.target.value)}
               value={this.props.selectedField || ''}
               inputProps={{
                 name: 'groupSelect',
@@ -136,7 +136,7 @@ export default class GroupSelector extends React.Component {
             placeholder="Name of new group"
             label="Name of new group"
             className="float-left clear"
-            onChange={(event, value) => this._handleTextFieldChange(value)}
+            onChange={event => this._handleTextFieldChange(event.target.value)}
             errorStyle={{ color: 'rgb(171, 16, 0)' }}
             errorText={this.state.errorText1}
           />
