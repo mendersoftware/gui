@@ -141,12 +141,11 @@ var AppActions = {
     var count = 0;
     var per_page = 100;
     var page = 1;
-    var forGroup = group ? `/groups/${group}` : '';
-    var ungroupedFilter = group ? '' : '&has_group=false';
+    var forGroup = group ? `&group=${group}` : '&has_group=false';
     var devices = [];
     function getDeviceCount() {
       DevicesApi
-      .get(`${inventoryApiUrl}${forGroup}/devices?per_page=${per_page}&page=${page}${ungroupedFilter}`)
+      .get(`${inventoryApiUrl}/devices?per_page=${per_page}&page=${page}${forGroup}`)
       .then(function(res) {
         var links = parse(res.headers['link']);
         count += res.body.length;
