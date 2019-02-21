@@ -9,7 +9,9 @@ import Loader from '../common/loader';
 // material ui
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
-import { ListItemText, ListItemAvatar } from '@material-ui/core';
+import ListItemText from '@material-ui/core/ListItemText';
+import ListItemAvatar from '@material-ui/core/ListItemAvatar';
+import { formatTime } from '../../helpers';
 
 export default class Progress extends React.Component {
   static contextTypes = {
@@ -22,15 +24,6 @@ export default class Progress extends React.Component {
       devices: {},
       selectedDevice: {}
     };
-  }
-  _formatTime(date) {
-    if (date) {
-      return date
-        .replace(' ', 'T')
-        .replace(/ /g, '')
-        .replace('UTC', '');
-    }
-    return;
   }
   render() {
     var deployments = this.props.deployments || [];
@@ -49,7 +42,7 @@ export default class Progress extends React.Component {
           </div>
           <div>
             <div className="progressLabel">Started:</div>
-            <Time className="progressTime" value={this._formatTime(deployment.created)} format="YYYY-MM-DD HH:mm" />
+            <Time className="progressTime" value={formatTime(deployment.created)} format="YYYY-MM-DD HH:mm" />
           </div>
           <div style={{ marginTop: '15px' }}>
             <div className="progressLabel" />

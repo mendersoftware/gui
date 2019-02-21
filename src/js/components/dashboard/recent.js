@@ -4,6 +4,7 @@ import Time from 'react-time';
 import PropTypes from 'prop-types';
 import RecentStats from './recentstats';
 import Loader from '../common/loader';
+import { formatTime } from '../../helpers';
 
 export default class Recent extends React.Component {
   static contextTypes = {
@@ -16,15 +17,7 @@ export default class Recent extends React.Component {
       devices: {}
     };
   }
-  _formatTime(date) {
-    if (date) {
-      return date
-        .replace(' ', 'T')
-        .replace(/ /g, '')
-        .replace('UTC', '');
-    }
-    return;
-  }
+
   render() {
     var deployments = this.props.deployments || [];
     var recent = deployments.map(function(deployment, index) {
@@ -42,7 +35,7 @@ export default class Recent extends React.Component {
               </div>
               <div>
                 <div className="progressLabel">Started:</div>
-                <Time className="progressTime" value={this._formatTime(deployment.created)} format="YYYY-MM-DD HH:mm" />
+                <Time className="progressTime" value={formatTime(deployment.created)} format="YYYY-MM-DD HH:mm" />
               </div>
             </div>
             <RecentStats id={deployment.id} />
