@@ -3,8 +3,6 @@ import { Link } from 'react-router-dom';
 import Time from 'react-time';
 import isEqual from 'lodash.isequal';
 
-import { statusToPercentage } from '../../helpers';
-
 // material ui
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -13,6 +11,8 @@ import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
 import Button from '@material-ui/core/Button';
 import LinearProgress from '@material-ui/core/LinearProgress';
+
+import { statusToPercentage, formatTime } from '../../helpers';
 
 export default class ProgressDeviceList extends React.Component {
   constructor(props, context) {
@@ -28,15 +28,6 @@ export default class ProgressDeviceList extends React.Component {
     this.props.finished();
     this.setState({ prevDevices: prevProps.devices });
   }
-  _formatTime(date) {
-    if (date) {
-      return date
-        .replace(' ', 'T')
-        .replace(/ /g, '')
-        .replace('UTC', '');
-    }
-    return;
-  }
   render() {
     var self = this;
     var intervalsSinceStart = Math.floor((Date.now() - Date.parse(self.props.created)) / (1000 * 20));
@@ -47,7 +38,7 @@ export default class ProgressDeviceList extends React.Component {
       deviceList = this.props.devices.map(function(device, index) {
         var time = '-';
         if (device.finished) {
-          time = <Time value={this._formatTime(device.finished)} format="YYYY-MM-DD HH:mm" />;
+          time = <Time value={formatTime(device.finished)} format="YYYY-MM-DD HH:mm" />;
         }
         var encodedDevice = `id=${device.id}`;
         var id_attribute = device.id;
@@ -120,7 +111,7 @@ export default class ProgressDeviceList extends React.Component {
             <TableCell>{device_type}</TableCell>
             <TableCell>{currentArtifactLink}</TableCell>
             <TableCell>
-              <Time value={this._formatTime(device.created)} format="YYYY-MM-DD HH:mm" />
+              <Time value={formatTime(device.created)} format="YYYY-MM-DD HH:mm" />
             </TableCell>
             <TableCell>{time}</TableCell>
             <TableCell style={{ paddingRight: '0px' }}>

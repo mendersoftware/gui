@@ -1,13 +1,8 @@
 import React from 'react';
 import Time from 'react-time';
 import ReactTooltip from 'react-tooltip';
-import { CreateDeployment, ProgressDeployment } from '../helptips/helptooltips';
-
-import DeploymentStatus from './deploymentstatus';
-
 import Pagination from 'rc-pagination';
 import _en_US from 'rc-pagination/lib/locale/en_US';
-import Loader from '../common/loader';
 
 // material ui
 import Table from '@material-ui/core/Table';
@@ -17,6 +12,11 @@ import TableBody from '@material-ui/core/TableBody';
 import TableRow from '@material-ui/core/TableRow';
 
 import HelpIcon from '@material-ui/icons/Help';
+
+import { CreateDeployment, ProgressDeployment } from '../helptips/helptooltips';
+import DeploymentStatus from './deploymentstatus';
+import Loader from '../common/loader';
+import { formatTime } from '../../helpers';
 
 export default class Progress extends React.Component {
   constructor(props, context) {
@@ -29,15 +29,7 @@ export default class Progress extends React.Component {
   _progressCellClick(rowNumber) {
     this.props.openReport(rowNumber, 'progress');
   }
-  _formatTime(date) {
-    if (date) {
-      return date
-        .replace(' ', 'T')
-        .replace(/ /g, '')
-        .replace('UTC', '');
-    }
-    return;
-  }
+
   _handlePageChange(pageNo) {
     this.props.refreshProgress(pageNo);
   }
@@ -50,7 +42,7 @@ export default class Progress extends React.Component {
           <TableCell>{deployment.artifact_name}</TableCell>
           <TableCell>{deployment.name}</TableCell>
           <TableCell>
-            <Time value={this._formatTime(deployment.created)} format="YYYY-MM-DD HH:mm" />
+            <Time value={formatTime(deployment.created)} format="YYYY-MM-DD HH:mm" />
           </TableCell>
           <TableCell style={{ textAlign: 'right', width: '100px' }}>{deployment.device_count}</TableCell>
           <TableCell style={{ overflow: 'visible', width: '350px' }}>{status}</TableCell>

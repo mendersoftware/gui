@@ -12,10 +12,10 @@ import TableBody from '@material-ui/core/TableBody';
 import TableRow from '@material-ui/core/TableRow';
 import IconButton from '@material-ui/core/IconButton';
 
-import Autosuggest, { defaultProps } from '@plan-three/material-ui-autosuggest';
-
 import ClearIcon from '@material-ui/icons/Clear';
 import HelpIcon from '@material-ui/icons/Help';
+
+import Autosuggest, { defaultProps } from '@plan-three/material-ui-autosuggest';
 
 import InlineDatePicker from 'material-ui-pickers/DatePicker';
 import MuiPickersUtilsProvider from 'material-ui-pickers/MuiPickersUtilsProvider';
@@ -24,6 +24,7 @@ import MomentUtils from '@date-io/moment';
 import Loader from '../common/loader';
 import { FinishedDeployment } from '../helptips/helptooltips';
 import DeploymentStatus from './deploymentstatus';
+import { formatTime } from '../../helpers';
 
 export default class Past extends React.Component {
   constructor(props, context) {
@@ -51,15 +52,6 @@ export default class Past extends React.Component {
     var report = this.props.past[rowNumber];
     this.props.showReport(report, 'past');
   }
-  _formatTime(date) {
-    if (date) {
-      return date
-        .replace(' ', 'T')
-        .replace(/ /g, '')
-        .replace('UTC', '');
-    }
-    return;
-  }
   _handleDateChange(pageNo, createdAfter, createdBefore) {
     createdAfter = createdAfter || this.props.startDate;
     createdBefore = createdBefore || this.props.endDate;
@@ -68,7 +60,7 @@ export default class Past extends React.Component {
   _handlePageChange(pageNo) {
     this.props.refreshPast(pageNo, this.props.startDate, this.props.endDate, this.props.pageSize, this.props.deviceGroup);
   }
-  _handleChangeStartDate(event, date) {
+  _handleChangeStartDate(date) {
     this.setState({
       active: ''
     });
@@ -77,7 +69,7 @@ export default class Past extends React.Component {
     this._handleDateChange(1, date, null);
   }
 
-  _handleChangeEndDate(event, date) {
+  _handleChangeEndDate(date) {
     var startDate = this.props.startDate;
     if (date < startDate) {
       startDate = date;
@@ -117,18 +109,18 @@ export default class Past extends React.Component {
     var pastMap = this.props.past.map(function(deployment, index) {
       var time = '-';
       if (deployment.finished) {
-        time = <Time value={this._formatTime(deployment.finished)} format="YYYY-MM-DD HH:mm" />;
+        time = <Time value={formatTime(deployment.finished)} format="YYYY-MM-DD HH:mm" />;
       }
 
       //  get statistics
       var status = <DeploymentStatus isActiveTab={this.props.isActiveTab} id={deployment.id} />;
 
       return (
-        <TableRow hover key={index} onClick={row => this._pastCellClick(row)}>
+        <TableRow hover key={index} onClick={() => this._pastCellClick(index)}>
           <TableCell>{deployment.artifact_name}</TableCell>
           <TableCell>{deployment.name}</TableCell>
           <TableCell>
-            <Time value={this._formatTime(deployment.created)} format="YYYY-MM-DD HH:mm" />
+            <Time value={formatTime(deployment.created)} format="YYYY-MM-DD HH:mm" />
           </TableCell>
           <TableCell>{time}</TableCell>
           <TableCell style={{ textAlign: 'right', width: '100px' }}>{deployment.device_count}</TableCell>
@@ -176,22 +168,20 @@ export default class Past extends React.Component {
 
           <MuiPickersUtilsProvider utils={MomentUtils} className="margin-left margin-right inline-block">
             <InlineDatePicker
-              onChange={(event, date) => this._handleChangeStartDate(event, date)}
+              onChange={date => this._handleChangeStartDate(date)}
               autoOk={true}
               label="From"
-              onlyCalendar={true}
               value={this.props.startDate}
               maxDate={this.props.endDate || this.state.today}
               style={{ marginRight: '20px', width: '160px' }}
             />
 
             <InlineDatePicker
-              onChange={(event, date) => this._handleChangeEndDate(event, date)}
+              onChange={date => this._handleChangeEndDate(date)}
               autoOk={true}
               label="To"
               value={this.props.endDate}
               maxDate={this.state.today}
-              onlyCalendar={true}
               style={{ width: '160px' }}
             />
           </MuiPickersUtilsProvider>

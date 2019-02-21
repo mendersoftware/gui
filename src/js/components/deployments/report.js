@@ -26,6 +26,7 @@ import Icon from '@material-ui/core/Icon';
 import BlockIcon from '@material-ui/icons/Block';
 import RefreshIcon from '@material-ui/icons/Refresh';
 import { AppContext } from '../../contexts/app-context';
+import { formatTime } from '../../helpers';
 
 export default class DeploymentReport extends React.Component {
   constructor(props, state) {
@@ -179,15 +180,6 @@ export default class DeploymentReport extends React.Component {
     }
     this.setState({ currentPage: pageNo, start: start, end: end, pagedDevices: slice });
   }
-  _formatTime(date) {
-    if (date) {
-      return date
-        .replace(' ', 'T')
-        .replace(/ /g, '')
-        .replace('UTC', '');
-    }
-    return;
-  }
   updatedList() {
     // use to make sure parent re-renders dialog when device list built
     this.props.updated();
@@ -259,7 +251,7 @@ export default class DeploymentReport extends React.Component {
 
     var finished = '-';
     if (this.props.deployment.finished) {
-      finished = <Time value={this._formatTime(this.props.deployment.finished)} format="YYYY-MM-DD HH:mm" />;
+      finished = <Time value={formatTime(this.props.deployment.finished)} format="YYYY-MM-DD HH:mm" />;
     }
 
     return (
@@ -292,7 +284,7 @@ export default class DeploymentReport extends React.Component {
                   </div>
                   <div>
                     <div className="progressLabel">Started:</div>
-                    <Time value={this._formatTime(this.props.deployment.created)} format="YYYY-MM-DD HH:mm" />
+                    <Time value={formatTime(this.props.deployment.created)} format="YYYY-MM-DD HH:mm" />
                   </div>
                   <div>
                     <div className="progressLabel">Finished:</div>
@@ -359,7 +351,7 @@ export default class DeploymentReport extends React.Component {
                   </h2>
                   <div>
                     Started:
-                    <Time value={this._formatTime(this.props.deployment.created)} format="YYYY-MM-DD HH:mm" />
+                    <Time value={formatTime(this.props.deployment.created)} format="YYYY-MM-DD HH:mm" />
                   </div>
                 </div>
                 <div className="inline-block">
@@ -423,7 +415,7 @@ export default class DeploymentReport extends React.Component {
           ) : null}
         </div>
 
-        <Dialog open={this.state.showDialog} scroll="body" style={{ padding: '0', overflow: 'hidden' }}>
+        <Dialog open={this.state.showDialog}>
           <DialogTitle>Deployment log for device</DialogTitle>
           <DialogContent>
             <div className="code log">{this.state.logData}</div>

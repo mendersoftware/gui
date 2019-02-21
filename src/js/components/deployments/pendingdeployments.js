@@ -15,6 +15,8 @@ import TableRow from '@material-ui/core/TableRow';
 import Button from '@material-ui/core/Button';
 import BlockIcon from '@material-ui/icons/Block';
 
+import { formatTime } from '../../helpers';
+
 export default class Pending extends React.Component {
   constructor(props, context) {
     super(props, context);
@@ -22,15 +24,6 @@ export default class Pending extends React.Component {
       abort: null,
       pageSize: 20
     };
-  }
-  _formatTime(date) {
-    if (date) {
-      return date
-        .replace(' ', 'T')
-        .replace(/ /g, '')
-        .replace('UTC', '');
-    }
-    return;
   }
   _abortHandler(id) {
     this.props.abort(id);
@@ -68,7 +61,7 @@ export default class Pending extends React.Component {
           <TableCell>{deployment.artifact_name}</TableCell>
           <TableCell>{deployment.name}</TableCell>
           <TableCell>
-            <Time value={this._formatTime(deployment.created)} format="YYYY-MM-DD HH:mm" />
+            <Time value={formatTime(deployment.created)} format="YYYY-MM-DD HH:mm" />
           </TableCell>
           <TableCell style={{ textAlign: 'right', width: '100px' }}>{deployment.device_count}</TableCell>
           <TableCell style={{ width: '126px' }}>{deployment.status}</TableCell>

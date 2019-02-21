@@ -247,7 +247,7 @@ export function hashString(str) {
   return md5(str);
 }
 
-export function formatTime(date) {
+export const formatTime = date => {
   if (date) {
     return date
       .replace(' ', 'T')

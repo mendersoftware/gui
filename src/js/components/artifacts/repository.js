@@ -24,7 +24,7 @@ import TableRow from '@material-ui/core/TableRow';
 import FileIcon from '@material-ui/icons/CloudUpload';
 import HelpIcon from '@material-ui/icons/Help';
 
-import { preformatWithRequestID } from '../../helpers';
+import { preformatWithRequestID, formatTime } from '../../helpers';
 
 var artifacts = [];
 
@@ -136,15 +136,7 @@ export default class Repository extends React.Component {
   _onClick(event) {
     event.stopPropagation();
   }
-  _formatTime(date) {
-    if (date) {
-      return date
-        .replace(' ', 'T')
-        .replace(/ /g, '')
-        .replace('UTC', '');
-    }
-    return;
-  }
+
   _adjustCellHeight(height) {
     this.setState({ divHeight: height + 110 });
   }
@@ -169,7 +161,7 @@ export default class Repository extends React.Component {
           <SelectedArtifact
             removeArtifact={() => self._handleRemove()}
             compatible={compatible}
-            formatTime={self._formatTime}
+            formatTime={formatTime}
             editArtifact={self._editArtifactData}
             // buttonStyle={styles.flatButtonIcon}
             artifact={self.state.artifact}
@@ -182,7 +174,7 @@ export default class Repository extends React.Component {
           <TableCell style={expanded ? { height: self.state.divHeight } : null}>{pkg.name}</TableCell>
           <TableCell>{compatible}</TableCell>
           <TableCell>
-            <Time value={self._formatTime(pkg.modified)} format="YYYY-MM-DD HH:mm" />
+            <Time value={formatTime(pkg.modified)} format="YYYY-MM-DD HH:mm" />
           </TableCell>
           <TableCell
             className="expandButton"
