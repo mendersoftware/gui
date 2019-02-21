@@ -205,31 +205,31 @@ export default class Header extends React.Component {
   }
   render() {
     const self = this;
-    var dropdownLabel = (
-      <span>
-        <Icon className="material-icons" style={{ marginRight: '8px', top: '5px', fontSize: '20px', color: '#c7c7c7' }}>
-          account_circle
-        </Icon>
-        {(this.state.user || {}).email}
-      </span>
-    );
-
     var helpPath = this.props.history.location.pathname.indexOf('/help') != -1;
 
     const { anchorEl } = self.state;
 
     var dropDownElement = (
       <div>
-        <Button
-          className="header-dropdown"
-          // anchorOrigin={{ vertical: 'center', horizontal: 'middle' }}
-          // targetOrigin={{ vertical: 'bottom', horizontal: 'middle' }}
-          style={{ marginRight: '0', fontSize: '14px', paddingLeft: '4px', fill: 'rgb(0, 0, 0)' }}
-          onClick={self.handleClick}
-        >
-          {dropdownLabel}
+        <Button className="header-dropdown" style={{ marginRight: '0', fontSize: '14px', paddingLeft: '4px', fill: 'rgb(0, 0, 0)' }} onClick={self.handleClick}>
+          <Icon className="material-icons" style={{ marginRight: '8px', top: '5px', fontSize: '20px', color: '#c7c7c7' }}>
+            account_circle
+          </Icon>
+          {(this.state.user || {}).email}
         </Button>
-        <Menu anchorEl={anchorEl} onClose={self.handleClose} open={Boolean(anchorEl)}>
+        <Menu
+          anchorEl={anchorEl}
+          onClose={self.handleClose}
+          open={Boolean(anchorEl)}
+          anchorOrigin={{
+            vertical: 'center',
+            horizontal: 'center'
+          }}
+          transformOrigin={{
+            vertical: 'bottom',
+            horizontal: 'center'
+          }}
+        >
           <MenuItem component={Link} to="/settings">
             Settings
           </MenuItem>
@@ -258,10 +258,12 @@ export default class Header extends React.Component {
       </div>
     );
 
+    const toolbarStyle = { height: '56px', minHeight: 'unset', paddingLeft: '16px', paddingRight: '16px' };
+
     return (
       <div className={self.context.location.pathname === '/login' ? 'hidden' : null}>
-        <Toolbar style={{ backgroundColor: '#fff' }}>
-          <ToolbarGroup key={0}>
+        <Toolbar style={Object.assign({ backgroundColor: '#fff' }, toolbarStyle)}>
+          <ToolbarGroup key={0} style={toolbarStyle}>
             <Link to="/" id="logo" />
 
             {this.props.demo ? (

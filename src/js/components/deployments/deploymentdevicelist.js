@@ -103,7 +103,7 @@ export default class ProgressDeviceList extends React.Component {
           return `${percentage}%`;
         })(device.percentage);
 
-        const progressColor = status && (status.toLowerCase() === 'failure' || status.toLowerCase() === 'aborted') ? '#8f0d0d' : '#009E73';
+        const progressColor = status && (status.toLowerCase() === 'failure' || status.toLowerCase() === 'aborted') ? 'secondary' : 'primary';
 
         return (
           <TableRow key={index}>
@@ -122,7 +122,7 @@ export default class ProgressDeviceList extends React.Component {
                     <div style={{ textAlign: 'end', color: '#aaaaaa' }}>
                       {!['aborted', 'failure', 'noartifact'].includes(device.status.toLowerCase()) ? devicePercentage : '0%'}
                     </div>
-                    <LinearProgress color={progressColor} mode="determinate" value={device.percentage} />
+                    <LinearProgress color={progressColor} variant="determinate" value={device.percentage} />
                   </div>
                 )}
               </div>

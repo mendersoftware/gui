@@ -156,8 +156,8 @@ export default class ProgressChart extends React.Component {
                     {percentage}%
                   </div>
                   <LinearProgress
-                    color={this.state.device.status && this.state.device.status.toLowerCase() == 'failure' ? '#8f0d0d' : '#009E73'}
-                    mode="determinate"
+                    color={this.state.device.status && this.state.device.status.toLowerCase() == 'failure' ? 'secondary' : 'primary'}
+                    variant="determinate"
                     value={percentage}
                   />
                 </div>
