@@ -108,13 +108,6 @@ export default class Deployments extends React.Component {
   }
 
   _getInitialState() {
-    // set default date range before refreshing
-    var startDate = new Date();
-    startDate.setDate(startDate.getDate());
-    startDate.setHours(0, 0, 0, 0); // set to start of day
-    var endDate = new Date();
-    endDate.setHours(23, 59, 59, 999);
-
     return {
       docsVersion: this.props.docsVersion ? `${this.props.docsVersion}/` : 'development/',
       tabIndex: this._updateActive(),
@@ -133,9 +126,7 @@ export default class Deployments extends React.Component {
       user: AppStore.getCurrentUser(),
       pageLength: AppStore.getTotalDevices(),
       isHosted: window.location.hostname === 'hosted.mender.io',
-      per_page: 20,
-      startDate,
-      endDate
+      per_page: 20
     };
   }
 
@@ -241,7 +232,7 @@ export default class Deployments extends React.Component {
     endDate = endDate || self.state.endDate;
     per_page = per_page || self.state.per_page;
 
-    // self.setState({ startDate, endDate, groupFilter: group });
+    self.setState({ startDate, endDate, groupFilter: group });
 
     startDate = Math.round(Date.parse(startDate) / 1000);
     endDate = Math.round(Date.parse(endDate) / 1000);
