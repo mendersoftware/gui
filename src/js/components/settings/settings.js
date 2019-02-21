@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import SelfUserManagement from '../user-management/selfusermanagement';
 import UserManagement from '../user-management/usermanagement';
@@ -11,10 +11,8 @@ import AppStore from '../../stores/app-store';
 // material ui
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
 import ListSubheader from '@material-ui/core/ListSubheader';
-import Tab from '@material-ui/core/Tab';
-import Tabs from '@material-ui/core/Tabs';
-import { ListItemText } from '@material-ui/core';
 
 const routes = {
   global: { route: '/settings/global-settings', text: 'Global settings', admin: true, component: <Global /> },
@@ -79,21 +77,16 @@ export default class Settings extends React.Component {
     if (self.state.hasMultitenancy) {
       relevantItems['myOrganization'] = myOrganization;
     }
-    const style = { display: 'block', width: '100%' };
-    var list = Object.entries(relevantItems).reduce(
-      (accu, entry) => {
-        const key = entry[0];
-        const item = entry[1];
-        accu.tabs.push(<Tab component={Link} key={key} label={item.text} style={style} to={item.route} value={key} />);
-        accu.listItems.push(
-          <ListItem component={NavLink} className="navLink settingsNav" to={item.route} key={key}>
-            <ListItemText>{item.text}</ListItemText>
-          </ListItem>
-        );
-        return accu;
-      },
-      { tabs: [], listItems: [] }
-    );
+    var list = Object.entries(relevantItems).reduce((accu, entry) => {
+      const key = entry[0];
+      const item = entry[1];
+      accu.push(
+        <ListItem component={NavLink} className="navLink settingsNav" to={item.route} key={key}>
+          <ListItemText>{item.text}</ListItemText>
+        </ListItem>
+      );
+      return accu;
+    }, []);
 
     const section = self._getCurrentSection(sectionMap, self.context.router.route.match.params.section);
     return (
@@ -101,13 +94,10 @@ export default class Settings extends React.Component {
         <div className="leftFixed">
           <List>
             <ListSubheader>Settings</ListSubheader>
-            {list.listItems}
+            {list}
           </List>
         </div>
-        <div className="rightFluid padding-right">
-          <Tabs value={section}>{list.tabs}</Tabs>
-          {self._getCurrentTab(relevantItems, section).component}
-        </div>
+        <div className="rightFluid padding-right">{self._getCurrentTab(relevantItems, section).component}</div>
       </div>
     );
   }

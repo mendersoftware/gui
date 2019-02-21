@@ -120,8 +120,9 @@ class AppRoot extends React.Component {
     return (
       <IdleTimer ref="idleTimer" element={document} idleAction={this._onIdle} timeout={this.state.timeout} format="MM-DD-YYYY HH:MM:ss.SSS">
         <div>
-          <div className="header" id="fixedHeader">
             <Header
+            className="header"
+            id="fixedHeader"
               announcement={_HostedAnnouncement}
               docsVersion={this.state.docsVersion}
               currentTab={this.state.currentTab}
@@ -129,7 +130,6 @@ class AppRoot extends React.Component {
               history={this.props.history}
               isLoggedIn={(this.state.currentUser || {}).hasOwnProperty('email')}
             />
-          </div>
 
           <div className="wrapper">
             <div className="leftFixed leftNav">

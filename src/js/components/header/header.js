@@ -15,29 +15,21 @@ import DeploymentNotifications from './deploymentnotifications';
 import AppActions from '../../actions/app-actions';
 import AppStore from '../../stores/app-store';
 
-import AnnounceIcon from '@material-ui/icons/Announcement';
 import Button from '@material-ui/core/Button';
-import CloseIcon from '@material-ui/icons/Close';
-import ExitIcon from '@material-ui/icons/ExitToApp';
-import HelpIcon from '@material-ui/icons/Help';
 import Icon from '@material-ui/core/Icon';
 import IconButton from '@material-ui/core/IconButton';
-import InfoIcon from '@material-ui/icons/InfoOutlined';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
-import Tab from '@material-ui/core/Tab';
-import Tabs from '@material-ui/core/Tabs';
 import Toolbar from '@material-ui/core/Toolbar';
 import ToolbarGroup from '@material-ui/core/Toolbar';
 
-var menuItems = [
-  { route: '/', text: 'Dashboard' },
-  { route: '/devices', text: 'Devices' },
-  { route: '/artifacts', text: 'Artifacts' },
-  { route: '/deployments', text: 'Deployments' }
-];
+import AnnounceIcon from '@material-ui/icons/Announcement';
+import CloseIcon from '@material-ui/icons/Close';
+import ExitIcon from '@material-ui/icons/ExitToApp';
+import HelpIcon from '@material-ui/icons/Help';
+import InfoIcon from '@material-ui/icons/InfoOutlined';
 
 export default class Header extends React.Component {
   static contextTypes = {
@@ -309,7 +301,6 @@ export default class Header extends React.Component {
 
           <ToolbarGroup style={{ flexShrink: '0' }} key={2}>
             <DeviceNotifications pending={this.state.pendingDevices} total={this.state.acceptedDevices} limit={this.state.deviceLimit} />
-
             <DeploymentNotifications inprogress={this.state.inProgress} />
             {dropDownElement}
           </ToolbarGroup>
@@ -373,14 +364,6 @@ export default class Header extends React.Component {
               </ReactTooltip>
             </div>
           ) : null}
-
-          {/*
-          // TODO: find out what this was used for...
-          <Tabs value={this.props.currentTab} onChange={() => this.changeTab()}>
-            {menuItems.map((item, index) => (
-              <Tab key={index} style={styles.tabs} label={item.text} value={item.route} />
-            ))}
-          </Tabs> */}
         </div>
       </div>
     );

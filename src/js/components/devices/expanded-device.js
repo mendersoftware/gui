@@ -191,29 +191,24 @@ export default class ExpandedDevice extends React.Component {
 
     if ((this.props.device || {}).identity_data) {
       var data = typeof this.props.device.identity_data == 'object' ? this.props.device.identity_data : JSON.parse(this.props.device.identity_data);
-      for (var k in data) {
-        deviceIdentity.push(
-          <ListItem key={k} disabled={true}>
-            <ListItemText primary={k} secondary={data[k]} />
+      deviceIdentity = Object.entries(data).reduce((accu, item) => {
+        accu.push(
+          <ListItem key={item[0]} disabled={true}>
+            <ListItemText primary={item[0]} secondary={item[1]} />
           </ListItem>
         );
-      }
+        return accu;
+      }, deviceIdentity);
     }
 
     if ((this.props.device || {}).created_ts) {
       deviceIdentity.push(
-        <div key="connectionTime">
-          <ListItem disabled={true}>
-            <ListItemText
-              primary={status === 'preauthorized' ? 'Date added' : 'First request'}
-              secondary={
-                <div>
-                  <Time value={this.props.device.created_ts} format="YYYY-MM-DD HH:mm" />
-                </div>
-              }
-            />
-          </ListItem>
-        </div>
+        <ListItem key="connectionTime" disabled={true}>
+          <ListItemText
+            primary={status === 'preauthorized' ? 'Date added' : 'First request'}
+            secondary={<Time value={this.props.device.created_ts} format="YYYY-MM-DD HH:mm" />}
+          />
+        </ListItem>
       );
     }
 
@@ -283,7 +278,7 @@ export default class ExpandedDevice extends React.Component {
       );
       break;
     case 'pending':
-      statusIcon = <div className="pending-icon" style={{ margin: '12px 0 12px 12px' }} />;
+      statusIcon = <Icon className="pending-icon" style={{ margin: '12px 0 12px 12px' }} />;
       break;
     case 'rejected':
       statusIcon = (
@@ -327,7 +322,7 @@ export default class ExpandedDevice extends React.Component {
           <h4 className="margin-bottom-none">Device identity</h4>
           <List className="list-horizontal-display">{deviceIdentity}</List>
 
-          <List className="block list-horizontal-display">
+          <List className="list-horizontal-display">
             <ListItem key="statusButton" disabled={true}>
               <ListItemAvatar>{statusIcon}</ListItemAvatar>
               <ListItemText primary={'Device status'} secondary={formatStatus} />

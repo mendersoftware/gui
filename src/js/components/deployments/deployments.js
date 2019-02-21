@@ -11,6 +11,7 @@ import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
 import Divider from '@material-ui/core/Divider';
 
 import AppStore from '../../stores/app-store';
@@ -25,7 +26,6 @@ import ScheduleForm from './scheduleform';
 import ScheduleButton from './schedulebutton';
 
 import { preformatWithRequestID } from '../../helpers';
-import { ListItemText } from '@material-ui/core';
 
 const routes = {
   active: {
@@ -489,7 +489,6 @@ export default class Deployments extends React.Component {
     clearInterval(self.timer);
     self.timer = setInterval(() => self._refreshDeployments(), self.state.refreshDeploymentsLength);
     self.setState({ tabIndex, currentTab: self._getCurrentLabel(), pend_page: 1, past_page: 1, prog_page: 1 }, () => self._refreshDeployments());
-    // self.context.router.history.push(tab.props.value);
     AppActions.setSnackbar('');
   }
 
