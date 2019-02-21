@@ -629,36 +629,23 @@ export default class Deployments extends React.Component {
           </div>
         )}
 
-        <Dialog
-          ref="dialog"
-          open={this.state.dialog || false}
-          scroll={'body'}
-          style={{ paddingTop: '0', fontSize: '13px', boxShadow: '0 14px 45px rgba(0, 0, 0, 0.25), 0 10px 18px rgba(0, 0, 0, 0.22)' }}
-        >
+        <Dialog open={this.state.dialog || false} fullWidth={true} maxWidth="lg">
           <DialogTitle>{this.state.dialogTitle}</DialogTitle>
           <DialogContent className={this.state.contentClass} style={{ overflow: 'hidden' }}>
             {dialogContent}
           </DialogContent>
-          <DialogActions style={{ marginBottom: '0' }}>{this.state.scheduleForm ? scheduleActions : reportActions}</DialogActions>
+          <DialogActions>{this.state.scheduleForm ? scheduleActions : reportActions}</DialogActions>
         </Dialog>
 
-        <Dialog
-          ref="onboard-complete"
-          scroll={'body'}
-          open={(this.state.onboardDialog && this.state.showHelptips) || false}
-          style={{ boxShadow: '0 14px 45px rgba(0, 0, 0, 0.25), 0 10px 18px rgba(0, 0, 0, 0.22)' }}
-        >
+        <Dialog open={(this.state.onboardDialog && this.state.showHelptips) || false}>
           <DialogTitle>Congratulations!</DialogTitle>
           <DialogContent style={{ overflow: 'hidden' }}>
             <h3>You've completed your first deployment - so what's next?</h3>
-
             <List>
               <ListItem key="physical" disabled={true}>
                 <ListItemText primary={<p>Try updating a physical device</p>} secondary={physicalLink} />
               </ListItem>
-
               <Divider />
-
               <ListItem key="yocto" disabled={true}>
                 <ListItemText
                   primary={<p>Try building your own Yocto Project images for use with Mender</p>}

@@ -76,12 +76,12 @@ export default class UserManagement extends React.Component {
     var self = this;
     return AppActions.editUser(self.state.user.id, userData)
       .then(() => {
-        self.dialogDismiss();
-        AppActions.setSnackbar('The user has been updated.');
         // if current logged in user
         if (self.state.user.id === self.state.currentUser.id) {
           AppActions.setCurrentUser(userData);
         }
+        self.dialogDismiss();
+        AppActions.setSnackbar('The user has been updated.');
         self._getUserList();
       })
       .catch(err => {
@@ -156,7 +156,7 @@ export default class UserManagement extends React.Component {
           autoHideDuration={8000}
         />
 
-        <Dialog ref="edit" open={this.state.editDialog || false}>
+        <Dialog open={this.state.editDialog || false} fullWidth={true} maxWidth="sm">
           <DialogTitle>{this.state.user ? 'Edit user' : 'Create new user'}</DialogTitle>
           <DialogContent>
             <UserForm
@@ -164,7 +164,7 @@ export default class UserManagement extends React.Component {
               editPass={this.state.editPass}
               togglePass={() => this._togglePass()}
               closeDialog={() => this.dialogDismiss()}
-              handleSubmit={this.state.user ? this._editSubmit : this._createSubmit}
+              handleSubmit={this.state.user ? data => this._editSubmit(data) : data => this._createSubmit(data)}
               user={this.state.user}
               buttonLabel={this.state.user ? 'Save changes' : 'Create user'}
             />
@@ -172,7 +172,7 @@ export default class UserManagement extends React.Component {
           <DialogActions />
         </Dialog>
 
-        <Dialog ref="remove" open={this.state.removeDialog || false}>
+        <Dialog open={this.state.removeDialog || false}>
           <DialogTitle>Remove user?</DialogTitle>
           <DialogContent style={{ overflow: 'hidden' }}>
             Are you sure you want to remove the user with email{' '}

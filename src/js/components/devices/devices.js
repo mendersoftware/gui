@@ -287,10 +287,7 @@ export default class Devices extends React.Component {
           </div>
         ) : null}
 
-        <Dialog
-          open={this.state.openDeviceExists || false}
-          style={{ paddingTop: '0', fontSize: '13px', boxShadow: '0 14px 45px rgba(0, 0, 0, 0.25), 0 10px 18px rgba(0, 0, 0, 0.22)' }}
-        >
+        <Dialog open={this.state.openDeviceExists || false}>
           <DialogTitle>Device with this identity data already exists</DialogTitle>
           <DialogContent style={{ overflow: 'hidden' }}>
             <p>This will remove the group from the list. Are you sure you want to continue?</p>
@@ -328,10 +325,7 @@ export default class Devices extends React.Component {
           <DialogActions>{duplicateActions}</DialogActions>
         </Dialog>
 
-        <Dialog
-          open={this.state.openIdDialog || false}
-          style={{ paddingTop: '0', fontSize: '13px', boxShadow: '0 14px 45px rgba(0, 0, 0, 0.25), 0 10px 18px rgba(0, 0, 0, 0.22)' }}
-        >
+        <Dialog open={this.state.openIdDialog || false}>
           <DialogTitle>Default device identity attribute</DialogTitle>
           <DialogContent style={{ overflow: 'hidden' }}>
             <Global dialog={true} closeDialog={() => this._openSettingsDialog()} />

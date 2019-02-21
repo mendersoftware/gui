@@ -462,10 +462,7 @@ export default class ExpandedDevice extends React.Component {
           </div>
         ) : null}
 
-        <Dialog
-          open={this.state.schedule}
-          style={{ paddingTop: '0', fontSize: '13px', boxShadow: '0 14px 45px rgba(0, 0, 0, 0.25), 0 10px 18px rgba(0, 0, 0, 0.22)' }}
-        >
+        <Dialog open={this.state.schedule}>
           <DialogTitle>Create a deployment</DialogTitle>
           <DialogContent style={{ overflow: 'hidden' }}>
             <ScheduleForm

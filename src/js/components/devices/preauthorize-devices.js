@@ -425,10 +425,7 @@ export default class Preauthorize extends React.Component {
           </div>
         )}
 
-        <Dialog
-          open={this.state.openPreauth}
-          style={{ paddingTop: '0', fontSize: '13px', minHeight: '375px', boxShadow: '0 14px 45px rgba(0, 0, 0, 0.25), 0 10px 18px rgba(0, 0, 0, 0.22)' }}
-        >
+        <Dialog open={this.state.openPreauth}>
           <DialogTitle>Preauthorize devices</DialogTitle>
           <DialogContent style={{ overflow: 'hidden' }}>
             <p>You can preauthorize a device by adding its authentication dataset here.</p>

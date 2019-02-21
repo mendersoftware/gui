@@ -628,7 +628,7 @@ export default class DeviceGroups extends React.Component {
           ) : null}
         </div>
 
-        <Dialog ref="addGroup" open={this.state.addGroup} style={{ fontSize: '13px' }}>
+        <Dialog open={this.state.addGroup}>
           <DialogTitle>Add selected devices to group</DialogTitle>
           <DialogContent>
             <GroupSelector
@@ -646,7 +646,7 @@ export default class DeviceGroups extends React.Component {
           <DialogActions>{addActions}</DialogActions>
         </Dialog>
 
-        <Dialog ref="removeGroup" open={this.state.removeGroup} style={{ fontSize: '13px' }}>
+        <Dialog open={this.state.removeGroup}>
           <DialogTitle>Remove this group?</DialogTitle>
           <DialogContent>
             <p>This will remove the group from the list. Are you sure you want to continue?</p>
