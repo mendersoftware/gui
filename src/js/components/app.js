@@ -118,8 +118,7 @@ class AppRoot extends React.Component {
 
   render() {
     return (
-      <IdleTimer ref="idleTimer" element={document} idleAction={this._onIdle} timeout={this.state.timeout} format="MM-DD-YYYY HH:MM:ss.SSS">
-        <div>
+      <IdleTimer element={document} idleAction={this._onIdle} timeout={this.state.timeout} format="MM-DD-YYYY HH:MM:ss.SSS">
             <Header
             className="header"
             id="fixedHeader"
@@ -132,21 +131,19 @@ class AppRoot extends React.Component {
             />
 
           <div className="wrapper">
-            <div className="leftFixed leftNav">
               <LeftNav
+            className="leftFixed leftNav"
                 version={this.state.version}
                 docsVersion={this.state.docsVersion}
                 currentTab={this.state.currentTab}
                 changeTab={tabIndex => this._changeTab(tabIndex)}
               />
-            </div>
             <div className="rightFluid container">
               <AppContext.Provider value={this.state}>{this.props.children}</AppContext.Provider>
             </div>
           </div>
 
           <SharedSnackbar snackbar={this.state.snackbar} />
-        </div>
       </IdleTimer>
     );
   }

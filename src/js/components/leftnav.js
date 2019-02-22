@@ -55,7 +55,7 @@ export default class LeftNav extends React.Component {
     );
 
     return (
-      <div>
+      <div className={self.props.className}>
         <List style={{ padding: '0' }}>{list}</List>
 
         <List style={{ padding: '0', position: 'absolute', bottom: '30px', left: '0px', right: '0px' }}>

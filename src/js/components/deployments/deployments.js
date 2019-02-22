@@ -22,8 +22,7 @@ import Pending from './pendingdeployments';
 import Progress from './inprogressdeployments';
 import Past from './pastdeployments';
 import Report from './report';
-import ScheduleForm from './scheduleform';
-import ScheduleButton from './schedulebutton';
+import ScheduleDialog from './scheduledialog';
 
 import { preformatWithRequestID } from '../../helpers';
 
@@ -45,7 +44,14 @@ export default class Deployments extends React.Component {
 
   constructor(props, context) {
     super(props, context);
-    this.state = this._getInitialState();
+    this.state = {
+      docsVersion: this.props.docsVersion ? `${this.props.docsVersion}/` : 'development/',
+      invalid: true,
+      per_page: 20,
+      refreshDeploymentsLength: 30000,
+      scheduleDialog: false,
+      ...this._getInitialState()
+    };
   }
 
   componentWillMount() {
@@ -91,7 +97,7 @@ export default class Deployments extends React.Component {
             self._getReportById(params.id);
           } else {
             setTimeout(() => {
-              self.dialogOpen('schedule');
+              self.setState({ scheduleDialog: true });
             }, 400);
           }
         }
@@ -99,6 +105,9 @@ export default class Deployments extends React.Component {
     } else {
       this.setState({ reportType: 'active' });
     }
+
+    const query = new URLSearchParams(this.context.router.route.location.search);
+    this.setState({ scheduleDialog: query.get('open') });
   }
 
   componentWillUnmount() {
@@ -109,7 +118,6 @@ export default class Deployments extends React.Component {
 
   _getInitialState() {
     return {
-      docsVersion: this.props.docsVersion ? `${this.props.docsVersion}/` : 'development/',
       tabIndex: this._updateActive(),
       past: AppStore.getPastDeployments(),
       pending: AppStore.getPendingDeployments(),
@@ -117,16 +125,13 @@ export default class Deployments extends React.Component {
       events: AppStore.getEventLog(),
       collatedArtifacts: AppStore.getCollatedArtifacts(),
       groups: AppStore.getGroups(),
-      invalid: true,
-      refreshDeploymentsLength: 30000,
       hasDeployments: AppStore.getHasDeployments(),
       showHelptips: AppStore.showHelptips(),
       hasPending: AppStore.getTotalPendingDevices(),
       hasDevices: AppStore.getTotalAcceptedDevices(),
       user: AppStore.getCurrentUser(),
       pageLength: AppStore.getTotalDevices(),
-      isHosted: window.location.hostname === 'hosted.mender.io',
-      per_page: 20
+      isHosted: window.location.hostname === 'hosted.mender.io'
     };
   }
 
@@ -287,16 +292,9 @@ export default class Deployments extends React.Component {
     });
   }
   dialogOpen(dialog) {
-    if (dialog === 'schedule') {
-      this.setState({
-        dialogTitle: 'Create a deployment',
-        scheduleForm: true,
-        contentClass: 'dialog'
-      });
-    }
     if (dialog === 'report') {
       this.setState({
-        scheduleForm: false,
+        scheduleDialog: false,
         contentClass: 'largeDialog'
       });
     }
@@ -377,15 +375,11 @@ export default class Deployments extends React.Component {
     var self = this;
     return AppActions.getSingleDeployment(id).then(data => setTimeout(() => self._showReport(data, self.state.reportType), 400));
   }
-  _showReport(deployment, type) {
-    var title = type === 'active' ? 'Deployment progress' : 'Results of deployment';
-    var reportType = type;
-    this.setState({ scheduleForm: false, selectedDeployment: deployment, dialogTitle: title, reportType: reportType });
+  _showReport(selectedDeployment, reportType) {
+    this.setState({ scheduleDialog: false, selectedDeployment, reportType });
     this.dialogOpen('report');
   }
   _scheduleDeployment(deployment) {
-    this.setState({ dialog: false });
-
     var artifact = '';
     var group = '';
     var start_time = null;
@@ -409,16 +403,14 @@ export default class Deployments extends React.Component {
       }
     }
     this.setState({
-      scheduleForm: true,
-      artifactVal: artifact,
+      dialog: false,
+      scheduleDialog: true,
       id: id,
       start_time: start_time,
       end_time: end_time,
       artifact: artifact,
-      group: group,
-      groupVal: group
+      group: group
     });
-    this.dialogOpen('schedule');
   }
   _handleRequestClose() {
     this._dismissSnackBar();
@@ -493,15 +485,6 @@ export default class Deployments extends React.Component {
   }
 
   render() {
-    var disabled = typeof this.state.filteredDevices !== 'undefined' && this.state.filteredDevices.length > 0 ? false : true;
-    var scheduleActions = [
-      <div key="schedule-action-button-1" style={{ marginRight: '10px', display: 'inline-block' }}>
-        <Button onClick={() => this.dialogDismiss('dialog')}>Cancel</Button>
-      </div>,
-      <Button variant="contained" key="schedule-action-button-2" primary="true" onClick={() => this._onScheduleSubmit()} ref="save" disabled={disabled}>
-        Create deployment
-      </Button>
-    ];
     var reportActions = [
       <Button key="report-action-button-1" onClick={() => this.dialogDismiss('dialog')}>
         Close
@@ -514,24 +497,7 @@ export default class Deployments extends React.Component {
     ];
     var dialogContent = '';
 
-    if (this.state.scheduleForm) {
-      dialogContent = (
-        <ScheduleForm
-          hasDeployments={this.state.hasDeployments}
-          showHelptips={this.state.showHelptips}
-          deploymentDevices={this.state.deploymentDevices}
-          filteredDevices={this.state.filteredDevices}
-          hasPending={this.state.hasPending}
-          hasDevices={this.state.hasDevices}
-          deploymentSettings={(...args) => this._deploymentParams(...args)}
-          id={this.state.id}
-          artifacts={this.state.collatedArtifacts}
-          artifact={this.state.artifact}
-          groups={this.state.groups}
-          group={this.state.group}
-        />
-      );
-    } else if (this.state.reportType === 'active') {
+    if (this.state.reportType === 'active') {
       dialogContent = <Report abort={id => this._abortDeployment(id)} updated={() => this.updated()} deployment={this.state.selectedDeployment} />;
     } else {
       dialogContent = (
@@ -561,10 +527,15 @@ export default class Deployments extends React.Component {
 
     return (
       <div style={{ marginTop: '-15px' }}>
-        <div className="top-right-button">
-          <ScheduleButton secondary="true" openDialog={dialog => this.dialogOpen(dialog)} />
-        </div>
-
+        <Button
+          className="top-right-button"
+          secondary="true"
+          variant="contained"
+          onClick={() => this.setState({ scheduleDialog: true })}
+          style={{ position: 'absolute' }}
+        >
+          Create a deployment
+        </Button>
         <Tabs value={tabIndex} onChange={tabIndex => this._changeTab(tabIndex)} style={{ display: 'inline-block' }}>
           {Object.values(routes).map(route => (
             <Tab component={Link} key={route.route} label={route.title} to={route.route} value={route.route} />
@@ -594,7 +565,7 @@ export default class Deployments extends React.Component {
               loading={!this.state.doneLoading}
               openReport={rowNum => this._showProgress(rowNum)}
               progress={this.state.progress}
-              createClick={() => this.dialogOpen('schedule')}
+              createClick={() => this.setState({ scheduleDialog: true })}
             />
           </div>
         )}
@@ -603,7 +574,7 @@ export default class Deployments extends React.Component {
             <Past
               groups={this.state.groups}
               deviceGroup={this.state.groupFilter}
-              createClick={() => this.dialogOpen('schedule')}
+              createClick={() => this.setState({ scheduleDialog: true })}
               pageSize={this.state.per_page}
               startDate={this.state.startDate}
               endDate={this.state.endDate}
@@ -620,12 +591,29 @@ export default class Deployments extends React.Component {
         )}
 
         <Dialog open={this.state.dialog || false} fullWidth={true} maxWidth="lg">
-          <DialogTitle>{this.state.dialogTitle}</DialogTitle>
+          <DialogTitle>{this.state.reportType === 'active' ? 'Deployment progress' : 'Results of deployment'}</DialogTitle>
           <DialogContent className={this.state.contentClass} style={{ overflow: 'hidden' }}>
             {dialogContent}
           </DialogContent>
-          <DialogActions>{this.state.scheduleForm ? scheduleActions : reportActions}</DialogActions>
+          <DialogActions>{reportActions}</DialogActions>
         </Dialog>
+
+        <ScheduleDialog
+          open={this.state.scheduleDialog}
+          hasDeployments={this.state.hasDeployments}
+          showHelptips={this.state.showHelptips}
+          deploymentDevices={this.state.deploymentDevices}
+          filteredDevices={this.state.filteredDevices}
+          hasPending={this.state.hasPending}
+          hasDevices={this.state.hasDevices}
+          deploymentSettings={(...args) => this._deploymentParams(...args)}
+          artifacts={this.state.collatedArtifacts}
+          artifact={this.state.artifact}
+          groups={this.state.groups}
+          group={this.state.group}
+          onDismiss={() => this.setState({ scheduleDialog: false })}
+          onScheduleSubmit={() => this._onScheduleSubmit()}
+        />
 
         <Dialog open={(this.state.onboardDialog && this.state.showHelptips) || false}>
           <DialogTitle>Congratulations!</DialogTitle>

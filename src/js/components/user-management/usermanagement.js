@@ -130,7 +130,7 @@ export default class UserManagement extends React.Component {
       <div key="remove-button-1" style={{ marginRight: '10px', display: 'inline-block' }}>
         <Button onClick={() => this.dialogDismiss()}>Cancel</Button>
       </div>,
-      <Button variant="contained" key="remove-button-2" primary="true" onClick={() => this._removeSubmit()} ref="save">
+      <Button variant="contained" key="remove-button-2" primary="true" onClick={() => this._removeSubmit()}>
         Remove user
       </Button>
     ];

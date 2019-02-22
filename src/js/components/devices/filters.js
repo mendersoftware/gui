@@ -113,23 +113,8 @@ export default class Filters extends React.Component {
         </ListItem>
       );
     });
-    var filterNav = (
-      <div className="slider">
-        <IconButton className="closeSlider" onClick={() => this._toggleNav()}>
-          <CloseIcon />
-        </IconButton>
-        <p className="align-right margin-bottom-small">
-          <a onClick={() => this._clearFilters()}>Clear all filters</a>
-        </p>
-        <List>{filters}</List>
-        {this.props.isHosted ? (
-          <Button disabled={!filterCount} onClick={() => this._addFilter()} secondary="true">
-            <AddCircleIcon />
-            Add filter
-          </Button>
-        ) : null}
-      </div>
-    );
+
+    const drawerStyles = this.state.showFilters ? { overflow: 'visible', top: '57px' } : { overflow: 'hidden', top: '57px' };
     return (
       <div style={{ position: 'relative' }}>
         <Button style={{ position: 'absolute', right: '0' }} secondary="true" onClick={() => this._toggleNav()}>
@@ -141,10 +126,27 @@ export default class Filters extends React.Component {
           docked="false"
           anchor="right"
           opensecondary="true"
-          style={this.state.showFilters ? { overflow: 'visible', top: '57px' } : { overflow: 'hidden', top: '57px' }}
+          PaperProps={{ style: drawerStyles }}
+          BackdropProps={{ style: drawerStyles }}
           onClose={() => this._closeNav()}
         >
-          {filterNav}
+          <IconButton
+            className="closeSlider"
+            onClick={() => this._toggleNav()}
+            style={{ position: 'absolute', left: '-25px', background: 'white', top: '20px' }}
+          >
+            <CloseIcon />
+          </IconButton>
+          <p className="align-right margin-bottom-small">
+            <a onClick={() => this._clearFilters()}>Clear all filters</a>
+          </p>
+          <List>{filters}</List>
+          {this.props.isHosted ? (
+            <Button disabled={!filterCount} onClick={() => this._addFilter()} secondary="true">
+              <AddCircleIcon />
+              Add filter
+            </Button>
+          ) : null}
         </Drawer>
       </div>
     );

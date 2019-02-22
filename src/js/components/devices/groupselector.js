@@ -131,7 +131,6 @@ export default class GroupSelector extends React.Component {
 
         <div className={this.state.showInput || !showSelect ? null : 'hidden'}>
           <TextField
-            ref="customGroup"
             value={this.state.customName || ''}
             placeholder="Name of new group"
             label="Name of new group"

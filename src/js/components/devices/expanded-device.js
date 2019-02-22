@@ -390,7 +390,6 @@ export default class ExpandedDevice extends React.Component {
         primary="true"
         disabled={!this.state.filterByArtifact}
         onClick={() => this._onScheduleSubmit()}
-        ref="save"
       >
         Create deployment
       </Button>

@@ -1,19 +1,16 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import SearchInput from 'react-search-input';
 import ReactTooltip from 'react-tooltip';
 import pluralize from 'pluralize';
 
-import TextField from '@material-ui/core/TextField';
 import Icon from '@material-ui/core/Icon';
-import Drawer from '@material-ui/core/Drawer';
-import IconButton from '@material-ui/core/IconButton';
 import MenuItem from '@material-ui/core/MenuItem';
-import Divider from '@material-ui/core/Divider';
-import Autosuggest, { defaultProps } from '@plan-three/material-ui-autosuggest';
+import TextField from '@material-ui/core/TextField';
 
-import CloseIcon from '@material-ui/icons/Close';
 import HelpIcon from '@material-ui/icons/Help';
+import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
+
+import Autosuggest, { defaultProps } from '@plan-three/material-ui-autosuggest';
 
 import { CreateDeploymentForm } from '../helptips/helptooltips';
 
@@ -70,7 +67,7 @@ export default class ScheduleForm extends React.Component {
   }
   _clearOnClick(ref) {
     this.refs[ref].setState({ searchText: '' });
-    this.refs[ref].focus();
+    // this.refs[ref].focus();
     this._sendUpToParent(null, ref);
   }
 
@@ -84,7 +81,7 @@ export default class ScheduleForm extends React.Component {
   }
 
   searchUpdated(term) {
-    this.setState({ searchTerm: term }); // needed to force re-render
+    // this.setState({ searchTerm: term }); // needed to force re-render
   }
 
   render() {
@@ -142,70 +139,13 @@ export default class ScheduleForm extends React.Component {
       tmpDevices = this.props.filteredDevices.filter(this.refs.search.filter(namefilter));
     }
 
-    var devices = <p>No devices</p>;
-
-    if (tmpDevices) {
-      devices = tmpDevices.map((item, index) => {
-        var idFilter = `id=${item.id}`;
-
-        return (
-          <div className="hint--bottom hint--medium" style={{ width: '100%' }} aria-label={item.id} key={index}>
-            <p className="text-overflow">
-              <Link to={`/devices/${idFilter}`}>{item.id}</Link>
-            </p>
-          </div>
-        );
-      }, this);
-    }
-
-    var group = this.props.group && this.props.group !== 'All devices' ? `group=${encodeURIComponent(this.props.group)}` : '';
-    var deviceList = (
-      <div className="slider">
-        <IconButton
-          className="closeSlider"
-          onClick={() => this._showDevices()}
-          style={{
-            borderRadius: '30px',
-            fontSize: '16px',
-            width: '40px',
-            height: '40px',
-            position: 'absolute',
-            left: '-18px',
-            backgroundColor: 'rgba(255,255,255,1)'
-          }}
-        >
-          <CloseIcon />
-        </IconButton>
-        <SearchInput style={{ marginBottom: '8px' }} className="search" ref="search" onChange={term => this.searchUpdated(term)} placeholder="Search devices" />
-        {devices}
-        <p className={tmpDevices.length ? 'hidden' : 'italic'}>No devices in this group match the device type or search term.</p>
-        <Divider />
-        <p>
-          <Link to={`/devices/${group}`}>{group ? 'Go to group' : 'Go to devices'}></Link>
-        </p>
-      </div>
-    );
-
     var devicesLength = this.props.deploymentDevices ? this.props.deploymentDevices.length : '0';
 
     return (
       <div style={{ overflow: 'visible', height: '400px' }}>
-        <Drawer
-          ref="devicesNav"
-          docked={false}
-          opensecondary="true"
-          style={this.state.showDevices ? { overflow: 'visible' } : { overflow: 'hidden' }}
-          open={this.state.showDevices}
-          onRequestChange={() => this._showDevices()}
-          width={320}
-        >
-          {deviceList}
-        </Drawer>
-
         <form>
-          <div style={{ display: 'block', marginBottom: '15px' }}>
+          <div style={{ display: 'inline-block', marginBottom: '15px' }}>
             <Autosuggest
-              ref="artifact"
               helperText="Select target artifact"
               suggestions={artifactItems}
               onNewRequest={(request, index) => this._handleArtifactValueChange(request, index)}
@@ -241,10 +181,9 @@ export default class ScheduleForm extends React.Component {
             </p>
           </div>
 
-          <div style={{ display: 'block' }}>
+          <div style={{ display: 'inline-block' }}>
             <div className={this.state.disabled ? 'hidden' : 'inline-block'}>
               <Autosuggest
-                ref="group"
                 helperText="Select target group"
                 suggestions={groupItems}
                 onNewRequest={(...args) => this._handleGroupValueChange(...args)}
@@ -277,7 +216,6 @@ export default class ScheduleForm extends React.Component {
               <TextField
                 style={{ width: '100%' }}
                 value={this.props.device ? this.props.device.device_id : ''}
-                ref="device"
                 label="Device"
                 disabled={this.state.disabled}
                 underlineDisabledStyle={{ borderBottom: 'none' }}
@@ -307,14 +245,12 @@ export default class ScheduleForm extends React.Component {
           <div className="margin-top">
             <p className={tmpDevices ? null : 'hidden'}>
               {this.props.filteredDevices ? this.props.filteredDevices.length : '0'} of {devicesLength} {pluralize('devices', devicesLength)} will be updated.{' '}
-              <span onClick={() => this._showDevices()} className={this.state.disabled ? 'hidden' : 'link'}>
+              <span onClick={() => this.props.showDevices()} className={this.state.disabled ? 'hidden' : 'link'}>
                 View the devices
               </span>
             </p>
             <p className={this.props.hasDevices && artifactItems.length ? 'info' : 'hidden'}>
-              <Icon className="material-icons" style={{ marginRight: '4px', fontSize: '18px', top: '4px' }}>
-                info_outline
-              </Icon>
+              <InfoOutlinedIcon />
               The deployment will skip any devices that are already on the target artifact version, or that have a different device type.
             </p>
           </div>

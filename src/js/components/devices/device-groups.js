@@ -538,7 +538,7 @@ export default class DeviceGroups extends React.Component {
       <div key="add-action-button-1" style={{ marginRight: '10px', display: 'inline-block' }}>
         <Button onClick={() => this._toggleDialog('addGroup')}>Cancel</Button>
       </div>,
-      <Button variant="contained" key="add-action-button-2" primary={true} onClick={() => this._addToGroup()} ref="save" disabled={this.state.groupInvalid}>
+      <Button variant="contained" key="add-action-button-2" primary={true} onClick={() => this._addToGroup()} disabled={this.state.groupInvalid}>
         Add to group
       </Button>
     ];
