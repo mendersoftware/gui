@@ -23,6 +23,7 @@ import TableRow from '@material-ui/core/TableRow';
 
 import FileIcon from '@material-ui/icons/CloudUpload';
 import HelpIcon from '@material-ui/icons/Help';
+import SortIcon from '@material-ui/icons/Sort';
 
 import { preformatWithRequestID, formatTime } from '../../helpers';
 
@@ -133,9 +134,6 @@ export default class Repository extends React.Component {
   searchUpdated(term) {
     this.setState({ searchTerm: term, artifact: {} }); // needed to force re-render
   }
-  _onClick(event) {
-    event.stopPropagation();
-  }
 
   _adjustCellHeight(height) {
     this.setState({ divHeight: height + 110 });
@@ -200,7 +198,11 @@ export default class Repository extends React.Component {
         </TableRow>
       );
     }, this);
-
+    const columnHeaders = [
+      { title: 'Name', name: 'name' },
+      { title: 'Device type compatibility', name: 'device_types' },
+      { title: 'Last modified', name: 'modified' }
+    ];
     return (
       <div>
         <div className={items.length ? 'top-right-button fadeIn' : 'top-right-button fadeOut'}>
@@ -242,24 +244,12 @@ export default class Repository extends React.Component {
           <Table className={items.length ? null : 'hidden'}>
             <TableHead>
               <TableRow>
-                <TableCell className="columnHeader" tooltip="Name">
-                  Name{' '}
-                  <Icon ref="name" onClick={() => self._sortColumn('name')} className="sortIcon material-icons">
-                    sort
-                  </Icon>
-                </TableCell>
-                <TableCell className="columnHeader" tooltip="Device type compatibility">
-                  Device type compatibility{' '}
-                  <Icon ref="device_types" onClick={() => self._sortColumn('device_types')} className="sortIcon material-icons">
-                    sort
-                  </Icon>
-                </TableCell>
-                <TableCell className="columnHeader" tooltip="Last modified">
-                  Last modified{' '}
-                  <Icon ref="modified" onClick={() => self._sortColumn('modified')} className="sortIcon material-icons">
-                    sort
-                  </Icon>
-                </TableCell>
+                {columnHeaders.map(item => (
+                  <TableCell key={item.name} className="columnHeader" tooltip={item.title}>
+                    {item.title}
+                    <SortIcon ref={item.name} onClick={() => self._sortColumn(item.name)} className="sortIcon" />
+                  </TableCell>
+                ))}
                 <TableCell style={{ width: '55px', paddingRight: '12px', paddingLeft: '0' }} className="columnHeader" />
               </TableRow>
             </TableHead>
