@@ -49,27 +49,31 @@ var Global = createReactClass({
 		var self = this;
 		var callback = {
 			success: function(devices) {
-				if (!isEmpty(devices)) {
-					var attributes = [{value:"Device ID", label:"Device ID"}];
-					var common1 = devices[0].identity_data;
-					var common2 = {};
-					// if more than 1 devices, get common keys from attributes
-					if (devices.length>1) {
-						common2 = devices[1].identity_data;
-						common1[intersection(common1,common2)] = intersection(common1,common2); 
-					}
-					
-					Object.keys(common1).forEach(function (x) {
-						attributes.push({value: x, label: x});
-					});
-					self.setState({id_attributes: attributes});
-				}
+        const availableAttributes = devices.reduce((accu, item) => {
+          return Object.keys(item.identity_data).reduce((keyAccu, key) => {
+            keyAccu[key] = keyAccu[key] + 1 || 1;
+            return keyAccu;
+          }, accu);
+        }, {});
+        const id_attributes = Object.entries(availableAttributes)
+          // sort in reverse order, to have most common attribute at the top of the select
+          .sort((a, b) => b[1] - a[1])
+          // limit the selection of the available attribute to AVAILABLE_ATTRIBUTE_LIMIT
+          .slice(0, AVAILABLE_ATTRIBUTE_LIMIT)
+          .reduce(
+            (accu, item) => {
+              accu.push({ value: item[0], label: item[0] });
+              return accu;
 			},
+            [{ value: 'Device ID', label: 'Device ID' }]
+          );
+        self.setState({ id_attributes });
+      },
 			error: function(err) {
-				console.log("error");
+        console.log('error');
 			}
 		};
-		AppActions.getDevicesByStatus(callback);
+    AppActions.getDevicesByStatus(callback, null, 1, 500);
 	},
 
 	changeIdAttribute: function (value) { 
