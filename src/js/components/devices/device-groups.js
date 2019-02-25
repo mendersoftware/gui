@@ -141,7 +141,7 @@ var DeviceGroups = createReactClass({
       success: () => {},
       error: () => {}
     };
-    AppActions.getDeviceCount(callback, 'accepted').catch(console.err);
+    AppActions.getDeviceCount(callback, 'accepted');
   },
 
   _refreshUngroupedDevices: function() {
@@ -173,6 +173,7 @@ var DeviceGroups = createReactClass({
 		// get number of devices in group first for pagination
       let promisedGroupCount;
       if (group === UNGROUPED_GROUP.id) {
+        // don't use backend count for ungrouped devices, as this includes 'pending', 'preauthorized', ... devices as well
         promisedGroupCount = self._refreshUngroupedDevices().then(() => Promise.resolve(self.state.ungroupedDevices.length));
       } else {
         promisedGroupCount = AppActions.getNumberOfDevicesInGroup(theGroup);

@@ -139,7 +139,9 @@ var AppActions = {
   getNumberOfDevicesInGroup: function(group) {
     var forGroup = group ? `/groups/${group}` : '';
     var ungroupedFilter = group ? '' : '&has_group=false';
-    return DevicesApi.get(`${inventoryApiUrl}${forGroup}/devices?per_page=1&page=1${ungroupedFilter}`).then(res => Promise.resolve(res.headers.groupcount));
+    return DevicesApi.get(`${inventoryApiUrl}${forGroup}/devices?per_page=1&page=1${ungroupedFilter}`).then(res =>
+      Promise.resolve(Number(res.headers['x-total-count']))
+    );
   },
   getAllDevicesInGroup: function(group) {
     var forGroup = group ? `/groups/${group}` : '';
