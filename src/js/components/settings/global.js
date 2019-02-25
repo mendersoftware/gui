@@ -1,7 +1,6 @@
 import React from 'react';
 import Form from '../common/forms/form';
 import SelectInput from '../common/forms/selectinput';
-import PasswordInput from '../common/forms/passwordinput';
 import { isEmpty, preformatWithRequestID, deepCompare, intersection } from '../../helpers.js';
 
 require('../common/prototype/Array.prototype.equals');
@@ -13,6 +12,7 @@ import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import FontIcon from 'material-ui/FontIcon';
 
+const AVAILABLE_ATTRIBUTE_LIMIT = 10;
 
 var Global = createReactClass({
 	getInitialState() {
