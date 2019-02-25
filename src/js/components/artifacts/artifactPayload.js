@@ -11,6 +11,8 @@ import TableRowColumn from 'material-ui/Table/TableRowColumn';
 import TextField from 'material-ui/TextField';
 import { FileSize, getFormattedSize } from './../../helpers';
 
+const METADATA_SPACING = 2;
+
 export default class ArtifactPayload extends React.PureComponent {
   render() {
     const style = {
@@ -25,7 +27,6 @@ export default class ArtifactPayload extends React.PureComponent {
     const files = this.props.payload.files || [];
     const summedSize = files.reduce((accu, item) => accu + item.size, 0);
     const attributes = ['Name', 'Checksum', 'Build date', 'Size (uncompressed)'];
-    // potential metadata would just have to be added to this list once the backend allows it
     const metaDataObject = this.props.payload.meta_data || {};
     const metaData = [{ title: 'Type', value: this.props.payload.type_info.type }, { title: 'Total size', value: getFormattedSize(summedSize) }];
     return (
@@ -37,15 +38,17 @@ export default class ArtifactPayload extends React.PureComponent {
             </ListItem>
           ))}
         </List>
-        {Object.keys(metaDataObject).length ? (
-          <div>
-            <pre>{JSON.stringify(metaDataObject)}</pre>
-          </div>
-        ) : null}
-
-        {files.length ? (
-          <div>
-            <h4>Files</h4>
+        <div className="file-meta">
+          {Object.keys(metaDataObject).length ? (
+            <div>
+              <h4>Update Metadata</h4>
+              <pre>
+                <code>{JSON.stringify(metaDataObject, null, METADATA_SPACING)}</code>
+              </pre>
+            </div>
+          ) : null}
+          <h4>Files</h4>
+          {files.length ? (
             <Table selectable={false} style={style.table}>
               <TableHeader displaySelectAll={false} adjustForCheckbox={false} enableSelectAll={false}>
                 <TableRow>
@@ -72,10 +75,10 @@ export default class ArtifactPayload extends React.PureComponent {
                 })}
               </TableBody>
             </Table>
-          </div>
-        ) : (
-          <p>There are no files in this artifact</p>
-        )}
+          ) : (
+            <p>There are no files in this artifact</p>
+          )}
+        </div>
       </div>
     );
   }
