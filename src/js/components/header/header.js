@@ -16,16 +16,17 @@ import AppActions from '../../actions/app-actions';
 import AppStore from '../../stores/app-store';
 
 import Button from '@material-ui/core/Button';
-import Icon from '@material-ui/core/Icon';
 import IconButton from '@material-ui/core/IconButton';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import Toolbar from '@material-ui/core/Toolbar';
-import ToolbarGroup from '@material-ui/core/Toolbar';
 
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import AnnounceIcon from '@material-ui/icons/Announcement';
+import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
+import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
 import CloseIcon from '@material-ui/icons/Close';
 import ExitIcon from '@material-ui/icons/ExitToApp';
 import HelpIcon from '@material-ui/icons/Help';
@@ -209,13 +210,14 @@ export default class Header extends React.Component {
 
     const { anchorEl } = self.state;
 
+    const menuButtonColor = '#c7c7c7';
+
     var dropDownElement = (
       <div>
         <Button className="header-dropdown" style={{ marginRight: '0', fontSize: '14px', paddingLeft: '4px', fill: 'rgb(0, 0, 0)' }} onClick={self.handleClick}>
-          <Icon className="material-icons" style={{ marginRight: '8px', top: '5px', fontSize: '20px', color: '#c7c7c7' }}>
-            account_circle
-          </Icon>
+          <AccountCircleIcon style={{ marginRight: '8px', top: '5px', fontSize: '20px', color: menuButtonColor }} />
           {(this.state.user || {}).email}
+          {anchorEl ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
         </Button>
         <Menu
           anchorEl={anchorEl}
@@ -250,7 +252,7 @@ export default class Header extends React.Component {
             <ListItemText primary="Log out" />
             <ListItemSecondaryAction>
               <IconButton>
-                <ExitIcon style={{ color: '#c7c7c7', fill: '#c7c7c7' }} />
+                <ExitIcon style={{ color: menuButtonColor, fill: menuButtonColor }} />
               </IconButton>
             </ListItemSecondaryAction>
           </MenuItem>
@@ -261,9 +263,9 @@ export default class Header extends React.Component {
     const toolbarStyle = { height: '56px', minHeight: 'unset', paddingLeft: '16px', paddingRight: '16px' };
 
     return (
-      <div className={self.context.location.pathname === '/login' ? 'hidden' : null}>
+      <div id="fixedHeader" className={`${self.props.className} ${self.context.location.pathname === '/login' ? 'hidden' : null}`}>
         <Toolbar style={Object.assign({ backgroundColor: '#fff' }, toolbarStyle)}>
-          <ToolbarGroup key={0} style={toolbarStyle}>
+          <Toolbar key={0} style={toolbarStyle}>
             <Link to="/" id="logo" />
 
             {this.props.demo ? (
@@ -287,25 +289,23 @@ export default class Header extends React.Component {
                 </ReactTooltip>
               </div>
             ) : null}
-          </ToolbarGroup>
+          </Toolbar>
 
-          <ToolbarGroup key={1} style={{ flexGrow: '2' }}>
+          <Toolbar key={1} style={{ flexGrow: '2' }}>
             {this.props.announcement ? (
               <div id="announcement" className={this.state.showAnnouncement ? 'fadeInSlow' : 'fadeOutSlow'} style={{ display: 'flex', alignItems: 'center' }}>
                 <AnnounceIcon className="red" style={{ marginRight: '4px', height: '18px', minWidth: '24px' }} />
                 <Linkify properties={{ target: '_blank' }}>{this.props.announcement}</Linkify>
-                <a onClick={() => this._hideAnnouncement()}>
-                  <CloseIcon style={{ marginLeft: '4px', height: '16px', verticalAlign: 'bottom' }} />
-                </a>
+                <CloseIcon style={{ marginLeft: '4px', height: '16px', verticalAlign: 'bottom' }} onClick={() => this._hideAnnouncement()} />
               </div>
             ) : null}
-          </ToolbarGroup>
+          </Toolbar>
 
-          <ToolbarGroup style={{ flexShrink: '0' }} key={2}>
+          <Toolbar style={{ flexShrink: '0' }} key={2}>
             <DeviceNotifications pending={this.state.pendingDevices} total={this.state.acceptedDevices} limit={this.state.deviceLimit} />
             <DeploymentNotifications inprogress={this.state.inProgress} />
             {dropDownElement}
-          </ToolbarGroup>
+          </Toolbar>
         </Toolbar>
 
         <div id="header-nav">

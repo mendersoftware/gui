@@ -121,7 +121,6 @@ class AppRoot extends React.Component {
       <IdleTimer element={document} idleAction={this._onIdle} timeout={this.state.timeout} format="MM-DD-YYYY HH:MM:ss.SSS">
             <Header
             className="header"
-            id="fixedHeader"
               announcement={_HostedAnnouncement}
               docsVersion={this.state.docsVersion}
               currentTab={this.state.currentTab}
