@@ -1,5 +1,6 @@
 var jwtDecode = require('jwt-decode');
 var md5 = require('md5');
+import React from 'react';
 
 export function isEncoded(uri) {
   uri = uri || '';
@@ -280,4 +281,19 @@ export function intersection(o1, o2) {
     }
     return r;
   }, []);
+}
+
+export function getFormattedSize(bytes) {
+  const suffixes = ['Bytes', 'KB', 'MB', 'GB'];
+  const i = Math.floor(Math.log(bytes) / Math.log(1024));
+  if (!bytes) {
+    return '0 Bytes';
+  }
+  return `${(bytes / Math.pow(1024, i)).toFixed(2)} ${suffixes[i]}`;
+}
+
+export class FileSize extends React.PureComponent {
+  render() {
+    return <span>{getFormattedSize(this.props.fileSize)}</span>;
+  }
 }

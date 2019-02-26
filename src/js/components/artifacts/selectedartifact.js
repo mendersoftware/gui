@@ -5,12 +5,13 @@ import { Router, Link } from 'react-router';
 var createReactClass = require('create-react-class');
 
 // material ui
-import { List, ListItem }  from 'material-ui/List';
+import { List, ListItem } from 'material-ui/List';
 import Divider from 'material-ui/Divider';
 import FontIcon from 'material-ui/FontIcon';
 import FlatButton from 'material-ui/FlatButton';
 import IconButton from 'material-ui/IconButton';
 import TextField from 'material-ui/TextField';
+import ArtifactPayload from './artifactPayload';
 
 var SelectedArtifact = createReactClass({
   getInitialState: function() {
@@ -36,9 +37,12 @@ var SelectedArtifact = createReactClass({
       this.setState({descEdit: !this.state.descEdit});
     }
   },
-
+  _toggleArtifactContentVisibility: function() {
+    this.setState({ showArtifacts: !this.state.showArtifacts });
+  },
   render: function() {
-    var info = {name: "-", device_type: "-", build_date: "-", modified: "-", size: "-", checksum: "-", devices: "-", description: "", signed: false};
+    const self = this;
+    var info = { name: '-', device_type: '-', build_date: '-', modified: '-', size: '-', checksum: '-', devices: '-', description: '', signed: false };
     if (this.props.artifact) {
       for (var key in this.props.artifact) {
         if (this.props.artifact[key]) {
@@ -82,35 +86,7 @@ var SelectedArtifact = createReactClass({
         onKeyDown={this._descEdit} />
     );
 
-    var devicesFilter = "artifact_name="+info.name;
-    devicesFilter = encodeURIComponent(devicesFilter);    
-    var devicesLink = (
-      <div>
-        <span>{info.devices}</span>
-        <Link className={info.devices == '-' ? 'hidden' : "listItem-link" } to={`/devices/groups/null/${devicesFilter}`}>View devices</Link>
-      </div>
-    );
-
-    var files = this.props.artifact.updates[0].files || [];
-    var fileDetails = files.map(function(file, index) {
-
-      var build_date = (
-        <Time value={file.date} format="YYYY-MM-DD HH:mm" />
-      );
-
-      return (
-        <div key={index} className="file-details">
-          <ListItem style={styles.listStyle} disabled={true} primaryText="Name" secondaryText={file.name} secondaryTextLines={2} />
-          <Divider />
-          <ListItem style={styles.listStyle} disabled={true} primaryText="Checksum" secondaryText={file.checksum} secondaryTextLines={2} />
-          <Divider />
-          <ListItem style={styles.listStyle} disabled={true} primaryText="Build date" secondaryText={build_date} />
-          <Divider />
-          <ListItem style={styles.listStyle} disabled={true} primaryText="Size (uncompressed)" secondaryText={(file.size / 1000000).toFixed(1) + " MB"} />
-          <Divider />
-        </div>
-      )
-    }, this);
+    var files = this.props.artifact.updates.map((update, index) => <ArtifactPayload payload={update} key={`artifact-update-${index}`} />);
 
     return (
       <div className={this.props.artifact.name == null ? "muted" : null}>
@@ -142,20 +118,26 @@ var SelectedArtifact = createReactClass({
             <List style={{backgroundColor: "rgba(255,255,255,0)"}}>
               <ListItem style={styles.listStyle} disabled={true} primaryText="Signed"  secondaryTextLines={2} secondaryText={info.signed ? "Yes" : "No"} />
               <Divider />
-              <ListItem 
-                style={styles.listStyle}
-                primaryText="Remove this artifact?"
-                onClick={this.props.removeArtifact} 
-                leftIcon={<FontIcon className="material-icons red auth" style={{marginTop:12, marginBottom:6}}>cancel</FontIcon>} />
             </List>
           </div>
-  
         </div>
 
-        <h4 className="margin-bottom-none">Files in Artifact</h4>
-        <div>
-          {fileDetails}
-        </div>
+        <h4 className="margin-bottom-none" onClick={() => self._toggleArtifactContentVisibility()}>
+          Artifact contents
+        </h4>
+        {files}
+        <List className="inline-block">
+          <ListItem
+            style={styles.listStyle}
+            primaryText="Remove this artifact?"
+            onClick={this.props.removeArtifact}
+            leftIcon={
+              <FontIcon className="material-icons red auth" style={{ marginTop: 12, marginBottom: 6 }}>
+                cancel
+              </FontIcon>
+            }
+          />
+        </List>
       </div>
     );
   }

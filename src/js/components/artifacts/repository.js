@@ -194,22 +194,32 @@ var Repository = createReactClass({
       if (this.state.artifact.id === pkg.id) {
         expanded = <SelectedArtifact removeArtifact={this._handleRemove} compatible={compatible} formatTime={this._formatTime} editArtifact={this._editArtifactData} buttonStyle={styles.flatButtonIcon} artifact={this.state.artifact} />
       }
-
+      const artifactType = pkg.updates.reduce((accu, item) => (accu ? accu : item.type_info.type), '');
       return (
-        <TableRow hoverable={!expanded} className={expanded ? "expand" : null} key={index} >
-          <TableRowColumn style={expanded ? {height: this.state.divHeight} : null}>{pkg.name}</TableRowColumn>
+        <TableRow hoverable={!expanded} className={expanded ? 'expand' : null} key={index}>
+          <TableRowColumn style={expanded ? { height: this.state.divHeight } : null}>{pkg.name}</TableRowColumn>
           <TableRowColumn>{compatible}</TableRowColumn>
-          <TableRowColumn><Time value={this._formatTime(pkg.modified)} format="YYYY-MM-DD HH:mm" /></TableRowColumn>
-          <TableRowColumn style={{width:"55px", paddingRight:"0", paddingLeft:"12px"}} className="expandButton">
-            <IconButton className="float-right"><FontIcon className="material-icons">{ expanded ? "arrow_drop_up" : "arrow_drop_down"}</FontIcon></IconButton>
+          <TableRowColumn>
+            <Time value={this._formatTime(pkg.modified)} format="YYYY-MM-DD HH:mm" />
           </TableRowColumn>
-          <TableRowColumn style={{width:"0", padding:"0", overflow:"visible"}}>
-            <Collapse springConfig={{stiffness: 210, damping: 20}} onHeightReady={this._adjustCellHeight} className="expanded" isOpened={expanded ? true : false}>
+          <TableRowColumn>{artifactType}</TableRowColumn>
+          <TableRowColumn style={{ width: '55px', paddingRight: '0', paddingLeft: '12px' }} className="expandButton">
+            <IconButton className="float-right">
+              <FontIcon className="material-icons">{expanded ? 'arrow_drop_up' : 'arrow_drop_down'}</FontIcon>
+            </IconButton>
+          </TableRowColumn>
+          <TableRowColumn style={{ width: '0', padding: '0', overflow: 'visible' }}>
+            <Collapse
+              springConfig={{ stiffness: 210, damping: 20 }}
+              onHeightReady={this._adjustCellHeight}
+              className="expanded"
+              isOpened={expanded ? true : false}
+            >
               {expanded}
             </Collapse>
           </TableRowColumn>
         </TableRow>
-      )
+      );
     }, this);
 
     return (
@@ -234,24 +244,42 @@ var Repository = createReactClass({
 
         <Loader show={this.props.loading} />
 
-        <div style={{position: "relative", marginTop:"10px"}}>
-          <Table
-            onCellClick={this._onRowSelection}
-            className={items.length ? null : "hidden"}>
-            <TableHeader
-              displaySelectAll={false}
-              adjustForCheckbox={false} >
+          <Table onCellClick={this._onRowSelection} className={items.length ? null : 'hidden'}>
+            <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
               <TableRow>
-                <TableHeaderColumn className="columnHeader" tooltip="Name">Name <FontIcon ref="name" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "name")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
-                <TableHeaderColumn className="columnHeader" tooltip="Device type compatibility">Device type compatibility <FontIcon ref="device_types" style={styles.sortIcon} onClick={this._sortColumn.bind(null, "device_types")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
-                <TableHeaderColumn className="columnHeader" tooltip="Last modified">Last modified <FontIcon style={styles.sortIcon} ref="modified" onClick={this._sortColumn.bind(null, "modified")} className="sortIcon material-icons">sort</FontIcon></TableHeaderColumn>
-                <TableHeaderColumn style={{width:"55px", paddingRight:"12px", paddingLeft:"0"}} className="columnHeader"></TableHeaderColumn>
+                <TableHeaderColumn className="columnHeader" tooltip="Name">
+                  Name{' '}
+                  <FontIcon ref="name" style={styles.sortIcon} onClick={this._sortColumn.bind(null, 'name')} className="sortIcon material-icons">
+                    sort
+                  </FontIcon>
+                </TableHeaderColumn>
+                <TableHeaderColumn className="columnHeader" tooltip="Device type compatibility">
+                  Device type compatibility{' '}
+                  <FontIcon
+                    ref="device_types"
+                    style={styles.sortIcon}
+                    onClick={this._sortColumn.bind(null, 'device_types')}
+                    className="sortIcon material-icons"
+                  >
+                    sort
+                  </FontIcon>
+                </TableHeaderColumn>
+                <TableHeaderColumn className="columnHeader" tooltip="Last modified">
+                  Last modified{' '}
+                  <FontIcon style={styles.sortIcon} ref="modified" onClick={this._sortColumn.bind(null, 'modified')} className="sortIcon material-icons">
+                    sort
+                  </FontIcon>
+                </TableHeaderColumn>
+                <TableHeaderColumn className="columnHeader" tooltip="Type">
+                  Type{' '}
+                  <FontIcon style={styles.sortIcon} ref="modified" onClick={this._sortColumn.bind(null, 'type')} className="sortIcon material-icons">
+                    sort
+                  </FontIcon>
+                </TableHeaderColumn>
+                <TableHeaderColumn style={{ width: '55px', paddingRight: '12px', paddingLeft: '0' }} className="columnHeader" />
               </TableRow>
             </TableHeader>
-            <TableBody
-              displayRowCheckbox={false}
-              showRowHover={true}
-              className="clickable">
+            <TableBody displayRowCheckbox={false} showRowHover={true} className="clickable">
               {items}
             </TableBody>
           </Table>
@@ -284,7 +312,7 @@ var Repository = createReactClass({
               <img src="assets/img/artifacts.png" alt="artifacts" />
             </Dropzone>
 
-            { this.props.showHelptips ?
+          {this.props.showHelptips ? (
             <div>
               <div
                 id="onboard-9"
@@ -304,12 +332,8 @@ var Repository = createReactClass({
                 <UploadArtifact />
               </ReactTooltip>
             </div>
-          : null }
-
-
-          </div>
+          ) : null}
         </div>
-
       </div>
     );
   }
