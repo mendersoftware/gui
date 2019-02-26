@@ -1,7 +1,6 @@
 var AppDispatcher = require('../dispatchers/app-dispatcher');
 var AppConstants = require('../constants/app-constants');
-var assign = require('object-assign');
-var EventEmitter = require('events').EventEmitter;  // from device
+var EventEmitter = require('events').EventEmitter; // from device
 
 var CHANGE_EVENT = "change";
 
@@ -441,7 +440,7 @@ function _setShowHelptips(val) {
   _showHelptips = val;
 }
 
-var AppStore = assign(EventEmitter.prototype, {
+var AppStore = Object.assign({}, EventEmitter.prototype, {
   emitChange: function() {
     this.emit(CHANGE_EVENT)
   },
