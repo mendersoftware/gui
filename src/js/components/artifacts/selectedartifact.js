@@ -118,20 +118,26 @@ var SelectedArtifact = createReactClass({
             <List style={{backgroundColor: "rgba(255,255,255,0)"}}>
               <ListItem style={styles.listStyle} disabled={true} primaryText="Signed"  secondaryTextLines={2} secondaryText={info.signed ? "Yes" : "No"} />
               <Divider />
-              <ListItem 
-                style={styles.listStyle}
-                primaryText="Remove this artifact?"
-                onClick={this.props.removeArtifact} 
-                leftIcon={<FontIcon className="material-icons red auth" style={{marginTop:12, marginBottom:6}}>cancel</FontIcon>} />
             </List>
           </div>
-  
         </div>
 
         <h4 className="margin-bottom-none" onClick={() => self._toggleArtifactContentVisibility()}>
           Artifact contents
         </h4>
         {files}
+        <List className="inline-block">
+          <ListItem
+            style={styles.listStyle}
+            primaryText="Remove this artifact?"
+            onClick={this.props.removeArtifact}
+            leftIcon={
+              <FontIcon className="material-icons red auth" style={{ marginTop: 12, marginBottom: 6 }}>
+                cancel
+              </FontIcon>
+            }
+          />
+        </List>
       </div>
     );
   }
