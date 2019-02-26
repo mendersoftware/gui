@@ -10,7 +10,7 @@ import ContentAdd from 'material-ui/svg-icons/content/add';
 import { ReviewDevices } from '../../helptips/helptooltips';
 import { BaseWidget } from './baseWidget';
 
-export class PendingDevices extends React.Component {
+export default class PendingDevices extends React.Component {
   render() {
     const hasPending = this.props.isActive;
     const pendingNotification = `Pending ${pluralize('devices', hasPending)}`;

@@ -15,7 +15,7 @@ const notificationStyles = {
   green: { color: '#009E73' }
 };
 
-export class AcceptedDevices extends React.Component {
+export default class AcceptedDevices extends React.Component {
   render() {
     const timeframe = '24h';
     let timeframeNote = 'Active in';

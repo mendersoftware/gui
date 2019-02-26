@@ -3,26 +3,23 @@ import BoardIcon from 'react-material-icons/icons/hardware/developer-board';
 
 import AppActions from '../../actions/app-actions';
 import AppStore from '../../stores/app-store';
-import { AcceptedDevices } from './widgets/accepteddevices';
-import { RedirectionWidget } from './widgets/redirectionwidget';
-import { PendingDevices } from './widgets/pendingdevices';
+import AcceptedDevices from './widgets/accepteddevices';
+import RedirectionWidget from './widgets/redirectionwidget';
+import PendingDevices from './widgets/pendingdevices';
 
-const styles = {
-  container: {
-    display: 'flex',
-    flexFlow: 'row wrap',
-    marginBottom: '50px',
-    marginTop: '50px',
-    maxWidth: '85vw'
-  }
-};
-
-export class Devices extends React.Component {
+export default class Devices extends React.Component {
   constructor(props, state) {
     super(props, state);
     const self = this;
     self.timer = null;
-    self.state = { devices: [], inactiveDevices: [], pendingDevices: [], deltaActivity: null, refreshDevicesLength: 30000 };
+    self.state = {
+      devices: [],
+      inactiveDevices: [],
+      pendingDevices: [],
+      deltaActivity: null,
+      refreshDevicesLength: 30000,
+      showHelptips: AppStore.showHelptips()
+    };
     // on render the store might not be updated so we resort to the API and let all later request go through the store
     // to be in sync with the rest of the UI
     AppActions.getAllDevicesByStatus('pending').then(devices => self.setState({ pendingDevices: devices.length }));
@@ -86,33 +83,18 @@ export class Devices extends React.Component {
   }
 
   render() {
-    const { devices, inactiveDevices, pendingDevices, deltaActivity } = this.state;
+    const { devices, inactiveDevices, pendingDevices, deltaActivity, showHelptips } = this.state;
     const hasPending = pendingDevices > 0;
     const noDevicesAvailable = !(devices.length || pendingDevices.length);
     return (
       <div>
-        <div className="dashboard-header">
-          <h3>
-            <BoardIcon /> Devices
-          </h3>
-        </div>
-        <div style={styles.container}>
-          <PendingDevices
-            itemStyle={styles.containedItems}
-            pendingDevicesCount={pendingDevices}
-            isActive={hasPending}
-            showHelptips={this.props.showHelptips}
-            onClick={this.props.clickHandle}
-          />
-          <AcceptedDevices
-            itemStyle={styles.containedItems}
-            devicesCount={devices}
-            inactiveCount={inactiveDevices}
-            delta={deltaActivity}
-            onClick={this.props.clickHandle}
-          />
+        <h3 className="dashboard-header">
+          <BoardIcon /> Devices
+        </h3>
+        <div style={Object.assign({ marginBottom: '50px', marginTop: '50px' }, this.props.styles)}>
+          <PendingDevices pendingDevicesCount={pendingDevices} isActive={hasPending} showHelptips={showHelptips} onClick={this.props.clickHandle} />
+          <AcceptedDevices devicesCount={devices} inactiveCount={inactiveDevices} delta={deltaActivity} onClick={this.props.clickHandle} />
           <RedirectionWidget
-            itemStyle={styles.containedItems}
             target={'/help/connecting-devices'}
             content={'Learn how to connect more devices'}
             buttonContent={'Learn more'}
