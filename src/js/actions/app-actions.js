@@ -162,21 +162,15 @@ var AppActions = {
   },
 
   getAllDevicesByStatus: status => {
-    var per_page = 100;
-    var page = 1;
-    var devices = [];
-    const getAllDevices = () =>
-      DevicesApi
-        .get(`${deviceAuthV2}/devices?status=${status}&per_page=${per_page}&page=${page}`)
-        .then(res => {
-          var links = parse(res.headers['link']);
-          devices.push(...res.body);
-          if (links.next) {
-            page++;
-            return getAllDevices();
-          }
-          return Promise.resolve(devices);
-        });
+    const getAllDevices = (per_page = 200, page = 1, devices = []) =>
+      DevicesApi.get(`${deviceAuthV2}/devices?status=${status}&per_page=${per_page}&page=${page}`).then(res => {
+        var links = parse(res.headers['link']);
+        devices.push(...res.body);
+        if (links.next) {
+          return getAllDevices(per_page, page + 1, devices);
+        }
+        return Promise.resolve(devices);
+      });
     return getAllDevices();
   },
 

@@ -267,11 +267,11 @@ export default class Deployments extends React.Component {
   _getGroupDevices(group) {
     // get list of devices for each group and save them to state
     var self = this;
-    return AppActions.getNumberOfDevicesInGroup((count, devices) => {
+    return AppActions.getAllDevicesInGroup(group).then(devices => {
       let state = {};
       state[group] = devices;
       self.setState(state);
-    }, group);
+    });
   }
 
   dialogDismiss() {
