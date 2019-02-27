@@ -305,11 +305,11 @@ var Deployments = createReactClass({
   _getGroupDevices: function(group) {
     // get list of devices for each group and save them to state
     var self = this;
-    AppActions.getNumberOfDevicesInGroup((count, devices) => {
+    AppActions.getAllDevicesInGroup(group).then(devices => {
       let state = {};
       state[group] = devices;
       self.setState(state);
-    }, group);
+    });
       },
   componentWillUnmount: function() {
     clearInterval(this.timer);
