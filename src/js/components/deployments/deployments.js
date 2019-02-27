@@ -46,12 +46,12 @@ export default class Deployments extends React.Component {
     var artifact = AppStore.getDeploymentArtifact();
     this.setState({ artifact });
 
-    Promise.all([AppActions.getArtifacts(), AppActions.getAllDevices(), AppActions.getGroups()])
+    Promise.all([AppActions.getArtifacts(), AppActions.getAllDevicesByStatus('accepted'), AppActions.getGroups()])
       .catch(err => console.log(`Error: ${err}`))
       .then(([artifacts, allDevices, groups]) => {
         const collatedArtifacts = AppStore.getCollatedArtifacts(artifacts);
         self.setState({ allDevices, collatedArtifacts, groups });
-        return Promise.all(groups.map(group => AppActions.getAllDevices(group)
+        return Promise.all(groups.map(group => AppActions.getAllDevicesInGroup(group)
           .then(devices => Promise.resolve({[group]: devices}))
         ));
       })
