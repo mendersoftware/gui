@@ -52,7 +52,7 @@ export default class DeploymentReport extends React.Component {
     } else {
       self.timer = setInterval(() => this.tick(), 50);
     }
-    this.timer2 = this.props.past ? null : setInterval(self.refreshDeploymentDevices, 5000);
+    this.timer2 = this.props.past ? null : setInterval(() => self.refreshDeploymentDevices(), 5000);
     this.refreshDeploymentDevices();
   }
   componentWillUnmount() {
