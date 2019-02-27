@@ -1,40 +1,38 @@
 import React from 'react';
-var AppActions = require('../../actions/app-actions');
-var pluralize = require('pluralize');
-var createReactClass = require('create-react-class');
+import AppActions from '../../actions/app-actions';
+import pluralize from 'pluralize';
 
-var RecentStats = createReactClass({
-  getInitialState: function() {
-    return {
+export default class RecentStats extends React.Component {
+  constructor(props, context) {
+    super(props, context);
+    this.state = {
       stats: {
-        "success": 0,
-        "failure": 0,
-        "noartifact": 0,
-        "aborted": 0,
-        "decommissioned": 0,
+        success: 0,
+        failure: 0,
+        noartifact: 0,
+        aborted: 0,
+        decommissioned: 0
       }
     };
-  },
+  }
   componentDidMount() {
-   this._refreshStats();
-  },
-  componentDidUpdate(prevProps, prevState) {
+    this._refreshStats();
+  }
+  componentDidUpdate(prevProps) {
     if (prevProps.id !== this.props.id) {
       this._refreshStats();
     }
-  },
-  _refreshStats: function() {
+  }
+  _refreshStats() {
     var self = this;
-     AppActions.getSingleDeploymentStats(self.props.id, function(stats) {
-      self.setState({stats:stats});
-    }.bind(this));
-  },
-  render: function() {
-    var skipped = (this.state.stats.noartifact + this.state.stats.aborted + this.state.stats.decommissioned + this.state.stats["already-installed"]);
+    return AppActions.getSingleDeploymentStats(self.props.id).then(stats => self.setState({ stats }));
+  }
+  render() {
+    var skipped = this.state.stats.noartifact + this.state.stats.aborted + this.state.stats.decommissioned + this.state.stats['already-installed'];
     return (
       <div className="deploymentStats">
         <div className="resultIcons">
-          <img className={this.state.stats.failure ? "alert" : null} src="assets/img/largeFail.png" />
+          <img className={this.state.stats.failure ? 'alert' : null} src="assets/img/largeFail.png" />
           <div>{this.state.stats.failure}</div>
           <span className="iconStatLabel">Failed</span>
         </div>
@@ -43,15 +41,12 @@ var RecentStats = createReactClass({
           <div>{this.state.stats.success}</div>
           <span className="iconStatLabel">Successful</span>
         </div>
-        {skipped ?
-          (
-            <div className="skipped-text">
-             {skipped} {pluralize("devices", skipped)} {pluralize("was", skipped)} skipped
-            </div>
-        ) : null }
+        {skipped ? (
+          <div className="skipped-text">
+            {skipped} {pluralize('devices', skipped)} {pluralize('was', skipped)} skipped
+          </div>
+        ) : null}
       </div>
     );
   }
-});
-
-module.exports = RecentStats;
+}

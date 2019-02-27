@@ -1,18 +1,15 @@
 import React from 'react';
-var createReactClass = require('create-react-class');
 
 // material ui
 import DatePicker from 'material-ui/DatePicker';
 import TimePicker from 'material-ui/TimePicker';
 
-var DateTime = createReactClass({
-  _update: function(e, date) {
+export default class DateTime extends React.Component {
+  _update(e, date) {
     this.props.changed(this.props.my_ref, date);
-  },
-  render: function() {
-    var element = (
-      <div/>
-    );
+  }
+  render() {
+    var element = <div />;
     if (this.props.date) {
       element = (
         <DatePicker
@@ -22,24 +19,14 @@ var DateTime = createReactClass({
           defaultDate={this.props.defaultDate}
           minDate={this.props.minDate}
           mode="landscape"
-          onChange={this._update} />
-      )
+          onChange={this._update}
+        />
+      );
     } else if (this.props.time) {
       element = (
-        <TimePicker
-        format="24hr"
-        ref={this.props.ref}
-        defaultTime={this.props.defaultDate}
-        floatingLabelText={this.props.label}
-        onChange={this._update} />
-      )
+        <TimePicker format="24hr" ref={this.props.ref} defaultTime={this.props.defaultDate} floatingLabelText={this.props.label} onChange={this._update} />
+      );
     }
-    return (
-      <div>
-        {element}
-      </div>
-    );
+    return <div>{element}</div>;
   }
-});
-
-module.exports = DateTime;
+}

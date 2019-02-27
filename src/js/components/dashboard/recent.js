@@ -1,57 +1,53 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-var RecentStats = require('./recentstats');
+import { Link } from 'react-router-dom';
 import Time from 'react-time';
-var AppActions = require('../../actions/app-actions');
-var Loader = require('../common/loader');
-var createReactClass = require('create-react-class');
+import PropTypes from 'prop-types';
+import RecentStats from './recentstats';
+import Loader from '../common/loader';
 
-import { Router, Route, Link } from 'react-router';
+export default class Recent extends React.Component {
+  static contextTypes = {
+    router: PropTypes.object
+  };
 
-// material ui
-import Divider from 'material-ui/Divider';
-import FontIcon from 'material-ui/FontIcon';
-
-var Recent = createReactClass({
-  getInitialState: function() {
-    return {
-      devices: {} 
+  constructor(props, context) {
+    super(props, context);
+    this.state = {
+      devices: {}
     };
-  },
-  _clickHandle: function(id) {
-    var params = {};
-    params.id = id;
-    params.tab = "finished";
-    params.route="deployments";
-    params.open=true;
-    this.props.clickHandle(params);
-  },
-  _formatTime: function(date) {
+  }
+  _formatTime(date) {
     if (date) {
-      return date.replace(' ','T').replace(/ /g, '').replace('UTC','');
-    } 
+      return date
+        .replace(' ', 'T')
+        .replace(/ /g, '')
+        .replace('UTC', '');
+    }
     return;
-  },
-  render: function() {
+  }
+  render() {
     var deployments = this.props.deployments || [];
     var recent = deployments.map(function(deployment, index) {
       if (index < 3) {
-        var status = deployment.status === "Failed" ? "warning" : "check";
-        var icon = (
-          <FontIcon className="material-icons">
-            {status}
-          </FontIcon>
-        );
         return (
-          <div onClick={this._clickHandle.bind(null, deployment.id)} className="deployment" key={index}>
+          <Link className="deployment" key={index} to={`/deployments/finished/open=true&id=${deployment.id}`}>
             <div className="deploymentInfo">
-              <div><div className="progressLabel">Updating to:</div>{deployment.artifact_name}</div>
-              <div><div className="progressLabel">Device group:</div>{deployment.name}</div>
-              <div><div className="progressLabel">Started:</div><Time className="progressTime" value={this._formatTime(deployment.created)} format="YYYY-MM-DD HH:mm" /></div>
+              <div>
+                <div className="progressLabel">Updating to:</div>
+                {deployment.artifact_name}
+              </div>
+              <div>
+                <div className="progressLabel">Device group:</div>
+                {deployment.name}
+              </div>
+              <div>
+                <div className="progressLabel">Started:</div>
+                <Time className="progressTime" value={this._formatTime(deployment.created)} format="YYYY-MM-DD HH:mm" />
+              </div>
             </div>
             <RecentStats id={deployment.id} />
-          </div>
-        )
+          </Link>
+        );
       }
     }, this);
     return (
@@ -63,25 +59,19 @@ var Recent = createReactClass({
 
           <Loader show={this.props.loading} fade={true} />
 
-          <div className={deployments.length ? "fadeIn" : "hidden" }>
-            <div className="block">
-              {recent}
-            </div>
-            <Link to="/deployments/finished" className="float-right">All finished deployments</Link>
-          </div> 
-          
-          <div className={(deployments.length || this.props.loading) ? "hidden" : "dashboard-placeholder" }>
+          <div className={deployments.length ? 'fadeIn' : 'hidden'}>
+            <div className="block">{recent}</div>
+            <Link to="/deployments/finished" className="float-right">
+              All finished deployments
+            </Link>
+          </div>
+
+          <div className={deployments.length || this.props.loading ? 'hidden' : 'dashboard-placeholder'}>
             <p>View the results of recent deployments here</p>
             <img src="assets/img/history.png" alt="recent" />
-          </div>  
+          </div>
         </div>
       </div>
     );
   }
-});
-
-Recent.contextTypes = {
-  router: PropTypes.object
-};
-
-module.exports = Recent;
+}

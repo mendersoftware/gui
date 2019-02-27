@@ -1,37 +1,28 @@
 import React from 'react';
-var createReactClass = require('create-react-class');
-var Schedule = require('./schedule');
-var Progress = require('./progress');
-var Recent = require('./recent');
+import { Link } from 'react-router-dom';
+import Progress from './progress';
+import Recent from './recent';
 
 // material ui
 import RaisedButton from 'material-ui/RaisedButton';
-import FlatButton from 'material-ui/FlatButton';
-import Dialog from 'material-ui/Dialog';
 
-var Deployments = createReactClass({
-  _clickHandle: function(params) {
-    this.props.clickHandle(params);
-  },
-  render: function() {
+export default class Deployments extends React.Component {
+  render() {
     return (
       <div className="deployments">
         <div>
           <div className="margin-bottom">
-            <Progress globalSettings={this.props.globalSettings} loading={this.props.loadingActive} clickHandle={this._clickHandle} deployments={this.props.progress} />
+            <Progress loading={this.props.loadingActive} deployments={this.props.progress} />
           </div>
           <div className="margin-bottom">
-            <Recent loading={this.props.loadingRecent} clickHandle={this._clickHandle} deployments={this.props.recent} />
+            <Recent loading={this.props.loadingRecent} deployments={this.props.recent} />
           </div>
         </div>
 
-        <div>
-          <RaisedButton onClick={this._clickHandle.bind(null, {route:"deployments",open:true})} label="Create a deployment" secondary={true} />
-        </div>
-
+        <Link to="/deployments?open=true">
+          <RaisedButton label="Create a deployment" secondary={true} />
+        </Link>
       </div>
     );
   }
-});
-
-module.exports = Deployments;
+}

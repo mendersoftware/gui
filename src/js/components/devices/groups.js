@@ -1,9 +1,8 @@
 import React from 'react';
 import ReactTooltip from 'react-tooltip';
 import { AddGroup } from '../helptips/helptooltips';
-import createReactClass from 'create-react-class';
 
-import { UNGROUPED_GROUP } from '../../constants/app-constants';
+import AppConstants from '../../constants/app-constants';
 
 // material ui
 import { List, ListItem } from 'material-ui/List';
@@ -11,16 +10,12 @@ import FontIcon from 'material-ui/FontIcon';
 import Divider from 'material-ui/Divider';
 require('../common/prototype/Array.prototype.equals');
 
-var Groups = createReactClass({
-  _changeGroup: function(group, numDevs) {
-    this.props.changeGroup(group, numDevs);
-  },
+export default class Groups extends React.Component {
+  dialogToggle() {
+    this.props.acceptedCount ? this.props.openGroupDialog() : null;
+  }
 
-  dialogToggle: function() {
-    this.props.openGroupDialog();
-  },
-
-  render: function() {
+  render() {
     var createBtn = (
       <FontIcon className="material-icons" style={this.props.allCount ? null : { color: '#d4e9e7' }}>
         add
@@ -32,14 +27,14 @@ var Groups = createReactClass({
     const groupItems = this.props.groups.reduce(
       (accu, group, index) => {
         var isSelected = group === this.props.selectedGroup ? { backgroundColor: '#e7e7e7' } : { backgroundColor: 'transparent' };
-        const isUngroupedGroup = group === UNGROUPED_GROUP.id || group === UNGROUPED_GROUP.name;
+        const isUngroupedGroup = group === AppConstants.UNGROUPED_GROUP.id || group === AppConstants.UNGROUPED_GROUP.name;
         var numDevs;
         if (this.props.groupDevices) {
           numDevs = this.props.groupDevices[group] || null;
         }
-        var boundClick = this._changeGroup.bind(null, group, numDevs);
+        var boundClick = () => this.props.changeGroup(group, numDevs);
         if (isUngroupedGroup) {
-          group = UNGROUPED_GROUP.name;
+          group = AppConstants.UNGROUPED_GROUP.name;
         }
         var groupLabel = <span>{decodeURIComponent(group)}</span>;
 
@@ -60,7 +55,7 @@ var Groups = createReactClass({
             key="All"
             primaryText={allLabel}
             style={!this.props.selectedGroup ? { backgroundColor: '#e7e7e7' } : { backgroundColor: 'transparent' }}
-            onClick={this._changeGroup.bind(null, '', this.props.allCount)}
+            onClick={() => this.props.changeGroup('', this.props.allCount)}
           />
           {groupItems.ungroupedsItem ? groupItems.ungroupedsItem : null}
           <Divider />
@@ -70,7 +65,7 @@ var Groups = createReactClass({
             disabled={!this.props.acceptedCount}
             primaryText="Create a group"
             style={this.props.acceptedCount ? null : { color: '#d4e9e7' }}
-            onClick={this.props.acceptedCount ? this.dialogToggle : null}
+            onClick={this.props.acceptedCount ? () => this.dialogToggle() : null}
           />
         </List>
 
@@ -87,6 +82,4 @@ var Groups = createReactClass({
       </div>
     );
   }
-});
-
-module.exports = Groups;
+}

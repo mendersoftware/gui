@@ -1,139 +1,125 @@
 import React from 'react';
-var AppStore = require('../../stores/app-store');
-var AppActions = require('../../actions/app-actions');
-var Repository = require('./repository.js');
-var createReactClass = require('create-react-class');
-
-import { Router, Route, Link } from 'react-router';
-import { setRetryTimer, clearRetryTimer, clearAllRetryTimers } from '../../utils/retrytimer';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
-import copy from 'copy-to-clipboard';
+import AppActions from '../../actions/app-actions';
+import { AppContext } from '../../contexts/app-context';
+import { preformatWithRequestID } from '../../helpers';
+import AppStore from '../../stores/app-store';
+import { setRetryTimer, clearRetryTimer, clearAllRetryTimers } from '../../utils/retrytimer';
+import Repository from './repository';
 
-import { preformatWithRequestID } from '../../helpers.js'
-
-function getState() {
-  return {
-    artifacts: AppStore.getArtifactsRepo(),
-    selected: null,
-    remove: false,
-    refreshArtifactsLength: 60000,
-    showHelptips: AppStore.showHelptips(),
+export default class Artifacts extends React.Component {
+  constructor(props, context) {
+    super(props, context);
+    this.state = this._getState();
   }
-}
-
-var Artifacts = createReactClass({
-  getInitialState: function() {
-    return getState()
-  },
-  componentWillMount: function() {
-    AppStore.changeListener(this._onChange);
-  },
-  componentDidMount: function() {
+  componentWillMount() {
+    AppStore.changeListener(this._onChange.bind(this));
+  }
+  componentDidMount() {
     clearAllRetryTimers();
-    this.artifactTimer = setInterval(this._getArtifacts, this.state.refreshArtifactsLength);
+    this.artifactTimer = setInterval(() => this._getArtifacts(), this.state.refreshArtifactsLength);
     this._getArtifacts();
-  },
-  componentWillUnmount: function() {
+  }
+  componentWillUnmount() {
     clearAllRetryTimers();
     clearInterval(this.artifactTimer);
-    AppStore.removeChangeListener(this._onChange);
-  },
-  componentDidUpdate(prevProps, prevState) {
+    AppStore.removeChangeListener(this._onChange.bind(this));
+  }
+  componentDidUpdate(prevProps) {
     if (prevProps.artifactProgress && !this.props.artifactProgress) {
       clearInterval(this.artifactTimer);
-      this.artifactTimer = setInterval(this._getArtifacts, this.state.refreshArtifactsLength);
+      this.artifactTimer = setInterval(() => this._getArtifacts(), this.state.refreshArtifactsLength);
       this._getArtifacts();
     }
-  },
-  _onChange: function() {
-    this.setState(getState());
+  }
+  _getState() {
+    return {
+      artifacts: AppStore.getArtifactsRepo(),
+      selected: null,
+      remove: false,
+      refreshArtifactsLength: 60000,
+      showHelptips: AppStore.showHelptips()
+    };
+  }
+  _onChange() {
+    this.setState(this._getState());
     if (this.props.params) {
       if (this.props.params.artifactVersion) {
         // selected artifacts
-        var artifact = AppStore.getSoftwareArtifact("name", this.props.params.artifactVersion);
-        this.setState({selected: artifact});
+        var artifact = AppStore.getSoftwareArtifact('name', this.props.params.artifactVersion);
+        this.setState({ selected: artifact });
       }
     }
-  },
-  _startLoading: function(bool) {
-     this.setState({doneLoading: !bool});
-  },
-  _getArtifacts: function() {
+  }
+  _startLoading(bool) {
+    this.setState({ doneLoading: !bool });
+  }
+  _getArtifacts() {
     var self = this;
-    var callback = {
-      success: function(artifacts) {
-        clearRetryTimer("artifacts");
-        setTimeout(function() {
-          self.setState({doneLoading: true, artifacts:artifacts});
+    return AppActions.getArtifacts()
+      .then(artifacts => {
+        clearRetryTimer('artifacts');
+        setTimeout(() => {
+          self.setState({ doneLoading: true, artifacts });
         }, 300);
-      },
-      error: function(err) {
-        var errormsg = err.error || "Please check your connection";
-        setRetryTimer(err, "artifacts", "Artifacts couldn't be loaded. " + errormsg, self.state.refreshArtifactsLength);
-      }
-    };
-    AppActions.getArtifacts(callback);
-  },
-  _removeDialog: function(artifact) {
-    AppActions.setSnackbar("");
+      })
+      .catch(err => {
+        var errormsg = err.error || 'Please check your connection';
+        setRetryTimer(err, 'artifacts', `Artifacts couldn't be loaded. ${errormsg}`, self.state.refreshArtifactsLength);
+      });
+  }
+  _removeDialog(artifact) {
+    AppActions.setSnackbar('');
     if (artifact) {
-      this.setState({remove: true, artifact: artifact});
+      this.setState({ remove: true, artifact });
     } else {
-      this.setState({remove: false, artifact: null});
+      this.setState({ remove: false, artifact: null });
     }
-  },
-  _removeArtifact: function() {
+  }
+  _removeArtifact() {
     var self = this;
-    var callback =  {
-      success: function() {
-        AppActions.setSnackbar("Artifact was removed", 5000, "");
+    return AppActions.removeArtifact(self.state.artifact.id)
+      .then(() => {
+        AppActions.setSnackbar('Artifact was removed', 5000, '');
         self._getArtifacts();
-      },
-      error: function(err) {
-
-        var errMsg = err.res.body.error || "";
-        AppActions.setSnackbar(preformatWithRequestID(err.res, "Error removing artifact: " + errMsg), null, "Copy to clipboard");
-      }
-    };
-    AppActions.removeArtifact(self.state.artifact.id, callback);
-  },
-  render: function() {
-    var artifact_link = (
-      <span>
-        Download latest artifact
-        <a href='https://s3-eu-west-1.amazonaws.com/yocto-builds/latest/latest.tar.gz' target='_blank'> here </a>
-         and upload the artifact file to the Mender server
-      </span>
-    );
-
+      })
+      .catch(err => {
+        var errMsg = err.res.body.error || '';
+        AppActions.setSnackbar(preformatWithRequestID(err.res, `Error removing artifact: ${errMsg}`), null, 'Copy to clipboard');
+      });
+  }
+  render() {
     var removeActions = [
-     <div style={{marginRight:"10px", display:"inline-block"}}>
-        <FlatButton
-          label="Cancel"
-          onClick={this._removeDialog.bind(null, null)} />
+      <div key="remove-action-button-1" style={{ marginRight: '10px', display: 'inline-block' }}>
+        <FlatButton label="Cancel" onClick={() => this._removeDialog(null)} />
       </div>,
-      <RaisedButton
-        label="Remove artifact"
-        secondary={true}
-        onClick={this._removeArtifact} />
+      <RaisedButton key="remove-action-button-2" label="Remove artifact" secondary={true} onClick={() => this._removeArtifact()} />
     ];
 
     return (
       <div>
-        <Repository uploadArtifact={this.props.uploadArtifact} progress={this.props.artifactProgress} showHelptips={this.state.showHelptips} removeArtifact={this._removeDialog} refreshArtifacts={this._getArtifacts} startLoader={this._startLoading} loading={!this.state.doneLoading} selected={this.state.selected} artifacts={this.state.artifacts} />
+        <AppContext.Consumer>
+          {({ uploadArtifact }) => (
+            <Repository
+              uploadArtifact={uploadArtifact}
+              progress={this.props.artifactProgress}
+              showHelptips={this.state.showHelptips}
+              removeArtifact={artifact => this._removeDialog(artifact)}
+              refreshArtifacts={this._getArtifacts}
+              startLoader={this._startLoading}
+              loading={!this.state.doneLoading}
+              selected={this.state.selected}
+              artifacts={this.state.artifacts}
+            />
+          )}
+        </AppContext.Consumer>
 
-        <Dialog
-          open={this.state.remove}
-          title="Remove this artifact?"
-          actions={removeActions}
-        >
-        Are you sure you want to remove <i>{(this.state.artifact||{}).name}</i>?
+        <Dialog open={this.state.remove} title="Remove this artifact?" actions={removeActions}>
+          Are you sure you want to remove <i>{(this.state.artifact || {}).name}</i>?
         </Dialog>
       </div>
     );
   }
-});
-
-module.exports = Artifacts;
+}

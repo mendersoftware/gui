@@ -1,7 +1,7 @@
 import React from 'react';
+import { Redirect, Route, Switch } from 'react-router-dom';
 
 import App from '../components/app';
-
 import Dashboard from '../components/dashboard/dashboard';
 import Deployments from '../components/deployments/deployments';
 import Devices from '../components/devices/devices';
@@ -11,55 +11,44 @@ import Settings from '../components/settings/settings';
 import Help from '../components/help/help';
 
 import { isLoggedIn } from '../auth';
+import { AppContext } from '../contexts/app-context';
 
-import { Router, Route, IndexRoute } from 'react-router';
-
-function requireAuth(nextState, replace) {
+const PrivateRoute = ({ component: Component, ...rest }) => {
   // if not logged in, redirect to login screen
-  if (!isLoggedIn()) {
-    replace({
-      pathname: '/login',
-      state: { nextPathname: nextState.location.pathname, loggedIn: false }
-    })
-  }
-}
+  return (
+    <Route
+      {...rest}
+      render={props =>
+        isLoggedIn() ? (
+          <Component {...props} />
+        ) : (
+          <Redirect
+            to={{
+              pathname: '/login',
+              state: { from: props.location }
+            }}
+          />
+        )
+      }
+    />
+  );
+};
 
-function noRequireAuth(nextState, replace) {
-  // if logged in, don't allow to show login screen
-  if (isLoggedIn()) {
-    replace({
-      pathname: '/',
-      state: { nextPathname: nextState.location.pathname, loggedIn: isLoggedIn() }
-    })
-  }
-}
-
-module.exports = (
-  <Route path="/" component={App}>
-    <IndexRoute component={Dashboard} onEnter={requireAuth} />
-    <Route path="devices" component={Devices} onEnter={requireAuth}>
-      <Route path="pending" component={Devices} />
-      <Route path="rejected" component={Devices} />
-      <Route path="preauthorized" component={Devices} />
-      <Route path="(:filters)" />
-    </Route>
-      
-    <Route path="/artifacts" component={Artifacts} onEnter={requireAuth}>
-      <Route path="(:artifactVersion)" />
-    </Route>
-    <Route path="/deployments" component={Deployments} onEnter={requireAuth}>
-      <Route path=":tab">
-        <Route path="(:params)">
-          <Route path="(:Id)" />
-        </Route>
-      </Route>
-    </Route>
-    <Route path="/settings" component={Settings} onEnter={requireAuth}>
-      <Route path="(:section)" />
-    </Route>
-    <Route path="/help" component={Help} onEnter={requireAuth}>
-      <Route path="/help/*" component={Help} onEnter={requireAuth} />
-    </Route>
-    <Route path="/login" component={Login} onEnter={noRequireAuth} />
-  </Route>
-);  
+export default (
+  <App>
+    <AppContext.Consumer>
+      {(docsVersion, artifactProgress, version) => (
+        <Switch>
+          <PrivateRoute exact path="/" component={Dashboard} />
+          <PrivateRoute path="/devices/:status?/:filters?" component={Devices} />
+          <PrivateRoute path="/artifacts/:artifactVersion?" component={Artifacts} artifactProgress={artifactProgress} />
+          <PrivateRoute path="/deployments/:tab?/:params?/:Id?" component={Deployments} docsVersion={docsVersion} />
+          <PrivateRoute path="/settings/:section?" component={Settings} />
+          <PrivateRoute path="/help" component={Help} docsVersion={docsVersion} version={version} />
+          <Route path="/login" component={Login} />
+          <PrivateRoute component={Dashboard} />
+        </Switch>
+      )}
+    </AppContext.Consumer>
+  </App>
+);
