@@ -3,9 +3,9 @@ import BoardIcon from 'react-material-icons/icons/hardware/developer-board';
 
 import AppActions from '../../actions/app-actions';
 import AppStore from '../../stores/app-store';
-import { AcceptedDevices } from './widgets/accepteddevices';
-import { RedirectionWidget } from './widgets/redirectionwidget';
-import { PendingDevices } from './widgets/pendingdevices';
+import AcceptedDevices from './widgets/accepteddevices';
+import RedirectionWidget from './widgets/redirectionwidget';
+import PendingDevices from './widgets/pendingdevices';
 
 const styles = {
   container: {

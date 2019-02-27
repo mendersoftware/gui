@@ -1,10 +1,10 @@
 import React from 'react';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 
 // material ui
 import RaisedButton from 'material-ui/RaisedButton';
 
-export class RedirectionWidget extends React.Component {
+export default class RedirectionWidget extends React.Component {
   render() {
     return (
       <div className="onboard widget" onClick={this.props.onClick}>

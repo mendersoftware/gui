@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 import ReactTooltip from 'react-tooltip';
 import pluralize from 'pluralize';
 
@@ -10,7 +10,7 @@ import ContentAdd from 'material-ui/svg-icons/content/add';
 import { ReviewDevices } from '../../helptips/helptooltips';
 import { BaseWidget } from './baseWidget';
 
-export class PendingDevices extends React.Component {
+export default class PendingDevices extends React.Component {
   render() {
     const hasPending = this.props.isActive;
     const pendingNotification = `Pending ${pluralize('devices', hasPending)}`;
@@ -33,7 +33,7 @@ export class PendingDevices extends React.Component {
 
     return (
       <div style={{ position: 'relative' }}>
-        <Link to="/devices/pending" style={{ position: 'absolute', top: '-28px', left: '15px' }}>
+        <Link to="/devices/pending" style={{ position: 'absolute', zIndex: '1', top: '-28px', left: '15px' }}>
           <FloatingActionButton>
             <ContentAdd />
           </FloatingActionButton>

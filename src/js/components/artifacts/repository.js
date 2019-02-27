@@ -199,7 +199,7 @@ export default class Repository extends React.Component {
           />
         );
       }
-
+      const artifactType = pkg.updates.reduce((accu, item) => (accu ? accu : item.type_info.type), '');
       return (
         <TableRow hoverable={!expanded} className={expanded ? 'expand' : null} key={index}>
           <TableRowColumn style={expanded ? { height: this.state.divHeight } : null}>{pkg.name}</TableRowColumn>
@@ -207,6 +207,7 @@ export default class Repository extends React.Component {
           <TableRowColumn>
             <Time value={this._formatTime(pkg.modified)} format="YYYY-MM-DD HH:mm" />
           </TableRowColumn>
+          <TableRowColumn>{artifactType}</TableRowColumn>
           <TableRowColumn style={{ width: '55px', paddingRight: '0', paddingLeft: '12px' }} className="expandButton">
             <IconButton className="float-right">
               <FontIcon className="material-icons">{expanded ? 'arrow_drop_up' : 'arrow_drop_down'}</FontIcon>

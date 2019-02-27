@@ -144,31 +144,27 @@ export default class DeviceGroups extends React.Component {
   }
 
   _refreshAcceptedDevices() {
-    const self = this;
-    AppActions.getAllDevicesByStatus('accepted')
-      .then(acceptedDevices => {
-        if (self.state.ungroupedDevices.length && acceptedDevices.length) {
-          const ungroupedDevices = self._pickAcceptedUngroupedDevices(acceptedDevices, self.state.ungroupedDevices);
-          self.setState({ ungroupedDevices, acceptedDevices });
-        } else {
-          self.setState({ acceptedDevices });
-        }
-      })
-      .catch(console.err);
+    AppActions.getDeviceCount('accepted');
   }
 
   _refreshUngroupedDevices() {
     var self = this;
-    AppActions.getAllDevices().then(devices => {
+    const noGroupDevices = AppActions.getAllDevicesInGroup();
+    const acceptedDevs = AppActions.getAllDevicesByStatus('accepted');
+    return Promise.all([noGroupDevices, acceptedDevs]).then(results => {
+      let ungroupedDevices = results[0];
+      const acceptedDevices = results[1];
       var groups = self.state.groups;
-      if (devices.length > 0 && !groups.find(item => item === UNGROUPED_GROUP.id)) {
+      if (ungroupedDevices.length > 0 && !groups.find(item => item === UNGROUPED_GROUP.id)) {
         groups.push(UNGROUPED_GROUP.id);
       }
-      var ungroupedDevices = devices;
-      if (self.state.acceptedDevices.length && devices.length) {
-        ungroupedDevices = self._pickAcceptedUngroupedDevices(self.state.acceptedDevices, devices);
+      if (acceptedDevices.length && ungroupedDevices.length) {
+        ungroupedDevices = self._pickAcceptedUngroupedDevices(acceptedDevices, ungroupedDevices);
       }
       self.setState({ ungroupedDevices, groups });
+      return new Promise(resolve => {
+        self.setState({ ungroupedDevices, groups }, () => resolve());
+      });
     });
   }
 
@@ -177,15 +173,17 @@ export default class DeviceGroups extends React.Component {
 
     clearInterval(self.deviceTimer);
     self.setState({ devices: [], loading: true, selectedGroup: group, pageNo: 1, filters: [] }, () => {
-      const groupInQuestion = UNGROUPED_GROUP.id ? null : group;
       // get number of devices in group first for pagination
-      AppActions.getAllDevices(groupInQuestion).then(devices => {
-        var ungroupedDevices = self.state.ungroupedDevices;
-        if (this._isUngroupedGroup(group) && self.state.acceptedDevices.length) {
-          ungroupedDevices = self._pickAcceptedUngroupedDevices(self.state.acceptedDevices, devices);
-        }
-        self.setState({ groupCount: devices.length, ungroupedDevices });
-        self.deviceTimer = setInterval(() => self._getDevices(), self.state.refreshDeviceLength);
+      let promisedGroupCount;
+      if (self._isUngroupedGroup(group)) {
+        // don't use backend count for ungrouped devices, as this includes 'pending', 'preauthorized', ... devices as well
+        promisedGroupCount = self._refreshUngroupedDevices().then(() => Promise.resolve(self.state.ungroupedDevices.length));
+      } else {
+        promisedGroupCount = AppActions.getNumberOfDevicesInGroup(group);
+      }
+      promisedGroupCount.then(groupCount => {
+        self.setState({ groupCount });
+        self.deviceTimer = setInterval(self._getDevices, self.state.refreshDeviceLength);
         self._getDevices();
       });
     });

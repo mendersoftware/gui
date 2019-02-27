@@ -8,6 +8,7 @@ import Divider from 'material-ui/Divider';
 import FontIcon from 'material-ui/FontIcon';
 import IconButton from 'material-ui/IconButton';
 import TextField from 'material-ui/TextField';
+import ArtifactPayload from './artifactPayload';
 
 export default class SelectedArtifact extends React.Component {
   static contextTypes = {
@@ -39,8 +40,11 @@ export default class SelectedArtifact extends React.Component {
       this.setState({ descEdit: !this.state.descEdit });
     }
   }
-
+  _toggleArtifactContentVisibility() {
+    this.setState({ showArtifacts: !this.state.showArtifacts });
+  }
   render() {
+    const self = this;
     var info = { name: '-', device_type: '-', build_date: '-', modified: '-', size: '-', checksum: '-', devices: '-', description: '', signed: false };
     if (this.props.artifact) {
       for (var key in this.props.artifact) {
@@ -91,24 +95,7 @@ export default class SelectedArtifact extends React.Component {
         onKeyDown={e => this._descEdit(e)}
       />
     );
-
-    var files = this.props.artifact.updates[0].files || [];
-    var fileDetails = files.map((file, index) => {
-      var build_date = <Time value={file.date} format="YYYY-MM-DD HH:mm" />;
-
-      return (
-        <div key={index} className="file-details">
-          <ListItem style={styles.listStyle} disabled={true} primaryText="Name" secondaryText={file.name} secondaryTextLines={2} />
-          <Divider />
-          <ListItem style={styles.listStyle} disabled={true} primaryText="Checksum" secondaryText={file.checksum} secondaryTextLines={2} />
-          <Divider />
-          <ListItem style={styles.listStyle} disabled={true} primaryText="Build date" secondaryText={build_date} />
-          <Divider />
-          <ListItem style={styles.listStyle} disabled={true} primaryText="Size (uncompressed)" secondaryText={`${(file.size / 1000000).toFixed(1)} MB`} />
-          <Divider />
-        </div>
-      );
-    }, this);
+    var files = this.props.artifact.updates.map((update, index) => <ArtifactPayload payload={update} key={`artifact-update-${index}`} />);
 
     return (
       <div className={this.props.artifact.name == null ? 'muted' : null}>
@@ -144,22 +131,26 @@ export default class SelectedArtifact extends React.Component {
             <List style={{ backgroundColor: 'rgba(255,255,255,0)' }}>
               <ListItem style={styles.listStyle} disabled={true} primaryText="Signed" secondaryTextLines={2} secondaryText={info.signed ? 'Yes' : 'No'} />
               <Divider />
-              <ListItem
-                style={styles.listStyle}
-                primaryText="Remove this artifact?"
-                onClick={this.props.removeArtifact}
-                leftIcon={
-                  <FontIcon className="material-icons red auth" style={{ marginTop: 12, marginBottom: 6 }}>
-                    cancel
-                  </FontIcon>
-                }
-              />
             </List>
           </div>
         </div>
 
-        <h4 className="margin-bottom-none">Files in Artifact</h4>
-        <div>{fileDetails}</div>
+        <h4 className="margin-bottom-none" onClick={() => self._toggleArtifactContentVisibility()}>
+          Artifact contents
+        </h4>
+        {files}
+        <List className="inline-block">
+          <ListItem
+            style={styles.listStyle}
+            primaryText="Remove this artifact?"
+            onClick={this.props.removeArtifact}
+            leftIcon={
+              <FontIcon className="material-icons red auth" style={{ marginTop: 12, marginBottom: 6 }}>
+                cancel
+              </FontIcon>
+            }
+          />
+        </List>
       </div>
     );
   }
