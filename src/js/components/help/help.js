@@ -10,6 +10,7 @@ import RaspberryPi from './connecting-devices/raspberry-pi-3';
 import BeagleBoneBlack from './connecting-devices/beagleboneblack';
 import DemoArtifacts from './connecting-devices/demo-artifacts';
 import BuildYocto from './connecting-devices/build-with-yocto';
+import IntegrateDebian from './connecting-devices/integrate-debian';
 import MoreHelp from './more-help-resources';
 import { isEmpty } from '../../helpers';
 import BoardIcon from 'react-material-icons/icons/hardware/developer-board';
@@ -50,6 +51,10 @@ var components = {
     "build-with-yocto": {
       title: "Build with Yocto",
       component: BuildYocto,
+    },
+    "integrate-debian": {
+      title: "Integrate with Debian",
+      component: IntegrateDebian,
     },
   },
   "more-help-resources": {
