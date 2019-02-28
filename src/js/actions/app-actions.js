@@ -82,7 +82,8 @@ var AppActions = {
   getGroupDevices: function(group, callback, page, per_page) {
     var page = page || default_page;
     var per_page = per_page || default_per_page;
-    DevicesApi.get(`${inventoryApiUrl}/devices?per_page=${per_page}&page=${page}&group=${group}`)
+    var forGroup = group ? `&group=${group}` : '&has_group=false';
+    return DevicesApi.get(`${inventoryApiUrl}/devices?per_page=${per_page}&page=${page}${forGroup}`)
       .then(function(res) {
         callback.success(res.body, parse(res.headers['link']));
       })
@@ -129,22 +130,17 @@ var AppActions = {
       });
   },
   getNumberOfDevicesInGroup: function(group) {
-    var forGroup = group ? `/groups/${group}` : '';
-    var ungroupedFilter = group ? '' : '&has_group=false';
-    return DevicesApi.get(`${inventoryApiUrl}${forGroup}/devices?per_page=1&page=1${ungroupedFilter}`).then(res =>
-      Promise.resolve(Number(res.headers['x-total-count']))
-    );
+    var forGroup = group ? `&group=${group}` : '&has_group=false';
+    return DevicesApi.get(`${inventoryApiUrl}/devices?per_page=1&page=1${forGroup}`).then(res => Promise.resolve(Number(res.headers['x-total-count'])));
   },
   getAllDevicesInGroup: function(group) {
-    var forGroup = group ? `/groups/${group}` : '';
-    var ungroupedFilter = group ? '' : '&has_group=false';
-    var devices = [];
-    const getDeviceCount = (per_page = 200, page = 1) =>
-      DevicesApi.get(`${inventoryApiUrl}${forGroup}/devices?per_page=${per_page}&page=${page}${ungroupedFilter}`).then(function(res) {
+    var forGroup = group ? `&group=${group}` : '&has_group=false';
+    const getDeviceCount = (per_page = 200, page = 1, devices = []) =>
+      DevicesApi.get(`${inventoryApiUrl}/devices?per_page=${per_page}&page=${page}${forGroup}`).then(function(res) {
         var links = parse(res.headers['link']);
         devices.push(...res.body);
         if (links.next) {
-          return getDeviceCount(per_page, page + 1);
+          return getDeviceCount(per_page, page + 1, devices);
         }
         return Promise.resolve(devices);
       });
