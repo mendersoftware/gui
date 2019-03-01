@@ -119,30 +119,30 @@ class AppRoot extends React.Component {
   render() {
     return (
       <IdleTimer element={document} idleAction={this._onIdle} timeout={this.state.timeout} format="MM-DD-YYYY HH:MM:ss.SSS">
-            <Header
-            className="header"
-              announcement={_HostedAnnouncement}
-              docsVersion={this.state.docsVersion}
-              currentTab={this.state.currentTab}
-              demo={isDemoMode}
-              history={this.props.history}
-              isLoggedIn={(this.state.currentUser || {}).hasOwnProperty('email')}
-            />
+        <Header
+          className="header"
+          announcement={_HostedAnnouncement}
+          docsVersion={this.state.docsVersion}
+          currentTab={this.state.currentTab}
+          demo={isDemoMode}
+          history={this.props.history}
+          isLoggedIn={(this.state.currentUser || {}).hasOwnProperty('email')}
+        />
 
-          <div className="wrapper">
-              <LeftNav
+        <div className="wrapper">
+          <LeftNav
             className="leftFixed leftNav"
-                version={this.state.version}
-                docsVersion={this.state.docsVersion}
-                currentTab={this.state.currentTab}
-                changeTab={tabIndex => this._changeTab(tabIndex)}
-              />
-            <div className="rightFluid container">
-              <AppContext.Provider value={this.state}>{this.props.children}</AppContext.Provider>
-            </div>
+            version={this.state.version}
+            docsVersion={this.state.docsVersion}
+            currentTab={this.state.currentTab}
+            changeTab={tabIndex => this._changeTab(tabIndex)}
+          />
+          <div className="rightFluid container">
+            <AppContext.Provider value={this.state}>{this.props.children}</AppContext.Provider>
           </div>
+        </div>
 
-          <SharedSnackbar snackbar={this.state.snackbar} />
+        <SharedSnackbar snackbar={this.state.snackbar} />
       </IdleTimer>
     );
   }

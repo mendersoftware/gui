@@ -1,14 +1,13 @@
 import React from 'react';
 import Time from 'react-time';
-import List from 'material-ui/List/List';
-import ListItem from 'material-ui/List/ListItem';
-import Table from 'material-ui/Table/Table';
-import TableBody from 'material-ui/Table/TableBody';
-import TableHeader from 'material-ui/Table/TableHeader';
-import TableHeaderColumn from 'material-ui/Table/TableHeaderColumn';
-import TableRow from 'material-ui/Table/TableRow';
-import TableRowColumn from 'material-ui/Table/TableRowColumn';
-import TextField from 'material-ui/TextField';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableHead from '@material-ui/core/TableHead';
+import TableCell from '@material-ui/core/TableCell';
+import TableRow from '@material-ui/core/TableRow';
+import TextField from '@material-ui/core/TextField';
 import { FileSize, getFormattedSize } from './../../helpers';
 
 const METADATA_SPACING = 2;
@@ -50,26 +49,26 @@ export default class ArtifactPayload extends React.PureComponent {
           <h4>Files</h4>
           {files.length ? (
             <Table selectable={false} style={style.table}>
-              <TableHeader displaySelectAll={false} adjustForCheckbox={false} enableSelectAll={false}>
+              <TableHead displaySelectAll={false} adjustForCheckbox={false} enableSelectAll={false}>
                 <TableRow>
                   {attributes.map((item, index) => (
-                    <TableHeaderColumn key={`file-header-${index}`} tooltip={item}>
+                    <TableCell key={`file-header-${index}`} tooltip={item}>
                       {item}
-                    </TableHeaderColumn>
+                    </TableCell>
                   ))}
                 </TableRow>
-              </TableHeader>
+              </TableHead>
               <TableBody displayRowCheckbox={false} style={style.table}>
                 {files.map((file, index) => {
                   const build_date = <Time value={file.date} format="YYYY-MM-DD HH:mm" />;
                   return (
                     <TableRow key={index}>
-                      <TableRowColumn>{file.name}</TableRowColumn>
-                      <TableRowColumn>{file.checksum}</TableRowColumn>
-                      <TableRowColumn>{build_date}</TableRowColumn>
-                      <TableRowColumn>
+                      <TableCell>{file.name}</TableCell>
+                      <TableCell>{file.checksum}</TableCell>
+                      <TableCell>{build_date}</TableCell>
+                      <TableCell>
                         <FileSize fileSize={file.size} />
-                      </TableRowColumn>
+                      </TableCell>
                     </TableRow>
                   );
                 })}
