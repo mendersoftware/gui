@@ -19,12 +19,14 @@ export default class Deployments extends React.Component {
     super(props, state);
     const self = this;
     self.timer = null;
+    const lastDeploymentCheck = self.updateDeploymentCutoff(new Date());
     self.state = {
-      loading: true,
-      inprogress: [],
       deployments: [],
-      pending: [],
-      finished: []
+      finished: [],
+      inprogress: [],
+      lastDeploymentCheck,
+      loading: true,
+      pending: []
     };
   }
   componentWillUnmount() {
@@ -63,11 +65,26 @@ export default class Deployments extends React.Component {
       success: () => self.setState({ loading: false }),
       error: self.handleDeploymentError
     };
-    return AppActions.getDeployments(callback, 1, 10);
+    return AppActions.getDeployments(callback, 1, 20);
   }
+  updateDeploymentCutoff(today) {
+    const jsonContent = window.localStorage.getItem('deploymentChecker');
+    let lastCheck = today;
+    try {
+      lastCheck = jsonContent ? new Date(JSON.parse(jsonContent)) : today;
+    } catch (error) {
+      console.warn(error);
+    }
+    if (!window.sessionStorage.length) {
+      window.localStorage.setItem('deploymentChecker', JSON.stringify(today));
+      window.sessionStorage.setItem('sessionDeploymentChecker', JSON.stringify(today));
+    }
+    return lastCheck;
+  }
+
   render() {
     const self = this;
-    const { loading, inprogress, deployments, pending, finished } = self.state;
+    const { lastDeploymentCheck, loading, inprogress, deployments, pending, finished } = self.state;
 
     const iconStyles = {
       fontSize: 48,
@@ -114,9 +131,11 @@ export default class Deployments extends React.Component {
             <Loader show={loading} fade={true} />
           ) : (
             <div style={this.props.styles}>
-              {finished.length ? (
-                <CompletedDeployments onClick={() => self.props.clickHandle({ route: 'deployments/finished' })} deployments={finished} />
-              ) : null}
+              <CompletedDeployments
+                onClick={() => self.props.clickHandle({ route: 'deployments/finished' })}
+                deployments={finished}
+                cutoffDate={lastDeploymentCheck}
+              />
               <BaseWidget
                 className={inprogress.length ? 'current-widget active' : 'current-widget'}
                 main={activeWidgetMain}

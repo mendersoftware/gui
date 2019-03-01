@@ -1452,12 +1452,17 @@ input.fileInput {
   .current-widget {
     max-width: 15vw;
     min-width: 200px;
+    width: 100%;
     &.active {
       background: fade(@mendergreen, 7.5%);
     }
     &.pending {
       background: fade(@mendermaroon, 7.5%);
     }
+  }
+  .completionInfo {
+    color: @verylightgrey;
+    font-size: small;
   }
   .statusText {
     min-width: 100px;
