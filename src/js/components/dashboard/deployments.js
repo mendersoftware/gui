@@ -10,6 +10,7 @@ import { BaseWidget } from './widgets/baseWidget';
 import RedirectionWidget from './widgets/redirectionwidget';
 import CompletedDeployments from './widgets/completeddeployments';
 import Recent from './recent';
+import { FontIcon } from 'material-ui';
 
 const refreshDeploymentsLength = 30000;
 
@@ -18,38 +19,12 @@ export default class Deployments extends React.Component {
     super(props, state);
     const self = this;
     self.timer = null;
-    // self.state = { devices: [], inactiveDevices: [], pendingDevices: [], deltaActivity: null, refreshDevicesLength: 30000 };
-    // // on render the store might not be updated so we resort to the API and let all later request go through the store
-    // // to be in sync with the rest of the UI
-    // AppActions.getAllDevicesByStatus('pending').then(devices => self.setState({ pendingDevices: devices.length }));
-    // self._refreshDevices().then(result => self.setState(result));
-
-    // loadingActive={!this.state.doneActiveDepsLoading}
-    // loadingRecent={!this.state.donePastDepsLoading}
-    // clickHandle={this._handleClick}
-    // progress={this.state.progress}
-    // recent={this.state.recent}
-    // completedDeployments={this.state.completed}
-    // inprogressDeployments={this.state.progress}
-    // pendingDeployments={this.state.pending}
-    // recentDeployments={this.state.recent}
-    // this.state = Object.assign(
-    this.state = {
-      loadingActive: true,
-      loadingPending: true,
-      loadingRecent: true,
-      active: [],
+    self.state = {
+      loading: true,
+      inprogress: [],
+      deployments: [],
       pending: [],
-      recent: []
-    };
-    // this.getInitialState()
-    // );
-  }
-  getInitialState() {
-    return {
-      active: AppStore.getDeploymentsInProgress(),
-      pending: AppStore.getPendingDeployments(),
-      recent: AppStore.getPastDeployments()
+      finished: []
     };
   }
   componentWillUnmount() {
@@ -57,103 +32,107 @@ export default class Deployments extends React.Component {
     clearAllRetryTimers();
     const changeEvent = this._onChange.bind(this);
     AppStore.removeChangeListener(changeEvent);
-    console.log('arguments');
   }
-  _onChange() {
-    this.setState(this.getInitialState());
-  }
-
   componentDidMount() {
     var self = this;
     const changeEvent = this._onChange.bind(this);
     AppStore.changeListener(changeEvent);
     clearAllRetryTimers();
-    self.timer = setInterval(() => self._refreshDeployments(), refreshDeploymentsLength);
-    self._refreshDeployments();
+    self.timer = setInterval(() => self.getDeployments(), refreshDeploymentsLength);
+    self.getDeployments();
   }
 
+  _onChange() {
+    const deployments = AppStore.getDeployments();
+    const deploymentsByState = deployments.reduce(
+      (accu, item) => {
+        accu[item.status].push(item);
+        return accu;
+      },
+      { inprogress: [], pending: [], finished: [], deployments }
+    );
+    this.setState(deploymentsByState);
+  }
   handleDeploymentError(err) {
     var errormsg = err.error || 'Please check your connection';
     setRetryTimer(err, 'deployments', `Couldn't load deployments. ${errormsg}`, refreshDeploymentsLength);
   }
-
-  getPastDeployments() {
+  getDeployments() {
     const self = this;
     const callback = {
-      success: () => self.setState({ loadingRecent: false }),
+      success: () => self.setState({ loading: false }),
       error: self.handleDeploymentError
     };
-    return AppActions.getPastDeployments(callback, 1, 10);
+    return AppActions.getDeployments(callback, 1, 10);
   }
-
-  getInProgressDeployments() {
-    const self = this;
-    const callback = {
-      success: () => self.setState({ loadingActive: false }),
-      error: self.handleDeploymentError
-    };
-    return AppActions.getDeploymentsInProgress(callback, 1, 10);
-  }
-
-  getPendingDeployments() {
-    const self = this;
-    const callback = {
-      success: () => self.setState({ loadingPending: false }),
-      error: self.handleDeploymentError
-    };
-    return AppActions.getPendingDeployments(callback, 1, 10);
-  }
-
-  _refreshDeployments() {
-    var self = this;
-    self.getPastDeployments();
-    self.getInProgressDeployments();
-    self.getPendingDeployments();
-  }
-
   render() {
     const self = this;
-    const { loadingActive, loadingPending, loadingRecent, active, pending, recent } = self.state;
+    const { loading, inprogress, deployments, pending, finished } = self.state;
+
+    const iconStyles = {
+      fontSize: 48,
+      opacity: 0.5
+    };
 
     const pendingWidgetMain = {
       counter: pending.length,
-      header: `Pending ${pluralize('deployment', pending.length)}`,
+      header: (
+        <div>
+          <FontIcon className="material-icons flip-horizontal red" style={iconStyles}>
+            update
+          </FontIcon>
+          Pending {pluralize('deployment', pending.length)}
+        </div>
+      ),
       targetLabel: 'View details'
     };
     const activeWidgetMain = {
-      counter: active.length,
-      header: `${pluralize('Deployment', active.length)} in progress`,
+      counter: inprogress.length,
+      header: (
+        <div>
+          <FontIcon className="material-icons flip-horizontal green" style={iconStyles}>
+            refresh
+          </FontIcon>
+          {pluralize('Deployment', inprogress.length)} in progress
+        </div>
+      ),
       targetLabel: 'View progress'
     };
+    const path = `open=true`;
+    const openingParam = encodeURIComponent(path);
     return (
       <div>
         <h3 className="dashboard-header">Deployments</h3>
-
-        {/* <div className={deployments.length || self.props.loading ? 'hidden' : 'dashboard-placeholder'}>
-          <p>View the results of recent deployments here</p>
-          <img src="assets/img/history.png" alt="recent" />
-        </div>
-        <Loader show={self.props.loading} fade={true} /> */}
-
         <div className="deployments" style={Object.assign({ marginBottom: '50px', marginTop: '50px' })}>
           <h4>Current deployments</h4>
-          <div style={this.props.styles}>
-            <Loader show={loadingRecent} fade={true} />
-            <CompletedDeployments onClick={() => self.props.clickHandle({ route: 'deployments/finished' })} deployments={recent} />
-            <Loader show={loadingActive} fade={true} />
-            <BaseWidget main={activeWidgetMain} onClick={() => self.props.clickHandle({ route: 'deployments/active' })} />
-            <Loader show={loadingPending} fade={true} />
-            <BaseWidget main={pendingWidgetMain} onClick={() => self.props.clickHandle({ route: 'deployments/active' })} />
-            <RedirectionWidget
-              target={'/deployments?open=true'}
-              content={'Create a new deployment to update a group of devices'}
-              buttonContent={'Create a deployment'}
-              onClick={() => this.props.clickHandle({ route: 'deployments?open=true' })}
-              isActive={false}
-            />
-          </div>
+          {loading ? (
+            <Loader show={loading} fade={true} />
+          ) : (
+            <div style={this.props.styles}>
+              {finished.length ? (
+                <CompletedDeployments onClick={() => self.props.clickHandle({ route: 'deployments/finished' })} deployments={finished} />
+              ) : null}
+              <BaseWidget
+                className={inprogress.length ? 'current-widget active' : 'current-widget'}
+                main={activeWidgetMain}
+                onClick={() => self.props.clickHandle({ route: 'deployments/active' })}
+              />
+              <BaseWidget
+                className={pending.length ? 'current-widget pending' : 'current-widget'}
+                main={pendingWidgetMain}
+                onClick={() => self.props.clickHandle({ route: 'deployments/active' })}
+              />
+              <RedirectionWidget
+                target={`/deployments/${openingParam}`}
+                content={'Create a new deployment to update a group of devices'}
+                buttonContent={'Create a deployment'}
+                onClick={() => this.props.clickHandle({ route: `deployments/${openingParam}` })}
+                isActive={false}
+              />
+            </div>
+          )}
           <h4>Latest deployment activity</h4>
-          <Recent loading={loadingRecent} clickHandle={self.props.clickHandle} deployments={recent} />
+          <Recent loading={loading} clickHandle={self.props.clickHandle} deployments={deployments} />
         </div>
       </div>
     );

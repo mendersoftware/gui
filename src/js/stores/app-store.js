@@ -190,8 +190,8 @@ function _uploadProgress(bool) {
   _uploadInProgress = bool;
 }
 
-
 // Deployments
+var _deployments = [];
 var _deploymentsInProgress = [];
 var _pastDeployments = [];
 var _pendingDeployments = [];
@@ -325,9 +325,16 @@ function setArtifacts(artifacts) {
   _artifactsRepo.sort(customSort(1, "modified"));
 }
 
-
 function setHasDeployments(deployments) {
-  _hasDeployments = (deployments == null || deployments.length === 0) ? false : true;
+  _hasDeployments = deployments == null || deployments.length === 0 ? false : true;
+}
+
+function setDeployments(deployments) {
+  _deployments = deployments;
+  _deployments.sort(startTimeSort);
+  if (deployments.length) {
+    setHasDeployments(deployments);
+  }
 }
 
 function setActiveDeployments(deployments, next) {
@@ -540,6 +547,13 @@ var AppStore = Object.assign({}, EventEmitter.prototype, {
     return _artifactsRepo[findWithAttr(_artifactsRepo, attr, val)];
   },
 
+  getDeployments: function() {
+    /*
+     * Return list of all deployments
+     */
+    return _deployments;
+  },
+
   getPastDeployments: function() {
     /*
     * Return list of finished deployments 
@@ -725,7 +739,7 @@ var AppStore = Object.assign({}, EventEmitter.prototype, {
 
       /* API */
       case AppConstants.RECEIVE_DEPLOYMENTS:
-        setHasDeployments(payload.action.deployments);
+        setDeployments(payload.action.deployments);
         break;
       case AppConstants.RECEIVE_ACTIVE_DEPLOYMENTS:
         setActiveDeployments(payload.action.deployments);

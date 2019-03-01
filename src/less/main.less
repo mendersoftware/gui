@@ -1449,6 +1449,33 @@ input.fileInput {
 
 .deployments {
   position: relative;
+  .current-widget {
+    max-width: 15vw;
+    min-width: 200px;
+    &.active {
+      background: fade(@mendergreen, 7.5%);
+    }
+    &.pending {
+      background: fade(@mendermaroon, 7.5%);
+    }
+  }
+  .statusText {
+    min-width: 100px;
+  }
+  .activity {
+    border-style: solid;
+    border-width: 1px;
+    border-color: @placeholder;
+    border-radius: 2px;
+    padding: 15px;
+    max-width: 60vw;
+    margin-bottom: 3.5vh;
+    h4 {
+      color: @verylightgrey;
+      text-transform: capitalize;
+      margin: 0;
+    }
+  }
 }
 
 span.month,

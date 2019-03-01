@@ -1,7 +1,5 @@
 import React, { PropTypes } from 'react';
 
-var AppStore = require('../../stores/app-store');
-var LocalStore = require('../../stores/local-store');
 import Deployments from './deployments';
 import Devices from './devices';
 
