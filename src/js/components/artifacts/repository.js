@@ -166,7 +166,7 @@ export default class Repository extends React.Component {
           />
         );
       }
-
+      const artifactType = pkg.updates.reduce((accu, item) => (accu ? accu : item.type_info.type), '');
       return (
         <TableRow hover={!expanded} className={expanded ? 'expand' : null} key={index} onClick={() => self._onRowSelection(index)}>
           <TableCell style={expanded ? { height: self.state.divHeight } : null}>{pkg.name}</TableCell>

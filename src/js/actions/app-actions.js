@@ -60,7 +60,7 @@ var AppActions = {
     }),
 
   getGroupDevices: (group, page = default_page, per_page = default_per_page) =>
-    DevicesApi.get(`${inventoryApiUrl}/groups/${group}/devices?per_page=${per_page}&page=${page}`),
+    DevicesApi.get(`${inventoryApiUrl}/devices?per_page=${per_page}&page=${page}&group=${group}`),
 
   setGroupDevices: devices => {
     AppDispatcher.handleViewAction({
@@ -82,21 +82,21 @@ var AppActions = {
     var search = search_term ? `&${search_term}` : '';
     return DevicesApi.get(`${inventoryApiUrl}/devices?per_page=${per_page}&page=${page}${search}`).then(res => res.body);
   },
-
-  getAllDevices: (group, getUngrouped) => {
-    const forGroup = group ? `/groups/${group}` : '';
-    const ungroupedFilter = getUngrouped ? '&has_group=false' : '';
-    const getDeviceCount = (page = 1, per_page = 500, devices = []) => {
-      return DevicesApi.get(`${inventoryApiUrl}${forGroup}/devices?per_page=${per_page}&page=${page}${ungroupedFilter}`).then(res => {
+  getNumberOfDevicesInGroup: function(group) {
+    var forGroup = group ? `&group=${group}` : '&has_group=false';
+    return DevicesApi.get(`${inventoryApiUrl}/devices?per_page=1&page=1${forGroup}`).then(res => Promise.resolve(Number(res.headers['x-total-count'])));
+  },
+  getAllDevicesInGroup: function(group) {
+    var forGroup = group ? `&group=${group}` : '&has_group=false';
+    const getDeviceCount = (per_page = 200, page = 1, devices = []) =>
+      DevicesApi.get(`${inventoryApiUrl}/devices?per_page=${per_page}&page=${page}${forGroup}`).then(function(res) {
         var links = parse(res.headers['link']);
         devices.push(...res.body);
         if (links.next) {
-          page++;
-          return getDeviceCount(page, per_page, devices);
+          return getDeviceCount(per_page, page + 1, devices);
         }
         return Promise.resolve(devices);
       });
-    };
     return getDeviceCount();
   },
 
@@ -158,21 +158,15 @@ var AppActions = {
   },
 
   getAllDevicesByStatus: status => {
-    var per_page = 100;
-    var page = 1;
-    var devices = [];
-    const getAllDevices = () =>
-      DevicesApi
-        .get(`${deviceAuthV2}/devices?status=${status}&per_page=${per_page}&page=${page}`)
-        .then(res => {
-          var links = parse(res.headers['link']);
-          devices.push(...res.body);
-          if (links.next) {
-            page++;
-            return getAllDevices();
-          }
-          return Promise.resolve(devices);
-        });
+    const getAllDevices = (per_page = 200, page = 1, devices = []) =>
+      DevicesApi.get(`${deviceAuthV2}/devices?status=${status}&per_page=${per_page}&page=${page}`).then(res => {
+        var links = parse(res.headers['link']);
+        devices.push(...res.body);
+        if (links.next) {
+          return getAllDevices(per_page, page + 1, devices);
+        }
+        return Promise.resolve(devices);
+      });
     return getAllDevices();
   },
 

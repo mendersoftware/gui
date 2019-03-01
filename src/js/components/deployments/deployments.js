@@ -68,12 +68,12 @@ export default class Deployments extends React.Component {
     var artifact = AppStore.getDeploymentArtifact();
     this.setState({ artifact });
 
-    Promise.all([AppActions.getArtifacts(), AppActions.getAllDevices(), AppActions.getGroups()])
+    Promise.all([AppActions.getArtifacts(), AppActions.getAllDevicesByStatus('accepted'), AppActions.getGroups()])
       .catch(err => console.log(`Error: ${err}`))
       .then(([artifacts, allDevices, groups]) => {
         const collatedArtifacts = AppStore.getCollatedArtifacts(artifacts);
         self.setState({ allDevices, collatedArtifacts, groups });
-        return Promise.all(groups.map(group => AppActions.getAllDevices(group).then(devices => Promise.resolve({ [group]: devices }))));
+        return Promise.all(groups.map(group => AppActions.getAllDevicesInGroup(group).then(devices => Promise.resolve({ [group]: devices }))));
       })
       .then(groupedDevices => {
         const state = groupedDevices.reduce((accu, item) => Object.assign(accu, item), { doneLoading: true });
@@ -277,11 +277,11 @@ export default class Deployments extends React.Component {
   _getGroupDevices(group) {
     // get list of devices for each group and save them to state
     var self = this;
-    return AppActions.getNumberOfDevicesInGroup((count, devices) => {
+    return AppActions.getAllDevicesInGroup(group).then(devices => {
       let state = {};
       state[group] = devices;
       self.setState(state);
-    }, group);
+    });
   }
 
   dialogDismiss() {

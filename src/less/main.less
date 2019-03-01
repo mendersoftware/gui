@@ -960,14 +960,12 @@ table thead.clickable tr > th:first-child {
   -webkit-line-clamp: 3;
 }
 
-#device-identity .list-horizontal-display,
-#device-actions .list-horizontal-display {
-  display: flex;
-  > li {
-    margin-right: 30px;
-    height: 70px;
-    width: auto;
-  }
+#device-identity .list-horizontal-display > div,
+#device-actions .list-horizontal-display > div {
+  float: left;
+  vertical-align: top;
+  margin-right: 30px;
+  height: 70px;
 }
 
 .list-horizontal-display {
@@ -1001,11 +999,13 @@ table thead.clickable tr > th:first-child {
 }
 
 .file-details {
-  display: inline-block;
-  width: 22%;
+  padding: 0.75vw;
   border-radius: 4px;
   margin: 10px 3px 20px 0;
   border: 1px solid @lightgrey;
+}
+.file-meta {
+  padding: 0 16px;
 }
 
 .listItem-link {
@@ -1354,9 +1354,6 @@ tr.expand {
 
   td:first-child > div div {
     margin-top: -1px;
-  }
-  td:last-child {
-    padding-top: 3px;
   }
   td.expandButton {
     padding-top: 2px;

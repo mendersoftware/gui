@@ -1,7 +1,7 @@
 import React from 'react';
 import Form from '../common/forms/form';
 import SelectInput from '../common/forms/selectinput';
-import { isEmpty, preformatWithRequestID, deepCompare, intersection } from '../../helpers';
+import { preformatWithRequestID, deepCompare } from '../../helpers';
 
 require('../common/prototype/Array.prototype.equals');
 
@@ -9,6 +9,8 @@ import AppActions from '../../actions/app-actions';
 
 import Button from '@material-ui/core/Button';
 import Icon from '@material-ui/core/Icon';
+
+const AVAILABLE_ATTRIBUTE_LIMIT = 10;
 
 export default class Global extends React.Component {
   constructor(props, context) {
@@ -36,23 +38,27 @@ export default class Global extends React.Component {
   }
   getIdentityAttributes() {
     var self = this;
-    AppActions.getDevicesByStatus()
+    AppActions.getDevicesByStatus(null, 1, 500)
       .then(devices => {
-        if (!isEmpty(devices)) {
-          var attributes = [{ value: 'Device ID', label: 'Device ID' }];
-          var common1 = devices[0].identity_data;
-          var common2 = {};
-          // if more than 1 devices, get common keys from attributes
-          if (devices.length > 1) {
-            common2 = devices[1].identity_data;
-            common1[intersection(common1, common2)] = intersection(common1, common2);
-          }
-
-          Object.keys(common1).forEach(x => {
-            attributes.push({ value: x, label: x });
-          });
-          self.setState({ id_attributes: attributes });
-        }
+        const availableAttributes = devices.reduce((accu, item) => {
+          return Object.keys(item.identity_data).reduce((keyAccu, key) => {
+            keyAccu[key] = keyAccu[key] + 1 || 1;
+            return keyAccu;
+          }, accu);
+        }, {});
+        const id_attributes = Object.entries(availableAttributes)
+          // sort in reverse order, to have most common attribute at the top of the select
+          .sort((a, b) => b[1] - a[1])
+          // limit the selection of the available attribute to AVAILABLE_ATTRIBUTE_LIMIT
+          .slice(0, AVAILABLE_ATTRIBUTE_LIMIT)
+          .reduce(
+            (accu, item) => {
+              accu.push({ value: item[0], label: item[0] });
+              return accu;
+            },
+            [{ value: 'Device ID', label: 'Device ID' }]
+          );
+        self.setState({ id_attributes });
       })
       .catch(err => console.log(`error:${err}`));
   }
