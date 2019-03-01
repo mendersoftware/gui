@@ -71,17 +71,22 @@ export default class Deployments extends React.Component {
 
     const iconStyles = {
       fontSize: 48,
-      opacity: 0.5
+      opacity: 0.4
+    };
+
+    const headerStyle = {
+      alignItems: 'center',
+      justifyContent: 'flex-end'
     };
 
     const pendingWidgetMain = {
       counter: pending.length,
       header: (
-        <div>
+        <div className="flexbox" style={headerStyle}>
           <FontIcon className="material-icons flip-horizontal red" style={iconStyles}>
             update
           </FontIcon>
-          Pending {pluralize('deployment', pending.length)}
+          <div>Pending {pluralize('deployment', pending.length)}</div>
         </div>
       ),
       targetLabel: 'View details'
@@ -89,11 +94,11 @@ export default class Deployments extends React.Component {
     const activeWidgetMain = {
       counter: inprogress.length,
       header: (
-        <div>
+        <div className="flexbox" style={headerStyle}>
           <FontIcon className="material-icons flip-horizontal green" style={iconStyles}>
             refresh
           </FontIcon>
-          {pluralize('Deployment', inprogress.length)} in progress
+          <div>{pluralize('Deployment', inprogress.length)} in progress</div>
         </div>
       ),
       targetLabel: 'View progress'
