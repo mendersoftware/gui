@@ -6,7 +6,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 
 export default class RedirectionWidget extends React.PureComponent {
   filteredClick(event) {
-    if (!event.target.closest('button').contains(event.target)) {
+    if (!(event.target.closest('button') && event.target.closest('button').contains(event.target))) {
       this.props.onClick();
     }
   }
