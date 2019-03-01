@@ -18,8 +18,8 @@ var MoreHelp =  createReactClass({
 
         <p>Visit our <a href={"https://docs.mender.io/"+this.props.docsVersion} target="_blank">documentation site</a></p>
         <p>Read our <a href={"https://docs.mender.io/"+this.props.docsVersion+"troubleshooting"} target="_blank">troubleshooting pages</a> or <a href="https://mender.io/faq" target="_blank">FAQs</a></p>
+        <p>Browse the topics or ask a question on the <a href="https://hub.mender.io" target="_blank">Mender Hub forum</a></p>
         <p><a href={support} target="_blank">Email us</a> with a question</p>
-        <p>Browse the topic or ask a question on our <a href="https://groups.google.com/a/lists.mender.io/forum/#!forum/mender" target="_blank">mailing list</a></p>
         <p>Submit a bug using <a href="https://tracker.mender.io" target="_blank">our bug tracker</a></p>
       </div>
     )
