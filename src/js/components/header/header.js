@@ -214,7 +214,11 @@ export default class Header extends React.Component {
 
     var dropDownElement = (
       <div>
-        <Button className="header-dropdown" style={{ marginRight: '0', fontSize: '14px', paddingLeft: '4px', fill: 'rgb(0, 0, 0)' }} onClick={self.handleClick}>
+        <Button
+          className="header-dropdown"
+          style={{ marginRight: '0', fontSize: '14px', paddingLeft: '4px', fill: 'rgb(0, 0, 0)', textTransform: 'none' }}
+          onClick={self.handleClick}
+        >
           <AccountCircleIcon style={{ marginRight: '8px', top: '5px', fontSize: '20px', color: menuButtonColor }} />
           {(this.state.user || {}).email}
           {anchorEl ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
@@ -301,7 +305,7 @@ export default class Header extends React.Component {
             ) : null}
           </Toolbar>
 
-          <Toolbar style={{ flexShrink: '0' }} key={2}>
+          <Toolbar key={2} style={{ flexShrink: '0' }}>
             <DeviceNotifications pending={this.state.pendingDevices} total={this.state.acceptedDevices} limit={this.state.deviceLimit} />
             <DeploymentNotifications inprogress={this.state.inProgress} />
             {dropDownElement}
