@@ -186,7 +186,7 @@ export default class DeviceGroups extends React.Component {
       }
       promisedGroupCount.then(groupCount => {
         self.setState({ groupCount });
-        self.deviceTimer = setInterval(self._getDevices, self.state.refreshDeviceLength);
+        self.deviceTimer = setInterval(() => self._getDevices(), self.state.refreshDeviceLength);
         self._getDevices();
       });
     });
@@ -250,7 +250,7 @@ export default class DeviceGroups extends React.Component {
    */
   _getDevices() {
     var self = this;
-    var hasFilters = this.state.filters.length && this.state.filters[0].value;
+    var hasFilters = self.state.filters.length && self.state.filters[0].value;
 
     if (this.state.selectedGroup || hasFilters) {
       var params = '';
