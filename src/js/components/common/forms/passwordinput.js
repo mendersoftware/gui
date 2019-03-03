@@ -95,7 +95,6 @@ export default class PasswordInput extends React.Component {
             onChange={e => this.setValue(e)}
             errorStyle={{ color: 'rgb(171, 16, 0)' }}
             style={{ maxWidth: '100%', width: '400px' }}
-            multiLine={this.props.multiLine}
             rows={this.props.rows}
             errorText={this.state.errorText}
             required={this.props.required}

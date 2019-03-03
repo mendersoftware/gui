@@ -33,7 +33,7 @@ export default class ArtifactPayload extends React.PureComponent {
         <List style={style.metadataList}>
           {metaData.map((item, index) => (
             <ListItem key={`metadata-item-${index}`}>
-              <TextField disabled={true} defaultValue={item.value} floatingLabelText={item.title} />
+              <TextField disabled={true} defaultValue={item.value} placeholder={item.title} />
             </ListItem>
           ))}
         </List>
@@ -48,8 +48,8 @@ export default class ArtifactPayload extends React.PureComponent {
           ) : null}
           <h4>Files</h4>
           {files.length ? (
-            <Table selectable={false} style={style.table}>
-              <TableHead displaySelectAll={false} adjustForCheckbox={false} enableSelectAll={false}>
+            <Table style={style.table}>
+              <TableHead>
                 <TableRow>
                   {attributes.map((item, index) => (
                     <TableCell key={`file-header-${index}`} tooltip={item}>
@@ -58,7 +58,7 @@ export default class ArtifactPayload extends React.PureComponent {
                   ))}
                 </TableRow>
               </TableHead>
-              <TableBody displayRowCheckbox={false} style={style.table}>
+              <TableBody style={style.table}>
                 {files.map((file, index) => {
                   const build_date = <Time value={file.date} format="YYYY-MM-DD HH:mm" />;
                   return (

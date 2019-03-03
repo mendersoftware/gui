@@ -235,7 +235,7 @@ export default class Repository extends React.Component {
 
         <div id="progressBarContainer" className={self.props.progress ? null : 'shrunk'}>
           <p className="align-center">Upload in progress ({Math.round(self.props.progress)}%)</p>
-          <LinearProgress mode="determinate" style={{ backgroundColor: '#c7c7c7', margin: '15px 0' }} value={self.props.progress} />
+          <LinearProgress variant="determinate" style={{ backgroundColor: '#c7c7c7', margin: '15px 0' }} value={self.props.progress} />
         </div>
 
         <Loader show={self.props.loading} />

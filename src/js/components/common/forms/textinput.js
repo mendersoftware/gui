@@ -50,8 +50,6 @@ export default class TextInput extends React.Component {
         onChange={e => this.setValue(e)}
         className={className}
         errorStyle={{ color: 'rgb(171, 16, 0)' }}
-        multiLine={this.props.multiLine}
-        rows={this.props.rows}
         style={{ width: '400px', maxWidth: '100%', marginRight: '80px' }}
         errorText={this.state.errorText}
         required={this.props.required}

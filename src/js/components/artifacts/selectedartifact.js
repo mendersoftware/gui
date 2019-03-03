@@ -6,10 +6,13 @@ import Time from 'react-time';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
+import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Divider from '@material-ui/core/Divider';
-import FontIcon from '@material-ui/core/FontIcon';
 import IconButton from '@material-ui/core/IconButton';
 import TextField from '@material-ui/core/TextField';
+
+import CancelIcon from '@material-ui/icons/Cancel';
+
 import ArtifactPayload from './artifactPayload';
 
 export default class SelectedArtifact extends React.Component {
@@ -65,8 +68,22 @@ export default class SelectedArtifact extends React.Component {
       }
     }
 
+    const styles = {
+      editButton: {
+        color: 'rgba(0, 0, 0, 0.54)',
+        fontSize: '20px'
+      },
+      listStyle: {
+        fontSize: '12px',
+        paddingTop: '10px',
+        paddingBottom: '10px',
+        wordWrap: 'break-word',
+        whiteSpace: 'normal'
+      }
+    };
+
     var editButtonDesc = (
-      <IconButton style={Object.assign({ position: 'absolute', right: '0', bottom: '8px' })} onClick={e => this._onToggleEditing(e)} className="material-icons">
+      <IconButton style={styles.editButton} onClick={e => this._onToggleEditing(e)} className="material-icons">
         {this.state.descEdit ? 'check' : 'edit'}
       </IconButton>
     );
@@ -77,8 +94,6 @@ export default class SelectedArtifact extends React.Component {
         autoFocus={true}
         className={this.state.descEdit ? null : 'hidden'}
         style={{ width: '100%', height: '38px', marginTop: '0' }}
-        multiLine={true}
-        rowsMax={2}
         value={this.state.description}
         onChange={e => this._descEdit(e.target.value)}
         onKeyDown={e => this._onToggleEditing(e)}
@@ -127,16 +142,12 @@ export default class SelectedArtifact extends React.Component {
         </h4>
         {files}
         <List className="inline-block">
-          <ListItem
-            style={styles.listStyle}
-            primaryText="Remove this artifact?"
-            onClick={this.props.removeArtifact}
-            leftIcon={
-              <FontIcon className="material-icons red auth" style={{ marginTop: 12, marginBottom: 6 }}>
-                cancel
-              </FontIcon>
-            }
-          />
+          <ListItem style={styles.listStyle} onClick={this.props.removeArtifact}>
+            <ListItemAvatar>
+              <CancelIcon className="red auth" />
+            </ListItemAvatar>
+            <ListItemText primary="Remove this artifact?" />
+          </ListItem>
         </List>
       </div>
     );

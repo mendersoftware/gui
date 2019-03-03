@@ -73,12 +73,12 @@ export default class Past extends React.Component {
     var startDate = this.props.startDate;
     if (date < startDate) {
       startDate = date;
-      startDate.setHours(0, 0, 0, 0);
+      startDate._isAMomentObject ? startDate.startOf('day') : startDate.setHours(0, 0, 0, 0);
     }
     this.setState({
       active: ''
     });
-    date.setHours(23, 59, 59, 999);
+    date._isAMomentObject ? date.endOf('day') : date.setHours(23, 59, 59, 999);
 
     // refresh deployment list
     this._handleDateChange(1, startDate, date);

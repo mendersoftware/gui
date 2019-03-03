@@ -168,7 +168,6 @@ export default class ScheduleForm extends React.Component {
               value={device_types}
               underlineDisabledStyle={{ borderBottom: 'none' }}
               style={{ verticalAlign: 'top', width: '400px' }}
-              multiLine={true}
               errorStyle={{ color: 'rgb(171, 16, 0)' }}
               className={this.props.artifact ? 'margin-left' : 'hidden'}
             />
