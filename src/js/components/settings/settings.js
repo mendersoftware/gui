@@ -46,9 +46,13 @@ export default class Settings extends React.Component {
   }
 
   componentDidMount() {
-    if (this.context.router.route.location.pathname === myOrganization.route && !this.state.hasMultitenancy) {
+    if (
+      this.context.router.route.location.pathname === '/settings' ||
+      (this.context.router.route.location.pathname === myOrganization.route && !this.state.hasMultitenancy)
+    ) {
       // redirect from organization screen if no multitenancy
-      this.context.router.history.replace(routes.myAccount);
+      // this.context.router.history.replace(routes.myAccount);
+      window.location.hash = `#${routes.myAccount}`;
     }
   }
 
