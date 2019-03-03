@@ -22,6 +22,11 @@ export default {
       action: {
         color: '#9E6F8E'
       }
+    },
+    MuiTab: {
+      root: {
+        textTransform: 'none'
+      }
     }
   },
   palette: {
