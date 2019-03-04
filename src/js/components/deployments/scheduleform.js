@@ -158,22 +158,20 @@ export default class ScheduleForm extends React.Component {
               }}
               openOnFocus={true}
               listStyle={{ overflow: 'auto', maxHeight: '360px' }}
-              errorStyle={{ color: 'rgb(171, 16, 0)' }}
-              errorText={this.state.autoCompleteErrorText}
+              errorstyle={{ color: 'rgb(171, 16, 0)' }}
+              errortext={this.state.autoCompleteErrorText}
               onClick={() => this._clearOnClick('artifact')}
             />
-            {this.props.artifact ? (
-              <TextField
-                disabled={true}
-                placeholder="Device types"
-                label="Device types"
-                value={device_types}
-                underlineDisabledStyle={{ borderBottom: 'none' }}
-                style={{ verticalAlign: 'top', width: '400px' }}
-                errorStyle={{ color: 'rgb(171, 16, 0)' }}
-                className="margin-left"
-              />
-            ) : null}
+            <TextField
+              disabled={true}
+              placeholder="Device types"
+              label="Device types"
+              value={device_types}
+              underlineDisabledStyle={{ borderBottom: 'none' }}
+              style={{ verticalAlign: 'top', width: '400px' }}
+              errorstyle={{ color: 'rgb(171, 16, 0)' }}
+              className={this.props.artifact ? 'margin-left' : 'hidden'}
+            />
 
             <p className={artifactItems.length ? 'hidden' : 'info'} style={{ marginTop: '0' }}>
               <Icon className="material-icons" style={{ marginRight: '4px', fontSize: '18px', top: '4px', color: 'rgb(171, 16, 0)' }}>
@@ -198,8 +196,8 @@ export default class ScheduleForm extends React.Component {
                 }}
                 openOnFocus={true}
                 listStyle={{ overflow: 'auto', maxHeight: '360px' }}
-                errorStyle={{ color: 'rgb(171, 16, 0)' }}
-                errorText={this.state.groupErrorText}
+                errorstyle={{ color: 'rgb(171, 16, 0)' }}
+                errortext={this.state.groupErrorText}
                 disabled={!this.props.hasDevices}
                 onClick={() => this._clearOnClick('group')}
               />
@@ -224,7 +222,7 @@ export default class ScheduleForm extends React.Component {
                 label="Device"
                 disabled={this.state.disabled}
                 underlineDisabledStyle={{ borderBottom: 'none' }}
-                errorStyle={{ color: 'rgb(171, 16, 0)' }}
+                errorstyle={{ color: 'rgb(171, 16, 0)' }}
               />
             ) : null}
 

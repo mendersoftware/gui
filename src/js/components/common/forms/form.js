@@ -60,20 +60,20 @@ export default class Form extends React.Component {
     }
 
     var isValid = true;
-    var errorText = '';
+    var errortext = '';
 
     if (component.props.file) {
       if (component.props.required && !value) {
         isValid = false;
-        errorText = 'You must choose a file to upload';
+        errortext = 'You must choose a file to upload';
       }
     } else if (component.props.id === 'password') {
       if (component.props.required && !value) {
         isValid = false;
-        errorText = 'Password is required';
+        errortext = 'Password is required';
       } else if (value && value.length < 2) {
         isValid = false;
-        errorText = 'Password too weak';
+        errortext = 'Password too weak';
       }
     } else {
       if (value || component.props.required) {
@@ -93,7 +93,7 @@ export default class Form extends React.Component {
           // So the next line of code is actually:
           // validator.isLength('valueFromInput', 5)
           if (!validator[validateMethod].apply(validator, args)) {
-            errorText = this.getErrorMsg(validateMethod, tmpArgs);
+            errortext = this.getErrorMsg(validateMethod, tmpArgs);
             isValid = false;
           }
         });
@@ -104,7 +104,7 @@ export default class Form extends React.Component {
     component.setState(
       {
         isValid: isValid,
-        errorText: errorText
+        errortext: errortext
         // We use the callback of setState to wait for the state
         // change being propagated, then we validate the form itself
       },

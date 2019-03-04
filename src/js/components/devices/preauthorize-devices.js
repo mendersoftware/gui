@@ -120,27 +120,27 @@ export default class Preauthorize extends React.Component {
   _updateKey(index, event) {
     var inputs = this.state.inputs;
     inputs[index].key = event.target.value;
-    this.setState({ inputs: inputs, errorText: '', errorText1: '' });
+    this.setState({ inputs: inputs, errortext: '', errortext1: '' });
     this._convertIdentityToJSON(inputs);
   }
 
   _updateValue(index, event) {
     var inputs = this.state.inputs;
     inputs[index].value = event.target.value;
-    this.setState({ inputs: inputs, errorText: '', errorText1: '' });
+    this.setState({ inputs: inputs, errortext: '', errortext1: '' });
     this._convertIdentityToJSON(inputs);
   }
 
   _addKeyValue() {
     var inputs = this.state.inputs;
     inputs.push({ key: '', value: '' });
-    this.setState({ inputs: inputs, errorText: '', errorText1: '' });
+    this.setState({ inputs: inputs, errortext: '', errortext1: '' });
   }
 
   _removeInput(index) {
     var inputs = this.state.inputs;
     inputs.splice(index, 1);
-    this.setState({ inputs: inputs, errorText: '', errorText1: '' });
+    this.setState({ inputs: inputs, errortext: '', errortext1: '' });
     this._convertIdentityToJSON(inputs);
   }
 
@@ -177,7 +177,7 @@ export default class Preauthorize extends React.Component {
         var errMsg = (err.res.body || {}).error || '';
 
         if (err.res.status === 409) {
-          self.setState({ errorText: 'A device with a matching identity data set already exists', errorText1: ' ' });
+          self.setState({ errortext: 'A device with a matching identity data set already exists', errortext1: ' ' });
         } else {
           AppActions.setSnackbar(preformatWithRequestID(err.res, `The device could not be added: ${errMsg}`), null, 'Copy to clipboard');
         }
@@ -311,8 +311,8 @@ export default class Preauthorize extends React.Component {
             value={input.key}
             style={{ marginRight: '15px', marginBottom: '15px', verticalAlign: 'top' }}
             onChange={e => this._updateKey(index, e)}
-            errorStyle={{ color: 'rgb(171, 16, 0)' }}
-            errorText={index === this.state.inputs.length - 1 ? this.state.errorText : ''}
+            errorstyle={{ color: 'rgb(171, 16, 0)' }}
+            errortext={index === this.state.inputs.length - 1 ? this.state.errortext : ''}
           />
           <TextField
             placeholder="Value"
@@ -320,8 +320,8 @@ export default class Preauthorize extends React.Component {
             style={{ verticalAlign: 'top' }}
             value={input.value}
             onChange={e => this._updateValue(index, e)}
-            errorStyle={{ color: 'rgb(171, 16, 0)' }}
-            errorText={index === this.state.inputs.length - 1 ? this.state.errorText1 : ''}
+            errorstyle={{ color: 'rgb(171, 16, 0)' }}
+            errortext={index === this.state.inputs.length - 1 ? this.state.errortext1 : ''}
           />
           {this.state.inputs.length > 1 ? (
             <IconButton disabled={!this.state.inputs[index].key || !this.state.inputs[index].value} onClick={() => this._removeInput(index)}>

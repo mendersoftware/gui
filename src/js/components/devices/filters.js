@@ -104,7 +104,7 @@ export default class Filters extends React.Component {
               placeholder="Value"
               fullWidth={true}
               disabled={!item.key}
-              errorStyle={{ color: 'rgb(171, 16, 0)' }}
+              errorstyle={{ color: 'rgb(171, 16, 0)' }}
               onChange={() => self._updateFilterValue(index)}
             />
           </ListItemText>

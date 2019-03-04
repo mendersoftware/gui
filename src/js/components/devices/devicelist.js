@@ -126,7 +126,7 @@ export default class Authorized extends React.Component {
     }
     this.setState({
       nameEdit: !this.state.nameEdit,
-      errorText: null
+      errortext: null
     });
   }
 
@@ -258,14 +258,14 @@ export default class Authorized extends React.Component {
         onKeyDown={() => this._handleGroupNameSave()}
         className="hoverText"
         style={{ borderBottom: 'none' }}
-        // underlineFocusStyle={{ borderColor: '#e0e0e0' }}
-        errorStyle={{ color: 'rgb(171, 16, 0)' }}
-        errorText={this.state.errorText}
+        underlinefocusstyle={{ borderColor: '#e0e0e0' }}
+        errorstyle={{ color: 'rgb(171, 16, 0)' }}
+        errortext={this.state.errortext}
       />
     ) : null;
 
     var correctIcon = this.state.nameEdit ? 'check' : 'edit';
-    if (this.state.errorText) {
+    if (this.state.errortext) {
       correctIcon = 'close';
     }
 
@@ -279,9 +279,9 @@ export default class Authorized extends React.Component {
             <div style={{ marginLeft: '26px' }}>
               <h2>
                 {groupNameInputs}
-                {this.state.nameEdit ? null : <span>{groupLabel}</span>}
-                {this.props.group ? (
-                  <IconButton onClick={() => this._nameEdit()} className={`material-icons ${this.state.errorText ? 'align-top' : null}`}>
+                <span className={this.state.nameEdit ? 'hidden' : null}>{groupLabel}</span>
+                <span className={this.props.group ? 'hidden' : 'hidden'}>
+                  <IconButton onClick={() => this._nameEdit()} className={`material-icons ${this.state.errortext ? 'align-top' : null}`}>
                     {correctIcon}
                   </IconButton>
                 ) : null}

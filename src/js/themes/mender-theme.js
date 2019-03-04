@@ -1,5 +1,4 @@
-'use strict';
-
+import { createMuiTheme } from '@material-ui/core/styles';
 import { grey100, lightBlack, white } from '@material-ui/core/colors';
 
 const colors = {
@@ -17,7 +16,26 @@ const colors = {
   disabledColor: lightBlack,
   errorStyleColor: '#ab1000'
 };
-export default {
+
+export default createMuiTheme({ 
+  palette: {
+    primary: {
+      main: colors.mendergreen
+    },
+    secondary: {
+      main: colors.mendermaroon
+    },
+    error: {
+      main: colors.errorStyleColor
+    },
+    text: {
+      main: colors.textColor
+    }
+  },
+  typography: {
+    fontFamily: 'Lato, sans-serif',
+    useNextVariants: true
+  },
   overrides: {
     MuiSnackbarContent: {
       action: {
@@ -70,24 +88,6 @@ export default {
       root: {
         flexDirection: 'column'
       }
-    }
+    },
   },
-  palette: {
-    primary: {
-      main: colors.mendergreen
-    },
-    secondary: {
-      main: colors.mendermaroon
-    },
-    error: {
-      main: colors.errorStyleColor
-    },
-    text: {
-      main: colors.textColor
-    }
-  },
-  typography: {
-    fontFamily: 'Lato, sans-serif',
-    useNextVariants: true
-  }
-};
+});
