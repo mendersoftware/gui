@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Time from 'react-time';
 import AppActions from '../../actions/app-actions';
-import ReactDOM from 'react-dom';
 import ReactTooltip from 'react-tooltip';
 import { UploadArtifact, ExpandArtifact } from '../helptips/helptooltips';
 import Loader from '../common/loader';
@@ -11,15 +10,13 @@ import SelectedArtifact from './selectedartifact';
 import Dropzone from 'react-dropzone';
 
 // material ui
-import Collapse from '@material-ui/core/Collapse';
+import ExpansionPanel from '@material-ui/core/ExpansionPanel';
+import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
+import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import Icon from '@material-ui/core/Icon';
 import IconButton from '@material-ui/core/IconButton';
 import LinearProgress from '@material-ui/core/LinearProgress';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
+import Tooltip from '@material-ui/core/Tooltip';
 
 import FileIcon from '@material-ui/icons/CloudUpload';
 import HelpIcon from '@material-ui/icons/Help';
@@ -27,7 +24,12 @@ import SortIcon from '@material-ui/icons/Sort';
 
 import { preformatWithRequestID, formatTime } from '../../helpers';
 
-var artifacts = [];
+const columnHeaders = [
+  { title: 'Name', name: 'name', sortable: true },
+  { title: 'Device type compatibility', name: 'device_types', sortable: false },
+  { title: 'Last modified', name: 'modified', sortable: true },
+  { title: 'Type', name: 'type', sortable: false }
+];
 
 export default class Repository extends React.Component {
   static contextTypes = {
@@ -53,10 +55,11 @@ export default class Repository extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    artifacts = nextProps.artifacts;
+    let state = { artifacts: nextProps.artifacts };
     if (nextProps.selected) {
-      this.setState({ artifact: nextProps.selected });
+      state.artifact = nextProps.selected;
     }
+    this.setState(state);
   }
 
   _resetArtifactState() {
@@ -106,30 +109,23 @@ export default class Repository extends React.Component {
       });
   }
 
-  _onRowSelection(rowNumber, shouldToggleRow) {
-    var artifact = artifacts[rowNumber];
-    if (shouldToggleRow) {
-      if (this.state.artifact === artifact) {
-        this._resetArtifactState();
-      } else {
-        this.setState({ artifact });
-      }
+  _onRowSelection(artifact) {
+    if (this.state.artifact === artifact) {
+      this._resetArtifactState();
+    } else {
+      this.setState({ artifact });
     }
   }
   _sortColumn(col) {
-    var direction;
-    if (this.state.sortCol !== col) {
-      ReactDOM.findDOMNode(this.refs[this.state.sortCol]).className = 'sortIcon material-icons';
-      ReactDOM.findDOMNode(this.refs[col]).className = 'sortIcon material-icons expand';
-      this.setState({ sortCol: col, sortDown: true });
-      direction = true;
-    } else {
-      direction = !this.state.sortDown;
-      ReactDOM.findDOMNode(this.refs[this.state.sortCol]).className = `sortIcon material-icons expand ${direction}`;
-      this.setState({ sortDown: direction });
+    if (!col.sortable) {
+      return;
     }
+    this.setState({
+      sortDown: !this.state.sortDown,
+      sortCol: col.name
+    });
     // sort table
-    AppActions.sortTable('_artifactsRepo', col, direction);
+    AppActions.sortTable('_artifactsRepo', col.name, this.state.sortDown);
   }
   searchUpdated(term) {
     this.setState({ searchTerm: term, artifact: {} }); // needed to force re-render
@@ -144,65 +140,41 @@ export default class Repository extends React.Component {
   }
   render() {
     const self = this;
-
     var tmpArtifacts = [];
     if (self.refs.search) {
       var filters = ['name', 'device_types_compatible', 'description'];
-      tmpArtifacts = artifacts.filter(self.refs.search.filter(filters));
+      tmpArtifacts = self.state.artifacts.filter(self.refs.search.filter(filters));
     }
-
+    const columnWidth = `${100 / columnHeaders.length}%`;
     var items = tmpArtifacts.map(function(pkg, index) {
       var compatible = pkg.device_types_compatible.join(', ');
-      var expanded = '';
-      if (self.state.artifact.id === pkg.id) {
-        expanded = (
-          <SelectedArtifact
-            removeArtifact={() => self._handleRemove()}
-            compatible={compatible}
-            formatTime={formatTime}
-            editArtifact={self._editArtifactData}
-            // buttonStyle={styles.flatButtonIcon}
-            artifact={self.state.artifact}
-          />
-        );
-      }
+      const expanded = self.state.artifact.id === pkg.id;
       const artifactType = pkg.updates.reduce((accu, item) => (accu ? accu : item.type_info.type), '');
+      const columnStyle = { width: columnWidth };
       return (
-        <TableRow hover={!expanded} className={expanded ? 'expand' : null} key={index} onClick={() => self._onRowSelection(index)}>
-          <TableCell style={expanded ? { height: self.state.divHeight } : null}>{pkg.name}</TableCell>
-          <TableCell>{compatible}</TableCell>
-          <TableCell>
-            <Time value={formatTime(pkg.modified)} format="YYYY-MM-DD HH:mm" />
-          </TableCell>
-          <TableCell
-            className="expandButton"
-            onClick={() => self._onRowSelection(index, true)}
-            style={{ width: '55px', paddingRight: '0', paddingLeft: '12px' }}
-          >
-            <IconButton className="float-right">
+        <ExpansionPanel square expanded={expanded} key={index} onChange={() => self._onRowSelection(pkg)}>
+          <ExpansionPanelSummary>
+            <div style={columnStyle}>{pkg.name}</div>
+            <div style={columnStyle}>{compatible}</div>
+            <Time value={formatTime(pkg.modified)} format="YYYY-MM-DD HH:mm" style={columnStyle} />
+            <div style={Object.assign({}, columnStyle, { maxWidth: '100vw' })}>{artifactType}</div>
+            <IconButton className="expandButton" onClick={() => self._onRowSelection(pkg)}>
               <Icon className="material-icons">{expanded ? 'arrow_drop_up' : 'arrow_drop_down'}</Icon>
             </IconButton>
-          </TableCell>
-          <TableCell padding={'none'} style={{ width: '0' }} colSpan="4">
-            <Collapse
-              hidden={!expanded}
-              in={!!expanded}
-              // springConfig={{ stiffness: 210, damping: 20 }}
-              // onMeasure={measurements => self._adjustCellHeight(measurements.height)}
-              // className="expanded"
-              unmountOnExit
-            >
-              {expanded}
-            </Collapse>
-          </TableCell>
-        </TableRow>
+          </ExpansionPanelSummary>
+          <ExpansionPanelDetails>
+            <SelectedArtifact
+              removeArtifact={() => self._handleRemove()}
+              compatible={compatible}
+              formatTime={formatTime}
+              editArtifact={self._editArtifactData}
+              artifact={self.state.artifact}
+            />
+          </ExpansionPanelDetails>
+        </ExpansionPanel>
       );
-    }, this);
-    const columnHeaders = [
-      { title: 'Name', name: 'name' },
-      { title: 'Device type compatibility', name: 'device_types' },
-      { title: 'Last modified', name: 'modified' }
-    ];
+    });
+
     return (
       <div>
         <div className={items.length ? 'top-right-button fadeIn' : 'top-right-button fadeOut'}>
@@ -241,21 +213,31 @@ export default class Repository extends React.Component {
         <Loader show={self.props.loading} />
 
         <div style={{ position: 'relative', marginTop: '10px' }}>
-          <Table className={items.length ? null : 'hidden'}>
-            <TableHead>
-              <TableRow>
+          {items.length ? (
+            <div>
+              <div className="flexbox inventoryTable">
                 {columnHeaders.map(item => (
-                  <TableCell key={item.name} className="columnHeader" tooltip={item.title}>
-                    {item.title}
-                    <SortIcon ref={item.name} onClick={() => self._sortColumn(item.name)} className="sortIcon" />
-                  </TableCell>
+                  <Tooltip
+                    key={item.name}
+                    className="columnHeader"
+                    title={item.title}
+                    placement="top-start"
+                    style={{ width: columnWidth }}
+                    onClick={() => self._sortColumn(item)}
+                  >
+                    <div>
+                      {item.title}
+                      {item.sortable ? (
+                        <SortIcon className={`sortIcon ${self.state.sortCol === item.name ? 'selected' : ''} ${self.state.sortDown.toString()}`} />
+                      ) : null}
+                    </div>
+                  </Tooltip>
                 ))}
-                <TableCell style={{ width: '55px', paddingRight: '12px', paddingLeft: '0' }} className="columnHeader" />
-              </TableRow>
-            </TableHead>
-            <TableBody className="clickable">{items}</TableBody>
-          </Table>
-
+                <div style={{ width: 48 }} />
+              </div>
+              {items}
+            </div>
+          ) : null}
           {self.props.showHelptips && items.length ? (
             <div>
               <div id="onboard-10" className="tooltip help" data-tip data-for="artifact-expand-tip" data-event="click focus">

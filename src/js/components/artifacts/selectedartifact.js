@@ -1,14 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Time from 'react-time';
 
 // material ui
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import Divider from '@material-ui/core/Divider';
+import Button from '@material-ui/core/Button';
+import ExpansionPanel from '@material-ui/core/ExpansionPanel';
+import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
+import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
+import FormControl from '@material-ui/core/FormControl';
 import IconButton from '@material-ui/core/IconButton';
+import Input from '@material-ui/core/Input';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import InputLabel from '@material-ui/core/InputLabel';
 import TextField from '@material-ui/core/TextField';
 
 import CancelIcon from '@material-ui/icons/Cancel';
@@ -25,11 +27,6 @@ export default class SelectedArtifact extends React.Component {
       descEdit: false,
       description: this.props.artifact.description || '-'
     };
-  }
-  componentDidUpdate() {
-    if (this.state.descEdit) {
-      this.refs.description.focus();
-    }
   }
   _handleLinkClick(device_type) {
     var filters = `device_type=${device_type}`;
@@ -56,17 +53,8 @@ export default class SelectedArtifact extends React.Component {
   }
   render() {
     const self = this;
-    var info = { name: '-', device_type: '-', build_date: '-', modified: '-', size: '-', checksum: '-', devices: '-', description: '', signed: false };
-    if (this.props.artifact) {
-      for (var key in this.props.artifact) {
-        if (this.props.artifact[key]) {
-          info[key] = this.props.artifact[key];
-        }
-        if (key.indexOf('modified') !== -1) {
-          info[key] = <Time style={{ position: 'relative', top: '4px' }} value={this.props.formatTime(this.props.artifact[key])} format="YYYY-MM-DD HH:mm" />;
-        }
-      }
-    }
+
+    const artifact = self.props.artifact;
 
     const styles = {
       editButton: {
@@ -77,78 +65,56 @@ export default class SelectedArtifact extends React.Component {
         fontSize: '12px',
         paddingTop: '10px',
         paddingBottom: '10px',
-        wordWrap: 'break-word',
-        whiteSpace: 'normal'
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'baseline'
       }
     };
 
-    var editButtonDesc = (
-      <IconButton style={styles.editButton} onClick={e => this._onToggleEditing(e)} className="material-icons">
-        {this.state.descEdit ? 'check' : 'edit'}
-      </IconButton>
-    );
-
-    var descInput = (
-      <TextField
-        id="inline-description"
-        autoFocus={true}
-        className={this.state.descEdit ? null : 'hidden'}
-        style={{ width: '100%', height: '38px', marginTop: '0' }}
-        value={this.state.description}
-        onChange={e => this._descEdit(e.target.value)}
-        onKeyDown={e => this._onToggleEditing(e)}
-      />
-    );
-    var files = this.props.artifact.updates.map((update, index) => <ArtifactPayload payload={update} key={`artifact-update-${index}`} />);
-
     return (
-      <div className={this.props.artifact.name == null ? 'muted' : null}>
+      <div className={artifact.name == null ? 'muted' : null}>
         <h3 className="margin-bottom-none">Artifact details</h3>
-        <div>
-          <div className="artifact-list list-item">
-            <div style={{ padding: '9px 0' }}>
-              <div style={{ padding: '12px 16px 10px', lineHeight: '12px', height: '74px', position: 'relative' }}>
-                <span style={{ color: 'rgba(0,0,0,0.8)', fontSize: '12px' }}>Description</span>
-                <div style={{ color: 'rgba(0,0,0,0.54)', marginRight: '30px', marginTop: '8px', whiteSpace: 'normal' }}>
-                  <span className={this.state.descEdit ? 'hidden' : null}>{this.state.description}</span>
-                  {descInput}
-                </div>
-                {editButtonDesc}
-              </div>
-              <hr style={{ margin: '0', backgroundColor: '#e0e0e0', height: '1px', border: 'none' }} />
-            </div>
-          </div>
-
-          <div className="artifact-list list-item">
-            <List style={{ backgroundColor: 'rgba(255,255,255,0)' }}>
-              <ListItem disabled={true}>
-                <ListItemText primary="Device type compatibility" secondary={this.props.compatible} />
-              </ListItem>
-              <Divider />
-            </List>
-          </div>
-          <div className="artifact-list list-item">
-            <List style={{ backgroundColor: 'rgba(255,255,255,0)' }}>
-              <ListItem disabled={true}>
-                <ListItemText primary="Signed" secondary={info.signed ? 'Yes' : 'No'} />
-              </ListItem>
-              <Divider />
-            </List>
-          </div>
+        <div style={styles.listStyle}>
+          <FormControl className="list-item">
+            <InputLabel htmlFor="artifact-description">Description</InputLabel>
+            <Input
+              id="artifact-description"
+              type="text"
+              disabled={!self.state.descEdit}
+              value={self.state.description}
+              onKeyDown={e => this._onToggleEditing(e)}
+              onChange={e => this._descEdit(e.target.value)}
+              endAdornment={
+                <InputAdornment position="end">
+                  <IconButton style={styles.editButton} onClick={e => self._onToggleEditing(e)} className="material-icons">
+                    {self.state.descEdit ? 'check' : 'edit'}
+                  </IconButton>
+                </InputAdornment>
+              }
+            />
+          </FormControl>
+          <TextField className="list-item" disabled label="Device type compatibility" defaultValue={self.props.compatible} margin="normal" />
+          <TextField className="list-item" disabled label="Signed" defaultValue={artifact.signed ? 'Yes' : 'No'} margin="normal" />
         </div>
 
-        <h4 className="margin-bottom-none" onClick={() => self._toggleArtifactContentVisibility()}>
-          Artifact contents
-        </h4>
-        {files}
-        <List className="inline-block">
-          <ListItem style={styles.listStyle} onClick={this.props.removeArtifact}>
-            <ListItemAvatar>
-              <CancelIcon className="red auth" />
-            </ListItemAvatar>
-            <ListItemText primary="Remove this artifact?" />
-          </ListItem>
-        </List>
+        <ExpansionPanel
+          square
+          expanded={self.state.showArtifacts}
+          onChange={() => self._toggleArtifactContentVisibility()}
+          style={{ background: 'transparent', borderTop: 'none', padding: 0 }}
+        >
+          <ExpansionPanelSummary style={{ padding: 0 }}>
+            <h4>Artifact contents</h4>
+          </ExpansionPanelSummary>
+          <ExpansionPanelDetails style={{ padding: 0 }}>
+            {artifact.updates ? artifact.updates.map((update, index) => <ArtifactPayload payload={update} key={`artifact-update-${index}`} />) : <div />}
+          </ExpansionPanelDetails>
+        </ExpansionPanel>
+
+        <Button onClick={() => self.props.removeArtifact()}>
+          <CancelIcon className="red auth" />
+          Remove this artifact?
+        </Button>
       </div>
     );
   }

@@ -875,8 +875,18 @@ table tbody.clickable tr > td:first-child,
 table thead.clickable tr > th:first-child {
   padding-right: 36px !important;
 }
+.inventoryTable {
+  padding: 0 24px;
+  align-items: center;
+  height: 56px;
+  font-size: 12px;
+  color: @mendermaroon;
+}
 
 .columnHeader {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
   .sortIcon {
     visibility: hidden;
     .transition(visibility 0.1s ease-in) !important;
@@ -885,17 +895,17 @@ table thead.clickable tr > th:first-child {
     color: @grey;
   }
   &:hover {
-    //visibility: visible;
-    //.opacity(.4);
+    visibility: visible;
+    .opacity(0.4);
     color: #aeaeae;
   }
   &:hover .sortIcon.selected,
   .sortIcon.selected {
     .opacity(1);
-    //visibility: visible;
+    visibility: visible;
     .transition(all 0.15s ease-in-out) !important;
   }
-  .sortIcon.selected.false {
+  .sortIcon.false {
     .rotateX(180deg) !important;
   }
 }
