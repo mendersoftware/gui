@@ -8,21 +8,20 @@ import UsersApi from '../api/users-api';
 import parse from 'parse-link-header';
 
 var rootUrl = 'https://localhost:443';
-var apiUrl = `${rootUrl}/api/management/v1`;
-var apiUrlV2 = `${rootUrl}/api/management/v2`;
-var deploymentsApiUrl = `${apiUrl}/deployments`;
-var devAuthApiUrl = `${apiUrl}/devauth`;
-var deviceAuthV2 = `${apiUrlV2}/devauth`;
-var inventoryApiUrl = `${apiUrl}/inventory`;
-var useradmApiUrl = `${apiUrl}/useradm`;
-var tenantadmUrl = `${apiUrl}/tenantadm`;
-var hostedLinks = 'https://s3.amazonaws.com/hosted-mender-artifacts-onboarding/';
+const apiUrl = `${rootUrl}/api/management/v1`;
+const apiUrlV2 = `${rootUrl}/api/management/v2`;
+const deploymentsApiUrl = `${apiUrl}/deployments`;
+const deviceAuthV2 = `${apiUrlV2}/devauth`;
+const inventoryApiUrl = `${apiUrl}/inventory`;
+const useradmApiUrl = `${apiUrl}/useradm`;
+const tenantadmUrl = `${apiUrl}/tenantadm`;
+const hostedLinks = 'https://s3.amazonaws.com/hosted-mender-artifacts-onboarding/';
 
 // default per page until pagination and counting integrated
-var default_per_page = 20;
-var default_page = 1;
+const default_per_page = 20;
+const default_page = 1;
 
-var AppActions = {
+const AppActions = {
   /*
    * Device inventory functions
    */
@@ -183,7 +182,7 @@ var AppActions = {
     return DevicesApi.post(`${deviceAuthV2}/devices`, authset);
   },
 
-  decommissionDevice: id => DevicesApi.delete(`${devAuthApiUrl}/devices/${id}`),
+  decommissionDevice: id => DevicesApi.delete(`${deviceAuthV2}/devices/${id}`),
 
   /* 
     General 
