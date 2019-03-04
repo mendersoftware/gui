@@ -169,7 +169,7 @@ export default class Header extends React.Component {
     if (!self.state.gettingUser) {
       var userId = self.state.sessionId ? decodeSessionToken(self.state.sessionId) : decodeSessionToken(cookie.load('JWT'));
       if (!userId) {
-        return Promise.reject();
+        return;
       }
       self.setState({ gettingUser: true });
       return AppActions.getUser(userId)

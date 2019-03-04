@@ -35,6 +35,7 @@ export default class FormCheckbox extends React.Component {
             onChange={(e, checked) => this.updateCheck(checked)}
             onClick={this.props.handleClick}
             style={this.props.style}
+            color="primary"
             checked={this.state.checked}
           />
         }
