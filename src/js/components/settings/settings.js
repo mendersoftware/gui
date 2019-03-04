@@ -51,8 +51,7 @@ export default class Settings extends React.Component {
       (this.context.router.route.location.pathname === myOrganization.route && !this.state.hasMultitenancy)
     ) {
       // redirect from organization screen if no multitenancy
-      // this.context.router.history.replace(routes.myAccount);
-      window.location.hash = `#${routes.myAccount}`;
+      this.context.router.history.replace(routes.myAccount.route);
     }
   }
 
