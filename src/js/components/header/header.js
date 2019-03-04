@@ -213,12 +213,8 @@ export default class Header extends React.Component {
     const menuButtonColor = '#c7c7c7';
 
     var dropDownElement = (
-      <div>
-        <Button
-          className="header-dropdown"
-          style={{ marginRight: '0', fontSize: '14px', paddingLeft: '4px', fill: 'rgb(0, 0, 0)', textTransform: 'none' }}
-          onClick={self.handleClick}
-        >
+      <div style={{ marginRight: '0', paddingLeft: '30px' }}>
+        <Button className="header-dropdown" style={{ fontSize: '14px', fill: 'rgb(0, 0, 0)', textTransform: 'none' }} onClick={self.handleClick}>
           <AccountCircleIcon style={{ marginRight: '8px', top: '5px', fontSize: '20px', color: menuButtonColor }} />
           {(this.state.user || {}).email}
           {anchorEl ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
