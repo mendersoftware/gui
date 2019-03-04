@@ -59,8 +59,10 @@ var AppActions = {
       return Promise.resolve(res.body);
     }),
 
-  getGroupDevices: (group, page = default_page, per_page = default_per_page) =>
-    DevicesApi.get(`${inventoryApiUrl}/devices?per_page=${per_page}&page=${page}&group=${group}`),
+  getGroupDevices: (group, page = default_page, per_page = default_per_page) => {
+    var forGroup = group ? `&group=${group}` : '&has_group=false';
+    return DevicesApi.get(`${inventoryApiUrl}/devices?per_page=${per_page}&page=${page}${forGroup}`);
+  },
 
   setGroupDevices: devices => {
     AppDispatcher.handleViewAction({
