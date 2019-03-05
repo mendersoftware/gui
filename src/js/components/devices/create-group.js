@@ -237,7 +237,13 @@ export default class CreateGroup extends React.Component {
             />
 
             <div className={self.state.showDeviceList ? 'hidden' : 'float-left margin-left-small'}>
-              <Button variant="contained" disabled={self.state.nextInvalid} style={{ marginTop: '26px' }} secondary="true" onClick={() => self._loadMoreDevs()}>
+              <Button
+                variant="contained"
+                disabled={self.state.nextInvalid}
+                style={{ marginTop: '26px' }}
+                color="secondary"
+                onClick={() => self._loadMoreDevs()}
+              >
                 Next
               </Button>
             </div>
@@ -304,7 +310,7 @@ export default class CreateGroup extends React.Component {
           <Button
             variant="contained"
             key="create-action-button-2"
-            primary="true"
+            color="primary"
             onClick={() => this._createGroupHandler()}
             disabled={this.state.createInvalid}
           >

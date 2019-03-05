@@ -39,7 +39,7 @@ export default class Schedule extends React.Component {
             </TableCell>
             <TableCell>
               <div>
-                <Button secondary="true" style={{ padding: '0', marginRight: '4', minWidth: '55' }} onClick={() => this._handleEdit(deployment)}>
+                <Button color="secondary" style={{ padding: '0', marginRight: '4', minWidth: '55' }} onClick={() => this._handleEdit(deployment)}>
                   Edit
                 </Button>
                 <Button style={{ padding: '0', marginLeft: '4', minWidth: '55' }} onClick={() => this._handleRemove(deployment.id)}>

@@ -130,18 +130,16 @@ export default class UserManagement extends React.Component {
       <div key="remove-button-1" style={{ marginRight: '10px', display: 'inline-block' }}>
         <Button onClick={() => this.dialogDismiss()}>Cancel</Button>
       </div>,
-      <Button variant="contained" key="remove-button-2" primary="true" onClick={() => this._removeSubmit()}>
+      <Button variant="contained" key="remove-button-2" color="primary" onClick={() => this._removeSubmit()}>
         Remove user
       </Button>
     ];
 
     return (
       <div>
-        <div className="float-right">
-          <Button variant="contained" primary="true" onClick={() => this._openCreate()}>
-            Create new user
-          </Button>
-        </div>
+        <Button className="float-right" variant="contained" color="primary" onClick={() => this._openCreate()}>
+          Create new user
+        </Button>
 
         <UserList
           users={this.state.users || []}

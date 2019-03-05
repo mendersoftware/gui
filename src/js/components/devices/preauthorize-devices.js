@@ -317,7 +317,7 @@ export default class Preauthorize extends React.Component {
           variant="contained"
           disabled={!this.state.public || isEmpty(this.state.json_identity) || !!limitMaxed}
           onClick={() => this._savePreauth(false)}
-          primary="true"
+          color="primary"
         >
           Save and add another
         </Button>
@@ -327,7 +327,7 @@ export default class Preauthorize extends React.Component {
         key="auth-button-3"
         disabled={!this.state.public || isEmpty(this.state.json_identity) || !!limitMaxed}
         onClick={() => this._savePreauth(true)}
-        secondary="true"
+        color="secondary"
       >
         Save
       </Button>
@@ -364,8 +364,15 @@ export default class Preauthorize extends React.Component {
     }, this);
 
     return (
-      <div>
-        <Button variant="contained" disabled={!!limitMaxed} className="top-right-button" secondary="true" onClick={() => this._dialogToggle('openPreauth')}>
+      <div className="relative">
+        <Button
+          variant="contained"
+          color="secondary"
+          disabled={!!limitMaxed}
+          className="top-right-button"
+          onClick={() => this._dialogToggle('openPreauth')}
+          style={{ position: 'absolute' }}
+        >
           Preauthorize devices
         </Button>
 

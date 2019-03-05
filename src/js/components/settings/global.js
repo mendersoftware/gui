@@ -144,7 +144,7 @@ export default class Global extends React.Component {
             <Button disabled={!changed && !this.props.dialog} onClick={() => this.undoChanges()} style={{ marginRight: '10px' }}>
               Cancel
             </Button>
-            <Button variant="contained" onClick={() => this.saveSettings()} disabled={!changed} primary="true">
+            <Button variant="contained" onClick={() => this.saveSettings()} disabled={!changed} color="primary">
               Save
             </Button>
           </div>

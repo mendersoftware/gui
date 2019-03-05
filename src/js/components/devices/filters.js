@@ -117,7 +117,7 @@ export default class Filters extends React.Component {
     const drawerStyles = this.state.showFilters ? { overflow: 'visible', top: '57px' } : { overflow: 'hidden', top: '57px' };
     return (
       <div style={{ position: 'relative' }}>
-        <Button style={{ position: 'absolute', right: '0' }} secondary="true" onClick={() => this._toggleNav()}>
+        <Button style={{ position: 'absolute', right: '0' }} color="secondary" onClick={() => this._toggleNav()}>
           <FilterListIcon />
           {filterCount > 0 ? `Filters (${filterCount})` : 'Filters'}
         </Button>
@@ -142,7 +142,7 @@ export default class Filters extends React.Component {
           </p>
           <List>{filters}</List>
           {this.props.isHosted ? (
-            <Button disabled={!filterCount} onClick={() => this._addFilter()} secondary="true">
+            <Button disabled={!filterCount} onClick={() => this._addFilter()} color="secondary">
               <AddCircleIcon />
               Add filter
             </Button>

@@ -88,7 +88,7 @@ export default class SelfUserManagement extends React.Component {
 
           <FormButton
             className={this.state.editEmail ? 'hidden' : 'inline-block'}
-            primary="true"
+            color="primary"
             id="change_email"
             label="Change email"
             handleClick={() => this.handleEmail()}
@@ -117,7 +117,7 @@ export default class SelfUserManagement extends React.Component {
           <FormButton
             buttonHolder={true}
             className={this.state.editPass ? 'hidden' : 'block'}
-            primary="true"
+            color="primary"
             id="change_pass"
             label="Change password"
             handleClick={() => this.handlePass()}

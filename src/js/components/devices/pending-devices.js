@@ -443,7 +443,7 @@ export default class Pending extends React.Component {
                 variant="contained"
                 disabled={this.props.disabled || limitMaxed || selectedOverLimit}
                 onClick={() => this._authorizeDevices()}
-                primary="true"
+                color="primary"
               >
                 {`Authorize ${this.state.selectedRows.length} ${pluralize('devices', this.state.selectedRows.length)}`}
               </Button>

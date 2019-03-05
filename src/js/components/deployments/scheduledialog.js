@@ -103,7 +103,7 @@ export default class ScheduleDialog extends React.Component {
           <Button key="schedule-action-button-1" onClick={onDismiss} style={{ marginRight: '10px', display: 'inline-block' }}>
             Cancel
           </Button>
-          <Button key="schedule-action-button-2" onClick={onScheduleSubmit} variant="contained" primary="true" disabled={disabled}>
+          <Button key="schedule-action-button-2" onClick={onScheduleSubmit} variant="contained" color="primary" disabled={disabled}>
             Create deployment
           </Button>
         </DialogActions>

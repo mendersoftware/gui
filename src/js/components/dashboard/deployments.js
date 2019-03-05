@@ -9,13 +9,13 @@ import Button from '@material-ui/core/Button';
 export default class Deployments extends React.Component {
   render() {
     return (
-      <div className="deployments">
+      <div className="relative">
         <div>
           <Progress className="margin-bottom" loading={this.props.loadingActive} deployments={this.props.progress} />
           <Recent className="margin-bottom" loading={this.props.loadingRecent} deployments={this.props.recent} />
         </div>
 
-        <Button component={Link} variant="contained" secondary="true" to="/deployments?open=true">
+        <Button component={Link} variant="contained" color="secondary" to="/deployments?open=true">
           Create a deployment
         </Button>
       </div>

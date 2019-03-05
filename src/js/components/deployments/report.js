@@ -229,7 +229,7 @@ export default class DeploymentReport extends React.Component {
       >
         <Button>Copy to clipboard</Button>
       </CopyToClipboard>,
-      <Button variant="contained" key="log-action-button-3" primary="true" onClick={() => this.exportLog()}>
+      <Button variant="contained" key="log-action-button-3" color="primary" onClick={() => this.exportLog()}>
         Export log
       </Button>
     ];
@@ -237,7 +237,7 @@ export default class DeploymentReport extends React.Component {
     var abort = (
       <div className="float-right">
         <Button
-          secondary="true"
+          color="secondary"
           onClick={() => this._showConfirm('abort')}
           icon={<BlockIcon style={{ height: '18px', width: '18px', verticalAlign: 'middle' }} />}
         >
@@ -311,7 +311,7 @@ export default class DeploymentReport extends React.Component {
                           <ConfirmRetry cancel={() => this._hideConfirm('retry')} retry={() => this._handleRetry()} />
                         ) : (
                           <Button
-                            secondary="true"
+                            color="secondary"
                             icon={<RefreshIcon style={{ height: '18px', width: '18px', verticalAlign: 'middle' }} />}
                             onClick={() => this._showConfirm('retry')}
                           >

@@ -44,7 +44,7 @@ export default class Pending extends React.Component {
     var pendingMap = this.props.pending.map(function(deployment, index) {
       var abort = (
         <Button
-          secondary="true"
+          color="secondary"
           onClick={() => this._showConfirm(deployment.id)}
           icon={<BlockIcon style={{ height: '18px', width: '18px', verticalAlign: 'middle' }} />}
         >

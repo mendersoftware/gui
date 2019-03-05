@@ -792,9 +792,9 @@ ul.link-list {
     background: none;
     color: @red !important;
   }
-  &.update {
-    .rotate(-45deg);
-  }
+}
+.rotated {
+  .rotate(-45deg);
 }
 
 // pagination
@@ -981,6 +981,16 @@ table thead.clickable tr > th:first-child {
 
 .list-horizontal-display {
   overflow: hidden;
+}
+
+.list-horizontal-flex {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  > div {
+    margin-right: 2vw;
+    flex-basis: 300px;
+  }
 }
 
 #device-identity.report-list.bordered,

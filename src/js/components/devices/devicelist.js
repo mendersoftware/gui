@@ -355,7 +355,7 @@ export default class Authorized extends React.Component {
                 <span className="margin-right">
                   {this.state.selectedRows.length} {pluralize('devices', this.state.selectedRows.length)} selected
                 </span>
-                <Button variant="contained" disabled={!this.state.selectedRows.length} secondary="true" onClick={() => this._addToGroup()}>
+                <Button variant="contained" disabled={!this.state.selectedRows.length} color="secondary" onClick={() => this._addToGroup()}>
                   <AddCircleIcon />
                   {addLabel}
                 </Button>

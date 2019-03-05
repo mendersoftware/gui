@@ -122,7 +122,7 @@ export default class Authsets extends React.Component {
 
     var decommission = (
       <div className="float-right">
-        <Button secondary="true" onClick={() => this._showConfirm()} icon={<TrashIcon style={{ height: '18px', width: '18px', verticalAlign: 'middle' }} />}>
+        <Button color="secondary" onClick={() => this._showConfirm()} icon={<TrashIcon style={{ height: '18px', width: '18px', verticalAlign: 'middle' }} />}>
           Decommission device
         </Button>
       </div>

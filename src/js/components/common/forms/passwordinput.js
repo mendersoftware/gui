@@ -106,7 +106,7 @@ export default class PasswordInput extends React.Component {
             />
           </FormControl>
           <div className={this.props.create ? 'pass-buttons' : 'hidden'}>
-            <Button primary="true" onClick={() => this.generatePass()}>
+            <Button color="primary" onClick={() => this.generatePass()}>
               Generate
             </Button>
             {this.props.edit ? <Button onClick={() => this.clearPass()}>Cancel</Button> : null}

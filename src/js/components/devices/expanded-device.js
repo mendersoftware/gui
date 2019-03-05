@@ -205,7 +205,14 @@ export default class ExpandedDevice extends React.Component {
       deviceIdentity.push(
         <FormControl className="list-item" key="connectionTime">
           <InputLabel htmlFor="device-connectionTime">{status === 'preauthorized' ? 'Date added' : 'First request'}</InputLabel>
-          <Input id="device-connectionTime" type="text" disabled={true} inputComponent={Time} value={this.props.device.created_ts} inputProps={{'format':"YYYY-MM-DD HH:mm"}} />
+          <Input
+            id="device-connectionTime"
+            type="text"
+            disabled={true}
+            inputComponent={Time}
+            value={this.props.device.created_ts}
+            inputProps={{ format: 'YYYY-MM-DD HH:mm' }}
+          />
         </FormControl>
       );
     }
@@ -383,7 +390,7 @@ export default class ExpandedDevice extends React.Component {
       <Button
         variant="contained"
         key="schedule-action-button-2"
-        primary="true"
+        color="primary"
         disabled={!this.state.filterByArtifact}
         onClick={() => this._onScheduleSubmit()}
       >

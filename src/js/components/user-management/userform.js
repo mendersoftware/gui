@@ -43,7 +43,7 @@ export default class UserForm extends React.Component {
         <FormButton
           buttonHolder={this.props.edit}
           className={this.props.editPass ? 'hidden' : 'block'}
-          primary="true"
+          color="primary"
           id="change"
           label="Change password"
           handleClick={() => this.handleButton()}

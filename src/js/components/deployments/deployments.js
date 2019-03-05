@@ -482,7 +482,7 @@ export default class Deployments extends React.Component {
         to="/deployments/finished"
         variant="contained"
         key="onboard-action-button-1"
-        primary="true"
+        color="primary"
         onClick={() => self.setState({ onboardDialog: false })}
       >
         Finish
@@ -522,7 +522,7 @@ export default class Deployments extends React.Component {
       <div style={{ marginTop: '-15px' }}>
         <Button
           className="top-right-button"
-          secondary="true"
+          color="secondary"
           variant="contained"
           onClick={() => this.setState({ scheduleDialog: true })}
           style={{ position: 'absolute' }}
