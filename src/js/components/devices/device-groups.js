@@ -192,12 +192,6 @@ export default class DeviceGroups extends React.Component {
     });
   }
 
-  _toggleDialog(ref) {
-    var state = {};
-    state[ref] = !this.state[ref];
-    this.setState(state);
-  }
-
   _removeCurrentGroup() {
     var self = this;
     clearInterval(self.deviceTimer);
@@ -210,9 +204,8 @@ export default class DeviceGroups extends React.Component {
         return Promise.all(singleRemovals);
       })
       .then(() => {
-        self._toggleDialog('removeGroup');
         AppActions.setSnackbar('Group was removed successfully', 5000);
-        self.setState({ selectedGroup: null, pageNo: 1, groupCount: self.props.acceptedDevices }, () => {
+        self.setState({ selectedGroup: null, pageNo: 1, groupCount: self.props.acceptedDevices, removeGroup: !self.state.removeGroup }, () => {
           setTimeout(() => {
             self.deviceTimer = setInterval(() => self._getDevices(), self.state.refreshDeviceLength);
             self._refreshAll();
@@ -406,9 +399,7 @@ export default class DeviceGroups extends React.Component {
   _addDevicesToGroup(devices) {
     var self = this;
     // (save selected devices in state, open dialog)
-    this.setState({ tmpDevices: devices }, () => {
-      self._toggleDialog('addGroup');
-    });
+    self.setState({ tmpDevices: devices, addGroup: !self.state.addGroup });
   }
 
   _validate(invalid, group) {
@@ -536,24 +527,24 @@ export default class DeviceGroups extends React.Component {
     const self = this;
     // Add to group dialog
     var addActions = [
-      <div key="add-action-button-1" style={{ marginRight: '10px', display: 'inline-block' }}>
-        <Button onClick={() => this._toggleDialog('addGroup')}>Cancel</Button>
-      </div>,
+      <Button key="add-action-button-1" style={{ marginRight: '10px' }} onClick={() => self.setState({ addGroup: !self.state.addGroup })}>
+        Cancel
+      </Button>,
       <Button variant="contained" key="add-action-button-2" primary={true} onClick={() => this._addToGroup()} disabled={this.state.groupInvalid}>
         Add to group
       </Button>
     ];
 
     var removeActions = [
-      <div key="remove-action-button-1" style={{ marginRight: '10px', display: 'inline-block' }}>
-        <Button onClick={() => this._toggleDialog('removeGroup')}>Cancel</Button>
-      </div>,
+      <Button key="remove-action-button-1" onClick={() => self.setState({ removeGroup: !self.state.removeGroup })} style={{ marginRight: '10px' }}>
+        Cancel
+      </Button>,
       <Button variant="contained" key="remove-action-button-2" primary={true} onClick={() => this._removeCurrentGroup()}>
         Remove group
       </Button>
     ];
 
-    var groupCount = this.state.groupCount ? this.state.groupCount : this.props.acceptedDevices;
+    var groupCount = this.state.groupCount || this.props.acceptedDevices || 0;
 
     var groupName = this._isUngroupedGroup(this.state.selectedGroup) ? UNGROUPED_GROUP.name : this.state.selectedGroup;
     var allowDeviceGroupRemoval = !this._isUngroupedGroup(this.state.selectedGroup);
@@ -562,7 +553,7 @@ export default class DeviceGroups extends React.Component {
       <div className="margin-top">
         <div className="leftFixed">
           <Groups
-            openGroupDialog={() => this._toggleDialog('createGroupDialog')}
+            openGroupDialog={() => self.setState({ createGroupDialog: !self.state.createGroupDialog })}
             changeGroup={group => this._handleGroupChange(group)}
             groups={this.state.groups}
             selectedGroup={this.state.selectedGroup}
@@ -582,7 +573,7 @@ export default class DeviceGroups extends React.Component {
           ) : null}
 
           {self.state.selectedGroup && allowDeviceGroupRemoval ? (
-            <Button onClick={() => this._toggleDialog('removeGroup')} labelPosition="after">
+            <Button onClick={() => self.setState({ removeGroup: !self.state.removeGroup })}>
               <DeleteIcon />
               Remove group
             </Button>
@@ -658,7 +649,7 @@ export default class DeviceGroups extends React.Component {
         <AppContext.Consumer>
           {globalSettings => (
             <CreateGroup
-              toggleDialog={() => this._toggleDialog('createGroupDialog')}
+              toggleDialog={() => self.setState({ createGroupDialog: !self.state.createGroupDialog })}
               open={this.state.createGroupDialog}
               groups={this.state.groups}
               changeGroup={() => this._handleGroupChange()}

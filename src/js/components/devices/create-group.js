@@ -198,13 +198,14 @@ export default class CreateGroup extends React.Component {
 
   render() {
     var self = this;
+
     var deviceList = self.state.devices.map((device, index) => {
       var id_attribute =
         self.props.globalSettings.id_attribute && self.props.globalSettings.id_attribute !== 'Device ID'
           ? (device.identity_data || {})[self.props.globalSettings.id_attribute]
           : device.device_id || device.id;
 
-      var attrs = mapDeviceAttributes(device.attributes);
+      var attrs = mapDeviceAttributes(device.attributes || []);
       return (
         <TableRow selected={self._isSelected(index)} hover key={index} onClick={row => this._onRowSelection(row)}>
           <TableCell padding="checkbox">
@@ -219,7 +220,7 @@ export default class CreateGroup extends React.Component {
     const numSelected = self.state.selectedRows.length;
 
     return (
-      <Dialog disableBackdropClick disableEscapeKeyDown open={self.props.open} scroll={'paper'}>
+      <Dialog disableBackdropClick disableEscapeKeyDown open={self.props.open} scroll={'paper'} fullWidth={true} maxWidth="sm">
         <DialogTitle style={{ paddingBottom: '15px', marginBottom: 0 }}>{this.state.showWarning ? '' : 'Create a new group'}</DialogTitle>
 
         <DialogContent style={{ maxHeight: '50vh' }}>
@@ -264,24 +265,26 @@ export default class CreateGroup extends React.Component {
             </div>
           ) : (
             <div className={this.state.showDeviceList === true ? 'dialogTableContainer' : 'dialogTableContainer zero'}>
-              <Table className={deviceList.length ? null : 'hidden'}>
-                <TableHead>
-                  <TableRow>
-                    <TableCell padding="checkbox">
-                      <Checkbox
-                        indeterminate={numSelected > 0 && numSelected < self.state.devices.length}
-                        checked={numSelected === self.state.devices.length}
-                        onChange={() => self.onSelectAllClick()}
-                      />
-                    </TableCell>
-                    <TableCell tooltip={(this.props.globalSettings || {}).id_attribute || 'Device ID'}>
-                      {(this.props.globalSettings || {}).id_attribute || 'Device ID'}
-                    </TableCell>
-                    <TableCell tooltip="Device type">Device type</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>{deviceList}</TableBody>
-              </Table>
+              {deviceList.length ? (
+                <Table>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell padding="checkbox">
+                        <Checkbox
+                          indeterminate={numSelected > 0 && numSelected < self.state.devices.length}
+                          checked={numSelected === self.state.devices.length}
+                          onChange={() => self.onSelectAllClick()}
+                        />
+                      </TableCell>
+                      <TableCell tooltip={(this.props.globalSettings || {}).id_attribute || 'Device ID'}>
+                        {(this.props.globalSettings || {}).id_attribute || 'Device ID'}
+                      </TableCell>
+                      <TableCell tooltip="Device type">Device type</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>{deviceList}</TableBody>
+                </Table>
+              ) : null}
               {this.props.acceptedCount > deviceList.length ? (
                 <a className="small" onClick={() => this._loadMoreDevs()}>
                   Load more devices

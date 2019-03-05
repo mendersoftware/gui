@@ -9,9 +9,9 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import ListItemText from '@material-ui/core/ListItemText';
-import Icon from '@material-ui/core/Icon';
 import Divider from '@material-ui/core/Divider';
 
+import AddIcon from '@material-ui/icons/Add';
 import HelpIcon from '@material-ui/icons/Help';
 
 require('../common/prototype/Array.prototype.equals');
@@ -22,12 +22,6 @@ export default class Groups extends React.Component {
   }
 
   render() {
-    var createBtn = (
-      <Icon className="material-icons" style={this.props.allCount ? null : { color: '#d4e9e7' }}>
-        add
-      </Icon>
-    );
-
     var allLabel = <span>All devices</span>;
 
     const groupItems = this.props.groups.reduce(
@@ -72,11 +66,14 @@ export default class Groups extends React.Component {
           <Divider />
           {groupItems.groups}
           <ListItem
+            button
             disabled={!this.props.acceptedCount}
             style={this.props.acceptedCount ? null : { color: '#d4e9e7' }}
             onClick={this.props.acceptedCount ? () => this.dialogToggle() : null}
           >
-            <ListItemAvatar>{createBtn}</ListItemAvatar>
+            <ListItemAvatar>
+              <AddIcon style={this.props.allCount ? null : { color: '#d4e9e7' }} />
+            </ListItemAvatar>
             <ListItemText primary="Create a group" />
           </ListItem>
         </List>
