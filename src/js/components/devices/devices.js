@@ -88,14 +88,14 @@ export default class Devices extends React.Component {
     };
   }
   _onChange() {
-    this.setState(this._getInitialState());
+    this.setState(this._getInitialState(), this._getAllCount);
   }
 
   _refreshAll() {
-    this._getAcceptedCount();
-    this._getRejectedCount();
-    this._getPendingCount();
-    this._getPreauthCount();
+    AppActions.getDeviceCount('accepted');
+    AppActions.getDeviceCount('rejected');
+    AppActions.getDeviceCount('pending');
+    AppActions.getDeviceCount('preauthorized');
   }
 
   _restartInterval() {
@@ -112,30 +112,6 @@ export default class Devices extends React.Component {
   /*
    * Get counts of devices
    */
-  _getAcceptedCount() {
-    var self = this;
-    return AppActions.getDeviceCount('accepted')
-      .then(acceptedCount => self.setState({ acceptedCount }))
-      .catch(() => {});
-  }
-  _getRejectedCount() {
-    var self = this;
-    return AppActions.getDeviceCount('rejected')
-      .then(rejectedCount => self.setState({ rejectedCount }, self._getAllCount()))
-      .catch(() => {});
-  }
-  _getPendingCount() {
-    var self = this;
-    return AppActions.getDeviceCount('pending')
-      .then(pendingCount => self.setState({ pendingCount }))
-      .catch(() => {});
-  }
-  _getPreauthCount() {
-    var self = this;
-    return AppActions.getDeviceCount('preauthorized')
-      .then(preauthCount => self.setState({ preauthCount }))
-      .catch(() => {});
-  }
   _getAllCount() {
     var self = this;
     var accepted = self.state.acceptedCount ? self.state.acceptedCount : 0;
