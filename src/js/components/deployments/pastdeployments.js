@@ -61,10 +61,6 @@ export default class Past extends React.Component {
     this.props.refreshPast(pageNo, this.props.startDate, this.props.endDate, this.props.pageSize, this.props.deviceGroup);
   }
   _handleChangeStartDate(date) {
-    this.setState({
-      active: ''
-    });
-
     // refresh deployment list
     this._handleDateChange(1, date, null);
   }
@@ -185,7 +181,6 @@ export default class Past extends React.Component {
               style={{ width: '160px' }}
             />
           </MuiPickersUtilsProvider>
-
           <Autosuggest
             className="inline-block margin-left"
             // ref="autocomplete"

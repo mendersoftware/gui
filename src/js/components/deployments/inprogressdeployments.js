@@ -26,19 +26,13 @@ export default class Progress extends React.Component {
       pageSize: 20
     };
   }
-  _progressCellClick(rowNumber) {
-    this.props.openReport(rowNumber, 'progress');
-  }
 
-  _handlePageChange(pageNo) {
-    this.props.refreshProgress(pageNo);
-  }
   render() {
     // get statistics for each in progress
     var progressMap = this.props.progress.map(function(deployment, index) {
       var status = <DeploymentStatus isActiveTab={this.props.isActiveTab} refresh={true} id={deployment.id} />;
       return (
-        <TableRow style={{ height: '52px' }} hover key={index}>
+        <TableRow style={{ height: '52px' }} hover key={index} onClick={() => this.props.openReport(index, 'progress')}>
           <TableCell>{deployment.artifact_name}</TableCell>
           <TableCell>{deployment.name}</TableCell>
           <TableCell>
@@ -59,7 +53,7 @@ export default class Progress extends React.Component {
               <h3>In progress</h3>
               <Table className={progressMap.length ? null : 'hidden'} style={{ overflow: 'visible' }}>
                 <TableHead>
-                  <TableRow style={{ overflow: 'visible' }} onClick={row => this._progressCellClick(row)}>
+                  <TableRow style={{ overflow: 'visible' }}>
                     <TableCell>Updating to</TableCell>
                     <TableCell>Group</TableCell>
                     <TableCell>Started</TableCell>
@@ -81,7 +75,7 @@ export default class Progress extends React.Component {
               pageSize={this.state.pageSize}
               current={this.props.page || 1}
               total={this.props.count}
-              onChange={page => this._handlePageChange(page)}
+              onChange={page => this.props.refreshProgress(page)}
             />
           ) : null}
 

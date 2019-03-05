@@ -49,6 +49,7 @@ export default class Deployments extends React.Component {
       invalid: true,
       per_page: 20,
       refreshDeploymentsLength: 30000,
+      reportDialog: false,
       scheduleDialog: false,
       ...this._getInitialState()
     };
@@ -107,7 +108,7 @@ export default class Deployments extends React.Component {
     }
 
     const query = new URLSearchParams(this.context.router.route.location.search);
-    this.setState({ scheduleDialog: query.get('open') });
+    this.setState({ scheduleDialog: query.get('open') || false });
   }
 
   componentWillUnmount() {
@@ -286,19 +287,10 @@ export default class Deployments extends React.Component {
 
   dialogDismiss() {
     this.setState({
-      dialog: false,
+      reportDialog: false,
       artifact: null,
       group: null
     });
-  }
-  dialogOpen(dialog) {
-    if (dialog === 'report') {
-      this.setState({
-        scheduleDialog: false,
-        contentClass: 'largeDialog'
-      });
-    }
-    this.setState({ dialog: true, filteredDevices: [], deploymentDevices: [] });
   }
 
   _retryDeployment(deployment, devices) {
@@ -315,8 +307,7 @@ export default class Deployments extends React.Component {
       artifact_name: this.state.artifact.name,
       devices: ids
     };
-    self.setState({ doneLoading: false });
-    self.dialogDismiss('dialog');
+    self.setState({ doneLoading: false, scheduleDialog: false });
 
     return AppActions.createDeployment(newDeployment)
       .then(data => {
@@ -373,11 +364,10 @@ export default class Deployments extends React.Component {
   }
   _getReportById(id) {
     var self = this;
-    return AppActions.getSingleDeployment(id).then(data => setTimeout(() => self._showReport(data, self.state.reportType), 400));
+    return AppActions.getSingleDeployment(id).then(data => self._showReport(data, self.state.reportType));
   }
   _showReport(selectedDeployment, reportType) {
-    this.setState({ scheduleDialog: false, selectedDeployment, reportType });
-    this.dialogOpen('report');
+    this.setState({ scheduleDialog: false, selectedDeployment, reportType, reportDialog: true });
   }
   _scheduleDeployment(deployment) {
     var artifact = '';
@@ -427,7 +417,7 @@ export default class Deployments extends React.Component {
         clearInterval(self.timer);
         self.timer = setInterval(() => self._refreshDeployments(), self.state.refreshDeploymentsLength);
         self._refreshDeployments();
-        self.dialogDismiss('dialog');
+        self.setState({ scheduleDialog: false });
         AppActions.setSnackbar('The deployment was successfully aborted');
       })
       .catch(err => {
@@ -441,11 +431,6 @@ export default class Deployments extends React.Component {
     this.setState({ updated: true });
   }
 
-  _finishOnboard() {
-    this.setState({ onboardDialog: false });
-    this.context.router.history.push('/deployments/finished');
-    this._changeTab('/deployments/finished');
-  }
   _isOnBoardFinished(id) {
     var self = this;
     return AppActions.getSingleDeployment(id).then(data => {
@@ -485,13 +470,21 @@ export default class Deployments extends React.Component {
   }
 
   render() {
+    const self = this;
     var reportActions = [
-      <Button key="report-action-button-1" onClick={() => this.dialogDismiss('dialog')}>
+      <Button key="report-action-button-1" onClick={() => self.setState({ reportDialog: false })}>
         Close
       </Button>
     ];
     var onboardActions = [
-      <Button variant="contained" key="onboard-action-button-1" primary="true" onClick={() => this._finishOnboard()}>
+      <Button
+        component={Link}
+        to="/deployments/finished"
+        variant="contained"
+        key="onboard-action-button-1"
+        primary="true"
+        onClick={() => self.setState({ onboardDialog: false })}
+      >
         Finish
       </Button>
     ];
@@ -590,9 +583,9 @@ export default class Deployments extends React.Component {
           </div>
         )}
 
-        <Dialog open={this.state.dialog || false} fullWidth={true} maxWidth="lg">
-          <DialogTitle>{this.state.reportType === 'active' ? 'Deployment progress' : 'Results of deployment'}</DialogTitle>
-          <DialogContent className={this.state.contentClass} style={{ overflow: 'hidden' }}>
+        <Dialog open={self.state.reportDialog} fullWidth={true} maxWidth="lg">
+          <DialogTitle>{self.state.reportType === 'active' ? 'Deployment progress' : 'Results of deployment'}</DialogTitle>
+          <DialogContent className={self.state.contentClass} style={{ overflow: 'hidden' }}>
             {dialogContent}
           </DialogContent>
           <DialogActions>{reportActions}</DialogActions>
@@ -615,7 +608,7 @@ export default class Deployments extends React.Component {
           onScheduleSubmit={() => this._onScheduleSubmit()}
         />
 
-        <Dialog open={(this.state.onboardDialog && this.state.showHelptips) || false}>
+        <Dialog open={(self.state.onboardDialog && self.state.showHelptips) || false}>
           <DialogTitle>Congratulations!</DialogTitle>
           <DialogContent style={{ overflow: 'hidden' }}>
             <h3>You've completed your first deployment - so what's next?</h3>
