@@ -1,6 +1,5 @@
 import React from 'react';
 import Time from 'react-time';
-import { Collapse } from 'react-collapse';
 import ReactTooltip from 'react-tooltip';
 import { AuthDevices, ExpandAuth } from '../helptips/helptooltips';
 import { Link } from 'react-router-dom';
@@ -17,6 +16,7 @@ import { preformatWithRequestID } from '../../helpers';
 // material ui
 import Button from '@material-ui/core/Button';
 import Checkbox from '@material-ui/core/Checkbox';
+import Collapse from '@material-ui/core/Collapse';
 import HelpIcon from '@material-ui/icons/Help';
 import Icon from '@material-ui/core/Icon';
 import IconButton from '@material-ui/core/IconButton';
@@ -92,13 +92,17 @@ export default class Pending extends React.Component {
   _sortColumn() {
     console.log('sort');
   }
-  _expandRow(rowNumber) {
+  _expandRow(event, rowNumber) {
+    const self = this;
+    if (event.target.closest('input') && event.target.closest('input').hasOwnProperty('checked')) {
+      return;
+    }
     AppActions.setSnackbar('');
-    var device = this.state.devices[rowNumber];
-    if (this.state.expandRow === rowNumber) {
+    var device = self.state.devices[rowNumber];
+    if (self.state.expandRow === rowNumber) {
       rowNumber = null;
     }
-    this.setState({ expandedDevice: device, expandRow: rowNumber });
+    self.setState({ expandedDevice: device, expandRow: rowNumber });
   }
   _adjustCellHeight(height) {
     this.setState({ divHeight: height + 95 });
@@ -119,7 +123,8 @@ export default class Pending extends React.Component {
     if (selectedIndex === -1) {
       updatedSelection = updatedSelection.concat(selectedRows, selectedRow);
     } else {
-      updatedSelection = selectedRows.splice(selectedIndex, 1);
+      selectedRows.splice(selectedIndex, 1);
+      updatedSelection = selectedRows;
     }
     self.setState({ selectedRows: updatedSelection });
   }
@@ -127,7 +132,7 @@ export default class Pending extends React.Component {
   onSelectAllClick() {
     const self = this;
     let selectedRows = Array.apply(null, { length: this.state.devices.length }).map(Number.call, Number);
-    if (self.state.selectedRows.length !== self.state.devices.length) {
+    if (self.state.selectedRows.length && self.state.selectedRows.length <= self.state.devices.length) {
       selectedRows = [];
     }
     self.setState({ selectedRows });
@@ -139,10 +144,8 @@ export default class Pending extends React.Component {
 
   _getDevicesFromSelectedRows() {
     // use selected rows to get device from corresponding position in devices array
-    var devices = [];
-    for (var i = 0; i < this.state.selectedRows.length; i++) {
-      devices.push(this.state.devices[this.state.selectedRows[i]]);
-    }
+    const self = this;
+    const devices = self.state.selectedRows.map(row => self.state.devices[row]);
     return devices;
   }
 
@@ -207,7 +210,6 @@ export default class Pending extends React.Component {
     var selectedOverLimit = this.props.deviceLimit ? this.props.deviceLimit < this.props.acceptedDevices + this.state.selectedRows.length : false;
 
     var devices = this.state.devices.map(function(device, index) {
-      var self = this;
       var expanded = '';
 
       var id_attribute =
@@ -235,99 +237,42 @@ export default class Pending extends React.Component {
 
       return (
         <TableRow
-          selected={this._isSelected(index)}
-          style={{ backgroundColor: '#e9f4f3' }}
+          selected={self._isSelected(index)}
+          style={expanded ? { height: self.state.divHeight, backgroundColor: '#e9f4f3' } : { backgroundColor: '#e9f4f3' }}
           className={expanded ? 'expand' : null}
           hover
           key={index}
-          onClick={row => this._onRowSelection(row)}
+          onClick={event => self._expandRow(event, index)}
         >
           <TableCell padding="checkbox">
-            <Checkbox checked={this._isSelected(index)} />
+            <Checkbox checked={self._isSelected(index)} onChange={() => self._onRowSelection(index)} />
           </TableCell>
-          <TableCell className="no-click-cell" style={expanded ? { height: this.state.divHeight } : null}>
-            <div
-              onClick={e => {
-                e.preventDefault();
-                e.stopPropagation();
-                self._expandRow(index);
-              }}
-            >
-              {id_attribute}
-            </div>
+          <TableCell>{id_attribute}</TableCell>
+          <TableCell>
+            <Time value={device.created_ts} format="YYYY-MM-DD HH:mm" />
           </TableCell>
-          <TableCell className="no-click-cell">
-            <div
-              onClick={e => {
-                e.preventDefault();
-                e.stopPropagation();
-                self._expandRow(index);
-              }}
-            >
-              <Time value={device.created_ts} format="YYYY-MM-DD HH:mm" />
-            </div>
+          <TableCell>
+            <Time value={device.updated_ts} format="YYYY-MM-DD HH:mm" />
           </TableCell>
-          <TableCell className="no-click-cell">
-            <div
-              onClick={e => {
-                e.preventDefault();
-                e.stopPropagation();
-                self._expandRow(index);
-              }}
-            >
-              <Time value={device.updated_ts} format="YYYY-MM-DD HH:mm" />
-            </div>
-          </TableCell>
-          <TableCell className="no-click-cell capitalized">
-            <div
-              onClick={e => {
-                e.preventDefault();
-                e.stopPropagation();
-                self._expandRow(index);
-              }}
-            >
-              {device.status}
-            </div>
-          </TableCell>
-
+          <TableCell className="capitalized">{device.status}</TableCell>
           <TableCell style={{ width: '55px', paddingRight: '0', paddingLeft: '12px' }} className="expandButton">
-            <div
-              onClick={e => {
-                e.preventDefault();
-                e.stopPropagation();
-                this._expandRow(index);
-              }}
-            >
-              <IconButton className="float-right">
-                <Icon className="material-icons">{expanded ? 'arrow_drop_up' : 'arrow_drop_down'}</Icon>
-              </IconButton>
-            </div>
+            <IconButton className="float-right">
+              <Icon className="material-icons">{expanded ? 'arrow_drop_up' : 'arrow_drop_down'}</Icon>
+            </IconButton>
           </TableCell>
           <TableCell style={{ width: '0', padding: '0', overflow: 'visible' }}>
-            <div
-              onClick={e => {
-                e.preventDefault();
-                e.stopPropagation();
-                this._expandRow(index);
-              }}
+            <Collapse
+              className="expanded"
+              in={Boolean(expanded)}
+              onExit={node => self._adjustCellHeight(node.parentElement.clientHeight)}
+              onEntered={node => self._adjustCellHeight(node.parentElement.clientHeight)}
             >
-              <Collapse
-                springConfig={{ stiffness: 210, damping: 20 }}
-                onMeasure={measurements => self._adjustCellHeight(measurements.height)}
-                className="expanded"
-                isOpened={expanded ? true : false}
-                onClick={e => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                }}
-              >
-                {expanded}
-              </Collapse>
-            </div>
+              {expanded}
+            </Collapse>
           </TableCell>
         </TableRow>
       );
-    }, this);
+    });
 
     var deviceLimitWarning =
       limitMaxed || limitNear ? (

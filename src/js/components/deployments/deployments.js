@@ -519,7 +519,7 @@ export default class Deployments extends React.Component {
     const { tabIndex } = this.state;
 
     return (
-      <div style={{ marginTop: '-15px' }}>
+      <div className="relative" style={{ marginTop: '-15px' }}>
         <Button
           className="top-right-button"
           color="secondary"

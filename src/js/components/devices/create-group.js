@@ -154,7 +154,8 @@ export default class CreateGroup extends React.Component {
     if (selectedIndex === -1) {
       updatedSelection = updatedSelection.concat(selectedRows, selectedRow);
     } else {
-      updatedSelection = selectedRows.splice(selectedIndex, 1);
+      selectedRows.splice(selectedIndex, 1);
+      updatedSelection = selectedRows;
     }
     self.setState({ selectedRows: updatedSelection, createInvalid: updatedSelection.length > 0 });
   }
@@ -163,7 +164,7 @@ export default class CreateGroup extends React.Component {
     const self = this;
     let createInvalid = true;
     let selectedRows = Array.apply(null, { length: this.state.devices.length }).map(Number.call, Number);
-    if (self.state.selectedRows.length !== self.state.devices.length) {
+    if (self.state.selectedRows.length && self.state.selectedRows.length <= self.state.devices.length) {
       selectedRows = [];
       createInvalid = false;
     }
@@ -207,7 +208,7 @@ export default class CreateGroup extends React.Component {
 
       var attrs = mapDeviceAttributes(device.attributes || []);
       return (
-        <TableRow selected={self._isSelected(index)} hover key={index} onClick={row => this._onRowSelection(row)}>
+        <TableRow selected={self._isSelected(index)} hover key={index} onClick={() => self._onRowSelection(index)}>
           <TableCell padding="checkbox">
             <Checkbox checked={self._isSelected(index)} />
           </TableCell>
@@ -221,12 +222,11 @@ export default class CreateGroup extends React.Component {
 
     return (
       <Dialog disableBackdropClick disableEscapeKeyDown open={self.props.open} scroll={'paper'} fullWidth={true} maxWidth="sm">
-        <DialogTitle style={{ paddingBottom: '15px', marginBottom: 0 }}>{this.state.showWarning ? '' : 'Create a new group'}</DialogTitle>
+        <DialogTitle style={{ paddingBottom: '15px', marginBottom: 0 }}>{self.state.showWarning ? '' : 'Create a new group'}</DialogTitle>
 
         <DialogContent style={{ maxHeight: '50vh' }}>
           <div className={self.state.showDeviceList || self.state.showWarning ? 'hidden' : 'absoluteTextfieldButton'}>
             <TextField
-              ref="customGroup"
               className="float-left"
               placeholder="Name your group"
               label="Name your group"

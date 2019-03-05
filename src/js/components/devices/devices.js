@@ -224,7 +224,7 @@ export default class Devices extends React.Component {
                   highlightHelp={!this.state.acceptedCount}
                   globalSettings={globalSettings}
                   openSettingsDialog={() => this._openSettingsDialog()}
-                  restart={this._restartInterval}
+                  restart={() => this._restartInterval()}
                   pause={() => this._pauseInterval()}
                 />
               )}

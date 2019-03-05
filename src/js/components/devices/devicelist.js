@@ -64,19 +64,21 @@ export default class Authorized extends React.Component {
   _sortColumn() {
     console.log('sort');
   }
-  _expandRow(rowNumber, e) {
-    e.preventDefault();
-    e.stopPropagation();
-    var self = this;
+
+  _expandRow(event, rowNumber) {
+    const self = this;
+    if (event.target.closest('input') && event.target.closest('input').hasOwnProperty('checked')) {
+      return;
+    }
     AppActions.setSnackbar('');
-    var device = this.props.devices[rowNumber];
-    if (this.state.expandRow === rowNumber) {
+    var device = self.props.devices[rowNumber];
+    if (self.state.expandRow === rowNumber) {
       rowNumber = null;
     }
-
     self.setState({ expandRow: rowNumber, device: device });
     self._setDeviceDetails(device);
   }
+
   _adjustCellHeight(height) {
     this.setState({ divHeight: height + 105 });
   }
@@ -149,7 +151,8 @@ export default class Authorized extends React.Component {
     if (selectedIndex === -1) {
       updatedSelection = updatedSelection.concat(selectedRows, selectedRow);
     } else {
-      updatedSelection = selectedRows.splice(selectedIndex, 1);
+      selectedRows.splice(selectedIndex, 1);
+      updatedSelection = selectedRows;
     }
     self.setState({ selectedRows: updatedSelection });
   }
@@ -157,7 +160,7 @@ export default class Authorized extends React.Component {
   onSelectAllClick() {
     const self = this;
     let selectedRows = Array.apply(null, { length: this.props.devices.length }).map(Number.call, Number);
-    if (self.state.selectedRows.length !== self.props.devices.length) {
+    if (self.state.selectedRows.length && self.state.selectedRows.length <= self.props.devices.length) {
       selectedRows = [];
     }
     self.setState({ selectedRows });
@@ -215,20 +218,16 @@ export default class Authorized extends React.Component {
           className={expanded ? 'expand' : null}
           key={device.id}
           selected={this._isSelected(index)}
-          onClick={row => this._onRowSelection(row)}
+          onClick={event => self._expandRow(event, index)}
         >
           <TableCell padding="checkbox">
-            <Checkbox checked={this._isSelected(index)} />
+            <Checkbox checked={self._isSelected(index)} onChange={() => self._onRowSelection(index)} />
           </TableCell>
-          <TableCell style={expanded ? { height: self.state.divHeight } : {}} onClick={e => this._expandRow(index, e)}>
-            {id_attribute}
-          </TableCell>
-          <TableCell onClick={e => this._expandRow(index, e)}>{attrs.device_type || '-'}</TableCell>
-          <TableCell onClick={e => this._expandRow(index, e)}>{attrs.artifact_name || '-'}</TableCell>
-          <TableCell onClick={e => this._expandRow(index, e)}>
-            {device.updated_ts ? <Time value={device.updated_ts} format="YYYY-MM-DD HH:mm" /> : '-'}
-          </TableCell>
-          <TableCell style={{ width: '55px', paddingRight: '0', paddingLeft: '12px' }} className="expandButton" onClick={e => this._expandRow(index, e)}>
+          <TableCell style={expanded ? { height: self.state.divHeight } : {}}>{id_attribute}</TableCell>
+          <TableCell>{attrs.device_type || '-'}</TableCell>
+          <TableCell>{attrs.artifact_name || '-'}</TableCell>
+          <TableCell>{device.updated_ts ? <Time value={device.updated_ts} format="YYYY-MM-DD HH:mm" /> : '-'}</TableCell>
+          <TableCell style={{ width: '55px', paddingRight: '0', paddingLeft: '12px' }} className="expandButton">
             <IconButton className="float-right">
               <Icon className="material-icons">{expanded ? 'arrow_drop_up' : 'arrow_drop_down'}</Icon>
             </IconButton>
@@ -254,13 +253,12 @@ export default class Authorized extends React.Component {
     var groupNameInputs = (
       <TextField
         id="groupNameInput"
-        ref="editGroupName"
         value={this.state.textfield}
         onChange={e => this._handleGroupNameChange(e)}
         onKeyDown={() => this._handleGroupNameSave()}
         className={this.state.nameEdit ? 'hoverText' : 'hidden'}
         style={{ borderBottom: 'none' }}
-        underlineFocusStyle={{ borderColor: '#e0e0e0' }}
+        // underlineFocusStyle={{ borderColor: '#e0e0e0' }}
         errorStyle={{ color: 'rgb(171, 16, 0)' }}
         errorText={this.state.errorText}
       />
