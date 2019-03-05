@@ -333,15 +333,8 @@ export default class Preauthorize extends React.Component {
     }, this);
 
     return (
-      <div className="relative">
-        <Button
-          variant="contained"
-          color="secondary"
-          disabled={!!limitMaxed}
-          className="top-right-button"
-          onClick={() => this._dialogToggle('openPreauth')}
-          style={{ position: 'absolute' }}
-        >
+      <div>
+        <Button color="secondary" variant="contained" disabled={!!limitMaxed} className="top-right-button" onClick={() => this._dialogToggle('openPreauth')}>
           Preauthorize devices
         </Button>
 

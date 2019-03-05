@@ -126,5 +126,13 @@ export default createMuiTheme({
         color: colors.mutedText,
       }
     },
+    MuiButton: {
+      root: {
+        color: colors.linkgreen,
+        '&:hover': {
+          colors: colors.mendergreen,
+        }
+      }
+    }
   },
 });
