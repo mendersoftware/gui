@@ -7,7 +7,7 @@ import AppConstants from '../../constants/app-constants';
 // material ui
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
-import ListItemAvatar from '@material-ui/core/ListItemAvatar';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import Divider from '@material-ui/core/Divider';
 
@@ -26,16 +26,16 @@ export default class Groups extends React.Component {
 
     const groupItems = this.props.groups.reduce(
       (accu, group, index) => {
-        var isSelected = group === this.props.selectedGroup ? { backgroundColor: '#e7e7e7' } : { backgroundColor: 'transparent' };
-        const isUngroupedGroup = group === AppConstants.UNGROUPED_GROUP.id || group === AppConstants.UNGROUPED_GROUP.name;
         var numDevs;
         if (this.props.groupDevices) {
           numDevs = this.props.groupDevices[group] || null;
         }
         var boundClick = () => this.props.changeGroup(group, numDevs);
+        const isUngroupedGroup = group === AppConstants.UNGROUPED_GROUP.id || group === AppConstants.UNGROUPED_GROUP.name;
         if (isUngroupedGroup) {
           group = AppConstants.UNGROUPED_GROUP.name;
         }
+        var isSelected = group === this.props.selectedGroup ? { backgroundColor: '#e7e7e7' } : { backgroundColor: 'transparent' };
         var groupLabel = <span>{decodeURIComponent(group)}</span>;
         const item = (
           <ListItem button key={group + index} style={isSelected} onClick={boundClick}>
@@ -72,9 +72,9 @@ export default class Groups extends React.Component {
             style={this.props.acceptedCount ? null : { color: '#d4e9e7' }}
             onClick={this.props.acceptedCount ? () => this.dialogToggle() : null}
           >
-            <ListItemAvatar>
+            <ListItemIcon>
               <AddIcon style={this.props.allCount ? null : { color: '#d4e9e7' }} />
-            </ListItemAvatar>
+            </ListItemIcon>
             <ListItemText primary="Create a group" />
           </ListItem>
         </List>
