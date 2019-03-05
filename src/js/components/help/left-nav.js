@@ -45,14 +45,14 @@ export default class LeftNav extends React.Component {
         }
       }
     }
-    eachRecursive(self.props.pages, '/help', 0);
+    eachRecursive(self.props.pages, '/help', 1);
   }
 
   render() {
     var self = this;
     return (
       <List>
-        <ListSubheader component={Link} to="/help" key="/help" style={{ padding: 0 }}>
+        <ListSubheader component={Link} to="/help" key="/help">
           Help topics
         </ListSubheader>
         {self.state.links.map(link => (

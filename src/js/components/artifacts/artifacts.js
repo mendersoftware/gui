@@ -119,7 +119,7 @@ export default class Artifacts extends React.Component {
           <DialogActions>
             <Button onClick={() => this._removeDialog(null)}>Cancel</Button>
 
-            <Button variant="contained" secondary="true" onClick={() => this._removeArtifact()}>
+            <Button variant="contained" color="secondary" onClick={() => this._removeArtifact()}>
               Remove artifact
             </Button>
           </DialogActions>

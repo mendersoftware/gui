@@ -38,7 +38,7 @@ export default class Groups extends React.Component {
         }
         var groupLabel = <span>{decodeURIComponent(group)}</span>;
         const item = (
-          <ListItem key={group + index} style={isSelected} onClick={boundClick}>
+          <ListItem button key={group + index} style={isSelected} onClick={boundClick}>
             <ListItemText primary={groupLabel} />
           </ListItem>
         );
@@ -56,6 +56,7 @@ export default class Groups extends React.Component {
       <div>
         <List>
           <ListItem
+            button
             key="All"
             style={!this.props.selectedGroup ? { backgroundColor: '#e7e7e7' } : { backgroundColor: 'transparent' }}
             onClick={() => this.props.changeGroup('', this.props.allCount)}
