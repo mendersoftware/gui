@@ -3,12 +3,13 @@ import { grey100, lightBlack, white } from '@material-ui/core/colors';
 
 const colors = {
   linkgreen: '#347A87',
-  mendergreen: '#015969', //
+  mendergreen: '#337a87', //
   grey: '#c7c7c7', //grey
   mendermaroon: '#5d0f43', //
   accent2Color: grey100,
   alertpurple: '#7D3F69', //
   textColor: 'rgba(0, 0, 0, 0.8)',
+  mutedText: 'rgba(0, 0, 0, 0.3)',
   alternateTextColor: white,
   canvasColor: white,
   borderColor: '#e0e0e0',
@@ -20,7 +21,7 @@ const colors = {
 export default createMuiTheme({ 
   palette: {
     primary: {
-      main: colors.mendergreen
+      main: colors.mendergreen,
     },
     secondary: {
       main: colors.mendermaroon
@@ -87,6 +88,42 @@ export default createMuiTheme({
     MuiExpansionPanelDetails: {
       root: {
         flexDirection: 'column'
+      }
+    },
+    MuiInput: {
+      underline: {
+        '&:before': {
+          borderBottom: '1px solid rgb(224, 224, 224)',
+        },
+        '&:hover:before': {
+          borderBottom: '2px solid #347A87 !important',
+        },
+        '&:after': {
+          borderBottom: '2px solid #347A87',
+        },
+      },
+    },
+    MuiFormLabel: {
+      root: {
+        color: colors.mutedText,
+        '&$focused': {
+          color: colors.linkgreen,
+        },
+      },
+    },
+    MuiFormControl: {
+      root: {
+        marginTop: '18px',
+      },
+    },
+    MuiFormControlLabel: {
+      root: {
+        marginTop: '18px',
+      },
+    },
+    MuiIconButton: {
+      root: {
+        color: colors.mutedText,
       }
     },
   },

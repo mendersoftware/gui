@@ -201,7 +201,7 @@ export default class Form extends React.Component {
           variant="contained"
           key="submit"
           id={this.props.submitButtonId}
-          color="primary"
+          color={this.props.buttonColor}
           onClick={() => this.updateModel()}
           disabled={!this.state.isValid}
         >
