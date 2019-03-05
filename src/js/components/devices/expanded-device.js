@@ -13,19 +13,27 @@ import pluralize from 'pluralize';
 import cookie from 'react-cookie';
 import copy from 'copy-to-clipboard';
 
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import ListItemText from '@material-ui/core/ListItemText';
-import Icon from '@material-ui/core/Icon';
+import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
+import FormControl from '@material-ui/core/FormControl';
+import Icon from '@material-ui/core/Icon';
+import Input from '@material-ui/core/Input';
+import InputLabel from '@material-ui/core/InputLabel';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import TextField from '@material-ui/core/TextField';
+import Typography from '@material-ui/core/Typography';
+
 import InfoIcon from '@material-ui/icons/Info';
 import HelpIcon from '@material-ui/icons/Help';
+import LinkIcon from '@material-ui/icons/Link';
+import ReplayIcon from '@material-ui/icons/Replay';
+import WarningIcon from '@material-ui/icons/Warning';
 
 import { preformatWithRequestID } from '../../helpers';
 
@@ -183,32 +191,22 @@ export default class ExpandedDevice extends React.Component {
     var status = this.props.device.status;
 
     var deviceIdentity = [];
-    deviceIdentity.push(
-      <ListItem key="id_checksum" disabled={true}>
-        <ListItemText primary="Device ID" secondary={(this.props.device || {}).id || ''} />
-      </ListItem>
-    );
+    deviceIdentity.push(<TextField key="id_checksum" disabled label="Device ID" defaultValue={(this.props.device || {}).id || ''} />);
 
     if ((this.props.device || {}).identity_data) {
       var data = typeof this.props.device.identity_data == 'object' ? this.props.device.identity_data : JSON.parse(this.props.device.identity_data);
       deviceIdentity = Object.entries(data).reduce((accu, item) => {
-        accu.push(
-          <ListItem key={item[0]} disabled={true}>
-            <ListItemText primary={item[0]} secondary={item[1]} />
-          </ListItem>
-        );
+        accu.push(<TextField key={item[0]} disabled label={item[0]} defaultValue={item[1]} />);
         return accu;
       }, deviceIdentity);
     }
 
     if ((this.props.device || {}).created_ts) {
       deviceIdentity.push(
-        <ListItem key="connectionTime" disabled={true}>
-          <ListItemText
-            primary={status === 'preauthorized' ? 'Date added' : 'First request'}
-            secondary={<Time value={this.props.device.created_ts} format="YYYY-MM-DD HH:mm" />}
-          />
-        </ListItem>
+        <FormControl className="list-item" key="connectionTime">
+          <InputLabel htmlFor="device-connectionTime">{status === 'preauthorized' ? 'Date added' : 'First request'}</InputLabel>
+          <Input id="device-connectionTime" type="text" disabled={true} inputComponent={Time} value={this.props.device.created_ts} inputProps={{'format':"YYYY-MM-DD HH:mm"}} />
+        </FormControl>
       );
     }
 
@@ -269,34 +267,33 @@ export default class ExpandedDevice extends React.Component {
     }
 
     var statusIcon = '';
+    const iconStyle = { margin: 12 };
     switch (status) {
     case 'accepted':
       statusIcon = (
-        <Icon className="material-icons green" style={{ margin: '12px 0 12px 12px' }}>
+        <Icon className="material-icons green" style={iconStyle}>
             check_circle
         </Icon>
       );
       break;
     case 'pending':
-      statusIcon = <Icon className="pending-icon" style={{ margin: '12px 0 12px 12px' }} />;
+      statusIcon = <Icon className="pending-icon" style={iconStyle} />;
       break;
     case 'rejected':
       statusIcon = (
-        <Icon className="material-icons red" style={{ margin: '12px 0 12px 12px' }}>
+        <Icon className="material-icons red" style={iconStyle}>
             block
         </Icon>
       );
       break;
     case 'preauthorized':
       statusIcon = (
-        <Icon className="material-icons" style={{ margin: '12px 0 12px 12px' }}>
+        <Icon className="material-icons" style={iconStyle}>
             check
         </Icon>
       );
       break;
     }
-
-    var formatStatus = <span className="text-color">{status.charAt(0).toUpperCase() + status.slice(1)}</span>;
 
     var hasPending = '';
     if (status === 'accepted' && this.props.device.auth_sets.length > 1) {
@@ -314,32 +311,39 @@ export default class ExpandedDevice extends React.Component {
 
     const authLabelText = hasPending ? hasPending : states[status] || states.default;
 
-    var authLabel = <span style={{ fontSize: '14px' }}>{authLabelText}</span>;
+    const buttonStyle = { textTransform: 'none', textAlign: 'left' };
 
     var deviceInfo = (
       <div key="deviceinfo">
         <div id="device-identity" className="report-list bordered">
           <h4 className="margin-bottom-none">Device identity</h4>
-          <List className="list-horizontal-display">{deviceIdentity}</List>
+          <div className="list-horizontal-flex">{deviceIdentity}</div>
 
-          <List className="list-horizontal-display">
-            <ListItem key="statusButton" disabled={true}>
-              <ListItemAvatar>{statusIcon}</ListItemAvatar>
-              <ListItemText primary={'Device status'} secondary={formatStatus} />
-            </ListItem>
+          <div className="flexbox" style={{ flexDirection: 'row' }}>
+            <span style={{ display: 'flex', minWidth: 180, justifyContent: 'space-evenly', alignItems: 'center', marginRight: '2vw' }}>
+              {statusIcon}
+              <span className="inline-block">
+                <Typography component="span" variant="subtitle2" style={Object.assign({}, buttonStyle, { textTransform: 'capitalize' })}>
+                  Device status
+                </Typography>
+                <Typography component="span" variant="subtitle1" style={buttonStyle}>
+                  {status}
+                </Typography>
+              </span>
+            </span>
 
-            <ListItem key="authsetsButton" disabled={false} onClick={() => this._showAuthsets()}>
-              {hasPending ? (
-                <ListItemAvatar>
-                  <Icon className="material-icons auth" style={{ marginTop: 12, marginBottom: 6 }}>
-                    warning
-                  </Icon>
-                </ListItemAvatar>
-              ) : null}
-
-              <ListItemText primary={authLabel} secondary={'Click to adjust authorization status for this device'} />
-            </ListItem>
-          </List>
+            <Button onClick={() => this._showAuthsets()}>
+              {hasPending ? <WarningIcon className="auth" /> : null}
+              <span className="inline-block">
+                <Typography component="span" variant="subtitle1" style={buttonStyle}>
+                  {authLabelText}
+                </Typography>
+                <Typography component="span" variant="body1" className="muted" style={buttonStyle}>
+                  Click to adjust authorization status for this device
+                </Typography>
+              </span>
+            </Button>
+          </div>
         </div>
 
         {this.props.attrs || status === 'accepted' ? (
@@ -356,25 +360,17 @@ export default class ExpandedDevice extends React.Component {
         ) : null}
 
         {status === 'accepted' && !waiting ? (
-          <div id="device-actions" className="report-list">
-            <List className="list-horizontal-display" style={{ marginTop: '24px' }}>
-              <ListItem key="copylink" onClick={() => this._copyLinkToClipboard()}>
-                <ListItemAvatar>
-                  <Icon className="material-icons update" style={{ margin: '12px 0 12px 12px' }}>
-                    link
-                  </Icon>
-                </ListItemAvatar>
-                <ListItemText primary="Copy link to this device" />
-              </ListItem>
-              <ListItem key="updateButton" className={status === 'accepted' ? null : 'hidden'} onClick={() => this._clickListItem()}>
-                <ListItemAvatar>
-                  <Icon className="material-icons update" style={{ margin: '12px 0 12px 12px' }}>
-                    replay
-                  </Icon>
-                </ListItemAvatar>
-                <ListItemText primary="Create a deployment for this device" />
-              </ListItem>
-            </List>
+          <div id="device-actions" className="report-list" style={{ marginTop: '24px' }}>
+            <Button onClick={() => self.props._copyLinkToClipboard()}>
+              <LinkIcon className="rotated" />
+              Copy link to this device
+            </Button>
+            {status === 'accepted' ? (
+              <Button onClick={() => self.props._clickListItem()}>
+                <ReplayIcon className="rotated" />
+                Create a deployment for this device
+              </Button>
+            ) : null}
           </div>
         ) : null}
       </div>
