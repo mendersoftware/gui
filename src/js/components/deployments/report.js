@@ -180,10 +180,6 @@ export default class DeploymentReport extends React.Component {
     }
     this.setState({ currentPage: pageNo, start: start, end: end, pagedDevices: slice });
   }
-  updatedList() {
-    // use to make sure parent re-renders dialog when device list built
-    this.props.updated();
-  }
   _abortHandler() {
     this.props.abort(this.props.deployment.id);
   }
