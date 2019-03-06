@@ -208,11 +208,10 @@ export default class Preauthorize extends React.Component {
   }
 
   render() {
-    var limitMaxed = this.props.deviceLimit && this.props.deviceLimit <= this.props.acceptedDevices;
-
-    var devices = this.state.devices.map(function(device, index) {
       var self = this;
+    var limitMaxed = self.props.deviceLimit && self.props.deviceLimit <= self.props.acceptedDevices;
 
+    var devices = self.state.devices.map((device, index) => {
       var id_attribute =
         self.props.globalSettings.id_attribute && self.props.globalSettings.id_attribute !== 'Device ID'
           ? (device.identity_data || {})[self.props.globalSettings.id_attribute]
@@ -222,9 +221,9 @@ export default class Preauthorize extends React.Component {
       if (self.state.expandRow === index) {
         expanded = (
           <ExpandedDevice
-            id_attribute={(this.props.globalSettings || {}).id_attribute}
-            _showKey={this._showKey}
-            showKey={this.state.showKey}
+            id_attribute={(self.props.globalSettings || {}).id_attribute}
+            _showKey={self._showKey}
+            showKey={self.state.showKey}
             limitMaxed={limitMaxed}
             deviceId={self.state.deviceId}
             id_value={id_attribute}
@@ -236,52 +235,22 @@ export default class Preauthorize extends React.Component {
       }
 
       return (
-        <TableRow className={expanded ? 'expand' : null} hover key={index}>
-          <TableCell className="no-click-cell" style={expanded ? { height: this.state.divHeight } : null}>
-            <div
-              onClick={e => {
-                e.preventDefault();
-                e.stopPropagation();
-                self._expandRow(index);
-              }}
+        <TableRow
+          className={expanded ? 'expand' : null}
+          hover
+          key={index}
+          onClick={() => self._expandRow(index)}
+          style={expanded ? { height: self.state.divHeight } : null}
             >
-              {id_attribute}
-            </div>
-          </TableCell>
+          <TableCell>{id_attribute}</TableCell>
           <TableCell className="no-click-cell">
-            <div
-              onClick={e => {
-                e.preventDefault();
-                e.stopPropagation();
-                self._expandRow(index);
-              }}
-            >
               <Time value={device.created_ts} format="YYYY-MM-DD HH:mm" />
-            </div>
           </TableCell>
-          <TableCell className="no-click-cell capitalized">
-            <div
-              onClick={e => {
-                e.preventDefault();
-                e.stopPropagation();
-                self._expandRow(index);
-              }}
-            >
-              {device.status}
-            </div>
-          </TableCell>
+          <TableCell className="no-click-cell capitalized">{device.status}</TableCell>
           <TableCell style={{ width: '55px', paddingRight: '0', paddingLeft: '12px' }} className="expandButton">
-            <div
-              onClick={e => {
-                e.preventDefault();
-                e.stopPropagation();
-                this._expandRow(index);
-              }}
-            >
               <IconButton className="float-right">
                 <Icon className="material-icons">{expanded ? 'arrow_drop_up' : 'arrow_drop_down'}</Icon>
               </IconButton>
-            </div>
           </TableCell>
           <TableCell style={{ width: '0', padding: '0', overflow: 'visible' }}>
             <Collapse
@@ -299,7 +268,7 @@ export default class Preauthorize extends React.Component {
           </TableCell>
         </TableRow>
       );
-    }, this);
+    });
 
     var deviceLimitWarning = limitMaxed ? (
       <p className="warning">
@@ -481,6 +450,7 @@ export default class Preauthorize extends React.Component {
             <Fab
               disabled={!this.state.inputs[this.state.inputs.length - 1].key || !this.state.inputs[this.state.inputs.length - 1].value}
               style={{ marginTop: '10px' }}
+              color="secondary"
               size="small"
               onClick={() => this._addKeyValue()}
             >
