@@ -25,7 +25,7 @@ export default class TextInput extends React.Component {
   }
   componentDidUpdate(prevProps) {
     if (this.props.focus) {
-      this.refs[this.props.id].focus();
+      this.input.focus();
     }
     var self = this;
     if (prevProps.value !== this.props.value) {
@@ -56,7 +56,7 @@ export default class TextInput extends React.Component {
         type={this.props.type}
         onKeyPress={this.props.handleKeyPress}
         disabled={this.props.disabled}
-        ref={this.props.id}
+        inputRef={input => (this.input = input)}
       />
     );
   }

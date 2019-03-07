@@ -48,7 +48,7 @@ export default class Repository extends React.Component {
       searchTerm: null,
       upload: false,
       popupLabel: 'Upload a new artifact',
-      artifacts: [],
+      artifacts: this.props.artifacts,
       tmpFile: null,
       divHeight: 178
     };
@@ -141,9 +141,9 @@ export default class Repository extends React.Component {
   render() {
     const self = this;
     var tmpArtifacts = [];
-    if (self.refs.search) {
+    if (self.search) {
       var filters = ['name', 'device_types_compatible', 'description'];
-      tmpArtifacts = self.state.artifacts.filter(self.refs.search.filter(filters));
+      tmpArtifacts = self.state.artifacts.filter(self.search.filter(filters));
     }
     const columnWidth = `${100 / columnHeaders.length}%`;
     var items = tmpArtifacts.map(function(pkg, index) {
@@ -202,7 +202,12 @@ export default class Repository extends React.Component {
 
         <div>
           <h3 className="inline-block">Available artifacts</h3>
-          <SearchInput placeholder="Search artifacts" className="search tableSearch" ref="search" onChange={term => self.searchUpdated(term)} />
+          <SearchInput
+            placeholder="Search artifacts"
+            className="search tableSearch"
+            ref={search => (self.search = search)}
+            onChange={term => self.searchUpdated(term)}
+          />
         </div>
 
         <div id="progressBarContainer" className={self.props.progress ? null : 'shrunk'}>

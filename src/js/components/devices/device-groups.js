@@ -530,7 +530,7 @@ export default class DeviceGroups extends React.Component {
       <Button key="add-action-button-1" style={{ marginRight: '10px' }} onClick={() => self.setState({ addGroup: !self.state.addGroup })}>
         Cancel
       </Button>,
-      <Button variant="contained" key="add-action-button-2" primary={true} onClick={() => this._addToGroup()} disabled={this.state.groupInvalid}>
+      <Button variant="contained" key="add-action-button-2" color="primary" onClick={() => this._addToGroup()} disabled={this.state.groupInvalid}>
         Add to group
       </Button>
     ];
@@ -539,7 +539,7 @@ export default class DeviceGroups extends React.Component {
       <Button key="remove-action-button-1" onClick={() => self.setState({ removeGroup: !self.state.removeGroup })} style={{ marginRight: '10px' }}>
         Cancel
       </Button>,
-      <Button variant="contained" key="remove-action-button-2" primary={true} onClick={() => this._removeCurrentGroup()}>
+      <Button variant="contained" key="remove-action-button-2" color="primary" onClick={() => this._removeCurrentGroup()}>
         Remove group
       </Button>
     ];
@@ -620,7 +620,7 @@ export default class DeviceGroups extends React.Component {
           ) : null}
         </div>
 
-        <Dialog open={this.state.addGroup}>
+        <Dialog open={this.state.addGroup} fullWidth={true} maxWidth="sm">
           <DialogTitle>Add selected devices to group</DialogTitle>
           <DialogContent>
             <GroupSelector

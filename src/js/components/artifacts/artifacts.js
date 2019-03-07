@@ -63,9 +63,7 @@ export default class Artifacts extends React.Component {
     return AppActions.getArtifacts()
       .then(artifacts => {
         clearRetryTimer('artifacts');
-        setTimeout(() => {
-          self.setState({ doneLoading: true, artifacts });
-        }, 300);
+        self.setState({ doneLoading: true, artifacts });
       })
       .catch(err => {
         var errormsg = err.error || 'Please check your connection';

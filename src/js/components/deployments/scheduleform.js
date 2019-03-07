@@ -66,8 +66,8 @@ export default class ScheduleForm extends React.Component {
     this._sendUpToParent(null, 'artifact');
   }
   _clearOnClick(ref) {
-    this.refs[ref].setState({ searchText: '' });
-    // this.refs[ref].focus();
+    this.setState({ searchText: '' });
+    this[ref].focus();
     this._sendUpToParent(null, ref);
   }
 
@@ -147,6 +147,7 @@ export default class ScheduleForm extends React.Component {
           <div style={{ display: 'inline-block', marginBottom: '15px' }}>
             <Autosuggest
               helperText="Select target artifact"
+              ref={input => (this.artifact = input)}
               suggestions={artifactItems}
               onNewRequest={(request, index) => this._handleArtifactValueChange(request, index)}
               onChange={() => this._handleArtifactInputChange()}
@@ -184,6 +185,7 @@ export default class ScheduleForm extends React.Component {
             <div className={this.state.disabled ? 'hidden' : 'inline-block'}>
               <Autosuggest
                 helperText="Select target group"
+                ref={input => (this.group = input)}
                 suggestions={groupItems}
                 onNewRequest={(...args) => this._handleGroupValueChange(...args)}
                 onUpdateInput={() => this._handleGroupInputChange()}
