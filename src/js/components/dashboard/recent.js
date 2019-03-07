@@ -51,18 +51,20 @@ export default class Recent extends React.Component {
           </div>
 
           <Loader show={this.props.loading} fade={true} />
-
-          <div className={deployments.length ? 'fadeIn' : 'hidden'}>
-            <div className="block">{recent}</div>
-            <Link to="/deployments/finished" className="float-right">
-              All finished deployments
-            </Link>
-          </div>
-
-          <div className={deployments.length || this.props.loading ? 'hidden' : 'dashboard-placeholder'}>
-            <p>View the results of recent deployments here</p>
-            <img src="assets/img/history.png" alt="recent" />
-          </div>
+          {deployments.length ? (
+            <div className="fadeIn">
+              <div className="block">{recent}</div>
+              <Link to="/deployments/finished" className="float-right">
+                All finished deployments
+              </Link>
+            </div>
+          ) : null}
+          {deployments.length || this.props.loading ? null : (
+            <div className="dashboard-placeholder">
+              <p>View the results of recent deployments here</p>
+              <img src="assets/img/history.png" alt="recent" />
+            </div>
+          )}
         </div>
       </div>
     );

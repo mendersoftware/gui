@@ -208,7 +208,7 @@ export default class Preauthorize extends React.Component {
   }
 
   render() {
-      var self = this;
+    var self = this;
     var limitMaxed = self.props.deviceLimit && self.props.deviceLimit <= self.props.acceptedDevices;
 
     var devices = self.state.devices.map((device, index) => {
@@ -241,16 +241,16 @@ export default class Preauthorize extends React.Component {
           key={index}
           onClick={() => self._expandRow(index)}
           style={expanded ? { height: self.state.divHeight } : null}
-            >
+        >
           <TableCell>{id_attribute}</TableCell>
           <TableCell className="no-click-cell">
-              <Time value={device.created_ts} format="YYYY-MM-DD HH:mm" />
+            <Time value={device.created_ts} format="YYYY-MM-DD HH:mm" />
           </TableCell>
           <TableCell className="no-click-cell capitalized">{device.status}</TableCell>
           <TableCell style={{ width: '55px', paddingRight: '0', paddingLeft: '12px' }} className="expandButton">
-              <IconButton className="float-right">
-                <Icon className="material-icons">{expanded ? 'arrow_drop_up' : 'arrow_drop_down'}</Icon>
-              </IconButton>
+            <IconButton className="float-right">
+              <Icon className="material-icons">{expanded ? 'arrow_drop_up' : 'arrow_drop_down'}</Icon>
+            </IconButton>
           </TableCell>
           <TableCell style={{ width: '0', padding: '0', overflow: 'visible' }}>
             <Collapse

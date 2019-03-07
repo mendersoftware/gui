@@ -105,21 +105,26 @@ export default class PasswordInput extends React.Component {
               visible={this.state.visible}
             />
           </FormControl>
-          <div className={this.props.create ? 'pass-buttons' : 'hidden'}>
-            <Button color="primary" onClick={() => this.generatePass()}>
-              Generate
-            </Button>
-            {this.props.edit ? <Button onClick={() => this.clearPass()}>Cancel</Button> : null}
-          </div>
+          {this.props.create ? (
+            <div>
+              <Button className="pass-buttons" color="primary" onClick={() => this.generatePass()}>
+                Generate
+              </Button>
+              {this.props.edit ? <Button onClick={() => this.clearPass()}>Cancel</Button> : null}
+            </div>
+          ) : null}
         </div>
         {this.state.copied ? <span className="green fadeIn margin-bottom-small">Copied to clipboard</span> : null}
-        <div className={this.props.create ? 'help-text' : 'hidden'}>
-          <div id="pass-strength">
-            Strength: <meter max={4} min={0} value={this.state.score} high={3.9} optimum={4} low={2.5} />
-            {this.state.score > 3 ? <CheckIcon className="fadeIn" style={{ color: '#009E73', height: '18px' }} /> : null}
+
+        {this.props.create ? (
+          <div>
+            <div className="help-text" id="pass-strength">
+              Strength: <meter max={4} min={0} value={this.state.score} high={3.9} optimum={4} low={2.5} />
+              {this.state.score > 3 ? <CheckIcon className="fadeIn" style={{ color: '#009E73', height: '18px' }} /> : null}
+            </div>
+            <div>{feedback}</div>
           </div>
-          <div>{feedback}</div>
-        </div>
+        ) : null}
       </div>
     );
   }

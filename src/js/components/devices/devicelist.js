@@ -250,19 +250,19 @@ export default class Authorized extends React.Component {
       );
     }, this);
 
-    var groupNameInputs = (
+    var groupNameInputs = this.state.nameEdit ? (
       <TextField
         id="groupNameInput"
         value={this.state.textfield}
         onChange={e => this._handleGroupNameChange(e)}
         onKeyDown={() => this._handleGroupNameSave()}
-        className={this.state.nameEdit ? 'hoverText' : 'hidden'}
+        className="hoverText"
         style={{ borderBottom: 'none' }}
         // underlineFocusStyle={{ borderColor: '#e0e0e0' }}
         errorStyle={{ color: 'rgb(171, 16, 0)' }}
         errorText={this.state.errorText}
       />
-    );
+    ) : null;
 
     var correctIcon = this.state.nameEdit ? 'check' : 'edit';
     if (this.state.errorText) {
@@ -279,12 +279,12 @@ export default class Authorized extends React.Component {
             <div style={{ marginLeft: '26px' }}>
               <h2>
                 {groupNameInputs}
-                <span className={this.state.nameEdit ? 'hidden' : null}>{groupLabel}</span>
-                <span className={this.props.group ? 'hidden' : 'hidden'}>
+                {this.state.nameEdit ? null : <span>{groupLabel}</span>}
+                {this.props.group ? (
                   <IconButton onClick={() => this._nameEdit()} className={`material-icons ${this.state.errorText ? 'align-top' : null}`}>
                     {correctIcon}
                   </IconButton>
-                </span>
+                ) : null}
               </h2>
             </div>
 
@@ -357,13 +357,8 @@ export default class Authorized extends React.Component {
                   <AddCircleIcon />
                   {addLabel}
                 </Button>
-                {this.props.allowDeviceGroupRemoval ? (
-                  <Button
-                    disabled={!this.state.selectedRows.length}
-                    style={{ marginLeft: '4px' }}
-                    className={this.props.group ? null : 'hidden'}
-                    onClick={() => this._removeFromGroup()}
-                  >
+                {this.props.allowDeviceGroupRemoval && this.props.group ? (
+                  <Button disabled={!this.state.selectedRows.length} style={{ marginLeft: '4px' }} onClick={() => this._removeFromGroup()}>
                     <RemoveCircleOutlineIcon />
                     {removeLabel}
                   </Button>

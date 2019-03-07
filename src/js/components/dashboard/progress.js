@@ -66,19 +66,21 @@ export default class Progress extends React.Component {
         <div className="dashboard-header">
           <h2>Deployments in progress</h2>
         </div>
-        <div className={deployments.length ? 'fadeIn' : 'hidden'}>
-          <List style={{ paddingTop: '0' }}>{progress}</List>
-          <Link to="/deployments" className="float-right">
-            All deployments in progress
-          </Link>
-        </div>
-
+        {deployments.length ? (
+          <div className="fadeIn">
+            <List style={{ paddingTop: '0' }}>{progress}</List>
+            <Link to="/deployments" className="float-right">
+              All deployments in progress
+            </Link>
+          </div>
+        ) : null}
         <Loader show={this.props.loading} fade={true} />
-
-        <div className={deployments.length || this.props.loading ? 'hidden' : 'dashboard-placeholder'}>
-          <p>Monitor ongoing deployments from here</p>
-          <img src="assets/img/deployments.png" alt="deployments" />
-        </div>
+        {deployments.length || this.props.loading ? null : (
+          <div className="dashboard-placeholder">
+            <p>Monitor ongoing deployments from here</p>
+            <img src="assets/img/deployments.png" alt="deployments" />
+          </div>
+        )}
       </div>
     );
   }

@@ -384,9 +384,9 @@ export default class ExpandedDevice extends React.Component {
     );
 
     var scheduleActions = [
-      <div key="schedule-action-button-1" style={{ marginRight: '10px', display: 'inline-block' }}>
-        <Button onClick={() => this.dialogToggle('schedule')}>Cancel</Button>
-      </div>,
+      <Button key="schedule-action-button-1" style={{ marginRight: '10px', display: 'inline-block' }} onClick={() => this.dialogToggle('schedule')}>
+        Cancel
+      </Button>,
       <Button
         variant="contained"
         key="schedule-action-button-2"
@@ -399,9 +399,9 @@ export default class ExpandedDevice extends React.Component {
     ];
 
     var authsetActions = [
-      <div key="authset-button-1" style={{ marginRight: '10px', display: 'inline-block' }}>
-        <Button onClick={() => this.dialogToggle('authsets')}>Close</Button>
-      </div>
+      <Button key="authset-button-1" style={{ marginRight: '10px', display: 'inline-block' }} onClick={() => this.dialogToggle('authsets')}>
+        Close
+      </Button>
     ];
 
     var authsetTitle = (

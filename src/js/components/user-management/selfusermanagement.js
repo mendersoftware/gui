@@ -103,25 +103,20 @@ export default class SelfUserManagement extends React.Component {
           showButtons={this.state.editPass}
           className="margin-top"
         >
-          <PasswordInput
-            className={this.state.editPass ? 'edit-pass' : 'hidden'}
-            id="password"
-            label="Password"
-            create={this.state.editPass}
-            validations="isLength:1"
-            disabled={!this.state.editPass}
-            onClear={() => this.handleButton()}
-            edit={false}
-          />
-
-          <FormButton
-            buttonHolder={true}
-            className={this.state.editPass ? 'hidden' : 'block'}
-            color="primary"
-            id="change_pass"
-            label="Change password"
-            handleClick={() => this.handlePass()}
-          />
+          {this.state.editPass ? (
+            <PasswordInput
+              className="edit-pass"
+              id="password"
+              label="Password"
+              create={this.state.editPass}
+              validations="isLength:1"
+              disabled={!this.state.editPass}
+              onClear={() => this.handleButton()}
+              edit={false}
+            />
+          ) : (
+            <FormButton buttonHolder={true} color="primary" id="change_pass" label="Change password" handleClick={() => this.handlePass()} />
+          )}
         </Form>
       </div>
     );

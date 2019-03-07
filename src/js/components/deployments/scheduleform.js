@@ -162,16 +162,18 @@ export default class ScheduleForm extends React.Component {
               errorText={this.state.autoCompleteErrorText}
               onClick={() => this._clearOnClick('artifact')}
             />
-            <TextField
-              disabled={true}
-              placeholder="Device types"
-              label="Device types"
-              value={device_types}
-              underlineDisabledStyle={{ borderBottom: 'none' }}
-              style={{ verticalAlign: 'top', width: '400px' }}
-              errorStyle={{ color: 'rgb(171, 16, 0)' }}
-              className={this.props.artifact ? 'margin-left' : 'hidden'}
-            />
+            {this.props.artifact ? (
+              <TextField
+                disabled={true}
+                placeholder="Device types"
+                label="Device types"
+                value={device_types}
+                underlineDisabledStyle={{ borderBottom: 'none' }}
+                style={{ verticalAlign: 'top', width: '400px' }}
+                errorStyle={{ color: 'rgb(171, 16, 0)' }}
+                className="margin-left"
+              />
+            ) : null}
 
             <p className={artifactItems.length ? 'hidden' : 'info'} style={{ marginTop: '0' }}>
               <Icon className="material-icons" style={{ marginRight: '4px', fontSize: '18px', top: '4px', color: 'rgb(171, 16, 0)' }}>
@@ -207,13 +209,15 @@ export default class ScheduleForm extends React.Component {
                   error_outline
                 </Icon>
                 There are no connected devices.{' '}
-                <span className={this.props.hasPending ? null : 'hidden'}>
-                  <Link to="/devices/pending">Accept pending devices</Link> to get started.
-                </span>
+                {this.props.hasPending ? (
+                  <span>
+                    <Link to="/devices/pending">Accept pending devices</Link> to get started.
+                  </span>
+                ) : null}
               </p>
             </div>
 
-            <div style={{ width: '100%' }} className={this.state.disabled ? 'inline-block' : 'hidden'}>
+            {this.state.disabled ? (
               <TextField
                 style={{ width: '100%' }}
                 value={this.props.device ? this.props.device.device_id : ''}
@@ -222,7 +226,7 @@ export default class ScheduleForm extends React.Component {
                 underlineDisabledStyle={{ borderBottom: 'none' }}
                 errorStyle={{ color: 'rgb(171, 16, 0)' }}
               />
-            </div>
+            ) : null}
 
             {this.props.showHelptips && (this.props.hasDevices && (this.props.artifacts || []).length) ? (
               <div style={{ position: 'relative' }}>
@@ -244,16 +248,20 @@ export default class ScheduleForm extends React.Component {
           </div>
 
           <div className="margin-top">
-            <p className={tmpDevices ? null : 'hidden'}>
-              {this.props.filteredDevices ? this.props.filteredDevices.length : '0'} of {devicesLength} {pluralize('devices', devicesLength)} will be updated.{' '}
-              <span onClick={() => this.props.showDevices()} className={this.state.disabled ? 'hidden' : 'link'}>
-                View the devices
-              </span>
-            </p>
-            <p className={this.props.hasDevices && artifactItems.length ? 'info' : 'hidden'}>
-              <InfoOutlinedIcon />
-              The deployment will skip any devices that are already on the target artifact version, or that have a different device type.
-            </p>
+            {tmpDevices ? (
+              <p>
+                {this.props.filteredDevices ? this.props.filteredDevices.length : '0'} of {devicesLength} {pluralize('devices', devicesLength)} will be updated.{' '}
+                <span onClick={() => this.props.showDevices()} className={this.state.disabled ? 'hidden' : 'link'}>
+                  View the devices
+                </span>
+              </p>
+            ) : null}
+            {this.props.hasDevices && artifactItems.length ? (
+              <p className="info">
+                <InfoOutlinedIcon />
+                The deployment will skip any devices that are already on the target artifact version, or that have a different device type.
+              </p>
+            ) : null}
           </div>
         </form>
       </div>

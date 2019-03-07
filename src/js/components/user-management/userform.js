@@ -28,26 +28,21 @@ export default class UserForm extends React.Component {
       >
         <TextInput hint="Email" label="Email" id="email" value={(this.props.user || {}).email} validations="isLength:1,isEmail" required={!this.props.user} />
 
-        <PasswordInput
-          className={this.props.editPass ? 'edit-pass' : 'hidden'}
-          id="password"
-          label="Password"
-          create={this.props.editPass}
-          validations="isLength:1"
-          disabled={!this.props.editPass}
-          onClear={() => this.handleButton()}
-          edit={this.props.edit}
-          required={!this.props.user}
-        />
-
-        <FormButton
-          buttonHolder={this.props.edit}
-          className={this.props.editPass ? 'hidden' : 'block'}
-          color="primary"
-          id="change"
-          label="Change password"
-          handleClick={() => this.handleButton()}
-        />
+        {this.props.editPass ? (
+          <PasswordInput
+            className="edit-pass"
+            id="password"
+            label="Password"
+            create={this.props.editPass}
+            validations="isLength:1"
+            disabled={!this.props.editPass}
+            onClear={() => this.handleButton()}
+            edit={this.props.edit}
+            required={!this.props.user}
+          />
+        ) : (
+          <FormButton buttonHolder={this.props.edit} color="primary" id="change" label="Change password" handleClick={() => this.handleButton()} />
+        )}
       </Form>
     );
   }

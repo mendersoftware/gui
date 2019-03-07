@@ -28,10 +28,10 @@ export default class GroupSelector extends React.Component {
   }
 
   _showButton() {
-    this.setState({ showInput: true, customName: '' });
-    this.props.changeSelect('');
-    this.refs.customGroup.focus();
-    this.props.validateName(true, '');
+    const self = this;
+    self.setState({ showInput: true, customName: '' }, () => self.customGroup.focus());
+    self.props.changeSelect('');
+    self.props.validateName(true, '');
   }
 
   _handleGroupNameSave(event) {
@@ -107,59 +107,61 @@ export default class GroupSelector extends React.Component {
 
     return (
       <div style={{ height: '200px' }}>
-        <div className={showSelect ? 'float-left' : 'hidden'}>
-          <FormControl className="float-left">
-            <InputLabel htmlFor="group-select">Select group</InputLabel>
-            <Select
-              onChange={event => this._handleSelectValueChange(event.target.value)}
-              value={this.props.selectedField || ''}
-              inputProps={{
-                name: 'groupSelect',
-                id: 'group-select'
-              }}
-            >
-              {groupList}
-            </Select>
-          </FormControl>
-
-          <div className="float-left margin-left-small">
-            <Button variant="contained" style={{ marginTop: '26px' }} onClick={() => this._showButton()}>
+        {showSelect ? (
+          <div className="float-left">
+            <FormControl>
+              <InputLabel htmlFor="group-select">Select group</InputLabel>
+              <Select
+                onChange={event => this._handleSelectValueChange(event.target.value)}
+                value={this.props.selectedField || ''}
+                inputProps={{
+                  name: 'groupSelect',
+                  id: 'group-select'
+                }}
+              >
+                {groupList}
+              </Select>
+            </FormControl>
+            <Button className="margin-left-small" variant="contained" style={{ marginTop: '26px' }} onClick={() => this._showButton()}>
               Create new
             </Button>
           </div>
-        </div>
+        ) : null}
 
-        <div className={this.state.showInput || !showSelect ? null : 'hidden'}>
+        {this.state.showInput || !showSelect ? (
           <TextField
             value={this.state.customName || ''}
             placeholder="Name of new group"
             label="Name of new group"
             className="float-left clear"
             onChange={event => this._handleTextFieldChange(event.target.value)}
+            inputRef={input => (this.customGroup = input)}
             errorStyle={{ color: 'rgb(171, 16, 0)' }}
             errorText={this.state.errorText1}
           />
-        </div>
+        ) : null}
 
         <div className="block float-left clear">
-          <p className={newGroup ? 'info' : 'hidden'}>
-            {this.props.selectedGroup ? (
-              <span>
-                <Icon className="material-icons" style={{ marginRight: '4px', fontSize: '18px', top: '4px' }}>
-                  error_outline
-                </Icon>
-                {this.props.devices} {pluralize('devices', this.props.devices)} will be removed from <i>{fullyDecodeURI(this.props.selectedGroupName)}</i> and
-                added to <i>{newGroup}</i>.
-              </span>
-            ) : (
-              <span>
-                <Icon className="material-icons" style={{ marginRight: '4px', fontSize: '18px', top: '4px' }}>
-                  error_outline
-                </Icon>
-                If a device is already in another group, it will be removed from that group and moved to <i>{newGroup}</i>.
-              </span>
-            )}
-          </p>
+          {newGroup ? (
+            <p className="info">
+              {this.props.selectedGroup ? (
+                <span>
+                  <Icon className="material-icons" style={{ marginRight: '4px', fontSize: '18px', top: '4px' }}>
+                    error_outline
+                  </Icon>
+                  {this.props.devices} {pluralize('devices', this.props.devices)} will be removed from <i>{fullyDecodeURI(this.props.selectedGroupName)}</i> and
+                  added to <i>{newGroup}</i>.
+                </span>
+              ) : (
+                <span>
+                  <Icon className="material-icons" style={{ marginRight: '4px', fontSize: '18px', top: '4px' }}>
+                    error_outline
+                  </Icon>
+                  If a device is already in another group, it will be removed from that group and moved to <i>{newGroup}</i>.
+                </span>
+              )}
+            </p>
+          ) : null}
 
           {this.props.willBeEmpty ? (
             <p className="info">

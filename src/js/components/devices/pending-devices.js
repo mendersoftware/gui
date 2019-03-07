@@ -278,8 +278,8 @@ export default class Pending extends React.Component {
       limitMaxed || limitNear ? (
         <p className="warning">
           <InfoIcon style={{ marginRight: '2px', height: '16px', verticalAlign: 'bottom' }} />
-          <span className={limitMaxed ? null : 'hidden'}>You have reached</span>
-          <span className={limitNear && !limitMaxed ? null : 'hidden'}>You are nearing</span> your limit of authorized devices: {this.props.acceptedDevices} of{' '}
+          {limitMaxed ? <span>You have reached</span> : null}
+          {limitNear && !limitMaxed ? <span>You are nearing</span> : null} your limit of authorized devices: {this.props.acceptedDevices} of{' '}
           {this.props.deviceLimit}
         </p>
       ) : null;
@@ -377,9 +377,7 @@ export default class Pending extends React.Component {
         {this.state.selectedRows.length ? (
           <div className="fixedButtons">
             <div className="float-right">
-              <div style={{ width: '100px', top: '7px', position: 'relative' }} className={this.state.authLoading ? 'inline-block' : 'hidden'}>
-                <Loader table={true} waiting={true} show={true} />
-              </div>
+              {this.state.authLoading ? <Loader style={{ width: '100px', top: '7px', position: 'relative' }} table={true} waiting={true} show={true} /> : null}
 
               <span className="margin-right">
                 {this.state.selectedRows.length} {pluralize('devices', this.state.selectedRows.length)} selected

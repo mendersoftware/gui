@@ -238,9 +238,11 @@ export default class Header extends React.Component {
           <MenuItem component={Link} to="/settings/my-account">
             My account
           </MenuItem>
-          <MenuItem component={Link} to="/settings/my-organization" className={this.state.multitenancy ? null : 'hidden'}>
-            My organization
-          </MenuItem>
+          {this.state.multitenancy ? (
+            <MenuItem component={Link} to="/settings/my-organization">
+              My organization
+            </MenuItem>
+          ) : null}
           <MenuItem component={Link} to="/settings/user-management">
             User management
           </MenuItem>

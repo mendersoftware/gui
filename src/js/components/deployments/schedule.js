@@ -54,20 +54,22 @@ export default class Schedule extends React.Component {
     return (
       <div>
         <h3>Scheduled deployments</h3>
-        <Table className={scheduleCount ? null : 'hidden'}>
-          <TableHead>
-            <TableRow>
-              <TableCell tooltip="Device group">Group</TableCell>
-              <TableCell tooltip="Target artifact version">Target artifact</TableCell>
-              <TableCell tooltip="Number of devices"># Devices</TableCell>
-              <TableCell tooltip="Started">Started</TableCell>
-              <TableCell tooltip="Finished">Finished</TableCell>
-              <TableCell tooltip="Details">Details</TableCell>
-              <TableCell tooltip="Actions" />
-            </TableRow>
-          </TableHead>
-          <TableBody>{schedule}</TableBody>
-        </Table>
+        {scheduleCount ? (
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell tooltip="Device group">Group</TableCell>
+                <TableCell tooltip="Target artifact version">Target artifact</TableCell>
+                <TableCell tooltip="Number of devices"># Devices</TableCell>
+                <TableCell tooltip="Started">Started</TableCell>
+                <TableCell tooltip="Finished">Finished</TableCell>
+                <TableCell tooltip="Details">Details</TableCell>
+                <TableCell tooltip="Actions" />
+              </TableRow>
+            </TableHead>
+            <TableBody>{schedule}</TableBody>
+          </Table>
+        ) : null}
         <div className={scheduleCount ? 'hidden' : null}>
           <p className="italic">No deployments scheduled</p>
         </div>

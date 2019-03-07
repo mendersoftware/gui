@@ -192,11 +192,11 @@ export default class Form extends React.Component {
   render() {
     var uploadActions = this.props.showButtons ? (
       <div className="float-right" style={this.props.dialog ? { margin: '24px -16px -16px 0' } : { marginTop: '32px' }}>
-        <div className={this.props.handleCancel ? null : 'hidden'} key="cancelcontain" style={{ marginRight: '10px', display: 'inline-block' }}>
-          <Button key="cancel" onClick={this.props.handleCancel}>
+        {this.props.handleCancel ? (
+          <Button key="cancel" onClick={this.props.handleCancel} style={{ marginRight: '10px', display: 'inline-block' }}>
             Cancel
           </Button>
-        </div>
+        ) : null}
         <Button
           variant="contained"
           key="submit"

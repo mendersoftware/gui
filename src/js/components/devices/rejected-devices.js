@@ -121,19 +121,19 @@ export default class Rejected extends React.Component {
           key={index}
           onClick={() => self._expandRow(index)}
           style={expanded ? { height: self.state.divHeight } : null}
-            >
+        >
           <TableCell>{id_attribute}</TableCell>
           <TableCell>
-              <Time value={device.created_ts} format="YYYY-MM-DD HH:mm" />
+            <Time value={device.created_ts} format="YYYY-MM-DD HH:mm" />
           </TableCell>
           <TableCell>
-              <Time value={device.updated_ts} format="YYYY-MM-DD HH:mm" />
+            <Time value={device.updated_ts} format="YYYY-MM-DD HH:mm" />
           </TableCell>
           <TableCell className="capitalized">{device.status}</TableCell>
           <TableCell style={{ width: '55px', paddingRight: '0', paddingLeft: '12px' }} className="expandButton">
-              <IconButton className="float-right">
-                <Icon className="material-icons">{expanded ? 'arrow_drop_up' : 'arrow_drop_down'}</Icon>
-              </IconButton>
+            <IconButton className="float-right">
+              <Icon className="material-icons">{expanded ? 'arrow_drop_up' : 'arrow_drop_down'}</Icon>
+            </IconButton>
           </TableCell>
           <TableCell style={{ width: '0', padding: '0', overflow: 'visible' }}>
             <Collapse

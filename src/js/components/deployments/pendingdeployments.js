@@ -72,36 +72,34 @@ export default class Pending extends React.Component {
       );
     }, this);
 
-    return (
-      <div className={pendingMap.length ? 'fadeIn' : 'hidden'}>
-        <div className="deploy-table-contain">
-          <h3>Pending</h3>
-          <Table style={{ overflow: 'visible' }}>
-            <TableHead>
-              <TableRow style={{ overflow: 'visible' }}>
-                <TableCell>Updating to</TableCell>
-                <TableCell>Group</TableCell>
-                <TableCell>Created</TableCell>
-                <TableCell style={{ textAlign: 'right', width: '100px' }}># Devices</TableCell>
-                <TableCell style={{ width: '126px' }}>Status</TableCell>
-                <TableCell />
-              </TableRow>
-            </TableHead>
-            <TableBody style={{ overflow: 'visible' }}>{pendingMap}</TableBody>
-          </Table>
+    return pendingMap.length ? (
+      <div className="deploy-table-contain fadeIn">
+        <h3>Pending</h3>
+        <Table style={{ overflow: 'visible' }}>
+          <TableHead>
+            <TableRow style={{ overflow: 'visible' }}>
+              <TableCell>Updating to</TableCell>
+              <TableCell>Group</TableCell>
+              <TableCell>Created</TableCell>
+              <TableCell style={{ textAlign: 'right', width: '100px' }}># Devices</TableCell>
+              <TableCell style={{ width: '126px' }}>Status</TableCell>
+              <TableCell />
+            </TableRow>
+          </TableHead>
+          <TableBody style={{ overflow: 'visible' }}>{pendingMap}</TableBody>
+        </Table>
 
-          {this.props.count > this.props.pending.length ? (
-            <Pagination
-              locale={_en_US}
-              simple
-              pageSize={this.state.pageSize}
-              current={this.props.page || 1}
-              total={this.props.count}
-              onChange={page => this._handlePageChange(page)}
-            />
-          ) : null}
-        </div>
+        {this.props.count > this.props.pending.length ? (
+          <Pagination
+            locale={_en_US}
+            simple
+            pageSize={this.state.pageSize}
+            current={this.props.page || 1}
+            total={this.props.count}
+            onChange={page => this._handlePageChange(page)}
+          />
+        ) : null}
       </div>
-    );
+    ) : null;
   }
 }

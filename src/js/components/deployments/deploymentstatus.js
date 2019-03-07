@@ -67,23 +67,23 @@ export default class DeploymentStatus extends React.Component {
       <div className={this.props.vertical ? 'results-status vertical' : 'results-status'}>
         <div className={skipped ? 'hint--bottom' : 'hint--bottom disabled'} aria-label="Skipped">
           <span className="status skipped">{skipped || 0}</span>
-          <span className={this.props.vertical ? 'label' : 'hidden'}>Skipped</span>
+          {this.props.vertical ? <span className="label">Skipped</span> : null}
         </div>
         <div className={this.state.stats.pending ? 'hint--bottom' : 'hint--bottom disabled'} aria-label="Pending">
           <span className={'status pending'}>{this.state.stats.pending}</span>
-          <span className={this.props.vertical ? 'label' : 'hidden'}>Pending</span>
+          {this.props.vertical ? <span className="label">Pending</span> : null}
         </div>
         <div className={inprogress ? 'hint--bottom' : 'hint--bottom disabled'} aria-label="In progress">
           <span className={'status inprogress'}>{inprogress}</span>
-          <span className={this.props.vertical ? 'label' : 'hidden'}>In progress</span>
+          {this.props.vertical ? <span className="label">In progress</span> : null}
         </div>
         <div className={this.state.stats.success ? 'hint--bottom' : 'hint--bottom disabled'} aria-label="Successful">
           <span className="status success">{this.state.stats.success}</span>
-          <span className={this.props.vertical ? 'label' : 'hidden'}>Successful</span>
+          {this.props.vertical ? <span className="label">Successful</span> : null}
         </div>
         <div className={failed ? 'hint--bottom' : 'hint--bottom disabled'} aria-label="Failures">
           <span className={'status failure'}>{failed}</span>
-          <span className={this.props.vertical ? 'label' : 'hidden'}>Failed</span>
+          {this.props.vertical ? <span className="label">Failed</span> : null}
         </div>
       </div>
     );

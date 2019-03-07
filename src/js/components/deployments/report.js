@@ -276,7 +276,7 @@ export default class DeploymentReport extends React.Component {
                   style={{ width: '260px', height: 'auto', margin: '30px 30px 30px 0', display: 'inline-block', verticalAlign: 'top' }}
                 >
                   <div>
-                    <div className="progressLabel">Status:</div>Finished<span className={this.state.stats.failure ? 'failures' : 'hidden'}> with failures</span>
+                    <div className="progressLabel">Status:</div>Finished {this.state.stats.failure ? <span className="failures">with failures</span> : null}
                   </div>
                   <div>
                     <div className="progressLabel">Started:</div>
@@ -288,45 +288,51 @@ export default class DeploymentReport extends React.Component {
                   </div>
                 </div>
                 <div className="deploymentInfo" style={{ height: 'auto', margin: '30px 30px 30px 0', display: 'inline-block', verticalAlign: 'top' }}>
-                  <div className={this.state.stats.failure || this.state.stats.aborted ? 'statusLarge' : 'hidden'}>
-                    <img src="assets/img/largeFail.png" />
-                    <div className="statusWrapper">
-                      <b className="red">{this.state.stats.failure || this.state.stats.aborted}</b> {pluralize('devices', this.state.stats.failure)} failed to
-                      update
-                    </div>
+                  {this.state.stats.failure || this.state.stats.aborted ? (
+                    <div className="statusLarge">
+                      <img src="assets/img/largeFail.png" />
+                      <div className="statusWrapper">
+                        <b className="red">{this.state.stats.failure || this.state.stats.aborted}</b> {pluralize('devices', this.state.stats.failure)} failed to
+                        update
+                      </div>
 
-                    <div>
-                      <div
-                        id="reportRetry"
-                        className={
-                          this.state.retry ? 'float-right hint--bottom hint--always hint--large hint--info' : 'float-right hint--bottom hint--large hint--info'
-                        }
-                        data-hint="This will create a new deployment with the same device group and Artifact.&#10;Devices with this Artifact already installed will be skipped, all others will be updated."
-                      >
-                        {this.state.retry ? (
-                          <ConfirmRetry cancel={() => this._hideConfirm('retry')} retry={() => this._handleRetry()} />
-                        ) : (
-                          <Button
-                            color="secondary"
-                            icon={<RefreshIcon style={{ height: '18px', width: '18px', verticalAlign: 'middle' }} />}
-                            onClick={() => this._showConfirm('retry')}
-                          >
-                            Retry deployment?
-                          </Button>
-                        )}
+                      <div>
+                        <div
+                          id="reportRetry"
+                          className={
+                            this.state.retry
+                              ? 'float-right hint--bottom hint--always hint--large hint--info'
+                              : 'float-right hint--bottom hint--large hint--info'
+                          }
+                          data-hint="This will create a new deployment with the same device group and Artifact.&#10;Devices with this Artifact already installed will be skipped, all others will be updated."
+                        >
+                          {this.state.retry ? (
+                            <ConfirmRetry cancel={() => this._hideConfirm('retry')} retry={() => this._handleRetry()} />
+                          ) : (
+                            <Button
+                              color="secondary"
+                              icon={<RefreshIcon style={{ height: '18px', width: '18px', verticalAlign: 'middle' }} />}
+                              onClick={() => this._showConfirm('retry')}
+                            >
+                              Retry deployment?
+                            </Button>
+                          )}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  <div className={this.state.stats.success ? 'statusLarge' : 'hidden'}>
-                    <img src="assets/img/largeSuccess.png" />
-                    <div className="statusWrapper">
-                      <b className="green">
-                        <span className={this.state.stats.success === deviceList.length ? null : 'hidden'}>All </span>
-                        {this.state.stats.success}
-                      </b>{' '}
-                      {pluralize('devices', this.state.stats.success)} updated successfully
+                  ) : null}
+                  {this.state.stats.success ? (
+                    <div className="statusLarge">
+                      <img src="assets/img/largeSuccess.png" />
+                      <div className="statusWrapper">
+                        <b className="green">
+                          {this.state.stats.success === deviceList.length ? <span>All </span> : null}
+                          {this.state.stats.success}
+                        </b>{' '}
+                        {pluralize('devices', this.state.stats.success)} updated successfully
+                      </div>
                     </div>
-                  </div>
+                  ) : null}
                 </div>
 
                 <div className="hidden" style={{ width: '240px', height: 'auto', margin: '30px 0 30px 30px', display: 'inline-block', verticalAlign: 'top' }}>
@@ -394,7 +400,6 @@ export default class DeploymentReport extends React.Component {
                 deviceIdentity={this.state.deviceIdentity}
                 deviceInventory={this.state.deviceInventory}
                 viewLog={id => this.viewLog(id)}
-                finished={() => this.updatedList()}
                 past={this.props.past}
               />
             )}

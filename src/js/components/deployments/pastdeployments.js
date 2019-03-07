@@ -201,19 +201,21 @@ export default class Past extends React.Component {
         </div>
         <div className="deploy-table-contain">
           <Loader show={this.props.loading} />
-          <Table className={pastMap.length ? null : 'hidden'} style={{ overflow: 'visible' }}>
-            <TableHead>
-              <TableRow style={{ overflow: 'visible' }}>
-                <TableCell>Updating to</TableCell>
-                <TableCell>Group</TableCell>
-                <TableCell>Started</TableCell>
-                <TableCell>Finished</TableCell>
-                <TableCell style={{ textAlign: 'right', width: '100px' }}># Devices</TableCell>
-                <TableCell style={{ width: '350px' }}>Status</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody style={{ cursor: 'pointer', overflow: 'visible' }}>{pastMap}</TableBody>
-          </Table>
+          {pastMap.length ? (
+            <Table style={{ overflow: 'visible' }}>
+              <TableHead>
+                <TableRow style={{ overflow: 'visible' }}>
+                  <TableCell>Updating to</TableCell>
+                  <TableCell>Group</TableCell>
+                  <TableCell>Started</TableCell>
+                  <TableCell>Finished</TableCell>
+                  <TableCell style={{ textAlign: 'right', width: '100px' }}># Devices</TableCell>
+                  <TableCell style={{ width: '350px' }}>Status</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody style={{ cursor: 'pointer', overflow: 'visible' }}>{pastMap}</TableBody>
+            </Table>
+          ) : null}
 
           {!this.props.loading && this.props.showHelptips && pastMap.length ? (
             <div>

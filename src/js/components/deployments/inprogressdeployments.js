@@ -51,20 +51,22 @@ export default class Progress extends React.Component {
           {progressMap.length ? (
             <div>
               <h3>In progress</h3>
-              <Table className={progressMap.length ? null : 'hidden'} style={{ overflow: 'visible' }}>
-                <TableHead>
-                  <TableRow style={{ overflow: 'visible' }}>
-                    <TableCell>Updating to</TableCell>
-                    <TableCell>Group</TableCell>
-                    <TableCell>Started</TableCell>
-                    <TableCell style={{ textAlign: 'right', width: '100px' }}># Devices</TableCell>
-                    <TableCell style={{ width: '350px' }}>Status</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody className="clickable" style={{ overflow: 'visible' }}>
-                  {progressMap}
-                </TableBody>
-              </Table>
+              {progressMap.length ? (
+                <Table style={{ overflow: 'visible' }}>
+                  <TableHead>
+                    <TableRow style={{ overflow: 'visible' }}>
+                      <TableCell>Updating to</TableCell>
+                      <TableCell>Group</TableCell>
+                      <TableCell>Started</TableCell>
+                      <TableCell style={{ textAlign: 'right', width: '100px' }}># Devices</TableCell>
+                      <TableCell style={{ width: '350px' }}>Status</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody className="clickable" style={{ overflow: 'visible' }}>
+                    {progressMap}
+                  </TableBody>
+                </Table>
+              ) : null}
             </div>
           ) : null}
 

@@ -89,13 +89,11 @@ export default class Filters extends React.Component {
         <ListItem className="filterPair" key={index}>
           <ListItemText>
             <div>
-              <IconButton
-                className={`material-icons ${fromProps[0].value ? 'remove-icon' : 'hidden'}`}
-                onClick={() => self._removeFilter(index)}
-                disabled={!fromProps[0].key}
-              >
-                remove_circle
-              </IconButton>
+              {fromProps[0].value ? (
+                <IconButton className="material-icons remove-icon" onClick={() => self._removeFilter(index)} disabled={!fromProps[0].key}>
+                  remove_circle
+                </IconButton>
+              ) : null}
               <Select fullWidth={true} value={item.key} autoWidth={true} onChange={() => self._updateFilterKey(index)}>
                 {attributes}
               </Select>

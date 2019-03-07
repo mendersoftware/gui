@@ -25,7 +25,6 @@ export default class ProgressDeviceList extends React.Component {
     return !isEqual(this.props, nextProps) || !isEqual(this.state, nextState);
   }
   componentDidUpdate(prevProps) {
-    this.props.finished();
     this.setState({ prevDevices: prevProps.devices });
   }
   render() {
@@ -127,18 +126,14 @@ export default class ProgressDeviceList extends React.Component {
                 )}
               </div>
             </TableCell>
-            <TableCell>
-              <Button className={device.log ? null : 'hidden'} onClick={() => this.props.viewLog(device.id)}>
-                View log
-              </Button>
-            </TableCell>
+            <TableCell>{device.log ? <Button onClick={() => this.props.viewLog(device.id)}>View log</Button> : null}</TableCell>
           </TableRow>
         );
       }, this);
     }
 
-    return (
-      <Table className={deviceList.length ? null : 'hidden'}>
+    return deviceList.length ? (
+      <Table>
         <TableHead>
           <TableRow>
             <TableCell tooltip={(this.props.globalSettings || {}).id_attribute || 'Device ID'}>
@@ -154,6 +149,6 @@ export default class ProgressDeviceList extends React.Component {
         </TableHead>
         <TableBody>{deviceList}</TableBody>
       </Table>
-    );
+    ) : null;
   }
 }
