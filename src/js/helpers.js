@@ -256,7 +256,7 @@ export const formatTime = date => {
       .replace('UTC', '');
   }
   return;
-}
+};
 
 export function formatPublicKey(key) {
   key = key.replace('-----BEGIN PUBLIC KEY-----', '');
@@ -276,21 +276,26 @@ export function intersection(o1, o2) {
     }, []);
 }
 
+export const customSort = (direction, field) => (a, b) => {
+  if (a[field] > b[field]) return direction ? -1 : 1;
+  if (a[field] < b[field]) return direction ? 1 : -1;
+  return 0;
+};
+
 export const mapDeviceAttributes = attributes =>
   attributes.reduce((accu, attribute) => Object.assign(accu, { [attribute.name]: attribute.value }), { device_type: '', artifact_name: '' });
 
-export function getFormattedSize(bytes) {
+export const getFormattedSize = bytes => {
   const suffixes = ['Bytes', 'KB', 'MB', 'GB'];
   const i = Math.floor(Math.log(bytes) / Math.log(1024));
   if (!bytes) {
     return '0 Bytes';
   }
   return `${(bytes / Math.pow(1024, i)).toFixed(2)} ${suffixes[i]}`;
-}
+};
 
 export class FileSize extends React.PureComponent {
   render() {
     return <span>{getFormattedSize(this.props.fileSize)}</span>;
   }
 }
-

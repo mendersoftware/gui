@@ -1902,6 +1902,44 @@ span.day {
   padding: 0px 25px 5px;
 }
 
+// Releases & Artifacts
+.repository-list,
+.release-repo {
+  overflow: auto;
+}
+
+.repository-list {
+  border-right: 1px solid @lightergrey;
+  width: 198px;
+}
+
+.repository-list-item {
+  &.active {
+    background-color: @lightestgrey;
+  }
+  & > div {
+    padding-right: 0;
+  }
+  .flexbox {
+    justify-content: space-between;
+    align-items: center;
+  }
+  .indicator {
+    opacity: 0;
+  }
+  &:hover .indicator {
+    .animation(fadein 0.2s 1);
+    opacity: 1;
+  }
+}
+
+.release-repo-item {
+  padding-bottom: 2vh;
+  & > div.muted {
+    margin: 18px 12px 0 0;
+  }
+}
+
 @keyframes fadein {
   0% {
     .opacity(0);

@@ -1,6 +1,8 @@
+import { EventEmitter } from 'events'; // from device
+
 import AppDispatcher from '../dispatchers/app-dispatcher';
 import AppConstants from '../constants/app-constants';
-import { EventEmitter } from 'events'; // from device
+import { customSort } from '../helpers';
 
 var CHANGE_EVENT = 'change';
 
@@ -23,6 +25,7 @@ var _hasMultitenancy = false;
 var _organization = {};
 var _showHelptips = null;
 var _groups = [];
+var _releasesRepo = [];
 var _uploadInProgress = false;
 var _MenderVersion = null;
 var _globalSettings = {};
@@ -268,14 +271,6 @@ function findWithAttr(array, attr, value) {
   }
 }
 
-function customSort(direction, field) {
-  return function(a, b) {
-    if (a[field] > b[field]) return direction ? -1 : 1;
-    if (a[field] < b[field]) return direction ? 1 : -1;
-    return 0;
-  };
-}
-
 function startTimeSort(a, b) {
   return (b.created > a.created) - (b.created < a.created);
 }
@@ -305,6 +300,13 @@ function setArtifacts(artifacts) {
     _artifactsRepo = artifacts;
   }
   _artifactsRepo.sort(customSort(1, 'modified'));
+}
+
+function setReleases(releases) {
+  if (releases) {
+    _releasesRepo = releases;
+  }
+  _releasesRepo.sort(customSort(1, 'name'));
 }
 
 function setHasDeployments(deployments) {
@@ -496,6 +498,11 @@ var AppStore = Object.assign(EventEmitter.prototype, {
   getSoftwareArtifact: (attr, val) => _artifactsRepo[findWithAttr(_artifactsRepo, attr, val)],
 
   /*
+   * Return list of saved release objects
+   */
+  getReleases: () => _releasesRepo,
+
+  /*
    * Return list of finished deployments
    */
   getPastDeployments: () => _getPastDeployments(),
@@ -633,6 +640,11 @@ var AppStore = Object.assign(EventEmitter.prototype, {
       /* API */
     case AppConstants.RECEIVE_ARTIFACTS:
       setArtifacts(payload.action.artifacts);
+      break;
+
+      /* API */
+    case AppConstants.RECEIVE_RELEASES:
+      setReleases(payload.action.releases);
       break;
 
       /* API */

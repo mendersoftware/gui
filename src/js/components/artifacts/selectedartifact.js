@@ -11,7 +11,6 @@ import IconButton from '@material-ui/core/IconButton';
 import Input from '@material-ui/core/Input';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import InputLabel from '@material-ui/core/InputLabel';
-import TextField from '@material-ui/core/TextField';
 
 import CancelIcon from '@material-ui/icons/Cancel';
 
@@ -93,8 +92,6 @@ export default class SelectedArtifact extends React.Component {
               }
             />
           </FormControl>
-          <TextField className="list-item" disabled label="Device type compatibility" defaultValue={self.props.compatible} margin="normal" />
-          <TextField className="list-item" disabled label="Signed" defaultValue={artifact.signed ? 'Yes' : 'No'} margin="normal" />
         </div>
 
         <ExpansionPanel
@@ -111,7 +108,7 @@ export default class SelectedArtifact extends React.Component {
           </ExpansionPanelDetails>
         </ExpansionPanel>
 
-        <Button onClick={() => self.props.removeArtifact()}>
+        <Button onClick={() => self.props.removeArtifact(self.props.artifact)}>
           <CancelIcon className="red auth" />
           Remove this artifact?
         </Button>
