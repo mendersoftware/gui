@@ -95,7 +95,7 @@ export default createMuiTheme({
         '&:before': {
           borderBottom: '1px solid rgb(224, 224, 224)',
         },
-        '&:hover:before': {
+        '&:hover:not($disabled):before': {
           borderBottom: '2px solid #347A87 !important',
         },
         '&:after': {
@@ -133,6 +133,14 @@ export default createMuiTheme({
           colors: colors.mendergreen,
         }
       }
-    }
+    },
+    MuiListItemText: {
+      root: {
+        fontSize: '0.87rem',
+      },
+      '&$primary': {
+        fontSize: '0.87rem',
+      }
+    },
   },
 });
