@@ -13,7 +13,9 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 import InputLabel from '@material-ui/core/InputLabel';
 
 import CancelIcon from '@material-ui/icons/Cancel';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 
+import AppActions from '../../actions/app-actions';
 import ArtifactPayload from './artifactPayload';
 
 export default class SelectedArtifact extends React.Component {
@@ -26,6 +28,15 @@ export default class SelectedArtifact extends React.Component {
       descEdit: false,
       description: this.props.artifact.description || '-'
     };
+  }
+  componentDidMount() {
+    const self = this;
+    AppActions.getArtifactUrl(this.props.artifact.id)
+      .then(response => self.setState({ downloadUrl: response.uri }))
+      .catch(error => {
+        console.log(error);
+        self.setState({ downloadUrl: null });
+      });
   }
   _handleLinkClick(device_type) {
     var filters = `device_type=${device_type}`;
@@ -108,6 +119,10 @@ export default class SelectedArtifact extends React.Component {
           </ExpansionPanelDetails>
         </ExpansionPanel>
 
+        <Button component="a" href={self.state.downloadUrl} target="_blank" disabled={!self.state.downloadUrl}>
+          <ExitToAppIcon style={{ transform: 'rotateZ(90deg)' }} />
+          Download Artifact
+        </Button>
         <Button onClick={() => self.props.removeArtifact(self.props.artifact)}>
           <CancelIcon className="red auth" />
           Remove this artifact?

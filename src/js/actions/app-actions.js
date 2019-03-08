@@ -289,6 +289,8 @@ const AppActions = {
       return Promise.resolve(artifacts);
     }),
 
+  getArtifactUrl: id => ArtifactsApi.get(`${deploymentsApiUrl}/artifacts/${id}/download`),
+
   uploadArtifact: (meta, file, progress) => {
     var formData = new FormData();
     formData.append('size', file.size);
