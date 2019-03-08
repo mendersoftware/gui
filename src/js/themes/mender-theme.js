@@ -51,8 +51,6 @@ export default createMuiTheme({
     MuiExpansionPanel: {
       root: {
         border: 'none',
-        borderTop: 'solid 1px',
-        borderTopColor: colors.borderColor,
         boxShadow: 'none',
         '&:before': {
           display: 'none'

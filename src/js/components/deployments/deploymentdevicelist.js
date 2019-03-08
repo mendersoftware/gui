@@ -62,7 +62,7 @@ export default class ProgressDeviceList extends React.Component {
           if (typeof this.props.deviceInventory[device.id] !== 'undefined') {
             var encodedArtifactName = encodeURIComponent((this.props.deviceInventory[device.id] || {}).artifact);
             currentArtifactLink = (
-              <Link style={{ fontWeight: '500' }} to={`/artifacts/${encodedArtifactName}`}>
+              <Link style={{ fontWeight: '500' }} to={`/releases/${encodedArtifactName}`}>
                 {(this.props.deviceInventory[device.id] || {}).artifact}
               </Link>
             );

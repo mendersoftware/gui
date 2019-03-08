@@ -313,6 +313,16 @@ const AppActions = {
       artifact: artifact
     }),
 
+  /* Releases */
+  getReleases: () =>
+    ArtifactsApi.get(`${deploymentsApiUrl}/deployments/releases`).then(releases => {
+      AppDispatcher.handleViewAction({
+        actionType: AppConstants.RECEIVE_RELEASES,
+        releases
+      });
+      return Promise.resolve(releases);
+    }),
+
   /*Deployments */
   // all deployments
   getDeployments: (page = default_page, per_page = default_per_page) =>

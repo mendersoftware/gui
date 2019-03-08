@@ -1,15 +1,19 @@
 import React from 'react';
+
+import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import Button from '@material-ui/core/Button';
+import LinearProgress from '@material-ui/core/LinearProgress';
+
 import AppActions from '../../actions/app-actions';
 import { AppContext } from '../../contexts/app-context';
 import { preformatWithRequestID } from '../../helpers';
 import AppStore from '../../stores/app-store';
-import { setRetryTimer, clearRetryTimer, clearAllRetryTimers } from '../../utils/retrytimer';
-import Repository from './repository';
+
+import ReleaseRepository from './releaserepository';
+import ReleasesList from './releaseslist';
 
 export default class Artifacts extends React.Component {
   constructor(props, context) {
@@ -20,26 +24,23 @@ export default class Artifacts extends React.Component {
     AppStore.changeListener(this._onChange.bind(this));
   }
   componentDidMount() {
-    clearAllRetryTimers();
-    this.artifactTimer = setInterval(() => this._getArtifacts(), this.state.refreshArtifactsLength);
-    this._getArtifacts();
+    this.artifactTimer = setInterval(() => this._getReleases(), this.state.refreshArtifactsLength);
+    this._getReleases();
   }
   componentWillUnmount() {
-    clearAllRetryTimers();
     clearInterval(this.artifactTimer);
     AppStore.removeChangeListener(this._onChange.bind(this));
   }
   componentDidUpdate(prevProps) {
     if (prevProps.artifactProgress && !this.props.artifactProgress) {
       clearInterval(this.artifactTimer);
-      this.artifactTimer = setInterval(() => this._getArtifacts(), this.state.refreshArtifactsLength);
-      this._getArtifacts();
+      this.artifactTimer = setInterval(() => this._getReleases(), this.state.refreshArtifactsLength);
+      this._getReleases();
     }
   }
   _getState() {
     return {
-      artifacts: AppStore.getArtifactsRepo(),
-      selected: null,
+      releases: AppStore.getReleases(),
       remove: false,
       refreshArtifactsLength: 60000,
       showHelptips: AppStore.showHelptips()
@@ -51,23 +52,45 @@ export default class Artifacts extends React.Component {
       if (this.props.params.artifactVersion) {
         // selected artifacts
         var artifact = AppStore.getSoftwareArtifact('name', this.props.params.artifactVersion);
-        this.setState({ selected: artifact });
+        const selectedRelease = this.state.releases.find(item => item.Artifacts.find(releaseArtifact => releaseArtifact.id === artifact.id));
+        this.setState({ selectedRelease, selectedArtifact: artifact });
       }
     }
   }
+
+  onSelectRelease(release) {
+    this.setState({ selectedRelease: release });
+  }
+
+  onFilterReleases(releases) {
+    let selectedRelease = this.state.selectedRelease;
+    if (releases && !releases.find(item => selectedRelease && selectedRelease.Name === item.Name)) {
+      selectedRelease = releases.length ? releases[0] : null;
+    }
+    if (this.state.selectedRelease != selectedRelease) {
+      this.setState({ selectedRelease });
+    }
+  }
+
   _startLoading(bool) {
     this.setState({ doneLoading: !bool });
   }
-  _getArtifacts() {
+  _getReleases() {
     var self = this;
-    return AppActions.getArtifacts()
-      .then(artifacts => {
-        clearRetryTimer('artifacts');
-        self.setState({ doneLoading: true, artifacts });
+    return AppActions.getReleases()
+      .then(releases => {
+        let selectedRelease = self.state.selectedRelease;
+        if (!selectedRelease && releases.length) {
+          selectedRelease = releases[0];
+        }
+        self.setState({ releases, selectedRelease });
       })
       .catch(err => {
         var errormsg = err.error || 'Please check your connection';
-        setRetryTimer(err, 'artifacts', `Artifacts couldn't be loaded. ${errormsg}`, self.state.refreshArtifactsLength);
+        console.log(errormsg);
+      })
+      .finally(() => {
+        self.setState({ doneLoading: true });
       });
   }
   _removeDialog(artifact) {
@@ -78,12 +101,12 @@ export default class Artifacts extends React.Component {
       this.setState({ remove: false, artifact: null });
     }
   }
-  _removeArtifact() {
+  _removeArtifact(artifact) {
     var self = this;
-    return AppActions.removeArtifact(self.state.artifact.id)
+    return AppActions.removeArtifact(artifact.id)
       .then(() => {
         AppActions.setSnackbar('Artifact was removed', 5000, '');
-        self._getArtifacts();
+        self._getReleases();
       })
       .catch(err => {
         var errMsg = err.res.body.error || '';
@@ -91,23 +114,39 @@ export default class Artifacts extends React.Component {
       });
   }
   render() {
+    const self = this;
+
     return (
-      <div>
-        <AppContext.Consumer>
-          {({ uploadArtifact }) => (
-            <Repository
-              uploadArtifact={uploadArtifact}
-              progress={this.props.artifactProgress}
-              showHelptips={this.state.showHelptips}
-              removeArtifact={artifact => this._removeDialog(artifact)}
-              refreshArtifacts={this._getArtifacts}
-              startLoader={this._startLoading}
-              loading={!this.state.doneLoading}
-              selected={this.state.selected}
-              artifacts={this.state.artifacts}
-            />
-          )}
-        </AppContext.Consumer>
+      <div style={{ height: '100%' }}>
+        <div className="flexbox" style={{ height: '100%' }}>
+          <ReleasesList
+            releases={self.state.releases}
+            selectedRelease={self.state.selectedRelease}
+            onSelect={release => self.onSelectRelease(release)}
+            onFilter={releases => self.onFilterReleases(releases)}
+            loading={!self.state.doneLoading}
+          />
+          <AppContext.Consumer>
+            {({ uploadArtifact }) => (
+              <ReleaseRepository
+                uploadArtifact={uploadArtifact}
+                progress={self.props.artifactProgress}
+                showHelptips={self.state.showHelptips}
+                removeArtifact={artifact => this._removeDialog(artifact)}
+                refreshArtifacts={self._getReleases}
+                startLoader={self._startLoading}
+                loading={!self.state.doneLoading}
+                release={self.state.selectedRelease}
+              />
+            )}
+          </AppContext.Consumer>
+        </div>
+        {self.props.artifactProgress ? (
+          <div id="progressBarContainer">
+            <p className="align-center">Upload in progress ({Math.round(self.props.artifactProgress)}%)</p>
+            <LinearProgress variant="determinate" style={{ backgroundColor: '#c7c7c7', margin: '15px 0' }} value={self.props.artifactProgress} />
+          </div>
+        ) : null}
 
         <Dialog open={this.state.remove}>
           <DialogTitle>Remove this artifact?</DialogTitle>
@@ -116,8 +155,7 @@ export default class Artifacts extends React.Component {
           </DialogContent>
           <DialogActions>
             <Button onClick={() => this._removeDialog(null)}>Cancel</Button>
-
-            <Button variant="contained" color="secondary" onClick={() => this._removeArtifact()}>
+            <Button variant="contained" color="secondary" onClick={() => this._removeArtifact(this.state.artifact)}>
               Remove artifact
             </Button>
           </DialogActions>
