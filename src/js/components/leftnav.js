@@ -9,7 +9,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 var listItems = [
   { route: '/', text: 'Dashboard' },
   { route: '/devices', text: 'Devices' },
-  { route: '/artifacts', text: 'Artifacts' },
+  { route: '/releases', text: 'Releases' },
   { route: '/deployments', text: 'Deployments' }
 ];
 

@@ -80,8 +80,8 @@ class AppRoot extends React.Component {
     switch (pathParams.location) {
     case 'devices':
       return '/devices';
-    case 'artifacts':
-      return '/artifacts';
+    case 'releases':
+      return '/releases';
     case 'deployments':
       return '/deployments';
     case 'help':

@@ -179,7 +179,7 @@ export default class ScheduleForm extends React.Component {
               <Icon className="material-icons" style={{ marginRight: '4px', fontSize: '18px', top: '4px', color: 'rgb(171, 16, 0)' }}>
                 error_outline
               </Icon>
-              There are no artifacts available. <Link to="/artifacts">Upload one to the repository</Link> to get started.
+              There are no artifacts available. <Link to="/releases">Upload one to the repository</Link> to get started.
             </p>
           </div>
 

@@ -179,11 +179,11 @@ export class ArtifactsNav extends React.Component {
   render() {
     return (
       <div>
-        <h3>Artifacts</h3>
+        <h3>Releases</h3>
         <hr />
         <p>Before you can create a deployment, an Artifact needs to be uploaded to the Mender server.</p>
         <p>
-          Go to the <Link to="/artifacts">Artifacts tab</Link>.
+          Go to the <Link to="/releases">Releases tab</Link>.
         </p>
         <p>
           <a className="hidehelp" onClick={toggleHelptips}>
@@ -269,7 +269,7 @@ export class ExpandArtifact extends React.Component {
           Mender Artifacts have <b>Device types compatible</b> as part of their metadata. All devices report which device type they are, as part of their
           inventory information. During a deployment, Mender makes sure that a device will only download and install an Artifact it is compatible with.
         </p>
-        <p>You can click on each Artifact to expand the row and view more information about it.</p>
+        <p>You can click on each Artifact in the Release to expand the row and view more information about it.</p>
         <p>
           <a className="hidehelp" onClick={toggleHelptips}>
             Hide all help tips
@@ -290,13 +290,13 @@ export class CreateDeployment extends React.Component {
 
         {this.props.artifacts && this.props.devices ? (
           <p>
-            Looks like you're ready to make your first deployment - you have {this.props.devices === 1 ? 'a device' : 'devices'} connected to the server and an
-            Artifact ready to deploy to them. Click <b>Create a deployment</b>.
+            Looks like you're ready to make your first deployment - you have {this.props.devices === 1 ? 'a device' : 'devices'} connected to the server and a
+            Release ready to deploy to them. Click <b>Create a deployment</b>.
           </p>
         ) : this.props.devices ? (
           <p>
             You're not quite ready to make your first deployment yet - you have {this.props.devices === 1 ? 'a device' : 'devices'} connected to the server, but
-            no Artifact uploaded. Go to the <Link to="/artifacts">Artifacts tab</Link>.
+            no Artifact uploaded. Go to the <Link to="/releases">Releases tab</Link>.
           </p>
         ) : (
           <p>
