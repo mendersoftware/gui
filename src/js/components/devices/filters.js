@@ -115,8 +115,8 @@ export default class Filters extends React.Component {
     const drawerStyles = this.state.showFilters ? { overflow: 'visible', top: '57px' } : { overflow: 'hidden', top: '57px' };
     return (
       <div style={{ position: 'relative' }}>
-        <Button style={{ position: 'absolute', right: '0' }} color="secondary" onClick={() => this._toggleNav()}>
-          <FilterListIcon />
+        <Button style={{position: 'absolute', top:0,right:0, zIndex:100}} color="secondary" onClick={() => this._toggleNav()}>
+          <FilterListIcon className="buttonLabelIcon" />
           {filterCount > 0 ? `Filters (${filterCount})` : 'Filters'}
         </Button>
         <Drawer

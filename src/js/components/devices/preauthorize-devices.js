@@ -304,7 +304,7 @@ export default class Preauthorize extends React.Component {
 
     var inputs = this.state.inputs.map(function(input, index) {
       return (
-        <div key={index}>
+        <div className="key-value-container" key={index}>
           <TextField
             placeholder="Key"
             id={`key-${index}`}
@@ -333,8 +333,8 @@ export default class Preauthorize extends React.Component {
     }, this);
 
     return (
-      <div>
-        <Button color="secondary" variant="contained" disabled={!!limitMaxed} className="top-right-button" onClick={() => this._dialogToggle('openPreauth')}>
+      <div className="tab-container">
+        <Button style={{position: 'absolute'}} color="secondary" variant="contained" disabled={!!limitMaxed} className="top-right-button" onClick={() => this._dialogToggle('openPreauth')}>
           Preauthorize devices
         </Button>
 
@@ -347,7 +347,6 @@ export default class Preauthorize extends React.Component {
 
             <Table>
               <TableHead className="clickable">
-                >
                 <TableRow>
                   <TableCell className="columnHeader" tooltip={(this.props.globalSettings || {}).id_attribute || 'Device ID'}>
                     {(this.props.globalSettings || {}).id_attribute || 'Device ID'}
@@ -420,10 +419,9 @@ export default class Preauthorize extends React.Component {
                   rejectClassName="active"
                   multiple={false}
                   onDrop={(accepted, rejected) => this.onDrop(accepted, rejected)}
-                  style={{ width: '528px' }}
                 >
                   {({ getRootProps, getInputProps }) => (
-                    <div {...getRootProps()} style={{ width: '500px', fontSize: '16px', margin: 'auto' }} className="dropzone onboard dashboard-placeholder">
+                    <div {...getRootProps()} style={{ fontSize: '16px', margin: 'auto' }} className="dropzone onboard dashboard-placeholder">
                       <input {...getInputProps()} />
                       <div className="icon inline-block">
                         <FileIcon style={{ height: '24px', width: '24px', verticalAlign: 'middle', marginTop: '-2px' }} />

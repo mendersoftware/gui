@@ -87,6 +87,7 @@ ul.unstyled {
   visibility: hidden;
 }
 
+
 /* icon */
 
 .pending-icon {
@@ -309,6 +310,16 @@ ul.link-list {
   }
 }
 
+.navLink.leftNav > div > span {
+  color: #949495;
+}
+.navLink.leftNav.active > div > span {
+  color: rgba(0, 0, 0, 0.87);
+}
+.navLink.leftNav:hover {
+  background-color: rgba(0,0,0,0.08);
+}
+
 /* Header */
 
 #fixedHeader {
@@ -332,12 +343,12 @@ ul.link-list {
 .header .material-icons {
   color: @grey !important;
   margin-left: 7px;
+  vertical-align: middle;
 }
 
 #logo {
   display: block;
   position: relative;
-  left: 5px;
   min-width: 165px;
   height: 48px;
   background-image: url('../assets/img/headerlogo.png');
@@ -423,6 +434,10 @@ ul.link-list {
       color: orange !important;
     }
   }
+
+  >* > * {
+    vertical-align: middle;
+  }
 }
 
 .header .header-dropdown:hover .material-icons {
@@ -430,6 +445,11 @@ ul.link-list {
 }
 
 /* Layout */
+
+.tab-container {
+  position: relative;
+  padding-top: 30px;
+}
 
 .flexbox {
   display: -webkit-flex;
@@ -496,8 +516,7 @@ ul.link-list {
   padding: 30px;
   position: relative;
   border-left: 1px solid @lightergrey;
-  min-height: 400px;
-  height: 91vh;
+  min-height: 80vh;
 
   &.container {
     margin-left: 198px;
@@ -595,6 +614,8 @@ ul.link-list {
 
     &.highlight .material-icons,
     &.highlight svg {
+      width: 1.3em;
+      height: 1.3em;
       border-radius: 50%;
       border: @alertpurple 4px solid;
       .animation(highlight 2.2s infinite);
@@ -797,6 +818,11 @@ ul.link-list {
   .rotate(-45deg);
 }
 
+.buttonLabelIcon {
+  margin-right: 8px;
+}
+
+
 // pagination
 
 ul.rc-pagination {
@@ -870,11 +896,7 @@ span.length {
   overflow: auto;
 }
 
-// custom style for checkbox
-table tbody.clickable tr > td:first-child,
-table thead.clickable tr > th:first-child {
-  padding-right: 36px !important;
-}
+
 .inventoryTable {
   padding: 0 24px;
   align-items: center;
@@ -896,8 +918,8 @@ table thead.clickable tr > th:first-child {
   }
   &:hover {
     visibility: visible;
-    .opacity(0.4);
-    color: #aeaeae;
+    // .opacity(0.4);
+    // color: #aeaeae;
   }
   &:hover .sortIcon.selected,
   .sortIcon.selected {
@@ -1222,6 +1244,11 @@ textarea#inline-description {
   }
 }
 
+.key-value-container button {
+  margin-top: 18px;
+  margin-left: 8px;
+}
+
 /* Log in */
 #login-box {
   .animation(fadein 1s 1);
@@ -1359,23 +1386,28 @@ tr.expand {
 
     div.expanded {
       position: absolute;
-      left: 0;
-      margin-top: 60px;
-      padding: 0 45px;
+      left: 30px;
       right: 0;
-
-      &.accepted {
-        padding-left: 93px;
-      }
+      margin-top: 60px;
+      padding: 0 45px 30px;
     }
   }
 
-  td:first-child > div div {
-    margin-top: -1px;
-  }
   td.expandButton {
     padding-top: 2px;
   }
+}
+
+.device-attributes.opaque {
+  opacity: 1;
+}
+
+.grouplist div span {
+  font-size: 0.9rem;
+}
+
+.leftNav ul a div span {
+  font-size: 0.9rem;
 }
 
 div.waiting-inventory {
@@ -1396,12 +1428,6 @@ div.waiting-inventory {
   padding-bottom: 15px;
 }
 
-td.no-click-cell {
-  padding: 0 !important;
-  > div {
-    padding: 17px 24px;
-  }
-}
 
 /* device auth */
 .actionButtons > span,
@@ -1431,6 +1457,7 @@ td.no-click-cell {
   position: absolute;
   top: 30px;
   right: 30px;
+  z-index:100;
 }
 
 .bottom-right-button {
@@ -1898,6 +1925,8 @@ span.day {
   background-color: @lightestgrey;
   padding: 0px 25px 5px;
 }
+
+
 
 @keyframes fadein {
   0% {

@@ -45,7 +45,7 @@ export default createMuiTheme({
     },
     MuiTab: {
       root: {
-        textTransform: 'none'
+        textTransform: 'none',
       }
     },
     MuiExpansionPanel: {
@@ -114,6 +114,7 @@ export default createMuiTheme({
     MuiFormControl: {
       root: {
         marginTop: '18px',
+        minWidth: '240px',
       },
     },
     MuiFormControlLabel: {
@@ -124,23 +125,51 @@ export default createMuiTheme({
     MuiIconButton: {
       root: {
         color: colors.mutedText,
-      }
+        fontSize: '1.3rem',
+      },
     },
     MuiButton: {
       root: {
         color: colors.linkgreen,
         '&:hover': {
           colors: colors.mendergreen,
+        },
+      },
+      text: {
+        padding: '10px 15px',
+      },
+    },
+    MuiSvgIcon: {
+      root: {
+        iconButton: {
+          marginRight: '8px',
         }
       }
     },
     MuiListItemText: {
       root: {
-        fontSize: '0.87rem',
+        fontSize: '0.8rem',
+        '&$primary': {
+          fontSize: '0.8rem',
+        },
       },
-      '&$primary': {
-        fontSize: '0.87rem',
-      }
+    },
+    MuiTypography: {
+      body1: {
+        fontSize: '0.8rem',
+      },
+      subtitle1: {
+        fontSize: '0.8rem',
+      },
+    },
+    MuiTableCell: {
+      root: {
+        padding: '0px 24px 0px 24px',
+      },
+      paddingCheckbox: { 
+        padding: '0 0 0 6px',
+        width: '54px',
+      },
     },
   },
 });

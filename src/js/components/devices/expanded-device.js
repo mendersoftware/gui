@@ -228,7 +228,7 @@ export default class ExpandedDevice extends React.Component {
         var secondaryText = sortedAttributes[i].value instanceof Array ? sortedAttributes[i].value.toString() : sortedAttributes[i].value;
         deviceInventory.push(
           <div key={i}>
-            <ListItem disabled={true}>
+            <ListItem classes={{ root: 'device-attributes', disabled: 'opaque' }} disabled={true}>
               <ListItemText primary={sortedAttributes[i].name} secondary={secondaryText} />
             </ListItem>
             <Divider />
@@ -324,16 +324,16 @@ export default class ExpandedDevice extends React.Component {
       <div key="deviceinfo">
         <div id="device-identity" className="report-list bordered">
           <h4 className="margin-bottom-none">Device identity</h4>
-          <div className="list-horizontal-flex">{deviceIdentity}</div>
+          <div className="list-horizontal-flex margin-bottom">{deviceIdentity}</div>
 
-          <div className="flexbox" style={{ flexDirection: 'row' }}>
+          <div className="margin-bottom-small flexbox" style={{ flexDirection: 'row' }}>
             <span style={{ display: 'flex', minWidth: 180, justifyContent: 'space-evenly', alignItems: 'center', marginRight: '2vw' }}>
               {statusIcon}
               <span className="inline-block">
                 <Typography component="span" variant="subtitle2" style={Object.assign({}, buttonStyle, { textTransform: 'capitalize' })}>
                   Device status
                 </Typography>
-                <Typography component="span" variant="subtitle1" style={buttonStyle}>
+                <Typography component="span" variant="subtitle1" style={Object.assign({}, buttonStyle, { textTransform: 'capitalize' })}>
                   {status}
                 </Typography>
               </span>
@@ -369,14 +369,16 @@ export default class ExpandedDevice extends React.Component {
         {status === 'accepted' && !waiting ? (
           <div id="device-actions" className="report-list" style={{ marginTop: '24px' }}>
             <Button onClick={() => self.props._copyLinkToClipboard()}>
-              <LinkIcon className="rotated" />
+              <LinkIcon className="rotated buttonLabelIcon" />
               Copy link to this device
             </Button>
             {status === 'accepted' ? (
-              <Button onClick={() => self.props._clickListItem()}>
-                <ReplayIcon className="rotated" />
-                Create a deployment for this device
-              </Button>
+              <div className="margin-left inline">
+                <Button onClick={() => self.props._clickListItem()}>
+                  <ReplayIcon className="rotated buttonLabelIcon" />
+                  Create a deployment for this device
+                </Button>
+              </div>
             ) : null}
           </div>
         ) : null}
