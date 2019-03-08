@@ -206,7 +206,7 @@ export default class DeploymentReport extends React.Component {
 
     var encodedArtifactName = encodeURIComponent(this.props.deployment.artifact_name);
     var artifactLink = (
-      <Link style={{ fontWeight: '500' }} to={`/artifacts/${encodedArtifactName}`}>
+      <Link style={{ fontWeight: '500' }} to={`/releases/${encodedArtifactName}`}>
         {this.props.deployment.artifact_name}
       </Link>
     );
@@ -304,7 +304,7 @@ export default class DeploymentReport extends React.Component {
                               ? 'float-right hint--bottom hint--always hint--large hint--info'
                               : 'float-right hint--bottom hint--large hint--info'
                           }
-                          data-hint="This will create a new deployment with the same device group and Artifact.&#10;Devices with this Artifact already installed will be skipped, all others will be updated."
+                          data-hint="This will create a new deployment with the same device group and Release.&#10;Devices with this Release already installed will be skipped, all others will be updated."
                         >
                           {this.state.retry ? (
                             <ConfirmRetry cancel={() => this._hideConfirm('retry')} retry={() => this._handleRetry()} />

@@ -95,7 +95,7 @@ export default class DemoArtifacts extends React.Component {
                   <TableBody>{tableRows}</TableBody>
                 </Table>
                 <p>
-                  Then upload them to the <a onClick={() => this._changePage('artifacts')}>Artifacts tab</a>.
+                  Then upload them to the <a onClick={() => this._changePage('releases')}>Releases tab</a>.
                 </p>
               </div>
             ) : (
