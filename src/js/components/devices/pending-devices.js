@@ -245,7 +245,7 @@ export default class Pending extends React.Component {
           onClick={event => self._expandRow(event, index)}
         >
           <TableCell padding="checkbox">
-            <Checkbox checked={self._isSelected(index)} onChange={() => self._onRowSelection(index)} />
+            <Checkbox style={expanded ? { paddingTop: '0', marginTop:'-4px' } : {}}  checked={self._isSelected(index)} onChange={() => self._onRowSelection(index)} />
           </TableCell>
           <TableCell>{id_attribute}</TableCell>
           <TableCell>
@@ -287,7 +287,7 @@ export default class Pending extends React.Component {
     const numSelected = self.state.selectedRows.length;
 
     return (
-      <div>
+      <div className="tab-container">
         <Loader show={this.state.authLoading} />
 
         {this.props.showHelptips && this.state.devices.length ? (

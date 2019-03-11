@@ -88,7 +88,7 @@ export default class Devices extends React.Component {
   render() {
     const { devices, inactiveDevices, pendingDevices, deltaActivity } = this.state;
     const hasPending = pendingDevices > 0;
-    const noDevicesAvailable = !(devices.length || pendingDevices.length);
+    const noDevicesAvailable = (!devices && !hasPending);
     return (
       <div>
         <div className="dashboard-header">
@@ -103,7 +103,7 @@ export default class Devices extends React.Component {
             target={'/help/connecting-devices'}
             content={'Learn how to connect more devices'}
             buttonContent={'Learn more'}
-            onClick={() => this.props.clickHandle({ route: 'help/connecting-devices' })}
+            onClick={() => this.props.clickHandle({ route: '/help/connecting-devices' })}
             isActive={noDevicesAvailable}
           />
         </div>

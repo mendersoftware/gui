@@ -481,15 +481,13 @@ export default class DeviceGroups extends React.Component {
     clearInterval(self.deviceTimer);
     var id, group;
     // check filters for ID or group, this is temporary until full filtering functionality
-    for (var i = 0; i < filters.length; i++) {
-      if (filters[i].key === 'id') {
-        id = filters[i].value;
-        break;
-      } else if (filters[i].key === 'group') {
-        group = filters[i].value;
-        break;
+    filters.forEach(filter => {
+      if (filter.key === 'id') {
+        id = filter.value;
+      } else if (filter.key === 'group') {
+        group = filter.value;
       }
-    }
+    });
 
     if (id) {
       // get single device by id
@@ -550,7 +548,7 @@ export default class DeviceGroups extends React.Component {
     var allowDeviceGroupRemoval = !this._isUngroupedGroup(this.state.selectedGroup);
 
     return (
-      <div className="margin-top">
+      <div className="tab-container">
         <div className="leftFixed">
           <Groups
             openGroupDialog={() => self.setState({ createGroupDialog: !self.state.createGroupDialog })}
@@ -573,8 +571,8 @@ export default class DeviceGroups extends React.Component {
           ) : null}
 
           {self.state.selectedGroup && allowDeviceGroupRemoval ? (
-            <Button className="float-right" onClick={() => self.setState({ removeGroup: !self.state.removeGroup })}>
-              <DeleteIcon className="green" />
+            <Button style={{position: 'absolute', top:0,right:'30px', zIndex:100}} onClick={() => self.setState({ removeGroup: !self.state.removeGroup })}>
+              <DeleteIcon className="buttonLabelIcon" />
               Remove group
             </Button>
           ) : null}

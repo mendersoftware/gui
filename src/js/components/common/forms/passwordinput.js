@@ -31,7 +31,7 @@ export default class PasswordInput extends React.Component {
   _getState() {
     return {
       value: '',
-      errorText: null,
+      errortext: null,
       isValid: true,
       score: '',
       feedback: [],
@@ -96,9 +96,9 @@ export default class PasswordInput extends React.Component {
               defaultValue={this.props.defaultValue}
               value={this.state.value}
               onChange={e => this.setValue(e)}
-              errorStyle={{ color: 'rgb(171, 16, 0)' }}
+              errorstyle={{ color: 'rgb(171, 16, 0)' }}
               style={{ width: 400 }}
-              errorText={this.state.errorText}
+              errortext={this.state.errortext}
               required={this.props.required}
               onKeyPress={this.props.handleKeyPress}
               disabled={this.props.disabled}

@@ -49,7 +49,7 @@ export default class Deployments extends React.Component {
       invalid: true,
       per_page: 20,
       refreshDeploymentsLength: 30000,
-      reportDialog: false,
+      dialog: false,
       scheduleDialog: false,
       ...this._getInitialState()
     };
@@ -69,15 +69,18 @@ export default class Deployments extends React.Component {
     var artifact = AppStore.getDeploymentArtifact();
     this.setState({ artifact });
 
-    Promise.all([AppActions.getArtifacts(), AppActions.getAllDevicesByStatus('accepted'), AppActions.getGroups()])
+    Promise.all([AppActions.getArtifacts(), AppActions.getAllDevices(), AppActions.getGroups()])
       .catch(err => console.log(`Error: ${err}`))
       .then(([artifacts, allDevices, groups]) => {
         const collatedArtifacts = AppStore.getCollatedArtifacts(artifacts);
-        self.setState({ allDevices, collatedArtifacts, groups });
-        return Promise.all(groups.map(group => AppActions.getAllDevicesInGroup(group).then(devices => Promise.resolve({ [group]: devices }))));
+        let state = { allDevices, collatedArtifacts, groups, doneLoading: true };
+        return Promise.all([
+          Promise.all(groups.map(group => AppActions.getAllDevicesInGroup(group).then(devices => Promise.resolve({ [group]: devices })))),
+          Promise.resolve(state)
+        ]);
       })
-      .then(groupedDevices => {
-        const state = groupedDevices.reduce((accu, item) => Object.assign(accu, item), { doneLoading: true });
+      .then(([groupedDevices, state]) => {
+        state = groupedDevices.reduce((accu, item) => Object.assign(accu, item), state);
         self.setState(state);
       });
 

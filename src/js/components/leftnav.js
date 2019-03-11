@@ -31,7 +31,6 @@ export default class LeftNav extends React.Component {
     }
     const listItemStyle = {
       container: { padding: '16px 16px 16px 42px' },
-      font: { fontSize: '14px' }
     };
 
     var list = listItems.map((item, index) => (
@@ -43,7 +42,7 @@ export default class LeftNav extends React.Component {
         style={{ padding: '22px 16px 22px 42px' }}
         to={item.route}
       >
-        <ListItemText primary={item.text} style={Object.assign({ textTransform: 'uppercase' }, listItemStyle.font)} />
+        <ListItemText primary={item.text} style={Object.assign({ textTransform: 'uppercase' })} />
       </ListItem>
     ));
 

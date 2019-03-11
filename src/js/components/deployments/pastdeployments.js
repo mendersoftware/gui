@@ -5,23 +5,21 @@ import Pagination from 'rc-pagination';
 import _en_US from 'rc-pagination/lib/locale/en_US';
 
 // material ui
+import Grid from '@material-ui/core/Grid';
 import Table from '@material-ui/core/Table';
 import TableHead from '@material-ui/core/TableHead';
 import TableCell from '@material-ui/core/TableCell';
 import TableBody from '@material-ui/core/TableBody';
 import TableRow from '@material-ui/core/TableRow';
-import IconButton from '@material-ui/core/IconButton';
 
-import ClearIcon from '@material-ui/icons/Clear';
 import HelpIcon from '@material-ui/icons/Help';
-
-import Autosuggest, { defaultProps } from '@plan-three/material-ui-autosuggest';
 
 import InlineDatePicker from 'material-ui-pickers/DatePicker';
 import MuiPickersUtilsProvider from 'material-ui-pickers/MuiPickersUtilsProvider';
 import MomentUtils from '@date-io/moment';
 
 import Loader from '../common/loader';
+import AutoSelect from '../common/forms/autoselect';
 import { FinishedDeployment } from '../helptips/helptooltips';
 import DeploymentStatus from './deploymentstatus';
 import { formatTime } from '../../helpers';
@@ -32,8 +30,7 @@ export default class Past extends React.Component {
     this.state = {
       retry: false,
       today: new Date(),
-      active: 'today',
-      disableClear: true
+      active: 'today'
     };
   }
   _setDateRange(after, before) {
@@ -86,19 +83,7 @@ export default class Past extends React.Component {
   }
 
   handleUpdateInput(value) {
-    var self = this;
-    setTimeout(() => {
-      self.setState({ disableClear: !value });
-    }, 150);
     this.props.refreshPast(1, this.props.startDate, this.props.endDate, this.props.pageSize, value);
-  }
-
-  clearAuto() {
-    var oldValue = this.refs['autocomplete'].state.searchText;
-    this.refs['autocomplete'].setState({ searchText: '' });
-    if (oldValue) {
-      this.handleUpdateInput(null);
-    }
   }
 
   render() {
@@ -127,16 +112,16 @@ export default class Past extends React.Component {
 
     const menuItems = this.props.groups.reduce(
       (accu, item) => {
-        accu.push({ text: item });
+        accu.push({ title: item, value: item });
         return accu;
       },
-      [{ text: 'All devices' }]
+      [{ title: 'All devices', value: 'All devices' }]
     );
 
     return (
       <div className="fadeIn">
-        <div className="datepicker-container">
-          <div className="inline-block">
+        <Grid container spacing={16} className="datepicker-container">
+          <Grid item>
             <span>Filter by date</span>
             <ul className="unstyled link-list horizontal">
               <li>
@@ -160,45 +145,42 @@ export default class Past extends React.Component {
                 </a>
               </li>
             </ul>
-          </div>
+          </Grid>
 
           <MuiPickersUtilsProvider utils={MomentUtils} className="margin-left margin-right inline-block">
-            <InlineDatePicker
-              onChange={date => this._handleChangeStartDate(date)}
-              autoOk={true}
-              label="From"
-              value={this.props.startDate}
-              maxDate={this.props.endDate || this.state.today}
-              style={{ marginRight: '20px', width: '160px' }}
-            />
-
-            <InlineDatePicker
-              onChange={date => this._handleChangeEndDate(date)}
-              autoOk={true}
-              label="To"
-              value={this.props.endDate}
-              maxDate={this.state.today}
-              style={{ width: '160px' }}
-            />
+            <Grid item>
+              <InlineDatePicker
+                className="margin-right"
+                onChange={date => this._handleChangeStartDate(date)}
+                autoOk={true}
+                label="From"
+                value={this.props.startDate}
+                maxDate={this.props.endDate || this.state.today}
+                style={{ width: '160px' }}
+              />
+            </Grid>
+            <Grid item>
+              <InlineDatePicker
+                className="margin-right"
+                onChange={date => this._handleChangeEndDate(date)}
+                autoOk={true}
+                label="To"
+                value={this.props.endDate}
+                maxDate={this.state.today}
+                style={{ width: '160px' }}
+              />
+            </Grid>
           </MuiPickersUtilsProvider>
-          <Autosuggest
-            className="inline-block margin-left"
-            // ref="autocomplete"
-            label="Filter by device group"
-            suggestions={menuItems}
-            fullWidth={false}
-            helperText="Select a group"
-            onChange={value => this.handleUpdateInput(value)}
-            fuzzySearchOpts={{
-              ...defaultProps.fuzzySearchOpts,
-              keys: ['text']
-            }}
-            openOnFocus={true}
-          />
-          <IconButton className="inline-block" style={{ fontSize: '16px' }} disabled={this.state.disableClear} onClick={() => this.clearAuto()}>
-            <ClearIcon />
-          </IconButton>
-        </div>
+          <Grid item>
+            <AutoSelect
+              label="Filter by device group"
+              placeholder="Select a group"
+              errorText="Choose an Artifact to be deployed"
+              items={menuItems}
+              onChange={value => this.handleUpdateInput(value)}
+            />
+          </Grid>
+        </Grid>
         <div className="deploy-table-contain">
           <Loader show={this.props.loading} />
           {pastMap.length ? (

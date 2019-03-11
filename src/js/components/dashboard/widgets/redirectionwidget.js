@@ -11,7 +11,7 @@ export default class RedirectionWidget extends React.Component {
         <div>
           <p className={this.props.isActive ? '' : 'muted'}>{this.props.content}</p>
         </div>
-        <Button variant="contained" component={Link} to={this.props.target}>
+        <Button component={Link} to={this.props.target}>
           {this.props.buttonContent}
         </Button>
       </div>
