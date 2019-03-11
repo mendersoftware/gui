@@ -126,7 +126,7 @@ export default class Authorized extends React.Component {
     }
     this.setState({
       nameEdit: !this.state.nameEdit,
-      errorText: null
+      errortext: null
     });
   }
 
@@ -221,7 +221,7 @@ export default class Authorized extends React.Component {
           onClick={event => self._expandRow(event, index)}
         >
           <TableCell padding="checkbox">
-            <Checkbox checked={self._isSelected(index)} onChange={() => self._onRowSelection(index)} />
+            <Checkbox style={expanded ? { paddingTop: '0', marginTop:'-4px' } : {}} checked={self._isSelected(index)} onChange={() => self._onRowSelection(index)} />
           </TableCell>
           <TableCell style={expanded ? { height: self.state.divHeight } : {}}>{id_attribute}</TableCell>
           <TableCell>{attrs.device_type || '-'}</TableCell>
@@ -257,31 +257,31 @@ export default class Authorized extends React.Component {
         onChange={e => this._handleGroupNameChange(e)}
         onKeyDown={() => this._handleGroupNameSave()}
         className="hoverText"
-        style={{ borderBottom: 'none' }}
-        // underlineFocusStyle={{ borderColor: '#e0e0e0' }}
-        errorStyle={{ color: 'rgb(171, 16, 0)' }}
-        errorText={this.state.errorText}
+        style={{ marginTop: '5px' }}
+        underlinefocusstyle={{ borderColor: '#e0e0e0' }}
+        errorstyle={{ color: 'rgb(171, 16, 0)' }}
+        errortext={this.state.errortext}
       />
     ) : null;
 
     var correctIcon = this.state.nameEdit ? 'check' : 'edit';
-    if (this.state.errorText) {
+    if (this.state.errortext) {
       correctIcon = 'close';
     }
 
     const numSelected = self.state.selectedRows.length;
     return (
-      <div>
+      <div className="relative">
         <Loader show={this.props.loading} />
 
         {this.props.devices.length && !this.props.loading ? (
           <div>
-            <div style={{ marginLeft: '26px' }}>
+            <div style={{ marginLeft: '20px' }}>
               <h2>
                 {groupNameInputs}
                 {this.state.nameEdit ? null : <span>{groupLabel}</span>}
-                {this.props.group ? (
-                  <IconButton onClick={() => this._nameEdit()} className={`material-icons ${this.state.errorText ? 'align-top' : null}`}>
+                {this.props.group && (this.props.group!=='Ungrouped') ? (
+                  <IconButton onClick={() => this._nameEdit()} className={`material-icons ${this.state.errortext ? 'align-top' : null}`}>
                     {correctIcon}
                   </IconButton>
                 ) : null}
@@ -354,12 +354,12 @@ export default class Authorized extends React.Component {
                   {this.state.selectedRows.length} {pluralize('devices', this.state.selectedRows.length)} selected
                 </span>
                 <Button variant="contained" disabled={!this.state.selectedRows.length} color="secondary" onClick={() => this._addToGroup()}>
-                  <AddCircleIcon />
+                  <AddCircleIcon className="buttonLabelIcon" />
                   {addLabel}
                 </Button>
                 {this.props.allowDeviceGroupRemoval && this.props.group ? (
-                  <Button disabled={!this.state.selectedRows.length} style={{ marginLeft: '4px' }} onClick={() => this._removeFromGroup()}>
-                    <RemoveCircleOutlineIcon />
+                  <Button variant="contained" disabled={!this.state.selectedRows.length} style={{ marginLeft: '4px' }} onClick={() => this._removeFromGroup()}>
+                    <RemoveCircleOutlineIcon className="buttonLabelIcon" />
                     {removeLabel}
                   </Button>
                 ) : null}

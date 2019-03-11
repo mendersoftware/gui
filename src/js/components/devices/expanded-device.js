@@ -19,14 +19,10 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Divider from '@material-ui/core/Divider';
-import FormControl from '@material-ui/core/FormControl';
 import Icon from '@material-ui/core/Icon';
-import Input from '@material-ui/core/Input';
-import InputLabel from '@material-ui/core/InputLabel';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
-import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 
 import InfoIcon from '@material-ui/icons/Info';
@@ -191,29 +187,40 @@ export default class ExpandedDevice extends React.Component {
     var status = this.props.device.status;
 
     var deviceIdentity = [];
-    deviceIdentity.push(<TextField key="id_checksum" disabled label="Device ID" defaultValue={(this.props.device || {}).id || ''} />);
+    deviceIdentity.push(
+      <div key="id_checksum">
+        <ListItem classes={{ root: 'device-attributes', disabled: 'opaque' }} disabled={true}>
+          <ListItemText primary="Device ID" secondary={(this.props.device || {}).id || '-'} />
+        </ListItem>
+        <Divider />
+      </div>
+    );
 
     if ((this.props.device || {}).identity_data) {
       var data = typeof this.props.device.identity_data == 'object' ? this.props.device.identity_data : JSON.parse(this.props.device.identity_data);
       deviceIdentity = Object.entries(data).reduce((accu, item) => {
-        accu.push(<TextField key={item[0]} disabled label={item[0]} defaultValue={item[1]} />);
+        accu.push(
+          <div key={item[0]}>
+            <ListItem classes={{ root: 'device-attributes', disabled: 'opaque' }} disabled={true}>
+              <ListItemText primary={item[0]} secondary={item[1]} />
+            </ListItem>
+            <Divider />
+          </div>
+        );
         return accu;
       }, deviceIdentity);
     }
 
     if ((this.props.device || {}).created_ts) {
+
+      var createdTime = <Time value={this.props.device.created_ts} format='YYYY-MM-DD HH:mm' />;
       deviceIdentity.push(
-        <FormControl className="list-item" key="connectionTime">
-          <InputLabel htmlFor="device-connectionTime">{status === 'preauthorized' ? 'Date added' : 'First request'}</InputLabel>
-          <Input
-            id="device-connectionTime"
-            type="text"
-            disabled={true}
-            inputComponent={Time}
-            value={this.props.device.created_ts}
-            inputProps={{ format: 'YYYY-MM-DD HH:mm' }}
-          />
-        </FormControl>
+        <div key="connectionTime">
+          <ListItem classes={{ root: 'device-attributes', disabled: 'opaque' }} disabled={true}>
+            <ListItemText primary={status === 'preauthorized' ? 'Date added' : 'First request'} secondary={createdTime} />
+          </ListItem>
+          <Divider />
+        </div>
       );
     }
 
@@ -228,7 +235,7 @@ export default class ExpandedDevice extends React.Component {
         var secondaryText = sortedAttributes[i].value instanceof Array ? sortedAttributes[i].value.toString() : sortedAttributes[i].value;
         deviceInventory.push(
           <div key={i}>
-            <ListItem disabled={true}>
+            <ListItem classes={{ root: 'device-attributes', disabled: 'opaque' }} disabled={true}>
               <ListItemText primary={sortedAttributes[i].name} secondary={secondaryText} />
             </ListItem>
             <Divider />
@@ -322,18 +329,20 @@ export default class ExpandedDevice extends React.Component {
 
     var deviceInfo = (
       <div key="deviceinfo">
-        <div id="device-identity" className="report-list bordered">
-          <h4 className="margin-bottom-none">Device identity</h4>
-          <div className="list-horizontal-flex">{deviceIdentity}</div>
+        <div id="device-identity" className="bordered">
+          <div className="margin-bottom-small">
+            <h4 className="margin-bottom-none">Device identity</h4>
+            <List className="list-horizontal-flex">{deviceIdentity}</List>
+          </div>
 
-          <div className="flexbox" style={{ flexDirection: 'row' }}>
+          <div className="margin-bottom-small flexbox" style={{ flexDirection: 'row' }}>
             <span style={{ display: 'flex', minWidth: 180, justifyContent: 'space-evenly', alignItems: 'center', marginRight: '2vw' }}>
               {statusIcon}
               <span className="inline-block">
                 <Typography component="span" variant="subtitle2" style={Object.assign({}, buttonStyle, { textTransform: 'capitalize' })}>
                   Device status
                 </Typography>
-                <Typography component="span" variant="subtitle1" style={buttonStyle}>
+                <Typography component="span" variant="subtitle1" style={Object.assign({}, buttonStyle, { textTransform: 'capitalize' })}>
                   {status}
                 </Typography>
               </span>
@@ -368,15 +377,17 @@ export default class ExpandedDevice extends React.Component {
 
         {status === 'accepted' && !waiting ? (
           <div id="device-actions" className="report-list" style={{ marginTop: '24px' }}>
-            <Button onClick={() => self.props._copyLinkToClipboard()}>
-              <LinkIcon className="rotated" />
+            <Button onClick={() => this._copyLinkToClipboard()}>
+              <LinkIcon className="rotated buttonLabelIcon" />
               Copy link to this device
             </Button>
             {status === 'accepted' ? (
-              <Button onClick={() => self.props._clickListItem()}>
-                <ReplayIcon className="rotated" />
-                Create a deployment for this device
-              </Button>
+              <div className="margin-left inline">
+                <Button onClick={() => this._clickListItem()}>
+                  <ReplayIcon className="rotated buttonLabelIcon" />
+                  Create a deployment for this device
+                </Button>
+              </div>
             ) : null}
           </div>
         ) : null}

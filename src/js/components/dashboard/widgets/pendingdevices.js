@@ -34,7 +34,7 @@ export default class PendingDevices extends React.Component {
 
     return (
       <div style={{ position: 'relative' }}>
-        <Fab component={Link} to="/devices/pending" style={{ position: 'absolute', top: '-28px', left: '15px', zIndex: '1' }}>
+        <Fab color="primary" component={Link} to="/devices/pending" style={{ position: 'absolute', top: '-28px', left: '15px', zIndex: '1' }}>
           <ContentAddIcon />
         </Fab>
         <BaseWidget {...this.props} main={widgetMain} onClick={() => this.props.onClick({ route: 'devices/pending' })} />

@@ -154,7 +154,7 @@ export default class Rejected extends React.Component {
     }, this);
 
     return (
-      <div>
+      <div className="tab-container">
         <Loader show={this.state.authLoading === 'all'} />
 
         {this.state.devices.length && this.state.authLoading !== 'all' ? (

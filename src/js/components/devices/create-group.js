@@ -36,7 +36,7 @@ export default class CreateGroup extends React.Component {
 
   _getInitialState() {
     return {
-      errorText: '',
+      errortext: '',
       showDeviceList: false,
       newGroup: '',
       nextInvalid: true,
@@ -112,27 +112,27 @@ export default class CreateGroup extends React.Component {
     var newName = e.target.value;
     this.setState({ newGroup: newName });
     var invalid = false;
-    var errorText = null;
+    var errortext = null;
     if (newName) {
       if (!validator.isWhitelisted(newName, 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-')) {
         invalid = true;
-        errorText = 'Valid characters are a-z, A-Z, 0-9, _ and -';
+        errortext = 'Valid characters are a-z, A-Z, 0-9, _ and -';
       } else if (validator.contains(newName.toLowerCase(), AppConstants.UNGROUPED_GROUP.name.toLowerCase())) {
         invalid = true;
-        errorText = `${newName} is a reserved group name`;
+        errortext = `${newName} is a reserved group name`;
       } else {
         for (var i = 0; i < this.props.groups.length; i++) {
           if (decodeURIComponent(this.props.groups[i]) === newName) {
             invalid = true;
-            errorText = 'A group with this name already exists';
+            errortext = 'A group with this name already exists';
           }
         }
       }
-      this.setState({ errorText: errorText, nextInvalid: invalid });
+      this.setState({ errortext: errortext, nextInvalid: invalid });
     } else {
       invalid = true;
-      errorText = 'Name cannot be left blank';
-      this.setState({ errorText: errorText, nextInvalid: invalid });
+      errortext = 'Name cannot be left blank';
+      this.setState({ errortext: errortext, nextInvalid: invalid });
     }
   }
 
@@ -192,7 +192,7 @@ export default class CreateGroup extends React.Component {
       showWarning: false,
       selectedRows: [],
       pageLength: 0,
-      errorText: ''
+      errortext: ''
     });
     this.props.toggleDialog('createGroupDialog');
   }
@@ -232,8 +232,8 @@ export default class CreateGroup extends React.Component {
               label="Name your group"
               value={self.state.newGroup}
               onChange={e => self.validateName(e)}
-              errorStyle={{ color: 'rgb(171, 16, 0)' }}
-              errorText={self.state.errorText}
+              errorstyle={{ color: 'rgb(171, 16, 0)' }}
+              errortext={self.state.errortext}
             />
 
             <div className={self.state.showDeviceList ? 'hidden' : 'float-left margin-left-small'}>
