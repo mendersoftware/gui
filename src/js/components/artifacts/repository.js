@@ -45,7 +45,6 @@ export default class Repository extends React.Component {
       },
       sortCol: 'name',
       sortDown: true,
-      searchTerm: null,
       upload: false,
       popupLabel: 'Upload a new artifact',
       artifacts: this.props.artifacts,
@@ -127,8 +126,8 @@ export default class Repository extends React.Component {
     // sort table
     AppActions.sortTable('_artifactsRepo', col.name, this.state.sortDown);
   }
-  searchUpdated(term) {
-    this.setState({ searchTerm: term, artifact: {} }); // needed to force re-render
+  searchUpdated() {
+    this.setState({ artifact: {} }); // needed to force re-render
   }
 
   _adjustCellHeight(height) {
@@ -206,7 +205,7 @@ export default class Repository extends React.Component {
             placeholder="Search artifacts"
             className="search tableSearch"
             ref={search => (self.search = search)}
-            onChange={term => self.searchUpdated(term)}
+            onChange={() => self.searchUpdated()}
           />
         </div>
 

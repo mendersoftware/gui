@@ -23,14 +23,19 @@ export default class ScheduleDialog extends React.Component {
     };
   }
 
+  searchUpdated() {
+    this.setState({ artifact: {} }); // needed to force re-render
+  }
+
   render() {
+    const self = this;
     const { open, onDismiss, onScheduleSubmit, filteredDevices, ...other } = this.props;
     var disabled = typeof filteredDevices !== 'undefined' && filteredDevices.length > 0 ? false : true;
 
-    var tmpDevices = [];
-    if (this.refs.search && filteredDevices) {
+    var tmpDevices = filteredDevices || [];
+    if (self.search && filteredDevices) {
       var namefilter = ['id'];
-      tmpDevices = filteredDevices.filter(this.refs.search.filter(namefilter));
+      tmpDevices = filteredDevices.filter(self.search.filter(namefilter));
     }
     var devices = <p>No devices</p>;
     if (tmpDevices) {
@@ -48,18 +53,16 @@ export default class ScheduleDialog extends React.Component {
     }
 
     const group = this.props.group && this.props.group !== 'All devices' ? `group=${encodeURIComponent(this.props.group)}` : '';
-    const drawerStyles = this.state.showDevices ? { overflow: 'visible', position: 'absolute' } : { overflow: 'hidden', position: 'absolute' };
+    const drawerStyles = { overflow: 'hidden', position: 'absolute' };
 
     var deviceList = (
       <Drawer
         anchor="right"
-        PaperProps={{ style: drawerStyles }}
+        PaperProps={{ style: { width: 320, overflow: 'visible', position: 'absolute' } }}
         BackdropProps={{ style: drawerStyles }}
         ModalProps={{ style: drawerStyles }}
         disablePortal={true}
         open={this.state.showDevices}
-        // onChange={() => this._showDevices()}
-        width={320}
       >
         <IconButton
           className="closeSlider"
@@ -78,8 +81,8 @@ export default class ScheduleDialog extends React.Component {
           <SearchInput
             style={{ marginBottom: '8px' }}
             className="search"
-            ref="search"
-            onChange={term => this.searchUpdated(term)}
+            ref={search => (self.search = search)}
+            onChange={() => self.searchUpdated()}
             placeholder="Search devices"
           />
           {devices}
