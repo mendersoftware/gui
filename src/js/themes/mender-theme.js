@@ -18,10 +18,10 @@ const colors = {
   errorStyleColor: '#ab1000'
 };
 
-export default createMuiTheme({ 
+export default createMuiTheme({
   palette: {
     primary: {
-      main: colors.mendergreen,
+      main: colors.mendergreen
     },
     secondary: {
       main: colors.mendermaroon
@@ -43,14 +43,9 @@ export default createMuiTheme({
         color: '#9E6F8E'
       }
     },
-    MuiButton: {
-      root: {
-        borderRadius: 2
-      }
-    },
     MuiTab: {
       root: {
-        textTransform: 'none',
+        textTransform: 'none'
       }
     },
     MuiExpansionPanel: {
@@ -98,56 +93,57 @@ export default createMuiTheme({
     MuiInput: {
       underline: {
         '&:before': {
-          borderBottom: '1px solid rgb(224, 224, 224)',
+          borderBottom: '1px solid rgb(224, 224, 224)'
         },
         '&:hover:not($disabled):before': {
-          borderBottom: '2px solid #347A87 !important',
+          borderBottom: '2px solid #347A87 !important'
         },
         '&:after': {
-          borderBottom: '2px solid #347A87',
-        },
-      },
+          borderBottom: '2px solid #347A87'
+        }
+      }
     },
     MuiFormLabel: {
       root: {
         color: colors.mutedText,
         '&$focused': {
-          color: colors.linkgreen,
-        },
-      },
+          color: colors.linkgreen
+        }
+      }
     },
     MuiFormControl: {
       root: {
         marginTop: '18px',
-        minWidth: '240px',
-      },
+        minWidth: '240px'
+      }
     },
     MuiFormControlLabel: {
       root: {
-        marginTop: '18px',
-      },
+        marginTop: '18px'
+      }
     },
     MuiIconButton: {
       root: {
         color: colors.mutedText,
-        fontSize: '1.2rem',
-      },
+        fontSize: '1.2rem'
+      }
     },
     MuiButton: {
       root: {
+        borderRadius: 2,
         color: colors.linkgreen,
         '&:hover': {
-          colors: colors.mendergreen,
-        },
+          colors: colors.mendergreen
+        }
       },
       text: {
-        padding: '10px 15px',
-      },
+        padding: '10px 15px'
+      }
     },
     MuiSvgIcon: {
       root: {
         iconButton: {
-          marginRight: '8px',
+          marginRight: '8px'
         }
       }
     },
@@ -155,32 +151,32 @@ export default createMuiTheme({
       root: {
         fontSize: '0.8rem',
         '&$primary': {
-          fontSize: '0.8rem',
-        },
-      },
+          fontSize: '0.8rem'
+        }
+      }
     },
     MuiTypography: {
       body1: {
-        fontSize: '0.8rem',
+        fontSize: '0.8rem'
       },
       subtitle1: {
-        fontSize: '0.8rem',
-      },
+        fontSize: '0.8rem'
+      }
     },
     MuiTableCell: {
       root: {
-        padding: '0px 24px 0px 24px',
+        padding: '0px 24px 0px 24px'
       },
-      paddingCheckbox: { 
+      paddingCheckbox: {
         padding: '0 0 0 6px',
-        width: '54px',
-      },
+        width: '54px'
+      }
     },
     MuiDrawer: {
       paperAnchorRight: {
         padding: '15px 30px 5%',
-        display: 'inherit',
-      },
-    },
-  },
+        display: 'inherit'
+      }
+    }
+  }
 });
