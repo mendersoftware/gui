@@ -106,10 +106,8 @@ export default class Preauthorize extends React.Component {
     });
   }
 
-  _dialogToggle(ref) {
-    var state = {};
-    state[ref] = !this.state[ref];
-    this.setState(state);
+  _togglePreauth(openPreauth = !this.state.openPreauth) {
+    this.setState({ openPreauth });
     this._clearForm();
   }
 
@@ -165,12 +163,7 @@ export default class Preauthorize extends React.Component {
         AppActions.setSnackbar('Device was successfully added to the preauthorization list', 5000);
         self._getDevices();
         self.props.refreshCount();
-
-        if (close) {
-          self._dialogToggle('openPreauth');
-        } else {
-          self._clearForm();
-        }
+        self._togglePreauth(!close);
       })
       .catch(err => {
         console.log(err);
@@ -279,7 +272,7 @@ export default class Preauthorize extends React.Component {
 
     var preauthActions = [
       <div key="auth-button-1" style={{ marginRight: '10px', display: 'inline-block' }}>
-        <Button onClick={() => this._dialogToggle('openPreauth')}>Cancel</Button>
+        <Button onClick={() => this._togglePreauth(false)}>Cancel</Button>
       </div>,
       <div key="auth-button-2" style={{ marginRight: '10px', display: 'inline-block' }}>
         <Button
@@ -334,7 +327,14 @@ export default class Preauthorize extends React.Component {
 
     return (
       <div className="tab-container">
-        <Button style={{position: 'absolute'}} color="secondary" variant="contained" disabled={!!limitMaxed} className="top-right-button" onClick={() => this._dialogToggle('openPreauth')}>
+        <Button
+          style={{ position: 'absolute' }}
+          color="secondary"
+          variant="contained"
+          disabled={!!limitMaxed}
+          className="top-right-button"
+          onClick={() => this._togglePreauth(true)}
+        >
           Preauthorize devices
         </Button>
 
@@ -386,8 +386,8 @@ export default class Preauthorize extends React.Component {
           <div className={this.state.authLoading ? 'hidden' : 'dashboard-placeholder'}>
             <p>There are no preauthorized devices.</p>
             <p>
-              {limitMaxed ? 'Preauthorize devices' : <a onClick={() => this._dialogToggle('openPreauth')}>Preauthorize devices</a>} so that when they come
-              online, they will connect to the server immediately
+              {limitMaxed ? 'Preauthorize devices' : <a onClick={() => this._togglePreauth(true)}>Preauthorize devices</a>} so that when they come online, they
+              will connect to the server immediately
             </p>
             <img src="assets/img/preauthorize.png" alt="preauthorize" />
           </div>
@@ -414,12 +414,7 @@ export default class Preauthorize extends React.Component {
               </div>
             ) : (
               <div>
-                <Dropzone
-                  activeClassName="active"
-                  rejectClassName="active"
-                  multiple={false}
-                  onDrop={(accepted, rejected) => this.onDrop(accepted, rejected)}
-                >
+                <Dropzone activeClassName="active" rejectClassName="active" multiple={false} onDrop={(accepted, rejected) => this.onDrop(accepted, rejected)}>
                   {({ getRootProps, getInputProps }) => (
                     <div {...getRootProps()} style={{ fontSize: '16px', margin: 'auto' }} className="dropzone onboard dashboard-placeholder">
                       <input {...getInputProps()} />

@@ -72,15 +72,14 @@ export default class ExpandedDevice extends React.Component {
   }
 
   dialogToggle(ref) {
-    var self = this;
     var state = {};
     state[ref] = !this.state[ref];
-    this.setState(state, () => {
-      if (ref === 'authsets') {
-        self.props.pause();
-      }
-    });
     this.setState({ filterByArtifact: null, artifact: null });
+  }
+
+  toggleAuthsets(authsets = !this.state.authsets) {
+    this.setState({ authsets });
+    this.props.pause();
   }
 
   _updateParams(val, attr) {
@@ -92,12 +91,7 @@ export default class ExpandedDevice extends React.Component {
 
   _clickListItem() {
     AppActions.setSnackbar('');
-    this.dialogToggle('schedule');
-  }
-
-  _showAuthsets() {
-    AppActions.setSnackbar('');
-    this.dialogToggle('authsets');
+    this.setState({ schedule: false });
   }
 
   _onScheduleSubmit() {
@@ -107,7 +101,7 @@ export default class ExpandedDevice extends React.Component {
       name: this.props.device.id,
       artifact_name: this.state.artifact.name
     };
-    this.dialogToggle('schedule');
+    self.setState({ schedule: false });
     return AppActions.createDeployment(newDeployment)
       .then(data => {
         // get id, if showhelptips & no onboarded cookie, this is user's first deployment - add id cookie
@@ -171,7 +165,7 @@ export default class ExpandedDevice extends React.Component {
     return AppActions.decommissionDevice(device_id)
       .then(() => {
         // close dialog!
-        self.dialogToggle('authsets');
+        self.toggleAuthsets(false);
         // close expanded device
         // trigger reset of list!
         AppActions.setSnackbar('Device was decommissioned successfully');
@@ -347,7 +341,12 @@ export default class ExpandedDevice extends React.Component {
               </span>
             </span>
 
-            <Button onClick={() => this._showAuthsets()}>
+            <Button
+              onClick={() => {
+                this.toggleAuthsets(true);
+                AppActions.setSnackbar('');
+              }}
+            >
               {hasPending ? <WarningIcon className="auth" /> : null}
               <span className="inline-block">
                 <Typography component="span" variant="subtitle1" style={buttonStyle}>
@@ -394,7 +393,7 @@ export default class ExpandedDevice extends React.Component {
     );
 
     var authsetActions = [
-      <Button key="authset-button-1" style={{ marginRight: '10px', display: 'inline-block' }} onClick={() => this.dialogToggle('authsets')}>
+      <Button key="authset-button-1" style={{ marginRight: '10px', display: 'inline-block' }} onClick={() => this.toggleAuthsets(false)}>
         Close
       </Button>
     ];
@@ -463,7 +462,7 @@ export default class ExpandedDevice extends React.Component {
           artifacts={this.state.artifacts}
           device={this.props.device}
           groups={this.props.groups}
-          onDismiss={() => this.dialogToggle('schedule')}
+          onDismiss={() => this.setState({ schedule: false })}
           onScheduleSubmit={() => this._onScheduleSubmit()}
         />
 
@@ -480,7 +479,7 @@ export default class ExpandedDevice extends React.Component {
           <DialogTitle>{authsetTitle}</DialogTitle>
           <DialogContent>
             <Authsets
-              dialogToggle={() => this.dialogToggle('authsets')}
+              dialogToggle={() => this.toggleAuthsets(false)}
               decommission={id => this._decommissionDevice(id)}
               device={this.props.device}
               id_attribute={this.props.id_attribute}
