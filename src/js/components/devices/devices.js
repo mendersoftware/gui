@@ -210,7 +210,7 @@ export default class Devices extends React.Component {
                   acceptedDevices={this.state.acceptedCount}
                   currentTab={this.state.currentTab}
                   count={this.state.preauthCount}
-                  refreshCount={() => this._getPreauthCount()}
+                  refreshCount={() => AppActions.getDeviceCount('preauthorized')}
                   globalSettings={globalSettings}
                   openSettingsDialog={() => this._openSettingsDialog()}
                   pause={() => this._pauseInterval()}
