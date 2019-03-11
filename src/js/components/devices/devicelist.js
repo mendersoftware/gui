@@ -280,7 +280,7 @@ export default class Authorized extends React.Component {
               <h2>
                 {groupNameInputs}
                 {this.state.nameEdit ? null : <span>{groupLabel}</span>}
-                {this.props.group ? (
+                {this.props.group && (this.props.group!=="Ungrouped") ? (
                   <IconButton onClick={() => this._nameEdit()} className={`material-icons ${this.state.errortext ? 'align-top' : null}`}>
                     {correctIcon}
                   </IconButton>
