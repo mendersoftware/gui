@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 
 // material ui
 import Button from '@material-ui/core/Button';
@@ -20,32 +19,36 @@ export default class Filters extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      showFilters: false
+      showFilters: false,
+      filters: this.props.filters || []
     };
   }
-  _updateFilterKey(i, event, index, value) {
-    var filterArray = this.props.filters;
-    filterArray[i] = { key: value, value: '' };
+  componentWillReceiveProps(nextProps) {
+    this.setState({ filters: nextProps.filters });
+  }
+  _updateFilterKey(index, key) {
+    var filterArray = this.state.filters;
+    filterArray[index] = { key, value: '' };
     this.setState({ filters: filterArray });
   }
-  _updateFilterValue(index, event) {
-    var filterArray = this.props.filters;
-    filterArray[index].value = event.target.value;
-    this.props.onFilterChange(filterArray);
+  _updateFilterValue(index, value) {
+    var filterArray = this.state.filters;
+    filterArray[index].value = value;
+    this.setState({ filters: filterArray }, this.props.onFilterChange(filterArray));
   }
   _addFilter() {
-    var filterArray = this.props.filters;
+    var filterArray = this.state.filters;
     filterArray.push({ key: '', value: '' });
-    this.props.onFilterChange(filterArray);
+    this.setState({ filters: filterArray });
   }
   _removeFilter(index) {
-    var filterArray = this.props.filters;
+    var filterArray = this.state.filters;
     if (filterArray.length > 1) {
       filterArray.splice(index, 1);
     } else {
       filterArray = [];
     }
-    this.props.onFilterChange(filterArray);
+    this.setState({ filters: filterArray }, this.props.onFilterChange(filterArray));
   }
   _toggleNav() {
     this.setState({
@@ -61,14 +64,14 @@ export default class Filters extends React.Component {
     });
   }
   _clearFilters() {
-    this.props.onFilterChange([]);
+    this.setState({ filters: [] }, this.props.onFilterChange());
   }
   render() {
     const self = this;
     var attributes = Object.entries(this.props.attributes).reduce(
       (accu, item, index) => {
         accu.push(
-          <MenuItem component={Link} to={item[0]} key={index}>
+          <MenuItem key={index} value={item}>
             {item[1]}
           </MenuItem>
         );
@@ -82,30 +85,29 @@ export default class Filters extends React.Component {
     );
 
     var filterCount = 0;
-    var fromProps = self.props.filters.length ? self.props.filters : [{ key: '', value: '' }];
+    var fromProps = self.state.filters.length ? self.state.filters : [{ key: '', value: '' }];
     var filters = fromProps.map((item, index) => {
       filterCount = item.value ? filterCount + 1 : filterCount;
       return (
         <ListItem className="filterPair" key={index}>
           <ListItemText>
             <div>
-              {fromProps[0].value ? (
-                <IconButton className="material-icons remove-icon" onClick={() => self._removeFilter(index)} disabled={!fromProps[0].key}>
+              {index === 0 && item.value ? (
+                <IconButton className="material-icons remove-icon" onClick={() => self._removeFilter(index)} style={{ position: 'absolute' }}>
                   remove_circle
                 </IconButton>
               ) : null}
-              <Select fullWidth={true} value={item.key} autoWidth={true} onChange={() => self._updateFilterKey(index)}>
+              <Select fullWidth={true} value={item.key} autoWidth={true} onChange={event => self._updateFilterKey(index, event.target.value[0])}>
                 {attributes}
               </Select>
             </div>
             <TextField
-              style={{ marginTop: '-10px' }}
               value={item.value || ''}
               placeholder="Value"
               fullWidth={true}
               disabled={!item.key}
               errorStyle={{ color: 'rgb(171, 16, 0)' }}
-              onChange={() => self._updateFilterValue(index)}
+              onChange={event => self._updateFilterValue(index, event.target.value)}
             />
           </ListItemText>
         </ListItem>
@@ -124,7 +126,7 @@ export default class Filters extends React.Component {
           docked="false"
           anchor="right"
           opensecondary="true"
-          PaperProps={{ style: drawerStyles }}
+          PaperProps={{ style: { width: 320, padding: 20, ...drawerStyles } }}
           BackdropProps={{ style: drawerStyles }}
           onClose={() => this._closeNav()}
         >
