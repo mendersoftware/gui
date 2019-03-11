@@ -1,4 +1,5 @@
 import React from 'react';
+import { Collapse } from 'react-collapse';
 import Time from 'react-time';
 import ReactTooltip from 'react-tooltip';
 import { AuthDevices, ExpandAuth } from '../helptips/helptooltips';
@@ -16,7 +17,6 @@ import { preformatWithRequestID } from '../../helpers';
 // material ui
 import Button from '@material-ui/core/Button';
 import Checkbox from '@material-ui/core/Checkbox';
-import Collapse from '@material-ui/core/Collapse';
 import HelpIcon from '@material-ui/icons/Help';
 import Icon from '@material-ui/core/Icon';
 import IconButton from '@material-ui/core/IconButton';
@@ -245,7 +245,11 @@ export default class Pending extends React.Component {
           onClick={event => self._expandRow(event, index)}
         >
           <TableCell padding="checkbox">
-            <Checkbox style={expanded ? { paddingTop: '0', marginTop:'-4px' } : {}}  checked={self._isSelected(index)} onChange={() => self._onRowSelection(index)} />
+            <Checkbox
+              style={expanded ? { paddingTop: '0', marginTop: '-4px' } : {}}
+              checked={self._isSelected(index)}
+              onChange={() => self._onRowSelection(index)}
+            />
           </TableCell>
           <TableCell>{id_attribute}</TableCell>
           <TableCell>
@@ -262,10 +266,14 @@ export default class Pending extends React.Component {
           </TableCell>
           <TableCell style={{ width: '0', padding: '0', overflow: 'visible' }}>
             <Collapse
+              springConfig={{ stiffness: 210, damping: 20 }}
+              onMeasure={measurements => self._adjustCellHeight(measurements.height)}
               className="expanded"
-              in={Boolean(expanded)}
-              onExit={node => self._adjustCellHeight(node.parentElement.clientHeight)}
-              onEntered={node => self._adjustCellHeight(node.parentElement.clientHeight)}
+              isOpened={Boolean(expanded)}
+              onClick={e => {
+                e.preventDefault();
+                e.stopPropagation();
+              }}
             >
               {expanded}
             </Collapse>
