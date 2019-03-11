@@ -548,7 +548,7 @@ export default class DeviceGroups extends React.Component {
     var allowDeviceGroupRemoval = !this._isUngroupedGroup(this.state.selectedGroup);
 
     return (
-      <div className="margin-top">
+      <div className="tab-container">
         <div className="leftFixed">
           <Groups
             openGroupDialog={() => self.setState({ createGroupDialog: !self.state.createGroupDialog })}
@@ -571,8 +571,8 @@ export default class DeviceGroups extends React.Component {
           ) : null}
 
           {self.state.selectedGroup && allowDeviceGroupRemoval ? (
-            <Button className="float-right" onClick={() => self.setState({ removeGroup: !self.state.removeGroup })}>
-              <DeleteIcon className="green" />
+            <Button style={{position: 'absolute', top:0,right:'30px', zIndex:100}} onClick={() => self.setState({ removeGroup: !self.state.removeGroup })}>
+              <DeleteIcon className="buttonLabelIcon" />
               Remove group
             </Button>
           ) : null}

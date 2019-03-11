@@ -117,8 +117,8 @@ export default class Filters extends React.Component {
     const drawerStyles = this.state.showFilters ? { overflow: 'visible', top: '57px' } : { overflow: 'hidden', top: '57px' };
     return (
       <div style={{ position: 'relative' }}>
-        <Button style={{ position: 'absolute', right: '0' }} color="secondary" onClick={() => this._toggleNav()}>
-          <FilterListIcon />
+        <Button style={{ position: 'absolute', top: 0, right: 0, zIndex: 100 }} color="secondary" onClick={() => this._toggleNav()}>
+          <FilterListIcon className="buttonLabelIcon" />
           {filterCount > 0 ? `Filters (${filterCount})` : 'Filters'}
         </Button>
         <Drawer
@@ -137,13 +137,13 @@ export default class Filters extends React.Component {
           >
             <CloseIcon />
           </IconButton>
-          <p className="align-right margin-bottom-small">
+          <div className="align-right margin-top-small">
             <a onClick={() => this._clearFilters()}>Clear all filters</a>
-          </p>
+          </div>
           <List>{filters}</List>
           {this.props.isHosted ? (
-            <Button disabled={!filterCount} onClick={() => this._addFilter()} color="secondary">
-              <AddCircleIcon />
+            <Button variant="text" disabled={!filterCount} onClick={() => this._addFilter()} color="secondary">
+              <AddCircleIcon className="buttonLabelIcon" />
               Add filter
             </Button>
           ) : null}

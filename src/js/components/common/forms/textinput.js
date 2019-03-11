@@ -7,7 +7,7 @@ export default class TextInput extends React.Component {
     super(props, context);
     this.state = {
       value: this.props.value,
-      errorText: null,
+      errortext: null,
       isValid: true
     };
   }
@@ -49,9 +49,9 @@ export default class TextInput extends React.Component {
         label={this.props.label}
         onChange={e => this.setValue(e)}
         className={className}
-        errorStyle={{ color: 'rgb(171, 16, 0)' }}
+        errorstyle={{ color: 'rgb(171, 16, 0)' }}
         style={{ width: '400px', maxWidth: '100%', marginRight: '80px' }}
-        errorText={this.state.errorText}
+        errortext={this.state.errortext}
         required={this.props.required}
         type={this.props.type}
         onKeyPress={this.props.handleKeyPress}

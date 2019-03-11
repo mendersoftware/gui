@@ -35,10 +35,10 @@ export default class Groups extends React.Component {
         if (isUngroupedGroup) {
           group = AppConstants.UNGROUPED_GROUP.name;
         }
-        var isSelected = group === this.props.selectedGroup ? { backgroundColor: '#e7e7e7' } : { backgroundColor: 'transparent' };
+        var isSelected = group === this.props.selectedGroup ? { backgroundColor: '#e7e7e7' } : {};
         var groupLabel = <span>{decodeURIComponent(group)}</span>;
         const item = (
-          <ListItem button key={group + index} style={isSelected} onClick={boundClick}>
+          <ListItem classes={{ root: 'grouplist'}} button key={group + index} style={isSelected} onClick={boundClick}>
             <ListItemText primary={groupLabel} />
           </ListItem>
         );
@@ -54,11 +54,13 @@ export default class Groups extends React.Component {
 
     return (
       <div>
+        <div className="muted margin-bottom-small">Groups</div>
         <List>
           <ListItem
+            classes={{ root: 'grouplist'}}
             button
             key="All"
-            style={!this.props.selectedGroup ? { backgroundColor: '#e7e7e7' } : { backgroundColor: 'transparent' }}
+            style={!this.props.selectedGroup ? { backgroundColor: '#e7e7e7' } : {}}
             onClick={() => this.props.changeGroup('', this.props.allCount)}
           >
             <ListItemText primary={allLabel} />
@@ -68,12 +70,13 @@ export default class Groups extends React.Component {
           {groupItems.groups}
           <ListItem
             button
+            classes={{ root: 'grouplist'}}
             disabled={!this.props.acceptedCount}
             style={this.props.acceptedCount ? null : { color: '#d4e9e7' }}
             onClick={this.props.acceptedCount ? () => this.dialogToggle() : null}
           >
             <ListItemIcon>
-              <AddIcon style={this.props.allCount ? null : { color: '#d4e9e7' }} />
+              <AddIcon />
             </ListItemIcon>
             <ListItemText primary="Create a group" />
           </ListItem>

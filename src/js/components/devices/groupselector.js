@@ -47,7 +47,7 @@ export default class GroupSelector extends React.Component {
     if (event && event['keyCode'] === 13) {
       this.setState({
         nameEdit: false,
-        errorText1: null
+        errortext1: null
       });
     }
   }
@@ -57,23 +57,23 @@ export default class GroupSelector extends React.Component {
   }
   _validateName(name) {
     name = fullyDecodeURI(name);
-    var errorText = null;
+    var errortext = null;
     var invalid = false;
     if (name && !validator.isWhitelisted(name, 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-')) {
       invalid = true;
-      errorText = 'Valid characters are a-z, A-Z, 0-9, _ and -';
+      errortext = 'Valid characters are a-z, A-Z, 0-9, _ and -';
     } else if (name) {
       for (var i = 0; i < this.props.groups.length; i++) {
         if (fullyDecodeURI(this.props.groups[i]) === name) {
-          errorText = 'A group with this name already exists';
+          errortext = 'A group with this name already exists';
           invalid = true;
         }
       }
     } else {
-      errorText = 'Name cannot be left blank';
+      errortext = 'Name cannot be left blank';
       invalid = true;
     }
-    this.setState({ errorText1: errorText, invalid: invalid });
+    this.setState({ errortext1: errortext, invalid: invalid });
     this.props.validateName(invalid, name);
   }
   _onChange(event) {
@@ -135,9 +135,8 @@ export default class GroupSelector extends React.Component {
             label="Name of new group"
             className="float-left clear"
             onChange={event => this._handleTextFieldChange(event.target.value)}
-            inputRef={input => (this.customGroup = input)}
-            errorStyle={{ color: 'rgb(171, 16, 0)' }}
-            errorText={this.state.errorText1}
+            errorstyle={{ color: 'rgb(171, 16, 0)' }}
+            errortext={this.state.errortext1}
           />
         ) : null}
 

@@ -49,7 +49,7 @@ export default class Deployments extends React.Component {
       invalid: true,
       per_page: 20,
       refreshDeploymentsLength: 30000,
-      reportDialog: false,
+      dialog: false,
       scheduleDialog: false,
       ...this._getInitialState()
     };

@@ -137,9 +137,11 @@ export default class UserManagement extends React.Component {
 
     return (
       <div>
-        <Button className="float-right" variant="contained" color="primary" onClick={() => this._openCreate()}>
-          Create new user
-        </Button>
+        <div className="float-right">
+          <Button variant="contained" color="primary" onClick={() => this._openCreate()}>
+            Create new user
+          </Button>
+        </div>
 
         <UserList
           users={this.state.users || []}

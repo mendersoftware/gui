@@ -46,7 +46,7 @@ export default class DeviceNotifications extends React.Component {
               <span>{this.props.total}</span>
               {this.props.limit ? <span>/{this.props.limit}</span> : null}
 
-              <Icon style={{ margin: '0 7px 0 10px', top: '5px', fontSize: '20px' }} className="material-icons">
+              <Icon style={{ margin: '0 7px 0 10px', fontSize: '20px' }} className="material-icons">
                 developer_board
               </Icon>
             </Link>

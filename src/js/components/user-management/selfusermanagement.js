@@ -100,6 +100,7 @@ export default class SelfUserManagement extends React.Component {
           handleCancel={() => this.handlePass()}
           submitLabel="Save"
           submitButtonId="submit_pass"
+          buttonColor="secondary"
           showButtons={this.state.editPass}
           className="margin-top"
         >

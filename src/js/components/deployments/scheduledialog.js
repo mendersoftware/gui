@@ -96,7 +96,7 @@ export default class ScheduleDialog extends React.Component {
     );
 
     return (
-      <Dialog open={open} fullWidth={true} maxWidth="md">
+      <Dialog open={open || false} fullWidth={true} maxWidth="md">
         {deviceList}
         <DialogTitle>Create a deployment</DialogTitle>
         <DialogContent className="dialog" style={{ overflow: 'hidden' }}>
