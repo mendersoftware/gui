@@ -257,7 +257,7 @@ export default class Authorized extends React.Component {
         onChange={e => this._handleGroupNameChange(e)}
         onKeyDown={() => this._handleGroupNameSave()}
         className="hoverText"
-        style={{ borderBottom: 'none' }}
+        style={{ marginTop: '5px' }}
         underlinefocusstyle={{ borderColor: '#e0e0e0' }}
         errorstyle={{ color: 'rgb(171, 16, 0)' }}
         errortext={this.state.errortext}

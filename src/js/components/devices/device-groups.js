@@ -574,7 +574,7 @@ export default class DeviceGroups extends React.Component {
 
           {self.state.selectedGroup && allowDeviceGroupRemoval ? (
             <Button style={{position: 'absolute', top:0,right:'30px', zIndex:100}} onClick={() => self.setState({ removeGroup: !self.state.removeGroup })}>
-              <DeleteIcon />
+              <DeleteIcon className="buttonLabelIcon" />
               Remove group
             </Button>
           ) : null}

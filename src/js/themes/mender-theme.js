@@ -125,7 +125,7 @@ export default createMuiTheme({
     MuiIconButton: {
       root: {
         color: colors.mutedText,
-        fontSize: '1.3rem',
+        fontSize: '1.2rem',
       },
     },
     MuiButton: {
