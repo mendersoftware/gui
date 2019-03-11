@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 
 import AppStore from '../../stores/app-store';
 import AppActions from '../../actions/app-actions';
-import ScheduleForm from '../deployments/scheduleform';
+import ScheduleDialog from '../deployments/scheduledialog';
 import Authsets from './authsets';
 import Loader from '../common/loader';
 import pluralize from 'pluralize';
@@ -212,8 +212,7 @@ export default class ExpandedDevice extends React.Component {
     }
 
     if ((this.props.device || {}).created_ts) {
-
-      var createdTime = <Time value={this.props.device.created_ts} format='YYYY-MM-DD HH:mm' />;
+      var createdTime = <Time value={this.props.device.created_ts} format="YYYY-MM-DD HH:mm" />;
       deviceIdentity.push(
         <div key="connectionTime">
           <ListItem classes={{ root: 'device-attributes', disabled: 'opaque' }} disabled={true}>
@@ -394,21 +393,6 @@ export default class ExpandedDevice extends React.Component {
       </div>
     );
 
-    var scheduleActions = [
-      <Button key="schedule-action-button-1" style={{ marginRight: '10px', display: 'inline-block' }} onClick={() => this.dialogToggle('schedule')}>
-        Cancel
-      </Button>,
-      <Button
-        variant="contained"
-        key="schedule-action-button-2"
-        color="primary"
-        disabled={!this.state.filterByArtifact}
-        onClick={() => this._onScheduleSubmit()}
-      >
-        Create deployment
-      </Button>
-    ];
-
     var authsetActions = [
       <Button key="authset-button-1" style={{ marginRight: '10px', display: 'inline-block' }} onClick={() => this.dialogToggle('authsets')}>
         Close
@@ -470,22 +454,18 @@ export default class ExpandedDevice extends React.Component {
           </div>
         ) : null}
 
-        <Dialog open={this.state.schedule}>
-          <DialogTitle>Create a deployment</DialogTitle>
-          <DialogContent style={{ overflow: 'hidden' }}>
-            <ScheduleForm
-              deploymentDevices={[this.props.device]}
-              filteredDevices={this.state.filterByArtifact}
-              deploymentSettings={(...args) => this._deploymentParams(...args)}
-              artifact={this.state.artifact}
-              artifacts={this.state.artifacts}
-              device={this.props.device}
-              deploymentSchedule={this._updateParams}
-              groups={this.props.groups}
-            />
-          </DialogContent>
-          <DialogActions>{scheduleActions}</DialogActions>
-        </Dialog>
+        <ScheduleDialog
+          open={this.state.schedule}
+          deploymentDevices={[this.props.device]}
+          filteredDevices={this.state.filterByArtifact}
+          deploymentSettings={(...args) => this._deploymentParams(...args)}
+          artifact={this.state.artifact}
+          artifacts={this.state.artifacts}
+          device={this.props.device}
+          groups={this.props.groups}
+          onDismiss={() => this.dialogToggle('schedule')}
+          onScheduleSubmit={() => this._onScheduleSubmit()}
+        />
 
         <Dialog
           open={this.state.authsets}

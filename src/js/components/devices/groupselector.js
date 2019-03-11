@@ -1,10 +1,10 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import pluralize from 'pluralize';
 import validator from 'validator';
 
 import Button from '@material-ui/core/Button';
 import FormControl from '@material-ui/core/FormControl';
+import Grid from '@material-ui/core/Grid';
 import Icon from '@material-ui/core/Icon';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -95,7 +95,7 @@ export default class GroupSelector extends React.Component {
       if (group && group !== self.props.selectedGroup) {
         // don't show the current selected group in the list
         return (
-          <MenuItem component={Link} to={group} key={index}>
+          <MenuItem key={index} value={group}>
             {decodeURIComponent(group)}
           </MenuItem>
         );
@@ -108,24 +108,28 @@ export default class GroupSelector extends React.Component {
     return (
       <div style={{ height: '200px' }}>
         {showSelect ? (
-          <div className="float-left">
-            <FormControl>
-              <InputLabel htmlFor="group-select">Select group</InputLabel>
-              <Select
-                onChange={event => this._handleSelectValueChange(event.target.value)}
-                value={this.props.selectedField || ''}
-                inputProps={{
-                  name: 'groupSelect',
-                  id: 'group-select'
-                }}
-              >
-                {groupList}
-              </Select>
-            </FormControl>
-            <Button className="margin-left-small" variant="contained" style={{ marginTop: '26px' }} onClick={() => this._showButton()}>
-              Create new
-            </Button>
-          </div>
+          <Grid container spacing={16} className="float-left">
+            <Grid item>
+              <FormControl>
+                <InputLabel htmlFor="group-select">Select group</InputLabel>
+                <Select
+                  onChange={event => this._handleSelectValueChange(event.target.value)}
+                  value={this.props.selectedField || ''}
+                  inputProps={{
+                    name: 'groupSelect',
+                    id: 'group-select'
+                  }}
+                >
+                  {groupList}
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item>
+              <Button className="margin-left-small" variant="contained" style={{ marginTop: '26px' }} onClick={() => this._showButton()}>
+                Create new
+              </Button>
+            </Grid>
+          </Grid>
         ) : null}
 
         {this.state.showInput || !showSelect ? (
