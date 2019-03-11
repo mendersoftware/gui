@@ -80,10 +80,6 @@ export default class ScheduleForm extends React.Component {
     this.setState({ showDevices: !this.state.showDevices });
   }
 
-  searchUpdated(term) {
-    // this.setState({ searchTerm: term }); // needed to force re-render
-  }
-
   render() {
     var artifactItems = this.props.artifacts.reduce((accu, artifact, i) => {
       accu.push({

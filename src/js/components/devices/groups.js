@@ -38,7 +38,7 @@ export default class Groups extends React.Component {
         var isSelected = group === this.props.selectedGroup ? { backgroundColor: '#e7e7e7' } : {};
         var groupLabel = <span>{decodeURIComponent(group)}</span>;
         const item = (
-          <ListItem classes={{ root: "grouplist"}} button key={group + index} style={isSelected} onClick={boundClick}>
+          <ListItem classes={{ root: 'grouplist'}} button key={group + index} style={isSelected} onClick={boundClick}>
             <ListItemText primary={groupLabel} />
           </ListItem>
         );
@@ -57,7 +57,7 @@ export default class Groups extends React.Component {
         <div className="muted margin-bottom-small">Groups</div>
         <List>
           <ListItem
-            classes={{ root: "grouplist"}}
+            classes={{ root: 'grouplist'}}
             button
             key="All"
             style={!this.props.selectedGroup ? { backgroundColor: '#e7e7e7' } : {}}
@@ -70,7 +70,7 @@ export default class Groups extends React.Component {
           {groupItems.groups}
           <ListItem
             button
-            classes={{ root: "grouplist"}}
+            classes={{ root: 'grouplist'}}
             disabled={!this.props.acceptedCount}
             style={this.props.acceptedCount ? null : { color: '#d4e9e7' }}
             onClick={this.props.acceptedCount ? () => this.dialogToggle() : null}
