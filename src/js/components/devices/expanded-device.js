@@ -377,13 +377,13 @@ export default class ExpandedDevice extends React.Component {
 
         {status === 'accepted' && !waiting ? (
           <div id="device-actions" className="report-list" style={{ marginTop: '24px' }}>
-            <Button onClick={() => self.props._copyLinkToClipboard()}>
+            <Button onClick={() => this._copyLinkToClipboard()}>
               <LinkIcon className="rotated buttonLabelIcon" />
               Copy link to this device
             </Button>
             {status === 'accepted' ? (
               <div className="margin-left inline">
-                <Button onClick={() => self.props._clickListItem()}>
+                <Button onClick={() => this._clickListItem()}>
                   <ReplayIcon className="rotated buttonLabelIcon" />
                   Create a deployment for this device
                 </Button>
