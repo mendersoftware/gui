@@ -7,7 +7,11 @@ import Time from 'react-time';
 import Loader from '../common/loader';
 
 // material ui
-import { List, ListItem } from 'material-ui/List';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import ListItemAvatar from '@material-ui/core/ListItemAvatar';
+import { formatTime } from '../../helpers';
 
 export default class Progress extends React.Component {
   static contextTypes = {
@@ -20,15 +24,6 @@ export default class Progress extends React.Component {
       devices: {},
       selectedDevice: {}
     };
-  }
-  _formatTime(date) {
-    if (date) {
-      return date
-        .replace(' ', 'T')
-        .replace(/ /g, '')
-        .replace('UTC', '');
-    }
-    return;
   }
   render() {
     var deployments = this.props.deployments || [];
@@ -47,7 +42,7 @@ export default class Progress extends React.Component {
           </div>
           <div>
             <div className="progressLabel">Started:</div>
-            <Time className="progressTime" value={this._formatTime(deployment.created)} format="YYYY-MM-DD HH:mm" />
+            <Time className="progressTime" value={formatTime(deployment.created)} format="YYYY-MM-DD HH:mm" />
           </div>
           <div style={{ marginTop: '15px' }}>
             <div className="progressLabel" />
@@ -58,12 +53,10 @@ export default class Progress extends React.Component {
 
       return (
         <div className="deployment" key={index}>
-          <ListItem
-            disabled={true}
-            style={{ minHeight: '100px', paddingLeft: '280px', paddingBottom: '15px' }}
-            primaryText={progressChart}
-            leftIcon={deploymentInfo}
-          />
+          <ListItem disabled={true} style={{ minHeight: '100px', paddingLeft: '280px', paddingBottom: '15px' }}>
+            <ListItemAvatar>{deploymentInfo}</ListItemAvatar>
+            <ListItemText primary={progressChart} />
+          </ListItem>
         </div>
       );
     }, this);
@@ -73,19 +66,21 @@ export default class Progress extends React.Component {
         <div className="dashboard-header">
           <h2>Deployments in progress</h2>
         </div>
-        <div className={deployments.length ? 'fadeIn' : 'hidden'}>
-          <List style={{ paddingTop: '0' }}>{progress}</List>
-          <Link to="/deployments" className="float-right">
-            All deployments in progress
-          </Link>
-        </div>
-
+        {deployments.length ? (
+          <div className="fadeIn">
+            <List style={{ paddingTop: '0' }}>{progress}</List>
+            <Link to="/deployments" className="float-right">
+              All deployments in progress
+            </Link>
+          </div>
+        ) : null}
         <Loader show={this.props.loading} fade={true} />
-
-        <div className={deployments.length || this.props.loading ? 'hidden' : 'dashboard-placeholder'}>
-          <p>Monitor ongoing deployments from here</p>
-          <img src="assets/img/deployments.png" alt="deployments" />
-        </div>
+        {deployments.length || this.props.loading ? null : (
+          <div className="dashboard-placeholder">
+            <p>Monitor ongoing deployments from here</p>
+            <img src="assets/img/deployments.png" alt="deployments" />
+          </div>
+        )}
       </div>
     );
   }

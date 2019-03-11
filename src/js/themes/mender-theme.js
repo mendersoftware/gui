@@ -1,26 +1,93 @@
 'use strict';
 
-import { darkBlack, grey100, white } from 'material-ui/styles/colors';
-import { fade } from 'material-ui/utils/colorManipulator';
-import Spacing from 'material-ui/styles/spacing';
+import { grey100, lightBlack, white } from '@material-ui/core/colors';
 
+const colors = {
+  linkgreen: '#347A87',
+  mendergreen: '#015969', //
+  grey: '#c7c7c7', //grey
+  mendermaroon: '#5d0f43', //
+  accent2Color: grey100,
+  alertpurple: '#7D3F69', //
+  textColor: 'rgba(0, 0, 0, 0.8)',
+  alternateTextColor: white,
+  canvasColor: white,
+  borderColor: '#e0e0e0',
+  expansionBackground: '#f5f5f5',
+  disabledColor: lightBlack,
+  errorStyleColor: '#ab1000'
+};
 export default {
-  spacing: Spacing,
-  fontFamily: 'Lato, sans-serif',
-  palette: {
-    primary1Color: '#347A87',
-    primary2Color: '#015969',
-    primary3Color: '#c7c7c7',
-    accent1Color: '#5d0f43',
-    accent2Color: grey100,
-    accent3Color: '#7D3F69',
-    textColor: 'rgba(0,0,0,0.8)',
-    alternateTextColor: white,
-    canvasColor: white,
-    borderColor: '#e0e0e0',
-    disabledColor: fade(darkBlack, 0.3)
+  overrides: {
+    MuiSnackbarContent: {
+      action: {
+        color: '#9E6F8E'
+      }
+    },
+    MuiTab: {
+      root: {
+        textTransform: 'none'
+      }
+    },
+    MuiExpansionPanel: {
+      root: {
+        border: 'none',
+        borderTop: 'solid 1px',
+        borderTopColor: colors.borderColor,
+        boxShadow: 'none',
+        '&:before': {
+          display: 'none'
+        },
+        padding: 0
+      },
+      expanded: {
+        backgroundColor: colors.expansionBackground,
+        margin: 'auto'
+      }
+    },
+    MuiExpansionPanelSummary: {
+      root: {
+        marginBottom: -1,
+        height: 48,
+        '&:hover': {
+          backgroundColor: colors.expansionBackground
+        },
+        '&$expanded': {
+          height: 48
+        }
+      },
+      content: {
+        alignItems: 'center',
+        '&$expanded': {
+          margin: 0
+        },
+        '& > :last-child': {
+          paddingRight: 12
+        }
+      }
+    },
+    MuiExpansionPanelDetails: {
+      root: {
+        flexDirection: 'column'
+      }
+    }
   },
-  snackbar: {
-    actionColor: '#9E6F8E'
+  palette: {
+    primary: {
+      main: colors.mendergreen
+    },
+    secondary: {
+      main: colors.mendermaroon
+    },
+    error: {
+      main: colors.errorStyleColor
+    },
+    text: {
+      main: colors.textColor
+    }
+  },
+  typography: {
+    fontFamily: 'Lato, sans-serif',
+    useNextVariants: true
   }
 };

@@ -1,7 +1,9 @@
 import React from 'react';
-import Dialog from 'material-ui/Dialog';
-import FlatButton from 'material-ui/FlatButton';
-import RaisedButton from 'material-ui/RaisedButton';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Button from '@material-ui/core/Button';
 import AppActions from '../../actions/app-actions';
 import { AppContext } from '../../contexts/app-context';
 import { preformatWithRequestID } from '../../helpers';
@@ -61,9 +63,7 @@ export default class Artifacts extends React.Component {
     return AppActions.getArtifacts()
       .then(artifacts => {
         clearRetryTimer('artifacts');
-        setTimeout(() => {
-          self.setState({ doneLoading: true, artifacts });
-        }, 300);
+        self.setState({ doneLoading: true, artifacts });
       })
       .catch(err => {
         var errormsg = err.error || 'Please check your connection';
@@ -91,13 +91,6 @@ export default class Artifacts extends React.Component {
       });
   }
   render() {
-    var removeActions = [
-      <div key="remove-action-button-1" style={{ marginRight: '10px', display: 'inline-block' }}>
-        <FlatButton label="Cancel" onClick={() => this._removeDialog(null)} />
-      </div>,
-      <RaisedButton key="remove-action-button-2" label="Remove artifact" secondary={true} onClick={() => this._removeArtifact()} />
-    ];
-
     return (
       <div>
         <AppContext.Consumer>
@@ -116,8 +109,18 @@ export default class Artifacts extends React.Component {
           )}
         </AppContext.Consumer>
 
-        <Dialog open={this.state.remove} title="Remove this artifact?" actions={removeActions}>
-          Are you sure you want to remove <i>{(this.state.artifact || {}).name}</i>?
+        <Dialog open={this.state.remove}>
+          <DialogTitle>Remove this artifact?</DialogTitle>
+          <DialogContent>
+            Are you sure you want to remove <i>{(this.state.artifact || {}).name}</i>?
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => this._removeDialog(null)}>Cancel</Button>
+
+            <Button variant="contained" color="secondary" onClick={() => this._removeArtifact()}>
+              Remove artifact
+            </Button>
+          </DialogActions>
         </Dialog>
       </div>
     );

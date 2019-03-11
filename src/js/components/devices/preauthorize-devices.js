@@ -12,23 +12,29 @@ import { clearAllRetryTimers } from '../../utils/retrytimer';
 import { isEmpty, preformatWithRequestID } from '../../helpers';
 
 // material ui
-import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
-import IconButton from 'material-ui/IconButton';
-import RaisedButton from 'material-ui/RaisedButton';
-import FlatButton from 'material-ui/FlatButton';
-import FontIcon from 'material-ui/FontIcon';
-import InfoIcon from 'react-material-icons/icons/action/info-outline';
-import Dialog from 'material-ui/Dialog';
-import TextField from 'material-ui/TextField';
-import FloatingActionButton from 'material-ui/FloatingActionButton';
-import ContentAdd from 'material-ui/svg-icons/content/add';
-import FileIcon from 'react-material-icons/icons/file/file-upload';
+import Table from '@material-ui/core/Table';
+import TableHead from '@material-ui/core/TableHead';
+import TableCell from '@material-ui/core/TableCell';
+import TableBody from '@material-ui/core/TableBody';
+import TableRow from '@material-ui/core/TableRow';
+import IconButton from '@material-ui/core/IconButton';
+import Button from '@material-ui/core/Button';
+import Icon from '@material-ui/core/Icon';
+import ClearIcon from '@material-ui/icons/Clear';
+import InfoIcon from '@material-ui/icons/InfoOutlined';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import TextField from '@material-ui/core/TextField';
+import Fab from '@material-ui/core/Fab';
+import ContentAddIcon from '@material-ui/icons/Add';
+import FileIcon from '@material-ui/icons/CloudUpload';
 
 export default class Preauthorize extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      minHeight: 260,
       divHeight: 208,
       devices: [],
       pageNo: 1,
@@ -70,7 +76,6 @@ export default class Preauthorize extends React.Component {
           //if devices empty but count not, put back to first page
           self._handlePageChange(1);
         }
-        self._adjustHeight();
       })
       .catch(error => {
         var errormsg = error.res.body.error || 'Please check your connection';
@@ -79,12 +84,6 @@ export default class Preauthorize extends React.Component {
       });
   }
 
-  _adjustHeight() {
-    // do this when number of devices changes
-    var h = this.state.devices.length * 55;
-    h += 230;
-    this.setState({ minHeight: h });
-  }
   _sortColumn() {
     console.log('sort');
   }
@@ -209,11 +208,10 @@ export default class Preauthorize extends React.Component {
   }
 
   render() {
-    var limitMaxed = this.props.deviceLimit && this.props.deviceLimit <= this.props.acceptedDevices;
+    var self = this;
+    var limitMaxed = self.props.deviceLimit && self.props.deviceLimit <= self.props.acceptedDevices;
 
-    var devices = this.state.devices.map(function(device, index) {
-      var self = this;
-
+    var devices = self.state.devices.map((device, index) => {
       var id_attribute =
         self.props.globalSettings.id_attribute && self.props.globalSettings.id_attribute !== 'Device ID'
           ? (device.identity_data || {})[self.props.globalSettings.id_attribute]
@@ -223,11 +221,10 @@ export default class Preauthorize extends React.Component {
       if (self.state.expandRow === index) {
         expanded = (
           <ExpandedDevice
-            id_attribute={(this.props.globalSettings || {}).id_attribute}
-            _showKey={this._showKey}
-            showKey={this.state.showKey}
+            id_attribute={(self.props.globalSettings || {}).id_attribute}
+            _showKey={self._showKey}
+            showKey={self.state.showKey}
             limitMaxed={limitMaxed}
-            styles={this.props.styles}
             deviceId={self.state.deviceId}
             id_value={id_attribute}
             device={self.state.expandedDevice}
@@ -238,54 +235,24 @@ export default class Preauthorize extends React.Component {
       }
 
       return (
-        <TableRow className={expanded ? 'expand' : null} hoverable={true} key={index}>
-          <TableRowColumn className="no-click-cell" style={expanded ? { height: this.state.divHeight } : null}>
-            <div
-              onClick={e => {
-                e.preventDefault();
-                e.stopPropagation();
-                self._expandRow(index);
-              }}
-            >
-              {id_attribute}
-            </div>
-          </TableRowColumn>
-          <TableRowColumn className="no-click-cell">
-            <div
-              onClick={e => {
-                e.preventDefault();
-                e.stopPropagation();
-                self._expandRow(index);
-              }}
-            >
-              <Time value={device.created_ts} format="YYYY-MM-DD HH:mm" />
-            </div>
-          </TableRowColumn>
-          <TableRowColumn className="no-click-cell capitalized">
-            <div
-              onClick={e => {
-                e.preventDefault();
-                e.stopPropagation();
-                self._expandRow(index);
-              }}
-            >
-              {device.status}
-            </div>
-          </TableRowColumn>
-          <TableRowColumn style={{ width: '55px', paddingRight: '0', paddingLeft: '12px' }} className="expandButton">
-            <div
-              onClick={e => {
-                e.preventDefault();
-                e.stopPropagation();
-                this._expandRow(index);
-              }}
-            >
-              <IconButton className="float-right">
-                <FontIcon className="material-icons">{expanded ? 'arrow_drop_up' : 'arrow_drop_down'}</FontIcon>
-              </IconButton>
-            </div>
-          </TableRowColumn>
-          <TableRowColumn style={{ width: '0', padding: '0', overflow: 'visible' }}>
+        <TableRow
+          className={expanded ? 'expand' : null}
+          hover
+          key={index}
+          onClick={() => self._expandRow(index)}
+          style={expanded ? { height: self.state.divHeight } : null}
+        >
+          <TableCell>{id_attribute}</TableCell>
+          <TableCell className="no-click-cell">
+            <Time value={device.created_ts} format="YYYY-MM-DD HH:mm" />
+          </TableCell>
+          <TableCell className="no-click-cell capitalized">{device.status}</TableCell>
+          <TableCell style={{ width: '55px', paddingRight: '0', paddingLeft: '12px' }} className="expandButton">
+            <IconButton className="float-right">
+              <Icon className="material-icons">{expanded ? 'arrow_drop_up' : 'arrow_drop_down'}</Icon>
+            </IconButton>
+          </TableCell>
+          <TableCell style={{ width: '0', padding: '0', overflow: 'visible' }}>
             <Collapse
               springConfig={{ stiffness: 210, damping: 20 }}
               onMeasure={measurements => self._adjustCellHeight(measurements.height)}
@@ -298,10 +265,10 @@ export default class Preauthorize extends React.Component {
             >
               {expanded}
             </Collapse>
-          </TableRowColumn>
+          </TableCell>
         </TableRow>
       );
-    }, this);
+    });
 
     var deviceLimitWarning = limitMaxed ? (
       <p className="warning">
@@ -310,34 +277,36 @@ export default class Preauthorize extends React.Component {
       </p>
     ) : null;
 
-    var minHeight = deviceLimitWarning ? this.state.minHeight + 20 : this.state.minHeight;
-
     var preauthActions = [
       <div key="auth-button-1" style={{ marginRight: '10px', display: 'inline-block' }}>
-        <FlatButton label="Cancel" onClick={() => this._dialogToggle('openPreauth')} />
+        <Button onClick={() => this._dialogToggle('openPreauth')}>Cancel</Button>
       </div>,
       <div key="auth-button-2" style={{ marginRight: '10px', display: 'inline-block' }}>
-        <RaisedButton
+        <Button
+          variant="contained"
           disabled={!this.state.public || isEmpty(this.state.json_identity) || !!limitMaxed}
-          label="Save and add another"
           onClick={() => this._savePreauth(false)}
-          primary={true}
-        />
+          color="primary"
+        >
+          Save and add another
+        </Button>
       </div>,
-      <RaisedButton
+      <Button
+        variant="contained"
         key="auth-button-3"
         disabled={!this.state.public || isEmpty(this.state.json_identity) || !!limitMaxed}
-        label="Save"
         onClick={() => this._savePreauth(true)}
-        secondary={true}
-      />
+        color="secondary"
+      >
+        Save
+      </Button>
     ];
 
     var inputs = this.state.inputs.map(function(input, index) {
       return (
         <div key={index}>
           <TextField
-            hintText="Key"
+            placeholder="Key"
             id={`key-${index}`}
             value={input.key}
             style={{ marginRight: '15px', marginBottom: '15px', verticalAlign: 'top' }}
@@ -346,7 +315,7 @@ export default class Preauthorize extends React.Component {
             errorText={index === this.state.inputs.length - 1 ? this.state.errorText : ''}
           />
           <TextField
-            hintText="Value"
+            placeholder="Value"
             id={`value-${index}`}
             style={{ verticalAlign: 'top' }}
             value={input.value}
@@ -355,12 +324,8 @@ export default class Preauthorize extends React.Component {
             errorText={index === this.state.inputs.length - 1 ? this.state.errorText1 : ''}
           />
           {this.state.inputs.length > 1 ? (
-            <IconButton
-              iconStyle={{ width: '16px' }}
-              disabled={!this.state.inputs[index].key || !this.state.inputs[index].value}
-              onClick={() => this._removeInput(index)}
-            >
-              <FontIcon className="material-icons">clear</FontIcon>
+            <IconButton disabled={!this.state.inputs[index].key || !this.state.inputs[index].value} onClick={() => this._removeInput(index)}>
+              <ClearIcon fontSize="small" />
             </IconButton>
           ) : null}
         </div>
@@ -368,20 +333,17 @@ export default class Preauthorize extends React.Component {
     }, this);
 
     return (
-      <Collapse
-        springConfig={{ stiffness: 190, damping: 20 }}
-        style={{ minHeight: minHeight, width: '100%' }}
-        isOpened={true}
-        id="preauthorize"
-        className="absolute authorize padding-top"
-      >
-        <RaisedButton
+      <div className="relative">
+        <Button
+          variant="contained"
+          color="secondary"
           disabled={!!limitMaxed}
           className="top-right-button"
-          secondary={true}
-          label="Preauthorize devices"
           onClick={() => this._dialogToggle('openPreauth')}
-        />
+          style={{ position: 'absolute' }}
+        >
+          Preauthorize devices
+        </Button>
 
         <Loader show={this.state.authLoading === 'all'} />
 
@@ -390,34 +352,26 @@ export default class Preauthorize extends React.Component {
             <h3 className="align-center">Preauthorized devices</h3>
             {deviceLimitWarning}
 
-            <Table selectable={false}>
-              <TableHeader className="clickable" displaySelectAll={false} adjustForCheckbox={false}>
+            <Table>
+              <TableHead className="clickable">
                 >
                 <TableRow>
-                  <TableHeaderColumn className="columnHeader" tooltip={(this.props.globalSettings || {}).id_attribute || 'Device ID'}>
+                  <TableCell className="columnHeader" tooltip={(this.props.globalSettings || {}).id_attribute || 'Device ID'}>
                     {(this.props.globalSettings || {}).id_attribute || 'Device ID'}
-                    <FontIcon
-                      onClick={this.props.openSettingsDialog}
-                      style={{ fontSize: '16px' }}
-                      color={'#c7c7c7'}
-                      hoverColor={'#aeaeae'}
-                      className="material-icons hover float-right"
-                    >
+                    <Icon onClick={this.props.openSettingsDialog} style={{ fontSize: '16px' }} className="material-icons hover float-right">
                       settings
-                    </FontIcon>
-                  </TableHeaderColumn>
-                  <TableHeaderColumn className="columnHeader" tooltip="Date added">
+                    </Icon>
+                  </TableCell>
+                  <TableCell className="columnHeader" tooltip="Date added">
                     Date added
-                  </TableHeaderColumn>
-                  <TableHeaderColumn className="columnHeader" tooltip="Status">
+                  </TableCell>
+                  <TableCell className="columnHeader" tooltip="Status">
                     Status
-                  </TableHeaderColumn>
-                  <TableHeaderColumn className="columnHeader" style={{ width: '55px', paddingRight: '12px', paddingLeft: '0' }} />
+                  </TableCell>
+                  <TableCell className="columnHeader" style={{ width: '55px', paddingRight: '12px', paddingLeft: '0' }} />
                 </TableRow>
-              </TableHeader>
-              <TableBody showRowHover={true} displayRowCheckbox={false} className="clickable">
-                {devices}
-              </TableBody>
+              </TableHead>
+              <TableBody className="clickable">{devices}</TableBody>
             </Table>
 
             <div className="margin-top">
@@ -447,70 +401,67 @@ export default class Preauthorize extends React.Component {
           </div>
         )}
 
-        <Dialog
-          open={this.state.openPreauth}
-          actions={preauthActions}
-          title="Preauthorize devices"
-          autoDetectWindowHeight={true}
-          bodyStyle={{ paddingTop: '0', fontSize: '13px', minHeight: '375px' }}
-          contentStyle={{ overflow: 'hidden', boxShadow: '0 14px 45px rgba(0, 0, 0, 0.25), 0 10px 18px rgba(0, 0, 0, 0.22)' }}
-        >
-          <p>You can preauthorize a device by adding its authentication dataset here.</p>
-          <p>This means when a device with the matching key and identity data comes online, it will automatically be authorized to connect to the server.</p>
+        <Dialog open={this.state.openPreauth}>
+          <DialogTitle>Preauthorize devices</DialogTitle>
+          <DialogContent style={{ overflow: 'hidden' }}>
+            <p>You can preauthorize a device by adding its authentication dataset here.</p>
+            <p>This means when a device with the matching key and identity data comes online, it will automatically be authorized to connect to the server.</p>
 
-          <h4 className="margin-top margin-bottom-small">Public key</h4>
-          {this.state.filename ? (
-            <div>
-              <TextField
-                id="keyfile"
-                value={this.state.filename}
-                disabled={true}
-                underlineStyle={{ borderBottom: '1px solid rgb(224, 224, 224)' }}
-                inputStyle={{ color: 'rgba(0, 0, 0, 0.8)' }}
-              />
-              <IconButton style={{ top: '6px' }} onClick={() => this._removeKey()}>
-                <FontIcon className="material-icons">clear</FontIcon>
-              </IconButton>
-            </div>
-          ) : (
-            <div>
-              <Dropzone
-                activeClassName="active"
-                rejectClassName="active"
-                multiple={false}
-                onDrop={(accepted, rejected) => this.onDrop(accepted, rejected)}
-                style={{ width: '528px' }}
-              >
-                {({ getRootProps, getInputProps }) => (
-                  <div {...getRootProps()} style={{ width: '500px', fontSize: '16px', margin: 'auto' }} className="dropzone onboard dashboard-placeholder">
-                    <input {...getInputProps()} />
-                    <div className="icon inline-block">
-                      <FileIcon style={{ height: '24px', width: '24px', verticalAlign: 'middle', marginTop: '-2px' }} />
+            <h4 className="margin-top margin-bottom-small">Public key</h4>
+            {this.state.filename ? (
+              <div>
+                <TextField
+                  id="keyfile"
+                  value={this.state.filename}
+                  disabled={true}
+                  style={{ color: 'rgba(0, 0, 0, 0.8)', borderBottom: '1px solid rgb(224, 224, 224)' }}
+                />
+                <IconButton style={{ top: '6px' }} onClick={() => this._removeKey()}>
+                  <ClearIcon />
+                </IconButton>
+              </div>
+            ) : (
+              <div>
+                <Dropzone
+                  activeClassName="active"
+                  rejectClassName="active"
+                  multiple={false}
+                  onDrop={(accepted, rejected) => this.onDrop(accepted, rejected)}
+                  style={{ width: '528px' }}
+                >
+                  {({ getRootProps, getInputProps }) => (
+                    <div {...getRootProps()} style={{ width: '500px', fontSize: '16px', margin: 'auto' }} className="dropzone onboard dashboard-placeholder">
+                      <input {...getInputProps()} />
+                      <div className="icon inline-block">
+                        <FileIcon style={{ height: '24px', width: '24px', verticalAlign: 'middle', marginTop: '-2px' }} />
+                      </div>
+                      <div className="dashboard-placeholder inline">
+                        Drag here or <a>browse</a> to upload a public key file
+                      </div>
                     </div>
-                    <div className="dashboard-placeholder inline">
-                      Drag here or <a>browse</a> to upload a public key file
-                    </div>
-                  </div>
-                )}
-              </Dropzone>
-            </div>
-          )}
+                  )}
+                </Dropzone>
+              </div>
+            )}
 
-          <h4 className="margin-bottom-none margin-top">Identity data</h4>
-          {inputs}
+            <h4 className="margin-bottom-none margin-top">Identity data</h4>
+            {inputs}
 
-          <FloatingActionButton
-            disabled={!this.state.inputs[this.state.inputs.length - 1].key || !this.state.inputs[this.state.inputs.length - 1].value}
-            style={{ marginTop: '10px' }}
-            mini={true}
-            onClick={() => this._addKeyValue()}
-          >
-            <ContentAdd />
-          </FloatingActionButton>
+            <Fab
+              disabled={!this.state.inputs[this.state.inputs.length - 1].key || !this.state.inputs[this.state.inputs.length - 1].value}
+              style={{ marginTop: '10px' }}
+              color="secondary"
+              size="small"
+              onClick={() => this._addKeyValue()}
+            >
+              <ContentAddIcon />
+            </Fab>
 
-          {deviceLimitWarning}
+            {deviceLimitWarning}
+          </DialogContent>
+          <DialogActions>{preauthActions}</DialogActions>
         </Dialog>
-      </Collapse>
+      </div>
     );
   }
 }

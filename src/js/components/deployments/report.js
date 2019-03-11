@@ -16,14 +16,17 @@ import ConfirmAbort from './confirmabort';
 import ConfirmRetry from './confirmretry';
 
 // material ui
-import FlatButton from 'material-ui/FlatButton';
-import RaisedButton from 'material-ui/RaisedButton';
-import Checkbox from 'material-ui/Checkbox';
-import Dialog from 'material-ui/Dialog';
-import FontIcon from 'material-ui/FontIcon';
-import BlockIcon from 'react-material-icons/icons/content/block';
-import RefreshIcon from 'react-material-icons/icons/navigation/refresh';
+import Button from '@material-ui/core/Button';
+import Checkbox from '@material-ui/core/Checkbox';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Icon from '@material-ui/core/Icon';
+import BlockIcon from '@material-ui/icons/Block';
+import RefreshIcon from '@material-ui/icons/Refresh';
 import { AppContext } from '../../contexts/app-context';
+import { formatTime } from '../../helpers';
 
 export default class DeploymentReport extends React.Component {
   constructor(props, state) {
@@ -139,7 +142,7 @@ export default class DeploymentReport extends React.Component {
   _filterPending(device) {
     return device.status !== 'pending';
   }
-  _handleCheckbox(e, checked) {
+  _handleCheckbox(checked) {
     this.setState({ showPending: checked, currentPage: 1 });
     this.refreshDeploymentDevices();
   }
@@ -177,19 +180,6 @@ export default class DeploymentReport extends React.Component {
     }
     this.setState({ currentPage: pageNo, start: start, end: end, pagedDevices: slice });
   }
-  _formatTime(date) {
-    if (date) {
-      return date
-        .replace(' ', 'T')
-        .replace(/ /g, '')
-        .replace('UTC', '');
-    }
-    return;
-  }
-  updatedList() {
-    // use to make sure parent re-renders dialog when device list built
-    this.props.updated();
-  }
   _abortHandler() {
     this.props.abort(this.props.deployment.id);
   }
@@ -225,7 +215,7 @@ export default class DeploymentReport extends React.Component {
 
     var logActions = [
       <div key="log-action-button-1" style={{ marginRight: '10px', display: 'inline-block' }}>
-        <FlatButton label="Cancel" onClick={() => this.dialogDismiss('dialog')} />
+        <Button onClick={() => this.dialogDismiss('dialog')}>Cancel</Button>
       </div>,
       <CopyToClipboard
         key="log-action-button-2"
@@ -233,19 +223,22 @@ export default class DeploymentReport extends React.Component {
         text={this.state.logData}
         onCopy={() => this.setState({ copied: true })}
       >
-        <FlatButton label="Copy to clipboard" />
+        <Button>Copy to clipboard</Button>
       </CopyToClipboard>,
-      <RaisedButton key="log-action-button-3" label="Export log" primary={true} onClick={() => this.exportLog()} />
+      <Button variant="contained" key="log-action-button-3" color="primary" onClick={() => this.exportLog()}>
+        Export log
+      </Button>
     ];
 
     var abort = (
       <div className="float-right">
-        <FlatButton
-          label="Abort deployment"
-          secondary={true}
+        <Button
+          color="secondary"
           onClick={() => this._showConfirm('abort')}
           icon={<BlockIcon style={{ height: '18px', width: '18px', verticalAlign: 'middle' }} />}
-        />
+        >
+          Abort deployment
+        </Button>
       </div>
     );
     if (this.state.abort) {
@@ -254,7 +247,7 @@ export default class DeploymentReport extends React.Component {
 
     var finished = '-';
     if (this.props.deployment.finished) {
-      finished = <Time value={this._formatTime(this.props.deployment.finished)} format="YYYY-MM-DD HH:mm" />;
+      finished = <Time value={formatTime(this.props.deployment.finished)} format="YYYY-MM-DD HH:mm" />;
     }
 
     return (
@@ -283,11 +276,11 @@ export default class DeploymentReport extends React.Component {
                   style={{ width: '260px', height: 'auto', margin: '30px 30px 30px 0', display: 'inline-block', verticalAlign: 'top' }}
                 >
                   <div>
-                    <div className="progressLabel">Status:</div>Finished<span className={this.state.stats.failure ? 'failures' : 'hidden'}> with failures</span>
+                    <div className="progressLabel">Status:</div>Finished {this.state.stats.failure ? <span className="failures">with failures</span> : null}
                   </div>
                   <div>
                     <div className="progressLabel">Started:</div>
-                    <Time value={this._formatTime(this.props.deployment.created)} format="YYYY-MM-DD HH:mm" />
+                    <Time value={formatTime(this.props.deployment.created)} format="YYYY-MM-DD HH:mm" />
                   </div>
                   <div>
                     <div className="progressLabel">Finished:</div>
@@ -295,48 +288,55 @@ export default class DeploymentReport extends React.Component {
                   </div>
                 </div>
                 <div className="deploymentInfo" style={{ height: 'auto', margin: '30px 30px 30px 0', display: 'inline-block', verticalAlign: 'top' }}>
-                  <div className={this.state.stats.failure || this.state.stats.aborted ? 'statusLarge' : 'hidden'}>
-                    <img src="assets/img/largeFail.png" />
-                    <div className="statusWrapper">
-                      <b className="red">{this.state.stats.failure || this.state.stats.aborted}</b> {pluralize('devices', this.state.stats.failure)} failed to
-                      update
-                    </div>
+                  {this.state.stats.failure || this.state.stats.aborted ? (
+                    <div className="statusLarge">
+                      <img src="assets/img/largeFail.png" />
+                      <div className="statusWrapper">
+                        <b className="red">{this.state.stats.failure || this.state.stats.aborted}</b> {pluralize('devices', this.state.stats.failure)} failed to
+                        update
+                      </div>
 
-                    <div>
-                      <div
-                        id="reportRetry"
-                        className={
-                          this.state.retry ? 'float-right hint--bottom hint--always hint--large hint--info' : 'float-right hint--bottom hint--large hint--info'
-                        }
-                        data-hint="This will create a new deployment with the same device group and Artifact.&#10;Devices with this Artifact already installed will be skipped, all others will be updated."
-                      >
-                        {this.state.retry ? (
-                          <ConfirmRetry cancel={() => this._hideConfirm('retry')} retry={() => this._handleRetry()} />
-                        ) : (
-                          <FlatButton
-                            label="Retry deployment?"
-                            secondary={true}
-                            icon={<RefreshIcon style={{ height: '18px', width: '18px', verticalAlign: 'middle' }} />}
-                            onClick={() => this._showConfirm('retry')}
-                          />
-                        )}
+                      <div>
+                        <div
+                          id="reportRetry"
+                          className={
+                            this.state.retry
+                              ? 'float-right hint--bottom hint--always hint--large hint--info'
+                              : 'float-right hint--bottom hint--large hint--info'
+                          }
+                          data-hint="This will create a new deployment with the same device group and Artifact.&#10;Devices with this Artifact already installed will be skipped, all others will be updated."
+                        >
+                          {this.state.retry ? (
+                            <ConfirmRetry cancel={() => this._hideConfirm('retry')} retry={() => this._handleRetry()} />
+                          ) : (
+                            <Button
+                              color="secondary"
+                              icon={<RefreshIcon style={{ height: '18px', width: '18px', verticalAlign: 'middle' }} />}
+                              onClick={() => this._showConfirm('retry')}
+                            >
+                              Retry deployment?
+                            </Button>
+                          )}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  <div className={this.state.stats.success ? 'statusLarge' : 'hidden'}>
-                    <img src="assets/img/largeSuccess.png" />
-                    <div className="statusWrapper">
-                      <b className="green">
-                        <span className={this.state.stats.success === deviceList.length ? null : 'hidden'}>All </span>
-                        {this.state.stats.success}
-                      </b>{' '}
-                      {pluralize('devices', this.state.stats.success)} updated successfully
+                  ) : null}
+                  {this.state.stats.success ? (
+                    <div className="statusLarge">
+                      <img src="assets/img/largeSuccess.png" />
+                      <div className="statusWrapper">
+                        <b className="green">
+                          {this.state.stats.success === deviceList.length ? <span>All </span> : null}
+                          {this.state.stats.success}
+                        </b>{' '}
+                        {pluralize('devices', this.state.stats.success)} updated successfully
+                      </div>
                     </div>
-                  </div>
+                  ) : null}
                 </div>
 
                 <div className="hidden" style={{ width: '240px', height: 'auto', margin: '30px 0 30px 30px', display: 'inline-block', verticalAlign: 'top' }}>
-                  <Checkbox label="Show only failures" onCheck={(e, checked) => this._handleCheckbox(e, checked)} />
+                  <Checkbox label="Show only failures" onChange={(e, checked) => this._handleCheckbox(checked)} />
                 </div>
               </div>
             </div>
@@ -346,14 +346,14 @@ export default class DeploymentReport extends React.Component {
                 <div id="progressStatus">
                   <h3 style={{ marginTop: '12px' }}>{this.state.finished ? 'Finished' : 'In progress'}</h3>
                   <h2>
-                    <FontIcon className="material-icons" style={{ margin: '0 10px 0 -10px', color: '#ACD4D0', verticalAlign: 'text-top' }}>
+                    <Icon className="material-icons" style={{ margin: '0 10px 0 -10px', color: '#ACD4D0', verticalAlign: 'text-top' }}>
                       timelapse
-                    </FontIcon>
+                    </Icon>
                     {this.state.elapsed}
                   </h2>
                   <div>
                     Started:
-                    <Time value={this._formatTime(this.props.deployment.created)} format="YYYY-MM-DD HH:mm" />
+                    <Time value={formatTime(this.props.deployment.created)} format="YYYY-MM-DD HH:mm" />
                   </div>
                 </div>
                 <div className="inline-block">
@@ -369,7 +369,7 @@ export default class DeploymentReport extends React.Component {
               </div>
 
               <div className="hidden" style={{ width: '240px', height: 'auto', margin: '30px 0 30px 30px', display: 'inline-block', verticalAlign: 'top' }}>
-                <Checkbox label={checkboxLabel} onCheck={(e, checked) => this._handleCheckbox(e, checked)} />
+                <Checkbox label={checkboxLabel} onChange={(e, checked) => this._handleCheckbox(checked)} />
                 <p style={{ marginLeft: '40px' }} className={this.state.deviceCount - allDevices.length ? 'info' : 'hidden'}>
                   {this.state.deviceCount - allDevices.length} devices pending
                 </p>
@@ -400,7 +400,6 @@ export default class DeploymentReport extends React.Component {
                 deviceIdentity={this.state.deviceIdentity}
                 deviceInventory={this.state.deviceInventory}
                 viewLog={id => this.viewLog(id)}
-                finished={() => this.updatedList()}
                 past={this.props.past}
               />
             )}
@@ -417,16 +416,13 @@ export default class DeploymentReport extends React.Component {
           ) : null}
         </div>
 
-        <Dialog
-          title="Deployment log for device"
-          autoDetectWindowHeight={true}
-          autoScrollBodyContent={true}
-          open={this.state.showDialog}
-          actions={logActions}
-          bodyStyle={{ padding: '0', overflow: 'hidden' }}
-        >
-          <div className="code log">{this.state.logData}</div>
-          <p style={{ marginLeft: '24px' }}>{this.state.copied ? <span className="green fadeIn">Copied to clipboard.</span> : null}</p>
+        <Dialog open={this.state.showDialog}>
+          <DialogTitle>Deployment log for device</DialogTitle>
+          <DialogContent>
+            <div className="code log">{this.state.logData}</div>
+            <p style={{ marginLeft: '24px' }}>{this.state.copied ? <span className="green fadeIn">Copied to clipboard.</span> : null}</p>
+          </DialogContent>
+          <DialogActions>{logActions}</DialogActions>
         </Dialog>
       </div>
     );

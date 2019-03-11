@@ -1,6 +1,6 @@
 import React from 'react';
-import Paper from 'material-ui/Paper';
-import HelpIcon from 'react-material-icons/icons/communication/live-help';
+import Paper from '@material-ui/core/Paper';
+import HelpIcon from '@material-ui/icons/LiveHelp';
 
 export default class Support extends React.Component {
   render() {
@@ -21,14 +21,12 @@ export default class Support extends React.Component {
             </a>
           </p>
         </div>
-        <div className="inline-block" style={{ verticalAlign: 'top' }}>
-          <a href={supportLink} target="_blank">
-            <Paper zDepth={1} className="help-section" style={{ marginTop: 0 }}>
-              <HelpIcon />
-              <p>Software support</p>
-            </Paper>
-          </a>
-        </div>
+        <a className="inline-block" href={supportLink} style={{ verticalAlign: 'top' }} target="_blank">
+          <Paper className="help-section" style={{ marginTop: 0 }}>
+            <HelpIcon />
+            <p>Software support</p>
+          </Paper>
+        </a>
       </div>
     );
   }

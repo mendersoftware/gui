@@ -1,11 +1,14 @@
 import React from 'react';
 import PasswordField from 'material-ui-password-field';
-import CheckIcon from 'react-material-icons/icons/action/check-circle';
 import zxcvbn from 'zxcvbn';
 import copy from 'copy-to-clipboard';
 import generator from 'generate-password';
 
-import FlatButton from 'material-ui/FlatButton';
+import Button from '@material-ui/core/Button';
+import FormControl from '@material-ui/core/FormControl';
+import InputLabel from '@material-ui/core/InputLabel';
+
+import CheckIcon from '@material-ui/icons/CheckCircle';
 
 export default class PasswordInput extends React.Component {
   constructor(props, context) {
@@ -85,37 +88,43 @@ export default class PasswordInput extends React.Component {
     return (
       <div id={`${this.props.id}-holder`} className={className}>
         <div style={{ position: 'relative' }}>
-          <PasswordField
-            id={this.props.id}
-            name={this.props.id}
-            defaultValue={this.props.defaultValue}
-            value={this.state.value}
-            hintText={this.props.hint}
-            floatingLabelText={this.props.label}
-            onChange={e => this.setValue(e)}
-            errorStyle={{ color: 'rgb(171, 16, 0)' }}
-            style={{ maxWidth: '100%', width: '400px' }}
-            multiLine={this.props.multiLine}
-            rows={this.props.rows}
-            errorText={this.state.errorText}
-            required={this.props.required}
-            onKeyPress={this.props.handleKeyPress}
-            disabled={this.props.disabled}
-            visible={this.state.visible}
-          />
-          <div className={this.props.create ? 'pass-buttons' : 'hidden'}>
-            <FlatButton label="Generate" primary={true} onClick={() => this.generatePass()} style={{ top: '20px !important' }} />
-            {this.props.edit ? <FlatButton label="Cancel" onClick={() => this.clearPass()} style={{ top: '20px !important' }} /> : null}
-          </div>
+          <FormControl>
+            <InputLabel htmlFor={this.props.id}>{this.props.label}</InputLabel>
+            <PasswordField
+              id={this.props.id}
+              name={this.props.id}
+              defaultValue={this.props.defaultValue}
+              value={this.state.value}
+              onChange={e => this.setValue(e)}
+              errorStyle={{ color: 'rgb(171, 16, 0)' }}
+              style={{ width: 400 }}
+              errorText={this.state.errorText}
+              required={this.props.required}
+              onKeyPress={this.props.handleKeyPress}
+              disabled={this.props.disabled}
+              visible={this.state.visible}
+            />
+          </FormControl>
+          {this.props.create ? (
+            <div>
+              <Button className="pass-buttons" color="primary" onClick={() => this.generatePass()}>
+                Generate
+              </Button>
+              {this.props.edit ? <Button onClick={() => this.clearPass()}>Cancel</Button> : null}
+            </div>
+          ) : null}
         </div>
         {this.state.copied ? <span className="green fadeIn margin-bottom-small">Copied to clipboard</span> : null}
-        <div className={this.props.create ? 'help-text' : 'hidden'}>
-          <div id="pass-strength">
-            Strength: <meter max={4} min={0} value={this.state.score} high={3.9} optimum={4} low={2.5} />
-            {this.state.score > 3 ? <CheckIcon className="fadeIn" style={{ color: '#009E73', height: '18px' }} /> : null}
+
+        {this.props.create ? (
+          <div>
+            <div className="help-text" id="pass-strength">
+              Strength: <meter max={4} min={0} value={this.state.score} high={3.9} optimum={4} low={2.5} />
+              {this.state.score > 3 ? <CheckIcon className="fadeIn" style={{ color: '#009E73', height: '18px' }} /> : null}
+            </div>
+            <div>{feedback}</div>
           </div>
-          <div>{feedback}</div>
-        </div>
+        ) : null}
       </div>
     );
   }

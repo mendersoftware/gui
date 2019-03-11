@@ -4,6 +4,7 @@ import Time from 'react-time';
 import PropTypes from 'prop-types';
 import RecentStats from './recentstats';
 import Loader from '../common/loader';
+import { formatTime } from '../../helpers';
 
 export default class Recent extends React.Component {
   static contextTypes = {
@@ -16,15 +17,7 @@ export default class Recent extends React.Component {
       devices: {}
     };
   }
-  _formatTime(date) {
-    if (date) {
-      return date
-        .replace(' ', 'T')
-        .replace(/ /g, '')
-        .replace('UTC', '');
-    }
-    return;
-  }
+
   render() {
     var deployments = this.props.deployments || [];
     var recent = deployments.map(function(deployment, index) {
@@ -42,7 +35,7 @@ export default class Recent extends React.Component {
               </div>
               <div>
                 <div className="progressLabel">Started:</div>
-                <Time className="progressTime" value={this._formatTime(deployment.created)} format="YYYY-MM-DD HH:mm" />
+                <Time className="progressTime" value={formatTime(deployment.created)} format="YYYY-MM-DD HH:mm" />
               </div>
             </div>
             <RecentStats id={deployment.id} />
@@ -58,18 +51,20 @@ export default class Recent extends React.Component {
           </div>
 
           <Loader show={this.props.loading} fade={true} />
-
-          <div className={deployments.length ? 'fadeIn' : 'hidden'}>
-            <div className="block">{recent}</div>
-            <Link to="/deployments/finished" className="float-right">
-              All finished deployments
-            </Link>
-          </div>
-
-          <div className={deployments.length || this.props.loading ? 'hidden' : 'dashboard-placeholder'}>
-            <p>View the results of recent deployments here</p>
-            <img src="assets/img/history.png" alt="recent" />
-          </div>
+          {deployments.length ? (
+            <div className="fadeIn">
+              <div className="block">{recent}</div>
+              <Link to="/deployments/finished" className="float-right">
+                All finished deployments
+              </Link>
+            </div>
+          ) : null}
+          {deployments.length || this.props.loading ? null : (
+            <div className="dashboard-placeholder">
+              <p>View the results of recent deployments here</p>
+              <img src="assets/img/history.png" alt="recent" />
+            </div>
+          )}
         </div>
       </div>
     );

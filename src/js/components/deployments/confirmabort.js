@@ -1,6 +1,6 @@
 import React from 'react';
-import IconButton from 'material-ui/IconButton';
-import FontIcon from 'material-ui/FontIcon';
+import IconButton from '@material-ui/core/IconButton';
+import Icon from '@material-ui/core/Icon';
 
 export default class ConfirmAbort extends React.Component {
   constructor(props, context) {
@@ -18,21 +18,15 @@ export default class ConfirmAbort extends React.Component {
     this.props.abort();
   }
   render() {
-    var styles = {
-      padding: '0',
-      marginLeft: '12px',
-      marginRight: '-24px',
-      verticalAlign: 'middle'
-    };
     return (
       <div className={this.state.class} style={{ marginRight: '12px' }}>
         <div className="float-right">
           <span className="bold">{this.state.loading ? 'Aborting...' : 'Confirm abort deployment?'}</span>
-          <IconButton id="confirmAbort" style={styles} onClick={() => this._handleAbort()}>
-            <FontIcon className="material-icons green">check_circle</FontIcon>
+          <IconButton id="confirmAbort" onClick={() => this._handleAbort()}>
+            <Icon className="material-icons green">check_circle</Icon>
           </IconButton>
-          <IconButton id="cancelAbort" style={styles} onClick={() => this._handleCancel()}>
-            <FontIcon className="material-icons red">cancel</FontIcon>
+          <IconButton id="cancelAbort" onClick={() => this._handleCancel()}>
+            <Icon className="material-icons red">cancel</Icon>
           </IconButton>
         </div>
       </div>

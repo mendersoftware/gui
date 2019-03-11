@@ -1,6 +1,7 @@
 import React from 'react';
 
-import Checkbox from 'material-ui/Checkbox';
+import Checkbox from '@material-ui/core/Checkbox';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 export default class FormCheckbox extends React.Component {
   constructor(props, context) {
@@ -18,26 +19,28 @@ export default class FormCheckbox extends React.Component {
     this.props.detachFromForm(this); // Detaching if unmounting
   }
 
-  updateCheck() {
-    this.setState({
-      checked: !this.state.checked
-    });
+  updateCheck(checked) {
+    this.setState({ checked });
     this.props.validate(this, !this.state.checked);
   }
   render() {
     return (
-      <div className={this.props.className}>
-        <Checkbox
-          id={this.props.id}
-          name={this.props.id}
-          ref={this.props.id}
-          onCheck={() => this.updateCheck()}
-          label={this.props.label}
-          onClick={this.props.handleClick}
-          style={this.props.style}
-          checked={this.state.checked}
-        />
-      </div>
+      <FormControlLabel
+        className={this.props.className}
+        control={
+          <Checkbox
+            id={this.props.id}
+            name={this.props.id}
+            ref={this.props.id}
+            onChange={(e, checked) => this.updateCheck(checked)}
+            onClick={this.props.handleClick}
+            style={this.props.style}
+            color="primary"
+            checked={this.state.checked}
+          />
+        }
+        label={this.props.label}
+      />
     );
   }
 }

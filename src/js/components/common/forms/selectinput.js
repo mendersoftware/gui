@@ -1,7 +1,10 @@
 import React from 'react';
 
-import SelectField from 'material-ui/SelectField';
-import MenuItem from 'material-ui/MenuItem';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import FormControl from '@material-ui/core/FormControl';
+import InputLabel from '@material-ui/core/InputLabel';
 
 export default class SelectInput extends React.Component {
   constructor(props, context) {
@@ -19,38 +22,49 @@ export default class SelectInput extends React.Component {
   }
 
   setValue(value) {
-    this.setState({
-      value: value
-    });
+    this.setState({ value });
     this.props.onChange(value);
   }
 
   render() {
-    var menuItems = this.props.menuItems.map((item, index) => {
-      return <MenuItem key={index} value={item.value} primaryText={item.label} />;
-    }, this);
+    var menuItems = this.props.menuItems.reduce(
+      (accu, item, index) => {
+        accu.push(
+          <MenuItem key={index} value={item.value}>
+            {item.label}
+          </MenuItem>
+        );
+        return accu;
+      },
+      [
+        <MenuItem key="selection-placeholder" value="" disabled>
+          {this.props.hint}
+        </MenuItem>
+      ]
+    );
 
     return (
-      <div>
-        <SelectField
+      <FormControl>
+        <InputLabel htmlFor="simple-select">{this.props.label}</InputLabel>
+        <Select
           id={this.props.id}
           name={this.props.id}
-          defaultValue={this.props.default}
-          value={this.props.value}
-          hintText={this.props.hint}
-          floatingLabelText={this.props.label}
-          onChange={(event, target, value) => this.setValue(value)}
-          errorStyle={{ color: 'rgb(171, 16, 0)' }}
+          value={this.state.value || this.props.value || this.props.default}
+          onChange={event => this.setValue(event.target.value)}
+          inputProps={{
+            name: 'selector',
+            id: 'simple-select'
+          }}
           style={this.props.style}
         >
           {menuItems}
-        </SelectField>
+        </Select>
         {this.props.extraHint ? (
-          <p className="info" style={{ width: '500px' }}>
+          <FormHelperText className="info" style={{ width: '500px' }}>
             {this.props.extraHint}
-          </p>
+          </FormHelperText>
         ) : null}
-      </div>
+      </FormControl>
     );
   }
 }

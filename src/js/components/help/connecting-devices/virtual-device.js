@@ -1,8 +1,8 @@
 import React from 'react';
 import CopyToClipboard from 'react-copy-to-clipboard';
 
-import FlatButton from 'material-ui/FlatButton';
-import FontIcon from 'material-ui/FontIcon';
+import Button from '@material-ui/core/Button';
+import Icon from '@material-ui/core/Icon';
 
 export default class VirtualDevice extends React.Component {
   constructor(props, context) {
@@ -86,11 +86,9 @@ export default class VirtualDevice extends React.Component {
               <div>
                 <div className="code">
                   <CopyToClipboard text={codeToCopy} onCopy={() => this._copied()}>
-                    <FlatButton
-                      label="Copy to clipboard"
-                      style={{ float: 'right', margin: '-10px 0 0 10px' }}
-                      icon={<FontIcon className="material-icons">content_paste</FontIcon>}
-                    />
+                    <Button style={{ float: 'right', margin: '-10px 0 0 10px' }} icon={<Icon className="material-icons">content_paste</Icon>}>
+                      Copy to clipboard
+                    </Button>
                   </CopyToClipboard>
                   <span style={{ wordBreak: 'break-word' }}>{codeToCopy}</span>
                 </div>

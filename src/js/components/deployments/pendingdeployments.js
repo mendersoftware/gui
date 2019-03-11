@@ -7,9 +7,15 @@ import Pagination from 'rc-pagination';
 import _en_US from 'rc-pagination/lib/locale/en_US';
 
 // material ui
-import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
-import FlatButton from 'material-ui/FlatButton';
-import BlockIcon from 'react-material-icons/icons/content/block';
+import Table from '@material-ui/core/Table';
+import TableHead from '@material-ui/core/TableHead';
+import TableCell from '@material-ui/core/TableCell';
+import TableBody from '@material-ui/core/TableBody';
+import TableRow from '@material-ui/core/TableRow';
+import Button from '@material-ui/core/Button';
+import BlockIcon from '@material-ui/icons/Block';
+
+import { formatTime } from '../../helpers';
 
 export default class Pending extends React.Component {
   constructor(props, context) {
@@ -18,15 +24,6 @@ export default class Pending extends React.Component {
       abort: null,
       pageSize: 20
     };
-  }
-  _formatTime(date) {
-    if (date) {
-      return date
-        .replace(' ', 'T')
-        .replace(/ /g, '')
-        .replace('UTC', '');
-    }
-    return;
   }
   _abortHandler(id) {
     this.props.abort(id);
@@ -46,12 +43,13 @@ export default class Pending extends React.Component {
   render() {
     var pendingMap = this.props.pending.map(function(deployment, index) {
       var abort = (
-        <FlatButton
-          label="Abort"
-          secondary={true}
+        <Button
+          color="secondary"
           onClick={() => this._showConfirm(deployment.id)}
           icon={<BlockIcon style={{ height: '18px', width: '18px', verticalAlign: 'middle' }} />}
-        />
+        >
+          Abort
+        </Button>
       );
       if (this.state.abort === deployment.id) {
         abort = <ConfirmAbort cancel={() => this._hideConfirm(deployment.id)} abort={() => this._abortHandler(deployment.id)} table={true} />;
@@ -60,50 +58,48 @@ export default class Pending extends React.Component {
       //  get statistics
       return (
         <TableRow key={index}>
-          <TableRowColumn>{deployment.artifact_name}</TableRowColumn>
-          <TableRowColumn>{deployment.name}</TableRowColumn>
-          <TableRowColumn>
-            <Time value={this._formatTime(deployment.created)} format="YYYY-MM-DD HH:mm" />
-          </TableRowColumn>
-          <TableRowColumn style={{ textAlign: 'right', width: '100px' }}>{deployment.device_count}</TableRowColumn>
-          <TableRowColumn style={{ width: '126px' }}>{deployment.status}</TableRowColumn>
-          <TableRowColumn style={{ overflow: 'visible' }}>
+          <TableCell>{deployment.artifact_name}</TableCell>
+          <TableCell>{deployment.name}</TableCell>
+          <TableCell>
+            <Time value={formatTime(deployment.created)} format="YYYY-MM-DD HH:mm" />
+          </TableCell>
+          <TableCell style={{ textAlign: 'right', width: '100px' }}>{deployment.device_count}</TableCell>
+          <TableCell style={{ width: '126px' }}>{deployment.status}</TableCell>
+          <TableCell style={{ overflow: 'visible' }}>
             <div className="float-right">{abort}</div>
-          </TableRowColumn>
+          </TableCell>
         </TableRow>
       );
     }, this);
 
-    return (
-      <div className={pendingMap.length ? 'fadeIn' : 'hidden'}>
-        <div className="deploy-table-contain">
-          <h3>Pending</h3>
-          <Table selectable={false} style={{ overflow: 'visible' }} wrapperStyle={{ overflow: 'visible' }} bodyStyle={{ overflow: 'visible' }}>
-            <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
-              <TableRow style={{ overflow: 'visible' }}>
-                <TableHeaderColumn>Updating to</TableHeaderColumn>
-                <TableHeaderColumn>Group</TableHeaderColumn>
-                <TableHeaderColumn>Created</TableHeaderColumn>
-                <TableHeaderColumn style={{ textAlign: 'right', width: '100px' }}># Devices</TableHeaderColumn>
-                <TableHeaderColumn style={{ width: '126px' }}>Status</TableHeaderColumn>
-                <TableHeaderColumn />
-              </TableRow>
-            </TableHeader>
-            <TableBody displayRowCheckbox={false}>{pendingMap}</TableBody>
-          </Table>
+    return pendingMap.length ? (
+      <div className="deploy-table-contain fadeIn">
+        <h3>Pending</h3>
+        <Table style={{ overflow: 'visible' }}>
+          <TableHead>
+            <TableRow style={{ overflow: 'visible' }}>
+              <TableCell>Updating to</TableCell>
+              <TableCell>Group</TableCell>
+              <TableCell>Created</TableCell>
+              <TableCell style={{ textAlign: 'right', width: '100px' }}># Devices</TableCell>
+              <TableCell style={{ width: '126px' }}>Status</TableCell>
+              <TableCell />
+            </TableRow>
+          </TableHead>
+          <TableBody style={{ overflow: 'visible' }}>{pendingMap}</TableBody>
+        </Table>
 
-          {this.props.count > this.props.pending.length ? (
-            <Pagination
-              locale={_en_US}
-              simple
-              pageSize={this.state.pageSize}
-              current={this.props.page || 1}
-              total={this.props.count}
-              onChange={page => this._handlePageChange(page)}
-            />
-          ) : null}
-        </div>
+        {this.props.count > this.props.pending.length ? (
+          <Pagination
+            locale={_en_US}
+            simple
+            pageSize={this.state.pageSize}
+            current={this.props.page || 1}
+            total={this.props.count}
+            onChange={page => this._handlePageChange(page)}
+          />
+        ) : null}
       </div>
-    );
+    ) : null;
   }
 }

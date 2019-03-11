@@ -1,17 +1,18 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import SearchInput from 'react-search-input';
 import ReactTooltip from 'react-tooltip';
-import { CreateDeploymentForm } from '../helptips/helptooltips';
-
-import AutoComplete from 'material-ui/AutoComplete';
-import TextField from 'material-ui/TextField';
-import FontIcon from 'material-ui/FontIcon';
-import Drawer from 'material-ui/Drawer';
-import IconButton from 'material-ui/IconButton';
-import MenuItem from 'material-ui/MenuItem';
-import Divider from 'material-ui/Divider';
 import pluralize from 'pluralize';
+
+import Icon from '@material-ui/core/Icon';
+import MenuItem from '@material-ui/core/MenuItem';
+import TextField from '@material-ui/core/TextField';
+
+import HelpIcon from '@material-ui/icons/Help';
+import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
+
+import Autosuggest, { defaultProps } from '@plan-three/material-ui-autosuggest';
+
+import { CreateDeploymentForm } from '../helptips/helptooltips';
 
 export default class ScheduleForm extends React.Component {
   constructor(props, context) {
@@ -65,8 +66,8 @@ export default class ScheduleForm extends React.Component {
     this._sendUpToParent(null, 'artifact');
   }
   _clearOnClick(ref) {
-    this.refs[ref].setState({ searchText: '' });
-    this.refs[ref].focus();
+    this.setState({ searchText: '' });
+    this[ref].focus();
     this._sendUpToParent(null, ref);
   }
 
@@ -80,7 +81,7 @@ export default class ScheduleForm extends React.Component {
   }
 
   searchUpdated(term) {
-    this.setState({ searchTerm: term }); // needed to force re-render
+    // this.setState({ searchTerm: term }); // needed to force re-render
   }
 
   render() {
@@ -88,7 +89,7 @@ export default class ScheduleForm extends React.Component {
       accu.push({
         text: artifact.name,
         value: (
-          <MenuItem value={artifact} key={i}>
+          <MenuItem component={Link} to={artifact} key={i}>
             {artifact.name}
           </MenuItem>
         )
@@ -101,14 +102,29 @@ export default class ScheduleForm extends React.Component {
       // If single device, don't show groups
       groupItems[0] = {
         text: this.props.device.id,
-        value: <MenuItem value={this.props.device.id} key={this.props.device.id} primaryText={this.props.device.id} />
+        value: (
+          <MenuItem component={Link} to={this.props.device.id} key={this.props.device.id}>
+            {this.props.device.id}
+          </MenuItem>
+        )
       };
     } else {
-      groupItems[0] = { text: 'All devices', value: <MenuItem value="All devices" key="All" primaryText="All devices" /> };
+      groupItems[0] = {
+        text: 'All devices',
+        value: (
+          <MenuItem component={Link} to="All devices" key="All">
+            All devices
+          </MenuItem>
+        )
+      };
       groupItems = this.props.groups.reduce((accu, group, i) => {
         accu.push({
           text: decodeURIComponent(group),
-          value: <MenuItem value={group} key={i} primaryText={decodeURIComponent(group)} />
+          value: (
+            <MenuItem component={Link} to={group} key={i}>
+              {decodeURIComponent(group)}
+            </MenuItem>
+          )
         });
         return accu;
       }, groupItems);
@@ -123,107 +139,63 @@ export default class ScheduleForm extends React.Component {
       tmpDevices = this.props.filteredDevices.filter(this.refs.search.filter(namefilter));
     }
 
-    var devices = <p>No devices</p>;
-
-    if (tmpDevices) {
-      devices = tmpDevices.map((item, index) => {
-        var idFilter = `id=${item.id}`;
-
-        return (
-          <div className="hint--bottom hint--medium" style={{ width: '100%' }} aria-label={item.id} key={index}>
-            <p className="text-overflow">
-              <Link to={`/devices/${idFilter}`}>{item.id}</Link>
-            </p>
-          </div>
-        );
-      }, this);
-    }
-
-    var group = this.props.group && this.props.group !== 'All devices' ? `group=${encodeURIComponent(this.props.group)}` : '';
-    var deviceList = (
-      <div className="slider">
-        <IconButton
-          className="closeSlider"
-          iconStyle={{ fontSize: '16px' }}
-          onClick={() => this._showDevices()}
-          style={{ borderRadius: '30px', width: '40px', height: '40px', position: 'absolute', left: '-18px', backgroundColor: 'rgba(255,255,255,1)' }}
-        >
-          <FontIcon className="material-icons">close</FontIcon>
-        </IconButton>
-        <SearchInput style={{ marginBottom: '8px' }} className="search" ref="search" onChange={term => this.searchUpdated(term)} placeholder="Search devices" />
-        {devices}
-        <p className={tmpDevices.length ? 'hidden' : 'italic'}>No devices in this group match the device type or search term.</p>
-        <Divider />
-        <p>
-          <Link to={`/devices/${group}`}>{group ? 'Go to group' : 'Go to devices'}></Link>
-        </p>
-      </div>
-    );
-
     var devicesLength = this.props.deploymentDevices ? this.props.deploymentDevices.length : '0';
 
     return (
       <div style={{ overflow: 'visible', height: '400px' }}>
-        <Drawer
-          ref="devicesNav"
-          docked={false}
-          openSecondary={true}
-          style={this.state.showDevices ? { overflow: 'visible' } : { overflow: 'hidden' }}
-          open={this.state.showDevices}
-          overlayStyle={{ backgroundColor: 'rgba(0, 0, 0, 0.3)' }}
-          onRequestChange={() => this._showDevices()}
-          containerStyle={this.state.showDevices ? { overflow: 'visible' } : { overflow: 'hidden' }}
-          width={320}
-        >
-          {deviceList}
-        </Drawer>
-
         <form>
-          <div style={{ display: 'block', marginBottom: '15px' }}>
-            <AutoComplete
-              ref="artifact"
-              hintText="Select target artifact"
-              dataSource={artifactItems}
+          <div style={{ display: 'inline-block', marginBottom: '15px' }}>
+            <Autosuggest
+              helperText="Select target artifact"
+              ref={input => (this.artifact = input)}
+              suggestions={artifactItems}
               onNewRequest={(request, index) => this._handleArtifactValueChange(request, index)}
-              onUpdateInput={() => this._handleArtifactInputChange()}
-              floatingLabelText="Select target artifact"
-              filter={AutoComplete.fuzzyFilter}
+              onChange={() => this._handleArtifactInputChange()}
+              label="Select target artifact"
+              fuzzySearchOpts={{
+                ...defaultProps.fuzzySearchOpts,
+                keys: ['text']
+              }}
               openOnFocus={true}
               listStyle={{ overflow: 'auto', maxHeight: '360px' }}
               errorStyle={{ color: 'rgb(171, 16, 0)' }}
               errorText={this.state.autoCompleteErrorText}
               onClick={() => this._clearOnClick('artifact')}
             />
-            <TextField
-              disabled={true}
-              hintText="Device types"
-              floatingLabelText="Device types"
-              value={device_types}
-              underlineDisabledStyle={{ borderBottom: 'none' }}
-              style={{ verticalAlign: 'top', width: '400px' }}
-              multiLine={true}
-              errorStyle={{ color: 'rgb(171, 16, 0)' }}
-              className={this.props.artifact ? 'margin-left' : 'hidden'}
-            />
+            {this.props.artifact ? (
+              <TextField
+                disabled={true}
+                placeholder="Device types"
+                label="Device types"
+                value={device_types}
+                underlineDisabledStyle={{ borderBottom: 'none' }}
+                style={{ verticalAlign: 'top', width: '400px' }}
+                errorStyle={{ color: 'rgb(171, 16, 0)' }}
+                className="margin-left"
+              />
+            ) : null}
 
             <p className={artifactItems.length ? 'hidden' : 'info'} style={{ marginTop: '0' }}>
-              <FontIcon className="material-icons" style={{ marginRight: '4px', fontSize: '18px', top: '4px', color: 'rgb(171, 16, 0)' }}>
+              <Icon className="material-icons" style={{ marginRight: '4px', fontSize: '18px', top: '4px', color: 'rgb(171, 16, 0)' }}>
                 error_outline
-              </FontIcon>
+              </Icon>
               There are no artifacts available. <Link to="/artifacts">Upload one to the repository</Link> to get started.
             </p>
           </div>
 
-          <div style={{ display: 'block' }}>
+          <div style={{ display: 'inline-block' }}>
             <div className={this.state.disabled ? 'hidden' : 'inline-block'}>
-              <AutoComplete
-                ref="group"
-                hintText="Select target group"
-                dataSource={groupItems}
+              <Autosuggest
+                helperText="Select target group"
+                ref={input => (this.group = input)}
+                suggestions={groupItems}
                 onNewRequest={(...args) => this._handleGroupValueChange(...args)}
                 onUpdateInput={() => this._handleGroupInputChange()}
-                floatingLabelText="Select target group"
-                filter={AutoComplete.fuzzyFilter}
+                label="Select target group"
+                fuzzySearchOpts={{
+                  ...defaultProps.fuzzySearchOpts,
+                  keys: ['text']
+                }}
                 openOnFocus={true}
                 listStyle={{ overflow: 'auto', maxHeight: '360px' }}
                 errorStyle={{ color: 'rgb(171, 16, 0)' }}
@@ -233,27 +205,28 @@ export default class ScheduleForm extends React.Component {
               />
 
               <p className={this.props.hasDevices ? 'hidden' : 'info'} style={{ marginTop: '0' }}>
-                <FontIcon className="material-icons" style={{ marginRight: '4px', fontSize: '18px', top: '4px', color: 'rgb(171, 16, 0)' }}>
+                <Icon className="material-icons" style={{ marginRight: '4px', fontSize: '18px', top: '4px', color: 'rgb(171, 16, 0)' }}>
                   error_outline
-                </FontIcon>
+                </Icon>
                 There are no connected devices.{' '}
-                <span className={this.props.hasPending ? null : 'hidden'}>
-                  <Link to="/devices/pending">Accept pending devices</Link> to get started.
-                </span>
+                {this.props.hasPending ? (
+                  <span>
+                    <Link to="/devices/pending">Accept pending devices</Link> to get started.
+                  </span>
+                ) : null}
               </p>
             </div>
 
-            <div style={{ width: '100%' }} className={this.state.disabled ? 'inline-block' : 'hidden'}>
+            {this.state.disabled ? (
               <TextField
                 style={{ width: '100%' }}
                 value={this.props.device ? this.props.device.device_id : ''}
-                ref="device"
-                floatingLabelText="Device"
+                label="Device"
                 disabled={this.state.disabled}
                 underlineDisabledStyle={{ borderBottom: 'none' }}
                 errorStyle={{ color: 'rgb(171, 16, 0)' }}
               />
-            </div>
+            ) : null}
 
             {this.props.showHelptips && (this.props.hasDevices && (this.props.artifacts || []).length) ? (
               <div style={{ position: 'relative' }}>
@@ -265,7 +238,7 @@ export default class ScheduleForm extends React.Component {
                   data-event="click focus"
                   style={{ top: '-75px', left: '45%' }}
                 >
-                  <FontIcon className="material-icons">help</FontIcon>
+                  <HelpIcon />
                 </div>
                 <ReactTooltip id="create-deployment1-tip" globalEventOff="click" place="bottom" type="light" effect="solid" className="react-tooltip">
                   <CreateDeploymentForm />
@@ -275,18 +248,20 @@ export default class ScheduleForm extends React.Component {
           </div>
 
           <div className="margin-top">
-            <p className={tmpDevices ? null : 'hidden'}>
-              {this.props.filteredDevices ? this.props.filteredDevices.length : '0'} of {devicesLength} {pluralize('devices', devicesLength)} will be updated.{' '}
-              <span onClick={() => this._showDevices()} className={this.state.disabled ? 'hidden' : 'link'}>
-                View the devices
-              </span>
-            </p>
-            <p className={this.props.hasDevices && artifactItems.length ? 'info' : 'hidden'}>
-              <FontIcon className="material-icons" style={{ marginRight: '4px', fontSize: '18px', top: '4px' }}>
-                info_outline
-              </FontIcon>
-              The deployment will skip any devices that are already on the target artifact version, or that have a different device type.
-            </p>
+            {tmpDevices ? (
+              <p>
+                {this.props.filteredDevices ? this.props.filteredDevices.length : '0'} of {devicesLength} {pluralize('devices', devicesLength)} will be updated.{' '}
+                <span onClick={() => this.props.showDevices()} className={this.state.disabled ? 'hidden' : 'link'}>
+                  View the devices
+                </span>
+              </p>
+            ) : null}
+            {this.props.hasDevices && artifactItems.length ? (
+              <p className="info">
+                <InfoOutlinedIcon />
+                The deployment will skip any devices that are already on the target artifact version, or that have a different device type.
+              </p>
+            ) : null}
           </div>
         </form>
       </div>

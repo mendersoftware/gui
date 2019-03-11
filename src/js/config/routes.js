@@ -40,7 +40,7 @@ export default (
       {(docsVersion, artifactProgress, version) => (
         <Switch>
           <PrivateRoute exact path="/" component={Dashboard} />
-          <PrivateRoute path="/devices/:status?/:filters?" component={Devices} />
+          <PrivateRoute path="/devices/:status(pending|preauthorized|rejected)?/:filters?" component={Devices} />
           <PrivateRoute path="/artifacts/:artifactVersion?" component={Artifacts} artifactProgress={artifactProgress} />
           <PrivateRoute path="/deployments/:tab?/:params?/:Id?" component={Deployments} docsVersion={docsVersion} />
           <PrivateRoute path="/settings/:section?" component={Settings} />

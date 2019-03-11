@@ -7,9 +7,8 @@ require('../common/prototype/Array.prototype.equals');
 
 import AppActions from '../../actions/app-actions';
 
-import FlatButton from 'material-ui/FlatButton';
-import RaisedButton from 'material-ui/RaisedButton';
-import FontIcon from 'material-ui/FontIcon';
+import Button from '@material-ui/core/Button';
+import Icon from '@material-ui/core/Icon';
 
 const AVAILABLE_ATTRIBUTE_LIMIT = 10;
 
@@ -65,7 +64,8 @@ export default class Global extends React.Component {
   }
 
   changeIdAttribute(value) {
-    this.setState({ updatedSettings: { id_attribute: value } });
+    const updatedSettings = Object.assign({}, this.state.updatedSettings, { id_attribute: value });
+    this.setState({ updatedSettings });
   }
 
   hasChanged() {
@@ -118,9 +118,9 @@ export default class Global extends React.Component {
           <div>
             <h2 style={{ marginTop: '15px' }}>Global settings</h2>
             <p className="info" style={{ marginBottom: '30px' }}>
-              <FontIcon className="material-icons" style={{ marginRight: '4px', fontSize: '18px', top: '4px' }}>
+              <Icon className="material-icons" style={{ marginRight: '4px', fontSize: '18px', top: '4px' }}>
                 info_outline
-              </FontIcon>
+              </Icon>
               These settings apply to all users, so changes made here may affect other users' experience.
             </p>
           </div>
@@ -134,15 +134,19 @@ export default class Global extends React.Component {
             onChange={value => this.changeIdAttribute(value)}
             menuItems={this.state.id_attributes}
             style={{ width: '400px' }}
-            value={this.state.updatedSettings.id_attribute}
+            value={this.state.updatedSettings.id_attribute || ''}
             extraHint={id_hint}
           />
         </Form>
 
         <div className="margin-top-large">
           <div className="float-right">
-            <FlatButton disabled={!changed && !this.props.dialog} onClick={() => this.undoChanges()} style={{ marginRight: '10px' }} label="Cancel" />
-            <RaisedButton onClick={() => this.saveSettings()} disabled={!changed} primary={true} label="Save" />
+            <Button disabled={!changed && !this.props.dialog} onClick={() => this.undoChanges()} style={{ marginRight: '10px' }}>
+              Cancel
+            </Button>
+            <Button variant="contained" onClick={() => this.saveSettings()} disabled={!changed} color="primary">
+              Save
+            </Button>
           </div>
         </div>
       </div>

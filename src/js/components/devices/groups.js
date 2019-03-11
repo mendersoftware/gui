@@ -5,9 +5,15 @@ import { AddGroup } from '../helptips/helptooltips';
 import AppConstants from '../../constants/app-constants';
 
 // material ui
-import { List, ListItem } from 'material-ui/List';
-import FontIcon from 'material-ui/FontIcon';
-import Divider from 'material-ui/Divider';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import Divider from '@material-ui/core/Divider';
+
+import AddIcon from '@material-ui/icons/Add';
+import HelpIcon from '@material-ui/icons/Help';
+
 require('../common/prototype/Array.prototype.equals');
 
 export default class Groups extends React.Component {
@@ -16,32 +22,30 @@ export default class Groups extends React.Component {
   }
 
   render() {
-    var createBtn = (
-      <FontIcon className="material-icons" style={this.props.allCount ? null : { color: '#d4e9e7' }}>
-        add
-      </FontIcon>
-    );
-
     var allLabel = <span>All devices</span>;
 
     const groupItems = this.props.groups.reduce(
       (accu, group, index) => {
-        var isSelected = group === this.props.selectedGroup ? { backgroundColor: '#e7e7e7' } : { backgroundColor: 'transparent' };
-        const isUngroupedGroup = group === AppConstants.UNGROUPED_GROUP.id || group === AppConstants.UNGROUPED_GROUP.name;
         var numDevs;
         if (this.props.groupDevices) {
           numDevs = this.props.groupDevices[group] || null;
         }
         var boundClick = () => this.props.changeGroup(group, numDevs);
+        const isUngroupedGroup = group === AppConstants.UNGROUPED_GROUP.id || group === AppConstants.UNGROUPED_GROUP.name;
         if (isUngroupedGroup) {
           group = AppConstants.UNGROUPED_GROUP.name;
         }
+        var isSelected = group === this.props.selectedGroup ? { backgroundColor: '#e7e7e7' } : { backgroundColor: 'transparent' };
         var groupLabel = <span>{decodeURIComponent(group)}</span>;
-
+        const item = (
+          <ListItem button key={group + index} style={isSelected} onClick={boundClick}>
+            <ListItemText primary={groupLabel} />
+          </ListItem>
+        );
         if (isUngroupedGroup) {
-          accu.ungroupedsItem = <ListItem key={group + index} primaryText={groupLabel} style={isSelected} onClick={boundClick} />;
+          accu.ungroupedsItem = item;
         } else {
-          accu.groups.push(<ListItem key={group + index} primaryText={groupLabel} style={isSelected} onClick={boundClick} />);
+          accu.groups.push(item);
         }
         return accu;
       },
@@ -52,27 +56,33 @@ export default class Groups extends React.Component {
       <div>
         <List>
           <ListItem
+            button
             key="All"
-            primaryText={allLabel}
             style={!this.props.selectedGroup ? { backgroundColor: '#e7e7e7' } : { backgroundColor: 'transparent' }}
             onClick={() => this.props.changeGroup('', this.props.allCount)}
-          />
+          >
+            <ListItemText primary={allLabel} />
+          </ListItem>
           {groupItems.ungroupedsItem ? groupItems.ungroupedsItem : null}
           <Divider />
           {groupItems.groups}
           <ListItem
-            leftIcon={createBtn}
+            button
             disabled={!this.props.acceptedCount}
-            primaryText="Create a group"
             style={this.props.acceptedCount ? null : { color: '#d4e9e7' }}
             onClick={this.props.acceptedCount ? () => this.dialogToggle() : null}
-          />
+          >
+            <ListItemIcon>
+              <AddIcon style={this.props.allCount ? null : { color: '#d4e9e7' }} />
+            </ListItemIcon>
+            <ListItemText primary="Create a group" />
+          </ListItem>
         </List>
 
         {this.props.showHelptips && this.props.acceptedCount && !this.props.groups.length ? (
           <div>
             <div id="onboard-5" className="tooltip help" data-tip data-for="groups-tip" data-event="click focus" style={{ bottom: '-10px' }}>
-              <FontIcon className="material-icons">help</FontIcon>
+              <HelpIcon />
             </div>
             <ReactTooltip id="groups-tip" globalEventOff="click" place="bottom" type="light" effect="solid" className="react-tooltip">
               <AddGroup />

@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import AppActions from '../../actions/app-actions';
 import AppStore from '../../stores/app-store';
 import pluralize from 'pluralize';
-import LinearProgress from 'material-ui/LinearProgress';
+import LinearProgress from '@material-ui/core/LinearProgress';
 import { statusToPercentage } from '../../helpers';
 import { AppContext } from '../../contexts/app-context';
 
@@ -156,8 +156,8 @@ export default class ProgressChart extends React.Component {
                     {percentage}%
                   </div>
                   <LinearProgress
-                    color={this.state.device.status && this.state.device.status.toLowerCase() == 'failure' ? '#8f0d0d' : '#009E73'}
-                    mode="determinate"
+                    color={this.state.device.status && this.state.device.status.toLowerCase() == 'failure' ? 'secondary' : 'primary'}
+                    variant="determinate"
                     value={percentage}
                   />
                 </div>

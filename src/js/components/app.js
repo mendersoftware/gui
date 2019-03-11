@@ -1,12 +1,9 @@
 import React from 'react';
-import { matchPath, withRouter } from 'react-router';
+import { matchPath, withRouter } from 'react-router-dom';
 
 import PropTypes from 'prop-types';
 import Header from './header/header';
 import LeftNav from './leftnav';
-
-import getMuiTheme from 'material-ui/styles/getMuiTheme';
-import RawTheme from '../themes/mender-theme.js';
 
 import IdleTimer from 'react-idle-timer';
 
@@ -35,9 +32,7 @@ class AppRoot extends React.Component {
   }
 
   getChildContext() {
-    var theme = getMuiTheme(RawTheme);
     return {
-      muiTheme: theme,
       location: this.props.location
     };
   }
@@ -94,7 +89,7 @@ class AppRoot extends React.Component {
     case 'settings':
       return '/settings';
     default:
-      return '';
+      return '/';
     }
   }
   _uploadArtifact(meta, file) {
@@ -123,35 +118,31 @@ class AppRoot extends React.Component {
 
   render() {
     return (
-      <IdleTimer ref="idleTimer" element={document} idleAction={this._onIdle} timeout={this.state.timeout} format="MM-DD-YYYY HH:MM:ss.SSS">
-        <div>
-          <div className="header" id="fixedHeader">
-            <Header
-              announcement={_HostedAnnouncement}
-              docsVersion={this.state.docsVersion}
-              currentTab={this.state.currentTab}
-              demo={isDemoMode}
-              history={this.props.history}
-              isLoggedIn={(this.state.currentUser || {}).hasOwnProperty('email')}
-            />
-          </div>
+      <IdleTimer element={document} idleAction={this._onIdle} timeout={this.state.timeout} format="MM-DD-YYYY HH:MM:ss.SSS">
+        <Header
+          className="header"
+          announcement={_HostedAnnouncement}
+          docsVersion={this.state.docsVersion}
+          currentTab={this.state.currentTab}
+          demo={isDemoMode}
+          history={this.props.history}
+          isLoggedIn={(this.state.currentUser || {}).hasOwnProperty('email')}
+        />
 
-          <div className="wrapper">
-            <div className="leftFixed leftNav">
-              <LeftNav
-                version={this.state.version}
-                docsVersion={this.state.docsVersion}
-                currentTab={this.state.currentTab}
-                changeTab={tabIndex => this._changeTab(tabIndex)}
-              />
-            </div>
-            <div className="rightFluid container">
-              <AppContext.Provider value={this.state}>{this.props.children}</AppContext.Provider>
-            </div>
+        <div className="wrapper">
+          <LeftNav
+            className="leftFixed leftNav"
+            version={this.state.version}
+            docsVersion={this.state.docsVersion}
+            currentTab={this.state.currentTab}
+            changeTab={tabIndex => this._changeTab(tabIndex)}
+          />
+          <div className="rightFluid container">
+            <AppContext.Provider value={this.state}>{this.props.children}</AppContext.Provider>
           </div>
-
-          <SharedSnackbar snackbar={this.state.snackbar} />
         </div>
+
+        <SharedSnackbar snackbar={this.state.snackbar} />
       </IdleTimer>
     );
   }

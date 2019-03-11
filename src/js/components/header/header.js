@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { matchPath } from 'react-router';
-import { Link } from 'react-router-dom';
+import { Link, matchPath } from 'react-router-dom';
 
 import cookie from 'react-cookie';
 import { isEmpty, decodeSessionToken, hashString } from '../../helpers';
@@ -16,29 +15,22 @@ import DeploymentNotifications from './deploymentnotifications';
 import AppActions from '../../actions/app-actions';
 import AppStore from '../../stores/app-store';
 
-import { Tabs, Tab } from 'material-ui/Tabs';
-import DropDownMenu from 'material-ui/DropDownMenu';
-import MenuItem from 'material-ui/MenuItem';
-import FontIcon from 'material-ui/FontIcon';
-import { Toolbar, ToolbarGroup } from 'material-ui/Toolbar';
-import InfoIcon from 'react-material-icons/icons/action/info-outline';
-import AnnounceIcon from 'react-material-icons/icons/action/announcement';
-import ExitIcon from 'react-material-icons/icons/action/exit-to-app';
-import CloseIcon from 'react-material-icons/icons/navigation/close';
+import Button from '@material-ui/core/Button';
+import IconButton from '@material-ui/core/IconButton';
+import ListItemText from '@material-ui/core/ListItemText';
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
+import Toolbar from '@material-ui/core/Toolbar';
 
-var menuItems = [
-  { route: '/', text: 'Dashboard' },
-  { route: '/devices', text: 'Devices' },
-  { route: '/artifacts', text: 'Artifacts' },
-  { route: '/deployments', text: 'Deployments' }
-];
-
-var styles = {
-  tabs: {
-    backgroundColor: '#f7f7f7',
-    color: '#414141'
-  }
-};
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import AnnounceIcon from '@material-ui/icons/Announcement';
+import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
+import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
+import CloseIcon from '@material-ui/icons/Close';
+import ExitIcon from '@material-ui/icons/ExitToApp';
+import HelpIcon from '@material-ui/icons/Help';
+import InfoIcon from '@material-ui/icons/InfoOutlined';
 
 export default class Header extends React.Component {
   static contextTypes = {
@@ -177,7 +169,7 @@ export default class Header extends React.Component {
     if (!self.state.gettingUser) {
       var userId = self.state.sessionId ? decodeSessionToken(self.state.sessionId) : decodeSessionToken(cookie.load('JWT'));
       if (!userId) {
-        return Promise.reject();
+        return;
       }
       self.setState({ gettingUser: true });
       return AppActions.getUser(userId)
@@ -200,59 +192,82 @@ export default class Header extends React.Component {
     this._checkHeaderInfo();
     AppActions.setSnackbar('');
   }
-  _handleHeaderMenu(event, index, value) {
-    if (value === 'toggleHelptips') {
-      toggleHelptips();
-    } else {
-      if (value === '/login') {
-        this.setState({ gettingUser: false });
-        clearAllRetryTimers();
-        cookie.remove('JWT');
-      }
-      this.context.router.history.push(value);
-    }
+  handleClick = event => {
+    this.setState({ anchorEl: event.currentTarget });
+  };
+  handleClose = () => {
+    this.setState({ anchorEl: null });
+  };
+  onLogoutClick() {
+    this.setState({ gettingUser: false });
+    clearAllRetryTimers();
+    cookie.remove('JWT');
+    this.context.router.history.push('/login');
   }
   render() {
-    var tabHandler = this._handleTabActive;
-    var menu = menuItems.map((item, index) => {
-      return <Tab key={index} style={styles.tabs} label={item.text} value={item.route} onActive={tabHandler} />;
-    });
-    var dropdownLabel = (
-      <span>
-        <FontIcon className="material-icons" style={{ marginRight: '8px', top: '5px', fontSize: '20px', color: '#c7c7c7' }}>
-          account_circle
-        </FontIcon>
-        {(this.state.user || {}).email}
-      </span>
-    );
-
+    const self = this;
     var helpPath = this.props.history.location.pathname.indexOf('/help') != -1;
 
+    const { anchorEl } = self.state;
+
+    const menuButtonColor = '#c7c7c7';
+
     var dropDownElement = (
-      <DropDownMenu
-        className="header-dropdown"
-        anchorOrigin={{ vertical: 'center', horizontal: 'middle' }}
-        targetOrigin={{ vertical: 'bottom', horizontal: 'middle' }}
-        style={{ marginRight: '0', fontSize: '14px', paddingLeft: '4px' }}
-        iconStyle={{ fill: 'rgb(0, 0, 0)' }}
-        value={(this.state.user || {}).email}
-        onChange={(...args) => this._handleHeaderMenu(...args)}
-      >
-        <MenuItem primaryText={dropdownLabel} value={(this.state.user || {}).email} className="hidden" />
-        <MenuItem primaryText="Settings" value="/settings" />
-        <MenuItem primaryText="My account" value="/settings/my-account" />
-        <MenuItem primaryText="My organization" value="/settings/my-organization" className={this.state.multitenancy ? null : 'hidden'} />
-        <MenuItem primaryText="User management" value="/settings/user-management" />
-        <MenuItem primaryText={this.state.showHelptips ? 'Hide help tooltips' : 'Show help tooltips'} value="toggleHelptips" />
-        <MenuItem primaryText="Help" value="/help" />
-        <MenuItem primaryText="Log out" value="/login" rightIcon={<ExitIcon style={{ color: '#c7c7c7', fill: '#c7c7c7' }} />} />
-      </DropDownMenu>
+      <div style={{ marginRight: '0', paddingLeft: '30px' }}>
+        <Button className="header-dropdown" style={{ fontSize: '14px', fill: 'rgb(0, 0, 0)', textTransform: 'none' }} onClick={self.handleClick}>
+          <AccountCircleIcon style={{ marginRight: '8px', top: '5px', fontSize: '20px', color: menuButtonColor }} />
+          {(this.state.user || {}).email}
+          {anchorEl ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
+        </Button>
+        <Menu
+          anchorEl={anchorEl}
+          onClose={self.handleClose}
+          open={Boolean(anchorEl)}
+          anchorOrigin={{
+            vertical: 'center',
+            horizontal: 'center'
+          }}
+          transformOrigin={{
+            vertical: 'bottom',
+            horizontal: 'center'
+          }}
+        >
+          <MenuItem component={Link} to="/settings">
+            Settings
+          </MenuItem>
+          <MenuItem component={Link} to="/settings/my-account">
+            My account
+          </MenuItem>
+          {this.state.multitenancy ? (
+            <MenuItem component={Link} to="/settings/my-organization">
+              My organization
+            </MenuItem>
+          ) : null}
+          <MenuItem component={Link} to="/settings/user-management">
+            User management
+          </MenuItem>
+          <MenuItem onClick={toggleHelptips}>{this.state.showHelptips ? 'Hide help tooltips' : 'Show help tooltips'}</MenuItem>
+          <MenuItem component={Link} to="/help">
+            Help
+          </MenuItem>
+          <MenuItem onClick={() => self.onLogoutClick()}>
+            <ListItemText primary="Log out" />
+            <ListItemSecondaryAction>
+              <IconButton>
+                <ExitIcon style={{ color: menuButtonColor, fill: menuButtonColor }} />
+              </IconButton>
+            </ListItemSecondaryAction>
+          </MenuItem>
+        </Menu>
+      </div>
     );
 
+    const toolbarStyle = { height: '56px', minHeight: 'unset', paddingLeft: '16px', paddingRight: '16px' };
+
     return (
-      <div className={this.context.location.pathname === '/login' ? 'hidden' : null}>
-        <Toolbar style={{ backgroundColor: '#fff' }}>
-          <ToolbarGroup key={0}>
+      <div id="fixedHeader" className={`${self.props.className} ${self.context.location.pathname === '/login' ? 'hidden' : null}`}>
+        <Toolbar style={Object.assign({ backgroundColor: '#fff' }, toolbarStyle)}>
+          <Toolbar key={0} style={toolbarStyle}>
             <Link to="/" id="logo" />
 
             {this.props.demo ? (
@@ -276,26 +291,23 @@ export default class Header extends React.Component {
                 </ReactTooltip>
               </div>
             ) : null}
-          </ToolbarGroup>
+          </Toolbar>
 
-          <ToolbarGroup key={1} style={{ flexGrow: '2' }}>
+          <Toolbar key={1} style={{ flexGrow: '2' }}>
             {this.props.announcement ? (
               <div id="announcement" className={this.state.showAnnouncement ? 'fadeInSlow' : 'fadeOutSlow'} style={{ display: 'flex', alignItems: 'center' }}>
                 <AnnounceIcon className="red" style={{ marginRight: '4px', height: '18px', minWidth: '24px' }} />
                 <Linkify properties={{ target: '_blank' }}>{this.props.announcement}</Linkify>
-                <a onClick={() => this._hideAnnouncement()}>
-                  <CloseIcon style={{ marginLeft: '4px', height: '16px', verticalAlign: 'bottom' }} />
-                </a>
+                <CloseIcon style={{ marginLeft: '4px', height: '16px', verticalAlign: 'bottom' }} onClick={() => this._hideAnnouncement()} />
               </div>
             ) : null}
-          </ToolbarGroup>
+          </Toolbar>
 
-          <ToolbarGroup style={{ flexShrink: '0' }} key={2}>
+          <Toolbar key={2} style={{ flexShrink: '0' }}>
             <DeviceNotifications pending={this.state.pendingDevices} total={this.state.acceptedDevices} limit={this.state.deviceLimit} />
-
             <DeploymentNotifications inprogress={this.state.inProgress} />
             {dropDownElement}
-          </ToolbarGroup>
+          </Toolbar>
         </Toolbar>
 
         <div id="header-nav">
@@ -309,7 +321,7 @@ export default class Header extends React.Component {
                 data-event="click focus"
                 style={{ left: '150px', top: '135px' }}
               >
-                <FontIcon className="material-icons">help</FontIcon>
+                <HelpIcon />
               </div>
               <ReactTooltip id="artifact-nav-tip" globalEventOff="click" place="bottom" type="light" effect="solid" className="react-tooltip">
                 <ArtifactsNav />
@@ -331,7 +343,7 @@ export default class Header extends React.Component {
                   data-event="click focus"
                   style={{ left: '150px', top: '75px' }}
                 >
-                  <FontIcon className="material-icons">help</FontIcon>
+                  <HelpIcon />
                 </div>
                 <ReactTooltip id="devices-nav-tip" globalEventOff="click" place="bottom" type="light" effect="solid" className="react-tooltip">
                   <DevicesNav devices={this.state.pendingDevices} />
@@ -349,17 +361,13 @@ export default class Header extends React.Component {
                 data-event="click focus"
                 style={{ left: '150px', top: '196px' }}
               >
-                <FontIcon className="material-icons">help</FontIcon>
+                <HelpIcon />
               </div>
               <ReactTooltip id="deployments-nav-tip" globalEventOff="click" place="bottom" type="light" effect="solid" className="react-tooltip">
                 <DeploymentsNav devices={this.state.acceptedDevices} />
               </ReactTooltip>
             </div>
           ) : null}
-
-          <Tabs value={this.props.currentTab} onChange={() => this.changeTab()} tabItemContainerStyle={{ display: 'none' }} inkBarStyle={{ display: 'none' }}>
-            {menu}
-          </Tabs>
         </div>
       </div>
     );

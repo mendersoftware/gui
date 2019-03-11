@@ -1,12 +1,21 @@
 import React from 'react';
 import ReactTooltip from 'react-tooltip';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import pluralize from 'pluralize';
-import { Tabs, Tab } from 'material-ui/Tabs';
-import Dialog from 'material-ui/Dialog';
-import FlatButton from 'material-ui/FlatButton';
-import FontIcon from 'material-ui/FontIcon';
-import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
+import Tab from '@material-ui/core/Tab';
+import Tabs from '@material-ui/core/Tabs';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Button from '@material-ui/core/Button';
+import Table from '@material-ui/core/Table';
+import TableHead from '@material-ui/core/TableHead';
+import TableCell from '@material-ui/core/TableCell';
+import TableBody from '@material-ui/core/TableBody';
+import TableRow from '@material-ui/core/TableRow';
+import HelpIcon from '@material-ui/icons/Help';
 
 import AppStore from '../../stores/app-store';
 import AppActions from '../../actions/app-actions';
@@ -22,18 +31,22 @@ import { AppContext } from '../../contexts/app-context';
 const routes = {
   pending: {
     route: '/devices/pending',
+    status: 'pending',
     title: 'Pending'
   },
   preauthorized: {
     route: '/devices/preauthorized',
+    status: 'preauthorized',
     title: 'Preauthorized'
   },
   rejected: {
     route: '/devices/rejected',
+    status: 'rejected',
     title: 'Rejected'
   },
   devices: {
     route: '/devices',
+    status: 'devices',
     title: 'Device groups'
   }
 };
@@ -75,14 +88,14 @@ export default class Devices extends React.Component {
     };
   }
   _onChange() {
-    this.setState(this._getInitialState());
+    this.setState(this._getInitialState(), this._getAllCount);
   }
 
   _refreshAll() {
-    this._getAcceptedCount();
-    this._getRejectedCount();
-    this._getPendingCount();
-    this._getPreauthCount();
+    AppActions.getDeviceCount('accepted');
+    AppActions.getDeviceCount('rejected');
+    AppActions.getDeviceCount('pending');
+    AppActions.getDeviceCount('preauthorized');
   }
 
   _restartInterval() {
@@ -93,43 +106,12 @@ export default class Devices extends React.Component {
     }, self.state.refreshLength);
     self._refreshAll();
   }
-
-  _changeTab(tab) {
-    const self = this;
-    const tabIndex = self._updateActive(tab);
-    self.setState({ tabIndex }, () => {
-      self.context.router.history.push(tabIndex);
-      AppActions.setSnackbar('');
-    });
+  _changeTab() {
+    AppActions.setSnackbar('');
   }
-
   /*
    * Get counts of devices
    */
-  _getAcceptedCount() {
-    var self = this;
-    return AppActions.getDeviceCount('accepted')
-      .then(acceptedCount => self.setState({ acceptedCount }))
-      .catch(() => {});
-  }
-  _getRejectedCount() {
-    var self = this;
-    return AppActions.getDeviceCount('rejected')
-      .then(rejectedCount => self.setState({ rejectedCount }, self._getAllCount()))
-      .catch(() => {});
-  }
-  _getPendingCount() {
-    var self = this;
-    return AppActions.getDeviceCount('pending')
-      .then(pendingCount => self.setState({ pendingCount }))
-      .catch(() => {});
-  }
-  _getPreauthCount() {
-    var self = this;
-    return AppActions.getDeviceCount('preauthorized')
-      .then(preauthCount => self.setState({ preauthCount }))
-      .catch(() => {});
-  }
   _getAllCount() {
     var self = this;
     var accepted = self.state.acceptedCount ? self.state.acceptedCount : 0;
@@ -151,9 +133,9 @@ export default class Devices extends React.Component {
 
   _getCurrentLabel(tab = this.context.router.route.match.params.status) {
     if (routes.hasOwnProperty(tab)) {
-      return routes[tab].route;
+      return routes[tab].title;
     }
-    return routes.devices.route;
+    return routes.devices.title;
   }
 
   dialogToggle(ref) {
@@ -188,61 +170,67 @@ export default class Devices extends React.Component {
 
   render() {
     // nested tabs
-    var styles = {
-      tabStyle: {
-        display: 'block',
-        width: '100%',
-        color: '#949495',
-        textTransform: 'none'
-      },
-      activeTabStyle: {
-        display: 'block',
-        width: '100%',
-        color: '#404041',
-        textTransform: 'none'
-      },
-      listStyle: {
-        fontSize: '12px',
-        paddingTop: '10px',
-        paddingBottom: '10px',
-        whiteSpace: 'normal'
-      },
-      listButtonStyle: {
-        fontSize: '12px',
-        marginTop: '-10px',
-        paddingRight: '12px',
-        marginLeft: '0px'
-      },
-      iconListButtonStyle: {
-        fontSize: '12px',
-        paddingRight: '12px',
-        marginLeft: '0px'
-      }
-    };
-
     var duplicateActions = [
       <div key="duplicate-action-button-1" style={{ marginRight: '10px', display: 'inline-block' }}>
-        <FlatButton label="Cancel" onClick={() => this.dialogToggle('openDeviceExists')} />
+        <Button onClick={() => this.dialogToggle('openDeviceExists')}>Cancel</Button>
       </div>
     ];
 
     var pendingLabel = this.state.pendingCount ? `Pending (${this.state.pendingCount})` : 'Pending';
 
+    const tabIndex = this.context.router.route.match.params.status || 'devices';
     return (
       <div style={{ marginTop: '-15px' }}>
+        <Tabs value={tabIndex} onChange={() => this._changeTab()}>
+          <Tab component={Link} label={routes.devices.title} value={routes.devices.status} to={routes.devices.route} />
+          <Tab component={Link} label={pendingLabel} value={routes.pending.status} to={routes.pending.route} />
+          <Tab component={Link} label={routes.preauthorized.title} value={routes.preauthorized.status} to={routes.preauthorized.route} />
+          <Tab component={Link} label={routes.rejected.title} value={routes.rejected.status} to={routes.rejected.route} />
+        </Tabs>
         <AppContext.Consumer>
           {(globalSettings, docsVersion) => (
-            <Tabs
-              value={this.context.router.route.match.params.status || 'devices'}
-              onChange={tab => this._changeTab(tab)}
-              tabItemContainerStyle={{ background: 'none', width: '580px' }}
-              inkBarStyle={{ backgroundColor: '#347a87' }}
-            >
-              <Tab label={routes.devices.title} value="devices" style={this.state.tabIndex === routes.devices.route ? styles.activeTabStyle : styles.tabStyle}>
+            <div>
+              {tabIndex === routes.pending.status && (
+                <PendingDevices
+                  deviceLimit={this.state.deviceLimit}
+                  currentTab={this.state.currentTab}
+                  acceptedDevices={this.state.acceptedCount}
+                  count={this.state.pendingCount}
+                  showHelptips={this.state.showHelptips}
+                  highlightHelp={!this.state.acceptedCount}
+                  globalSettings={globalSettings}
+                  openSettingsDialog={() => this._openSettingsDialog()}
+                  restart={() => this._restartInterval()}
+                  pause={() => this._pauseInterval()}
+                />
+              )}
+              {tabIndex === routes.preauthorized.status && (
+                <PreauthDevices
+                  deviceLimit={this.state.deviceLimit}
+                  acceptedDevices={this.state.acceptedCount}
+                  currentTab={this.state.currentTab}
+                  count={this.state.preauthCount}
+                  refreshCount={() => this._getPreauthCount()}
+                  globalSettings={globalSettings}
+                  openSettingsDialog={() => this._openSettingsDialog()}
+                  pause={() => this._pauseInterval()}
+                />
+              )}
+              {tabIndex === routes.rejected.status && (
+                <RejectedDevices
+                  deviceLimit={this.state.deviceLimit}
+                  acceptedDevices={this.state.acceptedCount}
+                  currentTab={this.state.currentTab}
+                  count={this.state.rejectedCount}
+                  globalSettings={globalSettings}
+                  openSettingsDialog={() => this._openSettingsDialog()}
+                  pause={() => this._pauseInterval()}
+                />
+              )}
+              {tabIndex === routes.devices.status && (
                 <DeviceGroups
                   docsVersion={docsVersion}
                   params={this.props.params}
-                  styles={styles}
                   rejectedDevices={this.state.rejectedCount}
                   acceptedDevices={this.state.acceptedCount}
                   allCount={this.state.allCount}
@@ -252,58 +240,8 @@ export default class Devices extends React.Component {
                   openSettingsDialog={() => this._openSettingsDialog()}
                   pause={() => this._pauseInterval()}
                 />
-              </Tab>
-              <Tab label={pendingLabel} value="pending" style={this.state.tabIndex === routes.devices.route ? styles.activeTabStyle : styles.tabStyle}>
-                <PendingDevices
-                  deviceLimit={this.state.deviceLimit}
-                  styles={styles}
-                  currentTab={this.state.currentTab}
-                  acceptedDevices={this.state.acceptedCount}
-                  count={this.state.pendingCount}
-                  showHelptips={this.state.showHelptips}
-                  highlightHelp={!this.state.acceptedCount}
-                  globalSettings={globalSettings}
-                  openSettingsDialog={() => this._openSettingsDialog()}
-                  restart={this._restartInterval}
-                  pause={() => this._pauseInterval()}
-                />
-              </Tab>
-
-              <Tab
-                label={routes.preauthorized.title}
-                value="preauthorized"
-                style={this.state.tabIndex === routes.devices.route ? styles.activeTabStyle : styles.tabStyle}
-              >
-                <PreauthDevices
-                  deviceLimit={this.state.deviceLimit}
-                  acceptedDevices={this.state.acceptedCount}
-                  styles={styles}
-                  currentTab={this.state.currentTab}
-                  count={this.state.preauthCount}
-                  refreshCount={() => this._getPreauthCount()}
-                  globalSettings={globalSettings}
-                  openSettingsDialog={() => this._openSettingsDialog()}
-                  pause={() => this._pauseInterval()}
-                />
-              </Tab>
-
-              <Tab
-                label={routes.rejected.title}
-                value="rejected"
-                style={this.state.tabIndex === routes.devices.route ? styles.activeTabStyle : styles.tabStyle}
-              >
-                <RejectedDevices
-                  deviceLimit={this.state.deviceLimit}
-                  acceptedDevices={this.state.acceptedCount}
-                  styles={styles}
-                  currentTab={this.state.currentTab}
-                  count={this.state.rejectedCount}
-                  globalSettings={globalSettings}
-                  openSettingsDialog={() => this._openSettingsDialog()}
-                  pause={() => this._pauseInterval()}
-                />
-              </Tab>
-            </Tabs>
+              )}
+            </div>
           )}
         </AppContext.Consumer>
 
@@ -317,7 +255,7 @@ export default class Devices extends React.Component {
               data-event="click focus"
               style={{ left: '19%', top: '46px' }}
             >
-              <FontIcon className="material-icons">help</FontIcon>
+              <HelpIcon />
             </div>
             <ReactTooltip id="devices-nav-tip" globalEventOff="click" place="bottom" type="light" effect="solid" className="react-tooltip">
               <DevicesNav devices={this.state.pendingCount} />
@@ -325,53 +263,49 @@ export default class Devices extends React.Component {
           </div>
         ) : null}
 
-        <Dialog
-          open={this.state.openDeviceExists || false}
-          title="Device with this identity data already exists"
-          actions={duplicateActions}
-          autoDetectWindowHeight={true}
-          bodyStyle={{ paddingTop: '0', fontSize: '13px' }}
-          contentStyle={{ overflow: 'hidden', boxShadow: '0 14px 45px rgba(0, 0, 0, 0.25), 0 10px 18px rgba(0, 0, 0, 0.22)' }}
-        >
-          <p>
-            A device with matching identity data already exists. If you still want to accept {pluralize('this', this.state.duplicates)} pending{' '}
-            {pluralize('device', this.state.duplicates)}, you should first remove the following {pluralize('device', this.state.duplicates)}:
-          </p>
-          <Table>
-            <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
-              <TableRow>
-                <TableHeaderColumn className="columnHeader" tooltip="ID">
-                  ID
-                </TableHeaderColumn>
-                <TableHeaderColumn className="columnHeader" tooltip="Status">
-                  Status
-                </TableHeaderColumn>
-              </TableRow>
-            </TableHeader>
-            <TableBody ShowrowHover={true} displayRowCheckbox={false}>
-              {(this.state.duplicates || []).map(function(device) {
-                var status = device.status === 'accepted' ? '' : `/${device.status}`;
-                return (
-                  <TableRow key={device.device_id}>
-                    <TableRowColumn>
-                      <a onClick={() => this._redirect(`/devices${status}/id%3D${device.device_id}`)}>{device.device_id}</a>
-                    </TableRowColumn>
-                    <TableRowColumn className="capitalized">{device.status}</TableRowColumn>
-                  </TableRow>
-                );
-              }, this)}
-            </TableBody>
-          </Table>
+        <Dialog open={this.state.openDeviceExists || false}>
+          <DialogTitle>Device with this identity data already exists</DialogTitle>
+          <DialogContent style={{ overflow: 'hidden' }}>
+            <p>This will remove the group from the list. Are you sure you want to continue?</p>
+
+            <p>
+              A device with matching identity data already exists. If you still want to accept {pluralize('this', this.state.duplicates)} pending{' '}
+              {pluralize('device', this.state.duplicates)}, you should first remove the following {pluralize('device', this.state.duplicates)}:
+            </p>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell className="columnHeader" tooltip="ID">
+                    ID
+                  </TableCell>
+                  <TableCell className="columnHeader" tooltip="Status">
+                    Status
+                  </TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {(this.state.duplicates || []).map(function(device) {
+                  var status = device.status === 'accepted' ? '' : `/${device.status}`;
+                  return (
+                    <TableRow hover key={device.device_id}>
+                      <TableCell>
+                        <a onClick={() => this._redirect(`/devices${status}/id%3D${device.device_id}`)}>{device.device_id}</a>
+                      </TableCell>
+                      <TableCell className="capitalized">{device.status}</TableCell>
+                    </TableRow>
+                  );
+                }, this)}
+              </TableBody>
+            </Table>
+          </DialogContent>
+          <DialogActions>{duplicateActions}</DialogActions>
         </Dialog>
 
-        <Dialog
-          open={this.state.openIdDialog || false}
-          title="Default device identity attribute"
-          autoDetectWindowHeight={true}
-          bodyStyle={{ paddingTop: '0', fontSize: '13px' }}
-          contentStyle={{ overflow: 'hidden', boxShadow: '0 14px 45px rgba(0, 0, 0, 0.25), 0 10px 18px rgba(0, 0, 0, 0.22)' }}
-        >
-          <Global dialog={true} closeDialog={() => this._openSettingsDialog()} />
+        <Dialog open={this.state.openIdDialog || false}>
+          <DialogTitle>Default device identity attribute</DialogTitle>
+          <DialogContent style={{ overflow: 'hidden' }}>
+            <Global dialog={true} closeDialog={() => this._openSettingsDialog()} />
+          </DialogContent>
         </Dialog>
       </div>
     );

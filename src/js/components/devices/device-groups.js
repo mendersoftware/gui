@@ -1,30 +1,30 @@
 import React from 'react';
 import { Promise } from 'es6-promise';
-
-import Groups from './groups';
-import GroupSelector from './groupselector';
-import CreateGroup from './create-group';
-import DeviceList from './devicelist';
-import Filters from './filters';
-import Loader from '../common/loader';
+import PropTypes from 'prop-types';
 import pluralize from 'pluralize';
 import Pagination from 'rc-pagination';
 import _en_US from 'rc-pagination/lib/locale/en_US';
 
-import PropTypes from 'prop-types';
-import { setRetryTimer, clearAllRetryTimers } from '../../utils/retrytimer';
-import { isEmpty, preformatWithRequestID } from '../../helpers';
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
 
-import AppStore from '../../stores/app-store';
+import DeleteIcon from '@material-ui/icons/Delete';
+
+import CreateGroup from './create-group';
+import DeviceList from './devicelist';
+import Filters from './filters';
+import Groups from './groups';
+import GroupSelector from './groupselector';
 import AppActions from '../../actions/app-actions';
-
+import AppStore from '../../stores/app-store';
 import AppConstants from '../../constants/app-constants';
-
-import Dialog from 'material-ui/Dialog';
-import FlatButton from 'material-ui/FlatButton';
-import RaisedButton from 'material-ui/RaisedButton';
-import FontIcon from 'material-ui/FontIcon';
 import { AppContext } from '../../contexts/app-context';
+import Loader from '../common/loader';
+import { isEmpty, preformatWithRequestID } from '../../helpers';
+import { setRetryTimer, clearAllRetryTimers } from '../../utils/retrytimer';
 
 const UNGROUPED_GROUP = AppConstants.UNGROUPED_GROUP;
 
@@ -186,16 +186,10 @@ export default class DeviceGroups extends React.Component {
       }
       promisedGroupCount.then(groupCount => {
         self.setState({ groupCount });
-        self.deviceTimer = setInterval(self._getDevices, self.state.refreshDeviceLength);
+        self.deviceTimer = setInterval(() => self._getDevices(), self.state.refreshDeviceLength);
         self._getDevices();
       });
     });
-  }
-
-  _toggleDialog(ref) {
-    var state = {};
-    state[ref] = !this.state[ref];
-    this.setState(state);
   }
 
   _removeCurrentGroup() {
@@ -210,9 +204,8 @@ export default class DeviceGroups extends React.Component {
         return Promise.all(singleRemovals);
       })
       .then(() => {
-        self._toggleDialog('removeGroup');
         AppActions.setSnackbar('Group was removed successfully', 5000);
-        self.setState({ selectedGroup: null, pageNo: 1, groupCount: self.props.acceptedDevices }, () => {
+        self.setState({ selectedGroup: null, pageNo: 1, groupCount: self.props.acceptedDevices, removeGroup: !self.state.removeGroup }, () => {
           setTimeout(() => {
             self.deviceTimer = setInterval(() => self._getDevices(), self.state.refreshDeviceLength);
             self._refreshAll();
@@ -250,7 +243,7 @@ export default class DeviceGroups extends React.Component {
    */
   _getDevices() {
     var self = this;
-    var hasFilters = this.state.filters.length && this.state.filters[0].value;
+    var hasFilters = self.state.filters.length && self.state.filters[0].value;
 
     if (this.state.selectedGroup || hasFilters) {
       var params = '';
@@ -406,9 +399,7 @@ export default class DeviceGroups extends React.Component {
   _addDevicesToGroup(devices) {
     var self = this;
     // (save selected devices in state, open dialog)
-    this.setState({ tmpDevices: devices }, () => {
-      self._toggleDialog('addGroup');
-    });
+    self.setState({ tmpDevices: devices, addGroup: !self.state.addGroup });
   }
 
   _validate(invalid, group) {
@@ -536,56 +527,33 @@ export default class DeviceGroups extends React.Component {
     const self = this;
     // Add to group dialog
     var addActions = [
-      <div key="add-action-button-1" style={{ marginRight: '10px', display: 'inline-block' }}>
-        <FlatButton label="Cancel" onClick={() => this._toggleDialog('addGroup')} />
-      </div>,
-      <RaisedButton
-        key="add-action-button-2"
-        label="Add to group"
-        primary={true}
-        onClick={() => this._addToGroup()}
-        ref="save"
-        disabled={this.state.groupInvalid}
-      />
+      <Button key="add-action-button-1" style={{ marginRight: '10px' }} onClick={() => self.setState({ addGroup: !self.state.addGroup })}>
+        Cancel
+      </Button>,
+      <Button variant="contained" key="add-action-button-2" color="primary" onClick={() => this._addToGroup()} disabled={this.state.groupInvalid}>
+        Add to group
+      </Button>
     ];
 
     var removeActions = [
-      <div key="remove-action-button-1" style={{ marginRight: '10px', display: 'inline-block' }}>
-        <FlatButton label="Cancel" onClick={() => this._toggleDialog('removeGroup')} />
-      </div>,
-      <RaisedButton key="remove-action-button-2" label="Remove group" primary={true} onClick={() => this._removeCurrentGroup()} />
+      <Button key="remove-action-button-1" onClick={() => self.setState({ removeGroup: !self.state.removeGroup })} style={{ marginRight: '10px' }}>
+        Cancel
+      </Button>,
+      <Button variant="contained" key="remove-action-button-2" color="primary" onClick={() => this._removeCurrentGroup()}>
+        Remove group
+      </Button>
     ];
 
-    var groupCount = this.state.groupCount ? this.state.groupCount : this.props.acceptedDevices;
+    var groupCount = this.state.groupCount || this.props.acceptedDevices || 0;
 
     var groupName = this._isUngroupedGroup(this.state.selectedGroup) ? UNGROUPED_GROUP.name : this.state.selectedGroup;
     var allowDeviceGroupRemoval = !this._isUngroupedGroup(this.state.selectedGroup);
-
-    var styles = {
-      exampleFlatButtonIcon: {
-        height: '100%',
-        display: 'inline-block',
-        verticalAlign: 'middle',
-        float: 'left',
-        paddingLeft: '12px',
-        lineHeight: '36px',
-        marginRight: '-6px',
-        color: '#679BA5',
-        fontSize: '16px'
-      },
-      exampleFlatButton: {
-        fontSize: '12px',
-        marginLeft: '10px',
-        float: 'right',
-        marginTop: '10px'
-      }
-    };
 
     return (
       <div className="margin-top">
         <div className="leftFixed">
           <Groups
-            openGroupDialog={() => this._toggleDialog('createGroupDialog')}
+            openGroupDialog={() => self.setState({ createGroupDialog: !self.state.createGroupDialog })}
             changeGroup={group => this._handleGroupChange(group)}
             groups={this.state.groups}
             selectedGroup={this.state.selectedGroup}
@@ -605,11 +573,10 @@ export default class DeviceGroups extends React.Component {
           ) : null}
 
           {self.state.selectedGroup && allowDeviceGroupRemoval ? (
-            <FlatButton onClick={() => this._toggleDialog('removeGroup')} style={styles.exampleFlatButton} label="Remove group" labelPosition="after">
-              <FontIcon style={styles.exampleFlatButtonIcon} className="material-icons">
-                delete
-              </FontIcon>
-            </FlatButton>
+            <Button className="float-right" onClick={() => self.setState({ removeGroup: !self.state.removeGroup })}>
+              <DeleteIcon className="green" />
+              Remove group
+            </Button>
           ) : null}
           <AppContext.Consumer>
             {(globalSettings, docsVersion) => (
@@ -624,7 +591,6 @@ export default class DeviceGroups extends React.Component {
                 allCount={this.props.allCount}
                 acceptedCount={this.props.acceptedDevices}
                 groupCount={groupCount}
-                styles={this.props.styles}
                 group={groupName}
                 devices={this.state.devices}
                 paused={this.props.paused}
@@ -654,42 +620,36 @@ export default class DeviceGroups extends React.Component {
           ) : null}
         </div>
 
-        <Dialog
-          ref="addGroup"
-          open={this.state.addGroup}
-          title="Add selected devices to group"
-          actions={addActions}
-          autoDetectWindowHeight={true}
-          bodyStyle={{ fontSize: '13px' }}
-        >
-          <GroupSelector
-            devices={this.state.tmpDevices.length}
-            willBeEmpty={this.state.willBeEmpty}
-            tmpGroup={this.state.tmpGroup}
-            selectedGroup={this.state.selectedGroup}
-            selectedGroupName={groupName}
-            changeSelect={group => this._changeTmpGroup(group)}
-            validateName={(invalid, group) => this._validate(invalid, group)}
-            groups={this.state.groups.filter(group => !this._isUngroupedGroup(group))}
-            selectedField={this.state.selectedField}
-          />
+        <Dialog open={this.state.addGroup} fullWidth={true} maxWidth="sm">
+          <DialogTitle>Add selected devices to group</DialogTitle>
+          <DialogContent>
+            <GroupSelector
+              devices={this.state.tmpDevices.length}
+              willBeEmpty={this.state.willBeEmpty}
+              tmpGroup={this.state.tmpGroup}
+              selectedGroup={this.state.selectedGroup}
+              selectedGroupName={groupName}
+              changeSelect={group => this._changeTmpGroup(group)}
+              validateName={(invalid, group) => this._validate(invalid, group)}
+              groups={this.state.groups.filter(group => !this._isUngroupedGroup(group))}
+              selectedField={this.state.selectedField}
+            />
+          </DialogContent>
+          <DialogActions>{addActions}</DialogActions>
         </Dialog>
 
-        <Dialog
-          ref="removeGroup"
-          open={this.state.removeGroup}
-          title="Remove this group?"
-          actions={removeActions}
-          autoDetectWindowHeight={true}
-          bodyStyle={{ fontSize: '13px' }}
-        >
-          <p>This will remove the group from the list. Are you sure you want to continue?</p>
+        <Dialog open={this.state.removeGroup}>
+          <DialogTitle>Remove this group?</DialogTitle>
+          <DialogContent>
+            <p>This will remove the group from the list. Are you sure you want to continue?</p>
+          </DialogContent>
+          <DialogActions>{removeActions}</DialogActions>
         </Dialog>
 
         <AppContext.Consumer>
           {globalSettings => (
             <CreateGroup
-              toggleDialog={() => this._toggleDialog('createGroupDialog')}
+              toggleDialog={() => self.setState({ createGroupDialog: !self.state.createGroupDialog })}
               open={this.state.createGroupDialog}
               groups={this.state.groups}
               changeGroup={() => this._handleGroupChange()}

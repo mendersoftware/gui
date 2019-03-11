@@ -2,8 +2,8 @@ import React from 'react';
 import pluralize from 'pluralize';
 
 // material ui
-import CheckCircle from 'material-ui/svg-icons/action/check-circle';
-import ReportProblem from 'material-ui/svg-icons/action/report-problem';
+import CheckIcon from '@material-ui/icons/CheckCircle';
+import ReportProblemIcon from '@material-ui/icons/ReportProblem';
 import { BaseWidget, styles } from './baseWidget';
 
 const notificationStyles = {
@@ -20,9 +20,9 @@ export default class AcceptedDevices extends React.Component {
     const timeframe = '24h';
     let timeframeNote = 'Active in';
     let activityNotificationText = 'All devices online';
-    let notificationSymbol = <CheckCircle style={Object.assign({}, notificationStyles.base, notificationStyles.green)} />;
+    let notificationSymbol = <CheckIcon style={Object.assign({}, notificationStyles.base, notificationStyles.green)} />;
     if (this.props.inactiveCount) {
-      notificationSymbol = <ReportProblem style={notificationStyles.base} className={'warning'} />;
+      notificationSymbol = <ReportProblemIcon style={notificationStyles.base} className={'warning'} />;
       timeframeNote = 'Inactive for';
       activityNotificationText = `${this.props.inactiveCount} ${pluralize('devices', this.props.inactiveCount)} may be offline`;
     }

@@ -9,15 +9,23 @@ import Global from './global';
 import AppStore from '../../stores/app-store';
 
 // material ui
-import { List, ListItem } from 'material-ui/List';
-import Subheader from 'material-ui/Subheader';
-import { Tabs, Tab } from 'material-ui/Tabs';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import ListSubheader from '@material-ui/core/ListSubheader';
 
-const listItems = [
-  { route: '/settings/global-settings', text: 'Global settings', admin: true, component: <Global /> },
-  { route: '/settings/my-account', text: 'My account', admin: false, component: <SelfUserManagement /> },
-  { route: '/settings/user-management', text: 'User management', admin: true, component: <UserManagement /> }
-];
+const routes = {
+  global: { route: '/settings/global-settings', text: 'Global settings', admin: true, component: <Global /> },
+  myAccount: { route: '/settings/my-account', text: 'My account', admin: false, component: <SelfUserManagement /> },
+  userManagement: { route: '/settings/user-management', text: 'User management', admin: true, component: <UserManagement /> }
+};
+const myOrganization = { route: '/settings/my-organization', text: 'My organization', admin: true, component: <MyOrganization /> };
+const sectionMap = {
+  'global-settings': 'global',
+  'my-account': 'myAccount',
+  'user-management': 'userManagement',
+  'my-organization': 'myOrganization'
+};
 
 export default class Settings extends React.Component {
   static contextTypes = {
@@ -38,10 +46,27 @@ export default class Settings extends React.Component {
   }
 
   componentDidMount() {
-    if (this.state.tabIndex === '/settings/my-organization' && !this.state.hasMultitenancy) {
+    if (
+      this.context.router.route.location.pathname === '/settings' ||
+      (this.context.router.route.location.pathname === myOrganization.route && !this.state.hasMultitenancy)
+    ) {
       // redirect from organization screen if no multitenancy
-      this.context.router.history.replace('/settings/my-account');
+      this.context.router.history.replace(routes.myAccount.route);
     }
+  }
+
+  _getCurrentTab(routeDefinitions, tab = this.props.history.location.pathname) {
+    if (routeDefinitions.hasOwnProperty(tab)) {
+      return routeDefinitions[tab];
+    }
+    return routeDefinitions.myAccount;
+  }
+
+  _getCurrentSection(sections, section = this.context.router.route.match.params.section) {
+    if (sections.hasOwnProperty(section)) {
+      return sections[section];
+    }
+    return sections['my-account'];
   }
 
   _onChange() {
@@ -50,39 +75,32 @@ export default class Settings extends React.Component {
 
   render() {
     var self = this;
-    let relevantItems = listItems;
+    let relevantItems = routes;
 
     if (self.state.hasMultitenancy) {
-      const organization = { route: '/settings/my-organization', text: 'My organization', admin: true, component: <MyOrganization /> };
-      relevantItems.splice(organization.tabIndex, 0, organization);
+      relevantItems['myOrganization'] = myOrganization;
     }
-    var list = relevantItems.map((item, index) => (
-      <NavLink className="navLink settingsNav" to={item.route} key={index}>
-        <ListItem primaryText={item.text} />
-      </NavLink>
-    ));
+    var list = Object.entries(relevantItems).reduce((accu, entry) => {
+      const key = entry[0];
+      const item = entry[1];
+      accu.push(
+        <ListItem component={NavLink} className="navLink settingsNav" to={item.route} key={key}>
+          <ListItemText>{item.text}</ListItemText>
+        </ListItem>
+      );
+      return accu;
+    }, []);
 
-    const style = { display: 'block', width: '100%' };
-
+    const section = self._getCurrentSection(sectionMap, self.context.router.route.match.params.section);
     return (
       <div className="margin-top">
         <div className="leftFixed">
           <List>
-            <Subheader>Settings</Subheader>
+            <ListSubheader>Settings</ListSubheader>
             {list}
           </List>
         </div>
-        <div className="rightFluid padding-right">
-          <Tabs value={this.props.history.location.pathname} tabItemContainerStyle={{ display: 'none' }} inkBarStyle={{ display: 'none' }}>
-            {listItems.map(item => {
-              return (
-                <Tab key={item.route} value={item.route} label={item.text} style={style}>
-                  {item.component}
-                </Tab>
-              );
-            })}
-          </Tabs>
-        </div>
+        <div className="rightFluid padding-right">{self._getCurrentTab(relevantItems, section).component}</div>
       </div>
     );
   }

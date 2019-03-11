@@ -92,19 +92,19 @@ export default class Dashboard extends React.Component {
       this.context.router.history.push('/devices/pending');
       break;
     default:
-      this.context.router.push(params.route);
+      this.context.router.history.push(params.route);
     }
   }
 
   render() {
     return (
       <div className="dashboard">
-        <Devices showHelptips={this.state.showHelptips} clickHandle={this._handleClick} />
+        <Devices showHelptips={this.state.showHelptips} clickHandle={params => this._handleClick(params)} />
         <Deployments
           globalSettings={this.props.globalSettings}
           loadingActive={!this.state.doneActiveDepsLoading}
           loadingRecent={!this.state.donePastDepsLoading}
-          clickHandle={this._handleClick}
+          clickHandle={params => this._handleClick(params)}
           progress={this.state.progress}
           recent={this.state.recent}
         />

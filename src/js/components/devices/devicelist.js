@@ -10,18 +10,25 @@ import ExpandedDevice from './expanded-device';
 import pluralize from 'pluralize';
 
 // material ui
-import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
-import IconButton from 'material-ui/IconButton';
-import RaisedButton from 'material-ui/RaisedButton';
-import FlatButton from 'material-ui/FlatButton';
-import FontIcon from 'material-ui/FontIcon';
-import TextField from 'material-ui/TextField';
+import Button from '@material-ui/core/Button';
+import Checkbox from '@material-ui/core/Checkbox';
+import Icon from '@material-ui/core/Icon';
+import IconButton from '@material-ui/core/IconButton';
+import Table from '@material-ui/core/Table';
+import TableHead from '@material-ui/core/TableHead';
+import TableCell from '@material-ui/core/TableCell';
+import TableBody from '@material-ui/core/TableBody';
+import TableRow from '@material-ui/core/TableRow';
+import TextField from '@material-ui/core/TextField';
+
+import AddCircleIcon from '@material-ui/icons/AddCircle';
+import HelpIcon from '@material-ui/icons/Help';
+import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
 
 export default class Authorized extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      minHeight: 200,
       divHeight: 208,
       selectedRows: [],
       textfield: this.props.group ? decodeURIComponent(this.props.group) : 'All devices',
@@ -43,10 +50,6 @@ export default class Authorized extends React.Component {
 
     if (prevProps.currentTab !== this.props.currentTab && this.props.currentTab === 'Device groups') {
       this.setState({ selectedRows: [], expandRow: null });
-
-      if (prevProps.devices.length !== this.props.devices.length) {
-        this._adjustHeight();
-      }
     }
 
     if (prevProps.group !== this.props.group) {
@@ -58,25 +61,24 @@ export default class Authorized extends React.Component {
     }
   }
 
-  _adjustHeight() {
-    // do this when number of devices changes
-    var h = this.props.devices.length * 55;
-    this.setState({ minHeight: h });
-  }
   _sortColumn() {
     console.log('sort');
   }
-  _expandRow(rowNumber) {
-    var self = this;
+
+  _expandRow(event, rowNumber) {
+    const self = this;
+    if (event.target.closest('input') && event.target.closest('input').hasOwnProperty('checked')) {
+      return;
+    }
     AppActions.setSnackbar('');
-    var device = this.props.devices[rowNumber];
-    if (this.state.expandRow === rowNumber) {
+    var device = self.props.devices[rowNumber];
+    if (self.state.expandRow === rowNumber) {
       rowNumber = null;
     }
-
     self.setState({ expandRow: rowNumber, device: device });
     self._setDeviceDetails(device);
   }
+
   _adjustCellHeight(height) {
     this.setState({ divHeight: height + 105 });
   }
@@ -96,17 +98,6 @@ export default class Authorized extends React.Component {
         self.setState({ expandedDevice: device });
       })
       .catch(err => console.log(`Error: ${err}`));
-  }
-
-  _onRowSelection(selectedRows) {
-    if (selectedRows === 'all') {
-      var rows = Array.apply(null, { length: this.props.devices.length }).map(Number.call, Number);
-      this.setState({ selectedRows: rows, allRowsSelected: true });
-    } else if (selectedRows === 'none') {
-      this.setState({ selectedRows: [], allRowsSelected: false });
-    } else {
-      this.setState({ selectedRows: selectedRows, allRowsSelected: false });
-    }
   }
 
   _isSelected(index) {
@@ -152,50 +143,36 @@ export default class Authorized extends React.Component {
     self.setState({ showKey: !self.state.showKey });
   }
 
+  _onRowSelection(selectedRow) {
+    const self = this;
+    const { selectedRows } = self.state;
+    const selectedIndex = selectedRows.indexOf(selectedRow);
+    let updatedSelection = [];
+    if (selectedIndex === -1) {
+      updatedSelection = updatedSelection.concat(selectedRows, selectedRow);
+    } else {
+      selectedRows.splice(selectedIndex, 1);
+      updatedSelection = selectedRows;
+    }
+    self.setState({ selectedRows: updatedSelection });
+  }
+
+  onSelectAllClick() {
+    const self = this;
+    let selectedRows = Array.apply(null, { length: this.props.devices.length }).map(Number.call, Number);
+    if (self.state.selectedRows.length && self.state.selectedRows.length <= self.props.devices.length) {
+      selectedRows = [];
+    }
+    self.setState({ selectedRows });
+  }
+
   render() {
+    const self = this;
     var pluralized = pluralize('devices', this.state.selectedRows.length);
 
     var addLabel = this.props.group ? `Move selected ${pluralized} to another group` : `Add selected ${pluralized} to a group`;
     var removeLabel = `Remove selected ${pluralized} from this group`;
     var groupLabel = this.props.group ? decodeURIComponent(this.props.group) : 'All devices';
-
-    var styles = {
-      editButton: {
-        color: 'rgba(0, 0, 0, 0.54)',
-        fontSize: '18px'
-      },
-      buttonIcon: {
-        height: '100%',
-        display: 'inline-block',
-        verticalAlign: 'middle',
-        float: 'left',
-        paddingLeft: '12px',
-        lineHeight: '36px',
-        marginRight: '-6px',
-        color: 'rgb(0, 188, 212)'
-      },
-      raisedButtonIcon: {
-        height: '100%',
-        display: 'inline-block',
-        verticalAlign: 'middle',
-        float: 'left',
-        paddingLeft: '12px',
-        lineHeight: '36px',
-        marginRight: '-6px',
-        color: '#fff'
-      },
-      sortIcon: {
-        verticalAlign: 'middle',
-        marginLeft: '10px',
-        color: '#8c8c8d',
-        cursor: 'pointer'
-      },
-      paddedCell: {
-        height: '100%',
-        padding: '16px 24px',
-        width: '100%'
-      }
-    };
 
     var devices = this.props.devices.map(function(device, index) {
       var self = this;
@@ -226,7 +203,6 @@ export default class Authorized extends React.Component {
             device={this.state.expandedDevice || device}
             attrs={device.attributes}
             device_type={attrs.device_type}
-            styles={this.props.styles}
             redirect={this.props.redirect}
             artifacts={this.props.artifacts}
             selectedGroup={this.props.group}
@@ -237,69 +213,26 @@ export default class Authorized extends React.Component {
       }
 
       return (
-        <TableRow hoverable={!expanded} className={expanded ? 'expand' : null} key={device.id} selected={this._isSelected(index)}>
-          <TableRowColumn style={expanded ? { height: self.state.divHeight, padding: 0 } : { padding: 0 }}>
-            <div
-              style={styles.paddedCell}
-              onClick={e => {
-                e.preventDefault();
-                e.stopPropagation();
-                this._expandRow(index, 0);
-              }}
-            >
-              {id_attribute}
-            </div>
-          </TableRowColumn>
-          <TableRowColumn style={{ padding: 0 }}>
-            <div
-              style={styles.paddedCell}
-              onClick={e => {
-                e.preventDefault();
-                e.stopPropagation();
-                this._expandRow(index, 1);
-              }}
-            >
-              {attrs.device_type || '-'}
-            </div>
-          </TableRowColumn>
-          <TableRowColumn style={{ padding: 0 }}>
-            <div
-              style={styles.paddedCell}
-              onClick={e => {
-                e.preventDefault();
-                e.stopPropagation();
-                this._expandRow(index, 2);
-              }}
-            >
-              {attrs.artifact_name || '-'}
-            </div>
-          </TableRowColumn>
-          <TableRowColumn style={{ padding: 0 }}>
-            <div
-              style={styles.paddedCell}
-              onClick={e => {
-                e.preventDefault();
-                e.stopPropagation();
-                this._expandRow(index, 3);
-              }}
-            >
-              {device.updated_ts ? <Time value={device.updated_ts} format="YYYY-MM-DD HH:mm" /> : '-'}
-            </div>
-          </TableRowColumn>
-          <TableRowColumn style={{ width: '55px', paddingRight: '0', paddingLeft: '12px' }} className="expandButton">
-            <div
-              onClick={e => {
-                e.preventDefault();
-                e.stopPropagation();
-                this._expandRow(index, 4);
-              }}
-            >
-              <IconButton className="float-right">
-                <FontIcon className="material-icons">{expanded ? 'arrow_drop_up' : 'arrow_drop_down'}</FontIcon>
-              </IconButton>
-            </div>
-          </TableRowColumn>
-          <TableRowColumn style={{ width: '0', padding: '0', overflow: 'visible' }}>
+        <TableRow
+          hover={!expanded}
+          className={expanded ? 'expand' : null}
+          key={device.id}
+          selected={this._isSelected(index)}
+          onClick={event => self._expandRow(event, index)}
+        >
+          <TableCell padding="checkbox">
+            <Checkbox checked={self._isSelected(index)} onChange={() => self._onRowSelection(index)} />
+          </TableCell>
+          <TableCell style={expanded ? { height: self.state.divHeight } : {}}>{id_attribute}</TableCell>
+          <TableCell>{attrs.device_type || '-'}</TableCell>
+          <TableCell>{attrs.artifact_name || '-'}</TableCell>
+          <TableCell>{device.updated_ts ? <Time value={device.updated_ts} format="YYYY-MM-DD HH:mm" /> : '-'}</TableCell>
+          <TableCell style={{ width: '55px', paddingRight: '0', paddingLeft: '12px' }} className="expandButton">
+            <IconButton className="float-right">
+              <Icon className="material-icons">{expanded ? 'arrow_drop_up' : 'arrow_drop_down'}</Icon>
+            </IconButton>
+          </TableCell>
+          <TableCell style={{ width: '0', padding: '0', overflow: 'visible' }}>
             <Collapse
               springConfig={{ stiffness: 210, damping: 20 }}
               onMeasure={measurements => self._adjustCellHeight(measurements.height)}
@@ -312,31 +245,31 @@ export default class Authorized extends React.Component {
             >
               {expanded}
             </Collapse>
-          </TableRowColumn>
+          </TableCell>
         </TableRow>
       );
     }, this);
 
-    var groupNameInputs = (
+    var groupNameInputs = this.state.nameEdit ? (
       <TextField
         id="groupNameInput"
-        ref="editGroupName"
         value={this.state.textfield}
         onChange={e => this._handleGroupNameChange(e)}
         onKeyDown={() => this._handleGroupNameSave()}
-        className={this.state.nameEdit ? 'hoverText' : 'hidden'}
-        underlineStyle={{ borderBottom: 'none' }}
-        underlineFocusStyle={{ borderColor: '#e0e0e0' }}
+        className="hoverText"
+        style={{ borderBottom: 'none' }}
+        // underlineFocusStyle={{ borderColor: '#e0e0e0' }}
         errorStyle={{ color: 'rgb(171, 16, 0)' }}
         errorText={this.state.errorText}
       />
-    );
+    ) : null;
 
     var correctIcon = this.state.nameEdit ? 'check' : 'edit';
     if (this.state.errorText) {
       correctIcon = 'close';
     }
 
+    const numSelected = self.state.selectedRows.length;
     return (
       <div>
         <Loader show={this.props.loading} />
@@ -346,51 +279,45 @@ export default class Authorized extends React.Component {
             <div style={{ marginLeft: '26px' }}>
               <h2>
                 {groupNameInputs}
-                <span className={this.state.nameEdit ? 'hidden' : null}>{groupLabel}</span>
-                <span className={this.props.group ? 'hidden' : 'hidden'}>
-                  <IconButton
-                    iconStyle={styles.editButton}
-                    onClick={() => this._nameEdit()}
-                    iconClassName="material-icons"
-                    className={this.state.errorText ? 'align-top' : null}
-                  >
+                {this.state.nameEdit ? null : <span>{groupLabel}</span>}
+                {this.props.group ? (
+                  <IconButton onClick={() => this._nameEdit()} className={`material-icons ${this.state.errorText ? 'align-top' : null}`}>
                     {correctIcon}
                   </IconButton>
-                </span>
+                ) : null}
               </h2>
             </div>
 
             <div className="padding-bottom">
-              <Table allRowsSelected={this.state.allRowsSelected} multiSelectable={true} onRowSelection={rows => this._onRowSelection(rows)}>
-                <TableHeader className="clickable" enableSelectAll={true}>
+              <Table>
+                <TableHead className="clickable">
                   <TableRow>
-                    <TableHeaderColumn className="columnHeader" tooltip={(this.props.globalSettings || {}).id_attribute || 'Device ID'}>
+                    <TableCell padding="checkbox">
+                      <Checkbox
+                        indeterminate={numSelected > 0 && numSelected < self.props.devices.length}
+                        checked={numSelected === self.props.devices.length}
+                        onChange={() => self.onSelectAllClick()}
+                      />
+                    </TableCell>
+                    <TableCell className="columnHeader" tooltip={(this.props.globalSettings || {}).id_attribute || 'Device ID'}>
                       {(this.props.globalSettings || {}).id_attribute || 'Device ID'}
-                      <FontIcon
-                        onClick={this.props.openSettingsDialog}
-                        style={{ fontSize: '16px' }}
-                        color={'#c7c7c7'}
-                        hoverColor={'#aeaeae'}
-                        className="material-icons hover float-right"
-                      >
+                      <Icon onClick={this.props.openSettingsDialog} style={{ fontSize: '16px' }} className="material-icons hover float-right">
                         settings
-                      </FontIcon>
-                    </TableHeaderColumn>
-                    <TableHeaderColumn className="columnHeader" tooltip="Device type">
+                      </Icon>
+                    </TableCell>
+                    <TableCell className="columnHeader" tooltip="Device type">
                       Device type
-                    </TableHeaderColumn>
-                    <TableHeaderColumn className="columnHeader" tooltip="Current software">
+                    </TableCell>
+                    <TableCell className="columnHeader" tooltip="Current software">
                       Current software
-                    </TableHeaderColumn>
-                    <TableHeaderColumn className="columnHeader" tooltip="Last updated">
+                    </TableCell>
+                    <TableCell className="columnHeader" tooltip="Last updated">
                       Last updated
-                    </TableHeaderColumn>
-                    <TableHeaderColumn className="columnHeader" style={{ width: '55px', paddingRight: '12px', paddingLeft: '0' }} />
+                    </TableCell>
+                    <TableCell className="columnHeader" style={{ width: '55px', paddingRight: '12px', paddingLeft: '0' }} />
                   </TableRow>
-                </TableHeader>
-                <TableBody showRowHover={true} deselectOnClickaway={false} className="clickable">
-                  {devices}
-                </TableBody>
+                </TableHead>
+                <TableBody className="clickable">{devices}</TableBody>
               </Table>
 
               {this.props.showHelptips && this.props.devices.length ? (
@@ -403,7 +330,7 @@ export default class Authorized extends React.Component {
                     data-event="click focus"
                     style={{ left: 'inherit', right: '45px' }}
                   >
-                    <FontIcon className="material-icons">help</FontIcon>
+                    <HelpIcon />
                   </div>
                   <ReactTooltip id="expand-device-tip" globalEventOff="click" place="left" type="light" effect="solid" className="react-tooltip">
                     <ExpandDevice />
@@ -426,23 +353,15 @@ export default class Authorized extends React.Component {
                 <span className="margin-right">
                   {this.state.selectedRows.length} {pluralize('devices', this.state.selectedRows.length)} selected
                 </span>
-                <RaisedButton disabled={!this.state.selectedRows.length} label={addLabel} secondary={true} onClick={() => this._addToGroup()}>
-                  <FontIcon style={styles.raisedButtonIcon} className="material-icons">
-                    add_circle
-                  </FontIcon>
-                </RaisedButton>
-                {this.props.allowDeviceGroupRemoval ? (
-                  <FlatButton
-                    disabled={!this.state.selectedRows.length}
-                    style={{ marginLeft: '4px' }}
-                    className={this.props.group ? null : 'hidden'}
-                    label={removeLabel}
-                    onClick={() => this._removeFromGroup()}
-                  >
-                    <FontIcon style={styles.buttonIcon} className="material-icons">
-                      remove_circle_outline
-                    </FontIcon>
-                  </FlatButton>
+                <Button variant="contained" disabled={!this.state.selectedRows.length} color="secondary" onClick={() => this._addToGroup()}>
+                  <AddCircleIcon />
+                  {addLabel}
+                </Button>
+                {this.props.allowDeviceGroupRemoval && this.props.group ? (
+                  <Button disabled={!this.state.selectedRows.length} style={{ marginLeft: '4px' }} onClick={() => this._removeFromGroup()}>
+                    <RemoveCircleOutlineIcon />
+                    {removeLabel}
+                  </Button>
                 ) : null}
               </div>
             </div>

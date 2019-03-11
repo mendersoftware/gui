@@ -1,6 +1,6 @@
 import React from 'react';
-import IconButton from 'material-ui/IconButton';
-import FontIcon from 'material-ui/FontIcon';
+import IconButton from '@material-ui/core/IconButton';
+import Icon from '@material-ui/core/Icon';
 import Loader from '../common/loader';
 
 export default class ConfirmDecommission extends React.Component {
@@ -19,12 +19,6 @@ export default class ConfirmDecommission extends React.Component {
     this.props.decommission();
   }
   render() {
-    var styles = {
-      padding: '0',
-      marginLeft: '12px',
-      marginRight: '-24px',
-      verticalAlign: 'middle'
-    };
     return (
       <div className={this.state.class} style={{ marginRight: '12px' }}>
         <div className="float-right">
@@ -38,11 +32,11 @@ export default class ConfirmDecommission extends React.Component {
             <Loader table={true} waiting={true} show={true} style={{ height: '4px', marginLeft: '20px' }} />
           ) : (
             <div className="inline-block">
-              <IconButton id="ConfirmDecommission" style={styles} onClick={() => this._handleDecommission()}>
-                <FontIcon className="material-icons green">check_circle</FontIcon>
+              <IconButton id="ConfirmDecommission" onClick={() => this._handleDecommission()}>
+                <Icon className="material-icons green">check_circle</Icon>
               </IconButton>
-              <IconButton id="cancelDecommission" style={styles} onClick={() => this._handleCancel()}>
-                <FontIcon className="material-icons red">cancel</FontIcon>
+              <IconButton id="cancelDecommission" onClick={() => this._handleCancel()}>
+                <Icon className="material-icons red">cancel</Icon>
               </IconButton>
             </div>
           )}

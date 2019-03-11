@@ -3,12 +3,16 @@ import { Link } from 'react-router-dom';
 import Time from 'react-time';
 import isEqual from 'lodash.isequal';
 
-import { statusToPercentage } from '../../helpers';
-
 // material ui
-import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
-import FlatButton from 'material-ui/FlatButton';
-import LinearProgress from 'material-ui/LinearProgress';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import TableCell from '@material-ui/core/TableCell';
+import Button from '@material-ui/core/Button';
+import LinearProgress from '@material-ui/core/LinearProgress';
+
+import { statusToPercentage, formatTime } from '../../helpers';
 
 export default class ProgressDeviceList extends React.Component {
   constructor(props, context) {
@@ -21,17 +25,7 @@ export default class ProgressDeviceList extends React.Component {
     return !isEqual(this.props, nextProps) || !isEqual(this.state, nextState);
   }
   componentDidUpdate(prevProps) {
-    this.props.finished();
     this.setState({ prevDevices: prevProps.devices });
-  }
-  _formatTime(date) {
-    if (date) {
-      return date
-        .replace(' ', 'T')
-        .replace(/ /g, '')
-        .replace('UTC', '');
-    }
-    return;
   }
   render() {
     var self = this;
@@ -43,7 +37,7 @@ export default class ProgressDeviceList extends React.Component {
       deviceList = this.props.devices.map(function(device, index) {
         var time = '-';
         if (device.finished) {
-          time = <Time value={this._formatTime(device.finished)} format="YYYY-MM-DD HH:mm" />;
+          time = <Time value={formatTime(device.finished)} format="YYYY-MM-DD HH:mm" />;
         }
         var encodedDevice = `id=${device.id}`;
         var id_attribute = device.id;
@@ -59,11 +53,9 @@ export default class ProgressDeviceList extends React.Component {
         }
 
         var deviceLink = (
-          <div>
-            <Link style={{ fontWeight: '500' }} to={`/devices/${encodedDevice}`}>
-              {id_attribute}
-            </Link>
-          </div>
+          <Link style={{ fontWeight: '500' }} to={`/devices/${encodedDevice}`}>
+            {id_attribute}
+          </Link>
         );
 
         if (typeof this.props.deviceInventory !== 'undefined') {
@@ -110,16 +102,18 @@ export default class ProgressDeviceList extends React.Component {
           return `${percentage}%`;
         })(device.percentage);
 
+        const progressColor = status && (status.toLowerCase() === 'failure' || status.toLowerCase() === 'aborted') ? 'secondary' : 'primary';
+
         return (
           <TableRow key={index}>
-            <TableRowColumn>{deviceLink}</TableRowColumn>
-            <TableRowColumn>{device_type}</TableRowColumn>
-            <TableRowColumn>{currentArtifactLink}</TableRowColumn>
-            <TableRowColumn>
-              <Time value={this._formatTime(device.created)} format="YYYY-MM-DD HH:mm" />
-            </TableRowColumn>
-            <TableRowColumn>{time}</TableRowColumn>
-            <TableRowColumn style={{ paddingRight: '0px' }}>
+            <TableCell>{deviceLink}</TableCell>
+            <TableCell>{device_type}</TableCell>
+            <TableCell>{currentArtifactLink}</TableCell>
+            <TableCell>
+              <Time value={formatTime(device.created)} format="YYYY-MM-DD HH:mm" />
+            </TableCell>
+            <TableCell>{time}</TableCell>
+            <TableCell style={{ paddingRight: '0px' }}>
               <div style={{ marginTop: '5px' }}>{statusText}</div>
               <div>
                 {!['pending', 'decommissioned', 'already-installed'].includes(device.status.toLowerCase()) && (
@@ -127,40 +121,34 @@ export default class ProgressDeviceList extends React.Component {
                     <div style={{ textAlign: 'end', color: '#aaaaaa' }}>
                       {!['aborted', 'failure', 'noartifact'].includes(device.status.toLowerCase()) ? devicePercentage : '0%'}
                     </div>
-                    <LinearProgress
-                      color={status && (status.toLowerCase() === 'failure' || status.toLowerCase() === 'aborted') ? '#8f0d0d' : '#009E73'}
-                      mode="determinate"
-                      value={device.percentage}
-                    />
+                    <LinearProgress color={progressColor} variant="determinate" value={device.percentage} />
                   </div>
                 )}
               </div>
-            </TableRowColumn>
-            <TableRowColumn>
-              <FlatButton className={device.log ? null : 'hidden'} onClick={() => this.props.viewLog(device.id)} label="View log" />
-            </TableRowColumn>
+            </TableCell>
+            <TableCell>{device.log ? <Button onClick={() => this.props.viewLog(device.id)}>View log</Button> : null}</TableCell>
           </TableRow>
         );
       }, this);
     }
 
-    return (
-      <Table className={deviceList.length ? null : 'hidden'} selectable={false}>
-        <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
+    return deviceList.length ? (
+      <Table>
+        <TableHead>
           <TableRow>
-            <TableHeaderColumn tooltip={(this.props.globalSettings || {}).id_attribute || 'Device ID'}>
+            <TableCell tooltip={(this.props.globalSettings || {}).id_attribute || 'Device ID'}>
               {(this.props.globalSettings || {}).id_attribute || 'Device ID'}
-            </TableHeaderColumn>
-            <TableHeaderColumn tooltip="Device type">Device type</TableHeaderColumn>
-            <TableHeaderColumn tooltip="Current software">Current software</TableHeaderColumn>
-            <TableHeaderColumn tooltip="Started">Started</TableHeaderColumn>
-            <TableHeaderColumn tooltip="Finished">Finished</TableHeaderColumn>
-            <TableHeaderColumn tooltip="Deployment status">Deployment status</TableHeaderColumn>
-            <TableHeaderColumn tooltip="" />
+            </TableCell>
+            <TableCell tooltip="Device type">Device type</TableCell>
+            <TableCell tooltip="Current software">Current software</TableCell>
+            <TableCell tooltip="Started">Started</TableCell>
+            <TableCell tooltip="Finished">Finished</TableCell>
+            <TableCell tooltip="Deployment status">Deployment status</TableCell>
+            <TableCell tooltip="" />
           </TableRow>
-        </TableHeader>
-        <TableBody displayRowCheckbox={false}>{deviceList}</TableBody>
+        </TableHead>
+        <TableBody>{deviceList}</TableBody>
       </Table>
-    );
+    ) : null;
   }
 }
