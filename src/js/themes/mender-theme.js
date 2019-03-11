@@ -24,6 +24,11 @@ export default {
         color: '#9E6F8E'
       }
     },
+    MuiButton: {
+      root: {
+        borderRadius: 2
+      }
+    },
     MuiTab: {
       root: {
         textTransform: 'none'
