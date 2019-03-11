@@ -99,7 +99,6 @@ export default class Filters extends React.Component {
               </Select>
             </div>
             <TextField
-              style={{ marginTop: '-10px' }}
               value={item.value || ''}
               placeholder="Value"
               fullWidth={true}
@@ -135,13 +134,13 @@ export default class Filters extends React.Component {
           >
             <CloseIcon />
           </IconButton>
-          <p className="align-right margin-bottom-small">
+          <div className="align-right margin-top-small">
             <a onClick={() => this._clearFilters()}>Clear all filters</a>
-          </p>
+          </div>
           <List>{filters}</List>
           {this.props.isHosted ? (
-            <Button disabled={!filterCount} onClick={() => this._addFilter()} color="secondary">
-              <AddCircleIcon />
+            <Button variant="text" disabled={!filterCount} onClick={() => this._addFilter()} color="secondary">
+              <AddCircleIcon className="buttonLabelIcon" />
               Add filter
             </Button>
           ) : null}

@@ -171,5 +171,11 @@ export default createMuiTheme({
         width: '54px',
       },
     },
+    MuiDrawer: {
+      paperAnchorRight: {
+        padding: '15px 30px 5%',
+        display: 'inherit',
+      },
+    },
   },
 });
