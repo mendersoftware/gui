@@ -157,18 +157,16 @@ export default class CreateGroup extends React.Component {
       selectedRows.splice(selectedIndex, 1);
       updatedSelection = selectedRows;
     }
-    self.setState({ selectedRows: updatedSelection, createInvalid: updatedSelection.length > 0 });
+    self.setState({ selectedRows: updatedSelection, createInvalid: !updatedSelection.length });
   }
 
   onSelectAllClick() {
     const self = this;
-    let createInvalid = true;
     let selectedRows = Array.apply(null, { length: this.state.devices.length }).map(Number.call, Number);
     if (self.state.selectedRows.length && self.state.selectedRows.length <= self.state.devices.length) {
       selectedRows = [];
-      createInvalid = false;
     }
-    self.setState({ selectedRows, createInvalid });
+    self.setState({ selectedRows, createInvalid: !selectedRows.length });
   }
 
   _handleCheckBox(isChecked) {
@@ -220,6 +218,8 @@ export default class CreateGroup extends React.Component {
 
     const numSelected = self.state.selectedRows.length;
 
+    const createButtonInvalid = this.state.createInvalid || !self.state.selectedRows.length;
+
     return (
       <Dialog disableBackdropClick disableEscapeKeyDown open={self.props.open} scroll={'paper'} fullWidth={true} maxWidth="sm">
         <DialogTitle style={{ paddingBottom: '15px', marginBottom: 0 }}>{self.state.showWarning ? '' : 'Create a new group'}</DialogTitle>
@@ -250,7 +250,7 @@ export default class CreateGroup extends React.Component {
           </div>
 
           {self.state.showWarning ? (
-            <div className="help-message" style={{ marginTop: '-30px' }}>
+            <div className="help-message" style={{ marginTop: '-15px' }}>
               <h2>
                 <Icon className="material-icons" style={{ marginRight: '4px', top: '4px' }}>
                   error_outline
@@ -307,13 +307,7 @@ export default class CreateGroup extends React.Component {
             <Button onClick={() => this._handleClose()}>Cancel</Button>
           </div>
           ,
-          <Button
-            variant="contained"
-            key="create-action-button-2"
-            color="primary"
-            onClick={() => this._createGroupHandler()}
-            disabled={this.state.createInvalid}
-          >
+          <Button variant="contained" key="create-action-button-2" color="primary" onClick={() => this._createGroupHandler()} disabled={createButtonInvalid}>
             {this.state.showWarning ? 'Confirm' : 'Create group'}
           </Button>
         </DialogActions>
