@@ -92,7 +92,10 @@ export default class Login extends React.Component {
   }
 
   render() {
-    let { from } = this.props.location.state || { from: { pathname: '/' } };
+    let { from } = { from: { pathname: '/' } };
+    if (this.props.location.state && this.props.location.state.from.pathname !== '/ui/') {
+      from = this.props.location.state.from;
+    }
     let { isHosted, noExpiry, redirectToReferrer } = this.state;
     if (redirectToReferrer) {
       return <Redirect to={from} />;
@@ -106,7 +109,13 @@ export default class Login extends React.Component {
           <h3>{title}</h3>
           <img src="assets/img/loginlogo.png" alt="mender-logo" className="margin-bottom-small" />
 
-          <Form showButtons={true} buttonColor="primary" onSubmit={formdata => this._handleLogin(formdata)} submitLabel={buttonLabel} submitButtonId="login_button">
+          <Form
+            showButtons={true}
+            buttonColor="primary"
+            onSubmit={formdata => this._handleLogin(formdata)}
+            submitLabel={buttonLabel}
+            submitButtonId="login_button"
+          >
             <TextInput hint="Your email" label="Your email" id="email" required={true} validations="isLength:1,isEmail" />
             <PasswordInput className="margin-bottom-small" id="password" label="Password *" required={true} />
             <FormCheckbox id="noExpiry" label="Stay logged in" checked={noExpiry === 'true'} />
