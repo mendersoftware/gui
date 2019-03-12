@@ -64,7 +64,7 @@ export default class Filters extends React.Component {
     });
   }
   _clearFilters() {
-    this.setState({ filters: [] }, this.props.onFilterChange());
+    this.setState({ filters: [] }, this.props.onFilterChange([]));
   }
   render() {
     const self = this;
