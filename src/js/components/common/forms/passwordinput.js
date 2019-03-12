@@ -6,6 +6,7 @@ import generator from 'generate-password';
 
 import Button from '@material-ui/core/Button';
 import FormControl from '@material-ui/core/FormControl';
+import FormHelperText from '@material-ui/core/FormHelperText';
 import InputLabel from '@material-ui/core/InputLabel';
 
 import CheckIcon from '@material-ui/icons/CheckCircle';
@@ -88,7 +89,7 @@ export default class PasswordInput extends React.Component {
     return (
       <div id={`${this.props.id}-holder`} className={className}>
         <div style={{ position: 'relative' }}>
-          <FormControl>
+          <FormControl error={Boolean(this.state.errortext)}>
             <InputLabel htmlFor={this.props.id}>{this.props.label}</InputLabel>
             <PasswordField
               id={this.props.id}
@@ -98,12 +99,12 @@ export default class PasswordInput extends React.Component {
               onChange={e => this.setValue(e)}
               errorstyle={{ color: 'rgb(171, 16, 0)' }}
               style={{ width: 400 }}
-              errortext={this.state.errortext}
               required={this.props.required}
               onKeyPress={this.props.handleKeyPress}
               disabled={this.props.disabled}
               visible={this.state.visible}
             />
+            <FormHelperText id="component-error-text">{this.state.errortext}</FormHelperText>
           </FormControl>
           {this.props.create ? (
             <div>
