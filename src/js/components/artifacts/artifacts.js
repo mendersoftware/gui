@@ -137,6 +137,7 @@ export default class Artifacts extends React.Component {
                 startLoader={self._startLoading}
                 loading={!self.state.doneLoading}
                 release={self.state.selectedRelease}
+                hasReleases={self.state.releases.length}
               />
             )}
           </AppContext.Consumer>

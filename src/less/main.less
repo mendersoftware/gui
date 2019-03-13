@@ -1245,6 +1245,13 @@ textarea#inline-description {
     }
     border-width: 2px;
   }
+  &:focus {
+    outline: none !important;
+  }
+}
+
+div:focus {
+  outline: none !important;
 }
 
 .key-value-container button {
@@ -1512,7 +1519,7 @@ input.fileInput {
   font-size: 16px;
   color: @grey;
   text-align: center;
-  padding: 15px;
+  padding: 15px 30px;
   .animation(fadein 0.2s 1);
 
   img {
@@ -1919,14 +1926,11 @@ span.day {
 }
 
 // Releases & Artifacts
-.repository-list,
-.release-repo {
-  overflow: auto;
-}
 
 .repository-list {
   border-right: 1px solid @lightergrey;
-  width: 198px;
+  width: 245px;
+  min-height: 83vh;
 }
 
 .repository-list-item {

@@ -146,16 +146,35 @@ export default class ReleaseRepository extends React.Component {
       );
     });
 
+    var emptyLink = (
+      <Dropzone
+        disabled={progress > 0}
+        activeClassName="active"
+        rejectClassName="active"
+        multiple={false}
+        accept=".mender"
+        onDrop={(accepted, rejected) => this.onDrop(accepted, rejected)}>
+        {({ getRootProps, getInputProps }) => (
+          <div {...getRootProps()}>
+            <input {...getInputProps()} />
+            <p>
+              There are no Artifacts yet. <a>Browse</a> to upload an Artifact and create a new Release
+            </p>
+          </div>
+        )}
+      </Dropzone>
+    );
+
     const noArtifactsClass = release ? '' : 'muted';
     return (
-      <div className="relative release-repo" style={{ width: '100%', marginLeft: '1vw' }}>
+      <div className="relative release-repo margin-left margin-top-small" style={{ width: '100%'}}>
         <div className="flexbox">
           <KeyboardArrowRightIcon className={noArtifactsClass} />
           <div className={noArtifactsClass}>
-            <Typography variant="body1" className="bold">
+            <Typography variant="body2" style={{marginBottom: '15px'}}>
               {release ? release.Name : 'No release selected'}
             </Typography>
-            <Typography variant="subtitle2">Artifacts in this release: {release ? release.Artifacts.length : 0}</Typography>
+            <Typography variant="body1">Artifacts in this release:</Typography>
           </div>
         </div>
 
@@ -168,10 +187,10 @@ export default class ReleaseRepository extends React.Component {
           onDrop={(accepted, rejected) => this.onDrop(accepted, rejected)}
         >
           {({ getRootProps, getInputProps }) => (
-            <div {...getRootProps()} className="top-right-button fadeIn dropzone onboard" style={{ top: 0 }}>
+            <div {...getRootProps()} className="dashboard-placeholder top-right-button fadeIn dropzone onboard" style={{ top: 0 }}>
               <input {...getInputProps()} />
               <span className="icon">
-                <FileIcon style={{ height: '24px', width: '24px', verticalAlign: 'middle', marginTop: '-2px' }} />
+                <FileIcon style={{ height: '24px', width: '24px', verticalAlign: 'middle', marginTop: '-2px', marginRight: '10px' }} />
               </span>
               <span>
                 Drag here or <a>browse</a> to upload an artifact file
@@ -220,10 +239,9 @@ export default class ReleaseRepository extends React.Component {
           ) : null}
 
           {items.length || loading ? null : (
-            <div className="onboard dashboard-placeholder fadeIn" style={{ width: '500px', fontSize: '16px', margin: 'auto' }}>
+            <div className="dashboard-placeholder fadeIn" style={{ fontSize: '16px', margin: '8vh auto' }}>
               <div>
-                <p>Select a release to view its Artifact details</p>
-                <img src="assets/img/artifacts.png" alt="artifacts" />
+                { this.props.hasReleases ? <p>'Select a Release on the left to view its Artifact details'</p> : emptyLink }
               </div>
               {showHelptips ? (
                 <div>
