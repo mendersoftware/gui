@@ -4,12 +4,13 @@ import validator from 'validator';
 
 import Button from '@material-ui/core/Button';
 import FormControl from '@material-ui/core/FormControl';
+import FormHelperText from '@material-ui/core/FormHelperText';
 import Grid from '@material-ui/core/Grid';
 import Icon from '@material-ui/core/Icon';
+import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
-import TextField from '@material-ui/core/TextField';
 
 import AppActions from '../../actions/app-actions';
 import { fullyDecodeURI } from '../../helpers';
@@ -133,15 +134,19 @@ export default class GroupSelector extends React.Component {
         ) : null}
 
         {this.state.showInput || !showSelect ? (
-          <TextField
-            value={this.state.customName || ''}
-            placeholder="Name of new group"
-            label="Name of new group"
-            className="float-left clear"
-            onChange={event => this._handleTextFieldChange(event.target.value)}
-            errorstyle={{ color: 'rgb(171, 16, 0)' }}
-            errortext={this.state.errortext1}
-          />
+          <FormControl error={Boolean(self.state.errortext1)}>
+            <InputLabel htmlFor="group-name-input">Name of new group</InputLabel>
+            <Input
+              id="group-name-input"
+              className="float-left clear"
+              inputRef={input => (self.customGroup = input)}
+              value={this.state.customName || ''}
+              placeholder="Name of new group"
+              onChange={event => this._handleTextFieldChange(event.target.value)}
+              type="text"
+            />
+            <FormHelperText>{self.state.errortext1}</FormHelperText>
+          </FormControl>
         ) : null}
 
         <div className="block float-left clear">

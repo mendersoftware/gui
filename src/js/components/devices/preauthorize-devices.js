@@ -12,24 +12,28 @@ import { clearAllRetryTimers } from '../../utils/retrytimer';
 import { isEmpty, preformatWithRequestID } from '../../helpers';
 
 // material ui
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Fab from '@material-ui/core/Fab';
+import FormControl from '@material-ui/core/FormControl';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import Icon from '@material-ui/core/Icon';
+import IconButton from '@material-ui/core/IconButton';
+import Input from '@material-ui/core/Input';
 import Table from '@material-ui/core/Table';
 import TableHead from '@material-ui/core/TableHead';
 import TableCell from '@material-ui/core/TableCell';
 import TableBody from '@material-ui/core/TableBody';
 import TableRow from '@material-ui/core/TableRow';
-import IconButton from '@material-ui/core/IconButton';
-import Button from '@material-ui/core/Button';
-import Icon from '@material-ui/core/Icon';
-import ClearIcon from '@material-ui/icons/Clear';
-import InfoIcon from '@material-ui/icons/InfoOutlined';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import TextField from '@material-ui/core/TextField';
-import Fab from '@material-ui/core/Fab';
+
 import ContentAddIcon from '@material-ui/icons/Add';
+import ClearIcon from '@material-ui/icons/Clear';
 import FileIcon from '@material-ui/icons/CloudUpload';
+import InfoIcon from '@material-ui/icons/InfoOutlined';
 
 export default class Preauthorize extends React.Component {
   constructor(props, context) {
@@ -118,27 +122,27 @@ export default class Preauthorize extends React.Component {
   _updateKey(index, event) {
     var inputs = this.state.inputs;
     inputs[index].key = event.target.value;
-    this.setState({ inputs: inputs, errortext: '', errortext1: '' });
+    this.setState({ inputs: inputs, errortext: '' });
     this._convertIdentityToJSON(inputs);
   }
 
   _updateValue(index, event) {
     var inputs = this.state.inputs;
     inputs[index].value = event.target.value;
-    this.setState({ inputs: inputs, errortext: '', errortext1: '' });
+    this.setState({ inputs: inputs, errortext: '' });
     this._convertIdentityToJSON(inputs);
   }
 
   _addKeyValue() {
     var inputs = this.state.inputs;
     inputs.push({ key: '', value: '' });
-    this.setState({ inputs: inputs, errortext: '', errortext1: '' });
+    this.setState({ inputs: inputs, errortext: '' });
   }
 
   _removeInput(index) {
     var inputs = this.state.inputs;
     inputs.splice(index, 1);
-    this.setState({ inputs: inputs, errortext: '', errortext1: '' });
+    this.setState({ inputs: inputs, errortext: '' });
     this._convertIdentityToJSON(inputs);
   }
 
@@ -170,7 +174,7 @@ export default class Preauthorize extends React.Component {
         var errMsg = (err.res.body || {}).error || '';
 
         if (err.res.status === 409) {
-          self.setState({ errortext: 'A device with a matching identity data set already exists', errortext1: ' ' });
+          self.setState({ errortext: 'A device with a matching identity data set already exists' });
         } else {
           AppActions.setSnackbar(preformatWithRequestID(err.res, `The device could not be added: ${errMsg}`), null, 'Copy to clipboard');
         }
@@ -295,35 +299,27 @@ export default class Preauthorize extends React.Component {
       </Button>
     ];
 
-    var inputs = this.state.inputs.map(function(input, index) {
+    var inputs = self.state.inputs.map((input, index) => {
+      const hasError = Boolean(index === self.state.inputs.length - 1 && self.state.errortext);
       return (
-        <div className="key-value-container" key={index}>
-          <TextField
-            placeholder="Key"
-            id={`key-${index}`}
-            value={input.key}
-            style={{ marginRight: '15px', marginBottom: '15px', verticalAlign: 'top' }}
-            onChange={e => this._updateKey(index, e)}
-            errorstyle={{ color: 'rgb(171, 16, 0)' }}
-            errortext={index === this.state.inputs.length - 1 ? this.state.errortext : ''}
-          />
-          <TextField
-            placeholder="Value"
-            id={`value-${index}`}
-            style={{ verticalAlign: 'top' }}
-            value={input.value}
-            onChange={e => this._updateValue(index, e)}
-            errorstyle={{ color: 'rgb(171, 16, 0)' }}
-            errortext={index === this.state.inputs.length - 1 ? this.state.errortext1 : ''}
-          />
+        <div className="key-value-container flexbox" key={index}>
+          <FormControl error={hasError} style={{ marginRight: 15, marginTop: 10 }}>
+            <Input id={`key-${index}`} value={input.key} placeholder="Key" onChange={e => self._updateKey(index, e)} type="text" />
+            <FormHelperText>{self.state.errortext}</FormHelperText>
+          </FormControl>
+          <FormControl error={hasError} style={{ marginTop: 10 }}>
+            <Input id={`value-${index}`} value={input.value} placeholder="Value" onChange={e => self._updateValue(index, e)} type="text" />
+          </FormControl>
           {this.state.inputs.length > 1 ? (
             <IconButton disabled={!this.state.inputs[index].key || !this.state.inputs[index].value} onClick={() => this._removeInput(index)}>
               <ClearIcon fontSize="small" />
             </IconButton>
-          ) : null}
+          ) : (
+            <span style={{ minWidth: 44 }} />
+          )}
         </div>
       );
-    }, this);
+    });
 
     return (
       <div className="tab-container">

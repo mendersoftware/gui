@@ -12,14 +12,16 @@ import pluralize from 'pluralize';
 // material ui
 import Button from '@material-ui/core/Button';
 import Checkbox from '@material-ui/core/Checkbox';
+import FormControl from '@material-ui/core/FormControl';
+import FormHelperText from '@material-ui/core/FormHelperText';
 import Icon from '@material-ui/core/Icon';
 import IconButton from '@material-ui/core/IconButton';
+import Input from '@material-ui/core/Input';
 import Table from '@material-ui/core/Table';
 import TableHead from '@material-ui/core/TableHead';
 import TableCell from '@material-ui/core/TableCell';
 import TableBody from '@material-ui/core/TableBody';
 import TableRow from '@material-ui/core/TableRow';
-import TextField from '@material-ui/core/TextField';
 
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import HelpIcon from '@material-ui/icons/Help';
@@ -221,7 +223,11 @@ export default class Authorized extends React.Component {
           onClick={event => self._expandRow(event, index)}
         >
           <TableCell padding="checkbox">
-            <Checkbox style={expanded ? { paddingTop: '0', marginTop:'-4px' } : {}} checked={self._isSelected(index)} onChange={() => self._onRowSelection(index)} />
+            <Checkbox
+              style={expanded ? { paddingTop: '0', marginTop: '-4px' } : {}}
+              checked={self._isSelected(index)}
+              onChange={() => self._onRowSelection(index)}
+            />
           </TableCell>
           <TableCell style={expanded ? { height: self.state.divHeight } : {}}>{id_attribute}</TableCell>
           <TableCell>{attrs.device_type || '-'}</TableCell>
@@ -251,17 +257,19 @@ export default class Authorized extends React.Component {
     }, this);
 
     var groupNameInputs = this.state.nameEdit ? (
-      <TextField
-        id="groupNameInput"
-        value={this.state.textfield}
-        onChange={e => this._handleGroupNameChange(e)}
-        onKeyDown={() => this._handleGroupNameSave()}
-        className="hoverText"
-        style={{ marginTop: '5px' }}
-        underlinefocusstyle={{ borderColor: '#e0e0e0' }}
-        errorstyle={{ color: 'rgb(171, 16, 0)' }}
-        errortext={this.state.errortext}
-      />
+      <FormControl error={Boolean(self.state.errortext)} style={{ marginTop: 0 }}>
+        <Input
+          id="groupNameInput"
+          className="hoverText"
+          value={self.state.textfield}
+          style={{ marginTop: '5px' }}
+          underlinefocusstyle={{ borderColor: '#e0e0e0' }}
+          onChange={e => this._handleGroupNameChange(e)}
+          onKeyDown={() => this._handleGroupNameSave()}
+          type="text"
+        />
+        <FormHelperText>{self.state.errortext}</FormHelperText>
+      </FormControl>
     ) : null;
 
     var correctIcon = this.state.nameEdit ? 'check' : 'edit';
@@ -278,8 +286,8 @@ export default class Authorized extends React.Component {
           <div>
             <div style={{ marginLeft: '20px' }}>
               <h2>
-                {this.state.nameEdit ? {groupNameInputs} : <span>{groupLabel}</span>}
-                
+                {this.state.nameEdit ? groupNameInputs : <span>{groupLabel}</span>}
+
                 {this.props.group && this.props.allowDeviceGroupRemoval ? (
                   <IconButton onClick={() => this._nameEdit()} className={`material-icons ${this.state.errorText ? 'align-top' : null}`}>
                     {correctIcon}
