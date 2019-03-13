@@ -203,7 +203,7 @@ export default class BeagleBoneBlack extends React.Component {
 
             <p>
               After you have downloaded the two Artifacts, upload them to the Mender server in the{' '}
-              <a onClick={() => this.props.changePage('artifacts')}>Artifacts tab</a>.
+              <a onClick={() => this.props.changePage('releases')}>Releases tab</a>.
             </p>
 
             <p>

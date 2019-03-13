@@ -83,6 +83,18 @@ const AppActions = {
     var search = search_term ? `&${search_term}` : '';
     return DevicesApi.get(`${inventoryApiUrl}/devices?per_page=${per_page}&page=${page}${search}`).then(res => res.body);
   },
+  getAllDevices: () => {
+    const getAllDevices = (per_page = 200, page = 1, devices = []) =>
+      DevicesApi.get(`${inventoryApiUrl}/devices?per_page=${per_page}&page=${page}`).then(res => {
+        var links = parse(res.headers['link']);
+        devices.push(...res.body);
+        if (links.next) {
+          return getAllDevices(per_page, page + 1, devices);
+        }
+        return Promise.resolve(devices);
+      });
+    return getAllDevices();
+  },
   getNumberOfDevicesInGroup: function(group) {
     var forGroup = group ? `&group=${group}` : '&has_group=false';
     return DevicesApi.get(`${inventoryApiUrl}/devices?per_page=1&page=1${forGroup}`).then(res => Promise.resolve(Number(res.headers['x-total-count'])));
@@ -277,6 +289,8 @@ const AppActions = {
       return Promise.resolve(artifacts);
     }),
 
+  getArtifactUrl: id => ArtifactsApi.get(`${deploymentsApiUrl}/artifacts/${id}/download`),
+
   uploadArtifact: (meta, file, progress) => {
     var formData = new FormData();
     formData.append('size', file.size);
@@ -299,6 +313,16 @@ const AppActions = {
     AppDispatcher.handleViewAction({
       actionType: AppConstants.SET_DEPLOYMENT_ARTIFACT,
       artifact: artifact
+    }),
+
+  /* Releases */
+  getReleases: () =>
+    ArtifactsApi.get(`${deploymentsApiUrl}/deployments/releases`).then(releases => {
+      AppDispatcher.handleViewAction({
+        actionType: AppConstants.RECEIVE_RELEASES,
+        releases
+      });
+      return Promise.resolve(releases);
     }),
 
   /*Deployments */

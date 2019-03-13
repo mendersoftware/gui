@@ -109,7 +109,7 @@ export default class VirtualDevice extends React.Component {
 
             <p>
               Artifacts for your virtual devices are already uploaded to your account so you can start deploying updates right away. Take a look at the{' '}
-              <a onClick={() => this.props.changePage('artifacts')}>Artifacts tab</a>. If they have been removed, you can download them again from the{' '}
+              <a onClick={() => this.props.changePage('releases')}>Releases tab</a>. If they have been removed, you can download them again from the{' '}
               <a onClick={() => this.props.changePage('help/connecting-devices/demo-artifacts')}>download page</a>.
             </p>
 

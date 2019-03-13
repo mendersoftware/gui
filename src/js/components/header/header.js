@@ -311,7 +311,7 @@ export default class Header extends React.Component {
         </Toolbar>
 
         <div id="header-nav">
-          {this.state.showHelptips && this.state.acceptedDevices && !this.state.artifacts.length && !matchPath('/artifacts') ? (
+          {this.state.showHelptips && this.state.acceptedDevices && !this.state.artifacts.length && !matchPath('/releases') ? (
             <div>
               <div
                 id="onboard-8"

@@ -190,7 +190,7 @@ export default class RaspberryPi extends React.Component {
             )}
             <p>
               After you have downloaded the two Artifacts, upload them to the Mender server in the{' '}
-              <a onClick={() => this.props.changePage('artifacts')}>Artifacts tab</a>.
+              <a onClick={() => this.props.changePage('releases')}>Releases tab</a>.
             </p>
             <p>
               Then head over to the <a onClick={() => this.props.changePage('deployments')}>Deployments tab</a> and do some remote deployments to your device!

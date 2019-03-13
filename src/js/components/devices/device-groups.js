@@ -481,15 +481,13 @@ export default class DeviceGroups extends React.Component {
     clearInterval(self.deviceTimer);
     var id, group;
     // check filters for ID or group, this is temporary until full filtering functionality
-    for (var i = 0; i < filters.length; i++) {
-      if (filters[i].key === 'id') {
-        id = filters[i].value;
-        break;
-      } else if (filters[i].key === 'group') {
-        group = filters[i].value;
-        break;
+    filters.forEach(filter => {
+      if (filter.key === 'id') {
+        id = filter.value;
+      } else if (filter.key === 'group') {
+        group = filter.value;
       }
-    }
+    });
 
     if (id) {
       // get single device by id

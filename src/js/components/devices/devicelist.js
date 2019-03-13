@@ -278,10 +278,10 @@ export default class Authorized extends React.Component {
           <div>
             <div style={{ marginLeft: '20px' }}>
               <h2>
-                {groupNameInputs}
-                {this.state.nameEdit ? null : <span>{groupLabel}</span>}
-                {this.props.group && (this.props.group!=='Ungrouped') ? (
-                  <IconButton onClick={() => this._nameEdit()} className={`material-icons ${this.state.errortext ? 'align-top' : null}`}>
+                {this.state.nameEdit ? {groupNameInputs} : <span>{groupLabel}</span>}
+                
+                {this.props.group && this.props.allowDeviceGroupRemoval ? (
+                  <IconButton onClick={() => this._nameEdit()} className={`material-icons ${this.state.errorText ? 'align-top' : null}`}>
                     {correctIcon}
                   </IconButton>
                 ) : null}
