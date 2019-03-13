@@ -5,49 +5,34 @@ import Button from '@material-ui/core/Button';
 import Drawer from '@material-ui/core/Drawer';
 import IconButton from '@material-ui/core/IconButton';
 import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import MenuItem from '@material-ui/core/MenuItem';
-import Select from '@material-ui/core/Select';
-import TextField from '@material-ui/core/TextField';
 
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import CloseIcon from '@material-ui/icons/Close';
 import FilterListIcon from '@material-ui/icons/FilterList';
+
+import FilterItem from './filteritem';
 
 export default class Filters extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
       showFilters: false,
-      filters: this.props.filters || []
+      filters: this.props.filters
     };
-  }
-  componentWillReceiveProps(nextProps) {
-    this.setState({ filters: nextProps.filters });
-  }
-  _updateFilterKey(index, key) {
-    var filterArray = this.state.filters;
-    filterArray[index] = { key, value: '' };
-    this.setState({ filters: filterArray });
-  }
-  _updateFilterValue(index, value) {
-    var filterArray = this.state.filters;
-    filterArray[index].value = value;
-    this.setState({ filters: filterArray }, this.props.onFilterChange(filterArray));
   }
   _addFilter() {
     var filterArray = this.state.filters;
     filterArray.push({ key: '', value: '' });
     this.setState({ filters: filterArray });
   }
+  _updateFilters(filter, index) {
+    let filters = this.state.filters;
+    filters[index] = filter;
+    this.setState({ filters }, this.props.onFilterChange(filters));
+  }
   _removeFilter(index) {
     var filterArray = this.state.filters;
-    if (filterArray.length > 1) {
-      filterArray.splice(index, 1);
-    } else {
-      filterArray = [];
-    }
+    filterArray.splice(index, 1);
     this.setState({ filters: filterArray }, this.props.onFilterChange(filterArray));
   }
   _toggleNav() {
@@ -55,69 +40,42 @@ export default class Filters extends React.Component {
       showFilters: !this.state.showFilters
     });
   }
-  _closeNav() {
-    if (!this.state.showFilters) {
-      return;
-    }
-    this.setState({
-      showFilters: false
-    });
-  }
   _clearFilters() {
     this.setState({ filters: [] }, this.props.onFilterChange([]));
   }
   render() {
     const self = this;
-    var attributes = Object.entries(this.props.attributes).reduce(
-      (accu, item, index) => {
-        accu.push(
-          <MenuItem key={index} value={item}>
-            {item[1]}
-          </MenuItem>
-        );
-        return accu;
-      },
-      [
-        <MenuItem key="filter-placeholder" disabled>
-          Filter by
-        </MenuItem>
-      ]
-    );
-
+    const filters = self.state.filters.length ? self.state.filters : [{ key: '', value: '' }];
     var filterCount = 0;
-    var fromProps = self.state.filters.length ? self.state.filters : [{ key: '', value: '' }];
-    var filters = fromProps.map((item, index) => {
-      filterCount = item.value ? filterCount + 1 : filterCount;
-      return (
-        <ListItem className="filterPair" key={index}>
-          <ListItemText>
-            <div>
-              {index === 0 && item.value ? (
-                <IconButton className="material-icons remove-icon" onClick={() => self._removeFilter(index)} style={{ position: 'absolute' }}>
-                  remove_circle
-                </IconButton>
-              ) : null}
-              <Select fullWidth={true} value={item.key} autoWidth={true} onChange={event => self._updateFilterKey(index, event.target.value[0])}>
-                {attributes}
-              </Select>
-            </div>
-            <TextField
-              value={item.value || ''}
-              placeholder="Value"
-              fullWidth={true}
-              disabled={!item.key}
-              errorStyle={{ color: 'rgb(171, 16, 0)' }}
-              onChange={event => self._updateFilterValue(index, event.target.value)}
-            />
-          </ListItemText>
-        </ListItem>
-      );
-    });
+    const filterAttributes = Object.entries(self.props.attributes).map(item => ({ key: item[0], value: item[1] }));
 
+    const remainingFilters = filterAttributes.reduce((accu, item) => {
+      const isInUse = filters.find(filter => filter.key === item.key);
+      if (isInUse) {
+        filterCount = filterCount + 1;
+      } else {
+        accu.push(item);
+      }
+      return accu;
+    }, []);
+
+    const filterItems = filters.map((item, index) => (
+      <FilterItem
+        key={index}
+        index={index}
+        filter={item}
+        filters={remainingFilters}
+        filterAttributes={filterAttributes}
+        onRemove={() => self._removeFilter(index)}
+        onSelect={filter => self._updateFilters(filter, index)}
+      />
+    ));
+
+    const canAddMore = remainingFilters.length && filterCount;
     const drawerStyles = this.state.showFilters ? { overflow: 'visible', top: '57px' } : { overflow: 'hidden', top: '57px' };
     return (
       <div style={{ position: 'relative' }}>
-        <Button style={{ position: 'absolute', top: 0, right: 0, zIndex: 100 }} color="secondary" onClick={() => this._toggleNav()}>
+        <Button style={{ position: 'absolute', top: 0, right: 0, zIndex: 100 }} color="secondary" onClick={() => self.setState({ showFilters: true })}>
           <FilterListIcon className="buttonLabelIcon" />
           {filterCount > 0 ? `Filters (${filterCount})` : 'Filters'}
         </Button>
@@ -128,11 +86,11 @@ export default class Filters extends React.Component {
           opensecondary="true"
           PaperProps={{ style: { width: 320, padding: 20, ...drawerStyles } }}
           BackdropProps={{ style: drawerStyles }}
-          onClose={() => this._closeNav()}
+          onClose={() => self.setState({ showFilters: false })}
         >
           <IconButton
             className="closeSlider"
-            onClick={() => this._toggleNav()}
+            onClick={() => self.setState({ showFilters: false })}
             style={{ position: 'absolute', left: '-25px', background: 'white', top: '20px' }}
           >
             <CloseIcon />
@@ -140,9 +98,9 @@ export default class Filters extends React.Component {
           <div className="align-right margin-top-small">
             <a onClick={() => this._clearFilters()}>Clear all filters</a>
           </div>
-          <List>{filters}</List>
+          <List>{filterItems}</List>
           {this.props.isHosted ? (
-            <Button variant="text" disabled={!filterCount} onClick={() => this._addFilter()} color="secondary">
+            <Button variant="text" disabled={!canAddMore} onClick={() => this._addFilter()} color="secondary">
               <AddCircleIcon className="buttonLabelIcon" />
               Add filter
             </Button>
