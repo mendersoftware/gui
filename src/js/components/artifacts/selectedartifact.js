@@ -12,6 +12,8 @@ import Input from '@material-ui/core/Input';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import InputLabel from '@material-ui/core/InputLabel';
 
+import AddIcon from '@material-ui/icons/Add';
+import RemoveIcon from '@material-ui/icons/Remove';
 import CancelIcon from '@material-ui/icons/Cancel';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 
@@ -73,7 +75,6 @@ export default class SelectedArtifact extends React.Component {
       },
       listStyle: {
         fontSize: '12px',
-        paddingTop: '10px',
         paddingBottom: '10px',
         display: 'flex',
         justifyContent: 'space-between',
@@ -81,15 +82,16 @@ export default class SelectedArtifact extends React.Component {
       }
     };
 
+    // TODO! list other artifact metadata too, not just description
     return (
       <div className={artifact.name == null ? 'muted' : null}>
-        <h3 className="margin-bottom-none">Artifact details</h3>
         <div style={styles.listStyle}>
-          <FormControl className="list-item">
+          <FormControl className="list-item list-item-large">
             <InputLabel htmlFor="artifact-description">Description</InputLabel>
             <Input
               id="artifact-description"
               type="text"
+              style={{color: '#404041', fontSize: '13px'}}
               disabled={!self.state.descEdit}
               value={self.state.description}
               onKeyDown={e => this._onToggleEditing(e)}
@@ -109,24 +111,27 @@ export default class SelectedArtifact extends React.Component {
           square
           expanded={self.state.showArtifacts}
           onChange={() => self._toggleArtifactContentVisibility()}
-          style={{ background: 'transparent', borderTop: 'none', padding: 0 }}
+          style={{ background: '#e9e9e9', borderTop: 'none', padding: '0 15px', margin: '30px 0' }}
         >
-          <ExpansionPanelSummary style={{ padding: 0 }}>
-            <h4>Artifact contents</h4>
+          <ExpansionPanelSummary style={{padding: 0}}>
+            <p>Artifact contents</p>
+            <div style={{marginLeft:'auto'}}>{self.state.showArtifacts ? <RemoveIcon /> : <AddIcon /> }</div>
           </ExpansionPanelSummary>
           <ExpansionPanelDetails style={{ padding: 0 }}>
-            {artifact.updates ? artifact.updates.map((update, index) => <ArtifactPayload payload={update} key={`artifact-update-${index}`} />) : <div />}
+            {artifact.updates ? artifact.updates.map((update, index) => <ArtifactPayload index={index} payload={update} key={`artifact-update-${index}`} />) : <div />}
           </ExpansionPanelDetails>
         </ExpansionPanel>
 
         <Button component="a" href={self.state.downloadUrl} target="_blank" disabled={!self.state.downloadUrl}>
-          <ExitToAppIcon style={{ transform: 'rotateZ(90deg)' }} />
+          <ExitToAppIcon style={{ transform: 'rotateZ(90deg)' }} className="buttonLabelIcon" />
           Download Artifact
         </Button>
-        <Button onClick={() => self.props.removeArtifact(self.props.artifact)}>
-          <CancelIcon className="red auth" />
-          Remove this artifact?
-        </Button>
+        <div className="margin-left inline">
+          <Button onClick={() => self.props.removeArtifact(self.props.artifact)}>
+            <CancelIcon className="red auth buttonLabelIcon" />
+            Remove this artifact?
+          </Button>
+        </div>
       </div>
     );
   }

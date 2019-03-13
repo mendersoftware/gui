@@ -64,13 +64,11 @@ export default createMuiTheme({
     },
     MuiExpansionPanelSummary: {
       root: {
-        marginBottom: -1,
+        marginBottom: 0,
         height: 48,
-        '&:hover': {
-          backgroundColor: colors.expansionBackground
-        },
         '&$expanded': {
-          height: 48
+          height: 48,
+          minHeight: 48,
         }
       },
       content: {
@@ -129,7 +127,6 @@ export default createMuiTheme({
     MuiButton: {
       root: {
         borderRadius: 2,
-        color: colors.linkgreen,
         '&:hover': {
           colors: colors.mendergreen
         }

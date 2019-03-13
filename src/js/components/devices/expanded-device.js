@@ -189,7 +189,7 @@ export default class ExpandedDevice extends React.Component {
     var deviceIdentity = [];
     deviceIdentity.push(
       <div key="id_checksum">
-        <ListItem classes={{ root: 'device-attributes', disabled: 'opaque' }} disabled={true}>
+        <ListItem classes={{ root: 'attributes', disabled: 'opaque' }} disabled={true}>
           <ListItemText primary="Device ID" secondary={(this.props.device || {}).id || '-'} />
         </ListItem>
         <Divider />
@@ -201,7 +201,7 @@ export default class ExpandedDevice extends React.Component {
       deviceIdentity = Object.entries(data).reduce((accu, item) => {
         accu.push(
           <div key={item[0]}>
-            <ListItem classes={{ root: 'device-attributes', disabled: 'opaque' }} disabled={true}>
+            <ListItem classes={{ root: 'attributes', disabled: 'opaque' }} disabled={true}>
               <ListItemText primary={item[0]} secondary={item[1]} />
             </ListItem>
             <Divider />

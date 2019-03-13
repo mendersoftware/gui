@@ -87,6 +87,11 @@ ul.unstyled {
   visibility: hidden;
 }
 
+
+time {
+  white-space: nowrap; 
+}
+
 /* icon */
 
 .pending-icon {
@@ -994,6 +999,10 @@ table thead.clickable tr > th:first-child {
   width: 30%;
   vertical-align: top;
   -webkit-line-clamp: 3;
+
+  &.list-item-large {
+    width: 60%;
+  }
 }
 
 #device-identity .list-horizontal-display > div,
@@ -1045,10 +1054,12 @@ table thead.clickable tr > th:first-child {
 }
 
 .file-details {
-  padding: 0.75vw;
+  padding: 10px 15px 30px;
+  width: 100%;
   border-radius: 4px;
   margin: 10px 3px 20px 0;
-  border: 1px solid @lightgrey;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  position: relative;
 }
 .file-meta {
   padding: 0 16px;
@@ -1408,7 +1419,7 @@ tr.expand {
   }
 }
 
-.device-attributes.opaque {
+.attributes.opaque {
   opacity: 1;
 }
 
@@ -1929,9 +1940,14 @@ span.day {
 
 .repository-list {
   border-right: 1px solid @lightergrey;
-  width: 245px;
+  min-width: 190px;
   min-height: 83vh;
 }
+
+
+.release-repo > .flexbox:first-of-type {
+  padding-top: 15px;
+} 
 
 .repository-list-item {
   &.active {
