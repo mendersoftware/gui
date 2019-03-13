@@ -9,8 +9,7 @@ import Loader from '../common/loader';
 import { BaseWidget } from './widgets/baseWidget';
 import RedirectionWidget from './widgets/redirectionwidget';
 import CompletedDeployments from './widgets/completeddeployments';
-import Recent from './recent';
-import { FontIcon } from 'material-ui';
+import FontIcon from 'material-ui/FontIcon';
 
 const refreshDeploymentsLength = 30000;
 
@@ -126,7 +125,6 @@ export default class Deployments extends React.Component {
       <div>
         <h3 className="dashboard-header">Deployments</h3>
         <div className="deployments" style={Object.assign({ marginBottom: '50px', marginTop: '50px' })}>
-          <h4>Current deployments</h4>
           {loading ? (
             <Loader show={loading} fade={true} />
           ) : (
@@ -155,8 +153,6 @@ export default class Deployments extends React.Component {
               />
             </div>
           )}
-          <h4>Latest deployment activity</h4>
-          <Recent loading={loading} clickHandle={self.props.clickHandle} deployments={deployments} />
         </div>
       </div>
     );
