@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import CopyToClipboard from 'react-copy-to-clipboard';
 
 import Button from '@material-ui/core/Button';
@@ -66,7 +67,7 @@ export default class VirtualDevice extends React.Component {
                   For security reasons, devices can only authenticate with Hosted Mender if they have a valid tenant token. The tenant token is unique for your
                   organization and ensures that only devices that you own are able to connect to your Hosted Mender account, so please keep it secure.
                 </p>
-                <p>You can see your tenant token by clicking your user email at the top right and then choosing "My organization".</p>
+                <p>{'You can see your tenant token by clicking your user email at the top right and then choosing "My organization".'}</p>
                 <p>Note however that we have pasted your tenant token in for you in the instructions below.</p>
               </div>
             ) : null}
@@ -101,20 +102,19 @@ export default class VirtualDevice extends React.Component {
 
             <p>
               When complete, you will see the virtual device login screen in your terminal. At this point it will take a couple of more minutes before the
-              device will appear in your <a onClick={() => this.props.changePage('devices')}>Devices tab</a>. Authorize the device to enable you to deploy
-              updates to it.
+              device will appear in your <Link to={'/devices'}>Devices tab</Link>. Authorize the device to enable you to deploy updates to it.
             </p>
 
             <h3>Deploy updates</h3>
 
             <p>
               Artifacts for your virtual devices are already uploaded to your account so you can start deploying updates right away. Take a look at the{' '}
-              <a onClick={() => this.props.changePage('releases')}>Releases tab</a>. If they have been removed, you can download them again from the{' '}
-              <a onClick={() => this.props.changePage('help/connecting-devices/demo-artifacts')}>download page</a>.
+              <Link to="/releases">Releases tab</Link>. If they have been removed, you can download them again from the{' '}
+              <Link to="/help/connecting-devices/demo-artifacts">download page</Link>.
             </p>
 
             <p>
-              Then head over to the <a onClick={() => this.props.changePage('deployments')}>Deployments tab</a> and do some deployments to your virtual devices!
+              Then head over to the <Link to="/deployments">Deployments tab</Link> and do some deployments to your virtual devices!
             </p>
 
             <h3>Manage the virtual device</h3>
@@ -125,8 +125,8 @@ export default class VirtualDevice extends React.Component {
             </p>
             <p>You may also start more than one virtual device if you want.</p>
             <p>
-              To stop a virtual device after you are done testing, simply switch to its terminal, login as root (no password) and type "shutdown -h now" in its
-              terminal. You can then also decommission it in the Hosted Mender interface.
+              {`To stop a virtual device after you are done testing, simply switch to its terminal, login as root (no password) and type "shutdown -h now" in its
+              terminal. You can then also decommission it in the Hosted Mender interface.`}
             </p>
           </div>
         ) : (
@@ -155,7 +155,7 @@ export default class VirtualDevice extends React.Component {
               runs as a daemon on the device, is asking to join the Mender server so that the server can manage its deployments.
             </p>
             <p>
-              You can view and authorize pending devices on the <a onClick={() => this.props.changePage('devices')}>Devices tab</a>.
+              You can view and authorize pending devices on the <Link to="/devices">Devices tab</Link>.
             </p>
           </div>
         )}

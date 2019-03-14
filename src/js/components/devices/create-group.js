@@ -10,7 +10,6 @@ import DialogContent from '@material-ui/core/DialogContent';
 import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormHelperText from '@material-ui/core/FormHelperText';
-import Icon from '@material-ui/core/Icon';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import Table from '@material-ui/core/Table';
@@ -18,6 +17,8 @@ import TableHead from '@material-ui/core/TableHead';
 import TableCell from '@material-ui/core/TableCell';
 import TableBody from '@material-ui/core/TableBody';
 import TableRow from '@material-ui/core/TableRow';
+
+import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
 
 import AppActions from '../../actions/app-actions';
 import AppConstants from '../../constants/app-constants';
@@ -249,12 +250,7 @@ export default class CreateGroup extends React.Component {
 
           {self.state.showWarning ? (
             <div className="help-message" style={{ marginTop: '-15px' }}>
-              <h2>
-                <Icon className="material-icons" style={{ marginRight: '4px', top: '4px' }}>
-                  error_outline
-                </Icon>
-                You're creating a new group
-              </h2>
+              <h2>{`${<ErrorOutlineIcon style={{ marginRight: '4px', top: '4px' }} />} You're creating a new group`}</h2>
               <p>
                 Just a heads-up: if a device is already in another group, it will be removed from that group and moved to the new one. A device can only belong
                 to one group at a time.

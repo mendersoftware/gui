@@ -73,12 +73,6 @@ export default class Login extends React.Component {
 
         // logged in, so redirect
         self.setState({ redirectToReferrer: true });
-        // var location = self.props.location;
-        // if (location.state && location.state.nextPathname) {
-        //   self.props.router.replace(location.state.nextPathname);
-        // } else {
-        //   self.props.router.replace('/');
-        // }
         return AppActions.setSnackbar('');
       })
       .catch(err => {
@@ -125,7 +119,7 @@ export default class Login extends React.Component {
           {isHosted ? (
             <div className="flexbox margin-top" style={{ color: 'rgba(0, 0, 0, 0.3)', justifyContent: 'center' }}>
               <span>
-                Don't have an account?{' '}
+                Don&#39;t have an account?{' '}
                 <a style={{ marginLeft: '4px' }} href="https://mender.io/signup" target="_blank">
                   Sign up here
                 </a>

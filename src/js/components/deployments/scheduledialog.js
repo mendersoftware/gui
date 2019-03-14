@@ -89,7 +89,7 @@ export default class ScheduleDialog extends React.Component {
           <p className={tmpDevices.length ? 'hidden' : 'italic'}>No devices in this group match the device type or search term.</p>
           <Divider />
           <p>
-            <Link to={`/devices/${group}`}>{group ? 'Go to group' : 'Go to devices'}></Link>
+            <Link to={`/devices/${group}`}>{group ? 'Go to group' : 'Go to devices'}</Link>
           </p>
         </div>
       </Drawer>

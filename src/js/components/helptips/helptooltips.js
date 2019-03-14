@@ -11,10 +11,10 @@ export class ReviewDevices extends React.Component {
       <div>
         <h3>Getting started</h3>
         <hr />
-        <p>If this is the first time you've used Mender, we have provided a virtual device for you to create a test deployment.</p>
+        <p>{`If this is the first time you've used Mender, we have provided a virtual device for you to create a test deployment.`}</p>
         <p>
           {this.props.devices} {pluralize('devices', this.props.devices)} {pluralize('are', this.props.devices)} waiting to be authorized by you. Click{' '}
-          <Link to={`/devices/pending`}>'View details'</Link> to see the {pluralize('devices', this.props.devices)} which {pluralize('are', this.props.devices)}{' '}
+          <Link to={`/devices/pending`}>View details</Link> to see the {pluralize('devices', this.props.devices)} which {pluralize('are', this.props.devices)}{' '}
           requesting to be accepted.
         </p>
         <p>
@@ -33,9 +33,7 @@ export class AuthDevices extends React.Component {
       <div>
         <h3>Authorize devices</h3>
         <hr />
-        <p>
-          There {this.props.devices === 1 ? 'is a' : 'are'} {pluralize('devices', this.props.devices)} waiting to be authorized.
-        </p>
+        <p>{`There ${this.props.devices === 1 ? 'is a' : 'are'} ${pluralize('devices', this.props.devices)} waiting to be authorized.`}</p>
         <p>
           This means that the Mender client, which runs as a daemon on each device, is asking to join the Mender server so that the server can manage its
           deployments.
@@ -57,7 +55,7 @@ export class ExpandAuth extends React.Component {
         <h3>Review device details</h3>
         <hr />
         <p>You should review each device before authorizing it to join the server.</p>
-        <p>Click to expand the row to view further information about the device's identity.</p>
+        <p>{`Click to expand the row to view further information about the device's identity.`}</p>
         <p>
           <a className="hidehelp" onClick={toggleHelptips}>
             Hide all help tips
@@ -158,7 +156,7 @@ export class DevicesNav extends React.Component {
           </div>
         ) : (
           <div>
-            <p>There aren't any devices connected yet.</p>
+            <p>{`There aren't any devices connected yet.`}</p>
             <p>The first step is to connect devices to the Mender server.</p>
             <p>
               Go to the <Link to="/devices/pending">Pending devices tab</Link>.
@@ -201,7 +199,7 @@ export class DeploymentsNav extends React.Component {
       <div>
         <h3>Create a Deployment</h3>
         <hr />
-        <p>Looks like you're ready to make your first deployment!</p>
+        <p>{`Looks like you're ready to make your first deployment!`}</p>
         <p>
           You have connected {this.props.devices === 1 ? 'a device' : 'devices'} to your server and uploaded an Artifact, so now go to the{' '}
           <Link to="/deployments">Deployments tab</Link> to create a deployment.
@@ -290,17 +288,19 @@ export class CreateDeployment extends React.Component {
 
         {this.props.artifacts && this.props.devices ? (
           <p>
-            Looks like you're ready to make your first deployment - you have {this.props.devices === 1 ? 'a device' : 'devices'} connected to the server and a
-            Release ready to deploy to them. Click <b>Create a deployment</b>.
+            {`Looks like you're ready to make your first deployment - you have ${
+              this.props.devices === 1 ? 'a device' : 'devices'
+            } connected to the server and a Release ready to deploy to them. Click ${<b>Create a deployment</b>}.`}
           </p>
         ) : this.props.devices ? (
           <p>
-            You're not quite ready to make your first deployment yet - you have {this.props.devices === 1 ? 'a device' : 'devices'} connected to the server, but
-            no Artifact uploaded. Go to the <Link to="/releases">Releases tab</Link>.
+            {`You're not quite ready to make your first deployment yet - you have ${
+              this.props.devices === 1 ? 'a device' : 'devices'
+            } connected to the server, but no Artifact uploaded. Go to the ${<Link to="/releases">Releases tab</Link>}.`}
           </p>
         ) : (
           <p>
-            You're not quite ready to make your first deployment yet - there are no devices connected to the server. Go to the{' '}
+            You&#39;re not quite ready to make your first deployment yet - there are no devices connected to the server. Go to the{' '}
             <Link to="/devices/pending">Pending devices tab</Link>.
           </p>
         )}
@@ -341,7 +341,7 @@ export class ProgressDeployment extends React.Component {
       <div>
         <h3>Tracking deployment progress</h3>
         <hr />
-        <p>In this row you can see the deployment's status at a glance.</p>
+        <p>{`In this row you can see the deployment's status at a glance.`}</p>
         <p>As the deployment progresses, you can click to see a more detailed view of the deployment progress broken down by individual device.</p>
         <p>
           <a className="hidehelp" onClick={toggleHelptips}>
@@ -386,10 +386,10 @@ export class NoDevices extends React.Component {
       <div>
         <h3>No devices found</h3>
         <hr />
-        <p>There aren't any devices connected or requesting to join the Mender server.</p>
+        <p>{`There aren't any devices connected or requesting to join the Mender server.`}</p>
         <p>When a new device is requesting to join the server it will show up here, and you will have the choice to accept it or not.</p>
         <p>
-          If you don't see any test devices here, or if you have a physical device you'd like to connect instead,{' '}
+          If you don&#39;t see any test devices here, or if you have a physical device you&#39;d like to connect instead,{' '}
           <Link to="/help/connecting-devices">try reading the help pages</Link>.
         </p>
         <p>

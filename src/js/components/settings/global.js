@@ -121,7 +121,7 @@ export default class Global extends React.Component {
               <Icon className="material-icons" style={{ marginRight: '4px', fontSize: '18px', top: '4px' }}>
                 info_outline
               </Icon>
-              These settings apply to all users, so changes made here may affect other users' experience.
+              {`These settings apply to all users, so changes made here may affect other users' experience.`}
             </p>
           </div>
         )}
