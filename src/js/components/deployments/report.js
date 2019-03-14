@@ -389,7 +389,7 @@ export default class DeploymentReport extends React.Component {
 
         <div style={{ minHeight: '20vh' }}>
           <AppContext.Consumer>
-            {(docsVersion, globalSettings) => (
+            {({ docsVersion, globalSettings }) => (
               <DeviceList
                 docsVersion={docsVersion}
                 globalSettings={globalSettings}

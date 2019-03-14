@@ -188,7 +188,7 @@ export default class Devices extends React.Component {
           <Tab component={Link} label={routes.rejected.title} value={routes.rejected.status} to={routes.rejected.route} />
         </Tabs>
         <AppContext.Consumer>
-          {(globalSettings, docsVersion) => (
+          {({ globalSettings, docsVersion }) => (
             <div>
               {tabIndex === routes.pending.status && (
                 <PendingDevices

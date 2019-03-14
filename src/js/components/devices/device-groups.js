@@ -580,7 +580,7 @@ export default class DeviceGroups extends React.Component {
             </Button>
           ) : null}
           <AppContext.Consumer>
-            {(globalSettings, docsVersion) => (
+            {({ globalSettings, docsVersion }) => (
               <DeviceList
                 docsVersion={docsVersion}
                 pageNo={this.state.pageNo}
@@ -648,7 +648,7 @@ export default class DeviceGroups extends React.Component {
         </Dialog>
 
         <AppContext.Consumer>
-          {globalSettings => (
+          {({ globalSettings }) => (
             <CreateGroup
               toggleDialog={() => self.setState({ createGroupDialog: !self.state.createGroupDialog })}
               open={this.state.createGroupDialog}
