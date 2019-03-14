@@ -1,7 +1,6 @@
 var AppDispatcher = require('../dispatchers/app-dispatcher');
 var AppConstants = require('../constants/app-constants');
-var assign = require('object-assign');
-var EventEmitter = require('events').EventEmitter;  // from device
+var EventEmitter = require('events').EventEmitter; // from device
 
 var CHANGE_EVENT = "change";
 
@@ -191,8 +190,8 @@ function _uploadProgress(bool) {
   _uploadInProgress = bool;
 }
 
-
 // Deployments
+var _deployments = [];
 var _deploymentsInProgress = [];
 var _pastDeployments = [];
 var _pendingDeployments = [];
@@ -326,9 +325,16 @@ function setArtifacts(artifacts) {
   _artifactsRepo.sort(customSort(1, "modified"));
 }
 
-
 function setHasDeployments(deployments) {
-  _hasDeployments = (deployments == null || deployments.length === 0) ? false : true;
+  _hasDeployments = deployments == null || deployments.length === 0 ? false : true;
+}
+
+function setDeployments(deployments) {
+  _deployments = deployments;
+  _deployments.sort(startTimeSort);
+  if (deployments.length) {
+    setHasDeployments(deployments);
+  }
 }
 
 function setActiveDeployments(deployments, next) {
@@ -441,7 +447,7 @@ function _setShowHelptips(val) {
   _showHelptips = val;
 }
 
-var AppStore = assign(EventEmitter.prototype, {
+var AppStore = Object.assign({}, EventEmitter.prototype, {
   emitChange: function() {
     this.emit(CHANGE_EVENT)
   },
@@ -539,6 +545,13 @@ var AppStore = assign(EventEmitter.prototype, {
     * Return single artifact by attr
     */
     return _artifactsRepo[findWithAttr(_artifactsRepo, attr, val)];
+  },
+
+  getDeployments: function() {
+    /*
+     * Return list of all deployments
+     */
+    return _deployments;
   },
 
   getPastDeployments: function() {
@@ -726,7 +739,7 @@ var AppStore = assign(EventEmitter.prototype, {
 
       /* API */
       case AppConstants.RECEIVE_DEPLOYMENTS:
-        setHasDeployments(payload.action.deployments);
+        setDeployments(payload.action.deployments);
         break;
       case AppConstants.RECEIVE_ACTIVE_DEPLOYMENTS:
         setActiveDeployments(payload.action.deployments);
