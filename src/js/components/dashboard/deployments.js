@@ -123,7 +123,7 @@ export default class Deployments extends React.Component {
     const openingParam = encodeURIComponent(path);
     return (
       <div>
-        <h3 className="dashboard-header">Deployments</h3>
+        <h4 className="dashboard-header"><span>Deployments</span></h4>
         <div className="deployments" style={Object.assign({ marginBottom: '50px', marginTop: '50px' })}>
           {loading ? (
             <Loader show={loading} fade={true} />
