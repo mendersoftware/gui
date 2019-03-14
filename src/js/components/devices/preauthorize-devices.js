@@ -20,7 +20,6 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import Fab from '@material-ui/core/Fab';
 import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
-import Icon from '@material-ui/core/Icon';
 import IconButton from '@material-ui/core/IconButton';
 import Input from '@material-ui/core/Input';
 import Table from '@material-ui/core/Table';
@@ -30,10 +29,13 @@ import TableBody from '@material-ui/core/TableBody';
 import TableRow from '@material-ui/core/TableRow';
 import TextField from '@material-ui/core/TextField';
 
+import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
+import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
 import ContentAddIcon from '@material-ui/icons/Add';
 import ClearIcon from '@material-ui/icons/Clear';
 import FileIcon from '@material-ui/icons/CloudUpload';
 import InfoIcon from '@material-ui/icons/InfoOutlined';
+import SettingsIcon from '@material-ui/icons/Settings';
 
 export default class Preauthorize extends React.Component {
   constructor(props, context) {
@@ -245,9 +247,7 @@ export default class Preauthorize extends React.Component {
           </TableCell>
           <TableCell className="no-click-cell capitalized">{device.status}</TableCell>
           <TableCell style={{ width: '55px', paddingRight: '0', paddingLeft: '12px' }} className="expandButton">
-            <IconButton className="float-right">
-              <Icon className="material-icons">{expanded ? 'arrow_drop_up' : 'arrow_drop_down'}</Icon>
-            </IconButton>
+            <IconButton className="float-right">{expanded ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}</IconButton>
           </TableCell>
           <TableCell style={{ width: '0', padding: '0', overflow: 'visible' }}>
             <Collapse
@@ -346,9 +346,7 @@ export default class Preauthorize extends React.Component {
                 <TableRow>
                   <TableCell className="columnHeader" tooltip={(this.props.globalSettings || {}).id_attribute || 'Device ID'}>
                     {(this.props.globalSettings || {}).id_attribute || 'Device ID'}
-                    <Icon onClick={this.props.openSettingsDialog} style={{ fontSize: '16px' }} className="material-icons hover float-right">
-                      settings
-                    </Icon>
+                    <SettingsIcon onClick={this.props.openSettingsDialog} style={{ fontSize: '16px' }} className="hover float-right" />
                   </TableCell>
                   <TableCell className="columnHeader" tooltip="Date added">
                     Date added

@@ -13,6 +13,8 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 import InputLabel from '@material-ui/core/InputLabel';
 
 import CancelIcon from '@material-ui/icons/Cancel';
+import CheckIcon from '@material-ui/icons/Check';
+import EditIcon from '@material-ui/icons/Edit';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 
 import AppActions from '../../actions/app-actions';
@@ -96,8 +98,8 @@ export default class SelectedArtifact extends React.Component {
               onChange={e => this._descEdit(e.target.value)}
               endAdornment={
                 <InputAdornment position="end">
-                  <IconButton style={styles.editButton} onClick={e => self._onToggleEditing(e)} className="material-icons">
-                    {self.state.descEdit ? 'check' : 'edit'}
+                  <IconButton style={styles.editButton} onClick={e => self._onToggleEditing(e)}>
+                    {self.state.descEdit ? <CheckIcon /> : <EditIcon />}
                   </IconButton>
                 </InputAdornment>
               }

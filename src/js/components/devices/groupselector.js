@@ -6,11 +6,12 @@ import Button from '@material-ui/core/Button';
 import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import Grid from '@material-ui/core/Grid';
-import Icon from '@material-ui/core/Icon';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
+
+import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
 
 import AppActions from '../../actions/app-actions';
 import { fullyDecodeURI } from '../../helpers';
@@ -154,17 +155,13 @@ export default class GroupSelector extends React.Component {
             <p className="info">
               {this.props.selectedGroup ? (
                 <span>
-                  <Icon className="material-icons" style={{ marginRight: '4px', fontSize: '18px', top: '4px' }}>
-                    error_outline
-                  </Icon>
+                  <ErrorOutlineIcon style={{ marginRight: '4px', fontSize: '18px', top: '4px' }} />
                   {this.props.devices} {pluralize('devices', this.props.devices)} will be removed from <i>{fullyDecodeURI(this.props.selectedGroupName)}</i> and
                   added to <i>{newGroup}</i>.
                 </span>
               ) : (
                 <span>
-                  <Icon className="material-icons" style={{ marginRight: '4px', fontSize: '18px', top: '4px' }}>
-                    error_outline
-                  </Icon>
+                  <ErrorOutlineIcon style={{ marginRight: '4px', fontSize: '18px', top: '4px' }} />
                   If a device is already in another group, it will be removed from that group and moved to <i>{newGroup}</i>.
                 </span>
               )}
@@ -173,9 +170,7 @@ export default class GroupSelector extends React.Component {
 
           {this.props.willBeEmpty ? (
             <p className="info">
-              <Icon className="material-icons" style={{ marginRight: '4px', fontSize: '18px', top: '4px', color: 'rgb(171, 16, 0)' }}>
-                error_outline
-              </Icon>
+              <ErrorOutlineIcon style={{ marginRight: '4px', fontSize: '18px', top: '4px', color: 'rgb(171, 16, 0)' }} />
               After moving the {pluralize('devices', this.props.devices)}, <i>{fullyDecodeURI(this.props.selectedGroup)}</i> will be empty and so will be
               removed.
             </p>

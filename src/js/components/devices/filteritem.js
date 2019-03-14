@@ -12,6 +12,8 @@ import ListItemText from '@material-ui/core/ListItemText';
 import MenuItem from '@material-ui/core/MenuItem';
 import TextField from '@material-ui/core/TextField';
 
+import RemoveCircleIcon from '@material-ui/icons/RemoveCircle';
+
 export default class FilterItem extends React.Component {
   constructor(props, context) {
     super(props, context);
@@ -66,8 +68,8 @@ export default class FilterItem extends React.Component {
             InputProps={{
               endAdornment: self.state.selectedFilterKey ? (
                 <InputAdornment position="end">
-                  <IconButton className="material-icons remove-icon" onClick={() => self._removeFilter()}>
-                    remove_circle
+                  <IconButton onClick={() => self._removeFilter()}>
+                    <RemoveCircleIcon />
                   </IconButton>
                 </InputAdornment>
               ) : null

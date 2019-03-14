@@ -1,7 +1,9 @@
 import React from 'react';
 import IconButton from '@material-ui/core/IconButton';
-import Icon from '@material-ui/core/Icon';
 import Loader from '../common/loader';
+
+import CancelIcon from '@material-ui/icons/Cancel';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 
 export default class ConfirmDecommission extends React.Component {
   constructor(props, context) {
@@ -33,10 +35,10 @@ export default class ConfirmDecommission extends React.Component {
           ) : (
             <div className="inline-block">
               <IconButton id="ConfirmDecommission" onClick={() => this._handleDecommission()}>
-                <Icon className="material-icons green">check_circle</Icon>
+                <CheckCircleIcon className="green" />
               </IconButton>
               <IconButton id="cancelDecommission" onClick={() => this._handleCancel()}>
-                <Icon className="material-icons red">cancel</Icon>
+                <CancelIcon className="red" />
               </IconButton>
             </div>
           )}

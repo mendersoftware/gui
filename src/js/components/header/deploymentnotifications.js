@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 // material ui
-import Icon from '@material-ui/core/Icon';
+import RefreshIcon from '@material-ui/icons/Refresh';
 
 export default class DeploymentNotifications extends React.Component {
   static contextTypes = {
@@ -14,9 +14,7 @@ export default class DeploymentNotifications extends React.Component {
     return (
       <Link to="/deployments/" className="header-section">
         <span>{this.props.inprogress}</span>
-        <Icon style={{ color: '#c7c7c7', margin: '0 7px 0 10px', top: '5px', fontSize: '20px' }} className="material-icons flip-horizontal">
-          refresh
-        </Icon>
+        <RefreshIcon style={{ color: '#c7c7c7', margin: '0 7px 0 10px', top: '5px', fontSize: '20px' }} className="flip-horizontal" />
       </Link>
     );
   }

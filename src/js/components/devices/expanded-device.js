@@ -25,6 +25,9 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Typography from '@material-ui/core/Typography';
 
+import BlockIcon from '@material-ui/icons/Block';
+import CheckIcon from '@material-ui/icons/Check';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import InfoIcon from '@material-ui/icons/Info';
 import HelpIcon from '@material-ui/icons/Help';
 import LinkIcon from '@material-ui/icons/Link';
@@ -277,28 +280,16 @@ export default class ExpandedDevice extends React.Component {
     const iconStyle = { margin: 12 };
     switch (status) {
     case 'accepted':
-      statusIcon = (
-        <Icon className="material-icons green" style={iconStyle}>
-            check_circle
-        </Icon>
-      );
+      statusIcon = <CheckCircleIcon className="green" style={iconStyle} />;
       break;
     case 'pending':
       statusIcon = <Icon className="pending-icon" style={iconStyle} />;
       break;
     case 'rejected':
-      statusIcon = (
-        <Icon className="material-icons red" style={iconStyle}>
-            block
-        </Icon>
-      );
+      statusIcon = <BlockIcon className="red" style={iconStyle} />;
       break;
     case 'preauthorized':
-      statusIcon = (
-        <Icon className="material-icons" style={iconStyle}>
-            check
-        </Icon>
-      );
+      statusIcon = <CheckIcon style={iconStyle} />;
       break;
     }
 

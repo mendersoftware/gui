@@ -1,7 +1,8 @@
 import React from 'react';
 import IconButton from '@material-ui/core/IconButton';
-import Icon from '@material-ui/core/Icon';
 
+import CancelIcon from '@material-ui/icons/Cancel';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 export default class ConfirmAbort extends React.Component {
   constructor(props, context) {
     super(props, context);
@@ -23,10 +24,10 @@ export default class ConfirmAbort extends React.Component {
         <div className="float-right">
           <span className="bold">{this.state.loading ? 'Aborting...' : 'Confirm abort deployment?'}</span>
           <IconButton id="confirmAbort" onClick={() => this._handleAbort()}>
-            <Icon className="material-icons green">check_circle</Icon>
+            <CheckCircleIcon className="green" />
           </IconButton>
           <IconButton id="cancelAbort" onClick={() => this._handleCancel()}>
-            <Icon className="material-icons red">cancel</Icon>
+            <CancelIcon className="red" />
           </IconButton>
         </div>
       </div>

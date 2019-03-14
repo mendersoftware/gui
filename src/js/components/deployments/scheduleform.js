@@ -4,9 +4,9 @@ import ReactTooltip from 'react-tooltip';
 import pluralize from 'pluralize';
 
 import Grid from '@material-ui/core/Grid';
-import Icon from '@material-ui/core/Icon';
 import TextField from '@material-ui/core/TextField';
 
+import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
 import HelpIcon from '@material-ui/icons/Help';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 
@@ -82,9 +82,7 @@ export default class ScheduleForm extends React.Component {
       <div style={{ overflow: 'visible', height: '400px' }}>
         {!artifactItems.length ? (
           <p className="info" style={{ marginTop: '0' }}>
-            <Icon className="material-icons" style={{ marginRight: '4px', fontSize: '18px', top: '4px', color: 'rgb(171, 16, 0)' }}>
-              error_outline
-            </Icon>
+            <ErrorOutlineIcon style={{ marginRight: '4px', fontSize: '18px', top: '4px', color: 'rgb(171, 16, 0)' }} />
             There are no artifacts available. <Link to="/artifacts">Upload one to the repository</Link> to get started.
           </p>
         ) : (
@@ -120,9 +118,7 @@ export default class ScheduleForm extends React.Component {
                   />
                   {this.props.hasDevices ? null : (
                     <p className="info" style={{ marginTop: '0' }}>
-                      <Icon className="material-icons" style={{ marginRight: '4px', fontSize: '18px', top: '4px', color: 'rgb(171, 16, 0)' }}>
-                        error_outline
-                      </Icon>
+                      <ErrorOutlineIcon style={{ marginRight: '4px', fontSize: '18px', top: '4px', color: 'rgb(171, 16, 0)' }} />
                       There are no connected devices.{' '}
                       {this.props.hasPending ? (
                         <span>

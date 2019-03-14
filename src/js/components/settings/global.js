@@ -8,7 +8,8 @@ require('../common/prototype/Array.prototype.equals');
 import AppActions from '../../actions/app-actions';
 
 import Button from '@material-ui/core/Button';
-import Icon from '@material-ui/core/Icon';
+
+import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 
 const AVAILABLE_ATTRIBUTE_LIMIT = 10;
 
@@ -118,9 +119,7 @@ export default class Global extends React.Component {
           <div>
             <h2 style={{ marginTop: '15px' }}>Global settings</h2>
             <p className="info" style={{ marginBottom: '30px' }}>
-              <Icon className="material-icons" style={{ marginRight: '4px', fontSize: '18px', top: '4px' }}>
-                info_outline
-              </Icon>
+              <InfoOutlinedIcon style={{ marginRight: '4px', fontSize: '18px', top: '4px' }} />
               {`These settings apply to all users, so changes made here may affect other users' experience.`}
             </p>
           </div>
