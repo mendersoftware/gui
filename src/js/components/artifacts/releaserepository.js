@@ -242,7 +242,7 @@ export default class ReleaseRepository extends React.Component {
           {items.length || loading ? null : (
             <div className="dashboard-placeholder fadeIn" style={{ fontSize: '16px', margin: '8vh auto' }}>
               <div>
-                { this.props.hasReleases ? <p>'Select a Release on the left to view its Artifact details'</p> : emptyLink }
+                { this.props.hasReleases ? <p>Select a Release on the left to view its Artifact details</p> : emptyLink }
               </div>
               {showHelptips ? (
                 <div>

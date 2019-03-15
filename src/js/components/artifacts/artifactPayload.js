@@ -3,7 +3,6 @@ import Time from 'react-time';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
-import Divider from '@material-ui/core/Divider';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableHead from '@material-ui/core/TableHead';
@@ -42,7 +41,7 @@ export default class ArtifactPayload extends React.PureComponent {
     const metaData = [{ title: 'Type', value: this.props.payload.type_info.type }, { title: 'Total size', value: getFormattedSize(summedSize) }];
     return (
       <div className="file-details">
-      <h4 style={style.payloadHeader}>Payload {this.props.index}</h4>
+        <h4 style={style.payloadHeader}>Payload {this.props.index}</h4>
         <List style={style.metadataList}>
           {metaData.map((item, index) => (
             <ListItem disabled={true} style={style.metadataListItem} classes={{ root: 'attributes', disabled: 'opaque' }} key={`metadata-item-${index}`} >
