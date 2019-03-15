@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import Loader from '../../common/loader';
 
 // material ui
@@ -9,9 +10,6 @@ import TableBody from '@material-ui/core/TableBody';
 import TableRow from '@material-ui/core/TableRow';
 
 export default class DemoArtifacts extends React.Component {
-  _changePage(path) {
-    this.props.changePage(path);
-  }
   render() {
     var links = [];
     var placeholder;
@@ -71,7 +69,7 @@ export default class DemoArtifacts extends React.Component {
 
         <p>
           We provide demo Artifacts that you can use with devices connected to the Mender server (see{' '}
-          <a onClick={() => this._changePage('help/connecting-devices/provision-a-demo')}>Provision demo device</a>).
+          <Link to="/help/connecting-devices/provision-a-demo">Provision demo device</Link>).
         </p>
         <p>
           Two Artifacts are provided for each device type so that you can do several deployments (Mender will skip deployments if the Artifact installed is the
@@ -95,7 +93,7 @@ export default class DemoArtifacts extends React.Component {
                   <TableBody>{tableRows}</TableBody>
                 </Table>
                 <p>
-                  Then upload them to the <a onClick={() => this._changePage('releases')}>Releases tab</a>.
+                  Then upload them to the <Link to="/releases">Releases tab</Link>.
                 </p>
               </div>
             ) : (

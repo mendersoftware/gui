@@ -1,15 +1,17 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import pluralize from 'pluralize';
 import validator from 'validator';
 
 import Button from '@material-ui/core/Button';
 import FormControl from '@material-ui/core/FormControl';
-import Icon from '@material-ui/core/Icon';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import Grid from '@material-ui/core/Grid';
+import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
-import TextField from '@material-ui/core/TextField';
+
+import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
 
 import AppActions from '../../actions/app-actions';
 import { fullyDecodeURI } from '../../helpers';
@@ -95,7 +97,7 @@ export default class GroupSelector extends React.Component {
       if (group && group !== self.props.selectedGroup) {
         // don't show the current selected group in the list
         return (
-          <MenuItem component={Link} to={group} key={index}>
+          <MenuItem key={index} value={group}>
             {decodeURIComponent(group)}
           </MenuItem>
         );
@@ -108,36 +110,44 @@ export default class GroupSelector extends React.Component {
     return (
       <div style={{ height: '200px' }}>
         {showSelect ? (
-          <div className="float-left">
-            <FormControl>
-              <InputLabel htmlFor="group-select">Select group</InputLabel>
-              <Select
-                onChange={event => this._handleSelectValueChange(event.target.value)}
-                value={this.props.selectedField || ''}
-                inputProps={{
-                  name: 'groupSelect',
-                  id: 'group-select'
-                }}
-              >
-                {groupList}
-              </Select>
-            </FormControl>
-            <Button className="margin-left-small" variant="contained" style={{ marginTop: '26px' }} onClick={() => this._showButton()}>
-              Create new
-            </Button>
-          </div>
+          <Grid container spacing={16} className="float-left">
+            <Grid item>
+              <FormControl>
+                <InputLabel htmlFor="group-select">Select group</InputLabel>
+                <Select
+                  onChange={event => this._handleSelectValueChange(event.target.value)}
+                  value={this.props.selectedField || ''}
+                  inputProps={{
+                    name: 'groupSelect',
+                    id: 'group-select'
+                  }}
+                >
+                  {groupList}
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item>
+              <Button className="margin-left-small" variant="contained" style={{ marginTop: '26px' }} onClick={() => this._showButton()}>
+                Create new
+              </Button>
+            </Grid>
+          </Grid>
         ) : null}
 
         {this.state.showInput || !showSelect ? (
-          <TextField
-            value={this.state.customName || ''}
-            placeholder="Name of new group"
-            label="Name of new group"
-            className="float-left clear"
-            onChange={event => this._handleTextFieldChange(event.target.value)}
-            errorstyle={{ color: 'rgb(171, 16, 0)' }}
-            errortext={this.state.errortext1}
-          />
+          <FormControl error={Boolean(self.state.errortext1)}>
+            <InputLabel htmlFor="group-name-input">Name of new group</InputLabel>
+            <Input
+              id="group-name-input"
+              className="float-left clear"
+              inputRef={input => (self.customGroup = input)}
+              value={this.state.customName || ''}
+              placeholder="Name of new group"
+              onChange={event => this._handleTextFieldChange(event.target.value)}
+              type="text"
+            />
+            <FormHelperText>{self.state.errortext1}</FormHelperText>
+          </FormControl>
         ) : null}
 
         <div className="block float-left clear">
@@ -145,17 +155,13 @@ export default class GroupSelector extends React.Component {
             <p className="info">
               {this.props.selectedGroup ? (
                 <span>
-                  <Icon className="material-icons" style={{ marginRight: '4px', fontSize: '18px', top: '4px' }}>
-                    error_outline
-                  </Icon>
+                  <ErrorOutlineIcon style={{ marginRight: '4px', fontSize: '18px', top: '4px' }} />
                   {this.props.devices} {pluralize('devices', this.props.devices)} will be removed from <i>{fullyDecodeURI(this.props.selectedGroupName)}</i> and
                   added to <i>{newGroup}</i>.
                 </span>
               ) : (
                 <span>
-                  <Icon className="material-icons" style={{ marginRight: '4px', fontSize: '18px', top: '4px' }}>
-                    error_outline
-                  </Icon>
+                  <ErrorOutlineIcon style={{ marginRight: '4px', fontSize: '18px', top: '4px' }} />
                   If a device is already in another group, it will be removed from that group and moved to <i>{newGroup}</i>.
                 </span>
               )}
@@ -164,9 +170,7 @@ export default class GroupSelector extends React.Component {
 
           {this.props.willBeEmpty ? (
             <p className="info">
-              <Icon className="material-icons" style={{ marginRight: '4px', fontSize: '18px', top: '4px', color: 'rgb(171, 16, 0)' }}>
-                error_outline
-              </Icon>
+              <ErrorOutlineIcon style={{ marginRight: '4px', fontSize: '18px', top: '4px', color: 'rgb(171, 16, 0)' }} />
               After moving the {pluralize('devices', this.props.devices)}, <i>{fullyDecodeURI(this.props.selectedGroup)}</i> will be empty and so will be
               removed.
             </p>

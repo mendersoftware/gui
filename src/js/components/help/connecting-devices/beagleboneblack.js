@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import Button from '@material-ui/core/Button';
 import Icon from '@material-ui/core/Icon';
@@ -77,8 +78,8 @@ export default class BeagleBoneBlack extends React.Component {
 
             <p>
               If you would like to use a different device type, please see the page on{' '}
-              <a onClick={() => this.props.changePage('help/connecting-devices/provision-a-demo/raspberry-pi-3')}>Raspberry Pi 3</a> or{' '}
-              <a onClick={() => this.props.changePage('help/connecting-devices/build-with-yocto')}>Build with Yocto Project</a>.
+              <Link to="/help/connecting-devices/provision-a-demo/raspberry-pi-3">Raspberry Pi 3</Link> or{' '}
+              <Link to="/help/connecting-devices/build-with-yocto">Build with Yocto Project</Link>.
             </p>
 
             <h3>Prerequisites</h3>
@@ -173,14 +174,13 @@ export default class BeagleBoneBlack extends React.Component {
 
             <p>Wait for 3-4 minutes until the device has fully booted and the Mender client has been able to connect to the Mender server.</p>
             <p>
-              You should see your device pending in the <a onClick={() => this.props.changePage('devices')}>Devices tab</a>. Simply Authorize the pending
-              device.
+              You should see your device pending in the <Link to="/devices">Devices tab</Link>. Simply Authorize the pending device.
             </p>
 
             <p>
               {' '}
               If you cannot see any new device after 10 minutes, please verify that the network connection is working, and feel free to reach out for help with
-              diagnostics via <a onClick={() => this.props.changePage('help/more-help-resources')}>our further Help resources</a>.
+              diagnostics via <Link to="/help/more-help-resources">our further Help resources</Link>.
             </p>
 
             <p className="note">
@@ -202,12 +202,11 @@ export default class BeagleBoneBlack extends React.Component {
             )}
 
             <p>
-              After you have downloaded the two Artifacts, upload them to the Mender server in the{' '}
-              <a onClick={() => this.props.changePage('releases')}>Releases tab</a>.
+              After you have downloaded the two Artifacts, upload them to the Mender server in the <Link to="/releases">Releases tab</Link>.
             </p>
 
             <p>
-              Then head over to the <a onClick={() => this.props.changePage('deployments')}>Deployments tab</a> and do some remote deployments to your device!
+              Then head over to the <Link to="/deployments">Deployments tab</Link> and do some remote deployments to your device!
             </p>
           </div>
         ) : (

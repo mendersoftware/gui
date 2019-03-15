@@ -34,7 +34,7 @@ export default class BuildYocto extends React.Component {
       <div>
         <h2>Build with Yocto</h2>
 
-        <h3>Don't yet have a working Yocto environment for your board?</h3>
+        <h3>{`Don't yet have a working Yocto environment for your board?`}</h3>
         <p>
           Visit{' '}
           <a href="https://hub.mender.io/c/board-integrations" target="_blank">
@@ -53,8 +53,8 @@ export default class BuildYocto extends React.Component {
 
         <p>
           Follow the docs at{' '}
-          <a href={'https://docs.mender.io/' + this.props.docsVersion + 'artifacts/building-mender-yocto-image'}>
-            {'https://docs.mender.io/' + this.props.docsVersion + 'artifacts/building-mender-yocto-image'}
+          <a href={`https://docs.mender.io/${this.props.docsVersion}artifacts/building-mender-yocto-image`}>
+            {`https://docs.mender.io/${this.props.docsVersion}artifacts/building-mender-yocto-image`}
           </a>{' '}
           to build your .sdimg and .mender files.
         </p>

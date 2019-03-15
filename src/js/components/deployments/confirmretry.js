@@ -1,6 +1,8 @@
 import React from 'react';
 import IconButton from '@material-ui/core/IconButton';
-import Icon from '@material-ui/core/Icon';
+
+import CancelIcon from '@material-ui/icons/Cancel';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 
 export default class ConfirmRetry extends React.Component {
   constructor(props, context) {
@@ -23,10 +25,10 @@ export default class ConfirmRetry extends React.Component {
         <div className="float-right">
           <span className="bold">{this.state.loading ? 'Creating new deployment...' : 'Confirm retry deployment?'}</span>
           <IconButton id="confirmRetry" onClick={() => this._handleRetry()}>
-            <Icon className="material-icons green">check_circle</Icon>
+            <CheckCircleIcon className="green" />
           </IconButton>
           <IconButton id="cancelRetry" onClick={() => this._handleCancel()}>
-            <Icon className="material-icons red">cancel</Icon>
+            <CancelIcon className="red" />
           </IconButton>
         </div>
       </div>

@@ -22,8 +22,9 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import Icon from '@material-ui/core/Icon';
+
 import BlockIcon from '@material-ui/icons/Block';
+import TimelapseIcon from '@material-ui/icons/Timelapse';
 import RefreshIcon from '@material-ui/icons/Refresh';
 import { AppContext } from '../../contexts/app-context';
 import { formatTime } from '../../helpers';
@@ -346,9 +347,7 @@ export default class DeploymentReport extends React.Component {
                 <div id="progressStatus">
                   <h3 style={{ marginTop: '12px' }}>{this.state.finished ? 'Finished' : 'In progress'}</h3>
                   <h2>
-                    <Icon className="material-icons" style={{ margin: '0 10px 0 -10px', color: '#ACD4D0', verticalAlign: 'text-top' }}>
-                      timelapse
-                    </Icon>
+                    <TimelapseIcon style={{ margin: '0 10px 0 -10px', color: '#ACD4D0', verticalAlign: 'text-top' }} />
                     {this.state.elapsed}
                   </h2>
                   <div>
@@ -390,7 +389,7 @@ export default class DeploymentReport extends React.Component {
 
         <div style={{ minHeight: '20vh' }}>
           <AppContext.Consumer>
-            {(docsVersion, globalSettings) => (
+            {({ docsVersion, globalSettings }) => (
               <DeviceList
                 docsVersion={docsVersion}
                 globalSettings={globalSettings}

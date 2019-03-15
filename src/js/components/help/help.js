@@ -148,7 +148,7 @@ export default class Help extends React.Component {
     return (
       <div style={{ marginTop: '-15px' }}>
         <div className="leftFixed">
-          <LeftNav pages={components} changePage={path => this.changePage(path)} />
+          <LeftNav pages={components} />
         </div>
         <div className="rightFluid padding-right" style={{ maxWidth: '980px', paddingTop: '0', paddingLeft: '45px' }}>
           <div style={{ position: 'relative', top: '12px' }} className="help-content">

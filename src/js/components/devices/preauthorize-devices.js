@@ -12,24 +12,30 @@ import { clearAllRetryTimers } from '../../utils/retrytimer';
 import { isEmpty, preformatWithRequestID } from '../../helpers';
 
 // material ui
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Fab from '@material-ui/core/Fab';
+import FormControl from '@material-ui/core/FormControl';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import IconButton from '@material-ui/core/IconButton';
+import Input from '@material-ui/core/Input';
 import Table from '@material-ui/core/Table';
 import TableHead from '@material-ui/core/TableHead';
 import TableCell from '@material-ui/core/TableCell';
 import TableBody from '@material-ui/core/TableBody';
 import TableRow from '@material-ui/core/TableRow';
-import IconButton from '@material-ui/core/IconButton';
-import Button from '@material-ui/core/Button';
-import Icon from '@material-ui/core/Icon';
-import ClearIcon from '@material-ui/icons/Clear';
-import InfoIcon from '@material-ui/icons/InfoOutlined';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import TextField from '@material-ui/core/TextField';
-import Fab from '@material-ui/core/Fab';
+
+import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
+import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
 import ContentAddIcon from '@material-ui/icons/Add';
+import ClearIcon from '@material-ui/icons/Clear';
 import FileIcon from '@material-ui/icons/CloudUpload';
+import InfoIcon from '@material-ui/icons/InfoOutlined';
+import SettingsIcon from '@material-ui/icons/Settings';
 
 export default class Preauthorize extends React.Component {
   constructor(props, context) {
@@ -106,10 +112,8 @@ export default class Preauthorize extends React.Component {
     });
   }
 
-  _dialogToggle(ref) {
-    var state = {};
-    state[ref] = !this.state[ref];
-    this.setState(state);
+  _togglePreauth(openPreauth = !this.state.openPreauth) {
+    this.setState({ openPreauth });
     this._clearForm();
   }
 
@@ -120,27 +124,27 @@ export default class Preauthorize extends React.Component {
   _updateKey(index, event) {
     var inputs = this.state.inputs;
     inputs[index].key = event.target.value;
-    this.setState({ inputs: inputs, errortext: '', errortext1: '' });
+    this.setState({ inputs: inputs, errortext: '' });
     this._convertIdentityToJSON(inputs);
   }
 
   _updateValue(index, event) {
     var inputs = this.state.inputs;
     inputs[index].value = event.target.value;
-    this.setState({ inputs: inputs, errortext: '', errortext1: '' });
+    this.setState({ inputs: inputs, errortext: '' });
     this._convertIdentityToJSON(inputs);
   }
 
   _addKeyValue() {
     var inputs = this.state.inputs;
     inputs.push({ key: '', value: '' });
-    this.setState({ inputs: inputs, errortext: '', errortext1: '' });
+    this.setState({ inputs: inputs, errortext: '' });
   }
 
   _removeInput(index) {
     var inputs = this.state.inputs;
     inputs.splice(index, 1);
-    this.setState({ inputs: inputs, errortext: '', errortext1: '' });
+    this.setState({ inputs: inputs, errortext: '' });
     this._convertIdentityToJSON(inputs);
   }
 
@@ -165,19 +169,14 @@ export default class Preauthorize extends React.Component {
         AppActions.setSnackbar('Device was successfully added to the preauthorization list', 5000);
         self._getDevices();
         self.props.refreshCount();
-
-        if (close) {
-          self._dialogToggle('openPreauth');
-        } else {
-          self._clearForm();
-        }
+        self._togglePreauth(!close);
       })
       .catch(err => {
         console.log(err);
         var errMsg = (err.res.body || {}).error || '';
 
         if (err.res.status === 409) {
-          self.setState({ errortext: 'A device with a matching identity data set already exists', errortext1: ' ' });
+          self.setState({ errortext: 'A device with a matching identity data set already exists' });
         } else {
           AppActions.setSnackbar(preformatWithRequestID(err.res, `The device could not be added: ${errMsg}`), null, 'Copy to clipboard');
         }
@@ -248,9 +247,7 @@ export default class Preauthorize extends React.Component {
           </TableCell>
           <TableCell className="no-click-cell capitalized">{device.status}</TableCell>
           <TableCell style={{ width: '55px', paddingRight: '0', paddingLeft: '12px' }} className="expandButton">
-            <IconButton className="float-right">
-              <Icon className="material-icons">{expanded ? 'arrow_drop_up' : 'arrow_drop_down'}</Icon>
-            </IconButton>
+            <IconButton className="float-right">{expanded ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}</IconButton>
           </TableCell>
           <TableCell style={{ width: '0', padding: '0', overflow: 'visible' }}>
             <Collapse
@@ -279,7 +276,7 @@ export default class Preauthorize extends React.Component {
 
     var preauthActions = [
       <div key="auth-button-1" style={{ marginRight: '10px', display: 'inline-block' }}>
-        <Button onClick={() => this._dialogToggle('openPreauth')}>Cancel</Button>
+        <Button onClick={() => this._togglePreauth(false)}>Cancel</Button>
       </div>,
       <div key="auth-button-2" style={{ marginRight: '10px', display: 'inline-block' }}>
         <Button
@@ -302,39 +299,38 @@ export default class Preauthorize extends React.Component {
       </Button>
     ];
 
-    var inputs = this.state.inputs.map(function(input, index) {
+    var inputs = self.state.inputs.map((input, index) => {
+      const hasError = Boolean(index === self.state.inputs.length - 1 && self.state.errortext);
       return (
-        <div className="key-value-container" key={index}>
-          <TextField
-            placeholder="Key"
-            id={`key-${index}`}
-            value={input.key}
-            style={{ marginRight: '15px', marginBottom: '15px', verticalAlign: 'top' }}
-            onChange={e => this._updateKey(index, e)}
-            errorstyle={{ color: 'rgb(171, 16, 0)' }}
-            errortext={index === this.state.inputs.length - 1 ? this.state.errortext : ''}
-          />
-          <TextField
-            placeholder="Value"
-            id={`value-${index}`}
-            style={{ verticalAlign: 'top' }}
-            value={input.value}
-            onChange={e => this._updateValue(index, e)}
-            errorstyle={{ color: 'rgb(171, 16, 0)' }}
-            errortext={index === this.state.inputs.length - 1 ? this.state.errortext1 : ''}
-          />
+        <div className="key-value-container flexbox" key={index}>
+          <FormControl error={hasError} style={{ marginRight: 15, marginTop: 10 }}>
+            <Input id={`key-${index}`} value={input.key} placeholder="Key" onChange={e => self._updateKey(index, e)} type="text" />
+            <FormHelperText>{self.state.errortext}</FormHelperText>
+          </FormControl>
+          <FormControl error={hasError} style={{ marginTop: 10 }}>
+            <Input id={`value-${index}`} value={input.value} placeholder="Value" onChange={e => self._updateValue(index, e)} type="text" />
+          </FormControl>
           {this.state.inputs.length > 1 ? (
             <IconButton disabled={!this.state.inputs[index].key || !this.state.inputs[index].value} onClick={() => this._removeInput(index)}>
               <ClearIcon fontSize="small" />
             </IconButton>
-          ) : null}
+          ) : (
+            <span style={{ minWidth: 44 }} />
+          )}
         </div>
       );
-    }, this);
+    });
 
     return (
       <div className="tab-container">
-        <Button style={{position: 'absolute'}} color="secondary" variant="contained" disabled={!!limitMaxed} className="top-right-button" onClick={() => this._dialogToggle('openPreauth')}>
+        <Button
+          style={{ position: 'absolute' }}
+          color="secondary"
+          variant="contained"
+          disabled={!!limitMaxed}
+          className="top-right-button"
+          onClick={() => this._togglePreauth(true)}
+        >
           Preauthorize devices
         </Button>
 
@@ -350,9 +346,7 @@ export default class Preauthorize extends React.Component {
                 <TableRow>
                   <TableCell className="columnHeader" tooltip={(this.props.globalSettings || {}).id_attribute || 'Device ID'}>
                     {(this.props.globalSettings || {}).id_attribute || 'Device ID'}
-                    <Icon onClick={this.props.openSettingsDialog} style={{ fontSize: '16px' }} className="material-icons hover float-right">
-                      settings
-                    </Icon>
+                    <SettingsIcon onClick={this.props.openSettingsDialog} style={{ fontSize: '16px' }} className="hover float-right" />
                   </TableCell>
                   <TableCell className="columnHeader" tooltip="Date added">
                     Date added
@@ -386,8 +380,8 @@ export default class Preauthorize extends React.Component {
           <div className={this.state.authLoading ? 'hidden' : 'dashboard-placeholder'}>
             <p>There are no preauthorized devices.</p>
             <p>
-              {limitMaxed ? 'Preauthorize devices' : <a onClick={() => this._dialogToggle('openPreauth')}>Preauthorize devices</a>} so that when they come
-              online, they will connect to the server immediately
+              {limitMaxed ? 'Preauthorize devices' : <a onClick={() => this._togglePreauth(true)}>Preauthorize devices</a>} so that when they come online, they
+              will connect to the server immediately
             </p>
             <img src="assets/img/preauthorize.png" alt="preauthorize" />
           </div>
@@ -414,12 +408,7 @@ export default class Preauthorize extends React.Component {
               </div>
             ) : (
               <div>
-                <Dropzone
-                  activeClassName="active"
-                  rejectClassName="active"
-                  multiple={false}
-                  onDrop={(accepted, rejected) => this.onDrop(accepted, rejected)}
-                >
+                <Dropzone activeClassName="active" rejectClassName="active" multiple={false} onDrop={(accepted, rejected) => this.onDrop(accepted, rejected)}>
                   {({ getRootProps, getInputProps }) => (
                     <div {...getRootProps()} style={{ fontSize: '16px', margin: 'auto' }} className="dropzone onboard dashboard-placeholder">
                       <input {...getInputProps()} />

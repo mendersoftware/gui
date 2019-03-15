@@ -130,13 +130,7 @@ class AppRoot extends React.Component {
         />
 
         <div className="wrapper">
-          <LeftNav
-            className="leftFixed leftNav"
-            version={this.state.version}
-            docsVersion={this.state.docsVersion}
-            currentTab={this.state.currentTab}
-            changeTab={tabIndex => this._changeTab(tabIndex)}
-          />
+          <LeftNav className="leftFixed leftNav" version={this.state.version} docsVersion={this.state.docsVersion} currentTab={this.state.currentTab} />
           <div className="rightFluid container">
             <AppContext.Provider value={this.state}>{this.props.children}</AppContext.Provider>
           </div>

@@ -255,7 +255,7 @@ export default class DeviceGroups extends React.Component {
       if (hasFilters) {
         const filterId = this.state.filters.find(item => item.key === 'id');
         if (filterId) {
-          return AppActions.getDeviceById(filterId);
+          return self._getDeviceById(filterId.value);
         }
         params += this.encodeFilters(this.state.filters);
       }
@@ -571,13 +571,16 @@ export default class DeviceGroups extends React.Component {
           ) : null}
 
           {self.state.selectedGroup && allowDeviceGroupRemoval ? (
-            <Button style={{position: 'absolute', top:0,right:'30px', zIndex:100}} onClick={() => self.setState({ removeGroup: !self.state.removeGroup })}>
+            <Button
+              style={{ position: 'absolute', top: 0, right: '30px', zIndex: 100 }}
+              onClick={() => self.setState({ removeGroup: !self.state.removeGroup })}
+            >
               <DeleteIcon className="buttonLabelIcon" />
               Remove group
             </Button>
           ) : null}
           <AppContext.Consumer>
-            {(globalSettings, docsVersion) => (
+            {({ globalSettings, docsVersion }) => (
               <DeviceList
                 docsVersion={docsVersion}
                 pageNo={this.state.pageNo}
@@ -645,7 +648,7 @@ export default class DeviceGroups extends React.Component {
         </Dialog>
 
         <AppContext.Consumer>
-          {globalSettings => (
+          {({ globalSettings }) => (
             <CreateGroup
               toggleDialog={() => self.setState({ createGroupDialog: !self.state.createGroupDialog })}
               open={this.state.createGroupDialog}

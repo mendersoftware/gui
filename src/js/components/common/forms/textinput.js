@@ -1,6 +1,9 @@
 import React from 'react';
 
-import TextField from '@material-ui/core/TextField';
+import FormControl from '@material-ui/core/FormControl';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import Input from '@material-ui/core/Input';
+import InputLabel from '@material-ui/core/InputLabel';
 
 export default class TextInput extends React.Component {
   constructor(props, context) {
@@ -41,23 +44,23 @@ export default class TextInput extends React.Component {
   render() {
     var className = this.props.required ? `${this.props.className} required` : this.props.className;
     return (
-      <TextField
-        id={this.props.id}
-        name={this.props.id}
-        value={this.state.value}
-        placeholder={this.props.hint}
-        label={this.props.label}
-        onChange={e => this.setValue(e)}
-        className={className}
-        errorstyle={{ color: 'rgb(171, 16, 0)' }}
-        style={{ width: '400px', maxWidth: '100%', marginRight: '80px' }}
-        errortext={this.state.errortext}
-        required={this.props.required}
-        type={this.props.type}
-        onKeyPress={this.props.handleKeyPress}
-        disabled={this.props.disabled}
-        inputRef={input => (this.input = input)}
-      />
+      <FormControl className={className} error={Boolean(this.state.errortext)}>
+        <InputLabel htmlFor={this.props.id}>{this.props.label}</InputLabel>
+        <Input
+          id={this.props.id}
+          name={this.props.id}
+          disabled={this.props.disabled}
+          inputRef={input => (this.input = input)}
+          value={this.state.value}
+          onKeyPress={this.props.handleKeyPress}
+          onChange={e => this.setValue(e)}
+          placeholder={this.props.hint}
+          required={this.props.required}
+          style={{ width: '400px', maxWidth: '100%' }}
+          type={this.props.type}
+        />
+        <FormHelperText id="component-error-text">{this.state.errortext}</FormHelperText>
+      </FormControl>
     );
   }
 }

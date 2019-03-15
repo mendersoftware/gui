@@ -5,7 +5,7 @@ import ReactTooltip from 'react-tooltip';
 import pluralize from 'pluralize';
 
 // material ui
-import Icon from '@material-ui/core/Icon';
+import DeveloperBoardIcon from '@material-ui/icons/DeveloperBoard';
 
 export default class DeviceNotifications extends React.Component {
   static contextTypes = {
@@ -46,9 +46,7 @@ export default class DeviceNotifications extends React.Component {
               <span>{this.props.total}</span>
               {this.props.limit ? <span>/{this.props.limit}</span> : null}
 
-              <Icon style={{ margin: '0 7px 0 10px', fontSize: '20px' }} className="material-icons">
-                developer_board
-              </Icon>
+              <DeveloperBoardIcon style={{ margin: '0 7px 0 10px', fontSize: '20px' }} />
             </Link>
 
             {this.props.pending ? (

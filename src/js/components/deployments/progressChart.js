@@ -125,7 +125,7 @@ export default class ProgressChart extends React.Component {
 
     var progressChart = (
       <AppContext.Consumer>
-        {globalSettings => (
+        {({ globalSettings }) => (
           <div className="relative">
             <div className="progressHeader">
               {success + failures} of {totalDevices} devices complete

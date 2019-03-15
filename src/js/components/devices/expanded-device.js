@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 
 import AppStore from '../../stores/app-store';
 import AppActions from '../../actions/app-actions';
-import ScheduleForm from '../deployments/scheduleform';
+import ScheduleDialog from '../deployments/scheduledialog';
 import Authsets from './authsets';
 import Loader from '../common/loader';
 import pluralize from 'pluralize';
@@ -25,6 +25,9 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Typography from '@material-ui/core/Typography';
 
+import BlockIcon from '@material-ui/icons/Block';
+import CheckIcon from '@material-ui/icons/Check';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import InfoIcon from '@material-ui/icons/Info';
 import HelpIcon from '@material-ui/icons/Help';
 import LinkIcon from '@material-ui/icons/Link';
@@ -72,15 +75,14 @@ export default class ExpandedDevice extends React.Component {
   }
 
   dialogToggle(ref) {
-    var self = this;
     var state = {};
     state[ref] = !this.state[ref];
-    this.setState(state, () => {
-      if (ref === 'authsets') {
-        self.props.pause();
-      }
-    });
     this.setState({ filterByArtifact: null, artifact: null });
+  }
+
+  toggleAuthsets(authsets = !this.state.authsets) {
+    this.setState({ authsets });
+    this.props.pause();
   }
 
   _updateParams(val, attr) {
@@ -92,12 +94,7 @@ export default class ExpandedDevice extends React.Component {
 
   _clickListItem() {
     AppActions.setSnackbar('');
-    this.dialogToggle('schedule');
-  }
-
-  _showAuthsets() {
-    AppActions.setSnackbar('');
-    this.dialogToggle('authsets');
+    this.setState({ schedule: false });
   }
 
   _onScheduleSubmit() {
@@ -107,7 +104,7 @@ export default class ExpandedDevice extends React.Component {
       name: this.props.device.id,
       artifact_name: this.state.artifact.name
     };
-    this.dialogToggle('schedule');
+    self.setState({ schedule: false });
     return AppActions.createDeployment(newDeployment)
       .then(data => {
         // get id, if showhelptips & no onboarded cookie, this is user's first deployment - add id cookie
@@ -171,7 +168,7 @@ export default class ExpandedDevice extends React.Component {
     return AppActions.decommissionDevice(device_id)
       .then(() => {
         // close dialog!
-        self.dialogToggle('authsets');
+        self.toggleAuthsets(false);
         // close expanded device
         // trigger reset of list!
         AppActions.setSnackbar('Device was decommissioned successfully');
@@ -212,8 +209,7 @@ export default class ExpandedDevice extends React.Component {
     }
 
     if ((this.props.device || {}).created_ts) {
-
-      var createdTime = <Time value={this.props.device.created_ts} format='YYYY-MM-DD HH:mm' />;
+      var createdTime = <Time value={this.props.device.created_ts} format="YYYY-MM-DD HH:mm" />;
       deviceIdentity.push(
         <div key="connectionTime">
           <ListItem classes={{ root: 'device-attributes', disabled: 'opaque' }} disabled={true}>
@@ -284,28 +280,16 @@ export default class ExpandedDevice extends React.Component {
     const iconStyle = { margin: 12 };
     switch (status) {
     case 'accepted':
-      statusIcon = (
-        <Icon className="material-icons green" style={iconStyle}>
-            check_circle
-        </Icon>
-      );
+      statusIcon = <CheckCircleIcon className="green" style={iconStyle} />;
       break;
     case 'pending':
       statusIcon = <Icon className="pending-icon" style={iconStyle} />;
       break;
     case 'rejected':
-      statusIcon = (
-        <Icon className="material-icons red" style={iconStyle}>
-            block
-        </Icon>
-      );
+      statusIcon = <BlockIcon className="red" style={iconStyle} />;
       break;
     case 'preauthorized':
-      statusIcon = (
-        <Icon className="material-icons" style={iconStyle}>
-            check
-        </Icon>
-      );
+      statusIcon = <CheckIcon style={iconStyle} />;
       break;
     }
 
@@ -348,7 +332,12 @@ export default class ExpandedDevice extends React.Component {
               </span>
             </span>
 
-            <Button onClick={() => this._showAuthsets()}>
+            <Button
+              onClick={() => {
+                this.toggleAuthsets(true);
+                AppActions.setSnackbar('');
+              }}
+            >
               {hasPending ? <WarningIcon className="auth" /> : null}
               <span className="inline-block">
                 <Typography component="span" variant="subtitle1" style={buttonStyle}>
@@ -394,23 +383,8 @@ export default class ExpandedDevice extends React.Component {
       </div>
     );
 
-    var scheduleActions = [
-      <Button key="schedule-action-button-1" style={{ marginRight: '10px', display: 'inline-block' }} onClick={() => this.dialogToggle('schedule')}>
-        Cancel
-      </Button>,
-      <Button
-        variant="contained"
-        key="schedule-action-button-2"
-        color="primary"
-        disabled={!this.state.filterByArtifact}
-        onClick={() => this._onScheduleSubmit()}
-      >
-        Create deployment
-      </Button>
-    ];
-
     var authsetActions = [
-      <Button key="authset-button-1" style={{ marginRight: '10px', display: 'inline-block' }} onClick={() => this.dialogToggle('authsets')}>
+      <Button key="authset-button-1" style={{ marginRight: '10px', display: 'inline-block' }} onClick={() => this.toggleAuthsets(false)}>
         Close
       </Button>
     ];
@@ -470,22 +444,18 @@ export default class ExpandedDevice extends React.Component {
           </div>
         ) : null}
 
-        <Dialog open={this.state.schedule}>
-          <DialogTitle>Create a deployment</DialogTitle>
-          <DialogContent style={{ overflow: 'hidden' }}>
-            <ScheduleForm
-              deploymentDevices={[this.props.device]}
-              filteredDevices={this.state.filterByArtifact}
-              deploymentSettings={(...args) => this._deploymentParams(...args)}
-              artifact={this.state.artifact}
-              artifacts={this.state.artifacts}
-              device={this.props.device}
-              deploymentSchedule={this._updateParams}
-              groups={this.props.groups}
-            />
-          </DialogContent>
-          <DialogActions>{scheduleActions}</DialogActions>
-        </Dialog>
+        <ScheduleDialog
+          open={this.state.schedule}
+          deploymentDevices={[this.props.device]}
+          filteredDevices={this.state.filterByArtifact}
+          deploymentSettings={(...args) => this._deploymentParams(...args)}
+          artifact={this.state.artifact}
+          artifacts={this.state.artifacts}
+          device={this.props.device}
+          groups={this.props.groups}
+          onDismiss={() => this.setState({ schedule: false })}
+          onScheduleSubmit={() => this._onScheduleSubmit()}
+        />
 
         <Dialog
           open={this.state.authsets}
@@ -500,7 +470,7 @@ export default class ExpandedDevice extends React.Component {
           <DialogTitle>{authsetTitle}</DialogTitle>
           <DialogContent>
             <Authsets
-              dialogToggle={() => this.dialogToggle('authsets')}
+              dialogToggle={() => this.toggleAuthsets(false)}
               decommission={id => this._decommissionDevice(id)}
               device={this.props.device}
               id_attribute={this.props.id_attribute}

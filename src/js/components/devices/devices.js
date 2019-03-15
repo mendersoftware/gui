@@ -188,7 +188,7 @@ export default class Devices extends React.Component {
           <Tab component={Link} label={routes.rejected.title} value={routes.rejected.status} to={routes.rejected.route} />
         </Tabs>
         <AppContext.Consumer>
-          {(globalSettings, docsVersion) => (
+          {({ globalSettings, docsVersion }) => (
             <div>
               {tabIndex === routes.pending.status && (
                 <PendingDevices
@@ -210,7 +210,7 @@ export default class Devices extends React.Component {
                   acceptedDevices={this.state.acceptedCount}
                   currentTab={this.state.currentTab}
                   count={this.state.preauthCount}
-                  refreshCount={() => this._getPreauthCount()}
+                  refreshCount={() => AppActions.getDeviceCount('preauthorized')}
                   globalSettings={globalSettings}
                   openSettingsDialog={() => this._openSettingsDialog()}
                   pause={() => this._pauseInterval()}

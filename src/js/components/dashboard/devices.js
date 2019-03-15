@@ -88,7 +88,7 @@ export default class Devices extends React.Component {
   render() {
     const { devices, inactiveDevices, pendingDevices, deltaActivity } = this.state;
     const hasPending = pendingDevices > 0;
-    const noDevicesAvailable = (!devices && !hasPending);
+    const noDevicesAvailable = !devices && !hasPending;
     return (
       <div>
         <div className="dashboard-header">
@@ -97,7 +97,14 @@ export default class Devices extends React.Component {
           </h3>
         </div>
         <div style={styles.container}>
-          <PendingDevices pendingDevicesCount={pendingDevices} isActive={hasPending} showHelptips={this.props.showHelptips} onClick={this.props.clickHandle} />
+          {pendingDevices > 0 ? (
+            <PendingDevices
+              pendingDevicesCount={pendingDevices}
+              isActive={hasPending}
+              showHelptips={this.props.showHelptips}
+              onClick={this.props.clickHandle}
+            />
+          ) : null}
           <AcceptedDevices devicesCount={devices} inactiveCount={inactiveDevices} delta={deltaActivity} onClick={this.props.clickHandle} />
           <RedirectionWidget
             target={'/help/connecting-devices'}

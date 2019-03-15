@@ -7,14 +7,18 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
+import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Icon from '@material-ui/core/Icon';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import Input from '@material-ui/core/Input';
+import InputLabel from '@material-ui/core/InputLabel';
 import Table from '@material-ui/core/Table';
 import TableHead from '@material-ui/core/TableHead';
 import TableCell from '@material-ui/core/TableCell';
 import TableBody from '@material-ui/core/TableBody';
 import TableRow from '@material-ui/core/TableRow';
-import TextField from '@material-ui/core/TextField';
+
+import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
 
 import AppActions from '../../actions/app-actions';
 import AppConstants from '../../constants/app-constants';
@@ -157,18 +161,16 @@ export default class CreateGroup extends React.Component {
       selectedRows.splice(selectedIndex, 1);
       updatedSelection = selectedRows;
     }
-    self.setState({ selectedRows: updatedSelection, createInvalid: updatedSelection.length > 0 });
+    self.setState({ selectedRows: updatedSelection, createInvalid: !updatedSelection.length });
   }
 
   onSelectAllClick() {
     const self = this;
-    let createInvalid = true;
     let selectedRows = Array.apply(null, { length: this.state.devices.length }).map(Number.call, Number);
     if (self.state.selectedRows.length && self.state.selectedRows.length <= self.state.devices.length) {
       selectedRows = [];
-      createInvalid = false;
     }
-    self.setState({ selectedRows, createInvalid });
+    self.setState({ selectedRows, createInvalid: !selectedRows.length });
   }
 
   _handleCheckBox(isChecked) {
@@ -220,22 +222,19 @@ export default class CreateGroup extends React.Component {
 
     const numSelected = self.state.selectedRows.length;
 
+    const createButtonInvalid = this.state.createInvalid || !self.state.selectedRows.length;
+
     return (
       <Dialog disableBackdropClick disableEscapeKeyDown open={self.props.open} scroll={'paper'} fullWidth={true} maxWidth="sm">
         <DialogTitle style={{ paddingBottom: '15px', marginBottom: 0 }}>{self.state.showWarning ? '' : 'Create a new group'}</DialogTitle>
 
         <DialogContent style={{ maxHeight: '50vh' }}>
           <div className={self.state.showDeviceList || self.state.showWarning ? 'hidden' : 'absoluteTextfieldButton'}>
-            <TextField
-              className="float-left"
-              placeholder="Name your group"
-              label="Name your group"
-              value={self.state.newGroup}
-              onChange={e => self.validateName(e)}
-              errorstyle={{ color: 'rgb(171, 16, 0)' }}
-              errortext={self.state.errortext}
-            />
-
+            <FormControl error={Boolean(self.state.errortext)} className="float-left">
+              <InputLabel htmlFor="group-name-input">Name your group</InputLabel>
+              <Input id="group-name-input" value={self.state.newGroup} placeholder="Name your group" onChange={e => self.validateName(e)} type="text" />
+              <FormHelperText>{self.state.errortext}</FormHelperText>
+            </FormControl>
             <div className={self.state.showDeviceList ? 'hidden' : 'float-left margin-left-small'}>
               <Button
                 variant="contained"
@@ -250,13 +249,8 @@ export default class CreateGroup extends React.Component {
           </div>
 
           {self.state.showWarning ? (
-            <div className="help-message" style={{ marginTop: '-30px' }}>
-              <h2>
-                <Icon className="material-icons" style={{ marginRight: '4px', top: '4px' }}>
-                  error_outline
-                </Icon>
-                You're creating a new group
-              </h2>
+            <div className="help-message" style={{ marginTop: '-15px' }}>
+              <h2>{`${<ErrorOutlineIcon style={{ marginRight: '4px', verticalAlign: 'sub' }} />} You're creating a new group`}</h2>
               <p>
                 Just a heads-up: if a device is already in another group, it will be removed from that group and moved to the new one. A device can only belong
                 to one group at a time.
@@ -307,13 +301,7 @@ export default class CreateGroup extends React.Component {
             <Button onClick={() => this._handleClose()}>Cancel</Button>
           </div>
           ,
-          <Button
-            variant="contained"
-            key="create-action-button-2"
-            color="primary"
-            onClick={() => this._createGroupHandler()}
-            disabled={this.state.createInvalid}
-          >
+          <Button variant="contained" key="create-action-button-2" color="primary" onClick={() => this._createGroupHandler()} disabled={createButtonInvalid}>
             {this.state.showWarning ? 'Confirm' : 'Create group'}
           </Button>
         </DialogActions>

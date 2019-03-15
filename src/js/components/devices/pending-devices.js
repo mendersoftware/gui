@@ -1,4 +1,5 @@
 import React from 'react';
+import { Collapse } from 'react-collapse';
 import Time from 'react-time';
 import ReactTooltip from 'react-tooltip';
 import { AuthDevices, ExpandAuth } from '../helptips/helptooltips';
@@ -16,9 +17,6 @@ import { preformatWithRequestID } from '../../helpers';
 // material ui
 import Button from '@material-ui/core/Button';
 import Checkbox from '@material-ui/core/Checkbox';
-import Collapse from '@material-ui/core/Collapse';
-import HelpIcon from '@material-ui/icons/Help';
-import Icon from '@material-ui/core/Icon';
 import IconButton from '@material-ui/core/IconButton';
 import InfoIcon from '@material-ui/icons/InfoOutlined';
 import Table from '@material-ui/core/Table';
@@ -26,6 +24,11 @@ import TableHead from '@material-ui/core/TableHead';
 import TableCell from '@material-ui/core/TableCell';
 import TableBody from '@material-ui/core/TableBody';
 import TableRow from '@material-ui/core/TableRow';
+
+import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
+import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
+import HelpIcon from '@material-ui/icons/Help';
+import SettingsIcon from '@material-ui/icons/Settings';
 
 export default class Pending extends React.Component {
   constructor(props, context) {
@@ -245,7 +248,11 @@ export default class Pending extends React.Component {
           onClick={event => self._expandRow(event, index)}
         >
           <TableCell padding="checkbox">
-            <Checkbox style={expanded ? { paddingTop: '0', marginTop:'-4px' } : {}}  checked={self._isSelected(index)} onChange={() => self._onRowSelection(index)} />
+            <Checkbox
+              style={expanded ? { paddingTop: '0', marginTop: '-4px' } : {}}
+              checked={self._isSelected(index)}
+              onChange={() => self._onRowSelection(index)}
+            />
           </TableCell>
           <TableCell>{id_attribute}</TableCell>
           <TableCell>
@@ -256,16 +263,18 @@ export default class Pending extends React.Component {
           </TableCell>
           <TableCell className="capitalized">{device.status}</TableCell>
           <TableCell style={{ width: '55px', paddingRight: '0', paddingLeft: '12px' }} className="expandButton">
-            <IconButton className="float-right">
-              <Icon className="material-icons">{expanded ? 'arrow_drop_up' : 'arrow_drop_down'}</Icon>
-            </IconButton>
+            <IconButton className="float-right">{expanded ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}</IconButton>
           </TableCell>
           <TableCell style={{ width: '0', padding: '0', overflow: 'visible' }}>
             <Collapse
+              springConfig={{ stiffness: 210, damping: 20 }}
+              onMeasure={measurements => self._adjustCellHeight(measurements.height)}
               className="expanded"
-              in={Boolean(expanded)}
-              onExit={node => self._adjustCellHeight(node.parentElement.clientHeight)}
-              onEntered={node => self._adjustCellHeight(node.parentElement.clientHeight)}
+              isOpened={Boolean(expanded)}
+              onClick={e => {
+                e.preventDefault();
+                e.stopPropagation();
+              }}
             >
               {expanded}
             </Collapse>
@@ -328,9 +337,7 @@ export default class Pending extends React.Component {
                   </TableCell>
                   <TableCell className="columnHeader" tooltip={(this.props.globalSettings || {}).id_attribute || 'Device ID'}>
                     {(this.props.globalSettings || {}).id_attribute || 'Device ID'}
-                    <Icon onClick={this.props.openSettingsDialog} style={{ fontSize: '16px' }} className="material-icons hover float-right">
-                      settings
-                    </Icon>
+                    <SettingsIcon onClick={this.props.openSettingsDialog} style={{ fontSize: '16px' }} className="hover float-right" />
                   </TableCell>
                   <TableCell className="columnHeader" tooltip="First request">
                     First request

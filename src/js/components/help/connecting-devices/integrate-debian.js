@@ -7,9 +7,9 @@ export default class IntegrateDebian extends React.Component {
         <h2>Integrate with Debian family</h2>
 
         <p>
-          If you'd like to integrate a board with the Debian family of OSes - for example Debian, Ubuntu, or Raspbian - you can use our{' '}
+          If you&#39;d like to integrate a board with the Debian family of OSes - for example Debian, Ubuntu, or Raspbian - you can use our{' '}
           <span className="code">mender-convert</span> utility to convert existing disk images for use with Mender.{' '}
-          <a href={'https://docs.mender.io/' + this.props.docsVersion + 'artifacts/debian-family'} target="_blank">
+          <a href={`https://docs.mender.io/${this.props.docsVersion}artifacts/debian-family`} target="_blank">
             Read our documentation
           </a>{' '}
           on building a Mender Debian image.

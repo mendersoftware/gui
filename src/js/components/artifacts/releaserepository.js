@@ -11,11 +11,12 @@ import Dropzone from 'react-dropzone';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
-import Icon from '@material-ui/core/Icon';
 import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 
+import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
+import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import FileIcon from '@material-ui/icons/CloudUpload';
 import HelpIcon from '@material-ui/icons/Help';
@@ -130,7 +131,7 @@ export default class ReleaseRepository extends React.Component {
               <div style={Object.assign({}, columnStyle, { maxWidth: '100vw' })}>{artifactType}</div>
               <div style={columnStyle}>{pkg.signed ? <CheckCircleOutlineIcon className="green" /> : '-'}</div>
               <IconButton className="expandButton" onClick={() => self._onRowSelection(pkg)}>
-                <Icon className="material-icons">{expanded ? 'arrow_drop_up' : 'arrow_drop_down'}</Icon>
+                {expanded ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
               </IconButton>
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>

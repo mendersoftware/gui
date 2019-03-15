@@ -20,7 +20,7 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
       {...rest}
       render={props =>
         isLoggedIn() ? (
-          <Component {...props} />
+          <Component {...props} {...rest} />
         ) : (
           <Redirect
             to={{
@@ -37,7 +37,7 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
 export default (
   <App>
     <AppContext.Consumer>
-      {(docsVersion, artifactProgress, version) => (
+      {({ docsVersion, artifactProgress, version }) => (
         <Switch>
           <PrivateRoute exact path="/" component={Dashboard} />
           <PrivateRoute path="/devices/:status(pending|preauthorized|rejected)?/:filters?" component={Devices} />

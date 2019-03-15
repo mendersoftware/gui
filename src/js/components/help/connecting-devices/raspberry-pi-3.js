@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import Button from '@material-ui/core/Button';
 import Icon from '@material-ui/core/Icon';
@@ -75,8 +76,8 @@ export default class RaspberryPi extends React.Component {
             <p>The purpose of this is to make it easier for you to test Mender with a physical device.</p>
             <p>
               If you would like to use a different device type, please see the page on{' '}
-              <a onClick={() => this.props.changePage('help/connecting-devices/provision-a-demo/beagleboneblack')}>BeagleBone Black</a> or{' '}
-              <a onClick={() => this.props.changePage('help/connecting-devices/build-with-yocto')}>Build with Yocto Project</a>.
+              <Link to="/help/connecting-devices/provision-a-demo/beagleboneblack">BeagleBone Black</Link> or{' '}
+              <Link to="/help/connecting-devices/build-with-yocto">Build with Yocto Project</Link>.
             </p>
             <h3>Prerequisites</h3>
             <h4>A device to test with</h4>
@@ -100,7 +101,7 @@ export default class RaspberryPi extends React.Component {
               .
             </p>
             <p>
-              Then modify the image as shown in the{' '}
+              Then modify the image as shown in the
               <a href={'https://docs.mender.io/development/getting-started/deploy-to-physical-devices#wifi-connectivity'} target="_blank">
                 Wifi connectivity
               </a>{' '}
@@ -120,7 +121,7 @@ export default class RaspberryPi extends React.Component {
             ) : (
               placeholder
             )}
-            }<p>After the image has been downloaded, unpack it:</p>
+            <p>{`After the image has been downloaded, unpack it:`}</p>
             <div className="code">
               <CopyToClipboard text={codeToCopy1} onCopy={() => this._copied('copied1')}>
                 <Button style={{ float: 'right', margin: '-10px 0 0 10px' }} icon={<Icon className="material-icons">content_paste</Icon>}>
@@ -134,9 +135,8 @@ export default class RaspberryPi extends React.Component {
             <p>Insert the SD card of your device into your workstation.</p>
             <p>Find the path to the device where your SD card is placed on your workstation.</p>
             <p>
-              {' '}
-              Normally this will be <span className="code">/dev/mmcblk0</span> or <span className="code">/dev/sdb</span>. If you are unsure about its location,
-              refer to these tutorials for{' '}
+              Normally this will be ${<span className="code">/dev/mmcblk0</span>} or <span className="code">/dev/sdb</span>. If you are unsure about its
+              location, refer to these tutorials for{' '}
               <a href="https://www.raspberrypi.org/documentation/installation/installing-images/linux.md" target="_blank">
                 Linux
               </a>
@@ -166,12 +166,11 @@ export default class RaspberryPi extends React.Component {
             <p>Now connect the device to power so it boots up.</p>
             <p>Wait for 3-4 minutes until the device has fully booted and the Mender client has been able to connect to the Mender server.</p>
             <p>
-              You should see your device pending in the <a onClick={() => this.props.changePage('devices')}>Devices tab</a>. Simply Authorize the pending
-              device.
+              You should see your device pending in the <Link to="/devices">Devices tab</Link>. Simply Authorize the pending device.
             </p>
             <p>
               If you cannot see any new device after 10 minutes, please verify that the network connection is working, and feel free to reach out for help with
-              diagnostics via <a onClick={() => this.props.changePage('help/more-help-resources')}>our further Help resources</a>.
+              diagnostics via <Link to="/help/more-help-resources">our further Help resources</Link>.
             </p>
             <p className="note">
               NOTE: If you reimage the device with the disk image or switch storage (e.g. SD cards) between the devices after they have booted once,{' '}
@@ -189,11 +188,10 @@ export default class RaspberryPi extends React.Component {
               placeholder
             )}
             <p>
-              After you have downloaded the two Artifacts, upload them to the Mender server in the{' '}
-              <a onClick={() => this.props.changePage('releases')}>Releases tab</a>.
+              After you have downloaded the two Artifacts, upload them to the Mender server in the <Link to="/releases">Releases tab</Link>.
             </p>
             <p>
-              Then head over to the <a onClick={() => this.props.changePage('deployments')}>Deployments tab</a> and do some remote deployments to your device!
+              Then head over to the <Link to="/deployments">Deployments tab</Link> and do some remote deployments to your device!
             </p>
           </div>
         ) : (

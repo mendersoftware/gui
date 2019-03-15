@@ -614,7 +614,7 @@ export default class Deployments extends React.Component {
         <Dialog open={(self.state.onboardDialog && self.state.showHelptips) || false}>
           <DialogTitle>Congratulations!</DialogTitle>
           <DialogContent style={{ overflow: 'hidden' }}>
-            <h3>You've completed your first deployment - so what's next?</h3>
+            <h3>{`You've completed your first deployment - so what's next?`}</h3>
             <List>
               <ListItem key="physical" disabled={true}>
                 <ListItemText primary={<p>Try updating a physical device</p>} secondary={physicalLink} />
