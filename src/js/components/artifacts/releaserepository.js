@@ -135,7 +135,12 @@ export default class ReleaseRepository extends React.Component {
               </IconButton>
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>
-              <SelectedArtifact removeArtifact={self.props.removeArtifact} formatTime={formatTime} editArtifact={self._editArtifactData} artifact={pkg} />
+              <SelectedArtifact
+                removeArtifact={self.props.removeArtifact}
+                formatTime={formatTime}
+                editArtifact={(id, description) => self._editArtifactData(id, description)}
+                artifact={pkg}
+              />
             </ExpansionPanelDetails>
           </ExpansionPanel>
         </div>
@@ -149,7 +154,8 @@ export default class ReleaseRepository extends React.Component {
         rejectClassName="active"
         multiple={false}
         accept=".mender"
-        onDrop={(accepted, rejected) => this.onDrop(accepted, rejected)}>
+        onDrop={(accepted, rejected) => this.onDrop(accepted, rejected)}
+      >
         {({ getRootProps, getInputProps }) => (
           <div {...getRootProps()}>
             <input {...getInputProps()} />
@@ -163,11 +169,11 @@ export default class ReleaseRepository extends React.Component {
 
     const noArtifactsClass = release ? '' : 'muted';
     return (
-      <div className="relative release-repo margin-left" style={{ width: '100%'}}>
+      <div className="relative release-repo margin-left" style={{ width: '100%' }}>
         <div className="flexbox">
           <KeyboardArrowRightIcon className={noArtifactsClass} />
           <div className={noArtifactsClass}>
-            <Typography variant="body2" style={release ? {fontWeight: 'bold', marginBottom: '30px'} : {marginBottom: '30px'} }>
+            <Typography variant="body2" style={release ? { fontWeight: 'bold', marginBottom: '30px' } : { marginBottom: '30px' }}>
               {release ? release.Name : 'No release selected'}
             </Typography>
             <Typography variant="body1">Artifacts in this release:</Typography>
@@ -236,9 +242,7 @@ export default class ReleaseRepository extends React.Component {
 
           {items.length || loading ? null : (
             <div className="dashboard-placeholder fadeIn" style={{ fontSize: '16px', margin: '8vh auto' }}>
-              <div>
-                { this.props.hasReleases ? <p>Select a Release on the left to view its Artifact details</p> : emptyLink }
-              </div>
+              <div>{this.props.hasReleases ? <p>Select a Release on the left to view its Artifact details</p> : emptyLink}</div>
               {showHelptips ? (
                 <div>
                   <div id="onboard-9" className="tooltip help highlight" data-tip data-for="artifact-upload-tip" data-event="click focus">
