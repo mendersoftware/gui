@@ -62,11 +62,9 @@ export default class Deployments extends React.Component {
   }
   getDeployments() {
     const self = this;
-    const callback = {
-      success: () => self.setState({ loading: false }),
-      error: self.handleDeploymentError
-    };
-    return AppActions.getDeployments(callback, 1, 20);
+    return AppActions.getDeployments(1, 20)
+      .then(() => self.setState({ loading: false }))
+      .catch(self.handleDeploymentError);
   }
   updateDeploymentCutoff(today) {
     const jsonContent = window.localStorage.getItem('deploymentChecker');
