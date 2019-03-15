@@ -87,9 +87,8 @@ ul.unstyled {
   visibility: hidden;
 }
 
-
 time {
-  white-space: nowrap; 
+  white-space: nowrap;
 }
 
 /* icon */
@@ -548,7 +547,7 @@ ul.link-list {
   overflow: hidden;
   position: relative;
   opacity: 1;
-  min-height: 53vh;
+  min-height: 47vh;
 
   &.zero {
     min-height: 100px;
@@ -1286,11 +1285,6 @@ div:focus {
     text-align: center;
   }
 
-  p {
-    font-size: 16px;
-    text-align: center;
-  }
-
   img {
     max-width: 100%;
   }
@@ -1322,19 +1316,13 @@ form .button-holder {
   &.edit-pass {
     background-color: @lightestgrey;
     padding: 0 20px 10px;
-    margin-left: -10px;
   }
 
   .pass-buttons {
-    display: inline-block;
-    position: relative;
-    margin-left: 10px;
-    top: 30px;
-    vertical-align: top;
-
-    button {
-      position: relative !important;
-      display: inline;
+    display: flex;
+    justify-content: flex-end;
+    button:first-of-type {
+      margin-right: 15px;
     }
   }
 }
@@ -1586,7 +1574,7 @@ span.day {
   border-bottom: 1px solid @lightgrey;
   margin-bottom: 15px;
   position: relative;
-  
+
   span {
     position: absolute;
     background: #ffffff;
@@ -1981,14 +1969,13 @@ span.day {
 
 .repository-list {
   border-right: 1px solid @lightergrey;
-  min-width: 190px;
+  min-width: 210px;
   min-height: 83vh;
 }
 
-
 .release-repo > .flexbox:first-of-type {
   padding-top: 15px;
-} 
+}
 
 .repository-list-item {
   &.active {

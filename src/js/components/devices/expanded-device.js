@@ -211,7 +211,7 @@ export default class ExpandedDevice extends React.Component {
       var createdTime = <Time value={this.props.device.created_ts} format="YYYY-MM-DD HH:mm" />;
       deviceIdentity.push(
         <div key="connectionTime">
-          <ListItem classes={{ root: 'device-attributes', disabled: 'opaque' }} disabled={true}>
+          <ListItem classes={{ root: 'attributes', disabled: 'opaque' }} disabled={true}>
             <ListItemText primary={status === 'preauthorized' ? 'Date added' : 'First request'} secondary={createdTime} />
           </ListItem>
           <Divider />
@@ -230,7 +230,7 @@ export default class ExpandedDevice extends React.Component {
         var secondaryText = sortedAttributes[i].value instanceof Array ? sortedAttributes[i].value.toString() : sortedAttributes[i].value;
         deviceInventory.push(
           <div key={i}>
-            <ListItem classes={{ root: 'device-attributes', disabled: 'opaque' }} disabled={true}>
+            <ListItem classes={{ root: 'attributes', disabled: 'opaque' }} disabled={true}>
               <ListItemText primary={sortedAttributes[i].name} secondary={secondaryText} />
             </ListItem>
             <Divider />

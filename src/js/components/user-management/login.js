@@ -111,7 +111,7 @@ export default class Login extends React.Component {
             submitButtonId="login_button"
           >
             <TextInput hint="Your email" label="Your email" id="email" required={true} validations="isLength:1,isEmail" />
-            <PasswordInput className="margin-bottom-small" id="password" label="Password *" required={true} />
+            <PasswordInput className="margin-bottom-small" id="password" label="Password" required={true} />
             <FormCheckbox id="noExpiry" label="Stay logged in" checked={noExpiry === 'true'} />
           </Form>
 

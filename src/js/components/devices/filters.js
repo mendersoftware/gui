@@ -61,7 +61,7 @@ export default class Filters extends React.Component {
 
     const filterItems = filters.map((item, index) => (
       <FilterItem
-        key={index}
+        key={self.state.filters.length ? index : `refresh-${index}`}
         index={index}
         filter={item}
         filters={remainingFilters}
