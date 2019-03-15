@@ -191,6 +191,7 @@ function _uploadProgress(bool) {
 }
 
 // Deployments
+var _deployments = [];
 var _deploymentsInProgress = [];
 var _pastDeployments = [];
 var _pendingDeployments = [];
@@ -313,6 +314,14 @@ function setHasDeployments(deployments) {
   _hasDeployments = deployments == null || deployments.length === 0 ? false : true;
 }
 
+function setDeployments(deployments) {
+  _deployments = deployments;
+  _deployments.sort(startTimeSort);
+  if (deployments.length) {
+    setHasDeployments(deployments);
+  }
+}
+
 function setActiveDeployments(deployments) {
   _deploymentsInProgress = deployments;
   _deploymentsInProgress.sort(startTimeSort);
@@ -424,7 +433,7 @@ function _setShowHelptips(val) {
   _showHelptips = val;
 }
 
-var AppStore = Object.assign(EventEmitter.prototype, {
+var AppStore = Object.assign({}, EventEmitter.prototype, {
   emitChange: function() {
     this.emit(CHANGE_EVENT);
   },
@@ -506,6 +515,11 @@ var AppStore = Object.assign(EventEmitter.prototype, {
    * Return list of finished deployments
    */
   getPastDeployments: () => _getPastDeployments(),
+
+  /*
+   * Return list of all deployments
+   */
+  getDeployments: () => _deployments,
 
   /*
    * Return list of pending deployments
@@ -641,15 +655,8 @@ var AppStore = Object.assign(EventEmitter.prototype, {
     case AppConstants.RECEIVE_ARTIFACTS:
       setArtifacts(payload.action.artifacts);
       break;
-
-      /* API */
-    case AppConstants.RECEIVE_RELEASES:
-      setReleases(payload.action.releases);
-      break;
-
-      /* API */
     case AppConstants.RECEIVE_DEPLOYMENTS:
-      setHasDeployments(payload.action.deployments);
+      setDeployments(payload.action.deployments);
       break;
     case AppConstants.RECEIVE_ACTIVE_DEPLOYMENTS:
       setActiveDeployments(payload.action.deployments);
@@ -662,6 +669,11 @@ var AppStore = Object.assign(EventEmitter.prototype, {
       break;
     case AppConstants.INPROGRESS_COUNT:
       setInProgressCount(payload.action.count);
+      break;
+
+      /* API */
+    case AppConstants.RECEIVE_RELEASES:
+      setReleases(payload.action.releases);
       break;
 
       /* API */
