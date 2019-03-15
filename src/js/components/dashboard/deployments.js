@@ -87,7 +87,8 @@ export default class Deployments extends React.Component {
 
     const iconStyles = {
       fontSize: 48,
-      opacity: 0.4
+      opacity: 0.5,
+      marginRight: '30px',
     };
 
     const headerStyle = {
@@ -99,7 +100,7 @@ export default class Deployments extends React.Component {
       counter: pending.length,
       header: (
         <div className="flexbox" style={headerStyle}>
-          <UpdateIcon className="flip-horizontal red" style={iconStyles} />
+          <UpdateIcon className="flip-horizontal" style={iconStyles} />
           <div>Pending {pluralize('deployment', pending.length)}</div>
         </div>
       ),
@@ -109,7 +110,7 @@ export default class Deployments extends React.Component {
       counter: inprogress.length,
       header: (
         <div className="flexbox" style={headerStyle}>
-          <RefreshIcon className="flip-horizontal green" style={iconStyles} />
+          <RefreshIcon className="flip-horizontal" style={iconStyles} />
           <div>{pluralize('Deployment', inprogress.length)} in progress</div>
         </div>
       ),
