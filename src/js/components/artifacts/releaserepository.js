@@ -135,12 +135,7 @@ export default class ReleaseRepository extends React.Component {
               </IconButton>
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>
-              <SelectedArtifact
-                removeArtifact={self.props.removeArtifact}
-                formatTime={formatTime}
-                editArtifact={self._editArtifactData}
-                artifact={self.state.artifact}
-              />
+              <SelectedArtifact removeArtifact={self.props.removeArtifact} formatTime={formatTime} editArtifact={self._editArtifactData} artifact={pkg} />
             </ExpansionPanelDetails>
           </ExpansionPanel>
         </div>
