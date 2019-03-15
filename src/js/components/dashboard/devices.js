@@ -91,7 +91,9 @@ export default class Devices extends React.Component {
           <span>Devices</span>
         </h4>
         <div style={Object.assign({ marginBottom: '30px', marginTop: '50px' }, this.props.styles)}>
-          <PendingDevices pendingDevicesCount={pendingDevices} isActive={hasPending} showHelptips={showHelptips} onClick={this.props.clickHandle} />
+          {hasPending ? (
+            <PendingDevices pendingDevicesCount={pendingDevices} isActive={hasPending} showHelptips={showHelptips} onClick={this.props.clickHandle} />
+          ) : null}
           <AcceptedDevices devicesCount={devices} inactiveCount={inactiveDevices} delta={deltaActivity} onClick={this.props.clickHandle} />
           <RedirectionWidget
             target={'/help/connecting-devices'}
