@@ -87,6 +87,11 @@ ul.unstyled {
   visibility: hidden;
 }
 
+
+time {
+  white-space: nowrap; 
+}
+
 /* icon */
 
 .pending-icon {
@@ -994,6 +999,10 @@ table thead.clickable tr > th:first-child {
   width: 30%;
   vertical-align: top;
   -webkit-line-clamp: 3;
+
+  &.list-item-large {
+    width: 60%;
+  }
 }
 
 #device-identity .list-horizontal-display > div,
@@ -1045,10 +1054,12 @@ table thead.clickable tr > th:first-child {
 }
 
 .file-details {
-  padding: 0.75vw;
+  padding: 10px 15px 30px;
+  width: 100%;
   border-radius: 4px;
   margin: 10px 3px 20px 0;
-  border: 1px solid @lightgrey;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  position: relative;
 }
 .file-meta {
   padding: 0 16px;
@@ -1245,6 +1256,13 @@ textarea#inline-description {
     }
     border-width: 2px;
   }
+  &:focus {
+    outline: none !important;
+  }
+}
+
+div:focus {
+  outline: none !important;
 }
 
 .key-value-container button {
@@ -1402,7 +1420,7 @@ tr.expand {
   }
 }
 
-.device-attributes.opaque {
+.attributes.opaque {
   opacity: 1;
 }
 
@@ -1513,7 +1531,7 @@ input.fileInput {
   font-size: 16px;
   color: @grey;
   text-align: center;
-  padding: 15px;
+  padding: 15px 30px;
   .animation(fadein 0.2s 1);
 
   img {
@@ -1920,15 +1938,17 @@ span.day {
 }
 
 // Releases & Artifacts
-.repository-list,
-.release-repo {
-  overflow: auto;
-}
 
 .repository-list {
   border-right: 1px solid @lightergrey;
-  width: 198px;
+  min-width: 190px;
+  min-height: 83vh;
 }
+
+
+.release-repo > .flexbox:first-of-type {
+  padding-top: 15px;
+} 
 
 .repository-list-item {
   &.active {

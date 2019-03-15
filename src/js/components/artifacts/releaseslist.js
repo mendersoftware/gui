@@ -41,10 +41,11 @@ export default class ReleasesList extends React.Component {
 
     return (
       <div className="repository-list">
-        <div>
+        <div className="margin-bottom-small">
           <h4>Releases</h4>
           <SearchInput placeholder="Filter by name" className="search" ref={search => (self.search = search)} onChange={term => self.searchUpdated(term)} />
-          {self.state.searchTerm ? <p className="muted">{`Filtered from ${releases.length} ${pluralize('release', releases.length)}`}</p> : null}
+          {self.state.searchTerm ? <p className="muted">{`Filtered from ${releases.length} ${pluralize('Release', releases.length)}`}</p> : null}
+          {!self.props.releases.length ? <p className="margin-top muted align-center margin-right">There are no Releases yet</p> : null }
         </div>
         {loading ? (
           <Loader show={loading} />
