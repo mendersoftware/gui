@@ -43,6 +43,9 @@ export default class SelectedArtifact extends React.Component {
           self.setState({ downloadUrl: null });
         });
     }
+    if (!self.state.descEdit && self.props.artifact.description && self.state.description !== self.props.artifact.description) {
+      self.setState({ description: self.props.artifact.description || '-' });
+    }
   }
   _handleLinkClick(device_type) {
     var filters = `device_type=${device_type}`;

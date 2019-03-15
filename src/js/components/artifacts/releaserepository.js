@@ -114,6 +114,7 @@ export default class ReleaseRepository extends React.Component {
     var items = this.state.artifacts.map((pkg, index) => {
       var compatible = pkg.device_types_compatible.join(', ');
       const expanded = self.state.artifact.id === pkg.id;
+      const expandedArtifact = expanded ? Object.assign({}, self.state.artifact, pkg) : {};
       const artifactType = pkg.updates.reduce((accu, item) => (accu ? accu : item.type_info.type), '');
       const columnStyle = { width: columnWidth };
       return (
@@ -135,12 +136,16 @@ export default class ReleaseRepository extends React.Component {
               </IconButton>
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>
-              <SelectedArtifact
-                removeArtifact={self.props.removeArtifact}
-                formatTime={formatTime}
-                editArtifact={(id, description) => self._editArtifactData(id, description)}
-                artifact={pkg}
-              />
+              {expanded ? (
+                <SelectedArtifact
+                  removeArtifact={self.props.removeArtifact}
+                  formatTime={formatTime}
+                  editArtifact={(id, description) => self._editArtifactData(id, description)}
+                  artifact={expandedArtifact}
+                />
+              ) : (
+                <div />
+              )}
             </ExpansionPanelDetails>
           </ExpansionPanel>
         </div>
