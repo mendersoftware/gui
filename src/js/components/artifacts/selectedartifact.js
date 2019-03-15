@@ -33,14 +33,16 @@ export default class SelectedArtifact extends React.Component {
       description: this.props.artifact.description || '-'
     };
   }
-  componentDidMount() {
+  componentDidUpdate(prevProps) {
     const self = this;
-    AppActions.getArtifactUrl(this.props.artifact.id)
+    if (prevProps.artifact.id !== self.props.artifact.id || !self.state.downloadUrl) {
+      AppActions.getArtifactUrl(self.props.artifact.id)
       .then(response => self.setState({ downloadUrl: response.uri }))
       .catch(error => {
         console.log(error);
         self.setState({ downloadUrl: null });
       });
+  }
   }
   _handleLinkClick(device_type) {
     var filters = `device_type=${device_type}`;
