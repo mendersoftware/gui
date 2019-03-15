@@ -37,12 +37,12 @@ export default class SelectedArtifact extends React.Component {
     const self = this;
     if (prevProps.artifact.id !== self.props.artifact.id || !self.state.downloadUrl) {
       AppActions.getArtifactUrl(self.props.artifact.id)
-      .then(response => self.setState({ downloadUrl: response.uri }))
-      .catch(error => {
-        console.log(error);
-        self.setState({ downloadUrl: null });
-      });
-  }
+        .then(response => self.setState({ downloadUrl: response.uri }))
+        .catch(error => {
+          console.log(error);
+          self.setState({ downloadUrl: null });
+        });
+    }
   }
   _handleLinkClick(device_type) {
     var filters = `device_type=${device_type}`;

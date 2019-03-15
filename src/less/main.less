@@ -547,7 +547,7 @@ ul.link-list {
   overflow: hidden;
   position: relative;
   opacity: 1;
-  min-height: 53vh;
+  min-height: 47vh;
 
   &.zero {
     min-height: 100px;
@@ -1285,11 +1285,6 @@ div:focus {
     text-align: center;
   }
 
-  p {
-    font-size: 16px;
-    text-align: center;
-  }
-
   img {
     max-width: 100%;
   }
@@ -1311,11 +1306,18 @@ form .button-holder {
 
 #password-holder {
   position: relative;
+  display: inline-block;
+  max-width: 100%;
+
+  > div > div > div {
+    max-width: 100%;
+  }
+
   &.edit-pass {
     background-color: @lightestgrey;
-    padding: 0 12px 10px;
-    margin: 0 -10px;
+    padding: 0 20px 10px;
   }
+
   .pass-buttons {
     display: flex;
     justify-content: flex-end;
@@ -1967,7 +1969,7 @@ span.day {
 
 .repository-list {
   border-right: 1px solid @lightergrey;
-  min-width: 190px;
+  min-width: 210px;
   min-height: 83vh;
 }
 
