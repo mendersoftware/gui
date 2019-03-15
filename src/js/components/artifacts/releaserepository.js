@@ -85,7 +85,7 @@ export default class ReleaseRepository extends React.Component {
     };
     return AppActions.editArtifact(id, body)
       .then(() => {
-        AppActions.setSnackbar('Release details were updated successfully.', 5000, '');
+        AppActions.setSnackbar('Artifact details were updated successfully.', 5000, '');
         var updated = self.state.artifact;
         updated.description = description;
         self.setState({ artifact: updated });
@@ -93,7 +93,7 @@ export default class ReleaseRepository extends React.Component {
       })
       .catch(err => {
         var errMsg = err.res.body.error || '';
-        AppActions.setSnackbar(preformatWithRequestID(errMsg, `Release details couldn't be updated. ${err.error}`), null, 'Copy to clipboard');
+        AppActions.setSnackbar(preformatWithRequestID(errMsg, `Artifact details couldn't be updated. ${err.error}`), null, 'Copy to clipboard');
       });
   }
 
@@ -124,7 +124,7 @@ export default class ReleaseRepository extends React.Component {
             onChange={() => self._onRowSelection(pkg)}
             style={{ width: '100%', border: '1px solid', borderColor: '#e0e0e0' }}
           >
-            <ExpansionPanelSummary style={{ paddingLeft: '12px' }}>
+            <ExpansionPanelSummary style={{ padding: '0 12px' }}>
               <div style={columnStyle}>{compatible}</div>
               <Time value={formatTime(pkg.modified)} format="YYYY-MM-DD HH:mm" style={columnStyle} />
               <div style={Object.assign({}, columnStyle, { maxWidth: '100vw' })}>{artifactType}</div>
@@ -146,16 +146,35 @@ export default class ReleaseRepository extends React.Component {
       );
     });
 
+    var emptyLink = (
+      <Dropzone
+        disabled={progress > 0}
+        activeClassName="active"
+        rejectClassName="active"
+        multiple={false}
+        accept=".mender"
+        onDrop={(accepted, rejected) => this.onDrop(accepted, rejected)}>
+        {({ getRootProps, getInputProps }) => (
+          <div {...getRootProps()}>
+            <input {...getInputProps()} />
+            <p>
+              There are no Releases yet. <a>Upload an Artifact</a> to create a new Release
+            </p>
+          </div>
+        )}
+      </Dropzone>
+    );
+
     const noArtifactsClass = release ? '' : 'muted';
     return (
-      <div className="relative release-repo" style={{ width: '100%', marginLeft: '1vw' }}>
+      <div className="relative release-repo margin-left" style={{ width: '100%'}}>
         <div className="flexbox">
           <KeyboardArrowRightIcon className={noArtifactsClass} />
           <div className={noArtifactsClass}>
-            <Typography variant="body1" className="bold">
+            <Typography variant="body2" style={release ? {fontWeight: 'bold', marginBottom: '30px'} : {marginBottom: '30px'} }>
               {release ? release.Name : 'No release selected'}
             </Typography>
-            <Typography variant="subtitle2">Artifacts in this release: {release ? release.Artifacts.length : 0}</Typography>
+            <Typography variant="body1">Artifacts in this release:</Typography>
           </div>
         </div>
 
@@ -168,10 +187,10 @@ export default class ReleaseRepository extends React.Component {
           onDrop={(accepted, rejected) => this.onDrop(accepted, rejected)}
         >
           {({ getRootProps, getInputProps }) => (
-            <div {...getRootProps()} className="top-right-button fadeIn dropzone onboard" style={{ top: 0 }}>
+            <div {...getRootProps()} className="dashboard-placeholder top-right-button fadeIn dropzone onboard" style={{ top: 0 }}>
               <input {...getInputProps()} />
               <span className="icon">
-                <FileIcon style={{ height: '24px', width: '24px', verticalAlign: 'middle', marginTop: '-2px' }} />
+                <FileIcon style={{ height: '24px', width: '24px', verticalAlign: 'middle', marginTop: '-2px', marginRight: '10px' }} />
               </span>
               <span>
                 Drag here or <a>browse</a> to upload an artifact file
@@ -220,10 +239,9 @@ export default class ReleaseRepository extends React.Component {
           ) : null}
 
           {items.length || loading ? null : (
-            <div className="onboard dashboard-placeholder fadeIn" style={{ width: '500px', fontSize: '16px', margin: 'auto' }}>
+            <div className="dashboard-placeholder fadeIn" style={{ fontSize: '16px', margin: '8vh auto' }}>
               <div>
-                <p>Select a release to view its Artifact details</p>
-                <img src="assets/img/artifacts.png" alt="artifacts" />
+                { this.props.hasReleases ? <p>'Select a Release on the left to view its Artifact details'</p> : emptyLink }
               </div>
               {showHelptips ? (
                 <div>
