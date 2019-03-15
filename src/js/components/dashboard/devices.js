@@ -88,10 +88,8 @@ export default class Devices extends React.Component {
     const noDevicesAvailable = !(devices.length || pendingDevices.length);
     return (
       <div>
-        <h3 className="dashboard-header">
-          <BoardIcon /> Devices
-        </h3>
-        <div style={Object.assign({ marginBottom: '50px', marginTop: '50px' }, this.props.styles)}>
+        <h4 className="dashboard-header"><span>Devices</span></h4>
+        <div style={Object.assign({ marginBottom: '30px', marginTop: '50px' }, this.props.styles)}>
           <PendingDevices pendingDevicesCount={pendingDevices} isActive={hasPending} showHelptips={showHelptips} onClick={this.props.clickHandle} />
           <AcceptedDevices devicesCount={devices} inactiveCount={inactiveDevices} delta={deltaActivity} onClick={this.props.clickHandle} />
           <RedirectionWidget
