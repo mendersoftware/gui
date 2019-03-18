@@ -10,7 +10,7 @@ set -e -x
 # * ANNOUNCEMENT - announcement to display in Hosted Mender UI
 
 # main.js path
-MAINJS="./js/main.js" 
+MAINJS="./main.js" 
 
 HOSTNAME=""
 
