@@ -1,22 +1,13 @@
 const HtmlWebPackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
-const autoprefixer = require('autoprefixer');
 const path = require('path');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 module.exports = {
+  devtool: 'source-map',
   module: {
     rules: [
-      // {
-      //   test: /\.js[x]?$/,
-      //   enforce: 'pre',
-      //   loader: 'eslint-loader',
-      //   exclude: /node_modules/,
-      //   options: {
-      //     emitWarning: true,
-      //     configFile: './.eslintrc'
-      //   }
-      // },
       {
         test: /\.js[x]?$/,
         exclude: /node_modules/,
@@ -63,10 +54,8 @@ module.exports = {
           {
             loader: 'postcss-loader',
             options: {
-              autoprefixer: {
-                browsers: ['last 2 versions']
-              },
-              plugins: () => [autoprefixer],
+              plugins: [require('autoprefixer')({})],
+              minimize: true,
               sourceMap: true
             }
           },
@@ -77,6 +66,7 @@ module.exports = {
     ]
   },
   plugins: [
+    new CleanWebpackPlugin(),
     new HtmlWebPackPlugin({
       template: './src/index.html'
     }),

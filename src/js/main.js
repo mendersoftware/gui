@@ -3,6 +3,7 @@ import { render } from 'react-dom';
 import { BrowserRouter as Router } from 'react-router-dom';
 import 'rc-pagination/assets/index.css';
 import { MuiThemeProvider } from '@material-ui/core/styles';
+import './../hint.css';
 import './../less/main.less';
 import theme from './themes/mender-theme';
 import routes from './config/routes';
