@@ -1,50 +1,49 @@
 import React from 'react';
-import IconButton from 'material-ui/IconButton';
-import FontIcon from 'material-ui/FontIcon';
-var Loader = require('../common/loader');
-var createReactClass = require('create-react-class');
+import IconButton from '@material-ui/core/IconButton';
+import Loader from '../common/loader';
 
-var ConfirmDecommission = createReactClass({
-  getInitialState: function() {
-    return {
-      class: "fadeIn"
+import CancelIcon from '@material-ui/icons/Cancel';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+
+export default class ConfirmDecommission extends React.Component {
+  constructor(props, context) {
+    super(props, context);
+    this.state = {
+      class: 'fadeIn'
     };
-  },
-  _handleCancel: function() {
-    this.setState({class: "fadeOut"});
+  }
+  _handleCancel() {
+    this.setState({ class: 'fadeOut' });
     this.props.cancel();
-  },
-  _handleDecommission: function() {
-    this.setState({loading:true});
+  }
+  _handleDecommission() {
+    this.setState({ loading: true });
     this.props.decommission();
-  },
-  render: function() {
-    var styles = {
-      padding: "0",
-      marginLeft:"12px",
-      marginRight:"-24px",
-      verticalAlign:"middle"
-    }
+  }
+  render() {
     return (
-      <div className={this.state.class} style={{marginRight:"12px"}}>
+      <div className={this.state.class} style={{ marginRight: '12px' }}>
         <div className="float-right">
-          <span className="bold">{this.state.loading ? "Decommissioning " : "Decommission this device and remove all of its data from the server. This cannot be undone. Are you sure?"}</span>
-     
-          {this.state.loading ? <Loader table={true} waiting={true} show={true} style={{height:"4px", marginLeft:"20px"}} /> :
-           
+          <span className="bold">
+            {this.state.loading
+              ? 'Decommissioning '
+              : 'Decommission this device and remove all of its data from the server. This cannot be undone. Are you sure?'}
+          </span>
+
+          {this.state.loading ? (
+            <Loader table={true} waiting={true} show={true} style={{ height: '4px', marginLeft: '20px' }} />
+          ) : (
             <div className="inline-block">
-              <IconButton id="ConfirmDecommission" style={styles} onClick={this._handleDecommission}>
-                <FontIcon className="material-icons green">check_circle</FontIcon>
+              <IconButton id="ConfirmDecommission" onClick={() => this._handleDecommission()}>
+                <CheckCircleIcon className="green" />
               </IconButton>
-              <IconButton id="cancelDecommission" style={styles} onClick={this._handleCancel}>
-                <FontIcon className="material-icons red">cancel</FontIcon>
+              <IconButton id="cancelDecommission" onClick={() => this._handleCancel()}>
+                <CancelIcon className="red" />
               </IconButton>
             </div>
-          }
+          )}
         </div>
       </div>
-    )
+    );
   }
-});
-
-module.exports = ConfirmDecommission;
+}

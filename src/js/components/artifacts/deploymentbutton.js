@@ -1,15 +1,10 @@
 import React from 'react';
-var createReactClass = require('create-react-class');
 
 // material ui
-import RaisedButton from 'material-ui/RaisedButton';
+import Button from '@material-ui/core/Button';
 
-var DeploymentButton = createReactClass({
-  render: function() {
-    return (
-      <RaisedButton label="Create deployment"/>
-    );
+export default class DeploymentButton extends React.Component {
+  render() {
+    return <Button variant="contained">Create deployment</Button>;
   }
-});
-
-module.exports = DeploymentButton;
+}

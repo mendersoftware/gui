@@ -1,5 +1,4 @@
 import React from 'react';
-import BoardIcon from 'react-material-icons/icons/hardware/developer-board';
 
 import AppActions from '../../actions/app-actions';
 import AppStore from '../../stores/app-store';
@@ -85,18 +84,22 @@ export default class Devices extends React.Component {
   render() {
     const { devices, inactiveDevices, pendingDevices, deltaActivity, showHelptips } = this.state;
     const hasPending = pendingDevices > 0;
-    const noDevicesAvailable = !(devices.length || pendingDevices.length);
+    const noDevicesAvailable = !devices && !hasPending;
     return (
       <div>
-        <h4 className="dashboard-header"><span>Devices</span></h4>
+        <h4 className="dashboard-header">
+          <span>Devices</span>
+        </h4>
         <div style={Object.assign({ marginBottom: '30px', marginTop: '50px' }, this.props.styles)}>
-          <PendingDevices pendingDevicesCount={pendingDevices} isActive={hasPending} showHelptips={showHelptips} onClick={this.props.clickHandle} />
+          {hasPending ? (
+            <PendingDevices pendingDevicesCount={pendingDevices} isActive={hasPending} showHelptips={showHelptips} onClick={this.props.clickHandle} />
+          ) : null}
           <AcceptedDevices devicesCount={devices} inactiveCount={inactiveDevices} delta={deltaActivity} onClick={this.props.clickHandle} />
           <RedirectionWidget
             target={'/help/connecting-devices'}
             content={'Learn how to connect more devices'}
             buttonContent={'Learn more'}
-            onClick={() => this.props.clickHandle({ route: 'help/connecting-devices' })}
+            onClick={() => this.props.clickHandle({ route: '/help/connecting-devices' })}
             isActive={noDevicesAvailable}
           />
         </div>

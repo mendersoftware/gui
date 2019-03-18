@@ -1,146 +1,119 @@
 import React from 'react';
 import Time from 'react-time';
 import ReactTooltip from 'react-tooltip';
-import { CreateDeployment, ProgressDeployment } from '../helptips/helptooltips';
-var createReactClass = require('create-react-class');
-var update = require('react-addons-update');
-var DeploymentStatus = require('./deploymentstatus');
-
-var Pagination = require('rc-pagination');
-var _en_US = require('rc-pagination/lib/locale/en_US');
-var Loader = require('../common/loader');
+import Pagination from 'rc-pagination';
+import _en_US from 'rc-pagination/lib/locale/en_US';
 
 // material ui
-import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
-import FlatButton from 'material-ui/FlatButton';
-import FontIcon from 'material-ui/FontIcon';
+import Table from '@material-ui/core/Table';
+import TableHead from '@material-ui/core/TableHead';
+import TableCell from '@material-ui/core/TableCell';
+import TableBody from '@material-ui/core/TableBody';
+import TableRow from '@material-ui/core/TableRow';
 
-var Progress = createReactClass({
-  getInitialState: function() {
-    return {
+import HelpIcon from '@material-ui/icons/Help';
+
+import { CreateDeployment, ProgressDeployment } from '../helptips/helptooltips';
+import DeploymentStatus from './deploymentstatus';
+import Loader from '../common/loader';
+import { formatTime } from '../../helpers';
+
+export default class Progress extends React.Component {
+  constructor(props, context) {
+    super(props, context);
+    this.state = {
       retry: false,
       pageSize: 20
     };
-  },
-  _progressCellClick: function(rowNumber, columnId) {
-    var self = this;
-    this.props.openReport(rowNumber, "progress");
-  },
-  _formatTime: function(date) {
-    if (date) {
-       return date.replace(' ','T').replace(/ /g, '').replace('UTC','');
-    }
-    return;
-  },
-  _handlePageChange: function(pageNo) {
-    this.props.refreshProgress(pageNo);
-  },
-  render: function() {
+  }
+
+  render() {
     // get statistics for each in progress
     var progressMap = this.props.progress.map(function(deployment, index) {
-      var status = (
-        <DeploymentStatus isActiveTab={this.props.isActiveTab} refresh={true} id={deployment.id} />
-      );
+      var status = <DeploymentStatus isActiveTab={this.props.isActiveTab} refresh={true} id={deployment.id} />;
       return (
-        <TableRow style={{height:"52px"}} key={index}>
-          <TableRowColumn>{deployment.artifact_name}</TableRowColumn>
-          <TableRowColumn>{deployment.name}</TableRowColumn>
-          <TableRowColumn><Time value={this._formatTime(deployment.created)} format="YYYY-MM-DD HH:mm" /></TableRowColumn>
-          <TableRowColumn style={{textAlign:"right", width:"100px"}}>{deployment.device_count}</TableRowColumn>
-          <TableRowColumn style={{overflow:"visible", width:"350px"}}>{status}</TableRowColumn>
+        <TableRow style={{ height: '52px' }} hover key={index} onClick={() => this.props.openReport(index, 'progress')}>
+          <TableCell>{deployment.artifact_name}</TableCell>
+          <TableCell>{deployment.name}</TableCell>
+          <TableCell>
+            <Time value={formatTime(deployment.created)} format="YYYY-MM-DD HH:mm" />
+          </TableCell>
+          <TableCell style={{ textAlign: 'right', width: '100px' }}>{deployment.device_count}</TableCell>
+          <TableCell style={{ overflow: 'visible', width: '350px' }}>{status}</TableCell>
         </TableRow>
-      )
+      );
     }, this);
 
     return (
       <div className="fadeIn">
-        <div className="deploy-table-contain"> 
+        <div className="deploy-table-contain">
           <Loader show={this.props.loading} />
-          { progressMap.length ?  
-
+          {progressMap.length ? (
             <div>
               <h3>In progress</h3>
-              <Table
-                onCellClick={this._progressCellClick}
-                className={progressMap.length ? null : 'hidden'}
-                selectable={false}
-                style={{overflow:"visible"}}
-                wrapperStyle={{overflow:"visible"}}
-                bodyStyle={{overflow:"visible"}}>
-                <TableHeader
-                  displaySelectAll={false}
-                  adjustForCheckbox={false}>
-                  <TableRow
-                   style={{overflow:"visible"}}>
-                    <TableHeaderColumn>Updating to</TableHeaderColumn>
-                    <TableHeaderColumn>Group</TableHeaderColumn>
-                    <TableHeaderColumn>Started</TableHeaderColumn>
-                    <TableHeaderColumn style={{textAlign:"right", width:"100px"}}># Devices</TableHeaderColumn>
-                    <TableHeaderColumn style={{width:"350px"}}>Status</TableHeaderColumn>
-                  </TableRow>
-                </TableHeader>
-                <TableBody
-                  showRowHover={true}
-                  displayRowCheckbox={false}
-                  className="clickable">
-                  {progressMap}
-                </TableBody>
-              </Table>
+              {progressMap.length ? (
+                <Table style={{ overflow: 'visible' }}>
+                  <TableHead>
+                    <TableRow style={{ overflow: 'visible' }}>
+                      <TableCell>Updating to</TableCell>
+                      <TableCell>Group</TableCell>
+                      <TableCell>Started</TableCell>
+                      <TableCell style={{ textAlign: 'right', width: '100px' }}># Devices</TableCell>
+                      <TableCell style={{ width: '350px' }}>Status</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody className="clickable" style={{ overflow: 'visible' }}>
+                    {progressMap}
+                  </TableBody>
+                </Table>
+              ) : null}
             </div>
-            
-            : null }
+          ) : null}
 
+          {this.props.count > this.props.progress.length ? (
+            <Pagination
+              locale={_en_US}
+              simple
+              pageSize={this.state.pageSize}
+              current={this.props.page || 1}
+              total={this.props.count}
+              onChange={page => this.props.refreshProgress(page)}
+            />
+          ) : null}
 
-          {
-            this.props.count>this.props.progress.length ? 
-            <Pagination locale={_en_US} simple pageSize={this.state.pageSize} current={this.props.page || 1} total={this.props.count} onChange={this._handlePageChange} /> 
-            :
-            null
-          }
-
-          { this.props.count || this.props.pendingCount ? null : 
-
-            <div className={(progressMap.length || this.props.loading)  ? 'hidden' : "dashboard-placeholder"}>
+          {this.props.count || this.props.pendingCount ? null : (
+            <div className={progressMap.length || this.props.loading ? 'hidden' : 'dashboard-placeholder'}>
               <p>Pending and ongoing deployments will appear here. </p>
-              <p><a onClick={this.props.createClick}>Create a deployment</a> to get started</p>
+              <p>
+                <a onClick={this.props.createClick}>Create a deployment</a> to get started
+              </p>
               <img src="assets/img/deployments.png" alt="In progress" />
             </div>
-          }
+          )}
 
-
-          { !this.props.loading && this.props.showHelptips && (!this.props.hasDeployments || this.props.progress.length) ?
+          {!this.props.loading && this.props.showHelptips && (!this.props.hasDeployments || this.props.progress.length) ? (
             // if first deployment not created, or if there is one in progress, show tip
             <div>
-              <div 
+              <div
                 id="onboard-12"
-                className={this.props.hasDeployments ? "tooltip help" : "tooltip help highlight"}
+                className={this.props.hasDeployments ? 'tooltip help' : 'tooltip help highlight'}
                 data-tip
-                data-for='create-deployment-tip'
-                data-event='click focus'>
-                <FontIcon className="material-icons">help</FontIcon>
+                data-for="create-deployment-tip"
+                data-event="click focus"
+              >
+                <HelpIcon />
               </div>
-              <ReactTooltip
-                id="create-deployment-tip"
-                globalEventOff='click'
-                place="bottom"
-                type="light"
-                effect="solid"
-                className="react-tooltip">
-                { !this.props.hasDeployments ? 
+              <ReactTooltip id="create-deployment-tip" globalEventOff="click" place="bottom" type="light" effect="solid" className="react-tooltip">
+                {!this.props.hasDeployments ? (
                   <CreateDeployment devices={this.props.devices.length} artifacts={this.props.hasArtifacts} />
-                  : 
+                ) : (
                   <ProgressDeployment />
-                }
-                
+                )}
               </ReactTooltip>
             </div>
-          : null }
-
+          ) : null}
         </div>
-
       </div>
     );
   }
-});
-
-module.exports = Progress;
+}

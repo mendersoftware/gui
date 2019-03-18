@@ -1,28 +1,21 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { Router } from 'react-router';
-var createReactClass = require('create-react-class');
 
 // material ui
-import FontIcon from 'material-ui/FontIcon';
+import RefreshIcon from '@material-ui/icons/Refresh';
 
-var DeploymentNotifications = createReactClass({
-    _handleClick: function() {
-    	this.context.router.push('/deployments/');
-  	},
-  	render: function() {
-	    return (
-	      <div onClick={this._handleClick} className="header-section">
-	        <span>{this.props.inprogress}</span>
-	        <FontIcon style={{color: '#c7c7c7', margin: '0 7px 0 10px', top: '5px', fontSize: '20px'}} className="material-icons flip-horizontal">refresh</FontIcon>
-	      </div>
-	    );
-  	}
-});
+export default class DeploymentNotifications extends React.Component {
+  static contextTypes = {
+    router: PropTypes.object
+  };
 
-DeploymentNotifications.contextTypes = {
-  router: PropTypes.object
-};
-
-
-module.exports = DeploymentNotifications;
+  render() {
+    return (
+      <Link to="/deployments/" className="header-section">
+        <span>{this.props.inprogress}</span>
+        <RefreshIcon style={{ color: '#c7c7c7', margin: '0 7px 0 10px', top: '5px', fontSize: '20px' }} className="flip-horizontal" />
+      </Link>
+    );
+  }
+}

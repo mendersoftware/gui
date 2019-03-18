@@ -1,61 +1,59 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { Collapse } from 'react-collapse';
 import Time from 'react-time';
-import { Motion, spring } from 'react-motion';
-import Collapse from 'react-collapse';
-import ReactHeight from 'react-height';
 import ReactTooltip from 'react-tooltip';
 import { AuthDevices, ExpandAuth } from '../helptips/helptooltips';
-import { Router, Link } from 'react-router';
-var Loader = require('../common/loader');
-var AppActions = require('../../actions/app-actions');
-var AppStore = require('../../stores/app-store');
-var ExpandedDevice = require('./expanded-device');
-var createReactClass = require('create-react-class');
-var Pagination = require('rc-pagination');
-var _en_US = require('rc-pagination/lib/locale/en_US');
-var pluralize = require('pluralize');
-import { setRetryTimer, clearRetryTimer, clearAllRetryTimers } from '../../utils/retrytimer';
-import { preformatWithRequestID } from '../../helpers.js';
+import { Link } from 'react-router-dom';
+import Loader from '../common/loader';
+import AppActions from '../../actions/app-actions';
+import ExpandedDevice from './expanded-device';
 
+import Pagination from 'rc-pagination';
+import _en_US from 'rc-pagination/lib/locale/en_US';
+import pluralize from 'pluralize';
+import { setRetryTimer, clearAllRetryTimers } from '../../utils/retrytimer';
+import { preformatWithRequestID } from '../../helpers';
 
 // material ui
-var mui = require('material-ui');
-import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
-import IconButton from 'material-ui/IconButton';
-import RaisedButton from 'material-ui/RaisedButton';
-import FlatButton from 'material-ui/RaisedButton';
-import FontIcon from 'material-ui/FontIcon';
-import InfoIcon from 'react-material-icons/icons/action/info-outline';
-import Dialog from 'material-ui/Dialog';
-import { List, ListItem } from 'material-ui/List';
+import Button from '@material-ui/core/Button';
+import Checkbox from '@material-ui/core/Checkbox';
+import IconButton from '@material-ui/core/IconButton';
+import InfoIcon from '@material-ui/icons/InfoOutlined';
+import Table from '@material-ui/core/Table';
+import TableHead from '@material-ui/core/TableHead';
+import TableCell from '@material-ui/core/TableCell';
+import TableBody from '@material-ui/core/TableBody';
+import TableRow from '@material-ui/core/TableRow';
 
-var Pending =  createReactClass({
-  getInitialState: function() {
-    return {
-      minHeight: 230,
+import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
+import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
+import HelpIcon from '@material-ui/icons/Help';
+import SettingsIcon from '@material-ui/icons/Settings';
+
+export default class Pending extends React.Component {
+  constructor(props, context) {
+    super(props, context);
+    this.state = {
       divHeight: 208,
       devices: [],
       pageNo: 1,
       pageLength: 20,
       selectedRows: [],
-      authLoading: "all",
-    }
-  },
+      authLoading: 'all'
+    };
+  }
 
   componentDidMount() {
     clearAllRetryTimers();
     this._getDevices();
-  },
+  }
 
   componentWillUnmount() {
     clearAllRetryTimers();
-  },
+  }
 
-  componentDidUpdate(prevProps, prevState) {
-
-    if ((prevProps.count !== this.props.count)
-      || ((prevProps.currentTab !== this.props.currentTab) && (this.props.currentTab.indexOf("Pending")!==-1)) ) {
+  componentDidUpdate(prevProps) {
+    if (prevProps.count !== this.props.count || (prevProps.currentTab !== this.props.currentTab && this.props.currentTab.indexOf('Pending') !== -1)) {
       this._getDevices();
       this._clearSelected();
     }
@@ -63,378 +61,365 @@ var Pending =  createReactClass({
     if (prevProps.currentTab !== this.props.currentTab) {
       this._clearSelected();
     }
-
-  },
-
+  }
 
   /*
-  * Devices to show
-  */ 
-  _getDevices: function() {
+   * Devices to show
+   */
+  _getDevices() {
     var self = this;
-    var callback =  {
-      success: function(devices) {
-        self.setState({devices: devices, pageLoading: false, authLoading: null, expandRow: null});
+    AppActions.getDevicesByStatus('pending', this.state.pageNo, this.state.pageLength)
+      .then(devices => {
+        self.setState({ devices, pageLoading: false, authLoading: null, expandRow: null });
         if (!devices.length && self.props.count) {
           //if devices empty but count not, put back to first page
           self._handlePageChange(1);
         }
-        self._adjustHeight();
-      },
-      error: function(error) {
+      })
+      .catch(err => {
         console.log(err);
-        var errormsg = err.error || "Please check your connection.";
-        self.setState({pageLoading: false, authLoading: null});
-        setRetryTimer(err, "devices", "Pending devices couldn't be loaded. " + errormsg, self.state.refreshDeviceLength);
-      }
-    };
-    AppActions.getDevicesByStatus(callback, "pending", this.state.pageNo, this.state.pageLength);
-  },
+        var errormsg = err.error || 'Please check your connection.';
+        self.setState({ pageLoading: false, authLoading: null });
+        setRetryTimer(err, 'devices', `Pending devices couldn't be loaded. ${errormsg}`, self.state.refreshDeviceLength);
+      });
+  }
 
-  _clearSelected: function() {
+  _clearSelected() {
     var self = this;
-    this.setState({selectedRows:[], expandRow: null, allRowsSelected: true}, function() {
+    this.setState({ selectedRows: [], expandRow: null, allRowsSelected: true }, () => {
       // workaround to ensure all rows deselected
-      self.setState({allRowsSelected: false});
+      self.setState({ allRowsSelected: false });
     });
+  }
 
-  },
-
-  _adjustHeight: function () {
-    // do this when number of devices changes
-    var h = this.state.devices.length * 55;
-    h += 200;
-    this.setState({minHeight: h});
-  },
-  _sortColumn: function(col) {
-    console.log("sort");
-  },
-  _expandRow: function(rowNumber) {
-    AppActions.setSnackbar("");
-    var device = this.state.devices[rowNumber];
-    if (this.state.expandRow === rowNumber) {
+  _sortColumn() {
+    console.log('sort');
+  }
+  _expandRow(event, rowNumber) {
+    const self = this;
+    if (event.target.closest('input') && event.target.closest('input').hasOwnProperty('checked')) {
+      return;
+    }
+    AppActions.setSnackbar('');
+    var device = self.state.devices[rowNumber];
+    if (self.state.expandRow === rowNumber) {
       rowNumber = null;
     }
-    this.setState({expandedDevice: device, expandRow: rowNumber});
-    
-  },
-  _adjustCellHeight: function(height) {
-    this.setState({divHeight: height+95});
-  },
+    self.setState({ expandedDevice: device, expandRow: rowNumber });
+  }
+  _adjustCellHeight(height) {
+    this.setState({ divHeight: height + 95 });
+  }
 
-  _handlePageChange: function(pageNo) {
+  _handlePageChange(pageNo) {
     var self = this;
-    self.setState({selectedRows:[], currentPage: pageNo, pageLoading:true, expandRow: null, pageNo: pageNo}, () => {self._getDevices()});
-  },
+    self.setState({ selectedRows: [], currentPage: pageNo, pageLoading: true, expandRow: null, pageNo: pageNo }, () => {
+      self._getDevices();
+    });
+  }
 
-  _onRowSelection: function(selectedRows) {
-    if (selectedRows === "all") {
-      var rows = Array.apply(null, {length: this.state.devices.length}).map(Number.call, Number);
-      this.setState({selectedRows: rows});
-    } else if (selectedRows === "none") {
-      this.setState({selectedRows: []});
+  _onRowSelection(selectedRow) {
+    const self = this;
+    const { selectedRows } = self.state;
+    const selectedIndex = selectedRows.indexOf(selectedRow);
+    let updatedSelection = [];
+    if (selectedIndex === -1) {
+      updatedSelection = updatedSelection.concat(selectedRows, selectedRow);
     } else {
-      this.setState({selectedRows: selectedRows});
+      selectedRows.splice(selectedIndex, 1);
+      updatedSelection = selectedRows;
     }
-    
-  },
+    self.setState({ selectedRows: updatedSelection });
+  }
 
-  _isSelected: function(index) {
+  onSelectAllClick() {
+    const self = this;
+    let selectedRows = Array.apply(null, { length: this.state.devices.length }).map(Number.call, Number);
+    if (self.state.selectedRows.length && self.state.selectedRows.length <= self.state.devices.length) {
+      selectedRows = [];
+    }
+    self.setState({ selectedRows });
+  }
+
+  _isSelected(index) {
     return this.state.selectedRows.indexOf(index) !== -1;
-  },
+  }
 
-  _getDevicesFromSelectedRows: function() {
+  _getDevicesFromSelectedRows() {
     // use selected rows to get device from corresponding position in devices array
-    var devices = [];
-    for (var i=0; i<this.state.selectedRows.length; i++) {
-      devices.push(this.state.devices[this.state.selectedRows[i]]);
-    }
+    const self = this;
+    const devices = self.state.selectedRows.map(row => self.state.devices[row]);
     return devices;
-  },
+  }
 
-  _getSnackbarMessage: function(skipped, done) {
-    pluralize.addIrregularRule('its', 'their')
-    var skipText = skipped ? skipped + " " + pluralize("devices", skipped) +" " + pluralize("have", skipped) + " more than one pending authset. Expand " + pluralize("this", skipped) +" " + pluralize("device", skipped) +" to individually adjust "+ pluralize("their", skipped) +" authorization status. " : "";
-    var doneText = done ? done + " " + pluralize("device", done)+" "+pluralize("was", done) +" updated successfully. " : "";
+  _getSnackbarMessage(skipped, done) {
+    pluralize.addIrregularRule('its', 'their');
+    var skipText = skipped
+      ? `${skipped} ${pluralize('devices', skipped)} ${pluralize('have', skipped)} more than one pending authset. Expand ${pluralize(
+        'this',
+        skipped
+      )} ${pluralize('device', skipped)} to individually adjust ${pluralize('their', skipped)} authorization status. `
+      : '';
+    var doneText = done ? `${done} ${pluralize('device', done)} ${pluralize('was', done)} updated successfully. ` : '';
     AppActions.setSnackbar(doneText + skipText);
-  },
+  }
 
-  _authorizeDevices: function() {
+  _authorizeDevices() {
     var self = this;
     var devices = this._getDevicesFromSelectedRows();
-    self.setState({authLoading: true});
+    self.setState({ authLoading: true });
     var skipped = 0;
     var count = 0;
 
     // for each device, get id and id of authset & make api call to accept
     // if >1 authset, skip instead
-    for (var i=0; i<devices.length; i++) {
-      var device=devices[i];
-      var idx = i;
-      if (device.auth_sets.length === 1) {
-        // api call device.id and device.authsets[0].id
-        AppActions.updateDeviceAuth(device.id, device.auth_sets[0].id, "accepted", {
-          success: function(data) {
-            count++;
-            if (count+skipped === devices.length) {
-              // if last device in list:
-              self._getSnackbarMessage(skipped, count);
-              // refresh devices by calling function in parent
-              self.props.restart();
-            }
-          },
-          error: function(err) {
-            var errMsg = err.res.error.message || "";
-            console.log(errMsg);
-            // break if an error occurs, display status up til this point before error message
-            self._getSnackbarMessage(skipped, count);
-            setTimeout(function() {
-              AppActions.setSnackbar(preformatWithRequestID(err.res, "The action was stopped as there was a problem updating a device authorization status: "+errMsg), null, "Copy to clipboard");
-              self.setState({selectedRows:[] });
-              self.props.restart();
-            }, 4000);
-            self.break;
-          }
-        });
-      } else {
+    const deviceAuthUpdates = devices.map(device => {
+      if (device.auth_sets.length !== 1) {
         skipped++;
-        if (skipped + count === devices.length) {
-          self._getSnackbarMessage(skipped, count);
-          self.props.restart();
-          self.setState({selectedRows:[] });
-        }
+        return Promise.resolve();
       }
+      // api call device.id and device.authsets[0].id
+      return AppActions.updateDeviceAuth(device.id, device.auth_sets[0].id, 'accepted')
+        .then(() => count++)
+        .catch(err => {
+          var errMsg = err.res.error.message || '';
+          console.log(errMsg);
+          // break if an error occurs, display status up til this point before error message
+          self._getSnackbarMessage(skipped, count);
+          setTimeout(() => {
+            AppActions.setSnackbar(
+              preformatWithRequestID(err.res, `The action was stopped as there was a problem updating a device authorization status: ${errMsg}`),
+              null,
+              'Copy to clipboard'
+            );
+            self.setState({ selectedRows: [] });
+            self.props.restart();
+          }, 4000);
+          self.break;
+        });
+    });
+    return Promise.all(deviceAuthUpdates).then(() => {
+      self._getSnackbarMessage(skipped, count);
+      // refresh devices by calling function in parent
+      self.props.restart();
+      self.setState({ selectedRows: [] });
+    });
+  }
 
-    }
-  },
-
-  render: function() {
-    var limitMaxed = this.props.deviceLimit ? (this.props.deviceLimit <= this.props.acceptedDevices) : false;
-    var limitNear = this.props.deviceLimit ? (this.props.deviceLimit < (this.props.acceptedDevices + this.state.devices.length) ) : false;
-    var selectedOverLimit = this.props.deviceLimit ? (this.props.deviceLimit < (this.props.acceptedDevices + this.state.selectedRows.length)) : false ;
-
+  render() {
+    const self = this;
+    var limitMaxed = this.props.deviceLimit ? this.props.deviceLimit <= this.props.acceptedDevices : false;
+    var limitNear = this.props.deviceLimit ? this.props.deviceLimit < this.props.acceptedDevices + this.state.devices.length : false;
+    var selectedOverLimit = this.props.deviceLimit ? this.props.deviceLimit < this.props.acceptedDevices + this.state.selectedRows.length : false;
 
     var devices = this.state.devices.map(function(device, index) {
-      var self = this;
       var expanded = '';
 
-      var id_attribute  = (self.props.globalSettings.id_attribute && self.props.globalSettings.id_attribute !== "Device ID") 
-        ? (device.identity_data || {})[self.props.globalSettings.id_attribute]
-        : device.id;
+      var id_attribute =
+        self.props.globalSettings.id_attribute && self.props.globalSettings.id_attribute !== 'Device ID'
+          ? (device.identity_data || {})[self.props.globalSettings.id_attribute]
+          : device.id;
 
-
-      if ( self.state.expandRow === index ) {
-        expanded = <ExpandedDevice 
-                    highlightHelp={self.props.highlightHelp}
-                    showHelptips={self.props.showHelptips} 
-                    id_attribute={(self.props.globalSettings || {}).id_attribute} 
-                    id_value={id_attribute}
-                    _showKey={self._showKey} 
-                    showKey={self.state.showKey} 
-                    limitMaxed={limitMaxed} 
-                    styles={self.props.styles} 
-                    deviceId={self.state.deviceId} 
-                    device={self.state.expandedDevice} 
-                    unauthorized={true} 
-                    pause={self.props.pause} />
+      if (self.state.expandRow === index) {
+        expanded = (
+          <ExpandedDevice
+            highlightHelp={self.props.highlightHelp}
+            showHelptips={self.props.showHelptips}
+            id_attribute={(self.props.globalSettings || {}).id_attribute}
+            id_value={id_attribute}
+            _showKey={self._showKey}
+            showKey={self.state.showKey}
+            limitMaxed={limitMaxed}
+            deviceId={self.state.deviceId}
+            device={self.state.expandedDevice}
+            unauthorized={true}
+            pause={self.props.pause}
+          />
+        );
       }
-     
-      return (
-        <TableRow selected={this._isSelected(index)} style={{"backgroundColor": "#e9f4f3"}} className={expanded ? "expand" : null} hoverable={true} key={index}>
-          <TableRowColumn className="no-click-cell" style={expanded ? {height: this.state.divHeight} : null}>
-             <div onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              self._expandRow(index);
-            }}>
-               {id_attribute}
-            </div>
-          </TableRowColumn>
-          <TableRowColumn className="no-click-cell">
-              <div onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              self._expandRow(index);
-            }}>
-            <Time value={device.created_ts} format="YYYY-MM-DD HH:mm" />
-            </div>
-          </TableRowColumn>
-          <TableRowColumn className="no-click-cell">
-              <div onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              self._expandRow(index);
-            }}>
-            <Time value={device.updated_ts} format="YYYY-MM-DD HH:mm" />
-            </div>
-          </TableRowColumn>
-          <TableRowColumn className="no-click-cell capitalized">
-            <div onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              self._expandRow(index);
-            }}>{device.status}
-            </div>
-          </TableRowColumn>
 
-          <TableRowColumn style={{width:"55px", paddingRight:"0", paddingLeft:"12px"}} className="expandButton">
-             <div onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              this._expandRow(index);
-            }}>
-              <IconButton className="float-right"><FontIcon className="material-icons">{ expanded ? "arrow_drop_up" : "arrow_drop_down"}</FontIcon></IconButton>
-            </div>
-          </TableRowColumn>
-          <TableRowColumn style={{width:"0", padding:"0", overflow:"visible"}}>
-            <div onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              this._expandRow(index);
-            }}>
-            <Collapse springConfig={{stiffness: 210, damping: 20}} onHeightReady={this._adjustCellHeight} className="expanded" isOpened={expanded ? true : false}
-             onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-            }}>
+      return (
+        <TableRow
+          selected={self._isSelected(index)}
+          style={expanded ? { height: self.state.divHeight, backgroundColor: '#e9f4f3' } : { backgroundColor: '#e9f4f3' }}
+          className={expanded ? 'expand' : null}
+          hover
+          key={index}
+          onClick={event => self._expandRow(event, index)}
+        >
+          <TableCell padding="checkbox">
+            <Checkbox
+              style={expanded ? { paddingTop: '0', marginTop: '-4px' } : {}}
+              checked={self._isSelected(index)}
+              onChange={() => self._onRowSelection(index)}
+            />
+          </TableCell>
+          <TableCell>{id_attribute}</TableCell>
+          <TableCell>
+            <Time value={device.created_ts} format="YYYY-MM-DD HH:mm" />
+          </TableCell>
+          <TableCell>
+            <Time value={device.updated_ts} format="YYYY-MM-DD HH:mm" />
+          </TableCell>
+          <TableCell className="capitalized">{device.status}</TableCell>
+          <TableCell style={{ width: '55px', paddingRight: '0', paddingLeft: '12px' }} className="expandButton">
+            <IconButton className="float-right">{expanded ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}</IconButton>
+          </TableCell>
+          <TableCell style={{ width: '0', padding: '0', overflow: 'visible' }}>
+            <Collapse
+              springConfig={{ stiffness: 210, damping: 20 }}
+              onMeasure={measurements => self._adjustCellHeight(measurements.height)}
+              className="expanded"
+              isOpened={Boolean(expanded)}
+              onClick={e => {
+                e.preventDefault();
+                e.stopPropagation();
+              }}
+            >
               {expanded}
             </Collapse>
-            </div>
-          </TableRowColumn>
+          </TableCell>
         </TableRow>
-      )
-    }, this);
-    
-    var deviceLimitWarning = (limitMaxed || limitNear) ?
-      (
-        <p className="warning">
-          <InfoIcon style={{marginRight:"2px", height:"16px", verticalAlign:"bottom"}} />
-          <span className={limitMaxed ? null : "hidden"}>You have reached</span><span className={limitNear&&!limitMaxed ? null : "hidden"}>You are nearing</span> your limit of authorized devices: {this.props.acceptedDevices} of {this.props.deviceLimit}
-        </p>
-    ) : null;
+      );
+    });
 
-    var minHeight = deviceLimitWarning ? this.state.minHeight + 20 : this.state.minHeight;
+    var deviceLimitWarning =
+      limitMaxed || limitNear ? (
+        <p className="warning">
+          <InfoIcon style={{ marginRight: '2px', height: '16px', verticalAlign: 'bottom' }} />
+          {limitMaxed ? <span>You have reached</span> : null}
+          {limitNear && !limitMaxed ? <span>You are nearing</span> : null} your limit of authorized devices: {this.props.acceptedDevices} of{' '}
+          {this.props.deviceLimit}
+        </p>
+      ) : null;
+
+    const numSelected = self.state.selectedRows.length;
 
     return (
-      <Collapse springConfig={{stiffness: 190, damping: 20}} style={{minHeight:minHeight, width:"100%"}} isOpened={true} id="authorize" className="absolute authorize padding-top">
-        
-      <Loader show={this.state.authLoading} />
+      <div className="tab-container">
+        <Loader show={this.state.authLoading} />
 
-        { this.props.showHelptips && this.state.devices.length ?
+        {this.props.showHelptips && this.state.devices.length ? (
           <div>
-            <div 
+            <div
               id="onboard-2"
-              className={this.props.highlightHelp ? "tooltip help highlight" : "tooltip help"}
+              className={this.props.highlightHelp ? 'tooltip help highlight' : 'tooltip help'}
               data-tip
-              data-for='review-devices-tip'
-              data-event='click focus'
-              style={{left:"60%",top:"35px"}}>
-              <FontIcon className="material-icons">help</FontIcon>
+              data-for="review-devices-tip"
+              data-event="click focus"
+              style={{ left: '60%', top: '35px' }}
+            >
+              <HelpIcon />
             </div>
-            <ReactTooltip
-              id="review-devices-tip"
-              globalEventOff='click'
-              place="bottom"
-              type="light"
-              effect="solid"
-              className="react-tooltip">
+            <ReactTooltip id="review-devices-tip" globalEventOff="click" place="bottom" type="light" effect="solid" className="react-tooltip">
               <AuthDevices devices={this.state.devices.length} />
             </ReactTooltip>
           </div>
-        : null }
+        ) : null}
 
-        { this.state.devices.length && this.state.authLoading!=="all" ?
-
+        {this.state.devices.length && this.state.authLoading !== 'all' ? (
           <div className="padding-bottom">
-
-            <h3 className="align-center">{this.props.count} {pluralize("devices", this.props.count)} pending authorization</h3>
+            <h3 className="align-center">
+              {this.props.count} {pluralize('devices', this.props.count)} pending authorization
+            </h3>
 
             {deviceLimitWarning}
 
-            <Table
-              multiSelectable={true}
-              onRowSelection={this._onRowSelection}
-              allRowsSelected={this.state.allRowsSelected}>
-              <TableHeader
-                className="clickable"
-                displaySelectAll={true}
-                adjustForCheckbox={true}>
+            <Table>
+              <TableHead className="clickable">
                 <TableRow>
-                  <TableHeaderColumn className="columnHeader" tooltip={(this.props.globalSettings || {}).id_attribute || "Device ID"}>{(this.props.globalSettings || {}).id_attribute || "Device ID"}<FontIcon onClick={this.props.openSettingsDialog} style={{fontSize: "16px"}} color={"#c7c7c7"} hoverColor={"#aeaeae"} className="material-icons hover float-right">settings</FontIcon></TableHeaderColumn>
-                  <TableHeaderColumn className="columnHeader" tooltip="First request">First request</TableHeaderColumn>
-                  <TableHeaderColumn className="columnHeader" tooltip="Last updated">Last updated</TableHeaderColumn>
-                  <TableHeaderColumn className="columnHeader" tooltip="Status">Status</TableHeaderColumn>
-                  <TableHeaderColumn className="columnHeader" style={{width:"55px", paddingRight:"12px", paddingLeft:"0"}}></TableHeaderColumn>
+                  <TableCell padding="checkbox">
+                    <Checkbox
+                      indeterminate={numSelected > 0 && numSelected < self.state.devices.length}
+                      checked={numSelected === self.state.devices.length}
+                      onChange={() => self.onSelectAllClick()}
+                    />
+                  </TableCell>
+                  <TableCell className="columnHeader" tooltip={(this.props.globalSettings || {}).id_attribute || 'Device ID'}>
+                    {(this.props.globalSettings || {}).id_attribute || 'Device ID'}
+                    <SettingsIcon onClick={this.props.openSettingsDialog} style={{ fontSize: '16px' }} className="hover float-right" />
+                  </TableCell>
+                  <TableCell className="columnHeader" tooltip="First request">
+                    First request
+                  </TableCell>
+                  <TableCell className="columnHeader" tooltip="Last updated">
+                    Last updated
+                  </TableCell>
+                  <TableCell className="columnHeader" tooltip="Status">
+                    Status
+                  </TableCell>
+                  <TableCell className="columnHeader" style={{ width: '55px', paddingRight: '12px', paddingLeft: '0' }} />
                 </TableRow>
-              </TableHeader>
-              <TableBody
-                showRowHover={true}
-                displayRowCheckbox={true}
-                className="clickable"
-                deselectOnClickaway={false}>
-                {devices}
-              </TableBody>
+              </TableHead>
+              <TableBody className="clickable">{devices}</TableBody>
             </Table>
 
             <div className="margin-top">
-              <Pagination locale={_en_US} simple pageSize={20} current={this.state.currentPage || 1} total={this.props.count} onChange={this._handlePageChange} />
-               {this.state.pageLoading ?  <div className="smallLoaderContainer"><Loader show={true} /></div> : null}
+              <Pagination
+                locale={_en_US}
+                simple
+                pageSize={20}
+                current={this.state.currentPage || 1}
+                total={this.props.count}
+                onChange={page => this._handlePageChange(page)}
+              />
+              {this.state.pageLoading ? (
+                <div className="smallLoaderContainer">
+                  <Loader show={true} />
+                </div>
+              ) : null}
             </div>
           </div>
-
-          :
-
-          <div className={this.state.authLoading ? "hidden" : "dashboard-placeholder"}>
+        ) : (
+          <div className={this.state.authLoading ? 'hidden' : 'dashboard-placeholder'}>
             <p>There are no devices pending authorization</p>
-            {this.props.highlightHelp ? <p>Visit the <Link to={`/help/connecting-devices`}>Help section</Link> to learn how to connect devices to the Mender server.</p> : null }
+            {this.props.highlightHelp ? (
+              <p>
+                Visit the <Link to="/help/connecting-devices">Help section</Link> to learn how to connect devices to the Mender server.
+              </p>
+            ) : null}
           </div>
-        }
+        )}
 
-
-
-        { this.state.selectedRows.length ? 
+        {this.state.selectedRows.length ? (
           <div className="fixedButtons">
             <div className="float-right">
+              {this.state.authLoading ? <Loader style={{ width: '100px', top: '7px', position: 'relative' }} table={true} waiting={true} show={true} /> : null}
 
-              <div style={{width:"100px", top:"7px", position:"relative"}} className={this.state.authLoading ? "inline-block" : "hidden"}>
-                <Loader table={true} waiting={true} show={true} />
-              </div>
-
-              <span className="margin-right">{this.state.selectedRows.length} {pluralize("devices", this.state.selectedRows.length)} selected</span>
-              <RaisedButton disabled={(this.props.disabled || limitMaxed || selectedOverLimit)} onClick={this._authorizeDevices} primary={true} label={"Authorize " + this.state.selectedRows.length +" " + pluralize("devices", this.state.selectedRows.length)} />
+              <span className="margin-right">
+                {this.state.selectedRows.length} {pluralize('devices', this.state.selectedRows.length)} selected
+              </span>
+              <Button
+                variant="contained"
+                disabled={this.props.disabled || limitMaxed || selectedOverLimit}
+                onClick={() => this._authorizeDevices()}
+                color="primary"
+              >
+                {`Authorize ${this.state.selectedRows.length} ${pluralize('devices', this.state.selectedRows.length)}`}
+              </Button>
               {deviceLimitWarning}
-
             </div>
           </div>
-        : null }
+        ) : null}
 
-
-        { this.props.showHelptips && this.state.devices.length ?
+        {this.props.showHelptips && this.state.devices.length ? (
           <div>
-            <div 
+            <div
               id="onboard-3"
               className="tooltip highlight help"
               data-tip
-              data-for='expand-auth-tip'
-              data-event='click focus'
-              style={{left:"16%", top:"170px"}}>
-              <FontIcon className="material-icons">help</FontIcon>
+              data-for="expand-auth-tip"
+              data-event="click focus"
+              style={{ left: '16%', top: '170px' }}
+            >
+              <HelpIcon />
             </div>
-            <ReactTooltip
-              id="expand-auth-tip"
-              globalEventOff='click'
-              place="bottom"
-              type="light"
-              effect="solid"
-              className="react-tooltip">
+            <ReactTooltip id="expand-auth-tip" globalEventOff="click" place="bottom" type="light" effect="solid" className="react-tooltip">
               <ExpandAuth />
             </ReactTooltip>
           </div>
-        : null }
-      </Collapse>
+        ) : null}
+      </div>
     );
   }
-});
-
-
-module.exports = Pending;
+}

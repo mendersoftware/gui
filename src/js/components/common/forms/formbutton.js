@@ -1,25 +1,15 @@
 import React from 'react';
-var createReactClass = require('create-react-class');
-import FlatButton from 'material-ui/FlatButton';
 
-var FormButton = createReactClass({
-  render: function () {
-    var className = this.props.buttonHolder ? "button-holder " + this.props.className : this.props.className;
+import Button from '@material-ui/core/Button';
 
-    return (  
-      <div className={className}>
-        <FlatButton
-          id={this.props.id}
-          label={this.props.label}
-          onClick={this.props.handleClick}
-          style={this.props.style}
-          primary={this.props.primary}
-          secondary={this.props.secondary}
-        />
-      </div>
-    )
+export default class FormButton extends React.Component {
+  render() {
+    var className = this.props.buttonHolder ? `button-holder ${this.props.className}` : this.props.className;
+
+    return (
+      <Button className={className} id={this.props.id} onClick={this.props.handleClick} style={this.props.style} color={this.props.color}>
+        {this.props.label}
+      </Button>
+    );
   }
-});
-
-module.exports = FormButton;
-
+}

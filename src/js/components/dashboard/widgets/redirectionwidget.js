@@ -1,8 +1,8 @@
 import React from 'react';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 
 // material ui
-import RaisedButton from 'material-ui/RaisedButton';
+import Button from '@material-ui/core/Button';
 
 export default class RedirectionWidget extends React.PureComponent {
   filteredClick(event) {
@@ -17,9 +17,9 @@ export default class RedirectionWidget extends React.PureComponent {
         <div>
           <p className={this.props.isActive ? '' : 'muted'}>{this.props.content}</p>
         </div>
-        <Link to={this.props.target}>
-          <RaisedButton label={this.props.buttonContent} />
-        </Link>
+        <Button component={Link} to={this.props.target}>
+          {this.props.buttonContent}
+        </Button>
       </div>
     );
   }

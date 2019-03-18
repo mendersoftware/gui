@@ -1,44 +1,36 @@
 import React from 'react';
-import IconButton from 'material-ui/IconButton';
-import FontIcon from 'material-ui/FontIcon';
-var Loader = require('../common/loader');
-var createReactClass = require('create-react-class');
+import IconButton from '@material-ui/core/IconButton';
 
-var ConfirmAbort = createReactClass({
-  getInitialState: function() {
-    return {
-      class: "fadeIn"
+import CancelIcon from '@material-ui/icons/Cancel';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+export default class ConfirmAbort extends React.Component {
+  constructor(props, context) {
+    super(props, context);
+    this.state = {
+      class: 'fadeIn'
     };
-  },
-  _handleCancel: function() {
-    this.setState({class: "fadeOut"});
+  }
+  _handleCancel() {
+    this.setState({ class: 'fadeOut' });
     this.props.cancel();
-  },
-  _handleAbort: function() {
-    this.setState({loading:true});
+  }
+  _handleAbort() {
+    this.setState({ loading: true });
     this.props.abort();
-  },
-  render: function() {
-    var styles = {
-      padding: "0",
-      marginLeft:"12px",
-      marginRight:"-24px",
-      verticalAlign:"middle"
-    }
+  }
+  render() {
     return (
-      <div className={this.state.class} style={{marginRight:"12px"}}>
+      <div className={this.state.class} style={{ marginRight: '12px' }}>
         <div className="float-right">
-          <span className="bold">{this.state.loading ? "Aborting..." : "Confirm abort deployment?"}</span>
-          <IconButton id="confirmAbort" style={styles} onClick={this._handleAbort}>
-            <FontIcon className="material-icons green">check_circle</FontIcon>
+          <span className="bold">{this.state.loading ? 'Aborting...' : 'Confirm abort deployment?'}</span>
+          <IconButton id="confirmAbort" onClick={() => this._handleAbort()}>
+            <CheckCircleIcon className="green" />
           </IconButton>
-          <IconButton id="cancelAbort" style={styles} onClick={this._handleCancel}>
-            <FontIcon className="material-icons red">cancel</FontIcon>
+          <IconButton id="cancelAbort" onClick={() => this._handleCancel()}>
+            <CancelIcon className="red" />
           </IconButton>
         </div>
       </div>
-    )
+    );
   }
-});
-
-module.exports = ConfirmAbort;
+}

@@ -1,203 +1,189 @@
 import React from 'react';
-import { Router, Route} from 'react-router';
 import UserList from './userlist';
 import UserForm from './userform';
 
-var AppActions = require('../../actions/app-actions');
-var AppStore = require('../../stores/app-store');
-var createReactClass = require('create-react-class');
+import AppActions from '../../actions/app-actions';
+import AppStore from '../../stores/app-store';
 
 // material ui
-import { List, ListItem } from 'material-ui/List';
-import Snackbar from 'material-ui/Snackbar';
-import Dialog from 'material-ui/Dialog';
-import FlatButton from 'material-ui/FlatButton';
-import RaisedButton from 'material-ui/RaisedButton';
+import Snackbar from '@material-ui/core/Snackbar';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Button from '@material-ui/core/Button';
 
 import { preformatWithRequestID } from '../../helpers';
 
-function getState() {
-  return {
-    snackbar: AppStore.getSnackbar(),
-    editPass: false,
-    currentUser: AppStore.getCurrentUser(),
-  };
-}
+export default class UserManagement extends React.Component {
+  constructor(props, context) {
+    super(props, context);
+    this.state = this._getState();
+  }
 
-var UserManagement =  createReactClass({
-  getInitialState: function() {
-     return getState()
-  },
+  componentWillMount() {
+    AppStore.changeListener(this._onChange.bind(this));
+  }
 
-  componentWillMount: function() {
-    AppStore.changeListener(this._onChange);
-  },
-
-  componentDidMount: function() {
+  componentDidMount() {
     this._getUserList();
-  },
-  _onChange: function() {
-    this.setState(getState());
-  },
-  componentDidUpdate(prevProps, prevState) {
-    if (prevProps.currentTab !== this.props.currentTab && this.props.currentTab==="/settings/user-management") {
+  }
+
+  _getState() {
+    return {
+      snackbar: AppStore.getSnackbar(),
+      editPass: false,
+      currentUser: AppStore.getCurrentUser()
+    };
+  }
+  _onChange() {
+    this.setState(this._getState());
+  }
+  componentDidUpdate(prevProps) {
+    if (prevProps !== this.props) {
       this._getUserList();
     }
-  },
-  componentWillUnmount: function() {
-    AppStore.removeChangeListener(this._onChange);
-  },
-  _getUserList: function() {
+  }
+  componentWillUnmount() {
+    AppStore.removeChangeListener(this._onChange.bind(this));
+  }
+  _getUserList() {
     var self = this;
-    var callback = {
-      success: function(users) {
-        self.setState({users: users});
-      },
-      error: function(err) {
-        var errormsg = err.error || "Please check your connection";
-        AppActions.setSnackbar(preformatWithRequestID(err.res, "Users couldn't be loaded. " + errormsg));
-      }
-    };
-    AppActions.getUserList(callback);
-  },
-  _openCreate: function() {
+    return AppActions.getUserList()
+      .then(users => self.setState({ users: users }))
+      .catch(err => {
+        var errormsg = err.error || 'Please check your connection';
+        AppActions.setSnackbar(preformatWithRequestID(err.res, `Users couldn't be loaded. ${errormsg}`));
+      });
+  }
+  _openCreate() {
     this._openEdit();
-  },
-  _openEdit: function (user) {
-    AppActions.setSnackbar("");
-    this.setState({user: user, editDialog: true, removeDialog: false, editPass: !user });
-  },
+  }
+  _openEdit(user) {
+    AppActions.setSnackbar('');
+    this.setState({ user: user, editDialog: true, removeDialog: false, editPass: !user });
+  }
 
-  _openRemove: function (user) {
-    AppActions.setSnackbar("");
-    this.setState({user: user, editDialog: false, removeDialog: true});
-  },
+  _openRemove(user) {
+    AppActions.setSnackbar('');
+    this.setState({ user: user, editDialog: false, removeDialog: true });
+  }
 
-  dialogDismiss: function () {
-    this.setState({editDialog: false, removeDialog: false});
-  },
-  _editSubmit: function (userData) {
+  dialogDismiss() {
+    this.setState({ editDialog: false, removeDialog: false });
+  }
+  _editSubmit(userData) {
     var self = this;
-    var callback = {
-      success: function() {
-        self.dialogDismiss();
-        AppActions.setSnackbar("The user has been updated.");
+    return AppActions.editUser(self.state.user.id, userData)
+      .then(() => {
         // if current logged in user
-        if (self.state.user.id === self.state.currentUser.id) {AppActions.setCurrentUser(userData)};
-        self._getUserList();
-      },
-      error: function(err) {
-        console.log(err);
-        var errMsg = err.res.body.error || "";
-        AppActions.setSnackbar(preformatWithRequestID(err.res, "There was an error editing the user. " +errMsg));
-      }
-    }
-
-    AppActions.editUser(self.state.user.id, userData, callback);
-  },
-
-  _createSubmit: function (userData) {
-    var self = this;
-    var callback = {
-      success: function() {
+        if (self.state.user.id === self.state.currentUser.id) {
+          AppActions.setCurrentUser(userData);
+        }
         self.dialogDismiss();
-        AppActions.setSnackbar("The user was created successfully.");
+        AppActions.setSnackbar('The user has been updated.');
         self._getUserList();
-      },
-      error: function(err) {
+      })
+      .catch(err => {
         console.log(err);
-        var errMsg = err.res.body.error || "";
-        AppActions.setSnackbar(preformatWithRequestID(err.res, "There was an error creating the user. " +errMsg));
-      }
-    }
+        var errMsg = err.res.body.error || '';
+        AppActions.setSnackbar(preformatWithRequestID(err.res, `There was an error editing the user. ${errMsg}`));
+      });
+  }
 
-    AppActions.createUser(userData, callback);
-  },
-
-  _removeSubmit: function () {
+  _createSubmit(userData) {
     var self = this;
-    var callback = {
-      success: function() {
+    return AppActions.createUser(userData)
+      .then(() => {
         self.dialogDismiss();
-        AppActions.setSnackbar("The user was removed from the system.");
+        AppActions.setSnackbar('The user was created successfully.');
         self._getUserList();
-      },
-      error: function(err) {
+      })
+      .catch(err => {
         console.log(err);
-        var errMsg = err.res.body.error || "";
-        AppActions.setSnackbar(preformatWithRequestID(err.res, "There was an error removing the user. " +errMsg));
-      }
-    }
+        var errMsg = err.res.body.error || '';
+        AppActions.setSnackbar(preformatWithRequestID(err.res, `There was an error creating the user. ${errMsg}`));
+      });
+  }
 
-    AppActions.removeUser(this.state.user.id, callback);
-  },
+  _removeSubmit() {
+    var self = this;
+    return AppActions.removeUser(this.state.user.id)
+      .then(() => {
+        self.dialogDismiss();
+        AppActions.setSnackbar('The user was removed from the system.');
+        self._getUserList();
+      })
+      .catch(err => {
+        console.log(err);
+        var errMsg = err.res.body.error || '';
+        AppActions.setSnackbar(preformatWithRequestID(err.res, `There was an error removing the user. ${errMsg}`));
+      });
+  }
 
-  _togglePass: function() {
-    this.setState({editPass: !this.state.editPass})
-  },
+  _togglePass() {
+    this.setState({ editPass: !this.state.editPass });
+  }
 
-  render: function() {
-
+  render() {
     var removeActions = [
-      <div style={{marginRight:"10px", display:"inline-block"}}>
-        <FlatButton
-          label="Cancel"
-          onClick={this.dialogDismiss} />
+      <div key="remove-button-1" style={{ marginRight: '10px', display: 'inline-block' }}>
+        <Button onClick={() => this.dialogDismiss()}>Cancel</Button>
       </div>,
-      <RaisedButton
-        label="Remove user"
-        primary={true}
-        onClick={this._removeSubmit}
-        ref="save" />
+      <Button variant="contained" key="remove-button-2" color="primary" onClick={() => this._removeSubmit()}>
+        Remove user
+      </Button>
     ];
 
     return (
-
       <div>
         <div className="float-right">
-          <RaisedButton primary={true} label="Create new user" onClick={this._openCreate} />
+          <Button variant="contained" color="primary" onClick={() => this._openCreate()}>
+            Create new user
+          </Button>
         </div>
 
-        <UserList users={this.state.users || []} editUser={this._openEdit} removeUser={this._openRemove} currentUser={this.state.currentUser} />
+        <UserList
+          users={this.state.users || []}
+          editUser={user => this._openEdit(user)}
+          removeUser={user => this._openRemove(user)}
+          currentUser={this.state.currentUser}
+        />
         <Snackbar
-          bodyStyle={{maxWidth: this.state.snackbar.maxWidth}}
+          bodyStyle={{ maxWidth: this.state.snackbar.maxWidth }}
           open={this.state.snackbar.open}
           message={this.state.snackbar.message}
           autoHideDuration={8000}
         />
 
-        <Dialog
-          ref="edit"
-          title={this.state.user ? "Edit user" : "Create new user"}
-          autoDetectWindowHeight={true}
-          autoScrollBodyContent={true}
-          bodyStyle={{paddingTop:"0", fontSize:"13px"}}
-          open={this.state.editDialog || false}
-          contentStyle={{overflow:"hidden", boxShadow:"0 14px 45px rgba(0, 0, 0, 0.25), 0 10px 18px rgba(0, 0, 0, 0.22)" }}
-          actionsContainerStyle={{marginBottom:"0"}}
-          repositionOnUpdate={false}
-          >
-          <UserForm edit={this.state.user ? true : false} editPass={this.state.editPass} togglePass={this._togglePass} closeDialog={this.dialogDismiss} handleSubmit={this.state.user ? this._editSubmit : this._createSubmit} user={this.state.user} buttonLabel={this.state.user ? "Save changes" : "Create user"} />
+        <Dialog open={this.state.editDialog || false} fullWidth={true} maxWidth="sm">
+          <DialogTitle>{this.state.user ? 'Edit user' : 'Create new user'}</DialogTitle>
+          <DialogContent>
+            <UserForm
+              edit={this.state.user ? true : false}
+              editPass={this.state.editPass}
+              togglePass={() => this._togglePass()}
+              closeDialog={() => this.dialogDismiss()}
+              handleSubmit={this.state.user ? data => this._editSubmit(data) : data => this._createSubmit(data)}
+              user={this.state.user}
+              buttonLabel={this.state.user ? 'Save changes' : 'Create user'}
+            />
+          </DialogContent>
+          <DialogActions />
         </Dialog>
 
-        <Dialog
-          ref="remove"
-          title="Remove user"
-          actions={removeActions}
-          autoDetectWindowHeight={true}
-          autoScrollBodyContent={true}
-          bodyStyle={{paddingTop:"0"}}
-          open={this.state.removeDialog || false}
-          contentStyle={{overflow:"hidden", boxShadow:"0 14px 45px rgba(0, 0, 0, 0.25), 0 10px 18px rgba(0, 0, 0, 0.22)"}}
-          actionsContainerStyle={{marginBottom:"0"}}
-          >
-          Are you sure you want to remove the user with email <b><i>{(this.state.user || {}).email}</i></b>?
+        <Dialog open={this.state.removeDialog || false}>
+          <DialogTitle>Remove user?</DialogTitle>
+          <DialogContent style={{ overflow: 'hidden' }}>
+            Are you sure you want to remove the user with email{' '}
+            <b>
+              <i>{(this.state.user || {}).email}</i>
+            </b>
+            ?
+          </DialogContent>
+          <DialogActions>{removeActions}</DialogActions>
         </Dialog>
-
       </div>
-    )
+    );
   }
-
-});
-
-module.exports = UserManagement;
+}

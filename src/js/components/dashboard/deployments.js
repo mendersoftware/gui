@@ -3,13 +3,15 @@ import pluralize from 'pluralize';
 
 import AppActions from '../../actions/app-actions';
 import AppStore from '../../stores/app-store';
-import { clearAllRetryTimers } from '../../utils/retrytimer';
+import { clearAllRetryTimers, setRetryTimer } from '../../utils/retrytimer';
 import Loader from '../common/loader';
 
 import { BaseWidget } from './widgets/baseWidget';
 import RedirectionWidget from './widgets/redirectionwidget';
 import CompletedDeployments from './widgets/completeddeployments';
-import FontIcon from 'material-ui/FontIcon';
+
+import RefreshIcon from '@material-ui/icons/Refresh';
+import UpdateIcon from '@material-ui/icons/Update';
 
 const refreshDeploymentsLength = 30000;
 
@@ -60,11 +62,9 @@ export default class Deployments extends React.Component {
   }
   getDeployments() {
     const self = this;
-    const callback = {
-      success: () => self.setState({ loading: false }),
-      error: self.handleDeploymentError
-    };
-    return AppActions.getDeployments(callback, 1, 20);
+    return AppActions.getDeployments(1, 20)
+      .then(() => self.setState({ loading: false }))
+      .catch(self.handleDeploymentError);
   }
   updateDeploymentCutoff(today) {
     const jsonContent = window.localStorage.getItem('deploymentChecker');
@@ -83,11 +83,12 @@ export default class Deployments extends React.Component {
 
   render() {
     const self = this;
-    const { lastDeploymentCheck, loading, inprogress, deployments, pending, finished } = self.state;
+    const { lastDeploymentCheck, loading, inprogress, pending, finished } = self.state;
 
     const iconStyles = {
       fontSize: 48,
-      opacity: 0.4
+      opacity: 0.5,
+      marginRight: '30px',
     };
 
     const headerStyle = {
@@ -99,9 +100,7 @@ export default class Deployments extends React.Component {
       counter: pending.length,
       header: (
         <div className="flexbox" style={headerStyle}>
-          <FontIcon className="material-icons flip-horizontal red" style={iconStyles}>
-            update
-          </FontIcon>
+          <UpdateIcon className="flip-horizontal" style={iconStyles} />
           <div>Pending {pluralize('deployment', pending.length)}</div>
         </div>
       ),
@@ -111,9 +110,7 @@ export default class Deployments extends React.Component {
       counter: inprogress.length,
       header: (
         <div className="flexbox" style={headerStyle}>
-          <FontIcon className="material-icons flip-horizontal green" style={iconStyles}>
-            refresh
-          </FontIcon>
+          <RefreshIcon className="flip-horizontal" style={iconStyles} />
           <div>{pluralize('Deployment', inprogress.length)} in progress</div>
         </div>
       ),
@@ -123,7 +120,9 @@ export default class Deployments extends React.Component {
     const openingParam = encodeURIComponent(path);
     return (
       <div>
-        <h4 className="dashboard-header"><span>Deployments</span></h4>
+        <h4 className="dashboard-header">
+          <span>Deployments</span>
+        </h4>
         <div className="deployments" style={Object.assign({ marginBottom: '50px', marginTop: '50px' })}>
           {loading ? (
             <Loader show={loading} fade={true} />

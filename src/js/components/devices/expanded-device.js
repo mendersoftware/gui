@@ -1,38 +1,50 @@
 import React from 'react';
-import { Router, Route, Link } from 'react-router';
 import Time from 'react-time';
-var createReactClass = require('create-react-class');
 import ReactTooltip from 'react-tooltip';
 import { AuthButton } from '../helptips/helptooltips';
 import PropTypes from 'prop-types';
 
-var AppStore = require('../../stores/app-store');
-var AppActions = require('../../actions/app-actions');
-var ScheduleForm = require('../deployments/scheduleform');
-var Authsets = require('./authsets');
-var Loader = require('../common/loader');
-var pluralize = require('pluralize');
+import AppStore from '../../stores/app-store';
+import AppActions from '../../actions/app-actions';
+import ScheduleDialog from '../deployments/scheduledialog';
+import Authsets from './authsets';
+import Loader from '../common/loader';
+import pluralize from 'pluralize';
 import cookie from 'react-cookie';
 import copy from 'copy-to-clipboard';
 
-import { List, ListItem } from 'material-ui/List';
-import FontIcon from 'material-ui/FontIcon';
-import Dialog from 'material-ui/Dialog';
-import TextField from 'material-ui/TextField';
-import FlatButton from 'material-ui/FlatButton';
-import RaisedButton from 'material-ui/RaisedButton';
-import Divider from 'material-ui/Divider';
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Divider from '@material-ui/core/Divider';
+import Icon from '@material-ui/core/Icon';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import Typography from '@material-ui/core/Typography';
+
+import BlockIcon from '@material-ui/icons/Block';
+import CheckIcon from '@material-ui/icons/Check';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import InfoIcon from '@material-ui/icons/Info';
+import HelpIcon from '@material-ui/icons/Help';
+import LinkIcon from '@material-ui/icons/Link';
+import ReplayIcon from '@material-ui/icons/Replay';
+import WarningIcon from '@material-ui/icons/Warning';
 
 import { preformatWithRequestID } from '../../helpers';
 
-function getGroups() {
-  var copy = AppStore.getGroups().slice();
-  return copy
-}
+export default class ExpandedDevice extends React.Component {
+  static contextTypes = {
+    router: PropTypes.object,
+    location: PropTypes.object
+  };
 
-var ExpandedDevice = createReactClass({
-  getInitialState: function() {
-    return {
+  constructor(props, context) {
+    super(props, context);
+    this.state = {
       showInput: false,
       selectedGroup: {
         payload: '',
@@ -41,104 +53,89 @@ var ExpandedDevice = createReactClass({
       schedule: false,
       authsets: false,
       artifacts: AppStore.getArtifactsRepo(),
-      user: AppStore.getCurrentUser(),
+      user: AppStore.getCurrentUser()
     };
-  },
+  }
 
-  componentDidMount: function() {
+  componentDidMount() {
     this._getArtifacts();
-  },
+  }
 
-  _getArtifacts: function() {
+  _getArtifacts() {
     var self = this;
-    var callback = {
-      success: function(artifacts) {
-        
-        setTimeout(function() {
-          self.setState({artifacts:artifacts});
-        }, 300);
-      },
-      error: function(err) {
-        var errormsg = err.error || "Please check your connection";
-      }
-    };
-    if (this.props.device.status==="accepted") {
-      AppActions.getArtifacts(callback);
+    if (this.props.device.status === 'accepted') {
+      AppActions.getArtifacts()
+        .then(artifacts =>
+          setTimeout(() => {
+            self.setState({ artifacts });
+          }, 300)
+        )
+        .catch(err => console.log(err.error || 'Please check your connection'));
     }
-  },
+  }
 
-  dialogToggle: function (ref) {
-    var self = this;
+  dialogToggle(ref) {
     var state = {};
     state[ref] = !this.state[ref];
-    this.setState(state, function() {
-      if (ref = "authsets") {
-        self.props.pause();
-      }
-    });
-    this.setState({filterByArtifact:null, artifact:null});
-  },
+    this.setState({ filterByArtifact: null });
+  }
 
-  _updateParams: function(val, attr) {
+  toggleAuthsets(authsets = !this.state.authsets) {
+    this.setState({ authsets });
+    this.props.pause();
+  }
+
+  _updateParams(val, attr) {
     // updating params from child schedule form
     var tmp = {};
     tmp[attr] = val;
     this.setState(tmp);
-  },
+  }
 
-  _clickListItem: function() {
-    AppActions.setSnackbar("");
-    this.dialogToggle('schedule');
-  },
+  _clickListItem() {
+    AppActions.setSnackbar('');
+    this.setState({ schedule: false });
+  }
 
-  _showAuthsets: function() {
-    AppActions.setSnackbar("");
-    this.dialogToggle('authsets');
-  },
-
-  _onScheduleSubmit: function() {
+  _onScheduleSubmit(artifact) {
     var self = this;
     var newDeployment = {
       devices: [this.props.device.id],
       name: this.props.device.id,
-      artifact_name: this.state.artifact.name
-    }
-    var callback = {
-      success: function(data) {
+      artifact_name: artifact.name
+    };
+    self.setState({ schedule: false });
+    return AppActions.createDeployment(newDeployment)
+      .then(data => {
         // get id, if showhelptips & no onboarded cookie, this is user's first deployment - add id cookie
         var lastslashindex = data.lastIndexOf('/');
-        var id = data.substring(lastslashindex  + 1);
+        var id = data.substring(lastslashindex + 1);
 
         // onboarding
-        if (self.props.showHelpTips && !cookie.load(self.state.user.id+'-onboarded') && !cookie.load(self.state.user.id+'-deploymentID')) {
-          cookie.save(self.state.user.id+'-deploymentID', id);
+        if (self.props.showHelpTips && !cookie.load(`${self.state.user.id}-onboarded`) && !cookie.load(`${self.state.user.id}-deploymentID`)) {
+          cookie.save(`${self.state.user.id}-deploymentID`, id);
         }
 
-        AppActions.setSnackbar("Deployment created successfully. Redirecting...", 5000);
-        var params = {};
-        params.route="deployments";
-        setTimeout(function() {
-          self.context.router.push(params.route);
-        }, 1200)
-      },
-      error: function(err) {
+        AppActions.setSnackbar('Deployment created successfully. Redirecting...', 5000);
+        setTimeout(() => {
+          self.context.router.history.replace('/deployments');
+        }, 1200);
+      })
+      .catch(err => {
         try {
-          var errMsg = err.res.body.error || ""
-          AppActions.setSnackbar(preformatWithRequestID(err.res, "Error creating deployment. " + errMsg), null, "Copy to clipboard");
+          var errMsg = err.res.body.error || '';
+          AppActions.setSnackbar(preformatWithRequestID(err.res, `Error creating deployment. ${errMsg}`), null, 'Copy to clipboard');
         } catch (e) {
-          console.log(e)
+          console.log(e);
         }
-      }
-    }
-    AppActions.createDeployment(newDeployment, callback);
-    this.dialogToggle('schedule');
-  },
+      });
+  }
 
-  _handleStopProp: function(e) {
+  _handleStopProp(e) {
     e.stopPropagation();
-  },
+  }
 
-  _deploymentParams: function(val, attr) {
+  _deploymentParams(val, attr) {
     // updating params from child schedule form
     var tmp = {};
     tmp[attr] = val;
@@ -146,68 +143,78 @@ var ExpandedDevice = createReactClass({
 
     // check that device type matches
     var filteredDevs = null;
-    if (attr==='artifact' && val) {
-      for (var i = 0; i<val.device_types_compatible.length; i++) {
+    if (attr === 'artifact' && val) {
+      for (var i = 0; i < val.device_types_compatible.length; i++) {
         if (val.device_types_compatible[i] === this.props.device_type) {
           filteredDevs = [this.props.device];
           break;
         }
       }
     }
-    this.setState({filterByArtifact:filteredDevs});
-  },
-  _clickLink: function() {
-    window.location.assign('https://docs.mender.io/'+this.props.docsVersion+'/client-configuration/configuration-file/polling-intervals');
-  },
-  _copyLinkToClipboard: function() {
-    var location = window.location.href.substring(0, window.location.href.indexOf("/devices") + "/devices".length);
-    copy(location + "/id=" + this.props.device.id);
-    AppActions.setSnackbar("Link copied to clipboard");
-  },
+    this.setState({ filterByArtifact: filteredDevs });
+  }
+  _clickLink() {
+    window.location.assign(`https://docs.mender.io/${this.props.docsVersion}/client-configuration/configuration-file/polling-intervals`);
+  }
+  _copyLinkToClipboard() {
+    var location = window.location.href.substring(0, window.location.href.indexOf('/devices') + '/devices'.length);
+    copy(`${location}/id=${this.props.device.id}`);
+    AppActions.setSnackbar('Link copied to clipboard');
+  }
 
-  _decommissionDevice: function(device_id) {
-     var self = this;
+  _decommissionDevice(device_id) {
+    var self = this;
+    return AppActions.decommissionDevice(device_id)
+      .then(() => {
+        // close dialog!
+        self.toggleAuthsets(false);
+        // close expanded device
+        // trigger reset of list!
+        AppActions.setSnackbar('Device was decommissioned successfully');
+      })
+      .catch(err => {
+        var errMsg = err.res.error.message || '';
+        console.log(errMsg);
+        AppActions.setSnackbar(preformatWithRequestID(err.res, `There was a problem decommissioning the device: ${errMsg}`), null, 'Copy to clipboard');
+      });
+  }
 
-      var callback = {
-        success: function(data) {
-          // close dialog!
-          self.dialogToggle("authsets");
-          // close expanded device
-
-          // trigger reset of list!
-          AppActions.setSnackbar("Device was decommissioned successfully");
-        },
-        error: function(err) {
-          var errMsg = err.res.error.message || "";
-          console.log(errMsg);
-          AppActions.setSnackbar(preformatWithRequestID(err.res, "There was a problem decommissioning the device: "+errMsg), null, "Copy to clipboard");
-        }
-      };
-    AppActions.decommissionDevice(device_id, callback);
-  },
-
-  render: function() {
-
+  render() {
     var status = this.props.device.status;
 
     var deviceIdentity = [];
     deviceIdentity.push(
-        <ListItem key="id_checksum" style={this.props.styles.listStyle} disabled={true} primaryText="Device ID" secondaryText={(this.props.device || {}).id || ''} secondaryTextLines={2} />
+      <div key="id_checksum">
+        <ListItem classes={{ root: 'attributes', disabled: 'opaque' }} disabled={true}>
+          <ListItemText primary="Device ID" secondary={(this.props.device || {}).id || '-'} />
+        </ListItem>
+        <Divider />
+      </div>
     );
 
     if ((this.props.device || {}).identity_data) {
-      var data = typeof this.props.device.identity_data == "object" ? this.props.device.identity_data : JSON.parse(this.props.device.identity_data);
-      for (var k in data) {
-        deviceIdentity.push(
-          <ListItem key={k} style={this.props.styles.listStyle} disabled={true} primaryText={k} secondaryText={ data[k] } />
+      var data = typeof this.props.device.identity_data == 'object' ? this.props.device.identity_data : JSON.parse(this.props.device.identity_data);
+      deviceIdentity = Object.entries(data).reduce((accu, item) => {
+        accu.push(
+          <div key={item[0]}>
+            <ListItem classes={{ root: 'attributes', disabled: 'opaque' }} disabled={true}>
+              <ListItemText primary={item[0]} secondary={item[1]} />
+            </ListItem>
+            <Divider />
+          </div>
         );
-      };
+        return accu;
+      }, deviceIdentity);
     }
 
     if ((this.props.device || {}).created_ts) {
+      var createdTime = <Time value={this.props.device.created_ts} format="YYYY-MM-DD HH:mm" />;
       deviceIdentity.push(
         <div key="connectionTime">
-          <ListItem style={this.props.styles.listStyle} disabled={true} primaryText={status==="preauthorized" ? "Date added" : "First request"} secondaryText={<div><Time value={this.props.device.created_ts} format="YYYY-MM-DD HH:mm" /></div>} />
+          <ListItem classes={{ root: 'attributes', disabled: 'opaque' }} disabled={true}>
+            <ListItemText primary={status === 'preauthorized' ? 'Date added' : 'First request'} secondary={createdTime} />
+          </ListItem>
+          <Divider />
         </div>
       );
     }
@@ -215,46 +222,46 @@ var ExpandedDevice = createReactClass({
     var deviceInventory = [];
 
     var waiting = false;
-    if (typeof this.props.attrs !== 'undefined' && this.props.attrs.length>0) {
-
-      var sortedAttributes = this.props.attrs.sort(function (a, b) {
-          return a.name.localeCompare( b.name );
+    if (typeof this.props.attrs !== 'undefined' && this.props.attrs.length > 0) {
+      var sortedAttributes = this.props.attrs.sort((a, b) => {
+        return a.name.localeCompare(b.name);
       });
-      for (var i=0;i<sortedAttributes.length;i++) {
-        var secondaryText = (sortedAttributes[i].value instanceof Array) ? sortedAttributes[i].value.toString() : sortedAttributes[i].value;
-        var secondaryTextLines = (sortedAttributes[i].value instanceof Array) || (secondaryText.length>50 ) ? 2 : 1;
+      for (var i = 0; i < sortedAttributes.length; i++) {
+        var secondaryText = sortedAttributes[i].value instanceof Array ? sortedAttributes[i].value.toString() : sortedAttributes[i].value;
         deviceInventory.push(
           <div key={i}>
-            <ListItem style={this.props.styles.listStyle} disabled={true} primaryText={sortedAttributes[i].name} secondaryText={secondaryText} secondaryTextLines={secondaryTextLines} />
+            <ListItem classes={{ root: 'attributes', disabled: 'opaque' }} disabled={true}>
+              <ListItemText primary={sortedAttributes[i].name} secondary={secondaryText} />
+            </ListItem>
             <Divider />
           </div>
         );
-      };
-
+      }
     } else {
       waiting = true;
       deviceInventory.push(
         <div className="waiting-inventory" key="waiting-inventory">
           <div
-            onClick={this._handleStopProp}
+            onClick={e => this._handleStopProp(e)}
             id="inventory-info"
             className="tooltip info"
-            style={{top:"8px", right:"8px"}}
+            style={{ top: '8px', right: '8px' }}
             data-tip
-            data-for='inventory-wait'
-            data-event='click focus'>
-            <FontIcon className="material-icons">info</FontIcon>
+            data-for="inventory-wait"
+            data-event="click focus"
+          >
+            <InfoIcon />
           </div>
-          <ReactTooltip
-            id="inventory-wait"
-            globalEventOff='click'
-            place="top"
-            type="light"
-            effect="solid"
-            className="react-tooltip">
+          <ReactTooltip id="inventory-wait" globalEventOff="click" place="top" type="light" effect="solid" className="react-tooltip">
             <h3>Waiting for inventory data</h3>
             <p>Inventory data not yet received from the device - this can take up to 30 minutes with default installation.</p>
-            <p>Also see the documentation for <a onClick={this._clickLink} href="https://docs.mender.io/client-configuration/configuration-file/polling-intervals">Polling intervals</a>.</p>
+            <p>
+              Also see the documentation for{' '}
+              <a onClick={() => this._clickLink()} href="https://docs.mender.io/client-configuration/configuration-file/polling-intervals">
+                Polling intervals
+              </a>
+              .
+            </p>
           </ReactTooltip>
 
           <p>Waiting for inventory data from the device</p>
@@ -265,242 +272,213 @@ var ExpandedDevice = createReactClass({
 
     var deviceInventory2 = [];
     if (deviceInventory.length > deviceIdentity.length) {
-      deviceInventory2 = deviceInventory.splice((deviceInventory.length/2)+(deviceInventory.length%2),deviceInventory.length);
+      deviceInventory2 = deviceInventory.splice(deviceInventory.length / 2 + (deviceInventory.length % 2), deviceInventory.length);
     }
 
-    var statusIcon = "";
+    var statusIcon = '';
+    const iconStyle = { margin: 12 };
     switch (status) {
-      case "accepted":
-        statusIcon = (<FontIcon className="material-icons green" style={{margin: "12px 0 12px 12px"}}>check_circle</FontIcon>)
-        break;
-      case "pending":
-        statusIcon = (<div className="pending-icon" style={{margin: "12px 0 12px 12px"}}></div>)
-        break;
-      case "rejected":
-        statusIcon = (<FontIcon className="material-icons red" style={{margin: "12px 0 12px 12px"}}>block</FontIcon>)
-        break;
-      case "preauthorized":
-        statusIcon = (<FontIcon className="material-icons" style={{margin: "12px 0 12px 12px"}}>check</FontIcon>)
-        break;
+    case 'accepted':
+      statusIcon = <CheckCircleIcon className="green" style={iconStyle} />;
+      break;
+    case 'pending':
+      statusIcon = <Icon className="pending-icon" style={iconStyle} />;
+      break;
+    case 'rejected':
+      statusIcon = <BlockIcon className="red" style={iconStyle} />;
+      break;
+    case 'preauthorized':
+      statusIcon = <CheckIcon style={iconStyle} />;
+      break;
     }
 
-    var formatStatus = (
-      <span className="text-color">
-        {status.charAt(0).toUpperCase() + status.slice(1)}
-      </span>
-    );
-
-    var hasPending = "";
-    if (status === "accepted" && this.props.device.auth_sets.length>1) {
-      for (var i=0; i<this.props.device.auth_sets.length; i++) {
-        if (this.props.device.auth_sets[i].status === "pending") {
-          hasPending = "This device has a pending authentication set";
-        }
-      }
+    var hasPending = '';
+    if (status === 'accepted' && this.props.device.auth_sets.length > 1) {
+      hasPending = this.props.device.auth_sets.reduce((accu, set) => {
+        return set.status === 'pending' ? 'This device has a pending authentication set' : accu;
+      }, '');
     }
 
+    const states = {
+      pending: 'Accept, reject or dismiss the device?',
+      accepted: 'Reject, dismiss or decommission this device?',
+      rejected: 'Accept, dismiss or decommission this device',
+      default: 'Remove this device from preauthorization?'
+    };
 
-    var authLabel = (
-      <span style={{fontSize:'14px'}}>
-        {
-        hasPending ? hasPending :
-        status === "pending" ? "Accept, reject or dismiss the device?" :
-        status === "accepted" ? "Reject, dismiss or decommission this device?" :
-        status === "rejected" ? "Accept, dismiss or decommission this device" : "Remove this device from preauthorization?" }
-      </span>
-    );
+    const authLabelText = hasPending ? hasPending : states[status] || states.default;
+
+    const buttonStyle = { textTransform: 'none', textAlign: 'left' };
 
     var deviceInfo = (
       <div key="deviceinfo">
+        <div id="device-identity" className="bordered">
+          <div className="margin-bottom-small">
+            <h4 className="margin-bottom-none">Device identity</h4>
+            <List className="list-horizontal-flex">{deviceIdentity}</List>
+          </div>
 
-        <div id="device-identity" className="report-list bordered">
-          <h4 className="margin-bottom-none">Device identity</h4>
-          <List className="list-horizontal-display">
-            {deviceIdentity}
-          </List>
+          <div className="margin-bottom-small flexbox" style={{ flexDirection: 'row' }}>
+            <span style={{ display: 'flex', minWidth: 180, justifyContent: 'space-evenly', alignItems: 'center', marginRight: '2vw' }}>
+              {statusIcon}
+              <span className="inline-block">
+                <Typography component="span" variant="subtitle2" style={Object.assign({}, buttonStyle, { textTransform: 'capitalize' })}>
+                  Device status
+                </Typography>
+                <Typography component="span" variant="subtitle1" style={Object.assign({}, buttonStyle, { textTransform: 'capitalize' })}>
+                  {status}
+                </Typography>
+              </span>
+            </span>
 
-          <List className="block list-horizontal-display">
-            <ListItem
-              key="statusButton"
-              disabled={true}
-              style={this.props.styles.listButtonStyle}
-              primaryText={"Device status"}
-              secondaryText={formatStatus}
-              leftIcon={statusIcon} />
-
-            <ListItem
-              key="authsetsButton"
-              disabled={false}
-              style={this.props.styles.listButtonStyle}
-              primaryText={authLabel}
-              secondaryText={"Click to adjust authorization status for this device"}
-              onClick={this._showAuthsets}
-              leftIcon={hasPending ? <FontIcon className="material-icons auth" style={{marginTop:12, marginBottom:6}}>warning</FontIcon> : null} />
-          </List>
+            <Button
+              onClick={() => {
+                this.toggleAuthsets(true);
+                AppActions.setSnackbar('');
+              }}
+            >
+              {hasPending ? <WarningIcon className="auth" /> : null}
+              <span className="inline-block">
+                <Typography component="span" variant="subtitle1" style={buttonStyle}>
+                  {authLabelText}
+                </Typography>
+                <Typography component="span" variant="body1" className="muted" style={buttonStyle}>
+                  Click to adjust authorization status for this device
+                </Typography>
+              </span>
+            </Button>
+          </div>
         </div>
 
-        {this.props.attrs || status==="accepted" ? 
+        {this.props.attrs || status === 'accepted' ? (
           <div id="device-inventory" className="bordered">
-            <div className={this.props.unauthorized ? "hidden" : "report-list"} >
+            <div className={this.props.unauthorized ? 'hidden' : 'report-list'}>
               <h4 className="margin-bottom-none">Device inventory</h4>
-              <List>
-                {deviceInventory}
-              </List>
-            </div>
-      
-
-            <div className={this.props.unauthorized ? "hidden" : "report-list"} >
-              <List style={{marginTop:"34px"}}>
-                {deviceInventory2}
-              </List>
+              <List>{deviceInventory}</List>
             </div>
 
-          </div> : null }
-
-        { (status==="accepted" && !waiting) ? 
-          (
-            <div id="device-actions" className="report-list">
-              <List className="list-horizontal-display" style={{marginTop:"24px"}}>
-                <ListItem
-                key="copylink"
-                style={this.props.styles.iconListButtonStyle}
-                primaryText="Copy link to this device"
-                onClick={this._copyLinkToClipboard}
-                leftIcon={<FontIcon className="material-icons update" style={{margin: "12px 0 12px 12px"}}>link</FontIcon>} />
-                <ListItem
-                key="updateButton"
-                className={status === "accepted" ? null : "hidden"}
-                style={this.props.styles.iconListButtonStyle}
-                primaryText="Create a deployment for this device"
-                onClick={this._clickListItem}
-                leftIcon={<FontIcon className="material-icons update" style={{margin: "12px 0 12px 12px"}}>replay</FontIcon>} />
-              </List>
+            <div className={this.props.unauthorized ? 'hidden' : 'report-list'}>
+              <List style={{ marginTop: '34px' }}>{deviceInventory2}</List>
             </div>
-          ) : null
-        }
-      
+          </div>
+        ) : null}
+
+        {status === 'accepted' && !waiting ? (
+          <div id="device-actions" className="report-list" style={{ marginTop: '24px' }}>
+            <Button onClick={() => this._copyLinkToClipboard()}>
+              <LinkIcon className="rotated buttonLabelIcon" />
+              Copy link to this device
+            </Button>
+            {status === 'accepted' ? (
+              <div className="margin-left inline">
+                <Button onClick={() => this.setState({ schedule: true })}>
+                  <ReplayIcon className="rotated buttonLabelIcon" />
+                  Create a deployment for this device
+                </Button>
+              </div>
+            ) : null}
+          </div>
+        ) : null}
       </div>
     );
 
-    var scheduleActions =  [
-      <div style={{marginRight:"10px", display:"inline-block"}}>
-        <FlatButton
-          label="Cancel"
-          onClick={this.dialogToggle.bind(null, 'schedule')} />
-      </div>,
-      <RaisedButton
-        label="Create deployment"
-        primary={true}
-        disabled={!this.state.filterByArtifact}
-        onClick={this._onScheduleSubmit}
-        ref="save" />
-    ];
-
-
-    var authsetActions =  [
-      <div style={{marginRight:"10px", display:"inline-block"}}>
-        <FlatButton
-          label="Close"
-          onClick={this.dialogToggle.bind(null, 'authsets')} />
-      </div>
+    var authsetActions = [
+      <Button key="authset-button-1" style={{ marginRight: '10px', display: 'inline-block' }} onClick={() => this.toggleAuthsets(false)}>
+        Close
+      </Button>
     ];
 
     var authsetTitle = (
-      <div style={{width:"fit-content", position:"relative"}}>
-        {
-          this.props.device.status==="pending" ? 'Authorization '+pluralize("request", this.props.device.auth_sets.length)+' for this device' : 'Authorization status for this device'
-        }
-          <div
-            onClick={this._handleStopProp}
-            id="inventory-info"
-            className="tooltip info"
-            style={{top:"28px", right:"-18px"}}
-            data-tip
-            data-for='inventory-wait'
-            data-event='click focus'>
-            <FontIcon className="material-icons">info</FontIcon>
-          </div>
-          <ReactTooltip
-            id="inventory-wait"
-            globalEventOff='click'
-            place="bottom"
-            type="light"
-            effect="solid"
-            className="react-tooltip">
-            <h3>Device authorization status</h3>
-            <p>Each device sends an authentication request containing its identity attributes and its current public key. You can accept, reject or dismiss these requests to determine the authorization status of the device.</p>
-            <p>In cases such as key rotation, each device may have more than one identity/key combination listed. See the documentation for more on <a onClick={this._clickLink} href="https://docs.mender.io/architecture/device-authentication">Device authentication</a>.</p>
-          </ReactTooltip>
+      <div style={{ width: 'fit-content', position: 'relative' }}>
+        {this.props.device.status === 'pending'
+          ? `Authorization ${pluralize('request', this.props.device.auth_sets.length)} for this device`
+          : 'Authorization status for this device'}
+        <div
+          onClick={e => this._handleStopProp(e)}
+          id="inventory-info"
+          className="tooltip info"
+          style={{ top: '28px', right: '-18px' }}
+          data-tip
+          data-for="inventory-wait"
+          data-event="click focus"
+        >
+          <InfoIcon />
+        </div>
+        <ReactTooltip id="inventory-wait" globalEventOff="click" place="bottom" type="light" effect="solid" className="react-tooltip">
+          <h3>Device authorization status</h3>
+          <p>
+            Each device sends an authentication request containing its identity attributes and its current public key. You can accept, reject or dismiss these
+            requests to determine the authorization status of the device.
+          </p>
+          <p>
+            In cases such as key rotation, each device may have more than one identity/key combination listed. See the documentation for more on{' '}
+            <a onClick={() => this._clickLink()} href="https://docs.mender.io/architecture/device-authentication">
+              Device authentication
+            </a>
+            .
+          </p>
+        </ReactTooltip>
       </div>
     );
-
 
     return (
       <div>
         {deviceInfo}
 
-          { this.props.showHelptips && status==="pending" ?
-            <div>
-              <div 
-                id="onboard-4"
-                className={this.props.highlightHelp ? "tooltip help highlight" : "tooltip help"}
-                data-tip
-                data-for='auth-button-tip'
-                data-event='click focus'
-                style={{left:"580px",top:"178px"}}>
-                <FontIcon className="material-icons">help</FontIcon>
-              </div>
-              <ReactTooltip
-                id="auth-button-tip"
-                globalEventOff='click'
-                place="bottom"
-                type="light"
-                effect="solid"
-                className="react-tooltip">
-                <AuthButton devices={[this.props.device]} />
-              </ReactTooltip>
+        {this.props.showHelptips && status === 'pending' ? (
+          <div>
+            <div
+              id="onboard-4"
+              className={this.props.highlightHelp ? 'tooltip help highlight' : 'tooltip help'}
+              data-tip
+              data-for="auth-button-tip"
+              data-event="click focus"
+              style={{ left: '580px', top: '178px' }}
+            >
+              <HelpIcon />
             </div>
-          : null }
+            <ReactTooltip id="auth-button-tip" globalEventOff="click" place="bottom" type="light" effect="solid" className="react-tooltip">
+              <AuthButton devices={[this.props.device]} />
+            </ReactTooltip>
+          </div>
+        ) : null}
 
-        <Dialog
+        <ScheduleDialog
           open={this.state.schedule}
-          title='Create a deployment'
-          actions={scheduleActions}
-          autoDetectWindowHeight={true}
-          bodyStyle={{paddingTop:"0", fontSize:"13px"}}
-          contentStyle={{overflow:"hidden", boxShadow:"0 14px 45px rgba(0, 0, 0, 0.25), 0 10px 18px rgba(0, 0, 0, 0.22)"}}
-          >
-          <ScheduleForm deploymentDevices={[this.props.device]} filteredDevices={this.state.filterByArtifact} deploymentSettings={this._deploymentParams} artifact={this.state.artifact} artifacts={this.state.artifacts} device={this.props.device} deploymentSchedule={this._updateParams} groups={this.props.groups} />
-
-        </Dialog>
-
+          deploymentDevices={[this.props.device]}
+          filteredDevices={this.state.filterByArtifact}
+          deploymentSettings={(...args) => this._deploymentParams(...args)}
+          artifacts={this.state.artifacts}
+          device={this.props.device}
+          groups={this.props.groups}
+          onDismiss={() => this.setState({ schedule: false })}
+          onScheduleSubmit={(_group, _devices, artifact) => this._onScheduleSubmit(artifact)}
+        />
 
         <Dialog
           open={this.state.authsets}
-          title={authsetTitle}
-          autoDetectWindowHeight={false}
-          actions={authsetActions}
-          bodyStyle={{paddingTop:"0", fontSize:"13px"}}
-          contentStyle={{width: "80%", maxWidth: "1500px", overflow:"hidden", boxShadow:"0 14px 45px rgba(0, 0, 0, 0.25), 0 10px 18px rgba(0, 0, 0, 0.22)"}}
-          >
-          <Authsets 
-            dialogToggle={this.dialogToggle} 
-            decommission={this._decommissionDevice} 
-            device={this.props.device} 
-            id_attribute={this.props.id_attribute}  
-            id_value={this.props.id_value}
-            limitMaxed={this.props.limitMaxed} />
+          fullWidth={true}
+          maxWidth="lg"
+          style={{
+            paddingTop: '0',
+            fontSize: '13px',
+            overflow: 'hidden'
+          }}
+        >
+          <DialogTitle>{authsetTitle}</DialogTitle>
+          <DialogContent>
+            <Authsets
+              dialogToggle={() => this.toggleAuthsets(false)}
+              decommission={id => this._decommissionDevice(id)}
+              device={this.props.device}
+              id_attribute={this.props.id_attribute}
+              id_value={this.props.id_value}
+              limitMaxed={this.props.limitMaxed}
+            />
+          </DialogContent>
+          <DialogActions>{authsetActions}</DialogActions>
         </Dialog>
-
-
       </div>
     );
   }
-});
-
-ExpandedDevice.contextTypes = {
-  router: PropTypes.object,
-  location: PropTypes.object,
-};
-
-module.exports = ExpandedDevice;
+}

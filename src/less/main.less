@@ -87,6 +87,10 @@ ul.unstyled {
   visibility: hidden;
 }
 
+time {
+  white-space: nowrap;
+}
+
 /* icon */
 
 .pending-icon {
@@ -290,11 +294,40 @@ ul.link-list {
   .transition(opacity 0.6s linear);
 }
 
+/* Navigation */
+.navLink {
+  transition: all 100ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;
+  color: #949495;
+  &.leftNav.active {
+    background: white;
+    border-top: 1px solid #eaf4f3;
+    border-bottom: 1px solid #eaf4f3;
+    transition: all 100ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;
+  }
+  &.leftNav:first-of-type {
+    border-top: none;
+  }
+  &.settingsNav.active,
+  &.helpNav.active {
+    background: @lightestgrey;
+  }
+}
+
+.navLink.leftNav > div > span {
+  color: #949495;
+}
+.navLink.leftNav.active > div > span {
+  color: rgba(0, 0, 0, 0.87);
+}
+.navLink.leftNav:hover {
+  background-color: rgba(0, 0, 0, 0.08);
+}
+
 /* Header */
 
 #fixedHeader {
   position: fixed;
-  z-index: 1400;
+  z-index: 1300;
   width: 100%;
 }
 
@@ -313,13 +346,13 @@ ul.link-list {
 .header .material-icons {
   color: @grey !important;
   margin-left: 7px;
+  vertical-align: middle;
 }
 
 #logo {
   display: block;
   position: relative;
-  left: 5px;
-  min-width: 174px;
+  min-width: 165px;
   height: 48px;
   background-image: url('../assets/img/headerlogo.png');
   background-repeat: no-repeat;
@@ -355,7 +388,8 @@ ul.link-list {
   padding-left: 36px;
   padding-right: 36px;
   border-right: 1px solid @lightergrey;
-
+  display: flex;
+  align-items: center;
   &:first-of-type {
     border-left: 1px solid @lightergrey;
   }
@@ -403,6 +437,10 @@ ul.link-list {
       color: orange !important;
     }
   }
+
+  > * > * {
+    vertical-align: middle;
+  }
 }
 
 .header .header-dropdown:hover .material-icons {
@@ -410,6 +448,11 @@ ul.link-list {
 }
 
 /* Layout */
+
+.tab-container {
+  position: relative;
+  padding-top: 30px;
+}
 
 .flexbox {
   display: -webkit-flex;
@@ -454,11 +497,13 @@ ul.link-list {
     width: 198px;
     margin-right: -198px;
     position: fixed;
-    top: 57px;
-    bottom: 0;
+    height: 100%;
     background-color: @lightestgrey;
     border-right: 1px solid @lightergrey;
     min-height: 400px;
+    ul {
+      margin-right: -1px;
+    }
   }
 }
 
@@ -474,8 +519,7 @@ ul.link-list {
   padding: 30px;
   position: relative;
   border-left: 1px solid @lightergrey;
-  min-height: 400px;
-  height: 91vh;
+  min-height: 80vh;
 
   &.container {
     margin-left: 198px;
@@ -503,7 +547,7 @@ ul.link-list {
   overflow: hidden;
   position: relative;
   opacity: 1;
-  min-height: 53vh;
+  min-height: 47vh;
 
   &.zero {
     min-height: 100px;
@@ -566,11 +610,15 @@ ul.link-list {
     left: 50%;
     margin-left: -16px;
     z-index: 10;
-    .material-icons {
+    .material-icons,
+    svg {
       color: @alertpurple !important;
     }
 
-    &.highlight .material-icons {
+    &.highlight .material-icons,
+    &.highlight svg {
+      width: 1.3em;
+      height: 1.3em;
       border-radius: 50%;
       border: @alertpurple 4px solid;
       .animation(highlight 2.2s infinite);
@@ -768,9 +816,13 @@ ul.link-list {
     background: none;
     color: @red !important;
   }
-  &.update {
-    .rotate(-45deg);
-  }
+}
+.rotated {
+  .rotate(-45deg);
+}
+
+.buttonLabelIcon {
+  margin-right: 8px;
 }
 
 // pagination
@@ -849,25 +901,40 @@ span.length {
 // custom style for checkbox
 table tbody.clickable tr > td:first-child,
 table thead.clickable tr > th:first-child {
-  padding-right: 36px !important;
+  padding-right: 0;
+  width: 1vw;
+}
+.inventoryTable {
+  padding: 0 24px;
+  align-items: center;
+  height: 56px;
+  font-size: 12px;
+  color: @mendermaroon;
 }
 
 .columnHeader {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
   .sortIcon {
     visibility: hidden;
     .transition(visibility 0.1s ease-in) !important;
   }
-  &:hover .sortIcon {
-    //visibility: visible;
-    //.opacity(.4);
+  .material-icons {
+    color: @grey;
+  }
+  &:hover {
+    visibility: visible;
+    // .opacity(0.4);
+    // color: #aeaeae;
   }
   &:hover .sortIcon.selected,
   .sortIcon.selected {
     .opacity(1);
-    //visibility: visible;
+    visibility: visible;
     .transition(all 0.15s ease-in-out) !important;
   }
-  .sortIcon.selected.false {
+  .sortIcon.false {
     .rotateX(180deg) !important;
   }
 }
@@ -931,6 +998,10 @@ table thead.clickable tr > th:first-child {
   width: 30%;
   vertical-align: top;
   -webkit-line-clamp: 3;
+
+  &.list-item-large {
+    width: 60%;
+  }
 }
 
 #device-identity .list-horizontal-display > div,
@@ -945,7 +1016,17 @@ table thead.clickable tr > th:first-child {
   overflow: hidden;
 }
 
-#device-identity.report-list.bordered,
+.list-horizontal-flex {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  > div {
+    margin-right: 2vw;
+    flex-basis: 300px;
+  }
+}
+
+#device-identity.bordered,
 #device-inventory.bordered {
   border: 1px solid @lightgrey;
   margin-top: 10px;
@@ -972,10 +1053,12 @@ table thead.clickable tr > th:first-child {
 }
 
 .file-details {
-  padding: 0.75vw;
+  padding: 10px 15px 30px;
+  width: 100%;
   border-radius: 4px;
   margin: 10px 3px 20px 0;
-  border: 1px solid @lightgrey;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  position: relative;
 }
 .file-meta {
   padding: 0 16px;
@@ -1104,7 +1187,7 @@ p.info {
 form .required::after {
   content: '* required';
   position: absolute;
-  top: 38px;
+  top: 50%;
   left: 102%;
   font-size: 12px;
   color: @linkgreen;
@@ -1171,10 +1254,20 @@ textarea#inline-description {
       color: lighten(@text, 33%);
     }
     border-width: 2px;
-    margin-right: -1px;
-    margin-top: -1px;
-    margin-left: -1px;
   }
+  &:focus {
+    outline: none !important;
+  }
+}
+
+div:focus {
+  outline: none !important;
+}
+
+.key-value-container button {
+  margin-left: 8px;
+  height: 100%;
+  align-self: center;
 }
 
 /* Log in */
@@ -1189,11 +1282,6 @@ textarea#inline-description {
     text-transform: uppercase;
     color: @grey;
     font-weight: normal;
-    text-align: center;
-  }
-
-  p {
-    font-size: 16px;
     text-align: center;
   }
 
@@ -1228,19 +1316,13 @@ form .button-holder {
   &.edit-pass {
     background-color: @lightestgrey;
     padding: 0 20px 10px;
-    margin-left: -10px;
   }
 
   .pass-buttons {
-    display: inline-block;
-    position: relative;
-    margin-left: 10px;
-    top: 30px;
-    vertical-align: top;
-
-    button {
-      position: relative !important;
-      display: inline;
+    display: flex;
+    justify-content: flex-end;
+    button:first-of-type {
+      margin-right: 15px;
     }
   }
 }
@@ -1314,23 +1396,28 @@ tr.expand {
 
     div.expanded {
       position: absolute;
-      left: 0;
-      margin-top: 60px;
-      padding: 0 45px;
+      left: 30px;
       right: 0;
-
-      &.accepted {
-        padding-left: 93px;
-      }
+      margin-top: 60px;
+      padding: 0 45px 30px;
     }
   }
 
-  td:first-child > div div {
-    margin-top: -1px;
-  }
   td.expandButton {
     padding-top: 2px;
   }
+}
+
+.attributes.opaque {
+  opacity: 1;
+}
+
+.grouplist div span {
+  font-size: 0.9rem;
+}
+
+.leftNav ul a div span {
+  font-size: 0.9rem;
 }
 
 div.waiting-inventory {
@@ -1349,13 +1436,6 @@ div.waiting-inventory {
 
 #authorize > div {
   padding-bottom: 15px;
-}
-
-td.no-click-cell {
-  padding: 0 !important;
-  > div {
-    padding: 17px 24px;
-  }
 }
 
 /* device auth */
@@ -1386,6 +1466,7 @@ td.no-click-cell {
   position: absolute;
   top: 30px;
   right: 30px;
+  z-index: 100;
 }
 
 .bottom-right-button {
@@ -1438,7 +1519,7 @@ input.fileInput {
   font-size: 16px;
   color: @grey;
   text-align: center;
-  padding: 15px;
+  padding: 15px 30px;
   .animation(fadein 0.2s 1);
 
   img {
@@ -1493,7 +1574,7 @@ span.day {
   border-bottom: 1px solid @lightgrey;
   margin-bottom: 15px;
   position: relative;
-  
+
   span {
     position: absolute;
     background: #ffffff;
@@ -1849,16 +1930,6 @@ span.day {
   }
 }
 
-.slider {
-  padding: 15px 15px 5% 30px;
-  height: 95%;
-  overflow-y: auto;
-  margin-bottom: -30px;
-  p {
-    padding: 0 15px;
-  }
-}
-
 .material-list-item {
   padding: 20px 16px 16px;
   overflow: hidden;
@@ -1892,6 +1963,45 @@ span.day {
 .datepicker-container {
   background-color: @lightestgrey;
   padding: 0px 25px 5px;
+}
+
+// Releases & Artifacts
+
+.repository-list {
+  border-right: 1px solid @lightergrey;
+  min-width: 210px;
+  min-height: 83vh;
+}
+
+.release-repo > .flexbox:first-of-type {
+  padding-top: 15px;
+}
+
+.repository-list-item {
+  &.active {
+    background-color: @lightestgrey;
+  }
+  & > div {
+    padding-right: 0;
+  }
+  .flexbox {
+    justify-content: space-between;
+    align-items: center;
+  }
+  .indicator {
+    opacity: 0;
+  }
+  &:hover .indicator {
+    .animation(fadein 0.2s 1);
+    opacity: 1;
+  }
+}
+
+.release-repo-item {
+  padding-bottom: 2vh;
+  & > div.muted {
+    margin: 18px 12px 0 0;
+  }
 }
 
 @keyframes fadein {
@@ -2084,6 +2194,11 @@ div.shake-alert {
 
 /* Progress bar */
 #progressBarContainer {
+  position: fixed;
+  left: 230px;
+  right: 30px;
+  bottom: 80px;
+  background-color: #ffffff;
   border: 1px solid @lightergrey;
   border-radius: 4px;
   height: 60px;

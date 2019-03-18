@@ -1,13 +1,12 @@
 /*
-* Store for localStorage
-*
-*/
-var AppDispatcher = require('../dispatchers/app-dispatcher');
-var AppConstants = require('../constants/app-constants');
-var EventEmitter = require('events').EventEmitter; // from device
+ * Store for localStorage
+ *
+ */
+import AppDispatcher from '../dispatchers/app-dispatcher';
+import AppConstants from '../constants/app-constants';
+import { EventEmitter } from 'events'; // from device
 
-var CHANGE_EVENT = "change";
-
+var CHANGE_EVENT = 'change';
 
 function _setStorage(key, value) {
   localStorage.setItem(key, value);
@@ -19,7 +18,7 @@ function _getStorageItem(key) {
 
 var LocalStore = Object.assign({}, EventEmitter.prototype, {
   emitChange: function() {
-    this.emit(CHANGE_EVENT)
+    this.emit(CHANGE_EVENT);
   },
 
   getStorageItem: function(key) {
@@ -27,25 +26,24 @@ var LocalStore = Object.assign({}, EventEmitter.prototype, {
   },
 
   changeListener: function(callback) {
-    this.on(CHANGE_EVENT, callback)
+    this.on(CHANGE_EVENT, callback);
   },
 
   removeChangeListener: function(callback) {
     this.removeListener(CHANGE_EVENT, callback);
   },
 
-  dispatcherIndex: AppDispatcher.register(function(payload) {
+  dispatcherIndex: AppDispatcher.register(payload => {
     var action = payload.action;
-    switch(action.actionType) {
-      case AppConstants.SET_LOCAL_STORAGE:
-        _setStorage(payload.action.key, payload.action.value);
-        break;
+    switch (action.actionType) {
+    case AppConstants.SET_LOCAL_STORAGE:
+      _setStorage(payload.action.key, payload.action.value);
+      break;
     }
-    
+
     LocalStore.emitChange();
     return true;
   })
-
 });
 
 module.exports = LocalStore;

@@ -1,28 +1,46 @@
 import React from 'react';
-import Dialog from 'material-ui/Dialog';
-import TextField from 'material-ui/TextField';
-import FlatButton from 'material-ui/FlatButton';
-import RaisedButton from 'material-ui/RaisedButton';
-import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
-import SearchInput from 'react-search-input';
 import cookie from 'react-cookie';
-import FontIcon from 'material-ui/FontIcon';
-import Checkbox from 'material-ui/Checkbox';
 import validator from 'validator';
-import { UNGROUPED_GROUP } from '../../constants/app-constants';
+import Button from '@material-ui/core/Button';
+import Checkbox from '@material-ui/core/Checkbox';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogContent from '@material-ui/core/DialogContent';
+import FormControl from '@material-ui/core/FormControl';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import Input from '@material-ui/core/Input';
+import InputLabel from '@material-ui/core/InputLabel';
+import Table from '@material-ui/core/Table';
+import TableHead from '@material-ui/core/TableHead';
+import TableCell from '@material-ui/core/TableCell';
+import TableBody from '@material-ui/core/TableBody';
+import TableRow from '@material-ui/core/TableRow';
 
-var createReactClass = require('create-react-class');
-var AppActions = require('../../actions/app-actions');
-var AppStore = require('../../stores/app-store');
-var Loader = require('../common/loader');
+import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
 
-import { preformatWithRequestID } from '../../helpers';
+import AppActions from '../../actions/app-actions';
+import AppConstants from '../../constants/app-constants';
+import AppStore from '../../stores/app-store';
+import Loader from '../common/loader';
+import { mapDeviceAttributes } from '../../helpers';
 
-var CreateGroup = createReactClass({
+export default class CreateGroup extends React.Component {
+  constructor(props, context) {
+    super(props, context);
+    this.state = this._getInitialState();
+  }
 
-  getInitialState: function() {
+  componentDidUpdate(prevProps) {
+    if (prevProps.open !== this.props.open) {
+      this.setState(this._getInitialState());
+    }
+  }
+
+  _getInitialState() {
     return {
-      errorText:'',
+      errortext: '',
       showDeviceList: false,
       newGroup: '',
       nextInvalid: true,
@@ -31,275 +49,265 @@ var CreateGroup = createReactClass({
       selectedRows: [],
       pageNo: 1,
       pageLength: 0,
-      user: AppStore.getCurrentUser(),
+      user: AppStore.getCurrentUser()
     };
-  },
+  }
 
-  componentDidUpdate: function(prevProps, prevState) {
-    if (prevProps.open!==this.props.open) {
-      this.setState(this.getInitialState());
-    }
-  },
-
-  _getDevices: function() {
-     var self = this;
-       var callback =  {
-        success: function(devices) {
-          self.setState({devices: devices, loading: false, pageLoading: false}, function() {
-                    // for each device, get inventory
-            for (var i=0; i<devices.length; i++) {
-              // have to call inventory each time - accepted list can change order so must refresh inventory too
-              self._getInventoryForDevice(devices[i].id, i, function(inventory, index) {
-                devices[index].attributes = inventory.attributes;
-                self.setState({devices: devices});
-              });
-            }
+  _getDevices() {
+    var self = this;
+    return AppActions.getDevicesByStatus('accepted', this.state.pageNo, this.state.pageLength)
+      .then(devices => {
+        self.setState({ devices, loading: false, pageLoading: false }, () => {
+          // for each device, get inventory
+          const devicesInventoryRequests = devices.map(device => {
+            // have to call inventory each time - accepted list can change order so must refresh inventory too
+            return self._getInventoryForDevice(device.id).then(inventory => {
+              device.attributes = inventory.attributes;
+              return Promise.resolve(device);
+            });
           });
-        },
-        error: function(error) {
-          console.log(err);
-          var errormsg = err.error || "Please check your connection.";
-          self.setState({loading: false});
-             // setRetryTimer(err, "devices", "Devices couldn't be loaded. " + errormsg, self.state.refreshDeviceLength);
-        }
-      };
-      AppActions.getDevicesByStatus(callback, "accepted", this.state.pageNo, this.state.pageLength);
-     
-  },
+          return Promise.all(devicesInventoryRequests).then(devicesInventory => self.setState({ devices: devicesInventory }));
+        });
+      })
+      .catch(err => {
+        console.log(err.error || 'Please check your connection.');
+        self.setState({ loading: false });
+        // setRetryTimer(err, "devices", "Devices couldn't be loaded. " + errormsg, self.state.refreshDeviceLength);
+      });
+  }
 
-  _getInventoryForDevice: function(device_id, index, originCallback) {
-      // get inventory for single device
-      var callback = {
-        success: function(device) {
-          originCallback(device, index);
-        },
-        error: function(err) {
-          if (err.res.statusCode !== 404) {
-            // don't show error if 404 - device hasn't received inventory yet
-             console.log(err);
-          }
-          originCallback(null);
-        }
-      };
-      AppActions.getDeviceById(device_id, callback);
-  },
+  _getInventoryForDevice(device_id) {
+    // get inventory for single device
+    return AppActions.getDeviceById(device_id).catch(err => {
+      if (err.res.statusCode !== 404) {
+        // don't show error if 404 - device hasn't received inventory yet
+        console.log(err);
+      }
+    });
+  }
 
-  _createGroupHandler: function() {
+  _createGroupHandler() {
     var self = this;
     if (!this.state.user) {
-      this.setState({user: AppStore.getCurrentUser()});
+      this.setState({ user: AppStore.getCurrentUser() });
     }
-    var gotCookie = cookie.load(this.state.user.id+'-groupHelpText');
+    var gotCookie = cookie.load(`${this.state.user.id}-groupHelpText`);
     // if another group exists, check for warning message cookie
     if (this.props.groups.length && !gotCookie && !this.state.showWarning) {
-        // if show warning message
-        this.setState({showDeviceList: false, showWarning:true});
+      // if show warning message
+      this.setState({ showDeviceList: false, showWarning: true });
     } else {
       self._createGroupFromSelected();
     }
-  },
+  }
 
-  _createGroupFromSelected: function() {
+  _createGroupFromSelected() {
     var devices = [];
-    for (var i=0;i<this.state.selectedRows.length;i++) {
+    for (var i = 0; i < this.state.selectedRows.length; i++) {
       var device = this.state.devices[this.state.selectedRows[i]];
       devices.push(device);
     }
     // cookie exists || if no other groups exist, continue to create group
     this.props.addListOfDevices(devices, this.state.newGroup);
-    this.setState({showWarning: false});
-  },
+    this.setState({ showWarning: false });
+  }
 
-
-  validateName: function(e) {
+  validateName(e) {
     var newName = e.target.value;
-    this.setState({newGroup: newName});
+    this.setState({ newGroup: newName });
     var invalid = false;
-    var errorText = null;
+    var errortext = null;
     if (newName) {
       if (!validator.isWhitelisted(newName, 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-')) {
         invalid = true;
-        errorText = 'Valid characters are a-z, A-Z, 0-9, _ and -';
-      } else if (validator.contains(newName.toLowerCase(), UNGROUPED_GROUP.name.toLowerCase())) {
+        errortext = 'Valid characters are a-z, A-Z, 0-9, _ and -';
+      } else if (validator.contains(newName.toLowerCase(), AppConstants.UNGROUPED_GROUP.name.toLowerCase())) {
         invalid = true;
-        errorText = `${newName} is a reserved group name`;
+        errortext = `${newName} is a reserved group name`;
       } else {
-        for (var i=0;i<this.props.groups.length; i++) {
+        for (var i = 0; i < this.props.groups.length; i++) {
           if (decodeURIComponent(this.props.groups[i]) === newName) {
             invalid = true;
-            errorText = "A group with this name already exists";
+            errortext = 'A group with this name already exists';
           }
         }
       }
-      this.setState({errorText: errorText, nextInvalid: invalid});
+      this.setState({ errortext: errortext, nextInvalid: invalid });
     } else {
       invalid = true;
-      errorText = "Name cannot be left blank";
-      this.setState({errorText: errorText, nextInvalid: invalid});
+      errortext = 'Name cannot be left blank';
+      this.setState({ errortext: errortext, nextInvalid: invalid });
     }
-  },
+  }
 
-  _loadMoreDevs: function() {
+  _loadMoreDevs() {
     var self = this;
-    var numberDevs = this.state.pageLength;
+    var numberDevs = self.state.pageLength;
     numberDevs += 10;
 
-    this.setState({showDeviceList: true, pageLength: numberDevs}, function() {
-        self._getDevices();
+    self.setState({ showDeviceList: true, pageLength: numberDevs }, () => {
+      self._getDevices();
     });
-  },
+  }
 
-  _onRowSelection: function(selectedRows) {
-  
-    var invalid = true;
-    if (selectedRows === "all") {
-      var rows = Array.apply(null, {length: this.state.devices.length}).map(Number.call, Number);
-      invalid = false;
-      this.setState({selectedRows: rows, createInvalid: invalid});
-    } else if (selectedRows === "none") {
-      this.setState({selectedRows: [], createInvalid: invalid});
+  _onRowSelection(selectedRow) {
+    const self = this;
+    const { selectedRows } = self.state;
+    const selectedIndex = selectedRows.indexOf(selectedRow);
+    let updatedSelection = [];
+    if (selectedIndex === -1) {
+      updatedSelection = updatedSelection.concat(selectedRows, selectedRow);
     } else {
-      invalid = false;
-      this.setState({selectedRows: selectedRows, createInvalid: invalid});
+      selectedRows.splice(selectedIndex, 1);
+      updatedSelection = selectedRows;
     }
-  },
+    self.setState({ selectedRows: updatedSelection, createInvalid: !updatedSelection.length });
+  }
 
+  onSelectAllClick() {
+    const self = this;
+    let selectedRows = Array.apply(null, { length: this.state.devices.length }).map(Number.call, Number);
+    if (self.state.selectedRows.length && self.state.selectedRows.length <= self.state.devices.length) {
+      selectedRows = [];
+    }
+    self.setState({ selectedRows, createInvalid: !selectedRows.length });
+  }
 
-  _handleCheckBox: function(event, isChecked) {
+  _handleCheckBox(isChecked) {
     var self = this;
-    this.setState({isChecked: isChecked});
-      if (isChecked) {
-        cookie.save(self.state.user.id+'-groupHelpText', true);
-      }
-  },
+    this.setState({ isChecked: isChecked });
+    if (isChecked) {
+      cookie.save(`${self.state.user.id}-groupHelpText`, true);
+    }
+  }
 
-  _isSelected: function(index) {
+  _isSelected(index) {
     return this.state.selectedRows.indexOf(index) !== -1;
-  },
+  }
 
-  _handleClose: function() {
-    this.setState({newGroup:'', showDeviceList: false, createInvalid: true, nextInvalid: true, showWarning: false, selectedRows:[], pageLength:0, errorText:''});
-    this.props.toggleDialog("createGroupDialog");
-  },
+  _handleClose() {
+    this.setState({
+      newGroup: '',
+      showDeviceList: false,
+      createInvalid: true,
+      nextInvalid: true,
+      showWarning: false,
+      selectedRows: [],
+      pageLength: 0,
+      errortext: ''
+    });
+    this.props.toggleDialog('createGroupDialog');
+  }
 
-  render: function() {
+  render() {
     var self = this;
-    var deviceList = this.state.devices.map(function(device, index) {
-      var attrs = {
-        device_type: "",
-        artifact_name: ""
-      };
 
-      var attributesLength = device.attributes ? device.attributes.length : 0; 
-      for (var i=0;i<attributesLength;i++) {
-        attrs[device.attributes[i].name] = device.attributes[i].value;
-      }
+    var deviceList = self.state.devices.map((device, index) => {
+      var id_attribute =
+        self.props.globalSettings.id_attribute && self.props.globalSettings.id_attribute !== 'Device ID'
+          ? (device.identity_data || {})[self.props.globalSettings.id_attribute]
+          : device.device_id || device.id;
 
-      var id_attribute = (self.props.globalSettings.id_attribute && self.props.globalSettings.id_attribute !== "Device ID") 
-        ? (device.identity_data || {})[self.props.globalSettings.id_attribute]
-        : (device.device_id || device.id) ;
-
+      var attrs = mapDeviceAttributes(device.attributes || []);
       return (
-        <TableRow selected={this._isSelected(index)} key={index}>
-          <TableRowColumn>
-            {id_attribute}
-          </TableRowColumn>
-          <TableRowColumn>
-            {attrs.device_type}
-          </TableRowColumn>
+        <TableRow selected={self._isSelected(index)} hover key={index} onClick={() => self._onRowSelection(index)}>
+          <TableCell padding="checkbox">
+            <Checkbox checked={self._isSelected(index)} />
+          </TableCell>
+          <TableCell>{id_attribute}</TableCell>
+          <TableCell>{attrs.device_type}</TableCell>
         </TableRow>
       );
-    },this);
+    });
 
+    const numSelected = self.state.selectedRows.length;
 
-
-    var createActions = [
-      <div style={{marginRight:"10px", display:"inline-block"}}>
-        <FlatButton
-          label="Cancel"
-          onClick={this._handleClose} />
-      </div>,
-      <RaisedButton
-        label={this.state.showWarning ? "Confirm" : "Create group"}
-        primary={true}
-        onClick={this._createGroupHandler}
-        disabled={this.state.createInvalid} />
-    ];
+    const createButtonInvalid = this.state.createInvalid || !self.state.selectedRows.length;
 
     return (
-      <Dialog
-        ref="createGroup"
-        title={this.state.showWarning ? "" : "Create a new group"}
-        actions={createActions}
-        open={this.props.open}
-        autoDetectWindowHeight={true} autoScrollBodyContent={true} modal={true}
-        bodyStyle={{maxHeight:"50vh"}}
-        titleStyle={{paddingBottom: "15px", marginBottom:0}}
-        footerStyle={{marginTop:0}}
-        >
+      <Dialog disableBackdropClick disableEscapeKeyDown open={self.props.open} scroll={'paper'} fullWidth={true} maxWidth="sm">
+        <DialogTitle style={{ paddingBottom: '15px', marginBottom: 0 }}>{self.state.showWarning ? '' : 'Create a new group'}</DialogTitle>
 
-        <div className={this.state.showDeviceList || this.state.showWarning ? "hidden" : "absoluteTextfieldButton" }>
-          <TextField
-            ref="customGroup"
-            className="float-left"
-            hintText="Name your group"
-            floatingLabelText="Name your group"
-            value={this.state.newGroup}
-            onChange={this.validateName}
-            errorStyle={{color: "rgb(171, 16, 0)"}}
-            errorText={this.state.errorText} />
-
-          <div className={this.state.showDeviceList ? "hidden" : "float-left margin-left-small"}>
-            <RaisedButton disabled={this.state.nextInvalid} style={{marginTop:"26px"}} label="Next" secondary={true} onClick={this._loadMoreDevs}/>
+        <DialogContent style={{ maxHeight: '50vh' }}>
+          <div className={self.state.showDeviceList || self.state.showWarning ? 'hidden' : 'absoluteTextfieldButton'}>
+            <FormControl error={Boolean(self.state.errortext)} className="float-left">
+              <InputLabel htmlFor="group-name-input">Name your group</InputLabel>
+              <Input id="group-name-input" value={self.state.newGroup} placeholder="Name your group" onChange={e => self.validateName(e)} type="text" />
+              <FormHelperText>{self.state.errortext}</FormHelperText>
+            </FormControl>
+            <div className={self.state.showDeviceList ? 'hidden' : 'float-left margin-left-small'}>
+              <Button
+                variant="contained"
+                disabled={self.state.nextInvalid}
+                style={{ marginTop: '26px' }}
+                color="secondary"
+                onClick={() => self._loadMoreDevs()}
+              >
+                Next
+              </Button>
+            </div>
           </div>
 
-        </div>
+          {self.state.showWarning ? (
+            <div className="help-message" style={{ marginTop: '-15px' }}>
+              <h2>
+                <ErrorOutlineIcon style={{ marginRight: '4px', verticalAlign: 'sub' }} />{ ' You\'re creating a new group'}
+              </h2>
+              <p>
+                Just a heads-up: if a device is already in another group, it will be removed from that group and moved to the new one. A device can only belong
+                to one group at a time.
+              </p>
 
-        {this.state.showWarning ?
-          <div className="help-message" style={{marginTop: "-30px"}}>
-            <h2><FontIcon className="material-icons" style={{marginRight:"4px", top: "4px"}}>error_outline</FontIcon>You're creating a new group</h2>
-            <p>
-              Just a heads-up: if a device is already in another group, it will be removed from that group and moved to the new one. A device can only belong to one group at a time.
-            </p>
+              <FormControlLabel
+                className={this.props.className}
+                control={<Checkbox onChange={(e, checked) => self._handleCheckBox(checked)} />}
+                label="Got it! Don't show this message again"
+                labelStyle={{ fontSize: '13px', color: 'rgba(0, 0, 0, 0.6)' }}
+              />
+            </div>
+          ) : (
+            <div className={this.state.showDeviceList === true ? 'dialogTableContainer' : 'dialogTableContainer zero'}>
+              {deviceList.length ? (
+                <Table>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell padding="checkbox">
+                        <Checkbox
+                          indeterminate={numSelected > 0 && numSelected < self.state.devices.length}
+                          checked={numSelected === self.state.devices.length}
+                          onChange={() => self.onSelectAllClick()}
+                        />
+                      </TableCell>
+                      <TableCell tooltip={(this.props.globalSettings || {}).id_attribute || 'Device ID'}>
+                        {(this.props.globalSettings || {}).id_attribute || 'Device ID'}
+                      </TableCell>
+                      <TableCell tooltip="Device type">Device type</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>{deviceList}</TableBody>
+                </Table>
+              ) : null}
+              {this.props.acceptedCount > deviceList.length ? (
+                <a className="small" onClick={() => this._loadMoreDevs()}>
+                  Load more devices
+                </a>
+              ) : null}
+              <Loader show={this.props.loadingDevices} />
+              <p className={deviceList.length || this.props.loadingDevices ? 'hidden' : 'italic muted'}>No devices match the search term</p>
+            </div>
+          )}
+        </DialogContent>
 
-
-            <Checkbox
-              label="Got it! Don't show this message again"
-              labelStyle={{fontSize: "13px", color: "rgba(0, 0, 0, 0.6)"}}
-              onCheck={this._handleCheckBox}
-            />
+        <DialogActions style={{ marginTop: 0 }}>
+          <div key="create-action-button-1" style={{ marginRight: '10px', display: 'inline-block' }}>
+            <Button onClick={() => this._handleClose()}>Cancel</Button>
           </div>
-          :
-
-          <div className={this.state.showDeviceList===true ? "dialogTableContainer" : "dialogTableContainer zero"}>
-            <Table
-              multiSelectable={true}
-              className={deviceList.length ? null : "hidden"}
-              onRowSelection={this._onRowSelection}
-              selectable={true}>
-              <TableHeader>
-                <TableRow>
-                  <TableHeaderColumn tooltip={(this.props.globalSettings || {}).id_attribute || "Device ID"}>{(this.props.globalSettings || {}).id_attribute || "Device ID"}</TableHeaderColumn>
-                  <TableHeaderColumn tooltip="Device type">Device type</TableHeaderColumn>
-                </TableRow>
-              </TableHeader>
-              <TableBody
-                deselectOnClickaway={false}
-                showRowHover={true}>
-                {deviceList}
-              </TableBody>
-            </Table>
-            {this.props.acceptedCount > deviceList.length ? <a className="small" onClick={this._loadMoreDevs}>Load more devices</a> : null }
-            <Loader show={this.props.loadingDevices} />
-            <p className={(deviceList.length||this.props.loadingDevices) ? "hidden" : "italic muted"}>
-              No devices match the search term
-            </p>
-          </div>
-
-        }
+          ,
+          <Button variant="contained" key="create-action-button-2" color="primary" onClick={() => this._createGroupHandler()} disabled={createButtonInvalid}>
+            {this.state.showWarning ? 'Confirm' : 'Create group'}
+          </Button>
+        </DialogActions>
       </Dialog>
-    )
+    );
   }
-});
-
-module.exports = CreateGroup;
+}

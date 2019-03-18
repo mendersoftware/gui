@@ -1,74 +1,66 @@
 import React from 'react';
+import { Link, NavLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { Router, Route } from 'react-router';
 
 // material ui
-import { List, ListItem }  from 'material-ui/List';
-import Subheader from 'material-ui/Subheader';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListSubheader from '@material-ui/core/ListSubheader';
+import ListItemText from '@material-ui/core/ListItemText';
 
-var createReactClass = require('create-react-class');
-
-var LeftNav =  createReactClass({
-  getInitialState: function () {
-    return {
-      links: [] 
+export default class LeftNav extends React.Component {
+  static contextTypes = {
+    router: PropTypes.object
+  };
+  constructor(props, context) {
+    super(props, context);
+    this.state = {
+      links: []
     };
-  },
+  }
 
-  componentDidMount: function () {
-     // generate sidebar links
+  componentDidMount() {
+    // generate sidebar links
     this._setNavLinks();
-  },
+  }
 
-  componentDidUpdate: function(prevProps, prevState) {
+  componentDidUpdate(prevProps) {
     if (this.props.pages !== prevProps.pages) {
       this._setNavLinks();
     }
-  },
+  }
 
-  _clickLink: function (path) {
-    this.props.changePage(path);
-  },
-
-  _setNavLinks: function () {
+  _setNavLinks() {
     var self = this;
     var links = [];
 
     // build array of link list components
     function eachRecursive(obj, path, level) {
-        for (var k in obj) {
-          if (typeof obj[k] == "object" && obj[k] !== null && k!=="component") {
-              var this_path = path+"/"+k;
-              links.push({title: obj[k].title, level:level, path:this_path});
-              self.setState({links:links});
-              eachRecursive(obj[k], this_path, level+1);
-          }
+      for (var k in obj) {
+        if (typeof obj[k] == 'object' && obj[k] !== null && k !== 'component') {
+          var this_path = `${path}/${k}`;
+          links.push({ title: obj[k].title, level: level, path: this_path });
+          self.setState({ links: links });
+          eachRecursive(obj[k], this_path, level + 1);
         }
       }
-      eachRecursive(self.props.pages, "/help", 0);
-  },
- 
-  render: function () {
-    var self = this;
-    var nav = self.state.links.map(function(link, index) {
-      var bgColor = self.context.router.isActive(link.path) ? "#E7E7E7" : "#FFFFFF";
-      return (
-        <ListItem primaryText={link.title} style={{paddingLeft: link.level*16, backgroundColor: bgColor}} onClick={self._clickLink.bind(null, link.path)} key={link.path} />
-      )
-    });
-    return (
-        <div>
-          <List>
-            <Subheader onClick={self._clickLink.bind(null, "/help")}><div style={{cursor: "pointer"}}>Help topics</div></Subheader>
-            {nav}
-          </List>
-        </div>
-    )
+    }
+    eachRecursive(self.props.pages, '/help', 1);
   }
-});
 
-LeftNav.contextTypes = {
-  router: PropTypes.object
-};
-
-module.exports = LeftNav;
+  render() {
+    var self = this;
+    return (
+      <List>
+        <ListSubheader component={Link} to="/help" key="/help">
+          Help topics
+        </ListSubheader>
+        {self.state.links.map(link => (
+          <ListItem className="navLink helpNav" component={NavLink} exact={true} key={link.path} style={{ paddingLeft: link.level * 16 }} to={link.path}>
+            <ListItemText primary={link.title} />
+          </ListItem>
+        ))}
+      </List>
+    );
+  }
+}
