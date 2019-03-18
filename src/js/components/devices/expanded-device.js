@@ -77,7 +77,7 @@ export default class ExpandedDevice extends React.Component {
   dialogToggle(ref) {
     var state = {};
     state[ref] = !this.state[ref];
-    this.setState({ filterByArtifact: null, artifact: null });
+    this.setState({ filterByArtifact: null });
   }
 
   toggleAuthsets(authsets = !this.state.authsets) {
@@ -97,12 +97,12 @@ export default class ExpandedDevice extends React.Component {
     this.setState({ schedule: false });
   }
 
-  _onScheduleSubmit() {
+  _onScheduleSubmit(artifact) {
     var self = this;
     var newDeployment = {
       devices: [this.props.device.id],
       name: this.props.device.id,
-      artifact_name: this.state.artifact.name
+      artifact_name: artifact.name
     };
     self.setState({ schedule: false });
     return AppActions.createDeployment(newDeployment)
@@ -117,9 +117,8 @@ export default class ExpandedDevice extends React.Component {
         }
 
         AppActions.setSnackbar('Deployment created successfully. Redirecting...', 5000);
-        var params = { route: 'deployments' };
         setTimeout(() => {
-          self.context.router.history.push(params.route);
+          self.context.router.history.replace('/deployments');
         }, 1200);
       })
       .catch(err => {
@@ -372,7 +371,7 @@ export default class ExpandedDevice extends React.Component {
             </Button>
             {status === 'accepted' ? (
               <div className="margin-left inline">
-                <Button onClick={() => this._clickListItem()}>
+                <Button onClick={() => this.setState({ schedule: true })}>
                   <ReplayIcon className="rotated buttonLabelIcon" />
                   Create a deployment for this device
                 </Button>
@@ -449,12 +448,11 @@ export default class ExpandedDevice extends React.Component {
           deploymentDevices={[this.props.device]}
           filteredDevices={this.state.filterByArtifact}
           deploymentSettings={(...args) => this._deploymentParams(...args)}
-          artifact={this.state.artifact}
           artifacts={this.state.artifacts}
           device={this.props.device}
           groups={this.props.groups}
           onDismiss={() => this.setState({ schedule: false })}
-          onScheduleSubmit={() => this._onScheduleSubmit()}
+          onScheduleSubmit={(_group, _devices, artifact) => this._onScheduleSubmit(artifact)}
         />
 
         <Dialog

@@ -43,6 +43,9 @@ export default class SelectedArtifact extends React.Component {
           self.setState({ downloadUrl: null });
         });
     }
+    if (!self.state.descEdit && self.props.artifact.description && self.state.description !== self.props.artifact.description) {
+      self.setState({ description: self.props.artifact.description || '-' });
+    }
   }
   _handleLinkClick(device_type) {
     var filters = `device_type=${device_type}`;
@@ -95,7 +98,7 @@ export default class SelectedArtifact extends React.Component {
             <Input
               id="artifact-description"
               type="text"
-              style={{color: '#404041', fontSize: '13px'}}
+              style={{ color: '#404041', fontSize: '13px' }}
               disabled={!self.state.descEdit}
               value={self.state.description}
               onKeyDown={e => this._onToggleEditing(e)}
@@ -117,12 +120,16 @@ export default class SelectedArtifact extends React.Component {
           onChange={() => self._toggleArtifactContentVisibility()}
           style={{ background: '#e9e9e9', borderTop: 'none', padding: '0 15px', margin: '30px 0' }}
         >
-          <ExpansionPanelSummary style={{padding: 0}}>
+          <ExpansionPanelSummary style={{ padding: 0 }}>
             <p>Artifact contents</p>
-            <div style={{marginLeft:'auto'}}>{self.state.showArtifacts ? <RemoveIcon /> : <AddIcon /> }</div>
+            <div style={{ marginLeft: 'auto' }}>{self.state.showArtifacts ? <RemoveIcon /> : <AddIcon />}</div>
           </ExpansionPanelSummary>
           <ExpansionPanelDetails style={{ padding: 0 }}>
-            {artifact.updates ? artifact.updates.map((update, index) => <ArtifactPayload index={index} payload={update} key={`artifact-update-${index}`} />) : <div />}
+            {artifact.updates ? (
+              artifact.updates.map((update, index) => <ArtifactPayload index={index} payload={update} key={`artifact-update-${index}`} />)
+            ) : (
+              <div />
+            )}
           </ExpansionPanelDetails>
         </ExpansionPanel>
 

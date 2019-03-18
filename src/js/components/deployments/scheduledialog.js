@@ -27,10 +27,20 @@ export default class ScheduleDialog extends React.Component {
     this.setState({ artifact: {} }); // needed to force re-render
   }
 
+  deploymentSettingsUpdate(value, property) {
+    this.setState({ [property]: value });
+    this.props.deploymentSettings(value, property);
+  }
+
+  onScheduleSubmit(group, devices, artifact) {
+    this.props.onScheduleSubmit(group, devices, artifact);
+    this.setState({ group: '', artifact: {} });
+  }
+
   render() {
     const self = this;
-    const { open, onDismiss, onScheduleSubmit, filteredDevices, ...other } = this.props;
-    var disabled = typeof filteredDevices !== 'undefined' && filteredDevices.length > 0 ? false : true;
+    const { open, onDismiss, filteredDevices, ...other } = this.props;
+    var disabled = filteredDevices && filteredDevices.length > 0 ? false : true;
 
     var tmpDevices = filteredDevices || [];
     if (self.search && filteredDevices) {
@@ -100,13 +110,24 @@ export default class ScheduleDialog extends React.Component {
         {deviceList}
         <DialogTitle>Create a deployment</DialogTitle>
         <DialogContent className="dialog" style={{ overflow: 'hidden' }}>
-          <ScheduleForm filteredDevices={filteredDevices} showDevices={() => this.setState({ showDevices: true })} {...other} />
+          <ScheduleForm
+            filteredDevices={filteredDevices}
+            showDevices={() => this.setState({ showDevices: true })}
+            {...other}
+            deploymentSettings={(...args) => self.deploymentSettingsUpdate(...args)}
+          />
         </DialogContent>
         <DialogActions>
           <Button key="schedule-action-button-1" onClick={onDismiss} style={{ marginRight: '10px', display: 'inline-block' }}>
             Cancel
           </Button>
-          <Button key="schedule-action-button-2" onClick={onScheduleSubmit} variant="contained" color="primary" disabled={disabled}>
+          <Button
+            key="schedule-action-button-2"
+            onClick={() => self.onScheduleSubmit(self.state.group, tmpDevices, self.state.artifact)}
+            variant="contained"
+            color="primary"
+            disabled={disabled}
+          >
             Create deployment
           </Button>
         </DialogActions>
