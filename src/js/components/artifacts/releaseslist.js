@@ -52,7 +52,8 @@ export default class ReleasesList extends React.Component {
         ) : (
           <List>
             {filteredItems.map((release, index) => {
-              const isSelected = release.Name === self.props.selectedRelease.Name;
+              var isSelected = index === 0;
+              isSelected = self.props.selectedRelease ? (release.Name === self.props.selectedRelease.Name) : isSelected;
               return (
                 <ListItem button className={`repository-list-item ${isSelected ? 'active' : ''}`} key={index} onClick={() => self.props.onSelect(release)}>
                   <ListItemText>
