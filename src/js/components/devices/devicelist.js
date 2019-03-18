@@ -272,11 +272,6 @@ export default class Authorized extends React.Component {
       </FormControl>
     ) : null;
 
-    var correctIcon = this.state.nameEdit ? 'check' : 'edit';
-    if (this.state.errortext) {
-      correctIcon = 'close';
-    }
-
     const numSelected = self.state.selectedRows.length;
     return (
       <div className="relative">
@@ -287,12 +282,6 @@ export default class Authorized extends React.Component {
             <div style={{ marginLeft: '20px' }}>
               <h2>
                 {this.state.nameEdit ? groupNameInputs : <span>{groupLabel}</span>}
-
-                {this.props.group && this.props.allowDeviceGroupRemoval ? (
-                  <IconButton onClick={() => this._nameEdit()} className={`material-icons ${this.state.errorText ? 'align-top' : null}`}>
-                    {correctIcon}
-                  </IconButton>
-                ) : null}
               </h2>
             </div>
 

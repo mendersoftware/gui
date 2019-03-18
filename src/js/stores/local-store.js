@@ -16,7 +16,7 @@ function _getStorageItem(key) {
   return localStorage.getItem(key);
 }
 
-var LocalStore = Object.assign(EventEmitter.prototype, {
+var LocalStore = Object.assign({}, EventEmitter.prototype, {
   emitChange: function() {
     this.emit(CHANGE_EVENT);
   },

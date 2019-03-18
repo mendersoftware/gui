@@ -298,16 +298,16 @@ export default class Deployments extends React.Component {
 
   _retryDeployment(deployment, devices) {
     var self = this;
-    var artifact = { name: deployment.artifact_name };
-    this.setState({ artifact, group: deployment.name, filteredDevices: devices }, () => self._onScheduleSubmit());
+    var artifact = { name: deployment.artifact_name, device_types_compatible: deployment.device_types_compatible || [] };
+    this.setState({ artifact, group: deployment.name, filteredDevices: devices }, () => self._onScheduleSubmit(deployment.name, devices, artifact));
   }
 
-  _onScheduleSubmit() {
+  _onScheduleSubmit(group, devices, artifact) {
     var self = this;
-    var ids = this.state.filteredDevices.map(device => device.id);
+    var ids = devices.map(device => device.id);
     var newDeployment = {
-      name: decodeURIComponent(this.state.group) || 'All devices',
-      artifact_name: this.state.artifact.name,
+      name: decodeURIComponent(group) || 'All devices',
+      artifact_name: artifact.name,
       devices: ids
     };
     self.setState({ doneLoading: false, scheduleDialog: false });
@@ -608,7 +608,7 @@ export default class Deployments extends React.Component {
           groups={this.state.groups}
           group={this.state.group}
           onDismiss={() => this.setState({ scheduleDialog: false })}
-          onScheduleSubmit={() => this._onScheduleSubmit()}
+          onScheduleSubmit={(...args) => this._onScheduleSubmit(...args)}
         />
 
         <Dialog open={(self.state.onboardDialog && self.state.showHelptips) || false}>

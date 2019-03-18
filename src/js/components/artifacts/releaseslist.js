@@ -45,14 +45,15 @@ export default class ReleasesList extends React.Component {
           <h4>Releases</h4>
           <SearchInput placeholder="Filter by name" className="search" ref={search => (self.search = search)} onChange={term => self.searchUpdated(term)} />
           {self.state.searchTerm ? <p className="muted">{`Filtered from ${releases.length} ${pluralize('Release', releases.length)}`}</p> : null}
-          {!self.props.releases.length ? <p className="margin-top muted align-center margin-right">There are no Releases yet</p> : null }
+          {!self.props.releases.length ? <p className="margin-top muted align-center margin-right">There are no Releases yet</p> : null}
         </div>
         {loading ? (
           <Loader show={loading} />
         ) : (
           <List>
             {filteredItems.map((release, index) => {
-              const isSelected = release === self.props.selectedRelease;
+              var isSelected = index === 0;
+              isSelected = self.props.selectedRelease ? (release.Name === self.props.selectedRelease.Name) : isSelected;
               return (
                 <ListItem button className={`repository-list-item ${isSelected ? 'active' : ''}`} key={index} onClick={() => self.props.onSelect(release)}>
                   <ListItemText>

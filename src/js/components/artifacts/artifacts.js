@@ -47,15 +47,19 @@ export default class Artifacts extends React.Component {
     };
   }
   _onChange() {
-    this.setState(this._getState());
+    let state = this._getState();
+    if (state.releases.length === 1) {
+      state.selectedRelease = state.releases[0];
+    }
     if (this.props.params) {
       if (this.props.params.artifactVersion) {
         // selected artifacts
         var artifact = AppStore.getSoftwareArtifact('name', this.props.params.artifactVersion);
-        const selectedRelease = this.state.releases.find(item => item.Artifacts.find(releaseArtifact => releaseArtifact.id === artifact.id));
-        this.setState({ selectedRelease, selectedArtifact: artifact });
+        state.selectedRelease = this.state.releases.find(item => item.Artifacts.find(releaseArtifact => releaseArtifact.id === artifact.id));
+        state.selectedArtifact = artifact;
       }
     }
+    this.setState(state);
   }
 
   onSelectRelease(release) {
@@ -133,7 +137,7 @@ export default class Artifacts extends React.Component {
                 progress={self.props.artifactProgress}
                 showHelptips={self.state.showHelptips}
                 removeArtifact={artifact => this._removeDialog(artifact)}
-                refreshArtifacts={self._getReleases}
+                refreshArtifacts={() => self._getReleases()}
                 startLoader={self._startLoading}
                 loading={!self.state.doneLoading}
                 release={self.state.selectedRelease}

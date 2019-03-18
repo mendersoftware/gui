@@ -87,9 +87,8 @@ ul.unstyled {
   visibility: hidden;
 }
 
-
 time {
-  white-space: nowrap; 
+  white-space: nowrap;
 }
 
 /* icon */
@@ -548,7 +547,7 @@ ul.link-list {
   overflow: hidden;
   position: relative;
   opacity: 1;
-  min-height: 53vh;
+  min-height: 47vh;
 
   &.zero {
     min-height: 100px;
@@ -1286,11 +1285,6 @@ div:focus {
     text-align: center;
   }
 
-  p {
-    font-size: 16px;
-    text-align: center;
-  }
-
   img {
     max-width: 100%;
   }
@@ -1322,19 +1316,13 @@ form .button-holder {
   &.edit-pass {
     background-color: @lightestgrey;
     padding: 0 20px 10px;
-    margin-left: -10px;
   }
 
   .pass-buttons {
-    display: inline-block;
-    position: relative;
-    margin-left: 10px;
-    top: 30px;
-    vertical-align: top;
-
-    button {
-      position: relative !important;
-      display: inline;
+    display: flex;
+    justify-content: flex-end;
+    button:first-of-type {
+      margin-right: 15px;
     }
   }
 }
@@ -1542,6 +1530,38 @@ input.fileInput {
 
 .deployments {
   position: relative;
+  .current-widget {
+    max-width: 15vw;
+    min-width: 200px;
+    width: 100%;
+    &.active {
+      background: fade(@mendergreen, 7.5%);
+    }
+    &.pending {
+      background: fade(@mendermaroon, 7.5%);
+    }
+  }
+  .completionInfo {
+    color: @verylightgrey;
+    font-size: small;
+  }
+  .statusText {
+    min-width: 100px;
+  }
+  .activity {
+    border-style: solid;
+    border-width: 1px;
+    border-color: @placeholder;
+    border-radius: 2px;
+    padding: 15px;
+    max-width: 60vw;
+    margin-bottom: 3.5vh;
+    h4 {
+      color: @verylightgrey;
+      text-transform: capitalize;
+      margin: 0;
+    }
+  }
 }
 
 span.month,
@@ -1553,6 +1573,14 @@ span.day {
 .dashboard-header {
   border-bottom: 1px solid @lightgrey;
   margin-bottom: 15px;
+  position: relative;
+
+  span {
+    position: absolute;
+    background: #ffffff;
+    padding: 10px 15px 10px 0;
+    top: -19px;
+  }
 
   h2,
   h3 {
@@ -1941,14 +1969,13 @@ span.day {
 
 .repository-list {
   border-right: 1px solid @lightergrey;
-  min-width: 190px;
+  min-width: 210px;
   min-height: 83vh;
 }
 
-
 .release-repo > .flexbox:first-of-type {
   padding-top: 15px;
-} 
+}
 
 .repository-list-item {
   &.active {

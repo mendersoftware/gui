@@ -46,13 +46,13 @@ export class BaseWidget extends React.Component {
     );
     if (this.props.isActive) {
       return (
-        <Paper className="widget" onClick={this.props.onClick}>
+        <Paper className={`widget ${this.props.className || ''}`} onClick={this.props.onClick}>
           {content}
         </Paper>
       );
     }
     return (
-      <div className="notActive widget" onClick={this.props.onClick}>
+      <div className={`notActive widget ${this.props.className || ''}`} onClick={this.props.onClick}>
         {content}
       </div>
     );
