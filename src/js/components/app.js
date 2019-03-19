@@ -1,43 +1,40 @@
 import React from 'react';
-import { matchPath, withRouter } from 'react-router-dom';
-
 import PropTypes from 'prop-types';
+import { Router, Route, Link } from 'react-router';
 import Header from './header/header';
 import LeftNav from './leftnav';
 
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
+import RawTheme from '../themes/mender-theme.js';
+
 import IdleTimer from 'react-idle-timer';
+import { clearAllRetryTimers } from '../utils/retrytimer';
 
 import { logout, updateMaxAge, expirySet } from '../auth';
-import { preformatWithRequestID } from '../helpers';
+import { preformatWithRequestID } from '../helpers.js'
 
-import SharedSnackbar from '../components/common/sharedsnackbar';
+var SharedSnackbar = require('../components/common/sharedsnackbar');
 
-import AppStore from '../stores/app-store';
-import AppActions from '../actions/app-actions';
-import { AppContext } from '../contexts/app-context';
+var AppStore = require('../stores/app-store');
+var AppActions = require('../actions/app-actions');
 
+var createReactClass = require('create-react-class');
 var isDemoMode = false;
-var _HostedAnnouncement = '';
+var _HostedAnnouncement = "";
 
-class AppRoot extends React.Component {
-  static childContextTypes = {
-    muiTheme: PropTypes.object,
-    router: PropTypes.object,
-    location: PropTypes.object
-  };
-
-  constructor(props, context) {
-    super(props, context);
-    this.state = this._getInitialState();
-  }
-
-  getChildContext() {
+var App = createReactClass({
+  childContextTypes: {
+    location: PropTypes.object,
+    muiTheme: PropTypes.object
+  },
+  getChildContext() { 
+    var theme = getMuiTheme(RawTheme);
     return {
+      muiTheme: theme,
       location: this.props.location
     };
-  }
-
-  _getInitialState() {
+  },
+  getInitialState: function() {
     return {
       currentUser: AppStore.getCurrentUser(),
       uploadInProgress: AppStore.getUploadInProgress(),
@@ -47,99 +44,108 @@ class AppRoot extends React.Component {
       docsVersion: AppStore.getDocsVersion(),
       globalSettings: AppStore.getGlobalSettings(),
       snackbar: AppStore.getSnackbar(),
-      uploadArtifact: (meta, file) => this._uploadArtifact(meta, file),
-      artifactProgress: 0
-    };
-  }
-  componentWillMount() {
-    AppStore.changeListener(this._onChange.bind(this));
-  }
-  componentDidMount() {
+    }
+  },
+  componentWillMount: function() {
+    AppStore.changeListener(this._onChange);
+  },
+  componentDidMount: function() {
     window.addEventListener('mousemove', updateMaxAge, false);
-  }
-  componentWillUnmount() {
+  },
+  componentWillUnmount: function() {
     window.addEventListener('mousemove', updateMaxAge, false);
-    AppStore.removeChangeListener(this._onChange.bind(this));
-  }
-  _onChange() {
-    this.setState(this._getInitialState());
-  }
-  _onIdle() {
+    AppStore.removeChangeListener(this._onChange);
+  },
+  _onChange: function() {
+    this.setState(this.getInitialState());
+  },
+  _onIdle: function() {
     if (expirySet()) {
       // logout user and warn
       if (this.state.currentUser && !this.state.uploadInProgress) {
         logout();
-        AppActions.setSnackbar('Your session has expired. You have been automatically logged out due to inactivity.');
+        AppActions.setSnackbar("Your session has expired. You have been automatically logged out due to inactivity.");
       } else if (this.state.currentUser && this.state.uploadInProgress) {
         updateMaxAge();
       }
     }
-  }
-  _updateActive() {
-    const pathParams = matchPath(this.props.location.pathname, { path: '/:location?' });
-    switch (pathParams.location) {
-    case 'devices':
-      return '/devices';
-    case 'releases':
-      return '/releases';
-    case 'deployments':
-      return '/deployments';
-    case 'help':
-      return '/help';
-    case 'settings':
-      return '/settings';
-    default:
-      return '/';
-    }
-  }
-  _uploadArtifact(meta, file) {
+  },
+  _changeTab: function(tab) {
+    this.context.router.push(tab);
+    this.setState({currentTab: this._updateActive()});
+  },
+  _updateActive: function() {
+    return this.context.router.isActive({ pathname: '/' }, true) ? '/' :
+      this.context.router.isActive('/devices') ? '/devices' :
+      this.context.router.isActive('/artifacts') ? '/artifacts' :
+      this.context.router.isActive('/deployments') ? '/deployments' :
+      this.context.router.isActive('/help') ? '/help' :
+      this.context.router.isActive('/settings') ? '/settings' : '';
+  },
+  _uploadArtifact: function(meta, file) {
     var self = this;
     AppActions.setUploadInProgress(true);
-    var progress = percent => self.setState({ artifactProgress: percent });
-
-    AppActions.setSnackbar('Uploading artifact');
-    AppActions.uploadArtifact(meta, file, progress)
-      .then(() => {
-        self.setState({ artifactProgress: 0 });
-        AppActions.setSnackbar('Upload successful', 5000);
+    var callback = {
+      success: function(result) {
+        self.setState({progress: 0});
+        AppActions.setSnackbar("Upload successful", 5000);
         AppActions.setUploadInProgress(false);
-      })
-      .catch(err => {
-        self.setState({ artifactProgress: 0 });
+      },
+      error: function(err) {
+        self.setState({progress: 0});
         AppActions.setUploadInProgress(false);
+     
         try {
-          var errMsg = err.res.body.error || '';
-          AppActions.setSnackbar(preformatWithRequestID(err.res, `Artifact couldn't be uploaded. ${errMsg}`), null, 'Copy to clipboard');
+          var errMsg = err.res.body.error || "";
+          AppActions.setSnackbar(preformatWithRequestID(err.res, "Artifact couldn't be uploaded. " + errMsg), null, "Copy to clipboard");
         } catch (e) {
-          console.log(e);
+          console.log(e)
         }
-      });
-  }
+  
+      },
+      progress: function(percent) {
+        self.setState({progress: percent});
+      }
+    };
 
-  render() {
+    AppActions.setSnackbar("Uploading artifact");
+    AppActions.uploadArtifact(meta, file, callback);
+  },
+
+  render: function() {
     return (
-      <IdleTimer element={document} idleAction={this._onIdle} timeout={this.state.timeout} format="MM-DD-YYYY HH:MM:ss.SSS">
-        <Header
-          className="header"
-          announcement={_HostedAnnouncement}
-          docsVersion={this.state.docsVersion}
-          currentTab={this.state.currentTab}
-          demo={isDemoMode}
-          history={this.props.history}
-          isLoggedIn={(this.state.currentUser || {}).hasOwnProperty('email')}
-        />
+      <IdleTimer
+        ref="idleTimer"
+        element={document}
+        idleAction={this._onIdle}
+        timeout={this.state.timeout}
+        format="MM-DD-YYYY HH:MM:ss.SSS">
 
-        <div className="wrapper">
-          <LeftNav className="leftFixed leftNav" version={this.state.version} docsVersion={this.state.docsVersion} currentTab={this.state.currentTab} />
-          <div className="rightFluid container">
-            <AppContext.Provider value={this.state}>{this.props.children}</AppContext.Provider>
+        <div>
+          <div className="header" id="fixedHeader">
+            <Header announcement={_HostedAnnouncement} docsVersion={this.state.docsVersion} currentTab={this.state.currentTab} demo={isDemoMode} history={this.props.history} isLoggedIn={(this.state.currentUser||{}).hasOwnProperty("email")} />
           </div>
-        </div>
 
-        <SharedSnackbar snackbar={this.state.snackbar} />
+          <div className="wrapper">
+            <div className="leftFixed leftNav">
+              <LeftNav version={this.state.version} docsVersion={this.state.docsVersion} currentTab={this.state.currentTab} changeTab={this._changeTab} />
+            </div>
+            <div className="rightFluid container">
+              {React.cloneElement(this.props.children, { isLoggedIn:(this.state.currentUser||{}).hasOwnProperty("email"), docsVersion: this.state.docsVersion, version: this.state.version, uploadArtifact: this._uploadArtifact, artifactProgress: this.state.progress, globalSettings:this.state.globalSettings })}
+            </div>
+          </div>
+
+          <SharedSnackbar snackbar={this.state.snackbar} />
+        </div>
       </IdleTimer>
-    );
+    )
   }
-}
-const App = withRouter(AppRoot);
-export default App;
+});
+
+App.contextTypes = {
+  router: PropTypes.object,
+  location: PropTypes.object,
+};
+
+
+module.exports = App;

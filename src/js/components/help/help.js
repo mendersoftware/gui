@@ -1,6 +1,6 @@
 import React from 'react';
-import { Link, matchPath } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { Router, Route } from 'react-router';
 import HelpTopics from './helptopics';
 import LeftNav from './left-nav';
 import ConnectingDevices from './connecting-devices';
@@ -12,166 +12,168 @@ import DemoArtifacts from './connecting-devices/demo-artifacts';
 import BuildYocto from './connecting-devices/build-with-yocto';
 import IntegrateDebian from './connecting-devices/integrate-debian';
 import MoreHelp from './more-help-resources';
-import { isEmpty, versionCompare } from '../../helpers';
-import BoardIcon from '@material-ui/icons/DeveloperBoard';
-import HelpIcon from '@material-ui/icons/HelpOutline';
+import { isEmpty } from '../../helpers';
+import BoardIcon from 'react-material-icons/icons/hardware/developer-board';
+import HelpIcon from 'react-material-icons/icons/action/help-outline';
 import Support from './support';
+import { versionCompare } from '../../helpers.js';
 
-import AppStore from '../../stores/app-store';
-import AppActions from '../../actions/app-actions';
+var createReactClass = require('create-react-class');
+var AppStore = require('../../stores/app-store');
+var AppActions = require('../../actions/app-actions');
+
 
 var components = {
-  'connecting-devices': {
-    title: 'Connecting devices',
+  "connecting-devices": {
+    title: "Connecting devices",
     component: ConnectingDevices,
     icon: BoardIcon,
-    'provision-a-demo': {
-      title: 'Provision a demo device',
+    "provision-a-demo": {
+      title: "Provision a demo device",
       component: ProvisionDemo,
-      'virtual-device': {
-        title: 'Virtual device',
-        component: VirtualDevice
+      "virtual-device": {
+        title: "Virtual device",
+        component: VirtualDevice,
       },
-      'raspberry-pi-3': {
-        title: 'Raspberry Pi 3',
-        component: RaspberryPi
+      "raspberry-pi-3": {
+        title: "Raspberry Pi 3",
+        component: RaspberryPi,
       },
-      beagleboneblack: {
-        title: 'BeagleBone Black',
-        component: BeagleBoneBlack
-      }
+      "beagleboneblack": {
+        title: "BeagleBone Black",
+        component: BeagleBoneBlack,
+      },
     },
-    'demo-artifacts': {
-      title: 'Download demo Artifacts',
-      component: DemoArtifacts
+    "demo-artifacts": {
+      title: "Download demo Artifacts",
+      component: DemoArtifacts,
     },
-    'build-with-yocto': {
-      title: 'Build with Yocto',
-      component: BuildYocto
+    "build-with-yocto": {
+      title: "Build with Yocto",
+      component: BuildYocto,
     },
-    'integrate-debian': {
-      title: 'Integrate with Debian',
-      component: IntegrateDebian
-    }
+    "integrate-debian": {
+      title: "Integrate with Debian",
+      component: IntegrateDebian,
+    },
   },
-  'more-help-resources': {
-    title: 'More help resources',
+  "more-help-resources": {
+    title: "More help resources",
     component: MoreHelp,
-    icon: HelpIcon
+    icon: HelpIcon,
   }
 };
 
-export default class Help extends React.Component {
-  static contextTypes = {
-    router: PropTypes.object
-  };
+var Help =  createReactClass({
 
-  constructor(props, context) {
-    super(props, context);
-    this.state = this._getInitialState();
-  }
-  _getInitialState() {
+  getInitialState: function() {
     return {
       snackbar: AppStore.getSnackbar(),
       hasMultitenancy: AppStore.hasMultitenancy(),
-      isHosted: window.location.hostname === 'hosted.mender.io'
+      isHosted: (window.location.hostname === "hosted.mender.io"),
     };
-  }
-  componentDidMount() {
+  },
+  componentDidMount: function() {
     if (this.state.hasMultitenancy && this.state.isHosted) {
       this._getUserOrganization();
-      this.setState({ version: '', docsVersion: '' }); // if hosted, use latest docs version
+      this.setState({version: "", docsVersion: ""}); // if hosted, use latest docs version 
     } else {
-      this.setState({ docsVersion: this.props.docsVersion ? `${this.props.docsVersion}/` : 'development/' });
+      this.setState({docsVersion: this.props.docsVersion ? this.props.docsVersion + "/" : "development/"});
     }
-  }
+  },
 
-  _getUserOrganization() {
+  _getUserOrganization: function() {
     var self = this;
-    return AppActions.getUserOrganization()
-      .then(org => {
-        self.setState({ org: org });
-        self.linksTimer = setInterval(() => {
+    var callback = {
+      success: function(org) {
+        self.setState({org: org});
+        self.linksTimer = setInterval(function() {
           self._getLinks(org.id);
         }, 30000);
         self._getLinks(org.id);
-      })
-      .catch(err => console.log(`Error: ${err}`));
-  }
+      },
+      error: function(err) {
+        console.log("Error: " +err);
+      }
+    };
+    AppActions.getUserOrganization(callback);
+  },
 
-  _getLinks(id) {
+  _getLinks: function(id) {
     var self = this;
-    AppActions.getHostedLinks(id)
-      .then(response => {
-        self.setState({ links: response });
+    var callback = {
+      success: function(response) {
+        self.setState({links: response});
         // clear timer when got links successfully
         clearInterval(self.linksTimer);
-      })
-      .catch(err => console.log(`Error: ${err}`, `Tenant id: ${id}`));
-  }
+      },
+      error: function(err) {
+        console.log("Error: " +err, "Tenant id: " +id);
+      }
+    };
+    AppActions.getHostedLinks(id, callback);
+  },
 
-  componentWillMount() {
-    AppStore.changeListener(this._onChange.bind(this));
-  }
+  componentWillMount: function() {
+    AppStore.changeListener(this._onChange);
+  },
 
-  componentWillUnmount() {
+  componentWillUnmount: function() {
     clearInterval(this.linksTimer);
-    AppStore.removeChangeListener(this._onChange.bind(this));
-  }
+    AppStore.removeChangeListener(this._onChange);
+  },
 
-  _onChange() {
-    this.setState(this._getInitialState());
-  }
+  _onChange: function() {
+    this.setState(this.getInitialState());
+  },
 
-  _getLatest(array) {
+  changePage: function (path) {
+    this.context.router.push(path);
+  },
+
+  _getLatest: function(array) {
     // returns latest version of format x.x.x
     array.sort(versionCompare);
-    return array[array.length - 1];
-  }
+    return(array[array.length-1]);
+  },
 
-  render() {
+  render: function() {
     var ComponentToShow = HelpTopics;
-    let routeParams = matchPath(this.props.location.pathname, { path: '/help/**' });
-    if (routeParams && routeParams.params[0]) {
-      var splitsplat = routeParams.params[0].split('/');
+  
+    if (this.props.params.splat) {
+      var splitsplat = this.props.params.splat.split("/");
       var copyOfComponents = components;
 
-      for (var i = 0; i < splitsplat.length; i++) {
-        if (i === splitsplat.length - 1) {
+      for (var i=0;i<splitsplat.length; i++) {
+        if (i === splitsplat.length-1) {
           ComponentToShow = copyOfComponents[splitsplat[i]].component;
         } else {
           copyOfComponents = copyOfComponents[splitsplat[i]];
         }
       }
+      
     }
 
     return (
-      <div style={{ marginTop: '-15px' }}>
+      <div style={{marginTop:"-15px"}}>
         <div className="leftFixed">
-          <LeftNav pages={components} />
+          <LeftNav pages={components} changePage={this.changePage} />
         </div>
-        <div className="rightFluid padding-right" style={{ maxWidth: '980px', paddingTop: '0', paddingLeft: '45px' }}>
-          <div style={{ position: 'relative', top: '12px' }} className="help-content">
-            <ComponentToShow
-              version={this.props.version}
-              docsVersion={this.state.docsVersion}
-              getLatest={this._getLatest}
-              isHosted={this.state.isHosted}
-              org={this.state.org}
-              links={this.state.links}
-              hasMultitenancy={this.state.hasMultitenancy}
-              isEmpty={isEmpty}
-              pages={components}
-            />
-            {ComponentToShow !== HelpTopics ? (
-              <p className="margin-top-large">
-                <Link to="/help">&lsaquo; Back to help topics</Link>
-              </p>
-            ) : null}
+        <div className="rightFluid padding-right" style={{maxWidth:"980px", paddingTop: "0", paddingLeft:"45px"}}>
+          <div style={{position:"relative", top:"12px"}} className="help-content">
+            <ComponentToShow version={this.props.version} docsVersion={this.state.docsVersion} getLatest={this._getLatest} isHosted={this.state.isHosted} org={this.state.org} links={this.state.links} hasMultitenancy={this.state.hasMultitenancy} isEmpty={isEmpty} pages={components} changePage={this.changePage} />
+            { ComponentToShow !== HelpTopics ? <p className="margin-top-large"><a onClick={this.changePage.bind(null, "/help")}>&lsaquo; Back to help topics</a></p> : null }
             <Support />
           </div>
         </div>
       </div>
-    );
+    )
   }
-}
+
+});
+
+Help.contextTypes = {
+  router: PropTypes.object,
+};
+
+module.exports = Help;

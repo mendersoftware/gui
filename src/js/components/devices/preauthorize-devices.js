@@ -1,447 +1,440 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import Time from 'react-time';
-import { Collapse } from 'react-collapse';
-import Loader from '../common/loader';
-import AppActions from '../../actions/app-actions';
-import ExpandedDevice from './expanded-device';
+import { Motion, spring } from 'react-motion';
+import Collapse from 'react-collapse';
+import ReactHeight from 'react-height';
+import { Router, Link } from 'react-router';
+var Loader = require('../common/loader');
+var AppActions = require('../../actions/app-actions');
+var ExpandedDevice = require('./expanded-device');
+var createReactClass = require('create-react-class');
+var Pagination = require('rc-pagination');
+var _en_US = require('rc-pagination/lib/locale/en_US');
+var Dropzone = require('react-dropzone');
+var pluralize = require('pluralize');
+import { setRetryTimer, clearRetryTimer, clearAllRetryTimers } from '../../utils/retrytimer';
+import { isEmpty, preformatWithRequestID } from '../../helpers.js';
 
-import Pagination from 'rc-pagination';
-import _en_US from 'rc-pagination/lib/locale/en_US';
-import Dropzone from 'react-dropzone';
-import { clearAllRetryTimers } from '../../utils/retrytimer';
-import { isEmpty, preformatWithRequestID } from '../../helpers';
 
 // material ui
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Fab from '@material-ui/core/Fab';
-import FormControl from '@material-ui/core/FormControl';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import IconButton from '@material-ui/core/IconButton';
-import Input from '@material-ui/core/Input';
-import Table from '@material-ui/core/Table';
-import TableHead from '@material-ui/core/TableHead';
-import TableCell from '@material-ui/core/TableCell';
-import TableBody from '@material-ui/core/TableBody';
-import TableRow from '@material-ui/core/TableRow';
-import TextField from '@material-ui/core/TextField';
+var mui = require('material-ui');
+import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
+import IconButton from 'material-ui/IconButton';
+import RaisedButton from 'material-ui/RaisedButton';
+import FlatButton from 'material-ui/RaisedButton';
+import FontIcon from 'material-ui/FontIcon';
+import InfoIcon from 'react-material-icons/icons/action/info-outline';
+import Dialog from 'material-ui/Dialog';
+import { List, ListItem } from 'material-ui/List';
+import TextField from 'material-ui/TextField';
+import FloatingActionButton from 'material-ui/FloatingActionButton';
+import ContentAdd from 'material-ui/svg-icons/content/add';
+import FileIcon from 'react-material-icons/icons/file/file-upload';
 
-import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
-import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
-import ContentAddIcon from '@material-ui/icons/Add';
-import ClearIcon from '@material-ui/icons/Clear';
-import FileIcon from '@material-ui/icons/CloudUpload';
-import InfoIcon from '@material-ui/icons/InfoOutlined';
-import SettingsIcon from '@material-ui/icons/Settings';
-
-export default class Preauthorize extends React.Component {
-  constructor(props, context) {
-    super(props, context);
-    this.state = {
+var Preauthorize =  createReactClass({
+  getInitialState: function() {
+    return {
+      minHeight: 260,
       divHeight: 208,
       devices: [],
       pageNo: 1,
       pageLength: 20,
-      authLoading: 'all',
+      authLoading: "all",
       openPreauth: false,
       openRemove: false,
-      inputs: [{ key: '', value: '' }],
-      public: '',
+      inputs: [{key:"", value:""}],
+      public: "",
       showKey: false,
-      devicesToRemove: []
-    };
-  }
+      devicesToRemove: [],
+    }
+  },
 
   componentDidMount() {
     clearAllRetryTimers();
     this._getDevices();
-  }
+  },
 
   componentWillUnmount() {
     clearAllRetryTimers();
-  }
+  },
 
-  componentDidUpdate(prevProps) {
-    if (prevProps.count !== this.props.count || (prevProps.currentTab !== this.props.currentTab && this.props.currentTab.indexOf('Preauthorized') !== -1)) {
+  componentDidUpdate(prevProps, prevState) {
+
+    if ((prevProps.count !== this.props.count)
+      || ((prevProps.currentTab !== this.props.currentTab) && (this.props.currentTab.indexOf("Preauthorized")!== -1)) ) {
       this._getDevices();
     }
-  }
-
+  },
   /*
-   * Devices to show
-   */
-  _getDevices() {
+  * Devices to show
+  */ 
+  _getDevices: function() {
     var self = this;
-    AppActions.getDevicesByStatus('preauthorized', this.state.pageNo, this.state.pageLength)
-      .then(devices => {
-        self.setState({ devices, pageLoading: false, authLoading: null, expandRow: null });
+    var callback =  {
+      success: function(devices) {
+        self.setState({devices: devices, pageLoading: false, authLoading: null, expandRow: null});
         if (!devices.length && self.props.count) {
           //if devices empty but count not, put back to first page
           self._handlePageChange(1);
         }
-      })
-      .catch(error => {
-        var errormsg = error.res.body.error || 'Please check your connection';
-        self.setState({ pageLoading: false, authLoading: null });
-        AppActions.setSnackbar(preformatWithRequestID(error.res, `Preauthorized devices couldn't be loaded. ${errormsg}`), null, 'Copy to clipboard');
-      });
-  }
+        self._adjustHeight();
+      },
+      error: function(error) {
+        var errormsg = error.res.body.error || "Please check your connection";
+        self.setState({pageLoading: false, authLoading: null });
+        AppActions.setSnackbar(preformatWithRequestID(error.res, "Preauthorized devices couldn't be loaded. " + errormsg), null, "Copy to clipboard");
+      }
+    };
+    AppActions.getDevicesByStatus(callback, "preauthorized", this.state.pageNo, this.state.pageLength);
+  },
 
-  _sortColumn() {
-    console.log('sort');
-  }
-  _expandRow(rowNumber) {
-    AppActions.setSnackbar('');
+  _adjustHeight: function () {
+    // do this when number of devices changes
+    var h = this.state.devices.length * 55;
+    h += 230;
+    this.setState({minHeight: h});
+  },
+  _sortColumn: function(col) {
+    console.log("sort");
+  },
+  _expandRow: function(rowNumber) {
+    AppActions.setSnackbar("");
     var device = this.state.devices[rowNumber];
     if (this.state.expandRow === rowNumber) {
       rowNumber = null;
     }
-    this.setState({ expandedDevice: device, expandRow: rowNumber });
-  }
-  _adjustCellHeight(height) {
-    this.setState({ divHeight: height + 95 });
-  }
+    this.setState({expandedDevice: device, expandRow: rowNumber});
+    
+  },
+  _adjustCellHeight: function(height) {
+    this.setState({divHeight: height+95});
+  },
 
-  _handlePageChange(pageNo) {
+  _handlePageChange: function(pageNo) {
     var self = this;
-    self.setState({ pageLoading: true, expandRow: null, pageNo: pageNo }, () => {
-      self._getDevices();
-    });
-  }
+    self.setState({pageLoading:true, expandRow: null, pageNo: pageNo}, () => {self._getDevices()});
+  },
 
-  _togglePreauth(openPreauth = !this.state.openPreauth) {
-    this.setState({ openPreauth });
+  _dialogToggle: function(ref) {
+    var state = {};
+    state[ref] = !this.state[ref];
+    this.setState(state);
     this._clearForm();
-  }
+  },
 
-  _clearForm() {
-    this.setState({ public: '', filename: '', inputs: [{ key: '', value: '' }] });
-  }
+  _clearForm: function() {
+    this.setState({public: "", filename:"", inputs: [{key:"", value:""}]});
+  },
 
-  _updateKey(index, event) {
+  _updateKey: function(index, event) {
     var inputs = this.state.inputs;
     inputs[index].key = event.target.value;
-    this.setState({ inputs: inputs, errortext: '' });
+    this.setState({inputs: inputs, errorText: "", errorText1: ""});
     this._convertIdentityToJSON(inputs);
-  }
+  },
 
-  _updateValue(index, event) {
+  _updateValue: function(index, event) {
     var inputs = this.state.inputs;
     inputs[index].value = event.target.value;
-    this.setState({ inputs: inputs, errortext: '' });
+    this.setState({inputs: inputs, errorText: "", errorText1: ""});
     this._convertIdentityToJSON(inputs);
-  }
+  },
 
-  _addKeyValue() {
+  _addKeyValue: function() {
     var inputs = this.state.inputs;
-    inputs.push({ key: '', value: '' });
-    this.setState({ inputs: inputs, errortext: '' });
-  }
+    inputs.push({key:"", value:""}); 
+    this.setState({inputs: inputs, errorText: "", errorText1: ""});
+  },
 
-  _removeInput(index) {
+  _removeInput: function(index) {
     var inputs = this.state.inputs;
     inputs.splice(index, 1);
-    this.setState({ inputs: inputs, errortext: '' });
+    this.setState({inputs: inputs, errorText: "", errorText1: ""});
     this._convertIdentityToJSON(inputs);
-  }
+  },
 
-  _convertIdentityToJSON(arr) {
+  _convertIdentityToJSON: function(arr) {
     var obj = {};
-    for (var i = 0; i < arr.length; i++) {
+    for (var i=0; i<arr.length; i++) {
       if (arr[i].value) {
         obj[arr[i].key] = arr[i].value;
       }
     }
-    this.setState({ json_identity: obj });
-  }
+    console.log(obj);
+    this.setState({json_identity: obj});
+  },
 
-  _savePreauth(close) {
+  _savePreauth: function(close) {
     var self = this;
     var authset = {
       pubkey: this.state.public,
-      identity_data: this.state.json_identity
+      identity_data: this.state.json_identity,
     };
-    AppActions.preauthDevice(authset)
-      .then(() => {
-        AppActions.setSnackbar('Device was successfully added to the preauthorization list', 5000);
+    var callback = {
+      success: function(res) {
+        AppActions.setSnackbar("Device was successfully added to the preauthorization list", 5000);
         self._getDevices();
         self.props.refreshCount();
-        self._togglePreauth(!close);
-      })
-      .catch(err => {
-        console.log(err);
-        var errMsg = (err.res.body || {}).error || '';
 
-        if (err.res.status === 409) {
-          self.setState({ errortext: 'A device with a matching identity data set already exists' });
+        if (close) {
+          self._dialogToggle("openPreauth");
         } else {
-          AppActions.setSnackbar(preformatWithRequestID(err.res, `The device could not be added: ${errMsg}`), null, 'Copy to clipboard');
+          self._clearForm();
         }
-      });
-  }
+      },
+      error: function(err) {
+        console.log(err);
+        var errMsg = (err.res.body||{}).error || "";
+        
+        if (err.res.status === 409) {
+          self.setState({errorText: "A device with a matching identity data set already exists", errorText1: " "});
+        } else {
+          AppActions.setSnackbar(preformatWithRequestID(err.res, "The device could not be added: "+errMsg), null, "Copy to clipboard");
+        }
+      }
+    }
+    AppActions.preauthDevice(authset, callback);
+  },
 
-  onDrop(acceptedFiles, rejectedFiles) {
+  onDrop: function (acceptedFiles, rejectedFiles) {
     var self = this;
     if (acceptedFiles.length) {
       var reader = new FileReader();
       reader.readAsBinaryString(acceptedFiles[0]);
       reader.fileName = acceptedFiles[0].name;
-      reader.onload = function() {
-        var str = reader.result.replace(/\n|\r/g, '\n');
-        self.setState({ public: str, filename: reader.fileName });
+      reader.onload = function () {
+        var str = reader.result.replace(/\n|\r/g, "\n");
+        self.setState({public: str, filename: reader.fileName});
       };
-      reader.onerror = function(error) {
+      reader.onerror = function (error) {
         console.log('Error: ', error);
       };
     }
     if (rejectedFiles.length) {
-      AppActions.setSnackbar(`File '${rejectedFiles[0].name}' was rejected.`);
+      AppActions.setSnackbar("File '"+rejectedFiles[0].name +"'' was rejected.");
     }
-  }
+  },
 
-  _removeKey() {
-    this.setState({ public: null, filename: null });
-  }
+  _removeKey: function () {
+    this.setState({public: null, filename: null});
+  },
 
-  render() {
-    var self = this;
-    var limitMaxed = self.props.deviceLimit && self.props.deviceLimit <= self.props.acceptedDevices;
+  render: function() {
+    var limitMaxed = this.props.deviceLimit && (this.props.deviceLimit <= this.props.acceptedDevices);
 
-    var devices = self.state.devices.map((device, index) => {
-      var id_attribute =
-        self.props.globalSettings.id_attribute && self.props.globalSettings.id_attribute !== 'Device ID'
-          ? (device.identity_data || {})[self.props.globalSettings.id_attribute]
-          : device.device_id || device.id;
+    var devices = this.state.devices.map(function(device, index) {
+      var self = this;
+
+    var id_attribute  = (self.props.globalSettings.id_attribute && self.props.globalSettings.id_attribute !== "Device ID") 
+        ? (device.identity_data || {})[self.props.globalSettings.id_attribute]
+        : (device.device_id || device.id) ;
 
       var expanded = '';
-      if (self.state.expandRow === index) {
-        expanded = (
-          <ExpandedDevice
-            id_attribute={(self.props.globalSettings || {}).id_attribute}
-            _showKey={self._showKey}
-            showKey={self.state.showKey}
-            limitMaxed={limitMaxed}
-            deviceId={self.state.deviceId}
-            id_value={id_attribute}
-            device={self.state.expandedDevice}
-            unauthorized={true}
-            pause={self.props.pause}
-          />
-        );
+      if ( self.state.expandRow === index ) {
+        expanded = <ExpandedDevice 
+                    id_attribute={(this.props.globalSettings || {}).id_attribute} 
+                    _showKey={this._showKey} 
+                    showKey={this.state.showKey} 
+                    limitMaxed={limitMaxed} 
+                    styles={this.props.styles} 
+                    deviceId={self.state.deviceId}
+                    id_attribute={(this.props.globalSettings || {}).id_attribute} 
+                    id_value={id_attribute}
+                    device={self.state.expandedDevice} 
+                    unauthorized={true} 
+                    pause={self.props.pause}  />
       }
 
+
+
       return (
-        <TableRow
-          className={expanded ? 'expand' : null}
-          hover
-          key={index}
-          onClick={() => self._expandRow(index)}
-          style={expanded ? { height: self.state.divHeight } : null}
-        >
-          <TableCell>{id_attribute}</TableCell>
-          <TableCell className="no-click-cell">
+        <TableRow className={expanded ? "expand" : null} hoverable={true} key={index}>
+          <TableRowColumn className="no-click-cell" style={expanded ? {height: this.state.divHeight} : null}>
+             <div onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              self._expandRow(index);
+            }}>
+              { id_attribute }
+            </div>
+          </TableRowColumn>
+          <TableRowColumn className="no-click-cell">
+              <div onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              self._expandRow(index);
+            }}>
             <Time value={device.created_ts} format="YYYY-MM-DD HH:mm" />
-          </TableCell>
-          <TableCell className="no-click-cell capitalized">{device.status}</TableCell>
-          <TableCell style={{ width: '55px', paddingRight: '0', paddingLeft: '12px' }} className="expandButton">
-            <IconButton className="float-right">{expanded ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}</IconButton>
-          </TableCell>
-          <TableCell style={{ width: '0', padding: '0', overflow: 'visible' }}>
-            <Collapse
-              springConfig={{ stiffness: 210, damping: 20 }}
-              onMeasure={measurements => self._adjustCellHeight(measurements.height)}
-              className="expanded"
-              isOpened={expanded ? true : false}
-              onClick={e => {
-                e.preventDefault();
-                e.stopPropagation();
-              }}
-            >
+            </div>
+          </TableRowColumn>
+          <TableRowColumn className="no-click-cell capitalized">
+            <div onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              self._expandRow(index);
+            }}>{device.status}
+            </div>
+          </TableRowColumn>
+          <TableRowColumn style={{width:"55px", paddingRight:"0", paddingLeft:"12px"}} className="expandButton">
+             <div onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              this._expandRow(index);
+            }}>
+              <IconButton className="float-right"><FontIcon className="material-icons">{ expanded ? "arrow_drop_up" : "arrow_drop_down"}</FontIcon></IconButton>
+            </div>
+          </TableRowColumn>
+          <TableRowColumn style={{width:"0", padding:"0", overflow:"visible"}}>
+            <Collapse springConfig={{stiffness: 210, damping: 20}} onHeightReady={this._adjustCellHeight} className="expanded" isOpened={expanded ? true : false}
+              onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+            }}>
               {expanded}
             </Collapse>
-          </TableCell>
+            
+          </TableRowColumn>
         </TableRow>
-      );
-    });
-
-    var deviceLimitWarning = limitMaxed ? (
-      <p className="warning">
-        <InfoIcon style={{ marginRight: '2px', height: '16px', verticalAlign: 'bottom' }} />
-        You have reached your limit of authorized devices: {this.props.acceptedDevices} of {this.props.deviceLimit}
-      </p>
+      )
+    }, this);
+    
+     var deviceLimitWarning = limitMaxed ?
+      (
+        <p className="warning">
+          <InfoIcon style={{marginRight:"2px", height:"16px", verticalAlign:"bottom"}} />
+          You have reached your limit of authorized devices: {this.props.acceptedDevices} of {this.props.deviceLimit}
+        </p>
     ) : null;
 
-    var preauthActions = [
-      <div key="auth-button-1" style={{ marginRight: '10px', display: 'inline-block' }}>
-        <Button onClick={() => this._togglePreauth(false)}>Cancel</Button>
+    var minHeight = deviceLimitWarning ? this.state.minHeight + 20 : this.state.minHeight;
+
+    var preauthActions =  [
+      <div style={{marginRight:"10px", display:"inline-block"}}>
+        <FlatButton
+          label="Cancel"
+          onClick={this._dialogToggle.bind(null, "openPreauth")} />
       </div>,
-      <div key="auth-button-2" style={{ marginRight: '10px', display: 'inline-block' }}>
-        <Button
-          variant="contained"
+      <div style={{marginRight:"10px", display:"inline-block"}}>
+        <RaisedButton
           disabled={!this.state.public || isEmpty(this.state.json_identity) || !!limitMaxed}
-          onClick={() => this._savePreauth(false)}
-          color="primary"
-        >
-          Save and add another
-        </Button>
+          label="Save and add another"
+          onClick={this._savePreauth.bind(null, false)}
+          primary={true} />
       </div>,
-      <Button
-        variant="contained"
-        key="auth-button-3"
+      <RaisedButton
         disabled={!this.state.public || isEmpty(this.state.json_identity) || !!limitMaxed}
-        onClick={() => this._savePreauth(true)}
-        color="secondary"
-      >
-        Save
-      </Button>
+        label="Save"
+        onClick={this._savePreauth.bind(null, true)}
+        secondary={true} />
     ];
 
-    var inputs = self.state.inputs.map((input, index) => {
-      const hasError = Boolean(index === self.state.inputs.length - 1 && self.state.errortext);
+  
+    var inputs = this.state.inputs.map(function(input, index) {
+      var self = this;
       return (
-        <div className="key-value-container flexbox" key={index}>
-          <FormControl error={hasError} style={{ marginRight: 15, marginTop: 10 }}>
-            <Input id={`key-${index}`} value={input.key} placeholder="Key" onChange={e => self._updateKey(index, e)} type="text" />
-            <FormHelperText>{self.state.errortext}</FormHelperText>
-          </FormControl>
-          <FormControl error={hasError} style={{ marginTop: 10 }}>
-            <Input id={`value-${index}`} value={input.value} placeholder="Value" onChange={e => self._updateValue(index, e)} type="text" />
-          </FormControl>
-          {this.state.inputs.length > 1 ? (
-            <IconButton disabled={!this.state.inputs[index].key || !this.state.inputs[index].value} onClick={() => this._removeInput(index)}>
-              <ClearIcon fontSize="small" />
-            </IconButton>
-          ) : (
-            <span style={{ minWidth: 44 }} />
-          )}
+        <div key={index}>
+          <TextField hintText="Key" id={"key-"+index} value={input.key} style={{marginRight:"15px", marginBottom: "15px", verticalAlign:"top"}} onChange={this._updateKey.bind(null, index)} errorStyle={{color: "rgb(171, 16, 0)"}}
+            errorText={index===this.state.inputs.length-1 ? this.state.errorText : ""} />
+          <TextField hintText="Value" id={"value-"+index} style={{verticalAlign:"top"}} value={input.value} onChange={this._updateValue.bind(null, index)} errorStyle={{color: "rgb(171, 16, 0)"}}
+            errorText={index===this.state.inputs.length-1 ? this.state.errorText1 : ""} />
+          {this.state.inputs.length>1 ? <IconButton iconStyle={{width:"16px"}} disabled={!this.state.inputs[index].key || !this.state.inputs[index].value } onClick={this._removeInput.bind(null, index)}><FontIcon className="material-icons">clear</FontIcon></IconButton> : null }
         </div>
-      );
-    });
+      )
+    }, this);
 
     return (
-      <div className="tab-container">
-        <Button
-          style={{ position: 'absolute' }}
-          color="secondary"
-          variant="contained"
-          disabled={!!limitMaxed}
-          className="top-right-button"
-          onClick={() => this._togglePreauth(true)}
-        >
-          Preauthorize devices
-        </Button>
+      <Collapse springConfig={{stiffness: 190, damping: 20}} style={{minHeight:minHeight, width:"100%"}} isOpened={true} id="preauthorize" className="absolute authorize padding-top">
+        
+      <RaisedButton disabled={!!limitMaxed} className="top-right-button" secondary={true} label="Preauthorize devices" onClick={this._dialogToggle.bind(null, 'openPreauth')} />
+      
+      <Loader show={this.state.authLoading==="all"} />
 
-        <Loader show={this.state.authLoading === 'all'} />
+        { this.state.devices.length && this.state.authLoading!=="all" ?
 
-        {this.state.devices.length && this.state.authLoading !== 'all' ? (
           <div className="padding-bottom">
+
             <h3 className="align-center">Preauthorized devices</h3>
             {deviceLimitWarning}
-
-            <Table>
-              <TableHead className="clickable">
+            
+            <Table
+              selectable={false}>
+              <TableHeader
+                className="clickable"
+                displaySelectAll={false}
+                adjustForCheckbox={false}>>
                 <TableRow>
-                  <TableCell className="columnHeader" tooltip={(this.props.globalSettings || {}).id_attribute || 'Device ID'}>
-                    {(this.props.globalSettings || {}).id_attribute || 'Device ID'}
-                    <SettingsIcon onClick={this.props.openSettingsDialog} style={{ fontSize: '16px' }} className="hover float-right" />
-                  </TableCell>
-                  <TableCell className="columnHeader" tooltip="Date added">
-                    Date added
-                  </TableCell>
-                  <TableCell className="columnHeader" tooltip="Status">
-                    Status
-                  </TableCell>
-                  <TableCell className="columnHeader" style={{ width: '55px', paddingRight: '12px', paddingLeft: '0' }} />
+                  <TableHeaderColumn className="columnHeader" tooltip={(this.props.globalSettings || {}).id_attribute || "Device ID"}>{(this.props.globalSettings || {}).id_attribute || "Device ID"}<FontIcon onClick={this.props.openSettingsDialog} style={{fontSize: "16px"}} color={"#c7c7c7"} hoverColor={"#aeaeae"} className="material-icons hover float-right">settings</FontIcon></TableHeaderColumn>
+                  <TableHeaderColumn className="columnHeader" tooltip="Date added">Date added</TableHeaderColumn>
+                  <TableHeaderColumn className="columnHeader" tooltip="Status">Status</TableHeaderColumn>
+                  <TableHeaderColumn className="columnHeader" style={{width:"55px", paddingRight:"12px", paddingLeft:"0"}}></TableHeaderColumn>
                 </TableRow>
-              </TableHead>
-              <TableBody className="clickable">{devices}</TableBody>
+              </TableHeader>
+              <TableBody
+                showRowHover={true}
+                displayRowCheckbox={false}
+                className="clickable">
+                {devices}
+              </TableBody>
             </Table>
 
             <div className="margin-top">
-              <Pagination
-                locale={_en_US}
-                simple
-                pageSize={this.state.pageLength}
-                current={this.state.pageNo || 1}
-                total={this.props.count}
-                onChange={page => this._handlePageChange(page)}
-              />
-              {this.state.pageLoading ? (
-                <div className="smallLoaderContainer">
-                  <Loader show={true} />
-                </div>
-              ) : null}
+              <Pagination locale={_en_US} simple pageSize={this.state.pageLength} current={this.state.pageNo || 1} total={this.props.count} onChange={this._handlePageChange} />
+               {this.state.pageLoading ?  <div className="smallLoaderContainer"><Loader show={true} /></div> : null}
             </div>
           </div>
-        ) : (
-          <div className={this.state.authLoading ? 'hidden' : 'dashboard-placeholder'}>
+
+          :
+
+          <div className={this.state.authLoading ? "hidden" : "dashboard-placeholder"}>
             <p>There are no preauthorized devices.</p>
-            <p>
-              {limitMaxed ? 'Preauthorize devices' : <a onClick={() => this._togglePreauth(true)}>Preauthorize devices</a>} so that when they come online, they
-              will connect to the server immediately
-            </p>
+            <p>{limitMaxed ? "Preauthorize devices" : <a onClick={this._dialogToggle.bind(null, "openPreauth")}>Preauthorize devices</a>} so that when they come online, they will connect to the server immediately</p>
             <img src="assets/img/preauthorize.png" alt="preauthorize" />
           </div>
-        )}
+        }
 
-        <Dialog open={this.state.openPreauth}>
-          <DialogTitle>Preauthorize devices</DialogTitle>
-          <DialogContent style={{ overflow: 'hidden' }}>
-            <p>You can preauthorize a device by adding its authentication dataset here.</p>
-            <p>This means when a device with the matching key and identity data comes online, it will automatically be authorized to connect to the server.</p>
 
-            <h4 className="margin-top margin-bottom-small">Public key</h4>
-            {this.state.filename ? (
-              <div>
-                <TextField
-                  id="keyfile"
-                  value={this.state.filename}
-                  disabled={true}
-                  style={{ color: 'rgba(0, 0, 0, 0.8)', borderBottom: '1px solid rgb(224, 224, 224)' }}
-                />
-                <IconButton style={{ top: '6px' }} onClick={() => this._removeKey()}>
-                  <ClearIcon />
-                </IconButton>
-              </div>
-            ) : (
-              <div>
-                <Dropzone activeClassName="active" rejectClassName="active" multiple={false} onDrop={(accepted, rejected) => this.onDrop(accepted, rejected)}>
-                  {({ getRootProps, getInputProps }) => (
-                    <div {...getRootProps()} style={{ fontSize: '16px', margin: 'auto' }} className="dropzone onboard dashboard-placeholder">
-                      <input {...getInputProps()} />
-                      <div className="icon inline-block">
-                        <FileIcon style={{ height: '24px', width: '24px', verticalAlign: 'middle', marginTop: '-2px' }} />
-                      </div>
-                      <div className="dashboard-placeholder inline">
-                        Drag here or <a>browse</a> to upload a public key file
-                      </div>
-                    </div>
-                  )}
-                </Dropzone>
-              </div>
-            )}
+        <Dialog
+          open={this.state.openPreauth}
+          actions={preauthActions}
+          title='Preauthorize devices'
+          autoDetectWindowHeight={true}
+          bodyStyle={{paddingTop:"0", fontSize:"13px", minHeight:"375px"}}
+          contentStyle={{overflow:"hidden", boxShadow:"0 14px 45px rgba(0, 0, 0, 0.25), 0 10px 18px rgba(0, 0, 0, 0.22)"}}>
+         
+          <p>You can preauthorize a device by adding its authentication dataset here.</p>
+          <p>This means when a device with the matching key and identity data comes online, it will automatically be authorized to connect to the server.</p>
 
-            <h4 className="margin-bottom-none margin-top">Identity data</h4>
-            {inputs}
 
-            <Fab
-              disabled={!this.state.inputs[this.state.inputs.length - 1].key || !this.state.inputs[this.state.inputs.length - 1].value}
-              style={{ marginTop: '10px' }}
-              color="secondary"
-              size="small"
-              onClick={() => this._addKeyValue()}
-            >
-              <ContentAddIcon />
-            </Fab>
+          
+         <h4 className="margin-top margin-bottom-small">Public key</h4>
+          {this.state.filename ? 
+            <div>
+              <TextField id="keyfile" value={this.state.filename} disabled={true} underlineStyle={{borderBottom:"1px solid rgb(224, 224, 224)"}} inputStyle={{color:"rgba(0, 0, 0, 0.8)"}} /><IconButton style={{top:"6px"}} onClick={this._removeKey}><FontIcon className="material-icons">clear</FontIcon></IconButton>
+            </div>
+            : 
+          <div>
+            <Dropzone className="dropzone onboard" activeClassName="active" rejectClassName="active" multiple={false} onDrop={this.onDrop} style={{width: "528px"}}>
+              <div className="icon inline-block"><FileIcon style={{height:"24px", width:"24px", verticalAlign:"middle", marginTop:"-2px"}}/></div>
+              <div className="dashboard-placeholder inline">Drag here or <a>browse</a> to upload a public key file</div>
+            </Dropzone>
+          </div> }
 
-            {deviceLimitWarning}
-          </DialogContent>
-          <DialogActions>{preauthActions}</DialogActions>
+          <h4 className="margin-bottom-none margin-top">Identity data</h4>
+          {inputs}
+
+          <FloatingActionButton disabled={!this.state.inputs[this.state.inputs.length-1].key || !this.state.inputs[this.state.inputs.length-1].value } style={{marginTop:"10px"}} mini={true} onClick={this._addKeyValue}>
+            <ContentAdd />
+          </FloatingActionButton>
+
+           {deviceLimitWarning}
         </Dialog>
-      </div>
+
+
+      </Collapse>
     );
   }
-}
+});
+
+
+module.exports = Preauthorize;

@@ -1,79 +1,76 @@
 import React from 'react';
 import Time from 'react-time';
+var createReactClass = require('create-react-class');
 
 // material ui
-import Button from '@material-ui/core/Button';
-import Table from '@material-ui/core/Table';
-import TableHead from '@material-ui/core/TableHead';
-import TableBody from '@material-ui/core/TableBody';
-import TableRow from '@material-ui/core/TableRow';
-import TableCell from '@material-ui/core/TableCell';
+var mui = require('material-ui');
+var Table = mui.Table;
+var TableHeader = mui.TableHeader;
+var TableHeaderColumn = mui.TableHeaderColumn;
+var TableBody = mui.TableBody;
+var TableRow = mui.TableRow;
+var TableRowColumn = mui.TableRowColumn;
+var FlatButton = mui.FlatButton;
 
-export default class Schedule extends React.Component {
-  _handleEdit(deployment) {
+
+var Schedule = createReactClass({
+  _handleEdit: function (deployment) {
     this.props.edit(deployment);
-  }
-  _handleRemove(id) {
+  },
+  _handleRemove: function (id) {
     this.props.remove(id);
-  }
-  render() {
+  },
+  render: function() {
     var now = new Date().getTime();
 
     var scheduleCount = 0;
     var schedule = this.props.schedule.map(function(deployment, index) {
-      if (deployment.start_time > now) {
+      if (deployment.start_time>now) {
         scheduleCount++;
         return (
-          <TableRow hover key={index}>
-            <TableCell>{deployment.group}</TableCell>
-            <TableCell>{deployment.artifact_name}</TableCell>
-            <TableCell>{deployment.devices.length}</TableCell>
-            <TableCell>
-              <Time value={deployment.start_time} format="YYYY/MM/DD HH:mm" />
-            </TableCell>
-            <TableCell>
-              <Time value={deployment.end_time} format="YYYY/MM/DD HH:mm" />
-            </TableCell>
-            <TableCell>
-              Begins <Time value={deployment.start_time} format="YYYY/MM/DD HH:mm" relative />
-            </TableCell>
-            <TableCell>
-              <div>
-                <Button color="secondary" style={{ padding: '0', marginRight: '4', minWidth: '55' }} onClick={() => this._handleEdit(deployment)}>
-                  Edit
-                </Button>
-                <Button style={{ padding: '0', marginLeft: '4', minWidth: '55' }} onClick={() => this._handleRemove(deployment.id)}>
-                  Remove
-                </Button>
-              </div>
-            </TableCell>
+          <TableRow key={index}>
+            <TableRowColumn>{deployment.group}</TableRowColumn>
+            <TableRowColumn>{deployment.artifact_name}</TableRowColumn>
+            <TableRowColumn>{deployment.devices.length}</TableRowColumn>
+            <TableRowColumn><Time value={deployment.start_time} format="YYYY/MM/DD HH:mm" /></TableRowColumn>
+            <TableRowColumn><Time value={deployment.end_time} format="YYYY/MM/DD HH:mm" /></TableRowColumn>
+            <TableRowColumn>Begins <Time value={deployment.start_time} format="YYYY/MM/DD HH:mm" relative /></TableRowColumn>
+            <TableRowColumn><div><FlatButton secondary={true} style={{padding:"0", marginRight:"4", minWidth:"55"}} label="Edit" onClick={this._handleEdit.bind(null, deployment)} /><FlatButton style={{padding:"0", marginLeft:"4", minWidth:"55"}} label="Remove" onClick={this._handleRemove.bind(null, deployment.id)} /></div></TableRowColumn>
           </TableRow>
-        );
+        )
       }
     }, this);
     return (
       <div>
         <h3>Scheduled deployments</h3>
-        {scheduleCount ? (
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell tooltip="Device group">Group</TableCell>
-                <TableCell tooltip="Target artifact version">Target artifact</TableCell>
-                <TableCell tooltip="Number of devices"># Devices</TableCell>
-                <TableCell tooltip="Started">Started</TableCell>
-                <TableCell tooltip="Finished">Finished</TableCell>
-                <TableCell tooltip="Details">Details</TableCell>
-                <TableCell tooltip="Actions" />
-              </TableRow>
-            </TableHead>
-            <TableBody>{schedule}</TableBody>
-          </Table>
-        ) : null}
+        <Table
+          className={scheduleCount ? null : 'hidden'}
+          selectable={false}>
+          <TableHeader
+            displaySelectAll={false}
+            adjustForCheckbox={false}>
+            <TableRow>
+              <TableHeaderColumn tooltip="Device group">Group</TableHeaderColumn>
+              <TableHeaderColumn tooltip="Target artifact version">Target artifact</TableHeaderColumn>
+              <TableHeaderColumn tooltip="Number of devices"># Devices</TableHeaderColumn>
+              <TableHeaderColumn tooltip="Started">Started</TableHeaderColumn>
+              <TableHeaderColumn tooltip="Finished">Finished</TableHeaderColumn>
+              <TableHeaderColumn tooltip="Details">Details</TableHeaderColumn>
+              <TableHeaderColumn tooltip="Actions"></TableHeaderColumn>
+            </TableRow>
+          </TableHeader>
+          <TableBody
+            showRowHover={true}
+            displayRowCheckbox={false}>
+            {schedule}
+          </TableBody>
+        </Table>
         <div className={scheduleCount ? 'hidden' : null}>
           <p className="italic">No deployments scheduled</p>
         </div>
       </div>
     );
   }
-}
+});
+
+module.exports = Schedule;

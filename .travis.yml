@@ -61,7 +61,6 @@ before_script:
 script:
     # Check commit compliance.
     - mendertesting/check_commits.sh
-    - npm install
     - gulp --version
     - gulp build
     # Make sure the test environment is running the pull request

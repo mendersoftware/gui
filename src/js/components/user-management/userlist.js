@@ -1,82 +1,132 @@
 import React from 'react';
+var createReactClass = require('create-react-class');
 
-import AppStore from '../../stores/app-store';
+var AppStore = require('../../stores/app-store');
+var AppActions = require('../../actions/app-actions');
 import Time from 'react-time';
 
 // material ui
-import Table from '@material-ui/core/Table';
-import TableHead from '@material-ui/core/TableHead';
-import TableCell from '@material-ui/core/TableCell';
-import TableBody from '@material-ui/core/TableBody';
-import TableRow from '@material-ui/core/TableRow';
-import Button from '@material-ui/core/Button';
+
+var mui = require('material-ui');
+import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
+import FontIcon from 'material-ui/FontIcon';
+import FlatButton from 'material-ui/FlatButton';
+
 
 const columnData = [
-  { id: 'email', numeric: 'false', disablePadding: false, label: 'Email' },
-  { id: 'created_ts', numeric: 'true', disablePadding: false, label: 'Date created' },
-  { id: 'updated_ts', numeric: 'true', disablePadding: false, label: 'Last updated' },
-  { id: 'actions', numeric: 'false', disablePadding: false, label: 'Manage' }
+  { id: 'email', numeric: false, disablePadding: false, label: 'Email' },
+  { id: 'created_ts', numeric: true, disablePadding: false, label: 'Date created' },
+  { id: 'updated_ts', numeric: true, disablePadding: false, label: 'Last updated' },
+  { id: 'actions', numeric: false, disablePadding: false, label: 'Manage' },
 ];
 
-export default class UserList extends React.Component {
-  _filter(array) {
+var UserList =  createReactClass({
+
+  _filter: function(array) {
     var newArray = [];
-    for (var i = 0; i < array.length; i++) {
+    for (var i=0; i<array.length;i++) {
       if (AppStore.matchFilters(array[i])) newArray.push(array[i]);
     }
     return newArray;
-  }
+  },
 
-  _handleEdit(user, current) {
+
+  _sortColumn: function(col) {
+    var direction;
+    if (this.state.sortCol !== col) {
+      ReactDOM.findDOMNode(this.refs[this.state.sortCol]).className = "sortIcon material-icons";
+      ReactDOM.findDOMNode(this.refs[col]).className = "sortIcon material-icons selected";
+      this.setState({sortCol:col, sortDown: true});
+      direction = true;
+    } else {
+      direction = !(this.state.sortDown);
+      ReactDOM.findDOMNode(this.refs[this.state.sortCol]).className = "sortIcon material-icons selected " +direction;
+      this.setState({sortDown: direction});
+    }
+  },
+
+  _hoverHeader: function (rowNumber, columnId) {
+
+  },
+
+  _handleEdit: function(user, current) {
     this.props.editUser(user, current);
-  }
-  _handleRemove(user) {
+  },
+  _handleRemove: function(user) {
     this.props.removeUser(user);
-  }
+  },
 
-  render() {
+  render: function() {
     var filteredUsers = this._filter(this.props.users);
 
-    var users = filteredUsers.map(user => {
+    var styles = {
+      sortIcon: {
+        verticalAlign: 'middle',
+        marginLeft: "10px",
+        color: "#8c8c8d",
+        cursor: "pointer",
+      },
+    }
+
+    var users = filteredUsers.map(function(user, index) {
       return (
-        <TableRow key={user.id} hover>
-          <TableCell>{user.email}</TableCell>
-          <TableCell align="left">
+        <TableRow 
+          key={user.id}
+          hover
+        >
+          <TableRowColumn>
+            {user.email}
+          </TableRowColumn>
+          <TableRowColumn numeric>
             <Time value={user.created_ts} format="YYYY-MM-DD HH:mm" />
-          </TableCell>
-          <TableCell align="left">
+          </TableRowColumn>
+          <TableRowColumn numeric>
             <Time value={user.updated_ts} format="YYYY-MM-DD HH:mm" />
-          </TableCell>
-          <TableCell padding="none">
-            <Button onClick={() => this._handleEdit(user)}>Edit</Button>
-            {this.props.currentUser.id !== user.id ? <Button onClick={() => this._handleRemove(user)}>Remove</Button> : null}
-          </TableCell>
+          </TableRowColumn>
+          <TableRowColumn disablePadding>
+            <FlatButton label="Edit" onClick={this._handleEdit.bind(this, user)} />
+            {this.props.currentUser.id !== user.id ? <FlatButton label="Remove" onClick={this._handleRemove.bind(this, user)} /> : null }
+          </TableRowColumn>
         </TableRow>
       );
-    });
+    }.bind(this));
 
     return (
+
       <div className="margin-top-small">
-        <div style={{ marginLeft: '20px' }}>
-          <h2 style={{ marginTop: '15px' }}>Users</h2>
+        <div style={{marginLeft: "20px"}}>
+          <h2 style={{marginTop: "15px"}}>Users</h2>
         </div>
         <div className="margin-bottom">
-          <Table>
-            <TableHead>
+          <Table selectable={false}>
+            <TableHeader
+              displaySelectAll={false}
+              adjustForCheckbox={false}>
               <TableRow>
                 {columnData.map(column => {
                   return (
-                    <TableCell key={column.id} padding={column.disablePadding ? 'none' : 'default'}>
-                      {column.label}
-                    </TableCell>
+                    <TableHeaderColumn
+                      key={column.id}
+                      disablePadding={column.disablePadding}
+                    >
+                      
+                        {column.label}
+                      
+                    </TableHeaderColumn>
                   );
                 }, this)}
               </TableRow>
-            </TableHead>
-            <TableBody>{users}</TableBody>
+            </TableHeader>
+            <TableBody
+              displayRowCheckbox={false}>
+              {users}
+            </TableBody>
           </Table>
         </div>
       </div>
-    );
+    )
   }
-}
+
+});
+
+module.exports = UserList;

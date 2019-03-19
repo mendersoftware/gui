@@ -21,7 +21,6 @@ module.exports = {
   UPLOAD_ARTIFACT: 'UPLOAD_ARTIFACT',
   UPLOAD_PROGRESS: 'UPLOAD_PROGRESS',
   SET_DEPLOYMENT_ARTIFACT: 'SET_DEPLOYMENT_ARTIFACT',
-  RECEIVE_RELEASES: 'RECEIVE_RELEASES',
   RECEIVE_DEPLOYMENTS: 'RECEIVE_DEPLOYMENTS',
   RECEIVE_PENDING_DEPLOYMENTS: 'RECEIVE_PENDING_DEPLOYMENTS',
   RECEIVE_ACTIVE_DEPLOYMENTS: 'RECEIVE_ACTIVE_DEPLOYMENTS',
@@ -37,5 +36,5 @@ module.exports = {
   SET_GLOBAL_SETTINGS: 'SET_GLOBAL_SETTINGS',
   // workaround to support showing ungrouped devices, relying on the fact that
   // '*', '|', '=' should not be whitelisted characters in a group name
-  UNGROUPED_GROUP: { id: '*|=ungrouped=|*', name: 'Ungrouped' }
-};
+  UNGROUPED_GROUP: { id: '*|=ungrouped=|*', name: 'Ungrouped' },
+}

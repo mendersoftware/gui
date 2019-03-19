@@ -6,20 +6,20 @@ import { unauthorizedRedirect } from '../auth';
 
 request.use(unauthorizedRedirect);
 
-const Api = {
-  get: url => {
-    var token = cookie.load('JWT');
-    return new Promise((resolve, reject) => {
+var Api = {
+  get: function(url) {
+    var token = cookie.load("JWT");
+    return new Promise(function (resolve, reject) {
       request
         .get(url)
         .authBearer(token)
         .timeout({
           response: 10000, // wait 10 seconds for server to start sending
-          deadline: 60000 // allow one minute to finish loading
+          deadline: 60000, // allow one minute to finish loading
         })
-        .end((err, res) => {
+        .end(function (err, res) {
           if (err || !res.ok) {
-            reject({ error: err, res: res });
+            reject({"error": err, "res": res});
           } else {
             resolve(res);
           }
@@ -27,23 +27,24 @@ const Api = {
     });
   },
 
-  getNoauth: url => {
-    return new Promise((resolve, reject) => {
+  getNoauth: function(url) {
+    var token = cookie.load("JWT");
+    return new Promise(function (resolve, reject) {
       request
         .get(url)
         .timeout({
           response: 10000, // wait 10 seconds for server to start sending
-          deadline: 60000 // allow one minute to finish loading
+          deadline: 60000, // allow one minute to finish loading
         })
-        .end((err, res) => {
+        .end(function (err, res) {
           if (err || !res.ok) {
-            reject({ error: err, res: res });
+            reject({"error": err, "res": res});
           } else {
             resolve(res);
           }
         });
     });
-  }
-};
+  },
+}
 
-export default Api;
+module.exports = Api;

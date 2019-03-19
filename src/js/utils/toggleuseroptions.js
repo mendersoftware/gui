@@ -1,5 +1,5 @@
-import AppActions from '../actions/app-actions';
-import AppStore from '../stores/app-store';
+var AppActions = require('../actions/app-actions');
+var AppStore = require('../stores/app-store');
 import cookie from 'react-cookie';
 
 export function toggleHelptips() {
@@ -18,6 +18,6 @@ export function toggleHelptips() {
 export function hideAnnouncement(hash) {
   var user = AppStore.getCurrentUser();
   if (user.id) {
-    cookie.save(user.id + hash, true, { maxAge: 604800 });
+    cookie.save(user.id+hash, true, {maxAge: 604800});
   }
 }

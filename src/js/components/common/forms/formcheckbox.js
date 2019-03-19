@@ -1,46 +1,45 @@
 import React from 'react';
+var createReactClass = require('create-react-class');
+import Checkbox from 'material-ui/Checkbox';
 
-import Checkbox from '@material-ui/core/Checkbox';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-
-export default class FormCheckbox extends React.Component {
-  constructor(props, context) {
-    super(props, context);
-    this.state = {
+var FormCheckbox = createReactClass({
+  getInitialState: function () {
+    return {
       checked: this.props.checked,
       isValid: true
     };
-  }
+  },
 
-  componentWillMount() {
+  componentWillMount: function () {
     this.props.attachToForm(this); // Attaching the component to the form
-  }
-  componentWillUnmount() {
+  },
+  componentWillUnmount: function () {
     this.props.detachFromForm(this); // Detaching if unmounting
-  }
+  },
 
-  updateCheck(checked) {
-    this.setState({ checked });
+  updateCheck: function () {
+    this.setState({
+      checked: !this.state.checked
+    });
     this.props.validate(this, !this.state.checked);
+  },
+  render: function () {
+    return (  
+      <div className={this.props.className}>
+        <Checkbox
+          id={this.props.id}
+          name={this.props.id}
+          ref={this.props.id}
+          onCheck={this.updateCheck}
+          label={this.props.label}
+          onClick={this.props.handleClick}
+          style={this.props.style}
+          checked={this.state.checked}
+        />
+      </div>
+    )
   }
-  render() {
-    return (
-      <FormControlLabel
-        className={this.props.className}
-        control={
-          <Checkbox
-            id={this.props.id}
-            name={this.props.id}
-            ref={this.props.id}
-            onChange={(e, checked) => this.updateCheck(checked)}
-            onClick={this.props.handleClick}
-            style={this.props.style}
-            color="primary"
-            checked={this.state.checked}
-          />
-        }
-        label={this.props.label}
-      />
-    );
-  }
-}
+});
+
+module.exports = FormCheckbox;
+

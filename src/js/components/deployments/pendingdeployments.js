@@ -1,105 +1,109 @@
 import React from 'react';
 import Time from 'react-time';
+var createReactClass = require('create-react-class');
+import BlockIcon from 'react-material-icons/icons/content/block';
+var ConfirmAbort = require('./confirmabort');
 
-import ConfirmAbort from './confirmabort';
-
-import Pagination from 'rc-pagination';
-import _en_US from 'rc-pagination/lib/locale/en_US';
+var Pagination = require('rc-pagination');
+var _en_US = require('rc-pagination/lib/locale/en_US');
 
 // material ui
-import Table from '@material-ui/core/Table';
-import TableHead from '@material-ui/core/TableHead';
-import TableCell from '@material-ui/core/TableCell';
-import TableBody from '@material-ui/core/TableBody';
-import TableRow from '@material-ui/core/TableRow';
-import Button from '@material-ui/core/Button';
-import BlockIcon from '@material-ui/icons/Block';
+import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
+import FlatButton from 'material-ui/FlatButton';
 
-import { formatTime } from '../../helpers';
-
-export default class Pending extends React.Component {
-  constructor(props, context) {
-    super(props, context);
-    this.state = {
+var Pending = createReactClass({
+  getInitialState: function() {
+    return {
       abort: null,
       pageSize: 20
     };
-  }
-  _abortHandler(id) {
+  },
+  _formatTime: function(date) {
+    if (date) {
+      return date.replace(' ','T').replace(/ /g, '').replace('UTC','');
+    }
+    return;
+  },
+  _abortHandler: function(id) {
     this.props.abort(id);
-  }
-  _hideConfirm() {
+  },
+  _hideConfirm: function() {
     var self = this;
-    setTimeout(() => {
-      self.setState({ abort: null });
+    setTimeout(function() {
+      self.setState({abort:null});
     }, 150);
-  }
-  _showConfirm(id) {
-    this.setState({ abort: id });
-  }
-  _handlePageChange(pageNo) {
+  },
+  _showConfirm: function(id) {
+    this.setState({abort:id});
+  },
+  _handlePageChange: function(pageNo) {
     this.props.refreshPending(pageNo);
-  }
-  render() {
+  },
+  render: function() {
     var pendingMap = this.props.pending.map(function(deployment, index) {
       var abort = (
-        <Button
-          color="secondary"
-          onClick={() => this._showConfirm(deployment.id)}
-          icon={<BlockIcon style={{ height: '18px', width: '18px', verticalAlign: 'middle' }} />}
-        >
-          Abort
-        </Button>
+        <FlatButton label="Abort" secondary={true} onClick={this._showConfirm.bind(null, deployment.id)} icon={<BlockIcon style={{height:"18px", width:"18px", verticalAlign:"middle"}}/>}/>
       );
       if (this.state.abort === deployment.id) {
-        abort = <ConfirmAbort cancel={() => this._hideConfirm(deployment.id)} abort={() => this._abortHandler(deployment.id)} table={true} />;
+        abort = (
+          <ConfirmAbort cancel={this._hideConfirm.bind(null, deployment.id)} abort={this._abortHandler.bind(null, deployment.id)} table={true}/>
+        );
       }
 
       //  get statistics
       return (
         <TableRow key={index}>
-          <TableCell>{deployment.artifact_name}</TableCell>
-          <TableCell>{deployment.name}</TableCell>
-          <TableCell>
-            <Time value={formatTime(deployment.created)} format="YYYY-MM-DD HH:mm" />
-          </TableCell>
-          <TableCell style={{ textAlign: 'right', width: '100px' }}>{deployment.device_count}</TableCell>
-          <TableCell style={{ width: '126px' }}>{deployment.status}</TableCell>
-          <TableCell style={{ overflow: 'visible' }}>
+          <TableRowColumn>{deployment.artifact_name}</TableRowColumn>
+          <TableRowColumn>{deployment.name}</TableRowColumn>
+          <TableRowColumn><Time value={this._formatTime(deployment.created)} format="YYYY-MM-DD HH:mm" /></TableRowColumn>
+          <TableRowColumn style={{textAlign:"right", width:"100px"}}>{deployment.device_count}</TableRowColumn>
+          <TableRowColumn style={{width:"126px"}}>{deployment.status}</TableRowColumn>
+          <TableRowColumn style={{overflow:"visible"}}>
             <div className="float-right">{abort}</div>
-          </TableCell>
+          </TableRowColumn>
         </TableRow>
-      );
+      )
     }, this);
 
-    return pendingMap.length ? (
-      <div className="deploy-table-contain fadeIn">
-        <h3>Pending</h3>
-        <Table style={{ overflow: 'visible' }}>
-          <TableHead>
-            <TableRow style={{ overflow: 'visible' }}>
-              <TableCell>Updating to</TableCell>
-              <TableCell>Group</TableCell>
-              <TableCell>Created</TableCell>
-              <TableCell style={{ textAlign: 'right', width: '100px' }}># Devices</TableCell>
-              <TableCell style={{ width: '126px' }}>Status</TableCell>
-              <TableCell />
-            </TableRow>
-          </TableHead>
-          <TableBody style={{ overflow: 'visible' }}>{pendingMap}</TableBody>
-        </Table>
-
-        {this.props.count > this.props.pending.length ? (
-          <Pagination
-            locale={_en_US}
-            simple
-            pageSize={this.state.pageSize}
-            current={this.props.page || 1}
-            total={this.props.count}
-            onChange={page => this._handlePageChange(page)}
-          />
-        ) : null}
+    return (
+      <div className={pendingMap.length ? "fadeIn" : "hidden" }>
+        <div className="deploy-table-contain">
+          <h3>Pending</h3>
+          <Table
+            selectable={false}
+            style={{overflow:"visible"}}
+            wrapperStyle={{overflow:"visible"}}
+            bodyStyle={{overflow:"visible"}}>
+            <TableHeader
+              displaySelectAll={false}
+              adjustForCheckbox={false}>
+              <TableRow
+              style={{overflow:"visible"}}>
+                <TableHeaderColumn>Updating to</TableHeaderColumn>
+                <TableHeaderColumn>Group</TableHeaderColumn>
+                <TableHeaderColumn>Created</TableHeaderColumn>
+                <TableHeaderColumn style={{textAlign:"right", width:"100px"}}># Devices</TableHeaderColumn>
+                <TableHeaderColumn style={{width:"126px"}}>Status</TableHeaderColumn>
+                <TableHeaderColumn></TableHeaderColumn>
+              </TableRow>
+            </TableHeader>
+            <TableBody
+              displayRowCheckbox={false}
+            >
+              {pendingMap}
+            </TableBody>
+          </Table>
+       
+          {
+            this.props.count>this.props.pending.length ? 
+            <Pagination locale={_en_US} simple pageSize={this.state.pageSize} current={this.props.page || 1} total={this.props.count} onChange={this._handlePageChange} /> 
+            :
+            null
+          }
+        </div>
       </div>
-    ) : null;
+    );
   }
-}
+});
+
+module.exports = Pending;

@@ -1,235 +1,286 @@
 import React from 'react';
 import Time from 'react-time';
 import ReactTooltip from 'react-tooltip';
-import Pagination from 'rc-pagination';
-import _en_US from 'rc-pagination/lib/locale/en_US';
+import { FinishedDeployment } from '../helptips/helptooltips';
+var createReactClass = require('create-react-class');
+var ScheduleForm = require('./scheduleform');
+var DeploymentStatus = require('./deploymentstatus');
+
+var Pagination = require('rc-pagination');
+var _en_US = require('rc-pagination/lib/locale/en_US');
+var Loader = require('../common/loader');
 
 // material ui
-import Grid from '@material-ui/core/Grid';
-import Table from '@material-ui/core/Table';
-import TableHead from '@material-ui/core/TableHead';
-import TableCell from '@material-ui/core/TableCell';
-import TableBody from '@material-ui/core/TableBody';
-import TableRow from '@material-ui/core/TableRow';
+import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
+import FlatButton from 'material-ui/FlatButton';
+import IconButton from 'material-ui/IconButton';
+import FontIcon from 'material-ui/FontIcon';
+import DatePicker from 'material-ui/DatePicker';
+import AutoComplete from 'material-ui/AutoComplete';
+import MenuItem from 'material-ui/MenuItem';
 
-import HelpIcon from '@material-ui/icons/Help';
 
-import InlineDatePicker from 'material-ui-pickers/DatePicker';
-import MuiPickersUtilsProvider from 'material-ui-pickers/MuiPickersUtilsProvider';
-import MomentUtils from '@date-io/moment';
-
-import Loader from '../common/loader';
-import AutoSelect from '../common/forms/autoselect';
-import { FinishedDeployment } from '../helptips/helptooltips';
-import DeploymentStatus from './deploymentstatus';
-import { formatTime } from '../../helpers';
-
-export default class Past extends React.Component {
-  constructor(props, context) {
-    super(props, context);
-    this.state = {
+var Past = createReactClass({
+  getInitialState: function() {
+    return {
       retry: false,
       today: new Date(),
-      active: 'today'
+      active: "today",
+      disableClear: true,
     };
-  }
-  _setDateRange(after, before) {
+  },
+  _setDateRange: function(after, before) {
     var self = this;
     var startDate = new Date();
     startDate.setDate(startDate.getDate() - (after || 0));
     startDate.setHours(0, 0, 0, 0);
     var endDate = new Date();
     endDate.setDate(endDate.getDate() - (before || 0));
-    endDate.setHours(23, 59, 59, 999);
+    endDate.setHours(23,59,59,999);
 
     self._handleDateChange(1, startDate, endDate);
-  }
-  _pastCellClick(rowNumber) {
+  },
+  _pastCellClick: function(rowNumber, columnId) {
     // adjust index to allow for client side pagination
     var report = this.props.past[rowNumber];
-    this.props.showReport(report, 'past');
-  }
-  _handleDateChange(pageNo, createdAfter, createdBefore) {
+    this.props.showReport(report, "past");
+  },
+  _formatTime: function(date) {
+    if (date) {
+      return date.replace(' ','T').replace(/ /g, '').replace('UTC','');
+    }
+    return;
+  },
+  _handleDateChange: function(pageNo, createdAfter, createdBefore) {
     createdAfter = createdAfter || this.props.startDate;
     createdBefore = createdBefore || this.props.endDate;
     this.props.refreshPast(pageNo, createdAfter, createdBefore, this.props.pageSize, this.props.deviceGroup);
-  }
-  _handlePageChange(pageNo) {
+  },
+  _handlePageChange: function(pageNo) {
     this.props.refreshPast(pageNo, this.props.startDate, this.props.endDate, this.props.pageSize, this.props.deviceGroup);
-  }
-  _handleChangeStartDate(date) {
+  },
+  _handleChangeStartDate: function(event, date){
+    var self = this;
+    this.setState({
+      active: "",
+    });
+
     // refresh deployment list
     this._handleDateChange(1, date, null);
-  }
+  },
 
-  _handleChangeEndDate(date) {
+  _handleChangeEndDate: function (event, date) {
+    var self = this;
     var startDate = this.props.startDate;
-    if (date < startDate) {
+    if (date<startDate) {
       startDate = date;
-      startDate._isAMomentObject ? startDate.startOf('day') : startDate.setHours(0, 0, 0, 0);
+      startDate.setHours(0, 0, 0, 0);
     }
     this.setState({
-      active: ''
+      active: "",
     });
-    date._isAMomentObject ? date.endOf('day') : date.setHours(23, 59, 59, 999);
+    date.setHours(23,59,59,999);
 
     // refresh deployment list
     this._handleDateChange(1, startDate, date);
-  }
+  },
 
-  setDefaultRange(after, before, active) {
+  setDefaultRange: function(after, before, active) {
     this._setDateRange(after, before);
-    this.setState({ active: active });
-  }
+    this.setState({active: active});
+  },
 
-  handleUpdateInput(value) {
+  handleUpdateInput: function(value) {
+    var self = this;
+    setTimeout(function() {
+      self.setState({disableClear: !value});
+    }, 150);
     this.props.refreshPast(1, this.props.startDate, this.props.endDate, this.props.pageSize, value);
-  }
+  },
 
-  render() {
+  clearAuto: function() {
+    var oldValue=this.refs["autocomplete"].state.searchText;
+    this.refs["autocomplete"].setState({searchText:''});
+    if (oldValue) {
+      this.handleUpdateInput(null);
+    }
+  },
+
+  render: function() {
     var pastMap = this.props.past.map(function(deployment, index) {
-      var time = '-';
+
+      var time = "-";
       if (deployment.finished) {
-        time = <Time value={formatTime(deployment.finished)} format="YYYY-MM-DD HH:mm" />;
-      }
+        time = (
+          <Time value={this._formatTime(deployment.finished)} format="YYYY-MM-DD HH:mm" />
+        )
+      } 
 
       //  get statistics
-      var status = <DeploymentStatus isActiveTab={this.props.isActiveTab} id={deployment.id} />;
+      var status = (
+        <DeploymentStatus isActiveTab={this.props.isActiveTab} id={deployment.id} />
+      );
 
       return (
-        <TableRow hover key={index} onClick={() => this._pastCellClick(index)}>
-          <TableCell>{deployment.artifact_name}</TableCell>
-          <TableCell>{deployment.name}</TableCell>
-          <TableCell>
-            <Time value={formatTime(deployment.created)} format="YYYY-MM-DD HH:mm" />
-          </TableCell>
-          <TableCell>{time}</TableCell>
-          <TableCell style={{ textAlign: 'right', width: '100px' }}>{deployment.device_count}</TableCell>
-          <TableCell style={{ overflow: 'visible', width: '350px' }}>{status}</TableCell>
+        <TableRow key={index}>
+          <TableRowColumn>{deployment.artifact_name}</TableRowColumn>
+          <TableRowColumn>{deployment.name}</TableRowColumn>
+          <TableRowColumn><Time value={this._formatTime(deployment.created)} format="YYYY-MM-DD HH:mm" /></TableRowColumn>
+          <TableRowColumn>{time}</TableRowColumn>
+          <TableRowColumn style={{textAlign:"right", width:"100px"}}>{deployment.device_count}</TableRowColumn>
+          <TableRowColumn style={{overflow:"visible", width:"350px"}}>{status}</TableRowColumn>
         </TableRow>
-      );
+      )
+
     }, this);
 
-    const menuItems = this.props.groups.reduce(
-      (accu, item) => {
-        accu.push({ title: item, value: item });
-        return accu;
-      },
-      [{ title: 'All devices', value: 'All devices' }]
-    );
+    var reportActions = [
+      { text: 'Close' }
+    ];
+    var retryActions = [
+      { text: 'Cancel' },
+      { text: 'Create deployment', onClick: this._onUploadSubmit, primary: 'true' }
+    ];
 
+    var menuItems = [];
+    var allDevicesGroup = {text: "All devices", value: ( <MenuItem key="All devices" value="All devices" primaryText="All devices" /> )};
+    menuItems.push(allDevicesGroup);
+
+    for (var i=0; i<this.props.groups.length; i++) {
+      menuItems.push({text:this.props.groups[i], value: ( <MenuItem key={i} value={this.props.groups[i]} primaryText={this.props.groups[i]} /> )})
+    }
+   
+       
     return (
       <div className="fadeIn">
-        <Grid container spacing={16} className="datepicker-container">
-          <Grid item>
+
+        <div className="datepicker-container">
+          <div className="inline-block align-bottom" style={{marginBottom: "12px"}}>
             <span>Filter by date</span>
             <ul className="unstyled link-list horizontal">
-              <li>
-                <a className={this.state.active === 'today' ? 'active' : ''} onClick={() => this.setDefaultRange(0, 0, 'today')}>
-                  Today
-                </a>
-              </li>
-              <li>
-                <a className={this.state.active === 'yesterday' ? 'active' : ''} onClick={() => this.setDefaultRange(1, 1, 'yesterday')}>
-                  Yesterday
-                </a>
-              </li>
-              <li>
-                <a className={this.state.active === 'week' ? 'active' : ''} onClick={() => this.setDefaultRange(6, 0, 'week')}>
-                  Last 7 days
-                </a>
-              </li>
-              <li>
-                <a className={this.state.active === 'month' ? 'active' : ''} onClick={() => this.setDefaultRange(29, 0, 'month')}>
-                  Last 30 days
-                </a>
-              </li>
+              <li><a className={this.state.active==="today" ? "active" : ""} onClick={this.setDefaultRange.bind(null, 0, 0, "today")}>Today</a></li>
+              <li><a className={this.state.active==="yesterday" ? "active" : ""} onClick={this.setDefaultRange.bind(null, 1, 1, "yesterday")}>Yesterday</a></li>
+              <li><a className={this.state.active==="week" ? "active" : ""} onClick={this.setDefaultRange.bind(null, 6, 0, "week")}>Last 7 days</a></li>
+              <li><a className={this.state.active==="month" ? "active" : ""} onClick={this.setDefaultRange.bind(null, 29, 0, "month")}>Last 30 days</a></li>
             </ul>
-          </Grid>
+          </div>
 
-          <MuiPickersUtilsProvider utils={MomentUtils} className="margin-left margin-right inline-block">
-            <Grid item>
-              <InlineDatePicker
-                className="margin-right"
-                onChange={date => this._handleChangeStartDate(date)}
-                autoOk={true}
-                label="From"
-                value={this.props.startDate}
-                maxDate={this.props.endDate || this.state.today}
-                style={{ width: '160px' }}
-              />
-            </Grid>
-            <Grid item>
-              <InlineDatePicker
-                className="margin-right"
-                onChange={date => this._handleChangeEndDate(date)}
-                autoOk={true}
-                label="To"
-                value={this.props.endDate}
-                maxDate={this.state.today}
-                style={{ width: '160px' }}
-              />
-            </Grid>
-          </MuiPickersUtilsProvider>
-          <Grid item>
-            <AutoSelect
-              label="Filter by device group"
-              placeholder="Select a group"
-              errorText="Choose an Artifact to be deployed"
-              items={menuItems}
-              onChange={value => this.handleUpdateInput(value)}
+          <div className="align-bottom margin-left margin-right inline-block">
+            <DatePicker
+              onChange={this._handleChangeStartDate}
+              autoOk={true}
+              floatingLabelText="From"
+              defaultDate={this.props.startDate}
+              disableYearSelection={true}
+              value={this.props.startDate}
+              maxDate={this.props.endDate || this.state.today}
+              style={{display: "inline-block", marginRight: "20px"}}
+              textFieldStyle={{width: "160px"}}
             />
-          </Grid>
-        </Grid>
+
+            <DatePicker
+              onChange={this._handleChangeEndDate}
+              autoOk={true}
+              floatingLabelText="To"
+              defaultDate={this.props.endDate}
+              value={this.props.endDate}
+              maxDate={this.state.today}
+              disableYearSelection={true}
+              style={{display: "inline-block"}}
+              textFieldStyle={{width: "160px"}}
+            />
+          </div>
+
+          <div className="inline-block align-bottom margin-left">
+
+          <AutoComplete
+            ref="autocomplete"
+            hintText="Select a group"
+            dataSource={menuItems}
+            onUpdateInput={this.handleUpdateInput}
+            floatingLabelText="Filter by device group"
+            floatingLabelFixed={true}
+            floatingLabelStyle={{color: "#404041", fontSize: "17px", top:"37px"}}
+            filter={AutoComplete.fuzzyFilter}
+            openOnFocus={true}
+            />
+            <IconButton style={{marginLeft: "-10px"}} disabled={this.state.disableClear} iconStyle={{fontSize:"16px"}}  onClick={this.clearAuto}>
+              <FontIcon className="material-icons">clear</FontIcon>
+            </IconButton>
+          </div>
+
+        </div>
+
         <div className="deploy-table-contain">
           <Loader show={this.props.loading} />
-          {pastMap.length ? (
-            <Table style={{ overflow: 'visible' }}>
-              <TableHead>
-                <TableRow style={{ overflow: 'visible' }}>
-                  <TableCell>Updating to</TableCell>
-                  <TableCell>Group</TableCell>
-                  <TableCell>Started</TableCell>
-                  <TableCell>Finished</TableCell>
-                  <TableCell style={{ textAlign: 'right', width: '100px' }}># Devices</TableCell>
-                  <TableCell style={{ width: '350px' }}>Status</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody style={{ cursor: 'pointer', overflow: 'visible' }}>{pastMap}</TableBody>
-            </Table>
-          ) : null}
+          <Table
+            onCellClick={this._pastCellClick}
+            className={pastMap.length ? null : 'hidden'}
+            selectable={false}
+            style={{overflow:"visible"}}
+            wrapperStyle={{overflow:"visible"}}
+            bodyStyle={{overflow:"visible"}}>
+            <TableHeader
+              displaySelectAll={false}
+              adjustForCheckbox={false}>
+              <TableRow
+              style={{overflow:"visible"}}>
+                <TableHeaderColumn>Updating to</TableHeaderColumn>
+                <TableHeaderColumn>Group</TableHeaderColumn>
+                <TableHeaderColumn>Started</TableHeaderColumn>
+                <TableHeaderColumn>Finished</TableHeaderColumn>
+                <TableHeaderColumn style={{textAlign:"right", width:"100px"}}># Devices</TableHeaderColumn>
+                <TableHeaderColumn style={{width:"350px"}}>Status</TableHeaderColumn>
+              </TableRow>
+            </TableHeader>
+            <TableBody
+              showRowHover={true}
+              displayRowCheckbox={false}
+              style={{cursor:"pointer", overflow:"visible"}}>
+              {pastMap}
+            </TableBody>
+          </Table>
 
-          {!this.props.loading && this.props.showHelptips && pastMap.length ? (
-            <div>
-              <div id="onboard-14" className="tooltip help" data-tip data-for="finished-deployment-tip" data-event="click focus">
-                <HelpIcon />
-              </div>
-              <ReactTooltip id="finished-deployment-tip" globalEventOff="click" place="bottom" type="light" effect="solid" className="react-tooltip">
-                <FinishedDeployment />
-              </ReactTooltip>
-            </div>
-          ) : null}
 
-          {this.props.past.length ? (
-            <Pagination
-              locale={_en_US}
-              simple
-              pageSize={this.props.pageSize}
-              current={this.props.page || 1}
-              total={this.props.count}
-              onChange={page => this._handlePageChange(page)}
-            />
-          ) : (
-            <div className={this.props.loading || pastMap.length ? 'hidden' : 'dashboard-placeholder'}>
+           { !this.props.loading && this.props.showHelptips && pastMap.length ?
+                <div>
+                  <div 
+                    id="onboard-14"
+                    className="tooltip help"
+                    data-tip
+                    data-for='finished-deployment-tip'
+                    data-event='click focus'>
+                    <FontIcon className="material-icons">help</FontIcon>
+                  </div>
+                  <ReactTooltip
+                    id="finished-deployment-tip"
+                    globalEventOff='click'
+                    place="bottom"
+                    type="light"
+                    effect="solid"
+                    className="react-tooltip">
+                      <FinishedDeployment />
+                  </ReactTooltip>
+                </div>
+              : null }
+
+
+          {
+            this.props.past.length ? 
+            <Pagination locale={_en_US} simple pageSize={this.props.pageSize} current={this.props.page || 1} total={this.props.count} onChange={this._handlePageChange} /> 
+            :
+            <div className={this.props.loading || pastMap.length ? 'hidden' : "dashboard-placeholder"}>
               <p>No finished deployments were found.</p>
-              <p>
-                Try a different date range, or <a onClick={this.props.createClick}>Create a new deployment</a> to get started
-              </p>
+              <p>Try a different date range, or  <a onClick={this.props.createClick}>Create a new deployment</a> to get started</p>
               <img src="assets/img/history.png" alt="Past" />
             </div>
-          )}
+          }
+
         </div>
+
       </div>
     );
   }
-}
+});
+
+module.exports = Past;

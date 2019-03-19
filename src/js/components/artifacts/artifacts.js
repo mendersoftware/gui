@@ -1,171 +1,139 @@
 import React from 'react';
+var AppStore = require('../../stores/app-store');
+var AppActions = require('../../actions/app-actions');
+var Repository = require('./repository.js');
+var createReactClass = require('create-react-class');
 
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import LinearProgress from '@material-ui/core/LinearProgress';
+import { Router, Route, Link } from 'react-router';
+import { setRetryTimer, clearRetryTimer, clearAllRetryTimers } from '../../utils/retrytimer';
+import Dialog from 'material-ui/Dialog';
+import FlatButton from 'material-ui/FlatButton';
+import RaisedButton from 'material-ui/RaisedButton';
+import copy from 'copy-to-clipboard';
 
-import AppActions from '../../actions/app-actions';
-import { AppContext } from '../../contexts/app-context';
-import { preformatWithRequestID } from '../../helpers';
-import AppStore from '../../stores/app-store';
+import { preformatWithRequestID } from '../../helpers.js'
 
-import ReleaseRepository from './releaserepository';
-import ReleasesList from './releaseslist';
-
-export default class Artifacts extends React.Component {
-  constructor(props, context) {
-    super(props, context);
-    this.state = this._getState();
+function getState() {
+  return {
+    artifacts: AppStore.getArtifactsRepo(),
+    selected: null,
+    remove: false,
+    refreshArtifactsLength: 60000,
+    showHelptips: AppStore.showHelptips(),
   }
-  componentWillMount() {
-    AppStore.changeListener(this._onChange.bind(this));
-  }
-  componentDidMount() {
-    this.artifactTimer = setInterval(() => this._getReleases(), this.state.refreshArtifactsLength);
-    this._getReleases();
-  }
-  componentWillUnmount() {
+}
+
+var Artifacts = createReactClass({
+  getInitialState: function() {
+    return getState()
+  },
+  componentWillMount: function() {
+    AppStore.changeListener(this._onChange);
+  },
+  componentDidMount: function() {
+    clearAllRetryTimers();
+    this.artifactTimer = setInterval(this._getArtifacts, this.state.refreshArtifactsLength);
+    this._getArtifacts();
+  },
+  componentWillUnmount: function() {
+    clearAllRetryTimers();
     clearInterval(this.artifactTimer);
-    AppStore.removeChangeListener(this._onChange.bind(this));
-  }
-  componentDidUpdate(prevProps) {
+    AppStore.removeChangeListener(this._onChange);
+  },
+  componentDidUpdate(prevProps, prevState) {
     if (prevProps.artifactProgress && !this.props.artifactProgress) {
       clearInterval(this.artifactTimer);
-      this.artifactTimer = setInterval(() => this._getReleases(), this.state.refreshArtifactsLength);
-      this._getReleases();
+      this.artifactTimer = setInterval(this._getArtifacts, this.state.refreshArtifactsLength);
+      this._getArtifacts();
     }
-  }
-  _getState() {
-    return {
-      releases: AppStore.getReleases(),
-      remove: false,
-      refreshArtifactsLength: 60000,
-      showHelptips: AppStore.showHelptips()
-    };
-  }
-  _onChange() {
-    let state = this._getState();
-    if (state.releases.length === 1) {
-      state.selectedRelease = state.releases[0];
-    }
+  },
+  _onChange: function() {
+    this.setState(getState());
     if (this.props.params) {
       if (this.props.params.artifactVersion) {
         // selected artifacts
-        var artifact = AppStore.getSoftwareArtifact('name', this.props.params.artifactVersion);
-        state.selectedRelease = this.state.releases.find(item => item.Artifacts.find(releaseArtifact => releaseArtifact.id === artifact.id));
-        state.selectedArtifact = artifact;
+        var artifact = AppStore.getSoftwareArtifact("name", this.props.params.artifactVersion);
+        this.setState({selected: artifact});
       }
     }
-    this.setState(state);
-  }
-
-  onSelectRelease(release) {
-    this.setState({ selectedRelease: release });
-  }
-
-  onFilterReleases(releases) {
-    let selectedRelease = this.state.selectedRelease;
-    if (releases && !releases.find(item => selectedRelease && selectedRelease.Name === item.Name)) {
-      selectedRelease = releases.length ? releases[0] : null;
-    }
-    if (this.state.selectedRelease != selectedRelease) {
-      this.setState({ selectedRelease });
-    }
-  }
-
-  _startLoading(bool) {
-    this.setState({ doneLoading: !bool });
-  }
-  _getReleases() {
+  },
+  _startLoading: function(bool) {
+     this.setState({doneLoading: !bool});
+  },
+  _getArtifacts: function() {
     var self = this;
-    return AppActions.getReleases()
-      .then(releases => {
-        let selectedRelease = self.state.selectedRelease;
-        if (!selectedRelease && releases.length) {
-          selectedRelease = releases[0];
-        }
-        self.setState({ releases, selectedRelease });
-      })
-      .catch(err => {
-        var errormsg = err.error || 'Please check your connection';
-        console.log(errormsg);
-      })
-      .finally(() => {
-        self.setState({ doneLoading: true });
-      });
-  }
-  _removeDialog(artifact) {
-    AppActions.setSnackbar('');
+    var callback = {
+      success: function(artifacts) {
+        clearRetryTimer("artifacts");
+        setTimeout(function() {
+          self.setState({doneLoading: true, artifacts:artifacts});
+        }, 300);
+      },
+      error: function(err) {
+        var errormsg = err.error || "Please check your connection";
+        setRetryTimer(err, "artifacts", "Artifacts couldn't be loaded. " + errormsg, self.state.refreshArtifactsLength);
+      }
+    };
+    AppActions.getArtifacts(callback);
+  },
+  _removeDialog: function(artifact) {
+    AppActions.setSnackbar("");
     if (artifact) {
-      this.setState({ remove: true, artifact });
+      this.setState({remove: true, artifact: artifact});
     } else {
-      this.setState({ remove: false, artifact: null });
+      this.setState({remove: false, artifact: null});
     }
-  }
-  _removeArtifact(artifact) {
+  },
+  _removeArtifact: function() {
     var self = this;
-    return AppActions.removeArtifact(artifact.id)
-      .then(() => {
-        AppActions.setSnackbar('Artifact was removed', 5000, '');
-        self._getReleases();
-      })
-      .catch(err => {
-        var errMsg = err.res.body.error || '';
-        AppActions.setSnackbar(preformatWithRequestID(err.res, `Error removing artifact: ${errMsg}`), null, 'Copy to clipboard');
-      });
-  }
-  render() {
-    const self = this;
+    var callback =  {
+      success: function() {
+        AppActions.setSnackbar("Artifact was removed", 5000, "");
+        self._getArtifacts();
+      },
+      error: function(err) {
+
+        var errMsg = err.res.body.error || "";
+        AppActions.setSnackbar(preformatWithRequestID(err.res, "Error removing artifact: " + errMsg), null, "Copy to clipboard");
+      }
+    };
+    AppActions.removeArtifact(self.state.artifact.id, callback);
+  },
+  render: function() {
+    var artifact_link = (
+      <span>
+        Download latest artifact
+        <a href='https://s3-eu-west-1.amazonaws.com/yocto-builds/latest/latest.tar.gz' target='_blank'> here </a>
+         and upload the artifact file to the Mender server
+      </span>
+    );
+
+    var removeActions = [
+     <div style={{marginRight:"10px", display:"inline-block"}}>
+        <FlatButton
+          label="Cancel"
+          onClick={this._removeDialog.bind(null, null)} />
+      </div>,
+      <RaisedButton
+        label="Remove artifact"
+        secondary={true}
+        onClick={this._removeArtifact} />
+    ];
 
     return (
-      <div style={{ height: '100%' }}>
-        <div className="flexbox" style={{ height: '100%' }}>
-          <ReleasesList
-            releases={self.state.releases}
-            selectedRelease={self.state.selectedRelease}
-            onSelect={release => self.onSelectRelease(release)}
-            onFilter={releases => self.onFilterReleases(releases)}
-            loading={!self.state.doneLoading}
-          />
-          <AppContext.Consumer>
-            {({ uploadArtifact }) => (
-              <ReleaseRepository
-                uploadArtifact={uploadArtifact}
-                progress={self.props.artifactProgress}
-                showHelptips={self.state.showHelptips}
-                removeArtifact={artifact => this._removeDialog(artifact)}
-                refreshArtifacts={() => self._getReleases()}
-                startLoader={self._startLoading}
-                loading={!self.state.doneLoading}
-                release={self.state.selectedRelease}
-                hasReleases={self.state.releases.length}
-              />
-            )}
-          </AppContext.Consumer>
-        </div>
-        {self.props.artifactProgress ? (
-          <div id="progressBarContainer">
-            <p className="align-center">Upload in progress ({Math.round(self.props.artifactProgress)}%)</p>
-            <LinearProgress variant="determinate" style={{ backgroundColor: '#c7c7c7', margin: '15px 0' }} value={self.props.artifactProgress} />
-          </div>
-        ) : null}
+      <div>
+        <Repository uploadArtifact={this.props.uploadArtifact} progress={this.props.artifactProgress} showHelptips={this.state.showHelptips} removeArtifact={this._removeDialog} refreshArtifacts={this._getArtifacts} startLoader={this._startLoading} loading={!this.state.doneLoading} selected={this.state.selected} artifacts={this.state.artifacts} />
 
-        <Dialog open={this.state.remove}>
-          <DialogTitle>Remove this artifact?</DialogTitle>
-          <DialogContent>
-            Are you sure you want to remove <i>{(this.state.artifact || {}).name}</i>?
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={() => this._removeDialog(null)}>Cancel</Button>
-            <Button variant="contained" color="secondary" onClick={() => this._removeArtifact(this.state.artifact)}>
-              Remove artifact
-            </Button>
-          </DialogActions>
+        <Dialog
+          open={this.state.remove}
+          title="Remove this artifact?"
+          actions={removeActions}
+        >
+        Are you sure you want to remove <i>{(this.state.artifact||{}).name}</i>?
         </Dialog>
       </div>
     );
   }
-}
+});
+
+module.exports = Artifacts;

@@ -1,13 +1,14 @@
 import React from 'react';
 import Time from 'react-time';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableHead from '@material-ui/core/TableHead';
-import TableCell from '@material-ui/core/TableCell';
-import TableRow from '@material-ui/core/TableRow';
+import List from 'material-ui/List/List';
+import ListItem from 'material-ui/List/ListItem';
+import Table from 'material-ui/Table/Table';
+import TableBody from 'material-ui/Table/TableBody';
+import TableHeader from 'material-ui/Table/TableHeader';
+import TableHeaderColumn from 'material-ui/Table/TableHeaderColumn';
+import TableRow from 'material-ui/Table/TableRow';
+import TableRowColumn from 'material-ui/Table/TableRowColumn';
+import TextField from 'material-ui/TextField';
 import { FileSize, getFormattedSize } from './../../helpers';
 
 const METADATA_SPACING = 2;
@@ -17,22 +18,11 @@ export default class ArtifactPayload extends React.PureComponent {
     const style = {
       metadataList: {
         display: 'flex',
-        flexDirection: 'row',
+        flexDirection: 'row'
       },
       table: {
         background: 'transparent'
-      },
-      metadataListItem: {
-        paddingBottom: '11px',
-        borderBottom: '1px solid #e0e0e0',
-        marginRight: '2vw',
-      },
-      payloadHeader: {
-        position: 'absolute',
-        background: 'rgb(233, 233, 233)',
-        top: '-35px',
-        padding: '10px',
-      },
+      }
     };
     const files = this.props.payload.files || [];
     const summedSize = files.reduce((accu, item) => accu + item.size, 0);
@@ -41,11 +31,10 @@ export default class ArtifactPayload extends React.PureComponent {
     const metaData = [{ title: 'Type', value: this.props.payload.type_info.type }, { title: 'Total size', value: getFormattedSize(summedSize) }];
     return (
       <div className="file-details">
-        <h4 style={style.payloadHeader}>Payload {this.props.index}</h4>
         <List style={style.metadataList}>
           {metaData.map((item, index) => (
-            <ListItem disabled={true} style={style.metadataListItem} classes={{ root: 'attributes', disabled: 'opaque' }} key={`metadata-item-${index}`} >
-              <ListItemText primary={item.title} secondary={item.value} />
+            <ListItem key={`metadata-item-${index}`}>
+              <TextField disabled={true} defaultValue={item.value} floatingLabelText={item.title} />
             </ListItem>
           ))}
         </List>
@@ -60,27 +49,27 @@ export default class ArtifactPayload extends React.PureComponent {
           ) : null}
           <h4>Files</h4>
           {files.length ? (
-            <Table style={style.table}>
-              <TableHead>
+            <Table selectable={false} style={style.table}>
+              <TableHeader displaySelectAll={false} adjustForCheckbox={false} enableSelectAll={false}>
                 <TableRow>
                   {attributes.map((item, index) => (
-                    <TableCell key={`file-header-${index}`} tooltip={item}>
+                    <TableHeaderColumn key={`file-header-${index}`} tooltip={item}>
                       {item}
-                    </TableCell>
+                    </TableHeaderColumn>
                   ))}
                 </TableRow>
-              </TableHead>
-              <TableBody style={style.table}>
+              </TableHeader>
+              <TableBody displayRowCheckbox={false} style={style.table}>
                 {files.map((file, index) => {
                   const build_date = <Time value={file.date} format="YYYY-MM-DD HH:mm" />;
                   return (
                     <TableRow key={index}>
-                      <TableCell>{file.name}</TableCell>
-                      <TableCell style={{wordBreak:'break-word'}}>{file.checksum}</TableCell>
-                      <TableCell>{build_date}</TableCell>
-                      <TableCell>
+                      <TableRowColumn>{file.name}</TableRowColumn>
+                      <TableRowColumn>{file.checksum}</TableRowColumn>
+                      <TableRowColumn>{build_date}</TableRowColumn>
+                      <TableRowColumn>
                         <FileSize fileSize={file.size} />
-                      </TableCell>
+                      </TableRowColumn>
                     </TableRow>
                   );
                 })}

@@ -1,71 +1,80 @@
 import React from 'react';
-import { Link, NavLink } from 'react-router-dom';
+var createReactClass = require('create-react-class');
 
 // material ui
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
+import { List, ListItem } from 'material-ui/List';
 
 var listItems = [
-  { route: '/', text: 'Dashboard' },
-  { route: '/devices', text: 'Devices' },
-  { route: '/releases', text: 'Releases' },
-  { route: '/deployments', text: 'Deployments' }
+  {route:"/", text:"Dashboard"},
+  {route:"/devices", text:"Devices"},
+  {route:"/artifacts", text:"Artifacts"},
+  {route:"/deployments", text:"Deployments"},
 ];
 
-export default class LeftNav extends React.Component {
-  constructor(props, context) {
-    super(props, context);
-    this.state = {
-      currentTab: this.props.currentTab,
-      isHosted: window.location.hostname === 'hosted.mender.io'
-    };
-  }
+var LeftNav = createReactClass({
+	getInitialState() {
+		return {
+			currentTab: this.props.currentTab,
+      isHosted: (window.location.hostname === "hosted.mender.io"),
+		};
+	},
 
-  render() {
-    var self = this;
+	_changeTab: function(route) {
+		this.props.changeTab(route);
+	},
 
-    var docsVersion = '';
-    if (!self.state.isHosted) {
-      docsVersion = self.props.docsVersion ? `${self.props.docsVersion}/` : 'development/';
+	render: function() {
+		var self = this;
+
+    var docsVersion = "";
+    if (!this.state.isHosted) {
+      docsVersion = this.props.docsVersion ? this.props.docsVersion + "/" : "development/";
     }
-    const listItemStyle = {
-      container: { padding: '16px 16px 16px 42px' },
-    };
+	
+    var list = listItems.map(function(item, index) {
+    	var borderTop = index===0 ? "none !important" : "1px solid #eaf4f3"; 
+      var active = self.props.currentTab.split('/')[1] === item.route.split('/')[1];
+      var style = active ? {backgroundColor: "#ffffff", marginRight: "-2px", borderTop: borderTop, borderBottom: "1px solid #eaf4f3", transition: "all 100ms cubic-bezier(0.23, 1, 0.32, 1) 0ms"} : {transition: "all 100ms cubic-bezier(0.23, 1, 0.32, 1) 0ms",  color:"#949495"};
+    
+       return (
+          <ListItem
+            key={index}
+            style={style}
+            primaryText={item.text}
+            onClick={self._changeTab.bind(null, item.route)}
+            innerDivStyle={{padding:"22px 16px 22px 42px", fontSize:"14px", textTransform: "uppercase"}} />
+       )
+    });
 
-    var list = listItems.map((item, index) => (
-      <ListItem
-        className="navLink leftNav"
-        component={NavLink}
-        exact={item.route === '/'}
-        key={index}
-        style={{ padding: '22px 16px 22px 42px' }}
-        to={item.route}
-      >
-        <ListItemText primary={item.text} style={Object.assign({ textTransform: 'uppercase' })} />
-      </ListItem>
-    ));
+    var licenseUrl = "https://docs.mender.io/"+ docsVersion +"release-information/open-source-licenses";
+    var licenseLink = <a target="_blank" href={licenseUrl} style={{fontSize:"13px", position:"relative", top:"6px", color:"#347A87"}}>License information</a>;
 
-    var licenseUrl = `https://docs.mender.io/${docsVersion}release-information/open-source-licenses`;
-    var licenseLink = (
-      <a target="_blank" rel="noopener noreferrer" href={licenseUrl} style={{ fontSize: '13px', position: 'relative', top: '6px', color: '#347A87' }}>
-        License information
-      </a>
-    );
+    var helpStyle = self.props.currentTab==="/help" ? {transition: "all 100ms cubic-bezier(0.23, 1, 0.32, 1) 0ms"} : {transition: "all 100ms cubic-bezier(0.23, 1, 0.32, 1) 0ms",  color:"#949495"};
 
-    return (
-      <div className={self.props.className}>
-        <List style={{ padding: '0' }}>{list}</List>
+		return (
+			<div>
+				<List style={{padding:"0"}}>
+        	{list}
+      	</List>
 
-        <List style={{ padding: '0', position: 'absolute', bottom: '30px', left: '0px', right: '0px' }}>
-          <ListItem className="navLink leftNav" component={Link} style={listItemStyle.container} to="/help">
-            <ListItemText primary="Help" style={listItemStyle.font} />
-          </ListItem>
-          <ListItem style={Object.assign({ color: '#949495' }, listItemStyle.container)} disabled={true}>
-            <ListItemText primary={self.props.version ? `Version: ${self.props.version}` : ''} secondary={licenseLink} style={listItemStyle.font} />
-          </ListItem>
+
+      	<List style={{padding:"0", position: "absolute", bottom: "30px", left:"0px", right: "0px"}}>
+      		<ListItem
+      			style={helpStyle}
+            primaryText="Help"
+            onClick={self._changeTab.bind(null, "/help")}
+            innerDivStyle={{padding:"16px 16px 16px 42px", fontSize:"14px"}} />
+          
+          <ListItem
+            style={{color: "#949495"}}
+            primaryText={this.props.version ? "Version: " + this.props.version : ""}
+            secondaryText={licenseLink}
+            disabled={true}
+            innerDivStyle={{padding:"16px 16px 16px 42px", fontSize:"14px"}} />
         </List>
-      </div>
-    );
-  }
-}
+			</div>
+		)
+	}
+});
+
+module.exports = LeftNav;

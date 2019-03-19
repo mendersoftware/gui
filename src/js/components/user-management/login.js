@@ -1,133 +1,140 @@
 import React from 'react';
-import { Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { Router, Route} from 'react-router';
 import cookie from 'react-cookie';
 import { clearAllRetryTimers } from '../../utils/retrytimer';
 
-import AppActions from '../../actions/app-actions';
-import AppStore from '../../stores/app-store';
+var AppActions = require('../../actions/app-actions');
+var AppStore = require('../../stores/app-store');
+var createReactClass = require('create-react-class');
 
 import Form from '../common/forms/form';
 import TextInput from '../common/forms/textinput';
 import PasswordInput from '../common/forms/passwordinput';
 import FormCheckbox from '../common/forms/formcheckbox';
 
-import { preformatWithRequestID } from '../../helpers';
+import { preformatWithRequestID } from '../../helpers.js'
 
-export default class Login extends React.Component {
-  static contextTypes = {
-    router: PropTypes.object,
-    location: PropTypes.object
+function getState() {
+  return {
+    noExpiry: cookie.load("noExpiry"),
+    isHosted: (window.location.hostname === "hosted.mender.io")
   };
+}
 
-  constructor(props, context) {
-    super(props, context);
-    this.state = this._getState();
-  }
+var Login = createReactClass({
+  getInitialState: function() {
+    return getState();
+  },
 
-  componentWillMount() {
-    AppStore.changeListener(this._onChange.bind(this));
-  }
+  componentWillMount: function() {
+    AppStore.changeListener(this._onChange);
+  },
 
-  componentDidMount() {
+  componentDidMount: function() {
     clearAllRetryTimers();
     AppActions.setCurrentUser(null);
-  }
+  },
 
-  componentWillUnmount() {
-    AppStore.removeChangeListener(this._onChange.bind(this));
-    AppActions.setSnackbar('');
-  }
+  componentWillUnmount: function () {
+    AppStore.removeChangeListener(this._onChange);
+    AppActions.setSnackbar("");
+  },
 
-  _getState() {
-    return {
-      noExpiry: cookie.load('noExpiry'),
-      isHosted: window.location.hostname === 'hosted.mender.io',
-      redirectToReferrer: false
-    };
-  }
+  _onChange: function() {
+    this.setState(getState());
+  },
 
-  _onChange() {
-    this.setState(this._getState());
-  }
-
-  _handleLogin(formData) {
+  _handleLogin: function(formData) {
     var self = this;
 
-    if (!formData.hasOwnProperty('email')) {
-      return;
-    }
-    return AppActions.loginUser(formData)
-      .then(token => {
-        var options = {};
-        if (!formData.noExpiry) {
-          options = { maxAge: 900 };
+
+    if (formData.hasOwnProperty("email")) {
+      AppActions.loginUser({
+        success: function(token) {
+
+          var options = {};
+          if (!formData.noExpiry) {
+            options = {maxAge: 900};
+          }
+
+          // set no expiry as cookie to remember checkbox value
+          cookie.save("noExpiry", formData.noExpiry.toString());
+
+          AppActions.setSnackbar("");
+          // save token as cookie
+          // set maxAge if noexpiry checkbox not checked
+          cookie.save("JWT", token, options);
+
+          // logged in, so redirect
+          var location = self.props.location;
+
+          if (location.state && location.state.nextPathname) {
+            self.props.router.replace(location.state.nextPathname);
+          } else {
+            self.props.router.replace('/');
+          }
+        },
+        error: function(err) {
+          var errMsg = "There was a problem logging in";
+          if (err.res.body && Object.keys(err.res.body).includes("error")) {
+            // if error message, check for "unauthorized" 
+            errMsg = err.res.body["error"] === "unauthorized" ? "The username or password is incorrect" : errMsg + ": " + err.res.body["error"];
+          }
+          AppActions.setSnackbar(preformatWithRequestID(err.res, errMsg), null, "Copy to clipboard");
         }
-
-        // set no expiry as cookie to remember checkbox value
-        cookie.save('noExpiry', formData.noExpiry.toString());
-
-        // save token as cookie
-        // set maxAge if noexpiry checkbox not checked
-        cookie.save('JWT', token, options);
-
-        // logged in, so redirect
-        self.setState({ redirectToReferrer: true });
-        return AppActions.setSnackbar('');
-      })
-      .catch(err => {
-        var errMsg = 'There was a problem logging in';
-        if (err.res.body && Object.keys(err.res.body).includes('error')) {
-          // if error message, check for "unauthorized"
-          errMsg = err.res.body['error'] === 'unauthorized' ? 'The username or password is incorrect' : `${errMsg}: ${err.res.body['error']}`;
-        }
-        AppActions.setSnackbar(preformatWithRequestID(err.res, errMsg), null, 'Copy to clipboard');
-      });
-  }
-
-  render() {
-    let { from } = { from: { pathname: '/' } };
-    if (this.props.location.state && this.props.location.state.from.pathname !== '/ui/') {
-      from = this.props.location.state.from;
+      }, formData);
     }
-    let { isHosted, noExpiry, redirectToReferrer } = this.state;
-    if (redirectToReferrer) {
-      return <Redirect to={from} />;
-    }
+  },
 
-    var title = 'Log in';
-    var buttonLabel = 'Log in';
+  render: function() {
+    var title = "Log in";
+    var buttonLabel = "Log in";
     return (
       <div className="full-screen">
         <div id="login-box">
           <h3>{title}</h3>
           <img src="assets/img/loginlogo.png" alt="mender-logo" className="margin-bottom-small" />
+         
+          <Form showButtons={true} onSubmit={this._handleLogin} submitLabel={buttonLabel} submitButtonId="login_button">
 
-          <Form
-            showButtons={true}
-            buttonColor="primary"
-            onSubmit={formdata => this._handleLogin(formdata)}
-            submitLabel={buttonLabel}
-            submitButtonId="login_button"
-          >
-            <TextInput hint="Your email" label="Your email" id="email" required={true} validations="isLength:1,isEmail" />
-            <PasswordInput className="margin-bottom-small" id="password" label="Password" required={true} />
-            <FormCheckbox id="noExpiry" label="Stay logged in" checked={noExpiry === 'true'} />
-          </Form>
+              <TextInput
+                hint="Your email"
+                label="Your email"
+                id="email"
+                required={true}
+                validations="isLength:1,isEmail" />
 
-          <div className="clear" />
-          {isHosted ? (
-            <div className="flexbox margin-top" style={{ color: 'rgba(0, 0, 0, 0.3)', justifyContent: 'center' }}>
-              <span>
-                Don&#39;t have an account?{' '}
-                <a style={{ marginLeft: '4px' }} href="https://mender.io/signup" target="_blank">
-                  Sign up here
-                </a>
-              </span>
-            </div>
-          ) : null}
+              <PasswordInput
+                id="password"
+                label="Password"
+                required={true} />
+
+              <FormCheckbox
+                id="noExpiry"
+                label="Stay logged in"
+                style={{display:"inline-block", marginTop:"36px", width: "200px", float:"left"}}
+                checked={this.state.noExpiry === "true"}
+                />
+
+            </Form>
+            
+            <div className="clear"></div>
+            {this.state.isHosted ? 
+              <div className="flexbox margin-top" style={{color: "rgba(0, 0, 0, 0.3)", justifyContent: "center"}}>
+                <span>Don't have an account? <a style={{marginLeft:"4px"}} href="https://mender.io/signup" target="_blank">Sign up here</a></span>
+              </div>
+            : null}
         </div>
       </div>
     );
   }
-}
+});
+
+
+Login.contextTypes = {
+  router: PropTypes.object,
+  location: PropTypes.object,
+};
+
+module.exports = Login;

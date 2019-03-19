@@ -1,16 +1,22 @@
 import React from 'react';
+import { Router, Route, hashHistory } from 'react-router';
 import { render } from 'react-dom';
-import { BrowserRouter as Router } from 'react-router-dom';
-import 'rc-pagination/assets/index.css';
-import { MuiThemeProvider } from '@material-ui/core/styles';
-import './../hint.css';
-import './../less/main.less';
-import theme from './themes/mender-theme';
-import routes from './config/routes';
+import { MuiThemeProvider } from 'material-ui/styles';
+var routes = require('./config/routes');
 
-render(
-  <MuiThemeProvider theme={theme}>
-    <Router basename="/ui/#">{routes}</Router>
-  </MuiThemeProvider>,
-  document.getElementById('main')
-);
+
+import injectTapEventPlugin from 'react-tap-event-plugin';
+
+//Needed for onTouchTap
+//Can go away when react 1.0 release
+//Check this repo:
+//https://github.com/zilverline/react-tap-event-plugin
+injectTapEventPlugin();
+
+render((
+  <MuiThemeProvider>
+    <Router history={hashHistory}>
+      {routes}
+    </Router>
+  </MuiThemeProvider>
+), document.getElementById('main'))

@@ -1,107 +1,165 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { Router, Route } from 'react-router';
+import cookie from 'react-cookie';
 import SelfUserManagement from '../user-management/selfusermanagement';
 import UserManagement from '../user-management/usermanagement';
 import MyOrganization from './organization';
 import Global from './global';
-
-import AppStore from '../../stores/app-store';
+var createReactClass = require('create-react-class');
+var AppStore = require('../../stores/app-store');
+var AppActions = require('../../actions/app-actions');
 
 // material ui
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListSubheader from '@material-ui/core/ListSubheader';
+import { List, ListItem } from 'material-ui/List';
+import Subheader from 'material-ui/Subheader';
+import { Tabs, Tab } from 'material-ui/Tabs';
 
-const routes = {
-  global: { route: '/settings/global-settings', text: 'Global settings', admin: true, component: <Global /> },
-  myAccount: { route: '/settings/my-account', text: 'My account', admin: false, component: <SelfUserManagement /> },
-  userManagement: { route: '/settings/user-management', text: 'User management', admin: true, component: <UserManagement /> }
-};
-const myOrganization = { route: '/settings/my-organization', text: 'My organization', admin: true, component: <MyOrganization /> };
-const sectionMap = {
-  'global-settings': 'global',
-  'my-account': 'myAccount',
-  'user-management': 'userManagement',
-  'my-organization': 'myOrganization'
-};
+var listItems = [
+  {route: "/settings/global-settings", text: "Global settings", admin: true},
+  {route: "/settings/my-account", text: "My account", admin: false},
+  {route: "/settings/my-organization", text: "My organization", admin: true},
+  {route: "/settings/user-management", text: "User management", admin: true},
 
-export default class Settings extends React.Component {
-  static contextTypes = {
-    router: PropTypes.object
-  };
+];
 
-  constructor(props, context) {
-    super(props, context);
-    this.state = { hasMultitenancy: AppStore.hasMultitenancy() };
-  }
+var Settings =  createReactClass({
+  getInitialState: function() {
+    return {
+      tabIndex: this._updateActive(),
+      hasMultitenancy: AppStore.hasMultitenancy(),
+    };
+  },
 
-  componentWillMount() {
-    AppStore.changeListener(this._onChange.bind(this));
-  }
+  componentWillMount: function() {
+    AppStore.changeListener(this._onChange);
+  },
 
-  componentWillUnmount() {
-    AppStore.removeChangeListener(this._onChange.bind(this));
-  }
+  componentWillUnmount: function() {
+    AppStore.removeChangeListener(this._onChange);
+  },
 
-  componentDidMount() {
-    if (
-      this.context.router.route.location.pathname === '/settings' ||
-      (this.context.router.route.location.pathname === myOrganization.route && !this.state.hasMultitenancy)
-    ) {
+  componentDidMount: function() {
+    if (this.state.tabIndex === "/settings/my-organization" && !this.state.hasMultitenancy) {
       // redirect from organization screen if no multitenancy
-      this.context.router.history.replace(routes.myAccount.route);
+      this.changeTab("/settings/my-account");
     }
-  }
+  },
 
-  _getCurrentTab(routeDefinitions, tab = this.props.history.location.pathname) {
-    if (routeDefinitions.hasOwnProperty(tab)) {
-      return routeDefinitions[tab];
-    }
-    return routeDefinitions.myAccount;
-  }
+  componentWillReceiveProps: function(nextProps) {
+    this.setState({tabIndex: this._updateActive()});
+  },
 
-  _getCurrentSection(sections, section = this.context.router.route.match.params.section) {
-    if (sections.hasOwnProperty(section)) {
-      return sections[section];
-    }
-    return sections['my-account'];
-  }
+  _onChange: function(x) {
+    this.setState(this.getInitialState());
+  },
 
-  _onChange() {
-    this.setState({ hasMultitenancy: AppStore.hasMultitenancy() });
-  }
-
-  render() {
+  _updateActive: function() {
     var self = this;
-    let relevantItems = routes;
+    return this.context.router.isActive({ pathname: '/settings/my-account' }, true) ? '/settings/my-account' :
+      this.context.router.isActive('/settings/user-management') ? '/settings/user-management' :
+      this.context.router.isActive('/settings/my-organization') ? '/settings/my-organization' :
+      this.context.router.isActive('/settings/global-settings') ? '/settings/global-settings' :
+      this.context.router.isActive('/settings') ? '/settings/global-settings' : '/settings/global-settings';
+  },
+  _handleTabActive: function(tab) {
+    this.context.router.push(tab.props.value);
+  },
+  changeTab: function(route) {
+    AppActions.setSnackbar("");
+    this.context.router.push(route);
+  },
 
-    if (self.state.hasMultitenancy) {
-      relevantItems['myOrganization'] = myOrganization;
-    }
-    var list = Object.entries(relevantItems).reduce((accu, entry) => {
-      const key = entry[0];
-      const item = entry[1];
-      accu.push(
-        <ListItem component={NavLink} className="navLink settingsNav" to={item.route} key={key}>
-          <ListItemText>{item.text}</ListItemText>
-        </ListItem>
-      );
-      return accu;
-    }, []);
+  render: function() {
+    var tabHandler = this._handleTabActive;
+    var self = this;
+    
+    var list = listItems.map(function(item, index) {
+      if (item.route === "/settings/my-organization" && !self.state.hasMultitenancy) {
+        // don't show organization if no multitenancy
+        return null
+      } else {
+        return (
+          <ListItem
+            key={index}
+            style={self.state.tabIndex===item.route ? {backgroundColor: "#e7e7e7"} : null }
+            primaryText={item.text}
+            onTouchTap={self.changeTab.bind(null, item.route)} />
+        )
+      }
+    });
 
-    const section = self._getCurrentSection(sectionMap, self.context.router.route.match.params.section);
+    var organization = this.state.hasMultitenancy ? 
+      (
+        <Tab
+          label="My organization"
+          value="/settings/my-organization"
+          onActive={tabHandler}
+          style={this.state.hasMultitenancy ? {display:"block", width:"100%"} : {display: "none"}}>
+          <div>
+            <MyOrganization />
+          </div>
+        </Tab>
+    ) :  null;
+
     return (
       <div className="margin-top">
         <div className="leftFixed">
           <List>
-            <ListSubheader>Settings</ListSubheader>
+            <Subheader>Settings</Subheader>
             {list}
           </List>
         </div>
-        <div className="rightFluid padding-right">{self._getCurrentTab(relevantItems, section).component}</div>
+        <div className="rightFluid padding-right"> 
+          <Tabs
+            value={this.state.tabIndex}
+            onChange={this.changeTab}
+            tabItemContainerStyle={{display: "none"}}
+            inkBarStyle={{display: "none"}}>
+
+            <Tab
+              label="Global settings"
+              value="/settings/global-settings"
+              onActive={tabHandler}
+              style={{display:"block", width:"100%"}}>
+              <div>
+                <Global />
+              </div>
+            </Tab>
+
+            <Tab
+              label="My account"
+              value="/settings/my-account"
+              onActive={tabHandler}
+              style={{display:"block", width:"100%"}}>
+              <div>
+                <SelfUserManagement />
+              </div>
+            </Tab>
+
+            {organization}
+
+            <Tab
+              label="User management"
+              value="/settings/user-management"
+              onActive={tabHandler}
+              style={{display:"block", width:"100%"}}>
+              <div>
+                <UserManagement currentTab={this.state.tabIndex} />
+              </div>
+            </Tab>
+
+          </Tabs>
+        </div>
       </div>
-    );
+    )
   }
-}
+
+});
+
+
+Settings.contextTypes = {
+  router: PropTypes.object,
+};
+
+module.exports = Settings;
