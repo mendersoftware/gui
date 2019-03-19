@@ -1,17 +1,22 @@
+FROM node:11.6.0-alpine AS build
+WORKDIR /usr/src/app
+COPY package-lock.json package.json ./
+RUN npm install
+COPY . ./
+RUN npm run build
+
 FROM alpine:3.4
-
 COPY ./entrypoint.sh /entrypoint.sh
-
+COPY httpd.conf /etc/httpd.conf
 EXPOSE 80
 
-COPY httpd.conf /etc/httpd.conf
+RUN mkdir -p /var/www/mender-gui
+WORKDIR /var/www/mender-gui/dist/
+
 RUN apk update && apk add nodejs
 RUN npm config set unsafe-perm true
 RUN npm install -g uglify-js
 RUN npm config set unsafe-perm false
-RUN mkdir -p /var/www/mender-gui
-COPY dist/ /var/www/mender-gui/dist/
-
-WORKDIR /var/www/mender-gui/dist/
+COPY --from=build /usr/src/app/dist .
 
 ENTRYPOINT ["/entrypoint.sh"]
