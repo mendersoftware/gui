@@ -231,7 +231,12 @@ export default class ExpandedDevice extends React.Component {
         deviceInventory.push(
           <div key={i}>
             <ListItem classes={{ root: 'attributes', disabled: 'opaque' }} disabled={true}>
-              <ListItemText primary={sortedAttributes[i].name} secondary={secondaryText} />
+              <ListItemText
+                primary={sortedAttributes[i].name}
+                secondary={secondaryText}
+                secondaryTypographyProps={{ title: secondaryText }}
+                classes={{ secondary: 'inventory-text' }}
+              />
             </ListItem>
             <Divider />
           </div>
