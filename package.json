@@ -87,7 +87,7 @@
     "url": "git+https://github.com/mendersoftware/gui.git"
   },
   "scripts": {
-    "disclaim": "yarn licenses generate-disclaimer > disclaimer.txt",
+    "disclaim": "yarn licenses generate-disclaimer > ./dist/disclaimer.txt",
     "lint": "eslint src",
     "lint-fix": "eslint --fix src",
     "build": "webpack --mode production ./src/js/main.js",
