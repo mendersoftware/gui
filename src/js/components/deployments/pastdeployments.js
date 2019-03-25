@@ -32,6 +32,7 @@ export default class Past extends React.Component {
       today: new Date(),
       active: 'today'
     };
+    this.setDefaultRange(0, 0, 'today');
   }
   _setDateRange(after, before) {
     var self = this;
