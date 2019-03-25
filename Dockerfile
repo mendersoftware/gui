@@ -4,6 +4,7 @@ COPY package-lock.json package.json ./
 RUN npm install
 COPY . ./
 RUN npm run build
+RUN npm run disclaim
 
 FROM alpine:3.4
 COPY ./entrypoint.sh /entrypoint.sh
