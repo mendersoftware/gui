@@ -626,7 +626,7 @@ export default class Deployments extends React.Component {
                   secondary={
                     <p>
                       See our{' '}
-                      <a href={`https://docs.mender.io/${this.state.docsVersion}artifacts/building-mender-yocto-image`} target="_blank">
+                      <a href={`https://docs.mender.io/${this.state.docsVersion}artifacts/yocto-project/building`} target="_blank">
                         documentation site
                       </a>{' '}
                       for a step by step guide on how to build a Yocto Project image for a device.
