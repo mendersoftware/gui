@@ -53,8 +53,8 @@ export default class BuildYocto extends React.Component {
 
         <p>
           Follow the docs at{' '}
-          <a href={`https://docs.mender.io/${this.props.docsVersion}artifacts/building-mender-yocto-image`}>
-            {`https://docs.mender.io/${this.props.docsVersion}artifacts/building-mender-yocto-image`}
+          <a href={`https://docs.mender.io/${this.props.docsVersion}artifacts/yocto-project/building`} target="_blank">
+            {`https://docs.mender.io/${this.props.docsVersion}artifacts/yocto-project/building`}
           </a>{' '}
           to build your .sdimg and .mender files.
         </p>
