@@ -42,7 +42,7 @@ export default class ExpandableDeviceAttribute extends React.Component {
             classes={{ secondary: currentTextClasses }}
             primary={primary}
             secondary={secondaryText}
-            secondaryTypographyProps={{ title: secondary }}
+            secondaryTypographyProps={{ title: secondary, component: 'div' }}
           />
         </ListItem>
         <Divider />
