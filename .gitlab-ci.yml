@@ -9,57 +9,75 @@ stages:
   - build
   - test
   - publish
+  - integration
 
 before_script:
   - docker info
-  # - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
   - git clone git://github.com/mendersoftware/mendertesting
   - . mendertesting/check_commits.sh
   - export DOCKER_REPOSITORY="mendersoftware/gui"
   - export GIT_REF=${CI_BUILD_REF_NAME}
-  - export DOCKER_TAG=${CI_BUILD_REF_SLUG/master/production}
+  - export DOCKER_TAG=${CI_BUILD_REF_SLUG/master}
   - export NODE_ENV=$(echo "$DOCKER_TAG" | grep -Eq '^(staging|production)$' && echo "production" || echo "development")
   - export SERVICE_ENV=$(echo "$DOCKER_TAG" | grep -Eq '^(development|staging|production)$' && echo $DOCKER_TAG || echo "development")
-  - export SERVICE_IMAGE=$(DOCKER_REPOSITORY):$(DOCKER_TAG)
+  - export SERVICE_IMAGE=$DOCKER_REPOSITORY:$DOCKER_TAG
 
-build-master:
+build:master:
   stage: build
   script:
+    - echo "building gui for ${SERVICE_IMAGE}"
     - docker build
       --pull
-      --build-arg NODE_ENV=${NODE_ENV}
-      -t "$SERVICE_IMAGE"
-      -t "$DOCKER_REPOSITORY:$COMMIT_TAG"
+      -t $SERVICE_IMAGE
+      -t $DOCKER_REPOSITORY:$COMMIT_TAG
       .
     - docker save $SERVICE_IMAGE > image.tar
-    
   only:
     - master
+  artifacts:
+    expire_in: 24h
+    paths:
+      - image.tar
+  tags:
+    - docker
 
 build:
   stage: build
   script:
+    - echo "building gui for ${SERVICE_IMAGE}"
     - docker build
-      --pull
-      -t "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG"
+      -t $SERVICE_IMAGE
+      -t $DOCKER_REPOSITORY:$CI_COMMIT_REF_SLUG
       .
     - docker save $SERVICE_IMAGE > image.tar
   except:
     - master
+  artifacts:
+    expire_in: 1h
+    paths:
+      - image.tar
+  tags:
+    - docker
 
 test:
   stage: test
   script:
-    - docker load -i image.tar
-    - docker run $SERVICE_IMAGE npm run lint
+    - docker build -t gui-test-image -f Dockerfile.testing .
+    - docker run --rm gui-test-image
   except:
     - master
+  tags:
+    - docker
 
 publish:
   stage: publish
-  dependencies: []
+  dependencies:
+    - build:master
   script:
     - docker load -i image.tar
-    - docker push "$CI_REGISTRY_IMAGE"
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+    - docker push $CI_REGISTRY_IMAGE
   only:
     - master
+  tags:
+    - docker
