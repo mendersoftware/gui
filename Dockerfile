@@ -14,7 +14,7 @@ EXPOSE 80
 RUN mkdir -p /var/www/mender-gui
 WORKDIR /var/www/mender-gui/dist/
 
-RUN apk update && apk add nodejs
+RUN apk update && apk add nodejs npm
 RUN npm config set unsafe-perm true
 RUN npm install -g uglify-js
 RUN npm config set unsafe-perm false
