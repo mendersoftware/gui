@@ -87,7 +87,7 @@ export default class ArtifactPayload extends React.PureComponent {
               </TableBody>
             </Table>
           ) : (
-            <p>There are no files in this artifact</p>
+            <p>There are no files in this Artifact</p>
           )}
         </div>
       </div>

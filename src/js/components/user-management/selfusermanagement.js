@@ -73,6 +73,7 @@ export default class SelfUserManagement extends React.Component {
           handleCancel={() => this.handleEmail()}
           submitLabel="Save"
           showButtons={this.state.editEmail}
+          buttonColor="secondary"
           submitButtonId="submit_email"
           uniqueId={this.state.emailFormId}
         >
@@ -91,6 +92,7 @@ export default class SelfUserManagement extends React.Component {
             color="primary"
             id="change_email"
             label="Change email"
+            style={{margin:'30px 0 0 15px'}}
             handleClick={() => this.handleEmail()}
           />
         </Form>

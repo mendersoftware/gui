@@ -616,13 +616,13 @@ export default class Deployments extends React.Component {
           <DialogContent style={{ overflow: 'hidden' }}>
             <h3>{`You've completed your first deployment - so what's next?`}</h3>
             <List>
-              <ListItem key="physical" disabled={true}>
-                <ListItemText primary={<p>Try updating a physical device</p>} secondary={physicalLink} />
+              <ListItem key="physical">
+                <ListItemText primary={<h3>Try updating a physical device</h3>} secondary={physicalLink} />
               </ListItem>
               <Divider />
-              <ListItem key="yocto" disabled={true}>
+              <ListItem key="yocto">
                 <ListItemText
-                  primary={<p>Try building your own Yocto Project images for use with Mender</p>}
+                  primary={<h3>Try building your own Yocto Project images for use with Mender</h3>}
                   secondary={
                     <p>
                       See our{' '}
