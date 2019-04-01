@@ -14,11 +14,13 @@ export default class ExpandableDeviceAttribute extends React.Component {
     };
   }
 
-  componentDidMount() {
+  componentDidUpdate() {
     const self = this;
-    if (self.textContent && self.textContainer) {
-      const overflowActive = self.textContent.offsetWidth > self.textContainer.clientWidth;
-      self.setState({ overflowActive });
+    if (self.textContent) {
+      const overflowActive = self.textContent.scrollWidth > self.textContent.clientWidth || self.textContent.scrollHeight > self.textContent.clientHeight;
+      if (self.state.overflowActive !== overflowActive && !self.state.expanded) {
+        self.setState({ overflowActive });
+      }
     }
   }
 
@@ -26,10 +28,10 @@ export default class ExpandableDeviceAttribute extends React.Component {
     const self = this;
     const { primary, secondary, classes, textClasses } = self.props;
     const defaultClasses = { root: 'attributes', disabled: 'opaque' };
-    const currentTextClasses = `${textClasses ? textClasses.secondary : ''} ${self.state.expanded ? 'expanded-attribute' : ''}`;
+    const currentTextClasses = `${textClasses ? textClasses.secondary : ''} ${self.state.expanded && self.state.overflowActive ? 'expanded-attribute' : ''}`;
     let secondaryText = (
-      <div className={currentTextClasses} ref={r => (self.textContainer = r)}>
-        <span className={currentTextClasses} ref={r => (self.textContent = r)}>
+      <div>
+        <span className={currentTextClasses} ref={r => (self.textContent = r)} style={self.state.overflowActive ? { marginBottom: '-0.5em' } : {}}>
           {secondary}
         </span>{' '}
         {self.state.overflowActive ? <a>show {self.state.expanded ? 'less' : 'more'}</a> : null}
@@ -38,12 +40,7 @@ export default class ExpandableDeviceAttribute extends React.Component {
     return (
       <div onClick={() => self.setState({ expanded: !self.state.expanded })}>
         <ListItem classes={classes || defaultClasses} disabled={true}>
-          <ListItemText
-            classes={{ secondary: currentTextClasses }}
-            primary={primary}
-            secondary={secondaryText}
-            secondaryTypographyProps={{ title: secondary, component: 'div' }}
-          />
+          <ListItemText primary={primary} secondary={secondaryText} secondaryTypographyProps={{ title: secondary, component: 'div' }} />
         </ListItem>
         <Divider />
       </div>
