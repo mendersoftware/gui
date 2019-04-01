@@ -1413,10 +1413,14 @@ tr.expand {
 }
 
 .inventory-text {
+  word-break: break-word;
+  display: inline-block;
   overflow: hidden;
-  text-overflow: ellipsis;
+  max-height: 46px;
   &.expanded-attribute {
-    word-break: break-word;
+    display: inline;
+    overflow: initial;
+    max-height: initial;
   }
 }
 
