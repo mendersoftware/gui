@@ -60,7 +60,7 @@ export default class AutoSelect extends React.Component {
     ));
 
     return (
-      <FormControl className={self.props.className}>
+      <FormControl className={self.props.className} style={self.props.style}>
         <InputLabel htmlFor="adornment-target-select">{self.props.label}</InputLabel>
         <Input
           id="adornment-target-select"

@@ -39,7 +39,7 @@ export default class Progress extends React.Component {
             <Time value={formatTime(deployment.created)} format="YYYY-MM-DD HH:mm" />
           </TableCell>
           <TableCell style={{ textAlign: 'right', width: '100px' }}>{deployment.device_count}</TableCell>
-          <TableCell style={{ overflow: 'visible', width: '350px' }}>{status}</TableCell>
+          <TableCell style={{ overflow: 'visible', minWidth: '400px' }}>{status}</TableCell>
         </TableRow>
       );
     }, this);
@@ -55,14 +55,14 @@ export default class Progress extends React.Component {
                 <Table style={{ overflow: 'visible' }}>
                   <TableHead>
                     <TableRow style={{ overflow: 'visible' }}>
-                      <TableCell>Updating to</TableCell>
+                      <TableCell style={{ width: '100px' }}>Updating to</TableCell>
                       <TableCell>Group</TableCell>
                       <TableCell>Started</TableCell>
                       <TableCell style={{ textAlign: 'right', width: '100px' }}># Devices</TableCell>
-                      <TableCell style={{ width: '350px' }}>Status</TableCell>
+                      <TableCell style={{ minWidth: '400px' }}>Status</TableCell>
                     </TableRow>
                   </TableHead>
-                  <TableBody className="clickable" style={{ overflow: 'visible' }}>
+                  <TableBody style={{ cursor: 'pointer', overflow: 'visible' }}>
                     {progressMap}
                   </TableBody>
                 </Table>

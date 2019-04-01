@@ -320,9 +320,9 @@ export class CreateDeploymentForm extends React.Component {
       <div>
         <h3>Creating a deployment</h3>
         <hr />
-        <p>A deployment needs to know which Artifact to deploy, and which group of devices to deploy it to.</p>
+        <p>A deployment needs to know which Release to deploy, and which group of devices to deploy it to.</p>
         <p>
-          Select an Artifact and a device group containing devices of a type compatible with the selected Artifact. You can see how many devices will be updated
+          Select a Release and a device group containing devices of a type compatible with the selected Release. You can see how many devices will be updated
           in the deployment.
         </p>
         <p>
