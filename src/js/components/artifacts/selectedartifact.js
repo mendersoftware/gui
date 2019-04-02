@@ -78,7 +78,7 @@ export default class SelectedArtifact extends React.Component {
     const styles = {
       editButton: {
         color: 'rgba(0, 0, 0, 0.54)',
-        fontSize: '20px'
+        marginBottom: '10px',
       },
       listStyle: {
         fontSize: '12px',
@@ -89,7 +89,6 @@ export default class SelectedArtifact extends React.Component {
       }
     };
 
-    // TODO! list other artifact metadata too, not just description
     return (
       <div className={artifact.name == null ? 'muted' : null}>
         <div style={styles.listStyle}>
@@ -140,7 +139,7 @@ export default class SelectedArtifact extends React.Component {
         <div className="margin-left inline">
           <Button onClick={() => self.props.removeArtifact(self.props.artifact)}>
             <CancelIcon className="red auth buttonLabelIcon" />
-            Remove this artifact?
+            Remove this Artifact?
           </Button>
         </div>
       </div>

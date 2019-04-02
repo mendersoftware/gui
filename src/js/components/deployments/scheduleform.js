@@ -76,10 +76,10 @@ export default class ScheduleForm extends React.Component {
 
     var devicesLength = this.props.deploymentDevices ? this.props.deploymentDevices.length : '0';
 
-    const infoStyle = { borderBottom: 'none', width: '400px' };
+    const infoStyle = { borderBottom: 'none' };
 
     return (
-      <div style={{ overflow: 'visible', height: '400px' }}>
+      <div style={{ overflow: 'visible', height: '300px' }}>
         {!artifactItems.length ? (
           <p className="info" style={{ marginTop: '0' }}>
             <ErrorOutlineIcon style={{ marginRight: '4px', fontSize: '18px', top: '4px', color: 'rgb(171, 16, 0)' }} />
@@ -87,12 +87,12 @@ export default class ScheduleForm extends React.Component {
           </p>
         ) : (
           <form>
-            <Grid container spacing={16} style={{ height: 72 }}>
+            <Grid container spacing={16}>
               <Grid item>
                 <AutoSelect
                   className="margin-right"
-                  label="Select target artifact"
-                  errorText="Choose an Artifact to be deployed"
+                  label="Select target Release"
+                  errorText="Choose a Release to be deployed"
                   items={artifactItems}
                   onChange={item => self.props.deploymentSettings(item, 'artifact')}
                 />
@@ -104,7 +104,7 @@ export default class ScheduleForm extends React.Component {
               ) : null}
             </Grid>
 
-            <div style={{ height: 72 }}>
+            <div>
               {self.state.disabled ? (
                 <TextField value={self.props.device ? self.props.device.id : ''} label="Device" disabled={self.state.disabled} style={infoStyle} />
               ) : (
@@ -138,7 +138,7 @@ export default class ScheduleForm extends React.Component {
                     data-tip
                     data-for="create-deployment1-tip"
                     data-event="click focus"
-                    style={{ top: '-75px', left: '45%' }}
+                    style={{ top: '-50px', left: '50%' }}
                   >
                     <HelpIcon />
                   </div>
@@ -161,8 +161,8 @@ export default class ScheduleForm extends React.Component {
               ) : null}
               {this.props.hasDevices && artifactItems.length ? (
                 <p className="info">
-                  <InfoOutlinedIcon />
-                  The deployment will skip any devices that are already on the target artifact version, or that have a different device type.
+                  <InfoOutlinedIcon fontSize="small" style={{ verticalAlign: 'middle', margin: '0 6px 4px 0' }} />
+                  The deployment will skip any devices that are already on the target Release version, or that have a different device type.
                 </p>
               ) : null}
             </div>
