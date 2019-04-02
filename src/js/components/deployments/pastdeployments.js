@@ -105,7 +105,7 @@ export default class Past extends React.Component {
           </TableCell>
           <TableCell>{time}</TableCell>
           <TableCell style={{ textAlign: 'right', width: '100px' }}>{deployment.device_count}</TableCell>
-          <TableCell style={{ overflow: 'visible', width: '350px' }}>{status}</TableCell>
+          <TableCell style={{ overflow: 'visible', minWidth: '400px' }}>{status}</TableCell>
         </TableRow>
       );
     }, this);
@@ -119,8 +119,8 @@ export default class Past extends React.Component {
     );
 
     return (
-      <div className="fadeIn">
-        <Grid container spacing={16} className="datepicker-container">
+      <div className="fadeIn margin-top-large">
+        <Grid container spacing={16} className="datepicker-container" style={{paddingTop: '4px'}}>
           <Grid item>
             <span>Filter by date</span>
             <ul className="unstyled link-list horizontal">
@@ -156,7 +156,7 @@ export default class Past extends React.Component {
                 label="From"
                 value={this.props.startDate}
                 maxDate={this.props.endDate || this.state.today}
-                style={{ width: '160px' }}
+                style={{ width: '160px', marginTop: 0 }}
               />
             </Grid>
             <Grid item>
@@ -167,7 +167,7 @@ export default class Past extends React.Component {
                 label="To"
                 value={this.props.endDate}
                 maxDate={this.state.today}
-                style={{ width: '160px' }}
+                style={{ width: '160px', marginTop: 0 }}
               />
             </Grid>
           </MuiPickersUtilsProvider>
@@ -175,9 +175,10 @@ export default class Past extends React.Component {
             <AutoSelect
               label="Filter by device group"
               placeholder="Select a group"
-              errorText="Choose an Artifact to be deployed"
+              errorText="Choose a Release to deploy"
               items={menuItems}
               onChange={value => this.handleUpdateInput(value)}
+              style={{ marginTop: 0 }}
             />
           </Grid>
         </Grid>
@@ -192,7 +193,7 @@ export default class Past extends React.Component {
                   <TableCell>Started</TableCell>
                   <TableCell>Finished</TableCell>
                   <TableCell style={{ textAlign: 'right', width: '100px' }}># Devices</TableCell>
-                  <TableCell style={{ width: '350px' }}>Status</TableCell>
+                  <TableCell style={{ minWidth: '400px' }}>Status</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody style={{ cursor: 'pointer', overflow: 'visible' }}>{pastMap}</TableBody>

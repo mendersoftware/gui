@@ -59,7 +59,7 @@ export default class Schedule extends React.Component {
             <TableHead>
               <TableRow>
                 <TableCell tooltip="Device group">Group</TableCell>
-                <TableCell tooltip="Target artifact version">Target artifact</TableCell>
+                <TableCell tooltip="Target Release version">Target Release</TableCell>
                 <TableCell tooltip="Number of devices"># Devices</TableCell>
                 <TableCell tooltip="Started">Started</TableCell>
                 <TableCell tooltip="Finished">Finished</TableCell>

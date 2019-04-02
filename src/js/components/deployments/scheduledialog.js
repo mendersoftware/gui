@@ -63,12 +63,12 @@ export default class ScheduleDialog extends React.Component {
     }
 
     const group = this.props.group && this.props.group !== 'All devices' ? `group=${encodeURIComponent(this.props.group)}` : '';
-    const drawerStyles = { overflow: 'hidden', position: 'absolute' };
+    const drawerStyles = { overflow: 'hidden', position: 'absolute'};
 
     var deviceList = (
       <Drawer
         anchor="right"
-        PaperProps={{ style: { width: 320, overflow: 'visible', position: 'absolute' } }}
+        PaperProps={{ style: { width: 320, overflow: 'visible', position: 'absolute', padding: '30px 40px' } }}
         BackdropProps={{ style: drawerStyles }}
         ModalProps={{ style: drawerStyles }}
         disablePortal={true}
@@ -87,7 +87,7 @@ export default class ScheduleDialog extends React.Component {
         >
           <CloseIcon />
         </IconButton>
-        <div style={{ padding: '20px' }}>
+        <div>
           <SearchInput
             style={{ marginBottom: '8px' }}
             className="search"
@@ -106,10 +106,10 @@ export default class ScheduleDialog extends React.Component {
     );
 
     return (
-      <Dialog open={open || false} fullWidth={true} maxWidth="md">
+      <Dialog open={open || false} fullWidth={true} maxWidth="sm">
         {deviceList}
         <DialogTitle>Create a deployment</DialogTitle>
-        <DialogContent className="dialog" style={{ overflow: 'hidden' }}>
+        <DialogContent className="dialog">
           <ScheduleForm
             filteredDevices={filteredDevices}
             showDevices={() => this.setState({ showDevices: true })}

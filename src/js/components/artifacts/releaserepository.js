@@ -40,7 +40,7 @@ export default class ReleaseRepository extends React.Component {
       sortCol: 'modified',
       sortDown: true,
       upload: false,
-      popupLabel: 'Upload a new artifact',
+      popupLabel: 'Upload a new Artifact',
       tmpFile: null,
       artifacts: this.props.release ? this.props.release.Artifacts : []
     };
@@ -181,7 +181,7 @@ export default class ReleaseRepository extends React.Component {
             <Typography variant="body2" style={release ? { fontWeight: 'bold', marginBottom: '30px' } : { marginBottom: '30px' }}>
               {release ? release.Name : 'No release selected'}
             </Typography>
-            <Typography variant="body1">Artifacts in this release:</Typography>
+            <Typography variant="body1">Artifacts in this Release:</Typography>
           </div>
         </div>
 
@@ -200,7 +200,7 @@ export default class ReleaseRepository extends React.Component {
                 <FileIcon style={{ height: '24px', width: '24px', verticalAlign: 'middle', marginTop: '-2px', marginRight: '10px' }} />
               </span>
               <span>
-                Drag here or <a>browse</a> to upload an artifact file
+                Drag here or <a>browse</a> to upload an Artifact file
               </span>
             </div>
           )}
