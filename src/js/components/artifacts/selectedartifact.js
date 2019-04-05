@@ -21,6 +21,7 @@ import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 
 import AppActions from '../../actions/app-actions';
 import ArtifactPayload from './artifactPayload';
+import { FileSize } from './../../helpers';
 
 export default class SelectedArtifact extends React.Component {
   static contextTypes = {
@@ -86,6 +87,10 @@ export default class SelectedArtifact extends React.Component {
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'baseline'
+      },
+      listItemStyle: {
+        color: '#404041',
+        fontSize: '13px'
       }
     };
 
@@ -97,7 +102,7 @@ export default class SelectedArtifact extends React.Component {
             <Input
               id="artifact-description"
               type="text"
-              style={{ color: '#404041', fontSize: '13px' }}
+              style={styles.listItemStyle}
               disabled={!self.state.descEdit}
               value={self.state.description}
               onKeyDown={e => this._onToggleEditing(e)}
@@ -109,6 +114,18 @@ export default class SelectedArtifact extends React.Component {
                   </IconButton>
                 </InputAdornment>
               }
+            />
+          </FormControl>
+          <FormControl className="list-item">
+            <InputLabel htmlFor="artifact-size">Total Size</InputLabel>
+            <Input
+              id="artifact-size"
+              type="text"
+              style={Object.assign({ padding: '6px 0 7px' }, styles.listItemStyle)}
+              disabled={true}
+              inputComponent={FileSize}
+              inputProps={{ fileSize: artifact.size }}
+              value={artifact.size}
             />
           </FormControl>
         </div>
