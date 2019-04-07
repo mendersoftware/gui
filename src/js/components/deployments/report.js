@@ -387,7 +387,7 @@ export default class DeploymentReport extends React.Component {
           )}
         </div>
 
-        <div style={{ minHeight: '20vh', maxHeight: '40vh', overflowX: 'auto' }}>
+        <div style={{ minHeight: '20vh' }}>
           <AppContext.Consumer>
             {({ docsVersion, globalSettings }) => (
               <DeviceList
