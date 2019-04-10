@@ -25,7 +25,7 @@ export default class VirtualDevice extends React.Component {
     var token = (this.props.org || {}).tenant_token;
 
     var codeToCopy = `
-      TENANT_TOKEN='${token}'\ndocker run -it -e SERVER_URL='https://hosted.mender.io' \\\n-e TENANT_TOKEN=$TENANT_TOKEN mendersoftware/mender-client-qemu:latest';
+      TENANT_TOKEN='${token}'\ndocker run -it -e SERVER_URL='https://hosted.mender.io' \\\n-e TENANT_TOKEN=$TENANT_TOKEN mendersoftware/mender-client-qemu:latest
     `;
     return (
       <div>
