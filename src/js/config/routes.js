@@ -35,7 +35,7 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
 };
 
 export default (
-  <App>
+  <App isLoggedIn={isLoggedIn()}>
     <AppContext.Consumer>
       {({ docsVersion, artifactProgress, version }) => (
         <Switch>

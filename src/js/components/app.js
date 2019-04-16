@@ -126,7 +126,7 @@ class AppRoot extends React.Component {
           currentTab={this.state.currentTab}
           demo={isDemoMode}
           history={this.props.history}
-          isLoggedIn={(this.state.currentUser || {}).hasOwnProperty('email')}
+          isLoggedIn={this.props.isLoggedIn}
         />
 
         <div className="wrapper">
