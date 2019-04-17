@@ -52,9 +52,8 @@ export default class ReleaseRepository extends React.Component {
     //delete meta.artifactFile;
     //delete meta.verified;
     var meta = { description: '' };
-    files.forEach(file => {
-      self.props.uploadArtifact(meta, file);
-    });
+    const uploads = files.map(file => self.props.uploadArtifact(meta, file));
+    Promise.all(uploads).then(() => self.props.refreshArtifacts());
   }
 
   _onRowSelection(artifact) {

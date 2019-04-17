@@ -94,26 +94,25 @@ class AppRoot extends React.Component {
   }
   _uploadArtifact(meta, file) {
     var self = this;
-    AppActions.setUploadInProgress(true);
     var progress = percent => self.setState({ artifactProgress: percent });
-
     AppActions.setSnackbar('Uploading artifact');
+    return new Promise((resolve, reject) =>
     AppActions.uploadArtifact(meta, file, progress)
-      .then(() => {
-        self.setState({ artifactProgress: 0 });
-        AppActions.setSnackbar('Upload successful', 5000);
-        AppActions.setUploadInProgress(false);
-      })
+        .then(() => AppActions.setSnackbar('Upload successful', 5000))
       .catch(err => {
-        self.setState({ artifactProgress: 0 });
-        AppActions.setUploadInProgress(false);
         try {
           var errMsg = err.res.body.error || '';
           AppActions.setSnackbar(preformatWithRequestID(err.res, `Artifact couldn't be uploaded. ${errMsg}`), null, 'Copy to clipboard');
         } catch (e) {
           console.log(e);
         }
-      });
+          reject();
+        })
+        .finally(() => {
+          self.setState({ artifactProgress: 0 });
+          resolve();
+        })
+    );
   }
 
   render() {
