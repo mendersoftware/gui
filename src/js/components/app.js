@@ -1,5 +1,5 @@
 import React from 'react';
-import { matchPath, withRouter } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 
 import PropTypes from 'prop-types';
 import Header from './header/header';
@@ -28,7 +28,14 @@ class AppRoot extends React.Component {
 
   constructor(props, context) {
     super(props, context);
-    this.state = this._getInitialState();
+    this.state = {
+      artifactProgress: 0,
+      version: AppStore.getMenderVersion(),
+      docsVersion: AppStore.getDocsVersion(),
+      timeout: 900000, // 15 minutes idle time,
+      uploadArtifact: (meta, file) => this._uploadArtifact(meta, file),
+      ...this._getState()
+    };
   }
 
   getChildContext() {
@@ -37,20 +44,15 @@ class AppRoot extends React.Component {
     };
   }
 
-  _getInitialState() {
+  _getState() {
     return {
       currentUser: AppStore.getCurrentUser(),
       uploadInProgress: AppStore.getUploadInProgress(),
-      timeout: 900000, // 15 minutes idle time,
-      currentTab: this._updateActive(),
-      version: AppStore.getMenderVersion(),
-      docsVersion: AppStore.getDocsVersion(),
       globalSettings: AppStore.getGlobalSettings(),
-      snackbar: AppStore.getSnackbar(),
-      uploadArtifact: (meta, file) => this._uploadArtifact(meta, file),
-      artifactProgress: 0
+      snackbar: AppStore.getSnackbar()
     };
   }
+
   componentWillMount() {
     AppStore.changeListener(this._onChange.bind(this));
   }
@@ -62,50 +64,34 @@ class AppRoot extends React.Component {
     AppStore.removeChangeListener(this._onChange.bind(this));
   }
   _onChange() {
-    this.setState(this._getInitialState());
+    this.setState(this._getState());
   }
   _onIdle() {
-    if (expirySet()) {
+    if (expirySet() && this.state.currentUser) {
       // logout user and warn
-      if (this.state.currentUser && !this.state.uploadInProgress) {
+      if (!this.state.uploadInProgress) {
         logout();
         AppActions.setSnackbar('Your session has expired. You have been automatically logged out due to inactivity.');
-      } else if (this.state.currentUser && this.state.uploadInProgress) {
-        updateMaxAge();
+        return;
       }
+      updateMaxAge();
     }
   }
-  _updateActive() {
-    const pathParams = matchPath(this.props.location.pathname, { path: '/:location?' });
-    switch (pathParams.location) {
-    case 'devices':
-      return '/devices';
-    case 'releases':
-      return '/releases';
-    case 'deployments':
-      return '/deployments';
-    case 'help':
-      return '/help';
-    case 'settings':
-      return '/settings';
-    default:
-      return '/';
-    }
-  }
+
   _uploadArtifact(meta, file) {
     var self = this;
     var progress = percent => self.setState({ artifactProgress: percent });
     AppActions.setSnackbar('Uploading artifact');
     return new Promise((resolve, reject) =>
-    AppActions.uploadArtifact(meta, file, progress)
+      AppActions.uploadArtifact(meta, file, progress)
         .then(() => AppActions.setSnackbar('Upload successful', 5000))
-      .catch(err => {
-        try {
-          var errMsg = err.res.body.error || '';
-          AppActions.setSnackbar(preformatWithRequestID(err.res, `Artifact couldn't be uploaded. ${errMsg}`), null, 'Copy to clipboard');
-        } catch (e) {
-          console.log(e);
-        }
+        .catch(err => {
+          try {
+            var errMsg = err.res.body.error || '';
+            AppActions.setSnackbar(preformatWithRequestID(err.res, `Artifact couldn't be uploaded. ${errMsg}`), null, 'Copy to clipboard');
+          } catch (e) {
+            console.log(e);
+          }
           reject();
         })
         .finally(() => {
@@ -116,26 +102,27 @@ class AppRoot extends React.Component {
   }
 
   render() {
+    const { snackbar, timeout, currentUser, ...context } = this.state;
+
     return (
-      <IdleTimer element={document} idleAction={this._onIdle} timeout={this.state.timeout} format="MM-DD-YYYY HH:MM:ss.SSS">
+      <IdleTimer element={document} idleAction={this._onIdle} timeout={timeout} format="MM-DD-YYYY HH:MM:ss.SSS">
         <Header
           className="header"
           announcement={_HostedAnnouncement}
-          docsVersion={this.state.docsVersion}
-          currentTab={this.state.currentTab}
+          docsVersion={context.docsVersion}
           demo={isDemoMode}
           history={this.props.history}
-          isLoggedIn={(this.state.currentUser || {}).hasOwnProperty('email')}
+          isLoggedIn={(currentUser || {}).hasOwnProperty('email')}
         />
 
         <div className="wrapper">
-          <LeftNav className="leftFixed leftNav" version={this.state.version} docsVersion={this.state.docsVersion} currentTab={this.state.currentTab} />
+          <LeftNav className="leftFixed leftNav" version={context.version} docsVersion={context.docsVersion} />
           <div className="rightFluid container">
-            <AppContext.Provider value={this.state}>{this.props.children}</AppContext.Provider>
+            <AppContext.Provider value={context}>{this.props.children}</AppContext.Provider>
           </div>
         </div>
 
-        <SharedSnackbar snackbar={this.state.snackbar} />
+        <SharedSnackbar snackbar={snackbar} />
       </IdleTimer>
     );
   }
