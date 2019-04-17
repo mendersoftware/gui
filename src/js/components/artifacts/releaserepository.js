@@ -210,7 +210,7 @@ export default class ReleaseRepository extends React.Component {
 
           {items.length || loading ? null : (
             <div className="dashboard-placeholder fadeIn" style={{ fontSize: '16px', margin: '8vh auto' }}>
-              <div>{this.props.hasReleases ? <p>Select a Release on the left to view its Artifact details</p> : emptyLink}</div>
+              {this.props.hasReleases ? <p>Select a Release on the left to view its Artifact details</p> : emptyLink}
               {showHelptips ? (
                 <div>
                   <div id="onboard-9" className="tooltip help highlight" data-tip data-for="artifact-upload-tip" data-event="click focus">
