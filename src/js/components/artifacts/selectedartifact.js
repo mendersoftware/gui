@@ -30,33 +30,22 @@ export default class SelectedArtifact extends React.Component {
     super(props, context);
     this.state = {
       descEdit: false,
-      description: this.props.artifact.description || '-'
+      description: this.props.artifact.description || '-',
+      gettingUrl: false
     };
   }
   componentDidUpdate(prevProps) {
     const self = this;
-    if (prevProps.artifact.id !== self.props.artifact.id || !self.state.downloadUrl) {
-      AppActions.getArtifactUrl(self.props.artifact.id)
-        .then(response => self.setState({ downloadUrl: response.uri }))
-        .catch(error => {
-          console.log(error);
-          self.setState({ downloadUrl: null });
-        });
+    if (prevProps.artifact.id !== self.props.artifact.id || (!self.props.artifact.url && !self.state.gettingUrl)) {
+      self.setState({ gettingUrl: true }, () => AppActions.getArtifactUrl(self.props.artifact.id).then(() => self.setState({ gettingUrl: false })));
     }
     if (!self.state.descEdit && self.props.artifact.description && self.state.description !== self.props.artifact.description) {
       self.setState({ description: self.props.artifact.description || '-' });
     }
   }
-  _handleLinkClick(device_type) {
-    var filters = `device_type=${device_type}`;
-    filters = encodeURIComponent(filters);
-    this.props.history.push('/devices/:group/:filters', { filters }, null);
-  }
-
   _descEdit(description) {
     this.setState({ description });
   }
-
   _onToggleEditing(event) {
     event.stopPropagation();
     if (event.keyCode === 13 || !event.keyCode) {
@@ -68,12 +57,12 @@ export default class SelectedArtifact extends React.Component {
     }
   }
   _toggleArtifactContentVisibility() {
-    this.setState({ showArtifacts: !this.state.showArtifacts });
+    this.setState({ showPayloads: !this.state.showPayloads });
   }
   render() {
     const self = this;
 
-    const artifact = self.props.artifact;
+    const { artifact, removeArtifact } = self.props;
 
     const styles = {
       editButton: {
@@ -116,13 +105,13 @@ export default class SelectedArtifact extends React.Component {
 
         <ExpansionPanel
           square
-          expanded={self.state.showArtifacts}
+          expanded={self.state.showPayloads}
           onChange={() => self._toggleArtifactContentVisibility()}
           style={{ background: '#e9e9e9', borderTop: 'none', padding: '0 15px', margin: '30px 0' }}
         >
           <ExpansionPanelSummary style={{ padding: 0 }}>
             <p>Artifact contents</p>
-            <div style={{ marginLeft: 'auto' }}>{self.state.showArtifacts ? <RemoveIcon /> : <AddIcon />}</div>
+            <div style={{ marginLeft: 'auto' }}>{self.state.showPayloads ? <RemoveIcon /> : <AddIcon />}</div>
           </ExpansionPanelSummary>
           <ExpansionPanelDetails style={{ padding: 0 }}>
             {artifact.updates ? (
@@ -133,12 +122,12 @@ export default class SelectedArtifact extends React.Component {
           </ExpansionPanelDetails>
         </ExpansionPanel>
 
-        <Button component="a" href={self.state.downloadUrl} target="_blank" disabled={!self.state.downloadUrl}>
+        <Button component="a" href={artifact.url} target="_blank" disabled={!artifact.url}>
           <ExitToAppIcon style={{ transform: 'rotateZ(90deg)' }} className="buttonLabelIcon" />
           Download Artifact
         </Button>
         <div className="margin-left inline">
-          <Button onClick={() => self.props.removeArtifact(self.props.artifact)}>
+          <Button onClick={() => removeArtifact(artifact)}>
             <CancelIcon className="red auth buttonLabelIcon" />
             Remove this artifact?
           </Button>
