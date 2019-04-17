@@ -52,9 +52,8 @@ export default class ReleaseRepository extends React.Component {
     //delete meta.artifactFile;
     //delete meta.verified;
     var meta = { description: '' };
-    files.forEach(file => {
-      self.props.uploadArtifact(meta, file);
-    });
+    const uploads = files.map(file => self.props.uploadArtifact(meta, file));
+    Promise.all(uploads).then(() => self.props.refreshArtifacts());
   }
 
   _onRowSelection(artifact) {
@@ -103,14 +102,14 @@ export default class ReleaseRepository extends React.Component {
         <ReleaseRepositoryItem
           key={`repository-item-${index}`}
           artifact={pkg}
-            expanded={expanded}
+          expanded={expanded}
           index={index}
           onEdit={(id, description) => self._editArtifactData(id, description)}
           onRowSelection={() => self._onRowSelection(pkg)}
           removeArtifact={removeArtifact}
           release={release}
           width={columnWidth}
-                />
+        />
       );
     });
 

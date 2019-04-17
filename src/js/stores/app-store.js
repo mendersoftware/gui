@@ -179,7 +179,7 @@ function discoverDevices(array) {
 
 function _uploadArtifact(artifact) {
   if (artifact.id) {
-    _artifactsRepo[findWithAttr(_artifactsRepo, 'id', artifact.id)] = artifact;
+    _artifactsRepo[_artifactsRepo.findIndex(item => item.id === artifact.id)] = artifact;
   } else {
     artifact.id = _artifactsRepo.length + 1;
     _artifactsRepo.push(artifact);
@@ -290,8 +290,18 @@ function _collateArtifacts() {
       newArray.push(_artifactsRepo[i]);
     }
   }
-  return newArray;
+
+const removeArtifact = id => {
+  const index = _artifactsRepo.findIndex(item => item.id === id);
+  const name = _artifactsRepo[index].name;
+  _artifactsRepo.splice(index, 1);
+  const releaseIndex = _releasesRepo.findIndex(item => item.Name === name);
+  const releaseArtifactIndex = _releasesRepo[releaseIndex].Artifacts.findIndex(item => item.id === id);
+  _releasesRepo[releaseIndex].Artifacts.splice(releaseArtifactIndex, 1);
+  if (!_releasesRepo[releaseIndex].Artifacts.length) {
+    _releasesRepo.splice(releaseIndex, 1);
 }
+};
 
 /*
  * API STARTS HERE
@@ -301,6 +311,11 @@ function setArtifacts(artifacts) {
     _artifactsRepo = artifacts;
   }
   _artifactsRepo.sort(customSort(1, 'modified'));
+}
+
+function setArtifactUrl(id, url) {
+  const artifact = AppStore.getSoftwareArtifact('id', id);
+  artifact.url = url;
 }
 
 function setReleases(releases) {
@@ -504,12 +519,17 @@ var AppStore = Object.assign({}, EventEmitter.prototype, {
   /*
    * Return single artifact by attr
    */
-  getSoftwareArtifact: (attr, val) => _artifactsRepo[findWithAttr(_artifactsRepo, attr, val)],
+  getSoftwareArtifact: (attr, val) => _artifactsRepo.find(item => item[attr] === val),
 
   /*
    * Return list of saved release objects
    */
   getReleases: () => _releasesRepo,
+
+  /*
+   * Return single release with corresponding Artifacts
+   */
+  getRelease: name => _releasesRepo.find(item => item.name === name),
 
   /*
    * Return list of finished deployments
@@ -654,6 +674,12 @@ var AppStore = Object.assign({}, EventEmitter.prototype, {
       /* API */
     case AppConstants.RECEIVE_ARTIFACTS:
       setArtifacts(payload.action.artifacts);
+      break;
+    case AppConstants.ARTIFACTS_SET_ARTIFACT_URL:
+      setArtifactUrl(payload.action.id, payload.action.url);
+      break;
+    case AppConstants.ARTIFACTS_REMOVED_ARTIFACT:
+      removeArtifact(payload.action.id);
       break;
     case AppConstants.RECEIVE_DEPLOYMENTS:
       setDeployments(payload.action.deployments);

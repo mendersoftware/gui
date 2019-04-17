@@ -159,9 +159,8 @@ export default class Header extends React.Component {
   }
   _hasArtifacts() {
     var self = this;
-    return AppActions.getArtifacts()
-      .then(artifacts => self.setState({ artifacts }))
-      .catch(err => console.log(err));
+    AppActions.getArtifacts();
+    return self.state.artifacts.length;
   }
   _updateUsername() {
     var self = this;
