@@ -115,7 +115,7 @@ function _setFilterAttributes(attrs) {
 
 function _addToGroup(group, devices) {
   var tmpGroup = group;
-  var idx = findWithAttr(_groups, 'id', tmpGroup);
+  const idx = _groups.findIndex(item => item.id === tmpGroup);
   if (idx != undefined) {
     for (var i = 0; i < devices.length; i++) {
       if (tmpGroup.devices.indexOf(devices[i].id) === -1) {
@@ -138,7 +138,7 @@ function _addToGroup(group, devices) {
 }
 
 function _removeGroup(groupId) {
-  var idx = findWithAttr(_groups, 'id', groupId);
+  const idx = _groups.findIndex(item => item.id === groupId);
   const group = _groups[idx];
   if (_currentGroup === group) {
     _selectGroup();
@@ -158,18 +158,17 @@ function _getPendingDevices() {
 
 function discoverDevices(array) {
   var unique = {};
-
-  for (var i = 0; i < _alldevices.length; i++) {
-    if (typeof unique[_alldevices[i].artifact_name] == 'undefined') {
-      unique[_alldevices[i].artifact_name] = 0;
+  _alldevices.forEach(device => {
+    if (typeof unique[device.artifact_name] == 'undefined') {
+      unique[device.artifact_name] = 0;
     }
-    unique[_alldevices[i].artifact_name]++;
-  }
+    unique[device.artifact_name]++;
+  });
 
   if (array.length) {
     for (var val in unique) {
-      var idx = findWithAttr(array, 'name', val);
-      if (idx !== undefined) {
+      const idx = array.findIndex(item => item.name === val);
+      if (idx > -1) {
         array[idx]['devices'] = unique[val];
       }
     }
@@ -264,32 +263,26 @@ function _sortTable(array, column, direction) {
   }
 }
 
-function findWithAttr(array, attr, value) {
-  for (var i = 0; i < array.length; i++) {
-    if (array[i][attr] === value) {
-      return i;
-    }
-  }
-}
-
 function startTimeSort(a, b) {
   return (b.created > a.created) - (b.created < a.created);
 }
 
 function _collateArtifacts() {
   var newArray = [];
-  for (var i = 0; i < _artifactsRepo.length; i++) {
-    var x = findWithAttr(newArray, 'name', _artifactsRepo[i].name);
-    if (typeof x !== 'undefined') {
+  _artifactsRepo.forEach(repo => {
+    var x = newArray.findIndex(item => item.name === repo.name);
+    if (x > -1) {
       newArray[x].device_types_compatible = newArray[x].device_types_compatible.concat(
-        _artifactsRepo[i].device_types_compatible.filter(item => {
+        repo.device_types_compatible.filter(item => {
           return newArray[x].device_types_compatible.indexOf(item) < 0;
         })
       );
     } else {
-      newArray.push(_artifactsRepo[i]);
+      newArray.push(repo);
     }
-  }
+  });
+  return newArray;
+}
 
 const removeArtifact = id => {
   const index = _artifactsRepo.findIndex(item => item.id === id);
@@ -300,7 +293,7 @@ const removeArtifact = id => {
   _releasesRepo[releaseIndex].Artifacts.splice(releaseArtifactIndex, 1);
   if (!_releasesRepo[releaseIndex].Artifacts.length) {
     _releasesRepo.splice(releaseIndex, 1);
-}
+  }
 };
 
 /*
@@ -466,7 +459,7 @@ var AppStore = Object.assign({}, EventEmitter.prototype, {
    */
   getGroups: () => _groups,
 
-  getSingleGroup: (attr, val) => _groups[findWithAttr(_groups, attr, val)],
+  getSingleGroup: (attr, val) => _groups.find(item => item[attr] === val),
 
   /*
    * Return group object for current group selection
@@ -489,7 +482,7 @@ var AppStore = Object.assign({}, EventEmitter.prototype, {
   /*
    * Return single device by id
    */
-  getSingleDevice: id => _alldevices[findWithAttr(_alldevices, 'id', id)],
+  getSingleDevice: id => _alldevices.find(item => item.id === id),
 
   /*
    * Return set of filters for list of devices
