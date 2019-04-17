@@ -114,9 +114,12 @@ export default class ReleaseRepository extends React.Component {
       );
     });
 
+    const uploading = AppStore.getUploadInProgress();
+    const dropzoneClass = uploading ? 'dropzone disabled muted' : 'dropzone';
+
     var emptyLink = (
       <Dropzone
-        disabled={progress > 0}
+        disabled={uploading}
         activeClassName="active"
         rejectClassName="active"
         multiple={false}
@@ -124,8 +127,8 @@ export default class ReleaseRepository extends React.Component {
         onDrop={(accepted, rejected) => this.onDrop(accepted, rejected)}
       >
         {({ getRootProps, getInputProps }) => (
-          <div {...getRootProps()}>
-            <input {...getInputProps()} />
+          <div {...getRootProps({ className: dropzoneClass })}>
+            <input {...getInputProps()} disabled={uploading} />
             <p>
               There are no Releases yet. <a>Upload an Artifact</a> to create a new Release
             </p>
@@ -133,7 +136,6 @@ export default class ReleaseRepository extends React.Component {
         )}
       </Dropzone>
     );
-
     const noArtifactsClass = release ? '' : 'muted';
     return (
       <div className="relative release-repo margin-left" style={{ width: '100%' }}>
@@ -148,7 +150,7 @@ export default class ReleaseRepository extends React.Component {
         </div>
 
         <Dropzone
-          disabled={progress > 0}
+          disabled={uploading}
           activeClassName="active"
           rejectClassName="active"
           multiple={false}
@@ -156,8 +158,8 @@ export default class ReleaseRepository extends React.Component {
           onDrop={(accepted, rejected) => this.onDrop(accepted, rejected)}
         >
           {({ getRootProps, getInputProps }) => (
-            <div {...getRootProps()} className="dashboard-placeholder top-right-button fadeIn dropzone onboard" style={{ top: 0 }}>
-              <input {...getInputProps()} />
+            <div {...getRootProps({ className: `dashboard-placeholder top-right-button fadeIn onboard ${dropzoneClass}`, style: { top: 0 } })}>
+              <input {...getInputProps()} disabled={uploading} />
               <span className="icon">
                 <FileIcon style={{ height: '24px', width: '24px', verticalAlign: 'middle', marginTop: '-2px', marginRight: '10px' }} />
               </span>
