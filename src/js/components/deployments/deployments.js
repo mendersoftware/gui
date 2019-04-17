@@ -44,9 +44,15 @@ export default class Deployments extends React.Component {
 
   constructor(props, context) {
     super(props, context);
+    const today = new Date();
+    today.setHours(0, 0, 0);
+    const tonight = new Date();
+    tonight.setHours(23, 59, 59);
     this.state = {
       docsVersion: this.props.docsVersion ? `${this.props.docsVersion}/` : 'development/',
       invalid: true,
+      startDate: today,
+      endDate: tonight,
       per_page: 20,
       refreshDeploymentsLength: 30000,
       dialog: false,
@@ -457,7 +463,7 @@ export default class Deployments extends React.Component {
     return routes.active.route;
   }
 
-  _getCurrentLabel(tab = this.context.router.route.match.params.status) {
+  _getCurrentLabel(tab = this.context.router.route.match.params.tab) {
     if (routes.hasOwnProperty(tab)) {
       return routes[tab].title;
     }
@@ -532,7 +538,7 @@ export default class Deployments extends React.Component {
         >
           Create a deployment
         </Button>
-        <Tabs value={tabIndex} onChange={tabIndex => this._changeTab(tabIndex)} style={{ display: 'inline-block' }}>
+        <Tabs value={tabIndex} onChange={(e, tabIndex) => this._changeTab(tabIndex)} style={{ display: 'inline-block' }}>
           {Object.values(routes).map(route => (
             <Tab component={Link} key={route.route} label={route.title} to={route.route} value={route.route} />
           ))}
@@ -616,13 +622,13 @@ export default class Deployments extends React.Component {
           <DialogContent style={{ overflow: 'hidden' }}>
             <h3>{`You've completed your first deployment - so what's next?`}</h3>
             <List>
-              <ListItem key="physical" disabled={true}>
-                <ListItemText primary={<p>Try updating a physical device</p>} secondary={physicalLink} />
+              <ListItem key="physical">
+                <ListItemText primary={<h3>Try updating a physical device</h3>} secondary={physicalLink} />
               </ListItem>
               <Divider />
-              <ListItem key="yocto" disabled={true}>
+              <ListItem key="yocto">
                 <ListItemText
-                  primary={<p>Try building your own Yocto Project images for use with Mender</p>}
+                  primary={<h3>Try building your own Yocto Project images for use with Mender</h3>}
                   secondary={
                     <p>
                       See our{' '}

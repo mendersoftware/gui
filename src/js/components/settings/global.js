@@ -119,7 +119,7 @@ export default class Global extends React.Component {
           <div>
             <h2 style={{ marginTop: '15px' }}>Global settings</h2>
             <p className="info" style={{ marginBottom: '30px' }}>
-              <InfoOutlinedIcon style={{ marginRight: '4px', fontSize: '18px', top: '4px' }} />
+              <InfoOutlinedIcon fontSize="small" style={{ verticalAlign: 'middle', margin: '0 6px 4px 0' }} />
               {`These settings apply to all users, so changes made here may affect other users' experience.`}
             </p>
           </div>
