@@ -8,6 +8,7 @@ import AppStore from '../../stores/app-store';
 import AppActions from '../../actions/app-actions';
 import ScheduleDialog from '../deployments/scheduledialog';
 import Authsets from './authsets';
+import ExpandableDeviceAttribute from './expandable-device-attribute';
 import Loader from '../common/loader';
 import pluralize from 'pluralize';
 import cookie from 'react-cookie';
@@ -18,11 +19,8 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import Divider from '@material-ui/core/Divider';
 import Icon from '@material-ui/core/Icon';
 import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
 import Typography from '@material-ui/core/Typography';
 
 import BlockIcon from '@material-ui/icons/Block';
@@ -182,27 +180,12 @@ export default class ExpandedDevice extends React.Component {
   render() {
     var status = this.props.device.status;
 
-    var deviceIdentity = [];
-    deviceIdentity.push(
-      <div key="id_checksum">
-        <ListItem classes={{ root: 'attributes', disabled: 'opaque' }} disabled={true}>
-          <ListItemText primary="Device ID" secondary={(this.props.device || {}).id || '-'} />
-        </ListItem>
-        <Divider />
-      </div>
-    );
+    var deviceIdentity = [<ExpandableDeviceAttribute key="id_checksum" primary="Device ID" secondary={(this.props.device || {}).id || '-'} />];
 
     if ((this.props.device || {}).identity_data) {
       var data = typeof this.props.device.identity_data == 'object' ? this.props.device.identity_data : JSON.parse(this.props.device.identity_data);
       deviceIdentity = Object.entries(data).reduce((accu, item) => {
-        accu.push(
-          <div key={item[0]}>
-            <ListItem classes={{ root: 'attributes', disabled: 'opaque' }} disabled={true}>
-              <ListItemText primary={item[0]} secondary={item[1]} />
-            </ListItem>
-            <Divider />
-          </div>
-        );
+        accu.push(<ExpandableDeviceAttribute key={item[0]} primary={item[0]} secondary={item[1]} />);
         return accu;
       }, deviceIdentity);
     }
@@ -210,12 +193,7 @@ export default class ExpandedDevice extends React.Component {
     if ((this.props.device || {}).created_ts) {
       var createdTime = <Time value={this.props.device.created_ts} format="YYYY-MM-DD HH:mm" />;
       deviceIdentity.push(
-        <div key="connectionTime">
-          <ListItem classes={{ root: 'attributes', disabled: 'opaque' }} disabled={true}>
-            <ListItemText primary={status === 'preauthorized' ? 'Date added' : 'First request'} secondary={createdTime} />
-          </ListItem>
-          <Divider />
-        </div>
+        <ExpandableDeviceAttribute key="connectionTime" primary={status === 'preauthorized' ? 'Date added' : 'First request'} secondary={createdTime} />
       );
     }
 
@@ -226,17 +204,11 @@ export default class ExpandedDevice extends React.Component {
       var sortedAttributes = this.props.attrs.sort((a, b) => {
         return a.name.localeCompare(b.name);
       });
-      for (var i = 0; i < sortedAttributes.length; i++) {
-        var secondaryText = sortedAttributes[i].value instanceof Array ? sortedAttributes[i].value.toString() : sortedAttributes[i].value;
-        deviceInventory.push(
-          <div key={i}>
-            <ListItem classes={{ root: 'attributes', disabled: 'opaque' }} disabled={true}>
-              <ListItemText primary={sortedAttributes[i].name} secondary={secondaryText} />
-            </ListItem>
-            <Divider />
-          </div>
-        );
-      }
+      deviceInventory = sortedAttributes.reduce((accu, attribute, i) => {
+        var secondaryText = attribute.value instanceof Array ? attribute.value.toString() : attribute.value;
+        accu.push(<ExpandableDeviceAttribute key={i} primary={attribute.name} secondary={secondaryText} textClasses={{ secondary: 'inventory-text' }} />);
+        return accu;
+      }, deviceInventory);
     } else {
       waiting = true;
       deviceInventory.push(
