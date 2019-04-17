@@ -1268,6 +1268,16 @@ textarea#inline-description {
   &:focus {
     outline: none !important;
   }
+  &.disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    &:hover {
+      background-color: initial;
+    }
+    a {
+      cursor: not-allowed;
+    }
+  }
 }
 
 div:focus {
