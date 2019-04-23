@@ -364,18 +364,18 @@ export default class ExpandedDevice extends React.Component {
         ) : null}
 
         {status === 'accepted' && !waiting ? (
-          <div id="device-actions" className="report-list" style={{ marginTop: '24px' }}>
+          <div id="device-actions" style={{ marginTop: '24px' }}>
             <Button onClick={() => this._copyLinkToClipboard()}>
               <LinkIcon className="rotated buttonLabelIcon" />
               Copy link to this device
             </Button>
             {status === 'accepted' ? (
-              <div className="margin-left inline">
+              <span className="margin-left">
                 <Button onClick={() => this.setState({ schedule: true })}>
                   <ReplayIcon className="rotated buttonLabelIcon" />
                   Create a deployment for this device
                 </Button>
-              </div>
+              </span>
             ) : null}
           </div>
         ) : null}
@@ -422,7 +422,7 @@ export default class ExpandedDevice extends React.Component {
     );
 
     return (
-      <div>
+      <div className={this.props.className}>
         {deviceInfo}
 
         {this.props.showHelptips && status === 'pending' ? (
