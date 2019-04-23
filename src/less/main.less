@@ -1431,6 +1431,18 @@ tr.expand {
   opacity: 1;
 }
 
+.inventory-text {
+  word-break: break-word;
+  display: inline-block;
+  overflow: hidden;
+  max-height: 46px;
+  &.expanded-attribute {
+    display: inline;
+    overflow: initial;
+    max-height: initial;
+  }
+}
+
 .grouplist div span {
   font-size: 0.9rem;
 }

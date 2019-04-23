@@ -102,7 +102,7 @@ class AppRoot extends React.Component {
   }
 
   render() {
-    const { snackbar, timeout, currentUser, ...context } = this.state;
+    const { snackbar, timeout, ...context } = this.state;
 
     return (
       <IdleTimer element={document} idleAction={this._onIdle} timeout={timeout} format="MM-DD-YYYY HH:MM:ss.SSS">
@@ -112,7 +112,7 @@ class AppRoot extends React.Component {
           docsVersion={context.docsVersion}
           demo={isDemoMode}
           history={this.props.history}
-          isLoggedIn={(currentUser || {}).hasOwnProperty('email')}
+          isLoggedIn={this.props.isLoggedIn}
         />
 
         <div className="wrapper">
