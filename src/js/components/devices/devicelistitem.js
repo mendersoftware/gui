@@ -14,6 +14,7 @@ import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
 import AppActions from '../../actions/app-actions';
 import AppStore from '../../stores/app-store';
 import ExpandedDevice from './expanded-device';
+import { colors } from '../../themes/mender-theme';
 
 export default class DeviceListItem extends React.PureComponent {
   constructor(props, context) {
@@ -70,9 +71,9 @@ export default class DeviceListItem extends React.PureComponent {
         ? (device.identity_data || {})[globalSettings.id_attribute]
         : device.id;
     return (
-      <ExpansionPanel square expanded={expanded} onChange={onClick} style={{ width: '100%', borderTop: '1px solid', borderColor: '#e0e0e0' }}>
+      <ExpansionPanel className="deviceListItem" square expanded={expanded} onChange={onClick} style={{ borderTop: `1px solid ${colors.borderColor}` }}>
         <ExpansionPanelSummary style={{ padding: '0 12px' }}>
-          <Checkbox checked={selected} onChange={onSelect} />
+          <Checkbox checked={selected} onChange={onSelect} style={{ marginRight: 12 }} />
           <div style={columnStyle}>{id_attribute}</div>
           <div style={columnStyle}>{attrs.device_type || '-'}</div>
           <div style={columnStyle}>{attrs.artifact_name || '-'}</div>

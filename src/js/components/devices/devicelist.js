@@ -9,12 +9,11 @@ import Checkbox from '@material-ui/core/Checkbox';
 import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import Input from '@material-ui/core/Input';
-import Tooltip from '@material-ui/core/Tooltip';
 
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import HelpIcon from '@material-ui/icons/Help';
 import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
-// import SettingsIcon from '@material-ui/icons/Settings';
+import SettingsIcon from '@material-ui/icons/Settings';
 import SortIcon from '@material-ui/icons/Sort';
 
 import { ExpandDevice } from '../helptips/helptooltips';
@@ -139,12 +138,12 @@ export default class Authorized extends React.Component {
 
   render() {
     const self = this;
-    const { allCount, artifacts, devices, group, groups, loading, pause, redirect } = self.props;
+    const { allCount, artifacts, devices, group, groups, loading, openSettingsDialog, pause, redirect } = self.props;
     const showHelptips = AppStore.showHelptips();
     const globalSettings = AppStore.getGlobalSettings();
 
     const columnHeaders = [
-      { title: (globalSettings || {}).id_attribute || 'Device ID', name: 'device_id', sortable: false },
+      { title: (globalSettings || {}).id_attribute || 'Device ID', name: 'device_id', sortable: false, customize: () => openSettingsDialog() },
       { title: 'Device type', name: 'device_type', sortable: false },
       { title: 'Current software', name: 'current_software', sortable: false },
       { title: 'Last updated', name: 'last_updated', sortable: false }
@@ -192,16 +191,16 @@ export default class Authorized extends React.Component {
                     indeterminate={numSelected > 0 && numSelected < devices.length}
                     checked={numSelected === devices.length}
                     onChange={() => self.onSelectAllClick()}
+                    style={{ marginRight: 12 }}
                   />
                   {columnHeaders.map(item => (
-                    <Tooltip key={item.name} className="columnHeader" title={item.title} placement="top-start" style={{ width: columnWidth }}>
-                      <div>
-                        {item.title}
-                        {item.sortable ? (
-                          <SortIcon className={`sortIcon ${self.state.sortCol === item.name ? 'selected' : ''} ${self.state.sortDown.toString()}`} />
-                        ) : null}
-                      </div>
-                    </Tooltip>
+                    <div className="columnHeader" key={item.name} style={{ width: columnWidth, paddingRight: 12 }}>
+                      {item.title}
+                      {item.sortable ? (
+                        <SortIcon className={`sortIcon ${self.state.sortCol === item.name ? 'selected' : ''} ${self.state.sortDown.toString()}`} />
+                      ) : null}
+                      {item.customize ? <SettingsIcon onClick={item.customize} style={{ fontSize: 16, marginLeft: 'auto' }} /> : null}
+                    </div>
                   ))}
                   <div style={{ width: 48 }} />
                 </div>
