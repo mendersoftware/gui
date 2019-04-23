@@ -270,7 +270,6 @@ export default class DeviceGroups extends React.Component {
             if (devices.length && devices[0].attributes && self.state.isHosted) {
               AppActions.setFilterAttributes(devices[0].attributes);
             }
-            self.setState({ devices });
             // for each device, get device identity info
             const allDeviceDetails = devices.map(device => {
               // have to call each time - accepted list can change order
@@ -296,12 +295,11 @@ export default class DeviceGroups extends React.Component {
       // otherwise, show accepted from device adm
       return AppActions.getDevicesByStatus('accepted', this.state.pageNo, this.state.pageLength)
         .then(devices => {
-          var state = { groupCount: self.props.acceptedDevices };
-          if (!devices.length) {
+          let state = { devices, groupCount: self.props.acceptedDevices, loading: false, pageLoading: false };
+          let additionalDeviceRequests = Promise.resolve(devices);
+          if (devices.length) {
             // if none, stop loading spinners
-            state = Object.assign(state, { devices, loading: false, pageLoading: false, attributes: AppStore.getFilterAttributes() });
-          }
-          self.setState(state, () => {
+            state.devices = [];
             // for each device, get inventory
             const deviceInventoryRequests = devices.map(device => {
               var gotAttrs = false;
@@ -309,7 +307,7 @@ export default class DeviceGroups extends React.Component {
               // have to call inventory each time - accepted list can change order so must refresh inventory too
               return self._getInventoryForDevice(device.id).then(inventory => {
                 device.attributes = inventory.attributes;
-                device.updated_ts = inventory.updated_ts;
+                device.updated_ts = inventory.updated_ts; // this leads to confusing changes in the device list
                 if (!gotAttrs && inventory.attributes && self.state.isHosted) {
                   AppActions.setFilterAttributes(inventory.attributes);
                   gotAttrs = true;
@@ -318,9 +316,12 @@ export default class DeviceGroups extends React.Component {
               });
             });
             // only set state after all devices inventory retrieved
-            return Promise.all(deviceInventoryRequests).then(inventoryDevices =>
-              self.setState({ devices: inventoryDevices, loading: false, pageLoading: false, attributes: AppStore.getFilterAttributes() })
-            );
+            additionalDeviceRequests = Promise.all(deviceInventoryRequests);
+          }
+          return additionalDeviceRequests.then(requestedDevices => {
+            state.devices = requestedDevices;
+            state.attributes = AppStore.getFilterAttributes();
+            self.setState(state);
           });
         })
         .catch(err => {
