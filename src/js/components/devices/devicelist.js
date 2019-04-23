@@ -1,11 +1,5 @@
 import React from 'react';
-import Time from 'react-time';
-import { Collapse } from 'react-collapse';
 import ReactTooltip from 'react-tooltip';
-import { ExpandDevice } from '../helptips/helptooltips';
-import Loader from '../common/loader';
-import AppActions from '../../actions/app-actions';
-import ExpandedDevice from './expanded-device';
 
 import pluralize from 'pluralize';
 
@@ -14,20 +8,20 @@ import Button from '@material-ui/core/Button';
 import Checkbox from '@material-ui/core/Checkbox';
 import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
-import IconButton from '@material-ui/core/IconButton';
 import Input from '@material-ui/core/Input';
-import Table from '@material-ui/core/Table';
-import TableHead from '@material-ui/core/TableHead';
-import TableCell from '@material-ui/core/TableCell';
-import TableBody from '@material-ui/core/TableBody';
-import TableRow from '@material-ui/core/TableRow';
+import Tooltip from '@material-ui/core/Tooltip';
 
 import AddCircleIcon from '@material-ui/icons/AddCircle';
-import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
-import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
 import HelpIcon from '@material-ui/icons/Help';
 import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
-import SettingsIcon from '@material-ui/icons/Settings';
+// import SettingsIcon from '@material-ui/icons/Settings';
+import SortIcon from '@material-ui/icons/Sort';
+
+import { ExpandDevice } from '../helptips/helptooltips';
+import Loader from '../common/loader';
+import AppActions from '../../actions/app-actions';
+import DeviceListItem from './devicelistitem';
+import AppStore from '../../stores/app-store';
 
 export default class Authorized extends React.Component {
   constructor(props, context) {
@@ -59,10 +53,6 @@ export default class Authorized extends React.Component {
     if (prevProps.group !== this.props.group) {
       this.setState({ textfield: this.props.group ? decodeURIComponent(this.props.group) : 'All devices' });
     }
-
-    if (prevProps.paused !== this.props.paused && this.state.device) {
-      this._setDeviceDetails(this.state.device);
-    }
   }
 
   _sortColumn() {
@@ -75,33 +65,10 @@ export default class Authorized extends React.Component {
       return;
     }
     AppActions.setSnackbar('');
-    var device = self.props.devices[rowNumber];
     if (self.state.expandRow === rowNumber) {
       rowNumber = null;
     }
-    self.setState({ expandRow: rowNumber, device: device });
-    self._setDeviceDetails(device);
-  }
-
-  _adjustCellHeight(height) {
-    this.setState({ divHeight: height + 105 });
-  }
-
-  /*
-   * Get full device identity details for single selected device
-   */
-  _setDeviceDetails(device) {
-    var self = this;
-    return AppActions.getDeviceAuth(device.id)
-      .then(data => {
-        device.identity_data = data.identity_data;
-        device.id = data.id;
-        device.updated_ts = data.updated_ts;
-        device.created_ts = data.created_ts;
-        device.status = data.status;
-        self.setState({ expandedDevice: device });
-      })
-      .catch(err => console.log(`Error: ${err}`));
+    self.setState({ expandRow: rowNumber });
   }
 
   _isSelected(index) {
@@ -172,89 +139,23 @@ export default class Authorized extends React.Component {
 
   render() {
     const self = this;
+    const { allCount, artifacts, devices, group, groups, loading, pause, redirect } = self.props;
+    const showHelptips = AppStore.showHelptips();
+    const globalSettings = AppStore.getGlobalSettings();
+
+    const columnHeaders = [
+      { title: (globalSettings || {}).id_attribute || 'Device ID', name: 'device_id', sortable: false },
+      { title: 'Device type', name: 'device_type', sortable: false },
+      { title: 'Current software', name: 'current_software', sortable: false },
+      { title: 'Last updated', name: 'last_updated', sortable: false }
+    ];
+    const columnWidth = `${100 / columnHeaders.length}%`;
+
     var pluralized = pluralize('devices', this.state.selectedRows.length);
 
-    var addLabel = this.props.group ? `Move selected ${pluralized} to another group` : `Add selected ${pluralized} to a group`;
+    var addLabel = group ? `Move selected ${pluralized} to another group` : `Add selected ${pluralized} to a group`;
     var removeLabel = `Remove selected ${pluralized} from this group`;
-    var groupLabel = this.props.group ? decodeURIComponent(this.props.group) : 'All devices';
-
-    var devices = this.props.devices.map(function(device, index) {
-      var self = this;
-      var expanded = '';
-
-      var attrs = {
-        device_type: '',
-        artifact_name: ''
-      };
-
-      var attributesLength = device.attributes ? device.attributes.length : 0;
-      for (var i = 0; i < attributesLength; i++) {
-        attrs[device.attributes[i].name] = device.attributes[i].value;
-      }
-
-      var id_attribute =
-        self.props.globalSettings && self.props.globalSettings.id_attribute && self.props.globalSettings.id_attribute !== 'Device ID'
-          ? (device.identity_data || {})[self.props.globalSettings.id_attribute]
-          : device.id;
-
-      if (self.state.expandRow === index) {
-        expanded = (
-          <ExpandedDevice
-            id_attribute={(this.props.globalSettings || {}).id_attribute}
-            id_value={id_attribute}
-            docsVersion={this.props.docsVersion}
-            showHelpTips={this.props.showHelptips}
-            device={this.state.expandedDevice || device}
-            attrs={device.attributes}
-            device_type={attrs.device_type}
-            redirect={this.props.redirect}
-            artifacts={this.props.artifacts}
-            selectedGroup={this.props.group}
-            groups={this.props.groups}
-            pause={this.props.pause}
-          />
-        );
-      }
-
-      return (
-        <TableRow
-          hover={!expanded}
-          className={expanded ? 'expand' : null}
-          key={device.id}
-          selected={this._isSelected(index)}
-          onClick={event => self._expandRow(event, index)}
-        >
-          <TableCell padding="checkbox">
-            <Checkbox
-              style={expanded ? { paddingTop: '0', marginTop: '-4px' } : {}}
-              checked={self._isSelected(index)}
-              onChange={() => self._onRowSelection(index)}
-            />
-          </TableCell>
-          <TableCell style={expanded ? { height: self.state.divHeight } : {}}>{id_attribute}</TableCell>
-          <TableCell>{attrs.device_type || '-'}</TableCell>
-          <TableCell>{attrs.artifact_name || '-'}</TableCell>
-          <TableCell>{device.updated_ts ? <Time value={device.updated_ts} format="YYYY-MM-DD HH:mm" /> : '-'}</TableCell>
-          <TableCell style={{ width: '55px', paddingRight: '0', paddingLeft: '12px' }} className="expandButton">
-            <IconButton className="float-right">{expanded ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}</IconButton>
-          </TableCell>
-          <TableCell style={{ width: '0', padding: '0', overflow: 'visible' }}>
-            <Collapse
-              springConfig={{ stiffness: 210, damping: 20 }}
-              onMeasure={measurements => self._adjustCellHeight(measurements.height)}
-              className="expanded accepted"
-              isOpened={expanded ? true : false}
-              onClick={e => {
-                e.preventDefault();
-                e.stopPropagation();
-              }}
-            >
-              {expanded}
-            </Collapse>
-          </TableCell>
-        </TableRow>
-      );
-    }, this);
+    var groupLabel = group ? decodeURIComponent(group) : 'All devices';
 
     var groupNameInputs = this.state.nameEdit ? (
       <FormControl error={Boolean(self.state.errortext)} style={{ marginTop: 0 }}>
@@ -273,49 +174,56 @@ export default class Authorized extends React.Component {
     ) : null;
 
     const numSelected = self.state.selectedRows.length;
+
     return (
       <div className="relative">
-        <Loader show={this.props.loading} />
+        <Loader show={loading} />
 
-        {this.props.devices.length && !this.props.loading ? (
+        {devices.length && !loading ? (
           <div>
             <div style={{ marginLeft: '20px' }}>
-              <h2>
-                {this.state.nameEdit ? groupNameInputs : <span>{groupLabel}</span>}
-              </h2>
+              <h2>{this.state.nameEdit ? groupNameInputs : <span>{groupLabel}</span>}</h2>
             </div>
 
             <div className="padding-bottom">
-              <Table>
-                <TableHead className="clickable">
-                  <TableRow>
-                    <TableCell padding="checkbox">
-                      <Checkbox
-                        indeterminate={numSelected > 0 && numSelected < self.props.devices.length}
-                        checked={numSelected === self.props.devices.length}
-                        onChange={() => self.onSelectAllClick()}
-                      />
-                    </TableCell>
-                    <TableCell className="columnHeader" tooltip={(this.props.globalSettings || {}).id_attribute || 'Device ID'}>
-                      {(this.props.globalSettings || {}).id_attribute || 'Device ID'}
-                      <SettingsIcon onClick={this.props.openSettingsDialog} style={{ fontSize: '16px' }} className="hover float-right" />
-                    </TableCell>
-                    <TableCell className="columnHeader" tooltip="Device type">
-                      Device type
-                    </TableCell>
-                    <TableCell className="columnHeader" tooltip="Current software">
-                      Current software
-                    </TableCell>
-                    <TableCell className="columnHeader" tooltip="Last updated">
-                      Last updated
-                    </TableCell>
-                    <TableCell className="columnHeader" style={{ width: '55px', paddingRight: '12px', paddingLeft: '0' }} />
-                  </TableRow>
-                </TableHead>
-                <TableBody className="clickable">{devices}</TableBody>
-              </Table>
+              <div>
+                <div className="flexbox inventoryTable" style={{ padding: '0 12px' }}>
+                  <Checkbox
+                    indeterminate={numSelected > 0 && numSelected < devices.length}
+                    checked={numSelected === devices.length}
+                    onChange={() => self.onSelectAllClick()}
+                  />
+                  {columnHeaders.map(item => (
+                    <Tooltip key={item.name} className="columnHeader" title={item.title} placement="top-start" style={{ width: columnWidth }}>
+                      <div>
+                        {item.title}
+                        {item.sortable ? (
+                          <SortIcon className={`sortIcon ${self.state.sortCol === item.name ? 'selected' : ''} ${self.state.sortDown.toString()}`} />
+                        ) : null}
+                      </div>
+                    </Tooltip>
+                  ))}
+                  <div style={{ width: 48 }} />
+                </div>
+                {devices.map((device, index) => (
+                  <DeviceListItem
+                    columnWidth={columnWidth}
+                    device={device}
+                    expanded={self.state.expandRow === index}
+                    key={`device-${index}`}
+                    group={group}
+                    groups={groups}
+                    pause={pause}
+                    artifacts={artifacts}
+                    redirect={redirect}
+                    selected={self._isSelected(index)}
+                    onClick={event => self._expandRow(event, index)}
+                    onSelect={() => self._onRowSelection(index)}
+                  />
+                ))}
+              </div>
 
-              {this.props.showHelptips && this.props.devices.length ? (
+              {showHelptips && devices.length ? (
                 <div>
                   <div
                     id="onboard-6"
@@ -335,9 +243,9 @@ export default class Authorized extends React.Component {
             </div>
           </div>
         ) : (
-          <div className={this.props.devices.length || this.props.loading ? 'hidden' : 'dashboard-placeholder'}>
+          <div className={devices.length || loading ? 'hidden' : 'dashboard-placeholder'}>
             <p>No devices found</p>
-            {!this.props.allCount ? <p>No devices have been authorized to connect to the Mender server yet.</p> : null}
+            {!allCount ? <p>No devices have been authorized to connect to the Mender server yet.</p> : null}
           </div>
         )}
 
