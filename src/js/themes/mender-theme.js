@@ -1,7 +1,7 @@
 import { createMuiTheme } from '@material-ui/core/styles';
 import { grey100, lightBlack, white } from '@material-ui/core/colors';
 
-const colors = {
+export const colors = {
   linkgreen: '#347A87',
   mendergreen: '#337a87', //
   grey: '#c7c7c7', //grey
@@ -13,7 +13,7 @@ const colors = {
   alternateTextColor: white,
   canvasColor: white,
   borderColor: '#e0e0e0',
-  expansionBackground: '#f5f5f5',
+  expansionBackground: '#f7f7f7',
   disabledColor: lightBlack,
   errorStyleColor: '#ab1000'
 };
@@ -68,7 +68,7 @@ export default createMuiTheme({
         height: 48,
         '&$expanded': {
           height: 48,
-          minHeight: 48,
+          minHeight: 48
         }
       },
       content: {
