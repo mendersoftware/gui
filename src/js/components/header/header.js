@@ -99,7 +99,7 @@ export default class Header extends React.Component {
   }
   _getGlobalSettings() {
     return AppActions.getGlobalSettings()
-      .then(settings => console.warn(settings))
+      .then(settings => console.log(settings))
       .catch(err => console.log('error', err));
   }
   _getDeviceLimit() {
@@ -159,9 +159,8 @@ export default class Header extends React.Component {
   }
   _hasArtifacts() {
     var self = this;
-    return AppActions.getArtifacts()
-      .then(artifacts => self.setState({ artifacts }))
-      .catch(err => console.log(err));
+    AppActions.getArtifacts();
+    return self.state.artifacts.length;
   }
   _updateUsername() {
     var self = this;
@@ -208,7 +207,7 @@ export default class Header extends React.Component {
     const self = this;
     var helpPath = this.props.history.location.pathname.indexOf('/help') != -1;
 
-    const { anchorEl } = self.state;
+    const { anchorEl, user } = self.state;
 
     const menuButtonColor = '#c7c7c7';
 
@@ -216,7 +215,7 @@ export default class Header extends React.Component {
       <div style={{ marginRight: '0', paddingLeft: '30px' }}>
         <Button className="header-dropdown" style={{ fontSize: '14px', fill: 'rgb(0, 0, 0)', textTransform: 'none' }} onClick={self.handleClick}>
           <AccountCircleIcon style={{ marginRight: '8px', top: '5px', fontSize: '20px', color: menuButtonColor }} />
-          {(this.state.user || {}).email}
+          {(user || {}).email}
           {anchorEl ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
         </Button>
         <Menu
@@ -311,28 +310,31 @@ export default class Header extends React.Component {
         </Toolbar>
 
         <div id="header-nav">
-          {this.state.showHelptips && this.state.acceptedDevices && !this.state.artifacts.length && !matchPath('/releases') ? (
-            <div>
-              <div
-                id="onboard-8"
-                className="tooltip help highlight"
-                data-tip
-                data-for="artifact-nav-tip"
-                data-event="click focus"
-                style={{ left: '150px', top: '135px' }}
-              >
-                <HelpIcon />
+          {this.state.showHelptips &&
+          this.state.acceptedDevices &&
+          !this.state.artifacts.length &&
+          !matchPath(self.context.location.pathname, { path: '/releases' }) ? (
+              <div>
+                <div
+                  id="onboard-8"
+                  className="tooltip help highlight"
+                  data-tip
+                  data-for="artifact-nav-tip"
+                  data-event="click focus"
+                  style={{ left: '150px', top: '135px' }}
+                >
+                  <HelpIcon />
+                </div>
+                <ReactTooltip id="artifact-nav-tip" globalEventOff="click" place="bottom" type="light" effect="solid" className="react-tooltip">
+                  <ArtifactsNav />
+                </ReactTooltip>
               </div>
-              <ReactTooltip id="artifact-nav-tip" globalEventOff="click" place="bottom" type="light" effect="solid" className="react-tooltip">
-                <ArtifactsNav />
-              </ReactTooltip>
-            </div>
-          ) : null}
+            ) : null}
 
           {this.state.showHelptips &&
           !this.state.acceptedDevices &&
-          !(this.state.pendingDevices && matchPath({ pathname: '/' }, true)) &&
-          !matchPath('/devices') &&
+          !(this.state.pendingDevices && matchPath(self.context.location.pathname, { path: '/', exact: true })) &&
+          !matchPath(self.context.location.pathname, { path: '/devices' }) &&
           !helpPath ? (
               <div>
                 <div
@@ -351,23 +353,27 @@ export default class Header extends React.Component {
               </div>
             ) : null}
 
-          {this.state.showHelptips && !this.state.hasDeployments && this.state.acceptedDevices && this.state.artifacts.length && !matchPath('/deployments') ? (
-            <div>
-              <div
-                id="onboard-11"
-                className="tooltip help highlight"
-                data-tip
-                data-for="deployments-nav-tip"
-                data-event="click focus"
-                style={{ left: '150px', top: '196px' }}
-              >
-                <HelpIcon />
+          {this.state.showHelptips &&
+          !this.state.hasDeployments &&
+          this.state.acceptedDevices &&
+          this.state.artifacts.length &&
+          !matchPath(self.context.location.pathname, { path: '/deployments' }) ? (
+              <div>
+                <div
+                  id="onboard-11"
+                  className="tooltip help highlight"
+                  data-tip
+                  data-for="deployments-nav-tip"
+                  data-event="click focus"
+                  style={{ left: '150px', top: '196px' }}
+                >
+                  <HelpIcon />
+                </div>
+                <ReactTooltip id="deployments-nav-tip" globalEventOff="click" place="bottom" type="light" effect="solid" className="react-tooltip">
+                  <DeploymentsNav devices={this.state.acceptedDevices} />
+                </ReactTooltip>
               </div>
-              <ReactTooltip id="deployments-nav-tip" globalEventOff="click" place="bottom" type="light" effect="solid" className="react-tooltip">
-                <DeploymentsNav devices={this.state.acceptedDevices} />
-              </ReactTooltip>
-            </div>
-          ) : null}
+            ) : null}
         </div>
       </div>
     );
