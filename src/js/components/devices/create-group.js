@@ -202,10 +202,12 @@ export default class CreateGroup extends React.Component {
   render() {
     var self = this;
 
+    const globalSettings = AppStore.getGlobalSettings();
+
     var deviceList = self.state.devices.map((device, index) => {
       var id_attribute =
-        self.props.globalSettings.id_attribute && self.props.globalSettings.id_attribute !== 'Device ID'
-          ? (device.identity_data || {})[self.props.globalSettings.id_attribute]
+        globalSettings.id_attribute && globalSettings.id_attribute !== 'Device ID'
+          ? (device.identity_data || {})[globalSettings.id_attribute]
           : device.device_id || device.id;
 
       var attrs = mapDeviceAttributes(device.attributes || []);
@@ -251,7 +253,8 @@ export default class CreateGroup extends React.Component {
           {self.state.showWarning ? (
             <div className="help-message" style={{ marginTop: '-15px' }}>
               <h2>
-                <ErrorOutlineIcon style={{ marginRight: '4px', verticalAlign: 'sub' }} />{ ' You\'re creating a new group'}
+                <ErrorOutlineIcon style={{ marginRight: '4px', verticalAlign: 'sub' }} />
+                {' You\'re creating a new group'}
               </h2>
               <p>
                 Just a heads-up: if a device is already in another group, it will be removed from that group and moved to the new one. A device can only belong
