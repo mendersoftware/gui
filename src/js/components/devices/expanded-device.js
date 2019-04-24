@@ -44,15 +44,18 @@ export default class ExpandedDevice extends React.Component {
 
   constructor(props, context) {
     super(props, context);
+
     this.state = {
-      showInput: false,
+      artifacts: AppStore.getArtifactsRepo(),
+      authsets: false,
+      docsVersion: AppStore.getDocsVersion(),
+      schedule: false,
       selectedGroup: {
         payload: '',
         text: ''
       },
-      schedule: false,
-      authsets: false,
-      artifacts: AppStore.getArtifactsRepo(),
+      showHelptips: AppStore.showHelptips(),
+      showInput: false,
       user: AppStore.getCurrentUser()
     };
   }
@@ -112,7 +115,7 @@ export default class ExpandedDevice extends React.Component {
         var id = data.substring(lastslashindex + 1);
 
         // onboarding
-        if (self.props.showHelpTips && !cookie.load(`${self.state.user.id}-onboarded`) && !cookie.load(`${self.state.user.id}-deploymentID`)) {
+        if (self.state.showHelpTips && !cookie.load(`${self.state.user.id}-onboarded`) && !cookie.load(`${self.state.user.id}-deploymentID`)) {
           cookie.save(`${self.state.user.id}-deploymentID`, id);
         }
 
@@ -154,7 +157,7 @@ export default class ExpandedDevice extends React.Component {
     this.setState({ filterByArtifact: filteredDevs });
   }
   _clickLink() {
-    window.location.assign(`https://docs.mender.io/${this.props.docsVersion}/client-configuration/configuration-file/polling-intervals`);
+    window.location.assign(`https://docs.mender.io/${this.state.docsVersion}/client-configuration/configuration-file/polling-intervals`);
   }
   _copyLinkToClipboard() {
     var location = window.location.href.substring(0, window.location.href.indexOf('/devices') + '/devices'.length);
@@ -425,7 +428,7 @@ export default class ExpandedDevice extends React.Component {
       <div className={this.props.className}>
         {deviceInfo}
 
-        {this.props.showHelptips && status === 'pending' ? (
+        {this.state.showHelptips && status === 'pending' ? (
           <div>
             <div
               id="onboard-4"
