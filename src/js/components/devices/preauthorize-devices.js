@@ -1,15 +1,6 @@
 import React from 'react';
-import Time from 'react-time';
-import { Collapse } from 'react-collapse';
-import Loader from '../common/loader';
-import AppActions from '../../actions/app-actions';
-import ExpandedDevice from './expanded-device';
-
-import Pagination from 'rc-pagination';
-import _en_US from 'rc-pagination/lib/locale/en_US';
 import Dropzone from 'react-dropzone';
-import { clearAllRetryTimers } from '../../utils/retrytimer';
-import { isEmpty, preformatWithRequestID } from '../../helpers';
+import Time from 'react-time';
 
 // material ui
 import Button from '@material-ui/core/Button';
@@ -22,26 +13,43 @@ import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import IconButton from '@material-ui/core/IconButton';
 import Input from '@material-ui/core/Input';
-import Table from '@material-ui/core/Table';
-import TableHead from '@material-ui/core/TableHead';
-import TableCell from '@material-ui/core/TableCell';
-import TableBody from '@material-ui/core/TableBody';
-import TableRow from '@material-ui/core/TableRow';
 import TextField from '@material-ui/core/TextField';
 
-import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
-import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
 import ContentAddIcon from '@material-ui/icons/Add';
 import ClearIcon from '@material-ui/icons/Clear';
 import FileIcon from '@material-ui/icons/CloudUpload';
 import InfoIcon from '@material-ui/icons/InfoOutlined';
-import SettingsIcon from '@material-ui/icons/Settings';
+
+import AppActions from '../../actions/app-actions';
+import AppStore from '../../stores/app-store';
+import { isEmpty, preformatWithRequestID } from '../../helpers';
+import { clearAllRetryTimers } from '../../utils/retrytimer';
+import Loader from '../common/loader';
+import DeviceList from './devicelist';
 
 export default class Preauthorize extends React.Component {
   constructor(props, context) {
     super(props, context);
+    const self = this;
+    const globalSettings = AppStore.getGlobalSettings();
     this.state = {
-      divHeight: 208,
+      columnHeaders: [
+        {
+          title: (globalSettings || {}).id_attribute || 'Device ID',
+          name: 'device_id',
+          customize: () => self.props.openSettingsDialog()
+        },
+        {
+          title: 'Date added',
+          name: 'date_added',
+          render: device => (device.created_ts ? <Time value={device.created_ts} format="YYYY-MM-DD HH:mm" /> : '-')
+        },
+        {
+          title: 'Status',
+          name: 'status',
+          render: device => (device.status ? <div className="capitalized">{device.status}</div> : '-')
+        }
+      ],
       devices: [],
       pageNo: 1,
       pageLength: 20,
@@ -50,7 +58,6 @@ export default class Preauthorize extends React.Component {
       openRemove: false,
       inputs: [{ key: '', value: '' }],
       public: '',
-      showKey: false,
       devicesToRemove: []
     };
   }
@@ -92,17 +99,6 @@ export default class Preauthorize extends React.Component {
 
   _sortColumn() {
     console.log('sort');
-  }
-  _expandRow(rowNumber) {
-    AppActions.setSnackbar('');
-    var device = this.state.devices[rowNumber];
-    if (this.state.expandRow === rowNumber) {
-      rowNumber = null;
-    }
-    this.setState({ expandedDevice: device, expandRow: rowNumber });
-  }
-  _adjustCellHeight(height) {
-    this.setState({ divHeight: height + 95 });
   }
 
   _handlePageChange(pageNo) {
@@ -210,63 +206,6 @@ export default class Preauthorize extends React.Component {
     var self = this;
     var limitMaxed = self.props.deviceLimit && self.props.deviceLimit <= self.props.acceptedDevices;
 
-    var devices = self.state.devices.map((device, index) => {
-      var id_attribute =
-        self.props.globalSettings.id_attribute && self.props.globalSettings.id_attribute !== 'Device ID'
-          ? (device.identity_data || {})[self.props.globalSettings.id_attribute]
-          : device.device_id || device.id;
-
-      var expanded = '';
-      if (self.state.expandRow === index) {
-        expanded = (
-          <ExpandedDevice
-            id_attribute={(self.props.globalSettings || {}).id_attribute}
-            _showKey={self._showKey}
-            showKey={self.state.showKey}
-            limitMaxed={limitMaxed}
-            deviceId={self.state.deviceId}
-            id_value={id_attribute}
-            device={self.state.expandedDevice}
-            unauthorized={true}
-            pause={self.props.pause}
-          />
-        );
-      }
-
-      return (
-        <TableRow
-          className={expanded ? 'expand' : null}
-          hover
-          key={index}
-          onClick={() => self._expandRow(index)}
-          style={expanded ? { height: self.state.divHeight } : null}
-        >
-          <TableCell>{id_attribute}</TableCell>
-          <TableCell className="no-click-cell">
-            <Time value={device.created_ts} format="YYYY-MM-DD HH:mm" />
-          </TableCell>
-          <TableCell className="no-click-cell capitalized">{device.status}</TableCell>
-          <TableCell style={{ width: '55px', paddingRight: '0', paddingLeft: '12px' }} className="expandButton">
-            <IconButton className="float-right">{expanded ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}</IconButton>
-          </TableCell>
-          <TableCell style={{ width: '0', padding: '0', overflow: 'visible' }}>
-            <Collapse
-              springConfig={{ stiffness: 210, damping: 20 }}
-              onMeasure={measurements => self._adjustCellHeight(measurements.height)}
-              className="expanded"
-              isOpened={expanded ? true : false}
-              onClick={e => {
-                e.preventDefault();
-                e.stopPropagation();
-              }}
-            >
-              {expanded}
-            </Collapse>
-          </TableCell>
-        </TableRow>
-      );
-    });
-
     var deviceLimitWarning = limitMaxed ? (
       <p className="warning">
         <InfoIcon style={{ marginRight: '2px', height: '16px', verticalAlign: 'bottom' }} />
@@ -341,40 +280,7 @@ export default class Preauthorize extends React.Component {
             <h3 className="align-center">Preauthorized devices</h3>
             {deviceLimitWarning}
 
-            <Table>
-              <TableHead className="clickable">
-                <TableRow>
-                  <TableCell className="columnHeader" tooltip={(this.props.globalSettings || {}).id_attribute || 'Device ID'}>
-                    {(this.props.globalSettings || {}).id_attribute || 'Device ID'}
-                    <SettingsIcon onClick={this.props.openSettingsDialog} style={{ fontSize: '16px' }} className="hover float-right" />
-                  </TableCell>
-                  <TableCell className="columnHeader" tooltip="Date added">
-                    Date added
-                  </TableCell>
-                  <TableCell className="columnHeader" tooltip="Status">
-                    Status
-                  </TableCell>
-                  <TableCell className="columnHeader" style={{ width: '55px', paddingRight: '12px', paddingLeft: '0' }} />
-                </TableRow>
-              </TableHead>
-              <TableBody className="clickable">{devices}</TableBody>
-            </Table>
-
-            <div className="margin-top">
-              <Pagination
-                locale={_en_US}
-                simple
-                pageSize={this.state.pageLength}
-                current={this.state.pageNo || 1}
-                total={this.props.count}
-                onChange={page => this._handlePageChange(page)}
-              />
-              {this.state.pageLoading ? (
-                <div className="smallLoaderContainer">
-                  <Loader show={true} />
-                </div>
-              ) : null}
-            </div>
+            <DeviceList {...self.props} {...self.state} onPageChange={e => self._handlePageChange(e)} pageTotal={self.props.count} />
           </div>
         ) : (
           <div className={this.state.authLoading ? 'hidden' : 'dashboard-placeholder'}>

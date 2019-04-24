@@ -1,31 +1,40 @@
 import React from 'react';
 import Time from 'react-time';
-import { Collapse } from 'react-collapse';
-import Loader from '../common/loader';
+
 import AppActions from '../../actions/app-actions';
-import ExpandedDevice from './expanded-device';
-
-import Pagination from 'rc-pagination';
-import _en_US from 'rc-pagination/lib/locale/en_US';
+import AppStore from '../../stores/app-store';
+import Loader from '../common/loader';
 import { setRetryTimer, clearAllRetryTimers } from '../../utils/retrytimer';
-
-// material ui
-import Table from '@material-ui/core/Table';
-import TableHead from '@material-ui/core/TableHead';
-import TableCell from '@material-ui/core/TableCell';
-import TableBody from '@material-ui/core/TableBody';
-import TableRow from '@material-ui/core/TableRow';
-import IconButton from '@material-ui/core/IconButton';
-
-import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
-import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
-import SettingsIcon from '@material-ui/icons/Settings';
+import DeviceList from './devicelist';
 
 export default class Rejected extends React.Component {
   constructor(props, context) {
     super(props, context);
+    const self = this;
+    const globalSettings = AppStore.getGlobalSettings();
     this.state = {
-      divHeight: 178,
+      columnHeaders: [
+        {
+          title: (globalSettings || {}).id_attribute || 'Device ID',
+          name: 'device_id',
+          customize: () => self.props.openSettingsDialog()
+        },
+        {
+          title: 'First request',
+          name: 'first_request',
+          render: device => (device.created_ts ? <Time value={device.created_ts} format="YYYY-MM-DD HH:mm" /> : '-')
+        },
+        {
+          title: 'Last updated',
+          name: 'last_updated',
+          render: device => (device.updated_ts ? <Time value={device.updated_ts} format="YYYY-MM-DD HH:mm" /> : '-')
+        },
+        {
+          title: 'Status',
+          name: 'status',
+          render: device => (device.status ? <div className="capitalized">{device.status}</div> : '-')
+        }
+      ],
       devices: [],
       pageNo: 1,
       pageLength: 20,
@@ -71,17 +80,6 @@ export default class Rejected extends React.Component {
   _sortColumn(col) {
     console.log(`sort: ${col}`);
   }
-  _expandRow(rowNumber) {
-    AppActions.setSnackbar('');
-    var device = this.state.devices[rowNumber];
-    if (this.state.expandRow === rowNumber) {
-      rowNumber = null;
-    }
-    this.setState({ expandedDevice: device, expandRow: rowNumber });
-  }
-  _adjustCellHeight(height) {
-    this.setState({ divHeight: height + 95 });
-  }
 
   _handlePageChange(pageNo) {
     var self = this;
@@ -94,66 +92,6 @@ export default class Rejected extends React.Component {
     var self = this;
     var limitMaxed = this.props.deviceLimit ? this.props.deviceLimit <= this.props.acceptedDevices : false;
 
-    var devices = this.state.devices.map((device, index) => {
-      var id_attribute =
-        self.props.globalSettings && self.props.globalSettings.id_attribute && self.props.globalSettings.id_attribute !== 'Device ID'
-          ? (device.identity_data || {})[self.props.globalSettings.id_attribute]
-          : device.id;
-
-      var expanded = '';
-      if (self.state.expandRow === index) {
-        expanded = (
-          <ExpandedDevice
-            id_attribute={(self.props.globalSettings || {}).id_attribute}
-            _showKey={self._showKey}
-            showKey={self.state.showKey}
-            limitMaxed={limitMaxed}
-            deviceId={self.state.deviceId}
-            id_value={id_attribute}
-            device={self.state.expandedDevice}
-            unauthorized={true}
-            pause={self.props.pause}
-          />
-        );
-      }
-
-      return (
-        <TableRow
-          className={expanded ? 'expand' : null}
-          hover
-          key={index}
-          onClick={() => self._expandRow(index)}
-          style={expanded ? { height: self.state.divHeight } : null}
-        >
-          <TableCell>{id_attribute}</TableCell>
-          <TableCell>
-            <Time value={device.created_ts} format="YYYY-MM-DD HH:mm" />
-          </TableCell>
-          <TableCell>
-            <Time value={device.updated_ts} format="YYYY-MM-DD HH:mm" />
-          </TableCell>
-          <TableCell className="capitalized">{device.status}</TableCell>
-          <TableCell style={{ width: '55px', paddingRight: '0', paddingLeft: '12px' }} className="expandButton">
-            <IconButton className="float-right">{expanded ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}</IconButton>
-          </TableCell>
-          <TableCell style={{ width: '0', padding: '0', overflow: 'visible' }}>
-            <Collapse
-              springConfig={{ stiffness: 210, damping: 20 }}
-              onMeasure={measurements => self._adjustCellHeight(measurements.height)}
-              className="expanded"
-              isOpened={expanded ? true : false}
-              onClick={e => {
-                e.preventDefault();
-                e.stopPropagation();
-              }}
-            >
-              {expanded}
-            </Collapse>
-          </TableCell>
-        </TableRow>
-      );
-    }, this);
-
     return (
       <div className="tab-container">
         <Loader show={this.state.authLoading === 'all'} />
@@ -161,44 +99,7 @@ export default class Rejected extends React.Component {
         {this.state.devices.length && this.state.authLoading !== 'all' ? (
           <div className="padding-bottom">
             <h3 className="align-center">Rejected devices</h3>
-
-            <Table>
-              <TableHead className="clickable">
-                <TableRow>
-                  <TableCell className="columnHeader" tooltip={(this.props.globalSettings || {}).id_attribute || 'Device ID'}>
-                    {(this.props.globalSettings || {}).id_attribute || 'Device ID'}
-                    <SettingsIcon onClick={this.props.openSettingsDialog} style={{ fontSize: '16px' }} className="hover float-right" />
-                  </TableCell>
-                  <TableCell className="columnHeader" tooltip="First request">
-                    First request
-                  </TableCell>
-                  <TableCell className="columnHeader" tooltip="Last updated">
-                    Last updated
-                  </TableCell>
-                  <TableCell className="columnHeader" tooltip="Status">
-                    Status
-                  </TableCell>
-                  <TableCell className="columnHeader" style={{ width: '55px', paddingRight: '12px', paddingLeft: '0' }} />
-                </TableRow>
-              </TableHead>
-              <TableBody className="clickable">{devices}</TableBody>
-            </Table>
-
-            <div className="margin-top">
-              <Pagination
-                locale={_en_US}
-                simple
-                pageSize={this.state.pageLength}
-                current={this.state.pageNo || 1}
-                total={this.props.count}
-                onChange={page => this._handlePageChange(page)}
-              />
-              {this.state.pageLoading ? (
-                <div className="smallLoaderContainer">
-                  <Loader show={true} />
-                </div>
-              ) : null}
-            </div>
+            <DeviceList limitMaxed={limitMaxed} {...self.props} {...self.state} onPageChange={e => self._handlePageChange(e)} pageTotal={self.props.count} />
           </div>
         ) : (
           <div className={this.state.authLoading ? 'hidden' : 'dashboard-placeholder'}>
