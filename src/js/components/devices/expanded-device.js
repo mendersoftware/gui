@@ -166,8 +166,9 @@ export default class ExpandedDevice extends React.Component {
     // check that device type matches
     var filteredDevs = null;
     if (attr === 'artifact' && val) {
+      const device_type = this.props.device.attributes.find(item => item.name === 'device_type').value;
       for (var i = 0; i < val.device_types_compatible.length; i++) {
-        if (val.device_types_compatible[i] === this.props.device_type) {
+        if (val.device_types_compatible[i] === device_type) {
           filteredDevs = [this.props.device];
           break;
         }
