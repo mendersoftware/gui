@@ -16,7 +16,7 @@ export default class DeviceList extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      expandRow: null
+      expandedDeviceId: null
     };
   }
 
@@ -35,10 +35,11 @@ export default class DeviceList extends React.Component {
       return;
     }
     AppActions.setSnackbar('');
-    if (self.state.expandRow === rowNumber) {
-      rowNumber = null;
+    let deviceId = self.props.devices[rowNumber].id;
+    if (self.state.expandedDeviceId === deviceId) {
+      deviceId = null;
     }
-    self.setState({ expandRow: rowNumber });
+    self.setState({ expandedDeviceId: deviceId });
   }
 
   _isSelected(index) {
@@ -70,13 +71,13 @@ export default class DeviceList extends React.Component {
 
   onPageChange(page) {
     this.props.onPageChange(page);
-    this.setState({ expandRow: null });
+    this.setState({ expandedDeviceId: null });
   }
 
   render() {
     const self = this;
     const { className, columnHeaders, devices, pageLength, pageLoading, pageNo, pageTotal, onSelect, selectedRows } = self.props;
-    const { sortCol, sortDown, expandRow } = self.state;
+    const { sortCol, sortDown, expandedDeviceId } = self.state;
     const columnWidth = `${100 / columnHeaders.length}%`;
     const numSelected = (selectedRows || []).length;
     return (
@@ -105,7 +106,7 @@ export default class DeviceList extends React.Component {
             <DeviceListItem
               {...self.props}
               device={device}
-              expanded={expandRow === index}
+              expanded={expandedDeviceId === device.id}
               key={`device-${index}`}
               selectable={!!onSelect}
               selected={self._isSelected(index)}
