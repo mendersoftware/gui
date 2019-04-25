@@ -88,12 +88,11 @@ export default class DeviceList extends React.Component {
               indeterminate={numSelected > 0 && numSelected < devices.length}
               checked={numSelected === devices.length}
               onChange={() => self.onSelectAllClick()}
-              style={{ marginRight: 12 }}
             />
           ) : null}
 
           {columnHeaders.map(item => (
-            <div className="columnHeader" key={item.name} style={{ width: item.width || columnWidth, paddingRight: 12 }}>
+            <div className="columnHeader" key={item.name} style={{ width: item.width || columnWidth }}>
               {item.title}
               {item.sortable ? <SortIcon className={`sortIcon ${sortCol === item.name ? 'selected' : ''} ${sortDown.toString()}`} /> : null}
               {item.customize ? <SettingsIcon onClick={item.customize} style={{ fontSize: 16, marginLeft: 'auto' }} /> : null}

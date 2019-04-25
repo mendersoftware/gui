@@ -57,15 +57,14 @@ export default class DeviceListItem extends React.PureComponent {
         : device.id;
 
     const columnWidth = `${100 / columnHeaders.length}%`;
-    const columnStyle = { width: columnWidth };
     return (
       <ExpansionPanel className="deviceListItem" square expanded={expanded} onChange={onClick}>
         <ExpansionPanelSummary style={{ padding: '0 12px' }}>
-          {selectable ? <Checkbox checked={selected} onChange={onRowSelect} style={{ marginRight: 12 }} /> : null}
-          <div style={columnStyle}>{id_attribute}</div>
+          {selectable ? <Checkbox checked={selected} onChange={onRowSelect} /> : null}
+          <div style={{ width: columnHeaders[0].width || columnWidth, padding: '0 24px' }}>{id_attribute}</div>
           {/* we'll skip the first column, since this is the id and that gets resolved differently in the lines above */}
           {columnHeaders.slice(1).map((item, index) => (
-            <div key={`column-${index}`} style={{ width: item.width || columnWidth }}>
+            <div key={`column-${index}`} style={{ width: item.width || columnWidth, padding: '0 24px' }}>
               {item.render(device)}
             </div>
           ))}
