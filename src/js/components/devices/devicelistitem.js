@@ -56,15 +56,15 @@ export default class DeviceListItem extends React.PureComponent {
         ? (device.identity_data || {})[globalSettings.id_attribute]
         : device.id;
 
-    const columnWidth = `${100 / columnHeaders.length}%`;
+    const columnWidth = `${(selectable ? 90 : 100) / columnHeaders.length}%`;
     return (
       <ExpansionPanel className="deviceListItem" square expanded={expanded} onChange={onClick}>
         <ExpansionPanelSummary style={{ padding: '0 12px' }}>
           {selectable ? <Checkbox checked={selected} onChange={onRowSelect} /> : null}
-          <div style={{ width: columnHeaders[0].width || columnWidth, padding: '0 24px' }}>{id_attribute}</div>
+          <div style={Object.assign({ width: columnHeaders[0].width || columnWidth, padding: '0 24px' }, columnHeaders[0].style)}>{id_attribute}</div>
           {/* we'll skip the first column, since this is the id and that gets resolved differently in the lines above */}
           {columnHeaders.slice(1).map((item, index) => (
-            <div key={`column-${index}`} style={{ width: item.width || columnWidth, padding: '0 24px' }}>
+            <div key={`column-${index}`} style={Object.assign({ width: item.width || columnWidth, padding: '0 24px' }, item.style)}>
               {item.render(device)}
             </div>
           ))}
