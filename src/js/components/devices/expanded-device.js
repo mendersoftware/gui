@@ -107,6 +107,7 @@ export default class ExpandedDevice extends React.Component {
   toggleAuthsets(authsets = !this.state.authsets) {
     this.setState({ authsets });
     this.props.pause();
+    this.props.refreshDevices();
   }
 
   _updateParams(val, attr) {
@@ -201,7 +202,8 @@ export default class ExpandedDevice extends React.Component {
         var errMsg = err.res.error.message || '';
         console.log(errMsg);
         AppActions.setSnackbar(preformatWithRequestID(err.res, `There was a problem decommissioning the device: ${errMsg}`), null, 'Copy to clipboard');
-      });
+      })
+      .finally(() => self.props.refreshDevices());
   }
 
   render() {
