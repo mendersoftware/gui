@@ -36,6 +36,27 @@ import WarningIcon from '@material-ui/icons/Warning';
 
 import { preformatWithRequestID } from '../../helpers';
 
+const iconStyle = { margin: 12 };
+
+const states = {
+  pending: {
+    text: 'Accept, reject or dismiss the device?',
+    statusIcon: <Icon className="pending-icon" style={iconStyle} />
+  },
+  accepted: {
+    text: 'Reject, dismiss or decommission this device?',
+    statusIcon: <CheckCircleIcon className="green" style={iconStyle} />
+  },
+  rejected: {
+    text: 'Accept, dismiss or decommission this device',
+    statusIcon: <BlockIcon className="red" style={iconStyle} />
+  },
+  preauthorized: {
+    text: 'Remove this device from preauthorization?',
+    statusIcon: <CheckIcon style={iconStyle} />
+  }
+};
+
 export default class ExpandedDevice extends React.Component {
   static contextTypes = {
     router: PropTypes.object,
@@ -278,22 +299,7 @@ export default class ExpandedDevice extends React.Component {
       deviceInventory2 = deviceInventory.splice(deviceInventory.length / 2 + (deviceInventory.length % 2), deviceInventory.length);
     }
 
-    var statusIcon = '';
-    const iconStyle = { margin: 12 };
-    switch (status) {
-    case 'accepted':
-      statusIcon = <CheckCircleIcon className="green" style={iconStyle} />;
-      break;
-    case 'pending':
-      statusIcon = <Icon className="pending-icon" style={iconStyle} />;
-      break;
-    case 'rejected':
-      statusIcon = <BlockIcon className="red" style={iconStyle} />;
-      break;
-    case 'preauthorized':
-      statusIcon = <CheckIcon style={iconStyle} />;
-      break;
-    }
+    const statusIcon = states[status].statusIcon;
 
     var hasPending = '';
     if (status === 'accepted' && this.props.device.auth_sets.length > 1) {
@@ -302,20 +308,13 @@ export default class ExpandedDevice extends React.Component {
       }, '');
     }
 
-    const states = {
-      pending: 'Accept, reject or dismiss the device?',
-      accepted: 'Reject, dismiss or decommission this device?',
-      rejected: 'Accept, dismiss or decommission this device',
-      default: 'Remove this device from preauthorization?'
-    };
-
-    const authLabelText = hasPending ? hasPending : states[status] || states.default;
+    const authLabelText = hasPending ? hasPending : states[status].text || states.default.text;
 
     const buttonStyle = { textTransform: 'none', textAlign: 'left' };
 
     var deviceInfo = (
       <div key="deviceinfo">
-        <div id="device-identity" className="bordered">
+        <div className="device-identity bordered">
           <div className="margin-bottom-small">
             <h4 className="margin-bottom-none">Device identity</h4>
             <List className="list-horizontal-flex">{deviceIdentity}</List>
@@ -354,7 +353,7 @@ export default class ExpandedDevice extends React.Component {
         </div>
 
         {this.props.attrs || status === 'accepted' ? (
-          <div id="device-inventory" className="bordered">
+          <div className="device-inventory bordered">
             <div className={this.props.unauthorized ? 'hidden' : 'report-list'}>
               <h4 className="margin-bottom-none">Device inventory</h4>
               <List>{deviceInventory}</List>
@@ -367,7 +366,7 @@ export default class ExpandedDevice extends React.Component {
         ) : null}
 
         {status === 'accepted' && !waiting ? (
-          <div id="device-actions" style={{ marginTop: '24px' }}>
+          <div className="device-actions" style={{ marginTop: '24px' }}>
             <Button onClick={() => this._copyLinkToClipboard()}>
               <LinkIcon className="rotated buttonLabelIcon" />
               Copy link to this device

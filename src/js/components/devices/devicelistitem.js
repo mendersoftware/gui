@@ -13,7 +13,6 @@ import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
 import AppActions from '../../actions/app-actions';
 import AppStore from '../../stores/app-store';
 import ExpandedDevice from './expanded-device';
-import { colors } from '../../themes/mender-theme';
 
 export default class DeviceListItem extends React.PureComponent {
   constructor(props, context) {
@@ -60,7 +59,7 @@ export default class DeviceListItem extends React.PureComponent {
     const columnWidth = `${100 / columnHeaders.length}%`;
     const columnStyle = { width: columnWidth };
     return (
-      <ExpansionPanel className="deviceListItem" square expanded={expanded} onChange={onClick} style={{ borderTop: `1px solid ${colors.borderColor}` }}>
+      <ExpansionPanel className="deviceListItem" square expanded={expanded} onChange={onClick}>
         <ExpansionPanelSummary style={{ padding: '0 12px' }}>
           {selectable ? <Checkbox checked={selected} onChange={onRowSelect} style={{ marginRight: 12 }} /> : null}
           <div style={columnStyle}>{id_attribute}</div>
@@ -75,12 +74,13 @@ export default class DeviceListItem extends React.PureComponent {
         <ExpansionPanelDetails>
           {expanded ? (
             <ExpandedDevice
-              className="expandedDevice"
               {...self.props}
+              className="expandedDevice"
               id_attribute={(globalSettings || {}).id_attribute}
               id_value={id_attribute}
               device={self.state.expandedDevice || device}
               attrs={device.attributes}
+              unauthorized={device.status !== 'accepted'}
               device_type={device.attributes ? device.attributes.device_type : null}
             />
           ) : (

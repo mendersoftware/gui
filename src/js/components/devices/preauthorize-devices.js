@@ -280,7 +280,7 @@ export default class Preauthorize extends React.Component {
             <h3 className="align-center">Preauthorized devices</h3>
             {deviceLimitWarning}
 
-            <DeviceList {...self.props} {...self.state} onPageChange={e => self._handlePageChange(e)} pageTotal={self.props.count} />
+            <DeviceList {...self.props} {...self.state} limitMaxed={limitMaxed} onPageChange={e => self._handlePageChange(e)} pageTotal={self.props.count} />
           </div>
         ) : (
           <div className={this.state.authLoading ? 'hidden' : 'dashboard-placeholder'}>
