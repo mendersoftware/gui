@@ -303,7 +303,7 @@ export default class DeviceGroups extends React.Component {
               // have to call inventory each time - accepted list can change order so must refresh inventory too
               return self._getInventoryForDevice(device.id).then(inventory => {
                 device.attributes = inventory.attributes;
-                device.updated_ts = inventory.updated_ts; // this leads to confusing changes in the device list
+                device.updated_ts = inventory.updated_ts;
                 if (!gotAttrs && inventory.attributes && self.state.isHosted) {
                   AppActions.setFilterAttributes(inventory.attributes);
                   gotAttrs = true;
@@ -349,7 +349,7 @@ export default class DeviceGroups extends React.Component {
         if (!isEmpty(device)) {
           return self._getInventoryForDevice(id).then(inventory => {
             device.attributes = inventory.attributes;
-
+            device.updated_ts = inventory.updated_ts;
             return Promise.resolve(device);
           });
         }
