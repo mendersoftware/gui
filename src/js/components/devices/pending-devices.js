@@ -214,9 +214,10 @@ export default class Pending extends React.Component {
             {deviceLimitWarning}
 
             <DeviceList
-              columnHeaders={self.state.columnHeaders}
               {...self.props}
               {...self.state}
+              className="pending"
+              limitMaxed={limitMaxed}
               onSelect={selection => self.onRowSelection(selection)}
               onPageChange={e => self._handlePageChange(e)}
               pageTotal={self.props.count}

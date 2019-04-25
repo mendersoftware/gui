@@ -99,7 +99,7 @@ export default class Rejected extends React.Component {
         {this.state.devices.length && this.state.authLoading !== 'all' ? (
           <div className="padding-bottom">
             <h3 className="align-center">Rejected devices</h3>
-            <DeviceList limitMaxed={limitMaxed} {...self.props} {...self.state} onPageChange={e => self._handlePageChange(e)} pageTotal={self.props.count} />
+            <DeviceList {...self.props} {...self.state} limitMaxed={limitMaxed} onPageChange={e => self._handlePageChange(e)} pageTotal={self.props.count} />
           </div>
         ) : (
           <div className={this.state.authLoading ? 'hidden' : 'dashboard-placeholder'}>

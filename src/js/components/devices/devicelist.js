@@ -75,13 +75,13 @@ export default class DeviceList extends React.Component {
 
   render() {
     const self = this;
-    const { columnHeaders, devices, pageLength, pageLoading, pageNo, pageTotal, onSelect, selectedRows } = self.props;
+    const { className, columnHeaders, devices, pageLength, pageLoading, pageNo, pageTotal, onSelect, selectedRows } = self.props;
     const { sortCol, sortDown, expandRow } = self.state;
     const columnWidth = `${100 / columnHeaders.length}%`;
     const numSelected = (selectedRows || []).length;
     return (
-      <div>
-        <div className="flexbox inventoryTable" style={{ padding: '0 12px' }}>
+      <div className={`deviceList ${className || ''}`}>
+        <div className="flexbox header" style={{ padding: '0 12px' }}>
           {onSelect ? (
             <Checkbox
               indeterminate={numSelected > 0 && numSelected < devices.length}
@@ -100,26 +100,34 @@ export default class DeviceList extends React.Component {
           ))}
           <div style={{ width: 48 }} />
         </div>
-        {devices.map((device, index) => (
-          <DeviceListItem
-            {...self.props}
-            device={device}
-            expanded={expandRow === index}
-            key={`device-${index}`}
-            selectable={!!onSelect}
-            selected={self._isSelected(index)}
-            onClick={event => self._expandRow(event, index)}
-            onRowSelect={() => self._onRowSelection(index)}
-          />
-        ))}
-        <div className="margin-top">
-          <Pagination locale={_en_US} simple pageSize={pageLength} current={pageNo} total={pageTotal} onChange={e => self.onPageChange(e)} />
-          {pageLoading ? (
-            <div className="smallLoaderContainer">
-              <Loader show={true} />
-            </div>
-          ) : null}
+        <div className="body">
+          {devices.map((device, index) => (
+            <DeviceListItem
+              {...self.props}
+              device={device}
+              expanded={expandRow === index}
+              key={`device-${index}`}
+              selectable={!!onSelect}
+              selected={self._isSelected(index)}
+              onClick={event => self._expandRow(event, index)}
+              onRowSelect={() => self._onRowSelection(index)}
+            />
+          ))}
         </div>
+        <Pagination
+          className="margin-top"
+          locale={_en_US}
+          simple
+          pageSize={pageLength}
+          current={pageNo}
+          total={pageTotal}
+          onChange={e => self.onPageChange(e)}
+        />
+        {pageLoading ? (
+          <div className="smallLoaderContainer">
+            <Loader show={true} />
+          </div>
+        ) : null}
       </div>
     );
   }
