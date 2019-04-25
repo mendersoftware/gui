@@ -23,41 +23,10 @@ import DeviceList from './devicelist';
 export default class Authorized extends React.Component {
   constructor(props, context) {
     super(props, context);
-    const self = this;
-    const globalSettings = AppStore.getGlobalSettings();
     this.state = {
-      columnHeaders: [
-        {
-          title: (globalSettings || {}).id_attribute || 'Device ID',
-          name: 'device_id',
-          customize: () => self.props.openSettingsDialog()
-        },
-        {
-          title: 'Device type',
-          name: 'device_type',
-          render: device => {
-            const found = (device.attributes || []).find(item => item.name === 'device_type');
-            return found ? found.value : '-';
-          }
-        },
-        {
-          title: 'Current software',
-          name: 'current_software',
-          render: device => {
-            const found = (device.attributes || []).find(item => item.name === 'artifact_name');
-            return found ? found.value : '-';
-          }
-        },
-        {
-          title: 'Last updated',
-          name: 'last_updated',
-          property: 'updated_ts',
-          render: device => (device.updated_ts ? <Time value={device.updated_ts} format="YYYY-MM-DD HH:mm" /> : '-')
-        }
-      ],
       divHeight: 208,
       selectedRows: [],
-      textfield: self.props.group ? decodeURIComponent(self.props.group) : 'All devices'
+      textfield: this.props.group ? decodeURIComponent(this.props.group) : 'All devices'
     };
   }
 
@@ -127,7 +96,36 @@ export default class Authorized extends React.Component {
   render() {
     const self = this;
     const { allCount, devices, group, groupCount, loading } = self.props;
-    const { columnHeaders, selectedRows } = self.state;
+    const { selectedRows } = self.state;
+    const columnHeaders = [
+      {
+        title: (AppStore.getGlobalSettings() || {}).id_attribute || 'Device ID',
+        name: 'device_id',
+        customize: () => self.props.openSettingsDialog()
+      },
+      {
+        title: 'Device type',
+        name: 'device_type',
+        render: device => {
+          const found = (device.attributes || []).find(item => item.name === 'device_type');
+          return found ? found.value : '-';
+        }
+      },
+      {
+        title: 'Current software',
+        name: 'current_software',
+        render: device => {
+          const found = (device.attributes || []).find(item => item.name === 'artifact_name');
+          return found ? found.value : '-';
+        }
+      },
+      {
+        title: 'Last updated',
+        name: 'last_updated',
+        property: 'updated_ts',
+        render: device => (device.updated_ts ? <Time value={device.updated_ts} format="YYYY-MM-DD HH:mm" /> : '-')
+      }
+    ];
     const showHelptips = AppStore.showHelptips();
 
     var pluralized = pluralize('devices', selectedRows.length);
@@ -164,10 +162,10 @@ export default class Authorized extends React.Component {
 
             <div className="padding-bottom">
               <DeviceList
+                {...self.props}
                 columnHeaders={columnHeaders}
                 selectedRows={selectedRows}
                 onSelect={selection => self.onRowSelection(selection)}
-                {...self.props}
                 pageTotal={groupCount}
               />
 

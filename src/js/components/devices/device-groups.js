@@ -590,6 +590,7 @@ export default class DeviceGroups extends React.Component {
             pageNo={self.state.pageNo}
             pageLength={self.state.pageLength}
             pause={() => this._pauseInterval()}
+            refreshDevices={() => self._getDevices()}
             paused={this.props.paused}
             removeDevicesFromGroup={rows => this._removeDevicesFromGroup(rows)}
           />
