@@ -124,25 +124,25 @@ const AppActions = {
       switch (status) {
       case 'pending':
         AppDispatcher.handleViewAction({
-          actionType: AppConstants.SET_PENDING_DEVICES,
+          actionType: AppConstants.SET_PENDING_DEVICES_COUNT,
           count: res.body.count
         });
         break;
       case 'accepted':
         AppDispatcher.handleViewAction({
-          actionType: AppConstants.SET_ACCEPTED_DEVICES,
+          actionType: AppConstants.SET_ACCEPTED_DEVICES_COUNT,
           count: res.body.count
         });
         break;
       case 'rejected':
         AppDispatcher.handleViewAction({
-          actionType: AppConstants.SET_REJECTED_DEVICES,
+          actionType: AppConstants.SET_REJECTED_DEVICES_COUNT,
           count: res.body.count
         });
         break;
       case 'preauthorized':
         AppDispatcher.handleViewAction({
-          actionType: AppConstants.SET_PREAUTH_DEVICES,
+          actionType: AppConstants.SET_PREAUTH_DEVICES_COUNT,
           count: res.body.count
         });
         break;
@@ -167,7 +167,16 @@ const AppActions = {
 
   getDevicesByStatus: (status, page = default_page, per_page = default_per_page) => {
     var dev_status = status ? `status=${status}` : '';
-    return DevicesApi.get(`${deviceAuthV2}/devices?${dev_status}&per_page=${per_page}&page=${page}`).then(response => response.body);
+    return DevicesApi.get(`${deviceAuthV2}/devices?${dev_status}&per_page=${per_page}&page=${page}`).then(response => {
+      if (status) {
+        const constant = `SET_${status.toUpperCase()}_DEVICES`;
+        AppDispatcher.handleViewAction({
+          actionType: AppConstants[constant],
+          devices: response.body
+        });
+      }
+      return Promise.resolve(response.body);
+    });
   },
 
   getAllDevicesByStatus: status => {

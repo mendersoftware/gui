@@ -76,6 +76,7 @@ export default class Devices extends React.Component {
   }
   _getInitialState() {
     return {
+      currentTab: this._getCurrentLabel(),
       tabIndex: this._updateActive(),
       acceptedCount: AppStore.getTotalAcceptedDevices(),
       rejectedCount: AppStore.getTotalRejectedDevices(),
@@ -190,8 +191,6 @@ export default class Devices extends React.Component {
           <PendingDevices
             deviceLimit={this.state.deviceLimit}
             currentTab={this.state.currentTab}
-            acceptedDevices={this.state.acceptedCount}
-            count={this.state.pendingCount}
             highlightHelp={!this.state.acceptedCount}
             openSettingsDialog={() => this._openSettingsDialog()}
             restart={() => this._restartInterval()}
@@ -201,9 +200,7 @@ export default class Devices extends React.Component {
         {tabIndex === routes.preauthorized.status && (
           <PreauthDevices
             deviceLimit={this.state.deviceLimit}
-            acceptedDevices={this.state.acceptedCount}
             currentTab={this.state.currentTab}
-            count={this.state.preauthCount}
             refreshCount={() => AppActions.getDeviceCount('preauthorized')}
             openSettingsDialog={() => this._openSettingsDialog()}
             pause={() => this._pauseInterval()}
@@ -212,9 +209,7 @@ export default class Devices extends React.Component {
         {tabIndex === routes.rejected.status && (
           <RejectedDevices
             deviceLimit={this.state.deviceLimit}
-            acceptedDevices={this.state.acceptedCount}
             currentTab={this.state.currentTab}
-            count={this.state.rejectedCount}
             openSettingsDialog={() => this._openSettingsDialog()}
             pause={() => this._pauseInterval()}
           />
@@ -222,7 +217,6 @@ export default class Devices extends React.Component {
         {tabIndex === routes.devices.status && (
           <DeviceGroups
             params={this.props.params}
-            rejectedDevices={this.state.rejectedCount}
             acceptedDevices={this.state.acceptedCount}
             allCount={this.state.allCount}
             currentTab={this.state.currentTab}

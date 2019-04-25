@@ -23,57 +23,62 @@ import InfoIcon from '@material-ui/icons/InfoOutlined';
 import AppActions from '../../actions/app-actions';
 import AppStore from '../../stores/app-store';
 import { isEmpty, preformatWithRequestID } from '../../helpers';
-import { clearAllRetryTimers } from '../../utils/retrytimer';
 import Loader from '../common/loader';
 import DeviceList from './devicelist';
 
 export default class Preauthorize extends React.Component {
   constructor(props, context) {
     super(props, context);
-    const self = this;
-    const globalSettings = AppStore.getGlobalSettings();
     this.state = {
-      columnHeaders: [
-        {
-          title: (globalSettings || {}).id_attribute || 'Device ID',
-          name: 'device_id',
-          customize: () => self.props.openSettingsDialog()
-        },
-        {
-          title: 'Date added',
-          name: 'date_added',
-          render: device => (device.created_ts ? <Time value={device.created_ts} format="YYYY-MM-DD HH:mm" /> : '-')
-        },
-        {
-          title: 'Status',
-          name: 'status',
-          render: device => (device.status ? <div className="capitalized">{device.status}</div> : '-')
-        }
-      ],
-      devices: [],
+      count: AppStore.getTotalPreauthDevices(),
+      devices: AppStore.getPreauthorizedDevices(),
       pageNo: 1,
       pageLength: 20,
-      authLoading: 'all',
+      pageLoading: true,
       openPreauth: false,
       openRemove: false,
       inputs: [{ key: '', value: '' }],
       public: '',
+      refreshDeviceLength: 10000,
       devicesToRemove: []
     };
   }
 
+  componentWillMount() {
+    AppStore.changeListener(this._onChange.bind(this));
+  }
+
   componentDidMount() {
-    clearAllRetryTimers();
+    this.timer = setInterval(() => this._getDevices(), this.state.refreshDeviceLength);
     this._getDevices();
   }
 
   componentWillUnmount() {
-    clearAllRetryTimers();
+    AppStore.removeChangeListener(this._onChange.bind(this));
+    clearInterval(this.timer);
   }
 
   componentDidUpdate(prevProps) {
     if (prevProps.count !== this.props.count || (prevProps.currentTab !== this.props.currentTab && this.props.currentTab.indexOf('Preauthorized') !== -1)) {
       this._getDevices();
+    }
+  }
+
+  shouldComponentUpdate(_, nextState) {
+    return this.state.pageLoading != nextState.pageLoading || this.state.devices.some((device, index) => device !== nextState.devices[index]);
+  }
+
+  _onChange() {
+    const self = this;
+    let state = {
+      devices: AppStore.getPreauthorizedDevices(),
+      count: AppStore.getTotalPreauthDevices()
+    };
+    if (!self.state.pageLoading && (!state.devices.length && state.count)) {
+      //if devices empty but count not, put back to first page
+      self._handlePageChange(1);
+    } else {
+      self.setState(state);
     }
   }
 
@@ -83,18 +88,13 @@ export default class Preauthorize extends React.Component {
   _getDevices() {
     var self = this;
     AppActions.getDevicesByStatus('preauthorized', this.state.pageNo, this.state.pageLength)
-      .then(devices => {
-        self.setState({ devices, pageLoading: false, authLoading: null, expandRow: null });
-        if (!devices.length && self.props.count) {
-          //if devices empty but count not, put back to first page
-          self._handlePageChange(1);
-        }
-      })
       .catch(error => {
-        var errormsg = error.res.body.error || 'Please check your connection';
-        self.setState({ pageLoading: false, authLoading: null });
+        console.log(error);
+        var errormsg = error.res.body.error || 'Please check your connection.';
         AppActions.setSnackbar(preformatWithRequestID(error.res, `Preauthorized devices couldn't be loaded. ${errormsg}`), null, 'Copy to clipboard');
-      });
+        console.log(errormsg);
+      })
+      .finally(() => self.setState({ pageLoading: false }));
   }
 
   _sortColumn() {
@@ -206,6 +206,24 @@ export default class Preauthorize extends React.Component {
     var self = this;
     var limitMaxed = self.props.deviceLimit && self.props.deviceLimit <= self.props.acceptedDevices;
 
+    const columnHeaders = [
+      {
+        title: (AppStore.getGlobalSettings() || {}).id_attribute || 'Device ID',
+        name: 'device_id',
+        customize: () => self.props.openSettingsDialog()
+      },
+      {
+        title: 'Date added',
+        name: 'date_added',
+        render: device => (device.created_ts ? <Time value={device.created_ts} format="YYYY-MM-DD HH:mm" /> : '-')
+      },
+      {
+        title: 'Status',
+        name: 'status',
+        render: device => (device.status ? <div className="capitalized">{device.status}</div> : '-')
+      }
+    ];
+
     var deviceLimitWarning = limitMaxed ? (
       <p className="warning">
         <InfoIcon style={{ marginRight: '2px', height: '16px', verticalAlign: 'bottom' }} />
@@ -273,17 +291,24 @@ export default class Preauthorize extends React.Component {
           Preauthorize devices
         </Button>
 
-        <Loader show={this.state.authLoading === 'all'} />
+        <Loader show={this.state.pageLoading} />
 
-        {this.state.devices.length && this.state.authLoading !== 'all' ? (
+        {this.state.devices.length && !this.state.pageLoading ? (
           <div className="padding-bottom">
             <h3 className="align-center">Preauthorized devices</h3>
             {deviceLimitWarning}
-
-            <DeviceList {...self.props} {...self.state} limitMaxed={limitMaxed} onPageChange={e => self._handlePageChange(e)} pageTotal={self.props.count} />
+            <DeviceList
+              {...self.props}
+              {...self.state}
+              columnHeaders={columnHeaders}
+              limitMaxed={limitMaxed}
+              onPageChange={e => self._handlePageChange(e)}
+              pageTotal={self.state.count}
+              refreshDevices={() => self._getDevices()}
+            />
           </div>
         ) : (
-          <div className={this.state.authLoading ? 'hidden' : 'dashboard-placeholder'}>
+          <div className={this.state.pageLoading ? 'hidden' : 'dashboard-placeholder'}>
             <p>There are no preauthorized devices.</p>
             <p>
               {limitMaxed ? 'Preauthorize devices' : <a onClick={() => this._togglePreauth(true)}>Preauthorize devices</a>} so that when they come online, they

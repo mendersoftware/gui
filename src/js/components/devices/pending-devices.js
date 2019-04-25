@@ -12,7 +12,6 @@ import HelpIcon from '@material-ui/icons/Help';
 
 import AppActions from '../../actions/app-actions';
 import AppStore from '../../stores/app-store';
-import { setRetryTimer, clearAllRetryTimers } from '../../utils/retrytimer';
 import { preformatWithRequestID } from '../../helpers';
 import Loader from '../common/loader';
 import { AuthDevices, ExpandAuth } from '../helptips/helptooltips';
@@ -21,52 +20,56 @@ import DeviceList from './devicelist';
 export default class Pending extends React.Component {
   constructor(props, context) {
     super(props, context);
-    const self = this;
-    const globalSettings = AppStore.getGlobalSettings();
     this.state = {
-      columnHeaders: [
-        {
-          title: (globalSettings || {}).id_attribute || 'Device ID',
-          name: 'device_id',
-          customize: () => self.props.openSettingsDialog()
-        },
-        {
-          title: 'First request',
-          name: 'first_request',
-          render: device => (device.created_ts ? <Time value={device.created_ts} format="YYYY-MM-DD HH:mm" /> : '-')
-        },
-        {
-          title: 'Last updated',
-          name: 'last_updated',
-          render: device => (device.updated_ts ? <Time value={device.updated_ts} format="YYYY-MM-DD HH:mm" /> : '-')
-        },
-        {
-          title: 'Status',
-          name: 'status',
-          render: device => (device.status ? <div className="capitalized">{device.status}</div> : '-')
-        }
-      ],
-      devices: [],
+      count: AppStore.getTotalPendingDevices(),
+      devices: AppStore.getPendingDevices(),
       pageNo: 1,
       pageLength: 20,
       selectedRows: [],
       showHelptips: AppStore.showHelptips(),
-      authLoading: 'all'
+      refreshDeviceLength: 10000,
+      authLoading: 'all',
+      pageLoading: true
     };
   }
 
+  componentWillMount() {
+    AppStore.changeListener(this._onChange.bind(this));
+  }
   componentDidMount() {
-    clearAllRetryTimers();
+    this.timer = setInterval(() => this._getDevices(), this.state.refreshDeviceLength);
     this._getDevices();
   }
-
   componentWillUnmount() {
-    clearAllRetryTimers();
+    AppStore.removeChangeListener(this._onChange.bind(this));
+    clearInterval(this.timer);
   }
 
   componentDidUpdate(prevProps) {
     if (prevProps.count !== this.props.count || (prevProps.currentTab !== this.props.currentTab && this.props.currentTab.indexOf('Pending') !== -1)) {
       this._getDevices();
+    }
+  }
+
+  shouldComponentUpdate(_, nextState) {
+    return (
+      this.state.pageLoading != nextState.pageLoading ||
+      this.state.authLoading != nextState.authLoading ||
+      this.state.devices.some((device, index) => device !== nextState.devices[index])
+    );
+  }
+
+  _onChange() {
+    const self = this;
+    let state = {
+      devices: AppStore.getPendingDevices(),
+      count: AppStore.getTotalPendingDevices()
+    };
+    if (!state.devices.length && state.count) {
+      //if devices empty but count not, put back to first page
+      self._handlePageChange(1);
+    } else {
+      self.setState(state);
     }
   }
 
@@ -76,18 +79,14 @@ export default class Pending extends React.Component {
   _getDevices() {
     var self = this;
     AppActions.getDevicesByStatus('pending', this.state.pageNo, this.state.pageLength)
-      .then(devices => {
-        self.setState({ devices, pageLoading: false, authLoading: null, expandRow: null });
-        if (!devices.length && self.props.count) {
-          //if devices empty but count not, put back to first page
-          self._handlePageChange(1);
-        }
+      .catch(error => {
+        console.log(error);
+        var errormsg = error.error || 'Please check your connection.';
+        AppActions.setSnackbar(errormsg, 5000, '');
+        console.log(errormsg);
       })
-      .catch(err => {
-        console.log(err);
-        var errormsg = err.error || 'Please check your connection.';
+      .finally(() => {
         self.setState({ pageLoading: false, authLoading: null });
-        setRetryTimer(err, 'devices', `Pending devices couldn't be loaded. ${errormsg}`, self.state.refreshDeviceLength);
       });
   }
 
@@ -173,6 +172,29 @@ export default class Pending extends React.Component {
     var limitNear = this.props.deviceLimit ? this.props.deviceLimit < this.props.acceptedDevices + this.state.devices.length : false;
     var selectedOverLimit = this.props.deviceLimit ? this.props.deviceLimit < this.props.acceptedDevices + this.state.selectedRows.length : false;
 
+    const columnHeaders = [
+      {
+        title: (AppStore.getGlobalSettings() || {}).id_attribute || 'Device ID',
+        name: 'device_id',
+        customize: () => self.props.openSettingsDialog()
+      },
+      {
+        title: 'First request',
+        name: 'first_request',
+        render: device => (device.created_ts ? <Time value={device.created_ts} format="YYYY-MM-DD HH:mm" /> : '-')
+      },
+      {
+        title: 'Last updated',
+        name: 'last_updated',
+        render: device => (device.updated_ts ? <Time value={device.updated_ts} format="YYYY-MM-DD HH:mm" /> : '-')
+      },
+      {
+        title: 'Status',
+        name: 'status',
+        render: device => (device.status ? <div className="capitalized">{device.status}</div> : '-')
+      }
+    ];
+
     var deviceLimitWarning =
       limitMaxed || limitNear ? (
         <p className="warning">
@@ -205,10 +227,10 @@ export default class Pending extends React.Component {
           </div>
         ) : null}
 
-        {this.state.devices.length && this.state.authLoading !== 'all' ? (
+        {this.state.devices.length && (!this.state.pageLoading || this.state.authLoading !== 'all') ? (
           <div className="padding-bottom">
             <h3 className="align-center">
-              {this.props.count} {pluralize('devices', this.props.count)} pending authorization
+              {this.state.count} {pluralize('devices', this.state.count)} pending authorization
             </h3>
 
             {deviceLimitWarning}
@@ -217,10 +239,12 @@ export default class Pending extends React.Component {
               {...self.props}
               {...self.state}
               className="pending"
+              columnHeaders={columnHeaders}
               limitMaxed={limitMaxed}
               onSelect={selection => self.onRowSelection(selection)}
               onPageChange={e => self._handlePageChange(e)}
-              pageTotal={self.props.count}
+              pageTotal={self.state.count}
+              refreshDevices={() => self._getDevices()}
             />
           </div>
         ) : (
