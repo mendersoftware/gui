@@ -55,6 +55,9 @@ export default class ScheduleForm extends React.Component {
         title: self.props.device.id,
         value: self.props.device
       };
+      artifactItems = artifactItems.filter(artifact =>
+        artifact.value.device_types_compatible.some(type => type === self.props.device.attributes.find(attr => attr.name === 'device_type').value)
+      );
     } else {
       groupItems = self.props.groups.reduce((accu, group) => {
         accu.push({
