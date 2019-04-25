@@ -79,6 +79,7 @@ export default class Pending extends React.Component {
   _getDevices() {
     var self = this;
     AppActions.getDevicesByStatus('pending', this.state.pageNo, this.state.pageLength)
+      // TODO: get inventory data for all devices retrieved here to get proper updated_ts
       .catch(error => {
         console.log(error);
         var errormsg = error.error || 'Please check your connection.';
@@ -184,8 +185,8 @@ export default class Pending extends React.Component {
         render: device => (device.created_ts ? <Time value={device.created_ts} format="YYYY-MM-DD HH:mm" /> : '-')
       },
       {
-        title: 'Last updated',
-        name: 'last_updated',
+        title: 'Last checkin',
+        name: 'last_checkin',
         render: device => (device.updated_ts ? <Time value={device.updated_ts} format="YYYY-MM-DD HH:mm" /> : '-')
       },
       {
