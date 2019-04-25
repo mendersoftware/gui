@@ -78,7 +78,7 @@ export default class DeviceList extends React.Component {
     const self = this;
     const { className, columnHeaders, devices, pageLength, pageLoading, pageNo, pageTotal, onSelect, selectedRows } = self.props;
     const { sortCol, sortDown, expandedDeviceId } = self.state;
-    const columnWidth = `${100 / columnHeaders.length}%`;
+    const columnWidth = `${(onSelect ? 90 : 100) / columnHeaders.length}%`;
     const numSelected = (selectedRows || []).length;
     return (
       <div className={`deviceList ${className || ''}`}>
@@ -92,7 +92,7 @@ export default class DeviceList extends React.Component {
           ) : null}
 
           {columnHeaders.map(item => (
-            <div className="columnHeader" key={item.name} style={{ width: item.width || columnWidth }}>
+            <div className="columnHeader" key={item.name} style={Object.assign({ width: item.width || columnWidth }, item.style)}>
               {item.title}
               {item.sortable ? <SortIcon className={`sortIcon ${sortCol === item.name ? 'selected' : ''} ${sortDown.toString()}`} /> : null}
               {item.customize ? <SettingsIcon onClick={item.customize} style={{ fontSize: 16, marginLeft: 'auto' }} /> : null}

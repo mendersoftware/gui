@@ -177,7 +177,8 @@ export default class Pending extends React.Component {
       {
         title: (AppStore.getGlobalSettings() || {}).id_attribute || 'Device ID',
         name: 'device_id',
-        customize: () => self.props.openSettingsDialog()
+        customize: () => self.props.openSettingsDialog(),
+        style: { flexGrow: 1 }
       },
       {
         title: 'First request',
