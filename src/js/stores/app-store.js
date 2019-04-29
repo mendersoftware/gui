@@ -235,16 +235,16 @@ function _sortDeploymentDevices(devices) {
     newList[devices[i].status].push(devices[i]);
   }
 
-  var newCombine = newList.success.concat(
+  var newCombine = newList.failure.concat(
     newList.downloading,
     newList.installing,
     newList.rebooting,
-    newList.failure,
-    newList.decommissioned,
+    newList.pending,
+    newList.success,
     newList.aborted,
-    newList['already-installed'],
     newList.noartifact,
-    newList.pending
+    newList['already-installed'],
+    newList.decommissioned
   );
   return newCombine;
 }
