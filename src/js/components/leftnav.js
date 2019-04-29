@@ -17,7 +17,6 @@ export default class LeftNav extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      currentTab: this.props.currentTab,
       isHosted: window.location.hostname === 'hosted.mender.io'
     };
   }
@@ -30,7 +29,7 @@ export default class LeftNav extends React.Component {
       docsVersion = self.props.docsVersion ? `${self.props.docsVersion}/` : 'development/';
     }
     const listItemStyle = {
-      container: { padding: '16px 16px 16px 42px' },
+      container: { padding: '16px 16px 16px 42px' }
     };
 
     var list = listItems.map((item, index) => (
