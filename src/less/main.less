@@ -275,7 +275,7 @@ ul.link-list {
 }
 
 .hoverText:hover > hr {
-  border-bottom: 2px solid #e0e0e0 !important;
+  border-bottom: 2px solid @bordercolor !important;
 }
 
 .fadeIn {
@@ -340,7 +340,7 @@ ul.link-list {
 
 #header-nav {
   position: relative;
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid @bordercolor;
 }
 
 .header .material-icons {
@@ -962,7 +962,7 @@ table thead.clickable tr > th:first-child {
     border-top: none;
     border-left: none;
     border-right: none;
-    border-bottom: solid 1px #e0e0e0;
+    border-bottom: solid 1px @bordercolor;
     padding: 7px 0;
     padding-left: 32px;
     font-size: 13px;
@@ -1013,18 +1013,6 @@ table thead.clickable tr > th:first-child {
   }
 }
 
-#device-identity .list-horizontal-display > div,
-#device-actions .list-horizontal-display > div {
-  float: left;
-  vertical-align: top;
-  margin-right: 30px;
-  height: 70px;
-}
-
-.list-horizontal-display {
-  overflow: hidden;
-}
-
 .list-horizontal-flex {
   display: flex;
   flex-direction: row;
@@ -1033,28 +1021,6 @@ table thead.clickable tr > th:first-child {
     margin-right: 2vw;
     flex-basis: 300px;
   }
-}
-
-#device-identity.bordered,
-#device-inventory.bordered {
-  border: 1px solid @lightgrey;
-  margin-top: 10px;
-  padding: 5px 20px;
-}
-
-#device-inventory.bordered {
-  padding-bottom: 20px;
-}
-
-.list-horizontal-display > div > span.key > div > div > div {
-  -webkit-line-clamp: 10 !important;
-  height: auto !important;
-  word-break: break-all;
-  white-space: inherit !important;
-}
-
-#device-inventory .report-list {
-  width: 45%;
 }
 
 .expandedButton {
@@ -1403,12 +1369,6 @@ tr.expand {
     }
   }
 
-  #device-identity,
-  #device-actions {
-    position: relative;
-    width: 100%;
-  }
-
   td {
     vertical-align: top;
     padding-top: 16px;
@@ -1421,9 +1381,52 @@ tr.expand {
       padding: 0 45px 30px;
     }
   }
+}
 
-  td.expandButton {
-    padding-top: 2px;
+.deviceList {
+  min-width: 800px;
+  .header {
+    padding: 0 24px;
+    align-items: center;
+    height: 56px;
+    font-size: 12px;
+    color: @textmuted;
+  }
+  .columnHeader {
+    padding: 0 24px;
+  }
+  .body > div:last-of-type {
+    border-bottom: 1px solid @bordercolor;
+  }
+  .deviceListItem {
+    border-top: 1px solid @bordercolor;
+    &:hover {
+      background: @lightestgrey;
+    }
+    .expandedDevice {
+      padding-left: 48px;
+      padding-right: 35px;
+    }
+    .device-identity.bordered,
+    .device-inventory.bordered {
+      border: 1px solid @lightgrey;
+      margin-top: 10px;
+      padding: 5px 20px;
+    }
+    .device-identity,
+    .device-actions {
+      position: relative;
+      width: 100%;
+    }
+    .device-inventory.bordered {
+      padding-bottom: 20px;
+    }
+    .device-inventory .report-list {
+      width: 45%;
+    }
+  }
+  &.pending .deviceListItem {
+    background: @lightergrey;
   }
 }
 
@@ -1535,7 +1538,7 @@ input.fileInput {
   border-top: none;
   border-left: none;
   border-right: none;
-  border-bottom: solid 1px #e0e0e0;
+  border-bottom: solid 1px @bordercolor;
   padding: 7px 0;
   font-size: 16px;
   font-family: Lato, sans-serif;

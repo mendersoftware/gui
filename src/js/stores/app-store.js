@@ -34,6 +34,8 @@ var _globalSettings = {};
 
 var _alldevices = [];
 var _pending = [];
+var _preauthorized = [];
+var _rejected = [];
 
 function _selectGroup(group) {
   _filters = [];
@@ -150,10 +152,6 @@ function _addGroup(group, idx) {
   if (idx !== undefined) {
     _groups.splice(idx, 0, group);
   }
-}
-
-function _getPendingDevices() {
-  return _pending || [];
 }
 
 function discoverDevices(array) {
@@ -410,6 +408,14 @@ function setPendingDevices(devices) {
   }
 }
 
+function setPreauthDevices(devices) {
+  _preauthorized = devices;
+}
+
+function setRejectedDevices(devices) {
+  _rejected = devices;
+}
+
 function setGroups(groups) {
   if (groups) {
     _groups = groups;
@@ -566,7 +572,11 @@ var AppStore = Object.assign({}, EventEmitter.prototype, {
 
   getOrderedDeploymentDevices: devices => _sortDeploymentDevices(devices),
 
-  getPendingDevices: () => _getPendingDevices(),
+  getPendingDevices: () => _pending || [],
+
+  getPreauthorizedDevices: () => _preauthorized || [],
+
+  getRejectedDevices: () => _rejected || [],
 
   getTotalDevices: () => _totalNumberDevices,
 
@@ -704,20 +714,36 @@ var AppStore = Object.assign({}, EventEmitter.prototype, {
       setTotalDevices(payload.action.count);
       break;
 
-    case AppConstants.SET_PENDING_DEVICES:
+    case AppConstants.SET_PENDING_DEVICES_COUNT:
       setTotalPendingDevices(payload.action.count);
       break;
 
-    case AppConstants.SET_ACCEPTED_DEVICES:
+    case AppConstants.SET_ACCEPTED_DEVICES_COUNT:
       setTotalAcceptedDevices(payload.action.count);
       break;
 
-    case AppConstants.SET_REJECTED_DEVICES:
+    case AppConstants.SET_REJECTED_DEVICES_COUNT:
       setTotalRejectedDevices(payload.action.count);
       break;
 
-    case AppConstants.SET_PREAUTH_DEVICES:
+    case AppConstants.SET_PREAUTH_DEVICES_COUNT:
       setTotalPreauthDevices(payload.action.count);
+      break;
+
+      // case AppConstants.SET_ACCEPTED_DEVICES:
+      //   setAcceptedDevices(payload.action.devices);
+      //   break;
+
+    case AppConstants.SET_PENDING_DEVICES:
+      setPendingDevices(payload.action.devices);
+      break;
+
+    case AppConstants.SET_REJECTED_DEVICES:
+      setRejectedDevices(payload.action.devices);
+      break;
+
+    case AppConstants.SET_PREAUTHORIZED_DEVICES:
+      setPreauthDevices(payload.action.devices);
       break;
 
     case AppConstants.SET_DEVICE_LIMIT:

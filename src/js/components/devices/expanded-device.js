@@ -34,6 +34,27 @@ import WarningIcon from '@material-ui/icons/Warning';
 
 import { preformatWithRequestID } from '../../helpers';
 
+const iconStyle = { margin: 12 };
+
+const states = {
+  pending: {
+    text: 'Accept, reject or dismiss the device?',
+    statusIcon: <Icon className="pending-icon" style={iconStyle} />
+  },
+  accepted: {
+    text: 'Reject, dismiss or decommission this device?',
+    statusIcon: <CheckCircleIcon className="green" style={iconStyle} />
+  },
+  rejected: {
+    text: 'Accept, dismiss or decommission this device',
+    statusIcon: <BlockIcon className="red" style={iconStyle} />
+  },
+  preauthorized: {
+    text: 'Remove this device from preauthorization?',
+    statusIcon: <CheckIcon style={iconStyle} />
+  }
+};
+
 export default class ExpandedDevice extends React.Component {
   static contextTypes = {
     router: PropTypes.object,
@@ -42,15 +63,18 @@ export default class ExpandedDevice extends React.Component {
 
   constructor(props, context) {
     super(props, context);
+
     this.state = {
-      showInput: false,
+      artifacts: AppStore.getArtifactsRepo(),
+      authsets: false,
+      docsVersion: AppStore.getDocsVersion(),
+      schedule: false,
       selectedGroup: {
         payload: '',
         text: ''
       },
-      schedule: false,
-      authsets: false,
-      artifacts: AppStore.getArtifactsRepo(),
+      showHelptips: AppStore.showHelptips(),
+      showInput: false,
       user: AppStore.getCurrentUser()
     };
   }
@@ -81,6 +105,7 @@ export default class ExpandedDevice extends React.Component {
   toggleAuthsets(authsets = !this.state.authsets) {
     this.setState({ authsets });
     this.props.pause();
+    this.props.refreshDevices();
   }
 
   _updateParams(val, attr) {
@@ -110,7 +135,7 @@ export default class ExpandedDevice extends React.Component {
         var id = data.substring(lastslashindex + 1);
 
         // onboarding
-        if (self.props.showHelpTips && !cookie.load(`${self.state.user.id}-onboarded`) && !cookie.load(`${self.state.user.id}-deploymentID`)) {
+        if (self.state.showHelpTips && !cookie.load(`${self.state.user.id}-onboarded`) && !cookie.load(`${self.state.user.id}-deploymentID`)) {
           cookie.save(`${self.state.user.id}-deploymentID`, id);
         }
 
@@ -142,8 +167,9 @@ export default class ExpandedDevice extends React.Component {
     // check that device type matches
     var filteredDevs = null;
     if (attr === 'artifact' && val) {
+      const device_type = this.props.device.attributes.find(item => item.name === 'device_type').value;
       for (var i = 0; i < val.device_types_compatible.length; i++) {
-        if (val.device_types_compatible[i] === this.props.device_type) {
+        if (val.device_types_compatible[i] === device_type) {
           filteredDevs = [this.props.device];
           break;
         }
@@ -152,7 +178,7 @@ export default class ExpandedDevice extends React.Component {
     this.setState({ filterByArtifact: filteredDevs });
   }
   _clickLink() {
-    window.location.assign(`https://docs.mender.io/${this.props.docsVersion}/client-configuration/configuration-file/polling-intervals`);
+    window.location.assign(`https://docs.mender.io/${this.state.docsVersion}/client-configuration/configuration-file/polling-intervals`);
   }
   _copyLinkToClipboard() {
     var location = window.location.href.substring(0, window.location.href.indexOf('/devices') + '/devices'.length);
@@ -174,7 +200,8 @@ export default class ExpandedDevice extends React.Component {
         var errMsg = err.res.error.message || '';
         console.log(errMsg);
         AppActions.setSnackbar(preformatWithRequestID(err.res, `There was a problem decommissioning the device: ${errMsg}`), null, 'Copy to clipboard');
-      });
+      })
+      .finally(() => self.props.refreshDevices());
   }
 
   render() {
@@ -247,22 +274,7 @@ export default class ExpandedDevice extends React.Component {
       deviceInventory2 = deviceInventory.splice(deviceInventory.length / 2 + (deviceInventory.length % 2), deviceInventory.length);
     }
 
-    var statusIcon = '';
-    const iconStyle = { margin: 12 };
-    switch (status) {
-    case 'accepted':
-      statusIcon = <CheckCircleIcon className="green" style={iconStyle} />;
-      break;
-    case 'pending':
-      statusIcon = <Icon className="pending-icon" style={iconStyle} />;
-      break;
-    case 'rejected':
-      statusIcon = <BlockIcon className="red" style={iconStyle} />;
-      break;
-    case 'preauthorized':
-      statusIcon = <CheckIcon style={iconStyle} />;
-      break;
-    }
+    const statusIcon = states[status].statusIcon;
 
     var hasPending = '';
     if (status === 'accepted' && this.props.device.auth_sets.length > 1) {
@@ -271,20 +283,13 @@ export default class ExpandedDevice extends React.Component {
       }, '');
     }
 
-    const states = {
-      pending: 'Accept, reject or dismiss the device?',
-      accepted: 'Reject, dismiss or decommission this device?',
-      rejected: 'Accept, dismiss or decommission this device',
-      default: 'Remove this device from preauthorization?'
-    };
-
-    const authLabelText = hasPending ? hasPending : states[status] || states.default;
+    const authLabelText = hasPending ? hasPending : states[status].text || states.default.text;
 
     const buttonStyle = { textTransform: 'none', textAlign: 'left' };
 
     var deviceInfo = (
       <div key="deviceinfo">
-        <div id="device-identity" className="bordered">
+        <div className="device-identity bordered">
           <div className="margin-bottom-small">
             <h4 className="margin-bottom-none">Device identity</h4>
             <List className="list-horizontal-flex">{deviceIdentity}</List>
@@ -323,7 +328,7 @@ export default class ExpandedDevice extends React.Component {
         </div>
 
         {this.props.attrs || status === 'accepted' ? (
-          <div id="device-inventory" className="bordered">
+          <div className="device-inventory bordered">
             <div className={this.props.unauthorized ? 'hidden' : 'report-list'}>
               <h4 className="margin-bottom-none">Device inventory</h4>
               <List>{deviceInventory}</List>
@@ -336,18 +341,18 @@ export default class ExpandedDevice extends React.Component {
         ) : null}
 
         {status === 'accepted' && !waiting ? (
-          <div id="device-actions" className="report-list" style={{ marginTop: '24px' }}>
+          <div className="device-actions" style={{ marginTop: '24px' }}>
             <Button onClick={() => this._copyLinkToClipboard()}>
               <LinkIcon className="rotated buttonLabelIcon" />
               Copy link to this device
             </Button>
             {status === 'accepted' ? (
-              <div className="margin-left inline">
+              <span className="margin-left">
                 <Button onClick={() => this.setState({ schedule: true })}>
                   <ReplayIcon className="rotated buttonLabelIcon" />
                   Create a deployment for this device
                 </Button>
-              </div>
+              </span>
             ) : null}
           </div>
         ) : null}
@@ -394,10 +399,10 @@ export default class ExpandedDevice extends React.Component {
     );
 
     return (
-      <div>
+      <div className={this.props.className}>
         {deviceInfo}
 
-        {this.props.showHelptips && status === 'pending' ? (
+        {this.state.showHelptips && status === 'pending' ? (
           <div>
             <div
               id="onboard-4"

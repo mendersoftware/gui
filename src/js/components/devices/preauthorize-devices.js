@@ -1,15 +1,6 @@
 import React from 'react';
-import Time from 'react-time';
-import { Collapse } from 'react-collapse';
-import Loader from '../common/loader';
-import AppActions from '../../actions/app-actions';
-import ExpandedDevice from './expanded-device';
-
-import Pagination from 'rc-pagination';
-import _en_US from 'rc-pagination/lib/locale/en_US';
 import Dropzone from 'react-dropzone';
-import { clearAllRetryTimers } from '../../utils/retrytimer';
-import { isEmpty, preformatWithRequestID } from '../../helpers';
+import Time from 'react-time';
 
 // material ui
 import Button from '@material-ui/core/Button';
@@ -22,51 +13,77 @@ import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import IconButton from '@material-ui/core/IconButton';
 import Input from '@material-ui/core/Input';
-import Table from '@material-ui/core/Table';
-import TableHead from '@material-ui/core/TableHead';
-import TableCell from '@material-ui/core/TableCell';
-import TableBody from '@material-ui/core/TableBody';
-import TableRow from '@material-ui/core/TableRow';
 import TextField from '@material-ui/core/TextField';
 
-import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
-import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
 import ContentAddIcon from '@material-ui/icons/Add';
 import ClearIcon from '@material-ui/icons/Clear';
 import FileIcon from '@material-ui/icons/CloudUpload';
 import InfoIcon from '@material-ui/icons/InfoOutlined';
-import SettingsIcon from '@material-ui/icons/Settings';
+
+import AppActions from '../../actions/app-actions';
+import AppStore from '../../stores/app-store';
+import { isEmpty, preformatWithRequestID } from '../../helpers';
+import Loader from '../common/loader';
+import DeviceList from './devicelist';
 
 export default class Preauthorize extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      divHeight: 208,
-      devices: [],
+      count: AppStore.getTotalPreauthDevices(),
+      devices: AppStore.getPreauthorizedDevices(),
       pageNo: 1,
       pageLength: 20,
-      authLoading: 'all',
+      pageLoading: true,
       openPreauth: false,
       openRemove: false,
       inputs: [{ key: '', value: '' }],
       public: '',
-      showKey: false,
+      refreshDeviceLength: 10000,
       devicesToRemove: []
     };
   }
 
+  componentWillMount() {
+    AppStore.changeListener(this._onChange.bind(this));
+  }
+
   componentDidMount() {
-    clearAllRetryTimers();
+    this.timer = setInterval(() => this._getDevices(), this.state.refreshDeviceLength);
     this._getDevices();
   }
 
   componentWillUnmount() {
-    clearAllRetryTimers();
+    AppStore.removeChangeListener(this._onChange.bind(this));
+    clearInterval(this.timer);
   }
 
   componentDidUpdate(prevProps) {
     if (prevProps.count !== this.props.count || (prevProps.currentTab !== this.props.currentTab && this.props.currentTab.indexOf('Preauthorized') !== -1)) {
       this._getDevices();
+    }
+  }
+
+  shouldComponentUpdate(_, nextState) {
+    return (
+      this.state.pageLoading != nextState.pageLoading ||
+      this.state.devices.some((device, index) => device !== nextState.devices[index]) ||
+      this.state.openPreauth !== nextState.openPreauth ||
+      this.state.openRemove !== nextState.openRemove
+    );
+  }
+
+  _onChange() {
+    const self = this;
+    let state = {
+      devices: AppStore.getPreauthorizedDevices(),
+      count: AppStore.getTotalPreauthDevices()
+    };
+    if (!self.state.pageLoading && (!state.devices.length && state.count)) {
+      //if devices empty but count not, put back to first page
+      self._handlePageChange(1);
+    } else {
+      self.setState(state);
     }
   }
 
@@ -76,33 +93,17 @@ export default class Preauthorize extends React.Component {
   _getDevices() {
     var self = this;
     AppActions.getDevicesByStatus('preauthorized', this.state.pageNo, this.state.pageLength)
-      .then(devices => {
-        self.setState({ devices, pageLoading: false, authLoading: null, expandRow: null });
-        if (!devices.length && self.props.count) {
-          //if devices empty but count not, put back to first page
-          self._handlePageChange(1);
-        }
-      })
       .catch(error => {
-        var errormsg = error.res.body.error || 'Please check your connection';
-        self.setState({ pageLoading: false, authLoading: null });
+        console.log(error);
+        var errormsg = error.res.body.error || 'Please check your connection.';
         AppActions.setSnackbar(preformatWithRequestID(error.res, `Preauthorized devices couldn't be loaded. ${errormsg}`), null, 'Copy to clipboard');
-      });
+        console.log(errormsg);
+      })
+      .finally(() => self.setState({ pageLoading: false }));
   }
 
   _sortColumn() {
     console.log('sort');
-  }
-  _expandRow(rowNumber) {
-    AppActions.setSnackbar('');
-    var device = this.state.devices[rowNumber];
-    if (this.state.expandRow === rowNumber) {
-      rowNumber = null;
-    }
-    this.setState({ expandedDevice: device, expandRow: rowNumber });
-  }
-  _adjustCellHeight(height) {
-    this.setState({ divHeight: height + 95 });
   }
 
   _handlePageChange(pageNo) {
@@ -210,62 +211,24 @@ export default class Preauthorize extends React.Component {
     var self = this;
     var limitMaxed = self.props.deviceLimit && self.props.deviceLimit <= self.props.acceptedDevices;
 
-    var devices = self.state.devices.map((device, index) => {
-      var id_attribute =
-        self.props.globalSettings.id_attribute && self.props.globalSettings.id_attribute !== 'Device ID'
-          ? (device.identity_data || {})[self.props.globalSettings.id_attribute]
-          : device.device_id || device.id;
-
-      var expanded = '';
-      if (self.state.expandRow === index) {
-        expanded = (
-          <ExpandedDevice
-            id_attribute={(self.props.globalSettings || {}).id_attribute}
-            _showKey={self._showKey}
-            showKey={self.state.showKey}
-            limitMaxed={limitMaxed}
-            deviceId={self.state.deviceId}
-            id_value={id_attribute}
-            device={self.state.expandedDevice}
-            unauthorized={true}
-            pause={self.props.pause}
-          />
-        );
+    const columnHeaders = [
+      {
+        title: (AppStore.getGlobalSettings() || {}).id_attribute || 'Device ID',
+        name: 'device_id',
+        customize: () => self.props.openSettingsDialog(),
+        style: { flexGrow: 1 }
+      },
+      {
+        title: 'Date added',
+        name: 'date_added',
+        render: device => (device.created_ts ? <Time value={device.created_ts} format="YYYY-MM-DD HH:mm" /> : '-')
+      },
+      {
+        title: 'Status',
+        name: 'status',
+        render: device => (device.status ? <div className="capitalized">{device.status}</div> : '-')
       }
-
-      return (
-        <TableRow
-          className={expanded ? 'expand' : null}
-          hover
-          key={index}
-          onClick={() => self._expandRow(index)}
-          style={expanded ? { height: self.state.divHeight } : null}
-        >
-          <TableCell>{id_attribute}</TableCell>
-          <TableCell className="no-click-cell">
-            <Time value={device.created_ts} format="YYYY-MM-DD HH:mm" />
-          </TableCell>
-          <TableCell className="no-click-cell capitalized">{device.status}</TableCell>
-          <TableCell style={{ width: '55px', paddingRight: '0', paddingLeft: '12px' }} className="expandButton">
-            <IconButton className="float-right">{expanded ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}</IconButton>
-          </TableCell>
-          <TableCell style={{ width: '0', padding: '0', overflow: 'visible' }}>
-            <Collapse
-              springConfig={{ stiffness: 210, damping: 20 }}
-              onMeasure={measurements => self._adjustCellHeight(measurements.height)}
-              className="expanded"
-              isOpened={expanded ? true : false}
-              onClick={e => {
-                e.preventDefault();
-                e.stopPropagation();
-              }}
-            >
-              {expanded}
-            </Collapse>
-          </TableCell>
-        </TableRow>
-      );
-    });
+    ];
 
     var deviceLimitWarning = limitMaxed ? (
       <p className="warning">
@@ -334,50 +297,24 @@ export default class Preauthorize extends React.Component {
           Preauthorize devices
         </Button>
 
-        <Loader show={this.state.authLoading === 'all'} />
+        <Loader show={this.state.pageLoading} />
 
-        {this.state.devices.length && this.state.authLoading !== 'all' ? (
+        {this.state.devices.length && !this.state.pageLoading ? (
           <div className="padding-bottom">
             <h3 className="align-center">Preauthorized devices</h3>
             {deviceLimitWarning}
-
-            <Table>
-              <TableHead className="clickable">
-                <TableRow>
-                  <TableCell className="columnHeader" tooltip={(this.props.globalSettings || {}).id_attribute || 'Device ID'}>
-                    {(this.props.globalSettings || {}).id_attribute || 'Device ID'}
-                    <SettingsIcon onClick={this.props.openSettingsDialog} style={{ fontSize: '16px' }} className="hover float-right" />
-                  </TableCell>
-                  <TableCell className="columnHeader" tooltip="Date added">
-                    Date added
-                  </TableCell>
-                  <TableCell className="columnHeader" tooltip="Status">
-                    Status
-                  </TableCell>
-                  <TableCell className="columnHeader" style={{ width: '55px', paddingRight: '12px', paddingLeft: '0' }} />
-                </TableRow>
-              </TableHead>
-              <TableBody className="clickable">{devices}</TableBody>
-            </Table>
-
-            <div className="margin-top">
-              <Pagination
-                locale={_en_US}
-                simple
-                pageSize={this.state.pageLength}
-                current={this.state.pageNo || 1}
-                total={this.props.count}
-                onChange={page => this._handlePageChange(page)}
-              />
-              {this.state.pageLoading ? (
-                <div className="smallLoaderContainer">
-                  <Loader show={true} />
-                </div>
-              ) : null}
-            </div>
+            <DeviceList
+              {...self.props}
+              {...self.state}
+              columnHeaders={columnHeaders}
+              limitMaxed={limitMaxed}
+              onPageChange={e => self._handlePageChange(e)}
+              pageTotal={self.state.count}
+              refreshDevices={() => self._getDevices()}
+            />
           </div>
         ) : (
-          <div className={this.state.authLoading ? 'hidden' : 'dashboard-placeholder'}>
+          <div className={this.state.pageLoading ? 'hidden' : 'dashboard-placeholder'}>
             <p>There are no preauthorized devices.</p>
             <p>
               {limitMaxed ? 'Preauthorize devices' : <a onClick={() => this._togglePreauth(true)}>Preauthorize devices</a>} so that when they come online, they

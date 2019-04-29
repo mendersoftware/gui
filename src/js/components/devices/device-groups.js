@@ -2,8 +2,6 @@ import React from 'react';
 import { Promise } from 'es6-promise';
 import PropTypes from 'prop-types';
 import pluralize from 'pluralize';
-import Pagination from 'rc-pagination';
-import _en_US from 'rc-pagination/lib/locale/en_US';
 
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
@@ -14,15 +12,13 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import DeleteIcon from '@material-ui/icons/Delete';
 
 import CreateGroup from './create-group';
-import DeviceList from './devicelist';
+import AuthorizedDevices from './authorized-devices';
 import Filters from './filters';
 import Groups from './groups';
 import GroupSelector from './groupselector';
 import AppActions from '../../actions/app-actions';
 import AppStore from '../../stores/app-store';
 import AppConstants from '../../constants/app-constants';
-import { AppContext } from '../../contexts/app-context';
-import Loader from '../common/loader';
 import { isEmpty, preformatWithRequestID } from '../../helpers';
 import { setRetryTimer, clearAllRetryTimers } from '../../utils/retrytimer';
 
@@ -270,7 +266,6 @@ export default class DeviceGroups extends React.Component {
             if (devices.length && devices[0].attributes && self.state.isHosted) {
               AppActions.setFilterAttributes(devices[0].attributes);
             }
-            self.setState({ devices });
             // for each device, get device identity info
             const allDeviceDetails = devices.map(device => {
               // have to call each time - accepted list can change order
@@ -296,12 +291,11 @@ export default class DeviceGroups extends React.Component {
       // otherwise, show accepted from device adm
       return AppActions.getDevicesByStatus('accepted', this.state.pageNo, this.state.pageLength)
         .then(devices => {
-          var state = { groupCount: self.props.acceptedDevices };
-          if (!devices.length) {
+          let state = { devices, groupCount: self.props.acceptedDevices, loading: false, pageLoading: false };
+          let additionalDeviceRequests = Promise.resolve(devices);
+          if (devices.length) {
             // if none, stop loading spinners
-            state = Object.assign(state, { devices, loading: false, pageLoading: false, attributes: AppStore.getFilterAttributes() });
-          }
-          self.setState(state, () => {
+            state.devices = [];
             // for each device, get inventory
             const deviceInventoryRequests = devices.map(device => {
               var gotAttrs = false;
@@ -318,9 +312,12 @@ export default class DeviceGroups extends React.Component {
               });
             });
             // only set state after all devices inventory retrieved
-            return Promise.all(deviceInventoryRequests).then(inventoryDevices =>
-              self.setState({ devices: inventoryDevices, loading: false, pageLoading: false, attributes: AppStore.getFilterAttributes() })
-            );
+            additionalDeviceRequests = Promise.all(deviceInventoryRequests);
+          }
+          return additionalDeviceRequests.then(requestedDevices => {
+            state.devices = requestedDevices;
+            state.attributes = AppStore.getFilterAttributes();
+            self.setState(state);
           });
         })
         .catch(err => {
@@ -352,7 +349,7 @@ export default class DeviceGroups extends React.Component {
         if (!isEmpty(device)) {
           return self._getInventoryForDevice(id).then(inventory => {
             device.attributes = inventory.attributes;
-
+            device.updated_ts = inventory.updated_ts;
             return Promise.resolve(device);
           });
         }
@@ -557,7 +554,6 @@ export default class DeviceGroups extends React.Component {
             selectedGroup={this.state.selectedGroup}
             allCount={this.props.allCount}
             acceptedCount={this.props.acceptedDevices}
-            showHelptips={this.props.showHelptips}
           />
         </div>
         <div className="rightFluid" style={{ paddingTop: '0' }}>
@@ -579,46 +575,25 @@ export default class DeviceGroups extends React.Component {
               Remove group
             </Button>
           ) : null}
-          <AppContext.Consumer>
-            {({ globalSettings, docsVersion }) => (
-              <DeviceList
-                docsVersion={docsVersion}
-                pageNo={this.state.pageNo}
-                addDevicesToGroup={devices => this._addDevicesToGroup(devices)}
-                removeDevicesFromGroup={rows => this._removeDevicesFromGroup(rows)}
-                allowDeviceGroupRemoval={allowDeviceGroupRemoval}
-                loading={this.state.loading}
-                currentTab={this.props.currentTab}
-                allCount={this.props.allCount}
-                acceptedCount={this.props.acceptedDevices}
-                groupCount={groupCount}
-                group={groupName}
-                devices={this.state.devices}
-                paused={this.props.paused}
-                showHelptips={this.props.showHelptips}
-                globalSettings={globalSettings}
-                openSettingsDialog={this.props.openSettingsDialog}
-                pause={() => this._pauseInterval()}
-              />
-            )}
-          </AppContext.Consumer>
-          {this.state.devices.length && !this.state.loading ? (
-            <div className="margin-top">
-              <Pagination
-                locale={_en_US}
-                simple
-                pageSize={this.state.pageLength}
-                current={this.state.pageNo}
-                total={groupCount}
-                onChange={e => this._handlePageChange(e)}
-              />
-              {this.state.pageLoading ? (
-                <div className="smallLoaderContainer">
-                  <Loader show={true} />
-                </div>
-              ) : null}
-            </div>
-          ) : null}
+          <AuthorizedDevices
+            acceptedCount={this.props.acceptedDevices}
+            addDevicesToGroup={devices => this._addDevicesToGroup(devices)}
+            allCount={this.props.allCount}
+            allowDeviceGroupRemoval={allowDeviceGroupRemoval}
+            currentTab={this.props.currentTab}
+            devices={this.state.devices}
+            group={groupName}
+            groupCount={groupCount}
+            loading={this.state.loading}
+            onPageChange={e => self._handlePageChange(e)}
+            openSettingsDialog={this.props.openSettingsDialog}
+            pageNo={self.state.pageNo}
+            pageLength={self.state.pageLength}
+            pause={() => this._pauseInterval()}
+            refreshDevices={() => self._getDevices()}
+            paused={this.props.paused}
+            removeDevicesFromGroup={rows => this._removeDevicesFromGroup(rows)}
+          />
         </div>
 
         <Dialog open={this.state.addGroup} fullWidth={true} maxWidth="sm">
@@ -647,19 +622,14 @@ export default class DeviceGroups extends React.Component {
           <DialogActions>{removeActions}</DialogActions>
         </Dialog>
 
-        <AppContext.Consumer>
-          {({ globalSettings }) => (
-            <CreateGroup
-              toggleDialog={() => self.setState({ createGroupDialog: !self.state.createGroupDialog })}
-              open={this.state.createGroupDialog}
-              groups={this.state.groups}
-              changeGroup={() => this._handleGroupChange()}
-              globalSettings={globalSettings}
-              addListOfDevices={(devices, group) => this._createGroupFromDialog(devices, group)}
-              acceptedCount={this.props.acceptedDevices}
-            />
-          )}
-        </AppContext.Consumer>
+        <CreateGroup
+          toggleDialog={() => self.setState({ createGroupDialog: !self.state.createGroupDialog })}
+          open={this.state.createGroupDialog}
+          groups={this.state.groups}
+          changeGroup={() => this._handleGroupChange()}
+          addListOfDevices={(devices, group) => this._createGroupFromDialog(devices, group)}
+          acceptedCount={this.props.acceptedDevices}
+        />
       </div>
     );
   }
