@@ -55,7 +55,7 @@ export default class Progress extends React.Component {
                 <Table style={{ overflow: 'visible' }}>
                   <TableHead>
                     <TableRow style={{ overflow: 'visible' }}>
-                      <TableCell style={{ width: '100px' }}>Updating to</TableCell>
+                      <TableCell>Updating to</TableCell>
                       <TableCell>Group</TableCell>
                       <TableCell>Started</TableCell>
                       <TableCell style={{ textAlign: 'right', width: '100px' }}># Devices</TableCell>
