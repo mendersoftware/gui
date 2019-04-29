@@ -98,10 +98,7 @@ export default class ProgressDeviceList extends React.Component {
           }
         })(status, device.substate || '');
 
-        var devicePercentage = (function(percentage) {
-          return `${percentage}%`;
-        })(device.percentage);
-
+        const devicePercentage = device.percentage || 0;
         const progressColor = status && (status.toLowerCase() === 'failure' || status.toLowerCase() === 'aborted') ? 'secondary' : 'primary';
 
         return (
@@ -118,10 +115,8 @@ export default class ProgressDeviceList extends React.Component {
               <div>
                 {!['pending', 'decommissioned', 'already-installed'].includes(device.status.toLowerCase()) && (
                   <div>
-                    <div style={{ textAlign: 'end', color: '#aaaaaa' }}>
-                      {!['aborted', 'failure', 'noartifact'].includes(device.status.toLowerCase()) ? devicePercentage : '0%'}
-                    </div>
-                    <LinearProgress color={progressColor} variant="determinate" value={device.percentage} />
+                    <div style={{ textAlign: 'end', color: '#aaaaaa' }}>{`${devicePercentage}%`}</div>
+                    <LinearProgress color={progressColor} variant="determinate" value={devicePercentage} />
                   </div>
                 )}
               </div>
