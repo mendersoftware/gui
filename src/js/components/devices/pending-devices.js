@@ -1,65 +1,76 @@
 import React from 'react';
-import { Collapse } from 'react-collapse';
+import { Link } from 'react-router-dom';
 import Time from 'react-time';
 import ReactTooltip from 'react-tooltip';
-import { AuthDevices, ExpandAuth } from '../helptips/helptooltips';
-import { Link } from 'react-router-dom';
-import Loader from '../common/loader';
-import AppActions from '../../actions/app-actions';
-import ExpandedDevice from './expanded-device';
-
-import Pagination from 'rc-pagination';
-import _en_US from 'rc-pagination/lib/locale/en_US';
 import pluralize from 'pluralize';
-import { setRetryTimer, clearAllRetryTimers } from '../../utils/retrytimer';
-import { preformatWithRequestID } from '../../helpers';
 
 // material ui
 import Button from '@material-ui/core/Button';
-import Checkbox from '@material-ui/core/Checkbox';
-import IconButton from '@material-ui/core/IconButton';
-import InfoIcon from '@material-ui/icons/InfoOutlined';
-import Table from '@material-ui/core/Table';
-import TableHead from '@material-ui/core/TableHead';
-import TableCell from '@material-ui/core/TableCell';
-import TableBody from '@material-ui/core/TableBody';
-import TableRow from '@material-ui/core/TableRow';
 
-import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
-import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
+import InfoIcon from '@material-ui/icons/InfoOutlined';
 import HelpIcon from '@material-ui/icons/Help';
-import SettingsIcon from '@material-ui/icons/Settings';
+
+import AppActions from '../../actions/app-actions';
+import AppStore from '../../stores/app-store';
+import { preformatWithRequestID } from '../../helpers';
+import Loader from '../common/loader';
+import { AuthDevices, ExpandAuth } from '../helptips/helptooltips';
+import DeviceList from './devicelist';
 
 export default class Pending extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      divHeight: 208,
-      devices: [],
+      count: AppStore.getTotalPendingDevices(),
+      devices: AppStore.getPendingDevices(),
       pageNo: 1,
       pageLength: 20,
       selectedRows: [],
-      authLoading: 'all'
+      showHelptips: AppStore.showHelptips(),
+      refreshDeviceLength: 10000,
+      authLoading: 'all',
+      pageLoading: true
     };
   }
 
+  componentWillMount() {
+    AppStore.changeListener(this._onChange.bind(this));
+  }
   componentDidMount() {
-    clearAllRetryTimers();
+    this.timer = setInterval(() => this._getDevices(), this.state.refreshDeviceLength);
     this._getDevices();
   }
-
   componentWillUnmount() {
-    clearAllRetryTimers();
+    AppStore.removeChangeListener(this._onChange.bind(this));
+    clearInterval(this.timer);
   }
 
   componentDidUpdate(prevProps) {
     if (prevProps.count !== this.props.count || (prevProps.currentTab !== this.props.currentTab && this.props.currentTab.indexOf('Pending') !== -1)) {
       this._getDevices();
-      this._clearSelected();
     }
+  }
 
-    if (prevProps.currentTab !== this.props.currentTab) {
-      this._clearSelected();
+  shouldComponentUpdate(_, nextState) {
+    return (
+      this.state.pageLoading !== nextState.pageLoading ||
+      this.state.authLoading !== nextState.authLoading ||
+      this.state.selectedRows !== nextState.selectedRows ||
+      this.state.devices.some((device, index) => device !== nextState.devices[index])
+    );
+  }
+
+  _onChange() {
+    const self = this;
+    let state = {
+      devices: AppStore.getPendingDevices(),
+      count: AppStore.getTotalPendingDevices()
+    };
+    if (!state.devices.length && state.count) {
+      //if devices empty but count not, put back to first page
+      self._handlePageChange(1);
+    } else {
+      self.setState(state);
     }
   }
 
@@ -69,46 +80,20 @@ export default class Pending extends React.Component {
   _getDevices() {
     var self = this;
     AppActions.getDevicesByStatus('pending', this.state.pageNo, this.state.pageLength)
-      .then(devices => {
-        self.setState({ devices, pageLoading: false, authLoading: null, expandRow: null });
-        if (!devices.length && self.props.count) {
-          //if devices empty but count not, put back to first page
-          self._handlePageChange(1);
-        }
+      // TODO: get inventory data for all devices retrieved here to get proper updated_ts
+      .catch(error => {
+        console.log(error);
+        var errormsg = error.error || 'Please check your connection.';
+        AppActions.setSnackbar(errormsg, 5000, '');
+        console.log(errormsg);
       })
-      .catch(err => {
-        console.log(err);
-        var errormsg = err.error || 'Please check your connection.';
+      .finally(() => {
         self.setState({ pageLoading: false, authLoading: null });
-        setRetryTimer(err, 'devices', `Pending devices couldn't be loaded. ${errormsg}`, self.state.refreshDeviceLength);
       });
-  }
-
-  _clearSelected() {
-    var self = this;
-    this.setState({ selectedRows: [], expandRow: null, allRowsSelected: true }, () => {
-      // workaround to ensure all rows deselected
-      self.setState({ allRowsSelected: false });
-    });
   }
 
   _sortColumn() {
     console.log('sort');
-  }
-  _expandRow(event, rowNumber) {
-    const self = this;
-    if (event.target.closest('input') && event.target.closest('input').hasOwnProperty('checked')) {
-      return;
-    }
-    AppActions.setSnackbar('');
-    var device = self.state.devices[rowNumber];
-    if (self.state.expandRow === rowNumber) {
-      rowNumber = null;
-    }
-    self.setState({ expandedDevice: device, expandRow: rowNumber });
-  }
-  _adjustCellHeight(height) {
-    this.setState({ divHeight: height + 95 });
   }
 
   _handlePageChange(pageNo) {
@@ -116,33 +101,6 @@ export default class Pending extends React.Component {
     self.setState({ selectedRows: [], currentPage: pageNo, pageLoading: true, expandRow: null, pageNo: pageNo }, () => {
       self._getDevices();
     });
-  }
-
-  _onRowSelection(selectedRow) {
-    const self = this;
-    const { selectedRows } = self.state;
-    const selectedIndex = selectedRows.indexOf(selectedRow);
-    let updatedSelection = [];
-    if (selectedIndex === -1) {
-      updatedSelection = updatedSelection.concat(selectedRows, selectedRow);
-    } else {
-      selectedRows.splice(selectedIndex, 1);
-      updatedSelection = selectedRows;
-    }
-    self.setState({ selectedRows: updatedSelection });
-  }
-
-  onSelectAllClick() {
-    const self = this;
-    let selectedRows = Array.apply(null, { length: this.state.devices.length }).map(Number.call, Number);
-    if (self.state.selectedRows.length && self.state.selectedRows.length <= self.state.devices.length) {
-      selectedRows = [];
-    }
-    self.setState({ selectedRows });
-  }
-
-  _isSelected(index) {
-    return this.state.selectedRows.indexOf(index) !== -1;
   }
 
   _getDevicesFromSelectedRows() {
@@ -206,82 +164,39 @@ export default class Pending extends React.Component {
     });
   }
 
+  onRowSelection(selection) {
+    this.setState({ selectedRows: selection });
+  }
+
   render() {
     const self = this;
     var limitMaxed = this.props.deviceLimit ? this.props.deviceLimit <= this.props.acceptedDevices : false;
     var limitNear = this.props.deviceLimit ? this.props.deviceLimit < this.props.acceptedDevices + this.state.devices.length : false;
     var selectedOverLimit = this.props.deviceLimit ? this.props.deviceLimit < this.props.acceptedDevices + this.state.selectedRows.length : false;
 
-    var devices = this.state.devices.map(function(device, index) {
-      var expanded = '';
-
-      var id_attribute =
-        self.props.globalSettings.id_attribute && self.props.globalSettings.id_attribute !== 'Device ID'
-          ? (device.identity_data || {})[self.props.globalSettings.id_attribute]
-          : device.id;
-
-      if (self.state.expandRow === index) {
-        expanded = (
-          <ExpandedDevice
-            highlightHelp={self.props.highlightHelp}
-            showHelptips={self.props.showHelptips}
-            id_attribute={(self.props.globalSettings || {}).id_attribute}
-            id_value={id_attribute}
-            _showKey={self._showKey}
-            showKey={self.state.showKey}
-            limitMaxed={limitMaxed}
-            deviceId={self.state.deviceId}
-            device={self.state.expandedDevice}
-            unauthorized={true}
-            pause={self.props.pause}
-          />
-        );
+    const columnHeaders = [
+      {
+        title: (AppStore.getGlobalSettings() || {}).id_attribute || 'Device ID',
+        name: 'device_id',
+        customize: () => self.props.openSettingsDialog(),
+        style: { flexGrow: 1 }
+      },
+      {
+        title: 'First request',
+        name: 'first_request',
+        render: device => (device.created_ts ? <Time value={device.created_ts} format="YYYY-MM-DD HH:mm" /> : '-')
+      },
+      {
+        title: 'Last checkin',
+        name: 'last_checkin',
+        render: device => (device.updated_ts ? <Time value={device.updated_ts} format="YYYY-MM-DD HH:mm" /> : '-')
+      },
+      {
+        title: 'Status',
+        name: 'status',
+        render: device => (device.status ? <div className="capitalized">{device.status}</div> : '-')
       }
-
-      return (
-        <TableRow
-          selected={self._isSelected(index)}
-          style={expanded ? { height: self.state.divHeight, backgroundColor: '#e9f4f3' } : { backgroundColor: '#e9f4f3' }}
-          className={expanded ? 'expand' : null}
-          hover
-          key={index}
-          onClick={event => self._expandRow(event, index)}
-        >
-          <TableCell padding="checkbox">
-            <Checkbox
-              style={expanded ? { paddingTop: '0', marginTop: '-4px' } : {}}
-              checked={self._isSelected(index)}
-              onChange={() => self._onRowSelection(index)}
-            />
-          </TableCell>
-          <TableCell>{id_attribute}</TableCell>
-          <TableCell>
-            <Time value={device.created_ts} format="YYYY-MM-DD HH:mm" />
-          </TableCell>
-          <TableCell>
-            <Time value={device.updated_ts} format="YYYY-MM-DD HH:mm" />
-          </TableCell>
-          <TableCell className="capitalized">{device.status}</TableCell>
-          <TableCell style={{ width: '55px', paddingRight: '0', paddingLeft: '12px' }} className="expandButton">
-            <IconButton className="float-right">{expanded ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}</IconButton>
-          </TableCell>
-          <TableCell style={{ width: '0', padding: '0', overflow: 'visible' }}>
-            <Collapse
-              springConfig={{ stiffness: 210, damping: 20 }}
-              onMeasure={measurements => self._adjustCellHeight(measurements.height)}
-              className="expanded"
-              isOpened={Boolean(expanded)}
-              onClick={e => {
-                e.preventDefault();
-                e.stopPropagation();
-              }}
-            >
-              {expanded}
-            </Collapse>
-          </TableCell>
-        </TableRow>
-      );
-    });
+    ];
 
     var deviceLimitWarning =
       limitMaxed || limitNear ? (
@@ -293,13 +208,11 @@ export default class Pending extends React.Component {
         </p>
       ) : null;
 
-    const numSelected = self.state.selectedRows.length;
-
     return (
       <div className="tab-container">
         <Loader show={this.state.authLoading} />
 
-        {this.props.showHelptips && this.state.devices.length ? (
+        {self.state.showHelptips && this.state.devices.length ? (
           <div>
             <div
               id="onboard-2"
@@ -317,58 +230,25 @@ export default class Pending extends React.Component {
           </div>
         ) : null}
 
-        {this.state.devices.length && this.state.authLoading !== 'all' ? (
+        {this.state.devices.length && (!this.state.pageLoading || this.state.authLoading !== 'all') ? (
           <div className="padding-bottom">
             <h3 className="align-center">
-              {this.props.count} {pluralize('devices', this.props.count)} pending authorization
+              {this.state.count} {pluralize('devices', this.state.count)} pending authorization
             </h3>
 
             {deviceLimitWarning}
 
-            <Table>
-              <TableHead className="clickable">
-                <TableRow>
-                  <TableCell padding="checkbox">
-                    <Checkbox
-                      indeterminate={numSelected > 0 && numSelected < self.state.devices.length}
-                      checked={numSelected === self.state.devices.length}
-                      onChange={() => self.onSelectAllClick()}
-                    />
-                  </TableCell>
-                  <TableCell className="columnHeader" tooltip={(this.props.globalSettings || {}).id_attribute || 'Device ID'}>
-                    {(this.props.globalSettings || {}).id_attribute || 'Device ID'}
-                    <SettingsIcon onClick={this.props.openSettingsDialog} style={{ fontSize: '16px' }} className="hover float-right" />
-                  </TableCell>
-                  <TableCell className="columnHeader" tooltip="First request">
-                    First request
-                  </TableCell>
-                  <TableCell className="columnHeader" tooltip="Last updated">
-                    Last updated
-                  </TableCell>
-                  <TableCell className="columnHeader" tooltip="Status">
-                    Status
-                  </TableCell>
-                  <TableCell className="columnHeader" style={{ width: '55px', paddingRight: '12px', paddingLeft: '0' }} />
-                </TableRow>
-              </TableHead>
-              <TableBody className="clickable">{devices}</TableBody>
-            </Table>
-
-            <div className="margin-top">
-              <Pagination
-                locale={_en_US}
-                simple
-                pageSize={20}
-                current={this.state.currentPage || 1}
-                total={this.props.count}
-                onChange={page => this._handlePageChange(page)}
-              />
-              {this.state.pageLoading ? (
-                <div className="smallLoaderContainer">
-                  <Loader show={true} />
-                </div>
-              ) : null}
-            </div>
+            <DeviceList
+              {...self.props}
+              {...self.state}
+              className="pending"
+              columnHeaders={columnHeaders}
+              limitMaxed={limitMaxed}
+              onSelect={selection => self.onRowSelection(selection)}
+              onPageChange={e => self._handlePageChange(e)}
+              pageTotal={self.state.count}
+              refreshDevices={() => self._getDevices()}
+            />
           </div>
         ) : (
           <div className={this.state.authLoading ? 'hidden' : 'dashboard-placeholder'}>
@@ -402,7 +282,7 @@ export default class Pending extends React.Component {
           </div>
         ) : null}
 
-        {this.props.showHelptips && this.state.devices.length ? (
+        {self.state.showHelptips && this.state.devices.length ? (
           <div>
             <div
               id="onboard-3"

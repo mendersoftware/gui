@@ -13,6 +13,7 @@ import Divider from '@material-ui/core/Divider';
 
 import AddIcon from '@material-ui/icons/Add';
 import HelpIcon from '@material-ui/icons/Help';
+import AppStore from '../../stores/app-store';
 
 require('../common/prototype/Array.prototype.equals');
 
@@ -38,7 +39,7 @@ export default class Groups extends React.Component {
         var isSelected = group === this.props.selectedGroup ? { backgroundColor: '#e7e7e7' } : {};
         var groupLabel = <span>{decodeURIComponent(group)}</span>;
         const item = (
-          <ListItem classes={{ root: 'grouplist'}} button key={group + index} style={isSelected} onClick={boundClick}>
+          <ListItem classes={{ root: 'grouplist' }} button key={group + index} style={isSelected} onClick={boundClick}>
             <ListItemText primary={groupLabel} />
           </ListItem>
         );
@@ -51,13 +52,14 @@ export default class Groups extends React.Component {
       },
       { groups: [], ungroupedsItem: null }
     );
+    const showHelptips = AppStore.showHelptips();
 
     return (
       <div>
         <div className="muted margin-bottom-small">Groups</div>
         <List>
           <ListItem
-            classes={{ root: 'grouplist'}}
+            classes={{ root: 'grouplist' }}
             button
             key="All"
             style={!this.props.selectedGroup ? { backgroundColor: '#e7e7e7' } : {}}
@@ -70,7 +72,7 @@ export default class Groups extends React.Component {
           {groupItems.groups}
           <ListItem
             button
-            classes={{ root: 'grouplist'}}
+            classes={{ root: 'grouplist' }}
             disabled={!this.props.acceptedCount}
             style={this.props.acceptedCount ? null : { color: '#d4e9e7' }}
             onClick={this.props.acceptedCount ? () => this.dialogToggle() : null}
@@ -82,7 +84,7 @@ export default class Groups extends React.Component {
           </ListItem>
         </List>
 
-        {this.props.showHelptips && this.props.acceptedCount && !this.props.groups.length ? (
+        {showHelptips && this.props.acceptedCount && !this.props.groups.length ? (
           <div>
             <div id="onboard-5" className="tooltip help" data-tip data-for="groups-tip" data-event="click focus" style={{ bottom: '-10px' }}>
               <HelpIcon />

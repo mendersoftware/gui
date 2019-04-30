@@ -26,7 +26,6 @@ import DeviceGroups from './device-groups';
 import PendingDevices from './pending-devices';
 import RejectedDevices from './rejected-devices';
 import PreauthDevices from './preauthorize-devices';
-import { AppContext } from '../../contexts/app-context';
 
 const routes = {
   pending: {
@@ -77,6 +76,7 @@ export default class Devices extends React.Component {
   }
   _getInitialState() {
     return {
+      currentTab: this._getCurrentLabel(),
       tabIndex: this._updateActive(),
       acceptedCount: AppStore.getTotalAcceptedDevices(),
       rejectedCount: AppStore.getTotalRejectedDevices(),
@@ -187,63 +187,43 @@ export default class Devices extends React.Component {
           <Tab component={Link} label={routes.preauthorized.title} value={routes.preauthorized.status} to={routes.preauthorized.route} />
           <Tab component={Link} label={routes.rejected.title} value={routes.rejected.status} to={routes.rejected.route} />
         </Tabs>
-        <AppContext.Consumer>
-          {({ globalSettings, docsVersion }) => (
-            <div>
-              {tabIndex === routes.pending.status && (
-                <PendingDevices
-                  deviceLimit={this.state.deviceLimit}
-                  currentTab={this.state.currentTab}
-                  acceptedDevices={this.state.acceptedCount}
-                  count={this.state.pendingCount}
-                  showHelptips={this.state.showHelptips}
-                  highlightHelp={!this.state.acceptedCount}
-                  globalSettings={globalSettings}
-                  openSettingsDialog={() => this._openSettingsDialog()}
-                  restart={() => this._restartInterval()}
-                  pause={() => this._pauseInterval()}
-                />
-              )}
-              {tabIndex === routes.preauthorized.status && (
-                <PreauthDevices
-                  deviceLimit={this.state.deviceLimit}
-                  acceptedDevices={this.state.acceptedCount}
-                  currentTab={this.state.currentTab}
-                  count={this.state.preauthCount}
-                  refreshCount={() => AppActions.getDeviceCount('preauthorized')}
-                  globalSettings={globalSettings}
-                  openSettingsDialog={() => this._openSettingsDialog()}
-                  pause={() => this._pauseInterval()}
-                />
-              )}
-              {tabIndex === routes.rejected.status && (
-                <RejectedDevices
-                  deviceLimit={this.state.deviceLimit}
-                  acceptedDevices={this.state.acceptedCount}
-                  currentTab={this.state.currentTab}
-                  count={this.state.rejectedCount}
-                  globalSettings={globalSettings}
-                  openSettingsDialog={() => this._openSettingsDialog()}
-                  pause={() => this._pauseInterval()}
-                />
-              )}
-              {tabIndex === routes.devices.status && (
-                <DeviceGroups
-                  docsVersion={docsVersion}
-                  params={this.props.params}
-                  rejectedDevices={this.state.rejectedCount}
-                  acceptedDevices={this.state.acceptedCount}
-                  allCount={this.state.allCount}
-                  currentTab={this.state.currentTab}
-                  showHelptips={this.state.showHelptips}
-                  globalSettings={globalSettings}
-                  openSettingsDialog={() => this._openSettingsDialog()}
-                  pause={() => this._pauseInterval()}
-                />
-              )}
-            </div>
-          )}
-        </AppContext.Consumer>
+        {tabIndex === routes.pending.status && (
+          <PendingDevices
+            deviceLimit={this.state.deviceLimit}
+            currentTab={this.state.currentTab}
+            highlightHelp={!this.state.acceptedCount}
+            openSettingsDialog={() => this._openSettingsDialog()}
+            restart={() => this._restartInterval()}
+            pause={() => this._pauseInterval()}
+          />
+        )}
+        {tabIndex === routes.preauthorized.status && (
+          <PreauthDevices
+            deviceLimit={this.state.deviceLimit}
+            currentTab={this.state.currentTab}
+            refreshCount={() => AppActions.getDeviceCount('preauthorized')}
+            openSettingsDialog={() => this._openSettingsDialog()}
+            pause={() => this._pauseInterval()}
+          />
+        )}
+        {tabIndex === routes.rejected.status && (
+          <RejectedDevices
+            deviceLimit={this.state.deviceLimit}
+            currentTab={this.state.currentTab}
+            openSettingsDialog={() => this._openSettingsDialog()}
+            pause={() => this._pauseInterval()}
+          />
+        )}
+        {tabIndex === routes.devices.status && (
+          <DeviceGroups
+            params={this.props.params}
+            acceptedDevices={this.state.acceptedCount}
+            allCount={this.state.allCount}
+            currentTab={this.state.currentTab}
+            openSettingsDialog={() => this._openSettingsDialog()}
+            pause={() => this._pauseInterval()}
+          />
+        )}
 
         {!this.state.acceptedCount && this.state.showHelptips && this.state.tabIndex !== routes.pending.route ? (
           <div>
