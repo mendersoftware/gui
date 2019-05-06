@@ -65,11 +65,11 @@ export default class Preauthorize extends React.Component {
   }
 
   shouldComponentUpdate(_, nextState) {
+    const self = this;
     return (
-      this.state.pageLoading != nextState.pageLoading ||
-      this.state.devices.some((device, index) => device !== nextState.devices[index]) ||
-      this.state.openPreauth !== nextState.openPreauth ||
-      this.state.openRemove !== nextState.openRemove
+      ['pageLoading', 'filename', 'public', 'json_identity', 'inputs', 'openPreauth', 'openRemove'].some(
+        attribute => self.state[attribute] !== nextState[attribute]
+      ) || this.state.devices.some((device, index) => device !== nextState.devices[index])
     );
   }
 
