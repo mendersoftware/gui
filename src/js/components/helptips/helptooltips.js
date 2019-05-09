@@ -290,13 +290,13 @@ export class CreateDeployment extends React.Component {
           <p>
             {`Looks like you're ready to make your first deployment - you have ${
               this.props.devices === 1 ? 'a device' : 'devices'
-            } connected to the server and a Release ready to deploy to them. Click ${<b>Create a deployment</b>}.`}
+            } connected to the server and a Release ready to deploy to them. Click `}<b>Create a deployment</b>.
           </p>
         ) : this.props.devices ? (
           <p>
             {`You're not quite ready to make your first deployment yet - you have ${
               this.props.devices === 1 ? 'a device' : 'devices'
-            } connected to the server, but no Artifact uploaded. Go to the ${<Link to="/releases">Releases tab</Link>}.`}
+            } connected to the server, but no Artifact uploaded. Go to the `}<Link to="/releases">Releases tab</Link>.
           </p>
         ) : (
           <p>
