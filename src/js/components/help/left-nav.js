@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 // material ui
@@ -52,7 +52,7 @@ export default class LeftNav extends React.Component {
     var self = this;
     return (
       <List>
-        <ListSubheader component={Link} to="/help" key="/help">
+        <ListSubheader>
           Help topics
         </ListSubheader>
         {self.state.links.map(link => (

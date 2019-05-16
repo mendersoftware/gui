@@ -6,45 +6,56 @@ export default class MoreHelp extends React.Component {
 
     return (
       <div>
-        <h2>More help resources</h2>
+        <h2>More resources</h2>
 
-        <p>{`If you can't find what you're looking for here, there are other places to find help getting started with Mender:`}</p>
-        <br />
+        <p>{`If you can't find what you're looking for here, there are other places to find help with Mender:`}</p>
 
-        <p>
-          Visit our{' '}
-          <a href={`https://docs.mender.io/${this.props.docsVersion}`} target="_blank">
-            documentation site
-          </a>
-        </p>
-        <p>
-          Read our{' '}
-          <a href={`https://docs.mender.io/${this.props.docsVersion}troubleshooting`} target="_blank">
-            troubleshooting pages
-          </a>{' '}
-          or{' '}
-          <a href="https://mender.io/faq" target="_blank">
-            FAQs
-          </a>
-        </p>
-        <p>
-          Browse the topics or ask a question on the{' '}
-          <a href="https://hub.mender.io" target="_blank">
-            Mender Hub forum
-          </a>
-        </p>
-        <p>
-          <a href={support} target="_blank">
-            Email us
-          </a>{' '}
-          with a question
-        </p>
-        <p>
-          Submit a bug using{' '}
-          <a href="https://tracker.mender.io" target="_blank">
-            our bug tracker
-          </a>
-        </p>
+        <ul>
+          <li>
+            <p>Ask questions and find answers at the{' '}
+              <a href="https://hub.mender.io" target="_blank">
+                Mender Hub community forum
+              </a>
+            </p>
+          </li>
+
+          <li>
+            <p>Report a bug using{' '}
+              <a href="https://tracker.mender.io" target="_blank">
+                our Bug Tracker
+              </a>
+            </p>
+          </li>
+
+          <li>
+            <p>Read the{' '}
+              <a href={`https://docs.mender.io/${this.props.docsVersion}`} target="_blank">
+                Mender documentation
+              </a>
+            </p>
+          </li>
+        </ul>
+        
+        <br/>
+        <p>Other ways to get in touch:</p>
+        <ul>
+          <li>
+            <p>
+              <a href={support} target="_blank">
+                Email us
+              </a>{' '}
+              with a question
+            </p>
+          </li>
+          <li>
+            <p>
+              Follow us on Twitter{' '}
+              <a href="https://twitter,com/mender_io" target="_blank">
+                @mender_io
+              </a>
+            </p>
+          </li>
+        </ul>
       </div>
     );
   }
