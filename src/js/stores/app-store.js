@@ -555,7 +555,7 @@ var AppStore = Object.assign({}, EventEmitter.prototype, {
   /*
    * Return single release with corresponding Artifacts
    */
-  getRelease: name => _releasesRepo.find(item => item.name === name),
+  getRelease: name => _releasesRepo.find(item => item.Name === name),
 
   /*
    * Return list of finished deployments

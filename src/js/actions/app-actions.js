@@ -81,7 +81,13 @@ const AppActions = {
   getDevices: (page = default_page, per_page = default_per_page, search_term) => {
     // get devices from inventory
     var search = search_term ? `&${search_term}` : '';
-    return DevicesApi.get(`${inventoryApiUrl}/devices?per_page=${per_page}&page=${page}${search}`).then(res => res.body);
+    return DevicesApi.get(`${inventoryApiUrl}/devices?per_page=${per_page}&page=${page}${search}`).then(res => {
+      AppDispatcher.handleViewAction({
+        actionType: AppConstants.RECEIVE_ALL_DEVICES,
+        devices: res.body
+      });
+      return res.body;
+    });
   },
   getAllDevices: () => {
     const getAllDevices = (per_page = 200, page = 1, devices = []) =>
@@ -122,35 +128,35 @@ const AppActions = {
 
     return DevicesApi.get(`${deviceAuthV2}/devices/count${filter}`).then(res => {
       switch (status) {
-      case 'pending':
-        AppDispatcher.handleViewAction({
-          actionType: AppConstants.SET_PENDING_DEVICES_COUNT,
-          count: res.body.count
-        });
-        break;
-      case 'accepted':
-        AppDispatcher.handleViewAction({
-          actionType: AppConstants.SET_ACCEPTED_DEVICES_COUNT,
-          count: res.body.count
-        });
-        break;
-      case 'rejected':
-        AppDispatcher.handleViewAction({
-          actionType: AppConstants.SET_REJECTED_DEVICES_COUNT,
-          count: res.body.count
-        });
-        break;
-      case 'preauthorized':
-        AppDispatcher.handleViewAction({
-          actionType: AppConstants.SET_PREAUTH_DEVICES_COUNT,
-          count: res.body.count
-        });
-        break;
-      default:
-        AppDispatcher.handleViewAction({
-          actionType: AppConstants.SET_TOTAL_DEVICES,
-          count: res.body.count
-        });
+        case 'pending':
+          AppDispatcher.handleViewAction({
+            actionType: AppConstants.SET_PENDING_DEVICES_COUNT,
+            count: res.body.count
+          });
+          break;
+        case 'accepted':
+          AppDispatcher.handleViewAction({
+            actionType: AppConstants.SET_ACCEPTED_DEVICES_COUNT,
+            count: res.body.count
+          });
+          break;
+        case 'rejected':
+          AppDispatcher.handleViewAction({
+            actionType: AppConstants.SET_REJECTED_DEVICES_COUNT,
+            count: res.body.count
+          });
+          break;
+        case 'preauthorized':
+          AppDispatcher.handleViewAction({
+            actionType: AppConstants.SET_PREAUTH_DEVICES_COUNT,
+            count: res.body.count
+          });
+          break;
+        default:
+          AppDispatcher.handleViewAction({
+            actionType: AppConstants.SET_TOTAL_DEVICES,
+            count: res.body.count
+          });
       }
       return Promise.resolve(res.body.count);
     });

@@ -13,6 +13,7 @@ import TableRow from '@material-ui/core/TableRow';
 
 import HelpIcon from '@material-ui/icons/Help';
 
+import BaseOnboardingTip from '../helptips/baseonboardingtip';
 import { CreateDeployment, ProgressDeployment } from '../helptips/helptooltips';
 import DeploymentStatus from './deploymentstatus';
 import Loader from '../common/loader';
@@ -44,12 +45,16 @@ export default class Progress extends React.Component {
       );
     }, this);
 
+    let onboardingAnchor = { left: 200, top: 0 };
+    if (this.inprogressRef) {
+      onboardingAnchor.top = this.inprogressRef.offsetTop + this.inprogressRef.offsetHeight;
+    }
     return (
       <div className="fadeIn">
         <div className="deploy-table-contain">
           <Loader show={this.props.loading} />
           {progressMap.length ? (
-            <div>
+            <div ref={ref => (this.inprogressRef = ref)}>
               <h3>In progress</h3>
               {progressMap.length ? (
                 <Table style={{ overflow: 'visible' }}>
@@ -62,9 +67,7 @@ export default class Progress extends React.Component {
                       <TableCell style={{ minWidth: '400px' }}>Status</TableCell>
                     </TableRow>
                   </TableHead>
-                  <TableBody style={{ cursor: 'pointer', overflow: 'visible' }}>
-                    {progressMap}
-                  </TableBody>
+                  <TableBody style={{ cursor: 'pointer', overflow: 'visible' }}>{progressMap}</TableBody>
                 </Table>
               ) : null}
             </div>
@@ -91,6 +94,9 @@ export default class Progress extends React.Component {
             </div>
           )}
 
+          {this.props.showHelptips && this.props.progress.length ? (
+            <BaseOnboardingTip id={11} progress={2} anchor={onboardingAnchor} component={<div>Your deployment is in progress. Click to view a report</div>} />
+          ) : null}
           {!this.props.loading && this.props.showHelptips && (!this.props.hasDeployments || this.props.progress.length) ? (
             // if first deployment not created, or if there is one in progress, show tip
             <div>

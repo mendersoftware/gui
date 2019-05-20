@@ -23,6 +23,7 @@ import Progress from './inprogressdeployments';
 import Past from './pastdeployments';
 import Report from './report';
 import ScheduleDialog from './scheduledialog';
+import BaseOnboardingTip from '../helptips/baseonboardingtip';
 
 import { preformatWithRequestID } from '../../helpers';
 
@@ -90,34 +91,28 @@ export default class Deployments extends React.Component {
         self.setState(state);
       });
 
-    if (this.props.params) {
-      this.setState({ reportType: this.props.params.tab });
+    if (this.props.match) {
+      this.setState({ reportType: this.props.match.params.tab });
 
-      if (this.props.params.params) {
-        var str = decodeURIComponent(this.props.params.params);
-        var obj = str.split('&');
-
-        var params = [];
-        for (var i = 0; i < obj.length; i++) {
-          var f = obj[i].split('=');
-          params[f[0]] = f[1];
-        }
-        if (params.open) {
-          if (params.id) {
-            self._getReportById(params.id);
-          } else {
-            setTimeout(() => {
-              self.setState({ scheduleDialog: true });
-            }, 400);
-          }
+      const params = new URLSearchParams(this.props.location.search);
+      if (params && params.get('open')) {
+        if (params.get('id')) {
+          self._getReportById(params.get('id'));
+        } else if (params.get('release')) {
+          const release = AppStore.getRelease(params.get('release'));
+          self.setState({ scheduleDialog: true, releaseArtifacts: release.Artifacts });
+        } else {
+          setTimeout(() => {
+            self.setState({ scheduleDialog: true });
+          }, 400);
         }
       }
     } else {
       this.setState({ reportType: 'active' });
     }
 
-    const query = new URLSearchParams(this.context.router.route.location.search);
-    this.setState({ scheduleDialog: query.get('open') || false });
+    const query = new URLSearchParams(this.props.location.search);
+    this.setState({ scheduleDialog: Boolean(query.get('open')) || false });
   }
 
   componentWillUnmount() {
@@ -609,6 +604,7 @@ export default class Deployments extends React.Component {
           hasPending={this.state.hasPending}
           hasDevices={this.state.hasDevices}
           deploymentSettings={(...args) => this._deploymentParams(...args)}
+          releaseArtifacts={this.state.releaseArtifacts}
           artifacts={this.state.collatedArtifacts}
           artifact={this.state.artifact}
           groups={this.state.groups}
@@ -644,6 +640,9 @@ export default class Deployments extends React.Component {
           </DialogContent>
           <DialogActions>{onboardActions}</DialogActions>
         </Dialog>
+        {this.state.showHelptips && (this.state.past.length || this.state.pastCount) && !window.location.hash.includes('finished') ? (
+          <BaseOnboardingTip id={12} anchor={{ left: 240, top: 50 }} component={<div>Your deployment has finished, click here to view it</div>} />
+        ) : null}
       </div>
     );
   }

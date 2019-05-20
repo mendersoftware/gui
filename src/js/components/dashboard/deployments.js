@@ -88,7 +88,7 @@ export default class Deployments extends React.Component {
     const iconStyles = {
       fontSize: 48,
       opacity: 0.5,
-      marginRight: '30px',
+      marginRight: '30px'
     };
 
     const headerStyle = {
@@ -116,8 +116,6 @@ export default class Deployments extends React.Component {
       ),
       targetLabel: 'View progress'
     };
-    const path = `open=true`;
-    const openingParam = encodeURIComponent(path);
     return (
       <div>
         <h4 className="dashboard-header">
@@ -144,10 +142,10 @@ export default class Deployments extends React.Component {
                 onClick={() => self.props.clickHandle({ route: 'deployments/active' })}
               />
               <RedirectionWidget
-                target={`/deployments/${openingParam}`}
+                target={'/deployments/active?open=true'}
                 content={'Create a new deployment to update a group of devices'}
                 buttonContent={'Create a deployment'}
-                onClick={() => this.props.clickHandle({ route: `deployments/${openingParam}` })}
+                onClick={() => this.props.clickHandle({ route: '/deployments/active?open=true' })}
                 isActive={false}
               />
             </div>
