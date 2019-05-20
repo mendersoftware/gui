@@ -14,8 +14,12 @@ import AddCircleIcon from '@material-ui/icons/AddCircle';
 import HelpIcon from '@material-ui/icons/Help';
 import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
 
+import BaseOnboardingTip from '../helptips/baseonboardingtip';
 import { ExpandDevice } from '../helptips/helptooltips';
+import { WelcomeSnackTip } from '../helptips/onboardingtips';
+
 import Loader from '../common/loader';
+import AppActions from '../../actions/app-actions';
 import AppStore from '../../stores/app-store';
 
 import DeviceList from './devicelist';
@@ -48,6 +52,12 @@ export default class Authorized extends React.Component {
 
     if (prevProps.group !== this.props.group) {
       this.setState({ textfield: this.props.group ? decodeURIComponent(this.props.group) : 'All devices' });
+    }
+
+    if (this.props.showHelptips && !AppStore.getOnboardingComplete() && this.props.devices.length) {
+      setTimeout(() => {
+        AppActions.setSnackbar('open', 500000, '', <WelcomeSnackTip progress={2} />, () => AppActions.setSnackbar(''));
+      }, 400);
     }
   }
 
@@ -195,7 +205,22 @@ export default class Authorized extends React.Component {
             {!allCount ? <p>No devices have been authorized to connect to the Mender server yet.</p> : null}
           </div>
         )}
-
+        {showHelptips && devices.length ? (
+          <BaseOnboardingTip
+            id={3}
+            progressTotal={3}
+            anchor={{ left: 200, top: 146 }}
+            component={
+              <div>
+                <b>Good job! Your first device is connected!</b>
+                <p>
+                  Your device is now <b>accepted</b>! It&apos;s now going to share inventory details with the server.
+                </p>
+                Click to expand the device and see more
+              </div>
+            }
+          />
+        ) : null}
         <div>
           {selectedRows.length ? (
             <div className="fixedButtons">

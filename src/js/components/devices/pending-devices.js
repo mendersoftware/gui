@@ -14,7 +14,9 @@ import AppActions from '../../actions/app-actions';
 import AppStore from '../../stores/app-store';
 import { preformatWithRequestID } from '../../helpers';
 import Loader from '../common/loader';
-import { AuthDevices, ExpandAuth } from '../helptips/helptooltips';
+import { AuthDevices } from '../helptips/helptooltips';
+import BaseOnboardingTip from '../helptips/baseonboardingtip';
+import { DevicePendingTip } from '../helptips/onboardingtips';
 import DeviceList from './devicelist';
 
 export default class Pending extends React.Component {
@@ -114,9 +116,9 @@ export default class Pending extends React.Component {
     pluralize.addIrregularRule('its', 'their');
     var skipText = skipped
       ? `${skipped} ${pluralize('devices', skipped)} ${pluralize('have', skipped)} more than one pending authset. Expand ${pluralize(
-        'this',
-        skipped
-      )} ${pluralize('device', skipped)} to individually adjust ${pluralize('their', skipped)} authorization status. `
+          'this',
+          skipped
+        )} ${pluralize('device', skipped)} to individually adjust ${pluralize('their', skipped)} authorization status. `
       : '';
     var doneText = done ? `${done} ${pluralize('device', done)} ${pluralize('was', done)} updated successfully. ` : '';
     AppActions.setSnackbar(doneText + skipText);
@@ -173,6 +175,7 @@ export default class Pending extends React.Component {
     var limitMaxed = this.props.deviceLimit ? this.props.deviceLimit <= this.props.acceptedDevices : false;
     var limitNear = this.props.deviceLimit ? this.props.deviceLimit < this.props.acceptedDevices + this.state.devices.length : false;
     var selectedOverLimit = this.props.deviceLimit ? this.props.deviceLimit < this.props.acceptedDevices + this.state.selectedRows.length : false;
+    const deviceConnectingProgressed = AppStore.getDeviceConnectionProgressed();
 
     const columnHeaders = [
       {
@@ -208,6 +211,30 @@ export default class Pending extends React.Component {
         </p>
       ) : null;
 
+    const onboardingTip = {
+      id: 3,
+      component: null,
+      progress: 1,
+      progressTotal: 3,
+      anchor: { left: 0, top: 0 }
+    };
+    if (self.state.showHelptips && this.state.devices.length && (this.deviceListRef || this.authorizeRef)) {
+      onboardingTip.component = (
+        <div>This should be your device, asking for permission to join the server. Inspect its identity details, then check it to accept it!</div>
+      );
+      const element = this.deviceListRef ? this.deviceListRef.getElementsByClassName('body')[0] : null;
+      onboardingTip.anchor = { left: 200, top: element ? element.offsetTop + element.offsetHeight : 170 };
+      if (this.state.selectedRows && this.authorizeRef) {
+        onboardingTip.component = <div>If you recognize this device as your own, you can accept it</div>;
+        onboardingTip.progress = 2;
+        onboardingTip.place = 'left';
+        onboardingTip.anchor = {
+          left: this.authorizeRef.offsetLeft - this.authorizeRef.offsetWidth / 2,
+          top: this.authorizeRef.offsetParent.offsetTop - this.authorizeRef.offsetParent.offsetHeight - this.authorizeRef.offsetHeight / 2
+        };
+      }
+    }
+
     return (
       <div className="tab-container">
         <Loader show={this.state.authLoading} />
@@ -231,7 +258,7 @@ export default class Pending extends React.Component {
         ) : null}
 
         {this.state.devices.length && (!this.state.pageLoading || this.state.authLoading !== 'all') ? (
-          <div className="padding-bottom">
+          <div className="padding-bottom" ref={ref => (this.deviceListRef = ref)}>
             <h3 className="align-center">
               {this.state.count} {pluralize('devices', this.state.count)} pending authorization
             </h3>
@@ -251,13 +278,19 @@ export default class Pending extends React.Component {
             />
           </div>
         ) : (
-          <div className={this.state.authLoading ? 'hidden' : 'dashboard-placeholder'}>
-            <p>There are no devices pending authorization</p>
-            {this.props.highlightHelp ? (
-              <p>
-                Visit the <Link to="/help/connecting-devices">Help section</Link> to learn how to connect devices to the Mender server.
-              </p>
-            ) : null}
+          <div>
+            {self.state.showHelptips && deviceConnectingProgressed ? (
+              <DevicePendingTip />
+            ) : (
+              <div className={this.state.authLoading ? 'hidden' : 'dashboard-placeholder'}>
+                <p>There are no devices pending authorization</p>
+                {this.props.highlightHelp ? (
+                  <p>
+                    Visit the <Link to="/help/connecting-devices">Help section</Link> to learn how to connect devices to the Mender server.
+                  </p>
+                ) : null}
+              </div>
+            )}
           </div>
         )}
 
@@ -273,6 +306,7 @@ export default class Pending extends React.Component {
                 variant="contained"
                 disabled={this.props.disabled || limitMaxed || selectedOverLimit}
                 onClick={() => this._authorizeDevices()}
+                buttonRef={ref => (this.authorizeRef = ref)}
                 color="primary"
               >
                 {`Authorize ${this.state.selectedRows.length} ${pluralize('devices', this.state.selectedRows.length)}`}
@@ -281,24 +315,7 @@ export default class Pending extends React.Component {
             </div>
           </div>
         ) : null}
-
-        {self.state.showHelptips && this.state.devices.length ? (
-          <div>
-            <div
-              id="onboard-3"
-              className="tooltip highlight help"
-              data-tip
-              data-for="expand-auth-tip"
-              data-event="click focus"
-              style={{ left: '16%', top: '170px' }}
-            >
-              <HelpIcon />
-            </div>
-            <ReactTooltip id="expand-auth-tip" globalEventOff="click" place="bottom" type="light" effect="solid" className="react-tooltip">
-              <ExpandAuth />
-            </ReactTooltip>
-          </div>
-        ) : null}
+        {onboardingTip.component ? <BaseOnboardingTip {...onboardingTip} /> : null}
       </div>
     );
   }

@@ -17,6 +17,7 @@ import AppActions from '../actions/app-actions';
 import { AppContext } from '../contexts/app-context';
 import ConfirmDismissHelptips from './common/dialogs/confirmdismisshelptips';
 import DeviceConnectionDialog from './common/dialogs/deviceconnectiondialog';
+import BaseOnboardingTip from './helptips/baseonboardingtip';
 
 var isDemoMode = false;
 var _HostedAnnouncement = '';
@@ -108,6 +109,31 @@ class AppRoot extends React.Component {
   render() {
     const { snackbar, timeout, showDismissHelptipsDialog, showDeviceConnectionDialog, showCreateArtifactDialog, ...context } = this.state;
 
+    let onboardingTip = {
+      anchor: {
+        left: 170,
+        top: 225
+      },
+      id: 'application-update-reminder-tip',
+      component: null,
+      place: 'right',
+      progress: 2
+    };
+    // TODO check onboarding progress
+    if (!showDismissHelptipsDialog && window.location.hash.endsWith('#/devices')) {
+      const devices = AppStore.getAllDevices();
+      if (devices.every(item => !!item.attributes)) {
+        onboardingTip.component = (
+          <div>
+            <b>Deploy your first Application update</b>
+            <p>
+              To continue to make a demo deployment to this device click the <Link to="/releases">Releases</Link> tab
+            </p>
+          </div>
+        );
+      }
+    }
+
     return (
       <IdleTimer element={document} idleAction={this._onIdle} timeout={timeout} format="MM-DD-YYYY HH:MM:ss.SSS">
         <Header
@@ -125,6 +151,7 @@ class AppRoot extends React.Component {
             <AppContext.Provider value={context}>{this.props.children}</AppContext.Provider>
           </div>
         </div>
+        {onboardingTip.component ? <BaseOnboardingTip {...onboardingTip} /> : null}
         <ConfirmDismissHelptips open={showDismissHelptipsDialog} />
         <DeviceConnectionDialog open={showDeviceConnectionDialog} onCancel={() => AppActions.setShowConnectingDialog(false)} />
         <SharedSnackbar snackbar={snackbar} />
