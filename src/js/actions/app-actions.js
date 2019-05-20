@@ -208,12 +208,14 @@ const AppActions = {
   /* 
     General 
   */
-  setSnackbar: (message, duration, action) =>
+  setSnackbar: (message, duration, action, component, onClick) =>
     AppDispatcher.handleViewAction({
       actionType: AppConstants.SET_SNACKBAR,
       message: message,
       duration: duration,
-      action: action
+      action: action,
+      children: component,
+      onClick: onClick
     }),
 
   /* 
