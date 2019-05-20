@@ -460,6 +460,13 @@ ul.link-list {
   display: -ms-flexbox;
   display: flex;
   overflow: hidden;
+  &.centered {
+    justify-content: center;
+    align-items: center;
+  }
+  &.column {
+    flex-direction: column;
+  }
 }
 
 .overflow-hidden {
@@ -652,6 +659,14 @@ ul.link-list {
     display: flex;
     flex-direction: column;
     justify-content: space-around;
+  }
+  .os-list {
+    margin-bottom: 30px;
+    img {
+      height: 80px;
+      margin: 15px;
+      margin-bottom: 30px;
+    }
   }
   .react-tooltip {
     width: 300px;
