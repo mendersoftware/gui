@@ -282,10 +282,45 @@ const AppActions = {
   /*
     Onboarding
   */
-  setShowHelptips: val =>
+  setShowHelptips: val => {
     AppDispatcher.handleViewAction({
       actionType: AppConstants.SET_SHOW_HELP,
       show: val
+    });
+    AppDispatcher.handleViewAction({
+      actionType: AppConstants.SET_SHOW_ONBOARDING_HELP,
+      show: val
+    });
+  },
+  setShowOnboardingHelp: val =>
+    AppDispatcher.handleViewAction({
+      actionType: AppConstants.SET_SHOW_ONBOARDING_HELP,
+      show: val
+    }),
+  setShowDismissOnboardingTipsDialog: val =>
+    AppDispatcher.handleViewAction({
+      actionType: AppConstants.SET_SHOW_ONBOARDING_HELP_DIALOG,
+      show: val
+    }),
+  setOnboardingComplete: val => {
+    AppDispatcher.handleViewAction({
+      actionType: AppConstants.SET_ONBOARDING_COMPLETE,
+      show: val
+    });
+    AppDispatcher.handleViewAction({
+      actionType: AppConstants.SET_SHOW_ONBOARDING_HELP,
+      show: val
+    });
+  },
+  setShowConnectingDialog: val =>
+    AppDispatcher.handleViewAction({
+      actionType: AppConstants.SET_SHOW_CONNECT_DEVICE,
+      show: val
+    }),
+  setConnectingDialogProgressed: val =>
+    AppDispatcher.handleViewAction({
+      actionType: AppConstants.SET_CONNECT_DEVICE_PROGRESSED,
+      progressed: val
     }),
 
   /* Artifacts */

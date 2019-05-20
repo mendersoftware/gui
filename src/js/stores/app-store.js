@@ -24,6 +24,10 @@ var _currentUser = {};
 var _hasMultitenancy = false;
 var _organization = {};
 var _showHelptips = null;
+var _showOnboardingTips = true;
+var _showOnboardingTipsDialog = false;
+var _showConnectDeviceDialog = false;
+var _connectDeviceProgressed = false;
 var _groups = [];
 var _releasesRepo = [];
 var _uploadInProgress = false;
@@ -447,6 +451,25 @@ function _setShowHelptips(val) {
   _showHelptips = val;
 }
 
+function _setShowOnboardingHelp(val) {
+  _showOnboardingTips = val;
+}
+function _setShowOnboardingTipsDialog(val) {
+  _showOnboardingTipsDialog = val;
+}
+function _setShowConnectDeviceDialog(val) {
+  _showConnectDeviceDialog = val;
+}
+
+function _setConnectDeviceProgressed(val) {
+  _connectDeviceProgressed = val;
+}
+
+function _setOnboardingComplete(val) {
+  _onboardingComplete = val;
+  window.localStorage.setItem('onboardingComplete', _onboardingComplete);
+}
+
 var AppStore = Object.assign({}, EventEmitter.prototype, {
   emitChange: function() {
     this.emit(CHANGE_EVENT);
@@ -606,6 +629,17 @@ var AppStore = Object.assign({}, EventEmitter.prototype, {
 
   showHelptips: () => _showHelptips,
 
+  getOnboardingComplete: () => _onboardingComplete,
+
+  getShowOnboardingTips: () => _showOnboardingTips,
+
+  getShowOnboardingTipsDialog: () => _showOnboardingTipsDialog,
+
+  getShowConnectDeviceDialog: () => _showConnectDeviceDialog,
+
+
+  getDeviceConnectionProgressed: () => _connectDeviceProgressed,
+
   getMenderVersion: function() {
     // return version number
     var version = '';
@@ -670,9 +704,25 @@ var AppStore = Object.assign({}, EventEmitter.prototype, {
       _setOrganization(payload.action.organization);
       break;
 
+      /* Onboarding */
     case AppConstants.SET_SHOW_HELP:
       _setShowHelptips(payload.action.show);
       break;
+      case AppConstants.SET_SHOW_ONBOARDING_HELP:
+        _setShowOnboardingHelp(payload.action.show);
+        break;
+      case AppConstants.SET_ONBOARDING_COMPLETE:
+        _setOnboardingComplete(payload.action.show);
+        break;
+      case AppConstants.SET_SHOW_ONBOARDING_HELP_DIALOG:
+        _setShowOnboardingTipsDialog(payload.action.show);
+        break;
+      case AppConstants.SET_SHOW_CONNECT_DEVICE:
+        _setShowConnectDeviceDialog(payload.action.show);
+        break;
+      case AppConstants.SET_CONNECT_DEVICE_PROGRESSED:
+        _setConnectDeviceProgressed(payload.action.progressed);
+        break;
 
       /* API */
     case AppConstants.RECEIVE_ARTIFACTS:

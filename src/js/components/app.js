@@ -15,6 +15,7 @@ import SharedSnackbar from '../components/common/sharedsnackbar';
 import AppStore from '../stores/app-store';
 import AppActions from '../actions/app-actions';
 import { AppContext } from '../contexts/app-context';
+import ConfirmDismissHelptips from './common/dialogs/confirmdismisshelptips';
 import DeviceConnectionDialog from './common/dialogs/deviceconnectiondialog';
 
 var isDemoMode = false;
@@ -51,6 +52,7 @@ class AppRoot extends React.Component {
       uploadInProgress: AppStore.getUploadInProgress(),
       globalSettings: AppStore.getGlobalSettings(),
       snackbar: AppStore.getSnackbar(),
+      showDismissHelptipsDialog: !AppStore.getOnboardingComplete() && AppStore.getShowOnboardingTipsDialog(),
       showDeviceConnectionDialog: AppStore.getShowConnectDeviceDialog()
     };
   }
@@ -123,6 +125,7 @@ class AppRoot extends React.Component {
             <AppContext.Provider value={context}>{this.props.children}</AppContext.Provider>
           </div>
         </div>
+        <ConfirmDismissHelptips open={showDismissHelptipsDialog} />
         <DeviceConnectionDialog open={showDeviceConnectionDialog} onCancel={() => AppActions.setShowConnectingDialog(false)} />
         <SharedSnackbar snackbar={snackbar} />
       </IdleTimer>
