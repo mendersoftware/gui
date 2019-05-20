@@ -5,6 +5,7 @@ import AppStore from '../../stores/app-store';
 import AcceptedDevices from './widgets/accepteddevices';
 import RedirectionWidget from './widgets/redirectionwidget';
 import PendingDevices from './widgets/pendingdevices';
+import BaseOnboardingTip from '../helptips/baseonboardingtip';
 
 export default class Devices extends React.Component {
   constructor(props, state) {
@@ -85,24 +86,57 @@ export default class Devices extends React.Component {
     const { devices, inactiveDevices, pendingDevices, deltaActivity, showHelptips } = this.state;
     const hasPending = pendingDevices > 0;
     const noDevicesAvailable = !devices && !hasPending;
+    const onboardingComplete = AppStore.getOnboardingComplete();
+    let onboardingTip = {
+      component: null,
+      anchor: { left: 0, top: 0 },
+      progress: 1
+    };
+    if (showHelptips && !onboardingComplete && this.anchor) {
+      const element = this.anchor.children[this.anchor.children.length - 1];
+      onboardingTip.anchor = { left: element.offsetLeft + element.offsetWidth / 2, top: element.offsetTop + element.offsetHeight - 50 };
+      onboardingTip.component = <div>Click here to get started!</div>;
+      if (hasPending && this.pendingsRef) {
+        const element = this.pendingsRef.wrappedElement.lastChild;
+        onboardingTip.anchor = {
+          left: this.pendingsRef.wrappedElement.offsetLeft + element.offsetWidth / 2,
+          top: this.pendingsRef.wrappedElement.offsetTop + element.offsetHeight
+        };
+        onboardingTip.component = <div>Next accept your device</div>;
+        onboardingTip.progress = 2;
+      }
+    }
+    const redirectionRoute = onboardingComplete ? '/help/connecting-devices' : '/devices';
     return (
       <div>
         <h4 className="dashboard-header">
           <span>Devices</span>
         </h4>
-        <div style={Object.assign({ marginBottom: '30px', marginTop: '50px' }, this.props.styles)}>
+        <div style={Object.assign({ marginBottom: '30px', marginTop: '50px' }, this.props.styles)} ref={element => (this.anchor = element)}>
           {hasPending ? (
-            <PendingDevices pendingDevicesCount={pendingDevices} isActive={hasPending} showHelptips={showHelptips} onClick={this.props.clickHandle} />
+            <PendingDevices
+              pendingDevicesCount={pendingDevices}
+              isActive={hasPending}
+              showHelptips={showHelptips}
+              onClick={this.props.clickHandle}
+              ref={ref => (this.pendingsRef = ref)}
+            />
           ) : null}
           <AcceptedDevices devicesCount={devices} inactiveCount={inactiveDevices} delta={deltaActivity} onClick={this.props.clickHandle} />
           <RedirectionWidget
-            target={'/help/connecting-devices'}
-            content={'Learn how to connect more devices'}
-            buttonContent={'Learn more'}
-            onClick={() => this.props.clickHandle({ route: '/help/connecting-devices' })}
+            target={redirectionRoute}
+            content={`Learn how to connect ${onboardingComplete ? 'more devices' : 'a device'}`}
+            buttonContent={onboardingComplete ? 'Learn more' : 'Connect a device'}
+            onClick={() => {
+              if (onboardingComplete) {
+                return this.props.clickHandle({ route: redirectionRoute });
+              }
+              AppActions.setShowConnectingDialog(true);
+            }}
             isActive={noDevicesAvailable}
           />
         </div>
+        {onboardingTip.component ? <BaseOnboardingTip {...onboardingTip} /> : null}
       </div>
     );
   }
