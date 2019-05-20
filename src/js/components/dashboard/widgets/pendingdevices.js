@@ -33,7 +33,7 @@ export default class PendingDevices extends React.Component {
     };
 
     return (
-      <div style={{ position: 'relative' }}>
+      <div style={{ position: 'relative' }} ref={ref => (this.wrappedElement = ref)}>
         <Fab color="primary" component={Link} to="/devices/pending" style={{ position: 'absolute', top: '-28px', left: '15px', zIndex: '1' }}>
           <ContentAddIcon />
         </Fab>
