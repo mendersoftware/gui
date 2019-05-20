@@ -631,6 +631,85 @@ ul.link-list {
   }
 }
 
+.onboard-icon {
+  background: @mendergreen;
+  border-radius: 50%;
+  height: 30px;
+  width: 30px;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  z-index: 1000;
+  color: @placeholder;
+  border: white 1px solid;
+}
+
+.onboard-dialog {
+  min-height: 30vh;
+  display: flex;
+  > div {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+  }
+  .react-tooltip {
+    width: 300px;
+  }
+}
+
+.onboard-tip {
+  pointer-events: auto;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.15);
+  position: absolute;
+  a {
+    color: @placeholder;
+    text-decoration: underline;
+  }
+  .onboard-icon {
+    &.top,
+    &.bottom {
+      .animation(bouncedownup 1.3s infinite);
+    }
+    &.left {
+      .animation(bouncerightleft 1.3s infinite);
+    }
+    &.right {
+      .animation(bounceleftright 1.3s infinite);
+    }
+  }
+
+  .content {
+    background-color: @linkgreen;
+    font-size: 14px;
+    color: @placeholder;
+    margin: 0;
+    width: 300px;
+    padding: 12px 18px;
+    text-align: left;
+    &.top {
+      margin-top: 15px;
+    }
+    &.bottom {
+      margin-top: -15px;
+    }
+    &.right {
+      margin-left: -15px;
+    }
+    &.left {
+      margin-left: 15px;
+    }
+    > div:first-of-type {
+      padding-top: 15px;
+      padding-bottom: 10px;
+    }
+    .flexbox {
+      justify-content: space-between;
+    }
+    .centered {
+      justify-content: center;
+    }
+  }
+}
 .dashboard {
   .hint {
     font-size: small;
@@ -2110,6 +2189,57 @@ span.day {
   }
   100% {
     top: 0;
+  }
+}
+
+@keyframes bouncerightleft {
+  0% {
+    left: 0;
+    animation-timing-function: ease-out;
+  }
+  8% {
+    left: 1px;
+    animation-timing-function: ease-out;
+  }
+  16% {
+    left: 0;
+    animation-timing-function: ease-out;
+  }
+  32% {
+    left: -2px;
+    animation-timing-function: ease-out;
+  }
+  50% {
+    left: 0px;
+    animation-timing-function: ease-out;
+  }
+  100% {
+    left: 0;
+  }
+}
+@keyframes bouncerightleft {
+  0% {
+    right: 0;
+    animation-timing-function: ease-out;
+  }
+  8% {
+    right: 1px;
+    animation-timing-function: ease-out;
+  }
+  16% {
+    right: 0;
+    animation-timing-function: ease-out;
+  }
+  32% {
+    right: -2px;
+    animation-timing-function: ease-out;
+  }
+  50% {
+    right: 0px;
+    animation-timing-function: ease-out;
+  }
+  100% {
+    right: 0;
   }
 }
 
