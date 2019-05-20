@@ -15,6 +15,7 @@ import SharedSnackbar from '../components/common/sharedsnackbar';
 import AppStore from '../stores/app-store';
 import AppActions from '../actions/app-actions';
 import { AppContext } from '../contexts/app-context';
+import DeviceConnectionDialog from './common/dialogs/deviceconnectiondialog';
 
 var isDemoMode = false;
 var _HostedAnnouncement = '';
@@ -49,7 +50,8 @@ class AppRoot extends React.Component {
       currentUser: AppStore.getCurrentUser(),
       uploadInProgress: AppStore.getUploadInProgress(),
       globalSettings: AppStore.getGlobalSettings(),
-      snackbar: AppStore.getSnackbar()
+      snackbar: AppStore.getSnackbar(),
+      showDeviceConnectionDialog: AppStore.getShowConnectDeviceDialog()
     };
   }
 
@@ -102,7 +104,7 @@ class AppRoot extends React.Component {
   }
 
   render() {
-    const { snackbar, timeout, ...context } = this.state;
+    const { snackbar, timeout, showDismissHelptipsDialog, showDeviceConnectionDialog, showCreateArtifactDialog, ...context } = this.state;
 
     return (
       <IdleTimer element={document} idleAction={this._onIdle} timeout={timeout} format="MM-DD-YYYY HH:MM:ss.SSS">
@@ -121,7 +123,7 @@ class AppRoot extends React.Component {
             <AppContext.Provider value={context}>{this.props.children}</AppContext.Provider>
           </div>
         </div>
-
+        <DeviceConnectionDialog open={showDeviceConnectionDialog} onCancel={() => AppActions.setShowConnectingDialog(false)} />
         <SharedSnackbar snackbar={snackbar} />
       </IdleTimer>
     );
