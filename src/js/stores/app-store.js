@@ -27,6 +27,7 @@ var _showHelptips = null;
 var _showOnboardingTips = true;
 var _showOnboardingTipsDialog = false;
 var _showConnectDeviceDialog = false;
+var _showCreateArtifactDialog = false;
 var _connectDeviceProgressed = false;
 var _groups = [];
 var _releasesRepo = [];
@@ -460,6 +461,9 @@ function _setShowOnboardingTipsDialog(val) {
 function _setShowConnectDeviceDialog(val) {
   _showConnectDeviceDialog = val;
 }
+function _setShowCreateArtifactDialog(val) {
+  _showCreateArtifactDialog = val;
+}
 
 function _setConnectDeviceProgressed(val) {
   _connectDeviceProgressed = val;
@@ -637,6 +641,7 @@ var AppStore = Object.assign({}, EventEmitter.prototype, {
 
   getShowConnectDeviceDialog: () => _showConnectDeviceDialog,
 
+  getShowCreateArtifactDialog: () => _showCreateArtifactDialog,
 
   getDeviceConnectionProgressed: () => _connectDeviceProgressed,
 
@@ -719,6 +724,9 @@ var AppStore = Object.assign({}, EventEmitter.prototype, {
         break;
       case AppConstants.SET_SHOW_CONNECT_DEVICE:
         _setShowConnectDeviceDialog(payload.action.show);
+        break;
+      case AppConstants.SET_SHOW_CREATE_ARTIFACT:
+        _setShowCreateArtifactDialog(payload.action.show);
         break;
       case AppConstants.SET_CONNECT_DEVICE_PROGRESSED:
         _setConnectDeviceProgressed(payload.action.progressed);

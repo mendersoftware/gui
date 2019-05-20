@@ -319,6 +319,11 @@ const AppActions = {
       actionType: AppConstants.SET_SHOW_CONNECT_DEVICE,
       show: val
     }),
+  setShowCreateArtifactDialog: val =>
+    AppDispatcher.handleViewAction({
+      actionType: AppConstants.SET_SHOW_CREATE_ARTIFACT,
+      show: val
+    }),
   setConnectingDialogProgressed: val =>
     AppDispatcher.handleViewAction({
       actionType: AppConstants.SET_CONNECT_DEVICE_PROGRESSED,

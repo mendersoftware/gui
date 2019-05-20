@@ -1,8 +1,10 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import Dropzone from 'react-dropzone';
 import ReactTooltip from 'react-tooltip';
 
 // material ui
+import Button from '@material-ui/core/Button';
 import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 
@@ -17,6 +19,7 @@ import { preformatWithRequestID, customSort } from '../../helpers';
 import { UploadArtifact, ExpandArtifact } from '../helptips/helptooltips';
 import Loader from '../common/loader';
 import ReleaseRepositoryItem from './releaserepositoryitem';
+import BaseOnboardingTip from '../helptips/baseonboardingtip';
 
 const columnHeaders = [
   { title: 'Device type compatibility', name: 'device_types', sortable: false },
@@ -106,8 +109,12 @@ export default class ReleaseRepository extends React.Component {
           index={index}
           onEdit={(id, description) => self._editArtifactData(id, description)}
           onRowSelection={() => self._onRowSelection(pkg)}
+          // this will be run after expansion + collapse and both need some time to fully settle
+          // otherwise the measurements are off
+          onExpanded={() => setTimeout(() => self.setState({}), 500)}
           removeArtifact={removeArtifact}
           release={release}
+          ref={ref => (this.repoItemAnchor = ref)}
           width={columnWidth}
         />
       );
@@ -136,6 +143,44 @@ export default class ReleaseRepository extends React.Component {
       </Dropzone>
     );
     const noArtifactsClass = release ? '' : 'muted';
+    const onboardingComplete = AppStore.getOnboardingComplete();
+    let onboarding = {
+      component: null,
+      anchor: { left: 0, top: 0 },
+      progress: 1,
+      progressTotal: 3,
+      id: 4
+    };
+    if (!onboardingComplete && this.repoItemAnchor && this.creationRef && this.dropzoneRef) {
+      const element = this.repoItemAnchor.itemRef;
+      onboarding.anchor = { left: element.offsetLeft + element.offsetWidth / 3, top: element.offsetTop + element.offsetHeight };
+      onboarding.component = (
+        <div>
+          We have included a Mender artifact with a simple Application update for you to test with.<p>Expand it for more details.</p>
+        </div>
+      );
+      if (selectedArtifact.id) {
+        onboarding.anchor = {
+          left: this.creationRef.offsetLeft + this.creationRef.offsetWidth,
+          top: this.creationRef.offsetTop + this.creationRef.offsetHeight / 2
+        };
+        onboarding.component = <div>Let&apos;s deploy this Release to your device now</div>;
+        onboarding.place = 'right';
+      }
+      // TODO: should be shown after modified Artifact was uploaded
+      onboarding.component = (
+        <div>
+          Your uploaded Artifact is now part of a new &apos;Release&apos;.
+          <p>Now create a deployment with this Release!</p>
+        </div>
+      );
+    }
+
+    // We need the ref to the <a> element that refers to the deployments tab, in order to align
+    // the helptip with the button - unfortunately this is not forwarded through react-router or mui
+    // thus, use the following component as a workaround:
+    const ForwardingLink = React.forwardRef((props, ref) => <Link {...props} innerRef={ref} />);
+    ForwardingLink.displayName = 'ForwardingLink';
     return (
       <div className="relative release-repo margin-left" style={{ width: '100%' }}>
         <div className="flexbox">
@@ -157,7 +202,10 @@ export default class ReleaseRepository extends React.Component {
           onDrop={(accepted, rejected) => this.onDrop(accepted, rejected)}
         >
           {({ getRootProps, getInputProps }) => (
-            <div {...getRootProps({ className: `dashboard-placeholder top-right-button fadeIn onboard ${dropzoneClass}`, style: { top: 0 } })}>
+            <div
+              {...getRootProps({ className: `dashboard-placeholder top-right-button fadeIn onboard ${dropzoneClass}`, style: { top: 0 } })}
+              ref={ref => (this.dropzoneRef = ref)}
+            >
               <input {...getInputProps()} disabled={uploading} />
               <span className="icon">
                 <FileIcon style={{ height: '24px', width: '24px', verticalAlign: 'middle', marginTop: '-2px', marginRight: '10px' }} />
@@ -168,6 +216,24 @@ export default class ReleaseRepository extends React.Component {
             </div>
           )}
         </Dropzone>
+        {!onboardingComplete && this.dropzoneRef ? (
+          // TODO: properly decide when to show this, as it requires artifact creation dialog to be completed
+          <BaseOnboardingTip
+            component={
+              <div>
+                Now upload your new Artifact here!
+                <p>
+                  Or <a onClick={() => AppActions.setShowCreateArtifactDialog(true)}>view the instructions again</a> on how to edit the demo webserver
+                  application and create your own Artifact
+                </p>
+              </div>
+            }
+            place="left"
+            progress={2}
+            id="upload-new-artifact-tip"
+            anchor={{ left: this.dropzoneRef.offsetLeft, top: this.dropzoneRef.offsetTop + this.dropzoneRef.offsetHeight }}
+          />
+        ) : null}
 
         <Loader show={loading} />
 
@@ -195,8 +261,19 @@ export default class ReleaseRepository extends React.Component {
                 <div style={{ width: 48 }} />
               </div>
               {items}
+              <Button
+                variant="contained"
+                buttonRef={ref => (this.creationRef = ref)}
+                component={ForwardingLink}
+                to={`/deployments?open=true&release=${release.Name}`}
+                style={{ marginLeft: 20 }}
+              >
+                Create deployment with this release
+              </Button>
             </div>
           ) : null}
+          {showHelptips && !onboardingComplete && onboarding.component ? <BaseOnboardingTip progressTotal={3} {...onboarding} /> : null}
+
           {showHelptips && items.length ? (
             <div>
               <div id="onboard-10" className="tooltip help" data-tip data-for="artifact-expand-tip" data-event="click focus">

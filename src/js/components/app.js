@@ -1,5 +1,5 @@
 import React from 'react';
-import { withRouter } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 
 import PropTypes from 'prop-types';
 import Header from './header/header';
@@ -15,6 +15,7 @@ import SharedSnackbar from '../components/common/sharedsnackbar';
 import AppStore from '../stores/app-store';
 import AppActions from '../actions/app-actions';
 import { AppContext } from '../contexts/app-context';
+import CreateArtifactDialog from './common/dialogs/createartifactdialog';
 import ConfirmDismissHelptips from './common/dialogs/confirmdismisshelptips';
 import DeviceConnectionDialog from './common/dialogs/deviceconnectiondialog';
 import BaseOnboardingTip from './helptips/baseonboardingtip';
@@ -54,6 +55,7 @@ class AppRoot extends React.Component {
       globalSettings: AppStore.getGlobalSettings(),
       snackbar: AppStore.getSnackbar(),
       showDismissHelptipsDialog: !AppStore.getOnboardingComplete() && AppStore.getShowOnboardingTipsDialog(),
+      showCreateArtifactDialog: AppStore.getShowCreateArtifactDialog(),
       showDeviceConnectionDialog: AppStore.getShowConnectDeviceDialog()
     };
   }
@@ -153,6 +155,7 @@ class AppRoot extends React.Component {
         </div>
         {onboardingTip.component ? <BaseOnboardingTip {...onboardingTip} /> : null}
         <ConfirmDismissHelptips open={showDismissHelptipsDialog} />
+        <CreateArtifactDialog open={showCreateArtifactDialog} />
         <DeviceConnectionDialog open={showDeviceConnectionDialog} onCancel={() => AppActions.setShowConnectingDialog(false)} />
         <SharedSnackbar snackbar={snackbar} />
       </IdleTimer>
