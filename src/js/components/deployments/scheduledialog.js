@@ -63,7 +63,7 @@ export default class ScheduleDialog extends React.Component {
     }
 
     const group = this.props.group && this.props.group !== 'All devices' ? `group=${encodeURIComponent(this.props.group)}` : '';
-    const drawerStyles = { overflow: 'hidden', position: 'absolute'};
+    const drawerStyles = { overflow: 'hidden', position: 'absolute' };
 
     var deviceList = (
       <Drawer
@@ -113,6 +113,7 @@ export default class ScheduleDialog extends React.Component {
           <ScheduleForm
             filteredDevices={filteredDevices}
             showDevices={() => this.setState({ showDevices: true })}
+            deploymentAnchor={this.deploymentRef}
             {...other}
             deploymentSettings={(...args) => self.deploymentSettingsUpdate(...args)}
           />
@@ -126,6 +127,7 @@ export default class ScheduleDialog extends React.Component {
             onClick={() => self.onScheduleSubmit(self.state.group, tmpDevices, self.state.artifact)}
             variant="contained"
             color="primary"
+            buttonRef={ref => (this.deploymentRef = ref)}
             disabled={disabled}
           >
             Create deployment
