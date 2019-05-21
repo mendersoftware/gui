@@ -1,19 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link, matchPath } from 'react-router-dom';
-
 import cookie from 'react-cookie';
-import { isEmpty, decodeSessionToken, hashString } from '../../helpers';
-import { clearAllRetryTimers } from '../../utils/retrytimer';
-import ReactTooltip from 'react-tooltip';
-import { toggleHelptips, hideAnnouncement } from '../../utils/toggleuseroptions';
-import { DevicesNav, ArtifactsNav, DeploymentsNav } from '../helptips/helptooltips';
 import Linkify from 'react-linkify';
-import DeviceNotifications from './devicenotifications';
-import DeploymentNotifications from './deploymentnotifications';
-
-import AppActions from '../../actions/app-actions';
-import AppStore from '../../stores/app-store';
+import ReactTooltip from 'react-tooltip';
 
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
@@ -31,6 +21,16 @@ import CloseIcon from '@material-ui/icons/Close';
 import ExitIcon from '@material-ui/icons/ExitToApp';
 import HelpIcon from '@material-ui/icons/Help';
 import InfoIcon from '@material-ui/icons/InfoOutlined';
+
+import { isEmpty, decodeSessionToken, hashString } from '../../helpers';
+import { getOnboardingState } from '../../utils/onboardingmanager';
+import { clearAllRetryTimers } from '../../utils/retrytimer';
+import { toggleHelptips, hideAnnouncement } from '../../utils/toggleuseroptions';
+import { DevicesNav, ArtifactsNav, DeploymentsNav } from '../helptips/helptooltips';
+import DeviceNotifications from './devicenotifications';
+import DeploymentNotifications from './deploymentnotifications';
+import AppActions from '../../actions/app-actions';
+import AppStore from '../../stores/app-store';
 
 export default class Header extends React.Component {
   static contextTypes = {
@@ -170,6 +170,7 @@ export default class Header extends React.Component {
       if (!userId) {
         return;
       }
+      self.ensureAppStoreInitialized(userId);
       self.setState({ gettingUser: true });
       return AppActions.getUser(userId)
         .then(user => {
@@ -186,6 +187,16 @@ export default class Header extends React.Component {
         });
     }
   }
+
+  ensureAppStoreInitialized(userId) {
+    const isAlreadyInitialized = JSON.parse(window.sessionStorage.getItem(`${userId}-init-done`));
+    if (isAlreadyInitialized) {
+      return;
+    }
+    getOnboardingState(userId);
+    window.sessionStorage.setItem(`${userId}-init-done`, true);
+  }
+
   changeTab() {
     this._getGlobalSettings();
     this._checkHeaderInfo();
