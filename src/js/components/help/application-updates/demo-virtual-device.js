@@ -47,17 +47,9 @@ export default class VirtualDevice extends React.Component {
                 On the infrastructure you run the virtual Mender client, you need to be able to create outgoing TCP connections to hosted.mender.io and
                 s3.amazonaws.com, both on port 443 (TLS).
               </p>
-              <p>As the Mender client does listen to any ports there are no incoming connections.</p>
+              <p>As the Mender client does not listen to any ports there are no incoming connections.</p>
             </div>
-          ) : (
-            <div>
-              <h4>Ability to connect to Mender over the Internet</h4>
-              <p>
-                On the infrastructure you run the virtual Mender client...
-              </p>
-              <p>As the Mender client does listen to any ports there are no incoming connections.</p>
-            </div>
-          )}
+          ) : '' }
 
           <h4>Docker Engine</h4>
           <p>If you do not have it already, please install docker on the infrastructure where you want to start the virtual Mender client.</p>

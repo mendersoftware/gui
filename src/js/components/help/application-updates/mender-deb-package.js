@@ -30,10 +30,10 @@ export default class DebPackage extends React.Component {
 
     var tenantToken = (this.props.org || {}).tenant_token;
 
-    var dpkgCode = 'wget https://d1b0l86ne08fsf.cloudfront.net/mender/master/mender_master-1_armhf.deb \ndpkg -i mender-client_master-1_armhf.deb.deb';
-    var cpCode = 'cp /etc/mender/mender.conf.demo /etc/mender/mender.conf';
-    var echoCode = 'echo "device_type=generic-armv6" > /var/lib/mender/device_type';
-    var startCode = 'systemctl enable mender && systemctl start mender';
+    var dpkgCode = 'wget https://d1b0l86ne08fsf.cloudfront.net/2.0.0/dist-packages/debian/armhf/mender-client_2.0.0-1_armhf.deb \nsudo dpkg -i mender-client_2.0.0-1_armhf.deb';
+    var cpCode = 'sudo cp /etc/mender/mender.conf.demo /etc/mender/mender.conf';
+    var echoCode = 'sudo mkdir -p /var/lib/mender \necho "device_type=generic-armv6" > /var/lib/mender/device_type';
+    var startCode = 'sudo systemctl enable mender && sudo systemctl start mender';
     var tenantCode = 'TENANT_TOKEN="'+ tenantToken +'" \nsudo sed -i "s/'+ tenantToken +'/$TENANT_TOKEN/" /etc/mender/mender.conf';
 
     return (
@@ -85,22 +85,21 @@ export default class DebPackage extends React.Component {
             <p>To configure the Mender client for Hosted Mender, you need to edit <span className="code">&#47;etc&#47;mender&#47;mender.conf</span> and insert your Tenant Token 
             where it says &quot;Paste your Hosted Mender token here&quot;.</p>
 
-            <p>Set the TENANT_TOKEN variable and update the configuration file:
-              <div className="code">
-                <CopyToClipboard text={tenantCode} onCopy={() => this._copied('tenantCode')}>
-                  <IconButton style={{ float: 'right', margin: '-20px 0 0 10px' }}>
-                    <CopyPasteIcon/>
-                  </IconButton>
-                </CopyToClipboard>
-                <span style={{ wordBreak: 'break-word' }}>{tenantCode}</span>              
-              </div>
-              <p>{this.state.tenantCode ? <span className="green fadeIn">Copied to clipboard.</span> : null}</p>
-              <br/>
-            </p>
+            <p>Set the TENANT_TOKEN variable and update the configuration file:</p>
+            <div className="code">
+              <CopyToClipboard text={tenantCode} onCopy={() => this._copied('tenantCode')}>
+                <IconButton style={{ float: 'right', margin: '-20px 0 0 10px' }}>
+                  <CopyPasteIcon/>
+                </IconButton>
+              </CopyToClipboard>
+              <span style={{ wordBreak: 'break-word' }}>{tenantCode}</span>              
+            </div>
+            <p>{this.state.tenantCode ? <span className="green fadeIn">Copied to clipboard.</span> : null}</p>
+            <br/>
           </div> : null }
        
         <h4>Setting the device type</h4>
-        <p>Set the device type on the device. This example uses <span className="code">generic-armv6</span>, but you can substitute your own specific device type:</p>
+        <p>Create the Mender client state directory and set the device type on the device. This example uses <span className="code">generic-armv6</span>, but you can substitute your own specific device type:</p>
         <div className="code">
           <CopyToClipboard text={echoCode} onCopy={() => this._copied('echoCode')}>
             <IconButton style={{ float: 'right', margin: '-20px 0 0 10px' }} >
