@@ -44,7 +44,7 @@ export default class CreateArtifactDialog extends React.Component {
 
     const chmodCode = `
     chmod +x mender-artifact
-    chmod +x file-instal-artifact-gen
+    chmod +x single-file-artifact-gen
     `;
 
     const artifactGenCode = `
@@ -53,7 +53,7 @@ export default class CreateArtifactDialog extends React.Component {
     OUTPUT_PATH="demo_webserver-2.0.mender"
     DEST_DIR="/opt/installed-by-file-installer/"
     FILE_TREE="dir-to-deploy"
-    /file-install-artifact-gen -n \${ARTIFACT_NAME}
+    /single-file-artifact-gen -n \${ARTIFACT_NAME}
     -t \${DEVICE_TYPE} -d {DEST_DIR} -o \${OUTPUT_PATH}
     \${FILE_TREE}
     `;
@@ -64,7 +64,18 @@ export default class CreateArtifactDialog extends React.Component {
           <p className="muted">Follow these steps on your Linux workstation. Estimated time 5 minutes</p>
           <ol>
             <li>
-              Download both <a>mender-artifact</a> and <a>file-install-artifact-gen</a>
+              Download both{' '}
+              <a href="https://d1b0l86ne08fsf.cloudfront.net/mender-artifact/master/mender-artifact" download target="_blank">
+                mender-artifact
+              </a>{' '}
+              and{' '}
+              <a
+                href="https://raw.githubusercontent.com/mendersoftware/mender/master/support/modules-artifact-gen/single-file-artifact-gen"
+                download
+                target="_blank"
+              >
+                single-file-artifact-gen
+              </a>
               <div>
                 then make them executable by running:
                 <div className="code">

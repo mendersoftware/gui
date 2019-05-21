@@ -57,7 +57,7 @@ export default class BaseOnboardingTip extends React.Component {
     ReactTooltip.hide(this.tipRef);
   }
   render() {
-    const { anchor, component, place, progress, progressTotal, id } = this.props;
+    const { anchor, component, place, progress, progressTotal, id, ...others } = this.props;
     const orientation = orientations[place || 'top'];
     const style = orientation.offsetStyle({ left: anchor.left, top: anchor.top });
     const tipId = `onboard-tip-${id ? id : 1}`;
@@ -82,7 +82,7 @@ export default class BaseOnboardingTip extends React.Component {
           clickable={true}
           style={orientation.contentStyle}
         >
-          {component}
+          {React.cloneElement(component, others)}
           <div className="flexbox">
             {progress ? <div>{`Progress: step ${progress} of ${progressTotal || 3}`}</div> : null}
             <div style={{ flexGrow: 1 }} />
