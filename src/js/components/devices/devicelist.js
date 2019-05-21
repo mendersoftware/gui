@@ -11,6 +11,8 @@ import SortIcon from '@material-ui/icons/Sort';
 import AppActions from '../../actions/app-actions';
 import Loader from '../common/loader';
 import DeviceListItem from './devicelistitem';
+import AppStore from '../../stores/app-store';
+import { advanceOnboarding } from '../../utils/onboardingmanager';
 
 export default class DeviceList extends React.Component {
   constructor(props, context) {
@@ -38,6 +40,9 @@ export default class DeviceList extends React.Component {
     let deviceId = self.props.devices[rowNumber].id;
     if (self.state.expandedDeviceId === deviceId) {
       deviceId = null;
+    }
+    if (!AppStore.getOnboardingComplete()) {
+      advanceOnboarding('devices-accepted-onboarding');
     }
     self.setState({ expandedDeviceId: deviceId });
   }

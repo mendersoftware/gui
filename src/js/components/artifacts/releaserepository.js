@@ -19,7 +19,7 @@ import { preformatWithRequestID, customSort } from '../../helpers';
 import { UploadArtifact, ExpandArtifact } from '../helptips/helptooltips';
 import Loader from '../common/loader';
 import ReleaseRepositoryItem from './releaserepositoryitem';
-import BaseOnboardingTip from '../helptips/baseonboardingtip';
+import { getOnboardingComponentFor, advanceOnboarding } from '../../utils/onboardingmanager';
 
 const columnHeaders = [
   { title: 'Device type compatibility', name: 'device_types', sortable: false },
@@ -56,7 +56,12 @@ export default class ReleaseRepository extends React.Component {
     //delete meta.verified;
     var meta = { description: '' };
     const uploads = files.map(file => self.props.uploadArtifact(meta, file));
-    Promise.all(uploads).then(() => self.props.refreshArtifacts());
+    Promise.all(uploads).then(() => {
+      if (!AppStore.getOnboardingComplete()) {
+        advanceOnboarding('upload-new-artifact-tip');
+      }
+      self.props.refreshArtifacts();
+    });
   }
 
   _onRowSelection(artifact) {
@@ -64,6 +69,9 @@ export default class ReleaseRepository extends React.Component {
       this.setState({ selectedArtifact: { id: null } });
     } else {
       this.setState({ selectedArtifact: artifact });
+    }
+    if (!AppStore.getOnboardingComplete()) {
+      advanceOnboarding('artifact-included-onboarding');
     }
   }
 
@@ -156,9 +164,9 @@ export default class ReleaseRepository extends React.Component {
       const anchor = { left: element.offsetLeft + element.offsetWidth / 3, top: element.offsetTop + element.offsetHeight };
       onboardingComponent = getOnboardingComponentFor('artifact-included-onboarding', { anchor });
       const artifactIncludedAnchor = {
-          left: this.creationRef.offsetLeft + this.creationRef.offsetWidth,
-          top: this.creationRef.offsetTop + this.creationRef.offsetHeight / 2
-        };
+        left: this.creationRef.offsetLeft + this.creationRef.offsetWidth,
+        top: this.creationRef.offsetTop + this.creationRef.offsetHeight / 2
+      };
       onboardingComponent = getOnboardingComponentFor(
         'artifact-included-deploy-onboarding',
         { place: 'right', anchor: artifactIncludedAnchor },
@@ -169,7 +177,7 @@ export default class ReleaseRepository extends React.Component {
         top: this.creationRef.offsetTop - this.creationRef.offsetHeight / 2
       };
       onboardingComponent = getOnboardingComponentFor('artifact-modified-onboarding', { anchor: artifactUploadedAnchor, place: 'bottom' }, onboardingComponent);
-      }
+    }
 
     let uploadArtifactOnboardingComponent = null;
     if (this.dropzoneRef) {
@@ -247,6 +255,7 @@ export default class ReleaseRepository extends React.Component {
                 component={ForwardingLink}
                 to={`/deployments?open=true&release=${release.Name}`}
                 style={{ marginLeft: 20 }}
+                onClick={() => AppActions.setDeploymentRelease(release)}
               >
                 Create deployment with this release
               </Button>

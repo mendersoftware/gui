@@ -9,6 +9,7 @@ import HelpIcon from '@material-ui/icons/Schedule';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 
 import AppActions from '../../actions/app-actions';
+import { advanceOnboarding } from '../../utils/onboardingmanager';
 
 export class WelcomeSnackTip extends React.PureComponent {
   render() {
@@ -34,11 +35,14 @@ export class WelcomeSnackTip extends React.PureComponent {
 
 export class DeploymentCompleteTip extends React.Component {
   onClose() {
-    AppActions.setShowHelptips(false);
+    AppActions.setShowOnboardingHelp(false);
     AppActions.setOnboardingComplete(false);
   }
   onClick() {
     AppActions.setOnboardingComplete(false);
+    window.open(this.props.targetUrl, '_blank');
+    advanceOnboarding('deployments-past-completed');
+    AppActions.setShowCreateArtifactDialog(true);
     this.onClose();
   }
 
@@ -52,7 +56,7 @@ export class DeploymentCompleteTip extends React.Component {
         </div>
         <p>and you should see the demo web application actually being run on the device.</p>
         <p>NOTE: if you have local network restrictions, you may need to check them if you have difficulty loading the page.</p>
-        <a href={this.props.targetUrl}>Visit the web app running your device</a>
+        <a onClick={() => this.onClick()}>Visit the web app running your device</a>
       </div>
     );
   }
@@ -66,7 +70,7 @@ export class OnboardingCompleteTip extends React.Component {
     ReactTooltip.show(this.tipRef);
   }
   onClose() {
-    AppActions.setShowHelptips(false);
+    AppActions.setShowOnboardingHelp(false);
   }
   render() {
     return (

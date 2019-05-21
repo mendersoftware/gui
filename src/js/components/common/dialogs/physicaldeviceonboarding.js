@@ -25,7 +25,7 @@ export default class PhysicalDeviceOnboarding extends React.Component {
       const pendingDevices = AppStore.getPendingDevices();
       const allDevices = AppStore.getAllDevices();
       if (!(pendingDevices.length || allDevices.length)) {
-        AppActions.setConnectingDialogProgressed(false);
+        AppActions.setConnectingDialogProgressed(null);
       }
     }, 1000 * 60 * 60); // show regular tooltip if 1 hour after this dialog still no device was connected
   }
@@ -33,7 +33,7 @@ export default class PhysicalDeviceOnboarding extends React.Component {
   copied() {
     var self = this;
     self.setState({ copied: true });
-    AppActions.setConnectingDialogProgressed(true);
+    AppActions.setConnectingDialogProgressed(Date.now());
     setTimeout(() => {
       self.setState({ copied: false });
     }, 5000);
