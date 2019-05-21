@@ -42,6 +42,9 @@ export default class Artifacts extends React.Component {
     if (staleSelection || (!selectedRelease && releases.length)) {
       selectedRelease = releases[0];
     }
+    if (this.state && this.state.releases.length < releases.length) {
+      selectedRelease = releases.find(release => this.state.releases.every(item => item.Name !== release.Name));
+    }
     return {
       releases,
       selectedRelease,
