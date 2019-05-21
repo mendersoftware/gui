@@ -32,6 +32,12 @@ const AppActions = {
     });
   },
 
+  selectDevice: device =>
+    AppDispatcher.handleViewAction({
+      actionType: AppConstants.SELECT_DEVICE,
+      device
+    }),
+
   addDeviceToGroup: (group, device) => {
     return DevicesApi.put(`${inventoryApiUrl}/devices/${device}/group`, { group });
   },
@@ -128,35 +134,35 @@ const AppActions = {
 
     return DevicesApi.get(`${deviceAuthV2}/devices/count${filter}`).then(res => {
       switch (status) {
-        case 'pending':
-          AppDispatcher.handleViewAction({
-            actionType: AppConstants.SET_PENDING_DEVICES_COUNT,
-            count: res.body.count
-          });
-          break;
-        case 'accepted':
-          AppDispatcher.handleViewAction({
-            actionType: AppConstants.SET_ACCEPTED_DEVICES_COUNT,
-            count: res.body.count
-          });
-          break;
-        case 'rejected':
-          AppDispatcher.handleViewAction({
-            actionType: AppConstants.SET_REJECTED_DEVICES_COUNT,
-            count: res.body.count
-          });
-          break;
-        case 'preauthorized':
-          AppDispatcher.handleViewAction({
-            actionType: AppConstants.SET_PREAUTH_DEVICES_COUNT,
-            count: res.body.count
-          });
-          break;
-        default:
-          AppDispatcher.handleViewAction({
-            actionType: AppConstants.SET_TOTAL_DEVICES,
-            count: res.body.count
-          });
+      case 'pending':
+        AppDispatcher.handleViewAction({
+          actionType: AppConstants.SET_PENDING_DEVICES_COUNT,
+          count: res.body.count
+        });
+        break;
+      case 'accepted':
+        AppDispatcher.handleViewAction({
+          actionType: AppConstants.SET_ACCEPTED_DEVICES_COUNT,
+          count: res.body.count
+        });
+        break;
+      case 'rejected':
+        AppDispatcher.handleViewAction({
+          actionType: AppConstants.SET_REJECTED_DEVICES_COUNT,
+          count: res.body.count
+        });
+        break;
+      case 'preauthorized':
+        AppDispatcher.handleViewAction({
+          actionType: AppConstants.SET_PREAUTH_DEVICES_COUNT,
+          count: res.body.count
+        });
+        break;
+      default:
+        AppDispatcher.handleViewAction({
+          actionType: AppConstants.SET_TOTAL_DEVICES,
+          count: res.body.count
+        });
       }
       return Promise.resolve(res.body.count);
     });
@@ -305,6 +311,11 @@ const AppActions = {
       actionType: AppConstants.SET_SHOW_ONBOARDING_HELP,
       show: val
     }),
+  setOnboardingProgress: value =>
+    AppDispatcher.handleViewAction({
+      actionType: AppConstants.SET_ONBOARDING_PROGRESS,
+      value
+    }),
   setShowDismissOnboardingTipsDialog: val =>
     AppDispatcher.handleViewAction({
       actionType: AppConstants.SET_SHOW_ONBOARDING_HELP_DIALOG,
@@ -317,7 +328,7 @@ const AppActions = {
     });
     AppDispatcher.handleViewAction({
       actionType: AppConstants.SET_SHOW_ONBOARDING_HELP,
-      show: val
+      show: !val
     });
   },
   setShowConnectingDialog: val =>
@@ -390,10 +401,10 @@ const AppActions = {
       })
     ),
 
-  setDeploymentArtifact: artifact =>
+  setDeploymentRelease: release =>
     AppDispatcher.handleViewAction({
-      actionType: AppConstants.SET_DEPLOYMENT_ARTIFACT,
-      artifact: artifact
+      actionType: AppConstants.SET_DEPLOYMENT_RELEASE,
+      release
     }),
 
   /* Releases */

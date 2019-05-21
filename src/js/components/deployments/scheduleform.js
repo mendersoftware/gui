@@ -9,8 +9,10 @@ import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 
 import AutoSelect from '../common/forms/autoselect';
-import BaseOnboardingTip from '../helptips/baseonboardingtip';
 import { RootRef } from '@material-ui/core';
+import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
+import AppStore from '../../stores/app-store';
+import AppActions from '../../actions/app-actions';
 
 export default class ScheduleForm extends React.Component {
   constructor(props, context) {
@@ -28,10 +30,28 @@ export default class ScheduleForm extends React.Component {
     };
   }
 
-  componentDidUpdate() {
-    if (this.onboardingRef) {
-      this.onboardingRef.show();
+  componentDidMount() {
+    const release = AppStore.getDeploymentRelease();
+    if (release) {
+      this.props.deploymentSettings(release.Artifacts[0], 'artifact');
     }
+    const group = AppStore.getSelectedGroup();
+    if (group) {
+      this.props.deploymentSettings(group, 'group');
+    }
+  }
+
+  componentWillUnmount() {
+    AppActions.setDeploymentRelease(null);
+    AppActions.selectGroup(null);
+    AppActions.selectDevice(null);
+  }
+
+  deploymentSettingsUpdate(value, property) {
+    if (property === 'group') {
+      AppActions.selectGroup(value);
+    }
+    this.props.deploymentSettings(value, property);
   }
 
   _showDevices() {
@@ -48,24 +68,11 @@ export default class ScheduleForm extends React.Component {
 
   render() {
     const self = this;
-    const {
-      artifact,
-      device,
-      deploymentAnchor,
-      deploymentDevices,
-      deploymentSettings,
-      filteredDevices,
-      group,
-      groups,
-      hasDevices,
-      hasPending,
-      showDevices,
-      showHelptips
-    } = self.props;
+    const { artifact, device, deploymentAnchor, deploymentDevices, filteredDevices, groups, hasDevices, hasPending, showDevices } = self.props;
     const artifacts = this.props.releaseArtifacts ? this.props.releaseArtifacts : this.props.artifacts;
-    var artifactItems = artifacts.map(artifact => ({
-      title: artifact.name,
-      value: artifact
+    var artifactItems = artifacts.map(art => ({
+      title: art.name,
+      value: art
     }));
 
     let groupItems = [{ title: 'All devices', value: 'All devices' }];
@@ -75,8 +82,8 @@ export default class ScheduleForm extends React.Component {
         title: device.id,
         value: device
       };
-      artifactItems = artifactItems.filter(artifact =>
-        artifact.value.device_types_compatible.some(type => type === device.attributes.find(attr => attr.name === 'device_type').value)
+      artifactItems = artifactItems.filter(art =>
+        art.value.device_types_compatible.some(type => type === device.attributes.find(attr => attr.name === 'device_type').value)
       );
     } else {
       groupItems = groups.reduce((accu, group) => {
@@ -88,8 +95,15 @@ export default class ScheduleForm extends React.Component {
       }, groupItems);
     }
 
-    var device_types = artifact ? artifact.device_types_compatible : [];
-    device_types = device_types.join(', ');
+    const release = AppStore.getDeploymentRelease();
+    const releaseDeviceTypes = release
+      ? release.Artifacts.reduce((accu, item) => {
+        accu.push(item.device_types_compatible);
+        return accu;
+      }, [])
+      : [];
+    const deviceTypeList = artifact ? artifact.device_types_compatible : releaseDeviceTypes;
+    const device_types = deviceTypeList.join(', ');
 
     var tmpDevices = deploymentDevices || [];
     if (self.search && filteredDevices) {
@@ -111,7 +125,7 @@ export default class ScheduleForm extends React.Component {
       const buttonAnchor = {
         top: deploymentAnchor.offsetTop - deploymentAnchor.offsetHeight,
         left: deploymentAnchor.offsetLeft + deploymentAnchor.offsetWidth / 2
-    };
+      };
       onboardingComponent = getOnboardingComponentFor('scheduling-release-to-devices', { anchor: buttonAnchor, place: 'bottom' }, onboardingComponent);
     }
     return (
@@ -126,13 +140,17 @@ export default class ScheduleForm extends React.Component {
             <RootRef rootRef={ref => (this.releaseRef = ref)}>
               <Grid container spacing={16}>
                 <Grid item>
-                  <AutoSelect
-                    className="margin-right"
-                    label="Select target Release"
-                    errorText="Choose a Release to be deployed"
-                    items={artifactItems}
-                    onChange={item => deploymentSettings(item, 'artifact')}
-                  />
+                  {self.props.releaseArtifacts ? (
+                    <TextField value={release ? release.Name : ''} label="Release" disabled={true} style={infoStyle} />
+                  ) : (
+                    <AutoSelect
+                      className="margin-right"
+                      label="Select target Release"
+                      errorText="Choose a Release to be deployed"
+                      items={artifactItems}
+                      onChange={item => self.deploymentSettingsUpdate(item, 'artifact')}
+                    />
+                  )}
                 </Grid>
                 {artifact ? (
                   <Grid item>
@@ -152,7 +170,7 @@ export default class ScheduleForm extends React.Component {
                     errorText="Please select a group from the list"
                     items={groupItems}
                     disabled={!hasDevices}
-                    onChange={item => deploymentSettings(item, 'group')}
+                    onChange={item => self.deploymentSettingsUpdate(item, 'group')}
                   />
                   {hasDevices ? null : (
                     <p className="info" style={{ marginTop: '0' }}>

@@ -8,7 +8,8 @@ var CHANGE_EVENT = 'change';
 
 var _artifactsRepo = [];
 var _currentGroup = null;
-var _deploymentArtifact = null;
+var _currentDevice = null;
+var _deploymentRelease = null;
 var _currentGroupDevices = [];
 var _totalNumberDevices, _totalPendingDevices, _totalAcceptedDevices, _totalRejectedDevices, _totalPreauthDevices, _deviceLimit, _numberInProgress;
 _totalPendingDevices = _totalAcceptedDevices = 0;
@@ -29,6 +30,8 @@ var _showOnboardingTipsDialog = false;
 var _showConnectDeviceDialog = false;
 var _showCreateArtifactDialog = false;
 var _connectDeviceProgressed = false;
+var _onboardingComplete = !!_onboardingComplete || !!JSON.parse(window.localStorage.getItem('onboardingComplete'));
+var _onboardingProgress = 0;
 var _groups = [];
 var _releasesRepo = [];
 var _uploadInProgress = false;
@@ -38,6 +41,7 @@ var _globalSettings = {};
 /* Temp local devices */
 
 var _alldevices = [];
+var _accepted = [];
 var _pending = [];
 var _preauthorized = [];
 var _rejected = [];
@@ -45,6 +49,10 @@ var _rejected = [];
 function _selectGroup(group) {
   _filters = [];
   _currentGroup = group;
+}
+
+function _selectDevice(device) {
+  _currentDevice = device;
 }
 
 function _addNewGroup(group, devices, type) {
@@ -204,21 +212,6 @@ var _hasDeployments = false;
 //_al deployments.sort(startTimeSort);
 
 var _activityLog = [];
-
-function _getPastDeployments() {
-  return _pastDeployments;
-}
-
-function _getPendingDeployments() {
-  return _pendingDeployments;
-}
-
-function _getDeploymentsInProgress() {
-  return _deploymentsInProgress;
-}
-function _getHasDeployments() {
-  return _hasDeployments;
-}
 
 function _sortDeploymentDevices(devices) {
   var newList = {
@@ -402,15 +395,12 @@ function setGroupDevices(devices) {
   });
 }
 
+function setAcceptedDevices(devices) {
+  _accepted = devices;
+}
+
 function setPendingDevices(devices) {
-  if (devices) {
-    var newDevices = {};
-    devices.forEach(element => {
-      newDevices[element.status] = newDevices[element.status] || [];
-      newDevices[element.status].push(element);
-    });
-    _pending = newDevices.pending || [];
-  }
+  _pending = devices;
 }
 
 function setPreauthDevices(devices) {
@@ -427,8 +417,8 @@ function setGroups(groups) {
   }
 }
 
-function setDeploymentArtifact(artifact) {
-  _deploymentArtifact = artifact;
+function setDeploymentRelease(release) {
+  _deploymentRelease = release;
 }
 
 function setGlobalSettings(settings) {
@@ -468,6 +458,9 @@ function _setShowCreateArtifactDialog(val) {
 function _setConnectDeviceProgressed(val) {
   _connectDeviceProgressed = val;
 }
+function _setOnboardingProgress(val) {
+  _onboardingProgress = val;
+}
 
 function _setOnboardingComplete(val) {
   _onboardingComplete = val;
@@ -499,8 +492,10 @@ var AppStore = Object.assign({}, EventEmitter.prototype, {
    */
   getSelectedGroup: () => _currentGroup,
 
+  getSelectedDevice: () => _currentDevice,
+
   // for use when switching tab from artifacts to create a deployment
-  getDeploymentArtifact: () => _deploymentArtifact,
+  getDeploymentRelease: () => _deploymentRelease,
 
   /*
    * Return list of devices by current selected group
@@ -560,7 +555,7 @@ var AppStore = Object.assign({}, EventEmitter.prototype, {
   /*
    * Return list of finished deployments
    */
-  getPastDeployments: () => _getPastDeployments(),
+  getPastDeployments: () => _pastDeployments,
 
   /*
    * Return list of all deployments
@@ -570,12 +565,12 @@ var AppStore = Object.assign({}, EventEmitter.prototype, {
   /*
    * Return list of pending deployments
    */
-  getPendingDeployments: () => _getPendingDeployments(),
+  getPendingDeployments: () => _pendingDeployments,
 
   /*
    * Return list of deployments in progress based on date
    */
-  getDeploymentsInProgress: () => _getDeploymentsInProgress(),
+  getDeploymentsInProgress: () => _deploymentsInProgress,
 
   /*
    * return only number in progress for top bar
@@ -585,7 +580,7 @@ var AppStore = Object.assign({}, EventEmitter.prototype, {
   /*
    * Return boolean whether or not any deployments exist at all
    */
-  getHasDeployments: () => _getHasDeployments(),
+  getHasDeployments: () => _hasDeployments,
 
   /*
    * Return list of event objects from log
@@ -598,6 +593,8 @@ var AppStore = Object.assign({}, EventEmitter.prototype, {
   filterDevicesByType: (devices, device_types) => _filterDevicesByType(devices, device_types),
 
   getOrderedDeploymentDevices: devices => _sortDeploymentDevices(devices),
+
+  getAcceptedDevices: () => _accepted || [],
 
   getPendingDevices: () => _pending || [],
 
@@ -634,6 +631,8 @@ var AppStore = Object.assign({}, EventEmitter.prototype, {
   showHelptips: () => _showHelptips,
 
   getOnboardingComplete: () => _onboardingComplete,
+
+  getOnboardingProgress: () => _onboardingProgress,
 
   getShowOnboardingTips: () => _showOnboardingTips,
 
@@ -675,6 +674,9 @@ var AppStore = Object.assign({}, EventEmitter.prototype, {
     case AppConstants.SELECT_GROUP:
       _selectGroup(payload.action.group);
       break;
+    case AppConstants.SELECT_DEVICE:
+      _selectDevice(payload.action.device);
+      break;
     case AppConstants.ADD_TO_GROUP:
       _addToGroup(payload.action.group, payload.action.devices);
       break;
@@ -698,7 +700,7 @@ var AppStore = Object.assign({}, EventEmitter.prototype, {
       break;
 
     case AppConstants.SET_SNACKBAR:
-        _setSnackbar(payload.action.message, payload.action.duration, payload.action.action, payload.action.children, payload.action.onClick);
+      _setSnackbar(payload.action.message, payload.action.duration, payload.action.action, payload.action.children, payload.action.onClick);
       break;
 
     case AppConstants.SET_CURRENT_USER:
@@ -713,24 +715,27 @@ var AppStore = Object.assign({}, EventEmitter.prototype, {
     case AppConstants.SET_SHOW_HELP:
       _setShowHelptips(payload.action.show);
       break;
-      case AppConstants.SET_SHOW_ONBOARDING_HELP:
-        _setShowOnboardingHelp(payload.action.show);
-        break;
-      case AppConstants.SET_ONBOARDING_COMPLETE:
-        _setOnboardingComplete(payload.action.show);
-        break;
-      case AppConstants.SET_SHOW_ONBOARDING_HELP_DIALOG:
-        _setShowOnboardingTipsDialog(payload.action.show);
-        break;
-      case AppConstants.SET_SHOW_CONNECT_DEVICE:
-        _setShowConnectDeviceDialog(payload.action.show);
-        break;
-      case AppConstants.SET_SHOW_CREATE_ARTIFACT:
-        _setShowCreateArtifactDialog(payload.action.show);
-        break;
-      case AppConstants.SET_CONNECT_DEVICE_PROGRESSED:
-        _setConnectDeviceProgressed(payload.action.progressed);
-        break;
+    case AppConstants.SET_SHOW_ONBOARDING_HELP:
+      _setShowOnboardingHelp(payload.action.show);
+      break;
+    case AppConstants.SET_ONBOARDING_COMPLETE:
+      _setOnboardingComplete(payload.action.show);
+      break;
+    case AppConstants.SET_SHOW_ONBOARDING_HELP_DIALOG:
+      _setShowOnboardingTipsDialog(payload.action.show);
+      break;
+    case AppConstants.SET_SHOW_CONNECT_DEVICE:
+      _setShowConnectDeviceDialog(payload.action.show);
+      break;
+    case AppConstants.SET_SHOW_CREATE_ARTIFACT:
+      _setShowCreateArtifactDialog(payload.action.show);
+      break;
+    case AppConstants.SET_CONNECT_DEVICE_PROGRESSED:
+      _setConnectDeviceProgressed(payload.action.progressed);
+      break;
+    case AppConstants.SET_ONBOARDING_PROGRESS:
+      _setOnboardingProgress(payload.action.value);
+      break;
 
       /* API */
     case AppConstants.RECEIVE_ARTIFACTS:
@@ -788,9 +793,9 @@ var AppStore = Object.assign({}, EventEmitter.prototype, {
       setTotalPreauthDevices(payload.action.count);
       break;
 
-      // case AppConstants.SET_ACCEPTED_DEVICES:
-      //   setAcceptedDevices(payload.action.devices);
-      //   break;
+    case AppConstants.SET_ACCEPTED_DEVICES:
+      setAcceptedDevices(payload.action.devices);
+      break;
 
     case AppConstants.SET_PENDING_DEVICES:
       setPendingDevices(payload.action.devices);
@@ -813,16 +818,12 @@ var AppStore = Object.assign({}, EventEmitter.prototype, {
       setGroupDevices(payload.action.devices);
       break;
 
-    case AppConstants.RECEIVE_ADMISSION_DEVICES:
-      setPendingDevices(payload.action.devices);
-      break;
-
     case AppConstants.RECEIVE_GROUPS:
       setGroups(payload.action.groups);
       break;
 
-    case AppConstants.SET_DEPLOYMENT_ARTIFACT:
-      setDeploymentArtifact(payload.action.artifact);
+    case AppConstants.SET_DEPLOYMENT_RELEASE:
+      setDeploymentRelease(payload.action.release);
       break;
 
     case AppConstants.SET_GLOBAL_SETTINGS:
