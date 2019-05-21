@@ -18,9 +18,9 @@ export default class SystemUpdates extends React.Component {
 
         <p>Learn how to enable and connect your devices for system updates:</p>
         <ul>
-          <li><Link to={`/help/system-updates/board-integrations`}>Supported board integrations on Mender Hub</Link></li>
-          <li><Link to={`/help/system-updates/build-with-yocto`}>Building a Mender-enabled Yocto image</Link></li>
-          <li><Link to={`/help/system-updates/integrate-debian`}>Devices running Debian family OSes</Link></li>
+          <li><p><Link to={`/help/system-updates/board-integrations`}>Supported board integrations on Mender Hub</Link></p></li>
+          <li><p><Link to={`/help/system-updates/build-with-yocto`}>Building a Mender-enabled Yocto image</Link></p></li>
+          <li><p><Link to={`/help/system-updates/integrate-debian`}>Devices running Debian family OSes</Link></p></li>
         </ul>
         
         <p>You can learn more about Mender&#39;s A&#47;B partition architecture <a href={`https://docs.mender.io/${this.props.docsVersion}architecture/overview`} target="_blank">here</a>.</p>

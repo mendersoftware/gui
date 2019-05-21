@@ -54,34 +54,29 @@ export default class DebPackage extends React.Component {
         <p>
           On the device, run the following commands:
         </p>
-        <p>
-          Download the package:
-          <div className="code">
-            <CopyToClipboard text={dpkgCode} onCopy={() => this._copied('dpkgCode')}>
-              <IconButton style={{ float: 'right', margin: '-20px 0 0 10px' }}>
-                <CopyPasteIcon/>
-              </IconButton>
-            </CopyToClipboard>
-            <span style={{ wordBreak: 'break-word' }}>{dpkgCode}</span>
-          </div>
-          <p>{this.state.dpkgCode ? <span className="green fadeIn">Copied to clipboard.</span> : null}</p>
-        </p>
+        <p>Download the package:</p>
+        <div className="code">
+          <CopyToClipboard text={dpkgCode} onCopy={() => this._copied('dpkgCode')}>
+            <IconButton style={{ float: 'right', margin: '-20px 0 0 10px' }}>
+              <CopyPasteIcon/>
+            </IconButton>
+          </CopyToClipboard>
+          <span style={{ wordBreak: 'break-word' }}>{dpkgCode}</span>
+        </div>
+        <p>{this.state.dpkgCode ? <span className="green fadeIn">Copied to clipboard.</span> : null}</p>
 
-        <p>
-          For demo purposes, copy the demo config file:
-          <div className="code">
-            <CopyToClipboard text={cpCode} onCopy={() => this._copied('cpCode')}>
-              <IconButton style={{ float: 'right', margin: '-20px 0 0 10px' }}>
-                <CopyPasteIcon/>
-              </IconButton>
-            </CopyToClipboard>
-            <span style={{ wordBreak: 'break-word' }}>{cpCode}</span>
-          </div>
-          <p>{this.state.cpCode ? <span className="green fadeIn">Copied to clipboard.</span> : null}</p>
-        </p>
-        <p>
-          Or edit the config file yourself by <a href={`https://docs.mender.io/${this.props.docsVersion}client-configuration/configuration-file`} target="_blank">following the docs</a>.
-        </p>
+        <p>For demo purposes, copy the demo config file:</p>
+        <div className="code">
+          <CopyToClipboard text={cpCode} onCopy={() => this._copied('cpCode')}>
+            <IconButton style={{ float: 'right', margin: '-20px 0 0 10px' }}>
+              <CopyPasteIcon/>
+            </IconButton>
+          </CopyToClipboard>
+          <span style={{ wordBreak: 'break-word' }}>{cpCode}</span>
+        </div>
+        <p>{this.state.cpCode ? <span className="green fadeIn">Copied to clipboard.</span> : null}</p>
+        <p>Or edit the config file yourself by <a href={`https://docs.mender.io/${this.props.docsVersion}client-configuration/configuration-file`} target="_blank">following the docs</a>.</p>
+        
         <br/>
 
         {this.props.isHosted ? 
@@ -105,33 +100,29 @@ export default class DebPackage extends React.Component {
           </div> : null }
        
         <h4>Setting the device type</h4>
-        <p>
-          Set the device type on the device. This example uses <span className="code">generic-armv6</span>, but you can substitute your own specific device type:
-          <div className="code">
-            <CopyToClipboard text={echoCode} onCopy={() => this._copied('echoCode')}>
-              <IconButton style={{ float: 'right', margin: '-20px 0 0 10px' }} >
-                <CopyPasteIcon/>
-              </IconButton>
-            </CopyToClipboard>
-            <span style={{ wordBreak: 'break-word' }}>{echoCode}</span>
-          </div>
-          <p>{this.state.echoCode ? <span className="green fadeIn">Copied to clipboard.</span> : null}</p>
-          <br/>
-        </p>
+        <p>Set the device type on the device. This example uses <span className="code">generic-armv6</span>, but you can substitute your own specific device type:</p>
+        <div className="code">
+          <CopyToClipboard text={echoCode} onCopy={() => this._copied('echoCode')}>
+            <IconButton style={{ float: 'right', margin: '-20px 0 0 10px' }} >
+              <CopyPasteIcon/>
+            </IconButton>
+          </CopyToClipboard>
+          <span style={{ wordBreak: 'break-word' }}>{echoCode}</span>
+        </div>
+        <p>{this.state.echoCode ? <span className="green fadeIn">Copied to clipboard.</span> : null}</p>
+        <br/>
         
-        <p>
-          <h4>Starting the client</h4>
-          Enable and start the Mender client:
-          <div className="code">
-            <CopyToClipboard text={startCode} onCopy={() => this._copied('startCode')}>
-              <IconButton style={{ float: 'right', margin: '-20px 0 0 10px' }}>
-                <CopyPasteIcon/>
-              </IconButton>
-            </CopyToClipboard>
-            <span style={{ wordBreak: 'break-word' }}>{startCode}</span>
-          </div>
-          <p>{this.state.startCode ? <span className="green fadeIn">Copied to clipboard.</span> : null}</p>
-        </p>
+        <h4>Starting the client</h4>
+        <p>Enable and start the Mender client:</p>
+        <div className="code">
+          <CopyToClipboard text={startCode} onCopy={() => this._copied('startCode')}>
+            <IconButton style={{ float: 'right', margin: '-20px 0 0 10px' }}>
+              <CopyPasteIcon/>
+            </IconButton>
+          </CopyToClipboard>
+          <span style={{ wordBreak: 'break-word' }}>{startCode}</span>
+        </div>
+        <p>{this.state.startCode ? <span className="green fadeIn">Copied to clipboard.</span> : null}</p>
        
         <p>
           Once the client has started, your device will attempt to connect to the server. It will then appear in your Pending devices tab and you can continue.
