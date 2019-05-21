@@ -101,38 +101,19 @@ export default class ScheduleForm extends React.Component {
 
     const infoStyle = { borderBottom: 'none' };
 
-    let onboarding = {
-      component: null,
-      place: 'right',
-      progress: 2,
-      progressTotal: 3,
-      anchor: { left: 0, top: 0 }
+    let onboardingComponent = null;
+    if (this.releaseRef && this.groupRef && deploymentAnchor) {
+      const anchor = { top: this.releaseRef.offsetTop + (this.releaseRef.offsetHeight / 3) * 2, left: this.releaseRef.offsetWidth / 2 };
+      onboardingComponent = getOnboardingComponentFor('scheduling-artifact-selection', { anchor, place: 'right' });
+      const groupAnchor = { top: this.groupRef.offsetTop + (this.groupRef.offsetHeight / 3) * 2, left: this.groupRef.offsetWidth / 2 };
+      onboardingComponent = getOnboardingComponentFor('scheduling-all-devices-selection', { anchor: groupAnchor, place: 'right' }, onboardingComponent);
+      onboardingComponent = getOnboardingComponentFor('scheduling-group-selection', { anchor: groupAnchor, place: 'right' }, onboardingComponent);
+      const buttonAnchor = {
+        top: deploymentAnchor.offsetTop - deploymentAnchor.offsetHeight,
+        left: deploymentAnchor.offsetLeft + deploymentAnchor.offsetWidth / 2
     };
-    if (hasDevices && artifacts.length && this.releaseRef && !artifact) {
-      onboarding.component = <div>{`Select the ${artifacts[0].name} release we included.`}</div>;
-      onboarding.anchor.top = this.releaseRef.offsetTop + (this.releaseRef.offsetHeight / 3) * 2;
-      onboarding.anchor.left = this.releaseRef.offsetWidth / 2;
-    } else if (artifact && this.groupRef && !group) {
-      let content = (
-        <>
-          Select &apos;All devices&apos; for now.<p>You can learn how to create device groups later.</p>
-        </>
-      );
-      if (groups.length) {
-        content = `Select the ${groups[0]} device group you just made.`;
-      }
-      onboarding.component = <div>{content}</div>;
-      onboarding.anchor.top = this.groupRef.offsetTop + (this.groupRef.offsetHeight / 3) * 2;
-      onboarding.anchor.left = this.groupRef.offsetWidth / 2;
-    } else if (devicesLength && (artifacts || []).length && group && deploymentAnchor) {
-      onboarding.component = (
-        <div>{`Create the deployment! This will deploy the ${artifacts[0].name} Artifact to ${device ? device.id : groups[0] || 'All devices'}`}</div>
-      );
-      onboarding.place = 'bottom';
-      onboarding.anchor.top = deploymentAnchor.offsetTop - deploymentAnchor.offsetHeight;
-      onboarding.anchor.left = deploymentAnchor.offsetLeft + deploymentAnchor.offsetWidth / 2;
+      onboardingComponent = getOnboardingComponentFor('scheduling-release-to-devices', { anchor: buttonAnchor, place: 'bottom' }, onboardingComponent);
     }
-
     return (
       <div style={{ overflow: 'visible', height: '300px' }}>
         {!artifactItems.length ? (
@@ -186,7 +167,7 @@ export default class ScheduleForm extends React.Component {
                   )}
                 </div>
               )}
-              {showHelptips && onboarding.component ? <BaseOnboardingTip id={3} {...onboarding} ref={ref => (this.onboardingRef = ref)} /> : null}
+              {onboardingComponent}
             </div>
             <div className="margin-top">
               {tmpDevices ? (

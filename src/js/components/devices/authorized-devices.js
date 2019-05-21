@@ -14,7 +14,6 @@ import AddCircleIcon from '@material-ui/icons/AddCircle';
 import HelpIcon from '@material-ui/icons/Help';
 import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
 
-import BaseOnboardingTip from '../helptips/baseonboardingtip';
 import { ExpandDevice } from '../helptips/helptooltips';
 import { WelcomeSnackTip } from '../helptips/onboardingtips';
 
@@ -23,6 +22,7 @@ import AppActions from '../../actions/app-actions';
 import AppStore from '../../stores/app-store';
 
 import DeviceList from './devicelist';
+import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 
 export default class Authorized extends React.Component {
   constructor(props, context) {
@@ -161,6 +161,7 @@ export default class Authorized extends React.Component {
       </FormControl>
     ) : null;
 
+    const onboardingComponent = getOnboardingComponentFor('devices-accepted-onboarding', { anchor: { left: 200, top: 146 } });
     return (
       <div className="relative">
         <Loader show={loading} />
@@ -205,22 +206,7 @@ export default class Authorized extends React.Component {
             {!allCount ? <p>No devices have been authorized to connect to the Mender server yet.</p> : null}
           </div>
         )}
-        {showHelptips && devices.length ? (
-          <BaseOnboardingTip
-            id={3}
-            progressTotal={3}
-            anchor={{ left: 200, top: 146 }}
-            component={
-              <div>
-                <b>Good job! Your first device is connected!</b>
-                <p>
-                  Your device is now <b>accepted</b>! It&apos;s now going to share inventory details with the server.
-                </p>
-                Click to expand the device and see more
-              </div>
-            }
-          />
-        ) : null}
+        {onboardingComponent ? onboardingComponent : null}
         <div>
           {selectedRows.length ? (
             <div className="fixedButtons">

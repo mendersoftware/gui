@@ -23,9 +23,9 @@ import Progress from './inprogressdeployments';
 import Past from './pastdeployments';
 import Report from './report';
 import ScheduleDialog from './scheduledialog';
-import BaseOnboardingTip from '../helptips/baseonboardingtip';
 
 import { preformatWithRequestID } from '../../helpers';
+import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 
 const routes = {
   active: {
@@ -73,9 +73,6 @@ export default class Deployments extends React.Component {
     this.timer = setInterval(() => this._refreshDeployments(), this.state.refreshDeploymentsLength);
     this._refreshDeployments();
 
-    var artifact = AppStore.getDeploymentArtifact();
-    this.setState({ artifact });
-
     Promise.all([AppActions.getArtifacts(), AppActions.getAllDevices(), AppActions.getGroups()])
       .catch(err => console.log(`Error: ${err}`))
       .then(([artifacts, allDevices, groups]) => {
@@ -92,24 +89,21 @@ export default class Deployments extends React.Component {
       });
 
     if (this.props.match) {
-      this.setState({ reportType: this.props.match.params.tab });
-
       const params = new URLSearchParams(this.props.location.search);
       if (params && params.get('open')) {
         if (params.get('id')) {
           self._getReportById(params.get('id'));
         } else if (params.get('release')) {
           const release = AppStore.getRelease(params.get('release'));
-          self.setState({ scheduleDialog: true, releaseArtifacts: release.Artifacts });
+          self.setState({ scheduleDialog: true, releaseArtifacts: release ? release.Artifacts : null });
         } else {
           setTimeout(() => {
             self.setState({ scheduleDialog: true });
           }, 400);
         }
       }
-    } else {
-      this.setState({ reportType: 'active' });
     }
+    this.setState({ reportType: this.props.match ? this.props.match.params.tab : 'active' });
 
     const query = new URLSearchParams(this.props.location.search);
     this.setState({ scheduleDialog: Boolean(query.get('open')) || false });
@@ -520,7 +514,12 @@ export default class Deployments extends React.Component {
       </p>
     );
     // tabs
-    const { tabIndex } = this.state;
+    const { past, pastCount, tabIndex } = this.state;
+
+    let onboardingComponent = null;
+    if (past.length || pastCount) {
+      onboardingComponent = getOnboardingComponentFor('deployments-past', { anchor: { left: 240, top: 50 } });
+    }
 
     return (
       <div className="relative" style={{ marginTop: '-15px' }}>
@@ -578,9 +577,9 @@ export default class Deployments extends React.Component {
               page={this.state.past_page}
               isActiveTab={this.state.currentTab === 'Finished'}
               showHelptips={this.state.showHelptips}
-              count={this.state.pastCount}
+              count={pastCount}
               loading={!this.state.doneLoading}
-              past={this.state.past}
+              past={past}
               refreshPast={(...args) => this._changePastPage(...args)}
               showReport={(deployment, type) => this._showReport(deployment, type)}
             />
@@ -640,9 +639,7 @@ export default class Deployments extends React.Component {
           </DialogContent>
           <DialogActions>{onboardActions}</DialogActions>
         </Dialog>
-        {this.state.showHelptips && (this.state.past.length || this.state.pastCount) && !window.location.hash.includes('finished') ? (
-          <BaseOnboardingTip id={12} anchor={{ left: 240, top: 50 }} component={<div>Your deployment has finished, click here to view it</div>} />
-        ) : null}
+        {onboardingComponent}
       </div>
     );
   }

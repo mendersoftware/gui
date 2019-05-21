@@ -13,11 +13,11 @@ import TableRow from '@material-ui/core/TableRow';
 
 import HelpIcon from '@material-ui/icons/Help';
 
-import BaseOnboardingTip from '../helptips/baseonboardingtip';
 import { CreateDeployment, ProgressDeployment } from '../helptips/helptooltips';
 import DeploymentStatus from './deploymentstatus';
 import Loader from '../common/loader';
 import { formatTime } from '../../helpers';
+import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 
 export default class Progress extends React.Component {
   constructor(props, context) {
@@ -45,9 +45,10 @@ export default class Progress extends React.Component {
       );
     }, this);
 
-    let onboardingAnchor = { left: 200, top: 0 };
+    let onboardingComponent = null;
     if (this.inprogressRef) {
-      onboardingAnchor.top = this.inprogressRef.offsetTop + this.inprogressRef.offsetHeight;
+      const anchor = { left: 200, top: this.inprogressRef.offsetTop + this.inprogressRef.offsetHeight };
+      onboardingComponent = getOnboardingComponentFor('deployments-inprogress', { anchor });
     }
     return (
       <div className="fadeIn">
@@ -94,9 +95,7 @@ export default class Progress extends React.Component {
             </div>
           )}
 
-          {this.props.showHelptips && this.props.progress.length ? (
-            <BaseOnboardingTip id={11} progress={2} anchor={onboardingAnchor} component={<div>Your deployment is in progress. Click to view a report</div>} />
-          ) : null}
+          {onboardingComponent ? onboardingComponent : null}
           {!this.props.loading && this.props.showHelptips && (!this.props.hasDeployments || this.props.progress.length) ? (
             // if first deployment not created, or if there is one in progress, show tip
             <div>

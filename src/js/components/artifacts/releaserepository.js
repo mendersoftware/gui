@@ -143,44 +143,42 @@ export default class ReleaseRepository extends React.Component {
       </Dropzone>
     );
     const noArtifactsClass = release ? '' : 'muted';
-    const onboardingComplete = AppStore.getOnboardingComplete();
-    let onboarding = {
-      component: null,
-      anchor: { left: 0, top: 0 },
-      progress: 1,
-      progressTotal: 3,
-      id: 4
-    };
-    if (!onboardingComplete && this.repoItemAnchor && this.creationRef && this.dropzoneRef) {
-      const element = this.repoItemAnchor.itemRef;
-      onboarding.anchor = { left: element.offsetLeft + element.offsetWidth / 3, top: element.offsetTop + element.offsetHeight };
-      onboarding.component = (
-        <div>
-          We have included a Mender artifact with a simple Application update for you to test with.<p>Expand it for more details.</p>
-        </div>
-      );
-      if (selectedArtifact.id) {
-        onboarding.anchor = {
-          left: this.creationRef.offsetLeft + this.creationRef.offsetWidth,
-          top: this.creationRef.offsetTop + this.creationRef.offsetHeight / 2
-        };
-        onboarding.component = <div>Let&apos;s deploy this Release to your device now</div>;
-        onboarding.place = 'right';
-      }
-      // TODO: should be shown after modified Artifact was uploaded
-      onboarding.component = (
-        <div>
-          Your uploaded Artifact is now part of a new &apos;Release&apos;.
-          <p>Now create a deployment with this Release!</p>
-        </div>
-      );
-    }
 
     // We need the ref to the <a> element that refers to the deployments tab, in order to align
     // the helptip with the button - unfortunately this is not forwarded through react-router or mui
     // thus, use the following component as a workaround:
     const ForwardingLink = React.forwardRef((props, ref) => <Link {...props} innerRef={ref} />);
     ForwardingLink.displayName = 'ForwardingLink';
+
+    let onboardingComponent = null;
+    if (this.repoItemAnchor && this.creationRef && this.dropzoneRef) {
+      const element = this.repoItemAnchor.itemRef;
+      const anchor = { left: element.offsetLeft + element.offsetWidth / 3, top: element.offsetTop + element.offsetHeight };
+      onboardingComponent = getOnboardingComponentFor('artifact-included-onboarding', { anchor });
+      const artifactIncludedAnchor = {
+          left: this.creationRef.offsetLeft + this.creationRef.offsetWidth,
+          top: this.creationRef.offsetTop + this.creationRef.offsetHeight / 2
+        };
+      onboardingComponent = getOnboardingComponentFor(
+        'artifact-included-deploy-onboarding',
+        { place: 'right', anchor: artifactIncludedAnchor },
+        onboardingComponent
+      );
+      const artifactUploadedAnchor = {
+        left: this.creationRef.offsetLeft + this.creationRef.offsetWidth / 2,
+        top: this.creationRef.offsetTop - this.creationRef.offsetHeight / 2
+      };
+      onboardingComponent = getOnboardingComponentFor('artifact-modified-onboarding', { anchor: artifactUploadedAnchor, place: 'bottom' }, onboardingComponent);
+      }
+
+    let uploadArtifactOnboardingComponent = null;
+    if (this.dropzoneRef) {
+      uploadArtifactOnboardingComponent = getOnboardingComponentFor('upload-new-artifact-tip', {
+        place: 'left',
+        anchor: { left: this.dropzoneRef.offsetLeft, top: this.dropzoneRef.offsetTop + this.dropzoneRef.offsetHeight }
+      });
+    }
+
     return (
       <div className="relative release-repo margin-left" style={{ width: '100%' }}>
         <div className="flexbox">
@@ -216,25 +214,7 @@ export default class ReleaseRepository extends React.Component {
             </div>
           )}
         </Dropzone>
-        {!onboardingComplete && this.dropzoneRef ? (
-          // TODO: properly decide when to show this, as it requires artifact creation dialog to be completed
-          <BaseOnboardingTip
-            component={
-              <div>
-                Now upload your new Artifact here!
-                <p>
-                  Or <a onClick={() => AppActions.setShowCreateArtifactDialog(true)}>view the instructions again</a> on how to edit the demo webserver
-                  application and create your own Artifact
-                </p>
-              </div>
-            }
-            place="left"
-            progress={2}
-            id="upload-new-artifact-tip"
-            anchor={{ left: this.dropzoneRef.offsetLeft, top: this.dropzoneRef.offsetTop + this.dropzoneRef.offsetHeight }}
-          />
-        ) : null}
-
+        {uploadArtifactOnboardingComponent ? uploadArtifactOnboardingComponent : null}
         <Loader show={loading} />
 
         <div style={{ position: 'relative', marginTop: '10px' }}>
@@ -272,7 +252,7 @@ export default class ReleaseRepository extends React.Component {
               </Button>
             </div>
           ) : null}
-          {showHelptips && !onboardingComplete && onboarding.component ? <BaseOnboardingTip progressTotal={3} {...onboarding} /> : null}
+          {showHelptips && onboardingComponent ? onboardingComponent : null}
 
           {showHelptips && items.length ? (
             <div>

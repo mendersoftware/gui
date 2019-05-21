@@ -5,7 +5,7 @@ import AppStore from '../../stores/app-store';
 import AcceptedDevices from './widgets/accepteddevices';
 import RedirectionWidget from './widgets/redirectionwidget';
 import PendingDevices from './widgets/pendingdevices';
-import BaseOnboardingTip from '../helptips/baseonboardingtip';
+import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 
 export default class Devices extends React.Component {
   constructor(props, state) {
@@ -13,10 +13,11 @@ export default class Devices extends React.Component {
     const self = this;
     self.timer = null;
     self.state = {
+      deltaActivity: null,
       devices: [],
       inactiveDevices: [],
       pendingDevices: [],
-      deltaActivity: null,
+      onboardingComplete: AppStore.getOnboardingComplete(),
       refreshDevicesLength: 30000,
       showHelptips: AppStore.showHelptips()
     };
@@ -83,27 +84,21 @@ export default class Devices extends React.Component {
   }
 
   render() {
-    const { devices, inactiveDevices, pendingDevices, deltaActivity, showHelptips } = this.state;
+    const { devices, inactiveDevices, onboardingComplete, pendingDevices, deltaActivity, showHelptips } = this.state;
     const hasPending = pendingDevices > 0;
     const noDevicesAvailable = !devices && !hasPending;
-    const onboardingComplete = AppStore.getOnboardingComplete();
-    let onboardingTip = {
-      component: null,
-      anchor: { left: 0, top: 0 },
-      progress: 1
-    };
-    if (showHelptips && !onboardingComplete && this.anchor) {
+    let onboardingComponent = null;
+    if (this.anchor) {
       const element = this.anchor.children[this.anchor.children.length - 1];
-      onboardingTip.anchor = { left: element.offsetLeft + element.offsetWidth / 2, top: element.offsetTop + element.offsetHeight - 50 };
-      onboardingTip.component = <div>Click here to get started!</div>;
-      if (hasPending && this.pendingsRef) {
+      const anchor = { left: element.offsetLeft + element.offsetWidth / 2, top: element.offsetTop + element.offsetHeight - 50 };
+      onboardingComponent = getOnboardingComponentFor('dashboard-onboarding-start', { anchor });
+      if (this.pendingsRef) {
         const element = this.pendingsRef.wrappedElement.lastChild;
-        onboardingTip.anchor = {
+        const anchor = {
           left: this.pendingsRef.wrappedElement.offsetLeft + element.offsetWidth / 2,
           top: this.pendingsRef.wrappedElement.offsetTop + element.offsetHeight
         };
-        onboardingTip.component = <div>Next accept your device</div>;
-        onboardingTip.progress = 2;
+        onboardingComponent = getOnboardingComponentFor('dashboard-onboarding-pendings', { anchor });
       }
     }
     const redirectionRoute = onboardingComplete ? '/help/connecting-devices' : '/devices';
@@ -136,7 +131,7 @@ export default class Devices extends React.Component {
             isActive={noDevicesAvailable}
           />
         </div>
-        {onboardingTip.component ? <BaseOnboardingTip {...onboardingTip} /> : null}
+        {onboardingComponent ? onboardingComponent : null}
       </div>
     );
   }

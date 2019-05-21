@@ -15,9 +15,9 @@ import AppStore from '../../stores/app-store';
 import { preformatWithRequestID } from '../../helpers';
 import Loader from '../common/loader';
 import { AuthDevices } from '../helptips/helptooltips';
-import BaseOnboardingTip from '../helptips/baseonboardingtip';
 import { DevicePendingTip } from '../helptips/onboardingtips';
 import DeviceList from './devicelist';
+import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 
 export default class Pending extends React.Component {
   constructor(props, context) {
@@ -116,9 +116,9 @@ export default class Pending extends React.Component {
     pluralize.addIrregularRule('its', 'their');
     var skipText = skipped
       ? `${skipped} ${pluralize('devices', skipped)} ${pluralize('have', skipped)} more than one pending authset. Expand ${pluralize(
-          'this',
-          skipped
-        )} ${pluralize('device', skipped)} to individually adjust ${pluralize('their', skipped)} authorization status. `
+        'this',
+        skipped
+      )} ${pluralize('device', skipped)} to individually adjust ${pluralize('their', skipped)} authorization status. `
       : '';
     var doneText = done ? `${done} ${pluralize('device', done)} ${pluralize('was', done)} updated successfully. ` : '';
     AppActions.setSnackbar(doneText + skipText);
@@ -211,27 +211,18 @@ export default class Pending extends React.Component {
         </p>
       ) : null;
 
-    const onboardingTip = {
-      id: 3,
-      component: null,
-      progress: 1,
-      progressTotal: 3,
-      anchor: { left: 0, top: 0 }
-    };
-    if (self.state.showHelptips && this.state.devices.length && (this.deviceListRef || this.authorizeRef)) {
-      onboardingTip.component = (
-        <div>This should be your device, asking for permission to join the server. Inspect its identity details, then check it to accept it!</div>
-      );
+    let onboardingComponent = null;
+    if (this.deviceListRef || this.authorizeRef) {
       const element = this.deviceListRef ? this.deviceListRef.getElementsByClassName('body')[0] : null;
-      onboardingTip.anchor = { left: 200, top: element ? element.offsetTop + element.offsetHeight : 170 };
+      onboardingComponent = getOnboardingComponentFor('devices-pending-onboarding', {
+        anchor: { left: 200, top: element ? element.offsetTop + element.offsetHeight : 170 }
+      });
       if (this.state.selectedRows && this.authorizeRef) {
-        onboardingTip.component = <div>If you recognize this device as your own, you can accept it</div>;
-        onboardingTip.progress = 2;
-        onboardingTip.place = 'left';
-        onboardingTip.anchor = {
+        const anchor = {
           left: this.authorizeRef.offsetLeft - this.authorizeRef.offsetWidth / 2,
           top: this.authorizeRef.offsetParent.offsetTop - this.authorizeRef.offsetParent.offsetHeight - this.authorizeRef.offsetHeight / 2
         };
+        onboardingComponent = getOnboardingComponentFor('devices-pending-accepting-onboarding', { place: 'left', anchor });
       }
     }
 
@@ -315,7 +306,7 @@ export default class Pending extends React.Component {
             </div>
           </div>
         ) : null}
-        {onboardingTip.component ? <BaseOnboardingTip {...onboardingTip} /> : null}
+        {onboardingComponent ? onboardingComponent : null}
       </div>
     );
   }

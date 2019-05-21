@@ -23,11 +23,11 @@ import AppStore from '../../stores/app-store';
 import Loader from '../common/loader';
 import AutoSelect from '../common/forms/autoselect';
 import { FinishedDeployment } from '../helptips/helptooltips';
-import { DeploymentCompleteTip, WelcomeSnackTip } from '../helptips/onboardingtips';
+import { WelcomeSnackTip } from '../helptips/onboardingtips';
 import DeploymentStatus from './deploymentstatus';
 import { formatTime } from '../../helpers';
-import BaseOnboardingTip from '../helptips/baseonboardingtip';
 import { RootRef } from '@material-ui/core';
+import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 
 const timeranges = {
   today: { start: 0, end: 0, title: 'Today' },
@@ -139,19 +139,11 @@ export default class Past extends React.Component {
       [{ title: 'All devices', value: 'All devices' }]
     );
 
-    let onboardingTip = {
-      component: 0,
-      id: 14,
-      anchor: { left: 250, top: 0 }
-    };
-    if (this.props.past.length && this.deploymentsRef) {
-      onboardingTip.component = <DeploymentCompleteTip />;
-      onboardingTip.anchor.top = this.deploymentsRef.offsetParent.offsetTop + this.deploymentsRef.offsetTop + this.deploymentsRef.offsetHeight;
-      if (this.props.past[0].status === 'failed') {
-        onboardingTip.component = (
-          <div>Your deployment has finished, but it looks like there was a problem. Click to view the deployment report, where you can see the error log.</div>
-        );
-      }
+    let onboardingComponent = null;
+    if (this.deploymentsRef) {
+      let anchor = { left: 250, top: this.deploymentsRef.offsetParent.offsetTop + this.deploymentsRef.offsetTop + this.deploymentsRef.offsetHeight };
+      onboardingComponent = getOnboardingComponentFor('deployments-past-completed', { anchor });
+      onboardingComponent = getOnboardingComponentFor('deployments-past-completed-failure', { anchor }, onboardingComponent);
     }
 
     return (
@@ -235,7 +227,7 @@ export default class Past extends React.Component {
               </ReactTooltip>
 
               {// TODO: fix status retrieval for past deployments to decide what to show here -
-              onboardingTip.component ? <BaseOnboardingTip {...onboardingTip} /> : null}
+                onboardingComponent ? onboardingComponent : null}
             </div>
           ) : null}
 
