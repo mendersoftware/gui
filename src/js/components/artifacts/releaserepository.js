@@ -19,7 +19,7 @@ import { preformatWithRequestID, customSort } from '../../helpers';
 import { UploadArtifact, ExpandArtifact } from '../helptips/helptooltips';
 import Loader from '../common/loader';
 import ReleaseRepositoryItem from './releaserepositoryitem';
-import { getOnboardingComponentFor, advanceOnboarding } from '../../utils/onboardingmanager';
+import { getOnboardingComponentFor, advanceOnboarding, getOnboardingStepCompleted } from '../../utils/onboardingmanager';
 
 const columnHeaders = [
   { title: 'Device type compatibility', name: 'device_types', sortable: false },
@@ -57,7 +57,7 @@ export default class ReleaseRepository extends React.Component {
     var meta = { description: '' };
     const uploads = files.map(file => self.props.uploadArtifact(meta, file));
     Promise.all(uploads).then(() => {
-      if (!AppStore.getOnboardingComplete()) {
+      if (!AppStore.getOnboardingComplete() && getOnboardingStepCompleted('artifact-included-deploy-onboarding')) {
         advanceOnboarding('upload-new-artifact-tip');
       }
       self.props.refreshArtifacts();
