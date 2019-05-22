@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { compose, setDisplayName } from 'recompose';
 
 import BaseOnboardingTip from '../components/helptips/baseonboardingtip';
 import { DeploymentCompleteTip } from '../components/helptips/onboardingtips';
@@ -77,7 +78,7 @@ const onboardingSteps = {
   },
   'scheduling-artifact-selection': {
     condition: () => onboardingTipSanityCheck() && AppStore.getTotalAcceptedDevices() && AppStore.getDeploymentRelease(),
-    component: () => <div>{`Select the ${AppStore.getDeploymentRelease().Name} release we included.`}</div>,
+    component: compose(setDisplayName('OnboardingTip'))(() => <div>{`Select the ${AppStore.getDeploymentRelease().Name} release we included.`}</div>),
     progress: 2
   },
   'scheduling-all-devices-selection': {
@@ -91,7 +92,7 @@ const onboardingSteps = {
   },
   'scheduling-group-selection': {
     condition: () => onboardingTipSanityCheck() && AppStore.getTotalAcceptedDevices() && !AppStore.getSelectedDevice() && AppStore.getGroups().length > 1, // group 0 will be the ungrouped group and always present
-    component: () => <div>{`Select the ${AppStore.getGroups()[1]} device group you just made.`}</div>,
+    component: compose(setDisplayName('OnboardingTip'))(() => <div>{`Select the ${AppStore.getGroups()[1]} device group you just made.`}</div>),
     progress: 2
   },
   'scheduling-release-to-devices': {
@@ -100,11 +101,11 @@ const onboardingSteps = {
       AppStore.getTotalAcceptedDevices() &&
       (AppStore.getSelectedGroup() || AppStore.getSelectedDevice()) &&
       AppStore.getDeploymentRelease(),
-    component: () => (
+    component: compose(setDisplayName('OnboardingTip'))(() => (
       <div>{`Create the deployment! This will deploy the ${AppStore.getDeploymentRelease().Name} Artifact to ${
         AppStore.getSelectedDevice() ? AppStore.getSelectedDevice().id : AppStore.getSelectedGroup() || 'All devices'
       }`}</div>
-    )
+    ))
   },
   'deployments-inprogress': {
     condition: () => onboardingTipSanityCheck() && AppStore.getDeploymentsInProgress().length,
