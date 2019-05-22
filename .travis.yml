@@ -1,117 +1,62 @@
 language: node_js
 node_js:
-  - "8"
+  - '8'
 
 # Forces travis to use VM insted container, required to be able to build containers.
 sudo: required
 
 # Disable git shallow clone. We need full history for validating copyright year of each file.
 git:
-    depth: false
+  depth: false
 
 services:
-    - docker
+  - docker
 
 dist: trusty
 
 env:
-    global:
-        # Should be encrypted or set as private travis variables (in travis settings):
-        # DOCKER_HUB_EMAIL
-        # DOCKER_HUB_USERNAME
-        # DOCKER_HUB_PASSWORD
+  global:
+    # Should be encrypted or set as private travis variables (in travis settings):
+    # DOCKER_HUB_EMAIL
+    # DOCKER_HUB_USERNAME
+    # DOCKER_HUB_PASSWORD
 
-        # Docker repository name
-        - DOCKER_REPOSITORY="mendersoftware/gui"
+    # Docker repository name
+    - DOCKER_REPOSITORY="mendersoftware/gui"
 
-notifications:
-    webhooks:
-        urls:
-            - http://dev-gui.mender.io/notifications
-        on_success: never
-        on_failure: never
-        on_start: always
+jobs:
+  include:
+    - stage: Static code checks
+      script:
+        # Check commit compliance.
+        - git clone git://github.com/mendersoftware/mendertesting
+        - mendertesting/check_commits.sh
+        - npm run lint
 
-before_install:
-    - sudo apt-get update
-    - sudo apt-get install python3-pip
-    - pip2.7 install -U --user paramiko fabric PyYAML pytest requests pytest-xdist filelock selenium psutil
-    - pip3 install -U --user pyyaml
+    - stage: Tests
+      name: 'acceptance'
+      install: skip
+      script:
+        - git clone https://github.com/mendersoftware/integration.git ;
+        - cp -r integration/tests/* tests
+        - GUI_REPOSITORY=$(pwd) INTEGRATION_PATH=$(pwd)/integration ./tests/e2e_tests/run
 
-before_script:
-    - npm install -g gulp
-    - npm install mocha selenium-webdriver@3.0.0-beta-2 saucelabs
-
-    # Rename the branch we're on, so that it's not in the way for the
-    # subsequent fetch. It's ok if this fails, it just means we're not on any
-    # branch.
-    - git branch -m temp-branch || true
-    # Git trick: Fetch directly into our local branches instead of remote
-    # branches.
-    - git fetch origin 'refs/heads/*:refs/heads/*'
-    # Get last remaining tags, if any.
-    - git fetch --tags origin
-
-    - git clone git://github.com/mendersoftware/mendertesting
-    - export CHROME_BIN=/usr/bin/google-chrome
-    - export DISPLAY=:99.0
-    - sh -e /etc/init.d/xvfb start
-    - sudo apt-get -q update
-    - sudo apt-get -q install -y chromium-chromedriver libxi6 libgconf-2-4 chromium-browser libappindicator1 fonts-liberation
-    - sudo ln -s /usr/lib/chromium-browser/chromedriver /usr/bin/chromedriver
-    - git clone https://github.com/mendersoftware/integration.git
-
-
-script:
-    # Check commit compliance.
-    - mendertesting/check_commits.sh
-    - npm install
-    - gulp --version
-    - gulp build
-    # Make sure the test environment is running the pull request
-    - if [ ${TRAVIS_PULL_REQUEST} = "false" ]; then export DEPLOY=$TRAVIS_BRANCH; else export DEPLOY=$TRAVIS_PULL_REQUEST; fi
-
-    # MEN-1365
-    
-    #- for i in {1..60} ; do curl -s "http://dev-gui.mender.io/deploy/" | grep $DEPLOY; if [ $? -eq 0 ]; then break; else sleep 3; fi; done
-
-    #- ( cd integration/tests && TEST_BRANCH=master ./run.sh --get-requirements && sudo cp ./downloaded-tools/mender-artifact /usr/bin/ && cp ./*.ext4 ./e2e_tests/)
-    #- ( cd integration/tests/e2e_tests && python2.7 test_ui.py)
-
-    # Build docker image from docker file
-    - sudo docker build -t $DOCKER_REPOSITORY .
-
-
-before_deploy:
-    # Master is always lastest
-    - if [ ! -z "$TRAVIS_TAG" ]; then export IMAGE_TAG=$TRAVIS_TAG; else export IMAGE_TAG=$TRAVIS_BRANCH; fi
-    - docker tag $DOCKER_REPOSITORY $DOCKER_REPOSITORY:$IMAGE_TAG
-
-    # Upload image to docker registry only on PUSH
-    - docker login --username=$DOCKER_HUB_USERNAME --password=$DOCKER_HUB_PASSWORD
-
-    - docker push $DOCKER_REPOSITORY:$IMAGE_TAG
-
-    # tag master builds with additional commit based tag
-    - if [ "$TRAVIS_BRANCH" = master ]; then 
-        export COMMIT_TAG="$TRAVIS_BRANCH"_"$TRAVIS_COMMIT";
-        docker tag $DOCKER_REPOSITORY:$IMAGE_TAG $DOCKER_REPOSITORY:$COMMIT_TAG;
-        docker push $DOCKER_REPOSITORY:$COMMIT_TAG;
-      fi;
-
-
-deploy:
-    # Force before_deploy for branches
-    -
-        provider: script
-        script: /bin/true
-        on:
-            all_branches: true
-
-    # Force before_deploy for tags
-    -
-        provider: script
-        script: /bin/true
-        on:
-            tags: true
-            all_branches: true
+    - stage: Build and publish
+      name: 'dockerhub'
+      if: type = push
+      install: skip
+      script:
+        # Build docker image from docker file
+        - sudo docker build -t $DOCKER_REPOSITORY .
+        # Master is always lastest
+        - if [ ! -z "$TRAVIS_TAG" ]; then export IMAGE_TAG=$TRAVIS_TAG; else export IMAGE_TAG=$TRAVIS_BRANCH; fi
+        - docker tag $DOCKER_REPOSITORY $DOCKER_REPOSITORY:$IMAGE_TAG
+        # Upload image to docker registry only on PUSH
+        - docker login --username=$DOCKER_HUB_USERNAME --password=$DOCKER_HUB_PASSWORD
+        - docker push $DOCKER_REPOSITORY:$IMAGE_TAG
+        # tag master builds with additional commit based tag
+        - if [ "$TRAVIS_BRANCH" = master ]; then
+          export COMMIT_TAG="$TRAVIS_BRANCH"_"$TRAVIS_COMMIT";
+          docker tag $DOCKER_REPOSITORY:$IMAGE_TAG $DOCKER_REPOSITORY:$COMMIT_TAG;
+          docker push $DOCKER_REPOSITORY:$COMMIT_TAG;
+          fi;
