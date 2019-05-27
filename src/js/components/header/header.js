@@ -189,12 +189,7 @@ export default class Header extends React.Component {
   }
 
   ensureAppStoreInitialized(userId) {
-    const isAlreadyInitialized = JSON.parse(window.sessionStorage.getItem(`${userId}-init-done`));
-    if (isAlreadyInitialized) {
-      return;
-    }
     getOnboardingState(userId);
-    window.sessionStorage.setItem(`${userId}-init-done`, true);
   }
 
   changeTab() {
