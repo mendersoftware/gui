@@ -84,6 +84,17 @@ const AppActions = {
 
   getDeviceById: id => DevicesApi.get(`${inventoryApiUrl}/devices/${id}`).then(res => res.body),
 
+  getDevicesWithInventory: devices =>
+    Promise.all(
+      devices.map(device => {
+        // have to call inventory each time - accepted list can change order so must refresh inventory too
+        return AppActions.getDeviceById(device.id).then(inventory => {
+          device.attributes = inventory.attributes;
+          return Promise.resolve(device);
+        });
+      })
+    ),
+
   getDevices: (page = default_page, per_page = default_per_page, search_term) => {
     // get devices from inventory
     var search = search_term ? `&${search_term}` : '';

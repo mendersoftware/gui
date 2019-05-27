@@ -3,10 +3,11 @@ import { Link } from 'react-router-dom';
 import { compose, setDisplayName } from 'recompose';
 
 import BaseOnboardingTip from '../components/helptips/baseonboardingtip';
-import { DeploymentCompleteTip } from '../components/helptips/onboardingtips';
+import DeploymentCompleteTip from '../components/helptips/deploymentcompletetip';
 
 import AppActions from '../actions/app-actions';
 import AppStore from '../stores/app-store';
+import OnboardingCompleteTip from '../components/helptips/onboardingcompletetip';
 
 const onboardingTipSanityCheck = () => !AppStore.getOnboardingComplete() && AppStore.getShowOnboardingTips() && AppStore.showHelptips();
 
@@ -122,8 +123,8 @@ const onboardingSteps = {
     progress: 3
   },
   'deployments-past-completed': {
-    condition: () => onboardingTipSanityCheck() && AppStore.getPastDeployments().length,
-    component: <DeploymentCompleteTip targetUrl="http://0.0.0.0/testurlfordemo" />
+    condition: () => onboardingTipSanityCheck() && AppStore.getPastDeployments().length && !getOnboardingStepCompleted('upload-new-artifact-tip'),
+    component: <DeploymentCompleteTip targetUrl="destination-unreachable" />
   },
   'deployments-past-completed-failure': {
     condition: () => onboardingTipSanityCheck() && !AppStore.getPastDeployments().reduce((accu, item) => (item.status === 'failed' ? false : accu), true),
@@ -154,6 +155,10 @@ const onboardingSteps = {
       </div>
     ),
     progress: 1
+  },
+  'onboarding-finished': {
+    condition: () => onboardingTipSanityCheck() && getOnboardingStepCompleted('artifact-modified-onboarding') && AppStore.getPastDeployments().length > 1,
+    specialComponent: <OnboardingCompleteTip targetUrl="destination-unreachable" />
   }
 };
 
