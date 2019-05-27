@@ -48,24 +48,6 @@ export class AuthDevices extends React.Component {
   }
 }
 
-export class ExpandAuth extends React.Component {
-  render() {
-    return (
-      <div>
-        <h3>Review device details</h3>
-        <hr />
-        <p>You should review each device before authorizing it to join the server.</p>
-        <p>{`Click to expand the row to view further information about the device's identity.`}</p>
-        <p>
-          <a className="hidehelp" onClick={toggleHelptips}>
-            Hide all help tips
-          </a>
-        </p>
-      </div>
-    );
-  }
-}
-
 export class AuthButton extends React.Component {
   render() {
     return (
@@ -290,13 +272,15 @@ export class CreateDeployment extends React.Component {
           <p>
             {`Looks like you're ready to make your first deployment - you have ${
               this.props.devices === 1 ? 'a device' : 'devices'
-            } connected to the server and a Release ready to deploy to them. Click `}<b>Create a deployment</b>.
+            } connected to the server and a Release ready to deploy to them. Click `}
+            <b>Create a deployment</b>.
           </p>
         ) : this.props.devices ? (
           <p>
             {`You're not quite ready to make your first deployment yet - you have ${
               this.props.devices === 1 ? 'a device' : 'devices'
-            } connected to the server, but no Artifact uploaded. Go to the `}<Link to="/releases">Releases tab</Link>.
+            } connected to the server, but no Artifact uploaded. Go to the `}
+            <Link to="/releases">Releases tab</Link>.
           </p>
         ) : (
           <p>
@@ -304,27 +288,6 @@ export class CreateDeployment extends React.Component {
             <Link to="/devices/pending">Pending devices tab</Link>.
           </p>
         )}
-        <p>
-          <a className="hidehelp" onClick={toggleHelptips}>
-            Hide all help tips
-          </a>
-        </p>
-      </div>
-    );
-  }
-}
-
-export class CreateDeploymentForm extends React.Component {
-  render() {
-    return (
-      <div>
-        <h3>Creating a deployment</h3>
-        <hr />
-        <p>A deployment needs to know which Release to deploy, and which group of devices to deploy it to.</p>
-        <p>
-          Select a Release and a device group containing devices of a type compatible with the selected Release. You can see how many devices will be updated
-          in the deployment.
-        </p>
         <p>
           <a className="hidehelp" onClick={toggleHelptips}>
             Hide all help tips
@@ -369,28 +332,6 @@ export class FinishedDeployment extends React.Component {
         <p>
           If you were using the test virtual device, you should now{' '}
           <Link to="/help/connecting-devices">read the help pages to learn how to provision other devices</Link>.
-        </p>
-        <p>
-          <a className="hidehelp" onClick={toggleHelptips}>
-            Hide all help tips
-          </a>
-        </p>
-      </div>
-    );
-  }
-}
-
-export class NoDevices extends React.Component {
-  render() {
-    return (
-      <div>
-        <h3>No devices found</h3>
-        <hr />
-        <p>{`There aren't any devices connected or requesting to join the Mender server.`}</p>
-        <p>When a new device is requesting to join the server it will show up here, and you will have the choice to accept it or not.</p>
-        <p>
-          If you don&#39;t see any test devices here, or if you have a physical device you&#39;d like to connect instead,{' '}
-          <Link to="/help/connecting-devices">try reading the help pages</Link>.
         </p>
         <p>
           <a className="hidehelp" onClick={toggleHelptips}>
