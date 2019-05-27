@@ -729,9 +729,21 @@ ul.link-list {
 .onboard-snack {
   background-color: @text;
   color: @placeholder;
-  padding: 2vw;
+  padding: 20px;
+  padding-right: 5px;
   border-radius: 4px;
   box-shadow: 0 1px 6px rgba(0, 0, 0, 0.15);
+  > .flexbox {
+    justify-content: space-between;
+    align-items: flex-start;
+    > div {
+      max-width: 90%;
+    }
+  }
+  button {
+    color: @placeholder;
+    padding: 8px;
+  }
   .onboard-icon {
     vertical-align: middle;
     display: inline-flex;

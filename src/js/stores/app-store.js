@@ -425,9 +425,9 @@ function setGlobalSettings(settings) {
   _globalSettings = settings;
 }
 
-function _setSnackbar(message, duration, action, children, onClick) {
+function _setSnackbar(message, duration, action, children, onClick, onClose) {
   var show = message ? true : false;
-  _snackbar = { open: show, message, maxWidth: '900px', autoHideDuration: duration, action, children, onClick };
+  _snackbar = { open: show, message, maxWidth: '900px', autoHideDuration: duration, action, children, onClick, onClose };
 }
 
 function _setCurrentUser(user) {
@@ -700,7 +700,7 @@ var AppStore = Object.assign({}, EventEmitter.prototype, {
       break;
 
     case AppConstants.SET_SNACKBAR:
-      _setSnackbar(payload.action.message, payload.action.duration, payload.action.action, payload.action.children, payload.action.onClick);
+      _setSnackbar(payload.action.message, payload.action.duration, payload.action.action, payload.action.children, payload.action.onClick, payload.action.onClose);
       break;
 
     case AppConstants.SET_CURRENT_USER:

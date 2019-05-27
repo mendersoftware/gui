@@ -56,7 +56,7 @@ export default class Authorized extends React.Component {
 
     if (this.props.showHelptips && !AppStore.getOnboardingComplete() && this.props.devices.length) {
       setTimeout(() => {
-        AppActions.setSnackbar('open', 500000, '', <WelcomeSnackTip progress={2} />, () => AppActions.setSnackbar(''));
+        AppActions.setSnackbar('open', 10000, '', <WelcomeSnackTip progress={2} />, () => AppActions.setSnackbar(''));
       }, 400);
     }
   }

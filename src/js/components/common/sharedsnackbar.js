@@ -15,12 +15,12 @@ export default class SharedSnackbar extends React.Component {
   }
 
   render() {
-    const { maxWidth, onClick, ...snackProps } = this.props.snackbar;
+    const { maxWidth, onClick, onClose, ...snackProps } = this.props.snackbar;
     return (
       <Snackbar
         style={{ maxWidth: maxWidth, height: 'auto', lineHeight: '28px', padding: 24, whiteSpace: 'pre-line' }}
         onClick={onClick ? onClick : () => this.handleActionClick()}
-        onClose={() => this.handleRequestClose()}
+        onClose={onClose ? onClose : () => this.handleRequestClose()}
         {...snackProps}
       />
     );

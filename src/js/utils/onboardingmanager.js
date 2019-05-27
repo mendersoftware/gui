@@ -18,12 +18,12 @@ const onboardingSteps = {
     progress: 1
   },
   'devices-pending-onboarding': {
-    condition: () => onboardingTipSanityCheck() && AppStore.getPendingDevices().length,
+    condition: () => onboardingTipSanityCheck() && AppStore.getPendingDevices().length && !getOnboardingStepCompleted('devices-accepted-onboarding'),
     component: <div>This should be your device, asking for permission to join the server. Inspect its identity details, then check it to accept it!</div>,
     progress: 1
   },
   'devices-pending-accepting-onboarding': {
-    condition: () => onboardingTipSanityCheck(),
+    condition: () => onboardingTipSanityCheck() && AppStore.getPendingDevices().length && !getOnboardingStepCompleted('devices-accepted-onboarding'),
     component: <div>If you recognize this device as your own, you can accept it</div>,
     progress: 2
   },
@@ -33,7 +33,7 @@ const onboardingSteps = {
     progress: 2
   },
   'devices-accepted-onboarding': {
-    condition: () => onboardingTipSanityCheck() && AppStore.getAcceptedDevices().length,
+    condition: () => onboardingTipSanityCheck() && AppStore.getAcceptedDevices().length && !getOnboardingStepCompleted('devices-accepted-onboarding'),
     component: (
       <div>
         <b>Good job! Your first device is connected!</b>
@@ -50,7 +50,8 @@ const onboardingSteps = {
       onboardingTipSanityCheck() &&
       window.location.hash.endsWith('#/devices') &&
       AppStore.getAcceptedDevices().every(item => !!item.attributes) &&
-      getOnboardingStepCompleted('devices-accepted-onboarding'),
+      getOnboardingStepCompleted('devices-accepted-onboarding') &&
+      !getOnboardingStepCompleted('artifact-included-deploy-onboarding'),
     component: (
       <div>
         <b>Deploy your first Application update</b>
@@ -109,7 +110,7 @@ const onboardingSteps = {
     ))
   },
   'deployments-inprogress': {
-    condition: () => onboardingTipSanityCheck() && AppStore.getDeploymentsInProgress().length,
+    condition: () => onboardingTipSanityCheck() && AppStore.getDeploymentsInProgress().length && !getOnboardingStepCompleted('upload-new-artifact-tip'),
     component: <div>Your deployment is in progress. Click to view a report</div>,
     progress: 2
   },

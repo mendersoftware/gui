@@ -7,6 +7,7 @@ import AppActions from '../../actions/app-actions';
 import AppStore from '../../stores/app-store';
 
 import { WelcomeSnackTip } from '../helptips/onboardingtips';
+import { getOnboardingStepCompleted } from '../../utils/onboardingmanager';
 
 const rowBaseStyles = {
   container: {
@@ -17,13 +18,20 @@ const rowBaseStyles = {
 
 export default class Dashboard extends React.Component {
   componentDidMount() {
-    // TODO: conditionally show this if onboarding progress has not been made
-    if (!AppStore.getOnboardingComplete()) {
+    const self = this;
+    if (!AppStore.getOnboardingComplete() && !getOnboardingStepCompleted('devices-pending-accepting-onboarding')) {
       setTimeout(() => {
-        AppActions.setSnackbar('open', 500000, '', <WelcomeSnackTip progress={1} />, () => AppActions.setSnackbar(''));
+        AppActions.setSnackbar('open', 10000, '', <WelcomeSnackTip progress={1} />, () => {}, self.onCloseSnackbar);
       }, 400);
     }
   }
+
+  onCloseSnackbar = (_, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    AppActions.setSnackbar('');
+  };
 
   _handleClick(params) {
     switch (params.route) {

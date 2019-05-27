@@ -27,7 +27,7 @@ import { WelcomeSnackTip } from '../helptips/onboardingtips';
 import DeploymentStatus from './deploymentstatus';
 import { formatTime } from '../../helpers';
 import { RootRef } from '@material-ui/core';
-import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
+import { getOnboardingComponentFor, getOnboardingStepCompleted } from '../../utils/onboardingmanager';
 
 const timeranges = {
   today: { start: 0, end: 0, title: 'Today' },
@@ -46,10 +46,12 @@ export default class Past extends React.Component {
     };
     this._setDateRange(timeranges['today'].start, timeranges['today'].end);
   }
+
   componentDidMount() {
     if (this.props.showHelptips && !AppStore.getOnboardingComplete() && this.props.past.length) {
+      const progress = getOnboardingStepCompleted('artifact-modified-onboarding') && this.props.past.length > 1 ? 4 : 3;
       setTimeout(() => {
-        AppActions.setSnackbar('open', 500000, '', <WelcomeSnackTip progress={3} />, () => AppActions.setSnackbar(''));
+        AppActions.setSnackbar('open', 10000, '', <WelcomeSnackTip progress={progress} />, () => AppActions.setSnackbar(''));
       }, 400);
     }
   }
@@ -144,6 +146,7 @@ export default class Past extends React.Component {
       let anchor = { left: 250, top: this.deploymentsRef.offsetParent.offsetTop + this.deploymentsRef.offsetTop + this.deploymentsRef.offsetHeight };
       onboardingComponent = getOnboardingComponentFor('deployments-past-completed', { anchor });
       onboardingComponent = getOnboardingComponentFor('deployments-past-completed-failure', { anchor }, onboardingComponent);
+      onboardingComponent = getOnboardingComponentFor('onboarding-finished', {anchor}, onboardingComponent);
     }
 
     return (
