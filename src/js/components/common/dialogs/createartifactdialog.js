@@ -43,15 +43,16 @@ export default class CreateArtifactDialog extends React.Component {
     const { progress, copied } = self.state;
 
     const artifactGenerator = 'single-file-artifact-gen';
+    const artifactName = 'demo-webserver-2.0';
     const chmodCode = `
     chmod +x mender-artifact
     chmod +x ${artifactGenerator}
     `;
 
     const artifactGenCode = `
-    ARTIFACT_NAME="demo-webserver-2.0"
+    ARTIFACT_NAME="${artifactName}"
     DEVICE_TYPE="*"
-    OUTPUT_PATH="demo_webserver-2.0.mender"
+    OUTPUT_PATH="${artifactName}.mender"
     DEST_DIR="/opt/installed-by-file-installer/"
     FILE_TREE="dir-to-deploy"
     /${artifactGenerator} -n \${ARTIFACT_NAME}
@@ -118,7 +119,7 @@ export default class CreateArtifactDialog extends React.Component {
         <div>
           You should now have a new Artifact file called
           <p>
-            <i>demo-webserver-2.0.mender</i>!
+            <i>{artifactName}.mender</i>!
           </p>
           <p>
             If you upload this Artifact to the Mender server, it will create a new Release. You can then deploy this &quot;2.0&quot; Release of the webserver
