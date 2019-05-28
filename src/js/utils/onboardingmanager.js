@@ -56,8 +56,7 @@ const onboardingSteps = {
     condition: () =>
       onboardingTipSanityCheck('artifact-included-deploy-onboarding') &&
       window.location.hash.endsWith('#/devices') &&
-      AppStore.getAcceptedDevices().every(item => !!item.attributes) &&
-      getOnboardingStepCompleted('devices-accepted-onboarding'),
+      (AppStore.getAcceptedDevices().every(item => !!item.attributes) || getOnboardingStepCompleted('devices-accepted-onboarding')),
     component: (
       <div>
         <b>Deploy your first Application update</b>
@@ -69,7 +68,7 @@ const onboardingSteps = {
     progress: 2
   },
   'upload-prepared-artifact-tip': {
-    condition: () => onboardingTipSanityCheck('upload-prepared-artifact-tip') && getOnboardingStepCompleted('devices-accepted-onboarding'),
+    condition: () => onboardingTipSanityCheck('artifact-included-onboarding') && getOnboardingStepCompleted('devices-accepted-onboarding'),
     component: (
       <div>
         Download our prepared demo Artifact from <a href={demoArtifactLink}>here</a> to upload it to your profile.
@@ -228,7 +227,7 @@ export function getOnboardingState(userId) {
 
   return promises
     .then(state => {
-      AppActions.setConnectingDialogProgressed(state.connectionDialogProgressed);
+      AppActions.setConnectingDialogProgressed(Boolean(state.connectionDialogProgressed));
       AppActions.setOnboardingComplete(state.complete);
       AppActions.setShowOnboardingHelp(state.showTips);
       AppActions.setOnboardingProgress(state.progress);

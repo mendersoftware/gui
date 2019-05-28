@@ -159,32 +159,38 @@ export default class ReleaseRepository extends React.Component {
     ForwardingLink.displayName = 'ForwardingLink';
 
     let onboardingComponent = null;
-    if (this.repoItemAnchor && this.creationRef && this.dropzoneRef) {
+    let uploadArtifactOnboardingComponent = null;
+    if (this.repoItemAnchor && this.creationRef) {
       const element = this.repoItemAnchor.itemRef;
       const anchor = { left: element.offsetLeft + element.offsetWidth / 3, top: element.offsetTop + element.offsetHeight };
-      onboardingComponent = getOnboardingComponentFor('artifact-included-onboarding', { anchor });
       const artifactIncludedAnchor = {
         left: this.creationRef.offsetLeft + this.creationRef.offsetWidth,
         top: this.creationRef.offsetTop + this.creationRef.offsetHeight / 2
       };
+      const artifactUploadedAnchor = {
+        left: this.creationRef.offsetLeft + this.creationRef.offsetWidth / 2,
+        top: this.creationRef.offsetTop - this.creationRef.offsetHeight / 2
+      };
+
+      onboardingComponent = getOnboardingComponentFor('artifact-included-onboarding', { anchor });
       onboardingComponent = getOnboardingComponentFor(
         'artifact-included-deploy-onboarding',
         { place: 'right', anchor: artifactIncludedAnchor },
         onboardingComponent
       );
-      const artifactUploadedAnchor = {
-        left: this.creationRef.offsetLeft + this.creationRef.offsetWidth / 2,
-        top: this.creationRef.offsetTop - this.creationRef.offsetHeight / 2
-      };
       onboardingComponent = getOnboardingComponentFor('artifact-modified-onboarding', { anchor: artifactUploadedAnchor, place: 'bottom' }, onboardingComponent);
     }
-
-    let uploadArtifactOnboardingComponent = null;
     if (this.dropzoneRef) {
-      uploadArtifactOnboardingComponent = getOnboardingComponentFor('upload-new-artifact-tip', {
-        place: 'left',
-        anchor: { left: this.dropzoneRef.offsetLeft, top: this.dropzoneRef.offsetTop + this.dropzoneRef.offsetHeight }
-      });
+      const dropzoneAnchor = { left: this.dropzoneRef.offsetLeft, top: this.dropzoneRef.offsetTop + this.dropzoneRef.offsetHeight };
+      uploadArtifactOnboardingComponent = getOnboardingComponentFor('upload-prepared-artifact-tip', { anchor: dropzoneAnchor, place: 'left' });
+      uploadArtifactOnboardingComponent = getOnboardingComponentFor(
+        'upload-new-artifact-tip',
+        {
+          place: 'left',
+          anchor: dropzoneAnchor
+        },
+        uploadArtifactOnboardingComponent
+      );
     }
 
     return (

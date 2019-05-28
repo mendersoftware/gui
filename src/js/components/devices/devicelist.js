@@ -12,7 +12,7 @@ import AppActions from '../../actions/app-actions';
 import Loader from '../common/loader';
 import DeviceListItem from './devicelistitem';
 import AppStore from '../../stores/app-store';
-import { advanceOnboarding } from '../../utils/onboardingmanager';
+import { advanceOnboarding, getOnboardingStepCompleted } from '../../utils/onboardingmanager';
 
 export default class DeviceList extends React.Component {
   constructor(props, context) {
@@ -41,7 +41,7 @@ export default class DeviceList extends React.Component {
     if (self.state.expandedDeviceId === deviceId) {
       deviceId = null;
     }
-    if (!AppStore.getOnboardingComplete()) {
+    if (!AppStore.getOnboardingComplete() && getOnboardingStepCompleted('devices-pending-accepting-onboarding')) {
       advanceOnboarding('devices-accepted-onboarding');
     }
     self.setState({ expandedDeviceId: deviceId });

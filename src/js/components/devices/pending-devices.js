@@ -17,7 +17,7 @@ import Loader from '../common/loader';
 import { AuthDevices } from '../helptips/helptooltips';
 import { DevicePendingTip } from '../helptips/onboardingtips';
 import DeviceList from './devicelist';
-import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
+import { getOnboardingComponentFor, advanceOnboarding } from '../../utils/onboardingmanager';
 
 export default class Pending extends React.Component {
   constructor(props, context) {
@@ -167,6 +167,9 @@ export default class Pending extends React.Component {
   }
 
   onRowSelection(selection) {
+    if (!AppStore.getOnboardingComplete()) {
+      advanceOnboarding('devices-pending-accepting-onboarding');
+    }
     this.setState({ selectedRows: selection });
   }
 

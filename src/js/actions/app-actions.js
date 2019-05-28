@@ -343,7 +343,9 @@ const AppActions = {
       actionType: AppConstants.SET_SHOW_ONBOARDING_HELP,
       show: !val
     });
-    advanceOnboarding('onboarding-finished');
+    if (val) {
+      advanceOnboarding('onboarding-finished');
+    }
   },
   setShowConnectingDialog: val =>
     AppDispatcher.handleViewAction({
@@ -360,7 +362,9 @@ const AppActions = {
       actionType: AppConstants.SET_CONNECT_DEVICE_PROGRESSED,
       progressed: val
     });
-    advanceOnboarding('devices-accepted-onboarding');
+    if (val) {
+      advanceOnboarding('devices-accepted-onboarding');
+    }
   },
 
   /* Artifacts */
