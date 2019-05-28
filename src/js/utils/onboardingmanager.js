@@ -136,7 +136,7 @@ const onboardingSteps = {
     progress: 3
   },
   'deployments-past-completed': {
-    condition: () => onboardingTipSanityCheck('upload-new-artifact-tip') && AppStore.getPastDeployments().length,
+    condition: () => onboardingTipSanityCheck('deployments-past-completed') && AppStore.getPastDeployments().length,
     component: <DeploymentCompleteTip targetUrl="destination-unreachable" />
   },
   'deployments-past-completed-failure': {

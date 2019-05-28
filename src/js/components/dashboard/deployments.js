@@ -1,17 +1,18 @@
 import React from 'react';
 import pluralize from 'pluralize';
 
+import RefreshIcon from '@material-ui/icons/Refresh';
+import UpdateIcon from '@material-ui/icons/Update';
+
 import AppActions from '../../actions/app-actions';
 import AppStore from '../../stores/app-store';
 import { clearAllRetryTimers, setRetryTimer } from '../../utils/retrytimer';
+import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 import Loader from '../common/loader';
 
 import { BaseWidget } from './widgets/baseWidget';
 import RedirectionWidget from './widgets/redirectionwidget';
 import CompletedDeployments from './widgets/completeddeployments';
-
-import RefreshIcon from '@material-ui/icons/Refresh';
-import UpdateIcon from '@material-ui/icons/Update';
 
 const refreshDeploymentsLength = 30000;
 
@@ -116,6 +117,14 @@ export default class Deployments extends React.Component {
       ),
       targetLabel: 'View progress'
     };
+    let onboardingComponent;
+    if (this.deploymentsRef) {
+      const anchor = {
+        top: this.deploymentsRef.offsetTop + this.deploymentsRef.offsetHeight,
+        left: this.deploymentsRef.offsetLeft + this.deploymentsRef.offsetWidth / 2
+      };
+      onboardingComponent = getOnboardingComponentFor('deployments-past-completed', { anchor });
+    }
     return (
       <div>
         <h4 className="dashboard-header">
@@ -130,6 +139,7 @@ export default class Deployments extends React.Component {
                 onClick={() => self.props.clickHandle({ route: 'deployments/finished' })}
                 deployments={finished}
                 cutoffDate={lastDeploymentCheck}
+                innerRef={ref => (this.deploymentsRef = ref)}
               />
               <BaseWidget
                 className={inprogress.length ? 'current-widget active' : 'current-widget'}
@@ -150,6 +160,7 @@ export default class Deployments extends React.Component {
               />
             </div>
           )}
+          {onboardingComponent}
         </div>
       </div>
     );

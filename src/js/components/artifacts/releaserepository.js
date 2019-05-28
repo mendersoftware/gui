@@ -178,6 +178,7 @@ export default class ReleaseRepository extends React.Component {
         { place: 'right', anchor: artifactIncludedAnchor },
         onboardingComponent
       );
+      onboardingComponent = getOnboardingComponentFor('deployments-past-completed', { anchor }, onboardingComponent);
       onboardingComponent = getOnboardingComponentFor('artifact-modified-onboarding', { anchor: artifactUploadedAnchor, place: 'bottom' }, onboardingComponent);
     }
     if (this.dropzoneRef) {

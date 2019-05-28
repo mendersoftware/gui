@@ -161,7 +161,9 @@ export default class Authorized extends React.Component {
       </FormControl>
     ) : null;
 
-    const onboardingComponent = getOnboardingComponentFor('devices-accepted-onboarding', { anchor: { left: 200, top: 146 } });
+    const anchor = { left: 200, top: 146 };
+    let onboardingComponent = getOnboardingComponentFor('devices-accepted-onboarding', { anchor });
+    onboardingComponent = getOnboardingComponentFor('deployments-past-completed', { anchor }, onboardingComponent);
     return (
       <div className="relative">
         <Loader show={loading} />

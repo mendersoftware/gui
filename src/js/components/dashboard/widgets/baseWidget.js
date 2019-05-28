@@ -22,10 +22,10 @@ export const styles = {
   }
 };
 
-export class BaseWidget extends React.Component {
+export class BaseWidget extends React.PureComponent {
   render() {
     const content = (
-      <div style={Object.assign({}, styles.contentStyle, styles.columnStyle)}>
+      <div style={Object.assign({}, styles.contentStyle, styles.columnStyle)} ref={ref => (this.props.innerRef ? this.props.innerRef(ref) : null)}>
         {this.props.showHelptips ? this.props.main.prepend : null}
         {this.props.header ? (
           <div style={Object.assign({ borderBottomStyle: 'solid' }, styles.rowStyle)} className="widgetHeader">
