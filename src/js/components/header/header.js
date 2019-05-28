@@ -170,7 +170,6 @@ export default class Header extends React.Component {
       if (!userId) {
         return;
       }
-      self.ensureAppStoreInitialized(userId);
       self.setState({ gettingUser: true });
       return AppActions.getUser(userId)
         .then(user => {
@@ -180,16 +179,13 @@ export default class Header extends React.Component {
           self._getGlobalSettings();
           self._checkHeaderInfo();
         })
+        .then(() => getOnboardingState(userId))
         .catch(err => {
           self.setState({ gettingUser: false });
           var errMsg = err.res.error;
           console.log(errMsg);
         });
     }
-  }
-
-  ensureAppStoreInitialized(userId) {
-    getOnboardingState(userId);
   }
 
   changeTab() {

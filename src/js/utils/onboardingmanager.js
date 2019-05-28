@@ -1,4 +1,5 @@
 import React from 'react';
+import cookie from 'react-cookie';
 import { Link } from 'react-router-dom';
 import { compose, setDisplayName } from 'recompose';
 
@@ -163,6 +164,13 @@ const onboardingSteps = {
   }
 };
 
+const getCurrentOnboardingState = () => ({
+  connectionDialogProgressed: AppStore.getDeviceConnectionProgressed(),
+  complete: AppStore.getOnboardingComplete(),
+  showTips: AppStore.getShowOnboardingTips(),
+  progress: AppStore.getOnboardingProgress()
+});
+
 export function getOnboardingComponentFor(id, params, previousComponent = null) {
   const step = onboardingSteps[id];
   if (!step.condition()) {
@@ -182,29 +190,47 @@ export function getOnboardingStepCompleted(id) {
 }
 
 export function getOnboardingState(userId) {
-  const onboardingState = JSON.parse(window.localStorage.getItem(`${userId}-onboarding`));
-  if (onboardingState) {
-    AppActions.setOnboardingComplete(onboardingState.complete);
-    AppActions.setShowOnboardingHelp(onboardingState.showTips);
-    AppActions.setOnboardingProgress(onboardingState.progress);
-    AppActions.setConnectingDialogProgressed(onboardingState.connectionDialogProgressed);
-    const progress = Object.keys(onboardingSteps).findIndex(step => step === 'deployments-past-completed');
-    AppActions.setShowCreateArtifactDialog(Math.abs(onboardingState.progress - progress) <= 1);
+  let promises = Promise.resolve(getCurrentOnboardingState());
+  const savedState = JSON.parse(window.localStorage.getItem(`${userId}-onboarding`));
+  if (!savedState) {
+    const userCookie = cookie.load(`${userId}-onboarded`);
+    // to prevent tips from showing up for previously onboarded users completion is set explicitly before the additional requests complete
+    if (userCookie) {
+      AppActions.setOnboardingComplete(Boolean(userCookie));
+    }
+    const requests = [AppActions.getDevicesByStatus('accepted'), AppActions.getReleases(), AppActions.getPastDeployments(), Promise.resolve(userCookie)];
+
+    promises = Promise.all(requests).then(([acceptedDevices, releases, pastDeployments, onboardedCookie]) =>
+      Promise.resolve({
+        complete: Boolean(onboardedCookie) || (acceptedDevices.length > 1 && releases.length > 2 && pastDeployments.length > 2),
+        showTips: onboardedCookie ? !onboardedCookie : true,
+        progress: -1,
+        connectionDialogProgressed: 0
+      })
+    );
+  } else {
+    promises = Promise.resolve(savedState);
   }
-  return onboardingState;
+
+  return promises
+    .then(state => {
+      AppActions.setConnectingDialogProgressed(state.connectionDialogProgressed);
+      AppActions.setOnboardingComplete(state.complete);
+      AppActions.setShowOnboardingHelp(state.showTips);
+      AppActions.setOnboardingProgress(state.progress);
+  const progress = Object.keys(onboardingSteps).findIndex(step => step === 'deployments-past-completed');
+      AppActions.setShowCreateArtifactDialog(Math.abs(state.progress - progress) <= 1);
+      return Promise.resolve(state);
+    })
+    .catch(e => console.log(e));
 }
 
 export function advanceOnboarding(stepId) {
   const user = AppStore.getCurrentUser();
-  const onboardingKey = `${user.id}-onboarding`;
-  let onboardingState = JSON.parse(window.localStorage.getItem(onboardingKey));
-  const progress =
-    onboardingState && onboardingState.progress >= AppStore.getOnboardingProgress() ? onboardingState.progress : AppStore.getOnboardingProgress();
+  const progress = AppStore.getOnboardingProgress();
   const stepIndex = Object.keys(onboardingSteps).findIndex(step => step === stepId);
   const madeProgress = progress <= stepIndex ? stepIndex + 1 : progress;
+  const onboardingKey = `${user.id}-onboarding`;
   AppActions.setOnboardingProgress(madeProgress);
-  if (onboardingState) {
-    onboardingState.progress = madeProgress;
-    window.localStorage.setItem(onboardingKey, onboardingState);
-  }
+  window.localStorage.setItem(onboardingKey, JSON.stringify(getCurrentOnboardingState()));
 }

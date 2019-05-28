@@ -33,7 +33,7 @@ export default class OnboardingCompleteTip extends React.Component {
         state.targetUrl = reachableAddress ? reachableAddress : state.targetUrl;
       })
       .catch(e => console.log(e))
-      .finally(() => self.setState(state, setTimeout(() => AppActions.setOnboardingComplete(true), 30000)));
+      .finally(() => self.setState(state));
   }
 
   componentDidUpdate() {

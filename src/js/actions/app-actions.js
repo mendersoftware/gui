@@ -6,6 +6,7 @@ import DevicesApi from '../api/devices-api';
 import GeneralApi from '../api/general-api';
 import UsersApi from '../api/users-api';
 import parse from 'parse-link-header';
+import { advanceOnboarding } from '../utils/onboardingmanager';
 
 var rootUrl = 'https://localhost:443';
 const apiUrl = `${rootUrl}/api/management/v1`;
@@ -342,6 +343,7 @@ const AppActions = {
       actionType: AppConstants.SET_SHOW_ONBOARDING_HELP,
       show: !val
     });
+    advanceOnboarding('onboarding-finished');
   },
   setShowConnectingDialog: val =>
     AppDispatcher.handleViewAction({
@@ -353,11 +355,13 @@ const AppActions = {
       actionType: AppConstants.SET_SHOW_CREATE_ARTIFACT,
       show: val
     }),
-  setConnectingDialogProgressed: val =>
+  setConnectingDialogProgressed: val => {
     AppDispatcher.handleViewAction({
       actionType: AppConstants.SET_CONNECT_DEVICE_PROGRESSED,
       progressed: val
-    }),
+    });
+    advanceOnboarding('devices-accepted-onboarding');
+  },
 
   /* Artifacts */
   getArtifacts: () =>

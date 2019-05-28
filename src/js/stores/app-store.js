@@ -464,7 +464,6 @@ function _setOnboardingProgress(val) {
 
 function _setOnboardingComplete(val) {
   _onboardingComplete = val;
-  window.localStorage.setItem('onboardingComplete', _onboardingComplete);
 }
 
 var AppStore = Object.assign({}, EventEmitter.prototype, {
@@ -700,7 +699,14 @@ var AppStore = Object.assign({}, EventEmitter.prototype, {
       break;
 
     case AppConstants.SET_SNACKBAR:
-      _setSnackbar(payload.action.message, payload.action.duration, payload.action.action, payload.action.children, payload.action.onClick, payload.action.onClose);
+      _setSnackbar(
+        payload.action.message,
+        payload.action.duration,
+        payload.action.action,
+        payload.action.children,
+        payload.action.onClick,
+        payload.action.onClose
+      );
       break;
 
     case AppConstants.SET_CURRENT_USER:

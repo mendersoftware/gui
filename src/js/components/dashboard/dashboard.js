@@ -19,11 +19,11 @@ const rowBaseStyles = {
 export default class Dashboard extends React.Component {
   componentDidMount() {
     const self = this;
-    if (!AppStore.getOnboardingComplete() && !getOnboardingStepCompleted('devices-pending-accepting-onboarding')) {
-      setTimeout(() => {
+    setTimeout(() => {
+      if (!AppStore.getOnboardingComplete() && !getOnboardingStepCompleted('devices-pending-accepting-onboarding')) {
         AppActions.setSnackbar('open', 10000, '', <WelcomeSnackTip progress={1} />, () => {}, self.onCloseSnackbar);
-      }, 400);
-    }
+      }
+    }, 1000);
   }
 
   onCloseSnackbar = (_, reason) => {
