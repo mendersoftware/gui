@@ -10,31 +10,37 @@ import AppActions from '../actions/app-actions';
 import AppStore from '../stores/app-store';
 import OnboardingCompleteTip from '../components/helptips/onboardingcompletetip';
 
-const onboardingTipSanityCheck = () => !AppStore.getOnboardingComplete() && AppStore.getShowOnboardingTips() && AppStore.showHelptips();
+const demoArtifactLink = 'https://d1b0l86ne08fsf.cloudfront.net/mender/master/mender-demo-artifact';
+
+const onboardingTipSanityCheck = step =>
+  !AppStore.getOnboardingComplete() && AppStore.getShowOnboardingTips() && AppStore.showHelptips() && !getOnboardingStepCompleted(step);
 
 const onboardingSteps = {
   'dashboard-onboarding-start': {
-    condition: () => onboardingTipSanityCheck() && !getOnboardingStepCompleted('dashboard-onboarding-start'),
+    condition: () => onboardingTipSanityCheck('dashboard-onboarding-start'),
     component: <div>Click here to get started!</div>,
     progress: 1
   },
   'devices-pending-onboarding': {
-    condition: () => onboardingTipSanityCheck() && AppStore.getPendingDevices().length && !getOnboardingStepCompleted('devices-accepted-onboarding'),
+    condition: () => onboardingTipSanityCheck('devices-accepted-onboarding') && AppStore.getPendingDevices().length,
     component: <div>This should be your device, asking for permission to join the server. Inspect its identity details, then check it to accept it!</div>,
     progress: 1
   },
   'devices-pending-accepting-onboarding': {
-    condition: () => onboardingTipSanityCheck() && AppStore.getPendingDevices().length && !getOnboardingStepCompleted('devices-accepted-onboarding'),
+    condition: () => onboardingTipSanityCheck('devices-accepted-onboarding') && AppStore.getPendingDevices().length,
     component: <div>If you recognize this device as your own, you can accept it</div>,
     progress: 2
   },
   'dashboard-onboarding-pendings': {
-    condition: () => onboardingTipSanityCheck() && getOnboardingStepCompleted('devices-pending-onboarding') && AppStore.getPendingDevices().length,
+    condition: () =>
+      onboardingTipSanityCheck('dashboard-onboarding-pendings') &&
+      getOnboardingStepCompleted('devices-pending-onboarding') &&
+      AppStore.getPendingDevices().length,
     component: <div>Next accept your device</div>,
     progress: 2
   },
   'devices-accepted-onboarding': {
-    condition: () => onboardingTipSanityCheck() && AppStore.getAcceptedDevices().length && !getOnboardingStepCompleted('devices-accepted-onboarding'),
+    condition: () => onboardingTipSanityCheck('devices-accepted-onboarding') && AppStore.getAcceptedDevices().length,
     component: (
       <div>
         <b>Good job! Your first device is connected!</b>
@@ -48,11 +54,10 @@ const onboardingSteps = {
   },
   'application-update-reminder-tip': {
     condition: () =>
-      onboardingTipSanityCheck() &&
+      onboardingTipSanityCheck('artifact-included-deploy-onboarding') &&
       window.location.hash.endsWith('#/devices') &&
       AppStore.getAcceptedDevices().every(item => !!item.attributes) &&
-      getOnboardingStepCompleted('devices-accepted-onboarding') &&
-      !getOnboardingStepCompleted('artifact-included-deploy-onboarding'),
+      getOnboardingStepCompleted('devices-accepted-onboarding'),
     component: (
       <div>
         <b>Deploy your first Application update</b>
@@ -63,29 +68,36 @@ const onboardingSteps = {
     ),
     progress: 2
   },
-  'artifact-included-onboarding': {
-    condition: () =>
-      onboardingTipSanityCheck() && getOnboardingStepCompleted('devices-accepted-onboarding') && !getOnboardingStepCompleted('deployments-inprogress'),
+  'upload-prepared-artifact-tip': {
+    condition: () => onboardingTipSanityCheck('upload-prepared-artifact-tip') && getOnboardingStepCompleted('devices-accepted-onboarding'),
     component: (
       <div>
-        We have included a Mender artifact with a simple Application update for you to test with.<p>Expand it for more details.</p>
+        Download our prepared demo Artifact from <a href={demoArtifactLink}>here</a> to upload it to your profile.
+      </div>
+    ),
+    progress: 2
+  },
+  'artifact-included-onboarding': {
+    condition: () => onboardingTipSanityCheck('deployments-inprogress') && getOnboardingStepCompleted('devices-accepted-onboarding'),
+    component: (
+      <div>
+        Now you have a Mender artifact with a simple Application update for you to test with.<p>Expand it for more details.</p>
       </div>
     ),
     progress: 1
   },
   'artifact-included-deploy-onboarding': {
-    condition: () =>
-      onboardingTipSanityCheck() && getOnboardingStepCompleted('artifact-included-onboarding') && !getOnboardingStepCompleted('deployments-inprogress'),
+    condition: () => onboardingTipSanityCheck('deployments-inprogress') && getOnboardingStepCompleted('artifact-included-onboarding'),
     component: <div>Let&apos;s deploy this Release to your device now</div>,
     progress: 1
   },
   'scheduling-artifact-selection': {
-    condition: () => onboardingTipSanityCheck() && AppStore.getTotalAcceptedDevices() && AppStore.getDeploymentRelease(),
+    condition: () => onboardingTipSanityCheck('scheduling-artifact-selection') && AppStore.getTotalAcceptedDevices() && AppStore.getDeploymentRelease(),
     component: compose(setDisplayName('OnboardingTip'))(() => <div>{`Select the ${AppStore.getDeploymentRelease().Name} release we included.`}</div>),
     progress: 2
   },
   'scheduling-all-devices-selection': {
-    condition: () => onboardingTipSanityCheck() && AppStore.getTotalAcceptedDevices() && !AppStore.getSelectedDevice(),
+    condition: () => onboardingTipSanityCheck('scheduling-all-devices-selection') && AppStore.getTotalAcceptedDevices() && !AppStore.getSelectedDevice(),
     component: (
       <div>
         Select &apos;All devices&apos; for now.<p>You can learn how to create device groups later.</p>
@@ -94,13 +106,17 @@ const onboardingSteps = {
     progress: 2
   },
   'scheduling-group-selection': {
-    condition: () => onboardingTipSanityCheck() && AppStore.getTotalAcceptedDevices() && !AppStore.getSelectedDevice() && AppStore.getGroups().length > 1, // group 0 will be the ungrouped group and always present
+    condition: () =>
+      onboardingTipSanityCheck('scheduling-group-selection') &&
+      AppStore.getTotalAcceptedDevices() &&
+      !AppStore.getSelectedDevice() &&
+      AppStore.getGroups().length > 1, // group 0 will be the ungrouped group and always present
     component: compose(setDisplayName('OnboardingTip'))(() => <div>{`Select the ${AppStore.getGroups()[1]} device group you just made.`}</div>),
     progress: 2
   },
   'scheduling-release-to-devices': {
     condition: () =>
-      onboardingTipSanityCheck() &&
+      onboardingTipSanityCheck('scheduling-release-to-devices') &&
       AppStore.getTotalAcceptedDevices() &&
       (AppStore.getSelectedGroup() || AppStore.getSelectedDevice()) &&
       AppStore.getDeploymentRelease(),
@@ -111,32 +127,29 @@ const onboardingSteps = {
     ))
   },
   'deployments-inprogress': {
-    condition: () => onboardingTipSanityCheck() && AppStore.getDeploymentsInProgress().length && !getOnboardingStepCompleted('upload-new-artifact-tip'),
+    condition: () => onboardingTipSanityCheck('upload-new-artifact-tip') && AppStore.getDeploymentsInProgress().length,
     component: <div>Your deployment is in progress. Click to view a report</div>,
     progress: 2
   },
   'deployments-past': {
-    condition: () =>
-      onboardingTipSanityCheck() &&
-      AppStore.getPastDeployments().length &&
-      !window.location.hash.includes('finished') &&
-      !getOnboardingStepCompleted('upload-new-artifact-tip'),
+    condition: () => onboardingTipSanityCheck('upload-new-artifact-tip') && AppStore.getPastDeployments().length && !window.location.hash.includes('finished'),
     component: <div>Your deployment has finished, click here to view it</div>,
     progress: 3
   },
   'deployments-past-completed': {
-    condition: () => onboardingTipSanityCheck() && AppStore.getPastDeployments().length && !getOnboardingStepCompleted('upload-new-artifact-tip'),
+    condition: () => onboardingTipSanityCheck('upload-new-artifact-tip') && AppStore.getPastDeployments().length,
     component: <DeploymentCompleteTip targetUrl="destination-unreachable" />
   },
   'deployments-past-completed-failure': {
-    condition: () => onboardingTipSanityCheck() && !AppStore.getPastDeployments().reduce((accu, item) => (item.status === 'failed' ? false : accu), true),
+    condition: () =>
+      onboardingTipSanityCheck('deployments-past-completed-failure') &&
+      !AppStore.getPastDeployments().reduce((accu, item) => (item.status === 'failed' ? false : accu), true),
     component: (
       <div>Your deployment has finished, but it looks like there was a problem. Click to view the deployment report, where you can see the error log.</div>
     )
   },
   'upload-new-artifact-tip': {
-    condition: () =>
-      onboardingTipSanityCheck() && getOnboardingStepCompleted('deployments-past-completed') && !getOnboardingStepCompleted('upload-new-artifact-tip'),
+    condition: () => onboardingTipSanityCheck('upload-new-artifact-tip') && getOnboardingStepCompleted('deployments-past-completed'),
     component: (
       <div>
         Now upload your new Artifact here!
@@ -149,7 +162,7 @@ const onboardingSteps = {
     progress: 2
   },
   'artifact-modified-onboarding': {
-    condition: () => onboardingTipSanityCheck() && getOnboardingStepCompleted('upload-new-artifact-tip'),
+    condition: () => onboardingTipSanityCheck('artifact-modified-onboarding') && getOnboardingStepCompleted('upload-new-artifact-tip'),
     component: (
       <div>
         Your uploaded Artifact is now part of a new &apos;Release&apos;.
@@ -159,7 +172,8 @@ const onboardingSteps = {
     progress: 1
   },
   'onboarding-finished': {
-    condition: () => onboardingTipSanityCheck() && getOnboardingStepCompleted('artifact-modified-onboarding') && AppStore.getPastDeployments().length > 1,
+    condition: () =>
+      onboardingTipSanityCheck('onboarding-finished') && getOnboardingStepCompleted('artifact-modified-onboarding') && AppStore.getPastDeployments().length > 1,
     specialComponent: <OnboardingCompleteTip targetUrl="destination-unreachable" />
   }
 };
@@ -218,7 +232,7 @@ export function getOnboardingState(userId) {
       AppActions.setOnboardingComplete(state.complete);
       AppActions.setShowOnboardingHelp(state.showTips);
       AppActions.setOnboardingProgress(state.progress);
-  const progress = Object.keys(onboardingSteps).findIndex(step => step === 'deployments-past-completed');
+      const progress = Object.keys(onboardingSteps).findIndex(step => step === 'deployments-past-completed');
       AppActions.setShowCreateArtifactDialog(Math.abs(state.progress - progress) <= 1);
       return Promise.resolve(state);
     })
