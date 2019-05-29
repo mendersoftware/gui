@@ -40,7 +40,7 @@ const onboardingSteps = {
     progress: 2
   },
   'devices-accepted-onboarding': {
-    condition: () => onboardingTipSanityCheck('devices-accepted-onboarding') && AppStore.getAcceptedDevices().length,
+    condition: () => onboardingTipSanityCheck('devices-accepted-onboarding') && AppStore.getAcceptedDevices().length > 0,
     component: (
       <div>
         <b>Good job! Your first device is connected!</b>
@@ -56,6 +56,7 @@ const onboardingSteps = {
     condition: () =>
       onboardingTipSanityCheck('artifact-included-deploy-onboarding') &&
       window.location.hash.endsWith('#/devices') &&
+      AppStore.getAcceptedDevices().length > 0 &&
       (AppStore.getAcceptedDevices().every(item => !!item.attributes) || getOnboardingStepCompleted('devices-accepted-onboarding')),
     component: (
       <div>
