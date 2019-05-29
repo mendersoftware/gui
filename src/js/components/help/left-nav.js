@@ -39,7 +39,7 @@ export default class LeftNav extends React.Component {
       for (var k in obj) {
         if (typeof obj[k] == 'object' && obj[k] !== null && k !== 'component') {
           var this_path = `${path}/${k}`;
-          links.push({ title: obj[k].title, level: level, path: this_path });
+          links.push({ title: obj[k].title, level: level, path: this_path, hosted: obj[k].hosted });
           self.setState({ links: links });
           eachRecursive(obj[k], this_path, level + 1);
         }
@@ -55,11 +55,14 @@ export default class LeftNav extends React.Component {
         <ListSubheader>
           Help topics
         </ListSubheader>
-        {self.state.links.map(link => (
-          <ListItem className="navLink helpNav" component={NavLink} exact={true} key={link.path} style={{ paddingLeft: link.level * 16 }} to={link.path}>
-            <ListItemText primary={link.title} />
-          </ListItem>
-        ))}
+        {self.state.links.map(link => {
+          return (!self.props.isHosted && link.hosted) ? null : (
+            <ListItem className="navLink helpNav" component={NavLink} exact={true} key={link.path} style={{ paddingLeft: link.level * 16 }} to={link.path}>
+              <ListItemText primary={link.title} />
+            </ListItem>
+          )
+        }
+        )}
       </List>
     );
   }

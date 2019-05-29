@@ -68,6 +68,7 @@ var components = {
   'support': {
     title: 'Support',
     component: Support,
+    hosted: true,
   },
   'more-help-resources': {
     title: 'More resources',
@@ -167,7 +168,7 @@ export default class Help extends React.Component {
     return (
       <div style={{ marginTop: '-15px' }}>
         <div className="leftFixed">
-          <LeftNav pages={components} />
+          <LeftNav isHosted={this.state.isHosted} pages={components} />
         </div>
         <div className="rightFluid padding-right" style={{ maxWidth: '780px', paddingTop: '1px', paddingLeft: '70px' }}>
           <p style={{color: 'rgba(0, 0, 0, 0.54)'}}>Help {breadcrumbs}</p>
