@@ -10,7 +10,7 @@ import AppActions from '../actions/app-actions';
 import AppStore from '../stores/app-store';
 import OnboardingCompleteTip from '../components/helptips/onboardingcompletetip';
 
-const demoArtifactLink = 'https://d1b0l86ne08fsf.cloudfront.net/mender/master/mender-demo-artifact';
+const demoArtifactLink = 'https://dgsbl4vditpls.cloudfront.net/mender-demo-artifact.mender';
 
 const onboardingTipSanityCheck = step =>
   !AppStore.getOnboardingComplete() && AppStore.getShowOnboardingTips() && AppStore.showHelptips() && !getOnboardingStepCompleted(step);
