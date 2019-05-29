@@ -3,7 +3,7 @@ import React from 'react';
 import Button from '@material-ui/core/Button';
 
 import AppActions from '../../actions/app-actions';
-import { collectAddressesFrom, probeAllAddresses } from '../../helpers';
+import { getReachableDeviceAddress } from '../../helpers';
 import { advanceOnboarding } from '../../utils/onboardingmanager';
 import Loader from '../common/loader';
 
@@ -17,20 +17,10 @@ export default class DeploymentCompleteTip extends React.Component {
   }
   componentDidMount() {
     const self = this;
-    let state = { targetUrl: '', loading: false };
     AppActions.getDevicesByStatus('accepted')
-      .then(AppActions.getDevicesWithInventory)
-      .then(devices => {
-        const addresses = collectAddressesFrom(devices);
-        state.targetUrl = `http://${addresses.find(item => !item.includes(':'))}`;
-        return probeAllAddresses(addresses);
-      })
-      .then(responses => {
-        const reachableAddress = responses.find(address => address);
-        state.targetUrl = reachableAddress ? reachableAddress : state.targetUrl;
-      })
+      .then(getReachableDeviceAddress)
       .catch(e => console.log(e))
-      .finally(() => self.setState(state));
+      .then(targetUrl => self.setState({ targetUrl, loading: false }));
   }
 
   onClose() {

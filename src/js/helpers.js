@@ -2,6 +2,8 @@ import jwtDecode from 'jwt-decode';
 import md5 from 'md5';
 import React from 'react';
 
+import AppActions from './actions/app-actions';
+
 export function isEncoded(uri) {
   uri = uri || '';
 
@@ -333,4 +335,19 @@ export const probeAllAddresses = addresses => {
     return accu;
   }, []);
   return Promise.all(requests);
+};
+
+export const getReachableDeviceAddress = devices => {
+  let targetUrl = '';
+  return AppActions.getDevicesWithInventory(devices)
+    .then(devices => {
+      const addresses = collectAddressesFrom(devices);
+      targetUrl = `http://${addresses.find(item => !item.includes(':'))}`;
+      return probeAllAddresses(addresses);
+    })
+    .then(responses => {
+      const reachableAddress = responses.find(address => address);
+      targetUrl = reachableAddress ? reachableAddress : targetUrl;
+      return Promise.resolve(targetUrl);
+    });
 };
