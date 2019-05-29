@@ -630,6 +630,8 @@ var AppStore = Object.assign({}, EventEmitter.prototype, {
   // return boolean rather than organization details
   hasMultitenancy: () => _hasMultitenancy,
 
+  getIsHosted: () => window.location.hostname === 'hosted.mender.io',
+
   getOrganization: () => _organization,
 
   showHelptips: () => _showHelptips,

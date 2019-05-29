@@ -4,6 +4,7 @@ import CopyToClipboard from 'react-copy-to-clipboard';
 
 import Button from '@material-ui/core/Button';
 import Icon from '@material-ui/core/Icon';
+import AppStore from '../../../stores/app-store';
 
 export default class VirtualDeviceOnboarding extends React.Component {
   constructor(props, context) {
@@ -24,10 +25,18 @@ export default class VirtualDeviceOnboarding extends React.Component {
   render() {
     const self = this;
     const { token } = self.props;
+    const isHosted = AppStore.getIsHosted();
+    let hasDivergingHostname = !isHosted && window.location.hostname !== 'docker.mender.io';
 
-    var codeToCopy = `
+    let codeToCopy = `
       TENANT_TOKEN='${token}'\ndocker run -it -e SERVER_URL='https://hosted.mender.io' \\\n-e TENANT_TOKEN=$TENANT_TOKEN mendersoftware/mender-client-qemu:latest
     `;
+
+    if (isHosted) {
+      codeToCopy = `
+        docker run -it -e SERVER_URL='https://docker.mender.io' mendersoftware/mender-client-qemu:latest
+      `;
+    }
 
     return (
       <div>
@@ -49,6 +58,13 @@ export default class VirtualDeviceOnboarding extends React.Component {
           <span style={{ wordBreak: 'break-word' }}>{codeToCopy}</span>
         </div>
         <p>{this.state.copied ? <span className="green fadeIn">Copied to clipboard.</span> : null}</p>
+        {hasDivergingHostname ? (
+          <p>
+            <span className="red fadeIn">
+              You might have to adjust the <i>SERVER_URL</i> to match the location of your server instance.
+            </span>
+          </p>
+        ) : null}
         <p>The device should appear in the Pending devices view in a couple of minutes.</p>
         <p>
           Visit the <Link to="/help/connecting-devices/provision-a-demo/virtual-device">Virtual Devices Help page</Link> for more info on managing the virtual
