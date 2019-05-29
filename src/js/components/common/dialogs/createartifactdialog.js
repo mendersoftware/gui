@@ -10,14 +10,27 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import Icon from '@material-ui/core/Icon';
 
 import AppActions from '../../../actions/app-actions';
+import AppStore from '../../../stores/app-store';
+import { getReachableDeviceAddress } from '../../../helpers';
+import Loader from '../loader';
 
 export default class CreateArtifactDialog extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
+      targetUrl: '',
+      loading: true,
       progress: 1,
       copied: 0
     };
+  }
+
+  componentDidMount() {
+    const self = this;
+    AppActions.getDevicesByStatus('accepted')
+      .then(getReachableDeviceAddress)
+      .catch(e => console.log(e))
+      .then(targetUrl => self.setState({ targetUrl, loading: false }));
   }
 
   onBackClick() {
@@ -40,10 +53,11 @@ export default class CreateArtifactDialog extends React.Component {
   render() {
     const self = this;
     const { open, onCancel } = self.props;
-    const { progress, copied } = self.state;
+    const { copied, loading, progress, targetUrl } = self.state;
+    const deviceType = AppStore.getOnboardingDeviceType();
 
     const artifactGenerator = 'single-file-artifact-gen';
-    const artifactName = 'demo-webserver-2.0';
+    const artifactName = 'demo-webserver-updated';
     const chmodCode = `
     chmod +x mender-artifact
     chmod +x ${artifactGenerator}
@@ -51,13 +65,13 @@ export default class CreateArtifactDialog extends React.Component {
 
     const artifactGenCode = `
     ARTIFACT_NAME="${artifactName}"
-    DEVICE_TYPE="*"
+    DEVICE_TYPE="${deviceType}"
     OUTPUT_PATH="${artifactName}.mender"
-    DEST_DIR="/opt/installed-by-file-installer/"
-    FILE_TREE="dir-to-deploy"
+    DEST_DIR="/var/www/localhost/htdocs/"
+    FILE_NAME="index.html"
     /${artifactGenerator} -n \${ARTIFACT_NAME}
     -t \${DEVICE_TYPE} -d {DEST_DIR} -o \${OUTPUT_PATH}
-    \${FILE_TREE}
+    \${FILE_NAME}
     `;
 
     const steps = {
@@ -79,7 +93,7 @@ export default class CreateArtifactDialog extends React.Component {
                 {artifactGenerator}
               </a>
               <div>
-                then make them executable by running:
+                and make them executable by running:
                 <div className="code">
                   <CopyToClipboard text={chmodCode} onCopy={() => self.copied(1)}>
                     <Button style={{ float: 'right', margin: '-10px 0 0 10px' }} icon={<Icon className="material-icons">content_paste</Icon>}>
@@ -90,6 +104,19 @@ export default class CreateArtifactDialog extends React.Component {
                 </div>
                 <p>{copied === 1 ? <span className="green fadeIn">Copied to clipboard.</span> : null}</p>
               </div>
+            </li>
+            <li>
+              {loading ? (
+                <Loader show={loading} />
+              ) : (
+                <span>
+                  Now save the{' '}
+                  <a href={`${targetUrl}/index.html`} download target="_blank">
+                    index.html
+                  </a>{' '}
+                  page you saw previously.
+                </span>
+              )}
             </li>
             <li>
               Extract the <i>demo_webserver.mender</i> file you just downloaded, and cd to the extracted folder so you can see the <i>index.html</i> file
