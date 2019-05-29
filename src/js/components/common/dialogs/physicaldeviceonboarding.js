@@ -39,6 +39,11 @@ export default class PhysicalDeviceOnboarding extends React.Component {
     }, 5000);
   }
 
+  onSelect(deviceType) {
+    AppActions.setOnboardingDeviceType(deviceType);
+    this.setState({ selection: deviceType });
+  }
+
   render() {
     const self = this;
 
@@ -73,7 +78,7 @@ export default class PhysicalDeviceOnboarding extends React.Component {
           <b>1. Enter your device type</b>
           <p>Setting this attribute on the device ensures that the device will only receive updates for compatible software releases.</p>
           <div className="flexbox centered">
-            <AutoSelect label="Device type" errorText="Choose a device type" items={types} onChange={item => self.setState({ selection: item })} />
+            <AutoSelect label="Device type" errorText="Choose a device type" items={types} onChange={item => self.onSelect(item)} />
           </div>
           <div id="onboard-connect-1" className="tooltip help highlight" data-tip data-for="physical-device-type-tip" data-event="click focus">
             <HelpIcon />

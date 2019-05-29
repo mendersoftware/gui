@@ -32,6 +32,7 @@ var _showCreateArtifactDialog = false;
 var _connectDeviceProgressed = false;
 var _onboardingComplete = !!_onboardingComplete || !!JSON.parse(window.localStorage.getItem('onboardingComplete'));
 var _onboardingProgress = 0;
+var _onboardingDeviceType = 'qemux86-64';
 var _groups = [];
 var _releasesRepo = [];
 var _uploadInProgress = false;
@@ -462,6 +463,10 @@ function _setOnboardingProgress(val) {
   _onboardingProgress = val;
 }
 
+function _setOnboardingDeviceType(val) {
+  _onboardingDeviceType = val;
+}
+
 function _setOnboardingComplete(val) {
   _onboardingComplete = val;
 }
@@ -633,6 +638,8 @@ var AppStore = Object.assign({}, EventEmitter.prototype, {
 
   getOnboardingProgress: () => _onboardingProgress,
 
+  getOnboardingDeviceType: () => _onboardingDeviceType,
+
   getShowOnboardingTips: () => _showOnboardingTips,
 
   getShowOnboardingTipsDialog: () => _showOnboardingTipsDialog,
@@ -741,6 +748,9 @@ var AppStore = Object.assign({}, EventEmitter.prototype, {
       break;
     case AppConstants.SET_ONBOARDING_PROGRESS:
       _setOnboardingProgress(payload.action.value);
+      break;
+    case AppConstants.SET_ONBOARDING_DEVICE_TYPE:
+      _setOnboardingDeviceType(payload.action.value);
       break;
 
       /* API */
