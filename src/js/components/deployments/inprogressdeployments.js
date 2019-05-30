@@ -1,6 +1,5 @@
 import React from 'react';
 import Time from 'react-time';
-import ReactTooltip from 'react-tooltip';
 import Pagination from 'rc-pagination';
 import _en_US from 'rc-pagination/lib/locale/en_US';
 
@@ -11,9 +10,6 @@ import TableCell from '@material-ui/core/TableCell';
 import TableBody from '@material-ui/core/TableBody';
 import TableRow from '@material-ui/core/TableRow';
 
-import HelpIcon from '@material-ui/icons/Help';
-
-import { CreateDeployment, ProgressDeployment } from '../helptips/helptooltips';
 import DeploymentStatus from './deploymentstatus';
 import Loader from '../common/loader';
 import { formatTime } from '../../helpers';
@@ -96,27 +92,6 @@ export default class Progress extends React.Component {
           )}
 
           {onboardingComponent ? onboardingComponent : null}
-          {!this.props.loading && this.props.showHelptips && (!this.props.hasDeployments || this.props.progress.length) ? (
-            // if first deployment not created, or if there is one in progress, show tip
-            <div>
-              <div
-                id="onboard-12"
-                className={this.props.hasDeployments ? 'tooltip help' : 'tooltip help highlight'}
-                data-tip
-                data-for="create-deployment-tip"
-                data-event="click focus"
-              >
-                <HelpIcon />
-              </div>
-              <ReactTooltip id="create-deployment-tip" globalEventOff="click" place="bottom" type="light" effect="solid" className="react-tooltip">
-                {!this.props.hasDeployments ? (
-                  <CreateDeployment devices={this.props.devices.length} artifacts={this.props.hasArtifacts} />
-                ) : (
-                  <ProgressDeployment />
-                )}
-              </ReactTooltip>
-            </div>
-          ) : null}
         </div>
       </div>
     );

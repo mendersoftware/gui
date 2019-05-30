@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Link, matchPath } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import cookie from 'react-cookie';
 import Linkify from 'react-linkify';
 import ReactTooltip from 'react-tooltip';
@@ -19,14 +19,12 @@ import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
 import CloseIcon from '@material-ui/icons/Close';
 import ExitIcon from '@material-ui/icons/ExitToApp';
-import HelpIcon from '@material-ui/icons/Help';
 import InfoIcon from '@material-ui/icons/InfoOutlined';
 
 import { isEmpty, decodeSessionToken, hashString } from '../../helpers';
 import { getOnboardingState } from '../../utils/onboardingmanager';
 import { clearAllRetryTimers } from '../../utils/retrytimer';
 import { toggleHelptips, hideAnnouncement } from '../../utils/toggleuseroptions';
-import { DevicesNav, ArtifactsNav, DeploymentsNav } from '../helptips/helptooltips';
 import DeviceNotifications from './devicenotifications';
 import DeploymentNotifications from './deploymentnotifications';
 import AppActions from '../../actions/app-actions';
@@ -207,8 +205,6 @@ export default class Header extends React.Component {
   }
   render() {
     const self = this;
-    var helpPath = this.props.history.location.pathname.indexOf('/help') != -1;
-
     const { anchorEl, user } = self.state;
 
     const menuButtonColor = '#c7c7c7';
@@ -311,72 +307,7 @@ export default class Header extends React.Component {
           </Toolbar>
         </Toolbar>
 
-        <div id="header-nav">
-          {this.state.showHelptips &&
-          this.state.acceptedDevices &&
-          !this.state.artifacts.length &&
-          !matchPath(self.context.location.pathname, { path: '/releases' }) ? (
-              <div>
-                <div
-                  id="onboard-8"
-                  className="tooltip help highlight"
-                  data-tip
-                  data-for="artifact-nav-tip"
-                  data-event="click focus"
-                  style={{ left: '150px', top: '135px' }}
-                >
-                  <HelpIcon />
-                </div>
-                <ReactTooltip id="artifact-nav-tip" globalEventOff="click" place="bottom" type="light" effect="solid" className="react-tooltip">
-                  <ArtifactsNav />
-                </ReactTooltip>
-              </div>
-            ) : null}
-
-          {this.state.showHelptips &&
-          !this.state.acceptedDevices &&
-          !(this.state.pendingDevices && matchPath(self.context.location.pathname, { path: '/', exact: true })) &&
-          !matchPath(self.context.location.pathname, { path: '/devices' }) &&
-          !helpPath ? (
-              <div>
-                <div
-                  id="onboard-7"
-                  className="tooltip help highlight"
-                  data-tip
-                  data-for="devices-nav-tip"
-                  data-event="click focus"
-                  style={{ left: '150px', top: '75px' }}
-                >
-                  <HelpIcon />
-                </div>
-                <ReactTooltip id="devices-nav-tip" globalEventOff="click" place="bottom" type="light" effect="solid" className="react-tooltip">
-                  <DevicesNav devices={this.state.pendingDevices} />
-                </ReactTooltip>
-              </div>
-            ) : null}
-
-          {this.state.showHelptips &&
-          !this.state.hasDeployments &&
-          this.state.acceptedDevices &&
-          this.state.artifacts.length &&
-          !matchPath(self.context.location.pathname, { path: '/deployments' }) ? (
-              <div>
-                <div
-                  id="onboard-11"
-                  className="tooltip help highlight"
-                  data-tip
-                  data-for="deployments-nav-tip"
-                  data-event="click focus"
-                  style={{ left: '150px', top: '196px' }}
-                >
-                  <HelpIcon />
-                </div>
-                <ReactTooltip id="deployments-nav-tip" globalEventOff="click" place="bottom" type="light" effect="solid" className="react-tooltip">
-                  <DeploymentsNav devices={this.state.acceptedDevices} />
-                </ReactTooltip>
-              </div>
-            ) : null}
-        </div>
+        <div id="header-nav" />
       </div>
     );
   }

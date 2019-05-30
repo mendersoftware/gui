@@ -1,8 +1,8 @@
 import React from 'react';
-import ReactTooltip from 'react-tooltip';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import pluralize from 'pluralize';
+
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
 import Dialog from '@material-ui/core/Dialog';
@@ -15,12 +15,10 @@ import TableHead from '@material-ui/core/TableHead';
 import TableCell from '@material-ui/core/TableCell';
 import TableBody from '@material-ui/core/TableBody';
 import TableRow from '@material-ui/core/TableRow';
-import HelpIcon from '@material-ui/icons/Help';
 
 import AppStore from '../../stores/app-store';
 import AppActions from '../../actions/app-actions';
 import { clearAllRetryTimers } from '../../utils/retrytimer';
-import { DevicesNav } from '../helptips/helptooltips';
 import Global from '../settings/global';
 import DeviceGroups from './device-groups';
 import PendingDevices from './pending-devices';
@@ -224,24 +222,6 @@ export default class Devices extends React.Component {
             pause={() => this._pauseInterval()}
           />
         )}
-
-        {!this.state.acceptedCount && this.state.showHelptips && this.state.tabIndex !== routes.pending.route ? (
-          <div>
-            <div
-              id="onboard-15"
-              className="tooltip help highlight"
-              data-tip
-              data-for="devices-nav-tip"
-              data-event="click focus"
-              style={{ left: '19%', top: '46px' }}
-            >
-              <HelpIcon />
-            </div>
-            <ReactTooltip id="devices-nav-tip" globalEventOff="click" place="bottom" type="light" effect="solid" className="react-tooltip">
-              <DevicesNav devices={this.state.pendingCount} />
-            </ReactTooltip>
-          </div>
-        ) : null}
 
         <Dialog open={this.state.openDeviceExists || false}>
           <DialogTitle>Device with this identity data already exists</DialogTitle>

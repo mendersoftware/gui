@@ -1,20 +1,17 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Time from 'react-time';
-import ReactTooltip from 'react-tooltip';
 import pluralize from 'pluralize';
 
 // material ui
 import Button from '@material-ui/core/Button';
 
 import InfoIcon from '@material-ui/icons/InfoOutlined';
-import HelpIcon from '@material-ui/icons/Help';
 
 import AppActions from '../../actions/app-actions';
 import AppStore from '../../stores/app-store';
 import { preformatWithRequestID } from '../../helpers';
 import Loader from '../common/loader';
-import { AuthDevices } from '../helptips/helptooltips';
 import { DevicePendingTip } from '../helptips/onboardingtips';
 import DeviceList from './devicelist';
 import { getOnboardingComponentFor, advanceOnboarding } from '../../utils/onboardingmanager';
@@ -232,24 +229,6 @@ export default class Pending extends React.Component {
     return (
       <div className="tab-container">
         <Loader show={this.state.authLoading} />
-
-        {self.state.showHelptips && this.state.devices.length ? (
-          <div>
-            <div
-              id="onboard-2"
-              className={this.props.highlightHelp ? 'tooltip help highlight' : 'tooltip help'}
-              data-tip
-              data-for="review-devices-tip"
-              data-event="click focus"
-              style={{ left: '60%', top: '35px' }}
-            >
-              <HelpIcon />
-            </div>
-            <ReactTooltip id="review-devices-tip" globalEventOff="click" place="bottom" type="light" effect="solid" className="react-tooltip">
-              <AuthDevices devices={this.state.devices.length} />
-            </ReactTooltip>
-          </div>
-        ) : null}
 
         {this.state.devices.length && (!this.state.pageLoading || this.state.authLoading !== 'all') ? (
           <div className="padding-bottom" ref={ref => (this.deviceListRef = ref)}>

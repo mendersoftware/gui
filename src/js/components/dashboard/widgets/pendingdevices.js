@@ -1,14 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import ReactTooltip from 'react-tooltip';
 import pluralize from 'pluralize';
 
 // material ui
 import Fab from '@material-ui/core/Fab';
 import ContentAddIcon from '@material-ui/icons/Add';
-import HelpIcon from '@material-ui/icons/Help';
 
-import { ReviewDevices } from '../../helptips/helptooltips';
 import { BaseWidget } from './baseWidget';
 
 export default class PendingDevices extends React.Component {
@@ -19,17 +16,7 @@ export default class PendingDevices extends React.Component {
     const widgetMain = {
       header: pendingNotification,
       counter: this.props.pendingDevicesCount,
-      targetLabel: 'View details',
-      prepend: (
-        <div>
-          <div id="onboard-1" className="tooltip help highlight" data-tip data-for="review-details-tip" data-event="click focus" style={{ top: '-15px' }}>
-            <HelpIcon />
-          </div>
-          <ReactTooltip id="review-details-tip" globalEventOff="click" place="bottom" type="light" effect="solid" className="react-tooltip">
-            <ReviewDevices devices={hasPending} />
-          </ReactTooltip>
-        </div>
-      )
+      targetLabel: 'View details'
     };
 
     return (

@@ -1,6 +1,5 @@
 import React from 'react';
 import Time from 'react-time';
-import ReactTooltip from 'react-tooltip';
 import Pagination from 'rc-pagination';
 import _en_US from 'rc-pagination/lib/locale/en_US';
 
@@ -12,8 +11,6 @@ import TableCell from '@material-ui/core/TableCell';
 import TableBody from '@material-ui/core/TableBody';
 import TableRow from '@material-ui/core/TableRow';
 
-import HelpIcon from '@material-ui/icons/Help';
-
 import InlineDatePicker from 'material-ui-pickers/DatePicker';
 import MuiPickersUtilsProvider from 'material-ui-pickers/MuiPickersUtilsProvider';
 import MomentUtils from '@date-io/moment';
@@ -22,7 +19,6 @@ import AppActions from '../../actions/app-actions';
 import AppStore from '../../stores/app-store';
 import Loader from '../common/loader';
 import AutoSelect from '../common/forms/autoselect';
-import { FinishedDeployment } from '../helptips/helptooltips';
 import { WelcomeSnackTip } from '../helptips/onboardingtips';
 import DeploymentStatus from './deploymentstatus';
 import { formatTime } from '../../helpers';
@@ -146,7 +142,7 @@ export default class Past extends React.Component {
       let anchor = { left: 250, top: this.deploymentsRef.offsetParent.offsetTop + this.deploymentsRef.offsetTop + this.deploymentsRef.offsetHeight };
       onboardingComponent = getOnboardingComponentFor('deployments-past-completed', { anchor });
       onboardingComponent = getOnboardingComponentFor('deployments-past-completed-failure', { anchor }, onboardingComponent);
-      onboardingComponent = getOnboardingComponentFor('onboarding-finished', {anchor}, onboardingComponent);
+      onboardingComponent = getOnboardingComponentFor('onboarding-finished', { anchor }, onboardingComponent);
     }
 
     return (
@@ -220,19 +216,9 @@ export default class Past extends React.Component {
             </Table>
           ) : null}
 
-          {!this.props.loading && this.props.showHelptips && pastMap.length ? (
-            <div>
-              <div id="onboard-14" className="tooltip help" data-tip data-for="finished-deployment-tip" data-event="click focus">
-                <HelpIcon />
-              </div>
-              <ReactTooltip id="finished-deployment-tip" globalEventOff="click" place="bottom" type="light" effect="solid" className="react-tooltip">
-                <FinishedDeployment />
-              </ReactTooltip>
-
-              {// TODO: fix status retrieval for past deployments to decide what to show here -
-                onboardingComponent ? onboardingComponent : null}
-            </div>
-          ) : null}
+          {!this.props.loading && this.props.showHelptips && pastMap.length && onboardingComponent
+            ? onboardingComponent // TODO: fix status retrieval for past deployments to decide what to show here -
+            : null}
 
           {this.props.past.length ? (
             <Pagination

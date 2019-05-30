@@ -16,7 +16,7 @@ import SortIcon from '@material-ui/icons/Sort';
 import AppActions from '../../actions/app-actions';
 import AppStore from '../../stores/app-store';
 import { preformatWithRequestID, customSort } from '../../helpers';
-import { UploadArtifact, ExpandArtifact } from '../helptips/helptooltips';
+import { ExpandArtifact } from '../helptips/helptooltips';
 import Loader from '../common/loader';
 import ReleaseRepositoryItem from './releaserepositoryitem';
 import { getOnboardingComponentFor, advanceOnboarding, getOnboardingStepCompleted } from '../../utils/onboardingmanager';
@@ -284,16 +284,6 @@ export default class ReleaseRepository extends React.Component {
           {items.length || loading ? null : (
             <div className="dashboard-placeholder fadeIn" style={{ fontSize: '16px', margin: '8vh auto' }}>
               {this.props.hasReleases ? <p>Select a Release on the left to view its Artifact details</p> : emptyLink}
-              {showHelptips ? (
-                <div>
-                  <div id="onboard-9" className="tooltip help highlight" data-tip data-for="artifact-upload-tip" data-event="click focus">
-                    <HelpIcon />
-                  </div>
-                  <ReactTooltip id="artifact-upload-tip" globalEventOff="click" place="bottom" type="light" effect="solid" className="react-tooltip">
-                    <UploadArtifact />
-                  </ReactTooltip>
-                </div>
-              ) : null}
             </div>
           )}
         </div>
