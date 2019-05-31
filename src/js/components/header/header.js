@@ -246,7 +246,7 @@ export default class Header extends React.Component {
             User management
           </MenuItem>
           <MenuItem onClick={toggleHelptips}>{this.state.showHelptips ? 'Hide help tooltips' : 'Show help tooltips'}</MenuItem>
-          <MenuItem component={Link} to="/help">
+          <MenuItem component={Link} to="/help/getting-started">
             Help
           </MenuItem>
           <MenuItem onClick={() => self.onLogoutClick()}>
