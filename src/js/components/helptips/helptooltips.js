@@ -15,7 +15,7 @@ export class AuthButton extends React.Component {
           now.
         </p>
         <p>
-          You can find out more about connecting different types of devices in <Link to="/help/connecting-devices">the help section</Link>.
+          You can find out more about connecting different types of devices in <Link to="/help/getting-started">the help section</Link>.
         </p>
         <p>
           <a className="hidehelp" onClick={toggleHelptips}>

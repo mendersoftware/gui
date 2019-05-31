@@ -101,7 +101,7 @@ export default class Devices extends React.Component {
         onboardingComponent = getOnboardingComponentFor('dashboard-onboarding-pendings', { anchor });
       }
     }
-    const redirectionRoute = onboardingComplete ? '/help/connecting-devices' : '/devices';
+    const redirectionRoute = onboardingComplete ? '/help/getting-started' : '/devices';
     return (
       <div>
         <h4 className="dashboard-header">

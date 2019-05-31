@@ -67,8 +67,7 @@ export default class VirtualDeviceOnboarding extends React.Component {
         ) : null}
         <p>The device should appear in the Pending devices view in a couple of minutes.</p>
         <p>
-          Visit the <Link to="/help/connecting-devices/provision-a-demo/virtual-device">Virtual Devices Help page</Link> for more info on managing the virtual
-          device.
+          Visit the <Link to="/help/application-updates/demo-virtual-device">Virtual Devices Help page</Link> for more info on managing the virtual device.
         </p>
       </div>
     );

@@ -75,7 +75,7 @@ export class DevicePendingTip extends React.Component {
         <ReactTooltip id="pending-device-onboarding-tip" place="bottom" type="light" effect="solid" className="content" clickable={true}>
           <p>It may take a few moments before your device appears.</p>
           <a onClick={() => AppActions.setShowConnectingDialog(true)}>Open the tutorial</a> again or{' '}
-          <Link to="/help/connecting-devices">go to the help pages</Link> if you have problems.
+          <Link to="/help/application-updates/mender-deb-package">go to the help pages</Link> if you have problems.
           <div className="flexbox">
             <div style={{ flexGrow: 1 }} />
             <a onClick={() => AppActions.setShowDismissOnboardingTipsDialog(true)}>Dismiss</a>
