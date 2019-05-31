@@ -33,8 +33,10 @@ export default class Devices extends React.Component {
   componentWillUnmount() {
     clearInterval(this.timer);
   }
+
   _refreshDevices() {
     return AppActions.getAllDevicesByStatus('accepted')
+      .then(AppActions.getDevicesWithInventory)
       .then(devices => {
         const yesterday = new Date();
         yesterday.setDate(yesterday.getDate() - 1);
@@ -52,6 +54,7 @@ export default class Devices extends React.Component {
       })
       .then(result => Object.assign(result, { pendingDevices: AppStore.getTotalPendingDevices() }));
   }
+
   _updateDeviceActivityHistory(today, yesterday, deviceCount) {
     const jsonContent = window.localStorage.getItem('dailyDeviceActivityCount');
     let history = [];
