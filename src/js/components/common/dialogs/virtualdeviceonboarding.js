@@ -31,7 +31,7 @@ export default class VirtualDeviceOnboarding extends React.Component {
       ? `
       TENANT_TOKEN='${token}'\ndocker run -it -e SERVER_URL='https://hosted.mender.io' \\\n-e TENANT_TOKEN=$TENANT_TOKEN mendersoftware/mender-client-qemu:latest
     `
-      : 'demo --client up';
+      : './demo --client up';
 
     return (
       <div>
