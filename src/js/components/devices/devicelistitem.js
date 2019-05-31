@@ -71,7 +71,7 @@ export default class DeviceListItem extends React.Component {
           <IconButton className="expandButton">{expanded ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}</IconButton>
         </ExpansionPanelSummary>
         <ExpansionPanelDetails>
-          {expanded ? (
+          {expanded && self.state.expandedDevice && self.state.expandedDevice.id === device.id ? (
             <ExpandedDevice
               {...self.props}
               className="expandedDevice"
