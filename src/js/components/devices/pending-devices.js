@@ -52,12 +52,7 @@ export default class Pending extends React.Component {
   }
 
   shouldComponentUpdate(_, nextState) {
-    return (
-      this.state.pageLoading !== nextState.pageLoading ||
-      this.state.authLoading !== nextState.authLoading ||
-      this.state.selectedRows !== nextState.selectedRows ||
-      this.state.devices.some((device, index) => device !== nextState.devices[index])
-    );
+    return !this.state.devices.every((device, index) => device === nextState.devices[index]) || true;
   }
 
   _onChange() {

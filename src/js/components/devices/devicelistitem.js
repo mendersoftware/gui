@@ -14,7 +14,7 @@ import AppActions from '../../actions/app-actions';
 import AppStore from '../../stores/app-store';
 import ExpandedDevice from './expanded-device';
 
-export default class DeviceListItem extends React.PureComponent {
+export default class DeviceListItem extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
