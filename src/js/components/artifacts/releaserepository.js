@@ -1,8 +1,10 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import Dropzone from 'react-dropzone';
 import ReactTooltip from 'react-tooltip';
 
 // material ui
+import Button from '@material-ui/core/Button';
 import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 
@@ -14,9 +16,10 @@ import SortIcon from '@material-ui/icons/Sort';
 import AppActions from '../../actions/app-actions';
 import AppStore from '../../stores/app-store';
 import { preformatWithRequestID, customSort } from '../../helpers';
-import { UploadArtifact, ExpandArtifact } from '../helptips/helptooltips';
+import { ExpandArtifact } from '../helptips/helptooltips';
 import Loader from '../common/loader';
 import ReleaseRepositoryItem from './releaserepositoryitem';
+import { getOnboardingComponentFor, advanceOnboarding, getOnboardingStepCompleted } from '../../utils/onboardingmanager';
 
 const columnHeaders = [
   { title: 'Device type compatibility', name: 'device_types', sortable: false },
@@ -53,7 +56,12 @@ export default class ReleaseRepository extends React.Component {
     //delete meta.verified;
     var meta = { description: '' };
     const uploads = files.map(file => self.props.uploadArtifact(meta, file));
-    Promise.all(uploads).then(() => self.props.refreshArtifacts());
+    Promise.all(uploads).then(() => {
+      if (!AppStore.getOnboardingComplete() && getOnboardingStepCompleted('artifact-included-deploy-onboarding')) {
+        advanceOnboarding('upload-new-artifact-tip');
+      }
+      self.props.refreshArtifacts();
+    });
   }
 
   _onRowSelection(artifact) {
@@ -61,6 +69,9 @@ export default class ReleaseRepository extends React.Component {
       this.setState({ selectedArtifact: { id: null } });
     } else {
       this.setState({ selectedArtifact: artifact });
+    }
+    if (!AppStore.getOnboardingComplete()) {
+      advanceOnboarding('artifact-included-onboarding');
     }
   }
 
@@ -106,8 +117,12 @@ export default class ReleaseRepository extends React.Component {
           index={index}
           onEdit={(id, description) => self._editArtifactData(id, description)}
           onRowSelection={() => self._onRowSelection(pkg)}
+          // this will be run after expansion + collapse and both need some time to fully settle
+          // otherwise the measurements are off
+          onExpanded={() => setTimeout(() => self.setState({}), 500)}
           removeArtifact={removeArtifact}
           release={release}
+          ref={ref => (this.repoItemAnchor = ref)}
           width={columnWidth}
         />
       );
@@ -136,6 +151,49 @@ export default class ReleaseRepository extends React.Component {
       </Dropzone>
     );
     const noArtifactsClass = release ? '' : 'muted';
+
+    // We need the ref to the <a> element that refers to the deployments tab, in order to align
+    // the helptip with the button - unfortunately this is not forwarded through react-router or mui
+    // thus, use the following component as a workaround:
+    const ForwardingLink = React.forwardRef((props, ref) => <Link {...props} innerRef={ref} />);
+    ForwardingLink.displayName = 'ForwardingLink';
+
+    let onboardingComponent = null;
+    let uploadArtifactOnboardingComponent = null;
+    if (this.repoItemAnchor && this.creationRef) {
+      const element = this.repoItemAnchor.itemRef;
+      const anchor = { left: element.offsetLeft + element.offsetWidth / 3, top: element.offsetTop + element.offsetHeight };
+      const artifactIncludedAnchor = {
+        left: this.creationRef.offsetLeft + this.creationRef.offsetWidth,
+        top: this.creationRef.offsetTop + this.creationRef.offsetHeight / 2
+      };
+      const artifactUploadedAnchor = {
+        left: this.creationRef.offsetLeft + this.creationRef.offsetWidth / 2,
+        top: this.creationRef.offsetTop - this.creationRef.offsetHeight / 2
+      };
+
+      onboardingComponent = getOnboardingComponentFor('artifact-included-onboarding', { anchor });
+      onboardingComponent = getOnboardingComponentFor(
+        'artifact-included-deploy-onboarding',
+        { place: 'right', anchor: artifactIncludedAnchor },
+        onboardingComponent
+      );
+      onboardingComponent = getOnboardingComponentFor('deployments-past-completed', { anchor }, onboardingComponent);
+      onboardingComponent = getOnboardingComponentFor('artifact-modified-onboarding', { anchor: artifactUploadedAnchor, place: 'bottom' }, onboardingComponent);
+    }
+    if (this.dropzoneRef) {
+      const dropzoneAnchor = { left: this.dropzoneRef.offsetLeft, top: this.dropzoneRef.offsetTop + this.dropzoneRef.offsetHeight };
+      uploadArtifactOnboardingComponent = getOnboardingComponentFor('upload-prepared-artifact-tip', { anchor: dropzoneAnchor, place: 'left' });
+      uploadArtifactOnboardingComponent = getOnboardingComponentFor(
+        'upload-new-artifact-tip',
+        {
+          place: 'left',
+          anchor: dropzoneAnchor
+        },
+        uploadArtifactOnboardingComponent
+      );
+    }
+
     return (
       <div className="relative release-repo margin-left" style={{ width: '100%' }}>
         <div className="flexbox">
@@ -157,7 +215,10 @@ export default class ReleaseRepository extends React.Component {
           onDrop={(accepted, rejected) => this.onDrop(accepted, rejected)}
         >
           {({ getRootProps, getInputProps }) => (
-            <div {...getRootProps({ className: `dashboard-placeholder top-right-button fadeIn onboard ${dropzoneClass}`, style: { top: 0 } })}>
+            <div
+              {...getRootProps({ className: `dashboard-placeholder top-right-button fadeIn onboard ${dropzoneClass}`, style: { top: 0 } })}
+              ref={ref => (this.dropzoneRef = ref)}
+            >
               <input {...getInputProps()} disabled={uploading} />
               <span className="icon">
                 <FileIcon style={{ height: '24px', width: '24px', verticalAlign: 'middle', marginTop: '-2px', marginRight: '10px' }} />
@@ -168,7 +229,7 @@ export default class ReleaseRepository extends React.Component {
             </div>
           )}
         </Dropzone>
-
+        {uploadArtifactOnboardingComponent ? uploadArtifactOnboardingComponent : null}
         <Loader show={loading} />
 
         <div style={{ position: 'relative', marginTop: '10px' }}>
@@ -195,8 +256,20 @@ export default class ReleaseRepository extends React.Component {
                 <div style={{ width: 48 }} />
               </div>
               {items}
+              <Button
+                variant="contained"
+                buttonRef={ref => (this.creationRef = ref)}
+                component={ForwardingLink}
+                to={`/deployments?open=true&release=${release.Name}`}
+                style={{ marginLeft: 20 }}
+                onClick={() => AppActions.setDeploymentRelease(release)}
+              >
+                Create deployment with this release
+              </Button>
             </div>
           ) : null}
+          {showHelptips && onboardingComponent ? onboardingComponent : null}
+
           {showHelptips && items.length ? (
             <div>
               <div id="onboard-10" className="tooltip help" data-tip data-for="artifact-expand-tip" data-event="click focus">
@@ -211,16 +284,6 @@ export default class ReleaseRepository extends React.Component {
           {items.length || loading ? null : (
             <div className="dashboard-placeholder fadeIn" style={{ fontSize: '16px', margin: '8vh auto' }}>
               {this.props.hasReleases ? <p>Select a Release on the left to view its Artifact details</p> : emptyLink}
-              {showHelptips ? (
-                <div>
-                  <div id="onboard-9" className="tooltip help highlight" data-tip data-for="artifact-upload-tip" data-event="click focus">
-                    <HelpIcon />
-                  </div>
-                  <ReactTooltip id="artifact-upload-tip" globalEventOff="click" place="bottom" type="light" effect="solid" className="react-tooltip">
-                    <UploadArtifact />
-                  </ReactTooltip>
-                </div>
-              ) : null}
             </div>
           )}
         </div>

@@ -6,6 +6,7 @@ import DevicesApi from '../api/devices-api';
 import GeneralApi from '../api/general-api';
 import UsersApi from '../api/users-api';
 import parse from 'parse-link-header';
+import { advanceOnboarding } from '../utils/onboardingmanager';
 
 var rootUrl = 'https://localhost:443';
 const apiUrl = `${rootUrl}/api/management/v1`;
@@ -31,6 +32,12 @@ const AppActions = {
       group: group
     });
   },
+
+  selectDevice: device =>
+    AppDispatcher.handleViewAction({
+      actionType: AppConstants.SELECT_DEVICE,
+      device
+    }),
 
   addDeviceToGroup: (group, device) => {
     return DevicesApi.put(`${inventoryApiUrl}/devices/${device}/group`, { group });
@@ -78,10 +85,27 @@ const AppActions = {
 
   getDeviceById: id => DevicesApi.get(`${inventoryApiUrl}/devices/${id}`).then(res => res.body),
 
+  getDevicesWithInventory: devices =>
+    Promise.all(
+      devices.map(device => {
+        // have to call inventory each time - accepted list can change order so must refresh inventory too
+        return AppActions.getDeviceById(device.id).then(inventory => {
+          device.attributes = inventory.attributes;
+          return Promise.resolve(device);
+        });
+      })
+    ),
+
   getDevices: (page = default_page, per_page = default_per_page, search_term) => {
     // get devices from inventory
     var search = search_term ? `&${search_term}` : '';
-    return DevicesApi.get(`${inventoryApiUrl}/devices?per_page=${per_page}&page=${page}${search}`).then(res => res.body);
+    return DevicesApi.get(`${inventoryApiUrl}/devices?per_page=${per_page}&page=${page}${search}`).then(res => {
+      AppDispatcher.handleViewAction({
+        actionType: AppConstants.RECEIVE_ALL_DEVICES,
+        devices: res.body
+      });
+      return res.body;
+    });
   },
   getAllDevices: () => {
     const getAllDevices = (per_page = 200, page = 1, devices = []) =>
@@ -208,12 +232,15 @@ const AppActions = {
   /* 
     General 
   */
-  setSnackbar: (message, duration, action) =>
+  setSnackbar: (message, duration, action, component, onClick, onClose) =>
     AppDispatcher.handleViewAction({
       actionType: AppConstants.SET_SNACKBAR,
       message: message,
       duration: duration,
-      action: action
+      action: action,
+      children: component,
+      onClick: onClick,
+      onClose: onClose
     }),
 
   /* 
@@ -282,11 +309,68 @@ const AppActions = {
   /*
     Onboarding
   */
-  setShowHelptips: val =>
+  setShowHelptips: val => {
     AppDispatcher.handleViewAction({
       actionType: AppConstants.SET_SHOW_HELP,
       show: val
+    });
+    AppDispatcher.handleViewAction({
+      actionType: AppConstants.SET_SHOW_ONBOARDING_HELP,
+      show: val
+    });
+  },
+  setShowOnboardingHelp: val =>
+    AppDispatcher.handleViewAction({
+      actionType: AppConstants.SET_SHOW_ONBOARDING_HELP,
+      show: val
     }),
+  setOnboardingProgress: value =>
+    AppDispatcher.handleViewAction({
+      actionType: AppConstants.SET_ONBOARDING_PROGRESS,
+      value
+    }),
+  setOnboardingDeviceType: value =>
+    AppDispatcher.handleViewAction({
+      actionType: AppConstants.SET_ONBOARDING_DEVICE_TYPE,
+      value
+    }),
+  setShowDismissOnboardingTipsDialog: val =>
+    AppDispatcher.handleViewAction({
+      actionType: AppConstants.SET_SHOW_ONBOARDING_HELP_DIALOG,
+      show: val
+    }),
+  setOnboardingComplete: val => {
+    AppDispatcher.handleViewAction({
+      actionType: AppConstants.SET_ONBOARDING_COMPLETE,
+      show: val
+    });
+    AppDispatcher.handleViewAction({
+      actionType: AppConstants.SET_SHOW_ONBOARDING_HELP,
+      show: !val
+    });
+    if (val) {
+      advanceOnboarding('onboarding-finished');
+    }
+  },
+  setShowConnectingDialog: val =>
+    AppDispatcher.handleViewAction({
+      actionType: AppConstants.SET_SHOW_CONNECT_DEVICE,
+      show: val
+    }),
+  setShowCreateArtifactDialog: val =>
+    AppDispatcher.handleViewAction({
+      actionType: AppConstants.SET_SHOW_CREATE_ARTIFACT,
+      show: val
+    }),
+  setConnectingDialogProgressed: val => {
+    AppDispatcher.handleViewAction({
+      actionType: AppConstants.SET_CONNECT_DEVICE_PROGRESSED,
+      progressed: val
+    });
+    if (val) {
+      advanceOnboarding('devices-accepted-onboarding');
+    }
+  },
 
   /* Artifacts */
   getArtifacts: () =>
@@ -342,10 +426,10 @@ const AppActions = {
       })
     ),
 
-  setDeploymentArtifact: artifact =>
+  setDeploymentRelease: release =>
     AppDispatcher.handleViewAction({
-      actionType: AppConstants.SET_DEPLOYMENT_ARTIFACT,
-      artifact: artifact
+      actionType: AppConstants.SET_DEPLOYMENT_RELEASE,
+      release
     }),
 
   /* Releases */

@@ -1,6 +1,5 @@
 import React from 'react';
 import Time from 'react-time';
-import ReactTooltip from 'react-tooltip';
 import Pagination from 'rc-pagination';
 import _en_US from 'rc-pagination/lib/locale/en_US';
 
@@ -12,17 +11,26 @@ import TableCell from '@material-ui/core/TableCell';
 import TableBody from '@material-ui/core/TableBody';
 import TableRow from '@material-ui/core/TableRow';
 
-import HelpIcon from '@material-ui/icons/Help';
-
 import InlineDatePicker from 'material-ui-pickers/DatePicker';
 import MuiPickersUtilsProvider from 'material-ui-pickers/MuiPickersUtilsProvider';
 import MomentUtils from '@date-io/moment';
 
+import AppActions from '../../actions/app-actions';
+import AppStore from '../../stores/app-store';
 import Loader from '../common/loader';
 import AutoSelect from '../common/forms/autoselect';
-import { FinishedDeployment } from '../helptips/helptooltips';
+import { WelcomeSnackTip } from '../helptips/onboardingtips';
 import DeploymentStatus from './deploymentstatus';
 import { formatTime } from '../../helpers';
+import { RootRef } from '@material-ui/core';
+import { getOnboardingComponentFor, getOnboardingStepCompleted } from '../../utils/onboardingmanager';
+
+const timeranges = {
+  today: { start: 0, end: 0, title: 'Today' },
+  yesterday: { start: 1, end: 1, title: 'Yesterday' },
+  week: { start: 6, end: 0, title: 'Last 7 days' },
+  month: { start: 29, end: 0, title: 'Last 30 days' }
+};
 
 export default class Past extends React.Component {
   constructor(props, context) {
@@ -32,8 +40,18 @@ export default class Past extends React.Component {
       today: new Date(),
       active: 'today'
     };
-    this.setDefaultRange(0, 0, 'today');
+    this._setDateRange(timeranges['today'].start, timeranges['today'].end);
   }
+
+  componentDidMount() {
+    if (this.props.showHelptips && !AppStore.getOnboardingComplete() && this.props.past.length) {
+      const progress = getOnboardingStepCompleted('artifact-modified-onboarding') && this.props.past.length > 1 ? 4 : 3;
+      setTimeout(() => {
+        AppActions.setSnackbar('open', 10000, '', <WelcomeSnackTip progress={progress} />, () => AppActions.setSnackbar(''));
+      }, 400);
+    }
+  }
+
   _setDateRange(after, before) {
     var self = this;
     var startDate = new Date();
@@ -119,32 +137,27 @@ export default class Past extends React.Component {
       [{ title: 'All devices', value: 'All devices' }]
     );
 
+    let onboardingComponent = null;
+    if (this.deploymentsRef) {
+      let anchor = { left: 250, top: this.deploymentsRef.offsetParent.offsetTop + this.deploymentsRef.offsetTop + this.deploymentsRef.offsetHeight };
+      onboardingComponent = getOnboardingComponentFor('deployments-past-completed', { anchor });
+      onboardingComponent = getOnboardingComponentFor('deployments-past-completed-failure', { anchor }, onboardingComponent);
+      onboardingComponent = getOnboardingComponentFor('onboarding-finished', { anchor }, onboardingComponent);
+    }
+
     return (
       <div className="fadeIn margin-top-large">
-        <Grid container spacing={16} className="datepicker-container" style={{paddingTop: '4px'}}>
+        <Grid container spacing={16} className="datepicker-container" style={{ paddingTop: '4px' }}>
           <Grid item>
             <span>Filter by date</span>
             <ul className="unstyled link-list horizontal">
-              <li>
-                <a className={this.state.active === 'today' ? 'active' : ''} onClick={() => this.setDefaultRange(0, 0, 'today')}>
-                  Today
-                </a>
-              </li>
-              <li>
-                <a className={this.state.active === 'yesterday' ? 'active' : ''} onClick={() => this.setDefaultRange(1, 1, 'yesterday')}>
-                  Yesterday
-                </a>
-              </li>
-              <li>
-                <a className={this.state.active === 'week' ? 'active' : ''} onClick={() => this.setDefaultRange(6, 0, 'week')}>
-                  Last 7 days
-                </a>
-              </li>
-              <li>
-                <a className={this.state.active === 'month' ? 'active' : ''} onClick={() => this.setDefaultRange(29, 0, 'month')}>
-                  Last 30 days
-                </a>
-              </li>
+              {Object.entries(timeranges).map(([key, range]) => (
+                <li key={`filter-by-${key}`}>
+                  <a className={this.state.active === key ? 'active' : ''} onClick={() => this.setDefaultRange(range.start, range.end, key)}>
+                    {range.title}
+                  </a>
+                </li>
+              ))}
             </ul>
           </Grid>
 
@@ -197,20 +210,15 @@ export default class Past extends React.Component {
                   <TableCell style={{ minWidth: '400px' }}>Status</TableCell>
                 </TableRow>
               </TableHead>
-              <TableBody style={{ cursor: 'pointer', overflow: 'visible' }}>{pastMap}</TableBody>
+              <RootRef rootRef={ref => (this.deploymentsRef = ref)}>
+                <TableBody style={{ cursor: 'pointer', overflow: 'visible' }}>{pastMap}</TableBody>
+              </RootRef>
             </Table>
           ) : null}
 
-          {!this.props.loading && this.props.showHelptips && pastMap.length ? (
-            <div>
-              <div id="onboard-14" className="tooltip help" data-tip data-for="finished-deployment-tip" data-event="click focus">
-                <HelpIcon />
-              </div>
-              <ReactTooltip id="finished-deployment-tip" globalEventOff="click" place="bottom" type="light" effect="solid" className="react-tooltip">
-                <FinishedDeployment />
-              </ReactTooltip>
-            </div>
-          ) : null}
+          {!this.props.loading && this.props.showHelptips && pastMap.length && onboardingComponent
+            ? onboardingComponent // TODO: fix status retrieval for past deployments to decide what to show here -
+            : null}
 
           {this.props.past.length ? (
             <Pagination

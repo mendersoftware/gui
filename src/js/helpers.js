@@ -2,6 +2,8 @@ import jwtDecode from 'jwt-decode';
 import md5 from 'md5';
 import React from 'react';
 
+import AppActions from './actions/app-actions';
+
 export function isEncoded(uri) {
   uri = uri || '';
 
@@ -299,3 +301,53 @@ export class FileSize extends React.PureComponent {
     return <span>{getFormattedSize(this.props.fileSize)}</span>;
   }
 }
+
+export const timeoutPromise = (url, options = {}, timeout = 1000) =>
+  Promise.race([fetch(url, options), new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), timeout))]);
+
+export const collectAddressesFrom = devices =>
+  devices.reduce((collector, device) => {
+    const ips = device.attributes.reduce((accu, item) => {
+      if (item.name.startsWith('ip')) {
+        if (Array.isArray(item.value)) {
+          const texts = item.value.map(text => text.slice(0, text.indexOf('/')));
+          accu.push(...texts);
+        } else {
+          const text = item.value.slice(0, item.value.indexOf('/'));
+          accu.push(text);
+        }
+      }
+      return accu;
+    }, []);
+    collector.push(...ips);
+    return collector;
+  }, []);
+
+export const probeAllAddresses = addresses => {
+  const variants = ['http', 'https'];
+  const requests = variants.reduce((accu, variant) => {
+    const variantRequests = addresses.map(address =>
+      timeoutPromise(`${variant}://${address}`, null, 2000)
+        .then(() => Promise.resolve(`${variant}://${address}`))
+        .catch(() => Promise.resolve())
+    );
+    accu.push(...variantRequests);
+    return accu;
+  }, []);
+  return Promise.all(requests);
+};
+
+export const getReachableDeviceAddress = devices => {
+  let targetUrl = '';
+  return AppActions.getDevicesWithInventory(devices)
+    .then(devices => {
+      const addresses = collectAddressesFrom(devices);
+      targetUrl = `http://${addresses.find(item => !item.includes(':'))}`;
+      return probeAllAddresses(addresses);
+    })
+    .then(responses => {
+      const reachableAddress = responses.find(address => address);
+      targetUrl = reachableAddress ? reachableAddress : targetUrl;
+      return Promise.resolve(targetUrl);
+    });
+};

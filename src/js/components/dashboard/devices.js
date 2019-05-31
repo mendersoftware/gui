@@ -5,6 +5,7 @@ import AppStore from '../../stores/app-store';
 import AcceptedDevices from './widgets/accepteddevices';
 import RedirectionWidget from './widgets/redirectionwidget';
 import PendingDevices from './widgets/pendingdevices';
+import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 
 export default class Devices extends React.Component {
   constructor(props, state) {
@@ -12,10 +13,11 @@ export default class Devices extends React.Component {
     const self = this;
     self.timer = null;
     self.state = {
+      deltaActivity: null,
       devices: [],
       inactiveDevices: [],
       pendingDevices: [],
-      deltaActivity: null,
+      onboardingComplete: AppStore.getOnboardingComplete(),
       refreshDevicesLength: 30000,
       showHelptips: AppStore.showHelptips()
     };
@@ -82,27 +84,54 @@ export default class Devices extends React.Component {
   }
 
   render() {
-    const { devices, inactiveDevices, pendingDevices, deltaActivity, showHelptips } = this.state;
+    const { devices, inactiveDevices, onboardingComplete, pendingDevices, deltaActivity, showHelptips } = this.state;
     const hasPending = pendingDevices > 0;
     const noDevicesAvailable = !devices && !hasPending;
+    let onboardingComponent = null;
+    if (this.anchor) {
+      const element = this.anchor.children[this.anchor.children.length - 1];
+      const anchor = { left: element.offsetLeft + element.offsetWidth / 2, top: element.offsetTop + element.offsetHeight - 50 };
+      onboardingComponent = getOnboardingComponentFor('dashboard-onboarding-start', { anchor });
+      if (this.pendingsRef) {
+        const element = this.pendingsRef.wrappedElement.lastChild;
+        const anchor = {
+          left: this.pendingsRef.wrappedElement.offsetLeft + element.offsetWidth / 2,
+          top: this.pendingsRef.wrappedElement.offsetTop + element.offsetHeight
+        };
+        onboardingComponent = getOnboardingComponentFor('dashboard-onboarding-pendings', { anchor });
+      }
+    }
+    const redirectionRoute = onboardingComplete ? '/help/getting-started' : '/devices';
     return (
       <div>
         <h4 className="dashboard-header">
           <span>Devices</span>
         </h4>
-        <div style={Object.assign({ marginBottom: '30px', marginTop: '50px' }, this.props.styles)}>
+        <div style={Object.assign({ marginBottom: '30px', marginTop: '50px' }, this.props.styles)} ref={element => (this.anchor = element)}>
           {hasPending ? (
-            <PendingDevices pendingDevicesCount={pendingDevices} isActive={hasPending} showHelptips={showHelptips} onClick={this.props.clickHandle} />
+            <PendingDevices
+              pendingDevicesCount={pendingDevices}
+              isActive={hasPending}
+              showHelptips={showHelptips}
+              onClick={this.props.clickHandle}
+              ref={ref => (this.pendingsRef = ref)}
+            />
           ) : null}
           <AcceptedDevices devicesCount={devices} inactiveCount={inactiveDevices} delta={deltaActivity} onClick={this.props.clickHandle} />
           <RedirectionWidget
-            target={'/help/connecting-devices'}
-            content={'Learn how to connect more devices'}
-            buttonContent={'Learn more'}
-            onClick={() => this.props.clickHandle({ route: '/help/connecting-devices' })}
+            target={redirectionRoute}
+            content={`Learn how to connect ${onboardingComplete ? 'more devices' : 'a device'}`}
+            buttonContent={onboardingComplete ? 'Learn more' : 'Connect a device'}
+            onClick={() => {
+              if (onboardingComplete) {
+                return this.props.clickHandle({ route: redirectionRoute });
+              }
+              AppActions.setShowConnectingDialog(true);
+            }}
             isActive={noDevicesAvailable}
           />
         </div>
+        {onboardingComponent ? onboardingComponent : null}
       </div>
     );
   }

@@ -15,6 +15,10 @@ import SharedSnackbar from '../components/common/sharedsnackbar';
 import AppStore from '../stores/app-store';
 import AppActions from '../actions/app-actions';
 import { AppContext } from '../contexts/app-context';
+import { getOnboardingComponentFor } from '../utils/onboardingmanager';
+import CreateArtifactDialog from './common/dialogs/createartifactdialog';
+import ConfirmDismissHelptips from './common/dialogs/confirmdismisshelptips';
+import DeviceConnectionDialog from './common/dialogs/deviceconnectiondialog';
 
 var isDemoMode = false;
 var _HostedAnnouncement = '';
@@ -49,7 +53,10 @@ class AppRoot extends React.Component {
       currentUser: AppStore.getCurrentUser(),
       uploadInProgress: AppStore.getUploadInProgress(),
       globalSettings: AppStore.getGlobalSettings(),
-      snackbar: AppStore.getSnackbar()
+      snackbar: AppStore.getSnackbar(),
+      showDismissHelptipsDialog: !AppStore.getOnboardingComplete() && AppStore.getShowOnboardingTipsDialog(),
+      showCreateArtifactDialog: AppStore.getShowCreateArtifactDialog(),
+      showDeviceConnectionDialog: AppStore.getShowConnectDeviceDialog()
     };
   }
 
@@ -102,7 +109,15 @@ class AppRoot extends React.Component {
   }
 
   render() {
-    const { snackbar, timeout, ...context } = this.state;
+    const { snackbar, timeout, showDismissHelptipsDialog, showDeviceConnectionDialog, showCreateArtifactDialog, ...context } = this.state;
+
+    const onboardingComponent = getOnboardingComponentFor('application-update-reminder-tip', {
+      anchor: {
+        left: 170,
+        top: 225
+      },
+      place: 'right'
+    });
 
     return (
       <IdleTimer element={document} idleAction={this._onIdle} timeout={timeout} format="MM-DD-YYYY HH:MM:ss.SSS">
@@ -121,7 +136,10 @@ class AppRoot extends React.Component {
             <AppContext.Provider value={context}>{this.props.children}</AppContext.Provider>
           </div>
         </div>
-
+        {onboardingComponent ? onboardingComponent : null}
+        <ConfirmDismissHelptips open={showDismissHelptipsDialog} />
+        <CreateArtifactDialog open={showCreateArtifactDialog} onCancel={() => AppActions.setShowCreateArtifactDialog(false)} />
+        <DeviceConnectionDialog open={showDeviceConnectionDialog} onCancel={() => AppActions.setShowConnectingDialog(false)} />
         <SharedSnackbar snackbar={snackbar} />
       </IdleTimer>
     );

@@ -16,21 +16,26 @@ import AppStore from '../../stores/app-store';
 import SelectedArtifact from './selectedartifact';
 
 export default class ReleaseRepositoryItem extends React.PureComponent {
+  componentDidMount() {
+    this.props.onExpanded();
+  }
+
   render() {
     const self = this;
-    const { artifact, expanded, index, onEdit, onRowSelection, release, removeArtifact, width } = self.props;
+    const { artifact, expanded, index, onEdit, onExpanded, onRowSelection, release, removeArtifact, width } = self.props;
     const compatible = artifact.device_types_compatible.join(', ');
     const storedArtifact = AppStore.getSoftwareArtifact('id', artifact.id);
     const expandedArtifact = expanded ? Object.assign({}, release, storedArtifact) : {};
     const artifactType = artifact.updates.reduce((accu, item) => (accu ? accu : item.type_info.type), '');
     const columnStyle = { width };
     return (
-      <div className="flexbox release-repo-item">
+      <div className="flexbox release-repo-item" ref={ref => (this.itemRef = ref)}>
         <div className="muted">{index + 1}</div>
         <ExpansionPanel
           square
           expanded={expanded}
           onChange={() => onRowSelection(artifact)}
+          CollapseProps={{ onEntered: () => onExpanded(), onExited: () => onExpanded() }}
           style={{ width: '100%', border: '1px solid', borderColor: '#e0e0e0' }}
         >
           <ExpansionPanelSummary style={{ padding: '0 12px' }}>
@@ -46,6 +51,7 @@ export default class ReleaseRepositoryItem extends React.PureComponent {
                 removeArtifact={removeArtifact}
                 formatTime={formatTime}
                 editArtifact={(id, description) => onEdit(id, description)}
+                onExpansion={() => onExpanded()}
                 artifact={expandedArtifact}
               />
             ) : (

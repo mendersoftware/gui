@@ -1,21 +1,20 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Time from 'react-time';
-import ReactTooltip from 'react-tooltip';
 import pluralize from 'pluralize';
 
 // material ui
 import Button from '@material-ui/core/Button';
 
 import InfoIcon from '@material-ui/icons/InfoOutlined';
-import HelpIcon from '@material-ui/icons/Help';
 
 import AppActions from '../../actions/app-actions';
 import AppStore from '../../stores/app-store';
 import { preformatWithRequestID } from '../../helpers';
 import Loader from '../common/loader';
-import { AuthDevices, ExpandAuth } from '../helptips/helptooltips';
+import { DevicePendingTip } from '../helptips/onboardingtips';
 import DeviceList from './devicelist';
+import { getOnboardingComponentFor, advanceOnboarding } from '../../utils/onboardingmanager';
 
 export default class Pending extends React.Component {
   constructor(props, context) {
@@ -160,6 +159,9 @@ export default class Pending extends React.Component {
   }
 
   onRowSelection(selection) {
+    if (!AppStore.getOnboardingComplete()) {
+      advanceOnboarding('devices-pending-accepting-onboarding');
+    }
     this.setState({ selectedRows: selection });
   }
 
@@ -168,6 +170,7 @@ export default class Pending extends React.Component {
     var limitMaxed = this.props.deviceLimit ? this.props.deviceLimit <= this.props.acceptedDevices : false;
     var limitNear = this.props.deviceLimit ? this.props.deviceLimit < this.props.acceptedDevices + this.state.devices.length : false;
     var selectedOverLimit = this.props.deviceLimit ? this.props.deviceLimit < this.props.acceptedDevices + this.state.selectedRows.length : false;
+    const deviceConnectingProgressed = AppStore.getDeviceConnectionProgressed();
 
     const columnHeaders = [
       {
@@ -203,30 +206,27 @@ export default class Pending extends React.Component {
         </p>
       ) : null;
 
+    let onboardingComponent = null;
+    if (this.deviceListRef || this.authorizeRef) {
+      const element = this.deviceListRef ? this.deviceListRef.getElementsByClassName('body')[0] : null;
+      onboardingComponent = getOnboardingComponentFor('devices-pending-onboarding', {
+        anchor: { left: 200, top: element ? element.offsetTop + element.offsetHeight : 170 }
+      });
+      if (this.state.selectedRows && this.authorizeRef) {
+        const anchor = {
+          left: this.authorizeRef.offsetLeft - this.authorizeRef.offsetWidth / 2,
+          top: this.authorizeRef.offsetParent.offsetTop - this.authorizeRef.offsetParent.offsetHeight - this.authorizeRef.offsetHeight / 2
+        };
+        onboardingComponent = getOnboardingComponentFor('devices-pending-accepting-onboarding', { place: 'left', anchor });
+      }
+    }
+
     return (
       <div className="tab-container">
         <Loader show={this.state.authLoading} />
 
-        {self.state.showHelptips && this.state.devices.length ? (
-          <div>
-            <div
-              id="onboard-2"
-              className={this.props.highlightHelp ? 'tooltip help highlight' : 'tooltip help'}
-              data-tip
-              data-for="review-devices-tip"
-              data-event="click focus"
-              style={{ left: '60%', top: '35px' }}
-            >
-              <HelpIcon />
-            </div>
-            <ReactTooltip id="review-devices-tip" globalEventOff="click" place="bottom" type="light" effect="solid" className="react-tooltip">
-              <AuthDevices devices={this.state.devices.length} />
-            </ReactTooltip>
-          </div>
-        ) : null}
-
         {this.state.devices.length && (!this.state.pageLoading || this.state.authLoading !== 'all') ? (
-          <div className="padding-bottom">
+          <div className="padding-bottom" ref={ref => (this.deviceListRef = ref)}>
             <h3 className="align-center">
               {this.state.count} {pluralize('devices', this.state.count)} pending authorization
             </h3>
@@ -246,13 +246,19 @@ export default class Pending extends React.Component {
             />
           </div>
         ) : (
-          <div className={this.state.authLoading ? 'hidden' : 'dashboard-placeholder'}>
-            <p>There are no devices pending authorization</p>
-            {this.props.highlightHelp ? (
-              <p>
-                Visit the <Link to="/help/connecting-devices">Help section</Link> to learn how to connect devices to the Mender server.
-              </p>
-            ) : null}
+          <div>
+            {self.state.showHelptips && deviceConnectingProgressed ? (
+              <DevicePendingTip />
+            ) : (
+              <div className={this.state.authLoading ? 'hidden' : 'dashboard-placeholder'}>
+                <p>There are no devices pending authorization</p>
+                {this.props.highlightHelp ? (
+                  <p>
+                    Visit the <Link to="/help/getting-started">Help section</Link> to learn how to connect devices to the Mender server.
+                  </p>
+                ) : null}
+              </div>
+            )}
           </div>
         )}
 
@@ -268,6 +274,7 @@ export default class Pending extends React.Component {
                 variant="contained"
                 disabled={this.props.disabled || limitMaxed || selectedOverLimit}
                 onClick={() => this._authorizeDevices()}
+                buttonRef={ref => (this.authorizeRef = ref)}
                 color="primary"
               >
                 {`Authorize ${this.state.selectedRows.length} ${pluralize('devices', this.state.selectedRows.length)}`}
@@ -276,24 +283,7 @@ export default class Pending extends React.Component {
             </div>
           </div>
         ) : null}
-
-        {self.state.showHelptips && this.state.devices.length ? (
-          <div>
-            <div
-              id="onboard-3"
-              className="tooltip highlight help"
-              data-tip
-              data-for="expand-auth-tip"
-              data-event="click focus"
-              style={{ left: '16%', top: '170px' }}
-            >
-              <HelpIcon />
-            </div>
-            <ReactTooltip id="expand-auth-tip" globalEventOff="click" place="bottom" type="light" effect="solid" className="react-tooltip">
-              <ExpandAuth />
-            </ReactTooltip>
-          </div>
-        ) : null}
+        {onboardingComponent ? onboardingComponent : null}
       </div>
     );
   }

@@ -42,7 +42,7 @@ export default (
           <PrivateRoute exact path="/" component={Dashboard} />
           <PrivateRoute path="/devices/:status(pending|preauthorized|rejected)?/:filters?" component={Devices} />
           <PrivateRoute path="/releases/:artifactVersion?" component={Artifacts} artifactProgress={artifactProgress} />
-          <PrivateRoute path="/deployments/:tab?/:params?/:Id?" component={Deployments} docsVersion={docsVersion} />
+          <PrivateRoute path="/deployments/:tab?" component={Deployments} docsVersion={docsVersion} />
           <PrivateRoute path="/settings/:section?" component={Settings} />
           <PrivateRoute path="/help" component={Help} docsVersion={docsVersion} version={version} />
           <Route path="/login" component={Login} />

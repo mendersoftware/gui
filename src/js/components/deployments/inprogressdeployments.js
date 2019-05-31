@@ -1,6 +1,5 @@
 import React from 'react';
 import Time from 'react-time';
-import ReactTooltip from 'react-tooltip';
 import Pagination from 'rc-pagination';
 import _en_US from 'rc-pagination/lib/locale/en_US';
 
@@ -11,12 +10,10 @@ import TableCell from '@material-ui/core/TableCell';
 import TableBody from '@material-ui/core/TableBody';
 import TableRow from '@material-ui/core/TableRow';
 
-import HelpIcon from '@material-ui/icons/Help';
-
-import { CreateDeployment, ProgressDeployment } from '../helptips/helptooltips';
 import DeploymentStatus from './deploymentstatus';
 import Loader from '../common/loader';
 import { formatTime } from '../../helpers';
+import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 
 export default class Progress extends React.Component {
   constructor(props, context) {
@@ -44,12 +41,17 @@ export default class Progress extends React.Component {
       );
     }, this);
 
+    let onboardingComponent = null;
+    if (this.inprogressRef) {
+      const anchor = { left: 200, top: this.inprogressRef.offsetTop + this.inprogressRef.offsetHeight };
+      onboardingComponent = getOnboardingComponentFor('deployments-inprogress', { anchor });
+    }
     return (
       <div className="fadeIn">
         <div className="deploy-table-contain">
           <Loader show={this.props.loading} />
           {progressMap.length ? (
-            <div>
+            <div ref={ref => (this.inprogressRef = ref)}>
               <h3>In progress</h3>
               {progressMap.length ? (
                 <Table style={{ overflow: 'visible' }}>
@@ -62,9 +64,7 @@ export default class Progress extends React.Component {
                       <TableCell style={{ minWidth: '400px' }}>Status</TableCell>
                     </TableRow>
                   </TableHead>
-                  <TableBody style={{ cursor: 'pointer', overflow: 'visible' }}>
-                    {progressMap}
-                  </TableBody>
+                  <TableBody style={{ cursor: 'pointer', overflow: 'visible' }}>{progressMap}</TableBody>
                 </Table>
               ) : null}
             </div>
@@ -91,27 +91,7 @@ export default class Progress extends React.Component {
             </div>
           )}
 
-          {!this.props.loading && this.props.showHelptips && (!this.props.hasDeployments || this.props.progress.length) ? (
-            // if first deployment not created, or if there is one in progress, show tip
-            <div>
-              <div
-                id="onboard-12"
-                className={this.props.hasDeployments ? 'tooltip help' : 'tooltip help highlight'}
-                data-tip
-                data-for="create-deployment-tip"
-                data-event="click focus"
-              >
-                <HelpIcon />
-              </div>
-              <ReactTooltip id="create-deployment-tip" globalEventOff="click" place="bottom" type="light" effect="solid" className="react-tooltip">
-                {!this.props.hasDeployments ? (
-                  <CreateDeployment devices={this.props.devices.length} artifacts={this.props.hasArtifacts} />
-                ) : (
-                  <ProgressDeployment />
-                )}
-              </ReactTooltip>
-            </div>
-          ) : null}
+          {onboardingComponent ? onboardingComponent : null}
         </div>
       </div>
     );

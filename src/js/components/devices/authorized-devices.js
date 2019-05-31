@@ -15,10 +15,14 @@ import HelpIcon from '@material-ui/icons/Help';
 import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
 
 import { ExpandDevice } from '../helptips/helptooltips';
+import { WelcomeSnackTip } from '../helptips/onboardingtips';
+
 import Loader from '../common/loader';
+import AppActions from '../../actions/app-actions';
 import AppStore from '../../stores/app-store';
 
 import DeviceList from './devicelist';
+import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 
 export default class Authorized extends React.Component {
   constructor(props, context) {
@@ -48,6 +52,12 @@ export default class Authorized extends React.Component {
 
     if (prevProps.group !== this.props.group) {
       this.setState({ textfield: this.props.group ? decodeURIComponent(this.props.group) : 'All devices' });
+    }
+
+    if (this.props.showHelptips && !AppStore.getOnboardingComplete() && this.props.devices.length) {
+      setTimeout(() => {
+        AppActions.setSnackbar('open', 10000, '', <WelcomeSnackTip progress={2} />, () => AppActions.setSnackbar(''));
+      }, 400);
     }
   }
 
@@ -151,6 +161,9 @@ export default class Authorized extends React.Component {
       </FormControl>
     ) : null;
 
+    const anchor = { left: 200, top: 146 };
+    let onboardingComponent = getOnboardingComponentFor('devices-accepted-onboarding', { anchor });
+    onboardingComponent = getOnboardingComponentFor('deployments-past-completed', { anchor }, onboardingComponent);
     return (
       <div className="relative">
         <Loader show={loading} />
@@ -195,7 +208,7 @@ export default class Authorized extends React.Component {
             {!allCount ? <p>No devices have been authorized to connect to the Mender server yet.</p> : null}
           </div>
         )}
-
+        {onboardingComponent ? onboardingComponent : null}
         <div>
           {selectedRows.length ? (
             <div className="fixedButtons">

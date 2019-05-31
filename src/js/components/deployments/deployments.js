@@ -9,10 +9,6 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import Button from '@material-ui/core/Button';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import Divider from '@material-ui/core/Divider';
 
 import AppStore from '../../stores/app-store';
 import AppActions from '../../actions/app-actions';
@@ -25,6 +21,7 @@ import Report from './report';
 import ScheduleDialog from './scheduledialog';
 
 import { preformatWithRequestID } from '../../helpers';
+import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 
 const routes = {
   active: {
@@ -72,9 +69,6 @@ export default class Deployments extends React.Component {
     this.timer = setInterval(() => this._refreshDeployments(), this.state.refreshDeploymentsLength);
     this._refreshDeployments();
 
-    var artifact = AppStore.getDeploymentArtifact();
-    this.setState({ artifact });
-
     Promise.all([AppActions.getArtifacts(), AppActions.getAllDevices(), AppActions.getGroups()])
       .catch(err => console.log(`Error: ${err}`))
       .then(([artifacts, allDevices, groups]) => {
@@ -90,34 +84,25 @@ export default class Deployments extends React.Component {
         self.setState(state);
       });
 
-    if (this.props.params) {
-      this.setState({ reportType: this.props.params.tab });
-
-      if (this.props.params.params) {
-        var str = decodeURIComponent(this.props.params.params);
-        var obj = str.split('&');
-
-        var params = [];
-        for (var i = 0; i < obj.length; i++) {
-          var f = obj[i].split('=');
-          params[f[0]] = f[1];
-        }
-        if (params.open) {
-          if (params.id) {
-            self._getReportById(params.id);
-          } else {
-            setTimeout(() => {
-              self.setState({ scheduleDialog: true });
-            }, 400);
-          }
+    if (this.props.match) {
+      const params = new URLSearchParams(this.props.location.search);
+      if (params && params.get('open')) {
+        if (params.get('id')) {
+          self._getReportById(params.get('id'));
+        } else if (params.get('release')) {
+          const release = AppStore.getRelease(params.get('release'));
+          self.setState({ scheduleDialog: true, releaseArtifacts: release ? release.Artifacts : null });
+        } else {
+          setTimeout(() => {
+            self.setState({ scheduleDialog: true });
+          }, 400);
         }
       }
-    } else {
-      this.setState({ reportType: 'active' });
     }
+    this.setState({ reportType: this.props.match ? this.props.match.params.tab : 'active' });
 
-    const query = new URLSearchParams(this.context.router.route.location.search);
-    this.setState({ scheduleDialog: query.get('open') || false });
+    const query = new URLSearchParams(this.props.location.search);
+    this.setState({ scheduleDialog: Boolean(query.get('open')) || false });
   }
 
   componentWillUnmount() {
@@ -485,20 +470,8 @@ export default class Deployments extends React.Component {
         Close
       </Button>
     ];
-    var onboardActions = [
-      <Button
-        component={Link}
-        to="/deployments/finished"
-        variant="contained"
-        key="onboard-action-button-1"
-        color="primary"
-        onClick={() => self.setState({ onboardDialog: false })}
-      >
-        Finish
-      </Button>
-    ];
-    var dialogContent = '';
 
+    var dialogContent = '';
     if (this.state.reportType === 'active') {
       dialogContent = <Report abort={id => this._abortDeployment(id)} updated={() => this.updated()} deployment={this.state.selectedDeployment} />;
     } else {
@@ -512,20 +485,13 @@ export default class Deployments extends React.Component {
       );
     }
 
-    var physicalLink = this.state.isHosted ? (
-      <p>
-        Visit the <Link to="/help">help pages</Link> for guides on provisioning Raspberry Pi 3 and BeagleBone Black devices.
-      </p>
-    ) : (
-      <p>
-        <a href={`https://docs.mender.io/${this.state.docsVersion}getting-started/deploy-to-physical-devices`} target="_blank">
-          Follow the tutorial
-        </a>{' '}
-        in our documentation to provision Raspberry Pi 3 or BeagleBone Black devices.
-      </p>
-    );
     // tabs
-    const { tabIndex } = this.state;
+    const { past, pastCount, tabIndex } = this.state;
+
+    let onboardingComponent = null;
+    if (past.length || pastCount) {
+      onboardingComponent = getOnboardingComponentFor('deployments-past', { anchor: { left: 240, top: 50 } });
+    }
 
     return (
       <div className="relative" style={{ marginTop: '-15px' }}>
@@ -583,9 +549,9 @@ export default class Deployments extends React.Component {
               page={this.state.past_page}
               isActiveTab={this.state.currentTab === 'Finished'}
               showHelptips={this.state.showHelptips}
-              count={this.state.pastCount}
+              count={pastCount}
               loading={!this.state.doneLoading}
-              past={this.state.past}
+              past={past}
               refreshPast={(...args) => this._changePastPage(...args)}
               showReport={(deployment, type) => this._showReport(deployment, type)}
             />
@@ -609,6 +575,7 @@ export default class Deployments extends React.Component {
           hasPending={this.state.hasPending}
           hasDevices={this.state.hasDevices}
           deploymentSettings={(...args) => this._deploymentParams(...args)}
+          releaseArtifacts={this.state.releaseArtifacts}
           artifacts={this.state.collatedArtifacts}
           artifact={this.state.artifact}
           groups={this.state.groups}
@@ -616,34 +583,7 @@ export default class Deployments extends React.Component {
           onDismiss={() => this.setState({ scheduleDialog: false })}
           onScheduleSubmit={(...args) => this._onScheduleSubmit(...args)}
         />
-
-        <Dialog open={(self.state.onboardDialog && self.state.showHelptips) || false}>
-          <DialogTitle>Congratulations!</DialogTitle>
-          <DialogContent style={{ overflow: 'hidden' }}>
-            <h3>{`You've completed your first deployment - so what's next?`}</h3>
-            <List>
-              <ListItem key="physical">
-                <ListItemText primary={<h3>Try updating a physical device</h3>} secondary={physicalLink} />
-              </ListItem>
-              <Divider />
-              <ListItem key="yocto">
-                <ListItemText
-                  primary={<h3>Try building your own Yocto Project images for use with Mender</h3>}
-                  secondary={
-                    <p>
-                      See our{' '}
-                      <a href={`https://docs.mender.io/${this.state.docsVersion}artifacts/yocto-project/building`} target="_blank">
-                        documentation site
-                      </a>{' '}
-                      for a step by step guide on how to build a Yocto Project image for a device.
-                    </p>
-                  }
-                />
-              </ListItem>
-            </List>
-          </DialogContent>
-          <DialogActions>{onboardActions}</DialogActions>
-        </Dialog>
+        {onboardingComponent}
       </div>
     );
   }

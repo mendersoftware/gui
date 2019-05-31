@@ -348,7 +348,12 @@ export default class ExpandedDevice extends React.Component {
             </Button>
             {status === 'accepted' ? (
               <span className="margin-left">
-                <Button onClick={() => this.setState({ schedule: true })}>
+                <Button
+                  onClick={() => {
+                    AppActions.selectDevice(this.props.device);
+                    this.setState({ schedule: true });
+                  }}
+                >
                   <ReplayIcon className="rotated buttonLabelIcon" />
                   Create a deployment for this device
                 </Button>
