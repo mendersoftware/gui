@@ -27,36 +27,38 @@ export default class VirtualDeviceOnboarding extends React.Component {
     const { token } = self.props;
     const isHosted = AppStore.getIsHosted();
 
-    let codeToCopy = `
+    let codeToCopy = token
+      ? `
       TENANT_TOKEN='${token}'\ndocker run -it -e SERVER_URL='https://hosted.mender.io' \\\n-e TENANT_TOKEN=$TENANT_TOKEN mendersoftware/mender-client-qemu:latest
-    `;
-
-    if (!isHosted) {
-      codeToCopy = `
-        demo --client up
-      `;
-    }
+    `
+      : 'demo --client up';
 
     return (
       <div>
         {isHosted ? (
           <div>
             <b>1. Get Docker Engine</b>
-            If you do not have it already, please install Docker on your local machine.
+            <p>If you do not have it already, please install Docker on your local machine.</p>
             <p>
               For example if you are using Ubuntu follow this tutorial:{' '}
               <a href="https://docs.docker.com/engine/installation/linux/docker-ce/ubuntu/" target="_blank">
                 https://docs.docker.com/engine/installation/linux/docker-ce/ubuntu/
               </a>
             </p>
-            <b>2. Copy & paste and run the following command to start the virtual device:</b>
           </div>
         ) : (
           <div>
-            <p>To add a demo device you have to change to the folder you cloned the &apos;mender-integration&apos; repository into, before proceeding.</p>
-            <b>Copy & paste and run the following command to start the virtual device:</b>
+            <b>1. Prerequisites</b>
+            <p>
+              As you are running Mender on-premise, for these instructions we assume that you already have Docker installed and the Mender integration
+              environment up and running on your machine.
+            </p>
+            <p>To start a virtual device, change directory into the folder where you cloned Mender integration.</p>
           </div>
         )}
+        <p>
+          <b>2. Copy & paste and run the following command to start the virtual device:</b>
+        </p>
         <div className="code">
           <CopyToClipboard text={codeToCopy} onCopy={() => this.copied()}>
             <Button style={{ float: 'right', margin: '-10px 0 0 10px' }} icon={<Icon className="material-icons">content_paste</Icon>}>
