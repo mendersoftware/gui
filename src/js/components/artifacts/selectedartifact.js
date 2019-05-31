@@ -139,7 +139,7 @@ export default class SelectedArtifact extends React.Component {
           </ExpansionPanelDetails>
         </ExpansionPanel>
 
-        <Button component="a" href={artifact.url} target="_blank" disabled={!artifact.url}>
+        <Button href={artifact.url} target="_blank" disabled={!artifact.url}>
           <ExitToAppIcon style={{ transform: 'rotateZ(90deg)' }} className="buttonLabelIcon" />
           Download Artifact
         </Button>
