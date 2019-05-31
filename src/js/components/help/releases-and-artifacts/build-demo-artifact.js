@@ -73,7 +73,7 @@ export default class BuildDemoArtifact extends React.Component {
 
 
         <h3>Edit the contents</h3>
-        <p>4. Take the <span className="code">mender-demo-artifact-master</span> Artifact you just downloaded, and extract its contents and enclosed <span className="code">.tar</span> files until you can see the <i>index.html</i> file within.</p>
+        <p>4. Take the <span className="code">mender-demo-artifact</span> Artifact you just downloaded, and extract its contents and enclosed <span className="code">.tar</span> files until you can see the <i>index.html</i> file within.</p>
         <p>5. Replace the contents of <i>index.html</i> with a simple string (e.g. &quot;Hello world&quot;), so you will be able to easily see the change when the webpage content is updated.</p>
 
         <p>6. Now, you can create a new version of the demo webserver application with this modified <i>index.html</i> file. Generate a new Artifact by copying & pasting the following snippet.</p>
