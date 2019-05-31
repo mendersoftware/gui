@@ -32,7 +32,7 @@ export default class VirtualDeviceOnboarding extends React.Component {
       TENANT_TOKEN='${token}'\ndocker run -it -e SERVER_URL='https://hosted.mender.io' \\\n-e TENANT_TOKEN=$TENANT_TOKEN mendersoftware/mender-client-qemu:latest
     `;
 
-    if (isHosted) {
+    if (!isHosted) {
       codeToCopy = `
         docker run -it -e SERVER_URL='https://docker.mender.io' mendersoftware/mender-client-qemu:latest
       `;
