@@ -15,13 +15,14 @@ import InputLabel from '@material-ui/core/InputLabel';
 import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
 import CancelIcon from '@material-ui/icons/Cancel';
+import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
+import CancelOutlinedIcon from '@material-ui/icons/CancelOutlined';
 import CheckIcon from '@material-ui/icons/Check';
 import EditIcon from '@material-ui/icons/Edit';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 
 import AppActions from '../../actions/app-actions';
 import ArtifactPayload from './artifactPayload';
-import { FileSize } from './../../helpers';
 
 export default class SelectedArtifact extends React.Component {
   static contextTypes = {
@@ -74,8 +75,7 @@ export default class SelectedArtifact extends React.Component {
         fontSize: '12px',
         paddingBottom: '10px',
         display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'baseline'
+        justifyContent: 'space-between'
       },
       listItemStyle: {
         color: '#404041',
@@ -106,15 +106,17 @@ export default class SelectedArtifact extends React.Component {
             />
           </FormControl>
           <FormControl className="list-item">
-            <InputLabel htmlFor="artifact-size">Total Size</InputLabel>
+            <InputLabel htmlFor="artifact-signed">Signed</InputLabel>
             <Input
-              id="artifact-size"
-              type="text"
-              style={Object.assign({ padding: '6px 0 7px' }, styles.listItemStyle)}
+              id="artifact-signed"
               disabled={true}
-              inputComponent={FileSize}
-              inputProps={{ fileSize: artifact.size }}
-              value={artifact.size}
+              startAdornment={
+                <InputAdornment position="start">
+                  {artifact.signed ? <CheckCircleOutlineIcon className="green" /> : <CancelOutlinedIcon className="red" />}
+                </InputAdornment>
+              }
+              style={styles.listItemStyle}
+              type="text"
             />
           </FormControl>
         </div>

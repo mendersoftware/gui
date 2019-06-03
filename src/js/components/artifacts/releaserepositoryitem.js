@@ -9,9 +9,8 @@ import IconButton from '@material-ui/core/IconButton';
 
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
-import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 
-import { formatTime } from '../../helpers';
+import { formatTime, FileSize } from '../../helpers';
 import AppStore from '../../stores/app-store';
 import SelectedArtifact from './selectedartifact';
 
@@ -42,7 +41,7 @@ export default class ReleaseRepositoryItem extends React.PureComponent {
             <div style={columnStyle}>{compatible}</div>
             <Time value={formatTime(artifact.modified)} format="YYYY-MM-DD HH:mm" style={columnStyle} />
             <div style={Object.assign({}, columnStyle, { maxWidth: '100vw' })}>{artifactType}</div>
-            <div style={columnStyle}>{artifact.signed ? <CheckCircleOutlineIcon className="green" /> : '-'}</div>
+            <FileSize fileSize={artifact.size} style={columnStyle} />
             <IconButton className="expandButton">{expanded ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}</IconButton>
           </ExpansionPanelSummary>
           <ExpansionPanelDetails>

@@ -25,7 +25,7 @@ const columnHeaders = [
   { title: 'Device type compatibility', name: 'device_types', sortable: false },
   { title: 'Last modified', name: 'modified', sortable: true },
   { title: 'Type', name: 'type', sortable: false },
-  { title: 'Signed', name: 'signed', sortable: true }
+  { title: 'Size', name: 'size', sortable: true }
 ];
 
 export default class ReleaseRepository extends React.Component {
