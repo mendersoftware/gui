@@ -91,6 +91,7 @@ const AppActions = {
         // have to call inventory each time - accepted list can change order so must refresh inventory too
         return AppActions.getDeviceById(device.id).then(inventory => {
           device.attributes = inventory.attributes;
+          device.updated_ts = inventory.updated_ts;
           return Promise.resolve(device);
         });
       })
