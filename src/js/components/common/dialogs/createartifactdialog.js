@@ -163,6 +163,7 @@ export default class CreateArtifactDialog extends React.Component {
         <DialogContent className="onboard-dialog">{steps[progress]}</DialogContent>
         <DialogActions>
           <Button onClick={onCancel}>Cancel</Button>
+          <div style={{ flexGrow: 1 }} />
           {progress > 1 ? <Button onClick={() => self.onBackClick()}>Back</Button> : null}
           {progress < 2 ? (
             <Button variant="contained" onClick={() => self.setState({ progress: progress + 1 })}>
