@@ -96,6 +96,7 @@ export default class DeviceConnectionDialog extends React.Component {
         <DialogContent className="onboard-dialog">{content}</DialogContent>
         <DialogActions>
           <Button onClick={onCancel}>Cancel</Button>
+          <div style={{ flexGrow: 1 }} />
           {onDevice || virtualDevice ? (
             <div>
               <Button onClick={() => self.onBackClick()}>Back</Button>

@@ -122,6 +122,7 @@ export default class ScheduleDialog extends React.Component {
           <Button key="schedule-action-button-1" onClick={onDismiss} style={{ marginRight: '10px', display: 'inline-block' }}>
             Cancel
           </Button>
+          <div style={{ flexGrow: 1 }} />
           <Button
             key="schedule-action-button-2"
             onClick={() => self.onScheduleSubmit(self.state.group, tmpDevices, self.state.artifact)}

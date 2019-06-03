@@ -298,7 +298,7 @@ export const getFormattedSize = bytes => {
 
 export class FileSize extends React.PureComponent {
   render() {
-    return <span>{getFormattedSize(this.props.fileSize)}</span>;
+    return <div style={this.props.style}>{getFormattedSize(this.props.fileSize)}</div>;
   }
 }
 

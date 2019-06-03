@@ -10,7 +10,7 @@ import AppActions from '../../../actions/app-actions';
 
 export default class ConfirmDismissHelptips extends React.Component {
   onClose() {
-    AppActions.setShowOnboardingTips(false);
+    AppActions.setShowOnboardingHelp(false);
     AppActions.setShowDismissOnboardingTipsDialog(false);
   }
   render() {
@@ -26,6 +26,7 @@ export default class ConfirmDismissHelptips extends React.Component {
         </DialogContent>
         <DialogActions>
           <Button onClick={() => AppActions.setShowDismissOnboardingTipsDialog(false)}>Cancel</Button>
+          <div style={{ flexGrow: 1 }} />
           <Button variant="contained" color="secondary" onClick={() => this.onClose()}>
             Yes, hide the help
           </Button>
