@@ -106,7 +106,6 @@ export default class ReleaseRepository extends React.Component {
     const self = this;
     const { artifacts, loading, release, removeArtifact, showHelptips } = self.props;
     const { selectedArtifact, sortDown, sortCol } = self.state;
-    const columnWidth = `${100 / columnHeaders.length}%`;
     const items = artifacts.sort(customSort(sortDown, sortCol)).map((pkg, index) => {
       const expanded = selectedArtifact.id === pkg.id;
       return (
@@ -123,7 +122,6 @@ export default class ReleaseRepository extends React.Component {
           removeArtifact={removeArtifact}
           release={release}
           ref={ref => (this.repoItemAnchor = ref)}
-          width={columnWidth}
         />
       );
     });
@@ -235,16 +233,9 @@ export default class ReleaseRepository extends React.Component {
         <div style={{ position: 'relative', marginTop: '10px' }}>
           {items.length ? (
             <div>
-              <div className="flexbox inventoryTable">
+              <div className="release-repo-item repo-item repo-header">
                 {columnHeaders.map(item => (
-                  <Tooltip
-                    key={item.name}
-                    className="columnHeader"
-                    title={item.title}
-                    placement="top-start"
-                    style={{ width: columnWidth }}
-                    onClick={() => self._sortColumn(item)}
-                  >
+                  <Tooltip key={item.name} className="columnHeader" title={item.title} placement="top-start" onClick={() => self._sortColumn(item)}>
                     <div>
                       {item.title}
                       {item.sortable ? (
