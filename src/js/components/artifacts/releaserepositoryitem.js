@@ -6,6 +6,7 @@ import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import IconButton from '@material-ui/core/IconButton';
+import Tooltip from '@material-ui/core/Tooltip';
 
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
@@ -38,7 +39,11 @@ export default class ReleaseRepositoryItem extends React.PureComponent {
           style={{ width: '100%', border: '1px solid', borderColor: '#e0e0e0' }}
         >
           <ExpansionPanelSummary style={{ padding: '0 12px' }}>
-            <div style={columnStyle}>{compatible}</div>
+            <Tooltip title={compatible} placement="top-start">
+              <div className="nowrap text-overflow" style={columnStyle}>
+                {compatible}
+              </div>
+            </Tooltip>
             <Time value={formatTime(artifact.modified)} format="YYYY-MM-DD HH:mm" style={columnStyle} />
             <div style={Object.assign({}, columnStyle, { maxWidth: '100vw' })}>{artifactType}</div>
             <FileSize fileSize={artifact.size} style={columnStyle} />
