@@ -114,7 +114,7 @@ export default class Artifacts extends React.Component {
     const self = this;
     const { artifact, doneLoading, selectedRelease, showHelptips, releases, remove } = self.state;
     const { artifactProgress } = self.props;
-    const currentSelectedRelease = releases.find(item => item.Name === selectedRelease.Name);
+    const currentSelectedRelease = releases.find(item => selectedRelease && item.Name === selectedRelease.Name);
     return (
       <div style={{ height: '100%' }}>
         <div className="flexbox" style={{ height: '100%' }}>
