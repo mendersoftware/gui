@@ -11,8 +11,16 @@ import Icon from '@material-ui/core/Icon';
 
 import AppActions from '../../../actions/app-actions';
 import AppStore from '../../../stores/app-store';
-import { getReachableDeviceAddress } from '../../../helpers';
+import { detectOsIdentifier, getReachableDeviceAddress } from '../../../helpers';
 import Loader from '../loader';
+
+// we don't support windows yet, so we'll point them to the linux file instead
+const downloadFolder = {
+  Windows: 'linux',
+  MacOs: 'darwin',
+  Unix: 'linux',
+  Linux: 'linux'
+};
 
 export default class CreateArtifactDialog extends React.Component {
   constructor(props, context) {
@@ -83,7 +91,11 @@ export default class CreateArtifactDialog extends React.Component {
           <ol>
             <li>
               Download both{' '}
-              <a href="https://d1b0l86ne08fsf.cloudfront.net/mender-artifact/master/mender-artifact" download target="_blank">
+              <a
+                href={`https://d1b0l86ne08fsf.cloudfront.net/mender-artifact/master/${downloadFolder[detectOsIdentifier()]}/mender-artifact`}
+                download
+                target="_blank"
+              >
                 mender-artifact
               </a>{' '}
               and{' '}

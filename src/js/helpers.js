@@ -348,6 +348,16 @@ export const getReachableDeviceAddress = devices => {
     .then(responses => {
       const reachableAddress = responses.find(address => address);
       targetUrl = reachableAddress ? reachableAddress : targetUrl;
+      if (!reachableAddress && (navigator.appVersion.indexOf('Win') != -1 || navigator.appVersion.indexOf('Mac') != -1)) {
+        targetUrl = 'http://localhost:3000';
+      }
       return Promise.resolve(targetUrl);
     });
+};
+
+export const detectOsIdentifier = () => {
+  if (navigator.appVersion.indexOf('Win') != -1) return 'Windows';
+  if (navigator.appVersion.indexOf('Mac') != -1) return 'MacOs';
+  if (navigator.appVersion.indexOf('X11') != -1) return 'Unix';
+  return 'Linux';
 };
