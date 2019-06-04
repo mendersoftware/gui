@@ -36,11 +36,11 @@ export default class CreateArtifactDialog extends React.Component {
   componentDidUpdate(prevProps) {
     const self = this;
     if (self.state.loading && self.props.open && self.props.open !== prevProps.open) {
-    AppActions.getDevicesByStatus('accepted')
-      .then(getReachableDeviceAddress)
-      .catch(e => console.log(e))
-      .then(targetUrl => self.setState({ targetUrl, loading: false }));
-  }
+      AppActions.getDevicesByStatus('accepted')
+        .then(getReachableDeviceAddress)
+        .catch(e => console.log(e))
+        .then(targetUrl => self.setState({ targetUrl, loading: false }));
+    }
   }
 
   onBackClick() {
@@ -68,19 +68,21 @@ export default class CreateArtifactDialog extends React.Component {
 
     const artifactGenerator = 'single-file-artifact-gen';
     const artifactName = 'demo-webserver-updated';
+    const binaryLocation = detectOsIdentifier() === 'MacOs' ? 'local/' : '';
     const chmodCode = `
     chmod +x mender-artifact
     chmod +x ${artifactGenerator}
+    mv mender-artifact ${artifactGenerator} /usr/${binaryLocation}bin/
     `;
 
     const artifactGenCode = `
-    ARTIFACT_NAME="${artifactName}"
-    DEVICE_TYPE="${deviceType}"
-    OUTPUT_PATH="${artifactName}.mender"
-    DEST_DIR="/var/www/localhost/htdocs/"
-    FILE_NAME="index.html"
-    /${artifactGenerator} -n \${ARTIFACT_NAME}
-    -t \${DEVICE_TYPE} -d {DEST_DIR} -o \${OUTPUT_PATH}
+    ARTIFACT_NAME="${artifactName}" \
+    DEVICE_TYPE="${deviceType}" \
+    OUTPUT_PATH="${artifactName}.mender" \
+    DEST_DIR="/var/www/localhost/htdocs/" \
+    FILE_NAME="index.html" \
+    ${artifactGenerator} -n \${ARTIFACT_NAME} \
+    -t \${DEVICE_TYPE} -d \${DEST_DIR} -o \${OUTPUT_PATH} \
     \${FILE_NAME}
     `;
 
