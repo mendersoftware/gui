@@ -94,6 +94,13 @@ export default class ReleaseRepository extends React.Component {
       });
   }
 
+  onCreateDeploymentFrom(release) {
+    if (!AppStore.getOnboardingComplete() && getOnboardingStepCompleted('upload-new-artifact-tip')) {
+      advanceOnboarding('artifact-modified-onboarding');
+    }
+    AppActions.setDeploymentRelease(release);
+  }
+
   _sortColumn(col) {
     if (!col.sortable) {
       return;
@@ -248,12 +255,13 @@ export default class ReleaseRepository extends React.Component {
               </div>
               {items}
               <Button
+                color="primary"
                 variant="contained"
                 buttonRef={ref => (this.creationRef = ref)}
                 component={ForwardingLink}
                 to={`/deployments?open=true&release=${release.Name}`}
                 style={{ marginLeft: 20 }}
-                onClick={() => AppActions.setDeploymentRelease(release)}
+                onClick={() => self.onCreateDeploymentFrom(release)}
               >
                 Create deployment with this release
               </Button>
