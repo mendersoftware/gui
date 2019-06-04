@@ -56,7 +56,7 @@ export default class BuildDemoArtifact extends React.Component {
 
         <p>
           1.{' '}
-          <a href={`https://d1b0l86ne08fsf.cloudfront.net/mender-artifact/3.0.0/${downloadFolder[detectOsIdentifier()]}/mender-artifact`} target="_blank">
+          <a href={`https://d1b0l86ne08fsf.cloudfront.net/mender-artifact/master/${downloadFolder[detectOsIdentifier()]}/mender-artifact`} target="_blank">
             Download the mender-artifact tool here
           </a>
           , extract it then make it executable by running:
