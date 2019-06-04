@@ -25,12 +25,14 @@ export default class CreateArtifactDialog extends React.Component {
     };
   }
 
-  componentDidMount() {
+  componentDidUpdate(prevProps) {
     const self = this;
+    if (self.state.loading && self.props.open && self.props.open !== prevProps.open) {
     AppActions.getDevicesByStatus('accepted')
       .then(getReachableDeviceAddress)
       .catch(e => console.log(e))
       .then(targetUrl => self.setState({ targetUrl, loading: false }));
+  }
   }
 
   onBackClick() {
