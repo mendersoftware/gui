@@ -95,7 +95,7 @@ export default class CreateArtifactDialog extends React.Component {
                 {artifactGenerator}
               </a>
               <div>
-                and make them executable by running:
+                cd to the folder you downloaded them to and make them executable by running:
                 <div className="code">
                   <CopyToClipboard text={chmodCode} onCopy={() => self.copied(1)}>
                     <Button style={{ float: 'right', margin: '-10px 0 0 10px' }} icon={<Icon className="material-icons">content_paste</Icon>}>
@@ -119,10 +119,6 @@ export default class CreateArtifactDialog extends React.Component {
                   page you saw previously.
                 </span>
               )}
-            </li>
-            <li>
-              Extract the <i>demo_webserver.mender</i> file you just downloaded, and cd to the extracted folder so you can see the <i>index.html</i> file
-              within.
             </li>
             <li>
               Replace the contents of the <i>index.html</i> with a string like &apos;Hello world&apos;, so you&apos;ll be able to easily see when the page has
