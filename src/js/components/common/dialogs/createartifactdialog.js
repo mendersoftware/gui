@@ -11,8 +11,16 @@ import Icon from '@material-ui/core/Icon';
 
 import AppActions from '../../../actions/app-actions';
 import AppStore from '../../../stores/app-store';
-import { getReachableDeviceAddress } from '../../../helpers';
+import { detectOsIdentifier, getReachableDeviceAddress } from '../../../helpers';
 import Loader from '../loader';
+
+// we don't support windows yet, so we'll point them to the linux file instead
+const downloadFolder = {
+  Windows: 'linux',
+  MacOs: 'darwin',
+  Unix: 'linux',
+  Linux: 'linux'
+};
 
 export default class CreateArtifactDialog extends React.Component {
   constructor(props, context) {
@@ -25,12 +33,14 @@ export default class CreateArtifactDialog extends React.Component {
     };
   }
 
-  componentDidMount() {
+  componentDidUpdate(prevProps) {
     const self = this;
-    AppActions.getDevicesByStatus('accepted')
-      .then(getReachableDeviceAddress)
-      .catch(e => console.log(e))
-      .then(targetUrl => self.setState({ targetUrl, loading: false }));
+    if (self.state.loading && self.props.open && self.props.open !== prevProps.open) {
+      AppActions.getDevicesByStatus('accepted')
+        .then(getReachableDeviceAddress)
+        .catch(e => console.log(e))
+        .then(targetUrl => self.setState({ targetUrl, loading: false }));
+    }
   }
 
   onBackClick() {
@@ -58,19 +68,21 @@ export default class CreateArtifactDialog extends React.Component {
 
     const artifactGenerator = 'single-file-artifact-gen';
     const artifactName = 'demo-webserver-updated';
+    const binaryLocation = detectOsIdentifier() === 'MacOs' ? 'local/' : '';
     const chmodCode = `
     chmod +x mender-artifact
     chmod +x ${artifactGenerator}
+    mv mender-artifact ${artifactGenerator} /usr/${binaryLocation}bin/
     `;
 
     const artifactGenCode = `
-    ARTIFACT_NAME="${artifactName}"
-    DEVICE_TYPE="${deviceType}"
-    OUTPUT_PATH="${artifactName}.mender"
-    DEST_DIR="/var/www/localhost/htdocs/"
-    FILE_NAME="index.html"
-    /${artifactGenerator} -n \${ARTIFACT_NAME}
-    -t \${DEVICE_TYPE} -d {DEST_DIR} -o \${OUTPUT_PATH}
+    ARTIFACT_NAME="${artifactName}" \
+    DEVICE_TYPE="${deviceType}" \
+    OUTPUT_PATH="${artifactName}.mender" \
+    DEST_DIR="/var/www/localhost/htdocs/" \
+    FILE_NAME="index.html" \
+    ${artifactGenerator} -n \${ARTIFACT_NAME} \
+    -t \${DEVICE_TYPE} -d \${DEST_DIR} -o \${OUTPUT_PATH} \
     \${FILE_NAME}
     `;
 
@@ -81,7 +93,11 @@ export default class CreateArtifactDialog extends React.Component {
           <ol>
             <li>
               Download both{' '}
-              <a href="https://d1b0l86ne08fsf.cloudfront.net/mender-artifact/master/mender-artifact" download target="_blank">
+              <a
+                href={`https://d1b0l86ne08fsf.cloudfront.net/mender-artifact/master/${downloadFolder[detectOsIdentifier()]}/mender-artifact`}
+                download
+                target="_blank"
+              >
                 mender-artifact
               </a>{' '}
               and{' '}
@@ -93,7 +109,7 @@ export default class CreateArtifactDialog extends React.Component {
                 {artifactGenerator}
               </a>
               <div>
-                and make them executable by running:
+                cd to the folder you downloaded them to and make them executable by running:
                 <div className="code">
                   <CopyToClipboard text={chmodCode} onCopy={() => self.copied(1)}>
                     <Button style={{ float: 'right', margin: '-10px 0 0 10px' }} icon={<Icon className="material-icons">content_paste</Icon>}>
@@ -117,10 +133,6 @@ export default class CreateArtifactDialog extends React.Component {
                   page you saw previously.
                 </span>
               )}
-            </li>
-            <li>
-              Extract the <i>demo_webserver.mender</i> file you just downloaded, and cd to the extracted folder so you can see the <i>index.html</i> file
-              within.
             </li>
             <li>
               Replace the contents of the <i>index.html</i> with a string like &apos;Hello world&apos;, so you&apos;ll be able to easily see when the page has
