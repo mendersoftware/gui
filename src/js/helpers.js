@@ -339,10 +339,20 @@ export const probeAllAddresses = addresses => {
 
 export const getReachableDeviceAddress = devices => {
   let targetUrl = '';
+  const defaultVitualizedIp = '10.0.2.15';
   return AppActions.getDevicesWithInventory(devices)
     .then(devices => {
       const addresses = collectAddressesFrom(devices);
-      targetUrl = `http://${addresses.find(item => !item.includes(':'))}`;
+      const address = addresses.reduce((accu, item) => {
+        if (item.includes(':')) {
+          if (accu && item === defaultVitualizedIp) {
+            return accu;
+          }
+          return item;
+        }
+        return accu;
+      }, null);
+      targetUrl = `http://${address}`;
       return probeAllAddresses(addresses);
     })
     .then(responses => {
