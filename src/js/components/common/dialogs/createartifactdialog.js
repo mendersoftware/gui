@@ -76,11 +76,11 @@ export default class CreateArtifactDialog extends React.Component {
     `;
 
     const artifactGenCode = `
-    ARTIFACT_NAME="${artifactName}" \
-    DEVICE_TYPE="${deviceType}" \
-    OUTPUT_PATH="${artifactName}.mender" \
-    DEST_DIR="/var/www/localhost/htdocs/" \
-    FILE_NAME="index.html" \
+    ARTIFACT_NAME="${artifactName}"; \
+    DEVICE_TYPE="${deviceType}"; \
+    OUTPUT_PATH="${artifactName}.mender"; \
+    DEST_DIR="/var/www/localhost/htdocs/"; \
+    FILE_NAME="index.html"; \
     ${artifactGenerator} -n \${ARTIFACT_NAME} \
     -t \${DEVICE_TYPE} -d \${DEST_DIR} -o \${OUTPUT_PATH} \
     \${FILE_NAME}
