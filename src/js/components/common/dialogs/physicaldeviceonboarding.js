@@ -46,13 +46,32 @@ export default class PhysicalDeviceOnboarding extends React.Component {
 
   render() {
     const self = this;
+    var token = (this.props.org || {}).tenant_token;
 
-    let codeToCopy = `wget https://d1b0l86ne08fsf.cloudfront.net/mender/master/mender-master-1_armhf.deb
-    dpkg -i mender-master-1_armhf.deb
-    cp /etc/mender/mender.conf.demo /etc/mender/mender.conf
-    echo "device_type=${self.state.selection}" > /var/lib/mender/device_type
-    systemctl enable mender && systemctl start mender
+    /* TODO: Replace the hardcoded master with the mender-client version */
+    let codeToCopy = `wget https://d1b0l86ne08fsf.cloudfront.net/master/dist-packages/debian/armhf/mender-client_master-1_armhf.deb
+    sudo dpkg -i mender-client_master-1_armhf.deb
+    sudo cp /etc/mender/mender.conf.demo /etc/mender/mender.conf
     `;
+    if (token) {
+      codeToCopy = codeToCopy + `TENANT_TOKEN="'${token}'"
+      sudo sed -i "s/Paste your Hosted Mender token here/$TENANT_TOKEN/" /etc/mender/mender.conf
+    `;
+    }
+    /* TODO: Figure out the user IP address automatically or extend the instructions to an extra step */
+    else {
+      codeToCopy = codeToCopy + `sudo sed /etc/mender/mender.conf -i -e "/Paste your Hosted Mender token here/d;s/hosted.mender.io/docker.mender.io/;1 a \\ \\ \\"ServerCertificate\\": \\"/etc/mender/server.crt\\","
+      sudo wget -q -O /etc/mender/server.crt https://raw.githubusercontent.com/mendersoftware/meta-mender/master/meta-mender-demo/recipes-mender/mender/files/server.crt
+      DOCKER_HOST_IP="X.X.X.X"
+      grep "\\ss3.docker.mender.io" /etc/hosts >/dev/null 2>&1 || echo "$DOCKER_HOST_IP s3.docker.mender.io # Added by mender" | sudo tee -a /etc/hosts > /dev/null
+      grep "\\sdocker.mender.io" /etc/hosts >/dev/null 2>&1 || echo "$DOCKER_HOST_IP docker.mender.io # Added by mender" | sudo tee -a /etc/hosts > /dev/null
+    `;
+    }
+    codeToCopy = codeToCopy + `sudo mkdir -p /var/lib/mender
+    echo "device_type=${self.state.selection}" | sudo tee /var/lib/mender/device_type
+    sudo systemctl enable mender && sudo systemctl restart mender
+    `;
+
     const types = [
       {
         title: 'BeagleBone',
