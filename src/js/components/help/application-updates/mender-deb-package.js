@@ -30,9 +30,10 @@ export default class DebPackage extends React.Component {
 
     var tenantToken = (this.props.org || {}).tenant_token;
 
-    var dpkgCode = 'wget https://d1b0l86ne08fsf.cloudfront.net/2.0.0/dist-packages/debian/armhf/mender-client_2.0.0-1_armhf.deb \nsudo dpkg -i mender-client_2.0.0-1_armhf.deb';
+    /* TODO: Replace the hardcoded master with the mender-client version */
+    var dpkgCode = 'wget https://d1b0l86ne08fsf.cloudfront.net/master/dist-packages/debian/armhf/mender-client_master-1_armhf.deb \nsudo dpkg -i mender-client_master-1_armhf.deb';
     var cpCode = 'sudo cp /etc/mender/mender.conf.demo /etc/mender/mender.conf';
-    var echoCode = 'sudo mkdir -p /var/lib/mender \necho "device_type=generic-armv6" > /var/lib/mender/device_type';
+    var echoCode = 'sudo mkdir -p /var/lib/mender \necho "device_type=generic-armv6" | sudo tee /var/lib/mender/device_type';
     var startCode = 'sudo systemctl enable mender && sudo systemctl start mender';
     var tenantCode = 'TENANT_TOKEN="'+ tenantToken +'" \nsudo sed -i "s/'+ tenantToken +'/$TENANT_TOKEN/" /etc/mender/mender.conf';
 

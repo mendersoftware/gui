@@ -85,7 +85,7 @@ export default class DeviceConnectionDialog extends React.Component {
     );
 
     if (onDevice) {
-      content = <PhysicalDeviceOnboarding progress={progress} />;
+      content = <PhysicalDeviceOnboarding progress={progress} token={token} />;
     } else if (virtualDevice) {
       content = <VirtualDeviceOnboarding token={token} />;
     }
