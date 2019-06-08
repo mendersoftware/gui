@@ -119,7 +119,7 @@ export default class PhysicalDeviceOnboarding extends React.Component {
             className="react-tooltip"
             style={{ maxWidth: 300 }}
           >
-            If you don&apos;t see your exact device on the list, choose <i>generic-x86_x64</i> to continue the tutorial for now.
+            If you don&apos;t see your exact device on the list, choose <i>Generic ARMv6 or newer</i> or <i>Generic x86</i> to continue the tutorial for now.
           </ReactTooltip>
         </div>
       ),
