@@ -371,3 +371,32 @@ export const detectOsIdentifier = () => {
   if (navigator.appVersion.indexOf('X11') != -1) return 'Unix';
   return 'Linux';
 };
+
+export const findLocalIpAddress = () => {
+  const pc = new RTCPeerConnection({ iceServers: [] });
+  const noop = () => {};
+  const ipRegex = /([0-9]{1,3}(\.[0-9]{1,3}){3}|[a-f0-9]{1,4}(:[a-f0-9]{1,4}){7})/g;
+  return new Promise((resolve, reject) => {
+    try {
+      pc.createDataChannel(''); //create a bogus data channel
+      pc.createOffer(sdp => pc.setLocalDescription(sdp, noop, noop), noop); // create offer and set local description
+      pc.onicecandidate = ice => {
+        //listen for candidate events
+        if (ice && ice.candidate) {
+          const {address, candidate} = ice.candidate;
+          if (address && address.match(ipRegex)) {
+            return resolve(address);
+          }
+          if (candidate && candidate.match(ipRegex)) {
+            const matches = candidate.match(ipRegex);
+            if (matches.length) {
+              return resolve(matches[0]);
+            }
+          }
+        }
+      };
+    } catch (ex) {
+      return reject(Error(ex));
+    }
+  });
+};
