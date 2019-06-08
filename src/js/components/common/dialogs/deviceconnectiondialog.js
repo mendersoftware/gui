@@ -13,6 +13,7 @@ import AppActions from '../../../actions/app-actions';
 
 import PhysicalDeviceOnboarding from './physicaldeviceonboarding';
 import VirtualDeviceOnboarding from './virtualdeviceonboarding';
+import AppStore from '../../../stores/app-store';
 
 export default class DeviceConnectionDialog extends React.Component {
   constructor(props, context) {
@@ -101,7 +102,11 @@ export default class DeviceConnectionDialog extends React.Component {
             <div>
               <Button onClick={() => self.onBackClick()}>Back</Button>
               {progress < 2 ? (
-                <Button variant="contained" onClick={() => self.setState({ progress: progress + 1 })}>
+                <Button
+                  variant="contained"
+                  disabled={!(virtualDevice || (onDevice && AppStore.getOnboardingDeviceType()))}
+                  onClick={() => self.setState({ progress: progress + 1 })}
+                >
                   Next
                 </Button>
               ) : (

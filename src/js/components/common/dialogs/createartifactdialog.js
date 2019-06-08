@@ -64,7 +64,7 @@ export default class CreateArtifactDialog extends React.Component {
     const self = this;
     const { open, onCancel } = self.props;
     const { copied, loading, progress, targetUrl } = self.state;
-    const deviceType = AppStore.getOnboardingDeviceType();
+    const deviceType = AppStore.getOnboardingDeviceType() || 'qemux86-64';
     const currentLocation = encodeURIComponent(window.location);
 
     const artifactGenerator = 'single-file-artifact-gen';
