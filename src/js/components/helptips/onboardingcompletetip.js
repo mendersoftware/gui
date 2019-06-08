@@ -51,7 +51,11 @@ export default class OnboardingCompleteTip extends React.Component {
           <p>
             Your device is now running the updated version of the software. At
             <div className="flexbox centered">
-              {loading ? <Loader show={loading} /> : <Button className="button" variant="contained" href={url} target="_blank">{`Go to ${url}`}</Button>}
+              {loading ? (
+                <Loader show={loading} />
+              ) : (
+                <Button className="button" variant="contained" href={`${url}/index.html?${currentLocation}`} target="_blank">{`Go to ${url}`}</Button>
+              )}
             </div>
             you should see &apos;hello world&apos; in place of the webpage you saw previously.
           </p>

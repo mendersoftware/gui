@@ -65,6 +65,7 @@ export default class CreateArtifactDialog extends React.Component {
     const { open, onCancel } = self.props;
     const { copied, loading, progress, targetUrl } = self.state;
     const deviceType = AppStore.getOnboardingDeviceType();
+    const currentLocation = encodeURIComponent(window.location);
 
     const artifactGenerator = 'single-file-artifact-gen';
     const artifactName = 'demo-webserver-updated';
@@ -127,7 +128,7 @@ export default class CreateArtifactDialog extends React.Component {
               ) : (
                 <span>
                   Now save the{' '}
-                  <a href={`${targetUrl}/index.html`} download target="_blank">
+                  <a href={`${targetUrl}/index.html?${currentLocation}`} download target="_blank">
                     index.html
                   </a>{' '}
                   page you saw previously.
