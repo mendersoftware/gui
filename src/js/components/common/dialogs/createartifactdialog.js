@@ -64,7 +64,8 @@ export default class CreateArtifactDialog extends React.Component {
     const self = this;
     const { open, onCancel } = self.props;
     const { copied, loading, progress, targetUrl } = self.state;
-    const deviceType = AppStore.getOnboardingDeviceType();
+    const deviceType = AppStore.getOnboardingDeviceType() || 'qemux86-64';
+    const currentLocation = encodeURIComponent(window.location);
 
     const artifactGenerator = 'single-file-artifact-gen';
     const artifactName = 'demo-webserver-updated';
@@ -76,11 +77,11 @@ export default class CreateArtifactDialog extends React.Component {
     `;
 
     const artifactGenCode = `
-    ARTIFACT_NAME="${artifactName}" \
-    DEVICE_TYPE="${deviceType}" \
-    OUTPUT_PATH="${artifactName}.mender" \
-    DEST_DIR="/var/www/localhost/htdocs/" \
-    FILE_NAME="index.html" \
+    ARTIFACT_NAME="${artifactName}"; \
+    DEVICE_TYPE="${deviceType}"; \
+    OUTPUT_PATH="${artifactName}.mender"; \
+    DEST_DIR="/var/www/localhost/htdocs/"; \
+    FILE_NAME="index.html"; \
     ${artifactGenerator} -n \${ARTIFACT_NAME} \
     -t \${DEVICE_TYPE} -d \${DEST_DIR} -o \${OUTPUT_PATH} \
     \${FILE_NAME}
@@ -127,7 +128,7 @@ export default class CreateArtifactDialog extends React.Component {
               ) : (
                 <span>
                   Now save the{' '}
-                  <a href={`${targetUrl}/index.html`} download target="_blank">
+                  <a href={`${targetUrl}/index.html?${currentLocation}`} download target="_blank">
                     index.html
                   </a>{' '}
                   page you saw previously.
