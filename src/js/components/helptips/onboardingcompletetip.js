@@ -33,7 +33,6 @@ export default class OnboardingCompleteTip extends React.Component {
   render() {
     const { loading, targetUrl } = this.state;
     const url = targetUrl ? targetUrl : this.props.targetUrl;
-    const currentLocation = encodeURIComponent(window.location);
 
     return (
       <div className="onboard-tip" style={{ left: '50%', top: '50%' }}>
@@ -55,7 +54,12 @@ export default class OnboardingCompleteTip extends React.Component {
               {loading ? (
                 <Loader show={loading} />
               ) : (
-                <Button className="button" variant="contained" href={`${url}/index.html?${currentLocation}`} target="_blank">{`Go to ${url}`}</Button>
+                <Button
+                  className="button"
+                  variant="contained"
+                  href={`${url}/index.html?source=${encodeURIComponent(window.location)}`}
+                  target="_blank"
+                >{`Go to ${url}`}</Button>
               )}
             </div>
             you should see &apos;hello world&apos; in place of the webpage you saw previously.
