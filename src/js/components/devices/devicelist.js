@@ -106,7 +106,7 @@ export default class DeviceList extends React.Component {
               {...self.props}
               device={device}
               expanded={expandedDeviceId === device.id}
-              key={`device-${index}`}
+              key={device.id}
               selectable={!!onSelect}
               selected={self._isSelected(index)}
               onClick={event => self._expandRow(event, index)}

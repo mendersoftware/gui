@@ -126,24 +126,36 @@ export default class ProgressDeviceList extends React.Component {
         );
       }, this);
     }
-
+    const headerStyle = { position: 'sticky', top: 0, background: 'white', zIndex: 1 };
     return deviceList.length ? (
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell tooltip={(this.props.globalSettings || {}).id_attribute || 'Device ID'}>
-              {(this.props.globalSettings || {}).id_attribute || 'Device ID'}
-            </TableCell>
-            <TableCell tooltip="Device type">Device type</TableCell>
-            <TableCell tooltip="Current software">Current software</TableCell>
-            <TableCell tooltip="Started">Started</TableCell>
-            <TableCell tooltip="Finished">Finished</TableCell>
-            <TableCell tooltip="Deployment status">Deployment status</TableCell>
-            <TableCell tooltip="" />
-          </TableRow>
-        </TableHead>
-        <TableBody>{deviceList}</TableBody>
-      </Table>
+      <div style={{ maxHeight: '40vh', overflowX: 'auto' }}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell style={headerStyle} tooltip={(this.props.globalSettings || {}).id_attribute || 'Device ID'}>
+                {(this.props.globalSettings || {}).id_attribute || 'Device ID'}
+              </TableCell>
+              <TableCell style={headerStyle} tooltip="Device type">
+                Device type
+              </TableCell>
+              <TableCell style={headerStyle} tooltip="Current software">
+                Current software
+              </TableCell>
+              <TableCell style={headerStyle} tooltip="Started">
+                Started
+              </TableCell>
+              <TableCell style={headerStyle} tooltip="Finished">
+                Finished
+              </TableCell>
+              <TableCell style={headerStyle} tooltip="Deployment status">
+                Deployment status
+              </TableCell>
+              <TableCell style={headerStyle} tooltip="" />
+            </TableRow>
+          </TableHead>
+          <TableBody>{deviceList}</TableBody>
+        </Table>
+      </div>
     ) : null;
   }
 }

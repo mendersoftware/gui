@@ -14,7 +14,7 @@ import AppActions from '../../actions/app-actions';
 import AppStore from '../../stores/app-store';
 import ExpandedDevice from './expanded-device';
 
-export default class DeviceListItem extends React.PureComponent {
+export default class DeviceListItem extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
@@ -71,7 +71,7 @@ export default class DeviceListItem extends React.PureComponent {
           <IconButton className="expandButton">{expanded ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}</IconButton>
         </ExpansionPanelSummary>
         <ExpansionPanelDetails>
-          {expanded ? (
+          {expanded && self.state.expandedDevice && self.state.expandedDevice.id === device.id ? (
             <ExpandedDevice
               {...self.props}
               className="expandedDevice"
