@@ -11,9 +11,8 @@ stages:
   - publish
 
 before_script:
-  - docker info
   - git clone git://github.com/mendersoftware/mendertesting
-  - . mendertesting/check_commits.sh
+  - mendertesting/check_commits.sh
   - export DOCKER_REPOSITORY="mendersoftware/gui"
   - export GIT_REF=${CI_BUILD_REF_NAME}
   - export DOCKER_TAG=${CI_BUILD_REF_SLUG/master}
