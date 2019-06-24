@@ -33,7 +33,7 @@ build:master:
   only:
     - master
   artifacts:
-    expire_in: 24h
+    expire_in: 2w
     paths:
       - image.tar
   tags:
@@ -51,7 +51,7 @@ build:
   except:
     - master
   artifacts:
-    expire_in: 1h
+    expire_in: 2w
     paths:
       - image.tar
   tags:
