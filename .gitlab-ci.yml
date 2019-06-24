@@ -9,8 +9,6 @@ stages:
   - publish
 
 before_script:
-  - git clone git://github.com/mendersoftware/mendertesting
-  - mendertesting/check_commits.sh
   - export DOCKER_REPOSITORY="mendersoftware/gui"
   - export GIT_REF=${CI_BUILD_REF_NAME}
   - export DOCKER_TAG=${CI_BUILD_REF_SLUG/master}
@@ -54,6 +52,14 @@ build:
       - image.tar
   tags:
     - docker
+
+test:static:
+  stage: test
+  script:
+    - apk add bash
+    # Check commit compliance.
+    - git clone git://github.com/mendersoftware/mendertesting
+    - mendertesting/check_commits.sh
 
 test:lint:
   stage: test
