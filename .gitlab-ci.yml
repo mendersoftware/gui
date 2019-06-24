@@ -6,10 +6,9 @@ services:
   - docker:dind
 
 stages:
-  - build
   - test
+  - build
   - publish
-  - integration
 
 before_script:
   - docker info
@@ -59,7 +58,7 @@ build:
   tags:
     - docker
 
-test:
+test:lint:
   stage: test
   script:
     - docker build -t gui-test-image -f Dockerfile.testing .
@@ -69,10 +68,22 @@ test:
   tags:
     - docker
 
+test:acceptance:
+  image: tiangolo/docker-with-compose
+  services:
+    - docker:dind
+  stage: test
+  script:
+    - apk add git bash
+    - git clone https://github.com/mendersoftware/integration.git ;
+    - cp -r integration/tests/* tests
+    - GUI_REPOSITORY=$(pwd) INTEGRATION_PATH=$(pwd)/integration ./tests/e2e_tests/run
+
 publish:
   stage: publish
   dependencies:
-    - build:master
+    - test:lint
+    - test:acceptance
   script:
     - docker load -i image.tar
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
