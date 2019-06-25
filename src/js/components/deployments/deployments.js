@@ -137,9 +137,12 @@ export default class Deployments extends React.Component {
     } else {
       this._refreshInProgress();
       this._refreshPending();
+      if (!AppStore.getOnboardingComplete()) {
+        this._refreshPast(null, null, null, null, this.state.groupFilter);
+    }
     }
 
-    if (this.state.showHelptips && !cookie.load(`${this.state.user.id}-onboarded`) && cookie.load(`${this.state.user.id}-deploymentID`)) {
+    if (this.state.showHelptips && cookie.load(`${this.state.user.id}-deploymentID`)) {
       this._isOnBoardFinished(cookie.load(`${this.state.user.id}-deploymentID`));
     }
   }

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Redirect } from 'react-router-dom';
 import ReactTooltip from 'react-tooltip';
 
 import Button from '@material-ui/core/Button';
@@ -89,6 +90,11 @@ export default class DeviceConnectionDialog extends React.Component {
       content = <PhysicalDeviceOnboarding progress={progress} token={token} />;
     } else if (virtualDevice) {
       content = <VirtualDeviceOnboarding token={token} />;
+    }
+
+    if (open && progress >= 2 && AppStore.getTotalPendingDevices() && !window.location.hash.includes('pending')) {
+      setTimeout(() => onCancel(), 2000);
+      return <Redirect to="/devices/pending" />;
     }
 
     return (
