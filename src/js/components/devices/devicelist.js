@@ -41,8 +41,13 @@ export default class DeviceList extends React.Component {
     if (self.state.expandedDeviceId === deviceId) {
       deviceId = null;
     }
-    if (!AppStore.getOnboardingComplete() && getOnboardingStepCompleted('devices-pending-accepting-onboarding')) {
-      advanceOnboarding('devices-accepted-onboarding');
+    if (!AppStore.getOnboardingComplete()) {
+      if (!getOnboardingStepCompleted('devices-pending-accepting-onboarding')) {
+        advanceOnboarding('devices-pending-accepting-onboarding');
+      }
+      if (getOnboardingStepCompleted('devices-pending-accepting-onboarding')) {
+        advanceOnboarding('devices-accepted-onboarding');
+      }
     }
     self.setState({ expandedDeviceId: deviceId });
   }
