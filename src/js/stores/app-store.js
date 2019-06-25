@@ -22,7 +22,7 @@ var _snackbar = {
   message: ''
 };
 var _currentUser = {};
-var _hasMultitenancy = false;
+var _hasMultitenancy = !!mender_environment.hasMultitenancy;
 var _organization = {};
 var _showHelptips = null;
 var _showOnboardingTips = true;
@@ -36,7 +36,7 @@ var _onboardingDeviceType = null;
 var _groups = [];
 var _releasesRepo = [];
 var _uploadInProgress = false;
-var _MenderVersion = null;
+var _MenderVersion = mender_environment ? mender_environment.menderVersion : null;
 var _globalSettings = {};
 
 /* Temp local devices */

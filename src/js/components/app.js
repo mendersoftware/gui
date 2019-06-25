@@ -20,8 +20,8 @@ import CreateArtifactDialog from './common/dialogs/createartifactdialog';
 import ConfirmDismissHelptips from './common/dialogs/confirmdismisshelptips';
 import DeviceConnectionDialog from './common/dialogs/deviceconnectiondialog';
 
-var isDemoMode = false;
-var _HostedAnnouncement = '';
+const isDemoMode = mender_environment ? mender_environment.isDemoMode : false;
+const _HostedAnnouncement = mender_environment ? mender_environment.hostedAnnouncement : '';
 
 class AppRoot extends React.Component {
   static childContextTypes = {

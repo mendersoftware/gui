@@ -15,6 +15,9 @@
   "parserOptions": {
     "sourceType": "module"
   },
+  "globals": {
+    "mender_environment": "readonly"
+  },
   "plugins": ["react"],
   "rules": {
     "indent": ["error", 2],
