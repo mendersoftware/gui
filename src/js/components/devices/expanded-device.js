@@ -135,7 +135,7 @@ export default class ExpandedDevice extends React.Component {
         var id = data.substring(lastslashindex + 1);
 
         // onboarding
-        if (self.state.showHelpTips && !cookie.load(`${self.state.user.id}-onboarded`) && !cookie.load(`${self.state.user.id}-deploymentID`)) {
+        if (self.state.showHelpTips && !cookie.load(`${self.state.user.id}-deploymentID`)) {
           cookie.save(`${self.state.user.id}-deploymentID`, id);
         }
 

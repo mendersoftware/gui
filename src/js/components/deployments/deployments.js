@@ -139,7 +139,7 @@ export default class Deployments extends React.Component {
       this._refreshPending();
       if (!AppStore.getOnboardingComplete()) {
         this._refreshPast(null, null, null, null, this.state.groupFilter);
-    }
+      }
     }
 
     if (this.state.showHelptips && cookie.load(`${this.state.user.id}-deploymentID`)) {
@@ -314,7 +314,7 @@ export default class Deployments extends React.Component {
         clearInterval(self.timer);
 
         // onboarding
-        if (self.state.showHelptips && !cookie.load(`${self.state.user.id}-onboarded`) && !cookie.load(`${self.state.user.id}-deploymentID`)) {
+        if (self.state.showHelptips && !cookie.load(`${self.state.user.id}-deploymentID`)) {
           cookie.save(`${self.state.user.id}-deploymentID`, id);
         }
 
@@ -433,8 +433,6 @@ export default class Deployments extends React.Component {
     var self = this;
     return AppActions.getSingleDeployment(id).then(data => {
       if (data.status === 'finished') {
-        self.setState({ onboardDialog: true });
-        cookie.save(`${self.state.user.id}-onboarded`, true);
         cookie.remove(`${self.state.user.id}-deploymentID`);
       }
     });
@@ -526,7 +524,7 @@ export default class Deployments extends React.Component {
             <Progress
               page={this.state.prog_page}
               isActiveTab={this.state.currentTab === 'Active'}
-              showHelptips={this.state.showHelptips && !cookie.load(`${this.state.user.id}-onboarded`)}
+              showHelptips={this.state.showHelptips}
               hasDeployments={this.state.hasDeployments}
               devices={this.state.allDevices || []}
               hasArtifacts={this.state.collatedArtifacts.length}
