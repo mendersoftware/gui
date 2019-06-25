@@ -37,6 +37,7 @@ var _groups = [];
 var _releasesRepo = [];
 var _uploadInProgress = false;
 var _MenderVersion = mender_environment ? mender_environment.menderVersion : null;
+var _demoArtifactPort = mender_environment ? mender_environment.demoArtifactPort : 85;
 var _globalSettings = {};
 
 /* Temp local devices */
@@ -661,6 +662,8 @@ var AppStore = Object.assign({}, EventEmitter.prototype, {
     }
     return version;
   },
+
+  getDemoArtifactPort: () => _demoArtifactPort,
 
   getDocsVersion: function() {
     // return docs link friendly version

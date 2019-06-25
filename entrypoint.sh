@@ -31,7 +31,8 @@ cat >/var/www/mender-gui/env.js <<EOF
     hasMultitenancy: "$HAVE_MULTITENANT",
     hostedAnnouncement: "$ANNOUCEMENT",
     isDemoMode: "$DEMO",
-    menderVersion: "$INTEGRATION_VERSION"
+    menderVersion: "$INTEGRATION_VERSION",
+    demoArtifactPort: "$DEMO_ARTIFACT_PORT"
   }
 EOF
 
