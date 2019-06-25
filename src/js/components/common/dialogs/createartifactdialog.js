@@ -162,7 +162,8 @@ export default class CreateArtifactDialog extends React.Component {
           </p>
           <p>
             If you upload this Artifact to the Mender server, it will create a new Release. You can then deploy this &quot;2.0&quot; Release of the webserver
-            demo to your device, and then
+            demo to your device, and when it has updated successfully you&quot;ll see the webpage&quot;s contents will have been replaced with the &quot;Hello
+            world&quot; string you modified.
           </p>
           <p>Click &apos;Next&apos; to continue to upload the new Artifact.</p>
         </div>
