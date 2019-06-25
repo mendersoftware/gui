@@ -481,6 +481,22 @@ const AppActions = {
       return Promise.resolve(deployments);
     });
   },
+
+  getDeploymentsWithStats: deployments =>
+    Promise.all(
+      deployments.map(deployment =>
+        // have to call inventory each time - accepted list can change order so must refresh inventory too
+        AppActions.getSingleDeploymentStats(deployment.id).then(stats => {
+          deployment.stats = stats;
+          AppDispatcher.handleViewAction({
+            actionType: AppConstants.RECEIVE_PAST_DEPLOYMENTS,
+            deployments
+          });
+          return Promise.resolve(deployment);
+        })
+      )
+    ),
+
   getPendingDeployments: (page = default_page, per_page = default_per_page) =>
     DeploymentsApi.get(`${deploymentsApiUrl}/deployments?status=pending&page=${page}&per_page=${per_page}`).then(res => {
       var deployments = res.body;

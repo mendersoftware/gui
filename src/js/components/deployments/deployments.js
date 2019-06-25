@@ -245,7 +245,7 @@ export default class Deployments extends React.Component {
         self.setState({ pastCount: count, past_page: page });
         // only refresh deployments if page, count or date range has changed
         if (oldPage !== page || oldCount !== count || !self.state.doneLoading) {
-          return AppActions.getPastDeployments(page, per_page, startDate, endDate, group);
+          return AppActions.getPastDeployments(page, per_page, startDate, endDate, group).then(AppActions.getDeploymentsWithStats);
         }
       })
       .then(() => {

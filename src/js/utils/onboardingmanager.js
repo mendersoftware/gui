@@ -143,7 +143,12 @@ const onboardingSteps = {
   'deployments-past-completed-failure': {
     condition: () =>
       onboardingTipSanityCheck('deployments-past-completed-failure') &&
-      !AppStore.getPastDeployments().reduce((accu, item) => (item.status === 'failed' ? false : accu), true),
+      !AppStore.getPastDeployments().reduce((accu, item) => {
+        if (item.status === 'failed' || (item.stats && item.stats.noartifact + item.stats.failure + item.stats['already-installed'] + item.stats.aborted > 0)) {
+          return false;
+        }
+        return accu;
+      }, true),
     component: (
       <div>Your deployment has finished, but it looks like there was a problem. Click to view the deployment report, where you can see the error log.</div>
     )
