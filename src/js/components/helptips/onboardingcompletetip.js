@@ -6,6 +6,7 @@ import Button from '@material-ui/core/Button';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 
 import AppActions from '../../actions/app-actions';
+import AppStore from '../../stores/app-store';
 import { getReachableDeviceAddress } from '../../helpers';
 import Loader from '../common/loader';
 
@@ -67,7 +68,7 @@ export default class OnboardingCompleteTip extends React.Component {
           <p>You&apos;ve now got a good foundation in how to use Mender. Look for more help hints in the UI as you go along.</p>
           What next?
           <div>
-            <a href="https://docs.mender.io/2.0/getting-started/deploy-to-physical-devices#prepare-the-disk-image" target="_blank">
+            <a href={`https://docs.mender.io/${AppStore.getDocsVersion()}/getting-started/deploy-to-physical-devices#prepare-the-disk-image`} target="_blank">
               Learn about full-image updates
             </a>{' '}
             or{' '}
