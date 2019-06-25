@@ -3,6 +3,7 @@ import md5 from 'md5';
 import React from 'react';
 
 import AppActions from './actions/app-actions';
+import AppStore from './stores/app-store';
 
 export function isEncoded(uri) {
   uri = uri || '';
@@ -325,10 +326,11 @@ export const collectAddressesFrom = devices =>
 
 export const probeAllAddresses = addresses => {
   const variants = ['http', 'https'];
+  const port = AppStore.getDemoArtifactPort();
   const requests = variants.reduce((accu, variant) => {
     const variantRequests = addresses.map(address =>
-      timeoutPromise(`${variant}://${address}`, null, 2000)
-        .then(() => Promise.resolve(`${variant}://${address}`))
+      timeoutPromise(`${variant}://${address}:${port}`, null, 2000)
+        .then(() => Promise.resolve(`${variant}://${address}:${port}`))
         .catch(() => Promise.resolve())
     );
     accu.push(...variantRequests);
@@ -339,6 +341,7 @@ export const probeAllAddresses = addresses => {
 
 export const getReachableDeviceAddress = devices => {
   let targetUrl = '';
+  const port = AppStore.getDemoArtifactPort();
   const defaultVitualizedIp = '10.0.2.15';
   return AppActions.getDevicesWithInventory(devices)
     .then(devices => {
@@ -352,14 +355,14 @@ export const getReachableDeviceAddress = devices => {
         }
         return accu;
       }, null);
-      targetUrl = `http://${address}`;
+      targetUrl = `http://${address}:${port}`;
       return probeAllAddresses(addresses);
     })
     .then(responses => {
       const reachableAddress = responses.find(address => address);
       targetUrl = reachableAddress ? reachableAddress : targetUrl;
       if (!reachableAddress && (navigator.appVersion.indexOf('Win') != -1 || navigator.appVersion.indexOf('Mac') != -1)) {
-        targetUrl = 'http://localhost:3000';
+        targetUrl = `http://localhost:${port}`;
       }
       return Promise.resolve(targetUrl);
     });
@@ -383,7 +386,7 @@ export const findLocalIpAddress = () => {
       pc.onicecandidate = ice => {
         //listen for candidate events
         if (ice && ice.candidate) {
-          const {address, candidate} = ice.candidate;
+          const { address, candidate } = ice.candidate;
           if (address && address.match(ipRegex)) {
             return resolve(address);
           }

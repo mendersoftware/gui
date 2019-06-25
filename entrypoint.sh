@@ -25,7 +25,7 @@ if [ ! -z "$HOSTNAME" ]; then
     ROOT_URL="https://$HOSTNAME"
 fi
 
-cat >/var/www/mender-gui/env.js <<EOF
+cat >/var/www/mender-gui/dist/env.js <<EOF
   mender_environment = {
     rootUrl: "$ROOT_URL",
     hasMultitenancy: "$HAVE_MULTITENANT",
