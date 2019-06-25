@@ -55,7 +55,7 @@ export default class OnboardingCompleteTip extends React.Component {
           <p>Great work! You updated your device with the new Release!</p>
           <p>
             Your device is now running the updated version of the software. At
-            <div className="flexbox centered" style={{margin:'5px 0'}}>
+            <div className="flexbox centered" style={{ margin: '5px 0' }}>
               {loading ? (
                 <Loader show={loading} />
               ) : (
