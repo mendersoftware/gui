@@ -308,7 +308,7 @@ export const timeoutPromise = (url, options = {}, timeout = 1000) =>
 export const collectAddressesFrom = devices =>
   devices.reduce((collector, device) => {
     const ips = device.attributes.reduce((accu, item) => {
-      if (item.name.startsWith('ip')) {
+      if (item.name.startsWith('ipv4')) {
         if (Array.isArray(item.value)) {
           const texts = item.value.map(text => text.slice(0, text.indexOf('/')));
           accu.push(...texts);
