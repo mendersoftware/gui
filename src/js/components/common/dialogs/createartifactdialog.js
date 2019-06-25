@@ -90,7 +90,7 @@ export default class CreateArtifactDialog extends React.Component {
       1: (
         <div>
           <p className="muted">Follow these steps on your Linux workstation. Estimated time 5 minutes</p>
-          <ol>
+          <ol className="spaced-list">
             <li>
               Download both{' '}
               <a
