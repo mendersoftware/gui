@@ -361,7 +361,7 @@ export const getReachableDeviceAddress = devices => {
     .then(responses => {
       const reachableAddress = responses.find(address => address);
       targetUrl = reachableAddress ? reachableAddress : targetUrl;
-      if (!reachableAddress && (navigator.appVersion.indexOf('Win') != -1 || navigator.appVersion.indexOf('Mac') != -1)) {
+      if (!targetUrl || (!reachableAddress && (navigator.appVersion.indexOf('Win') != -1 || navigator.appVersion.indexOf('Mac') != -1))) {
         targetUrl = `http://localhost:${port}`;
       }
       return Promise.resolve(targetUrl);
