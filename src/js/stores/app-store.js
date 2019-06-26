@@ -36,7 +36,7 @@ var _onboardingDeviceType = null;
 var _groups = [];
 var _releasesRepo = [];
 var _uploadInProgress = false;
-var _MenderVersion = mender_environment ? mender_environment.menderVersion : null;
+var _MenderVersion = mender_environment && mender_environment.menderVersion ? mender_environment.menderVersion : null;
 var _demoArtifactPort = mender_environment && mender_environment.demoArtifactPort ? mender_environment.demoArtifactPort : 85;
 var _globalSettings = {};
 
