@@ -1,7 +1,7 @@
 FROM node:11.6.0-alpine AS build
 WORKDIR /usr/src/app
 COPY package-lock.json package.json ./
-RUN npm install
+RUN npm ci
 COPY . ./
 RUN npm run build
 RUN npm run disclaim
