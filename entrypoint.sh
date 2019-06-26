@@ -36,4 +36,8 @@ cat >/var/www/mender-gui/dist/env.js <<EOF
   }
 EOF
 
-exec httpd -f -p 80 -c /etc/httpd.conf "$@"
+if [ "$1" = 'nginx' ]; then
+  exec nginx -g 'daemon off;'
+fi
+
+exec "$@"
