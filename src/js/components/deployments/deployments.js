@@ -92,7 +92,12 @@ export default class Deployments extends React.Component {
           self._getReportById(params.get('id'));
         } else if (params.get('release')) {
           const release = AppStore.getRelease(params.get('release'));
-          self.setState({ scheduleDialog: true, releaseArtifacts: release ? release.Artifacts : null });
+          self.setState({
+            scheduleDialog: true,
+            releaseArtifacts: release ? release.Artifacts : null,
+            release,
+            artifact: release && release.Artifacts ? release.Artifacts[0] : null
+          });
         } else {
           setTimeout(() => {
             self.setState({ scheduleDialog: true });
@@ -125,6 +130,7 @@ export default class Deployments extends React.Component {
       showHelptips: AppStore.showHelptips(),
       hasPending: AppStore.getTotalPendingDevices(),
       hasDevices: AppStore.getTotalAcceptedDevices(),
+      release: AppStore.getDeploymentRelease(),
       user: AppStore.getCurrentUser(),
       pageLength: AppStore.getTotalDevices(),
       isHosted: window.location.hostname === 'hosted.mender.io'
@@ -287,6 +293,8 @@ export default class Deployments extends React.Component {
     this.setState({
       reportDialog: false,
       artifact: null,
+      release: null,
+      releaseArtifacts: null,
       group: null
     });
   }
@@ -582,7 +590,17 @@ export default class Deployments extends React.Component {
           artifact={this.state.artifact}
           groups={this.state.groups}
           group={this.state.group}
-          onDismiss={() => this.setState({ scheduleDialog: false })}
+          onDismiss={() =>
+            this.setState({
+              scheduleDialog: false,
+              releaseArtifacts: null,
+              release: null,
+              artifact: null,
+              group: null,
+              deploymentDevices: null,
+              filteredDevices: null
+            })
+          }
           onScheduleSubmit={(...args) => this._onScheduleSubmit(...args)}
         />
         {onboardingComponent}
