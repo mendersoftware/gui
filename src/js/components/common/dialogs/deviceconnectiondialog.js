@@ -15,6 +15,7 @@ import AppActions from '../../../actions/app-actions';
 import PhysicalDeviceOnboarding from './physicaldeviceonboarding';
 import VirtualDeviceOnboarding from './virtualdeviceonboarding';
 import AppStore from '../../../stores/app-store';
+import { advanceOnboarding } from '../../../utils/onboardingmanager';
 
 export default class DeviceConnectionDialog extends React.Component {
   constructor(props, context) {
@@ -93,6 +94,7 @@ export default class DeviceConnectionDialog extends React.Component {
     }
 
     if (open && progress >= 2 && AppStore.getTotalPendingDevices() && !window.location.hash.includes('pending')) {
+      advanceOnboarding('dashboard-onboarding-start');
       setTimeout(() => onCancel(), 2000);
       return <Redirect to="/devices/pending" />;
     }
