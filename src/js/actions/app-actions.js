@@ -234,19 +234,15 @@ const AppActions = {
     General 
   */
   setSnackbar: (message, duration, action, component, onClick, onClose) =>
-    setTimeout(
-      () =>
-        AppDispatcher.handleViewAction({
-          actionType: AppConstants.SET_SNACKBAR,
-          message: message,
-          duration: duration,
-          action: action,
-          children: component,
-          onClick: onClick,
-          onClose: onClose
-        }),
-      1
-    ),
+    AppDispatcher.handleViewAction({
+      actionType: AppConstants.SET_SNACKBAR,
+      message: message,
+      duration: duration,
+      action: action,
+      children: component,
+      onClick: onClick,
+      onClose: onClose
+    }),
 
   /* 
     User management 
