@@ -188,7 +188,8 @@ const getCurrentOnboardingState = () => ({
   complete: AppStore.getOnboardingComplete(),
   deviceType: AppStore.getOnboardingDeviceType(),
   showTips: AppStore.getShowOnboardingTips(),
-  progress: AppStore.getOnboardingProgress()
+  progress: AppStore.getOnboardingProgress(),
+  approach: AppStore.getOnboardingApproach()
 });
 
 export function getOnboardingComponentFor(id, params, previousComponent = null) {
@@ -225,6 +226,7 @@ export function getOnboardingState(userId) {
         complete: Boolean(onboardedCookie) || (acceptedDevices.length > 1 && releases.length > 2 && pastDeployments.length > 2),
         showTips: onboardedCookie ? !onboardedCookie : true,
         deviceType: AppStore.getOnboardingDeviceType(),
+        approach: AppStore.getOnboardingApproach(),
         progress: -1,
         connectionDialogProgressed: 0
       })
@@ -238,6 +240,7 @@ export function getOnboardingState(userId) {
       AppActions.setConnectingDialogProgressed(Boolean(state.connectionDialogProgressed));
       AppActions.setOnboardingComplete(state.complete);
       AppActions.setOnboardingDeviceType(state.deviceType);
+      AppActions.setOnboardingApproach(state.approach);
       AppActions.setShowOnboardingHelp(state.showTips);
       AppActions.setOnboardingProgress(state.progress);
       const progress = Object.keys(onboardingSteps).findIndex(step => step === 'deployments-past-completed');

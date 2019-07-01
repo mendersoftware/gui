@@ -25,6 +25,7 @@ export default class PhysicalDeviceOnboarding extends React.Component {
   componentDidMount() {
     const self = this;
     findLocalIpAddress().then(ipAddress => self.setState({ ipAddress }));
+    AppActions.setOnboardingApproach('virtual');
   }
 
   componentWillUnmount() {

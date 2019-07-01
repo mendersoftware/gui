@@ -33,6 +33,7 @@ var _connectDeviceProgressed = false;
 var _onboardingComplete = !!_onboardingComplete || !!JSON.parse(window.localStorage.getItem('onboardingComplete'));
 var _onboardingProgress = 0;
 var _onboardingDeviceType = null;
+var _onboardingApproach = null;
 var _groups = [];
 var _releasesRepo = [];
 var _uploadInProgress = false;
@@ -468,6 +469,10 @@ function _setOnboardingDeviceType(val) {
   _onboardingDeviceType = val;
 }
 
+function _setOnboardingApproach(val) {
+  _onboardingApproach = val;
+}
+
 function _setOnboardingComplete(val) {
   _onboardingComplete = val;
 }
@@ -643,6 +648,8 @@ var AppStore = Object.assign({}, EventEmitter.prototype, {
 
   getOnboardingDeviceType: () => _onboardingDeviceType,
 
+  getOnboardingApproach: () => _onboardingApproach,
+
   getShowOnboardingTips: () => _showOnboardingTips,
 
   getShowOnboardingTipsDialog: () => _showOnboardingTipsDialog,
@@ -756,6 +763,9 @@ var AppStore = Object.assign({}, EventEmitter.prototype, {
       break;
     case AppConstants.SET_ONBOARDING_DEVICE_TYPE:
       _setOnboardingDeviceType(payload.action.value);
+      break;
+    case AppConstants.SET_ONBOARDING_APPROACH:
+      _setOnboardingApproach(payload.action.value);
       break;
 
       /* API */

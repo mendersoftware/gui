@@ -4,6 +4,7 @@ import CopyToClipboard from 'react-copy-to-clipboard';
 
 import Button from '@material-ui/core/Button';
 import Icon from '@material-ui/core/Icon';
+import AppActions from '../../../actions/app-actions';
 import AppStore from '../../../stores/app-store';
 
 export default class VirtualDeviceOnboarding extends React.Component {
@@ -12,6 +13,10 @@ export default class VirtualDeviceOnboarding extends React.Component {
     this.state = {
       copied: false
     };
+  }
+
+  componentDidMount() {
+    AppActions.setOnboardingApproach('virtual');
   }
 
   copied() {
