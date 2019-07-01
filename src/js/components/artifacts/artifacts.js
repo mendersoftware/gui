@@ -21,7 +21,8 @@ export default class Artifacts extends React.Component {
     this.state = {
       refreshArtifactsLength: 30000, //60000,
       doneLoading: false,
-      ...this._getState()
+      ...this._getState(),
+      remove: false
     };
   }
   componentWillMount() {
@@ -48,7 +49,6 @@ export default class Artifacts extends React.Component {
     return {
       releases,
       selectedRelease,
-      remove: false,
       showHelptips: AppStore.showHelptips()
     };
   }
@@ -101,6 +101,7 @@ export default class Artifacts extends React.Component {
     }
   }
   _removeArtifact(artifact) {
+    const self = this;
     return AppActions.removeArtifact(artifact.id)
       .then(() => {
         AppActions.setSnackbar('Artifact was removed', 5000, '');
@@ -108,7 +109,8 @@ export default class Artifacts extends React.Component {
       .catch(err => {
         var errMsg = err.res.body.error || '';
         AppActions.setSnackbar(preformatWithRequestID(err.res, `Error removing artifact: ${errMsg}`), null, 'Copy to clipboard');
-      });
+      })
+      .finally(() => self.setState({ remove: false }));
   }
   render() {
     const self = this;
