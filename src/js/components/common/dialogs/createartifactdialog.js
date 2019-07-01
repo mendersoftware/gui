@@ -70,9 +70,9 @@ export default class CreateArtifactDialog extends React.Component {
     const artifactName = 'demo-webserver-updated';
     const binaryLocation = detectOsIdentifier() === 'MacOs' ? 'local/' : '';
     const chmodCode = `
-    chmod +x mender-artifact
-    chmod +x ${artifactGenerator}
-    mv mender-artifact ${artifactGenerator} /usr/${binaryLocation}bin/
+    sudo chmod +x mender-artifact
+    sudo chmod +x ${artifactGenerator}
+    sudo mv mender-artifact ${artifactGenerator} /usr/${binaryLocation}bin/
     `;
 
     const artifactGenCode = `

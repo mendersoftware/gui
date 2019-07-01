@@ -33,8 +33,8 @@ export default class BuildDemoArtifact extends React.Component {
   }
 
   render() {
-    var executable = `chmod +x mender-artifact`;
-    var file_install = `wget https://raw.githubusercontent.com/mendersoftware/mender/master/support/modules-artifact-gen/single-file-artifact-gen \nchmod +x single-file-artifact-gen`;
+    var executable = `sudo chmod +x mender-artifact`;
+    var file_install = `wget https://raw.githubusercontent.com/mendersoftware/mender/master/support/modules-artifact-gen/single-file-artifact-gen \nsudo chmod +x single-file-artifact-gen`;
     var generate =
       `ARTIFACT_NAME="demo-webserver-updated" \nDEVICE_TYPE="generic_x86" \nOUTPUT_PATH="demo-webserver-updated.mender" \nDEST_DIR="/var/www/localhost/htdocs/" \nFILE_NAME="index.html" \n./single-file-artifact-gen -n` +
       ' ${ARTIFACT_NAME} -t ${DEVICE_TYPE} -d ${DEST_DIR} -o ${OUTPUT_PATH} ${FILE_NAME}';
