@@ -7,7 +7,7 @@ import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 
 import AppActions from '../../actions/app-actions';
 import AppStore from '../../stores/app-store';
-import { getReachableDeviceAddress } from '../../helpers';
+import { getDemoDeviceAddress } from '../../helpers';
 import Loader from '../common/loader';
 
 export default class OnboardingCompleteTip extends React.Component {
@@ -22,7 +22,7 @@ export default class OnboardingCompleteTip extends React.Component {
   componentDidMount() {
     const self = this;
     AppActions.getDevicesByStatus('accepted')
-      .then(getReachableDeviceAddress)
+      .then(getDemoDeviceAddress)
       .catch(e => console.log(e))
       .then(targetUrl => self.setState({ targetUrl, loading: false }));
   }

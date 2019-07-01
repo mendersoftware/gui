@@ -11,7 +11,7 @@ import Icon from '@material-ui/core/Icon';
 
 import AppActions from '../../../actions/app-actions';
 import AppStore from '../../../stores/app-store';
-import { detectOsIdentifier, getReachableDeviceAddress } from '../../../helpers';
+import { detectOsIdentifier, getDemoDeviceAddress } from '../../../helpers';
 import Loader from '../loader';
 
 // we don't support windows yet, so we'll point them to the linux file instead
@@ -37,7 +37,7 @@ export default class CreateArtifactDialog extends React.Component {
     const self = this;
     if (self.state.loading && self.props.open && self.props.open !== prevProps.open) {
       AppActions.getDevicesByStatus('accepted')
-        .then(getReachableDeviceAddress)
+        .then(getDemoDeviceAddress)
         .catch(e => console.log(e))
         .then(targetUrl => self.setState({ targetUrl, loading: false }));
     }
