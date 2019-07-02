@@ -1,0 +1,97 @@
+image: docker:git
+
+services:
+  - docker:dind
+
+stages:
+  - test
+  - build
+  - publish
+
+before_script:
+  - export DOCKER_REPOSITORY="mendersoftware/gui"
+  - export GIT_REF=${CI_BUILD_REF_NAME}
+  - export DOCKER_TAG=${CI_BUILD_REF_SLUG/master}
+  - export NODE_ENV=$(echo "$DOCKER_TAG" | grep -Eq '^(staging|production)$' && echo "production" || echo "development")
+  - export SERVICE_ENV=$(echo "$DOCKER_TAG" | grep -Eq '^(development|staging|production)$' && echo $DOCKER_TAG || echo "development")
+  - export SERVICE_IMAGE=$DOCKER_REPOSITORY:$DOCKER_TAG
+
+build:master:
+  stage: build
+  script:
+    - echo "building gui for ${SERVICE_IMAGE}"
+    - docker build
+      --pull
+      -t $SERVICE_IMAGE
+      -t $DOCKER_REPOSITORY:$COMMIT_TAG
+      .
+    - docker save $SERVICE_IMAGE > image.tar
+  only:
+    - master
+  artifacts:
+    expire_in: 2w
+    paths:
+      - image.tar
+  tags:
+    - docker
+
+build:
+  stage: build
+  script:
+    - echo "building gui for ${SERVICE_IMAGE}"
+    - docker build
+      -t $SERVICE_IMAGE
+      -t $DOCKER_REPOSITORY:$CI_COMMIT_REF_SLUG
+      .
+    - docker save $SERVICE_IMAGE > image.tar
+  except:
+    - master
+  artifacts:
+    expire_in: 2w
+    paths:
+      - image.tar
+  tags:
+    - docker
+
+test:static:
+  stage: test
+  script:
+    - apk add bash
+    # Check commit compliance.
+    - git clone git://github.com/mendersoftware/mendertesting
+    - mendertesting/check_commits.sh
+
+test:lint:
+  stage: test
+  script:
+    - docker build -t gui-test-image -f Dockerfile.testing .
+    - docker run --rm gui-test-image
+  except:
+    - master
+  tags:
+    - docker
+
+test:acceptance:
+  image: tiangolo/docker-with-compose
+  services:
+    - docker:dind
+  stage: test
+  script:
+    - apk add git bash
+    - git clone https://github.com/mendersoftware/integration.git ;
+    - cp -r integration/tests/* tests
+    - GUI_REPOSITORY=$(pwd) INTEGRATION_PATH=$(pwd)/integration ./tests/e2e_tests/run
+
+publish:
+  stage: publish
+  dependencies:
+    - test:lint
+    - test:acceptance
+  script:
+    - docker load -i image.tar
+    # - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+    # - docker push $CI_REGISTRY_IMAGE
+  only:
+    - master
+  tags:
+    - docker
