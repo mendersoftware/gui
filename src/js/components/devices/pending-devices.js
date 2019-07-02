@@ -14,7 +14,7 @@ import { preformatWithRequestID } from '../../helpers';
 import Loader from '../common/loader';
 import { DevicePendingTip } from '../helptips/onboardingtips';
 import DeviceList from './devicelist';
-import { getOnboardingComponentFor, advanceOnboarding } from '../../utils/onboardingmanager';
+import { getOnboardingComponentFor, advanceOnboarding, getOnboardingStepCompleted } from '../../utils/onboardingmanager';
 
 export default class Pending extends React.Component {
   constructor(props, context) {
@@ -205,7 +205,7 @@ export default class Pending extends React.Component {
         </p>
       ) : null;
 
-    const deviceConnectingProgressed = AppStore.getDeviceConnectionProgressed();
+    const deviceConnectingProgressed = getOnboardingStepCompleted('devices-pending-onboarding');
     let onboardingComponent = null;
     if (!AppStore.getOnboardingComplete() && (this.deviceListRef || this.authorizeRef)) {
       const element = this.deviceListRef ? this.deviceListRef.getElementsByClassName('body')[0] : null;
@@ -250,7 +250,7 @@ export default class Pending extends React.Component {
           </div>
         ) : (
           <div>
-            {self.state.showHelptips && deviceConnectingProgressed ? (
+            {self.state.showHelptips && !deviceConnectingProgressed ? (
               <DevicePendingTip />
             ) : (
               <div className={this.state.authLoading ? 'hidden' : 'dashboard-placeholder'}>
