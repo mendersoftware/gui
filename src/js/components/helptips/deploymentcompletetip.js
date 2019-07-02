@@ -32,8 +32,8 @@ export default class DeploymentCompleteTip extends React.Component {
     AppActions.setOnboardingComplete(false);
     const url = this.state.targetUrl ? this.state.targetUrl : this.props.targetUrl;
     const parametrizedAddress = `${url}/index.html?source=${encodeURIComponent(window.location)}`;
-    window.open(parametrizedAddress, '_blank');
     advanceOnboarding('deployments-past-completed');
+    window.open(parametrizedAddress, '_blank');
     AppActions.setShowCreateArtifactDialog(true);
     this.onClose();
   }

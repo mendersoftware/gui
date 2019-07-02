@@ -257,5 +257,5 @@ export function advanceOnboarding(stepId) {
   const madeProgress = progress <= stepIndex ? stepIndex + 1 : progress;
   const onboardingKey = `${user.id}-onboarding`;
   AppActions.setOnboardingProgress(madeProgress);
-  window.localStorage.setItem(onboardingKey, JSON.stringify(getCurrentOnboardingState()));
+  window.localStorage.setItem(onboardingKey, JSON.stringify(Object.assign(getCurrentOnboardingState(), { progress: madeProgress })));
 }
