@@ -269,12 +269,14 @@ export default class DeviceGroups extends React.Component {
             // for each device, get device identity info
             const allDeviceDetails = devices.map(device => {
               // have to call each time - accepted list can change order
-              return self._getDeviceDetails(device.id).then(deviceAuth => {
-                device.identity_data = deviceAuth.identity_data;
-                device.auth_sets = deviceAuth.auth_sets;
-                device.status = deviceAuth.status;
-                return Promise.resolve(device);
-              });
+              return self
+                ._getDeviceDetails(device.id)
+                .then(deviceAuth => {
+                  device.identity_data = deviceAuth.identity_data;
+                  device.auth_sets = deviceAuth.auth_sets;
+                  device.status = deviceAuth.status;
+                })
+                .finally(() => Promise.resolve(device));
             });
             return Promise.all(allDeviceDetails);
           })
