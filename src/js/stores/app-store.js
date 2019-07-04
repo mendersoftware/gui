@@ -652,7 +652,7 @@ var AppStore = Object.assign({}, EventEmitter.prototype, {
   getIsHosted: () => (mender_environment && mender_environment.features.isHosted) || window.location.hostname === 'hosted.mender.io',
 
   getIsEnterprise: () => mender_environment && mender_environment.features.isEnterprise,
-  
+
   getVersionInformation: () => _versionInformation,
 
   getOrganization: () => _organization,
@@ -688,7 +688,7 @@ var AppStore = Object.assign({}, EventEmitter.prototype, {
   },
 
   getMenderArtifactVersion: () => _menderArtifactVersion,
-  
+
   getMenderDebPackageVersion: () => _menderDebPackageVersion,
 
   getDemoArtifactPort: () => _demoArtifactPort,
