@@ -11,8 +11,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableBody from '@material-ui/core/TableBody';
 import TableRow from '@material-ui/core/TableRow';
 
-import InlineDatePicker from 'material-ui-pickers/DatePicker';
-import MuiPickersUtilsProvider from 'material-ui-pickers/MuiPickersUtilsProvider';
+import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import MomentUtils from '@date-io/moment';
 
 import AppActions from '../../actions/app-actions';
@@ -172,7 +171,8 @@ export default class Past extends React.Component {
 
           <MuiPickersUtilsProvider utils={MomentUtils} className="margin-left margin-right inline-block">
             <Grid item>
-              <InlineDatePicker
+              <DatePicker
+                variant="inline"
                 className="margin-right"
                 onChange={date => this._handleChangeStartDate(date)}
                 autoOk={true}
@@ -183,7 +183,8 @@ export default class Past extends React.Component {
               />
             </Grid>
             <Grid item>
-              <InlineDatePicker
+              <DatePicker
+                variant="inline"
                 className="margin-right"
                 onChange={date => this._handleChangeEndDate(date)}
                 autoOk={true}

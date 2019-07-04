@@ -1,20 +1,19 @@
 import { createMuiTheme } from '@material-ui/core/styles';
-import { grey100, lightBlack, white } from '@material-ui/core/colors';
 
 export const colors = {
   linkgreen: '#347A87',
   mendergreen: '#337a87', //
   grey: '#c7c7c7', //grey
   mendermaroon: '#5d0f43', //
-  accent2Color: grey100,
+  accent2Color: '#f5f5f5',
   alertpurple: '#7D3F69', //
   textColor: 'rgba(0, 0, 0, 0.8)',
   mutedText: 'rgba(0, 0, 0, 0.3)',
-  alternateTextColor: white,
-  canvasColor: white,
+  alternateTextColor: 'white',
+  canvasColor: 'white',
   borderColor: '#e0e0e0',
   expansionBackground: '#f7f7f7',
-  disabledColor: lightBlack,
+  disabledColor: 'rgba(0, 0, 0, 0.54)',
   errorStyleColor: '#ab1000'
 };
 
@@ -34,8 +33,7 @@ export default createMuiTheme({
     }
   },
   typography: {
-    fontFamily: 'Lato, sans-serif',
-    useNextVariants: true
+    fontFamily: 'Lato, sans-serif'
   },
   overrides: {
     MuiSnackbarContent: {
