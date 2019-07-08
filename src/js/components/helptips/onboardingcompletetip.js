@@ -24,7 +24,7 @@ export default class OnboardingCompleteTip extends React.Component {
     AppActions.getDevicesByStatus('accepted')
       .then(getDemoDeviceAddress)
       .catch(e => console.log(e))
-      .then(targetUrl => self.setState({ targetUrl, loading: false }, () => AppActions.setOnboardingComplete(true)));
+      .then(targetUrl => self.setState({ targetUrl, loading: false }, () => setTimeout(() => AppActions.setOnboardingComplete(true), 120000)));
   }
 
   componentWillUnmount() {
