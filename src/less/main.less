@@ -738,19 +738,35 @@ ul.link-list {
   background-color: @text;
   color: @placeholder;
   padding: 20px;
-  padding-right: 5px;
   border-radius: 4px;
   box-shadow: 0 1px 6px rgba(0, 0, 0, 0.15);
+  position: relative;
   > .flexbox {
-    justify-content: space-between;
-    align-items: flex-start;
-    > div {
-      max-width: 90%;
-    }
+    flex-direction: column;
+    min-width: 300px;
+    max-width: 90%;
   }
   button {
     color: @placeholder;
     padding: 8px;
+    position: absolute;
+    right: 5px;
+    top: 15px;
+  }
+  ol {
+    padding-inline-start: 0;
+    li {
+      list-style: none;
+      &:before {
+        content: '';
+        vertical-align: text-top;
+        margin-right: 35px;
+      }
+      &.completed:before {
+        content: url('../assets/img/success_status.png');
+        margin-right: 10px;
+      }
+    }
   }
   .onboard-icon {
     vertical-align: middle;

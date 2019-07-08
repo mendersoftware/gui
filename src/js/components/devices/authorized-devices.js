@@ -54,7 +54,7 @@ export default class Authorized extends React.Component {
       this.setState({ textfield: this.props.group ? decodeURIComponent(this.props.group) : 'All devices' });
     }
 
-    if (this.props.showHelptips && !AppStore.getOnboardingComplete() && this.props.devices.length) {
+    if (AppStore.showHelptips() && !AppStore.getOnboardingComplete() && this.props.devices.length) {
       setTimeout(() => {
         AppActions.setSnackbar('open', 10000, '', <WelcomeSnackTip progress={2} />, () => {}, self.onCloseSnackbar);
       }, 400);
