@@ -186,7 +186,6 @@ const onboardingSteps = {
 };
 
 const getCurrentOnboardingState = () => ({
-  connectionDialogProgressed: AppStore.getDeviceConnectionProgressed(),
   complete: AppStore.getOnboardingComplete(),
   deviceType: AppStore.getOnboardingDeviceType(),
   showTips: AppStore.getShowOnboardingTips(),
@@ -240,7 +239,6 @@ export function getOnboardingState(userId) {
 
   return promises
     .then(state => {
-      AppActions.setConnectingDialogProgressed(Boolean(state.connectionDialogProgressed));
       AppActions.setOnboardingComplete(state.complete);
       AppActions.setOnboardingDeviceType(state.deviceType);
       AppActions.setOnboardingApproach(state.approach);

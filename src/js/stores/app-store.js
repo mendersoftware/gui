@@ -29,7 +29,6 @@ var _showOnboardingTips = true;
 var _showOnboardingTipsDialog = false;
 var _showConnectDeviceDialog = false;
 var _showCreateArtifactDialog = false;
-var _connectDeviceProgressed = false;
 var _onboardingComplete = !!_onboardingComplete || !!JSON.parse(window.localStorage.getItem('onboardingComplete'));
 var _onboardingProgress = 0;
 var _onboardingDeviceType = null;
@@ -458,10 +457,6 @@ function _setShowConnectDeviceDialog(val) {
 function _setShowCreateArtifactDialog(val) {
   _showCreateArtifactDialog = val;
 }
-
-function _setConnectDeviceProgressed(val) {
-  _connectDeviceProgressed = val;
-}
 function _setOnboardingProgress(val) {
   _onboardingProgress = val;
 }
@@ -667,8 +662,6 @@ var AppStore = Object.assign({}, EventEmitter.prototype, {
 
   getShowCreateArtifactDialog: () => _showCreateArtifactDialog,
 
-  getDeviceConnectionProgressed: () => _connectDeviceProgressed,
-
   getMenderVersion: function() {
     // return version number
     var version = '';
@@ -766,9 +759,6 @@ var AppStore = Object.assign({}, EventEmitter.prototype, {
       break;
     case AppConstants.SET_SHOW_CREATE_ARTIFACT:
       _setShowCreateArtifactDialog(payload.action.show);
-      break;
-    case AppConstants.SET_CONNECT_DEVICE_PROGRESSED:
-      _setConnectDeviceProgressed(payload.action.progressed);
       break;
     case AppConstants.SET_ONBOARDING_PROGRESS:
       _setOnboardingProgress(payload.action.value);
