@@ -69,7 +69,8 @@ const onboardingSteps = {
     progress: 2
   },
   'upload-prepared-artifact-tip': {
-    condition: () => onboardingTipSanityCheck('artifact-included-onboarding') && getOnboardingStepCompleted('devices-accepted-onboarding'),
+    condition: () =>
+      onboardingTipSanityCheck('artifact-included-onboarding') && getOnboardingStepCompleted('devices-accepted-onboarding') && !AppStore.getReleases().length,
     component: (
       <div>
         Download our prepared demo Artifact from <a href={demoArtifactLink}>here</a> to upload it to your profile.
@@ -79,11 +80,12 @@ const onboardingSteps = {
   },
   'artifact-included-onboarding': {
     condition: () => onboardingTipSanityCheck('deployments-inprogress') && getOnboardingStepCompleted('devices-accepted-onboarding'),
-    component: (
+    component: compose(setDisplayName('OnboardingTip'))(() => (
       <div>
-        Now you have a Mender artifact with a simple Application update for you to test with.<p>Expand it for more details.</p>
+        {AppStore.getOnboardingArtifactIncluded() ? 'We have included' : 'Now you have'} a Mender artifact with a simple Application update for you to test
+        with.<p>Expand it for more details.</p>
       </div>
-    ),
+    )),
     progress: 1
   },
   'artifact-included-deploy-onboarding': {
@@ -189,7 +191,8 @@ const getCurrentOnboardingState = () => ({
   deviceType: AppStore.getOnboardingDeviceType(),
   showTips: AppStore.getShowOnboardingTips(),
   progress: AppStore.getOnboardingProgress(),
-  approach: AppStore.getOnboardingApproach()
+  approach: AppStore.getOnboardingApproach(),
+  artifactIncluded: AppStore.getOnboardingArtifactIncluded()
 });
 
 export function getOnboardingComponentFor(id, params, previousComponent = null) {
@@ -227,8 +230,8 @@ export function getOnboardingState(userId) {
         showTips: onboardedCookie ? !onboardedCookie : true,
         deviceType: AppStore.getOnboardingDeviceType(),
         approach: AppStore.getOnboardingApproach(),
-        progress: -1,
-        connectionDialogProgressed: 0
+        artifactIncluded: AppStore.getOnboardingArtifactIncluded(),
+        progress: -1
       })
     );
   } else {
@@ -241,6 +244,7 @@ export function getOnboardingState(userId) {
       AppActions.setOnboardingComplete(state.complete);
       AppActions.setOnboardingDeviceType(state.deviceType);
       AppActions.setOnboardingApproach(state.approach);
+      AppActions.setOnboardingArtifactIncluded(state.artifactIncluded);
       AppActions.setShowOnboardingHelp(state.showTips);
       AppActions.setOnboardingProgress(state.progress);
       const progress = Object.keys(onboardingSteps).findIndex(step => step === 'deployments-past-completed');

@@ -340,6 +340,11 @@ const AppActions = {
       actionType: AppConstants.SET_ONBOARDING_APPROACH,
       value
     }),
+  setOnboardingArtifactIncluded: value =>
+    AppDispatcher.handleViewAction({
+      actionType: AppConstants.SET_ONBOARDING_ARTIFACT_INCLUDED,
+      value
+    }),
   setShowDismissOnboardingTipsDialog: val =>
     AppDispatcher.handleViewAction({
       actionType: AppConstants.SET_SHOW_ONBOARDING_HELP_DIALOG,

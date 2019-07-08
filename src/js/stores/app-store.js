@@ -34,6 +34,7 @@ var _onboardingComplete = !!_onboardingComplete || !!JSON.parse(window.localStor
 var _onboardingProgress = 0;
 var _onboardingDeviceType = null;
 var _onboardingApproach = null;
+var _onboardingArtifactIncluded = null;
 var _groups = [];
 var _releasesRepo = [];
 var _uploadInProgress = false;
@@ -477,6 +478,12 @@ function _setOnboardingComplete(val) {
   _onboardingComplete = val;
 }
 
+function _setOnboardingArtifactIncluded(val) {
+  if (_onboardingArtifactIncluded === null) {
+    _onboardingArtifactIncluded = val;
+  }
+}
+
 var AppStore = Object.assign({}, EventEmitter.prototype, {
   emitChange: function() {
     this.emit(CHANGE_EVENT);
@@ -650,6 +657,8 @@ var AppStore = Object.assign({}, EventEmitter.prototype, {
 
   getOnboardingApproach: () => _onboardingApproach,
 
+  getOnboardingArtifactIncluded: () => _onboardingArtifactIncluded,
+
   getShowOnboardingTips: () => _showOnboardingTips,
 
   getShowOnboardingTipsDialog: () => _showOnboardingTipsDialog,
@@ -745,6 +754,9 @@ var AppStore = Object.assign({}, EventEmitter.prototype, {
       break;
     case AppConstants.SET_ONBOARDING_COMPLETE:
       _setOnboardingComplete(payload.action.show);
+      break;
+    case AppConstants.SET_ONBOARDING_ARTIFACT_INCLUDED:
+      _setOnboardingArtifactIncluded(payload.action.value);
       break;
     case AppConstants.SET_SHOW_ONBOARDING_HELP_DIALOG:
       _setShowOnboardingTipsDialog(payload.action.show);
