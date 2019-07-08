@@ -47,10 +47,19 @@ export default class Past extends React.Component {
     if (this.props.showHelptips && !AppStore.getOnboardingComplete() && this.props.past.length) {
       const progress = getOnboardingStepCompleted('artifact-modified-onboarding') && this.props.past.length > 1 ? 4 : 3;
       setTimeout(() => {
-        AppActions.setSnackbar('open', 10000, '', <WelcomeSnackTip progress={progress} />, () => AppActions.setSnackbar(''));
+        !AppStore.getOnboardingComplete()
+          ? AppActions.setSnackbar('open', 10000, '', <WelcomeSnackTip progress={progress} />, () => {}, self.onCloseSnackbar)
+          : null;
       }, 400);
     }
   }
+
+  onCloseSnackbar = (_, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    AppActions.setSnackbar('');
+  };
 
   _setDateRange(after, before) {
     var self = this;

@@ -56,10 +56,17 @@ export default class Authorized extends React.Component {
 
     if (this.props.showHelptips && !AppStore.getOnboardingComplete() && this.props.devices.length) {
       setTimeout(() => {
-        AppActions.setSnackbar('open', 10000, '', <WelcomeSnackTip progress={2} />, () => AppActions.setSnackbar(''));
+        AppActions.setSnackbar('open', 10000, '', <WelcomeSnackTip progress={2} />, () => {}, self.onCloseSnackbar);
       }, 400);
     }
   }
+
+  onCloseSnackbar = (_, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    AppActions.setSnackbar('');
+  };
 
   _sortColumn() {
     console.log('sort');

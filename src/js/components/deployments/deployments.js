@@ -198,7 +198,7 @@ export default class Deployments extends React.Component {
 
     return AppActions.getPendingDeployments(page, per_page)
       .then(result => {
-        self._dismissSnackBar();
+        AppActions.setSnackbar('');
         const { deployments, links } = result;
 
         // Get full count of deployments for pagination
@@ -259,7 +259,7 @@ export default class Deployments extends React.Component {
       })
       .then(() => {
         self.setState({ doneLoading: true });
-        self._dismissSnackBar();
+        AppActions.setSnackbar('');
       })
       .catch(err => {
         console.log(err);
@@ -267,12 +267,6 @@ export default class Deployments extends React.Component {
         var errormsg = err.error || 'Please check your connection';
         setRetryTimer(err, 'deployments', `Couldn't load deployments. ${errormsg}`, self.state.refreshDeploymentsLength);
       });
-  }
-
-  _dismissSnackBar() {
-    setTimeout(() => {
-      AppActions.setSnackbar('');
-    }, 1500);
   }
 
   _onChange() {
@@ -409,7 +403,7 @@ export default class Deployments extends React.Component {
     });
   }
   _handleRequestClose() {
-    this._dismissSnackBar();
+    AppActions.setSnackbar('');
   }
   _showProgress(rowNumber) {
     var deployment = this.state.progress[rowNumber];
