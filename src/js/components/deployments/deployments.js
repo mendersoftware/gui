@@ -92,7 +92,12 @@ export default class Deployments extends React.Component {
           self._getReportById(params.get('id'));
         } else if (params.get('release')) {
           const release = AppStore.getRelease(params.get('release'));
-          self.setState({ scheduleDialog: true, releaseArtifacts: release ? release.Artifacts : null });
+          self.setState({
+            scheduleDialog: true,
+            releaseArtifacts: release ? release.Artifacts : null,
+            release,
+            artifact: release && release.Artifacts ? release.Artifacts[0] : null
+          });
         } else {
           setTimeout(() => {
             self.setState({ scheduleDialog: true });
@@ -125,6 +130,7 @@ export default class Deployments extends React.Component {
       showHelptips: AppStore.showHelptips(),
       hasPending: AppStore.getTotalPendingDevices(),
       hasDevices: AppStore.getTotalAcceptedDevices(),
+      release: AppStore.getDeploymentRelease(),
       user: AppStore.getCurrentUser(),
       pageLength: AppStore.getTotalDevices(),
       isHosted: window.location.hostname === 'hosted.mender.io'
@@ -137,9 +143,12 @@ export default class Deployments extends React.Component {
     } else {
       this._refreshInProgress();
       this._refreshPending();
+      if (!AppStore.getOnboardingComplete()) {
+        this._refreshPast(null, null, null, null, this.state.groupFilter);
+      }
     }
 
-    if (this.state.showHelptips && !cookie.load(`${this.state.user.id}-onboarded`) && cookie.load(`${this.state.user.id}-deploymentID`)) {
+    if (this.state.showHelptips && cookie.load(`${this.state.user.id}-deploymentID`)) {
       this._isOnBoardFinished(cookie.load(`${this.state.user.id}-deploymentID`));
     }
   }
@@ -189,7 +198,7 @@ export default class Deployments extends React.Component {
 
     return AppActions.getPendingDeployments(page, per_page)
       .then(result => {
-        self._dismissSnackBar();
+        AppActions.setSnackbar('');
         const { deployments, links } = result;
 
         // Get full count of deployments for pagination
@@ -245,12 +254,12 @@ export default class Deployments extends React.Component {
         self.setState({ pastCount: count, past_page: page });
         // only refresh deployments if page, count or date range has changed
         if (oldPage !== page || oldCount !== count || !self.state.doneLoading) {
-          return AppActions.getPastDeployments(page, per_page, startDate, endDate, group);
+          return AppActions.getPastDeployments(page, per_page, startDate, endDate, group).then(AppActions.getDeploymentsWithStats);
         }
       })
       .then(() => {
         self.setState({ doneLoading: true });
-        self._dismissSnackBar();
+        AppActions.setSnackbar('');
       })
       .catch(err => {
         console.log(err);
@@ -258,12 +267,6 @@ export default class Deployments extends React.Component {
         var errormsg = err.error || 'Please check your connection';
         setRetryTimer(err, 'deployments', `Couldn't load deployments. ${errormsg}`, self.state.refreshDeploymentsLength);
       });
-  }
-
-  _dismissSnackBar() {
-    setTimeout(() => {
-      AppActions.setSnackbar('');
-    }, 1500);
   }
 
   _onChange() {
@@ -284,6 +287,8 @@ export default class Deployments extends React.Component {
     this.setState({
       reportDialog: false,
       artifact: null,
+      release: null,
+      releaseArtifacts: null,
       group: null
     });
   }
@@ -311,7 +316,7 @@ export default class Deployments extends React.Component {
         clearInterval(self.timer);
 
         // onboarding
-        if (self.state.showHelptips && !cookie.load(`${self.state.user.id}-onboarded`) && !cookie.load(`${self.state.user.id}-deploymentID`)) {
+        if (self.state.showHelptips && !cookie.load(`${self.state.user.id}-deploymentID`)) {
           cookie.save(`${self.state.user.id}-deploymentID`, id);
         }
 
@@ -398,7 +403,7 @@ export default class Deployments extends React.Component {
     });
   }
   _handleRequestClose() {
-    this._dismissSnackBar();
+    AppActions.setSnackbar('');
   }
   _showProgress(rowNumber) {
     var deployment = this.state.progress[rowNumber];
@@ -430,8 +435,6 @@ export default class Deployments extends React.Component {
     var self = this;
     return AppActions.getSingleDeployment(id).then(data => {
       if (data.status === 'finished') {
-        self.setState({ onboardDialog: true });
-        cookie.save(`${self.state.user.id}-onboarded`, true);
         cookie.remove(`${self.state.user.id}-deploymentID`);
       }
     });
@@ -523,7 +526,7 @@ export default class Deployments extends React.Component {
             <Progress
               page={this.state.prog_page}
               isActiveTab={this.state.currentTab === 'Active'}
-              showHelptips={this.state.showHelptips && !cookie.load(`${this.state.user.id}-onboarded`)}
+              showHelptips={this.state.showHelptips}
               hasDeployments={this.state.hasDeployments}
               devices={this.state.allDevices || []}
               hasArtifacts={this.state.collatedArtifacts.length}
@@ -581,7 +584,17 @@ export default class Deployments extends React.Component {
           artifact={this.state.artifact}
           groups={this.state.groups}
           group={this.state.group}
-          onDismiss={() => this.setState({ scheduleDialog: false })}
+          onDismiss={() =>
+            this.setState({
+              scheduleDialog: false,
+              releaseArtifacts: null,
+              release: null,
+              artifact: null,
+              group: null,
+              deploymentDevices: null,
+              filteredDevices: null
+            })
+          }
           onScheduleSubmit={(...args) => this._onScheduleSubmit(...args)}
         />
         {onboardingComponent}

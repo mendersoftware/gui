@@ -1,4 +1,5 @@
 import React from 'react';
+import { Redirect } from 'react-router-dom';
 import Time from 'react-time';
 import Pagination from 'rc-pagination';
 import _en_US from 'rc-pagination/lib/locale/en_US';
@@ -13,7 +14,8 @@ import TableRow from '@material-ui/core/TableRow';
 import DeploymentStatus from './deploymentstatus';
 import Loader from '../common/loader';
 import { formatTime } from '../../helpers';
-import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
+import { getOnboardingComponentFor, getOnboardingStepCompleted } from '../../utils/onboardingmanager';
+import AppStore from '../../stores/app-store';
 
 export default class Progress extends React.Component {
   constructor(props, context) {
@@ -42,9 +44,16 @@ export default class Progress extends React.Component {
     }, this);
 
     let onboardingComponent = null;
-    if (this.inprogressRef) {
+    if (!AppStore.getOnboardingComplete() && this.inprogressRef) {
       const anchor = { left: 200, top: this.inprogressRef.offsetTop + this.inprogressRef.offsetHeight };
       onboardingComponent = getOnboardingComponentFor('deployments-inprogress', { anchor });
+      if (
+        AppStore.getPastDeployments() &&
+        getOnboardingStepCompleted('scheduling-release-to-devices') &&
+        !getOnboardingStepCompleted('upload-new-artifact-tip')
+      ) {
+        return <Redirect to="/deployments/finished" />;
+      }
     }
     return (
       <div className="fadeIn">

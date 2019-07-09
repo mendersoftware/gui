@@ -39,7 +39,7 @@ export default class ScheduleDialog extends React.Component {
 
   render() {
     const self = this;
-    const { open, onDismiss, filteredDevices, ...other } = this.props;
+    const { artifact, open, onDismiss, filteredDevices, ...other } = this.props;
     var disabled = filteredDevices && filteredDevices.length > 0 ? false : true;
 
     var tmpDevices = filteredDevices || [];
@@ -125,7 +125,7 @@ export default class ScheduleDialog extends React.Component {
           <div style={{ flexGrow: 1 }} />
           <Button
             key="schedule-action-button-2"
-            onClick={() => self.onScheduleSubmit(self.state.group, tmpDevices, self.state.artifact)}
+            onClick={() => self.onScheduleSubmit(self.state.group, tmpDevices, self.state.artifact || artifact)}
             variant="contained"
             color="primary"
             buttonRef={ref => (this.deploymentRef = ref)}

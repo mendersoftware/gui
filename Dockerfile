@@ -1,23 +1,18 @@
 FROM node:11.6.0-alpine AS build
 WORKDIR /usr/src/app
 COPY package-lock.json package.json ./
-RUN npm install
+RUN npm ci
 COPY . ./
 RUN npm run build
 RUN npm run disclaim
 
-FROM alpine:3.9
+FROM nginx:1.17-alpine
+RUN mkdir -p /var/www/mender-gui/dist
+WORKDIR /var/www/mender-gui/dist
+
 COPY ./entrypoint.sh /entrypoint.sh
-COPY httpd.conf /etc/httpd.conf
-EXPOSE 80
-
-RUN mkdir -p /var/www/mender-gui
-WORKDIR /var/www/mender-gui/dist/
-
-RUN apk update && apk add nodejs npm
-RUN npm config set unsafe-perm true
-RUN npm install -g uglify-js
-RUN npm config set unsafe-perm false
+COPY httpd.conf /etc/nginx/nginx.conf
 COPY --from=build /usr/src/app/dist .
 
 ENTRYPOINT ["/entrypoint.sh"]
+CMD ["nginx"]

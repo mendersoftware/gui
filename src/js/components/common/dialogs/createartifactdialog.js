@@ -11,7 +11,7 @@ import Icon from '@material-ui/core/Icon';
 
 import AppActions from '../../../actions/app-actions';
 import AppStore from '../../../stores/app-store';
-import { detectOsIdentifier, getReachableDeviceAddress } from '../../../helpers';
+import { detectOsIdentifier, getDemoDeviceAddress } from '../../../helpers';
 import Loader from '../loader';
 
 // we don't support windows yet, so we'll point them to the linux file instead
@@ -37,7 +37,7 @@ export default class CreateArtifactDialog extends React.Component {
     const self = this;
     if (self.state.loading && self.props.open && self.props.open !== prevProps.open) {
       AppActions.getDevicesByStatus('accepted')
-        .then(getReachableDeviceAddress)
+        .then(getDemoDeviceAddress)
         .catch(e => console.log(e))
         .then(targetUrl => self.setState({ targetUrl, loading: false }));
     }
@@ -68,11 +68,10 @@ export default class CreateArtifactDialog extends React.Component {
 
     const artifactGenerator = 'single-file-artifact-gen';
     const artifactName = 'demo-webserver-updated';
-    const binaryLocation = detectOsIdentifier() === 'MacOs' ? 'local/' : '';
     const chmodCode = `
     chmod +x mender-artifact
     chmod +x ${artifactGenerator}
-    mv mender-artifact ${artifactGenerator} /usr/${binaryLocation}bin/
+    mv mender-artifact ${artifactGenerator} /usr/local/bin/
     `;
 
     const artifactGenCode = `
@@ -90,7 +89,7 @@ export default class CreateArtifactDialog extends React.Component {
       1: (
         <div>
           <p className="muted">Follow these steps on your Linux workstation. Estimated time 5 minutes</p>
-          <ol>
+          <ol className="spaced-list">
             <li>
               Download both{' '}
               <a
@@ -162,7 +161,8 @@ export default class CreateArtifactDialog extends React.Component {
           </p>
           <p>
             If you upload this Artifact to the Mender server, it will create a new Release. You can then deploy this &quot;2.0&quot; Release of the webserver
-            demo to your device, and then
+            demo to your device, and when it has updated successfully you&quot;ll see the webpage&quot;s contents will have been replaced with the &quot;Hello
+            world&quot; string you modified.
           </p>
           <p>Click &apos;Next&apos; to continue to upload the new Artifact.</p>
         </div>

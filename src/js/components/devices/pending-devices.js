@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import Time from 'react-time';
 import pluralize from 'pluralize';
 
@@ -14,7 +14,7 @@ import { preformatWithRequestID } from '../../helpers';
 import Loader from '../common/loader';
 import { DevicePendingTip } from '../helptips/onboardingtips';
 import DeviceList from './devicelist';
-import { getOnboardingComponentFor, advanceOnboarding } from '../../utils/onboardingmanager';
+import { getOnboardingComponentFor, advanceOnboarding, getOnboardingStepCompleted } from '../../utils/onboardingmanager';
 
 export default class Pending extends React.Component {
   constructor(props, context) {
@@ -170,7 +170,6 @@ export default class Pending extends React.Component {
     var limitMaxed = this.props.deviceLimit ? this.props.deviceLimit <= this.props.acceptedDevices : false;
     var limitNear = this.props.deviceLimit ? this.props.deviceLimit < this.props.acceptedDevices + this.state.devices.length : false;
     var selectedOverLimit = this.props.deviceLimit ? this.props.deviceLimit < this.props.acceptedDevices + this.state.selectedRows.length : false;
-    const deviceConnectingProgressed = AppStore.getDeviceConnectionProgressed();
 
     const columnHeaders = [
       {
@@ -206,8 +205,9 @@ export default class Pending extends React.Component {
         </p>
       ) : null;
 
+    const deviceConnectingProgressed = getOnboardingStepCompleted('devices-pending-onboarding');
     let onboardingComponent = null;
-    if (this.deviceListRef || this.authorizeRef) {
+    if (!AppStore.getOnboardingComplete() && (this.deviceListRef || this.authorizeRef)) {
       const element = this.deviceListRef ? this.deviceListRef.getElementsByClassName('body')[0] : null;
       onboardingComponent = getOnboardingComponentFor('devices-pending-onboarding', {
         anchor: { left: 200, top: element ? element.offsetTop + element.offsetHeight : 170 }
@@ -218,6 +218,9 @@ export default class Pending extends React.Component {
           top: this.authorizeRef.offsetParent.offsetTop - this.authorizeRef.offsetParent.offsetHeight - this.authorizeRef.offsetHeight / 2
         };
         onboardingComponent = getOnboardingComponentFor('devices-pending-accepting-onboarding', { place: 'left', anchor });
+      }
+      if (AppStore.getTotalAcceptedDevices()) {
+        return <Redirect to="/devices" />;
       }
     }
 
@@ -247,7 +250,7 @@ export default class Pending extends React.Component {
           </div>
         ) : (
           <div>
-            {self.state.showHelptips && deviceConnectingProgressed ? (
+            {self.state.showHelptips && !deviceConnectingProgressed ? (
               <DevicePendingTip />
             ) : (
               <div className={this.state.authLoading ? 'hidden' : 'dashboard-placeholder'}>

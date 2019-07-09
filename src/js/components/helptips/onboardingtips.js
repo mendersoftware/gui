@@ -37,19 +37,28 @@ export class WelcomeSnackTip extends React.PureComponent {
     };
     return (
       <div className="onboard-snack">
+        <IconButton onClick={() => this.onClose()}>
+          <CloseIcon fontSize="small" />
+        </IconButton>
         <div className="flexbox">
           {messages[progress]}
-          <IconButton onClick={() => this.onClose()}>
-            <CloseIcon fontSize="small" />
-          </IconButton>
+          <ol>
+            {['Connect a device', 'Deploy an Application Update', 'Create your own Release and deploy it'].map((item, index) => {
+              let classNames = '';
+              if (index < progress) {
+                classNames = 'bold';
+                if (index < progress - 1) {
+                  classNames = 'completed';
+                }
+              }
+              return (
+                <li className={classNames} key={`onboarding-step-${index}`}>
+                  {index + 1}. {item}
+                </li>
+              );
+            })}
+          </ol>
         </div>
-        <ol>
-          {['Connect a device', 'Deploy an Application Update', 'Create your own Release and deploy it'].map((item, index) => (
-            <li className={index < progress ? 'bold' : ''} key={`onboarding-step-${index}`}>
-              {item}
-            </li>
-          ))}
-        </ol>
       </div>
     );
   }

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Redirect } from 'react-router-dom';
 import ReactTooltip from 'react-tooltip';
 
 import Button from '@material-ui/core/Button';
@@ -14,6 +15,7 @@ import AppActions from '../../../actions/app-actions';
 import PhysicalDeviceOnboarding from './physicaldeviceonboarding';
 import VirtualDeviceOnboarding from './virtualdeviceonboarding';
 import AppStore from '../../../stores/app-store';
+import { advanceOnboarding } from '../../../utils/onboardingmanager';
 
 export default class DeviceConnectionDialog extends React.Component {
   constructor(props, context) {
@@ -23,7 +25,8 @@ export default class DeviceConnectionDialog extends React.Component {
       progress: 1,
       virtualDevice: false
     };
-    AppActions.getUserOrganization().then(org => self.setState({ token: org.tenant_token }));
+    AppActions.getUserOrganization().then(org => (org ? self.setState({ token: org.tenant_token }) : null));
+    AppActions.getReleases().then(releases => AppActions.setOnboardingArtifactIncluded(!!releases.length));
   }
 
   onBackClick() {
@@ -89,6 +92,12 @@ export default class DeviceConnectionDialog extends React.Component {
       content = <PhysicalDeviceOnboarding progress={progress} token={token} />;
     } else if (virtualDevice) {
       content = <VirtualDeviceOnboarding token={token} />;
+    }
+
+    if (open && progress >= 2 && AppStore.getTotalPendingDevices() && !window.location.hash.includes('pending')) {
+      advanceOnboarding('dashboard-onboarding-start');
+      setTimeout(() => onCancel(), 2000);
+      return <Redirect to="/devices/pending" />;
     }
 
     return (

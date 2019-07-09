@@ -9,8 +9,8 @@ import HelpIcon from '@material-ui/icons/Help';
 
 import AutoSelect from '../forms/autoselect';
 import AppActions from '../../../actions/app-actions';
-import AppStore from '../../../stores/app-store';
 import { findLocalIpAddress } from '../../../helpers';
+import { advanceOnboarding } from '../../../utils/onboardingmanager';
 
 export default class PhysicalDeviceOnboarding extends React.Component {
   constructor(props, context) {
@@ -25,22 +25,13 @@ export default class PhysicalDeviceOnboarding extends React.Component {
   componentDidMount() {
     const self = this;
     findLocalIpAddress().then(ipAddress => self.setState({ ipAddress }));
-  }
-
-  componentWillUnmount() {
-    setTimeout(() => {
-      const pendingDevices = AppStore.getPendingDevices();
-      const allDevices = AppStore.getAllDevices();
-      if (!(pendingDevices.length || allDevices.length)) {
-        AppActions.setConnectingDialogProgressed(null);
-      }
-    }, 1000 * 60 * 60); // show regular tooltip if 1 hour after this dialog still no device was connected
+    AppActions.setOnboardingApproach('virtual');
   }
 
   copied() {
     var self = this;
     self.setState({ copied: true });
-    AppActions.setConnectingDialogProgressed(Date.now());
+    advanceOnboarding('devices-accepted-onboarding');
     setTimeout(() => {
       self.setState({ copied: false });
     }, 5000);
