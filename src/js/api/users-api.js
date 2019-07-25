@@ -23,11 +23,16 @@ const Api = {
     });
   },
   postLogin: (url, userData) => {
-    return new Promise((resolve, reject) => {
+    let body = {};
+    if (userData.hasOwnProperty('token2fa')) {
+      body = { token2fa: userData.token2fa };
+    }
+    return new Promise((resolve, reject) =>
       request
         .post(url)
         .auth(userData.email, userData.password)
-        .set('Content-Type', 'application/jwt')
+        .set('Content-Type', 'application/json')
+        .send(body)
         .end((err, res) => {
           if (err || !res.ok) {
             var errorResponse = {
@@ -42,8 +47,8 @@ const Api = {
             };
             resolve(response);
           }
-        });
-    });
+        })
+    );
   },
   post: (url, userData) => {
     return new Promise((resolve, reject) => {
