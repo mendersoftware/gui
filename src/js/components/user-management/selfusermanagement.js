@@ -15,6 +15,11 @@ export default class SelfUserManagement extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = Object.assign({ qrExpanded: false }, this._getState());
+    AppActions.getGlobalSettings().then(settings => {
+      if (AppStore.getIsEnterprise() && !settings.hasOwnProperty('2fa')) {
+        AppActions.saveGlobalSettings(Object.assign(settings, { '2fa': 'disabled' }));
+      }
+    });
   }
 
   componentWillMount() {

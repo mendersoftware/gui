@@ -22,7 +22,7 @@ export default class Login extends React.Component {
 
   constructor(props, context) {
     super(props, context);
-    this.state = Object.assign({ has2FA: false }, this._getState());
+    this.state = this._getState();
   }
 
   componentWillMount() {
@@ -44,6 +44,7 @@ export default class Login extends React.Component {
       noExpiry: cookie.load('noExpiry'),
       isHosted: AppStore.getIsHosted(),
       redirectToReferrer: false,
+      has2FA: AppStore.get2FARequired(),
       isEnterprise: AppStore.getIsEnterprise()
     };
   }
@@ -65,7 +66,7 @@ export default class Login extends React.Component {
       .catch(err => {
         if (err.error.text.error.includes('2fa')) {
           const settings = AppStore.getGlobalSettings();
-          AppActions.saveGlobalSettings(Object.assign({ '2fa': 'enabled' }, settings));
+          AppActions.saveGlobalSettings(Object.assign(settings, { '2fa': 'enabled' }));
           return self.setState({ has2FA: true });
         }
       })
