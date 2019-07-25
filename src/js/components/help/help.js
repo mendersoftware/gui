@@ -89,7 +89,7 @@ export default class Help extends React.Component {
     return {
       snackbar: AppStore.getSnackbar(),
       hasMultitenancy: AppStore.hasMultitenancy(),
-      isHosted: window.location.hostname === 'hosted.mender.io'
+      isHosted: AppStore.getIsHosted()
     };
   }
   componentDidMount() {

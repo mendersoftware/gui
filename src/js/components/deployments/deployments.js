@@ -133,7 +133,7 @@ export default class Deployments extends React.Component {
       release: AppStore.getDeploymentRelease(),
       user: AppStore.getCurrentUser(),
       pageLength: AppStore.getTotalDevices(),
-      isHosted: window.location.hostname === 'hosted.mender.io'
+      isHosted: AppStore.getIsHosted()
     };
   }
 

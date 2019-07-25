@@ -139,7 +139,7 @@ export default class SelfUserManagement extends React.Component {
             <FormButton buttonHolder={true} color="primary" id="change_pass" label="Change password" handleClick={() => this.handlePass()} />
           )}
         </Form>
-        {AppStore.get2FAAvailability() && (
+        {AppStore.getIsEnterprise() && (
           <div className="margin-top">
             <div className="clickable flexbox space-between" onClick={() => self.handle2FAState(!has2fa)}>
               <p className="help-content muted">Enable 2FA authentication</p>
