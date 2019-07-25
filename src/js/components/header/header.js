@@ -97,7 +97,6 @@ export default class Header extends React.Component {
   }
   _getGlobalSettings() {
     return AppActions.getGlobalSettings()
-      .then(settings => console.log(settings))
       .catch(err => console.log('error', err));
   }
   _getDeviceLimit() {

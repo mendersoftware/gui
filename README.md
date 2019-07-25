@@ -1,9 +1,7 @@
 [![Build Status](https://travis-ci.org/mendersoftware/gui.svg?branch=master)](https://travis-ci.org/mendersoftware/gui)
-[![Docker pulls](https://img.shields.io/docker/pulls/mendersoftware/gui.svg?maxAge=3600)](https://hub.docker.com/r/mendersoftware/deployments/)
+[![Docker pulls](https://img.shields.io/docker/pulls/mendersoftware/gui.svg?maxAge=3600)](https://hub.docker.com/r/mendersoftware/gui/)
 
-
-Mender: GUI
-==============================================
+# Mender: GUI
 
 Mender is an open source over-the-air (OTA) software updater for embedded Linux
 devices. Mender comprises a client running at the embedded device, as well as
@@ -16,9 +14,7 @@ and comprises several repositories.
 The GUI exposes the entirety of Mender's functionality to the user, including
 deployment definition, scheduling and monitoring, device listing and admission, etc.
 
-
 ![Mender logo](https://vgy.me/0tXIM6.png)
-
 
 ## Getting started
 
@@ -32,10 +28,10 @@ documentation](https://github.com/mendersoftware/mender/blob/master/CONTRIBUTING
 
 ## Development
 
-In order to develop the GUI code to contribute, it is required to 
-install [gulp](https://github.com/gulpjs/gulp) and all the dependencies in 
-package.json. Work on the files in 'src'. Running 'gulp' will watch for your 
-changes as you develop and build as you go. Always run 'gulp build' to build 
+In order to develop the GUI code to contribute, it is required to
+install [gulp](https://github.com/gulpjs/gulp) and all the dependencies in
+package.json. Work on the files in 'src'. Running 'gulp' will watch for your
+changes as you develop and build as you go. Always run 'gulp build' to build
 the production code in 'dist' before you commit.
 
 ## License
@@ -53,13 +49,13 @@ issue. We thank you in advance for your cooperation.
 
 ## Connect with us
 
-* Join the [Mender Hub discussion forum](https://hub.mender.io)
-* Follow us on [Twitter](https://twitter.com/mender_io). Please
+- Join the [Mender Hub discussion forum](https://hub.mender.io)
+- Follow us on [Twitter](https://twitter.com/mender_io). Please
   feel free to tweet us questions.
-* Fork us on [Github](https://github.com/mendersoftware)
-* Create an issue in the [bugtracker](https://tracker.mender.io/projects/MEN)
-* Email us at [contact@mender.io](mailto:contact@mender.io)
-* Connect to the [#mender IRC channel on Freenode](http://webchat.freenode.net/?channels=mender)
+- Fork us on [Github](https://github.com/mendersoftware)
+- Create an issue in the [bugtracker](https://tracker.mender.io/projects/MEN)
+- Email us at [contact@mender.io](mailto:contact@mender.io)
+- Connect to the [#mender IRC channel on Freenode](http://webchat.freenode.net/?channels=mender)
 
 ## Authors
 

@@ -9,7 +9,7 @@ request.use(unauthorizedRedirect);
 const Api = {
   get: url => {
     var token = cookie.load('JWT');
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve, reject) =>
       request
         .get(url)
         .authBearer(token)
@@ -19,8 +19,8 @@ const Api = {
           } else {
             resolve(res.body);
           }
-        });
-    });
+        })
+    );
   },
   postLogin: (url, userData) => {
     let body = {};
@@ -51,8 +51,8 @@ const Api = {
     );
   },
   post: (url, userData) => {
-    return new Promise((resolve, reject) => {
-      var token = cookie.load('JWT');
+    var token = cookie.load('JWT');
+    return new Promise((resolve, reject) =>
       request
         .post(url)
         .authBearer(token)
@@ -60,16 +60,16 @@ const Api = {
         .send(userData)
         .end((err, res) => {
           if (err || !res.ok) {
-            reject({ error: err, res: res });
+            reject({ error: err, res });
           } else {
-            resolve(res.header);
+            resolve(res);
           }
-        });
-    });
+        })
+    );
   },
   put: (url, userData) => {
-    return new Promise((resolve, reject) => {
-      var token = cookie.load('JWT');
+    var token = cookie.load('JWT');
+    return new Promise((resolve, reject) =>
       request
         .put(url)
         .authBearer(token)
@@ -81,12 +81,12 @@ const Api = {
           } else {
             resolve(res.header);
           }
-        });
-    });
+        })
+    );
   },
   delete: url => {
     var token = cookie.load('JWT');
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve, reject) =>
       request
         .del(url)
         .authBearer(token)
@@ -96,8 +96,8 @@ const Api = {
           } else {
             resolve(res.header);
           }
-        });
-    });
+        })
+    );
   }
 };
 
