@@ -1,0 +1,54 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+<div>
+  <h2>
+    Application Updates
+  </h2>
+  <p>
+    Learn how to get started quickly with Application updates:
+  </p>
+  <ul>
+    <li>
+      <p>
+        <a
+          href="/help/application-updates/mender-deb-package"
+          onClick={[Function]}
+        >
+          Connect devices with .deb package
+        </a>
+      </p>
+    </li>
+    <li>
+      <p>
+        <a
+          href="/help/application-updates/demo-virtual-device"
+          onClick={[Function]}
+        >
+          Connect a virtual device for demo/testing purposes
+        </a>
+      </p>
+    </li>
+    <li>
+      <p>
+        <a
+          href="/help/application-updates/update-modules"
+          onClick={[Function]}
+        >
+          Enabling different kinds of updates with update modules
+        </a>
+      </p>
+    </li>
+  </ul>
+  <p>
+    For more robust and reliable updates, 
+    <a
+      href="/help/system-updates"
+      onClick={[Function]}
+    >
+      learn about Mender’s System updates
+    </a>
+    , which we recommend for production.
+  </p>
+</div>
+`;

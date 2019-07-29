@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+<ul
+  className="MuiList-root-1 MuiList-padding-2"
+>
+  <li
+    className="MuiListSubheader-root-5 MuiListSubheader-sticky-10 MuiListSubheader-gutters-8"
+  >
+    Help topics
+  </li>
+</ul>
+`;
