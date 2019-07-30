@@ -1,4 +1,3 @@
-
 /**
  * [1,2,3].equals([1,2,3]); // true
  * [1,2,3].equals([1,2]); // false
@@ -8,7 +7,9 @@
  * Array.prototype.equals.call("123", [1,2,3]); // false
  * [1,2,3].equals([1,2,{value: 3}], (x, y) => (x.value || x) === (y.value || y)); // true
  */
-Array.prototype.equals = function (other, callback = (x, y) => (x === y)) {
+
+// TODO: check if this is still in use
+Array.prototype.equals = function(other, callback = (x, y) => x === y) {
   // Check the other object is of the same type
   if (Object.getPrototypeOf(this) !== Object.getPrototypeOf(other)) {
     return false;

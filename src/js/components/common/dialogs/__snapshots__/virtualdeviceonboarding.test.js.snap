@@ -1,0 +1,89 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+<div>
+  <div>
+    <b>
+      1. Prerequisites
+    </b>
+    <p>
+      As you are running Mender on-premise, for these instructions we assume that you already have Docker installed and the Mender integration environment up and running on your machine.
+    </p>
+    <p>
+      To start a virtual device, change directory into the folder where you cloned Mender integration.
+    </p>
+  </div>
+  <p>
+    <b>
+      2. Copy & paste and run the following command to start the virtual device:
+    </b>
+  </p>
+  <div
+    className="code"
+  >
+    <button
+      className="MuiButtonBase-root-27 MuiButton-root-1 MuiButton-text-3 MuiButton-flat-6"
+      disabled={false}
+      icon={
+        <WithStyles(Icon)
+          className="material-icons"
+        >
+          content_paste
+        </WithStyles(Icon)>
+      }
+      onBlur={[Function]}
+      onClick={[Function]}
+      onContextMenu={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      style={
+        Object {
+          "float": "right",
+          "margin": "-10px 0 0 10px",
+        }
+      }
+      tabIndex="0"
+      type="button"
+    >
+      <span
+        className="MuiButton-label-2"
+      >
+        Copy to clipboard
+      </span>
+      <span
+        className="MuiTouchRipple-root-30"
+      />
+    </button>
+    <span
+      style={
+        Object {
+          "wordBreak": "break-word",
+        }
+      }
+    >
+      ./demo --client up
+    </span>
+  </div>
+  <p />
+  <p>
+    The device should appear in the Pending devices view in a couple of minutes.
+  </p>
+  <p>
+    Visit the 
+    <a
+      href="/help/application-updates/demo-virtual-device"
+      onClick={[Function]}
+    >
+      Virtual Devices Help page
+    </a>
+     for more info on managing the virtual device.
+  </p>
+</div>
+`;
