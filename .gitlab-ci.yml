@@ -83,6 +83,7 @@ test:acceptance:
     - GUI_REPOSITORY=$(pwd) INTEGRATION_PATH=$(pwd)/integration ./tests/e2e_tests/run
 
 test:unit:
+  image: node:11.6.0-alpine
   stage: test
   script:
     - npm install
