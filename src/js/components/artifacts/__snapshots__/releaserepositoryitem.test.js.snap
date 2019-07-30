@@ -1,0 +1,143 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+<div
+  className="release-repo-item flexbox"
+>
+  <div
+    className="muted"
+  >
+    NaN
+  </div>
+  <div
+    className="MuiPaper-root-5 MuiPaper-elevation1-8 MuiExpansionPanel-root-1"
+    style={
+      Object {
+        "border": "1px solid",
+        "borderColor": "#e0e0e0",
+        "width": "100%",
+      }
+    }
+  >
+    <div
+      aria-expanded={false}
+      className="MuiButtonBase-root-38 MuiExpansionPanelSummary-root-32"
+      onBlur={[Function]}
+      onClick={[Function]}
+      onContextMenu={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      role="button"
+      style={
+        Object {
+          "padding": "0 12px",
+        }
+      }
+      tabIndex="0"
+    >
+      <div
+        className="MuiExpansionPanelSummary-content-36 repo-item"
+      >
+        <div
+          aria-describedby={null}
+          className="nowrap text-overflow"
+          onBlur={[Function]}
+          onFocus={[Function]}
+          onMouseLeave={[Function]}
+          onMouseOver={[Function]}
+          onTouchEnd={[Function]}
+          onTouchStart={[Function]}
+          title="test-type"
+        >
+          test-type
+        </div>
+        <span>
+          Invalid date
+        </span>
+        <div
+          style={
+            Object {
+              "maxWidth": "100vw",
+            }
+          }
+        >
+          
+        </div>
+        <div>
+          0 Bytes
+        </div>
+        <button
+          className="MuiButtonBase-root-38 MuiIconButton-root-49 expandButton"
+          disabled={false}
+          onBlur={[Function]}
+          onContextMenu={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          onKeyUp={[Function]}
+          onMouseDown={[Function]}
+          onMouseLeave={[Function]}
+          onMouseUp={[Function]}
+          onTouchEnd={[Function]}
+          onTouchMove={[Function]}
+          onTouchStart={[Function]}
+          tabIndex="0"
+          type="button"
+        >
+          <span
+            className="MuiIconButton-label-54"
+          >
+            <svg
+              aria-hidden="true"
+              className="MuiSvgIcon-root-55"
+              focusable="false"
+              role="presentation"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M7 10l5 5 5-5z"
+              />
+              <path
+                d="M0 0h24v24H0z"
+                fill="none"
+              />
+            </svg>
+          </span>
+          <span
+            className="MuiTouchRipple-root-69"
+          />
+        </button>
+      </div>
+    </div>
+    <div
+      aria-hidden="true"
+      className="MuiCollapse-container-64"
+      style={
+        Object {
+          "minHeight": "0px",
+        }
+      }
+    >
+      <div
+        className="MuiCollapse-wrapper-66"
+      >
+        <div
+          className="MuiCollapse-wrapperInner-67"
+        >
+          <div
+            className="MuiExpansionPanelDetails-root-68"
+          >
+            <div />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

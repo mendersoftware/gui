@@ -1,0 +1,229 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+<div
+  className="fadeIn margin-top-large"
+>
+  <div
+    className="MuiGrid-container-1 MuiGrid-spacing-xs-16-24 datepicker-container"
+    style={
+      Object {
+        "paddingTop": "4px",
+      }
+    }
+  >
+    <div
+      className="MuiGrid-item-2"
+    >
+      <span>
+        Filter by date
+      </span>
+      <ul
+        className="unstyled link-list horizontal"
+      >
+        <li>
+          <a
+            className="active"
+            onClick={[Function]}
+          >
+            Today
+          </a>
+        </li>
+        <li>
+          <a
+            className=""
+            onClick={[Function]}
+          >
+            Yesterday
+          </a>
+        </li>
+        <li>
+          <a
+            className=""
+            onClick={[Function]}
+          >
+            Last 7 days
+          </a>
+        </li>
+        <li>
+          <a
+            className=""
+            onClick={[Function]}
+          >
+            Last 30 days
+          </a>
+        </li>
+      </ul>
+    </div>
+    <div
+      className="MuiGrid-item-2"
+    >
+      <div
+        className="MuiFormControl-root-98 margin-right"
+        onClick={[Function]}
+        onKeyPress={[Function]}
+        style={
+          Object {
+            "marginTop": 0,
+            "width": "160px",
+          }
+        }
+      >
+        <label
+          className="MuiFormLabel-root-113 MuiFormLabel-filled-117 MuiInputLabel-root-102 MuiInputLabel-formControl-107 MuiInputLabel-animated-110 MuiInputLabel-shrink-109"
+          data-shrink={true}
+        >
+          From
+        </label>
+        <div
+          className="MuiInputBase-root-133 MuiInput-root-120 MuiInput-underline-124 MuiInputBase-formControl-134 MuiInput-formControl-121"
+          onClick={[Function]}
+        >
+          <input
+            aria-invalid={false}
+            className="MuiInputBase-input-143 MuiInput-input-128"
+            disabled={false}
+            mask={null}
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            pipe={null}
+            readOnly={true}
+            required={false}
+            type="text"
+            value="July 30th"
+          />
+        </div>
+        
+      </div>
+    </div>
+    <div
+      className="MuiGrid-item-2"
+    >
+      <div
+        className="MuiFormControl-root-98 margin-right"
+        onClick={[Function]}
+        onKeyPress={[Function]}
+        style={
+          Object {
+            "marginTop": 0,
+            "width": "160px",
+          }
+        }
+      >
+        <label
+          className="MuiFormLabel-root-113 MuiFormLabel-filled-117 MuiInputLabel-root-102 MuiInputLabel-formControl-107 MuiInputLabel-animated-110 MuiInputLabel-shrink-109"
+          data-shrink={true}
+        >
+          To
+        </label>
+        <div
+          className="MuiInputBase-root-133 MuiInput-root-120 MuiInput-underline-124 MuiInputBase-formControl-134 MuiInput-formControl-121"
+          onClick={[Function]}
+        >
+          <input
+            aria-invalid={false}
+            className="MuiInputBase-input-143 MuiInput-input-128"
+            disabled={false}
+            mask={null}
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            pipe={null}
+            readOnly={true}
+            required={false}
+            type="text"
+            value="July 30th"
+          />
+        </div>
+        
+      </div>
+    </div>
+    <div
+      className="MuiGrid-item-2"
+    >
+      <div
+        className="MuiFormControl-root-98"
+        style={
+          Object {
+            "marginTop": 0,
+          }
+        }
+      >
+        <label
+          className="MuiFormLabel-root-113 MuiInputLabel-root-102 MuiInputLabel-formControl-107 MuiInputLabel-animated-110"
+          data-shrink={false}
+          htmlFor="adornment-target-select"
+        >
+          Filter by device group
+        </label>
+        <div
+          className="MuiInputBase-root-133 MuiInput-root-120 MuiInput-underline-124 MuiInputBase-formControl-134 MuiInput-formControl-121"
+          onClick={[Function]}
+          style={
+            Object {
+              "minWidth": "250px",
+            }
+          }
+        >
+          <input
+            aria-invalid={false}
+            className="MuiInputBase-input-143 MuiInput-input-128"
+            disabled={false}
+            id="adornment-target-select"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            placeholder="Select a group"
+            required={false}
+            type="text"
+            value=""
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    className="deploy-table-contain"
+  >
+    <div
+      className="loaderContainer shrunk"
+    >
+      <div
+        className="loader"
+      >
+        <span
+          className="dot dot_1"
+        />
+        <span
+          className="dot dot_2"
+        />
+        <span
+          className="dot dot_3"
+        />
+        <span
+          className="dot dot_4"
+        />
+      </div>
+    </div>
+    <div
+      className="dashboard-placeholder"
+    >
+      <p>
+        No finished deployments were found.
+      </p>
+      <p>
+        Try a different date range, or 
+        <a>
+          Create a new deployment
+        </a>
+         to get started
+      </p>
+      <img
+        alt="Past"
+        src="assets/img/history.png"
+      />
+    </div>
+  </div>
+</div>
+`;
