@@ -1,0 +1,106 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+<div
+  className="deviceList "
+>
+  <div
+    className="flexbox header"
+    style={
+      Object {
+        "padding": "0 12px",
+      }
+    }
+  >
+    <div
+      className="columnHeader"
+      style={
+        Object {
+          "width": "25%",
+        }
+      }
+    />
+    <div
+      className="columnHeader"
+      style={
+        Object {
+          "width": "25%",
+        }
+      }
+    />
+    <div
+      className="columnHeader"
+      style={
+        Object {
+          "width": "25%",
+        }
+      }
+    />
+    <div
+      className="columnHeader"
+      style={
+        Object {
+          "width": "25%",
+        }
+      }
+    />
+    <div
+      style={
+        Object {
+          "width": 48,
+        }
+      }
+    />
+  </div>
+  <div
+    className="body"
+  />
+  <ul
+    className="rc-pagination rc-pagination-simple margin-top"
+    style={Object {}}
+  >
+    <li
+      aria-disabled={true}
+      className="rc-pagination-disabled rc-pagination-prev"
+      onClick={[Function]}
+      onKeyPress={[Function]}
+      tabIndex={null}
+      title="Previous Page"
+    >
+      <a
+        className="rc-pagination-item-link"
+      />
+    </li>
+    <li
+      className="rc-pagination-simple-pager"
+      title="undefined/NaN"
+    >
+      <input
+        onChange={[Function]}
+        onKeyDown={[Function]}
+        onKeyUp={[Function]}
+        size="3"
+        type="text"
+      />
+      <span
+        className="rc-pagination-slash"
+      >
+        ／
+      </span>
+      NaN
+    </li>
+    <li
+      aria-disabled={true}
+      className="rc-pagination-disabled rc-pagination-next"
+      onClick={[Function]}
+      onKeyPress={[Function]}
+      tabIndex={null}
+      title="Next Page"
+    >
+      <a
+        className="rc-pagination-item-link"
+      />
+    </li>
+  </ul>
+</div>
+`;

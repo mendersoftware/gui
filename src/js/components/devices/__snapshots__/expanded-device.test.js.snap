@@ -1,0 +1,288 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+<div>
+  <div>
+    <div
+      className="device-identity bordered"
+    >
+      <div
+        className="margin-bottom-small"
+      >
+        <h4
+          className="margin-bottom-none"
+        >
+          Device identity
+        </h4>
+        <ul
+          className="MuiList-root-1 MuiList-padding-2 list-horizontal-flex"
+        >
+          <div
+            onClick={[Function]}
+          >
+            <li
+              className="MuiListItem-root-5 attributes MuiListItem-default-8 MuiListItem-gutters-13 MuiListItem-disabled-11 opaque"
+              disabled={true}
+            >
+              <div
+                className="MuiListItemText-root-17"
+              >
+                <span
+                  className="MuiTypography-root-23 MuiTypography-subheading-30 MuiListItemText-primary-20"
+                >
+                  Device ID
+                </span>
+                <div
+                  className="MuiTypography-root-23 MuiTypography-body1-32 MuiTypography-colorTextSecondary-56 MuiListItemText-secondary-21"
+                  title="-"
+                >
+                  <div>
+                    <span
+                      className=" "
+                      style={Object {}}
+                    >
+                      -
+                    </span>
+                     
+                  </div>
+                </div>
+              </div>
+            </li>
+            <hr
+              className="MuiDivider-root-59"
+            />
+          </div>
+        </ul>
+      </div>
+      <div
+        className="margin-bottom-small flexbox"
+        style={
+          Object {
+            "flexDirection": "row",
+          }
+        }
+      >
+        <span
+          style={
+            Object {
+              "alignItems": "center",
+              "display": "flex",
+              "justifyContent": "space-evenly",
+              "marginRight": "2vw",
+              "minWidth": 180,
+            }
+          }
+        >
+          <svg
+            aria-hidden="true"
+            className="MuiSvgIcon-root-64 green"
+            focusable="false"
+            role="presentation"
+            style={
+              Object {
+                "margin": 12,
+              }
+            }
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M0 0h24v24H0z"
+              fill="none"
+            />
+            <path
+              d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
+            />
+          </svg>
+          <span
+            className="inline-block"
+          >
+            <span
+              className="MuiTypography-root-23 MuiTypography-subtitle2-42"
+              style={
+                Object {
+                  "textAlign": "left",
+                  "textTransform": "capitalize",
+                }
+              }
+            >
+              Device status
+            </span>
+            <span
+              className="MuiTypography-root-23 MuiTypography-subtitle1-41"
+              style={
+                Object {
+                  "textAlign": "left",
+                  "textTransform": "capitalize",
+                }
+              }
+            >
+              accepted
+            </span>
+          </span>
+        </span>
+        <button
+          className="MuiButtonBase-root-99 MuiButton-root-73 MuiButton-text-75 MuiButton-flat-78"
+          disabled={false}
+          onBlur={[Function]}
+          onClick={[Function]}
+          onContextMenu={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          onKeyUp={[Function]}
+          onMouseDown={[Function]}
+          onMouseLeave={[Function]}
+          onMouseUp={[Function]}
+          onTouchEnd={[Function]}
+          onTouchMove={[Function]}
+          onTouchStart={[Function]}
+          tabIndex="0"
+          type="button"
+        >
+          <span
+            className="MuiButton-label-74"
+          >
+            <span
+              className="inline-block"
+            >
+              <span
+                className="MuiTypography-root-23 MuiTypography-subtitle1-41"
+                style={
+                  Object {
+                    "textAlign": "left",
+                    "textTransform": "none",
+                  }
+                }
+              >
+                Reject, dismiss or decommission this device?
+              </span>
+              <span
+                className="MuiTypography-root-23 MuiTypography-body1-32 muted"
+                style={
+                  Object {
+                    "textAlign": "left",
+                    "textTransform": "none",
+                  }
+                }
+              >
+                Click to adjust authorization status for this device
+              </span>
+            </span>
+          </span>
+          <span
+            className="MuiTouchRipple-root-118"
+          />
+        </button>
+      </div>
+    </div>
+    <div
+      className="device-inventory bordered"
+    >
+      <div
+        className="report-list"
+      >
+        <h4
+          className="margin-bottom-none"
+        >
+          Device inventory
+        </h4>
+        <ul
+          className="MuiList-root-1 MuiList-padding-2"
+        >
+          <div
+            className="waiting-inventory"
+          >
+            <div
+              className="tooltip info"
+              data-event="click focus"
+              data-for="inventory-wait"
+              data-tip={true}
+              id="inventory-info"
+              onClick={[Function]}
+              style={
+                Object {
+                  "right": "8px",
+                  "top": "8px",
+                }
+              }
+            >
+              <svg
+                aria-hidden="true"
+                className="MuiSvgIcon-root-64"
+                focusable="false"
+                role="presentation"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M0 0h24v24H0z"
+                  fill="none"
+                />
+                <path
+                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"
+                />
+              </svg>
+            </div>
+            <div
+              className="__react_component_tooltip place-top type-dark "
+              data-id="tooltip"
+              id="inventory-wait"
+            >
+              <h3>
+                Waiting for inventory data
+              </h3>
+              <p>
+                Inventory data not yet received from the device - this can take up to 30 minutes with default installation.
+              </p>
+              <p>
+                Also see the documentation for
+                 
+                <a
+                  href="https://docs.mender.io/client-configuration/configuration-file/polling-intervals"
+                  onClick={[Function]}
+                >
+                  Polling intervals
+                </a>
+                .
+              </p>
+            </div>
+            <p>
+              Waiting for inventory data from the device
+            </p>
+            <div
+              className="loaderContainer"
+            >
+              <div
+                className="waiting-loader loader"
+              >
+                <span
+                  className="dot dot_1"
+                />
+                <span
+                  className="dot dot_2"
+                />
+                <span
+                  className="dot dot_3"
+                />
+                <span
+                  className="dot dot_4"
+                />
+              </div>
+            </div>
+          </div>
+        </ul>
+      </div>
+      <div
+        className="report-list"
+      >
+        <ul
+          className="MuiList-root-1 MuiList-padding-2"
+          style={
+            Object {
+              "marginTop": "34px",
+            }
+          }
+        />
+      </div>
+    </div>
+  </div>
+</div>
+`;
