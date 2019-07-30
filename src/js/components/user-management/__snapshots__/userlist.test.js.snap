@@ -1,0 +1,72 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+<div
+  className="margin-top-small"
+>
+  <div
+    style={
+      Object {
+        "marginLeft": "20px",
+      }
+    }
+  >
+    <h2
+      style={
+        Object {
+          "marginTop": "15px",
+        }
+      }
+    >
+      Users
+    </h2>
+  </div>
+  <div
+    className="margin-bottom"
+  >
+    <table
+      className="MuiTable-root-1"
+    >
+      <thead
+        className="MuiTableHead-root-2"
+      >
+        <tr
+          className="MuiTableRow-root-3 MuiTableRow-head-6"
+        >
+          <th
+            aria-sort={null}
+            className="MuiTableCell-root-8 MuiTableCell-head-9"
+            scope="col"
+          >
+            Email
+          </th>
+          <th
+            aria-sort={null}
+            className="MuiTableCell-root-8 MuiTableCell-head-9"
+            scope="col"
+          >
+            Date created
+          </th>
+          <th
+            aria-sort={null}
+            className="MuiTableCell-root-8 MuiTableCell-head-9"
+            scope="col"
+          >
+            Last updated
+          </th>
+          <th
+            aria-sort={null}
+            className="MuiTableCell-root-8 MuiTableCell-head-9"
+            scope="col"
+          >
+            Manage
+          </th>
+        </tr>
+      </thead>
+      <tbody
+        className="MuiTableBody-root-20"
+      />
+    </table>
+  </div>
+</div>
+`;
