@@ -82,6 +82,12 @@ test:acceptance:
     - cp -r integration/tests/* tests
     - GUI_REPOSITORY=$(pwd) INTEGRATION_PATH=$(pwd)/integration ./tests/e2e_tests/run
 
+test:unit:
+  stage: test
+  script:
+    - npm install
+    - npm run test
+
 publish:
   stage: publish
   dependencies:

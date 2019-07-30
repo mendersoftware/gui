@@ -41,6 +41,13 @@ jobs:
         - cp -r integration/tests/* tests
         - GUI_REPOSITORY=$(pwd) INTEGRATION_PATH=$(pwd)/integration ./tests/e2e_tests/run
 
+    - stage: Tests
+      name: 'unit'
+      install: skip
+      script:
+        - npm install
+        - npm run test
+
     - stage: Build and publish
       name: 'dockerhub'
       if: type = push
