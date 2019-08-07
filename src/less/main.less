@@ -479,6 +479,9 @@ ul.link-list {
   &.space-between {
     justify-content: space-between;
   }
+  &.no-basis {
+    flex-basis: 0;
+  }
 }
 
 .overflow-hidden {
@@ -1545,10 +1548,6 @@ tr.expand {
   &.pending .deviceListItem {
     background: @lightergrey;
   }
-}
-
-.attributes.opaque {
-  opacity: 1;
 }
 
 .inventory-text {

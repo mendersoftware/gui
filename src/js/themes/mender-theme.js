@@ -53,11 +53,11 @@ export default createMuiTheme({
         '&:before': {
           display: 'none'
         },
-        padding: 0
-      },
-      expanded: {
-        backgroundColor: colors.expansionBackground,
-        margin: 'auto'
+        padding: 0,
+        '&$expanded': {
+          backgroundColor: colors.expansionBackground,
+          margin: 'auto'
+        }
       }
     },
     MuiExpansionPanelSummary: {
@@ -140,12 +140,21 @@ export default createMuiTheme({
         }
       }
     },
+    MuiListItem: {
+      root: {
+        '&$disabled': {
+          opacity: 1
+        }
+      }
+    },
     MuiListItemText: {
       root: {
         fontSize: '0.8rem',
         '&$primary': {
           fontSize: '0.8rem'
-        }
+        },
+        marginTop: 0,
+        marginBottom: 0
       }
     },
     MuiTypography: {
@@ -158,7 +167,11 @@ export default createMuiTheme({
     },
     MuiTableCell: {
       root: {
-        padding: '0px 24px 0px 24px'
+        padding: '0px 24px 0px 24px',
+        lineHeight: '48px'
+      },
+      head: {
+        lineHeight: '56px'
       },
       paddingCheckbox: {
         padding: '0 0 0 6px',

@@ -155,7 +155,7 @@ export default class Past extends React.Component {
 
     return (
       <div className="fadeIn margin-top-large">
-        <Grid container spacing={16} className="datepicker-container" style={{ paddingTop: '4px' }}>
+        <Grid container spacing={2} className="datepicker-container" style={{ paddingTop: '4px' }}>
           <Grid item>
             <span>Filter by date</span>
             <ul className="unstyled link-list horizontal">

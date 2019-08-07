@@ -110,8 +110,8 @@ export default class ProgressDeviceList extends React.Component {
               <Time value={formatTime(device.created)} format="YYYY-MM-DD HH:mm" />
             </TableCell>
             <TableCell>{time}</TableCell>
-            <TableCell style={{ paddingRight: '0px' }}>
-              <div style={{ marginTop: '5px' }}>{statusText}</div>
+            <TableCell style={{ paddingRight: '0px', position: 'relative' }}>
+              <div style={{ position: 'absolute', top: 0 }}>{statusText}</div>
               <div>
                 {!['pending', 'decommissioned', 'already-installed'].includes(device.status.toLowerCase()) && (
                   <div>

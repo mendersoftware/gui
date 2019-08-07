@@ -138,7 +138,7 @@ export default class ScheduleForm extends React.Component {
         ) : (
           <form>
             <RootRef rootRef={ref => (this.releaseRef = ref)}>
-              <Grid container spacing={16}>
+              <Grid container spacing={2}>
                 <Grid item>
                   {release ? (
                     <TextField value={release.Name} label="Release" disabled={true} style={infoStyle} />
