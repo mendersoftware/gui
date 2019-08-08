@@ -69,7 +69,9 @@ export default class CreateArtifactDialog extends React.Component {
     const artifactGenerator = 'single-file-artifact-gen';
     const artifactName = 'demo-webserver-updated';
     const chmodCode = `
+    wget https://d1b0l86ne08fsf.cloudfront.net/mender-artifact/master/${downloadFolder[detectOsIdentifier()]}/mender-artifact
     chmod +x mender-artifact
+    wget https://raw.githubusercontent.com/mendersoftware/mender/master/support/modules-artifact-gen/${artifactGenerator}
     chmod +x ${artifactGenerator}
     mv mender-artifact ${artifactGenerator} /usr/local/bin/
     `;
@@ -88,53 +90,34 @@ export default class CreateArtifactDialog extends React.Component {
     const steps = {
       1: (
         <div>
-          <p className="muted">Follow these steps on your Linux workstation. Estimated time 5 minutes</p>
+          <div className="muted">Follow these steps on your workstation. Estimated time 5 minutes.</div>
           <ol className="spaced-list">
             <li>
-              Download both{' '}
-              <a
-                href={`https://d1b0l86ne08fsf.cloudfront.net/mender-artifact/master/${downloadFolder[detectOsIdentifier()]}/mender-artifact`}
-                download
-                target="_blank"
-              >
-                mender-artifact
-              </a>{' '}
-              and{' '}
-              <a
-                href={`https://raw.githubusercontent.com/mendersoftware/mender/master/support/modules-artifact-gen/${artifactGenerator}`}
-                download
-                target="_blank"
-              >
-                {artifactGenerator}
-              </a>
-              <div>
-                cd to the folder you downloaded them to and make them executable by running:
-                <div className="code">
-                  <CopyToClipboard text={chmodCode} onCopy={() => self.copied(1)}>
-                    <Button style={{ float: 'right', margin: '-10px 0 0 10px' }} icon={<Icon className="material-icons">content_paste</Icon>}>
-                      Copy to clipboard
-                    </Button>
-                  </CopyToClipboard>
-                  <span style={{ wordBreak: 'break-word' }}>{chmodCode}</span>
-                </div>
-                <p>{copied === 1 ? <span className="green fadeIn">Copied to clipboard.</span> : null}</p>
+              Download both mender-artifact and {artifactGenerator} and make them executable by running:
+              <div className="code">
+                <CopyToClipboard text={chmodCode} onCopy={() => self.copied(1)}>
+                  <Button style={{ float: 'right', margin: '-10px 0 0 10px' }} icon={<Icon className="material-icons">content_paste</Icon>}>
+                    Copy to clipboard
+                  </Button>
+                </CopyToClipboard>
+                <span style={{ wordBreak: 'break-word' }}>{chmodCode}</span>
               </div>
+              <p>{copied === 1 ? <span className="green fadeIn">Copied to clipboard.</span> : null}</p>
             </li>
             <li>
               {loading ? (
                 <Loader show={loading} />
               ) : (
                 <span>
-                  Now save the{' '}
                   <a href={`${targetUrl}/index.html?source=${encodeURIComponent(window.location)}`} download target="_blank">
-                    index.html
+                    Right-click this link
                   </a>{' '}
-                  page you saw previously.
+                  and select &apos;Save Link As&apos; to save index.html into the same directory as above.
                 </span>
               )}
             </li>
             <li>
-              Replace the contents of the <i>index.html</i> with a string like &apos;Hello world&apos;, so you&apos;ll be able to easily see when the page has
+              Open the <i>index.html</i> file you just saved, and replace its contents with a string like &apos;Hello world&apos;, so you&apos;ll be able to easily see when the page has
               updated.
             </li>
             <li>
@@ -155,13 +138,12 @@ export default class CreateArtifactDialog extends React.Component {
       ),
       2: (
         <div>
-          You should now have a new Artifact file called
           <p>
-            <i>{artifactName}.mender</i>!
+            You should now have a new Artifact file called <i>{artifactName}.mender</i>!
           </p>
           <p>
-            If you upload this Artifact to the Mender server, it will create a new Release. You can then deploy this &quot;2.0&quot; Release of the webserver
-            demo to your device, and when it has updated successfully you&quot;ll see the webpage&quot;s contents will have been replaced with the &quot;Hello
+            If you upload <i>{artifactName}.mender</i> to the Mender server, it will create a new Release. You can then deploy this new Release of the webserver
+            demo to your device, and when it has updated successfully you&apos;ll see the webpage&apos;s contents will have been replaced with the &quot;Hello
             world&quot; string you modified.
           </p>
           <p>Click &apos;Next&apos; to continue to upload the new Artifact.</p>
@@ -170,7 +152,7 @@ export default class CreateArtifactDialog extends React.Component {
     };
 
     return (
-      <Dialog open={open || false} fullWidth={true} maxWidth="sm">
+      <Dialog open={open || false} fullWidth={true} maxWidth={progress > 1 ? 'sm' : 'md'}>
         <DialogTitle>Creating a new Artifact</DialogTitle>
         <DialogContent className="onboard-dialog">{steps[progress]}</DialogContent>
         <DialogActions>
