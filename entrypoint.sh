@@ -32,6 +32,8 @@ cat >/var/www/mender-gui/dist/env.js <<EOF
     hostedAnnouncement: "$ANNOUCEMENT",
     isDemoMode: "$DEMO",
     menderVersion: "$INTEGRATION_VERSION",
+    menderArtifactVersion: "$MENDER_ARTIFACT_VERSION",
+    menderDebPackageVersion: "$MENDER_DEB_PACKAGE_VERSION",
     demoArtifactPort: "$DEMO_ARTIFACT_PORT"
   }
 EOF
