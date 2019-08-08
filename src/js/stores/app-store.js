@@ -37,7 +37,9 @@ var _onboardingArtifactIncluded = null;
 var _groups = [];
 var _releasesRepo = [];
 var _uploadInProgress = false;
-var _MenderVersion = mender_environment && mender_environment.menderVersion ? mender_environment.menderVersion : null;
+const _MenderVersion = mender_environment && mender_environment.menderVersion ? mender_environment.menderVersion : 'master';
+const _menderArtifactVersion = mender_environment && mender_environment.menderArtifactVersion ? mender_environment.menderArtifactVersion : 'master';
+const _menderDebPackageVersion = mender_environment && mender_environment.menderDebPackageVersion ? mender_environment.menderDebPackageVersion : 'master';
 var _demoArtifactPort = mender_environment && mender_environment.demoArtifactPort ? mender_environment.demoArtifactPort : 85;
 var _globalSettings = {};
 
@@ -671,6 +673,10 @@ var AppStore = Object.assign({}, EventEmitter.prototype, {
     }
     return version;
   },
+
+  getMenderArtifactVersion: () => _menderArtifactVersion,
+  
+  getMenderDebPackageVersion: () => _menderDebPackageVersion,
 
   getDemoArtifactPort: () => _demoArtifactPort,
 
