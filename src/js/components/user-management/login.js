@@ -128,7 +128,7 @@ export default class Login extends React.Component {
           >
             <TextInput hint="Your email" label="Your email" id="email" required={true} validations="isLength:1,isEmail" />
             <PasswordInput className="margin-bottom-small" id="password" label="Password" required={true} />
-            {has2FA ? <TextInput hint="2FA Code" label="2FA Code" id="token2fa" /> : <div />}
+            {has2FA ? <TextInput hint="Two Factor Authentication Code" label="Two Factor Authentication Code" id="token2fa" /> : <div />}
             <FormCheckbox id="noExpiry" label="Stay logged in" checked={noExpiry === 'true'} />
           </Form>
 

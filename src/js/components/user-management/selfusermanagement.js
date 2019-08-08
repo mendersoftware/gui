@@ -147,11 +147,16 @@ export default class SelfUserManagement extends React.Component {
         {AppStore.getIsEnterprise() && (
           <div className="margin-top">
             <div className="clickable flexbox space-between" onClick={() => self.handle2FAState(!has2fa)}>
-              <p className="help-content muted">Enable 2FA authentication</p>
+              <p className="help-content">Enable Two Factor authentication</p>
               <Checkbox checked={has2fa} />
             </div>
+            <p className="info" style={{ width: '75%', margin: 0 }}>
+              If you enable Two Factor Authentication, you will be asked to provide an additional verification code when you log in. You can configure an
+              authenticator app to generate codes for you using the QR Code that will be generated once you enable it.
+            </p>
             <Collapse in={qrExpanded} timeout="auto" unmountOnExit>
               {!qrImage ? <Loader show={!qrImage} /> : <img src={`data:image/png;base64,${qrImage}`} style={{ maxHeight: '20vh' }} />}
+              <div className="red">Make sure to scan this code with your authenticator app before proceeding.</div>
             </Collapse>
           </div>
         )}
