@@ -3,6 +3,7 @@ import md5 from 'md5';
 import React from 'react';
 
 import AppActions from './actions/app-actions';
+import AppStore from './stores/app-store';
 
 export function isEncoded(uri) {
   uri = uri || '';
@@ -308,7 +309,7 @@ export const timeoutPromise = (url, options = {}, timeout = 1000) =>
 export const collectAddressesFrom = devices =>
   devices.reduce((collector, device) => {
     const ips = device.attributes.reduce((accu, item) => {
-      if (item.name.startsWith('ip')) {
+      if (item.name.startsWith('ipv4')) {
         if (Array.isArray(item.value)) {
           const texts = item.value.map(text => text.slice(0, text.indexOf('/')));
           accu.push(...texts);
@@ -323,46 +324,25 @@ export const collectAddressesFrom = devices =>
     return collector;
   }, []);
 
-export const probeAllAddresses = addresses => {
-  const variants = ['http', 'https'];
-  const requests = variants.reduce((accu, variant) => {
-    const variantRequests = addresses.map(address =>
-      timeoutPromise(`${variant}://${address}`, null, 2000)
-        .then(() => Promise.resolve(`${variant}://${address}`))
-        .catch(() => Promise.resolve())
-    );
-    accu.push(...variantRequests);
-    return accu;
-  }, []);
-  return Promise.all(requests);
-};
-
-export const getReachableDeviceAddress = devices => {
+export const getDemoDeviceAddress = devices => {
   let targetUrl = '';
   const defaultVitualizedIp = '10.0.2.15';
-  return AppActions.getDevicesWithInventory(devices)
-    .then(devices => {
-      const addresses = collectAddressesFrom(devices);
-      const address = addresses.reduce((accu, item) => {
-        if (item.includes(':')) {
-          if (accu && item === defaultVitualizedIp) {
-            return accu;
-          }
-          return item;
-        }
+  return AppActions.getDevicesWithInventory(devices).then(devices => {
+    const addresses = collectAddressesFrom(devices);
+    const address = addresses.reduce((accu, item) => {
+      if (accu && item === defaultVitualizedIp) {
         return accu;
-      }, null);
-      targetUrl = `http://${address}`;
-      return probeAllAddresses(addresses);
-    })
-    .then(responses => {
-      const reachableAddress = responses.find(address => address);
-      targetUrl = reachableAddress ? reachableAddress : targetUrl;
-      if (!reachableAddress && (navigator.appVersion.indexOf('Win') != -1 || navigator.appVersion.indexOf('Mac') != -1)) {
-        targetUrl = 'http://localhost:3000';
       }
-      return Promise.resolve(targetUrl);
-    });
+      return item;
+    }, null);
+    const onboardingApproach = AppStore.getOnboardingApproach();
+    const port = AppStore.getDemoArtifactPort();
+    targetUrl = `http://${address}:${port}`;
+    if (!address || (onboardingApproach === 'virtual' && (navigator.appVersion.indexOf('Win') != -1 || navigator.appVersion.indexOf('Mac') != -1))) {
+      targetUrl = `http://localhost:${port}`;
+    }
+    return Promise.resolve(targetUrl);
+  });
 };
 
 export const detectOsIdentifier = () => {
@@ -383,7 +363,7 @@ export const findLocalIpAddress = () => {
       pc.onicecandidate = ice => {
         //listen for candidate events
         if (ice && ice.candidate) {
-          const {address, candidate} = ice.candidate;
+          const { address, candidate } = ice.candidate;
           if (address && address.match(ipRegex)) {
             return resolve(address);
           }

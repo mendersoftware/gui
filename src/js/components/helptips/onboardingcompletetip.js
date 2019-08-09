@@ -6,7 +6,8 @@ import Button from '@material-ui/core/Button';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 
 import AppActions from '../../actions/app-actions';
-import { getReachableDeviceAddress } from '../../helpers';
+import AppStore from '../../stores/app-store';
+import { getDemoDeviceAddress } from '../../helpers';
 import Loader from '../common/loader';
 
 export default class OnboardingCompleteTip extends React.Component {
@@ -21,9 +22,13 @@ export default class OnboardingCompleteTip extends React.Component {
   componentDidMount() {
     const self = this;
     AppActions.getDevicesByStatus('accepted')
-      .then(getReachableDeviceAddress)
+      .then(getDemoDeviceAddress)
       .catch(e => console.log(e))
-      .then(targetUrl => self.setState({ targetUrl, loading: false }));
+      .then(targetUrl => self.setState({ targetUrl, loading: false }, () => setTimeout(() => AppActions.setOnboardingComplete(true), 120000)));
+  }
+
+  componentWillUnmount() {
+    AppActions.setOnboardingComplete(true);
   }
 
   componentDidUpdate() {
@@ -50,7 +55,7 @@ export default class OnboardingCompleteTip extends React.Component {
           <p>Great work! You updated your device with the new Release!</p>
           <p>
             Your device is now running the updated version of the software. At
-            <div className="flexbox centered">
+            <div className="flexbox centered" style={{margin:'5px 0'}}>
               {loading ? (
                 <Loader show={loading} />
               ) : (
@@ -62,12 +67,12 @@ export default class OnboardingCompleteTip extends React.Component {
                 >{`Go to ${url}`}</Button>
               )}
             </div>
-            you should see &apos;hello world&apos; in place of the webpage you saw previously.
+            you should now see &quot;Hello world&quot; in place of the webpage you saw previously.
           </p>
           <p>You&apos;ve now got a good foundation in how to use Mender. Look for more help hints in the UI as you go along.</p>
           What next?
           <div>
-            <a href="https://docs.mender.io/2.0/getting-started/deploy-to-physical-devices#prepare-the-disk-image" target="_blank">
+            <a href={`https://docs.mender.io/${AppStore.getDocsVersion()}/getting-started/deploy-to-physical-devices#prepare-the-disk-image`} target="_blank">
               Learn about full-image updates
             </a>{' '}
             or{' '}

@@ -22,21 +22,25 @@ var _snackbar = {
   message: ''
 };
 var _currentUser = {};
-var _hasMultitenancy = false;
+var _hasMultitenancy = mender_environment && mender_environment.hasMultitenancy;
 var _organization = {};
 var _showHelptips = null;
 var _showOnboardingTips = true;
 var _showOnboardingTipsDialog = false;
 var _showConnectDeviceDialog = false;
 var _showCreateArtifactDialog = false;
-var _connectDeviceProgressed = false;
 var _onboardingComplete = !!_onboardingComplete || !!JSON.parse(window.localStorage.getItem('onboardingComplete'));
 var _onboardingProgress = 0;
 var _onboardingDeviceType = null;
+var _onboardingApproach = null;
+var _onboardingArtifactIncluded = null;
 var _groups = [];
 var _releasesRepo = [];
 var _uploadInProgress = false;
-var _MenderVersion = null;
+const _MenderVersion = mender_environment && mender_environment.menderVersion ? mender_environment.menderVersion : 'master';
+const _menderArtifactVersion = mender_environment && mender_environment.menderArtifactVersion ? mender_environment.menderArtifactVersion : 'master';
+const _menderDebPackageVersion = mender_environment && mender_environment.menderDebPackageVersion ? mender_environment.menderDebPackageVersion : 'master';
+var _demoArtifactPort = mender_environment && mender_environment.demoArtifactPort ? mender_environment.demoArtifactPort : 85;
 var _globalSettings = {};
 
 /* Temp local devices */
@@ -455,10 +459,6 @@ function _setShowConnectDeviceDialog(val) {
 function _setShowCreateArtifactDialog(val) {
   _showCreateArtifactDialog = val;
 }
-
-function _setConnectDeviceProgressed(val) {
-  _connectDeviceProgressed = val;
-}
 function _setOnboardingProgress(val) {
   _onboardingProgress = val;
 }
@@ -467,8 +467,18 @@ function _setOnboardingDeviceType(val) {
   _onboardingDeviceType = val;
 }
 
+function _setOnboardingApproach(val) {
+  _onboardingApproach = val;
+}
+
 function _setOnboardingComplete(val) {
   _onboardingComplete = val;
+}
+
+function _setOnboardingArtifactIncluded(val) {
+  if (_onboardingArtifactIncluded === null) {
+    _onboardingArtifactIncluded = val;
+  }
 }
 
 var AppStore = Object.assign({}, EventEmitter.prototype, {
@@ -642,6 +652,10 @@ var AppStore = Object.assign({}, EventEmitter.prototype, {
 
   getOnboardingDeviceType: () => _onboardingDeviceType,
 
+  getOnboardingApproach: () => _onboardingApproach,
+
+  getOnboardingArtifactIncluded: () => _onboardingArtifactIncluded,
+
   getShowOnboardingTips: () => _showOnboardingTips,
 
   getShowOnboardingTipsDialog: () => _showOnboardingTipsDialog,
@@ -649,8 +663,6 @@ var AppStore = Object.assign({}, EventEmitter.prototype, {
   getShowConnectDeviceDialog: () => _showConnectDeviceDialog,
 
   getShowCreateArtifactDialog: () => _showCreateArtifactDialog,
-
-  getDeviceConnectionProgressed: () => _connectDeviceProgressed,
 
   getMenderVersion: function() {
     // return version number
@@ -661,6 +673,12 @@ var AppStore = Object.assign({}, EventEmitter.prototype, {
     }
     return version;
   },
+
+  getMenderArtifactVersion: () => _menderArtifactVersion,
+  
+  getMenderDebPackageVersion: () => _menderDebPackageVersion,
+
+  getDemoArtifactPort: () => _demoArtifactPort,
 
   getDocsVersion: function() {
     // return docs link friendly version
@@ -736,6 +754,9 @@ var AppStore = Object.assign({}, EventEmitter.prototype, {
     case AppConstants.SET_ONBOARDING_COMPLETE:
       _setOnboardingComplete(payload.action.show);
       break;
+    case AppConstants.SET_ONBOARDING_ARTIFACT_INCLUDED:
+      _setOnboardingArtifactIncluded(payload.action.value);
+      break;
     case AppConstants.SET_SHOW_ONBOARDING_HELP_DIALOG:
       _setShowOnboardingTipsDialog(payload.action.show);
       break;
@@ -745,14 +766,14 @@ var AppStore = Object.assign({}, EventEmitter.prototype, {
     case AppConstants.SET_SHOW_CREATE_ARTIFACT:
       _setShowCreateArtifactDialog(payload.action.show);
       break;
-    case AppConstants.SET_CONNECT_DEVICE_PROGRESSED:
-      _setConnectDeviceProgressed(payload.action.progressed);
-      break;
     case AppConstants.SET_ONBOARDING_PROGRESS:
       _setOnboardingProgress(payload.action.value);
       break;
     case AppConstants.SET_ONBOARDING_DEVICE_TYPE:
       _setOnboardingDeviceType(payload.action.value);
+      break;
+    case AppConstants.SET_ONBOARDING_APPROACH:
+      _setOnboardingApproach(payload.action.value);
       break;
 
       /* API */

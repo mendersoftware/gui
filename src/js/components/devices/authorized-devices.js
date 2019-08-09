@@ -44,6 +44,11 @@ export default class Authorized extends React.Component {
       prevProps.pageNo !== this.props.pageNo
     ) {
       self.setState({ selectedRows: [], expandRow: null, allRowsSelected: false });
+      if (AppStore.showHelptips() && !AppStore.getOnboardingComplete() && this.props.devices.length) {
+        setTimeout(() => {
+          AppActions.setSnackbar('open', 10000, '', <WelcomeSnackTip progress={2} />, () => {}, self.onCloseSnackbar);
+        }, 400);
+      }
     }
 
     if (prevProps.currentTab !== this.props.currentTab && this.props.currentTab === 'Device groups') {
@@ -53,13 +58,14 @@ export default class Authorized extends React.Component {
     if (prevProps.group !== this.props.group) {
       this.setState({ textfield: this.props.group ? decodeURIComponent(this.props.group) : 'All devices' });
     }
-
-    if (this.props.showHelptips && !AppStore.getOnboardingComplete() && this.props.devices.length) {
-      setTimeout(() => {
-        AppActions.setSnackbar('open', 10000, '', <WelcomeSnackTip progress={2} />, () => AppActions.setSnackbar(''));
-      }, 400);
-    }
   }
+
+  onCloseSnackbar = (_, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    AppActions.setSnackbar('');
+  };
 
   _sortColumn() {
     console.log('sort');

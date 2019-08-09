@@ -8,7 +8,7 @@ import UsersApi from '../api/users-api';
 import parse from 'parse-link-header';
 import { advanceOnboarding } from '../utils/onboardingmanager';
 
-var rootUrl = 'https://localhost:443';
+const rootUrl = mender_environment && mender_environment.rootUrl ? mender_environment.rootUrl : 'https://localhost:443';
 const apiUrl = `${rootUrl}/api/management/v1`;
 const apiUrlV2 = `${rootUrl}/api/management/v2`;
 const deploymentsApiUrl = `${apiUrl}/deployments`;
@@ -335,6 +335,16 @@ const AppActions = {
       actionType: AppConstants.SET_ONBOARDING_DEVICE_TYPE,
       value
     }),
+  setOnboardingApproach: value =>
+    AppDispatcher.handleViewAction({
+      actionType: AppConstants.SET_ONBOARDING_APPROACH,
+      value
+    }),
+  setOnboardingArtifactIncluded: value =>
+    AppDispatcher.handleViewAction({
+      actionType: AppConstants.SET_ONBOARDING_ARTIFACT_INCLUDED,
+      value
+    }),
   setShowDismissOnboardingTipsDialog: val =>
     AppDispatcher.handleViewAction({
       actionType: AppConstants.SET_SHOW_ONBOARDING_HELP_DIALOG,
@@ -481,6 +491,22 @@ const AppActions = {
       return Promise.resolve(deployments);
     });
   },
+
+  getDeploymentsWithStats: deployments =>
+    Promise.all(
+      deployments.map(deployment =>
+        // have to call inventory each time - accepted list can change order so must refresh inventory too
+        AppActions.getSingleDeploymentStats(deployment.id).then(stats => {
+          deployment.stats = stats;
+          AppDispatcher.handleViewAction({
+            actionType: AppConstants.RECEIVE_PAST_DEPLOYMENTS,
+            deployments
+          });
+          return Promise.resolve(deployment);
+        })
+      )
+    ),
+
   getPendingDeployments: (page = default_page, per_page = default_per_page) =>
     DeploymentsApi.get(`${deploymentsApiUrl}/deployments?status=pending&page=${page}&per_page=${per_page}`).then(res => {
       var deployments = res.body;

@@ -32,15 +32,13 @@ export default class Deployments extends React.Component {
     };
   }
   componentWillUnmount() {
+    AppStore.removeChangeListener(this._onChange.bind(this));
     clearInterval(this.timer);
     clearAllRetryTimers();
-    const changeEvent = this._onChange.bind(this);
-    AppStore.removeChangeListener(changeEvent);
   }
   componentDidMount() {
     var self = this;
-    const changeEvent = this._onChange.bind(this);
-    AppStore.changeListener(changeEvent);
+    AppStore.changeListener(this._onChange.bind(this));
     clearAllRetryTimers();
     self.timer = setInterval(() => self.getDeployments(), refreshDeploymentsLength);
     self.getDeployments();

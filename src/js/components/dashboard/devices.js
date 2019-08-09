@@ -88,7 +88,7 @@ export default class Devices extends React.Component {
 
   render() {
     const { devices, inactiveDevices, onboardingComplete, pendingDevices, deltaActivity, showHelptips } = this.state;
-    const hasPending = pendingDevices > 0;
+    const hasPending = pendingDevices > 0 || AppStore.getTotalPendingDevices() > 0;
     const noDevicesAvailable = !devices && !hasPending;
     let onboardingComponent = null;
     if (this.anchor) {
@@ -113,7 +113,7 @@ export default class Devices extends React.Component {
         <div style={Object.assign({ marginBottom: '30px', marginTop: '50px' }, this.props.styles)} ref={element => (this.anchor = element)}>
           {hasPending ? (
             <PendingDevices
-              pendingDevicesCount={pendingDevices}
+              pendingDevicesCount={pendingDevices || AppStore.getTotalPendingDevices()}
               isActive={hasPending}
               showHelptips={showHelptips}
               onClick={this.props.clickHandle}

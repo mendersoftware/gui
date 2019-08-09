@@ -4,6 +4,7 @@ import IconButton from '@material-ui/core/IconButton';
 import CopyPasteIcon from '@material-ui/icons/FileCopy';
 
 import { detectOsIdentifier } from '../../../helpers';
+import AppStore from '../../../stores/app-store';
 
 // we don't support windows yet, so we'll point them to the linux file instead
 const downloadFolder = {
@@ -33,8 +34,9 @@ export default class BuildDemoArtifact extends React.Component {
   }
 
   render() {
-    var executable = `chmod +x mender-artifact`;
-    var file_install = `wget https://raw.githubusercontent.com/mendersoftware/mender/master/support/modules-artifact-gen/single-file-artifact-gen \nchmod +x single-file-artifact-gen`;
+    var executable = `sudo chmod +x mender-artifact`;
+    var file_install = `wget https://raw.githubusercontent.com/mendersoftware/mender/${AppStore.getMenderVersion()}/support/modules-artifact-gen/single-file-artifact-gen
+    sudo chmod +x single-file-artifact-gen`;
     var generate =
       `ARTIFACT_NAME="demo-webserver-updated" \nDEVICE_TYPE="generic_x86" \nOUTPUT_PATH="demo-webserver-updated.mender" \nDEST_DIR="/var/www/localhost/htdocs/" \nFILE_NAME="index.html" \n./single-file-artifact-gen -n` +
       ' ${ARTIFACT_NAME} -t ${DEVICE_TYPE} -d ${DEST_DIR} -o ${OUTPUT_PATH} ${FILE_NAME}';
@@ -56,7 +58,12 @@ export default class BuildDemoArtifact extends React.Component {
 
         <p>
           1.{' '}
-          <a href={`https://d1b0l86ne08fsf.cloudfront.net/mender-artifact/master/${downloadFolder[detectOsIdentifier()]}/mender-artifact`} target="_blank">
+          <a
+            href={`https://d1b0l86ne08fsf.cloudfront.net/mender-artifact/${AppStore.getMenderArtifactVersion()}/${
+              downloadFolder[detectOsIdentifier()]
+            }/mender-artifact`}
+            target="_blank"
+          >
             Download the mender-artifact tool here
           </a>
           , extract it then make it executable by running:

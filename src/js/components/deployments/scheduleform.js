@@ -140,8 +140,8 @@ export default class ScheduleForm extends React.Component {
             <RootRef rootRef={ref => (this.releaseRef = ref)}>
               <Grid container spacing={16}>
                 <Grid item>
-                  {self.props.releaseArtifacts ? (
-                    <TextField value={release ? release.Name : ''} label="Release" disabled={true} style={infoStyle} />
+                  {release ? (
+                    <TextField value={release.Name} label="Release" disabled={true} style={infoStyle} />
                   ) : (
                     <AutoSelect
                       className="margin-right"
@@ -152,7 +152,7 @@ export default class ScheduleForm extends React.Component {
                     />
                   )}
                 </Grid>
-                {artifact ? (
+                {device_types ? (
                   <Grid item>
                     <TextField disabled={true} placeholder="Device types" label="Device types" value={device_types} style={infoStyle} />
                   </Grid>

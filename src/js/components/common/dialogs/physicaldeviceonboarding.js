@@ -9,8 +9,9 @@ import HelpIcon from '@material-ui/icons/Help';
 
 import AutoSelect from '../forms/autoselect';
 import AppActions from '../../../actions/app-actions';
-import AppStore from '../../../stores/app-store';
 import { findLocalIpAddress } from '../../../helpers';
+import { advanceOnboarding } from '../../../utils/onboardingmanager';
+import AppStore from '../../../stores/app-store';
 
 export default class PhysicalDeviceOnboarding extends React.Component {
   constructor(props, context) {
@@ -25,22 +26,13 @@ export default class PhysicalDeviceOnboarding extends React.Component {
   componentDidMount() {
     const self = this;
     findLocalIpAddress().then(ipAddress => self.setState({ ipAddress }));
-  }
-
-  componentWillUnmount() {
-    setTimeout(() => {
-      const pendingDevices = AppStore.getPendingDevices();
-      const allDevices = AppStore.getAllDevices();
-      if (!(pendingDevices.length || allDevices.length)) {
-        AppActions.setConnectingDialogProgressed(null);
-      }
-    }, 1000 * 60 * 60); // show regular tooltip if 1 hour after this dialog still no device was connected
+    AppActions.setOnboardingApproach('virtual');
   }
 
   copied() {
     var self = this;
     self.setState({ copied: true });
-    AppActions.setConnectingDialogProgressed(Date.now());
+    advanceOnboarding('devices-accepted-onboarding');
     setTimeout(() => {
       self.setState({ copied: false });
     }, 5000);
@@ -56,7 +48,6 @@ export default class PhysicalDeviceOnboarding extends React.Component {
     const { ipAddress, selection } = self.state;
     const { token } = self.props;
 
-    /* TODO: Figure out the user IP address automatically or extend the instructions to an extra step */
     let connectionInstructions = `
       sudo sed /etc/mender/mender.conf -i -e "/Paste your Hosted Mender token here/d;s/hosted.mender.io/docker.mender.io/;1 a \\ \\ \\"ServerCertificate\\": \\"/etc/mender/server.crt\\","
       sudo wget -q -O /etc/mender/server.crt https://raw.githubusercontent.com/mendersoftware/meta-mender/master/meta-mender-demo/recipes-mender/mender/files/server.crt
@@ -70,9 +61,8 @@ export default class PhysicalDeviceOnboarding extends React.Component {
       sudo sed -i "s/Paste your Hosted Mender token here/$TENANT_TOKEN/" /etc/mender/mender.conf
     `;
     }
-    /* TODO: Replace the hardcoded master with the mender-client version */
-    let codeToCopy = `wget https://d1b0l86ne08fsf.cloudfront.net/master/dist-packages/debian/armhf/mender-client_master-1_armhf.deb
-    sudo dpkg -i mender-client_master-1_armhf.deb
+    let codeToCopy = `wget https://d1b0l86ne08fsf.cloudfront.net/${AppStore.getMenderDebPackageVersion()}/dist-packages/debian/armhf/mender-client_${AppStore.getMenderDebPackageVersion()}-1_armhf.deb
+    sudo dpkg -i mender-client_${AppStore.getMenderDebPackageVersion()}-1_armhf.deb
     sudo cp /etc/mender/mender.conf.demo /etc/mender/mender.conf
      ${connectionInstructions}
     sudo mkdir -p /var/lib/mender

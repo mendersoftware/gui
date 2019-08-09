@@ -3,7 +3,7 @@ import React from 'react';
 import Button from '@material-ui/core/Button';
 
 import AppActions from '../../actions/app-actions';
-import { getReachableDeviceAddress } from '../../helpers';
+import { getDemoDeviceAddress } from '../../helpers';
 import { advanceOnboarding } from '../../utils/onboardingmanager';
 import Loader from '../common/loader';
 
@@ -18,7 +18,7 @@ export default class DeploymentCompleteTip extends React.Component {
   componentDidMount() {
     const self = this;
     AppActions.getDevicesByStatus('accepted')
-      .then(getReachableDeviceAddress)
+      .then(getDemoDeviceAddress)
       .catch(e => console.log(e))
       .then(targetUrl => self.setState({ targetUrl, loading: false }));
   }
@@ -32,8 +32,8 @@ export default class DeploymentCompleteTip extends React.Component {
     AppActions.setOnboardingComplete(false);
     const url = this.state.targetUrl ? this.state.targetUrl : this.props.targetUrl;
     const parametrizedAddress = `${url}/index.html?source=${encodeURIComponent(window.location)}`;
-    window.open(parametrizedAddress, '_blank');
     advanceOnboarding('deployments-past-completed');
+    window.open(parametrizedAddress, '_blank');
     AppActions.setShowCreateArtifactDialog(true);
     this.onClose();
   }
