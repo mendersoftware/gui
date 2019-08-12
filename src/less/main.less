@@ -2116,13 +2116,26 @@ span.day {
 }
 
 // Releases & Artifacts
-
+.repository {
+  min-height: 400px;
+  height: 100%;
+  display: flex;
+  .release-repo {
+    overflow: auto;
+    width: 100%;
+  }
 .repository-list {
   border-right: 1px solid @lightergrey;
   min-width: 210px;
-  min-height: 83vh;
+    > div.margin-bottom-small {
+      height: 85px;
 }
-
+    > ul {
+      overflow: auto;
+      height: 70vh;
+    }
+  }
+}
 .release-repo > .flexbox:first-of-type {
   padding-top: 15px;
 }
