@@ -88,7 +88,14 @@ export default class AutoSelect extends React.Component {
             <Fade {...TransitionProps} timeout={350}>
               <Paper elevation={2}>
                 <ClickAwayListener onClickAway={() => self.setState({ open: false })}>
-                  <MenuList>{items}</MenuList>
+                  <MenuList
+                    style={{
+                      overflow: 'scroll',
+                      maxHeight: '250px'
+                    }}
+                  >
+                    {items}
+                  </MenuList>
                 </ClickAwayListener>
               </Paper>
             </Fade>
