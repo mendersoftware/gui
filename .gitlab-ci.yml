@@ -83,13 +83,15 @@ test:lint:
 test:acceptance:
   image: tiangolo/docker-with-compose
   services:
-    - docker:dind
+    - docker:18-dind
   stage: test
   script:
     - apk add git bash
-    - git clone https://github.com/mendersoftware/integration.git ;
+    - git clone https://github.com/mendersoftware/integration.git
     - cp -r integration/tests/* tests
     - GUI_REPOSITORY=$(pwd) INTEGRATION_PATH=$(pwd)/integration ./tests/e2e_tests/run
+  tags:
+    - mender-qa-slave
 
 publish:
   stage: publish
