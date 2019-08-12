@@ -32,6 +32,7 @@ export default class Login extends React.Component {
   componentDidMount() {
     clearAllRetryTimers();
     AppActions.setCurrentUser(null);
+    AppActions.setSnackbar('');
   }
 
   componentWillUnmount() {
