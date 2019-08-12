@@ -69,12 +69,12 @@ export default class CreateArtifactDialog extends React.Component {
     const artifactGenerator = 'single-file-artifact-gen';
     const artifactName = 'demo-webserver-updated';
     const chmodCode = `
-    wget https://d1b0l86ne08fsf.cloudfront.net/mender-artifact/${AppStore.getMenderArtifactVersion()}/${downloadFolder[detectOsIdentifier()]}/mender-artifact
-    chmod +x mender-artifact
-    wget https://raw.githubusercontent.com/mendersoftware/mender/${AppStore.getMenderVersion()}/support/modules-artifact-gen/${artifactGenerator}
-    chmod +x ${artifactGenerator}
-    mv mender-artifact ${artifactGenerator} /usr/local/bin/
-    `;
+wget https://d1b0l86ne08fsf.cloudfront.net/mender-artifact/${AppStore.getMenderArtifactVersion()}/${downloadFolder[detectOsIdentifier()]}/mender-artifact
+chmod +x mender-artifact
+wget https://raw.githubusercontent.com/mendersoftware/mender/${AppStore.getMenderVersion()}/support/modules-artifact-gen/${artifactGenerator}
+chmod +x ${artifactGenerator}
+sudo cp mender-artifact ${artifactGenerator} /usr/local/bin/
+`;
 
     const artifactGenCode = `
     ARTIFACT_NAME="${artifactName}"; \
