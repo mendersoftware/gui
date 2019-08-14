@@ -47,8 +47,8 @@ export default class MyOrganization extends React.Component {
         {this.state.org ? (
           <div>
             <List>
-              <ListItem key="name" disabled={true} secondaryText={this.state.org.name}>
-                <ListItemText primary="Organization name" />
+              <ListItem key="name" disabled={true}>
+                <ListItemText primary="Organization name" secondary={this.state.org.name} />
               </ListItem>
               <Divider />
               <div className="material-list-item">
