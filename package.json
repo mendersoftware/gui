@@ -27,7 +27,6 @@
     "prop-types": "^15.7.2",
     "rc-pagination": "^1.20.1",
     "react": "^16.8.6",
-    "react-addons-update": "^15.6.2",
     "react-collapse": "^4.0.3",
     "react-cookie": "^1.0.5",
     "react-copy-to-clipboard": "^5.0.1",
