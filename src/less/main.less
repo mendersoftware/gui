@@ -892,6 +892,24 @@ ul.link-list {
 }
 
 //  Help section
+.help-container {
+  min-height: 400px;
+  height: 100%;
+  display: flex;
+  > ul {
+    min-width: 250px;
+    width: 260px;
+    border-right: 1px solid @lightergrey;
+    overflow: auto;
+    height: 90vh;
+  }
+  > div {
+    overflow: auto;
+    width: 100%;
+    padding-top: 1px;
+    padding-left: 70px;
+  }
+}
 
 .help-content {
   font-size: 15px;
@@ -2120,20 +2138,20 @@ span.day {
   min-height: 400px;
   height: 100%;
   display: flex;
-  .release-repo {
-    overflow: auto;
-    width: 100%;
-  }
-.repository-list {
-  border-right: 1px solid @lightergrey;
-  min-width: 210px;
+  .repository-list {
+    border-right: 1px solid @lightergrey;
+    min-width: 210px;
     > div.margin-bottom-small {
       height: 85px;
-}
+    }
     > ul {
       overflow: auto;
       height: 70vh;
     }
+  }
+  .release-repo {
+    overflow: auto;
+    width: 100%;
   }
 }
 .release-repo > .flexbox:first-of-type {

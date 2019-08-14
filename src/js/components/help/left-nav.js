@@ -51,18 +51,15 @@ export default class LeftNav extends React.Component {
   render() {
     var self = this;
     return (
-      <List>
-        <ListSubheader>
-          Help topics
-        </ListSubheader>
+      <List className="leftFixed">
+        <ListSubheader disableSticky={true}>Help topics</ListSubheader>
         {self.state.links.map(link => {
-          return (!self.props.isHosted && link.hosted) ? null : (
+          return !self.props.isHosted && link.hosted ? null : (
             <ListItem className="navLink helpNav" component={NavLink} exact={true} key={link.path} style={{ paddingLeft: link.level * 16 }} to={link.path}>
               <ListItemText primary={link.title} />
             </ListItem>
-          )
-        }
-        )}
+          );
+        })}
       </List>
     );
   }
