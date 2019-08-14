@@ -94,7 +94,7 @@ export default class Pending extends React.Component {
             rowsPerPage={self.state.pageSize}
             onChangeRowsPerPage={pageSize => self.setState({ pageSize })}
             page={self.props.page}
-            onPageChange={self._handlePageChange}
+            onChangePage={page => self.props.refreshPending(page)}
           />
         ) : null}
       </div>

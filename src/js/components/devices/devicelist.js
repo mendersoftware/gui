@@ -124,7 +124,13 @@ export default class DeviceList extends React.Component {
             />
           ))}
         </div>
-        <Pagination count={pageTotal} rowsPerPage={pageLength} onChangeRowsPerPage={onChangeRowsPerPage} page={pageNo} onChangePage={self.onPageChange} />
+        <Pagination
+          count={pageTotal}
+          rowsPerPage={pageLength}
+          onChangeRowsPerPage={onChangeRowsPerPage}
+          page={pageNo}
+          onChangePage={page => self.onPageChange(page)}
+        />
         {pageLoading ? (
           <div className="smallLoaderContainer">
             <Loader show={true} />

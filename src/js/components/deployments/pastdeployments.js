@@ -236,7 +236,7 @@ export default class Past extends React.Component {
               rowsPerPage={self.props.pageSize}
               onChangeRowsPerPage={self.props.onChangeRowsPerPage}
               page={self.props.page}
-              onPageChange={page => self._handlePageChange(page)}
+              onChangePage={page => self._handlePageChange(page)}
             />
           ) : (
             <div className={this.props.loading || pastMap.length ? 'hidden' : 'dashboard-placeholder'}>

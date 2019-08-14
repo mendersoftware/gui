@@ -403,7 +403,7 @@ export default class DeploymentReport extends React.Component {
               rowsPerPage={self.state.perPage}
               onChangeRowsPerPage={perPage => self.setState({ perPage })}
               page={self.state.currentPage}
-              onPageChange={self._handlePageChange}
+              onChangePage={page => self._handlePageChange(page)}
             />
           ) : null}
         </div>

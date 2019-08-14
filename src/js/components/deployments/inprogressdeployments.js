@@ -28,20 +28,19 @@ export default class Progress extends React.Component {
   render() {
     const self = this;
     // get statistics for each in progress
-    var progressMap = this.props.progress.map(function(deployment, index) {
-      var status = <DeploymentStatus isActiveTab={this.props.isActiveTab} refresh={true} id={deployment.id} />;
-      return (
-        <TableRow style={{ height: '52px' }} hover key={index} onClick={() => this.props.openReport(index, 'progress')}>
-          <TableCell>{deployment.artifact_name}</TableCell>
-          <TableCell>{deployment.name}</TableCell>
-          <TableCell>
-            <Time value={formatTime(deployment.created)} format="YYYY-MM-DD HH:mm" />
-          </TableCell>
-          <TableCell style={{ textAlign: 'right', width: '100px' }}>{deployment.device_count}</TableCell>
-          <TableCell style={{ overflow: 'visible', minWidth: '400px' }}>{status}</TableCell>
-        </TableRow>
-      );
-    }, this);
+    var progressMap = this.props.progress.map((deployment, index) => (
+      <TableRow style={{ height: '52px' }} hover key={index} onClick={() => this.props.openReport(index, 'progress')}>
+        <TableCell>{deployment.artifact_name}</TableCell>
+        <TableCell>{deployment.name}</TableCell>
+        <TableCell>
+          <Time value={formatTime(deployment.created)} format="YYYY-MM-DD HH:mm" />
+        </TableCell>
+        <TableCell style={{ textAlign: 'right', width: '100px' }}>{deployment.device_count}</TableCell>
+        <TableCell style={{ overflow: 'visible', minWidth: '400px' }}>
+          <DeploymentStatus isActiveTab={this.props.isActiveTab} refresh={true} id={deployment.id} />
+        </TableCell>
+      </TableRow>
+    ));
 
     let onboardingComponent = null;
     if (!AppStore.getOnboardingComplete() && this.inprogressRef) {
@@ -85,7 +84,7 @@ export default class Progress extends React.Component {
               rowsPerPage={self.state.pageSize}
               onChangeRowsPerPage={pageSize => self.setState({ pageSize })}
               page={self.props.page}
-              onPageChange={self.props.refreshProgress}
+              onChangePage={self.props.refreshProgress}
             />
           ) : null}
 

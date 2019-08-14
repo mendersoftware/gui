@@ -51,6 +51,8 @@ export default class Deployments extends React.Component {
       startDate: today,
       endDate: tonight,
       per_page: 20,
+      prog_page: 1,
+      pend_page: 1,
       refreshDeploymentsLength: 30000,
       dialog: false,
       reportDialog: false,

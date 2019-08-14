@@ -15,44 +15,28 @@ const TablePaginationActions = props => {
   const { count, page, rowsPerPage, onChangePage } = props;
   const currentPage = page + 1;
 
-  function handleFirstPageButtonClick(event) {
-    onChangePage(event, 0);
-  }
-
-  function handleBackButtonClick(event) {
-    onChangePage(event, currentPage - 1);
-  }
-
-  function handleNextButtonClick(event) {
-    onChangePage(event, currentPage + 1);
-  }
-
-  function handleLastPageButtonClick(event) {
-    onChangePage(event, Math.max(0, Math.ceil(count / rowsPerPage) - 1));
-  }
-
   const pages = Math.ceil(count / rowsPerPage);
   return (
     <div className="flexbox">
-      <IconButton onClick={handleFirstPageButtonClick} disabled={currentPage === 0}>
+      <IconButton onClick={() => onChangePage(1)} disabled={currentPage === 1}>
         <FirstPageIcon />
       </IconButton>
-      <IconButton onClick={handleBackButtonClick} disabled={currentPage === 0}>
+      <IconButton onClick={() => onChangePage(currentPage - 1)} disabled={currentPage === 1}>
         <KeyboardArrowLeft />
       </IconButton>
       <div className="flexbox" style={{ alignItems: 'baseline' }}>
         <TextField
           value={currentPage}
-          onChange={e => onChangePage(e, e.target.value)}
+          onChange={e => onChangePage(e.target.value)}
           margin="dense"
           style={{ minWidth: '40px', maxWidth: '40px', marginRight: '10px' }}
         />{' '}
         / {pages}
       </div>
-      <IconButton onClick={handleNextButtonClick} disabled={currentPage >= Math.ceil(count / rowsPerPage) - 1}>
+      <IconButton onClick={() => onChangePage(currentPage + 1)} disabled={currentPage >= Math.ceil(count / rowsPerPage)}>
         <KeyboardArrowRight />
       </IconButton>
-      <IconButton onClick={handleLastPageButtonClick} disabled={currentPage >= Math.ceil(count / rowsPerPage) - 1}>
+      <IconButton onClick={() => onChangePage(Math.max(1, Math.ceil(count / rowsPerPage)))} disabled={currentPage >= Math.ceil(count / rowsPerPage) - 1}>
         <LastPageIcon />
       </IconButton>
     </div>
@@ -61,20 +45,18 @@ const TablePaginationActions = props => {
 
 export default class Pagination extends React.PureComponent {
   render() {
-    const { className, rowsPerPage, page, count, onChangeRowsPerPage, onPageChange } = this.props;
+    const { className, page, onChangeRowsPerPage, ...remainingProps } = this.props;
     return (
       <TablePagination
         className={`flexbox margin-top ${className}`}
         classes={{ spacer: 'flexbox no-basis' }}
         component="div"
-        count={count}
         labelDisplayedRows={() => ''}
-        rowsPerPage={rowsPerPage}
         rowsPerPageOptions={defaultRowsPerPageOptions}
         onChangeRowsPerPage={e => onChangeRowsPerPage(e.target.value)}
         page={page - 1}
-        onChangePage={(_, page) => onPageChange(page + 1)}
         ActionsComponent={TablePaginationActions}
+        {...remainingProps}
       />
     );
   }
