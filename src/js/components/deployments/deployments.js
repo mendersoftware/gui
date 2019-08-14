@@ -358,7 +358,10 @@ export default class Deployments extends React.Component {
     // set the selected groups devices to state, to be sent down to the child schedule form
     if (artifact && group) {
       devices = (group !== 'All devices' ? this.state[group] : this.state.allDevices) || [];
-      filteredDevices = AppStore.filterDevicesByType(devices, artifact.device_types_compatible);
+      filteredDevices = devices;
+      if (devices.length < 5000) {
+        filteredDevices = AppStore.filterDevicesByType(devices, artifact.device_types_compatible);
+      }
     }
     this.setState({ deploymentDevices: devices, filteredDevices: filteredDevices });
   }
