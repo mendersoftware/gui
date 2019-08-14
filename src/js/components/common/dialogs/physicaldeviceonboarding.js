@@ -49,26 +49,26 @@ export default class PhysicalDeviceOnboarding extends React.Component {
     const { token } = self.props;
 
     let connectionInstructions = `
-      sudo sed /etc/mender/mender.conf -i -e "/Paste your Hosted Mender token here/d;s/hosted.mender.io/docker.mender.io/;1 a \\ \\ \\"ServerCertificate\\": \\"/etc/mender/server.crt\\","
-      sudo wget -q -O /etc/mender/server.crt https://raw.githubusercontent.com/mendersoftware/meta-mender/master/meta-mender-demo/recipes-mender/mender/files/server.crt
-      DOCKER_HOST_IP="${ipAddress ? ipAddress : 'X.X.X.X'}"
-      grep "\\ss3.docker.mender.io" /etc/hosts >/dev/null 2>&1 || echo "$DOCKER_HOST_IP s3.docker.mender.io # Added by mender" | sudo tee -a /etc/hosts > /dev/null
-      grep "\\sdocker.mender.io" /etc/hosts >/dev/null 2>&1 || echo "$DOCKER_HOST_IP docker.mender.io # Added by mender" | sudo tee -a /etc/hosts > /dev/null
-    `;
+sed /etc/mender/mender.conf -i -e "/Paste your Hosted Mender token here/d;s/hosted.mender.io/docker.mender.io/;1 a \\ \\ \\"ServerCertificate\\": \\"/etc/mender/server.crt\\","
+wget -q -O /etc/mender/server.crt https://raw.githubusercontent.com/mendersoftware/meta-mender/master/meta-mender-demo/recipes-mender/mender/files/server.crt
+DOCKER_HOST_IP="${ipAddress ? ipAddress : 'X.X.X.X'}"
+grep "\\ss3.docker.mender.io" /etc/hosts >/dev/null 2>&1 || echo "$DOCKER_HOST_IP s3.docker.mender.io # Added by mender" | tee -a /etc/hosts > /dev/null
+grep "\\sdocker.mender.io" /etc/hosts >/dev/null 2>&1 || echo "$DOCKER_HOST_IP docker.mender.io # Added by mender" | tee -a /etc/hosts > /dev/null
+`;
     if (token) {
       connectionInstructions = `
-        TENANT_TOKEN="'${token}'"
-      sudo sed -i "s/Paste your Hosted Mender token here/$TENANT_TOKEN/" /etc/mender/mender.conf
-    `;
+TENANT_TOKEN="'${token}'"
+sed -i "s/Paste your Hosted Mender token here/$TENANT_TOKEN/" /etc/mender/mender.conf
+`;
     }
-    let codeToCopy = `wget https://d1b0l86ne08fsf.cloudfront.net/${AppStore.getMenderDebPackageVersion()}/dist-packages/debian/armhf/mender-client_${AppStore.getMenderDebPackageVersion()}-1_armhf.deb
-    sudo dpkg -i mender-client_${AppStore.getMenderDebPackageVersion()}-1_armhf.deb
-    sudo cp /etc/mender/mender.conf.demo /etc/mender/mender.conf
-     ${connectionInstructions}
-    sudo mkdir -p /var/lib/mender
-    echo "device_type=${selection}" | sudo tee /var/lib/mender/device_type
-    sudo systemctl enable mender && sudo systemctl restart mender
-    `;
+    let codeToCopy = `sudo bash -c 'wget https://d1b0l86ne08fsf.cloudfront.net/${AppStore.getMenderDebPackageVersion()}/dist-packages/debian/armhf/mender-client_${AppStore.getMenderDebPackageVersion()}-1_armhf.deb
+dpkg -i mender-client_${AppStore.getMenderDebPackageVersion()}-1_armhf.deb
+cp /etc/mender/mender.conf.demo /etc/mender/mender.conf
+${connectionInstructions}
+mkdir -p /var/lib/mender
+echo "device_type=${selection}" | tee /var/lib/mender/device_type
+systemctl enable mender && systemctl restart mender'
+`;
 
     const types = [
       {

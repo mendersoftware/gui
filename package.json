@@ -51,10 +51,10 @@
   },
   "devDependencies": {
     "autoprefixer": "^9.5.1",
-    "@babel/core": "^7.4.5",
+    "@babel/core": "^7.5.5",
     "babel-loader": "^8.0.6",
-    "@babel/plugin-proposal-class-properties": "^7.4.4",
-    "@babel/preset-env": "^7.4.5",
+    "@babel/plugin-proposal-class-properties": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
     "@babel/preset-react": "^7.0.0",
     "clean-webpack-plugin": "^2.0.2",
     "css-loader": "^2.1.1",
