@@ -269,12 +269,14 @@ export default class DeviceGroups extends React.Component {
             // for each device, get device identity info
             const allDeviceDetails = devices.map(device => {
               // have to call each time - accepted list can change order
-              return self._getDeviceDetails(device.id).then(deviceAuth => {
-                device.identity_data = deviceAuth.identity_data;
-                device.auth_sets = deviceAuth.auth_sets;
-                device.status = deviceAuth.status;
-                return Promise.resolve(device);
-              });
+              return AppActions.getDeviceAuth(device.id)
+                .then(deviceAuth => {
+                  device.identity_data = deviceAuth.identity_data;
+                  device.auth_sets = deviceAuth.auth_sets;
+                  device.status = deviceAuth.status;
+                  return Promise.resolve(device);
+                })
+                .catch(() => Promise.resolve(device));
             });
             return Promise.all(allDeviceDetails);
           })
@@ -371,10 +373,6 @@ export default class DeviceGroups extends React.Component {
   /*
    * Get full device identity details for single selected device
    */
-  _getDeviceDetails(device_id) {
-    return AppActions.getDeviceAuth(device_id);
-  }
-
   _getInventoryForDevice(device_id) {
     // get inventory for single device
     return AppActions.getDeviceById(device_id).catch(err => {

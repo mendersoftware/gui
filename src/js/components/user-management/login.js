@@ -12,7 +12,7 @@ import TextInput from '../common/forms/textinput';
 import PasswordInput from '../common/forms/passwordinput';
 import FormCheckbox from '../common/forms/formcheckbox';
 
-import { preformatWithRequestID } from '../../helpers';
+import { decodeSessionToken, preformatWithRequestID } from '../../helpers';
 
 export default class Login extends React.Component {
   static contextTypes = {
@@ -72,9 +72,14 @@ export default class Login extends React.Component {
         // set maxAge if noexpiry checkbox not checked
         cookie.save('JWT', token, options);
 
-        // logged in, so redirect
-        self.setState({ redirectToReferrer: true });
-        return AppActions.setSnackbar('');
+        var userId = decodeSessionToken(token);
+        return AppActions.getUser(userId)
+          .then(AppActions.setCurrentUser)
+          .then(() => {
+            // logged in, so redirect
+            self.setState({ redirectToReferrer: true });
+            AppActions.setSnackbar('');
+          });
       })
       .catch(err => {
         var errMsg = 'There was a problem logging in';
