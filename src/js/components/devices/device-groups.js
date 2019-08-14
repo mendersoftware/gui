@@ -48,7 +48,7 @@ export default class DeviceGroups extends React.Component {
       loading: true,
       tmpDevices: [],
       refreshDeviceLength: 10000,
-      isHosted: window.location.hostname === 'hosted.mender.io'
+      isHosted: AppStore.getIsHosted()
     };
   }
 

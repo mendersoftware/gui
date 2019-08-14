@@ -43,8 +43,10 @@ export default class Login extends React.Component {
   _getState() {
     return {
       noExpiry: cookie.load('noExpiry'),
-      isHosted: window.location.hostname === 'hosted.mender.io',
-      redirectToReferrer: false
+      isHosted: AppStore.getIsHosted(),
+      redirectToReferrer: false,
+      has2FA: AppStore.get2FARequired(),
+      isEnterprise: AppStore.getIsEnterprise()
     };
   }
 
@@ -58,8 +60,21 @@ export default class Login extends React.Component {
     if (!formData.hasOwnProperty('email')) {
       return;
     }
+    if (self.state.isEnterprise && AppStore.get2FARequired() && !formData.hasOwnProperty('token2fa')) {
+      return;
+    }
     return AppActions.loginUser(formData)
+      .catch(err => {
+        if (err.error.text.error.includes('2fa')) {
+          const settings = AppStore.getGlobalSettings();
+          AppActions.saveGlobalSettings(Object.assign(settings, { '2fa': 'enabled' }));
+          return self.setState({ has2FA: true });
+        }
+      })
       .then(token => {
+        if (!token) {
+          return;
+        }
         var options = {};
         if (!formData.noExpiry) {
           options = { maxAge: 900 };
@@ -92,6 +107,7 @@ export default class Login extends React.Component {
   }
 
   render() {
+    const { has2FA } = this.state;
     let { from } = { from: { pathname: '/' } };
     if (this.props.location.state && this.props.location.state.from.pathname !== '/ui/') {
       from = this.props.location.state.from;
@@ -118,6 +134,7 @@ export default class Login extends React.Component {
           >
             <TextInput hint="Your email" label="Your email" id="email" required={true} validations="isLength:1,isEmail" />
             <PasswordInput className="margin-bottom-small" id="password" label="Password" required={true} />
+            {has2FA ? <TextInput hint="Two Factor Authentication Code" label="Two Factor Authentication Code" id="token2fa" /> : <div />}
             <FormCheckbox id="noExpiry" label="Stay logged in" checked={noExpiry === 'true'} />
           </Form>
 

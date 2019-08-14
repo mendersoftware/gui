@@ -45,7 +45,9 @@ export default class TextInput extends React.Component {
     var className = this.props.required ? `${this.props.className} required` : this.props.className;
     return (
       <FormControl className={className} error={Boolean(this.state.errortext)}>
-        <InputLabel htmlFor={this.props.id}>{this.props.label}</InputLabel>
+        <InputLabel htmlFor={this.props.id} {...this.props.InputLabelProps}>
+          {this.props.label}
+        </InputLabel>
         <Input
           id={this.props.id}
           name={this.props.id}

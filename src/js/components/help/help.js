@@ -23,23 +23,23 @@ import AppActions from '../../actions/app-actions';
 var components = {
   'getting-started': {
     title: 'Getting started',
-    component: GettingStarted,
+    component: GettingStarted
   },
   'application-updates': {
     title: 'Application updates',
     component: ApplicationUpdates,
     'mender-deb-package': {
       title: 'Connecting your device using Mender .deb package',
-      component: DebPackage,
+      component: DebPackage
     },
     'demo-virtual-device': {
       title: 'Connecting a demo virtual device',
-      component: VirtualDevice,
+      component: VirtualDevice
     },
     'update-modules': {
       title: 'Enabling different kinds of updates with Update Modules',
-      component: UpdateModules,
-    },
+      component: UpdateModules
+    }
   },
   'system-updates': {
     title: 'System updates',
@@ -63,16 +63,16 @@ var components = {
     'build-demo-artifact': {
       title: 'Building a demo application update Artifact',
       component: BuildDemoArtifact
-    },
+    }
   },
-  'support': {
+  support: {
     title: 'Support',
     component: Support,
-    hosted: true,
+    hosted: true
   },
   'more-help-resources': {
     title: 'More resources',
-    component: MoreHelp,
+    component: MoreHelp
   }
 };
 
@@ -89,7 +89,7 @@ export default class Help extends React.Component {
     return {
       snackbar: AppStore.getSnackbar(),
       hasMultitenancy: AppStore.hasMultitenancy(),
-      isHosted: window.location.hostname === 'hosted.mender.io'
+      isHosted: AppStore.getIsHosted()
     };
   }
   componentDidMount() {
@@ -160,9 +160,8 @@ export default class Help extends React.Component {
         }
       }
 
-    
-      breadcrumbs = splitsplat[0] ? '  >  '+components[splitsplat[0]].title : '';
-      breadcrumbs = splitsplat[1] ? breadcrumbs+'  >  '+components[splitsplat[0]][splitsplat[1]].title : breadcrumbs;
+      breadcrumbs = splitsplat[0] ? '  >  ' + components[splitsplat[0]].title : '';
+      breadcrumbs = splitsplat[1] ? breadcrumbs + '  >  ' + components[splitsplat[0]][splitsplat[1]].title : breadcrumbs;
     }
 
     return (
@@ -171,7 +170,7 @@ export default class Help extends React.Component {
           <LeftNav isHosted={this.state.isHosted} pages={components} />
         </div>
         <div className="rightFluid padding-right" style={{ maxWidth: '780px', paddingTop: '1px', paddingLeft: '70px' }}>
-          <p style={{color: 'rgba(0, 0, 0, 0.54)'}}>Help {breadcrumbs}</p>
+          <p style={{ color: 'rgba(0, 0, 0, 0.54)' }}>Help {breadcrumbs}</p>
           <div style={{ position: 'relative', top: '12px' }} className="help-content">
             <ComponentToShow
               version={this.props.version}

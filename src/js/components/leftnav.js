@@ -5,6 +5,7 @@ import { Link, NavLink } from 'react-router-dom';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
+import AppStore from '../stores/app-store';
 
 var listItems = [
   { route: '/', text: 'Dashboard' },
@@ -17,7 +18,7 @@ export default class LeftNav extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      isHosted: window.location.hostname === 'hosted.mender.io'
+      isHosted: AppStore.getIsHosted()
     };
   }
 

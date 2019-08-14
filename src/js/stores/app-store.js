@@ -22,7 +22,7 @@ var _snackbar = {
   message: ''
 };
 var _currentUser = {};
-var _hasMultitenancy = mender_environment && mender_environment.hasMultitenancy;
+var _hasMultitenancy = mender_environment && mender_environment.features.hasMultitenancy;
 var _organization = {};
 var _showHelptips = null;
 var _showOnboardingTips = true;
@@ -640,7 +640,9 @@ var AppStore = Object.assign({}, EventEmitter.prototype, {
   // return boolean rather than organization details
   hasMultitenancy: () => _hasMultitenancy,
 
-  getIsHosted: () => window.location.hostname === 'hosted.mender.io',
+  getIsHosted: () => (mender_environment && mender_environment.features.isHosted) || window.location.hostname === 'hosted.mender.io',
+
+  getIsEnterprise: () => mender_environment && mender_environment.features.isEnterprise,
 
   getOrganization: () => _organization,
 
@@ -693,6 +695,8 @@ var AppStore = Object.assign({}, EventEmitter.prototype, {
   getUploadInProgress: () => _uploadInProgress,
 
   getGlobalSettings: () => _globalSettings,
+
+  get2FARequired: () => _globalSettings.hasOwnProperty('2fa') && _globalSettings['2fa'] === 'enabled',
 
   dispatcherIndex: AppDispatcher.register(payload => {
     var action = payload.action;
