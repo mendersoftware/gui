@@ -214,25 +214,38 @@ export function getOnboardingStepCompleted(id) {
 
 export function getOnboardingState(userId) {
   let promises = Promise.resolve(getCurrentOnboardingState());
-  const savedState = JSON.parse(window.localStorage.getItem(`${userId}-onboarding`));
-  if (!savedState) {
+  const onboardingKey = `${userId}-onboarding`;
+  const savedState = JSON.parse(window.localStorage.getItem(onboardingKey));
+  if (!savedState || !savedState.complete) {
     const userCookie = cookie.load(`${userId}-onboarded`);
     // to prevent tips from showing up for previously onboarded users completion is set explicitly before the additional requests complete
     if (userCookie) {
       AppActions.setOnboardingComplete(Boolean(userCookie));
     }
-    const requests = [AppActions.getDevicesByStatus('accepted'), AppActions.getReleases(), AppActions.getPastDeployments(), Promise.resolve(userCookie)];
+    const requests = [
+      AppActions.getDevicesByStatus('accepted'),
+      AppActions.getReleases(),
+      AppActions.getPastDeployments(),
+      Promise.resolve(userCookie),
+      AppActions.getDevicesByStatus('accepted')
+    ];
 
-    promises = Promise.all(requests).then(([acceptedDevices, releases, pastDeployments, onboardedCookie]) =>
-      Promise.resolve({
-        complete: Boolean(onboardedCookie) || (acceptedDevices.length > 1 && releases.length > 2 && pastDeployments.length > 2),
+    promises = Promise.all(requests).then(([acceptedDevices, releases, pastDeployments, onboardedCookie, pendingDevices]) => {
+      const state = {
+        complete: !!(
+          Boolean(onboardedCookie) ||
+          (acceptedDevices.length > 1 && pendingDevices.length > 0 && releases.length > 1 && pastDeployments.length > 1) ||
+          (acceptedDevices.length >= 1 && releases.length >= 2 && pastDeployments.length >= 2)
+        ),
         showTips: onboardedCookie ? !onboardedCookie : true,
         deviceType: AppStore.getOnboardingDeviceType(),
         approach: AppStore.getOnboardingApproach(),
         artifactIncluded: AppStore.getOnboardingArtifactIncluded(),
         progress: -1
-      })
-    );
+      };
+      window.localStorage.setItem(onboardingKey, JSON.stringify(state));
+      return Promise.resolve(state);
+    });
   } else {
     promises = Promise.resolve(savedState);
   }
@@ -259,5 +272,7 @@ export function advanceOnboarding(stepId) {
   const madeProgress = progress <= stepIndex ? stepIndex + 1 : progress;
   const onboardingKey = `${user.id}-onboarding`;
   AppActions.setOnboardingProgress(madeProgress);
-  window.localStorage.setItem(onboardingKey, JSON.stringify(Object.assign(getCurrentOnboardingState(), { progress: madeProgress })));
+  const state = Object.assign(getCurrentOnboardingState(), { progress: madeProgress });
+  state.complete = state.progress >= Object.keys(onboardingSteps).length ? true : state.complete;
+  window.localStorage.setItem(onboardingKey, JSON.stringify(state));
 }
