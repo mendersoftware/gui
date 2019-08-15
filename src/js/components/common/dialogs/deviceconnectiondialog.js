@@ -25,6 +25,7 @@ export default class DeviceConnectionDialog extends React.Component {
       progress: 1,
       virtualDevice: false
     };
+    const self = this;
     AppActions.getUserOrganization().then(org => (org ? self.setState({ token: org.tenant_token }) : null));
     AppActions.getReleases().then(releases => AppActions.setOnboardingArtifactIncluded(!!releases.length));
   }
