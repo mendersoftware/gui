@@ -25,6 +25,9 @@ export default class TextInput extends React.Component {
     if (this.props.value) {
       this.props.validate(this, this.props.value);
     }
+    if (this.props.setControlRef) {
+      this.props.setControlRef(this.input);
+    }
   }
   componentDidUpdate(prevProps) {
     if (this.props.focus) {
@@ -33,6 +36,11 @@ export default class TextInput extends React.Component {
     var self = this;
     if (prevProps.value !== this.props.value) {
       this.setState({ value: this.props.value }, self.props.validate(self, self.props.value));
+    }
+  }
+  setControlRef(ref) {
+    if (this.props.setControlRef) {
+      this.props.setControlRef(ref);
     }
   }
   setValue(event) {

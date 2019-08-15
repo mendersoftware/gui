@@ -865,6 +865,14 @@ ul.link-list {
   margin-left: 6px !important;
   max-width: 600px;
   color: @textsecondary !important;
+  &.info {
+    max-width: 300px;
+    color: @textmuted !important;
+    background-color: @placeholder !important;
+    &.place-top:after {
+      border-top-color: @placeholder !important;
+    }
+  }
   p {
     font-size: 14px;
   }
@@ -1403,6 +1411,7 @@ div:focus {
   max-width: 400px;
   min-width: 240px;
   margin: 12% auto 0;
+  position: relative;
 
   h3 {
     text-transform: uppercase;
