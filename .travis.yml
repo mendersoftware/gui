@@ -33,13 +33,13 @@ jobs:
         - mendertesting/check_commits.sh
         - npm run lint
 
-    - stage: Tests
-      name: 'acceptance'
-      install: skip
-      script:
-        - git clone https://github.com/mendersoftware/integration.git
-        - cp -r integration/tests/* tests
-        - GUI_REPOSITORY=$(pwd) INTEGRATION_PATH=$(pwd)/integration ./tests/e2e_tests/run
+    # - stage: Tests
+    #   name: 'acceptance'
+    #   install: skip
+    #   script:
+    #     - git clone https://github.com/mendersoftware/integration.git
+    #     - cp -r integration/tests/* tests
+    #     - GUI_REPOSITORY=$(pwd) INTEGRATION_PATH=$(pwd)/integration ./tests/e2e_tests/run
 
     - stage: Build and publish
       name: 'dockerhub'

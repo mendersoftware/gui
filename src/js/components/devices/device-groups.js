@@ -303,15 +303,18 @@ export default class DeviceGroups extends React.Component {
               var gotAttrs = false;
               device.id_attributes = device.attributes;
               // have to call inventory each time - accepted list can change order so must refresh inventory too
-              return self._getInventoryForDevice(device.id).then(inventory => {
-                device.attributes = inventory.attributes;
-                device.updated_ts = inventory.updated_ts;
-                if (!gotAttrs && inventory.attributes && self.state.isHosted) {
-                  AppActions.setFilterAttributes(inventory.attributes);
-                  gotAttrs = true;
-                }
-                return Promise.resolve(device);
-              });
+              return self
+                ._getInventoryForDevice(device.id)
+                .then(inventory => {
+                  device.attributes = inventory.attributes;
+                  device.updated_ts = inventory.updated_ts;
+                  if (!gotAttrs && inventory.attributes && self.state.isHosted) {
+                    AppActions.setFilterAttributes(inventory.attributes);
+                    gotAttrs = true;
+                  }
+                  return Promise.resolve(device);
+                })
+                .catch(() => Promise.resolve(device));
             });
             // only set state after all devices inventory retrieved
             additionalDeviceRequests = Promise.all(deviceInventoryRequests);
