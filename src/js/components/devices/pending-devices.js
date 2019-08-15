@@ -250,7 +250,7 @@ export default class Pending extends React.Component {
           </div>
         ) : (
           <div>
-            {self.state.showHelptips && !deviceConnectingProgressed ? (
+            {self.state.showHelptips && !AppStore.getOnboardingComplete() && !deviceConnectingProgressed ? (
               <DevicePendingTip />
             ) : (
               <div className={this.state.authLoading ? 'hidden' : 'dashboard-placeholder'}>
