@@ -57,7 +57,25 @@ export default class Login extends React.Component {
   _onChange() {
     this.setState(this._getState());
   }
-
+  _handleLoginError(err) {
+    const self = this;
+    const settings = AppStore.getGlobalSettings();
+    const is2FABackend = err.error.text.error.includes('2fa');
+    if (is2FABackend && !settings.hasOwnProperty('2fa')) {
+      AppActions.saveGlobalSettings(Object.assign(settings, { '2fa': 'enabled' }));
+      return self.setState({ has2FA: true });
+    }
+    let errMsg = 'There was a problem logging in';
+    if (err.res.body && Object.keys(err.res.body).includes('error')) {
+      const twoFAError = is2FABackend || (settings.hasOwnProperty('2fa') && settings['2fa'] === 'enabled') ? ' and verification code' : '';
+      const errorMessage = `There was a problem logging in. Please check your email${
+        twoFAError ? ',' : ' and'
+      } password${twoFAError}. If you still have problems, contact an administrator.`;
+      // if error message, check for "unauthorized"
+      errMsg = err.res.body['error'] === 'unauthorized' ? errorMessage : `${errMsg}: ${err.res.body['error']}`;
+    }
+    AppActions.setSnackbar(preformatWithRequestID(err.res, errMsg), null, 'Copy to clipboard');
+  }
   _handleLogin(formData) {
     var self = this;
 
@@ -68,13 +86,7 @@ export default class Login extends React.Component {
       return;
     }
     return AppActions.loginUser(formData)
-      .catch(err => {
-        if (err.error.text.error.includes('2fa')) {
-          const settings = AppStore.getGlobalSettings();
-          AppActions.saveGlobalSettings(Object.assign(settings, { '2fa': 'enabled' }));
-          return self.setState({ has2FA: true });
-        }
-      })
+      .catch(err => self._handleLoginError(err))
       .then(token => {
         if (!token) {
           return;
@@ -100,14 +112,7 @@ export default class Login extends React.Component {
             AppActions.setSnackbar('');
           });
       })
-      .catch(err => {
-        var errMsg = 'There was a problem logging in';
-        if (err.res.body && Object.keys(err.res.body).includes('error')) {
-          // if error message, check for "unauthorized"
-          errMsg = err.res.body['error'] === 'unauthorized' ? 'The username or password is incorrect' : `${errMsg}: ${err.res.body['error']}`;
-        }
-        AppActions.setSnackbar(preformatWithRequestID(err.res, errMsg), null, 'Copy to clipboard');
-      });
+      .catch(self._handleLoginError);
   }
 
   render() {
