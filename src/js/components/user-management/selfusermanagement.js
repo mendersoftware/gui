@@ -8,7 +8,7 @@ import AppActions from '../../actions/app-actions';
 import AppStore from '../../stores/app-store';
 
 import { preformatWithRequestID } from '../../helpers';
-import { Checkbox, Collapse } from '@material-ui/core';
+import { Collapse, Switch } from '@material-ui/core';
 import Loader from '../common/loader';
 
 export default class SelfUserManagement extends React.Component {
@@ -148,15 +148,35 @@ export default class SelfUserManagement extends React.Component {
           <div className="margin-top">
             <div className="clickable flexbox space-between" onClick={() => self.handle2FAState(!has2fa)}>
               <p className="help-content">Enable Two Factor authentication</p>
-              <Checkbox checked={has2fa} />
+              <Switch checked={has2fa} />
             </div>
             <p className="info" style={{ width: '75%', margin: 0 }}>
-              If you enable Two Factor Authentication, you will be asked to provide an additional verification code when you log in. You can configure an
-              authenticator app to generate codes for you using the QR Code that will be generated once you enable it.
+              Two Factor Authentication adds a second layer of protection to your account by asking for an additional verification code each time you log in.
             </p>
             <Collapse in={qrExpanded} timeout="auto" unmountOnExit>
-              {!qrImage ? <Loader show={!qrImage} /> : <img src={`data:image/png;base64,${qrImage}`} style={{ maxHeight: '20vh' }} />}
-              <div className="red">Make sure to scan this code with your authenticator app before proceeding.</div>
+              <div className="margin-top">
+                Setup:
+                <div className="flexbox margin-top">
+                  <ol className="spaced-list margin-right-large" style={{ paddingInlineStart: 20 }}>
+                    <li className="margin-top-none">
+                      To use Two Factor Authentication, first download a third party authentication app such as{' '}
+                      <a href="https://authy.com/download/" target="_blank">
+                        Authy
+                      </a>{' '}
+                      or{' '}
+                      <a href="https://support.google.com/accounts/answer/1066447" target="_blank">
+                        Google Authenticator
+                      </a>
+                      .
+                    </li>
+                    <li>Scan the QR code on the right with the authenticator app you just downloaded on your device.</li>
+                    <li>
+                      Then each time you lo in, you will be asked for a verification code which you can retrieve from the authentication app on your device.
+                    </li>
+                  </ol>
+                  {!qrImage ? <Loader show={!qrImage} /> : <img src={`data:image/png;base64,${qrImage}`} style={{ maxHeight: '20vh' }} />}
+                </div>
+              </div>
             </Collapse>
           </div>
         )}
