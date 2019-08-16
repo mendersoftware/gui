@@ -171,7 +171,7 @@ export default class SelfUserManagement extends React.Component {
                     </li>
                     <li>Scan the QR code on the right with the authenticator app you just downloaded on your device.</li>
                     <li>
-                      Then each time you lo in, you will be asked for a verification code which you can retrieve from the authentication app on your device.
+                      Then each time you log in, you will be asked for a verification code which you can retrieve from the authentication app on your device.
                     </li>
                   </ol>
                   {!qrImage ? <Loader show={!qrImage} /> : <img src={`data:image/png;base64,${qrImage}`} style={{ maxHeight: '20vh' }} />}
