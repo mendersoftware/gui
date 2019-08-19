@@ -8,9 +8,8 @@ import UsersApi from '../api/users-api';
 import parse from 'parse-link-header';
 import { advanceOnboarding } from '../utils/onboardingmanager';
 
-const rootUrl = mender_environment && mender_environment.rootUrl ? mender_environment.rootUrl : 'https://localhost:443';
-const apiUrl = `${rootUrl}/api/management/v1`;
-const apiUrlV2 = `${rootUrl}/api/management/v2`;
+const apiUrl = `/api/management/v1`;
+const apiUrlV2 = `/api/management/v2`;
 const deploymentsApiUrl = `${apiUrl}/deployments`;
 const deviceAuthV2 = `${apiUrlV2}/devauth`;
 const inventoryApiUrl = `${apiUrl}/inventory`;
