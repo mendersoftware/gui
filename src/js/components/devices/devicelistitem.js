@@ -66,7 +66,10 @@ export default class DeviceListItem extends React.Component {
           {columnHeaders.slice(1).map((item, index) => (
             <div
               key={`column-${index}`}
-              style={Object.assign({ width: item.width || columnWidth, padding: '0 24px', overflow: 'hidden', maxHeight: 48 }, item.style)}
+              style={Object.assign(
+                { width: item.width || columnWidth, padding: '0 24px', overflow: 'hidden', wordBreak: 'break-all', maxHeight: 48 },
+                item.style
+              )}
             >
               {item.render(device)}
             </div>
