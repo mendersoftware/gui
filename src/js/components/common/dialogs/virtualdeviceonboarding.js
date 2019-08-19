@@ -3,7 +3,9 @@ import { Link } from 'react-router-dom';
 import CopyToClipboard from 'react-copy-to-clipboard';
 
 import Button from '@material-ui/core/Button';
-import Icon from '@material-ui/core/Icon';
+
+import CopyPasteIcon from '@material-ui/icons/FileCopy';
+
 import AppActions from '../../../actions/app-actions';
 import AppStore from '../../../stores/app-store';
 
@@ -66,7 +68,8 @@ export default class VirtualDeviceOnboarding extends React.Component {
         </p>
         <div className="code">
           <CopyToClipboard text={codeToCopy} onCopy={() => this.copied()}>
-            <Button style={{ float: 'right', margin: '-10px 0 0 10px' }} icon={<Icon className="material-icons">content_paste</Icon>}>
+            <Button style={{ float: 'right', margin: '-10px 0 0 10px' }}>
+              <CopyPasteIcon />
               Copy to clipboard
             </Button>
           </CopyToClipboard>
