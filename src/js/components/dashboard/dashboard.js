@@ -20,7 +20,7 @@ export default class Dashboard extends React.Component {
   componentDidMount() {
     const self = this;
     setTimeout(() => {
-      if (!AppStore.getOnboardingComplete() && !getOnboardingStepCompleted('devices-pending-accepting-onboarding')) {
+      if (AppStore.getCurrentUser() && !AppStore.getOnboardingComplete() && !getOnboardingStepCompleted('devices-pending-accepting-onboarding')) {
         AppActions.setSnackbar('open', 10000, '', <WelcomeSnackTip progress={1} />, () => {}, self.onCloseSnackbar);
       }
     }, 1000);
