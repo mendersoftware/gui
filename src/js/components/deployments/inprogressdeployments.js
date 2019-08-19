@@ -82,9 +82,9 @@ export default class Progress extends React.Component {
             <Pagination
               count={self.props.count}
               rowsPerPage={self.state.pageSize}
-              onChangeRowsPerPage={pageSize => self.setState({ pageSize })}
+              onChangeRowsPerPage={pageSize => self.setState({ pageSize }, () => self.props.refreshProgress(1, pageSize))}
               page={self.props.page}
-              onChangePage={self.props.refreshProgress}
+              onChangePage={page => self.props.refreshProgress(page, self.state.pageSize)}
             />
           ) : null}
 

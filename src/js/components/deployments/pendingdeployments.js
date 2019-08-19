@@ -92,9 +92,9 @@ export default class Pending extends React.Component {
           <Pagination
             count={self.props.count}
             rowsPerPage={self.state.pageSize}
-            onChangeRowsPerPage={pageSize => self.setState({ pageSize })}
+            onChangeRowsPerPage={pageSize => self.setState({ pageSize }, () => self.props.refreshPending(1, pageSize))}
             page={self.props.page}
-            onChangePage={page => self.props.refreshPending(page)}
+            onChangePage={page => self.props.refreshPending(page, self.state.pageSize)}
           />
         ) : null}
       </div>

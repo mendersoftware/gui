@@ -555,7 +555,7 @@ export default class Deployments extends React.Component {
               deviceGroup={this.state.groupFilter}
               createClick={() => this.setState({ scheduleDialog: true })}
               pageSize={per_page}
-              onChangeRowsPerPage={perPage => self.setState({ per_page: perPage }, () => self._changePastPage())}
+              onChangeRowsPerPage={perPage => self.setState({ per_page: perPage, page: 1 }, () => self._changePastPage())}
               startDate={this.state.startDate}
               endDate={this.state.endDate}
               page={this.state.past_page}

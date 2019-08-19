@@ -401,7 +401,7 @@ export default class DeploymentReport extends React.Component {
             <Pagination
               count={allDevices.length}
               rowsPerPage={self.state.perPage}
-              onChangeRowsPerPage={perPage => self.setState({ perPage })}
+              onChangeRowsPerPage={perPage => self.setState({ currentPage: 1, perPage })}
               page={self.state.currentPage}
               onChangePage={page => self._handlePageChange(page)}
             />
