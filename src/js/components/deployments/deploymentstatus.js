@@ -63,30 +63,25 @@ export default class DeploymentStatus extends React.Component {
     var inprogress = this.state.stats.downloading + this.state.stats.installing + this.state.stats.rebooting;
     var failed = this.state.stats.failure;
     var skipped = this.state.stats.aborted + this.state.stats.noartifact + this.state.stats['already-installed'] + this.state.stats.decommissioned;
-    var label = (
-      <div className={this.props.vertical ? 'results-status vertical' : 'results-status'}>
-        <div className={skipped ? 'hint--bottom' : 'hint--bottom disabled'} aria-label="Skipped">
-          <span className="status skipped">{skipped || 0}</span>
-          {this.props.vertical ? <span className="label">Skipped</span> : null}
-        </div>
-        <div className={this.state.stats.pending ? 'hint--bottom' : 'hint--bottom disabled'} aria-label="Pending">
-          <span className={'status pending'}>{this.state.stats.pending}</span>
-          {this.props.vertical ? <span className="label">Pending</span> : null}
-        </div>
-        <div className={inprogress ? 'hint--bottom' : 'hint--bottom disabled'} aria-label="In progress">
-          <span className={'status inprogress'}>{inprogress}</span>
-          {this.props.vertical ? <span className="label">In progress</span> : null}
-        </div>
-        <div className={this.state.stats.success ? 'hint--bottom' : 'hint--bottom disabled'} aria-label="Successful">
-          <span className="status success">{this.state.stats.success}</span>
-          {this.props.vertical ? <span className="label">Successful</span> : null}
-        </div>
-        <div className={failed ? 'hint--bottom' : 'hint--bottom disabled'} aria-label="Failures">
-          <span className={'status failure'}>{failed}</span>
-          {this.props.vertical ? <span className="label">Failed</span> : null}
+
+    const phases = [
+      { title: 'Skipped', value: skipped, className: 'skipped' },
+      { title: 'Pending', value: this.state.stats.pending, className: 'pending' },
+      { title: 'In progress', value: inprogress, className: 'inprogress' },
+      { title: 'Successful', value: this.state.stats.success, className: 'success' },
+      { title: 'Failed', value: failed, className: 'failure' }
+    ];
+    return (
+      <div>
+        <div className={this.props.vertical ? 'results-status vertical' : 'results-status'}>
+          {phases.map(phase => (
+            <div key={phase.className} className={phase.value ? 'hint--bottom' : 'hint--bottom disabled'} aria-label={phase.title}>
+              <span className={`status ${phase.className}`}>{(phase.value || 0).toLocaleString()}</span>
+              {this.props.vertical && <span className="label">{phase.title}</span>}
+            </div>
+          ))}
         </div>
       </div>
     );
-    return <div>{label}</div>;
   }
 }
