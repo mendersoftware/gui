@@ -3,8 +3,8 @@ import CopyToClipboard from 'react-copy-to-clipboard';
 import ReactTooltip from 'react-tooltip';
 
 import Button from '@material-ui/core/Button';
-import Icon from '@material-ui/core/Icon';
 
+import CopyPasteIcon from '@material-ui/icons/FileCopy';
 import HelpIcon from '@material-ui/icons/Help';
 
 import AutoSelect from '../forms/autoselect';
@@ -121,7 +121,8 @@ systemctl enable mender && systemctl restart mender'
           </p>
           <div className="code">
             <CopyToClipboard text={codeToCopy} onCopy={() => self.copied(true)}>
-              <Button style={{ float: 'right', margin: '-10px 0 0 10px' }} icon={<Icon className="material-icons">content_paste</Icon>}>
+              <Button style={{ float: 'right', margin: '-10px 0 0 10px' }}>
+                <CopyPasteIcon />
                 Copy to clipboard
               </Button>
             </CopyToClipboard>

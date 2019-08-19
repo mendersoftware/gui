@@ -18,7 +18,8 @@ export default class BuildDemoArtifact extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      executable: false
+      executable: false,
+      file_modification: false
     };
   }
 
@@ -35,11 +36,27 @@ export default class BuildDemoArtifact extends React.Component {
 
   render() {
     var executable = `sudo chmod +x mender-artifact`;
-    var file_install = `wget https://raw.githubusercontent.com/mendersoftware/mender/${AppStore.getMenderVersion()}/support/modules-artifact-gen/single-file-artifact-gen
-    sudo chmod +x single-file-artifact-gen`;
-    var generate =
-      `ARTIFACT_NAME="demo-webserver-updated" \nDEVICE_TYPE="generic_x86" \nOUTPUT_PATH="demo-webserver-updated.mender" \nDEST_DIR="/var/www/localhost/htdocs/" \nFILE_NAME="index.html" \n./single-file-artifact-gen -n` +
-      ' ${ARTIFACT_NAME} -t ${DEVICE_TYPE} -d ${DEST_DIR} -o ${OUTPUT_PATH} ${FILE_NAME}';
+    const artifactGenerator = 'single-file-artifact-gen';
+    const artifactName = 'demo-webserver-updated';
+
+    const file_install = `
+wget https://raw.githubusercontent.com/mendersoftware/mender/${AppStore.getMenderVersion()}/support/modules-artifact-gen/${artifactGenerator}
+sudo chmod +x ${artifactGenerator}`;
+
+    const generate = `
+ARTIFACT_NAME="${artifactName}"; \
+DEVICE_TYPE="generic_x86"; \
+OUTPUT_PATH="${artifactName}.mender"; \
+DEST_DIR="/var/www/localhost/htdocs/"; \
+FILE_NAME="index.html"; \
+./${artifactGenerator} -n \${ARTIFACT_NAME} \
+-t \${DEVICE_TYPE} -d \${DEST_DIR} -o \${OUTPUT_PATH} \
+\${FILE_NAME}
+`;
+
+    const file_modification = `cat >index.html <<EOF
+Hello World!
+EOF`;
 
     return (
       <div>
@@ -109,9 +126,22 @@ export default class BuildDemoArtifact extends React.Component {
           <span className="code">.tar</span> files until you can see the <i>index.html</i> file within.
         </p>
         <p>
-          5. Replace the contents of <i>index.html</i> with a simple string (e.g. &quot;Hello world&quot;), so you will be able to easily see the change when
-          the webpage content is updated.
+          5. Replace the contents of <i>index.html</i> with a simple string (&quot;Hello world&quot;), so you will be able to easily see the change when the
+          webpage content is updated. This can be done by using:
         </p>
+
+        <div>
+          <div className="code">
+            <CopyToClipboard text={file_modification} onCopy={() => this._copied('file_modification')}>
+              <IconButton style={{ float: 'right', margin: '-20px 0 0 10px' }}>
+                <CopyPasteIcon />
+              </IconButton>
+            </CopyToClipboard>
+            <span style={{ wordBreak: 'break-word' }}>{file_modification}</span>
+          </div>
+
+          <p>{this.state.file_modification ? <span className="green fadeIn">Copied to clipboard.</span> : null}</p>
+        </div>
 
         <p>
           6. Now, you can create a new version of the demo webserver application with this modified <i>index.html</i> file. Generate a new Artifact by copying &
