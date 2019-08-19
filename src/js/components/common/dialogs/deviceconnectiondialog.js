@@ -23,10 +23,12 @@ export default class DeviceConnectionDialog extends React.Component {
     this.state = {
       onDevice: false,
       progress: 1,
+      token: null,
       virtualDevice: false
     };
-    const self = this;
-    AppActions.getUserOrganization().then(org => (org ? self.setState({ token: org.tenant_token }) : null));
+    if (AppStore.hasMultitenancy() || AppStore.getIsEnterprise() || AppStore.getIsHosted()) {
+      AppActions.getUserOrganization().then(org => (org ? self.setState({ token: org.tenant_token }) : null));
+    }
     AppActions.getReleases().then(releases => AppActions.setOnboardingArtifactIncluded(!!releases.length));
   }
 
