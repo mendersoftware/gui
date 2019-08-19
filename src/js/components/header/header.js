@@ -96,8 +96,7 @@ export default class Header extends React.Component {
     this._checkAnnouncement();
   }
   _getGlobalSettings() {
-    return AppActions.getGlobalSettings()
-      .catch(err => console.log('error', err));
+    return AppActions.getGlobalSettings().catch(err => console.log('error', err));
   }
   _getDeviceLimit() {
     var self = this;
@@ -261,7 +260,7 @@ export default class Header extends React.Component {
     const toolbarStyle = { height: '56px', minHeight: 'unset', paddingLeft: '16px', paddingRight: '16px' };
 
     return (
-      <div id="fixedHeader" className={`${self.props.className} ${self.context.location.pathname === '/login' ? 'hidden' : null}`}>
+      <div id="fixedHeader" className={`header ${self.context.location.pathname === '/login' ? 'hidden' : null}`}>
         <Toolbar style={Object.assign({ backgroundColor: '#fff' }, toolbarStyle)}>
           <Toolbar key={0} style={toolbarStyle}>
             <Link to="/" id="logo" />
@@ -305,8 +304,6 @@ export default class Header extends React.Component {
             {dropDownElement}
           </Toolbar>
         </Toolbar>
-
-        <div id="header-nav" />
       </div>
     );
   }

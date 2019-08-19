@@ -165,7 +165,7 @@ export default class Help extends React.Component {
     }
 
     return (
-      <div style={{ marginTop: '-15px' }}>
+      <div>
         <div className="leftFixed">
           <LeftNav isHosted={this.state.isHosted} pages={components} />
         </div>

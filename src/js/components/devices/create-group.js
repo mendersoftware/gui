@@ -251,7 +251,7 @@ export default class CreateGroup extends React.Component {
           </div>
 
           {self.state.showWarning ? (
-            <div className="help-message" style={{ marginTop: '-15px' }}>
+            <div className="help-message">
               <h2>
                 <ErrorOutlineIcon style={{ marginRight: '4px', verticalAlign: 'sub' }} />
                 {' You\'re creating a new group'}

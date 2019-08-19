@@ -501,7 +501,7 @@ export default class Deployments extends React.Component {
     }
 
     return (
-      <div className="relative" style={{ marginTop: '-15px' }}>
+      <div className="relative">
         <Button
           className="top-right-button"
           color="secondary"

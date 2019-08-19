@@ -122,7 +122,6 @@ class AppRoot extends React.Component {
     return (
       <IdleTimer element={document} idleAction={this._onIdle} timeout={timeout} format="MM-DD-YYYY HH:MM:ss.SSS">
         <Header
-          className="header"
           announcement={_HostedAnnouncement}
           docsVersion={context.docsVersion}
           demo={isDemoMode}
@@ -130,11 +129,9 @@ class AppRoot extends React.Component {
           isLoggedIn={this.props.isLoggedIn}
         />
 
-        <div className="wrapper">
-          <LeftNav className="leftFixed leftNav" version={context.version} docsVersion={context.docsVersion} />
-          <div className="rightFluid container">
-            <AppContext.Provider value={context}>{this.props.children}</AppContext.Provider>
-          </div>
+        <LeftNav className="leftFixed leftNav" version={context.version} docsVersion={context.docsVersion} />
+        <div className="rightFluid container">
+          <AppContext.Provider value={context}>{this.props.children}</AppContext.Provider>
         </div>
         {onboardingComponent ? onboardingComponent : null}
         <ConfirmDismissHelptips open={showDismissHelptipsDialog} />

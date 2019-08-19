@@ -178,7 +178,7 @@ export default class Devices extends React.Component {
 
     const tabIndex = this.context.router.route.match.params.status || 'devices';
     return (
-      <div style={{ marginTop: '-15px' }}>
+      <div>
         <Tabs value={tabIndex} onChange={() => this._changeTab()}>
           <Tab component={Link} label={routes.devices.title} value={routes.devices.status} to={routes.devices.route} />
           <Tab component={Link} label={pendingLabel} value={routes.pending.status} to={routes.pending.route} />
