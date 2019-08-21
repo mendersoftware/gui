@@ -1,10 +1,12 @@
 import React from 'react';
 import { Link, NavLink } from 'react-router-dom';
+import copy from 'copy-to-clipboard';
 
 // material ui
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
+import Tooltip from '@material-ui/core/Tooltip';
 import AppStore from '../stores/app-store';
 
 var listItems = [
@@ -53,6 +55,29 @@ export default class LeftNav extends React.Component {
       </a>
     );
 
+    const versionInformation = AppStore.getVersionInformation();
+
+    const versions = (
+      <ul className="unstyled" style={{ minWidth: 120 }}>
+        {Object.entries(versionInformation).reduce((accu, [key, version]) => {
+          if (version) {
+            accu.push(
+              <li key={key} className="flexbox space-between">
+                <div>{key}</div>
+                <div>{version}</div>
+              </li>
+            );
+          }
+          return accu;
+        }, [])}
+      </ul>
+    );
+    const versionInfo = (
+      <Tooltip title={versions} placement="top">
+        <div onClick={() => copy(JSON.stringify(versionInformation))}>{self.props.version ? `Version: ${self.props.version}` : ''}</div>
+      </Tooltip>
+    );
+
     return (
       <div className={self.props.className}>
         <List style={{ padding: '0' }}>{list}</List>
@@ -62,7 +87,7 @@ export default class LeftNav extends React.Component {
             <ListItemText primary="Help" style={listItemStyle.font} />
           </ListItem>
           <ListItem style={Object.assign({ color: '#949495' }, listItemStyle.container)} disabled={true}>
-            <ListItemText primary={self.props.version ? `Version: ${self.props.version}` : ''} secondary={licenseLink} style={listItemStyle.font} />
+            <ListItemText primary={versionInfo} secondary={licenseLink} style={listItemStyle.font} />
           </ListItem>
         </List>
       </div>

@@ -43,6 +43,15 @@ const _menderDebPackageVersion = mender_environment && mender_environment.mender
 var _demoArtifactPort = mender_environment && mender_environment.demoArtifactPort ? mender_environment.demoArtifactPort : 85;
 var _globalSettings = {};
 
+const _versionInformation = {
+  Mender: mender_environment.menderVersion,
+  'Mender-Artifact': mender_environment.menderArtifactVersion,
+  'Meta-Mender': mender_environment.metaMenderVersion,
+  Deployments: mender_environment.services.deploymentsVersion,
+  Deviceauth: mender_environment.services.deviceauthVersion,
+  Inventory: mender_environment.services.inventoryVersion
+};
+
 /* Temp local devices */
 
 var _alldevices = [];
@@ -643,6 +652,8 @@ var AppStore = Object.assign({}, EventEmitter.prototype, {
   getIsHosted: () => (mender_environment && mender_environment.features.isHosted) || window.location.hostname === 'hosted.mender.io',
 
   getIsEnterprise: () => mender_environment && mender_environment.features.isEnterprise,
+  
+  getVersionInformation: () => _versionInformation,
 
   getOrganization: () => _organization,
 
