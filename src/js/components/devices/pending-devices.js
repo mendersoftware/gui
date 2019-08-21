@@ -219,7 +219,8 @@ export default class Pending extends React.Component {
         };
         onboardingComponent = getOnboardingComponentFor('devices-pending-accepting-onboarding', { place: 'left', anchor });
       }
-      if (AppStore.getTotalAcceptedDevices()) {
+      if (AppStore.getTotalAcceptedDevices() && !window.sessionStorage.getItem('pendings-redirect')) {
+        window.sessionStorage.setItem('pendings-redirect', true);
         return <Redirect to="/devices" />;
       }
     }
