@@ -66,7 +66,9 @@ module.exports = {
     ]
   },
   plugins: [
-    new CleanWebpackPlugin(),
+    new CleanWebpackPlugin({
+      cleanOnceBeforeBuildPatterns: ['**/*', '!env.js', '!assets/{fonts|img}/*']
+    }),
     new HtmlWebPackPlugin({
       template: './src/index.html',
       hash: true
