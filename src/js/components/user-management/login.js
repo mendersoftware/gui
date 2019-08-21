@@ -15,6 +15,8 @@ import Form from '../common/forms/form';
 import TextInput from '../common/forms/textinput';
 import PasswordInput from '../common/forms/passwordinput';
 import FormCheckbox from '../common/forms/formcheckbox';
+import { WelcomeSnackTip } from '../helptips/onboardingtips';
+import { getOnboardingStepCompleted } from '../../utils/onboardingmanager';
 
 import { decodeSessionToken, preformatWithRequestID } from '../../helpers';
 
@@ -76,6 +78,14 @@ export default class Login extends React.Component {
     }
     AppActions.setSnackbar(preformatWithRequestID(err.res, errMsg), null, 'Copy to clipboard');
   }
+
+  onCloseSnackbar = (_, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    AppActions.setSnackbar('');
+  };
+
   _handleLogin(formData) {
     var self = this;
 
@@ -109,6 +119,11 @@ export default class Login extends React.Component {
           .then(() => {
             // logged in, so redirect
             self.setState({ redirectToReferrer: true });
+            setTimeout(() => {
+              if (!AppStore.getOnboardingComplete() && !getOnboardingStepCompleted('devices-pending-accepting-onboarding')) {
+                AppActions.setSnackbar('open', 10000, '', <WelcomeSnackTip progress={1} />, () => {}, self.onCloseSnackbar);
+              }
+            }, 1000);
             AppActions.setSnackbar('');
           });
       })
