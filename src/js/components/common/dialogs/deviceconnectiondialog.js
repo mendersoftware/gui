@@ -62,8 +62,9 @@ export default class DeviceConnectionDialog extends React.Component {
               <HelpIcon />
             </div>
             <ReactTooltip id="deb-package-tip" globalEventOff="click" place="bottom" type="light" effect="solid" className="react-tooltip">
-              The Mender .deb package should work on most operating systems in the debian family (e.g. Debian, Ubuntu, Raspbian) and devices (e.g. Raspberry Pi
-              2/3, Beaglebone).
+              <p>
+                The Mender .deb package should work on most operating systems in the debian family (e.g. Debian, Ubuntu, Raspbian) and devices based on ARMv6 or newer (e.g. Raspberry Pi 2/3, Beaglebone). 
+              </p>
               <p>
                 Otherwise, use the virtual device or read more about <a href="https://hub.mender.io">Board integrations</a>
               </p>
