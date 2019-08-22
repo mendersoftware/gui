@@ -190,7 +190,9 @@ export default class ScheduleForm extends React.Component {
             <div className="margin-top">
               {tmpDevices ? (
                 <p>
-                  {filteredDevices ? filteredDevices.length : '0'} of {devicesLength} {pluralize('devices', devicesLength)} will be updated.{' '}
+                  {devicesLength < AppStore.getDeploymentDeviceLimit()
+                    ? `${filteredDevices ? filteredDevices.length : '0'} of ${devicesLength} ${pluralize('devices', devicesLength)} will be updated. `
+                    : `${devicesLength} devices will be targeted `}
                   <span onClick={() => showDevices()} className={this.state.disabled ? 'hidden' : 'link'}>
                     View the devices
                   </span>
