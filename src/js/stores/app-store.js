@@ -52,6 +52,8 @@ const _versionInformation = {
   Inventory: mender_environment.services.inventoryVersion
 };
 
+const _deploymentDeviceLimit = 5000;
+
 /* Temp local devices */
 
 var _alldevices = [];
@@ -708,6 +710,8 @@ var AppStore = Object.assign({}, EventEmitter.prototype, {
   getGlobalSettings: () => _globalSettings,
 
   get2FARequired: () => _globalSettings.hasOwnProperty('2fa') && _globalSettings['2fa'] === 'enabled',
+
+  getDeploymentDeviceLimit: () => _deploymentDeviceLimit,
 
   dispatcherIndex: AppDispatcher.register(payload => {
     var action = payload.action;

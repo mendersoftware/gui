@@ -12,8 +12,7 @@ import CopyPasteIcon from '@material-ui/icons/FileCopy';
 
 import AppActions from '../../../actions/app-actions';
 import AppStore from '../../../stores/app-store';
-import { detectOsIdentifier, getDemoDeviceAddress } from '../../../helpers';
-import Loader from '../loader';
+import { detectOsIdentifier } from '../../../helpers';
 
 // we don't support windows yet, so we'll point them to the linux file instead
 const downloadFolder = {
@@ -27,21 +26,9 @@ export default class CreateArtifactDialog extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      targetUrl: '',
-      loading: true,
       progress: 1,
       copied: 0
     };
-  }
-
-  componentDidUpdate(prevProps) {
-    const self = this;
-    if (self.state.loading && self.props.open && self.props.open !== prevProps.open) {
-      AppActions.getDevicesByStatus('accepted')
-        .then(getDemoDeviceAddress)
-        .catch(e => console.log(e))
-        .then(targetUrl => self.setState({ targetUrl, loading: false }));
-    }
   }
 
   onBackClick() {
@@ -64,7 +51,7 @@ export default class CreateArtifactDialog extends React.Component {
   render() {
     const self = this;
     const { open, onCancel } = self.props;
-    const { copied, loading, progress, targetUrl } = self.state;
+    const { copied, progress } = self.state;
     const deviceType = AppStore.getOnboardingDeviceType() || 'qemux86-64';
 
     const artifactGenerator = 'single-file-artifact-gen';
@@ -110,21 +97,10 @@ EOF`;
               </div>
               <p>{copied === 1 ? <span className="green fadeIn">Copied to clipboard.</span> : null}</p>
             </li>
+          
             <li>
-              {loading ? (
-                <Loader show={loading} />
-              ) : (
-                <span>
-                  <a href={`${targetUrl}/index.html?source=${encodeURIComponent(window.location)}`} download target="_blank">
-                    Right-click this link
-                  </a>{' '}
-                  and select &apos;Save Link As&apos; to save index.html into the same directory as above.
-                </span>
-              )}
-            </li>
-            <li>
-              Open the <i>index.html</i> file you just saved, and replace its contents with a string like &apos;Hello world&apos;, so you&apos;ll be able to
-              easily see when the page has updated.
+              Next, create a new <i>index.html</i> file with the simple contents &apos;Hello world&apos;. This will be the web page of your updated application, so you&apos;ll be able to
+              easily see when your device has received the update. Copy and run the command:
               <div className="code">
                 <CopyToClipboard text={file_modification} onCopy={() => self.copied(3)}>
                   <Button style={{ float: 'right', margin: '-20px 0 0 10px' }}>
@@ -137,8 +113,8 @@ EOF`;
               <p>{copied === 3 ? <span className="green fadeIn">Copied to clipboard.</span> : null}</p>
             </li>
             <li>
-              Now you can create a new version of the demo webserver application with this modified <i>index.html</i> file. Generate a new Artifact by copy &
-              pasting:
+              Now you can create a new version of the demo webserver application with this <i>index.html</i> file. Generate a new Artifact by copying &
+              running:
               <div className="code">
                 <CopyToClipboard text={artifactGenCode} onCopy={() => self.copied(2)}>
                   <Button style={{ float: 'right', margin: '-10px 0 0 10px' }}>

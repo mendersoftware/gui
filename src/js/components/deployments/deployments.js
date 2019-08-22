@@ -367,7 +367,7 @@ export default class Deployments extends React.Component {
     if (artifact && group) {
       devices = (group !== 'All devices' ? this.state[group] : this.state.allDevices) || [];
       filteredDevices = devices;
-      if (devices.length < 5000) {
+      if (devices.length < AppStore.getDeploymentDeviceLimit()) {
         filteredDevices = AppStore.filterDevicesByType(devices, artifact.device_types_compatible);
       }
     }

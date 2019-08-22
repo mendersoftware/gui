@@ -212,18 +212,34 @@ export function getOnboardingStepCompleted(id) {
   return progress > stepIndex;
 }
 
+const determineProgress = (acceptedDevices, pendingDevices, releases, pastDeployments) => {
+  const steps = Object.keys(onboardingSteps);
+  let progress = -1;
+  progress = pendingDevices.length > 1 ? steps.findIndex(step => step === 'devices-pending-accepting-onboarding') : progress;
+  progress = acceptedDevices.length > 1 && releases.length > 1 ? steps.findIndex(step => step === 'application-update-reminder-tip') : progress;
+  progress =
+    acceptedDevices.length > 1 && releases.length > 1 && pastDeployments.length > 1 ? steps.findIndex(step => step === 'deployments-past-completed') : progress;
+  progress =
+    acceptedDevices.length >= 1 && releases.length >= 2 && pastDeployments.length > 1
+      ? steps.findIndex(step => step === 'artifact-modified-onboarding')
+      : progress;
+  progress =
+    acceptedDevices.length >= 1 && releases.length >= 2 && pastDeployments.length > 2 ? steps.findIndex(step => step === 'onboarding-finished') : progress;
+  return progress;
+};
+
 export function getOnboardingState(userId) {
   let promises = Promise.resolve(getCurrentOnboardingState());
   const onboardingKey = `${userId}-onboarding`;
-  const savedState = JSON.parse(window.localStorage.getItem(onboardingKey));
-  if (!savedState || !savedState.complete) {
+  const savedState = JSON.parse(window.localStorage.getItem(onboardingKey)) || {};
+  if (!Object.keys(savedState).length || !savedState.complete) {
     const userCookie = cookie.load(`${userId}-onboarded`);
     // to prevent tips from showing up for previously onboarded users completion is set explicitly before the additional requests complete
     if (userCookie) {
       AppActions.setOnboardingComplete(Boolean(userCookie));
     }
     const requests = [
-      AppActions.getDevicesByStatus('accepted'),
+      AppActions.getDevicesByStatus('accepted').then(AppActions.getDevicesWithInventory),
       AppActions.getReleases(),
       AppActions.getPastDeployments(),
       Promise.resolve(userCookie),
@@ -231,17 +247,26 @@ export function getOnboardingState(userId) {
     ];
 
     promises = Promise.all(requests).then(([acceptedDevices, releases, pastDeployments, onboardedCookie, pendingDevices]) => {
+      const deviceType =
+        acceptedDevices.length && acceptedDevices[0].hasOwnProperty('attributes')
+          ? acceptedDevices[0].attributes.find(item => item.name === 'device_type').value
+          : '';
       const state = {
         complete: !!(
           Boolean(onboardedCookie) ||
+          savedState.complete ||
           (acceptedDevices.length > 1 && pendingDevices.length > 0 && releases.length > 1 && pastDeployments.length > 1) ||
-          (acceptedDevices.length >= 1 && releases.length >= 2 && pastDeployments.length >= 2)
+          (acceptedDevices.length >= 1 && releases.length >= 2 && pastDeployments.length > 2) ||
+          (acceptedDevices.length >= 1 && pendingDevices.length > 0 && releases.length >= 2 && pastDeployments.length >= 2)
         ),
-        showTips: onboardedCookie ? !onboardedCookie : true,
-        deviceType: AppStore.getOnboardingDeviceType(),
-        approach: AppStore.getOnboardingApproach(),
-        artifactIncluded: AppStore.getOnboardingArtifactIncluded(),
-        progress: -1
+        showTips: savedState.showTips || onboardedCookie ? !onboardedCookie : true,
+        deviceType:
+          savedState.deviceType || AppStore.getOnboardingDeviceType() || (acceptedDevices.length && acceptedDevices[0].hasOwnProperty('attributes'))
+            ? acceptedDevices[0].attributes.find(item => item.name === 'device_type').value
+            : null,
+        approach: savedState.approach || AppStore.getOnboardingApproach() || deviceType.startsWith('qemu') ? 'virtual' : 'physical',
+        artifactIncluded: savedState.artifactIncluded || AppStore.getOnboardingArtifactIncluded(),
+        progress: savedState.progress || determineProgress(acceptedDevices, pendingDevices, releases, pastDeployments)
       };
       window.localStorage.setItem(onboardingKey, JSON.stringify(state));
       return Promise.resolve(state);
