@@ -20,9 +20,9 @@ class TablePaginationActions extends React.Component {
     };
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps) {
     const currentPage = this.props.page + paginationIndex;
-    if (currentPage !== this.state.pageNo) {
+    if (currentPage !== this.state.pageNo && prevProps.rowsPerPage !== this.props.rowsPerPage) {
       this.setState({ pageNo: currentPage });
     }
   }
@@ -37,7 +37,7 @@ class TablePaginationActions extends React.Component {
     } else if (isNaN(Number(input))) {
       value = pageNo;
     }
-    if (value != pageNo) {
+    if (value !== pageNo) {
       self.setState({ pageNo: value });
     }
   };
@@ -78,8 +78,8 @@ class TablePaginationActions extends React.Component {
             onKeyUp={self.onKeyPress}
             margin="dense"
             style={{ minWidth: '30px', maxWidth: '30px', marginRight: '10px' }}
-          />{' '}
-          / {pages}
+          />
+          {`/ ${pages}`}
         </div>
         <IconButton onClick={() => self.onPaging(currentPage + 1)} disabled={currentPage >= Math.ceil(count / rowsPerPage)}>
           <KeyboardArrowRight />
