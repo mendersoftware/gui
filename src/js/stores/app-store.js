@@ -52,6 +52,8 @@ const _versionInformation = {
   Inventory: mender_environment.services.inventoryVersion
 };
 
+const _deploymentDeviceLimit = 5000;
+
 /* Temp local devices */
 
 var _alldevices = [];
@@ -652,7 +654,7 @@ var AppStore = Object.assign({}, EventEmitter.prototype, {
   getIsHosted: () => (mender_environment && mender_environment.features.isHosted) || window.location.hostname === 'hosted.mender.io',
 
   getIsEnterprise: () => mender_environment && mender_environment.features.isEnterprise,
-  
+
   getVersionInformation: () => _versionInformation,
 
   getOrganization: () => _organization,
@@ -688,7 +690,7 @@ var AppStore = Object.assign({}, EventEmitter.prototype, {
   },
 
   getMenderArtifactVersion: () => _menderArtifactVersion,
-  
+
   getMenderDebPackageVersion: () => _menderDebPackageVersion,
 
   getDemoArtifactPort: () => _demoArtifactPort,
@@ -708,6 +710,8 @@ var AppStore = Object.assign({}, EventEmitter.prototype, {
   getGlobalSettings: () => _globalSettings,
 
   get2FARequired: () => _globalSettings.hasOwnProperty('2fa') && _globalSettings['2fa'] === 'enabled',
+
+  getDeploymentDeviceLimit: () => _deploymentDeviceLimit,
 
   dispatcherIndex: AppDispatcher.register(payload => {
     var action = payload.action;
