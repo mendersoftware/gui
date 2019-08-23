@@ -24,7 +24,7 @@ export default class DeviceNotifications extends React.Component {
             place="bottom"
             type="light"
             effect="solid"
-            delayHide={1500}
+            delayHide={500}
             className="react-tooltip"
             disabled={!this.props.limit}
           >
