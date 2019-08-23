@@ -44,7 +44,8 @@ cat >/var/www/mender-gui/dist/env.js <<EOF
       deviceauthVersion: "$MENDER_DEVICEAUTH_VERSION",
       inventoryVersion: "$MENDER_INVENTORY_VERSION"
     },
-    demoArtifactPort: "$DEMO_ARTIFACT_PORT"
+    demoArtifactPort: "$DEMO_ARTIFACT_PORT",
+    disableOnboarding: "$DISABLE_ONBOARDING"
   }
 EOF
 
