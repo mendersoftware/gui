@@ -45,6 +45,11 @@ exports[`renders correctly 1`] = `
       Your device is now running the updated version of the software. At
       <div
         className="flexbox centered"
+        style={
+          Object {
+            "margin": "5px 0",
+          }
+        }
       >
         <div
           className="loaderContainer"
@@ -67,7 +72,7 @@ exports[`renders correctly 1`] = `
           </div>
         </div>
       </div>
-      you should see 'hello world' in place of the webpage you saw previously.
+      you should now see "Hello world" in place of the webpage you saw previously.
     </p>
     <p>
       You've now got a good foundation in how to use Mender. Look for more help hints in the UI as you go along.

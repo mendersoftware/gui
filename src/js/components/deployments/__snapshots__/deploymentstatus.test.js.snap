@@ -46,7 +46,7 @@ exports[`renders correctly 1`] = `
       </span>
     </div>
     <div
-      aria-label="Failures"
+      aria-label="Failed"
       className="hint--bottom disabled"
     >
       <span

@@ -155,7 +155,8 @@ exports[`renders correctly 1`] = `
           }
         }
       >
-        wget https://raw.githubusercontent.com/mendersoftware/mender/master/support/modules-artifact-gen/single-file-artifact-gen 
+        
+wget https://raw.githubusercontent.com/mendersoftware/mender/master/support/modules-artifact-gen/single-file-artifact-gen
 sudo chmod +x single-file-artifact-gen
       </span>
     </div>
@@ -198,8 +199,73 @@ sudo chmod +x single-file-artifact-gen
     <i>
       index.html
     </i>
-     with a simple string (e.g. "Hello world"), so you will be able to easily see the change when the webpage content is updated.
+     with a simple string ("Hello world"), so you will be able to easily see the change when the webpage content is updated. This can be done by using:
   </p>
+  <div>
+    <div
+      className="code"
+    >
+      <button
+        className="MuiButtonBase-root-7 MuiIconButton-root-1"
+        disabled={false}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onContextMenu={[Function]}
+        onFocus={[Function]}
+        onKeyDown={[Function]}
+        onKeyUp={[Function]}
+        onMouseDown={[Function]}
+        onMouseLeave={[Function]}
+        onMouseUp={[Function]}
+        onTouchEnd={[Function]}
+        onTouchMove={[Function]}
+        onTouchStart={[Function]}
+        style={
+          Object {
+            "float": "right",
+            "margin": "-20px 0 0 10px",
+          }
+        }
+        tabIndex="0"
+        type="button"
+      >
+        <span
+          className="MuiIconButton-label-6"
+        >
+          <svg
+            aria-hidden="true"
+            className="MuiSvgIcon-root-10"
+            focusable="false"
+            role="presentation"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M0 0h24v24H0z"
+              fill="none"
+            />
+            <path
+              d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm-1 4l6 6v10c0 1.1-.9 2-2 2H7.99C6.89 23 6 22.1 6 21l.01-14c0-1.1.89-2 1.99-2h7zm-1 7h5.5L14 6.5V12z"
+            />
+          </svg>
+        </span>
+        <span
+          className="MuiTouchRipple-root-19"
+        />
+      </button>
+      <span
+        style={
+          Object {
+            "wordBreak": "break-word",
+          }
+        }
+      >
+        cat &gt;index.html &lt;&lt;EOF
+Hello World!
+EOF
+      </span>
+    </div>
+    <p />
+  </div>
   <p>
     6. Now, you can create a new version of the demo webserver application with this modified 
     <i>
@@ -274,12 +340,9 @@ sudo chmod +x single-file-artifact-gen
           }
         }
       >
-        ARTIFACT_NAME="demo-webserver-updated" 
-DEVICE_TYPE="generic_x86" 
-OUTPUT_PATH="demo-webserver-updated.mender" 
-DEST_DIR="/var/www/localhost/htdocs/" 
-FILE_NAME="index.html" 
-./single-file-artifact-gen -n \${ARTIFACT_NAME} -t \${DEVICE_TYPE} -d \${DEST_DIR} -o \${OUTPUT_PATH} \${FILE_NAME}
+        
+ARTIFACT_NAME="demo-webserver-updated"; DEVICE_TYPE="generic_x86"; OUTPUT_PATH="demo-webserver-updated.mender"; DEST_DIR="/var/www/localhost/htdocs/"; FILE_NAME="index.html"; ./single-file-artifact-gen -n \${ARTIFACT_NAME} -t \${DEVICE_TYPE} -d \${DEST_DIR} -o \${OUTPUT_PATH} \${FILE_NAME}
+
       </span>
     </div>
     <p />

@@ -3,11 +3,6 @@
 exports[`renders correctly 1`] = `
 <div
   className="relative"
-  style={
-    Object {
-      "marginTop": "-15px",
-    }
-  }
 >
   <button
     className="MuiButtonBase-root-27 MuiButton-root-1 MuiButton-contained-12 MuiButton-containedSecondary-14 MuiButton-raised-15 MuiButton-raisedSecondary-17 top-right-button"

@@ -6,7 +6,7 @@ exports[`renders correctly 1`] = `
     data-for="limit-tip"
     data-offset="{'bottom': 0, 'right': 0}"
     data-tip={true}
-    data-tip-disable={true}
+    data-tip-disable={false}
     id="limit"
   >
     <div
@@ -19,7 +19,7 @@ exports[`renders correctly 1`] = `
       </h3>
       <p>
         You can still connect another 
-        NaN
+        900
          
         devices
         .
@@ -37,14 +37,16 @@ exports[`renders correctly 1`] = `
         There is no fee for a higher limit; the purpose of the limit is to allow us to plan capacity for scaling Hosted Mender.
       </p>
       <p>
-        Billing is based on your usage only. See 
+        Billing is based on your usage only. See
+         
         <a
           href="https://mender.io/pricing"
           target="_blank"
         >
           pricing
         </a>
-         for an overview.
+         
+        for an overview.
       </p>
     </div>
     <div
@@ -55,7 +57,13 @@ exports[`renders correctly 1`] = `
         href="/devices"
         onClick={[Function]}
       >
-        <span />
+        <span>
+          100
+        </span>
+        <span>
+          /
+          1,000
+        </span>
         <svg
           aria-hidden="true"
           className="MuiSvgIcon-root-1"
@@ -77,6 +85,19 @@ exports[`renders correctly 1`] = `
             fill="none"
           />
         </svg>
+      </a>
+      <a
+        className={null}
+        href="/devices/pending"
+        onClick={[Function]}
+        style={
+          Object {
+            "marginLeft": "7px",
+          }
+        }
+      >
+        10
+         pending
       </a>
     </div>
   </div>

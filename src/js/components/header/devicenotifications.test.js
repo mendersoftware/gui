@@ -7,7 +7,7 @@ it('renders correctly', () => {
   const tree = renderer
     .create(
       <MemoryRouter>
-        <DeviceNotifications />
+        <DeviceNotifications pending={10} total={100} limit={1000} />
       </MemoryRouter>
     )
     .toJSON();

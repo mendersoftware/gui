@@ -149,6 +149,14 @@ exports[`renders correctly 1`] = `
           />
         </div>
       </div>
+      <div
+        attachToForm={[Function]}
+        detachFromForm={[Function]}
+        handleKeyPress={[Function]}
+        updateModel={[Function]}
+        validate={[Function]}
+        validations=""
+      />
       <label
         className="MuiFormControlLabel-root-84"
       >

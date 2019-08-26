@@ -4,5 +4,12 @@ import Adapter from 'enzyme-adapter-react-16';
 Enzyme.configure({ adapter: new Adapter() });
 
 window.mender_environment = {
-  hasMultitenancy: true
+  features: {
+    hasMultitenancy: true
+  },
+  services: {
+    deploymentsVersion: null,
+    deviceauthVersion: null,
+    inventoryVersion: null
+  }
 };

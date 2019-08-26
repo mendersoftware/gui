@@ -24,13 +24,6 @@ exports[`renders correctly 1`] = `
     <button
       className="MuiButtonBase-root-27 MuiButton-root-1 MuiButton-text-3 MuiButton-flat-6"
       disabled={false}
-      icon={
-        <WithStyles(Icon)
-          className="material-icons"
-        >
-          content_paste
-        </WithStyles(Icon)>
-      }
       onBlur={[Function]}
       onClick={[Function]}
       onContextMenu={[Function]}
@@ -55,10 +48,25 @@ exports[`renders correctly 1`] = `
       <span
         className="MuiButton-label-2"
       >
+        <svg
+          aria-hidden="true"
+          className="MuiSvgIcon-root-30"
+          focusable="false"
+          role="presentation"
+          viewBox="0 0 24 24"
+        >
+          <path
+            d="M0 0h24v24H0z"
+            fill="none"
+          />
+          <path
+            d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm-1 4l6 6v10c0 1.1-.9 2-2 2H7.99C6.89 23 6 22.1 6 21l.01-14c0-1.1.89-2 1.99-2h7zm-1 7h5.5L14 6.5V12z"
+          />
+        </svg>
         Copy to clipboard
       </span>
       <span
-        className="MuiTouchRipple-root-30"
+        className="MuiTouchRipple-root-39"
       />
     </button>
     <span

@@ -19,7 +19,7 @@ exports[`renders correctly 1`] = `
     My account
   </h2>
   <form
-    className=""
+    className="flexbox space-between"
   >
     <div
       className="MuiFormControl-root-1"
@@ -96,7 +96,7 @@ exports[`renders correctly 1`] = `
     </button>
   </form>
   <form
-    className="margin-top"
+    className="margin-top flexbox space-between"
   >
     <button
       className="MuiButtonBase-root-87 MuiButton-root-61 MuiButton-text-63 MuiButton-textPrimary-64 MuiButton-flat-66 MuiButton-flatPrimary-67 button-holder undefined"
