@@ -207,7 +207,7 @@ export default class Pending extends React.Component {
 
     const deviceConnectingProgressed = getOnboardingStepCompleted('devices-pending-onboarding');
     let onboardingComponent = null;
-    if (!AppStore.getOnboardingComplete() && (this.deviceListRef || this.authorizeRef)) {
+    if (AppStore.showHelptips() && (!AppStore.getOnboardingComplete() && (this.deviceListRef || this.authorizeRef))) {
       const element = this.deviceListRef ? this.deviceListRef.getElementsByClassName('body')[0] : null;
       onboardingComponent = getOnboardingComponentFor('devices-pending-onboarding', {
         anchor: { left: 200, top: element ? element.offsetTop + element.offsetHeight : 170 }
@@ -219,7 +219,8 @@ export default class Pending extends React.Component {
         };
         onboardingComponent = getOnboardingComponentFor('devices-pending-accepting-onboarding', { place: 'left', anchor });
       }
-      if (AppStore.getTotalAcceptedDevices()) {
+      if (AppStore.getTotalAcceptedDevices() && !window.sessionStorage.getItem('pendings-redirect')) {
+        window.sessionStorage.setItem('pendings-redirect', true);
         return <Redirect to="/devices" />;
       }
     }
@@ -250,7 +251,7 @@ export default class Pending extends React.Component {
           </div>
         ) : (
           <div>
-            {self.state.showHelptips && !deviceConnectingProgressed ? (
+            {self.state.showHelptips && !AppStore.getOnboardingComplete() && !deviceConnectingProgressed ? (
               <DevicePendingTip />
             ) : (
               <div className={this.state.authLoading ? 'hidden' : 'dashboard-placeholder'}>

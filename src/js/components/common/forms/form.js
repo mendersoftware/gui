@@ -90,9 +90,14 @@ export default class Form extends React.Component {
           // We then merge two arrays, ending up with the value
           // to pass first, then options, if any. ['valueFromInput', 5]
           args = [value].concat(args);
-          // So the next line of code is actually:
-          // validator.isLength('valueFromInput', 5)
-          if (!validator[validateMethod].apply(validator, args)) {
+          try {
+            // So the next line of code is actually:
+            // validator.isLength('valueFromInput', 5)
+            if (!validator[validateMethod].apply(validator, args)) {
+              errortext = this.getErrorMsg(validateMethod, tmpArgs);
+              isValid = false;
+            }
+          } catch {
             errortext = this.getErrorMsg(validateMethod, tmpArgs);
             isValid = false;
           }
@@ -125,6 +130,8 @@ export default class Form extends React.Component {
       return 'This field must contain only letters';
     case 'isAlphanumeric':
       return 'This field must contain only letters or numbers';
+    case 'isNumeric':
+      return 'Please enter a valid code';
     case 'isEmail':
       return 'Please enter a valid email address';
     default:

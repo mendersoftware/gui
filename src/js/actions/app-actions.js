@@ -8,7 +8,7 @@ import UsersApi from '../api/users-api';
 import parse from 'parse-link-header';
 import { advanceOnboarding } from '../utils/onboardingmanager';
 
-const rootUrl = mender_environment && mender_environment.rootUrl ? mender_environment.rootUrl : 'https://localhost:443';
+const rootUrl = mender_environment && mender_environment.rootUrl ? mender_environment.rootUrl : '';
 const apiUrl = `${rootUrl}/api/management/v1`;
 const apiUrlV2 = `${rootUrl}/api/management/v2`;
 const deploymentsApiUrl = `${apiUrl}/deployments`;
@@ -286,25 +286,27 @@ const AppActions = {
 
   getHostedLinks: id => GeneralApi.getNoauth(`${hostedLinks}${id}/links.json`).then(res => JSON.parse(res.text)),
 
+  get2FAQRCode: () => UsersApi.get(`${useradmApiUrl}/2faqr`).then(res => res.qr),
+
   /* 
     Global settings 
   */
   getGlobalSettings: () =>
-    GeneralApi.get(`${useradmApiUrl}/settings`).then(res => {
+    UsersApi.get(`${useradmApiUrl}/settings`).then(res => {
       AppDispatcher.handleViewAction({
         actionType: AppConstants.SET_GLOBAL_SETTINGS,
-        settings: res.body
+        settings: res
       });
-      return Promise.resolve(res.body);
+      return Promise.resolve(res);
     }),
 
   saveGlobalSettings: settings =>
     UsersApi.post(`${useradmApiUrl}/settings`, settings).then(() => {
       AppDispatcher.handleViewAction({
         actionType: AppConstants.SET_GLOBAL_SETTINGS,
-        settings: settings
+        settings
       });
-      return Promise.resolve();
+      return Promise.resolve(settings);
     }),
 
   /*

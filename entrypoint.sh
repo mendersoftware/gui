@@ -28,12 +28,22 @@ fi
 cat >/var/www/mender-gui/dist/env.js <<EOF
   mender_environment = {
     rootUrl: "$ROOT_URL",
-    hasMultitenancy: "$HAVE_MULTITENANT",
     hostedAnnouncement: "$ANNOUCEMENT",
     isDemoMode: "$DEMO",
+    features: {
+      hasMultitenancy: "$HAVE_MULTITENANT",
+      isEnterprise: "$HAVE_ENTERPRISE",
+      isHosted: "$MENDER_HOSTED"
+    },
     menderVersion: "$INTEGRATION_VERSION",
     menderArtifactVersion: "$MENDER_ARTIFACT_VERSION",
     menderDebPackageVersion: "$MENDER_DEB_PACKAGE_VERSION",
+    metaMenderVersion: "$META_MENDER_VERSION",
+    services: {
+      deploymentsVersion: "$MENDER_DEPLOYMENTS_VERSION",
+      deviceauthVersion: "$MENDER_DEVICEAUTH_VERSION",
+      inventoryVersion: "$MENDER_INVENTORY_VERSION"
+    },
     demoArtifactPort: "$DEMO_ARTIFACT_PORT"
   }
 EOF

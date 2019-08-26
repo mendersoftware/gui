@@ -32,7 +32,6 @@ export default class UserManagement extends React.Component {
   _getState() {
     return {
       snackbar: AppStore.getSnackbar(),
-      editPass: false,
       currentUser: AppStore.getCurrentUser()
     };
   }

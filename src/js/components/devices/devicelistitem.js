@@ -64,7 +64,13 @@ export default class DeviceListItem extends React.Component {
           <div style={Object.assign({ width: columnHeaders[0].width || columnWidth, padding: '0 24px' }, columnHeaders[0].style)}>{id_attribute}</div>
           {/* we'll skip the first column, since this is the id and that gets resolved differently in the lines above */}
           {columnHeaders.slice(1).map((item, index) => (
-            <div key={`column-${index}`} style={Object.assign({ width: item.width || columnWidth, padding: '0 24px' }, item.style)}>
+            <div
+              key={`column-${index}`}
+              style={Object.assign(
+                { width: item.width || columnWidth, padding: '0 24px', overflow: 'hidden', wordBreak: 'break-all', maxHeight: 48 },
+                item.style
+              )}
+            >
               {item.render(device)}
             </div>
           ))}

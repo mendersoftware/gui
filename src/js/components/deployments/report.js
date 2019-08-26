@@ -9,7 +9,6 @@ import DeviceList from './deploymentdevicelist';
 import Pagination from 'rc-pagination';
 import _en_US from 'rc-pagination/lib/locale/en_US';
 import pluralize from 'pluralize';
-import update from 'react-addons-update';
 import isEqual from 'lodash.isequal';
 import differenceWith from 'lodash.differencewith';
 import ConfirmAbort from './confirmabort';
@@ -103,42 +102,37 @@ export default class DeploymentReport extends React.Component {
   }
   _getDeviceAttribute(device, attributeName) {
     var none = '-';
-    const artifact = device.attributes.find(attribute => attribute.name === attributeName);
+    const artifact = device.attributes ? device.attributes.find(attribute => attribute.name === attributeName) : null;
     return artifact ? artifact.value : none;
   }
   _getDeviceDetails(devices) {
     var self = this;
     // get device artifact and inventory details not listed in schedule data
-    devices.forEach(device => self._setSingleDeviceDetails(device.id));
+    const inventoryRequests = devices.map(device => self._setSingleDeviceDetails(device));
+    return Promise.all(inventoryRequests).then(devices => {
+      let deviceInventory = self.state.deviceInventory || {};
+      deviceInventory = devices.reduce((accu, device) => {
+        let inventory = accu[device.id] || {};
+        inventory.artifact = self._getDeviceAttribute(device, 'artifact_name');
+        inventory.device_type = self._getDeviceAttribute(device, 'device_type');
+        accu[device.id] = inventory;
+        return accu;
+      }, deviceInventory);
+      if (!self.state.stopRestCalls) {
+        self.setState({ deviceInventory });
+      }
+    });
   }
-  _setSingleDeviceDetails(id) {
-    var self = this;
-    const getInventory = AppActions.getDeviceById(id)
+  _setSingleDeviceDetails(device) {
+    return AppActions.getDeviceById(device.id)
       .then(device_inventory => {
-        var artifact = self._getDeviceAttribute(device_inventory, 'artifact_name');
-        var device_type = self._getDeviceAttribute(device_inventory, 'device_type');
-        var deviceInventory = self.state.deviceInventory || {};
-        var inventory = { device_type: device_type, artifact: artifact };
-
-        if (!self.state.stopRestCalls) {
-          self.setState({
-            deviceInventory: update(deviceInventory, { [id]: { $set: inventory } })
-          });
-        }
+        device.attributes = device_inventory.attributes;
+        return Promise.resolve(device);
       })
-      .catch(err => console.log('error ', err));
-
-    const getAuthData = AppActions.getDeviceAuth(id)
-      .then(data => {
-        var deviceIdentity = self.state.deviceIdentity || {};
-        if (!self.state.stopRestCalls) {
-          self.setState({
-            deviceIdentity: update(deviceIdentity, { [id]: { $set: data.identity_data } })
-          });
-        }
-      })
-      .catch(err => console.log(`Error: ${err}`));
-    return Promise.all([getInventory, getAuthData]);
+      .catch(err => {
+        console.log('error ', err);
+        return Promise.resolve(device);
+      });
   }
   _filterPending(device) {
     return device.status !== 'pending';

@@ -8,12 +8,20 @@ import AppActions from '../../actions/app-actions';
 import AppStore from '../../stores/app-store';
 
 import { preformatWithRequestID } from '../../helpers';
+import { Collapse, Switch } from '@material-ui/core';
+import Loader from '../common/loader';
 
 export default class SelfUserManagement extends React.Component {
   constructor(props, context) {
     super(props, context);
-    this.state = this._getState();
+    this.state = Object.assign({ qrExpanded: false }, this._getState());
+    AppActions.getGlobalSettings().then(settings => {
+      if (AppStore.getIsEnterprise() && !settings.hasOwnProperty('2fa')) {
+        AppActions.saveGlobalSettings(Object.assign(settings, { '2fa': 'disabled' }));
+      }
+    });
   }
+
   componentWillMount() {
     AppStore.changeListener(this._onChange.bind(this));
   }
@@ -21,12 +29,16 @@ export default class SelfUserManagement extends React.Component {
   _getState() {
     return {
       snackbar: AppStore.getSnackbar(),
-      currentUser: AppStore.getCurrentUser()
+      currentUser: AppStore.getCurrentUser(),
+      has2fa: AppStore.get2FARequired()
     };
   }
 
   _onChange() {
-    this.setState(this._getState());
+    const self = this;
+    self.setState(self._getState(), () =>
+      self.state.qrExpanded && !self.state.qrImage ? AppActions.get2FAQRCode(self.state.currentUser.email).then(qrImage => self.setState({ qrImage })) : null
+    );
   }
 
   componentWillUnmount() {
@@ -63,16 +75,24 @@ export default class SelfUserManagement extends React.Component {
     this.setState({ editPass: !this.state.editPass });
   }
 
+  handle2FAState(required) {
+    this.setState({ qrExpanded: required });
+    AppActions.saveGlobalSettings(Object.assign(AppStore.getGlobalSettings() || {}, { '2fa': required ? 'enabled' : 'disabled' }));
+  }
+
   render() {
+    const self = this;
+    const { editEmail, editPass, qrExpanded, has2fa, qrImage } = self.state;
     return (
       <div style={{ maxWidth: '750px' }} className="margin-top-small">
         <h2 style={{ marginTop: '15px' }}>My account</h2>
 
         <Form
+          className="flexbox space-between"
           onSubmit={userdata => this._editSubmit(userdata)}
           handleCancel={() => this.handleEmail()}
           submitLabel="Save"
-          showButtons={this.state.editEmail}
+          showButtons={editEmail}
           buttonColor="secondary"
           submitButtonId="submit_email"
           uniqueId={this.state.emailFormId}
@@ -81,20 +101,23 @@ export default class SelfUserManagement extends React.Component {
             hint="Email"
             label="Email"
             id="email"
-            disabled={!this.state.editEmail}
+            disabled={!editEmail}
             value={(this.state.currentUser || {}).email}
             validations="isLength:1,isEmail"
-            focus={this.state.editEmail}
+            focus={editEmail}
+            InputLabelProps={{ shrink: (this.state.currentUser || {}).email }}
           />
 
-          <FormButton
-            className={this.state.editEmail ? 'hidden' : 'inline-block'}
-            color="primary"
-            id="change_email"
-            label="Change email"
-            style={{margin:'30px 0 0 15px'}}
-            handleClick={() => this.handleEmail()}
-          />
+          {!editEmail && (
+            <FormButton
+              className="inline-block"
+              color="primary"
+              id="change_email"
+              label="Change email"
+              style={{ margin: '30px 0 0 15px' }}
+              handleClick={() => this.handleEmail()}
+            />
+          )}
         </Form>
 
         <Form
@@ -103,17 +126,17 @@ export default class SelfUserManagement extends React.Component {
           submitLabel="Save"
           submitButtonId="submit_pass"
           buttonColor="secondary"
-          showButtons={this.state.editPass}
-          className="margin-top"
+          showButtons={editPass}
+          className="margin-top flexbox space-between"
         >
-          {this.state.editPass ? (
+          {editPass ? (
             <PasswordInput
               className="edit-pass"
               id="password"
               label="Password"
-              create={this.state.editPass}
+              create={editPass}
               validations="isLength:1"
-              disabled={!this.state.editPass}
+              disabled={!editPass}
               onClear={() => this.handleButton()}
               edit={false}
             />
@@ -121,6 +144,42 @@ export default class SelfUserManagement extends React.Component {
             <FormButton buttonHolder={true} color="primary" id="change_pass" label="Change password" handleClick={() => this.handlePass()} />
           )}
         </Form>
+        {AppStore.getIsEnterprise() && (
+          <div className="margin-top">
+            <div className="clickable flexbox space-between" onClick={() => self.handle2FAState(!has2fa)}>
+              <p className="help-content">Enable Two Factor authentication</p>
+              <Switch checked={has2fa} />
+            </div>
+            <p className="info" style={{ width: '75%', margin: 0 }}>
+              Two Factor Authentication adds a second layer of protection to your account by asking for an additional verification code each time you log in.
+            </p>
+            <Collapse in={qrExpanded} timeout="auto" unmountOnExit>
+              <div className="margin-top">
+                Setup:
+                <div className="flexbox margin-top">
+                  <ol className="spaced-list margin-right-large" style={{ paddingInlineStart: 20 }}>
+                    <li className="margin-top-none">
+                      To use Two Factor Authentication, first download a third party authentication app such as{' '}
+                      <a href="https://authy.com/download/" target="_blank">
+                        Authy
+                      </a>{' '}
+                      or{' '}
+                      <a href="https://support.google.com/accounts/answer/1066447" target="_blank">
+                        Google Authenticator
+                      </a>
+                      .
+                    </li>
+                    <li>Scan the QR code on the right with the authenticator app you just downloaded on your device.</li>
+                    <li>
+                      Then each time you log in, you will be asked for a verification code which you can retrieve from the authentication app on your device.
+                    </li>
+                  </ol>
+                  {!qrImage ? <Loader show={!qrImage} /> : <img src={`data:image/png;base64,${qrImage}`} style={{ maxHeight: '20vh' }} />}
+                </div>
+              </div>
+            </Collapse>
+          </div>
+        )}
       </div>
     );
   }

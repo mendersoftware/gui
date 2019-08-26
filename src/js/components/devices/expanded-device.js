@@ -33,6 +33,7 @@ import ReplayIcon from '@material-ui/icons/Replay';
 import WarningIcon from '@material-ui/icons/Warning';
 
 import { preformatWithRequestID } from '../../helpers';
+import { advanceOnboarding, getOnboardingStepCompleted } from '../../utils/onboardingmanager';
 
 const iconStyle = { margin: 12 };
 
@@ -186,6 +187,16 @@ export default class ExpandedDevice extends React.Component {
     AppActions.setSnackbar('Link copied to clipboard');
   }
 
+  _scheduleDeploymentFor(device) {
+    if (!AppStore.getOnboardingComplete()) {
+      if (!getOnboardingStepCompleted('upload-prepared-artifact-tip')) {
+        advanceOnboarding('upload-prepared-artifact-tip');
+      }
+    }
+    AppActions.selectDevice(device);
+    this.setState({ schedule: true });
+  }
+
   _decommissionDevice(device_id) {
     var self = this;
     return AppActions.decommissionDevice(device_id)
@@ -205,6 +216,7 @@ export default class ExpandedDevice extends React.Component {
   }
 
   render() {
+    const self = this;
     var status = this.props.device.status;
 
     var deviceIdentity = [<ExpandableDeviceAttribute key="id_checksum" primary="Device ID" secondary={(this.props.device || {}).id || '-'} />];
@@ -348,12 +360,7 @@ export default class ExpandedDevice extends React.Component {
             </Button>
             {status === 'accepted' ? (
               <span className="margin-left">
-                <Button
-                  onClick={() => {
-                    AppActions.selectDevice(this.props.device);
-                    this.setState({ schedule: true });
-                  }}
-                >
+                <Button onClick={() => self._scheduleDeploymentFor(this.props.device)}>
                   <ReplayIcon className="rotated buttonLabelIcon" />
                   Create a deployment for this device
                 </Button>
