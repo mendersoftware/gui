@@ -133,7 +133,7 @@ export default class Deployments extends React.Component {
       release: AppStore.getDeploymentRelease(),
       user: AppStore.getCurrentUser(),
       pageLength: AppStore.getTotalDevices(),
-      isHosted: window.location.hostname === 'hosted.mender.io'
+      isHosted: AppStore.getIsHosted()
     };
   }
 
@@ -358,7 +358,10 @@ export default class Deployments extends React.Component {
     // set the selected groups devices to state, to be sent down to the child schedule form
     if (artifact && group) {
       devices = (group !== 'All devices' ? this.state[group] : this.state.allDevices) || [];
-      filteredDevices = AppStore.filterDevicesByType(devices, artifact.device_types_compatible);
+      filteredDevices = devices;
+      if (devices.length < AppStore.getDeploymentDeviceLimit()) {
+        filteredDevices = AppStore.filterDevicesByType(devices, artifact.device_types_compatible);
+      }
     }
     this.setState({ deploymentDevices: devices, filteredDevices: filteredDevices });
   }
@@ -498,7 +501,7 @@ export default class Deployments extends React.Component {
     }
 
     return (
-      <div className="relative" style={{ marginTop: '-15px' }}>
+      <div className="relative">
         <Button
           className="top-right-button"
           color="secondary"

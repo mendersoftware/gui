@@ -44,6 +44,11 @@ export default class Authorized extends React.Component {
       prevProps.pageNo !== this.props.pageNo
     ) {
       self.setState({ selectedRows: [], expandRow: null, allRowsSelected: false });
+      if (AppStore.showHelptips() && !AppStore.getOnboardingComplete() && this.props.devices.length) {
+        setTimeout(() => {
+          AppActions.setSnackbar('open', 10000, '', <WelcomeSnackTip progress={2} />, () => {}, self.onCloseSnackbar);
+        }, 400);
+      }
     }
 
     if (prevProps.currentTab !== this.props.currentTab && this.props.currentTab === 'Device groups') {
@@ -52,12 +57,6 @@ export default class Authorized extends React.Component {
 
     if (prevProps.group !== this.props.group) {
       this.setState({ textfield: this.props.group ? decodeURIComponent(this.props.group) : 'All devices' });
-    }
-
-    if (AppStore.showHelptips() && !AppStore.getOnboardingComplete() && this.props.devices.length) {
-      setTimeout(() => {
-        AppActions.setSnackbar('open', 10000, '', <WelcomeSnackTip progress={2} />, () => {}, self.onCloseSnackbar);
-      }, 400);
     }
   }
 

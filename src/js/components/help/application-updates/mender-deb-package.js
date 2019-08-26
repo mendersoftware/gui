@@ -2,6 +2,7 @@ import React from 'react';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import IconButton from '@material-ui/core/IconButton';
 import CopyPasteIcon from '@material-ui/icons/FileCopy';
+import AppStore from '../../../stores/app-store';
 
 export default class DebPackage extends React.Component {
   constructor(props, context) {
@@ -30,12 +31,12 @@ export default class DebPackage extends React.Component {
 
     var tenantToken = (this.props.org || {}).tenant_token;
 
-    /* TODO: Replace the hardcoded master with the mender-client version */
-    var dpkgCode = 'wget https://d1b0l86ne08fsf.cloudfront.net/master/dist-packages/debian/armhf/mender-client_master-1_armhf.deb \nsudo dpkg -i mender-client_master-1_armhf.deb';
+    var dpkgCode = `wget https://d1b0l86ne08fsf.cloudfront.net/${AppStore.getMenderDebPackageVersion()}/dist-packages/debian/armhf/mender-client_${AppStore.getMenderDebPackageVersion()}-1_armhf.deb
+    sudo dpkg -i mender-client_${AppStore.getMenderDebPackageVersion()}-1_armhf.deb`;
     var cpCode = 'sudo cp /etc/mender/mender.conf.demo /etc/mender/mender.conf';
     var echoCode = 'sudo mkdir -p /var/lib/mender \necho "device_type=generic-armv6" | sudo tee /var/lib/mender/device_type';
     var startCode = 'sudo systemctl enable mender && sudo systemctl start mender';
-    var tenantCode = 'TENANT_TOKEN="'+ tenantToken +'" \nsudo sed -i "s/'+ tenantToken +'/$TENANT_TOKEN/" /etc/mender/mender.conf';
+    var tenantCode = `TENANT_TOKEN="${tenantToken}" \nsudo sed -i "s/${tenantToken}/$TENANT_TOKEN/" /etc/mender/mender.conf`;
 
     return (
       <div>

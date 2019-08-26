@@ -34,7 +34,7 @@ export default class Global extends React.Component {
   getSettings() {
     var self = this;
     return AppActions.getGlobalSettings()
-      .then(settings => self.setState({ settings, updatedSettings: settings }))
+      .then(settings => self.setState({ settings, updatedSettings: Object.assign(self.state.updatedSettings, settings) }))
       .catch(err => console.log(`error:${err}`));
   }
   getIdentityAttributes() {

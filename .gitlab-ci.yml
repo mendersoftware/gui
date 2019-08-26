@@ -55,10 +55,19 @@ build:
 
 test:static:
   stage: test
+  before_script:
+    - apk add --no-cache bash
+    # Rename the branch we're on, so that it's not in the way for the
+    # subsequent fetch. It's ok if this fails, it just means we're not on any
+    # branch.
+    - git branch -m temp-branch || true
+    # Git trick: Fetch directly into our local branches instead of remote
+    # branches.
+    - git fetch origin 'refs/heads/*:refs/heads/*'
+    # Get last remaining tags, if any.
+    - git fetch --tags origin
+    - git clone http://github.com/mendersoftware/mendertesting
   script:
-    - apk add bash
-    # Check commit compliance.
-    - git clone git://github.com/mendersoftware/mendertesting
     - mendertesting/check_commits.sh
 
 test:lint:
@@ -74,13 +83,15 @@ test:lint:
 test:acceptance:
   image: tiangolo/docker-with-compose
   services:
-    - docker:dind
+    - docker:18-dind
   stage: test
   script:
     - apk add git bash
-    - git clone https://github.com/mendersoftware/integration.git ;
+    - git clone https://github.com/mendersoftware/integration.git
     - cp -r integration/tests/* tests
     - GUI_REPOSITORY=$(pwd) INTEGRATION_PATH=$(pwd)/integration ./tests/e2e_tests/run
+  tags:
+    - mender-qa-slave
 
 test:unit:
   image: node:11.6.0-alpine

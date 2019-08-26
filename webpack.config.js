@@ -66,9 +66,13 @@ module.exports = {
     ]
   },
   plugins: [
-    new CleanWebpackPlugin(),
+    new CleanWebpackPlugin({
+      cleanOnceBeforeBuildPatterns: ['**/*', '!env.js'],
+      cleanAfterEveryBuildPatterns: ['!assets/fonts/*', '!assets/img/*']
+    }),
     new HtmlWebPackPlugin({
-      template: './src/index.html'
+      template: './src/index.html',
+      hash: true
     }),
     new MiniCssExtractPlugin({
       filename: '[name].css',

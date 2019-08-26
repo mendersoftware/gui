@@ -22,7 +22,7 @@ var _snackbar = {
   message: ''
 };
 var _currentUser = {};
-var _hasMultitenancy = mender_environment && mender_environment.hasMultitenancy;
+var _hasMultitenancy = mender_environment && mender_environment.features.hasMultitenancy;
 var _organization = {};
 var _showHelptips = null;
 var _showOnboardingTips = true;
@@ -37,9 +37,22 @@ var _onboardingArtifactIncluded = null;
 var _groups = [];
 var _releasesRepo = [];
 var _uploadInProgress = false;
-var _MenderVersion = mender_environment && mender_environment.menderVersion ? mender_environment.menderVersion : null;
+const _MenderVersion = mender_environment && mender_environment.menderVersion ? mender_environment.menderVersion : 'master';
+const _menderArtifactVersion = mender_environment && mender_environment.menderArtifactVersion ? mender_environment.menderArtifactVersion : 'master';
+const _menderDebPackageVersion = mender_environment && mender_environment.menderDebPackageVersion ? mender_environment.menderDebPackageVersion : 'master';
 var _demoArtifactPort = mender_environment && mender_environment.demoArtifactPort ? mender_environment.demoArtifactPort : 85;
 var _globalSettings = {};
+
+const _versionInformation = {
+  Mender: mender_environment.menderVersion,
+  'Mender-Artifact': mender_environment.menderArtifactVersion,
+  'Meta-Mender': mender_environment.metaMenderVersion,
+  Deployments: mender_environment.services.deploymentsVersion,
+  Deviceauth: mender_environment.services.deviceauthVersion,
+  Inventory: mender_environment.services.inventoryVersion
+};
+
+const _deploymentDeviceLimit = 5000;
 
 /* Temp local devices */
 
@@ -638,7 +651,11 @@ var AppStore = Object.assign({}, EventEmitter.prototype, {
   // return boolean rather than organization details
   hasMultitenancy: () => _hasMultitenancy,
 
-  getIsHosted: () => window.location.hostname === 'hosted.mender.io',
+  getIsHosted: () => (mender_environment && mender_environment.features.isHosted) || window.location.hostname === 'hosted.mender.io',
+
+  getIsEnterprise: () => mender_environment && mender_environment.features.isEnterprise,
+
+  getVersionInformation: () => _versionInformation,
 
   getOrganization: () => _organization,
 
@@ -672,6 +689,10 @@ var AppStore = Object.assign({}, EventEmitter.prototype, {
     return version;
   },
 
+  getMenderArtifactVersion: () => _menderArtifactVersion,
+
+  getMenderDebPackageVersion: () => _menderDebPackageVersion,
+
   getDemoArtifactPort: () => _demoArtifactPort,
 
   getDocsVersion: function() {
@@ -687,6 +708,10 @@ var AppStore = Object.assign({}, EventEmitter.prototype, {
   getUploadInProgress: () => _uploadInProgress,
 
   getGlobalSettings: () => _globalSettings,
+
+  get2FARequired: () => _globalSettings.hasOwnProperty('2fa') && _globalSettings['2fa'] === 'enabled',
+
+  getDeploymentDeviceLimit: () => _deploymentDeviceLimit,
 
   dispatcherIndex: AppDispatcher.register(payload => {
     var action = payload.action;
