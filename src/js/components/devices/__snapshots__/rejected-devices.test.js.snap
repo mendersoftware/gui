@@ -1,0 +1,35 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+<div
+  className="tab-container"
+>
+  <div
+    className="loaderContainer"
+  >
+    <div
+      className="loader"
+    >
+      <span
+        className="dot dot_1"
+      />
+      <span
+        className="dot dot_2"
+      />
+      <span
+        className="dot dot_3"
+      />
+      <span
+        className="dot dot_4"
+      />
+    </div>
+  </div>
+  <div
+    className="hidden"
+  >
+    <p>
+      There are no rejected devices
+    </p>
+  </div>
+</div>
+`;

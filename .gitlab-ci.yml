@@ -98,6 +98,13 @@ test:acceptance:
   tags:
     - mender-qa-slave
 
+test:unit:
+  image: node:11.6.0-alpine
+  stage: test
+  script:
+    - npm install
+    - npm run test
+
 publish:
   stage: publish
   services:

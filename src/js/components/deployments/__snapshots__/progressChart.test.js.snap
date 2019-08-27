@@ -1,0 +1,85 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+<div>
+  <div
+    className="relative"
+  >
+    <div
+      className="progressHeader"
+    >
+      0
+       of 
+      0
+       devices complete
+    </div>
+    <div
+      className="bubbles-contain"
+    />
+    <div
+      className="device-info"
+    >
+      <b>
+        Device info:
+      </b>
+      <p>
+        <b>
+          Device ID
+          : 
+        </b>
+      </p>
+      <p>
+        <b>
+          Status: 
+        </b>
+        
+      </p>
+      <div
+        className="substateText"
+      />
+      <div>
+        <div
+          className="substateText"
+          style={
+            Object {
+              "textAlign": "end",
+            }
+          }
+        >
+          %
+        </div>
+        <div
+          className="MuiLinearProgress-root-1 MuiLinearProgress-colorPrimary-2 MuiLinearProgress-determinate-4"
+          role="progressbar"
+        >
+          <div
+            className="MuiLinearProgress-bar-11 MuiLinearProgress-barColorPrimary-12 MuiLinearProgress-bar1Determinate-15"
+            style={Object {}}
+          />
+        </div>
+      </div>
+    </div>
+    <div
+      className="key"
+    >
+      <div
+        className="bubble failure"
+      />
+       Failed 
+      <div
+        className="bubble pending"
+      />
+       Pending 
+      <div
+        className="bubble inprogress"
+      />
+       In progress
+       
+      <div
+        className="bubble success"
+      />
+       Successful
+    </div>
+  </div>
+</div>
+`;
