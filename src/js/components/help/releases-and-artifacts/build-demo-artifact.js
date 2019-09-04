@@ -56,7 +56,8 @@ FILE_NAME="index.html"; \
 
     const file_modification = `cat >index.html <<EOF
 Hello World!
-EOF`;
+EOF
+`;
 
     return (
       <div>
