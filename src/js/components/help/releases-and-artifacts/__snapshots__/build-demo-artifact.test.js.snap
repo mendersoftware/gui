@@ -262,6 +262,7 @@ sudo chmod +x single-file-artifact-gen
         cat &gt;index.html &lt;&lt;EOF
 Hello World!
 EOF
+
       </span>
     </div>
     <p />
