@@ -1,0 +1,29 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+<div>
+  <h2>
+    Support
+  </h2>
+  <p>
+    Contact us directly for support with Hosted Mender at: 
+    <a
+      href="mailto:support@hosted.mender.io"
+      target="_blank"
+    >
+      support@hosted.mender.io
+    </a>
+    .
+  </p>
+  <p>
+    You can also try our 
+    <a
+      href="/help/more-help-resources"
+      onClick={[Function]}
+    >
+      other resources
+    </a>
+     to find help from our community, our documentation and more.
+  </p>
+</div>
+`;

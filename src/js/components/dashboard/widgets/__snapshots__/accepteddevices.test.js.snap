@@ -1,0 +1,42 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+<div
+  className="notActive widget "
+  onClick={[Function]}
+>
+  <div
+    style={
+      Object {
+        "display": "flex",
+        "flexDirection": "column",
+        "height": "100%",
+        "width": "100%",
+      }
+    }
+  >
+    <div
+      className="widgetMainContent align-right"
+      style={
+        Object {
+          "alignItems": "flex-end",
+          "display": "flex",
+          "flexDirection": "column",
+        }
+      }
+    >
+      <div
+        className="header"
+      >
+        Accepted devices
+      </div>
+      <div
+        className="counter"
+      />
+    </div>
+    <span
+      className="link"
+    />
+  </div>
+</div>
+`;

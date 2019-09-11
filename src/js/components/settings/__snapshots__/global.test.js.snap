@@ -1,0 +1,203 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+<div
+  className="margin-top-small"
+  style={
+    Object {
+      "maxWidth": "750px",
+    }
+  }
+>
+  <div>
+    <h2
+      style={
+        Object {
+          "marginTop": "15px",
+        }
+      }
+    >
+      Global settings
+    </h2>
+    <p
+      className="info"
+      style={
+        Object {
+          "marginBottom": "30px",
+        }
+      }
+    >
+      <svg
+        aria-hidden="true"
+        className="MuiSvgIcon-root-1 MuiSvgIcon-fontSizeSmall-8"
+        focusable="false"
+        role="presentation"
+        style={
+          Object {
+            "margin": "0 6px 4px 0",
+            "verticalAlign": "middle",
+          }
+        }
+        viewBox="0 0 24 24"
+      >
+        <path
+          d="M0 0h24v24H0V0z"
+          fill="none"
+        />
+        <path
+          d="M11 7h2v2h-2zM11 11h2v6h-2z"
+        />
+        <path
+          d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+        />
+      </svg>
+      These settings apply to all users, so changes made here may affect other users' experience.
+    </p>
+  </div>
+  <form
+    className=""
+  >
+    <div
+      className="MuiFormControl-root-10"
+    >
+      <label
+        className="MuiFormLabel-root-25 MuiFormLabel-filled-29 MuiInputLabel-root-14 MuiInputLabel-formControl-19 MuiInputLabel-animated-22 MuiInputLabel-shrink-21"
+        data-shrink={true}
+        htmlFor="simple-select"
+      >
+        Device identity attribute
+      </label>
+      <div
+        className="MuiInputBase-root-52 MuiInput-root-39 MuiInput-underline-43 MuiInputBase-formControl-53 MuiInput-formControl-40"
+        onClick={[Function]}
+        style={
+          Object {
+            "width": "400px",
+          }
+        }
+      >
+        <div
+          className="MuiSelect-root-32"
+        >
+          <div
+            aria-haspopup="true"
+            aria-pressed="false"
+            className="MuiSelect-select-33 MuiSelect-selectMenu-36 MuiInputBase-input-62 MuiInput-input-47"
+            id="select-selector"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            role="button"
+            tabIndex={0}
+          >
+            Device ID
+          </div>
+          <input
+            id="simple-select"
+            name="selector"
+            type="hidden"
+            value="Device ID"
+          />
+          <svg
+            aria-hidden="true"
+            className="MuiSvgIcon-root-1 MuiSelect-icon-38"
+            focusable="false"
+            role="presentation"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M7 10l5 5 5-5z"
+            />
+          </svg>
+        </div>
+      </div>
+      <p
+        className="MuiFormHelperText-root-73 MuiFormHelperText-filled-79 info"
+        style={
+          Object {
+            "width": "500px",
+          }
+        }
+      >
+        <div>
+          <p>
+            Choose a device identity attribute to use to identify your devices throughout the UI.
+          </p>
+          <p>
+            <a
+              href="https://docs.mender.io/client-configuration/identity"
+              target="_blank"
+            >
+              Learn how to add custom identity attributes
+            </a>
+             
+            to your devices.
+          </p>
+        </div>
+      </p>
+    </div>
+  </form>
+  <div
+    className="margin-top-large"
+  >
+    <div
+      className="float-right"
+    >
+      <button
+        className="MuiButtonBase-root-107 MuiButtonBase-disabled-108 MuiButton-root-81 MuiButton-text-83 MuiButton-flat-86 MuiButton-disabled-101"
+        disabled={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onContextMenu={[Function]}
+        onFocus={[Function]}
+        onKeyDown={[Function]}
+        onKeyUp={[Function]}
+        onMouseDown={[Function]}
+        onMouseLeave={[Function]}
+        onMouseUp={[Function]}
+        onTouchEnd={[Function]}
+        onTouchMove={[Function]}
+        onTouchStart={[Function]}
+        style={
+          Object {
+            "marginRight": "10px",
+          }
+        }
+        tabIndex="-1"
+        type="button"
+      >
+        <span
+          className="MuiButton-label-82"
+        >
+          Cancel
+        </span>
+      </button>
+      <button
+        className="MuiButtonBase-root-107 MuiButtonBase-disabled-108 MuiButton-root-81 MuiButton-contained-92 MuiButton-containedPrimary-93 MuiButton-raised-95 MuiButton-raisedPrimary-96 MuiButton-disabled-101"
+        disabled={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onContextMenu={[Function]}
+        onFocus={[Function]}
+        onKeyDown={[Function]}
+        onKeyUp={[Function]}
+        onMouseDown={[Function]}
+        onMouseLeave={[Function]}
+        onMouseUp={[Function]}
+        onTouchEnd={[Function]}
+        onTouchMove={[Function]}
+        onTouchStart={[Function]}
+        tabIndex="-1"
+        type="button"
+      >
+        <span
+          className="MuiButton-label-82"
+        >
+          Save
+        </span>
+      </button>
+    </div>
+  </div>
+</div>
+`;

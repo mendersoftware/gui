@@ -1,0 +1,131 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+<div
+  className="margin-top-small"
+  style={
+    Object {
+      "maxWidth": "750px",
+    }
+  }
+>
+  <h2
+    style={
+      Object {
+        "marginTop": "15px",
+      }
+    }
+  >
+    My account
+  </h2>
+  <form
+    className="flexbox space-between"
+  >
+    <div
+      className="MuiFormControl-root-1"
+    >
+      <label
+        className="MuiFormLabel-root-16 MuiInputLabel-root-5 MuiInputLabel-formControl-10 MuiInputLabel-animated-13"
+        data-shrink={false}
+        htmlFor="email"
+      >
+        Email
+      </label>
+      <div
+        className="MuiInputBase-root-36 MuiInput-root-23 MuiInput-underline-27 MuiInputBase-disabled-39 MuiInput-disabled-26 MuiInputBase-formControl-37 MuiInput-formControl-24"
+        onClick={[Function]}
+        onKeyPress={[Function]}
+        style={
+          Object {
+            "maxWidth": "100%",
+            "width": "400px",
+          }
+        }
+      >
+        <input
+          aria-invalid={false}
+          className="MuiInputBase-input-46 MuiInput-input-31 MuiInputBase-disabled-39 MuiInput-disabled-26"
+          disabled={true}
+          id="email"
+          name="email"
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          placeholder="Email"
+          required={false}
+          type="text"
+        />
+      </div>
+      <p
+        className="MuiFormHelperText-root-53"
+        id="component-error-text"
+      />
+    </div>
+    <button
+      className="MuiButtonBase-root-87 MuiButton-root-61 MuiButton-text-63 MuiButton-textPrimary-64 MuiButton-flat-66 MuiButton-flatPrimary-67 inline-block"
+      disabled={false}
+      id="change_email"
+      onBlur={[Function]}
+      onClick={[Function]}
+      onContextMenu={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      style={
+        Object {
+          "margin": "30px 0 0 15px",
+        }
+      }
+      tabIndex="0"
+      type="button"
+    >
+      <span
+        className="MuiButton-label-62"
+      >
+        Change email
+      </span>
+      <span
+        className="MuiTouchRipple-root-90"
+      />
+    </button>
+  </form>
+  <form
+    className="margin-top flexbox space-between"
+  >
+    <button
+      className="MuiButtonBase-root-87 MuiButton-root-61 MuiButton-text-63 MuiButton-textPrimary-64 MuiButton-flat-66 MuiButton-flatPrimary-67 button-holder undefined"
+      disabled={false}
+      id="change_pass"
+      onBlur={[Function]}
+      onClick={[Function]}
+      onContextMenu={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex="0"
+      type="button"
+    >
+      <span
+        className="MuiButton-label-62"
+      >
+        Change password
+      </span>
+      <span
+        className="MuiTouchRipple-root-90"
+      />
+    </button>
+  </form>
+</div>
+`;

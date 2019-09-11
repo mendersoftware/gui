@@ -1,0 +1,154 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`DevicePendingTip renders correctly 1`] = `
+<div
+  className="onboard-tip"
+  style={
+    Object {
+      "left": "50%",
+      "top": "50%",
+    }
+  }
+>
+  <a
+    className="tooltip onboard-icon"
+    data-event="click focus"
+    data-event-off="dblclick"
+    data-for="pending-device-onboarding-tip"
+    data-tip={true}
+  >
+    <svg
+      aria-hidden="true"
+      className="MuiSvgIcon-root-1"
+      focusable="false"
+      role="presentation"
+      viewBox="0 0 24 24"
+    >
+      <path
+        d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
+      />
+      <path
+        d="M0 0h24v24H0z"
+        fill="none"
+      />
+      <path
+        d="M12.5 7H11v6l5.25 3.15.75-1.23-4.5-2.67z"
+      />
+    </svg>
+  </a>
+  <div
+    className="__react_component_tooltip place-bottom type-dark allow_click "
+    data-id="tooltip"
+    id="pending-device-onboarding-tip"
+  >
+    <p>
+      It may take a few moments before your device appears.
+    </p>
+    <a
+      onClick={[Function]}
+    >
+      Open the tutorial
+    </a>
+     again or
+     
+    <a
+      href="/help/application-updates/mender-deb-package"
+      onClick={[Function]}
+    >
+      go to the help pages
+    </a>
+     if you have problems.
+    <div
+      className="flexbox"
+    >
+      <div
+        style={
+          Object {
+            "flexGrow": 1,
+          }
+        }
+      />
+      <a
+        onClick={[Function]}
+      >
+        Dismiss
+      </a>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`WelcomeSnackTip renders correctly 1`] = `
+<div
+  className="onboard-snack"
+>
+  <button
+    className="MuiButtonBase-root-16 MuiIconButton-root-10"
+    disabled={false}
+    onBlur={[Function]}
+    onClick={[Function]}
+    onContextMenu={[Function]}
+    onFocus={[Function]}
+    onKeyDown={[Function]}
+    onKeyUp={[Function]}
+    onMouseDown={[Function]}
+    onMouseLeave={[Function]}
+    onMouseUp={[Function]}
+    onTouchEnd={[Function]}
+    onTouchMove={[Function]}
+    onTouchStart={[Function]}
+    tabIndex="0"
+    type="button"
+  >
+    <span
+      className="MuiIconButton-label-15"
+    >
+      <svg
+        aria-hidden="true"
+        className="MuiSvgIcon-root-1 MuiSvgIcon-fontSizeSmall-8"
+        focusable="false"
+        role="presentation"
+        viewBox="0 0 24 24"
+      >
+        <path
+          d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+        />
+        <path
+          d="M0 0h24v24H0z"
+          fill="none"
+        />
+      </svg>
+    </span>
+    <span
+      className="MuiTouchRipple-root-19"
+    />
+  </button>
+  <div
+    className="flexbox"
+  >
+    <ol>
+      <li
+        className=""
+      >
+        1
+        . 
+        Connect a device
+      </li>
+      <li
+        className=""
+      >
+        2
+        . 
+        Deploy an Application Update
+      </li>
+      <li
+        className=""
+      >
+        3
+        . 
+        Create your own Release and deploy it
+      </li>
+    </ol>
+  </div>
+</div>
+`;

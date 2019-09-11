@@ -1,0 +1,180 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+<div
+  className="margin-top-small"
+  style={
+    Object {
+      "maxWidth": "750px",
+    }
+  }
+>
+  <h2
+    style={
+      Object {
+        "marginTop": "15px",
+      }
+    }
+  >
+    My organization
+  </h2>
+  <div>
+    <ul
+      className="MuiList-root-1 MuiList-padding-2"
+    >
+      <li
+        className="MuiListItem-root-5 MuiListItem-default-8 MuiListItem-gutters-13 MuiListItem-disabled-11"
+        disabled={true}
+      >
+        <div
+          className="MuiListItemText-root-17"
+        >
+          <span
+            className="MuiTypography-root-23 MuiTypography-subheading-30 MuiListItemText-primary-20"
+          >
+            Organization name
+          </span>
+        </div>
+      </li>
+      <hr
+        className="MuiDivider-root-59"
+      />
+      <div
+        className="material-list-item"
+      >
+        <h4
+          style={
+            Object {
+              "display": "inline",
+              "paddingRight": "10px",
+            }
+          }
+        >
+          Token
+        </h4>
+        <div
+          className="tooltip info"
+          data-event="click focus"
+          data-for="token-help"
+          data-tip={true}
+          id="token-info"
+          style={
+            Object {
+              "display": "inline",
+              "position": "relative",
+              "top": "6px",
+            }
+          }
+        >
+          <svg
+            aria-hidden="true"
+            className="MuiSvgIcon-root-64"
+            focusable="false"
+            role="presentation"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M0 0h24v24H0z"
+              fill="none"
+            />
+            <path
+              d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"
+            />
+          </svg>
+        </div>
+        <div
+          className="__react_component_tooltip place-top type-dark "
+          data-id="tooltip"
+          id="token-help"
+        >
+          <h3>
+            Tenant token
+          </h3>
+          <p
+            style={
+              Object {
+                "color": "#DECFD9",
+                "margin": "1em 0",
+              }
+            }
+          >
+            This token is unique for your organization and ensures that only devices that you own are able to connect to your account.
+          </p>
+          <p
+            style={
+              Object {
+                "color": "#DECFD9",
+                "margin": "1em 0",
+              }
+            }
+          >
+            Set this variable in 
+            <i>
+              local.conf
+            </i>
+             in order to make the device recognize the organization to which it belongs.
+          </p>
+        </div>
+        <p
+          style={
+            Object {
+              "wordBreak": "break-all",
+            }
+          }
+        >
+          
+        </p>
+        <button
+          className="MuiButtonBase-root-99 MuiButton-root-73 MuiButton-text-75 MuiButton-flat-78"
+          disabled={false}
+          icon={
+            <WithStyles(Icon)
+              className="material-icons"
+            >
+              content_paste
+            </WithStyles(Icon)>
+          }
+          onBlur={[Function]}
+          onClick={[Function]}
+          onContextMenu={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          onKeyUp={[Function]}
+          onMouseDown={[Function]}
+          onMouseLeave={[Function]}
+          onMouseUp={[Function]}
+          onTouchEnd={[Function]}
+          onTouchMove={[Function]}
+          onTouchStart={[Function]}
+          style={
+            Object {
+              "marginTop": "15px",
+            }
+          }
+          tabIndex="0"
+          type="button"
+        >
+          <span
+            className="MuiButton-label-74"
+          >
+            Copy to clipboard
+          </span>
+          <span
+            className="MuiTouchRipple-root-102"
+          />
+        </button>
+        <p
+          style={
+            Object {
+              "marginLeft": "14px",
+            }
+          }
+        />
+      </div>
+      <hr
+        className="MuiDivider-root-59"
+      />
+    </ul>
+  </div>
+</div>
+`;

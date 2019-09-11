@@ -1,0 +1,138 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+<div
+  className="onboard-tip"
+  style={
+    Object {
+      "left": "50%",
+      "top": "50%",
+    }
+  }
+>
+  <a
+    className="tooltip onboard-icon"
+    data-event="click focus"
+    data-event-off="dblclick"
+    data-for="pending-device-onboarding-tip"
+    data-tip={true}
+  >
+    <svg
+      aria-hidden="true"
+      className="MuiSvgIcon-root-1"
+      focusable="false"
+      role="presentation"
+      viewBox="0 0 24 24"
+    >
+      <path
+        d="M0 0h24v24H0z"
+        fill="none"
+      />
+      <path
+        d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
+      />
+    </svg>
+  </a>
+  <div
+    className="__react_component_tooltip place-bottom type-dark allow_click "
+    data-id="tooltip"
+    id="pending-device-onboarding-tip"
+  >
+    <p>
+      Great work! You updated your device with the new Release!
+    </p>
+    <p>
+      Your device is now running the updated version of the software. At
+      <div
+        className="flexbox centered"
+        style={
+          Object {
+            "margin": "5px 0",
+          }
+        }
+      >
+        <div
+          className="loaderContainer"
+        >
+          <div
+            className="loader"
+          >
+            <span
+              className="dot dot_1"
+            />
+            <span
+              className="dot dot_2"
+            />
+            <span
+              className="dot dot_3"
+            />
+            <span
+              className="dot dot_4"
+            />
+          </div>
+        </div>
+      </div>
+      you should now see "Hello world" in place of the webpage you saw previously.
+    </p>
+    <p>
+      You've now got a good foundation in how to use Mender. Look for more help hints in the UI as you go along.
+    </p>
+    What next?
+    <div>
+      <a
+        href="https://docs.mender.io//getting-started/deploy-to-physical-devices#prepare-the-disk-image"
+        target="_blank"
+      >
+        Learn about full-image updates
+      </a>
+       
+      or
+       
+      <a
+        href="https://hub.mender.io/c/update-modules"
+        target="_blank"
+      >
+        how to create other kinds of application updates.
+      </a>
+    </div>
+    <div
+      className="flexbox"
+    >
+      <div
+        style={
+          Object {
+            "flexGrow": 1,
+          }
+        }
+      />
+      <button
+        className="MuiButtonBase-root-36 MuiButton-root-10 MuiButton-contained-21 MuiButton-containedSecondary-23 MuiButton-raised-24 MuiButton-raisedSecondary-26"
+        disabled={false}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onContextMenu={[Function]}
+        onFocus={[Function]}
+        onKeyDown={[Function]}
+        onKeyUp={[Function]}
+        onMouseDown={[Function]}
+        onMouseLeave={[Function]}
+        onMouseUp={[Function]}
+        onTouchEnd={[Function]}
+        onTouchMove={[Function]}
+        onTouchStart={[Function]}
+        tabIndex="0"
+        type="button"
+      >
+        <span
+          className="MuiButton-label-11"
+        >
+          Close
+        </span>
+        <span
+          className="MuiTouchRipple-root-39"
+        />
+      </button>
+    </div>
+  </div>
+</div>
+`;

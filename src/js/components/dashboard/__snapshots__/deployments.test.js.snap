@@ -1,0 +1,43 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+<div>
+  <h4
+    className="dashboard-header"
+  >
+    <span>
+      Deployments
+    </span>
+  </h4>
+  <div
+    className="deployments"
+    style={
+      Object {
+        "marginBottom": "50px",
+        "marginTop": "50px",
+      }
+    }
+  >
+    <div
+      className="loaderContainer"
+    >
+      <div
+        className="loader"
+      >
+        <span
+          className="dot dot_1"
+        />
+        <span
+          className="dot dot_2"
+        />
+        <span
+          className="dot dot_3"
+        />
+        <span
+          className="dot dot_4"
+        />
+      </div>
+    </div>
+  </div>
+</div>
+`;

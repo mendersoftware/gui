@@ -1,0 +1,109 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+<div
+  className="MuiPaper-root-5 MuiPaper-elevation1-8 MuiExpansionPanel-root-1 deviceListItem"
+>
+  <div
+    aria-expanded={false}
+    className="MuiButtonBase-root-38 MuiExpansionPanelSummary-root-32"
+    onBlur={[Function]}
+    onClick={[Function]}
+    onContextMenu={[Function]}
+    onFocus={[Function]}
+    onKeyDown={[Function]}
+    onKeyUp={[Function]}
+    onMouseDown={[Function]}
+    onMouseLeave={[Function]}
+    onMouseUp={[Function]}
+    onTouchEnd={[Function]}
+    onTouchMove={[Function]}
+    onTouchStart={[Function]}
+    role="button"
+    style={
+      Object {
+        "padding": "0 12px",
+      }
+    }
+    tabIndex="0"
+  >
+    <div
+      className="MuiExpansionPanelSummary-content-36"
+    >
+      <div
+        style={
+          Object {
+            "padding": "0 24px",
+            "width": "100%",
+          }
+        }
+      >
+        1
+      </div>
+      <button
+        className="MuiButtonBase-root-38 MuiIconButton-root-41 expandButton"
+        disabled={false}
+        onBlur={[Function]}
+        onContextMenu={[Function]}
+        onFocus={[Function]}
+        onKeyDown={[Function]}
+        onKeyUp={[Function]}
+        onMouseDown={[Function]}
+        onMouseLeave={[Function]}
+        onMouseUp={[Function]}
+        onTouchEnd={[Function]}
+        onTouchMove={[Function]}
+        onTouchStart={[Function]}
+        tabIndex="0"
+        type="button"
+      >
+        <span
+          className="MuiIconButton-label-46"
+        >
+          <svg
+            aria-hidden="true"
+            className="MuiSvgIcon-root-47"
+            focusable="false"
+            role="presentation"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M7 10l5 5 5-5z"
+            />
+            <path
+              d="M0 0h24v24H0z"
+              fill="none"
+            />
+          </svg>
+        </span>
+        <span
+          className="MuiTouchRipple-root-61"
+        />
+      </button>
+    </div>
+  </div>
+  <div
+    aria-hidden="true"
+    className="MuiCollapse-container-56"
+    style={
+      Object {
+        "minHeight": "0px",
+      }
+    }
+  >
+    <div
+      className="MuiCollapse-wrapper-58"
+    >
+      <div
+        className="MuiCollapse-wrapperInner-59"
+      >
+        <div
+          className="MuiExpansionPanelDetails-root-60"
+        >
+          <div />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

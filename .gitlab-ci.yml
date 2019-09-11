@@ -1,11 +1,9 @@
 image: docker:git
 
-services:
-  - docker:dind
-
 stages:
   - test
   - build
+  - e2e-test
   - publish
 
 before_script:
@@ -18,6 +16,8 @@ before_script:
 
 build:master:
   stage: build
+  services:
+    - docker:dind
   script:
     - echo "building gui for ${SERVICE_IMAGE}"
     - docker build
@@ -37,6 +37,10 @@ build:master:
 
 build:
   stage: build
+  services:
+    - docker:dind
+  except:
+    - master
   script:
     - echo "building gui for ${SERVICE_IMAGE}"
     - docker build
@@ -44,8 +48,6 @@ build:
       -t $DOCKER_REPOSITORY:$CI_COMMIT_REF_SLUG
       .
     - docker save $SERVICE_IMAGE > image.tar
-  except:
-    - master
   artifacts:
     expire_in: 2w
     paths:
@@ -72,20 +74,23 @@ test:static:
 
 test:lint:
   stage: test
+  image: node
   script:
-    - docker build -t gui-test-image -f Dockerfile.testing .
-    - docker run --rm gui-test-image
+    - npm ci
+    - npm run lint
   except:
     - master
-  tags:
-    - docker
 
 test:acceptance:
   image: tiangolo/docker-with-compose
+  dependencies:
+    - build
   services:
     - docker:18-dind
-  stage: test
+  stage: e2e-test
   script:
+    - docker load -i image.tar
+    - docker tag $SERVICE_IMAGE $DOCKER_REPOSITORY:pr
     - apk add git bash
     - git clone https://github.com/mendersoftware/integration.git
     - cp -r integration/tests/* tests
@@ -93,8 +98,17 @@ test:acceptance:
   tags:
     - mender-qa-slave
 
+test:unit:
+  image: node:11.6.0-alpine
+  stage: test
+  script:
+    - npm install
+    - npm run test
+
 publish:
   stage: publish
+  services:
+    - docker:dind
   dependencies:
     - test:lint
     - test:acceptance

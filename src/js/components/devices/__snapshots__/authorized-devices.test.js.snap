@@ -1,0 +1,39 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+<div
+  className="relative"
+>
+  <div
+    className="loaderContainer shrunk"
+  >
+    <div
+      className="loader"
+    >
+      <span
+        className="dot dot_1"
+      />
+      <span
+        className="dot dot_2"
+      />
+      <span
+        className="dot dot_3"
+      />
+      <span
+        className="dot dot_4"
+      />
+    </div>
+  </div>
+  <div
+    className="dashboard-placeholder"
+  >
+    <p>
+      No devices found
+    </p>
+    <p>
+      No devices have been authorized to connect to the Mender server yet.
+    </p>
+  </div>
+  <div />
+</div>
+`;

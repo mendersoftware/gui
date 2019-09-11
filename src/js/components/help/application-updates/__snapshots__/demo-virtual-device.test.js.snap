@@ -1,0 +1,145 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+<div>
+  <h2>
+    Virtual device
+  </h2>
+  <div>
+    <p>
+      Mender supports virtual devices, which is handy as you do not need to configure any hardware to try Mender. You can start your own virtual devices by following the steps below.
+    </p>
+    <h3>
+      Prerequisites
+    </h3>
+    <h4>
+      Infrastructure to run the virtual device
+    </h4>
+    <p>
+      You need to start virtual devices on your own infrastructure (e.g. your workstation or EC2 instance).
+    </p>
+    <div>
+      <p>
+        As you are running Mender on-premise, for these instructions we assume that you already have Docker installed and the Mender integration environment up and running on your machine.
+      </p>
+    </div>
+    <h3>
+      Start a virtual device
+    </h3>
+    
+    <p>
+      To start a virtual device, 
+      change directory into the folder where you cloned Mender integration, then
+       paste and run the following command
+       
+    </p>
+    <div>
+      <div
+        className="code"
+      >
+        <button
+          className="MuiButtonBase-root-7 MuiIconButton-root-1"
+          disabled={false}
+          onBlur={[Function]}
+          onClick={[Function]}
+          onContextMenu={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          onKeyUp={[Function]}
+          onMouseDown={[Function]}
+          onMouseLeave={[Function]}
+          onMouseUp={[Function]}
+          onTouchEnd={[Function]}
+          onTouchMove={[Function]}
+          onTouchStart={[Function]}
+          style={
+            Object {
+              "float": "right",
+              "margin": "-20px 0 0 10px",
+            }
+          }
+          tabIndex="0"
+          type="button"
+        >
+          <span
+            className="MuiIconButton-label-6"
+          >
+            <svg
+              aria-hidden="true"
+              className="MuiSvgIcon-root-10"
+              focusable="false"
+              role="presentation"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M0 0h24v24H0z"
+                fill="none"
+              />
+              <path
+                d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm-1 4l6 6v10c0 1.1-.9 2-2 2H7.99C6.89 23 6 22.1 6 21l.01-14c0-1.1.89-2 1.99-2h7zm-1 7h5.5L14 6.5V12z"
+              />
+            </svg>
+          </span>
+          <span
+            className="MuiTouchRipple-root-19"
+          />
+        </button>
+        <span
+          style={
+            Object {
+              "wordBreak": "break-word",
+            }
+          }
+        >
+          ./demo --client up
+        </span>
+      </div>
+      <p />
+    </div>
+    
+    <p>
+      The 
+      device will appear in your 
+      <a
+        href="/devices/pending"
+        onClick={[Function]}
+      >
+        Pending devices tab
+      </a>
+      . Authorizing the device will enable you to deploy updates to it.
+    </p>
+    <h3>
+      Deploying updates
+    </h3>
+    <p>
+      The next step is to upload an Artifact. Artifacts can be uploaded to the server in the
+       
+      <a
+        href="/releases"
+        onClick={[Function]}
+      >
+        Releases tab
+      </a>
+      . You should see a tooltip which provides a link to a demo Artifact for you to use, or you can learn more about building a demo Artifact 
+      <a
+        href="/help/releases-artifacts/build-demo-artifact"
+        onClick={[Function]}
+      >
+        here
+      </a>
+      .
+    </p>
+    <p>
+      Once you have an Artifact uploaded, head over to the 
+      <a
+        href="/deployments"
+        onClick={[Function]}
+      >
+        Deployments tab
+      </a>
+       to deploy it to your virtual device!
+    </p>
+    
+  </div>
+</div>
+`;

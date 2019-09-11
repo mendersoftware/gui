@@ -1,0 +1,92 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+<div
+  className="file-details"
+>
+  <h4
+    style={
+      Object {
+        "background": "rgb(233, 233, 233)",
+        "padding": "10px",
+        "position": "absolute",
+        "top": "-35px",
+      }
+    }
+  >
+    Payload 
+  </h4>
+  <ul
+    className="MuiList-root-1 MuiList-padding-2"
+    style={
+      Object {
+        "display": "flex",
+        "flexDirection": "row",
+      }
+    }
+  >
+    <li
+      className="MuiListItem-root-5 attributes MuiListItem-default-8 MuiListItem-gutters-13 MuiListItem-disabled-11 opaque"
+      disabled={true}
+      style={
+        Object {
+          "borderBottom": "1px solid #e0e0e0",
+          "marginRight": "2vw",
+          "paddingBottom": "11px",
+        }
+      }
+    >
+      <div
+        className="MuiListItemText-root-17"
+      >
+        <span
+          className="MuiTypography-root-23 MuiTypography-subheading-30 MuiListItemText-primary-20"
+        >
+          Type
+        </span>
+        <p
+          className="MuiTypography-root-23 MuiTypography-body1-32 MuiTypography-colorTextSecondary-56 MuiListItemText-secondary-21"
+        >
+          test
+        </p>
+      </div>
+    </li>
+    <li
+      className="MuiListItem-root-5 attributes MuiListItem-default-8 MuiListItem-gutters-13 MuiListItem-disabled-11 opaque"
+      disabled={true}
+      style={
+        Object {
+          "borderBottom": "1px solid #e0e0e0",
+          "marginRight": "2vw",
+          "paddingBottom": "11px",
+        }
+      }
+    >
+      <div
+        className="MuiListItemText-root-17"
+      >
+        <span
+          className="MuiTypography-root-23 MuiTypography-subheading-30 MuiListItemText-primary-20"
+        >
+          Total Size (uncompressed)
+        </span>
+        <p
+          className="MuiTypography-root-23 MuiTypography-body1-32 MuiTypography-colorTextSecondary-56 MuiListItemText-secondary-21"
+        >
+          0 Bytes
+        </p>
+      </div>
+    </li>
+  </ul>
+  <div
+    className="file-meta"
+  >
+    <h4>
+      Files
+    </h4>
+    <p>
+      There are no files in this Artifact
+    </p>
+  </div>
+</div>
+`;
