@@ -25,6 +25,9 @@ if [ ! -z "$HOSTNAME" ]; then
     ROOT_URL="https://$HOSTNAME"
 fi
 
+touch /var/www/mender-gui/dist/version
+MENDER_GUI_VERSION=$(cat /var/www/mender-gui/dist/version)
+
 cat >/var/www/mender-gui/dist/env.js <<EOF
   mender_environment = {
     rootUrl: "$ROOT_URL",
@@ -42,6 +45,7 @@ cat >/var/www/mender-gui/dist/env.js <<EOF
     services: {
       deploymentsVersion: "$MENDER_DEPLOYMENTS_VERSION",
       deviceauthVersion: "$MENDER_DEVICEAUTH_VERSION",
+      guiVersion: "$MENDER_GUI_VERSION",
       inventoryVersion: "$MENDER_INVENTORY_VERSION"
     },
     demoArtifactPort: "$DEMO_ARTIFACT_PORT"

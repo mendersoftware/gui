@@ -49,7 +49,8 @@ const _versionInformation = {
   'Meta-Mender': mender_environment.metaMenderVersion,
   Deployments: mender_environment.services.deploymentsVersion,
   Deviceauth: mender_environment.services.deviceauthVersion,
-  Inventory: mender_environment.services.inventoryVersion
+  Inventory: mender_environment.services.inventoryVersion,
+  GUI: mender_environment.services.guiVersion || 'latest'
 };
 
 const _deploymentDeviceLimit = 5000;
