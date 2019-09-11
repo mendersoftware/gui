@@ -36,7 +36,9 @@ export default class DebPackage extends React.Component {
     var cpCode = 'sudo cp /etc/mender/mender.conf.demo /etc/mender/mender.conf';
     var echoCode = 'sudo mkdir -p /var/lib/mender \necho "device_type=generic-armv6" | sudo tee /var/lib/mender/device_type';
     var startCode = 'sudo systemctl enable mender && sudo systemctl start mender';
-    var tenantCode = `TENANT_TOKEN="${tenantToken}" \nsudo sed -i "s/${tenantToken}/$TENANT_TOKEN/" /etc/mender/mender.conf`;
+    var tenantCode = `TENANT_TOKEN="${tenantToken}" \nsudo sed -i ${
+      detectOsIdentifier() === 'MacOs' ? '""' : ''
+    } "s/Paste your Hosted Mender token here/$TENANT_TOKEN/" /etc/mender/mender.conf`;
 
     return (
       <div>
