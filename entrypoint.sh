@@ -22,7 +22,7 @@ fi
 cat >/var/www/mender-gui/dist/env.js <<EOF
   mender_environment = {
     hostAddress: "$HOSTNAME",
-    hostedAnnouncement: "$ANNOUCEMENT",
+    hostedAnnouncement: "$ANNOUNCEMENT",
     isDemoMode: "$DEMO",
     features: {
       hasMultitenancy: "$HAVE_MULTITENANT",
