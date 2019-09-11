@@ -15,6 +15,7 @@ WORKDIR /var/www/mender-gui/dist
 COPY ./entrypoint.sh /entrypoint.sh
 COPY httpd.conf /etc/nginx/nginx.conf
 COPY --from=build /usr/src/app/dist .
+COPY --from=build /usr/src/app/version .
 
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["nginx"]

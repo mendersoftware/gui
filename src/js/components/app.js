@@ -8,7 +8,7 @@ import LeftNav from './leftnav';
 import IdleTimer from 'react-idle-timer';
 
 import { logout, updateMaxAge, expirySet } from '../auth';
-import { preformatWithRequestID } from '../helpers';
+import { preformatWithRequestID, stringToBoolean } from '../helpers';
 
 import SharedSnackbar from '../components/common/sharedsnackbar';
 
@@ -20,7 +20,7 @@ import CreateArtifactDialog from './common/dialogs/createartifactdialog';
 import ConfirmDismissHelptips from './common/dialogs/confirmdismisshelptips';
 import DeviceConnectionDialog from './common/dialogs/deviceconnectiondialog';
 
-const isDemoMode = mender_environment && mender_environment.isDemoMode;
+const isDemoMode = mender_environment && stringToBoolean(mender_environment.isDemoMode);
 const _HostedAnnouncement = mender_environment && mender_environment.hostedAnnouncement ? mender_environment.hostedAnnouncement : '';
 
 class AppRoot extends React.Component {

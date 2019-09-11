@@ -91,7 +91,7 @@ exports[`renders correctly 1`] = `
             readOnly={true}
             required={false}
             type="text"
-            value="August 26th"
+            value="January 1st"
           />
         </div>
         
@@ -133,7 +133,7 @@ exports[`renders correctly 1`] = `
             readOnly={true}
             required={false}
             type="text"
-            value="August 26th"
+            value="January 1st"
           />
         </div>
         
