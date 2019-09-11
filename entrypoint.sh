@@ -17,17 +17,11 @@ fi
 
 if [ -n "$GATEWAY_PORT" ]; then
     HOSTNAME=$HOSTNAME':'$GATEWAY_PORT
-fi 
-
-ROOT_URL=""
-# It is expected that gateway uri is set as 'rootUrl' variable 
-if [ ! -z "$HOSTNAME" ]; then
-    ROOT_URL="https://$HOSTNAME"
 fi
 
 cat >/var/www/mender-gui/dist/env.js <<EOF
   mender_environment = {
-    rootUrl: "$ROOT_URL",
+    hostAddress: "$HOSTNAME",
     hostedAnnouncement: "$ANNOUCEMENT",
     isDemoMode: "$DEMO",
     features: {
