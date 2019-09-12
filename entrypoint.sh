@@ -45,7 +45,8 @@ cat >/var/www/mender-gui/dist/env.js <<EOF
       guiVersion: "$(cat /var/www/mender-gui/dist/version)",
       inventoryVersion: "$MENDER_INVENTORY_VERSION"
     },
-    demoArtifactPort: "$DEMO_ARTIFACT_PORT"
+    demoArtifactPort: "$DEMO_ARTIFACT_PORT",
+    disableOnboarding: "$DISABLE_ONBOARDING"
   }
 EOF
 
