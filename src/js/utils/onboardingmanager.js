@@ -257,7 +257,8 @@ export function getOnboardingState(userId) {
           savedState.complete ||
           (acceptedDevices.length > 1 && pendingDevices.length > 0 && releases.length > 1 && pastDeployments.length > 1) ||
           (acceptedDevices.length >= 1 && releases.length >= 2 && pastDeployments.length > 2) ||
-          (acceptedDevices.length >= 1 && pendingDevices.length > 0 && releases.length >= 2 && pastDeployments.length >= 2)
+          (acceptedDevices.length >= 1 && pendingDevices.length > 0 && releases.length >= 2 && pastDeployments.length >= 2) ||
+          (mender_environment && mender_environment.disableOnboarding)
         ),
         showTips: savedState.showTips || onboardedCookie ? !onboardedCookie : true,
         deviceType:
