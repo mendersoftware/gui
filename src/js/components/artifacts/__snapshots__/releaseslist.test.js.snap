@@ -1,0 +1,33 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+<div
+  className="repository-list"
+>
+  <div
+    className="margin-bottom-small"
+  >
+    <h4>
+      Releases
+    </h4>
+    <div
+      className="search"
+    >
+      <input
+        onChange={[Function]}
+        placeholder="Filter by name"
+        type="search"
+        value=""
+      />
+    </div>
+    <p
+      className="margin-top muted align-center margin-right"
+    >
+      There are no Releases yet
+    </p>
+  </div>
+  <ul
+    className="MuiList-root-1 MuiList-padding-2"
+  />
+</div>
+`;

@@ -1,0 +1,462 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+Array [
+  <div
+    className="header null"
+    id="fixedHeader"
+  >
+    <div
+      className="MuiToolbar-root-1 MuiToolbar-regular-3 MuiToolbar-gutters-2"
+      style={
+        Object {
+          "backgroundColor": "#fff",
+          "height": "56px",
+          "minHeight": "unset",
+          "paddingLeft": "16px",
+          "paddingRight": "16px",
+        }
+      }
+    >
+      <div
+        className="MuiToolbar-root-1 MuiToolbar-regular-3 MuiToolbar-gutters-2"
+        style={
+          Object {
+            "height": "56px",
+            "minHeight": "unset",
+            "paddingLeft": "16px",
+            "paddingRight": "16px",
+          }
+        }
+      >
+        <a
+          href="/"
+          id="logo"
+          onClick={[Function]}
+        />
+      </div>
+      <div
+        className="MuiToolbar-root-1 MuiToolbar-regular-3 MuiToolbar-gutters-2"
+        style={
+          Object {
+            "flexGrow": "2",
+          }
+        }
+      />
+      <div
+        className="MuiToolbar-root-1 MuiToolbar-regular-3 MuiToolbar-gutters-2"
+        style={
+          Object {
+            "flexShrink": "0",
+          }
+        }
+      >
+        <div>
+          <div
+            data-for="limit-tip"
+            data-offset="{'bottom': 0, 'right': 0}"
+            data-tip={true}
+            data-tip-disable={true}
+            id="limit"
+          >
+            <div
+              className="__react_component_tooltip place-bottom type-dark "
+              data-id="tooltip"
+              id="limit-tip"
+            >
+              <h3>
+                Device limit
+              </h3>
+              <p>
+                You can still connect another 
+                NaN
+                 
+                devices
+                .
+              </p>
+              <p>
+                Contact us by email at 
+                <a
+                  href="mailto:support@hosted.mender.io"
+                >
+                  support@hosted.mender.io
+                </a>
+                 to request a higher limit.
+              </p>
+              <p>
+                There is no fee for a higher limit; the purpose of the limit is to allow us to plan capacity for scaling Hosted Mender.
+              </p>
+              <p>
+                Billing is based on your usage only. See
+                 
+                <a
+                  href="https://mender.io/pricing"
+                  target="_blank"
+                >
+                  pricing
+                </a>
+                 
+                for an overview.
+              </p>
+            </div>
+            <div
+              className="header-section"
+            >
+              <a
+                className="inline"
+                href="/devices"
+                onClick={[Function]}
+              >
+                <span>
+                  0
+                </span>
+                <svg
+                  aria-hidden="true"
+                  className="MuiSvgIcon-root-5"
+                  focusable="false"
+                  role="presentation"
+                  style={
+                    Object {
+                      "fontSize": "20px",
+                      "margin": "0 7px 0 10px",
+                    }
+                  }
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M22 9V7h-2V5c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-2h2v-2h-2v-2h2v-2h-2V9h2zm-4 10H4V5h14v14zM6 13h5v4H6zm6-6h4v3h-4zM6 7h5v5H6zm6 4h4v6h-4z"
+                  />
+                  <path
+                    d="M0 0h24v24H0zm0 0h24v24H0z"
+                    fill="none"
+                  />
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+        <a
+          className="header-section"
+          href="/deployments/"
+          onClick={[Function]}
+        >
+          <span />
+          <svg
+            aria-hidden="true"
+            className="MuiSvgIcon-root-5 flip-horizontal"
+            focusable="false"
+            role="presentation"
+            style={
+              Object {
+                "color": "#c7c7c7",
+                "fontSize": "20px",
+                "margin": "0 7px 0 10px",
+                "top": "5px",
+              }
+            }
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"
+            />
+            <path
+              d="M0 0h24v24H0z"
+              fill="none"
+            />
+          </svg>
+        </a>
+        <div
+          style={
+            Object {
+              "marginRight": "0",
+              "paddingLeft": "30px",
+            }
+          }
+        >
+          <button
+            className="MuiButtonBase-root-40 MuiButton-root-14 MuiButton-text-16 MuiButton-flat-19 header-dropdown"
+            disabled={false}
+            onBlur={[Function]}
+            onClick={[Function]}
+            onContextMenu={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+            onMouseLeave={[Function]}
+            onMouseUp={[Function]}
+            onTouchEnd={[Function]}
+            onTouchMove={[Function]}
+            onTouchStart={[Function]}
+            style={
+              Object {
+                "fill": "rgb(0, 0, 0)",
+                "fontSize": "14px",
+                "textTransform": "none",
+              }
+            }
+            tabIndex="0"
+            type="button"
+          >
+            <span
+              className="MuiButton-label-15"
+            >
+              <svg
+                aria-hidden="true"
+                className="MuiSvgIcon-root-5"
+                focusable="false"
+                role="presentation"
+                style={
+                  Object {
+                    "color": "#c7c7c7",
+                    "fontSize": "20px",
+                    "marginRight": "8px",
+                    "top": "5px",
+                  }
+                }
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"
+                />
+                <path
+                  d="M0 0h24v24H0z"
+                  fill="none"
+                />
+              </svg>
+              <svg
+                aria-hidden="true"
+                className="MuiSvgIcon-root-5"
+                focusable="false"
+                role="presentation"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M7 10l5 5 5-5z"
+                />
+                <path
+                  d="M0 0h24v24H0z"
+                  fill="none"
+                />
+              </svg>
+            </span>
+            <span
+              className="MuiTouchRipple-root-134"
+            />
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>,
+  <div
+    className="leftFixed leftNav"
+  >
+    <ul
+      className="MuiList-root-47 MuiList-padding-48"
+      style={
+        Object {
+          "padding": "0",
+        }
+      }
+    >
+      <a
+        aria-current="page"
+        className="MuiListItem-root-51 MuiListItem-default-54 MuiListItem-gutters-59 navLink leftNav active"
+        disabled={false}
+        href="/"
+        onClick={[Function]}
+        style={
+          Object {
+            "padding": "22px 16px 22px 42px",
+          }
+        }
+      >
+        <div
+          className="MuiListItemText-root-63"
+          style={
+            Object {
+              "textTransform": "uppercase",
+            }
+          }
+        >
+          <span
+            className="MuiTypography-root-69 MuiTypography-subheading-76 MuiListItemText-primary-66"
+          >
+            Dashboard
+          </span>
+        </div>
+      </a>
+      <a
+        aria-current={null}
+        className="MuiListItem-root-51 MuiListItem-default-54 MuiListItem-gutters-59 navLink leftNav"
+        disabled={false}
+        href="/devices"
+        onClick={[Function]}
+        style={
+          Object {
+            "padding": "22px 16px 22px 42px",
+          }
+        }
+      >
+        <div
+          className="MuiListItemText-root-63"
+          style={
+            Object {
+              "textTransform": "uppercase",
+            }
+          }
+        >
+          <span
+            className="MuiTypography-root-69 MuiTypography-subheading-76 MuiListItemText-primary-66"
+          >
+            Devices
+          </span>
+        </div>
+      </a>
+      <a
+        aria-current={null}
+        className="MuiListItem-root-51 MuiListItem-default-54 MuiListItem-gutters-59 navLink leftNav"
+        disabled={false}
+        href="/releases"
+        onClick={[Function]}
+        style={
+          Object {
+            "padding": "22px 16px 22px 42px",
+          }
+        }
+      >
+        <div
+          className="MuiListItemText-root-63"
+          style={
+            Object {
+              "textTransform": "uppercase",
+            }
+          }
+        >
+          <span
+            className="MuiTypography-root-69 MuiTypography-subheading-76 MuiListItemText-primary-66"
+          >
+            Releases
+          </span>
+        </div>
+      </a>
+      <a
+        aria-current={null}
+        className="MuiListItem-root-51 MuiListItem-default-54 MuiListItem-gutters-59 navLink leftNav"
+        disabled={false}
+        href="/deployments"
+        onClick={[Function]}
+        style={
+          Object {
+            "padding": "22px 16px 22px 42px",
+          }
+        }
+      >
+        <div
+          className="MuiListItemText-root-63"
+          style={
+            Object {
+              "textTransform": "uppercase",
+            }
+          }
+        >
+          <span
+            className="MuiTypography-root-69 MuiTypography-subheading-76 MuiListItemText-primary-66"
+          >
+            Deployments
+          </span>
+        </div>
+      </a>
+    </ul>
+    <ul
+      className="MuiList-root-47 MuiList-padding-48"
+      style={
+        Object {
+          "bottom": "30px",
+          "left": "0px",
+          "padding": "0",
+          "position": "absolute",
+          "right": "0px",
+        }
+      }
+    >
+      <a
+        className="MuiListItem-root-51 MuiListItem-default-54 MuiListItem-gutters-59 navLink leftNav"
+        disabled={false}
+        href="/help"
+        onClick={[Function]}
+        style={
+          Object {
+            "padding": "16px 16px 16px 42px",
+          }
+        }
+      >
+        <div
+          className="MuiListItemText-root-63"
+        >
+          <span
+            className="MuiTypography-root-69 MuiTypography-subheading-76 MuiListItemText-primary-66"
+          >
+            Help
+          </span>
+        </div>
+      </a>
+      <li
+        className="MuiListItem-root-51 MuiListItem-default-54 MuiListItem-gutters-59 MuiListItem-disabled-57"
+        disabled={true}
+        style={
+          Object {
+            "color": "#949495",
+            "padding": "16px 16px 16px 42px",
+          }
+        }
+      >
+        <div
+          className="MuiListItemText-root-63"
+        >
+          <span
+            className="MuiTypography-root-69 MuiTypography-subheading-76 MuiListItemText-primary-66"
+          >
+            <div
+              aria-describedby={null}
+              className=""
+              onBlur={[Function]}
+              onClick={[Function]}
+              onFocus={[Function]}
+              onMouseLeave={[Function]}
+              onMouseOver={[Function]}
+              onTouchEnd={[Function]}
+              onTouchStart={[Function]}
+              title={null}
+            >
+              Version: master
+            </div>
+          </span>
+          <p
+            className="MuiTypography-root-69 MuiTypography-body1-78 MuiTypography-colorTextSecondary-102 MuiListItemText-secondary-67"
+          >
+            <a
+              href="https://docs.mender.io/development/release-information/open-source-licenses"
+              rel="noopener noreferrer"
+              style={
+                Object {
+                  "color": "#347A87",
+                  "fontSize": "13px",
+                  "position": "relative",
+                  "top": "6px",
+                }
+              }
+              target="_blank"
+            >
+              License information
+            </a>
+          </p>
+        </div>
+      </li>
+    </ul>
+  </div>,
+  <div
+    className="rightFluid container"
+  />,
+]
+`;

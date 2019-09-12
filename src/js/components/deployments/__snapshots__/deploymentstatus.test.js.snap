@@ -1,0 +1,60 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+<div>
+  <div
+    className="results-status"
+  >
+    <div
+      aria-label="Skipped"
+      className="hint--bottom disabled"
+    >
+      <span
+        className="status skipped"
+      >
+        0
+      </span>
+    </div>
+    <div
+      aria-label="Pending"
+      className="hint--bottom disabled"
+    >
+      <span
+        className="status pending"
+      >
+        0
+      </span>
+    </div>
+    <div
+      aria-label="In progress"
+      className="hint--bottom disabled"
+    >
+      <span
+        className="status inprogress"
+      >
+        0
+      </span>
+    </div>
+    <div
+      aria-label="Successful"
+      className="hint--bottom disabled"
+    >
+      <span
+        className="status success"
+      >
+        0
+      </span>
+    </div>
+    <div
+      aria-label="Failed"
+      className="hint--bottom disabled"
+    >
+      <span
+        className="status failure"
+      >
+        0
+      </span>
+    </div>
+  </div>
+</div>
+`;

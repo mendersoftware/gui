@@ -1,0 +1,314 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+<div>
+  <h2>
+    Connecting your device using Mender .deb package
+  </h2>
+  <p>
+    Mender is available as a .deb package, to make it easy to install and use Mender for application-based updates on Debian, Ubuntu and Raspbian OSes. We currently provide packages for:
+  </p>
+  <ul>
+    <li>
+      armhf (ARM-v6):
+      <ul>
+        <li>
+          Raspberry Pi, BeagleBone and other ARM based devices.
+        </li>
+      </ul>
+    </li>
+  </ul>
+  <h3>
+    Installing and configuring the .deb package
+  </h3>
+  <p>
+    On the device, run the following commands:
+  </p>
+  <p>
+    Download the package:
+  </p>
+  <div
+    className="code"
+  >
+    <button
+      className="MuiButtonBase-root-7 MuiIconButton-root-1"
+      disabled={false}
+      onBlur={[Function]}
+      onClick={[Function]}
+      onContextMenu={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      style={
+        Object {
+          "float": "right",
+          "margin": "-20px 0 0 10px",
+        }
+      }
+      tabIndex="0"
+      type="button"
+    >
+      <span
+        className="MuiIconButton-label-6"
+      >
+        <svg
+          aria-hidden="true"
+          className="MuiSvgIcon-root-10"
+          focusable="false"
+          role="presentation"
+          viewBox="0 0 24 24"
+        >
+          <path
+            d="M0 0h24v24H0z"
+            fill="none"
+          />
+          <path
+            d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm-1 4l6 6v10c0 1.1-.9 2-2 2H7.99C6.89 23 6 22.1 6 21l.01-14c0-1.1.89-2 1.99-2h7zm-1 7h5.5L14 6.5V12z"
+          />
+        </svg>
+      </span>
+      <span
+        className="MuiTouchRipple-root-19"
+      />
+    </button>
+    <span
+      style={
+        Object {
+          "wordBreak": "break-word",
+        }
+      }
+    >
+      wget https://d1b0l86ne08fsf.cloudfront.net/master/dist-packages/debian/armhf/mender-client_master-1_armhf.deb
+    sudo dpkg -i mender-client_master-1_armhf.deb
+    </span>
+  </div>
+  <p />
+  <p>
+    For demo purposes, copy the demo config file:
+  </p>
+  <div
+    className="code"
+  >
+    <button
+      className="MuiButtonBase-root-7 MuiIconButton-root-1"
+      disabled={false}
+      onBlur={[Function]}
+      onClick={[Function]}
+      onContextMenu={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      style={
+        Object {
+          "float": "right",
+          "margin": "-20px 0 0 10px",
+        }
+      }
+      tabIndex="0"
+      type="button"
+    >
+      <span
+        className="MuiIconButton-label-6"
+      >
+        <svg
+          aria-hidden="true"
+          className="MuiSvgIcon-root-10"
+          focusable="false"
+          role="presentation"
+          viewBox="0 0 24 24"
+        >
+          <path
+            d="M0 0h24v24H0z"
+            fill="none"
+          />
+          <path
+            d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm-1 4l6 6v10c0 1.1-.9 2-2 2H7.99C6.89 23 6 22.1 6 21l.01-14c0-1.1.89-2 1.99-2h7zm-1 7h5.5L14 6.5V12z"
+          />
+        </svg>
+      </span>
+      <span
+        className="MuiTouchRipple-root-19"
+      />
+    </button>
+    <span
+      style={
+        Object {
+          "wordBreak": "break-word",
+        }
+      }
+    >
+      sudo cp /etc/mender/mender.conf.demo /etc/mender/mender.conf
+    </span>
+  </div>
+  <p />
+  <p>
+    Or edit the config file yourself by
+     
+    <a
+      href="https://docs.mender.io/undefinedclient-configuration/configuration-file"
+      target="_blank"
+    >
+      following the docs
+    </a>
+    .
+  </p>
+  <br />
+  <h4>
+    Setting the device type
+  </h4>
+  <p>
+    Create the Mender client state directory and set the device type on the device. This example uses 
+    <span
+      className="code"
+    >
+      generic-armv6
+    </span>
+    , but you can substitute your own specific device type:
+  </p>
+  <div
+    className="code"
+  >
+    <button
+      className="MuiButtonBase-root-7 MuiIconButton-root-1"
+      disabled={false}
+      onBlur={[Function]}
+      onClick={[Function]}
+      onContextMenu={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      style={
+        Object {
+          "float": "right",
+          "margin": "-20px 0 0 10px",
+        }
+      }
+      tabIndex="0"
+      type="button"
+    >
+      <span
+        className="MuiIconButton-label-6"
+      >
+        <svg
+          aria-hidden="true"
+          className="MuiSvgIcon-root-10"
+          focusable="false"
+          role="presentation"
+          viewBox="0 0 24 24"
+        >
+          <path
+            d="M0 0h24v24H0z"
+            fill="none"
+          />
+          <path
+            d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm-1 4l6 6v10c0 1.1-.9 2-2 2H7.99C6.89 23 6 22.1 6 21l.01-14c0-1.1.89-2 1.99-2h7zm-1 7h5.5L14 6.5V12z"
+          />
+        </svg>
+      </span>
+      <span
+        className="MuiTouchRipple-root-19"
+      />
+    </button>
+    <span
+      style={
+        Object {
+          "wordBreak": "break-word",
+        }
+      }
+    >
+      sudo mkdir -p /var/lib/mender 
+echo "device_type=generic-armv6" | sudo tee /var/lib/mender/device_type
+    </span>
+  </div>
+  <p />
+  <br />
+  <h4>
+    Starting the client
+  </h4>
+  <p>
+    Enable and start the Mender client:
+  </p>
+  <div
+    className="code"
+  >
+    <button
+      className="MuiButtonBase-root-7 MuiIconButton-root-1"
+      disabled={false}
+      onBlur={[Function]}
+      onClick={[Function]}
+      onContextMenu={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      style={
+        Object {
+          "float": "right",
+          "margin": "-20px 0 0 10px",
+        }
+      }
+      tabIndex="0"
+      type="button"
+    >
+      <span
+        className="MuiIconButton-label-6"
+      >
+        <svg
+          aria-hidden="true"
+          className="MuiSvgIcon-root-10"
+          focusable="false"
+          role="presentation"
+          viewBox="0 0 24 24"
+        >
+          <path
+            d="M0 0h24v24H0z"
+            fill="none"
+          />
+          <path
+            d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm-1 4l6 6v10c0 1.1-.9 2-2 2H7.99C6.89 23 6 22.1 6 21l.01-14c0-1.1.89-2 1.99-2h7zm-1 7h5.5L14 6.5V12z"
+          />
+        </svg>
+      </span>
+      <span
+        className="MuiTouchRipple-root-19"
+      />
+    </button>
+    <span
+      style={
+        Object {
+          "wordBreak": "break-word",
+        }
+      }
+    >
+      sudo systemctl enable mender && sudo systemctl start mender
+    </span>
+  </div>
+  <p />
+  <p>
+    Once the client has started, your device will attempt to connect to the server. It will then appear in your Pending devices tab and you can continue.
+  </p>
+</div>
+`;

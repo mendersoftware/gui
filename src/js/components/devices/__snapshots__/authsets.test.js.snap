@@ -1,0 +1,47 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+<div
+  style={
+    Object {
+      "minWidth": "900px",
+    }
+  }
+>
+  <div
+    className="margin-bottom-small"
+    style={
+      Object {
+        "border": "1px solid #f1f2f3",
+        "fontSize": "15px",
+        "padding": "14px 40px 0px 20px",
+        "width": "fit-content",
+      }
+    }
+  >
+    <span
+      className="bold margin-right"
+    >
+      Device ID
+    </span>
+    <span />
+    <p>
+      <span
+        className="bold margin-right"
+      >
+        Device status
+      </span>
+      <span
+        className="capitalized inline-block"
+      />
+    </p>
+  </div>
+  <div
+    className="clear"
+  >
+    <div
+      className="margin-top-large margin-bottom auto"
+    />
+  </div>
+</div>
+`;

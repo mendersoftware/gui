@@ -2,7 +2,7 @@ import { EventEmitter } from 'events'; // from device
 
 import AppDispatcher from '../dispatchers/app-dispatcher';
 import AppConstants from '../constants/app-constants';
-import { customSort } from '../helpers';
+import { customSort, stringToBoolean } from '../helpers';
 
 var CHANGE_EVENT = 'change';
 
@@ -22,14 +22,14 @@ var _snackbar = {
   message: ''
 };
 var _currentUser = {};
-var _hasMultitenancy = mender_environment && mender_environment.features.hasMultitenancy;
+var _hasMultitenancy = mender_environment && stringToBoolean(mender_environment.features.hasMultitenancy);
 var _organization = {};
 var _showHelptips = null;
 var _showOnboardingTips = true;
 var _showOnboardingTipsDialog = false;
 var _showConnectDeviceDialog = false;
 var _showCreateArtifactDialog = false;
-var _onboardingComplete = !!_onboardingComplete || !!JSON.parse(window.localStorage.getItem('onboardingComplete'));
+var _onboardingComplete = !!_onboardingComplete || (mender_environment && stringToBoolean(mender_environment.disableOnboarding)) || !!JSON.parse(window.localStorage.getItem('onboardingComplete'));
 var _onboardingProgress = 0;
 var _onboardingDeviceType = null;
 var _onboardingApproach = null;
@@ -651,9 +651,9 @@ var AppStore = Object.assign({}, EventEmitter.prototype, {
   // return boolean rather than organization details
   hasMultitenancy: () => _hasMultitenancy,
 
-  getIsHosted: () => (mender_environment && mender_environment.features.isHosted) || window.location.hostname === 'hosted.mender.io',
+  getIsHosted: () => (mender_environment && stringToBoolean(mender_environment.features.isHosted)) || window.location.hostname === 'hosted.mender.io',
 
-  getIsEnterprise: () => mender_environment && mender_environment.features.isEnterprise,
+  getIsEnterprise: () => mender_environment && stringToBoolean(mender_environment.features.isEnterprise),
 
   getVersionInformation: () => _versionInformation,
 

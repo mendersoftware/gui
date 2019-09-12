@@ -1,0 +1,42 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+<div>
+  <h2>
+    Build with Yocto
+  </h2>
+  <h3>
+    Don't yet have a working Yocto environment for your board?
+  </h3>
+  <p>
+    Visit
+     
+    <a
+      href="https://hub.mender.io/c/board-integrations"
+      target="_blank"
+    >
+      Mender Hub
+    </a>
+     
+    and look for your board - your device may already have been integrated and tested by the community. If so, you can follow the instructions found there to set up the Yocto environment and configure the build.
+  </p>
+  <h3>
+    If you already have a Yocto environment for your board
+  </h3>
+  <p>
+    You can build your own Yocto Project images for use with Mender. By updating a small part of your build configuration, your newly provisioned devices will securely connect to the Mender server the first time they boot.
+  </p>
+  <p>
+    Follow the docs at
+     
+    <a
+      href="https://docs.mender.io/undefinedartifacts/yocto-project/building"
+      target="_blank"
+    >
+      https://docs.mender.io/undefinedartifacts/yocto-project/building
+    </a>
+     
+    to build your .sdimg and .mender files.
+  </p>
+</div>
+`;

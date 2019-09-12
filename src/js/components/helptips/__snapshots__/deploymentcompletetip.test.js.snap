@@ -1,0 +1,62 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+<div>
+  <p>
+    Fantastic! You completed your first deployment!
+  </p>
+  <p>
+    Your deployment is finished and your device is now running the updated software!
+  </p>
+  <div
+    className="flexbox centered"
+  >
+    <div
+      className="loaderContainer"
+    >
+      <div
+        className="loader"
+      >
+        <span
+          className="dot dot_1"
+        />
+        <span
+          className="dot dot_2"
+        />
+        <span
+          className="dot dot_3"
+        />
+        <span
+          className="dot dot_4"
+        />
+      </div>
+    </div>
+  </div>
+  <p>
+    and you should see the demo web application actually being run on the device.
+  </p>
+  <p>
+    NOTE: if you have local network restrictions, you may need to check them if you have difficulty loading the page.
+  </p>
+  <div
+    className="loaderContainer"
+  >
+    <div
+      className="loader"
+    >
+      <span
+        className="dot dot_1"
+      />
+      <span
+        className="dot dot_2"
+      />
+      <span
+        className="dot dot_3"
+      />
+      <span
+        className="dot dot_4"
+      />
+    </div>
+  </div>
+</div>
+`;

@@ -42,9 +42,11 @@ cat >/var/www/mender-gui/dist/env.js <<EOF
     services: {
       deploymentsVersion: "$MENDER_DEPLOYMENTS_VERSION",
       deviceauthVersion: "$MENDER_DEVICEAUTH_VERSION",
+      guiVersion: "$(cat /var/www/mender-gui/dist/version)",
       inventoryVersion: "$MENDER_INVENTORY_VERSION"
     },
-    demoArtifactPort: "$DEMO_ARTIFACT_PORT"
+    demoArtifactPort: "$DEMO_ARTIFACT_PORT",
+    disableOnboarding: "$DISABLE_ONBOARDING"
   }
 EOF
 

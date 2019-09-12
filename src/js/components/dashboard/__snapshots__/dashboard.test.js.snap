@@ -1,0 +1,207 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+<div
+  className="dashboard"
+>
+  <div>
+    <h4
+      className="dashboard-header"
+    >
+      <span>
+        Devices
+      </span>
+    </h4>
+    <div
+      style={
+        Object {
+          "display": "flex",
+          "flexDirection": "row",
+          "flexWrap": "wrap",
+          "marginBottom": "30px",
+          "marginTop": "50px",
+          "maxWidth": "85vw",
+        }
+      }
+    >
+      <div
+        className="notActive widget "
+        onClick={[Function]}
+      >
+        <div
+          style={
+            Object {
+              "display": "flex",
+              "flexDirection": "column",
+              "height": "100%",
+              "width": "100%",
+            }
+          }
+        >
+          <div
+            className="widgetHeader"
+            style={
+              Object {
+                "borderBottomStyle": "solid",
+                "display": "flex",
+                "flexDirection": "row",
+              }
+            }
+          >
+            <div
+              style={
+                Object {
+                  "display": "flex",
+                  "flexDirection": "row",
+                }
+              }
+            >
+              <svg
+                aria-hidden="true"
+                className="MuiSvgIcon-root-1 warning"
+                focusable="false"
+                role="presentation"
+                style={
+                  Object {
+                    "height": "14px",
+                    "marginRight": "10px",
+                    "width": "14px",
+                  }
+                }
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M0 0h24v24H0z"
+                  fill="none"
+                />
+                <path
+                  d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"
+                />
+              </svg>
+              <div
+                style={
+                  Object {
+                    "display": "flex",
+                    "flexDirection": "column",
+                  }
+                }
+              >
+                <div
+                  className="hint"
+                >
+                   devices may be offline
+                </div>
+                <div
+                  className="tiny"
+                >
+                  Inactive for past 24h
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            className="widgetMainContent align-right"
+            style={
+              Object {
+                "alignItems": "flex-end",
+                "display": "flex",
+                "flexDirection": "column",
+              }
+            }
+          >
+            <div
+              className="header"
+            >
+              Accepted devices
+            </div>
+            <div
+              className="counter"
+            />
+          </div>
+          <span
+            className="link"
+          />
+        </div>
+      </div>
+      <div
+        className="onboard widget"
+        onClick={[Function]}
+      >
+        <div>
+          <p
+            className="muted"
+          >
+            Learn how to connect a device
+          </p>
+        </div>
+        <a
+          className="MuiButtonBase-root-36 MuiButton-root-10 MuiButton-text-12 MuiButton-flat-15"
+          href="/devices"
+          onBlur={[Function]}
+          onClick={[Function]}
+          onContextMenu={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          onKeyUp={[Function]}
+          onMouseDown={[Function]}
+          onMouseLeave={[Function]}
+          onMouseUp={[Function]}
+          onTouchEnd={[Function]}
+          onTouchMove={[Function]}
+          onTouchStart={[Function]}
+          role="button"
+          tabIndex="0"
+        >
+          <span
+            className="MuiButton-label-11"
+          >
+            Connect a device
+          </span>
+          <span
+            className="MuiTouchRipple-root-39"
+          />
+        </a>
+      </div>
+    </div>
+  </div>
+  <div>
+    <h4
+      className="dashboard-header"
+    >
+      <span>
+        Deployments
+      </span>
+    </h4>
+    <div
+      className="deployments"
+      style={
+        Object {
+          "marginBottom": "50px",
+          "marginTop": "50px",
+        }
+      }
+    >
+      <div
+        className="loaderContainer"
+      >
+        <div
+          className="loader"
+        >
+          <span
+            className="dot dot_1"
+          />
+          <span
+            className="dot dot_2"
+          />
+          <span
+            className="dot dot_3"
+          />
+          <span
+            className="dot dot_4"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

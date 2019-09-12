@@ -77,7 +77,8 @@ ${artifactGenerator} -n \${ARTIFACT_NAME} \
 
     const file_modification = `cat >index.html <<EOF
 Hello World!
-EOF`;
+EOF
+`;
 
     const steps = {
       1: (

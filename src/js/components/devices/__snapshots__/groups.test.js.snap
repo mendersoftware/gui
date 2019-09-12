@@ -1,0 +1,106 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+<div>
+  <div
+    className="muted margin-bottom-small"
+  >
+    Groups
+  </div>
+  <ul
+    className="MuiList-root-1 MuiList-padding-2"
+  >
+    <div
+      className="MuiButtonBase-root-17 MuiListItem-root-5 grouplist MuiListItem-default-8 MuiListItem-gutters-13 MuiListItem-button-14"
+      onBlur={[Function]}
+      onClick={[Function]}
+      onContextMenu={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      role="button"
+      style={
+        Object {
+          "backgroundColor": "#e7e7e7",
+        }
+      }
+      tabIndex="0"
+    >
+      <div
+        className="MuiListItemText-root-20"
+      >
+        <span
+          className="MuiTypography-root-26 MuiTypography-subheading-33 MuiListItemText-primary-23"
+        >
+          <span>
+            All devices
+          </span>
+        </span>
+      </div>
+      <span
+        className="MuiTouchRipple-root-77"
+      />
+    </div>
+    <hr
+      className="MuiDivider-root-62"
+    />
+    <div
+      className="MuiButtonBase-root-17 MuiButtonBase-disabled-18 MuiListItem-root-5 grouplist MuiListItem-default-8 MuiListItem-gutters-13 MuiListItem-disabled-11 MuiListItem-button-14"
+      onBlur={[Function]}
+      onClick={null}
+      onContextMenu={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      role="button"
+      style={
+        Object {
+          "color": "#d4e9e7",
+        }
+      }
+      tabIndex="-1"
+    >
+      <div
+        className="MuiListItemIcon-root-67"
+      >
+        <svg
+          aria-hidden="true"
+          className="MuiSvgIcon-root-68"
+          focusable="false"
+          role="presentation"
+          viewBox="0 0 24 24"
+        >
+          <path
+            d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"
+          />
+          <path
+            d="M0 0h24v24H0z"
+            fill="none"
+          />
+        </svg>
+      </div>
+      <div
+        className="MuiListItemText-root-20"
+      >
+        <span
+          className="MuiTypography-root-26 MuiTypography-subheading-33 MuiListItemText-primary-23"
+        >
+          Create a group
+        </span>
+      </div>
+    </div>
+  </ul>
+</div>
+`;

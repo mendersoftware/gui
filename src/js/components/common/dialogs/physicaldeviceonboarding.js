@@ -83,10 +83,6 @@ systemctl enable mender && systemctl restart mender'
         title: 'Generic ARMv6 or newer',
         value: 'generic-armv6'
       },
-      {
-        title: 'Generic x86',
-        value: 'generic-x86_64'
-      }
     ];
 
     const steps = {
@@ -97,7 +93,7 @@ systemctl enable mender && systemctl restart mender'
           <div className="flexbox centered">
             <AutoSelect label="Device type" errorText="Choose a device type" items={types} onChange={item => self.onSelect(item)} />
           </div>
-          <div id="onboard-connect-1" className="tooltip help highlight" data-tip data-for="physical-device-type-tip" data-event="click focus">
+          <div id="onboard-connect-1" className="tooltip help" data-tip data-for="physical-device-type-tip" data-event="click focus">
             <HelpIcon />
           </div>
           <ReactTooltip
@@ -109,7 +105,10 @@ systemctl enable mender && systemctl restart mender'
             className="react-tooltip"
             style={{ maxWidth: 300 }}
           >
-            If you don&apos;t see your exact device on the list, choose <i>Generic ARMv6 or newer</i> or <i>Generic x86</i> to continue the tutorial for now.
+            <div>
+              <p>If you don&apos;t see your exact device on the list, choose <i>Generic ARMv6 or newer</i> to continue the tutorial for now.</p>
+              <p>(Note: if your device is <i>not</i> based on ARMv6 or newer, the tutorial won&apos;t work - instead, go back and use the virtual device)</p>
+            </div>
           </ReactTooltip>
         </div>
       ),
