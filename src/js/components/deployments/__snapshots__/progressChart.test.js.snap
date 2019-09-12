@@ -49,11 +49,11 @@ exports[`renders correctly 1`] = `
           %
         </div>
         <div
-          className="MuiLinearProgress-root-1 MuiLinearProgress-colorPrimary-2 MuiLinearProgress-determinate-4"
+          className="MuiLinearProgress-root MuiLinearProgress-colorPrimary MuiLinearProgress-determinate"
           role="progressbar"
         >
           <div
-            className="MuiLinearProgress-bar-11 MuiLinearProgress-barColorPrimary-12 MuiLinearProgress-bar1Determinate-15"
+            className="MuiLinearProgress-bar MuiLinearProgress-barColorPrimary MuiLinearProgress-bar1Determinate"
             style={Object {}}
           />
         </div>

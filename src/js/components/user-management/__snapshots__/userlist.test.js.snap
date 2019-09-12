@@ -25,38 +25,38 @@ exports[`renders correctly 1`] = `
     className="margin-bottom"
   >
     <table
-      className="MuiTable-root-1"
+      className="MuiTable-root"
     >
       <thead
-        className="MuiTableHead-root-2"
+        className="MuiTableHead-root"
       >
         <tr
-          className="MuiTableRow-root-3 MuiTableRow-head-6"
+          className="MuiTableRow-root MuiTableRow-head"
         >
           <th
             aria-sort={null}
-            className="MuiTableCell-root-8 MuiTableCell-head-9"
+            className="MuiTableCell-root MuiTableCell-head"
             scope="col"
           >
             Email
           </th>
           <th
             aria-sort={null}
-            className="MuiTableCell-root-8 MuiTableCell-head-9"
+            className="MuiTableCell-root MuiTableCell-head"
             scope="col"
           >
             Date created
           </th>
           <th
             aria-sort={null}
-            className="MuiTableCell-root-8 MuiTableCell-head-9"
+            className="MuiTableCell-root MuiTableCell-head"
             scope="col"
           >
             Last updated
           </th>
           <th
             aria-sort={null}
-            className="MuiTableCell-root-8 MuiTableCell-head-9"
+            className="MuiTableCell-root MuiTableCell-head"
             scope="col"
           >
             Manage
@@ -64,7 +64,7 @@ exports[`renders correctly 1`] = `
         </tr>
       </thead>
       <tbody
-        className="MuiTableBody-root-20"
+        className="MuiTableBody-root"
       />
     </table>
   </div>

@@ -7,7 +7,7 @@ Array [
     id="fixedHeader"
   >
     <div
-      className="MuiToolbar-root-1 MuiToolbar-regular-3 MuiToolbar-gutters-2"
+      className="MuiToolbar-root MuiToolbar-regular MuiToolbar-gutters"
       style={
         Object {
           "backgroundColor": "#fff",
@@ -19,7 +19,7 @@ Array [
       }
     >
       <div
-        className="MuiToolbar-root-1 MuiToolbar-regular-3 MuiToolbar-gutters-2"
+        className="MuiToolbar-root MuiToolbar-regular MuiToolbar-gutters"
         style={
           Object {
             "height": "56px",
@@ -36,7 +36,7 @@ Array [
         />
       </div>
       <div
-        className="MuiToolbar-root-1 MuiToolbar-regular-3 MuiToolbar-gutters-2"
+        className="MuiToolbar-root MuiToolbar-regular MuiToolbar-gutters"
         style={
           Object {
             "flexGrow": "2",
@@ -44,7 +44,7 @@ Array [
         }
       />
       <div
-        className="MuiToolbar-root-1 MuiToolbar-regular-3 MuiToolbar-gutters-2"
+        className="MuiToolbar-root MuiToolbar-regular MuiToolbar-gutters"
         style={
           Object {
             "flexShrink": "0",
@@ -112,7 +112,7 @@ Array [
                 </span>
                 <svg
                   aria-hidden="true"
-                  className="MuiSvgIcon-root-5"
+                  className="MuiSvgIcon-root"
                   focusable="false"
                   role="presentation"
                   style={
@@ -143,7 +143,7 @@ Array [
           <span />
           <svg
             aria-hidden="true"
-            className="MuiSvgIcon-root-5 flip-horizontal"
+            className="MuiSvgIcon-root flip-horizontal"
             focusable="false"
             role="presentation"
             style={
@@ -159,10 +159,6 @@ Array [
             <path
               d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"
             />
-            <path
-              d="M0 0h24v24H0z"
-              fill="none"
-            />
           </svg>
         </a>
         <div
@@ -174,11 +170,11 @@ Array [
           }
         >
           <button
-            className="MuiButtonBase-root-40 MuiButton-root-14 MuiButton-text-16 MuiButton-flat-19 header-dropdown"
+            className="MuiButtonBase-root MuiButton-root header-dropdown MuiButton-text"
             disabled={false}
             onBlur={[Function]}
             onClick={[Function]}
-            onContextMenu={[Function]}
+            onDragLeave={[Function]}
             onFocus={[Function]}
             onKeyDown={[Function]}
             onKeyUp={[Function]}
@@ -195,15 +191,15 @@ Array [
                 "textTransform": "none",
               }
             }
-            tabIndex="0"
+            tabIndex={0}
             type="button"
           >
             <span
-              className="MuiButton-label-15"
+              className="MuiButton-label"
             >
               <svg
                 aria-hidden="true"
-                className="MuiSvgIcon-root-5"
+                className="MuiSvgIcon-root"
                 focusable="false"
                 role="presentation"
                 style={
@@ -219,14 +215,10 @@ Array [
                 <path
                   d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"
                 />
-                <path
-                  d="M0 0h24v24H0z"
-                  fill="none"
-                />
               </svg>
               <svg
                 aria-hidden="true"
-                className="MuiSvgIcon-root-5"
+                className="MuiSvgIcon-root"
                 focusable="false"
                 role="presentation"
                 viewBox="0 0 24 24"
@@ -234,14 +226,10 @@ Array [
                 <path
                   d="M7 10l5 5 5-5z"
                 />
-                <path
-                  d="M0 0h24v24H0z"
-                  fill="none"
-                />
               </svg>
             </span>
             <span
-              className="MuiTouchRipple-root-134"
+              className="MuiTouchRipple-root"
             />
           </button>
         </div>
@@ -252,7 +240,7 @@ Array [
     className="leftFixed leftNav"
   >
     <ul
-      className="MuiList-root-47 MuiList-padding-48"
+      className="MuiList-root MuiList-padding"
       style={
         Object {
           "padding": "0",
@@ -261,7 +249,7 @@ Array [
     >
       <a
         aria-current="page"
-        className="MuiListItem-root-51 MuiListItem-default-54 MuiListItem-gutters-59 navLink leftNav active"
+        className="MuiListItem-root navLink leftNav MuiListItem-gutters active"
         disabled={false}
         href="/"
         onClick={[Function]}
@@ -272,7 +260,7 @@ Array [
         }
       >
         <div
-          className="MuiListItemText-root-63"
+          className="MuiListItemText-root"
           style={
             Object {
               "textTransform": "uppercase",
@@ -280,7 +268,7 @@ Array [
           }
         >
           <span
-            className="MuiTypography-root-69 MuiTypography-subheading-76 MuiListItemText-primary-66"
+            className="MuiTypography-root MuiListItemText-primary MuiTypography-body1"
           >
             Dashboard
           </span>
@@ -288,7 +276,7 @@ Array [
       </a>
       <a
         aria-current={null}
-        className="MuiListItem-root-51 MuiListItem-default-54 MuiListItem-gutters-59 navLink leftNav"
+        className="MuiListItem-root navLink leftNav MuiListItem-gutters"
         disabled={false}
         href="/devices"
         onClick={[Function]}
@@ -299,7 +287,7 @@ Array [
         }
       >
         <div
-          className="MuiListItemText-root-63"
+          className="MuiListItemText-root"
           style={
             Object {
               "textTransform": "uppercase",
@@ -307,7 +295,7 @@ Array [
           }
         >
           <span
-            className="MuiTypography-root-69 MuiTypography-subheading-76 MuiListItemText-primary-66"
+            className="MuiTypography-root MuiListItemText-primary MuiTypography-body1"
           >
             Devices
           </span>
@@ -315,7 +303,7 @@ Array [
       </a>
       <a
         aria-current={null}
-        className="MuiListItem-root-51 MuiListItem-default-54 MuiListItem-gutters-59 navLink leftNav"
+        className="MuiListItem-root navLink leftNav MuiListItem-gutters"
         disabled={false}
         href="/releases"
         onClick={[Function]}
@@ -326,7 +314,7 @@ Array [
         }
       >
         <div
-          className="MuiListItemText-root-63"
+          className="MuiListItemText-root"
           style={
             Object {
               "textTransform": "uppercase",
@@ -334,7 +322,7 @@ Array [
           }
         >
           <span
-            className="MuiTypography-root-69 MuiTypography-subheading-76 MuiListItemText-primary-66"
+            className="MuiTypography-root MuiListItemText-primary MuiTypography-body1"
           >
             Releases
           </span>
@@ -342,7 +330,7 @@ Array [
       </a>
       <a
         aria-current={null}
-        className="MuiListItem-root-51 MuiListItem-default-54 MuiListItem-gutters-59 navLink leftNav"
+        className="MuiListItem-root navLink leftNav MuiListItem-gutters"
         disabled={false}
         href="/deployments"
         onClick={[Function]}
@@ -353,7 +341,7 @@ Array [
         }
       >
         <div
-          className="MuiListItemText-root-63"
+          className="MuiListItemText-root"
           style={
             Object {
               "textTransform": "uppercase",
@@ -361,7 +349,7 @@ Array [
           }
         >
           <span
-            className="MuiTypography-root-69 MuiTypography-subheading-76 MuiListItemText-primary-66"
+            className="MuiTypography-root MuiListItemText-primary MuiTypography-body1"
           >
             Deployments
           </span>
@@ -369,7 +357,7 @@ Array [
       </a>
     </ul>
     <ul
-      className="MuiList-root-47 MuiList-padding-48"
+      className="MuiList-root MuiList-padding"
       style={
         Object {
           "bottom": "30px",
@@ -381,7 +369,7 @@ Array [
       }
     >
       <a
-        className="MuiListItem-root-51 MuiListItem-default-54 MuiListItem-gutters-59 navLink leftNav"
+        className="MuiListItem-root navLink leftNav MuiListItem-gutters"
         disabled={false}
         href="/help"
         onClick={[Function]}
@@ -392,17 +380,17 @@ Array [
         }
       >
         <div
-          className="MuiListItemText-root-63"
+          className="MuiListItemText-root"
         >
           <span
-            className="MuiTypography-root-69 MuiTypography-subheading-76 MuiListItemText-primary-66"
+            className="MuiTypography-root MuiListItemText-primary MuiTypography-body1"
           >
             Help
           </span>
         </div>
       </a>
       <li
-        className="MuiListItem-root-51 MuiListItem-default-54 MuiListItem-gutters-59 MuiListItem-disabled-57"
+        className="MuiListItem-root MuiListItem-gutters Mui-disabled"
         disabled={true}
         style={
           Object {
@@ -412,10 +400,10 @@ Array [
         }
       >
         <div
-          className="MuiListItemText-root-63"
+          className="MuiListItemText-root MuiListItemText-multiline"
         >
           <span
-            className="MuiTypography-root-69 MuiTypography-subheading-76 MuiListItemText-primary-66"
+            className="MuiTypography-root MuiListItemText-primary MuiTypography-body1"
           >
             <div
               aria-describedby={null}
@@ -433,7 +421,7 @@ Array [
             </div>
           </span>
           <p
-            className="MuiTypography-root-69 MuiTypography-body1-78 MuiTypography-colorTextSecondary-102 MuiListItemText-secondary-67"
+            className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary"
           >
             <a
               href="https://docs.mender.io/development/release-information/open-source-licenses"

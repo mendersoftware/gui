@@ -1,298 +1,288 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`renders correctly 1`] = `
-<div>
-  <div
-    className="leftFixed"
+<div
+  className="help-container"
+>
+  <ul
+    className="MuiList-root leftFixed MuiList-padding"
   >
-    <ul
-      className="MuiList-root-1 MuiList-padding-2"
+    <li
+      className="MuiListSubheader-root MuiListSubheader-gutters"
     >
-      <li
-        className="MuiListSubheader-root-5 MuiListSubheader-sticky-10 MuiListSubheader-gutters-8"
-      >
-        Help topics
-      </li>
-      <a
-        aria-current={null}
-        className="MuiListItem-root-11 MuiListItem-default-14 MuiListItem-gutters-19 navLink helpNav"
-        disabled={false}
-        href="/help/getting-started"
-        onClick={[Function]}
-        style={
-          Object {
-            "paddingLeft": 16,
-          }
+      Help topics
+    </li>
+    <a
+      aria-current={null}
+      className="MuiListItem-root navLink helpNav MuiListItem-gutters"
+      disabled={false}
+      href="/help/getting-started"
+      onClick={[Function]}
+      style={
+        Object {
+          "paddingLeft": 16,
         }
-      >
-        <div
-          className="MuiListItemText-root-23"
-        >
-          <span
-            className="MuiTypography-root-29 MuiTypography-subheading-36 MuiListItemText-primary-26"
-          >
-            Getting started
-          </span>
-        </div>
-      </a>
-      <a
-        aria-current={null}
-        className="MuiListItem-root-11 MuiListItem-default-14 MuiListItem-gutters-19 navLink helpNav"
-        disabled={false}
-        href="/help/application-updates"
-        onClick={[Function]}
-        style={
-          Object {
-            "paddingLeft": 16,
-          }
-        }
-      >
-        <div
-          className="MuiListItemText-root-23"
-        >
-          <span
-            className="MuiTypography-root-29 MuiTypography-subheading-36 MuiListItemText-primary-26"
-          >
-            Application updates
-          </span>
-        </div>
-      </a>
-      <a
-        aria-current={null}
-        className="MuiListItem-root-11 MuiListItem-default-14 MuiListItem-gutters-19 navLink helpNav"
-        disabled={false}
-        href="/help/application-updates/mender-deb-package"
-        onClick={[Function]}
-        style={
-          Object {
-            "paddingLeft": 32,
-          }
-        }
-      >
-        <div
-          className="MuiListItemText-root-23"
-        >
-          <span
-            className="MuiTypography-root-29 MuiTypography-subheading-36 MuiListItemText-primary-26"
-          >
-            Connecting your device using Mender .deb package
-          </span>
-        </div>
-      </a>
-      <a
-        aria-current={null}
-        className="MuiListItem-root-11 MuiListItem-default-14 MuiListItem-gutters-19 navLink helpNav"
-        disabled={false}
-        href="/help/application-updates/demo-virtual-device"
-        onClick={[Function]}
-        style={
-          Object {
-            "paddingLeft": 32,
-          }
-        }
-      >
-        <div
-          className="MuiListItemText-root-23"
-        >
-          <span
-            className="MuiTypography-root-29 MuiTypography-subheading-36 MuiListItemText-primary-26"
-          >
-            Connecting a demo virtual device
-          </span>
-        </div>
-      </a>
-      <a
-        aria-current={null}
-        className="MuiListItem-root-11 MuiListItem-default-14 MuiListItem-gutters-19 navLink helpNav"
-        disabled={false}
-        href="/help/application-updates/update-modules"
-        onClick={[Function]}
-        style={
-          Object {
-            "paddingLeft": 32,
-          }
-        }
-      >
-        <div
-          className="MuiListItemText-root-23"
-        >
-          <span
-            className="MuiTypography-root-29 MuiTypography-subheading-36 MuiListItemText-primary-26"
-          >
-            Enabling different kinds of updates with Update Modules
-          </span>
-        </div>
-      </a>
-      <a
-        aria-current={null}
-        className="MuiListItem-root-11 MuiListItem-default-14 MuiListItem-gutters-19 navLink helpNav"
-        disabled={false}
-        href="/help/system-updates"
-        onClick={[Function]}
-        style={
-          Object {
-            "paddingLeft": 16,
-          }
-        }
-      >
-        <div
-          className="MuiListItemText-root-23"
-        >
-          <span
-            className="MuiTypography-root-29 MuiTypography-subheading-36 MuiListItemText-primary-26"
-          >
-            System updates
-          </span>
-        </div>
-      </a>
-      <a
-        aria-current={null}
-        className="MuiListItem-root-11 MuiListItem-default-14 MuiListItem-gutters-19 navLink helpNav"
-        disabled={false}
-        href="/help/system-updates/board-integrations"
-        onClick={[Function]}
-        style={
-          Object {
-            "paddingLeft": 32,
-          }
-        }
-      >
-        <div
-          className="MuiListItemText-root-23"
-        >
-          <span
-            className="MuiTypography-root-29 MuiTypography-subheading-36 MuiListItemText-primary-26"
-          >
-            Supported board integrations on Mender Hub
-          </span>
-        </div>
-      </a>
-      <a
-        aria-current={null}
-        className="MuiListItem-root-11 MuiListItem-default-14 MuiListItem-gutters-19 navLink helpNav"
-        disabled={false}
-        href="/help/system-updates/build-with-yocto"
-        onClick={[Function]}
-        style={
-          Object {
-            "paddingLeft": 32,
-          }
-        }
-      >
-        <div
-          className="MuiListItemText-root-23"
-        >
-          <span
-            className="MuiTypography-root-29 MuiTypography-subheading-36 MuiListItemText-primary-26"
-          >
-            Building a Mender-enabled Yocto image
-          </span>
-        </div>
-      </a>
-      <a
-        aria-current={null}
-        className="MuiListItem-root-11 MuiListItem-default-14 MuiListItem-gutters-19 navLink helpNav"
-        disabled={false}
-        href="/help/system-updates/integrate-debian"
-        onClick={[Function]}
-        style={
-          Object {
-            "paddingLeft": 32,
-          }
-        }
-      >
-        <div
-          className="MuiListItemText-root-23"
-        >
-          <span
-            className="MuiTypography-root-29 MuiTypography-subheading-36 MuiListItemText-primary-26"
-          >
-            Devices running Debian family
-          </span>
-        </div>
-      </a>
-      <a
-        aria-current={null}
-        className="MuiListItem-root-11 MuiListItem-default-14 MuiListItem-gutters-19 navLink helpNav"
-        disabled={false}
-        href="/help/releases-artifacts"
-        onClick={[Function]}
-        style={
-          Object {
-            "paddingLeft": 16,
-          }
-        }
-      >
-        <div
-          className="MuiListItemText-root-23"
-        >
-          <span
-            className="MuiTypography-root-29 MuiTypography-subheading-36 MuiListItemText-primary-26"
-          >
-            Releases and artifacts
-          </span>
-        </div>
-      </a>
-      <a
-        aria-current={null}
-        className="MuiListItem-root-11 MuiListItem-default-14 MuiListItem-gutters-19 navLink helpNav"
-        disabled={false}
-        href="/help/releases-artifacts/build-demo-artifact"
-        onClick={[Function]}
-        style={
-          Object {
-            "paddingLeft": 32,
-          }
-        }
-      >
-        <div
-          className="MuiListItemText-root-23"
-        >
-          <span
-            className="MuiTypography-root-29 MuiTypography-subheading-36 MuiListItemText-primary-26"
-          >
-            Building a demo application update Artifact
-          </span>
-        </div>
-      </a>
-      <a
-        aria-current={null}
-        className="MuiListItem-root-11 MuiListItem-default-14 MuiListItem-gutters-19 navLink helpNav"
-        disabled={false}
-        href="/help/more-help-resources"
-        onClick={[Function]}
-        style={
-          Object {
-            "paddingLeft": 16,
-          }
-        }
-      >
-        <div
-          className="MuiListItemText-root-23"
-        >
-          <span
-            className="MuiTypography-root-29 MuiTypography-subheading-36 MuiListItemText-primary-26"
-          >
-            More resources
-          </span>
-        </div>
-      </a>
-    </ul>
-  </div>
-  <div
-    className="rightFluid padding-right"
-    style={
-      Object {
-        "maxWidth": "780px",
-        "paddingLeft": "70px",
-        "paddingTop": "1px",
       }
-    }
-  >
+    >
+      <div
+        className="MuiListItemText-root"
+      >
+        <span
+          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1"
+        >
+          Getting started
+        </span>
+      </div>
+    </a>
+    <a
+      aria-current={null}
+      className="MuiListItem-root navLink helpNav MuiListItem-gutters"
+      disabled={false}
+      href="/help/application-updates"
+      onClick={[Function]}
+      style={
+        Object {
+          "paddingLeft": 16,
+        }
+      }
+    >
+      <div
+        className="MuiListItemText-root"
+      >
+        <span
+          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1"
+        >
+          Application updates
+        </span>
+      </div>
+    </a>
+    <a
+      aria-current={null}
+      className="MuiListItem-root navLink helpNav MuiListItem-gutters"
+      disabled={false}
+      href="/help/application-updates/mender-deb-package"
+      onClick={[Function]}
+      style={
+        Object {
+          "paddingLeft": 32,
+        }
+      }
+    >
+      <div
+        className="MuiListItemText-root"
+      >
+        <span
+          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1"
+        >
+          Connecting your device using Mender .deb package
+        </span>
+      </div>
+    </a>
+    <a
+      aria-current={null}
+      className="MuiListItem-root navLink helpNav MuiListItem-gutters"
+      disabled={false}
+      href="/help/application-updates/demo-virtual-device"
+      onClick={[Function]}
+      style={
+        Object {
+          "paddingLeft": 32,
+        }
+      }
+    >
+      <div
+        className="MuiListItemText-root"
+      >
+        <span
+          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1"
+        >
+          Connecting a demo virtual device
+        </span>
+      </div>
+    </a>
+    <a
+      aria-current={null}
+      className="MuiListItem-root navLink helpNav MuiListItem-gutters"
+      disabled={false}
+      href="/help/application-updates/update-modules"
+      onClick={[Function]}
+      style={
+        Object {
+          "paddingLeft": 32,
+        }
+      }
+    >
+      <div
+        className="MuiListItemText-root"
+      >
+        <span
+          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1"
+        >
+          Enabling different kinds of updates with Update Modules
+        </span>
+      </div>
+    </a>
+    <a
+      aria-current={null}
+      className="MuiListItem-root navLink helpNav MuiListItem-gutters"
+      disabled={false}
+      href="/help/system-updates"
+      onClick={[Function]}
+      style={
+        Object {
+          "paddingLeft": 16,
+        }
+      }
+    >
+      <div
+        className="MuiListItemText-root"
+      >
+        <span
+          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1"
+        >
+          System updates
+        </span>
+      </div>
+    </a>
+    <a
+      aria-current={null}
+      className="MuiListItem-root navLink helpNav MuiListItem-gutters"
+      disabled={false}
+      href="/help/system-updates/board-integrations"
+      onClick={[Function]}
+      style={
+        Object {
+          "paddingLeft": 32,
+        }
+      }
+    >
+      <div
+        className="MuiListItemText-root"
+      >
+        <span
+          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1"
+        >
+          Supported board integrations on Mender Hub
+        </span>
+      </div>
+    </a>
+    <a
+      aria-current={null}
+      className="MuiListItem-root navLink helpNav MuiListItem-gutters"
+      disabled={false}
+      href="/help/system-updates/build-with-yocto"
+      onClick={[Function]}
+      style={
+        Object {
+          "paddingLeft": 32,
+        }
+      }
+    >
+      <div
+        className="MuiListItemText-root"
+      >
+        <span
+          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1"
+        >
+          Building a Mender-enabled Yocto image
+        </span>
+      </div>
+    </a>
+    <a
+      aria-current={null}
+      className="MuiListItem-root navLink helpNav MuiListItem-gutters"
+      disabled={false}
+      href="/help/system-updates/integrate-debian"
+      onClick={[Function]}
+      style={
+        Object {
+          "paddingLeft": 32,
+        }
+      }
+    >
+      <div
+        className="MuiListItemText-root"
+      >
+        <span
+          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1"
+        >
+          Devices running Debian family
+        </span>
+      </div>
+    </a>
+    <a
+      aria-current={null}
+      className="MuiListItem-root navLink helpNav MuiListItem-gutters"
+      disabled={false}
+      href="/help/releases-artifacts"
+      onClick={[Function]}
+      style={
+        Object {
+          "paddingLeft": 16,
+        }
+      }
+    >
+      <div
+        className="MuiListItemText-root"
+      >
+        <span
+          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1"
+        >
+          Releases and artifacts
+        </span>
+      </div>
+    </a>
+    <a
+      aria-current={null}
+      className="MuiListItem-root navLink helpNav MuiListItem-gutters"
+      disabled={false}
+      href="/help/releases-artifacts/build-demo-artifact"
+      onClick={[Function]}
+      style={
+        Object {
+          "paddingLeft": 32,
+        }
+      }
+    >
+      <div
+        className="MuiListItemText-root"
+      >
+        <span
+          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1"
+        >
+          Building a demo application update Artifact
+        </span>
+      </div>
+    </a>
+    <a
+      aria-current={null}
+      className="MuiListItem-root navLink helpNav MuiListItem-gutters"
+      disabled={false}
+      href="/help/more-help-resources"
+      onClick={[Function]}
+      style={
+        Object {
+          "paddingLeft": 16,
+        }
+      }
+    >
+      <div
+        className="MuiListItemText-root"
+      >
+        <span
+          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1"
+        >
+          More resources
+        </span>
+      </div>
+    </a>
+  </ul>
+  <div>
     <p
       style={
         Object {
           "color": "rgba(0, 0, 0, 0.54)",
+          "maxWidth": 780,
         }
       }
     >
@@ -303,6 +293,7 @@ exports[`renders correctly 1`] = `
       className="help-content"
       style={
         Object {
+          "maxWidth": 780,
           "position": "relative",
           "top": "12px",
         }

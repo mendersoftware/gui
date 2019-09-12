@@ -5,11 +5,11 @@ exports[`renders correctly 1`] = `
   className="tab-container"
 >
   <button
-    className="MuiButtonBase-root-27 MuiButton-root-1 MuiButton-contained-12 MuiButton-containedSecondary-14 MuiButton-raised-15 MuiButton-raisedSecondary-17 top-right-button"
+    className="MuiButtonBase-root MuiButton-root top-right-button MuiButton-contained MuiButton-containedSecondary"
     disabled={false}
     onBlur={[Function]}
     onClick={[Function]}
-    onContextMenu={[Function]}
+    onDragLeave={[Function]}
     onFocus={[Function]}
     onKeyDown={[Function]}
     onKeyUp={[Function]}
@@ -24,17 +24,14 @@ exports[`renders correctly 1`] = `
         "position": "absolute",
       }
     }
-    tabIndex="0"
+    tabIndex={0}
     type="button"
   >
     <span
-      className="MuiButton-label-2"
+      className="MuiButton-label"
     >
       Preauthorize devices
     </span>
-    <span
-      className="MuiTouchRipple-root-46"
-    />
   </button>
   <div
     className="loaderContainer"

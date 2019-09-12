@@ -2,18 +2,18 @@
 
 exports[`renders correctly 1`] = `
 <table
-  className="MuiTable-root-1"
+  className="MuiTable-root"
 >
   <thead
-    className="MuiTableHead-root-2"
+    className="MuiTableHead-root"
     style={Object {}}
   >
     <tr
-      className="MuiTableRow-root-3 MuiTableRow-head-6"
+      className="MuiTableRow-root MuiTableRow-head"
     >
       <th
         aria-sort={null}
-        className="MuiTableCell-root-8 MuiTableCell-head-9"
+        className="MuiTableCell-root MuiTableCell-head"
         scope="col"
         style={
           Object {
@@ -25,28 +25,28 @@ exports[`renders correctly 1`] = `
       </th>
       <th
         aria-sort={null}
-        className="MuiTableCell-root-8 MuiTableCell-head-9"
+        className="MuiTableCell-root MuiTableCell-head"
         scope="col"
       >
         Request time
       </th>
       <th
         aria-sort={null}
-        className="MuiTableCell-root-8 MuiTableCell-head-9"
+        className="MuiTableCell-root MuiTableCell-head"
         scope="col"
       >
         Status
       </th>
       <th
         aria-sort={null}
-        className="MuiTableCell-root-8 MuiTableCell-head-9"
+        className="MuiTableCell-root MuiTableCell-head"
         scope="col"
       >
         Actions
       </th>
       <th
         aria-sort={null}
-        className="MuiTableCell-root-8 MuiTableCell-head-9 columnHeader"
+        className="MuiTableCell-root columnHeader MuiTableCell-head"
         scope="col"
         style={
           Object {
@@ -59,7 +59,7 @@ exports[`renders correctly 1`] = `
     </tr>
   </thead>
   <tbody
-    className="MuiTableBody-root-20"
+    className="MuiTableBody-root"
   />
 </table>
 `;

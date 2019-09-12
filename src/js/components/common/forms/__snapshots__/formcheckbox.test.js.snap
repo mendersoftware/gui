@@ -2,12 +2,13 @@
 
 exports[`renders correctly 1`] = `
 <label
-  className="MuiFormControlLabel-root-1"
+  className="MuiFormControlLabel-root"
 >
   <span
-    className="MuiButtonBase-root-23 MuiIconButton-root-17 MuiPrivateSwitchBase-root-13 MuiCheckbox-root-7 MuiCheckbox-colorPrimary-11"
+    aria-disabled={false}
+    className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-13 MuiCheckbox-root MuiCheckbox-colorPrimary MuiIconButton-colorPrimary"
     onBlur={[Function]}
-    onContextMenu={[Function]}
+    onDragLeave={[Function]}
     onFocus={[Function]}
     onKeyDown={[Function]}
     onKeyUp={[Function]}
@@ -20,11 +21,17 @@ exports[`renders correctly 1`] = `
     tabIndex={null}
   >
     <span
-      className="MuiIconButton-label-22"
+      className="MuiIconButton-label"
     >
+      <input
+        className="PrivateSwitchBase-input-16"
+        data-indeterminate={false}
+        onChange={[Function]}
+        type="checkbox"
+      />
       <svg
         aria-hidden="true"
-        className="MuiSvgIcon-root-26"
+        className="MuiSvgIcon-root"
         focusable="false"
         role="presentation"
         viewBox="0 0 24 24"
@@ -33,19 +40,10 @@ exports[`renders correctly 1`] = `
           d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
         />
       </svg>
-      <input
-        className="MuiPrivateSwitchBase-input-16"
-        data-indeterminate={false}
-        onChange={[Function]}
-        type="checkbox"
-      />
     </span>
-    <span
-      className="MuiTouchRipple-root-71"
-    />
   </span>
   <span
-    className="MuiTypography-root-35 MuiTypography-body1-44 MuiFormControlLabel-label-6"
+    className="MuiTypography-root MuiFormControlLabel-label MuiTypography-body1"
   />
 </label>
 `;

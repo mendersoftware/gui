@@ -9,22 +9,22 @@ exports[`renders correctly 1`] = `
   }
 >
   <div
-    className="MuiFormControl-root-1"
+    className="MuiFormControl-root"
   >
     <label
-      className="MuiFormLabel-root-16 MuiInputLabel-root-5 MuiInputLabel-formControl-10 MuiInputLabel-animated-13"
+      className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
       data-shrink={false}
       htmlFor="group-name-input"
     >
       Name of new group
     </label>
     <div
-      className="MuiInputBase-root-36 MuiInput-root-23 MuiInput-underline-27 MuiInputBase-formControl-37 MuiInput-formControl-24 float-left clear"
+      className="MuiInputBase-root MuiInput-root MuiInput-underline float-left clear MuiInputBase-formControl MuiInput-formControl"
       onClick={[Function]}
     >
       <input
         aria-invalid={false}
-        className="MuiInputBase-input-46 MuiInput-input-31"
+        className="MuiInputBase-input MuiInput-input"
         disabled={false}
         id="group-name-input"
         onBlur={[Function]}
@@ -37,7 +37,7 @@ exports[`renders correctly 1`] = `
       />
     </div>
     <p
-      className="MuiFormHelperText-root-53"
+      className="MuiFormHelperText-root"
     />
   </div>
   <div

@@ -19,17 +19,17 @@ exports[`renders correctly 1`] = `
       className=""
     >
       <div
-        className="MuiFormControl-root-1 undefined required"
+        className="MuiFormControl-root undefined required"
       >
         <label
-          className="MuiFormLabel-root-16 MuiInputLabel-root-5 MuiInputLabel-formControl-10 MuiInputLabel-animated-13"
+          className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
           data-shrink={false}
           htmlFor="email"
         >
           Your email
         </label>
         <div
-          className="MuiInputBase-root-36 MuiInput-root-23 MuiInput-underline-27 MuiInputBase-formControl-37 MuiInput-formControl-24"
+          className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
           onClick={[Function]}
           onKeyPress={[Function]}
           required={true}
@@ -42,7 +42,7 @@ exports[`renders correctly 1`] = `
         >
           <input
             aria-invalid={false}
-            className="MuiInputBase-input-46 MuiInput-input-31"
+            className="MuiInputBase-input MuiInput-input"
             disabled={false}
             id="email"
             name="email"
@@ -55,7 +55,7 @@ exports[`renders correctly 1`] = `
           />
         </div>
         <p
-          className="MuiFormHelperText-root-53"
+          className="MuiFormHelperText-root"
           id="component-error-text"
         />
       </div>
@@ -64,17 +64,17 @@ exports[`renders correctly 1`] = `
         id="password-holder"
       >
         <div
-          className="MuiFormControl-root-1 required"
+          className="MuiFormControl-root required"
         >
           <label
-            className="MuiFormLabel-root-16 MuiInputLabel-root-5 MuiInputLabel-formControl-10 MuiInputLabel-animated-13"
+            className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
             data-shrink={false}
             htmlFor="password"
           >
             Password
           </label>
           <div
-            className="MuiInputBase-root-36 MuiInput-root-23 MuiInput-underline-27 MuiInputBase-formControl-37 MuiInput-formControl-24 MuiInputBase-adornedEnd-41"
+            className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl MuiInputBase-adornedEnd"
             onClick={[Function]}
             onKeyPress={[Function]}
             required={true}
@@ -86,7 +86,7 @@ exports[`renders correctly 1`] = `
           >
             <input
               aria-invalid={false}
-              className="MuiInputBase-input-46 MuiInput-input-31 MuiInputBase-inputType-49 MuiInput-inputType-34 MuiInputBase-inputAdornedEnd-52"
+              className="MuiInputBase-input MuiInput-input MuiInputBase-inputAdornedEnd"
               disabled={false}
               id="password"
               name="password"
@@ -98,14 +98,14 @@ exports[`renders correctly 1`] = `
               value=""
             />
             <div
-              className="MuiInputAdornment-root-61 MuiInputAdornment-positionEnd-64"
+              className="MuiInputAdornment-root MuiInputAdornment-positionEnd"
             >
               <button
-                className="MuiButtonBase-root-72 MuiIconButton-root-66"
+                className="MuiButtonBase-root MuiIconButton-root"
                 disabled={false}
                 onBlur={[Function]}
                 onClick={[Function]}
-                onContextMenu={[Function]}
+                onDragLeave={[Function]}
                 onFocus={[Function]}
                 onKeyDown={[Function]}
                 onKeyUp={[Function]}
@@ -115,21 +115,21 @@ exports[`renders correctly 1`] = `
                 onTouchEnd={[Function]}
                 onTouchMove={[Function]}
                 onTouchStart={[Function]}
-                tabIndex="0"
+                tabIndex={0}
                 type="button"
               >
                 <span
-                  className="MuiIconButton-label-71"
+                  className="MuiIconButton-label"
                 >
                   <svg
                     aria-hidden="true"
-                    className="MuiSvgIcon-root-75"
+                    className="MuiSvgIcon-root"
                     focusable="false"
                     role="presentation"
                     viewBox="0 0 24 24"
                   >
                     <path
-                      d="M0 0h24v24H0zm0 0h24v24H0zm0 0h24v24H0zm0 0h24v24H0z"
+                      d="m0 0h24v24H0z"
                       fill="none"
                     />
                     <path
@@ -137,14 +137,11 @@ exports[`renders correctly 1`] = `
                     />
                   </svg>
                 </span>
-                <span
-                  className="MuiTouchRipple-root-162"
-                />
               </button>
             </div>
           </div>
           <p
-            className="MuiFormHelperText-root-53"
+            className="MuiFormHelperText-root"
             id="component-error-text"
           />
         </div>
@@ -158,12 +155,13 @@ exports[`renders correctly 1`] = `
         validations=""
       />
       <label
-        className="MuiFormControlLabel-root-84"
+        className="MuiFormControlLabel-root"
       >
         <span
-          className="MuiButtonBase-root-72 MuiIconButton-root-66 MuiPrivateSwitchBase-root-96 MuiCheckbox-root-90 MuiCheckbox-colorPrimary-94"
+          aria-disabled={false}
+          className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-102 MuiCheckbox-root MuiCheckbox-colorPrimary MuiIconButton-colorPrimary"
           onBlur={[Function]}
-          onContextMenu={[Function]}
+          onDragLeave={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
           onKeyUp={[Function]}
@@ -176,11 +174,20 @@ exports[`renders correctly 1`] = `
           tabIndex={null}
         >
           <span
-            className="MuiIconButton-label-71"
+            className="MuiIconButton-label"
           >
+            <input
+              checked={false}
+              className="PrivateSwitchBase-input-105"
+              data-indeterminate={false}
+              id="noExpiry"
+              name="noExpiry"
+              onChange={[Function]}
+              type="checkbox"
+            />
             <svg
               aria-hidden="true"
-              className="MuiSvgIcon-root-75"
+              className="MuiSvgIcon-root"
               focusable="false"
               role="presentation"
               viewBox="0 0 24 24"
@@ -189,22 +196,10 @@ exports[`renders correctly 1`] = `
                 d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
               />
             </svg>
-            <input
-              checked={false}
-              className="MuiPrivateSwitchBase-input-99"
-              data-indeterminate={false}
-              id="noExpiry"
-              name="noExpiry"
-              onChange={[Function]}
-              type="checkbox"
-            />
           </span>
-          <span
-            className="MuiTouchRipple-root-162"
-          />
         </span>
         <span
-          className="MuiTypography-root-100 MuiTypography-body1-109 MuiFormControlLabel-label-89"
+          className="MuiTypography-root MuiFormControlLabel-label MuiTypography-body1"
         >
           Stay logged in
         </span>
@@ -218,12 +213,12 @@ exports[`renders correctly 1`] = `
         }
       >
         <button
-          className="MuiButtonBase-root-72 MuiButtonBase-disabled-73 MuiButton-root-136 MuiButton-contained-147 MuiButton-containedPrimary-148 MuiButton-raised-150 MuiButton-raisedPrimary-151 MuiButton-disabled-156"
+          className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary Mui-disabled Mui-disabled"
           disabled={true}
           id="login_button"
           onBlur={[Function]}
           onClick={[Function]}
-          onContextMenu={[Function]}
+          onDragLeave={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
           onKeyUp={[Function]}
@@ -233,11 +228,11 @@ exports[`renders correctly 1`] = `
           onTouchEnd={[Function]}
           onTouchMove={[Function]}
           onTouchStart={[Function]}
-          tabIndex="-1"
+          tabIndex={-1}
           type="button"
         >
           <span
-            className="MuiButton-label-137"
+            className="MuiButton-label"
           >
             Log in
           </span>
