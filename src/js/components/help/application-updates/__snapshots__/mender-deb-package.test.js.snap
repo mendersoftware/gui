@@ -154,7 +154,8 @@ exports[`renders correctly 1`] = `
   </div>
   <p />
   <p>
-    Or edit the config file yourself by 
+    Or edit the config file yourself by
+     
     <a
       href="https://docs.mender.io/undefinedclient-configuration/configuration-file"
       target="_blank"
