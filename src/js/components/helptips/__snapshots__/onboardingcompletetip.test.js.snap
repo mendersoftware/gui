@@ -72,7 +72,7 @@ exports[`renders correctly 1`] = `
           </div>
         </div>
       </div>
-      you should now see "Hello world" in place of the webpage you saw previously.
+      you should now see "Hello world" in place of the webpage you saw previously. If you continue to see the webpage you saw previously you might have to refresh the page.
     </p>
     <p>
       You've now got a good foundation in how to use Mender. Look for more help hints in the UI as you go along.
