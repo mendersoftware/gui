@@ -1,5 +1,4 @@
 import React from 'react';
-import zxcvbn from 'zxcvbn';
 import copy from 'copy-to-clipboard';
 import generator from 'generate-password';
 
@@ -46,23 +45,24 @@ export default class PasswordInput extends React.Component {
   }
   setValue(event) {
     var value = event ? event.currentTarget.value : '';
-
     if (this.props.create) {
-      var strength = zxcvbn(value);
-      var score = strength.score;
-      var feedback = strength.feedback.suggestions || [];
+      import(/* webpackChunkName: "zxcvbn" */ 'zxcvbn').then(({ default: zxcvbn }) => {
+        var strength = zxcvbn(value);
+        var score = strength.score;
+        var feedback = strength.feedback.suggestions || [];
 
-      this.setState({
-        score: score,
-        feedback: feedback,
-        value: value
+        this.setState({
+          score: score,
+          feedback: feedback,
+          value: value
+        });
+        if (score > 3) {
+          this.props.validate(this, value);
+        } else {
+          // if some weak pass exists, pass it to validate as "0", otherwise leave empty- if not required, blank is allowed but weak is not
+          this.props.validate(this, value ? '0' : '');
+        }
       });
-      if (score > 3) {
-        this.props.validate(this, value);
-      } else {
-        // if some weak pass exists, pass it to validate as "0", otherwise leave empty- if not required, blank is allowed but weak is not
-        this.props.validate(this, value ? '0' : '');
-      }
     } else {
       this.setState({ value: value });
       this.props.validate(this, value);

@@ -1,6 +1,0 @@
-FROM node:11.6.0-alpine AS build
-WORKDIR /usr/src/app
-COPY package-lock.json package.json ./
-RUN npm install
-COPY . ./
-CMD npm run lint

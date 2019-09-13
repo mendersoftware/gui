@@ -8,7 +8,6 @@
     "@material-ui/core": "^3.9.3",
     "@material-ui/icons": "^3.0.2",
     "acorn": "^6.1.1",
-    "babel-eslint": "^10.0.1",
     "copy-to-clipboard": "^3.2.0",
     "deepmerge": "^3.2.0",
     "es6-promise": "^4.2.6",
@@ -49,29 +48,40 @@
     "zxcvbn": "^4.4.2"
   },
   "devDependencies": {
-    "autoprefixer": "^9.5.1",
     "@babel/core": "^7.5.5",
-    "babel-loader": "^8.0.6",
     "@babel/plugin-proposal-class-properties": "^7.5.5",
+    "@babel/plugin-syntax-dynamic-import": "^7.2.0",
     "@babel/preset-env": "^7.5.5",
     "@babel/preset-react": "^7.0.0",
+    "autoprefixer": "^9.5.1",
+    "babel-eslint": "^10.0.1",
+    "babel-jest": "^24.8.0",
+    "babel-loader": "^8.0.6",
+    "child_process": "^1.0.2",
     "clean-webpack-plugin": "^2.0.2",
-    "css-loader": "^2.1.1",
     "copy-webpack-plugin": "^5.0.3",
+    "css-loader": "^2.1.1",
+    "enzyme": "^3.10.0",
+    "enzyme-adapter-react-16": "^1.14.0",
     "core-js": "^3.2.0",
     "eslint": "^5.16.0",
     "eslint-loader": "^2.1.2",
     "eslint-plugin-import": "^2.17.3",
     "eslint-plugin-react": "^7.13.0",
-    "child_process": "^1.0.2",
+    "file-loader": "^3.0.1",
     "gulp": "^4.0.2",
+    "html-loader": "^0.5.5",
+    "html-webpack-plugin": "^3.2.0",
+    "identity-obj-proxy": "^3.0.0",
+    "jest": "^24.8.0",
+    "jest-environment-jsdom-fifteen": "1.0.0",
+    "jest-resolve": "24.7.1",
+    "jest-watch-typeahead": "0.3.0",
     "less": "^3.9.0",
     "less-loader": "^4.1.0",
-    "file-loader": "^3.0.1",
-    "html-webpack-plugin": "^3.2.0",
-    "html-loader": "^0.5.5",
     "mini-css-extract-plugin": "^0.7.0",
     "postcss-loader": "^3.0.0",
+    "react-test-renderer": "^16.8.6",
     "resolve-url-loader": "^3.1.0",
     "url-loader": "^1.1.2",
     "webpack": "^4.32.2",
@@ -79,18 +89,53 @@
     "yarn": "^1.16.0"
   },
   "browserslist": [
-    ">1%",
-    "last 5 versions"
+    ">0.2%",
+    "last 5 versions",
+    "not dead",
+    "not op_mini all"
   ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/mendersoftware/gui.git"
   },
+  "jest": {
+    "collectCoverageFrom": [
+      "src/**/*.js"
+    ],
+    "setupFilesAfterEnv": [
+      "./tests/setupTests.js"
+    ],
+    "testMatch": [
+      "<rootDir>/src/**/__tests__/**/*.js",
+      "<rootDir>/src/**/*.{spec,test}.js"
+    ],
+    "testEnvironment": "jest-environment-jsdom-fifteen",
+    "transform": {
+      "^.+\\.js$": "<rootDir>/node_modules/babel-jest",
+      "^.+\\.(css|less)$": "<rootDir>/tests/cssTransform.js"
+    },
+    "transformIgnorePatterns": [
+      "[/\\\\]node_modules[/\\\\].+\\.js$",
+      "^.+\\.module\\.(css|less|sass|scss)$"
+    ],
+    "modulePaths": [],
+    "moduleNameMapper": {
+      "^.+\\.module\\.(css|sass|scss)$": "identity-obj-proxy"
+    },
+    "moduleFileExtensions": [
+      "js"
+    ],
+    "watchPlugins": [
+      "jest-watch-typeahead/filename",
+      "jest-watch-typeahead/testname"
+    ]
+  },
   "scripts": {
+    "build": "webpack --mode production ./src/js/main.js",
     "disclaim": "yarn licenses generate-disclaimer > ./dist/disclaimer.txt",
     "lint": "eslint src",
     "lint-fix": "eslint --fix src",
-    "build": "webpack --mode production ./src/js/main.js",
+    "test": "node test.js",
     "watch": "webpack --watch --mode development ./src/js/main.js"
   },
   "author": "Michael Clelland",

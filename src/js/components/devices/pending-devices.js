@@ -207,11 +207,13 @@ export default class Pending extends React.Component {
 
     const deviceConnectingProgressed = getOnboardingStepCompleted('devices-pending-onboarding');
     let onboardingComponent = null;
-    if (AppStore.showHelptips() && (!AppStore.getOnboardingComplete() && (this.deviceListRef || this.authorizeRef))) {
-      const element = this.deviceListRef ? this.deviceListRef.getElementsByClassName('body')[0] : null;
-      onboardingComponent = getOnboardingComponentFor('devices-pending-onboarding', {
-        anchor: { left: 200, top: element ? element.offsetTop + element.offsetHeight : 170 }
-      });
+    if (AppStore.showHelptips() && !AppStore.getOnboardingComplete()) {
+      if (this.deviceListRef) {
+        const element = this.deviceListRef ? this.deviceListRef.getElementsByClassName('body')[0] : null;
+        onboardingComponent = getOnboardingComponentFor('devices-pending-onboarding', {
+          anchor: { left: 200, top: element ? element.offsetTop + element.offsetHeight : 170 }
+        });
+      }
       if (this.state.selectedRows && this.authorizeRef) {
         const anchor = {
           left: this.authorizeRef.offsetLeft - this.authorizeRef.offsetWidth / 2,

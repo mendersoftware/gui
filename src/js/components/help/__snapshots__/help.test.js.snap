@@ -1,0 +1,358 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+<div>
+  <div
+    className="leftFixed"
+  >
+    <ul
+      className="MuiList-root-1 MuiList-padding-2"
+    >
+      <li
+        className="MuiListSubheader-root-5 MuiListSubheader-sticky-10 MuiListSubheader-gutters-8"
+      >
+        Help topics
+      </li>
+      <a
+        aria-current={null}
+        className="MuiListItem-root-11 MuiListItem-default-14 MuiListItem-gutters-19 navLink helpNav"
+        disabled={false}
+        href="/help/getting-started"
+        onClick={[Function]}
+        style={
+          Object {
+            "paddingLeft": 16,
+          }
+        }
+      >
+        <div
+          className="MuiListItemText-root-23"
+        >
+          <span
+            className="MuiTypography-root-29 MuiTypography-subheading-36 MuiListItemText-primary-26"
+          >
+            Getting started
+          </span>
+        </div>
+      </a>
+      <a
+        aria-current={null}
+        className="MuiListItem-root-11 MuiListItem-default-14 MuiListItem-gutters-19 navLink helpNav"
+        disabled={false}
+        href="/help/application-updates"
+        onClick={[Function]}
+        style={
+          Object {
+            "paddingLeft": 16,
+          }
+        }
+      >
+        <div
+          className="MuiListItemText-root-23"
+        >
+          <span
+            className="MuiTypography-root-29 MuiTypography-subheading-36 MuiListItemText-primary-26"
+          >
+            Application updates
+          </span>
+        </div>
+      </a>
+      <a
+        aria-current={null}
+        className="MuiListItem-root-11 MuiListItem-default-14 MuiListItem-gutters-19 navLink helpNav"
+        disabled={false}
+        href="/help/application-updates/mender-deb-package"
+        onClick={[Function]}
+        style={
+          Object {
+            "paddingLeft": 32,
+          }
+        }
+      >
+        <div
+          className="MuiListItemText-root-23"
+        >
+          <span
+            className="MuiTypography-root-29 MuiTypography-subheading-36 MuiListItemText-primary-26"
+          >
+            Connecting your device using Mender .deb package
+          </span>
+        </div>
+      </a>
+      <a
+        aria-current={null}
+        className="MuiListItem-root-11 MuiListItem-default-14 MuiListItem-gutters-19 navLink helpNav"
+        disabled={false}
+        href="/help/application-updates/demo-virtual-device"
+        onClick={[Function]}
+        style={
+          Object {
+            "paddingLeft": 32,
+          }
+        }
+      >
+        <div
+          className="MuiListItemText-root-23"
+        >
+          <span
+            className="MuiTypography-root-29 MuiTypography-subheading-36 MuiListItemText-primary-26"
+          >
+            Connecting a demo virtual device
+          </span>
+        </div>
+      </a>
+      <a
+        aria-current={null}
+        className="MuiListItem-root-11 MuiListItem-default-14 MuiListItem-gutters-19 navLink helpNav"
+        disabled={false}
+        href="/help/application-updates/update-modules"
+        onClick={[Function]}
+        style={
+          Object {
+            "paddingLeft": 32,
+          }
+        }
+      >
+        <div
+          className="MuiListItemText-root-23"
+        >
+          <span
+            className="MuiTypography-root-29 MuiTypography-subheading-36 MuiListItemText-primary-26"
+          >
+            Enabling different kinds of updates with Update Modules
+          </span>
+        </div>
+      </a>
+      <a
+        aria-current={null}
+        className="MuiListItem-root-11 MuiListItem-default-14 MuiListItem-gutters-19 navLink helpNav"
+        disabled={false}
+        href="/help/system-updates"
+        onClick={[Function]}
+        style={
+          Object {
+            "paddingLeft": 16,
+          }
+        }
+      >
+        <div
+          className="MuiListItemText-root-23"
+        >
+          <span
+            className="MuiTypography-root-29 MuiTypography-subheading-36 MuiListItemText-primary-26"
+          >
+            System updates
+          </span>
+        </div>
+      </a>
+      <a
+        aria-current={null}
+        className="MuiListItem-root-11 MuiListItem-default-14 MuiListItem-gutters-19 navLink helpNav"
+        disabled={false}
+        href="/help/system-updates/board-integrations"
+        onClick={[Function]}
+        style={
+          Object {
+            "paddingLeft": 32,
+          }
+        }
+      >
+        <div
+          className="MuiListItemText-root-23"
+        >
+          <span
+            className="MuiTypography-root-29 MuiTypography-subheading-36 MuiListItemText-primary-26"
+          >
+            Supported board integrations on Mender Hub
+          </span>
+        </div>
+      </a>
+      <a
+        aria-current={null}
+        className="MuiListItem-root-11 MuiListItem-default-14 MuiListItem-gutters-19 navLink helpNav"
+        disabled={false}
+        href="/help/system-updates/build-with-yocto"
+        onClick={[Function]}
+        style={
+          Object {
+            "paddingLeft": 32,
+          }
+        }
+      >
+        <div
+          className="MuiListItemText-root-23"
+        >
+          <span
+            className="MuiTypography-root-29 MuiTypography-subheading-36 MuiListItemText-primary-26"
+          >
+            Building a Mender-enabled Yocto image
+          </span>
+        </div>
+      </a>
+      <a
+        aria-current={null}
+        className="MuiListItem-root-11 MuiListItem-default-14 MuiListItem-gutters-19 navLink helpNav"
+        disabled={false}
+        href="/help/system-updates/integrate-debian"
+        onClick={[Function]}
+        style={
+          Object {
+            "paddingLeft": 32,
+          }
+        }
+      >
+        <div
+          className="MuiListItemText-root-23"
+        >
+          <span
+            className="MuiTypography-root-29 MuiTypography-subheading-36 MuiListItemText-primary-26"
+          >
+            Devices running Debian family
+          </span>
+        </div>
+      </a>
+      <a
+        aria-current={null}
+        className="MuiListItem-root-11 MuiListItem-default-14 MuiListItem-gutters-19 navLink helpNav"
+        disabled={false}
+        href="/help/releases-artifacts"
+        onClick={[Function]}
+        style={
+          Object {
+            "paddingLeft": 16,
+          }
+        }
+      >
+        <div
+          className="MuiListItemText-root-23"
+        >
+          <span
+            className="MuiTypography-root-29 MuiTypography-subheading-36 MuiListItemText-primary-26"
+          >
+            Releases and artifacts
+          </span>
+        </div>
+      </a>
+      <a
+        aria-current={null}
+        className="MuiListItem-root-11 MuiListItem-default-14 MuiListItem-gutters-19 navLink helpNav"
+        disabled={false}
+        href="/help/releases-artifacts/build-demo-artifact"
+        onClick={[Function]}
+        style={
+          Object {
+            "paddingLeft": 32,
+          }
+        }
+      >
+        <div
+          className="MuiListItemText-root-23"
+        >
+          <span
+            className="MuiTypography-root-29 MuiTypography-subheading-36 MuiListItemText-primary-26"
+          >
+            Building a demo application update Artifact
+          </span>
+        </div>
+      </a>
+      <a
+        aria-current={null}
+        className="MuiListItem-root-11 MuiListItem-default-14 MuiListItem-gutters-19 navLink helpNav"
+        disabled={false}
+        href="/help/more-help-resources"
+        onClick={[Function]}
+        style={
+          Object {
+            "paddingLeft": 16,
+          }
+        }
+      >
+        <div
+          className="MuiListItemText-root-23"
+        >
+          <span
+            className="MuiTypography-root-29 MuiTypography-subheading-36 MuiListItemText-primary-26"
+          >
+            More resources
+          </span>
+        </div>
+      </a>
+    </ul>
+  </div>
+  <div
+    className="rightFluid padding-right"
+    style={
+      Object {
+        "maxWidth": "780px",
+        "paddingLeft": "70px",
+        "paddingTop": "1px",
+      }
+    }
+  >
+    <p
+      style={
+        Object {
+          "color": "rgba(0, 0, 0, 0.54)",
+        }
+      }
+    >
+      Help 
+      
+    </p>
+    <div
+      className="help-content"
+      style={
+        Object {
+          "position": "relative",
+          "top": "12px",
+        }
+      }
+    >
+      <div>
+        <h2>
+          Getting Started
+        </h2>
+        <p>
+          Your devices first need to have the Mender client running on them in order to connect to the server.
+          <br />
+          There are two approaches to this, depending on what kind of updates you want to do.
+        </p>
+        <h3>
+          Application updates
+        </h3>
+        <h4>
+          (Recommended for new users)
+        </h4>
+        <p>
+          For partial updates such as application updates, you can install Mender on your device as a .deb package. This is the quickest and easiest way to get started with Mender.
+        </p>
+        <p>
+          Get started here: 
+          <a
+            href="/help/application-updates/mender-deb-package"
+            onClick={[Function]}
+          >
+            How to connect your device using .deb package
+          </a>
+        </p>
+        <h3>
+          System updates
+        </h3>
+        <p>
+          The most robust and reliable approach is full rootfs system updates. For this, the Mender client needs to be integrated as part of the disk image, which can be done by building with Yocto or converting an existing Debian disk image. This approach also enables support for partial updates, but there are some device partition layout requirements.
+        </p>
+        <p>
+          The 
+          <a
+            href="/help/system-updates"
+            onClick={[Function]}
+          >
+            System updates section
+          </a>
+           has several help pages to get you started enabling and connecting your devices for system updates.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+`;

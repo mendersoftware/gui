@@ -18,15 +18,17 @@ export default class PhysicalDeviceOnboarding extends React.Component {
     super(props, context);
     this.state = {
       selection: null,
-      ipAddress: null,
+      ipAddress: AppStore.getHostAddress(),
       copied: false
     };
   }
 
   componentDidMount() {
     const self = this;
-    findLocalIpAddress().then(ipAddress => self.setState({ ipAddress }));
-    AppActions.setOnboardingApproach('virtual');
+    if (!self.state.ipAddress || self.state.ipAddress === 'X.X.X.X') {
+      findLocalIpAddress().then(ipAddress => self.setState({ ipAddress }));
+    }
+    AppActions.setOnboardingApproach('physical');
   }
 
   copied() {
@@ -51,7 +53,7 @@ export default class PhysicalDeviceOnboarding extends React.Component {
     let connectionInstructions = `
 sed /etc/mender/mender.conf -i -e "/Paste your Hosted Mender token here/d;s/hosted.mender.io/docker.mender.io/;1 a \\ \\ \\"ServerCertificate\\": \\"/etc/mender/server.crt\\","
 wget -q -O /etc/mender/server.crt https://raw.githubusercontent.com/mendersoftware/meta-mender/master/meta-mender-demo/recipes-mender/mender/files/server.crt
-DOCKER_HOST_IP="${ipAddress ? ipAddress : 'X.X.X.X'}"
+DOCKER_HOST_IP="${ipAddress || 'X.X.X.X'}"
 grep "\\ss3.docker.mender.io" /etc/hosts >/dev/null 2>&1 || echo "$DOCKER_HOST_IP s3.docker.mender.io # Added by mender" | tee -a /etc/hosts > /dev/null
 grep "\\sdocker.mender.io" /etc/hosts >/dev/null 2>&1 || echo "$DOCKER_HOST_IP docker.mender.io # Added by mender" | tee -a /etc/hosts > /dev/null
 `;
@@ -82,7 +84,7 @@ systemctl enable mender && systemctl restart mender'
       {
         title: 'Generic ARMv6 or newer',
         value: 'generic-armv6'
-      },
+      }
     ];
 
     const steps = {
@@ -106,8 +108,12 @@ systemctl enable mender && systemctl restart mender'
             style={{ maxWidth: 300 }}
           >
             <div>
-              <p>If you don&apos;t see your exact device on the list, choose <i>Generic ARMv6 or newer</i> to continue the tutorial for now.</p>
-              <p>(Note: if your device is <i>not</i> based on ARMv6 or newer, the tutorial won&apos;t work - instead, go back and use the virtual device)</p>
+              <p>
+                If you don&apos;t see your exact device on the list, choose <i>Generic ARMv6 or newer</i> to continue the tutorial for now.
+              </p>
+              <p>
+                (Note: if your device is <i>not</i> based on ARMv6 or newer, the tutorial won&apos;t work - instead, go back and use the virtual device)
+              </p>
             </div>
           </ReactTooltip>
         </div>

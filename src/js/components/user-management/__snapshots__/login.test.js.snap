@@ -1,0 +1,252 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+<div
+  className="full-screen"
+>
+  <div
+    id="login-box"
+  >
+    <h3>
+      Log in
+    </h3>
+    <img
+      alt="mender-logo"
+      className="margin-bottom-small"
+      src="assets/img/loginlogo.png"
+    />
+    <form
+      className=""
+    >
+      <div
+        className="MuiFormControl-root-1 undefined required"
+      >
+        <label
+          className="MuiFormLabel-root-16 MuiInputLabel-root-5 MuiInputLabel-formControl-10 MuiInputLabel-animated-13"
+          data-shrink={false}
+          htmlFor="email"
+        >
+          Your email
+        </label>
+        <div
+          className="MuiInputBase-root-36 MuiInput-root-23 MuiInput-underline-27 MuiInputBase-formControl-37 MuiInput-formControl-24"
+          onClick={[Function]}
+          onKeyPress={[Function]}
+          required={true}
+          style={
+            Object {
+              "maxWidth": "100%",
+              "width": "400px",
+            }
+          }
+        >
+          <input
+            aria-invalid={false}
+            className="MuiInputBase-input-46 MuiInput-input-31"
+            disabled={false}
+            id="email"
+            name="email"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            placeholder="Your email"
+            required={true}
+            type="text"
+          />
+        </div>
+        <p
+          className="MuiFormHelperText-root-53"
+          id="component-error-text"
+        />
+      </div>
+      <div
+        className="margin-bottom-small"
+        id="password-holder"
+      >
+        <div
+          className="MuiFormControl-root-1 required"
+        >
+          <label
+            className="MuiFormLabel-root-16 MuiInputLabel-root-5 MuiInputLabel-formControl-10 MuiInputLabel-animated-13"
+            data-shrink={false}
+            htmlFor="password"
+          >
+            Password
+          </label>
+          <div
+            className="MuiInputBase-root-36 MuiInput-root-23 MuiInput-underline-27 MuiInputBase-formControl-37 MuiInput-formControl-24 MuiInputBase-adornedEnd-41"
+            onClick={[Function]}
+            onKeyPress={[Function]}
+            required={true}
+            style={
+              Object {
+                "width": 400,
+              }
+            }
+          >
+            <input
+              aria-invalid={false}
+              className="MuiInputBase-input-46 MuiInput-input-31 MuiInputBase-inputType-49 MuiInput-inputType-34 MuiInputBase-inputAdornedEnd-52"
+              disabled={false}
+              id="password"
+              name="password"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              required={true}
+              type="password"
+              value=""
+            />
+            <div
+              className="MuiInputAdornment-root-61 MuiInputAdornment-positionEnd-64"
+            >
+              <button
+                className="MuiButtonBase-root-72 MuiIconButton-root-66"
+                disabled={false}
+                onBlur={[Function]}
+                onClick={[Function]}
+                onContextMenu={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyUp={[Function]}
+                onMouseDown={[Function]}
+                onMouseLeave={[Function]}
+                onMouseUp={[Function]}
+                onTouchEnd={[Function]}
+                onTouchMove={[Function]}
+                onTouchStart={[Function]}
+                tabIndex="0"
+                type="button"
+              >
+                <span
+                  className="MuiIconButton-label-71"
+                >
+                  <svg
+                    aria-hidden="true"
+                    className="MuiSvgIcon-root-75"
+                    focusable="false"
+                    role="presentation"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M0 0h24v24H0zm0 0h24v24H0zm0 0h24v24H0zm0 0h24v24H0z"
+                      fill="none"
+                    />
+                    <path
+                      d="M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.83l2.92 2.92c1.51-1.26 2.7-2.89 3.43-4.75-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7zM2 4.27l2.28 2.28.46.46C3.08 8.3 1.78 10.02 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.42.42L19.73 22 21 20.73 3.27 3 2 4.27zM7.53 9.8l1.55 1.55c-.05.21-.08.43-.08.65 0 1.66 1.34 3 3 3 .22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53-2.76 0-5-2.24-5-5 0-.79.2-1.53.53-2.2zm4.31-.78l3.15 3.15.02-.16c0-1.66-1.34-3-3-3l-.17.01z"
+                    />
+                  </svg>
+                </span>
+                <span
+                  className="MuiTouchRipple-root-162"
+                />
+              </button>
+            </div>
+          </div>
+          <p
+            className="MuiFormHelperText-root-53"
+            id="component-error-text"
+          />
+        </div>
+      </div>
+      <div
+        attachToForm={[Function]}
+        detachFromForm={[Function]}
+        handleKeyPress={[Function]}
+        updateModel={[Function]}
+        validate={[Function]}
+        validations=""
+      />
+      <label
+        className="MuiFormControlLabel-root-84"
+      >
+        <span
+          className="MuiButtonBase-root-72 MuiIconButton-root-66 MuiPrivateSwitchBase-root-96 MuiCheckbox-root-90 MuiCheckbox-colorPrimary-94"
+          onBlur={[Function]}
+          onContextMenu={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          onKeyUp={[Function]}
+          onMouseDown={[Function]}
+          onMouseLeave={[Function]}
+          onMouseUp={[Function]}
+          onTouchEnd={[Function]}
+          onTouchMove={[Function]}
+          onTouchStart={[Function]}
+          tabIndex={null}
+        >
+          <span
+            className="MuiIconButton-label-71"
+          >
+            <svg
+              aria-hidden="true"
+              className="MuiSvgIcon-root-75"
+              focusable="false"
+              role="presentation"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
+              />
+            </svg>
+            <input
+              checked={false}
+              className="MuiPrivateSwitchBase-input-99"
+              data-indeterminate={false}
+              id="noExpiry"
+              name="noExpiry"
+              onChange={[Function]}
+              type="checkbox"
+            />
+          </span>
+          <span
+            className="MuiTouchRipple-root-162"
+          />
+        </span>
+        <span
+          className="MuiTypography-root-100 MuiTypography-body1-109 MuiFormControlLabel-label-89"
+        >
+          Stay logged in
+        </span>
+      </label>
+      <div
+        className="float-right"
+        style={
+          Object {
+            "marginTop": "32px",
+          }
+        }
+      >
+        <button
+          className="MuiButtonBase-root-72 MuiButtonBase-disabled-73 MuiButton-root-136 MuiButton-contained-147 MuiButton-containedPrimary-148 MuiButton-raised-150 MuiButton-raisedPrimary-151 MuiButton-disabled-156"
+          disabled={true}
+          id="login_button"
+          onBlur={[Function]}
+          onClick={[Function]}
+          onContextMenu={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          onKeyUp={[Function]}
+          onMouseDown={[Function]}
+          onMouseLeave={[Function]}
+          onMouseUp={[Function]}
+          onTouchEnd={[Function]}
+          onTouchMove={[Function]}
+          onTouchStart={[Function]}
+          tabIndex="-1"
+          type="button"
+        >
+          <span
+            className="MuiButton-label-137"
+          >
+            Log in
+          </span>
+        </button>
+      </div>
+    </form>
+    <div
+      className="clear"
+    />
+  </div>
+</div>
+`;

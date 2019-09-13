@@ -1,0 +1,60 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+<div
+  className="onboard-tip"
+  style={
+    Object {
+      "left": -14,
+      "top": 1,
+    }
+  }
+>
+  <a
+    className="tooltip onboard-icon bottom"
+    data-event="click focus"
+    data-event-off="dblclick"
+    data-for="onboard-tip-1"
+    data-tip={true}
+  >
+    <svg
+      aria-hidden="true"
+      className="MuiSvgIcon-root-1"
+      focusable="false"
+      role="presentation"
+      viewBox="0 0 24 24"
+    >
+      <path
+        d="M0 0h24v24H0V0z"
+        fill="none"
+      />
+      <path
+        d="M4 12l1.41 1.41L11 7.83V20h2V7.83l5.58 5.59L20 12l-8-8-8 8z"
+      />
+    </svg>
+  </a>
+  <div
+    className="__react_component_tooltip place-bottom type-dark allow_click "
+    data-id="tooltip"
+    id="onboard-tip-1"
+  >
+    <div />
+    <div
+      className="flexbox"
+    >
+      <div
+        style={
+          Object {
+            "flexGrow": 1,
+          }
+        }
+      />
+      <a
+        onClick={[Function]}
+      >
+        Dismiss
+      </a>
+    </div>
+  </div>
+</div>
+`;

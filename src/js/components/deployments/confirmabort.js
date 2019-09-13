@@ -3,6 +3,8 @@ import IconButton from '@material-ui/core/IconButton';
 
 import CancelIcon from '@material-ui/icons/Cancel';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+
+// TODO: combine with ConfirmRetry
 export default class ConfirmAbort extends React.Component {
   constructor(props, context) {
     super(props, context);

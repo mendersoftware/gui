@@ -1,0 +1,65 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+<table
+  className="MuiTable-root-1"
+>
+  <thead
+    className="MuiTableHead-root-2"
+    style={Object {}}
+  >
+    <tr
+      className="MuiTableRow-root-3 MuiTableRow-head-6"
+    >
+      <th
+        aria-sort={null}
+        className="MuiTableCell-root-8 MuiTableCell-head-9"
+        scope="col"
+        style={
+          Object {
+            "width": "400px",
+          }
+        }
+      >
+        Public key
+      </th>
+      <th
+        aria-sort={null}
+        className="MuiTableCell-root-8 MuiTableCell-head-9"
+        scope="col"
+      >
+        Request time
+      </th>
+      <th
+        aria-sort={null}
+        className="MuiTableCell-root-8 MuiTableCell-head-9"
+        scope="col"
+      >
+        Status
+      </th>
+      <th
+        aria-sort={null}
+        className="MuiTableCell-root-8 MuiTableCell-head-9"
+        scope="col"
+      >
+        Actions
+      </th>
+      <th
+        aria-sort={null}
+        className="MuiTableCell-root-8 MuiTableCell-head-9 columnHeader"
+        scope="col"
+        style={
+          Object {
+            "paddingLeft": "0",
+            "paddingRight": "0",
+            "width": "0px",
+          }
+        }
+      />
+    </tr>
+  </thead>
+  <tbody
+    className="MuiTableBody-root-20"
+  />
+</table>
+`;
