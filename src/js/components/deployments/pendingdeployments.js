@@ -1,21 +1,16 @@
 import React from 'react';
-import Time from 'react-time';
-
-import ConfirmAbort from './confirmabort';
-
 import Pagination from 'rc-pagination';
 import _en_US from 'rc-pagination/lib/locale/en_US';
 
-// material ui
-import Table from '@material-ui/core/Table';
-import TableHead from '@material-ui/core/TableHead';
-import TableCell from '@material-ui/core/TableCell';
-import TableBody from '@material-ui/core/TableBody';
-import TableRow from '@material-ui/core/TableRow';
-import Button from '@material-ui/core/Button';
-import BlockIcon from '@material-ui/icons/Block';
+import DeploymentItem from './deploymentitem';
 
-import { formatTime } from '../../helpers';
+const columnHeaders = [
+  { title: 'Release', class: '' },
+  { title: 'Device group', class: '' },
+  { title: 'Creation time', class: '' },
+  { title: 'Total # devices', class: 'align-right' },
+  { title: 'Status', class: '' }
+];
 
 export default class Pending extends React.Component {
   constructor(props, context) {
@@ -41,54 +36,34 @@ export default class Pending extends React.Component {
     this.props.refreshPending(pageNo);
   }
   render() {
-    var pendingMap = this.props.pending.map(function(deployment, index) {
-      var abort = (
-        <Button
-          color="secondary"
-          onClick={() => this._showConfirm(deployment.id)}
-          icon={<BlockIcon style={{ height: '18px', width: '18px', verticalAlign: 'middle' }} />}
-        >
-          Abort
-        </Button>
-      );
-      if (this.state.abort === deployment.id) {
-        abort = <ConfirmAbort cancel={() => this._hideConfirm(deployment.id)} abort={() => this._abortHandler(deployment.id)} table={true} />;
-      }
+    const pendingMap = this.props.pending.map((deployment, index) => (
+      <DeploymentItem
+        abort={this.props.abort}
+        columnHeaders={columnHeaders}
+        deployment={deployment}
+        key={`deployment-${index}`}
+        index={index}
+        isActiveTab={this.props.isActiveTab}
+        openReport={this.props.openReport}
+        type="pending"
+      />
+    ));
 
-      //  get statistics
-      return (
-        <TableRow key={index}>
-          <TableCell>{deployment.artifact_name}</TableCell>
-          <TableCell>{deployment.name}</TableCell>
-          <TableCell>
-            <Time value={formatTime(deployment.created)} format="YYYY-MM-DD HH:mm" />
-          </TableCell>
-          <TableCell style={{ textAlign: 'right', width: '100px' }}>{deployment.device_count}</TableCell>
-          <TableCell style={{ width: '126px' }}>{deployment.status}</TableCell>
-          <TableCell style={{ overflow: 'visible' }}>
-            <div className="float-right">{abort}</div>
-          </TableCell>
-        </TableRow>
-      );
-    }, this);
-
-    return pendingMap.length ? (
-      <div className="deploy-table-contain fadeIn">
-        <h3>Pending</h3>
-        <Table style={{ overflow: 'visible' }}>
-          <TableHead>
-            <TableRow style={{ overflow: 'visible' }}>
-              <TableCell>Updating to</TableCell>
-              <TableCell>Group</TableCell>
-              <TableCell>Created</TableCell>
-              <TableCell style={{ textAlign: 'right', width: '100px' }}># Devices</TableCell>
-              <TableCell style={{ width: '126px' }}>Status</TableCell>
-              <TableCell />
-            </TableRow>
-          </TableHead>
-          <TableBody style={{ overflow: 'visible' }}>{pendingMap}</TableBody>
-        </Table>
-
+    return (
+      <div className="fadeIn deploy-table-contain">
+        {pendingMap.length ? (
+          <div>
+            <h3>Pending</h3>
+            <div className="deployment-item deployment-header-item muted">
+              {columnHeaders.map(item => (
+                <div key={item.title} className={item.class}>
+                  {item.title}
+                </div>
+              ))}
+            </div>
+            {pendingMap}
+          </div>
+        ) : null}
         {this.props.count > this.props.pending.length ? (
           <Pagination
             locale={_en_US}
@@ -100,6 +75,6 @@ export default class Pending extends React.Component {
           />
         ) : null}
       </div>
-    ) : null;
+    );
   }
 }
