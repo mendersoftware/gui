@@ -37,6 +37,7 @@ var _onboardingArtifactIncluded = null;
 var _groups = [];
 var _releasesRepo = [];
 var _uploadInProgress = false;
+const _hostAddress = mender_environment && mender_environment.hostAddress ? mender_environment.hostAddress : null;
 const _MenderVersion = mender_environment && mender_environment.menderVersion ? mender_environment.menderVersion : 'master';
 const _menderArtifactVersion = mender_environment && mender_environment.menderArtifactVersion ? mender_environment.menderArtifactVersion : 'master';
 const _menderDebPackageVersion = mender_environment && mender_environment.menderDebPackageVersion ? mender_environment.menderDebPackageVersion : 'master';
@@ -49,7 +50,8 @@ const _versionInformation = {
   'Meta-Mender': mender_environment.metaMenderVersion,
   Deployments: mender_environment.services.deploymentsVersion,
   Deviceauth: mender_environment.services.deviceauthVersion,
-  Inventory: mender_environment.services.inventoryVersion
+  Inventory: mender_environment.services.inventoryVersion,
+  GUI: mender_environment.services.guiVersion || 'latest'
 };
 
 const _deploymentDeviceLimit = 5000;
@@ -654,6 +656,8 @@ var AppStore = Object.assign({}, EventEmitter.prototype, {
   getIsHosted: () => (mender_environment && stringToBoolean(mender_environment.features.isHosted)) || window.location.hostname === 'hosted.mender.io',
 
   getIsEnterprise: () => mender_environment && stringToBoolean(mender_environment.features.isEnterprise),
+
+  getHostAddress: () => _hostAddress,
 
   getVersionInformation: () => _versionInformation,
 

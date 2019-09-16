@@ -8,8 +8,7 @@ stages:
 
 before_script:
   - export DOCKER_REPOSITORY="mendersoftware/gui"
-  - export GIT_REF=${CI_BUILD_REF_NAME}
-  - export DOCKER_TAG=${CI_BUILD_REF_SLUG/master}
+  - export DOCKER_TAG=${CI_COMMIT_REF_NAME/master}
   - export NODE_ENV=$(echo "$DOCKER_TAG" | grep -Eq '^(staging|production)$' && echo "production" || echo "development")
   - export SERVICE_ENV=$(echo "$DOCKER_TAG" | grep -Eq '^(development|staging|production)$' && echo $DOCKER_TAG || echo "development")
   - export SERVICE_IMAGE=$DOCKER_REPOSITORY:$DOCKER_TAG
