@@ -3,6 +3,8 @@ require('superagent-auth-bearer')(request);
 var Promise = require('es6-promise').Promise;
 import cookie from 'react-cookie';
 import { unauthorizedRedirect } from '../auth';
+import AppActions from '../actions/app-actions';
+import { preformatWithRequestID } from '../helpers';
 
 request.use(unauthorizedRedirect);
 
@@ -34,6 +36,14 @@ const Api = {
         .set('Content-Type', 'application/json')
         .send(body)
         .end((err, res) => {
+          if (err && !res) {
+            var errorResponse2 = {
+              text: err.response ? JSON.parse(err.response.text) : err,
+              code: err.status
+            };
+            AppActions.setSnackbar(preformatWithRequestID(err.res, err.message), null, 'Copy to clipboard');
+            reject({ error: errorResponse2, res: Response.error()});
+          }
           if (err || !res.ok) {
             var errorResponse = {
               text: err.response ? JSON.parse(err.response.text) : err,
