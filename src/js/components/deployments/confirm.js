@@ -4,8 +4,12 @@ import IconButton from '@material-ui/core/IconButton';
 import CancelIcon from '@material-ui/icons/Cancel';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 
-// TODO: combine with ConfirmRetry
-export default class ConfirmAbort extends React.Component {
+const confirmationType = {
+  retry: 'Creating new deployment...',
+  abort: 'Aborting...'
+};
+
+export default class Confirm extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
@@ -16,16 +20,16 @@ export default class ConfirmAbort extends React.Component {
     this.setState({ class: 'fadeOut' });
     this.props.cancel();
   }
-  _handleAbort() {
+  _handleConfirm() {
     this.setState({ loading: true });
-    this.props.abort();
+    this.props.action();
   }
   render() {
     return (
       <div className={this.state.class} style={{ marginRight: '12px' }}>
         <div className="float-right">
-          <span className="bold">{this.state.loading ? 'Aborting...' : 'Confirm abort deployment?'}</span>
-          <IconButton id="confirmAbort" onClick={() => this._handleAbort()}>
+          <span className="bold">{this.state.loading ? confirmationType[this.props.type] : `Confirm ${this.props.type} deployment?`}</span>
+          <IconButton id="confirmAbort" onClick={() => this._handleConfirm()}>
             <CheckCircleIcon className="green" />
           </IconButton>
           <IconButton id="cancelAbort" onClick={() => this._handleCancel()}>

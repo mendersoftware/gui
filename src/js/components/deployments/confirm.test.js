@@ -1,8 +1,8 @@
 import React from 'react';
 import renderer from 'react-test-renderer';
-import ConfirmRetry from './confirmretry';
+import ConfirmAbort from './confirmabort';
 
 it('renders correctly', () => {
-  const tree = renderer.create(<ConfirmRetry />).toJSON();
+  const tree = renderer.create(<Confirm type="abort" />).toJSON();
   expect(tree).toMatchSnapshot();
 });
