@@ -11,8 +11,7 @@ import _en_US from 'rc-pagination/lib/locale/en_US';
 import pluralize from 'pluralize';
 import isEqual from 'lodash.isequal';
 import differenceWith from 'lodash.differencewith';
-import ConfirmAbort from './confirmabort';
-import ConfirmRetry from './confirmretry';
+import Confirm from './confirm';
 
 // material ui
 import Button from '@material-ui/core/Button';
@@ -237,7 +236,7 @@ export default class DeploymentReport extends React.Component {
       </div>
     );
     if (this.state.abort) {
-      abort = <ConfirmAbort cancel={() => this._hideConfirm('abort')} abort={() => this._abortHandler()} />;
+      abort = <Confirm cancel={() => this._hideConfirm('abort')} action={() => this._abortHandler()} type="abort" />;
     }
 
     var finished = '-';
@@ -302,7 +301,7 @@ export default class DeploymentReport extends React.Component {
                           data-hint="This will create a new deployment with the same device group and Release.&#10;Devices with this Release already installed will be skipped, all others will be updated."
                         >
                           {this.state.retry ? (
-                            <ConfirmRetry cancel={() => this._hideConfirm('retry')} retry={() => this._handleRetry()} />
+                            <Confirm cancel={() => this._hideConfirm('retry')} action={() => this._handleRetry()} type="retry" />
                           ) : (
                             <Button
                               color="secondary"
