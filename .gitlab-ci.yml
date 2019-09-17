@@ -19,10 +19,11 @@ build:master:
     - docker:dind
   script:
     - echo "building gui for ${SERVICE_IMAGE}"
+    - export COMMIT_TAG="$CI_COMMIT_REF_SLUG"_"$CI_COMMIT_SHA";
     - docker build
       --pull
       -t $SERVICE_IMAGE
-      -t $DOCKER_REPOSITORY:$CI_COMMIT_TAG
+      -t $DOCKER_REPOSITORY:$COMMIT_TAG
       .
     - docker save $SERVICE_IMAGE > image.tar
   only:
