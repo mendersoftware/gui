@@ -12,35 +12,12 @@ before_script:
   - export NODE_ENV=$(echo "$DOCKER_TAG" | grep -Eq '^(staging|production)$' && echo "production" || echo "development")
   - export SERVICE_ENV=$(echo "$DOCKER_TAG" | grep -Eq '^(development|staging|production)$' && echo $DOCKER_TAG || echo "development")
   - export SERVICE_IMAGE=$DOCKER_REPOSITORY:$DOCKER_TAG
-
-build:master:
-  stage: build
-  services:
-    - docker:dind
-  script:
-    - echo "building gui for ${SERVICE_IMAGE}"
-    - export COMMIT_TAG="$CI_COMMIT_REF_SLUG"_"$CI_COMMIT_SHA";
-    - docker build
-      --pull
-      -t $SERVICE_IMAGE
-      -t $DOCKER_REPOSITORY:$COMMIT_TAG
-      .
-    - docker save $SERVICE_IMAGE > image.tar
-  only:
-    - master
-  artifacts:
-    expire_in: 2w
-    paths:
-      - image.tar
-  tags:
-    - docker
+  - export COMMIT_TAG="$CI_COMMIT_REF_SLUG"_"$CI_COMMIT_SHA";
 
 build:
   stage: build
   services:
     - docker:dind
-  except:
-    - master
   script:
     - echo "building gui for ${SERVICE_IMAGE}"
     - docker build
@@ -110,10 +87,10 @@ publish:
   services:
     - docker:dind
   dependencies:
-    - test:lint
     - test:acceptance
   script:
     - docker load -i image.tar
+    - docker tag $SERVICE_IMAGE $DOCKER_REPOSITORY:$COMMIT_TAG
     # - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
     # - docker push $CI_REGISTRY_IMAGE
   only:
