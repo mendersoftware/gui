@@ -8,7 +8,7 @@ stages:
 
 before_script:
   - export DOCKER_REPOSITORY="mendersoftware/gui"
-  - export DOCKER_TAG=${CI_COMMIT_REF_NAME/master}
+  - export DOCKER_TAG=${CI_COMMIT_REF_SLUG:-master}
   - export NODE_ENV=$(echo "$DOCKER_TAG" | grep -Eq '^(staging|production)$' && echo "production" || echo "development")
   - export SERVICE_ENV=$(echo "$DOCKER_TAG" | grep -Eq '^(development|staging|production)$' && echo $DOCKER_TAG || echo "development")
   - export SERVICE_IMAGE=$DOCKER_REPOSITORY:$DOCKER_TAG
@@ -22,7 +22,7 @@ build:master:
     - docker build
       --pull
       -t $SERVICE_IMAGE
-      -t $DOCKER_REPOSITORY:$COMMIT_TAG
+      -t $DOCKER_REPOSITORY:$CI_COMMIT_TAG
       .
     - docker save $SERVICE_IMAGE > image.tar
   only:
