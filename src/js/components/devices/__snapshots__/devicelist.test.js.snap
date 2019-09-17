@@ -83,16 +83,11 @@ exports[`renders correctly 1`] = `
           role="button"
           tabIndex={0}
         >
-          <span
-            dangerouslySetInnerHTML={
-              Object {
-                "__html": "&#8203;",
-              }
-            }
-          />
+          10
         </div>
         <input
           type="hidden"
+          value={10}
         />
         <svg
           aria-hidden="true"
@@ -222,7 +217,7 @@ exports[`renders correctly 1`] = `
               />
             </div>
           </div>
-          / NaN
+          / 5
         </div>
         <button
           className="MuiButtonBase-root MuiIconButton-root"

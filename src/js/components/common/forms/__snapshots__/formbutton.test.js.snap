@@ -20,6 +20,8 @@ exports[`renders correctly 1`] = `
 >
   <span
     className="MuiButton-label"
-  />
+  >
+    test
+  </span>
 </button>
 `;

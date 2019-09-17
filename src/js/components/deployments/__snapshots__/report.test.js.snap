@@ -97,9 +97,12 @@ exports[`renders correctly 1`] = `
           </h2>
           <div>
             Started:
-            <span>
-              Invalid date
-            </span>
+            <time
+              dateTime="2019-01-01T00:00:00+01:00"
+              title={null}
+            >
+              2019-01-01 00:00
+            </time>
           </div>
         </div>
         <div
