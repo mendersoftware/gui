@@ -90,7 +90,7 @@ export default class AutoSelect extends React.Component {
                 <ClickAwayListener onClickAway={() => self.setState({ open: false })}>
                   <MenuList
                     style={{
-                      overflow: 'scroll',
+                      overflow: 'auto',
                       maxHeight: '250px'
                     }}
                   >
