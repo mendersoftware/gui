@@ -558,7 +558,7 @@ export default class Deployments extends React.Component {
               onChangeRowsPerPage={perPage => self.setState({ per_page: perPage, page: 1 }, () => self._changePastPage())}
               startDate={this.state.startDate}
               endDate={this.state.endDate}
-              page={this.state.past_page}
+              page={this.state.page}
               isActiveTab={this.state.currentTab === 'Finished'}
               showHelptips={this.state.showHelptips}
               count={pastCount}
