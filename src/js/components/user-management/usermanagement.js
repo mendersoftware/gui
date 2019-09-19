@@ -157,7 +157,7 @@ export default class UserManagement extends React.Component {
 
         <Dialog open={this.state.editDialog || false} fullWidth={true} maxWidth="sm">
           <DialogTitle>{this.state.user ? 'Edit user' : 'Create new user'}</DialogTitle>
-          <DialogContent>
+          <DialogContent style={{ overflowY: 'initial' }}>
             <UserForm
               edit={this.state.user ? true : false}
               editPass={this.state.editPass}

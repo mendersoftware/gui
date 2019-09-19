@@ -32,7 +32,7 @@ exports[`renders correctly 1`] = `
         Email
       </label>
       <div
-        className="MuiInputBase-root MuiInput-root MuiInput-underline Mui-disabled Mui-disabled MuiInputBase-formControl MuiInput-formControl"
+        className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
         onClick={[Function]}
         onKeyPress={[Function]}
         style={
@@ -44,8 +44,8 @@ exports[`renders correctly 1`] = `
       >
         <input
           aria-invalid={false}
-          className="MuiInputBase-input MuiInput-input Mui-disabled Mui-disabled"
-          disabled={true}
+          className="MuiInputBase-input MuiInput-input"
+          disabled={false}
           id="email"
           name="email"
           onBlur={[Function]}
@@ -61,36 +61,6 @@ exports[`renders correctly 1`] = `
         id="component-error-text"
       />
     </div>
-    <button
-      className="MuiButtonBase-root MuiButton-root inline-block MuiButton-text MuiButton-textPrimary"
-      disabled={false}
-      id="change_email"
-      onBlur={[Function]}
-      onClick={[Function]}
-      onDragLeave={[Function]}
-      onFocus={[Function]}
-      onKeyDown={[Function]}
-      onKeyUp={[Function]}
-      onMouseDown={[Function]}
-      onMouseLeave={[Function]}
-      onMouseUp={[Function]}
-      onTouchEnd={[Function]}
-      onTouchMove={[Function]}
-      onTouchStart={[Function]}
-      style={
-        Object {
-          "margin": "30px 0 0 15px",
-        }
-      }
-      tabIndex={0}
-      type="button"
-    >
-      <span
-        className="MuiButton-label"
-      >
-        Change email
-      </span>
-    </button>
   </form>
   <form
     className="margin-top flexbox space-between"
