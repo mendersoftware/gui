@@ -87,9 +87,9 @@ export default class ProgressDeviceList extends React.Component {
         var statusText = (function(status, substate) {
           if (status && substate) {
             return (
-              <div>
-                <div style={{ display: 'inline', verticalAlign: 'top' }}>{status}: </div>
-                <div className="substate">{device.substate}</div>
+              <div className="flexbox">
+                <div style={{ verticalAlign: 'top' }}>{status}: </div>
+                <div className="substate">{substate}</div>
               </div>
             );
           }
@@ -110,16 +110,14 @@ export default class ProgressDeviceList extends React.Component {
               <Time value={formatTime(device.created)} format="YYYY-MM-DD HH:mm" />
             </TableCell>
             <TableCell>{time}</TableCell>
-            <TableCell style={{ paddingRight: '0px', position: 'relative' }}>
-              <div style={{ position: 'absolute', top: 0 }}>{statusText}</div>
-              <div>
-                {!['pending', 'decommissioned', 'already-installed'].includes(device.status.toLowerCase()) && (
-                  <div>
-                    <div style={{ textAlign: 'end', color: '#aaaaaa' }}>{`${devicePercentage}%`}</div>
-                    <LinearProgress color={progressColor} variant="determinate" value={devicePercentage} />
-                  </div>
-                )}
-              </div>
+            <TableCell style={{ paddingRight: '0px', position: 'relative', minWidth: 200 }}>
+              {statusText}
+              {!['pending', 'decommissioned', 'already-installed'].includes(device.status.toLowerCase()) && (
+                <div style={{ position: 'absolute', bottom: 0, width: '100%' }}>
+                  <div style={{ textAlign: 'end', color: '#aaaaaa' }}>{`${devicePercentage}%`}</div>
+                  <LinearProgress color={progressColor} variant="determinate" value={devicePercentage} />
+                </div>
+              )}
             </TableCell>
             <TableCell>{device.log ? <Button onClick={() => this.props.viewLog(device.id)}>View log</Button> : null}</TableCell>
           </TableRow>

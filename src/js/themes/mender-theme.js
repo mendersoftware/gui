@@ -144,7 +144,9 @@ export default createMuiTheme({
       root: {
         '&$disabled': {
           opacity: 1
-        }
+        },
+        paddingTop: 11,
+        paddingBottom: 11
       }
     },
     MuiListItemText: {
@@ -168,10 +170,10 @@ export default createMuiTheme({
     MuiTableCell: {
       root: {
         padding: '0px 24px 0px 24px',
-        lineHeight: '48px'
+        height: '48px'
       },
       head: {
-        lineHeight: '56px'
+        height: '56px'
       },
       paddingCheckbox: {
         padding: '0 0 0 6px',
