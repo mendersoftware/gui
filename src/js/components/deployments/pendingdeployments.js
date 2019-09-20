@@ -35,6 +35,7 @@ export default class Pending extends React.Component {
     this.props.refreshPending(pageNo);
   }
   render() {
+    const self = this;
     const pendingMap = this.props.pending.map((deployment, index) => (
       <DeploymentItem
         abort={this.props.abort}
