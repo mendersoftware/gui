@@ -87,6 +87,7 @@ publish:
   services:
     - docker:dind
   dependencies:
+    - build
     - test:acceptance
   script:
     - docker load -i image.tar
