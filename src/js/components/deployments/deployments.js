@@ -51,6 +51,8 @@ export default class Deployments extends React.Component {
       startDate: today,
       endDate: tonight,
       per_page: 20,
+      prog_page: 1,
+      pend_page: 1,
       refreshDeploymentsLength: 30000,
       dialog: false,
       reportDialog: false,
@@ -220,7 +222,13 @@ export default class Deployments extends React.Component {
       });
   }
 
-  _changePastPage(page, startDate, endDate, per_page, group) {
+  _changePastPage(
+    page = this.state.page,
+    startDate = this.state.startDate,
+    endDate = this.state.endDate,
+    per_page = this.state.per_page,
+    group = this.state.group
+  ) {
     var self = this;
     self.setState({ doneLoading: false }, () => {
       clearInterval(self.timer);
@@ -479,22 +487,18 @@ export default class Deployments extends React.Component {
     ];
 
     var dialogContent = '';
+    const dialogProps = {
+      updated: () => this.updated(),
+      deployment: this.state.selectedDeployment
+    };
     if (this.state.reportType === 'active') {
-      dialogContent = <Report abort={id => this._abortDeployment(id)} updated={() => this.updated()} deployment={this.state.selectedDeployment} />;
+      dialogContent = <Report abort={id => this._abortDeployment(id)} {...dialogProps} />;
     } else {
-      dialogContent = (
-        <Report
-          retry={(deployment, devices) => this._retryDeployment(deployment, devices)}
-          updated={() => this.updated()}
-          past={true}
-          deployment={this.state.selectedDeployment}
-        />
-      );
+      dialogContent = <Report retry={(deployment, devices) => this._retryDeployment(deployment, devices)} past={true} {...dialogProps} />;
     }
 
     // tabs
-    const { past, pastCount, tabIndex } = this.state;
-
+    const { past, per_page, pastCount, tabIndex } = this.state;
     let onboardingComponent = null;
     if (past.length || pastCount) {
       onboardingComponent = getOnboardingComponentFor('deployments-past', { anchor: { left: 240, top: 50 } });
@@ -550,10 +554,11 @@ export default class Deployments extends React.Component {
               groups={this.state.groups}
               deviceGroup={this.state.groupFilter}
               createClick={() => this.setState({ scheduleDialog: true })}
-              pageSize={this.state.per_page}
+              pageSize={per_page}
+              onChangeRowsPerPage={perPage => self.setState({ per_page: perPage, page: 1 }, () => self._changePastPage())}
               startDate={this.state.startDate}
               endDate={this.state.endDate}
-              page={this.state.past_page}
+              page={this.state.page}
               isActiveTab={this.state.currentTab === 'Finished'}
               showHelptips={this.state.showHelptips}
               count={pastCount}

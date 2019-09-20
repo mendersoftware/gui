@@ -6,8 +6,6 @@ import AppActions from '../../actions/app-actions';
 import AppStore from '../../stores/app-store';
 import DeploymentStatus from './deploymentstatus';
 import DeviceList from './deploymentdevicelist';
-import Pagination from 'rc-pagination';
-import _en_US from 'rc-pagination/lib/locale/en_US';
 import pluralize from 'pluralize';
 import isEqual from 'lodash.isequal';
 import differenceWith from 'lodash.differencewith';
@@ -26,6 +24,7 @@ import BlockIcon from '@material-ui/icons/Block';
 import TimelapseIcon from '@material-ui/icons/Timelapse';
 import RefreshIcon from '@material-ui/icons/Refresh';
 import { AppContext } from '../../contexts/app-context';
+import Pagination from '../common/pagination';
 import { formatTime } from '../../helpers';
 
 export default class DeploymentReport extends React.Component {
@@ -196,6 +195,7 @@ export default class DeploymentReport extends React.Component {
     this.setState(newState);
   }
   render() {
+    const self = this;
     var deviceList = this.state.pagedDevices || [];
     var allDevices = this.state.allDevices || [];
 
@@ -399,12 +399,11 @@ export default class DeploymentReport extends React.Component {
           </AppContext.Consumer>
           {allDevices.length ? (
             <Pagination
-              locale={_en_US}
-              simple
-              pageSize={this.state.perPage}
-              current={this.state.currentPage || 1}
-              total={allDevices.length}
-              onChange={page => this._handlePageChange(page)}
+              count={allDevices.length}
+              rowsPerPage={self.state.perPage}
+              onChangeRowsPerPage={perPage => self.setState({ currentPage: 1, perPage })}
+              page={self.state.currentPage}
+              onChangePage={page => self._handlePageChange(page)}
             />
           ) : null}
         </div>

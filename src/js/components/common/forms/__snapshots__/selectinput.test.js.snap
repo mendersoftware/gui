@@ -2,57 +2,52 @@
 
 exports[`renders correctly 1`] = `
 <div
-  className="MuiFormControl-root-1"
+  className="MuiFormControl-root"
 >
   <label
-    className="MuiFormLabel-root-16 MuiInputLabel-root-5 MuiInputLabel-formControl-10 MuiInputLabel-animated-13"
+    className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
     data-shrink={false}
     htmlFor="simple-select"
   />
   <div
-    className="MuiInputBase-root-43 MuiInput-root-30 MuiInput-underline-34 MuiInputBase-formControl-44 MuiInput-formControl-31"
+    className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
     onClick={[Function]}
   >
     <div
-      className="MuiSelect-root-23"
+      aria-haspopup="listbox"
+      className="MuiSelect-root MuiSelect-select MuiSelect-selectMenu MuiInputBase-input MuiInput-input MuiInputBase-inputSelect"
+      id="select-selector"
+      onBlur={[Function]}
+      onClick={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      role="button"
+      tabIndex={0}
     >
-      <div
-        aria-haspopup="true"
-        aria-pressed="false"
-        className="MuiSelect-select-24 MuiSelect-selectMenu-27 MuiInputBase-input-53 MuiInput-input-38"
-        id="select-selector"
-        onBlur={[Function]}
-        onClick={[Function]}
-        onFocus={[Function]}
-        onKeyDown={[Function]}
-        role="button"
-        tabIndex={0}
-      >
-        <span
-          dangerouslySetInnerHTML={
-            Object {
-              "__html": "&#8203;",
-            }
+      <span
+        dangerouslySetInnerHTML={
+          Object {
+            "__html": "&#8203;",
           }
-        />
-      </div>
-      <input
-        id="simple-select"
-        name="selector"
-        type="hidden"
+        }
       />
-      <svg
-        aria-hidden="true"
-        className="MuiSvgIcon-root-60 MuiSelect-icon-29"
-        focusable="false"
-        role="presentation"
-        viewBox="0 0 24 24"
-      >
-        <path
-          d="M7 10l5 5 5-5z"
-        />
-      </svg>
     </div>
+    <input
+      id="simple-select"
+      name="selector"
+      type="hidden"
+    />
+    <svg
+      aria-hidden="true"
+      className="MuiSvgIcon-root MuiSelect-icon"
+      focusable="false"
+      role="presentation"
+      viewBox="0 0 24 24"
+    >
+      <path
+        d="M7 10l5 5 5-5z"
+      />
+    </svg>
   </div>
 </div>
 `;

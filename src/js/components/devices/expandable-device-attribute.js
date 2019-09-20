@@ -27,7 +27,7 @@ export default class ExpandableDeviceAttribute extends React.Component {
   render() {
     const self = this;
     const { primary, secondary, classes, textClasses } = self.props;
-    const defaultClasses = { root: 'attributes', disabled: 'opaque' };
+    const defaultClasses = { root: 'attributes' };
     const currentTextClasses = `${textClasses ? textClasses.secondary : ''} ${self.state.expanded && self.state.overflowActive ? 'expanded-attribute' : ''}`;
     let secondaryText = (
       <div>

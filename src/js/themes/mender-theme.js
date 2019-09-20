@@ -1,20 +1,19 @@
 import { createMuiTheme } from '@material-ui/core/styles';
-import { grey100, lightBlack, white } from '@material-ui/core/colors';
 
 export const colors = {
   linkgreen: '#347A87',
   mendergreen: '#337a87', //
   grey: '#c7c7c7', //grey
   mendermaroon: '#5d0f43', //
-  accent2Color: grey100,
+  accent2Color: '#f5f5f5',
   alertpurple: '#7D3F69', //
   textColor: 'rgba(0, 0, 0, 0.8)',
   mutedText: 'rgba(0, 0, 0, 0.3)',
-  alternateTextColor: white,
-  canvasColor: white,
+  alternateTextColor: 'white',
+  canvasColor: 'white',
   borderColor: '#e0e0e0',
   expansionBackground: '#f7f7f7',
-  disabledColor: lightBlack,
+  disabledColor: 'rgba(0, 0, 0, 0.54)',
   errorStyleColor: '#ab1000'
 };
 
@@ -34,8 +33,7 @@ export default createMuiTheme({
     }
   },
   typography: {
-    fontFamily: 'Lato, sans-serif',
-    useNextVariants: true
+    fontFamily: 'Lato, sans-serif'
   },
   overrides: {
     MuiSnackbarContent: {
@@ -55,11 +53,11 @@ export default createMuiTheme({
         '&:before': {
           display: 'none'
         },
-        padding: 0
-      },
-      expanded: {
-        backgroundColor: colors.expansionBackground,
-        margin: 'auto'
+        padding: 0,
+        '&$expanded': {
+          backgroundColor: colors.expansionBackground,
+          margin: 'auto'
+        }
       }
     },
     MuiExpansionPanelSummary: {
@@ -142,12 +140,23 @@ export default createMuiTheme({
         }
       }
     },
+    MuiListItem: {
+      root: {
+        '&$disabled': {
+          opacity: 1
+        },
+        paddingTop: 11,
+        paddingBottom: 11
+      }
+    },
     MuiListItemText: {
       root: {
         fontSize: '0.8rem',
         '&$primary': {
           fontSize: '0.8rem'
-        }
+        },
+        marginTop: 0,
+        marginBottom: 0
       }
     },
     MuiTypography: {
@@ -160,7 +169,11 @@ export default createMuiTheme({
     },
     MuiTableCell: {
       root: {
-        padding: '0px 24px 0px 24px'
+        padding: '0px 24px 0px 24px',
+        height: '48px'
+      },
+      head: {
+        height: '56px'
       },
       paddingCheckbox: {
         padding: '0 0 0 6px',

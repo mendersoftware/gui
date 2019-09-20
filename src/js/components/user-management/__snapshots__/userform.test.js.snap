@@ -5,17 +5,17 @@ exports[`renders correctly 1`] = `
   className=""
 >
   <div
-    className="MuiFormControl-root-1 undefined required"
+    className="MuiFormControl-root undefined required"
   >
     <label
-      className="MuiFormLabel-root-16 MuiInputLabel-root-5 MuiInputLabel-formControl-10 MuiInputLabel-animated-13"
+      className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
       data-shrink={false}
       htmlFor="email"
     >
       Email
     </label>
     <div
-      className="MuiInputBase-root-36 MuiInput-root-23 MuiInput-underline-27 MuiInputBase-formControl-37 MuiInput-formControl-24"
+      className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
       onClick={[Function]}
       onKeyPress={[Function]}
       required={true}
@@ -28,7 +28,7 @@ exports[`renders correctly 1`] = `
     >
       <input
         aria-invalid={false}
-        className="MuiInputBase-input-46 MuiInput-input-31"
+        className="MuiInputBase-input MuiInput-input"
         disabled={false}
         id="email"
         name="email"
@@ -41,17 +41,17 @@ exports[`renders correctly 1`] = `
       />
     </div>
     <p
-      className="MuiFormHelperText-root-53"
+      className="MuiFormHelperText-root"
       id="component-error-text"
     />
   </div>
   <button
-    className="MuiButtonBase-root-87 MuiButton-root-61 MuiButton-text-63 MuiButton-textPrimary-64 MuiButton-flat-66 MuiButton-flatPrimary-67"
+    className="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary"
     disabled={false}
     id="change"
     onBlur={[Function]}
     onClick={[Function]}
-    onContextMenu={[Function]}
+    onDragLeave={[Function]}
     onFocus={[Function]}
     onKeyDown={[Function]}
     onKeyUp={[Function]}
@@ -61,17 +61,14 @@ exports[`renders correctly 1`] = `
     onTouchEnd={[Function]}
     onTouchMove={[Function]}
     onTouchStart={[Function]}
-    tabIndex="0"
+    tabIndex={0}
     type="button"
   >
     <span
-      className="MuiButton-label-62"
+      className="MuiButton-label"
     >
       Change password
     </span>
-    <span
-      className="MuiTouchRipple-root-90"
-    />
   </button>
   <div
     className="float-right"
@@ -82,12 +79,12 @@ exports[`renders correctly 1`] = `
     }
   >
     <button
-      className="MuiButtonBase-root-87 MuiButtonBase-disabled-88 MuiButton-root-61 MuiButton-contained-72 MuiButton-raised-75 MuiButton-disabled-81"
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained Mui-disabled Mui-disabled"
       disabled={true}
       id="submit_button"
       onBlur={[Function]}
       onClick={[Function]}
-      onContextMenu={[Function]}
+      onDragLeave={[Function]}
       onFocus={[Function]}
       onKeyDown={[Function]}
       onKeyUp={[Function]}
@@ -97,11 +94,11 @@ exports[`renders correctly 1`] = `
       onTouchEnd={[Function]}
       onTouchMove={[Function]}
       onTouchStart={[Function]}
-      tabIndex="-1"
+      tabIndex={-1}
       type="button"
     >
       <span
-        className="MuiButton-label-62"
+        className="MuiButton-label"
       />
     </button>
   </div>

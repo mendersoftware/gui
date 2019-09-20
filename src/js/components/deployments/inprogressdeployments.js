@@ -1,8 +1,6 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
 import Time from 'react-time';
-import Pagination from 'rc-pagination';
-import _en_US from 'rc-pagination/lib/locale/en_US';
 
 // material ui
 import Table from '@material-ui/core/Table';
@@ -13,6 +11,7 @@ import TableRow from '@material-ui/core/TableRow';
 
 import DeploymentStatus from './deploymentstatus';
 import Loader from '../common/loader';
+import Pagination from '../common/pagination';
 import { formatTime } from '../../helpers';
 import { getOnboardingComponentFor, getOnboardingStepCompleted } from '../../utils/onboardingmanager';
 import AppStore from '../../stores/app-store';
@@ -27,21 +26,21 @@ export default class Progress extends React.Component {
   }
 
   render() {
+    const self = this;
     // get statistics for each in progress
-    var progressMap = this.props.progress.map(function(deployment, index) {
-      var status = <DeploymentStatus isActiveTab={this.props.isActiveTab} refresh={true} id={deployment.id} />;
-      return (
-        <TableRow style={{ height: '52px' }} hover key={index} onClick={() => this.props.openReport(index, 'progress')}>
-          <TableCell>{deployment.artifact_name}</TableCell>
-          <TableCell>{deployment.name}</TableCell>
-          <TableCell>
-            <Time value={formatTime(deployment.created)} format="YYYY-MM-DD HH:mm" />
-          </TableCell>
-          <TableCell style={{ textAlign: 'right', width: '100px' }}>{deployment.device_count}</TableCell>
-          <TableCell style={{ overflow: 'visible', minWidth: '400px' }}>{status}</TableCell>
-        </TableRow>
-      );
-    }, this);
+    var progressMap = this.props.progress.map((deployment, index) => (
+      <TableRow style={{ height: '52px' }} hover key={index} onClick={() => this.props.openReport(index, 'progress')}>
+        <TableCell>{deployment.artifact_name}</TableCell>
+        <TableCell>{deployment.name}</TableCell>
+        <TableCell>
+          <Time value={formatTime(deployment.created)} format="YYYY-MM-DD HH:mm" />
+        </TableCell>
+        <TableCell style={{ textAlign: 'right', width: '100px' }}>{deployment.device_count}</TableCell>
+        <TableCell style={{ overflow: 'visible', minWidth: '400px' }}>
+          <DeploymentStatus isActiveTab={this.props.isActiveTab} refresh={true} id={deployment.id} />
+        </TableCell>
+      </TableRow>
+    ));
 
     let onboardingComponent = null;
     if (!AppStore.getOnboardingComplete() && this.inprogressRef) {
@@ -81,12 +80,11 @@ export default class Progress extends React.Component {
 
           {this.props.count > this.props.progress.length ? (
             <Pagination
-              locale={_en_US}
-              simple
-              pageSize={this.state.pageSize}
-              current={this.props.page || 1}
-              total={this.props.count}
-              onChange={page => this.props.refreshProgress(page)}
+              count={self.props.count}
+              rowsPerPage={self.state.pageSize}
+              onChangeRowsPerPage={pageSize => self.setState({ pageSize }, () => self.props.refreshProgress(1, pageSize))}
+              page={self.props.page}
+              onChangePage={page => self.props.refreshProgress(page, self.state.pageSize)}
             />
           ) : null}
 

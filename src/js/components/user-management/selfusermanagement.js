@@ -8,7 +8,7 @@ import AppActions from '../../actions/app-actions';
 import AppStore from '../../stores/app-store';
 
 import { preformatWithRequestID } from '../../helpers';
-import { Collapse, Switch } from '@material-ui/core';
+import { Collapse, Switch, TextField } from '@material-ui/core';
 import Loader from '../common/loader';
 
 export default class SelfUserManagement extends React.Component {
@@ -82,47 +82,51 @@ export default class SelfUserManagement extends React.Component {
 
   render() {
     const self = this;
-    const { editEmail, editPass, qrExpanded, has2fa, qrImage } = self.state;
+    const { currentUser, editEmail, editPass, emailFormId, qrExpanded, has2fa, qrImage } = self.state;
+    const email = (currentUser || { email: '' }).email;
     return (
       <div style={{ maxWidth: '750px' }} className="margin-top-small">
         <h2 style={{ marginTop: '15px' }}>My account</h2>
 
         <Form
           className="flexbox space-between"
-          onSubmit={userdata => this._editSubmit(userdata)}
-          handleCancel={() => this.handleEmail()}
+          onSubmit={userdata => self._editSubmit(userdata)}
+          handleCancel={() => self.handleEmail()}
           submitLabel="Save"
           showButtons={editEmail}
           buttonColor="secondary"
           submitButtonId="submit_email"
-          uniqueId={this.state.emailFormId}
+          uniqueId={emailFormId}
         >
-          <TextInput
-            hint="Email"
-            label="Email"
-            id="email"
-            disabled={!editEmail}
-            value={(this.state.currentUser || {}).email}
-            validations="isLength:1,isEmail"
-            focus={editEmail}
-            InputLabelProps={{ shrink: (this.state.currentUser || {}).email }}
-          />
-
-          {!editEmail && (
-            <FormButton
-              className="inline-block"
-              color="primary"
-              id="change_email"
-              label="Change email"
-              style={{ margin: '30px 0 0 15px' }}
-              handleClick={() => this.handleEmail()}
+          {!editEmail && currentUser.email ? (
+            <>
+              <TextField label="Email" InputLabelProps={{ shrink: !!email }} disabled defaultValue={email} style={{ width: '400px', maxWidth: '100%' }} />
+              <FormButton
+                className="inline-block"
+                color="primary"
+                id="change_email"
+                label="Change email"
+                style={{ margin: '30px 0 0 15px' }}
+                handleClick={() => self.handleEmail()}
+              />
+            </>
+          ) : (
+            <TextInput
+              hint="Email"
+              label="Email"
+              id="email"
+              disabled={false}
+              value={email}
+              validations="isLength:1,isEmail"
+              focus={true}
+              InputLabelProps={{ shrink: !!email }}
             />
           )}
         </Form>
 
         <Form
-          onSubmit={userdata => this._editSubmit(userdata)}
-          handleCancel={() => this.handlePass()}
+          onSubmit={userdata => self._editSubmit(userdata)}
+          handleCancel={() => self.handlePass()}
           submitLabel="Save"
           submitButtonId="submit_pass"
           buttonColor="secondary"
@@ -137,11 +141,11 @@ export default class SelfUserManagement extends React.Component {
               create={editPass}
               validations="isLength:1"
               disabled={!editPass}
-              onClear={() => this.handleButton()}
+              onClear={() => self.handleButton()}
               edit={false}
             />
           ) : (
-            <FormButton buttonHolder={true} color="primary" id="change_pass" label="Change password" handleClick={() => this.handlePass()} />
+            <FormButton buttonHolder={true} color="primary" id="change_pass" label="Change password" handleClick={() => self.handlePass()} />
           )}
         </Form>
         {AppStore.getIsEnterprise() && (

@@ -55,52 +55,240 @@ exports[`renders correctly 1`] = `
   <div
     className="body"
   />
-  <ul
-    className="rc-pagination rc-pagination-simple margin-top"
-    style={Object {}}
+  <div
+    className="flexbox margin-top undefined"
   >
-    <li
-      aria-disabled={true}
-      className="rc-pagination-disabled rc-pagination-prev"
-      onClick={[Function]}
-      onKeyPress={[Function]}
-      tabIndex={null}
-      title="Previous Page"
+    <div
+      className="MuiToolbar-root MuiToolbar-regular MuiTablePagination-toolbar MuiToolbar-gutters"
     >
-      <a
-        className="rc-pagination-item-link"
-      />
-    </li>
-    <li
-      className="rc-pagination-simple-pager"
-      title="undefined/NaN"
-    >
-      <input
-        onChange={[Function]}
-        onKeyDown={[Function]}
-        onKeyUp={[Function]}
-        size="3"
-        type="text"
+      <div
+        className="MuiTablePagination-spacer flexbox no-basis"
       />
       <span
-        className="rc-pagination-slash"
+        className="MuiTypography-root MuiTablePagination-caption MuiTypography-caption MuiTypography-colorInherit"
       >
-        ／
+        Rows
       </span>
-      NaN
-    </li>
-    <li
-      aria-disabled={true}
-      className="rc-pagination-disabled rc-pagination-next"
-      onClick={[Function]}
-      onKeyPress={[Function]}
-      tabIndex={null}
-      title="Next Page"
-    >
-      <a
-        className="rc-pagination-item-link"
-      />
-    </li>
-  </ul>
+      <div
+        className="MuiInputBase-root MuiTablePagination-input MuiTablePagination-selectRoot"
+        onClick={[Function]}
+      >
+        <div
+          aria-haspopup="listbox"
+          className="MuiSelect-root MuiSelect-select MuiTablePagination-select MuiSelect-selectMenu MuiInputBase-input MuiInputBase-inputSelect"
+          onBlur={[Function]}
+          onClick={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          role="button"
+          tabIndex={0}
+        >
+          10
+        </div>
+        <input
+          type="hidden"
+          value={10}
+        />
+        <svg
+          aria-hidden="true"
+          className="MuiSvgIcon-root MuiSelect-icon MuiTablePagination-selectIcon"
+          focusable="false"
+          role="presentation"
+          viewBox="0 0 24 24"
+        >
+          <path
+            d="M7 10l5 5 5-5z"
+          />
+        </svg>
+      </div>
+      <span
+        className="MuiTypography-root MuiTablePagination-caption MuiTypography-caption MuiTypography-colorInherit"
+      >
+        
+      </span>
+      <div
+        className="flexbox"
+      >
+        <button
+          className="MuiButtonBase-root MuiIconButton-root"
+          disabled={false}
+          onBlur={[Function]}
+          onClick={[Function]}
+          onDragLeave={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          onKeyUp={[Function]}
+          onMouseDown={[Function]}
+          onMouseLeave={[Function]}
+          onMouseUp={[Function]}
+          onTouchEnd={[Function]}
+          onTouchMove={[Function]}
+          onTouchStart={[Function]}
+          tabIndex={0}
+          type="button"
+        >
+          <span
+            className="MuiIconButton-label"
+          >
+            <svg
+              aria-hidden="true"
+              className="MuiSvgIcon-root"
+              focusable="false"
+              role="presentation"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M18.41 16.59L13.82 12l4.59-4.59L17 6l-6 6 6 6zM6 6h2v12H6z"
+              />
+              <path
+                d="M24 24H0V0h24v24z"
+                fill="none"
+              />
+            </svg>
+          </span>
+        </button>
+        <button
+          className="MuiButtonBase-root MuiIconButton-root"
+          disabled={false}
+          onBlur={[Function]}
+          onClick={[Function]}
+          onDragLeave={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          onKeyUp={[Function]}
+          onMouseDown={[Function]}
+          onMouseLeave={[Function]}
+          onMouseUp={[Function]}
+          onTouchEnd={[Function]}
+          onTouchMove={[Function]}
+          onTouchStart={[Function]}
+          tabIndex={0}
+          type="button"
+        >
+          <span
+            className="MuiIconButton-label"
+          >
+            <svg
+              aria-hidden="true"
+              className="MuiSvgIcon-root"
+              focusable="false"
+              role="presentation"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z"
+              />
+            </svg>
+          </span>
+        </button>
+        <div
+          className="flexbox"
+          style={
+            Object {
+              "alignItems": "baseline",
+            }
+          }
+        >
+          <div
+            className="MuiFormControl-root MuiTextField-root MuiFormControl-marginDense"
+            onKeyUp={[Function]}
+            style={
+              Object {
+                "marginRight": "10px",
+                "maxWidth": "30px",
+                "minWidth": "30px",
+              }
+            }
+          >
+            <div
+              className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl MuiInputBase-marginDense"
+              onClick={[Function]}
+            >
+              <input
+                aria-invalid={false}
+                className="MuiInputBase-input MuiInput-input MuiInputBase-inputMarginDense MuiInput-inputMarginDense"
+                disabled={false}
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                required={false}
+                type="text"
+                value={1}
+              />
+            </div>
+          </div>
+          / 5
+        </div>
+        <button
+          className="MuiButtonBase-root MuiIconButton-root"
+          disabled={false}
+          onBlur={[Function]}
+          onClick={[Function]}
+          onDragLeave={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          onKeyUp={[Function]}
+          onMouseDown={[Function]}
+          onMouseLeave={[Function]}
+          onMouseUp={[Function]}
+          onTouchEnd={[Function]}
+          onTouchMove={[Function]}
+          onTouchStart={[Function]}
+          tabIndex={0}
+          type="button"
+        >
+          <span
+            className="MuiIconButton-label"
+          >
+            <svg
+              aria-hidden="true"
+              className="MuiSvgIcon-root"
+              focusable="false"
+              role="presentation"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"
+              />
+            </svg>
+          </span>
+        </button>
+        <button
+          className="MuiButtonBase-root MuiIconButton-root"
+          disabled={false}
+          onBlur={[Function]}
+          onClick={[Function]}
+          onDragLeave={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          onKeyUp={[Function]}
+          onMouseDown={[Function]}
+          onMouseLeave={[Function]}
+          onMouseUp={[Function]}
+          onTouchEnd={[Function]}
+          onTouchMove={[Function]}
+          onTouchStart={[Function]}
+          tabIndex={0}
+          type="button"
+        >
+          <span
+            className="MuiIconButton-label"
+          >
+            <svg
+              aria-hidden="true"
+              className="MuiSvgIcon-root"
+              focusable="false"
+              role="presentation"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M5.59 7.41L10.18 12l-4.59 4.59L7 18l6-6-6-6zM16 6h2v12h-2z"
+              />
+            </svg>
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
 </div>
 `;

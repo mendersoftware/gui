@@ -29,7 +29,7 @@ exports[`renders correctly 1`] = `
     >
       <svg
         aria-hidden="true"
-        className="MuiSvgIcon-root-1 MuiSvgIcon-fontSizeSmall-8"
+        className="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall"
         focusable="false"
         role="presentation"
         style={
@@ -41,14 +41,7 @@ exports[`renders correctly 1`] = `
         viewBox="0 0 24 24"
       >
         <path
-          d="M0 0h24v24H0V0z"
-          fill="none"
-        />
-        <path
-          d="M11 7h2v2h-2zM11 11h2v6h-2z"
-        />
-        <path
-          d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+          d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
         />
       </svg>
       These settings apply to all users, so changes made here may affect other users' experience.
@@ -58,17 +51,17 @@ exports[`renders correctly 1`] = `
     className=""
   >
     <div
-      className="MuiFormControl-root-10"
+      className="MuiFormControl-root"
     >
       <label
-        className="MuiFormLabel-root-25 MuiFormLabel-filled-29 MuiInputLabel-root-14 MuiInputLabel-formControl-19 MuiInputLabel-animated-22 MuiInputLabel-shrink-21"
+        className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiFormLabel-filled"
         data-shrink={true}
         htmlFor="simple-select"
       >
         Device identity attribute
       </label>
       <div
-        className="MuiInputBase-root-52 MuiInput-root-39 MuiInput-underline-43 MuiInputBase-formControl-53 MuiInput-formControl-40"
+        className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
         onClick={[Function]}
         style={
           Object {
@@ -77,43 +70,38 @@ exports[`renders correctly 1`] = `
         }
       >
         <div
-          className="MuiSelect-root-32"
+          aria-haspopup="listbox"
+          className="MuiSelect-root MuiSelect-select MuiSelect-selectMenu MuiInputBase-input MuiInput-input MuiInputBase-inputSelect"
+          id="select-selector"
+          onBlur={[Function]}
+          onClick={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          role="button"
+          tabIndex={0}
         >
-          <div
-            aria-haspopup="true"
-            aria-pressed="false"
-            className="MuiSelect-select-33 MuiSelect-selectMenu-36 MuiInputBase-input-62 MuiInput-input-47"
-            id="select-selector"
-            onBlur={[Function]}
-            onClick={[Function]}
-            onFocus={[Function]}
-            onKeyDown={[Function]}
-            role="button"
-            tabIndex={0}
-          >
-            Device ID
-          </div>
-          <input
-            id="simple-select"
-            name="selector"
-            type="hidden"
-            value="Device ID"
-          />
-          <svg
-            aria-hidden="true"
-            className="MuiSvgIcon-root-1 MuiSelect-icon-38"
-            focusable="false"
-            role="presentation"
-            viewBox="0 0 24 24"
-          >
-            <path
-              d="M7 10l5 5 5-5z"
-            />
-          </svg>
+          Device ID
         </div>
+        <input
+          id="simple-select"
+          name="selector"
+          type="hidden"
+          value="Device ID"
+        />
+        <svg
+          aria-hidden="true"
+          className="MuiSvgIcon-root MuiSelect-icon"
+          focusable="false"
+          role="presentation"
+          viewBox="0 0 24 24"
+        >
+          <path
+            d="M7 10l5 5 5-5z"
+          />
+        </svg>
       </div>
       <p
-        className="MuiFormHelperText-root-73 MuiFormHelperText-filled-79 info"
+        className="MuiFormHelperText-root info MuiFormHelperText-filled"
         style={
           Object {
             "width": "500px",
@@ -145,11 +133,11 @@ exports[`renders correctly 1`] = `
       className="float-right"
     >
       <button
-        className="MuiButtonBase-root-107 MuiButtonBase-disabled-108 MuiButton-root-81 MuiButton-text-83 MuiButton-flat-86 MuiButton-disabled-101"
+        className="MuiButtonBase-root MuiButton-root MuiButton-text Mui-disabled Mui-disabled"
         disabled={true}
         onBlur={[Function]}
         onClick={[Function]}
-        onContextMenu={[Function]}
+        onDragLeave={[Function]}
         onFocus={[Function]}
         onKeyDown={[Function]}
         onKeyUp={[Function]}
@@ -164,21 +152,21 @@ exports[`renders correctly 1`] = `
             "marginRight": "10px",
           }
         }
-        tabIndex="-1"
+        tabIndex={-1}
         type="button"
       >
         <span
-          className="MuiButton-label-82"
+          className="MuiButton-label"
         >
           Cancel
         </span>
       </button>
       <button
-        className="MuiButtonBase-root-107 MuiButtonBase-disabled-108 MuiButton-root-81 MuiButton-contained-92 MuiButton-containedPrimary-93 MuiButton-raised-95 MuiButton-raisedPrimary-96 MuiButton-disabled-101"
+        className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary Mui-disabled Mui-disabled"
         disabled={true}
         onBlur={[Function]}
         onClick={[Function]}
-        onContextMenu={[Function]}
+        onDragLeave={[Function]}
         onFocus={[Function]}
         onKeyDown={[Function]}
         onKeyUp={[Function]}
@@ -188,11 +176,11 @@ exports[`renders correctly 1`] = `
         onTouchEnd={[Function]}
         onTouchMove={[Function]}
         onTouchStart={[Function]}
-        tabIndex="-1"
+        tabIndex={-1}
         type="button"
       >
         <span
-          className="MuiButton-label-82"
+          className="MuiButton-label"
         >
           Save
         </span>

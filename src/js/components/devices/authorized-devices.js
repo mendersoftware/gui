@@ -111,7 +111,7 @@ export default class Authorized extends React.Component {
 
   render() {
     const self = this;
-    const { allCount, devices, group, groupCount, loading } = self.props;
+    const { allCount, devices, group, groupCount, loading, onChangeRowsPerPage } = self.props;
     const { selectedRows } = self.state;
     const columnHeaders = [
       {
@@ -186,6 +186,7 @@ export default class Authorized extends React.Component {
                 columnHeaders={columnHeaders}
                 selectedRows={selectedRows}
                 onSelect={selection => self.onRowSelection(selection)}
+                onChangeRowsPerPage={onChangeRowsPerPage}
                 pageTotal={groupCount}
               />
 

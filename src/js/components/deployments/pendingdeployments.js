@@ -1,20 +1,18 @@
 import React from 'react';
 import Time from 'react-time';
 
-import ConfirmAbort from './confirmabort';
-
-import Pagination from 'rc-pagination';
-import _en_US from 'rc-pagination/lib/locale/en_US';
-
 // material ui
+import Button from '@material-ui/core/Button';
 import Table from '@material-ui/core/Table';
 import TableHead from '@material-ui/core/TableHead';
 import TableCell from '@material-ui/core/TableCell';
 import TableBody from '@material-ui/core/TableBody';
 import TableRow from '@material-ui/core/TableRow';
-import Button from '@material-ui/core/Button';
+
 import BlockIcon from '@material-ui/icons/Block';
 
+import Pagination from '../common/pagination';
+import ConfirmAbort from './confirmabort';
 import { formatTime } from '../../helpers';
 
 export default class Pending extends React.Component {
@@ -41,6 +39,7 @@ export default class Pending extends React.Component {
     this.props.refreshPending(pageNo);
   }
   render() {
+    const self = this;
     var pendingMap = this.props.pending.map(function(deployment, index) {
       var abort = (
         <Button
@@ -91,12 +90,11 @@ export default class Pending extends React.Component {
 
         {this.props.count > this.props.pending.length ? (
           <Pagination
-            locale={_en_US}
-            simple
-            pageSize={this.state.pageSize}
-            current={this.props.page || 1}
-            total={this.props.count}
-            onChange={page => this._handlePageChange(page)}
+            count={self.props.count}
+            rowsPerPage={self.state.pageSize}
+            onChangeRowsPerPage={pageSize => self.setState({ pageSize }, () => self.props.refreshPending(1, pageSize))}
+            page={self.props.page}
+            onChangePage={page => self.props.refreshPending(page, self.state.pageSize)}
           />
         ) : null}
       </div>

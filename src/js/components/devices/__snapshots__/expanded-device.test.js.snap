@@ -15,25 +15,25 @@ exports[`renders correctly 1`] = `
           Device identity
         </h4>
         <ul
-          className="MuiList-root-1 MuiList-padding-2 list-horizontal-flex"
+          className="MuiList-root list-horizontal-flex MuiList-padding"
         >
           <div
             onClick={[Function]}
           >
             <li
-              className="MuiListItem-root-5 attributes MuiListItem-default-8 MuiListItem-gutters-13 MuiListItem-disabled-11 opaque"
+              className="MuiListItem-root attributes MuiListItem-gutters Mui-disabled"
               disabled={true}
             >
               <div
-                className="MuiListItemText-root-17"
+                className="MuiListItemText-root MuiListItemText-multiline"
               >
                 <span
-                  className="MuiTypography-root-23 MuiTypography-subheading-30 MuiListItemText-primary-20"
+                  className="MuiTypography-root MuiListItemText-primary MuiTypography-body1"
                 >
                   Device ID
                 </span>
                 <div
-                  className="MuiTypography-root-23 MuiTypography-body1-32 MuiTypography-colorTextSecondary-56 MuiListItemText-secondary-21"
+                  className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary"
                   title="-"
                 >
                   <div>
@@ -49,7 +49,7 @@ exports[`renders correctly 1`] = `
               </div>
             </li>
             <hr
-              className="MuiDivider-root-59"
+              className="MuiDivider-root"
             />
           </div>
         </ul>
@@ -75,7 +75,7 @@ exports[`renders correctly 1`] = `
         >
           <svg
             aria-hidden="true"
-            className="MuiSvgIcon-root-64 green"
+            className="MuiSvgIcon-root green"
             focusable="false"
             role="presentation"
             style={
@@ -86,18 +86,14 @@ exports[`renders correctly 1`] = `
             viewBox="0 0 24 24"
           >
             <path
-              d="M0 0h24v24H0z"
-              fill="none"
-            />
-            <path
               d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
             />
           </svg>
           <span
             className="inline-block"
           >
-            <span
-              className="MuiTypography-root-23 MuiTypography-subtitle2-42"
+            <h6
+              className="MuiTypography-root MuiTypography-subtitle2"
               style={
                 Object {
                   "textAlign": "left",
@@ -106,9 +102,9 @@ exports[`renders correctly 1`] = `
               }
             >
               Device status
-            </span>
-            <span
-              className="MuiTypography-root-23 MuiTypography-subtitle1-41"
+            </h6>
+            <p
+              className="MuiTypography-root MuiTypography-body1"
               style={
                 Object {
                   "textAlign": "left",
@@ -117,15 +113,15 @@ exports[`renders correctly 1`] = `
               }
             >
               accepted
-            </span>
+            </p>
           </span>
         </span>
         <button
-          className="MuiButtonBase-root-99 MuiButton-root-73 MuiButton-text-75 MuiButton-flat-78"
+          className="MuiButtonBase-root MuiButton-root MuiButton-text"
           disabled={false}
           onBlur={[Function]}
           onClick={[Function]}
-          onContextMenu={[Function]}
+          onDragLeave={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
           onKeyUp={[Function]}
@@ -135,17 +131,17 @@ exports[`renders correctly 1`] = `
           onTouchEnd={[Function]}
           onTouchMove={[Function]}
           onTouchStart={[Function]}
-          tabIndex="0"
+          tabIndex={0}
           type="button"
         >
           <span
-            className="MuiButton-label-74"
+            className="MuiButton-label"
           >
             <span
               className="inline-block"
             >
-              <span
-                className="MuiTypography-root-23 MuiTypography-subtitle1-41"
+              <h6
+                className="MuiTypography-root MuiTypography-subtitle2"
                 style={
                   Object {
                     "textAlign": "left",
@@ -154,9 +150,9 @@ exports[`renders correctly 1`] = `
                 }
               >
                 Reject, dismiss or decommission this device?
-              </span>
-              <span
-                className="MuiTypography-root-23 MuiTypography-body1-32 muted"
+              </h6>
+              <p
+                className="MuiTypography-root muted MuiTypography-body1"
                 style={
                   Object {
                     "textAlign": "left",
@@ -165,12 +161,9 @@ exports[`renders correctly 1`] = `
                 }
               >
                 Click to adjust authorization status for this device
-              </span>
+              </p>
             </span>
           </span>
-          <span
-            className="MuiTouchRipple-root-118"
-          />
         </button>
       </div>
     </div>
@@ -186,7 +179,7 @@ exports[`renders correctly 1`] = `
           Device inventory
         </h4>
         <ul
-          className="MuiList-root-1 MuiList-padding-2"
+          className="MuiList-root MuiList-padding"
         >
           <div
             className="waiting-inventory"
@@ -207,15 +200,11 @@ exports[`renders correctly 1`] = `
             >
               <svg
                 aria-hidden="true"
-                className="MuiSvgIcon-root-64"
+                className="MuiSvgIcon-root"
                 focusable="false"
                 role="presentation"
                 viewBox="0 0 24 24"
               >
-                <path
-                  d="M0 0h24v24H0z"
-                  fill="none"
-                />
                 <path
                   d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"
                 />
@@ -274,7 +263,7 @@ exports[`renders correctly 1`] = `
         className="report-list"
       >
         <ul
-          className="MuiList-root-1 MuiList-padding-2"
+          className="MuiList-root MuiList-padding"
           style={
             Object {
               "marginTop": "34px",

@@ -35,6 +35,7 @@ body {
   .leftFixed.leftNav {
     grid-area: nav;
     min-height: 500px;
+    width: 200px;
     overflow-y: auto;
     overflow-x: hidden;
     background-color: @lightestgrey;
@@ -168,7 +169,7 @@ ul.link-list {
   &.horizontal {
     li {
       float: left;
-      margin-right: 30px;
+      margin-right: 2 * @defaultGutterWidth;
     }
     margin-bottom: 10px;
   }
@@ -211,54 +212,54 @@ ul.link-list {
 }
 
 .margin-top {
-  margin-top: 30px;
+  margin-top: 2 * @defaultGutterWidth;
 }
 .margin-top-small {
-  margin-top: 15px;
+  margin-top: @defaultGutterWidth;
 }
 .margin-top-none {
   margin-top: 0;
 }
 .margin-top-large {
-  margin-top: 45px;
+  margin-top: 3 * @defaultGutterWidth;
 }
 .margin-left {
-  margin-left: 30px;
+  margin-left: 2 * @defaultGutterWidth;
 }
 .margin-left-small {
-  margin-left: 15px;
+  margin-left: @defaultGutterWidth;
 }
 .margin-right {
-  margin-right: 30px;
+  margin-right: 2 * @defaultGutterWidth;
 }
 .margin-right-small {
-  margin-right: 15px;
+  margin-right: @defaultGutterWidth;
 }
 .margin-right-large {
-  margin-right: 45px;
+  margin-right: 3 * @defaultGutterWidth;
 }
 .margin-bottom {
-  margin-bottom: 30px;
+  margin-bottom: 2 * @defaultGutterWidth;
 }
 .margin-bottom-large {
-  margin-bottom: 45px;
+  margin-bottom: 3 * @defaultGutterWidth;
 }
 .margin-bottom-small {
-  margin-bottom: 15px;
+  margin-bottom: @defaultGutterWidth;
 }
 .margin-bottom-none {
   margin-bottom: 0;
 }
 
 .padding-right {
-  padding-right: 45px;
+  padding-right: 3 * @defaultGutterWidth;
 }
 
 .padding-top {
-  padding-top: 30px;
+  padding-top: 2 * @defaultGutterWidth;
 }
 .padding-bottom {
-  padding-bottom: 30px;
+  padding-bottom: 2 * @defaultGutterWidth;
 }
 
 .inline-block {
@@ -371,7 +372,7 @@ ul.link-list {
 #demoBox,
 #announcement {
   border-left: 1px solid @lightergrey;
-  padding: 4px 30px;
+  padding: 4px 2 * @defaultGutterWidth;
   margin: 14px 0;
   font-size: 14px;
   max-height: 56px;
@@ -386,7 +387,7 @@ ul.link-list {
 }
 
 #announcement {
-  padding: 0 15px;
+  padding: 0 @defaultGutterWidth;
 }
 
 .header .header-section {
@@ -460,7 +461,7 @@ ul.link-list {
 
 .tab-container {
   position: relative;
-  padding-top: 30px;
+  padding-top: 2 * @defaultGutterWidth;
   min-height: 60vh;
 }
 
@@ -478,6 +479,9 @@ ul.link-list {
   }
   &.space-between {
     justify-content: space-between;
+  }
+  &.no-basis {
+    flex-basis: 0;
   }
 }
 
@@ -503,20 +507,20 @@ ul.link-list {
 }
 
 .leftFixed {
-  width: 260px;
+  width: @defaultLeftBarWidth;
   float: left;
   position: relative;
 
   .innerBlock {
     width: 100%;
-    margin-right: -260px;
+    margin-right: -1 * @defaultLeftBarWidth;
     padding-top: 20px;
   }
 }
 
 .rightFluid {
-  margin-left: 260px;
-  padding: 30px;
+  margin-left: @defaultLeftBarWidth;
+  padding: 2 * @defaultGutterWidth;
   position: relative;
   border-left: 1px solid @lightergrey;
   min-height: 80vh;
@@ -569,7 +573,7 @@ ul.link-list {
 // Onboarding
 
 .onboard {
-  padding: 30px 15px;
+  padding: 2 * @defaultGutterWidth @defaultGutterWidth;
   border-style: dashed;
   border-color: @placeholder;
   border-width: 2px;
@@ -632,8 +636,8 @@ ul.link-list {
 .onboard-icon {
   background: @mendergreen;
   border-radius: 50%;
-  height: 30px;
-  width: 30px;
+  height: 2 * @defaultGutterWidth;
+  width: 2 * @defaultGutterWidth;
   align-items: center;
   justify-content: center;
   display: flex;
@@ -651,11 +655,11 @@ ul.link-list {
     justify-content: space-around;
   }
   .os-list {
-    margin-bottom: 30px;
+    margin-bottom: 2 * @defaultGutterWidth;
     img {
       height: 80px;
-      margin: 15px;
-      margin-bottom: 30px;
+      margin: @defaultGutterWidth;
+      margin-bottom: 2 * @defaultGutterWidth;
     }
   }
   .react-tooltip {
@@ -693,19 +697,19 @@ ul.link-list {
     padding: 12px 18px;
     text-align: left;
     &.top {
-      margin-top: 15px;
+      margin-top: @defaultGutterWidth;
     }
     &.bottom {
-      margin-top: -15px;
+      margin-top: -1 * @defaultGutterWidth;
     }
     &.right {
-      margin-left: -15px;
+      margin-left: -1 * @defaultGutterWidth;
     }
     &.left {
-      margin-left: 15px;
+      margin-left: @defaultGutterWidth;
     }
     > div:first-of-type {
-      padding-top: 15px;
+      padding-top: @defaultGutterWidth;
       padding-bottom: 10px;
     }
     .flexbox {
@@ -737,7 +741,7 @@ ul.link-list {
     padding: 8px;
     position: absolute;
     right: 5px;
-    top: 15px;
+    top: @defaultGutterWidth;
   }
   ol {
     padding-inline-start: 0;
@@ -809,7 +813,7 @@ ul.link-list {
     font-weight: normal;
   }
   .widgetMainContent {
-    padding: 10px 15px;
+    padding: 10px @defaultGutterWidth;
     align-items: center;
     flex-grow: 1;
     .header {
@@ -865,12 +869,12 @@ ul.link-list {
   }
 
   hr {
-    margin-bottom: 15px;
+    margin-bottom: @defaultGutterWidth;
   }
 
   .hidehelp {
     float: right;
-    margin-top: 15px;
+    margin-top: @defaultGutterWidth;
     margin-bottom: 5px;
   }
 
@@ -889,9 +893,27 @@ ul.link-list {
 }
 
 //  Help section
+.help-container {
+  min-height: 400px;
+  height: 100%;
+  display: flex;
+  > ul {
+    min-width: 210px;
+    width: @defaultLeftBarWidth;
+    border-right: 1px solid @lightergrey;
+    overflow: auto;
+    height: 90vh;
+  }
+  > div {
+    overflow: auto;
+    width: 100%;
+    padding-top: 1px;
+    padding-left: 70px;
+  }
+}
 
 .help-content {
-  font-size: 15px;
+  font-size: @defaultGutterWidth;
   line-height: 1.5em;
 
   h3 {
@@ -915,7 +937,7 @@ ul.link-list {
   margin-right: 40px;
   margin-top: 40px;
   cursor: pointer;
-  font-size: 15px;
+  font-size: @defaultGutterWidth;
   color: @linkgreen !important;
   .scale(0.99);
   &:hover {
@@ -963,22 +985,6 @@ ul.link-list {
   margin-right: 8px;
 }
 
-// pagination
-
-ul.rc-pagination {
-  list-style: none;
-  padding-left: 0;
-}
-
-.rc-pagination-simple .rc-pagination-simple-pager {
-  margin-right: 0;
-
-  input {
-    margin: 0;
-    padding: 5px 5px;
-  }
-}
-
 .absoluteTextfieldButton {
   position: absolute;
   top: 70px;
@@ -1012,7 +1018,7 @@ ul.rc-pagination {
   min-height: 175px;
   float: left;
   padding: 22px 4% 22px;
-  margin: 0 15px 30px;
+  margin: 0 @defaultGutterWidth 2 * @defaultGutterWidth;
 
   &.small {
     width: 20%;
@@ -1081,7 +1087,7 @@ table thead.clickable tr > th:first-child {
 
 .tableSearch {
   display: inline-block;
-  margin-left: 45px;
+  margin-left: 3 * @defaultGutterWidth;
   position: relative;
   top: -4px;
 }
@@ -1108,9 +1114,9 @@ table thead.clickable tr > th:first-child {
   content: '\26b2';
   display: block;
   position: absolute;
-  width: 15px;
+  width: @defaultGutterWidth;
   z-index: 3;
-  height: 15px;
+  height: @defaultGutterWidth;
   transform: rotate(-45deg);
   font-size: 20px;
   line-height: 32px;
@@ -1159,7 +1165,7 @@ table thead.clickable tr > th:first-child {
 }
 
 .file-details {
-  padding: 10px 15px 30px;
+  padding: 10px @defaultGutterWidth 2 * @defaultGutterWidth;
   width: 100%;
   border-radius: 4px;
   margin: 10px 3px 20px 0;
@@ -1270,7 +1276,7 @@ span.code {
 #reportAbort {
   position: absolute;
   top: 85px;
-  right: 45px;
+  right: 3 * @defaultGutterWidth;
   width: 280px;
   background-color: rgba(255, 255, 255, 0.8);
 }
@@ -1341,8 +1347,8 @@ textarea#inline-description {
 }
 
 .dropzone {
-  padding-top: 15px;
-  padding-bottom: 15px;
+  padding-top: @defaultGutterWidth;
+  padding-bottom: @defaultGutterWidth;
   cursor: pointer;
   .dashboard-placeholder {
     .transition(all 0.4s ease);
@@ -1444,7 +1450,7 @@ form .button-holder {
     display: flex;
     justify-content: flex-end;
     button:first-of-type {
-      margin-right: 15px;
+      margin-right: @defaultGutterWidth;
     }
   }
 }
@@ -1512,10 +1518,10 @@ tr.expand {
 
     div.expanded {
       position: absolute;
-      left: 30px;
+      left: 2 * @defaultGutterWidth;
       right: 0;
       margin-top: 60px;
-      padding: 0 45px 30px;
+      padding: 0 3 * @defaultGutterWidth 2 * @defaultGutterWidth;
     }
   }
 }
@@ -1567,10 +1573,6 @@ tr.expand {
   }
 }
 
-.attributes.opaque {
-  opacity: 1;
-}
-
 .inventory-text {
   word-break: break-word;
   display: inline-block;
@@ -1606,7 +1608,7 @@ div.waiting-inventory {
 }
 
 #authorize > div {
-  padding-bottom: 15px;
+  padding-bottom: @defaultGutterWidth;
 }
 
 /* device auth */
@@ -1624,10 +1626,10 @@ div.waiting-inventory {
 
 .fixedButtons {
   position: fixed;
-  bottom: 30px;
+  bottom: 2 * @defaultGutterWidth;
   left: 198px;
-  right: 30px;
-  padding: 15px 30px;
+  right: 2 * @defaultGutterWidth;
+  padding: @defaultGutterWidth 2 * @defaultGutterWidth;
   background-color: rgba(255, 255, 255, 0.8);
   .animation(fadein 0.3s 1);
   z-index: 1;
@@ -1635,15 +1637,15 @@ div.waiting-inventory {
 
 .top-right-button {
   position: absolute;
-  top: 30px;
-  right: 30px;
+  top: 2 * @defaultGutterWidth;
+  right: 2 * @defaultGutterWidth;
   z-index: 100;
 }
 
 .bottom-right-button {
   position: absolute;
-  bottom: 15px;
-  right: 15px;
+  bottom: @defaultGutterWidth;
+  right: @defaultGutterWidth;
 }
 
 /* Tags */
@@ -1690,11 +1692,11 @@ input.fileInput {
   font-size: 16px;
   color: @grey;
   text-align: center;
-  padding: 15px 30px;
+  padding: @defaultGutterWidth 2 * @defaultGutterWidth;
   .animation(fadein 0.2s 1);
 
   img {
-    margin-top: 15px;
+    margin-top: @defaultGutterWidth;
     width: 74px;
   }
 }
@@ -1724,7 +1726,7 @@ input.fileInput {
     border-width: 1px;
     border-color: @placeholder;
     border-radius: 2px;
-    padding: 15px;
+    padding: @defaultGutterWidth;
     max-width: 60vw;
     margin-bottom: 3.5vh;
     h4 {
@@ -1743,13 +1745,13 @@ span.day {
 
 .dashboard-header {
   border-bottom: 1px solid @lightgrey;
-  margin-bottom: 15px;
+  margin-bottom: @defaultGutterWidth;
   position: relative;
 
   span {
     position: absolute;
     background: #ffffff;
-    padding: 10px 15px 10px 0;
+    padding: 10px @defaultGutterWidth 10px 0;
     top: -19px;
   }
 
@@ -1770,17 +1772,17 @@ span.day {
 }
 
 .progress-container {
-  padding-bottom: 45px;
+  padding-bottom: 3 * @defaultGutterWidth;
 
   .device-info {
     position: absolute;
     width: 33%;
     right: -16px;
     background-color: #fff;
-    top: -30px;
-    bottom: 15px;
+    top: -2 * @defaultGutterWidth;
+    bottom: @defaultGutterWidth;
     z-index: 300;
-    padding: 0 30px;
+    padding: 0 2 * @defaultGutterWidth;
     box-sizing: border-box;
     display: none;
     border-left: 1px @linkhover solid;
@@ -1836,7 +1838,7 @@ span.day {
 
   .progressHeader {
     position: absolute;
-    top: -45px;
+    top: -3 * @defaultGutterWidth;
     left: 18%;
     color: #757575;
     font-size: 14px;
@@ -1848,7 +1850,7 @@ span.day {
     width: 60%;
     position: relative;
     top: -10px;
-    padding-left: 30px;
+    padding-left: 2 * @defaultGutterWidth;
 
     > div {
       float: left;
@@ -1947,7 +1949,7 @@ span.day {
   .deployment {
     padding-top: 50px;
     padding-bottom: 10px;
-    margin-bottom: 15px;
+    margin-bottom: @defaultGutterWidth;
     border-radius: 4px;
     border: 1px solid @lightergrey;
     overflow: hidden;
@@ -1964,7 +1966,7 @@ span.day {
     display: inline-block;
     width: 30%;
     margin-right: 3%;
-    margin-bottom: 15px;
+    margin-bottom: @defaultGutterWidth;
     min-width: 220px;
     max-width: 320px;
     padding: 20px 20px 0;
@@ -2019,7 +2021,7 @@ span.day {
 
 .deploy-table-contain {
   margin-bottom: 60px;
-  margin-top: 30px;
+  margin-top: 2 * @defaultGutterWidth;
 }
 
 @media (min-width: 1700px) {
@@ -2051,7 +2053,7 @@ span.day {
   position: relative;
   display: inline-block;
   top: -5px;
-  margin-right: 15px;
+  margin-right: @defaultGutterWidth;
 
   > img {
     vertical-align: top;
@@ -2060,7 +2062,7 @@ span.day {
   .statusWrapper {
     max-width: 160px;
     min-height: 38px;
-    padding: 15px 20px 25px;
+    padding: @defaultGutterWidth 20px 25px;
     margin: 0 8px 10px 10px;
     background-color: @lightestgrey;
     position: relative;
@@ -2085,11 +2087,11 @@ span.day {
 
 .progressStatus {
   background-color: @lightestgrey;
-  padding: 15px 90px 15px;
+  padding: @defaultGutterWidth 90px @defaultGutterWidth;
   position: relative;
   top: -26px;
   height: auto;
-  margin: 30px 30px 0 0;
+  margin: 2 * @defaultGutterWidth 2 * @defaultGutterWidth 0 0;
   display: inline-block;
   vertical-align: top;
 
@@ -2117,8 +2119,9 @@ span.day {
 }
 
 .substate {
-  display: inline-block;
   width: 64%;
+  min-width: 200px;
+  overflow: hidden;
   color: @verylightgrey;
   white-space: normal;
   word-wrap: break-word;
@@ -2137,15 +2140,30 @@ span.day {
 }
 
 // Releases & Artifacts
-
-.repository-list {
-  border-right: 1px solid @lightergrey;
-  min-width: 210px;
-  min-height: 83vh;
+.repository {
+  min-height: 400px;
+  height: 100%;
+  display: flex;
+  .repository-list {
+    border-right: 1px solid @lightergrey;
+    min-width: 210px;
+    width: 100%;
+    max-width: @defaultLeftBarWidth;
+    > div.margin-bottom-small {
+      height: 85px;
+    }
+    > ul {
+      overflow: auto;
+      height: 70vh;
+    }
+  }
+  .release-repo {
+    overflow: auto;
+    width: 100%;
+  }
 }
-
 .release-repo > .flexbox:first-of-type {
-  padding-top: 15px;
+  padding-top: @defaultGutterWidth;
 }
 
 .repository-list-item {
@@ -2174,7 +2192,7 @@ span.day {
     margin: 18px 12px 0 0;
   }
   &.repo-header {
-    padding-left: 30px;
+    padding-left: 2 * @defaultGutterWidth;
     padding-right: 12px;
     height: 56px;
     font-size: 12px;
@@ -2431,16 +2449,16 @@ div.shake-alert {
 #progressBarContainer {
   position: fixed;
   left: 230px;
-  right: 30px;
+  right: 2 * @defaultGutterWidth;
   bottom: 80px;
   background-color: #ffffff;
   border: 1px solid @lightergrey;
   border-radius: 4px;
   height: 60px;
-  padding: 0 15px;
+  padding: 0 @defaultGutterWidth;
   overflow: hidden;
   color: @grey;
-  margin: 25px 0 15px;
+  margin: 25px 0 @defaultGutterWidth;
   .transition(all 0.2s ease-in-out);
   &.shrunk {
     border: none;

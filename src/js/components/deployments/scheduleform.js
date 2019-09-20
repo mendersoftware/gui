@@ -13,6 +13,7 @@ import { RootRef } from '@material-ui/core';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 import AppStore from '../../stores/app-store';
 import AppActions from '../../actions/app-actions';
+import { customSort } from '../../helpers';
 
 export default class ScheduleForm extends React.Component {
   constructor(props, context) {
@@ -70,7 +71,8 @@ export default class ScheduleForm extends React.Component {
     const self = this;
     const { artifact, device, deploymentAnchor, deploymentDevices, filteredDevices, groups, hasDevices, hasPending, showDevices } = self.props;
     const artifacts = this.props.releaseArtifacts ? this.props.releaseArtifacts : this.props.artifacts;
-    var artifactItems = artifacts.map(art => ({
+
+    var artifactItems = artifacts.sort(customSort(1, 'modified')).map(art => ({
       title: art.name,
       value: art
     }));
@@ -86,7 +88,7 @@ export default class ScheduleForm extends React.Component {
         art.value.device_types_compatible.some(type => type === device.attributes.find(attr => attr.name === 'device_type').value)
       );
     } else {
-      groupItems = groups.reduce((accu, group) => {
+      groupItems = groups.sort().reduce((accu, group) => {
         accu.push({
           title: group,
           value: group
@@ -138,7 +140,7 @@ export default class ScheduleForm extends React.Component {
         ) : (
           <form>
             <RootRef rootRef={ref => (this.releaseRef = ref)}>
-              <Grid container spacing={16}>
+              <Grid container spacing={2}>
                 <Grid item>
                   {release ? (
                     <TextField value={release.Name} label="Release" disabled={true} style={infoStyle} />
