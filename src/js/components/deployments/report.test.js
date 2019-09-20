@@ -7,7 +7,7 @@ it('renders correctly', () => {
   const tree = renderer
     .create(
       <MemoryRouter>
-        <DeploymentReport deployment={{ artifact_name: 'test' }} />
+        <DeploymentReport deployment={{ artifact_name: 'test', created: '2019-01-01', finished: '2019-01-01' }} />
       </MemoryRouter>
     )
     .toJSON();

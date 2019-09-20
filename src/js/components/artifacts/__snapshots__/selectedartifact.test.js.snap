@@ -15,17 +15,17 @@ exports[`renders correctly 1`] = `
     }
   >
     <div
-      className="MuiFormControl-root-1 list-item list-item-large"
+      className="MuiFormControl-root list-item list-item-large"
     >
       <label
-        className="MuiFormLabel-root-16 MuiFormLabel-filled-20 MuiInputLabel-root-5 MuiInputLabel-formControl-10 MuiInputLabel-animated-13 MuiInputLabel-shrink-12"
+        className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiFormLabel-filled"
         data-shrink={true}
         htmlFor="artifact-description"
       >
         Description
       </label>
       <div
-        className="MuiInputBase-root-36 MuiInput-root-23 MuiInput-underline-27 MuiInputBase-disabled-39 MuiInput-disabled-26 MuiInputBase-formControl-37 MuiInput-formControl-24 MuiInputBase-adornedEnd-41"
+        className="MuiInputBase-root MuiInput-root MuiInput-underline Mui-disabled Mui-disabled MuiInputBase-formControl MuiInput-formControl MuiInputBase-adornedEnd"
         onClick={[Function]}
         style={
           Object {
@@ -36,7 +36,7 @@ exports[`renders correctly 1`] = `
       >
         <input
           aria-invalid={false}
-          className="MuiInputBase-input-46 MuiInput-input-31 MuiInputBase-disabled-39 MuiInput-disabled-26 MuiInputBase-inputAdornedEnd-52"
+          className="MuiInputBase-input MuiInput-input Mui-disabled Mui-disabled MuiInputBase-inputAdornedEnd"
           disabled={true}
           id="artifact-description"
           onBlur={[Function]}
@@ -48,14 +48,14 @@ exports[`renders correctly 1`] = `
           value="text"
         />
         <div
-          className="MuiInputAdornment-root-53 MuiInputAdornment-positionEnd-56"
+          className="MuiInputAdornment-root MuiInputAdornment-positionEnd"
         >
           <button
-            className="MuiButtonBase-root-64 MuiIconButton-root-58"
+            className="MuiButtonBase-root MuiIconButton-root"
             disabled={false}
             onBlur={[Function]}
             onClick={[Function]}
-            onContextMenu={[Function]}
+            onDragLeave={[Function]}
             onFocus={[Function]}
             onKeyDown={[Function]}
             onKeyUp={[Function]}
@@ -71,47 +71,40 @@ exports[`renders correctly 1`] = `
                 "marginBottom": "10px",
               }
             }
-            tabIndex="0"
+            tabIndex={0}
             type="button"
           >
             <span
-              className="MuiIconButton-label-63"
+              className="MuiIconButton-label"
             >
               <svg
                 aria-hidden="true"
-                className="MuiSvgIcon-root-67"
+                className="MuiSvgIcon-root"
                 focusable="false"
                 role="presentation"
                 viewBox="0 0 24 24"
               >
                 <path
-                  d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.9959.9959 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"
-                />
-                <path
-                  d="M0 0h24v24H0z"
-                  fill="none"
+                  d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.9959.9959 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"
                 />
               </svg>
             </span>
-            <span
-              className="MuiTouchRipple-root-144"
-            />
           </button>
         </div>
       </div>
     </div>
     <div
-      className="MuiFormControl-root-1 list-item"
+      className="MuiFormControl-root list-item"
     >
       <label
-        className="MuiFormLabel-root-16 MuiInputLabel-root-5 MuiInputLabel-formControl-10 MuiInputLabel-animated-13 MuiInputLabel-shrink-12"
+        className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink"
         data-shrink={true}
         htmlFor="artifact-signed"
       >
         Signed
       </label>
       <div
-        className="MuiInputBase-root-36 MuiInput-root-23 MuiInput-underline-27 MuiInputBase-disabled-39 MuiInput-disabled-26 MuiInputBase-formControl-37 MuiInput-formControl-24 MuiInputBase-adornedStart-40"
+        className="MuiInputBase-root MuiInput-root MuiInput-underline Mui-disabled Mui-disabled MuiInputBase-formControl MuiInput-formControl MuiInputBase-adornedStart"
         onClick={[Function]}
         style={
           Object {
@@ -121,11 +114,11 @@ exports[`renders correctly 1`] = `
         }
       >
         <div
-          className="MuiInputAdornment-root-53 MuiInputAdornment-positionStart-55"
+          className="MuiInputAdornment-root MuiInputAdornment-positionStart"
         >
           <svg
             aria-hidden="true"
-            className="MuiSvgIcon-root-67 red"
+            className="MuiSvgIcon-root red"
             focusable="false"
             role="presentation"
             viewBox="0 0 24 24"
@@ -136,16 +129,13 @@ exports[`renders correctly 1`] = `
               opacity=".87"
             />
             <path
-              d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
-            />
-            <path
-              d="M15.59 7L12 10.59 8.41 7 7 8.41 10.59 12 7 15.59 8.41 17 12 13.41 15.59 17 17 15.59 13.41 12 17 8.41z"
+              d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm3.59-13L12 10.59 8.41 7 7 8.41 10.59 12 7 15.59 8.41 17 12 13.41 15.59 17 17 15.59 13.41 12 17 8.41z"
             />
           </svg>
         </div>
         <input
           aria-invalid={false}
-          className="MuiInputBase-input-46 MuiInput-input-31 MuiInputBase-disabled-39 MuiInput-disabled-26 MuiInputBase-inputAdornedStart-51"
+          className="MuiInputBase-input MuiInput-input Mui-disabled Mui-disabled MuiInputBase-inputAdornedStart"
           disabled={true}
           id="artifact-signed"
           onBlur={[Function]}
@@ -158,7 +148,7 @@ exports[`renders correctly 1`] = `
     </div>
   </div>
   <div
-    className="MuiPaper-root-80 MuiPaper-elevation1-83 MuiExpansionPanel-root-76"
+    className="MuiPaper-root MuiPaper-elevation1 MuiExpansionPanel-root"
     style={
       Object {
         "background": "#e9e9e9",
@@ -169,11 +159,12 @@ exports[`renders correctly 1`] = `
     }
   >
     <div
+      aria-disabled={false}
       aria-expanded={false}
-      className="MuiButtonBase-root-64 MuiExpansionPanelSummary-root-107"
+      className="MuiButtonBase-root MuiExpansionPanelSummary-root"
       onBlur={[Function]}
       onClick={[Function]}
-      onContextMenu={[Function]}
+      onDragLeave={[Function]}
       onFocus={[Function]}
       onKeyDown={[Function]}
       onKeyUp={[Function]}
@@ -189,10 +180,10 @@ exports[`renders correctly 1`] = `
           "padding": 0,
         }
       }
-      tabIndex="0"
+      tabIndex={0}
     >
       <div
-        className="MuiExpansionPanelSummary-content-111"
+        className="MuiExpansionPanelSummary-content"
       >
         <p>
           Artifact contents
@@ -206,7 +197,7 @@ exports[`renders correctly 1`] = `
         >
           <svg
             aria-hidden="true"
-            className="MuiSvgIcon-root-67"
+            className="MuiSvgIcon-root"
             focusable="false"
             role="presentation"
             viewBox="0 0 24 24"
@@ -214,17 +205,12 @@ exports[`renders correctly 1`] = `
             <path
               d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"
             />
-            <path
-              d="M0 0h24v24H0z"
-              fill="none"
-            />
           </svg>
         </div>
       </div>
     </div>
     <div
-      aria-hidden="true"
-      className="MuiCollapse-container-113"
+      className="MuiCollapse-container MuiCollapse-hidden"
       style={
         Object {
           "minHeight": "0px",
@@ -232,30 +218,34 @@ exports[`renders correctly 1`] = `
       }
     >
       <div
-        className="MuiCollapse-wrapper-115"
+        className="MuiCollapse-wrapper"
       >
         <div
-          className="MuiCollapse-wrapperInner-116"
+          className="MuiCollapse-wrapperInner"
         >
           <div
-            className="MuiExpansionPanelDetails-root-117"
-            style={
-              Object {
-                "padding": 0,
-              }
-            }
+            role="region"
           >
-            <div />
+            <div
+              className="MuiExpansionPanelDetails-root"
+              style={
+                Object {
+                  "padding": 0,
+                }
+              }
+            >
+              <div />
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
   <button
-    className="MuiButtonBase-root-64 MuiButtonBase-disabled-65 MuiButton-root-118 MuiButton-text-120 MuiButton-flat-123 MuiButton-disabled-138"
+    className="MuiButtonBase-root MuiButton-root MuiButton-text Mui-disabled Mui-disabled"
     disabled={true}
     onBlur={[Function]}
-    onContextMenu={[Function]}
+    onDragLeave={[Function]}
     onFocus={[Function]}
     onKeyDown={[Function]}
     onKeyUp={[Function]}
@@ -265,16 +255,16 @@ exports[`renders correctly 1`] = `
     onTouchEnd={[Function]}
     onTouchMove={[Function]}
     onTouchStart={[Function]}
-    tabIndex="-1"
+    tabIndex={-1}
     target="_blank"
     type="button"
   >
     <span
-      className="MuiButton-label-119"
+      className="MuiButton-label"
     >
       <svg
         aria-hidden="true"
-        className="MuiSvgIcon-root-67 buttonLabelIcon"
+        className="MuiSvgIcon-root buttonLabelIcon"
         focusable="false"
         role="presentation"
         style={
@@ -284,10 +274,6 @@ exports[`renders correctly 1`] = `
         }
         viewBox="0 0 24 24"
       >
-        <path
-          d="M0 0h24v24H0z"
-          fill="none"
-        />
         <path
           d="M10.09 15.59L11.5 17l5-5-5-5-1.41 1.41L12.67 11H3v2h9.67l-2.58 2.59zM19 3H5c-1.11 0-2 .9-2 2v4h2V5h14v14H5v-4H3v4c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
         />
@@ -299,11 +285,11 @@ exports[`renders correctly 1`] = `
     className="margin-left inline"
   >
     <button
-      className="MuiButtonBase-root-64 MuiButton-root-118 MuiButton-text-120 MuiButton-flat-123"
+      className="MuiButtonBase-root MuiButton-root MuiButton-text"
       disabled={false}
       onBlur={[Function]}
       onClick={[Function]}
-      onContextMenu={[Function]}
+      onDragLeave={[Function]}
       onFocus={[Function]}
       onKeyDown={[Function]}
       onKeyUp={[Function]}
@@ -313,15 +299,15 @@ exports[`renders correctly 1`] = `
       onTouchEnd={[Function]}
       onTouchMove={[Function]}
       onTouchStart={[Function]}
-      tabIndex="0"
+      tabIndex={0}
       type="button"
     >
       <span
-        className="MuiButton-label-119"
+        className="MuiButton-label"
       >
         <svg
           aria-hidden="true"
-          className="MuiSvgIcon-root-67 red auth buttonLabelIcon"
+          className="MuiSvgIcon-root red auth buttonLabelIcon"
           focusable="false"
           role="presentation"
           viewBox="0 0 24 24"
@@ -329,16 +315,9 @@ exports[`renders correctly 1`] = `
           <path
             d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z"
           />
-          <path
-            d="M0 0h24v24H0z"
-            fill="none"
-          />
         </svg>
         Remove this Artifact?
       </span>
-      <span
-        className="MuiTouchRipple-root-144"
-      />
     </button>
   </div>
 </div>

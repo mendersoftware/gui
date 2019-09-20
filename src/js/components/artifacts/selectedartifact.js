@@ -125,7 +125,7 @@ export default class SelectedArtifact extends React.Component {
           square
           expanded={self.state.showPayloads}
           onChange={() => self._toggleArtifactContentVisibility()}
-          CollapseProps={{ onEntered: () => onExpansion(), onExited: () => onExpansion() }}
+          TransitionProps={{ onEntered: () => onExpansion(), onExited: () => onExpansion() }}
           style={{ background: '#e9e9e9', borderTop: 'none', padding: '0 15px', margin: '30px 0' }}
         >
           <ExpansionPanelSummary style={{ padding: 0 }}>

@@ -1,5 +1,4 @@
 var request = require('superagent-use')(require('superagent'));
-var Promise = require('es6-promise').Promise;
 import cookie from 'react-cookie';
 import { unauthorizedRedirect } from '../auth';
 

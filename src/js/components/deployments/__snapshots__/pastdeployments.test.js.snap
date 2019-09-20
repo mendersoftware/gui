@@ -5,7 +5,7 @@ exports[`renders correctly 1`] = `
   className="fadeIn margin-top-large"
 >
   <div
-    className="MuiGrid-container-1 MuiGrid-spacing-xs-16-24 datepicker-container"
+    className="MuiGrid-root datepicker-container MuiGrid-container MuiGrid-spacing-xs-2"
     style={
       Object {
         "paddingTop": "4px",
@@ -13,7 +13,7 @@ exports[`renders correctly 1`] = `
     }
   >
     <div
-      className="MuiGrid-item-2"
+      className="MuiGrid-root MuiGrid-item"
     >
       <span>
         Filter by date
@@ -56,12 +56,13 @@ exports[`renders correctly 1`] = `
       </ul>
     </div>
     <div
-      className="MuiGrid-item-2"
+      className="MuiGrid-root MuiGrid-item"
     >
       <div
-        className="MuiFormControl-root-98 margin-right"
+        className="MuiFormControl-root MuiTextField-root margin-right"
+        format="MMMM Do"
         onClick={[Function]}
-        onKeyPress={[Function]}
+        onKeyDown={[Function]}
         style={
           Object {
             "marginTop": 0,
@@ -70,24 +71,22 @@ exports[`renders correctly 1`] = `
         }
       >
         <label
-          className="MuiFormLabel-root-113 MuiFormLabel-filled-117 MuiInputLabel-root-102 MuiInputLabel-formControl-107 MuiInputLabel-animated-110 MuiInputLabel-shrink-109"
+          className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiFormLabel-filled"
           data-shrink={true}
         >
           From
         </label>
         <div
-          className="MuiInputBase-root-133 MuiInput-root-120 MuiInput-underline-124 MuiInputBase-formControl-134 MuiInput-formControl-121"
+          className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
           onClick={[Function]}
         >
           <input
             aria-invalid={false}
-            className="MuiInputBase-input-143 MuiInput-input-128"
+            className="MuiInputBase-input MuiInput-input"
             disabled={false}
-            mask={null}
             onBlur={[Function]}
             onChange={[Function]}
             onFocus={[Function]}
-            pipe={null}
             readOnly={true}
             required={false}
             type="text"
@@ -98,12 +97,13 @@ exports[`renders correctly 1`] = `
       </div>
     </div>
     <div
-      className="MuiGrid-item-2"
+      className="MuiGrid-root MuiGrid-item"
     >
       <div
-        className="MuiFormControl-root-98 margin-right"
+        className="MuiFormControl-root MuiTextField-root margin-right"
+        format="MMMM Do"
         onClick={[Function]}
-        onKeyPress={[Function]}
+        onKeyDown={[Function]}
         style={
           Object {
             "marginTop": 0,
@@ -112,24 +112,22 @@ exports[`renders correctly 1`] = `
         }
       >
         <label
-          className="MuiFormLabel-root-113 MuiFormLabel-filled-117 MuiInputLabel-root-102 MuiInputLabel-formControl-107 MuiInputLabel-animated-110 MuiInputLabel-shrink-109"
+          className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiFormLabel-filled"
           data-shrink={true}
         >
           To
         </label>
         <div
-          className="MuiInputBase-root-133 MuiInput-root-120 MuiInput-underline-124 MuiInputBase-formControl-134 MuiInput-formControl-121"
+          className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
           onClick={[Function]}
         >
           <input
             aria-invalid={false}
-            className="MuiInputBase-input-143 MuiInput-input-128"
+            className="MuiInputBase-input MuiInput-input"
             disabled={false}
-            mask={null}
             onBlur={[Function]}
             onChange={[Function]}
             onFocus={[Function]}
-            pipe={null}
             readOnly={true}
             required={false}
             type="text"
@@ -140,10 +138,10 @@ exports[`renders correctly 1`] = `
       </div>
     </div>
     <div
-      className="MuiGrid-item-2"
+      className="MuiGrid-root MuiGrid-item"
     >
       <div
-        className="MuiFormControl-root-98"
+        className="MuiFormControl-root"
         style={
           Object {
             "marginTop": 0,
@@ -151,14 +149,14 @@ exports[`renders correctly 1`] = `
         }
       >
         <label
-          className="MuiFormLabel-root-113 MuiInputLabel-root-102 MuiInputLabel-formControl-107 MuiInputLabel-animated-110"
+          className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
           data-shrink={false}
           htmlFor="adornment-target-select"
         >
           Filter by device group
         </label>
         <div
-          className="MuiInputBase-root-133 MuiInput-root-120 MuiInput-underline-124 MuiInputBase-formControl-134 MuiInput-formControl-121"
+          className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
           onClick={[Function]}
           style={
             Object {
@@ -168,7 +166,7 @@ exports[`renders correctly 1`] = `
         >
           <input
             aria-invalid={false}
-            className="MuiInputBase-input-143 MuiInput-input-128"
+            className="MuiInputBase-input MuiInput-input"
             disabled={false}
             id="adornment-target-select"
             onBlur={[Function]}

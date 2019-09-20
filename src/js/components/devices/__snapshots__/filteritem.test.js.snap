@@ -2,69 +2,64 @@
 
 exports[`renders correctly 1`] = `
 <li
-  className="MuiListItem-root-1 MuiListItem-default-4 MuiListItem-gutters-9 filterPair"
+  className="MuiListItem-root filterPair MuiListItem-gutters"
   disabled={false}
 >
   <div
-    className="MuiListItemText-root-13"
+    className="MuiListItemText-root"
   >
     <span
-      className="MuiTypography-root-19 MuiTypography-subheading-26 MuiListItemText-primary-16"
+      className="MuiTypography-root MuiListItemText-primary MuiTypography-body1"
     >
       <div
-        className="MuiFormControl-root-55"
+        className="MuiFormControl-root MuiTextField-root"
       >
         <label
-          className="MuiFormLabel-root-70 MuiFormLabel-filled-74 MuiInputLabel-root-59 MuiInputLabel-formControl-64 MuiInputLabel-animated-67 MuiInputLabel-shrink-66"
+          className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiFormLabel-filled"
           data-shrink={true}
         >
           Filter by
         </label>
         <div
-          className="MuiInputBase-root-97 MuiInput-root-84 MuiInput-underline-88 MuiInputBase-formControl-98 MuiInput-formControl-85 MuiInputBase-adornedEnd-102"
+          className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl MuiInputBase-adornedEnd"
           onClick={[Function]}
         >
           <div
-            className="MuiSelect-root-77"
+            aria-haspopup="listbox"
+            className="MuiSelect-root MuiSelect-select MuiSelect-selectMenu MuiInputBase-input MuiInput-input MuiInputBase-inputSelect MuiInputBase-inputAdornedEnd"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            role="button"
+            tabIndex={0}
           >
-            <div
-              aria-haspopup="true"
-              aria-pressed="false"
-              className="MuiSelect-select-78 MuiSelect-selectMenu-81 MuiInputBase-input-107 MuiInput-input-92 MuiInputBase-inputAdornedEnd-113"
-              onBlur={[Function]}
-              onClick={[Function]}
-              onFocus={[Function]}
-              onKeyDown={[Function]}
-              role="button"
-              tabIndex={0}
-            >
-              testvalue
-            </div>
-            <input
-              type="hidden"
-              value="testkey"
-            />
-            <svg
-              aria-hidden="true"
-              className="MuiSvgIcon-root-114 MuiSelect-icon-83"
-              focusable="false"
-              role="presentation"
-              viewBox="0 0 24 24"
-            >
-              <path
-                d="M7 10l5 5 5-5z"
-              />
-            </svg>
+            testvalue
           </div>
+          <input
+            type="hidden"
+            value="testkey"
+          />
+          <svg
+            aria-hidden="true"
+            className="MuiSvgIcon-root MuiSelect-icon"
+            focusable="false"
+            role="presentation"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M7 10l5 5 5-5z"
+            />
+          </svg>
           <div
-            className="MuiInputAdornment-root-127 MuiInputAdornment-positionEnd-130"
+            className="MuiInputAdornment-root MuiInputAdornment-positionEnd"
           >
             <button
-              className="MuiButtonBase-root-138 MuiIconButton-root-132"
+              className="MuiButtonBase-root MuiIconButton-root"
               disabled={false}
               onBlur={[Function]}
               onClick={[Function]}
-              onContextMenu={[Function]}
+              onDragLeave={[Function]}
               onFocus={[Function]}
               onKeyDown={[Function]}
               onKeyUp={[Function]}
@@ -74,52 +69,45 @@ exports[`renders correctly 1`] = `
               onTouchEnd={[Function]}
               onTouchMove={[Function]}
               onTouchStart={[Function]}
-              tabIndex="0"
+              tabIndex={0}
               type="button"
             >
               <span
-                className="MuiIconButton-label-137"
+                className="MuiIconButton-label"
               >
                 <svg
                   aria-hidden="true"
-                  className="MuiSvgIcon-root-114"
+                  className="MuiSvgIcon-root"
                   focusable="false"
                   role="presentation"
                   viewBox="0 0 24 24"
                 >
                   <path
-                    d="M0 0h24v24H0z"
-                    fill="none"
-                  />
-                  <path
                     d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11H7v-2h10v2z"
                   />
                 </svg>
               </span>
-              <span
-                className="MuiTouchRipple-root-149"
-              />
             </button>
           </div>
         </div>
       </div>
       <div
-        className="MuiFormControl-root-55"
+        className="MuiFormControl-root"
       >
         <label
-          className="MuiFormLabel-root-70 MuiFormLabel-filled-74 MuiInputLabel-root-59 MuiInputLabel-formControl-64 MuiInputLabel-animated-67 MuiInputLabel-shrink-66"
+          className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiFormLabel-filled"
           data-shrink={true}
           htmlFor="filter-undefined"
         >
           Value
         </label>
         <div
-          className="MuiInputBase-root-97 MuiInput-root-84 MuiInput-underline-88 MuiInputBase-fullWidth-106 MuiInput-fullWidth-91 MuiInputBase-formControl-98 MuiInput-formControl-85"
+          className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-fullWidth MuiInput-fullWidth MuiInputBase-formControl MuiInput-formControl"
           onClick={[Function]}
         >
           <input
             aria-invalid={false}
-            className="MuiInputBase-input-107 MuiInput-input-92"
+            className="MuiInputBase-input MuiInput-input"
             disabled={false}
             id="filter-undefined"
             onBlur={[Function]}
@@ -132,7 +120,7 @@ exports[`renders correctly 1`] = `
           />
         </div>
         <p
-          className="MuiFormHelperText-root-141 MuiFormHelperText-filled-147"
+          className="MuiFormHelperText-root MuiFormHelperText-filled"
         />
       </div>
     </span>

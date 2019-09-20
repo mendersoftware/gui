@@ -311,10 +311,10 @@ export default class ExpandedDevice extends React.Component {
             <span style={{ display: 'flex', minWidth: 180, justifyContent: 'space-evenly', alignItems: 'center', marginRight: '2vw' }}>
               {statusIcon}
               <span className="inline-block">
-                <Typography component="span" variant="subtitle2" style={Object.assign({}, buttonStyle, { textTransform: 'capitalize' })}>
+                <Typography variant="subtitle2" style={Object.assign({}, buttonStyle, { textTransform: 'capitalize' })}>
                   Device status
                 </Typography>
-                <Typography component="span" variant="subtitle1" style={Object.assign({}, buttonStyle, { textTransform: 'capitalize' })}>
+                <Typography variant="body1" style={Object.assign({}, buttonStyle, { textTransform: 'capitalize' })}>
                   {status}
                 </Typography>
               </span>
@@ -328,10 +328,10 @@ export default class ExpandedDevice extends React.Component {
             >
               {hasPending ? <WarningIcon className="auth" /> : null}
               <span className="inline-block">
-                <Typography component="span" variant="subtitle1" style={buttonStyle}>
+                <Typography variant="subtitle2" style={buttonStyle}>
                   {authLabelText}
                 </Typography>
-                <Typography component="span" variant="body1" className="muted" style={buttonStyle}>
+                <Typography variant="body1" className="muted" style={buttonStyle}>
                   Click to adjust authorization status for this device
                 </Typography>
               </span>

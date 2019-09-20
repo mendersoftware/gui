@@ -86,9 +86,16 @@ export default class AutoSelect extends React.Component {
         <Popper open={open} anchorEl={self.anchorEl} transition style={{ zIndex: 1300 }} placement="bottom-start">
           {({ TransitionProps }) => (
             <Fade {...TransitionProps} timeout={350}>
-              <Paper>
+              <Paper elevation={2}>
                 <ClickAwayListener onClickAway={() => self.setState({ open: false })}>
-                  <MenuList>{items}</MenuList>
+                  <MenuList
+                    style={{
+                      overflow: 'auto',
+                      maxHeight: '250px'
+                    }}
+                  >
+                    {items}
+                  </MenuList>
                 </ClickAwayListener>
               </Paper>
             </Fade>

@@ -1,10 +1,9 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
-import Pagination from 'rc-pagination';
-import _en_US from 'rc-pagination/lib/locale/en_US';
 
 import DeploymentItem from './deploymentitem';
 import Loader from '../common/loader';
+import Pagination from '../common/pagination';
 import { getOnboardingComponentFor, getOnboardingStepCompleted } from '../../utils/onboardingmanager';
 import AppStore from '../../stores/app-store';
 
@@ -26,6 +25,7 @@ export default class Progress extends React.Component {
   }
 
   render() {
+    const self = this;
     // get statistics for each in progress
     const progressMap = this.props.progress.map((deployment, index) => (
       <DeploymentItem
@@ -71,15 +71,13 @@ export default class Progress extends React.Component {
         )}
         {this.props.count > this.props.progress.length ? (
           <Pagination
-            locale={_en_US}
-            simple
-            pageSize={this.state.pageSize}
-            current={this.props.page || 1}
-            total={this.props.count}
-            onChange={page => this.props.refreshProgress(page)}
+            count={self.props.count}
+            rowsPerPage={self.state.pageSize}
+            onChangeRowsPerPage={pageSize => self.setState({ pageSize }, () => self.props.refreshProgress(1, pageSize))}
+            page={self.props.page}
+            onChangePage={page => self.props.refreshProgress(page, self.state.pageSize)}
           />
         ) : null}
-
         {this.props.count || this.props.pendingCount ? null : (
           <div className={progressMap.length || this.props.loading ? 'hidden' : 'dashboard-placeholder'}>
             <p>Pending and ongoing deployments will appear here. </p>
@@ -89,7 +87,6 @@ export default class Progress extends React.Component {
             <img src="assets/img/deployments.png" alt="In progress" />
           </div>
         )}
-
         {onboardingComponent ? onboardingComponent : null}
       </div>
     );

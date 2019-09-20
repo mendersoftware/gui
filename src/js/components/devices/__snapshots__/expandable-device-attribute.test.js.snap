@@ -5,14 +5,14 @@ exports[`renders correctly 1`] = `
   onClick={[Function]}
 >
   <li
-    className="MuiListItem-root-1 attributes MuiListItem-default-4 MuiListItem-gutters-9 MuiListItem-disabled-7 opaque"
+    className="MuiListItem-root attributes MuiListItem-gutters Mui-disabled"
     disabled={true}
   >
     <div
-      className="MuiListItemText-root-13"
+      className="MuiListItemText-root"
     >
       <div
-        className="MuiTypography-root-19 MuiTypography-body1-28 MuiTypography-colorTextSecondary-52 MuiListItemText-secondary-17"
+        className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary"
       >
         <div>
           <span
@@ -25,7 +25,7 @@ exports[`renders correctly 1`] = `
     </div>
   </li>
   <hr
-    className="MuiDivider-root-55"
+    className="MuiDivider-root"
   />
 </div>
 `;

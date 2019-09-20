@@ -1,84 +1,80 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`renders correctly 1`] = `
-<div>
+<div
+  className="flexbox column"
+>
   <div
-    className="relative"
+    className="flexbox space-between progress-chart"
   >
     <div
-      className="progressHeader"
+      aria-valuenow={NaN}
+      className="MuiLinearProgress-root MuiLinearProgress-colorPrimary MuiLinearProgress-buffer"
+      role="progressbar"
     >
-      0
-       of 
-      0
-       devices complete
-    </div>
-    <div
-      className="bubbles-contain"
-    />
-    <div
-      className="device-info"
-    >
-      <b>
-        Device info:
-      </b>
-      <p>
-        <b>
-          Device ID
-          : 
-        </b>
-      </p>
-      <p>
-        <b>
-          Status: 
-        </b>
-        
-      </p>
       <div
-        className="substateText"
+        className="MuiLinearProgress-dashed MuiLinearProgress-dashedColorPrimary"
       />
-      <div>
-        <div
-          className="substateText"
-          style={
-            Object {
-              "textAlign": "end",
-            }
+      <div
+        className="MuiLinearProgress-bar MuiLinearProgress-barColorPrimary MuiLinearProgress-bar1Buffer"
+        style={
+          Object {
+            "transform": "translateX(NaN%)",
           }
-        >
-          %
-        </div>
-        <div
-          className="MuiLinearProgress-root-1 MuiLinearProgress-colorPrimary-2 MuiLinearProgress-determinate-4"
-          role="progressbar"
-        >
-          <div
-            className="MuiLinearProgress-bar-11 MuiLinearProgress-barColorPrimary-12 MuiLinearProgress-bar1Determinate-15"
-            style={Object {}}
-          />
-        </div>
-      </div>
+        }
+      />
+      <div
+        className="MuiLinearProgress-bar MuiLinearProgress-colorPrimary MuiLinearProgress-bar2Buffer"
+        style={
+          Object {
+            "transform": "translateX(-100%)",
+          }
+        }
+      />
     </div>
     <div
-      className="key"
+      className="muted"
+      style={
+        Object {
+          "alignItems": "center",
+        }
+      }
     >
-      <div
-        className="bubble failure"
-      />
-       Failed 
-      <div
-        className="bubble pending"
-      />
-       Pending 
-      <div
-        className="bubble inprogress"
-      />
-       In progress
-       
-      <div
-        className="bubble success"
-      />
-       Successful
+      <svg
+        aria-hidden="true"
+        className="MuiSvgIcon-root"
+        focusable="false"
+        role="presentation"
+        style={
+          Object {
+            "fontSize": 16,
+          }
+        }
+        viewBox="0 0 24 24"
+      >
+        <path
+          d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"
+        />
+      </svg>
+       undefined failures
+    </div>
+  </div>
+  <div
+    className="flexbox space-between muted"
+  >
+    <div>
+      Current phase: undefined of undefined
+    </div>
+    <div>
+      <span>
+        Time until next phase:
+      </span>
+      <time
+        dateTime="2019-09-22T02:00:00+02:00"
+        title={null}
+      >
+        0 2 0
+      </time>
     </div>
   </div>
 </div>

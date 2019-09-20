@@ -1,6 +1,4 @@
 import React from 'react';
-import Pagination from 'rc-pagination';
-import _en_US from 'rc-pagination/lib/locale/en_US';
 
 // material ui
 import Checkbox from '@material-ui/core/Checkbox';
@@ -10,6 +8,7 @@ import SortIcon from '@material-ui/icons/Sort';
 
 import AppActions from '../../actions/app-actions';
 import Loader from '../common/loader';
+import Pagination from '../common/pagination';
 import DeviceListItem from './devicelistitem';
 import AppStore from '../../stores/app-store';
 import { advanceOnboarding, getOnboardingStepCompleted } from '../../utils/onboardingmanager';
@@ -18,7 +17,8 @@ export default class DeviceList extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      expandedDeviceId: null
+      expandedDeviceId: null,
+      pageSize: 20
     };
   }
 
@@ -86,7 +86,7 @@ export default class DeviceList extends React.Component {
 
   render() {
     const self = this;
-    const { className, columnHeaders, devices, pageLength, pageLoading, pageNo, pageTotal, onSelect, selectedRows } = self.props;
+    const { className, columnHeaders, devices, pageLength, pageLoading, pageNo, pageTotal, onSelect, onChangeRowsPerPage, selectedRows } = self.props;
     const { sortCol, sortDown, expandedDeviceId } = self.state;
     const columnWidth = `${(onSelect ? 90 : 100) / columnHeaders.length}%`;
     const numSelected = (selectedRows || []).length;
@@ -125,13 +125,11 @@ export default class DeviceList extends React.Component {
           ))}
         </div>
         <Pagination
-          className="margin-top"
-          locale={_en_US}
-          simple
-          pageSize={pageLength}
-          current={pageNo}
-          total={pageTotal}
-          onChange={e => self.onPageChange(e)}
+          count={pageTotal}
+          rowsPerPage={pageLength}
+          onChangeRowsPerPage={onChangeRowsPerPage}
+          page={pageNo}
+          onChangePage={page => self.onPageChange(page)}
         />
         {pageLoading ? (
           <div className="smallLoaderContainer">

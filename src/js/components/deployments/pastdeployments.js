@@ -1,7 +1,5 @@
 import React from 'react';
 import Time from 'react-time';
-import Pagination from 'rc-pagination';
-import _en_US from 'rc-pagination/lib/locale/en_US';
 
 // material ui
 import Grid from '@material-ui/core/Grid';
@@ -11,13 +9,13 @@ import TableCell from '@material-ui/core/TableCell';
 import TableBody from '@material-ui/core/TableBody';
 import TableRow from '@material-ui/core/TableRow';
 
-import InlineDatePicker from 'material-ui-pickers/DatePicker';
-import MuiPickersUtilsProvider from 'material-ui-pickers/MuiPickersUtilsProvider';
+import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import MomentUtils from '@date-io/moment';
 
 import AppActions from '../../actions/app-actions';
 import AppStore from '../../stores/app-store';
 import Loader from '../common/loader';
+import Pagination from '../common/pagination';
 import AutoSelect from '../common/forms/autoselect';
 import { WelcomeSnackTip } from '../helptips/onboardingtips';
 import DeploymentStatus from './deploymentstatus';
@@ -115,6 +113,7 @@ export default class Past extends React.Component {
   }
 
   render() {
+    const self = this;
     var pastMap = this.props.past.map(function(deployment, index) {
       var time = '-';
       if (deployment.finished) {
@@ -156,7 +155,7 @@ export default class Past extends React.Component {
 
     return (
       <div className="fadeIn margin-top-large">
-        <Grid container spacing={16} className="datepicker-container" style={{ paddingTop: '4px' }}>
+        <Grid container spacing={2} className="datepicker-container" style={{ paddingTop: '4px' }}>
           <Grid item>
             <span>Filter by date</span>
             <ul className="unstyled link-list horizontal">
@@ -172,7 +171,8 @@ export default class Past extends React.Component {
 
           <MuiPickersUtilsProvider utils={MomentUtils} className="margin-left margin-right inline-block">
             <Grid item>
-              <InlineDatePicker
+              <DatePicker
+                variant="inline"
                 className="margin-right"
                 onChange={date => this._handleChangeStartDate(date)}
                 autoOk={true}
@@ -183,7 +183,8 @@ export default class Past extends React.Component {
               />
             </Grid>
             <Grid item>
-              <InlineDatePicker
+              <DatePicker
+                variant="inline"
                 className="margin-right"
                 onChange={date => this._handleChangeEndDate(date)}
                 autoOk={true}
@@ -231,12 +232,11 @@ export default class Past extends React.Component {
 
           {this.props.past.length ? (
             <Pagination
-              locale={_en_US}
-              simple
-              pageSize={this.props.pageSize}
-              current={this.props.page || 1}
-              total={this.props.count}
-              onChange={page => this._handlePageChange(page)}
+              count={self.props.count}
+              rowsPerPage={self.props.pageSize}
+              onChangeRowsPerPage={self.props.onChangeRowsPerPage}
+              page={self.props.page}
+              onChangePage={page => self._handlePageChange(page)}
             />
           ) : (
             <div className={this.props.loading || pastMap.length ? 'hidden' : 'dashboard-placeholder'}>

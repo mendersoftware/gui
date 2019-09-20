@@ -164,14 +164,14 @@ export default class Help extends React.Component {
       breadcrumbs = splitsplat[1] ? breadcrumbs + '  >  ' + components[splitsplat[0]][splitsplat[1]].title : breadcrumbs;
     }
 
+    const contentWidth = 780;
+
     return (
-      <div>
-        <div className="leftFixed">
-          <LeftNav isHosted={this.state.isHosted} pages={components} />
-        </div>
-        <div className="rightFluid padding-right" style={{ maxWidth: '780px', paddingTop: '1px', paddingLeft: '70px' }}>
-          <p style={{ color: 'rgba(0, 0, 0, 0.54)' }}>Help {breadcrumbs}</p>
-          <div style={{ position: 'relative', top: '12px' }} className="help-content">
+      <div className="help-container">
+        <LeftNav isHosted={this.state.isHosted} pages={components} />
+        <div>
+          <p style={{ color: 'rgba(0, 0, 0, 0.54)', maxWidth: contentWidth }}>Help {breadcrumbs}</p>
+          <div style={{ position: 'relative', top: '12px', maxWidth: contentWidth }} className="help-content">
             <ComponentToShow
               version={this.props.version}
               docsVersion={this.state.docsVersion}

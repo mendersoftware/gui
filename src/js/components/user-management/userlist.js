@@ -12,10 +12,10 @@ import TableRow from '@material-ui/core/TableRow';
 import Button from '@material-ui/core/Button';
 
 const columnData = [
-  { id: 'email', numeric: 'false', disablePadding: false, label: 'Email' },
-  { id: 'created_ts', numeric: 'true', disablePadding: false, label: 'Date created' },
-  { id: 'updated_ts', numeric: 'true', disablePadding: false, label: 'Last updated' },
-  { id: 'actions', numeric: 'false', disablePadding: false, label: 'Manage' }
+  { id: 'email', disablePadding: false, label: 'Email' },
+  { id: 'created_ts', disablePadding: false, label: 'Date created' },
+  { id: 'updated_ts', disablePadding: false, label: 'Last updated' },
+  { id: 'actions', disablePadding: false, label: 'Manage' }
 ];
 
 export default class UserList extends React.Component {

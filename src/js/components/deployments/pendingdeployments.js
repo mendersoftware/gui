@@ -1,7 +1,6 @@
 import React from 'react';
-import Pagination from 'rc-pagination';
-import _en_US from 'rc-pagination/lib/locale/en_US';
 
+import Pagination from '../common/pagination';
 import DeploymentItem from './deploymentitem';
 
 const columnHeaders = [
@@ -66,12 +65,11 @@ export default class Pending extends React.Component {
         ) : null}
         {this.props.count > this.props.pending.length ? (
           <Pagination
-            locale={_en_US}
-            simple
-            pageSize={this.state.pageSize}
-            current={this.props.page || 1}
-            total={this.props.count}
-            onChange={page => this._handlePageChange(page)}
+            count={self.props.count}
+            rowsPerPage={self.state.pageSize}
+            onChangeRowsPerPage={pageSize => self.setState({ pageSize }, () => self.props.refreshPending(1, pageSize))}
+            page={self.props.page}
+            onChangePage={page => self.props.refreshPending(page, self.state.pageSize)}
           />
         ) : null}
       </div>
