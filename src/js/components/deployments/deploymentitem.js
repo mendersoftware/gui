@@ -80,7 +80,7 @@ export default class DeploymentItem extends React.Component {
         <Time className={columnHeaders[2].class} value={formatTime(created)} format="YYYY-MM-DD HH:mm" />
         <div className={columnHeaders[3].class}>{device_count}</div>
         {type === 'progress' ? (
-          <div className={`flexbox space-between ${columnHeaders[4].class}`}>
+          <div className={`flexbox space-between centered ${columnHeaders[4].class}`}>
             <ProgressChart current={current} total={device_count} failures={failures} id={id} />
             <Button variant="contained" onClick={() => openReport(index, type)}>
               View details
@@ -88,7 +88,7 @@ export default class DeploymentItem extends React.Component {
             {abortButton}
           </div>
         ) : (
-          <div className={`flexbox space-between ${columnHeaders[4].class}`}>
+          <div className={`flexbox space-between centered ${columnHeaders[4].class}`}>
             <div>{status}</div>
             {abortButton}
           </div>

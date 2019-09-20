@@ -67,6 +67,10 @@ body {
   color: @text!important;
 }
 
+.failure {
+  color: @menderwarning;
+}
+
 .warning {
   color: @errorStyleColor !important;
   font-size: 14px !important;
@@ -1800,11 +1804,38 @@ span.day {
   .cancelButton:hover {
     color: @red;
   }
-  .progress-chart {
+  .progress-chart-container {
     width: 66%;
-    background: @placeholder;
-    padding: 10px 20px;
+    background: @lightestgrey;
+    padding: 15px 20px;
+    height: 70px;
     border-radius: @dotSize * 0.5;
+    .progress-chart {
+      display: flex;
+      width: 100%;
+      height: 30px;
+      position: relative;
+    }
+    .progress-step {
+      border-right: 1px dashed @verylightgrey;
+      display: flex;
+      align-items: center;
+      z-index: 1;
+    }
+    .progress-bar {
+      height: 5px;
+      background-color: currentColor;
+    }
+    .progress-step-total {
+      position: absolute;
+      width: 100%;
+      height: 30px;
+      z-index: 0;
+      border: none;
+      .progress-bar {
+        background-color: @lightgrey;
+      }
+    }
   }
 }
 
