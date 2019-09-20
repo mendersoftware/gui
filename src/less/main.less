@@ -68,11 +68,11 @@ body {
 }
 
 .warning {
-  color: rgb(171, 16, 0) !important;
+  color: @errorStyleColor !important;
   font-size: 14px !important;
 }
 a.warning:hover {
-  color: lighten(rgb(171, 16, 0), 10%) !important;
+  color: lighten(@errorStyleColor, 10%) !important;
 }
 
 .lightestgrey {
@@ -416,7 +416,7 @@ ul.link-list {
       a,
       .material-icons,
       span {
-        color: lighten(rgb(171, 16, 0), 10%) !important;
+        color: lighten(@errorStyleColor, 10%) !important;
       }
     }
   }
@@ -426,7 +426,7 @@ ul.link-list {
     a,
     .material-icons,
     span {
-      color: rgb(171, 16, 0) !important;
+      color: @errorStyleColor !important;
     }
   }
 
@@ -1330,7 +1330,7 @@ input[type='text'].fileInput {
 
   &.error {
     border-bottom-width: 2px;
-    border-bottom-color: rgb(171, 16, 0);
+    border-bottom-color: @errorStyleColor;
   }
 }
 
@@ -1487,7 +1487,7 @@ button.remove-icon .material-icons {
 }
 
 .material-icons.error-icon {
-  color: rgb(171, 16, 0) !important;
+  color: @errorStyleColor !important;
 }
 
 /* tables */
