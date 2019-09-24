@@ -2,11 +2,8 @@ import React from 'react';
 import Time from 'react-time';
 
 // material ui
-import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
-import Tooltip from '@material-ui/core/Tooltip';
-
-import CancelOutlinedIcon from '@material-ui/icons/CancelOutlined';
+import { Button, IconButton, Tooltip } from '@material-ui/core';
+import { CancelOutlined as CancelOutlinedIcon } from '@material-ui/icons';
 
 import Confirm from './confirm';
 import ProgressChart from './progressChart';
@@ -27,7 +24,8 @@ export default class DeploymentItem extends React.Component {
         rebooting: 0,
         success: 0,
         'already-installed': 0
-      }
+      },
+      phases: []
     };
   }
 
@@ -57,7 +55,7 @@ export default class DeploymentItem extends React.Component {
   render() {
     const self = this;
     const { deployment, openReport, index, type, columnHeaders } = self.props;
-    const { abort, stats } = self.state;
+    const { abort, stats, phases } = self.state;
     const current = stats.downloading + stats.installing + stats.rebooting + stats.success;
     const failures = stats.failure + stats.aborted + stats.noartifact + stats['already-installed'] + stats.decommissioned;
 
@@ -81,7 +79,7 @@ export default class DeploymentItem extends React.Component {
         <div className={columnHeaders[3].class}>{device_count}</div>
         {type === 'progress' ? (
           <div className={`flexbox space-between centered ${columnHeaders[4].class}`}>
-            <ProgressChart current={current} total={device_count} failures={failures} id={id} />
+            <ProgressChart currentDeviceCount={current} totalDeviceCount={device_count} totalFailureCount={failures} phases={phases} id={id} />
             <Button variant="contained" onClick={() => openReport(index, type)}>
               View details
             </Button>

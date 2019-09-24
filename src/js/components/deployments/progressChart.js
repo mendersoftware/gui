@@ -1,24 +1,69 @@
 import React from 'react';
-import Time from 'react-time';
-
+import moment from 'moment';
 import pluralize from 'pluralize';
 
 import WarningIcon from '@material-ui/icons/Warning';
 
-export default class ProgressChart extends React.PureComponent {
-  render() {
-    const { current, total, failures, status } = this.props;
-    const currentPercentage = (current / total) * 100;
-    const totalPercentage = ((current + failures) / total) * 100;
-    const nextPhaseStart = new Date('2019-09-22');
-    const phases = [{ width: totalPercentage, successWidth: (currentPercentage / 3) * 2, failureWidth: Math.max(0, currentPercentage / 3 - 3) }];
+export default class ProgressChart extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      time: new Date()
+    };
+  }
 
+  componentDidMount() {
+    const self = this;
+    self.timer = setInterval(() => self.setState({ time: new Date() }), 10000);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.timer);
+  }
+
+  render() {
+    let { currentDeviceCount, totalDeviceCount, totalFailureCount, phases } = this.props;
+    const { time } = this.state;
+
+    phases = phases.length
+      ? phases
+      : [{ id: 1, device_count: currentDeviceCount, batch_size: totalDeviceCount, start_ts: new Date('2019-01-01').toISOString() }];
+
+    // to display failures per phase we have to approximate the failure count per phase by keeping track of the failures we display in previous phases and
+    // deduct the phase failures from the remainder - so if we have a total of 5 failures reported and are in the 3rd phase, with each phase before reporting
+    // 3 successful deployments -> the 3rd phase should end up with 1 failure so far
+    const displayablePhases = phases.reduce(
+      (accu, phase) => {
+        const devicesInPhase = Math.ceil((totalDeviceCount / 100) * phase.batch_size);
+        phase.successWidth = (phase.device_count / devicesInPhase) * 100;
+        const possiblePhaseFailures = totalFailureCount - accu.countedFailures;
+        phase.failureWidth = (possiblePhaseFailures / devicesInPhase) * 100;
+        accu.displayablePhases.push(phase);
+        accu.countedFailures = accu.countedFailures + possiblePhaseFailures;
+        return accu;
+      },
+      { countedFailures: 0, displayablePhases: [] }
+    ).displayablePhases;
+
+    const currentPhase = phases
+      .slice()
+      .reverse()
+      .find(phase => new Date(phase.start_ts) < time);
+    const currentPhaseIndex = phases.findIndex(phase => phase.id === currentPhase.id);
+
+    const nextPhaseStart = moment(phases.length > currentPhaseIndex + 1 ? phases[currentPhaseIndex + 1].start_ts : new Date('2019-09-30'));
+    const momentaryTime = moment(time);
+    const timeToNext = {
+      days: nextPhaseStart.diff(momentaryTime, 'days'),
+      hours: nextPhaseStart.diff(momentaryTime, 'hours') - nextPhaseStart.diff(momentaryTime, 'days') * 24,
+      minutes: nextPhaseStart.diff(momentaryTime, 'minutes') - nextPhaseStart.diff(momentaryTime, 'hours') * 60
+    };
     return (
       <div className="flexbox column progress-chart-container">
         <div className="flexbox space-between centered">
           <div className="progress-chart">
-            {phases.map((phase, index) => {
-              let style = { width: `${phase.width}%` };
+            {displayablePhases.map((phase, index) => {
+              let style = { width: `${phase.batch_size}%` };
               if (index === phases.length - 1) {
                 style = { flexGrow: 1, borderRight: 'none' };
               }
@@ -34,19 +79,19 @@ export default class ProgressChart extends React.PureComponent {
             </div>
           </div>
           <div
-            className={`flexbox space-between centered ${failures ? 'failure' : 'muted'}`}
+            className={`flexbox space-between centered ${totalFailureCount ? 'failure' : 'muted'}`}
             style={{ width: '60%', marginLeft: 15, justifyContent: 'flex-end' }}
           >
             <WarningIcon style={{ fontSize: 16, marginRight: 10 }} />
-            {`${failures} ${pluralize('failure', failures)}`}
+            {`${totalFailureCount} ${pluralize('failure', totalFailureCount)}`}
           </div>
         </div>
         <div className="flexbox space-between muted">
-          <div>{`Current phase: ${current} of ${total}`}</div>
+          <div>{`Current phase: ${currentPhaseIndex + 1} of ${phases.length}`}</div>
           {nextPhaseStart && (
             <div>
               <span>Time until next phase: </span>
-              <Time value={nextPhaseStart} format="d h m" />
+              <span>{`${timeToNext.days} days ${timeToNext.hours}h ${timeToNext.minutes}m`}</span>
             </div>
           )}
         </div>
