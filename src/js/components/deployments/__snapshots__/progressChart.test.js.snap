@@ -2,41 +2,60 @@
 
 exports[`renders correctly 1`] = `
 <div
-  className="flexbox column"
+  className="flexbox column progress-chart-container"
 >
   <div
-    className="flexbox space-between progress-chart"
+    className="flexbox space-between centered"
   >
     <div
-      aria-valuenow={NaN}
-      className="MuiLinearProgress-root MuiLinearProgress-colorPrimary MuiLinearProgress-buffer"
-      role="progressbar"
+      className="progress-chart"
     >
       <div
-        className="MuiLinearProgress-dashed MuiLinearProgress-dashedColorPrimary"
-      />
-      <div
-        className="MuiLinearProgress-bar MuiLinearProgress-barColorPrimary MuiLinearProgress-bar1Buffer"
+        className="progress-step"
         style={
           Object {
-            "transform": "translateX(NaN%)",
+            "borderRight": "none",
+            "flexGrow": 1,
           }
         }
-      />
+      >
+        <div
+          className="progress-bar green"
+          style={
+            Object {
+              "width": "NaN%",
+            }
+          }
+        />
+        <div
+          className="progress-bar failure"
+          style={
+            Object {
+              "width": "NaN%",
+            }
+          }
+        />
+      </div>
       <div
-        className="MuiLinearProgress-bar MuiLinearProgress-colorPrimary MuiLinearProgress-bar2Buffer"
-        style={
-          Object {
-            "transform": "translateX(-100%)",
+        className="progress-step progress-step-total"
+      >
+        <div
+          className="progress-bar"
+          style={
+            Object {
+              "width": "100%",
+            }
           }
-        }
-      />
+        />
+      </div>
     </div>
     <div
-      className="muted"
+      className="flexbox space-between centered muted"
       style={
         Object {
-          "alignItems": "center",
+          "justifyContent": "flex-end",
+          "marginLeft": 15,
+          "width": "60%",
         }
       }
     >
@@ -48,6 +67,7 @@ exports[`renders correctly 1`] = `
         style={
           Object {
             "fontSize": 16,
+            "marginRight": 10,
           }
         }
         viewBox="0 0 24 24"
@@ -56,25 +76,14 @@ exports[`renders correctly 1`] = `
           d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"
         />
       </svg>
-       undefined failures
+      undefined failures
     </div>
   </div>
   <div
     className="flexbox space-between muted"
   >
     <div>
-      Current phase: undefined of undefined
-    </div>
-    <div>
-      <span>
-        Time until next phase:
-      </span>
-      <time
-        dateTime="2019-09-22T02:00:00+02:00"
-        title={null}
-      >
-        0 2 0
-      </time>
+      Current phase: 1 of 1
     </div>
   </div>
 </div>

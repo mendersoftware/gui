@@ -24,8 +24,7 @@ export default class DeploymentItem extends React.Component {
         rebooting: 0,
         success: 0,
         'already-installed': 0
-      },
-      phases: []
+      }
     };
   }
 
@@ -55,11 +54,11 @@ export default class DeploymentItem extends React.Component {
   render() {
     const self = this;
     const { deployment, openReport, index, type, columnHeaders } = self.props;
-    const { abort, stats, phases } = self.state;
+    const { abort, stats } = self.state;
     const current = stats.downloading + stats.installing + stats.rebooting + stats.success;
     const failures = stats.failure + stats.aborted + stats.noartifact + stats['already-installed'] + stats.decommissioned;
 
-    const { artifact_name, name, created, device_count, id, status } = deployment;
+    const { artifact_name, name, created, device_count, id, status, phases } = deployment;
     let confirmation;
 
     const abortButton = (
@@ -89,7 +88,14 @@ export default class DeploymentItem extends React.Component {
         <div className={columnHeaders[3].class}>{device_count}</div>
         {type === 'progress' ? (
           <div className={`flexbox space-between centered ${columnHeaders[4].class}`}>
-            <ProgressChart currentDeviceCount={current} totalDeviceCount={device_count} totalFailureCount={failures} phases={phases} id={id} />
+            <ProgressChart
+              currentDeviceCount={current}
+              totalDeviceCount={device_count}
+              totalFailureCount={failures}
+              phases={phases}
+              created={created}
+              id={id}
+            />
             <Button variant="contained" onClick={() => openReport(index, type)}>
               View details
             </Button>

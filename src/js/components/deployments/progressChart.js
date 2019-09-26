@@ -22,12 +22,10 @@ export default class ProgressChart extends React.Component {
   }
 
   render() {
-    let { currentDeviceCount, totalDeviceCount, totalFailureCount, phases } = this.props;
+    let { created, currentDeviceCount, id, totalDeviceCount, totalFailureCount, phases } = this.props;
     const { time } = this.state;
 
-    phases = phases.length
-      ? phases
-      : [{ id: 1, device_count: currentDeviceCount, batch_size: totalDeviceCount, start_ts: new Date('2019-01-01').toISOString() }];
+    phases = phases && phases.length ? phases : [{ id, device_count: currentDeviceCount, batch_size: totalDeviceCount, start_ts: created }];
 
     // to display failures per phase we have to approximate the failure count per phase by keeping track of the failures we display in previous phases and
     // deduct the phase failures from the remainder - so if we have a total of 5 failures reported and are in the 3rd phase, with each phase before reporting
@@ -45,19 +43,22 @@ export default class ProgressChart extends React.Component {
       { countedFailures: 0, displayablePhases: [] }
     ).displayablePhases;
 
-    const currentPhase = phases
-      .slice()
-      .reverse()
-      .find(phase => new Date(phase.start_ts) < time);
+    const currentPhase =
+      phases
+        .slice()
+        .reverse()
+        .find(phase => new Date(phase.start_ts) < time) || phases[0];
     const currentPhaseIndex = phases.findIndex(phase => phase.id === currentPhase.id);
 
-    const nextPhaseStart = moment(phases.length > currentPhaseIndex + 1 ? phases[currentPhaseIndex + 1].start_ts : new Date('2019-09-30'));
+    const nextPhaseStart = phases.length > currentPhaseIndex + 1 ? moment(phases[currentPhaseIndex + 1].start_ts) : null;
     const momentaryTime = moment(time);
-    const timeToNext = {
-      days: nextPhaseStart.diff(momentaryTime, 'days'),
-      hours: nextPhaseStart.diff(momentaryTime, 'hours') - nextPhaseStart.diff(momentaryTime, 'days') * 24,
-      minutes: nextPhaseStart.diff(momentaryTime, 'minutes') - nextPhaseStart.diff(momentaryTime, 'hours') * 60
-    };
+    const timeToNext = nextPhaseStart
+      ? {
+        days: nextPhaseStart.diff(momentaryTime, 'days'),
+        hours: nextPhaseStart.diff(momentaryTime, 'hours') - nextPhaseStart.diff(momentaryTime, 'days') * 24,
+        minutes: nextPhaseStart.diff(momentaryTime, 'minutes') - nextPhaseStart.diff(momentaryTime, 'hours') * 60
+      }
+      : null;
     return (
       <div className="flexbox column progress-chart-container">
         <div className="flexbox space-between centered">
