@@ -47,7 +47,7 @@ export default class DeviceGroups extends React.Component {
       loading: true,
       tmpDevices: [],
       refreshDeviceLength: 10000,
-      isHosted: AppStore.getIsHosted()
+      isHosted: AppStore.getIsEnterprise() || AppStore.getIsHosted()
     };
   }
 
