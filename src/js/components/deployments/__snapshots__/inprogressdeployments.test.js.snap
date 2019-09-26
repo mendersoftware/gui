@@ -1,3 +1,3 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`renders correctly 1`] = `"<div class=\\"fadeIn deploy-table-contain\\"><div class=\\"loaderContainer shrunk\\"><div class=\\"loader\\"><span class=\\"dot dot_1\\"></span><span class=\\"dot dot_2\\"></span><span class=\\"dot dot_3\\"></span><span class=\\"dot dot_4\\"></span></div></div><div class=\\"dashboard-placeholder\\"><p>Pending and ongoing deployments will appear here. </p><p><a>Create a deployment</a> to get started</p><img src=\\"assets/img/deployments.png\\" alt=\\"In progress\\"></div></div>"`;
+exports[`renders correctly 1`] = `"<div></div>"`;

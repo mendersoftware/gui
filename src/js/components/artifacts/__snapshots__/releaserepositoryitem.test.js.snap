@@ -60,7 +60,7 @@ exports[`renders correctly 1`] = `
           test-type
         </div>
         <time
-          dateTime="2019-01-01T00:00:00+01:00"
+          dateTime="2019-01-01T00:00:00+00:00"
           title={null}
         >
           2019-01-01 00:00

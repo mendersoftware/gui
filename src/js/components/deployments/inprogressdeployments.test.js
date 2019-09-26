@@ -6,7 +6,7 @@ import Progress from './inprogressdeployments';
 it('renders correctly', () => {
   const tree = createMount()(
     <MemoryRouter>
-      <Progress progress={[]} />
+      <Progress items={[]} refreshItems={() => {}} type="progress" title="in progress" />
     </MemoryRouter>
   );
   expect(tree.html()).toMatchSnapshot();
