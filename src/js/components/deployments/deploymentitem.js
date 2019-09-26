@@ -60,8 +60,9 @@ export default class DeploymentItem extends React.Component {
     const failures = stats.failure + stats.aborted + stats.noartifact + stats['already-installed'] + stats.decommissioned;
 
     const { artifact_name, name, created, device_count, id, status } = deployment;
+    let confirmation;
 
-    let abortButton = (
+    const abortButton = (
       <Tooltip className="columnHeader" title="Abort" placement="top-start">
         <IconButton onClick={() => self.toggleConfirm(id)}>
           <CancelOutlinedIcon className="cancelButton muted" />
@@ -69,10 +70,19 @@ export default class DeploymentItem extends React.Component {
       </Tooltip>
     );
     if (abort === id) {
-      abortButton = <Confirm cancel={() => self.toggleConfirm(id)} action={() => self.handleAbort(id)} table={true} type="abort" />;
+      confirmation = (
+        <Confirm
+          classes="flexbox centered confirmation-overlay"
+          cancel={() => self.toggleConfirm(id)}
+          action={() => self.handleAbort(id)}
+          table={true}
+          type="abort"
+        />
+      );
     }
     return (
-      <div className={`deployment-item deployment-active-item ${type === 'progress' ? 'progress-item' : ''}`}>
+      <div className={`deployment-item ${type === 'progress' ? 'progress-item' : ''}`}>
+        {!!confirmation && confirmation}
         <div className={columnHeaders[0].class}>{artifact_name}</div>
         <div className={columnHeaders[1].class}>{name}</div>
         <Time className={columnHeaders[2].class} value={formatTime(created)} format="YYYY-MM-DD HH:mm" />

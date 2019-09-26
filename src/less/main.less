@@ -1795,6 +1795,7 @@ span.day {
   border-bottom: 1px solid @bordercolor;
   margin: 0 30px;
   align-items: center;
+  position: relative;
   &.deployment-header-item {
     border-bottom: transparent;
   }
@@ -1829,13 +1830,21 @@ span.day {
     .progress-step-total {
       position: absolute;
       width: 100%;
-      height: 30px;
+      height: 2 * @defaultGutterWidth;
       z-index: 0;
       border: none;
       .progress-bar {
         background-color: @lightgrey;
       }
     }
+  }
+  .confirmation-overlay {
+    position: absolute;
+    z-index: 1;
+    background: fadeout(@lightestgrey, 20%);
+    width: 100%;
+    height: 100%;
+    justify-content: flex-end;
   }
 }
 

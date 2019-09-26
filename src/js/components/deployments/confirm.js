@@ -26,7 +26,7 @@ export default class Confirm extends React.Component {
   }
   render() {
     return (
-      <div className={this.state.class} style={{ marginRight: '12px' }}>
+      <div className={`${this.state.class} ${this.props.classes}`} style={{ marginRight: '12px' }}>
         <div className="float-right">
           <span className="bold">{this.state.loading ? confirmationType[this.props.type] : `Confirm ${this.props.type} deployment?`}</span>
           <IconButton id="confirmAbort" onClick={() => this._handleConfirm()}>
