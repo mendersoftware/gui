@@ -92,8 +92,11 @@ publish:
   script:
     - docker load -i image.tar
     - docker tag $SERVICE_IMAGE $DOCKER_REPOSITORY:$COMMIT_TAG
-    # - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
-    # - docker push $CI_REGISTRY_IMAGE
+    - docker tag $SERVICE_IMAGE $DOCKER_REPOSITORY:$CI_COMMIT_REF_SLUG
+    - docker tag $SERVICE_IMAGE $DOCKER_REPOSITORY:latest
+    - docker rmi $SERVICE_IMAGE $DOCKER_REPOSITORY:$CI_COMMIT_REF_SLUG
+    - echo -n $DOCKER_HUB_PASSWORD | docker login -u $DOCKER_HUB_USERNAME --password-stdin
+    - docker push $DOCKER_REPOSITORY:$COMMIT_TAG
   only:
     - master
   tags:
