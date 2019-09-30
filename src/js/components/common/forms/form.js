@@ -198,7 +198,10 @@ export default class Form extends React.Component {
   }
   render() {
     var uploadActions = this.props.showButtons ? (
-      <div className="float-right" style={this.props.dialog ? { margin: '24px 0 -16px 0' } : { marginTop: '32px' }}>
+      <div
+        className="flexbox"
+        style={Object.assign({ justifyContent: 'flex-end', height: 'min-content' }, this.props.dialog ? { margin: '24px 0 -16px 0' } : { marginTop: '32px' })}
+      >
         {this.props.handleCancel ? (
           <Button key="cancel" onClick={this.props.handleCancel} style={{ marginRight: '10px', display: 'inline-block' }}>
             Cancel
