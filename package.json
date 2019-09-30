@@ -39,9 +39,7 @@
     "react-tooltip": "^3.11.1",
     "react-transition-group": "^2.5.3",
     "recompose": "^0.30.0",
-    "superagent": "^3.8.3",
-    "superagent-auth-bearer": "0.0.1",
-    "superagent-use": "^0.1.0",
+    "superagent": "^5.1.0",
     "validator": "^11.1.0",
     "zxcvbn": "^4.4.2"
   },
