@@ -43,6 +43,11 @@ export default class ScheduleDialog extends React.Component {
     this.setState({ activeStep: 0, deploymentDeviceIds: [], group: null, phases: [], release: null });
   }
 
+  closeWizard() {
+    this.setState({ activeStep: 0, deploymentDeviceIds: [], group: null, phases: [], release: null });
+    this.props.onDismiss();
+  }
+
   render() {
     const self = this;
     const { device, open, onDismiss } = this.props;
@@ -70,7 +75,7 @@ export default class ScheduleDialog extends React.Component {
           <ComponentToShow {...self.props} {...self.state} deploymentSettings={(...args) => self.deploymentSettings(...args)} />
         </DialogContent>
         <DialogActions className="margin-left margin-right">
-          <Button key="schedule-action-button-1" onClick={onDismiss} style={{ marginRight: '10px', display: 'inline-block' }}>
+          <Button key="schedule-action-button-1" onClick={() => self.closeWizard()} style={{ marginRight: '10px', display: 'inline-block' }}>
             Cancel
           </Button>
           <Button disabled={activeStep === 0} onClick={() => self.setState({ activeStep: activeStep - 1 })}>
