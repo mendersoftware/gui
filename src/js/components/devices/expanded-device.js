@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 
 import AppStore from '../../stores/app-store';
 import AppActions from '../../actions/app-actions';
-import ScheduleDialog from '../deployments/scheduledialog';
+import ScheduleDialog from '../deployments/createdeployment';
 import Authsets from './authsets';
 import ExpandableDeviceAttribute from './expandable-device-attribute';
 import Loader from '../common/loader';
@@ -434,12 +434,7 @@ export default class ExpandedDevice extends React.Component {
 
         <ScheduleDialog
           open={this.state.schedule}
-          deploymentDevices={[this.props.device]}
-          filteredDevices={this.state.filterByArtifact}
-          deploymentSettings={(...args) => this._deploymentParams(...args)}
-          artifacts={this.state.artifacts}
           device={this.props.device}
-          groups={this.props.groups}
           onDismiss={() => this.setState({ schedule: false })}
           onScheduleSubmit={(_group, _devices, artifact) => this._onScheduleSubmit(artifact)}
         />
