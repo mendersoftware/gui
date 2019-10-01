@@ -40,17 +40,17 @@ export default class ScheduleDialog extends React.Component {
 
   onScheduleSubmit(settings) {
     this.props.onScheduleSubmit(settings);
-    this.setState({ activeStep: 0, deploymentDeviceIds: [], group: null, phases: [], release: null });
+    this.setState({ activeStep: 0, deploymentDeviceIds: [], group: null, phases: null, release: null });
   }
 
   closeWizard() {
-    this.setState({ activeStep: 0, deploymentDeviceIds: [], group: null, phases: [], release: null });
+    this.setState({ activeStep: 0, deploymentDeviceIds: [], group: null, phases: null, release: null });
     this.props.onDismiss();
   }
 
   render() {
     const self = this;
-    const { device, open, onDismiss } = this.props;
+    const { device, open } = this.props;
     const { activeStep, release, deploymentDeviceIds, group, phases, steps } = self.state;
     const disabled = !(release && deploymentDeviceIds.length);
     const finalStep = activeStep === steps.length - 1;

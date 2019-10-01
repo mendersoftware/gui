@@ -12,12 +12,18 @@ const Review = props => {
 
   var deploymentPhases = phases ? phases : [{batch_size: 100, start_ts: new Date()}];
 
+  const start_time = 
+    props.phases 
+      ? props.phases.length
+        ? props.phases[0].start_ts : new Date()
+      : new Date();
+
   const deploymentInformation = [
     { primary: 'Release', secondary: release.name },
     { primary: `Device${device ? '' : ' group'}`, secondary: device ? device.id : group },
     { primary: 'Device types compatible', secondary: release.device_types_compatible.join(', ') },
     { primary: '# devices', secondary: deploymentDeviceIds.length },
-    { primary: 'Start time', secondary: (phases ? phases[0].start_ts.toLocaleString() : null) }
+    { primary: 'Start time', secondary: start_time.toLocaleString() }
   ];
 
   return (

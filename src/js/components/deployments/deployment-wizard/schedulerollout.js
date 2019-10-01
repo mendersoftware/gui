@@ -85,7 +85,11 @@ export default class ScheduleRollout extends React.Component {
     const self = this;
     const props = self.props;
     const numberDevices = props.deploymentDeviceIds ? props.deploymentDeviceIds.length : null;
-    const start_time = props.phases ? props.phases[0].start_ts : null;
+    const start_time = 
+      props.phases 
+        ? props.phases.length
+          ? props.phases[0].start_ts : null
+        : null;
     const customPattern = props.phases && props.phases.length>1 ? 1 : 0;
 
     const styles = {
