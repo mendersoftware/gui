@@ -22,7 +22,6 @@ build:
     - echo "building gui for ${SERVICE_IMAGE}"
     - docker build
       -t $SERVICE_IMAGE
-      -t $DOCKER_REPOSITORY:$CI_COMMIT_REF_SLUG
       .
     - docker save $SERVICE_IMAGE > image.tar
   artifacts:
@@ -94,7 +93,7 @@ publish:
     - docker tag $SERVICE_IMAGE $DOCKER_REPOSITORY:$COMMIT_TAG
     - docker tag $SERVICE_IMAGE $DOCKER_REPOSITORY:$CI_COMMIT_REF_SLUG
     - docker tag $SERVICE_IMAGE $DOCKER_REPOSITORY:latest
-    - docker rmi $SERVICE_IMAGE $DOCKER_REPOSITORY:$CI_COMMIT_REF_SLUG
+    - docker rmi $SERVICE_IMAGE
     - echo -n $DOCKER_HUB_PASSWORD | docker login -u $DOCKER_HUB_USERNAME --password-stdin
     - docker push $DOCKER_REPOSITORY:$COMMIT_TAG
   only:
