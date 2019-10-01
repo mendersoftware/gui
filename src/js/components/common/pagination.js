@@ -99,7 +99,7 @@ const Pagination = props => {
   const { className, page, onChangeRowsPerPage, onChangePage, ...remainingProps } = props;
   return (
     <TablePagination
-      className={`flexbox margin-top ${className}`}
+      className={`flexbox margin-top ${className || ''}`}
       classes={{ spacer: 'flexbox no-basis' }}
       component="div"
       labelDisplayedRows={() => ''}

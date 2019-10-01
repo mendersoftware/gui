@@ -2,19 +2,14 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import cookie from 'react-cookie';
 import PropTypes from 'prop-types';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Button from '@material-ui/core/Button';
-import Tab from '@material-ui/core/Tab';
-import Tabs from '@material-ui/core/Tabs';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Tab, Tabs } from '@material-ui/core';
 
 import AppStore from '../../stores/app-store';
 import AppActions from '../../actions/app-actions';
 import { setRetryTimer, clearRetryTimer, clearAllRetryTimers } from '../../utils/retrytimer';
 
-import Pending from './pendingdeployments';
+import Loader from '../common/loader';
+import DeploymentsList from './deploymentslist';
 import Progress from './inprogressdeployments';
 import Past from './pastdeployments';
 import Report from './report';
@@ -522,31 +517,44 @@ export default class Deployments extends React.Component {
         </Tabs>
 
         {tabIndex === routes.active.route && (
-          <div className="margin-top">
-            <Pending
-              page={this.state.pend_page}
-              count={this.state.pendingCount || this.state.pending.length}
-              refreshPending={(...args) => this._refreshPending(...args)}
-              pending={this.state.pending}
-              abort={id => this._abortDeployment(id)}
-            />
-            <Progress
-              page={this.state.prog_page}
-              isActiveTab={this.state.currentTab === 'Active'}
-              showHelptips={this.state.showHelptips}
-              hasDeployments={this.state.hasDeployments}
-              devices={this.state.allDevices || []}
-              hasArtifacts={this.state.collatedArtifacts.length}
-              count={this.state.progressCount || this.state.progress.length}
-              pendingCount={this.state.pendingCount || this.state.pending.length}
-              refreshProgress={(...args) => this._refreshInProgress(...args)}
-              abort={id => this._abortDeployment(id)}
-              loading={!this.state.doneLoading}
-              openReport={rowNum => this._showProgress(rowNum)}
-              progress={this.state.progress}
-              createClick={() => this.setState({ scheduleDialog: true })}
-            />
-          </div>
+          <>
+            {this.state.doneLoading ? (
+              <div className="margin-top">
+                <DeploymentsList
+                  abort={id => this._abortDeployment(id)}
+                  count={this.state.pendingCount || this.state.pending.length}
+                  items={this.state.pending}
+                  page={this.state.pend_page}
+                  refreshItems={(...args) => this._refreshPending(...args)}
+                  isActiveTab={this.state.currentTab === 'Active'}
+                  title="pending"
+                  type="pending"
+                />
+                <Progress
+                  abort={id => this._abortDeployment(id)}
+                  count={this.state.progressCount || this.state.progress.length}
+                  items={this.state.progress}
+                  page={this.state.prog_page}
+                  refreshItems={(...args) => this._refreshInProgress(...args)}
+                  isActiveTab={this.state.currentTab === 'Active'}
+                  openReport={rowNum => this._showProgress(rowNum)}
+                  title="In progress"
+                  type="progress"
+                />
+                {!(this.state.progressCount || this.state.progress.length || this.state.pendingCount || this.state.pending.length) && (
+                  <div className={this.state.progress.length || !this.state.doneLoading ? 'hidden' : 'dashboard-placeholder'}>
+                    <p>Pending and ongoing deployments will appear here. </p>
+                    <p>
+                      <a onClick={() => this.setState({ scheduleDialog: true })}>Create a deployment</a> to get started
+                    </p>
+                    <img src="assets/img/deployments.png" alt="In progress" />
+                  </div>
+                )}
+              </div>
+            ) : (
+              <Loader show={this.state.doneLoading} />
+            )}
+          </>
         )}
         {tabIndex === routes.finished.route && (
           <div className="margin-top">

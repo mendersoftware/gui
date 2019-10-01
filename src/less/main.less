@@ -67,12 +67,16 @@ body {
   color: @text!important;
 }
 
+.failure {
+  color: @menderwarning;
+}
+
 .warning {
-  color: rgb(171, 16, 0) !important;
+  color: @errorStyleColor !important;
   font-size: 14px !important;
 }
 a.warning:hover {
-  color: lighten(rgb(171, 16, 0), 10%) !important;
+  color: lighten(@errorStyleColor, 10%) !important;
 }
 
 .lightestgrey {
@@ -180,6 +184,10 @@ ul.link-list {
 }
 
 .capitalized {
+  text-transform: capitalize;
+}
+
+.capitalized-start::first-letter {
   text-transform: capitalize;
 }
 
@@ -416,7 +424,7 @@ ul.link-list {
       a,
       .material-icons,
       span {
-        color: lighten(rgb(171, 16, 0), 10%) !important;
+        color: lighten(@errorStyleColor, 10%) !important;
       }
     }
   }
@@ -426,7 +434,7 @@ ul.link-list {
     a,
     .material-icons,
     span {
-      color: rgb(171, 16, 0) !important;
+      color: @errorStyleColor !important;
     }
   }
 
@@ -1330,7 +1338,7 @@ input[type='text'].fileInput {
 
   &.error {
     border-bottom-width: 2px;
-    border-bottom-color: rgb(171, 16, 0);
+    border-bottom-color: @errorStyleColor;
   }
 }
 
@@ -1487,7 +1495,7 @@ button.remove-icon .material-icons {
 }
 
 .material-icons.error-icon {
-  color: rgb(171, 16, 0) !important;
+  color: @errorStyleColor !important;
 }
 
 /* tables */
@@ -1648,44 +1656,6 @@ div.waiting-inventory {
   right: @defaultGutterWidth;
 }
 
-/* Tags */
-
-.tagContainer {
-  margin-top: 20px;
-}
-
-.ReactTags__tag {
-  margin-right: 10px;
-  margin-bottom: 5px;
-  padding: 5px;
-  background-color: @lightgrey;
-  color: @linkhover;
-  display: inline-block;
-  margin-top: 5px;
-  font-size: 13px;
-}
-
-.ReactTags__remove {
-  cursor: pointer;
-  padding: 10px 0 10px 10px;
-}
-
-.ReactTags__tagInput input,
-.ReactTags__tagInput input:focus,
-input.fileInput {
-  outline: none;
-  border-top: none;
-  border-left: none;
-  border-right: none;
-  border-bottom: solid 1px @bordercolor;
-  padding: 7px 0;
-  font-size: 16px;
-  font-family: Lato, sans-serif;
-  color: rgba(0, 0, 0, 0.8);
-
-  .placeholder({color: rgba(0, 0, 0, 0.3) ;});
-}
-
 /* Dashboard */
 
 .dashboard-placeholder {
@@ -1771,152 +1741,6 @@ span.day {
   }
 }
 
-.progress-container {
-  padding-bottom: 3 * @defaultGutterWidth;
-
-  .device-info {
-    position: absolute;
-    width: 33%;
-    right: -16px;
-    background-color: #fff;
-    top: -2 * @defaultGutterWidth;
-    bottom: @defaultGutterWidth;
-    z-index: 300;
-    padding: 0 2 * @defaultGutterWidth;
-    box-sizing: border-box;
-    display: none;
-    border-left: 1px @linkhover solid;
-    font-size: 12px;
-    word-break: break-all;
-
-    &.show {
-      display: block;
-      .animation(fadein 0.2s 1);
-    }
-  }
-
-  .key {
-    color: @grey;
-    font-size: 12px;
-    clear: both;
-    vertical-align: middle;
-    margin-top: 10px;
-    text-align: center;
-    width: 60%;
-
-    .bubble {
-      width: 14px;
-      height: 14px;
-      border-radius: 50%;
-      display: inline-block;
-      margin-left: 6px;
-      margin-right: 2px;
-      margin-top: -2px;
-      vertical-align: middle;
-      position: relative;
-      background-size: cover;
-
-      &.success {
-        background-image: url('../assets/img/success_status.png');
-      }
-      &.failure {
-        background-image: url('../assets/img/error_status.png');
-      }
-      &.pending {
-        background-image: url('../assets/img/pending_status.png');
-      }
-      &.inprogress,
-      &.installing {
-        background-image: url('../assets/img/progress_status.png');
-      }
-      &.downloading,
-      &.rebooting {
-        background-image: url('../assets/img/progress_status.png');
-      }
-    }
-  }
-
-  .progressHeader {
-    position: absolute;
-    top: -3 * @defaultGutterWidth;
-    left: 18%;
-    color: #757575;
-    font-size: 14px;
-  }
-
-  .bubbles-contain {
-    height: 100px;
-    min-width: 300px;
-    width: 60%;
-    position: relative;
-    top: -10px;
-    padding-left: 2 * @defaultGutterWidth;
-
-    > div {
-      float: left;
-      margin: 0 10px 4px 0;
-      position: relative;
-      cursor: pointer;
-      max-height: 80px;
-      max-width: 80px;
-
-      &:hover:after {
-        content: '';
-        position: absolute;
-        top: 50%;
-        left: 110%;
-        width: 500px;
-        border-bottom: 1px @linkhover solid;
-        z-index: 200;
-        .animation(fadein 0.6s 1);
-      }
-    }
-
-    .bubble {
-      border-radius: 50%;
-      position: relative;
-      display: block;
-      height: 100%;
-      width: 100%;
-      background-size: 66%;
-      background-repeat: no-repeat;
-      background-position: center;
-      background-color: @lightergrey;
-
-      &:hover {
-        .scale(1.15);
-        .transition(all 0.2s ease);
-        border: 1px solid @linkhover;
-      }
-    }
-
-    .inprogress .bubble,
-    .installing .bubble {
-      .animation(pulse 2.8s infinite);
-      background-image: url('../assets/img/progress_status_large.png');
-    }
-
-    .downloading .bubble,
-    .rebooting .bubble {
-      .animation(pulse 2.8s infinite);
-      background-image: url('../assets/img/progress_status.png');
-    }
-
-    .pending .bubble {
-      background-color: lighten(@lightergrey, 4%);
-      background-image: url('../assets/img/pending_status_large.png');
-    }
-    .failure .bubble {
-      background-image: url('../assets/img/error_status_large.png');
-    }
-    .success .bubble {
-      background-image: url('../assets/img/success_status_large.png');
-    }
-  }
-}
-
-.progress-container,
-.deployments-container,
 .report-container {
   .deploymentInfo {
     font-size: 14px;
@@ -1945,89 +1769,9 @@ span.day {
   }
 }
 
-.progress-container {
-  .deployment {
-    padding-top: 50px;
-    padding-bottom: 10px;
-    margin-bottom: @defaultGutterWidth;
-    border-radius: 4px;
-    border: 1px solid @lightergrey;
-    overflow: hidden;
-    max-width: 1150px;
-
-    .skipped-text {
-      margin-top: 2px;
-    }
-  }
-}
-
-.deployments-container {
-  .deployment {
-    display: inline-block;
-    width: 30%;
-    margin-right: 3%;
-    margin-bottom: @defaultGutterWidth;
-    min-width: 220px;
-    max-width: 320px;
-    padding: 20px 20px 0;
-    min-height: 210px;
-    border-radius: 4px;
-    border: 1px solid @lightergrey;
-    cursor: pointer;
-    vertical-align: top;
-
-    &:hover {
-      .transition(all 0.3s ease);
-      border: 1px solid @grey;
-      background-color: #fdfdfe;
-    }
-  }
-
-  .resultIcons {
-    display: inline-block;
-    width: 50%;
-    padding: 0 2% 12px;
-    font-size: 2em;
-    position: relative;
-    max-height: 76px;
-
-    img {
-      display: inline;
-      margin: 10px 0;
-      vertical-align: middle;
-      width: 50%;
-      padding: 0 5%;
-    }
-
-    div {
-      vertical-align: middle;
-      text-align: center;
-      width: 40%;
-      padding: 0 5%;
-      display: inline-block;
-    }
-
-    span.iconStatLabel {
-      position: absolute;
-      width: 80%;
-      left: 10%;
-      bottom: 0;
-      font-size: 12px;
-      color: @grey;
-      text-align: center;
-    }
-  }
-}
-
 .deploy-table-contain {
   margin-bottom: 60px;
   margin-top: 2 * @defaultGutterWidth;
-}
-
-@media (min-width: 1700px) {
-  .deployments-container .progressLabel {
-    margin-right: 35px;
-  }
 }
 
 .fail {
@@ -2043,6 +1787,68 @@ span.day {
 
   .material-icons {
     color: @red !important;
+  }
+}
+
+/* Deployments */
+
+.deployment-item {
+  display: grid;
+  grid-template-columns: 0.25fr 0.25fr 0.25fr 0.25fr 1fr;
+  grid-column-gap: 30px;
+  border-bottom: 1px solid @bordercolor;
+  margin: 0 30px;
+  align-items: center;
+  position: relative;
+  &.deployment-header-item {
+    border-bottom: transparent;
+  }
+  &.progress-item {
+    padding: 10px 0;
+  }
+  .cancelButton:hover {
+    color: @red;
+  }
+  .progress-chart-container {
+    width: 66%;
+    background: @lightestgrey;
+    padding: 15px 20px;
+    height: 70px;
+    border-radius: @dotSize * 0.5;
+    .progress-chart {
+      display: flex;
+      width: 100%;
+      height: 30px;
+      position: relative;
+    }
+    .progress-step {
+      border-right: 1px dashed @verylightgrey;
+      display: flex;
+      align-items: center;
+      z-index: 1;
+    }
+    .progress-bar {
+      height: 5px;
+      background-color: currentColor;
+    }
+    .progress-step-total {
+      position: absolute;
+      width: 100%;
+      height: 2 * @defaultGutterWidth;
+      z-index: 0;
+      border: none;
+      .progress-bar {
+        background-color: @lightgrey;
+      }
+    }
+  }
+  .confirmation-overlay {
+    position: absolute;
+    z-index: 1;
+    background: fadeout(@lightestgrey, 20%);
+    width: 100%;
+    height: 100%;
+    justify-content: flex-end;
   }
 }
 
