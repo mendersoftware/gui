@@ -73,6 +73,7 @@ test:acceptance:
     - git clone https://github.com/mendersoftware/integration.git
     - cp -r integration/tests/* tests
     - GUI_REPOSITORY=$(pwd) INTEGRATION_PATH=$(pwd)/integration ./tests/e2e_tests/run
+    - docker rmi $DOCKER_REPOSITORY:pr
   tags:
     - mender-qa-slave
 
@@ -94,10 +95,9 @@ publish:
     - docker load -i image.tar
     - docker tag $SERVICE_IMAGE $DOCKER_REPOSITORY:$COMMIT_TAG
     - docker tag $SERVICE_IMAGE $DOCKER_REPOSITORY:$CI_COMMIT_REF_SLUG
-    - docker tag $SERVICE_IMAGE $DOCKER_REPOSITORY:latest
-    - docker rmi $SERVICE_IMAGE
     - echo -n $DOCKER_HUB_PASSWORD | docker login -u $DOCKER_HUB_USERNAME --password-stdin
     - docker push $DOCKER_REPOSITORY:$COMMIT_TAG
+    - docker push $SERVICE_IMAGE
   only:
     - master
   tags:
