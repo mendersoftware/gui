@@ -50,7 +50,7 @@ export default class MoreHelp extends React.Component {
           <li>
             <p>
               Follow us on Twitter{' '}
-              <a href="https://twitter,com/mender_io" target="_blank">
+              <a href="https://twitter.com/mender_io" target="_blank">
                 @mender_io
               </a>
             </p>
