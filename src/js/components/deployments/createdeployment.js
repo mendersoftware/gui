@@ -14,7 +14,7 @@ const deploymentSteps = [
   { title: 'Review and create', closed: false, component: Review }
 ];
 
-export default class ScheduleDialog extends React.Component {
+export default class CreateDialog extends React.Component {
   constructor(props, context) {
     super(props, context);
     const isEnterprise = AppStore.getIsEnterprise() || AppStore.getIsHosted();

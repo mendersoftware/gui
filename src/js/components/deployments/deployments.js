@@ -89,7 +89,7 @@ export default class Deployments extends React.Component {
         } else if (params.get('release')) {
           const release = AppStore.getRelease(params.get('release'));
           self.setState({
-            scheduleDialog: true,
+            createDialog: true,
             releaseArtifacts: release ? release.Artifacts : null,
             release,
             artifact: release && release.Artifacts ? release.Artifacts[0] : null
@@ -98,7 +98,7 @@ export default class Deployments extends React.Component {
           AppActions.getDeviceById(params.get('deviceId'))
             .then(device => { 
               self.setState({
-                scheduleDialog: true,
+                createDialog: true,
                 device: device,
                 deploymentDeviceIds: [device.id],
               });
