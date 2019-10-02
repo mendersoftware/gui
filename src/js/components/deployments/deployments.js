@@ -302,9 +302,15 @@ export default class Deployments extends React.Component {
   }
 
   _retryDeployment(deployment, devices) {
-    var self = this;
-    var artifact = { name: deployment.artifact_name, device_types_compatible: deployment.device_types_compatible || [] };
-    this.setState({ artifact, group: deployment.name, filteredDevices: devices }, () => self._onScheduleSubmit(deployment.name, devices, artifact));
+    const self = this;
+    const release = { name: deployment.artifact_name, device_types_compatible: deployment.device_types_compatible || [] };
+    const deploymentObject = {
+      group: deployment.name,
+      deploymentDeviceIds: devices.map(item => item.id),
+      release,
+      phases: deployment.phases ? deployment.phases : null
+    }
+    self.setState({ release, group: deployment.name, filteredDevices: devices }, () => self._onScheduleSubmit(deploymentObject));
   }
 
   _onScheduleSubmit(deploymentObject) {
@@ -316,7 +322,7 @@ export default class Deployments extends React.Component {
       devices: deploymentDeviceIds,
       phases: phases
     };
-    self.setState({ doneLoading: false, createDialog: false });
+    self.setState({ doneLoading: false, createDialog: false, reportDialog: false });
 
     return AppActions.createDeployment(newDeployment)
       .then(data => {
@@ -465,7 +471,7 @@ export default class Deployments extends React.Component {
         </Tabs>
 
         {tabIndex === routes.active.route && (
-          <>
+          <div>
             {this.state.doneLoading ? (
               <div className="margin-top">
                 <DeploymentsList
@@ -502,7 +508,7 @@ export default class Deployments extends React.Component {
             ) : (
               <Loader show={this.state.doneLoading} />
             )}
-          </>
+          </div>
         )}
         {tabIndex === routes.finished.route && (
           <div className="margin-top">
