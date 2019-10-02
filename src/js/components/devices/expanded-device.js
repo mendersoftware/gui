@@ -3,15 +3,14 @@ import Time from 'react-time';
 import ReactTooltip from 'react-tooltip';
 import { AuthButton } from '../helptips/helptooltips';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 
 import AppStore from '../../stores/app-store';
 import AppActions from '../../actions/app-actions';
-import ScheduleDialog from '../deployments/createdeployment';
 import Authsets from './authsets';
 import ExpandableDeviceAttribute from './expandable-device-attribute';
 import Loader from '../common/loader';
 import pluralize from 'pluralize';
-import cookie from 'react-cookie';
 import copy from 'copy-to-clipboard';
 
 import Button from '@material-ui/core/Button';
@@ -121,39 +120,6 @@ export default class ExpandedDevice extends React.Component {
     this.setState({ schedule: false });
   }
 
-  _onScheduleSubmit(artifact) {
-    var self = this;
-    var newDeployment = {
-      devices: [this.props.device.id],
-      name: this.props.device.id,
-      artifact_name: artifact.name
-    };
-    self.setState({ schedule: false });
-    return AppActions.createDeployment(newDeployment)
-      .then(data => {
-        // get id, if showhelptips & no onboarded cookie, this is user's first deployment - add id cookie
-        var lastslashindex = data.lastIndexOf('/');
-        var id = data.substring(lastslashindex + 1);
-
-        // onboarding
-        if (self.state.showHelpTips && !cookie.load(`${self.state.user.id}-deploymentID`)) {
-          cookie.save(`${self.state.user.id}-deploymentID`, id);
-        }
-
-        AppActions.setSnackbar('Deployment created successfully. Redirecting...', 5000);
-        setTimeout(() => {
-          self.context.router.history.replace('/deployments');
-        }, 1200);
-      })
-      .catch(err => {
-        try {
-          var errMsg = err.res.body.error || '';
-          AppActions.setSnackbar(preformatWithRequestID(err.res, `Error creating deployment. ${errMsg}`), null, 'Copy to clipboard');
-        } catch (e) {
-          console.log(e);
-        }
-      });
-  }
 
   _handleStopProp(e) {
     e.stopPropagation();
@@ -216,7 +182,6 @@ export default class ExpandedDevice extends React.Component {
   }
 
   render() {
-    const self = this;
     var status = this.props.device.status;
 
     var deviceIdentity = [<ExpandableDeviceAttribute key="id_checksum" primary="Device ID" secondary={(this.props.device || {}).id || '-'} />];
@@ -299,6 +264,9 @@ export default class ExpandedDevice extends React.Component {
 
     const buttonStyle = { textTransform: 'none', textAlign: 'left' };
 
+    const ForwardingLink = React.forwardRef((props, ref) => <Link {...props} innerRef={ref} />);
+    ForwardingLink.displayName = 'ForwardingLink';
+
     var deviceInfo = (
       <div key="deviceinfo">
         <div className="device-identity bordered">
@@ -360,7 +328,10 @@ export default class ExpandedDevice extends React.Component {
             </Button>
             {status === 'accepted' ? (
               <span className="margin-left">
-                <Button onClick={() => self._scheduleDeploymentFor(this.props.device)}>
+                <Button
+                  to={`/deployments?open=true&deviceId=${this.props.device.id}`}
+                  component={ForwardingLink}
+                >
                   <ReplayIcon className="rotated buttonLabelIcon" />
                   Create a deployment for this device
                 </Button>
@@ -431,13 +402,6 @@ export default class ExpandedDevice extends React.Component {
             </ReactTooltip>
           </div>
         ) : null}
-
-        <ScheduleDialog
-          open={this.state.schedule}
-          device={this.props.device}
-          onDismiss={() => this.setState({ schedule: false })}
-          onScheduleSubmit={(_group, _devices, artifact) => this._onScheduleSubmit(artifact)}
-        />
 
         <Dialog
           open={this.state.authsets}

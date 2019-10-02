@@ -6,12 +6,11 @@ import { Chip, List } from '@material-ui/core';
 import { InfoOutlined as InfoOutlinedIcon } from '@material-ui/icons';
 
 import ExpandableDeviceAttribute from '../../devices/expandable-device-attribute';
+import { getRemainderPercent } from '../../../helpers';
 
 const Review = props => {
   const { deploymentDeviceIds, device, group, isEnterprise, phases, release } = props;
-
   var deploymentPhases = phases ? phases : [{batch_size: 100, start_ts: new Date()}];
-
   const start_time = 
     props.phases 
       ? props.phases.length
@@ -51,7 +50,7 @@ const Review = props => {
             <div>Batch size</div>
           </div>
           {deploymentPhases.map((row, index) => {
-            const deviceCount = Math.ceil((deploymentDeviceIds.length / 100) * row.batch_size);
+            const deviceCount = Math.ceil((deploymentDeviceIds.length / 100) * (row.batch_size || getRemainderPercent(deploymentPhases)));
             return (
               <div className="flexbox column" key={row.start_ts}>
                 <Chip size="small" label={`Phase ${index + 1}`} />

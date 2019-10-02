@@ -34,6 +34,13 @@ export default class ScheduleDialog extends React.Component {
     };
   }
 
+  componentDidUpdate(prevProps) {
+    // Update state if single device passed from props
+    if ((prevProps.device !== this.props.device) && this.props.device) {
+      this.setState({deploymentDeviceIds: [this.props.device.id]})
+    }
+  }
+
   deploymentSettings(value, property) {
     this.setState({ [property]: value });
   }
@@ -50,13 +57,13 @@ export default class ScheduleDialog extends React.Component {
 
   render() {
     const self = this;
-    const { device, open } = this.props;
-    const { activeStep, release, deploymentDeviceIds, group, phases, steps } = self.state;
+    const { device, open } = self.props;
+    const { activeStep, deploymentDeviceIds, release, group, phases, steps } = self.state;
     const disabled = !(release && deploymentDeviceIds.length);
     const finalStep = activeStep === steps.length - 1;
     const ComponentToShow = steps[activeStep].component;
     const deploymentSettings = {
-      group: device ? null : group,
+      group: device ? device.id : group,
       deploymentDeviceIds,
       release,
       phases

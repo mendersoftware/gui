@@ -94,6 +94,21 @@ export default class Deployments extends React.Component {
             release,
             artifact: release && release.Artifacts ? release.Artifacts[0] : null
           });
+        } else if (params.get('deviceId')) {
+          AppActions.getDeviceById(params.get('deviceId'))
+            .then(device => { 
+              self.setState({
+                scheduleDialog: true,
+                device: device,
+                deploymentDeviceIds: [device.id],
+              });
+            })
+            .catch(err => {
+              console.log(err);
+              var errMsg = err.res.body.error || '';
+              AppActions.setSnackbar(preformatWithRequestID(err.res, `Error fetching device details. ${errMsg}`), null, 'Copy to clipboard');
+            });
+  
         } else {
           setTimeout(() => {
             self.setState({ createDialog: true });
@@ -507,10 +522,11 @@ export default class Deployments extends React.Component {
 
         <CreateDialog
           open={this.state.createDialog}
-          onDismiss={() => self.setState({ createDialog: false })}
+          onDismiss={() => self.setState({ createDialog: false, device: null })}
           onScheduleSubmit={(...args) => this._onScheduleSubmit(...args)}
           deploymentRelease={release}
           hasDevices={this.state.hasDevices}
+          device={this.state.device}
         />
         {onboardingComponent}
       </div>

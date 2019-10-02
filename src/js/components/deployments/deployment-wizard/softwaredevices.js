@@ -30,7 +30,6 @@ export default class SoftwareDevices extends React.Component {
 
     this.state = {
       artifacts: AppStore.getCollatedArtifacts(AppStore.getArtifactsRepo()),
-      disabled: false,
       groups: AppStore.getGroups().filter(item => item !== AppConstants.UNGROUPED_GROUP.id),
       release: null
     };
@@ -66,7 +65,7 @@ export default class SoftwareDevices extends React.Component {
     // check that device type matches
     let promisedDevices;
     if (group === allDevices) {
-      promisedDevices = AppActions.getAllDevices();
+      promisedDevices = AppActions.getAllDevicesByStatus('accepted').then(devices => AppActions.getDevicesWithInventory(devices));
     } else if (device) {
       promisedDevices = Promise.resolve([device]);
     } else {
@@ -169,8 +168,8 @@ export default class SoftwareDevices extends React.Component {
               ) : null}
             </div>
             <div ref={ref => (this.groupRef = ref)} style={{ width: 'min-content' }}>
-              {self.state.disabled ? (
-                <TextField value={device ? device.id : ''} label="Device" disabled={self.state.disabled} style={styles.infoStyle} />
+              {device ? (
+                <TextField value={device ? device.id : ''} label="Device" disabled={true} style={styles.infoStyle} />
               ) : (
                 <div>
                   <AutoSelect

@@ -6,19 +6,11 @@ import AddIcon from '@material-ui/icons/Add';
 
 import { Table, TableBody, TableCell, TableHead, TableRow, Select, MenuItem, Input, InputAdornment, IconButton } from '@material-ui/core';
 import CancelIcon from '@material-ui/icons/Cancel';
+import { getRemainderPercent } from '../../../helpers';
 
 export default class PhaseSettings extends React.Component {
   constructor(props, context) {
     super(props, context);
-  }
-
-  getRemainder(phases) {
-    // use this to get remaining percent of last phase so we don't set a hard number
-    let remainder = 100;
-    for (let phase of phases) {
-      remainder = phase.batch_size ? remainder - phase.batch_size : remainder;
-    }
-    return remainder;
   }
 
   updateDelay(value, index) {
@@ -45,11 +37,11 @@ export default class PhaseSettings extends React.Component {
     }
 
     newPhases[index].batch_size = value;
-    const remainder = this.getRemainder(newPhases);
+    const remainder = getRemainderPercent(newPhases);
     // if new remainder will be 0 or negative remove last phase
     if (remainder < 1) {
       newPhases.pop();
-      newPhases[newPhases.length-1].batch_size = this.getRemainder(newPhases);
+      newPhases[newPhases.length-1].batch_size = getRemainderPercent(newPhases);
     }
 
     this.props.deploymentSettings(newPhases, 'phases');
@@ -60,7 +52,7 @@ export default class PhaseSettings extends React.Component {
     let newPhase = {};
 
     // assign new batch size to *previous* last batch
-    const remainder = this.getRemainder(phases);
+    const remainder = getRemainderPercent(phases);
     // make it default 10, unless remainder is <=10 in which case make it half remainder
     let batch_size = (remainder>10) ? 10 : (Math.floor(remainder/2));
     phases[phases.length-1].batch_size = batch_size;
@@ -105,14 +97,14 @@ export default class PhaseSettings extends React.Component {
   render() {
     const self = this;
     const props = self.props;
-    const remainder = self.getRemainder(props.phases);
+    const remainder = getRemainderPercent(props.phases);
 
     // disable 'add phase' if no more devices left
     const disableAdd = ((remainder/100)*props.numberDevices ) < 1;
   
     const phases = props.phases ? props.phases.map((phase, index) => {
       let max = index > 0 ? 100-(props.phases[index-1].batch_size) : 100;
-      const deviceCount = Math.ceil((props.numberDevices / 100) * phase.batch_size);
+      const deviceCount = Math.ceil((props.numberDevices / 100) * (phase.batch_size || remainder));
 
       return (
         <TableRow key={index}>
