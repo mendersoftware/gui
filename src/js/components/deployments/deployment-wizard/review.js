@@ -10,19 +10,18 @@ import { getRemainderPercent } from '../../../helpers';
 
 const Review = props => {
   const { deploymentDeviceIds, device, group, isEnterprise, phases, release } = props;
+
+  // Create 'phases' for view only
   var deploymentPhases = phases ? phases : [{batch_size: 100, start_ts: new Date()}];
-  const start_time = 
-    props.phases 
-      ? props.phases.length
-        ? props.phases[0].start_ts : new Date()
-      : new Date();
+  deploymentPhases[0].start_ts = deploymentPhases[0].start_ts || new Date();
+  const start_time = deploymentPhases[0].start_ts;
 
   const deploymentInformation = [
     { primary: 'Release', secondary: release.name },
     { primary: `Device${device ? '' : ' group'}`, secondary: device ? device.id : group },
     { primary: 'Device types compatible', secondary: release.device_types_compatible.join(', ') },
     { primary: '# devices', secondary: deploymentDeviceIds.length },
-    { primary: 'Start time', secondary: start_time.toLocaleString() }
+    { primary: 'Start time', secondary: start_time ? start_time.toLocaleString() : new Date().toLocaleString() }
   ];
 
   return (
@@ -50,7 +49,10 @@ const Review = props => {
             <div>Batch size</div>
           </div>
           {deploymentPhases.map((row, index) => {
-            const deviceCount = Math.ceil((deploymentDeviceIds.length / 100) * (row.batch_size || getRemainderPercent(deploymentPhases)));
+            row.batch_size = row.batch_size || getRemainderPercent(deploymentPhases);
+            const deviceCount = (index === deploymentPhases.length-1) 
+              ? Math.ceil((deploymentDeviceIds.length / 100) * row.batch_size)
+              : Math.floor((deploymentDeviceIds.length / 100) * row.batch_size);
             return (
               <div className="flexbox column" key={row.start_ts}>
                 <Chip size="small" label={`Phase ${index + 1}`} />

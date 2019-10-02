@@ -39,14 +39,13 @@ export default class ScheduleRollout extends React.Component {
       newPhases[0].start_ts = value;
       self.updatePhaseStarts(newPhases);
     }
-    
   }
 
   updatePhaseStarts(phases) {
     const self = this;
     // Iterate through phases starting from 2nd ensuring start times are based on delay from previous phase
     for (let i=1; i<phases.length; i++) {
-      let dateObj = new Date(phases[i-1].start_ts);
+      let dateObj = phases[i-1].start_ts ? new Date(phases[i-1].start_ts) : new Date();
       dateObj = dateObj.setHours(dateObj.getHours()+(phases[i-1].delay));
       phases[i].start_ts = new Date(dateObj).toISOString();
       if (i>=phases.length-1) {
@@ -65,11 +64,11 @@ export default class ScheduleRollout extends React.Component {
   handlePatternChange(value) {
     let phases = [];
     // check if a start time already exists from props and if so, use it
-    let start_ts = this.props.phases ? this.props.phases[0].start_ts : new Date().toISOString();
+    let start_ts = this.props.phases ? this.props.phases[0].start_ts : null;
     // if setting new custom pattern we use default 2 phases
     if (value !== 0) {
       phases = [{batch_size:10, start_ts:start_ts, delay:2},{}];
-      this.updatePhaseStarts(phases) ;
+      this.updatePhaseStarts(phases);
     } else {
       phases = [{batch_size:100, start_ts:start_ts}];
       this.props.deploymentSettings(phases, 'phases')

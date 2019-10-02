@@ -27,7 +27,6 @@ export default class PhaseSettings extends React.Component {
   }
 
   updateBatchSize(value, index) {
-    // When phase's batch size changes, adjust other phases' batch sizes starting with 'remainder' first.
     let newPhases = this.props.phases;
 
     if (value < 1) {
@@ -37,13 +36,13 @@ export default class PhaseSettings extends React.Component {
     }
 
     newPhases[index].batch_size = value;
+    // When phase's batch size changes, check for new 'remainder' 
     const remainder = getRemainderPercent(newPhases);
     // if new remainder will be 0 or negative remove last phase
     if (remainder < 1) {
       newPhases.pop();
       newPhases[newPhases.length-1].batch_size = getRemainderPercent(newPhases);
     }
-
     this.props.deploymentSettings(newPhases, 'phases');
   }
 
@@ -101,11 +100,13 @@ export default class PhaseSettings extends React.Component {
 
     // disable 'add phase' if no more devices left
     const disableAdd = ((remainder/100)*props.numberDevices ) < 1;
-  
     const phases = props.phases ? props.phases.map((phase, index) => {
       let max = index > 0 ? 100-(props.phases[index-1].batch_size) : 100;
-      const deviceCount = Math.ceil((props.numberDevices / 100) * (phase.batch_size || remainder));
+      const deviceCount = (index === props.phases.length-1) 
+        ? Math.ceil((props.numberDevices / 100) * (phase.batch_size || remainder))
+        : Math.floor((props.numberDevices / 100) * phase.batch_size);
 
+      const startTime = !(index && phase.start_ts) ? new Date().toISOString() : phase.start_ts;
       return (
         <TableRow key={index}>
           <TableCell component="th" scope="row">
@@ -127,7 +128,7 @@ export default class PhaseSettings extends React.Component {
             : phase.batch_size || remainder}
           <span className="info" style={{marginLeft:'5px'}}>{`(${deviceCount} ${pluralize('device', deviceCount)})`}</span>
           </TableCell>
-          <TableCell>{phase.start_ts}</TableCell>
+          <TableCell>{startTime.toLocaleString()}</TableCell>
           <TableCell>
             { phase.delay && (index!==props.phases.length-1) ?
               <div>
