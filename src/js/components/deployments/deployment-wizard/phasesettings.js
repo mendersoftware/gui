@@ -109,7 +109,7 @@ export default class PhaseSettings extends React.Component {
       return (
         <TableRow key={index}>
           <TableCell component="th" scope="row">
-            <Chip size="small" label={'Phase ' + (index+1).toString()} />
+            <Chip size="small" label={`Phase ${index+1}`} />
           </TableCell>
           <TableCell>{phase.batch_size && (phase.batch_size<100) ? 
             <Input
