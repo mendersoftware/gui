@@ -87,7 +87,8 @@ export default class Deployments extends React.Component {
         if (params.get('id')) {
           self._getReportById(params.get('id'));
         } else if (params.get('release')) {
-          const release = AppStore.getRelease(params.get('release'));
+          const release = self.flattenRelease(AppStore.getRelease(params.get('release')));
+          console.log(release);
           self.setState({
             createDialog: true,
             releaseArtifacts: release ? release.Artifacts : null,
@@ -143,6 +144,19 @@ export default class Deployments extends React.Component {
       pageLength: AppStore.getTotalDevices(),
       isHosted: AppStore.getIsHosted()
     };
+  }
+
+  flattenRelease(release) {
+    if (release && release.hasOwnProperty('Artifacts')) {
+      return release.Artifacts.reduce(
+        (accu, item) => {
+          accu.device_types_compatible = accu.device_types_compatible.concat(item.device_types_compatible);
+          return accu;
+        },
+        { name: release.Name, device_types_compatible: [] }
+      );
+    }
+    return release;
   }
 
   _refreshDeployments() {
