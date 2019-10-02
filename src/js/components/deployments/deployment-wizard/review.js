@@ -12,16 +12,15 @@ const Review = props => {
   const { deploymentDeviceIds, device, group, isEnterprise, phases, release } = props;
 
   // Create 'phases' for view only
-  var deploymentPhases = phases ? phases : [{batch_size: 100, start_ts: new Date()}];
-  deploymentPhases[0].start_ts = deploymentPhases[0].start_ts || new Date();
-  const start_time = deploymentPhases[0].start_ts;
+  var deploymentPhases = phases ? phases : [{batch_size: 100}];
+  const start_time = deploymentPhases[0].start_ts || new Date().toISOString();
 
   const deploymentInformation = [
     { primary: 'Release', secondary: release.name },
     { primary: `Device${device ? '' : ' group'}`, secondary: device ? device.id : group },
     { primary: 'Device types compatible', secondary: release.device_types_compatible.join(', ') },
     { primary: '# devices', secondary: deploymentDeviceIds.length },
-    { primary: 'Start time', secondary: start_time ? start_time.toLocaleString() : new Date().toLocaleString() }
+    { primary: 'Start time', secondary: start_time}
   ];
 
   return (
@@ -54,9 +53,9 @@ const Review = props => {
               ? Math.ceil((deploymentDeviceIds.length / 100) * row.batch_size)
               : Math.floor((deploymentDeviceIds.length / 100) * row.batch_size);
             return (
-              <div className="flexbox column" key={row.start_ts}>
+              <div className="flexbox column" key={row.start_ts || start_time}>
                 <Chip size="small" label={`Phase ${index + 1}`} />
-                <div>{row.start_ts.toLocaleString()}</div>
+                <div>{(row.start_ts || start_time).toLocaleString()}</div>
                 <div>{`${row.batch_size}% (${deviceCount}) ${pluralize('device', deviceCount)}`}</div>
               </div>
             );
