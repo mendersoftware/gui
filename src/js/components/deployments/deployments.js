@@ -499,7 +499,7 @@ export default class Deployments extends React.Component {
                   <div className={this.state.progress.length || !this.state.doneLoading ? 'hidden' : 'dashboard-placeholder'}>
                     <p>Pending and ongoing deployments will appear here. </p>
                     <p>
-                      <a onClick={() => this.setState({ scheduleDialog: true })}>Create a deployment</a> to get started
+                      <a onClick={() => this.setState({ createDialog: true })}>Create a deployment</a> to get started
                     </p>
                     <img src="assets/img/deployments.png" alt="In progress" />
                   </div>
