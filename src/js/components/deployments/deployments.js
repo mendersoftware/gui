@@ -471,7 +471,7 @@ export default class Deployments extends React.Component {
         </Tabs>
 
         {tabIndex === routes.active.route && (
-          <div>
+          <>
             {this.state.doneLoading ? (
               <div className="margin-top">
                 <DeploymentsList
@@ -508,7 +508,7 @@ export default class Deployments extends React.Component {
             ) : (
               <Loader show={this.state.doneLoading} />
             )}
-          </div>
+          </>
         )}
         {tabIndex === routes.finished.route && (
           <div className="margin-top">
