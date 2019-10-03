@@ -35,7 +35,7 @@ export default class PhaseSettings extends React.Component {
       value = 100;
     }
 
-    newPhases[index].batch_size = value;
+    newPhases[index].batch_size = Number(value);
     // When phase's batch size changes, check for new 'remainder' 
     const remainder = getRemainderPercent(newPhases);
     // if new remainder will be 0 or negative remove last phase
