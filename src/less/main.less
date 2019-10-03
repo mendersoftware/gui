@@ -2044,11 +2044,19 @@ span.day {
   }
 }
 
-.deployment-phases-list > .column {
-  margin-right: @defaultGutterWidth;
-  justify-content: flex-end;
-  & > div {
-   margin-bottom: @defaultGutterWidth;
+.deployment-phases-list {
+  overflow: auto;
+  max-width: 900px;
+  & > .column {
+    min-width: 115px;
+    margin: 0 5px;
+    justify-content: flex-end;
+    & > div {
+      margin: 5px 0;
+    }
+    .MuiChip-root {
+      width: fit-content;
+    }
   }
 }
 
