@@ -7,7 +7,10 @@ const EnterpriseNotification = props => {
     !props.isEnterprise && (
       <p className="info icon">
         <InfoOutlinedIcon fontSize="small" style={{ verticalAlign: 'middle', margin: '0 6px 4px 0' }} />
-        {`Hosted Mender & Mender Enterprise users can ${props.benefit}. ${<a href="https://mender.io">Learn more</a>}`}
+        {`Hosted Mender & Mender Enterprise users can ${props.benefit}. `}
+        <a href="https://mender.io" target="_blank">
+          Learn more
+        </a>
       </p>
     )
   );
