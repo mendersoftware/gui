@@ -42,7 +42,7 @@ const Review = props => {
 
         <h4 className="margin-bottom-none">Rollout Schedule</h4>
 
-        <div className="flexbox deployment-phases-list margin-top-small">
+        <div className="flexbox deployment-phases-list margin-top-small margin-bottom-small">
           <div className="flexbox column align-right">
             <div>Phase begins</div>
             <div>Batch size</div>
