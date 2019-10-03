@@ -88,7 +88,6 @@ export default class Deployments extends React.Component {
           self._getReportById(params.get('id'));
         } else if (params.get('release')) {
           const release = self.flattenRelease(AppStore.getRelease(params.get('release')));
-          console.log(release);
           self.setState({
             createDialog: true,
             releaseArtifacts: release ? release.Artifacts : null,

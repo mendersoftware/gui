@@ -45,9 +45,10 @@ export default class ScheduleRollout extends React.Component {
     const self = this;
     // Iterate through phases starting from 2nd ensuring start times are based on delay from previous phase
     for (let i=1; i<phases.length; i++) {
-      let dateObj = phases[i-1].start_ts ? new Date(phases[i-1].start_ts) : new Date();
-      dateObj = dateObj.setHours(dateObj.getHours()+(phases[i-1].delay));
-      phases[i].start_ts = new Date(dateObj).toISOString();
+      let delay = phases[i-1].delay;
+      let prevTime = phases[i-1].start_ts ? new Date(phases[i-1].start_ts) : new Date();
+      let newDateObj = prevTime.setTime(prevTime.getTime()+(delay*60*60*1000));
+      phases[i].start_ts = new Date(newDateObj).toISOString();
       if (i>=phases.length-1) {
         self.props.deploymentSettings(phases, 'phases');
       }

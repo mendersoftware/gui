@@ -1,5 +1,5 @@
 import React from 'react';
-
+import Time from 'react-time';
 import pluralize from 'pluralize';
 
 import { Chip, List } from '@material-ui/core';
@@ -20,7 +20,7 @@ const Review = props => {
     { primary: `Device${device ? '' : ' group'}`, secondary: device ? device.id : group },
     { primary: 'Device types compatible', secondary: release.device_types_compatible.join(', ') },
     { primary: '# devices', secondary: deploymentDeviceIds.length },
-    { primary: 'Start time', secondary: start_time}
+    { primary: 'Start time', secondary: <Time value={start_time} format="YYYY-MM-DD HH:mm" />}
   ];
 
   return (
@@ -55,7 +55,7 @@ const Review = props => {
             return (
               <div className="flexbox column" key={row.start_ts || start_time}>
                 <Chip size="small" label={`Phase ${index + 1}`} />
-                <div>{(row.start_ts || start_time).toLocaleString()}</div>
+                <div><Time value={(row.start_ts || start_time)} format="YYYY-MM-DD HH:mm" /></div>
                 <div>{`${row.batch_size}% (${deviceCount}) ${pluralize('device', deviceCount)}`}</div>
               </div>
             );

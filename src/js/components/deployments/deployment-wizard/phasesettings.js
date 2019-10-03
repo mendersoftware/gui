@@ -1,5 +1,6 @@
 import React from 'react';
 import pluralize from 'pluralize';
+import Time from 'react-time';
 
 import Chip from '@material-ui/core/Chip';
 import AddIcon from '@material-ui/icons/Add';
@@ -128,7 +129,7 @@ export default class PhaseSettings extends React.Component {
             : phase.batch_size || remainder}
           <span className="info" style={{marginLeft:'5px'}}>{`(${deviceCount} ${pluralize('device', deviceCount)})`}</span>
           </TableCell>
-          <TableCell>{startTime.toLocaleString()}</TableCell>
+          <TableCell><Time value={startTime} format="YYYY-MM-DD HH:mm" /></TableCell>
           <TableCell>
             { phase.delay && (index!==props.phases.length-1) ?
               <div>
