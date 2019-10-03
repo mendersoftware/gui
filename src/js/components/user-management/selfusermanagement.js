@@ -152,7 +152,10 @@ export default class SelfUserManagement extends React.Component {
         </Form>
         {isEnterprise ? (
           <div className="margin-top">
-            <div className="clickable flexbox space-between" onClick={() => self.setState({ qrExpanded: !qrExpanded })}>
+            <div
+              className="clickable flexbox space-between"
+              onClick={() => self.setState({ qrExpanded: has2fa && !qrExpanded ? self.handle2FAState(false) : !qrExpanded })}
+            >
               <p className="help-content">Enable Two Factor authentication</p>
               <Switch checked={has2fa || qrExpanded} />
             </div>
