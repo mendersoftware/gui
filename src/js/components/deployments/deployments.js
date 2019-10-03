@@ -13,7 +13,7 @@ import DeploymentsList from './deploymentslist';
 import Progress from './inprogressdeployments';
 import Past from './pastdeployments';
 import Report from './report';
-import ScheduleDialog from './scheduledialog';
+import CreateDialog from './createdeployment';
 
 import { preformatWithRequestID } from '../../helpers';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
@@ -49,9 +49,8 @@ export default class Deployments extends React.Component {
       prog_page: 1,
       pend_page: 1,
       refreshDeploymentsLength: 30000,
-      dialog: false,
       reportDialog: false,
-      scheduleDialog: false,
+      createDialog: false,
       ...this._getInitialState()
     };
   }
@@ -88,16 +87,31 @@ export default class Deployments extends React.Component {
         if (params.get('id')) {
           self._getReportById(params.get('id'));
         } else if (params.get('release')) {
-          const release = AppStore.getRelease(params.get('release'));
+          const release = self.flattenRelease(AppStore.getRelease(params.get('release')));
           self.setState({
-            scheduleDialog: true,
+            createDialog: true,
             releaseArtifacts: release ? release.Artifacts : null,
             release,
             artifact: release && release.Artifacts ? release.Artifacts[0] : null
           });
+        } else if (params.get('deviceId')) {
+          AppActions.getDeviceById(params.get('deviceId'))
+            .then(device => { 
+              self.setState({
+                createDialog: true,
+                device: device,
+                deploymentDeviceIds: [device.id],
+              });
+            })
+            .catch(err => {
+              console.log(err);
+              var errMsg = err.res.body.error || '';
+              AppActions.setSnackbar(preformatWithRequestID(err.res, `Error fetching device details. ${errMsg}`), null, 'Copy to clipboard');
+            });
+  
         } else {
           setTimeout(() => {
-            self.setState({ scheduleDialog: true });
+            self.setState({ createDialog: true });
           }, 400);
         }
       }
@@ -105,7 +119,7 @@ export default class Deployments extends React.Component {
     this.setState({ reportType: this.props.match ? this.props.match.params.tab : 'active' });
 
     const query = new URLSearchParams(this.props.location.search);
-    this.setState({ scheduleDialog: Boolean(query.get('open')) || false });
+    this.setState({ createDialog: Boolean(query.get('open')) || false });
   }
 
   componentWillUnmount() {
@@ -121,17 +135,27 @@ export default class Deployments extends React.Component {
       pending: AppStore.getPendingDeployments(),
       progress: AppStore.getDeploymentsInProgress() || [],
       events: AppStore.getEventLog(),
-      collatedArtifacts: AppStore.getCollatedArtifacts(),
-      groups: AppStore.getGroups(),
       hasDeployments: AppStore.getHasDeployments(),
       showHelptips: AppStore.showHelptips(),
       hasPending: AppStore.getTotalPendingDevices(),
       hasDevices: AppStore.getTotalAcceptedDevices(),
-      release: AppStore.getDeploymentRelease(),
       user: AppStore.getCurrentUser(),
       pageLength: AppStore.getTotalDevices(),
       isHosted: AppStore.getIsHosted()
     };
+  }
+
+  flattenRelease(release) {
+    if (release && release.hasOwnProperty('Artifacts')) {
+      return release.Artifacts.reduce(
+        (accu, item) => {
+          accu.device_types_compatible = accu.device_types_compatible.concat(item.device_types_compatible);
+          return accu;
+        },
+        { name: release.Name, device_types_compatible: [] }
+      );
+    }
+    return release;
   }
 
   _refreshDeployments() {
@@ -276,41 +300,28 @@ export default class Deployments extends React.Component {
     this.setState(this._getInitialState());
   }
 
-  _getGroupDevices(group) {
-    // get list of devices for each group and save them to state
-    var self = this;
-    return AppActions.getAllDevicesInGroup(group).then(devices => {
-      let state = {};
-      state[group] = devices;
-      self.setState(state);
-    });
-  }
-
-  dialogDismiss() {
-    this.setState({
-      reportDialog: false,
-      artifact: null,
-      release: null,
-      releaseArtifacts: null,
-      group: null
-    });
-  }
-
   _retryDeployment(deployment, devices) {
-    var self = this;
-    var artifact = { name: deployment.artifact_name, device_types_compatible: deployment.device_types_compatible || [] };
-    this.setState({ artifact, group: deployment.name, filteredDevices: devices }, () => self._onScheduleSubmit(deployment.name, devices, artifact));
+    const self = this;
+    const release = { name: deployment.artifact_name, device_types_compatible: deployment.device_types_compatible || [] };
+    const deploymentObject = {
+      group: deployment.name,
+      deploymentDeviceIds: devices.map(item => item.id),
+      release,
+      phases: deployment.phases ? deployment.phases : null
+    }
+    self.setState({ release, group: deployment.name, filteredDevices: devices }, () => self._onScheduleSubmit(deploymentObject));
   }
 
-  _onScheduleSubmit(group, devices, artifact) {
+  _onScheduleSubmit(deploymentObject) {
     var self = this;
-    var ids = devices.map(device => device.id);
+    const { group, deploymentDeviceIds, release, phases } = deploymentObject;
     var newDeployment = {
       name: decodeURIComponent(group) || 'All devices',
-      artifact_name: artifact.name,
-      devices: ids
+      artifact_name: release.name,
+      devices: deploymentDeviceIds,
+      phases: phases
     };
-    self.setState({ doneLoading: false, scheduleDialog: false });
+    self.setState({ doneLoading: false, createDialog: false, reportDialog: false });
 
     return AppActions.createDeployment(newDeployment)
       .then(data => {
@@ -346,70 +357,12 @@ export default class Deployments extends React.Component {
         AppActions.setSnackbar(preformatWithRequestID(err.res, `Error creating deployment. ${errMsg}`), null, 'Copy to clipboard');
       });
   }
-  _deploymentParams(val, attr) {
-    // updating params from child schedule form
-    var tmp = {};
-    tmp[attr] = val;
-    this.setState(tmp);
-    var group = attr === 'group' ? val : this.state.group;
-    var artifact = attr === 'artifact' ? val : this.state.artifact;
-    this._getDeploymentDevices(group, artifact);
-  }
-  _getDeploymentDevices(group, artifact) {
-    var devices = [];
-    var filteredDevices = [];
-    // set the selected groups devices to state, to be sent down to the child schedule form
-    if (artifact && group) {
-      devices = (group !== 'All devices' ? this.state[group] : this.state.allDevices) || [];
-      filteredDevices = devices;
-      if (devices.length < AppStore.getDeploymentDeviceLimit()) {
-        filteredDevices = AppStore.filterDevicesByType(devices, artifact.device_types_compatible);
-      }
-    }
-    this.setState({ deploymentDevices: devices, filteredDevices: filteredDevices });
-  }
   _getReportById(id) {
     var self = this;
     return AppActions.getSingleDeployment(id).then(data => self._showReport(data, self.state.reportType));
   }
   _showReport(selectedDeployment, reportType) {
-    this.setState({ scheduleDialog: false, selectedDeployment, reportType, reportDialog: true });
-  }
-  _scheduleDeployment(deployment) {
-    var artifact = '';
-    var group = '';
-    var start_time = null;
-    var end_time = null;
-    var id = null;
-    if (deployment) {
-      if (deployment.id) {
-        id = deployment.id;
-      }
-      if (deployment.artifact_name) {
-        artifact = AppStore.getSoftwareArtifact('name', deployment.artifact_name);
-      }
-      if (deployment.group) {
-        group = AppStore.getSingleGroup('name', deployment.group);
-      }
-      if (deployment.start_time) {
-        start_time = deployment.start_time;
-      }
-      if (deployment.end_time) {
-        end_time = deployment.end_time;
-      }
-    }
-    this.setState({
-      dialog: false,
-      scheduleDialog: true,
-      id: id,
-      start_time: start_time,
-      end_time: end_time,
-      artifact: artifact,
-      group: group
-    });
-  }
-  _handleRequestClose() {
-    AppActions.setSnackbar('');
+    this.setState({ createDialog: false, selectedDeployment, reportType, reportDialog: true });
   }
   _showProgress(rowNumber) {
     var deployment = this.state.progress[rowNumber];
@@ -423,7 +376,7 @@ export default class Deployments extends React.Component {
         clearInterval(self.timer);
         self.timer = setInterval(() => self._refreshDeployments(), self.state.refreshDeploymentsLength);
         self._refreshDeployments();
-        self.setState({ scheduleDialog: false });
+        self.setState({ createDialog: false });
         AppActions.setSnackbar('The deployment was successfully aborted');
       })
       .catch(err => {
@@ -483,7 +436,7 @@ export default class Deployments extends React.Component {
 
     var dialogContent = '';
     const dialogProps = {
-      updated: () => this.updated(),
+      updated: () => this.setState({ updated: true }),
       deployment: this.state.selectedDeployment
     };
     if (this.state.reportType === 'active') {
@@ -493,7 +446,7 @@ export default class Deployments extends React.Component {
     }
 
     // tabs
-    const { past, per_page, pastCount, tabIndex } = this.state;
+    const { past, per_page, pastCount, release, tabIndex } = this.state;
     let onboardingComponent = null;
     if (past.length || pastCount) {
       onboardingComponent = getOnboardingComponentFor('deployments-past', { anchor: { left: 240, top: 50 } });
@@ -505,7 +458,7 @@ export default class Deployments extends React.Component {
           className="top-right-button"
           color="secondary"
           variant="contained"
-          onClick={() => this.setState({ scheduleDialog: true })}
+          onClick={() => this.setState({ createDialog: true })}
           style={{ position: 'absolute' }}
         >
           Create a deployment
@@ -545,7 +498,7 @@ export default class Deployments extends React.Component {
                   <div className={this.state.progress.length || !this.state.doneLoading ? 'hidden' : 'dashboard-placeholder'}>
                     <p>Pending and ongoing deployments will appear here. </p>
                     <p>
-                      <a onClick={() => this.setState({ scheduleDialog: true })}>Create a deployment</a> to get started
+                      <a onClick={() => this.setState({ createDialog: true })}>Create a deployment</a> to get started
                     </p>
                     <img src="assets/img/deployments.png" alt="In progress" />
                   </div>
@@ -561,7 +514,7 @@ export default class Deployments extends React.Component {
             <Past
               groups={this.state.groups}
               deviceGroup={this.state.groupFilter}
-              createClick={() => this.setState({ scheduleDialog: true })}
+              createClick={() => this.setState({ createDialog: true })}
               pageSize={per_page}
               onChangeRowsPerPage={perPage => self.setState({ per_page: perPage, page: 1 }, () => self._changePastPage())}
               startDate={this.state.startDate}
@@ -586,32 +539,13 @@ export default class Deployments extends React.Component {
           <DialogActions>{reportActions}</DialogActions>
         </Dialog>
 
-        <ScheduleDialog
-          open={this.state.scheduleDialog}
-          hasDeployments={this.state.hasDeployments}
-          showHelptips={this.state.showHelptips}
-          deploymentDevices={this.state.deploymentDevices}
-          filteredDevices={this.state.filteredDevices}
-          hasPending={this.state.hasPending}
-          hasDevices={this.state.hasDevices}
-          deploymentSettings={(...args) => this._deploymentParams(...args)}
-          releaseArtifacts={this.state.releaseArtifacts}
-          artifacts={this.state.collatedArtifacts}
-          artifact={this.state.artifact}
-          groups={this.state.groups}
-          group={this.state.group}
-          onDismiss={() =>
-            this.setState({
-              scheduleDialog: false,
-              releaseArtifacts: null,
-              release: null,
-              artifact: null,
-              group: null,
-              deploymentDevices: null,
-              filteredDevices: null
-            })
-          }
+        <CreateDialog
+          open={this.state.createDialog}
+          onDismiss={() => self.setState({ createDialog: false, device: null })}
           onScheduleSubmit={(...args) => this._onScheduleSubmit(...args)}
+          deploymentRelease={release}
+          hasDevices={this.state.hasDevices}
+          device={this.state.device}
         />
         {onboardingComponent}
       </div>

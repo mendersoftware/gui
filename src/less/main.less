@@ -1300,9 +1300,19 @@ input[required]:-moz-ui-invalid {
   background-color: rgba(66, 66, 66, 0.03);
 }
 
-p.info {
-  margin: 20px 0;
+p.info, span.info {
+  margin: 15px 0;
   color: rgba(66, 66, 66, 0.6);
+
+  &.icon {
+    position: relative;
+    padding-left: 30px;
+
+    svg {
+      position: absolute;
+      left: 0;
+    }
+  }
 }
 
 form .required::after {
@@ -1534,6 +1544,12 @@ tr.expand {
   }
 }
 
+.bordered {
+  border: 1px solid @lightgrey;
+  margin-top: 10px;
+  padding: 5px 20px;
+}
+
 .deviceList {
   min-width: 800px;
   .header {
@@ -1557,12 +1573,6 @@ tr.expand {
     .expandedDevice {
       padding-left: 48px;
       padding-right: 35px;
-    }
-    .device-identity.bordered,
-    .device-inventory.bordered {
-      border: 1px solid @lightgrey;
-      margin-top: 10px;
-      padding: 5px 20px;
     }
     .device-identity,
     .device-actions {
@@ -1656,6 +1666,44 @@ div.waiting-inventory {
   right: @defaultGutterWidth;
 }
 
+/* Tags */
+
+.tagContainer {
+  margin-top: 20px;
+}
+
+.ReactTags__tag {
+  margin-right: 10px;
+  margin-bottom: 5px;
+  padding: 5px;
+  background-color: @lightgrey;
+  color: @linkhover;
+  display: inline-block;
+  margin-top: 5px;
+  font-size: 13px;
+}
+
+.ReactTags__remove {
+  cursor: pointer;
+  padding: 10px 0 10px 10px;
+}
+
+.ReactTags__tagInput input,
+.ReactTags__tagInput input:focus,
+input.fileInput {
+  outline: none;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  border-bottom: solid 1px @bordercolor;
+  padding: 7px 0;
+  font-size: 16px;
+  font-family: Lato, sans-serif;
+  color: rgba(0, 0, 0, 0.8);
+
+  .placeholder({color: rgba(0, 0, 0, 0.3) ;});
+}
+
 /* Dashboard */
 
 .dashboard-placeholder {
@@ -1738,6 +1786,150 @@ span.day {
   svg {
     vertical-align: middle;
     margin: 0px 10px 4px 0;
+  }
+}
+
+.progress-container {
+  padding-bottom: 3 * @defaultGutterWidth;
+
+  .device-info {
+    position: absolute;
+    width: 33%;
+    right: -16px;
+    background-color: #fff;
+    top: -2 * @defaultGutterWidth;
+    bottom: @defaultGutterWidth;
+    z-index: 300;
+    padding: 0 2 * @defaultGutterWidth;
+    box-sizing: border-box;
+    display: none;
+    border-left: 1px @linkhover solid;
+    font-size: 12px;
+    word-break: break-all;
+
+    &.show {
+      display: block;
+      .animation(fadein 0.2s 1);
+    }
+  }
+
+  .key {
+    color: @grey;
+    font-size: 12px;
+    clear: both;
+    vertical-align: middle;
+    margin-top: 10px;
+    text-align: center;
+    width: 60%;
+
+    .bubble {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      display: inline-block;
+      margin-left: 6px;
+      margin-right: 2px;
+      margin-top: -2px;
+      vertical-align: middle;
+      position: relative;
+      background-size: cover;
+
+      &.success {
+        background-image: url('../assets/img/success_status.png');
+      }
+      &.failure {
+        background-image: url('../assets/img/error_status.png');
+      }
+      &.pending {
+        background-image: url('../assets/img/pending_status.png');
+      }
+      &.inprogress,
+      &.installing {
+        background-image: url('../assets/img/progress_status.png');
+      }
+      &.downloading,
+      &.rebooting {
+        background-image: url('../assets/img/progress_status.png');
+      }
+    }
+  }
+
+  .progressHeader {
+    position: absolute;
+    top: -3 * @defaultGutterWidth;
+    left: 18%;
+    color: #757575;
+    font-size: 14px;
+  }
+
+  .bubbles-contain {
+    height: 100px;
+    min-width: 300px;
+    width: 60%;
+    position: relative;
+    top: -10px;
+    padding-left: 2 * @defaultGutterWidth;
+
+    > div {
+      float: left;
+      margin: 0 10px 4px 0;
+      position: relative;
+      cursor: pointer;
+      max-height: 80px;
+      max-width: 80px;
+
+      &:hover:after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 110%;
+        width: 500px;
+        border-bottom: 1px @linkhover solid;
+        z-index: 200;
+        .animation(fadein 0.6s 1);
+      }
+    }
+
+    .bubble {
+      border-radius: 50%;
+      position: relative;
+      display: block;
+      height: 100%;
+      width: 100%;
+      background-size: 66%;
+      background-repeat: no-repeat;
+      background-position: center;
+      background-color: @lightergrey;
+
+      &:hover {
+        .scale(1.15);
+        .transition(all 0.2s ease);
+        border: 1px solid @linkhover;
+      }
+    }
+
+    .inprogress .bubble,
+    .installing .bubble {
+      .animation(pulse 2.8s infinite);
+      background-image: url('../assets/img/progress_status_large.png');
+    }
+
+    .downloading .bubble,
+    .rebooting .bubble {
+      .animation(pulse 2.8s infinite);
+      background-image: url('../assets/img/progress_status.png');
+    }
+
+    .pending .bubble {
+      background-color: lighten(@lightergrey, 4%);
+      background-image: url('../assets/img/pending_status_large.png');
+    }
+    .failure .bubble {
+      background-image: url('../assets/img/error_status_large.png');
+    }
+    .success .bubble {
+      background-image: url('../assets/img/success_status_large.png');
+    }
   }
 }
 
@@ -1849,6 +2041,22 @@ span.day {
     width: 100%;
     height: 100%;
     justify-content: flex-end;
+  }
+}
+
+.deployment-phases-list {
+  overflow: auto;
+  max-width: 900px;
+  & > .column {
+    min-width: 115px;
+    margin: 0 5px;
+    justify-content: flex-end;
+    & > div {
+      margin: 5px 0;
+    }
+    .MuiChip-root {
+      width: fit-content;
+    }
   }
 }
 
