@@ -400,3 +400,12 @@ export const findLocalIpAddress = () => {
     }
   });
 };
+
+export const getRemainderPercent = phases => {
+  // use this to get remaining percent of last phase so we don't set a hard number
+  let remainder = 100;
+  for (let phase of phases) {
+    remainder = phase.batch_size ? remainder - phase.batch_size : remainder;
+  }
+  return remainder;
+};

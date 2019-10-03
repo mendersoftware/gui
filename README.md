@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/mendersoftware/gui.svg?branch=master)](https://travis-ci.org/mendersoftware/gui)
+[![Build Status](https://gitlab.com/Northern.tech/Mender/gui/badges/master/pipeline.svg)](https://gitlab.com/Northern.tech/Mender/gui/pipelines)
 [![Docker pulls](https://img.shields.io/docker/pulls/mendersoftware/gui.svg?maxAge=3600)](https://hub.docker.com/r/mendersoftware/gui/)
 
 # Mender: GUI

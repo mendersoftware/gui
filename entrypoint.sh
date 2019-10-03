@@ -19,8 +19,6 @@ if [ -n "$GATEWAY_PORT" ]; then
     HOSTNAME=$HOSTNAME':'$GATEWAY_PORT
 fi
 
-touch /var/www/mender-gui/dist/version
-
 cat >/var/www/mender-gui/dist/env.js <<EOF
   mender_environment = {
     hostAddress: "$HOSTNAME",
@@ -38,7 +36,7 @@ cat >/var/www/mender-gui/dist/env.js <<EOF
     services: {
       deploymentsVersion: "$MENDER_DEPLOYMENTS_VERSION",
       deviceauthVersion: "$MENDER_DEVICEAUTH_VERSION",
-      guiVersion: "$(cat /var/www/mender-gui/dist/version)",
+      guiVersion: "${GIT_REF}_${GIT_COMMIT}",
       inventoryVersion: "$MENDER_INVENTORY_VERSION"
     },
     demoArtifactPort: "$DEMO_ARTIFACT_PORT",

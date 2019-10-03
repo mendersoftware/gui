@@ -26,7 +26,7 @@ export default class ExpandableDeviceAttribute extends React.Component {
 
   render() {
     const self = this;
-    const { primary, secondary, classes, textClasses } = self.props;
+    const { primary, secondary, classes, textClasses, dividerDisabled, style } = self.props;
     const defaultClasses = { root: 'attributes' };
     const currentTextClasses = `${textClasses ? textClasses.secondary : ''} ${self.state.expanded && self.state.overflowActive ? 'expanded-attribute' : ''}`;
     let secondaryText = (
@@ -38,11 +38,11 @@ export default class ExpandableDeviceAttribute extends React.Component {
       </div>
     );
     return (
-      <div onClick={() => self.setState({ expanded: !self.state.expanded })}>
+      <div onClick={() => self.setState({ expanded: !self.state.expanded })} style={style}>
         <ListItem classes={classes || defaultClasses} disabled={true}>
           <ListItemText primary={primary} secondary={secondaryText} secondaryTypographyProps={{ title: secondary, component: 'div' }} />
         </ListItem>
-        <Divider />
+        {dividerDisabled ? null : <Divider />}
       </div>
     );
   }

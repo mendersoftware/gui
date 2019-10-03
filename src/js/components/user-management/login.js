@@ -62,19 +62,21 @@ export default class Login extends React.Component {
   _handleLoginError(err) {
     const self = this;
     const settings = AppStore.getGlobalSettings();
-    const is2FABackend = err.error.text.error.includes('2fa');
+    const is2FABackend = err.error.text.error && err.error.text.error.includes('2fa');
     if (is2FABackend && !settings.hasOwnProperty('2fa')) {
       AppActions.saveGlobalSettings(Object.assign(settings, { '2fa': 'enabled' }));
       return self.setState({ has2FA: true });
     }
     let errMsg = 'There was a problem logging in';
-    if (err.res.body && Object.keys(err.res.body).includes('error')) {
+    if (err.res && err.res.body && Object.keys(err.res.body).includes('error')) {
       const twoFAError = is2FABackend || (settings.hasOwnProperty('2fa') && settings['2fa'] === 'enabled') ? ' and verification code' : '';
       const errorMessage = `There was a problem logging in. Please check your email${
         twoFAError ? ',' : ' and'
       } password${twoFAError}. If you still have problems, contact an administrator.`;
       // if error message, check for "unauthorized"
       errMsg = err.res.body['error'] === 'unauthorized' ? errorMessage : `${errMsg}: ${err.res.body['error']}`;
+    } else {
+      errMsg = `${errMsg}\n${err.error.text && err.error.text.message ? err.error.text.message : ''}`;
     }
     AppActions.setSnackbar(preformatWithRequestID(err.res, errMsg), null, 'Copy to clipboard');
   }

@@ -29,6 +29,12 @@ export default class AutoSelect extends React.Component {
     clearTimeout(this.timeout);
   }
 
+  componentDidMount() {
+    if (this.props.value) {
+      this.setState({searchTerm: this.props.value});
+    }
+  }
+
   searchUpdated(searchTerm) {
     clearTimeout(this.timeout);
     const open = Boolean(searchTerm.length);
