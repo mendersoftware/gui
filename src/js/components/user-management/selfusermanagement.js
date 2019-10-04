@@ -1,4 +1,7 @@
 import React from 'react';
+
+import { Collapse, Switch, TextField } from '@material-ui/core';
+
 import Form from '../common/forms/form';
 import TextInput from '../common/forms/textinput';
 import PasswordInput from '../common/forms/passwordinput';
@@ -8,15 +11,15 @@ import AppActions from '../../actions/app-actions';
 import AppStore from '../../stores/app-store';
 
 import { preformatWithRequestID } from '../../helpers';
-import { Collapse, Switch, TextField } from '@material-ui/core';
 import Loader from '../common/loader';
+import EnterpriseNotification from '../common/enterpriseNotification';
 
 export default class SelfUserManagement extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = Object.assign({ qrExpanded: false }, this._getState());
     AppActions.getGlobalSettings().then(settings => {
-      if (AppStore.getIsEnterprise() && !settings.hasOwnProperty('2fa')) {
+      if ((AppStore.getIsEnterprise() || AppStore.getIsHosted()) && !settings.hasOwnProperty('2fa')) {
         AppActions.saveGlobalSettings(Object.assign(settings, { '2fa': 'disabled' }));
       }
     });
@@ -84,6 +87,7 @@ export default class SelfUserManagement extends React.Component {
     const self = this;
     const { currentUser, editEmail, editPass, emailFormId, qrExpanded, has2fa, qrImage } = self.state;
     const email = (currentUser || { email: '' }).email;
+    const isEnterprise = AppStore.getIsEnterprise() || AppStore.getIsHosted();
     return (
       <div style={{ maxWidth: '750px' }} className="margin-top-small">
         <h2 style={{ marginTop: '15px' }}>My account</h2>
@@ -148,7 +152,7 @@ export default class SelfUserManagement extends React.Component {
             <FormButton buttonHolder={true} color="primary" id="change_pass" label="Change password" handleClick={() => self.handlePass()} />
           )}
         </Form>
-        {AppStore.getIsEnterprise() && (
+        {isEnterprise ? (
           <div className="margin-top">
             <div className="clickable flexbox space-between" onClick={() => self.handle2FAState(!has2fa)}>
               <p className="help-content">Enable Two Factor authentication</p>
@@ -183,6 +187,11 @@ export default class SelfUserManagement extends React.Component {
               </div>
             </Collapse>
           </div>
+        ) : (
+          <EnterpriseNotification
+            isEnterprise={isEnterprise}
+            benefit="set up Two Factor Authentication to add an additional layer of security to their account"
+          />
         )}
       </div>
     );

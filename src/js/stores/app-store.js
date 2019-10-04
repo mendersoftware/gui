@@ -22,14 +22,16 @@ var _snackbar = {
   message: ''
 };
 var _currentUser = {};
-var _hasMultitenancy = mender_environment && stringToBoolean(mender_environment.features.hasMultitenancy);
 var _organization = {};
 var _showHelptips = null;
 var _showOnboardingTips = true;
 var _showOnboardingTipsDialog = false;
 var _showConnectDeviceDialog = false;
 var _showCreateArtifactDialog = false;
-var _onboardingComplete = !!_onboardingComplete || (mender_environment && stringToBoolean(mender_environment.disableOnboarding)) || !!JSON.parse(window.localStorage.getItem('onboardingComplete'));
+var _onboardingComplete =
+  !!_onboardingComplete ||
+  (mender_environment && stringToBoolean(mender_environment.disableOnboarding)) ||
+  !!JSON.parse(window.localStorage.getItem('onboardingComplete'));
 var _onboardingProgress = 0;
 var _onboardingDeviceType = null;
 var _onboardingApproach = null;
@@ -651,7 +653,7 @@ var AppStore = Object.assign({}, EventEmitter.prototype, {
   getCurrentUser: () => _currentUser,
 
   // return boolean rather than organization details
-  hasMultitenancy: () => _hasMultitenancy,
+  hasMultitenancy: () => mender_environment && stringToBoolean(mender_environment.features.hasMultitenancy),
 
   getIsHosted: () => (mender_environment && stringToBoolean(mender_environment.features.isHosted)) || window.location.hostname === 'hosted.mender.io',
 
