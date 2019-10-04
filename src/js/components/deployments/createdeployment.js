@@ -79,7 +79,7 @@ export default class CreateDialog extends React.Component {
               </Step>
             ))}
           </Stepper>
-          <ComponentToShow {...self.props} {...self.state} deploymentSettings={(...args) => self.deploymentSettings(...args)} />
+          <ComponentToShow deploymentAnchor={this.deploymentRef} {...self.props} {...self.state} deploymentSettings={(...args) => self.deploymentSettings(...args)} />
         </DialogContent>
         <DialogActions className="margin-left margin-right">
           <Button key="schedule-action-button-1" onClick={() => self.closeWizard()} style={{ marginRight: '10px', display: 'inline-block' }}>
@@ -92,6 +92,7 @@ export default class CreateDialog extends React.Component {
           <Button
             variant="contained"
             color="primary"
+            buttonRef={ref => (this.deploymentRef = ref)}
             disabled={disabled}
             onClick={finalStep ? () => self.onScheduleSubmit(deploymentSettings) : () => self.setState({ activeStep: activeStep + 1 })}
           >
