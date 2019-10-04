@@ -59,7 +59,7 @@ export default class TwoFactorAuthSetup extends React.Component {
             <li>Scan the QR code on the right with the authenticator app you just downloaded on your device.</li>
             <li>
               <div>
-                Type in your password and the generated code in the input field below and click confirm.
+                Type in your password and the generated code in the input field below and click Verify.
                 <Form
                   showButtons={true}
                   buttonColor="primary"
