@@ -357,7 +357,7 @@ export default class ExpandedDevice extends React.Component {
           onClick={e => this._handleStopProp(e)}
           id="inventory-info"
           className="tooltip info"
-          style={{ top: '28px', right: '-18px' }}
+          style={{ top: '5px', right: '-35px' }}
           data-tip
           data-for="inventory-wait"
           data-event="click focus"
