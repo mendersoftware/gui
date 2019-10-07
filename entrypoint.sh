@@ -29,7 +29,8 @@ cat >/var/www/mender-gui/dist/env.js <<EOF
       isEnterprise: "$HAVE_ENTERPRISE",
       isHosted: "$MENDER_HOSTED"
     },
-    menderVersion: "$INTEGRATION_VERSION",
+    integrationVersion: "$INTEGRATION_VERSION",
+    menderVersion: "$MENDER_VERSION",
     menderArtifactVersion: "$MENDER_ARTIFACT_VERSION",
     menderDebPackageVersion: "$MENDER_DEB_PACKAGE_VERSION",
     metaMenderVersion: "$META_MENDER_VERSION",

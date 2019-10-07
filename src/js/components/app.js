@@ -34,7 +34,7 @@ class AppRoot extends React.Component {
     super(props, context);
     this.state = {
       artifactProgress: 0,
-      version: AppStore.getMenderVersion(),
+      version: AppStore.getIntegrationVersion(),
       docsVersion: AppStore.getDocsVersion(),
       timeout: 900000, // 15 minutes idle time,
       uploadArtifact: (meta, file) => this._uploadArtifact(meta, file),
