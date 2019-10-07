@@ -40,6 +40,7 @@ var _groups = [];
 var _releasesRepo = [];
 var _uploadInProgress = false;
 const _hostAddress = mender_environment && mender_environment.hostAddress ? mender_environment.hostAddress : null;
+const _IntegrationVersion = mender_environment && mender_environment.integrationVersion ? mender_environment.integrationVersion : 'master';
 const _MenderVersion = mender_environment && mender_environment.menderVersion ? mender_environment.menderVersion : 'master';
 const _menderArtifactVersion = mender_environment && mender_environment.menderArtifactVersion ? mender_environment.menderArtifactVersion : 'master';
 const _menderDebPackageVersion = mender_environment && mender_environment.menderDebPackageVersion ? mender_environment.menderDebPackageVersion : 'master';
@@ -47,7 +48,8 @@ var _demoArtifactPort = mender_environment && mender_environment.demoArtifactPor
 var _globalSettings = {};
 
 const _versionInformation = {
-  Mender: mender_environment.menderVersion,
+  Integration: mender_environment.integrationVersion,
+  'Mender-Client': mender_environment.menderVersion,
   'Mender-Artifact': mender_environment.menderArtifactVersion,
   'Meta-Mender': mender_environment.metaMenderVersion,
   Deployments: mender_environment.services.deploymentsVersion,
@@ -684,6 +686,16 @@ var AppStore = Object.assign({}, EventEmitter.prototype, {
   getShowConnectDeviceDialog: () => _showConnectDeviceDialog,
 
   getShowCreateArtifactDialog: () => _showCreateArtifactDialog,
+
+  getIntegrationVersion: function() {
+    // return version number
+    var version = '';
+    if (_IntegrationVersion) {
+      // if first character NaN, is master branch
+      version = isNaN(_IntegrationVersion.charAt(0)) ? 'master' : _IntegrationVersion;
+    }
+    return version;
+  },
 
   getMenderVersion: function() {
     // return version number
