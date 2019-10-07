@@ -78,7 +78,9 @@ export default class SelfUserManagement extends React.Component {
 
   handle2FAState(required) {
     this.setState({ qrExpanded: false });
-    AppActions.saveGlobalSettings(Object.assign(AppStore.getGlobalSettings() || {}, { '2fa': required ? 'enabled' : 'disabled' }));
+    AppActions.saveGlobalSettings(Object.assign(AppStore.getGlobalSettings() || {}, { '2fa': required ? 'enabled' : 'disabled' })).then(() =>
+      required ? AppActions.setSnackbar('Two Factor authentication set up successfully.') : null
+    );
   }
 
   render() {
