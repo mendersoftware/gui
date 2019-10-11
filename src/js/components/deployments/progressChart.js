@@ -60,7 +60,7 @@ export default class ProgressChart extends React.Component {
       }
       : null;
     return (
-      <div className="flexbox column progress-chart-container">
+      <div className={`flexbox column progress-chart-container ${this.props.className || ''}`}>
         <div className="flexbox space-between centered">
           <div className="progress-chart">
             {displayablePhases.map((phase, index) => {
