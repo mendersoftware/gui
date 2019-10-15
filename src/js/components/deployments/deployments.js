@@ -102,7 +102,7 @@ export default class Deployments extends React.Component {
               self.setState({
                 createDialog: true,
                 device: device,
-                deploymentDeviceIds: [device.id],
+                deploymentDeviceIds: [device.id]
               });
             })
             .catch(err => {
@@ -110,7 +110,6 @@ export default class Deployments extends React.Component {
               var errMsg = err.res.body.error || '';
               AppActions.setSnackbar(preformatWithRequestID(err.res, `Error fetching device details. ${errMsg}`), null, 'Copy to clipboard');
             });
-  
         } else {
           setTimeout(() => {
             self.setState({ createDialog: true });
@@ -161,7 +160,7 @@ export default class Deployments extends React.Component {
   }
 
   _refreshDeployments() {
-    if (this._getCurrentLabel() === 'Finished') {
+    if (this._getCurrentLabel() === routes.finished.title) {
       this._refreshPast(null, null, null, null, this.state.groupFilter);
     } else {
       this._refreshInProgress();
@@ -310,7 +309,7 @@ export default class Deployments extends React.Component {
       deploymentDeviceIds: devices.map(item => item.id),
       release,
       phases: deployment.phases ? deployment.phases : null
-    }
+    };
     self.setState({ release, group: deployment.name, filteredDevices: devices }, () => self._onScheduleSubmit(deploymentObject));
   }
 
@@ -331,17 +330,12 @@ export default class Deployments extends React.Component {
         var id = data.substring(lastslashindex + 1);
         clearInterval(self.timer);
 
-        // onboarding
-        if (self.state.showHelptips && !cookie.load(`${self.state.user.id}-deploymentID`)) {
-          cookie.save(`${self.state.user.id}-deploymentID`, id);
-        }
-
         return AppActions.getSingleDeployment(id).then(data => {
           if (data) {
             // successfully retrieved new deployment
-            if (self.state.currentTab !== 'Active') {
-              self.context.router.history.push('/deployments/active');
-              self._changeTab('/deployments/active');
+            if (self._getCurrentLabel() !== routes.active.title) {
+              self.context.router.history.push(routes.active.route);
+              self._changeTab(routes.active.route);
             } else {
               self.timer = setInterval(() => self._refreshDeployments(), self.state.refreshDeploymentsLength);
               self._refreshDeployments();
@@ -434,7 +428,7 @@ export default class Deployments extends React.Component {
     var self = this;
     clearInterval(self.timer);
     self.timer = setInterval(() => self._refreshDeployments(), self.state.refreshDeploymentsLength);
-    self.setState({ tabIndex, currentTab: self._getCurrentLabel(), pend_page: 1, past_page: 1, prog_page: 1 }, () => self._refreshDeployments());
+    self.setState({ tabIndex, pend_page: 1, past_page: 1, prog_page: 1 }, () => self._refreshDeployments());
     AppActions.setSnackbar('');
   }
 
@@ -491,7 +485,7 @@ export default class Deployments extends React.Component {
                   items={this.state.pending}
                   page={this.state.pend_page}
                   refreshItems={(...args) => this._refreshPending(...args)}
-                  isActiveTab={this.state.currentTab === 'Active'}
+                  isActiveTab={self._getCurrentLabel() === routes.active.title}
                   title="pending"
                   type="pending"
                 />
@@ -501,7 +495,7 @@ export default class Deployments extends React.Component {
                   items={this.state.progress}
                   page={this.state.prog_page}
                   refreshItems={(...args) => this._refreshInProgress(...args)}
-                  isActiveTab={this.state.currentTab === 'Active'}
+                  isActiveTab={self._getCurrentLabel() === routes.active.title}
                   openReport={rowNum => this._showProgress(rowNum)}
                   title="In progress"
                   type="progress"
@@ -532,7 +526,7 @@ export default class Deployments extends React.Component {
               startDate={this.state.startDate}
               endDate={this.state.endDate}
               page={this.state.page}
-              isActiveTab={this.state.currentTab === 'Finished'}
+              isActiveTab={self._getCurrentLabel() === routes.finished.title}
               showHelptips={this.state.showHelptips}
               count={pastCount}
               loading={!this.state.doneLoading}
