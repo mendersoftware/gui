@@ -15,8 +15,10 @@ import Past from './pastdeployments';
 import Report from './report';
 import CreateDialog from './createdeployment';
 
-import { preformatWithRequestID } from '../../helpers';
+import { deepCompare, preformatWithRequestID, standardizePhases } from '../../helpers';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
+
+const MAX_PREVIOUS_PHASES_COUNT = 5;
 
 const routes = {
   active: {
@@ -351,10 +353,20 @@ export default class Deployments extends React.Component {
           return Promise.resolve();
         });
       })
-      .then(() => self.setState({ doneLoading: true }))
       .catch(err => {
         var errMsg = err.res.body.error || '';
         AppActions.setSnackbar(preformatWithRequestID(err.res, `Error creating deployment. ${errMsg}`), null, 'Copy to clipboard');
+      })
+      .then(() => self.setState({ doneLoading: true }))
+      .then(() => {
+        const standardPhases = phases.map(standardizePhases);
+        const settings = AppStore.getGlobalSettings();
+        let previousPhases = settings.previousPhases || [];
+        previousPhases = previousPhases.map(previousPhaseList => previousPhaseList.map(standardizePhases));
+        if (!previousPhases.find(previousPhaseList => previousPhaseList.every(oldPhase => standardPhases.find(phase => deepCompare(phase, oldPhase))))) {
+          previousPhases.push(standardPhases);
+        }
+        AppActions.saveGlobalSettings({ ...settings, previousPhases: previousPhases.slice(-1 * MAX_PREVIOUS_PHASES_COUNT) });
       });
   }
   _getReportById(id) {

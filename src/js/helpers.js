@@ -409,3 +409,12 @@ export const getRemainderPercent = phases => {
   }
   return remainder;
 };
+
+export const standardizePhases = (phase, index) => {
+  let standardizedPhase = { batch_size: phase.batch_size, start_ts: index };
+  if (phase.delay) {
+    standardizedPhase.delay = phase.delay;
+    standardizedPhase.delayUnit = phase.delayUnit || 'hours';
+  }
+  return standardizedPhase;
+};

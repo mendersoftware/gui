@@ -1,19 +1,21 @@
 import React from 'react';
 
-import { FormControl, Grid, InputLabel, MenuItem, RootRef, Select } from '@material-ui/core';
+import { FormControl, Grid, InputLabel, ListSubheader, MenuItem, RootRef, Select } from '@material-ui/core';
 import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import MomentUtils from '@date-io/moment';
 
 import PhaseSettings from './phasesettings';
+import AppStore from '../../../stores/app-store';
 
 export default class ScheduleRollout extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
       disabled: false,
-      pattern: '',
-      isPickerOpen: false,
       isPhasesOpen: false,
+      isPickerOpen: false,
+      pattern: '',
+      previousPhases: AppStore.getGlobalSettings().previousPhases || []
     };
   }
 
@@ -32,7 +34,7 @@ export default class ScheduleRollout extends React.Component {
     const self = this;
     // if there is no existing phase, set phase and start time
     if (!self.props.phases) {
-      self.props.deploymentSettings([{ batch_size: 100, start_ts: value, delay: 0}], 'phases');
+      self.props.deploymentSettings([{ batch_size: 100, start_ts: value, delay: 0 }], 'phases');
     } else {
       //if there are existing phases, set the first phases to the new start time and adjust later phases in different function
       let newPhases = this.props.phases;
@@ -44,12 +46,12 @@ export default class ScheduleRollout extends React.Component {
   updatePhaseStarts(phases) {
     const self = this;
     // Iterate through phases starting from 2nd ensuring start times are based on delay from previous phase
-    for (let i=1; i<phases.length; i++) {
-      let delay = phases[i-1].delay;
-      let prevTime = phases[i-1].start_ts ? new Date(phases[i-1].start_ts) : new Date();
-      let newDateObj = prevTime.setTime(prevTime.getTime()+(delay*60*60*1000));
+    for (let i = 1; i < phases.length; i++) {
+      let delay = phases[i - 1].delay;
+      let prevTime = phases[i - 1].start_ts ? new Date(phases[i - 1].start_ts) : new Date();
+      let newDateObj = prevTime.setTime(prevTime.getTime() + delay * 60 * 60 * 1000);
       phases[i].start_ts = new Date(newDateObj).toISOString();
-      if (i>=phases.length-1) {
+      if (i >= phases.length - 1) {
         self.props.deploymentSettings(phases, 'phases');
       }
     }
@@ -67,14 +69,22 @@ export default class ScheduleRollout extends React.Component {
     // check if a start time already exists from props and if so, use it
     let start_ts = this.props.phases ? this.props.phases[0].start_ts : null;
     // if setting new custom pattern we use default 2 phases
-    if (value !== 0) {
-      phases = [{batch_size:10, start_ts:start_ts, delay:2},{}];
-      this.updatePhaseStarts(phases);
-    } else {
-      phases = [{batch_size:100, start_ts:start_ts}];
-      this.props.deploymentSettings(phases, 'phases')
+    switch (value) {
+    case 0:
+      phases = [{ batch_size: 100, start_ts }];
+      return this.props.deploymentSettings(phases, 'phases');
+    case 1:
+      phases = [{ batch_size: 10, start_ts, delay: 2 }, {}];
+      break;
+    default:
+      phases = value;
+      if (phases[0].start_ts === 0) {
+        // delete the start timestamp if it is from a previous deployment pattern, to default to starting without delay
+        delete phases[0].start_ts;
+      }
+      break;
     }
-    
+    this.updatePhaseStarts(phases);
   }
 
   setPickerOpen(value) {
@@ -83,14 +93,11 @@ export default class ScheduleRollout extends React.Component {
 
   render() {
     const self = this;
-    const props = self.props;
-    const numberDevices = props.deploymentDeviceIds ? props.deploymentDeviceIds.length : null;
-    const start_time = 
-      props.phases 
-        ? props.phases.length
-          ? props.phases[0].start_ts : null
-        : null;
-    const customPattern = props.phases && props.phases.length>1 ? 1 : 0;
+    const { deploymentDeviceIds = [], phases = [] } = self.props;
+    const { previousPhases } = self.state;
+    const numberDevices = deploymentDeviceIds ? deploymentDeviceIds.length : 0;
+    const start_time = phases && phases.length ? phases[0].start_ts : null;
+    const customPattern = phases && phases.length > 1 ? 1 : 0;
 
     const styles = {
       textField: {
@@ -102,16 +109,30 @@ export default class ScheduleRollout extends React.Component {
       }
     };
 
+    const previousPhaseOptions =
+      previousPhases.length > 0
+        ? previousPhases.map((previousPhaseSetting, index) => (
+          <MenuItem key={`previousPhaseSetting-${index}`} value={previousPhaseSetting}>
+            {previousPhaseSetting.reduce((accu, phase) => {
+              const phaseDescription = phase.delay ? `${phase.batch_size}% > ${phase.delay} ${phase.delayUnit || 'hours'} >` : `${phase.batch_size}%`;
+              return `${accu} ${phaseDescription}`;
+            }, `${previousPhaseSetting.length} phases:`)}
+          </MenuItem>
+        ))
+        : [
+          <MenuItem key="noPreviousPhaseSetting" disabled={true} style={{ opacity: '0.4' }}>
+              No recent patterns
+          </MenuItem>
+        ];
+
     return (
       <div style={{ overflow: 'visible', minHeight: '300px', marginTop: '15px' }}>
         <form>
           <RootRef rootRef={ref => (this.scheduleRef = ref)}>
             <Grid container justify="center" alignItems="center">
               <Grid item>
-                <div style={{width:'min-content', minHeight:'105px'}}>
-
-                  { (self.state.isPickerOpen || start_time) ?
-
+                <div style={{ width: 'min-content', minHeight: '105px' }}>
+                  {self.state.isPickerOpen || start_time ? (
                     <FormControl>
                       <MuiPickersUtilsProvider utils={MomentUtils}>
                         <DateTimePicker
@@ -126,20 +147,15 @@ export default class ScheduleRollout extends React.Component {
                         />
                       </MuiPickersUtilsProvider>
                     </FormControl>
-                    :
+                  ) : (
                     <FormControl>
                       <InputLabel>Set a start time</InputLabel>
-                      <Select
-                        onChange={event => this.handleStartChange(event.target.value)}
-                        value={0}
-                        style={styles.textField}
-                      >
+                      <Select onChange={event => this.handleStartChange(event.target.value)} value={0} style={styles.textField}>
                         <MenuItem value={0}>Start immediately</MenuItem>
                         <MenuItem value="custom">Schedule a start date & time</MenuItem>
                       </Select>
                     </FormControl>
-                  }
-                 
+                  )}
                 </div>
               </Grid>
             </Grid>
@@ -148,27 +164,31 @@ export default class ScheduleRollout extends React.Component {
           <div>
             <Grid container justify="center" alignItems="center">
               <Grid item>
-                <div style={{ width:'min-content' }}>
-                  <FormControl>
+                <div style={{ width: 'min-content' }}>
+                  <FormControl style={{ maxWidth: 515 }}>
                     <InputLabel>Select a rollout pattern</InputLabel>
                     <Select onChange={event => self.handlePatternChange(event.target.value)} value={customPattern} style={styles.textField}>
                       <MenuItem value={0}>Single phase: 100%</MenuItem>
-                      {numberDevices>1 ? <MenuItem value={1}>Custom</MenuItem> : null }
+                      {numberDevices > 1 && [
+                        <MenuItem key="customPhaseSetting" divider={true} value={1}>
+                          Custom
+                        </MenuItem>,
+                        <ListSubheader key="phaseSettingsSubheader">Recent patterns</ListSubheader>,
+                        ...previousPhaseOptions
+                      ]}
                     </Select>
                   </FormControl>
                 </div>
               </Grid>
             </Grid>
 
-            {customPattern ? 
+            {customPattern ? (
               <Grid style={{ marginBottom: '15px' }} container justify="center" alignItems="center">
                 <Grid item>
-                  <PhaseSettings numberDevices={numberDevices} {...props} updatePhaseStarts={(...args) => self.updatePhaseStarts(...args)} />
+                  <PhaseSettings numberDevices={numberDevices} {...self.props} updatePhaseStarts={(...args) => self.updatePhaseStarts(...args)} />
                 </Grid>
               </Grid>
-              : null
-            }
-            
+            ) : null}
           </div>
         </form>
       </div>
