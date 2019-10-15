@@ -1,6 +1,5 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import cookie from 'react-cookie';
 import PropTypes from 'prop-types';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Tab, Tabs } from '@material-ui/core';
 
@@ -98,7 +97,7 @@ export default class Deployments extends React.Component {
           });
         } else if (params.get('deviceId')) {
           AppActions.getDeviceById(params.get('deviceId'))
-            .then(device => { 
+            .then(device => {
               self.setState({
                 createDialog: true,
                 device: device,
@@ -168,10 +167,6 @@ export default class Deployments extends React.Component {
       if (!AppStore.getOnboardingComplete()) {
         this._refreshPast(null, null, null, null, this.state.groupFilter);
       }
-    }
-
-    if (this.state.showHelptips && cookie.load(`${this.state.user.id}-deploymentID`)) {
-      this._isOnBoardFinished(cookie.load(`${this.state.user.id}-deploymentID`));
     }
   }
   _refreshInProgress(page, per_page) {
@@ -394,20 +389,6 @@ export default class Deployments extends React.Component {
   updated() {
     // use to make sure re-renders dialog at correct height when device list built
     this.setState({ updated: true });
-  }
-
-  _isOnBoardFinished(id) {
-    var self = this;
-    return AppActions.getSingleDeployment(id).then(data => {
-      if (data.status === 'finished') {
-        cookie.remove(`${self.state.user.id}-deploymentID`);
-      }
-    });
-  }
-
-  // nested tabs
-  componentWillReceiveProps() {
-    // this.setState({ tabIndex: this._updateActive(), currentTab: this._getCurrentLabel() });
   }
 
   _updateActive(tab = this.context.router.route.match.params.tab) {
