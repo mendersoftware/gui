@@ -78,10 +78,6 @@ export default class ScheduleRollout extends React.Component {
       break;
     default:
       phases = value;
-      if (phases[0].start_ts === 0) {
-        // delete the start timestamp if it is from a previous deployment pattern, to default to starting without delay
-        delete phases[0].start_ts;
-      }
       break;
     }
     this.updatePhaseStarts(phases);

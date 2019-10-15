@@ -348,10 +348,10 @@ export default class Deployments extends React.Component {
       })
       .then(() => self.setState({ doneLoading: true }))
       .then(() => {
-        const standardPhases = phases.map(standardizePhases);
+        const standardPhases = standardizePhases(phases);
         const settings = AppStore.getGlobalSettings();
         let previousPhases = settings.previousPhases || [];
-        previousPhases = previousPhases.map(previousPhaseList => previousPhaseList.map(standardizePhases));
+        previousPhases = previousPhases.map(standardizePhases);
         if (!previousPhases.find(previousPhaseList => previousPhaseList.every(oldPhase => standardPhases.find(phase => deepCompare(phase, oldPhase))))) {
           previousPhases.push(standardPhases);
         }
