@@ -33,7 +33,7 @@ export default class PhaseSettings extends React.Component {
     }
 
     newPhases[index].batch_size = Number(value);
-    // When phase's batch size changes, check for new 'remainder' 
+    // When phase's batch size changes, check for new 'remainder'
     const remainder = getRemainderPercent(newPhases);
     // if new remainder will be 0 or negative remove last phase
     if (remainder < 1) {
@@ -104,7 +104,7 @@ export default class PhaseSettings extends React.Component {
               <Chip size="small" label={`Phase ${index + 1}`} />
             </TableCell>
             <TableCell>
-              {phase.batch_size && phase.batch_size < 100 ? (
+              {index !== props.phases.length - 1 ? (
                 <Input
                   value={phase.batch_size}
                   margin="dense"
@@ -153,11 +153,11 @@ export default class PhaseSettings extends React.Component {
                 '-'
               )}
             </TableCell>
-            <TableCell> 
+            <TableCell>
               {index >= 1 ? (
                 <IconButton onClick={() => self.removePhase(index)}>
                   <CancelIcon />
-                </IconButton> 
+                </IconButton>
               ) : null}
             </TableCell>
           </TableRow>
