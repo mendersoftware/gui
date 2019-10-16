@@ -17,12 +17,8 @@ export default class PhaseSettings extends React.Component {
   updateDelay(value, index) {
     let newPhases = this.props.phases;
     // value must be at least 1
-    value = value>0 ? value : 1;
-
-    // set value based on unit 
-    value = newPhases[index].delayUnit === 'days' ? value*24 : value;
+    value = value > 0 ? value : 1;
     newPhases[index].delay = value;
-
     this.props.updatePhaseStarts(newPhases);
     // logic for updating time stamps should be in parent - only change delays here
   }
@@ -32,7 +28,7 @@ export default class PhaseSettings extends React.Component {
 
     if (value < 1) {
       value = 1;
-    } else if (value >100) {
+    } else if (value > 100) {
       value = 100;
     }
 
@@ -42,7 +38,7 @@ export default class PhaseSettings extends React.Component {
     // if new remainder will be 0 or negative remove last phase
     if (remainder < 1) {
       newPhases.pop();
-      newPhases[newPhases.length-1].batch_size = getRemainderPercent(newPhases);
+      newPhases[newPhases.length - 1].batch_size = getRemainderPercent(newPhases);
     }
     this.props.deploymentSettings(newPhases, 'phases');
   }
@@ -54,14 +50,14 @@ export default class PhaseSettings extends React.Component {
     // assign new batch size to *previous* last batch
     const remainder = getRemainderPercent(phases);
     // make it default 10, unless remainder is <=10 in which case make it half remainder
-    let batch_size = (remainder>10) ? 10 : (Math.floor(remainder/2));
-    phases[phases.length-1].batch_size = batch_size;
+    let batch_size = remainder > 10 ? 10 : Math.floor(remainder / 2);
+    phases[phases.length - 1].batch_size = batch_size;
 
     // check for previous phase delay or set 2hr default
-    const delay = phases[phases.length-1].delay || 2;
-    phases[phases.length-1].delay = delay;
-    const delayUnit = phases[phases.length-1].delayUnit || 'hours';
-    phases[phases.length-1].delayUnit = delayUnit;
+    const delay = phases[phases.length - 1].delay || 2;
+    phases[phases.length - 1].delay = delay;
+    const delayUnit = phases[phases.length - 1].delayUnit || 'hours';
+    phases[phases.length - 1].delayUnit = delayUnit;
 
     phases.push(newPhase);
     // use function to set new phases incl start time of new phase
@@ -71,7 +67,7 @@ export default class PhaseSettings extends React.Component {
   removePhase(index) {
     let phases = this.props.phases;
     phases.splice(index, 1);
-    if (phases.length===1) {
+    if (phases.length === 1) {
       delete phases[0].batch_size;
       delete phases[0].delay;
       this.props.deploymentSettings(phases, 'phases');
@@ -82,14 +78,6 @@ export default class PhaseSettings extends React.Component {
 
   handleDelayToggle(value, index) {
     let phases = this.props.phases;
-
-    if (phases[index].delayUnit === 'days' && value === 'hours') {
-      phases[index].delay = Math.floor(phases[index].delay/24);
-    }
-    if (phases[index].delayUnit !== 'days' && value === 'days')  {
-      phases[index].delay =  phases[index].delay*24;
-    }
-
     phases[index].delayUnit = value;
     this.props.updatePhaseStarts(phases);
   }
@@ -100,10 +88,12 @@ export default class PhaseSettings extends React.Component {
     const remainder = getRemainderPercent(props.phases);
 
     // disable 'add phase' if no more devices left
-    const disableAdd = ((remainder/100)*props.numberDevices ) < 1;
-    const phases = props.phases ? props.phases.map((phase, index) => {
-      let max = index > 0 ? 100-(props.phases[index-1].batch_size) : 100;
-      const deviceCount = (index === props.phases.length-1) 
+    const disableAdd = (remainder / 100) * props.numberDevices < 1;
+    const phases = props.phases
+      ? props.phases.map((phase, index) => {
+        let max = index > 0 ? 100 - props.phases[index - 1].batch_size : 100;
+        const deviceCount =
+            index === props.phases.length - 1
         ? Math.ceil((props.numberDevices / 100) * (phase.batch_size || remainder))
         : Math.floor((props.numberDevices / 100) * phase.batch_size);
 
@@ -111,9 +101,10 @@ export default class PhaseSettings extends React.Component {
       return (
         <TableRow key={index}>
           <TableCell component="th" scope="row">
-            <Chip size="small" label={`Phase ${index+1}`} />
+              <Chip size="small" label={`Phase ${index + 1}`} />
           </TableCell>
-          <TableCell>{phase.batch_size && (phase.batch_size<100) ? 
+            <TableCell>
+              {phase.batch_size && phase.batch_size < 100 ? (
             <Input
               value={phase.batch_size}
               margin="dense"
@@ -123,48 +114,56 @@ export default class PhaseSettings extends React.Component {
                 step: 1,
                 min: 1,
                 max: max,
-                type: 'number',
+                    type: 'number'
               }}
             />
-            : phase.batch_size || remainder}
-          <span className="info" style={{marginLeft:'5px'}}>{`(${deviceCount} ${pluralize('device', deviceCount)})`}</span>
+              ) : (
+                phase.batch_size || remainder
+              )}
+              <span className="info" style={{ marginLeft: '5px' }}>{`(${deviceCount} ${pluralize('device', deviceCount)})`}</span>
+            </TableCell>
+            <TableCell>
+              <Time value={startTime} format="YYYY-MM-DD HH:mm" />
           </TableCell>
-          <TableCell><Time value={startTime} format="YYYY-MM-DD HH:mm" /></TableCell>
           <TableCell>
-            { phase.delay && (index!==props.phases.length-1) ?
+              {phase.delay && index !== props.phases.length - 1 ? (
               <div>
                 <Input
-                  value={phase.delayUnit === 'days' ? Math.ceil(phase.delay/24) : phase.delay}
+                    value={phase.delay}
                   margin="dense"
                   onChange={event => self.updateDelay(event.target.value, index)}
                   inputProps={{
                     step: 1,
                     min: 1,
                     max: 720,
-                    type: 'number',
+                      type: 'number'
                   }}
                 />
 
                 <Select
                   onChange={event => this.handleDelayToggle(event.target.value, index)}
                   value={phase.delayUnit || 'hours'}
-                  style={{marginLeft:'5px'}}
+                    style={{ marginLeft: '5px' }}
                 >
                   <MenuItem value={'hours'}>Hours</MenuItem>
                   <MenuItem value={'days'}>Days</MenuItem>
                 </Select>
               </div>
-              : '-' }
+              ) : (
+                '-'
+              )}
           </TableCell>
           <TableCell> 
-            {index >= 1 ?
+              {index >= 1 ? (
               <IconButton onClick={() => self.removePhase(index)}>
                 <CancelIcon />
               </IconButton> 
-              : null}
+              ) : null}
           </TableCell>
         </TableRow>
-      )}) : null;
+        );
+      })
+      : null;
 
     return (
       <div>
@@ -178,14 +177,12 @@ export default class PhaseSettings extends React.Component {
               <TableCell></TableCell>
             </TableRow>
           </TableHead>
-          <TableBody>
-            {phases}
-          </TableBody>
+          <TableBody>{phases}</TableBody>
         </Table>
 
-        {!disableAdd ?
+        {!disableAdd ? (
           <Chip className="margin-top-small" color="primary" clickable={!disableAdd} icon={<AddIcon />} label="Add a phase" onClick={() => this.addPhase()} />
-          : null }
+        ) : null}
       </div>
     );
   }
