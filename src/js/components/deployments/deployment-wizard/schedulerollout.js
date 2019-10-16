@@ -53,10 +53,8 @@ export default class ScheduleRollout extends React.Component {
       let prevTime = phases[i - 1].start_ts ? new Date(phases[i - 1].start_ts) : new Date();
       const newStartTime = moment(prevTime).add(delay, delayUnit);
       phases[i].start_ts = newStartTime.toISOString();
-      if (i >= phases.length - 1) {
-        self.props.deploymentSettings(phases, 'phases');
-      }
     }
+    self.props.deploymentSettings(phases, 'phases');
   }
 
   handleStartChange(value) {
@@ -69,14 +67,14 @@ export default class ScheduleRollout extends React.Component {
   handlePatternChange(value) {
     let phases = [];
     // check if a start time already exists from props and if so, use it
-    let start_ts = this.props.phases ? this.props.phases[0].start_ts : null;
+    const phaseStart = this.props.phases ? { start_ts: this.props.phases[0].start_ts } : {};
     // if setting new custom pattern we use default 2 phases
     switch (value) {
     case 0:
-      phases = [{ batch_size: 100, start_ts }];
+      phases = [{ batch_size: 100, ...phaseStart }];
       return this.props.deploymentSettings(phases, 'phases');
     case 1:
-      phases = [{ batch_size: 10, start_ts, delay: 2 }, {}];
+      phases = [{ batch_size: 10, delay: 2, delayUnit: 'hours', ...phaseStart }, {}];
       break;
     default:
       // have to create a deep copy of the array to prevent overwriting, due to nested objects in the array
