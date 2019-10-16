@@ -88,15 +88,13 @@ export default class PhaseSettings extends React.Component {
     const remainder = getRemainderPercent(props.phases);
     let emptyPhase = null;
 
-    // disable 'add phase' if no more devices left
-    const disableAdd = (remainder / 100) * props.numberDevices < 1;
-    const phases = props.phases
-      ? props.phases.map((phase, index) => {
-        let max = index > 0 ? 100 - props.phases[index - 1].batch_size : 100;
-        const deviceCount =
-            index === props.phases.length - 1
-              ? Math.ceil((props.numberDevices / 100) * (phase.batch_size || remainder))
-              : Math.floor((props.numberDevices / 100) * phase.batch_size);
+    // disable 'add phase' button if last phase/remainder has only 1 device left
+    const disableAdd = ((remainder/100)*props.numberDevices ) <= 1;
+    const phases = props.phases ? props.phases.map((phase, index) => {
+      let max = index > 0 ? 100-(props.phases[index-1].batch_size) : 100;
+      const deviceCount = (index === props.phases.length-1) 
+        ? Math.ceil((props.numberDevices / 100) * (phase.batch_size || remainder))
+        : Math.floor((props.numberDevices / 100) * phase.batch_size);
 
       if (deviceCount<1) { emptyPhase = index }
       const startTime = !(index && phase.start_ts) ? new Date().toISOString() : phase.start_ts;
