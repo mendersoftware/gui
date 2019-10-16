@@ -79,7 +79,8 @@ export default class ScheduleRollout extends React.Component {
       phases = [{ batch_size: 10, start_ts, delay: 2 }, {}];
       break;
     default:
-      phases = [...value];
+      // have to create a deep copy of the array to prevent overwriting, due to nested objects in the array
+      phases = JSON.parse(JSON.stringify(value));
       break;
     }
     this.updatePhaseStarts(phases);
