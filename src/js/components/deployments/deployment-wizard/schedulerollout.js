@@ -77,7 +77,7 @@ export default class ScheduleRollout extends React.Component {
       phases = [{ batch_size: 10, start_ts, delay: 2 }, {}];
       break;
     default:
-      phases = value;
+      phases = [...value];
       break;
     }
     this.updatePhaseStarts(phases);
