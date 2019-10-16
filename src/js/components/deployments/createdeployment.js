@@ -57,11 +57,15 @@ export default class CreateDialog extends React.Component {
     this.props.onDismiss();
   }
 
+  validatePhases(value) {
+    this.setState({disableSchedule: !value});
+  }
+
   render() {
     const self = this;
     const { device, open } = self.props;
     const { activeStep, deploymentDeviceIds, release, group, phases, steps } = self.state;
-    const disabled = !(release && deploymentDeviceIds.length);
+    const disabled = (activeStep === 0) ? !(release && deploymentDeviceIds.length) : self.state.disableSchedule;
     const finalStep = activeStep === steps.length - 1;
     const ComponentToShow = steps[activeStep].component;
     const deploymentSettings = {
@@ -81,12 +85,7 @@ export default class CreateDialog extends React.Component {
               </Step>
             ))}
           </Stepper>
-          <ComponentToShow
-            deploymentAnchor={this.deploymentRef}
-            {...self.props}
-            {...self.state}
-            deploymentSettings={(...args) => self.deploymentSettings(...args)}
-          />
+          <ComponentToShow disableSchedule={self.state.disableSchedule} validatePhases={(arg) => self.validatePhases(arg)} deploymentAnchor={this.deploymentRef} {...self.props} {...self.state} deploymentSettings={(...args) => self.deploymentSettings(...args)} />
         </DialogContent>
         <DialogActions className="margin-left margin-right">
           <Button key="schedule-action-button-1" onClick={() => self.closeWizard()} style={{ marginRight: '10px', display: 'inline-block' }}>
