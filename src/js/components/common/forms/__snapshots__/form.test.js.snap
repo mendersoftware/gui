@@ -5,9 +5,11 @@ exports[`renders correctly 1`] = `
   className=""
 >
   <div
-    className="float-right"
+    className="flexbox"
     style={
       Object {
+        "height": "min-content",
+        "justifyContent": "flex-end",
         "marginTop": "32px",
       }
     }
