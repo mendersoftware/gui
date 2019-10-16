@@ -94,29 +94,29 @@ export default class PhaseSettings extends React.Component {
         let max = index > 0 ? 100 - props.phases[index - 1].batch_size : 100;
         const deviceCount =
             index === props.phases.length - 1
-        ? Math.ceil((props.numberDevices / 100) * (phase.batch_size || remainder))
-        : Math.floor((props.numberDevices / 100) * phase.batch_size);
+              ? Math.ceil((props.numberDevices / 100) * (phase.batch_size || remainder))
+              : Math.floor((props.numberDevices / 100) * phase.batch_size);
 
-      const startTime = !(index && phase.start_ts) ? new Date().toISOString() : phase.start_ts;
-      return (
-        <TableRow key={index}>
-          <TableCell component="th" scope="row">
+        const startTime = !(index && phase.start_ts) ? new Date().toISOString() : phase.start_ts;
+        return (
+          <TableRow key={index}>
+            <TableCell component="th" scope="row">
               <Chip size="small" label={`Phase ${index + 1}`} />
-          </TableCell>
+            </TableCell>
             <TableCell>
               {phase.batch_size && phase.batch_size < 100 ? (
-            <Input
-              value={phase.batch_size}
-              margin="dense"
-              onChange={event => self.updateBatchSize(event.target.value, index)}
-              endAdornment={<InputAdornment position="end">%</InputAdornment>}
-              inputProps={{
-                step: 1,
-                min: 1,
-                max: max,
+                <Input
+                  value={phase.batch_size}
+                  margin="dense"
+                  onChange={event => self.updateBatchSize(event.target.value, index)}
+                  endAdornment={<InputAdornment position="end">%</InputAdornment>}
+                  inputProps={{
+                    step: 1,
+                    min: 1,
+                    max: max,
                     type: 'number'
-              }}
-            />
+                  }}
+                />
               ) : (
                 phase.batch_size || remainder
               )}
@@ -124,43 +124,43 @@ export default class PhaseSettings extends React.Component {
             </TableCell>
             <TableCell>
               <Time value={startTime} format="YYYY-MM-DD HH:mm" />
-          </TableCell>
-          <TableCell>
+            </TableCell>
+            <TableCell>
               {phase.delay && index !== props.phases.length - 1 ? (
-              <div>
-                <Input
+                <div>
+                  <Input
                     value={phase.delay}
-                  margin="dense"
-                  onChange={event => self.updateDelay(event.target.value, index)}
-                  inputProps={{
-                    step: 1,
-                    min: 1,
-                    max: 720,
+                    margin="dense"
+                    onChange={event => self.updateDelay(event.target.value, index)}
+                    inputProps={{
+                      step: 1,
+                      min: 1,
+                      max: 720,
                       type: 'number'
-                  }}
-                />
+                    }}
+                  />
 
-                <Select
-                  onChange={event => this.handleDelayToggle(event.target.value, index)}
-                  value={phase.delayUnit || 'hours'}
+                  <Select
+                    onChange={event => this.handleDelayToggle(event.target.value, index)}
+                    value={phase.delayUnit || 'hours'}
                     style={{ marginLeft: '5px' }}
-                >
-                  <MenuItem value={'hours'}>Hours</MenuItem>
-                  <MenuItem value={'days'}>Days</MenuItem>
-                </Select>
-              </div>
+                  >
+                    <MenuItem value={'hours'}>Hours</MenuItem>
+                    <MenuItem value={'days'}>Days</MenuItem>
+                  </Select>
+                </div>
               ) : (
                 '-'
               )}
-          </TableCell>
-          <TableCell> 
+            </TableCell>
+            <TableCell> 
               {index >= 1 ? (
-              <IconButton onClick={() => self.removePhase(index)}>
-                <CancelIcon />
-              </IconButton> 
+                <IconButton onClick={() => self.removePhase(index)}>
+                  <CancelIcon />
+                </IconButton> 
               ) : null}
-          </TableCell>
-        </TableRow>
+            </TableCell>
+          </TableRow>
         );
       })
       : null;
