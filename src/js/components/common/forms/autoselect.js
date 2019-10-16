@@ -31,7 +31,7 @@ export default class AutoSelect extends React.Component {
 
   componentDidMount() {
     if (this.props.value) {
-      this.setState({searchTerm: this.props.value});
+      this.setState({ searchTerm: this.props.value });
     }
   }
 
@@ -70,6 +70,7 @@ export default class AutoSelect extends React.Component {
         <InputLabel htmlFor="adornment-target-select">{self.props.label}</InputLabel>
         <Input
           id="adornment-target-select"
+          autoComplete="off"
           type="text"
           inputRef={input => (self.anchorEl = input)}
           placeholder={self.props.placeholder || self.props.label}
