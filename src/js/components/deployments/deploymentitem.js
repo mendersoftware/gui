@@ -66,8 +66,7 @@ export default class DeploymentItem extends React.Component {
     const failures = stats.failure + stats.aborted + stats.noartifact + stats['already-installed'] + stats.decommissioned;
 
     const { artifact_name, name, created, device_count, id, status, phases } = deployment;
-    let started = created;
-    const isEnterprise = AppStore.getIsEnterprise() || AppStore.getIsHosted();
+
     let confirmation;
     if (abort === id) {
       confirmation = (
@@ -80,7 +79,8 @@ export default class DeploymentItem extends React.Component {
         />
       );
     }
-    started = isEnterprise && phases.length >= 1 ? phases[0].start_ts || created : created;
+    const isEnterprise = AppStore.getIsEnterprise() || AppStore.getIsHosted();
+    const started = isEnterprise && phases && phases.length >= 1 ? phases[0].start_ts || created : created;
     return (
       <div className={`deployment-item ${deploymentTypeClasses[type]}`}>
         {!!confirmation && confirmation}
@@ -106,11 +106,7 @@ export default class DeploymentItem extends React.Component {
         ) : (
           <>
             <div className={`flexbox space-between centered ${columnHeaders[4].class}`}>{status}</div>
-            {isEnterprise ? (
-              <Time className={columnHeaders[5].class} value={formatTime(created)} format="YYYY-MM-DD HH:mm" />
-            ) : (
-              <div className={columnHeaders[5].class} />
-            )}
+            <div className={columnHeaders[5].class} />
           </>
         )}
         <Tooltip className={`columnHeader ${columnHeaders[6].class}`} title="Abort" placement="top-start">

@@ -3,21 +3,18 @@ import React from 'react';
 import Pagination from '../common/pagination';
 import DeploymentItem from './deploymentitem';
 
-import AppStore from '../../stores/app-store';
-
 export default class DeploymentsList extends React.Component {
   constructor(props, context) {
     super(props, context);
-    const isEnterprise = AppStore.getIsEnterprise() || AppStore.getIsHosted();
     this.state = {
       pageSize: 10,
       defaultHeaders: [
         { title: 'Release', class: '' },
         { title: 'Device group', class: '' },
-        { title: `${isEnterprise ? 'Start' : 'Creation'} time`, class: '' },
+        { title: `Start time`, class: '' },
         { title: 'Total # devices', class: 'align-right' },
         { title: 'Status', class: '' },
-        { title: isEnterprise ? 'Creation time' : '', class: '' },
+        { title: '', class: '' },
         { title: '', class: '' }
       ]
     };
