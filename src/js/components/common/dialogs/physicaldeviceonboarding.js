@@ -82,6 +82,10 @@ systemctl enable mender && systemctl restart mender'
         value: 'raspberrypi3'
       },
       {
+        title: 'Raspberry Pi 4',
+        value: 'raspberrypi4'
+      },
+      {
         title: 'Generic ARMv6 or newer',
         value: 'generic-armv6'
       }
