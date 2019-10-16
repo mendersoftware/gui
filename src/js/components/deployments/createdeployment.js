@@ -27,7 +27,6 @@ export default class CreateDialog extends React.Component {
     }, []);
     this.state = {
       activeStep: 0,
-      release: null,
       deploymentDeviceIds: [],
       isEnterprise,
       steps
@@ -36,8 +35,11 @@ export default class CreateDialog extends React.Component {
 
   componentDidUpdate(prevProps) {
     // Update state if single device passed from props
-    if ((prevProps.device !== this.props.device) && this.props.device) {
-      this.setState({deploymentDeviceIds: [this.props.device.id]})
+    if (prevProps.device !== this.props.device && this.props.device) {
+      this.setState({ deploymentDeviceIds: [this.props.device.id] });
+    }
+    if (prevProps.deploymentObject !== this.props.deploymentObject && this.props.deploymentObject) {
+      this.setState({ activeStep: this.state.steps.length - 1, ...this.props.deploymentObject });
     }
   }
 
@@ -72,14 +74,19 @@ export default class CreateDialog extends React.Component {
       <Dialog open={open || false} fullWidth={false} maxWidth="md">
         <DialogTitle>Create a deployment</DialogTitle>
         <DialogContent className="dialog">
-          <Stepper activeStep={activeStep} alternativeLabel style={{minWidth: '500px'}}>
+          <Stepper activeStep={activeStep} alternativeLabel style={{ minWidth: '500px' }}>
             {steps.map(step => (
               <Step key={step.title}>
                 <StepLabel>{step.title}</StepLabel>
               </Step>
             ))}
           </Stepper>
-          <ComponentToShow deploymentAnchor={this.deploymentRef} {...self.props} {...self.state} deploymentSettings={(...args) => self.deploymentSettings(...args)} />
+          <ComponentToShow
+            deploymentAnchor={this.deploymentRef}
+            {...self.props}
+            {...self.state}
+            deploymentSettings={(...args) => self.deploymentSettings(...args)}
+          />
         </DialogContent>
         <DialogActions className="margin-left margin-right">
           <Button key="schedule-action-button-1" onClick={() => self.closeWizard()} style={{ marginRight: '10px', display: 'inline-block' }}>

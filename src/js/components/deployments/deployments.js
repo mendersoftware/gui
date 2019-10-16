@@ -96,11 +96,11 @@ export default class Deployments extends React.Component {
           });
         } else if (params.get('deviceId')) {
           AppActions.getDeviceById(params.get('deviceId'))
-            .then(device => { 
+            .then(device => {
               self.setState({
                 createDialog: true,
                 device: device,
-                deploymentDeviceIds: [device.id],
+                deploymentDeviceIds: [device.id]
               });
             })
             .catch(err => {
@@ -108,7 +108,6 @@ export default class Deployments extends React.Component {
               var errMsg = err.res.body.error || '';
               AppActions.setSnackbar(preformatWithRequestID(err.res, `Error fetching device details. ${errMsg}`), null, 'Copy to clipboard');
             });
-  
         } else {
           setTimeout(() => {
             self.setState({ createDialog: true });
@@ -307,9 +306,9 @@ export default class Deployments extends React.Component {
       group: deployment.name,
       deploymentDeviceIds: devices.map(item => item.id),
       release,
-      phases: deployment.phases ? deployment.phases : null
-    }
-    self.setState({ release, group: deployment.name, filteredDevices: devices }, () => self._onScheduleSubmit(deploymentObject));
+      phases: null
+    };
+    self.setState({ deploymentObject, createDialog: true, reportDialog: false });
   }
 
   _onScheduleSubmit(deploymentObject) {
@@ -351,7 +350,7 @@ export default class Deployments extends React.Component {
           return Promise.resolve();
         });
       })
-      .then(() => self.setState({ doneLoading: true }))
+      .then(() => self.setState({ doneLoading: true, deploymentObject: null }))
       .catch(err => {
         var errMsg = err.res.body.error || '';
         AppActions.setSnackbar(preformatWithRequestID(err.res, `Error creating deployment. ${errMsg}`), null, 'Copy to clipboard');
@@ -541,11 +540,12 @@ export default class Deployments extends React.Component {
 
         <CreateDialog
           open={this.state.createDialog}
-          onDismiss={() => self.setState({ createDialog: false, device: null })}
+          onDismiss={() => self.setState({ createDialog: false, device: null, deploymentObject: null })}
           onScheduleSubmit={(...args) => this._onScheduleSubmit(...args)}
           deploymentRelease={release}
           hasDevices={this.state.hasDevices}
           device={this.state.device}
+          deploymentObject={self.state.deploymentObject}
         />
         {onboardingComponent}
       </div>
