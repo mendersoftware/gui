@@ -39,7 +39,7 @@ export default class CreateDialog extends React.Component {
       this.setState({ deploymentDeviceIds: [this.props.device.id] });
     }
     if (prevProps.deploymentObject !== this.props.deploymentObject && this.props.deploymentObject) {
-      this.setState({ activeStep: this.state.steps.length - 1, ...this.props.deploymentObject });
+      this.setState({ ...this.props.deploymentObject });
     }
   }
 
