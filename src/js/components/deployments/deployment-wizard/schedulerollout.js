@@ -135,6 +135,7 @@ export default class ScheduleRollout extends React.Component {
                     <FormControl>
                       <MuiPickersUtilsProvider utils={MomentUtils}>
                         <DateTimePicker
+                          ampm={false}
                           open={self.state.isPickerOpen}
                           onOpen={() => self.setPickerOpen(true)}
                           onClose={() => self.setPickerOpen(false)}
