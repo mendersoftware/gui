@@ -104,7 +104,7 @@ export default class PhaseSettings extends React.Component {
               <Chip size="small" label={`Phase ${index + 1}`} />
             </TableCell>
             <TableCell>
-              {phase.batch_size && phase.batch_size < 100 ? (
+              {index !== props.phases.length - 1 ? (
                 <Input
                   value={phase.batch_size}
                   margin="dense"
