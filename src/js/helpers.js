@@ -409,3 +409,17 @@ export const getRemainderPercent = phases => {
   }
   return remainder;
 };
+
+export const standardizePhases = phases =>
+  phases.map((phase, index) => {
+    let standardizedPhase = { batch_size: phase.batch_size, start_ts: index };
+    if (phase.delay) {
+      standardizedPhase.delay = phase.delay;
+      standardizedPhase.delayUnit = phase.delayUnit || 'hours';
+    }
+    if (index === 0) {
+      // delete the start timestamp from a deployment pattern, to default to starting without delay
+      delete standardizedPhase.start_ts;
+    }
+    return standardizedPhase;
+  });

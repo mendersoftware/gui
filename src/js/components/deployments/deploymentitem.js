@@ -9,6 +9,13 @@ import Confirm from './confirm';
 import ProgressChart from './progressChart';
 import { formatTime } from '../../helpers';
 import AppActions from '../../actions/app-actions';
+import AppStore from '../../stores/app-store';
+
+const deploymentTypeClasses = {
+  past: 'past-item',
+  pending: 'pending-item',
+  progress: 'progress-item'
+};
 
 export default class DeploymentItem extends React.Component {
   constructor(props, context) {
@@ -60,15 +67,8 @@ export default class DeploymentItem extends React.Component {
     const failures = stats.failure + stats.aborted + stats.noartifact + stats['already-installed'] + stats.decommissioned;
 
     const { artifact_name, name, created, device_count, id, status, phases } = deployment;
-    let confirmation;
 
-    const abortButton = (
-      <Tooltip className="columnHeader" title="Abort" placement="top-start">
-        <IconButton onClick={() => self.toggleConfirm(id)}>
-          <CancelOutlinedIcon className="cancelButton muted" />
-        </IconButton>
-      </Tooltip>
-    );
+    let confirmation;
     if (abort === id) {
       confirmation = (
         <Confirm
@@ -80,16 +80,19 @@ export default class DeploymentItem extends React.Component {
         />
       );
     }
+    const isEnterprise = AppStore.getIsEnterprise() || AppStore.getIsHosted();
+    const started = isEnterprise && phases && phases.length >= 1 ? phases[0].start_ts || created : created;
     return (
-      <div className={`deployment-item ${type === 'progress' ? 'progress-item' : ''}`}>
+      <div className={`deployment-item ${deploymentTypeClasses[type]}`}>
         {!!confirmation && confirmation}
         <div className={columnHeaders[0].class}>{artifact_name}</div>
         <div className={columnHeaders[1].class}>{name}</div>
-        <Time className={columnHeaders[2].class} value={formatTime(created)} format="YYYY-MM-DD HH:mm" />
+        <Time className={columnHeaders[2].class} value={formatTime(started)} format="YYYY-MM-DD HH:mm" />
         <div className={columnHeaders[3].class}>{device_count}</div>
         {type === 'progress' ? (
-          <div className={`flexbox space-between centered ${columnHeaders[4].class}`}>
+          <>
             <ProgressChart
+              className={columnHeaders[4].class}
               currentSuccessCount={successes}
               currentProgressCount={current}
               totalDeviceCount={device_count}
@@ -98,17 +101,21 @@ export default class DeploymentItem extends React.Component {
               created={created}
               id={id}
             />
-            <Button variant="contained" onClick={() => openReport(index, type)}>
+            <Button className={columnHeaders[5].class} variant="contained" onClick={() => openReport(index, type)} style={{ justifySelf: 'center' }}>
               View details
             </Button>
-            {abortButton}
-          </div>
+          </>
         ) : (
-          <div className={`flexbox space-between centered ${columnHeaders[4].class}`}>
-            <div>{status}</div>
-            {abortButton}
-          </div>
+          <>
+            <div className={`flexbox space-between centered ${columnHeaders[4].class}`}>{status}</div>
+            <div className={columnHeaders[5].class} />
+          </>
         )}
+        <Tooltip className={`columnHeader ${columnHeaders[6].class}`} title="Abort" placement="top-start">
+          <IconButton onClick={() => self.toggleConfirm(id)}>
+            <CancelOutlinedIcon className="cancelButton muted" />
+          </IconButton>
+        </Tooltip>
       </div>
     );
   }

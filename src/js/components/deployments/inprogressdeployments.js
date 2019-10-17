@@ -11,7 +11,9 @@ const columnHeaders = [
   { title: 'Device group', class: '' },
   { title: 'Start time', class: '' },
   { title: 'Total # devices', class: 'align-right' },
-  { title: 'Overall progress', class: '' }
+  { title: 'Overall progress', class: '' },
+  { title: '', class: '' },
+  { title: '', class: '' }
 ];
 
 export default class Progress extends React.Component {
