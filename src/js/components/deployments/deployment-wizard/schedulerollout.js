@@ -182,7 +182,7 @@ export default class ScheduleRollout extends React.Component {
             {customPattern ? (
               <Grid style={{ marginBottom: '15px' }} container justify="center" alignItems="center">
                 <Grid item>
-                  <PhaseSettings disabled={props.disableSchedule} validatePhases={(arg) => self.props.validate(arg)} numberDevices={numberDevices} {...props} updatePhaseStarts={(...args) => self.updatePhaseStarts(...args)} />
+                  <PhaseSettings disabled={self.props.disableSchedule} validatePhases={(arg) => self.props.validate(arg)} numberDevices={numberDevices} {...self.props} updatePhaseStarts={(...args) => self.updatePhaseStarts(...args)} />
                 </Grid>
               </Grid>
             ) : null}
