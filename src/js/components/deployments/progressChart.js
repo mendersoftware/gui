@@ -32,8 +32,9 @@ export default class ProgressChart extends React.Component {
     // 3 successful deployments -> the 3rd phase should end up with 1 failure so far
     const displayablePhases = phases.reduce(
       (accu, phase) => {
-        const devicesInPhase = Math.floor((totalDeviceCount / 100) * phase.batch_size);
         const possiblePhaseFailures = totalFailureCount - accu.countedFailures;
+        // if there are too few devices in a phase to register, fallback to occured failures, as those have definitely happened
+        const devicesInPhase = Math.max(Math.floor((totalDeviceCount / 100) * phase.batch_size), possiblePhaseFailures);
         const possiblePhaseSuccesses = Math.max(phase.device_count - possiblePhaseFailures - currentProgressCount, 0);
         phase.successWidth = (possiblePhaseSuccesses / devicesInPhase) * 100;
         phase.failureWidth = (possiblePhaseFailures / devicesInPhase) * 100;

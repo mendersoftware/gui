@@ -19,6 +19,15 @@ export function fullyDecodeURI(uri) {
   return uri;
 }
 
+export const groupDeploymentStats = stats => {
+  const collector = items => items.reduce((accu, property) => accu + (stats[property] || 0), 0);
+  return {
+    inprogress: collector(['downloading', 'installing', 'rebooting']),
+    successes: stats.success || 0,
+    failures: collector(['failure', 'aborted', 'noartifact', 'already-installed', 'decommissioned'])
+  };
+};
+
 export function statusToPercentage(state, intervals) {
   var time;
   var minutes = intervals / 3;

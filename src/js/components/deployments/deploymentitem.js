@@ -7,7 +7,7 @@ import { CancelOutlined as CancelOutlinedIcon } from '@material-ui/icons';
 
 import Confirm from './confirm';
 import ProgressChart from './progressChart';
-import { formatTime } from '../../helpers';
+import { formatTime, groupDeploymentStats } from '../../helpers';
 import AppActions from '../../actions/app-actions';
 import AppStore from '../../stores/app-store';
 
@@ -62,9 +62,7 @@ export default class DeploymentItem extends React.Component {
     const self = this;
     const { deployment, openReport, index, type, columnHeaders } = self.props;
     const { abort, stats } = self.state;
-    const current = stats.downloading + stats.installing + stats.rebooting;
-    const successes = stats.success;
-    const failures = stats.failure + stats.aborted + stats.noartifact + stats['already-installed'] + stats.decommissioned;
+    const { inprogress: current, successes, failures } = groupDeploymentStats(stats);
 
     const { artifact_name, name, created, device_count, id, status, phases } = deployment;
 
