@@ -22,7 +22,6 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import BlockIcon from '@material-ui/icons/Block';
 import TimelapseIcon from '@material-ui/icons/Timelapse';
 import RefreshIcon from '@material-ui/icons/Refresh';
-import { AppContext } from '../../contexts/app-context';
 import Pagination from '../common/pagination';
 import { formatTime } from '../../helpers';
 
@@ -176,23 +175,6 @@ export default class DeploymentReport extends React.Component {
   _abortHandler() {
     this.props.abort(this.props.deployment.id);
   }
-  _handleRetry() {
-    this.props.retry(this.props.deployment, this.state.allDevices);
-  }
-  _hideConfirm(ref) {
-    var self = this;
-    var newState = {};
-    newState[ref] = false;
-    this.setState(newState);
-    setTimeout(() => {
-      self.setState(newState);
-    }, 150);
-  }
-  _showConfirm(ref) {
-    var newState = {};
-    newState[ref] = true;
-    this.setState(newState);
-  }
   render() {
     const self = this;
     var deviceList = this.state.pagedDevices || [];
@@ -228,7 +210,7 @@ export default class DeploymentReport extends React.Component {
       <div className="float-right">
         <Button
           color="secondary"
-          onClick={() => this._showConfirm('abort')}
+          onClick={() => self.setState({ abort: true })}
           icon={<BlockIcon style={{ height: '18px', width: '18px', verticalAlign: 'middle' }} />}
         >
           Abort deployment
@@ -236,7 +218,7 @@ export default class DeploymentReport extends React.Component {
       </div>
     );
     if (this.state.abort) {
-      abort = <Confirm cancel={() => this._hideConfirm('abort')} action={() => this._abortHandler()} type="abort" />;
+      abort = <Confirm cancel={() => self.setState({ abort: false })} action={() => this._abortHandler()} type="abort" />;
     }
 
     var finished = '-';
@@ -300,17 +282,13 @@ export default class DeploymentReport extends React.Component {
                           }
                           data-hint="This will create a new deployment with the same device group and Release.&#10;Devices with this Release already installed will be skipped, all others will be updated."
                         >
-                          {this.state.retry ? (
-                            <Confirm cancel={() => this._hideConfirm('retry')} action={() => this._handleRetry()} type="retry" />
-                          ) : (
-                            <Button
-                              color="secondary"
-                              icon={<RefreshIcon style={{ height: '18px', width: '18px', verticalAlign: 'middle' }} />}
-                              onClick={() => this._showConfirm('retry')}
-                            >
-                              Retry deployment?
-                            </Button>
-                          )}
+                          <Button
+                            color="secondary"
+                            icon={<RefreshIcon style={{ height: '18px', width: '18px', verticalAlign: 'middle' }} />}
+                            onClick={() => self.props.retry(self.props.deployment, self.state.allDevices)}
+                          >
+                            Retry deployment?
+                          </Button>
                         </div>
                       </div>
                     </div>
@@ -381,21 +359,15 @@ export default class DeploymentReport extends React.Component {
         </div>
 
         <div style={{ minHeight: '20vh' }}>
-          <AppContext.Consumer>
-            {({ docsVersion, globalSettings }) => (
-              <DeviceList
-                docsVersion={docsVersion}
-                globalSettings={globalSettings}
-                created={this.props.deployment.created}
-                status={this.props.deployment.status}
-                devices={deviceList}
-                deviceIdentity={this.state.deviceIdentity}
-                deviceInventory={this.state.deviceInventory}
-                viewLog={id => this.viewLog(id)}
-                past={this.props.past}
-              />
-            )}
-          </AppContext.Consumer>
+          <DeviceList
+            created={this.props.deployment.created}
+            status={this.props.deployment.status}
+            devices={deviceList}
+            deviceIdentity={this.state.deviceIdentity}
+            deviceInventory={this.state.deviceInventory}
+            viewLog={id => this.viewLog(id)}
+            past={this.props.past}
+          />
           {allDevices.length ? (
             <Pagination
               count={allDevices.length}

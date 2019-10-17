@@ -18,11 +18,7 @@ export default class PhaseSettings extends React.Component {
     let newPhases = this.props.phases;
     // value must be at least 1
     value = value > 0 ? value : 1;
-
-    // set value based on unit
-    value = newPhases[index].delayUnit === 'days' ? value * 24 : value;
     newPhases[index].delay = value;
-
     this.props.updatePhaseStarts(newPhases);
     // logic for updating time stamps should be in parent - only change delays here
   }
@@ -82,14 +78,6 @@ export default class PhaseSettings extends React.Component {
 
   handleDelayToggle(value, index) {
     let phases = this.props.phases;
-
-    if (phases[index].delayUnit === 'days' && value === 'hours') {
-      phases[index].delay = Math.floor(phases[index].delay / 24);
-    }
-    if (phases[index].delayUnit !== 'days' && value === 'days') {
-      phases[index].delay = phases[index].delay * 24;
-    }
-
     phases[index].delayUnit = value;
     this.props.updatePhaseStarts(phases);
   }
@@ -116,7 +104,7 @@ export default class PhaseSettings extends React.Component {
               <Chip size="small" label={`Phase ${index + 1}`} />
             </TableCell>
             <TableCell>
-              {phase.batch_size && phase.batch_size < 100 ? (
+              {index !== props.phases.length - 1 ? (
                 <Input
                   value={phase.batch_size}
                   margin="dense"
@@ -141,7 +129,7 @@ export default class PhaseSettings extends React.Component {
               {phase.delay && index !== props.phases.length - 1 ? (
                 <div>
                   <Input
-                    value={phase.delayUnit === 'days' ? Math.ceil(phase.delay / 24) : phase.delay}
+                    value={phase.delay}
                     margin="dense"
                     onChange={event => self.updateDelay(event.target.value, index)}
                     inputProps={{
