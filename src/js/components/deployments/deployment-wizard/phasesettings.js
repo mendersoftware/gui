@@ -129,7 +129,7 @@ export default class PhaseSettings extends React.Component {
               ( 
                 <div>
                   <Input
-                    value={phase.delayUnit === 'days' ? Math.ceil(phase.delay/24) : phase.delay}
+                    value={phase.delay}
                     margin="dense"
                     onChange={event => self.updateDelay(event.target.value, index)}
                     inputProps={{
