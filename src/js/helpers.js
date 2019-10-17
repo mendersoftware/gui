@@ -24,6 +24,7 @@ export function statusToPercentage(state, intervals) {
   var minutes = intervals / 3;
   switch (state) {
   case 'pending':
+  case 'noartifact':
     return 0;
 
   case 'downloading':
@@ -41,7 +42,6 @@ export function statusToPercentage(state, intervals) {
   case 'aborted':
   case 'already-installed':
   case 'failure':
-  case 'noartifact':
   case 'success':
     return 100;
   }

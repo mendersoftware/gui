@@ -303,9 +303,9 @@ export default class Deployments extends React.Component {
       group: deployment.name,
       deploymentDeviceIds: devices.map(item => item.id),
       release,
-      phases: deployment.phases ? deployment.phases : null
+      phases: null
     };
-    self.setState({ release, group: deployment.name, filteredDevices: devices }, () => self._onScheduleSubmit(deploymentObject));
+    self.setState({ deploymentObject, createDialog: true, reportDialog: false });
   }
 
   _onScheduleSubmit(deploymentObject) {
@@ -346,7 +346,7 @@ export default class Deployments extends React.Component {
         var errMsg = err.res.body.error || '';
         AppActions.setSnackbar(preformatWithRequestID(err.res, `Error creating deployment. ${errMsg}`), null, 'Copy to clipboard');
       })
-      .then(() => self.setState({ doneLoading: true }))
+      .then(() => self.setState({ doneLoading: true, deploymentObject: null }))
       .then(() => {
         const standardPhases = standardizePhases(phases);
         const settings = AppStore.getGlobalSettings();
@@ -528,11 +528,12 @@ export default class Deployments extends React.Component {
 
         <CreateDialog
           open={this.state.createDialog}
-          onDismiss={() => self.setState({ createDialog: false, device: null })}
+          onDismiss={() => self.setState({ createDialog: false, device: null, deploymentObject: null })}
           onScheduleSubmit={(...args) => this._onScheduleSubmit(...args)}
           deploymentRelease={release}
           hasDevices={this.state.hasDevices}
           device={this.state.device}
+          deploymentObject={self.state.deploymentObject}
         />
         {onboardingComponent}
       </div>
