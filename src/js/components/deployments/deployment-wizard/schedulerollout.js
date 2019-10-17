@@ -69,12 +69,14 @@ export default class ScheduleRollout extends React.Component {
     // check if a start time already exists from props and if so, use it
     const phaseStart = this.props.phases ? { start_ts: this.props.phases[0].start_ts } : {};
     // if setting new custom pattern we use default 2 phases
+    // for small groups get minimum batch size containing at least 1 device
+    const minBatch = this.props.deploymentDeviceIds.length < 10 ? Math.ceil(1/this.props.deploymentDeviceIds.length*100) : 10;
     switch (value) {
     case 0:
       phases = [{ batch_size: 100, ...phaseStart }];
       return this.props.deploymentSettings(phases, 'phases');
     case 1:
-      phases = [{ batch_size: 10, delay: 2, delayUnit: 'hours', ...phaseStart }, {}];
+      phases = [{ batch_size: minBatch, delay: 2, delayUnit: 'hours', ...phaseStart }, {}];
       break;
     default:
       // have to create a deep copy of the array to prevent overwriting, due to nested objects in the array
@@ -182,7 +184,7 @@ export default class ScheduleRollout extends React.Component {
             {customPattern ? (
               <Grid style={{ marginBottom: '15px' }} container justify="center" alignItems="center">
                 <Grid item>
-                  <PhaseSettings numberDevices={numberDevices} {...self.props} updatePhaseStarts={(...args) => self.updatePhaseStarts(...args)} />
+                  <PhaseSettings disabled={self.props.disableSchedule} numberDevices={numberDevices} {...self.props} updatePhaseStarts={(...args) => self.updatePhaseStarts(...args)} />
                 </Grid>
               </Grid>
             ) : null}
