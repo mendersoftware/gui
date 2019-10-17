@@ -145,6 +145,7 @@ export default class PhaseSettings extends React.Component {
                     value={phase.delayUnit || 'hours'}
                     style={{ marginLeft: '5px' }}
                   >
+                    <MenuItem value={'minutes'}>Minutes</MenuItem>
                     <MenuItem value={'hours'}>Hours</MenuItem>
                     <MenuItem value={'days'}>Days</MenuItem>
                   </Select>
