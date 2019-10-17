@@ -67,8 +67,11 @@ export default class PhaseSettings extends React.Component {
   removePhase(index) {
     let phases = this.props.phases;
     phases.splice(index, 1);
-    if (phases.length === 1) {
-      delete phases[0].batch_size;
+
+    // remove batch size from new last phase, use remainder
+    delete phases[phases.length-1].batch_size;
+
+    if (phases.length===1) {
       delete phases[0].delay;
       this.props.deploymentSettings(phases, 'phases');
     } else {
@@ -86,7 +89,6 @@ export default class PhaseSettings extends React.Component {
     const self = this;
     const props = self.props;
     const remainder = getRemainderPercent(props.phases);
-    let emptyPhase = null;
 
     // disable 'add phase' button if last phase/remainder has only 1 device left
     const disableAdd = ((remainder/100)*props.numberDevices ) <= 1;
@@ -96,7 +98,6 @@ export default class PhaseSettings extends React.Component {
         ? Math.ceil((props.numberDevices / 100) * (phase.batch_size || remainder))
         : Math.floor((props.numberDevices / 100) * phase.batch_size);
 
-      if (deviceCount<1) { emptyPhase = index }
       const startTime = !(index && phase.start_ts) ? new Date().toISOString() : phase.start_ts;
       return (
         <TableRow key={index}>
@@ -125,18 +126,19 @@ export default class PhaseSettings extends React.Component {
           <TableCell><Time value={startTime} format="YYYY-MM-DD HH:mm" /></TableCell>
           <TableCell>
             { phase.delay && (index!==props.phases.length-1) ?
-              <div>
-                <Input
-                  value={phase.delayUnit === 'days' ? Math.ceil(phase.delay/24) : phase.delay}
-                  margin="dense"
-                  onChange={event => self.updateDelay(event.target.value, index)}
-                  inputProps={{
-                    step: 1,
-                    min: 1,
-                    max: 720,
-                    type: 'number',
-                  }}
-                />
+              ( 
+                <div>
+                  <Input
+                    value={phase.delayUnit === 'days' ? Math.ceil(phase.delay/24) : phase.delay}
+                    margin="dense"
+                    onChange={event => self.updateDelay(event.target.value, index)}
+                    inputProps={{
+                      step: 1,
+                      min: 1,
+                      max: 720,
+                      type: 'number',
+                    }}
+                  />
 
                   <Select
                     onChange={event => this.handleDelayToggle(event.target.value, index)}

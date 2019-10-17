@@ -7,6 +7,7 @@ import ScheduleRollout from './deployment-wizard/schedulerollout';
 import Review from './deployment-wizard/review';
 
 import AppStore from '../../stores/app-store';
+import { getRemainderPercent } from '../../helpers';
 
 const deploymentSteps = [
   { title: 'Select target software and devices', closed: false, component: SoftwareDevices },
@@ -45,20 +46,29 @@ export default class CreateDialog extends React.Component {
 
   deploymentSettings(value, property) {
     this.setState({ [property]: value });
+    if (property==='phases') {
+      this.validatePhases(value);
+    }
   }
 
   onScheduleSubmit(settings) {
     this.props.onScheduleSubmit(settings);
-    this.setState({ activeStep: 0, deploymentDeviceIds: [], group: null, phases: null, release: null });
+    this.setState({ activeStep: 0, deploymentDeviceIds: [], group: null, phases: null, release: null, disableSchedule: false });
   }
 
   closeWizard() {
-    this.setState({ activeStep: 0, deploymentDeviceIds: [], group: null, phases: null, release: null });
+    this.setState({ activeStep: 0, deploymentDeviceIds: [], group: null, phases: null, release: null, disableSchedule: false });
     this.props.onDismiss();
   }
 
-  validatePhases(value) {
-    this.setState({disableSchedule: !value});
+  validatePhases(phases) {
+    let valid = true;
+    const remainder = getRemainderPercent(phases);
+    for (var phase of phases) {
+      const deviceCount =  Math.floor((this.state.deploymentDeviceIds.length / 100) * (phase.batch_size || remainder));
+      if (deviceCount<1) { valid = false }
+    }
+    this.setState({disableSchedule: !valid});
   }
 
   render() {
@@ -85,7 +95,7 @@ export default class CreateDialog extends React.Component {
               </Step>
             ))}
           </Stepper>
-          <ComponentToShow disableSchedule={self.state.disableSchedule} validatePhases={(arg) => self.validatePhases(arg)} deploymentAnchor={this.deploymentRef} {...self.props} {...self.state} deploymentSettings={(...args) => self.deploymentSettings(...args)} />
+          <ComponentToShow disableSchedule={self.state.disableSchedule} deploymentAnchor={this.deploymentRef} {...self.props} {...self.state} deploymentSettings={(...args) => self.deploymentSettings(...args)} />
         </DialogContent>
         <DialogActions className="margin-left margin-right">
           <Button key="schedule-action-button-1" onClick={() => self.closeWizard()} style={{ marginRight: '10px', display: 'inline-block' }}>
