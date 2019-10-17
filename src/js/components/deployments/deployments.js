@@ -18,6 +18,7 @@ import { deepCompare, preformatWithRequestID, standardizePhases } from '../../he
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 
 const MAX_PREVIOUS_PHASES_COUNT = 5;
+const DEFAULT_PENDING_INPROGRESS_COUNT = 10;
 
 const routes = {
   active: {
@@ -47,8 +48,9 @@ export default class Deployments extends React.Component {
       startDate: today,
       endDate: tonight,
       per_page: 20,
-      prog_page: 1,
-      pend_page: 1,
+      progPage: 1,
+      pendPage: 1,
+      pastPage: 1,
       refreshDeploymentsLength: 30000,
       reportDialog: false,
       createDialog: false,
@@ -169,16 +171,16 @@ export default class Deployments extends React.Component {
       }
     }
   }
-  _refreshInProgress(page, per_page) {
+  _refreshInProgress(page, per_page = DEFAULT_PENDING_INPROGRESS_COUNT) {
     /*
     / refresh only in progress deployments
     /
     */
     var self = this;
     if (page) {
-      self.setState({ prog_page: page });
+      self.setState({ progPage: page });
     } else {
-      page = self.state.prog_page;
+      page = self.state.progPage;
     }
 
     return Promise.all([
@@ -201,16 +203,16 @@ export default class Deployments extends React.Component {
         setRetryTimer(err, 'deployments', `Couldn't load deployments. ${errormsg}`, self.state.refreshDeploymentsLength);
       });
   }
-  _refreshPending(page, per_page) {
+  _refreshPending(page, per_page = DEFAULT_PENDING_INPROGRESS_COUNT) {
     /*
     / refresh only pending deployments
     /
     */
     var self = this;
     if (page) {
-      self.setState({ pend_page: page });
+      self.setState({ pendPage: page });
     } else {
-      page = self.state.pend_page;
+      page = self.state.pendPage;
     }
 
     return AppActions.getPendingDeployments(page, per_page)
@@ -238,7 +240,7 @@ export default class Deployments extends React.Component {
   }
 
   _changePastPage(
-    page = this.state.page,
+    page = this.state.pastPage,
     startDate = this.state.startDate,
     endDate = this.state.endDate,
     per_page = this.state.per_page,
@@ -259,7 +261,7 @@ export default class Deployments extends React.Component {
     var self = this;
 
     var oldCount = self.state.pastCount;
-    var oldPage = self.state.past_page;
+    var oldPage = self.state.pastPage;
 
     startDate = startDate || self.state.startDate;
     endDate = endDate || self.state.endDate;
@@ -273,8 +275,8 @@ export default class Deployments extends React.Component {
     // get total count of past deployments first
     return AppActions.getDeploymentCount('finished', startDate, endDate, group)
       .then(count => {
-        page = page || self.state.past_page || 1;
-        self.setState({ pastCount: count, past_page: page });
+        page = page || self.state.pastPage || 1;
+        self.setState({ pastCount: count, pastPage: page });
         // only refresh deployments if page, count or date range has changed
         if (oldPage !== page || oldCount !== count || !self.state.doneLoading) {
           return AppActions.getPastDeployments(page, per_page, startDate, endDate, group).then(AppActions.getDeploymentsWithStats);
@@ -409,7 +411,7 @@ export default class Deployments extends React.Component {
     var self = this;
     clearInterval(self.timer);
     self.timer = setInterval(() => self._refreshDeployments(), self.state.refreshDeploymentsLength);
-    self.setState({ tabIndex, pend_page: 1, past_page: 1, prog_page: 1 }, () => self._refreshDeployments());
+    self.setState({ tabIndex, pendPage: 1, pastPage: 1, progPage: 1 }, () => self._refreshDeployments());
     AppActions.setSnackbar('');
   }
 
@@ -464,7 +466,7 @@ export default class Deployments extends React.Component {
                   abort={id => this._abortDeployment(id)}
                   count={this.state.pendingCount || this.state.pending.length}
                   items={this.state.pending}
-                  page={this.state.pend_page}
+                  page={this.state.pendPage}
                   refreshItems={(...args) => this._refreshPending(...args)}
                   isActiveTab={self._getCurrentLabel() === routes.active.title}
                   title="pending"
@@ -474,7 +476,7 @@ export default class Deployments extends React.Component {
                   abort={id => this._abortDeployment(id)}
                   count={this.state.progressCount || this.state.progress.length}
                   items={this.state.progress}
-                  page={this.state.prog_page}
+                  page={this.state.progPage}
                   refreshItems={(...args) => this._refreshInProgress(...args)}
                   isActiveTab={self._getCurrentLabel() === routes.active.title}
                   openReport={rowNum => this._showProgress(rowNum)}
@@ -503,10 +505,10 @@ export default class Deployments extends React.Component {
               deviceGroup={this.state.groupFilter}
               createClick={() => this.setState({ createDialog: true })}
               pageSize={per_page}
-              onChangeRowsPerPage={perPage => self.setState({ per_page: perPage, page: 1 }, () => self._changePastPage())}
+              onChangeRowsPerPage={perPage => self.setState({ per_page: perPage, pastPage: 1 }, () => self._changePastPage())}
               startDate={this.state.startDate}
               endDate={this.state.endDate}
-              page={this.state.page}
+              page={this.state.pastPage}
               isActiveTab={self._getCurrentLabel() === routes.finished.title}
               showHelptips={this.state.showHelptips}
               count={pastCount}
