@@ -29,6 +29,7 @@ var _showOnboardingTipsDialog = false;
 var _showConnectDeviceDialog = false;
 var _showCreateArtifactDialog = false;
 var _onboardingComplete =
+  (mender_environment && stringToBoolean(mender_environment.features.isEnterprise)) ||
   !!_onboardingComplete ||
   (mender_environment && stringToBoolean(mender_environment.disableOnboarding)) ||
   !!JSON.parse(window.localStorage.getItem('onboardingComplete'));
