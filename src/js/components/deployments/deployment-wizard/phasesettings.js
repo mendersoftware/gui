@@ -153,18 +153,17 @@ export default class PhaseSettings extends React.Component {
               ) : (
                 '-'
               )}
-            </TableCell>
-            <TableCell>
-              {index >= 1 ? (
-                <IconButton onClick={() => self.removePhase(index)}>
-                  <CancelIcon />
-                </IconButton>
-              ) : null}
-            </TableCell>
-          </TableRow>
-        );
-      })
-      : null;
+          </TableCell>
+          <TableCell>
+            {index >= 1 ? (
+              <IconButton onClick={() => self.removePhase(index)}>
+                <CancelIcon />
+              </IconButton>
+            ) : null}
+          </TableCell>
+        </TableRow>
+      );
+    }) : null;
 
     return (
       <div>
