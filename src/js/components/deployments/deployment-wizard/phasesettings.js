@@ -98,7 +98,7 @@ export default class PhaseSettings extends React.Component {
         ? Math.ceil((props.numberDevices / 100) * (phase.batch_size || remainder))
         : Math.floor((props.numberDevices / 100) * phase.batch_size);
 
-      const startTime = !(index && phase.start_ts) ? new Date().toISOString() : phase.start_ts;
+      const startTime = !(index || phase.start_ts) ? new Date().toISOString() : phase.start_ts;
       return (
         <TableRow key={index}>
           <TableCell component="th" scope="row">
