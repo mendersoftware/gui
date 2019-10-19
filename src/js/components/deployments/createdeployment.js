@@ -72,7 +72,7 @@ export default class CreateDialog extends React.Component {
       <Dialog open={open || false} fullWidth={false} maxWidth="md">
         <DialogTitle>Create a deployment</DialogTitle>
         <DialogContent className="dialog">
-          <Stepper activeStep={activeStep} alternativeLabel style={{minWidth: '500px'}}>
+          <Stepper activeStep={activeStep} alternativeLabel>
             {steps.map(step => (
               <Step key={step.title}>
                 <StepLabel>{step.title}</StepLabel>

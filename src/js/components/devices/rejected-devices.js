@@ -99,7 +99,7 @@ export default class Rejected extends React.Component {
         render: device => (device.created_ts ? <Time value={device.created_ts} format="YYYY-MM-DD HH:mm" /> : '-')
       },
       {
-        title: 'Last check-in',
+        title: 'Last checkin',
         name: 'last_checkin',
         render: device => (device.updated_ts ? <Time value={device.updated_ts} format="YYYY-MM-DD HH:mm" /> : '-')
       },

@@ -17,8 +17,8 @@ const Review = props => {
 
   const deploymentInformation = [
     { primary: 'Release', secondary: release.name },
-    { primary: 'Device types compatible', secondary: release.device_types_compatible.join(', '), wide: true },
     { primary: `Device${device ? '' : ' group'}`, secondary: device ? device.id : group },
+    { primary: 'Device types compatible', secondary: release.device_types_compatible.join(', ') },
     { primary: '# devices', secondary: deploymentDeviceIds.length },
     { primary: 'Start time', secondary: <Time value={start_time} format="YYYY-MM-DD HH:mm" /> }
   ];
@@ -34,7 +34,7 @@ const Review = props => {
               key={item.primary}
               primary={item.primary}
               secondary={item.secondary}
-              style={item.wide ? { flexBasis: 480, margin: '-5px 0' } : { flexBasis: 240, margin: '-5px 0' }}
+              style={{ flexBasis: 240, margin: '-5px 0' }}
               dividerDisabled={true}
             />
           ))}

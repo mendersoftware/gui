@@ -137,7 +137,7 @@ export default class Authorized extends React.Component {
         }
       },
       {
-        title: 'Last check-in',
+        title: 'Last checkin',
         name: 'last_checkin',
         property: 'updated_ts',
         render: device => (device.updated_ts ? <Time value={device.updated_ts} format="YYYY-MM-DD HH:mm" /> : '-')
