@@ -2,7 +2,7 @@
 
 exports[`renders correctly 1`] = `
 <div
-  className="flexbox column progress-chart-container"
+  className="flexbox column progress-chart-container "
 >
   <div
     className="flexbox space-between centered"

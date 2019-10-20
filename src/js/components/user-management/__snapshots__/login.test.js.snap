@@ -205,9 +205,11 @@ exports[`renders correctly 1`] = `
         </span>
       </label>
       <div
-        className="float-right"
+        className="flexbox"
         style={
           Object {
+            "height": "min-content",
+            "justifyContent": "flex-end",
             "marginTop": "32px",
           }
         }

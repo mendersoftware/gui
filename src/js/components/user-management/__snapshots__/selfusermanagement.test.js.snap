@@ -10,11 +10,7 @@ exports[`renders correctly 1`] = `
   }
 >
   <h2
-    style={
-      Object {
-        "marginTop": "15px",
-      }
-    }
+    className="margin-top-small"
   >
     My account
   </h2>

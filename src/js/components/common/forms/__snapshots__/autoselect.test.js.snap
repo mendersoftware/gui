@@ -22,6 +22,7 @@ exports[`renders correctly 1`] = `
   >
     <input
       aria-invalid={false}
+      autoComplete="off"
       className="MuiInputBase-input MuiInput-input"
       disabled={false}
       id="adornment-target-select"
