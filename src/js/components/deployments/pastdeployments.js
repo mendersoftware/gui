@@ -121,7 +121,7 @@ export default class Past extends React.Component {
       }
 
       //  get statistics
-      var status = <DeploymentStatus isActiveTab={this.props.isActiveTab} id={deployment.id} />;
+      var status = <DeploymentStatus isActiveTab={this.props.isActiveTab} id={deployment.id} setFinished={() => {}} />;
 
       return (
         <TableRow hover key={index} onClick={() => this._pastCellClick(index)}>
@@ -137,13 +137,15 @@ export default class Past extends React.Component {
       );
     }, this);
 
-    const menuItems = this.props.groups ? this.props.groups.reduce(
-      (accu, item) => {
-        accu.push({ title: item, value: item });
-        return accu;
-      },
-      [{ title: 'All devices', value: 'All devices' }]
-    ) : [{ title: 'All devices', value: 'All devices' }];
+    const menuItems = this.props.groups
+      ? this.props.groups.reduce(
+        (accu, item) => {
+          accu.push({ title: item, value: item });
+          return accu;
+        },
+        [{ title: 'All devices', value: 'All devices' }]
+      )
+      : [{ title: 'All devices', value: 'All devices' }];
 
     let onboardingComponent = null;
     if (this.deploymentsRef) {

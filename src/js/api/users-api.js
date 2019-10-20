@@ -1,9 +1,6 @@
-var request = require('superagent-use')(require('superagent'));
-require('superagent-auth-bearer')(request);
+var request = require('superagent');
 import cookie from 'react-cookie';
 import { unauthorizedRedirect } from '../auth';
-
-request.use(unauthorizedRedirect);
 
 const Api = {
   get: url => {
@@ -11,7 +8,8 @@ const Api = {
     return new Promise((resolve, reject) =>
       request
         .get(url)
-        .authBearer(token)
+        .use(unauthorizedRedirect)
+        .auth(token, { type: 'bearer' })
         .end((err, res) => {
           if (err || !res.ok) {
             reject({ error: err, res: res });
@@ -54,7 +52,8 @@ const Api = {
     return new Promise((resolve, reject) =>
       request
         .post(url)
-        .authBearer(token)
+        .use(unauthorizedRedirect)
+        .auth(token, { type: 'bearer' })
         .set('Content-Type', 'application/json')
         .send(userData)
         .end((err, res) => {
@@ -71,7 +70,8 @@ const Api = {
     return new Promise((resolve, reject) =>
       request
         .put(url)
-        .authBearer(token)
+        .use(unauthorizedRedirect)
+        .auth(token, { type: 'bearer' })
         .set('Content-Type', 'application/json')
         .send(userData)
         .end((err, res) => {
@@ -88,7 +88,8 @@ const Api = {
     return new Promise((resolve, reject) =>
       request
         .del(url)
-        .authBearer(token)
+        .use(unauthorizedRedirect)
+        .auth(token, { type: 'bearer' })
         .end((err, res) => {
           if (err || !res.ok) {
             reject({ error: err, res: res });

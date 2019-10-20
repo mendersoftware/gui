@@ -19,11 +19,21 @@ export function fullyDecodeURI(uri) {
   return uri;
 }
 
+export const groupDeploymentStats = stats => {
+  const collector = items => items.reduce((accu, property) => accu + (stats[property] || 0), 0);
+  return {
+    inprogress: collector(['downloading', 'installing', 'rebooting']),
+    successes: stats.success || 0,
+    failures: collector(['failure', 'aborted', 'noartifact', 'already-installed', 'decommissioned'])
+  };
+};
+
 export function statusToPercentage(state, intervals) {
   var time;
   var minutes = intervals / 3;
   switch (state) {
   case 'pending':
+  case 'noartifact':
     return 0;
 
   case 'downloading':
@@ -41,7 +51,6 @@ export function statusToPercentage(state, intervals) {
   case 'aborted':
   case 'already-installed':
   case 'failure':
-  case 'noartifact':
   case 'success':
     return 100;
   }
@@ -402,10 +411,26 @@ export const findLocalIpAddress = () => {
 };
 
 export const getRemainderPercent = phases => {
-  // use this to get remaining percent of last phase so we don't set a hard number
+  // use this to get remaining percent of final phase so we don't set a hard number
   let remainder = 100;
+  // remove final phase size if set
+  phases[phases.length-1].batch_size = null;
   for (let phase of phases) {
     remainder = phase.batch_size ? remainder - phase.batch_size : remainder;
   }
   return remainder;
 };
+
+export const standardizePhases = phases =>
+  phases.map((phase, index) => {
+    let standardizedPhase = { batch_size: phase.batch_size, start_ts: index };
+    if (phase.delay) {
+      standardizedPhase.delay = phase.delay;
+      standardizedPhase.delayUnit = phase.delayUnit || 'hours';
+    }
+    if (index === 0) {
+      // delete the start timestamp from a deployment pattern, to default to starting without delay
+      delete standardizedPhase.start_ts;
+    }
+    return standardizedPhase;
+  });

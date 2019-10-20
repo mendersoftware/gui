@@ -1,6 +1,5 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import cookie from 'react-cookie';
 import PropTypes from 'prop-types';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Tab, Tabs } from '@material-ui/core';
 
@@ -15,8 +14,11 @@ import Past from './pastdeployments';
 import Report from './report';
 import CreateDialog from './createdeployment';
 
-import { preformatWithRequestID } from '../../helpers';
+import { deepCompare, preformatWithRequestID, standardizePhases } from '../../helpers';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
+
+const MAX_PREVIOUS_PHASES_COUNT = 5;
+const DEFAULT_PENDING_INPROGRESS_COUNT = 10;
 
 const routes = {
   active: {
@@ -46,8 +48,9 @@ export default class Deployments extends React.Component {
       startDate: today,
       endDate: tonight,
       per_page: 20,
-      prog_page: 1,
-      pend_page: 1,
+      progPage: 1,
+      pendPage: 1,
+      pastPage: 1,
       refreshDeploymentsLength: 30000,
       reportDialog: false,
       createDialog: false,
@@ -96,11 +99,11 @@ export default class Deployments extends React.Component {
           });
         } else if (params.get('deviceId')) {
           AppActions.getDeviceById(params.get('deviceId'))
-            .then(device => { 
+            .then(device => {
               self.setState({
                 createDialog: true,
                 device: device,
-                deploymentDeviceIds: [device.id],
+                deploymentDeviceIds: [device.id]
               });
             })
             .catch(err => {
@@ -108,7 +111,6 @@ export default class Deployments extends React.Component {
               var errMsg = err.res.body.error || '';
               AppActions.setSnackbar(preformatWithRequestID(err.res, `Error fetching device details. ${errMsg}`), null, 'Copy to clipboard');
             });
-  
         } else {
           setTimeout(() => {
             self.setState({ createDialog: true });
@@ -159,7 +161,7 @@ export default class Deployments extends React.Component {
   }
 
   _refreshDeployments() {
-    if (this._getCurrentLabel() === 'Finished') {
+    if (this._getCurrentLabel() === routes.finished.title) {
       this._refreshPast(null, null, null, null, this.state.groupFilter);
     } else {
       this._refreshInProgress();
@@ -168,21 +170,17 @@ export default class Deployments extends React.Component {
         this._refreshPast(null, null, null, null, this.state.groupFilter);
       }
     }
-
-    if (this.state.showHelptips && cookie.load(`${this.state.user.id}-deploymentID`)) {
-      this._isOnBoardFinished(cookie.load(`${this.state.user.id}-deploymentID`));
-    }
   }
-  _refreshInProgress(page, per_page) {
+  _refreshInProgress(page, per_page = DEFAULT_PENDING_INPROGRESS_COUNT) {
     /*
     / refresh only in progress deployments
     /
     */
     var self = this;
     if (page) {
-      self.setState({ prog_page: page });
+      self.setState({ progPage: page });
     } else {
-      page = self.state.prog_page;
+      page = self.state.progPage;
     }
 
     return Promise.all([
@@ -205,16 +203,16 @@ export default class Deployments extends React.Component {
         setRetryTimer(err, 'deployments', `Couldn't load deployments. ${errormsg}`, self.state.refreshDeploymentsLength);
       });
   }
-  _refreshPending(page, per_page) {
+  _refreshPending(page, per_page = DEFAULT_PENDING_INPROGRESS_COUNT) {
     /*
     / refresh only pending deployments
     /
     */
     var self = this;
     if (page) {
-      self.setState({ pend_page: page });
+      self.setState({ pendPage: page });
     } else {
-      page = self.state.pend_page;
+      page = self.state.pendPage;
     }
 
     return AppActions.getPendingDeployments(page, per_page)
@@ -242,7 +240,7 @@ export default class Deployments extends React.Component {
   }
 
   _changePastPage(
-    page = this.state.page,
+    page = this.state.pastPage,
     startDate = this.state.startDate,
     endDate = this.state.endDate,
     per_page = this.state.per_page,
@@ -263,7 +261,7 @@ export default class Deployments extends React.Component {
     var self = this;
 
     var oldCount = self.state.pastCount;
-    var oldPage = self.state.past_page;
+    var oldPage = self.state.pastPage;
 
     startDate = startDate || self.state.startDate;
     endDate = endDate || self.state.endDate;
@@ -277,8 +275,8 @@ export default class Deployments extends React.Component {
     // get total count of past deployments first
     return AppActions.getDeploymentCount('finished', startDate, endDate, group)
       .then(count => {
-        page = page || self.state.past_page || 1;
-        self.setState({ pastCount: count, past_page: page });
+        page = page || self.state.pastPage || 1;
+        self.setState({ pastCount: count, pastPage: page });
         // only refresh deployments if page, count or date range has changed
         if (oldPage !== page || oldCount !== count || !self.state.doneLoading) {
           return AppActions.getPastDeployments(page, per_page, startDate, endDate, group).then(AppActions.getDeploymentsWithStats);
@@ -307,9 +305,9 @@ export default class Deployments extends React.Component {
       group: deployment.name,
       deploymentDeviceIds: devices.map(item => item.id),
       release,
-      phases: deployment.phases ? deployment.phases : null
-    }
-    self.setState({ release, group: deployment.name, filteredDevices: devices }, () => self._onScheduleSubmit(deploymentObject));
+      phases: null
+    };
+    self.setState({ deploymentObject, createDialog: true, reportDialog: false });
   }
 
   _onScheduleSubmit(deploymentObject) {
@@ -329,17 +327,12 @@ export default class Deployments extends React.Component {
         var id = data.substring(lastslashindex + 1);
         clearInterval(self.timer);
 
-        // onboarding
-        if (self.state.showHelptips && !cookie.load(`${self.state.user.id}-deploymentID`)) {
-          cookie.save(`${self.state.user.id}-deploymentID`, id);
-        }
-
         return AppActions.getSingleDeployment(id).then(data => {
           if (data) {
             // successfully retrieved new deployment
-            if (self.state.currentTab !== 'Active') {
-              self.context.router.history.push('/deployments/active');
-              self._changeTab('/deployments/active');
+            if (self._getCurrentLabel() !== routes.active.title) {
+              self.context.router.history.push(routes.active.route);
+              self._changeTab(routes.active.route);
             } else {
               self.timer = setInterval(() => self._refreshDeployments(), self.state.refreshDeploymentsLength);
               self._refreshDeployments();
@@ -351,10 +344,20 @@ export default class Deployments extends React.Component {
           return Promise.resolve();
         });
       })
-      .then(() => self.setState({ doneLoading: true }))
       .catch(err => {
         var errMsg = err.res.body.error || '';
         AppActions.setSnackbar(preformatWithRequestID(err.res, `Error creating deployment. ${errMsg}`), null, 'Copy to clipboard');
+      })
+      .then(() => self.setState({ doneLoading: true, deploymentObject: null }))
+      .then(() => {
+        const standardPhases = standardizePhases(phases);
+        const settings = AppStore.getGlobalSettings();
+        let previousPhases = settings.previousPhases || [];
+        previousPhases = previousPhases.map(standardizePhases);
+        if (!previousPhases.find(previousPhaseList => previousPhaseList.every(oldPhase => standardPhases.find(phase => deepCompare(phase, oldPhase))))) {
+          previousPhases.push(standardPhases);
+        }
+        AppActions.saveGlobalSettings({ ...settings, previousPhases: previousPhases.slice(-1 * MAX_PREVIOUS_PHASES_COUNT) });
       });
   }
   _getReportById(id) {
@@ -390,20 +393,6 @@ export default class Deployments extends React.Component {
     this.setState({ updated: true });
   }
 
-  _isOnBoardFinished(id) {
-    var self = this;
-    return AppActions.getSingleDeployment(id).then(data => {
-      if (data.status === 'finished') {
-        cookie.remove(`${self.state.user.id}-deploymentID`);
-      }
-    });
-  }
-
-  // nested tabs
-  componentWillReceiveProps() {
-    // this.setState({ tabIndex: this._updateActive(), currentTab: this._getCurrentLabel() });
-  }
-
   _updateActive(tab = this.context.router.route.match.params.tab) {
     if (routes.hasOwnProperty(tab)) {
       return routes[tab].route;
@@ -422,7 +411,7 @@ export default class Deployments extends React.Component {
     var self = this;
     clearInterval(self.timer);
     self.timer = setInterval(() => self._refreshDeployments(), self.state.refreshDeploymentsLength);
-    self.setState({ tabIndex, currentTab: self._getCurrentLabel(), pend_page: 1, past_page: 1, prog_page: 1 }, () => self._refreshDeployments());
+    self.setState({ tabIndex, pendPage: 1, pastPage: 1, progPage: 1 }, () => self._refreshDeployments());
     AppActions.setSnackbar('');
   }
 
@@ -477,9 +466,9 @@ export default class Deployments extends React.Component {
                   abort={id => this._abortDeployment(id)}
                   count={this.state.pendingCount || this.state.pending.length}
                   items={this.state.pending}
-                  page={this.state.pend_page}
+                  page={this.state.pendPage}
                   refreshItems={(...args) => this._refreshPending(...args)}
-                  isActiveTab={this.state.currentTab === 'Active'}
+                  isActiveTab={self._getCurrentLabel() === routes.active.title}
                   title="pending"
                   type="pending"
                 />
@@ -487,9 +476,9 @@ export default class Deployments extends React.Component {
                   abort={id => this._abortDeployment(id)}
                   count={this.state.progressCount || this.state.progress.length}
                   items={this.state.progress}
-                  page={this.state.prog_page}
+                  page={this.state.progPage}
                   refreshItems={(...args) => this._refreshInProgress(...args)}
-                  isActiveTab={this.state.currentTab === 'Active'}
+                  isActiveTab={self._getCurrentLabel() === routes.active.title}
                   openReport={rowNum => this._showProgress(rowNum)}
                   title="In progress"
                   type="progress"
@@ -516,11 +505,11 @@ export default class Deployments extends React.Component {
               deviceGroup={this.state.groupFilter}
               createClick={() => this.setState({ createDialog: true })}
               pageSize={per_page}
-              onChangeRowsPerPage={perPage => self.setState({ per_page: perPage, page: 1 }, () => self._changePastPage())}
+              onChangeRowsPerPage={perPage => self.setState({ per_page: perPage, pastPage: 1 }, () => self._changePastPage())}
               startDate={this.state.startDate}
               endDate={this.state.endDate}
-              page={this.state.page}
-              isActiveTab={this.state.currentTab === 'Finished'}
+              page={this.state.pastPage}
+              isActiveTab={self._getCurrentLabel() === routes.finished.title}
               showHelptips={this.state.showHelptips}
               count={pastCount}
               loading={!this.state.doneLoading}
@@ -541,11 +530,12 @@ export default class Deployments extends React.Component {
 
         <CreateDialog
           open={this.state.createDialog}
-          onDismiss={() => self.setState({ createDialog: false, device: null })}
+          onDismiss={() => self.setState({ createDialog: false, device: null, deploymentObject: null })}
           onScheduleSubmit={(...args) => this._onScheduleSubmit(...args)}
           deploymentRelease={release}
           hasDevices={this.state.hasDevices}
           device={this.state.device}
+          deploymentObject={self.state.deploymentObject}
         />
         {onboardingComponent}
       </div>

@@ -22,19 +22,21 @@ export default class ProgressChart extends React.Component {
   }
 
   render() {
-    let { created, currentDeviceCount, id, totalDeviceCount, totalFailureCount, phases } = this.props;
+    let { created, currentProgressCount, currentSuccessCount, id, totalDeviceCount, totalFailureCount, phases } = this.props;
     const { time } = this.state;
 
-    phases = phases && phases.length ? phases : [{ id, device_count: currentDeviceCount, batch_size: totalDeviceCount, start_ts: created }];
+    phases = phases && phases.length ? phases : [{ id, device_count: currentSuccessCount, batch_size: totalDeviceCount, start_ts: created }];
 
     // to display failures per phase we have to approximate the failure count per phase by keeping track of the failures we display in previous phases and
     // deduct the phase failures from the remainder - so if we have a total of 5 failures reported and are in the 3rd phase, with each phase before reporting
     // 3 successful deployments -> the 3rd phase should end up with 1 failure so far
     const displayablePhases = phases.reduce(
       (accu, phase) => {
-        const devicesInPhase = Math.ceil((totalDeviceCount / 100) * phase.batch_size);
-        phase.successWidth = (phase.device_count / devicesInPhase) * 100;
         const possiblePhaseFailures = totalFailureCount - accu.countedFailures;
+        // if there are too few devices in a phase to register, fallback to occured failures, as those have definitely happened
+        const devicesInPhase = Math.max(Math.floor((totalDeviceCount / 100) * phase.batch_size), possiblePhaseFailures);
+        const possiblePhaseSuccesses = Math.max(phase.device_count - possiblePhaseFailures - currentProgressCount, 0);
+        phase.successWidth = (possiblePhaseSuccesses / devicesInPhase) * 100;
         phase.failureWidth = (possiblePhaseFailures / devicesInPhase) * 100;
         accu.displayablePhases.push(phase);
         accu.countedFailures = accu.countedFailures + possiblePhaseFailures;
@@ -60,7 +62,7 @@ export default class ProgressChart extends React.Component {
       }
       : null;
     return (
-      <div className="flexbox column progress-chart-container">
+      <div className={`flexbox column progress-chart-container ${this.props.className || ''}`}>
         <div className="flexbox space-between centered">
           <div className="progress-chart">
             {displayablePhases.map((phase, index) => {
