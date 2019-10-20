@@ -90,7 +90,6 @@ publish:
     - docker:dind
   dependencies:
     - build
-    - test:acceptance
   script:
     - docker load -i image.tar
     - docker tag $SERVICE_IMAGE $DOCKER_REPOSITORY:$COMMIT_TAG
@@ -99,6 +98,6 @@ publish:
     - docker push $DOCKER_REPOSITORY:$COMMIT_TAG
     - docker push $SERVICE_IMAGE
   only:
-    - master
+    - /^(master|[0-9]+\.[0-9]+\.x)$/
   tags:
     - docker
