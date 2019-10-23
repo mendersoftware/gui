@@ -7,7 +7,7 @@ const EnterpriseNotification = props => {
     !props.isEnterprise && (
       <p className="info icon">
         <InfoOutlinedIcon fontSize="small" style={{ verticalAlign: 'middle', margin: '0 6px 4px 0' }} />
-        {`With a commercial edition of Mender you can ${props.benefit}. `}
+        {`With a commercial Mender plan you can ${props.benefit}. `}
         <a href="https://mender.io" target="_blank">
           Learn more
         </a>
