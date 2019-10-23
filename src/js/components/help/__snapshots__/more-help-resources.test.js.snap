@@ -68,7 +68,7 @@ exports[`renders correctly 1`] = `
         Follow us on Twitter
          
         <a
-          href="https://twitter,com/mender_io"
+          href="https://twitter.com/mender_io"
           target="_blank"
         >
           @mender_io

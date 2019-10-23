@@ -184,7 +184,7 @@ export default class Pending extends React.Component {
         render: device => (device.created_ts ? <Time value={device.created_ts} format="YYYY-MM-DD HH:mm" /> : '-')
       },
       {
-        title: 'Last checkin',
+        title: 'Last check-in',
         name: 'last_checkin',
         render: device => (device.updated_ts ? <Time value={device.updated_ts} format="YYYY-MM-DD HH:mm" /> : '-')
       },
@@ -246,6 +246,7 @@ export default class Pending extends React.Component {
               columnHeaders={columnHeaders}
               limitMaxed={limitMaxed}
               onSelect={selection => self.onRowSelection(selection)}
+              onChangeRowsPerPage={pageLength => self.setState({ pageNo: 1, pageLength })}
               onPageChange={e => self._handlePageChange(e)}
               pageTotal={self.state.count}
               refreshDevices={() => self._getDevices()}

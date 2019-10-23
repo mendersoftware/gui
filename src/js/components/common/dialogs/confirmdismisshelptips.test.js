@@ -1,8 +1,8 @@
 import React from 'react';
-import renderer from 'react-test-renderer';
+import { createMount } from '@material-ui/core/test-utils';
 import ConfirmDismissHelptips from './confirmdismisshelptips';
 
 it('renders correctly', () => {
-  const tree = renderer.create(<ConfirmDismissHelptips />).toJSON();
-  expect(tree).toMatchSnapshot();
+  const tree = createMount()(<ConfirmDismissHelptips open={true} />);
+  expect(tree.html()).toMatchSnapshot();
 });

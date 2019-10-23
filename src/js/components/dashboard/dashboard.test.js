@@ -1,6 +1,6 @@
 import React from 'react';
+import { createMount } from '@material-ui/core/test-utils';
 import { MemoryRouter } from 'react-router-dom';
-import renderer from 'react-test-renderer';
 import { mount } from 'enzyme';
 import Dashboard from './dashboard';
 
@@ -13,12 +13,10 @@ it('renders without crashing', () => {
 });
 
 it('renders correctly', () => {
-  const tree = renderer
-    .create(
-      <MemoryRouter>
-        <Dashboard />
-      </MemoryRouter>
-    )
-    .toJSON();
-  expect(tree).toMatchSnapshot();
+  const tree = createMount()(
+    <MemoryRouter>
+      <Dashboard />
+    </MemoryRouter>
+  );
+  expect(tree.html()).toMatchSnapshot();
 });

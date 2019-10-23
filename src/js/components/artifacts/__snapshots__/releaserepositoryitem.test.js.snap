@@ -10,7 +10,7 @@ exports[`renders correctly 1`] = `
     NaN
   </div>
   <div
-    className="MuiPaper-root-5 MuiPaper-elevation1-8 MuiExpansionPanel-root-1"
+    className="MuiPaper-root MuiPaper-elevation1 MuiExpansionPanel-root"
     style={
       Object {
         "border": "1px solid",
@@ -20,11 +20,12 @@ exports[`renders correctly 1`] = `
     }
   >
     <div
+      aria-disabled={false}
       aria-expanded={false}
-      className="MuiButtonBase-root-38 MuiExpansionPanelSummary-root-32"
+      className="MuiButtonBase-root MuiExpansionPanelSummary-root"
       onBlur={[Function]}
       onClick={[Function]}
-      onContextMenu={[Function]}
+      onDragLeave={[Function]}
       onFocus={[Function]}
       onKeyDown={[Function]}
       onKeyUp={[Function]}
@@ -40,10 +41,10 @@ exports[`renders correctly 1`] = `
           "padding": "0 12px",
         }
       }
-      tabIndex="0"
+      tabIndex={0}
     >
       <div
-        className="MuiExpansionPanelSummary-content-36 repo-item"
+        className="MuiExpansionPanelSummary-content repo-item"
       >
         <div
           aria-describedby={null}
@@ -58,9 +59,12 @@ exports[`renders correctly 1`] = `
         >
           test-type
         </div>
-        <span>
-          Invalid date
-        </span>
+        <time
+          dateTime="2019-01-01T00:00:00+00:00"
+          title={null}
+        >
+          2019-01-01 00:00
+        </time>
         <div
           style={
             Object {
@@ -74,10 +78,10 @@ exports[`renders correctly 1`] = `
           0 Bytes
         </div>
         <button
-          className="MuiButtonBase-root-38 MuiIconButton-root-49 expandButton"
+          className="MuiButtonBase-root MuiIconButton-root expandButton"
           disabled={false}
           onBlur={[Function]}
-          onContextMenu={[Function]}
+          onDragLeave={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
           onKeyUp={[Function]}
@@ -87,15 +91,15 @@ exports[`renders correctly 1`] = `
           onTouchEnd={[Function]}
           onTouchMove={[Function]}
           onTouchStart={[Function]}
-          tabIndex="0"
+          tabIndex={0}
           type="button"
         >
           <span
-            className="MuiIconButton-label-54"
+            className="MuiIconButton-label"
           >
             <svg
               aria-hidden="true"
-              className="MuiSvgIcon-root-55"
+              className="MuiSvgIcon-root"
               focusable="false"
               role="presentation"
               viewBox="0 0 24 24"
@@ -103,21 +107,16 @@ exports[`renders correctly 1`] = `
               <path
                 d="M7 10l5 5 5-5z"
               />
-              <path
-                d="M0 0h24v24H0z"
-                fill="none"
-              />
             </svg>
           </span>
           <span
-            className="MuiTouchRipple-root-69"
+            className="MuiTouchRipple-root"
           />
         </button>
       </div>
     </div>
     <div
-      aria-hidden="true"
-      className="MuiCollapse-container-64"
+      className="MuiCollapse-container MuiCollapse-hidden"
       style={
         Object {
           "minHeight": "0px",
@@ -125,15 +124,19 @@ exports[`renders correctly 1`] = `
       }
     >
       <div
-        className="MuiCollapse-wrapper-66"
+        className="MuiCollapse-wrapper"
       >
         <div
-          className="MuiCollapse-wrapperInner-67"
+          className="MuiCollapse-wrapperInner"
         >
           <div
-            className="MuiExpansionPanelDetails-root-68"
+            role="region"
           >
-            <div />
+            <div
+              className="MuiExpansionPanelDetails-root"
+            >
+              <div />
+            </div>
           </div>
         </div>
       </div>

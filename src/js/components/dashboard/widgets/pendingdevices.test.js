@@ -1,15 +1,13 @@
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
-import renderer from 'react-test-renderer';
+import { createMount } from '@material-ui/core/test-utils';
 import PendingDevices from './pendingdevices';
 
 it('renders correctly', () => {
-  const tree = renderer
-    .create(
-      <MemoryRouter>
-        <PendingDevices />
-      </MemoryRouter>
-    )
-    .toJSON();
-  expect(tree).toMatchSnapshot();
+  const tree = createMount()(
+    <MemoryRouter>
+      <PendingDevices />
+    </MemoryRouter>
+  );
+  expect(tree.html()).toMatchSnapshot();
 });

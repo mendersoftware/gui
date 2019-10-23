@@ -110,7 +110,7 @@ export default class GroupSelector extends React.Component {
     return (
       <div style={{ height: '200px' }}>
         {showSelect ? (
-          <Grid container spacing={16} className="float-left">
+          <Grid container spacing={2} className="float-left">
             <Grid item>
               <FormControl>
                 <InputLabel htmlFor="group-select">Select group</InputLabel>

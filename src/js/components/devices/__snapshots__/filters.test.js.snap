@@ -9,11 +9,11 @@ exports[`renders correctly 1`] = `
   }
 >
   <button
-    className="MuiButtonBase-root-27 MuiButton-root-1 MuiButton-text-3 MuiButton-textSecondary-5 MuiButton-flat-6 MuiButton-flatSecondary-8"
+    className="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary"
     disabled={false}
     onBlur={[Function]}
     onClick={[Function]}
-    onContextMenu={[Function]}
+    onDragLeave={[Function]}
     onFocus={[Function]}
     onKeyDown={[Function]}
     onKeyUp={[Function]}
@@ -31,15 +31,15 @@ exports[`renders correctly 1`] = `
         "zIndex": 100,
       }
     }
-    tabIndex="0"
+    tabIndex={0}
     type="button"
   >
     <span
-      className="MuiButton-label-2"
+      className="MuiButton-label"
     >
       <svg
         aria-hidden="true"
-        className="MuiSvgIcon-root-30 buttonLabelIcon"
+        className="MuiSvgIcon-root buttonLabelIcon"
         focusable="false"
         role="presentation"
         viewBox="0 0 24 24"
@@ -47,16 +47,9 @@ exports[`renders correctly 1`] = `
         <path
           d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"
         />
-        <path
-          d="M0 0h24v24H0z"
-          fill="none"
-        />
       </svg>
       Filters
     </span>
-    <span
-      className="MuiTouchRipple-root-53"
-    />
   </button>
 </div>
 `;

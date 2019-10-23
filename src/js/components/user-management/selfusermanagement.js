@@ -1,22 +1,26 @@
 import React from 'react';
+
+import { Collapse, Switch, TextField } from '@material-ui/core';
+
 import Form from '../common/forms/form';
 import TextInput from '../common/forms/textinput';
 import PasswordInput from '../common/forms/passwordinput';
 import FormButton from '../common/forms/formbutton';
+import EnterpriseNotification from '../common/enterpriseNotification';
 
 import AppActions from '../../actions/app-actions';
 import AppStore from '../../stores/app-store';
 
 import { preformatWithRequestID } from '../../helpers';
-import { Collapse, Switch } from '@material-ui/core';
-import Loader from '../common/loader';
+
+import TwoFactorAuthSetup from './twofactorauthsetup';
 
 export default class SelfUserManagement extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = Object.assign({ qrExpanded: false }, this._getState());
     AppActions.getGlobalSettings().then(settings => {
-      if (AppStore.getIsEnterprise() && !settings.hasOwnProperty('2fa')) {
+      if ((AppStore.getIsEnterprise() || AppStore.getIsHosted()) && !settings.hasOwnProperty('2fa')) {
         AppActions.saveGlobalSettings(Object.assign(settings, { '2fa': 'disabled' }));
       }
     });
@@ -35,10 +39,7 @@ export default class SelfUserManagement extends React.Component {
   }
 
   _onChange() {
-    const self = this;
-    self.setState(self._getState(), () =>
-      self.state.qrExpanded && !self.state.qrImage ? AppActions.get2FAQRCode(self.state.currentUser.email).then(qrImage => self.setState({ qrImage })) : null
-    );
+    this.setState(this._getState());
   }
 
   componentWillUnmount() {
@@ -76,53 +77,60 @@ export default class SelfUserManagement extends React.Component {
   }
 
   handle2FAState(required) {
-    this.setState({ qrExpanded: required });
-    AppActions.saveGlobalSettings(Object.assign(AppStore.getGlobalSettings() || {}, { '2fa': required ? 'enabled' : 'disabled' }));
+    this.setState({ qrExpanded: false });
+    AppActions.saveGlobalSettings(Object.assign(AppStore.getGlobalSettings() || {}, { '2fa': required ? 'enabled' : 'disabled' })).then(() =>
+      required ? AppActions.setSnackbar('Two Factor authentication set up successfully.') : null
+    );
   }
 
   render() {
     const self = this;
-    const { editEmail, editPass, qrExpanded, has2fa, qrImage } = self.state;
+    const { currentUser, editEmail, editPass, emailFormId, qrExpanded, has2fa } = self.state;
+    const email = (currentUser || { email: '' }).email;
+    const isEnterprise = AppStore.getIsEnterprise() || AppStore.getIsHosted();
     return (
       <div style={{ maxWidth: '750px' }} className="margin-top-small">
-        <h2 style={{ marginTop: '15px' }}>My account</h2>
+        <h2 className="margin-top-small">My account</h2>
 
         <Form
           className="flexbox space-between"
-          onSubmit={userdata => this._editSubmit(userdata)}
-          handleCancel={() => this.handleEmail()}
+          onSubmit={userdata => self._editSubmit(userdata)}
+          handleCancel={() => self.handleEmail()}
           submitLabel="Save"
           showButtons={editEmail}
           buttonColor="secondary"
           submitButtonId="submit_email"
-          uniqueId={this.state.emailFormId}
+          uniqueId={emailFormId}
         >
-          <TextInput
-            hint="Email"
-            label="Email"
-            id="email"
-            disabled={!editEmail}
-            value={(this.state.currentUser || {}).email}
-            validations="isLength:1,isEmail"
-            focus={editEmail}
-            InputLabelProps={{ shrink: (this.state.currentUser || {}).email }}
-          />
-
-          {!editEmail && (
-            <FormButton
-              className="inline-block"
-              color="primary"
-              id="change_email"
-              label="Change email"
-              style={{ margin: '30px 0 0 15px' }}
-              handleClick={() => this.handleEmail()}
+          {!editEmail && currentUser.email ? (
+            <>
+              <TextField label="Email" InputLabelProps={{ shrink: !!email }} disabled defaultValue={email} style={{ width: '400px', maxWidth: '100%' }} />
+              <FormButton
+                className="inline-block"
+                color="primary"
+                id="change_email"
+                label="Change email"
+                style={{ margin: '30px 0 0 15px' }}
+                handleClick={() => self.handleEmail()}
+              />
+            </>
+          ) : (
+            <TextInput
+              hint="Email"
+              label="Email"
+              id="email"
+              disabled={false}
+              value={email}
+              validations="isLength:1,isEmail"
+              focus={true}
+              InputLabelProps={{ shrink: !!email }}
             />
           )}
         </Form>
 
         <Form
-          onSubmit={userdata => this._editSubmit(userdata)}
-          handleCancel={() => this.handlePass()}
+          onSubmit={userdata => self._editSubmit(userdata)}
+          handleCancel={() => self.handlePass()}
           submitLabel="Save"
           submitButtonId="submit_pass"
           buttonColor="secondary"
@@ -137,48 +145,34 @@ export default class SelfUserManagement extends React.Component {
               create={editPass}
               validations="isLength:1"
               disabled={!editPass}
-              onClear={() => this.handleButton()}
+              onClear={() => self.handleButton()}
               edit={false}
             />
           ) : (
-            <FormButton buttonHolder={true} color="primary" id="change_pass" label="Change password" handleClick={() => this.handlePass()} />
+            <FormButton buttonHolder={true} color="primary" id="change_pass" label="Change password" handleClick={() => self.handlePass()} />
           )}
         </Form>
-        {AppStore.getIsEnterprise() && (
+        {isEnterprise ? (
           <div className="margin-top">
-            <div className="clickable flexbox space-between" onClick={() => self.handle2FAState(!has2fa)}>
+            <div
+              className="clickable flexbox space-between"
+              onClick={() => self.setState({ qrExpanded: has2fa && !qrExpanded ? self.handle2FAState(false) : !qrExpanded })}
+            >
               <p className="help-content">Enable Two Factor authentication</p>
-              <Switch checked={has2fa} />
+              <Switch checked={has2fa || qrExpanded} />
             </div>
             <p className="info" style={{ width: '75%', margin: 0 }}>
               Two Factor Authentication adds a second layer of protection to your account by asking for an additional verification code each time you log in.
             </p>
             <Collapse in={qrExpanded} timeout="auto" unmountOnExit>
-              <div className="margin-top">
-                Setup:
-                <div className="flexbox margin-top">
-                  <ol className="spaced-list margin-right-large" style={{ paddingInlineStart: 20 }}>
-                    <li className="margin-top-none">
-                      To use Two Factor Authentication, first download a third party authentication app such as{' '}
-                      <a href="https://authy.com/download/" target="_blank">
-                        Authy
-                      </a>{' '}
-                      or{' '}
-                      <a href="https://support.google.com/accounts/answer/1066447" target="_blank">
-                        Google Authenticator
-                      </a>
-                      .
-                    </li>
-                    <li>Scan the QR code on the right with the authenticator app you just downloaded on your device.</li>
-                    <li>
-                      Then each time you log in, you will be asked for a verification code which you can retrieve from the authentication app on your device.
-                    </li>
-                  </ol>
-                  {!qrImage ? <Loader show={!qrImage} /> : <img src={`data:image/png;base64,${qrImage}`} style={{ maxHeight: '20vh' }} />}
-                </div>
-              </div>
+              <TwoFactorAuthSetup handle2FAState={isEnabled => self.handle2FAState(isEnabled)} show={qrExpanded} user={currentUser} />
             </Collapse>
           </div>
+        ) : (
+          <EnterpriseNotification
+            isEnterprise={isEnterprise}
+            benefit="set up Two Factor Authentication to add an additional layer of security to their account"
+          />
         )}
       </div>
     );

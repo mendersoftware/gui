@@ -3,7 +3,7 @@
 exports[`renders correctly 1`] = `
 <div>
   <ul
-    className="MuiList-root-1 MuiList-padding-2"
+    className="MuiList-root MuiList-padding"
     style={
       Object {
         "padding": "0",
@@ -12,7 +12,7 @@ exports[`renders correctly 1`] = `
   >
     <a
       aria-current="page"
-      className="MuiListItem-root-5 MuiListItem-default-8 MuiListItem-gutters-13 navLink leftNav active"
+      className="MuiListItem-root navLink leftNav MuiListItem-gutters active"
       disabled={false}
       href="/"
       onClick={[Function]}
@@ -23,7 +23,7 @@ exports[`renders correctly 1`] = `
       }
     >
       <div
-        className="MuiListItemText-root-17"
+        className="MuiListItemText-root"
         style={
           Object {
             "textTransform": "uppercase",
@@ -31,7 +31,7 @@ exports[`renders correctly 1`] = `
         }
       >
         <span
-          className="MuiTypography-root-23 MuiTypography-subheading-30 MuiListItemText-primary-20"
+          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1"
         >
           Dashboard
         </span>
@@ -39,7 +39,7 @@ exports[`renders correctly 1`] = `
     </a>
     <a
       aria-current={null}
-      className="MuiListItem-root-5 MuiListItem-default-8 MuiListItem-gutters-13 navLink leftNav"
+      className="MuiListItem-root navLink leftNav MuiListItem-gutters"
       disabled={false}
       href="/devices"
       onClick={[Function]}
@@ -50,7 +50,7 @@ exports[`renders correctly 1`] = `
       }
     >
       <div
-        className="MuiListItemText-root-17"
+        className="MuiListItemText-root"
         style={
           Object {
             "textTransform": "uppercase",
@@ -58,7 +58,7 @@ exports[`renders correctly 1`] = `
         }
       >
         <span
-          className="MuiTypography-root-23 MuiTypography-subheading-30 MuiListItemText-primary-20"
+          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1"
         >
           Devices
         </span>
@@ -66,7 +66,7 @@ exports[`renders correctly 1`] = `
     </a>
     <a
       aria-current={null}
-      className="MuiListItem-root-5 MuiListItem-default-8 MuiListItem-gutters-13 navLink leftNav"
+      className="MuiListItem-root navLink leftNav MuiListItem-gutters"
       disabled={false}
       href="/releases"
       onClick={[Function]}
@@ -77,7 +77,7 @@ exports[`renders correctly 1`] = `
       }
     >
       <div
-        className="MuiListItemText-root-17"
+        className="MuiListItemText-root"
         style={
           Object {
             "textTransform": "uppercase",
@@ -85,7 +85,7 @@ exports[`renders correctly 1`] = `
         }
       >
         <span
-          className="MuiTypography-root-23 MuiTypography-subheading-30 MuiListItemText-primary-20"
+          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1"
         >
           Releases
         </span>
@@ -93,7 +93,7 @@ exports[`renders correctly 1`] = `
     </a>
     <a
       aria-current={null}
-      className="MuiListItem-root-5 MuiListItem-default-8 MuiListItem-gutters-13 navLink leftNav"
+      className="MuiListItem-root navLink leftNav MuiListItem-gutters"
       disabled={false}
       href="/deployments"
       onClick={[Function]}
@@ -104,7 +104,7 @@ exports[`renders correctly 1`] = `
       }
     >
       <div
-        className="MuiListItemText-root-17"
+        className="MuiListItemText-root"
         style={
           Object {
             "textTransform": "uppercase",
@@ -112,7 +112,7 @@ exports[`renders correctly 1`] = `
         }
       >
         <span
-          className="MuiTypography-root-23 MuiTypography-subheading-30 MuiListItemText-primary-20"
+          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1"
         >
           Deployments
         </span>
@@ -120,7 +120,7 @@ exports[`renders correctly 1`] = `
     </a>
   </ul>
   <ul
-    className="MuiList-root-1 MuiList-padding-2"
+    className="MuiList-root MuiList-padding"
     style={
       Object {
         "bottom": "30px",
@@ -132,7 +132,7 @@ exports[`renders correctly 1`] = `
     }
   >
     <a
-      className="MuiListItem-root-5 MuiListItem-default-8 MuiListItem-gutters-13 navLink leftNav"
+      className="MuiListItem-root navLink leftNav MuiListItem-gutters"
       disabled={false}
       href="/help"
       onClick={[Function]}
@@ -143,17 +143,17 @@ exports[`renders correctly 1`] = `
       }
     >
       <div
-        className="MuiListItemText-root-17"
+        className="MuiListItemText-root"
       >
         <span
-          className="MuiTypography-root-23 MuiTypography-subheading-30 MuiListItemText-primary-20"
+          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1"
         >
           Help
         </span>
       </div>
     </a>
     <li
-      className="MuiListItem-root-5 MuiListItem-default-8 MuiListItem-gutters-13 MuiListItem-disabled-11"
+      className="MuiListItem-root MuiListItem-gutters Mui-disabled"
       disabled={true}
       style={
         Object {
@@ -163,10 +163,10 @@ exports[`renders correctly 1`] = `
       }
     >
       <div
-        className="MuiListItemText-root-17"
+        className="MuiListItemText-root MuiListItemText-multiline"
       >
         <span
-          className="MuiTypography-root-23 MuiTypography-subheading-30 MuiListItemText-primary-20"
+          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1"
         >
           <div
             aria-describedby={null}
@@ -184,7 +184,7 @@ exports[`renders correctly 1`] = `
           </div>
         </span>
         <p
-          className="MuiTypography-root-23 MuiTypography-body1-32 MuiTypography-colorTextSecondary-56 MuiListItemText-secondary-21"
+          className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary"
         >
           <a
             href="https://docs.mender.io/development/release-information/open-source-licenses"

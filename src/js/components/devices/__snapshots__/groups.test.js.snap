@@ -8,13 +8,14 @@ exports[`renders correctly 1`] = `
     Groups
   </div>
   <ul
-    className="MuiList-root-1 MuiList-padding-2"
+    className="MuiList-root MuiList-padding"
   >
     <div
-      className="MuiButtonBase-root-17 MuiListItem-root-5 grouplist MuiListItem-default-8 MuiListItem-gutters-13 MuiListItem-button-14"
+      aria-disabled={false}
+      className="MuiButtonBase-root MuiListItem-root grouplist MuiListItem-gutters MuiListItem-button"
       onBlur={[Function]}
       onClick={[Function]}
-      onContextMenu={[Function]}
+      onDragLeave={[Function]}
       onFocus={[Function]}
       onKeyDown={[Function]}
       onKeyUp={[Function]}
@@ -30,31 +31,29 @@ exports[`renders correctly 1`] = `
           "backgroundColor": "#e7e7e7",
         }
       }
-      tabIndex="0"
+      tabIndex={0}
     >
       <div
-        className="MuiListItemText-root-20"
+        className="MuiListItemText-root"
       >
         <span
-          className="MuiTypography-root-26 MuiTypography-subheading-33 MuiListItemText-primary-23"
+          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1"
         >
           <span>
             All devices
           </span>
         </span>
       </div>
-      <span
-        className="MuiTouchRipple-root-77"
-      />
     </div>
     <hr
-      className="MuiDivider-root-62"
+      className="MuiDivider-root"
     />
     <div
-      className="MuiButtonBase-root-17 MuiButtonBase-disabled-18 MuiListItem-root-5 grouplist MuiListItem-default-8 MuiListItem-gutters-13 MuiListItem-disabled-11 MuiListItem-button-14"
+      aria-disabled={true}
+      className="MuiButtonBase-root MuiListItem-root grouplist MuiListItem-gutters Mui-disabled MuiListItem-button Mui-disabled"
       onBlur={[Function]}
       onClick={null}
-      onContextMenu={[Function]}
+      onDragLeave={[Function]}
       onFocus={[Function]}
       onKeyDown={[Function]}
       onKeyUp={[Function]}
@@ -70,14 +69,14 @@ exports[`renders correctly 1`] = `
           "color": "#d4e9e7",
         }
       }
-      tabIndex="-1"
+      tabIndex={-1}
     >
       <div
-        className="MuiListItemIcon-root-67"
+        className="MuiListItemIcon-root"
       >
         <svg
           aria-hidden="true"
-          className="MuiSvgIcon-root-68"
+          className="MuiSvgIcon-root"
           focusable="false"
           role="presentation"
           viewBox="0 0 24 24"
@@ -85,17 +84,13 @@ exports[`renders correctly 1`] = `
           <path
             d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"
           />
-          <path
-            d="M0 0h24v24H0z"
-            fill="none"
-          />
         </svg>
       </div>
       <div
-        className="MuiListItemText-root-20"
+        className="MuiListItemText-root"
       >
         <span
-          className="MuiTypography-root-26 MuiTypography-subheading-33 MuiListItemText-primary-23"
+          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1"
         >
           Create a group
         </span>

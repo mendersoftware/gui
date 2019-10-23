@@ -20,24 +20,24 @@ exports[`renders correctly 1`] = `
   </h2>
   <div>
     <ul
-      className="MuiList-root-1 MuiList-padding-2"
+      className="MuiList-root MuiList-padding"
     >
       <li
-        className="MuiListItem-root-5 MuiListItem-default-8 MuiListItem-gutters-13 MuiListItem-disabled-11"
+        className="MuiListItem-root MuiListItem-gutters Mui-disabled"
         disabled={true}
       >
         <div
-          className="MuiListItemText-root-17"
+          className="MuiListItemText-root"
         >
           <span
-            className="MuiTypography-root-23 MuiTypography-subheading-30 MuiListItemText-primary-20"
+            className="MuiTypography-root MuiListItemText-primary MuiTypography-body1"
           >
             Organization name
           </span>
         </div>
       </li>
       <hr
-        className="MuiDivider-root-59"
+        className="MuiDivider-root"
       />
       <div
         className="material-list-item"
@@ -68,15 +68,11 @@ exports[`renders correctly 1`] = `
         >
           <svg
             aria-hidden="true"
-            className="MuiSvgIcon-root-64"
+            className="MuiSvgIcon-root"
             focusable="false"
             role="presentation"
             viewBox="0 0 24 24"
           >
-            <path
-              d="M0 0h24v24H0z"
-              fill="none"
-            />
             <path
               d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"
             />
@@ -125,18 +121,18 @@ exports[`renders correctly 1`] = `
           
         </p>
         <button
-          className="MuiButtonBase-root-99 MuiButton-root-73 MuiButton-text-75 MuiButton-flat-78"
+          className="MuiButtonBase-root MuiButton-root MuiButton-text"
           disabled={false}
           icon={
-            <WithStyles(Icon)
+            <ForwardRef(WithStyles)
               className="material-icons"
             >
               content_paste
-            </WithStyles(Icon)>
+            </ForwardRef(WithStyles)>
           }
           onBlur={[Function]}
           onClick={[Function]}
-          onContextMenu={[Function]}
+          onDragLeave={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
           onKeyUp={[Function]}
@@ -151,17 +147,14 @@ exports[`renders correctly 1`] = `
               "marginTop": "15px",
             }
           }
-          tabIndex="0"
+          tabIndex={0}
           type="button"
         >
           <span
-            className="MuiButton-label-74"
+            className="MuiButton-label"
           >
             Copy to clipboard
           </span>
-          <span
-            className="MuiTouchRipple-root-102"
-          />
         </button>
         <p
           style={
@@ -172,7 +165,7 @@ exports[`renders correctly 1`] = `
         />
       </div>
       <hr
-        className="MuiDivider-root-59"
+        className="MuiDivider-root"
       />
     </ul>
   </div>

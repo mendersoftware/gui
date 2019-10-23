@@ -46,7 +46,7 @@ export class BaseWidget extends React.PureComponent {
     );
     if (this.props.isActive) {
       return (
-        <Paper className={`widget ${this.props.className || ''}`} onClick={this.props.onClick}>
+        <Paper className={`widget ${this.props.className || ''}`} onClick={this.props.onClick} elevation={2}>
           {content}
         </Paper>
       );
