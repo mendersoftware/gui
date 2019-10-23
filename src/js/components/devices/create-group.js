@@ -305,7 +305,6 @@ export default class CreateGroup extends React.Component {
           <div key="create-action-button-1" style={{ marginRight: '10px', display: 'inline-block' }}>
             <Button onClick={() => this._handleClose()}>Cancel</Button>
           </div>
-          ,
           <Button variant="contained" key="create-action-button-2" color="primary" onClick={() => this._createGroupHandler()} disabled={createButtonInvalid}>
             {this.state.showWarning ? 'Confirm' : 'Create group'}
           </Button>

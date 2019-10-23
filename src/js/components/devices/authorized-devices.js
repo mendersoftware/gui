@@ -111,7 +111,7 @@ export default class Authorized extends React.Component {
 
   render() {
     const self = this;
-    const { allCount, devices, group, groupCount, loading } = self.props;
+    const { allCount, devices, group, groupCount, loading, onChangeRowsPerPage } = self.props;
     const { selectedRows } = self.state;
     const columnHeaders = [
       {
@@ -137,7 +137,7 @@ export default class Authorized extends React.Component {
         }
       },
       {
-        title: 'Last checkin',
+        title: 'Last check-in',
         name: 'last_checkin',
         property: 'updated_ts',
         render: device => (device.updated_ts ? <Time value={device.updated_ts} format="YYYY-MM-DD HH:mm" /> : '-')
@@ -186,6 +186,7 @@ export default class Authorized extends React.Component {
                 columnHeaders={columnHeaders}
                 selectedRows={selectedRows}
                 onSelect={selection => self.onRowSelection(selection)}
+                onChangeRowsPerPage={onChangeRowsPerPage}
                 pageTotal={groupCount}
               />
 

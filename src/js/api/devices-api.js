@@ -1,10 +1,8 @@
-var request = require('superagent-use')(require('superagent'));
-var Promise = require('es6-promise').Promise;
-require('superagent-auth-bearer')(request);
 import cookie from 'react-cookie';
 import { unauthorizedRedirect } from '../auth';
-
-request.use(unauthorizedRedirect);
+var request = require('superagent')
+  .agent()
+  .use(unauthorizedRedirect);
 
 const Api = {
   get: url => {
@@ -12,7 +10,7 @@ const Api = {
     return new Promise((resolve, reject) => {
       request
         .get(url)
-        .authBearer(token)
+        .auth(token, { type: 'bearer' })
         .timeout({
           response: 10000, // wait 10 seconds for server to start sending
           deadline: 60000 // allow one minute to finish loading
@@ -31,7 +29,7 @@ const Api = {
     return new Promise((resolve, reject) => {
       request
         .post(url)
-        .authBearer(token)
+        .auth(token, { type: 'bearer' })
         .set('Content-Type', 'application/json')
         .send(data)
         .end((err, res) => {
@@ -48,7 +46,7 @@ const Api = {
     return new Promise((resolve, reject) => {
       request
         .put(url)
-        .authBearer(token)
+        .auth(token, { type: 'bearer' })
         .set('Content-Type', 'application/json')
         .send(data)
         .end((err, res) => {
@@ -70,7 +68,7 @@ const Api = {
     return new Promise((resolve, reject) => {
       request
         .del(url)
-        .authBearer(token)
+        .auth(token, { type: 'bearer' })
         .end((err, res) => {
           if (err || !res.ok) {
             reject({ error: err, res: res });

@@ -1,8 +1,8 @@
 import React from 'react';
-import renderer from 'react-test-renderer';
+import { createMount } from '@material-ui/core/test-utils';
 import CompletedDeployments from './completeddeployments';
 
 it('renders correctly', () => {
-  const tree = renderer.create(<CompletedDeployments deployments={[]} />).toJSON();
-  expect(tree).toMatchSnapshot();
+  const tree = createMount()(<CompletedDeployments deployments={[]} cutoffDate="2019-01-01" />);
+  expect(tree.html()).toMatchSnapshot();
 });

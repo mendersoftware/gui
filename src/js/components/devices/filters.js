@@ -1,16 +1,12 @@
 import React from 'react';
 
 // material ui
-import Button from '@material-ui/core/Button';
-import Drawer from '@material-ui/core/Drawer';
-import IconButton from '@material-ui/core/IconButton';
-import List from '@material-ui/core/List';
+import { Button, Drawer, IconButton, List } from '@material-ui/core';
 
-import AddCircleIcon from '@material-ui/icons/AddCircle';
-import CloseIcon from '@material-ui/icons/Close';
-import FilterListIcon from '@material-ui/icons/FilterList';
+import { AddCircle as AddCircleIcon, Close as CloseIcon, FilterList as FilterListIcon } from '@material-ui/icons';
 
 import FilterItem from './filteritem';
+import EnterpriseNotification from '../common/enterpriseNotification';
 
 export default class Filters extends React.Component {
   constructor(props, context) {
@@ -104,7 +100,9 @@ export default class Filters extends React.Component {
               <AddCircleIcon className="buttonLabelIcon" />
               Add filter
             </Button>
-          ) : null}
+          ) : (
+            <EnterpriseNotification isEnterprise={this.props.isHosted} benefit="filter by multiple attributes to improve the device overview" />
+          )}
         </Drawer>
       </div>
     );

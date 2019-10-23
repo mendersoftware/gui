@@ -2,14 +2,15 @@
 
 exports[`renders correctly 1`] = `
 <div
-  className="MuiPaper-root-5 MuiPaper-elevation1-8 MuiExpansionPanel-root-1 deviceListItem"
+  className="MuiPaper-root MuiPaper-elevation1 MuiExpansionPanel-root deviceListItem"
 >
   <div
+    aria-disabled={false}
     aria-expanded={false}
-    className="MuiButtonBase-root-38 MuiExpansionPanelSummary-root-32"
+    className="MuiButtonBase-root MuiExpansionPanelSummary-root"
     onBlur={[Function]}
     onClick={[Function]}
-    onContextMenu={[Function]}
+    onDragLeave={[Function]}
     onFocus={[Function]}
     onKeyDown={[Function]}
     onKeyUp={[Function]}
@@ -25,10 +26,10 @@ exports[`renders correctly 1`] = `
         "padding": "0 12px",
       }
     }
-    tabIndex="0"
+    tabIndex={0}
   >
     <div
-      className="MuiExpansionPanelSummary-content-36"
+      className="MuiExpansionPanelSummary-content"
     >
       <div
         style={
@@ -41,10 +42,10 @@ exports[`renders correctly 1`] = `
         1
       </div>
       <button
-        className="MuiButtonBase-root-38 MuiIconButton-root-41 expandButton"
+        className="MuiButtonBase-root MuiIconButton-root expandButton"
         disabled={false}
         onBlur={[Function]}
-        onContextMenu={[Function]}
+        onDragLeave={[Function]}
         onFocus={[Function]}
         onKeyDown={[Function]}
         onKeyUp={[Function]}
@@ -54,15 +55,15 @@ exports[`renders correctly 1`] = `
         onTouchEnd={[Function]}
         onTouchMove={[Function]}
         onTouchStart={[Function]}
-        tabIndex="0"
+        tabIndex={0}
         type="button"
       >
         <span
-          className="MuiIconButton-label-46"
+          className="MuiIconButton-label"
         >
           <svg
             aria-hidden="true"
-            className="MuiSvgIcon-root-47"
+            className="MuiSvgIcon-root"
             focusable="false"
             role="presentation"
             viewBox="0 0 24 24"
@@ -70,21 +71,13 @@ exports[`renders correctly 1`] = `
             <path
               d="M7 10l5 5 5-5z"
             />
-            <path
-              d="M0 0h24v24H0z"
-              fill="none"
-            />
           </svg>
         </span>
-        <span
-          className="MuiTouchRipple-root-61"
-        />
       </button>
     </div>
   </div>
   <div
-    aria-hidden="true"
-    className="MuiCollapse-container-56"
+    className="MuiCollapse-container MuiCollapse-hidden"
     style={
       Object {
         "minHeight": "0px",
@@ -92,15 +85,19 @@ exports[`renders correctly 1`] = `
     }
   >
     <div
-      className="MuiCollapse-wrapper-58"
+      className="MuiCollapse-wrapper"
     >
       <div
-        className="MuiCollapse-wrapperInner-59"
+        className="MuiCollapse-wrapperInner"
       >
         <div
-          className="MuiExpansionPanelDetails-root-60"
+          role="region"
         >
-          <div />
+          <div
+            className="MuiExpansionPanelDetails-root"
+          >
+            <div />
+          </div>
         </div>
       </div>
     </div>

@@ -1,5 +1,4 @@
 import React from 'react';
-import { Promise } from 'es6-promise';
 import PropTypes from 'prop-types';
 import pluralize from 'pluralize';
 
@@ -48,7 +47,7 @@ export default class DeviceGroups extends React.Component {
       loading: true,
       tmpDevices: [],
       refreshDeviceLength: 10000,
-      isHosted: AppStore.getIsHosted()
+      isHosted: AppStore.getIsEnterprise() || AppStore.getIsHosted()
     };
   }
 
@@ -587,6 +586,7 @@ export default class DeviceGroups extends React.Component {
             groupCount={groupCount}
             loading={this.state.loading}
             onPageChange={e => self._handlePageChange(e)}
+            onChangeRowsPerPage={pageLength => self.setState({ pageNo: 1, pageLength })}
             openSettingsDialog={this.props.openSettingsDialog}
             pageNo={self.state.pageNo}
             pageLength={self.state.pageLength}

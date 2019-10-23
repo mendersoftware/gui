@@ -2,10 +2,10 @@
 
 exports[`renders correctly 1`] = `
 <ul
-  className="MuiList-root-1 MuiList-padding-2"
+  className="MuiList-root leftFixed MuiList-padding"
 >
   <li
-    className="MuiListSubheader-root-5 MuiListSubheader-sticky-10 MuiListSubheader-gutters-8"
+    className="MuiListSubheader-root MuiListSubheader-gutters"
   >
     Help topics
   </li>

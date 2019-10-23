@@ -19,15 +19,11 @@ exports[`renders correctly 1`] = `
   >
     <svg
       aria-hidden="true"
-      className="MuiSvgIcon-root-1"
+      className="MuiSvgIcon-root"
       focusable="false"
       role="presentation"
       viewBox="0 0 24 24"
     >
-      <path
-        d="M0 0h24v24H0z"
-        fill="none"
-      />
       <path
         d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
       />
@@ -106,11 +102,11 @@ exports[`renders correctly 1`] = `
         }
       />
       <button
-        className="MuiButtonBase-root-36 MuiButton-root-10 MuiButton-contained-21 MuiButton-containedSecondary-23 MuiButton-raised-24 MuiButton-raisedSecondary-26"
+        className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedSecondary"
         disabled={false}
         onBlur={[Function]}
         onClick={[Function]}
-        onContextMenu={[Function]}
+        onDragLeave={[Function]}
         onFocus={[Function]}
         onKeyDown={[Function]}
         onKeyUp={[Function]}
@@ -120,17 +116,14 @@ exports[`renders correctly 1`] = `
         onTouchEnd={[Function]}
         onTouchMove={[Function]}
         onTouchStart={[Function]}
-        tabIndex="0"
+        tabIndex={0}
         type="button"
       >
         <span
-          className="MuiButton-label-11"
+          className="MuiButton-label"
         >
           Close
         </span>
-        <span
-          className="MuiTouchRipple-root-39"
-        />
       </button>
     </div>
   </div>

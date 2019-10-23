@@ -29,6 +29,12 @@ export default class AutoSelect extends React.Component {
     clearTimeout(this.timeout);
   }
 
+  componentDidMount() {
+    if (this.props.value) {
+      this.setState({ searchTerm: this.props.value });
+    }
+  }
+
   searchUpdated(searchTerm) {
     clearTimeout(this.timeout);
     const open = Boolean(searchTerm.length);
@@ -64,6 +70,7 @@ export default class AutoSelect extends React.Component {
         <InputLabel htmlFor="adornment-target-select">{self.props.label}</InputLabel>
         <Input
           id="adornment-target-select"
+          autoComplete="off"
           type="text"
           inputRef={input => (self.anchorEl = input)}
           placeholder={self.props.placeholder || self.props.label}
@@ -86,9 +93,16 @@ export default class AutoSelect extends React.Component {
         <Popper open={open} anchorEl={self.anchorEl} transition style={{ zIndex: 1300 }} placement="bottom-start">
           {({ TransitionProps }) => (
             <Fade {...TransitionProps} timeout={350}>
-              <Paper>
+              <Paper elevation={2}>
                 <ClickAwayListener onClickAway={() => self.setState({ open: false })}>
-                  <MenuList>{items}</MenuList>
+                  <MenuList
+                    style={{
+                      overflow: 'auto',
+                      maxHeight: '250px'
+                    }}
+                  >
+                    {items}
+                  </MenuList>
                 </ClickAwayListener>
               </Paper>
             </Fade>

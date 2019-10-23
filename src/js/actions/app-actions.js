@@ -247,13 +247,7 @@ const AppActions = {
     User management 
   */
   loginUser: userData =>
-    UsersApi.postLogin(`${useradmApiUrl}/auth/login`, userData)
-      .then(res => res.text)
-      .catch(err => {
-        if (err.error.code && err.error.code !== 200) {
-          return Promise.reject(err);
-        }
-      }),
+    UsersApi.postLogin(`${useradmApiUrl}/auth/login`, userData).then(res => res.text),
 
   getUserList: () => UsersApi.get(`${useradmApiUrl}/users`),
 

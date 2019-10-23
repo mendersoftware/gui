@@ -1,15 +1,32 @@
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
-import renderer from 'react-test-renderer';
+import { createMount } from '@material-ui/core/test-utils';
 import Deployments from './deployments';
 
 it('renders correctly', () => {
-  const tree = renderer
-    .create(
-      <MemoryRouter>
-        <Deployments location={{ search: '' }} />
-      </MemoryRouter>
-    )
-    .toJSON();
-  expect(tree).toMatchSnapshot();
+  const context = {
+    childContextTypes: {
+      router: () => {}
+    },
+    context: {
+      router: {
+        route: {
+          location: {
+            hash: '',
+            pathname: '',
+            search: '',
+            state: ''
+          },
+          match: { params: {}, isExact: false, path: '', url: '' }
+        }
+      }
+    }
+  };
+  const tree = createMount()(
+    <MemoryRouter>
+      <Deployments location={{ search: '' }} />
+    </MemoryRouter>,
+    context
+  );
+  expect(tree.html()).toMatchSnapshot();
 });

@@ -26,10 +26,16 @@ export default class DeviceConnectionDialog extends React.Component {
       token: null,
       virtualDevice: false
     };
-    if (AppStore.hasMultitenancy() || AppStore.getIsEnterprise() || AppStore.getIsHosted()) {
-      AppActions.getUserOrganization().then(org => (org ? self.setState({ token: org.tenant_token }) : null));
+  }
+
+  componentDidUpdate(prevProps) {
+    const self = this;
+    if (self.props.open && self.props.open !== prevProps.open) {
+      if (AppStore.hasMultitenancy() || AppStore.getIsEnterprise() || AppStore.getIsHosted()) {
+        AppActions.getUserOrganization().then(org => (org ? self.setState({ token: org.tenant_token }) : null));
+      }
+      AppActions.getReleases().then(releases => AppActions.setOnboardingArtifactIncluded(!!releases.length));
     }
-    AppActions.getReleases().then(releases => AppActions.setOnboardingArtifactIncluded(!!releases.length));
   }
 
   onBackClick() {
@@ -63,7 +69,8 @@ export default class DeviceConnectionDialog extends React.Component {
             </div>
             <ReactTooltip id="deb-package-tip" globalEventOff="click" place="bottom" type="light" effect="solid" className="react-tooltip">
               <p>
-                The Mender .deb package should work on most operating systems in the debian family (e.g. Debian, Ubuntu, Raspbian) and devices based on ARMv6 or newer (e.g. Raspberry Pi 2/3, Beaglebone). 
+                The Mender .deb package should work on most operating systems in the debian family (e.g. Debian, Ubuntu, Raspbian) and devices based on ARMv6 or
+                newer (e.g. Raspberry Pi 2/3, Beaglebone).
               </p>
               <p>
                 Otherwise, use the virtual device or read more about <a href="https://hub.mender.io">Board integrations</a>

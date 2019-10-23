@@ -17,7 +17,7 @@ exports[`renders correctly 1`] = `
     Payload 
   </h4>
   <ul
-    className="MuiList-root-1 MuiList-padding-2"
+    className="MuiList-root MuiList-padding"
     style={
       Object {
         "display": "flex",
@@ -26,7 +26,7 @@ exports[`renders correctly 1`] = `
     }
   >
     <li
-      className="MuiListItem-root-5 attributes MuiListItem-default-8 MuiListItem-gutters-13 MuiListItem-disabled-11 opaque"
+      className="MuiListItem-root attributes MuiListItem-gutters Mui-disabled opaque"
       disabled={true}
       style={
         Object {
@@ -37,22 +37,22 @@ exports[`renders correctly 1`] = `
       }
     >
       <div
-        className="MuiListItemText-root-17"
+        className="MuiListItemText-root MuiListItemText-multiline"
       >
         <span
-          className="MuiTypography-root-23 MuiTypography-subheading-30 MuiListItemText-primary-20"
+          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1"
         >
           Type
         </span>
         <p
-          className="MuiTypography-root-23 MuiTypography-body1-32 MuiTypography-colorTextSecondary-56 MuiListItemText-secondary-21"
+          className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary"
         >
           test
         </p>
       </div>
     </li>
     <li
-      className="MuiListItem-root-5 attributes MuiListItem-default-8 MuiListItem-gutters-13 MuiListItem-disabled-11 opaque"
+      className="MuiListItem-root attributes MuiListItem-gutters Mui-disabled opaque"
       disabled={true}
       style={
         Object {
@@ -63,15 +63,15 @@ exports[`renders correctly 1`] = `
       }
     >
       <div
-        className="MuiListItemText-root-17"
+        className="MuiListItemText-root MuiListItemText-multiline"
       >
         <span
-          className="MuiTypography-root-23 MuiTypography-subheading-30 MuiListItemText-primary-20"
+          className="MuiTypography-root MuiListItemText-primary MuiTypography-body1"
         >
           Total Size (uncompressed)
         </span>
         <p
-          className="MuiTypography-root-23 MuiTypography-body1-32 MuiTypography-colorTextSecondary-56 MuiListItemText-secondary-21"
+          className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary"
         >
           0 Bytes
         </p>

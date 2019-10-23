@@ -34,7 +34,7 @@ export default class ReleaseRepositoryItem extends React.PureComponent {
           square
           expanded={expanded}
           onChange={() => onRowSelection(artifact)}
-          CollapseProps={{ onEntered: () => onExpanded(), onExited: () => onExpanded() }}
+          TransitionProps={{ onEntered: () => onExpanded(), onExited: () => onExpanded() }}
           style={{ width: '100%', border: '1px solid', borderColor: '#e0e0e0' }}
         >
           <ExpansionPanelSummary style={{ padding: '0 12px' }} classes={{ content: 'repo-item' }}>
