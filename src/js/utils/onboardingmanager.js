@@ -260,16 +260,16 @@ export function getOnboardingState(userId) {
           (acceptedDevices.length >= 1 && pendingDevices.length > 0 && releases.length >= 2 && pastDeployments.length >= 2) ||
           (mender_environment && mender_environment.disableOnboarding)
         ),
-        showTips: savedState.showTips || onboardedCookie ? !onboardedCookie : true,
+        showTips: savedState.showTips != null ? savedState.showTips : onboardedCookie ? !onboardedCookie : true,
         deviceType:
           savedState.deviceType || AppStore.getOnboardingDeviceType() || (acceptedDevices.length && acceptedDevices[0].hasOwnProperty('attributes'))
             ? acceptedDevices[0].attributes.find(item => item.name === 'device_type').value
             : null,
-        approach: savedState.approach || AppStore.getOnboardingApproach() || deviceType.startsWith('qemu') ? 'virtual' : 'physical',
+        approach: savedState.approach || deviceType.startsWith('qemu') ? 'virtual' : 'physical' || AppStore.getOnboardingApproach(),
         artifactIncluded: savedState.artifactIncluded || AppStore.getOnboardingArtifactIncluded(),
         progress: savedState.progress || determineProgress(acceptedDevices, pendingDevices, releases, pastDeployments)
       };
-      window.localStorage.setItem(onboardingKey, JSON.stringify(state));
+      persistOnboardingState(state);
       return Promise.resolve(state);
     });
   } else {
@@ -292,13 +292,17 @@ export function getOnboardingState(userId) {
 }
 
 export function advanceOnboarding(stepId) {
-  const user = AppStore.getCurrentUser();
   const progress = AppStore.getOnboardingProgress();
   const stepIndex = Object.keys(onboardingSteps).findIndex(step => step === stepId);
   const madeProgress = progress <= stepIndex ? stepIndex + 1 : progress;
-  const onboardingKey = `${user.id}-onboarding`;
   AppActions.setOnboardingProgress(madeProgress);
   const state = Object.assign(getCurrentOnboardingState(), { progress: madeProgress });
   state.complete = state.progress >= Object.keys(onboardingSteps).length ? true : state.complete;
+  persistOnboardingState(state);
+}
+
+export function persistOnboardingState(state = getCurrentOnboardingState()) {
+  const user = AppStore.getCurrentUser();
+  const onboardingKey = `${user.id}-onboarding`;
   window.localStorage.setItem(onboardingKey, JSON.stringify(state));
 }
