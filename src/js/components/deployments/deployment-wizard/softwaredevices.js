@@ -55,32 +55,24 @@ export default class SoftwareDevices extends React.Component {
     }
     if (currentState.group && currentState.release) {
       self
-        .filterDeploymentDeviceIds(currentState.group, currentState.release, self.props.device)
+        .filterDeploymentDeviceIds(currentState.group, self.props.device)
         .then(devices => self.props.deploymentSettings(devices, 'deploymentDeviceIds'));
     }
     self.setState(state);
   }
 
-  filterDeploymentDeviceIds(group, release, device) {
+  filterDeploymentDeviceIds(group, device) {
     // check that device type matches
     let promisedDevices;
     if (group === allDevices) {
-      promisedDevices = AppActions.getAllDevicesByStatus('accepted').then(devices => AppActions.getDevicesWithInventory(devices));
+      promisedDevices = AppActions.getAllDevicesByStatus('accepted');
     } else if (device) {
       promisedDevices = Promise.resolve([device]);
     } else {
       promisedDevices = AppActions.getAllDevicesInGroup(group);
     }
-    return promisedDevices.then(devices =>
-      devices.reduce((accu, item) => {
-        const deviceType = item.attributes ? item.attributes.find(attribute => attribute.name === 'device_type').value : null;
-        if (release.device_types_compatible.includes(deviceType)) {
-          accu.push(item.id);
+    return promisedDevices.then(devices => devices.map(item => item.id));
         }
-        return accu;
-      }, [])
-    );
-  }
 
   render() {
     const self = this;
