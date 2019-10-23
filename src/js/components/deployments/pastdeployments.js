@@ -42,7 +42,7 @@ export default class Past extends React.Component {
   }
 
   componentDidMount() {
-    if (this.props.showHelptips && !AppStore.getOnboardingComplete() && this.props.past.length) {
+    if (this.props.showHelptips && AppStore.getShowOnboardingTips() && !AppStore.getOnboardingComplete() && this.props.past.length) {
       const progress = getOnboardingStepCompleted('artifact-modified-onboarding') && this.props.past.length > 1 ? 4 : 3;
       setTimeout(() => {
         !AppStore.getOnboardingComplete()

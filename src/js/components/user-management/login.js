@@ -122,7 +122,12 @@ export default class Login extends React.Component {
             // logged in, so redirect
             self.setState({ redirectToReferrer: true });
             setTimeout(() => {
-              if (!AppStore.getOnboardingComplete() && !getOnboardingStepCompleted('devices-pending-accepting-onboarding')) {
+              if (
+                AppStore.showHelptips() &&
+                AppStore.getShowOnboardingTips() &&
+                !AppStore.getOnboardingComplete() &&
+                !getOnboardingStepCompleted('devices-pending-accepting-onboarding')
+              ) {
                 AppActions.setSnackbar('open', 10000, '', <WelcomeSnackTip progress={1} />, () => {}, self.onCloseSnackbar);
               }
             }, 1000);
