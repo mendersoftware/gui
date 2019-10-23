@@ -38,7 +38,7 @@ export default class DeviceNotifications extends React.Component {
               </p>
             )}
             <p>
-              Contact us by email at <a href="mailto:support@hosted.mender.io">support@hosted.mender.io</a> to request a higher limit.
+              Contact us by email at <a href="mailto:support@mender.io">support@mender.io</a> to request a higher limit.
             </p>
             <p>There is no fee for a higher limit; the purpose of the limit is to allow us to plan capacity for scaling Hosted Mender.</p>
             <p>
