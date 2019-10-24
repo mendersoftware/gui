@@ -27,9 +27,9 @@ exports[`renders correctly 1`] = `
       <p>
         Contact us by email at 
         <a
-          href="mailto:support@hosted.mender.io"
+          href="mailto:support@mender.io"
         >
-          support@hosted.mender.io
+          support@mender.io
         </a>
          to request a higher limit.
       </p>

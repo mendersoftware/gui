@@ -45,6 +45,18 @@ exports[`renders correctly 1`] = `
         </a>
       </p>
     </li>
+    <li>
+      <p>
+        Ask questions and find answers at the
+         
+        <a
+          href="https://hub.mender.io"
+          target="_blank"
+        >
+          Mender Hub community forum
+        </a>
+      </p>
+    </li>
   </ul>
   <br />
   <p>
