@@ -54,15 +54,13 @@ export default class SoftwareDevices extends React.Component {
       currentState.release = state.release = self.props.deploymentRelease;
     }
     if (currentState.group && currentState.release) {
-      self
-        .filterDeploymentDeviceIds(currentState.group, self.props.device)
-        .then(devices => self.props.deploymentSettings(devices, 'deploymentDeviceIds'));
+      self.getDeploymentDeviceIds(currentState.group, self.props.device).then(devices => self.props.deploymentSettings(devices, 'deploymentDeviceIds'));
     }
     self.setState(state);
   }
 
-  filterDeploymentDeviceIds(group, device) {
-    // check that device type matches
+  getDeploymentDeviceIds(group, device) {
+    // no device type checking to not hinder deployments to large device counts, just id mapping
     let promisedDevices;
     if (group === allDevices) {
       promisedDevices = AppActions.getAllDevicesByStatus('accepted');
@@ -72,7 +70,7 @@ export default class SoftwareDevices extends React.Component {
       promisedDevices = AppActions.getAllDevicesInGroup(group);
     }
     return promisedDevices.then(devices => devices.map(item => item.id));
-        }
+  }
 
   render() {
     const self = this;
@@ -177,15 +175,15 @@ export default class SoftwareDevices extends React.Component {
                     <p className="info" style={{ marginTop: '10px' }}>
                       <ErrorOutlineIcon style={{ marginRight: '4px', fontSize: '18px', top: '4px', color: 'rgb(171, 16, 0)', position: 'relative' }} />
                       There are no connected devices.{' '}
-                      {hasPending ? 
+                      {hasPending ? (
                         <span>
                           <Link to="/devices/pending">Accept pending devices</Link> to get started.
                         </span>
-                        :
+                      ) : (
                         <span>
                           <Link to="/help/getting-started">Read the help pages</Link> for help with connecting devices.
                         </span>
-                      }
+                      )}
                     </p>
                   )}
                 </div>
