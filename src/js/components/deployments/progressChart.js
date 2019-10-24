@@ -1,8 +1,13 @@
 import React from 'react';
 import moment from 'moment';
+import momentDurationFormatSetup from 'moment-duration-format';
+import Time from 'react-time';
 import pluralize from 'pluralize';
 
+import { Tooltip } from '@material-ui/core';
 import WarningIcon from '@material-ui/icons/Warning';
+
+momentDurationFormatSetup(moment);
 
 export default class ProgressChart extends React.Component {
   constructor(props) {
@@ -14,7 +19,7 @@ export default class ProgressChart extends React.Component {
 
   componentDidMount() {
     const self = this;
-    self.timer = setInterval(() => self.setState({ time: new Date() }), 10000);
+    self.timer = setInterval(() => self.setState({ time: new Date() }), 1000);
   }
 
   componentWillUnmount() {
@@ -36,13 +41,6 @@ export default class ProgressChart extends React.Component {
 
     const nextPhaseStart = phases.length > currentPhaseIndex + 1 ? moment(phases[currentPhaseIndex + 1].start_ts) : null;
     const momentaryTime = moment(time);
-    const timeToNext = nextPhaseStart
-      ? {
-          days: nextPhaseStart.diff(momentaryTime, 'days'),
-          hours: nextPhaseStart.diff(momentaryTime, 'hours') - nextPhaseStart.diff(momentaryTime, 'days') * 24,
-          minutes: nextPhaseStart.diff(momentaryTime, 'minutes') - nextPhaseStart.diff(momentaryTime, 'hours') * 60
-        }
-      : null;
 
     // to display failures per phase we have to approximate the failure count per phase by keeping track of the failures we display in previous phases and
     // deduct the phase failures from the remainder - so if we have a total of 5 failures reported and are in the 3rd phase, with each phase before reporting
@@ -76,6 +74,7 @@ export default class ProgressChart extends React.Component {
       { countedFailures: 0, countedSuccesses: 0, countedProgress: 0, displayablePhases: [] }
     ).displayablePhases;
 
+    const duration = moment.duration(nextPhaseStart.diff(momentaryTime));
     return (
       <div className={`flexbox column progress-chart-container ${this.props.className || ''}`}>
         <div className="flexbox space-between centered">
@@ -110,7 +109,13 @@ export default class ProgressChart extends React.Component {
           {nextPhaseStart && (
             <div>
               <span>Time until next phase: </span>
-              <span>{`${timeToNext.days} days ${timeToNext.hours}h ${timeToNext.minutes}m`}</span>
+              <Tooltip title={<Time value={nextPhaseStart.toDate()} format="YYYY-MM-DD HH:mm" />} placement="top">
+                <span>{`${duration.format('d [days] hh [h] mm [m] ss [s]', {
+                  useSignificantDigits: true,
+                  precision: 4,
+                  trim: true
+                })}`}</span>
+              </Tooltip>
             </div>
           )}
         </div>
