@@ -144,6 +144,9 @@ export default class DeviceGroups extends React.Component {
 
   _refreshUngroupedDevices() {
     var self = this;
+    if (AppStore.getTotalAcceptedDevices() > AppStore.getDeploymentDeviceLimit()) {
+      return Promise.resolve();
+    }
     const noGroupDevices = AppActions.getAllDevicesInGroup();
     const acceptedDevs = AppActions.getAllDevicesByStatus('accepted');
     return Promise.all([noGroupDevices, acceptedDevs]).then(results => {
