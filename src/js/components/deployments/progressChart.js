@@ -113,7 +113,7 @@ export default class ProgressChart extends React.Component {
                 <span>{`${duration.format('d [days] hh [h] mm [m] ss [s]', {
                   useSignificantDigits: true,
                   precision: 4,
-                  trim: true
+                  trim: 'both'
                 })}`}</span>
               </Tooltip>
             </div>
