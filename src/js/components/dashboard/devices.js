@@ -12,10 +12,10 @@ export default class Devices extends React.Component {
     super(props, state);
     const self = this;
     self.state = {
-      deltaActivity: null,
+      deltaActivity: 0,
       devices: AppStore.getTotalAcceptedDevices(),
-      inactiveDevices: [],
-      pendingDevices: [],
+      inactiveDevices: 0,
+      pendingDevices: AppStore.getTotalPendingDevices(),
       onboardingComplete: AppStore.getOnboardingComplete(),
       showHelptips: AppStore.showHelptips(),
       loading: null
@@ -45,6 +45,7 @@ export default class Devices extends React.Component {
     }
     return AppActions.getAllDevicesByStatus('accepted')
       .then(AppActions.getDevicesWithInventory)
+      .catch(() => Promise.resolve([]))
       .then(devices => {
         const yesterday = new Date();
         yesterday.setDate(yesterday.getDate() - 1);
@@ -60,6 +61,7 @@ export default class Devices extends React.Component {
         const deltaActivity = this._updateDeviceActivityHistory(new Date(), yesterday, devices.length);
         return Promise.resolve({ devices: devices.length, inactiveDevices, deltaActivity });
       })
+      .catch(() => Promise.resolve({ devices: 0, inactiveDevices: 0, deltaActivity: 0 }))
       .then(result => self.setState({ pendingDevices: AppStore.getTotalPendingDevices(), ...result }))
       .finally(() => self.setState({ loading: false }));
   }
