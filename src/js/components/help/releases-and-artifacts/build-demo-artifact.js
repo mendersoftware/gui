@@ -35,7 +35,9 @@ export default class BuildDemoArtifact extends React.Component {
   }
 
   render() {
-    var executable = `sudo chmod +x mender-artifact`;
+    var executable = `
+sudo chmod +x mender-artifact
+sudo mv mender-artifact /usr/local/bin`;
     const artifactGenerator = 'single-file-artifact-gen';
     const artifactName = 'demo-webserver-updated';
 
