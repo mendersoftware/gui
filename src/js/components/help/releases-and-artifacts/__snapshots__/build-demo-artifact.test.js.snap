@@ -76,7 +76,9 @@ exports[`renders correctly 1`] = `
           }
         }
       >
-        sudo chmod +x mender-artifact
+        
+sudo chmod +x mender-artifact
+sudo mv mender-artifact /usr/local/bin
       </span>
     </div>
     <p />
