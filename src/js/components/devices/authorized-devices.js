@@ -44,7 +44,7 @@ export default class Authorized extends React.Component {
       prevProps.pageNo !== this.props.pageNo
     ) {
       self.setState({ selectedRows: [], expandRow: null, allRowsSelected: false });
-      if (AppStore.showHelptips() && !AppStore.getOnboardingComplete() && this.props.devices.length) {
+      if (AppStore.showHelptips() && AppStore.getShowOnboardingTips() && !AppStore.getOnboardingComplete() && this.props.devices.length) {
         setTimeout(() => {
           AppActions.setSnackbar('open', 10000, '', <WelcomeSnackTip progress={2} />, () => {}, self.onCloseSnackbar);
         }, 400);
