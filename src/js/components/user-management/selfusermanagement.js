@@ -18,7 +18,7 @@ import TwoFactorAuthSetup from './twofactorauthsetup';
 export default class SelfUserManagement extends React.Component {
   constructor(props, context) {
     super(props, context);
-    this.state = Object.assign({ qrExpanded: false }, this._getState());
+    this.state = { qrExpanded: false };
     AppActions.getGlobalSettings().then(settings => {
       if ((AppStore.getIsEnterprise() || AppStore.getIsHosted()) && !settings.hasOwnProperty('2fa')) {
         AppActions.saveGlobalSettings(Object.assign(settings, { '2fa': 'disabled' }));
@@ -30,28 +30,19 @@ export default class SelfUserManagement extends React.Component {
     AppStore.changeListener(this._onChange.bind(this));
   }
 
-  _getState() {
-    return {
-      snackbar: AppStore.getSnackbar(),
-      currentUser: AppStore.getCurrentUser(),
-      has2fa: AppStore.get2FARequired()
-    };
-  }
-
   _onChange() {
-    this.setState(this._getState());
+    this.setState({});
   }
 
   componentWillUnmount() {
     AppStore.removeChangeListener(this._onChange.bind(this));
   }
 
-  _editSubmit(userData) {
+  _editSubmit(id, userData) {
     var self = this;
-    return AppActions.editUser(self.state.currentUser.id, userData)
-      .then(user => {
-        user = userData;
-        user.id = self.state.currentUser.id;
+    return AppActions.editUser(id, userData)
+      .then(() => {
+        const user = { ...AppStore.getCurrentUser(), ...userData };
         AppActions.setCurrentUser(user);
         AppActions.setSnackbar('The user has been updated.');
         self.setState({ editPass: false, editEmail: false });
@@ -85,7 +76,9 @@ export default class SelfUserManagement extends React.Component {
 
   render() {
     const self = this;
-    const { currentUser, editEmail, editPass, emailFormId, qrExpanded, has2fa } = self.state;
+    const { editEmail, editPass, emailFormId, qrExpanded } = self.state;
+    const has2fa = AppStore.get2FARequired();
+    const currentUser = AppStore.getCurrentUser();
     const email = (currentUser || { email: '' }).email;
     const isEnterprise = AppStore.getIsEnterprise() || AppStore.getIsHosted();
     return (
@@ -94,7 +87,7 @@ export default class SelfUserManagement extends React.Component {
 
         <Form
           className="flexbox space-between"
-          onSubmit={userdata => self._editSubmit(userdata)}
+          onSubmit={userdata => self._editSubmit(currentUser.id, userdata)}
           handleCancel={() => self.handleEmail()}
           submitLabel="Save"
           showButtons={editEmail}
@@ -104,7 +97,14 @@ export default class SelfUserManagement extends React.Component {
         >
           {!editEmail && currentUser.email ? (
             <>
-              <TextField label="Email" InputLabelProps={{ shrink: !!email }} disabled defaultValue={email} style={{ width: '400px', maxWidth: '100%' }} />
+              <TextField
+                label="Email"
+                key={email}
+                InputLabelProps={{ shrink: !!email }}
+                disabled
+                defaultValue={email}
+                style={{ width: '400px', maxWidth: '100%' }}
+              />
               <FormButton
                 className="inline-block"
                 color="primary"
