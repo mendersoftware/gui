@@ -11,32 +11,41 @@ export default class Devices extends React.Component {
   constructor(props, state) {
     super(props, state);
     const self = this;
-    self.timer = null;
     self.state = {
-      deltaActivity: null,
-      devices: [],
-      inactiveDevices: [],
-      pendingDevices: [],
+      deltaActivity: 0,
+      devices: AppStore.getTotalAcceptedDevices(),
+      inactiveDevices: 0,
+      pendingDevices: AppStore.getTotalPendingDevices(),
       onboardingComplete: AppStore.getOnboardingComplete(),
-      refreshDevicesLength: 30000,
-      showHelptips: AppStore.showHelptips()
+      showHelptips: AppStore.showHelptips(),
+      loading: null
     };
+    self.timer = null;
+    self.refreshDevicesLength = 30000;
     // on render the store might not be updated so we resort to the API and let all later request go through the store
     // to be in sync with the rest of the UI
     AppActions.getAllDevicesByStatus('pending').then(devices => self.setState({ pendingDevices: devices.length }));
-    self._refreshDevices().then(result => self.setState(result));
+    self._refreshDevices();
   }
   componentDidMount() {
     var self = this;
-    self.timer = setInterval(() => self._refreshDevices().then(result => self.setState(result)), self.state.refreshDevicesLength);
+    self.timer = setInterval(() => self._refreshDevices(), self.refreshDevicesLength);
   }
   componentWillUnmount() {
     clearInterval(this.timer);
   }
 
   _refreshDevices() {
+    const self = this;
+    if (self.state.loading || self.state.devices > AppStore.getDeploymentDeviceLimit()) {
+      return;
+    }
+    if (self.state.loading !== null) {
+      self.setState({ loading: true });
+    }
     return AppActions.getAllDevicesByStatus('accepted')
       .then(AppActions.getDevicesWithInventory)
+      .catch(() => Promise.resolve([]))
       .then(devices => {
         const yesterday = new Date();
         yesterday.setDate(yesterday.getDate() - 1);
@@ -52,7 +61,9 @@ export default class Devices extends React.Component {
         const deltaActivity = this._updateDeviceActivityHistory(new Date(), yesterday, devices.length);
         return Promise.resolve({ devices: devices.length, inactiveDevices, deltaActivity });
       })
-      .then(result => Object.assign(result, { pendingDevices: AppStore.getTotalPendingDevices() }));
+      .catch(() => Promise.resolve({ devices: 0, inactiveDevices: 0, deltaActivity: 0 }))
+      .then(result => self.setState({ pendingDevices: AppStore.getTotalPendingDevices(), ...result }))
+      .finally(() => self.setState({ loading: false }));
   }
 
   _updateDeviceActivityHistory(today, yesterday, deviceCount) {
