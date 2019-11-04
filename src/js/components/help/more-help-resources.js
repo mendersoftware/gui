@@ -17,11 +17,6 @@ const MoreHelp = ({ docsVersion, isHosted }) => {
       pretext: 'Read the',
       target: `https://docs.mender.io/${docsVersion}`,
       linkTitle: 'Mender documentation'
-    },
-    {
-      pretext: 'Ask questions and find answers at the',
-      target: 'https://hub.mender.io',
-      linkTitle: 'Mender Hub community forum'
     }
   ];
   return (
