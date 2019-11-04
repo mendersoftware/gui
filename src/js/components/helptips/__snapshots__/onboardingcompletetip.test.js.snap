@@ -76,7 +76,7 @@ exports[`renders correctly 1`] = `
     What next?
     <div>
       <a
-        href="https://docs.mender.io/getting-started/deploy-a-system-update-demo"
+        href="https://docs.mender.io/getting-started/on-premise-installation/deploy-a-system-update-demo"
         target="_blank"
       >
         Learn about full-image updates

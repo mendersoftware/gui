@@ -74,7 +74,7 @@ export default class OnboardingCompleteTip extends React.Component {
           What next?
           <div>
             <a
-              href={`https://docs.mender.io/${AppStore.getDocsVersion() ? `${AppStore.getDocsVersion()}/` : ''}getting-started/deploy-a-system-update-demo`}
+              href={`https://docs.mender.io/${AppStore.getDocsVersion() ? `${AppStore.getDocsVersion()}/` : ''}getting-started/on-premise-installation/deploy-a-system-update-demo`}
               target="_blank"
             >
               Learn about full-image updates
