@@ -414,7 +414,7 @@ export const getRemainderPercent = phases => {
   // use this to get remaining percent of final phase so we don't set a hard number
   let remainder = 100;
   // remove final phase size if set
-  phases[phases.length-1].batch_size = null;
+  phases[phases.length - 1].batch_size = null;
   for (let phase of phases) {
     remainder = phase.batch_size ? remainder - phase.batch_size : remainder;
   }
@@ -434,3 +434,33 @@ export const standardizePhases = phases =>
     }
     return standardizedPhase;
   });
+
+export const getDebConfigurationCode = (ipAddress, isHosted, isEnterprise, token, packageVersion, deviceType = 'generic-armv6') => {
+  let connectionInstructions = `  --demo ${ipAddress ? `--server-ip ${ipAddress}` : ''}`;
+  if (isEnterprise || isHosted) {
+    const enterpriseSettings = `  --tenant-token $TENANT_TOKEN \\
+  --retry-poll 30 \\
+  --update-poll 5 \\
+  --inventory-poll 5`;
+    connectionInstructions = `${ipAddress ? `  --server-url ${ipAddress}` : ' '} --server-cert="" \\
+${enterpriseSettings}`;
+    if (isHosted) {
+      connectionInstructions = `  --mender-professional \\
+${enterpriseSettings}`;
+    }
+  }
+  let codeToCopy = `sudo bash -c 'wget https://d1b0l86ne08fsf.cloudfront.net/${packageVersion}/dist-packages/debian/armhf/mender-client_${packageVersion}-1_armhf.deb && \\
+DEBIAN_FRONTEND=noninteractive dpkg -i mender-client_${packageVersion}-1_armhf.deb && \\
+DEVICE_TYPE="${deviceType}" && \\ ${
+  token
+    ? `
+TENANT_TOKEN=${token} && \\`
+    : ''
+}
+mender setup \\
+  --device-type $DEVICE_TYPE \\
+${connectionInstructions} && \\
+systemctl restart mender-client'
+`;
+  return codeToCopy;
+};
