@@ -38,8 +38,7 @@ export default class ProgressChart extends React.Component {
         .reverse()
         .find(phase => new Date(phase.start_ts) < time) || phases[0];
     const currentPhaseIndex = phases.findIndex(phase => phase.id === currentPhase.id);
-
-    const nextPhaseStart = phases.length > currentPhaseIndex + 1 ? moment(phases[currentPhaseIndex + 1].start_ts) : null;
+    const nextPhaseStart = phases.length > currentPhaseIndex + 1 ? moment(phases[currentPhaseIndex + 1].start_ts) : moment(time);
     const momentaryTime = moment(time);
 
     // to display failures per phase we have to approximate the failure count per phase by keeping track of the failures we display in previous phases and
@@ -112,7 +111,7 @@ export default class ProgressChart extends React.Component {
               <Tooltip title={<Time value={nextPhaseStart.toDate()} format="YYYY-MM-DD HH:mm" />} placement="top">
                 <span>{`${duration.format('d [days] hh [h] mm [m] ss [s]', {
                   useSignificantDigits: true,
-                  precision: 4,
+                  precision: 3,
                   trim: 'both'
                 })}`}</span>
               </Tooltip>
