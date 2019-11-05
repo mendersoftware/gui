@@ -2,6 +2,7 @@ import React from 'react';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import IconButton from '@material-ui/core/IconButton';
 import CopyPasteIcon from '@material-ui/icons/FileCopy';
+import AppActions from '../../../actions/app-actions';
 import AppStore from '../../../stores/app-store';
 import { findLocalIpAddress, getDebConfigurationCode } from '../../../helpers';
 
@@ -20,6 +21,9 @@ export default class DebPackage extends React.Component {
     if (!self.state.ipAddress || self.state.ipAddress === 'X.X.X.X') {
       findLocalIpAddress().then(ipAddress => self.setState({ ipAddress }));
     }
+    if (AppStore.hasMultitenancy() || AppStore.getIsEnterprise() || AppStore.getIsHosted()) {
+      AppActions.getUserOrganization().then(org => (org ? self.setState({ token: org.tenant_token }) : null));
+    }
   }
 
   _copied(ref) {
@@ -35,8 +39,7 @@ export default class DebPackage extends React.Component {
 
   render() {
     const self = this;
-    const { codeToCopyCopied, dpkgCodeCopied, ipAddress } = self.state;
-    const token = (self.props.org || {}).tenant_token;
+    const { codeToCopyCopied, dpkgCodeCopied, ipAddress, token } = self.state;
     const isHosted = AppStore.getIsHosted();
     const isEnterprise = AppStore.getIsEnterprise();
     const debPackageVersion = AppStore.getMenderDebPackageVersion();
