@@ -314,8 +314,26 @@ export const customSort = (direction, field) => (a, b) => {
   return 0;
 };
 
-export const mapDeviceAttributes = attributes =>
-  attributes.reduce((accu, attribute) => Object.assign(accu, { [attribute.name]: attribute.value }), { device_type: '', artifact_name: '' });
+export const mapDeviceAttributes = (attributes = []) => {
+  return attributes.reduce((accu, attribute) => ({ ...accu, [attribute.name]: attribute.value }),  { device_type: '', artifact_name: '' });
+};
+
+export const deriveAttributesFromDevices = devices => {
+  const availableAttributes = devices.reduce(
+    (accu, item) =>
+      // count popularity of attributes to create attribute sort order
+      Object.keys(item.identity_data).reduce((keyAccu, key) => {
+        keyAccu[key] = keyAccu[key] + 1 || 1;
+        return keyAccu;
+      }, accu),
+    {}
+  );
+  const attributes = Object.entries(availableAttributes)
+    // sort in reverse order, to have most common attribute at the top of the select
+    .sort((a, b) => b[1] - a[1])
+    .map(a => a[0]);
+  return attributes;
+};
 
 export const getFormattedSize = bytes => {
   const suffixes = ['Bytes', 'KB', 'MB', 'GB'];
@@ -414,7 +432,7 @@ export const getRemainderPercent = phases => {
   // use this to get remaining percent of final phase so we don't set a hard number
   let remainder = 100;
   // remove final phase size if set
-  phases[phases.length-1].batch_size = null;
+  phases[phases.length - 1].batch_size = null;
   for (let phase of phases) {
     remainder = phase.batch_size ? remainder - phase.batch_size : remainder;
   }
