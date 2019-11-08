@@ -77,7 +77,7 @@ exports[`renders correctly 1`] = `
         }
       >
         
-sudo chmod +x mender-artifact
+sudo chmod +x mender-artifact && \\
 sudo mv mender-artifact /usr/local/bin
       </span>
     </div>
@@ -144,7 +144,7 @@ sudo mv mender-artifact /usr/local/bin
         }
       >
         
-wget https://raw.githubusercontent.com/mendersoftware/mender/master/support/modules-artifact-gen/single-file-artifact-gen
+wget https://raw.githubusercontent.com/mendersoftware/mender/master/support/modules-artifact-gen/single-file-artifact-gen && \\
 sudo chmod +x single-file-artifact-gen
       </span>
     </div>
@@ -316,7 +316,12 @@ EOF
         }
       >
         
-ARTIFACT_NAME="demo-webserver-updated"; DEVICE_TYPE="generic_x86"; OUTPUT_PATH="demo-webserver-updated.mender"; DEST_DIR="/var/www/localhost/htdocs/"; FILE_NAME="index.html"; ./single-file-artifact-gen -n \${ARTIFACT_NAME} -t \${DEVICE_TYPE} -d \${DEST_DIR} -o \${OUTPUT_PATH} \${FILE_NAME}
+ARTIFACT_NAME="demo-webserver-updated" && \\
+DEVICE_TYPE="generic_x86" && \\
+OUTPUT_PATH="demo-webserver-updated.mender" && \\
+DEST_DIR="/var/www/localhost/htdocs/" && \\
+FILE_NAME="index.html" && \\
+./single-file-artifact-gen -n \${ARTIFACT_NAME} -t \${DEVICE_TYPE} -d \${DEST_DIR} -o \${OUTPUT_PATH} \${FILE_NAME}
 
       </span>
     </div>
