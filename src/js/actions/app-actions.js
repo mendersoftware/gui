@@ -2,17 +2,13 @@ import AppConstants from '../constants/app-constants';
 import AppDispatcher from '../dispatchers/app-dispatcher';
 import ArtifactsApi from '../api/artifacts-api';
 import DeploymentsApi from '../api/deployments-api';
-import DevicesApi from '../api/devices-api';
 import GeneralApi from '../api/general-api';
 import UsersApi from '../api/users-api';
 import parse from 'parse-link-header';
 import { advanceOnboarding } from '../utils/onboardingmanager';
 
 const apiUrl = '/api/management/v1';
-const apiUrlV2 = '/api/management/v2';
 const deploymentsApiUrl = `${apiUrl}/deployments`;
-const deviceAuthV2 = `${apiUrlV2}/devauth`;
-const inventoryApiUrl = `${apiUrl}/inventory`;
 const useradmApiUrl = `${apiUrl}/useradm`;
 const tenantadmUrl = `${apiUrl}/tenantadm`;
 const hostedLinks = 'https://s3.amazonaws.com/hosted-mender-artifacts-onboarding/';
@@ -22,213 +18,6 @@ const default_per_page = 20;
 const default_page = 1;
 
 const AppActions = {
-  /*
-   * Device inventory functions
-   */
-  selectGroup: group => {
-    AppDispatcher.handleViewAction({
-      actionType: AppConstants.SELECT_GROUP,
-      group: group
-    });
-  },
-
-  selectDevice: device =>
-    AppDispatcher.handleViewAction({
-      actionType: AppConstants.SELECT_DEVICE,
-      device
-    }),
-
-  addDeviceToGroup: (group, device) => {
-    return DevicesApi.put(`${inventoryApiUrl}/devices/${device}/group`, { group });
-  },
-
-  removeDeviceFromGroup: (device, group) => {
-    return DevicesApi.delete(`${inventoryApiUrl}/devices/${device}/group/${group}`);
-  },
-
-  addGroup: (group, idx) => {
-    AppDispatcher.handleViewAction({
-      actionType: AppConstants.ADD_GROUP,
-      group: group,
-      index: idx
-    });
-  },
-
-  /* Groups */
-  getGroups: () =>
-    DevicesApi.get(`${inventoryApiUrl}/groups`).then(res => {
-      AppDispatcher.handleViewAction({
-        actionType: AppConstants.RECEIVE_GROUPS,
-        groups: res.body
-      });
-      return Promise.resolve(res.body);
-    }),
-
-  getGroupDevices: (group, page = default_page, per_page = default_per_page) => {
-    var forGroup = group ? `&group=${group}` : '&has_group=false';
-    return DevicesApi.get(`${inventoryApiUrl}/devices?per_page=${per_page}&page=${page}${forGroup}`);
-  },
-
-  setGroupDevices: devices => {
-    AppDispatcher.handleViewAction({
-      actionType: AppConstants.RECEIVE_GROUP_DEVICES,
-      devices: devices
-    });
-  },
-
-  setFilterAttributes: attrs =>
-    AppDispatcher.handleViewAction({
-      actionType: AppConstants.SET_FILTER_ATTRIBUTES,
-      attrs: attrs
-    }),
-
-  getDeviceById: id => DevicesApi.get(`${inventoryApiUrl}/devices/${id}`).then(res => res.body),
-
-  getDevicesWithInventory: devices =>
-    Promise.all(
-      devices.map(device => {
-        // have to call inventory each time - accepted list can change order so must refresh inventory too
-        return AppActions.getDeviceById(device.id).then(inventory => {
-          device.attributes = inventory.attributes;
-          device.updated_ts = inventory.updated_ts;
-          return Promise.resolve(device);
-        });
-      })
-    ),
-
-  getDevices: (page = default_page, per_page = default_per_page, search_term) => {
-    // get devices from inventory
-    var search = search_term ? `&${search_term}` : '';
-    return DevicesApi.get(`${inventoryApiUrl}/devices?per_page=${per_page}&page=${page}${search}`).then(res => {
-      AppDispatcher.handleViewAction({
-        actionType: AppConstants.RECEIVE_ALL_DEVICES,
-        devices: res.body
-      });
-      return res.body;
-    });
-  },
-  getAllDevices: () => {
-    const getAllDevices = (per_page = 200, page = 1, devices = []) =>
-      DevicesApi.get(`${inventoryApiUrl}/devices?per_page=${per_page}&page=${page}`).then(res => {
-        var links = parse(res.headers['link']);
-        devices.push(...res.body);
-        if (links.next) {
-          return getAllDevices(per_page, page + 1, devices);
-        }
-        return Promise.resolve(devices);
-      });
-    return getAllDevices();
-  },
-  getNumberOfDevicesInGroup: function(group) {
-    var forGroup = group ? `&group=${group}` : '&has_group=false';
-    return DevicesApi.get(`${inventoryApiUrl}/devices?per_page=1&page=1${forGroup}`).then(res => Promise.resolve(Number(res.headers['x-total-count'])));
-  },
-  getAllDevicesInGroup: function(group) {
-    var forGroup = group ? `&group=${group}` : '&has_group=false';
-    const getDeviceCount = (per_page = 200, page = 1, devices = []) =>
-      DevicesApi.get(`${inventoryApiUrl}/devices?per_page=${per_page}&page=${page}${forGroup}`).then(function(res) {
-        var links = parse(res.headers['link']);
-        devices.push(...res.body);
-        if (links.next) {
-          return getDeviceCount(per_page, page + 1, devices);
-        }
-        return Promise.resolve(devices);
-      });
-    return getDeviceCount();
-  },
-
-  /* 
-    Device Auth + admission 
-  */
-
-  getDeviceCount: status => {
-    var filter = status ? `?status=${status}` : '';
-
-    return DevicesApi.get(`${deviceAuthV2}/devices/count${filter}`).then(res => {
-      switch (status) {
-      case 'pending':
-        AppDispatcher.handleViewAction({
-          actionType: AppConstants.SET_PENDING_DEVICES_COUNT,
-          count: res.body.count
-        });
-        break;
-      case 'accepted':
-        AppDispatcher.handleViewAction({
-          actionType: AppConstants.SET_ACCEPTED_DEVICES_COUNT,
-          count: res.body.count
-        });
-        break;
-      case 'rejected':
-        AppDispatcher.handleViewAction({
-          actionType: AppConstants.SET_REJECTED_DEVICES_COUNT,
-          count: res.body.count
-        });
-        break;
-      case 'preauthorized':
-        AppDispatcher.handleViewAction({
-          actionType: AppConstants.SET_PREAUTH_DEVICES_COUNT,
-          count: res.body.count
-        });
-        break;
-      default:
-        AppDispatcher.handleViewAction({
-          actionType: AppConstants.SET_TOTAL_DEVICES,
-          count: res.body.count
-        });
-      }
-      return Promise.resolve(res.body.count);
-    });
-  },
-
-  getDeviceLimit: () =>
-    DevicesApi.get(`${deviceAuthV2}/limits/max_devices`).then(res => {
-      AppDispatcher.handleViewAction({
-        actionType: AppConstants.SET_DEVICE_LIMIT,
-        limit: res.body.limit
-      });
-      return Promise.resolve(res.body.limit);
-    }),
-
-  getDevicesByStatus: (status, page = default_page, per_page = default_per_page) => {
-    var dev_status = status ? `status=${status}` : '';
-    return DevicesApi.get(`${deviceAuthV2}/devices?${dev_status}&per_page=${per_page}&page=${page}`).then(response => {
-      if (status) {
-        const constant = `SET_${status.toUpperCase()}_DEVICES`;
-        AppDispatcher.handleViewAction({
-          actionType: AppConstants[constant],
-          devices: response.body
-        });
-      }
-      return Promise.resolve(response.body);
-    });
-  },
-
-  getAllDevicesByStatus: status => {
-    const getAllDevices = (per_page = 200, page = 1, devices = []) =>
-      DevicesApi.get(`${deviceAuthV2}/devices?status=${status}&per_page=${per_page}&page=${page}`).then(res => {
-        var links = parse(res.headers['link']);
-        devices.push(...res.body);
-        if (links.next) {
-          return getAllDevices(per_page, page + 1, devices);
-        }
-        return Promise.resolve(devices);
-      });
-    return getAllDevices();
-  },
-
-  getDeviceAuth: id => DevicesApi.get(`${deviceAuthV2}/devices/${id}`).then(res => res.body),
-
-  updateDeviceAuth: (device_id, auth_id, status) => DevicesApi.put(`${deviceAuthV2}/devices/${device_id}/auth/${auth_id}/status`, { status: status }),
-
-  deleteAuthset: (device_id, auth_id) => DevicesApi.delete(`${deviceAuthV2}/devices/${device_id}/auth/${auth_id}`),
-
-  preauthDevice: authset => {
-    console.log(authset);
-    return DevicesApi.post(`${deviceAuthV2}/devices`, authset);
-  },
-
-  decommissionDevice: id => DevicesApi.delete(`${deviceAuthV2}/devices/${id}`),
-
   /* 
     General 
   */
@@ -246,8 +35,7 @@ const AppActions = {
   /* 
     User management 
   */
-  loginUser: userData =>
-    UsersApi.postLogin(`${useradmApiUrl}/auth/login`, userData).then(res => res.text),
+  loginUser: userData => UsersApi.postLogin(`${useradmApiUrl}/auth/login`, userData).then(res => res.text),
 
   getUserList: () => UsersApi.get(`${useradmApiUrl}/users`),
 

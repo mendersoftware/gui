@@ -7,16 +7,9 @@ import { customSort, stringToBoolean } from '../helpers';
 var CHANGE_EVENT = 'change';
 
 var _artifactsRepo = [];
-var _currentGroup = null;
-var _currentDevice = null;
 var _deploymentRelease = null;
-var _currentGroupDevices = [];
-var _totalNumberDevices, _totalPendingDevices, _totalAcceptedDevices, _totalRejectedDevices, _totalPreauthDevices, _deviceLimit, _numberInProgress;
-_totalPendingDevices = _totalAcceptedDevices = 0;
+var _numberInProgress = 0;
 var _filters = [];
-var _attributes = {
-  id: 'ID'
-};
 var _snackbar = {
   open: false,
   message: ''
@@ -37,7 +30,6 @@ var _onboardingProgress = 0;
 var _onboardingDeviceType = null;
 var _onboardingApproach = null;
 var _onboardingArtifactIncluded = null;
-var _groups = [];
 var _releasesRepo = [];
 var _uploadInProgress = false;
 const _hostAddress = mender_environment && mender_environment.hostAddress ? mender_environment.hostAddress : null;
@@ -60,34 +52,6 @@ const _versionInformation = {
 };
 
 const _deploymentDeviceLimit = 5000;
-
-/* Temp local devices */
-
-var _alldevices = [];
-var _accepted = [];
-var _pending = [];
-var _preauthorized = [];
-var _rejected = [];
-
-function _selectGroup(group) {
-  _filters = [];
-  _currentGroup = group;
-}
-
-function _selectDevice(device) {
-  _currentDevice = device;
-}
-
-function _addNewGroup(group, devices, type) {
-  var tmpGroup = group;
-  for (var i = 0; i < devices.length; i++) {
-    tmpGroup.devices.push(devices[i].id);
-  }
-  tmpGroup.id = _groups.length + 1;
-  tmpGroup.type = type ? type : 'public';
-  _groups.push(tmpGroup);
-  _selectGroup(_groups[_groups.length] - 1);
-}
 
 function _matchFilters(device, filters) {
   /*
@@ -377,69 +341,6 @@ function setPendingDeployments(deployments) {
   }
 }
 
-function setDevices(devices) {
-  if (devices) {
-    var newDevices = {};
-    devices.forEach(element => {
-      newDevices[element.status] = newDevices[element.status] || [];
-      newDevices[element.status].push(element);
-    });
-    _alldevices = devices;
-    if (!_currentGroup) {
-      // if "all devices" selected
-      _currentGroupDevices = devices;
-    }
-  }
-}
-
-function setTotalDevices(count) {
-  _totalNumberDevices = count;
-}
-function setTotalPendingDevices(count) {
-  _totalPendingDevices = count;
-}
-function setTotalAcceptedDevices(count) {
-  _totalAcceptedDevices = count;
-}
-function setTotalRejectedDevices(count) {
-  _totalRejectedDevices = count;
-}
-function setTotalPreauthDevices(count) {
-  _totalPreauthDevices = count;
-}
-function setDeviceLimit(limit) {
-  _deviceLimit = limit;
-}
-
-function setGroupDevices(devices) {
-  _currentGroupDevices = [];
-  devices.forEach((element, index) => {
-    _currentGroupDevices[index] = element;
-  });
-}
-
-function setAcceptedDevices(devices) {
-  _accepted = devices;
-}
-
-function setPendingDevices(devices) {
-  _pending = devices;
-}
-
-function setPreauthDevices(devices) {
-  _preauthorized = devices;
-}
-
-function setRejectedDevices(devices) {
-  _rejected = devices;
-}
-
-function setGroups(groups) {
-  if (groups) {
-    _groups = groups;
-  }
-}
-
 function setDeploymentRelease(release) {
   _deploymentRelease = release;
 }
@@ -512,42 +413,8 @@ var AppStore = Object.assign({}, EventEmitter.prototype, {
     this.removeListener(CHANGE_EVENT, callback);
   },
 
-  /*
-   * Return list of groups
-   */
-  getGroups: () => _groups,
-
-  getSingleGroup: (attr, val) => _groups.find(item => item[attr] === val),
-
-  /*
-   * Return group object for current group selection
-   */
-  getSelectedGroup: () => _currentGroup,
-
-  getSelectedDevice: () => _currentDevice,
-
   // for use when switching tab from artifacts to create a deployment
   getDeploymentRelease: () => _deploymentRelease,
-
-  /*
-   * Return list of devices by current selected group
-   */
-  getAllDevices: () => _alldevices,
-
-  /*
-   * Return list of devices by current selected group
-   */
-  getGroupDevices: () => _currentGroupDevices,
-
-  /*
-   * Return single device by id
-   */
-  getSingleDevice: id => _alldevices.find(item => item.id === id),
-
-  /*
-   * Return set of filters for list of devices
-   */
-  getFilterAttributes: () => _attributes,
 
   /*
    * Return set of filters for list of devices
@@ -619,32 +486,7 @@ var AppStore = Object.assign({}, EventEmitter.prototype, {
    */
   getEventLog: () => _events,
 
-  /*
-   * Return list of devices given group and device_type
-   */
-  filterDevicesByType: (devices, device_types) => _filterDevicesByType(devices, device_types),
-
   getOrderedDeploymentDevices: devices => _sortDeploymentDevices(devices),
-
-  getAcceptedDevices: () => _accepted || [],
-
-  getPendingDevices: () => _pending || [],
-
-  getPreauthorizedDevices: () => _preauthorized || [],
-
-  getRejectedDevices: () => _rejected || [],
-
-  getTotalDevices: () => _totalNumberDevices,
-
-  getTotalPendingDevices: () => _totalPendingDevices,
-
-  getTotalAcceptedDevices: () => _totalAcceptedDevices,
-
-  getTotalRejectedDevices: () => _totalRejectedDevices,
-
-  getTotalPreauthDevices: () => _totalPreauthDevices,
-
-  getDeviceLimit: () => _deviceLimit,
 
   /*
    * Return activity log
@@ -735,24 +577,6 @@ var AppStore = Object.assign({}, EventEmitter.prototype, {
   dispatcherIndex: AppDispatcher.register(payload => {
     var action = payload.action;
     switch (action.actionType) {
-    case AppConstants.SELECT_GROUP:
-      _selectGroup(payload.action.group);
-      break;
-    case AppConstants.SELECT_DEVICE:
-      _selectDevice(payload.action.device);
-      break;
-    case AppConstants.ADD_TO_GROUP:
-      _addToGroup(payload.action.group, payload.action.devices);
-      break;
-    case AppConstants.REMOVE_GROUP:
-      _removeGroup(payload.action.groupId);
-      break;
-    case AppConstants.ADD_GROUP:
-      _addGroup(payload.action.group, payload.action.index);
-      break;
-    case AppConstants.SET_FILTER_ATTRIBUTES:
-      _setFilterAttributes(payload.action.attrs);
-      break;
     case AppConstants.UPLOAD_ARTIFACT:
       _uploadArtifact(payload.action.artifact);
       break;
@@ -846,59 +670,6 @@ var AppStore = Object.assign({}, EventEmitter.prototype, {
       break;
 
       /* API */
-    case AppConstants.RECEIVE_ALL_DEVICES:
-      setDevices(payload.action.devices);
-      break;
-
-    case AppConstants.SET_TOTAL_DEVICES:
-      setTotalDevices(payload.action.count);
-      break;
-
-    case AppConstants.SET_PENDING_DEVICES_COUNT:
-      setTotalPendingDevices(payload.action.count);
-      break;
-
-    case AppConstants.SET_ACCEPTED_DEVICES_COUNT:
-      setTotalAcceptedDevices(payload.action.count);
-      break;
-
-    case AppConstants.SET_REJECTED_DEVICES_COUNT:
-      setTotalRejectedDevices(payload.action.count);
-      break;
-
-    case AppConstants.SET_PREAUTH_DEVICES_COUNT:
-      setTotalPreauthDevices(payload.action.count);
-      break;
-
-    case AppConstants.SET_ACCEPTED_DEVICES:
-      setAcceptedDevices(payload.action.devices);
-      break;
-
-    case AppConstants.SET_PENDING_DEVICES:
-      setPendingDevices(payload.action.devices);
-      break;
-
-    case AppConstants.SET_REJECTED_DEVICES:
-      setRejectedDevices(payload.action.devices);
-      break;
-
-    case AppConstants.SET_PREAUTHORIZED_DEVICES:
-      setPreauthDevices(payload.action.devices);
-      break;
-
-    case AppConstants.SET_DEVICE_LIMIT:
-      setDeviceLimit(payload.action.limit);
-      break;
-
-      /* API */
-    case AppConstants.RECEIVE_GROUP_DEVICES:
-      setGroupDevices(payload.action.devices);
-      break;
-
-    case AppConstants.RECEIVE_GROUPS:
-      setGroups(payload.action.groups);
-      break;
-
     case AppConstants.SET_DEPLOYMENT_RELEASE:
       setDeploymentRelease(payload.action.release);
       break;
