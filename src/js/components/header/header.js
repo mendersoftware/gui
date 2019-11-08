@@ -1,25 +1,22 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import cookie from 'react-cookie';
 import Linkify from 'react-linkify';
 import ReactTooltip from 'react-tooltip';
 
-import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
-import Toolbar from '@material-ui/core/Toolbar';
+import { Button, IconButton, ListItemText, ListItemSecondaryAction, Menu, MenuItem, Toolbar } from '@material-ui/core';
 
-import AccountCircleIcon from '@material-ui/icons/AccountCircle';
-import AnnounceIcon from '@material-ui/icons/Announcement';
-import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
-import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
-import CloseIcon from '@material-ui/icons/Close';
-import ExitIcon from '@material-ui/icons/ExitToApp';
-import InfoIcon from '@material-ui/icons/InfoOutlined';
+import {
+  AccountCircle as AccountCircleIcon,
+  Announcement as AnnounceIcon,
+  ArrowDropDown as ArrowDropDownIcon,
+  ArrowDropUp as ArrowDropUpIcon,
+  Close as CloseIcon,
+  ExitToApp as ExitIcon,
+  InfoOutlined as InfoIcon
+} from '@material-ui/icons';
 
 import { isEmpty, decodeSessionToken, hashString } from '../../helpers';
 import { getOnboardingState } from '../../utils/onboardingmanager';
@@ -30,7 +27,7 @@ import DeploymentNotifications from './deploymentnotifications';
 import AppActions from '../../actions/app-actions';
 import AppStore from '../../stores/app-store';
 
-export default class Header extends React.Component {
+class Header extends React.Component {
   static contextTypes = {
     router: PropTypes.object,
     location: PropTypes.object
@@ -75,13 +72,9 @@ export default class Header extends React.Component {
       sessionId: cookie.load('JWT'),
       user: AppStore.getCurrentUser(),
       showHelptips: AppStore.showHelptips(),
-      pendingDevices: AppStore.getTotalPendingDevices(),
-      acceptedDevices: AppStore.getTotalAcceptedDevices(),
       artifacts: AppStore.getArtifactsRepo(),
       hasDeployments: AppStore.getHasDeployments(),
       multitenancy: AppStore.hasMultitenancy(),
-      deviceLimit: AppStore.getDeviceLimit(),
-      inProgress: AppStore.getNumberInProgress(),
       globalSettings: AppStore.getGlobalSettings()
     };
   }
@@ -89,18 +82,11 @@ export default class Header extends React.Component {
     this.setState(this._getInitialState());
   }
   _checkHeaderInfo() {
-    this._getDeviceLimit();
     this._deploymentsInProgress();
-    this._hasDevices();
-    this._hasPendingDevices();
     this._checkAnnouncement();
   }
   _getGlobalSettings() {
     return AppActions.getGlobalSettings().catch(err => console.log('error', err));
-  }
-  _getDeviceLimit() {
-    var self = this;
-    return AppActions.getDeviceLimit().then(limit => self.setState({ deviceLimit: limit ? limit : 500 }));
   }
   _checkShowHelp() {
     //checks if user id is set and if cookie for helptips exists for that user
@@ -137,21 +123,6 @@ export default class Header extends React.Component {
     // check if deployments in progress
     var self = this;
     AppActions.getDeploymentCount('inprogress').then(inProgress => self.setState({ inProgress }));
-  }
-
-  _hasDevices() {
-    // check if any devices connected + accepted
-    var self = this;
-    return AppActions.getDeviceCount('accepted')
-      .then(acceptedDevices => self.setState({ acceptedDevices }))
-      .catch(err => console.log(err));
-  }
-  _hasPendingDevices() {
-    // check if any devices connected + accepted
-    var self = this;
-    return AppActions.getDeviceCount('pending')
-      .then(pendingDevices => self.setState({ pendingDevices }))
-      .catch(err => console.log(err.error));
   }
   _hasArtifacts() {
     var self = this;
@@ -299,7 +270,7 @@ export default class Header extends React.Component {
           </Toolbar>
 
           <Toolbar key={2} style={{ flexShrink: '0' }}>
-            <DeviceNotifications pending={this.state.pendingDevices} total={this.state.acceptedDevices} limit={this.state.deviceLimit} />
+            <DeviceNotifications pending={this.props.pendingDevices} total={this.props.acceptedDevices} limit={this.props.deviceLimit} />
             <DeploymentNotifications inprogress={this.state.inProgress} />
             {dropDownElement}
           </Toolbar>
@@ -308,3 +279,13 @@ export default class Header extends React.Component {
     );
   }
 }
+
+const mapStateToProps = state => {
+  return {
+    deviceLimit: state.devices.limit,
+    acceptedDevices: state.devices.byStatus.accepted.total,
+    pendingDevices: state.devices.byStatus.pending.total
+  };
+};
+
+export default connect(mapStateToProps)(Header);
