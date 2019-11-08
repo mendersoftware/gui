@@ -1147,14 +1147,17 @@ table thead.clickable tr > th:first-child {
 
 .report-list,
 .list-item {
-  display: inline-block;
-  margin-right: 3%;
-  width: 30%;
   vertical-align: top;
-  -webkit-line-clamp: 3;
-
   &.list-item-large {
     width: 60%;
+  }
+  ul {
+    display: flex;
+    flex-wrap: wrap;
+    & > div {
+      flex: 0 45%;
+      margin-right: 2 * @defaultGutterWidth;
+    }
   }
 }
 
@@ -1300,7 +1303,8 @@ input[required]:-moz-ui-invalid {
   background-color: rgba(66, 66, 66, 0.03);
 }
 
-p.info, span.info {
+p.info,
+span.info {
   margin: 15px 0;
   color: rgba(66, 66, 66, 0.6);
 
