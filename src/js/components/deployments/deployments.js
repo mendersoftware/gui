@@ -1,9 +1,11 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Tab, Tabs } from '@material-ui/core';
 
 import AppStore from '../../stores/app-store';
+import { getAllGroupDevices, selectDevice } from '../../actions/deviceActions';
 import AppActions from '../../actions/app-actions';
 import { setRetryTimer, clearRetryTimer, clearAllRetryTimers } from '../../utils/retrytimer';
 
@@ -31,7 +33,7 @@ const routes = {
   }
 };
 
-export default class Deployments extends React.Component {
+class Deployments extends React.Component {
   static contextTypes = {
     router: PropTypes.object
   };
@@ -69,19 +71,12 @@ export default class Deployments extends React.Component {
     this.timer = setInterval(() => this._refreshDeployments(), this.state.refreshDeploymentsLength);
     this._refreshDeployments();
 
-    Promise.all([AppActions.getArtifacts(), AppActions.getAllDevices(), AppActions.getGroups()])
+    self.props.groups.map(group => self.props.getAllGroupDevices(group));
+    AppActions.getArtifacts()
       .catch(err => console.log(`Error: ${err}`))
-      .then(([artifacts, allDevices, groups]) => {
+      .then(artifacts => {
         const collatedArtifacts = AppStore.getCollatedArtifacts(artifacts);
-        let state = { allDevices, collatedArtifacts, groups, doneLoading: true };
-        return Promise.all([
-          Promise.all(groups.map(group => AppActions.getAllDevicesInGroup(group).then(devices => Promise.resolve({ [group]: devices })))),
-          Promise.resolve(state)
-        ]);
-      })
-      .then(([groupedDevices, state]) => {
-        state = groupedDevices.reduce((accu, item) => Object.assign(accu, item), state);
-        self.setState(state);
+        return self.setState({ collatedArtifacts, doneLoading: true });
       });
 
     if (this.props.match) {
@@ -98,14 +93,9 @@ export default class Deployments extends React.Component {
             artifact: release && release.Artifacts ? release.Artifacts[0] : null
           });
         } else if (params.get('deviceId')) {
-          AppActions.getDeviceById(params.get('deviceId'))
-            .then(device => {
-              self.setState({
-                createDialog: true,
-                device: device,
-                deploymentDeviceIds: [device.id]
-              });
-            })
+          self.props
+            .selectDevice({ id: params.get('deviceId') })
+            .then(() => self.setState({ createDialog: true }))
             .catch(err => {
               console.log(err);
               var errMsg = err.res.body.error || '';
@@ -139,10 +129,7 @@ export default class Deployments extends React.Component {
       events: AppStore.getEventLog(),
       hasDeployments: AppStore.getHasDeployments(),
       showHelptips: AppStore.showHelptips(),
-      hasPending: AppStore.getTotalPendingDevices(),
-      hasDevices: AppStore.getTotalAcceptedDevices(),
       user: AppStore.getCurrentUser(),
-      pageLength: AppStore.getTotalDevices(),
       isHosted: AppStore.getIsHosted()
     };
   }
@@ -423,15 +410,13 @@ export default class Deployments extends React.Component {
       </Button>
     ];
 
-    var dialogContent = '';
     const dialogProps = {
       updated: () => this.setState({ updated: true }),
       deployment: this.state.selectedDeployment
     };
+    let dialogContent = <Report retry={(deployment, devices) => this._retryDeployment(deployment, devices)} past={true} {...dialogProps} />;
     if (this.state.reportType === 'active') {
       dialogContent = <Report abort={id => this._abortDeployment(id)} {...dialogProps} />;
-    } else {
-      dialogContent = <Report retry={(deployment, devices) => this._retryDeployment(deployment, devices)} past={true} {...dialogProps} />;
     }
 
     // tabs
@@ -501,7 +486,7 @@ export default class Deployments extends React.Component {
         {tabIndex === routes.finished.route && (
           <div className="margin-top">
             <Past
-              groups={this.state.groups}
+              groups={this.props.groups}
               deviceGroup={this.state.groupFilter}
               createClick={() => this.setState({ createDialog: true })}
               pageSize={per_page}
@@ -530,11 +515,9 @@ export default class Deployments extends React.Component {
 
         <CreateDialog
           open={this.state.createDialog}
-          onDismiss={() => self.setState({ createDialog: false, device: null, deploymentObject: null })}
+          onDismiss={() => self.setState({ createDialog: false, deploymentObject: null })}
           onScheduleSubmit={(...args) => this._onScheduleSubmit(...args)}
           deploymentRelease={release}
-          hasDevices={this.state.hasDevices}
-          device={this.state.device}
           deploymentObject={self.state.deploymentObject}
         />
         {onboardingComponent}
@@ -542,3 +525,17 @@ export default class Deployments extends React.Component {
     );
   }
 }
+
+const actionCreators = { getAllGroupDevices, selectDevice };
+
+const mapStateToProps = state => {
+  return {
+    groups: Object.keys(state.devices.groups.byId),
+    groupDevices: state.devices.groups.byId
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  actionCreators
+)(Deployments);

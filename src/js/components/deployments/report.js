@@ -1,31 +1,28 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import Time from 'react-time';
 import CopyToClipboard from 'react-copy-to-clipboard';
-import AppActions from '../../actions/app-actions';
-import AppStore from '../../stores/app-store';
-import DeploymentStatus from './deploymentstatus';
-import DeviceList from './deploymentdevicelist';
+
 import pluralize from 'pluralize';
 import isEqual from 'lodash.isequal';
 import differenceWith from 'lodash.differencewith';
-import Confirm from './confirm';
 
 // material ui
-import Button from '@material-ui/core/Button';
-import Checkbox from '@material-ui/core/Checkbox';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
+import { Button, Checkbox, Dialog, DialogActions, DialogContent, DialogTitle } from '@material-ui/core';
+import { Block as BlockIcon, Timelapse as TimelapseIcon, Refresh as RefreshIcon } from '@material-ui/icons';
 
-import BlockIcon from '@material-ui/icons/Block';
-import TimelapseIcon from '@material-ui/icons/Timelapse';
-import RefreshIcon from '@material-ui/icons/Refresh';
-import Pagination from '../common/pagination';
+import { getDeviceById } from '../../actions/deviceActions';
+import AppActions from '../../actions/app-actions';
+import AppStore from '../../stores/app-store';
+import { DEVICE_STATES } from '../../constants/deviceConstants';
 import { formatTime } from '../../helpers';
+import Pagination from '../common/pagination';
+import DeploymentStatus from './deploymentstatus';
+import DeviceList from './deploymentdevicelist';
+import Confirm from './confirm';
 
-export default class DeploymentReport extends React.Component {
+class DeploymentReport extends React.Component {
   constructor(props, state) {
     super(props, state);
     this.state = {
@@ -69,6 +66,7 @@ export default class DeploymentReport extends React.Component {
     var now = new Date();
     var then = new Date(this.props.deployment.created);
 
+    // TODO refactor using momentjs:
     // get difference in seconds
     var difference = (now.getTime() - then.getTime()) / 1000;
 
@@ -103,36 +101,12 @@ export default class DeploymentReport extends React.Component {
     return artifact ? artifact.value : none;
   }
   _getDeviceDetails(devices) {
-    var self = this;
     // get device artifact and inventory details not listed in schedule data
-    const inventoryRequests = devices.map(device => self._setSingleDeviceDetails(device));
-    return Promise.all(inventoryRequests).then(devices => {
-      let deviceInventory = self.state.deviceInventory || {};
-      deviceInventory = devices.reduce((accu, device) => {
-        let inventory = accu[device.id] || {};
-        inventory.artifact = self._getDeviceAttribute(device, 'artifact_name');
-        inventory.device_type = self._getDeviceAttribute(device, 'device_type');
-        accu[device.id] = inventory;
-        return accu;
-      }, deviceInventory);
-      if (!self.state.stopRestCalls) {
-        self.setState({ deviceInventory });
-      }
-    });
+    devices.map(device => this.props.getDeviceById(device.id));
   }
-  _setSingleDeviceDetails(device) {
-    return AppActions.getDeviceById(device.id)
-      .then(device_inventory => {
-        device.attributes = device_inventory.attributes;
-        return Promise.resolve(device);
-      })
-      .catch(err => {
-        console.log('error ', err);
-        return Promise.resolve(device);
-      });
-  }
+
   _filterPending(device) {
-    return device.status !== 'pending';
+    return device.status !== DEVICE_STATES.pending;
   }
   _handleCheckbox(checked) {
     this.setState({ showPending: checked, currentPage: 1 });
@@ -150,8 +124,7 @@ export default class DeploymentReport extends React.Component {
   dialogDismiss() {
     this.setState({
       showDialog: false,
-      logData: null,
-      stopRestCalls: true
+      logData: null
     });
   }
   _setFinished(bool) {
@@ -363,8 +336,6 @@ export default class DeploymentReport extends React.Component {
             created={this.props.deployment.created}
             status={this.props.deployment.status}
             devices={deviceList}
-            deviceIdentity={this.state.deviceIdentity}
-            deviceInventory={this.state.deviceInventory}
             viewLog={id => this.viewLog(id)}
             past={this.props.past}
           />
@@ -391,3 +362,16 @@ export default class DeploymentReport extends React.Component {
     );
   }
 }
+
+const actionCreators = { getDeviceById };
+
+const mapStateToProps = state => {
+  return {
+    acceptedDevicesCount: state.devices.byStatus.accepted.total
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  actionCreators
+)(DeploymentReport);
