@@ -1,24 +1,26 @@
 import React from 'react';
+import { connect } from 'react-redux';
 
 import Button from '@material-ui/core/Button';
 
+import { getDevices } from '../../actions/deviceActions';
 import AppActions from '../../actions/app-actions';
 import { getDemoDeviceAddress } from '../../helpers';
 import { advanceOnboarding } from '../../utils/onboardingmanager';
 import Loader from '../common/loader';
 
-export default class DeploymentCompleteTip extends React.Component {
+class DeploymentCompleteTip extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
       loading: true,
       targetUrl: ''
     };
+    self.props.getDevices();
   }
   componentDidMount() {
     const self = this;
-    AppActions.getDevicesByStatus('accepted')
-      .then(getDemoDeviceAddress)
+    getDemoDeviceAddress(self.props.acceptedDevices)
       .catch(e => console.log(e))
       .then(targetUrl => self.setState({ targetUrl, loading: false }));
   }
@@ -56,3 +58,16 @@ export default class DeploymentCompleteTip extends React.Component {
     );
   }
 }
+
+const actionCreators = { getDevices };
+
+const mapStateToProps = state => {
+  return {
+    acceptedDevices: state.devices.byStatus.accepted.deviceIds.map(id => state.devices.byId[id])
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  actionCreators
+)(DeploymentCompleteTip);

@@ -374,22 +374,20 @@ export const collectAddressesFrom = devices =>
 export const getDemoDeviceAddress = devices => {
   let targetUrl = '';
   const defaultVitualizedIp = '10.0.2.15';
-  return AppActions.getDevicesWithInventory(devices).then(devices => {
-    const addresses = collectAddressesFrom(devices);
-    const address = addresses.reduce((accu, item) => {
-      if (accu && item === defaultVitualizedIp) {
-        return accu;
-      }
-      return item;
-    }, null);
-    const onboardingApproach = AppStore.getOnboardingApproach();
-    const port = AppStore.getDemoArtifactPort();
-    targetUrl = `http://${address}:${port}`;
-    if (!address || (onboardingApproach === 'virtual' && (navigator.appVersion.indexOf('Win') != -1 || navigator.appVersion.indexOf('Mac') != -1))) {
-      targetUrl = `http://localhost:${port}`;
+  const addresses = collectAddressesFrom(devices);
+  const address = addresses.reduce((accu, item) => {
+    if (accu && item === defaultVitualizedIp) {
+      return accu;
     }
-    return Promise.resolve(targetUrl);
-  });
+    return item;
+  }, null);
+  const onboardingApproach = AppStore.getOnboardingApproach();
+  const port = AppStore.getDemoArtifactPort();
+  targetUrl = `http://${address}:${port}`;
+  if (!address || (onboardingApproach === 'virtual' && (navigator.appVersion.indexOf('Win') != -1 || navigator.appVersion.indexOf('Mac') != -1))) {
+    targetUrl = `http://localhost:${port}`;
+  }
+  return Promise.resolve(targetUrl);
 };
 
 export const detectOsIdentifier = () => {
