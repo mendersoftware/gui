@@ -1,19 +1,17 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import { Button } from '@material-ui/core';
+
+import { InfoOutlined as InfoOutlinedIcon } from '@material-ui/icons';
+
 import Form from '../common/forms/form';
 import SelectInput from '../common/forms/selectinput';
 import { preformatWithRequestID, deepCompare } from '../../helpers';
 
-require('../common/prototype/Array.prototype.equals');
-
+import { getDevicesByStatus } from '../../actions/deviceActions';
 import AppActions from '../../actions/app-actions';
 
-import Button from '@material-ui/core/Button';
-
-import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
-
-const AVAILABLE_ATTRIBUTE_LIMIT = 10;
-
-export default class Global extends React.Component {
+class Global extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
@@ -23,44 +21,17 @@ export default class Global extends React.Component {
       },
       updatedSettings: {
         id_attribute: 'Device ID'
-      },
-      id_attributes: [{ value: 'Device ID', label: 'Device ID' }]
+      }
     };
   }
   componentDidMount() {
     this.getSettings();
-    this.getIdentityAttributes();
+    this.props.getDevicesByStatus(null, 1, 500);
   }
   getSettings() {
     var self = this;
     return AppActions.getGlobalSettings()
       .then(settings => self.setState({ settings, updatedSettings: Object.assign(self.state.updatedSettings, settings) }))
-      .catch(err => console.log(`error:${err}`));
-  }
-  getIdentityAttributes() {
-    var self = this;
-    AppActions.getDevicesByStatus(null, 1, 500)
-      .then(devices => {
-        const availableAttributes = devices.reduce((accu, item) => {
-          return Object.keys(item.identity_data).reduce((keyAccu, key) => {
-            keyAccu[key] = keyAccu[key] + 1 || 1;
-            return keyAccu;
-          }, accu);
-        }, {});
-        const id_attributes = Object.entries(availableAttributes)
-          // sort in reverse order, to have most common attribute at the top of the select
-          .sort((a, b) => b[1] - a[1])
-          // limit the selection of the available attribute to AVAILABLE_ATTRIBUTE_LIMIT
-          .slice(0, AVAILABLE_ATTRIBUTE_LIMIT)
-          .reduce(
-            (accu, item) => {
-              accu.push({ value: item[0], label: item[0] });
-              return accu;
-            },
-            [{ value: 'Device ID', label: 'Device ID' }]
-          );
-        self.setState({ id_attributes });
-      })
       .catch(err => console.log(`error:${err}`));
   }
 
@@ -101,7 +72,15 @@ export default class Global extends React.Component {
 
   render() {
     var changed = this.hasChanged();
-    var id_hint = (
+    const id_attributes = this.props.attributes.reduce(
+      (accu, value) => {
+        accu.push({ value, label: value });
+        return accu;
+      },
+      [{ value: 'Device ID', label: 'Device ID' }]
+    );
+
+    const id_hint = (
       <div>
         <p>Choose a device identity attribute to use to identify your devices throughout the UI.</p>
         <p>
@@ -131,7 +110,7 @@ export default class Global extends React.Component {
             label="Device identity attribute"
             id="deviceid"
             onChange={value => this.changeIdAttribute(value)}
-            menuItems={this.state.id_attributes}
+            menuItems={id_attributes}
             style={{ width: '400px' }}
             value={this.state.updatedSettings.id_attribute || ''}
             extraHint={id_hint}
@@ -152,3 +131,17 @@ export default class Global extends React.Component {
     );
   }
 }
+
+const actionCreators = { getDevicesByStatus };
+
+const mapStateToProps = state => {
+  return {
+    // limit the selection of the available attribute to AVAILABLE_ATTRIBUTE_LIMIT
+    attributes: state.devices.filteringAttributes.slice(0, state.devices.filteringAttributesLimit)
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  actionCreators
+)(Global);
