@@ -15,8 +15,6 @@ import AddIcon from '@material-ui/icons/Add';
 import HelpIcon from '@material-ui/icons/Help';
 import AppStore from '../../stores/app-store';
 
-require('../common/prototype/Array.prototype.equals');
-
 export default class Groups extends React.Component {
   dialogToggle() {
     this.props.acceptedCount ? this.props.openGroupDialog() : null;
