@@ -7,7 +7,11 @@ import BaseOnboardingTip from '../components/helptips/baseonboardingtip';
 import DeploymentCompleteTip from '../components/helptips/deploymentcompletetip';
 
 import AppActions from '../actions/app-actions';
+import { getDevicesByStatus, getAllDevices } from '../actions/deviceActions';
 import AppStore from '../stores/app-store';
+import store from '../reducers';
+
+import { DEVICE_STATES } from '../constants/deviceConstants';
 import OnboardingCompleteTip from '../components/helptips/onboardingcompletetip';
 
 const demoArtifactLink = 'https://dgsbl4vditpls.cloudfront.net/mender-demo-artifact.mender';
@@ -22,12 +26,12 @@ const onboardingSteps = {
     progress: 1
   },
   'devices-pending-onboarding': {
-    condition: () => onboardingTipSanityCheck('devices-accepted-onboarding') && AppStore.getPendingDevices().length,
+    condition: () => onboardingTipSanityCheck('devices-accepted-onboarding') && !!store.getState().devices.byStatus.pending.total > 0,
     component: <div>This should be your device, asking for permission to join the server. Inspect its identity details, then check it to accept it!</div>,
     progress: 1
   },
   'devices-pending-accepting-onboarding': {
-    condition: () => onboardingTipSanityCheck('devices-accepted-onboarding') && AppStore.getPendingDevices().length,
+    condition: () => onboardingTipSanityCheck('devices-accepted-onboarding') && store.getState().devices.byStatus.pending.total > 0,
     component: <div>If you recognize this device as your own, you can accept it</div>,
     progress: 2
   },
@@ -35,12 +39,12 @@ const onboardingSteps = {
     condition: () =>
       onboardingTipSanityCheck('dashboard-onboarding-pendings') &&
       getOnboardingStepCompleted('devices-pending-onboarding') &&
-      AppStore.getPendingDevices().length,
+      store.getState().devices.byStatus.pending,
     component: <div>Next accept your device</div>,
     progress: 2
   },
   'devices-accepted-onboarding': {
-    condition: () => onboardingTipSanityCheck('devices-accepted-onboarding') && AppStore.getAcceptedDevices().length > 0,
+    condition: () => onboardingTipSanityCheck('devices-accepted-onboarding') && store.getState().devices.byStatus.accepted.total > 0,
     component: (
       <div>
         <b>Good job! Your first device is connected!</b>
@@ -56,8 +60,8 @@ const onboardingSteps = {
     condition: () =>
       onboardingTipSanityCheck('artifact-included-deploy-onboarding') &&
       window.location.hash.endsWith('#/devices') &&
-      AppStore.getAcceptedDevices().length > 0 &&
-      (AppStore.getAcceptedDevices().every(item => !!item.attributes) || getOnboardingStepCompleted('devices-accepted-onboarding')),
+      store.getState().devices.byStatus.accepted.total.length > 0 &&
+      (Object.values(store.getState().devices.byId).every(item => !!item.attributes) || getOnboardingStepCompleted('devices-accepted-onboarding')),
     component: (
       <div>
         <b>Deploy your first Application update</b>
@@ -94,12 +98,16 @@ const onboardingSteps = {
     progress: 1
   },
   'scheduling-artifact-selection': {
-    condition: () => onboardingTipSanityCheck('scheduling-artifact-selection') && AppStore.getTotalAcceptedDevices() && AppStore.getDeploymentRelease(),
+    condition: () =>
+      onboardingTipSanityCheck('scheduling-artifact-selection') && store.getState().devices.byStatus.accepted.total && AppStore.getDeploymentRelease(),
     component: compose(setDisplayName('OnboardingTip'))(() => <div>{`Select the ${AppStore.getDeploymentRelease().Name} release we included.`}</div>),
     progress: 2
   },
   'scheduling-all-devices-selection': {
-    condition: () => onboardingTipSanityCheck('scheduling-all-devices-selection') && AppStore.getTotalAcceptedDevices() && !AppStore.getSelectedDevice(),
+    condition: () =>
+      onboardingTipSanityCheck('scheduling-all-devices-selection') &&
+      store.getState().devices.byStatus.accepted.total &&
+      !store.getState().devices.selectedDevice,
     component: (
       <div>
         Select &apos;All devices&apos; for now.<p>You can learn how to create device groups later.</p>
@@ -110,21 +118,23 @@ const onboardingSteps = {
   'scheduling-group-selection': {
     condition: () =>
       onboardingTipSanityCheck('scheduling-group-selection') &&
-      AppStore.getTotalAcceptedDevices() &&
-      !AppStore.getSelectedDevice() &&
-      AppStore.getGroups().length > 1, // group 0 will be the ungrouped group and always present
-    component: compose(setDisplayName('OnboardingTip'))(() => <div>{`Select the ${AppStore.getGroups()[1]} device group you just made.`}</div>),
+      store.getState().devices.byStatus.accepted.total &&
+      !store.getState().devices.selectedDevice &&
+      Object.values(store.getState().devices.groups.byId).length > 1, // group 0 will be the ungrouped group and always present
+    component: compose(setDisplayName('OnboardingTip'))(() => (
+      <div>{`Select the ${Object.values(store.getState().devices.groups.byId)[1]} device group you just made.`}</div>
+    )),
     progress: 2
   },
   'scheduling-release-to-devices': {
     condition: () =>
       onboardingTipSanityCheck('scheduling-release-to-devices') &&
-      AppStore.getTotalAcceptedDevices() &&
-      (AppStore.getSelectedGroup() || AppStore.getSelectedDevice()) &&
+      store.getState().devices.byStatus.accepted.total &&
+      (store.getState().devices.groups.selectedGroup || store.getState().devices.selectedDevice) &&
       AppStore.getDeploymentRelease(),
     component: compose(setDisplayName('OnboardingTip'))(() => (
       <div>{`Create the deployment! This will deploy the ${AppStore.getDeploymentRelease().Name} Artifact to ${
-        AppStore.getSelectedDevice() ? AppStore.getSelectedDevice().id : AppStore.getSelectedGroup() || 'All devices'
+        store.getState().devices.selectedDevice ? store.getState().devices.selectedDevice : store.getState().devices.groups.selectedGroup || 'All devices'
       }`}</div>
     ))
   },
@@ -239,18 +249,16 @@ export function getOnboardingState(userId) {
       AppActions.setOnboardingComplete(Boolean(userCookie));
     }
     const requests = [
-      AppActions.getDevicesByStatus('accepted').then(AppActions.getDevicesWithInventory),
+      getDevicesByStatus(DEVICE_STATES.accepted),
+      getDevicesByStatus(DEVICE_STATES.pending),
+      getAllDevices(),
       AppActions.getReleases(),
       AppActions.getPastDeployments(),
-      Promise.resolve(userCookie),
-      AppActions.getDevicesByStatus('accepted')
+      Promise.resolve(userCookie)
     ];
 
-    promises = Promise.all(requests).then(([acceptedDevices, releases, pastDeployments, onboardedCookie, pendingDevices]) => {
-      const deviceType =
-        acceptedDevices.length && acceptedDevices[0].hasOwnProperty('attributes')
-          ? acceptedDevices[0].attributes.find(item => item.name === 'device_type').value
-          : '';
+    promises = Promise.all(requests).then(([acceptedDevices, pendingDevices, devices, releases, pastDeployments, onboardedCookie]) => {
+      const deviceType = acceptedDevices.length && acceptedDevices[0].hasOwnProperty('attributes') ? acceptedDevices[0].attributes.device_type : null;
       const state = {
         complete: !!(
           Boolean(onboardedCookie) ||
@@ -261,11 +269,8 @@ export function getOnboardingState(userId) {
           (mender_environment && mender_environment.disableOnboarding)
         ),
         showTips: savedState.showTips != null ? savedState.showTips : onboardedCookie ? !onboardedCookie : true,
-        deviceType:
-          savedState.deviceType || AppStore.getOnboardingDeviceType() || (acceptedDevices.length && acceptedDevices[0].hasOwnProperty('attributes'))
-            ? acceptedDevices[0].attributes.find(item => item.name === 'device_type').value
-            : null,
-        approach: savedState.approach || deviceType.startsWith('qemu') ? 'virtual' : 'physical' || AppStore.getOnboardingApproach(),
+        deviceType: savedState.deviceType || AppStore.getOnboardingDeviceType() || deviceType,
+        approach: savedState.approach || (deviceType || '').startsWith('qemu') ? 'virtual' : 'physical' || AppStore.getOnboardingApproach(),
         artifactIncluded: savedState.artifactIncluded || AppStore.getOnboardingArtifactIncluded(),
         progress: savedState.progress || determineProgress(acceptedDevices, pendingDevices, releases, pastDeployments)
       };
