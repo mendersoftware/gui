@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Step, StepLabel, Stepper } from '@material-ui/core';
 
@@ -6,6 +7,7 @@ import SoftwareDevices from './deployment-wizard/softwaredevices';
 import ScheduleRollout from './deployment-wizard/schedulerollout';
 import Review from './deployment-wizard/review';
 
+import { selectDevice } from '../../actions/deviceActions';
 import AppStore from '../../stores/app-store';
 import { getRemainderPercent } from '../../helpers';
 
@@ -15,7 +17,7 @@ const deploymentSteps = [
   { title: 'Review and create', closed: false, component: Review }
 ];
 
-export default class CreateDialog extends React.Component {
+class CreateDialog extends React.Component {
   constructor(props, context) {
     super(props, context);
     const isEnterprise = AppStore.getIsEnterprise() || AppStore.getIsHosted();
@@ -46,7 +48,7 @@ export default class CreateDialog extends React.Component {
 
   deploymentSettings(value, property) {
     this.setState({ [property]: value });
-    if (property==='phases') {
+    if (property === 'phases') {
       this.validatePhases(value);
     }
   }
@@ -58,6 +60,7 @@ export default class CreateDialog extends React.Component {
 
   closeWizard() {
     this.setState({ activeStep: 0, deploymentDeviceIds: [], group: null, phases: null, release: null, disableSchedule: false });
+    this.props.selectDevice();
     this.props.onDismiss();
   }
 
@@ -65,17 +68,19 @@ export default class CreateDialog extends React.Component {
     let valid = true;
     const remainder = getRemainderPercent(phases);
     for (var phase of phases) {
-      const deviceCount =  Math.floor((this.state.deploymentDeviceIds.length / 100) * (phase.batch_size || remainder));
-      if (deviceCount<1) { valid = false }
+      const deviceCount = Math.floor((this.state.deploymentDeviceIds.length / 100) * (phase.batch_size || remainder));
+      if (deviceCount < 1) {
+        valid = false;
+      }
     }
-    this.setState({disableSchedule: !valid});
+    this.setState({ disableSchedule: !valid });
   }
 
   render() {
     const self = this;
     const { device, open } = self.props;
     const { activeStep, deploymentDeviceIds, release, group, phases, steps } = self.state;
-    const disabled = (activeStep === 0) ? !(release && deploymentDeviceIds.length) : self.state.disableSchedule;
+    const disabled = activeStep === 0 ? !(release && deploymentDeviceIds.length) : self.state.disableSchedule;
     const finalStep = activeStep === steps.length - 1;
     const ComponentToShow = steps[activeStep].component;
     const deploymentSettings = {
@@ -95,7 +100,13 @@ export default class CreateDialog extends React.Component {
               </Step>
             ))}
           </Stepper>
-          <ComponentToShow disableSchedule={self.state.disableSchedule} deploymentAnchor={this.deploymentRef} {...self.props} {...self.state} deploymentSettings={(...args) => self.deploymentSettings(...args)} />
+          <ComponentToShow
+            disableSchedule={self.state.disableSchedule}
+            deploymentAnchor={this.deploymentRef}
+            {...self.props}
+            {...self.state}
+            deploymentSettings={(...args) => self.deploymentSettings(...args)}
+          />
         </DialogContent>
         <DialogActions className="margin-left margin-right">
           <Button key="schedule-action-button-1" onClick={() => self.closeWizard()} style={{ marginRight: '10px', display: 'inline-block' }}>
@@ -119,3 +130,18 @@ export default class CreateDialog extends React.Component {
     );
   }
 }
+
+const actionCreators = { selectDevice };
+
+const mapStateToProps = state => {
+  return {
+    device: state.devices.selectedDevice,
+    groups: Object.keys(state.devices.groups.byId),
+    hasDevices: state.devices.byStatus.accepted.total || state.devices.byStatus.accepted.deviceIds.length > 0
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  actionCreators
+)(CreateDialog);

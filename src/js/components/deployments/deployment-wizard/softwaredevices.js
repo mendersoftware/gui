@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import pluralize from 'pluralize';
@@ -7,9 +8,10 @@ import { TextField, Tooltip } from '@material-ui/core';
 import { ErrorOutline as ErrorOutlineIcon, InfoOutlined as InfoOutlinedIcon } from '@material-ui/icons';
 
 import AutoSelect from '../../common/forms/autoselect';
-import AppActions from '../../../actions/app-actions';
+import { getAllDevicesByStatus, getAllGroupDevices, selectDevice } from '../../../actions/deviceActions';
 import AppStore from '../../../stores/app-store';
 import AppConstants from '../../../constants/app-constants';
+import { DEVICE_STATES } from '../../../constants/deviceConstants';
 
 import { getOnboardingComponentFor } from '../../../utils/onboardingmanager';
 
@@ -24,14 +26,14 @@ const styles = {
   }
 };
 
-export default class SoftwareDevices extends React.Component {
+class SoftwareDevices extends React.Component {
   constructor(props, context) {
     super(props, context);
 
+    this.props.getAllDevicesByStatus(DEVICE_STATES.accepted);
     this.state = {
       artifacts: AppStore.getCollatedArtifacts(AppStore.getArtifactsRepo()),
-      groups: AppStore.getGroups().filter(item => item !== AppConstants.UNGROUPED_GROUP.id),
-      release: null
+      deploymentDeviceIds: []
     };
   }
 
@@ -40,13 +42,8 @@ export default class SoftwareDevices extends React.Component {
     let state = { [property]: value };
     self.props.deploymentSettings(value, property);
 
-    if (property === 'group') {
-      if (value) {
-        let promise = value === allDevices ? Promise.resolve(AppStore.getTotalAcceptedDevices()) : AppActions.getNumberOfDevicesInGroup(value);
-        promise.then(devicesLength => self.setState({ devicesLength }));
-      } else {
-        state.devicesLength = 0;
-      }
+    if (property === 'group' && value && value !== allDevices) {
+      self.props.getAllGroupDevices(value);
     }
     const currentState = Object.assign({}, self.state, state);
     if (!currentState.release && property !== 'release') {
@@ -54,28 +51,23 @@ export default class SoftwareDevices extends React.Component {
       currentState.release = state.release = self.props.deploymentRelease;
     }
     if (currentState.group && currentState.release) {
-      self.getDeploymentDeviceIds(currentState.group, self.props.device).then(devices => self.props.deploymentSettings(devices, 'deploymentDeviceIds'));
+      state.deploymentDeviceIds = self.props.acceptedDevices;
+      if (self.props.groups[currentState.group]) {
+        state.deploymentDeviceIds = self.props.groups[currentState.group].deviceIds;
+      } else if (self.props.device) {
+        state.deploymentDeviceIds = [self.props.device];
+      }
+      self.props.deploymentSettings(state.deploymentDeviceIds, 'deploymentDeviceIds');
+    } else {
+      state.deploymentDeviceIds = [];
     }
     self.setState(state);
   }
 
-  getDeploymentDeviceIds(group, device) {
-    // no device type checking to not hinder deployments to large device counts, just id mapping
-    let promisedDevices;
-    if (group === allDevices) {
-      promisedDevices = AppActions.getAllDevicesByStatus('accepted');
-    } else if (device) {
-      promisedDevices = Promise.resolve([device]);
-    } else {
-      promisedDevices = AppActions.getAllDevicesInGroup(group);
-    }
-    return promisedDevices.then(devices => devices.map(item => item.id));
-  }
-
   render() {
     const self = this;
-    const { device, deploymentAnchor, deploymentRelease, hasPending, release, group, hasDevices } = self.props;
-    const { artifacts, devicesLength, groups } = self.state;
+    const { device, deploymentAnchor, deploymentRelease, group, groups, hasDevices, hasPending, release } = self.props;
+    const { artifacts, deploymentDeviceIds } = self.state;
 
     const selectedRelease = deploymentRelease ? deploymentRelease : release;
 
@@ -104,7 +96,7 @@ export default class SoftwareDevices extends React.Component {
         art.value.device_types_compatible.some(type => type === device.attributes.find(attr => attr.name === 'device_type').value)
       );
     } else {
-      groupItems = groups.reduce((accu, group) => {
+      groupItems = Object.keys(groups).reduce((accu, group) => {
         accu.push({
           title: group,
           value: group
@@ -188,13 +180,13 @@ export default class SoftwareDevices extends React.Component {
                   )}
                 </div>
               )}
-              {devicesLength > 0 && (
+              {deploymentDeviceIds.length > 0 && (
                 <p className="info">
-                  {devicesLength} {pluralize('devices', devicesLength)} will be targeted. <Link to={groupLink}>View the devices</Link>
+                  {deploymentDeviceIds.length} {pluralize('devices', deploymentDeviceIds.length)} will be targeted. <Link to={groupLink}>View the devices</Link>
                 </p>
               )}
               {onboardingComponent}
-              {devicesLength > 0 && release && (
+              {deploymentDeviceIds.length > 0 && release && (
                 <p className="info icon">
                   <InfoOutlinedIcon fontSize="small" style={{ verticalAlign: 'middle', margin: '0 6px 4px 0' }} />
                   The deployment will skip any devices in the group that are already on the target Release version, or that have an incompatible device type.
@@ -207,3 +199,22 @@ export default class SoftwareDevices extends React.Component {
     );
   }
 }
+
+const actionCreators = { getAllDevicesByStatus, getAllGroupDevices, selectDevice };
+
+const mapStateToProps = state => {
+  const { [AppConstants.UNGROUPED_GROUP.id]: ungroupedGroup, ...groups } = state.devices.groups.byId;
+  return {
+    acceptedDevices: state.devices.byStatus.accepted.deviceIds,
+    device: state.devices.selectedDevice,
+    groups,
+    ungroupedGroup,
+    hasDevices: state.devices.byStatus.accepted.total || state.devices.byStatus.accepted.deviceIds.length > 0,
+    hasPending: state.devices.byStatus.pending.total || state.devices.byStatus.pending.deviceIds.length > 0
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  actionCreators
+)(SoftwareDevices);
