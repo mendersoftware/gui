@@ -1,27 +1,29 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { Link, Redirect } from 'react-router-dom';
 import Time from 'react-time';
 import pluralize from 'pluralize';
 
 // material ui
-import Button from '@material-ui/core/Button';
+import { Button } from '@material-ui/core';
 
-import InfoIcon from '@material-ui/icons/InfoOutlined';
+import { InfoOutlined as InfoIcon } from '@material-ui/icons';
+
+import { getDevicesByStatus, updateDeviceAuth } from '../../actions/deviceActions';
 
 import AppActions from '../../actions/app-actions';
 import AppStore from '../../stores/app-store';
+import { DEVICE_STATES } from '../../constants/deviceConstants';
 import { preformatWithRequestID } from '../../helpers';
+import { getOnboardingComponentFor, advanceOnboarding, getOnboardingStepCompleted } from '../../utils/onboardingmanager';
 import Loader from '../common/loader';
 import { DevicePendingTip } from '../helptips/onboardingtips';
 import DeviceList from './devicelist';
-import { getOnboardingComponentFor, advanceOnboarding, getOnboardingStepCompleted } from '../../utils/onboardingmanager';
 
-export default class Pending extends React.Component {
+class Pending extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      count: AppStore.getTotalPendingDevices(),
-      devices: AppStore.getPendingDevices(),
       pageNo: 1,
       pageLength: 20,
       selectedRows: [],
@@ -50,21 +52,15 @@ export default class Pending extends React.Component {
     }
   }
 
-  shouldComponentUpdate(_, nextState) {
-    return !this.state.devices.every((device, index) => device === nextState.devices[index]) || true;
+  shouldComponentUpdate(nextProps) {
+    return !this.props.devices.every((device, index) => device === nextProps.devices[index]) || true;
   }
 
   _onChange() {
     const self = this;
-    let state = {
-      devices: AppStore.getPendingDevices(),
-      count: AppStore.getTotalPendingDevices()
-    };
-    if (!state.devices.length && state.count) {
+    if (!self.props.devices.length && self.props.count) {
       //if devices empty but count not, put back to first page
       self._handlePageChange(1);
-    } else {
-      self.setState(state);
     }
   }
 
@@ -73,8 +69,8 @@ export default class Pending extends React.Component {
    */
   _getDevices() {
     var self = this;
-    AppActions.getDevicesByStatus('pending', this.state.pageNo, this.state.pageLength)
-      // TODO: get inventory data for all devices retrieved here to get proper updated_ts
+    self.props
+      .getDevicesByStatus(DEVICE_STATES.pending, this.state.pageNo, this.state.pageLength)
       .catch(error => {
         console.log(error);
         var errormsg = error.error || 'Please check your connection.';
@@ -100,7 +96,7 @@ export default class Pending extends React.Component {
   _getDevicesFromSelectedRows() {
     // use selected rows to get device from corresponding position in devices array
     const self = this;
-    const devices = self.state.selectedRows.map(row => self.state.devices[row]);
+    const devices = self.state.selectedRows.map(row => self.props.devices[row]);
     return devices;
   }
 
@@ -131,7 +127,8 @@ export default class Pending extends React.Component {
         return Promise.resolve();
       }
       // api call device.id and device.authsets[0].id
-      return AppActions.updateDeviceAuth(device.id, device.auth_sets[0].id, 'accepted')
+      return self.props
+        .updateDeviceAuth(device.id, device.auth_sets[0].id, DEVICE_STATES.accepted)
         .then(() => count++)
         .catch(err => {
           var errMsg = err.res.error.message || '';
@@ -168,7 +165,7 @@ export default class Pending extends React.Component {
   render() {
     const self = this;
     var limitMaxed = this.props.deviceLimit ? this.props.deviceLimit <= this.props.acceptedDevices : false;
-    var limitNear = this.props.deviceLimit ? this.props.deviceLimit < this.props.acceptedDevices + this.state.devices.length : false;
+    var limitNear = this.props.deviceLimit ? this.props.deviceLimit < this.props.acceptedDevices + this.props.devices.length : false;
     var selectedOverLimit = this.props.deviceLimit ? this.props.deviceLimit < this.props.acceptedDevices + this.state.selectedRows.length : false;
 
     const columnHeaders = [
@@ -221,7 +218,7 @@ export default class Pending extends React.Component {
         };
         onboardingComponent = getOnboardingComponentFor('devices-pending-accepting-onboarding', { place: 'left', anchor });
       }
-      if (AppStore.getTotalAcceptedDevices() && !window.sessionStorage.getItem('pendings-redirect')) {
+      if (self.props.acceptedDevices && !window.sessionStorage.getItem('pendings-redirect')) {
         window.sessionStorage.setItem('pendings-redirect', true);
         return <Redirect to="/devices" />;
       }
@@ -231,10 +228,10 @@ export default class Pending extends React.Component {
       <div className="tab-container">
         <Loader show={this.state.authLoading} />
 
-        {this.state.devices.length && (!this.state.pageLoading || this.state.authLoading !== 'all') ? (
+        {this.props.devices.length && (!this.state.pageLoading || this.state.authLoading !== 'all') ? (
           <div className="padding-bottom" ref={ref => (this.deviceListRef = ref)}>
             <h3 className="align-center">
-              {this.state.count} {pluralize('devices', this.state.count)} pending authorization
+              {this.props.count} {pluralize('devices', this.props.count)} pending authorization
             </h3>
 
             {deviceLimitWarning}
@@ -248,7 +245,7 @@ export default class Pending extends React.Component {
               onSelect={selection => self.onRowSelection(selection)}
               onChangeRowsPerPage={pageLength => self.setState({ pageNo: 1, pageLength })}
               onPageChange={e => self._handlePageChange(e)}
-              pageTotal={self.state.count}
+              pageTotal={self.props.count}
               refreshDevices={() => self._getDevices()}
             />
           </div>
@@ -295,3 +292,19 @@ export default class Pending extends React.Component {
     );
   }
 }
+
+const actionCreators = { getDevicesByStatus, updateDeviceAuth };
+
+const mapStateToProps = state => {
+  return {
+    acceptedDevices: state.devices.byStatus.accepted.total || 0,
+    devices: state.devices.selectedDeviceList,
+    deviceLimit: state.devices.limit,
+    count: state.devices.byStatus.pending.total
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  actionCreators
+)(Pending);

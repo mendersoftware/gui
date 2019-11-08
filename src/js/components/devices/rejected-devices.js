@@ -1,17 +1,18 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import Time from 'react-time';
 
+import { getDevicesByStatus } from '../../actions/deviceActions';
 import AppActions from '../../actions/app-actions';
 import AppStore from '../../stores/app-store';
+import { DEVICE_STATES } from '../../constants/deviceConstants';
 import Loader from '../common/loader';
 import DeviceList from './devicelist';
 
-export default class Rejected extends React.Component {
+class Rejected extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      count: AppStore.getTotalRejectedDevices(),
-      devices: AppStore.getRejectedDevices(),
       pageNo: 1,
       pageLength: 20,
       refreshDeviceLength: 10000,
@@ -37,21 +38,15 @@ export default class Rejected extends React.Component {
     }
   }
 
-  shouldComponentUpdate(_, nextState) {
-    return this.state.pageLoading != nextState.pageLoading || this.state.devices.some((device, index) => device !== nextState.devices[index]);
+  shouldComponentUpdate(nextProps) {
+    return this.state.pageLoading != nextProps.pageLoading || this.props.devices.some((device, index) => device !== nextProps.devices[index]);
   }
 
   _onChange() {
     const self = this;
-    let state = {
-      devices: AppStore.getRejectedDevices(),
-      count: AppStore.getTotalRejectedDevices()
-    };
-    if (!state.devices.length && state.count) {
+    if (!self.props.devices.length && self.props.count) {
       //if devices empty but count not, put back to first page
       self._handlePageChange(1);
-    } else {
-      self.setState(state);
     }
   }
 
@@ -60,7 +55,8 @@ export default class Rejected extends React.Component {
    */
   _getDevices() {
     var self = this;
-    AppActions.getDevicesByStatus('rejected', this.state.pageNo, this.state.pageLength)
+    self.props
+      .getDevicesByStatus(DEVICE_STATES.rejected, this.state.pageNo, this.state.pageLength)
       // TODO: get inventory data for all devices retrieved here to get proper updated_ts
       .catch(error => {
         console.log(error);
@@ -113,7 +109,7 @@ export default class Rejected extends React.Component {
       <div className="tab-container">
         <Loader show={this.state.pageLoading} />
 
-        {this.state.devices.length && !this.state.pageLoading ? (
+        {this.props.devices.length && !this.state.pageLoading ? (
           <div className="padding-bottom">
             <h3 className="align-center">Rejected devices</h3>
             <DeviceList
@@ -122,7 +118,7 @@ export default class Rejected extends React.Component {
               columnHeaders={columnHeaders}
               limitMaxed={limitMaxed}
               onPageChange={e => self._handlePageChange(e)}
-              pageTotal={self.state.count}
+              pageTotal={self.props.count}
               refreshDevices={() => self._getDevices()}
             />
           </div>
@@ -135,3 +131,19 @@ export default class Rejected extends React.Component {
     );
   }
 }
+
+const actionCreators = { getDevicesByStatus };
+
+const mapStateToProps = state => {
+  return {
+    acceptedDevices: state.devices.byStatus.rejected.total || 0,
+    devices: state.devices.selectedDeviceList,
+    deviceLimit: state.devices.limit,
+    count: state.devices.byStatus.rejected.total
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  actionCreators
+)(Rejected);

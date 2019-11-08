@@ -1,37 +1,24 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import Dropzone from 'react-dropzone';
 import Time from 'react-time';
 
 // material ui
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Fab from '@material-ui/core/Fab';
-import FormControl from '@material-ui/core/FormControl';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import IconButton from '@material-ui/core/IconButton';
-import Input from '@material-ui/core/Input';
-import TextField from '@material-ui/core/TextField';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Fab, FormControl, FormHelperText, IconButton, Input, TextField } from '@material-ui/core';
+import { Add as ContentAddIcon, Clear as ClearIcon, CloudUpload as FileIcon, InfoOutlined as InfoIcon } from '@material-ui/icons';
 
-import ContentAddIcon from '@material-ui/icons/Add';
-import ClearIcon from '@material-ui/icons/Clear';
-import FileIcon from '@material-ui/icons/CloudUpload';
-import InfoIcon from '@material-ui/icons/InfoOutlined';
-
+import { getDeviceCount, getDevicesByStatus, preauthDevice } from '../../actions/deviceActions';
 import AppActions from '../../actions/app-actions';
 import AppStore from '../../stores/app-store';
+import { DEVICE_STATES } from '../../constants/deviceConstants';
 import { isEmpty, preformatWithRequestID } from '../../helpers';
 import Loader from '../common/loader';
 import DeviceList from './devicelist';
 
-export default class Preauthorize extends React.Component {
+class Preauthorize extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      count: AppStore.getTotalPreauthDevices(),
-      devices: AppStore.getPreauthorizedDevices(),
       pageNo: 1,
       pageLength: 20,
       pageLoading: true,
@@ -64,21 +51,15 @@ export default class Preauthorize extends React.Component {
     }
   }
 
-  shouldComponentUpdate(_, nextState) {
-    return !this.state.devices.every((device, index) => device === nextState.devices[index]) || true;
+  shouldComponentUpdate(nextProps) {
+    return !this.props.devices.every((device, index) => device === nextProps.devices[index]) || true;
   }
 
   _onChange() {
     const self = this;
-    let state = {
-      devices: AppStore.getPreauthorizedDevices(),
-      count: AppStore.getTotalPreauthDevices()
-    };
-    if (!self.state.pageLoading && (!state.devices.length && state.count)) {
+    if (!self.state.pageLoading && (!self.props.devices.length && self.props.count)) {
       //if devices empty but count not, put back to first page
       self._handlePageChange(1);
-    } else {
-      self.setState(state);
     }
   }
 
@@ -87,7 +68,10 @@ export default class Preauthorize extends React.Component {
    */
   _getDevices() {
     var self = this;
-    AppActions.getDevicesByStatus('preauthorized', this.state.pageNo, this.state.pageLength)
+    Promise.all([
+      self.props.getDevicesByStatus(DEVICE_STATES.preauth, this.state.pageNo, this.state.pageLength),
+      self.props.getDeviceCount(DEVICE_STATES.preauth)
+    ])
       .catch(error => {
         console.log(error);
         var errormsg = error.res.body.error || 'Please check your connection.';
@@ -160,11 +144,11 @@ export default class Preauthorize extends React.Component {
       pubkey: this.state.public,
       identity_data: this.state.json_identity
     };
-    AppActions.preauthDevice(authset)
+    self.props
+      .preauthDevice(authset)
       .then(() => {
         AppActions.setSnackbar('Device was successfully added to the preauthorization list', 5000);
         self._getDevices();
-        self.props.refreshCount();
         self._togglePreauth(!close);
       })
       .catch(err => {
@@ -294,7 +278,7 @@ export default class Preauthorize extends React.Component {
 
         <Loader show={this.state.pageLoading} />
 
-        {this.state.devices.length && !this.state.pageLoading ? (
+        {this.props.devices.length && !this.state.pageLoading ? (
           <div className="padding-bottom">
             <h3 className="align-center">Preauthorized devices</h3>
             {deviceLimitWarning}
@@ -304,7 +288,7 @@ export default class Preauthorize extends React.Component {
               columnHeaders={columnHeaders}
               limitMaxed={limitMaxed}
               onPageChange={e => self._handlePageChange(e)}
-              pageTotal={self.state.count}
+              pageTotal={self.props.count}
               refreshDevices={() => self._getDevices()}
             />
           </div>
@@ -377,3 +361,19 @@ export default class Preauthorize extends React.Component {
     );
   }
 }
+
+const actionCreators = { getDeviceCount, getDevicesByStatus, preauthDevice };
+
+const mapStateToProps = state => {
+  return {
+    acceptedDevices: state.devices.byStatus.accepted.total || 0,
+    devices: state.devices.selectedDeviceList,
+    deviceLimit: state.devices.limit,
+    count: state.devices.byStatus.preauth.total
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  actionCreators
+)(Preauthorize);

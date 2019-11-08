@@ -1,16 +1,12 @@
 import React from 'react';
+import { Collapse } from 'react-collapse';
+import Time from 'react-time';
+
+import { Button, Table, TableBody, TableHead, TableCell, TableRow } from '@material-ui/core';
 
 import { formatTime, formatPublicKey } from '../../helpers';
-import Time from 'react-time';
-import { Collapse } from 'react-collapse';
+import { DEVICE_STATES } from '../../constants/deviceConstants';
 import Loader from '../common/loader';
-
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import TableCell from '@material-ui/core/TableCell';
-import Button from '@material-ui/core/Button';
 
 export default class AuthsetList extends React.Component {
   constructor(props, context) {
@@ -44,7 +40,7 @@ export default class AuthsetList extends React.Component {
 
       if (self.state.newStatus === 'accept') {
         confirmMessage = 'By accepting, the device with this identity data and public key will be granted authentication by the server.';
-        if (self.props.device.status === 'accepted') {
+        if (self.props.device.status === DEVICE_STATES.accepted) {
           // if device already accepted, and you are accepting a different authset:
           confirmMessage = `${confirmMessage} The previously accepted public key will be rejected automatically in favor of this new key.`;
         }
@@ -52,17 +48,17 @@ export default class AuthsetList extends React.Component {
 
       if (self.state.newStatus === 'reject') {
         confirmMessage = 'The device with this identity data and public key will be rejected, and blocked from communicating with the Mender server.';
-        if (self.props.device.status === 'accepted' && authset.status !== 'accepted') {
+        if (self.props.device.status === DEVICE_STATES.accepted && authset.status !== DEVICE_STATES.accepted) {
           // if device is accepted but you are rejecting an authset that is not accepted, device status is unaffected:
           confirmMessage = `${confirmMessage} Rejecting this request will not affect the device status as it is using a different key. `;
         }
       }
 
       if (self.state.newStatus === 'dismiss') {
-        if (authset.status === 'preauthorized') {
+        if (authset.status === DEVICE_STATES.preauth) {
           confirmMessage = 'The device authentication set will be removed from the preauthorization list.';
         }
-        if (authset.status === 'accepted') {
+        if (authset.status === DEVICE_STATES.accepted) {
           if (self.props.device.auth_sets.length > 1) {
             // if there are other authsets, device will still be in UI
             confirmMessage = 'The device with this public key will no longer be accepted, and this authorization request will be removed from the UI.';
@@ -71,7 +67,7 @@ export default class AuthsetList extends React.Component {
               'The device with this public key will no longer be accepted, and will be removed from the UI. If it makes another request in future, it will show again as pending for you to accept or reject at that time.';
           }
         }
-        if (authset.status === 'pending') {
+        if (authset.status === DEVICE_STATES.pending) {
           confirmMessage = 'You can dismiss this authentication request for now.';
           if (self.props.device.auth_sets.length > 1) {
             // it has other authsets
@@ -80,7 +76,7 @@ export default class AuthsetList extends React.Component {
             confirmMessage = `${confirmMessage} The device will be removed from the UI, but if the same device asks for authentication again in the future, it will show again as pending.`;
           }
         }
-        if (authset.status === 'rejected') {
+        if (authset.status === DEVICE_STATES.rejected) {
           confirmMessage =
             'This request will be removed from the UI, but if the device asks for authentication again in the future, it will show as pending for you to accept or reject it at that time.';
         }
@@ -117,19 +113,19 @@ export default class AuthsetList extends React.Component {
         `Confirm ${self.state.newStatus}?`
       ) : (
         <div className="actionButtons">
-          {authset.status !== 'accepted' && authset.status !== 'preauthorized' && !self.props.limitMaxed ? (
+          {authset.status !== DEVICE_STATES.accepted && authset.status !== DEVICE_STATES.preauth && !self.props.limitMaxed ? (
             <a onClick={self.props.total > 1 ? () => self.setConfirmStatus(authset, 'accept', index) : () => self.confirm(authset, 'accept')}>Accept</a>
           ) : (
             <span className="bold muted">Accept</span>
           )}
-          {authset.status !== 'rejected' && authset.status !== 'preauthorized' ? (
+          {authset.status !== DEVICE_STATES.rejected && authset.status !== DEVICE_STATES.preauth ? (
             <a onClick={() => self.setConfirmStatus(authset, 'reject', index)}>Reject</a>
           ) : (
             <span className="bold muted">Reject</span>
           )}
           <a
             onClick={
-              self.props.total > 1 || self.props.device.status !== 'pending'
+              self.props.total > 1 || self.props.device.status !== DEVICE_STATES.pending
                 ? () => self.setConfirmStatus(authset, 'dismiss', index)
                 : () => self.confirm(authset, 'dismiss')
             }
