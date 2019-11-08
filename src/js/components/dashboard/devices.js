@@ -1,21 +1,21 @@
 import React from 'react';
+import { connect } from 'react-redux';
 
+import { getAllDevices, getAllDevicesByStatus, getDeviceCount } from '../../actions/deviceActions';
 import AppActions from '../../actions/app-actions';
 import AppStore from '../../stores/app-store';
+import { DEVICE_STATES } from '../../constants/deviceConstants';
 import AcceptedDevices from './widgets/accepteddevices';
 import RedirectionWidget from './widgets/redirectionwidget';
 import PendingDevices from './widgets/pendingdevices';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 
-export default class Devices extends React.Component {
+class Devices extends React.Component {
   constructor(props, state) {
     super(props, state);
     const self = this;
     self.state = {
       deltaActivity: 0,
-      devices: AppStore.getTotalAcceptedDevices(),
-      inactiveDevices: 0,
-      pendingDevices: AppStore.getTotalPendingDevices(),
       onboardingComplete: AppStore.getOnboardingComplete(),
       showHelptips: AppStore.showHelptips(),
       loading: null
@@ -24,9 +24,9 @@ export default class Devices extends React.Component {
     self.refreshDevicesLength = 30000;
     // on render the store might not be updated so we resort to the API and let all later request go through the store
     // to be in sync with the rest of the UI
-    AppActions.getAllDevicesByStatus('pending').then(devices => self.setState({ pendingDevices: devices.length }));
     self._refreshDevices();
   }
+
   componentDidMount() {
     var self = this;
     self.timer = setInterval(() => self._refreshDevices(), self.refreshDevicesLength);
@@ -36,37 +36,20 @@ export default class Devices extends React.Component {
   }
 
   _refreshDevices() {
-    const self = this;
-    if (self.state.loading || self.state.devices > AppStore.getDeploymentDeviceLimit()) {
+    if (this.props.devices.length > AppStore.getDeploymentDeviceLimit()) {
       return;
     }
-    if (self.state.loading !== null) {
-      self.setState({ loading: true });
-    }
-    return AppActions.getAllDevicesByStatus('accepted')
-      .then(AppActions.getDevicesWithInventory)
-      .catch(() => Promise.resolve([]))
-      .then(devices => {
-        const yesterday = new Date();
-        yesterday.setDate(yesterday.getDate() - 1);
-        const yesterdaysIsoString = yesterday.toISOString();
-        const inactiveDevices = devices
-          // now boil the list down to the ones that were not updated since yesterday
-          .reduce((accu, item) => {
-            if (item.updated_ts < yesterdaysIsoString) {
-              accu.push(item);
-            }
-            return accu;
-          }, []).length;
-        const deltaActivity = this._updateDeviceActivityHistory(new Date(), yesterday, devices.length);
-        return Promise.resolve({ devices: devices.length, inactiveDevices, deltaActivity });
-      })
-      .catch(() => Promise.resolve({ devices: 0, inactiveDevices: 0, deltaActivity: 0 }))
-      .then(result => self.setState({ pendingDevices: AppStore.getTotalPendingDevices(), ...result }))
-      .finally(() => self.setState({ loading: false }));
+    this.props.getAllDevicesByStatus(DEVICE_STATES.accepted);
+    this.props.getDeviceCount(DEVICE_STATES.pending);
+    this.props.getAllDevices();
+    const deltaActivity = this._updateDeviceActivityHistory(this.props.activeDevicesCount);
+    this.setState({ deltaActivity });
   }
 
-  _updateDeviceActivityHistory(today, yesterday, deviceCount) {
+  _updateDeviceActivityHistory(deviceCount) {
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    const today = new Date();
     const jsonContent = window.localStorage.getItem('dailyDeviceActivityCount');
     let history = [];
     try {
@@ -98,9 +81,9 @@ export default class Devices extends React.Component {
   }
 
   render() {
-    const { devices, inactiveDevices, onboardingComplete, pendingDevices, deltaActivity, showHelptips } = this.state;
-    const hasPending = pendingDevices > 0 || AppStore.getTotalPendingDevices() > 0;
-    const noDevicesAvailable = !devices && !hasPending;
+    const { onboardingComplete, deltaActivity, showHelptips } = this.state;
+    const { devices, inactiveDevicesCount, pendingDevicesCount } = this.props;
+    const noDevicesAvailable = !(devices.length + pendingDevicesCount > 0);
     let onboardingComponent = null;
     if (this.anchor) {
       const element = this.anchor.children[this.anchor.children.length - 1];
@@ -122,16 +105,16 @@ export default class Devices extends React.Component {
           <span>Devices</span>
         </h4>
         <div style={Object.assign({ marginBottom: '30px', marginTop: '50px' }, this.props.styles)} ref={element => (this.anchor = element)}>
-          {hasPending ? (
+          {!!pendingDevicesCount && (
             <PendingDevices
-              pendingDevicesCount={pendingDevices || AppStore.getTotalPendingDevices()}
-              isActive={hasPending}
+              pendingDevicesCount={pendingDevicesCount}
+              isActive={pendingDevicesCount > 0}
               showHelptips={showHelptips}
               onClick={this.props.clickHandle}
               ref={ref => (this.pendingsRef = ref)}
             />
-          ) : null}
-          <AcceptedDevices devicesCount={devices} inactiveCount={inactiveDevices} delta={deltaActivity} onClick={this.props.clickHandle} />
+          )}
+          <AcceptedDevices devicesCount={devices.length} inactiveCount={inactiveDevicesCount} delta={deltaActivity} onClick={this.props.clickHandle} />
           <RedirectionWidget
             target={redirectionRoute}
             content={`Learn how to connect ${onboardingComplete ? 'more devices' : 'a device'}`}
@@ -150,3 +133,19 @@ export default class Devices extends React.Component {
     );
   }
 }
+
+const actionCreators = { getAllDevices, getAllDevicesByStatus, getDeviceCount };
+
+const mapStateToProps = state => {
+  return {
+    activeDevicesCount: state.devices.byStatus.active.total,
+    inactiveDevicesCount: state.devices.byStatus.inactive.total,
+    devices: state.devices.byStatus.accepted.deviceIds,
+    pendingDevicesCount: state.devices.byStatus.pending.total
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  actionCreators
+)(Devices);
