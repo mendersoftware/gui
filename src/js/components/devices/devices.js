@@ -1,23 +1,15 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import pluralize from 'pluralize';
 
-import Tab from '@material-ui/core/Tab';
-import Tabs from '@material-ui/core/Tabs';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Button from '@material-ui/core/Button';
-import Table from '@material-ui/core/Table';
-import TableHead from '@material-ui/core/TableHead';
-import TableCell from '@material-ui/core/TableCell';
-import TableBody from '@material-ui/core/TableBody';
-import TableRow from '@material-ui/core/TableRow';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Tab, Tabs, Table, TableBody, TableCell, TableHead, TableRow } from '@material-ui/core';
 
 import AppStore from '../../stores/app-store';
+import { getAllDeviceCounts } from '../../actions/deviceActions';
 import AppActions from '../../actions/app-actions';
+import { DEVICE_STATES } from '../../constants/deviceConstants';
 import { clearAllRetryTimers } from '../../utils/retrytimer';
 import Global from '../settings/global';
 import DeviceGroups from './device-groups';
@@ -28,17 +20,17 @@ import PreauthDevices from './preauthorize-devices';
 const routes = {
   pending: {
     route: '/devices/pending',
-    status: 'pending',
+    status: DEVICE_STATES.pending,
     title: 'Pending'
   },
   preauthorized: {
     route: '/devices/preauthorized',
-    status: 'preauthorized',
+    status: DEVICE_STATES.preauth,
     title: 'Preauthorized'
   },
   rejected: {
     route: '/devices/rejected',
-    status: 'rejected',
+    status: DEVICE_STATES.rejected,
     title: 'Rejected'
   },
   devices: {
@@ -48,7 +40,7 @@ const routes = {
   }
 };
 
-export default class Devices extends React.Component {
+class Devices extends React.Component {
   static contextTypes = {
     router: PropTypes.object
   };
@@ -56,6 +48,7 @@ export default class Devices extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = this._getInitialState();
+    this.props.getAllDeviceCounts();
   }
 
   componentWillMount() {
@@ -76,45 +69,24 @@ export default class Devices extends React.Component {
     return {
       currentTab: this._getCurrentLabel(),
       tabIndex: this._updateActive(),
-      acceptedCount: AppStore.getTotalAcceptedDevices(),
-      rejectedCount: AppStore.getTotalRejectedDevices(),
-      preauthCount: AppStore.getTotalPreauthDevices(),
-      pendingCount: AppStore.getTotalPendingDevices(),
       refreshLength: 10000,
-      showHelptips: AppStore.showHelptips(),
-      deviceLimit: AppStore.getDeviceLimit()
+      showHelptips: AppStore.showHelptips()
     };
   }
   _onChange() {
-    this.setState(this._getInitialState(), this._getAllCount);
-  }
-
-  _refreshAll() {
-    AppActions.getDeviceCount('accepted');
-    AppActions.getDeviceCount('rejected');
-    AppActions.getDeviceCount('pending');
-    AppActions.getDeviceCount('preauthorized');
+    this.setState(this._getInitialState());
   }
 
   _restartInterval() {
     var self = this;
     clearInterval(self.interval);
     self.interval = setInterval(() => {
-      self._refreshAll();
+      self.props.getAllDeviceCounts();
     }, self.state.refreshLength);
-    self._refreshAll();
+    self.props.getAllDeviceCounts();
   }
   _changeTab() {
     AppActions.setSnackbar('');
-  }
-  /*
-   * Get counts of devices
-   */
-  _getAllCount() {
-    var self = this;
-    var accepted = self.state.acceptedCount ? self.state.acceptedCount : 0;
-    var rejected = self.state.rejectedCount ? self.state.rejectedCount : 0;
-    self.setState({ allCount: accepted + rejected });
   }
 
   // nested tabs
@@ -174,7 +146,7 @@ export default class Devices extends React.Component {
       </div>
     ];
 
-    var pendingLabel = this.state.pendingCount ? `Pending (${this.state.pendingCount})` : 'Pending';
+    var pendingLabel = this.props.pendingCount ? `Pending (${this.props.pendingCount})` : 'Pending';
 
     const tabIndex = this.context.router.route.match.params.status || 'devices';
     return (
@@ -187,9 +159,8 @@ export default class Devices extends React.Component {
         </Tabs>
         {tabIndex === routes.pending.status && (
           <PendingDevices
-            deviceLimit={this.state.deviceLimit}
             currentTab={this.state.currentTab}
-            highlightHelp={!this.state.acceptedCount}
+            highlightHelp={!this.props.acceptedCount}
             openSettingsDialog={() => this._openSettingsDialog()}
             restart={() => this._restartInterval()}
             pause={() => this._pauseInterval()}
@@ -199,7 +170,6 @@ export default class Devices extends React.Component {
           <PreauthDevices
             deviceLimit={this.state.deviceLimit}
             currentTab={this.state.currentTab}
-            refreshCount={() => AppActions.getDeviceCount('preauthorized')}
             openSettingsDialog={() => this._openSettingsDialog()}
             pause={() => this._pauseInterval()}
           />
@@ -215,8 +185,7 @@ export default class Devices extends React.Component {
         {tabIndex === routes.devices.status && (
           <DeviceGroups
             params={this.props.params}
-            acceptedDevices={this.state.acceptedCount}
-            allCount={this.state.allCount}
+            acceptedDevices={this.props.acceptedCount}
             currentTab={this.state.currentTab}
             openSettingsDialog={() => this._openSettingsDialog()}
             pause={() => this._pauseInterval()}
@@ -245,7 +214,7 @@ export default class Devices extends React.Component {
               </TableHead>
               <TableBody>
                 {(this.state.duplicates || []).map(function(device) {
-                  var status = device.status === 'accepted' ? '' : `/${device.status}`;
+                  var status = device.status === DEVICE_STATES.accepted ? '' : `/${device.status}`;
                   return (
                     <TableRow hover key={device.device_id}>
                       <TableCell>
@@ -271,3 +240,20 @@ export default class Devices extends React.Component {
     );
   }
 }
+
+const actionCreators = { getAllDeviceCounts };
+
+const mapStateToProps = state => {
+  let devices = state.devices.selectedDeviceList;
+  return {
+    acceptedCount: state.devices.byStatus.accepted.total,
+    pendingCount: state.devices.byStatus.pending.total,
+    deviceLimit: state.devices.limit,
+    devices
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  actionCreators
+)(Devices);

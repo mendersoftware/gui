@@ -123,18 +123,12 @@ export default class Authorized extends React.Component {
       {
         title: 'Device type',
         name: 'device_type',
-        render: device => {
-          const found = (device.attributes || []).find(item => item.name === 'device_type');
-          return found ? found.value : '-';
-        }
+        render: device => (device.attributes && device.attributes.device_type ? device.attributes.device_type : '-')
       },
       {
         title: 'Current software',
         name: 'current_software',
-        render: device => {
-          const found = (device.attributes || []).find(item => item.name === 'artifact_name');
-          return found ? found.value : '-';
-        }
+        render: device => (device.attributes && device.attributes.artifact_name ? device.attributes.artifact_name : '-')
       },
       {
         title: 'Last check-in',

@@ -1,35 +1,38 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import cookie from 'react-cookie';
 import validator from 'validator';
-import Button from '@material-ui/core/Button';
-import Checkbox from '@material-ui/core/Checkbox';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import DialogContent from '@material-ui/core/DialogContent';
-import FormControl from '@material-ui/core/FormControl';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import Input from '@material-ui/core/Input';
-import InputLabel from '@material-ui/core/InputLabel';
-import Table from '@material-ui/core/Table';
-import TableHead from '@material-ui/core/TableHead';
-import TableCell from '@material-ui/core/TableCell';
-import TableBody from '@material-ui/core/TableBody';
-import TableRow from '@material-ui/core/TableRow';
+import {
+  Button,
+  Checkbox,
+  Dialog,
+  DialogActions,
+  DialogTitle,
+  DialogContent,
+  FormControl,
+  FormControlLabel,
+  FormHelperText,
+  Input,
+  InputLabel,
+  Table,
+  TableHead,
+  TableCell,
+  TableBody,
+  TableRow
+} from '@material-ui/core';
+import { ErrorOutline as ErrorOutlineIcon } from '@material-ui/icons';
 
-import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
-
-import AppActions from '../../actions/app-actions';
+import { getDevicesByStatus } from '../../actions/deviceActions';
 import AppConstants from '../../constants/app-constants';
+import { DEVICE_STATES } from '../../constants/deviceConstants';
 import AppStore from '../../stores/app-store';
 import Loader from '../common/loader';
-import { mapDeviceAttributes } from '../../helpers';
 
-export default class CreateGroup extends React.Component {
+class CreateGroup extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = this._getInitialState();
+    this.props.getDevicesByStatus(DEVICE_STATES.accepted, this.state.pageNo, this.state.pageLength);
   }
 
   componentDidUpdate(prevProps) {
@@ -45,45 +48,22 @@ export default class CreateGroup extends React.Component {
       newGroup: '',
       nextInvalid: true,
       createInvalid: true,
-      devices: [],
       selectedRows: [],
       pageNo: 1,
-      pageLength: 0,
+      pageLength: 10,
       user: AppStore.getCurrentUser()
     };
   }
 
   _getDevices() {
     var self = this;
-    return AppActions.getDevicesByStatus('accepted', this.state.pageNo, this.state.pageLength)
-      .then(devices => {
-        self.setState({ devices, loading: false, pageLoading: false }, () => {
-          // for each device, get inventory
-          const devicesInventoryRequests = devices.map(device => {
-            // have to call inventory each time - accepted list can change order so must refresh inventory too
-            return self._getInventoryForDevice(device.id).then(inventory => {
-              device.attributes = inventory.attributes;
-              return Promise.resolve(device);
-            });
-          });
-          return Promise.all(devicesInventoryRequests).then(devicesInventory => self.setState({ devices: devicesInventory }));
-        });
-      })
+    return self.props
+      .getDevicesByStatus(DEVICE_STATES.accepted, this.state.pageNo, this.state.pageLength)
       .catch(err => {
         console.log(err.error || 'Please check your connection.');
-        self.setState({ loading: false });
         // setRetryTimer(err, "devices", "Devices couldn't be loaded. " + errormsg, self.state.refreshDeviceLength);
-      });
-  }
-
-  _getInventoryForDevice(device_id) {
-    // get inventory for single device
-    return AppActions.getDeviceById(device_id).catch(err => {
-      if (err.res.statusCode !== 404) {
-        // don't show error if 404 - device hasn't received inventory yet
-        console.log(err);
-      }
-    });
+      })
+      .finally(() => self.setState({ loading: false, pageLoading: false }));
   }
 
   _createGroupHandler() {
@@ -102,11 +82,7 @@ export default class CreateGroup extends React.Component {
   }
 
   _createGroupFromSelected() {
-    var devices = [];
-    for (var i = 0; i < this.state.selectedRows.length; i++) {
-      var device = this.state.devices[this.state.selectedRows[i]];
-      devices.push(device);
-    }
+    const devices = this.state.selectedRows.map(row => this.props.devices[row]);
     // cookie exists || if no other groups exist, continue to create group
     this.props.addListOfDevices(devices, this.state.newGroup);
     this.setState({ showWarning: false });
@@ -166,8 +142,8 @@ export default class CreateGroup extends React.Component {
 
   onSelectAllClick() {
     const self = this;
-    let selectedRows = Array.apply(null, { length: this.state.devices.length }).map(Number.call, Number);
-    if (self.state.selectedRows.length && self.state.selectedRows.length <= self.state.devices.length) {
+    let selectedRows = Array.apply(null, { length: this.props.devices.length }).map(Number.call, Number);
+    if (self.state.selectedRows.length && self.state.selectedRows.length <= self.props.devices.length) {
       selectedRows = [];
     }
     self.setState({ selectedRows, createInvalid: !selectedRows.length });
@@ -204,20 +180,20 @@ export default class CreateGroup extends React.Component {
 
     const globalSettings = AppStore.getGlobalSettings();
 
-    var deviceList = self.state.devices.map((device, index) => {
-      var id_attribute =
-        globalSettings.id_attribute && globalSettings.id_attribute !== 'Device ID'
-          ? (device.identity_data || {})[globalSettings.id_attribute]
-          : device.device_id || device.id;
+    var deviceList = self.props.devices.map((device, index) => {
+      let id_attribute = device.device_id || device.id;
+      if (globalSettings.id_attribute && globalSettings.id_attribute !== 'Device ID') {
+        id_attribute = (device.identity_data || {})[globalSettings.id_attribute];
+      }
 
-      var attrs = mapDeviceAttributes(device.attributes || []);
+      const deviceType = device.attributes ? device.attributes.device_type : '-';
       return (
         <TableRow selected={self._isSelected(index)} hover key={index} onClick={() => self._onRowSelection(index)}>
           <TableCell padding="checkbox">
             <Checkbox checked={self._isSelected(index)} />
           </TableCell>
           <TableCell>{id_attribute}</TableCell>
-          <TableCell>{attrs.device_type}</TableCell>
+          <TableCell>{deviceType}</TableCell>
         </TableRow>
       );
     });
@@ -276,8 +252,8 @@ export default class CreateGroup extends React.Component {
                     <TableRow>
                       <TableCell padding="checkbox">
                         <Checkbox
-                          indeterminate={numSelected > 0 && numSelected < self.state.devices.length}
-                          checked={numSelected === self.state.devices.length}
+                          indeterminate={numSelected > 0 && numSelected < self.props.devices.length}
+                          checked={numSelected === self.props.devices.length}
                           onChange={() => self.onSelectAllClick()}
                         />
                       </TableCell>
@@ -313,3 +289,16 @@ export default class CreateGroup extends React.Component {
     );
   }
 }
+
+const actionCreators = { getDevicesByStatus };
+
+const mapStateToProps = state => {
+  const deviceList = state.devices.selectedDeviceList.length > 0 ? state.devices.selectedDeviceList : [];
+  const devices = deviceList.map(id => state.devices.byId[id]);
+  return { devices };
+};
+
+export default connect(
+  mapStateToProps,
+  actionCreators
+)(CreateGroup);

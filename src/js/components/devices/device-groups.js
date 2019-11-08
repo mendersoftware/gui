@@ -1,14 +1,10 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import pluralize from 'pluralize';
 
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-
-import DeleteIcon from '@material-ui/icons/Delete';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@material-ui/core';
+import { Delete as DeleteIcon } from '@material-ui/icons';
 
 import CreateGroup from './create-group';
 import AuthorizedDevices from './authorized-devices';
@@ -16,14 +12,28 @@ import Filters from './filters';
 import Groups from './groups';
 import GroupSelector from './groupselector';
 import AppActions from '../../actions/app-actions';
+import {
+  addDeviceToGroup,
+  getAllDevicesByStatus,
+  getDevices,
+  getDevicesByStatus,
+  getGroups,
+  getGroupDevices,
+  removeDeviceFromGroup,
+  selectGroup,
+  selectDevice,
+  selectDevices
+} from '../../actions/deviceActions';
+
 import AppStore from '../../stores/app-store';
 import AppConstants from '../../constants/app-constants';
+import { DEVICE_STATES } from '../../constants/deviceConstants';
 import { isEmpty, preformatWithRequestID } from '../../helpers';
 import { setRetryTimer, clearAllRetryTimers } from '../../utils/retrytimer';
 
 const UNGROUPED_GROUP = AppConstants.UNGROUPED_GROUP;
 
-export default class DeviceGroups extends React.Component {
+class DeviceGroups extends React.Component {
   static contextTypes = {
     router: PropTypes.object
   };
@@ -31,17 +41,11 @@ export default class DeviceGroups extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      groups: AppStore.getGroups(),
-      selectedGroup: AppStore.getSelectedGroup(),
       addGroup: false,
       removeGroup: false,
       groupInvalid: true,
       filters: AppStore.getFilters(),
-      attributes: AppStore.getFilterAttributes(),
       createGroupDialog: false,
-      devices: [],
-      acceptedDevices: [],
-      ungroupedDevices: [],
       pageNo: 1,
       pageLength: 20,
       loading: true,
@@ -49,6 +53,8 @@ export default class DeviceGroups extends React.Component {
       refreshDeviceLength: 10000,
       isHosted: AppStore.getIsEnterprise() || AppStore.getIsHosted()
     };
+    this.props.selectDevices(this.props.acceptedDevicesList);
+    this.props.getAllDevicesByStatus(DEVICE_STATES.accepted);
   }
 
   componentDidMount() {
@@ -70,8 +76,6 @@ export default class DeviceGroups extends React.Component {
       this.deviceTimer = setInterval(() => this._getDevices(), this.state.refreshDeviceLength);
       this._refreshAll();
     }
-    self._refreshUngroupedDevices();
-    self._refreshAcceptedDevices();
   }
 
   componentWillUnmount() {
@@ -79,8 +83,8 @@ export default class DeviceGroups extends React.Component {
     clearAllRetryTimers();
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    if (prevState.selectedGroup !== this.state.selectedGroup) {
+  componentDidUpdate(prevProps) {
+    if (prevProps.selectedGroup !== this.props.selectedGroup) {
       this._refreshGroups();
     }
 
@@ -114,12 +118,9 @@ export default class DeviceGroups extends React.Component {
    */
   _refreshGroups(cb) {
     var self = this;
-    AppActions.getGroups()
-      .then(groups => {
-        if (self.state.ungroupedDevices.length) {
-          groups.push(UNGROUPED_GROUP.id);
-        }
-        self.setState({ groups });
+    self.props
+      .getGroups()
+      .then(() => {
         if (cb) {
           cb();
         }
@@ -127,88 +128,25 @@ export default class DeviceGroups extends React.Component {
       .catch(err => console.log(err));
   }
 
-  _pickAcceptedUngroupedDevices(acceptedDevs, ungroupedDevs) {
-    const devices = ungroupedDevs.reduce((accu, device) => {
-      const isContained = acceptedDevs.find(item => item.id === device.id);
-      if (isContained) {
-        accu.push(device);
-      }
-      return accu;
-    }, []);
-    return devices;
-  }
-
-  _refreshAcceptedDevices() {
-    AppActions.getDeviceCount('accepted');
-  }
-
-  _refreshUngroupedDevices() {
-    var self = this;
-    if (AppStore.getTotalAcceptedDevices() > AppStore.getDeploymentDeviceLimit()) {
-      return Promise.resolve();
-    }
-    const noGroupDevices = AppActions.getAllDevicesInGroup();
-    const acceptedDevs = AppActions.getAllDevicesByStatus('accepted');
-    return Promise.all([noGroupDevices, acceptedDevs]).then(results => {
-      let ungroupedDevices = results[0];
-      const acceptedDevices = results[1];
-      var groups = self.state.groups;
-      if (ungroupedDevices.length > 0 && !groups.find(item => item === UNGROUPED_GROUP.id)) {
-        groups.push(UNGROUPED_GROUP.id);
-      }
-      if (acceptedDevices.length && ungroupedDevices.length) {
-        ungroupedDevices = self._pickAcceptedUngroupedDevices(acceptedDevices, ungroupedDevices);
-      }
-      self.setState({ ungroupedDevices, groups });
-      return new Promise(resolve => {
-        self.setState({ ungroupedDevices, groups }, () => resolve());
-      });
-    });
-  }
-
   _handleGroupChange(group) {
     var self = this;
-
-    clearInterval(self.deviceTimer);
-    self.setState({ devices: [], loading: true, selectedGroup: group, pageNo: 1, filters: [] }, () => {
-      // get number of devices in group first for pagination
-      let promisedGroupCount;
-      if (self._isUngroupedGroup(group)) {
-        // don't use backend count for ungrouped devices, as this includes 'pending', 'preauthorized', ... devices as well
-        promisedGroupCount = self._refreshUngroupedDevices().then(() => Promise.resolve(self.state.ungroupedDevices.length));
-      } else if (group === '') {
-        // don't use backend count for 'All devices', as this just refers to 'accepted' devices
-        promisedGroupCount = AppActions.getAllDevicesByStatus('accepted').then(devices => Promise.resolve(devices.length));
-      } else {
-        promisedGroupCount = AppActions.getNumberOfDevicesInGroup(group);
-      }
-      promisedGroupCount.then(groupCount => {
-        self.setState({ groupCount });
-        self.deviceTimer = setInterval(() => self._getDevices(), self.state.refreshDeviceLength);
-        self._getDevices();
-      });
-    });
+    const isUngroupedGroup = group === AppConstants.UNGROUPED_GROUP.id || group === AppConstants.UNGROUPED_GROUP.name;
+    if (isUngroupedGroup) {
+      group = AppConstants.UNGROUPED_GROUP.id;
+    }
+    self.props.selectGroup(group);
+    self.setState({ loading: true, pageNo: 1, filters: [] }, self._getDevices);
   }
 
   _removeCurrentGroup() {
     var self = this;
-    clearInterval(self.deviceTimer);
-    var params = this.state.selectedGroup ? `group=${this.state.selectedGroup}` : '';
-    return AppActions.getDevices(1, this.state.groupCount, params)
-      .then(devices => {
-        // should handle "next page"
-        // returns all group devices ids
-        const singleRemovals = devices.map((device, i) => self._removeSingleDevice(i, devices.length, device.id, true));
-        return Promise.all(singleRemovals);
-      })
+    const devices = self.props.groups.byId[self.props.selectedGroup].deviceIds;
+    // returns all group devices ids
+    return Promise.all(devices.map((device, index) => self._removeSingleDevice(index, devices.length, device.id, true)))
       .then(() => {
         AppActions.setSnackbar('Group was removed successfully', 5000);
-        self.setState({ selectedGroup: null, pageNo: 1, groupCount: self.props.acceptedDevices, removeGroup: !self.state.removeGroup }, () => {
-          setTimeout(() => {
-            self.deviceTimer = setInterval(() => self._getDevices(), self.state.refreshDeviceLength);
-            self._refreshAll();
-          }, 100);
-        });
+        self.props.selectGroup();
+        self.setState({ pageNo: 1, removeGroup: !self.state.removeGroup });
       })
       .catch(err => console.log(err));
   }
@@ -216,14 +154,10 @@ export default class DeviceGroups extends React.Component {
   _removeSingleDevice(idx, length, device, isGroupRemoval = false) {
     // remove single device from group
     var self = this;
-    clearInterval(self.deviceTimer);
-    return AppActions.removeDeviceFromGroup(device, this.state.selectedGroup).then(() => {
+    return self.props.removeDeviceFromGroup(device, this.props.selectedGroup).then(() => {
       if (idx === length - 1 && !isGroupRemoval) {
         // if isGroupRemoval, whole group is being removed
         AppActions.setSnackbar(`The ${pluralize('devices', length)} ${pluralize('were', length)} removed from the group`, 5000);
-        self._refreshAll();
-        self._refreshUngroupedDevices();
-        self._refreshAcceptedDevices();
       }
       return Promise.resolve();
     });
@@ -241,92 +175,41 @@ export default class DeviceGroups extends React.Component {
    */
   _getDevices() {
     var self = this;
+    const { getDevices, getDevicesByStatus, getGroupDevices, selectDevice, selectDevices, selectedGroup, ungroupedDevices } = self.props;
     var hasFilters = self.state.filters.length && self.state.filters[0].value;
 
-    if (this.state.selectedGroup || hasFilters) {
-      var params = '';
-      if (this.state.selectedGroup && this._isUngroupedGroup(this.state.selectedGroup)) {
-        params += this.encodeFilters([{ key: 'has_group', value: 'false' }]);
+    if (selectedGroup || hasFilters) {
+      let request;
+      if (selectedGroup) {
+        request = self._isUngroupedGroup(selectedGroup) ? Promise.resolve() : getGroupDevices(selectedGroup, this.state.pageNo, this.state.pageLength);
       } else {
-        params += this.state.selectedGroup ? `group=${this.state.selectedGroup}` : '';
-      }
-      if (hasFilters) {
         const filterId = this.state.filters.find(item => item.key === 'id');
         if (filterId) {
-          return self._getDeviceById(filterId.value);
+          return selectDevice(filterId.value);
         }
-        params += this.encodeFilters(this.state.filters);
+        request = getDevices(this.state.pageNo, this.state.pageLength, this.encodeFilters(this.state.filters));
       }
       // if a group or filters, must use inventory API
-      return (
-        AppActions.getDevices(this.state.pageNo, this.state.pageLength, params)
-          .then(devices => {
-            if (this._isUngroupedGroup(this.state.selectedGroup)) {
-              const offset = (self.state.pageNo - 1) * self.state.pageLength;
-              devices = self.state.ungroupedDevices.slice(offset, offset + self.state.pageLength);
-            }
-            if (devices.length && devices[0].attributes && self.state.isHosted) {
-              AppActions.setFilterAttributes(devices[0].attributes);
-            }
-            // for each device, get device identity info
-            const allDeviceDetails = devices.map(device => {
-              // have to call each time - accepted list can change order
-              return AppActions.getDeviceAuth(device.id)
-                .then(deviceAuth => {
-                  device.identity_data = deviceAuth.identity_data;
-                  device.auth_sets = deviceAuth.auth_sets;
-                  device.status = deviceAuth.status;
-                  return Promise.resolve(device);
-                })
-                .catch(() => Promise.resolve(device));
-            });
-            return Promise.all(allDeviceDetails);
-          })
+      return request
+        .then(() => {
+          if (this._isUngroupedGroup(selectedGroup)) {
+            const offset = (self.state.pageNo - 1) * self.state.pageLength;
+            const devices = ungroupedDevices.slice(offset, offset + self.state.pageLength);
+            selectDevices(devices);
+          }
           // only set state after all devices id data retrieved
-          .then(detailedDevices => self.setState({ devices: detailedDevices, loading: false, pageLoading: false }))
-          .catch(err => {
-            console.log(err);
-            var errormsg = err.error || 'Please check your connection.';
-            self.setState({ loading: false });
-            setRetryTimer(err, 'devices', `Devices couldn't be loaded. ${errormsg}`, self.state.refreshDeviceLength);
-          })
-      );
+          self.setState({ loading: false, pageLoading: false });
+        })
+        .catch(err => {
+          console.log(err);
+          var errormsg = err.error || 'Please check your connection.';
+          self.setState({ loading: false });
+          setRetryTimer(err, 'devices', `Devices couldn't be loaded. ${errormsg}`, self.state.refreshDeviceLength);
+        });
     } else {
       // otherwise, show accepted from device adm
-      return AppActions.getDevicesByStatus('accepted', this.state.pageNo, this.state.pageLength)
-        .then(devices => {
-          let state = { devices, groupCount: self.props.acceptedDevices, loading: false, pageLoading: false };
-          let additionalDeviceRequests = Promise.resolve(devices);
-          if (devices.length) {
-            // if none, stop loading spinners
-            state.devices = [];
-            // for each device, get inventory
-            const deviceInventoryRequests = devices.map(device => {
-              var gotAttrs = false;
-              device.id_attributes = device.attributes;
-              // have to call inventory each time - accepted list can change order so must refresh inventory too
-              return self
-                ._getInventoryForDevice(device.id)
-                .then(inventory => {
-                  device.attributes = inventory.attributes;
-                  device.updated_ts = inventory.updated_ts;
-                  if (!gotAttrs && inventory.attributes && self.state.isHosted) {
-                    AppActions.setFilterAttributes(inventory.attributes);
-                    gotAttrs = true;
-                  }
-                  return Promise.resolve(device);
-                })
-                .catch(() => Promise.resolve(device));
-            });
-            // only set state after all devices inventory retrieved
-            additionalDeviceRequests = Promise.all(deviceInventoryRequests);
-          }
-          return additionalDeviceRequests.then(requestedDevices => {
-            state.devices = requestedDevices;
-            state.attributes = AppStore.getFilterAttributes();
-            self.setState(state);
-          });
-        })
+      return getDevicesByStatus(DEVICE_STATES.accepted, this.state.pageNo, this.state.pageLength)
+        .then(() => self.setState({ loading: false, pageLoading: false }))
         .catch(err => {
           console.log(err);
           var errormsg = err.error || 'Please check your connection.';
@@ -351,41 +234,17 @@ export default class DeviceGroups extends React.Component {
     var self = this;
 
     // do this via deviceauth not inventory
-    return AppActions.getDeviceAuth(id)
-      .then(device => {
-        if (!isEmpty(device)) {
-          return self._getInventoryForDevice(id).then(inventory => {
-            device.attributes = inventory.attributes;
-            device.updated_ts = inventory.updated_ts;
-            return Promise.resolve(device);
-          });
-        }
-        return Promise.resolve(device);
-      })
-      .then(device => self.setState({ devices: [device], loading: false, pageLoading: false, groupCount: !!device }))
+    return self.props
+      .selectDevice(id)
+      .then(() => self.setState({ loading: false, pageLoading: false }))
       .catch(err => {
         var state = { loading: false };
         if (err.res.statusCode === 404) {
-          state = Object.assign(state, { devices: [] });
-        } else {
           var errormsg = err.error || 'Please check your connection.';
           setRetryTimer(err, 'devices', `Device couldn't be loaded. ${errormsg}`, self.state.refreshDeviceLength);
         }
         self.setState(state);
       });
-  }
-
-  /*
-   * Get full device identity details for single selected device
-   */
-  _getInventoryForDevice(device_id) {
-    // get inventory for single device
-    return AppActions.getDeviceById(device_id).catch(err => {
-      if (err.res.statusCode !== 404) {
-        // don't show error if 404 - device hasn't received inventory yet
-        console.log(err);
-      }
-    });
   }
 
   _handlePageChange(pageNo) {
@@ -431,14 +290,13 @@ export default class DeviceGroups extends React.Component {
 
   _addDeviceToGroup(group, device, idx, length) {
     var self = this;
-    AppActions.addDeviceToGroup(group, device.id)
+    self.props
+      .addDeviceToGroup(group, device.id)
       .then(() => {
         if (idx === length - 1) {
           // reached end of list
           self.setState({ createGroupDialog: false, addGroup: false, tmpGroup: '', selectedField: '' }, () => {
             AppActions.setSnackbar('The group was updated successfully', 5000);
-            self._refreshUngroupedDevices();
-            self._refreshAcceptedDevices();
             self._refreshGroups(() => {
               self._handleGroupChange(group);
             });
@@ -455,7 +313,7 @@ export default class DeviceGroups extends React.Component {
   _removeDevicesFromGroup(rows) {
     var self = this;
     clearInterval(self.deviceTimer);
-    const isGroupRemoval = rows.length >= self.state.groupCount;
+    const isGroupRemoval = rows.length >= self.props.groupCount;
     const isPageRemoval = self.state.devices.length <= rows.length;
     const refresh = () => self._refreshAll();
     const deviceRemovals = rows.map((row, i) => self._removeSingleDevice(i, rows.length, self.state.devices[row].id, isGroupRemoval));
@@ -464,13 +322,14 @@ export default class DeviceGroups extends React.Component {
         // if rows.length = number on page but < groupCount
         // move page back to pageNO 1
         if (isPageRemoval) {
-          self.setState({ pageNo: 1, pageLoading: true, groupCount: self.state.groupCount - rows.length }, refresh);
+          self.setState({ pageNo: 1, pageLoading: true }, refresh);
         }
         // if rows.length === groupCount
         // group now empty, go to all devices
         if (isGroupRemoval) {
           AppActions.setSnackbar('Group was removed successfully', 5000);
-          self.setState({ loading: true, selectedGroup: null, pageNo: 1, groupCount: self.props.acceptedDevices }, refresh);
+          self.props.selectGroup();
+          self.setState({ loading: true, pageNo: 1 }, refresh);
         }
       })
       .catch(err => console.log(err));
@@ -542,10 +401,10 @@ export default class DeviceGroups extends React.Component {
       </Button>
     ];
 
-    var groupCount = this.state.groupCount || this.props.acceptedDevices || 0;
+    var groupCount = this.props.groupCount || this.props.acceptedDevices || 0;
 
-    var groupName = this._isUngroupedGroup(this.state.selectedGroup) ? UNGROUPED_GROUP.name : this.state.selectedGroup;
-    var allowDeviceGroupRemoval = !this._isUngroupedGroup(this.state.selectedGroup);
+    var groupName = this._isUngroupedGroup(this.props.selectedGroup) ? UNGROUPED_GROUP.name : this.props.selectedGroup;
+    var allowDeviceGroupRemoval = !this._isUngroupedGroup(this.props.selectedGroup);
 
     return (
       <div className="tab-container">
@@ -553,23 +412,23 @@ export default class DeviceGroups extends React.Component {
           <Groups
             openGroupDialog={() => self.setState({ createGroupDialog: !self.state.createGroupDialog })}
             changeGroup={group => this._handleGroupChange(group)}
-            groups={this.state.groups}
-            selectedGroup={this.state.selectedGroup}
+            groups={this.props.groups}
+            selectedGroup={this.props.selectedGroup}
             allCount={this.props.allCount}
             acceptedCount={this.props.acceptedDevices}
           />
         </div>
         <div className="rightFluid" style={{ paddingTop: '0' }}>
-          {!this.state.selectedGroup ? (
+          {!this.props.selectedGroup ? (
             <Filters
-              attributes={this.state.attributes}
+              attributes={this.props.attributes}
               filters={this.state.filters}
               onFilterChange={filters => this._onFilterChange(filters)}
               isHosted={this.state.isHosted}
             />
           ) : null}
 
-          {self.state.selectedGroup && allowDeviceGroupRemoval ? (
+          {self.props.selectedGroup && allowDeviceGroupRemoval ? (
             <Button
               style={{ position: 'absolute', top: 0, right: '30px', zIndex: 100 }}
               onClick={() => self.setState({ removeGroup: !self.state.removeGroup })}
@@ -584,7 +443,7 @@ export default class DeviceGroups extends React.Component {
             allCount={this.props.allCount}
             allowDeviceGroupRemoval={allowDeviceGroupRemoval}
             currentTab={this.props.currentTab}
-            devices={this.state.devices}
+            devices={this.props.devices}
             group={groupName}
             groupCount={groupCount}
             loading={this.state.loading}
@@ -607,11 +466,11 @@ export default class DeviceGroups extends React.Component {
               devices={this.state.tmpDevices.length}
               willBeEmpty={this.state.willBeEmpty}
               tmpGroup={this.state.tmpGroup}
-              selectedGroup={this.state.selectedGroup}
+              selectedGroup={this.props.selectedGroup}
               selectedGroupName={groupName}
               changeSelect={group => this._changeTmpGroup(group)}
               validateName={(invalid, group) => this._validate(invalid, group)}
-              groups={this.state.groups.filter(group => !this._isUngroupedGroup(group))}
+              groups={this.props.groups.filter(group => !this._isUngroupedGroup(group))}
               selectedField={this.state.selectedField}
             />
           </DialogContent>
@@ -629,7 +488,7 @@ export default class DeviceGroups extends React.Component {
         <CreateGroup
           toggleDialog={() => self.setState({ createGroupDialog: !self.state.createGroupDialog })}
           open={this.state.createGroupDialog}
-          groups={this.state.groups}
+          groups={this.props.groups}
           changeGroup={() => this._handleGroupChange()}
           addListOfDevices={(devices, group) => this._createGroupFromDialog(devices, group)}
           acceptedCount={this.props.acceptedDevices}
@@ -638,3 +497,47 @@ export default class DeviceGroups extends React.Component {
     );
   }
 }
+
+const actionCreators = {
+  addDeviceToGroup,
+  getAllDevicesByStatus,
+  getDevices,
+  getDevicesByStatus,
+  getGroups,
+  getGroupDevices,
+  removeDeviceFromGroup,
+  selectGroup,
+  selectDevice,
+  selectDevices
+};
+
+const mapStateToProps = state => {
+  let devices = state.devices.selectedDeviceList;
+  let groupCount = state.devices.byStatus.accepted.total;
+  let selectedGroup;
+  if (!isEmpty(state.devices.groups.selectedGroup)) {
+    groupCount = state.devices.groups.byId[state.devices.groups.selectedGroup].total;
+    selectedGroup = state.devices.groups.selectedGroup;
+  } else if (!isEmpty(state.devices.selectedDevice)) {
+    devices = [state.devices.selectedDevice];
+  }
+  const ungroupedDevices = state.devices.groups.byId[AppConstants.UNGROUPED_GROUP.id]
+    ? state.devices.groups.byId[AppConstants.UNGROUPED_GROUP.id].deviceIds
+    : [];
+  return {
+    acceptedDevices: state.devices.byStatus.accepted.total || 0,
+    acceptedDevicesList: state.devices.byStatus.accepted.deviceIds.slice(0, 20),
+    allCount: state.devices.byStatus.accepted.total + state.devices.byStatus.rejected.total || 0,
+    attributes: state.devices.filteringAttributes || [],
+    devices,
+    groups: Object.keys(state.devices.groups.byId) || [],
+    groupCount,
+    selectedGroup,
+    ungroupedDevices
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  actionCreators
+)(DeviceGroups);

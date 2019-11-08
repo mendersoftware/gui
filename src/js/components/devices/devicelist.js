@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 
 // material ui
 import Checkbox from '@material-ui/core/Checkbox';
@@ -6,14 +7,17 @@ import Checkbox from '@material-ui/core/Checkbox';
 import SettingsIcon from '@material-ui/icons/Settings';
 import SortIcon from '@material-ui/icons/Sort';
 
+import { getDeviceAuth, getDeviceById } from '../../actions/deviceActions';
+
 import AppActions from '../../actions/app-actions';
+import AppStore from '../../stores/app-store';
+import { DEVICE_STATES } from '../../constants/deviceConstants';
 import Loader from '../common/loader';
 import Pagination from '../common/pagination';
 import DeviceListItem from './devicelistitem';
-import AppStore from '../../stores/app-store';
 import { advanceOnboarding, getOnboardingStepCompleted } from '../../utils/onboardingmanager';
 
-export default class DeviceList extends React.Component {
+class DeviceList extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
@@ -37,9 +41,14 @@ export default class DeviceList extends React.Component {
       return;
     }
     AppActions.setSnackbar('');
-    let deviceId = self.props.devices[rowNumber].id;
-    if (self.state.expandedDeviceId === deviceId) {
-      deviceId = null;
+    let device = self.props.devices[rowNumber];
+    if (self.state.expandedDeviceId === device.id) {
+      device = null;
+    } else if (device.status === DEVICE_STATES.accepted) {
+      // Get full device identity details for single selected device
+      Promise.all([self.props.getDeviceAuth(device.id), self.props.getDeviceById(device.id)]).catch(err => console.log(`Error: ${err}`));
+    } else {
+      self.props.getDeviceAuth(device.id);
     }
     if (!AppStore.getOnboardingComplete()) {
       if (!getOnboardingStepCompleted('devices-pending-accepting-onboarding')) {
@@ -49,7 +58,7 @@ export default class DeviceList extends React.Component {
         advanceOnboarding('devices-accepted-onboarding');
       }
     }
-    self.setState({ expandedDeviceId: deviceId });
+    self.setState({ expandedDeviceId: device ? device.id : null });
   }
 
   _isSelected(index) {
@@ -140,3 +149,21 @@ export default class DeviceList extends React.Component {
     );
   }
 }
+
+const actionCreators = { getDeviceAuth, getDeviceById };
+const mapStateToProps = (state, ownProps) => {
+  const devices = ownProps.devices.reduce((accu, deviceId) => {
+    if (deviceId) {
+      accu.push(state.devices.byId[deviceId]);
+    }
+    return accu;
+  }, []);
+  return {
+    devices
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  actionCreators
+)(DeviceList);
