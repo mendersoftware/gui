@@ -169,10 +169,7 @@ export default class SelfUserManagement extends React.Component {
             </Collapse>
           </div>
         ) : (
-          <EnterpriseNotification
-            isEnterprise={isEnterprise}
-            benefit="set up Two Factor Authentication to add an additional layer of security to their account"
-          />
+          <EnterpriseNotification isEnterprise={isEnterprise} benefit="set up Two Factor Authentication to add an additional layer of security to accounts" />
         )}
       </div>
     );
