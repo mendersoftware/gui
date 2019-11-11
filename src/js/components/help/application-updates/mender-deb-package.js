@@ -2,19 +2,28 @@ import React from 'react';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import IconButton from '@material-ui/core/IconButton';
 import CopyPasteIcon from '@material-ui/icons/FileCopy';
+import AppActions from '../../../actions/app-actions';
 import AppStore from '../../../stores/app-store';
-import { detectOsIdentifier } from '../../../helpers';
+import { findLocalIpAddress, getDebConfigurationCode } from '../../../helpers';
 
 export default class DebPackage extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      dpkgCode: false,
-      cpCode: false,
-      echoCode: false,
-      startCode: false,
-      tenantCode: false
+      codeToCopy: false,
+      dpkgCodeCopied: false,
+      ipAddress: AppStore.getHostAddress()
     };
+  }
+
+  componentDidMount() {
+    const self = this;
+    if (!self.state.ipAddress || self.state.ipAddress === 'X.X.X.X') {
+      findLocalIpAddress().then(ipAddress => self.setState({ ipAddress }));
+    }
+    if (AppStore.hasMultitenancy() || AppStore.getIsEnterprise() || AppStore.getIsHosted()) {
+      AppActions.getUserOrganization().then(org => (org ? self.setState({ token: org.tenant_token }) : null));
+    }
   }
 
   _copied(ref) {
@@ -29,17 +38,22 @@ export default class DebPackage extends React.Component {
   }
 
   render() {
-    var tenantToken = (this.props.org || {}).tenant_token;
+    const self = this;
+    const { codeToCopyCopied, dpkgCodeCopied, ipAddress, token } = self.state;
+    const isHosted = AppStore.getIsHosted();
+    const isEnterprise = AppStore.getIsEnterprise();
+    const debPackageVersion = AppStore.getMenderDebPackageVersion();
+    const dpkgCode = `wget https://d1b0l86ne08fsf.cloudfront.net/${debPackageVersion}/dist-packages/debian/armhf/mender-client_${debPackageVersion}-1_armhf.deb &&
+    sudo dpkg -i mender-client_${debPackageVersion}-1_armhf.deb`;
 
-    var dpkgCode = `wget https://d1b0l86ne08fsf.cloudfront.net/${AppStore.getMenderDebPackageVersion()}/dist-packages/debian/armhf/mender-client_${AppStore.getMenderDebPackageVersion()}-1_armhf.deb
-    sudo dpkg -i mender-client_${AppStore.getMenderDebPackageVersion()}-1_armhf.deb`;
-    var cpCode = 'sudo cp /etc/mender/mender.conf.demo /etc/mender/mender.conf';
-    var echoCode = 'sudo mkdir -p /var/lib/mender \necho "device_type=generic-armv6" | sudo tee /var/lib/mender/device_type';
-    var startCode = 'sudo systemctl enable mender && sudo systemctl start mender';
-    var tenantCode = `TENANT_TOKEN="${tenantToken}" \nsudo sed -i ${
-      detectOsIdentifier() === 'MacOs' ? '""' : ''
-    } "s/Paste your Hosted Mender token here/$TENANT_TOKEN/" /etc/mender/mender.conf`;
-
+    const codeToCopy = getDebConfigurationCode(ipAddress, isHosted, isEnterprise, token, debPackageVersion);
+    let title = 'Connecting to a demo server with demo settings';
+    if (isEnterprise || isHosted) {
+      title = 'Connecting to an Enterprise server';
+      if (isHosted) {
+        title = 'Connecting to Mender Professional with demo settings';
+      }
+    }
     return (
       <div>
         <h2>Connecting your device using Mender .deb package</h2>
@@ -57,91 +71,41 @@ export default class DebPackage extends React.Component {
         </ul>
 
         <h3>Installing and configuring the .deb package</h3>
-        <p>On the device, run the following commands:</p>
-        <p>Download the package:</p>
+        <p>
+          The Mender package comes with a wizard that will let you easily configure and customize your installation. To install and configure Mender run the
+          following command:
+        </p>
         <div className="code">
-          <CopyToClipboard text={dpkgCode} onCopy={() => this._copied('dpkgCode')}>
+          <CopyToClipboard text={dpkgCode} onCopy={() => self._copied('dpkgCodeCopied')}>
             <IconButton style={{ float: 'right', margin: '-20px 0 0 10px' }}>
               <CopyPasteIcon />
             </IconButton>
           </CopyToClipboard>
           <span style={{ wordBreak: 'break-word' }}>{dpkgCode}</span>
         </div>
-        <p>{this.state.dpkgCode ? <span className="green fadeIn">Copied to clipboard.</span> : null}</p>
+        <p>{dpkgCodeCopied ? <span className="green fadeIn">Copied to clipboard.</span> : null}</p>
 
-        <p>For demo purposes, copy the demo config file:</p>
+        <p>
+          After the installation wizard is completed, Mender is correctly setup on your device and will automatically start in managed mode. Your device is now
+          ready to authenticate with the server and start receiving updates.
+        </p>
+
+        <h3>Unattended installation</h3>
+        <p>
+          Alternatively to the above method, the package can be installed in a non-interactive way, suitable for scripts or other situations where no user input
+          is desired. To learn about all configuration options, use `mender setup --help`.
+        </p>
+        <p>Use the below script to download and setup the Mender client for your Mender installation.</p>
+        <h4>{title}</h4>
         <div className="code">
-          <CopyToClipboard text={cpCode} onCopy={() => this._copied('cpCode')}>
+          <CopyToClipboard text={codeToCopy} onCopy={() => self._copied('codeToCopyCopied')}>
             <IconButton style={{ float: 'right', margin: '-20px 0 0 10px' }}>
               <CopyPasteIcon />
             </IconButton>
           </CopyToClipboard>
-          <span style={{ wordBreak: 'break-word' }}>{cpCode}</span>
+          <span style={{ wordBreak: 'break-word', whiteSpace: 'pre-wrap' }}>{codeToCopy}</span>
         </div>
-        <p>{this.state.cpCode ? <span className="green fadeIn">Copied to clipboard.</span> : null}</p>
-        <p>
-          Or edit the config file yourself by{' '}
-          <a href={`https://docs.mender.io/${this.props.docsVersion}client-configuration/configuration-file`} target="_blank">
-            following the docs
-          </a>
-          .
-        </p>
-
-        <br />
-
-        {this.props.isHosted ? (
-          <div>
-            <h4>Configuration for Hosted Mender server</h4>
-            <p>
-              To configure the Mender client for Hosted Mender, you need to edit <span className="code">&#47;etc&#47;mender&#47;mender.conf</span> and insert
-              your Tenant Token where it says &quot;Paste your Hosted Mender token here&quot;.
-            </p>
-
-            <p>Set the TENANT_TOKEN variable and update the configuration file:</p>
-            <div className="code">
-              <CopyToClipboard text={tenantCode} onCopy={() => this._copied('tenantCode')}>
-                <IconButton style={{ float: 'right', margin: '-20px 0 0 10px' }}>
-                  <CopyPasteIcon />
-                </IconButton>
-              </CopyToClipboard>
-              <span style={{ wordBreak: 'break-word' }}>{tenantCode}</span>
-            </div>
-            <p>{this.state.tenantCode ? <span className="green fadeIn">Copied to clipboard.</span> : null}</p>
-            <br />
-          </div>
-        ) : null}
-
-        <h4>Setting the device type</h4>
-        <p>
-          Create the Mender client state directory and set the device type on the device. This example uses <span className="code">generic-armv6</span>, but you
-          can substitute your own specific device type:
-        </p>
-        <div className="code">
-          <CopyToClipboard text={echoCode} onCopy={() => this._copied('echoCode')}>
-            <IconButton style={{ float: 'right', margin: '-20px 0 0 10px' }}>
-              <CopyPasteIcon />
-            </IconButton>
-          </CopyToClipboard>
-          <span style={{ wordBreak: 'break-word' }}>{echoCode}</span>
-        </div>
-        <p>{this.state.echoCode ? <span className="green fadeIn">Copied to clipboard.</span> : null}</p>
-        <br />
-
-        <h4>Starting the client</h4>
-        <p>Enable and start the Mender client:</p>
-        <div className="code">
-          <CopyToClipboard text={startCode} onCopy={() => this._copied('startCode')}>
-            <IconButton style={{ float: 'right', margin: '-20px 0 0 10px' }}>
-              <CopyPasteIcon />
-            </IconButton>
-          </CopyToClipboard>
-          <span style={{ wordBreak: 'break-word' }}>{startCode}</span>
-        </div>
-        <p>{this.state.startCode ? <span className="green fadeIn">Copied to clipboard.</span> : null}</p>
-
-        <p>
-          Once the client has started, your device will attempt to connect to the server. It will then appear in your Pending devices tab and you can continue.
-        </p>
+        <p>{codeToCopyCopied && <span className="green fadeIn">Copied to clipboard.</span>}</p>
       </div>
     );
   }

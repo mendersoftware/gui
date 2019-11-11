@@ -57,19 +57,19 @@ export default class CreateArtifactDialog extends React.Component {
     const artifactGenerator = 'single-file-artifact-gen';
     const artifactName = 'demo-webserver-updated';
     const chmodCode = `
-wget https://d1b0l86ne08fsf.cloudfront.net/mender-artifact/${AppStore.getMenderArtifactVersion()}/${downloadFolder[detectOsIdentifier()]}/mender-artifact
-chmod +x mender-artifact
-wget https://raw.githubusercontent.com/mendersoftware/mender/${AppStore.getMenderVersion()}/support/modules-artifact-gen/${artifactGenerator}
-chmod +x ${artifactGenerator}
+wget https://d1b0l86ne08fsf.cloudfront.net/mender-artifact/${AppStore.getMenderArtifactVersion()}/${downloadFolder[detectOsIdentifier()]}/mender-artifact && \\
+chmod +x mender-artifact && \\
+wget https://raw.githubusercontent.com/mendersoftware/mender/${AppStore.getMenderVersion()}/support/modules-artifact-gen/${artifactGenerator} && \\
+chmod +x ${artifactGenerator} && \\
 sudo cp mender-artifact ${artifactGenerator} /usr/local/bin/
 `;
 
     const artifactGenCode = `
-ARTIFACT_NAME="${artifactName}"; \
-DEVICE_TYPE="${deviceType}"; \
-OUTPUT_PATH="${artifactName}.mender"; \
-DEST_DIR="/var/www/localhost/htdocs/"; \
-FILE_NAME="index.html"; \
+ARTIFACT_NAME="${artifactName}" && \\
+DEVICE_TYPE="${deviceType}" && \\
+OUTPUT_PATH="${artifactName}.mender" && \\
+DEST_DIR="/var/www/localhost/htdocs/" && \\
+FILE_NAME="index.html" && \\
 ${artifactGenerator} -n \${ARTIFACT_NAME} \
 -t \${DEVICE_TYPE} -d \${DEST_DIR} -o \${OUTPUT_PATH} \
 \${FILE_NAME}
@@ -98,10 +98,10 @@ EOF
               </div>
               <p>{copied === 1 ? <span className="green fadeIn">Copied to clipboard.</span> : null}</p>
             </li>
-          
+
             <li>
-              Next, create a new <i>index.html</i> file with the simple contents &apos;Hello world&apos;. This will be the web page of your updated application, so you&apos;ll be able to
-              easily see when your device has received the update. Copy and run the command:
+              Next, create a new <i>index.html</i> file with the simple contents &apos;Hello world&apos;. This will be the web page of your updated application,
+              so you&apos;ll be able to easily see when your device has received the update. Copy and run the command:
               <div className="code">
                 <CopyToClipboard text={file_modification} onCopy={() => self.copied(3)}>
                   <Button style={{ float: 'right', margin: '-20px 0 0 10px' }}>
@@ -114,8 +114,7 @@ EOF
               <p>{copied === 3 ? <span className="green fadeIn">Copied to clipboard.</span> : null}</p>
             </li>
             <li>
-              Now you can create a new version of the demo webserver application with this <i>index.html</i> file. Generate a new Artifact by copying &
-              running:
+              Now you can create a new version of the demo webserver application with this <i>index.html</i> file. Generate a new Artifact by copying & running:
               <div className="code">
                 <CopyToClipboard text={artifactGenCode} onCopy={() => self.copied(2)}>
                   <Button style={{ float: 'right', margin: '-10px 0 0 10px' }}>
