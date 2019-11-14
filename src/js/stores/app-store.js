@@ -78,17 +78,6 @@ function _selectDevice(device) {
   _currentDevice = device;
 }
 
-function _addNewGroup(group, devices, type) {
-  var tmpGroup = group;
-  for (var i = 0; i < devices.length; i++) {
-    tmpGroup.devices.push(devices[i].id);
-  }
-  tmpGroup.id = _groups.length + 1;
-  tmpGroup.type = type ? type : 'public';
-  _groups.push(tmpGroup);
-  _selectGroup(_groups[_groups.length] - 1);
-}
-
 function _matchFilters(device, filters) {
   /*
    * Match device attributes against _filters, return true or false
@@ -149,45 +138,6 @@ function _setFilterAttributes(attrs) {
     _attributes[attrs[i].name] = attrs[i].name;
   }
   _attributes.id = 'ID';
-}
-
-function _addToGroup(group, devices) {
-  var tmpGroup = group;
-  const idx = _groups.findIndex(item => item.id === tmpGroup);
-  if (idx != undefined) {
-    for (var i = 0; i < devices.length; i++) {
-      if (tmpGroup.devices.indexOf(devices[i].id) === -1) {
-        tmpGroup.devices.push(devices[i].id);
-      } else {
-        tmpGroup.devices.splice(tmpGroup.devices.indexOf(devices[i].id), 1);
-      }
-    }
-    _groups[idx] = tmpGroup;
-
-    // reset filters
-    _filters = [];
-
-    // TODO - delete if empty group?
-  } else {
-    // New group
-    _addNewGroup(group, devices, 'public');
-    // TODO - go through devices and add group
-  }
-}
-
-function _removeGroup(groupId) {
-  const idx = _groups.findIndex(item => item.id === groupId);
-  const group = _groups[idx];
-  if (_currentGroup === group) {
-    _selectGroup();
-  }
-  _groups.splice(idx, 1);
-}
-
-function _addGroup(group, idx) {
-  if (idx !== undefined) {
-    _groups.splice(idx, 0, group);
-  }
 }
 
 function discoverDevices(array) {
@@ -740,15 +690,6 @@ var AppStore = Object.assign({}, EventEmitter.prototype, {
       break;
     case AppConstants.SELECT_DEVICE:
       _selectDevice(payload.action.device);
-      break;
-    case AppConstants.ADD_TO_GROUP:
-      _addToGroup(payload.action.group, payload.action.devices);
-      break;
-    case AppConstants.REMOVE_GROUP:
-      _removeGroup(payload.action.groupId);
-      break;
-    case AppConstants.ADD_GROUP:
-      _addGroup(payload.action.group, payload.action.index);
       break;
     case AppConstants.SET_FILTER_ATTRIBUTES:
       _setFilterAttributes(payload.action.attrs);

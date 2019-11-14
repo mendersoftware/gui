@@ -46,14 +46,6 @@ const AppActions = {
     return DevicesApi.delete(`${inventoryApiUrl}/devices/${device}/group/${group}`);
   },
 
-  addGroup: (group, idx) => {
-    AppDispatcher.handleViewAction({
-      actionType: AppConstants.ADD_GROUP,
-      group: group,
-      index: idx
-    });
-  },
-
   /* Groups */
   getGroups: () =>
     DevicesApi.get(`${inventoryApiUrl}/groups`).then(res => {
