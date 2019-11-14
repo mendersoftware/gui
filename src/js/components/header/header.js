@@ -27,7 +27,7 @@ import DeploymentNotifications from './deploymentnotifications';
 import AppActions from '../../actions/app-actions';
 import AppStore from '../../stores/app-store';
 
-class Header extends React.Component {
+export class Header extends React.Component {
   static contextTypes = {
     router: PropTypes.object,
     location: PropTypes.object

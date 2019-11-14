@@ -40,7 +40,7 @@ const routes = {
   }
 };
 
-class Devices extends React.Component {
+export class Devices extends React.Component {
   static contextTypes = {
     router: PropTypes.object
   };

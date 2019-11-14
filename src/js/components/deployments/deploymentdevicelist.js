@@ -15,7 +15,7 @@ const stateTitleMap = {
   'already-installed': 'Already installed'
 };
 
-class ProgressDeviceList extends React.PureComponent {
+export class ProgressDeviceList extends React.PureComponent {
   shouldComponentUpdate(nextProps, nextState) {
     return !isEqual(this.props, nextProps) || !isEqual(this.state, nextState);
   }

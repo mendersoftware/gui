@@ -17,7 +17,7 @@ import Pagination from '../common/pagination';
 import DeviceListItem from './devicelistitem';
 import { advanceOnboarding, getOnboardingStepCompleted } from '../../utils/onboardingmanager';
 
-class DeviceList extends React.Component {
+export class DeviceList extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {

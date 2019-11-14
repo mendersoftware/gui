@@ -11,7 +11,7 @@ import { preformatWithRequestID, deepCompare } from '../../helpers';
 import { getDevicesByStatus } from '../../actions/deviceActions';
 import AppActions from '../../actions/app-actions';
 
-class Global extends React.Component {
+export class Global extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {

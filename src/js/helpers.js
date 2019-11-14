@@ -2,7 +2,6 @@ import jwtDecode from 'jwt-decode';
 import md5 from 'md5';
 import React from 'react';
 
-import AppActions from './actions/app-actions';
 import AppStore from './stores/app-store';
 
 export function isEncoded(uri) {
@@ -315,7 +314,7 @@ export const customSort = (direction, field) => (a, b) => {
 };
 
 export const mapDeviceAttributes = (attributes = []) => {
-  return attributes.reduce((accu, attribute) => ({ ...accu, [attribute.name]: attribute.value }),  { device_type: '', artifact_name: '' });
+  return attributes.reduce((accu, attribute) => ({ ...accu, [attribute.name]: attribute.value }), { device_type: '', artifact_name: '' });
 };
 
 export const deriveAttributesFromDevices = devices => {

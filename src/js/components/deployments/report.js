@@ -22,7 +22,7 @@ import DeploymentStatus from './deploymentstatus';
 import DeviceList from './deploymentdevicelist';
 import Confirm from './confirm';
 
-class DeploymentReport extends React.Component {
+export class DeploymentReport extends React.Component {
   constructor(props, state) {
     super(props, state);
     this.state = {

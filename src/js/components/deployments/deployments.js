@@ -33,7 +33,7 @@ const routes = {
   }
 };
 
-class Deployments extends React.Component {
+export class Deployments extends React.Component {
   static contextTypes = {
     router: PropTypes.object
   };

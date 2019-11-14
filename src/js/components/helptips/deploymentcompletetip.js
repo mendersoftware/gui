@@ -9,7 +9,7 @@ import { getDemoDeviceAddress } from '../../helpers';
 import { advanceOnboarding } from '../../utils/onboardingmanager';
 import Loader from '../common/loader';
 
-class DeploymentCompleteTip extends React.Component {
+export class DeploymentCompleteTip extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {

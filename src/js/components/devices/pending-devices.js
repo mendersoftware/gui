@@ -20,7 +20,7 @@ import Loader from '../common/loader';
 import { DevicePendingTip } from '../helptips/onboardingtips';
 import DeviceList from './devicelist';
 
-class Pending extends React.Component {
+export class Pending extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {

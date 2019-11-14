@@ -15,7 +15,7 @@ import { isEmpty, preformatWithRequestID } from '../../helpers';
 import Loader from '../common/loader';
 import DeviceList from './devicelist';
 
-class Preauthorize extends React.Component {
+export class Preauthorize extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {

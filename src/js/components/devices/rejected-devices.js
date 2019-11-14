@@ -9,7 +9,7 @@ import { DEVICE_STATES } from '../../constants/deviceConstants';
 import Loader from '../common/loader';
 import DeviceList from './devicelist';
 
-class Rejected extends React.Component {
+export class Rejected extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {

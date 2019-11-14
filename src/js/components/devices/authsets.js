@@ -13,7 +13,7 @@ import { preformatWithRequestID } from '../../helpers';
 import { Button } from '@material-ui/core';
 import { InfoOutlined as InfoIcon, Delete as TrashIcon } from '@material-ui/icons';
 
-class Authsets extends React.Component {
+export class Authsets extends React.Component {
   constructor(props, context) {
     super(props, context);
 

@@ -11,7 +11,7 @@ import AppStore from '../../stores/app-store';
 import { getDemoDeviceAddress } from '../../helpers';
 import Loader from '../common/loader';
 
-class OnboardingCompleteTip extends React.Component {
+export class OnboardingCompleteTip extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {

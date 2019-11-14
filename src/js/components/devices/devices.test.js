@@ -1,7 +1,7 @@
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import { createMount } from '@material-ui/core/test-utils';
-import Devices from './devices';
+import { Devices } from './devices';
 
 it('renders correctly', () => {
   const context = {

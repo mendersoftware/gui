@@ -1,7 +1,7 @@
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import renderer from 'react-test-renderer';
-import DeploymentReport from './report';
+import { DeploymentReport } from './report';
 
 it('renders correctly', () => {
   const tree = renderer

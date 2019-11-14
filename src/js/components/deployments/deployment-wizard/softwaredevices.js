@@ -26,7 +26,7 @@ const styles = {
   }
 };
 
-class SoftwareDevices extends React.Component {
+export class SoftwareDevices extends React.Component {
   constructor(props, context) {
     super(props, context);
 

@@ -33,7 +33,7 @@ import { setRetryTimer, clearAllRetryTimers } from '../../utils/retrytimer';
 
 const UNGROUPED_GROUP = AppConstants.UNGROUPED_GROUP;
 
-class DeviceGroups extends React.Component {
+export class DeviceGroups extends React.Component {
   static contextTypes = {
     router: PropTypes.object
   };

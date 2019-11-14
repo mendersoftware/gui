@@ -51,7 +51,7 @@ const states = {
   }
 };
 
-class ExpandedDevice extends React.Component {
+export class ExpandedDevice extends React.Component {
   static contextTypes = {
     router: PropTypes.object,
     location: PropTypes.object

@@ -1,6 +1,6 @@
 import React from 'react';
 import renderer from 'react-test-renderer';
-import DeviceList from './devicelist';
+import { DeviceList } from './devicelist';
 
 it('renders correctly', () => {
   const tree = renderer

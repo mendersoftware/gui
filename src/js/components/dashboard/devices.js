@@ -10,7 +10,7 @@ import RedirectionWidget from './widgets/redirectionwidget';
 import PendingDevices from './widgets/pendingdevices';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 
-class Devices extends React.Component {
+export class Devices extends React.Component {
   constructor(props, state) {
     super(props, state);
     const self = this;

@@ -28,7 +28,7 @@ import { DEVICE_STATES } from '../../constants/deviceConstants';
 import AppStore from '../../stores/app-store';
 import Loader from '../common/loader';
 
-class CreateGroup extends React.Component {
+export class CreateGroup extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = this._getInitialState();
