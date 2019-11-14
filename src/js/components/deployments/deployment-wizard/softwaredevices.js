@@ -10,8 +10,7 @@ import { ErrorOutline as ErrorOutlineIcon, InfoOutlined as InfoOutlinedIcon } fr
 import AutoSelect from '../../common/forms/autoselect';
 import { getAllDevicesByStatus, getAllGroupDevices, selectDevice } from '../../../actions/deviceActions';
 import AppStore from '../../../stores/app-store';
-import AppConstants from '../../../constants/app-constants';
-import { DEVICE_STATES } from '../../../constants/deviceConstants';
+import DeviceConstants from '../../../constants/deviceConstants';
 
 import { getOnboardingComponentFor } from '../../../utils/onboardingmanager';
 
@@ -30,7 +29,7 @@ export class SoftwareDevices extends React.Component {
   constructor(props, context) {
     super(props, context);
 
-    this.props.getAllDevicesByStatus(DEVICE_STATES.accepted);
+    this.props.getAllDevicesByStatus(DeviceConstants.DEVICE_STATES.accepted);
     this.state = {
       artifacts: AppStore.getCollatedArtifacts(AppStore.getArtifactsRepo()),
       deploymentDeviceIds: []
@@ -203,7 +202,7 @@ export class SoftwareDevices extends React.Component {
 const actionCreators = { getAllDevicesByStatus, getAllGroupDevices, selectDevice };
 
 const mapStateToProps = state => {
-  const { [AppConstants.UNGROUPED_GROUP.id]: ungroupedGroup, ...groups } = state.devices.groups.byId;
+  const { [DeviceConstants.UNGROUPED_GROUP.id]: ungroupedGroup, ...groups } = state.devices.groups.byId;
   return {
     acceptedDevices: state.devices.byStatus.accepted.deviceIds,
     device: state.devices.selectedDevice,

@@ -1,7 +1,6 @@
 import parse from 'parse-link-header';
 
 import DevicesApi from '../api/devices-api';
-import AppConstants from '../constants/app-constants';
 import * as DeviceConstants from '../constants/deviceConstants';
 import { deriveAttributesFromDevices, mapDeviceAttributes } from '../helpers';
 
@@ -48,7 +47,7 @@ export const removeDeviceFromGroup = (device, group) => dispatch =>
       }),
       dispatch({
         type: DeviceConstants.ADD_TO_GROUP,
-        group: AppConstants.UNGROUPED_GROUP.id,
+        group: DeviceConstants.UNGROUPED_GROUP.id,
         device
       })
     ])

@@ -1,5 +1,4 @@
 import * as DeviceConstants from '../constants/deviceConstants';
-import AppConstants from '../constants/app-constants';
 
 const initialState = {
   byId: {},
@@ -19,7 +18,7 @@ const initialState = {
   limit: 500,
   groups: {
     byId: {
-      // [AppConstants.UNGROUPED_GROUP.id]: { deviceIds: [], total: 0 }
+      // [DeviceConstants.UNGROUPED_GROUP.id]: { deviceIds: [], total: 0 }
     },
     selectedGroup: null
   }
@@ -234,7 +233,7 @@ const deviceReducer = (state = initialState, action) => {
   case DeviceConstants.SET_UNGROUPED_DEVICES: {
     const ungroupedGroup = action.deviceIds
       ? {
-        [AppConstants.UNGROUPED_GROUP.id]: {
+        [DeviceConstants.UNGROUPED_GROUP.id]: {
           deviceIds: action.deviceIds,
           total: action.deviceIds.length
         }

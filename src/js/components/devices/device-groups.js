@@ -26,12 +26,11 @@ import {
 } from '../../actions/deviceActions';
 
 import AppStore from '../../stores/app-store';
-import AppConstants from '../../constants/app-constants';
-import { DEVICE_STATES } from '../../constants/deviceConstants';
+import * as DeviceConstants from '../../constants/deviceConstants';
 import { isEmpty, preformatWithRequestID } from '../../helpers';
 import { setRetryTimer, clearAllRetryTimers } from '../../utils/retrytimer';
 
-const UNGROUPED_GROUP = AppConstants.UNGROUPED_GROUP;
+const UNGROUPED_GROUP = DeviceConstants.UNGROUPED_GROUP;
 
 export class DeviceGroups extends React.Component {
   static contextTypes = {
@@ -54,7 +53,7 @@ export class DeviceGroups extends React.Component {
       isHosted: AppStore.getIsEnterprise() || AppStore.getIsHosted()
     };
     this.props.selectDevices(this.props.acceptedDevicesList);
-    this.props.getAllDevicesByStatus(DEVICE_STATES.accepted);
+    this.props.getAllDevicesByStatus(DeviceConstants.DEVICE_STATES.accepted);
   }
 
   componentDidMount() {
@@ -130,9 +129,9 @@ export class DeviceGroups extends React.Component {
 
   _handleGroupChange(group) {
     var self = this;
-    const isUngroupedGroup = group === AppConstants.UNGROUPED_GROUP.id || group === AppConstants.UNGROUPED_GROUP.name;
+    const isUngroupedGroup = group === DeviceConstants.UNGROUPED_GROUP.id || group === DeviceConstants.UNGROUPED_GROUP.name;
     if (isUngroupedGroup) {
-      group = AppConstants.UNGROUPED_GROUP.id;
+      group = DeviceConstants.UNGROUPED_GROUP.id;
     }
     self.props.selectGroup(group);
     self.setState({ loading: true, pageNo: 1, filters: [] }, self._getDevices);
@@ -208,7 +207,7 @@ export class DeviceGroups extends React.Component {
         });
     } else {
       // otherwise, show accepted from device adm
-      return getDevicesByStatus(DEVICE_STATES.accepted, this.state.pageNo, this.state.pageLength)
+      return getDevicesByStatus(DeviceConstants.DEVICE_STATES.accepted, this.state.pageNo, this.state.pageLength)
         .then(() => self.setState({ loading: false, pageLoading: false }))
         .catch(err => {
           console.log(err);
@@ -521,8 +520,8 @@ const mapStateToProps = state => {
   } else if (!isEmpty(state.devices.selectedDevice)) {
     devices = [state.devices.selectedDevice];
   }
-  const ungroupedDevices = state.devices.groups.byId[AppConstants.UNGROUPED_GROUP.id]
-    ? state.devices.groups.byId[AppConstants.UNGROUPED_GROUP.id].deviceIds
+  const ungroupedDevices = state.devices.groups.byId[DeviceConstants.UNGROUPED_GROUP.id]
+    ? state.devices.groups.byId[DeviceConstants.UNGROUPED_GROUP.id].deviceIds
     : [];
   return {
     acceptedDevices: state.devices.byStatus.accepted.total || 0,

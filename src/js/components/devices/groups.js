@@ -2,7 +2,7 @@ import React from 'react';
 import ReactTooltip from 'react-tooltip';
 import { AddGroup } from '../helptips/helptooltips';
 
-import AppConstants from '../../constants/app-constants';
+import * as DeviceConstants from '../../constants/deviceConstants';
 
 // material ui
 import List from '@material-ui/core/List';
@@ -30,9 +30,9 @@ export default class Groups extends React.Component {
           numDevs = this.props.groupDevices[group] || null;
         }
         var boundClick = () => this.props.changeGroup(group, numDevs);
-        const isUngroupedGroup = group === AppConstants.UNGROUPED_GROUP.id || group === AppConstants.UNGROUPED_GROUP.name;
+        const isUngroupedGroup = group === DeviceConstants.UNGROUPED_GROUP.id || group === DeviceConstants.UNGROUPED_GROUP.name;
         if (isUngroupedGroup) {
-          group = AppConstants.UNGROUPED_GROUP.name;
+          group = DeviceConstants.UNGROUPED_GROUP.name;
         }
         var isSelected = group === this.props.selectedGroup ? { backgroundColor: '#e7e7e7' } : {};
         var groupLabel = <span>{decodeURIComponent(group)}</span>;

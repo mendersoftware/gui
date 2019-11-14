@@ -23,8 +23,7 @@ import {
 import { ErrorOutline as ErrorOutlineIcon } from '@material-ui/icons';
 
 import { getDevicesByStatus } from '../../actions/deviceActions';
-import AppConstants from '../../constants/app-constants';
-import { DEVICE_STATES } from '../../constants/deviceConstants';
+import * as DeviceConstants from '../../constants/deviceConstants';
 import AppStore from '../../stores/app-store';
 import Loader from '../common/loader';
 
@@ -32,7 +31,7 @@ export class CreateGroup extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = this._getInitialState();
-    this.props.getDevicesByStatus(DEVICE_STATES.accepted, this.state.pageNo, this.state.pageLength);
+    this.props.getDevicesByStatus(DeviceConstants.DEVICE_STATES.accepted, this.state.pageNo, this.state.pageLength);
   }
 
   componentDidUpdate(prevProps) {
@@ -58,7 +57,7 @@ export class CreateGroup extends React.Component {
   _getDevices() {
     var self = this;
     return self.props
-      .getDevicesByStatus(DEVICE_STATES.accepted, this.state.pageNo, this.state.pageLength)
+      .getDevicesByStatus(DeviceConstants.DEVICE_STATES.accepted, this.state.pageNo, this.state.pageLength)
       .catch(err => {
         console.log(err.error || 'Please check your connection.');
         // setRetryTimer(err, "devices", "Devices couldn't be loaded. " + errormsg, self.state.refreshDeviceLength);
@@ -97,7 +96,7 @@ export class CreateGroup extends React.Component {
       if (!validator.isWhitelisted(newName, 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-')) {
         invalid = true;
         errortext = 'Valid characters are a-z, A-Z, 0-9, _ and -';
-      } else if (validator.contains(newName.toLowerCase(), AppConstants.UNGROUPED_GROUP.name.toLowerCase())) {
+      } else if (validator.contains(newName.toLowerCase(), DeviceConstants.UNGROUPED_GROUP.name.toLowerCase())) {
         invalid = true;
         errortext = `${newName} is a reserved group name`;
       } else {
