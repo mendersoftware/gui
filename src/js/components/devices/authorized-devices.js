@@ -22,6 +22,7 @@ import AppActions from '../../actions/app-actions';
 import AppStore from '../../stores/app-store';
 
 import DeviceList from './devicelist';
+import DeviceStatus from './device-status';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 
 export default class Authorized extends React.Component {
@@ -141,6 +142,11 @@ export default class Authorized extends React.Component {
         name: 'last_checkin',
         property: 'updated_ts',
         render: device => (device.updated_ts ? <Time value={device.updated_ts} format="YYYY-MM-DD HH:mm" /> : '-')
+      },
+      {
+        title: '',
+        name: 'status',
+        render: device => <DeviceStatus device={device} />
       }
     ];
     const showHelptips = AppStore.showHelptips();

@@ -191,6 +191,10 @@ ul.link-list {
   text-transform: capitalize;
 }
 
+.uppercased {
+  text-transform: uppercase;
+}
+
 .text-overflow {
   overflow: hidden;
   text-overflow: ellipsis;
@@ -1584,6 +1588,20 @@ tr.expand {
     }
     .device-inventory .report-list {
       width: 45%;
+    }
+    .deviceStatus {
+      border-color: @verylightgrey;
+      color: @verylightgrey;
+      font-size: 0.8em;
+      line-height: 0.8em;
+      .notificationCounter {
+        width: 14px;
+        height: 14px;
+        background-color: @verylightgrey;
+        margin-left: 5px;
+        margin-right: -5px;
+        color: @lightestgrey;
+      }
     }
   }
   &.pending .deviceListItem {
