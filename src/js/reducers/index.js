@@ -1,21 +1,16 @@
-import { createStore, combineReducers, applyMiddleware, compose } from 'redux';
+import { createStore, combineReducers, applyMiddleware } from 'redux';
 import thunkMiddleware from 'redux-thunk';
-import { devToolsEnhancer } from 'redux-devtools-extension';
+import { composeWithDevTools } from 'redux-devtools-extension';
 import deviceReducer from './deviceReducer';
+// import releaseReducer from './releaseReducer';
 
 const rootReducer = combineReducers({
   devices: deviceReducer
   // deployments: deploymentReducer,
-  // releases: releaseReducer,
+  // releases: releaseReducer
   // user: userReducer
 });
 
-const store = createStore(
-  rootReducer,
-  compose(
-    //   devToolsEnhancer(),
-    applyMiddleware(thunkMiddleware)
-  )
-);
+const store = createStore(rootReducer, composeWithDevTools(applyMiddleware(thunkMiddleware)));
 
 export default store;

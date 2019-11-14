@@ -275,6 +275,7 @@ export function getOnboardingState(userId) {
         progress: savedState.progress || determineProgress(acceptedDevices, pendingDevices, releases, pastDeployments)
       };
       persistOnboardingState(state);
+      state.devices = devices;
       return Promise.resolve(state);
     });
   } else {
