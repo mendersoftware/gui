@@ -1,6 +1,5 @@
 import AppConstants from '../constants/app-constants';
 import AppDispatcher from '../dispatchers/app-dispatcher';
-import ArtifactsApi from '../api/artifacts-api';
 import DeploymentsApi from '../api/deployments-api';
 import GeneralApi from '../api/general-api';
 import UsersApi from '../api/users-api';
@@ -166,74 +165,10 @@ const AppActions = {
     }
   },
 
-  /* Artifacts */
-  getArtifacts: () =>
-    ArtifactsApi.get(`${deploymentsApiUrl}/artifacts`).then(artifacts => {
-      AppDispatcher.handleViewAction({
-        actionType: AppConstants.RECEIVE_ARTIFACTS,
-        artifacts: artifacts
-      });
-      return Promise.resolve(artifacts);
-    }),
-
-  getArtifactUrl: id =>
-    ArtifactsApi.get(`${deploymentsApiUrl}/artifacts/${id}/download`).then(response => {
-      AppDispatcher.handleViewAction({
-        actionType: AppConstants.ARTIFACTS_SET_ARTIFACT_URL,
-        id,
-        url: response.uri
-      });
-      return Promise.resolve(response.uri);
-    }),
-
-  uploadArtifact: (meta, file, progress) => {
-    var formData = new FormData();
-    formData.append('size', file.size);
-    formData.append('description', meta.description);
-    formData.append('artifact', file);
-    AppDispatcher.handleViewAction({
-      actionType: AppConstants.UPLOAD_PROGRESS,
-      inprogress: true
-    });
-    return ArtifactsApi.postFormData(`${deploymentsApiUrl}/artifacts`, formData, e => progress(e.percent))
-      .then(() => {
-        AppDispatcher.handleViewAction({
-          actionType: AppConstants.UPLOAD_ARTIFACT,
-          artifact: file
-        });
-      })
-      .finally(() =>
-        AppDispatcher.handleViewAction({
-          actionType: AppConstants.UPLOAD_PROGRESS,
-          inprogress: false
-        })
-      );
-  },
-
-  editArtifact: (id, body) => ArtifactsApi.putJSON(`${deploymentsApiUrl}/artifacts/${id}`, body),
-
-  removeArtifact: id =>
-    ArtifactsApi.delete(`${deploymentsApiUrl}/artifacts/${id}`).then(() =>
-      AppDispatcher.handleViewAction({
-        actionType: AppConstants.ARTIFACTS_REMOVED_ARTIFACT,
-        id
-      })
-    ),
-
   setDeploymentRelease: release =>
     AppDispatcher.handleViewAction({
       actionType: AppConstants.SET_DEPLOYMENT_RELEASE,
       release
-    }),
-
-  /* Releases */
-  getReleases: () =>
-    ArtifactsApi.get(`${deploymentsApiUrl}/deployments/releases`).then(releases => {
-      AppDispatcher.handleViewAction({
-        actionType: AppConstants.RECEIVE_RELEASES,
-        releases
-      });
-      return Promise.resolve(releases);
     }),
 
   /*Deployments */

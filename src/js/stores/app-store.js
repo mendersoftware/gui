@@ -2,11 +2,10 @@ import { EventEmitter } from 'events'; // from device
 
 import AppDispatcher from '../dispatchers/app-dispatcher';
 import AppConstants from '../constants/app-constants';
-import { customSort, stringToBoolean } from '../helpers';
+import { stringToBoolean } from '../helpers';
 
 var CHANGE_EVENT = 'change';
 
-var _artifactsRepo = [];
 var _deploymentRelease = null;
 var _numberInProgress = 0;
 var _filters = [];
@@ -30,8 +29,6 @@ var _onboardingProgress = 0;
 var _onboardingDeviceType = null;
 var _onboardingApproach = null;
 var _onboardingArtifactIncluded = null;
-var _releasesRepo = [];
-var _uploadInProgress = false;
 const _hostAddress = mender_environment && mender_environment.hostAddress ? mender_environment.hostAddress : null;
 const _IntegrationVersion = mender_environment && mender_environment.integrationVersion ? mender_environment.integrationVersion : 'master';
 const _MenderVersion = mender_environment && mender_environment.menderVersion ? mender_environment.menderVersion : 'master';
@@ -154,39 +151,6 @@ function _addGroup(group, idx) {
   }
 }
 
-function discoverDevices(array) {
-  var unique = {};
-  _alldevices.forEach(device => {
-    if (typeof unique[device.artifact_name] == 'undefined') {
-      unique[device.artifact_name] = 0;
-    }
-    unique[device.artifact_name]++;
-  });
-
-  if (array.length) {
-    for (var val in unique) {
-      const idx = array.findIndex(item => item.name === val);
-      if (idx > -1) {
-        array[idx]['devices'] = unique[val];
-      }
-    }
-  }
-  return array;
-}
-
-function _uploadArtifact(artifact) {
-  if (artifact.id) {
-    _artifactsRepo[_artifactsRepo.findIndex(item => item.id === artifact.id)] = artifact;
-  } else {
-    artifact.id = _artifactsRepo.length + 1;
-    _artifactsRepo.push(artifact);
-  }
-}
-
-function _uploadProgress(bool) {
-  _uploadInProgress = bool;
-}
-
 // Deployments
 var _deployments = [];
 var _deploymentsInProgress = [];
@@ -250,57 +214,9 @@ function startTimeSort(a, b) {
   return (b.created > a.created) - (b.created < a.created);
 }
 
-function _collateArtifacts() {
-  var newArray = [];
-  _artifactsRepo.forEach(repo => {
-    var x = newArray.findIndex(item => item.name === repo.name);
-    if (x > -1) {
-      newArray[x].device_types_compatible = newArray[x].device_types_compatible.concat(
-        repo.device_types_compatible.filter(item => {
-          return newArray[x].device_types_compatible.indexOf(item) < 0;
-        })
-      );
-    } else {
-      newArray.push(repo);
-    }
-  });
-  return newArray;
-}
-
-const removeArtifact = id => {
-  const index = _artifactsRepo.findIndex(item => item.id === id);
-  const name = _artifactsRepo[index].name;
-  _artifactsRepo.splice(index, 1);
-  const releaseIndex = _releasesRepo.findIndex(item => item.Name === name);
-  const releaseArtifactIndex = _releasesRepo[releaseIndex].Artifacts.findIndex(item => item.id === id);
-  _releasesRepo[releaseIndex].Artifacts.splice(releaseArtifactIndex, 1);
-  if (!_releasesRepo[releaseIndex].Artifacts.length) {
-    _releasesRepo.splice(releaseIndex, 1);
-  }
-};
-
 /*
  * API STARTS HERE
  */
-function setArtifacts(artifacts) {
-  if (artifacts) {
-    _artifactsRepo = artifacts;
-  }
-  _artifactsRepo.sort(customSort(1, 'modified'));
-}
-
-function setArtifactUrl(id, url) {
-  const artifact = AppStore.getSoftwareArtifact('id', id);
-  artifact.url = url;
-}
-
-function setReleases(releases) {
-  if (releases) {
-    _releasesRepo = releases;
-  }
-  _releasesRepo.sort(customSort(1, 'name'));
-}
-
 function setHasDeployments(deployments) {
   _hasDeployments = deployments == null || deployments.length === 0 ? false : true;
 }
@@ -427,31 +343,6 @@ var AppStore = Object.assign({}, EventEmitter.prototype, {
   matchFilters: (item, filters) => _matchFilters(item, filters),
 
   /*
-   * Return list of saved artifacts objects
-   */
-  getArtifactsRepo: () => discoverDevices(_artifactsRepo),
-
-  /*
-   * return list of artifacts where duplicate names are collated with device compatibility lists combined
-   */
-  getCollatedArtifacts: () => _collateArtifacts(),
-
-  /*
-   * Return single artifact by attr
-   */
-  getSoftwareArtifact: (attr, val) => _artifactsRepo.find(item => item[attr] === val),
-
-  /*
-   * Return list of saved release objects
-   */
-  getReleases: () => _releasesRepo,
-
-  /*
-   * Return single release with corresponding Artifacts
-   */
-  getRelease: name => _releasesRepo.find(item => item.Name === name),
-
-  /*
    * Return list of finished deployments
    */
   getPastDeployments: () => _pastDeployments,
@@ -566,8 +457,6 @@ var AppStore = Object.assign({}, EventEmitter.prototype, {
     return docsVersion;
   },
 
-  getUploadInProgress: () => _uploadInProgress,
-
   getGlobalSettings: () => _globalSettings,
 
   get2FARequired: () => _globalSettings.hasOwnProperty('2fa') && _globalSettings['2fa'] === 'enabled',
@@ -577,16 +466,6 @@ var AppStore = Object.assign({}, EventEmitter.prototype, {
   dispatcherIndex: AppDispatcher.register(payload => {
     var action = payload.action;
     switch (action.actionType) {
-    case AppConstants.UPLOAD_ARTIFACT:
-      _uploadArtifact(payload.action.artifact);
-      break;
-    case AppConstants.UPLOAD_PROGRESS:
-      _uploadProgress(payload.action.inprogress);
-      break;
-    case AppConstants.SORT_TABLE:
-      _sortTable(payload.action.table, payload.action.column, payload.action.direction);
-      break;
-
     case AppConstants.SET_SNACKBAR:
       _setSnackbar(
         payload.action.message,
@@ -639,15 +518,6 @@ var AppStore = Object.assign({}, EventEmitter.prototype, {
       break;
 
       /* API */
-    case AppConstants.RECEIVE_ARTIFACTS:
-      setArtifacts(payload.action.artifacts);
-      break;
-    case AppConstants.ARTIFACTS_SET_ARTIFACT_URL:
-      setArtifactUrl(payload.action.id, payload.action.url);
-      break;
-    case AppConstants.ARTIFACTS_REMOVED_ARTIFACT:
-      removeArtifact(payload.action.id);
-      break;
     case AppConstants.RECEIVE_DEPLOYMENTS:
       setDeployments(payload.action.deployments);
       break;
@@ -662,11 +532,6 @@ var AppStore = Object.assign({}, EventEmitter.prototype, {
       break;
     case AppConstants.INPROGRESS_COUNT:
       setInProgressCount(payload.action.count);
-      break;
-
-      /* API */
-    case AppConstants.RECEIVE_RELEASES:
-      setReleases(payload.action.releases);
       break;
 
       /* API */

@@ -2,12 +2,12 @@ import { createStore, combineReducers, applyMiddleware } from 'redux';
 import thunkMiddleware from 'redux-thunk';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import deviceReducer from './deviceReducer';
-// import releaseReducer from './releaseReducer';
+import releaseReducer from './releaseReducer';
 
 const rootReducer = combineReducers({
-  devices: deviceReducer
+  devices: deviceReducer,
   // deployments: deploymentReducer,
-  // releases: releaseReducer
+  releases: releaseReducer
   // user: userReducer
 });
 
