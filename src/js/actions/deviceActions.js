@@ -64,16 +64,16 @@ export const addGroup = group => dispatch =>
  */
 export const selectGroup = group => dispatch => dispatch({ type: DeviceConstants.SELECT_GROUP, group });
 
-export const selectDevice = device => dispatch => {
+export const selectDevice = deviceId => dispatch => {
   let tasks = [
     dispatch({
       type: DeviceConstants.SELECT_DEVICE,
-      device
+      deviceId
     })
   ];
-  if (device) {
-    tasks.push(getDeviceById(device.id)(dispatch));
-    tasks.push(getDeviceAuth(device.id)(dispatch));
+  if (deviceId) {
+    tasks.push(getDeviceById(deviceId)(dispatch));
+    tasks.push(getDeviceAuth(deviceId)(dispatch));
   }
   return Promise.all(tasks);
 };

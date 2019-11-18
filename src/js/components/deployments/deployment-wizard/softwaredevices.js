@@ -49,12 +49,12 @@ export class SoftwareDevices extends React.Component {
       self.props.deploymentSettings(self.props.deploymentRelease, 'release');
       currentState.release = state.release = self.props.deploymentRelease;
     }
-    if (currentState.group && currentState.release) {
+    if ((self.props.device || currentState.group) && currentState.release) {
       state.deploymentDeviceIds = self.props.acceptedDevices;
       if (self.props.groups[currentState.group]) {
         state.deploymentDeviceIds = self.props.groups[currentState.group].deviceIds;
       } else if (self.props.device) {
-        state.deploymentDeviceIds = [self.props.device];
+        state.deploymentDeviceIds = [self.props.device.id];
       }
       self.props.deploymentSettings(state.deploymentDeviceIds, 'deploymentDeviceIds');
     } else {
@@ -85,15 +85,13 @@ export class SoftwareDevices extends React.Component {
     }));
 
     let groupItems = [{ title: 'All devices', value: 'All devices' }];
-    if (device) {
+    if (device && device.attributes) {
       // If single device, don't show groups
       groupItems[0] = {
         title: device.id,
         value: device
       };
-      artifactItems = artifactItems.filter(art =>
-        art.value.device_types_compatible.some(type => type === device.attributes.find(attr => attr.name === 'device_type').value)
-      );
+      releaseItems = releaseItems.filter(rel => rel.value.device_types_compatible.some(type => type === device.attributes.device_type));
     } else {
       groupItems = Object.keys(groups).reduce((accu, group) => {
         accu.push({
@@ -205,9 +203,8 @@ const mapStateToProps = state => {
   const { [DeviceConstants.UNGROUPED_GROUP.id]: ungroupedGroup, ...groups } = state.devices.groups.byId;
   return {
     acceptedDevices: state.devices.byStatus.accepted.deviceIds,
-    device: state.devices.selectedDevice,
+    device: state.devices.selectedDevice ? state.devices.byId[state.devices.selectedDevice] : null,
     groups,
-    ungroupedGroup,
     hasDevices: state.devices.byStatus.accepted.total || state.devices.byStatus.accepted.deviceIds.length > 0,
     hasPending: state.devices.byStatus.pending.total || state.devices.byStatus.pending.deviceIds.length > 0
   };
