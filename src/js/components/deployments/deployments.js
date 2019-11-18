@@ -134,19 +134,6 @@ export class Deployments extends React.Component {
     };
   }
 
-  flattenRelease(release) {
-    if (release && release.hasOwnProperty('Artifacts')) {
-      return release.Artifacts.reduce(
-        (accu, item) => {
-          accu.device_types_compatible = accu.device_types_compatible.concat(item.device_types_compatible);
-          return accu;
-        },
-        { name: release.Name, device_types_compatible: [] }
-      );
-    }
-    return release;
-  }
-
   _refreshDeployments() {
     if (this._getCurrentLabel() === routes.finished.title) {
       this._refreshPast(null, null, null, null, this.state.groupFilter);
