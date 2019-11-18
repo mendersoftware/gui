@@ -369,7 +369,7 @@ const mapStateToProps = state => {
     acceptedDevices: state.devices.byStatus.accepted.total || 0,
     devices: state.devices.selectedDeviceList,
     deviceLimit: state.devices.limit,
-    count: state.devices.byStatus.preauth.total
+    count: state.devices.byStatus.preauthorized.total
   };
 };
 
