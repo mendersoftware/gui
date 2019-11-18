@@ -1,4 +1,6 @@
 import React from 'react';
+import { compose } from 'redux';
+import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
 import PropTypes from 'prop-types';
@@ -8,7 +10,7 @@ import LeftNav from './leftnav';
 import IdleTimer from 'react-idle-timer';
 
 import { logout, updateMaxAge, expirySet } from '../auth';
-import { preformatWithRequestID, stringToBoolean } from '../helpers';
+import { stringToBoolean } from '../helpers';
 
 import SharedSnackbar from '../components/common/sharedsnackbar';
 
@@ -33,11 +35,9 @@ class AppRoot extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      artifactProgress: 0,
       version: AppStore.getIntegrationVersion(),
       docsVersion: AppStore.getDocsVersion(),
       timeout: 900000, // 15 minutes idle time,
-      uploadArtifact: (meta, file) => this._uploadArtifact(meta, file),
       ...this._getState()
     };
   }
@@ -51,7 +51,6 @@ class AppRoot extends React.Component {
   _getState() {
     return {
       currentUser: AppStore.getCurrentUser(),
-      uploadInProgress: AppStore.getUploadInProgress(),
       globalSettings: AppStore.getGlobalSettings(),
       snackbar: AppStore.getSnackbar(),
       showDismissHelptipsDialog: !AppStore.getOnboardingComplete() && AppStore.getShowOnboardingTipsDialog(),
@@ -76,36 +75,13 @@ class AppRoot extends React.Component {
   _onIdle() {
     if (expirySet() && this.state.currentUser) {
       // logout user and warn
-      if (!this.state.uploadInProgress) {
+      if (!this.props.uploadInProgress) {
         logout();
         AppActions.setSnackbar('Your session has expired. You have been automatically logged out due to inactivity.');
         return;
       }
       updateMaxAge();
     }
-  }
-
-  _uploadArtifact(meta, file) {
-    var self = this;
-    var progress = percent => self.setState({ artifactProgress: percent });
-    AppActions.setSnackbar('Uploading artifact');
-    return new Promise((resolve, reject) =>
-      AppActions.uploadArtifact(meta, file, progress)
-        .then(() => AppActions.setSnackbar('Upload successful', 5000))
-        .catch(err => {
-          try {
-            var errMsg = err.res.body.error || '';
-            AppActions.setSnackbar(preformatWithRequestID(err.res, `Artifact couldn't be uploaded. ${errMsg}`), null, 'Copy to clipboard');
-          } catch (e) {
-            console.log(e);
-          }
-          reject();
-        })
-        .finally(() => {
-          self.setState({ artifactProgress: 0 });
-          resolve();
-        })
-    );
   }
 
   render() {
@@ -142,5 +118,18 @@ class AppRoot extends React.Component {
     );
   }
 }
-const App = withRouter(AppRoot);
-export default App;
+
+const mapStateToProps = state => {
+  return {
+    uploadInProgress: state.releases.uploadInProgress,
+    artifactProgress: state.releases.artifactProgress
+  };
+};
+
+export default compose(
+  withRouter,
+  connect(
+    mapStateToProps
+    // actionCreators
+  )
+)(AppRoot);
