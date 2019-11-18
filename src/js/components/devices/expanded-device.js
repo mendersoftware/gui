@@ -21,6 +21,7 @@ import {
 
 import AppStore from '../../stores/app-store';
 import { decommissionDevice, selectDevice } from '../../actions/deviceActions';
+import { getReleases } from '../../actions/releaseActions';
 import AppActions from '../../actions/app-actions';
 import { DEVICE_STATES } from '../../constants/deviceConstants';
 import { preformatWithRequestID } from '../../helpers';
@@ -61,7 +62,6 @@ export class ExpandedDevice extends React.Component {
     super(props, context);
 
     this.state = {
-      artifacts: AppStore.getArtifactsRepo(),
       authsets: false,
       docsVersion: AppStore.getDocsVersion(),
       schedule: false,
@@ -72,19 +72,8 @@ export class ExpandedDevice extends React.Component {
   }
 
   componentDidMount() {
-    this._getArtifacts();
-  }
-
-  _getArtifacts() {
-    var self = this;
     if (this.props.device.status === DEVICE_STATES.accepted) {
-      AppActions.getArtifacts()
-        .then(artifacts =>
-          setTimeout(() => {
-            self.setState({ artifacts });
-          }, 300)
-        )
-        .catch(err => console.log(err.error || 'Please check your connection'));
+      this.props.getReleases();
     }
   }
 
@@ -405,9 +394,15 @@ export class ExpandedDevice extends React.Component {
   }
 }
 
-const actionCreators = { decommissionDevice, selectDevice };
+const actionCreators = { decommissionDevice, getReleases, selectDevice };
+
+const mapStateToProps = state => {
+  return {
+    artifacts: state.releases.artifactsRepo
+  };
+};
 
 export default connect(
-  null,
+  mapStateToProps,
   actionCreators
 )(ExpandedDevice);

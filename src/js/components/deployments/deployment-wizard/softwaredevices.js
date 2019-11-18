@@ -8,8 +8,7 @@ import { TextField, Tooltip } from '@material-ui/core';
 import { ErrorOutline as ErrorOutlineIcon, InfoOutlined as InfoOutlinedIcon } from '@material-ui/icons';
 
 import AutoSelect from '../../common/forms/autoselect';
-import { getAllDevicesByStatus, getAllGroupDevices, selectDevice } from '../../../actions/deviceActions';
-import AppStore from '../../../stores/app-store';
+import { getAllDevicesByStatus, getAllGroupDevices } from '../../../actions/deviceActions';
 import DeviceConstants from '../../../constants/deviceConstants';
 
 import { getOnboardingComponentFor } from '../../../utils/onboardingmanager';
@@ -31,7 +30,6 @@ export class SoftwareDevices extends React.Component {
 
     this.props.getAllDevicesByStatus(DeviceConstants.DEVICE_STATES.accepted);
     this.state = {
-      artifacts: AppStore.getCollatedArtifacts(AppStore.getArtifactsRepo()),
       deploymentDeviceIds: []
     };
   }
@@ -65,8 +63,8 @@ export class SoftwareDevices extends React.Component {
 
   render() {
     const self = this;
-    const { device, deploymentAnchor, deploymentRelease, group, groups, hasDevices, hasPending, release } = self.props;
-    const { artifacts, deploymentDeviceIds } = self.state;
+    const { device, deploymentAnchor, deploymentRelease, group, groups, hasDevices, hasPending, release, releases } = self.props;
+    const { deploymentDeviceIds } = self.state;
 
     const selectedRelease = deploymentRelease ? deploymentRelease : release;
 
@@ -79,9 +77,9 @@ export class SoftwareDevices extends React.Component {
       </Tooltip>
     );
 
-    let artifactItems = artifacts.map(art => ({
-      title: art.name,
-      value: art
+    let releaseItems = releases.map(rel => ({
+      title: rel.Name,
+      value: rel
     }));
 
     let groupItems = [{ title: 'All devices', value: 'All devices' }];
@@ -120,7 +118,7 @@ export class SoftwareDevices extends React.Component {
 
     return (
       <div style={{ overflow: 'visible', minHeight: '300px', marginTop: '15px' }}>
-        {!artifactItems.length ? (
+        {!releaseItems.length ? (
           <p className="info" style={{ marginTop: '0' }}>
             <ErrorOutlineIcon style={{ marginRight: '4px', fontSize: '18px', top: '4px', color: 'rgb(171, 16, 0)' }} />
             There are no artifacts available. <Link to="/artifacts">Upload one to the repository</Link> to get started.
@@ -134,7 +132,7 @@ export class SoftwareDevices extends React.Component {
                 <AutoSelect
                   label="Select a Release to deploy"
                   errorText="Select a Release to deploy"
-                  items={artifactItems}
+                  items={releaseItems}
                   onChange={item => self.deploymentSettingsUpdate(item, 'release')}
                   style={styles.textField}
                   value={release ? release.name : null}
@@ -197,7 +195,7 @@ export class SoftwareDevices extends React.Component {
   }
 }
 
-const actionCreators = { getAllDevicesByStatus, getAllGroupDevices, selectDevice };
+const actionCreators = { getAllDevicesByStatus, getAllGroupDevices };
 
 const mapStateToProps = state => {
   const { [DeviceConstants.UNGROUPED_GROUP.id]: ungroupedGroup, ...groups } = state.devices.groups.byId;
@@ -206,7 +204,9 @@ const mapStateToProps = state => {
     device: state.devices.selectedDevice ? state.devices.byId[state.devices.selectedDevice] : null,
     groups,
     hasDevices: state.devices.byStatus.accepted.total || state.devices.byStatus.accepted.deviceIds.length > 0,
-    hasPending: state.devices.byStatus.pending.total || state.devices.byStatus.pending.deviceIds.length > 0
+    hasPending: state.devices.byStatus.pending.total || state.devices.byStatus.pending.deviceIds.length > 0,
+    releases: Object.values(state.releases.byId),
+    ungroupedGroup
   };
 };
 

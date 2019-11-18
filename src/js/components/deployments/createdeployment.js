@@ -8,6 +8,8 @@ import ScheduleRollout from './deployment-wizard/schedulerollout';
 import Review from './deployment-wizard/review';
 
 import { selectDevice } from '../../actions/deviceActions';
+import { selectRelease } from '../../actions/releaseActions';
+
 import AppStore from '../../stores/app-store';
 import { getRemainderPercent } from '../../helpers';
 
@@ -55,12 +57,15 @@ export class CreateDialog extends React.Component {
 
   onScheduleSubmit(settings) {
     this.props.onScheduleSubmit(settings);
-    this.setState({ activeStep: 0, deploymentDeviceIds: [], group: null, phases: null, release: null, disableSchedule: false });
+    this.setState({ activeStep: 0, deploymentDeviceIds: [], group: null, phases: null, disableSchedule: false });
+    this.props.selectDevice();
+    this.props.selectRelease();
   }
 
   closeWizard() {
-    this.setState({ activeStep: 0, deploymentDeviceIds: [], group: null, phases: null, release: null, disableSchedule: false });
+    this.setState({ activeStep: 0, deploymentDeviceIds: [], group: null, phases: null, disableSchedule: false });
     this.props.selectDevice();
+    this.props.selectRelease();
     this.props.onDismiss();
   }
 
@@ -78,8 +83,8 @@ export class CreateDialog extends React.Component {
 
   render() {
     const self = this;
-    const { device, open } = self.props;
-    const { activeStep, deploymentDeviceIds, release, group, phases, steps } = self.state;
+    const { device, open, release } = self.props;
+    const { activeStep, deploymentDeviceIds, group, phases, steps } = self.state;
     const disabled = activeStep === 0 ? !(release && deploymentDeviceIds.length) : self.state.disableSchedule;
     const finalStep = activeStep === steps.length - 1;
     const ComponentToShow = steps[activeStep].component;
@@ -131,13 +136,14 @@ export class CreateDialog extends React.Component {
   }
 }
 
-const actionCreators = { selectDevice };
+const actionCreators = { selectDevice, selectRelease };
 
 const mapStateToProps = state => {
   return {
-    device: state.devices.selectedDevice,
+    device: state.devices.selectedDevice ? state.devices.byId[state.devices.selectedDevice] : null,
     groups: Object.keys(state.devices.groups.byId),
-    hasDevices: state.devices.byStatus.accepted.total || state.devices.byStatus.accepted.deviceIds.length > 0
+    hasDevices: state.devices.byStatus.accepted.total || state.devices.byStatus.accepted.deviceIds.length > 0,
+    release: state.releases.selectedRelease ? state.releases.byId[state.releases.selectedRelease] : null
   };
 };
 

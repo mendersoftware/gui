@@ -8,6 +8,7 @@ import DeploymentCompleteTip from '../components/helptips/deploymentcompletetip'
 
 import AppActions from '../actions/app-actions';
 import { getDevicesByStatus, getAllDevices } from '../actions/deviceActions';
+import { getReleases } from '../actions/releaseActions';
 import AppStore from '../stores/app-store';
 import store from '../reducers';
 
@@ -74,7 +75,9 @@ const onboardingSteps = {
   },
   'upload-prepared-artifact-tip': {
     condition: () =>
-      onboardingTipSanityCheck('artifact-included-onboarding') && getOnboardingStepCompleted('devices-accepted-onboarding') && !AppStore.getReleases().length,
+      onboardingTipSanityCheck('artifact-included-onboarding') &&
+      getOnboardingStepCompleted('devices-accepted-onboarding') &&
+      !Object.keys(store.getState().releases.byId).length,
     component: (
       <div>
         Download our prepared demo Artifact from <a href={demoArtifactLink}>here</a> to upload it to your profile.
@@ -252,7 +255,7 @@ export function getOnboardingState(userId) {
       getDevicesByStatus(DEVICE_STATES.accepted),
       getDevicesByStatus(DEVICE_STATES.pending),
       getAllDevices(),
-      AppActions.getReleases(),
+      getReleases(),
       AppActions.getPastDeployments(),
       Promise.resolve(userCookie)
     ];

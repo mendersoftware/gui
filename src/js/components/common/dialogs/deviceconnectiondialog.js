@@ -1,23 +1,21 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import ReactTooltip from 'react-tooltip';
 
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@material-ui/core';
 
 import HelpIcon from '@material-ui/icons/Help';
 
 import AppActions from '../../../actions/app-actions';
+import { getReleases } from '../../../actions/releaseActions';
 
 import PhysicalDeviceOnboarding from './physicaldeviceonboarding';
 import VirtualDeviceOnboarding from './virtualdeviceonboarding';
 import AppStore from '../../../stores/app-store';
 import { advanceOnboarding } from '../../../utils/onboardingmanager';
 
-export default class DeviceConnectionDialog extends React.Component {
+export class DeviceConnectionDialog extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
@@ -34,7 +32,7 @@ export default class DeviceConnectionDialog extends React.Component {
       if (AppStore.hasMultitenancy() || AppStore.getIsEnterprise() || AppStore.getIsHosted()) {
         AppActions.getUserOrganization().then(org => (org ? self.setState({ token: org.tenant_token }) : null));
       }
-      AppActions.getReleases().then(releases => AppActions.setOnboardingArtifactIncluded(!!releases.length));
+      self.props.getReleases();
     }
   }
 
@@ -141,3 +139,10 @@ export default class DeviceConnectionDialog extends React.Component {
     );
   }
 }
+
+const actionCreators = { getReleases };
+
+export default connect(
+  null,
+  actionCreators
+)(DeviceConnectionDialog);

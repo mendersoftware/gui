@@ -6,6 +6,8 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Tab, Tabs } 
 
 import AppStore from '../../stores/app-store';
 import { getAllGroupDevices, selectDevice } from '../../actions/deviceActions';
+import { selectRelease } from '../../actions/releaseActions';
+
 import AppActions from '../../actions/app-actions';
 import { setRetryTimer, clearRetryTimer, clearAllRetryTimers } from '../../utils/retrytimer';
 
@@ -70,48 +72,33 @@ export class Deployments extends React.Component {
     clearAllRetryTimers();
     this.timer = setInterval(() => this._refreshDeployments(), this.state.refreshDeploymentsLength);
     this._refreshDeployments();
-
+    self.props.selectRelease();
+    self.props.selectDevice();
     self.props.groups.map(group => self.props.getAllGroupDevices(group));
-    AppActions.getArtifacts()
-      .catch(err => console.log(`Error: ${err}`))
-      .then(artifacts => {
-        const collatedArtifacts = AppStore.getCollatedArtifacts(artifacts);
-        return self.setState({ collatedArtifacts, doneLoading: true });
-      });
-
     if (this.props.match) {
       const params = new URLSearchParams(this.props.location.search);
       if (params && params.get('open')) {
         if (params.get('id')) {
           self._getReportById(params.get('id'));
         } else if (params.get('release')) {
-          const release = self.flattenRelease(AppStore.getRelease(params.get('release')));
-          self.setState({
-            createDialog: true,
-            releaseArtifacts: release ? release.Artifacts : null,
-            release,
-            artifact: release && release.Artifacts ? release.Artifacts[0] : null
-          });
+          self.props.selectRelease(params.get('release'));
         } else if (params.get('deviceId')) {
-          self.props
-            .selectDevice({ id: params.get('deviceId') })
-            .then(() => self.setState({ createDialog: true }))
-            .catch(err => {
-              console.log(err);
-              var errMsg = err.res.body.error || '';
-              AppActions.setSnackbar(preformatWithRequestID(err.res, `Error fetching device details. ${errMsg}`), null, 'Copy to clipboard');
-            });
+          self.props.selectDevice(params.get('deviceId')).catch(err => {
+            console.log(err);
+            var errMsg = err.res.body.error || '';
+            AppActions.setSnackbar(preformatWithRequestID(err.res, `Error fetching device details. ${errMsg}`), null, 'Copy to clipboard');
+          });
         } else {
-          setTimeout(() => {
-            self.setState({ createDialog: true });
-          }, 400);
+          setTimeout(() => self.setState({ createDialog: true }), 400);
         }
       }
     }
-    this.setState({ reportType: this.props.match ? this.props.match.params.tab : 'active' });
-
     const query = new URLSearchParams(this.props.location.search);
-    this.setState({ createDialog: Boolean(query.get('open')) || false });
+    this.setState({
+      reportType: this.props.match ? this.props.match.params.tab : 'active',
+      createDialog: Boolean(query.get('open')),
+      doneLoading: true
+    });
   }
 
   componentWillUnmount() {
@@ -407,7 +394,7 @@ export class Deployments extends React.Component {
     }
 
     // tabs
-    const { past, per_page, pastCount, release, tabIndex } = this.state;
+    const { past, per_page, pastCount, tabIndex } = this.state;
     let onboardingComponent = null;
     if (past.length || pastCount) {
       onboardingComponent = getOnboardingComponentFor('deployments-past', { anchor: { left: 240, top: 50 } });
@@ -504,7 +491,6 @@ export class Deployments extends React.Component {
           open={this.state.createDialog}
           onDismiss={() => self.setState({ createDialog: false, deploymentObject: null })}
           onScheduleSubmit={(...args) => this._onScheduleSubmit(...args)}
-          deploymentRelease={release}
           deploymentObject={self.state.deploymentObject}
         />
         {onboardingComponent}
@@ -513,7 +499,7 @@ export class Deployments extends React.Component {
   }
 }
 
-const actionCreators = { getAllGroupDevices, selectDevice };
+const actionCreators = { getAllGroupDevices, selectDevice, selectRelease };
 
 const mapStateToProps = state => {
   return {
