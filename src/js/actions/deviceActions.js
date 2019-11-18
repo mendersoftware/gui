@@ -95,7 +95,7 @@ export const getGroupDevices = (group, page = defaultPage, perPage = defaultPerP
 
 export const getAllGroupDevices = group => dispatch => {
   var forGroup = group ? `&group=${group}` : '&has_group=false';
-  const getAllDevices = (perPage = 200, page = defaultPage, devices = []) =>
+  const getAllDevices = (perPage = 500, page = defaultPage, devices = []) =>
     DevicesApi.get(`${inventoryApiUrl}/devices?per_page=${perPage}&page=${page}${forGroup}`).then(res => {
       var links = parse(res.headers['link']);
       const mappedDevices = res.body.map(device => ({ ...device, attributes: mapDeviceAttributes(device.attributes) }));
@@ -104,7 +104,10 @@ export const getAllGroupDevices = group => dispatch => {
         return getAllDevices(perPage, page + 1, devices);
       }
       if (!group) {
-        return Promise.resolve({ devices });
+        return dispatch({
+          type: DeviceConstants.RECEIVE_ALL_DEVICES,
+          devices
+        });
       }
       return dispatch({
         type: DeviceConstants.RECEIVE_GROUP_DEVICES,
@@ -202,7 +205,7 @@ const deriveInactiveDevices = (acceptedDevices, deviceInventory) => dispatch => 
 };
 
 export const getAllDevices = () => (dispatch, getState) => {
-  const getAllDevices = (perPage = 200, page = 1, devices = []) =>
+  const getAllDevices = (perPage = 500, page = 1, devices = []) =>
     DevicesApi.get(`${inventoryApiUrl}/devices?per_page=${perPage}&page=${page}`).then(res => {
       var links = parse(res.headers['link']);
       const mappedDevices = res.body.map(device => ({ ...device, attributes: mapDeviceAttributes(device.attributes) }));
@@ -232,20 +235,20 @@ export const getAllDevices = () => (dispatch, getState) => {
 export const getDeviceCount = status => dispatch => {
   return DevicesApi.get(`${deviceAuthV2}/devices/count${status ? `?status=${status}` : ''}`).then(res => {
     switch (status) {
-    case DeviceConstants.DEVICE_STATES.accepted:
-    case DeviceConstants.DEVICE_STATES.pending:
-    case DeviceConstants.DEVICE_STATES.preauth:
-    case DeviceConstants.DEVICE_STATES.rejected:
-      return dispatch({
-        type: DeviceConstants[`SET_${status.toUpperCase()}_DEVICES_COUNT`],
-        count: res.body.count,
-        status
-      });
-    default:
-      return dispatch({
-        type: DeviceConstants.SET_TOTAL_DEVICES,
-        count: res.body.count
-      });
+      case DeviceConstants.DEVICE_STATES.accepted:
+      case DeviceConstants.DEVICE_STATES.pending:
+      case DeviceConstants.DEVICE_STATES.preauth:
+      case DeviceConstants.DEVICE_STATES.rejected:
+        return dispatch({
+          type: DeviceConstants[`SET_${status.toUpperCase()}_DEVICES_COUNT`],
+          count: res.body.count,
+          status
+        });
+      default:
+        return dispatch({
+          type: DeviceConstants.SET_TOTAL_DEVICES,
+          count: res.body.count
+        });
     }
   });
 };
@@ -292,7 +295,7 @@ export const getDevicesByStatus = (status, page = defaultPage, perPage = default
   });
 
 export const getAllDevicesByStatus = status => (dispatch, getState) => {
-  const getAllDevices = (perPage = 200, page = 1, devices = []) =>
+  const getAllDevices = (perPage = 500, page = 1, devices = []) =>
     DevicesApi.get(`${deviceAuthV2}/devices?status=${status}&per_page=${perPage}&page=${page}`).then(res => {
       var links = parse(res.headers['link']);
       devices.push(...res.body);
