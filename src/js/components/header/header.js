@@ -24,6 +24,9 @@ import { clearAllRetryTimers } from '../../utils/retrytimer';
 import { toggleHelptips, hideAnnouncement } from '../../utils/toggleuseroptions';
 import DeviceNotifications from './devicenotifications';
 import DeploymentNotifications from './deploymentnotifications';
+
+import { getDeviceLimit } from '../../actions/deviceActions';
+import { getReleases } from '../../actions/releaseActions';
 import AppActions from '../../actions/app-actions';
 import AppStore from '../../stores/app-store';
 
@@ -49,7 +52,7 @@ export class Header extends React.Component {
     } else {
       if (prevState.sessionId !== this.state.sessionId) {
         this._hasDeployments();
-        this._hasArtifacts();
+        this.props.getReleases();
         this._checkShowHelp();
         this._checkHeaderInfo();
         this._getGlobalSettings();
@@ -62,7 +65,8 @@ export class Header extends React.Component {
       this._updateUsername();
       this._hasDeployments();
       this._checkHeaderInfo();
-      this._hasArtifacts();
+      this.props.getReleases();
+      this.props.getDeviceLimit();
       this._checkShowHelp();
       this._getGlobalSettings();
     }
@@ -72,7 +76,6 @@ export class Header extends React.Component {
       sessionId: cookie.load('JWT'),
       user: AppStore.getCurrentUser(),
       showHelptips: AppStore.showHelptips(),
-      artifacts: AppStore.getArtifactsRepo(),
       hasDeployments: AppStore.getHasDeployments(),
       multitenancy: AppStore.hasMultitenancy(),
       globalSettings: AppStore.getGlobalSettings()
@@ -124,11 +127,7 @@ export class Header extends React.Component {
     var self = this;
     AppActions.getDeploymentCount('inprogress').then(inProgress => self.setState({ inProgress }));
   }
-  _hasArtifacts() {
-    var self = this;
-    AppActions.getArtifacts();
-    return self.state.artifacts.length;
-  }
+
   _updateUsername() {
     var self = this;
     // get current user
@@ -280,6 +279,8 @@ export class Header extends React.Component {
   }
 }
 
+const actionCreators = { getDeviceLimit, getReleases };
+
 const mapStateToProps = state => {
   return {
     deviceLimit: state.devices.limit,
@@ -288,4 +289,7 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps)(Header);
+export default connect(
+  mapStateToProps,
+  actionCreators
+)(Header);

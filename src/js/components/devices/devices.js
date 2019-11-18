@@ -167,20 +167,10 @@ export class Devices extends React.Component {
           />
         )}
         {tabIndex === routes.preauthorized.status && (
-          <PreauthDevices
-            deviceLimit={this.state.deviceLimit}
-            currentTab={this.state.currentTab}
-            openSettingsDialog={() => this._openSettingsDialog()}
-            pause={() => this._pauseInterval()}
-          />
+          <PreauthDevices currentTab={this.state.currentTab} openSettingsDialog={() => this._openSettingsDialog()} pause={() => this._pauseInterval()} />
         )}
         {tabIndex === routes.rejected.status && (
-          <RejectedDevices
-            deviceLimit={this.state.deviceLimit}
-            currentTab={this.state.currentTab}
-            openSettingsDialog={() => this._openSettingsDialog()}
-            pause={() => this._pauseInterval()}
-          />
+          <RejectedDevices currentTab={this.state.currentTab} openSettingsDialog={() => this._openSettingsDialog()} pause={() => this._pauseInterval()} />
         )}
         {tabIndex === routes.devices.status && (
           <DeviceGroups
@@ -248,7 +238,6 @@ const mapStateToProps = state => {
   return {
     acceptedCount: state.devices.byStatus.accepted.total,
     pendingCount: state.devices.byStatus.pending.total,
-    deviceLimit: state.devices.limit,
     devices
   };
 };
