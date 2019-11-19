@@ -1,21 +1,16 @@
 import React from 'react';
+import { connect } from 'react-redux';
+// material ui
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Snackbar } from '@material-ui/core';
+
 import UserList from './userlist';
 import UserForm from './userform';
-
 import AppActions from '../../actions/app-actions';
 import AppStore from '../../stores/app-store';
-
-// material ui
-import Snackbar from '@material-ui/core/Snackbar';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Button from '@material-ui/core/Button';
-
+import { createUser, editUser, getUserList, removeUser } from '../../actions/userActions';
 import { preformatWithRequestID } from '../../helpers';
 
-export default class UserManagement extends React.Component {
+export class UserManagement extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = this._getState();
@@ -26,34 +21,25 @@ export default class UserManagement extends React.Component {
   }
 
   componentDidMount() {
-    this._getUserList();
+    this.props.getUserList();
   }
 
   _getState() {
     return {
-      snackbar: AppStore.getSnackbar(),
-      currentUser: AppStore.getCurrentUser()
+      snackbar: AppStore.getSnackbar()
     };
   }
   _onChange() {
     this.setState(this._getState());
   }
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
-      this._getUserList();
+    const changed = prevProps.currentUser !== this.props.currentUser || prevProps.users.some((user, index) => user !== this.props.users[index]);
+    if (changed) {
+      this.props.getUserList();
     }
   }
   componentWillUnmount() {
     AppStore.removeChangeListener(this._onChange.bind(this));
-  }
-  _getUserList() {
-    var self = this;
-    return AppActions.getUserList()
-      .then(users => self.setState({ users: users }))
-      .catch(err => {
-        var errormsg = err.error || 'Please check your connection';
-        AppActions.setSnackbar(preformatWithRequestID(err.res, `Users couldn't be loaded. ${errormsg}`));
-      });
   }
   _openCreate() {
     this._openEdit();
@@ -73,15 +59,11 @@ export default class UserManagement extends React.Component {
   }
   _editSubmit(userData) {
     var self = this;
-    return AppActions.editUser(self.state.user.id, userData)
+    return self.props
+      .editUser(self.state.user.id, userData)
       .then(() => {
-        // if current logged in user
-        if (self.state.user.id === self.state.currentUser.id) {
-          AppActions.setCurrentUser(userData);
-        }
         self.dialogDismiss();
         AppActions.setSnackbar('The user has been updated.');
-        self._getUserList();
       })
       .catch(err => {
         console.log(err);
@@ -92,11 +74,11 @@ export default class UserManagement extends React.Component {
 
   _createSubmit(userData) {
     var self = this;
-    return AppActions.createUser(userData)
+    return self.props
+      .createUser(userData)
       .then(() => {
         self.dialogDismiss();
         AppActions.setSnackbar('The user was created successfully.');
-        self._getUserList();
       })
       .catch(err => {
         console.log(err);
@@ -107,11 +89,11 @@ export default class UserManagement extends React.Component {
 
   _removeSubmit() {
     var self = this;
-    return AppActions.removeUser(this.state.user.id)
+    return self.props
+      .removeUser(this.state.user.id)
       .then(() => {
         self.dialogDismiss();
         AppActions.setSnackbar('The user was removed from the system.');
-        self._getUserList();
       })
       .catch(err => {
         console.log(err);
@@ -143,10 +125,10 @@ export default class UserManagement extends React.Component {
         </div>
 
         <UserList
-          users={this.state.users || []}
+          users={this.props.users}
           editUser={user => this._openEdit(user)}
           removeUser={user => this._openRemove(user)}
-          currentUser={this.state.currentUser}
+          currentUser={this.props.currentUser}
         />
         <Snackbar
           bodyStyle={{ maxWidth: this.state.snackbar.maxWidth }}
@@ -186,3 +168,17 @@ export default class UserManagement extends React.Component {
     );
   }
 }
+
+const actionCreators = { createUser, editUser, getUserList, removeUser };
+
+const mapStateToProps = state => {
+  return {
+    currentUser: state.users.byId[state.users.currentUser] || {},
+    users: Object.values(state.users.byId)
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  actionCreators
+)(UserManagement);

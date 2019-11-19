@@ -9,6 +9,8 @@ import SelectInput from '../common/forms/selectinput';
 import { preformatWithRequestID, deepCompare } from '../../helpers';
 
 import { getDevicesByStatus } from '../../actions/deviceActions';
+import { getGlobalSettings, saveGlobalSettings } from '../../actions/userActions';
+
 import AppActions from '../../actions/app-actions';
 
 export class Global extends React.Component {
@@ -16,23 +18,19 @@ export class Global extends React.Component {
     super(props, context);
     this.state = {
       disabled: true,
-      settings: {
-        id_attribute: 'Device ID'
-      },
       updatedSettings: {
         id_attribute: 'Device ID'
       }
     };
   }
   componentDidMount() {
-    this.getSettings();
+    this.props.getGlobalSettings();
     this.props.getDevicesByStatus(null, 1, 500);
   }
-  getSettings() {
-    var self = this;
-    return AppActions.getGlobalSettings()
-      .then(settings => self.setState({ settings, updatedSettings: Object.assign(self.state.updatedSettings, settings) }))
-      .catch(err => console.log(`error:${err}`));
+  componentDidUpdate(prevProps) {
+    if (!deepCompare(prevProps.settings, this.props.settings)) {
+      this.setState({ updatedSettings: { ...this.state.updatedSettings, ...this.props.settings } });
+    }
   }
 
   changeIdAttribute(value) {
@@ -42,13 +40,13 @@ export class Global extends React.Component {
 
   hasChanged() {
     // compare to see if any changes were made
-    var changed = this.state.updatedSettings ? !deepCompare(this.state.settings, this.state.updatedSettings) : false;
+    var changed = this.state.updatedSettings ? !deepCompare(this.props.settings, this.state.updatedSettings) : false;
     return changed;
   }
 
   undoChanges() {
     var self = this;
-    this.setState({ updatedSettings: self.state.settings });
+    this.setState({ updatedSettings: self.props.settings });
     if (this.props.dialog) {
       this.props.closeDialog();
     }
@@ -56,9 +54,9 @@ export class Global extends React.Component {
 
   saveSettings() {
     var self = this;
-    return AppActions.saveGlobalSettings(self.state.updatedSettings)
+    return self.props
+      .saveGlobalSettings(self.state.updatedSettings)
       .then(() => {
-        self.setState({ settings: self.state.updatedSettings });
         AppActions.setSnackbar('Settings saved successfully');
         if (self.props.dialog) {
           self.props.closeDialog();
@@ -132,12 +130,13 @@ export class Global extends React.Component {
   }
 }
 
-const actionCreators = { getDevicesByStatus };
+const actionCreators = { getDevicesByStatus, getGlobalSettings, saveGlobalSettings };
 
 const mapStateToProps = state => {
   return {
     // limit the selection of the available attribute to AVAILABLE_ATTRIBUTE_LIMIT
-    attributes: state.devices.filteringAttributes.slice(0, state.devices.filteringAttributesLimit)
+    attributes: state.devices.filteringAttributes.slice(0, state.devices.filteringAttributesLimit),
+    settings: state.users.globalSettings
   };
 };
 

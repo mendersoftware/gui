@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 
 import { Collapse, Switch, TextField } from '@material-ui/core';
 
@@ -10,20 +11,19 @@ import EnterpriseNotification from '../common/enterpriseNotification';
 
 import AppActions from '../../actions/app-actions';
 import AppStore from '../../stores/app-store';
+import { editUser, saveGlobalSettings } from '../../actions/userActions';
 
 import { preformatWithRequestID } from '../../helpers';
 
 import TwoFactorAuthSetup from './twofactorauthsetup';
 
-export default class SelfUserManagement extends React.Component {
+export class SelfUserManagement extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = { qrExpanded: false };
-    AppActions.getGlobalSettings().then(settings => {
-      if ((AppStore.getIsEnterprise() || AppStore.getIsHosted()) && !settings.hasOwnProperty('2fa')) {
-        AppActions.saveGlobalSettings(Object.assign(settings, { '2fa': 'disabled' }));
-      }
-    });
+    if ((AppStore.getIsEnterprise() || AppStore.getIsHosted()) && !this.props.has2FA) {
+      this.props.saveGlobalSettings({ '2fa': 'disabled' });
+    }
   }
 
   componentWillMount() {
@@ -40,10 +40,9 @@ export default class SelfUserManagement extends React.Component {
 
   _editSubmit(id, userData) {
     var self = this;
-    return AppActions.editUser(id, userData)
+    return self.props
+      .editUser(id, userData)
       .then(() => {
-        const user = { ...AppStore.getCurrentUser(), ...userData };
-        AppActions.setCurrentUser(user);
         AppActions.setSnackbar('The user has been updated.');
         self.setState({ editPass: false, editEmail: false });
       })
@@ -69,17 +68,16 @@ export default class SelfUserManagement extends React.Component {
 
   handle2FAState(required) {
     this.setState({ qrExpanded: false });
-    AppActions.saveGlobalSettings(Object.assign(AppStore.getGlobalSettings() || {}, { '2fa': required ? 'enabled' : 'disabled' })).then(() =>
-      required ? AppActions.setSnackbar('Two Factor authentication set up successfully.') : null
-    );
+    this.props
+      .saveGlobalSettings({ '2fa': required ? 'enabled' : 'disabled' })
+      .then(() => (required ? AppActions.setSnackbar('Two Factor authentication set up successfully.') : null));
   }
 
   render() {
     const self = this;
     const { editEmail, editPass, emailFormId, qrExpanded } = self.state;
-    const has2fa = AppStore.get2FARequired();
-    const currentUser = AppStore.getCurrentUser();
-    const email = (currentUser || { email: '' }).email;
+    const { currentUser, has2fa } = self.props;
+    const email = currentUser.email;
     const isEnterprise = AppStore.getIsEnterprise() || AppStore.getIsHosted();
     return (
       <div style={{ maxWidth: '750px' }} className="margin-top-small">
@@ -178,3 +176,17 @@ export default class SelfUserManagement extends React.Component {
     );
   }
 }
+
+const actionCreators = { editUser, saveGlobalSettings };
+
+const mapStateToProps = state => {
+  return {
+    has2FA: state.users.globalSettings.hasOwnProperty('2fa') && state.users.globalSettings['2fa'] === 'enabled',
+    currentUser: state.users.byId[state.users.currentUser] || {}
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  actionCreators
+)(SelfUserManagement);

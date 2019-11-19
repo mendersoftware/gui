@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import cookie from 'react-cookie';
@@ -10,6 +11,7 @@ import { clearAllRetryTimers } from '../../utils/retrytimer';
 
 import AppActions from '../../actions/app-actions';
 import AppStore from '../../stores/app-store';
+import { getUser, loginUser, saveGlobalSettings, setCurrentUser } from '../../actions/userActions';
 
 import Form from '../common/forms/form';
 import TextInput from '../common/forms/textinput';
@@ -18,9 +20,7 @@ import FormCheckbox from '../common/forms/formcheckbox';
 import { WelcomeSnackTip } from '../helptips/onboardingtips';
 import { getOnboardingStepCompleted } from '../../utils/onboardingmanager';
 
-import { decodeSessionToken, preformatWithRequestID } from '../../helpers';
-
-export default class Login extends React.Component {
+export class Login extends React.Component {
   static contextTypes = {
     router: PropTypes.object,
     location: PropTypes.object
@@ -37,8 +37,27 @@ export default class Login extends React.Component {
 
   componentDidMount() {
     clearAllRetryTimers();
-    AppActions.setCurrentUser(null);
+    this.props.setCurrentUser(null);
     AppActions.setSnackbar('');
+  }
+
+  componentDidUpdate(prevProps) {
+    const self = this;
+    if (prevProps.currentUser !== this.props.currentUser && !!this.props.currentUser.id) {
+      // logged in, so redirect
+      self.setState({ redirectToReferrer: true });
+      setTimeout(() => {
+        if (
+          self.props.showHelptips &&
+          self.props.showOnboardingTips &&
+          !self.props.onboardingComplete &&
+          !getOnboardingStepCompleted('devices-pending-accepting-onboarding')
+        ) {
+          AppActions.setSnackbar('open', 10000, '', <WelcomeSnackTip progress={1} />, () => {}, self.onCloseSnackbar);
+        }
+      }, 1000);
+      AppActions.setSnackbar('');
+    }
   }
 
   componentWillUnmount() {
@@ -51,34 +70,12 @@ export default class Login extends React.Component {
       noExpiry: cookie.load('noExpiry'),
       isHosted: AppStore.getIsHosted(),
       redirectToReferrer: false,
-      has2FA: AppStore.get2FARequired(),
       isEnterprise: AppStore.getIsEnterprise()
     };
   }
 
   _onChange() {
     this.setState(this._getState());
-  }
-  _handleLoginError(err) {
-    const self = this;
-    const settings = AppStore.getGlobalSettings();
-    const is2FABackend = err.error.text.error && err.error.text.error.includes('2fa');
-    if (is2FABackend && !settings.hasOwnProperty('2fa')) {
-      AppActions.saveGlobalSettings(Object.assign(settings, { '2fa': 'enabled' }));
-      return self.setState({ has2FA: true });
-    }
-    let errMsg = 'There was a problem logging in';
-    if (err.res && err.res.body && Object.keys(err.res.body).includes('error')) {
-      const twoFAError = is2FABackend || (settings.hasOwnProperty('2fa') && settings['2fa'] === 'enabled') ? ' and verification code' : '';
-      const errorMessage = `There was a problem logging in. Please check your email${
-        twoFAError ? ',' : ' and'
-      } password${twoFAError}. If you still have problems, contact an administrator.`;
-      // if error message, check for "unauthorized"
-      errMsg = err.res.body['error'] === 'unauthorized' ? errorMessage : `${errMsg}: ${err.res.body['error']}`;
-    } else {
-      errMsg = `${errMsg}\n${err.error.text && err.error.text.message ? err.error.text.message : ''}`;
-    }
-    AppActions.setSnackbar(preformatWithRequestID(err.res, errMsg), null, 'Copy to clipboard');
   }
 
   onCloseSnackbar = (_, reason) => {
@@ -94,51 +91,15 @@ export default class Login extends React.Component {
     if (!formData.hasOwnProperty('email')) {
       return;
     }
-    if (self.state.isEnterprise && AppStore.get2FARequired() && !formData.hasOwnProperty('token2fa')) {
+    if (self.state.isEnterprise && self.props.has2FA && !formData.hasOwnProperty('token2fa')) {
       return;
     }
-    return AppActions.loginUser(formData)
-      .catch(err => self._handleLoginError(err))
-      .then(token => {
-        if (!token) {
-          return;
-        }
-        var options = {};
-        if (!formData.noExpiry) {
-          options = { maxAge: 900 };
-        }
-
-        // set no expiry as cookie to remember checkbox value
-        cookie.save('noExpiry', formData.noExpiry.toString());
-
-        // save token as cookie
-        // set maxAge if noexpiry checkbox not checked
-        cookie.save('JWT', token, options);
-
-        var userId = decodeSessionToken(token);
-        return AppActions.getUser(userId)
-          .then(AppActions.setCurrentUser)
-          .then(() => {
-            // logged in, so redirect
-            self.setState({ redirectToReferrer: true });
-            setTimeout(() => {
-              if (
-                AppStore.showHelptips() &&
-                AppStore.getShowOnboardingTips() &&
-                !AppStore.getOnboardingComplete() &&
-                !getOnboardingStepCompleted('devices-pending-accepting-onboarding')
-              ) {
-                AppActions.setSnackbar('open', 10000, '', <WelcomeSnackTip progress={1} />, () => {}, self.onCloseSnackbar);
-              }
-            }, 1000);
-            AppActions.setSnackbar('');
-          });
-      })
-      .catch(self._handleLoginError);
+    return self.props.loginUser(formData);
   }
 
   render() {
-    const { isHosted, noExpiry, redirectToReferrer, has2FA } = this.state;
+    const { isHosted, noExpiry, redirectToReferrer } = this.state;
+    const { has2FA } = this.props;
     let { from } = { from: { pathname: '/' } };
     if (this.props.location.state && this.props.location.state.from.pathname !== '/ui/') {
       from = this.props.location.state.from;
@@ -205,3 +166,20 @@ export default class Login extends React.Component {
     );
   }
 }
+
+const actionCreators = { getUser, loginUser, saveGlobalSettings, setCurrentUser };
+
+const mapStateToProps = state => {
+  return {
+    currentUser: state.users.byId[state.users.currentUser] || {},
+    has2FA: state.users.globalSettings.hasOwnProperty('2fa') && state.users.globalSettings['2fa'] === 'enabled',
+    showHelptips: state.users.showHelptips,
+    showOnboardingTips: state.users.onboarding.showTips,
+    onboardingComplete: state.users.onboarding.complete
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  actionCreators
+)(Login);
