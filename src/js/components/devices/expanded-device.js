@@ -65,9 +65,7 @@ export class ExpandedDevice extends React.Component {
       authsets: false,
       docsVersion: AppStore.getDocsVersion(),
       schedule: false,
-      showHelptips: AppStore.showHelptips(),
-      showInput: false,
-      user: AppStore.getCurrentUser()
+      showInput: false
     };
   }
 
@@ -134,7 +132,7 @@ export class ExpandedDevice extends React.Component {
   }
 
   _scheduleDeploymentFor(device) {
-    if (!AppStore.getOnboardingComplete()) {
+    if (!this.props.onboardingComplete) {
       if (!getOnboardingStepCompleted('upload-prepared-artifact-tip')) {
         advanceOnboarding('upload-prepared-artifact-tip');
       }
@@ -348,7 +346,7 @@ export class ExpandedDevice extends React.Component {
       <div className={this.props.className}>
         {deviceInfo}
 
-        {this.state.showHelptips && status === DEVICE_STATES.pending ? (
+        {this.props.showHelptips && status === DEVICE_STATES.pending ? (
           <div>
             <div
               id="onboard-4"
@@ -398,7 +396,9 @@ const actionCreators = { decommissionDevice, getReleases, selectDevice };
 
 const mapStateToProps = state => {
   return {
-    artifacts: state.releases.artifactsRepo
+    artifacts: state.releases.artifactsRepo,
+    onboardingComplete: state.users.onboarding.complete,
+    showHelptips: state.users.showHelptips
   };
 };
 

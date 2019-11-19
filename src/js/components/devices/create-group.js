@@ -24,7 +24,6 @@ import { ErrorOutline as ErrorOutlineIcon } from '@material-ui/icons';
 
 import { getDevicesByStatus } from '../../actions/deviceActions';
 import * as DeviceConstants from '../../constants/deviceConstants';
-import AppStore from '../../stores/app-store';
 import Loader from '../common/loader';
 
 export class CreateGroup extends React.Component {
@@ -49,8 +48,7 @@ export class CreateGroup extends React.Component {
       createInvalid: true,
       selectedRows: [],
       pageNo: 1,
-      pageLength: 10,
-      user: AppStore.getCurrentUser()
+      pageLength: 10
     };
   }
 
@@ -67,10 +65,8 @@ export class CreateGroup extends React.Component {
 
   _createGroupHandler() {
     var self = this;
-    if (!this.state.user) {
-      this.setState({ user: AppStore.getCurrentUser() });
-    }
-    var gotCookie = cookie.load(`${this.state.user.id}-groupHelpText`);
+
+    var gotCookie = cookie.load(`${this.props.userId}-groupHelpText`);
     // if another group exists, check for warning message cookie
     if (this.props.groups.length && !gotCookie && !this.state.showWarning) {
       // if show warning message
@@ -152,7 +148,7 @@ export class CreateGroup extends React.Component {
     var self = this;
     this.setState({ isChecked: isChecked });
     if (isChecked) {
-      cookie.save(`${self.state.user.id}-groupHelpText`, true);
+      cookie.save(`${self.state.userId}-groupHelpText`, true);
     }
   }
 
@@ -177,11 +173,11 @@ export class CreateGroup extends React.Component {
   render() {
     var self = this;
 
-    const globalSettings = AppStore.getGlobalSettings();
+    const globalSettings = self.props.globalSettings;
 
     var deviceList = self.props.devices.map((device, index) => {
       let id_attribute = device.device_id || device.id;
-      if (globalSettings.id_attribute && globalSettings.id_attribute !== 'Device ID') {
+      if (globalSettings.id_attribute !== 'Device ID') {
         id_attribute = (device.identity_data || {})[globalSettings.id_attribute];
       }
 
@@ -229,7 +225,7 @@ export class CreateGroup extends React.Component {
             <div className="help-message">
               <h2>
                 <ErrorOutlineIcon style={{ marginRight: '4px', verticalAlign: 'sub' }} />
-                {' You\'re creating a new group'}
+                {` You're creating a new group`}
               </h2>
               <p>
                 Just a heads-up: if a device is already in another group, it will be removed from that group and moved to the new one. A device can only belong
@@ -294,7 +290,7 @@ const actionCreators = { getDevicesByStatus };
 const mapStateToProps = state => {
   const deviceList = state.devices.selectedDeviceList.length > 0 ? state.devices.selectedDeviceList : [];
   const devices = deviceList.map(id => state.devices.byId[id]);
-  return { devices };
+  return { devices, globalSettings: state.users.globalSettings, userid: state.users.currentUser };
 };
 
 export default connect(

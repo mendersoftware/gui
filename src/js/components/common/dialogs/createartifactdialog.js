@@ -1,16 +1,13 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import CopyToClipboard from 'react-copy-to-clipboard';
 
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@material-ui/core';
 
 import CopyPasteIcon from '@material-ui/icons/FileCopy';
 
-import AppActions from '../../../actions/app-actions';
+import { setShowCreateArtifactDialog } from '../../../actions/userActions';
 import AppStore from '../../../stores/app-store';
 import { detectOsIdentifier } from '../../../helpers';
 
@@ -22,7 +19,7 @@ const downloadFolder = {
   Linux: 'linux'
 };
 
-export default class CreateArtifactDialog extends React.Component {
+export class CreateArtifactDialog extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
@@ -50,9 +47,8 @@ export default class CreateArtifactDialog extends React.Component {
 
   render() {
     const self = this;
-    const { open, onCancel } = self.props;
+    const { deviceType, open, onCancel, setShowCreateArtifactDialog } = self.props;
     const { copied, progress } = self.state;
-    const deviceType = AppStore.getOnboardingDeviceType() || 'qemux86-64';
 
     const artifactGenerator = 'single-file-artifact-gen';
     const artifactName = 'demo-webserver-updated';
@@ -98,10 +94,10 @@ EOF
               </div>
               <p>{copied === 1 ? <span className="green fadeIn">Copied to clipboard.</span> : null}</p>
             </li>
-          
+
             <li>
-              Next, create a new <i>index.html</i> file with the simple contents &apos;Hello world&apos;. This will be the web page of your updated application, so you&apos;ll be able to
-              easily see when your device has received the update. Copy and run the command:
+              Next, create a new <i>index.html</i> file with the simple contents &apos;Hello world&apos;. This will be the web page of your updated application,
+              so you&apos;ll be able to easily see when your device has received the update. Copy and run the command:
               <div className="code">
                 <CopyToClipboard text={file_modification} onCopy={() => self.copied(3)}>
                   <Button style={{ float: 'right', margin: '-20px 0 0 10px' }}>
@@ -114,8 +110,7 @@ EOF
               <p>{copied === 3 ? <span className="green fadeIn">Copied to clipboard.</span> : null}</p>
             </li>
             <li>
-              Now you can create a new version of the demo webserver application with this <i>index.html</i> file. Generate a new Artifact by copying &
-              running:
+              Now you can create a new version of the demo webserver application with this <i>index.html</i> file. Generate a new Artifact by copying & running:
               <div className="code">
                 <CopyToClipboard text={artifactGenCode} onCopy={() => self.copied(2)}>
                   <Button style={{ float: 'right', margin: '-10px 0 0 10px' }}>
@@ -158,7 +153,7 @@ EOF
               Next
             </Button>
           ) : (
-            <Button variant="contained" component={Link} to="/releases" onClick={() => AppActions.setShowCreateArtifactDialog(false)}>
+            <Button variant="contained" component={Link} to="/releases" onClick={() => setShowCreateArtifactDialog(false)}>
               Next
             </Button>
           )}
@@ -167,3 +162,16 @@ EOF
     );
   }
 }
+
+const actionCreators = { setShowCreateArtifactDialog };
+
+const mapStateToProps = state => {
+  return {
+    deviceType: state.users.onboarding.deviceType || 'qemux86-64'
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  actionCreators
+)(CreateArtifactDialog);

@@ -1,12 +1,12 @@
 import AppActions from '../actions/app-actions';
-import AppStore from '../stores/app-store';
+import store from '../reducers';
 import { preformatWithRequestID } from '../helpers';
 
 var timerArr = {};
 
 export function setRetryTimer(err, service, msg, timeLeft) {
   // check if logged in and if service not already retrying
-  if (!timerArr[service] && AppStore.getCurrentUser().hasOwnProperty('email')) {
+  if (!timerArr[service] && (store.getState().users.byId[store.getState().users.currentUser] || {}).hasOwnProperty('email')) {
     var remaining = timeLeft - 1000;
     timerArr[service] = setInterval(() => {
       remaining -= 1000;

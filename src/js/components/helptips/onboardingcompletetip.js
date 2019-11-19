@@ -6,7 +6,7 @@ import Button from '@material-ui/core/Button';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 
 import { getDevices } from '../../actions/deviceActions';
-import AppActions from '../../actions/app-actions';
+import { setOnboardingComplete } from '../../actions/userActions';
 import AppStore from '../../stores/app-store';
 import { getDemoDeviceAddress } from '../../helpers';
 import Loader from '../common/loader';
@@ -25,11 +25,11 @@ export class OnboardingCompleteTip extends React.Component {
     const self = this;
     getDemoDeviceAddress(self.props.acceptedDevices)
       .catch(e => console.log(e))
-      .then(targetUrl => self.setState({ targetUrl, loading: false }, () => setTimeout(() => AppActions.setOnboardingComplete(true), 120000)));
+      .then(targetUrl => self.setState({ targetUrl, loading: false }, () => setTimeout(() => self.props.setOnboardingComplete(true), 120000)));
   }
 
   componentWillUnmount() {
-    AppActions.setOnboardingComplete(true);
+    this.props.setOnboardingComplete(true);
   }
 
   componentDidUpdate() {
@@ -37,6 +37,7 @@ export class OnboardingCompleteTip extends React.Component {
   }
 
   render() {
+    const { setOnboardingComplete } = this.props;
     const { loading, targetUrl } = this.state;
     const url = targetUrl ? targetUrl : this.props.targetUrl;
 
@@ -84,7 +85,7 @@ export class OnboardingCompleteTip extends React.Component {
           </div>
           <div className="flexbox">
             <div style={{ flexGrow: 1 }} />
-            <Button variant="contained" color="secondary" onClick={() => AppActions.setOnboardingComplete(true)}>
+            <Button variant="contained" color="secondary" onClick={() => setOnboardingComplete(true)}>
               Close
             </Button>
           </div>
@@ -94,7 +95,7 @@ export class OnboardingCompleteTip extends React.Component {
   }
 }
 
-const actionCreators = { getDevices };
+const actionCreators = { getDevices, setOnboardingComplete };
 
 const mapStateToProps = state => {
   return {

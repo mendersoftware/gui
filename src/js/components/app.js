@@ -16,6 +16,7 @@ import SharedSnackbar from '../components/common/sharedsnackbar';
 
 import AppStore from '../stores/app-store';
 import AppActions from '../actions/app-actions';
+import { setShowConnectingDialog, setShowCreateArtifactDialog } from '../actions/userActions';
 import { AppContext } from '../contexts/app-context';
 import { getOnboardingComponentFor } from '../utils/onboardingmanager';
 import CreateArtifactDialog from './common/dialogs/createartifactdialog';
@@ -50,12 +51,7 @@ class AppRoot extends React.Component {
 
   _getState() {
     return {
-      currentUser: AppStore.getCurrentUser(),
-      globalSettings: AppStore.getGlobalSettings(),
-      snackbar: AppStore.getSnackbar(),
-      showDismissHelptipsDialog: !AppStore.getOnboardingComplete() && AppStore.getShowOnboardingTipsDialog(),
-      showCreateArtifactDialog: AppStore.getShowCreateArtifactDialog(),
-      showDeviceConnectionDialog: AppStore.getShowConnectDeviceDialog()
+      snackbar: AppStore.getSnackbar()
     };
   }
 
@@ -73,7 +69,7 @@ class AppRoot extends React.Component {
     this.setState(this._getState());
   }
   _onIdle() {
-    if (expirySet() && this.state.currentUser) {
+    if (expirySet() && this.props.currentUser) {
       // logout user and warn
       if (!this.props.uploadInProgress) {
         logout();
@@ -85,7 +81,8 @@ class AppRoot extends React.Component {
   }
 
   render() {
-    const { snackbar, timeout, showDismissHelptipsDialog, showDeviceConnectionDialog, showCreateArtifactDialog, ...context } = this.state;
+    const { snackbar, timeout, ...context } = this.state;
+    const { showDismissHelptipsDialog, showDeviceConnectionDialog, showCreateArtifactDialog } = this.props;
 
     const onboardingComponent = getOnboardingComponentFor('application-update-reminder-tip', {
       anchor: {
@@ -111,25 +108,31 @@ class AppRoot extends React.Component {
         </div>
         {onboardingComponent ? onboardingComponent : null}
         <ConfirmDismissHelptips open={showDismissHelptipsDialog} />
-        <CreateArtifactDialog open={showCreateArtifactDialog} onCancel={() => AppActions.setShowCreateArtifactDialog(false)} />
-        <DeviceConnectionDialog open={showDeviceConnectionDialog} onCancel={() => AppActions.setShowConnectingDialog(false)} />
+        <CreateArtifactDialog open={showCreateArtifactDialog} onCancel={() => setShowCreateArtifactDialog(false)} />
+        <DeviceConnectionDialog open={showDeviceConnectionDialog} onCancel={() => setShowConnectingDialog(false)} />
         <SharedSnackbar snackbar={snackbar} />
       </IdleTimer>
     );
   }
 }
 
+const actionCreators = { setShowConnectingDialog, setShowCreateArtifactDialog };
+
 const mapStateToProps = state => {
   return {
+    artifactProgress: state.releases.artifactProgress,
+    currentUser: state.users.currentUser,
     uploadInProgress: state.releases.uploadInProgress,
-    artifactProgress: state.releases.artifactProgress
+    showDismissHelptipsDialog: !state.users.onboarding.complete && state.users.onboarding.showTipsDialog,
+    showCreateArtifactDialog: state.users.onboarding.showCreateArtifactDialog,
+    showDeviceConnectionDialog: state.users.onboarding.showConnectDeviceDialog
   };
 };
 
 export default compose(
   withRouter,
   connect(
-    mapStateToProps
-    // actionCreators
+    mapStateToProps,
+    actionCreators
   )
 )(AppRoot);

@@ -69,8 +69,7 @@ export class Devices extends React.Component {
     return {
       currentTab: this._getCurrentLabel(),
       tabIndex: this._updateActive(),
-      refreshLength: 10000,
-      showHelptips: AppStore.showHelptips()
+      refreshLength: 10000
     };
   }
   _onChange() {
@@ -237,8 +236,8 @@ const mapStateToProps = state => {
   let devices = state.devices.selectedDeviceList;
   return {
     acceptedCount: state.devices.byStatus.accepted.total,
-    pendingCount: state.devices.byStatus.pending.total,
-    devices
+    devices,
+    pendingCount: state.devices.byStatus.pending.total
   };
 };
 

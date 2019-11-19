@@ -7,6 +7,7 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Tab, Tabs } 
 import AppStore from '../../stores/app-store';
 import { getAllGroupDevices, selectDevice } from '../../actions/deviceActions';
 import { selectRelease } from '../../actions/releaseActions';
+import { saveGlobalSettings } from '../../actions/userActions';
 
 import AppActions from '../../actions/app-actions';
 import { setRetryTimer, clearRetryTimer, clearAllRetryTimers } from '../../utils/retrytimer';
@@ -115,8 +116,6 @@ export class Deployments extends React.Component {
       progress: AppStore.getDeploymentsInProgress() || [],
       events: AppStore.getEventLog(),
       hasDeployments: AppStore.getHasDeployments(),
-      showHelptips: AppStore.showHelptips(),
-      user: AppStore.getCurrentUser(),
       isHosted: AppStore.getIsHosted()
     };
   }
@@ -127,7 +126,7 @@ export class Deployments extends React.Component {
     } else {
       this._refreshInProgress();
       this._refreshPending();
-      if (!AppStore.getOnboardingComplete()) {
+      if (!this.props.onboardingComplete) {
         this._refreshPast(null, null, null, null, this.state.groupFilter);
       }
     }
@@ -312,13 +311,12 @@ export class Deployments extends React.Component {
       .then(() => self.setState({ doneLoading: true, deploymentObject: null }))
       .then(() => {
         const standardPhases = standardizePhases(phases);
-        const settings = AppStore.getGlobalSettings();
-        let previousPhases = settings.previousPhases || [];
+        let previousPhases = self.props.settings.previousPhases || [];
         previousPhases = previousPhases.map(standardizePhases);
         if (!previousPhases.find(previousPhaseList => previousPhaseList.every(oldPhase => standardPhases.find(phase => deepCompare(phase, oldPhase))))) {
           previousPhases.push(standardPhases);
         }
-        AppActions.saveGlobalSettings({ ...settings, previousPhases: previousPhases.slice(-1 * MAX_PREVIOUS_PHASES_COUNT) });
+        self.props.saveGlobalSettings({ previousPhases: previousPhases.slice(-1 * MAX_PREVIOUS_PHASES_COUNT) });
       });
   }
   _getReportById(id) {
@@ -469,7 +467,6 @@ export class Deployments extends React.Component {
               endDate={this.state.endDate}
               page={this.state.pastPage}
               isActiveTab={self._getCurrentLabel() === routes.finished.title}
-              showHelptips={this.state.showHelptips}
               count={pastCount}
               loading={!this.state.doneLoading}
               past={past}
@@ -499,12 +496,16 @@ export class Deployments extends React.Component {
   }
 }
 
-const actionCreators = { getAllGroupDevices, selectDevice, selectRelease };
+const actionCreators = { getAllGroupDevices, saveGlobalSettings, selectDevice, selectRelease };
 
 const mapStateToProps = state => {
   return {
     groups: Object.keys(state.devices.groups.byId),
-    groupDevices: state.devices.groups.byId
+    groupDevices: state.devices.groups.byId,
+    onboardingComplete: state.users.onboarding.complete,
+    settings: state.users.globalSettings,
+    showHelptips: state.users.showHelptips,
+    user: state.users.byId[state.users.currentUser] || {}
   };
 };
 

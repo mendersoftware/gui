@@ -10,7 +10,6 @@ import SortIcon from '@material-ui/icons/Sort';
 import { getDeviceAuth, getDeviceById } from '../../actions/deviceActions';
 
 import AppActions from '../../actions/app-actions';
-import AppStore from '../../stores/app-store';
 import { DEVICE_STATES } from '../../constants/deviceConstants';
 import Loader from '../common/loader';
 import Pagination from '../common/pagination';
@@ -50,7 +49,7 @@ export class DeviceList extends React.Component {
     } else {
       self.props.getDeviceAuth(device.id);
     }
-    if (!AppStore.getOnboardingComplete()) {
+    if (!self.props.onboardingComplete) {
       if (!getOnboardingStepCompleted('devices-pending-accepting-onboarding')) {
         advanceOnboarding('devices-pending-accepting-onboarding');
       }
@@ -159,7 +158,8 @@ const mapStateToProps = (state, ownProps) => {
     return accu;
   }, []);
   return {
-    devices
+    devices,
+    onboardingComplete: state.users.onboarding.complete
   };
 };
 

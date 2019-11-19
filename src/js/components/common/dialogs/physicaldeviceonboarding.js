@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import ReactTooltip from 'react-tooltip';
 
@@ -8,12 +9,12 @@ import CopyPasteIcon from '@material-ui/icons/FileCopy';
 import HelpIcon from '@material-ui/icons/Help';
 
 import AutoSelect from '../forms/autoselect';
-import AppActions from '../../../actions/app-actions';
+import { setOnboardingApproach, setOnboardingDeviceType } from '../../../actions/userActions';
 import { findLocalIpAddress } from '../../../helpers';
 import { advanceOnboarding } from '../../../utils/onboardingmanager';
 import AppStore from '../../../stores/app-store';
 
-export default class PhysicalDeviceOnboarding extends React.Component {
+export class PhysicalDeviceOnboarding extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
@@ -28,7 +29,7 @@ export default class PhysicalDeviceOnboarding extends React.Component {
     if (!self.state.ipAddress || self.state.ipAddress === 'X.X.X.X') {
       findLocalIpAddress().then(ipAddress => self.setState({ ipAddress }));
     }
-    AppActions.setOnboardingApproach('physical');
+    self.props.setOnboardingApproach('physical');
   }
 
   copied() {
@@ -41,7 +42,7 @@ export default class PhysicalDeviceOnboarding extends React.Component {
   }
 
   onSelect(deviceType) {
-    AppActions.setOnboardingDeviceType(deviceType);
+    this.props.setOnboardingDeviceType(deviceType);
     this.setState({ selection: deviceType });
   }
 
@@ -149,3 +150,10 @@ systemctl enable mender && systemctl restart mender'
     return <div>{steps[self.props.progress]}</div>;
   }
 }
+
+const actionCreators = { setOnboardingApproach, setOnboardingDeviceType };
+
+export default connect(
+  null,
+  actionCreators
+)(PhysicalDeviceOnboarding);

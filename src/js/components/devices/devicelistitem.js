@@ -1,23 +1,19 @@
 import React from 'react';
+import { connect } from 'react-redux';
 
 // material ui
 import { Checkbox, ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary, IconButton } from '@material-ui/core';
 
 import { ArrowDropDown as ArrowDropDownIcon, ArrowDropUp as ArrowDropUpIcon } from '@material-ui/icons';
 
-import AppStore from '../../stores/app-store';
 import { DEVICE_STATES } from '../../constants/deviceConstants';
 import ExpandedDevice from './expanded-device';
 
-export default class DeviceListItem extends React.PureComponent {
+export class DeviceListItem extends React.PureComponent {
   render() {
     const self = this;
-    const { columnHeaders, device, expanded, onClick, onRowSelect, selectable, selected } = self.props;
-    const globalSettings = AppStore.getGlobalSettings();
-    const id_attribute =
-      globalSettings && globalSettings.id_attribute && globalSettings.id_attribute !== 'Device ID'
-        ? (device.identity_data || {})[globalSettings.id_attribute]
-        : device.id;
+    const { columnHeaders, device, expanded, globalSettings, onClick, onRowSelect, selectable, selected } = self.props;
+    const id_attribute = globalSettings.id_attribute !== 'Device ID' ? (device.identity_data || {})[globalSettings.id_attribute] : device.id;
 
     const columnWidth = `${(selectable ? 90 : 100) / columnHeaders.length}%`;
     return (
@@ -59,3 +55,11 @@ export default class DeviceListItem extends React.PureComponent {
     );
   }
 }
+
+const mapStateToProps = state => {
+  return {
+    globalSettings: state.users.globalSettings
+  };
+};
+
+export default connect(mapStateToProps)(DeviceListItem);

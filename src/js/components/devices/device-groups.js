@@ -409,12 +409,13 @@ export class DeviceGroups extends React.Component {
       <div className="tab-container">
         <div className="leftFixed">
           <Groups
-            openGroupDialog={() => self.setState({ createGroupDialog: !self.state.createGroupDialog })}
+            acceptedCount={this.props.acceptedDevices}
+            allCount={this.props.allCount}
             changeGroup={group => this._handleGroupChange(group)}
             groups={this.props.groups}
+            openGroupDialog={() => self.setState({ createGroupDialog: !self.state.createGroupDialog })}
             selectedGroup={this.props.selectedGroup}
-            allCount={this.props.allCount}
-            acceptedCount={this.props.acceptedDevices}
+            showHelptips={this.props.showHelptips}
           />
         </div>
         <div className="rightFluid" style={{ paddingTop: '0' }}>
@@ -532,6 +533,7 @@ const mapStateToProps = state => {
     groups: Object.keys(state.devices.groups.byId) || [],
     groupCount,
     selectedGroup,
+    showHelptips: state.users.showHelptips,
     ungroupedDevices
   };
 };

@@ -5,17 +5,10 @@ import { AddGroup } from '../helptips/helptooltips';
 import * as DeviceConstants from '../../constants/deviceConstants';
 
 // material ui
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import Divider from '@material-ui/core/Divider';
+import { Divider, List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
+import { Add as AddIcon, Help as HelpIcon } from '@material-ui/icons';
 
-import AddIcon from '@material-ui/icons/Add';
-import HelpIcon from '@material-ui/icons/Help';
-import AppStore from '../../stores/app-store';
-
-export default class Groups extends React.Component {
+export default class Groups extends React.PureComponent {
   dialogToggle() {
     this.props.acceptedCount ? this.props.openGroupDialog() : null;
   }
@@ -50,7 +43,6 @@ export default class Groups extends React.Component {
       },
       { groups: [], ungroupedsItem: null }
     );
-    const showHelptips = AppStore.showHelptips();
 
     return (
       <div>
@@ -82,7 +74,7 @@ export default class Groups extends React.Component {
           </ListItem>
         </List>
 
-        {showHelptips && this.props.acceptedCount && !this.props.groups.length ? (
+        {this.props.showHelptips && this.props.acceptedCount && !this.props.groups.length ? (
           <div>
             <div id="onboard-5" className="tooltip help" data-tip data-for="groups-tip" data-event="click focus" style={{ bottom: '-10px' }}>
               <HelpIcon />

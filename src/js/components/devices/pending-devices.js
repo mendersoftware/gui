@@ -27,7 +27,6 @@ export class Pending extends React.Component {
       pageNo: 1,
       pageLength: 20,
       selectedRows: [],
-      showHelptips: AppStore.showHelptips(),
       refreshDeviceLength: 10000,
       authLoading: 'all',
       pageLoading: true
@@ -104,9 +103,9 @@ export class Pending extends React.Component {
     pluralize.addIrregularRule('its', 'their');
     var skipText = skipped
       ? `${skipped} ${pluralize('devices', skipped)} ${pluralize('have', skipped)} more than one pending authset. Expand ${pluralize(
-        'this',
-        skipped
-      )} ${pluralize('device', skipped)} to individually adjust ${pluralize('their', skipped)} authorization status. `
+          'this',
+          skipped
+        )} ${pluralize('device', skipped)} to individually adjust ${pluralize('their', skipped)} authorization status. `
       : '';
     var doneText = done ? `${done} ${pluralize('device', done)} ${pluralize('was', done)} updated successfully. ` : '';
     AppActions.setSnackbar(doneText + skipText);
@@ -156,7 +155,7 @@ export class Pending extends React.Component {
   }
 
   onRowSelection(selection) {
-    if (!AppStore.getOnboardingComplete()) {
+    if (!this.props.onboardingComplete) {
       advanceOnboarding('devices-pending-accepting-onboarding');
     }
     this.setState({ selectedRows: selection });
@@ -170,7 +169,7 @@ export class Pending extends React.Component {
 
     const columnHeaders = [
       {
-        title: (AppStore.getGlobalSettings() || {}).id_attribute || 'Device ID',
+        title: self.props.globalSettings.id_attribute || 'Device ID',
         name: 'device_id',
         customize: () => self.props.openSettingsDialog(),
         style: { flexGrow: 1 }
@@ -204,7 +203,7 @@ export class Pending extends React.Component {
 
     const deviceConnectingProgressed = getOnboardingStepCompleted('devices-pending-onboarding');
     let onboardingComponent = null;
-    if (AppStore.showHelptips() && !AppStore.getOnboardingComplete()) {
+    if (self.props.showHelptips && !self.props.onboardingComplete) {
       if (this.deviceListRef) {
         const element = this.deviceListRef ? this.deviceListRef.getElementsByClassName('body')[0] : null;
         onboardingComponent = getOnboardingComponentFor('devices-pending-onboarding', {
@@ -251,7 +250,7 @@ export class Pending extends React.Component {
           </div>
         ) : (
           <div>
-            {self.state.showHelptips && AppStore.getShowOnboardingTips() && !AppStore.getOnboardingComplete() && !deviceConnectingProgressed ? (
+            {self.props.showHelptips && self.props.showOnboardingTips && !self.props.onboardingComplete && !deviceConnectingProgressed ? (
               <DevicePendingTip />
             ) : (
               <div className={this.state.authLoading ? 'hidden' : 'dashboard-placeholder'}>
@@ -298,9 +297,13 @@ const actionCreators = { getDevicesByStatus, updateDeviceAuth };
 const mapStateToProps = state => {
   return {
     acceptedDevices: state.devices.byStatus.accepted.total || 0,
+    count: state.devices.byStatus.pending.total,
     devices: state.devices.selectedDeviceList,
     deviceLimit: state.devices.limit,
-    count: state.devices.byStatus.pending.total
+    globalSettings: state.users.globalSettings,
+    onboardingComplete: state.users.onboarding.complete,
+    showHelptips: state.users.showHelptips,
+    showOnboardingTips: state.users.onboarding.showTips
   };
 };
 

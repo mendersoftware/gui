@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { toggleHelptips } from '../../utils/toggleuseroptions';
+import { toggleHelptips } from '../../actions/userActions';
 import AppStore from '../../stores/app-store';
 
 export class AuthButton extends React.Component {

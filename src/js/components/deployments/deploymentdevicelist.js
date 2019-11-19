@@ -7,7 +7,6 @@ import isEqual from 'lodash.isequal';
 // material ui
 import { Button, LinearProgress, Table, TableBody, TableCell, TableHead, TableRow } from '@material-ui/core';
 
-import AppStore from '../../stores/app-store';
 import { statusToPercentage, formatTime } from '../../helpers';
 
 const stateTitleMap = {
@@ -22,13 +21,13 @@ export class ProgressDeviceList extends React.PureComponent {
   render() {
     var self = this;
     var intervalsSinceStart = Math.floor((Date.now() - Date.parse(self.props.created)) / (1000 * 20));
-    const globalSettings = AppStore.getGlobalSettings();
+    const globalSettings = self.props.globalSettings;
 
     const deviceList = this.props.devices.map((device, index) => {
       var encodedDevice = `id=${device.id}`;
       var id_attribute = device.id || '-';
 
-      if (globalSettings.id_attribute && globalSettings.id_attribute !== 'Device ID') {
+      if (globalSettings.id_attribute !== 'Device ID') {
         // if global setting is not "Device Id"
         // if device identity data is available, set custom attribute
         id_attribute = device[globalSettings.id_attribute];
@@ -106,7 +105,8 @@ export class ProgressDeviceList extends React.PureComponent {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    devices: ownProps.devices.map(device => ({ attributes: {}, ...state.devices.byId[device.id], ...device }))
+    devices: ownProps.devices.map(device => ({ attributes: {}, ...state.devices.byId[device.id], ...device })),
+    globalSettings: state.users.globalSettings
   };
 };
 

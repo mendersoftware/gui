@@ -84,7 +84,7 @@ export class Rejected extends React.Component {
     var limitMaxed = this.props.deviceLimit ? this.props.deviceLimit <= this.props.acceptedDevices : false;
     const columnHeaders = [
       {
-        title: (AppStore.getGlobalSettings() || {}).id_attribute || 'Device ID',
+        title: self.props.globalSettings.id_attribute || 'Device ID',
         name: 'device_id',
         customize: () => self.props.openSettingsDialog(),
         style: { flexGrow: 1 }
@@ -137,9 +137,10 @@ const actionCreators = { getDevicesByStatus };
 const mapStateToProps = state => {
   return {
     acceptedDevices: state.devices.byStatus.rejected.total || 0,
+    count: state.devices.byStatus.rejected.total,
     devices: state.devices.selectedDeviceList,
     deviceLimit: state.devices.limit,
-    count: state.devices.byStatus.rejected.total
+    globalSettings: state.users.globalSettings
   };
 };
 

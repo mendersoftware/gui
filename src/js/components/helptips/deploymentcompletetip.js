@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import Button from '@material-ui/core/Button';
 
 import { getDevices } from '../../actions/deviceActions';
-import AppActions from '../../actions/app-actions';
+import { setOnboardingComplete, setShowOnboardingHelp, setShowCreateArtifactDialog } from '../../actions/userActions';
 import { getDemoDeviceAddress } from '../../helpers';
 import { advanceOnboarding } from '../../utils/onboardingmanager';
 import Loader from '../common/loader';
@@ -26,17 +26,17 @@ export class DeploymentCompleteTip extends React.Component {
   }
 
   onClose() {
-    AppActions.setShowOnboardingHelp(false);
-    AppActions.setOnboardingComplete(false);
+    this.props.setShowOnboardingHelp(false);
+    this.props.setOnboardingComplete(false);
   }
 
   onClick() {
-    AppActions.setOnboardingComplete(false);
+    this.props.setOnboardingComplete(false);
     const url = this.state.targetUrl ? this.state.targetUrl : this.props.targetUrl;
     const parametrizedAddress = `${url}/index.html?source=${encodeURIComponent(window.location)}`;
     advanceOnboarding('deployments-past-completed');
     window.open(parametrizedAddress, '_blank');
-    AppActions.setShowCreateArtifactDialog(true);
+    this.props.setShowCreateArtifactDialog(true);
     this.onClose();
   }
 
@@ -59,7 +59,7 @@ export class DeploymentCompleteTip extends React.Component {
   }
 }
 
-const actionCreators = { getDevices };
+const actionCreators = { getDevices, setOnboardingComplete, setShowOnboardingHelp, setShowCreateArtifactDialog };
 
 const mapStateToProps = state => {
   return {

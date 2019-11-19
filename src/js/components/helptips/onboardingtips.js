@@ -1,14 +1,14 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import ReactTooltip from 'react-tooltip';
 
 import IconButton from '@material-ui/core/IconButton';
 
-import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
-import CloseIcon from '@material-ui/icons/Close';
-import HelpIcon from '@material-ui/icons/Schedule';
+import { ArrowUpward as ArrowUpwardIcon, Close as CloseIcon, Schedule as HelpIcon } from '@material-ui/icons';
 
 import AppActions from '../../actions/app-actions';
+import { setShowConnectingDialog, setShowDismissOnboardingTipsDialog } from '../../actions/userActions';
 
 export class WelcomeSnackTip extends React.PureComponent {
   onClose(_, reason) {
@@ -64,11 +64,12 @@ export class WelcomeSnackTip extends React.PureComponent {
   }
 }
 
-export class DevicePendingTip extends React.Component {
+class DevicePendingTipComponent extends React.PureComponent {
   componentDidUpdate() {
     ReactTooltip.show(this.tipRef);
   }
   render() {
+    const { setShowConnectingDialog, setShowDismissOnboardingTipsDialog } = this.props;
     return (
       <div className="onboard-tip" style={{ left: '50%', top: '50%' }}>
         <a
@@ -83,14 +84,21 @@ export class DevicePendingTip extends React.Component {
         </a>
         <ReactTooltip id="pending-device-onboarding-tip" place="bottom" type="light" effect="solid" className="content" clickable={true}>
           <p>It may take a few moments before your device appears.</p>
-          <a onClick={() => AppActions.setShowConnectingDialog(true)}>Open the tutorial</a> again or{' '}
+          <a onClick={() => setShowConnectingDialog(true)}>Open the tutorial</a> again or{' '}
           <Link to="/help/application-updates/mender-deb-package">go to the help pages</Link> if you have problems.
           <div className="flexbox">
             <div style={{ flexGrow: 1 }} />
-            <a onClick={() => AppActions.setShowDismissOnboardingTipsDialog(true)}>Dismiss</a>
+            <a onClick={() => setShowDismissOnboardingTipsDialog(true)}>Dismiss</a>
           </div>
         </ReactTooltip>
       </div>
     );
   }
 }
+
+const actionCreators = { setShowConnectingDialog, setShowDismissOnboardingTipsDialog };
+
+export const DevicePendingTip = connect(
+  null,
+  actionCreators
+)(DevicePendingTipComponent);

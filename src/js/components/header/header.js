@@ -21,12 +21,12 @@ import {
 import { isEmpty, decodeSessionToken, hashString } from '../../helpers';
 import { getOnboardingState } from '../../utils/onboardingmanager';
 import { clearAllRetryTimers } from '../../utils/retrytimer';
-import { toggleHelptips, hideAnnouncement } from '../../utils/toggleuseroptions';
 import DeviceNotifications from './devicenotifications';
 import DeploymentNotifications from './deploymentnotifications';
 
 import { getDeviceLimit } from '../../actions/deviceActions';
 import { getReleases } from '../../actions/releaseActions';
+import { getUser, getGlobalSettings, setShowHelptips, toggleHelptips } from '../../actions/userActions';
 import AppActions from '../../actions/app-actions';
 import AppStore from '../../stores/app-store';
 
@@ -47,16 +47,14 @@ export class Header extends React.Component {
     AppStore.removeChangeListener(this._onChange.bind(this));
   }
   componentDidUpdate(prevProps, prevState) {
-    if (!this.state.sessionId || isEmpty(this.state.user) || this.state.user === null) {
+    if (!this.state.sessionId || isEmpty(this.props.user) || this.props.user === null) {
       this._updateUsername();
-    } else {
-      if (prevState.sessionId !== this.state.sessionId) {
-        this._hasDeployments();
-        this.props.getReleases();
-        this._checkShowHelp();
-        this._checkHeaderInfo();
-        this._getGlobalSettings();
-      }
+    } else if (prevState.sessionId !== this.state.sessionId) {
+      this._hasDeployments();
+      this.props.getReleases();
+      this._checkShowHelp();
+      this._checkHeaderInfo();
+      this.props.getGlobalSettings();
     }
   }
   componentDidMount() {
@@ -68,17 +66,15 @@ export class Header extends React.Component {
       this.props.getReleases();
       this.props.getDeviceLimit();
       this._checkShowHelp();
-      this._getGlobalSettings();
+      this.props.getGlobalSettings();
     }
   }
+
   _getInitialState() {
     return {
       sessionId: cookie.load('JWT'),
-      user: AppStore.getCurrentUser(),
-      showHelptips: AppStore.showHelptips(),
       hasDeployments: AppStore.getHasDeployments(),
-      multitenancy: AppStore.hasMultitenancy(),
-      globalSettings: AppStore.getGlobalSettings()
+      multitenancy: AppStore.hasMultitenancy()
     };
   }
   _onChange() {
@@ -88,23 +84,20 @@ export class Header extends React.Component {
     this._deploymentsInProgress();
     this._checkAnnouncement();
   }
-  _getGlobalSettings() {
-    return AppActions.getGlobalSettings().catch(err => console.log('error', err));
-  }
   _checkShowHelp() {
     //checks if user id is set and if cookie for helptips exists for that user
-    var userCookie = cookie.load(this.state.user.id);
+    var userCookie = cookie.load(this.props.user.id);
     // if no user cookie set, do so via togglehelptips
     if (typeof userCookie === 'undefined' || typeof userCookie.help === 'undefined') {
       toggleHelptips();
     } else {
       // got user cookie but help value not set
-      AppActions.setShowHelptips(userCookie.help);
+      this.props.setShowHelptips(userCookie.help);
     }
   }
   _checkAnnouncement() {
     var hash = this.props.announcement ? hashString(this.props.announcement) : null;
-    var announceCookie = cookie.load(this.state.user.id + hash);
+    var announceCookie = cookie.load(this.props.user.id + hash);
     if (hash && typeof announceCookie === 'undefined') {
       this.setState({ showAnnouncement: true, hash: hash });
     } else {
@@ -112,7 +105,9 @@ export class Header extends React.Component {
     }
   }
   _hideAnnouncement() {
-    hideAnnouncement(this.state.hash);
+    if (this.props.user.id) {
+      cookie.save(this.props.user.id + this.state.hash, true, { maxAge: 604800 });
+    }
     this.setState({ showAnnouncement: false });
   }
   _hasDeployments() {
@@ -137,12 +132,12 @@ export class Header extends React.Component {
         return;
       }
       self.setState({ gettingUser: true });
-      return AppActions.getUser(userId)
-        .then(user => {
-          AppActions.setCurrentUser(user);
-          self.setState({ user: user, gettingUser: false });
+      return self.props
+        .getUser(userId)
+        .then(() => {
+          self.setState({ gettingUser: false });
           self._checkShowHelp();
-          self._getGlobalSettings();
+          self.props.getGlobalSettings();
           self._checkHeaderInfo();
         })
         .then(() => getOnboardingState(userId))
@@ -155,7 +150,7 @@ export class Header extends React.Component {
   }
 
   changeTab() {
-    this._getGlobalSettings();
+    this.props.getGlobalSettings();
     this._checkHeaderInfo();
     AppActions.setSnackbar('');
   }
@@ -173,7 +168,8 @@ export class Header extends React.Component {
   }
   render() {
     const self = this;
-    const { anchorEl, user } = self.state;
+    const { anchorEl } = self.state;
+    const { user } = self.props;
 
     const menuButtonColor = '#c7c7c7';
 
@@ -181,7 +177,7 @@ export class Header extends React.Component {
       <div style={{ marginRight: '0', paddingLeft: '30px' }}>
         <Button className="header-dropdown" style={{ fontSize: '14px', fill: 'rgb(0, 0, 0)', textTransform: 'none' }} onClick={self.handleClick}>
           <AccountCircleIcon style={{ marginRight: '8px', top: '5px', fontSize: '20px', color: menuButtonColor }} />
-          {(user || {}).email}
+          {user.email}
           {anchorEl ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
         </Button>
         <Menu
@@ -211,7 +207,7 @@ export class Header extends React.Component {
           <MenuItem component={Link} to="/settings/user-management">
             User management
           </MenuItem>
-          <MenuItem onClick={toggleHelptips}>{this.state.showHelptips ? 'Hide help tooltips' : 'Show help tooltips'}</MenuItem>
+          <MenuItem onClick={toggleHelptips}>{this.props.showHelptips ? 'Hide help tooltips' : 'Show help tooltips'}</MenuItem>
           <MenuItem component={Link} to="/help/getting-started">
             Help
           </MenuItem>
@@ -279,13 +275,15 @@ export class Header extends React.Component {
   }
 }
 
-const actionCreators = { getDeviceLimit, getReleases };
+const actionCreators = { getDeviceLimit, getGlobalSettings, getReleases, getUser, setShowHelptips, toggleHelptips };
 
 const mapStateToProps = state => {
   return {
-    deviceLimit: state.devices.limit,
     acceptedDevices: state.devices.byStatus.accepted.total,
-    pendingDevices: state.devices.byStatus.pending.total
+    deviceLimit: state.devices.limit,
+    showHelptips: state.users.showHelptips,
+    pendingDevices: state.devices.byStatus.pending.total,
+    user: state.users.byId[state.users.currentUser] || { email: '', id: null }
   };
 };
 

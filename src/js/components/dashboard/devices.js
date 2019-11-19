@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import { getAllDevices, getAllDevicesByStatus, getDeviceCount } from '../../actions/deviceActions';
-import AppActions from '../../actions/app-actions';
+import { setShowConnectingDialog } from '../../actions/userActions';
 import AppStore from '../../stores/app-store';
 import { DEVICE_STATES } from '../../constants/deviceConstants';
 import AcceptedDevices from './widgets/accepteddevices';
@@ -16,8 +16,6 @@ export class Devices extends React.Component {
     const self = this;
     self.state = {
       deltaActivity: 0,
-      onboardingComplete: AppStore.getOnboardingComplete(),
-      showHelptips: AppStore.showHelptips(),
       loading: null
     };
     self.timer = null;
@@ -81,8 +79,8 @@ export class Devices extends React.Component {
   }
 
   render() {
-    const { onboardingComplete, deltaActivity, showHelptips } = this.state;
-    const { devices, inactiveDevicesCount, pendingDevicesCount } = this.props;
+    const { deltaActivity } = this.state;
+    const { devices, inactiveDevicesCount, onboardingComplete, pendingDevicesCount, showHelptips } = this.props;
     const noDevicesAvailable = !(devices.length + pendingDevicesCount > 0);
     let onboardingComponent = null;
     if (this.anchor) {
@@ -123,7 +121,7 @@ export class Devices extends React.Component {
               if (onboardingComplete) {
                 return this.props.clickHandle({ route: redirectionRoute });
               }
-              AppActions.setShowConnectingDialog(true);
+              setShowConnectingDialog(true);
             }}
             isActive={noDevicesAvailable}
           />
@@ -134,14 +132,16 @@ export class Devices extends React.Component {
   }
 }
 
-const actionCreators = { getAllDevices, getAllDevicesByStatus, getDeviceCount };
+const actionCreators = { getAllDevices, getAllDevicesByStatus, getDeviceCount, setShowConnectingDialog };
 
 const mapStateToProps = state => {
   return {
     activeDevicesCount: state.devices.byStatus.active.total,
     inactiveDevicesCount: state.devices.byStatus.inactive.total,
     devices: state.devices.byStatus.accepted.deviceIds,
-    pendingDevicesCount: state.devices.byStatus.pending.total
+    onboardingComplete: state.users.onboarding.complete,
+    pendingDevicesCount: state.devices.byStatus.pending.total,
+    showHelptips: state.users.showHelptips
   };
 };
 

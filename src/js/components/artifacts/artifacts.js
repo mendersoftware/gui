@@ -17,7 +17,6 @@ export class Artifacts extends React.Component {
     this.state = {
       refreshArtifactsLength: 30000, //60000,
       doneLoading: false,
-      showHelptips: AppStore.showHelptips(),
       remove: false
     };
   }
@@ -45,7 +44,6 @@ export class Artifacts extends React.Component {
       // selected artifacts
       self.props.selectArtifact(this.props.params.artifactVersion);
     }
-    self.setState({ showHelptips: AppStore.showHelptips() });
   }
 
   onFilterReleases(releases) {
@@ -87,7 +85,7 @@ export class Artifacts extends React.Component {
   }
   render() {
     const self = this;
-    const { artifact, doneLoading, showHelptips } = self.state;
+    const { artifact, doneLoading } = self.state;
     const { artifactProgress, releases, showRemoveDialog, selectedArtifact, selectedRelease, showRemoveArtifactDialog } = self.props;
     return (
       <div style={{ height: '100%' }}>
@@ -99,7 +97,7 @@ export class Artifacts extends React.Component {
             onFilter={rels => self.onFilterReleases(rels)}
             loading={!doneLoading}
           />
-          <ReleaseRepository showHelptips={showHelptips} refreshArtifacts={() => self._getReleases()} loading={!doneLoading} release={selectedRelease} />
+          <ReleaseRepository refreshArtifacts={() => self._getReleases()} loading={!doneLoading} release={selectedRelease} />
         </div>
         {artifactProgress ? (
           <div id="progressBarContainer">

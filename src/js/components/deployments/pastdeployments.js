@@ -1,26 +1,20 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import Time from 'react-time';
 
 // material ui
-import Grid from '@material-ui/core/Grid';
-import Table from '@material-ui/core/Table';
-import TableHead from '@material-ui/core/TableHead';
-import TableCell from '@material-ui/core/TableCell';
-import TableBody from '@material-ui/core/TableBody';
-import TableRow from '@material-ui/core/TableRow';
+import { Grid, RootRef, Table, TableBody, TableCell, TableHead, TableRow } from '@material-ui/core';
 
 import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import MomentUtils from '@date-io/moment';
 
 import AppActions from '../../actions/app-actions';
-import AppStore from '../../stores/app-store';
 import Loader from '../common/loader';
 import Pagination from '../common/pagination';
 import AutoSelect from '../common/forms/autoselect';
 import { WelcomeSnackTip } from '../helptips/onboardingtips';
 import DeploymentStatus from './deploymentstatus';
 import { formatTime } from '../../helpers';
-import { RootRef } from '@material-ui/core';
 import { getOnboardingComponentFor, getOnboardingStepCompleted } from '../../utils/onboardingmanager';
 
 const timeranges = {
@@ -30,7 +24,7 @@ const timeranges = {
   month: { start: 29, end: 0, title: 'Last 30 days' }
 };
 
-export default class Past extends React.Component {
+export class Past extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
@@ -42,10 +36,11 @@ export default class Past extends React.Component {
   }
 
   componentDidMount() {
-    if (this.props.showHelptips && AppStore.getShowOnboardingTips() && !AppStore.getOnboardingComplete() && this.props.past.length) {
+    const self = this;
+    if (self.props.showHelptips && self.props.showOnboardingTips && !self.props.onboardingComplete && this.props.past.length) {
       const progress = getOnboardingStepCompleted('artifact-modified-onboarding') && this.props.past.length > 1 ? 4 : 3;
       setTimeout(() => {
-        !AppStore.getOnboardingComplete()
+        !self.props.onboardingComplete
           ? AppActions.setSnackbar('open', 10000, '', <WelcomeSnackTip progress={progress} />, () => {}, self.onCloseSnackbar)
           : null;
       }, 400);
@@ -139,12 +134,12 @@ export default class Past extends React.Component {
 
     const menuItems = this.props.groups
       ? this.props.groups.reduce(
-        (accu, item) => {
-          accu.push({ title: item, value: item });
-          return accu;
-        },
-        [{ title: 'All devices', value: 'All devices' }]
-      )
+          (accu, item) => {
+            accu.push({ title: item, value: item });
+            return accu;
+          },
+          [{ title: 'All devices', value: 'All devices' }]
+        )
       : [{ title: 'All devices', value: 'All devices' }];
 
     let onboardingComponent = null;
@@ -254,3 +249,13 @@ export default class Past extends React.Component {
     );
   }
 }
+
+const mapStateToProps = state => {
+  return {
+    onboardingComplete: state.users.onboarding.complete,
+    showHelptips: state.users.showHelptips,
+    showOnboardingTips: state.users.onboarding.showTips
+  };
+};
+
+export default connect(mapStateToProps)(Past);

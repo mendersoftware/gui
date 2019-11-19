@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { matchPath } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import LeftNav from './left-nav';
@@ -19,6 +20,7 @@ import { isEmpty, versionCompare } from '../../helpers';
 
 import AppStore from '../../stores/app-store';
 import AppActions from '../../actions/app-actions';
+import { getUserOrganization } from '../../actions/userActions';
 
 var components = {
   'getting-started': {
@@ -76,7 +78,7 @@ var components = {
   }
 };
 
-export default class Help extends React.Component {
+export class Help extends React.Component {
   static contextTypes = {
     router: PropTypes.object
   };
@@ -94,24 +96,11 @@ export default class Help extends React.Component {
   }
   componentDidMount() {
     if (this.state.hasMultitenancy && this.state.isHosted) {
-      this._getUserOrganization();
+      this.props.getUserOrganization();
       this.setState({ version: '', docsVersion: '' }); // if hosted, use latest docs version
     } else {
       this.setState({ docsVersion: this.props.docsVersion ? `${this.props.docsVersion}/` : 'development/' });
     }
-  }
-
-  _getUserOrganization() {
-    var self = this;
-    return AppActions.getUserOrganization()
-      .then(org => {
-        self.setState({ org: org });
-        self.linksTimer = setInterval(() => {
-          self._getLinks(org.id);
-        }, 30000);
-        self._getLinks(org.id);
-      })
-      .catch(err => console.log(`Error: ${err}`));
   }
 
   _getLinks(id) {
@@ -130,7 +119,6 @@ export default class Help extends React.Component {
   }
 
   componentWillUnmount() {
-    clearInterval(this.linksTimer);
     AppStore.removeChangeListener(this._onChange.bind(this));
   }
 
@@ -189,3 +177,16 @@ export default class Help extends React.Component {
     );
   }
 }
+
+const actionCreators = { getUserOrganization };
+
+const mapStateToProps = state => {
+  return {
+    org: state.users.organization
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  actionCreators
+)(Help);

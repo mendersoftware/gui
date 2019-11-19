@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 
 import { getOnboardingComponentFor, getOnboardingStepCompleted } from '../../utils/onboardingmanager';
@@ -16,12 +17,12 @@ const columnHeaders = [
   { title: '', class: '' }
 ];
 
-export default class Progress extends React.Component {
+export class Progress extends React.PureComponent {
   render() {
     const self = this;
 
     let onboardingComponent = null;
-    if (!AppStore.getOnboardingComplete() && this.inprogressRef) {
+    if (!self.props.onboardingComplete && this.inprogressRef) {
       const anchor = { left: 200, top: this.inprogressRef.offsetTop + this.inprogressRef.offsetHeight };
       onboardingComponent = getOnboardingComponentFor('deployments-inprogress', { anchor });
       if (
@@ -45,3 +46,11 @@ export default class Progress extends React.Component {
     );
   }
 }
+
+const mapStateToProps = state => {
+  return {
+    onboardingComplete: state.users.onboarding.complete
+  };
+};
+
+export default connect(mapStateToProps)(Progress);

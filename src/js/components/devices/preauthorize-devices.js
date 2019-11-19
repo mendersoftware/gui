@@ -192,7 +192,7 @@ export class Preauthorize extends React.Component {
 
     const columnHeaders = [
       {
-        title: (AppStore.getGlobalSettings() || {}).id_attribute || 'Device ID',
+        title: self.props.globalSettings.id_attribute || 'Device ID',
         name: 'device_id',
         customize: () => self.props.openSettingsDialog(),
         style: { flexGrow: 1 }
@@ -367,9 +367,10 @@ const actionCreators = { getDeviceCount, getDevicesByStatus, preauthDevice };
 const mapStateToProps = state => {
   return {
     acceptedDevices: state.devices.byStatus.accepted.total || 0,
+    count: state.devices.byStatus.preauthorized.total,
     devices: state.devices.selectedDeviceList,
     deviceLimit: state.devices.limit,
-    count: state.devices.byStatus.preauthorized.total
+    globalSettings: state.users.globalSettings
   };
 };
 

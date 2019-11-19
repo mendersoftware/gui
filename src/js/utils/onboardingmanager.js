@@ -9,6 +9,15 @@ import DeploymentCompleteTip from '../components/helptips/deploymentcompletetip'
 import AppActions from '../actions/app-actions';
 import { getDevicesByStatus, getAllDevices } from '../actions/deviceActions';
 import { getReleases } from '../actions/releaseActions';
+import {
+  setOnboardingApproach,
+  setOnboardingArtifactIncluded,
+  setOnboardingComplete,
+  setOnboardingDeviceType,
+  setOnboardingProgress,
+  setShowCreateArtifactDialog,
+  setShowOnboardingHelp
+} from '../actions/userActions';
 import AppStore from '../stores/app-store';
 import store from '../reducers';
 
@@ -18,7 +27,10 @@ import OnboardingCompleteTip from '../components/helptips/onboardingcompletetip'
 const demoArtifactLink = 'https://dgsbl4vditpls.cloudfront.net/mender-demo-artifact.mender';
 
 const onboardingTipSanityCheck = step =>
-  !AppStore.getOnboardingComplete() && AppStore.getShowOnboardingTips() && AppStore.showHelptips() && !getOnboardingStepCompleted(step);
+  !store.getState().users.onboarding.complete &&
+  store.getState().users.onboarding.showTips &&
+  store.getState().users.showHelptips &&
+  !getOnboardingStepCompleted(step);
 
 const onboardingSteps = {
   'dashboard-onboarding-start': {
@@ -89,8 +101,8 @@ const onboardingSteps = {
     condition: () => onboardingTipSanityCheck('deployments-inprogress') && getOnboardingStepCompleted('devices-accepted-onboarding'),
     component: compose(setDisplayName('OnboardingTip'))(() => (
       <div>
-        {AppStore.getOnboardingArtifactIncluded() ? 'We have included' : 'Now you have'} a Mender artifact with a simple Application update for you to test
-        with.<p>Expand it for more details.</p>
+        {store.getState().users.onboarding.artifactIncluded ? 'We have included' : 'Now you have'} a Mender artifact with a simple Application update for you to
+        test with.<p>Expand it for more details.</p>
       </div>
     )),
     progress: 1
@@ -174,8 +186,8 @@ const onboardingSteps = {
       <div>
         Now upload your new Artifact here!
         <p>
-          Or <a onClick={() => AppActions.setShowCreateArtifactDialog(true)}>view the instructions again</a> on how to edit the demo webserver application and
-          create your own Artifact
+          Or <a onClick={() => setShowCreateArtifactDialog(true)}>view the instructions again</a> on how to edit the demo webserver application and create your
+          own Artifact
         </p>
       </div>
     ),
@@ -198,14 +210,10 @@ const onboardingSteps = {
   }
 };
 
-const getCurrentOnboardingState = () => ({
-  complete: AppStore.getOnboardingComplete(),
-  deviceType: AppStore.getOnboardingDeviceType(),
-  showTips: AppStore.getShowOnboardingTips(),
-  progress: AppStore.getOnboardingProgress(),
-  approach: AppStore.getOnboardingApproach(),
-  artifactIncluded: AppStore.getOnboardingArtifactIncluded()
-});
+const getCurrentOnboardingState = () => {
+  const { showTipsDialog, showConnectDeviceDialog, showCreateArtifactDialog, ...state } = store.getState().users.onboarding; // eslint-disable-line no-unused-vars
+  return state;
+};
 
 export function getOnboardingComponentFor(id, params, previousComponent = null) {
   const step = onboardingSteps[id];
@@ -220,7 +228,7 @@ export function getOnboardingComponentFor(id, params, previousComponent = null) 
 }
 
 export function getOnboardingStepCompleted(id) {
-  const progress = AppStore.getOnboardingProgress();
+  const progress = store.getState().users.onboarding.progress;
   const stepIndex = Object.keys(onboardingSteps).findIndex(step => step === id);
   return progress > stepIndex;
 }
@@ -249,7 +257,7 @@ export function getOnboardingState(userId) {
     const userCookie = cookie.load(`${userId}-onboarded`);
     // to prevent tips from showing up for previously onboarded users completion is set explicitly before the additional requests complete
     if (userCookie) {
-      AppActions.setOnboardingComplete(Boolean(userCookie));
+      setOnboardingComplete(Boolean(userCookie));
     }
     const requests = [
       getDevicesByStatus(DEVICE_STATES.accepted),
@@ -272,9 +280,9 @@ export function getOnboardingState(userId) {
           (mender_environment && mender_environment.disableOnboarding)
         ),
         showTips: savedState.showTips != null ? savedState.showTips : onboardedCookie ? !onboardedCookie : true,
-        deviceType: savedState.deviceType || AppStore.getOnboardingDeviceType() || deviceType,
-        approach: savedState.approach || (deviceType || '').startsWith('qemu') ? 'virtual' : 'physical' || AppStore.getOnboardingApproach(),
-        artifactIncluded: savedState.artifactIncluded || AppStore.getOnboardingArtifactIncluded(),
+        deviceType: savedState.deviceType || store.getState().users.onboarding.deviceType || deviceType,
+        approach: savedState.approach || (deviceType || '').startsWith('qemu') ? 'virtual' : 'physical' || store.getState().users.onboarding.approach,
+        artifactIncluded: savedState.artifactIncluded || store.getState().users.onboarding.artifactIncluded,
         progress: savedState.progress || determineProgress(acceptedDevices, pendingDevices, releases, pastDeployments)
       };
       persistOnboardingState(state);
@@ -287,31 +295,31 @@ export function getOnboardingState(userId) {
 
   return promises
     .then(state => {
-      AppActions.setOnboardingComplete(state.complete);
-      AppActions.setOnboardingDeviceType(state.deviceType);
-      AppActions.setOnboardingApproach(state.approach);
-      AppActions.setOnboardingArtifactIncluded(state.artifactIncluded);
-      AppActions.setShowOnboardingHelp(state.showTips);
-      AppActions.setOnboardingProgress(state.progress);
+      setOnboardingComplete(state.complete);
+      setOnboardingDeviceType(state.deviceType);
+      setOnboardingApproach(state.approach);
+      setOnboardingArtifactIncluded(state.artifactIncluded);
+      setShowOnboardingHelp(state.showTips);
+      setOnboardingProgress(state.progress);
       const progress = Object.keys(onboardingSteps).findIndex(step => step === 'deployments-past-completed');
-      AppActions.setShowCreateArtifactDialog(Math.abs(state.progress - progress) <= 1);
+      setShowCreateArtifactDialog(Math.abs(state.progress - progress) <= 1);
       return Promise.resolve(state);
     })
     .catch(e => console.log(e));
 }
 
 export function advanceOnboarding(stepId) {
-  const progress = AppStore.getOnboardingProgress();
+  const progress = store.getState().users.onboarding.progress;
   const stepIndex = Object.keys(onboardingSteps).findIndex(step => step === stepId);
   const madeProgress = progress <= stepIndex ? stepIndex + 1 : progress;
-  AppActions.setOnboardingProgress(madeProgress);
+  setOnboardingProgress(madeProgress);
   const state = Object.assign(getCurrentOnboardingState(), { progress: madeProgress });
   state.complete = state.progress >= Object.keys(onboardingSteps).length ? true : state.complete;
   persistOnboardingState(state);
 }
 
 export function persistOnboardingState(state = getCurrentOnboardingState()) {
-  const user = AppStore.getCurrentUser();
-  const onboardingKey = `${user.id}-onboarding`;
+  const userId = store.getState().users.currentUser;
+  const onboardingKey = `${userId}-onboarding`;
   window.localStorage.setItem(onboardingKey, JSON.stringify(state));
 }

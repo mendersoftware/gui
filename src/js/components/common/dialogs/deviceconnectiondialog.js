@@ -7,8 +7,8 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mate
 
 import HelpIcon from '@material-ui/icons/Help';
 
-import AppActions from '../../../actions/app-actions';
 import { getReleases } from '../../../actions/releaseActions';
+import { getUserOrganization } from '../../../actions/userActions';
 
 import PhysicalDeviceOnboarding from './physicaldeviceonboarding';
 import VirtualDeviceOnboarding from './virtualdeviceonboarding';
@@ -21,7 +21,6 @@ export class DeviceConnectionDialog extends React.Component {
     this.state = {
       onDevice: false,
       progress: 1,
-      token: null,
       virtualDevice: false
     };
   }
@@ -30,7 +29,7 @@ export class DeviceConnectionDialog extends React.Component {
     const self = this;
     if (self.props.open && self.props.open !== prevProps.open) {
       if (AppStore.hasMultitenancy() || AppStore.getIsEnterprise() || AppStore.getIsHosted()) {
-        AppActions.getUserOrganization().then(org => (org ? self.setState({ token: org.tenant_token }) : null));
+        self.props.getUserOrganization();
       }
       self.props.getReleases();
     }
@@ -47,8 +46,8 @@ export class DeviceConnectionDialog extends React.Component {
 
   render() {
     const self = this;
-    const { open, onCancel } = self.props;
-    const { progress, onDevice, token, virtualDevice } = self.state;
+    const { onboardingDeviceType, open, onCancel, pendingCount, token } = self.props;
+    const { progress, onDevice, virtualDevice } = self.state;
 
     let content = (
       <div>
@@ -103,7 +102,7 @@ export class DeviceConnectionDialog extends React.Component {
       content = <VirtualDeviceOnboarding token={token} />;
     }
 
-    if (open && progress >= 2 && AppStore.getTotalPendingDevices() && !window.location.hash.includes('pending')) {
+    if (open && progress >= 2 && pendingCount && !window.location.hash.includes('pending')) {
       advanceOnboarding('dashboard-onboarding-start');
       setTimeout(() => onCancel(), 2000);
       return <Redirect to="/devices/pending" />;
@@ -122,7 +121,7 @@ export class DeviceConnectionDialog extends React.Component {
               {progress < 2 ? (
                 <Button
                   variant="contained"
-                  disabled={!(virtualDevice || (onDevice && AppStore.getOnboardingDeviceType()))}
+                  disabled={!(virtualDevice || (onDevice && onboardingDeviceType))}
                   onClick={() => self.setState({ progress: progress + 1 })}
                 >
                   Next
@@ -140,9 +139,17 @@ export class DeviceConnectionDialog extends React.Component {
   }
 }
 
-const actionCreators = { getReleases };
+const actionCreators = { getReleases, getUserOrganization };
+
+const mapStateToProps = state => {
+  return {
+    pendingCount: state.devices.byStatus.pending.total,
+    onboardingDeviceType: state.users.onboarding.deviceType,
+    token: state.users.organization.tenant_token
+  };
+};
 
 export default connect(
-  null,
+  mapStateToProps,
   actionCreators
 )(DeviceConnectionDialog);

@@ -1,30 +1,25 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import ReactTooltip from 'react-tooltip';
 import Time from 'react-time';
 
 import pluralize from 'pluralize';
 
 // material ui
-import Button from '@material-ui/core/Button';
-import FormControl from '@material-ui/core/FormControl';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import Input from '@material-ui/core/Input';
+import { Button, FormControl, FormHelperText, Input } from '@material-ui/core';
 
-import AddCircleIcon from '@material-ui/icons/AddCircle';
-import HelpIcon from '@material-ui/icons/Help';
-import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
+import { AddCircle as AddCircleIcon, Help as HelpIcon, RemoveCircleOutline as RemoveCircleOutlineIcon } from '@material-ui/icons';
 
 import { ExpandDevice } from '../helptips/helptooltips';
 import { WelcomeSnackTip } from '../helptips/onboardingtips';
 
 import Loader from '../common/loader';
 import AppActions from '../../actions/app-actions';
-import AppStore from '../../stores/app-store';
 
 import DeviceList from './devicelist';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
 
-export default class Authorized extends React.Component {
+export class Authorized extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
@@ -44,7 +39,7 @@ export default class Authorized extends React.Component {
       prevProps.pageNo !== this.props.pageNo
     ) {
       self.setState({ selectedRows: [], expandRow: null, allRowsSelected: false });
-      if (AppStore.showHelptips() && AppStore.getShowOnboardingTips() && !AppStore.getOnboardingComplete() && this.props.devices.length) {
+      if (self.props.showHelptips && self.props.showTips && !self.props.onboardingComplete && this.props.devices.length) {
         setTimeout(() => {
           AppActions.setSnackbar('open', 10000, '', <WelcomeSnackTip progress={2} />, () => {}, self.onCloseSnackbar);
         }, 400);
@@ -111,11 +106,11 @@ export default class Authorized extends React.Component {
 
   render() {
     const self = this;
-    const { allCount, devices, group, groupCount, loading, onChangeRowsPerPage } = self.props;
+    const { allCount, devices, globalSettings, group, groupCount, loading, onChangeRowsPerPage, showHelptips } = self.props;
     const { selectedRows } = self.state;
     const columnHeaders = [
       {
-        title: (AppStore.getGlobalSettings() || {}).id_attribute || 'Device ID',
+        title: globalSettings.id_attribute || 'Device ID',
         name: 'device_id',
         customize: () => self.props.openSettingsDialog(),
         style: { flexGrow: 1 }
@@ -137,7 +132,6 @@ export default class Authorized extends React.Component {
         render: device => (device.updated_ts ? <Time value={device.updated_ts} format="YYYY-MM-DD HH:mm" /> : '-')
       }
     ];
-    const showHelptips = AppStore.showHelptips();
 
     var pluralized = pluralize('devices', selectedRows.length);
 
@@ -235,3 +229,14 @@ export default class Authorized extends React.Component {
     );
   }
 }
+
+const mapStateToProps = state => {
+  return {
+    onboardingComplete: state.users.onboarding.complete,
+    showTips: state.users.onboarding.showTips,
+    globalSettings: state.users.globalSettings,
+    showHelptips: state.users.showHelptips
+  };
+};
+
+export default connect(mapStateToProps)(Authorized);

@@ -11,7 +11,6 @@ import { CloudUpload as FileIcon, Help as HelpIcon, KeyboardArrowRight as Keyboa
 
 import AppActions from '../../actions/app-actions';
 import { editArtifact, uploadArtifact, selectArtifact } from '../../actions/releaseActions';
-import AppStore from '../../stores/app-store';
 import { preformatWithRequestID, customSort } from '../../helpers';
 import { ExpandArtifact } from '../helptips/helptooltips';
 import Loader from '../common/loader';
@@ -53,7 +52,7 @@ export class ReleaseRepository extends React.Component {
     var meta = { description: '' };
     const uploads = files.map(file => self.props.uploadArtifact(meta, file));
     Promise.all(uploads).then(() => {
-      if (!AppStore.getOnboardingComplete() && getOnboardingStepCompleted('artifact-included-deploy-onboarding')) {
+      if (!self.props.onboardingComplete && getOnboardingStepCompleted('artifact-included-deploy-onboarding')) {
         advanceOnboarding('upload-new-artifact-tip');
       }
       self.props.refreshArtifacts();
@@ -66,7 +65,7 @@ export class ReleaseRepository extends React.Component {
     } else {
       this.props.selectArtifact();
     }
-    if (!AppStore.getOnboardingComplete()) {
+    if (!this.props.onboardingComplete) {
       advanceOnboarding('artifact-included-onboarding');
     }
   }
@@ -86,7 +85,7 @@ export class ReleaseRepository extends React.Component {
   }
 
   onCreateDeploymentFrom(release) {
-    if (!AppStore.getOnboardingComplete() && getOnboardingStepCompleted('upload-new-artifact-tip')) {
+    if (!this.props.onboardingComplete && getOnboardingStepCompleted('upload-new-artifact-tip')) {
       advanceOnboarding('artifact-modified-onboarding');
     }
     AppActions.setDeploymentRelease(release);
@@ -285,9 +284,11 @@ const actionCreators = { editArtifact, uploadArtifact, selectArtifact };
 
 const mapStateToProps = state => {
   return {
+    onboardingComplete: state.users.onboarding.complete,
     release: state.releases.selectedRelease ? state.releases.byId[state.releases.selectedRelease] : null,
     releases: Object.values(state.releases.byId),
     selectedArtifact: state.releases.selectedArtifact,
+    showHelptips: state.users.showHelptips,
     uploading: state.releases.uploading
   };
 };

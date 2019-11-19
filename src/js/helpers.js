@@ -2,7 +2,7 @@ import jwtDecode from 'jwt-decode';
 import md5 from 'md5';
 import React from 'react';
 
-import AppStore from './stores/app-store';
+import store from './reducers';
 
 export function isEncoded(uri) {
   uri = uri || '';
@@ -31,27 +31,27 @@ export function statusToPercentage(state, intervals) {
   var time;
   var minutes = intervals / 3;
   switch (state) {
-  case 'pending':
-  case 'noartifact':
-    return 0;
+    case 'pending':
+    case 'noartifact':
+      return 0;
 
-  case 'downloading':
-    // increase slightly over time to show progress
-    time = minutes < 15 && intervals < 69 ? 0 + intervals : 69;
-    return time;
+    case 'downloading':
+      // increase slightly over time to show progress
+      time = minutes < 15 && intervals < 69 ? 0 + intervals : 69;
+      return time;
 
-  case 'installing':
-    return 70;
+    case 'installing':
+      return 70;
 
-  case 'rebooting':
-    time = minutes < 18 && 75 + intervals < 99 ? 75 + intervals : 99;
-    return time;
+    case 'rebooting':
+      time = minutes < 18 && 75 + intervals < 99 ? 75 + intervals : 99;
+      return time;
 
-  case 'aborted':
-  case 'already-installed':
-  case 'failure':
-  case 'success':
-    return 100;
+    case 'aborted':
+    case 'already-installed':
+    case 'failure':
+    case 'success':
+      return 100;
   }
 }
 
@@ -214,24 +214,24 @@ export function deepCompare() {
       }
 
       switch (typeof x[p]) {
-      case 'object':
-      case 'function':
-        leftChain.push(x);
-        rightChain.push(y);
+        case 'object':
+        case 'function':
+          leftChain.push(x);
+          rightChain.push(y);
 
-        if (!compare2Objects(x[p], y[p])) {
-          return false;
-        }
+          if (!compare2Objects(x[p], y[p])) {
+            return false;
+          }
 
-        leftChain.pop();
-        rightChain.pop();
-        break;
+          leftChain.pop();
+          rightChain.pop();
+          break;
 
-      default:
-        if (x[p] !== y[p]) {
-          return false;
-        }
-        break;
+        default:
+          if (x[p] !== y[p]) {
+            return false;
+          }
+          break;
       }
     }
 
@@ -261,17 +261,17 @@ export function stringToBoolean(content) {
   }
   const string = content + '';
   switch (string.trim().toLowerCase()) {
-  case 'true':
-  case 'yes':
-  case '1':
-    return true;
-  case 'false':
-  case 'no':
-  case '0':
-  case null:
-    return false;
-  default:
-    return Boolean(string);
+    case 'true':
+    case 'yes':
+    case '1':
+      return true;
+    case 'false':
+    case 'no':
+    case '0':
+    case null:
+      return false;
+    default:
+      return Boolean(string);
   }
 }
 
@@ -380,8 +380,9 @@ export const getDemoDeviceAddress = devices => {
     }
     return item;
   }, null);
-  const onboardingApproach = AppStore.getOnboardingApproach();
-  const port = AppStore.getDemoArtifactPort();
+  const onboarding = store.getState().users.onboarding;
+  const onboardingApproach = onboarding.approach;
+  const port = onboarding.demoArtifactPort;
   targetUrl = `http://${address}:${port}`;
   if (!address || (onboardingApproach === 'virtual' && (navigator.appVersion.indexOf('Win') != -1 || navigator.appVersion.indexOf('Mac') != -1))) {
     targetUrl = `http://localhost:${port}`;
