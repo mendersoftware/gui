@@ -13,7 +13,6 @@ import Select from '@material-ui/core/Select';
 
 import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
 
-import AppActions from '../../actions/app-actions';
 import { fullyDecodeURI } from '../../helpers';
 
 export default class GroupSelector extends React.Component {
@@ -37,14 +36,8 @@ export default class GroupSelector extends React.Component {
   }
 
   _handleGroupNameSave(event) {
-    if (!event || event['keyCode'] === 13) {
-      if (!this.state.errorCode1) {
-        var group = this.props.selectedGroup;
-        group = this.state.groupName;
-        AppActions.addToGroup(group, []);
-      } else {
-        this.setState({ groupName: this.props.selectedGroup });
-      }
+    if ((!event || event['keyCode'] === 13) && this.state.errorCode1) {
+      this.setState({ groupName: this.props.selectedGroup });
     }
     if (event && event['keyCode'] === 13) {
       this.setState({
