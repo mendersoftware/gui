@@ -31,7 +31,8 @@ export class TwoFactorAuthSetup extends React.Component {
     const self = this;
     self.setState({ validating2fa: true });
     formData.email = self.props.user.email;
-    AppActions.loginUser(formData)
+    self.props
+      .loginUser(formData)
       .then(token => self.setState({ validated2fa: !!token, validating2fa: false }))
       .catch(() => {
         AppActions.setSnackbar('An error occured validating the verification code.');
