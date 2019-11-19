@@ -46,22 +46,15 @@ const AppActions = {
     return DevicesApi.delete(`${inventoryApiUrl}/devices/${device}/group/${group}`);
   },
 
-  addGroup: (group, idx) => {
-    AppDispatcher.handleViewAction({
-      actionType: AppConstants.ADD_GROUP,
-      group: group,
-      index: idx
-    });
-  },
-
   /* Groups */
   getGroups: () =>
     DevicesApi.get(`${inventoryApiUrl}/groups`).then(res => {
+      const groups = res.body ? res.body.sort() : null
       AppDispatcher.handleViewAction({
         actionType: AppConstants.RECEIVE_GROUPS,
-        groups: res.body
+        groups
       });
-      return Promise.resolve(res.body);
+      return Promise.resolve(groups);
     }),
 
   getGroupDevices: (group, page = default_page, per_page = default_per_page) => {
