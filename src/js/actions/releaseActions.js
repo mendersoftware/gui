@@ -1,6 +1,7 @@
 import ArtifactsApi from '../api/artifacts-api';
 import AppActions from '../actions/app-actions';
 import * as ReleaseConstants from '../constants/releaseConstants';
+import * as UserConstants from '../constants/userConstants';
 
 import { customSort, preformatWithRequestID } from '../helpers';
 
@@ -115,6 +116,6 @@ export const getReleases = () => dispatch =>
     }, {});
     return Promise.all([
       dispatch({ type: ReleaseConstants.RECEIVE_RELEASES, releases: flatReleases }),
-      AppActions.setOnboardingArtifactIncluded(!!releases.length)
+      dispatch({ type: UserConstants.SET_ONBOARDING_ARTIFACT_INCLUDED, value: !!releases.length })
     ]);
   });
