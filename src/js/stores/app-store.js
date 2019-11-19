@@ -13,29 +13,12 @@ var _snackbar = {
   open: false,
   message: ''
 };
-var _currentUser = {};
-var _organization = {};
-var _showHelptips = null;
-var _showOnboardingTips = true;
-var _showOnboardingTipsDialog = false;
-var _showConnectDeviceDialog = false;
-var _showCreateArtifactDialog = false;
-var _onboardingComplete =
-  (mender_environment && stringToBoolean(mender_environment.features.isEnterprise)) ||
-  !!_onboardingComplete ||
-  (mender_environment && stringToBoolean(mender_environment.disableOnboarding)) ||
-  !!JSON.parse(window.localStorage.getItem('onboardingComplete'));
-var _onboardingProgress = 0;
-var _onboardingDeviceType = null;
-var _onboardingApproach = null;
-var _onboardingArtifactIncluded = null;
 const _hostAddress = mender_environment && mender_environment.hostAddress ? mender_environment.hostAddress : null;
 const _IntegrationVersion = mender_environment && mender_environment.integrationVersion ? mender_environment.integrationVersion : 'master';
 const _MenderVersion = mender_environment && mender_environment.menderVersion ? mender_environment.menderVersion : 'master';
 const _menderArtifactVersion = mender_environment && mender_environment.menderArtifactVersion ? mender_environment.menderArtifactVersion : 'master';
 const _menderDebPackageVersion = mender_environment && mender_environment.menderDebPackageVersion ? mender_environment.menderDebPackageVersion : 'master';
 var _demoArtifactPort = mender_environment && mender_environment.demoArtifactPort ? mender_environment.demoArtifactPort : 85;
-var _globalSettings = {};
 
 const _versionInformation = {
   Integration: mender_environment.integrationVersion,
@@ -189,59 +172,9 @@ function setDeploymentRelease(release) {
   _deploymentRelease = release;
 }
 
-function setGlobalSettings(settings) {
-  _globalSettings = settings;
-}
-
 function _setSnackbar(message, duration, action, children, onClick, onClose) {
   var show = message ? true : false;
   _snackbar = { open: show, message, maxWidth: '900px', autoHideDuration: duration, action, children, onClick, onClose };
-}
-
-function _setCurrentUser(user) {
-  _currentUser = user;
-}
-
-function _setOrganization(org) {
-  _organization = org;
-}
-
-function _setShowHelptips(val) {
-  _showHelptips = val;
-}
-
-function _setShowOnboardingHelp(val) {
-  _showOnboardingTips = val;
-}
-function _setShowOnboardingTipsDialog(val) {
-  _showOnboardingTipsDialog = val;
-}
-function _setShowConnectDeviceDialog(val) {
-  _showConnectDeviceDialog = val;
-}
-function _setShowCreateArtifactDialog(val) {
-  _showCreateArtifactDialog = val;
-}
-function _setOnboardingProgress(val) {
-  _onboardingProgress = val;
-}
-
-function _setOnboardingDeviceType(val) {
-  _onboardingDeviceType = val;
-}
-
-function _setOnboardingApproach(val) {
-  _onboardingApproach = val;
-}
-
-function _setOnboardingComplete(val) {
-  _onboardingComplete = val;
-}
-
-function _setOnboardingArtifactIncluded(val) {
-  if (_onboardingArtifactIncluded === null) {
-    _onboardingArtifactIncluded = val;
-  }
 }
 
 var AppStore = Object.assign({}, EventEmitter.prototype, {
@@ -314,8 +247,6 @@ var AppStore = Object.assign({}, EventEmitter.prototype, {
 
   getSnackbar: () => _snackbar,
 
-  getCurrentUser: () => _currentUser,
-
   // return boolean rather than organization details
   hasMultitenancy: () => mender_environment && stringToBoolean(mender_environment.features.hasMultitenancy),
 
@@ -326,28 +257,6 @@ var AppStore = Object.assign({}, EventEmitter.prototype, {
   getHostAddress: () => _hostAddress,
 
   getVersionInformation: () => _versionInformation,
-
-  getOrganization: () => _organization,
-
-  showHelptips: () => _showHelptips,
-
-  getOnboardingComplete: () => _onboardingComplete,
-
-  getOnboardingProgress: () => _onboardingProgress,
-
-  getOnboardingDeviceType: () => _onboardingDeviceType,
-
-  getOnboardingApproach: () => _onboardingApproach,
-
-  getOnboardingArtifactIncluded: () => _onboardingArtifactIncluded,
-
-  getShowOnboardingTips: () => _showOnboardingTips,
-
-  getShowOnboardingTipsDialog: () => _showOnboardingTipsDialog,
-
-  getShowConnectDeviceDialog: () => _showConnectDeviceDialog,
-
-  getShowCreateArtifactDialog: () => _showCreateArtifactDialog,
 
   getIntegrationVersion: function() {
     // return version number
@@ -385,10 +294,6 @@ var AppStore = Object.assign({}, EventEmitter.prototype, {
     return docsVersion;
   },
 
-  getGlobalSettings: () => _globalSettings,
-
-  get2FARequired: () => _globalSettings.hasOwnProperty('2fa') && _globalSettings['2fa'] === 'enabled',
-
   getDeploymentDeviceLimit: () => _deploymentDeviceLimit,
 
   dispatcherIndex: AppDispatcher.register(payload => {
@@ -403,46 +308,6 @@ var AppStore = Object.assign({}, EventEmitter.prototype, {
         payload.action.onClick,
         payload.action.onClose
       );
-      break;
-
-    case AppConstants.SET_CURRENT_USER:
-      _setCurrentUser(payload.action.user);
-      break;
-
-    case AppConstants.SET_ORGANIZATION:
-      _setOrganization(payload.action.organization);
-      break;
-
-      /* Onboarding */
-    case AppConstants.SET_SHOW_HELP:
-      _setShowHelptips(payload.action.show);
-      break;
-    case AppConstants.SET_SHOW_ONBOARDING_HELP:
-      _setShowOnboardingHelp(payload.action.show);
-      break;
-    case AppConstants.SET_ONBOARDING_COMPLETE:
-      _setOnboardingComplete(payload.action.show);
-      break;
-    case AppConstants.SET_ONBOARDING_ARTIFACT_INCLUDED:
-      _setOnboardingArtifactIncluded(payload.action.value);
-      break;
-    case AppConstants.SET_SHOW_ONBOARDING_HELP_DIALOG:
-      _setShowOnboardingTipsDialog(payload.action.show);
-      break;
-    case AppConstants.SET_SHOW_CONNECT_DEVICE:
-      _setShowConnectDeviceDialog(payload.action.show);
-      break;
-    case AppConstants.SET_SHOW_CREATE_ARTIFACT:
-      _setShowCreateArtifactDialog(payload.action.show);
-      break;
-    case AppConstants.SET_ONBOARDING_PROGRESS:
-      _setOnboardingProgress(payload.action.value);
-      break;
-    case AppConstants.SET_ONBOARDING_DEVICE_TYPE:
-      _setOnboardingDeviceType(payload.action.value);
-      break;
-    case AppConstants.SET_ONBOARDING_APPROACH:
-      _setOnboardingApproach(payload.action.value);
       break;
 
       /* API */
@@ -465,10 +330,6 @@ var AppStore = Object.assign({}, EventEmitter.prototype, {
       /* API */
     case AppConstants.SET_DEPLOYMENT_RELEASE:
       setDeploymentRelease(payload.action.release);
-      break;
-
-    case AppConstants.SET_GLOBAL_SETTINGS:
-      setGlobalSettings(payload.action.settings);
       break;
     }
 
