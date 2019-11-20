@@ -74,8 +74,7 @@ export class Header extends React.Component {
   _getInitialState() {
     return {
       sessionId: cookie.load('JWT'),
-      hasDeployments: AppStore.getHasDeployments(),
-      multitenancy: AppStore.hasMultitenancy()
+      hasDeployments: AppStore.getHasDeployments()
     };
   }
   _onChange() {
@@ -200,7 +199,7 @@ export class Header extends React.Component {
           <MenuItem component={Link} to="/settings/my-account">
             My account
           </MenuItem>
-          {this.state.multitenancy ? (
+          {this.props.multitenancy ? (
             <MenuItem component={Link} to="/settings/my-organization">
               My organization
             </MenuItem>
@@ -285,6 +284,7 @@ const mapStateToProps = state => {
     deviceLimit: state.devices.limit,
     demo: state.app.features.isDemoMode,
     docsVersion: state.app.docsVersion,
+    multitenancy: state.app.features.hasMultitenancy,
     showHelptips: state.users.showHelptips,
     pendingDevices: state.devices.byStatus.pending.total,
     user: state.users.byId[state.users.currentUser] || { email: '', id: null }

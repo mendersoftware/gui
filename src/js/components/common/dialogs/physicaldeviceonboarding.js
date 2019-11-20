@@ -10,24 +10,22 @@ import HelpIcon from '@material-ui/icons/Help';
 
 import AutoSelect from '../forms/autoselect';
 import { setOnboardingApproach, setOnboardingDeviceType } from '../../../actions/userActions';
-import { findLocalIpAddress } from '../../../helpers';
+import { findLocalIpAddress } from '../../../actions/appActions';
 import { advanceOnboarding } from '../../../utils/onboardingmanager';
-import AppStore from '../../../stores/app-store';
 
 export class PhysicalDeviceOnboarding extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
       selection: null,
-      ipAddress: AppStore.getHostAddress(),
       copied: false
     };
   }
 
   componentDidMount() {
     const self = this;
-    if (!self.state.ipAddress || self.state.ipAddress === 'X.X.X.X') {
-      findLocalIpAddress().then(ipAddress => self.setState({ ipAddress }));
+    if (!self.props.ipAddress || self.props.ipAddress === 'X.X.X.X') {
+      self.props.findLocalIpAddress();
     }
     self.props.setOnboardingApproach('physical');
   }
@@ -48,8 +46,8 @@ export class PhysicalDeviceOnboarding extends React.Component {
 
   render() {
     const self = this;
-    const { ipAddress, selection } = self.state;
-    const { token } = self.props;
+    const { selection } = self.state;
+    const { ipAddress, debPackageVersion, token } = self.props;
 
     let connectionInstructions = `
 sed /etc/mender/mender.conf -i -e "/Paste your Hosted Mender token here/d;s/hosted.mender.io/docker.mender.io/;1 a \\ \\ \\"ServerCertificate\\": \\"/etc/mender/server.crt\\","
@@ -64,8 +62,8 @@ TENANT_TOKEN="'${token}'"
 sed -i "s/Paste your Hosted Mender token here/$TENANT_TOKEN/" /etc/mender/mender.conf
 `;
     }
-    let codeToCopy = `sudo bash -c 'wget https://d1b0l86ne08fsf.cloudfront.net/${AppStore.getMenderDebPackageVersion()}/dist-packages/debian/armhf/mender-client_${AppStore.getMenderDebPackageVersion()}-1_armhf.deb
-dpkg -i mender-client_${AppStore.getMenderDebPackageVersion()}-1_armhf.deb
+    let codeToCopy = `sudo bash -c 'wget https://d1b0l86ne08fsf.cloudfront.net/${debPackageVersion}/dist-packages/debian/armhf/mender-client_${debPackageVersion}-1_armhf.deb
+dpkg -i mender-client_${debPackageVersion}-1_armhf.deb
 cp /etc/mender/mender.conf.demo /etc/mender/mender.conf
 ${connectionInstructions}
 mkdir -p /var/lib/mender
@@ -151,9 +149,16 @@ systemctl enable mender && systemctl restart mender'
   }
 }
 
-const actionCreators = { setOnboardingApproach, setOnboardingDeviceType };
+const actionCreators = { findLocalIpAddress, setOnboardingApproach, setOnboardingDeviceType };
+
+const mapStateToProps = state => {
+  return {
+    ipAddress: state.app.hostAddress,
+    debPackageVersion: state.app.menderDebPackageVersion
+  };
+};
 
 export default connect(
-  null,
+  mapStateToProps,
   actionCreators
 )(PhysicalDeviceOnboarding);

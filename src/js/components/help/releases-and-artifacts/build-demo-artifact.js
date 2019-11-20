@@ -4,7 +4,6 @@ import IconButton from '@material-ui/core/IconButton';
 import CopyPasteIcon from '@material-ui/icons/FileCopy';
 
 import { detectOsIdentifier } from '../../../helpers';
-import AppStore from '../../../stores/app-store';
 
 // we don't support windows yet, so we'll point them to the linux file instead
 const downloadFolder = {
@@ -42,7 +41,7 @@ sudo mv mender-artifact /usr/local/bin`;
     const artifactName = 'demo-webserver-updated';
 
     const file_install = `
-wget https://raw.githubusercontent.com/mendersoftware/mender/${AppStore.getMenderVersion()}/support/modules-artifact-gen/${artifactGenerator}
+wget https://raw.githubusercontent.com/mendersoftware/mender/${this.props.menderVersion}/support/modules-artifact-gen/${artifactGenerator}
 sudo chmod +x ${artifactGenerator}`;
 
     const generate = `
@@ -79,7 +78,7 @@ EOF
         <p>
           1.{' '}
           <a
-            href={`https://d1b0l86ne08fsf.cloudfront.net/mender-artifact/${AppStore.getMenderArtifactVersion()}/${
+            href={`https://d1b0l86ne08fsf.cloudfront.net/mender-artifact/${this.props.menderArtifactVersion}/${
               downloadFolder[detectOsIdentifier()]
             }/mender-artifact`}
             target="_blank"

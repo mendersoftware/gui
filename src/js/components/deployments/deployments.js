@@ -423,6 +423,7 @@ export class Deployments extends React.Component {
                   items={this.state.pending}
                   page={this.state.pendPage}
                   refreshItems={(...args) => this._refreshPending(...args)}
+                  isEnterprise={this.props.isEnterprise}
                   isActiveTab={self._getCurrentLabel() === routes.active.title}
                   title="pending"
                   type="pending"
@@ -500,6 +501,7 @@ const mapStateToProps = state => {
   return {
     groups: Object.keys(state.devices.groups.byId),
     groupDevices: state.devices.groups.byId,
+    isEnterprise: state.app.features.isEnterprise || state.app.features.isHosted,
     onboardingComplete: state.users.onboarding.complete,
     settings: state.users.globalSettings,
     showHelptips: state.users.showHelptips,

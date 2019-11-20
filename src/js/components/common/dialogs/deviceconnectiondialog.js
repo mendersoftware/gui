@@ -12,7 +12,6 @@ import { getUserOrganization } from '../../../actions/userActions';
 
 import PhysicalDeviceOnboarding from './physicaldeviceonboarding';
 import VirtualDeviceOnboarding from './virtualdeviceonboarding';
-import AppStore from '../../../stores/app-store';
 import { advanceOnboarding } from '../../../utils/onboardingmanager';
 
 export class DeviceConnectionDialog extends React.Component {
@@ -28,7 +27,7 @@ export class DeviceConnectionDialog extends React.Component {
   componentDidUpdate(prevProps) {
     const self = this;
     if (self.props.open && self.props.open !== prevProps.open) {
-      if (AppStore.hasMultitenancy() || AppStore.getIsEnterprise() || AppStore.getIsHosted()) {
+      if (self.props.isEnterprise) {
         self.props.getUserOrganization();
       }
       self.props.getReleases();
@@ -143,6 +142,7 @@ const actionCreators = { getReleases, getUserOrganization };
 
 const mapStateToProps = state => {
   return {
+    isEnterprise: state.app.features.hasMultitenancy || state.app.features.isEnterprise || state.app.features.isHosted,
     pendingCount: state.devices.byStatus.pending.total,
     onboardingDeviceType: state.users.onboarding.deviceType,
     token: state.users.organization.tenant_token

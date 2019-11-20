@@ -2,7 +2,6 @@ import React from 'react';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import IconButton from '@material-ui/core/IconButton';
 import CopyPasteIcon from '@material-ui/icons/FileCopy';
-import AppStore from '../../../stores/app-store';
 import { detectOsIdentifier } from '../../../helpers';
 
 export default class DebPackage extends React.Component {
@@ -31,8 +30,8 @@ export default class DebPackage extends React.Component {
   render() {
     var tenantToken = (this.props.org || {}).tenant_token;
 
-    var dpkgCode = `wget https://d1b0l86ne08fsf.cloudfront.net/${AppStore.getMenderDebPackageVersion()}/dist-packages/debian/armhf/mender-client_${AppStore.getMenderDebPackageVersion()}-1_armhf.deb
-    sudo dpkg -i mender-client_${AppStore.getMenderDebPackageVersion()}-1_armhf.deb`;
+    var dpkgCode = `wget https://d1b0l86ne08fsf.cloudfront.net/${this.props.menderDebPackageVersion}/dist-packages/debian/armhf/mender-client_${this.props.menderDebPackageVersion}-1_armhf.deb
+    sudo dpkg -i mender-client_${this.props.menderDebPackageVersion}-1_armhf.deb`;
     var cpCode = 'sudo cp /etc/mender/mender.conf.demo /etc/mender/mender.conf';
     var echoCode = 'sudo mkdir -p /var/lib/mender \necho "device_type=generic-armv6" | sudo tee /var/lib/mender/device_type';
     var startCode = 'sudo systemctl enable mender && sudo systemctl start mender';

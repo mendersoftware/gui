@@ -8,7 +8,6 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mate
 import CopyPasteIcon from '@material-ui/icons/FileCopy';
 
 import { setShowCreateArtifactDialog } from '../../../actions/userActions';
-import AppStore from '../../../stores/app-store';
 import { detectOsIdentifier } from '../../../helpers';
 
 // we don't support windows yet, so we'll point them to the linux file instead
@@ -47,15 +46,15 @@ export class CreateArtifactDialog extends React.Component {
 
   render() {
     const self = this;
-    const { deviceType, open, onCancel, setShowCreateArtifactDialog } = self.props;
+    const { deviceType, menderVersion, menderArtifactVersion, open, onCancel, setShowCreateArtifactDialog } = self.props;
     const { copied, progress } = self.state;
 
     const artifactGenerator = 'single-file-artifact-gen';
     const artifactName = 'demo-webserver-updated';
     const chmodCode = `
-wget https://d1b0l86ne08fsf.cloudfront.net/mender-artifact/${AppStore.getMenderArtifactVersion()}/${downloadFolder[detectOsIdentifier()]}/mender-artifact
+wget https://d1b0l86ne08fsf.cloudfront.net/mender-artifact/${menderArtifactVersion}/${downloadFolder[detectOsIdentifier()]}/mender-artifact
 chmod +x mender-artifact
-wget https://raw.githubusercontent.com/mendersoftware/mender/${AppStore.getMenderVersion()}/support/modules-artifact-gen/${artifactGenerator}
+wget https://raw.githubusercontent.com/mendersoftware/mender/${menderVersion}/support/modules-artifact-gen/${artifactGenerator}
 chmod +x ${artifactGenerator}
 sudo cp mender-artifact ${artifactGenerator} /usr/local/bin/
 `;
@@ -167,7 +166,9 @@ const actionCreators = { setShowCreateArtifactDialog };
 
 const mapStateToProps = state => {
   return {
-    deviceType: state.users.onboarding.deviceType || 'qemux86-64'
+    deviceType: state.users.onboarding.deviceType || 'qemux86-64',
+    menderVersion: state.app.versionInformation['Mender-Client'],
+    menderArtifactVersion: state.app.versionInformation['Mender-Artifact']
   };
 };
 

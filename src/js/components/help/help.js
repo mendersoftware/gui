@@ -129,6 +129,9 @@ export class Help extends React.PureComponent {
               org={this.props.org}
               links={this.props.links}
               hasMultitenancy={this.props.hasMultitenancy}
+              menderDebPackageVersion={this.props.menderDebPackageVersion}
+              menderVersion={this.props.menderVersion}
+              menderArtifactVersion={this.props.menderArtifactVersion}
               isEmpty={isEmpty}
               pages={components}
             />
@@ -148,6 +151,9 @@ const mapStateToProps = state => {
     docsVersion: state.app.features.hasMultitenancy && state.app.features.isHosted ? '' : docsVersion,
     isHosted: state.app.features.isHosted,
     links: state.app.hostedLinks,
+    menderVersion: state.app.versionInformation['Mender-Client'],
+    menderDebPackageVersion: state.app.menderDebPackageVersion,
+    menderArtifactVersion: state.app.versionInformation['Mender-Artifact'],
     org: state.users.organization,
     version: state.app.versionInformation.Integration
   };

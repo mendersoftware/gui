@@ -71,6 +71,11 @@ const userReducer = (state = initialState, action) => {
         ...state,
         hostedLinks: action.links
       };
+    case AppConstants.SET_LOCAL_IPADDRESS:
+      return {
+        ...state,
+        hostAddress: action.ipAddress
+      };
     default:
       return state;
   }

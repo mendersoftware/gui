@@ -150,11 +150,6 @@ function setDeploymentRelease(release) {
   _deploymentRelease = release;
 }
 
-function _setSnackbar(message, duration, action, children, onClick, onClose) {
-  var show = message ? true : false;
-  _snackbar = { open: show, message, maxWidth: '900px', autoHideDuration: duration, action, children, onClick, onClose };
-}
-
 var AppStore = Object.assign({}, EventEmitter.prototype, {
   emitChange: function() {
     this.emit(CHANGE_EVENT);

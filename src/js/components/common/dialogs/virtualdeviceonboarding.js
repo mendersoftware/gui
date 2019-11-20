@@ -8,7 +8,6 @@ import Button from '@material-ui/core/Button';
 import CopyPasteIcon from '@material-ui/icons/FileCopy';
 
 import { setOnboardingApproach } from '../../../actions/userActions';
-import AppStore from '../../../stores/app-store';
 
 export class VirtualDeviceOnboarding extends React.Component {
   constructor(props, context) {
@@ -32,8 +31,7 @@ export class VirtualDeviceOnboarding extends React.Component {
 
   render() {
     const self = this;
-    const { token } = self.props;
-    const isHosted = AppStore.getIsHosted();
+    const { isHosted, token } = self.props;
 
     let codeToCopy = token
       ? `
@@ -89,7 +87,13 @@ export class VirtualDeviceOnboarding extends React.Component {
 
 const actionCreators = { setOnboardingApproach };
 
+const mapStateToProps = state => {
+  return {
+    isHosted: state.app.features.isHosted
+  };
+};
+
 export default connect(
-  null,
+  mapStateToProps,
   actionCreators
 )(VirtualDeviceOnboarding);

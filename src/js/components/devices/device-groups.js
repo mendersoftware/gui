@@ -49,8 +49,7 @@ export class DeviceGroups extends React.Component {
       pageLength: 20,
       loading: true,
       tmpDevices: [],
-      refreshDeviceLength: 10000,
-      isHosted: AppStore.getIsEnterprise() || AppStore.getIsHosted()
+      refreshDeviceLength: 10000
     };
     this.props.selectDevices(this.props.acceptedDevicesList);
     this.props.getAllDevicesByStatus(DeviceConstants.DEVICE_STATES.accepted);
@@ -424,7 +423,7 @@ export class DeviceGroups extends React.Component {
               attributes={this.props.attributes}
               filters={this.state.filters}
               onFilterChange={filters => this._onFilterChange(filters)}
-              isHosted={this.state.isHosted}
+              isHosted={this.props.isEnterprise}
             />
           ) : null}
 
@@ -533,6 +532,7 @@ const mapStateToProps = state => {
     devices,
     groups: Object.keys(state.devices.groups.byId) || [],
     groupCount,
+    isEnterprise: state.app.features.isEnterprise || state.app.features.isHosted,
     selectedGroup,
     showHelptips: state.users.showHelptips,
     ungroupedDevices

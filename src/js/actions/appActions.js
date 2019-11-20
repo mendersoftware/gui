@@ -1,4 +1,5 @@
 import AppConstants from '../constants/app-constants';
+import * as Helpers from '../helpers';
 import GeneralApi from '../api/general-api';
 
 const hostedLinks = 'https://s3.amazonaws.com/hosted-mender-artifacts-onboarding/';
@@ -31,3 +32,6 @@ export const setSnackbar = (message, duration, action, component, onClick, onClo
 
 export const getHostedLinks = id => dispatch =>
   GeneralApi.getNoauth(`${hostedLinks}${id}/links.json`).then(res => dispatch({ type: AppConstants.RECEIVED_HOSTED_LINKS, links: JSON.parse(res.text) }));
+
+export const findLocalIpAddress = () => dispatch =>
+  Helpers.findLocalIpAddress().then(ipAddress => dispatch({ type: AppConstants.SET_LOCAL_IPADDRESS, ipAddress }));

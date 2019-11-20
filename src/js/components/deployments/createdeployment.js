@@ -10,7 +10,6 @@ import Review from './deployment-wizard/review';
 import { selectDevice } from '../../actions/deviceActions';
 import { selectRelease } from '../../actions/releaseActions';
 
-import AppStore from '../../stores/app-store';
 import { getRemainderPercent } from '../../helpers';
 
 const deploymentSteps = [
@@ -22,9 +21,9 @@ const deploymentSteps = [
 export class CreateDialog extends React.Component {
   constructor(props, context) {
     super(props, context);
-    const isEnterprise = AppStore.getIsEnterprise() || AppStore.getIsHosted();
+    const self = this;
     const steps = deploymentSteps.reduce((accu, step) => {
-      if (step.closed && !isEnterprise) {
+      if (step.closed && !self.props.isEnterprise) {
         return accu;
       }
       accu.push(step);
@@ -33,7 +32,6 @@ export class CreateDialog extends React.Component {
     this.state = {
       activeStep: 0,
       deploymentDeviceIds: [],
-      isEnterprise,
       steps
     };
   }
@@ -140,6 +138,7 @@ const actionCreators = { selectDevice, selectRelease };
 
 const mapStateToProps = state => {
   return {
+    isEnterprise: state.app.features.isEnterprise || state.app.features.isHosted,
     device: state.devices.selectedDevice ? state.devices.byId[state.devices.selectedDevice] : null,
     groups: Object.keys(state.devices.groups.byId),
     hasDevices: state.devices.byStatus.accepted.total || state.devices.byStatus.accepted.deviceIds.length > 0,

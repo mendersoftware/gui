@@ -7,7 +7,6 @@ import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 
 import { getDevices } from '../../actions/deviceActions';
 import { setOnboardingComplete } from '../../actions/userActions';
-import AppStore from '../../stores/app-store';
 import { getDemoDeviceAddress } from '../../helpers';
 import Loader from '../common/loader';
 
@@ -37,7 +36,7 @@ export class OnboardingCompleteTip extends React.Component {
   }
 
   render() {
-    const { setOnboardingComplete } = this.props;
+    const { docsVersion, setOnboardingComplete } = this.props;
     const { loading, targetUrl } = this.state;
     const url = targetUrl ? targetUrl : this.props.targetUrl;
 
@@ -75,7 +74,7 @@ export class OnboardingCompleteTip extends React.Component {
           <p>You&apos;ve now got a good foundation in how to use Mender. Look for more help hints in the UI as you go along.</p>
           What next?
           <div>
-            <a href={`https://docs.mender.io/${AppStore.getDocsVersion()}/getting-started/deploy-to-physical-devices#prepare-the-disk-image`} target="_blank">
+            <a href={`https://docs.mender.io/${docsVersion}getting-started/deploy-to-physical-devices#prepare-the-disk-image`} target="_blank">
               Learn about full-image updates
             </a>{' '}
             or{' '}
@@ -98,7 +97,9 @@ export class OnboardingCompleteTip extends React.Component {
 const actionCreators = { getDevices, setOnboardingComplete };
 
 const mapStateToProps = state => {
+  const docsVersion = state.app.docsVersion ? `${state.app.docsVersion}/` : 'development/';
   return {
+    docsVersion: state.app.features.hasMultitenancy && state.app.features.isHosted ? '' : docsVersion,
     acceptedDevices: state.devices.byStatus.accepted.deviceIds.map(id => state.devices.byId[id])
   };
 };

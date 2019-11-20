@@ -9,7 +9,6 @@ import Confirm from './confirm';
 import ProgressChart from './progressChart';
 import { formatTime, groupDeploymentStats } from '../../helpers';
 import AppActions from '../../actions/app-actions';
-import AppStore from '../../stores/app-store';
 
 const deploymentTypeClasses = {
   past: 'past-item',
@@ -60,7 +59,7 @@ export default class DeploymentItem extends React.Component {
 
   render() {
     const self = this;
-    const { deployment, openReport, index, type, columnHeaders } = self.props;
+    const { columnHeaders, deployment, index, isEnterprise, openReport, type } = self.props;
     const { abort, stats } = self.state;
     const { inprogress: current, successes, failures } = groupDeploymentStats(stats);
 
@@ -78,7 +77,6 @@ export default class DeploymentItem extends React.Component {
         />
       );
     }
-    const isEnterprise = AppStore.getIsEnterprise() || AppStore.getIsHosted();
     const started = isEnterprise && phases && phases.length >= 1 ? phases[0].start_ts || created : created;
     return (
       <div className={`deployment-item ${deploymentTypeClasses[type]}`}>
