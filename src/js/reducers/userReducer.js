@@ -22,7 +22,7 @@ const initialState = {
       (mender_environment && stringToBoolean(mender_environment.disableOnboarding)) ||
       !!JSON.parse(window.localStorage.getItem('onboardingComplete')),
     deviceType: null,
-    demoArtifactPort: 80,
+    demoArtifactPort: mender_environment && mender_environment.demoArtifactPort ? mender_environment.demoArtifactPort : 85,
     progress: 0,
     showTips: true,
     showTipsDialog: false,
