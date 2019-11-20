@@ -32,13 +32,13 @@ export const getArtifactUrl = id => (dispatch, getState) =>
     const state = getState();
     let { release, index } = findArtifactIndexInRelease(state.releases.byId, id);
     if (!release || index === -1) {
-      return getReleases()(dispatch);
+      return dispatch(getReleases());
     }
     release.Artifacts[index].url = response.uri;
     return dispatch({ type: ReleaseConstants.ARTIFACTS_SET_ARTIFACT_URL, release });
   });
 
-export const uploadArtifact = (meta, file) => (dispatch, getState) => {
+export const uploadArtifact = (meta, file) => dispatch => {
   var formData = new FormData();
   formData.append('size', file.size);
   formData.append('description', meta.description);
@@ -49,7 +49,7 @@ export const uploadArtifact = (meta, file) => (dispatch, getState) => {
     dispatch({ type: ReleaseConstants.UPLOAD_PROGRESS, inprogress: true, uploadProgress: 0 }),
     ArtifactsApi.postFormData(`${deploymentsApiUrl}/artifacts`, formData, e => progress(e.percent))
   ])
-    .then(() => Promise.all([selectArtifact(file)(dispatch, getState), dispatch(setSnackbar('Upload successful', 5000))]))
+    .then(() => Promise.all([dispatch(selectArtifact(file)), dispatch(setSnackbar('Upload successful', 5000))]))
     .catch(err => {
       try {
         var errMsg = err.res.body.error || '';
@@ -66,7 +66,7 @@ export const editArtifact = (id, body) => (dispatch, getState) =>
     const state = getState();
     let { release, index } = findArtifactIndexInRelease(state.releases.byId, id);
     if (!release || index === -1) {
-      return getReleases()(dispatch);
+      return dispatch(getReleases());
     }
     release.Artifacts[index].description = body.description;
     return dispatch({ type: ReleaseConstants.UPDATED_ARTIFACT, release });

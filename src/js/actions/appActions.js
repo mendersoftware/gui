@@ -1,4 +1,4 @@
-import AppConstants from '../constants/app-constants';
+import AppConstants from '../constants/appConstants';
 import * as Helpers from '../helpers';
 import GeneralApi from '../api/general-api';
 

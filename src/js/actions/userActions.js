@@ -55,7 +55,7 @@ export const loginUser = userData => dispatch =>
       cookie.save('JWT', token, options);
 
       var userId = decodeSessionToken(token);
-      return Promise.all([dispatch({ type: UserConstants.SUCCESSFULLY_LOGGED_IN, value: token }), getUser(userId)(dispatch)]);
+      return Promise.all([dispatch({ type: UserConstants.SUCCESSFULLY_LOGGED_IN, value: token }), dispatch(getUser(userId))]);
     })
     .catch(err => dispatch(handleLoginError(err)));
 
@@ -77,12 +77,12 @@ export const getUser = id => dispatch => UsersApi.get(`${useradmApiUrl}/users/${
 
 export const createUser = userData => dispatch =>
   UsersApi.post(`${useradmApiUrl}/users`, userData).then(() =>
-    Promise.all([dispatch({ type: UserConstants.CREATED_USER, user: userData }), getUserList()(dispatch)])
+    Promise.all([dispatch({ type: UserConstants.CREATED_USER, user: userData }), dispatch(getUserList())])
   );
 
 export const removeUser = userId => dispatch =>
   UsersApi.delete(`${useradmApiUrl}/users/${userId}`).then(() =>
-    Promise.all([dispatch({ type: UserConstants.REMOVED_USER, userId }), getUserList()(dispatch)])
+    Promise.all([dispatch({ type: UserConstants.REMOVED_USER, userId }), dispatch(getUserList())])
   );
 
 export const editUser = (userId, userData) => dispatch =>
@@ -110,7 +110,7 @@ export const saveGlobalSettings = settings => (dispatch, getState) => {
     let tasks = [dispatch({ type: UserConstants.SET_GLOBAL_SETTINGS, updatedSettings })];
     if (updatedSettings.hasOwnProperty('2fa') && updatedSettings['2fa'] === 'enabled') {
       const state = getState();
-      tasks.push(get2FAQRCode(state.users.byId[state.users.currentUser].email)(dispatch));
+      tasks.push(dispatch(get2FAQRCode(state.users.byId[state.users.currentUser].email)));
     }
     return Promise.all(tasks);
   });
@@ -135,7 +135,7 @@ export const toggleHelptips = () => (dispatch, getState) => {
     userCookie.help = updatedValue;
     userCookie = JSON.stringify(userCookie);
     cookie.save(user.id, userCookie);
-    setShowHelptips(updatedValue)(dispatch);
+    return dispatch(setShowHelptips(updatedValue));
   }
 };
 
