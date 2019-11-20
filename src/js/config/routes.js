@@ -11,7 +11,6 @@ import Settings from '../components/settings/settings';
 import Help from '../components/help/help';
 
 import { isLoggedIn } from '../auth';
-import { AppContext } from '../contexts/app-context';
 
 const PrivateRoute = ({ component: Component, ...rest }) => {
   // if not logged in, redirect to login screen
@@ -36,19 +35,15 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
 
 export default (
   <App isLoggedIn={isLoggedIn()}>
-    <AppContext.Consumer>
-      {({ docsVersion, version }) => (
-        <Switch>
-          <PrivateRoute exact path="/" component={Dashboard} />
-          <PrivateRoute path="/devices/:status(pending|preauthorized|rejected)?/:filters?" component={Devices} />
-          <PrivateRoute path="/releases/:artifactVersion?" component={Artifacts} />
-          <PrivateRoute path="/deployments/:tab?" component={Deployments} docsVersion={docsVersion} />
-          <PrivateRoute path="/settings/:section?" component={Settings} />
-          <PrivateRoute path="/help" component={Help} docsVersion={docsVersion} version={version} />
-          <Route path="/login" render={() => <Login />} />
-          <PrivateRoute component={Dashboard} />
-        </Switch>
-      )}
-    </AppContext.Consumer>
+    <Switch>
+      <PrivateRoute exact path="/" component={Dashboard} />
+      <PrivateRoute path="/devices/:status(pending|preauthorized|rejected)?/:filters?" component={Devices} />
+      <PrivateRoute path="/releases/:artifactVersion?" component={Artifacts} />
+      <PrivateRoute path="/deployments/:tab?" component={Deployments} />
+      <PrivateRoute path="/settings/:section?" component={Settings} />
+      <PrivateRoute path="/help" component={Help} />
+      <Route path="/login" render={() => <Login />} />
+      <PrivateRoute component={Dashboard} />
+    </Switch>
   </App>
 );

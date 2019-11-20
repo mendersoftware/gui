@@ -14,7 +14,7 @@ import { logout, updateMaxAge, expirySet } from '../auth';
 import SharedSnackbar from '../components/common/sharedsnackbar';
 
 import { setShowConnectingDialog, setShowCreateArtifactDialog } from '../actions/userActions';
-import { AppContext } from '../contexts/app-context';
+import { setSnackbar } from '../actions/appActions';
 import { getOnboardingComponentFor } from '../utils/onboardingmanager';
 import CreateArtifactDialog from './common/dialogs/createartifactdialog';
 import ConfirmDismissHelptips from './common/dialogs/confirmdismisshelptips';
@@ -59,7 +59,7 @@ class AppRoot extends React.Component {
   }
 
   render() {
-    const { snackbar, timeout, ...context } = this.state;
+    const { timeout } = this.state;
     const { showDismissHelptipsDialog, showDeviceConnectionDialog, showCreateArtifactDialog } = this.props;
 
     const onboardingComponent = getOnboardingComponentFor('application-update-reminder-tip', {
@@ -74,6 +74,7 @@ class AppRoot extends React.Component {
       <IdleTimer element={document} idleAction={this._onIdle} timeout={timeout} format="MM-DD-YYYY HH:MM:ss.SSS">
         <Header history={this.props.history} isLoggedIn={this.props.isLoggedIn} />
         <LeftNav className="leftFixed leftNav" />
+        <div className="rightFluid container">{this.props.children}</div>
         {onboardingComponent ? onboardingComponent : null}
         <ConfirmDismissHelptips open={showDismissHelptipsDialog} />
         <CreateArtifactDialog open={showCreateArtifactDialog} onCancel={() => setShowCreateArtifactDialog(false)} />

@@ -49,7 +49,6 @@ export class Deployments extends React.Component {
     const tonight = new Date();
     tonight.setHours(23, 59, 59);
     this.state = {
-      docsVersion: this.props.docsVersion ? `${this.props.docsVersion}/` : 'development/',
       invalid: true,
       startDate: today,
       endDate: tonight,
@@ -115,8 +114,7 @@ export class Deployments extends React.Component {
       pending: AppStore.getPendingDeployments(),
       progress: AppStore.getDeploymentsInProgress() || [],
       events: AppStore.getEventLog(),
-      hasDeployments: AppStore.getHasDeployments(),
-      isHosted: AppStore.getIsHosted()
+      hasDeployments: AppStore.getHasDeployments()
     };
   }
 

@@ -148,7 +148,8 @@ const mapStateToProps = state => {
     docsVersion: state.app.features.hasMultitenancy && state.app.features.isHosted ? '' : docsVersion,
     isHosted: state.app.features.isHosted,
     links: state.app.hostedLinks,
-    org: state.users.organization
+    org: state.users.organization,
+    version: state.app.versionInformation.Integration
   };
 };
 
