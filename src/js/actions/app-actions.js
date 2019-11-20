@@ -11,20 +11,6 @@ const default_per_page = 20;
 const default_page = 1;
 
 const AppActions = {
-  /* 
-    General 
-  */
-  setSnackbar: (message, duration, action, component, onClick, onClose) =>
-    AppDispatcher.handleViewAction({
-      actionType: AppConstants.SET_SNACKBAR,
-      message: message,
-      duration: duration,
-      action: action,
-      children: component,
-      onClick: onClick,
-      onClose: onClose
-    }),
-
   setDeploymentRelease: release =>
     AppDispatcher.handleViewAction({
       actionType: AppConstants.SET_DEPLOYMENT_RELEASE,

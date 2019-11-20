@@ -9,8 +9,7 @@ import HelpIcon from '@material-ui/icons/Help';
 
 import { clearAllRetryTimers } from '../../utils/retrytimer';
 
-import AppActions from '../../actions/app-actions';
-import AppStore from '../../stores/app-store';
+import { setSnackbar } from '../../actions/appActions';
 import { getUser, loginUser, saveGlobalSettings, setCurrentUser } from '../../actions/userActions';
 
 import Form from '../common/forms/form';
@@ -28,17 +27,15 @@ export class Login extends React.Component {
 
   constructor(props, context) {
     super(props, context);
-    this.state = this._getState();
-  }
-
-  componentWillMount() {
-    AppStore.changeListener(this._onChange.bind(this));
+    this.state = {
+      noExpiry: cookie.load('noExpiry'),
+      redirectToReferrer: false
+    };
   }
 
   componentDidMount() {
-    clearAllRetryTimers();
+    clearAllRetryTimers(this.props.setSnackbar);
     this.props.setCurrentUser(null);
-    AppActions.setSnackbar('');
   }
 
   componentDidUpdate(prevProps) {
@@ -53,36 +50,22 @@ export class Login extends React.Component {
           !self.props.onboardingComplete &&
           !getOnboardingStepCompleted('devices-pending-accepting-onboarding')
         ) {
-          AppActions.setSnackbar('open', 10000, '', <WelcomeSnackTip progress={1} />, () => {}, self.onCloseSnackbar);
+          self.props.setSnackbar('open', 10000, '', <WelcomeSnackTip progress={1} />, () => {}, self.onCloseSnackbar);
         }
       }, 1000);
-      AppActions.setSnackbar('');
+      self.props.setSnackbar('');
     }
   }
 
   componentWillUnmount() {
-    AppStore.removeChangeListener(this._onChange.bind(this));
-    AppActions.setSnackbar('');
-  }
-
-  _getState() {
-    return {
-      noExpiry: cookie.load('noExpiry'),
-      isHosted: AppStore.getIsHosted(),
-      redirectToReferrer: false,
-      isEnterprise: AppStore.getIsEnterprise()
-    };
-  }
-
-  _onChange() {
-    this.setState(this._getState());
+    this.props.setSnackbar('');
   }
 
   onCloseSnackbar = (_, reason) => {
     if (reason === 'clickaway') {
       return;
     }
-    AppActions.setSnackbar('');
+    this.props.setSnackbar('');
   };
 
   _handleLogin(formData) {
@@ -98,8 +81,8 @@ export class Login extends React.Component {
   }
 
   render() {
-    const { isHosted, noExpiry, redirectToReferrer } = this.state;
-    const { has2FA } = this.props;
+    const { noExpiry, redirectToReferrer } = this.state;
+    const { has2FA, isHosted } = this.props;
     let { from } = { from: { pathname: '/' } };
     if (this.props.location.state && this.props.location.state.from.pathname !== '/ui/') {
       from = this.props.location.state.from;
@@ -167,12 +150,13 @@ export class Login extends React.Component {
   }
 }
 
-const actionCreators = { getUser, loginUser, saveGlobalSettings, setCurrentUser };
+const actionCreators = { getUser, loginUser, saveGlobalSettings, setCurrentUser, setSnackbar };
 
 const mapStateToProps = state => {
   return {
     currentUser: state.users.byId[state.users.currentUser] || {},
     has2FA: state.users.globalSettings.hasOwnProperty('2fa') && state.users.globalSettings['2fa'] === 'enabled',
+    isHosted: state.app.features.isHosted,
     showHelptips: state.users.showHelptips,
     showOnboardingTips: state.users.onboarding.showTips,
     onboardingComplete: state.users.onboarding.complete

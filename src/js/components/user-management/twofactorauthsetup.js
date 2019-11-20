@@ -8,7 +8,7 @@ import Form from '../common/forms/form';
 import TextInput from '../common/forms/textinput';
 import PasswordInput from '../common/forms/passwordinput';
 
-import AppActions from '../../actions/app-actions';
+import { setSnackbar } from '../../actions/appActions';
 import { loginUser, saveGlobalSettings } from '../../actions/userActions';
 
 import Loader from '../common/loader';
@@ -35,7 +35,7 @@ export class TwoFactorAuthSetup extends React.Component {
       .loginUser(formData)
       .then(token => self.setState({ validated2fa: !!token, validating2fa: false }))
       .catch(() => {
-        AppActions.setSnackbar('An error occured validating the verification code.');
+        self.props.setSnackbar('An error occured validating the verification code.');
         self.setState({ validating2fa: false });
       });
   }
@@ -119,7 +119,7 @@ export class TwoFactorAuthSetup extends React.Component {
   }
 }
 
-const actionCreators = { loginUser, saveGlobalSettings };
+const actionCreators = { loginUser, saveGlobalSettings, setSnackbar };
 
 const mapStateToProps = state => {
   return {

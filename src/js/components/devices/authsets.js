@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 import { deleteAuthset, updateDeviceAuth } from '../../actions/deviceActions';
 
-import AppActions from '../../actions/app-actions';
+import { setSnackbar } from '../../actions/appActions';
 import { DEVICE_STATES } from '../../constants/deviceConstants';
 import Authsetlist from './authsetlist';
 import ConfirmDecommission from './confirmdecommission';
@@ -44,12 +44,12 @@ export class Authsets extends React.Component {
           // on finish, change "loading" back to null
           self.setState({ loading: null });
         }
-        AppActions.setSnackbar('Device authorization status was updated successfully');
+        self.props.setSnackbar('Device authorization status was updated successfully');
       })
       .catch(err => {
         var errMsg = err ? (err.res ? err.res.error.message : err.message) : '';
         console.log(errMsg);
-        AppActions.setSnackbar(
+        self.props.setSnackbar(
           preformatWithRequestID(err.res, `There was a problem updating the device authorization status: ${errMsg}`),
           null,
           'Copy to clipboard'
@@ -147,24 +147,24 @@ export class Authsets extends React.Component {
   }
 }
 
-const actionCreators = { deleteAuthset, updateDeviceAuth };
+const actionCreators = { deleteAuthset, updateDeviceAuth, setSnackbar };
 
 const mapStateToProps = (state, ownProps) => {
   const device = state.devices.byId[ownProps.device.id];
   let authsets = { active: [], inactive: [] };
   authsets = device.auth_sets
     ? device.auth_sets.reduce(
-      // for each authset compare the device status and if it matches authset status, put it in correct listv
-      (accu, authset) => {
-        if (authset.status === device.status) {
-          accu.active.push(authset);
-        } else {
-          accu.inactive.push(authset);
-        }
-        return accu;
-      },
-      { active: [], inactive: [] }
-    )
+        // for each authset compare the device status and if it matches authset status, put it in correct listv
+        (accu, authset) => {
+          if (authset.status === device.status) {
+            accu.active.push(authset);
+          } else {
+            accu.inactive.push(authset);
+          }
+          return accu;
+        },
+        { active: [], inactive: [] }
+      )
     : authsets;
   return {
     device,

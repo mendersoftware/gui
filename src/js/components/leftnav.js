@@ -1,35 +1,26 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { Link, NavLink } from 'react-router-dom';
 import copy from 'copy-to-clipboard';
 
 // material ui
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import Tooltip from '@material-ui/core/Tooltip';
-import AppStore from '../stores/app-store';
+import { List, ListItem, ListItemText, Tooltip } from '@material-ui/core';
 
-var listItems = [
+const listItems = [
   { route: '/', text: 'Dashboard' },
   { route: '/devices', text: 'Devices' },
   { route: '/releases', text: 'Releases' },
   { route: '/deployments', text: 'Deployments' }
 ];
 
-export default class LeftNav extends React.Component {
-  constructor(props, context) {
-    super(props, context);
-    this.state = {
-      isHosted: AppStore.getIsHosted()
-    };
-  }
-
+export class LeftNav extends React.Component {
   render() {
-    var self = this;
+    const self = this;
+    const { docsVersion, isHosted, versionInformation } = self.props;
 
-    var docsVersion = '';
-    if (!self.state.isHosted) {
-      docsVersion = self.props.docsVersion ? `${self.props.docsVersion}/` : 'development/';
+    let displayedDocsVersion = '';
+    if (!isHosted) {
+      displayedDocsVersion = docsVersion ? `${docsVersion}/` : 'development/';
     }
     const listItemStyle = {
       container: { padding: '16px 16px 16px 42px' }
@@ -48,14 +39,12 @@ export default class LeftNav extends React.Component {
       </ListItem>
     ));
 
-    var licenseUrl = `https://docs.mender.io/${docsVersion}release-information/open-source-licenses`;
+    var licenseUrl = `https://docs.mender.io/${displayedDocsVersion}release-information/open-source-licenses`;
     var licenseLink = (
       <a target="_blank" rel="noopener noreferrer" href={licenseUrl} style={{ fontSize: '13px', position: 'relative', top: '6px', color: '#347A87' }}>
         License information
       </a>
     );
-
-    const versionInformation = AppStore.getVersionInformation();
 
     const versions = (
       <ul className="unstyled" style={{ minWidth: 120 }}>
@@ -74,7 +63,7 @@ export default class LeftNav extends React.Component {
     );
     const versionInfo = (
       <Tooltip title={versions} placement="top">
-        <div onClick={() => copy(JSON.stringify(versionInformation))}>{self.props.version ? `Version: ${self.props.version}` : ''}</div>
+        <div onClick={() => copy(JSON.stringify(versionInformation))}>{versionInformation.Integration ? `Version: ${versionInformation.Integration}` : ''}</div>
       </Tooltip>
     );
 
@@ -94,3 +83,13 @@ export default class LeftNav extends React.Component {
     );
   }
 }
+
+const mapStateToProps = state => {
+  return {
+    docsVersion: state.app.docsVersion,
+    isHosted: state.app.features.isHosted,
+    versionInformation: state.app.versionInformation
+  };
+};
+
+export default connect(mapStateToProps)(LeftNav);

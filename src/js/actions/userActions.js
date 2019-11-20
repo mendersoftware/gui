@@ -1,6 +1,6 @@
 import cookie from 'react-cookie';
 
-import AppActions from '../actions/app-actions';
+import { getHostedLinks, setSnackbar } from '../actions/appActions';
 import GeneralApi from '../api/general-api';
 import UsersApi from '../api/users-api';
 import * as UserConstants from '../constants/userConstants';
@@ -11,11 +11,11 @@ const apiUrl = '/api/management/v1';
 const tenantadmUrl = `${apiUrl}/tenantadm`;
 const useradmApiUrl = `${apiUrl}/useradm`;
 
-const handleLoginError = (err, dispatch) => {
+const handleLoginError = err => dispatch => {
   const self = this;
   const is2FABackend = err.error.text.error && err.error.text.error.includes('2fa');
   if (is2FABackend && !self.props.has2FA) {
-    return saveGlobalSettings({ '2fa': 'enabled' })(dispatch);
+    return dispatch(saveGlobalSettings({ '2fa': 'enabled' }));
   }
   let errMsg = 'There was a problem logging in';
   if (err.res && err.res.body && Object.keys(err.res.body).includes('error')) {
@@ -28,7 +28,7 @@ const handleLoginError = (err, dispatch) => {
   } else {
     errMsg = `${errMsg}\n${err.error.text && err.error.text.message ? err.error.text.message : ''}`;
   }
-  AppActions.setSnackbar(preformatWithRequestID(err.res, errMsg), null, 'Copy to clipboard');
+  return dispatch(setSnackbar(preformatWithRequestID(err.res, errMsg), null, 'Copy to clipboard'));
 };
 
 /* 
@@ -36,7 +36,7 @@ const handleLoginError = (err, dispatch) => {
 */
 export const loginUser = userData => dispatch =>
   UsersApi.postLogin(`${useradmApiUrl}/auth/login`, userData)
-    .catch(err => handleLoginError(err, dispatch))
+    .catch(err => dispatch(handleLoginError(err)))
     .then(res => {
       const token = res.text;
       if (!token) {
@@ -57,7 +57,7 @@ export const loginUser = userData => dispatch =>
       var userId = decodeSessionToken(token);
       return Promise.all([dispatch({ type: UserConstants.SUCCESSFULLY_LOGGED_IN, value: token }), getUser(userId)(dispatch)]);
     })
-    .catch(err => handleLoginError(err, dispatch));
+    .catch(err => dispatch(handleLoginError(err)));
 
 export const getUserList = () => dispatch =>
   UsersApi.get(`${useradmApiUrl}/users`)
@@ -70,7 +70,7 @@ export const getUserList = () => dispatch =>
     })
     .catch(err => {
       var errormsg = err.error || 'Please check your connection';
-      AppActions.setSnackbar(preformatWithRequestID(err.res, `Users couldn't be loaded. ${errormsg}`));
+      dispatch(setSnackbar(preformatWithRequestID(err.res, `Users couldn't be loaded. ${errormsg}`)));
     });
 
 export const getUser = id => dispatch => UsersApi.get(`${useradmApiUrl}/users/${id}`).then(user => dispatch({ type: UserConstants.RECEIVED_USER, user }));
@@ -95,7 +95,7 @@ export const setCurrentUser = user => dispatch => dispatch({ type: UserConstants
 */
 export const getUserOrganization = () => dispatch =>
   GeneralApi.get(`${tenantadmUrl}/user/tenant`).then(res =>
-    Promise.all([dispatch({ type: UserConstants.SET_ORGANIZATION, organization: res.body }), AppActions.getHostedLinks(res.body.id)])
+    Promise.all([dispatch({ type: UserConstants.SET_ORGANIZATION, organization: res.body }), dispatch(getHostedLinks(res.body.id))])
   );
 
 /* 

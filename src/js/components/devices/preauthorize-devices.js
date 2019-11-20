@@ -8,7 +8,7 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Fab, FormCon
 import { Add as ContentAddIcon, Clear as ClearIcon, CloudUpload as FileIcon, InfoOutlined as InfoIcon } from '@material-ui/icons';
 
 import { getDeviceCount, getDevicesByStatus, preauthDevice } from '../../actions/deviceActions';
-import AppActions from '../../actions/app-actions';
+import { setSnackbar } from '../../actions/appActions';
 import AppStore from '../../stores/app-store';
 import { DEVICE_STATES } from '../../constants/deviceConstants';
 import { isEmpty, preformatWithRequestID } from '../../helpers';
@@ -75,7 +75,7 @@ export class Preauthorize extends React.Component {
       .catch(error => {
         console.log(error);
         var errormsg = error.res.body.error || 'Please check your connection.';
-        AppActions.setSnackbar(preformatWithRequestID(error.res, `Preauthorized devices couldn't be loaded. ${errormsg}`), null, 'Copy to clipboard');
+        self.props.setSnackbar(preformatWithRequestID(error.res, `Preauthorized devices couldn't be loaded. ${errormsg}`), null, 'Copy to clipboard');
         console.log(errormsg);
       })
       .finally(() => self.setState({ pageLoading: false }));
@@ -147,7 +147,7 @@ export class Preauthorize extends React.Component {
     self.props
       .preauthDevice(authset)
       .then(() => {
-        AppActions.setSnackbar('Device was successfully added to the preauthorization list', 5000);
+        self.props.setSnackbar('Device was successfully added to the preauthorization list', 5000);
         self._getDevices();
         self._togglePreauth(!close);
       })
@@ -158,7 +158,7 @@ export class Preauthorize extends React.Component {
         if (err.res.status === 409) {
           self.setState({ errortext: 'A device with a matching identity data set already exists' });
         } else {
-          AppActions.setSnackbar(preformatWithRequestID(err.res, `The device could not be added: ${errMsg}`), null, 'Copy to clipboard');
+          self.props.setSnackbar(preformatWithRequestID(err.res, `The device could not be added: ${errMsg}`), null, 'Copy to clipboard');
         }
       });
   }
@@ -178,7 +178,7 @@ export class Preauthorize extends React.Component {
       };
     }
     if (rejectedFiles.length) {
-      AppActions.setSnackbar(`File '${rejectedFiles[0].name}' was rejected.`);
+      self.props.setSnackbar(`File '${rejectedFiles[0].name}' was rejected.`);
     }
   }
 
@@ -362,7 +362,7 @@ export class Preauthorize extends React.Component {
   }
 }
 
-const actionCreators = { getDeviceCount, getDevicesByStatus, preauthDevice };
+const actionCreators = { getDeviceCount, getDevicesByStatus, preauthDevice, setSnackbar };
 
 const mapStateToProps = state => {
   return {

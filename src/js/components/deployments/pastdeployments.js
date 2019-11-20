@@ -8,7 +8,7 @@ import { Grid, RootRef, Table, TableBody, TableCell, TableHead, TableRow } from 
 import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import MomentUtils from '@date-io/moment';
 
-import AppActions from '../../actions/app-actions';
+import { setSnackbar } from '../../actions/appActions';
 import Loader from '../common/loader';
 import Pagination from '../common/pagination';
 import AutoSelect from '../common/forms/autoselect';
@@ -41,7 +41,7 @@ export class Past extends React.Component {
       const progress = getOnboardingStepCompleted('artifact-modified-onboarding') && this.props.past.length > 1 ? 4 : 3;
       setTimeout(() => {
         !self.props.onboardingComplete
-          ? AppActions.setSnackbar('open', 10000, '', <WelcomeSnackTip progress={progress} />, () => {}, self.onCloseSnackbar)
+          ? self.props.setSnackbar('open', 10000, '', <WelcomeSnackTip progress={progress} />, () => {}, self.onCloseSnackbar)
           : null;
       }, 400);
     }
@@ -51,7 +51,7 @@ export class Past extends React.Component {
     if (reason === 'clickaway') {
       return;
     }
-    AppActions.setSnackbar('');
+    self.props.setSnackbar('');
   };
 
   _setDateRange(after, before) {
@@ -250,6 +250,8 @@ export class Past extends React.Component {
   }
 }
 
+const actionCreators = { setSnackbar };
+
 const mapStateToProps = state => {
   return {
     onboardingComplete: state.users.onboarding.complete,
@@ -258,4 +260,7 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps)(Past);
+export default connect(
+  mapStateToProps,
+  actionCreators
+)(Past);

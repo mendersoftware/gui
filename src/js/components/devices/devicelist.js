@@ -7,9 +7,9 @@ import Checkbox from '@material-ui/core/Checkbox';
 import SettingsIcon from '@material-ui/icons/Settings';
 import SortIcon from '@material-ui/icons/Sort';
 
+import { setSnackbar } from '../../actions/appActions';
 import { getDeviceAuth, getDeviceById } from '../../actions/deviceActions';
 
-import AppActions from '../../actions/app-actions';
 import { DEVICE_STATES } from '../../constants/deviceConstants';
 import Loader from '../common/loader';
 import Pagination from '../common/pagination';
@@ -39,7 +39,7 @@ export class DeviceList extends React.Component {
     if (event.target.closest('input') && event.target.closest('input').hasOwnProperty('checked')) {
       return;
     }
-    AppActions.setSnackbar('');
+    self.props.setSnackbar('');
     let device = self.props.devices[rowNumber];
     if (self.state.expandedDeviceId === device.id) {
       device = null;
@@ -149,7 +149,7 @@ export class DeviceList extends React.Component {
   }
 }
 
-const actionCreators = { getDeviceAuth, getDeviceById };
+const actionCreators = { getDeviceAuth, getDeviceById, setSnackbar };
 const mapStateToProps = (state, ownProps) => {
   const devices = ownProps.devices.reduce((accu, deviceId) => {
     if (deviceId) {

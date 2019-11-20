@@ -19,10 +19,9 @@ import {
   Warning as WarningIcon
 } from '@material-ui/icons';
 
-import AppStore from '../../stores/app-store';
 import { decommissionDevice, selectDevice } from '../../actions/deviceActions';
 import { getReleases } from '../../actions/releaseActions';
-import AppActions from '../../actions/app-actions';
+import { setSnackbar } from '../../actions/appActions';
 import { DEVICE_STATES } from '../../constants/deviceConstants';
 import { preformatWithRequestID } from '../../helpers';
 import { advanceOnboarding, getOnboardingStepCompleted } from '../../utils/onboardingmanager';
@@ -63,7 +62,6 @@ export class ExpandedDevice extends React.Component {
 
     this.state = {
       authsets: false,
-      docsVersion: AppStore.getDocsVersion(),
       schedule: false,
       showInput: false
     };
@@ -95,7 +93,7 @@ export class ExpandedDevice extends React.Component {
   }
 
   _clickListItem() {
-    AppActions.setSnackbar('');
+    this.props.setSnackbar('');
     this.setState({ schedule: false });
   }
 
@@ -123,12 +121,12 @@ export class ExpandedDevice extends React.Component {
     this.setState({ filterByArtifact: filteredDevs });
   }
   _clickLink() {
-    window.location.assign(`https://docs.mender.io/${this.state.docsVersion}/client-configuration/configuration-file/polling-intervals`);
+    window.location.assign(`https://docs.mender.io/${this.props.docsVersion}/client-configuration/configuration-file/polling-intervals`);
   }
   _copyLinkToClipboard() {
     var location = window.location.href.substring(0, window.location.href.indexOf('/devices') + '/devices'.length);
     copy(`${location}/id=${this.props.device.id}`);
-    AppActions.setSnackbar('Link copied to clipboard');
+    this.props.setSnackbar('Link copied to clipboard');
   }
 
   _scheduleDeploymentFor(device) {
@@ -150,17 +148,18 @@ export class ExpandedDevice extends React.Component {
         self.toggleAuthsets(false);
         // close expanded device
         // trigger reset of list!
-        AppActions.setSnackbar('Device was decommissioned successfully');
+        self.props.setSnackbar('Device was decommissioned successfully');
       })
       .catch(err => {
         var errMsg = err.res.error.message || '';
         console.log(errMsg);
-        AppActions.setSnackbar(preformatWithRequestID(err.res, `There was a problem decommissioning the device: ${errMsg}`), null, 'Copy to clipboard');
+        self.props.setSnackbar(preformatWithRequestID(err.res, `There was a problem decommissioning the device: ${errMsg}`), null, 'Copy to clipboard');
       })
       .finally(() => self.props.refreshDevices());
   }
 
   render() {
+    const self = this;
     const { attributes, created_ts, identity_data, status } = this.props.device;
 
     let deviceIdentity = [<ExpandableDeviceAttribute key="id_checksum" primary="Device ID" secondary={this.props.device.id || '-'} />];
@@ -261,7 +260,7 @@ export class ExpandedDevice extends React.Component {
             <Button
               onClick={() => {
                 this.toggleAuthsets(true);
-                AppActions.setSnackbar('');
+                self.props.setSnackbar('');
               }}
             >
               {hasPending ? <WarningIcon className="auth" /> : null}
@@ -392,11 +391,12 @@ export class ExpandedDevice extends React.Component {
   }
 }
 
-const actionCreators = { decommissionDevice, getReleases, selectDevice };
+const actionCreators = { decommissionDevice, getReleases, selectDevice, setSnackbar };
 
 const mapStateToProps = state => {
   return {
     artifacts: state.releases.artifactsRepo,
+    docsVersion: state.app.docsVersion,
     onboardingComplete: state.users.onboarding.complete,
     showHelptips: state.users.showHelptips
   };

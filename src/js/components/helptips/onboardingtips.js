@@ -7,7 +7,7 @@ import IconButton from '@material-ui/core/IconButton';
 
 import { ArrowUpward as ArrowUpwardIcon, Close as CloseIcon, Schedule as HelpIcon } from '@material-ui/icons';
 
-import AppActions from '../../actions/app-actions';
+import { setSnackbar } from '../../actions/appActions';
 import { setShowConnectingDialog, setShowDismissOnboardingTipsDialog } from '../../actions/userActions';
 
 export class WelcomeSnackTip extends React.PureComponent {
@@ -15,7 +15,7 @@ export class WelcomeSnackTip extends React.PureComponent {
     if (reason === 'clickaway') {
       return;
     }
-    AppActions.setSnackbar('');
+    this.props.setSnackbar('');
   }
 
   render() {
@@ -96,7 +96,7 @@ class DevicePendingTipComponent extends React.PureComponent {
   }
 }
 
-const actionCreators = { setShowConnectingDialog, setShowDismissOnboardingTipsDialog };
+const actionCreators = { setShowConnectingDialog, setShowDismissOnboardingTipsDialog, setSnackbar };
 
 export const DevicePendingTip = connect(
   null,

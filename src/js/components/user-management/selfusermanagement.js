@@ -9,8 +9,7 @@ import PasswordInput from '../common/forms/passwordinput';
 import FormButton from '../common/forms/formbutton';
 import EnterpriseNotification from '../common/enterpriseNotification';
 
-import AppActions from '../../actions/app-actions';
-import AppStore from '../../stores/app-store';
+import { setSnackbar } from '../../actions/appActions';
 import { editUser, saveGlobalSettings } from '../../actions/userActions';
 
 import { preformatWithRequestID } from '../../helpers';
@@ -21,21 +20,9 @@ export class SelfUserManagement extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = { qrExpanded: false };
-    if ((AppStore.getIsEnterprise() || AppStore.getIsHosted()) && !this.props.has2FA) {
+    if (this.props.isEnterprise && !this.props.has2FA) {
       this.props.saveGlobalSettings({ '2fa': 'disabled' });
     }
-  }
-
-  componentWillMount() {
-    AppStore.changeListener(this._onChange.bind(this));
-  }
-
-  _onChange() {
-    this.setState({});
-  }
-
-  componentWillUnmount() {
-    AppStore.removeChangeListener(this._onChange.bind(this));
   }
 
   _editSubmit(id, userData) {
@@ -43,13 +30,13 @@ export class SelfUserManagement extends React.Component {
     return self.props
       .editUser(id, userData)
       .then(() => {
-        AppActions.setSnackbar('The user has been updated.');
+        self.props.setSnackbar('The user has been updated.');
         self.setState({ editPass: false, editEmail: false });
       })
       .catch(err => {
         console.log(err);
         var errMsg = err.res.body.error || '';
-        AppActions.setSnackbar(preformatWithRequestID(err.res, `There was an error editing the user. ${errMsg}`));
+        self.props.setSnackbar(preformatWithRequestID(err.res, `There was an error editing the user. ${errMsg}`));
       });
   }
 
@@ -67,18 +54,18 @@ export class SelfUserManagement extends React.Component {
   }
 
   handle2FAState(required) {
-    this.setState({ qrExpanded: false });
-    this.props
+    const self = this;
+    self.setState({ qrExpanded: false });
+    self.props
       .saveGlobalSettings({ '2fa': required ? 'enabled' : 'disabled' })
-      .then(() => (required ? AppActions.setSnackbar('Two Factor authentication set up successfully.') : null));
+      .then(() => (required ? self.props.setSnackbar('Two Factor authentication set up successfully.') : null));
   }
 
   render() {
     const self = this;
     const { editEmail, editPass, emailFormId, qrExpanded } = self.state;
-    const { currentUser, has2fa } = self.props;
+    const { currentUser, has2fa, isEnterprise } = self.props;
     const email = currentUser.email;
-    const isEnterprise = AppStore.getIsEnterprise() || AppStore.getIsHosted();
     return (
       <div style={{ maxWidth: '750px' }} className="margin-top-small">
         <h2 className="margin-top-small">My account</h2>
@@ -177,11 +164,12 @@ export class SelfUserManagement extends React.Component {
   }
 }
 
-const actionCreators = { editUser, saveGlobalSettings };
+const actionCreators = { editUser, saveGlobalSettings, setSnackbar };
 
 const mapStateToProps = state => {
   return {
     has2FA: state.users.globalSettings.hasOwnProperty('2fa') && state.users.globalSettings['2fa'] === 'enabled',
+    isEnterprise: state.app.features.isEnterprise || state.app.features.isHosted,
     currentUser: state.users.byId[state.users.currentUser] || {}
   };
 };

@@ -2,34 +2,12 @@ import { EventEmitter } from 'events'; // from device
 
 import AppDispatcher from '../dispatchers/app-dispatcher';
 import AppConstants from '../constants/app-constants';
-import { stringToBoolean } from '../helpers';
 
 var CHANGE_EVENT = 'change';
 
 var _deploymentRelease = null;
 var _numberInProgress = 0;
 var _filters = [];
-var _snackbar = {
-  open: false,
-  message: ''
-};
-const _hostAddress = mender_environment && mender_environment.hostAddress ? mender_environment.hostAddress : null;
-const _IntegrationVersion = mender_environment && mender_environment.integrationVersion ? mender_environment.integrationVersion : 'master';
-const _MenderVersion = mender_environment && mender_environment.menderVersion ? mender_environment.menderVersion : 'master';
-const _menderArtifactVersion = mender_environment && mender_environment.menderArtifactVersion ? mender_environment.menderArtifactVersion : 'master';
-const _menderDebPackageVersion = mender_environment && mender_environment.menderDebPackageVersion ? mender_environment.menderDebPackageVersion : 'master';
-var _demoArtifactPort = mender_environment && mender_environment.demoArtifactPort ? mender_environment.demoArtifactPort : 85;
-
-const _versionInformation = {
-  Integration: mender_environment.integrationVersion,
-  'Mender-Client': mender_environment.menderVersion,
-  'Mender-Artifact': mender_environment.menderArtifactVersion,
-  'Meta-Mender': mender_environment.metaMenderVersion,
-  Deployments: mender_environment.services.deploymentsVersion,
-  Deviceauth: mender_environment.services.deviceauthVersion,
-  Inventory: mender_environment.services.inventoryVersion,
-  GUI: mender_environment.services.guiVersion || 'latest'
-};
 
 const _deploymentDeviceLimit = 5000;
 
@@ -245,71 +223,11 @@ var AppStore = Object.assign({}, EventEmitter.prototype, {
    */
   getActivity: () => _activityLog,
 
-  getSnackbar: () => _snackbar,
-
-  // return boolean rather than organization details
-  hasMultitenancy: () => mender_environment && stringToBoolean(mender_environment.features.hasMultitenancy),
-
-  getIsHosted: () => (mender_environment && stringToBoolean(mender_environment.features.isHosted)) || window.location.hostname === 'hosted.mender.io',
-
-  getIsEnterprise: () => mender_environment && stringToBoolean(mender_environment.features.isEnterprise),
-
-  getHostAddress: () => _hostAddress,
-
-  getVersionInformation: () => _versionInformation,
-
-  getIntegrationVersion: function() {
-    // return version number
-    var version = '';
-    if (_IntegrationVersion) {
-      // if first character NaN, is master branch
-      version = isNaN(_IntegrationVersion.charAt(0)) ? 'master' : _IntegrationVersion;
-    }
-    return version;
-  },
-
-  getMenderVersion: function() {
-    // return version number
-    var version = '';
-    if (_MenderVersion) {
-      // if first character NaN, is master branch
-      version = isNaN(_MenderVersion.charAt(0)) ? 'master' : _MenderVersion;
-    }
-    return version;
-  },
-
-  getMenderArtifactVersion: () => _menderArtifactVersion,
-
-  getMenderDebPackageVersion: () => _menderDebPackageVersion,
-
-  getDemoArtifactPort: () => _demoArtifactPort,
-
-  getDocsVersion: function() {
-    // return docs link friendly version
-    var docsVersion = '';
-    if (_MenderVersion && !isNaN(_MenderVersion.charAt(0))) {
-      var splitArray = _MenderVersion.split('.').slice(0, 2);
-      docsVersion = splitArray.join('.');
-    }
-    return docsVersion;
-  },
-
   getDeploymentDeviceLimit: () => _deploymentDeviceLimit,
 
   dispatcherIndex: AppDispatcher.register(payload => {
     var action = payload.action;
     switch (action.actionType) {
-    case AppConstants.SET_SNACKBAR:
-      _setSnackbar(
-        payload.action.message,
-        payload.action.duration,
-        payload.action.action,
-        payload.action.children,
-        payload.action.onClick,
-        payload.action.onClose
-      );
-      break;
-
       /* API */
     case AppConstants.RECEIVE_DEPLOYMENTS:
       setDeployments(payload.action.deployments);

@@ -18,8 +18,6 @@ import Support from './support';
 import MoreHelp from './more-help-resources';
 import { isEmpty, versionCompare } from '../../helpers';
 
-import AppStore from '../../stores/app-store';
-import AppActions from '../../actions/app-actions';
 import { getUserOrganization } from '../../actions/userActions';
 
 var components = {
@@ -78,52 +76,15 @@ var components = {
   }
 };
 
-export class Help extends React.Component {
+export class Help extends React.PureComponent {
   static contextTypes = {
     router: PropTypes.object
   };
 
-  constructor(props, context) {
-    super(props, context);
-    this.state = this._getInitialState();
-  }
-  _getInitialState() {
-    return {
-      snackbar: AppStore.getSnackbar(),
-      hasMultitenancy: AppStore.hasMultitenancy(),
-      isHosted: AppStore.getIsHosted()
-    };
-  }
   componentDidMount() {
-    if (this.state.hasMultitenancy && this.state.isHosted) {
+    if (this.props.hasMultitenancy && this.props.isHosted) {
       this.props.getUserOrganization();
-      this.setState({ version: '', docsVersion: '' }); // if hosted, use latest docs version
-    } else {
-      this.setState({ docsVersion: this.props.docsVersion ? `${this.props.docsVersion}/` : 'development/' });
     }
-  }
-
-  _getLinks(id) {
-    var self = this;
-    AppActions.getHostedLinks(id)
-      .then(response => {
-        self.setState({ links: response });
-        // clear timer when got links successfully
-        clearInterval(self.linksTimer);
-      })
-      .catch(err => console.log(`Error: ${err}`, `Tenant id: ${id}`));
-  }
-
-  componentWillMount() {
-    AppStore.changeListener(this._onChange.bind(this));
-  }
-
-  componentWillUnmount() {
-    AppStore.removeChangeListener(this._onChange.bind(this));
-  }
-
-  _onChange() {
-    this.setState(this._getInitialState());
   }
 
   _getLatest(array) {
@@ -156,18 +117,18 @@ export class Help extends React.Component {
 
     return (
       <div className="help-container">
-        <LeftNav isHosted={this.state.isHosted} pages={components} />
+        <LeftNav isHosted={this.props.isHosted} pages={components} />
         <div>
           <p style={{ color: 'rgba(0, 0, 0, 0.54)', maxWidth: contentWidth }}>Help {breadcrumbs}</p>
           <div style={{ position: 'relative', top: '12px', maxWidth: contentWidth }} className="help-content">
             <ComponentToShow
               version={this.props.version}
-              docsVersion={this.state.docsVersion}
+              docsVersion={this.props.docsVersion}
               getLatest={this._getLatest}
-              isHosted={this.state.isHosted}
-              org={this.state.org}
-              links={this.state.links}
-              hasMultitenancy={this.state.hasMultitenancy}
+              isHosted={this.props.isHosted}
+              org={this.props.org}
+              links={this.props.links}
+              hasMultitenancy={this.props.hasMultitenancy}
               isEmpty={isEmpty}
               pages={components}
             />
@@ -181,7 +142,12 @@ export class Help extends React.Component {
 const actionCreators = { getUserOrganization };
 
 const mapStateToProps = state => {
+  // if hosted, use latest docs version
+  const docsVersion = state.app.docsVersion ? `${state.app.docsVersion}/` : 'development/';
   return {
+    docsVersion: state.app.features.hasMultitenancy && state.app.features.isHosted ? '' : docsVersion,
+    isHosted: state.app.features.isHosted,
+    links: state.app.hostedLinks,
     org: state.users.organization
   };
 };

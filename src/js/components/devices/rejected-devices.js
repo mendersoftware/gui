@@ -3,8 +3,7 @@ import { connect } from 'react-redux';
 import Time from 'react-time';
 
 import { getDevicesByStatus } from '../../actions/deviceActions';
-import AppActions from '../../actions/app-actions';
-import AppStore from '../../stores/app-store';
+import { setSnackbar } from '../../actions/appActions';
 import { DEVICE_STATES } from '../../constants/deviceConstants';
 import Loader from '../common/loader';
 import DeviceList from './devicelist';
@@ -20,34 +19,26 @@ export class Rejected extends React.Component {
     };
   }
 
-  componentWillMount() {
-    AppStore.changeListener(this._onChange.bind(this));
-  }
   componentDidMount() {
     this.timer = setInterval(() => this._getDevices(), this.state.refreshDeviceLength);
     this._getDevices();
   }
   componentWillUnmount() {
-    AppStore.removeChangeListener(this._onChange.bind(this));
     clearInterval(this.timer);
   }
 
   componentDidUpdate(prevProps) {
     if (prevProps.count !== this.props.count || (prevProps.currentTab !== this.props.currentTab && this.props.currentTab.indexOf('Rejected'))) {
       this._getDevices();
+      if (!this.props.devices.length && this.props.count) {
+        //if devices empty but count not, put back to first page
+        this._handlePageChange(1);
+      }
     }
   }
 
   shouldComponentUpdate(nextProps) {
     return this.state.pageLoading != nextProps.pageLoading || this.props.devices.some((device, index) => device !== nextProps.devices[index]);
-  }
-
-  _onChange() {
-    const self = this;
-    if (!self.props.devices.length && self.props.count) {
-      //if devices empty but count not, put back to first page
-      self._handlePageChange(1);
-    }
   }
 
   /*
@@ -61,7 +52,7 @@ export class Rejected extends React.Component {
       .catch(error => {
         console.log(error);
         var errormsg = error.error || 'Please check your connection.';
-        AppActions.setSnackbar(errormsg, 5000, '');
+        self.props.setSnackbar(errormsg, 5000, '');
         console.log(errormsg);
       })
       .finally(() => {
@@ -132,7 +123,7 @@ export class Rejected extends React.Component {
   }
 }
 
-const actionCreators = { getDevicesByStatus };
+const actionCreators = { getDevicesByStatus, setSnackbar };
 
 const mapStateToProps = state => {
   return {

@@ -3,10 +3,9 @@ import { connect } from 'react-redux';
 
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, LinearProgress } from '@material-ui/core';
 
-import AppActions from '../../actions/app-actions';
+import { setSnackbar } from '../../actions/appActions';
 import { getReleases, removeArtifact, selectArtifact, selectRelease, showRemoveArtifactDialog } from '../../actions/releaseActions';
 import { preformatWithRequestID } from '../../helpers';
-import AppStore from '../../stores/app-store';
 
 import ReleaseRepository from './releaserepository';
 import ReleasesList from './releaseslist';
@@ -20,13 +19,15 @@ export class Artifacts extends React.Component {
       remove: false
     };
   }
-  componentWillMount() {
-    AppStore.changeListener(this._onChange.bind(this));
-  }
+
   componentDidUpdate(prevProps) {
     if (prevProps.releases.length !== this.props.releases.length) {
       const selectedRelease = this.props.releases.find(release => prevProps.releases.every(item => item.Name !== release.Name));
       this.props.selectArtifact(selectedRelease.Artifacts[0]);
+    }
+    if (this.props.params && this.props.params.artifactVersion && prevProps.params && prevProps.params.artifactVersion !== this.props.params.artifactVersion) {
+      // selected artifacts
+      self.props.selectArtifact(this.props.params.artifactVersion);
     }
   }
   componentDidMount() {
@@ -35,15 +36,6 @@ export class Artifacts extends React.Component {
   }
   componentWillUnmount() {
     clearInterval(this.artifactTimer);
-    AppStore.removeChangeListener(this._onChange.bind(this));
-  }
-
-  _onChange() {
-    const self = this;
-    if (this.props.params && this.props.params.artifactVersion) {
-      // selected artifacts
-      self.props.selectArtifact(this.props.params.artifactVersion);
-    }
   }
 
   onFilterReleases(releases) {
@@ -62,7 +54,7 @@ export class Artifacts extends React.Component {
       .getReleases()
       .catch(err => {
         var errormsg = err.error || 'Please check your connection';
-        AppActions.setSnackbar(errormsg, 5000, '');
+        self.props.setSnackbar(errormsg, 5000, '');
         console.log(errormsg);
       })
       .finally(() => {
@@ -75,11 +67,11 @@ export class Artifacts extends React.Component {
     return self.props
       .removeArtifact(artifact.id)
       .then(() => {
-        AppActions.setSnackbar('Artifact was removed', 5000, '');
+        self.props.setSnackbar('Artifact was removed', 5000, '');
       })
       .catch(err => {
         var errMsg = err.res.body.error || '';
-        AppActions.setSnackbar(preformatWithRequestID(err.res, `Error removing artifact: ${errMsg}`), null, 'Copy to clipboard');
+        self.props.setSnackbar(preformatWithRequestID(err.res, `Error removing artifact: ${errMsg}`), null, 'Copy to clipboard');
       })
       .finally(() => self.props.showRemoveArtifactDialog(false));
   }
@@ -124,7 +116,7 @@ export class Artifacts extends React.Component {
   }
 }
 
-const actionCreators = { getReleases, removeArtifact, selectArtifact, selectRelease, showRemoveArtifactDialog };
+const actionCreators = { getReleases, removeArtifact, selectArtifact, selectRelease, showRemoveArtifactDialog, setSnackbar };
 
 const mapStateToProps = state => {
   return {

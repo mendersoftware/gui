@@ -8,6 +8,7 @@ import AppStore from '../../stores/app-store';
 import { getAllGroupDevices, selectDevice } from '../../actions/deviceActions';
 import { selectRelease } from '../../actions/releaseActions';
 import { saveGlobalSettings } from '../../actions/userActions';
+import { setSnackbar } from '../../actions/appActions';
 
 import AppActions from '../../actions/app-actions';
 import { setRetryTimer, clearRetryTimer, clearAllRetryTimers } from '../../utils/retrytimer';
@@ -69,8 +70,7 @@ export class Deployments extends React.Component {
 
   componentDidMount() {
     var self = this;
-
-    clearAllRetryTimers();
+    clearAllRetryTimers(self.props.setSnackbar);
     this.timer = setInterval(() => this._refreshDeployments(), this.state.refreshDeploymentsLength);
     this._refreshDeployments();
     self.props.selectRelease();
@@ -87,7 +87,7 @@ export class Deployments extends React.Component {
           self.props.selectDevice(params.get('deviceId')).catch(err => {
             console.log(err);
             var errMsg = err.res.body.error || '';
-            AppActions.setSnackbar(preformatWithRequestID(err.res, `Error fetching device details. ${errMsg}`), null, 'Copy to clipboard');
+            self.props.setSnackbar(preformatWithRequestID(err.res, `Error fetching device details. ${errMsg}`), null, 'Copy to clipboard');
           });
         } else {
           setTimeout(() => self.setState({ createDialog: true }), 400);
@@ -104,7 +104,7 @@ export class Deployments extends React.Component {
 
   componentWillUnmount() {
     clearInterval(this.timer);
-    clearAllRetryTimers();
+    clearAllRetryTimers(this.props.setSnackbar);
     AppStore.removeChangeListener(this._onChange.bind(this));
   }
 
@@ -152,7 +152,7 @@ export class Deployments extends React.Component {
         const deployments = results[0];
         const progressCount = results[1];
         self.setState({ doneLoading: true, progressCount });
-        clearRetryTimer('progress');
+        clearRetryTimer('progress', self.props.setSnackbar);
         if (progressCount && !deployments.length) {
           self._refreshInProgress(1);
         }
@@ -160,7 +160,7 @@ export class Deployments extends React.Component {
       .catch(err => {
         console.log(err);
         var errormsg = err.error || 'Please check your connection';
-        setRetryTimer(err, 'deployments', `Couldn't load deployments. ${errormsg}`, self.state.refreshDeploymentsLength);
+        setRetryTimer(err, 'deployments', `Couldn't load deployments. ${errormsg}`, self.state.refreshDeploymentsLength, self.props.setSnackbar);
       });
   }
   _refreshPending(page, per_page = DEFAULT_PENDING_INPROGRESS_COUNT) {
@@ -177,7 +177,7 @@ export class Deployments extends React.Component {
 
     return AppActions.getPendingDeployments(page, per_page)
       .then(result => {
-        AppActions.setSnackbar('');
+        self.props.setSnackbar('');
         const { deployments, links } = result;
 
         // Get full count of deployments for pagination
@@ -195,7 +195,7 @@ export class Deployments extends React.Component {
       .catch(err => {
         console.log(err);
         var errormsg = err.error || 'Please check your connection';
-        setRetryTimer(err, 'deployments', `Couldn't load deployments. ${errormsg}`, self.state.refreshDeploymentsLength);
+        setRetryTimer(err, 'deployments', `Couldn't load deployments. ${errormsg}`, self.state.refreshDeploymentsLength, self.props.setSnackbar);
       });
   }
 
@@ -244,13 +244,13 @@ export class Deployments extends React.Component {
       })
       .then(() => {
         self.setState({ doneLoading: true });
-        AppActions.setSnackbar('');
+        self.props.setSnackbar('');
       })
       .catch(err => {
         console.log(err);
         self.setState({ doneLoading: true });
         var errormsg = err.error || 'Please check your connection';
-        setRetryTimer(err, 'deployments', `Couldn't load deployments. ${errormsg}`, self.state.refreshDeploymentsLength);
+        setRetryTimer(err, 'deployments', `Couldn't load deployments. ${errormsg}`, self.state.refreshDeploymentsLength, self.props.setSnackbar);
       });
   }
 
@@ -297,16 +297,16 @@ export class Deployments extends React.Component {
               self.timer = setInterval(() => self._refreshDeployments(), self.state.refreshDeploymentsLength);
               self._refreshDeployments();
             }
-            AppActions.setSnackbar('Deployment created successfully', 8000);
+            self.props.setSnackbar('Deployment created successfully', 8000);
           } else {
-            AppActions.setSnackbar('Error while creating deployment');
+            self.props.setSnackbar('Error while creating deployment');
           }
           return Promise.resolve();
         });
       })
       .catch(err => {
         var errMsg = err.res.body.error || '';
-        AppActions.setSnackbar(preformatWithRequestID(err.res, `Error creating deployment. ${errMsg}`), null, 'Copy to clipboard');
+        self.props.setSnackbar(preformatWithRequestID(err.res, `Error creating deployment. ${errMsg}`), null, 'Copy to clipboard');
       })
       .then(() => self.setState({ doneLoading: true, deploymentObject: null }))
       .then(() => {
@@ -339,12 +339,12 @@ export class Deployments extends React.Component {
         self.timer = setInterval(() => self._refreshDeployments(), self.state.refreshDeploymentsLength);
         self._refreshDeployments();
         self.setState({ createDialog: false });
-        AppActions.setSnackbar('The deployment was successfully aborted');
+        self.props.setSnackbar('The deployment was successfully aborted');
       })
       .catch(err => {
         console.log(err);
         var errMsg = err.res.body.error || '';
-        AppActions.setSnackbar(preformatWithRequestID(err.res, `There was wan error while aborting the deployment: ${errMsg}`));
+        self.props.setSnackbar(preformatWithRequestID(err.res, `There was wan error while aborting the deployment: ${errMsg}`));
       });
   }
   updated() {
@@ -371,7 +371,7 @@ export class Deployments extends React.Component {
     clearInterval(self.timer);
     self.timer = setInterval(() => self._refreshDeployments(), self.state.refreshDeploymentsLength);
     self.setState({ tabIndex, pendPage: 1, pastPage: 1, progPage: 1 }, () => self._refreshDeployments());
-    AppActions.setSnackbar('');
+    self.props.setSnackbar('');
   }
 
   render() {
@@ -496,7 +496,7 @@ export class Deployments extends React.Component {
   }
 }
 
-const actionCreators = { getAllGroupDevices, saveGlobalSettings, selectDevice, selectRelease };
+const actionCreators = { getAllGroupDevices, saveGlobalSettings, selectDevice, selectRelease, setSnackbar };
 
 const mapStateToProps = state => {
   return {

@@ -11,7 +11,7 @@ import { preformatWithRequestID, deepCompare } from '../../helpers';
 import { getDevicesByStatus } from '../../actions/deviceActions';
 import { getGlobalSettings, saveGlobalSettings } from '../../actions/userActions';
 
-import AppActions from '../../actions/app-actions';
+import { setSnackbar } from '../../actions/appActions';
 
 export class Global extends React.Component {
   constructor(props, context) {
@@ -57,14 +57,14 @@ export class Global extends React.Component {
     return self.props
       .saveGlobalSettings(self.state.updatedSettings)
       .then(() => {
-        AppActions.setSnackbar('Settings saved successfully');
+        self.props.setSnackbar('Settings saved successfully');
         if (self.props.dialog) {
           self.props.closeDialog();
         }
       })
       .catch(err => {
         console.log(err);
-        AppActions.setSnackbar(preformatWithRequestID(err.res, `The settings couldn't be saved. ${err.res.body.error}`));
+        self.props.setSnackbar(preformatWithRequestID(err.res, `The settings couldn't be saved. ${err.res.body.error}`));
       });
   }
 
@@ -130,7 +130,7 @@ export class Global extends React.Component {
   }
 }
 
-const actionCreators = { getDevicesByStatus, getGlobalSettings, saveGlobalSettings };
+const actionCreators = { getDevicesByStatus, getGlobalSettings, saveGlobalSettings, setSnackbar };
 
 const mapStateToProps = state => {
   return {

@@ -5,32 +5,13 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Snackbar } f
 
 import UserList from './userlist';
 import UserForm from './userform';
-import AppActions from '../../actions/app-actions';
-import AppStore from '../../stores/app-store';
+import { setSnackbar } from '../../actions/appActions';
 import { createUser, editUser, getUserList, removeUser } from '../../actions/userActions';
 import { preformatWithRequestID } from '../../helpers';
 
 export class UserManagement extends React.Component {
-  constructor(props, context) {
-    super(props, context);
-    this.state = this._getState();
-  }
-
-  componentWillMount() {
-    AppStore.changeListener(this._onChange.bind(this));
-  }
-
   componentDidMount() {
     this.props.getUserList();
-  }
-
-  _getState() {
-    return {
-      snackbar: AppStore.getSnackbar()
-    };
-  }
-  _onChange() {
-    this.setState(this._getState());
   }
   componentDidUpdate(prevProps) {
     const changed = prevProps.currentUser !== this.props.currentUser || prevProps.users.some((user, index) => user !== this.props.users[index]);
@@ -38,19 +19,16 @@ export class UserManagement extends React.Component {
       this.props.getUserList();
     }
   }
-  componentWillUnmount() {
-    AppStore.removeChangeListener(this._onChange.bind(this));
-  }
   _openCreate() {
     this._openEdit();
   }
   _openEdit(user) {
-    AppActions.setSnackbar('');
+    this.props.setSnackbar('');
     this.setState({ user: user, editDialog: true, removeDialog: false, editPass: !user });
   }
 
   _openRemove(user) {
-    AppActions.setSnackbar('');
+    this.props.setSnackbar('');
     this.setState({ user: user, editDialog: false, removeDialog: true });
   }
 
@@ -63,12 +41,12 @@ export class UserManagement extends React.Component {
       .editUser(self.state.user.id, userData)
       .then(() => {
         self.dialogDismiss();
-        AppActions.setSnackbar('The user has been updated.');
+        self.props.setSnackbar('The user has been updated.');
       })
       .catch(err => {
         console.log(err);
         var errMsg = err.res.body.error || '';
-        AppActions.setSnackbar(preformatWithRequestID(err.res, `There was an error editing the user. ${errMsg}`));
+        self.props.setSnackbar(preformatWithRequestID(err.res, `There was an error editing the user. ${errMsg}`));
       });
   }
 
@@ -78,12 +56,12 @@ export class UserManagement extends React.Component {
       .createUser(userData)
       .then(() => {
         self.dialogDismiss();
-        AppActions.setSnackbar('The user was created successfully.');
+        self.props.setSnackbar('The user was created successfully.');
       })
       .catch(err => {
         console.log(err);
         var errMsg = err.res.body.error || '';
-        AppActions.setSnackbar(preformatWithRequestID(err.res, `There was an error creating the user. ${errMsg}`));
+        self.props.setSnackbar(preformatWithRequestID(err.res, `There was an error creating the user. ${errMsg}`));
       });
   }
 
@@ -93,12 +71,12 @@ export class UserManagement extends React.Component {
       .removeUser(this.state.user.id)
       .then(() => {
         self.dialogDismiss();
-        AppActions.setSnackbar('The user was removed from the system.');
+        self.props.setSnackbar('The user was removed from the system.');
       })
       .catch(err => {
         console.log(err);
         var errMsg = err.res.body.error || '';
-        AppActions.setSnackbar(preformatWithRequestID(err.res, `There was an error removing the user. ${errMsg}`));
+        self.props.setSnackbar(preformatWithRequestID(err.res, `There was an error removing the user. ${errMsg}`));
       });
   }
 
@@ -131,9 +109,9 @@ export class UserManagement extends React.Component {
           currentUser={this.props.currentUser}
         />
         <Snackbar
-          bodyStyle={{ maxWidth: this.state.snackbar.maxWidth }}
-          open={this.state.snackbar.open}
-          message={this.state.snackbar.message}
+          bodyStyle={{ maxWidth: this.props.snackbar.maxWidth }}
+          open={this.props.snackbar.open}
+          message={this.props.snackbar.message}
           autoHideDuration={8000}
         />
 
@@ -169,11 +147,12 @@ export class UserManagement extends React.Component {
   }
 }
 
-const actionCreators = { createUser, editUser, getUserList, removeUser };
+const actionCreators = { createUser, editUser, getUserList, removeUser, setSnackbar };
 
 const mapStateToProps = state => {
   return {
     currentUser: state.users.byId[state.users.currentUser] || {},
+    snackbar: state.app.snackbar,
     users: Object.values(state.users.byId)
   };
 };

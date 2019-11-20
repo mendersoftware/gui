@@ -7,8 +7,8 @@ import pluralize from 'pluralize';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Tab, Tabs, Table, TableBody, TableCell, TableHead, TableRow } from '@material-ui/core';
 
 import AppStore from '../../stores/app-store';
+import { setSnackbar } from '../../actions/appActions';
 import { getAllDeviceCounts } from '../../actions/deviceActions';
-import AppActions from '../../actions/app-actions';
 import { DEVICE_STATES } from '../../constants/deviceConstants';
 import { clearAllRetryTimers } from '../../utils/retrytimer';
 import Global from '../settings/global';
@@ -56,12 +56,12 @@ export class Devices extends React.Component {
   }
 
   componentDidMount() {
-    clearAllRetryTimers();
+    clearAllRetryTimers(this.props.setSnackbar);
     this._restartInterval();
   }
 
   componentWillUnmount() {
-    clearAllRetryTimers();
+    clearAllRetryTimers(this.props.setSnackbar);
     clearInterval(this.interval);
     AppStore.removeChangeListener(this._onChange.bind(this));
   }
@@ -85,7 +85,7 @@ export class Devices extends React.Component {
     self.props.getAllDeviceCounts();
   }
   _changeTab() {
-    AppActions.setSnackbar('');
+    this.props.setSnackbar('');
   }
 
   // nested tabs
@@ -230,7 +230,7 @@ export class Devices extends React.Component {
   }
 }
 
-const actionCreators = { getAllDeviceCounts };
+const actionCreators = { getAllDeviceCounts, setSnackbar };
 
 const mapStateToProps = state => {
   let devices = state.devices.selectedDeviceList;

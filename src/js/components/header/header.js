@@ -27,6 +27,7 @@ import DeploymentNotifications from './deploymentnotifications';
 import { getDeviceLimit } from '../../actions/deviceActions';
 import { getReleases } from '../../actions/releaseActions';
 import { getUser, getGlobalSettings, setShowHelptips, toggleHelptips } from '../../actions/userActions';
+import { setSnackbar } from '../../actions/appActions';
 import AppActions from '../../actions/app-actions';
 import AppStore from '../../stores/app-store';
 
@@ -152,7 +153,7 @@ export class Header extends React.Component {
   changeTab() {
     this.props.getGlobalSettings();
     this._checkHeaderInfo();
-    AppActions.setSnackbar('');
+    this.props.setSnackbar('');
   }
   handleClick = event => {
     this.setState({ anchorEl: event.currentTarget });
@@ -162,7 +163,7 @@ export class Header extends React.Component {
   };
   onLogoutClick() {
     this.setState({ gettingUser: false });
-    clearAllRetryTimers();
+    clearAllRetryTimers(this.props.setSnackbar);
     cookie.remove('JWT');
     this.context.router.history.push('/login');
   }
@@ -275,12 +276,15 @@ export class Header extends React.Component {
   }
 }
 
-const actionCreators = { getDeviceLimit, getGlobalSettings, getReleases, getUser, setShowHelptips, toggleHelptips };
+const actionCreators = { getDeviceLimit, getGlobalSettings, getReleases, getUser, setShowHelptips, setSnackbar, toggleHelptips };
 
 const mapStateToProps = state => {
   return {
     acceptedDevices: state.devices.byStatus.accepted.total,
+    announcement: state.app.hostedAnnouncement,
     deviceLimit: state.devices.limit,
+    demo: state.app.features.isDemoMode,
+    docsVersion: state.app.docsVersion,
     showHelptips: state.users.showHelptips,
     pendingDevices: state.devices.byStatus.pending.total,
     user: state.users.byId[state.users.currentUser] || { email: '', id: null }

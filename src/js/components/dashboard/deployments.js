@@ -1,10 +1,12 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import pluralize from 'pluralize';
 
 import RefreshIcon from '@material-ui/icons/Refresh';
 import UpdateIcon from '@material-ui/icons/Update';
 
 import AppActions from '../../actions/app-actions';
+import { setSnackbar } from '../../actions/appActions';
 import AppStore from '../../stores/app-store';
 import { clearAllRetryTimers, setRetryTimer } from '../../utils/retrytimer';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
@@ -16,7 +18,7 @@ import CompletedDeployments from './widgets/completeddeployments';
 
 const refreshDeploymentsLength = 30000;
 
-export default class Deployments extends React.Component {
+export class Deployments extends React.Component {
   constructor(props, state) {
     super(props, state);
     const self = this;
@@ -34,12 +36,12 @@ export default class Deployments extends React.Component {
   componentWillUnmount() {
     AppStore.removeChangeListener(this._onChange.bind(this));
     clearInterval(this.timer);
-    clearAllRetryTimers();
+    clearAllRetryTimers(this.props.setSnackbar);
   }
   componentDidMount() {
     var self = this;
-    AppStore.changeListener(this._onChange.bind(this));
-    clearAllRetryTimers();
+    AppStore.changeListener(self._onChange.bind(this));
+    clearAllRetryTimers(self.props.setSnackbar);
     self.timer = setInterval(() => self.getDeployments(), refreshDeploymentsLength);
     self.getDeployments();
   }
@@ -57,7 +59,7 @@ export default class Deployments extends React.Component {
   }
   handleDeploymentError(err) {
     var errormsg = err.error || 'Please check your connection';
-    setRetryTimer(err, 'deployments', `Couldn't load deployments. ${errormsg}`, refreshDeploymentsLength);
+    setRetryTimer(err, 'deployments', `Couldn't load deployments. ${errormsg}`, refreshDeploymentsLength, this.props.setSnackbar);
   }
   getDeployments() {
     const self = this;
@@ -164,3 +166,10 @@ export default class Deployments extends React.Component {
     );
   }
 }
+
+const actionCreators = { setSnackbar };
+
+export default connect(
+  null,
+  actionCreators
+)(Deployments);

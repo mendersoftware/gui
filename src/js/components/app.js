@@ -10,21 +10,15 @@ import LeftNav from './leftnav';
 import IdleTimer from 'react-idle-timer';
 
 import { logout, updateMaxAge, expirySet } from '../auth';
-import { stringToBoolean } from '../helpers';
 
 import SharedSnackbar from '../components/common/sharedsnackbar';
 
-import AppStore from '../stores/app-store';
-import AppActions from '../actions/app-actions';
 import { setShowConnectingDialog, setShowCreateArtifactDialog } from '../actions/userActions';
 import { AppContext } from '../contexts/app-context';
 import { getOnboardingComponentFor } from '../utils/onboardingmanager';
 import CreateArtifactDialog from './common/dialogs/createartifactdialog';
 import ConfirmDismissHelptips from './common/dialogs/confirmdismisshelptips';
 import DeviceConnectionDialog from './common/dialogs/deviceconnectiondialog';
-
-const isDemoMode = mender_environment && stringToBoolean(mender_environment.isDemoMode);
-const _HostedAnnouncement = mender_environment && mender_environment.hostedAnnouncement ? mender_environment.hostedAnnouncement : '';
 
 class AppRoot extends React.Component {
   static childContextTypes = {
@@ -36,10 +30,7 @@ class AppRoot extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      version: AppStore.getIntegrationVersion(),
-      docsVersion: AppStore.getDocsVersion(),
-      timeout: 900000, // 15 minutes idle time,
-      ...this._getState()
+      timeout: 900000 // 15 minutes idle time,
     };
   }
 
@@ -49,31 +40,18 @@ class AppRoot extends React.Component {
     };
   }
 
-  _getState() {
-    return {
-      snackbar: AppStore.getSnackbar()
-    };
-  }
-
-  componentWillMount() {
-    AppStore.changeListener(this._onChange.bind(this));
-  }
   componentDidMount() {
     window.addEventListener('mousemove', updateMaxAge, false);
   }
   componentWillUnmount() {
     window.addEventListener('mousemove', updateMaxAge, false);
-    AppStore.removeChangeListener(this._onChange.bind(this));
-  }
-  _onChange() {
-    this.setState(this._getState());
   }
   _onIdle() {
     if (expirySet() && this.props.currentUser) {
       // logout user and warn
       if (!this.props.uploadInProgress) {
         logout();
-        AppActions.setSnackbar('Your session has expired. You have been automatically logged out due to inactivity.');
+        this.props.setSnackbar('Your session has expired. You have been automatically logged out due to inactivity.');
         return;
       }
       updateMaxAge();
@@ -94,29 +72,19 @@ class AppRoot extends React.Component {
 
     return (
       <IdleTimer element={document} idleAction={this._onIdle} timeout={timeout} format="MM-DD-YYYY HH:MM:ss.SSS">
-        <Header
-          announcement={_HostedAnnouncement}
-          docsVersion={context.docsVersion}
-          demo={isDemoMode}
-          history={this.props.history}
-          isLoggedIn={this.props.isLoggedIn}
-        />
-
-        <LeftNav className="leftFixed leftNav" version={context.version} docsVersion={context.docsVersion} />
-        <div className="rightFluid container">
-          <AppContext.Provider value={context}>{this.props.children}</AppContext.Provider>
-        </div>
+        <Header history={this.props.history} isLoggedIn={this.props.isLoggedIn} />
+        <LeftNav className="leftFixed leftNav" />
         {onboardingComponent ? onboardingComponent : null}
         <ConfirmDismissHelptips open={showDismissHelptipsDialog} />
         <CreateArtifactDialog open={showCreateArtifactDialog} onCancel={() => setShowCreateArtifactDialog(false)} />
         <DeviceConnectionDialog open={showDeviceConnectionDialog} onCancel={() => setShowConnectingDialog(false)} />
-        <SharedSnackbar snackbar={snackbar} />
+        <SharedSnackbar />
       </IdleTimer>
     );
   }
 }
 
-const actionCreators = { setShowConnectingDialog, setShowCreateArtifactDialog };
+const actionCreators = { setShowConnectingDialog, setShowCreateArtifactDialog, setSnackbar };
 
 const mapStateToProps = state => {
   return {

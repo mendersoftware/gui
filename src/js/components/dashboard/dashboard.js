@@ -4,7 +4,7 @@ import Deployments from './deployments';
 import Devices from './devices';
 
 import { styles } from './widgets/baseWidget';
-import AppActions from '../../actions/app-actions';
+import { setSnackbar } from '../../actions/appActions';
 
 import { WelcomeSnackTip } from '../helptips/onboardingtips';
 import { getOnboardingStepCompleted } from '../../utils/onboardingmanager';
@@ -26,7 +26,7 @@ export class Dashboard extends React.Component {
         !self.props.onboardingComplete &&
         !getOnboardingStepCompleted('devices-pending-accepting-onboarding')
       ) {
-        AppActions.setSnackbar('open', 10000, '', <WelcomeSnackTip progress={1} />, () => {}, self.onCloseSnackbar);
+        self.props.setSnackbar('open', 10000, '', <WelcomeSnackTip progress={1} />, () => {}, self.onCloseSnackbar);
       }
     }, 1000);
   }
@@ -35,7 +35,7 @@ export class Dashboard extends React.Component {
     if (reason === 'clickaway') {
       return;
     }
-    AppActions.setSnackbar('');
+    this.props.setSnackbar('');
   };
 
   _handleClick(params) {
@@ -70,6 +70,8 @@ export class Dashboard extends React.Component {
   }
 }
 
+const actionCreators = { setSnackbar };
+
 const mapStateToProps = state => {
   return {
     currentUser: state.users.byId[state.users.currentUser] || {},
@@ -79,4 +81,7 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps)(Dashboard);
+export default connect(
+  mapStateToProps,
+  actionCreators
+)(Dashboard);

@@ -1,5 +1,5 @@
 import ArtifactsApi from '../api/artifacts-api';
-import AppActions from '../actions/app-actions';
+import { setSnackbar } from '../actions/appActions';
 import * as ReleaseConstants from '../constants/releaseConstants';
 import * as UserConstants from '../constants/userConstants';
 
@@ -45,15 +45,15 @@ export const uploadArtifact = (meta, file) => (dispatch, getState) => {
   formData.append('artifact', file);
   var progress = percent => dispatch({ type: ReleaseConstants.UPLOAD_PROGRESS, uploadProgress: percent });
   return Promise.all([
-    AppActions.setSnackbar('Uploading artifact'),
+    dispatch(setSnackbar('Uploading artifact')),
     dispatch({ type: ReleaseConstants.UPLOAD_PROGRESS, inprogress: true, uploadProgress: 0 }),
     ArtifactsApi.postFormData(`${deploymentsApiUrl}/artifacts`, formData, e => progress(e.percent))
   ])
-    .then(() => Promise.all([selectArtifact(file)(dispatch, getState), AppActions.setSnackbar('Upload successful', 5000)]))
+    .then(() => Promise.all([selectArtifact(file)(dispatch, getState), dispatch(setSnackbar('Upload successful', 5000))]))
     .catch(err => {
       try {
         var errMsg = err.res.body.error || '';
-        AppActions.setSnackbar(preformatWithRequestID(err.res, `Artifact couldn't be uploaded. ${errMsg}`), null, 'Copy to clipboard');
+        dispatch(setSnackbar(preformatWithRequestID(err.res, `Artifact couldn't be uploaded. ${errMsg}`), null, 'Copy to clipboard'));
       } catch (e) {
         console.log(e);
       }

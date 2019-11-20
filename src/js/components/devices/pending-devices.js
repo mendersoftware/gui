@@ -10,8 +10,8 @@ import { Button } from '@material-ui/core';
 import { InfoOutlined as InfoIcon } from '@material-ui/icons';
 
 import { getDevicesByStatus, updateDeviceAuth } from '../../actions/deviceActions';
+import { setSnackbar } from '../../actions/appActions';
 
-import AppActions from '../../actions/app-actions';
 import AppStore from '../../stores/app-store';
 import { DEVICE_STATES } from '../../constants/deviceConstants';
 import { preformatWithRequestID } from '../../helpers';
@@ -73,7 +73,7 @@ export class Pending extends React.Component {
       .catch(error => {
         console.log(error);
         var errormsg = error.error || 'Please check your connection.';
-        AppActions.setSnackbar(errormsg, 5000, '');
+        self.props.setSnackbar(errormsg, 5000, '');
         console.log(errormsg);
       })
       .finally(() => {
@@ -108,7 +108,7 @@ export class Pending extends React.Component {
         )} ${pluralize('device', skipped)} to individually adjust ${pluralize('their', skipped)} authorization status. `
       : '';
     var doneText = done ? `${done} ${pluralize('device', done)} ${pluralize('was', done)} updated successfully. ` : '';
-    AppActions.setSnackbar(doneText + skipText);
+    this.props.setSnackbar(doneText + skipText);
   }
 
   _authorizeDevices() {
@@ -135,7 +135,7 @@ export class Pending extends React.Component {
           // break if an error occurs, display status up til this point before error message
           self._getSnackbarMessage(skipped, count);
           setTimeout(() => {
-            AppActions.setSnackbar(
+            self.props.setSnackbar(
               preformatWithRequestID(err.res, `The action was stopped as there was a problem updating a device authorization status: ${errMsg}`),
               null,
               'Copy to clipboard'
@@ -292,7 +292,7 @@ export class Pending extends React.Component {
   }
 }
 
-const actionCreators = { getDevicesByStatus, updateDeviceAuth };
+const actionCreators = { getDevicesByStatus, updateDeviceAuth, setSnackbar };
 
 const mapStateToProps = state => {
   return {

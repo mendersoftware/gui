@@ -11,7 +11,6 @@ import AuthorizedDevices from './authorized-devices';
 import Filters from './filters';
 import Groups from './groups';
 import GroupSelector from './groupselector';
-import AppActions from '../../actions/app-actions';
 import {
   addDeviceToGroup,
   getAllDevicesByStatus,
@@ -24,6 +23,7 @@ import {
   selectDevice,
   selectDevices
 } from '../../actions/deviceActions';
+import { setSnackbar } from '../../actions/appActions';
 
 import AppStore from '../../stores/app-store';
 import * as DeviceConstants from '../../constants/deviceConstants';
@@ -57,8 +57,8 @@ export class DeviceGroups extends React.Component {
   }
 
   componentDidMount() {
-    clearAllRetryTimers();
     var self = this;
+    clearAllRetryTimers(self.props.setSnackbar);
     var filters = [];
 
     if (self.context.router.route.match.params.filters) {
@@ -79,7 +79,7 @@ export class DeviceGroups extends React.Component {
 
   componentWillUnmount() {
     clearInterval(this.deviceTimer);
-    clearAllRetryTimers();
+    clearAllRetryTimers(this.props.setSnackbar);
   }
 
   componentDidUpdate(prevProps) {
@@ -143,7 +143,7 @@ export class DeviceGroups extends React.Component {
     // returns all group devices ids
     return Promise.all(devices.map((device, index) => self._removeSingleDevice(index, devices.length, device.id, true)))
       .then(() => {
-        AppActions.setSnackbar('Group was removed successfully', 5000);
+        self.props.setSnackbar('Group was removed successfully', 5000);
         self.props.selectGroup();
         self.setState({ pageNo: 1, removeGroup: !self.state.removeGroup });
       })
@@ -156,7 +156,7 @@ export class DeviceGroups extends React.Component {
     return self.props.removeDeviceFromGroup(device, this.props.selectedGroup).then(() => {
       if (idx === length - 1 && !isGroupRemoval) {
         // if isGroupRemoval, whole group is being removed
-        AppActions.setSnackbar(`The ${pluralize('devices', length)} ${pluralize('were', length)} removed from the group`, 5000);
+        self.props.setSnackbar(`The ${pluralize('devices', length)} ${pluralize('were', length)} removed from the group`, 5000);
       }
       return Promise.resolve();
     });
@@ -203,7 +203,7 @@ export class DeviceGroups extends React.Component {
           console.log(err);
           var errormsg = err.error || 'Please check your connection.';
           self.setState({ loading: false });
-          setRetryTimer(err, 'devices', `Devices couldn't be loaded. ${errormsg}`, self.state.refreshDeviceLength);
+          setRetryTimer(err, 'devices', `Devices couldn't be loaded. ${errormsg}`, self.state.refreshDeviceLength, self.props.setSnackbar);
         });
     } else {
       // otherwise, show accepted from device adm
@@ -213,7 +213,7 @@ export class DeviceGroups extends React.Component {
           console.log(err);
           var errormsg = err.error || 'Please check your connection.';
           self.setState({ loading: false });
-          setRetryTimer(err, 'devices', `Devices couldn't be loaded. ${errormsg}`, self.state.refreshDeviceLength);
+          setRetryTimer(err, 'devices', `Devices couldn't be loaded. ${errormsg}`, self.state.refreshDeviceLength, self.props.setSnackbar);
         });
     }
   }
@@ -240,7 +240,7 @@ export class DeviceGroups extends React.Component {
         var state = { loading: false };
         if (err.res.statusCode === 404) {
           var errormsg = err.error || 'Please check your connection.';
-          setRetryTimer(err, 'devices', `Device couldn't be loaded. ${errormsg}`, self.state.refreshDeviceLength);
+          setRetryTimer(err, 'devices', `Device couldn't be loaded. ${errormsg}`, self.state.refreshDeviceLength, self.props.setSnackbar);
         }
         self.setState(state);
       });
@@ -295,7 +295,7 @@ export class DeviceGroups extends React.Component {
         if (idx === length - 1) {
           // reached end of list
           self.setState({ createGroupDialog: false, addGroup: false, tmpGroup: '', selectedField: '' }, () => {
-            AppActions.setSnackbar('The group was updated successfully', 5000);
+            self.props.setSnackbar('The group was updated successfully', 5000);
             self._refreshGroups(() => {
               self._handleGroupChange(group);
             });
@@ -305,7 +305,7 @@ export class DeviceGroups extends React.Component {
       .catch(err => {
         console.log(err);
         var errMsg = err.res.body.error || '';
-        AppActions.setSnackbar(preformatWithRequestID(err.res, `Group could not be updated: ${errMsg}`), null, 'Copy to clipboard');
+        self.props.setSnackbar(preformatWithRequestID(err.res, `Group could not be updated: ${errMsg}`), null, 'Copy to clipboard');
       });
   }
 
@@ -326,7 +326,7 @@ export class DeviceGroups extends React.Component {
         // if rows.length === groupCount
         // group now empty, go to all devices
         if (isGroupRemoval) {
-          AppActions.setSnackbar('Group was removed successfully', 5000);
+          self.props.setSnackbar('Group was removed successfully', 5000);
           self.props.selectGroup();
           self.setState({ loading: true, pageNo: 1 }, refresh);
         }
@@ -508,7 +508,8 @@ const actionCreators = {
   removeDeviceFromGroup,
   selectGroup,
   selectDevice,
-  selectDevices
+  selectDevices,
+  setSnackbar
 };
 
 const mapStateToProps = state => {

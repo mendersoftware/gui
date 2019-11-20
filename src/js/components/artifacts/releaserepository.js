@@ -10,6 +10,7 @@ import { Button, Tooltip, Typography } from '@material-ui/core';
 import { CloudUpload as FileIcon, Help as HelpIcon, KeyboardArrowRight as KeyboardArrowRightIcon, Sort as SortIcon } from '@material-ui/icons';
 
 import AppActions from '../../actions/app-actions';
+import { setSnackbar } from '../../actions/appActions';
 import { editArtifact, uploadArtifact, selectArtifact } from '../../actions/releaseActions';
 import { preformatWithRequestID, customSort } from '../../helpers';
 import { ExpandArtifact } from '../helptips/helptooltips';
@@ -41,7 +42,7 @@ export class ReleaseRepository extends React.Component {
       this._onUploadSubmit(acceptedFiles);
     }
     if (rejectedFiles.length) {
-      AppActions.setSnackbar(`File '${rejectedFiles[0].name}' was rejected. File must be of type .mender`, null);
+      this.props.setSnackbar(`File '${rejectedFiles[0].name}' was rejected. File must be of type .mender`, null);
     }
   }
   _onUploadSubmit(files) {
@@ -75,12 +76,12 @@ export class ReleaseRepository extends React.Component {
     return self.props
       .editArtifact(id, { description })
       .then(() => {
-        AppActions.setSnackbar('Artifact details were updated successfully.', 5000, '');
+        self.props.setSnackbar('Artifact details were updated successfully.', 5000, '');
         self.props.refreshArtifacts();
       })
       .catch(err => {
         var errMsg = err.res.body.error || '';
-        AppActions.setSnackbar(preformatWithRequestID(errMsg, `Artifact details couldn't be updated. ${err.error}`), null, 'Copy to clipboard');
+        self.props.setSnackbar(preformatWithRequestID(errMsg, `Artifact details couldn't be updated. ${err.error}`), null, 'Copy to clipboard');
       });
   }
 
@@ -280,7 +281,7 @@ export class ReleaseRepository extends React.Component {
   }
 }
 
-const actionCreators = { editArtifact, uploadArtifact, selectArtifact };
+const actionCreators = { editArtifact, uploadArtifact, selectArtifact, setSnackbar };
 
 const mapStateToProps = state => {
   return {

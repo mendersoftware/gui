@@ -14,7 +14,7 @@ import { ExpandDevice } from '../helptips/helptooltips';
 import { WelcomeSnackTip } from '../helptips/onboardingtips';
 
 import Loader from '../common/loader';
-import AppActions from '../../actions/app-actions';
+import { setSnackbar } from '../../actions/appActions';
 
 import DeviceList from './devicelist';
 import { getOnboardingComponentFor } from '../../utils/onboardingmanager';
@@ -41,7 +41,7 @@ export class Authorized extends React.Component {
       self.setState({ selectedRows: [], expandRow: null, allRowsSelected: false });
       if (self.props.showHelptips && self.props.showTips && !self.props.onboardingComplete && this.props.devices.length) {
         setTimeout(() => {
-          AppActions.setSnackbar('open', 10000, '', <WelcomeSnackTip progress={2} />, () => {}, self.onCloseSnackbar);
+          self.props.setSnackbar('open', 10000, '', <WelcomeSnackTip progress={2} />, () => {}, self.onCloseSnackbar);
         }, 400);
       }
     }
@@ -59,7 +59,7 @@ export class Authorized extends React.Component {
     if (reason === 'clickaway') {
       return;
     }
-    AppActions.setSnackbar('');
+    this.props.setSnackbar('');
   };
 
   _sortColumn() {
@@ -230,6 +230,8 @@ export class Authorized extends React.Component {
   }
 }
 
+const actionCreators = { setSnackbar };
+
 const mapStateToProps = state => {
   return {
     onboardingComplete: state.users.onboarding.complete,
@@ -239,4 +241,7 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps)(Authorized);
+export default connect(
+  mapStateToProps,
+  actionCreators
+)(Authorized);
