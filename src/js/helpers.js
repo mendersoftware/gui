@@ -451,7 +451,7 @@ ${enterpriseSettings}`;
   }
   let codeToCopy = `sudo bash -c 'wget https://d1b0l86ne08fsf.cloudfront.net/${packageVersion}/dist-packages/debian/armhf/mender-client_${packageVersion}-1_armhf.deb && \\
 DEBIAN_FRONTEND=noninteractive dpkg -i mender-client_${packageVersion}-1_armhf.deb && \\
-DEVICE_TYPE="${deviceType}" && \\ ${
+DEVICE_TYPE="${deviceType}" && \\${
   token
     ? `
 TENANT_TOKEN=${token} && \\`
