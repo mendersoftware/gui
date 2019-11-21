@@ -82,10 +82,10 @@ export class Login extends React.Component {
 
   render() {
     const { noExpiry, redirectToReferrer } = this.state;
-    const { has2FA, isHosted } = this.props;
+    const { has2FA, isHosted, location } = this.props;
     let { from } = { from: { pathname: '/' } };
-    if (this.props.location.state && this.props.location.state.from.pathname !== '/ui/') {
-      from = this.props.location.state.from;
+    if (location && location.state && location.state.from.pathname !== '/ui/') {
+      from = location.state.from;
     }
     if (redirectToReferrer) {
       return <Redirect to={from} />;
