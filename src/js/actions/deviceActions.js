@@ -125,6 +125,12 @@ export const setFilterAttributes = attrs => dispatch =>
     attributes: attrs
   });
 
+export const setDeviceFilters = filters => dispatch =>
+  dispatch({
+    type: DeviceConstants.SET_DEVICE_FILTERS,
+    filters
+  });
+
 export const getDeviceById = id => dispatch =>
   DevicesApi.get(`${inventoryApiUrl}/devices/${id}`).then(res =>
     dispatch({

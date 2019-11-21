@@ -12,6 +12,7 @@ const initialState = {
   },
   selectedDevice: null,
   selectedDeviceList: [],
+  filters: [],
   filteringAttributes: [],
   filteringAttributesLimit: 10,
   total: 0,
@@ -186,6 +187,13 @@ const deviceReducer = (state = initialState, action) => {
       };
     }
 
+    case DeviceConstants.SET_DEVICE_FILTERS: {
+      return {
+        ...state,
+        filters: action.filters
+      };
+    }
+
     case DeviceConstants.SET_INACTIVE_DEVICES:
       return {
         ...state,
@@ -284,6 +292,7 @@ const deviceReducer = (state = initialState, action) => {
         }
       };
     }
+    // TODO!!!
     case DeviceConstants.UPDATE_DEVICE_AUTHSET:
     case DeviceConstants.REMOVE_DEVICE_AUTHSET:
     case DeviceConstants.ADD_DEVICE_AUTHSET:
