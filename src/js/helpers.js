@@ -437,6 +437,36 @@ export const getRemainderPercent = phases => {
   return remainder;
 };
 
+export const sortDeploymentDevices = devices => {
+  const newList = {
+    aborted: [],
+    decommissioned: [],
+    'already-installed': [],
+    downloading: [],
+    failure: [],
+    installing: [],
+    noartifact: [],
+    pending: [],
+    rebooting: [],
+    success: []
+  };
+  devices.map(device => newList[device.status].push(device));
+  const newCombine = newList.failure.concat(
+    newList.downloading,
+    newList.installing,
+    newList.rebooting,
+    newList.pending,
+    newList.success,
+    newList.aborted,
+    newList.noartifact,
+    newList['already-installed'],
+    newList.decommissioned
+  );
+  return newCombine;
+};
+
+export const startTimeSort = (a, b) => (b.created > a.created) - (b.created < a.created);
+
 export const standardizePhases = phases =>
   phases.map((phase, index) => {
     let standardizedPhase = { batch_size: phase.batch_size, start_ts: index };
@@ -450,3 +480,29 @@ export const standardizePhases = phases =>
     }
     return standardizedPhase;
   });
+
+/*
+ * Match device attributes against filters, return true or false
+ */
+export const matchFilters = (device, filters = store.getState().devices.filteringAttributes) =>
+  filters.reduce((accu, filter) => {
+    if (filter.key && filter.value) {
+      if (device[filter.key] instanceof Array) {
+        // array
+        if (
+          device[filter.key]
+            .join(', ')
+            .toLowerCase()
+            .indexOf(filter.value.toLowerCase()) == -1
+        ) {
+          return false;
+        }
+      } else {
+        // string
+        if (device[filter.key].toLowerCase().indexOf(filter.value.toLowerCase()) == -1) {
+          return false;
+        }
+      }
+    }
+    return accu;
+  }, true);
