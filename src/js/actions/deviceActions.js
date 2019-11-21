@@ -285,15 +285,14 @@ export const getDevicesByStatus = (status, page = defaultPage, perPage = default
       }
       return Promise.all(tasks);
     } else {
-      let deviceStatus = status;
       tasks.push(
         dispatch({
-          type: DeviceConstants[`SET_${deviceStatus.toUpperCase()}_DEVICES`],
+          type: DeviceConstants[`SET_${status.toUpperCase()}_DEVICES`],
           devices: response.body,
           status
         })
       );
-      if (status === DeviceConstants.DEVICE_STATES.accepted) {
+      if (status === DeviceConstants.DEVICE_STATES.accepted || status === DeviceConstants.DEVICE_STATES.rejected) {
         tasks.push(dispatch(getDevicesWithInventory(response.body)));
       }
     }
